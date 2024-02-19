@@ -78,7 +78,7 @@ const createFacilityMaster = async (context) => {
     };
   } catch (error) {
     console.error('Unable to create facility master record. %s', error);
-    throw new Error('Unable to create facility master record');
+    throw new Error('Unable to create facility master record %s', error);
   }
 };
 

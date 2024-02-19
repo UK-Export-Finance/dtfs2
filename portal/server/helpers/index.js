@@ -1,12 +1,10 @@
 const { dealFormsCompleted, dealHasIncompleteTransactions } = require('./dealFormsCompleted');
 const errorHref = require('./errorHref');
 const formatCountriesForGDSComponent = require('./formatCountriesForGDSComponent');
-const formattedTimestamp = require('./formattedTimestamp');
 const getApiData = require('./getApiData');
 const getFlashSuccessMessage = require('./getFlashSuccessMessage');
 const generateErrorSummary = require('./generateErrorSummary');
 const getUserRoles = require('./getUserRoles');
-const isObject = require('./isObject');
 const isSuperUser = require('./isSuperUser');
 const mapCurrencies = require('./mapCurrencies');
 const mapCountries = require('./mapCountries');
@@ -20,19 +18,18 @@ const validationErrorHandler = require('./validationErrorHandler');
 const constructPayload = require('./constructPayload');
 const { getOneIndexedMonth } = require('./getOneIndexedMonth');
 const { getBusinessDayOfMonth } = require('./getBusinessDayOfMonth');
-const { formatReportPeriodToString } = require('./formatReportPeriodToString');
+const { getNowAsEpoch, getDateFromMonthAndYear } = require('./date');
+const { getFormattedReportPeriod } = require('./getFormattedReportPeriod');
 
 module.exports = {
   dealFormsCompleted,
   dealHasIncompleteTransactions,
   errorHref,
   formatCountriesForGDSComponent,
-  formattedTimestamp,
   getApiData,
   getFlashSuccessMessage,
   generateErrorSummary,
   getUserRoles,
-  isObject,
   isSuperUser,
   mapCountries,
   mapCurrencies,
@@ -46,5 +43,7 @@ module.exports = {
   constructPayload,
   getOneIndexedMonth,
   getBusinessDayOfMonth,
-  formatReportPeriodToString,
+  getNowAsEpoch,
+  getDateFromMonthAndYear,
+  getFormattedReportPeriod,
 };

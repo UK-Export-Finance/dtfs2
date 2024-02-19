@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
+const { isValidMongoId, isValidBankId, isValidReportPeriod, isValidReportStatus } = require('./validation/validateIds');
 
 require('dotenv').config();
 
@@ -268,26 +268,41 @@ const saveUtilisationReport = async (reportData, reportPeriod, user, fileInfo) =
 };
 
 /**
- * Gets utilisation reports for a specific bank. If a report
- * period is not provided, all reports for that bank are
- * returned. If a report period is provided, the report
- * submitted for that report period is returned. Returned
- * reports are ordered by year and month ascending.
- * @param {string} bankId
- * @param {import('../types/utilisation-reports').ReportPeriod} [reportPeriod]
+ * @typedef {Object} GetUtilisationReportsOptions
+ * @property {import('../types/utilisation-reports').ReportPeriod} [reportPeriod] - a report period to filter reports by
+ * @property {import('../types/utilisation-reports').UtilisationReportReconciliationStatus[]} [reportStatuses] - list of report statuses to filter reports by
  */
-const getUtilisationReports = async (bankId, reportPeriod) => {
+
+/**
+ * Gets utilisation reports for a specific bank. If a report
+ * period or statuses are not provided, all reports for that bank are
+ * returned. If a report period is provided, the report
+ * submitted for that report period is returned. If an array of report
+ * statuses are provided, the reports returned are filtered by status.
+ * Returned reports are ordered by year and month ascending.
+ * @param {string} bankId
+ * @param {GetUtilisationReportsOptions} [options]
+ */
+const getUtilisationReports = async (bankId, options) => {
+  const reportPeriod = options?.reportPeriod;
+  const reportStatuses = options?.reportStatuses;
+
   try {
     if (!isValidBankId(bankId)) {
       console.error('Get utilisation reports failed with the following bank ID: %s', bankId);
-      throw new Error(`Invalid bank ID provided: ${bankId}`);
+      throw new Error('Invalid bank ID provided: %s', bankId);
     }
 
     if (reportPeriod && !isValidReportPeriod(reportPeriod)) {
       console.error('Get utilisation reports failed with the following report period: %s', reportPeriod);
-      throw new Error(`Invalid report period provided: ${reportPeriod}`);
+      throw new Error('Invalid report period provided: %s', reportPeriod);
     }
-    const params = reportPeriod ? reportPeriod.start : undefined;
+
+    if (reportStatuses?.length > 0 && !reportStatuses.every(isValidReportStatus)) {
+      console.error('Get utilisation reports failed with the following report statuses: %s', reportStatuses);
+      throw new Error('Invalid report statuses provided: %s', reportStatuses);
+    }
+    const params = { reportPeriod, reportStatuses };
 
     const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports`, {
       headers: headers.central,

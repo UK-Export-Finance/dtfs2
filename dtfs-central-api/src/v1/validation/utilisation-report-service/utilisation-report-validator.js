@@ -52,7 +52,7 @@ const validateYear = (year, propertyName = 'Year') => {
  * @returns {string[]} - an array of errors or an empty array if valid.
  */
 const validateReportPeriod = (reportPeriod) => {
-  if (!reportPeriod || !reportPeriod.start || !reportPeriod.end) {
+  if (!reportPeriod?.start || !reportPeriod?.end) {
     return ['Report period is required'];
   }
 
@@ -80,6 +80,13 @@ const validateReportPeriod = (reportPeriod) => {
 
   return reportPeriodErrors;
 };
+
+/**
+ * Checks whether or not the supplied report period is a valid report period object
+ * @param {unknown} reportPeriod - details of the report period
+ * @returns {reportPeriod is import('../../../types/utilisation-reports').ReportPeriod}
+ */
+const isValidReportPeriod = (reportPeriod) => validateReportPeriod(reportPeriod).length === 0;
 
 /**
  * Validates the details of the file storage for the utilisation report in azure
@@ -188,6 +195,7 @@ module.exports = {
   validateMonth,
   validateYear,
   validateReportPeriod,
+  isValidReportPeriod,
   validateFileInfo,
   validateBankId,
 };

@@ -7,28 +7,14 @@ const { withRoleAuthorisationTests } = require('../../common-tests/role-authoris
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { insertOneUtilisationReportDetails } = require('../../insertUtilisationReportDetails');
+const { MOCK_NOT_RECEIVED_REPORT_WITHOUT_ID } = require('../../../test-helpers/mock-utilisation-report-details');
 
-describe('GET /v1/banks/:bankId/due-report-dates', () => {
-  const dueReportDatesUrl = (bankId) => `/v1/banks/${bankId}/due-report-dates`;
+describe('GET /v1/banks/:bankId/due-report-periods', () => {
+  const dueReportPeriodsUrl = (bankId) => `/v1/banks/${bankId}/due-report-periods`;
   let aPaymentReportOfficer;
   let mockUtilisationReport;
   let testUsers;
   let matchingBankId;
-
-  const expectedDueReports = [
-    {
-      month: 12,
-      year: 2022,
-    },
-    {
-      month: 1,
-      year: 2023,
-    },
-    {
-      month: 2,
-      year: 2023,
-    },
-  ];
 
   beforeAll(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
@@ -42,6 +28,7 @@ describe('GET /v1/banks/:bankId/due-report-dates', () => {
     const year = 2022;
     const dateUploaded = new Date(year, month - 1);
     mockUtilisationReport = {
+      ...MOCK_NOT_RECEIVED_REPORT_WITHOUT_ID,
       bank,
       reportPeriod: {
         start: {
@@ -55,7 +42,6 @@ describe('GET /v1/banks/:bankId/due-report-dates', () => {
       },
       dateUploaded,
       uploadedBy: aPaymentReportOfficer,
-      path: 'www.abc.com',
     };
     await insertOneUtilisationReportDetails(mockUtilisationReport);
   });
@@ -65,34 +51,34 @@ describe('GET /v1/banks/:bankId/due-report-dates', () => {
   });
 
   withClientAuthenticationTests({
-    makeRequestWithoutAuthHeader: () => get(dueReportDatesUrl(matchingBankId)),
-    makeRequestWithAuthHeader: (authHeader) => get(dueReportDatesUrl(matchingBankId), { headers: { Authorization: authHeader } }),
+    makeRequestWithoutAuthHeader: () => get(dueReportPeriodsUrl(matchingBankId)),
+    makeRequestWithAuthHeader: (authHeader) => get(dueReportPeriodsUrl(matchingBankId), { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({
     allowedRoles: [PAYMENT_REPORT_OFFICER],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
     getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-    makeRequestAsUser: (user) => as(user).get(dueReportDatesUrl(matchingBankId)),
+    makeRequestAsUser: (user) => as(user).get(dueReportPeriodsUrl(matchingBankId)),
     successStatusCode: 200,
   });
 
   it('400s requests that do not have a valid bank id', async () => {
-    const { status } = await as(aPaymentReportOfficer).get(dueReportDatesUrl('620a1aa095a618b12da38c7b'));
+    const { status } = await as(aPaymentReportOfficer).get(dueReportPeriodsUrl('620a1aa095a618b12da38c7b'));
 
     expect(status).toEqual(400);
   });
 
   it('401s requests if users bank != request bank', async () => {
-    const { status } = await as(aPaymentReportOfficer).get(dueReportDatesUrl(matchingBankId - 1));
+    const { status } = await as(aPaymentReportOfficer).get(dueReportPeriodsUrl(matchingBankId - 1));
 
     expect(status).toEqual(401);
   });
 
   it('returns the requested resource', async () => {
-    const response = await as(aPaymentReportOfficer).get(dueReportDatesUrl(matchingBankId));
+    const response = await as(aPaymentReportOfficer).get(dueReportPeriodsUrl(matchingBankId));
 
     expect(response.status).toEqual(200);
-    expect(JSON.parse(response.text)).toEqual(expect.arrayContaining(expectedDueReports));
+    expect(JSON.parse(response.text)).toEqual([mockUtilisationReport.reportPeriod]);
   });
 });

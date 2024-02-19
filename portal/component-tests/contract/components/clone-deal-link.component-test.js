@@ -2,7 +2,7 @@ const componentRenderer = require('../../componentRenderer');
 
 const component = 'contract/components/clone-deal-link.njk';
 const render = componentRenderer(component);
-const { MAKER } = require('../../../server/constants/roles');
+const { ROLES: { MAKER } } = require('../../../server/constants');
 const { NON_MAKER_ROLES } = require('../../../test-helpers/common-role-lists');
 const { DRAFT, CHANGES_REQUIRED, SUBMITTED_TO_UKEF, UKEF_REFUSED, ABANDONED, UKEF_ACKNOWLEDGED, UKEF_APPROVED_WITHOUT_CONDITIONS, UKEF_APPROVED_WITH_CONDITIONS, READY_FOR_APPROVAL } = require('../../../server/constants/status');
 

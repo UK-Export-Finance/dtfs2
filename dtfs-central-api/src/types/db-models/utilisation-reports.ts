@@ -3,6 +3,7 @@ import { AzureFileInfo } from '../azure-file-info';
 import { UtilisationReportReconciliationStatus, ReportPeriod } from '../utilisation-reports';
 import { SessionBank } from '../session-bank';
 import { Prettify } from '../types-helper';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 
 export type UploadedByUserDetails = {
   id: string;
@@ -39,4 +40,12 @@ export type UtilisationReport = Prettify<
      */
     uploadedBy?: UploadedByUserDetails;
   }>
+>;
+
+export type UtilisationReportUploadDetails = Prettify<
+  Required<
+    Pick<UtilisationReport, 'azureFileInfo' | 'dateUploaded' | 'uploadedBy'> & {
+      status: typeof UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
+    }
+  >
 >;

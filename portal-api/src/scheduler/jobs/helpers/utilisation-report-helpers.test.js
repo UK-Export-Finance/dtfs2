@@ -12,7 +12,7 @@ const {
 const externalApi = require('../../../external-api/api');
 const api = require('../../../v1/api');
 const MOCK_BANKS = require('../../../../test-helpers/mock-banks');
-const MOCK_UTILISATION_REPORT = require('../../../../test-helpers/mock-utilisation-reports');
+const { MOCK_UTILISATION_REPORT } = require('../../../../test-helpers/mock-utilisation-report-details');
 
 jest.mock('../../../external-api/api');
 jest.mock('../../../v1/api');

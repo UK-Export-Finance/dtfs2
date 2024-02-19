@@ -1,5 +1,6 @@
 const crypto = require('node:crypto');
 const db = require('./db-client');
+const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
 
 module.exports = {
   createTasks: ({ dbName, dbConnectionString }) => {
@@ -9,6 +10,11 @@ module.exports = {
     const getUsersCollection = () => db.getCollection(usersCollectionName, connectionOptions);
 
     return {
+      log(message) {
+        console.info('Cypress log: ', message);
+        return null;
+      },
+
       async getUserFromDbByEmail(email) {
         const users = await getUsersCollection();
         return users.findOne({ email: { $eq: email } });
@@ -76,13 +82,18 @@ module.exports = {
       },
 
       async insertUtilisationReportDetailsIntoDb(utilisationReportDetails) {
-        const utilisationReports = await db.getCollection('utilisationReports', connectionOptions);
+        const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
         return utilisationReports.insertMany(utilisationReportDetails);
       },
 
       async removeAllUtilisationReportDetailsFromDb() {
-        const utilisationReports = await db.getCollection('utilisationReports', connectionOptions);
+        const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
         return utilisationReports.deleteMany({});
+      },
+
+      async getAllBanks() {
+        const banks = await db.getCollection(DB_COLLECTIONS.BANKS, connectionOptions);
+        return banks.find().toArray();
       },
     };
   },

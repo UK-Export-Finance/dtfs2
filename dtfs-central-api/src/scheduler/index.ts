@@ -19,11 +19,11 @@ export const initScheduler = () => {
     const { schedule, message, task } = job.init();
 
     if (!cron.validate(schedule)) {
-      console.error(`Failed to add job '${message}' due to invalid schedule '${schedule}'`);
+      console.error("Failed to add job '%s' due to invalid schedule '%s'", message, schedule);
       return;
     }
 
-    console.info(`Adding scheduled job '${message}'`);
-    cron.schedule(schedule, promiseToVoid(task)).on('error', (error) => console.error(`An error occurred running job '${message}':`, error));
+    console.info("Adding scheduled job '%s'", message);
+    cron.schedule(schedule, promiseToVoid(task)).on('error', (error) => console.error("An error occurred running job '%s':", message, error));
   });
 };
