@@ -9,7 +9,9 @@ const getDueReportPeriodsByBankId = async (req, res) => {
   try {
     const { bankId } = req.params;
 
-    const notReceivedReports = await api.getUtilisationReports(bankId, { reportStatuses: [UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED] });
+    const notReceivedReports = (await api.getUtilisationReports(bankId)).filter(
+      (report) => report.status === UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+    );
     const dueReportPeriods = notReceivedReports.map((notReceivedReport) => notReceivedReport.reportPeriod);
 
     return res.status(200).send(dueReportPeriods);
