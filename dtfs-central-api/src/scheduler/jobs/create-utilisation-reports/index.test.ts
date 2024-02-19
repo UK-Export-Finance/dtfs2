@@ -12,7 +12,7 @@ console.info = jest.fn();
 jest.mock('../../../services/repositories/banks-repo');
 jest.mock('../../../services/repositories/utilisation-reports-repo');
 jest.mock('../../../utils/report-period');
-jest.mock('../../../helpers/validation', () => ({
+jest.mock('@ukef/dtfs2-common', () => ({
   asString: jest.fn(),
 }));
 
@@ -85,7 +85,7 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
     it('does not try to create any utilisation reports when reports for all banks in the current period already exist', async () => {
       // Arrange
       const job = getJob();
-      const bank = { id: '123', name: 'Test bank' } as Bank;
+      const bank = { id: '123', name: 'Test bank', isVisibleInTfmUtilisationReports: true } as Bank;
       jest.mocked(getAllBanks).mockResolvedValue([bank]);
       const getOneUtilisationReportDetailsByBankIdSpy = jest
         .mocked(utilisationReportsRepo.getOneUtilisationReportDetailsByBankId)
@@ -100,10 +100,27 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       expect(saveNotReceivedUtilisationReportSpy).not.toHaveBeenCalled();
     });
 
+    it('does not try to create reports when the bank is not visible in TFM utilisation reports', async () => {
+      // Arrange
+      const job = getJob();
+
+      const bank = { id: '1', name: 'Bank 1', isVisibleInTfmUtilisationReports: false } as Bank;
+      jest.mocked(getAllBanks).mockResolvedValue([bank]);
+      const getOneUtilisationReportDetailsByBankIdSpy = jest.mocked(utilisationReportsRepo.getOneUtilisationReportDetailsByBankId).mockResolvedValue(null);
+      const saveNotReceivedUtilisationReportSpy = jest.spyOn(utilisationReportsRepo, 'saveNotReceivedUtilisationReport');
+
+      // Act
+      await job.task(new Date());
+
+      // Assert
+      expect(getOneUtilisationReportDetailsByBankIdSpy).not.toHaveBeenCalled();
+      expect(saveNotReceivedUtilisationReportSpy).not.toHaveBeenCalled();
+    });
+
     const banks = [
-      { id: '1', name: 'Bank 1' },
-      { id: '2', name: 'Bank 2' },
-      { id: '3', name: 'Bank 3' },
+      { id: '1', name: 'Bank 1', isVisibleInTfmUtilisationReports: true },
+      { id: '2', name: 'Bank 2', isVisibleInTfmUtilisationReports: true },
+      { id: '3', name: 'Bank 3', isVisibleInTfmUtilisationReports: true },
     ] as Bank[];
 
     it('tries to create utilisation reports for all banks when reports for all banks in the current period do not exist', async () => {
@@ -120,7 +137,7 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       expect(getOneUtilisationReportDetailsByBankIdSpy).toHaveBeenCalledTimes(banks.length);
       banks.forEach(({ id }) => expect(getOneUtilisationReportDetailsByBankIdSpy).toHaveBeenCalledWith(id, { reportPeriod: mockReportPeriod }));
       expect(saveNotReceivedUtilisationReportSpy).toHaveBeenCalledTimes(banks.length);
-      banks.forEach((bank) => expect(saveNotReceivedUtilisationReportSpy).toHaveBeenCalledWith(mockReportPeriod, bank));
+      banks.forEach((bank) => expect(saveNotReceivedUtilisationReportSpy).toHaveBeenCalledWith(mockReportPeriod, { id: bank.id, name: bank.name }));
     });
 
     it('only tries to create reports for banks which do not have a report for the current report period', async () => {
@@ -148,7 +165,7 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       expect(getOneUtilisationReportDetailsByBankIdSpy).toHaveBeenCalledTimes(banks.length);
       banks.forEach(({ id }) => expect(getOneUtilisationReportDetailsByBankIdSpy).toHaveBeenCalledWith(id, { reportPeriod: mockReportPeriod }));
       expect(saveNotReceivedUtilisationReportSpy).toHaveBeenCalledTimes(1);
-      expect(saveNotReceivedUtilisationReportSpy).toHaveBeenCalledWith(mockReportPeriod, bankWithoutReport);
+      expect(saveNotReceivedUtilisationReportSpy).toHaveBeenCalledWith(mockReportPeriod, { id: bankWithoutReport.id, name: bankWithoutReport.name });
     });
   });
 });
