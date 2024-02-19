@@ -12,7 +12,7 @@ const { DB_COLLECTIONS } = require('../../../src/constants');
 const collectionName = DB_COLLECTIONS.FACILITIES;
 const applicationCollectionName = DB_COLLECTIONS.DEALS;
 
-const db = require('../../../src/drivers/db-client');
+const db = require('../../../src/drivers/db-client').default;
 
 const { APPLICATION } = require('../../mocks/gef/gef-applications');
 const { mockFacilities } = require('../../mocks/gef/gef-facilities');

@@ -1,4 +1,4 @@
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const DEFAULTS = require('../../../defaults');
 const getDealErrors = require('../../../validation/create-deal');
 const { DB_COLLECTIONS } = require('../../../../constants');

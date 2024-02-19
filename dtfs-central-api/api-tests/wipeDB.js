@@ -1,4 +1,4 @@
-const db = require('../src/drivers/db-client');
+const db = require('../src/drivers/db-client').default;
 const { DB_COLLECTIONS } = require('../src/constants');
 
 /**

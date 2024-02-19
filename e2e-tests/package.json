@@ -23,6 +23,7 @@
     "load": "cd .. && npm run load"
   },
   "devDependencies": {
+    "@ukef/dtfs2-common": "1.0.0",
     "bson": "^6.2.0",
     "chance": "^1.1.11",
     "cypress": "^13.6.3",

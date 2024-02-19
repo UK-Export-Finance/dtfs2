@@ -46,7 +46,7 @@ describe('utilisation-reports-repo', () => {
           id: '123',
           name: 'test bank',
         },
-      } as PortalSessionUser;
+      } as unknown as PortalSessionUser;
 
       // Act
       await updateUtilisationReportDetailsWithUploadDetails(existingReport, mockAzureFileInfo, mockUploadedUser);

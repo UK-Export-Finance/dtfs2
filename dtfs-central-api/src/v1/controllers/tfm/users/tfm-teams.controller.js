@@ -1,4 +1,4 @@
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const { DB_COLLECTIONS, PAYLOAD } = require('../../../../constants');
 const { payloadVerification } = require('../../../../helpers');
 
