@@ -20,13 +20,7 @@ class SignInLinkService {
   }
 
   async createAndEmailSignInLink(user) {
-    const {
-      _id: userId,
-      email: userEmail,
-      firstname: userFirstName,
-      surname: userLastName,
-      signInLinkSendDate: userSignInLinkSendDate,
-    } = user;
+    const { _id: userId, email: userEmail, firstname: userFirstName, surname: userLastName, signInLinkSendDate: userSignInLinkSendDate } = user;
 
     const isUserBlockedOrDisabled = await this.#userService.isUserBlockedOrDisabled(user);
 
@@ -62,7 +56,8 @@ class SignInLinkService {
         target: signInToken,
         hash: databaseSignInToken.hash,
         salt: databaseSignInToken.salt,
-      }),);
+      }),
+    );
 
     if (matchingSignInTokenIndex === -1) {
       return SIGN_IN_LINK.STATUS.NOT_FOUND;
@@ -71,8 +66,8 @@ class SignInLinkService {
     const matchingSignInToken = databaseSignInTokens[matchingSignInTokenIndex];
 
     if (
-      this.#isSignInTokenIsInDate(matchingSignInToken)
-      && this.#isSignInTokenIsLastIssued({ signInTokenIndex: matchingSignInTokenIndex, databaseSignInTokens })
+      this.#isSignInTokenIsInDate(matchingSignInToken) &&
+      this.#isSignInTokenIsLastIssued({ signInTokenIndex: matchingSignInTokenIndex, databaseSignInTokens })
     ) {
       return SIGN_IN_LINK.STATUS.VALID;
     }
@@ -132,9 +127,17 @@ class SignInLinkService {
   async #sendSignInLinkEmail({ userEmail, userFirstName, userLastName, signInLink }) {
     if (process.env.NODE_ENV === 'development') {
       console.info('🔗 signInLink 🔗', signInLink);
+      console.error("*** IT'S ALL GONE WRONG :( *** ");
     }
 
     try {
+      console.info('*** PRE sendEmail ***');
+      console.info({
+        'EMAIL_TEMPLATE_IDS.SIGN_IN_LINK': EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
+        userEmail,
+        userFirstName,
+        userLastName,
+      });
       await sendEmail(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, userEmail, {
         firstName: userFirstName,
         lastName: userLastName,
