@@ -1,3 +1,4 @@
+const { produce } = require('immer');
 const databaseHelper = require('../../database-helper');
 const testUserCache = require('../../api-test-users');
 
@@ -17,9 +18,7 @@ const MOCK_USER = users.barclaysBankMaker1;
 const PASSWORD_ERROR = {
   text: 'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
 };
-const EMAIL_ERROR = { text: 'Enter an email address in the correct format, for example, name@example.com' };
 const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: "You cannot combine 'Read-only' with any of the other roles" };
-const USERNAME_AND_EMAIL_MUST_MATCH_ERROR = { text: 'Username and email must match' };
 
 const BASE_URL = '/v1/users';
 describe('a user', () => {
@@ -112,44 +111,79 @@ describe('a user', () => {
       });
     });
 
-    describe('validating the email address', () => {
-      it('rejects if the provided email address is not in valid format', async () => {
-        const newUser = {
-          ...MOCK_USER,
-          email: 'abc',
-        };
+    describe('when validating the email and username', () => {
+      const EMAIL_ERROR = { text: 'Enter an email address in the correct format, for example, name@example.com' };
+      const USERNAME_AND_EMAIL_MUST_MATCH_ERROR = { text: 'Username and email must match' };
+      const A_DIFFERENT_EMAIL_ADDRESS = 'ADifferentEmailAddress@ukexportfinance.gov.uk';
+      const AN_INVALID_EMAIL_ADDRESS = 'notAValidEmailAddress';
+      const AN_EMPTY_STRING = '';
+      const AN_OBJECT = { aField: 'AString' };
+      const AN_EMPTY_OBJECT = {};
 
-        const { status, body } = await createUser(newUser);
+      const errorTestCases = [
+        {
+          description: `is a different email address`,
+          valueToSetField: A_DIFFERENT_EMAIL_ADDRESS,
+          expectedErrorForEmailTests: USERNAME_AND_EMAIL_MUST_MATCH_ERROR.text,
+          expectedErrorForUsernameTests: USERNAME_AND_EMAIL_MUST_MATCH_ERROR.text,
+        },
+        {
+          description: `is an invalid email address`,
+          valueToSetField: AN_INVALID_EMAIL_ADDRESS,
+          expectedErrorForEmailTests: EMAIL_ERROR.text,
+          expectedErrorForUsernameTests: USERNAME_AND_EMAIL_MUST_MATCH_ERROR.text,
+        },
+        {
+          description: `is an empty string`,
+          valueToSetField: AN_EMPTY_STRING,
+          expectedErrorForEmailTests: EMAIL_ERROR.text,
+          expectedErrorForUsernameTests: USERNAME_AND_EMAIL_MUST_MATCH_ERROR.text,
+        },
+        {
+          description: `is an empty object`,
+          valueToSetField: AN_EMPTY_OBJECT,
+          expectedErrorForEmailTests: EMAIL_ERROR.text,
+          expectedErrorForUsernameTests: USERNAME_AND_EMAIL_MUST_MATCH_ERROR.text,
+        },
+        {
+          description: `is an object`,
+          valueToSetField: AN_OBJECT,
+          expectedErrorForEmailTests: EMAIL_ERROR.text,
+          expectedErrorForUsernameTests: USERNAME_AND_EMAIL_MUST_MATCH_ERROR.text,
+        },
+      ];
+      describe('when validating the email', () => {
+        it.each(errorTestCases)(
+          `rejects if the provided email $description (error: $expectedErrorForEmailTests)`,
+          async ({ valueToSetField, expectedErrorForEmailTests }) => {
+            const user = produce(MOCK_USER, (draftUser) => {
+              draftUser.email = valueToSetField;
+            });
 
-        expect(status).toEqual(400);
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.email.text).toEqual(EMAIL_ERROR.text);
+            const { status, body } = await createUser(user);
+
+            expect(status).toEqual(400);
+            expect(body.success).toEqual(false);
+            expect(body.errors.errorList.email.text).toEqual(expectedErrorForEmailTests);
+          },
+        );
       });
 
-      it('rejects if the provided email address is empty', async () => {
-        const newUser = {
-          ...MOCK_USER,
-          email: '',
-        };
+      describe('when validating the username', () => {
+        it.each(errorTestCases)(
+          `rejects if the provided username $description (error: $expectedErrorForUsernameTests)`,
+          async ({ valueToSetField, expectedErrorForUsernameTests }) => {
+            const user = produce(MOCK_USER, (draftUser) => {
+              draftUser.username = valueToSetField;
+            });
 
-        const { status, body } = await createUser(newUser);
+            const { status, body } = await createUser(user);
 
-        expect(status).toEqual(400);
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.email.text).toEqual(EMAIL_ERROR.text);
-      });
-
-      it('rejects if the provided email address does not match the provided username', async () => {
-        const newUser = {
-          ...MOCK_USER,
-          username: '',
-        };
-
-        const { status, body } = await createUser(newUser);
-
-        expect(status).toEqual(400);
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.email.text).toEqual(USERNAME_AND_EMAIL_MUST_MATCH_ERROR.text);
+            expect(status).toEqual(400);
+            expect(body.success).toEqual(false);
+            expect(body.errors.errorList.email.text).toEqual(expectedErrorForUsernameTests);
+          },
+        );
       });
     });
 
