@@ -1,7 +1,10 @@
 const { isValidEmail } = require('../../../../utils/string');
 
 module.exports = (user, change) => {
-  if (change && change.email !== undefined && !(typeof change.email === 'string' && isValidEmail(change.email))) {
+  const changeHasEmailProperty = change?.email !== undefined;
+  const changeEmailPropertyIsNotAValidEmailAddress = !(typeof change.email === 'string' && isValidEmail(change.email));
+  
+  if (changeHasEmailProperty && changeEmailPropertyIsNotAValidEmailAddress) {
     return [
       {
         email: {
