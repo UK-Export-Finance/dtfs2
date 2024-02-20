@@ -1,3 +1,5 @@
+const { produce } = require('immer');
+
 const databaseHelper = require('../../database-helper');
 const testUserCache = require('../../api-test-users');
 
@@ -10,10 +12,10 @@ const { NON_READ_ONLY_ROLES } = require('../../../test-helpers/common-role-lists
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { ADMIN } = require('../../../src/v1/roles/roles');
 const { STATUS } = require('../../../src/constants/user');
+const withValidateUsernameAndEmailTests = require('./validate-username-and-email.api-tests');
 
 const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
 const MOCK_USER = { ...users.barclaysBankMaker1, username: temporaryUsernameAndEmail, email: temporaryUsernameAndEmail };
-
 
 const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: "You cannot combine 'Read-only' with any of the other roles" };
 
@@ -39,11 +41,17 @@ describe('a user', () => {
   });
 
   describe('PUT /v1/users', () => {
+    let createdUser;
+
+    const A_MATCHING_EMAIL_ADDRESS = 'aMatchingEmailAddress@ukexportfinance.gov.uk';
+
+    beforeEach(async () => {
+      const response = await createUser(MOCK_USER);
+      createdUser = response.body.user;
+    });
+
     describe('as admin', () => {
       it("a user's details can be updated", async () => {
-        const response = await createUser(MOCK_USER);
-        const createdUser = response.body.user;
-
         const updatedUserCredentials = {
           roles: [CHECKER, MAKER],
           firstname: 'NEW_FIRSTNAME',
@@ -68,9 +76,6 @@ describe('a user', () => {
       });
 
       it("a user's password can be updated", async () => {
-        const response = await createUser(MOCK_USER);
-        const createdUser = response.body.user;
-
         const updatedUserCredentials = {
           password: 'AbC1234!',
           passwordConfirm: 'AbC1234!',
@@ -82,9 +87,6 @@ describe('a user', () => {
       });
 
       it.each(NON_READ_ONLY_ROLES)('rejects if the user update request has the read-only role with the %s role', async (otherRole) => {
-        const response = await createUser(MOCK_USER);
-        const createdUser = response.body.user;
-
         const updatedUserCredentials = {
           roles: [READ_ONLY, otherRole],
         };
@@ -97,9 +99,6 @@ describe('a user', () => {
       });
 
       it('updates the user if the user update request has the read-only role only', async () => {
-        const response = await createUser(MOCK_USER);
-        const createdUser = response.body.user;
-
         const updatedUserCredentials = {
           roles: [READ_ONLY],
         };
@@ -113,9 +112,6 @@ describe('a user', () => {
       });
 
       it('updates the user if the user update request has the read-only role repeated', async () => {
-        const response = await createUser(MOCK_USER);
-        const createdUser = response.body.user;
-
         const updatedUserCredentials = {
           roles: [READ_ONLY, READ_ONLY],
         };
@@ -127,12 +123,21 @@ describe('a user', () => {
         expect(status).toEqual(200);
         expect(body.roles).toStrictEqual([READ_ONLY, READ_ONLY]);
       });
+
+      withValidateUsernameAndEmailTests({
+        createRequestBodyWithUpdatedField: ({ fieldToUpdate, valueToSetField }) => {
+          return produce({}, (draftRequest) => {
+            draftRequest.username = A_MATCHING_EMAIL_ADDRESS;
+            draftRequest.email = A_MATCHING_EMAIL_ADDRESS;
+            draftRequest[fieldToUpdate] = valueToSetField;
+          });
+        },
+        makeRequest: async (updatedUserCredentials) => await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`),
+      });
     });
+
     describe('as non-admin', () => {
       it('a user can update their own password', async () => {
-        const response = await createUser(MOCK_USER);
-        const createdUser = response.body.user;
-
         const updatedUserCredentials = {
           currentPassword: 'AbC!2345',
           password: 'AbC1234!',
@@ -148,9 +153,6 @@ describe('a user', () => {
       });
 
       it('a user cannot update their role', async () => {
-        const response = await createUser(MOCK_USER);
-        const createdUser = response.body.user;
-
         const updatedUserCredentials = {
           roles: [CHECKER, MAKER],
         };
@@ -164,9 +166,6 @@ describe('a user', () => {
       });
 
       it('a non-admin cannot change someone elses password', async () => {
-        const response = await createUser(MOCK_USER);
-        const createdUser = response.body.user;
-
         const updatedUserCredentials = {
           currentPassword: 'AbC!2345',
           password: 'AbC1234!',
@@ -177,8 +176,20 @@ describe('a user', () => {
 
         expect(status).toEqual(403);
       });
+
+      it('a non-admin cannot update their username', async () => {
+        const updatedUserCredentials = {
+          username: A_MATCHING_EMAIL_ADDRESS,
+          email: A_MATCHING_EMAIL_ADDRESS,
+        };
+
+        const { status } = await as(aNonAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+
+        expect(status).toEqual(403);
+      });
     });
   });
+
   async function createUser(userToCreate) {
     return as(aNonAdmin).post(userToCreate).to(BASE_URL);
   }

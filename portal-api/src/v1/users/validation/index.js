@@ -17,8 +17,8 @@ const createRules = [
   passwordAtLeastOneLowercase,
   passwordAtLeastOneSpecialCharacter,
   readOnlyRoleCannotBeAssignedWithOtherRoles,
-  emailMustBeValidEmailAddress,
   usernameAndEmailMustMatch,
+  emailMustBeValidEmailAddress,
 ];
 
 const updateWithoutCurrentPasswordRules = [
@@ -30,8 +30,8 @@ const updateWithoutCurrentPasswordRules = [
   passwordsMustMatch,
   passwordsCannotBeReUsed,
   readOnlyRoleCannotBeAssignedWithOtherRoles,
-  emailMustBeValidEmailAddress,
   usernameAndEmailMustMatch,
+  emailMustBeValidEmailAddress,
 ];
 
 const updateWithCurrentPasswordRules = [...updateWithoutCurrentPasswordRules, currentPasswordMustMatch];
