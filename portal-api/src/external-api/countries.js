@@ -15,7 +15,6 @@ const headers = {
  * Retrieves a list of countries from an external API.
  *
  * @returns {Promise<Array>} A promise that resolves to an array of country objects.
- * @throws {Object} If there is an error retrieving the countries.
  */
 const getCountries = async () => {
   const response = await axios({
@@ -34,22 +33,22 @@ const getCountries = async () => {
  * Retrieves country information from an external API based on the provided country code.
  *
  * @param {string} code - The country code to retrieve information for.
- * @returns {Promise<Object>} - A promise that resolves to an object containing the status and data of the country.
- * @throws {Object} - If an error occurs while retrieving the country information.
+ * @returns {Promise<Object>} - A promise that resolves to an object containing the status and data of the requested country.
  *
  * @example
- * // Returns { status: 200, data: { name: 'United States', population: 331002651, capital: 'Washington, D.C.' } }
- * getCountry('US');
+ * // Returns { status: 200, data: { name: 'United Kingdom' } }
+ * getCountry('GBR');
  *
  * @example
  * // Returns { status: 404 }
- * getCountry('ZZ');
+ * getCountry('INVALID');
  */
 const getCountry = async (code) => {
   if (!isValidRegex(COUNTRY_CODE, code)) {
-    console.error('countries.getCountry: invalid code provided %s', code);
+    console.error('Invalid country code supplied %s', code);
     return {
       status: 400,
+      error: 'Invalid country code supplied',
     };
   }
 
@@ -61,12 +60,12 @@ const getCountry = async (code) => {
     console.error('Error retrieving country from External API %o', error);
 
     return {
-      status: 404,
+      status: 500,
       error: 'Failed to get country',
     };
   });
 
-  if (response.data) {
+  if (response?.data) {
     return {
       status: 200,
       data: response.data,
@@ -75,6 +74,7 @@ const getCountry = async (code) => {
 
   return {
     status: 404,
+    error: 'Void response received'
   };
 };
 

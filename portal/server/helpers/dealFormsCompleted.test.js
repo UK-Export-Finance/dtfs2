@@ -59,7 +59,7 @@ const acknowledgedBonds = {
   ...completeFacilities,
   acknowledgedFacilities,
 };
-const acknowledgedLoan = {
+const acknowledgedLoans = {
   ...completeFacilities,
   acknowledgedFacilities,
 };
@@ -173,7 +173,7 @@ describe('isEveryFacilityComplete', () => {
 describe('isEveryDealFormComplete', () => {
   it('If the `Acknowledged` loan does not have all the required properties', () => {
     const incompleteAcknowledgedLoan = {
-      ...acknowledgedLoan,
+      ...acknowledgedLoans,
       items: [
         { _id: '12345678911', status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: null },
         { _id: '12345678912', status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: 123, coverDateConfirmed: true },
@@ -201,7 +201,7 @@ describe('isEveryDealFormComplete', () => {
 
     const deal = {
       bondTransactions: incompleteAcknowledgedBonds,
-      loanTransactions: acknowledgedLoan,
+      loanTransactions: acknowledgedLoans,
       submissionDetails: completeSubmissionDetails,
       eligibility: completeEligibility,
     };
@@ -211,7 +211,7 @@ describe('isEveryDealFormComplete', () => {
 
   it('If both the `Acknowledged` bond and loan does not have all the required properties', () => {
     const incompleteAcknowledgedLoan = {
-      ...acknowledgedLoan,
+      ...acknowledgedLoans,
       items: [
         { _id: '12345678911', status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: null },
         { _id: '12345678912', status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: null },
@@ -347,7 +347,7 @@ describe('isEveryDealFormComplete', () => {
 
   it('If the `Acknowledged` facility have all the required properties', () => {
     const deal = {
-      bondTransactions: acknowledgedLoan,
+      bondTransactions: acknowledgedLoans,
       loanTransactions: acknowledgedBonds,
       submissionDetails: completeSubmissionDetails,
       eligibility: completeEligibility,
@@ -358,7 +358,7 @@ describe('isEveryDealFormComplete', () => {
 
   it('If the `Acknowledged` bond and loan does have all the required properties', () => {
     const completeAcknowledgedLoan = {
-      ...acknowledgedLoan,
+      ...acknowledgedLoans,
       items: [
         { _id: '12345678911', status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: 123, coverDateConfirmed: true },
         { _id: '12345678912', status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: 123, coverDateConfirmed: true },
