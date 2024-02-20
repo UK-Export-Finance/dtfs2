@@ -23,6 +23,34 @@ const acknowledgedFacilities = {
   ],
 };
 
+const submittedLoans = {
+  items: [
+    { _id: '12345678910', status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF, requestedCoverStartDate: 123, coverDateConfirmed: true },
+    { _id: '12345678911', status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF, requestedCoverStartDate: 123, coverDateConfirmed: true },
+  ],
+};
+
+const submittedBonds = {
+  items: [
+    { _id: '12345678912', status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF, requestedCoverStartDate: 123, coverDateConfirmed: true },
+    { _id: '12345678913', status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF, requestedCoverStartDate: 123, coverDateConfirmed: true },
+  ],
+};
+
+const submittedBondsWithMissingProperties = {
+  items: [
+    { _id: '12345678910', status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF, requestedCoverStartDate: 123, coverDateConfirmed: true },
+    { _id: '12345678911', status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF },
+  ],
+};
+
+const submittedLoansWithMissingProperties = {
+  items: [
+    { _id: '12345678912', status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF },
+    { _id: '12345678913', status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF, requestedCoverStartDate: 123, coverDateConfirmed: true },
+  ],
+};
+
 const completeBonds = completeFacilities;
 const incompleteBonds = incompleteFacilities;
 const completeLoans = completeFacilities;
@@ -75,7 +103,7 @@ describe('isEveryFacilityComplete', () => {
     expect(isEveryFacilityComplete(deal)).toEqual(false);
   });
 
-  it('should return true when all bonds have `Completed` status ', () => {
+  it('should return true when all the bonds have `Completed` status', () => {
     const deal = {
       bondTransactions: completeBonds,
       loanTransactions: { items: [] },
@@ -86,7 +114,7 @@ describe('isEveryFacilityComplete', () => {
     expect(isEveryFacilityComplete(deal)).toEqual(true);
   });
 
-  it('should return true when all loans have `Completed` status ', () => {
+  it('should return true when all the loans have `Completed` status', () => {
     const deal = {
       bondTransactions: { items: [] },
       loanTransactions: completeLoans,
@@ -97,6 +125,52 @@ describe('isEveryFacilityComplete', () => {
     expect(isEveryFacilityComplete(deal)).toEqual(true);
   });
 
+  it('should return true when all the loans have `Submitted` status', () => {
+    const deal = {
+      bondTransactions: { items: [] },
+      loanTransactions: submittedLoans,
+      submissionDetails: completeSubmissionDetails,
+      eligibility: completeEligibility,
+    };
+
+    expect(isEveryFacilityComplete(deal)).toEqual(true);
+  });
+
+  it('should return true when all the bonds have `Submitted` status', () => {
+    const deal = {
+      bondTransactions: submittedBonds,
+      loanTransactions: { items: [] },
+      submissionDetails: completeSubmissionDetails,
+      eligibility: completeEligibility,
+    };
+
+    expect(isEveryFacilityComplete(deal)).toEqual(true);
+  });
+
+  it('should return true when both bonds and loans have `Submitted` status', () => {
+    const deal = {
+      bondTransactions: submittedBonds,
+      loanTransactions: submittedLoans,
+      submissionDetails: completeSubmissionDetails,
+      eligibility: completeEligibility,
+    };
+
+    expect(isEveryFacilityComplete(deal)).toEqual(true);
+  });
+
+  it('should return false when both bonds and loans have `Submitted` status but with missing mandatory properties', () => {
+    const deal = {
+      bondTransactions: submittedBondsWithMissingProperties,
+      loanTransactions: submittedLoansWithMissingProperties,
+      submissionDetails: completeSubmissionDetails,
+      eligibility: completeEligibility,
+    };
+
+    expect(isEveryFacilityComplete(deal)).toEqual(false);
+  });
+});
+
+describe('isEveryDealFormComplete', () => {
   it('If the `Acknowledged` loan does not have all the required properties', () => {
     const incompleteAcknowledgedLoan = {
       ...acknowledgedLoan,
@@ -161,9 +235,29 @@ describe('isEveryFacilityComplete', () => {
 
     expect(isEveryDealFormComplete(deal)).toEqual(false);
   });
-});
 
-describe('isEveryDealFormComplete', () => {
+  it('If both the bond and loan are `Submitted` and does not have all the required properties', () => {
+    const deal = {
+      bondTransactions: submittedBondsWithMissingProperties,
+      loanTransactions: submittedLoansWithMissingProperties,
+      submissionDetails: completeSubmissionDetails,
+      eligibility: completeEligibility,
+    };
+
+    expect(isEveryDealFormComplete(deal)).toEqual(false);
+  });
+
+  it('If both the bond and loan are `Submitted` and have all the required properties', () => {
+    const deal = {
+      bondTransactions: submittedBonds,
+      loanTransactions: submittedLoans,
+      submissionDetails: completeSubmissionDetails,
+      eligibility: completeEligibility,
+    };
+
+    expect(isEveryDealFormComplete(deal)).toEqual(true);
+  });
+
   it("should return false when a deal's eligibility.status is NOT `Completed`", () => {
     const deal = {
       eligibility: incompleteEligibility,

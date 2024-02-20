@@ -7,11 +7,10 @@ const CONSTANTS = require('../constants');
  */
 const isFacilityComplete = (facility) => {
   const items = facility?.items || [];
+  const facilityProcessedStatus = [CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF];
 
   const completed = items.filter((item) => item.status === CONSTANTS.STATUS.SECTION.COMPLETED);
-  const acknowledged = items.filter(
-    (item) => item.status === CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED && item.requestedCoverStartDate && item.coverDateConfirmed,
-  );
+  const acknowledged = items.filter((item) => facilityProcessedStatus.includes(item.status) && item.requestedCoverStartDate && item.coverDateConfirmed);
 
   return items.length === completed.length + acknowledged.length;
 };
