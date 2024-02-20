@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { TEAM_IDS } from '../../../../constants';
 import {
   userCanEditGeneral,
@@ -57,5 +56,3 @@ describe('case - underwriting - pricing and risk - helpers', () => {
     });
   });
 });
-
-/* eslint-enable no-underscore-dangle */

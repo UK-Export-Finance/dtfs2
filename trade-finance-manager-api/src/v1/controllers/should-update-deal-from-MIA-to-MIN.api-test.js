@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
 
 describe('deal submit - shouldUpdateDealFromMIAtoMIN', () => {
@@ -58,5 +57,3 @@ describe('deal submit - shouldUpdateDealFromMIAtoMIN', () => {
     expect(result).toEqual(false);
   });
 });
-
-/* eslint-enable no-underscore-dangle */

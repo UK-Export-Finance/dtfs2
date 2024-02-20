@@ -39,7 +39,6 @@ describe('get-utilisation-report-download controller', () => {
         }),
       );
 
-      // eslint-disable-next-line no-underscore-dangle
       expect(res._getStatusCode()).toEqual(500);
     });
 
@@ -61,7 +60,6 @@ describe('get-utilisation-report-download controller', () => {
         }),
       );
 
-      // eslint-disable-next-line no-underscore-dangle
       expect(res._getStatusCode()).toEqual(500);
     });
 
@@ -83,7 +81,6 @@ describe('get-utilisation-report-download controller', () => {
         }),
       );
 
-      // eslint-disable-next-line no-underscore-dangle
       expect(res._getStatusCode()).toEqual(500);
     });
 
@@ -103,7 +100,6 @@ describe('get-utilisation-report-download controller', () => {
       // Assert
       expect(console.error).toHaveBeenCalledWith(expect.any(String), azureError);
 
-      // eslint-disable-next-line no-underscore-dangle
       expect(res._getStatusCode()).toEqual(500);
     });
 
@@ -134,14 +130,12 @@ describe('get-utilisation-report-download controller', () => {
           filename: mockFilename,
         });
 
-        /* eslint-disable no-underscore-dangle */
         expect(res._getHeaders()).toEqual({
           'content-disposition': `attachment; filename=${mockFilename}`,
           'content-type': mockMimetype,
         });
 
         expect(res._getBuffer().toString()).toEqual(mockFileContent);
-        /* eslint-enable no-underscore-dangle */
 
         done();
       });

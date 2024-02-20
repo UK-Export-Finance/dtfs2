@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import partiesController from '.';
 import api from '../../../api';
 import { TEAM_IDS } from '../../../constants';
