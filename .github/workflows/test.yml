@@ -203,8 +203,6 @@ jobs:
           npm run load
 
       - name: Execute
-        env:
-          MONGODB_URI: mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT&directConnection=true
         run: docker-compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
 
       - name: Stop
