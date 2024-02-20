@@ -137,4 +137,52 @@ bankRouter
   .route('/:bankId/utilisation-reports')
   .get(validation.bankIdValidation, handleExpressValidatorResult, getUtilisationReportsController.getUtilisationReports);
 
+/**
+* @openapi
+* /bank/:bankId/next-due-report:
+*   get:
+*     summary: Get utilisation reports by bank ID
+*     tags: [UtilisationReport]
+*     description: Get a banks utilisation reports by ID.
+*     parameters:
+*       - in: path
+*         name: bankId
+*         schema:
+*           type: string
+*         required: true
+*         description: bank ID to fetch reports for
+*       - in: query
+*         name: reportPeriod
+*         schema:
+*           - $ref: '#/definitions/ReportPeriod'
+*       - in: query
+*         name: reportStatuses
+*         schema:
+*           type: array
+*           items:
+*             anyOf:
+*               - $ref: '#/definitions/UtilisationReportReconciliationStatus'
+*     responses:
+*       200:
+*         description: OK
+*         content:
+*           application/json:
+*             schema:
+*               type: array
+*               items:
+*                 allOf:
+*                   - $ref: '#/definitions/UtilisationReport'
+*                   - type: object
+*                     properties:
+*                       _id:
+*                         example: 123456abc
+*       400:
+*         description: Bad request
+*       404:
+*         description: Not found
+*/
+bankRouter
+  .route('/:bankId/next-due-report')
+  .get(validation.bankIdValidation, handleExpressValidatorResult, getUtilisationReportsController.getUtilisationReports);
+
 module.exports = bankRouter;

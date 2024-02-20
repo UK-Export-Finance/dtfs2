@@ -365,6 +365,26 @@ const getAllBanks = async () => {
   }
 };
 
+const getNextReportPeriodByBankId = async (bankId) => {
+  try {
+    if (!isValidBankId(bankId)) {
+      console.error('Get next report period failed with the following bank ID %s', bankId);
+      return false;
+    }
+
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/next-report-period`,
+      headers: headers.central,
+    });
+
+    return { status: 200, data: response.data };
+  } catch (error) {
+    console.error('Unable to get next report period by bank ID %s', error);
+    return { status: error?.response?.status || 500, data: 'Failed to get next report period by bank ID' };
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -383,4 +403,5 @@ module.exports = {
   getUtilisationReportById,
   getBankById,
   getAllBanks,
+  getNextReportPeriodByBankId,
 };

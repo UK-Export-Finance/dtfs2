@@ -1,5 +1,6 @@
 const db = require('../../../drivers/db-client');
 const { DB_COLLECTIONS } = require("../../../constants");
+const { getNextReportPeriodForBankSchedule} = require('../../../utils/report-period');
 
 const findOneBank = async (id) => {
   if (typeof id !== 'string') {
@@ -22,4 +23,12 @@ exports.findOneBankGet = async (req, res) => {
   }
 
   return res.status(404).send();
+};
+
+exports.getNextReportPeriodByBankId = async (req, res) => {
+  const bank = await findOneBank(req.params.bankId);
+  const bankSchedule = bank.utilisationReportPeriodSchedule;
+  const nextReportPeriod = getNextReportPeriodForBankSchedule(bankSchedule);
+  //TODO FN-1249 sort out response
+  return res.status(200).send(nextReportPeriod);
 };

@@ -107,6 +107,16 @@ export const getCurrentReportPeriodForBankSchedule = (bankReportPeriodSchedule: 
 };
 
 /**
+ * Gets the next report period for the inputted bank schedule
+ * @param bankReportPeriodSchedule - The bank report period schedule
+ * @returns The current report period
+ */
+export const getNextReportPeriodForBankSchedule = (bankReportPeriodSchedule: BankReportPeriodSchedule): ReportPeriod => {
+  const currentMonthDate = new Date();
+  return getReportPeriodForBankScheduleByTargetDate(bankReportPeriodSchedule, currentMonthDate);
+};
+
+/**
  * Gets the current report period for the inputted bank schedule for the inputted submission month
  * @param bankReportPeriodSchedule - The bank report period schedule
  * @param submissionMonth - The submission month

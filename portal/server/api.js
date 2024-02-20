@@ -919,6 +919,20 @@ const getDueReportPeriodsByBankId = async (token, bankId) => {
   return response.data;
 };
 
+const getNextReportPeriodByBankId = async (token, bankId) => {
+  if (!isValidBankId(bankId)) {
+    throw new Error(`Getting next report period failed for id ${bankId}`);
+  };
+
+  const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/next-report-period`, {
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+  return response.data;
+};
+
 const downloadUtilisationReport = async (userToken, bankId, _id) =>
   await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-report-download/${_id}`, {
     responseType: 'stream',
@@ -990,5 +1004,6 @@ module.exports = {
   getPreviousUtilisationReportsByBank,
   getLastUploadedReportByBankId,
   getDueReportPeriodsByBankId,
+  getNextReportPeriodByBankId,
   getUkBankHolidays,
 };
