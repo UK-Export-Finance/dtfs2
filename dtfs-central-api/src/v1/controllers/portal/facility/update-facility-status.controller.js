@@ -3,6 +3,7 @@ const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
 const db = require('../../../../drivers/db-client');
 const { DB_COLLECTIONS } = require('../../../../constants');
+const { generatePortalUserAuditDetails } = require('../../../../helpers/generateAuditDetails');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -10,9 +11,10 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateFacilityStatus = async (facilityId, status, existingFacility) => {
+const updateFacilityStatus = async (facilityId, status, existingFacility, userId) => {
   if (ObjectId.isValid(facilityId)) {
     const collection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
+    const auditDetails = generatePortalUserAuditDetails(userId);
 
     console.info('Updating Portal facility status to %s', status);
     const previousStatus = existingFacility.status;
@@ -22,6 +24,7 @@ const updateFacilityStatus = async (facilityId, status, existingFacility) => {
       updatedAt: Date.now(),
       previousStatus,
       status,
+      auditDetails,
     };
 
     const findAndUpdateResponse = await collection.findOneAndUpdate(
