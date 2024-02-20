@@ -49,7 +49,7 @@ describe('password reset', () => {
   });
 
   afterAll(async () => {
-    // await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
+    await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
     jest.restoreAllMocks();
   });
 
