@@ -1,6 +1,4 @@
-const {
-  contract, contractReadyForReview, contractComments, defaults,
-} = require('../../../pages');
+const { contract, contractReadyForReview, contractComments, defaults } = require('../../../pages');
 const { successMessage } = require('../../../partials');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
@@ -35,101 +33,94 @@ context('A maker selects to submit a contract for review from the view-contract 
 
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(dealWithIncompleteBonds, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deals.dealWithIncompleteBonds = insertedDeal;
-        dealId = insertedDeal._id;
+    cy.insertOneDeal(dealWithIncompleteBonds, BANK1_MAKER1).then((insertedDeal) => {
+      deals.dealWithIncompleteBonds = insertedDeal;
+      dealId = insertedDeal._id;
 
-        const { mockFacilities } = dealWithIncompleteBonds;
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          allCreatedFacilities.push(...createdFacilities);
-        });
+      const { mockFacilities } = dealWithIncompleteBonds;
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        allCreatedFacilities.push(...createdFacilities);
       });
+    });
 
-    cy.insertOneDeal(dealWithIncompleteLoans, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deals.dealWithIncompleteLoans = insertedDeal;
-        dealId = insertedDeal._id;
+    cy.insertOneDeal(dealWithIncompleteLoans, BANK1_MAKER1).then((insertedDeal) => {
+      deals.dealWithIncompleteLoans = insertedDeal;
+      dealId = insertedDeal._id;
 
-        const { mockFacilities } = dealWithIncompleteLoans;
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          allCreatedFacilities.push(...createdFacilities);
-        });
+      const { mockFacilities } = dealWithIncompleteLoans;
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        allCreatedFacilities.push(...createdFacilities);
       });
+    });
 
-    cy.insertOneDeal(dealWithIncompleteAbout, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deals.dealWithIncompleteAbout = insertedDeal;
-        dealId = insertedDeal._id;
+    cy.insertOneDeal(dealWithIncompleteAbout, BANK1_MAKER1).then((insertedDeal) => {
+      deals.dealWithIncompleteAbout = insertedDeal;
+      dealId = insertedDeal._id;
 
-        const { mockFacilities } = dealWithIncompleteAbout;
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          allCreatedFacilities.push(...createdFacilities);
-        });
+      const { mockFacilities } = dealWithIncompleteAbout;
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        allCreatedFacilities.push(...createdFacilities);
       });
+    });
 
-    cy.insertOneDeal(dealWithIncompleteEligibility, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deals.dealWithIncompleteEligibility = insertedDeal;
-        dealId = insertedDeal._id;
+    cy.insertOneDeal(dealWithIncompleteEligibility, BANK1_MAKER1).then((insertedDeal) => {
+      deals.dealWithIncompleteEligibility = insertedDeal;
+      dealId = insertedDeal._id;
 
-        const { mockFacilities } = dealWithIncompleteEligibility;
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          allCreatedFacilities.push(...createdFacilities);
-        });
+      const { mockFacilities } = dealWithIncompleteEligibility;
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        allCreatedFacilities.push(...createdFacilities);
       });
+    });
 
-    cy.insertOneDeal(dealReadyToSubmitForReview, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deals.dealReadyToSubmitForReview = insertedDeal;
-        dealId = insertedDeal._id;
+    cy.insertOneDeal(dealReadyToSubmitForReview, BANK1_MAKER1).then((insertedDeal) => {
+      deals.dealReadyToSubmitForReview = insertedDeal;
+      dealId = insertedDeal._id;
 
-        const { mockFacilities } = dealReadyToSubmitForReview;
+      const { mockFacilities } = dealReadyToSubmitForReview;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-          const loans = createdFacilities.filter((f) => f.type === 'Loan');
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-          dealFacilities.dealReadyToSubmitForReview.bonds = bonds;
-          dealFacilities.dealReadyToSubmitForReview.loans = loans;
+        dealFacilities.dealReadyToSubmitForReview.bonds = bonds;
+        dealFacilities.dealReadyToSubmitForReview.loans = loans;
 
-          allCreatedFacilities.push(...createdFacilities);
-        });
+        allCreatedFacilities.push(...createdFacilities);
       });
+    });
 
-    cy.insertOneDeal(dealWithNoBondCoverStartDate, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deals.dealWithNoBondCoverStartDate = insertedDeal;
-        dealId = insertedDeal._id;
+    cy.insertOneDeal(dealWithNoBondCoverStartDate, BANK1_MAKER1).then((insertedDeal) => {
+      deals.dealWithNoBondCoverStartDate = insertedDeal;
+      dealId = insertedDeal._id;
 
-        const { mockFacilities } = dealWithNoBondCoverStartDate;
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-          const loans = createdFacilities.filter((f) => f.type === 'Loan');
+      const { mockFacilities } = dealWithNoBondCoverStartDate;
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-          dealFacilities.dealWithNoBondCoverStartDate.bonds = bonds;
-          dealFacilities.dealWithNoBondCoverStartDate.loans = loans;
+        dealFacilities.dealWithNoBondCoverStartDate.bonds = bonds;
+        dealFacilities.dealWithNoBondCoverStartDate.loans = loans;
 
-          allCreatedFacilities.push(...createdFacilities);
-        });
+        allCreatedFacilities.push(...createdFacilities);
       });
+    });
 
-    cy.insertOneDeal(dealWithNoLoanCoverStartDate, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deals.dealWithNoLoanCoverStartDate = insertedDeal;
-        dealId = insertedDeal._id;
+    cy.insertOneDeal(dealWithNoLoanCoverStartDate, BANK1_MAKER1).then((insertedDeal) => {
+      deals.dealWithNoLoanCoverStartDate = insertedDeal;
+      dealId = insertedDeal._id;
 
-        const { mockFacilities } = dealWithNoLoanCoverStartDate;
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-          const loans = createdFacilities.filter((f) => f.type === 'Loan');
+      const { mockFacilities } = dealWithNoLoanCoverStartDate;
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-          dealFacilities.dealWithNoLoanCoverStartDate.bonds = bonds;
-          dealFacilities.dealWithNoLoanCoverStartDate.loans = loans;
+        dealFacilities.dealWithNoLoanCoverStartDate.bonds = bonds;
+        dealFacilities.dealWithNoLoanCoverStartDate.loans = loans;
 
-          allCreatedFacilities.push(...createdFacilities);
-        });
+        allCreatedFacilities.push(...createdFacilities);
       });
+    });
   });
 
   after(() => {
@@ -142,7 +133,8 @@ context('A maker selects to submit a contract for review from the view-contract 
     it('User cannot proceed to submit the deal for review', () => {
       cy.login(BANK1_MAKER1);
       contract.visit(deals.dealWithIncompleteEligibility);
-      contract.proceedToReview().should('be.disabled');
+      contract.proceedToReview().should('not.exist');
+      contract.canProceed().should('exist');
     });
   });
 
@@ -150,7 +142,8 @@ context('A maker selects to submit a contract for review from the view-contract 
     it('User cannot proceed to submit the deal for review', () => {
       cy.login(BANK1_MAKER1);
       contract.visit(deals.dealWithIncompleteBonds);
-      contract.proceedToReview().should('be.disabled');
+      contract.proceedToReview().should('not.exist');
+      contract.canProceed().should('exist');
     });
   });
 
@@ -158,7 +151,8 @@ context('A maker selects to submit a contract for review from the view-contract 
     it('User cannot proceed to submit the deal for review', () => {
       cy.login(BANK1_MAKER1);
       contract.visit(deals.dealWithIncompleteLoans);
-      contract.proceedToReview().should('be.disabled');
+      contract.proceedToReview().should('not.exist');
+      contract.canProceed().should('exist');
     });
   });
 
@@ -166,7 +160,8 @@ context('A maker selects to submit a contract for review from the view-contract 
     it('User cannot proceed to submit the deal for review', () => {
       cy.login(BANK1_MAKER1);
       contract.visit(deals.dealWithIncompleteAbout);
-      contract.proceedToReview().should('be.disabled');
+      contract.proceedToReview().should('not.exist');
+      contract.canProceed().should('exist');
     });
   });
 
@@ -229,18 +224,27 @@ context('A maker selects to submit a contract for review from the view-contract 
 
       // expect to land on the /dashboard page with a success message
       cy.url().should('include', '/dashboard');
-      successMessage.successMessageListItem().invoke('text').then((text) => {
-        expect(text.trim()).to.match(/Supply Contract submitted for review./);
-      });
+      successMessage
+        .successMessageListItem()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.match(/Supply Contract submitted for review./);
+        });
 
       // visit the deal and confirm the updates have been made
       contract.visit(deal);
-      contract.status().invoke('text').then((text) => {
-        expect(text.trim()).to.equal("Ready for Checker's approval");
-      });
-      contract.previousStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Draft');
-      });
+      contract
+        .status()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal("Ready for Checker's approval");
+        });
+      contract
+        .previousStatus()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Draft');
+        });
 
       // while on the deal page: confirm that the various edit features have been
       //  disabled since we're now in a new state
@@ -258,12 +262,20 @@ context('A maker selects to submit a contract for review from the view-contract 
 
       // visit the comments page and prove that the comment has been added
       contract.commentsTab().click();
-      contractComments.row(0).comment().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('a mandatory comment');
-      });
-      contractComments.row(0).commentorName().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(`${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
-      });
+      contractComments
+        .row(0)
+        .comment()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('a mandatory comment');
+        });
+      contractComments
+        .row(0)
+        .commentorName()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(`${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
+        });
     });
   });
 
