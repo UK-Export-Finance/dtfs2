@@ -9,7 +9,7 @@ const acbsController = require('../../v1/controllers/acbs.controller');
 const checkAzureAcbsFunction = {
   cronExpression: schedule,
   description: 'Check Azure ACBS Function messages',
-  task: acbsController.checkAzureAcbsFunction(),
+  task: acbsController.checkAzureAcbsFunction,
 };
 
 module.exports = { checkAzureAcbsFunction };

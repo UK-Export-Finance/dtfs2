@@ -12,7 +12,7 @@ const numberGeneratorController = require('../../v1/controllers/number-generator
 const checkAzureNumberGeneratorFunction = {
   cronExpression: schedule,
   description: 'Check Azure Number Generator Function messages',
-  task: numberGeneratorController.checkAzureNumberGeneratorFunction(),
+  task: numberGeneratorController.checkAzureNumberGeneratorFunction,
 };
 
 module.exports = { checkAzureNumberGeneratorFunction };
