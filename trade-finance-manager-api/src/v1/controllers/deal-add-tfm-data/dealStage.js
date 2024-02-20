@@ -20,6 +20,7 @@ const dealStage = (status, submissionType) => {
     return isSubmissionTypeAinOrMin ? DEAL_STAGE_TFM.CONFIRMED : DEAL_STAGE_TFM.APPLICATION;
   }
 
+  console.info('Void deal stage with status %s and submission type %s', status, submissionType);
   return false;
 };
 
