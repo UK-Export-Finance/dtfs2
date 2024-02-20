@@ -14,8 +14,7 @@ const getCountryFromArray = (arr, code) => (arr.length ? arr.filter((country) =>
  * Sorry countries in alphabetical order with `GBR` always on the top.
  *
  * @param {Array} countries - The array of countries to be sorted.
- * @returns {Array} - The sorted array of countries.
- * @throws {Error} - If unable to sort countries.
+ * @returns {Array} - The sorted array of countries, error if an exception is caught.
  */
 const sortCountries = (countries) => {
   try {
@@ -37,7 +36,6 @@ const sortCountries = (countries) => {
  *
  * @param {string} code - The country code.
  * @returns {Promise<Object>} - A promise that resolves to the country information.
- * @throws {Error} - If the API response is void or an error occurs while retrieving the country information.
  */
 const getCountry = async (code) => {
   try {
@@ -99,7 +97,7 @@ const findOne = async (req, res) => {
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
  * @returns {Object} - An object with the count of countries and the sorted array of countries.
- * @throws {Error} - If there is an error retrieving or sorting the countries.
+ * Status `400` and `500` can also be returned if an exception is caught.
  */
 const findAll = async (req, res) => {
   try {
