@@ -1,5 +1,5 @@
 const { produce } = require('immer');
-const sendReportSubmissionPeriodStartEmailsJob = require('.');
+const { sendReportSubmissionPeriodStartEmailsJob } = require('.');
 const api = require('../../../v1/api');
 const externalApi = require('../../../external-api/api');
 const sendEmail = require('../../../external-api/send-email');
@@ -15,8 +15,6 @@ console.warn = jest.fn();
 console.info = jest.fn();
 
 const originalProcessEnv = process.env;
-
-const sendReportSubmissionPeriodStartEmailsTask = sendReportSubmissionPeriodStartEmailsJob.init().task;
 
 describe('sendReportSubmissionPeriodStartEmailsJob', () => {
   afterEach(() => {
@@ -46,7 +44,7 @@ describe('sendReportSubmissionPeriodStartEmailsJob', () => {
     externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue([]);
 
     // Act
-    await sendReportSubmissionPeriodStartEmailsTask();
+    await sendReportSubmissionPeriodStartEmailsJob.task();
 
     // Assert
     const expectedEmailTemplate = EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_SUBMISSION_PERIOD_START;

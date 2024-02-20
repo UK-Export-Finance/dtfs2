@@ -3,14 +3,13 @@ const schedule = process.env.AZURE_ACBS_FUNCTION_SCHEDULE || defaultSchedule;
 
 const acbsController = require('../../v1/controllers/acbs.controller');
 
+/**
+ * @type {import('@ukef/dtfs2-common').SchedulerJob}
+ */
 const checkAzureAcbsFunction = {
-  init: () => ({
-    schedule,
-    message: 'Check Azure ACBS Function messages',
-    task: async () => {
-      await acbsController.checkAzureAcbsFunction();
-    },
-  }),
+  cronExpression: schedule,
+  description: 'Check Azure ACBS Function messages',
+  task: acbsController.checkAzureAcbsFunction(),
 };
 
-module.exports = checkAzureAcbsFunction;
+module.exports = { checkAzureAcbsFunction };

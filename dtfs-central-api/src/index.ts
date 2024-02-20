@@ -1,7 +1,7 @@
 import app from './createApp';
-import { initScheduler } from './scheduler';
+import { initialiseScheduler } from './scheduler';
 
-initScheduler();
+initialiseScheduler();
 
 const PORT = process.env.PORT || 5005;
 

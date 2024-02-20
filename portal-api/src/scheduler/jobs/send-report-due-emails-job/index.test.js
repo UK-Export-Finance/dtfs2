@@ -1,6 +1,6 @@
 const { subDays } = require('date-fns');
 const { produce } = require('immer');
-const sendReportDueEmailsJob = require('.');
+const { sendReportDueEmailsJob } = require('.');
 const api = require('../../../v1/api');
 const externalApi = require('../../../external-api/api');
 const sendEmail = require('../../../external-api/send-email');
@@ -16,8 +16,6 @@ console.warn = jest.fn();
 console.info = jest.fn();
 
 const originalProcessEnv = process.env;
-
-const sendReportDueEmailsJobTask = sendReportDueEmailsJob.init().task;
 
 describe('sendReportDueEmailsJob', () => {
   const validBarclaysEmail = 'valid-barclays-email@example.com';
@@ -47,7 +45,7 @@ describe('sendReportDueEmailsJob', () => {
     api.getAllBanks.mockResolvedValue([validBarclaysBank, validHsbcBank]);
 
     // Act
-    await sendReportDueEmailsJobTask();
+    await sendReportDueEmailsJob.task();
 
     // Assert
     expect(sendEmail).not.toHaveBeenCalled();
@@ -67,7 +65,7 @@ describe('sendReportDueEmailsJob', () => {
     api.getUtilisationReports.mockResolvedValue([]);
 
     // Act
-    await sendReportDueEmailsJobTask();
+    await sendReportDueEmailsJob.task();
 
     // Assert
     const expectedEmailTemplate = EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_DUE_TODAY;

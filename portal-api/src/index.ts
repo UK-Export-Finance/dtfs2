@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
-import initScheduler from './scheduler';
+import { initialiseScheduler } from './scheduler';
 
 dotenv.config();
 
-initScheduler();
+initialiseScheduler();
 
 // eslint-disable-next-line import/first
 import app from './createApp';
