@@ -30,6 +30,7 @@ const updatedECCriteria11NoExtraInfo = {
   'criterion-11': 'false',
   'criterion-12': 'true',
   'criterion-14': 'false',
+  'agentAddressCountry': 'GBR',
 };
 
 const updatedECCriteria11WithExtraInfo = {

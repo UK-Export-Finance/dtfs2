@@ -5,11 +5,24 @@ const { getDocumentationErrors } = require('../validation/eligibility-documentat
 const CONSTANTS = require('../../constants');
 const { getCountry } = require('./countries.controller');
 
+/**
+ * Retrieves the country object encompassing `name` and `code` for a specified country code.
+ * Returns `{}` when either the country code specified is void or upon an unexpected response.
+ *
+ * @param {string} countryCode - The country code.
+ * @returns {Promise<Object>} - The country object with properties 'name' and 'code' returned as a promise.
+ */
 const countryObject = async (countryCode) => {
+  if (!countryCode) {
+    console.error('Void country code specified %s', countryCode);
+    return {};
+  }
+
   const response = await getCountry(countryCode);
 
   if (!response?.data) {
-    throw new Error('Unexpected response received whilst fetching country with code', response);
+    console.error('Unexpected response received whilst fetching country with code %o', response);
+    return {};
   }
 
   const { data: country } = response;
