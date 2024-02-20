@@ -24,6 +24,9 @@ const BASE_URL = '/v1/users';
 describe('a user', () => {
   let aNonAdmin;
   let anAdmin;
+  let createdUser;
+
+  const A_MATCHING_EMAIL_ADDRESS = 'aMatchingEmailAddress@ukexportfinance.gov.uk';
 
   beforeAll(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
@@ -34,6 +37,10 @@ describe('a user', () => {
 
   beforeEach(async () => {
     await databaseHelper.deleteUser(MOCK_USER);
+
+    const response = await createUser(MOCK_USER);
+    createdUser = response.body.user;
+
   });
 
   afterAll(async () => {
@@ -41,15 +48,6 @@ describe('a user', () => {
   });
 
   describe('PUT /v1/users', () => {
-    let createdUser;
-
-    const A_MATCHING_EMAIL_ADDRESS = 'aMatchingEmailAddress@ukexportfinance.gov.uk';
-
-    beforeEach(async () => {
-      const response = await createUser(MOCK_USER);
-      createdUser = response.body.user;
-    });
-
     describe('as admin', () => {
       it("a user's details can be updated", async () => {
         const updatedUserCredentials = {
@@ -125,7 +123,8 @@ describe('a user', () => {
       });
 
       withValidateUsernameAndEmailTests({
-        createRequestBodyWithUpdatedField: ({ fieldToUpdate, valueToSetField }) => produce({}, (draftRequest) => {
+        createRequestBodyWithUpdatedField: ({ fieldToUpdate, valueToSetField }) =>
+          produce({}, (draftRequest) => {
             draftRequest.username = A_MATCHING_EMAIL_ADDRESS;
             draftRequest.email = A_MATCHING_EMAIL_ADDRESS;
             draftRequest[fieldToUpdate] = valueToSetField;
