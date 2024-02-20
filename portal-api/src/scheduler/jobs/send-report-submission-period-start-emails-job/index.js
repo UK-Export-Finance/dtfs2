@@ -29,7 +29,7 @@ const sendEmails = async () => {
 };
 
 /**
- * @type {typeof import('../../types/scheduler-job').SchedulerJob}
+ * @type {typeof import('../../../types/scheduler-job').SchedulerJob}
  */
 const sendReportSubmissionPeriodStartEmailsJob = {
   init: () => ({

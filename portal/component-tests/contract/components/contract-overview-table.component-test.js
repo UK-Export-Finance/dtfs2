@@ -1,13 +1,11 @@
-const moment = require('moment');
-require('moment-timezone');// monkey-patch to provide moment().tz()
-
+const { formatInTimeZone } = require('date-fns-tz');
+const { DATE: { LONDON_TIMEZONE, FULL_DATE, FULL_DATE_AND_TIME } } = require('../../../server/constants');
+const { getNowAsEpoch } = require('../../../server/helpers');
 const componentRenderer = require('../../componentRenderer');
 
 const component = 'contract/components/contract-overview-table.njk';
 const render = componentRenderer(component);
 describe(component, () => {
-  const now = moment();
-
   const deal = {
     updatedAt: Date.now(),
     bankInternalRefName: 'bankInternalRefName',
@@ -23,7 +21,7 @@ describe(component, () => {
         firstname: 'First',
         surname: 'Last',
       },
-      submissionDate: now.valueOf(),
+      submissionDate: getNowAsEpoch(),
     },
   };
 
@@ -32,7 +30,7 @@ describe(component, () => {
     submissionType: 'Manual Inclusion Notice',
     details: {
       ...deal.details,
-      manualInclusionApplicationSubmissionDate: now.valueOf(),
+      manualInclusionApplicationSubmissionDate: getNowAsEpoch(),
     },
   };
 
@@ -40,7 +38,7 @@ describe(component, () => {
     let wrapper;
 
     beforeAll(() => {
-      const user = { timezone: 'Europe/London' };
+      const user = { timezone: LONDON_TIMEZONE };
       wrapper = render({ deal, user });
     });
 
@@ -63,19 +61,23 @@ describe(component, () => {
       .toRead(`${deal.details.checker.firstname} ${deal.details.checker.surname}`));
 
     it('displays deal.details.submissionDate', () => wrapper.expectText('[data-cy="submissionDate"]')
-      .toRead(moment(deal.details.submissionDate)
-        .tz('Europe/London')
-        .format('DD/MM/YYYY')));
+      .toRead(formatInTimeZone(
+        new Date(deal.details.submissionDate),
+        LONDON_TIMEZONE,
+        FULL_DATE,
+      )));
 
     it('displays deal.updatedAt', () => wrapper.expectText('[data-cy="updatedAt"]')
-      .toRead(moment(deal.updatedAt)
-        .tz('Europe/London')
-        .format('DD/MM/YYYY HH:mm')));
+      .toRead(formatInTimeZone(
+        new Date(deal.updatedAt),
+        LONDON_TIMEZONE,
+        FULL_DATE_AND_TIME,
+      )));
   });
 
   describe('when deal has manualInclusionApplicationSubmissionDate', () => {
     let wrapper;
-    const user = { timezone: 'Europe/London' };
+    const user = { timezone: LONDON_TIMEZONE };
 
     beforeAll(() => {
       wrapper = render({ deal: dealWithManualInclusionApplicationSubmissionDate, user });
@@ -85,9 +87,11 @@ describe(component, () => {
       .toRead('MIA Submission date'));
 
     it('displays deal.details.manualInclusionApplicationSubmissionDate', () => wrapper.expectText('[data-cy="submissionDate"]')
-      .toRead(moment(deal.details.dealWithManualInclusionApplicationSubmissionDate)
-        .tz('Europe/London')
-        .format('DD/MM/YYYY')));
+      .toRead(formatInTimeZone(
+        new Date(dealWithManualInclusionApplicationSubmissionDate.details.manualInclusionApplicationSubmissionDate),
+        LONDON_TIMEZONE,
+        FULL_DATE,
+      )));
   });
 
   describe('renders - for any blank fields', () => {
@@ -107,7 +111,7 @@ describe(component, () => {
     };
 
     beforeAll(() => {
-      const user = { timezone: 'Europe/London' };
+      const user = { timezone: LONDON_TIMEZONE };
       wrapper = render({ mockDeal, user });
     });
 

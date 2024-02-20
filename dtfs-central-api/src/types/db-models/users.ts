@@ -22,7 +22,7 @@ export type PortalUser = Prettify<
     lastLogin?: UnixTimestamp;
     loginFailureCount?: number;
     sessionIdentifier?: string;
-    signInLinkSendDate?: Date;
+    signInLinkSendDate?: UnixTimestamp;
     signInLinkSendCount?: number;
   }>
 >;

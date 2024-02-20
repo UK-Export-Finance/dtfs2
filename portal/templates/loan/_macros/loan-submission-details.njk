@@ -36,7 +36,7 @@
             Issued Date
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s" data-cy="issued-date">
-            {{ loan.issuedDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
+            {{ loan.issuedDate | localiseTimestamp('dd/MM/yyyy', user.timezone) }}
           </dd>
         </div>
       {% endif %}
@@ -58,7 +58,7 @@
             Requested Cover Start Date
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s" data-cy="requested-cover-start-date">
-            {{ loan.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
+            {{ loan.requestedCoverStartDate | localiseTimestamp('dd/MM/yyyy', user.timezone) }}
           </dd>
         </div>
       {% endif %}

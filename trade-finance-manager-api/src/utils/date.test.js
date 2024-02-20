@@ -1,5 +1,3 @@
-const moment = require('moment');
-
 const { formatYear, formatDate, formatTimestamp, convertDateToTimestamp, isValidIsoMonth } = require('./date');
 
 describe('utils - date', () => {
@@ -24,7 +22,7 @@ describe('utils - date', () => {
       const mockDate = '20210419';
       const result = formatDate(mockDate);
 
-      const expected = moment(mockDate).format('YYYY-MM-DD');
+      const expected = '2021-04-19';
       expect(result).toEqual(expected);
     });
   });

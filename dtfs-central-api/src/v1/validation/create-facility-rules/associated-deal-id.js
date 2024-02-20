@@ -1,12 +1,11 @@
+const { isNonEmptyString } = require('@ukef/dtfs2-common');
 const { orderNumber } = require('../../../utils/error-list-order-number');
-const { hasValue } = require('../../../utils/string');
 
-// eslint-disable-next-line default-param-last
-module.exports = (facility = {}, errorList) => {
+module.exports = (facility, errorList) => {
   const newErrorList = { ...errorList };
-  const { dealId } = facility;
+  const dealId = facility?.dealId;
 
-  if (!hasValue(dealId)) {
+  if (!isNonEmptyString(dealId)) {
     newErrorList.dealId = {
       order: orderNumber(newErrorList),
       text: 'Enter the Associated deal id',

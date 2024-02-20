@@ -4,7 +4,7 @@ const db = require('../../../drivers/db-client');
 const { validateApplicationReferences } = require('./validation/application');
 const { exporterStatus } = require('./validation/exporter');
 const CONSTANTS = require('../../../constants');
-const { getLatestCriteria: getLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
+const { getLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
 
 const cloneExporter = (currentExporter) => {
   const clonedExporter = currentExporter;

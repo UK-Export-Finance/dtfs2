@@ -18,7 +18,8 @@ const getReportAndUserDetails = (report) => {
     throw new Error('Cannot get report and user details');
   }
 
-  const { dateUploaded, uploadedBy, year, month } = report;
+  const { dateUploaded, uploadedBy, reportPeriod } = report;
+  const { month: startMonth, year: startYear } = reportPeriod.start;
 
   const { firstname, surname } = uploadedBy;
   const uploadedByFullName = `${firstname} ${surname}`;
@@ -28,7 +29,7 @@ const getReportAndUserDetails = (report) => {
   const formattedTime = format(date, 'h:mmaaa');
   const formattedDateAndTimeUploaded = `${formattedDate} at ${formattedTime}`;
 
-  const lastUploadedReportDate = new Date(year, month - 1);
+  const lastUploadedReportDate = new Date(startYear, startMonth - 1);
   const lastUploadedReportPeriod = format(lastUploadedReportDate, 'MMMM yyyy');
 
   return {

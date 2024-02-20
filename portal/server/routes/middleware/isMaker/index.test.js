@@ -1,6 +1,8 @@
 import mockResponse from '../../../helpers/responseMock';
 import isMaker from '.';
-import { CHECKER, MAKER } from '../../../constants/roles';
+import { ROLES } from '../../../constants';
+
+const { CHECKER, MAKER } = ROLES;
 
 describe('isMaker', () => {
   let req;

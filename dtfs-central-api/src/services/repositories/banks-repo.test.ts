@@ -58,7 +58,7 @@ describe('banks-repo', () => {
       await getBankNameById(bankId);
 
       // Assert
-      expect(findOneMock).toHaveBeenLastCalledWith({ id: bankId });
+      expect(findOneMock).toHaveBeenLastCalledWith({ id: { $eq: bankId } });
     });
 
     it('returns the bank name for the bank with the matching id', async () => {
