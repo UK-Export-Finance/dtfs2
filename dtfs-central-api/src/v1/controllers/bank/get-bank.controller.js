@@ -29,6 +29,6 @@ exports.getNextReportPeriodByBankId = async (req, res) => {
   const bank = await findOneBank(req.params.bankId);
   const bankSchedule = bank.utilisationReportPeriodSchedule;
   const nextReportPeriod = getNextReportPeriodForBankSchedule(bankSchedule);
-  //TODO FN-1249 sort out response
+  // TODO FN-1249 sort out response
   return res.status(200).send(nextReportPeriod);
 };
