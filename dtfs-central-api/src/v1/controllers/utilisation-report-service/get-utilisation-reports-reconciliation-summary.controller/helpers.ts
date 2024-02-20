@@ -12,8 +12,8 @@ import {
   getReportPeriodForBankScheduleBySubmissionMonth,
   getReportPeriodStartForSubmissionMonth,
   getSubmissionMonthForReportPeriodStart,
-  isEqualReportPeriodStart,
 } from '../../../../utils/report-period';
+import { isEqualMonthAndYear } from '../../../../utils/date';
 
 type UtilisationReportForSubmissionMonth = {
   submissionMonth: IsoMonthStamp;
@@ -109,7 +109,7 @@ const isBankDueToSubmitReport =
   (currentSubmissionMonth: IsoMonthStamp) =>
   (bank: Bank): boolean => {
     const currentReportPeriodForBank = getCurrentReportPeriodForBankSchedule(bank.utilisationReportPeriodSchedule);
-    return isEqualReportPeriodStart(currentReportPeriodForBank.start, getReportPeriodStartForSubmissionMonth(currentSubmissionMonth));
+    return isEqualMonthAndYear(currentReportPeriodForBank.start, getReportPeriodStartForSubmissionMonth(currentSubmissionMonth));
   };
 
 export const generateReconciliationSummaries = async (currentSubmissionMonth: IsoMonthStamp): Promise<UtilisationReportReconciliationSummary[]> => {
