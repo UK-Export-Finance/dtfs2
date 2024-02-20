@@ -1,4 +1,6 @@
-const { contract, contractReadyForReview, contractComments, defaults } = require('../../../pages');
+const {
+  contract, contractReadyForReview, contractComments, defaults,
+} = require('../../../pages');
 const { successMessage } = require('../../../partials');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
