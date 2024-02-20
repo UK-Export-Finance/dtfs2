@@ -113,13 +113,11 @@ describe('a user', () => {
     });
 
     withValidateUsernameAndEmailTests({
-      createRequestBodyWithUpdatedField: ({ fieldToUpdate, valueToSetField }) => {
-        return produce(MOCK_USER, (draftRequest) => {
+      createRequestBodyWithUpdatedField: ({ fieldToUpdate, valueToSetField }) => produce(MOCK_USER, (draftRequest) => {
           draftRequest.username = 'AValid@ukexportfinance.gov.uk';
           draftRequest.email = 'Avalid@ukepxortfinance.gov.uk';
           draftRequest[fieldToUpdate] = valueToSetField;
-        });
-      },
+        }),
       makeRequest: async (user) => await createUser(user),
     });
     describe('when a user already exists', () => {

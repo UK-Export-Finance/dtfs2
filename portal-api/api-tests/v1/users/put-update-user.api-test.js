@@ -125,13 +125,11 @@ describe('a user', () => {
       });
 
       withValidateUsernameAndEmailTests({
-        createRequestBodyWithUpdatedField: ({ fieldToUpdate, valueToSetField }) => {
-          return produce({}, (draftRequest) => {
+        createRequestBodyWithUpdatedField: ({ fieldToUpdate, valueToSetField }) => produce({}, (draftRequest) => {
             draftRequest.username = A_MATCHING_EMAIL_ADDRESS;
             draftRequest.email = A_MATCHING_EMAIL_ADDRESS;
             draftRequest[fieldToUpdate] = valueToSetField;
-          });
-        },
+          }),
         makeRequest: async (updatedUserCredentials) => await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`),
       });
     });
