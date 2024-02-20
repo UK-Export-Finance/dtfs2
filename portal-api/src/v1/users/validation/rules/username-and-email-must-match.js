@@ -8,11 +8,7 @@ module.exports = (user, change) => {
     },
   ];
 
-  if ((change.username && !change.email) || (!change.username && change.email)) {
-    return error;
-  }
-
-  if (change && change.username !== change.email) {
+  if (change?.username !== change?.email) {
     return error;
   }
 
