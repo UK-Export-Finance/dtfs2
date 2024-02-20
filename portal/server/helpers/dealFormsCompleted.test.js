@@ -12,7 +12,7 @@ const completeFacilities = {
 const incompleteFacilities = {
   items: [
     { _id: '12345678911', status: CONSTANTS.STATUS.SECTION.COMPLETED },
-    { _id: '12345678910', status: CONSTANTS.STATUS.SECTION.INCOMPLETE },
+    { _id: '12345678910', status: CONSTANTS.STATUS.FACILITY.INCOMPLETE },
   ],
 };
 

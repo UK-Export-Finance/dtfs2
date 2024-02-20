@@ -1,4 +1,4 @@
-import { DEAL, SECTION } from '../../../server/constants/status';
+import { DEAL, FACILITY } from '../../../server/constants/status';
 import { getNowAsEpoch } from '../../../server/helpers'
 
 const { ROLES: { MAKER, CHECKER }, DATE: { LONDON_TIMEZONE } } = require('../../../server/constants');
@@ -18,7 +18,7 @@ describe(component, () => {
         {
           _id: '5f3ab3f705e6630007dcfb21',
           ukefFacilityId: '5678',
-          status: SECTION.INCOMPLETE,
+          status: FACILITY.INCOMPLETE,
           value: '100',
           currency: { id: 'GBP' },
           facilityStage: 'Unissued',
@@ -30,7 +30,7 @@ describe(component, () => {
         {
           _id: '5f3ab3f705e6630007dcfb22',
           ukefFacilityId: '5678',
-          status: SECTION.INCOMPLETE,
+          status: FACILITY.INCOMPLETE,
           value: '100',
           currency: { id: 'GBP' },
           facilityStage: 'Unissued',

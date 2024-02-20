@@ -8,7 +8,7 @@ const {
  *
  * @param {Object} deal - The deal object.
  * @param {Object} user - The user object.
- * @returns {boolean} - Returns true if the deal is editable, false otherwise.
+ * @returns {boolean} - True if the deal is editable, false otherwise.
  */
 const isDealEditable = (deal, user) => {
   if (!user.roles.includes(MAKER)) {
@@ -18,7 +18,7 @@ const isDealEditable = (deal, user) => {
   const { submissionDate } = deal.details;
   const dealHasBeenSubmitted = submissionDate;
 
-  return !((![STATUS.DEAL.DRAFT, STATUS.DEAL.CHANGES_REQUIRED].includes(deal.status) || dealHasBeenSubmitted));
+  return [STATUS.DEAL.DRAFT, STATUS.DEAL.CHANGES_REQUIRED].includes(deal.status) && !dealHasBeenSubmitted;
 };
 
 module.exports = isDealEditable;

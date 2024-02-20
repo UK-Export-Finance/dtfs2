@@ -11,13 +11,18 @@ const DEAL = {
   UKEF_REFUSED: 'Rejected by UKEF',
 };
 
-const SECTION = {
+const FACILITY = {
   COMPLETED: 'Completed',
   INCOMPLETE: 'Incomplete',
+}
+
+const SECTION = {
+  COMPLETED: 'Completed',
   NOT_COMPLETED: 'Not completed',
 };
 
 module.exports = {
   DEAL,
+  FACILITY,
   SECTION,
 };
