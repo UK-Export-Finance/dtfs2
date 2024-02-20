@@ -36,7 +36,6 @@ Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'
 
 // commands that abstract common tasks you might perform while clicking round the portal..
 Cypress.Commands.add('login', require('./portal/logIn'));
-Cypress.Commands.add('tfmLogin', require('./trade-finance-manager-ui/login'));
 Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', require('./portal/overridePortalUserSignInTokenWithValidTokenByUsername'));
 Cypress.Commands.add('getUserByUsername', require('./portal/getUserByUsername'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
@@ -48,3 +47,9 @@ Cypress.Commands.add('forceVisit', (url) => {
 
 Cypress.Commands.add('submitDeal', require('./trade-finance-manager-api/submitDeal'));
 Cypress.Commands.add('submitManyDeals', require('./trade-finance-manager-api/submitManyDeals'));
+
+// shared commands for TFM
+Cypress.Commands.add('mockTfmLogin', require('../../../support/trade-finance-manager/mockTfmSsoLogin'));
+Cypress.Commands.add('getTfmUserByUsername', require('../../../support/trade-finance-manager/getTfmUserByUsername'));
+Cypress.Commands.add('overrideTfmUserSessionId', require('../../../support/trade-finance-manager/overrideTfmUserSessionId'));
+Cypress.Commands.add('overrideRedisUserSession', require('../../../support/trade-finance-manager/overrideRedisUserSession'));

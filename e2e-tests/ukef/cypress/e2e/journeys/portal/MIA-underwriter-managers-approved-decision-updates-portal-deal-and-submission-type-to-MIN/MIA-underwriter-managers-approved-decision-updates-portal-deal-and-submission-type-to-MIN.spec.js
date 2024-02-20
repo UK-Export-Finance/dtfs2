@@ -32,6 +32,7 @@ context('Portal to TFM deal submission', () => {
   });
 
   beforeEach(() => {
+    cy.clearCookies();
     cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
@@ -62,7 +63,6 @@ context('Portal to TFM deal submission', () => {
     cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
-    cy.forceVisit(TFM_URL);
 
     cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
@@ -96,9 +96,8 @@ context('Portal to TFM deal submission', () => {
     cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
-    cy.forceVisit(TFM_URL);
 
-    cy.tfmLogin(UNDERWRITER_MANAGER_1);
+    cy.mockTfmLogin(UNDERWRITER_MANAGER_1, TFM_URL);
 
     cy.forceVisit(`${TFM_URL}/case/${dealId}/deal`);
 
@@ -114,7 +113,6 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     tfmPartials.caseSubNavigation.underwritingLink().click();
     tfmPages.managersDecisionPage.addDecisionLink().click({ force: true });
-
     const MOCK_COMMENTS = 'e2e test comment';
 
     tfmPages.managersDecisionPage.decisionRadioInputApproveWithConditions().click();
@@ -137,7 +135,6 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.previousStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('In progress by UKEF');
     });
-
     portalPages.contract.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Accepted by UKEF (with conditions)');
     });
@@ -197,7 +194,6 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal deal status should be updated
     //---------------------------------------------------------------
-
     portalPages.contract.visit(deal);
     portalPages.contract.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Acknowledged');
@@ -223,9 +219,7 @@ context('Portal to TFM deal submission', () => {
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
 
-    cy.forceVisit(TFM_URL);
-
-    cy.tfmLogin(UNDERWRITER_MANAGER_1);
+    cy.mockTfmLogin(UNDERWRITER_MANAGER_1, TFM_URL);
 
     cy.forceVisit(`${TFM_URL}/case/${dealId}/deal`);
 

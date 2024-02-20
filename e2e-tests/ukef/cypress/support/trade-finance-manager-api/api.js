@@ -43,14 +43,3 @@ module.exports.getUser = (username, token) => cy.request({
   expect(resp.status).to.equal(200);
   return resp.body.user;
 });
-
-module.exports.login = (username, password) => cy.request({
-  url: `${api()}/v1/login`,
-  method: 'POST',
-  body: { username, password },
-  headers: genericHeaders,
-}).then((resp) => {
-  expect(resp.status).to.equal(200);
-
-  return resp.body.token;
-});

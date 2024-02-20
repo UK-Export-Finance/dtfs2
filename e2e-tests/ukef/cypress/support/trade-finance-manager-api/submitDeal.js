@@ -1,9 +1,8 @@
-const { submitDealAfterUkefIds, login } = require('./api');
+const { submitDealAfterUkefIds } = require('./api');
 const { T1_USER_1 } = require('../../../../e2e-fixtures/tfm-users.fixture');
 
 module.exports = (dealId, dealType) => {
   console.info('submitDeal::');
-  const { username, password } = T1_USER_1;
 
-  return login(username, password).then((token) => submitDealAfterUkefIds(dealId, dealType, null, token));
+  return cy.mockTfmLogin(T1_USER_1, null, false).then((token) => submitDealAfterUkefIds(dealId, dealType, null, token));
 };

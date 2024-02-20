@@ -71,9 +71,7 @@ context('Portal to TFM deal submission', () => {
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
 
-    cy.forceVisit(TFM_URL);
-
-    cy.tfmLogin(T1_USER_1);
+    cy.mockTfmLogin(T1_USER_1, TFM_URL);
 
     const tfmCaseDealPage = `${TFM_URL}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
