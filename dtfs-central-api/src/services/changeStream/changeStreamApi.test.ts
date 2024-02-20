@@ -51,7 +51,7 @@ describe('changeStreamApi', () => {
 
       await postAuditDetails(changeStreamCollModDocument);
 
-      expect(axios).not.toHaveBeenCalled();
+      expect((axios)).not.toHaveBeenCalled();
     });
 
     const envVarTestCases = [
@@ -59,10 +59,10 @@ describe('changeStreamApi', () => {
       {envVarName: 'AUDIT_API_USERNAME'},
       {envVarName: 'AUDIT_API_PASSWORD'},
     ]
-    it.each(envVarTestCases)('should not call the audit api if the %envVarName env var is missing', async ({envVarName}) => {
+    it.each(envVarTestCases)('should throw an error if the %envVarName env var is missing', async ({envVarName}) => {
       delete process.env[envVarName];
-      await postAuditDetails(mockChangeStreamDocument);
-      expect(axios).not.toHaveBeenCalled();
+
+      await expect(postAuditDetails(mockChangeStreamDocument)).rejects.toThrow();
     })
   });
 });

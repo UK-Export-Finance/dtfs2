@@ -7,24 +7,14 @@ services:
       - '3310:3310'
 
   dtfs-submissions-data:
-    build:
-      context: ./mongodb
-      dockerfile: Dockerfile
+    image: mongo:5.0.5
+    restart: always
     environment:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
     ports:
-      - "27017:27017"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    healthcheck:
-      test: echo "rs.status()" | mongo --quiet
-      interval: 5s
-      timeout: 30s
-      retries: 30
-    volumes:
-      - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
+      - '27017-27019:27017-27019'
 
   dtfs-central-api:
     build:
