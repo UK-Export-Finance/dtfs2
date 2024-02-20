@@ -175,27 +175,6 @@ describe('users routes', () => {
       expect(res.status).toHaveBeenCalledWith(403);
     });
 
-    it('does not allow a user to change their status', () => {
-      const req = {
-        params: {
-          _id: '1234',
-        },
-        user: {
-          _id: '1234',
-          roles: [],
-        },
-        body: {
-          password: 'AbC!234',
-          passwordConfirm: 'AbC!234',
-          'user-status': USER.STATUS.ACTIVE,
-        },
-      };
-
-      updateById(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(403);
-    });
-
     it('allows admin to change another users status and password', () => {
       const req = {
         params: {

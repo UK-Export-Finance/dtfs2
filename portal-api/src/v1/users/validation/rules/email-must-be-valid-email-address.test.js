@@ -20,6 +20,12 @@ describe('emailMustBeValidEmailAddress', () => {
       const errors = emailMustBeValidEmailAddress(user, change);
       expect(errors).toStrictEqual([]);
     });
+    
+    it('should not return error when the email is an email address', () => {
+      const change = { email: 'aValidEmail@ukexportfinance.gov.uk' };
+      const errors = emailMustBeValidEmailAddress(user, change);
+      expect(errors).toStrictEqual([]);
+    });
 
     const invalidEmailAddresses = [
       { invalidEmailAddress: '' },
@@ -34,12 +40,6 @@ describe('emailMustBeValidEmailAddress', () => {
       const change = { email: invalidEmailAddress };
       const errors = emailMustBeValidEmailAddress(user, change);
       expect(errors).toStrictEqual(emailMustBeValidEmailAddressError);
-    });
-
-    it('should not return error when the email is an email address', () => {
-      const change = { email: 'aValidEmail@ukexportfinance.gov.uk' };
-      const errors = emailMustBeValidEmailAddress(user, change);
-      expect(errors).toStrictEqual([]);
     });
   });
 });

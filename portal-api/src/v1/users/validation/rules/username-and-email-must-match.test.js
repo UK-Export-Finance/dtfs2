@@ -1,9 +1,9 @@
 const usernameAndEmailMustMatch = require('./username-and-email-must-match');
 
 describe('usernameAndEmailMustMatch', () => {
-  const matching = 'Matching';
-  const nonMatchingUsername = 'NonMatchingUsername';
-  const nonMatchingEmail = 'NonMatchingEmail';
+  const matching = 'matching@ukexportfinance.gov.uk';
+  const nonMatchingUsername = 'nonMatchingUsername@ukexportfinance.gov.uk';
+  const nonMatchingEmail = 'nonMatchingEmail@ukexportfinance.gov.uk';
 
   const usernameAndEmailMustMatchError = [
     {
