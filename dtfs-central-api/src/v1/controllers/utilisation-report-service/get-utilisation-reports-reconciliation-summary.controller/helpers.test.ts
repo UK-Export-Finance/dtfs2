@@ -1,23 +1,17 @@
 import { MOCK_BANKS } from '../../../../../api-tests/mocks/banks';
-import {
-  getOpenReportsBeforeReportPeriodForBankId,
-  getUtilisationReportDetailsByBankIdMonthAndYear,
-} from '../../../../services/repositories/utilisation-reports-repo';
+import { getOpenReportsBeforeReportPeriodForBankId, getUtilisationReportDetailsByBankIdMonthAndYear } from '../../../../repositories/utilisation-reports-repo';
 import { MOCK_UTILISATION_REPORT } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-reports';
 import { getMockUtilisationDataForReport } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-data';
-import { getAllUtilisationDataForReport } from '../../../../services/repositories/utilisation-data-repo';
+import { getAllUtilisationDataForReport } from '../../../../repositories/utilisation-data-repo';
 import { getAllReportsForSubmissionMonth, getPreviousOpenReportsBySubmissionMonth } from './helpers';
 import { IsoMonthStamp } from '../../../../types/date';
 import { Bank } from '../../../../types/db-models/banks';
 import { UtilisationReport } from '../../../../types/db-models/utilisation-reports';
-import {
-  UtilisationReportReconciliationSummary,
-  UtilisationReportReconciliationSummaryItem
-} from '../../../../types/utilisation-reports';
+import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
 
-jest.mock('../../../../services/repositories/banks-repo');
-jest.mock('../../../../services/repositories/utilisation-reports-repo');
-jest.mock('../../../../services/repositories/utilisation-data-repo');
+jest.mock('../../../../repositories/banks-repo');
+jest.mock('../../../../repositories/utilisation-reports-repo');
+jest.mock('../../../../repositories/utilisation-data-repo');
 
 describe('get-utilisation-reports-reconciliation-summary.controller helper', () => {
   afterEach(() => {

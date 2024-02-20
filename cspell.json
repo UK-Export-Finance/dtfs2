@@ -19,7 +19,8 @@
     "**.csv",
     "**.css",
     "**.scss",
-    "**/migrations/*"
+    "**/migrations/*",
+    "**/*.drawio"
   ],
   "language": "en",
   "noConfigSearch": true,

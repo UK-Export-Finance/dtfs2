@@ -1,5 +1,5 @@
-const { saveUtilisationData } = require('../../../services/repositories/utilisation-data-repo');
-const { saveUtilisationReportDetails, getUtilisationReportDetailsByBankIdMonthAndYear } = require('../../../services/repositories/utilisation-reports-repo');
+const { saveUtilisationData } = require('../../../repositories/utilisation-data-repo');
+const { saveUtilisationReportDetails, getUtilisationReportDetailsByBankIdMonthAndYear } = require('../../../repositories/utilisation-reports-repo');
 const {
   validateUtilisationReportData,
   validateReportPeriod,

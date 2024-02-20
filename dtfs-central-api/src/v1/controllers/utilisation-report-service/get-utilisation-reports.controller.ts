@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
-import { getUtilisationReportDetailsByBankId, getUtilisationReportDetailsByBankIdMonthAndYear } from '../../../services/repositories/utilisation-reports-repo';
+import { getUtilisationReportDetailsByBankId, getUtilisationReportDetailsByBankIdMonthAndYear } from '../../../repositories/utilisation-reports-repo';
 
 type GetUtilisationReportsRequest = CustomExpressRequest<{
   params: {
@@ -14,8 +14,8 @@ type GetUtilisationReportsRequest = CustomExpressRequest<{
 
 /**
  * Gets utilisation reports from the database. Filters by bank ID and report start month & year.
- * @param req 
- * @param res 
+ * @param req
+ * @param res
  */
 
 export const getUtilisationReports = async (req: GetUtilisationReportsRequest, res: Response) => {

@@ -6,12 +6,12 @@ import { IsoMonthStamp } from '../../../../types/date';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
 import { UtilisationReport } from '../../../../types/db-models/utilisation-reports';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../../constants';
-import { getAllBanks } from '../../../../services/repositories/banks-repo';
-import { getAllUtilisationDataForReport } from '../../../../services/repositories/utilisation-data-repo';
+import { getAllBanks } from '../../../../repositories/banks-repo';
+import { getAllUtilisationDataForReport } from '../../../../repositories/utilisation-data-repo';
 import {
   getUtilisationReportDetailsByBankIdMonthAndYear,
   getOpenReportsBeforeReportPeriodForBankId,
-} from '../../../../services/repositories/utilisation-reports-repo';
+} from '../../../../repositories/utilisation-reports-repo';
 import {
   getPreviousReportPeriodStart,
   getReportPeriodStartForSubmissionMonth,

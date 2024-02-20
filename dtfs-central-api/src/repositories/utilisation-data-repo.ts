@@ -1,10 +1,10 @@
 import { OptionalId } from 'mongodb';
-import db from '../../drivers/db-client';
-import { SessionBank } from '../../types/session-bank';
-import { UtilisationData } from '../../types/db-models/utilisation-data';
-import { UtilisationReport } from '../../types/db-models/utilisation-reports';
-import { UtilisationReportRawCsvData, ReportPeriod } from '../../types/utilisation-reports';
-import { DB_COLLECTIONS, UTILISATION_REPORT_HEADERS } from '../../constants';
+import db from '../drivers/db-client';
+import { SessionBank } from '../types/session-bank';
+import { UtilisationData } from '../types/db-models/utilisation-data';
+import { UtilisationReport } from '../types/db-models/utilisation-reports';
+import { UtilisationReportRawCsvData, ReportPeriod } from '../types/utilisation-reports';
+import { DB_COLLECTIONS, UTILISATION_REPORT_HEADERS } from '../constants';
 
 export const saveUtilisationData = async (reportData: UtilisationReportRawCsvData[], reportPeriod: ReportPeriod, bank: SessionBank, reportId: string) => {
   const utilisationDataObjects = reportData.map(

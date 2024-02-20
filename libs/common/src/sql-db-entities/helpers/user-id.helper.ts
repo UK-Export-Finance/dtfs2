@@ -14,8 +14,8 @@ export type DbRequestSourceParam = {
  * Constructs the string value to be used on the `updatedByUserId` property of
  * the {@link AuditableBaseEntity}, based on the source of the request.
  *
- * If the source platform of the request is not 'SYSTEM' (e.g. from a scheduled
- * job), then a 'userId' must also be provided.
+ * If the source platform of the request is not `'SYSTEM'` (e.g. from a scheduled
+ * job), then a `userId` must also be provided.
  *
  * @example
  * // returns 'PORTAL-abc123'

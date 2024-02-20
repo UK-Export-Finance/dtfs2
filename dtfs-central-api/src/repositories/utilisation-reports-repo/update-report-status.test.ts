@@ -5,12 +5,12 @@ import {
   ReportFilterWithBankId,
   UpdateUtilisationReportStatusInstructions,
   UtilisationReportReconciliationStatus,
-} from '../../../types/utilisation-reports';
-import { UploadedByUserDetails, UtilisationReport } from '../../../types/db-models/utilisation-reports';
-import db from '../../../drivers/db-client';
-import { MOCK_AZURE_FILE_INFO } from '../../../../api-tests/mocks/azure-file-info';
+} from '../../types/utilisation-reports';
+import { UploadedByUserDetails, UtilisationReport } from '../../types/db-models/utilisation-reports';
+import db from '../../drivers/db-client';
+import { MOCK_AZURE_FILE_INFO } from '../../../api-tests/mocks/azure-file-info';
 import * as banksRepo from '../banks-repo';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 
 console.error = jest.fn();
 
