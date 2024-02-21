@@ -22,6 +22,8 @@ module.exports = defineConfig({
   pageLoadTimeout: 120000,
   redirectionLimit: 100,
   numTestsKeptInMemory: 1,
+  viewportWidth: 3840,
+  viewportHeight: 2400,
   retries: {
     runMode: 2,
     openMode: 0,

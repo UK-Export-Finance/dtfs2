@@ -185,7 +185,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     // Maker cannot resubmit deal until all facility cover start dates have been confirmed
     // at this point, only 1 facility has NOT had the date confirmed
     //---------------------------------------------------------------
-    pages.contract.proceedToReview().should('be.disabled');
+    pages.contract.proceedToReview().should('not.exist');
 
     //---------------------------------------------------------------
     // Maker can change Cover start date for an Unconditional facility with 'Completed' status
