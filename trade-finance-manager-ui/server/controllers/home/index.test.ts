@@ -21,7 +21,6 @@ describe('controllers - home', () => {
     homeController.getUserHomepage(req, res);
 
     // Assert
-    // eslint-disable-next-line no-underscore-dangle
     expect(res._getRedirectUrl()).toEqual('/');
   });
 
@@ -44,7 +43,6 @@ describe('controllers - home', () => {
     homeController.getUserHomepage(req, res);
 
     // Assert
-    // eslint-disable-next-line no-underscore-dangle
     expect(res._getRedirectUrl()).toEqual(team.redirectLocation);
   });
 
@@ -57,7 +55,6 @@ describe('controllers - home', () => {
       homeController.getUserHomepage(req, res);
 
       // Assert
-      // eslint-disable-next-line no-underscore-dangle
       expect(res._getRedirectUrl()).toEqual(team.redirectLocation);
     });
   });

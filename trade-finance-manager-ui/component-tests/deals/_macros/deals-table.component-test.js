@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const componentRenderer = require('../../componentRenderer');
 const formatDateString = require('../../../server/nunjucks-configuration/filter-formatDateString');
 
