@@ -1,7 +1,5 @@
 const { ObjectId } = require('mongodb');
-const utils = require('../../../utils/crypto.util');
-// const { userIsDisabled, usernameOrPasswordIncorrect, userIsBlocked } = require('../../../constants/login-results.constant');
-const { create, update, removeTfmUserById, findOne, findByUsername, findByEmails, updateLastLoginAndResetSignInData } = require('./user.controller');
+const { create, update, removeTfmUserById, findOne, findByUsername } = require('./user.controller');
 
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
@@ -94,32 +92,6 @@ module.exports.findTfmUser = (req, res, next) => {
   }
 };
 
-module.exports.findTfmUserByEmail = (req, res, next) => {
-  findByEmails(req.query, (error, users) => {
-    if (error) {
-      next(error);
-    } else if (users.length > 1) {
-      res.status(400).json({ user: {}, status: 400, message: 'Multiple users match request'});
-    } else if (users[0]) {
-      if (users[0].disabled) {
-        res.status(401).json({
-          success: false,
-          msg: 'User is disabled',
-        });
-      }
-      if (users[0].status === 'blocked') {
-        res.status(401).json({
-          success: false,
-          msg: 'User is blocked',
-        });
-      }
-      res.status(200).json({ user: mapUserData(users[0]), status: 200 });
-    } else {
-      res.status(404).json({ user: {}, status: 404, message: 'User does not exist' });
-    }
-  });
-};
-
 module.exports.updateTfmUserById = (req, res, next) => {
   findOne(req.params.user, (error, user) => {
     if (error) {
@@ -198,17 +170,3 @@ module.exports.removeTfmUserById = (req, res, next) => {
 //     expiresIn: tokenObject.expires,
 //   });
 // };
-
-module.exports.getUserToken = (req, res) => {
-  const { user } = req.body;
-  const { sessionIdentifier, ...tokenObject } = utils.issueJWT(user);
-
-  updateLastLoginAndResetSignInData(user, sessionIdentifier, () => {});
-
-  return res.status(200).json({
-    success: true,
-    token: tokenObject.token,
-    user: mapUserData(user),
-    expiresIn: tokenObject.expires,
-  });
-};

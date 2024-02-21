@@ -2,7 +2,7 @@ import { getRolesGroupedByEntraId, getTfmRolesFromEntraGroups } from './entra-gr
 
 require('dotenv').config();
 
-const { TEAMS } = require('../constants/team-ids')
+const { TEAMS } = require('../../constants/teams')
 
 describe('helpers - entra-group-to-tfm-role', () => {
   describe('getRolesGroupedByEntraId', () => {

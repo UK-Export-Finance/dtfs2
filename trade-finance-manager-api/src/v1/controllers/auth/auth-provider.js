@@ -14,9 +14,9 @@ class AuthProvider {
     return new msal.ConfidentialClientApplication(this.msalConfig);
   }
 
-  async login(req, res, next) {
+  async getLoginUrl() {
     // create a GUID for csrf
-    req.session.csrfToken = this.cryptoProvider.createNewGuid();
+    const csrfToken = this.cryptoProvider.createNewGuid();
 
     /**
      * The MSAL Node library allows you to pass your custom state as state parameter in the Request object.
@@ -26,7 +26,7 @@ class AuthProvider {
 
     const state = this.cryptoProvider.base64Encode(
       JSON.stringify({
-        csrfToken: req.session.csrfToken,
+        csrfToken,
         redirectTo: '/',
       }),
     );
@@ -64,10 +64,8 @@ class AuthProvider {
     const msalInstance = this.getMsalInstance(this.config.msalConfig);
 
     // trigger the first leg of auth code flow
-    return this.redirectToAuthCodeUrl(
-      req,
-      res,
-      next,
+    return this.getAuthCodeUrl(
+      csrfToken,
       authCodeUrlRequestParams,
       authCodeRequestParams,
       msalInstance,
@@ -82,11 +80,12 @@ class AuthProvider {
    * @param authCodeUrlRequestParams: parameters for requesting an auth code url
    * @param authCodeRequestParams: parameters for requesting tokens using auth code
    */
-  async redirectToAuthCodeUrl(req, res, next, authCodeUrlRequestParams, authCodeRequestParams, msalInstance) {
+  async getAuthCodeUrl(csrfToken, authCodeUrlRequestParams, authCodeRequestParams, msalInstance) {
     // Generate Proof Key of Code Exchange (PKCE) Codes before starting the authorization flow
     const { verifier, challenge } = await this.cryptoProvider.generatePkceCodes();
     // Set generated PKCE codes and method as session vars
-    req.session.pkceCodes = {
+    const response = { csrfToken };
+    response.pkceCodes = {
       challengeMethod: 'S256',
       verifier,
       challenge,
@@ -97,27 +96,21 @@ class AuthProvider {
      * https://azuread.github.io/microsoft-authentication-library-for-js/ref/modules/_azure_msal_node.html#authorizationurlrequest
      * https://azuread.github.io/microsoft-authentication-library-for-js/ref/modules/_azure_msal_node.html#authorizationcoderequest
      * */
-    req.session.authCodeUrlRequest = {
+    response.authCodeUrlRequest = {
       ...authCodeUrlRequestParams,
       redirectUri: this.config.redirectUri,
       responseMode: 'form_post', // recommended for confidential clients
-      codeChallenge: req.session.pkceCodes.challenge,
-      codeChallengeMethod: req.session.pkceCodes.challengeMethod,
+      codeChallenge: response.pkceCodes.challenge,
+      codeChallengeMethod: response.pkceCodes.challengeMethod,
     };
 
-    req.session.authCodeRequest = {
+    response.authCodeRequest = {
       ...authCodeRequestParams,
       redirectUri: this.config.redirectUri,
       code: '',
     };
-    try {
-      const authCodeUrlResponse = await msalInstance.getAuthCodeUrl(req.session.authCodeUrlRequest);
-      return res.redirect(authCodeUrlResponse);
-    } catch (error) {
-      next(error);
-    }
-    // TODO: eslint want's return, but not sure what is best return value if we don't need it.
-    return null;
+    response.loginUrl = await msalInstance.getAuthCodeUrl(response.authCodeUrlRequest);
+    return response;
   }
 
   /**
@@ -129,29 +122,25 @@ class AuthProvider {
    * @param next: Express next function
    * @returns
    */
-  async handleRedirect(req, res, next) {
-    try {
-      const authCodeRequest = {
-        ...req.session.authCodeRequest,
-        code: req.body.code, // authZ code
-        codeVerifier: req.session.pkceCodes.verifier, // PKCE Code Verifier
-      };
+  async handleRedirect(pkceCodes, origAuthCodeRequest, code, body) {
+    const authCodeRequest = {
+      ...origAuthCodeRequest,
+      code, // authZ code
+      codeVerifier: pkceCodes.verifier, // PKCE Code Verifier
+    };
 
-      const msalInstance = this.getMsalInstance(this.config.msalConfig);
+    const msalInstance = this.getMsalInstance(this.config.msalConfig);
 
-      msalInstance.getTokenCache().deserialize(req.session.tokenCache);
-      const tokenResponse = await msalInstance.acquireTokenByCode(authCodeRequest, req.body);
+    // TODO: do we need token cache?
+    // msalInstance.getTokenCache().deserialize(req.session.tokenCache);
+    const tokenResponse = await msalInstance.acquireTokenByCode(authCodeRequest, body);
 
-      return tokenResponse.account;
-    } catch (error) {
-      next(error);
-    }
-    return null;
+    return tokenResponse.account;
   }
 
-  redirectAfterLogin(rawState, res) {
+  redirectAfterLogin(rawState) {
     const state = JSON.parse(this.cryptoProvider.base64Decode(rawState));
-    res.redirect(state.redirectTo);
+    return state.redirectTo;
   }
 
   /**
@@ -166,9 +155,7 @@ class AuthProvider {
      * session with Azure AD. For more information, visit:
      * https://docs.microsoft.com/azure/active-directory/develop/v2-protocols-oidc#send-a-sign-out-request
      */
-    const logoutUri = `${this.config.msalConfig.auth.authority}${TENANT_SUBDOMAIN}.onmicrosoft.com/oauth2/v2.0/logout?post_logout_redirect_uri=${POST_LOGOUT_REDIRECT_URI}`;
-
-    return logoutUri;
+    return `${this.config.msalConfig.auth.authority}${TENANT_SUBDOMAIN}.onmicrosoft.com/oauth2/v2.0/logout?post_logout_redirect_uri=${POST_LOGOUT_REDIRECT_URI}`;
   }
 
   /**

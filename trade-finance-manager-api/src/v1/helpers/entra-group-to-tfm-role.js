@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { TEAMS } = require('../constants/team-ids')
+const { TEAMS } = require('../../constants/teams')
 
 const getRolesGroupedByEntraId = () => {
   const entraGroups = {};

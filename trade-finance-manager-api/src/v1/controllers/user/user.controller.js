@@ -4,6 +4,7 @@ const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { USER, PAYLOAD } = require('../../../constants');
 const utils = require('../../../utils/crypto.util');
+const { UserNotFoundError } = require('../../errors');
 
 const businessRules = { loginFailureCount: 5 };
 
@@ -17,10 +18,26 @@ exports.findOne = async (_id, callback) => {
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
 };
 
-exports.findByEmails = async (query, callback) => {
+exports.findByEmails = async (emails) => {
   const collection = await db.getCollection('tfm-users');
-  const emailsRegex = query.emails.map(email => new RegExp(`^${email}$`, 'i'));
-  collection.find({ 'email': { $in: emailsRegex }}).toArray(callback);
+  const emailsRegex = emails.map(email => new RegExp(`^${email}$`, 'i'));
+  const users = await collection.find({ 'email': { $in: emailsRegex }}).toArray();
+  if (users.length === 0) {
+    throw new UserNotFoundError('No matching users found', emails);
+  }
+  if (users.length > 1) {
+    throw new Error('More than 1 matching user found %O', users);
+  }
+  if (users[0].disabled) {
+    throw new Error('User is disabled %O', users[0]);
+  }
+  if (users[0].status === 'blocked') {
+    throw new Error('User is blocked %O', users[0]);
+  }
+  if (users[0]?.username) {
+    return users[0];
+  }
+  throw new Error('Unexpected DB response %O', users);
 };
 
 exports.findByUsername = async (username, callback) => {
@@ -32,7 +49,8 @@ exports.findByUsername = async (username, callback) => {
   collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
-exports.create = async (user, callback) => {
+
+exports.createUser = async (user) => {
   const collection = await db.getCollection('tfm-users');
   const tfmUser = {
     ...user,
@@ -48,13 +66,22 @@ exports.create = async (user, callback) => {
     const { insertedId: userId } = createUserResult;
 
     if (!ObjectId.isValid(userId)) {
-      throw new Error('Invalid User Id');
+      throw new Error('User creation failed. Invalid User Id');
     }
 
     const createdUser = await collection.findOne({ _id: { $eq: userId } });
     const mapUser = mapUserData(createdUser);
 
-    return callback(null, mapUser);
+    return mapUser;
+  }
+
+  return false;
+};
+
+exports.create = async (user, callback) => {
+  const newUser = await exports.createUser(user);
+  if (newUser) {
+    return callback(null, newUser);
   }
 
   return callback('Invalid TFM user payload', user);
@@ -69,6 +96,7 @@ exports.update = async (_id, update, callback) => {
   const collection = await db.getCollection('tfm-users');
 
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
+    // TODO: remove password logic, it is not used after SSO
     if (userUpdate.password) {
       // we're updating the password, so do the dance...
       const { password: newPassword } = userUpdate;
@@ -111,6 +139,7 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
 };
 
 exports.incrementFailedLoginCount = async (user) => {
+  // TODO: count failures for SSO.
   if (!ObjectId.isValid(user._id)) {
     throw new Error('Invalid User Id');
   }

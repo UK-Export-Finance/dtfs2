@@ -10,7 +10,7 @@ const { swaggerSpec, swaggerUiOptions } = require('./swagger');
 const feedbackController = require('./controllers/feedback-controller');
 const amendmentController = require('./controllers/amendment.controller');
 const facilityController = require('./controllers/facility.controller');
-// const authController = require('./controllers/auth/auth.controller');
+const authController = require('./controllers/auth/auth.controller');
 const partyController = require('./controllers/party.controller');
 const bankHolidaysController = require('./controllers/bank-holidays');
 const utilisationReportsController = require('./controllers/utilisation-reports');
@@ -68,11 +68,12 @@ authRouter.use('/', tasksRouter);
  */
 openRouter.route('/feedback').post(feedbackController.create);
 
-openRouter.route('/user-sso').post(users.createTfmUserFromSso);
-openRouter.route('/user/token').post(users.getUserToken);
-
 // token-validator
 authRouter.get('/validate-user-token', (_req, res) => res.status(200).send());
+
+openRouter.route('/auth/getLoginUrl').get(authController.getLoginUrl);
+openRouter.route('/auth/processSsoRedirect').post(authController.processSsoRedirect);
+authRouter.route('/auth/getLogoutUrl').get(authController.getLogoutUrl);
 
 openRouter.route('/user').post(users.createTfmUser);
 authRouter.route('/users').post(users.createTfmUser);
@@ -82,10 +83,6 @@ authRouter
   .get(validation.userIdEscapingSanitization, handleExpressValidatorResult, users.findTfmUser)
   .put(validation.userIdValidation, handleExpressValidatorResult, users.updateTfmUserById)
   .delete(validation.userIdValidation, handleExpressValidatorResult, users.removeTfmUserById);
-
-openRouter
-  .route('/user/byEmail')
-  .get(users.findTfmUserByEmail);
 
 authRouter.route('/facilities').get(facilityController.getFacilities);
 

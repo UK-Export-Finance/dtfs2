@@ -12,18 +12,6 @@ const generateHeaders = (token) => ({
   'x-api-key': TFM_API_KEY,
 });
 
-// TODO: cleanup or we could handle expired sessions 401. User can login in different browser and break first existing session.
-// const handle401Error = (error, token) => {
-//   console.log('handle401Error error ====================== error.response.status', error.response.status);
-//   //console.log('handle401Error error ======================', error);
-//   if (error?.response?.status === 401) {
-//     console.log('Most likely JWT session was replaced, and token needs regeneration');
-//     console.log('token', token);
-//     throw new Error('Most likely JWT session was replaced, and token needs regeneration');
-//     // Most likely JWT session was replaced, and token needs regeneration.
-//   }
-// };
-
 const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
   const { filterType: tasksFilterType, teamId: tasksTeamId, userId: tasksUserId } = tasksFilters;
   const { filterType: activityFilterType } = activityFilters;
@@ -395,91 +383,111 @@ const createActivity = async (dealId, activityUpdate, token) => {
   }
 };
 
-const login = async (username, password) => {
+// const login = async (username, password) => {
+//   try {
+//     const response = await axios({
+//       method: 'post',
+//       url: `${TFM_API_URL}/v1/login`,
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       data: { username, password },
+//     });
+
+//     return response.data;
+//   } catch (error) {
+//     console.error('Unable to log in %s', error?.response?.data);
+//     return { status: error?.response?.status || 500, data: 'Failed to login' };
+//   }
+// };
+
+const getAuthLoginUrl = async () => {
   try {
     const response = await axios({
-      method: 'post',
-      url: `${TFM_API_URL}/v1/login`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: { username, password },
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error('Unable to log in %s', error?.response?.data);
-    return { status: error?.response?.status || 500, data: 'Failed to login' };
-  }
-};
-
-// TODO: token generation is sentitive and we need to add challenge before it is generated.
-const getUserToken = async (user) => {
-  try {
-    const response = await axios({
-      method: 'post',
-      url: `${TFM_API_URL}/v1/user/token`,
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': TFM_API_KEY,
-      },
-      data: { user },
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error('Unable to get user token %s', error?.response?.data);
-    return { status: error?.response?.status || 500, data: 'Failed to get user token' };
-  }
-};
-
-
-
-
-const createUser = async (user) => {
-  try {
-    const response = await axios({
-      method: 'post',
-      url: `${TFM_API_URL}/v1/user-sso`,
+      method: 'get',
+      url: `${TFM_API_URL}/v1/auth/getLoginUrl`,
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': TFM_API_KEY,
       },
-      data: user,
     });
 
     return response.data;
   } catch (error) {
-    console.error('Unable to create user in %s', error?.response?.data);
-    return { status: error?.response?.status || 500, data: 'Failed to create user' };
+    console.error('Unable to get login url %s', error?.response);
+    return { status: error?.response?.status || 500, data: 'Unable to get login url' };
   }
-};
+}
 
-const updateUserPassword = async (userId, update, token) => {
+const getAuthLogoutUrl = async (token) => {
   try {
-    const isValidUserId = isValidMongoId(userId);
-
-    if (!isValidUserId) {
-      console.error('updateUserPassword: Invalid user id provided: %s', userId);
-      return { status: 400, data: 'Invalid user id' };
-    }
-
     const response = await axios({
-      method: 'put',
-      url: `${TFM_API_URL}/v1/users/${userId}`,
+      method: 'get',
+      url: `${TFM_API_URL}/v1/auth/getLogoutUrl`,
       headers: generateHeaders(token),
-      data: update,
-    }).catch((error) => {
-      console.error('Unable to update user details in axios request %s', error);
-      return { status: error?.response?.status || 500, data: 'Failed to update user password' };
     });
 
-    return response;
+    return response.data;
   } catch (error) {
-    console.error('Unable to update user details %s', error);
-    return { status: error?.response?.status || 500, data: 'Failed to update user password' };
+    console.error('Unable to get logout url %s', error?.response?.data);
+    return { status: error?.response?.status || 500, data: 'Unable to get logout url' };
   }
+}
+
+const processSsoRedirect = async (pkceCodes, authCodeUrlRequest, authCodeRequest, code, state) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${TFM_API_URL}/v1/auth/processSsoRedirect`,
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': TFM_API_KEY,
+      },
+      data: { pkceCodes, authCodeUrlRequest, authCodeRequest, code, state }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get logout url %s', error?.response?.data);
+    return { status: error?.response?.status || 500, data: 'Unable to get logout url' };
+  }
+}
+
+const validateToken = async (token) => {
+  if (!token) return false;
+
+  const response = await axios({
+    method: 'get',
+    headers: generateHeaders(token),
+    url: `${TFM_API_URL}/v1/validate-user-token`,
+  }).catch((error) => error.response);
+  return response.status === 200;
 };
+
+// const updateUserPassword = async (userId, update, token) => {
+//   try {
+//     const isValidUserId = isValidMongoId(userId);
+
+//     if (!isValidUserId) {
+//       console.error('updateUserPassword: Invalid user id provided: %s', userId);
+//       return { status: 400, data: 'Invalid user id' };
+//     }
+
+//     const response = await axios({
+//       method: 'put',
+//       url: `${TFM_API_URL}/v1/users/${userId}`,
+//       headers: generateHeaders(token),
+//       data: update,
+//     }).catch((error) => {
+//       console.error('Unable to update user details in axios request %s', error);
+//       return { status: error?.response?.status || 500, data: 'Failed to update user password' };
+//     });
+
+//     return response;
+//   } catch (error) {
+//     console.error('Unable to update user details %s', error);
+//     return { status: error?.response?.status || 500, data: 'Failed to update user password' };
+//   }
+// };
 
 const createFeedback = async (formData, token) => {
   const response = await axios({
@@ -510,25 +518,6 @@ const getUser = async (userId, token) => {
   } catch (error) {
     console.error('Unable to get the user details %s', error?.response?.data);
     return { status: error?.response?.status || 500, data: 'Failed to get user' };
-  }
-};
-
-/**
- * Used to connect Azure Entra record to TFM users.
- */
-const getUserByEmail = async (emails, token) => {
-  try {
-    const response = await axios({
-      method: 'get',
-      url: `${TFM_API_URL}/v1/user/byEmail`,
-      headers: generateHeaders(token),
-      params: { emails }
-    });
-
-    return response.data.user;
-  } catch (error) {
-    console.error('Unable to get the users %s', error?.response?.data);
-    return { status: error?.response?.status || 500, data: 'Failed to get users' };
   }
 };
 
@@ -852,23 +841,6 @@ const getParty = async (partyUrn, token) => {
 
 /**
  * @param {string} token
- * @returns {Promise<import('./types/validate-user-token').EmptyResponseBody>}
- */
-const isUserTokenValid = async (token) => {
-  try {
-    const { data } = await axios.get(`${TFM_API_URL}/v1/validate-user-token`, {
-      headers: generateHeaders(token),
-    });
-
-    return data;
-  } catch (error) {
-    console.error('Failed to get /validate-user-token', error);
-    throw error;
-  }
-};
-
-/**
- * @param {string} token
  * @returns {Promise<import('./types/bank-holidays').BankHolidaysResponseBody>}
  */
 const getUkBankHolidays = async (token) => {
@@ -951,9 +923,8 @@ module.exports = {
   updateFacilityRiskProfile,
   getTeamMembers,
   getUser,
-  createUser,
-  getUserByEmail,
-  updateUserPassword,
+  // createUser,
+  // updateUserPassword,
   updateParty,
   updateFacility,
   updateTask,
@@ -963,9 +934,10 @@ module.exports = {
   updateUnderwriterManagersDecision,
   updateLeadUnderwriter,
   createActivity,
-  login,
-  getUserToken,
-  isUserTokenValid,
+  getAuthLoginUrl,
+  getAuthLogoutUrl,
+  processSsoRedirect,
+  validateToken,
   getFacilities,
   createFeedback,
   updateAmendment,
