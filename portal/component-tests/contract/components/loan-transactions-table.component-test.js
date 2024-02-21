@@ -209,7 +209,7 @@ describe(component, () => {
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-requested-cover-start-date-${facility._id}"]`).toExist();
 
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-cover-end-date"]`).toExist();
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-cover-end-date-${facility._id}"]`).toExist();
         });
       });
     });

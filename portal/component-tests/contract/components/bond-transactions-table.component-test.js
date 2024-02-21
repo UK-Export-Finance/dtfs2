@@ -215,7 +215,7 @@ describe(component, () => {
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-requested-cover-start-date-${facility._id}"]`).toExist();
 
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-cover-end-date"]`).toExist();
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-cover-end-date-${facility._id}"]`).toExist();
         });
       });
     });

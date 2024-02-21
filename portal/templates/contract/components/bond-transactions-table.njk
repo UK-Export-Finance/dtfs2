@@ -54,7 +54,7 @@
                   {% endif %}
                 </td>
 
-                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-cover-end-date">
+                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-cover-end-date-{{ bond._id}}">
                    {% if bond.coverEndDate %}
                   {{ bond.coverEndDate | localiseTimestamp('dd/MM/yyyy', params.user.timezone) | safe }}
                 {% endif %}

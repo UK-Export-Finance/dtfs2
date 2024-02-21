@@ -5,7 +5,7 @@ const fillLoanForm = require('../maker-loan/fill-loan-forms');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const dealWithNoFacilities = require('./fixtures/dealWithNoFacilities');
 
-const { BANK1_MAKER1 } = MOCK_USERS;
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Ensure proceed to review button is only visible once facilities are in eligible for submission', () => {
   let deal;
@@ -17,7 +17,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   after(() => {
-    // cy.deleteDeals(ADMIN);
+    cy.deleteDeals(ADMIN);
   });
 
   it('Add an un-issued bond', () => {
