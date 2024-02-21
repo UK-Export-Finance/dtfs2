@@ -1,5 +1,5 @@
-const { add, format, parseISO } = require('date-fns');
-const { formatTimestamp, getDateAsEpochMillisecondString } = require('../../utils/date');
+const { add } = require('date-fns');
+const { formatDate, formatTimestamp, getDateAsEpochMillisecondString } = require('../../utils/date');
 
 /*
 Commitment / Un-issued / 06
@@ -23,7 +23,7 @@ const getGuaranteeDates = (facility, dealSubmissionDate) => {
 
   if (hasBeenIssued) {
     guaranteeCommencementDate = formatTimestamp(coverStartDate);
-    guaranteeExpiryDate = format(parseISO(coverEndDate), 'yyyy-MM-dd');
+    guaranteeExpiryDate = formatDate(coverEndDate);
   } else {
     guaranteeCommencementDate = formatTimestamp(Number(dealSubmissionDate));
     guaranteeExpiryDate = formatTimestamp(
