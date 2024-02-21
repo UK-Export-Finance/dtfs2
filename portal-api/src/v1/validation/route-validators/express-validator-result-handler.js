@@ -1,4 +1,3 @@
-import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
 
 /**
@@ -8,7 +7,7 @@ import { validationResult } from 'express-validator';
  * @param {Response} res Response object
  * @param {NextFunction} next Next callback
  */
-export const handleValidationResult = (req: Request, res: Response, next: NextFunction): void => {
+export const handleValidationResult = (req, res, next) => {
   const validationResults = validationResult(req);
 
   if (!validationResults.isEmpty()) {
