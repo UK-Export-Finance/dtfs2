@@ -1,4 +1,3 @@
-
 const { format, sub, add } = require('date-fns');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
