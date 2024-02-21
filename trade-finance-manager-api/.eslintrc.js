@@ -4,7 +4,10 @@ const baseParserOptions = {
 
 const baseRules = {
   'no-console': ['error', { allow: ['info', 'error'] }],
-  'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
+  'no-underscore-dangle': [
+    'error',
+    { allow: ['_id', '_csrf', '_getBuffer', '_getData', '_getHeaders', '_getStatusCode', '_getRedirectUrl', '_getRenderData', '_getRenderView'] },
+  ],
   'import/extensions': 'off',
   'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.{js,ts}', '**/*.api-test.{js,ts}', '**/api-tests/**', '**/__mocks__/**'] }],
   'import/no-named-as-default': 'off',

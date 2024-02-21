@@ -70,5 +70,3 @@ describe('case - underwriter-managers-decision - helpers', () => {
     });
   });
 });
-
-/* eslint-enable no-underscore-dangle */

@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import {
   getTeamMembersWithoutCurrentUser,
   mapTeamMembersSelectOptions,
@@ -58,5 +57,3 @@ describe('team - helpers', () => {
     });
   });
 });
-
-/* eslint-enable no-underscore-dangle */
