@@ -29,6 +29,7 @@
     "audit:all": "npm audit --if-present",
     "audit:fix:all": "npm audit --fix --if-present",
     "ci:all": "npm ci --if-present",
+    "dev": "docker-compose -f docker-compose.dev.yml up --build",
     "housekeeping": "npm run update:all && npm run install:all && npm run lint:fix:all && npm run audit:fix:all && npm run spellcheck",
     "postinstall": "husky install",
     "install:all": "npm install --if-present",
