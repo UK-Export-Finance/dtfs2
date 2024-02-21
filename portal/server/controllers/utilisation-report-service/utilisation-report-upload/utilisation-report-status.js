@@ -48,9 +48,26 @@ const getDueReportDetails = async (userToken) => {
   return { reportDueDate, reportPeriod, month, year };
 };
 
+/**
+ * Returns an array of due report dates including the one-indexed month,
+ * the year and the report period with format 'MMMM yyyy'
+ * @param {string} userToken - Token to validate session
+ * @param {string} bankId - ID of the bank
+ * @returns {Promise<{ month: number, year: number, formattedReportPeriod: string }[]>}
+ */
+const getDueReportDates = async (userToken, bankId) => {
+  const dueReports = await api.getDueReportDatesByBank(userToken, bankId);
+  return dueReports.map((dueReport) => {
+    const { month, year } = dueReport;
+    const formattedReportPeriod = format(new Date(year, month - 1), 'MMMM yyyy');
+    return { ...dueReport, formattedReportPeriod };
+  });
+};
+
 module.exports = {
   getBankHolidays,
   getReportPeriod,
   getReportDueDate,
   getDueReportDetails,
+  getDueReportDates,
 };

@@ -60,6 +60,22 @@ const isValidMonth = (month) => Number.isInteger(month) && month >= 1 && month <
  */
 const isValidYear = (year) => Number.isInteger(year) && year >= 2000 && year <= 2100;
 
+/**
+ * isValidReportPeriod
+ * checks if the supplied report period is a valid report period object
+ * @param {unknown} reportPeriod
+ * @returns {boolean}
+ */
+const isValidReportPeriod = (reportPeriod) => Boolean(
+  reportPeriod &&
+  reportPeriod.start &&
+  isValidMonth(parseInt(reportPeriod.start.month, 10)) &&
+  isValidYear(parseInt(reportPeriod.start.year, 10)) &&
+  reportPeriod.end &&
+  isValidMonth(parseInt(reportPeriod.end.month, 10)) &&
+  isValidYear(parseInt(reportPeriod.end.year, 10))
+);
+
 module.exports = {
   isValidMongoId,
   isValidRegex,
@@ -68,4 +84,5 @@ module.exports = {
   isValidBankId,
   isValidMonth,
   isValidYear,
+  isValidReportPeriod,
 };

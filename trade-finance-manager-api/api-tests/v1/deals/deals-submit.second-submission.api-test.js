@@ -7,7 +7,8 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   submitACBSIfAllPartiesHaveUrn: jest.fn(),
 }));
 
-const moment = require('moment');
+const { set } = require('date-fns');
+const { cloneDeep } = require('lodash');
 const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const dealController = require('../../../src/v1/controllers/deal.controller');
@@ -59,7 +60,7 @@ const createSubmitBody = (mockDeal) => ({
 });
 
 const createFacilityCoverEndDate = (facility) =>
-  moment().set({
+  set(new Date(), {
     date: Number(facility['coverEndDate-day']),
     month: Number(facility['coverEndDate-month']) - 1, // months are zero indexed
     year: Number(facility['coverEndDate-year']),
@@ -149,7 +150,7 @@ describe('/v1/deals', () => {
         });
 
         it('should add bond.facilityGuaranteeDates', async () => {
-          const initialBond = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
+          const initialBond = cloneDeep(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0]);
           const dealSubmissionDate = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
 
           // add fields that are mapped in deal.submit

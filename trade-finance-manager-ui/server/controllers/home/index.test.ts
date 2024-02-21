@@ -21,17 +21,17 @@ describe('controllers - home', () => {
     homeController.getUserHomepage(req, res);
 
     // Assert
-    // eslint-disable-next-line no-underscore-dangle
     expect(res._getRedirectUrl()).toEqual('/');
   });
 
-  const pdcTeams = Object.values(PDC_TEAM_IDS).map((id) => ({
+  const pdcTeams: {id: PdcTeamId; redirectLocation: string}[] = Object.values(PDC_TEAM_IDS as PdcTeamId[]).map((id: string) => ({
     id,
     redirectLocation: '/utilisation-reports',
   }));
-  const nonPdcTeams = Object.values(TEAM_IDS)
-    .filter((id) => !Object.values(PDC_TEAM_IDS).includes(id as PdcTeamId))
-    .map((id) => ({
+
+  const nonPdcTeams = Object.values(TEAM_IDS as TeamId[])
+    .filter((id: TeamId) => !Object.values(PDC_TEAM_IDS as PdcTeamId[]).includes(id))
+    .map((id: string) => ({
       id,
       redirectLocation: '/deals',
     }));
@@ -44,11 +44,10 @@ describe('controllers - home', () => {
     homeController.getUserHomepage(req, res);
 
     // Assert
-    // eslint-disable-next-line no-underscore-dangle
     expect(res._getRedirectUrl()).toEqual(team.redirectLocation);
   });
 
-  describe.each(Object.values(PDC_TEAM_IDS))("when the user is in the '%s' team", (pdcTeamId) => {
+  describe.each(Object.values(PDC_TEAM_IDS as PdcTeamId[]))("when the user is in the '%s' team", (pdcTeamId) => {
     it.each(nonPdcTeams)("should redirect to $redirectLocation if the user is also in the '$id' team", (team) => {
       // Arrange
       const { req, res } = getHttpMocksWithTeams(team.id, pdcTeamId);
@@ -57,7 +56,6 @@ describe('controllers - home', () => {
       homeController.getUserHomepage(req, res);
 
       // Assert
-      // eslint-disable-next-line no-underscore-dangle
       expect(res._getRedirectUrl()).toEqual(team.redirectLocation);
     });
   });

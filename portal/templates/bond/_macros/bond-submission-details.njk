@@ -47,7 +47,7 @@
             Issued Date
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s" data-cy="issued-date">
-            {{ bond.issuedDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
+            {{ bond.issuedDate | localiseTimestamp('dd/MM/yyyy', user.timezone) }}
           </dd>
         </div>
       {% endif %}
@@ -58,7 +58,7 @@
             Requested Cover Start Date
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s"  data-cy="requested-cover-start-date">
-            {{ bond.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
+            {{ bond.requestedCoverStartDate | localiseTimestamp('dd/MM/yyyy', user.timezone) }}
           </dd>
         </div>
       {% endif %}

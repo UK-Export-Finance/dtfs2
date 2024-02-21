@@ -1,8 +1,10 @@
 import relative from '../../relativeURL';
 import pages from '../../pages';
-import { nowPlusDays } from '../../../support/utils/dateFuncs';
+import DATE_CONSTANTS from '../../../../../e2e-fixtures/dateConstants';
 import createMockDeal from '../../../fixtures/create-mock-deal';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
+import { ALIAS_KEY } from '../../../fixtures/constants';
+import { aliasSelector } from '../../../../../support/alias-selector';
 
 context('User can view and sort deals', () => {
   let ALL_SUBMITTED_DEALS = [];
@@ -10,8 +12,7 @@ context('User can view and sort deals', () => {
   let dealMostRecent;
   let dealNotRecent;
 
-  const twoDaysAgo = nowPlusDays(-2);
-  const yesterday = nowPlusDays(-1);
+  const { twoDaysAgo, yesterday } = DATE_CONSTANTS;
 
   const DEAL_NOT_RECENT = createMockDeal({
     details: {
@@ -50,7 +51,8 @@ context('User can view and sort deals', () => {
         });
       });
 
-      cy.submitManyDeals(insertedDeals, T1_USER_1).then((submittedDeals) => {
+      cy.submitManyDeals(insertedDeals, T1_USER_1);
+      cy.get(aliasSelector(ALIAS_KEY.SUBMIT_MANY_DEALS)).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
 
         dealMostRecent = ALL_SUBMITTED_DEALS.find((deal) =>

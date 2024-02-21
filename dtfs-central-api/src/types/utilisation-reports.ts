@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
-import { ValuesOf } from './types-helper';
-import { IsoMonthStamp, OneIndexedMonth } from './date';
+import { ValuesOf } from '@ukef/dtfs2-common';
+import { IsoMonthStamp, MonthAndYear, OneIndexedMonth } from './date';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS, UTILISATION_REPORT_HEADERS } from '../constants';
 import { Currency } from './currency';
 
@@ -24,12 +24,12 @@ export type UtilisationReportReconciliationSummary = {
   items: UtilisationReportReconciliationSummaryItem[];
 };
 
-export type ReportPeriodStart = {
-  month: OneIndexedMonth;
-  year: number;
+export type ReportPeriod = {
+  start: MonthAndYear;
+  end: MonthAndYear;
 };
 
-export type ReportDetails = ReportPeriodStart & {
+export type ReportDetails = MonthAndYear & {
   bankId: string;
 };
 
@@ -46,8 +46,10 @@ export type ReportFilterWithReportId = {
   _id: ObjectId;
 };
 
-export type ReportFilterWithBankId = ReportPeriodStart & {
+export type ReportFilterWithBankId = {
   'bank.id': string;
+  'reportPeriod.start.month': OneIndexedMonth;
+  'reportPeriod.start.year': number;
 };
 
 export type ReportFilter = ReportFilterWithReportId | ReportFilterWithBankId;

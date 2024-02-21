@@ -43,6 +43,16 @@ const DISPLAY_USER_TEAMS = {
   PDC_READ: 'PDC read',
 };
 
+/**
+ * Stores the alias keys which should be used to access
+ * the values yielded from custom commands
+ * @link https://github.com/UK-Export-Finance/dtfs2/blob/main/e2e-tests/README.md#Aliases
+ */
+const ALIAS_KEY = {
+  SUBMIT_MANY_DEALS: 'submittedDeals',
+  SUBMIT_DEAL: 'submittedDeal',
+};
+
 module.exports = {
   DEAL_TYPE,
   DEAL_SUBMISSION_TYPE,
@@ -53,4 +63,5 @@ module.exports = {
   NOT_ADDED,
   PARTY_URN,
   PARTIES,
+  ALIAS_KEY,
 };

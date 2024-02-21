@@ -1,5 +1,5 @@
 import { eachMonthOfInterval, format, isValid, parseISO } from 'date-fns';
-import { isString } from './string';
+import { isString } from '@ukef/dtfs2-common';
 import { IsoMonthStamp, OneIndexedMonth } from '../types/date';
 
 /**

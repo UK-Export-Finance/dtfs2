@@ -12,18 +12,32 @@
   },
   "license": "MIT",
   "author": "",
+  "workspaces": [
+    "azure-functions/*",
+    "dtfs-central-api",
+    "e2e-tests",
+    "external-api",
+    "gef-ui",
+    "libs/*",
+    "portal",
+    "portal-api",
+    "trade-finance-manager-api",
+    "trade-finance-manager-ui",
+    "utils/*"
+  ],
   "scripts": {
-    "audit:all": "(npm audit); (cd azure-functions/acbs-function && npm audit); (cd azure-functions/number-generator-function && npm audit); (cd dtfs-central-api && npm audit); (cd gef-ui && npm audit); (cd portal && npm audit); (cd portal-api && npm audit); (cd external-api && npm audit); (cd trade-finance-manager-api && npm audit); (cd trade-finance-manager-ui && npm audit); (cd utils/mock-data-loader && npm audit); (cd utils/data-migration && npm audit)",
-    "audit:fix:all": "(npm audit --fix); (cd azure-functions/acbs-function && npm audit --fix); (cd azure-functions/number-generator-function && npm audit --fix); (cd dtfs-central-api && npm audit --fix); (cd gef-ui && npm audit --fix); (cd portal && npm audit --fix); (cd portal-api && npm audit --fix); (cd external-api && npm audit --fix); (cd trade-finance-manager-api && npm audit --fix); (cd trade-finance-manager-ui && npm audit --fix); (cd utils/mock-data-loader && npm audit --fix); (cd utils/data-migration && npm audit --fix)",
-    "ci:all": "npm ci && npm ci --prefix azure-functions/acbs-function && npm ci --prefix azure-functions/number-generator-function && npm ci --prefix dtfs-central-api && npm ci --prefix gef-ui && npm ci --prefix portal && npm ci --prefix portal-api && npm ci --prefix external-api && npm ci --prefix trade-finance-manager-api && npm ci --prefix trade-finance-manager-ui && npm ci --prefix utils/mock-data-loader && npm ci --prefix utils/data-migration",
+    "audit:all": "npm audit --if-present",
+    "audit:fix:all": "npm audit --fix --if-present",
+    "ci:all": "npm ci --if-present",
     "housekeeping": "npm run update:all && npm run install:all && npm run lint:fix:all && npm run audit:fix:all && npm run spellcheck",
     "postinstall": "husky install",
-    "install:all": "npm i && npm i --prefix azure-functions/acbs-function && npm i --prefix azure-functions/number-generator-function && npm i --prefix dtfs-central-api && npm i --prefix gef-ui && npm i --prefix portal && npm i --prefix portal-api && npm i --prefix external-api && npm i --prefix trade-finance-manager-api && npm i --prefix trade-finance-manager-ui && npm i --prefix utils/mock-data-loader && npm i --prefix utils/data-migration",
-    "lint:all": "npx eslint ./azure-functions/acbs-function && npx eslint ./azure-functions/number-generator-function && npx eslint ./dtfs-central-api && npx eslint ./e2e-tests && npx eslint ./gef-ui && npx eslint ./portal && npx eslint ./portal-api && npx eslint ./external-api && npx eslint ./trade-finance-manager-api && npx eslint ./trade-finance-manager-ui && npx eslint ./utils/mock-data-loader && npx eslint ./utils/data-migration",
-    "lint:fix:all": "npx eslint --fix ./azure-functions/acbs-function && npx eslint --fix ./azure-functions/number-generator-function && npx eslint --fix ./dtfs-central-api && npx eslint --fix ./e2e-tests && npx eslint --fix ./gef-ui && npx eslint --fix ./portal && npx eslint --fix ./portal-api && npx eslint --fix ./external-api && npx eslint --fix ./trade-finance-manager-api && npx eslint --fix ./trade-finance-manager-ui && npx eslint --fix ./utils/mock-data-loader && npx eslint --fix ./utils/data-migration",
+    "install:all": "npm install --if-present",
+    "lint:all": "npm run lint --workspaces --if-present",
+    "lint:fix:all": "npm run lint --fix --workspaces --if-present",
     "load": "node utils/mock-data-loader/re-insert-mocks.js",
     "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color '**/*'",
-    "update:all": "npm update --save && npm update --save --prefix azure-functions/acbs-function && npm update --save --prefix azure-functions/number-generator-function && npm update --save --prefix dtfs-central-api && npm update --save --prefix gef-ui && npm update --save --prefix portal && npm update --save --prefix portal-api && npm update --save --prefix external-api && npm update --save --prefix trade-finance-manager-api && npm update --save --prefix trade-finance-manager-ui && npm update --save --prefix utils/mock-data-loader && npm update --save --prefix utils/data-migration"
+    "type-check:all": "npm run type-check --workspaces --if-present",
+    "update:all": "npm update --save --if-present"
   },
   "lint-staged": {
     "**/package.json": "sort-package-json",
@@ -33,34 +47,29 @@
       "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"
     ]
   },
+  "dependencies": {
+    "axios": "^1.6.7"
+  },
   "devDependencies": {
     "@commitlint/cli": "^17.8.1",
     "@commitlint/config-conventional": "^17.8.1",
-    "@typescript-eslint/eslint-plugin": "^6.19.1",
-    "@typescript-eslint/parser": "^6.19.1",
+    "@typescript-eslint/eslint-plugin": "^6.20.0",
+    "@typescript-eslint/parser": "^6.20.0",
     "bson": "^6.2.0",
     "chance": "^1.1.11",
     "cookie-signature": "^1.2.1",
     "cspell": "^7.3.9",
-    "cypress": "^13.6.3",
-    "cypress-file-upload": "^5.0.8",
-    "cypress-plugin-tab": "^1.0.5",
-    "cypress-v10-preserve-cookie": "^1.2.1",
-    "date-fns": "^2.30.0",
-    "dotenv": "^16.4.0",
     "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-cypress": "^2.15.1",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-prettier": "^5.1.3",
     "husky": "^8.0.3",
     "jws": "^4.0.0",
     "lint-staged": "^14.0.1",
-    "moment": "^2.30.1",
-    "mongodb": "^6.3.0",
     "prettier": "3.0.3",
     "redis": "^4.6.13",
-    "sort-package-json": "^2.6.0"
+    "sort-package-json": "^2.7.0"
   },
   "engines": {
     "node": ">=20",

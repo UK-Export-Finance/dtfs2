@@ -18,7 +18,8 @@ import { dashboardDealsFiltersQuery } from './deals-filters-query';
 import { dealsTemplateFilters as templateFilters } from './template-filters';
 import { selectedFilters } from './selected-filters';
 import CONSTANTS from '../../../constants';
-import { MAKER, CHECKER } from '../../../constants/roles';
+
+const { MAKER, CHECKER } = CONSTANTS.ROLES;
 
 jest.mock('../../../api', () => ({
   allDeals: jest.fn(),

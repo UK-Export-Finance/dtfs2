@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { set } = require('date-fns');
 const getGuaranteeDates = require('./get-guarantee-dates');
 
 const submissionDate = '2023-01-01';
@@ -6,7 +6,7 @@ const dealSubmissionDate = new Date(submissionDate).valueOf();
 const issuedFacility = {
   hasBeenIssued: true,
   coverStartDate: new Date(submissionDate).valueOf(),
-  coverEndDate: moment().set({
+  coverEndDate: set(new Date(), {
     date: Number('01'),
     month: Number('01') - 1, // months are zero indexed
     year: Number('2024'),

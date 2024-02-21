@@ -3,7 +3,6 @@ import api from '../../../api';
 import * as getUtilisationReportsController from '..';
 import { UpdateUtilisationReportStatusRequest, UpdateUtilisationReportStatusRequestBody, updateUtilisationReportStatus } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
-import { TEAM_IDS } from '../../../constants';
 import { ReportWithStatus } from '../../../types/utilisation-reports';
 
 console.error = jest.fn();
@@ -21,7 +20,7 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
     const userToken = 'user-token';
     const session = {
       userToken,
-      user: { ...MOCK_TFM_SESSION_USER, teams: [TEAM_IDS.PDC_RECONCILE] },
+      user: MOCK_TFM_SESSION_USER,
     };
     const validBody: UpdateUtilisationReportStatusRequestBody = {
       _csrf: 'csrf',
@@ -44,7 +43,6 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
       await updateUtilisationReportStatus(req, res);
 
       // Assert
-      // eslint-disable-next-line no-underscore-dangle
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(errorSpy).toHaveBeenCalledWith('Expected request body to be an object');
     });
@@ -61,7 +59,6 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
       await updateUtilisationReportStatus(req, res);
 
       // Assert
-      // eslint-disable-next-line no-underscore-dangle
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
     });
 
@@ -77,7 +74,6 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
       await updateUtilisationReportStatus(req, res);
 
       // Assert
-      // eslint-disable-next-line no-underscore-dangle
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(errorSpy).toHaveBeenCalledWith("form-button body parameter of 'invalid-value' does not match either 'completed' or 'not-completed'");
     });
@@ -94,7 +90,6 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
       await updateUtilisationReportStatus(req, res);
 
       // Assert
-      // eslint-disable-next-line no-underscore-dangle
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(errorSpy).toHaveBeenCalledWith("Invalid ISO month 'March 2023' - expected a string in format 'yyyy-MM'");
     });

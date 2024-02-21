@@ -1,19 +1,19 @@
 const { submitDeal, submitDealAfterUkefIds } = require('./api');
+const { ALIAS_KEY } = require('../../fixtures/constants');
 
 module.exports = (deals, opts) => {
   console.info('submitManyDeals::');
   const persistedDeals = [];
 
-  deals.forEach((dealToInsert) => {
-    cy.mockLogin(opts).then((token) =>
-      submitDeal(dealToInsert._id, dealToInsert.dealType, token).then(() => {
-      // eslint-disable-next-line consistent-return
-        submitDealAfterUkefIds(dealToInsert._id, dealToInsert.dealType, null, token).then((deal) => {
-          persistedDeals.push(deal);
-          if (persistedDeals.length === deals.length) {
-            return persistedDeals;
-          }
+  cy.mockLogin(opts).then((token) => {
+    cy.wrap(deals).each((dealToInsert) => {
+      submitDeal(dealToInsert._id, dealToInsert.dealType, null, token);
+
+      submitDealAfterUkefIds(dealToInsert._id, dealToInsert.dealType, null, token)
+        .then((submittedDeal) => {
+          persistedDeals.push(submittedDeal);
         });
-      }));
+    });
+    cy.wrap(persistedDeals).as(ALIAS_KEY.SUBMIT_MANY_DEALS);
   });
 };

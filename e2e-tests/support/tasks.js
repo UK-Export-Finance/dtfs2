@@ -20,6 +20,11 @@ module.exports = {
     const getTfmUsersCollection = () => db.getCollection(tfmUsersCollectionName, connectionOptions);
 
     return {
+      log(message) {
+        console.info('Cypress log: ', message);
+        return null;
+      },
+
       async getUserFromDbByEmail(email) {
         const users = await getUsersCollection();
         return users.findOne({ email: { $eq: email } });
