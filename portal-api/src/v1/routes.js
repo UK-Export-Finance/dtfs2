@@ -103,20 +103,8 @@ authRouter
   .get(mandatoryCriteria.findOne)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteria.delete);
 
-authRouter
-  .route('/users')
-  .get(users.list)
-  .post(
-    users.create,
-  );
-
-authRouter
-  .route('/users/:_id')
-  .get(users.findById)
-  .put(
-    users.updateById,
-  )
-  .delete(users.remove);
+authRouter.route('/users').get(users.list).post(users.create);
+authRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
 authRouter.route('/users/:_id/disable').delete(users.disable);
 
 authRouter.use('/gef', gef);
@@ -248,8 +236,7 @@ authRouter
 authRouter.get('/validate', (_req, res) => res.status(200).send());
 
 openRouter.get('/validate-partial-2fa-token', passport.authenticate(partial2faTokenPassportStrategy, { session: false }), (_req, res) =>
-  res.status(200).send(),
-);
+  res.status(200).send(),);
 
 // bank-validator
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
