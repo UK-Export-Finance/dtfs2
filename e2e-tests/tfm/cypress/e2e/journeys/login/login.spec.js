@@ -119,7 +119,7 @@ context('User can login', () => {
       followRedirect: false, // avoid infinite redirect loop
     }).then((resp) => {
       expect(resp.status).to.eq(302);
-      expect(resp.redirectedToUrl).match(/^https:\/\/login.microsoftonline.com\/*/);
+      expect(resp.redirectedToUrl).match(/^https:\/\/login\.microsoftonline\.com\/*/);
     });
   });
 
@@ -131,7 +131,7 @@ context('User can login', () => {
       followRedirect: false, // avoid infinite redirect loop
     }).then((resp) => {
       expect(resp.status).to.eq(302);
-      expect(resp.redirectedToUrl).match(/^https:\/\/login.microsoftonline.com\/*/);
+      expect(resp.redirectedToUrl).match(/^https:\/\/login\.microsoftonline\.com\/*/);
     });
   });
 });
