@@ -9,7 +9,7 @@
     "load": "node re-insert-mocks.js"
   },
   "dependencies": {
-    "axios": "^1.6.7",
+    "axios": "^0.28.0",
     "chance": "^1.1.11",
     "date-fns": "^2.30.0",
     "dotenv": "^16.4.1",
