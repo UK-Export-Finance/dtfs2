@@ -130,7 +130,7 @@ npx cypress run --spec "cypress/e2e/**/my-test.spec.js" --config video=false
 #### For Live Debugging, Open the GUI and Select the Test :mag_right:
 
 ```shell
-npx cypress open .
+npx cypress open
 ```
 
 ### API Tests :rocket:

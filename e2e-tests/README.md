@@ -46,7 +46,7 @@ npx cypress run --spec "cypress/e2e/**/my-test.spec.js" --config video=false
 ### **For live debugging, open the GUI and select the test:**
 
 ```shell
-npx cypress open .
+npx cypress open
 ```
 
 ## Cypress configuration ⚙️

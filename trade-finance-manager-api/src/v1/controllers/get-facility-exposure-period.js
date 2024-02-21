@@ -1,5 +1,5 @@
+const { format, toDate } = require('date-fns');
 const api = require('../api');
-const dateHelpers = require('../../utils/date');
 
 const getFacilityExposurePeriod = async (facility) => {
   try {
@@ -13,9 +13,9 @@ const getFacilityExposurePeriod = async (facility) => {
     let facilityUpdate;
 
     if (hasBeenIssued) {
-      const formattedStartDate = dateHelpers.formatDate(coverStartDate);
+      const formattedStartDate = format(toDate(coverStartDate), 'yyyy-MM-dd');
 
-      const formattedEndDate = dateHelpers.formatDate(coverEndDate);
+      const formattedEndDate = format(toDate(coverEndDate), 'yyyy-MM-dd');
 
       const exposurePeriodResponse = await api.getFacilityExposurePeriod(
         formattedStartDate,

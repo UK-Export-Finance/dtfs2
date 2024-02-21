@@ -28,17 +28,7 @@ const mapTenorDate = (
     return null;
   }
 
-  // Un-issued facility
-  if (!hasBeenIssued) {
-    return `${months} ${monthString(months)}`;
-  }
-
-  // Issued facility
-  if (hasBeenIssued) {
-    return `${months} ${monthString(months)}`;
-  }
-
-  return null;
+  return `${months} ${monthString(months)}`;
 };
 
 module.exports = mapTenorDate;

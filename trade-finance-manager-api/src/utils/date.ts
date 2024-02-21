@@ -1,5 +1,4 @@
 import { format, isValid, parseISO, set, startOfDay } from 'date-fns';
-import moment from 'moment';
 
 /**
  * @param date 
@@ -19,13 +18,6 @@ export const getNowAsEpochMillisecondString = () => getDateAsEpochMillisecondStr
  * @returns year in `yyyy` formatting (e.g. 24 becomes 2024)
  */
 export const formatYear = (year: string | number) => (Number(year) < 1000 ? (2000 + parseInt(String(year), 10)).toString() : year && year.toString());
-
-/**
- * @param dateStr 
- * @returns date formatted as `yyyy-MM-dd` or 'Invalid date' if not a valid format
- */
-// TODO: DTFS2-6998: remove this function
-export const formatDate = (dateStr: string) => moment(dateStr).format('YYYY-MM-DD');
 
 /**
  * @param dateStr Unix timestamp representing number of milliseconds between this date and 1st January 1970 (UTC),
