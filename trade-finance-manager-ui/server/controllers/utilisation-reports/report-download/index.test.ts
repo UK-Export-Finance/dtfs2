@@ -30,9 +30,7 @@ describe('controllers/utilisation-reports/report-download', () => {
       await getReportDownload(req, res);
 
       // Assert
-      /* eslint-disable no-underscore-dangle */
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
-      /* eslint-enable no-underscore-dangle */
     });
 
     it('returns the expected headers and file content', async () => {
@@ -58,7 +56,6 @@ describe('controllers/utilisation-reports/report-download', () => {
       // Assert
       expect(api.downloadUtilisationReport).toHaveBeenCalledWith(req.session.userToken, req.params._id);
 
-      // eslint-disable-next-line no-underscore-dangle
       expect(res._getHeaders()).toEqual(mockHeaders);
       expect(dataPipeSpy).toHaveBeenCalledTimes(1);
     });

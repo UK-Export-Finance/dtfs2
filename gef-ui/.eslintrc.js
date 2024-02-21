@@ -18,7 +18,10 @@ module.exports = {
       ignoreTemplateLiterals: true,
     }],
     'no-console': ['error', { allow: ['info', 'error'] }],
-    'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
+    'no-underscore-dangle': [
+      'error',
+      { allow: ['_id', '_csrf', '_getBuffer', '_getData', '_getHeaders', '_getStatusCode', '_getRedirectUrl', '_getRenderData', '_getRenderView'] },
+    ],
     'import/no-named-as-default': 'off',
     'implicit-arrow-linebreak': 'off',
     'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js', '**/api-tests/**', '**/__mocks__/**'] }],
