@@ -12,7 +12,10 @@ const baseRules = {
   }],
   'no-console': ['error', { allow: ['info', 'warn', 'error'] }],
   'no-return-await': 'off',
-  'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
+  'no-underscore-dangle': [
+    'error',
+    { allow: ['_id', '_csrf', '_getBuffer', '_getData', '_getHeaders', '_getStatusCode', '_getRedirectUrl', '_getRenderData', '_getRenderView'] },
+  ],
   'import/no-named-as-default': 'off',
   'import/prefer-default-export': 'off',
   'import/extensions': 'off',

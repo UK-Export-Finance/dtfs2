@@ -34,9 +34,7 @@ describe('controllers/utilisation-reports', () => {
       await getUtilisationReports(req, res);
 
       // Assert
-      /* eslint-disable no-underscore-dangle */
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
-      /* eslint-enable no-underscore-dangle */
     });
 
     it('renders the utilisation-reports.njk view with required data', async () => {
@@ -60,13 +58,11 @@ describe('controllers/utilisation-reports', () => {
       await getUtilisationReports(req, res);
 
       // Assert
-      /* eslint-disable no-underscore-dangle */
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-reports.njk');
       expect(res._getRenderData()).toMatchObject({
         activePrimaryNavigation: 'utilisation reports',
         reportPeriodSummaries: expectedViewModel,
       });
-      /* eslint-enable no-underscore-dangle */
     });
   });
 });
