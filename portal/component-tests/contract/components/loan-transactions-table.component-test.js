@@ -207,7 +207,7 @@ describe(component, () => {
 
           wrapper.expectText(`${facilityIdSelector} [data-cy="loan-facility-stage-${facility._id}"]`).toRead(facility.facilityStage);
 
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-requested-cover-start-date"]`).toExist();
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-requested-cover-start-date-${facility._id}"]`).toExist();
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-cover-end-date"]`).toExist();
         });

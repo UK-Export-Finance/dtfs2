@@ -8,7 +8,6 @@ const {
 } = require('../fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm');
 const {
   fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate,
-  ISSUED_LOAN_DATE_VALUE,
 } = require('../fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
@@ -20,79 +19,98 @@ context('Maker fills in bond & loan issue facility forms without requested cover
     bonds: [],
     loans: [],
   };
+  const today = ISSUED_BOND_DATE_VALUE.toLocaleDateString('en-GB');
 
   before(() => {
-    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id;
+    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
 
-        const { mockFacilities } = dealWithNotStartedFacilityStatuses;
+      const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-          const loans = createdFacilities.filter((f) => f.type === 'Loan');
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-          dealFacilities.bonds = bonds;
-          dealFacilities.loans = loans;
-        });
+        dealFacilities.bonds = bonds;
+        dealFacilities.loans = loans;
       });
+    });
   });
 
   after(() => {
     cy.deleteDeals(ADMIN);
-
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
-
     dealFacilities.loans.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 
   it('defaults the submitted facilities requested cover start dates to the previously entered issue date', () => {
+    let bondRow;
+    let loanRow;
+
     cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('not.exist');
 
-    const bondId = dealFacilities.bonds[0]._id;
-    const bondRow = pages.contract.bondTransactionsTable.row(bondId);
+    dealFacilities.bonds.forEach((bond) => {
+      const bondId = bond._id;
+      bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-    bondRow.issueFacilityLink().click();
+      bondRow.issueFacilityLink().click();
 
-    fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate();
-    cy.url().should('eq', relative(`/contract/${dealId}`));
+      fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate();
+      cy.url().should('eq', relative(`/contract/${dealId}`));
+    });
 
-    const loanId = dealFacilities.loans[0]._id;
-    const loanRow = pages.contract.loansTransactionsTable.row(loanId);
+    dealFacilities.loans.forEach((loan) => {
+      const loanId = loan._id;
+      loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-    loanRow.issueFacilityLink().click();
+      loanRow.issueFacilityLink().click();
 
-    fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate();
-    cy.url().should('eq', relative(`/contract/${dealId}`));
+      fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate();
+      cy.url().should('eq', relative(`/contract/${dealId}`));
+    });
 
-    // submit deal for review
+    // Submit deal for review
     pages.contract.proceedToReview().click();
 
     pages.contractReadyForReview.comments().type('Issued facilities');
     pages.contractReadyForReview.readyForCheckersApproval().click();
 
-    // expect to land on the /dashboard page
+    // Expect to land on the /dashboard page
     cy.url().should('include', '/dashboard');
 
     pages.contract.visit(deal);
 
-    // expect bond requested cover start date to default to issued date
-    bondRow.requestedCoverStartDate().invoke('text').then((text) => {
-      const expected = ISSUED_BOND_DATE_VALUE.toLocaleDateString('en-GB');
-      expect(text.trim()).to.equal(expected);
+    // Expect bond requested cover start date to default to issued date
+    dealFacilities.bonds.forEach((bond) => {
+      const bondId = bond._id;
+      bondRow = pages.contract.bondTransactionsTable.row(bondId);
+
+      bondRow
+        .requestedCoverStartDate()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(today);
+        });
     });
 
-    // expect loan requested cover start date to default to issued date
-    loanRow.requestedCoverStartDate().invoke('text').then((text) => {
-      const expected = ISSUED_LOAN_DATE_VALUE.toLocaleDateString('en-GB');
-      expect(text.trim()).to.equal(expected);
+    // Expect loan requested cover start date to default to issued date
+    dealFacilities.loans.forEach((loan) => {
+      const loanId = loan._id;
+      loanRow = pages.contract.loansTransactionsTable.row(loanId);
+
+      loanRow
+        .requestedCoverStartDate()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(today);
+        });
     });
   });
 });

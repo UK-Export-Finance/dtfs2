@@ -213,7 +213,7 @@ describe(component, () => {
 
           wrapper.expectText(`${facilityIdSelector} [data-cy="facility-stage-${facility._id}"]`).toRead(facility.facilityStage);
 
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-requested-cover-start-date"]`).toExist();
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-requested-cover-start-date-${facility._id}"]`).toExist();
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-cover-end-date"]`).toExist();
         });

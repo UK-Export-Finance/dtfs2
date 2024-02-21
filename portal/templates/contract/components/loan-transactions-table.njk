@@ -49,7 +49,7 @@
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-facility-stage-{{ loan._id }}">{{ loan.facilityStage | safe }}</td>
 
-                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-requested-cover-start-date">
+                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-requested-cover-start-date-{{ loan._id }}">
                   {% if loan.requestedCoverStartDate %}
                     {{ loan.requestedCoverStartDate | localiseTimestamp('dd/MM/yyyy', params.user.timezone) | safe }}
                   {% endif %}
