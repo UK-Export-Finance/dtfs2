@@ -1,9 +1,9 @@
-const { toDate, getDate, getMonth, getYear } = require('date-fns');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const getGuaranteeDates = require('../helpers/get-guarantee-dates');
 const { mapCashContingentFacility } = require('../mappings/map-submitted-deal/map-cash-contingent-facility');
 const { mapBssEwcsFacility } = require('../mappings/map-submitted-deal/map-bss-ewcs-facility');
+const { formatDate } = require('../../utils/date');
 
 /**
  * Amend TFM properties of issued facility.
@@ -88,13 +88,13 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
           const coverEndDateMs = coverEndDate * 1000;
 
           if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-            const expiryDate = toDate(coverEndDateMs);
+            const expiryDate = formatDate(coverEndDateMs).split('-');
 
             amendedFacility = {
               ...amendedFacility,
-              'coverEndDate-day': getDate(expiryDate),
-              'coverEndDate-month': getMonth(expiryDate),
-              'coverEndDate-year': getYear(expiryDate),
+              'coverEndDate-day': expiryDate[2],
+              'coverEndDate-month': expiryDate[1],
+              'coverEndDate-year': expiryDate[0],
             };
           } else {
             amendedFacility = {
