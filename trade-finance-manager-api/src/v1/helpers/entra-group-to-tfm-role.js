@@ -5,7 +5,7 @@ const getRolesGroupedByEntraId = () => {
   const entraGroups = {};
 
   Object.values(TEAMS).forEach(group => {
-    const azureId = process.env[group.azure_id_env_var];
+    const azureId = process.env[group.ssoGroupEnvVar];
     entraGroups[azureId] = group.id;
   }, {});
 
