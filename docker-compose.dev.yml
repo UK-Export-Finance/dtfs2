@@ -46,6 +46,7 @@ services:
       - EXTERNAL_API_KEY
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
+      - UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
 
   trade-finance-manager-ui:
     build:

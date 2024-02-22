@@ -40,9 +40,9 @@ run-name: ✅ Quality assurance testing on ${{ github.event.number }}
 
 on:
   pull_request:
-    branches: 
+    branches:
       - main
-      
+
     paths:
       - "package*.json"
       - "docker*.yml"
@@ -126,6 +126,7 @@ env:
   UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE }}
   UTILISATION_REPORT_DUE_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }}
   UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE }}
+  UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: ${{ vars.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}
 
 jobs:
   # 1. Setup test infrastructure
@@ -500,6 +501,7 @@ jobs:
             "header/**/*.spec.js",
             "login/**/*.spec.js",
             "users/**/*.spec.js",
+            "utilisation-reports/**/*.spec.js",
           ]
 
     concurrency:

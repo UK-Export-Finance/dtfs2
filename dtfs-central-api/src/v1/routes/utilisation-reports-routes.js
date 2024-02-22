@@ -125,9 +125,7 @@ utilisationReportsRouter
  *               reportsWithStatus:
  *                 type: array
  *                 items:
- *                   oneOf:
- *                     - $ref: '#/definitions/UtilisationReportStatusWithReportId'
- *                     - $ref: '#/definitions/UtilisationReportStatusWithBankId'
+ *                   $ref: '#/definitions/UtilisationReportStatusWithReportId'
  *               user:
  *                 $ref: '#/definitions/TFMUser'
  *     responses:

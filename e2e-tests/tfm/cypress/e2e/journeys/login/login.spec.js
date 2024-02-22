@@ -21,6 +21,7 @@ context('User can login', () => {
       cy.submitDeal(dealId, dealType, T1_USER_1);
     });
   });
+
   after(() => {
     cy.deleteDeals(dealId, ADMIN);
     dealFacilities.forEach((facility) => {
