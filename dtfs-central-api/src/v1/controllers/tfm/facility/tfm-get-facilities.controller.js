@@ -130,9 +130,23 @@ exports.getAllFacilities = async (req, res) => {
       },
     },
     {
+      $addFields: {
+        facilityStage: {
+          $cond: {
+            if: '$tfmFacilities.hasBeenIssued',
+            then: 'Issued',
+            else: 'Unissued',
+          }
+        }
+      }
+    },
+    {
       $sort: {
         ...fieldsToSortOn,
       },
+    },
+    {
+      $unset: 'facilityStage'
     },
     {
       $facet: {
