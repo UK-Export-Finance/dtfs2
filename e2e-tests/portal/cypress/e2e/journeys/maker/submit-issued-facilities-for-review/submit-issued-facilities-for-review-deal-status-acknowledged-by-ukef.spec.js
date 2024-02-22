@@ -48,7 +48,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
   it('Completing Issue bond and Issue loan facility form\'s allows maker to re-submit the deal for review. Deal/facilities should be updated after submitting for review', () => {
     cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
-    pages.contract.proceedToReview().should('not.exist');
+    pages.contract.proceedToReview().should('be.disabled');
 
     const firstBondId = dealFacilities.bonds[0]._id;
     const firstBondRow = pages.contract.bondTransactionsTable.row(firstBondId);
