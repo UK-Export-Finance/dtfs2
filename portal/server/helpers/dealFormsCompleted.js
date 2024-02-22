@@ -1,18 +1,21 @@
 const CONSTANTS = require('../constants');
 
+
 /**
- * Checks if a given facility is complete with respect to the current facility status.
- * @param {Object} facility - An object representing a facility with an `items` property that contains an array of items.
- * @returns {boolean} - `true` if there are no incomplete items, `false` otherwise.
+ * Checks if a facility is complete by filtering its items based on their status and certain conditions,
+ * and then comparing the length of the filtered arrays with the total number of items.
+ * @param {Object} facility - The facility object containing an array of items.
+ * @returns {boolean} - True if the facility is complete, false otherwise.
  */
 const isFacilityComplete = (facility) => {
   const items = facility?.items || [];
   const facilityProcessedStatus = [CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF];
 
-  const completed = items.filter((item) => item.status === CONSTANTS.STATUS.SECTION.COMPLETED);
+  const completed = items.filter((item) => item.status === CONSTANTS.STATUS.FACILITY.COMPLETED);
+  const incomplete = items.filter((item) => item.status === CONSTANTS.STATUS.FACILITY.INCOMPLETE);
   const acknowledged = items.filter((item) => facilityProcessedStatus.includes(item.status) && item.requestedCoverStartDate && item.coverDateConfirmed);
 
-  return items.length === completed.length + acknowledged.length;
+  return items.length === completed.length + incomplete.length + acknowledged.length;
 };
 
 /**
@@ -63,6 +66,7 @@ const isEveryDealFormComplete = (deal) =>
 module.exports = {
   isEligibilityComplete,
   isSubmissionDetailComplete,
+  isFacilityComplete,
   isEveryFacilityComplete,
   isEveryDealFormComplete,
 };
