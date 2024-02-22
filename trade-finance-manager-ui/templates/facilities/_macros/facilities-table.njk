@@ -37,7 +37,14 @@
             activeSortByField: activeSortByField
           })}}
 
-          <th class="govuk-table__header" data-cy="facilities-table-heading-type">Type</th>
+          {{tableHeading.render({
+            fieldName: 'type',
+            buttonText: 'Type',
+            buttonValue: 'tfmFacilities.type',
+            sortButtonWasClicked: sortButtonWasClicked,
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
 
           {{tableHeading.render({
             fieldName: 'companyName',
