@@ -30,7 +30,7 @@ exports.getAllFacilities = async (req, res) => {
     fieldsToSortOn[sortBy.field] = sortBy.order === CONSTANTS.FACILITIES.SORT_BY.ASCENDING ? 1 : -1;
   }
   if (sortBy?.field !== 'ukefFacilityId') {
-    fieldsToSortOn.ukefFacilityId = -1;
+    fieldsToSortOn.ukefFacilityId = 1;
   }
 
   const searchStringEscaped = escapeStringRegexp(searchString || '');

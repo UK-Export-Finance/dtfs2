@@ -12,7 +12,7 @@ const TFM_SORT_BY = {
 
 const TFM_SORT_BY_DEFAULT = {
   field: 'ukefFacilityId',
-  order: TFM_SORT_BY.DESCENDING,
+  order: TFM_SORT_BY.ASCENDING,
 };
 
 module.exports = {
