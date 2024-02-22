@@ -40,10 +40,9 @@ run-name: ✅ Quality assurance testing on ${{ github.event.number }}
 
 on:
   pull_request:
-    branches: 
+    branches:
       - main
-      - feat/FN-1549/refactor-report-schedule
-      
+
     paths:
       - "package*.json"
       - "docker*.yml"

@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { userFullName, userIsInTeam, userIsOnlyInTeams } from './user';
 import { TfmSessionUser } from '../types/tfm-session-user';
 import { TeamId } from '../types/team-id';
@@ -76,5 +75,3 @@ describe('user helpers', () => {
     });
   });
 });
-
-/* eslint-enable no-underscore-dangle */

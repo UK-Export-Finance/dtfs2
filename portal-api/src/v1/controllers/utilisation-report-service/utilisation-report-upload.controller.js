@@ -1,6 +1,6 @@
 const api = require('../../api');
 const sendEmail = require('../../email');
-const { EMAIL_TEMPLATE_IDS, FILESHARES, UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
+const { EMAIL_TEMPLATE_IDS, FILESHARES } = require('../../../constants');
 const { formatDateForEmail } = require('../../helpers/formatDateForEmail');
 const { uploadFile } = require('../../../drivers/fileshare');
 const { formatFilenameForSharepoint } = require('../../../utils');
@@ -109,13 +109,9 @@ const uploadReportAndSendNotification = async (req, res) => {
     }
 
     // If a report has already been uploaded, we should not overwrite it
-    // TODO what about when a TFM user marks the report as done?
-    const nonNotReceivedStatuses = Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).filter(
-      (status) => status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
-    );
     const uploadedReportsInReportPeriod = await api.getUtilisationReports(parsedUser?.bank?.id, {
       reportPeriod: parsedReportPeriod,
-      reportStatuses: nonNotReceivedStatuses,
+      excludeNotUploaded: true,
     });
     if (uploadedReportsInReportPeriod.length > 0) {
       return res.status(409).send('Report for the supplied report period has already been uploaded');

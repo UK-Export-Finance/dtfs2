@@ -18,7 +18,6 @@ describe('get-bank-holidays.controller', () => {
 
     // Assert
     expect(res.statusCode).toEqual(200);
-    // eslint-disable-next-line no-underscore-dangle
     expect(res._getData()).toEqual(MOCK_BANK_HOLIDAYS);
   });
 
@@ -34,7 +33,6 @@ describe('get-bank-holidays.controller', () => {
 
     // Assert
     expect(res.statusCode).toEqual(axiosError.response.status);
-    // eslint-disable-next-line no-underscore-dangle
     expect(res._getData()).toEqual('Failed to get bank holidays');
   });
 });

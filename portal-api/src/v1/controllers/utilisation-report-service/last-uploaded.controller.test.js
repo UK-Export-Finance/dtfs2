@@ -102,9 +102,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
         },
       });
 
-    const nonNotReceivedStatuses = Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).filter(
-      (status) => status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
-    );
+    const excludeNotUploaded = true;
 
     beforeEach(() => {
       jest.resetAllMocks();
@@ -123,9 +121,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       await getLastUploadedReportByBankId(req, res);
 
       // Assert
-      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, {
-        reportStatuses: nonNotReceivedStatuses,
-      });
+      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotUploaded });
 
       // eslint-disable-next-line no-underscore-dangle
       expect(res._getStatusCode()).toBe(errorStatusCode);
@@ -140,9 +136,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       await getLastUploadedReportByBankId(req, res);
 
       // Assert
-      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, {
-        reportStatuses: nonNotReceivedStatuses,
-      });
+      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotUploaded });
 
       // eslint-disable-next-line no-underscore-dangle
       expect(res._getStatusCode()).toBe(500);
@@ -152,16 +146,16 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const uploadedReports = sortedReports.filter((report) => report.status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED);
+      const uploadedReports = sortedReports.filter(
+        (report) => report.status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED && !!report.azureFileInfo,
+      );
       jest.mocked(api.getUtilisationReports).mockResolvedValue(uploadedReports);
 
       // Act
       await getLastUploadedReportByBankId(req, res);
 
       // Assert
-      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, {
-        reportStatuses: nonNotReceivedStatuses,
-      });
+      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotUploaded });
 
       // eslint-disable-next-line no-underscore-dangle
       expect(res._getStatusCode()).toBe(200);

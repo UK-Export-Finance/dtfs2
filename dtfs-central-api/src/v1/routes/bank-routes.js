@@ -108,12 +108,12 @@ bankRouter.route('/').get(getBanksController.getAllBanksGet);
  *         schema:
  *           - $ref: '#/definitions/ReportPeriod'
  *       - in: query
- *         name: reportStatuses
+ *         name: excludeNotUploaded
  *         schema:
- *           type: array
- *           items:
- *             anyOf:
- *               - $ref: '#/definitions/UtilisationReportReconciliationStatus'
+ *           type: string
+ *           enum:
+ *             - true
+ *             - false
  *     responses:
  *       200:
  *         description: OK

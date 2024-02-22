@@ -46,15 +46,6 @@ export const getPreviousReportPeriodStart = (monthAndYear: MonthAndYear): MonthA
 };
 
 /**
- * Checks if the two report period starts are equal
- * @param reportPeriodStart1 - A report period start
- * @param reportPeriodStart2 - The report period start to check against
- * @returns Whether or not the report period starts are equal
- */
-export const isEqualReportPeriodStart = (reportPeriodStart1: MonthAndYear, reportPeriodStart2: MonthAndYear): boolean =>
-  reportPeriodStart1.year === reportPeriodStart2.year && reportPeriodStart1.month === reportPeriodStart2.month;
-
-/**
  * Get the report period for the inputted bank schedule by the target date
  * @param bankReportPeriodSchedule - The bank report period schedule
  * @param dateInTargetReportPeriod - A date in the target report period

@@ -56,7 +56,7 @@ export const saveNotReceivedUtilisationReport = async (reportPeriod: ReportPerio
 
 export type GetUtilisationReportDetailsOptions = {
   reportPeriod?: UtilisationReport['reportPeriod'];
-  reportStatuses?: UtilisationReport['status'][];
+  excludeNotUploaded?: boolean;
 };
 
 /**
@@ -73,8 +73,9 @@ const getUtilisationReportDetailsFilterFromOptions = (options?: GetUtilisationRe
   if (options.reportPeriod) {
     utilisationReportDetailsFilter.reportPeriod = { $eq: options.reportPeriod };
   }
-  if (options.reportStatuses) {
-    utilisationReportDetailsFilter.status = { $in: options.reportStatuses };
+  if (options.excludeNotUploaded) {
+    utilisationReportDetailsFilter.status = { $not: { $in: ['REPORT_NOT_RECEIVED'] } };
+    utilisationReportDetailsFilter.azureFileInfo = { $not: { $eq: null } };
   }
   return utilisationReportDetailsFilter;
 };
@@ -82,6 +83,7 @@ const getUtilisationReportDetailsFilterFromOptions = (options?: GetUtilisationRe
 /**
  * Gets a utilisation report by bank id
  * @param bankId - The bank id
+ * @param options - Extra options to filter reports by
  * @returns The found bank reports (`null` if not found)
  */
 export const getOneUtilisationReportDetailsByBankId = async (

@@ -4,10 +4,9 @@ import {
   getPreviousReportPeriodStart,
   getReportPeriodStartForSubmissionMonth,
   getSubmissionMonthForReportPeriodStart,
-  isEqualReportPeriodStart,
   parseReportPeriod,
 } from './report-period';
-import { MonthAndYear, OneIndexedMonth } from '../types/date';
+import { OneIndexedMonth } from '../types/date';
 import { BankReportPeriodSchedule } from '../types/db-models/banks';
 import { ReportPeriod } from '../types/utilisation-reports';
 
@@ -36,36 +35,6 @@ describe('report-period utils', () => {
       { current: { month: 1, year: 2024 }, previous: { month: 12, year: 2023 } },
     ])('returns $previous when the current ReportPeriodStart is $current', ({ current, previous }) => {
       expect(getPreviousReportPeriodStart(current)).toEqual(previous);
-    });
-  });
-
-  describe('isEqualReportPeriodStart', () => {
-    it.each([
-      {
-        testCase: 'months are the same but years are different',
-        values: [
-          { month: 1, year: 2023 },
-          { month: 1, year: 2024 },
-        ],
-      },
-      {
-        testCase: 'years are the same but months are different',
-        values: [
-          { month: 1, year: 2024 },
-          { month: 2, year: 2024 },
-        ],
-      },
-    ])('returns false when $testCase', ({ values }) => {
-      expect(isEqualReportPeriodStart(values[0], values[1])).toBe(false);
-    });
-
-    it('returns true when values are equal', () => {
-      // Arrange
-      const value1: MonthAndYear = { month: 2, year: 2024 };
-      const value2: MonthAndYear = { month: 2, year: 2024 };
-
-      // Act / Assert
-      expect(isEqualReportPeriodStart(value1, value2)).toBe(true);
     });
   });
 
