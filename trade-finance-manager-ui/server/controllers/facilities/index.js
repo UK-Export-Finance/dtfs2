@@ -128,5 +128,5 @@ const queryFacilities = (req, res) => {
 
 module.exports = {
   getFacilities,
-  queryFacilities
+  queryFacilities,
 };
