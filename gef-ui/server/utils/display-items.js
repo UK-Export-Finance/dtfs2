@@ -1,4 +1,4 @@
-const { format } = require('date-fns');
+const { format, parseISO } = require('date-fns');
 const { isTrueSet } = require('./helpers');
 const {
   BOOLEAN, STAGE, FACILITY_TYPE,
@@ -89,7 +89,7 @@ const facilityItems = (facilityUrl, {
       id: 'issueDate',
       method: (value) => {
         // issueDate is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
-        const date = new Date(value);
+        const date = parseISO(value);
         return format(date, 'd MMMM yyyy');
       },
       isHidden: !issueDate,
@@ -100,7 +100,7 @@ const facilityItems = (facilityUrl, {
       href: `${facilityUrl}/about-facility?status=change`,
       method: (value) => {
         // coverStartDate is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
-        const date = new Date(value);
+        const date = parseISO(value);
         return format(date, 'd MMMM yyyy');
       },
       isHidden: !hasBeenIssued,
@@ -113,7 +113,7 @@ const facilityItems = (facilityUrl, {
       href: `${facilityUrl}/about-facility?status=change`,
       method: (value) => {
         // coverEndDate is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
-        const date = new Date(value);
+        const date = parseISO(value);
         return format(date, 'd MMMM yyyy');
       },
       isHidden: !hasBeenIssued,
