@@ -21,3 +21,11 @@ export const MOCK_UTILISATION_REPORT: UtilisationReport = {
     surname: 'user',
   },
 };
+
+export const MOCK_NOT_RECEIVED_UTILISATION_REPORT: UtilisationReport = {
+  ...MOCK_UTILISATION_REPORT,
+  status: 'REPORT_NOT_RECEIVED',
+  azureFileInfo: null,
+  uploadedBy: undefined,
+  dateUploaded: undefined,
+};

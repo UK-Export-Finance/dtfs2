@@ -18,7 +18,8 @@ const validationErrorHandler = require('./validationErrorHandler');
 const constructPayload = require('./constructPayload');
 const { getOneIndexedMonth } = require('./getOneIndexedMonth');
 const { getBusinessDayOfMonth } = require('./getBusinessDayOfMonth');
-const { getNowAsEpoch } = require('./date');
+const { getNowAsEpoch, getDateFromMonthAndYear } = require('./date');
+const { getFormattedReportPeriod } = require('./getFormattedReportPeriod');
 
 module.exports = {
   dealFormsCompleted,
@@ -42,5 +43,7 @@ module.exports = {
   constructPayload,
   getOneIndexedMonth,
   getBusinessDayOfMonth,
-  getNowAsEpoch
+  getNowAsEpoch,
+  getDateFromMonthAndYear,
+  getFormattedReportPeriod,
 };

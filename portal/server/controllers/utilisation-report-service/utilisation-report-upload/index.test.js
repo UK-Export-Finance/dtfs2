@@ -2,7 +2,7 @@ const httpMocks = require('node-mocks-http');
 const { MOCK_PORTAL_SESSION_USER } = require('../../../test-mocks/mock-portal-session-user');
 const { postUtilisationReportUpload } = require('.');
 const { getUploadErrors } = require('./utilisation-report-upload-errors');
-const { getDueReportDates } = require('./utilisation-report-status');
+const { getDueReportPeriodsByBankId } = require('./utilisation-report-status');
 const { validateCsvData } = require('./utilisation-report-validator');
 const { extractCsvData } = require('../../../utils/csv-utils');
 const { PRIMARY_NAV_KEY } = require('../../../constants');
@@ -18,10 +18,10 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
   });
 
   describe('postUtilisationReportUpload', () => {
-    const mockDueReportDates = [];
+    const mockDueReportPeriods = [];
 
     beforeEach(() => {
-      jest.mocked(getDueReportDates).mockReturnValueOnce(mockDueReportDates);
+      jest.mocked(getDueReportPeriodsByBankId).mockReturnValueOnce(mockDueReportPeriods);
     });
 
     it("renders the 'utilisation-report-upload' page if getUploadErrors returns errors", async () => {
@@ -52,7 +52,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
         errorSummary,
         user: req.session.user,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-        dueReportDates: mockDueReportDates,
+        dueReportPeriods: mockDueReportPeriods,
       });
     });
 
@@ -88,7 +88,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
         errorSummary: expectedExtractDataErrorSummary,
         user: req.session.user,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-        dueReportDates: mockDueReportDates,
+        dueReportPeriods: mockDueReportPeriods,
       });
     });
 

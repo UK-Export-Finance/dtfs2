@@ -68,6 +68,7 @@ services:
       - AUDIT_API_USERNAME
       - AUDIT_API_PASSWORD
       - CHANGE_STREAM_ENABLED
+      - UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
     entrypoint: npx ts-node dtfs-central-api/src/index.ts
 
   trade-finance-manager-ui:

@@ -29,7 +29,8 @@ const generateReportDetails = (year, month) => {
     },
     dateUploaded,
     uploadedBy,
-    azureFileInfo: null,
+    // Azure file info must be non-null if in 'PENDING_RECONCILIATION' state
+    azureFileInfo: {},
     status: 'PENDING_RECONCILIATION',
   };
 };
@@ -47,23 +48,23 @@ const generateReports = (startMonthDate, endMonthDate) =>
 // Reports to be populated for 2020, 2022 and 2023 (ie. not 2021 to match specific test case)
 const previousReportDetails = generateReports(new Date('2020-01-01'), new Date('2023-01-01')).filter(({ reportPeriod }) => reportPeriod.start.year !== 2021);
 
-const january2023ReportDetails = [
+const february2023ReportDetails = [
   {
     bank: BANK1,
     reportPeriod: {
       start: {
-        month: 1,
+        month: 2,
         year: 2023,
       },
       end: {
-        month: 1,
+        month: 2,
         year: 2023,
       },
     },
-    dateUploaded: new Date(2023, 0),
+    dateUploaded: new Date(2023, 1),
     uploadedBy: BANK1_PAYMENT_REPORT_OFFICER1,
     azureFileInfo: null,
-    status: 'PENDING_RECONCILIATION',
+    status: 'REPORT_NOT_RECEIVED',
   },
 ];
 
@@ -79,6 +80,6 @@ const upToDateReportDetails = generateUpToDateReportDetails();
 
 module.exports = {
   previousReportDetails,
-  january2023ReportDetails,
+  february2023ReportDetails,
   upToDateReportDetails,
 };
