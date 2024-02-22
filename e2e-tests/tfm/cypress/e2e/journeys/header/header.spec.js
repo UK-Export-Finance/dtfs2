@@ -3,12 +3,13 @@ import { primaryNavigation } from '../../partials';
 import USERS from '../../../fixtures/users';
 import TEAMS from '../../../fixtures/teams';
 
-context('Users see correct primary navigation items', () => {
-  const findOneUserByTeamId = (teamId) => USERS.find((user) => user?.teams?.includes(teamId));
+const findOneUserByTeamId = (teamId) => USERS.find((user) => user?.teams?.includes(teamId));
 
+const NON_PDC_TEAMS = Object.values(TEAMS).filter((team) => !team.includes('PDC'));
+const PDC_TEAMS = Object.values(TEAMS).filter((team) => team.includes('PDC'));
+
+context('Users see correct primary navigation items', () => {
   beforeEach(() => {
-    // TODO: After SSO user can't visit landingPage.
-    // pages.landingPage.visit();
     pages.feedbackPage.visit();
   });
 
@@ -18,8 +19,7 @@ context('Users see correct primary navigation items', () => {
     primaryNavigation.bankReportsLink().should('not.exist');
   });
 
-  const nonPdcTeams = Object.values(TEAMS).filter((team) => !team.includes('PDC'));
-  nonPdcTeams.forEach((team) => {
+  NON_PDC_TEAMS.forEach((team) => {
     it(`should only show the 'All Deals' and 'All Facilities' navigation item for a user in '${team.id}' team`, () => {
       const userInTeam = findOneUserByTeamId(team);
       cy.login(userInTeam);
@@ -30,8 +30,7 @@ context('Users see correct primary navigation items', () => {
     });
   });
 
-  const pdcTeams = Object.values(TEAMS).filter((team) => team.includes('PDC'));
-  pdcTeams.forEach((team) => {
+  PDC_TEAMS.forEach((team) => {
     it(`should show the 'All Deals', 'All Facilities' and 'Bank Reports' navigation item for a user in '${team.id}' team`, () => {
       const userInTeam = findOneUserByTeamId(team);
       cy.login(userInTeam);
