@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb');
 const escapeStringRegexp = require('escape-string-regexp');
 const db = require('../../../../drivers/db-client');
+const CONSTANTS = require('../../../../constants');
 
 exports.getFacilitiesByDealId = async (req, res) => {
   const { id: dealId } = req.params;
@@ -18,8 +19,21 @@ exports.getFacilitiesByDealId = async (req, res) => {
 };
 
 exports.getAllFacilities = async (req, res) => {
-  const collection = await db.getCollection('tfm-facilities');
-  const searchStringEscaped = escapeStringRegexp(req.body?.searchString || '');
+  const facilitiesCollection = await db.getCollection('tfm-facilities');
+
+  const {
+    searchString, sortBy, pagesize, page = 0
+  } = req.body.queryParams;
+
+  const fieldsToSortOn = {};
+  if (sortBy) {
+    fieldsToSortOn[sortBy.field] = sortBy.order === CONSTANTS.FACILITIES.SORT_BY.ASCENDING ? 1 : -1;
+  }
+  if (sortBy?.field !== 'ukefFacilityId') {
+    fieldsToSortOn.ukefFacilityId = -1;
+  }
+
+  const searchStringEscaped = escapeStringRegexp(searchString || '');
 
   /**
    * mongodb query that returns an array of objects with the following format:
@@ -39,7 +53,7 @@ exports.getAllFacilities = async (req, res) => {
    *     }
    * }]
    */
-  const facilities = await collection.aggregate([
+  const doc = await facilitiesCollection.aggregate([
     {
       $lookup: {
         from: 'tfm-deals',
@@ -116,13 +130,44 @@ exports.getAllFacilities = async (req, res) => {
       },
     },
     {
-      // sort based on the ukefFacilityId - this is default behavior
       $sort: {
-        ukefFacilityId: -1
-      }
+        ...fieldsToSortOn,
+      },
     },
-
+    {
+      $facet: {
+        count: [{ $count: 'total' }],
+        facilities: [{ $skip: page * (pagesize ?? 0) }, ...(pagesize ? [{ $limit: parseInt(pagesize, 10) }] : [])],
+      },
+    },
+    { $unwind: '$count' },
+    {
+      $project: {
+        count: '$count.total',
+        facilities: true,
+      },
+    },
   ]).toArray();
 
-  res.status(200).send(facilities);
+  if (!doc.length) {
+    const pagination = {
+      totalItems: 0,
+      currentPage: page,
+      totalPages: 0,
+    };
+    return res.status(200).send({ facilities: [], pagination });
+  }
+  const { count, facilities } = doc[0];
+
+  const pagination = {
+    totalItems: count,
+    currentPage: page,
+    totalPages: pagesize ? Math.ceil(count / pagesize) : 1,
+  };
+
+  if (facilities) {
+    res.status(200).send({ facilities, pagination });
+  }
+
+  return res.status(404).send();
 };

@@ -84,7 +84,7 @@ const getDeals = async (req, res) => {
   const sortButtonWasClicked = sortfield ? true : false;
 
   return res.render('deals/deals.njk', {
-    heading: generateHeadingText(pagination.totalItems, search),
+    heading: generateHeadingText(pagination.totalItems, search, 'deals'),
     deals,
     activePrimaryNavigation: 'all deals',
     activeSubNavigation: 'deal',

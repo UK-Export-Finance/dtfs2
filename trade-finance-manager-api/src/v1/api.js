@@ -1122,11 +1122,13 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
   return response.data;
 };
 
-const getAllFacilities = async (searchString) => {
+const getAllFacilities = async ({ queryParams }) => {
   try {
     const response = await axios({
       method: 'GET',
-      data: searchString,
+      data: {
+        queryParams
+      },
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities`,
       headers: headers.central,
     });

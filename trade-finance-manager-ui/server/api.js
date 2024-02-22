@@ -48,23 +48,31 @@ const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
   }
 };
 
-const getFacilities = async (token, searchString = '') => {
+const getFacilities = async (queryParams, token) => {
   try {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/facilities`,
       headers: generateHeaders(token),
-      params: { searchString },
+      params: queryParams,
     });
     if (response.data) {
       return {
-        facilities: response.data.tfmFacilities,
+        facilities: response.data.facilities,
+        pagination: response.data.pagination,
       };
     }
-    return { facilities: [] };
+    return {
+      facilities: [],
+      pagination: {
+        totalItems: 0,
+        currentPage: queryParams.page,
+        totalPages: 0,
+      },
+    };
   } catch (error) {
-    console.error(error);
-    return { facilities: [] };
+    console.error('Unable to get facilities %O', error);
+    return {};
   }
 };
 
