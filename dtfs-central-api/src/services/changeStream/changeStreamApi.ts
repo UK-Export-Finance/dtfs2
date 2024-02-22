@@ -2,8 +2,6 @@ import axios from 'axios';
 import { ChangeStreamDocument } from 'mongodb';
 import { InvalidEnvironmentVariableError } from '../../errors/invalid-environment-variable.error';
 
-const { AUDIT_API_URL, AUDIT_API_USERNAME, AUDIT_API_PASSWORD } = process.env;
-
 /**
  * Checks whether the document is a document that needs to be sent to the audit API
  * and sends it if it is
@@ -11,6 +9,7 @@ const { AUDIT_API_URL, AUDIT_API_USERNAME, AUDIT_API_PASSWORD } = process.env;
  * @returns
  */
 export const postAuditDetails: (changeStreamDocument: ChangeStreamDocument) => Promise<void> = async (changeStreamDocument: ChangeStreamDocument) => {
+  const { AUDIT_API_URL, AUDIT_API_USERNAME, AUDIT_API_PASSWORD } = process.env;
   if (!AUDIT_API_URL || !AUDIT_API_USERNAME || !AUDIT_API_PASSWORD) {
     throw new InvalidEnvironmentVariableError('AUDIT_API_URL, AUDIT_API_USERNAME or AUDIT_API_PASSWORD not set');
   }
