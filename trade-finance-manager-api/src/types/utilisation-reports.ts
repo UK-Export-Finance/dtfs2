@@ -34,19 +34,7 @@ export type UtilisationReportResponseBody = {
   };
 };
 
-type ReportId = {
-  id: string;
-};
-
-type ReportDetails = {
-  month: number;
-  year: number;
-  bankId: string;
-};
-
-export type ReportIdentifier = ReportId | ReportDetails;
-
 export type ReportWithStatus = {
   status: UtilisationReportReconciliationStatus;
-  report: ReportIdentifier;
+  reportId: string;
 };

@@ -55,7 +55,10 @@ module.exports = {
         project: './tsconfig.eslint.json',
         tsconfigRootDir: __dirname,
       },
-      rules: baseRules,
+      rules: {
+        ...baseRules,
+        '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
+      },
     },
   ],
 };

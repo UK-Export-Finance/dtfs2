@@ -38,7 +38,7 @@ const getSummaryItemViewModel = (apiItem: UtilisationReportReconciliationSummary
     ...apiItem,
     displayStatus: reconciliationStatusCodeToDisplayStatus[status],
     formattedDateUploaded: dateUploaded ? format(parseISO(dateUploaded), 'd MMM yyyy') : undefined,
-    downloadPath: reportId && !apiItem.isPlaceholderReport ? `/utilisation-reports/${reportId}/download` : undefined,
+    downloadPath: status !== 'REPORT_NOT_RECEIVED' ? `/utilisation-reports/${reportId}/download` : undefined,
   };
 };
 
