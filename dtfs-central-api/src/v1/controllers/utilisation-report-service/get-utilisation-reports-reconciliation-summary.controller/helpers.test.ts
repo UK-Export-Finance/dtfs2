@@ -1,5 +1,8 @@
 import { MOCK_BANKS } from '../../../../../api-tests/mocks/banks';
-import { getOpenReportsBeforeReportPeriodForBankId, getUtilisationReportDetailsByBankIdMonthAndYear } from '../../../../repositories/utilisation-reports-repo';
+import {
+  getOpenReportsBeforeReportPeriodForBankId,
+  getOneUtilisationReportDetailsByBankId,
+} from '../../../../repositories/utilisation-reports-repo';
 import { MOCK_UTILISATION_REPORT } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-reports';
 import { getMockUtilisationDataForReport } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-data';
 import { getAllUtilisationDataForReport } from '../../../../repositories/utilisation-data-repo';
@@ -21,26 +24,17 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
   describe('getAllReportsForSubmissionMonth', () => {
     const submissionMonth: IsoMonthStamp = '2024-01';
 
-    it("returns a minimal 'REPORT_NOT_RECEIVED' summary when the bank has not yet submitted their report", async () => {
+    it('throws an error when the report for the current submission month does not exist', async () => {
       // Arrange
       const banks: Bank[] = [MOCK_BANKS.BARCLAYS];
 
-      jest.mocked(getUtilisationReportDetailsByBankIdMonthAndYear).mockResolvedValue(null);
+      jest.mocked(getOneUtilisationReportDetailsByBankId).mockResolvedValue(null);
       jest.mocked(getOpenReportsBeforeReportPeriodForBankId).mockResolvedValue([]);
 
-      // Act
-      const result = await getAllReportsForSubmissionMonth(banks, submissionMonth);
+      const expectedError = new Error(`Failed to get report for bank with id ${MOCK_BANKS.BARCLAYS.id} for submission month ${submissionMonth}`);
 
-      // Assert
-      expect(result).toEqual<UtilisationReportReconciliationSummary>({
-        submissionMonth,
-        items: [
-          {
-            bank: { id: MOCK_BANKS.BARCLAYS.id, name: MOCK_BANKS.BARCLAYS.name },
-            status: 'REPORT_NOT_RECEIVED',
-          },
-        ],
-      });
+      // Act/Assert
+      await expect(getAllReportsForSubmissionMonth(banks, submissionMonth)).rejects.toThrow(expectedError);
     });
 
     it('returns the reconciliation summary for all banks', async () => {
@@ -52,12 +46,18 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         bank: { id: MOCK_BANKS.BARCLAYS.id, name: MOCK_BANKS.BARCLAYS.name },
         status: 'RECONCILIATION_IN_PROGRESS',
       };
+      const hsbcReport: UtilisationReport = {
+        ...MOCK_UTILISATION_REPORT,
+        bank: { id: MOCK_BANKS.HSBC.id, name: MOCK_BANKS.HSBC.name },
+        status: 'PENDING_RECONCILIATION',
+      };
       // eslint-disable-next-line @typescript-eslint/require-await
-      jest.mocked(getUtilisationReportDetailsByBankIdMonthAndYear).mockImplementation(async (bankId) => {
+      jest.mocked(getOneUtilisationReportDetailsByBankId).mockImplementation(async (bankId) => {
         switch (bankId) {
           case MOCK_BANKS.BARCLAYS.id:
             return barclaysReport;
           case MOCK_BANKS.HSBC.id:
+            return hsbcReport;
           default:
             return null;
         }
@@ -76,16 +76,19 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         items: [
           {
             reportId: barclaysReport._id,
-            bank: { id: MOCK_BANKS.BARCLAYS.id, name: MOCK_BANKS.BARCLAYS.name },
+            bank: barclaysReport.bank,
             status: barclaysReport.status,
             dateUploaded: barclaysReport.dateUploaded,
             totalFeesReported: 1,
             reportedFeesLeftToReconcile: 1,
-            isPlaceholderReport: false,
           },
           {
-            bank: { id: MOCK_BANKS.HSBC.id, name: MOCK_BANKS.HSBC.name },
-            status: 'REPORT_NOT_RECEIVED',
+            reportId: hsbcReport._id,
+            bank: hsbcReport.bank,
+            status: hsbcReport.status,
+            dateUploaded: hsbcReport.dateUploaded,
+            totalFeesReported: 1,
+            reportedFeesLeftToReconcile: 1,
           },
         ],
       });
@@ -93,7 +96,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
   });
 
   describe('getPreviousOpenReportsBySubmissionMonth', () => {
-    it('adds missing reports (i.e. where not received)', async () => {
+    it('returns all the previous reports', async () => {
       // Arrange
       const banks: Bank[] = [MOCK_BANKS.BARCLAYS];
       const currentSubmissionMonth: IsoMonthStamp = '2023-12';
@@ -130,11 +133,23 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         },
       };
 
-      const openReports: UtilisationReport[] = [
-        augustPeriodReport,
-        septemberPeriodReport,
-        // MISSING - october report not received
-      ];
+      const octoberPeriodReport: UtilisationReport = {
+        ...MOCK_UTILISATION_REPORT,
+        bank: MOCK_BANKS.BARCLAYS,
+        status: 'REPORT_NOT_RECEIVED',
+        reportPeriod: {
+          start: {
+            month: 10,
+            year: 2023,
+          },
+          end: {
+            month: 10,
+            year: 2023,
+          },
+        },
+      };
+
+      const openReports: UtilisationReport[] = [augustPeriodReport, septemberPeriodReport, octoberPeriodReport];
 
       jest.mocked(getOpenReportsBeforeReportPeriodForBankId).mockResolvedValue(openReports);
       jest.mocked(getAllUtilisationDataForReport).mockImplementation((report) => Promise.resolve([getMockUtilisationDataForReport(report)]));
@@ -208,7 +223,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
               getOpenReport({ bank: bankB, month: 8 }),
             ]);
           case bankC.id:
-            return Promise.resolve([getOpenReport({ bank: bankC, month: 9 })]);
+            return Promise.resolve([getOpenReport({ bank: bankC, month: 9 }), getOpenReport({ bank: bankC, month: 10 })]);
           default:
             throw new Error(`unexpected bankId ${bankId}`);
         }

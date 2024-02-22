@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const CONSTANTS = require('../../constants');
 const Application = require('../../models/application');
 const api = require('../../services/api');

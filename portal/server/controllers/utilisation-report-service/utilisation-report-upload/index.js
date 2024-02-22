@@ -2,34 +2,35 @@ const { format, startOfMonth, addMonths } = require('date-fns');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
 const { getUploadErrors } = require('./utilisation-report-upload-errors');
-const { getReportDueDate, getDueReportDates } = require('./utilisation-report-status');
+const { getDueReportPeriodsByBankId, getReportDueDate } = require('./utilisation-report-status');
 const api = require('../../../api');
 const { getReportAndUserDetails } = require('./utilisation-report-details');
 const { PRIMARY_NAV_KEY } = require('../../../constants');
 
-const setSessionUtilisationReport = (req, nextDueReportDate) => {
+const setSessionUtilisationReport = (req, nextDueReportPeriod) => {
   req.session.utilisationReport = {
     reportPeriod: {
       start: {
-        month: nextDueReportDate.month,
-        year: nextDueReportDate.year,
+        month: nextDueReportPeriod.start.month,
+        year: nextDueReportPeriod.start.year,
       },
       end: {
-        month: nextDueReportDate.month,
-        year: nextDueReportDate.year,
+        month: nextDueReportPeriod.end.month,
+        year: nextDueReportPeriod.end.year,
       },
     },
-    formattedReportPeriod: nextDueReportDate.formattedReportPeriod,
+    formattedReportPeriod: nextDueReportPeriod.formattedReportPeriod,
   };
 };
 
 /**
- * @typedef {Object} ReportDetails
- * @property {string} uploadedByFullName - The uploaded by users full name with format '{firstname} {surname}'
- * @property {string} formattedDateAndTimeUploaded - The date uploaded formatted as 'd MMMM yyyy at h:mmaaa'
- * @property {string} lastUploadedReportPeriod - The report period of the report formatted as 'MMMM yyyy'
+ * @typedef {import('./utilisation-report-details').ReportAndUserDetails} ReportAndUserDetails
+ *
+ * @typedef {Object} NextReportPeriodDetails
  * @property {string} nextReportPeriod - The upcoming report period (the current month) with format 'MMMM yyyy'
  * @property {string} nextReportPeriodSubmissionStart - The start of the month when the next report period report can be submitted with format 'd MMMM yyyy'
+ *
+ * @typedef {NextReportPeriodDetails & ReportAndUserDetails} ReportDetails
  */
 
 /**
@@ -40,9 +41,10 @@ const setSessionUtilisationReport = (req, nextDueReportDate) => {
  * @returns {Promise<ReportDetails>}
  */
 const getLastUploadedReportDetails = async (userToken, bankId) => {
-  const lastUploadedReport = await api.getLastestReportByBank(userToken, bankId);
+  const lastUploadedReport = await api.getLastUploadedReportByBankId(userToken, bankId);
   const reportAndUserDetails = getReportAndUserDetails(lastUploadedReport);
 
+  // TODO FN-1249 adjust for quarterly
   const nextReportDate = new Date();
   const nextReportPeriod = format(nextReportDate, 'MMMM yyyy');
 
@@ -56,16 +58,16 @@ const getUtilisationReportUpload = async (req, res) => {
   const { user, userToken } = req.session;
   const bankId = user.bank.id;
   try {
-    const dueReportDates = await getDueReportDates(userToken, bankId);
-    if (dueReportDates.length > 0) {
-      const nextDueReportDate = dueReportDates[0];
-      setSessionUtilisationReport(req, nextDueReportDate);
-      const reportPeriodDate = new Date(nextDueReportDate.year, nextDueReportDate.month - 1);
-      const nextDueReportDueDate = await getReportDueDate(userToken, reportPeriodDate);
+    const dueReportPeriods = await getDueReportPeriodsByBankId(userToken, bankId);
+    if (dueReportPeriods.length > 0) {
+      const nextDueReportPeriod = dueReportPeriods[0];
+      setSessionUtilisationReport(req, nextDueReportPeriod);
+      const reportPeriodEndDate = new Date(nextDueReportPeriod.end.year, nextDueReportPeriod.end.month - 1);
+      const nextDueReportDueDate = await getReportDueDate(userToken, reportPeriodEndDate);
       return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
         user,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-        dueReportDates,
+        dueReportPeriods,
         nextDueReportDueDate,
       });
     }
@@ -74,7 +76,7 @@ const getUtilisationReportUpload = async (req, res) => {
     return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
       user,
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-      dueReportDates,
+      dueReportPeriods,
       ...lastUploadedReportDetails,
     });
   } catch (error) {
@@ -83,7 +85,7 @@ const getUtilisationReportUpload = async (req, res) => {
   }
 };
 
-const renderPageWithError = (req, res, errorSummary, validationError, dueReportDates) => {
+const renderPageWithError = (req, res, errorSummary, validationError, dueReportPeriods) => {
   if (req.query?.check_the_report) {
     return res.render('utilisation-report-service/utilisation-report-upload/check-the-report.njk', {
       fileUploadError: validationError,
@@ -97,7 +99,7 @@ const renderPageWithError = (req, res, errorSummary, validationError, dueReportD
     errorSummary,
     user: req.session.user,
     primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-    dueReportDates,
+    dueReportPeriods,
   });
 };
 
@@ -110,8 +112,8 @@ const postUtilisationReportUpload = async (req, res) => {
     if (uploadErrors) {
       const { uploadErrorSummary, uploadValidationError } = uploadErrors;
 
-      const dueReportDates = await getDueReportDates(userToken, bankId);
-      return renderPageWithError(req, res, uploadErrorSummary, uploadValidationError, dueReportDates);
+      const dueReportPeriods = await getDueReportPeriodsByBankId(userToken, bankId);
+      return renderPageWithError(req, res, uploadErrorSummary, uploadValidationError, dueReportPeriods);
     }
 
     // File is valid so we can start processing and validating its data
@@ -124,8 +126,8 @@ const postUtilisationReportUpload = async (req, res) => {
         },
       ];
       const extractDataError = { text: 'The selected file could not be uploaded, try again and make sure it is not password protected' };
-      const dueReportDates = await getDueReportDates(userToken, bankId);
-      return renderPageWithError(req, res, extractDataErrorSummary, extractDataError, dueReportDates);
+      const dueReportPeriods = await getDueReportPeriodsByBankId(userToken, bankId);
+      return renderPageWithError(req, res, extractDataErrorSummary, extractDataError, dueReportPeriods);
     }
 
     const csvValidationErrors = validateCsvData(csvJson);

@@ -1,7 +1,7 @@
 const TEAMS = require('./teams');
 
-module.exports = [
-  {
+module.exports = {
+  T1_USER_1: {
     username: 'T1_USER_1',
     email: 'test@testing.com',
     password: 'AbC!2345',
@@ -10,7 +10,7 @@ module.exports = [
     firstName: 'Joe',
     lastName: 'Bloggs',
   },
-  {
+  T1_USER_2: {
     username: 'T1_USER_2',
     email: 'test@testing.com',
     password: 'AbC!2345',
@@ -19,7 +19,7 @@ module.exports = [
     firstName: 'Joe',
     lastName: 'Bloggs',
   },
-  {
+  T1_USER_3: {
     username: 'T1_USER_3',
     email: 'test@testing.com',
     password: 'AbC!2345',
@@ -28,7 +28,7 @@ module.exports = [
     firstName: 'Joe',
     lastName: 'Bloggs',
   },
-  {
+  T2_USER_1: {
     username: 'T2_USER_1',
     email: 'test@testing.com',
     password: 'AbC!2345',
@@ -37,7 +37,7 @@ module.exports = [
     firstName: 'Joe',
     lastName: 'Bloggs',
   },
-  {
+  T2_USER_2: {
     username: 'T2_USER_2',
     email: 'test@testing.com',
     password: 'AbC!2345',
@@ -46,7 +46,7 @@ module.exports = [
     firstName: 'Joe',
     lastName: 'Bloggs',
   },
-  {
+  T2_USER_3: {
     username: 'T2_USER_3',
     email: 'test@testing.com',
     password: 'AbC!2345',
@@ -55,7 +55,7 @@ module.exports = [
     firstName: 'Joe',
     lastName: 'Bloggs',
   },
-  {
+  BUSINESS_SUPPORT_USER_1: {
     username: 'BUSINESS_SUPPORT_USER_1',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -64,7 +64,7 @@ module.exports = [
     firstName: 'John',
     lastName: 'Davies',
   },
-  {
+  BUSINESS_SUPPORT_USER_2: {
     username: 'BUSINESS_SUPPORT_USER_2',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -73,7 +73,7 @@ module.exports = [
     firstName: 'Sarah',
     lastName: 'Walker',
   },
-  {
+  UNDERWRITING_SUPPORT_1: {
     username: 'UNDERWRITING_SUPPORT_1',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -82,7 +82,7 @@ module.exports = [
     firstName: 'Ben',
     lastName: 'Wilson',
   },
-  {
+  UNDERWRITING_SUPPORT_2: {
     username: 'UNDERWRITING_SUPPORT_2',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -91,7 +91,7 @@ module.exports = [
     firstName: 'Rachel',
     lastName: 'Smith',
   },
-  {
+  UNDERWRITER_MANAGER_1: {
     username: 'UNDERWRITER_MANAGER_1',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -100,7 +100,7 @@ module.exports = [
     firstName: 'Benjamin',
     lastName: 'Jones',
   },
-  {
+  UNDERWRITER_MANAGER_2: {
     username: 'UNDERWRITER_MANAGER_2',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -109,7 +109,7 @@ module.exports = [
     firstName: 'Jonathan',
     lastName: 'Roberts',
   },
-  {
+  UNDERWRITER_1: {
     username: 'UNDERWRITER_1',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -118,7 +118,7 @@ module.exports = [
     firstName: 'Olivia',
     lastName: 'Williams',
   },
-  {
+  UNDERWRITER_2: {
     username: 'UNDERWRITER_2',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -127,7 +127,7 @@ module.exports = [
     firstName: 'James',
     lastName: 'Smith',
   },
-  {
+  UNDERWRITER_3: {
     username: 'UNDERWRITER_3',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -136,7 +136,7 @@ module.exports = [
     firstName: 'Rachel',
     lastName: 'Jones',
   },
-  {
+  RISK_MANAGER_1: {
     username: 'RISK_MANAGER_1',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -145,7 +145,7 @@ module.exports = [
     firstName: 'Steven',
     lastName: 'Robinson',
   },
-  {
+  PIM_USER_1: {
     username: 'PIM_USER_1',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -154,7 +154,7 @@ module.exports = [
     firstName: 'Adam',
     lastName: 'Last',
   },
-  {
+  QA: {
     username: 'QA',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -163,7 +163,7 @@ module.exports = [
     firstName: 'Caroline-Test',
     lastName: 'O’Test Taylor',
   },
-  {
+  ESTORE: {
     username: 'ESTORE',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -172,7 +172,7 @@ module.exports = [
     firstName: 'ESTORE',
     lastName: 'ESTORE',
   },
-  {
+  PDC_READ: {
     username: 'PDC_READ',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -181,7 +181,7 @@ module.exports = [
     firstName: 'PDC',
     lastName: 'Read',
   },
-  {
+  PDC_RECONCILE: {
     username: 'PDC_RECONCILE',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -190,4 +190,13 @@ module.exports = [
     firstName: 'PDC',
     lastName: 'Reconcile',
   },
-];
+  PIM_PDC_RECONCILE: {
+    username: 'PIM_PDC_RECONCILE',
+    password: 'AbC!2345',
+    email: 'test@testing.com',
+    teams: [TEAMS.PIM.id, TEAMS.PDC_RECONCILE.id],
+    timezone: 'Europe/London',
+    firstName: 'PIM and',
+    lastName: 'PDC Reconcile',
+  },
+};
