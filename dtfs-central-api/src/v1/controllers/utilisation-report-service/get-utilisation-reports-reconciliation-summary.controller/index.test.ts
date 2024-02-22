@@ -34,7 +34,6 @@ describe('getUtilisationReportsReconciliationSummary', () => {
     expect(console.error).toHaveBeenCalledWith(expectedErrorMessage, error);
 
     expect(res.statusCode).toEqual(500);
-    // eslint-disable-next-line no-underscore-dangle
     expect(res._getData()).toEqual(expectedErrorMessage);
   });
 
@@ -49,7 +48,6 @@ describe('getUtilisationReportsReconciliationSummary', () => {
 
     // Assert
     expect(res.statusCode).toEqual(200);
-    // eslint-disable-next-line no-underscore-dangle
     expect(res._getData()).toEqual([MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY]);
   });
 });

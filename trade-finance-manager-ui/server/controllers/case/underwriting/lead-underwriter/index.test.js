@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
 import mapAssignToSelectOptions from '../../../../helpers/map-assign-to-select-options';
