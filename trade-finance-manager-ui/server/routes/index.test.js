@@ -6,7 +6,6 @@ import dealsRoutes from './deals';
 import facilitiesRoutes from './facilities';
 import feedbackRoutes from './feedback';
 import feedbackThankYouRoutes from './feedback-thank-you';
-import userRoutes from './user';
 import utilisationReportsRoutes from './utilisation-reports';
 import footerRoutes from './footer';
 import { validateUser } from '../middleware/user-validation';
@@ -29,7 +28,6 @@ describe('routes index', () => {
     expect(use).toHaveBeenCalledWith('/facilities', validateUser, facilitiesRoutes);
     expect(use).toHaveBeenCalledWith('/feedback', feedbackRoutes);
     expect(use).toHaveBeenCalledWith('/thank-you-feedback', feedbackThankYouRoutes);
-    expect(use).toHaveBeenCalledWith('/user', userRoutes);
     expect(use).toHaveBeenCalledWith('/utilisation-reports', validateUser, utilisationReportsRoutes);
     expect(use).toHaveBeenCalledWith('/', footerRoutes);
   });
