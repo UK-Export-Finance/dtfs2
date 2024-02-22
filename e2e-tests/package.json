@@ -38,5 +38,11 @@
     "node": ">=20",
     "npm": ">=10"
   },
-  "engineStrict": true
+  "engineStrict": true,
+  "dependencies": {
+    "cookie-signature": "^1.2.1",
+    "dotenv": "^16.4.5",
+    "jws": "^4.0.0",
+    "redis": "^4.6.13"
+  }
 }

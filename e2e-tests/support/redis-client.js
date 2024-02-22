@@ -2,6 +2,12 @@ const redis = require('redis');
 
 let connection = null;
 
+/**
+ * redisConnect
+ * Create and connect to a redis client.
+ * @param {Object} config: Redis configuration
+ * @returns {RedisClient}
+ */
 const redisConnect = async (config) => {
   let redisOptions = {};
 
@@ -17,7 +23,20 @@ const redisConnect = async (config) => {
   return redisClient;
 };
 
-module.exports.set = async (key, value, maxAge, config) => {
+/**
+ * set
+ * Set the redis connection.
+ * @param {String} key: Session identifier key
+ * @param {String} value: Session identifier value
+ * @param {String} maxAge: Session age
+ * @param {Object} config: Redis configuration
+ */
+const set = async ({
+  key,
+  value,
+  maxAge,
+  config,
+}) => {
   if (!connection) {
     connection = await redisConnect(config);
   }
@@ -25,7 +44,13 @@ module.exports.set = async (key, value, maxAge, config) => {
   await connection.set(key, JSON.stringify(value), { EX: maxAge * 1000 });
 };
 
-module.exports.getConnection = async (config) => {
+/**
+ * getConnection
+ * Get the redis connection.
+ * @param {Object} config: Redis configuration
+ * @returns {RedisClient}
+ */
+const getConnection = async (config) => {
   if (!connection) {
     connection = await redisConnect(config);
   }
@@ -33,8 +58,18 @@ module.exports.getConnection = async (config) => {
   return connection;
 };
 
-module.exports.close = async () => {
+/**
+ * close
+ * Close the redis connection.
+ */
+const close = async () => {
   if (connection) {
     await connection.disconnect();
   }
+};
+
+module.exports = {
+  set,
+  getConnection,
+  close,
 };

@@ -71,7 +71,12 @@ module.exports = {
       },
 
       async overrideRedisUserSession({ sessionIdentifier, value, maxAge }) {
-        await redis.set(`sess:${sessionIdentifier}`, value, maxAge, redisConnectionOptions);
+        await redis.set({
+          key: `sess:${sessionIdentifier}`,
+          value,
+          maxAge,
+          config: redisConnectionOptions,
+        });
         return true;
       },
 
