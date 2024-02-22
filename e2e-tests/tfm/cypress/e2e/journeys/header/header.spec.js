@@ -22,7 +22,7 @@ context('Users see correct primary navigation items', () => {
   nonPdcTeams.forEach((team) => {
     it(`should only show the 'All Deals' and 'All Facilities' navigation item for a user in '${team.id}' team`, () => {
       const userInTeam = findOneUserByTeamId(team);
-      cy.mockLogin(userInTeam);
+      cy.login(userInTeam);
 
       primaryNavigation.allDealsLink().should('exist');
       primaryNavigation.allFacilitiesLink().should('exist');
@@ -34,7 +34,7 @@ context('Users see correct primary navigation items', () => {
   pdcTeams.forEach((team) => {
     it(`should show the 'All Deals', 'All Facilities' and 'Bank Reports' navigation item for a user in '${team.id}' team`, () => {
       const userInTeam = findOneUserByTeamId(team);
-      cy.mockLogin(userInTeam);
+      cy.login(userInTeam);
 
       primaryNavigation.allDealsLink().should('exist');
       primaryNavigation.allFacilitiesLink().should('exist');

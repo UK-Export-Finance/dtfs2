@@ -36,7 +36,7 @@ context('Amendments - automatic approval journey', () => {
     });
 
     it('should display facility details and values on deal and facility page', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
@@ -59,7 +59,7 @@ context('Amendments - automatic approval journey', () => {
     });
 
     it('should take you to `Check your answers page` page', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -165,7 +165,7 @@ context('Amendments - automatic approval journey', () => {
     });
 
     it('should validate the content on `Check your answers` page', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -199,7 +199,7 @@ context('Amendments - automatic approval journey', () => {
     });
 
     it('should display the Automatic approval for Cover end date AND Facility value', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -216,7 +216,7 @@ context('Amendments - automatic approval journey', () => {
     });
 
     it('should display amendment changed dates and values on deal and facility page', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
@@ -265,7 +265,7 @@ context('Amendments - automatic approval journey', () => {
     });
 
     it('should display facility details and values on deal and facility page', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
@@ -286,7 +286,7 @@ context('Amendments - automatic approval journey', () => {
     });
 
     it('should take you to `Check your answers` page', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -332,7 +332,7 @@ context('Amendments - automatic approval journey', () => {
     });
 
     it('should validate the content on `Check your answers` page', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -363,7 +363,7 @@ context('Amendments - automatic approval journey', () => {
     });
 
     it('should display the Automatic approval for Cover end date', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -380,7 +380,7 @@ context('Amendments - automatic approval journey', () => {
     });
 
     it('should display amendment changed dates on deal and facility page', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
@@ -427,7 +427,7 @@ context('Amendments - automatic approval journey', () => {
     });
 
     it('should display facility details and values on deal and facility page', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
@@ -448,7 +448,7 @@ context('Amendments - automatic approval journey', () => {
     });
 
     it('should take you to `Check your answers page` page', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -493,7 +493,7 @@ context('Amendments - automatic approval journey', () => {
     });
 
     it('should validate the content on `Check your answers` page', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -523,7 +523,7 @@ context('Amendments - automatic approval journey', () => {
     });
 
     it('should display the Automatic approval for Facility value', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -540,7 +540,7 @@ context('Amendments - automatic approval journey', () => {
     });
 
     it('should display amendment changed values on deal and facility page', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));

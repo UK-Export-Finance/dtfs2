@@ -31,7 +31,7 @@ context('Amendments - Request date', () => {
   });
 
   it('should take you to amendment request page when clicking add an amendment button', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -50,7 +50,7 @@ context('Amendments - Request date', () => {
   });
 
   it('should return errors when clicking continue on blank inputs', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -65,7 +65,7 @@ context('Amendments - Request date', () => {
   });
 
   it('should return errors when clicking continue on past date', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -84,7 +84,7 @@ context('Amendments - Request date', () => {
   });
 
   it('should return errors when clicking continue on future date', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -103,7 +103,7 @@ context('Amendments - Request date', () => {
   });
 
   it('should return errors when clicking continue on year in wrong format', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -149,7 +149,7 @@ context('Amendments - Request date', () => {
   });
 
   it('should take you back to amendments page when clicking cancel', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -162,7 +162,7 @@ context('Amendments - Request date', () => {
   });
 
   it('should redirect when adding correct request date', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));

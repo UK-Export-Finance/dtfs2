@@ -9,7 +9,7 @@ context('Login to tfm with specific roles', () => {
   nonPdcTeams.forEach((team) => {
     it(`should redirect to /deals after a login for users in '${team}' team`, () => {
       const userInTeam = findOneUserByTeamId(team);
-      cy.mockLogin(userInTeam);
+      cy.login(userInTeam);
 
       cy.url().should('eq', relativeURL('/deals'));
     });
@@ -19,7 +19,7 @@ context('Login to tfm with specific roles', () => {
   pdcTeams.forEach((team) => {
     it(`should redirect to /utilisation-reports after a login for users in '${team}' team`, () => {
       const userInTeam = findOneUserByTeamId(team);
-      cy.mockLogin(userInTeam);
+      cy.login(userInTeam);
 
       cy.url().should('eq', relativeURL('/utilisation-reports'));
     });
