@@ -33,7 +33,7 @@ context('Facility page', () => {
     });
   });
 
-  it.only('renders case summary with deal data', () => {
+  it('renders case summary with deal data', () => {
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 

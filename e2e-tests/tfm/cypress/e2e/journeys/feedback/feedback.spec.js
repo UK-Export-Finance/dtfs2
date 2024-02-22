@@ -1,77 +1,75 @@
 import relative from '../../relativeURL';
-import pages from '../../pages';
+import feedbackPage from '../../pages/feedbackPage';
+import partials from '../../partials';
 
 context('User submit feedback on TFM', () => {
-  it('feedback should contain correct components and text', () => {
-    // TODO: After SSO user can't visit landingPage.
-    // pages.landingPage.visit();
-    // partials.header.betaBannerHref().should('have.attr', 'target', '_blank');
-
-    pages.feedbackPage.visit();
-
-    pages.feedbackPage.feedBackPageHeading().contains('Feedback');
-
-    pages.feedbackPage.roleHeading().contains('What is your role?');
-    pages.feedbackPage.role().should('exist');
-
-    pages.feedbackPage.teamHeading().contains('Which team do you work in?');
-    pages.feedbackPage.team().should('exist');
-
-    pages.feedbackPage.whyUsingServiceHeading().contains('Why were you using the service today?');
-    pages.feedbackPage.whyUsingService().should('exist');
-
-    pages.feedbackPage.ratingHeading().contains('How would you rate this service?');
-
-    pages.feedbackPage.easyToUse().should('exist');
-
-    pages.feedbackPage.satisfied().should('exist');
-
-    pages.feedbackPage.howCanWeImproveHeading().contains('How can we improve the service? (optional)');
-    pages.feedbackPage.howCanWeImprove().should('exist');
-
-    pages.feedbackPage.emailAddressHeading().contains('Email address (optional)');
-    pages.feedbackPage.emailAddressHint().contains('We will use it to contact you to participate in research and testing to help us improve the service.');
-    pages.feedbackPage.emailAddress().should('exist');
+  beforeEach(() => {
+    cy.saveSession();
+    feedbackPage.visit();
   });
 
-  it('feedback should give errors if incorrectly filled up', () => {
-    pages.feedbackPage.visit();
+  it('feedback should contain correct components and text', () => {
+    partials.header.betaBannerHref().should('have.attr', 'target', '_blank');
 
-    pages.feedbackPage.emailAddress().type('a');
+    feedbackPage.feedBackPageHeading().contains('Feedback');
 
-    pages.feedbackPage.submitButton().click();
+    feedbackPage.roleHeading().contains('What is your role?');
+    feedbackPage.role().should('exist');
 
-    pages.feedbackPage.roleErrorMessage().contains('Enter your role');
-    pages.feedbackPage.teamErrorMessage().contains('Enter which team you work for');
-    pages.feedbackPage.whyUsingServiceErrorMessage().contains('Enter your reason for using this service today');
-    pages.feedbackPage.easyToUseErrorMessage().contains('Select a rating for how easy the service is to use');
-    pages.feedbackPage.satisfiedErrorMessage().contains('Select a rating for how satisfied you are with the service');
-    pages.feedbackPage.emailAddressErrorMessage().contains('Enter an email address in the correct format, like name@example.com');
+    feedbackPage.teamHeading().contains('Which team do you work in?');
+    feedbackPage.team().should('exist');
 
-    pages.feedbackPage.errorSummary().contains('Enter your role');
-    pages.feedbackPage.errorSummary().contains('Enter which team you work for');
-    pages.feedbackPage.errorSummary().contains('Enter your reason for using this service today');
-    pages.feedbackPage.errorSummary().contains('Select a rating for how easy the service is to use');
-    pages.feedbackPage.errorSummary().contains('Select a rating for how satisfied you are with the service');
-    pages.feedbackPage.errorSummary().contains('Enter an email address in the correct format, like name@example.com');
+    feedbackPage.whyUsingServiceHeading().contains('Why were you using the service today?');
+    feedbackPage.whyUsingService().should('exist');
+
+    feedbackPage.ratingHeading().contains('How would you rate this service?');
+
+    feedbackPage.easyToUse().should('exist');
+
+    feedbackPage.satisfied().should('exist');
+
+    feedbackPage.howCanWeImproveHeading().contains('How can we improve the service? (optional)');
+    feedbackPage.howCanWeImprove().should('exist');
+
+    feedbackPage.emailAddressHeading().contains('Email address (optional)');
+    feedbackPage.emailAddressHint().contains('We will use it to contact you to participate in research and testing to help us improve the service.');
+    feedbackPage.emailAddress().should('exist');
+  });
+
+  it('feedback should give errors if incorrectly entered', () => {
+    feedbackPage.emailAddress().type('a');
+
+    feedbackPage.submitButton().click();
+
+    feedbackPage.roleErrorMessage().contains('Enter your role');
+    feedbackPage.teamErrorMessage().contains('Enter which team you work for');
+    feedbackPage.whyUsingServiceErrorMessage().contains('Enter your reason for using this service today');
+    feedbackPage.easyToUseErrorMessage().contains('Select a rating for how easy the service is to use');
+    feedbackPage.satisfiedErrorMessage().contains('Select a rating for how satisfied you are with the service');
+    feedbackPage.emailAddressErrorMessage().contains('Enter an email address in the correct format, like name@example.com');
+
+    feedbackPage.errorSummary().contains('Enter your role');
+    feedbackPage.errorSummary().contains('Enter which team you work for');
+    feedbackPage.errorSummary().contains('Enter your reason for using this service today');
+    feedbackPage.errorSummary().contains('Select a rating for how easy the service is to use');
+    feedbackPage.errorSummary().contains('Select a rating for how satisfied you are with the service');
+    feedbackPage.errorSummary().contains('Enter an email address in the correct format, like name@example.com');
   });
 
   it('feedback should submit without errors and with correct thank you page', () => {
-    pages.feedbackPage.visit();
+    feedbackPage.role().type('test');
+    feedbackPage.team().type('test');
+    feedbackPage.whyUsingService().type('test');
+    feedbackPage.easyToUseSelection().click();
+    feedbackPage.satisfiedSelection().click();
+    feedbackPage.howCanWeImprove().type('test');
+    feedbackPage.emailAddress().clear();
 
-    pages.feedbackPage.role().type('test');
-    pages.feedbackPage.team().type('test');
-    pages.feedbackPage.whyUsingService().type('test');
-    pages.feedbackPage.easyToUseSelection().click();
-    pages.feedbackPage.satisfiedSelection().click();
-    pages.feedbackPage.howCanWeImprove().type('test');
-    pages.feedbackPage.emailAddress().clear();
-
-    pages.feedbackPage.submitButton().click();
+    feedbackPage.submitButton().click();
 
     cy.url().should('eq', relative('/thank-you-feedback'));
 
-    pages.feedbackPage.thankYouPageHeading().contains('Feedback');
-    pages.feedbackPage.thankYouPageText().contains('Thank you for your feedback. We will use your feedback for future improvement. Do let us know if there is anything else we need to know to improve this area of concern.');
+    feedbackPage.thankYouPageHeading().contains('Feedback');
+    feedbackPage.thankYouPageText().contains('Thank you for your feedback. We will use your feedback for future improvement. Do let us know if there is anything else we need to know to improve this area of concern.');
   });
 });
