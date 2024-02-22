@@ -2,6 +2,8 @@ import axios from 'axios';
 import { ChangeStreamDocument } from 'mongodb';
 import { InvalidEnvironmentVariableError } from '../../errors/invalid-environment-variable.error';
 
+const { AUDIT_API_URL, AUDIT_API_USERNAME, AUDIT_API_PASSWORD } = process.env;
+
 /**
  * Checks whether the document is a document that needs to be sent to the audit API
  * and sends it if it is
@@ -9,7 +11,7 @@ import { InvalidEnvironmentVariableError } from '../../errors/invalid-environmen
  * @returns
  */
 export const postAuditDetails: (changeStreamDocument: ChangeStreamDocument) => Promise<void> = async (changeStreamDocument: ChangeStreamDocument) => {
-  if (!process.env.AUDIT_API_URL || !process.env.AUDIT_API_USERNAME || !process.env.AUDIT_API_PASSWORD) {
+  if (!AUDIT_API_URL || !AUDIT_API_USERNAME || !AUDIT_API_PASSWORD) {
     throw new InvalidEnvironmentVariableError('AUDIT_API_URL, AUDIT_API_USERNAME or AUDIT_API_PASSWORD not set');
   }
   if (
@@ -25,10 +27,10 @@ export const postAuditDetails: (changeStreamDocument: ChangeStreamDocument) => P
   const fullDocument = changeStreamDocument.operationType !== 'delete' ? changeStreamDocument.fullDocument : null;
   console.info('Sending change stream update to API for document', changeStreamDocument);
 
-  const authorizationHeader = Buffer.from(`${process.env.AUDIT_API_USERNAME}:${process.env.AUDIT_API_PASSWORD}`).toString('base64');
+  const authorizationHeader = Buffer.from(`${AUDIT_API_USERNAME}:${AUDIT_API_PASSWORD}`).toString('base64');
   await axios({
     method: 'post',
-    url: `${process.env.AUDIT_API_URL}`,
+    url: `${AUDIT_API_URL}`,
     headers: {
       Authorization: `Basic ${authorizationHeader}`,
       integrationHubItemId: changeStreamDocument.documentKey._id.toString(),
