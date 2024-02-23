@@ -23,7 +23,7 @@ const { ROLES } = require('../server/constants');
 const MOCK_BANKS = require('../test-helpers/mock-banks');
 
 describe('utilisation-report routes', () => {
-  describe('GET /banks/:bankId/utilisation-report-download/:_id', () => {
+  describe('GET /banks/:bankId/utilisation-report-download/:id', () => {
     const getUrl = ({ bankId, reportId }) => `/banks/${bankId}/utilisation-report-download/${reportId}`;
 
     withRoleValidationApiTests({
@@ -31,7 +31,7 @@ describe('utilisation-report routes', () => {
         get(
           getUrl({
             bankId: MOCK_BANKS.BARCLAYS.id,
-            reportId: '5099803df3f4948bd2f98391',
+            reportId: '5',
           }),
           {},
           headers,
