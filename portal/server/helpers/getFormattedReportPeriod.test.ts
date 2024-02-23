@@ -1,4 +1,4 @@
-import { ReportPeriod } from '../types/utilisation-reports';
+import { ReportPeriod } from '@ukef/dtfs2-common';
 import { getFormattedReportPeriod } from './getFormattedReportPeriod';
 
 describe('getFormattedReportPeriod', () => {

@@ -3,8 +3,6 @@
  */
 export type IsoMonthStamp = string;
 
-export type OneIndexedMonth = number;
-
 /**
  * Unix timestamp, representing the time that has elapsed since 1st January 1970
  * (UTC).
@@ -19,8 +17,3 @@ export type OneIndexedMonth = number;
  *  * 19 digits - nanoseconds
  */
 export type UnixTimestamp = number;
-
-export type MonthAndYear = {
-  month: OneIndexedMonth;
-  year: number;
-};

@@ -1,9 +1,9 @@
 import { Filter, ObjectId } from 'mongodb';
+import { MonthAndYear, ReportPeriod } from '@ukef/dtfs2-common';
 import {
   updateUtilisationReportDetailsWithUploadDetails,
   getManyUtilisationReportDetailsByBankId,
   getOneUtilisationReportDetailsByBankId,
-  getUtilisationReportDetailsById,
   getOpenReportsBeforeReportPeriodForBankId,
   saveNotReceivedUtilisationReport,
   GetUtilisationReportDetailsOptions,
@@ -13,9 +13,7 @@ import { DB_COLLECTIONS } from '../../constants/db-collections';
 import { MOCK_NOT_RECEIVED_UTILISATION_REPORT, MOCK_UTILISATION_REPORT } from '../../../api-tests/mocks/utilisation-reports/utilisation-reports';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 import { PortalSessionUser } from '../../types/portal/portal-session-user';
-import { MonthAndYear } from '../../types/date';
 import { UtilisationReport } from '../../types/db-models/utilisation-reports';
-import { ReportPeriod } from '../../types/utilisation-reports';
 
 describe('utilisation-reports-repo', () => {
   describe('updateUtilisationReportDetailsWithUploadDetails', () => {
@@ -301,26 +299,6 @@ describe('utilisation-reports-repo', () => {
         // Assert
         expect(findSpy).toHaveBeenCalledWith(expectedFilter);
       });
-    });
-  });
-
-  describe('getUtilisationReportDetailsById', () => {
-    it('makes a request to the DB with the expected _id', async () => {
-      // Arrange
-      const reportId = '5099803df3f4948bd2f98391';
-
-      const findOneSpy = jest.fn().mockResolvedValue(MOCK_UTILISATION_REPORT);
-      const getCollectionMock = jest.fn().mockResolvedValue({
-        findOne: findOneSpy,
-      });
-      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
-
-      // Act
-      const response = await getUtilisationReportDetailsById(reportId);
-
-      // Assert
-      expect(findOneSpy).toHaveBeenCalledWith({ _id: { $eq: new ObjectId(reportId) } });
-      expect(response).toEqual(MOCK_UTILISATION_REPORT);
     });
   });
 

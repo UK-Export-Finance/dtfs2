@@ -1,8 +1,8 @@
 import httpMocks from 'node-mocks-http';
+import { ReportPeriod } from '@ukef/dtfs2-common';
 import { GetUtilisationReportsRequest, getUtilisationReports } from './index';
 import { getManyUtilisationReportDetailsByBankId } from '../../../../repositories/utilisation-reports-repo';
 import { UtilisationReport } from '../../../../types/db-models/utilisation-reports';
-import { ReportPeriod } from '../../../../types/utilisation-reports';
 
 jest.mock('../../../../repositories/utilisation-reports-repo');
 

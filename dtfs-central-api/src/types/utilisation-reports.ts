@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { ValuesOf } from '@ukef/dtfs2-common';
-import { IsoMonthStamp, MonthAndYear } from './date';
+import { IsoMonthStamp, } from './date';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS, UTILISATION_REPORT_HEADERS } from '../constants';
 import { Currency } from './currency';
 
@@ -21,11 +21,6 @@ export type UtilisationReportReconciliationSummaryItem = {
 export type UtilisationReportReconciliationSummary = {
   submissionMonth: IsoMonthStamp;
   items: UtilisationReportReconciliationSummaryItem[];
-};
-
-export type ReportPeriod = {
-  start: MonthAndYear;
-  end: MonthAndYear;
 };
 
 export type ReportWithStatus = {

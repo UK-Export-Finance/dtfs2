@@ -16,7 +16,7 @@ jest.mock('../../../src/drivers/fileshare', () => ({
   readFile: jest.fn().mockResolvedValue(Buffer.of(1, 2, 3)),
 }));
 
-describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
+describe('/v1/banks/:bankId/utilisation-report-download/:id', () => {
   let noRoles;
   let testUsers;
   let barclaysBank;
@@ -39,22 +39,22 @@ describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
     const getUrl = ({ bankId, reportId }) => `/v1/banks/${bankId}/utilisation-report-download/${reportId}`;
 
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => get(getUrl({ bankId: barclaysBank.id, reportId: '5099803df3f4948bd2f98391' })),
+      makeRequestWithoutAuthHeader: () => get(getUrl({ bankId: barclaysBank.id, reportId: '5' })),
       makeRequestWithAuthHeader: (authHeader) =>
-        get(getUrl({ bankId: barclaysBank.id, reportId: '5099803df3f4948bd2f98391' }), { headers: { Authorization: authHeader } }),
+        get(getUrl({ bankId: barclaysBank.id, reportId: '5' }), { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [PAYMENT_REPORT_OFFICER],
       getUserWithRole: (role) => testUsers().withRole(role).withBankName(barclaysBank.name).one(),
       getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).get(getUrl({ bankId: barclaysBank.id, reportId: '5099803df3f4948bd2f98391' })),
+      makeRequestAsUser: (user) => as(user).get(getUrl({ bankId: barclaysBank.id, reportId: '5' })),
       successStatusCode: 200,
     });
 
     it("returns 400 if the 'bankId' path param is invalid", async () => {
       // Arrange
-      const url = getUrl({ bankId: 'invalid-bank-id', reportId: '5099803df3f4948bd2f98391' });
+      const url = getUrl({ bankId: 'invalid-bank-id', reportId: '5' });
       const { status } = await as(aHsbcPaymentReportOfficer).get(url);
 
       // Assert
@@ -72,7 +72,7 @@ describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
 
     it('returns 401 if trying to download of file from a different user organisation', async () => {
       // Arrange
-      const { status } = await as(aHsbcPaymentReportOfficer).get(getUrl({ bankId: barclaysBank.id, reportId: '5099803df3f4948bd2f98391' }));
+      const { status } = await as(aHsbcPaymentReportOfficer).get(getUrl({ bankId: barclaysBank.id, reportId: '5' }));
 
       // Assert
       expect(status).toEqual(401);

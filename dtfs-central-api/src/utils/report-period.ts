@@ -1,8 +1,8 @@
 import { addMonths, subMonths } from 'date-fns';
+import { MonthAndYear, ReportPeriod } from '@ukef/dtfs2-common';
 import { getOneIndexedMonth, toIsoMonthStamp } from './date';
-import { IsoMonthStamp, MonthAndYear } from '../types/date';
+import { IsoMonthStamp } from '../types/date';
 import { BankReportPeriodSchedule } from '../types/db-models/banks';
-import { ReportPeriod } from '../types/utilisation-reports';
 import { isValidReportPeriod } from '../v1/validation/utilisation-report-service/utilisation-report-validator';
 
 /**

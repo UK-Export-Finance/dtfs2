@@ -1,6 +1,6 @@
 import { WithId } from 'mongodb';
+import { ReportPeriod } from '@ukef/dtfs2-common';
 import { Currency } from '../currency';
-import { ReportPeriod } from '../utilisation-reports';
 
 export type UtilisationData = WithId<{
   facilityId: string;

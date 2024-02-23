@@ -1,4 +1,5 @@
 import { addMonths } from 'date-fns';
+import { OneIndexedMonth, ReportPeriod } from '@ukef/dtfs2-common';
 import {
   getCurrentReportPeriodForBankSchedule,
   getPreviousReportPeriodStart,
@@ -6,9 +7,7 @@ import {
   getSubmissionMonthForReportPeriodStart,
   parseReportPeriod,
 } from './report-period';
-import { OneIndexedMonth } from '../types/date';
 import { BankReportPeriodSchedule } from '../types/db-models/banks';
-import { ReportPeriod } from '../types/utilisation-reports';
 
 describe('report-period utils', () => {
   describe('getReportPeriodStartForSubmissionMonth', () => {

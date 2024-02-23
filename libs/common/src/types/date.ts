@@ -3,7 +3,9 @@
  */
 export type IsoDateTimeStamp = string;
 
+export type OneIndexedMonth = number;
+
 export type MonthAndYear = {
-  month: number;
+  month: OneIndexedMonth;
   year: number;
 };

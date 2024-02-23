@@ -1,6 +1,7 @@
 import { WithId } from 'mongodb';
+import { ReportPeriod } from '@ukef/dtfs2-common';
 import { AzureFileInfo } from '../azure-file-info';
-import { UtilisationReportReconciliationStatus, ReportPeriod } from '../utilisation-reports';
+import { UtilisationReportReconciliationStatus } from '../utilisation-reports';
 import { SessionBank } from '../session-bank';
 import { Prettify } from '../types-helper';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
