@@ -4,16 +4,16 @@ on:
   push:
     branches:
       - feat/e2etf-sql
-    paths:
-      - 'portal/**'
-      - 'portal-api/**'
-      - 'gef-ui/**'
-      - 'trade-finance-manager-ui/**'
-      - 'trade-finance-manager-api/**'
-      - 'dtfs-central-api/**'
-      - 'external-api/**'
-      - 'azure-functions/number-generator-function/**'
-      - 'azure-functions/acbs-function/**'
+    # paths:
+    #   - 'portal/**'
+    #   - 'portal-api/**'
+    #   - 'gef-ui/**'
+    #   - 'trade-finance-manager-ui/**'
+    #   - 'trade-finance-manager-api/**'
+    #   - 'dtfs-central-api/**'
+    #   - 'external-api/**'
+    #   - 'azure-functions/number-generator-function/**'
+    #   - 'azure-functions/acbs-function/**'
 
 env:
   environment: feature
