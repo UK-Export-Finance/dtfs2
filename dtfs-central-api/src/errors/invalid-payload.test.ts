@@ -1,3 +1,4 @@
+import { HttpStatusCode } from 'axios';
 import { InvalidPayloadError } from './invalid-payload';
 
 describe('InvalidPayloadError', () => {
@@ -12,15 +13,15 @@ describe('InvalidPayloadError', () => {
     expect(exception.message).toEqual(message);
   });
 
-  it('exposes a default status code of 400', () => {
+  it('exposes the 400 (Bad Request) status code', () => {
     // Arrange
     const message = '';
 
     // Act
-    const exception = new InvalidPayloadError(message);
+    const error = new InvalidPayloadError(message);
 
     // Assert
-    expect(exception.status).toBe(400);
+    expect(error.status).toBe(HttpStatusCode.BadRequest);
   });
 
   it('exposes the name of the exception', () => {

@@ -249,21 +249,24 @@ const findLatestGefMandatoryCriteria = async () => {
   }
 };
 
-const saveUtilisationReport = async (reportData, reportPeriod, user, fileInfo) => {
+const saveUtilisationReport = async (reportId, reportData, user, fileInfo) => {
   try {
-    return await axios({
+    const response = await axios({
       method: 'post',
       url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports`,
       headers: headers.central,
       data: {
+        reportId,
         reportData,
-        reportPeriod,
         user,
         fileInfo,
       },
     });
-  } catch ({ response }) {
-    return { status: response?.status || 500 };
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to save utilisation report', error);
+    throw error;
   }
 };
 

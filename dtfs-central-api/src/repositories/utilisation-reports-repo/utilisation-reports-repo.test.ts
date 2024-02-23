@@ -1,7 +1,6 @@
 import { Filter, ObjectId } from 'mongodb';
 import { MONGO_DB_COLLECTIONS, UTILISATION_REPORT_RECONCILIATION_STATUS, ReportPeriod, UtilisationReport, MonthAndYear } from '@ukef/dtfs2-common';
 import {
-  updateUtilisationReportDetailsWithUploadDetails,
   getManyUtilisationReportDetailsByBankId,
   getOneUtilisationReportDetailsByBankId,
   getUtilisationReportDetailsById,
@@ -10,71 +9,9 @@ import {
   GetUtilisationReportDetailsOptions,
 } from './utilisation-reports-repo';
 import db from '../../drivers/db-client';
-import { MOCK_NOT_RECEIVED_UTILISATION_REPORT, MOCK_UTILISATION_REPORT } from '../../../api-tests/mocks/utilisation-reports/utilisation-reports';
-import { PortalSessionUser } from '../../types/portal/portal-session-user';
+import { MOCK_UTILISATION_REPORT } from '../../../api-tests/mocks/utilisation-reports/utilisation-reports';
 
 describe('utilisation-reports-repo', () => {
-  describe('updateUtilisationReportDetailsWithUploadDetails', () => {
-    it('maps the data and correctly saves to the database', async () => {
-      // Arrange
-      const updateOneSpy = jest.fn().mockResolvedValue({
-        acknowledged: true,
-      });
-      const getCollectionMock = jest.fn().mockResolvedValue({
-        updateOne: updateOneSpy,
-      });
-      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
-
-      const existingReport = MOCK_NOT_RECEIVED_UTILISATION_REPORT;
-
-      const mockAzureFileInfo = {
-        folder: 'test_bank',
-        filename: '2021_January_test_bank_utilisation_report.csv',
-        fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
-        url: 'test.url.csv',
-        mimetype: 'text/csv',
-      };
-      const mockUploadedUser = {
-        _id: new ObjectId('5ce819935e539c343f141ece'),
-        firstname: 'test',
-        surname: 'user',
-        bank: {
-          id: '123',
-          name: 'test bank',
-        },
-      } as unknown as PortalSessionUser;
-
-      // Act
-      await updateUtilisationReportDetailsWithUploadDetails(existingReport, mockAzureFileInfo, mockUploadedUser);
-
-      // Assert
-      expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.UTILISATION_REPORTS);
-      expect(updateOneSpy).toHaveBeenCalledWith(
-        {
-          _id: { $eq: existingReport._id },
-        },
-        {
-          $set: {
-            dateUploaded: expect.any(Date) as Date,
-            azureFileInfo: {
-              folder: 'test_bank',
-              filename: '2021_January_test_bank_utilisation_report.csv',
-              fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
-              url: 'test.url.csv',
-              mimetype: 'text/csv',
-            },
-            status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
-            uploadedBy: {
-              id: mockUploadedUser._id.toString(),
-              firstname: mockUploadedUser.firstname,
-              surname: mockUploadedUser.surname,
-            },
-          },
-        },
-      );
-    });
-  });
-
   describe('saveNewUtilisationReportAsSystemUser', () => {
     it('maps the data and correctly saves to the database', async () => {
       // Arrange

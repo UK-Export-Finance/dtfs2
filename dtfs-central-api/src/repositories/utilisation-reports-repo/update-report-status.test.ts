@@ -1,9 +1,14 @@
 import { ObjectId, WithoutId } from 'mongodb';
-import { UtilisationReportReconciliationStatus, UTILISATION_REPORT_RECONCILIATION_STATUS, UploadedByUserDetails, UtilisationReport } from '@ukef/dtfs2-common';
+import {
+  UtilisationReportReconciliationStatus,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UploadedByUserDetails,
+  UtilisationReport,
+  MOCK_AZURE_FILE_INFO,
+} from '@ukef/dtfs2-common';
 import { updateManyUtilisationReportStatuses } from './update-report-status';
 import { ReportWithStatus } from '../../types/utilisation-reports';
 import db from '../../drivers/db-client';
-import { MOCK_AZURE_FILE_INFO } from '../../../api-tests/mocks/azure-file-info';
 import * as banksRepo from '../banks-repo';
 
 console.error = jest.fn();

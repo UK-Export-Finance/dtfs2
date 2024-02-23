@@ -18,7 +18,7 @@ jest.mock('../../../src/drivers/fileshare', () => ({
 }));
 
 jest.mock('../../../src/v1/api', () => ({
-  saveUtilisationReport: jest.fn().mockResolvedValue({ status: 201, data: { dateUploaded: new Date() } }),
+  saveUtilisationReport: jest.fn().mockResolvedValue({ dateUploaded: new Date() }),
   getUtilisationReports: jest.fn().mockResolvedValue([]),
 }));
 

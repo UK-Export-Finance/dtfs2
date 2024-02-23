@@ -1,3 +1,4 @@
+const { isMongoId } = require('validator');
 const { UTILISATION_REPORT_HEADERS } = require('../../../constants');
 const REGEXES = require('../../../constants/regex');
 const {
@@ -13,6 +14,19 @@ const {
   validatePaymentCurrency,
   validatePaymentExchangeRate,
 } = require('./utilisation-data-validator');
+
+/**
+ * Validate the ID of a utilisation report
+ * @param {unknown} reportId - the report ID
+ * @returns {string | null} - error message or null if valid
+ */
+const validateReportId = (reportId) => {
+  if (Number.isInteger(reportId) && reportId > 0) {
+    return null;
+  }
+
+  return `Report ID must be a positive integer`;
+};
 
 /**
  * Validates the month of the utilisation report. Returns null if valid, otherwise returns an error message.
@@ -46,6 +60,7 @@ const validateYear = (year, propertyName = 'Year') => {
   return null;
 };
 
+// TODO FN-1859 -  MOVE TO REPORT-PERIOD UTILS
 /**
  * Validates the report period for the utilisation report
  * @param {unknown} reportPeriod - details of the report period.
@@ -129,24 +144,9 @@ const validateFileInfo = (fileInfo) => {
 };
 
 /**
- * Validates the bank id. Returns null if valid, otherwise returns an error message.
- * @param {unknown} bankId - file path of the utilisation report in azure.
- * @returns {String | null} - Error message or null if valid.
- */
-const validateBankId = (bankId) => {
-  if (!bankId) {
-    return 'Bank id is required';
-  }
-  if (!REGEXES.INTEGER_REGEX.test(bankId)) {
-    return 'Bank id is not valid';
-  }
-  return null;
-};
-
-/**
  * Validates the utilisation report data. Returns an array of error messages.
- * @param {object[]} utilisationReportData - array of json objects representing utilisation report data.
- * @returns {object[]} - Array of error objects.
+ * @param {unknown} utilisationReportData - array of json objects representing utilisation report data.
+ * @returns {import('./utilisation-data-validator.types').UtilisationDataValidatorError[]} - Array of error objects.
  */
 const validateUtilisationReportData = (utilisationReportData) => {
   const errors = utilisationReportData.flatMap((utilisationReportDataEntry, index) => {
@@ -190,12 +190,29 @@ const validateUtilisationReportData = (utilisationReportData) => {
   return errors;
 };
 
+/**
+ * Validates the user associated with a utilisation report
+ * @param {unknown} user - the user
+ * @returns {string[]} - an array of errors or an empty array if valid.
+ */
+const validateReportUser = (user) => {
+  /** @type {string[]} */
+  const errors = [];
+
+  if (!isMongoId(user?._id)) {
+    errors.push(`User '_id' is not a valid MongoDB ID: '${user?._id}'`);
+  }
+
+  return errors;
+};
+
 module.exports = {
+  validateReportId,
   validateUtilisationReportData,
   validateMonth,
   validateYear,
   validateReportPeriod,
   isValidReportPeriod,
   validateFileInfo,
-  validateBankId,
+  validateReportUser,
 };

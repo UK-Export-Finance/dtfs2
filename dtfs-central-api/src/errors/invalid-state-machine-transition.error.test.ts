@@ -1,3 +1,4 @@
+import { HttpStatusCode } from 'axios';
 import { InvalidStateMachineTransitionError } from './invalid-state-machine-transition.error';
 
 describe('InvalidStateMachineTransitionError', () => {
@@ -27,6 +28,14 @@ describe('InvalidStateMachineTransitionError', () => {
 
     // Assert
     expect(error.message).toBe("Event type 'DELETE_ENTITY' is invalid for 'SomeEntity' (ID: '123') in state 'COMPLETED'");
+  });
+
+  it('exposes the 400 (Bad Request) status code', () => {
+    // Act
+    const error = InvalidStateMachineTransitionError.forUninitialisedEntity(uninitialisedEntityParams);
+
+    // Assert
+    expect(error.status).toBe(HttpStatusCode.BadRequest);
   });
 
   it('exposes the name of the error', () => {
