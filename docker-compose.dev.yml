@@ -7,16 +7,24 @@ services:
       - '3310:3310'
 
   dtfs-submissions-data:
-    image: mongo:5.0.5
-    restart: always
+    build:
+      context: ./mongodb
+      dockerfile: Dockerfile
     environment:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
+    ports:
+      - "27017:27017"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: echo "rs.status()" | mongo --quiet
+      interval: 5s
+      timeout: 30s
+      retries: 30
     volumes:
       - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
-    ports:
-      - '27017-27019:27017-27019'
 
   dtfs-central-api:
     build:
@@ -46,6 +54,11 @@ services:
       - EXTERNAL_API_KEY
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
+      - AUDIT_API_URL
+      - AUDIT_API_USERNAME
+      - AUDIT_API_PASSWORD
+      - CHANGE_STREAM_ENABLED
+      - UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
 
   trade-finance-manager-ui:
     build:

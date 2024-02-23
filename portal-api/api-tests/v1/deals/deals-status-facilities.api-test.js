@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { add, format } = require('date-fns');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -40,6 +40,8 @@ describe('/v1/deals/:id/status - facilities', () => {
   });
 
   describe('PUT /v1/deals/:id/status', () => {
+    const nowDate = new Date();
+
     describe('when the status changes from `Further Maker\'s input required` to `Ready for Checker\'s approval`', () => {
       let createdDeal;
       let updatedDeal;
@@ -48,7 +50,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
       beforeEach(async () => {
         completedDeal.status = 'Further Maker\'s input required';
-        completedDeal.details.submissionDate = moment().utc().valueOf();
+        completedDeal.details.submissionDate = nowDate.valueOf();
 
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
@@ -225,7 +227,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         beforeEach(async () => {
           completedDeal.status = 'Accepted by UKEF (without conditions)';
           completedDeal.submissionType = 'Manual Inclusion Application';
-          completedDeal.details.approvalDate = moment().utc().valueOf().toString();
+          completedDeal.details.approvalDate = nowDate.valueOf().toString();
 
           const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
@@ -404,10 +406,12 @@ describe('/v1/deals/:id/status - facilities', () => {
         status: 'Ready for Checker\'s approval',
       };
 
+      const nowPlusOneMonth = add(nowDate, { months: 1 });
+
       const coverEndDate = () => ({
-        'coverEndDate-day': moment().add(1, 'month').format('DD'),
-        'coverEndDate-month': moment().add(1, 'month').format('MM'),
-        'coverEndDate-year': moment().add(1, 'month').format('YYYY'),
+        'coverEndDate-day': format(nowPlusOneMonth, 'dd'),
+        'coverEndDate-month': format(nowPlusOneMonth, 'MM'),
+        'coverEndDate-year': format(nowPlusOneMonth, 'yyyy'),
       });
 
       const baseBond = {

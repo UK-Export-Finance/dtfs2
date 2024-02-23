@@ -2,7 +2,7 @@ const httpMocks = require('node-mocks-http');
 const { MOCK_PORTAL_SESSION_USER } = require('../../../test-mocks/mock-portal-session-user');
 const { postUtilisationReportUpload } = require('.');
 const { getUploadErrors } = require('./utilisation-report-upload-errors');
-const { getDueReportDates } = require('./utilisation-report-status');
+const { getDueReportPeriodsByBankId } = require('./utilisation-report-status');
 const { validateCsvData } = require('./utilisation-report-validator');
 const { extractCsvData } = require('../../../utils/csv-utils');
 const { PRIMARY_NAV_KEY } = require('../../../constants');
@@ -18,10 +18,10 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
   });
 
   describe('postUtilisationReportUpload', () => {
-    const mockDueReportDates = [];
+    const mockDueReportPeriods = [];
 
     beforeEach(() => {
-      jest.mocked(getDueReportDates).mockReturnValueOnce(mockDueReportDates);
+      jest.mocked(getDueReportPeriodsByBankId).mockReturnValueOnce(mockDueReportPeriods);
     });
 
     it("renders the 'utilisation-report-upload' page if getUploadErrors returns errors", async () => {
@@ -46,16 +46,14 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       await postUtilisationReportUpload(req, res);
 
       // Assert
-      /* eslint-disable no-underscore-dangle */
       expect(res._getRenderView()).toEqual('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk');
       expect(res._getRenderData()).toEqual({
         validationError,
         errorSummary,
         user: req.session.user,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-        dueReportDates: mockDueReportDates,
+        dueReportPeriods: mockDueReportPeriods,
       });
-      /* eslint-enable no-underscore-dangle */
     });
 
     it("renders the 'utilisation-report-upload' page if extractCsvData returns errors", async () => {
@@ -84,16 +82,14 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       await postUtilisationReportUpload(req, res);
 
       // Assert
-      /* eslint-disable no-underscore-dangle */
       expect(res._getRenderView()).toEqual('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk');
       expect(res._getRenderData()).toEqual({
         validationError: expectedExtractDataError,
         errorSummary: expectedExtractDataErrorSummary,
         user: req.session.user,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-        dueReportDates: mockDueReportDates,
+        dueReportPeriods: mockDueReportPeriods,
       });
-      /* eslint-enable no-underscore-dangle */
     });
 
     it("renders the 'check-the-report' page if validateCsvData returns errors", async () => {
@@ -127,7 +123,6 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       await postUtilisationReportUpload(req, res);
 
       // Assert
-      /* eslint-disable no-underscore-dangle */
       expect(res._getRenderView()).toEqual('utilisation-report-service/utilisation-report-upload/check-the-report.njk');
       expect(res._getRenderData()).toEqual({
         validationErrors: csvValidationErrors,
@@ -136,7 +131,6 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
         filename: req.file.originalname,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       });
-      /* eslint-enable no-underscore-dangle */
     });
 
     it("redirects to the 'confirm-and-send' url if no file errors", async () => {
@@ -160,7 +154,6 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       await postUtilisationReportUpload(req, res);
 
       // Assert
-      // eslint-disable-next-line no-underscore-dangle
       expect(res._getRedirectUrl()).toEqual('/utilisation-report-upload/confirm-and-send');
     });
   });

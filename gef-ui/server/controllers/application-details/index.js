@@ -1,5 +1,4 @@
-/* eslint-disable no-underscore-dangle */
-const _startCase = require('lodash/startCase');
+const startCase = require('lodash/startCase');
 const api = require('../../services/api');
 const {
   canUpdateUnissuedFacilitiesCheck,
@@ -98,7 +97,7 @@ function buildBody(app, previewMode, user) {
       status: app.facilitiesStatus,
       data: app.facilities.items
         .map((item) => ({
-          heading: _startCase(FACILITY_TYPE[item.details.type.toUpperCase()].toLowerCase()),
+          heading: startCase(FACILITY_TYPE[item.details.type.toUpperCase()].toLowerCase()),
           rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), mapSummaryParams, previewMode),
           createdAt: item.details.createdAt,
           facilityId: item.details._id,

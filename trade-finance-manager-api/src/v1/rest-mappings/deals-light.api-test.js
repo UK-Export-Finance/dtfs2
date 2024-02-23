@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const {
   mapBssDeal,
   mapGefDeal,
@@ -86,5 +85,3 @@ describe('reducer - deals', () => {
     });
   });
 });
-
-/* eslint-enable no-underscore-dangle */
