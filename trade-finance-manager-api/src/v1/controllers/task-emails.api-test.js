@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 const sendUpdatedTaskEmail = require('./task-emails');
 const { generateTaskUrl } = require('../helpers/generate-task-email-variables');
 const { lowercaseFirstLetter } = require('../../utils/string');
@@ -252,5 +250,3 @@ describe('task emails functions', () => {
     });
   });
 });
-
-/* eslint-enable no-underscore-dangle */

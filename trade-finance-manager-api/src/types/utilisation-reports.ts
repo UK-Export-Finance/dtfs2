@@ -1,15 +1,20 @@
 import { ValuesOf } from './types-helper';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../constants';
-import { IsoDateTimeStamp } from './date';
+import { IsoDateTimeStamp, MonthAndYear } from './date';
 
 export type UtilisationReportReconciliationStatus = ValuesOf<typeof UTILISATION_REPORT_RECONCILIATION_STATUS>;
 
-type AzureFileInfo = {
+export type AzureFileInfo = {
   folder: string;
   filename: string;
   fullPath: string;
   url: string;
   mimetype: string;
+};
+
+export type ReportPeriod = {
+  start: MonthAndYear;
+  end: MonthAndYear;
 };
 
 export type UtilisationReportResponseBody = {
@@ -18,8 +23,7 @@ export type UtilisationReportResponseBody = {
     id: string;
     name: string;
   };
-  month: number;
-  year: number;
+  reportPeriod: ReportPeriod;
   dateUploaded: IsoDateTimeStamp;
   azureFileInfo: AzureFileInfo | null;
   status: UtilisationReportReconciliationStatus;
@@ -30,19 +34,7 @@ export type UtilisationReportResponseBody = {
   };
 };
 
-type ReportId = {
-  id: string;
-};
-
-type ReportDetails = {
-  month: number;
-  year: number;
-  bankId: string;
-};
-
-export type ReportIdentifier = ReportId | ReportDetails;
-
 export type ReportWithStatus = {
   status: UtilisationReportReconciliationStatus;
-  report: ReportIdentifier;
+  reportId: string;
 };

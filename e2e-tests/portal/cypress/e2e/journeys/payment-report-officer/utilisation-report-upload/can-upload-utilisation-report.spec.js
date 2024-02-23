@@ -1,14 +1,14 @@
 const { utilisationReportUpload } = require('../../../pages');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
-const { january2023ReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
+const { february2023ReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
 
 const { BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
 
 context('Utilisation report upload', () => {
   beforeEach(() => {
     cy.removeAllUtilisationReportDetails();
-    cy.insertUtilisationReportDetails(january2023ReportDetails);
+    cy.insertUtilisationReportDetails(february2023ReportDetails);
   });
 
   after(() => {
@@ -87,6 +87,7 @@ context('Utilisation report upload', () => {
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
       utilisationReportUpload.utilisationReportFileInputErrorMessage().contains('password protected');
+      utilisationReportUpload.mainHeading().contains('Report GEF utilisation and fees');
     });
 
     it('should display the check the report page with an error if uploading a file with an error on the check the report page', () => {

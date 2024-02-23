@@ -2,9 +2,9 @@
 
 {% macro render(params) %}
 
-  {% if not ["Submitted", "Rejected by UKEF"].includes(params.deal.status) and params.user.roles.includes('maker') %}
+  {% if params.isEveryDealFormComplete and params.user.roles.includes('maker') and  not ["Submitted", "Rejected by UKEF"].includes(params.deal.status) %}
 
-    {% if ["Draft", "Further Maker's input required"].includes(params.deal.status) and params.dealFormsCompleted %}
+    {% if ["Draft", "Further Maker's input required"].includes(params.deal.status) and params.isEveryDealFormComplete %}
 
       {{ govukButton({
         "disabled": false,
@@ -15,7 +15,7 @@
         "href": "/contract/" + params.deal._id + "/ready-for-review"
       }) }}
 
-    {% elseif ["Ready for Checker's approval"].includes(params.deal.status) and params.dealFormsCompleted and not params.user.roles.includes('checker')%}
+    {% elseif ["Ready for Checker's approval"].includes(params.deal.status) and not params.user.roles.includes('checker')%}
 
       {{ govukButton({
         "disabled": true,
@@ -26,7 +26,7 @@
         "href": ""
       }) }}
 
-    {% elseif  ["Draft", "Further Maker's input required", "Abandoned", "Acknowledged"].includes(params.deal.status) and not params.dealFormsCompleted and not params.dealHasIssuedFacilitiesToSubmit %}
+    {% elseif  ["Draft", "Further Maker's input required", "Abandoned", "Acknowledged"].includes(params.deal.status) and not params.dealHasIssuedFacilitiesToSubmit %}
 
       {{ govukButton({
         "disabled": true,

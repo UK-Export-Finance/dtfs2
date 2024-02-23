@@ -4,10 +4,12 @@ import {
   SUBMISSION_TYPE,
   FIELD_NAMES,
   ALL_BANKS_ID,
+  ROLES,
 } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 import keywordQuery from './deals-filters-keyword-query';
-import { CHECKER, MAKER } from '../../../constants/roles';
+
+const { MAKER, CHECKER } = ROLES;
 
 describe('controllers/dashboard/deals - filters query', () => {
   const mockUser = {
@@ -87,7 +89,7 @@ describe('controllers/dashboard/deals - filters query', () => {
   });
 
   describe('when user is a checker', () => {
-    it(`should return ${STATUS.READY_FOR_APPROVAL} filter`, () => {
+    it(`should return ${STATUS.DEAL.READY_FOR_APPROVAL} filter`, () => {
       const mockFilters = [];
       mockUser.roles = [CHECKER];
 
@@ -99,7 +101,7 @@ describe('controllers/dashboard/deals - filters query', () => {
       const expected = {
         AND: [
           { 'bank.id': mockUser.bank.id },
-          { status: STATUS.READY_FOR_APPROVAL },
+          { status: STATUS.DEAL.READY_FOR_APPROVAL },
         ],
       };
 

@@ -44,13 +44,22 @@ const getReportOverdueChaserDate = async () => {
 };
 
 /**
- * Returns the month (1-indexed) and year of the current report period (i.e. the previous month)
- * @returns {{ month: number, year: number }}
+ * Returns the start and end months (1-indexed) and years of the current report period (i.e. the previous month)
+ * @returns {import('../../../types/utilisation-reports').ReportPeriod}
  */
-const getReportPeriodMonthAndYear = () => {
+const getReportPeriod = () => {
   const lastMonthDate = subMonths(new Date(), 1);
   const oneIndexedMonth = lastMonthDate.getMonth() + 1;
-  return { month: oneIndexedMonth, year: lastMonthDate.getFullYear() };
+  return {
+    start: {
+      month: oneIndexedMonth,
+      year: lastMonthDate.getFullYear(),
+    },
+    end: {
+      month: oneIndexedMonth,
+      year: lastMonthDate.getFullYear(),
+    },
+  };
 };
 
 /**
@@ -64,13 +73,16 @@ const getFormattedReportPeriod = () => {
 
 /**
  * Checks if a utilisation report has already been submitted by the specified bank for the current reporting period
- * @param bank {object} - the bank to check
+ * @param {object} bank - the bank to check
  * @returns {Promise<boolean>}
  */
 const getIsReportSubmitted = async (bank) => {
-  const reportPeriod = getReportPeriodMonthAndYear();
-  const reportsResponse = await api.getUtilisationReports(bank.id, reportPeriod.month, reportPeriod.year);
-  return reportsResponse.length > 0;
+  const reportPeriod = getReportPeriod();
+  const uploadedReportsInReportPeriod = await api.getUtilisationReports(bank.id, {
+    reportPeriod,
+    excludeNotUploaded: true,
+  });
+  return uploadedReportsInReportPeriod.length > 0;
 };
 
 /**
@@ -160,7 +172,7 @@ module.exports = {
   getReportDueDate,
   getFormattedReportDueDate,
   getReportOverdueChaserDate,
-  getReportPeriodMonthAndYear,
+  getReportPeriod,
   getFormattedReportPeriod,
   getIsReportSubmitted,
   getEmailRecipient,

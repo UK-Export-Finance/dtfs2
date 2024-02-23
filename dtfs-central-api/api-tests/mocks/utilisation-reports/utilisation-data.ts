@@ -3,14 +3,14 @@ import { MOCK_UTILISATION_REPORT } from './utilisation-reports';
 import { UtilisationData } from '../../../src/types/db-models/utilisation-data';
 import { UtilisationReport } from '../../../src/types/db-models/utilisation-reports';
 import { CURRENCIES } from '../../../src/constants';
+import { MOCK_MONTHLY_REPORT_PERIOD } from '../report-period';
 
 export const MOCK_UTILISATION_DATA: UtilisationData = {
   _id: new ObjectId('65646e1d1621576fd7a6bc9b'),
   facilityId: '',
   reportId: MOCK_UTILISATION_REPORT._id.toString(),
   bankId: MOCK_UTILISATION_REPORT.bank.id,
-  month: MOCK_UTILISATION_REPORT.month,
-  year: MOCK_UTILISATION_REPORT.year,
+  reportPeriod: MOCK_MONTHLY_REPORT_PERIOD,
   exporter: 'Exporter 1',
   baseCurrency: CURRENCIES.GBP,
   facilityUtilisation: 100000,
@@ -28,7 +28,6 @@ export const getMockUtilisationDataForReport = (report: UtilisationReport, overr
   ...MOCK_UTILISATION_DATA,
   reportId: report._id.toString(),
   bankId: report.bank.id,
-  month: report.month,
-  year: report.year,
+  reportPeriod: report.reportPeriod,
   ...overrides,
 });

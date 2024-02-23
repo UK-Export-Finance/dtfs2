@@ -3,7 +3,7 @@ const {
   getReportDueDate,
   getFormattedReportDueDate,
   getReportOverdueChaserDate,
-  getReportPeriodMonthAndYear,
+  getReportPeriod,
   getFormattedReportPeriod,
   getIsReportSubmitted,
   getEmailRecipient,
@@ -12,7 +12,8 @@ const {
 const externalApi = require('../../../external-api/api');
 const api = require('../../../v1/api');
 const MOCK_BANKS = require('../../../../test-helpers/mock-banks');
-const MOCK_UTILISATION_REPORT = require('../../../../test-helpers/mock-utilisation-reports');
+const { MOCK_UTILISATION_REPORT } = require('../../../../test-helpers/mock-utilisation-report-details');
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
 
 jest.mock('../../../external-api/api');
 jest.mock('../../../v1/api');
@@ -138,7 +139,7 @@ describe('utilisation-report-helpers', () => {
     );
   });
 
-  describe('getReportPeriodMonthAndYear', () => {
+  describe('getReportPeriod', () => {
     it.each([
       { today: new Date('2023-11-15'), expectedMonth: 10, expectedYear: 2023 },
       { today: new Date('2023-03-31'), expectedMonth: 2, expectedYear: 2023 },
@@ -148,10 +149,12 @@ describe('utilisation-report-helpers', () => {
       jest.useFakeTimers().setSystemTime(today);
 
       // Act
-      const result = getReportPeriodMonthAndYear();
+      const result = getReportPeriod();
 
-      expect(result.month).toEqual(expectedMonth);
-      expect(result.year).toEqual(expectedYear);
+      expect(result.start.month).toEqual(expectedMonth);
+      expect(result.start.year).toEqual(expectedYear);
+      expect(result.end.month).toEqual(expectedMonth);
+      expect(result.end.year).toEqual(expectedYear);
     });
   });
 
@@ -173,36 +176,69 @@ describe('utilisation-report-helpers', () => {
   });
 
   describe('getIsReportSubmitted', () => {
+    const bank = {
+      id: MOCK_BANKS.HSBC.id,
+      name: MOCK_BANKS.HSBC.name,
+    };
+
+    const currentMonth = 11; // so report period is October
+    const year = 2023;
+    const today = new Date(`${year}-${currentMonth}-15`);
+    jest.useFakeTimers().setSystemTime(today);
+
+    const reportPeriod = {
+      start: {
+        month: currentMonth - 1,
+        year,
+      },
+      end: {
+        month: currentMonth - 1,
+        year,
+      },
+    };
+
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(today);
+      jest.resetAllMocks();
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
     it('returns false when there are no existing reports', async () => {
       // Arrange
-      const today = new Date('2023-11-15');
-      jest.useFakeTimers().setSystemTime(today);
-
       api.getUtilisationReports.mockResolvedValue([]);
 
       // Act
-      const result = await getIsReportSubmitted(MOCK_BANKS.HSBC);
+      const result = await getIsReportSubmitted(bank);
 
       // Assert
+      expect(api.getUtilisationReports).toHaveBeenCalledWith(bank.id, {
+        reportPeriod,
+        excludeNotUploaded: true,
+      });
       expect(result).toBe(false);
     });
 
     it('returns true when there are existing reports', async () => {
       // Arrange
-      const today = new Date('2023-11-15'); // so report period is October
-      jest.useFakeTimers().setSystemTime(today);
-
       const existingReport = {
         ...MOCK_UTILISATION_REPORT,
-        month: 10,
-        year: 2023,
+        bank,
+        status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+        reportPeriod,
       };
       api.getUtilisationReports.mockResolvedValue([existingReport]);
 
       // Act
-      const result = await getIsReportSubmitted(MOCK_BANKS.HSBC);
+      const result = await getIsReportSubmitted(bank);
 
       // Assert
+      expect(api.getUtilisationReports).toHaveBeenCalledWith(bank.id, {
+        reportPeriod,
+        excludeNotUploaded: true,
+      });
       expect(result).toBe(true);
     });
   });

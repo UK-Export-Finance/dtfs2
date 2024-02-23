@@ -42,7 +42,7 @@ const sendEmailsOnReportOverdueChaserDate = async () => {
 };
 
 /**
- * @type {typeof import('../../types/scheduler-job').SchedulerJob}
+ * @type {typeof import('../../../types/scheduler-job').SchedulerJob}
  */
 const sendReportOverdueEmailsJob = {
   init: () => ({

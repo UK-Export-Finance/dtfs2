@@ -29,14 +29,15 @@ const login = async (username, password) => {
  * @param {string} token auth token
  * @returns {Object} Response object
  */
-const sendSignInLink = async (token) => axios({
-  method: 'post',
-  url: `${PORTAL_API_URL}/v1/users/me/sign-in-link`,
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: token,
-  },
-});
+const sendSignInLink = async (token) =>
+  axios({
+    method: 'post',
+    url: `${PORTAL_API_URL}/v1/users/me/sign-in-link`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+  });
 
 /**
  * Logs in a user using a sign in link
@@ -839,18 +840,17 @@ const getUkefDecisionReport = async (token, payload) => {
   }
 };
 
-const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, csvFileBuffer, reportPeriod, token) => {
+const uploadUtilisationReportData = async (uploadingUser, reportPeriod, csvData, csvFileBuffer, formattedReportPeriod, token) => {
   try {
     const formData = new FormData();
     formData.append('reportData', JSON.stringify(csvData));
 
     formData.append('user', JSON.stringify(uploadingUser));
-    formData.append('month', month);
-    formData.append('year', year);
-    formData.append('reportPeriod', reportPeriod);
+    formData.append('reportPeriod', JSON.stringify(reportPeriod));
+    formData.append('formattedReportPeriod', formattedReportPeriod);
 
     const buffer = Buffer.from(csvFileBuffer);
-    const filename = `${year}_${month}_${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}_${uploadingUser.bank.name}_utilisation_report.csv`;
+    const filename = `${reportPeriod.start.year}_${reportPeriod.start.month}_${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}_${uploadingUser.bank.name}_utilisation_report.csv`;
     formData.append('csvFile', buffer, { filename });
 
     const formHeaders = formData.getHeaders();
@@ -891,35 +891,31 @@ const getPreviousUtilisationReportsByBank = async (token, bankId) => {
   return response.data;
 };
 
-const getLastestReportByBank = async (token, bankId) => {
+const getLastUploadedReportByBankId = async (userToken, bankId) => {
   if (!isValidBankId(bankId)) {
-    throw new Error(`Getting latest report failed - bank id '${bankId}' is invalid`);
+    throw new Error(`Error getting last uploaded utilisation report: bank id '${bankId}' is invalid`);
   }
 
-  const response = await axios({
-    method: 'get',
-    url: `${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-reports/latest`,
+  const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-reports/last-uploaded`, {
     headers: {
-      Authorization: token,
+      Authorization: userToken,
       'Content-Type': 'application/json',
     },
   });
-
   return response.data;
 };
 
-const getDueReportDatesByBank = async (token, bankId) => {
+const getDueReportPeriodsByBankId = async (token, bankId) => {
   if (!isValidBankId(bankId)) {
     throw new Error(`Getting due utilisation reports failed for id ${bankId}`);
   }
 
-  const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/due-report-dates`, {
+  const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/due-report-periods`, {
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
     },
   });
-
   return response.data;
 };
 
@@ -992,7 +988,7 @@ module.exports = {
   uploadUtilisationReportData,
   downloadUtilisationReport,
   getPreviousUtilisationReportsByBank,
-  getDueReportDatesByBank,
-  getLastestReportByBank,
+  getLastUploadedReportByBankId,
+  getDueReportPeriodsByBankId,
   getUkBankHolidays,
 };

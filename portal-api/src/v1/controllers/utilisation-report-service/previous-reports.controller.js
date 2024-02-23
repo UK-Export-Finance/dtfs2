@@ -7,7 +7,7 @@ const api = require('../../api');
  * @returns {number[]} - unique set of years
  */
 const getYears = (reports) => {
-  const years = reports.map((report) => report.year);
+  const years = reports.map((report) => report.reportPeriod.start.year);
   return [...new Set(years)];
 };
 
@@ -17,25 +17,25 @@ const getYears = (reports) => {
  * @param {Object[]} reports - reports from the database
  * @returns {Object[]} - list of objects with year and reports property
  */
-const getReportsGroupedByYear = (years, reports) =>
+const groupReportsByStartYear = (years, reports) =>
   years.map((year) => ({
     year,
-    reports: reports.filter((report) => report.year === year),
+    reports: reports.filter((report) => report.reportPeriod.start.year === year),
   }));
 
 /**
  * Adds an object for all year with is no database reports when there is a report for the
  * previous and future years
- * @param {Object[]} reportsGroupedByYear - list of objects with year and reports property
+ * @param {Object[]} reportsGroupedByStartYear - list of objects with year and reports property
  * @param {number[]} years - unique set of years
  * @returns {Object[]} - list of objects with year and reports property
  */
-const populateOmittedYears = (reportsGroupedByYear, years) => {
+const populateOmittedYears = (reportsGroupedByStartYear, years) => {
   years.forEach((year, index) => {
     if (index > 0 && year - years[index - 1] > 1) {
       let numberOfMissingYears = year - years[index - 1] - 1;
       while (numberOfMissingYears > 0) {
-        reportsGroupedByYear.push({
+        reportsGroupedByStartYear.push({
           year: year - numberOfMissingYears,
           reports: [],
         });
@@ -43,7 +43,7 @@ const populateOmittedYears = (reportsGroupedByYear, years) => {
       }
     }
   });
-  return reportsGroupedByYear;
+  return reportsGroupedByStartYear;
 };
 
 /**
@@ -53,18 +53,20 @@ const populateOmittedYears = (reportsGroupedByYear, years) => {
  */
 const groupAndSortReports = (dbReports) => {
   const years = getYears(dbReports);
-  const groupedReports = getReportsGroupedByYear(years, dbReports);
-  const reportsGroupedByYear = populateOmittedYears(groupedReports, years);
-  return orderBy(reportsGroupedByYear, ['year'], ['desc']);
+  const groupedReports = groupReportsByStartYear(years, dbReports);
+  const groupedReportsByStartYear = populateOmittedYears(groupedReports, years);
+  return orderBy(groupedReportsByStartYear, ['year'], ['desc']);
 };
 
 const getPreviousReportsByBankId = async (req, res) => {
   try {
     const { bankId } = req.params;
 
-    const reports = await api.getUtilisationReports(bankId);
+    const uploadedReports = await api.getUtilisationReports(bankId, {
+      excludeNotUploaded: true,
+    });
 
-    const sortedReports = groupAndSortReports(reports);
+    const sortedReports = groupAndSortReports(uploadedReports);
 
     return res.status(200).send(sortedReports);
   } catch (error) {
@@ -76,7 +78,7 @@ const getPreviousReportsByBankId = async (req, res) => {
 module.exports = {
   getPreviousReportsByBankId,
   getYears,
-  getReportsGroupedByYear,
+  groupReportsByStartYear,
   populateOmittedYears,
   groupAndSortReports,
 };

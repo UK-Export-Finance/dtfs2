@@ -3,6 +3,6 @@ const sendReportSubmissionPeriodStartEmailsJob = require('./send-report-submissi
 const sendReportOverdueEmailsJob = require('./send-report-overdue-emails-job');
 
 /**
- * @type {typeof import('../types/scheduler-job').SchedulerJob[]}
+ * @type {typeof import('../../types/scheduler-job').SchedulerJob[]}
  */
 module.exports = [sendReportDueEmailsJob, sendReportSubmissionPeriodStartEmailsJob, sendReportOverdueEmailsJob];

@@ -7,22 +7,31 @@ const {
 const { BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../e2e-fixtures');
 
 const BANK1 = {
-  id: '9',
-  name: 'BANK1',
+  id: BANK1_PAYMENT_REPORT_OFFICER1.bank.id,
+  name: BANK1_PAYMENT_REPORT_OFFICER1.bank.name,
 };
 
 const generateReportDetails = (year, month) => {
   const bank = BANK1;
-  const path = 'www.abc.com';
   const uploadedBy = BANK1_PAYMENT_REPORT_OFFICER1;
   const dateUploaded = new Date(year, month - 1);
   return {
     bank,
-    month,
-    year,
+    reportPeriod: {
+      start: {
+        month,
+        year,
+      },
+      end: {
+        month,
+        year,
+      },
+    },
     dateUploaded,
     uploadedBy,
-    path,
+    // Azure file info must be non-null if in 'PENDING_RECONCILIATION' state
+    azureFileInfo: {},
+    status: 'PENDING_RECONCILIATION',
   };
 };
 
@@ -37,16 +46,27 @@ const generateReports = (startMonthDate, endMonthDate) =>
   });
 
 // Reports to be populated for 2020, 2022 and 2023 (ie. not 2021 to match specific test case)
-const previousReportDetails = generateReports(new Date('2020-01-01'), new Date('2023-01-01')).filter((report) => report.year !== 2021);
+const previousReportDetails = generateReports(new Date('2020-01-01'), new Date('2023-01-01')).filter(({ reportPeriod }) => reportPeriod.start.year !== 2021);
 
-const january2023ReportDetails = [{
-  bank: BANK1,
-  month: 1,
-  year: 2023,
-  dateUploaded: new Date(2023, 0),
-  uploadedBy: BANK1_PAYMENT_REPORT_OFFICER1,
-  path: 'www.abc.com',
-}];
+const february2023ReportDetails = [
+  {
+    bank: BANK1,
+    reportPeriod: {
+      start: {
+        month: 2,
+        year: 2023,
+      },
+      end: {
+        month: 2,
+        year: 2023,
+      },
+    },
+    dateUploaded: new Date(2023, 1),
+    uploadedBy: BANK1_PAYMENT_REPORT_OFFICER1,
+    azureFileInfo: null,
+    status: 'REPORT_NOT_RECEIVED',
+  },
+];
 
 const generateUpToDateReportDetails = () => {
   const currentReportPeriod = subMonths(new Date(), 1);
@@ -60,6 +80,6 @@ const upToDateReportDetails = generateUpToDateReportDetails();
 
 module.exports = {
   previousReportDetails,
-  january2023ReportDetails,
+  february2023ReportDetails,
   upToDateReportDetails,
 };

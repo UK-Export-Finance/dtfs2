@@ -1,13 +1,12 @@
 import { endOfDay, format, isPast, isSameMonth, parseISO } from 'date-fns';
 import {
-  ReportPeriodStart,
   UtilisationReportReconciliationStatus,
   UtilisationReportReconciliationSummary,
   UtilisationReportReconciliationSummaryItem,
 } from '../../../types/utilisation-reports';
 import { getReportDueDate, getReportPeriodStart } from '../../../services/utilisation-report-service';
 import api from '../../../api';
-import { IsoMonthStamp } from '../../../types/date';
+import { IsoMonthStamp, MonthAndYear } from '../../../types/date';
 
 type SummaryItemViewModel = UtilisationReportReconciliationSummaryItem & {
   displayStatus: string;
@@ -18,7 +17,7 @@ type SummaryItemViewModel = UtilisationReportReconciliationSummaryItem & {
 type ReportPeriodSummaryViewModel = {
   items: SummaryItemViewModel[];
   submissionMonth: IsoMonthStamp;
-  reportPeriodStart: ReportPeriodStart;
+  reportPeriodStart: MonthAndYear;
   reportPeriodHeading: string;
   dueDateText: string;
 };
@@ -39,7 +38,7 @@ const getSummaryItemViewModel = (apiItem: UtilisationReportReconciliationSummary
     ...apiItem,
     displayStatus: reconciliationStatusCodeToDisplayStatus[status],
     formattedDateUploaded: dateUploaded ? format(parseISO(dateUploaded), 'd MMM yyyy') : undefined,
-    downloadPath: reportId && !apiItem.isPlaceholderReport ? `/utilisation-reports/${reportId}/download` : undefined,
+    downloadPath: status !== 'REPORT_NOT_RECEIVED' ? `/utilisation-reports/${reportId}/download` : undefined,
   };
 };
 
@@ -49,7 +48,7 @@ export const getDueDateText = (reportDueDate: Date) => {
   return `Reports${reportIsPastDue ? ' were ' : ' '}due to be received by ${formattedReportDueDate}.`;
 };
 
-export const getReportPeriodHeading = (submissionMonth: IsoMonthStamp, reportPeriodStart: ReportPeriodStart) => {
+export const getReportPeriodHeading = (submissionMonth: IsoMonthStamp, reportPeriodStart: MonthAndYear) => {
   const isCurrentSubmissionMonth = isSameMonth(new Date(submissionMonth), new Date());
 
   const reportPeriodStartDate = new Date(reportPeriodStart.year, reportPeriodStart.month - 1);

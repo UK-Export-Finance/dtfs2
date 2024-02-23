@@ -1,28 +1,23 @@
 import groupBy from 'lodash/groupBy';
 import orderBy from 'lodash/orderBy';
-import { eachIsoMonthOfInterval } from '../../../../utils/date';
 import { Bank } from '../../../../types/db-models/banks';
 import { IsoMonthStamp } from '../../../../types/date';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
 import { UtilisationReport } from '../../../../types/db-models/utilisation-reports';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../../constants';
 import { getAllBanks } from '../../../../services/repositories/banks-repo';
 import { getAllUtilisationDataForReport } from '../../../../services/repositories/utilisation-data-repo';
+import { getOneUtilisationReportDetailsByBankId, getOpenReportsBeforeReportPeriodForBankId } from '../../../../services/repositories/utilisation-reports-repo';
 import {
-  getUtilisationReportDetailsByBankIdMonthAndYear,
-  getOpenReportsBeforeReportPeriodForBankId,
-} from '../../../../services/repositories/utilisation-reports-repo';
-import {
-  getPreviousReportPeriodStart,
+  getCurrentReportPeriodForBankSchedule,
+  getReportPeriodForBankScheduleBySubmissionMonth,
   getReportPeriodStartForSubmissionMonth,
-  getReportPeriodStartForUtilisationReport,
   getSubmissionMonthForReportPeriodStart,
-  isEqualReportPeriodStart,
 } from '../../../../utils/report-period';
+import { isEqualMonthAndYear } from '../../../../utils/date';
 
 type UtilisationReportForSubmissionMonth = {
   submissionMonth: IsoMonthStamp;
-  report: UtilisationReport | null;
+  report: UtilisationReport;
 };
 
 type SummaryItemForSubmissionMonth = {
@@ -30,18 +25,7 @@ type SummaryItemForSubmissionMonth = {
   item: UtilisationReportReconciliationSummaryItem;
 };
 
-const mapToSummaryItem = async (bank: Bank, report: UtilisationReport | null): Promise<UtilisationReportReconciliationSummaryItem> => {
-  // TODO FN-1949 - Use actual REPORT_NOT_RECEIVED UtilisationReport when added by job. Throw errors when null.
-  if (!report) {
-    return {
-      bank: {
-        id: bank.id,
-        name: bank.name,
-      },
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
-    };
-  }
-
+const mapToSummaryItem = async (bank: Bank, report: UtilisationReport): Promise<UtilisationReportReconciliationSummaryItem> => {
   const reportData = await getAllUtilisationDataForReport(report);
 
   // TODO FN-1398 - status to be added to report data to allow us to calculate how
@@ -58,7 +42,6 @@ const mapToSummaryItem = async (bank: Bank, report: UtilisationReport | null): P
     dateUploaded: report.dateUploaded,
     totalFeesReported: reportData.length,
     reportedFeesLeftToReconcile,
-    isPlaceholderReport: report.azureFileInfo === null,
   };
 };
 
@@ -70,46 +53,13 @@ const mapToSummaryItemForSubmissionMonth = async (
   item: await mapToSummaryItem(bank, report),
 });
 
-const generateMissingReports = ({ from, to }: { from: IsoMonthStamp; to: IsoMonthStamp }): UtilisationReportForSubmissionMonth[] => {
-  const missingSubmissionMonths = eachIsoMonthOfInterval(from, to, {
-    exclusive: true,
-  });
+const mapToSubmissionMonth = (reports: UtilisationReport[]): UtilisationReportForSubmissionMonth[] => {
+  const reportsOrderedByReportPeriodStartAscending = orderBy(reports, ['reportPeriod.start.year', 'reportPeriod.start.month'], ['asc', 'asc']);
 
-  return missingSubmissionMonths.map((submissionMonth) => ({
-    submissionMonth,
-    report: null,
-  }));
-};
-
-const addNotReceivedReportsAndMapToSubmissionMonth = (
-  reports: UtilisationReport[],
-  currentSubmissionMonth: IsoMonthStamp,
-): UtilisationReportForSubmissionMonth[] => {
-  const currentReportPeriodStart = getReportPeriodStartForSubmissionMonth(currentSubmissionMonth);
-  const previousReportPeriodStart = getPreviousReportPeriodStart(currentReportPeriodStart);
-
-  const reportsOrderedByReportPeriodStartAscending = orderBy(reports, ['year', 'month'], ['asc', 'asc']);
-
-  const updatedReportsWithSubmissionMonth = reportsOrderedByReportPeriodStartAscending.map((report) => {
-    const reportPeriodStart = getReportPeriodStartForUtilisationReport(report);
-    const submissionMonth = getSubmissionMonthForReportPeriodStart(reportPeriodStart);
+  return reportsOrderedByReportPeriodStartAscending.map((report) => {
+    const submissionMonth = getSubmissionMonthForReportPeriodStart(report.reportPeriod.start);
     return { submissionMonth, report };
   });
-
-  // TODO FN-1949 - when REPORT_NOT_RECEIVED reports are added by a job we can
-  //  just return `updatedReportsWithSubmissionMonth` here.
-
-  const mostRecentOpenReport = reportsOrderedByReportPeriodStartAscending.at(-1);
-
-  if (!mostRecentOpenReport || isEqualReportPeriodStart(getReportPeriodStartForUtilisationReport(mostRecentOpenReport), previousReportPeriodStart)) {
-    return updatedReportsWithSubmissionMonth;
-  }
-
-  const missingReports = generateMissingReports({
-    from: getSubmissionMonthForReportPeriodStart(mostRecentOpenReport),
-    to: currentSubmissionMonth,
-  });
-  return [...updatedReportsWithSubmissionMonth, ...missingReports];
 };
 
 const getPreviousOpenReportsForBank = async (bank: Bank, currentSubmissionMonth: IsoMonthStamp): Promise<SummaryItemForSubmissionMonth[]> => {
@@ -121,10 +71,7 @@ const getPreviousOpenReportsForBank = async (bank: Bank, currentSubmissionMonth:
     return [];
   }
 
-  const reportsMappedToSubmissionMonth: UtilisationReportForSubmissionMonth[] = addNotReceivedReportsAndMapToSubmissionMonth(
-    openReportsBeforeCurrentReportPeriod,
-    currentSubmissionMonth,
-  );
+  const reportsMappedToSubmissionMonth: UtilisationReportForSubmissionMonth[] = mapToSubmissionMonth(openReportsBeforeCurrentReportPeriod);
 
   return await Promise.all(reportsMappedToSubmissionMonth.map((report) => mapToSummaryItemForSubmissionMonth(bank, report)));
 };
@@ -145,8 +92,11 @@ export const getPreviousOpenReportsBySubmissionMonth = async (
 };
 
 const getCurrentReconciliationSummaryItem = async (bank: Bank, submissionMonth: IsoMonthStamp): Promise<UtilisationReportReconciliationSummaryItem> => {
-  const { month, year } = getReportPeriodStartForSubmissionMonth(submissionMonth);
-  const report = await getUtilisationReportDetailsByBankIdMonthAndYear(bank.id, month, year);
+  const reportPeriod = getReportPeriodForBankScheduleBySubmissionMonth(bank.utilisationReportPeriodSchedule, submissionMonth);
+  const report = await getOneUtilisationReportDetailsByBankId(bank.id, { reportPeriod });
+  if (!report) {
+    throw new Error(`Failed to get report for bank with id ${bank.id} for submission month ${submissionMonth}`);
+  }
   return await mapToSummaryItem(bank, report);
 };
 
@@ -155,14 +105,20 @@ export const getAllReportsForSubmissionMonth = async (banks: Bank[], submissionM
   items: await Promise.all(banks.map((bank) => getCurrentReconciliationSummaryItem(bank, submissionMonth))),
 });
 
-export const generateReconciliationSummaries = async (currentSubmissionMonth: IsoMonthStamp): Promise<UtilisationReportReconciliationSummary[]> => {
-  // TODO FN-1949 - when banks' reporting schedules are added to the `bank` collection, add new repo method to only
-  //  fetch banks that are due to submit this month
-  const banks = await getAllBanks();
-  const banksVisibleInTfm = banks.filter((bank) => bank.isVisibleInTfmUtilisationReports);
+const isBankDueToSubmitReport =
+  (currentSubmissionMonth: IsoMonthStamp) =>
+  (bank: Bank): boolean => {
+    const currentReportPeriodForBank = getCurrentReportPeriodForBankSchedule(bank.utilisationReportPeriodSchedule);
+    return isEqualMonthAndYear(currentReportPeriodForBank.start, getReportPeriodStartForSubmissionMonth(currentSubmissionMonth));
+  };
 
-  const allReportsForCurrentSubmissionMonth = await getAllReportsForSubmissionMonth(banksVisibleInTfm , currentSubmissionMonth);
-  const openReportsForPreviousSubmissionMonths = await getPreviousOpenReportsBySubmissionMonth(banksVisibleInTfm , currentSubmissionMonth);
+export const generateReconciliationSummaries = async (currentSubmissionMonth: IsoMonthStamp): Promise<UtilisationReportReconciliationSummary[]> => {
+  const banksVisibleInTfm = (await getAllBanks()).filter((bank) => bank.isVisibleInTfmUtilisationReports);
+
+  const banksDueToSubmit = banksVisibleInTfm.filter(isBankDueToSubmitReport(currentSubmissionMonth));
+  const allReportsForCurrentSubmissionMonth = await getAllReportsForSubmissionMonth(banksDueToSubmit, currentSubmissionMonth);
+
+  const openReportsForPreviousSubmissionMonths = await getPreviousOpenReportsBySubmissionMonth(banksVisibleInTfm, currentSubmissionMonth);
 
   return [allReportsForCurrentSubmissionMonth, ...openReportsForPreviousSubmissionMonths];
 };

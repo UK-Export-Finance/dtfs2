@@ -52,7 +52,7 @@ exports.update = (req, res) => {
       }
     }
 
-    const validationErrors = validateStateChange(deal, req.body, user);
+    const validationErrors = await validateStateChange(deal, req.body, user);
 
     if (validationErrors) {
       return res.status(200).send({

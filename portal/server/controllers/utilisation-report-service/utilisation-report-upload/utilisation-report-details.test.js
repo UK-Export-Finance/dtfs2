@@ -8,8 +8,16 @@ describe('utilisation-report-details', () => {
   const morningReport = {
     _id: 'abc',
     bankId: '1',
-    month: 4,
-    year: 2023,
+    reportPeriod: {
+      start: {
+        month: 4,
+        year: 2023,
+      },
+      end: {
+        month: 4,
+        year: 2023,
+      },
+    },
     dateUploaded: '2023-04-08T10:35:31',
     path: 'www.abc.com',
     uploadedBy: user,
@@ -17,15 +25,24 @@ describe('utilisation-report-details', () => {
   const afternoonReport = {
     _id: 'def',
     bankId: '1',
-    month: 4,
-    year: 2023,
+    reportPeriod: {
+      start: {
+        month: 4,
+        year: 2023,
+      },
+      end: {
+        month: 4,
+        year: 2023,
+      },
+    },
     dateUploaded: '2023-04-08T15:23:10',
     path: 'www.abc.com',
     uploadedBy: user,
   };
 
   it('should throw an error if the report is undefined', () => {
-    expect(() => getReportAndUserDetails(undefined)).toThrow(new Error('Cannot get report and user details'));
+    // Act/Assert
+    expect(() => getReportAndUserDetails(undefined)).toThrow(new Error("Failed to get report and user details: 'report' was undefined"));
   });
 
   it('should return the correct full name, date format and report period for a report uploaded in the morning', () => {

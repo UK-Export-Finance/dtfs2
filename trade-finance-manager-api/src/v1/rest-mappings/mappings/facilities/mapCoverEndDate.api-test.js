@@ -1,5 +1,4 @@
-const moment = require('moment');
-const { format, fromUnixTime } = require('date-fns');
+const { format, fromUnixTime, set } = require('date-fns');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const { formatYear } = require('../../../../utils/date');
 
@@ -15,13 +14,13 @@ describe('mapCoverEndDate', () => {
 
     const result = mapCoverEndDate(day, month, year, {});
 
-    const coverEndDate = moment().set({
+    const coverEndDate = set(new Date(), {
       date: Number(day),
       month: Number(month) - 1, // months are zero indexed
       year: Number(year),
     });
 
-    const expected = moment(coverEndDate).format('D MMMM YYYY');
+    const expected = format(coverEndDate, 'd MMMM yyyy');
 
     expect(result).toEqual(expected);
   });
@@ -38,16 +37,16 @@ describe('mapCoverEndDate', () => {
 
       const result = mapCoverEndDate(day, month, year, {});
 
-      const coverEndDate = moment().set({
+      const coverEndDate = set(new Date(), {
         date: Number(day),
         month: Number(month) - 1, // months are zero indexed
         year: formatYear(Number(year)),
       });
 
-      const expected = moment(coverEndDate).format('D MMMM YYYY');
+      const expected = format(coverEndDate, 'd MMMM yyyy');
       expect(result).toEqual(expected);
 
-      const yearResult = moment(coverEndDate).format('YYYY');
+      const yearResult = format(coverEndDate, 'yyyy');
       expect(yearResult).toEqual('2021');
     });
   });
@@ -73,16 +72,16 @@ describe('mapCoverEndDate', () => {
 
       const result = mapCoverEndDate(day, month, year, facility);
 
-      const coverEndDate = moment().set({
+      const coverEndDate = set(new Date(), {
         date: Number(day),
         month: Number(month) - 1, // months are zero indexed
         year: formatYear(Number(year)),
       });
 
-      const expected = moment(coverEndDate).format('D MMMM YYYY');
+      const expected = format(coverEndDate, 'd MMMM yyyy');
       expect(result).toEqual(expected);
 
-      const yearResult = moment(coverEndDate).format('YYYY');
+      const yearResult = format(coverEndDate, 'yyyy');
       expect(yearResult).toEqual('2021');
     });
   });

@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 services:
   clamav:
     image: mkodockx/docker-clamav:alpine
@@ -7,37 +7,48 @@ services:
       - '3310:3310'
 
   dtfs-submissions-data:
-    image: mongo:5.0.5
-    restart: always
+    build:
+      context: ./mongodb
+      dockerfile: Dockerfile
     environment:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
+    ports:
+      - '27017:27017'
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    healthcheck:
+      test: echo "rs.status()" | mongo --quiet
+      interval: 5s
+      timeout: 30s
+      retries: 30
     volumes:
       - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
     deploy:
       resources:
         limits:
-          cpus: "0.1"
+          cpus: '0.1'
           memory: 300M
-    ports:
-      - "27017-27019:27017-27019"
 
   dtfs-central-api:
-    build: ./dtfs-central-api
+    build:
+      context: .
+      dockerfile: ./dtfs-central-api/Dockerfile
     image: dtfs/dtfs-central-api
     restart: always
     depends_on:
       - dtfs-submissions-data
       - external-api
     ports:
-      - "5005:5005"
+      - '5005:5005'
     volumes:
-      - ./dtfs-central-api/src:/app/src:ro
+      - ./dtfs-central-api/src:/app/dtfs-central-api/src:ro
+      - ./libs:/app/libs:ro
     deploy:
       resources:
         limits:
-          cpus: "0.1"
+          cpus: '0.1'
           memory: 400M
     environment:
       - PORT=5005
@@ -53,23 +64,31 @@ services:
       - EXTERNAL_API_KEY
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
-    entrypoint: npx ts-node src/index.ts
+      - AUDIT_API_URL
+      - AUDIT_API_USERNAME
+      - AUDIT_API_PASSWORD
+      - CHANGE_STREAM_ENABLED
+      - UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
+    entrypoint: npx ts-node dtfs-central-api/src/index.ts
 
   trade-finance-manager-ui:
-    build: ./trade-finance-manager-ui
+    build:
+      context: .
+      dockerfile: ./trade-finance-manager-ui/Dockerfile
     image: dtfs/trade-finance-manager-ui
     depends_on:
       - trade-finance-manager-api
     ports:
-      - "5003:5003"
+      - '5003:5003'
     volumes:
-      - ./trade-finance-manager-ui/server:/app/server:ro
-      - ./trade-finance-manager-ui/public:/app/public:ro
-      - ./trade-finance-manager-ui/templates:/app/templates:ro
+      - ./trade-finance-manager-ui/server:/app/trade-finance-manager-ui/server:ro
+      - ./trade-finance-manager-ui/public:/app/trade-finance-manager-ui/public:ro
+      - ./trade-finance-manager-ui/templates:/app/trade-finance-manager-ui/templates:ro
+      - ./libs:/app/libs:ro
     deploy:
       resources:
         limits:
-          cpus: "0.1"
+          cpus: '0.1'
           memory: 300M
     environment:
       - PORT=5003
@@ -89,7 +108,9 @@ services:
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
 
   trade-finance-manager-api:
-    build: ./trade-finance-manager-api
+    build:
+      context: .
+      dockerfile: ./trade-finance-manager-api/Dockerfile
     image: dtfs/trade-finance-manager-api
     restart: always
     depends_on:
@@ -97,9 +118,10 @@ services:
       - dtfs-central-api
       - external-api
     ports:
-      - "5004:5004"
+      - '5004:5004'
     volumes:
-      - ./trade-finance-manager-api/src:/app/src:ro
+      - ./trade-finance-manager-api/src:/app/trade-finance-manager-api/src:ro
+      - ./libs:/app/libs:ro
     environment:
       - PORT=5004
       - CORS_ORIGIN
@@ -128,12 +150,14 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.2"
+          cpus: '0.2'
           memory: 600M
-    entrypoint: npx ts-node src/index.ts
+    entrypoint: npx ts-node trade-finance-manager-api/src/index.ts
 
   portal:
-    build: ./portal
+    build:
+      context: .
+      dockerfile: ./portal/Dockerfile
     image: dtfs/portal
     restart: always
     depends_on:
@@ -141,15 +165,16 @@ services:
       - portal-api
       - clamav
     ports:
-      - "5000:5000"
+      - '5000:5000'
     volumes:
-      - ./portal/server:/app/server:ro
-      - ./portal/public:/app/public:ro
-      - ./portal/templates:/app/templates:ro
+      - ./portal/server:/app/portal/server:ro
+      - ./portal/public:/app/portal/public:ro
+      - ./portal/templates:/app/portal/templates:ro
+      - ./libs:/app/libs:ro
     deploy:
       resources:
         limits:
-          cpus: "0.2"
+          cpus: '0.2'
           memory: 700M
     environment:
       - COMPANIES_HOUSE_API_KEY
@@ -172,20 +197,23 @@ services:
       - UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=1048576
 
   portal-api:
-    build: ./portal-api
+    build:
+      context: .
+      dockerfile: ./portal-api/Dockerfile
     image: dtfs/portal-api
     restart: always
     depends_on:
       - dtfs-central-api
       - external-api
     ports:
-      - "5001:5001"
+      - '5001:5001'
     volumes:
-      - ./portal-api/src:/app/src:ro
+      - ./portal-api/src:/app/portal-api/src:ro
+      - ./libs:/app/libs:ro
     deploy:
       resources:
         limits:
-          cpus: "0.25"
+          cpus: '0.25'
           memory: 950M
     environment:
       - PORT=5001
@@ -218,22 +246,25 @@ services:
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
       - UTILISATION_REPORT_DUE_EMAIL_SCHEDULE
       - UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE
-    entrypoint: npx ts-node src/index.ts
+    entrypoint: npx ts-node portal-api/src/index.ts
 
   external-api:
-    build: ./external-api
+    build:
+      context: .
+      dockerfile: ./external-api/Dockerfile
     image: dtfs/external-api
     restart: always
     depends_on:
       - dtfs-submissions-data
     ports:
-      - "5002:5002"
+      - '5002:5002'
     volumes:
-      - ./external-api/src:/app/src:ro
+      - ./external-api/src:/app/external-api/src:ro
+      - ./libs:/app/libs:ro
     deploy:
       resources:
         limits:
-          cpus: "0.1"
+          cpus: '0.1'
           memory: 400M
     environment:
       - PORT=5002
@@ -264,25 +295,28 @@ services:
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
-    entrypoint: npx nodemon src/index.ts -L --max-old-space-size=350
+    entrypoint: npx nodemon external-api/src/index.ts -L --max-old-space-size=350
 
   gef-ui:
-    build: ./gef-ui
+    build:
+      context: .
+      dockerfile: ./gef-ui/Dockerfile
     image: dtfs/gef-ui
     restart: always
     depends_on:
       - redis
       - portal-api
     ports:
-      - "5006:5006"
+      - '5006:5006'
     volumes:
-      - ./gef-ui/server:/app/server:ro
-      - ./gef-ui/public:/app/public:ro
-      - ./gef-ui/templates:/app/templates:ro
+      - ./gef-ui/server:/app/gef-ui/server:ro
+      - ./gef-ui/public:/app/gef-ui/public:ro
+      - ./gef-ui/templates:/app/gef-ui/templates:ro
+      - ./libs:/app/libs:ro
     deploy:
       resources:
         limits:
-          cpus: "0.1"
+          cpus: '0.1'
           memory: 300M
     environment:
       - PORTAL_API_URL=http://portal-api:5001
@@ -304,11 +338,11 @@ services:
     image: dtfs/azure-function-number-generator
     restart: always
     ports:
-      - "7072:80"
+      - '7072:80'
     deploy:
       resources:
         limits:
-          cpus: "0.1"
+          cpus: '0.1'
           memory: 300M
     environment:
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
@@ -324,28 +358,28 @@ services:
       - NODE_ENV=${NODE_ENV}
 
   redis:
-    image: "redis:alpine"
+    image: 'redis:alpine'
     ports:
-      - "6379:6379"
+      - '6379:6379'
     deploy:
       resources:
         limits:
-          cpus: "0.1"
+          cpus: '0.1'
           memory: 300M
 
   reverse-proxy:
     build: ./reverse-proxy
-    image: "dtfs/reverse-proxy"
+    image: 'dtfs/reverse-proxy'
     depends_on:
       - portal
       - gef-ui
     ports:
-      - "80:80"
+      - '80:80'
     environment:
       - PORTAL_UI=portal:5000
       - GEF_UI=gef-ui:5006
     deploy:
       resources:
         limits:
-          cpus: "0.01"
+          cpus: '0.01'
           memory: 150M
