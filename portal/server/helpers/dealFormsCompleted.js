@@ -1,21 +1,24 @@
 const CONSTANTS = require('../constants');
 
-
 /**
  * Checks if a facility is complete by filtering its items based on their status and certain conditions,
  * and then comparing the length of the filtered arrays with the total number of items.
- * @param {Object} facility - The facility object containing an array of items.
+ * @param {Object} facilities - The facility object containing an array of items.
  * @returns {boolean} - True if the facility is complete, false otherwise.
  */
-const isFacilityComplete = (facility) => {
-  const items = facility?.items || [];
+const isFacilityComplete = (facilities = []) => {
   const facilityProcessedStatus = [CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF];
 
-  const completed = items.filter((item) => item.status === CONSTANTS.STATUS.FACILITY.COMPLETED);
-  const incomplete = items.filter((item) => item.status === CONSTANTS.STATUS.FACILITY.INCOMPLETE);
-  const acknowledged = items.filter((item) => facilityProcessedStatus.includes(item.status) && item.requestedCoverStartDate && item.coverDateConfirmed);
+  const completed = facilities.filter((facility) => facility.status === CONSTANTS.STATUS.FACILITY.COMPLETED).length;
+  const incomplete = facilities.filter((facility) => facility.status === CONSTANTS.STATUS.FACILITY.INCOMPLETE).length;
+  const notStarted = facilities.filter((facility) => facility.status === CONSTANTS.STATUS.FACILITY.NOT_STARTED).length;
+  const acknowledged = facilities.filter(
+    (facility) => facilityProcessedStatus.includes(facility.status) && facility.requestedCoverStartDate && facility.coverDateConfirmed,
+  ).length;
 
-  return items.length === completed.length + incomplete.length + acknowledged.length;
+  const total = completed + incomplete + notStarted + acknowledged;
+
+  return facilities.length === total && facilities.length !== notStarted && facilities.length !== incomplete;
 };
 
 /**
@@ -47,12 +50,14 @@ const isSubmissionDetailComplete = (deal) => deal?.submissionDetails?.status ===
 const isEligibilityComplete = (deal) => deal?.eligibility?.status === CONSTANTS.STATUS.SECTION.COMPLETED;
 
 /**
- * Determines if a deal has any incomplete facilities.
- *
- * @param {object} deal - The deal object.
- * @returns {boolean} - True if the deal has incomplete facilities, false otherwise.
+ * Checks if every facility in a deal is complete by calling the `isFacilityComplete` function.
+ * @param {object} deal - The deal object containing bond and loan transactions.
+ * @returns {boolean} - Returns true if every facility in the deal is complete, otherwise returns false.
  */
-const isEveryFacilityComplete = (deal) => isFacilityComplete(deal?.bondTransactions) && isFacilityComplete(deal?.loanTransactions);
+const isEveryFacilityComplete = (deal) => {
+  const facilities = [...(deal.bondTransactions?.items ?? []), ...(deal.loanTransactions?.items ?? [])];
+  return isFacilityComplete(facilities);
+};
 
 /**
  * Determines if all forms in a deal are completed.
