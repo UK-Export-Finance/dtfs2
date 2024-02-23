@@ -1,5 +1,5 @@
 const { T1_USER_1 } = require('../../../../e2e-fixtures/tfm-users.fixture');
-const { tfmLogin, submitDealAfterUkefIds } = require('./api');
+const { submitDealAfterUkefIds } = require('./api');
 
 /**
  * logs into tfm to get token
@@ -9,9 +9,7 @@ const { tfmLogin, submitDealAfterUkefIds } = require('./api');
  * @param {Object} checker
  */
 const submitDealAfterUkefIdsCall = (dealId, dealType, checker) => {
-  const { username, password } = T1_USER_1;
-
-  tfmLogin(username, password).then((token) => submitDealAfterUkefIds(dealId, dealType, checker, token));
+  cy.tfmLogin({ user: T1_USER_1, isSessionForAPICall: true }).then((token) => submitDealAfterUkefIds(dealId, dealType, checker, token));
 };
 
 module.exports = submitDealAfterUkefIdsCall;

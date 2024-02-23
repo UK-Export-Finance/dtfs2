@@ -37,7 +37,7 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
   });
 
   it('should submit an amendment request', () => {
-    cy.login(PIM_USER_1);
+    cy.tfmLogin({ user: PIM_USER_1 });
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -84,7 +84,7 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
   });
 
   it('should take you to `Add underwriter decision - Facility value` page if a decision has been made for Cover End Date', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -98,7 +98,7 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
   });
 
   it('should take you to `Add conditions, reasons and comments` page if a decision has been made for Facility Value and Cover End Date', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -129,7 +129,7 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
   });
 
   it('should take you to `Add conditions, reasons and comments` summary page', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -164,7 +164,7 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
   });
 
   it('should show add decision button if logged in as PIM user', () => {
-    cy.login(PIM_USER_1);
+    cy.tfmLogin({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().should('exist');
@@ -175,7 +175,7 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
   });
 
   it('should take you to request date page if selecting withdraw on bank decision choice page', () => {
-    cy.login(PIM_USER_1);
+    cy.tfmLogin({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
@@ -223,7 +223,7 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
   });
 
   it('should take you to check answers page if date entered correctly (and not effective date)', () => {
-    cy.login(PIM_USER_1);
+    cy.tfmLogin({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
@@ -248,7 +248,7 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
   });
 
   it('should take you to individual pages with fields checked or filled when pressing change link', () => {
-    cy.login(PIM_USER_1);
+    cy.tfmLogin({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
@@ -282,7 +282,7 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
   });
 
   it('should take you to underwriting page once submit bank decision.  Amendments page should show withdrawn badge for banks decision', () => {
-    cy.login(PIM_USER_1);
+    cy.tfmLogin({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
@@ -328,7 +328,7 @@ context('Amendments underwriting - add banks decision - change from proceed to w
   });
 
   it('should submit an amendment request', () => {
-    cy.login(PIM_USER_1);
+    cy.tfmLogin({ user: PIM_USER_1 });
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -375,7 +375,7 @@ context('Amendments underwriting - add banks decision - change from proceed to w
   });
 
   it('should take you to `Add underwriter decision - Facility value` page if a decision has been made for Cover End Date', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -389,7 +389,7 @@ context('Amendments underwriting - add banks decision - change from proceed to w
   });
 
   it('should take you to `Add conditions, reasons and comments` page if a decision has been made for Facility Value and Cover End Date', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -420,7 +420,7 @@ context('Amendments underwriting - add banks decision - change from proceed to w
   });
 
   it('should take you to `Add conditions, reasons and comments` summary page', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -455,7 +455,7 @@ context('Amendments underwriting - add banks decision - change from proceed to w
   });
 
   it('should take you to check your answers page after completing form for proceed as bank decision', () => {
-    cy.login(PIM_USER_1);
+    cy.tfmLogin({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
@@ -481,7 +481,7 @@ context('Amendments underwriting - add banks decision - change from proceed to w
   });
 
   it('should take you to check answers page from received page after changing decision to withdraw without effective date', () => {
-    cy.login(PIM_USER_1);
+    cy.tfmLogin({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
@@ -507,7 +507,7 @@ context('Amendments underwriting - add banks decision - change from proceed to w
   });
 
   it('should take you to underwriting page once submit bank decision.  Amendments page should show withdrawn badge for banks decision', () => {
-    cy.login(PIM_USER_1);
+    cy.tfmLogin({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });

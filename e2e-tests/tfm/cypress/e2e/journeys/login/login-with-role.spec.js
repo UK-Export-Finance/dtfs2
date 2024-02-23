@@ -12,7 +12,7 @@ context('Login to tfm with specific roles', () => {
     it(`should redirect to /deals after a login for users in '${teamName}' team`, () => {
       const userInTeam = findOneUserByTeamId(teamName);
 
-      cy.login(userInTeam);
+      cy.tfmLogin({ user: userInTeam });
 
       cy.url().should('eq', relativeURL('/deals'));
     });
@@ -22,7 +22,7 @@ context('Login to tfm with specific roles', () => {
     it(`should redirect to /utilisation-reports after a login for users in '${teamName}' team`, () => {
       const userInTeam = findOneUserByTeamId(teamName);
 
-      cy.login(userInTeam);
+      cy.tfmLogin({ user: userInTeam });
 
       cy.url().should('eq', relativeURL('/utilisation-reports'));
     });

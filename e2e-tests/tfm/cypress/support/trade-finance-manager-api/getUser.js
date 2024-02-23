@@ -1,7 +1,10 @@
 const { getUser } = require('./api');
 
-module.exports = (usernameToGet, opts) => {
+module.exports = (usernameToGet, user) => {
   console.info('getUser::');
 
-  return cy.login(opts).then((token) => getUser(usernameToGet, token));
+  return cy.tfmLogin({
+    user,
+    isSessionForAPI: true,
+  }).then((token) => getUser(usernameToGet, token));
 };

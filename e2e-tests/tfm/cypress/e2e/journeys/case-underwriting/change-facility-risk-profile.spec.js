@@ -37,7 +37,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
   context('unauthorised user', () => {
     it('a user that is not in the `underwriters` or `underwriter managers` team cannot view the `edit facility risk profile`page', () => {
       // unauthorised user goes to the `Pricing and risk` page
-      cy.login(T1_USER_1);
+      cy.tfmLogin({ user: T1_USER_1 });
       cy.visit(relative(`/case/${dealId}/deal`));
 
       // go to pricing and risk page
@@ -56,7 +56,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
   });
 
   it('should show Guarantee fee, interest margin and risk profile correctly', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to pricing and risk page
@@ -71,7 +71,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
   });
 
   it('clicking `Change` link in facilities table goes to Facility Risk profile page', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to pricing and risk page
@@ -87,7 +87,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
   });
 
   it('clicking `ukefFacilityId` link in the legend goes to the Facility page', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to pricing and risk page
@@ -106,7 +106,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
   });
 
   it('clicking `cancel` link in the form redirects to `Pricing and risk` page', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to pricing and risk page
@@ -125,7 +125,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
   });
 
   it('submitting an empty form displays validation errors', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to pricing and risk page
@@ -143,7 +143,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
   });
 
   it('submitting a new risk profile redirects to `Pricing and Risk` page and updates the value in facilities table', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to pricing and risk page

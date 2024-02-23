@@ -8,8 +8,7 @@ module.exports = (deals) => {
   deals.forEach((dealToInsert) => {
     cy.tfmLogin({
       user: T1_USER_1,
-      url: null,
-      createCookie: false,
+      isSessionForAPI: true,
     }).then((token) => submitDeal(dealToInsert._id, dealToInsert.dealType, token).then(() => {
       // eslint-disable-next-line consistent-return
       submitDealAfterUkefIds(dealToInsert._id, dealToInsert.dealType, null, token).then((deal) => {

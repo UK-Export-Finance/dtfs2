@@ -23,7 +23,7 @@ context('Facility page', () => {
   });
 
   beforeEach(() => {
-    cy.login(T1_USER_1);
+    cy.tfmLogin({ user: T1_USER_1 });
   });
 
   after(() => {

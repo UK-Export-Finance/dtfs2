@@ -39,7 +39,7 @@ context('User can login', () => {
   });
 
   it('should login, redirect to /deals. Header displays user\'s first and last name and logout link', () => {
-    cy.login(T1_USER_1);
+    cy.tfmLogin({ user: T1_USER_1 });
     cy.url().should('eq', relative('/deals'));
 
     partials.header.userLink().invoke('text').then((text) => {
@@ -51,7 +51,7 @@ context('User can login', () => {
   });
 
   it('should login, redirect to /deals, visiting / should redirect back to /deals', () => {
-    cy.login(T1_USER_1);
+    cy.tfmLogin({ user: T1_USER_1 });
     cy.url().should('eq', relative('/deals'));
 
     pages.landingPage.visit();
@@ -60,7 +60,7 @@ context('User can login', () => {
   });
 
   it('should login, redirect to /deals, visiting / should redirect back to /deals', () => {
-    cy.login(T1_USER_1);
+    cy.tfmLogin({ user: T1_USER_1 });
     cy.url().should('eq', relative('/deals'));
 
     pages.landingPage.visit();
@@ -69,11 +69,11 @@ context('User can login', () => {
   });
 
   it('should login and login again as different user', () => {
-    cy.login(T1_USER_1);
+    cy.tfmLogin({ user: T1_USER_1 });
 
     partials.header.signOutLink().should('exist');
 
-    cy.login(PIM_USER_1);
+    cy.tfmLogin({ user: PIM_USER_1 });
 
     cy.url().should('eq', relative('/deals'));
 
@@ -86,7 +86,7 @@ context('User can login', () => {
   });
 
   it('should login, and show relevant header information', () => {
-    cy.login(T1_USER_1);
+    cy.tfmLogin({ user: T1_USER_1 });
 
     partials.header.ukefLogo().should('exist');
     partials.header.headerName().should('exist');
@@ -104,7 +104,7 @@ context('User can login', () => {
   });
 
   it('displays the beta banner correctly', () => {
-    cy.login(T1_USER_1);
+    cy.tfmLogin({ user: T1_USER_1 });
     partials.header.betaBanner().contains('This is a new service – your feedback will help us to improve it.');
     partials.header.betaBanner().contains('beta');
     partials.header.betaBannerHref().contains('feedback');
@@ -124,7 +124,7 @@ context('User can login', () => {
   });
 
   it('logout redirects to https://login.microsoftonline.com', () => {
-    cy.login(T1_USER_1);
+    cy.tfmLogin({ user: T1_USER_1 });
 
     cy.request({
       url: relative('/logout'),

@@ -26,7 +26,7 @@ context('Case Underwriting - Underwriter Manager\'s decision - Form and Validati
   });
 
   beforeEach(() => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to underwriter managers decision page
@@ -45,7 +45,7 @@ context('Case Underwriting - Underwriter Manager\'s decision - Form and Validati
   });
 
   it('a user that is NOT in UNDERWRITER_MANAGERS team should not see `Add decision` link', () => {
-    cy.login(T1_USER_1);
+    cy.tfmLogin({ user: T1_USER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to underwriter managers decision page
@@ -191,7 +191,7 @@ context('Case Underwriting - Underwriter Manager\'s decision - Submit Form', () 
   });
 
   beforeEach(() => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to underwriter managers decision page
@@ -272,7 +272,7 @@ context('Case Underwriting - Underwriter Manager\'s decision AIN', () => {
   });
 
   beforeEach(() => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to underwriter managers decision page

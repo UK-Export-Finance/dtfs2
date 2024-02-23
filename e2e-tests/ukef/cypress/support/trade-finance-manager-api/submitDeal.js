@@ -6,7 +6,6 @@ module.exports = (dealId, dealType) => {
 
   return cy.tfmLogin({
     user: T1_USER_1,
-    url: null,
-    createCookie: false,
+    isSessionForAPI: true,
   }).then((token) => submitDealAfterUkefIds(dealId, dealType, null, token));
 };

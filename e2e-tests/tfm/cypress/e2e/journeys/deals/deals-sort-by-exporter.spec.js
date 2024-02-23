@@ -64,7 +64,7 @@ context('User can view and sort deals by exporter', () => {
   });
 
   beforeEach(() => {
-    cy.login(T1_USER_1);
+    cy.tfmLogin({ user: T1_USER_1 });
     cy.url().should('eq', relative('/deals'));
   });
 
