@@ -6,6 +6,7 @@ import { UtilisationReport } from '../types/db-models/utilisation-reports';
 import { UtilisationReportRawCsvData, ReportPeriod } from '../types/utilisation-reports';
 import { DB_COLLECTIONS, UTILISATION_REPORT_HEADERS } from '../constants';
 
+// TODO FN-1859 - REMOVE UNUSED FUNCTIONS
 export const saveUtilisationData = async (reportData: UtilisationReportRawCsvData[], reportPeriod: ReportPeriod, bank: SessionBank, reportId: string) => {
   const utilisationDataObjects = reportData.map(
     (reportDataEntry): OptionalId<UtilisationData> => ({

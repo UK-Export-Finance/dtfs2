@@ -100,6 +100,7 @@ const uploadReportAndSendNotification = async (req, res) => {
     const { file } = req;
 
     const { formattedReportPeriod, reportData, reportPeriod, user } = req.body;
+    // TODO FN-1859 - why parse here?
     const parsedReportData = JSON.parse(reportData);
     const parsedUser = JSON.parse(user);
     const parsedReportPeriod = JSON.parse(reportPeriod);
@@ -108,23 +109,31 @@ const uploadReportAndSendNotification = async (req, res) => {
       return res.status(400).send();
     }
 
-    // If a report has already been uploaded, we should not overwrite it
-    const uploadedReportsInReportPeriod = await api.getUtilisationReports(parsedUser?.bank?.id, {
+    const bankId = parsedUser?.bank?.id;
+
+    const existingReports = await api.getUtilisationReports(bankId, {
       reportPeriod: parsedReportPeriod,
-      excludeNotUploaded: true,
     });
-    if (uploadedReportsInReportPeriod.length > 0) {
+
+    if (existingReports.length !== 1) {
+      return res.status(500).send(`Expected 1 report but found ${existingReports.length} with bank ID ${bankId} and report period '${parsedReportPeriod}'`);
+    }
+
+    const existingReport = existingReports[0];
+
+    // If a report has already been uploaded, we should not overwrite it
+    if (existingReport.azureFileInfo) {
       return res.status(409).send('Report for the supplied report period has already been uploaded');
     }
 
-    const fileInfo = await saveFileToAzure(file, parsedUser.bank.id);
+    const fileInfo = await saveFileToAzure(file, bankId);
 
     const azureFileInfo = {
       ...fileInfo,
       mimetype: file.mimetype,
     };
 
-    const saveDataResponse = await api.saveUtilisationReport(parsedReportData, parsedReportPeriod, parsedUser, azureFileInfo);
+    const saveDataResponse = await api.saveUtilisationReport(existingReport.id, parsedReportData, parsedUser, azureFileInfo);
 
     if (saveDataResponse.status !== 201) {
       const status = saveDataResponse.status || 500;

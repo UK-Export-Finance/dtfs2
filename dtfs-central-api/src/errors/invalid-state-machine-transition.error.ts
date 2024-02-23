@@ -1,3 +1,6 @@
+import { HttpStatusCode } from 'axios';
+import { ApiError } from './api.error.ts';
+
 type RequiredParams = {
   eventType: string;
   entityName: string;
@@ -8,9 +11,13 @@ type EntityParams = RequiredParams & {
   entityId: number;
 };
 
-export class InvalidStateMachineTransitionError extends Error {
+export class InvalidStateMachineTransitionError extends ApiError {
   private constructor(message: string) {
-    super(message);
+    super({
+      status: HttpStatusCode.BadRequest,
+      message,
+    });
+
     this.name = this.constructor.name;
   }
 

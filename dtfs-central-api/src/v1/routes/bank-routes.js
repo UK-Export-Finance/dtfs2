@@ -5,7 +5,7 @@ const bankRouter = express.Router();
 const getBankController = require('../controllers/bank/get-bank.controller');
 const getBanksController = require('../controllers/bank/get-banks.controller');
 const createBankController = require('../controllers/bank/create-bank.controller');
-const getUtilisationReportsController = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
+const getUtilisationReportsController = require('../controllers/utilisation-report/get-utilisation-reports.controller');
 
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');

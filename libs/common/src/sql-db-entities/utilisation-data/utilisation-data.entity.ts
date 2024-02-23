@@ -1,7 +1,9 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { UtilisationReportEntity } from '../utilisation-report/utilisation-report.entity';
+import { UtilisationReportEntity } from '../utilisation-report';
 import { Currency } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
+import { CreateUtilisationDataParams } from './utilisation-data.types';
+import { getDbAuditUpdatedByUserId } from '../helpers';
 
 // TODO FN-2183 - should this name maybe refer to `payments`, `feeRecords`, or something else?
 @Entity('UtilisationData')
@@ -82,4 +84,34 @@ export class UtilisationDataEntity extends AuditableBaseEntity {
    */
   @Column()
   paymentExchangeRate!: number;
+
+  static create({
+    facilityId,
+    exporter,
+    baseCurrency,
+    facilityUtilisation,
+    totalFeesAccruedForTheMonth,
+    totalFeesAccruedForTheMonthCurrency,
+    totalFeesAccruedForTheMonthExchangeRate,
+    monthlyFeesPaidToUkef,
+    monthlyFeesPaidToUkefCurrency,
+    paymentCurrency,
+    paymentExchangeRate,
+    requestSource,
+  }: CreateUtilisationDataParams): UtilisationDataEntity {
+    const data = new UtilisationDataEntity();
+    data.facilityId = facilityId;
+    data.exporter = exporter;
+    data.baseCurrency = baseCurrency;
+    data.facilityUtilisation = facilityUtilisation;
+    data.totalFeesAccruedForTheMonth = totalFeesAccruedForTheMonth;
+    data.totalFeesAccruedForTheMonthCurrency = totalFeesAccruedForTheMonthCurrency;
+    data.totalFeesAccruedForTheMonthExchangeRate = totalFeesAccruedForTheMonthExchangeRate;
+    data.monthlyFeesPaidToUkef = monthlyFeesPaidToUkef;
+    data.monthlyFeesPaidToUkefCurrency = monthlyFeesPaidToUkefCurrency;
+    data.paymentCurrency = paymentCurrency;
+    data.paymentExchangeRate = paymentExchangeRate;
+    data.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
+    return data;
+  }
 }

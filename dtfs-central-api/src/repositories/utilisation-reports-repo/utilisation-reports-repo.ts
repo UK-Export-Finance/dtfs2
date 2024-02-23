@@ -9,6 +9,7 @@ import { ReportPeriod } from '../../types/utilisation-reports';
 import { MonthAndYear } from '../../types/date';
 import { SessionBank } from '../../types/session-bank';
 
+// TODO FN-1859 - REMOVE UNUSED FUNCTIONS
 export const updateUtilisationReportDetailsWithUploadDetails = async (
   existingReport: UtilisationReport,
   azureFileInfo: AzureFileInfo,

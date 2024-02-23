@@ -12,6 +12,9 @@ interface RequestQuery {
   [key: string]: string | string[] | RequestQuery | RequestQuery[] | undefined;
 }
 
+/**
+ * Types match generic params of base express {@link Request} type
+ */
 type CustomExpressRequestOptions = {
   params?: RequestParams;
   /* eslint-disable @typescript-eslint/no-explicit-any */

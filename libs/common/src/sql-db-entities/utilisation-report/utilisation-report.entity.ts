@@ -1,10 +1,11 @@
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { produce } from 'immer';
 import { UtilisationReportReconciliationStatus } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import { ReportPeriodPartialEntity } from '../partial-entities';
 import { AzureFileInfoEntity } from '../azure-file-info';
 import { UtilisationDataEntity } from '../utilisation-data';
-import { CreateNotReceivedUtilisationReportEntityParams } from './utilisation-report.types';
+import { CreateNotReceivedUtilisationReportEntityParams, UpdateWithUploadDetailsParams } from './utilisation-report.types';
 import { getDbAuditUpdatedByUserId } from '../helpers';
 
 @Entity('UtilisationReport')
@@ -69,5 +70,16 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     report.uploadedByUserId = null;
     report.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
     return report;
+  }
+
+  public updatedWithUploadDetails({ azureFileInfo, data, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): UtilisationReportEntity {
+    return produce(this, (draftReport) => {
+      draftReport.dateUploaded = new Date();
+      draftReport.azureFileInfo = azureFileInfo;
+      draftReport.status = 'PENDING_RECONCILIATION';
+      draftReport.uploadedByUserId = uploadedByUserId;
+      draftReport.data = data;
+      draftReport.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
+    });
   }
 }

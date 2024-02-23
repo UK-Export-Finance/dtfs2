@@ -25,6 +25,7 @@ module.exports = {
     'no-return-await': 'off',
     'no-use-before-define': ['error', { functions: false }],
     'class-methods-use-this': ['error', { exceptMethods: ['up', 'down'] }],
+    'no-param-reassign': ['error', { props: true, ignorePropertyModificationsForRegex: ['^draft'] }],
   },
   settings: {
     'import/resolver': {

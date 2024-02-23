@@ -1,4 +1,5 @@
-const { InvalidEnvironmentVariableError } = require('./invalid-environment-variable.error');
+import { HttpStatusCode } from 'axios';
+import { InvalidEnvironmentVariableError } from './invalid-environment-variable.error';
 
 describe('InvalidEnvironmentVariableError', () => {
   const message = 'an error message';
@@ -7,6 +8,14 @@ describe('InvalidEnvironmentVariableError', () => {
     const exception = new InvalidEnvironmentVariableError(message);
 
     expect(exception.message).toBe(message);
+  });
+
+  it('exposes the 500 (Internal Server Error) status code', () => {
+    // Act
+    const error = new InvalidEnvironmentVariableError(message);
+
+    // Assert
+    expect(error.status).toBe(HttpStatusCode.InternalServerError);
   });
 
   it('exposes the name of the exception', () => {

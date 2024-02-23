@@ -249,15 +249,16 @@ const findLatestGefMandatoryCriteria = async () => {
   }
 };
 
-const saveUtilisationReport = async (reportData, reportPeriod, user, fileInfo) => {
+const saveUtilisationReport = async (reportId, reportData, user, fileInfo) => {
+  // TODO FN-1859 - throw here?
   try {
     return await axios({
       method: 'post',
       url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports`,
       headers: headers.central,
       data: {
+        reportId,
         reportData,
-        reportPeriod,
         user,
         fileInfo,
       },
