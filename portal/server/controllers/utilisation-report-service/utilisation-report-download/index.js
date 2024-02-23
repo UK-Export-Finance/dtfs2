@@ -9,9 +9,9 @@ const api = require('../../../api');
 const getReportDownload = async (req, res) => {
   try {
     const { userToken } = req.session;
-    const { bankId, _id } = req.params;
+    const { bankId, id } = req.params;
 
-    const { data, headers } = await api.downloadUtilisationReport(userToken, bankId, _id);
+    const { data, headers } = await api.downloadUtilisationReport(userToken, bankId, id);
 
     res.set('content-disposition', headers['content-disposition']);
     res.set('content-type', headers['content-type']);

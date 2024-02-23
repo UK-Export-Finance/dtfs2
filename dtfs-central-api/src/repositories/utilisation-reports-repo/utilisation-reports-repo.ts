@@ -1,4 +1,4 @@
-import { Filter, InsertOneResult, ObjectId, OptionalId } from 'mongodb';
+import { Filter, InsertOneResult, OptionalId } from 'mongodb';
 import sortBy from 'lodash/sortBy';
 import db from '../../drivers/db-client';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS, DB_COLLECTIONS } from '../../constants';
@@ -111,16 +111,6 @@ export const getManyUtilisationReportDetailsByBankId = async (bankId: string, op
   };
   const filteredUtilisationReports: UtilisationReport[] = await utilisationReportsCollection.find(utilisationReportDetailsFilter).toArray();
   return sortBy(filteredUtilisationReports, ['reportPeriod.start.year', 'reportPeriod.start.month']);
-};
-
-/**
- * Gets utilisation reports by utilisation report id
- * @param _id - The utilisation report id
- * @returns The found bank report (`null` if not found)
- */
-export const getUtilisationReportDetailsById = async (_id: string): Promise<UtilisationReport | null> => {
-  const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  return await collection.findOne({ _id: { $eq: new ObjectId(_id) } });
 };
 
 export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStart: MonthAndYear, bankId: string): Promise<UtilisationReport[]> => {

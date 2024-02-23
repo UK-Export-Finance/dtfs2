@@ -316,19 +316,23 @@ const getUtilisationReports = async (bankId, options) => {
   }
 };
 
-const getUtilisationReportById = async (_id) => {
+/**
+ * @param {number} id
+ * @returns {Promise<import('@ukef/dtfs2-common/').UtilisationReportResponseBody>}
+ */
+const getUtilisationReportById = async (id) => {
   try {
-    if (!isValidMongoId(_id)) {
-      throw new Error(`Invalid MongoDB _id provided: '${_id}'`);
+    if (!Number.isInteger(id)) {
+      throw new Error(`Invalid report id provided: ${id}`);
     }
 
-    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${_id}`, {
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${id}`, {
       headers: headers.central,
     });
 
     return response.data;
   } catch (error) {
-    console.error(`Unable to get utilisation report with MongoDB _id '${_id}'`, error);
+    console.error(`Unable to get utilisation report with id '${id}'`, error);
     throw error;
   }
 };

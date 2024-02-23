@@ -134,9 +134,8 @@ authRouter
   );
 
 authRouter
-  .route('/utilisation-reports/:_id/download')
+  .route('/utilisation-reports/:id/download')
   .get(
-    validation.mongoIdValidation,
     handleExpressValidatorResult,
     utilisationReportsController.getUtilisationReportDownload,
   );
