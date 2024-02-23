@@ -1,6 +1,6 @@
 const {
   getEligibilityStatus,
-} = require('../../../src/v1/validation/eligibility-criteria');
+} = require('./eligibility-criteria');
 
 describe('validation - eligibility criteria', () => {
   it('should return "Completed" status if all EC completed and no validation errors', () => {
