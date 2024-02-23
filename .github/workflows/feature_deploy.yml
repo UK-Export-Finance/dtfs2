@@ -3,7 +3,7 @@ name: Feature environment deployment
 on:
   push:
     branches:
-      - main
+      - feat/e2etf-sql
     paths:
       - 'portal/**'
       - 'portal-api/**'
