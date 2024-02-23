@@ -48,13 +48,13 @@
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="facility-stage-{{ bond._id}}">{{ bond.facilityStage | safe }}</td>
 
-                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-requested-cover-start-date">
+                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-requested-cover-start-date-{{ bond._id }}">
                   {% if bond.requestedCoverStartDate %}
                     {{ bond.requestedCoverStartDate | localiseTimestamp('dd/MM/yyyy', params.user.timezone) | safe }}
                   {% endif %}
                 </td>
 
-                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-cover-end-date">
+                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-cover-end-date-{{ bond._id}}">
                    {% if bond.coverEndDate %}
                   {{ bond.coverEndDate | localiseTimestamp('dd/MM/yyyy', params.user.timezone) | safe }}
                 {% endif %}

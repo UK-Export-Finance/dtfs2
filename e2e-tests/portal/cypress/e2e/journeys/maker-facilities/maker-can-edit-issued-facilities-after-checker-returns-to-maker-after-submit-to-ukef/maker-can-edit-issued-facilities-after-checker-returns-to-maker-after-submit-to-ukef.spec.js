@@ -16,21 +16,20 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
 
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(mockDeal, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id;
+    cy.insertOneDeal(mockDeal, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
 
-        const { mockFacilities } = mockDeal;
+      const { mockFacilities } = mockDeal;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-          const loans = createdFacilities.filter((f) => f.type === 'Loan');
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-          dealFacilities.bonds = bonds;
-          dealFacilities.loans = loans;
-        });
+        dealFacilities.bonds = bonds;
+        dealFacilities.loans = loans;
       });
+    });
   });
 
   after(() => {
@@ -49,15 +48,18 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
     cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 
-    pages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Further Maker\'s input required');
-    });
+    pages.contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal("Further Maker's input required");
+      });
 
-    //---------------------------------------------------------------
-    // 'proceed to review' button should be enabled
-    // purely because facility statuses are 'Maker's input required'
-    //---------------------------------------------------------------
-    pages.contract.proceedToReview().should('not.be.disabled');
+    /**
+     * Proceed to review button should not be visible
+     * until maker has made changes to the facility
+     */
+    pages.contract.proceedToReview().should('not.exist');
 
     //---------------------------------------------------------------
     // facilities should be in correct shape,
@@ -72,13 +74,19 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       bondRow.uniqueNumberLink().should('not.exist');
       bondRow.uniqueNumber().should('be.visible');
 
-      bondRow.bondStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Maker\'s input required');
-      });
+      bondRow
+        .bondStatus()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal("Maker's input required");
+        });
 
-      bondRow.issueFacilityLink().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
+      bondRow
+        .issueFacilityLink()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Facility issued');
+        });
 
       bondRow.issueFacilityLink().click();
       cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
@@ -118,13 +126,19 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       loanRow.nameLink().should('not.exist');
       loanRow.name().should('be.visible');
 
-      loanRow.loanStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Maker\'s input required');
-      });
+      loanRow
+        .loanStatus()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal("Maker's input required");
+        });
 
-      loanRow.issueFacilityLink().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
+      loanRow
+        .issueFacilityLink()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Facility issued');
+        });
 
       loanRow.issueFacilityLink().click();
       cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));
