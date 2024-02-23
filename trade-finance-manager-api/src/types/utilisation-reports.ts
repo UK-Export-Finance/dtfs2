@@ -18,20 +18,13 @@ export type ReportPeriod = {
 };
 
 export type UtilisationReportResponseBody = {
-  _id: string;
-  bank: {
-    id: string;
-    name: string;
-  };
+  id: number;
+  bankId: string;
   reportPeriod: ReportPeriod;
   dateUploaded: IsoDateTimeStamp;
   azureFileInfo: AzureFileInfo | null;
   status: UtilisationReportReconciliationStatus;
-  uploadedBy: {
-    id: string;
-    firstname: string;
-    surname: string;
-  };
+  uploadedByUserId: string | null
 };
 
 export type ReportWithStatus = {
