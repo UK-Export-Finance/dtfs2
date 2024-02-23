@@ -21,16 +21,13 @@
   "scripts": {
     "api-test": "jest --coverage --verbose --forceExit --config=api-test.jest.config.js",
     "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
-    "component-test": "jest --config=jest.component-test.config.js",
     "dev": "webpack --config webpack.dev.config.js --watch",
     "lint": "eslint ./api-tests ./component-tests ./scripts ./server && npm run type-check",
     "lint:fix": "eslint ./api-tests ./component-tests ./scripts ./server --fix",
     "start": "npx ts-node server/index.ts",
-    "test": "jest --coverage --verbose --config=jest.config.js",
-    "test-dev": "jest --verbose --config=jest.config.js",
-    "test-quick": "jest --config=jest.config.js",
-    "test-watch": "jest --watchAll --coverage --verbose --config=jest.config.js --detectOpenHandles",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
+    "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",

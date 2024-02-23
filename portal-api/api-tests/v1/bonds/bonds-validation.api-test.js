@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { sub, format, add } = require('date-fns');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
@@ -7,6 +7,7 @@ const { as } = require('../../api')(app);
 const { MAKER } = require('../../../src/v1/roles/roles');
 const { dateValidationText } = require('../../../src/v1/validation/fields/date');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
+const { DATE_FORMATS } = require('../../../src/constants');
 
 describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({
@@ -85,6 +86,8 @@ describe('/v1/deals/:id/bond', () => {
   });
 
   describe('PUT /v1/deals/:id/bond/:bondId', () => {
+    const nowDate = new Date();
+
     it('returns 400 with validation errors', async () => {
       const { body, status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/${bondId}`);
       expect(status).toEqual(400);
@@ -281,7 +284,11 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     describe('when facilityStage is `Issued`', () => {
+      const yesterday = sub(nowDate, { days: 1 })
+
       describe('requestedCoverStartDate', () => {
+        const todayPlus3Months1Day = add(nowDate, { months: 3, days: 1 });
+
         const updateRequestedCoverStartDate = async (requestedCoverStartDate) => {
           const bond = {
             ...allBondFields,
@@ -296,12 +303,10 @@ describe('/v1/deals/:id/bond', () => {
 
         describe('when is before today', () => {
           it('should return validationError', async () => {
-            const beforeToday = moment().subtract(1, 'day');
-
             const requestedCoverStartDateFields = {
-              'requestedCoverStartDate-day': moment(beforeToday).format('DD'),
-              'requestedCoverStartDate-month': moment(beforeToday).format('MM'),
-              'requestedCoverStartDate-year': moment(beforeToday).format('YYYY'),
+              'requestedCoverStartDate-day': format(yesterday, 'dd'),
+              'requestedCoverStartDate-month': format(yesterday, 'MM'),
+              'requestedCoverStartDate-year': format(yesterday, 'yyyy'),
             };
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
@@ -312,20 +317,21 @@ describe('/v1/deals/:id/bond', () => {
 
         describe('when is 3 months or more', () => {
           it('should return validationError', async () => {
-            const nowDate = moment();
-            const requestedCoverStartDate = moment(nowDate).add(3, 'months').add(1, 'day');
-
             const requestedCoverStartDateFields = {
-              'requestedCoverStartDate-day': moment(requestedCoverStartDate).format('DD'),
-              'requestedCoverStartDate-month': moment(requestedCoverStartDate).format('MM'),
-              'requestedCoverStartDate-year': moment(requestedCoverStartDate).format('YYYY'),
+              'requestedCoverStartDate-day': format(todayPlus3Months1Day, 'dd'),
+              'requestedCoverStartDate-month': format(todayPlus3Months1Day, 'MM'),
+              'requestedCoverStartDate-year': format(todayPlus3Months1Day, 'yyyy'),
             };
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
 
             expect(validationErrors.errorList.requestedCoverStartDate).toBeDefined();
 
-            const expectedText = `Requested Cover Start Date must be between ${moment().format('Do MMMM YYYY')} and ${moment(nowDate).add(3, 'months').format('Do MMMM YYYY')}`;
+            const nowFormatted = format(nowDate, DATE_FORMATS.LONG_FORM_DATE);
+            const nowPlus3Months = add(nowDate, { months: 3 });
+            const nowPlus3MonthsFormatted = format(nowPlus3Months, DATE_FORMATS.LONG_FORM_DATE);
+
+            const expectedText = `Requested Cover Start Date must be between ${nowFormatted} and ${nowPlus3MonthsFormatted}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });
@@ -343,13 +349,10 @@ describe('/v1/deals/:id/bond', () => {
 
             await as(aBarclaysMaker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
 
-            const nowDate = moment();
-            const requestedCoverStartDate = moment(nowDate).add(3, 'months').add(1, 'day');
-
             const requestedCoverStartDateFields = {
-              'requestedCoverStartDate-day': moment(requestedCoverStartDate).format('DD'),
-              'requestedCoverStartDate-month': moment(requestedCoverStartDate).format('MM'),
-              'requestedCoverStartDate-year': moment(requestedCoverStartDate).format('YYYY'),
+              'requestedCoverStartDate-day': format(todayPlus3Months1Day, 'dd'),
+              'requestedCoverStartDate-month': format(todayPlus3Months1Day, 'MM'),
+              'requestedCoverStartDate-year': format(todayPlus3Months1Day, 'yyyy'),
             };
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
@@ -365,16 +368,14 @@ describe('/v1/deals/:id/bond', () => {
                 ...newDeal,
                 details: {
                   ...newDeal.details,
-                  submissionDate: moment().utc().valueOf(),
+                  submissionDate: nowDate.valueOf(),
                 }
               });
 
-              const beforeToday = moment().subtract(1, 'day');
-
               const requestedCoverStartDateFields = {
-                'requestedCoverStartDate-day': moment(beforeToday).format('DD'),
-                'requestedCoverStartDate-month': moment(beforeToday).format('MM'),
-                'requestedCoverStartDate-year': moment(beforeToday).format('YYYY'),
+                'requestedCoverStartDate-day': format(yesterday, 'dd'),
+                'requestedCoverStartDate-month': format(yesterday, 'MM'),
+                'requestedCoverStartDate-year': format(yesterday, 'yyyy'),
               };
 
               const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
@@ -388,17 +389,14 @@ describe('/v1/deals/:id/bond', () => {
                 ...newDeal,
                 details: {
                   ...newDeal.details,
-                  submissionDate: moment().utc().valueOf(),
+                  submissionDate: nowDate.valueOf(),
                 }
               });
 
-              const nowDate = moment();
-              const requestedCoverStartDate = moment(nowDate).add(3, 'months').add(1, 'day');
-
               const requestedCoverStartDateFields = {
-                'requestedCoverStartDate-day': moment(requestedCoverStartDate).format('DD'),
-                'requestedCoverStartDate-month': moment(requestedCoverStartDate).format('MM'),
-                'requestedCoverStartDate-year': moment(requestedCoverStartDate).format('YYYY'),
+                'requestedCoverStartDate-day': format(todayPlus3Months1Day, 'dd'),
+                'requestedCoverStartDate-month': format(todayPlus3Months1Day, 'MM'),
+                'requestedCoverStartDate-year': format(todayPlus3Months1Day, 'yyyy'),
               };
 
               const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
@@ -409,14 +407,58 @@ describe('/v1/deals/:id/bond', () => {
         });
 
         describe('when has some values', () => {
-          it('should return validationError', async () => {
-            const nowDate = moment();
-            const requestedCoverStartDateFields = {
-              'requestedCoverStartDate-day': moment(nowDate).format('DD'),
-              'requestedCoverStartDate-month': '',
-              'requestedCoverStartDate-year': '',
-            };
+          const testValuesWithMissingFields = [
+            {
+              description: 'month and year empty strings',
+              requestedCoverStartDateFields: {
+                'requestedCoverStartDate-day': format(nowDate, 'dd'),
+                'requestedCoverStartDate-month': '',
+                'requestedCoverStartDate-year': '',
+              }
+            },
+            {
+              description: 'day and year set to empty strings',
+              requestedCoverStartDateFields: {
+                'requestedCoverStartDate-day': '',
+                'requestedCoverStartDate-month': format(nowDate, 'MM'),
+                'requestedCoverStartDate-year': '',
+              }
+            },
+            {
+              description: 'month and year set to empty strings',
+              requestedCoverStartDateFields: {
+                'requestedCoverStartDate-day': '',
+                'requestedCoverStartDate-month': '',
+                'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
+              }
+            },
+            {
+              description: 'year set to empty string',
+              requestedCoverStartDateFields: {
+                'requestedCoverStartDate-day': format(nowDate, 'dd'),
+                'requestedCoverStartDate-month': format(nowDate, 'MM'),
+                'requestedCoverStartDate-year': '',
+              }
+            },
+            {
+              description: 'month set to empty string',
+              requestedCoverStartDateFields: {
+                'requestedCoverStartDate-day': format(nowDate, 'dd'),
+                'requestedCoverStartDate-month': '',
+                'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
+              }
+            },
+            {
+              description: 'day set to empty string',
+              requestedCoverStartDateFields: {
+                'requestedCoverStartDate-day': '',
+                'requestedCoverStartDate-month': format(nowDate, 'MM'),
+                'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
+              }
+            },
+          ]
 
+          it.each(testValuesWithMissingFields)('with $description it should return a validationError', async ({ requestedCoverStartDateFields }) => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate).toBeDefined();
 
@@ -427,7 +469,7 @@ describe('/v1/deals/:id/bond', () => {
               requestedCoverStartDateFields['requestedCoverStartDate-year'],
             );
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
-          });
+          })
         });
       });
 
@@ -459,14 +501,58 @@ describe('/v1/deals/:id/bond', () => {
         });
 
         describe('when has some values', () => {
-          it('should return validationError', async () => {
-            const nowDate = moment();
-            const coverEndDateFields = {
-              'coverEndDate-day': moment(nowDate).add(1, 'day').format('DD'),
-              'coverEndDate-month': '',
-              'coverEndDate-year': '',
-            };
+          const testValuesWithMissingFields = [
+            {
+              description: 'month and year set to empty strings',
+              coverEndDateFields: {
+                'coverEndDate-day': format(nowDate, 'dd'),
+                'coverEndDate-month': '',
+                'coverEndDate-year': '',
+              }
+            },
+            {
+              description: 'day and year set to empty strings',
+              coverEndDateFields: {
+                'coverEndDate-day': '',
+                'coverEndDate-month': format(nowDate, 'MM'),
+                'coverEndDate-year': '',
+              }
+            },
+            {
+              description: 'month and year set to empty strings',
+              coverEndDateFields: {
+                'coverEndDate-day': '',
+                'coverEndDate-month': '',
+                'coverEndDate-year': format(nowDate, 'yyyy'),
+              }
+            },
+            {
+              description: 'year set to empty string',
+              coverEndDateFields: {
+                'coverEndDate-day': format(nowDate, 'dd'),
+                'coverEndDate-month': format(nowDate, 'MM'),
+                'coverEndDate-year': '',
+              }
+            },
+            {
+              description: 'month set to empty string',
+              coverEndDateFields: {
+                'coverEndDate-day': format(nowDate, 'dd'),
+                'coverEndDate-month': '',
+                'coverEndDate-year': format(nowDate, 'yyyy'),
+              }
+            },
+            {
+              description: 'day set to empty string',
+              coverEndDateFields: {
+                'coverEndDate-day': '',
+                'coverEndDate-month': format(nowDate, 'MM'),
+                'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
+              }
+            },
+          ]
 
+          it.each(testValuesWithMissingFields)('with $description it should return a validationError', async ({ coverEndDateFields }) => {
             const { validationErrors } = await updateCoverEndDate(coverEndDateFields);
             expect(validationErrors.errorList.coverEndDate).toBeDefined();
             const expectedText = dateValidationText(
@@ -481,12 +567,10 @@ describe('/v1/deals/:id/bond', () => {
 
         describe('when is before today', () => {
           it('should return validationError', async () => {
-            const beforeToday = moment().subtract(1, 'day');
-
             const coverEndDateFields = {
-              'coverEndDate-day': moment(beforeToday).format('DD'),
-              'coverEndDate-month': moment(beforeToday).format('MM'),
-              'coverEndDate-year': moment(beforeToday).format('YYYY'),
+              'coverEndDate-day': format(yesterday, 'dd'),
+              'coverEndDate-month': format(yesterday, 'MM'),
+              'coverEndDate-year': format(yesterday, 'yyyy'),
             };
 
             const { validationErrors } = await updateCoverEndDate(coverEndDateFields);
@@ -497,48 +581,45 @@ describe('/v1/deals/:id/bond', () => {
 
         describe('when is before requestedCoverStartDate', () => {
           it('should return validationError', async () => {
-            const date = moment();
-            const requestedCoverStartDate = moment(date).add(2, 'months');
-            const coverEndDate = moment(date).add(2, 'months').subtract(1, 'day');
+            const requestedCoverStartDate = add(nowDate, { months: 2 })
+            const coverEndDate = sub(requestedCoverStartDate, { days: 1 })
 
             const bond = {
               ...allBondFields,
               facilityStage: 'Issued',
               hasBeenIssued: true,
-              'requestedCoverStartDate-day': moment(requestedCoverStartDate).format('DD'),
-              'requestedCoverStartDate-month': moment(requestedCoverStartDate).format('MM'),
-              'requestedCoverStartDate-year': moment(requestedCoverStartDate).format('YYYY'),
-              'coverEndDate-day': moment(coverEndDate).format('DD'),
-              'coverEndDate-month': moment(coverEndDate).format('MM'),
-              'coverEndDate-year': moment(coverEndDate).format('YYYY'),
+              'requestedCoverStartDate-day': format(requestedCoverStartDate, 'dd'),
+              'requestedCoverStartDate-month': format(requestedCoverStartDate, 'MM'),
+              'requestedCoverStartDate-year': format(requestedCoverStartDate, 'yyyy'),
+              'coverEndDate-day': format(coverEndDate, 'dd'),
+              'coverEndDate-month': format(coverEndDate, 'MM'),
+              'coverEndDate-year': format(coverEndDate, 'yyyy'),
             };
 
             const body = await updateBondInDeal(dealId, bond);
             expect(body.validationErrors.errorList.coverEndDate).toBeDefined();
+            // These aren't the same error message but could be
             expect(body.validationErrors.errorList.coverEndDate.text).toEqual('Cover End Date cannot be before Requested Cover Start Date');
           });
         });
 
         describe('when is same as requestedCoverStartDate', () => {
           it('should return validationError', async () => {
-            const date = moment();
-            const requestedCoverStartDate = date;
-            const coverEndDate = date;
-
             const bond = {
               ...allBondFields,
               facilityStage: 'Issued',
               hasBeenIssued: true,
-              'requestedCoverStartDate-day': moment(requestedCoverStartDate).format('DD'),
-              'requestedCoverStartDate-month': moment(requestedCoverStartDate).format('MM'),
-              'requestedCoverStartDate-year': moment(requestedCoverStartDate).format('YYYY'),
-              'coverEndDate-day': moment(coverEndDate).format('DD'),
-              'coverEndDate-month': moment(coverEndDate).format('MM'),
-              'coverEndDate-year': moment(coverEndDate).format('YYYY'),
+              'requestedCoverStartDate-day': format(nowDate, 'dd'),
+              'requestedCoverStartDate-month': format(nowDate, 'MM'),
+              'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
+              'coverEndDate-day': format(nowDate, 'dd'),
+              'coverEndDate-month': format(nowDate, 'MM'),
+              'coverEndDate-year': format(nowDate, 'yyyy'),
             };
 
             const body = await updateBondInDeal(dealId, bond);
             expect(body.validationErrors.errorList.coverEndDate).toBeDefined();
+            // These aren't the same error message but could be
             expect(body.validationErrors.errorList.coverEndDate.text).toEqual('Cover End Date must be after the Requested Cover Start Date');
           });
         });
@@ -668,11 +749,11 @@ describe('/v1/deals/:id/bond', () => {
 
         describe('when in the future', () => {
           it('should return validationError', async () => {
-            const date = moment().add(1, 'day');
+            const tomorrow = add(nowDate, { days: 1 });
             const conversionRateFields = {
-              'conversionRateDate-day': moment(date).format('DD'),
-              'conversionRateDate-month': moment(date).format('MM'),
-              'conversionRateDate-year': moment(date).format('YYYY'),
+              'conversionRateDate-day': format(tomorrow, 'dd'),
+              'conversionRateDate-month': format(tomorrow, 'MM'),
+              'conversionRateDate-year': format(tomorrow, 'yyyy'),
             };
 
             const { validationErrors } = await updateBondConversionRateDate(conversionRateFields);
@@ -683,41 +764,88 @@ describe('/v1/deals/:id/bond', () => {
 
         describe('when more than 29 days in the past', () => {
           it('should return validationError', async () => {
-            const date = moment().subtract(30, 'day');
+            const thirtyDaysAgo = sub(nowDate, { days: 30 })  ;
             const conversionRateFields = {
-              'conversionRateDate-day': moment(date).format('DD'),
-              'conversionRateDate-month': moment(date).format('MM'),
-              'conversionRateDate-year': moment(date).format('YYYY'),
+              'conversionRateDate-day': format(thirtyDaysAgo, 'dd'),
+              'conversionRateDate-month': format(thirtyDaysAgo, 'MM'),
+              'conversionRateDate-year': format(thirtyDaysAgo, 'yyyy'),
             };
 
             const { validationErrors } = await updateBondConversionRateDate(conversionRateFields);
             expect(validationErrors.errorList.conversionRateDate).toBeDefined();
-            const expectedText = `Conversion rate date must be between ${moment().subtract(29, 'day').format('Do MMMM YYYY')} and ${moment().format('Do MMMM YYYY')}`;
+            const twentyNineDaysAgo = sub(nowDate, { days: 29 });
+            const twentyNineDaysAgoFormatted = format(twentyNineDaysAgo, DATE_FORMATS.LONG_FORM_DATE);
+            const nowDateFormatted = format(nowDate, DATE_FORMATS.LONG_FORM_DATE)
+            const expectedText = `Conversion rate date must be between ${twentyNineDaysAgoFormatted} and ${nowDateFormatted}`;
             expect(validationErrors.errorList.conversionRateDate.text).toEqual(expectedText);
           });
         });
 
         describe('when has some values', () => {
-          it('should return validationError', async () => {
-            const date = moment().add(1, 'day');
-            const conversionRateFields = {
-              'conversionRateDate-day': moment(date).format('DD'),
-              'conversionRateDate-month': '',
-              'conversionRateDate-year': '',
-            };
+          const testValuesWithSomeFieldsEmptyStrings = [
+            {
+              description: 'month and year set to empty strings',
+              conversionRateDateFields: {
+                'conversionRateDate-day': format(nowDate, 'dd'),
+                'conversionRateDate-month': '',
+                'conversionRateDate-year': '',
+              }
+            },
+            {
+              description: 'day and year set to empty strings',
+              conversionRateDateFields: {
+                'conversionRateDate-day': '',
+                'conversionRateDate-month': format(nowDate, 'MM'),
+                'conversionRateDate-year': '',
+              }
+            },
+            {
+              description: 'month and year set to empty strings',
+              conversionRateDateFields: {
+                'conversionRateDate-day': '',
+                'conversionRateDate-month': '',
+                'conversionRateDate-year': format(nowDate, 'yyyy'),
+              }
+            },
+            {
+              description: 'year set to empty string',
+              conversionRateDateFields: {
+                'conversionRateDate-day': format(nowDate, 'dd'),
+                'conversionRateDate-month': format(nowDate, 'MM'),
+                'conversionRateDate-year': '',
+              }
+            },
+            {
+              description: 'month set to empty string',
+              conversionRateDateFields: {
+                'conversionRateDate-day': format(nowDate, 'dd'),
+                'conversionRateDate-month': '',
+                'conversionRateDate-year': format(nowDate, 'yyyy'),
+              }
+            },
+            {
+              description: 'day set to empty string',
+              conversionRateDateFields: {
+                'conversionRateDate-day': '',
+                'conversionRateDate-month': format(nowDate, 'MM'),
+                'conversionRateDate-year': format(nowDate, 'yyyy'),
+              }
+            },
+          ]
 
-            const { validationErrors } = await updateBondConversionRateDate(conversionRateFields);
+          it.each(testValuesWithSomeFieldsEmptyStrings)('with $description it should return a validationError', async ({ conversionRateDateFields }) => {
+            const { validationErrors } = await updateBondConversionRateDate(conversionRateDateFields);
             expect(validationErrors.errorList.conversionRateDate).toBeDefined();
 
             const expectedText = dateValidationText(
               'Conversion rate date',
-              conversionRateFields['conversionRateDate-day'],
-              conversionRateFields['conversionRateDate-month'],
-              conversionRateFields['conversionRateDate-year'],
+              conversionRateDateFields['conversionRateDate-day'],
+              conversionRateDateFields['conversionRateDate-month'],
+              conversionRateDateFields['conversionRateDate-year'],
             );
 
             expect(validationErrors.errorList.conversionRateDate.text).toEqual(expectedText);
-          });
+          })
         });
       });
 

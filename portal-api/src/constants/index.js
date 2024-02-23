@@ -10,6 +10,8 @@ const { FILE_UPLOAD, FILESHARES } = require('./file-upload');
 const SIGN_IN_LINK = require('./sign-in-link');
 const HTTP_ERROR_CAUSES = require('./http-error-causes');
 const PASSPORT_VALIDATION_RESULTS = require('./passport-validation-results');
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('./utilisation-report-reconciliation-status');
+const DATE_FORMATS = require('./date-formats');
 
 module.exports = {
   FACILITIES,
@@ -24,5 +26,7 @@ module.exports = {
   FILESHARES,
   SIGN_IN_LINK,
   HTTP_ERROR_CAUSES,
-  PASSPORT_VALIDATION_RESULTS
+  PASSPORT_VALIDATION_RESULTS,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  DATE_FORMATS,
 };

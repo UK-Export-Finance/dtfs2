@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { sub, format, add } = require('date-fns');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
@@ -9,13 +9,15 @@ const { MAKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('/v1/deals/:id/bond/:id/issue-facility', () => {
+  const nowDate = new Date();
+
   const newDeal = aDeal({
     submissionType: 'Manual Inclusion Notice',
     additionalRefName: 'mock name',
     bankInternalRefName: 'mock id',
     status: 'Ready for Checker\'s approval',
     details: {
-      submissionDate: moment().subtract(1, 'day').utc().valueOf(),
+      submissionDate: sub(nowDate, { days: 1 }).valueOf(),
     },
     submissionDetails: {
       supplyContractCurrency: {
@@ -29,10 +31,10 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     },
   });
 
-  const createCoverDateFields = (prefix, value) => ({
-    [`${prefix}-day`]: moment(value).format('DD'),
-    [`${prefix}-month`]: moment(value).format('MM'),
-    [`${prefix}-year`]: moment(value).format('YYYY'),
+  const createCoverDateFields = (prefix, date) => ({
+    [`${prefix}-day`]: format(date, 'dd'),
+    [`${prefix}-month`]: format(date, 'MM'),
+    [`${prefix}-year`]: format(date, 'yyyy'),
   });
 
   const allBondFields = {
@@ -54,9 +56,9 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
   };
 
   const issueFacilityBody = {
-    ...createCoverDateFields('requestedCoverStartDate', moment().add(1, 'week')),
-    ...createCoverDateFields('coverEndDate', moment().add(1, 'month')),
-    ...createCoverDateFields('issuedDate', moment()),
+    ...createCoverDateFields('requestedCoverStartDate', add(nowDate, { weeks: 1 })),
+    ...createCoverDateFields('coverEndDate', add(nowDate, { months: 1 })),
+    ...createCoverDateFields('issuedDate', nowDate),
     name: '1234',
   };
 
@@ -163,9 +165,9 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
 
     it('should return 200 with updated bond, if special issue permission and more than 3 months in advance', async () => {
       const issueFacilityBodySpecialPermission = {
-        ...createCoverDateFields('requestedCoverStartDate', moment().add(5, 'month')),
-        ...createCoverDateFields('coverEndDate', moment().add(8, 'month')),
-        ...createCoverDateFields('issuedDate', moment()),
+        ...createCoverDateFields('requestedCoverStartDate', add(nowDate, { months: 5 })),
+        ...createCoverDateFields('coverEndDate', add(nowDate, { months: 8 })),
+        ...createCoverDateFields('issuedDate', nowDate),
         name: '1234',
         specialIssuePermission: true,
       };
@@ -182,7 +184,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
 
     describe('with validation errors', () => {
       const incompleteIssueFacilityBody = {
-        ...createCoverDateFields('requestedCoverStartDate', moment().add(1, 'week')),
+        ...createCoverDateFields('requestedCoverStartDate', add(nowDate, { weeks: 1 })),
       };
 
       it('should return 400 with validationErrors, the bond,  and add issueFacilityDetailsProvided=false', async () => {
@@ -208,8 +210,8 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
           await putIssueFacility(dealId, bondId, issueFacilityBody);
 
           const incompleteDate = {
-            'requestedCoverStartDate-day': moment().format('DD'),
-            'requestedCoverStartDate-month': moment().format('MM'),
+            'requestedCoverStartDate-day': format(nowDate, 'dd'),
+            'requestedCoverStartDate-month': format(nowDate, 'MM'),
             'requestedCoverStartDate-year': '',
           };
 
@@ -223,8 +225,8 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
           await putIssueFacility(dealId, bondId, issueFacilityBody);
 
           const incompleteDate = {
-            'issuedDate-day': moment().format('DD'),
-            'issuedDate-month': moment().format('MM'),
+            'issuedDate-day': format(nowDate, 'dd'),
+            'issuedDate-month': format(nowDate, 'MM'),
             'issuedDate-year': '',
           };
 

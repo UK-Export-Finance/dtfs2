@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');

@@ -25,12 +25,9 @@
     "lint": "eslint ./server ./scripts ./component-tests ./test-helpers ./api-tests && npm run type-check",
     "lint:fix": "eslint ./server ./scripts ./component-tests ./test-helpers ./api-tests --fix",
     "start": "npx ts-node server/index.ts",
-    "test": "jest --coverage --verbose --config=jest.config.js",
-    "test-dev": "jest --verbose --config=jest.config.js",
-    "test-file": "jest --config=jest.config.js --verbose --testMatch",
-    "test-quick": "jest --config=jest.config.js",
-    "test-watch": "jest --watchAll --coverage --verbose --config=jest.config.js --detectOpenHandles",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
+    "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },
   "dependencies": {
     "@ministryofjustice/frontend": "1.8.0",

@@ -17,6 +17,7 @@ const details = {
     pages.bondDetails.bondBeneficiaryInput().type(BOND_FORM_VALUES.DETAILS.bondBeneficiary);
   },
   facilityStageUnissued: () => {
+    pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
     pages.bondDetails.facilityStageUnissuedInput().click();
     pages.bondDetails.ukefGuaranteeInMonthsInput().type(BOND_FORM_VALUES.DETAILS.ukefGuaranteeInMonths);
   },

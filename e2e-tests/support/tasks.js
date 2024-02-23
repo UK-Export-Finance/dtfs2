@@ -1,5 +1,6 @@
 const crypto = require('node:crypto');
 const db = require('./db-client');
+const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
 
 module.exports = {
   createTasks: ({ dbName, dbConnectionString }) => {
@@ -81,13 +82,18 @@ module.exports = {
       },
 
       async insertUtilisationReportDetailsIntoDb(utilisationReportDetails) {
-        const utilisationReports = await db.getCollection('utilisationReports', connectionOptions);
+        const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
         return utilisationReports.insertMany(utilisationReportDetails);
       },
 
       async removeAllUtilisationReportDetailsFromDb() {
-        const utilisationReports = await db.getCollection('utilisationReports', connectionOptions);
+        const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
         return utilisationReports.deleteMany({});
+      },
+
+      async getAllBanks() {
+        const banks = await db.getCollection(DB_COLLECTIONS.BANKS, connectionOptions);
+        return banks.find().toArray();
       },
     };
   },
