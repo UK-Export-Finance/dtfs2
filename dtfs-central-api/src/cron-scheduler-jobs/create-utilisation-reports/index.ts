@@ -1,9 +1,8 @@
-import { asString } from '@ukef/dtfs2-common';
-import { getOneUtilisationReportDetailsByBankId, saveNotReceivedUtilisationReport } from '../../../services/repositories/utilisation-reports-repo';
-import { getAllBanks } from '../../../services/repositories/banks-repo';
-import { SchedulerJob } from '../../../types/scheduler-job';
-import { Bank } from '../../../types/db-models/banks';
-import { getCurrentReportPeriodForBankSchedule } from '../../../utils/report-period';
+import { asString, CronSchedulerJob } from '@ukef/dtfs2-common';
+import { getOneUtilisationReportDetailsByBankId, saveNotReceivedUtilisationReport } from '../../services/repositories/utilisation-reports-repo';
+import { getAllBanks } from '../../services/repositories/banks-repo';
+import { Bank } from '../../types/db-models/banks';
+import { getCurrentReportPeriodForBankSchedule } from '../../utils/report-period';
 
 const { UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE } = process.env;
 
@@ -51,10 +50,8 @@ const createUtilisationReportForBanks = async (): Promise<void> => {
   );
 };
 
-export const createUtilisationReportForBanksJob: SchedulerJob = {
-  init: () => ({
-    schedule: asString(UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE, 'UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE'),
-    message: 'Create utilisation reports in the database for banks which have a report due',
-    task: createUtilisationReportForBanks,
-  }),
+export const createUtilisationReportForBanksJob: CronSchedulerJob = {
+  cronExpression: asString(UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE, 'UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE'),
+  description: 'Create utilisation reports in the database for banks which have a report due',
+  task: createUtilisationReportForBanks,
 };
