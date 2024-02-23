@@ -20,6 +20,7 @@ export const filterLocaliseTimestamp = (
   }
   const timestamp = parseInt(String(utcTimestamp), 10);
 
+  // Implements behaviour inherited from moment to handle invalid dates
   if (Number.isNaN(timestamp)) {
     return 'Invalid date';
   }
