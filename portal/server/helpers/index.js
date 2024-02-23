@@ -1,4 +1,4 @@
-const { isEveryDealFormComplete, isEveryFacilityComplete } = require('./dealFormsCompleted');
+const { isEveryDealFormComplete, isEveryFacilityInDealComplete } = require('./dealFormsCompleted');
 const errorHref = require('./errorHref');
 const formatCountriesForGDSComponent = require('./formatCountriesForGDSComponent');
 const getApiData = require('./getApiData');
@@ -23,7 +23,7 @@ const { getFormattedReportPeriod } = require('./getFormattedReportPeriod');
 
 module.exports = {
   isEveryDealFormComplete,
-  isEveryFacilityComplete,
+  isEveryFacilityInDealComplete,
   errorHref,
   formatCountriesForGDSComponent,
   getApiData,

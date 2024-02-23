@@ -1,11 +1,11 @@
-const { isFacilityComplete } = require('./dealFormsCompleted');
+const { isEveryFacilityComplete } = require('./dealFormsCompleted');
 const CONSTANTS = require('../constants');
 
-describe('isFacilityComplete', () => {
+describe('isEveryFacilityComplete', () => {
   it('should return false when facilities has no items', () => {
     const facilities = [];
 
-    const result = isFacilityComplete(facilities);
+    const result = isEveryFacilityComplete(facilities);
 
     expect(result).toBe(false);
   });
@@ -13,7 +13,7 @@ describe('isFacilityComplete', () => {
   it('should return false when facilities is undefined', () => {
     const facilities = undefined;
 
-    const result = isFacilityComplete(facilities);
+    const result = isEveryFacilityComplete(facilities);
 
     expect(result).toBe(false);
   });
@@ -25,7 +25,7 @@ describe('isFacilityComplete', () => {
       { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE },
     ];
 
-    const result = isFacilityComplete(facilities);
+    const result = isEveryFacilityComplete(facilities);
 
     expect(result).toBe(false);
   });
@@ -37,7 +37,7 @@ describe('isFacilityComplete', () => {
       { status: CONSTANTS.STATUS.FACILITY.NOT_STARTED },
     ];
 
-    const result = isFacilityComplete(facilities);
+    const result = isEveryFacilityComplete(facilities);
 
     expect(result).toBe(false);
   });
@@ -52,7 +52,7 @@ describe('isFacilityComplete', () => {
       { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE },
     ];
 
-    const result = isFacilityComplete(facilities);
+    const result = isEveryFacilityComplete(facilities);
 
     expect(result).toBe(false);
   });
@@ -64,7 +64,7 @@ describe('isFacilityComplete', () => {
       { status: CONSTANTS.STATUS.FACILITY.NOT_STARTED },
     ];
 
-    const result = isFacilityComplete(facilities);
+    const result = isEveryFacilityComplete(facilities);
 
     expect(result).toBe(true);
   });
@@ -76,7 +76,7 @@ describe('isFacilityComplete', () => {
       { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
     ];
 
-    const result = isFacilityComplete(facilities);
+    const result = isEveryFacilityComplete(facilities);
 
     expect(result).toBe(true);
   });
@@ -88,7 +88,7 @@ describe('isFacilityComplete', () => {
       { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
     ];
 
-    const result = isFacilityComplete(facilities);
+    const result = isEveryFacilityComplete(facilities);
 
     expect(result).toBe(true);
   });
@@ -100,7 +100,7 @@ describe('isFacilityComplete', () => {
       { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
     ];
 
-    const result = isFacilityComplete(facilities);
+    const result = isEveryFacilityComplete(facilities);
 
     expect(result).toBe(false);
   });
@@ -113,7 +113,7 @@ describe('isFacilityComplete', () => {
       { status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF },
     ];
 
-    const result = isFacilityComplete(facilities);
+    const result = isEveryFacilityComplete(facilities);
 
     expect(result).toBe(false);
   });
@@ -125,7 +125,7 @@ describe('isFacilityComplete', () => {
       { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
     ];
 
-    const result = isFacilityComplete(facilities);
+    const result = isEveryFacilityComplete(facilities);
 
     expect(result).toBe(false);
   });
@@ -138,7 +138,7 @@ describe('isFacilityComplete', () => {
       { status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF, requestedCoverStartDate: '2022-01-01', coverDateConfirmed: true },
     ];
 
-    const result = isFacilityComplete(facilities);
+    const result = isEveryFacilityComplete(facilities);
 
     expect(result).toBe(true);
   });

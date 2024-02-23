@@ -9,7 +9,7 @@ const {
   errorHref,
   postToApi,
   isEveryDealFormComplete,
-  isEveryFacilityComplete,
+  isEveryFacilityInDealComplete,
   generateErrorSummary,
   getFlashSuccessMessage,
 } = require('../../helpers');
@@ -46,7 +46,7 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
   };
 
   // flag to display a message if the deal summary (returned by API) will not account for everything
-  const canFullyCalculateDealSummary = canCalculateSupplyContractValues(deal.submissionDetails) && isEveryFacilityComplete(deal);
+  const canFullyCalculateDealSummary = canCalculateSupplyContractValues(deal.submissionDetails) && isEveryFacilityInDealComplete(deal);
 
   const confirmedRequestedCoverStartDates = req.session.confirmedRequestedCoverStartDates || {};
 

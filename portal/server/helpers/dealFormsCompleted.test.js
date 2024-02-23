@@ -1,4 +1,4 @@
-import { isEligibilityComplete, isSubmissionDetailComplete, isEveryDealFormComplete, isEveryFacilityComplete } from './dealFormsCompleted';
+import { isEligibilityComplete, isSubmissionDetailComplete, isEveryDealFormComplete, isEveryFacilityInDealComplete } from './dealFormsCompleted';
 import CONSTANTS from '../constants';
 
 const completeFacilities = {
@@ -69,7 +69,7 @@ const completeSubmissionDetails = { status: CONSTANTS.STATUS.SECTION.COMPLETED }
 const incompleteEligibility = { status: CONSTANTS.STATUS.SECTION.NOT_COMPLETED };
 const completeEligibility = { status: CONSTANTS.STATUS.SECTION.COMPLETED };
 
-describe('isEveryFacilityComplete', () => {
+describe('isEveryFacilityInDealComplete', () => {
   it('should return false if a deal has neither a bond nor a loan', () => {
     const deal = {
       bondTransactions: { items: [] },
@@ -78,7 +78,7 @@ describe('isEveryFacilityComplete', () => {
       eligibility: completeEligibility,
     };
 
-    expect(isEveryFacilityComplete(deal)).toEqual(false);
+    expect(isEveryFacilityInDealComplete(deal)).toEqual(false);
   });
 
   it('should return true if a deal has any bond with status `Incomplete`', () => {
@@ -89,7 +89,7 @@ describe('isEveryFacilityComplete', () => {
       eligibility: completeEligibility,
     };
 
-    expect(isEveryFacilityComplete(deal)).toEqual(true);
+    expect(isEveryFacilityInDealComplete(deal)).toEqual(true);
   });
 
   it('should return true if a deal has any loan with status `Incomplete`', () => {
@@ -100,7 +100,7 @@ describe('isEveryFacilityComplete', () => {
       eligibility: completeEligibility,
     };
 
-    expect(isEveryFacilityComplete(deal)).toEqual(true);
+    expect(isEveryFacilityInDealComplete(deal)).toEqual(true);
   });
 
   it('should return true when all the bonds have `Completed` status', () => {
@@ -111,7 +111,7 @@ describe('isEveryFacilityComplete', () => {
       eligibility: completeEligibility,
     };
 
-    expect(isEveryFacilityComplete(deal)).toEqual(true);
+    expect(isEveryFacilityInDealComplete(deal)).toEqual(true);
   });
 
   it('should return true when all the loans have `Completed` status', () => {
@@ -122,7 +122,7 @@ describe('isEveryFacilityComplete', () => {
       eligibility: completeEligibility,
     };
 
-    expect(isEveryFacilityComplete(deal)).toEqual(true);
+    expect(isEveryFacilityInDealComplete(deal)).toEqual(true);
   });
 
   it('should return true when all the loans have `Submitted` status', () => {
@@ -133,7 +133,7 @@ describe('isEveryFacilityComplete', () => {
       eligibility: completeEligibility,
     };
 
-    expect(isEveryFacilityComplete(deal)).toEqual(true);
+    expect(isEveryFacilityInDealComplete(deal)).toEqual(true);
   });
 
   it('should return true when all the bonds have `Submitted` status', () => {
@@ -144,7 +144,7 @@ describe('isEveryFacilityComplete', () => {
       eligibility: completeEligibility,
     };
 
-    expect(isEveryFacilityComplete(deal)).toEqual(true);
+    expect(isEveryFacilityInDealComplete(deal)).toEqual(true);
   });
 
   it('should return true when both bonds and loans have `Submitted` status', () => {
@@ -155,7 +155,7 @@ describe('isEveryFacilityComplete', () => {
       eligibility: completeEligibility,
     };
 
-    expect(isEveryFacilityComplete(deal)).toEqual(true);
+    expect(isEveryFacilityInDealComplete(deal)).toEqual(true);
   });
 
   it('should return false when both bonds and loans have `Submitted` status but with missing mandatory properties', () => {
@@ -166,7 +166,7 @@ describe('isEveryFacilityComplete', () => {
       eligibility: completeEligibility,
     };
 
-    expect(isEveryFacilityComplete(deal)).toEqual(false);
+    expect(isEveryFacilityInDealComplete(deal)).toEqual(false);
   });
 });
 

@@ -6,7 +6,7 @@ const CONSTANTS = require('../constants');
  * @param {Object} facilities - The facility object containing an array of items.
  * @returns {boolean} - True if the facility is complete, false otherwise.
  */
-const isFacilityComplete = (facilities = []) => {
+const isEveryFacilityComplete = (facilities = []) => {
   const facilityProcessedStatus = [CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF];
 
   const completed = facilities.filter((facility) => facility.status === CONSTANTS.STATUS.FACILITY.COMPLETED).length;
@@ -60,14 +60,14 @@ const isSubmissionDetailComplete = (deal) => deal?.submissionDetails?.status ===
 const isEligibilityComplete = (deal) => deal?.eligibility?.status === CONSTANTS.STATUS.SECTION.COMPLETED;
 
 /**
- * Checks if every facility in a deal is complete by calling the `isFacilityComplete` function.
+ * Checks if every facility in a deal is complete by calling the `isEveryFacilityComplete` function.
  * @param {object} deal - The deal object containing bond and loan transactions.
  * @returns {boolean} - Returns true if every facility in the deal is complete, otherwise returns false.
  */
-const isEveryFacilityComplete = (deal) => {
+const isEveryFacilityInDealComplete = (deal) => {
   const facilities = [...(deal.bondTransactions?.items ?? []), ...(deal.loanTransactions?.items ?? [])];
 
-  return isFacilityComplete(facilities);
+  return isEveryFacilityComplete(facilities);
 };
 
 /**
@@ -77,12 +77,12 @@ const isEveryFacilityComplete = (deal) => {
  * @returns {boolean} - True if all forms are completed, false otherwise.
  */
 const isEveryDealFormComplete = (deal) =>
-  isEligibilityComplete(deal) && isSubmissionDetailComplete(deal) && hasAtLeastOneLoanOrBond(deal) && isEveryFacilityComplete(deal);
+  isEligibilityComplete(deal) && isSubmissionDetailComplete(deal) && hasAtLeastOneLoanOrBond(deal) && isEveryFacilityInDealComplete(deal);
 
 module.exports = {
   isEligibilityComplete,
   isSubmissionDetailComplete,
-  isFacilityComplete,
   isEveryFacilityComplete,
+  isEveryFacilityInDealComplete,
   isEveryDealFormComplete,
 };
