@@ -1,9 +1,16 @@
 const { isValidEmail } = require('../../../../utils/string');
 
-module.exports = (user, change) => {
+/**
+ * Ensures that if the change has an email property, it is a valid email address
+ * @param {Object} user the existing user (optional)
+ * @param {Object} change the changes to make
+ * @returns {Array} either an empty array or an array containing an error object if the email is not a valid email address
+ */
+
+const emailMustBeValidEmailAddress = (user, change) => {
   const changeHasEmailProperty = change?.email !== undefined;
   const changeEmailPropertyIsNotAValidEmailAddress = !(typeof change.email === 'string' && isValidEmail(change.email));
-  
+
   if (changeHasEmailProperty && changeEmailPropertyIsNotAValidEmailAddress) {
     return [
       {
@@ -17,3 +24,5 @@ module.exports = (user, change) => {
 
   return [];
 };
+
+module.exports = emailMustBeValidEmailAddress;
