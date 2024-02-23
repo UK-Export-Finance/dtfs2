@@ -1,4 +1,4 @@
-const cheerio = require('cheerio');
+const { load } = require('cheerio');
 const assertions = require('./assertions');
 const configureNunjucks = require('../server/nunjucks-configuration');
 
@@ -22,7 +22,7 @@ const componentRenderer = (componentLocation) => (params) => {
   const html = nunjucks.renderString(fakePage, { payload: params });
 
   // Load the rendered HTML into Cheerio
-  const $ = cheerio.load(html);
+  const $ = load(html);
 
   // Perform assertions on the rendered HTML
   return assertions($, html, params);
