@@ -1,5 +1,5 @@
-const sendEmail = require('../../../external-api/send-email');
-const EMAIL_TEMPLATE_IDS = require('../../../constants/email-template-ids');
+const sendEmail = require('../../external-api/send-email');
+const EMAIL_TEMPLATE_IDS = require('../../constants/email-template-ids');
 const { getFormattedReportDueDate, getFormattedReportPeriod, sendEmailToAllBanksWhereReportNotReceived } = require('../helpers/utilisation-report-helpers');
 
 const { UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE } = process.env;
@@ -25,7 +25,7 @@ const sendEmails = async () => {
 };
 
 /**
- * @type {import('@ukef/dtfs2-common').SchedulerJob}
+ * @type {import('@ukef/dtfs2-common').CronSchedulerJob}
  */
 const sendReportSubmissionPeriodStartEmailsJob = {
   cronExpression: UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE,

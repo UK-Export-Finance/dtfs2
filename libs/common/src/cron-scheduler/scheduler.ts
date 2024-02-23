@@ -1,8 +1,12 @@
 import cron from 'node-cron';
-import { SchedulerJob } from './scheduler.types';
+import { CronSchedulerJob } from './scheduler.types';
 import { asyncTaskToSyncTask, taskWithErrorLogging } from './scheduler.helpers';
 
-export const initialiseCronScheduler = (jobs: SchedulerJob[]) => {
+/**
+ * Validates and sets up the given jobs to run according to when their cron
+ * expression ticks.
+ */
+export const initialiseCronJobScheduler = (jobs: CronSchedulerJob[]) => {
   jobs.forEach((job) => {
     const { cronExpression, description, task } = job;
 

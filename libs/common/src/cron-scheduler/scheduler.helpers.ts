@@ -1,4 +1,4 @@
-import { CronScheduleFunc, SchedulerJobTask } from './scheduler.types';
+import { CronScheduleFunc, CronSchedulerJobTask } from './scheduler.types';
 
 /**
  * 'node-cron' requires the task function to be synchronous (return type `void`)
@@ -7,7 +7,7 @@ import { CronScheduleFunc, SchedulerJobTask } from './scheduler.types';
  * into a synchronous function
  */
 export const asyncTaskToSyncTask =
-  (task: SchedulerJobTask): CronScheduleFunc =>
+  (task: CronSchedulerJobTask): CronScheduleFunc =>
   (now) => {
     (async () => {
       await task(now);
@@ -18,7 +18,7 @@ export const asyncTaskToSyncTask =
  * Wraps the given task to add logging of any errors that occur during execution
  */
 export const taskWithErrorLogging =
-  (description: string, task: SchedulerJobTask): SchedulerJobTask =>
+  (description: string, task: CronSchedulerJobTask): CronSchedulerJobTask =>
   async (now) => {
     try {
       await task(now);

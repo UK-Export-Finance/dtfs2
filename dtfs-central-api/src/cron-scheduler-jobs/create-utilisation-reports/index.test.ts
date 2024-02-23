@@ -1,17 +1,17 @@
 import { asString } from '@ukef/dtfs2-common';
-import { createUtilisationReportForBanksJob } from '.';
-import { getAllBanks } from '../../../services/repositories/banks-repo';
-import * as utilisationReportsRepo from '../../../services/repositories/utilisation-reports-repo';
-import { getCurrentReportPeriodForBankSchedule } from '../../../utils/report-period';
-import { Bank } from '../../../types/db-models/banks';
-import { UtilisationReport } from '../../../types/db-models/utilisation-reports';
-import { ReportPeriod } from '../../../types/utilisation-reports';
+import { createUtilisationReportForBanksJob } from './index.ts';
+import { getAllBanks } from '../../services/repositories/banks-repo.ts';
+import * as utilisationReportsRepo from '../../services/repositories/utilisation-reports-repo';
+import { getCurrentReportPeriodForBankSchedule } from '../../utils/report-period.ts';
+import { Bank } from '../../types/db-models/banks.ts';
+import { UtilisationReport } from '../../types/db-models/utilisation-reports.ts';
+import { ReportPeriod } from '../../types/utilisation-reports.ts';
 
 console.info = jest.fn();
 
-jest.mock('../../../services/repositories/banks-repo');
-jest.mock('../../../services/repositories/utilisation-reports-repo');
-jest.mock('../../../utils/report-period');
+jest.mock('../../services/repositories/banks-repo');
+jest.mock('../../services/repositories/utilisation-reports-repo');
+jest.mock('../../utils/report-period');
 jest.mock('@ukef/dtfs2-common', () => ({
   asString: jest.fn(),
 }));

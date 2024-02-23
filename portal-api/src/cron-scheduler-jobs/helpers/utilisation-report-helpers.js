@@ -1,9 +1,9 @@
 const { format, subMonths } = require('date-fns');
-const externalApi = require('../../../external-api/api');
-const api = require('../../../v1/api');
-const { getBusinessDayOfMonth } = require('../../../utils/date');
-const { hasValue, isValidEmail } = require('../../../utils/string');
-const { BANK_HOLIDAY_REGION } = require('../../../constants/bank-holiday-region');
+const externalApi = require('../../external-api/api');
+const api = require('../../v1/api');
+const { getBusinessDayOfMonth } = require('../../utils/date');
+const { hasValue, isValidEmail } = require('../../utils/string');
+const { BANK_HOLIDAY_REGION } = require('../../constants/bank-holiday-region');
 
 /**
  * @typedef {({ emailAddress: string, recipient: string }) => Promise<void>} SendEmailCallback
@@ -45,7 +45,7 @@ const getReportOverdueChaserDate = async () => {
 
 /**
  * Returns the start and end months (1-indexed) and years of the current report period (i.e. the previous month)
- * @returns {import('../../../types/utilisation-reports').ReportPeriod}
+ * @returns {import('../../types/utilisation-reports').ReportPeriod}
  */
 const getReportPeriod = () => {
   const lastMonthDate = subMonths(new Date(), 1);

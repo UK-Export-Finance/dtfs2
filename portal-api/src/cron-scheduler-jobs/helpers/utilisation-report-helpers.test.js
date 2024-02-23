@@ -9,14 +9,14 @@ const {
   getEmailRecipient,
   sendEmailToAllBanksWhereReportNotReceived,
 } = require('./utilisation-report-helpers');
-const externalApi = require('../../../external-api/api');
-const api = require('../../../v1/api');
-const MOCK_BANKS = require('../../../../test-helpers/mock-banks');
-const { MOCK_UTILISATION_REPORT } = require('../../../../test-helpers/mock-utilisation-report-details');
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
+const externalApi = require('../../external-api/api');
+const api = require('../../v1/api');
+const MOCK_BANKS = require('../../../test-helpers/mock-banks');
+const { MOCK_UTILISATION_REPORT } = require('../../../test-helpers/mock-utilisation-report-details');
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../constants');
 
-jest.mock('../../../external-api/api');
-jest.mock('../../../v1/api');
+jest.mock('../../external-api/api');
+jest.mock('../../v1/api');
 
 console.error = jest.fn();
 console.warn = jest.fn();

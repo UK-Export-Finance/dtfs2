@@ -4,10 +4,10 @@ dotenv.config();
 
 const schedule = process.env.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE;
 
-const numberGeneratorController = require('../../v1/controllers/number-generator.controller');
+const numberGeneratorController = require('../v1/controllers/number-generator.controller');
 
 /**
- * @type {import('@ukef/dtfs2-common').SchedulerJob}
+ * @type {import('@ukef/dtfs2-common').CronSchedulerJob}
  */
 const checkAzureNumberGeneratorFunction = {
   cronExpression: schedule,

@@ -5,9 +5,9 @@ export type CronScheduleFunc = Parameters<typeof cron.schedule>[1];
 // eslint-disable-next-line @typescript-eslint/ban-types
 type CronScheduleFuncParameters = Parameters<Extract<CronScheduleFunc, Function>>[0];
 
-export type SchedulerJobTask = (now: CronScheduleFuncParameters) => void | Promise<void>;
+export type CronSchedulerJobTask = (now: CronScheduleFuncParameters) => void | Promise<void>;
 
-export type SchedulerJob = {
+export type CronSchedulerJob = {
   /**
    * A cron expression representing when the job will run
    */
@@ -19,5 +19,5 @@ export type SchedulerJob = {
   /**
    * The task to be run by the job
    */
-  task: SchedulerJobTask;
+  task: CronSchedulerJobTask;
 };

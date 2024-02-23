@@ -1,7 +1,7 @@
 const { format, isSameDay } = require('date-fns');
 const { getReportDueDate, getFormattedReportPeriod, sendEmailToAllBanksWhereReportNotReceived } = require('../helpers/utilisation-report-helpers');
-const sendEmail = require('../../../external-api/send-email');
-const EMAIL_TEMPLATE_IDS = require('../../../constants/email-template-ids');
+const sendEmail = require('../../external-api/send-email');
+const EMAIL_TEMPLATE_IDS = require('../../constants/email-template-ids');
 
 const { UTILISATION_REPORT_DUE_EMAIL_SCHEDULE } = process.env;
 
@@ -34,7 +34,7 @@ const sendEmailsOnReportDueDate = async () => {
 };
 
 /**
- * @type {import('@ukef/dtfs2-common').SchedulerJob}
+ * @type {import('@ukef/dtfs2-common').CronSchedulerJob}
  */
 const sendReportDueEmailsJob = {
   cronExpression: UTILISATION_REPORT_DUE_EMAIL_SCHEDULE,

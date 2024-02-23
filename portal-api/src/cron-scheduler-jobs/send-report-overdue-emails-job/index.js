@@ -5,8 +5,8 @@ const {
   getFormattedReportDueDate,
   sendEmailToAllBanksWhereReportNotReceived,
 } = require('../helpers/utilisation-report-helpers');
-const sendEmail = require('../../../external-api/send-email');
-const EMAIL_TEMPLATE_IDS = require('../../../constants/email-template-ids');
+const sendEmail = require('../../external-api/send-email');
+const EMAIL_TEMPLATE_IDS = require('../../constants/email-template-ids');
 
 const { UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE } = process.env;
 
@@ -42,7 +42,7 @@ const sendEmailsOnReportOverdueChaserDate = async () => {
 };
 
 /**
- * @type {import('@ukef/dtfs2-common').SchedulerJob}
+ * @type {import('@ukef/dtfs2-common').CronSchedulerJob}
  */
 const sendReportOverdueEmailsJob = {
   cronExpression: UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE,
