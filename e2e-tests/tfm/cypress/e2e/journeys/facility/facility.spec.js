@@ -23,7 +23,7 @@ context('Facility page', () => {
   });
 
   beforeEach(() => {
-    cy.mockLogin(T1_USER_1);
+    cy.login(T1_USER_1);
   });
 
   after(() => {
@@ -33,7 +33,7 @@ context('Facility page', () => {
     });
   });
 
-  it.only('renders case summary with deal data', () => {
+  it('renders case summary with deal data', () => {
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 

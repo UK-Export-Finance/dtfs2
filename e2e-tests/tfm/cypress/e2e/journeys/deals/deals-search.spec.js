@@ -115,7 +115,7 @@ context('User can view and filter multiple deals', () => {
   });
 
   beforeEach(() => {
-    cy.mockLogin(T1_USER_1);
+    cy.login(T1_USER_1);
     cy.url().should('eq', relative('/deals'));
   });
 

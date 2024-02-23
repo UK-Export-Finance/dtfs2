@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const jws = require('jws');
 const cookieSignature = require('cookie-signature');
 const relative = require('../../tfm/cypress/e2e/relativeURL');
+const { TFM_URL } = require('../../e2e-fixtures/constants.fixture');
 
 const issueValid2faJWT = (user, sessionIdentifier) => {
   const { _id } = user;
@@ -28,17 +29,17 @@ const issueValid2faJWT = (user, sessionIdentifier) => {
 };
 
 /**
- * Ensure user is logged in TFM and return JWT token for API use.
- *
- * - Create season id
- * - Set session id in MondoDB
- * - Set session in Redis
- * - Set session id in Cookie
- *
- * @param {Object} loginUser - User object to login.
- * @param {string} url - usually after login you want to visit home page, pass null to skip for API call.
- * @param {boolean} createCookie - this can be skip if we just need JWT for API call.
- * @returns {Promise<String>} - TFM Jwt token.
+ * tfmLogin
+ * Ensure a user is logged in to TFM.
+ * Return JWT token for API use.
+ * 1) Create season id
+ * 2) Set session id in MondoDB
+ * 3) Set session in Redis
+ * 4) Set session id in Cookie
+ * @param {Object} user: User object for login.
+ * @param {String} url: URL to navigate to after login. Defaults to TFM_URL
+ * @param {Boolean} createCookie: This can be skipped if we just need a JWT for the API.
+ * @returns {Promise<String>} TFM JWT token.
  *
  * @example
  * // Returns { status: 200, data: { name: 'United States', population: 331002651, capital: 'Washington, D.C.' } }
@@ -48,9 +49,15 @@ const issueValid2faJWT = (user, sessionIdentifier) => {
  * // Returns { status: 404 }
  * getCountry('ZZ');
  */
-export default (loginUser, url = '/', createCookie = true) => {
-  const { username } = loginUser;
+const tfmLogin = ({
+  user,
+  url = TFM_URL,
+  createCookie = true,
+}) => {
+  const { username } = user;
+
   let fullUrl;
+
   if (url && url.indexOf('http') === 0) {
     fullUrl = url;
   } else if (url === null) {
@@ -61,9 +68,9 @@ export default (loginUser, url = '/', createCookie = true) => {
   // TODO: try reuse login session.
   console.info('Mock login::');
 
-  return cy.getTfmUserByUsername(username).then(async (user) => {
+  return cy.getTfmUserByUsername(username).then(async (tfmUser) => {
     const sessionIdentifier = crypto.randomBytes(32).toString('hex');
-    const userToken = issueValid2faJWT(user, sessionIdentifier);
+    const userToken = issueValid2faJWT(tfmUser, sessionIdentifier);
     const maxAge = 60 * 30; // 30 min
 
     const sessionValue = {
@@ -75,7 +82,7 @@ export default (loginUser, url = '/', createCookie = true) => {
         path: '/',
         sameSite: 'strict',
       },
-      user,
+      user: tfmUser,
       userToken: `Bearer ${userToken}`,
     };
 
@@ -102,3 +109,5 @@ export default (loginUser, url = '/', createCookie = true) => {
     return `Bearer ${userToken}`;
   });
 };
+
+export default tfmLogin;

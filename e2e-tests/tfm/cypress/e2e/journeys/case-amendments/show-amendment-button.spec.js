@@ -38,7 +38,7 @@ context('Amendments page', () => {
     });
 
     it('should render `add amendment` button if AIN and PIM user', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -48,7 +48,7 @@ context('Amendments page', () => {
     });
 
     it('should NOT render `add amendment` button if AIN and not PIM user', () => {
-      cy.mockLogin(T1_USER_1);
+      cy.login(T1_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -83,7 +83,7 @@ context('Amendments page', () => {
     });
 
     it('should NOT renders `add amendment` button if MIA and PIM user', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -92,7 +92,7 @@ context('Amendments page', () => {
     });
 
     it('should NOT render `add amendment` button if MIA and not PIM user', () => {
-      cy.mockLogin(T1_USER_1);
+      cy.login(T1_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -128,7 +128,7 @@ context('Amendments page', () => {
     });
 
     it('should render `add amendment` button if MIN and confirmed and PIM user', () => {
-      cy.mockLogin(PIM_USER_1);
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -138,7 +138,7 @@ context('Amendments page', () => {
     });
 
     it('should NOT render `add amendment` button if MIN and not confirmed and PIM user', () => {
-      cy.mockLogin(T1_USER_1);
+      cy.login(T1_USER_1);
       const facilityId = dealFacilities._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 

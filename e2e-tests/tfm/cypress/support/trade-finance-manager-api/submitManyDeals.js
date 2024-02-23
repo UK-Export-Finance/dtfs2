@@ -5,7 +5,7 @@ module.exports = (deals, opts) => {
   console.info('submitManyDeals::');
   const persistedDeals = [];
 
-  cy.mockLogin(opts).then((token) => {
+  cy.login(opts).then((token) => {
     cy.wrap(deals).each((dealToInsert) => {
       submitDeal(dealToInsert._id, dealToInsert.dealType, null, token);
 

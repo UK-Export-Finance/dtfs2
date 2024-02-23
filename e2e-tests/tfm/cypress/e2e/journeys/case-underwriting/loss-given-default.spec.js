@@ -35,7 +35,7 @@ context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
   context('unauthorised user', () => {
     it('a user that is not in the `underwriting support` team cannot view the loss given default page', () => {
       // non-underwriting support user goes to the `Pricing and risk` page
-      cy.mockLogin(T1_USER_1);
+      cy.login(T1_USER_1);
       cy.visit(relative(`/case/${dealId}/underwriting/pricing-and-risk/loss-given-default`));
 
       cy.url().should('eq', relative('/not-found'));
@@ -44,7 +44,7 @@ context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
 
   context('authorised user', () => {
     beforeEach(() => {
-      cy.mockLogin(UNDERWRITER_1);
+      cy.login(UNDERWRITER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
 
       // go to pricing and risk page

@@ -37,7 +37,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   });
 
   it('should display facility details and values on deal and facility page', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/deal`));
@@ -58,7 +58,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   });
 
   it('should submit an amendment request', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -105,7 +105,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   });
 
   it('should take you to `Add underwriter decision - Facility value` page if a decision has been made for Cover End Date', () => {
-    cy.mockLogin(UNDERWRITER_MANAGER_1);
+    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -119,7 +119,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   });
 
   it('should take you to `Add conditions, reasons and comments` page if a decision has been made for Facility Value and Cover End Date', () => {
-    cy.mockLogin(UNDERWRITER_MANAGER_1);
+    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -150,7 +150,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   });
 
   it('should take you to `Add conditions, reasons and comments` summary page', () => {
-    cy.mockLogin(UNDERWRITER_MANAGER_1);
+    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -185,7 +185,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   });
 
   it('should display facility details and values on deal and facility page as bank decision not added yet', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/deal`));
@@ -206,7 +206,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   });
 
   it('should show add decision button if logged in as PIM user', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().should('exist');
@@ -218,7 +218,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   });
 
   it('should show error if no decision selected and cancel should take back to the underwriting page', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
@@ -234,7 +234,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   });
 
   it('should take you to request date page if selecting proceed on bank decision choice page', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
@@ -248,7 +248,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   });
 
   it('should show an error if no date or partial date is entered', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
@@ -306,7 +306,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   });
 
   it('should take you to effective date page if date entered correctly', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
@@ -325,7 +325,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   });
 
   it('should show an error if no date or partial date is entered', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
@@ -368,7 +368,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   });
 
   it('should take you to check answers page if date entered correctly', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
@@ -399,7 +399,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   });
 
   it('should take you to individual pages with fields checked or filled when pressing change link', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
@@ -452,7 +452,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   });
 
   it('should take you to underwriting page once submit bank decision.  Amendments page should show proceed badge for banks decision', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
@@ -474,7 +474,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   });
 
   it('should display amendment changed values on deal and facility page', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/deal`));

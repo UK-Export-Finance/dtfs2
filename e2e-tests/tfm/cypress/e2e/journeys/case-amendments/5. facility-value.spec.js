@@ -31,7 +31,7 @@ context('Amendments - Facility value', () => {
   });
 
   it('should take you to `Enter the new facility value` page', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -61,7 +61,7 @@ context('Amendments - Facility value', () => {
   });
 
   it('should NOT allow users to enter the same facility value', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -81,7 +81,7 @@ context('Amendments - Facility value', () => {
   });
 
   it('should NOT allow users to enter the characters that are not numbers', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -101,7 +101,7 @@ context('Amendments - Facility value', () => {
   });
 
   it('should continue to `Check your answers` page if the facility value is valid', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 

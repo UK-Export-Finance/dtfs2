@@ -31,7 +31,7 @@ context('Amendments - Cover End Date', () => {
   });
 
   it('should take you to `Enter the new facility value` page', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -61,7 +61,7 @@ context('Amendments - Cover End Date', () => {
   });
 
   it('should NOT allow users to enter the same cover end date or with wrong year format', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -107,7 +107,7 @@ context('Amendments - Cover End Date', () => {
   });
 
   it('should continue to `Check your answers` page if the cover end date is valid', () => {
-    cy.mockLogin(PIM_USER_1);
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
