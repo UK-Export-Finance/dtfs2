@@ -9,7 +9,7 @@
     "axios": "^1.6.7",
     "bson": "^6.3.0",
     "date-fns": "^2.30.0",
-    "dotenv": "^16.4.4",
+    "dotenv": "^16.4.5",
     "generate-password": "^1.7.1",
     "html-entities": "^2.4.0",
     "json2csv": "^5.0.7",
