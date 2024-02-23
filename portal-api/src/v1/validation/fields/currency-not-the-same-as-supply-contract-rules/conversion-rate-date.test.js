@@ -1,5 +1,5 @@
 const moment = require('moment');
-const checkConversionRate = require('../../../src/v1/validation/fields/currency-not-the-same-as-supply-contract-rules/conversion-rate-date');
+const checkConversionRate = require('./conversion-rate-date');
 
 describe('validation - conversion rate date', () => {
   const deal = {

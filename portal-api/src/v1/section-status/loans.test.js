@@ -1,25 +1,25 @@
 const {
-  bondStatus,
-  bondHasIncompleteIssueFacilityDetails,
-  addAccurateStatusesToBonds,
-} = require('../../../src/v1/section-status/bonds');
+  loanStatus,
+  loanHasIncompleteIssueFacilityDetails,
+  addAccurateStatusesToLoans,
+} = require('./loans');
 
-describe('section-status - bond', () => {
-  describe('bondStatus', () => {
-    describe('when bond.status exists', () => {
-      it('should return bond.status', () => {
-        const mockBond = {
+describe('section-status - loan', () => {
+  describe('loanStatus', () => {
+    describe('when loan.status exists', () => {
+      it('should return loan.status', () => {
+        const mockLoan = {
           status: 'Test',
         };
 
-        const result = bondStatus(mockBond);
-        expect(result).toEqual(mockBond.status);
+        const result = loanStatus(mockLoan);
+        expect(result).toEqual(mockLoan.status);
       });
     });
 
-    describe('when bond has no errors', () => {
+    describe('when loan has no errors', () => {
       it('should return `Completed` status', () => {
-        const result = bondStatus({});
+        const result = loanStatus({});
         expect(result).toEqual('Completed');
       });
     });
@@ -30,14 +30,14 @@ describe('section-status - bond', () => {
         errorList: [{}],
       };
 
-      const result = bondStatus({}, mockErrors);
+      const result = loanStatus({}, mockErrors);
       expect(result).toEqual('Incomplete');
     });
   });
 
-  describe('bondHasIncompleteIssueFacilityDetails', () => {
-    const validMockBond = {
-      facilityStage: 'Unissued',
+  describe('loanHasIncompleteIssueFacilityDetails', () => {
+    const validMockLoan = {
+      facilityStage: 'Conditional',
       hasBeenIssued: false,
       issueFacilityDetailsSubmitted: false,
     };
@@ -57,7 +57,7 @@ describe('section-status - bond', () => {
       ];
 
       mockDeals.forEach((deal) => {
-        const result = bondHasIncompleteIssueFacilityDetails(deal.status, deal.previousStatus, validMockBond);
+        const result = loanHasIncompleteIssueFacilityDetails(deal.status, deal.previousStatus, validMockLoan);
         expect(result).toEqual(true);
       });
     });
@@ -68,7 +68,7 @@ describe('section-status - bond', () => {
         previousStatus: 'Draft',
       };
 
-      const result = bondHasIncompleteIssueFacilityDetails(mockDeal.status, mockDeal.previousStatus, validMockBond);
+      const result = loanHasIncompleteIssueFacilityDetails(mockDeal.status, mockDeal.previousStatus, validMockLoan);
       expect(result).toEqual(false);
     });
 
@@ -77,42 +77,42 @@ describe('section-status - bond', () => {
         status: 'Draft',
       };
 
-      const result = bondHasIncompleteIssueFacilityDetails(mockDeal.status, mockDeal.previousStatus, validMockBond);
+      const result = loanHasIncompleteIssueFacilityDetails(mockDeal.status, mockDeal.previousStatus, validMockLoan);
       expect(result).toEqual(false);
     });
 
     it('should return false when facility stage is not allowed', () => {
-      const mockBond = {
-        facilityStage: 'Issued',
+      const mockLoan = {
+        facilityStage: 'Unconditional',
         hasBeenIssued: true,
       };
 
-      const result = bondHasIncompleteIssueFacilityDetails(validMockDeal.status, validMockDeal.previousStatus, mockBond);
+      const result = loanHasIncompleteIssueFacilityDetails(validMockDeal.status, validMockDeal.previousStatus, mockLoan);
       expect(result).toEqual(false);
     });
 
     it('should return false when issueFacilityDetailsSubmitted is true', () => {
-      const mockBond = {
-        ...validMockBond,
+      const mockLoan = {
+        ...validMockLoan,
         issueFacilityDetailsSubmitted: true,
       };
 
-      const result = bondHasIncompleteIssueFacilityDetails(validMockDeal.status, validMockDeal.previousStatus, mockBond);
+      const result = loanHasIncompleteIssueFacilityDetails(validMockDeal.status, validMockDeal.previousStatus, mockLoan);
       expect(result).toEqual(false);
     });
   });
 
-  describe('addAccurateStatusesToBonds', () => {
-    describe('when a bond in a deal has issueFacilityDetailsStarted', () => {
-      it('should update bond.status from bondStatus function', () => {
-        const mockBonds = [
+  describe('addAccurateStatusesToLoans', () => {
+    describe('when a loan in a deal has issueFacilityDetailsStarted', () => {
+      it('should update loan.status from loanStatus function', () => {
+        const mockLoans = [
           {
-            facilityStage: 'Unissued',
+            facilityStage: 'Conditional',
             hasBeenIssued: false,
             issueFacilityDetailsStarted: false,
           },
           {
-            facilityStage: 'Unissued',
+            facilityStage: 'Conditional',
             hasBeenIssued: false,
             issueFacilityDetailsStarted: true,
           },
@@ -121,8 +121,8 @@ describe('section-status - bond', () => {
         const mockDeal = (submissionType) => ({
           status: 'Further Maker\'s input required',
           submissionType,
-          bondTransactions: {
-            items: mockBonds,
+          loanTransactions: {
+            items: mockLoans,
           },
         });
 
@@ -133,9 +133,9 @@ describe('section-status - bond', () => {
         ];
 
         mockDeals.forEach((deal) => {
-          const result = addAccurateStatusesToBonds(deal);
+          const result = addAccurateStatusesToLoans(deal);
 
-          const expected = bondStatus(mockBonds[1]);
+          const expected = loanStatus(mockLoans[1]);
           expect(result.items[1].status).toEqual(expected);
         });
       });

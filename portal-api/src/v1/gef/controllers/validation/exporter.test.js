@@ -1,8 +1,8 @@
 const {
   unansweredFields,
   exporterStatus,
-} = require('../../../../src/v1/gef/controllers/validation/exporter');
-const CONSTANTS = require('../../../../src/constants');
+} = require('./exporter');
+const CONSTANTS = require('../../../../constants');
 
 describe('GEF controllers validation - exporter', () => {
   const mockAnswersValid = {
