@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { sub } = require('date-fns');
 const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
@@ -22,6 +22,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
   const originalFacilities = completedDeal.mockFacilities;
   const MOCK_NUMBER_GENERATOR_ID = 'MOCK_NUMBER_GENERATOR_ID';
+  const nowDate = new Date();
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
@@ -247,7 +248,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const firstBond = modifiedMockFacilities.find((f) => f.type === 'Bond');
 
       firstBond.status = 'Ready for check';
-      firstBond.requestedCoverStartDate = moment().subtract(1, 'day').utc().valueOf();
+      firstBond.requestedCoverStartDate = sub(nowDate, { days: 1 }).valueOf();
 
       await createFacilities(aBarclaysMaker, dealId, [firstBond]);
 
@@ -273,7 +274,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const firstLoan = modifiedMockFacilities.find((f) => f.type === 'Loan');
 
       firstLoan.status = 'Ready for check';
-      firstLoan.requestedCoverStartDate = moment().subtract(1, 'day').utc().valueOf();
+      firstLoan.requestedCoverStartDate = sub(nowDate, { days: 1 }).valueOf();
 
       await createFacilities(aBarclaysMaker, dealId, [firstLoan]);
 
@@ -300,7 +301,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const mockFacilities = [
         {
           ...completedDeal.mockFacilities[0],
-          requestedCoverStartDate: moment().utc().valueOf(),
+          requestedCoverStartDate: nowDate.valueOf(),
         },
       ];
 

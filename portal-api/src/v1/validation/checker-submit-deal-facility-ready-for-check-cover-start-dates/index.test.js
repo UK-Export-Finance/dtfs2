@@ -1,7 +1,7 @@
 const moment = require('moment');
-const CONSTANTS = require('../../../src/constants');
+const CONSTANTS = require('../../../constants');
 
-const checkCoverStartDate = require('../../../src/v1/validation/checker-submit-deal-facility-ready-for-check-cover-start-dates');
+const checkCoverStartDate = require('.');
 
 describe('validation - coverStartDate on ready for checkers approval', () => {
   const errorMessage = 'Requested Cover Start Date must be on the application submission date or in the future';
