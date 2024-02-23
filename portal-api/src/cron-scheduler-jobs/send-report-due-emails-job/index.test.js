@@ -1,6 +1,6 @@
 const { subDays } = require('date-fns');
 const { produce } = require('immer');
-const { sendReportDueEmailsJob } = require('./index');
+const { sendReportDueEmailsJob } = require('.');
 const api = require('../../v1/api');
 const externalApi = require('../../external-api/api');
 const sendEmail = require('../../external-api/send-email');
