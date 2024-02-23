@@ -1,4 +1,4 @@
-import { filterFormatDateString } from './filter-formatDateString';
+import { formatDateString } from './filter-formatDateString';
 
 describe('nunjuck filters - formatDateString', () => {
   const testCases = [
@@ -45,7 +45,7 @@ describe('nunjuck filters - formatDateString', () => {
   ];
 
   it.each(testCases)('$description', ({ mockDate, fromFormat, toFormat, expected}) => {
-    const result = filterFormatDateString(mockDate, fromFormat, toFormat);
+    const result = formatDateString(mockDate, fromFormat, toFormat);
 
     expect(result).toEqual(expected);
   });

@@ -1,7 +1,7 @@
 const componentRenderer = require('../../../../componentRenderer');
 
 const component = '../templates/case/underwriting/managers-decision/_macros/managers-decision-submitted.njk';
-const { filterLocaliseTimestamp } = require('../../../../../server/nunjucks-configuration/filter-localiseTimestamp');
+const { localiseTimestamp } = require('../../../../../server/nunjucks-configuration/filter-localiseTimestamp');
 
 const render = componentRenderer(component);
 
@@ -46,8 +46,8 @@ describe(component, () => {
     it('should render value', () => {
       const wrapper = render(params);
 
-      const formattedDay = filterLocaliseTimestamp(params.decision.timestamp, 'dd MMMM yyyy', params.user.timezone);
-      const formattedTime = filterLocaliseTimestamp(params.decision.timestamp, 'HH:mm', params.user.timezone);
+      const formattedDay = localiseTimestamp(params.decision.timestamp, 'dd MMMM yyyy', params.user.timezone);
+      const formattedTime = localiseTimestamp(params.decision.timestamp, 'HH:mm', params.user.timezone);
 
       const expected = `${formattedDay} at ${formattedTime}`;
       wrapper.expectText('[data-cy="date-time-value"]').toRead(expected);

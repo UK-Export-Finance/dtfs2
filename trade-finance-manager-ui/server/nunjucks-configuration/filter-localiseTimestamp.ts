@@ -10,7 +10,7 @@ import { formatInTimeZone } from 'date-fns-tz';
  *
  * https://www.npmjs.com/package/date-fns-tz#formatintimezone
  */
-export const filterLocaliseTimestamp = (
+export const localiseTimestamp = (
   utcTimestamp: number | string,
   format: string,
   targetTimezone: string,

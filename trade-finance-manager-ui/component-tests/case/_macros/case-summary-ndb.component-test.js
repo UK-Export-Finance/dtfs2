@@ -3,7 +3,7 @@ const componentRenderer = require('../../componentRenderer');
 
 const component = '../templates/case/_macros/case-summary-ndb.njk';
 
-const { filterFormatDateString } = require('../../../server/nunjucks-configuration/filter-formatDateString');
+const { formatDateString } = require('../../../server/nunjucks-configuration/filter-formatDateString');
 
 const render = componentRenderer(component);
 
@@ -89,7 +89,7 @@ describe(component, () => {
   });
 
   it('should render date received', () => {
-    const expected = filterFormatDateString(params.tfm.dateReceived, 'dd-MM-yyyy', 'd MMMM yyyy');
+    const expected = formatDateString(params.tfm.dateReceived, 'dd-MM-yyyy', 'd MMMM yyyy');
     wrapper.expectText('[data-cy="date-received"]').toRead(expected);
   });
 
