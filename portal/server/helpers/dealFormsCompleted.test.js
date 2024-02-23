@@ -70,7 +70,7 @@ const incompleteEligibility = { status: CONSTANTS.STATUS.SECTION.NOT_COMPLETED }
 const completeEligibility = { status: CONSTANTS.STATUS.SECTION.COMPLETED };
 
 describe('isEveryFacilityComplete', () => {
-  it('should return true if a deal has neither a bond nor a loan', () => {
+  it('should return false if a deal has neither a bond nor a loan', () => {
     const deal = {
       bondTransactions: { items: [] },
       loanTransactions: { items: [] },
@@ -78,7 +78,7 @@ describe('isEveryFacilityComplete', () => {
       eligibility: completeEligibility,
     };
 
-    expect(isEveryFacilityComplete(deal)).toEqual(true);
+    expect(isEveryFacilityComplete(deal)).toEqual(false);
   });
 
   it('should return true if a deal has any bond with status `Incomplete`', () => {

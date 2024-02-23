@@ -2,106 +2,143 @@ const { isFacilityComplete } = require('./dealFormsCompleted');
 const CONSTANTS = require('../constants');
 
 describe('isFacilityComplete', () => {
-  it('should return true when facility has no items', () => {
-    const facility = {
-      items: [],
-    };
+  it('should return false when facilities has no items', () => {
+    const facilities = [];
 
-    const result = isFacilityComplete(facility);
-
-    expect(result).toBe(true);
-  });
-
-  it('should return true when facility is undefined', () => {
-    const facility = undefined;
-
-    const result = isFacilityComplete(facility);
-
-    expect(result).toBe(true);
-  });
-
-  it('should return true when facility is complete', () => {
-    const facility = {
-      items: [
-        { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
-        { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
-        { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
-      ],
-    };
-
-    const result = isFacilityComplete(facility);
-
-    expect(result).toBe(true);
-  });
-
-  it('should return false when facility is incomplete', () => {
-    const facility = {
-      items: [
-        { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
-        { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE },
-        { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
-      ],
-    };
-
-    const result = isFacilityComplete(facility);
-
-    expect(result).toBe(true);
-  });
-
-  it('should return false when facility has acknowledged items but not all are complete', () => {
-    const facility = {
-      items: [
-        { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
-        { status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED },
-        { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
-      ],
-    };
-
-    const result = isFacilityComplete(facility);
+    const result = isFacilityComplete(facilities);
 
     expect(result).toBe(false);
   });
 
-  it('should return false when facility has acknowledged items and all are complete with missing properties', () => {
-    const facility = {
-      items: [
-        { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
-        { status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED },
-        { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
-        { status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF },
-      ],
-    };
+  it('should return false when facilities is undefined', () => {
+    const facilities = undefined;
 
-    const result = isFacilityComplete(facility);
+    const result = isFacilityComplete(facilities);
 
     expect(result).toBe(false);
   });
 
-  it('should return false when facility has acknowledged items but not all have requestedCoverStartDate and coverDateConfirmed', () => {
-    const facility = {
-      items: [
-        { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
-        { status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: '2022-01-01' },
-        { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
-      ],
-    };
+  it('should return false when all facilities are incomplete', () => {
+    const facilities = [
+      { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE },
+      { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE },
+      { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE },
+    ];
 
-    const result = isFacilityComplete(facility);
+    const result = isFacilityComplete(facilities);
 
     expect(result).toBe(false);
   });
 
-  it('should return true when facility has acknowledged items and all have requestedCoverStartDate and coverDateConfirmed', () => {
-    const facility = {
-      items: [
-        { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
-        { status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: '2022-01-01', coverDateConfirmed: true },
-        { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
-        { status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF, requestedCoverStartDate: '2022-01-01', coverDateConfirmed: true },
-      ],
-    };
+  it('should return false when all facilities are not started', () => {
+    const facilities = [
+      { status: CONSTANTS.STATUS.FACILITY.NOT_STARTED },
+      { status: CONSTANTS.STATUS.FACILITY.NOT_STARTED },
+      { status: CONSTANTS.STATUS.FACILITY.NOT_STARTED },
+    ];
 
-    const result = isFacilityComplete(facility);
+    const result = isFacilityComplete(facilities);
+
+    expect(result).toBe(false);
+  });
+
+  it('should return false when all facilities are not started and are incomplete', () => {
+    const facilities = [
+      { status: CONSTANTS.STATUS.FACILITY.NOT_STARTED },
+      { status: CONSTANTS.STATUS.FACILITY.NOT_STARTED },
+      { status: CONSTANTS.STATUS.FACILITY.NOT_STARTED },
+      { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE },
+      { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE },
+      { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE },
+    ];
+
+    const result = isFacilityComplete(facilities);
+
+    expect(result).toBe(false);
+  });
+
+  it('should return true when atleast one facility is completed', () => {
+    const facilities = [
+      { status: CONSTANTS.STATUS.FACILITY.NOT_STARTED },
+      { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
+      { status: CONSTANTS.STATUS.FACILITY.NOT_STARTED },
+    ];
+
+    const result = isFacilityComplete(facilities);
+
+    expect(result).toBe(true);
+  });
+
+  it('should return true when facilities is complete', () => {
+    const facilities = [
+      { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
+      { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
+      { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
+    ];
+
+    const result = isFacilityComplete(facilities);
+
+    expect(result).toBe(true);
+  });
+
+  it('should return false when facilities is incomplete', () => {
+    const facilities = [
+      { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
+      { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE },
+      { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
+    ];
+
+    const result = isFacilityComplete(facilities);
+
+    expect(result).toBe(true);
+  });
+
+  it('should return false when facilities has acknowledged items but not all are complete', () => {
+    const facilities = [
+      { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
+      { status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED },
+      { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
+    ];
+
+    const result = isFacilityComplete(facilities);
+
+    expect(result).toBe(false);
+  });
+
+  it('should return false when facilities has acknowledged items and all are complete with missing properties', () => {
+    const facilities = [
+      { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
+      { status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED },
+      { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
+      { status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF },
+    ];
+
+    const result = isFacilityComplete(facilities);
+
+    expect(result).toBe(false);
+  });
+
+  it('should return false when facilities has acknowledged items but not all have requestedCoverStartDate and coverDateConfirmed', () => {
+    const facilities = [
+      { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
+      { status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: '2022-01-01' },
+      { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
+    ];
+
+    const result = isFacilityComplete(facilities);
+
+    expect(result).toBe(false);
+  });
+
+  it('should return true when facilities has acknowledged items and all have requestedCoverStartDate and coverDateConfirmed', () => {
+    const facilities = [
+      { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
+      { status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: '2022-01-01', coverDateConfirmed: true },
+      { status: CONSTANTS.STATUS.FACILITY.COMPLETED },
+      { status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF, requestedCoverStartDate: '2022-01-01', coverDateConfirmed: true },
+    ];
+
+    const result = isFacilityComplete(facilities);
 
     expect(result).toBe(true);
   });

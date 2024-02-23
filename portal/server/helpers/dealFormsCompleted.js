@@ -16,9 +16,19 @@ const isFacilityComplete = (facilities = []) => {
     (facility) => facilityProcessedStatus.includes(facility.status) && facility.requestedCoverStartDate && facility.coverDateConfirmed,
   ).length;
 
-  const total = completed + incomplete + notStarted + acknowledged;
+  const canBeSubmitted = completed + acknowledged;
+  const canNotBeSubmitted = incomplete + notStarted;
+  const total = canBeSubmitted + canNotBeSubmitted;
 
-  return facilities.length === total && facilities.length !== notStarted && facilities.length !== incomplete;
+  /**
+   * Ensure total facilities are not all in cannot be submitted status.
+   * Need atleast one minimum facility from canBeSubmitted status to allow
+   * maker to submit the deal further to the checker.
+   *
+   * Note: A maker can submit one facility at a time therefore remaining facilities
+   * can be either `Not Started` or `Incomplete`.
+   */
+  return facilities.length === total && facilities.length !== canNotBeSubmitted;
 };
 
 /**
@@ -56,6 +66,7 @@ const isEligibilityComplete = (deal) => deal?.eligibility?.status === CONSTANTS.
  */
 const isEveryFacilityComplete = (deal) => {
   const facilities = [...(deal.bondTransactions?.items ?? []), ...(deal.loanTransactions?.items ?? [])];
+
   return isFacilityComplete(facilities);
 };
 
