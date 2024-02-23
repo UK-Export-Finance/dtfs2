@@ -31,6 +31,7 @@ const createLoggedInUserSession = async (user) => {
     await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier } });
     return `Bearer ${token}`;
   } catch (e) {
+    console.error('Failed to create logged in user session %o', e);
     throw new Error(`Failed to create logged in user session for user: ${user.username}: ${e}`);
   }
 };

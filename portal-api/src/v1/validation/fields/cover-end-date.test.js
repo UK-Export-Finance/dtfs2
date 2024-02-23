@@ -1,7 +1,7 @@
 const moment = require('moment');
-const CONSTANTS = require('../../../src/constants');
+const CONSTANTS = require('../../../constants');
 
-const checkCoverStartDate = require('../../../src/v1/validation/fields/cover-end-date');
+const checkCoverStartDate = require('./cover-end-date');
 
 describe('validation - coverEndDate on ready for checkers approval', () => {
   const errorMessage = 'Cover End Date must be today or in the future';

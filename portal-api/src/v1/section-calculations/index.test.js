@@ -1,11 +1,11 @@
 const {
   calculateGuaranteeFee,
   calculateUkefExposure,
-} = require('../../../src/v1/section-calculations');
+} = require('.');
 const {
   roundNumber,
   formattedNumber,
-} = require('../../../src/utils/number');
+} = require('../../utils/number');
 
 describe('section-calculations', () => {
   describe('calculateGuaranteeFee', () => {

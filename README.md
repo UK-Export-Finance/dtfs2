@@ -156,13 +156,13 @@ From the respective folder (./portal, ./gef-ui, ./trade-finance-manager-ui):
 #### Run a UI Test Suite :heavy_check_mark:
 
 ```shell
-npm run test
+npm run unit-test
 ```
 
 #### Run a Single UI Test :heavy_check_mark:
 
 ```shell
-npm run test /path/to/file.test.js
+npm run unit-test /path/to/file.test.js
 ```
 
 ## Building CSS and JS :wrench:

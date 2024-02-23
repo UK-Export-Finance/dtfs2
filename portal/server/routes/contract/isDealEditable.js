@@ -3,6 +3,13 @@ const {
   ROLES: { MAKER },
 } = require('../../constants');
 
+/**
+ * Determines if a deal is editable for a given user.
+ *
+ * @param {Object} deal - The deal object.
+ * @param {Object} user - The user object.
+ * @returns {boolean} - True if the deal is editable, false otherwise.
+ */
 const isDealEditable = (deal, user) => {
   if (!user.roles.includes(MAKER)) {
     return false;
@@ -11,11 +18,7 @@ const isDealEditable = (deal, user) => {
   const { submissionDate } = deal.details;
   const dealHasBeenSubmitted = submissionDate;
 
-  if (![STATUS.DRAFT, STATUS.CHANGES_REQUIRED].includes(deal.status) || dealHasBeenSubmitted) {
-    return false;
-  }
-
-  return true;
+  return [STATUS.DEAL.DRAFT, STATUS.DEAL.CHANGES_REQUIRED].includes(deal.status) && !dealHasBeenSubmitted;
 };
 
 module.exports = isDealEditable;
