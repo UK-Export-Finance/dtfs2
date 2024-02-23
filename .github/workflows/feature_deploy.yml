@@ -60,7 +60,7 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: 3. Install dependencies
-        working-directory: ./libs/common
+        working-directory: ./
         run: npm ci
 
       - name: 4. Run migrations
