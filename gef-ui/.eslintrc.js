@@ -24,7 +24,6 @@ const baseRules = {
   'object-curly-newline': ['error', {
     consistent: true,
   }],
-  'no-restricted-syntax': 'off',
   'no-use-before-define': [
     'error',
     {
