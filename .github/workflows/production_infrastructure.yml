@@ -1790,7 +1790,21 @@ jobs:
                 AZURE_PORTAL_STORAGE_ACCOUNT="tfs${{ env.environment }}storage" \
                 AZURE_UTILISATION_REPORTS_FILESHARE_NAME="${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}" \
                 JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
-                JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}"
+                JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}" \
+                AZURE_SSO_TENANT_SUBDOMAIN="${{ secrets.AZURE_SSO_TENANT_SUBDOMAIN }}" \
+                AZURE_SSO_REDIRECT_URI="${{ secrets.AZURE_SSO_REDIRECT_URI }}" \
+                AZURE_SSO_POST_LOGOUT_URI="${{ secrets.AZURE_SSO_POST_LOGOUT_URI }}" \
+                AZURE_SSO_CLIENT_ID="${{ secrets.AZURE_SSO_CLIENT_ID }}" \
+                AZURE_SSO_AUTHORITY="${{ secrets.AZURE_SSO_AUTHORITY }}" \
+                AZURE_SSO_CLIENT_SECRET="${{ secrets.AZURE_SSO_CLIENT_SECRET }}" \
+                AZURE_SSO_GROUP_UNDERWRITERS="${{ secrets.AZURE_SSO_GROUP_UNDERWRITERS }}" \
+                AZURE_SSO_GROUP_UNDERWRITING_SUPPORT="${{ secrets.AZURE_SSO_GROUP_UNDERWRITING_SUPPORT }}" \
+                AZURE_SSO_GROUP_UNDERWRITER_MANAGERS="${{ secrets.AZURE_SSO_GROUP_UNDERWRITER_MANAGERS }}" \
+                AZURE_SSO_GROUP_RISK_MANAGERS="${{ secrets.AZURE_SSO_GROUP_RISK_MANAGERS }}" \
+                AZURE_SSO_GROUP_BUSINESS_SUPPORT="${{ secrets.AZURE_SSO_GROUP_BUSINESS_SUPPORT }}" \
+                AZURE_SSO_GROUP_PIM="${{ secrets.AZURE_SSO_GROUP_PIM }}" \
+                AZURE_SSO_GROUP_PDC_READ="${{ secrets.AZURE_SSO_GROUP_PDC_READ }}" \
+                AZURE_SSO_GROUP_PDC_RECONCILE="${{ secrets.AZURE_SSO_GROUP_PDC_RECONCILE }}"
 
   # END API setup
 
