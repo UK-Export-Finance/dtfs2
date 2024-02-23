@@ -1,8 +1,8 @@
 import { asString, CronSchedulerJob } from '@ukef/dtfs2-common';
 import { getOneUtilisationReportDetailsByBankId, saveNotReceivedUtilisationReport } from '../../services/repositories/utilisation-reports-repo';
-import { getAllBanks } from '../../services/repositories/banks-repo.ts';
-import { Bank } from '../../types/db-models/banks.ts';
-import { getCurrentReportPeriodForBankSchedule } from '../../utils/report-period.ts';
+import { getAllBanks } from '../../services/repositories/banks-repo';
+import { Bank } from '../../types/db-models/banks';
+import { getCurrentReportPeriodForBankSchedule } from '../../utils/report-period';
 
 const { UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE } = process.env;
 

@@ -1,11 +1,11 @@
 import { asString } from '@ukef/dtfs2-common';
-import { createUtilisationReportForBanksJob } from './index.ts';
-import { getAllBanks } from '../../services/repositories/banks-repo.ts';
+import { createUtilisationReportForBanksJob } from '.';
+import { getAllBanks } from '../../services/repositories/banks-repo';
 import * as utilisationReportsRepo from '../../services/repositories/utilisation-reports-repo';
-import { getCurrentReportPeriodForBankSchedule } from '../../utils/report-period.ts';
-import { Bank } from '../../types/db-models/banks.ts';
-import { UtilisationReport } from '../../types/db-models/utilisation-reports.ts';
-import { ReportPeriod } from '../../types/utilisation-reports.ts';
+import { getCurrentReportPeriodForBankSchedule } from '../../utils/report-period';
+import { Bank } from '../../types/db-models/banks';
+import { UtilisationReport } from '../../types/db-models/utilisation-reports';
+import { ReportPeriod } from '../../types/utilisation-reports';
 
 console.info = jest.fn();
 
