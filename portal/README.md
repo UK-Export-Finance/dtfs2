@@ -26,7 +26,6 @@ Verbose with coverage:
 ```shell
 npm run unit-test
 ```
-```
 
 ### **Run a single UI test**
 
