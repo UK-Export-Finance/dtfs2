@@ -237,7 +237,8 @@ authRouter
 authRouter.get('/validate', (_req, res) => res.status(200).send());
 
 openRouter.get('/validate-partial-2fa-token', passport.authenticate(partial2faTokenPassportStrategy, { session: false }), (_req, res) =>
-  res.status(200).send(),);
+  res.status(200).send(),
+);
 
 // bank-validator
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
@@ -268,23 +269,23 @@ authRouter
   );
 
 authRouter
-  .route('/banks/:bankId/utilisation-reports/latest')
+  .route('/banks/:bankId/utilisation-reports/last-uploaded')
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,
     handleExpressValidatorResult,
     validateUserAndBankIdMatch,
-    utilisationReportControllers.getLatestReport,
+    utilisationReportControllers.getLastUploadedReportByBankId,
   );
 
 authRouter
-  .route('/banks/:bankId/due-report-dates')
+  .route('/banks/:bankId/due-report-periods')
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,
     handleExpressValidatorResult,
     validateUserAndBankIdMatch,
-    utilisationReportControllers.getDueReportDates,
+    utilisationReportControllers.getDueReportPeriodsByBankId,
   );
 
 authRouter

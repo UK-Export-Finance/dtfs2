@@ -1,4 +1,4 @@
-const { MAKER } = require('../../../server/constants/roles');
+const { ROLES: { MAKER } } = require('../../../server/constants');
 const { NON_MAKER_ROLES } = require('../../../test-helpers/common-role-lists');
 
 const componentRenderer = require('../../componentRenderer');

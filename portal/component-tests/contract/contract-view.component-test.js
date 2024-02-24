@@ -5,8 +5,9 @@ const pageRenderer = require('../pageRenderer');
 const page = 'contract/contract-view.njk';
 const render = pageRenderer(page);
 const dealFullyCompleted = require('../fixtures/deal-fully-completed');
-const { MAKER, CHECKER } = require('../../server/constants/roles');
+const { ROLES: { MAKER, CHECKER } } = require('../../server/constants');
 const { NON_MAKER_ROLES } = require('../../test-helpers/common-role-lists');
+const { DATE: { LONDON_TIMEZONE } } = require('../../server/constants')
 
 const mockDeal = { _id: '61f6fbaea2460c018a4189d7', ...dealFullyCompleted };
 mockDeal.bondTransactions.items[0]._id = '61f6fbaea2460c018a4189d8';
@@ -17,15 +18,15 @@ const aDealInStatus = (status) => ({
 });
 
 const oneDealInEachStatus = () => [
-  aDealInStatus(STATUS.DRAFT),
-  aDealInStatus(STATUS.READY_FOR_APPROVAL),
-  aDealInStatus(STATUS.CHANGES_REQUIRED),
-  aDealInStatus(STATUS.ABANDONED),
-  aDealInStatus(STATUS.SUBMITTED_TO_UKEF),
-  aDealInStatus(STATUS.UKEF_ACKNOWLEDGED),
-  aDealInStatus(STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS),
-  aDealInStatus(STATUS.UKEF_APPROVED_WITH_CONDITIONS),
-  aDealInStatus(STATUS.UKEF_REFUSED),
+  aDealInStatus(STATUS.DEAL.DRAFT),
+  aDealInStatus(STATUS.DEAL.READY_FOR_APPROVAL),
+  aDealInStatus(STATUS.DEAL.CHANGES_REQUIRED),
+  aDealInStatus(STATUS.DEAL.ABANDONED),
+  aDealInStatus(STATUS.DEAL.SUBMITTED_TO_UKEF),
+  aDealInStatus(STATUS.DEAL.UKEF_ACKNOWLEDGED),
+  aDealInStatus(STATUS.DEAL.UKEF_APPROVED_WITHOUT_CONDITIONS),
+  aDealInStatus(STATUS.DEAL.UKEF_APPROVED_WITH_CONDITIONS),
+  aDealInStatus(STATUS.DEAL.UKEF_REFUSED),
 ];
 
 const confirmedRequestStartDateParams = {
@@ -35,7 +36,7 @@ const confirmedRequestStartDateParams = {
 
 describe(page, () => {
   describe("when viewed as a 'maker'", () => {
-    const user = { roles: [MAKER], timezone: 'Europe/London' };
+    const user = { roles: [MAKER], timezone: LONDON_TIMEZONE };
 
     commonTests(user);
 
@@ -67,7 +68,7 @@ describe(page, () => {
   });
 
   describe("when viewed as a 'checker'", () => {
-    const user = { roles: [CHECKER], timezone: 'Europe/London' };
+    const user = { roles: [CHECKER], timezone: LONDON_TIMEZONE };
 
     commonTests(user);
 
@@ -97,8 +98,8 @@ describe(page, () => {
     });
   });
 
-  describe.each(NON_MAKER_ROLES)("when viewed as a '%o'", (nonMakerRole) => {
-    const user = { roles: [nonMakerRole], timezone: 'Europe/London' };
+  describe.each(NON_MAKER_ROLES)("when viewed as a '%s'", (nonMakerRole) => {
+    const user = { roles: [nonMakerRole], timezone: LONDON_TIMEZONE };
 
     commonTests(user);
 

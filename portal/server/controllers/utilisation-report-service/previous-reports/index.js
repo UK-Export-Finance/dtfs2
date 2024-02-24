@@ -8,10 +8,7 @@ const getPreviousReports = async (req, res) => {
   const bankId = user.bank.id;
 
   try {
-    const previousReportsByBank = await getApiData(api.getPreviousUtilisationReportsByBank(
-      userToken,
-      bankId,
-    ), res);
+    const previousReportsByBank = await getApiData(api.getPreviousUtilisationReportsByBank(userToken, bankId), res);
 
     const { targetYear } = req.query;
     const navItems = previousReportsByBank?.map((utilisationReport) => ({
@@ -32,9 +29,7 @@ const getPreviousReports = async (req, res) => {
           path: `/banks/${bankId}/utilisation-report-download/${report._id}`,
         }))
       : [];
-    const year = navItems?.length
-      ? utilisation?.year
-      : undefined;
+    const year = navItems?.length ? utilisation?.year : undefined;
 
     return res.render('utilisation-report-service/previous-reports/previous-reports.njk', {
       user: req.session.user,

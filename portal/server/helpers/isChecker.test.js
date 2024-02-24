@@ -1,5 +1,7 @@
-import { ADMIN, CHECKER, MAKER } from '../constants/roles';
+import { ROLES } from '../constants';
 import { isChecker } from './isChecker.helper';
+
+const { ADMIN, CHECKER, MAKER } = ROLES;
 
 describe('isChecker', () => {
   it('should return `true` when the role is `checker`', () => {

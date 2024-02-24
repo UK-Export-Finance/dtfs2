@@ -1,5 +1,10 @@
 const {
-  validateMonth, validateYear, validateReportPeriod, validateFileInfo, validateUtilisationReportData
+  validateMonth,
+  validateYear,
+  validateReportPeriod,
+  isValidReportPeriod,
+  validateFileInfo,
+  validateUtilisationReportData,
 } = require('./utilisation-report-validator');
 
 describe('utilisation-report-validator', () => {
@@ -52,7 +57,7 @@ describe('utilisation-report-validator', () => {
 
       expect(validationError).toEqual(`${defaultPropertyName} must be between 2020 and 2100`);
     });
-    
+
     it('returns an error with the specific property name when an incorrect year is provided', () => {
       const propertyName = 'date.year';
       const validationError = validateMonth(14, propertyName);
@@ -103,13 +108,57 @@ describe('utilisation-report-validator', () => {
     });
 
     it('returns an error if a report period start and end properties are not provided', async () => {
-      const validationErrors = validateReportPeriod({ start: {}, end: {}});
+      const validationErrors = validateReportPeriod({ start: {}, end: {} });
 
       expect(validationErrors.length).toBe(4);
       expect(validationErrors).toContain('startMonth is required');
       expect(validationErrors).toContain('startYear is required');
       expect(validationErrors).toContain('endMonth is required');
       expect(validationErrors).toContain('endYear is required');
+    });
+  });
+
+  describe('isValidReportPeriod', () => {
+    it('returns true when a correct report period is provided', () => {
+      // Arrange
+      const validReportPeriod = {
+        start: {
+          month: 1,
+          year: 2021,
+        },
+        end: {
+          month: 1,
+          year: 2021,
+        },
+      };
+
+      // Act
+      const result = isValidReportPeriod(validReportPeriod);
+
+      // Assert
+      expect(result).toBe(true);
+    });
+
+    const validStart = { month: 1, year: 2021 };
+    const validEnd = { month: 1, year: 2021 };
+
+    it.each`
+      condition                                  | reportPeriod
+      ${'is null'}                               | ${null}
+      ${'is undefined'}                          | ${undefined}
+      ${'is an empty object'}                    | ${{}}
+      ${"is missing the 'start' property"}       | ${{ end: validEnd }}
+      ${"is missing the 'start.month' property"} | ${{ start: { year: 2021 }, end: validEnd }}
+      ${"is missing the 'start.year' property"}  | ${{ start: { month: 1 }, end: validEnd }}
+      ${"is missing the 'end' property"}         | ${{ start: validStart }}
+      ${"is missing the 'end.month' property"}   | ${{ start: validStart, end: { year: 2021 } }}
+      ${"is missing the 'end.year' property"}    | ${{ start: validStart, end: { month: 1 } }}
+    `('returns false when the reportPeriod object $condition', ({ reportPeriod }) => {
+      // Act
+      const result = isValidReportPeriod(reportPeriod);
+
+      // Assert
+      expect(result).toBe(false);
     });
   });
 

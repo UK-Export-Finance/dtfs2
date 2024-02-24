@@ -37,7 +37,7 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
   it('Starting to fill in the Issue Bond Facility form should change the Bond status from `Not started` to `Incomplete` and the Issue Facility link to `Facility issued`', () => {
     cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
-    pages.contract.proceedToReview().should('be.disabled');
+    pages.contract.proceedToReview().should('not.exist');
 
     const bondId = dealFacilities.bonds[0]._id;
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);

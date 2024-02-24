@@ -62,9 +62,11 @@ const getPreviousReportsByBankId = async (req, res) => {
   try {
     const { bankId } = req.params;
 
-    const reports = await api.getUtilisationReports(bankId);
+    const uploadedReports = await api.getUtilisationReports(bankId, {
+      excludeNotUploaded: true,
+    });
 
-    const sortedReports = groupAndSortReports(reports);
+    const sortedReports = groupAndSortReports(uploadedReports);
 
     return res.status(200).send(sortedReports);
   } catch (error) {

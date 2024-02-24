@@ -15,7 +15,7 @@ jest.mock('../server/api', () => ({
 jest.mock('../server/helpers/getApiData', () => () => []);
 
 const app = require('../server/createApp');
-const { ADMIN } = require('../server/constants/roles');
+const { ROLES: { ADMIN } } = require('../server/constants');
 const mockLogin = require('./helpers/login');
 const extractSessionCookie = require('./helpers/extractSessionCookie');
 const { login, updateUser, loginWithSignInLink } = require('../server/api');

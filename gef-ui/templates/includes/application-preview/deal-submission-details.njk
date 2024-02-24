@@ -11,7 +11,7 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
         <div class="govuk-grid-column-one-third"><p><strong>Sent to UKEF</strong></p></div>
-        <div class="govuk-grid-column-two-thirds"><p data-cy="date-submitted">{{ latestSubmissionDate | localiseTimestamp('DD MMM YYYY', timezone)  | dashIfEmpty }}</p>
+        <div class="govuk-grid-column-two-thirds"><p data-cy="date-submitted">{{ latestSubmissionDate | localiseTimestamp('dd MMM yyyy', timezone)  | dashIfEmpty }}</p>
         </div>
       </div>
       <div class="govuk-grid-column-one-half">

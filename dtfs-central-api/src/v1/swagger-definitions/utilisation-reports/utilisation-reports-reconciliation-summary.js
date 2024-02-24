@@ -28,11 +28,6 @@
  *         type: number
  *       reportedFeesLeftToReconcile:
  *         type: number
- *       isPlaceholderReport:
- *         type: boolean
- *         description: |
- *           The report is a placeholder report if no actual report has been uploaded by a portal user
- *           (e.g. if reconciliation was done manually)
  *   UtilisationReportReportPeriodReconciliationSummary:
  *     type: object
  *     required:

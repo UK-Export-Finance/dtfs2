@@ -1,7 +1,9 @@
-import { MAKER } from '../../constants/roles';
+import { ROLES } from '../../constants';
 import isDealEditable from './isDealEditable';
 
 const { NON_MAKER_ROLES } = require('../../../test-helpers/common-role-lists');
+
+const { MAKER } = ROLES;
 
 describe('isDealEditable', () => {
   describe('when user is maker', () => {

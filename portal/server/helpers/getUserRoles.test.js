@@ -1,5 +1,7 @@
-const { MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_REPORT_OFFICER } = require('../constants/roles');
 const getUserRoles = require('./getUserRoles');
+const { ROLES } = require('../constants');
+
+const { MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_REPORT_OFFICER } = ROLES;
 
 describe('getUserRoles', () => {
   const allRoles = [MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_REPORT_OFFICER];

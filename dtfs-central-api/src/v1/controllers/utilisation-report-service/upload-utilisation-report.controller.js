@@ -1,5 +1,5 @@
 const { saveUtilisationData } = require('../../../services/repositories/utilisation-data-repo');
-const { saveUtilisationReportDetails, getUtilisationReportDetailsByBankIdMonthAndYear } = require('../../../services/repositories/utilisation-reports-repo');
+const { updateUtilisationReportDetailsWithUploadDetails, getOneUtilisationReportDetailsByBankId } = require('../../../services/repositories/utilisation-reports-repo');
 const {
   validateUtilisationReportData,
   validateReportPeriod,
@@ -31,16 +31,17 @@ const postUtilisationReportData = async (req, res) => {
       return res.status(400).send(validationErrors);
     }
 
-    const existingReport = await getUtilisationReportDetailsByBankIdMonthAndYear(bank.id, reportPeriod.start.month, reportPeriod.start.year);
-    if (existingReport) {
-      console.error('Utilisation report already exists for bank %d, month %d, year %d', bank.id, reportPeriod.start.month, reportPeriod.start.year);
-      return res.status(409).send('Utilisation report already exists');
+    const existingReport = await getOneUtilisationReportDetailsByBankId(bank.id, { reportPeriod });
+    if (!existingReport) {
+      console.error('Failed to find a utilisation report for bank %s, month %d, year %d', bank.id, reportPeriod.start.month, reportPeriod.start.year);
+      return res.status(404).send('Utilisation report could not be found');
     }
+
     const client = await db.getClient();
     const session = client.startSession();
     let reportDetails;
     await session.withTransaction(async () => {
-      reportDetails = await saveUtilisationReportDetails(reportPeriod, fileInfo, user);
+      reportDetails = await updateUtilisationReportDetailsWithUploadDetails(existingReport, fileInfo, user);
       await saveUtilisationData(reportData, reportPeriod, bank, reportDetails?.reportId);
     });
     await session.endSession();

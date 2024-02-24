@@ -1,7 +1,7 @@
 const express = require('express');
 const { getPreviousReports } = require('../../../controllers/utilisation-report-service');
 const { validateRole, validateToken } = require('../../middleware');
-const { PAYMENT_REPORT_OFFICER } = require('../../../constants/roles');
+const { ROLES: { PAYMENT_REPORT_OFFICER } } = require('../../../constants');
 
 const router = express.Router();
 
