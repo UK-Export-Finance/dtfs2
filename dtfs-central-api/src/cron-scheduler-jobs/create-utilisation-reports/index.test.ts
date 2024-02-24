@@ -1,17 +1,17 @@
 import { asString } from '@ukef/dtfs2-common';
 import { createUtilisationReportForBanksJob } from '.';
-import { getAllBanks } from '../../../services/repositories/banks-repo';
-import * as utilisationReportsRepo from '../../../services/repositories/utilisation-reports-repo';
-import { getCurrentReportPeriodForBankSchedule } from '../../../utils/report-period';
-import { Bank } from '../../../types/db-models/banks';
-import { UtilisationReport } from '../../../types/db-models/utilisation-reports';
-import { ReportPeriod } from '../../../types/utilisation-reports';
+import { getAllBanks } from '../../services/repositories/banks-repo';
+import * as utilisationReportsRepo from '../../services/repositories/utilisation-reports-repo';
+import { getCurrentReportPeriodForBankSchedule } from '../../utils/report-period';
+import { Bank } from '../../types/db-models/banks';
+import { UtilisationReport } from '../../types/db-models/utilisation-reports';
+import { ReportPeriod } from '../../types/utilisation-reports';
 
 console.info = jest.fn();
 
-jest.mock('../../../services/repositories/banks-repo');
-jest.mock('../../../services/repositories/utilisation-reports-repo');
-jest.mock('../../../utils/report-period');
+jest.mock('../../services/repositories/banks-repo');
+jest.mock('../../services/repositories/utilisation-reports-repo');
+jest.mock('../../utils/report-period');
 jest.mock('@ukef/dtfs2-common', () => ({
   asString: jest.fn(),
 }));
@@ -27,38 +27,7 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
     process.env = { ...originalProcessEnv };
   });
 
-  it("throws an error when the 'UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE' environment variable is undefined", () => {
-    // Arrange
-    jest.mocked(asString).mockImplementation(() => {
-      throw new Error();
-    });
-
-    // Act/Assert
-    expect(() => createUtilisationReportForBanksJob.init()).toThrow();
-  });
-
-  it('has the correct job schedule', () => {
-    // Arrange
-    const expectedSchedule = process.env.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE;
-
-    // Act
-    const job = createUtilisationReportForBanksJob.init();
-
-    // Assert
-    expect(job.schedule).toEqual(expectedSchedule);
-  });
-
-  it('has the correct job message', () => {
-    // Act
-    const job = createUtilisationReportForBanksJob.init();
-
-    // Assert
-    expect(job.message).toEqual('Create utilisation reports in the database for banks which have a report due');
-  });
-
   describe('the task', () => {
-    const getJob = () => createUtilisationReportForBanksJob.init();
-
     const mockReportPeriod = {} as ReportPeriod;
 
     beforeEach(() => {
@@ -71,12 +40,11 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
 
     it('does not try to create any utilisation reports when there are no banks', async () => {
       // Arrange
-      const job = getJob();
       jest.mocked(getAllBanks).mockResolvedValue([]);
       const updateUtilisationReportDetailsWithUploadDetailsSpy = jest.spyOn(utilisationReportsRepo, 'updateUtilisationReportDetailsWithUploadDetails');
 
       // Act
-      await job.task(new Date());
+      await createUtilisationReportForBanksJob.task(new Date());
 
       // Assert
       expect(updateUtilisationReportDetailsWithUploadDetailsSpy).not.toHaveBeenCalled();
@@ -84,7 +52,6 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
 
     it('does not try to create any utilisation reports when reports for all banks in the current period already exist', async () => {
       // Arrange
-      const job = getJob();
       const bank = { id: '123', name: 'Test bank', isVisibleInTfmUtilisationReports: true } as Bank;
       jest.mocked(getAllBanks).mockResolvedValue([bank]);
       const getOneUtilisationReportDetailsByBankIdSpy = jest
@@ -93,7 +60,7 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       const saveNotReceivedUtilisationReportSpy = jest.spyOn(utilisationReportsRepo, 'saveNotReceivedUtilisationReport');
 
       // Act
-      await job.task(new Date());
+      await createUtilisationReportForBanksJob.task(new Date());
 
       // Assert
       expect(getOneUtilisationReportDetailsByBankIdSpy).toHaveBeenCalledWith(bank.id, { reportPeriod: mockReportPeriod });
@@ -102,15 +69,13 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
 
     it('does not try to create reports when the bank is not visible in TFM utilisation reports', async () => {
       // Arrange
-      const job = getJob();
-
       const bank = { id: '1', name: 'Bank 1', isVisibleInTfmUtilisationReports: false } as Bank;
       jest.mocked(getAllBanks).mockResolvedValue([bank]);
       const getOneUtilisationReportDetailsByBankIdSpy = jest.mocked(utilisationReportsRepo.getOneUtilisationReportDetailsByBankId).mockResolvedValue(null);
       const saveNotReceivedUtilisationReportSpy = jest.spyOn(utilisationReportsRepo, 'saveNotReceivedUtilisationReport');
 
       // Act
-      await job.task(new Date());
+      await createUtilisationReportForBanksJob.task(new Date());
 
       // Assert
       expect(getOneUtilisationReportDetailsByBankIdSpy).not.toHaveBeenCalled();
@@ -125,13 +90,12 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
 
     it('tries to create utilisation reports for all banks when reports for all banks in the current period do not exist', async () => {
       // Arrange
-      const job = getJob();
       jest.mocked(getAllBanks).mockResolvedValue(banks);
       const getOneUtilisationReportDetailsByBankIdSpy = jest.mocked(utilisationReportsRepo.getOneUtilisationReportDetailsByBankId).mockResolvedValue(null);
       const saveNotReceivedUtilisationReportSpy = jest.spyOn(utilisationReportsRepo, 'saveNotReceivedUtilisationReport');
 
       // Act
-      await job.task(new Date());
+      await createUtilisationReportForBanksJob.task(new Date());
 
       // Assert
       expect(getOneUtilisationReportDetailsByBankIdSpy).toHaveBeenCalledTimes(banks.length);
@@ -142,7 +106,6 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
 
     it('only tries to create reports for banks which do not have a report for the current report period', async () => {
       // Arrange
-      const job = getJob();
       jest.mocked(getAllBanks).mockResolvedValue(banks);
 
       const bankWithoutReport = banks[0];
@@ -159,7 +122,7 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       const saveNotReceivedUtilisationReportSpy = jest.spyOn(utilisationReportsRepo, 'saveNotReceivedUtilisationReport');
 
       // Act
-      await job.task(new Date());
+      await createUtilisationReportForBanksJob.task(new Date());
 
       // Assert
       expect(getOneUtilisationReportDetailsByBankIdSpy).toHaveBeenCalledTimes(banks.length);
