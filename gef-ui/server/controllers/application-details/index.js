@@ -66,7 +66,7 @@ function buildBody(app, previewMode, user) {
   const hasChangedFacilities = hasChangedToIssued(app);
   const unissuedFacilitiesPresent = areUnissuedFacilitiesPresent(app);
   const facilitiesChangedToIssued = facilitiesChangedToIssuedAsArray(app);
-  const hasUkefDecisionAccepted = app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false;
+  const hasUkefDecisionAccepted = Boolean(app.ukefDecisionAccepted);
 
   const mapSummaryParams = {
     app,

@@ -11,6 +11,7 @@ const {
   summaryIssuedUnchanged,
   areUnissuedFacilitiesPresent,
   facilitiesChangedPresent,
+  coverDatesConfirmed,
 } = require('./facility-helpers');
 
 const { isUkefReviewAvailable } = require('./deal-helpers');
@@ -470,16 +471,19 @@ const commentsPresent = (app) => {
   return false;
 };
 
-/*
-  checks if taskComments should be shown on top of application
-  if any of the below conditions are present
-*/
+/**
+ * Checks various conditions related to the `app` object and returns a boolean value.
+ * @param {object} app - An object containing properties related to the application.
+ * @returns {boolean} - `true` if any of the conditions are met, `false` otherwise.
+ */
 const displayTaskComments = (app) => {
   const ukefReviewAvailable = isUkefReviewAvailable(app.status, app.ukefDecision);
+  const coverStartDateConfirmed = coverDatesConfirmed(app.facilities);
   const unissuedFacilitiesPresent = areUnissuedFacilitiesPresent(app);
   const facilitiesChanged = facilitiesChangedPresent(app);
   const appCommentsPresent = commentsPresent(app);
-  return (ukefReviewAvailable || unissuedFacilitiesPresent || facilitiesChanged || appCommentsPresent);
+
+  return (ukefReviewAvailable && !coverStartDateConfirmed) || unissuedFacilitiesPresent || facilitiesChanged || appCommentsPresent;
 };
 
 const pastDate = ({ day, month, year }) => {
