@@ -14,5 +14,4 @@ RUN chmod 400 /mongo-keyfile && \
     chown 999:999 /mongo-keyfile
 
 # Set the entrypoint script
-CMD ["mongod", "--bind_ip_all", "--port", "27017", "--keyFile", "/mongo-keyfile", "--replSet", "rs0"]
 ENTRYPOINT ["/docker-entrypoint.sh"]
