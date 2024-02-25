@@ -1,5 +1,11 @@
 FROM mongo:5.0.5
 
+# Copy entrypoint script into the container
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+
+# Set permissions for entrypoint script
+RUN chmod +x /docker-entrypoint.sh
+
 # Create keyfile
 RUN openssl rand -base64 756 > /mongo-keyfile
 
@@ -7,5 +13,5 @@ RUN openssl rand -base64 756 > /mongo-keyfile
 RUN chmod 400 /mongo-keyfile && \
     chown 999:999 /mongo-keyfile
 
-# Launch MongoDB with replica set configuration
-CMD ["mongod", "--bind_ip_all", "--port", "27017", "--keyFile", "/mongo-keyfile", "--replSet", "rs0"]
+# Set the entrypoint script
+ENTRYPOINT ["/docker-entrypoint.sh"]
