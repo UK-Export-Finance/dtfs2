@@ -1,7 +1,8 @@
 import { Collection, DeleteResult, ObjectId, UpdateResult, WithoutId } from 'mongodb';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import { ReportWithStatus } from '../../types/utilisation-reports';
 import { UploadedByUserDetails, UtilisationReport } from '../../types/db-models/utilisation-reports';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, DB_COLLECTIONS } from '../../constants';
+import { DB_COLLECTIONS } from '../../constants';
 import db from '../../drivers/db-client';
 
 type ReportFilter = {

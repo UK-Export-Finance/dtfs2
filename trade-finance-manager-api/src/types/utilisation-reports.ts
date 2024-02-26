@@ -1,4 +1,4 @@
-import { UtilisationReportReconciliationStatus } from "@ukef/dtfs2-common";
+import { UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
 
 export type ReportWithStatus = {
   status: UtilisationReportReconciliationStatus;

@@ -1,9 +1,6 @@
 import { endOfDay, format, isPast, isSameMonth, parseISO } from 'date-fns';
-import {
-  UtilisationReportReconciliationStatus,
-  UtilisationReportReconciliationSummary,
-  UtilisationReportReconciliationSummaryItem,
-} from '../../../types/utilisation-reports';
+import { UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
+import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../types/utilisation-reports';
 import { getReportDueDate, getReportPeriodStart } from '../../../services/utilisation-report-service';
 import api from '../../../api';
 import { IsoMonthStamp, MonthAndYear } from '../../../types/date';

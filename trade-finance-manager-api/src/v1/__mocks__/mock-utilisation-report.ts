@@ -1,5 +1,4 @@
-import { AzureFileInfo, ReportPeriod, UtilisationReportResponseBody } from "@ukef/dtfs2-common";
-
+import { AzureFileInfo, ReportPeriod, UtilisationReportResponseBody } from '@ukef/dtfs2-common';
 
 const MOCK_AZURE_FILE_INFO: AzureFileInfo = {
   folder: 'folder_name',

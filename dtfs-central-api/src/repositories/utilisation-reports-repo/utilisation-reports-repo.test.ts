@@ -1,5 +1,5 @@
 import { Filter, ObjectId } from 'mongodb';
-import { MonthAndYear, ReportPeriod } from '@ukef/dtfs2-common';
+import { MonthAndYear, ReportPeriod, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import {
   updateUtilisationReportDetailsWithUploadDetails,
   getManyUtilisationReportDetailsByBankId,
@@ -11,7 +11,6 @@ import {
 import db from '../../drivers/db-client';
 import { DB_COLLECTIONS } from '../../constants/db-collections';
 import { MOCK_NOT_RECEIVED_UTILISATION_REPORT, MOCK_UTILISATION_REPORT } from '../../../api-tests/mocks/utilisation-reports/utilisation-reports';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 import { PortalSessionUser } from '../../types/portal/portal-session-user';
 import { UtilisationReport } from '../../types/db-models/utilisation-reports';
 

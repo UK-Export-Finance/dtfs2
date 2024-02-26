@@ -1,8 +1,8 @@
 import { Filter, InsertOneResult, OptionalId } from 'mongodb';
 import sortBy from 'lodash/sortBy';
-import { MonthAndYear, ReportPeriod } from '@ukef/dtfs2-common';
+import { MonthAndYear, ReportPeriod, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import db from '../../drivers/db-client';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, DB_COLLECTIONS } from '../../constants';
+import { DB_COLLECTIONS } from '../../constants';
 import { AzureFileInfo } from '../../types/azure-file-info';
 import { UtilisationReport, UtilisationReportUploadDetails } from '../../types/db-models/utilisation-reports';
 import { PortalSessionUser } from '../../types/portal/portal-session-user';

@@ -1,10 +1,8 @@
 import { WithId } from 'mongodb';
-import { ReportPeriod } from '@ukef/dtfs2-common';
+import { ReportPeriod, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
 import { AzureFileInfo } from '../azure-file-info';
-import { UtilisationReportReconciliationStatus } from '../utilisation-reports';
 import { SessionBank } from '../session-bank';
 import { Prettify } from '../types-helper';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 
 export type UploadedByUserDetails = {
   id: string;

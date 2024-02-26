@@ -1,12 +1,4 @@
-import { UtilisationReportReconciliationStatus, ReportPeriod, IsoDateTimeStamp } from '..';
-
-export type AzureFileInfo = {
-  folder: string;
-  filename: string;
-  fullPath: string;
-  url: string;
-  mimetype: string;
-};
+import { UtilisationReportReconciliationStatus, ReportPeriod, IsoDateTimeStamp, AzureFileInfo } from '..';
 
 export type UtilisationReportResponseBody = {
   id: number;

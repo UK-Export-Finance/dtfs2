@@ -8,7 +8,7 @@ const { FILESHARES } = require('../../../constants/file-upload');
  * specified id and bankId
  * @param bankId {string} - the id of the bank
  * @param id {number} - the SQL id of the report
- * @returns {Promise<{ filename: string; mimetype: string }>}
+ * @returns {Promise<{ filename: string, mimetype: string }>}
  */
 const getUtilisationReportFileMetadata = async (bankId, id) => {
   const response = await api.getUtilisationReportById(id);

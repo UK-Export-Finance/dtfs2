@@ -1,9 +1,9 @@
 import { Response } from 'express';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asString } from '../../../helpers/validation';
 import { ReportWithStatus } from '../../../types/utilisation-reports';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
 import { getUtilisationReports } from '..';
 import { asUserSession } from '../../../helpers/express-session';
 
@@ -27,7 +27,7 @@ export type UpdateUtilisationReportStatusRequestBody = {
 
 const getReportIdsFromBody = (body: undefined | UpdateUtilisationReportStatusRequestBody): string[] => {
   if (!body || typeof body !== 'object') {
-    throw new Error('Expected request body to be an object');  
+    throw new Error('Expected request body to be an object');
   }
 
   return Object.keys(body)

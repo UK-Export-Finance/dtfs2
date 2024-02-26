@@ -1205,7 +1205,7 @@ const getUtilisationReportsReconciliationSummary = async (submissionMonth) => {
 
 /**
  * @param {string} id
- * @returns {Promise<import('@ukef/dtfs2-common/').UtilisationReportResponseBody>}
+ * @returns {Promise<import('@ukef/dtfs2-common').UtilisationReportResponseBody>}
  */
 const getUtilisationReportById = async (id) => {
   if (!Number.isInteger(id)) {

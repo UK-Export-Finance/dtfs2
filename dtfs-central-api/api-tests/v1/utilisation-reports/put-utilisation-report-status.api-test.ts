@@ -1,4 +1,5 @@
 import { Collection, ObjectId, OptionalId, WithoutId } from 'mongodb';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import wipeDB from '../../wipeDB';
 import app from '../../../src/createApp';
 import createApi from '../../api';
@@ -7,7 +8,6 @@ import { MOCK_UTILISATION_REPORT } from '../../mocks/utilisation-reports/utilisa
 import { MOCK_TFM_USER } from '../../mocks/test-users/mock-tfm-user';
 import { MOCK_BANKS } from '../../mocks/banks';
 import { DB_COLLECTIONS } from '../../../src/constants/db-collections';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../src/constants';
 import { UtilisationReport } from '../../../src/types/db-models/utilisation-reports';
 import { withoutMongoId } from '../../../src/helpers/mongodb';
 
