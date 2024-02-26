@@ -1,22 +1,20 @@
 const { produce } = require('immer');
-const sendReportSubmissionPeriodStartEmailsJob = require('.');
-const api = require('../../../v1/api');
-const externalApi = require('../../../external-api/api');
-const sendEmail = require('../../../external-api/send-email');
-const MOCK_BANKS = require('../../../../test-helpers/mock-banks');
-const { EMAIL_TEMPLATE_IDS } = require('../../../constants');
+const { sendReportSubmissionPeriodStartEmailsJob } = require('./index');
+const api = require('../../v1/api');
+const externalApi = require('../../external-api/api');
+const sendEmail = require('../../external-api/send-email');
+const MOCK_BANKS = require('../../../test-helpers/mock-banks');
+const { EMAIL_TEMPLATE_IDS } = require('../../constants');
 
-jest.mock('../../../v1/api');
-jest.mock('../../../external-api/bank-holidays');
-jest.mock('../../../external-api/send-email', () => jest.fn());
+jest.mock('../../v1/api');
+jest.mock('../../external-api/bank-holidays');
+jest.mock('../../external-api/send-email', () => jest.fn());
 
 console.error = jest.fn();
 console.warn = jest.fn();
 console.info = jest.fn();
 
 const originalProcessEnv = process.env;
-
-const sendReportSubmissionPeriodStartEmailsTask = sendReportSubmissionPeriodStartEmailsJob.init().task;
 
 describe('sendReportSubmissionPeriodStartEmailsJob', () => {
   afterEach(() => {
@@ -46,7 +44,7 @@ describe('sendReportSubmissionPeriodStartEmailsJob', () => {
     externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue([]);
 
     // Act
-    await sendReportSubmissionPeriodStartEmailsTask();
+    await sendReportSubmissionPeriodStartEmailsJob.task();
 
     // Assert
     const expectedEmailTemplate = EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_SUBMISSION_PERIOD_START;
