@@ -1,6 +1,13 @@
 /* calculating exposure period based on Portal V2 algorithm */
 const CONSTANTS = require('../../../constants');
-const { isDate, formatYear, formatTimestamp, getMonthDifference, isSameDayOfMonth, getDateStringFromYearMonthDay } = require('../../../helpers/date');
+const {
+  isDate,
+  formatYear,
+  formatTimestamp,
+  getMonthDifference,
+  isSameDayOfMonth,
+  getDateStringFromYearMonthDay,
+} = require('../../../helpers/date');
 
 const { PRODUCT } = CONSTANTS;
 
@@ -26,13 +33,11 @@ const getExposurePeriod = (facility, dealType, fmr = null) => {
     const startDate = formatTimestamp(issueDate);
     const endDate = formatTimestamp(coverEndDate);
 
-    // Calculate exposure period (+1 for inclusive calculation)
-    let exposurePeriod = getMonthDifference(startDate, endDate) + 1;
-    // Month offset
-    const offset = isSameDayOfMonth(startDate, endDate) ? -1 : 0;
-    exposurePeriod += offset;
+    // Calculate the exposure period, with number of months rounded up
+    const durationMonths = getMonthDifference(startDate, endDate);
+    const offset = isSameDayOfMonth(startDate, endDate) ? 0 : 1;
 
-    return String(exposurePeriod);
+    return String(durationMonths + offset);
   }
 
   // New facility exposure calculation

@@ -3,8 +3,13 @@ const moment = require('moment');
 /**
  * @param {string} dateStr
  * @returns {boolean} true if the date string is a valid date in the format `yyyy-MM-dd`
+ * Does not allow date of month to wrap or months > 12 (e.g 2024-13-32 is invalid)
  */
 const isDate = (dateStr) => moment(dateStr, 'YYYY-MM-DD', true).isValid();
+/**
+ * @param {string | number} epoch
+ * @returns {boolean} true if the value given is a unix epoch in seconds or milliseconds
+ */
 const isEpoch = (epoch) => moment(epoch, 'x', true).isValid() || moment(epoch, 'X', true).isValid();
 const isString = (dateStr) => typeof dateStr === 'string' && !isEpoch(dateStr);
 const now = () => moment().format('YYYY-MM-DD');
