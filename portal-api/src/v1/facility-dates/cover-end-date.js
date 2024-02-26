@@ -1,18 +1,32 @@
-const { cloneDeep } = require('lodash');
-const {
-  getDateAsEpochMillisecondString,
-  getStartOfDateFromDayMonthYearStringsReplicatingMoment
-} = require('../helpers/date');
-const { dateHasAllValues } = require('../validation/fields/date');
+const moment = require('moment');
+const { hasValue } = require('../../utils/string');
 
-const hasAllCoverEndDateValues = (facility) => {
+const getCoverEndDateValues = (facility) => {
   const {
     'coverEndDate-day': coverEndDateDay,
     'coverEndDate-month': coverEndDateMonth,
     'coverEndDate-year': coverEndDateYear,
   } = facility;
 
-  if (dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
+  return {
+    coverEndDateDay,
+    coverEndDateMonth,
+    coverEndDateYear,
+  };
+};
+
+const hasAllCoverEndDateValues = (facility) => {
+  const {
+    coverEndDateDay,
+    coverEndDateMonth,
+    coverEndDateYear,
+  } = getCoverEndDateValues(facility);
+
+  const hasCoverEndDate = (hasValue(coverEndDateDay)
+    && hasValue(coverEndDateMonth)
+    && hasValue(coverEndDateYear));
+
+  if (hasCoverEndDate) {
     return true;
   }
 
@@ -21,30 +35,25 @@ const hasAllCoverEndDateValues = (facility) => {
 
 exports.hasAllCoverEndDateValues = hasAllCoverEndDateValues;
 
-// TODO: DTFS2-7024 remove this dependence on moment behaviour
-/**
- * returns facility object with added coverEndDate property, if the day month,
- * year are given. This is stored as a UTC timestamp
- * @param {Object} facility
- * @returns {Object}
- *
- * This function has odd behaviour inherited from moment js:
- *  - If the month is invalid set coverEndDate to NaN
- *  - If the day/year is invalid, use the current day/year instead
- */
 const updateCoverEndDate = (facility) => {
-  const modifiedFacility = cloneDeep(facility);
+  // if we have all coverEndDate fields (day, month and year)
+  // generate UTC timestamp in a single coverEndDate property.
+  const modifiedFacility = facility;
 
   if (hasAllCoverEndDateValues(facility)) {
     const {
-      'coverEndDate-day': coverEndDateDay,
-      'coverEndDate-month': coverEndDateMonth,
-      'coverEndDate-year': coverEndDateYear,
-    } = facility;
+      coverEndDateDay,
+      coverEndDateMonth,
+      coverEndDateYear,
+    } = getCoverEndDateValues(facility);
 
-    modifiedFacility.coverEndDate = getDateAsEpochMillisecondString(
-      getStartOfDateFromDayMonthYearStringsReplicatingMoment(coverEndDateDay, coverEndDateMonth, coverEndDateYear),
-    );
+    const momentDate = moment().set({
+      date: Number(coverEndDateDay),
+      month: Number(coverEndDateMonth) - 1, // months are zero indexed
+      year: Number(coverEndDateYear),
+    });
+
+    modifiedFacility.coverEndDate = moment(momentDate).utc().valueOf().toString();
   }
   return modifiedFacility;
 };
