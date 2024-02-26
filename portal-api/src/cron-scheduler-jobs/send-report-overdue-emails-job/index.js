@@ -5,8 +5,8 @@ const {
   getFormattedReportDueDate,
   sendEmailToAllBanksWhereReportNotReceived,
 } = require('../helpers/utilisation-report-helpers');
-const sendEmail = require('../../../external-api/send-email');
-const EMAIL_TEMPLATE_IDS = require('../../../constants/email-template-ids');
+const sendEmail = require('../../external-api/send-email');
+const EMAIL_TEMPLATE_IDS = require('../../constants/email-template-ids');
 
 const { UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE } = process.env;
 
@@ -42,14 +42,12 @@ const sendEmailsOnReportOverdueChaserDate = async () => {
 };
 
 /**
- * @type {typeof import('../../../types/scheduler-job').SchedulerJob}
+ * @type {import('@ukef/dtfs2-common').CronSchedulerJob}
  */
 const sendReportOverdueEmailsJob = {
-  init: () => ({
-    schedule: UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE,
-    message: 'Email banks to notify that this months GEF utilisation report is overdue',
-    task: sendEmailsOnReportOverdueChaserDate,
-  }),
+  cronExpression: UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE,
+  description: 'Email banks to notify that this months GEF utilisation report is overdue',
+  task: sendEmailsOnReportOverdueChaserDate,
 };
 
-module.exports = sendReportOverdueEmailsJob;
+module.exports = { sendReportOverdueEmailsJob };
