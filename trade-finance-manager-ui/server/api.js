@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId } = require('./helpers/validateIds');
+const PageOutOfBoundsError = require("./errors/page-out-of-bounds.error");
 
 require('dotenv').config();
 
@@ -75,31 +76,22 @@ const getFacilities = async (token, searchString = '') => {
  * @returns {Object} Deals data and pagination metadata
  */
 const getDeals = async (queryParams, token) => {
-  try {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/deals`,
       headers: generateHeaders(token),
       params: queryParams,
     });
-    if (response.data) {
-      return {
-        deals: response.data.deals,
-        pagination: response.data.pagination,
-      };
+    const { deals, pagination } = response.data;
+
+    if (queryParams.page >= pagination?.totalPages && !(queryParams.page === 0 && pagination?.totalPages === 0)) {
+      throw new PageOutOfBoundsError('Page number exceeds the maximum page number');
     }
+
     return {
-      deals: [],
-      pagination: {
-        totalItems: 0,
-        currentPage: queryParams.page,
-        totalPages: 0,
-      },
+      deals,
+      pagination
     };
-  } catch (error) {
-    console.error('Unable to get deals %O', error);
-    return {};
-  }
 };
 
 const getFacility = async (id, token) => {
