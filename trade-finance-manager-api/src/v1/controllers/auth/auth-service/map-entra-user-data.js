@@ -1,5 +1,6 @@
 const { getTfmRolesFromEntraGroups } = require('../../../helpers/entra-group-to-tfm-role');
 const { mapFirstAndLastName } =  require('./map-first-and-last-name');
+const { DATE } = require('../../../../constants');
 
 /**
  * Map Entra user data
@@ -17,8 +18,7 @@ const mapEntraUserData = (entraUser, tfmUser) => {
     email,
     username: email,
     teams: getTfmRolesFromEntraGroups(groups),
-    // TODO: move default values to constants
-    timezone: 'Europe/London',
+    timezone: DATE.LONDON_TIMEZONE,
     ...mapFirstAndLastName(claims, tfmUser),
   };
 
