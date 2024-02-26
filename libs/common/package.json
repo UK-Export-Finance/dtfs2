@@ -28,6 +28,7 @@
     "db:migrate": "npm run typeorm -- migration:run -d src/sql-db-connection/data-source.ts",
     "db:migrate:down": "npm run typeorm -- migration:revert -d src/sql-db-connection/data-source.ts",
     "db:reset": "npm run db:drop-all && npm run db:migrate",
+    "db:view-tables": "npx ts-node src/__helpers__/view-all-tables.ts",
     "lint": "eslint \"src/**/*.{ts,js}\" && npm run type-check",
     "lint:fix": "eslint \"src/**/*.{ts,js}\"",
     "prettier": "prettier --check \"src/**/*.{ts,js}\"",
