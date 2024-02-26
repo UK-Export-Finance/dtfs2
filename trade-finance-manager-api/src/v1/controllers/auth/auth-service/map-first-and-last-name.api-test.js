@@ -1,11 +1,6 @@
 const { mapName, mapFirstAndLastName } = require('./map-first-and-last-name');
 const MOCK_ENTRA_USER = require('../../../__mocks__/mock-entra-user');
-
-// TODO: is there a generic mock we can use for this?
-const mockTfmUser = {
-  firstName: 'First',
-  lastName: 'Last',
-};
+const { MOCK_TFM_SESSION_USER } = require('../../../__mocks__/mock-tfm-session-user');
 
 const mockEntraPropertyName = 'given_name';
 const mockTfmPropertyName = 'firstName';
@@ -14,7 +9,7 @@ const mockDefaultCopy = 'No name';
 const baseParams = {
   entraUser: MOCK_ENTRA_USER.idTokenClaims,
   entraPropertyName: mockEntraPropertyName,
-  tfmUser: mockTfmUser,
+  tfmUser: MOCK_TFM_SESSION_USER,
   tfmPropertyName: mockTfmPropertyName,
   defaultCopy: mockDefaultCopy,
 };
@@ -40,7 +35,7 @@ describe('auth-service/map-first-and-last-name', () => {
             entraPropertyName: '',
           });
 
-          const expected = mockTfmUser[mockTfmPropertyName];
+          const expected = MOCK_TFM_SESSION_USER[mockTfmPropertyName];
 
           expect(result).toEqual(expected);
         });
@@ -65,19 +60,19 @@ describe('auth-service/map-first-and-last-name', () => {
 
   describe('mapFirstAndLastName', () => {
     it('returns a firstName and lastName via mapName function', () => {
-      const result = mapFirstAndLastName(MOCK_ENTRA_USER.idTokenClaims, mockTfmUser);
+      const result = mapFirstAndLastName(MOCK_ENTRA_USER.idTokenClaims, MOCK_TFM_SESSION_USER);
 
       const expected = {
         firstName: mapName({
           entraUser: MOCK_ENTRA_USER.idTokenClaims,
-          tfmUser: mockTfmUser,
+          tfmUser: MOCK_TFM_SESSION_USER,
           entraPropertyName: 'given_name',
           tfmPropertyName: 'firstName',
           defaultCopy: 'No name',
         }),
         lastName: mapName({
           entraUser: MOCK_ENTRA_USER.idTokenClaims,
-          tfmUser: mockTfmUser,
+          tfmUser: MOCK_TFM_SESSION_USER,
           entraPropertyName: 'family_name',
           tfmPropertyName: 'lastName',
           defaultCopy: 'No surname',
