@@ -1,7 +1,7 @@
 const api = require('../../api');
 const { generateHeadingText } = require('../helpers');
 const CONSTANTS = require('../../constants');
-const PageOutOfBoundsError = require("../../errors/page-out-of-bounds.error");
+const PageOutOfBoundsError = require('../../errors/page-out-of-bounds.error');
 
 const generateQueryParameters = (sortBy, pageNumber, search) => {
   const queryParams = {
@@ -14,7 +14,7 @@ const generateQueryParameters = (sortBy, pageNumber, search) => {
   }
 
   return queryParams;
-}
+};
 
 /**
  * Builds a query string from query parameter values
@@ -101,13 +101,13 @@ const getDeals = async (req, res) => {
       },
       queryString: buildQueryStringFromQueryParameterValues(search, sortfield, sortorder),
     });
-} catch (error) {
-  console.error(error);
-  if (error instanceof PageOutOfBoundsError ) {
-    return res.redirect('/not-found');
+  } catch (error) {
+    console.error(error);
+    if (error instanceof PageOutOfBoundsError) {
+      return res.redirect('/not-found');
+    }
+    return res.render('_partials/problem-with-service.njk');
   }
-  return res.render('_partials/problem-with-service.njk');
-}
 };
 
 /**
