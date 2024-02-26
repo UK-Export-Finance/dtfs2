@@ -9,6 +9,7 @@ const isDate = (dateStr) => moment(dateStr, 'YYYY-MM-DD', true).isValid();
 /**
  * @param {string | number} epoch
  * @returns {boolean} true if the value given is a unix epoch in seconds or milliseconds
+ * Epoch time must be less than 8640000000000000 {@link https://262.ecma-international.org/5.1/#sec-15.9.1.1 | (see docs)}
  */
 const isEpoch = (epoch) => moment(epoch, 'x', true).isValid() || moment(epoch, 'X', true).isValid();
 const isString = (dateStr) => typeof dateStr === 'string' && !isEpoch(dateStr);
