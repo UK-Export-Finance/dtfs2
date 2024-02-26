@@ -1,6 +1,11 @@
-const moment = require('moment');
 const { hasValue } = require('../../../utils/string');
 
+/**
+ * @param {string} day day of the month
+ * @param {string} month month of the year
+ * @param {string} year
+ * @returns true if all three are non-empty strings
+ */
 exports.dateHasAllValues = (day, month, year) => {
   const hasDay = hasValue(day);
   const hasMonth = hasValue(month);
@@ -10,6 +15,12 @@ exports.dateHasAllValues = (day, month, year) => {
   return hasValues;
 };
 
+/**
+ * @param {string} day day of the month
+ * @param {string} month month of the year
+ * @param {string} year
+ * @returns true if any is non-empty string
+ */
 exports.dateHasSomeValues = (day, month, year) => {
   const hasDay = hasValue(day);
   const hasMonth = hasValue(month);
@@ -19,22 +30,7 @@ exports.dateHasSomeValues = (day, month, year) => {
   return hasSomeValues;
 };
 
-exports.dateIsInTimeframe = (day, month, year, start, end) => {
-  const formattedDate = moment(`${year}-${month}-${day}`);
-  const isInTimeframe = moment(formattedDate).isBetween(start, end, 'days', '[]');
-
-  if (isInTimeframe) {
-    return true;
-  }
-  return false;
-};
-
-exports.dateValidationText = (
-  fieldTitle,
-  dayValue,
-  monthValue,
-  yearValue,
-) => {
+exports.dateValidationText = (fieldTitle, dayValue, monthValue, yearValue) => {
   const hasDay = hasValue(dayValue);
   const hasMonth = hasValue(monthValue);
   const hasYear = hasValue(yearValue);

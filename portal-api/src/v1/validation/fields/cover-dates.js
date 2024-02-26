@@ -1,49 +1,43 @@
-const moment = require('moment');
+const { isValid, isBefore, isSameDay } = require('date-fns');
 const { orderNumber } = require('../../../utils/error-list-order-number');
-const {
-  dateHasAllValues,
-} = require('./date');
-const { formattedTimestamp } = require('../../facility-dates/timestamp');
 const isReadyForValidation = require('../helpers/isReadyForValidation.helper');
+const { getStartOfDateFromEpochMillisecondString, getStartOfDateFromDayMonthYearStrings } = require('../../helpers/date');
+const { dateHasAllValues } = require('./date');
 
 module.exports = (submittedValues, deal, errorList) => {
   const newErrorList = errorList;
-
-  const requestedCoverStartDateTimestamp = formattedTimestamp(submittedValues.requestedCoverStartDate);
 
   const {
     'coverEndDate-day': coverEndDateDay,
     'coverEndDate-month': coverEndDateMonth,
     'coverEndDate-year': coverEndDateYear,
   } = submittedValues;
+  const requestedCoverStartDate = getStartOfDateFromEpochMillisecondString(submittedValues.requestedCoverStartDate);
 
   if (isReadyForValidation(deal, submittedValues)) {
-    const hasValidRequestedCoverStartDate = (requestedCoverStartDateTimestamp && !newErrorList.requestedCoverStartDate);
+    const hasValidRequestedCoverStartDate =
+      submittedValues.requestedCoverStartDate &&
+      isValid(requestedCoverStartDate) &&
+      !newErrorList.requestedCoverStartDate;
 
-    const hasValidCoverEndDate = dateHasAllValues(
-      coverEndDateDay,
-      coverEndDateMonth,
-      coverEndDateYear,
-    ) && !newErrorList.coverEndDate;
+    const hasValidCoverEndDate = dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)
+      && !newErrorList.coverEndDate;
 
-    const hasValidCoverStartAndEndDates = (hasValidRequestedCoverStartDate && hasValidCoverEndDate);
+    if (hasValidRequestedCoverStartDate && hasValidCoverEndDate) {
+      const coverEndDate = getStartOfDateFromDayMonthYearStrings(
+        coverEndDateDay,
+        coverEndDateMonth,
+        coverEndDateYear,
+      )
 
-    if (hasValidCoverStartAndEndDates) {
-      const requestedCoverStartDateDay = moment(requestedCoverStartDateTimestamp).format('DD');
-      const requestedCoverStartDateMonth = moment(requestedCoverStartDateTimestamp).format('MM');
-      const requestedCoverStartDateYear = moment(requestedCoverStartDateTimestamp).format('YYYY');
-
-      const requestedCoverStartDate = `${requestedCoverStartDateYear}-${requestedCoverStartDateMonth}-${requestedCoverStartDateDay}`;
-      const coverEndDate = `${coverEndDateYear}-${coverEndDateMonth}-${coverEndDateDay}`;
-
-      if (moment(coverEndDate).isBefore(requestedCoverStartDate)) {
+      if (isBefore(coverEndDate, requestedCoverStartDate)) {
         newErrorList.coverEndDate = {
           text: 'Cover End Date cannot be before Requested Cover Start Date',
           order: orderNumber(newErrorList),
         };
       }
 
-      if (moment(coverEndDate).isSame(requestedCoverStartDate)) {
+      if (isSameDay(coverEndDate, requestedCoverStartDate)) {
         newErrorList.coverEndDate = {
           text: 'Cover End Date must be after the Requested Cover Start Date',
           order: orderNumber(newErrorList),

@@ -1,8 +1,8 @@
 import { format } from 'date-fns';
 import {
   getDateAsEpochMillisecondString,
-  getDateFromDayMonthYearStrings,
-  getDateFromDayMonthYearStringsReplicatingMoment,
+  getStartOfDateFromDayMonthYearStrings,
+  getStartOfDateFromDayMonthYearStringsReplicatingMoment,
   getLongFormattedDate,
   getStartOfDateFromEpochMillisecondString,
 } from './date';
@@ -51,13 +51,13 @@ describe('getStartOfDateFromEpochMillisecondString', () => {
   });
 });
 
-describe('getDateFromDayMonthYearStrings', () => {
+describe('getStartOfDateFromDayMonthYearStrings', () => {
   it('returns GMT time correctly', () => {
     const mockDay = '12';
     const mockMonth = '02';
     const mockYear = '2022';
 
-    const result = getDateFromDayMonthYearStrings(mockDay, mockMonth, mockYear);
+    const result = getStartOfDateFromDayMonthYearStrings(mockDay, mockMonth, mockYear);
 
     const expectedEpoch = 1644624000000; // Sat Feb 12 2022 00:00:00 GMT+0000
     expect(result.valueOf()).toEqual(expectedEpoch);
@@ -68,7 +68,7 @@ describe('getDateFromDayMonthYearStrings', () => {
     const mockMonth = '05';
     const mockYear = '2022';
 
-    const result = getDateFromDayMonthYearStrings(mockDay, mockMonth, mockYear);
+    const result = getStartOfDateFromDayMonthYearStrings(mockDay, mockMonth, mockYear);
 
     const expectedEpoch = 1652310000000; // Thu May 12 2022 00:00:00 GMT+0100
     expect(result.valueOf()).toEqual(expectedEpoch);
@@ -79,33 +79,33 @@ describe('getDateFromDayMonthYearStrings', () => {
     const mockMonth = '02';
     const mockYear = '2024';
 
-    const result = getDateFromDayMonthYearStrings(mockDay, mockMonth, mockYear);
+    const result = getStartOfDateFromDayMonthYearStrings(mockDay, mockMonth, mockYear);
 
     const expectedEpoch = 1709164800000; // Thu Feb 29 2024 00:00:00 GMT+0000
     expect(result.valueOf()).toEqual(expectedEpoch);
   });
 });
 
-describe('getDateFromDayMonthYearStringsReplicatingMoment', () => {
+describe('getStartOfDateFromDayMonthYearStringsReplicatingMoment', () => {
   const mockDay = '12';
   const mockMonth = '05';
   const mockYear = '2022';
   it('returns the correct value when given valid dates', () => {
-    const result = getDateFromDayMonthYearStringsReplicatingMoment(mockDay, mockMonth, mockYear);
+    const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment(mockDay, mockMonth, mockYear);
 
     const expectedEpoch = 1652310000000; // Thu May 12 2022 00:00:00 GMT+0100
     expect(result.valueOf()).toEqual(expectedEpoch);
   });
 
   it('returns NaN when given an invalid month', () => {
-    const result = getDateFromDayMonthYearStringsReplicatingMoment(mockDay, '##', mockYear);
+    const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment(mockDay, '##', mockYear);
 
     expect(result.valueOf()).toEqual(NaN);
   });
 
   describe('should maintain moment js behaviour for date construction', () => {
     it('should use todays date if invalid date', () => {
-      const result = getDateFromDayMonthYearStringsReplicatingMoment('##', mockMonth, mockYear);
+      const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment('##', mockMonth, mockYear);
 
       expect(format(result, 'dd')).toEqual(format(new Date(), 'dd'));
       expect(format(result, 'MM')).toEqual(mockMonth);
@@ -113,7 +113,7 @@ describe('getDateFromDayMonthYearStringsReplicatingMoment', () => {
     });
 
     it('should use the current year if invalid year', () => {
-      const result = getDateFromDayMonthYearStringsReplicatingMoment(mockDay, mockMonth, '####');
+      const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment(mockDay, mockMonth, '####');
 
       expect(format(result, 'dd')).toEqual(mockDay);
       expect(format(result, 'MM')).toEqual(mockMonth);
