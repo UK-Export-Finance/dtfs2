@@ -24,7 +24,6 @@ describe('getUtilisationReportsReconciliationSummary', () => {
 
     // Assert
     expect(res.statusCode).toEqual(200);
-    // eslint-disable-next-line no-underscore-dangle
     expect(res._getData()).toEqual(mockSummary);
   });
 
@@ -44,7 +43,6 @@ describe('getUtilisationReportsReconciliationSummary', () => {
 
     // Assert
     expect(res.statusCode).toEqual(401);
-    // eslint-disable-next-line no-underscore-dangle
     expect(res._getData()).toEqual('Failed to get utilisation reports reconciliation summary');
   });
 
@@ -61,7 +59,6 @@ describe('getUtilisationReportsReconciliationSummary', () => {
 
     // Assert
     expect(res.statusCode).toEqual(500);
-    // eslint-disable-next-line no-underscore-dangle
     expect(res._getData()).toEqual('Failed to get utilisation reports reconciliation summary');
   });
 });

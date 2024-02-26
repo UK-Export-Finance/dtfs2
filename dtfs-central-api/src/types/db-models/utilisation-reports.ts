@@ -3,6 +3,7 @@ import { AzureFileInfo } from '../azure-file-info';
 import { UtilisationReportReconciliationStatus, ReportPeriod } from '../utilisation-reports';
 import { SessionBank } from '../session-bank';
 import { Prettify } from '../types-helper';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 
 export type UploadedByUserDetails = {
   id: string;
@@ -25,7 +26,7 @@ export type UtilisationReport = Prettify<
     /**
      * The date and time that the report was originally uploaded
      */
-    dateUploaded: Date;
+    dateUploaded?: Date;
     /**
      * Metadata about the file uploaded to Azure Storage
      */
@@ -37,6 +38,14 @@ export type UtilisationReport = Prettify<
     /**
      * Details of the user that uploaded the report
      */
-    uploadedBy: UploadedByUserDetails;
+    uploadedBy?: UploadedByUserDetails;
   }>
+>;
+
+export type UtilisationReportUploadDetails = Prettify<
+  Required<
+    Pick<UtilisationReport, 'azureFileInfo' | 'dateUploaded' | 'uploadedBy'> & {
+      status: typeof UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
+    }
+  >
 >;

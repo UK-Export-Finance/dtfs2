@@ -268,23 +268,23 @@ authRouter
   );
 
 authRouter
-  .route('/banks/:bankId/utilisation-reports/latest')
+  .route('/banks/:bankId/utilisation-reports/last-uploaded')
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,
     handleExpressValidatorResult,
     validateUserAndBankIdMatch,
-    utilisationReportControllers.getLatestReport,
+    utilisationReportControllers.getLastUploadedReportByBankId,
   );
 
 authRouter
-  .route('/banks/:bankId/due-report-dates')
+  .route('/banks/:bankId/due-report-periods')
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,
     handleExpressValidatorResult,
     validateUserAndBankIdMatch,
-    utilisationReportControllers.getDueReportDates,
+    utilisationReportControllers.getDueReportPeriodsByBankId,
   );
 
 authRouter

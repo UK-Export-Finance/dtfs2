@@ -41,7 +41,8 @@ describe('utilisation-report-details', () => {
   };
 
   it('should throw an error if the report is undefined', () => {
-    expect(() => getReportAndUserDetails(undefined)).toThrow(new Error('Cannot get report and user details'));
+    // Act/Assert
+    expect(() => getReportAndUserDetails(undefined)).toThrow(new Error("Failed to get report and user details: 'report' was undefined"));
   });
 
   it('should return the correct full name, date format and report period for a report uploaded in the morning', () => {
