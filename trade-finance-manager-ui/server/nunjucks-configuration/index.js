@@ -1,8 +1,8 @@
 const path = require('path');
 const nunjucks = require('nunjucks');
 let mojFilters = require('@ministryofjustice/frontend/moj/filters/all')();
-const filterLocaliseTimestamp = require('./filter-localiseTimestamp');
-const filterFormatDateString = require('./filter-formatDateString');
+const { localiseTimestamp } = require('./filter-localiseTimestamp');
+const { formatDateString } = require('./filter-formatDateString');
 const dashIfEmpty = require('./filter-dashIfEmpty');
 const displayName = require('./filter-displayName');
 const formatAsCurrency = require('./filter-formatAsCurrency');
@@ -24,8 +24,8 @@ const configureNunjucks = (opts) => {
 
   const nunjucksEnvironment = nunjucks.configure(appViews, opts);
 
-  nunjucksEnvironment.addFilter('localiseTimestamp', filterLocaliseTimestamp);
-  nunjucksEnvironment.addFilter('formatDateString', filterFormatDateString);
+  nunjucksEnvironment.addFilter('localiseTimestamp', localiseTimestamp);
+  nunjucksEnvironment.addFilter('formatDateString', formatDateString);
   nunjucksEnvironment.addFilter('dashIfEmpty', dashIfEmpty);
   nunjucksEnvironment.addFilter('displayName', displayName);
   nunjucksEnvironment.addFilter('formatAsCurrency', formatAsCurrency);
