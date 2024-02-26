@@ -1,4 +1,4 @@
-const { getTfmRolesFromEntraGroups } = require('../../../helpers/entra-group-to-tfm-role');
+const { getTfmRolesFromEntraGroups } = require('../../../helpers/get-tfm-roles-from-entra-groups');
 const { mapFirstAndLastName } =  require('./map-first-and-last-name');
 const { DATE } = require('../../../../constants');
 
