@@ -1,6 +1,6 @@
 const msal = require('@azure/msal-node');
 const axios = require('axios');
-const { msalConfig, TENANT_SUBDOMAIN, REDIRECT_URI, POST_LOGOUT_REDIRECT_URI } = require('./auth-provider-config');
+const { msalConfig, AZURE_SSO_TENANT_SUBDOMAIN, REDIRECT_URI, AZURE_SSO_POST_LOGOUT_URI } = require('./auth-provider-config');
 
 class AuthProvider {
 
@@ -122,11 +122,11 @@ class AuthProvider {
    * @param next: Express next function
    * @returns
    */
-  async handleRedirect(pkceCodes, origAuthCodeRequest, code, body) {
+  async handleRedirect(pkceCode, origAuthCodeRequest, code, body) {
     const authCodeRequest = {
       ...origAuthCodeRequest,
       code, // authZ code
-      codeVerifier: pkceCodes.verifier, // PKCE Code Verifier
+      codeVerifier: pkceCode.verifier, // PKCE Code Verifier
     };
 
     const msalInstance = this.getMsalInstance(this.config.msalConfig);
@@ -155,7 +155,7 @@ class AuthProvider {
      * session with Azure AD. For more information, visit:
      * https://docs.microsoft.com/azure/active-directory/develop/v2-protocols-oidc#send-a-sign-out-request
      */
-    return `${this.config.msalConfig.auth.authority}${TENANT_SUBDOMAIN}.onmicrosoft.com/oauth2/v2.0/logout?post_logout_redirect_uri=${POST_LOGOUT_REDIRECT_URI}`;
+    return `${this.config.msalConfig.auth.authority}${AZURE_SSO_TENANT_SUBDOMAIN}.onmicrosoft.com/oauth2/v2.0/logout?post_logout_redirect_uri=${AZURE_SSO_POST_LOGOUT_URI}`;
   }
 
   /**
@@ -163,7 +163,7 @@ class AuthProvider {
    * @returns
    */
   async getAuthorityMetadata() {
-    const endpoint = `${this.config.msalConfig.auth.authority}${TENANT_SUBDOMAIN}.onmicrosoft.com/v2.0/.well-known/openid-configuration`;
+    const endpoint = `${this.config.msalConfig.auth.authority}${AZURE_SSO_TENANT_SUBDOMAIN}.onmicrosoft.com/v2.0/.well-known/openid-configuration`;
     try {
       const response = await axios.get(endpoint);
       return await response.data;
@@ -177,7 +177,7 @@ class AuthProvider {
 const authProvider = new AuthProvider({
   msalConfig,
   redirectUri: REDIRECT_URI,
-  postLogoutRedirectUri: POST_LOGOUT_REDIRECT_URI,
+  postLogoutRedirectUri: AZURE_SSO_POST_LOGOUT_URI,
 });
 
 module.exports = authProvider;
