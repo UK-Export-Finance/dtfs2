@@ -1,5 +1,9 @@
 const moment = require('moment');
 
+/**
+ * @param {string} dateStr
+ * @returns {boolean} true if the date string is a valid date in the format `yyyy-MM-dd`
+ */
 const isDate = (dateStr) => moment(dateStr, 'YYYY-MM-DD', true).isValid();
 const isEpoch = (epoch) => moment(epoch, 'x', true).isValid() || moment(epoch, 'X', true).isValid();
 const isString = (dateStr) => typeof dateStr === 'string' && !isEpoch(dateStr);
@@ -36,13 +40,13 @@ const isSameDayOfMonth = (date1, date2) => moment(date1).date() === moment(date2
  * @param {string | number} day day of the month
  * @param {string | number} month 1 indexed month of the year
  * @param {string | number} year
- * @returns {moment.Moment}
+ * @returns {string} formatted as `yyyy-MM-dd`
  */
-const getMomentFromYearMonthDay = (year, month, day) => moment([
+const getDateStringFromYearMonthDay = (year, month, day) => moment([
   Number(formatYear(year)),
   Number(month) - 1,
   Number(day),
-]);
+]).format('YYYY-MM-DD');
 
 module.exports = {
   isDate,
@@ -58,5 +62,5 @@ module.exports = {
   getNowAsIsoString,
   getMonthDifference,
   isSameDayOfMonth,
-  getMomentFromYearMonthDay,
+  getDateStringFromYearMonthDay,
 };

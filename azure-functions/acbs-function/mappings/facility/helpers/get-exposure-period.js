@@ -1,7 +1,6 @@
 /* calculating exposure period based on Portal V2 algorithm */
-const moment = require('moment');
 const CONSTANTS = require('../../../constants');
-const { formatYear, formatTimestamp, getMonthDifference, isSameDayOfMonth, getMomentFromYearMonthDay } = require('../../../helpers/date');
+const { isDate, formatYear, formatTimestamp, getMonthDifference, isSameDayOfMonth, getDateStringFromYearMonthDay } = require('../../../helpers/date');
 
 const { PRODUCT } = CONSTANTS;
 
@@ -57,20 +56,20 @@ const getExposurePeriod = (facility, dealType, fmr = null) => {
     const { requestedCoverStartDate, ukefGuaranteeInMonths } = facilitySnapshot;
 
     const coverStartDate = requestedCoverStartDate
-      ? moment(formatTimestamp(requestedCoverStartDate))
-      : getMomentFromYearMonthDay(
+      ? formatTimestamp(requestedCoverStartDate)
+      : getDateStringFromYearMonthDay(
         formatYear(facilitySnapshot['requestedCoverStartDate-year']),
         facilitySnapshot['requestedCoverStartDate-month'],
         facilitySnapshot['requestedCoverStartDate-day'],
       );
 
-    const coverEndDate = getMomentFromYearMonthDay(
+    const coverEndDate = getDateStringFromYearMonthDay(
       formatYear(facilitySnapshot['coverEndDate-year']),
       facilitySnapshot['coverEndDate-month'],
       facilitySnapshot['coverEndDate-day'],
     );
 
-    if ((!coverStartDate.isValid() || !coverEndDate.isValid()) && ukefGuaranteeInMonths) {
+    if ((!isDate(coverStartDate) || !isDate(coverEndDate)) && ukefGuaranteeInMonths) {
       exposure = ukefGuaranteeInMonths;
     }
 
