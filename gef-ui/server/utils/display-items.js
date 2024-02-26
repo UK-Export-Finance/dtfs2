@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { format, parseISO } = require('date-fns');
 const { isTrueSet } = require('./helpers');
 const {
   BOOLEAN, STAGE, FACILITY_TYPE,
@@ -33,7 +33,7 @@ const exporterItems = (exporterUrl, options = {}) => [
     label: 'SME type',
     id: 'smeType',
     href: `${exporterUrl}/about-exporter?status=change`,
-    method: (callback) => callback,
+    method: (value) => value,
   },
   {
     label: 'Probability of default',
@@ -45,7 +45,7 @@ const exporterItems = (exporterUrl, options = {}) => [
     label: 'Is finance for this exporter increasing?',
     id: 'isFinanceIncreasing',
     href: `${exporterUrl}/about-exporter?status=change`,
-    method: (callback) => (isTrueSet(callback) ? BOOLEAN.YES : BOOLEAN.NO),
+    method: (value) => (isTrueSet(value) ? BOOLEAN.YES : BOOLEAN.NO),
   },
 ];
 
@@ -82,21 +82,27 @@ const facilityItems = (facilityUrl, {
       label: 'Stage',
       id: 'hasBeenIssued',
       href: `${facilityUrl}?status=change`,
-      method: (callback) => (isTrueSet(callback) ? STAGE.ISSUED : STAGE.UNISSUED),
+      method: (value) => (isTrueSet(value) ? STAGE.ISSUED : STAGE.UNISSUED),
     },
     {
       label: 'Date issued to exporter',
       id: 'issueDate',
-      method: (callback) => moment(callback)
-        .format('D MMMM YYYY'),
+      method: (value) => {
+        // issueDate is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
+        const date = parseISO(value);
+        return format(date, 'd MMMM yyyy');
+      },
       isHidden: !issueDate,
     },
     {
       label: 'Cover start date',
       id: 'coverStartDate',
       href: `${facilityUrl}/about-facility?status=change`,
-      method: (callback) => moment(callback)
-        .format('D MMMM YYYY'),
+      method: (value) => {
+        // coverStartDate is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
+        const date = parseISO(value);
+        return format(date, 'd MMMM yyyy');
+      },
       isHidden: !hasBeenIssued,
       shouldCoverStartOnSubmission,
       issueDate,
@@ -105,8 +111,11 @@ const facilityItems = (facilityUrl, {
       label: 'Cover end date',
       id: 'coverEndDate',
       href: `${facilityUrl}/about-facility?status=change`,
-      method: (callback) => moment(callback)
-        .format('D MMMM YYYY'),
+      method: (value) => {
+        // coverEndDate is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
+        const date = parseISO(value);
+        return format(date, 'd MMMM yyyy');
+      },
       isHidden: !hasBeenIssued,
     },
     {
