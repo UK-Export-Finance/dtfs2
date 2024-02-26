@@ -90,7 +90,7 @@ const processSsoRedirect = async (pkceCode, origAuthCodeRequest, req) => {
 
   updateLastLoginAndResetSignInData(tfmUser, sessionIdentifier, () => { });
 
-  const redirectUrl = authProvider.redirectAfterLogin(req.body.state);
+  const redirectUrl = authProvider.loginRedirectUrl(req.body.state);
 
   return { tfmUser, token: tokenObject.token, redirectUrl };
 };
