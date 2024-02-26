@@ -1,3 +1,5 @@
+# TODO: Remove file post MSSQL migration
+
 name: Feature environment deployment
 
 on:
@@ -5,15 +7,14 @@ on:
     branches:
       - main
     paths:
-      - 'portal/**'
-      - 'portal-api/**'
-      - 'gef-ui/**'
-      - 'trade-finance-manager-ui/**'
-      - 'trade-finance-manager-api/**'
-      - 'dtfs-central-api/**'
-      - 'external-api/**'
-      - 'azure-functions/number-generator-function/**'
-      - 'azure-functions/acbs-function/**'
+      - "portal/**"
+      - "portal-api/**"
+      - "gef-ui/**"
+      - "trade-finance-manager-ui/**"
+      - "trade-finance-manager-api/**"
+      - "dtfs-central-api/**"
+      - "external-api/**"
+      - "azure-functions/acbs-function/**"
 
 env:
   environment: feature
@@ -175,10 +176,3 @@ jobs:
             az functionapp deployment slot create --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ matrix.name }}
             az functionapp deployment slot swap --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }} --action swap
             az functionapp deployment slot delete --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }}
-
-      # There has been an issue with number generator not working after a slot swap. A restart appears to fix it.
-      - name: 7. Restart
-        uses: azure/cli@v1.0.0
-        with:
-          inlineScript: |
-            az functionapp restart --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }}

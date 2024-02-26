@@ -31,7 +31,7 @@ const createFacilityCovenant = async (context) => {
 
     const { status: covenantStatus, data: covenantData } = await api.createFacilityCovenantId(covenantIdPayload);
 
-    if (covenantStatus === 201 && Array.isArray(covenantData)) {
+    if (covenantStatus === 200 && Array.isArray(covenantData)) {
       acbsFacilityCovenantInput.covenantIdentifier = covenantData[0].maskedId;
     }
 
