@@ -1,6 +1,6 @@
 const pageRenderer = require('../pageRenderer');
 
-const page = '../templates/login.njk';
+const page = '../templates/deals/deals.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
