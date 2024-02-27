@@ -231,7 +231,6 @@ describe('user validation', () => {
           const result = await makeApplyRulesCall();
 
           expect(result).toEqual(expectedErrors);
-          expect(result.length).toEqual(expectedErrors.length);
         });
       });
 
@@ -247,7 +246,6 @@ describe('user validation', () => {
           const result = await makeApplyRulesCall();
 
           expect(result).toEqual(expectedErrors);
-          expect(result.length).toEqual(expectedErrors.length);
         });
       });
     });
