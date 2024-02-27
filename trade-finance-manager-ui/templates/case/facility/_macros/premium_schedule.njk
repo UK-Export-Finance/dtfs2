@@ -65,7 +65,7 @@
             {% for schedule_item in facilityTfm.premiumSchedule %}
               <tr class="govuk-table__row" data-cy="schedule_item">
                 <th scope="row" class="govuk-table__cell govuk-body-s govuk-table__cell--numeric" data-cy="facility-{{ schedule_item.id }}-payment">{{ schedule_item.period }}</th>
-                <td class="govuk-table__cell govuk-!-width-one-quarter govuk-body-s govuk-table__cell--numeric" data-cy="facility-{{ schedule_item.id }}-dueDate">{{ schedule_item.calculationDate | formatDateString('YYYY-MM-DD', 'DD MMM YYYY') }}</td>
+                <td class="govuk-table__cell govuk-!-width-one-quarter govuk-body-s govuk-table__cell--numeric" data-cy="facility-{{ schedule_item.id }}-dueDate">{{ schedule_item.calculationDate | formatDateString('yyyy-MM-dd', 'dd MMM yyyy') }}</td>
                 <td class="govuk-table__cell govuk-!-width-one-quarter govuk-body-s govuk-table__cell--numeric" data-cy="facility-{{ schedule_item.id }}-amount">{{ schedule_item.income | formatAsCurrency }}</td>
                 <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
               </tr>
