@@ -1,6 +1,6 @@
 const { TEAM_IDS } = require('../../../../server/constants');
 const componentRenderer = require('../../../componentRenderer');
-const localiseTimestamp = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
+const { localiseTimestamp } = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
 
 const component = '../templates/case/tasks/_macros/tasks-table.njk';
 
@@ -136,7 +136,7 @@ describe(component, () => {
         group.groupTasks.forEach((task) => {
           const selector = `[data-cy="task-table-row-group-${task.groupId}-task-${task.id}-date-started"]`;
 
-          const expected = localiseTimestamp(task.dateStarted, 'DD MMM YYYY', params.userTimezone);
+          const expected = localiseTimestamp(task.dateStarted, 'dd MMM yyyy', params.userTimezone);
           wrapper.expectText(selector).toRead(expected);
         });
       });
@@ -147,7 +147,7 @@ describe(component, () => {
         group.groupTasks.forEach((task) => {
           const selector = `[data-cy="task-table-row-group-${task.groupId}-task-${task.id}-date-completed"]`;
 
-          const expected = localiseTimestamp(task.dateCompleted, 'DD MMM YYYY', params.userTimezone);
+          const expected = localiseTimestamp(task.dateCompleted, 'dd MMM yyyy', params.userTimezone);
           wrapper.expectText(selector).toRead(expected);
         });
       });
