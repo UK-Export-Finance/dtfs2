@@ -5,7 +5,7 @@ const {
   updateRequestedCoverStartDate,
 } = require('../facility-dates/requested-cover-start-date');
 const { hasAllIssuedDateValues } = require('../facility-dates/issued-date');
-const { getStartOfDateFromDayMonthYearStrings } = require('../helpers/date');
+const { getStartOfDateFromDayMonthYearStrings } = require("../helpers/date")
 const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
 const { hasValue } = require('../../utils/string');
 const canIssueFacility = require('../facility-issuance');
@@ -64,7 +64,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
           req.body['issuedDate-day'],
           req.body['issuedDate-month'],
           req.body['issuedDate-year']
-        );
+        ).valueOf().toString()
       } else {
         modifiedLoan.issuedDate = null;
       }
