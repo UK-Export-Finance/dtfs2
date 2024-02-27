@@ -3,14 +3,22 @@ const { generateHeadingText } = require('../helpers');
 const CONSTANTS = require('../../constants');
 const PageOutOfBoundsError = require('../../errors/page-out-of-bounds.error');
 
-const generateQueryParameters = (sortBy, pageNumber, search) => {
+/**
+ * Builds a query parameters object for requests to the GET /deals TFM API endpoint
+ * based on the values provided
+ * @param {Object} sortBy Value for the sortBy query parameter
+ * @param {string} page Value for the page query parameter
+ * @param {string} searchString Value for the searchString query parameter
+ * @returns {string} Query parameters object
+ */
+const buildQueryParametersObject = (sortBy, page, searchString) => {
   const queryParams = {
     sortBy,
     pagesize: CONSTANTS.DEALS.TFM_PAGE_SIZE,
-    page: pageNumber,
+    page: page,
   };
-  if (search) {
-    queryParams.searchString = search;
+  if (searchString) {
+    queryParams.searchString = searchString;
   }
 
   return queryParams;
@@ -57,7 +65,7 @@ const getDeals = async (req, res) => {
       field: sortfield ?? CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.field,
       order: sortorder ?? CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.order,
     };
-    const queryParams = generateQueryParameters(sortBy, pageNumber, search);
+    const queryParams = buildQueryParametersObject(sortBy, pageNumber, search);
 
     const { userToken } = req.session;
 
