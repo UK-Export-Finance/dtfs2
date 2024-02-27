@@ -12,7 +12,9 @@ const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { ADMIN } = require('../../../src/v1/roles/roles');
 const { STATUS } = require('../../../src/constants/user');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const withValidateUsernameAndEmailTests = require('./validate-username-and-email.api-tests');
+const { withValidateEmailIsUniqueTests } = require('./validate-email-is-unique.api-tests');
+const { withValidateUsernameAndEmailMatchTests } = require('./validate-username-and-email-match.api-tests');
+const { withValidateEmailIsCorrectFormatTests } = require('./validate-email-is-correct-format.api-tests').default;
 
 const MOCK_USER = users.barclaysBankMaker1;
 
@@ -112,14 +114,28 @@ describe('a user', () => {
       });
     });
 
-    withValidateUsernameAndEmailTests({
-      createRequestBodyWithUpdatedField: ({ fieldToUpdate, valueToSetField }) => produce(MOCK_USER, (draftRequest) => {
-          draftRequest.username = 'AValid@ukexportfinance.gov.uk';
-          draftRequest.email = 'Avalid@ukepxortfinance.gov.uk';
-          draftRequest[fieldToUpdate] = valueToSetField;
+    withValidateEmailIsUniqueTests({
+      payload: MOCK_USER,
+      makeRequest: async (user) => await createUser(user),
+    });
+
+    withValidateUsernameAndEmailMatchTests({
+      createRequestWithUpdatedEmailAddress: (email) =>
+        produce(MOCK_USER, (draftRequest) => {
+          draftRequest.email = email;
         }),
       makeRequest: async (user) => await createUser(user),
     });
+
+    withValidateEmailIsCorrectFormatTests({
+      createRequestWithUpdatedEmailAddress: (email) =>
+        produce(MOCK_USER, (draftRequest) => {
+          draftRequest.username = email;
+          draftRequest.email = email;
+        }),
+      makeRequest: async (user) => await createUser(user),
+    });
+
     describe('when a user already exists', () => {
       it('returns a 400', async () => {
         // User creation - first instance
