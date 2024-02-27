@@ -44,7 +44,7 @@ const applyRules = async (ruleset, existingUser, candidateChange) => {
   for (const rule of ruleset) {
     const result = await rule(existingUser, candidateChange);
 
-    if (!!result.length) {
+    if (result.length) {
       errors = errors.concat(result);
     } // We concat here as rules return an array
   }
