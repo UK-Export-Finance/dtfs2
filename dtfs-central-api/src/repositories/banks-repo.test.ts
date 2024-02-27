@@ -1,6 +1,6 @@
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import db from '../drivers/db-client';
 import { getAllBanks, getBankNameById } from './banks-repo';
-import { DB_COLLECTIONS } from '../constants';
 import { MOCK_BANKS } from '../../api-tests/mocks/banks';
 
 describe('banks-repo', () => {
@@ -22,7 +22,7 @@ describe('banks-repo', () => {
       await getAllBanks();
 
       // Assert
-      expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.BANKS);
+      expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.BANKS);
       expect(findMock).toHaveBeenCalled();
       expect(toArrayMock).toHaveBeenCalled();
     });
@@ -47,7 +47,7 @@ describe('banks-repo', () => {
       await getBankNameById(bankId);
 
       // Assert
-      expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.BANKS);
+      expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.BANKS);
     });
 
     it('calls the findOne function with the correct id', async () => {

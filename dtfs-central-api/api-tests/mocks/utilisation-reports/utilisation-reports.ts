@@ -1,8 +1,7 @@
 import { ObjectId } from 'mongodb';
-import { UtilisationReport } from '../../../src/types/db-models/utilisation-reports';
+import { UtilisationReport, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import { MOCK_BANKS } from '../banks';
 import { MOCK_AZURE_FILE_INFO } from '../azure-file-info';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../src/constants/utilisation-report-reconciliation-status';
 import { MOCK_MONTHLY_REPORT_PERIOD } from '../report-period';
 
 export const MOCK_UTILISATION_REPORT: UtilisationReport = {

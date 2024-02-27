@@ -1,10 +1,9 @@
 import { OptionalId } from 'mongodb';
+import { MONGO_DB_COLLECTIONS, UtilisationData, UtilisationReport, ReportPeriod } from '@ukef/dtfs2-common';
 import db from '../drivers/db-client';
 import { SessionBank } from '../types/session-bank';
-import { UtilisationData } from '../types/db-models/utilisation-data';
-import { UtilisationReport } from '../types/db-models/utilisation-reports';
-import { UtilisationReportRawCsvData, ReportPeriod } from '../types/utilisation-reports';
-import { DB_COLLECTIONS, UTILISATION_REPORT_HEADERS } from '../constants';
+import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
+import { UTILISATION_REPORT_HEADERS } from '../constants';
 
 export const saveUtilisationData = async (reportData: UtilisationReportRawCsvData[], reportPeriod: ReportPeriod, bank: SessionBank, reportId: string) => {
   const utilisationDataObjects = reportData.map(
@@ -31,15 +30,17 @@ export const saveUtilisationData = async (reportData: UtilisationReportRawCsvDat
     }),
   );
 
-  const utilisationDataCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_DATA);
+  const utilisationDataCollection = await db.getCollection(MONGO_DB_COLLECTIONS.UTILISATION_DATA);
   await utilisationDataCollection.insertMany(utilisationDataObjects);
 };
 
 export const getAllUtilisationDataForReport = async ({ _id: reportId, reportPeriod }: UtilisationReport): Promise<UtilisationData[]> => {
-  const utilisationDataCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_DATA);
-  return await utilisationDataCollection.find({
-    reportId: { $eq: reportId.toString() },
-    'reportPeriod.start.month': { $eq: reportPeriod.start.month },
-    'reportPeriod.start.year': { $eq: reportPeriod.start.year }
-  }).toArray();
+  const utilisationDataCollection = await db.getCollection(MONGO_DB_COLLECTIONS.UTILISATION_DATA);
+  return await utilisationDataCollection
+    .find({
+      reportId: { $eq: reportId.toString() },
+      'reportPeriod.start.month': { $eq: reportPeriod.start.month },
+      'reportPeriod.start.year': { $eq: reportPeriod.start.year },
+    })
+    .toArray();
 };

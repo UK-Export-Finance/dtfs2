@@ -1,9 +1,9 @@
+import { MONGO_DB_COLLECTIONS, ReportPeriod } from '@ukef/dtfs2-common';
 import { saveUtilisationData, getAllUtilisationDataForReport } from './utilisation-data-repo';
 import db from '../drivers/db-client';
-import { DB_COLLECTIONS } from '../constants';
 import { MOCK_UTILISATION_DATA } from '../../api-tests/mocks/utilisation-reports/utilisation-data';
 import { MOCK_UTILISATION_REPORT } from '../../api-tests/mocks/utilisation-reports/utilisation-reports';
-import { ReportPeriod, UtilisationReportRawCsvData } from '../types/utilisation-reports';
+import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
 
 describe('utilisation-data-repo', () => {
   describe('saveUtilisationData', () => {
@@ -48,7 +48,7 @@ describe('utilisation-data-repo', () => {
       await saveUtilisationData([mockReportData], mockReportPeriod, mockBank, mockReportId);
 
       // Assert
-      expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_DATA);
+      expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.UTILISATION_DATA);
       expect(insertManySpy).toHaveBeenCalledWith([
         {
           facilityId: mockReportData['ukef facility id'],
@@ -95,7 +95,7 @@ describe('utilisation-data-repo', () => {
       const response = await getAllUtilisationDataForReport(MOCK_UTILISATION_REPORT);
 
       // Assert
-      expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_DATA);
+      expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.UTILISATION_DATA);
       expect(findMock).toHaveBeenCalledWith({
         reportId: { $eq: MOCK_UTILISATION_REPORT._id.toString() },
         'reportPeriod.start.month': { $eq: MOCK_UTILISATION_REPORT.reportPeriod.start.month },

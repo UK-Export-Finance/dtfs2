@@ -1,6 +1,5 @@
-import { UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, ReportPeriod } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
-import { ReportPeriod } from '../../../types/utilisation-reports';
 import { InvalidStateMachineTransitionError } from '../../../errors';
 import {
   handleUtilisationReportDueReportInitialisedEvent,

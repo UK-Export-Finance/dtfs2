@@ -1,6 +1,6 @@
 import { eachMonthOfInterval, format, isValid, parseISO } from 'date-fns';
-import { isString } from '@ukef/dtfs2-common';
-import { IsoMonthStamp, MonthAndYear, OneIndexedMonth } from '../types/date';
+import { isString, MonthAndYear } from '@ukef/dtfs2-common';
+import { IsoMonthStamp, OneIndexedMonth } from '../types/date';
 
 /**
  * Converts date with index-0 month value to numeric index-1 month
