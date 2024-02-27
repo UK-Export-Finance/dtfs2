@@ -15,7 +15,7 @@ const buildQueryParametersObject = (sortBy, page, searchString) => {
   const queryParams = {
     sortBy,
     pagesize: CONSTANTS.DEALS.TFM_PAGE_SIZE,
-    page: page,
+    page,
   };
   if (searchString) {
     queryParams.searchString = searchString;
