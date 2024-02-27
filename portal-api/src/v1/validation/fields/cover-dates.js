@@ -1,4 +1,4 @@
-const { isValid, isBefore, isSameDay } = require('date-fns');
+const { isBefore, isSameDay } = require('date-fns');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 const isReadyForValidation = require('../helpers/isReadyForValidation.helper');
 const { getStartOfDateFromEpochMillisecondString, getStartOfDateFromDayMonthYearStrings } = require('../../helpers/date');
@@ -15,10 +15,8 @@ module.exports = (submittedValues, deal, errorList) => {
   const requestedCoverStartDate = getStartOfDateFromEpochMillisecondString(submittedValues.requestedCoverStartDate);
 
   if (isReadyForValidation(deal, submittedValues)) {
-    const hasValidRequestedCoverStartDate =
-      submittedValues.requestedCoverStartDate &&
-      isValid(requestedCoverStartDate) &&
-      !newErrorList.requestedCoverStartDate;
+    const hasValidRequestedCoverStartDate = submittedValues.requestedCoverStartDate
+      && !newErrorList.requestedCoverStartDate;
 
     const hasValidCoverEndDate = dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)
       && !newErrorList.coverEndDate;
