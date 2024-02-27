@@ -1,5 +1,3 @@
-const { findByEmail } = require('../../controller');
-
 /**
  * Ensures that if the change has an email property, it is a unique email address
  * @param {Object} user the existing user
@@ -7,24 +5,28 @@ const { findByEmail } = require('../../controller');
  * @returns {Promise<Array>} either an empty array or an array containing an error object if the email is not a unique email address
  */
 
+const { findByEmail } = require('../../controller');
+
 const emailMustBeUnique = async (user, change) => {
   if (!change?.email) {
     return [];
   }
 
-  return await findByEmail(change.email, (error, account) => {
-    if (account) {
-      return [
-        {
-          email: {
-            order: '1',
-            text: 'User already exists.',
-          },
-        },
-      ];
-    }
+  // we use a simple callback to allow for more compartmentalised unit testing
+  const existingUser = await findByEmail(change.email, (foundUser) => foundUser);
+
+  if (!existingUser) {
     return [];
-  });
+  }
+
+  return [
+    {
+      email: {
+        order: '1',
+        text: 'Email address already in use',
+      },
+    },
+  ];
 };
 
 module.exports = emailMustBeUnique;
