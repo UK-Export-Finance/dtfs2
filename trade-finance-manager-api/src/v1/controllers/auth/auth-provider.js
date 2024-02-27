@@ -189,7 +189,7 @@ class AuthProvider {
     try {
       const response = await axios.get(endpoint);
 
-      return await response.data;
+      return response.data;
     } catch (error) {
       console.error('Error MSAL - getting getAuthorityMetadata %s', error);
 
