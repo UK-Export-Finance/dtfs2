@@ -1,14 +1,6 @@
-const moment = require('moment');
-const { format } = require('date-fns');
+const { format, isValid } = require('date-fns');
 const api = require('../api');
 const dateHelpers = require('../../utils/date');
-
-// TODO: DTFS2-6998: remove this function
-const getEpoch = (timestamp) => {
-  const utc = moment(Number(timestamp));
-  const dt = moment(utc);
-  return moment(dt).isValid() ? dt.valueOf() : '';
-};
 
 const getFacilityExposurePeriod = async (facility) => {
   try {
@@ -22,8 +14,8 @@ const getFacilityExposurePeriod = async (facility) => {
     let facilityUpdate;
 
     if (hasBeenIssued) {
-      const startDate = getEpoch(coverStartDate);
-      const formattedStartDate = format(new Date(startDate), 'yyyy-MM-dd');
+      const startDate = new Date(Number(coverStartDate));
+      const formattedStartDate = isValid(startDate) ? format(new Date(startDate), 'yyyy-MM-dd') : 'Invalid date';
 
       const formattedEndDate = dateHelpers.formatDate(coverEndDate);
 
