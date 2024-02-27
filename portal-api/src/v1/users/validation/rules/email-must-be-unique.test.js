@@ -1,8 +1,9 @@
+const { produce } = require('immer');
 const emailMustBeUnique = require('./email-must-be-unique');
 
 const userController = require('../../controller');
 const { TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../../../test-helpers/unit-test-mocks/mock-user');
-const { produce } = require('immer');
+
 jest.mock('../../controller');
 
 describe('emailMustBeUniqueTest', () => {
