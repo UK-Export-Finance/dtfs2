@@ -27,8 +27,6 @@ const TFM = {
     azureOid: String,
     username: String,
     email: String,
-    // salt: String,
-    // hash: String,
     teams: Object,
     timezone: String,
     firstName: String,

@@ -14,7 +14,7 @@ const authController = require('./controllers/auth/auth.controller');
 const partyController = require('./controllers/party.controller');
 const bankHolidaysController = require('./controllers/bank-holidays');
 const utilisationReportsController = require('./controllers/utilisation-reports');
-const users = require('./controllers/user/user.routes');
+// const users = require('./controllers/user/user.routes');
 const party = require('./controllers/deal.party-db');
 const validation = require('./validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('./validation/route-validators/express-validator-result-handler');
@@ -74,15 +74,6 @@ authRouter.get('/validate-user-token', (_req, res) => res.status(200).send());
 openRouter.route('/auth/getLoginUrl').get(authController.getLoginUrl);
 openRouter.route('/auth/processSsoRedirect').post(authController.processSsoRedirect);
 authRouter.route('/auth/getLogoutUrl').get(authController.getLogoutUrl);
-
-openRouter.route('/user').post(users.createTfmUser);
-authRouter.route('/users').post(users.createTfmUser);
-
-authRouter
-  .route('/users/:user')
-  .get(validation.userIdEscapingSanitization, handleExpressValidatorResult, users.findTfmUser)
-  .put(validation.userIdValidation, handleExpressValidatorResult, users.updateTfmUserById)
-  .delete(validation.userIdValidation, handleExpressValidatorResult, users.removeTfmUserById);
 
 authRouter.route('/facilities').get(facilityController.getFacilities);
 
