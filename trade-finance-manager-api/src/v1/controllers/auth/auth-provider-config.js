@@ -34,7 +34,7 @@ const msalConfig = {
       // TODO: Do we want a logger that supports containsPii handling
       // loggerCallback(loglevel, message, containsPii) {
       loggerCallback(loglevel, message, ) {
-        console.info('MSAL log: ', message);
+        console.info('MSAL: ', message);
       },
       piiLoggingEnabled: false,
       logLevel: 'Info',

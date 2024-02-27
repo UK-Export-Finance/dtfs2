@@ -7,15 +7,30 @@ const { updateLastLoginAndResetSignInData } = require('../../user/user.controlle
 /**
  * getExistingTfmUser
  * Get an existing TFM user with a matching Entra use email(s)
+ * Note: an Entra user could have just a primary email, no secondary email.
  * @param {Object} entraUser: Entra user data
  * @returns {Object}
  */
 const getExistingTfmUser = async (entraUser) => {
-  const claims = entraUser.idTokenClaims;
+  try {
+    console.info('TFM auth service - Getting existing TFM user');
 
-  const emails = [...claims.verified_primary_email, ...claims.verified_secondary_email];
+    const claims = entraUser.idTokenClaims;
 
-  return await userController.findByEmails(emails);
+    let emails = claims.verified_primary_email;
+
+    if (claims.verified_secondary_email) {
+      emails = [...emails, ...claims.verified_secondary_email];
+    }
+
+    const user = await userController.findByEmails(emails);
+
+    return user;
+  } catch (error) {
+    console.error('TFM auth service - Error - Getting existing TFM user %O', error);
+
+    throw new Error('TFM auth service - Error - Getting existing TFM user %O', error);
+  }
 };
 
 /**
@@ -25,15 +40,19 @@ const getExistingTfmUser = async (entraUser) => {
  * @returns {Object} New TFM user.
  */
 const createTfmUser = async (entraUser) => {
-  const newUser = mapEntraUserData(entraUser);
+  try {
+    console.info('TFM auth service - mapping Entra user and creating TFM user');
 
-  const createdUser = await userController.createUser(newUser);
+    const newUser = mapEntraUserData(entraUser);
 
-  if (createdUser) {
+    const createdUser = await userController.createUser(newUser);
+
     return createdUser;
-  }
+  } catch {
+    console.error("TFM auth service - Error - User creation didn't pass validation");
 
-  throw new Error("User creation didn't pass validation");
+    throw new Error("TFM auth service - Error - User creation didn't pass validation");
+  }
 };
 
 /**
@@ -65,34 +84,40 @@ const populateTfmUserWithEntraData = (existingTfmUser, entraUser) => ({
 
 // TODO: consume values from req.body instead of passing req.
 const processSsoRedirect = async (pkceCode, origAuthCodeRequest, req) => {
+  console.info('TFM auth service - processing SSO redirect');
+
   let tfmUser;
-
-  const entraUser = await authProvider.handleRedirect(pkceCode, origAuthCodeRequest, req.body.code, req.body);
-
-  if (!entraUser?.idTokenClaims) {
-    throw new Error('Entra user details are missing: %O', entraUser);
-  }
+  let entraUser;
 
   try {
+    entraUser = await authProvider.handleRedirect(pkceCode, origAuthCodeRequest, req.body.code, req.body);
+
+    if (!entraUser?.idTokenClaims) {
+      throw new Error('TFM auth service - processing SSO redirect - Entra user details are missing: %O', entraUser);
+    }
+
     const existingTfmUser = await getExistingTfmUser(entraUser);
+
     // TODO: update user in DB
     tfmUser = populateTfmUserWithEntraData(existingTfmUser, entraUser);
+
+    const { sessionIdentifier, ...tokenObject } = utils.issueJWT(tfmUser);
+
+    updateLastLoginAndResetSignInData(tfmUser, sessionIdentifier, () => { });
+
+    const redirectUrl = authProvider.loginRedirectUrl(req.body.state);
+
+    return { tfmUser, token: tokenObject.token, redirectUrl };
   } catch (err) {
+    console.error('TFM auth service - Error processing SSO redirect %s', err);
+   
     // TODO: couldn't get instanceof working
     if (err.name === 'UserNotFoundError') {
       tfmUser = await createTfmUser(entraUser);
-    } else {
-      throw err;
     }
+
+    throw new Error('TFM auth service - Error processing SSO redirect %s', err);
   }
-
-  const { sessionIdentifier, ...tokenObject } = utils.issueJWT(tfmUser);
-
-  updateLastLoginAndResetSignInData(tfmUser, sessionIdentifier, () => { });
-
-  const redirectUrl = authProvider.loginRedirectUrl(req.body.state);
-
-  return { tfmUser, token: tokenObject.token, redirectUrl };
 };
 
 module.exports = {
