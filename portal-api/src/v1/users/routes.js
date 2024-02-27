@@ -1,7 +1,7 @@
 const utils = require('../../crypto/utils');
 const { login } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
-const { create, update, remove, list, findOne, disable, findByEmail } = require('./controller');
+const { create, update, remove, list, findOne, disable } = require('./controller');
 const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
@@ -14,7 +14,6 @@ const { Hasher } = require('../../crypto/hasher');
 const { UserRepository } = require('./repository');
 const { UserService } = require('./user.service');
 const { ADMIN } = require('../roles/roles');
-const { isValidEmail } = require('../../utils/string');
 
 const randomGenerator = new CryptographicallyStrongGenerator();
 
@@ -60,88 +59,45 @@ const combineErrors = (listOfErrors) =>
   }, {});
 
 module.exports.create = async (req, res, next) => {
-  if (!isValidEmail(req.body?.email)) {
-    // Empty email address
-    const invalidEmail = {
-      email: {
-        order: '1',
-        text: 'Enter an email address in the correct format, for example, name@example.com',
-      },
-    };
+  const userToCreate = req.body;
+  const errors = applyCreateRules(userToCreate);
 
+  if (errors.length) {
     return res.status(400).json({
       success: false,
       errors: {
-        count: invalidEmail.length,
-        errorList: invalidEmail,
+        count: errors.length,
+        errorList: combineErrors(errors),
       },
     });
   }
 
-  await findByEmail(req.body.email, (error, account) => {
-    let userExists = {};
-    if (account) {
-      // User exists with same email address
-      userExists = {
-        email: {
-          order: '1',
-          text: 'User already exists.',
-        },
-      };
+  const { password } = userToCreate;
+
+  let salt = '';
+  let hash = '';
+
+  if (password) {
+    const saltHash = utils.genPassword(password);
+    ({ salt, hash } = saltHash);
+  }
+
+  userToCreate.password = '';
+  userToCreate.passwordConfirm = '';
+
+  const newUser = {
+    ...userToCreate,
+    salt,
+    hash,
+  };
+
+  // Defined `e` since `error` is defined on a higher scope
+  return create(newUser, userService, (e, user) => {
+    if (e) {
+      return next(e);
     }
-
-    if (Object.keys(userExists).length) {
-      return res.status(400).json({
-        success: false,
-        errors: {
-          count: userExists.length,
-          errorList: userExists,
-        },
-      });
-    }
-
-    const userToCreate = req.body;
-    const errors = applyCreateRules(userToCreate);
-
-    if (errors.length) {
-      return res.status(400).json({
-        success: false,
-        errors: {
-          count: errors.length,
-          errorList: combineErrors(errors),
-        },
-      });
-    }
-
-    const { password } = userToCreate;
-
-    let salt = '';
-    let hash = '';
-
-    if (password) {
-      const saltHash = utils.genPassword(password);
-      ({ salt, hash } = saltHash);
-    }
-
-    userToCreate.password = '';
-    userToCreate.passwordConfirm = '';
-
-    const newUser = {
-      ...userToCreate,
-      salt,
-      hash,
-    };
-
-    // Defined `e` since `error` is defined on a higher scope
-    return create(newUser, userService, (e, user) => {
-      if (e) {
-        return next(e);
-      }
-      return res.json({ success: true, user });
-    });
+    return res.json({ success: true, user });
   });
-
-  return null;
 };
 
 module.exports.findById = (req, res, next) => {
@@ -162,7 +118,7 @@ module.exports.updateById = (req, res, next) => {
     const userIsChangingTheirOwnPassword =
       req.user?._id?.toString() === req.params._id &&
       Object.keys(req.body).every((property) => ['password', 'passwordConfirm', 'currentPassword'].includes(property));
-      
+
     if (!userIsAdmin && !userIsChangingTheirOwnPassword) {
       return res.status(403).send();
     }

@@ -9,6 +9,7 @@ const currentPasswordMustMatch = require('./rules/currentPasswordMustMatch');
 const readOnlyRoleCannotBeAssignedWithOtherRoles = require('./rules/read-only-role-cannot-be-assigned-with-other-roles');
 const usernameAndEmailMustMatch = require('./rules/username-and-email-must-match');
 const emailMustBeValidEmailAddress = require('./rules/email-must-be-valid-email-address');
+const emailMustBeUnique = require('./rules/email-must-be-unique');
 
 const createRules = [
   passwordAtLeast8Characters,
@@ -19,6 +20,7 @@ const createRules = [
   readOnlyRoleCannotBeAssignedWithOtherRoles,
   usernameAndEmailMustMatch,
   emailMustBeValidEmailAddress,
+  emailMustBeUnique,
 ];
 
 const updateWithoutCurrentPasswordRules = [
@@ -32,24 +34,38 @@ const updateWithoutCurrentPasswordRules = [
   readOnlyRoleCannotBeAssignedWithOtherRoles,
   usernameAndEmailMustMatch,
   emailMustBeValidEmailAddress,
+  emailMustBeUnique,
 ];
 
 const updateWithCurrentPasswordRules = [...updateWithoutCurrentPasswordRules, currentPasswordMustMatch];
 
-const applyRules = (ruleset, existingUser, candidateChange) =>
-  ruleset.reduce((accumulator, rule) => {
-    const result = rule(existingUser, candidateChange);
-    return result.length ? accumulator.concat(result) : accumulator;
-  }, []);
+// const applyRules = async (ruleset, existingUser, candidateChange) =>
+//   await ruleset.reduce((accumulator, rule) => {
+//     const result = await rule(existingUser, candidateChange);
+//     return result.length ? accumulator.concat(result) : accumulator;
+//   }, []);
 
-const applyCreateRules = (candidateChange) => applyRules(createRules, null, candidateChange);
+const applyRulesNew = async (ruleset, existingUser, candidateChange) => {
+  const errors = [];
+  for (const rule of ruleset) {
+    const result = await rule(existingUser, candidateChange);
+    if (result.length) {
+      errors.concat(result); // We concat here as rules return an array
+    }
+  }
+  return errors;
+};
 
-const applyUpdateRules = (existingUser, candidateChange) => {
-  const rule = !candidateChange.currentPassword ? updateWithoutCurrentPasswordRules : updateWithCurrentPasswordRules;
-  return applyRules(rule, existingUser, candidateChange);
+const applyCreateRules = async (candidateChange) => await applyRulesNew(createRules, null, candidateChange);
+
+const applyUpdateRules = async (existingUser, candidateChange) => {
+  const rules = !candidateChange.currentPassword ? updateWithoutCurrentPasswordRules : updateWithCurrentPasswordRules;
+  return await applyRulesNew(rules, existingUser, candidateChange);
 };
 
 module.exports = {
+  // applyRules,
+  applyRulesNew,
   applyCreateRules,
   applyUpdateRules,
 };
