@@ -15,6 +15,7 @@ const { STATUS } = require('../../../src/constants/user');
 const { withValidateUsernameAndEmailMatchTests } = require('./validate-username-and-email-match.api-tests');
 const { withValidateEmailIsCorrectFormatTests } = require('./validate-email-is-correct-format.api-tests').default;
 const { withValidateEmailIsUniqueTests } = require('./validate-email-is-unique.api-tests');
+
 const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
 const MOCK_USER = { ...users.barclaysBankMaker1, username: temporaryUsernameAndEmail, email: temporaryUsernameAndEmail };
 
