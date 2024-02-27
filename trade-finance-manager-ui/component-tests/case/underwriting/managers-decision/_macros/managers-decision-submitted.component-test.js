@@ -1,7 +1,7 @@
 const componentRenderer = require('../../../../componentRenderer');
 
 const component = '../templates/case/underwriting/managers-decision/_macros/managers-decision-submitted.njk';
-const localiseTimestamp = require('../../../../../server/nunjucks-configuration/filter-localiseTimestamp');
+const { localiseTimestamp } = require('../../../../../server/nunjucks-configuration/filter-localiseTimestamp');
 
 const render = componentRenderer(component);
 
@@ -46,7 +46,7 @@ describe(component, () => {
     it('should render value', () => {
       const wrapper = render(params);
 
-      const formattedDay = localiseTimestamp(params.decision.timestamp, 'DD MMMM YYYY', params.user.timezone);
+      const formattedDay = localiseTimestamp(params.decision.timestamp, 'dd MMMM yyyy', params.user.timezone);
       const formattedTime = localiseTimestamp(params.decision.timestamp, 'HH:mm', params.user.timezone);
 
       const expected = `${formattedDay} at ${formattedTime}`;
