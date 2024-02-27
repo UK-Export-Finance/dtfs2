@@ -5,9 +5,18 @@
 
 require('dotenv').config();
 
-const TENANT_SUBDOMAIN = process.env.AZURE_SSO_TENANT_SUBDOMAIN;
-const REDIRECT_URI = `${process.env.TFM_UI_URL}/${process.env.AZURE_SSO_REDIRECT_URI}`;
-const POST_LOGOUT_REDIRECT_URI = process.env.AZURE_SSO_POST_LOGOUT_URI;
+const {
+  AZURE_SSO_AUTHORITY,
+  AZURE_SSO_CLIENT_ID,
+  AZURE_SSO_CLIENT_SECRET,
+  AZURE_SSO_REDIRECT_URI,
+  AZURE_SSO_POST_LOGOUT_URI,
+  AZURE_SSO_TENANT_SUBDOMAIN,
+  TFM_UI_URL,
+} = process.env
+
+// TODO: new env var?
+const REDIRECT_URI = `${TFM_UI_URL}/${AZURE_SSO_REDIRECT_URI}`;
 
 /**
  * Configuration object to be passed to MSAL instance on creation.
@@ -16,16 +25,16 @@ const POST_LOGOUT_REDIRECT_URI = process.env.AZURE_SSO_POST_LOGOUT_URI;
  */
 const msalConfig = {
   auth: {
-    clientId: process.env.AZURE_SSO_CLIENT_ID, // 'Application (client) ID' of app registration in Azure portal - this value is a GUID
-    authority: process.env.AZURE_SSO_AUTHORITY, // Replace the placeholder with your tenant subdomain
-    clientSecret: process.env.AZURE_SSO_CLIENT_SECRET, // Client secret generated from the app registration in Azure portal
+    clientId: AZURE_SSO_CLIENT_ID, // 'Application (client) ID' of app registration in Azure portal - this value is a GUID
+    authority: AZURE_SSO_AUTHORITY, // Replace the placeholder with your tenant subdomain
+    clientSecret: AZURE_SSO_CLIENT_SECRET, // Client secret generated from the app registration in Azure portal
   },
   system: {
     loggerOptions: {
       // TODO: Do we want a logger that supports containsPii handling
       // loggerCallback(loglevel, message, containsPii) {
       loggerCallback(loglevel, message, ) {
-        console.info(message);
+        console.info('MSAL log: ', message);
       },
       piiLoggingEnabled: false,
       logLevel: 'Info',
@@ -35,7 +44,7 @@ const msalConfig = {
 
 module.exports = {
   msalConfig,
-  TENANT_SUBDOMAIN,
+  AZURE_SSO_TENANT_SUBDOMAIN,
   REDIRECT_URI,
-  POST_LOGOUT_REDIRECT_URI,
+  AZURE_SSO_POST_LOGOUT_URI,
 };

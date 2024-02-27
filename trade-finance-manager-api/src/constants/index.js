@@ -1,4 +1,5 @@
 const FACILITIES = require('./facilities');
+const DATE = require('./date');
 const DEALS = require('./deals');
 const { TEAMS, TEAM_IDS } = require('./teams');
 const TASKS = require('./tasks');
@@ -17,6 +18,7 @@ const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('./utilisation-repo
 
 module.exports = {
   FACILITIES,
+  DATE,
   DEALS,
   TEAMS,
   TEAM_IDS,

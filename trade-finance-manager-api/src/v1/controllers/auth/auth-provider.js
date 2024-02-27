@@ -1,9 +1,8 @@
 const msal = require('@azure/msal-node');
 const axios = require('axios');
-const { msalConfig, TENANT_SUBDOMAIN, REDIRECT_URI, POST_LOGOUT_REDIRECT_URI } = require('./auth-provider-config');
+const { msalConfig, AZURE_SSO_TENANT_SUBDOMAIN, REDIRECT_URI, AZURE_SSO_POST_LOGOUT_URI } = require('./auth-provider-config');
 
 class AuthProvider {
-
   constructor(config) {
     this.config = config;
     this.cryptoProvider = new msal.CryptoProvider();
@@ -74,22 +73,28 @@ class AuthProvider {
 
   /**
    * Prepares the auth code request parameters and initiates the first leg of auth code flow
-   * @param req: Express request object
-   * @param res: Express response object
-   * @param next: Express next function
-   * @param authCodeUrlRequestParams: parameters for requesting an auth code url
-   * @param authCodeRequestParams: parameters for requesting tokens using auth code
+   * @param {String} csrfToken: CSRF token
+   * @param {Object} authCodeUrlRequestParams: Parameters for requesting an auth code url
+   * @param {Object} authCodeRequestParams: Parameters for requesting tokens using auth code
+   * @param {Object} msalInstance: MSAL instance
+   * @return {Object} PKCE codes, auth code request, login URL.
    */
   async getAuthCodeUrl(csrfToken, authCodeUrlRequestParams, authCodeRequestParams, msalInstance) {
-    // Generate Proof Key of Code Exchange (PKCE) Codes before starting the authorization flow
+    /**
+     * Generate Proof Key of Code Exchange (PKCE) Codes,
+     * before starting the authorization flow.
+     */
     const { verifier, challenge } = await this.cryptoProvider.generatePkceCodes();
+
     // Set generated PKCE codes and method as session vars
     const response = { csrfToken };
+
     response.pkceCodes = {
       challengeMethod: 'S256',
       verifier,
       challenge,
     };
+
     /**
      * By manipulating the request objects below before each request, we can obtain
      * auth artifacts with desired claims. For more information, visit:
@@ -109,24 +114,30 @@ class AuthProvider {
       redirectUri: this.config.redirectUri,
       code: '',
     };
+
     response.loginUrl = await msalInstance.getAuthCodeUrl(response.authCodeUrlRequest);
+
     return response;
   }
 
   /**
-   * handleRedirect original is from Microsoft example, but was modified to meet out minimal needs.
+   * handleRedirect
+   * Modified Microsoft example, to meet out minimal needs.
    * OpendId tokenResponse is enough for us (UKEF), it has all claims (aka fields) required for user data.
    * We don't save Authorisation code because we don't need Access token.
-   * @param req: Express request object
-   * @param res: Express response object
-   * @param next: Express next function
-   * @returns
+   * @param {Object} pkceCode: PKCE Code object
+   * @param {Object} origAuthCodeRequest: Original auth code request
+   * @param {String} code: authZ code
+   * @param {Object} req: Request object
    */
-  async handleRedirect(pkceCodes, origAuthCodeRequest, code, body) {
+  // TODO: "returns" documentation
+  // TODO: update body param to consume required property in the body,
+  // instead of passing around req.body
+  async handleRedirect(pkceCode, origAuthCodeRequest, code, body) {
     const authCodeRequest = {
       ...origAuthCodeRequest,
       code, // authZ code
-      codeVerifier: pkceCodes.verifier, // PKCE Code Verifier
+      codeVerifier: pkceCode.verifier, // PKCE Code Verifier
     };
 
     const msalInstance = this.getMsalInstance(this.config.msalConfig);
@@ -138,46 +149,59 @@ class AuthProvider {
     return tokenResponse.account;
   }
 
-  redirectAfterLogin(rawState) {
-    const state = JSON.parse(this.cryptoProvider.base64Decode(rawState));
+  /**
+   * loginRedirectUrl
+   * Get a redirect URL to use after logging in.
+   * @param {String} inputString
+   * @returns {String} Redirect URL.
+   */
+  loginRedirectUrl(inputString) {
+    const state = JSON.parse(this.cryptoProvider.base64Decode(inputString));
+
     return state.redirectTo;
   }
 
   /**
-     *
-     * @param req: Express request object
-     * @param res: Express response object
-     * @param next: Express next function
-     */
+   * getLogoutUrl
+   * Get a logout URL.
+   * @param req: Express request object
+   * @param res: Express response object
+   * @param next: Express next function
+   * @return {String} Log out URL
+   */
   getLogoutUrl() {
     /**
      * Construct a logout URI and redirect the user to end the
      * session with Azure AD. For more information, visit:
      * https://docs.microsoft.com/azure/active-directory/develop/v2-protocols-oidc#send-a-sign-out-request
      */
-    return `${this.config.msalConfig.auth.authority}${TENANT_SUBDOMAIN}.onmicrosoft.com/oauth2/v2.0/logout?post_logout_redirect_uri=${POST_LOGOUT_REDIRECT_URI}`;
+    return `${this.config.msalConfig.auth.authority}${AZURE_SSO_TENANT_SUBDOMAIN}.onmicrosoft.com/oauth2/v2.0/logout?post_logout_redirect_uri=${AZURE_SSO_POST_LOGOUT_URI}`;
   }
 
   /**
-   * Retrieves oidc metadata from the openid endpoint
-   * @returns
+   * getAuthorityMetadata
+   * Retrieves OIDC metadata from the openid endpoint
+   * @returns {Object} OIDC metadata
    */
   async getAuthorityMetadata() {
-    const endpoint = `${this.config.msalConfig.auth.authority}${TENANT_SUBDOMAIN}.onmicrosoft.com/v2.0/.well-known/openid-configuration`;
+    const endpoint = `${this.config.msalConfig.auth.authority}${AZURE_SSO_TENANT_SUBDOMAIN}.onmicrosoft.com/v2.0/.well-known/openid-configuration`;
+
     try {
       const response = await axios.get(endpoint);
+
       return await response.data;
     } catch (error) {
-      console.error('Error in getAuthorityMetadata', error);
+      console.error('Error MSAL - getting getAuthorityMetadata %s', error);
+
+      throw new Error('Error MSAL - getting getAuthorityMetadata %s', error);
     }
-    return null;
   }
 }
 
 const authProvider = new AuthProvider({
   msalConfig,
   redirectUri: REDIRECT_URI,
-  postLogoutRedirectUri: POST_LOGOUT_REDIRECT_URI,
+  postLogoutRedirectUri: AZURE_SSO_POST_LOGOUT_URI,
 });
 
 module.exports = authProvider;

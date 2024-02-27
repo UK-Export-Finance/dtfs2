@@ -1,9 +1,9 @@
 const authProvider = require('./auth-provider');
 const authService = require('./auth-service');
 
-exports.getLoginUrl = async (req, res, next) => {
+exports.getLoginUrl = async (req, res) => {
   try {
-    const loginInfo = await authProvider.getLoginUrl(req, res, next);
+    const loginInfo = await authProvider.getLoginUrl();
     return res.status(200).send(loginInfo);
   } catch (err) {
     console.error('Error getting login URL: %O', err);
