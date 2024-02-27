@@ -12,6 +12,7 @@ const usernameAndEmailMustMatch = require('./rules/username-and-email-must-match
 const emailMustBeValidEmailAddress = require('./rules/email-must-be-valid-email-address');
 const emailMustBeUnique = require('./rules/email-must-be-unique');
 const { applyCreateRules, applyUpdateRules } = require('.');
+const { TEST_USER } = require('../../../../test-helpers/unit-test-mocks/mock-user');
 
 jest.mock('./rules/passwordAtLeast8Characters');
 jest.mock('./rules/passwordAtLeastOneNumber');
@@ -52,9 +53,9 @@ describe('user validation', () => {
   };
 
   describe('applyCreateRules', () => {
-    const createUserRequest = {};
+    const mockCreateUserRequest = TEST_USER;
 
-    const makeApplyRulesCall = async () => await applyCreateRules(createUserRequest);
+    const makeApplyRulesCall = async () => await applyCreateRules(mockCreateUserRequest);
 
     const expectedRules = [
       'passwordAtLeast8Characters',
@@ -76,7 +77,7 @@ describe('user validation', () => {
       makeApplyRulesCall,
       expectedRulesTestCases,
       otherRulesTestCases,
-      expectedArgumentsToCallRuleWith: [null, createUserRequest],
+      expectedArgumentsToCallRuleWith: [null, mockCreateUserRequest],
     });
 
     whenNoRulesReturnAnErrorItReturnsAnEmptyArray({ makeApplyRulesCall });
