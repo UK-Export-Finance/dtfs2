@@ -251,8 +251,8 @@ describe('user validation', () => {
   }
 
   function getExpectedRuleAndOtherRulesTestCases({ expectedRules }) {
-    let expectedRulesTestCases = [];
-    let otherRulesTestCases = [];
+    const expectedRulesTestCases = [];
+    const otherRulesTestCases = [];
     let allRulesNames = Object.keys(allRules);
 
     expectedRules.forEach((expectedRule) => {
