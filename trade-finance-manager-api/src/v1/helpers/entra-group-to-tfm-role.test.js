@@ -17,8 +17,8 @@ describe('helpers - entra-group-to-tfm-role', () => {
     const roles = ['UNDERWRITING_SUPPORT', 'UNDERWRITER_MANAGERS'];
     const entraIds = [process.env.AZURE_SSO_GROUP_UNDERWRITING_SUPPORT, process.env.AZURE_SSO_GROUP_UNDERWRITER_MANAGERS];
 
-    const rolesReadOnly = ['READ_ONLY'];
-    const entraIdsReadOnly = [process.env.AZURE_SSO_GROUP_READ_ONLY];
+    const rolesRiskManagers = ['RISK_MANAGERS'];
+    const entraIdsRiskManagers = [process.env.AZURE_SSO_GROUP_RISK_MANAGERS];
 
     it('should return tfm role ids for entra Ids', () => {
       const result = getTfmRolesFromEntraGroups(entraIds);
@@ -26,10 +26,10 @@ describe('helpers - entra-group-to-tfm-role', () => {
       expect(result).toEqual(roles);
     });
 
-    it('should return tfm role id for entra ReadOnly id', () => {
-      const result = getTfmRolesFromEntraGroups(entraIdsReadOnly);
+    it('should return tfm role id for entra Risk Managers id', () => {
+      const result = getTfmRolesFromEntraGroups(entraIdsRiskManagers);
 
-      expect(result).toEqual(rolesReadOnly);
+      expect(result).toEqual(rolesRiskManagers);
     });
   });
 });

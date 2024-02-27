@@ -34,13 +34,6 @@ const PIM = {
   ssoGroupEnvVar: 'AZURE_SSO_GROUP_PIM',
 };
 
-// TODO: remove READ_ONLY?
-const READ_ONLY = {
-  id: 'READ_ONLY',
-  name: 'Read only',
-  ssoGroupEnvVar: 'AZURE_SSO_GROUP_READ_ONLY',
-};
-
 const PDC_READ = {
   id: 'PDC_READ',
   name: 'PDC read',
@@ -68,7 +61,6 @@ const TEAMS = {
   RISK_MANAGERS,
   BUSINESS_SUPPORT,
   PIM,
-  READ_ONLY,
   PDC_READ,
   PDC_RECONCILE,
 };
