@@ -1,7 +1,8 @@
 import * as dotenv from 'dotenv';
 import axios, { AxiosResponse, HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
-import { ENTITY_TYPE, NUMBER_TYPE, USER } from '../../constants';
+import { ENTITY_TYPE, NUMBER_TYPE, USER, ERRORS } from '../../constants';
+import { InvalidEntityTypeError } from '../errors';
 
 dotenv.config();
 
@@ -27,7 +28,7 @@ const getNumberTypeId = (entityType: string): number => {
     case ENTITY_TYPE.FACILITY:
       return NUMBER_TYPE.FACILITY;
     default:
-      throw new Error(`Invalid entityType ${entityType}`);
+      throw new InvalidEntityTypeError(entityType);
   }
 };
 
@@ -56,17 +57,33 @@ export const get = async (req: Request, res: Response): Promise<object> => {
 
     if (!response.data) {
       console.error('❌ Void number generator response received for deal %s %o', dealId, response);
-      return res.status(HttpStatusCode.UnprocessableEntity).send({});
+      throw new Error(`Void number generator response received for deal ${dealId}`, { cause: 'Void response from APIM MDM' });
     }
 
-    const { status, data } = response.data;
+    const { status, data } = response;
 
-    console.info('✅ UKEF ID received %o for deal %s', data, dealId);
+    if (!data.length) {
+      throw new Error(`Empty number generator response received for deal ${dealId}`, { cause: 'Empty response from APIM MDM' });
+    }
 
-    return res.status(HttpStatusCode.Ok).send({ status, message: data });
-  } catch (error) {
-    console.error('❌ Error getting number from number generator for deal %s %o', error);
+    const { maskedId: ukefId } = data[0];
 
-    return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: error });
+    console.info('✅ UKEF ID received %d for deal %s', ukefId, dealId);
+
+    return res.status(HttpStatusCode.Ok).send({ status, data });
+  } catch (error: any) {
+    console.error('❌ Error getting number from number generator: %o', error);
+
+    if (error.name === ERRORS.ENTITY_TYPE.INVALID) {
+      return res.status(HttpStatusCode.BadRequest).send({
+        status: HttpStatusCode.BadRequest,
+        error,
+      });
+    }
+
+    return res.status(HttpStatusCode.InternalServerError).send({
+      status: HttpStatusCode.InternalServerError,
+      error,
+    });
   }
 };
