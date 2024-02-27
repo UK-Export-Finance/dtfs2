@@ -39,33 +39,27 @@ const updateWithoutCurrentPasswordRules = [
 
 const updateWithCurrentPasswordRules = [...updateWithoutCurrentPasswordRules, currentPasswordMustMatch];
 
-// const applyRules = async (ruleset, existingUser, candidateChange) =>
-//   await ruleset.reduce((accumulator, rule) => {
-//     const result = await rule(existingUser, candidateChange);
-//     return result.length ? accumulator.concat(result) : accumulator;
-//   }, []);
-
-const applyRulesNew = async (ruleset, existingUser, candidateChange) => {
-  const errors = [];
+const applyRules = async (ruleset, existingUser, candidateChange) => {
+  let errors = [];
   for (const rule of ruleset) {
     const result = await rule(existingUser, candidateChange);
-    if (result.length) {
-      errors.concat(result); // We concat here as rules return an array
-    }
+
+    if (!!result.length) {
+      errors = errors.concat(result);
+    } // We concat here as rules return an array
   }
+
   return errors;
 };
 
-const applyCreateRules = async (candidateChange) => await applyRulesNew(createRules, null, candidateChange);
+const applyCreateRules = async (candidateChange) => await applyRules(createRules, null, candidateChange);
 
 const applyUpdateRules = async (existingUser, candidateChange) => {
   const rules = !candidateChange.currentPassword ? updateWithoutCurrentPasswordRules : updateWithCurrentPasswordRules;
-  return await applyRulesNew(rules, existingUser, candidateChange);
+  return await applyRules(rules, existingUser, candidateChange);
 };
 
 module.exports = {
-  // applyRules,
-  applyRulesNew,
   applyCreateRules,
   applyUpdateRules,
 };
