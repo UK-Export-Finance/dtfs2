@@ -4,7 +4,6 @@
  * @param {Object} change the changes to make
  * @returns {Promise<Array>} either an empty array or an array containing an error object if the email is not a unique email address
  */
-
 const { findByEmail } = require('../../controller');
 
 const emailMustBeUnique = async (user, change) => {

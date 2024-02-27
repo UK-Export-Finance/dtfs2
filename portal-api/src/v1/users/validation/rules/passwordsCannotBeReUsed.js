@@ -1,6 +1,12 @@
 const utils = require('../../../../crypto/utils');
 
-module.exports = (user, change) => {
+/**
+ * Ensures that if the change has a password property, it is not a password that has been used before
+ * @param {Object} user the existing user
+ * @param {Object} change the changes to make
+ * @returns {Array} either an empty array or an array containing an error object
+ */
+const passwordsCannotBeReUsed = (user, change) => {
   if (change && change.password) {
     const { password } = change;
     const { blockedPasswordList = [] } = user;
@@ -14,14 +20,18 @@ module.exports = (user, change) => {
     }, false);
 
     if (passwordAlreadyUsed) {
-      return [{
-        password: {
-          order: '6',
-          text: 'You cannot re-use old passwords.',
+      return [
+        {
+          password: {
+            order: '6',
+            text: 'You cannot re-use old passwords.',
+          },
         },
-      }];
+      ];
     }
   }
 
   return [];
 };
+
+module.exports = passwordsCannotBeReUsed;

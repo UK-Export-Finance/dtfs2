@@ -6,7 +6,6 @@ const { isValidEmail } = require('../../../../utils/string');
  * @param {Object} change the changes to make
  * @returns {Array} either an empty array or an array containing an error object if the email is not a valid email address
  */
-
 const emailMustBeValidEmailAddress = (user, change) => {
   const changeHasEmailProperty = change?.email !== undefined;
   const changeEmailPropertyIsNotAValidEmailAddress = !(typeof change.email === 'string' && isValidEmail(change.email));
