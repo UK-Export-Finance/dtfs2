@@ -124,8 +124,9 @@ describe('a user', () => {
       });
 
       withValidateEmailIsUniqueTests({
-        payload: { currentPassword: 'AbC!2345', password: 'AbC1234!', passwordConfirm: 'AbC1234!' },
+        payload: { roles: [READ_ONLY] },
         makeRequest: async (updatedUserCredentials) => await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`),
+        getAdminUser: () => anAdmin,
       });
 
       withValidateUsernameAndEmailMatchTests({
@@ -137,7 +138,7 @@ describe('a user', () => {
       });
 
       withValidateEmailIsCorrectFormatTests({
-        createRequestBodyWithUpdatedEmailField: (email) =>
+        createRequestWithUpdatedEmailAddress: (email) =>
           produce({}, (draftRequest) => {
             draftRequest.username = email;
             draftRequest.email = email;

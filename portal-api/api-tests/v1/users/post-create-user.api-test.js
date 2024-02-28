@@ -26,11 +26,13 @@ const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: "You cannot combine 'Read-only' w
 const BASE_URL = '/v1/users';
 describe('a user', () => {
   let aNonAdmin;
+  let anAdmin;
 
   beforeAll(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
     const testUsers = await testUserCache.initialise(app);
     aNonAdmin = testUsers().withoutRole(ADMIN).one();
+    anAdmin = testUsers().withRole(ADMIN).one();
   });
 
   beforeEach(async () => {
@@ -117,6 +119,7 @@ describe('a user', () => {
     withValidateEmailIsUniqueTests({
       payload: MOCK_USER,
       makeRequest: async (user) => await createUser(user),
+      getAdminUser: () => anAdmin,
     });
 
     withValidateUsernameAndEmailMatchTests({
@@ -134,18 +137,6 @@ describe('a user', () => {
           draftRequest.email = email;
         }),
       makeRequest: async (user) => await createUser(user),
-    });
-
-    describe('when a user already exists', () => {
-      it('returns a 400', async () => {
-        // User creation - first instance
-        const first = await createUser(MOCK_USER);
-        expect(first.status).toEqual(200);
-
-        // User creation - second instance
-        const second = await createUser(MOCK_USER);
-        expect(second.status).toEqual(400);
-      });
     });
 
     it.each(NON_READ_ONLY_ROLES)('rejects if the user creation request has the read-only role and the %s role', async (otherRole) => {
