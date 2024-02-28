@@ -302,7 +302,7 @@ describe(component, () => {
     });
   });
 
-  describe(`when totalPages is large enough that not all page links can be rendered on every page and an ellipsis is rendered on some pages`, () => {
+  describe('when totalPages is large enough that not all page links can be rendered on every page and an ellipsis is rendered on some pages', () => {
     describe('when totalPages is 6', () => {
       const totalPages = 6;
 
@@ -488,7 +488,7 @@ describe(component, () => {
     it('should display the total number of items', () => {
       wrapper.expectText('[data-cy="totalItems"]').toRead('(2000 items)');
     });
-  };
+  }
 
   function itShouldRenderNavigationList() {
     it('should render a div with a role of \'navigation\'', () => {
@@ -503,7 +503,7 @@ describe(component, () => {
     it('should render an unordered list', () => {
       wrapper.expectElement('ul').hasClass('govuk-!-margin-bottom-0');
     });
-  };
+  }
 
   function itShouldNOTRenderNavigationList() {
     it('should NOT render a div with a role of \'navigation\'', () => {
@@ -517,7 +517,7 @@ describe(component, () => {
     it('should NOT render an unordered list', () => {
       wrapper.expectElement('ul').notToExist();
     });
-  };
+  }
 
   function itShouldRenderFirstAndPreviousLinks(currentPage) {
     it('should render a \'First\' link', () => {
@@ -535,7 +535,7 @@ describe(component, () => {
       wrapper.expectLink('[data-cy="Previous"]').toLinkTo(`/testRoute/${currentPage - 1}?testQuery=test`, 'Previous');
       wrapper.expectElement('[data-cy="Previous"]').hasClass('govuk-link');
     });
-  };
+  }
 
   function itShouldNOTRenderFirstAndPreviousLinks() {
     it('should NOT render a \'First\' link', () => {
@@ -549,7 +549,7 @@ describe(component, () => {
 
       wrapper.expectLink('[data-cy="Previous"]').notToExist();
     });
-  };
+  }
 
   function itShouldRenderEllipsisAfterFirstAndPreviousLinks() {
     it('should render an ellipsis after the \'First\' and \'Previous\' links', () => {
@@ -557,13 +557,13 @@ describe(component, () => {
       wrapper.expectElement('[data-cy="firstPreviousEllipsis"]').hasClass('govuk-!-margin-bottom-3');
       wrapper.expectText('[data-cy="firstPreviousEllipsis"]').toRead('...');
     });
-  };
+  }
 
   function itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks() {
     it('should NOT render an ellipsis after the \'First\' and \'Previous\' links', () => {
       wrapper.expectElement('[data-cy="firstPreviousEllipsis"]').notToExist();
     });
-  };
+  }
 
   function itShouldRenderLinksToPagesInRange({ firstPage, lastPage, currentPage }) {
     it(`should render direct links to pages in the range ${firstPage} to ${lastPage} inclusive (zero-indexed)`, () => {
@@ -587,7 +587,7 @@ describe(component, () => {
       wrapper.expectElement(`[data-cy="Page_${lastPage + 1}_listItem"]`).notToExist();
       wrapper.expectLink(`[data-cy="Page_${lastPage + 1}"]`).notToExist();
     });
-  };
+  }
 
   function itShouldRenderEllipsisBeforeNextAndLastLinks() {
     it('should render an ellipsis before the \'Next\' and \'Last\' links', () => {
@@ -595,13 +595,13 @@ describe(component, () => {
       wrapper.expectElement('[data-cy="nextLastEllipsis"]').hasClass('govuk-body');
       wrapper.expectElement('[data-cy="nextLastEllipsis"]').hasClass('govuk-!-margin-bottom-3');
     });
-  };
+  }
 
   function itShouldNOTRenderEllipsisBeforeNextAndLastLinks() {
     it('should NOT render an ellipsis before the \'Next\' and \'Last\' links', () => {
       wrapper.expectText('[data-cy="nextLastEllipsis"]').notToExist();
     });
-  };
+  }
 
   function itShouldRenderNextAndLastLinks({ currentPage, totalPages }) {
     it('should render a \'Next\' link', () => {
@@ -619,7 +619,7 @@ describe(component, () => {
       wrapper.expectLink('[data-cy="Last"]').toLinkTo(`/testRoute/${totalPages - 1}?testQuery=test`, 'Last');
       wrapper.expectElement('[data-cy="Last"]').hasClass('govuk-link');
     });
-  };
+  }
 
   function itShouldNOTRenderNextAndLastLinks() {
     it('should NOT render a \'Next\' link', () => {
@@ -633,5 +633,5 @@ describe(component, () => {
 
       wrapper.expectLink('[data-cy="Last"]').notToExist();
     });
-  };
+  }
 });

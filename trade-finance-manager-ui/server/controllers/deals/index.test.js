@@ -375,7 +375,7 @@ describe('controllers - deals', () => {
       );
       expect(api.getAllAmendmentsInProgress).toHaveBeenCalledWith('userToken');
     });
-  };
+  }
 
   function itShouldRenderDealsTemplateWithDefaultArguments({ mockReq, overrideDealStage }) {
     it('should render the deals template with the deals data and the default arguments', async () => {
@@ -410,5 +410,5 @@ describe('controllers - deals', () => {
         queryString: '',
       });
     });
-  };
+  }
 });

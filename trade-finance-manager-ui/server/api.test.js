@@ -28,7 +28,7 @@ describe('getDeals()', () => {
       Authorization: token,
       'Content-Type': 'application/json',
       'x-api-key': TFM_API_KEY,
-    }
+    },
   };
 
   it('should return deals data and pagination metadata when TFM API returns this data', async () => {
