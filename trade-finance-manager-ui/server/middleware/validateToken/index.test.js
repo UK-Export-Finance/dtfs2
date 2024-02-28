@@ -1,7 +1,7 @@
-const validateToken = require('.');
-const api = require('../../services/api');
+const { validateToken } = require('.');
+const api = require('../../api');
 
-jest.mock('../../services/api');
+jest.mock('../../api');
 
 const MockRequest = () => {
   const req = {};

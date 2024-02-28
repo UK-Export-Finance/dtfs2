@@ -5,7 +5,6 @@
  * @returns {void}
  */
 function destroySessionAndRedirectToStart(req, res) {
-  console.info('Invalid user JWT destroying session');
   req.session.destroy(() => {
     res.redirect('/');
   });

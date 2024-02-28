@@ -9,9 +9,10 @@ const destroySessionAndRedirectToStart = require('../../helpers/destroy-session-
 const validateToken = async (req, res, next) => {
   const { userToken } = req.session;
 
-  if (await api.validateToken(userToken)) {
+  if (userToken && await api.validateToken(userToken)) {
     next();
   } else {
+    console.error('validateToken - Error - Invalid user JWT, destroying session and redirect to start');
     destroySessionAndRedirectToStart(req, res);
   }
 };
