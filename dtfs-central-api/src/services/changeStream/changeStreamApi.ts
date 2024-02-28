@@ -35,7 +35,8 @@ export const postAuditDetails: (changeStreamDocument: ChangeStreamDocument) => P
         integrationHubItemId: changeStreamDocument.documentKey._id.toString(),
         integrationHubCollectionName: changeStreamDocument.ns.coll,
         integrationHubProcess: 'dtfs',
-        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'Content-Type': 'text/plain',
       },
       data: fullDocument,
     });
