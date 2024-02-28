@@ -1,8 +1,8 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./get-gef-deal.controller');
 const db = require('../../../../drivers/db-client').default;
 const { isNumber } = require('../../../../helpers');
-const { DB_COLLECTIONS } = require('../../../../constants');
 
 const updateDeal = async (dealId, update) => {
   try {
@@ -10,7 +10,7 @@ const updateDeal = async (dealId, update) => {
       return { status: 400, message: 'Invalid Deal Id' };
     }
 
-    const collection = await db.getCollection(DB_COLLECTIONS.DEALS);
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
     const originalDeal = await findOneDeal(dealId);
     const dealUpdate = {
       ...originalDeal,

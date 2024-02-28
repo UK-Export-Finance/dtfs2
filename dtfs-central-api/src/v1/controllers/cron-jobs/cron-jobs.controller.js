@@ -1,9 +1,9 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const db = require('../../../drivers/db-client').default;
-const { DB_COLLECTIONS } = require('../../../constants');
 
 exports.deleteAllEstoreLogs = async (req, res) => {
   try {
-    const collection = await db.getCollection(DB_COLLECTIONS.CRON_JOB_LOGS);
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
     // delete all documents from `cron-job-logs` collection
     await collection.deleteMany({});
 

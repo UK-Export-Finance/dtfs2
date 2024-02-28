@@ -1,8 +1,8 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const db = require('../../../../drivers/db-client').default;
-const { DB_COLLECTIONS } = require('../../../../constants');
 
 const getLatestGefMandatoryCriteria = async (req, res) => {
-  const collection = await db.getCollection(DB_COLLECTIONS.GEF_MANDATORY_CRITERIA_VERSIONED);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.GEF_MANDATORY_CRITERIA_VERSIONED);
   const [criteria] = await collection.find({ isInDraft: { $eq: false } }).sort({ version: -1 }).limit(1).toArray();
   if (criteria) {
     return res.status(200).send(criteria);
@@ -19,7 +19,7 @@ const getGefMandatoryCriteriaByVersion = async (req, res) => {
 
   const versionAsNumber = Number(version);
 
-  const collection = await db.getCollection(DB_COLLECTIONS.GEF_MANDATORY_CRITERIA_VERSIONED);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.GEF_MANDATORY_CRITERIA_VERSIONED);
   const criteria = await collection.findOne({ version: { $eq: versionAsNumber } });
   if (criteria) {
     return res.status(200).send(criteria);

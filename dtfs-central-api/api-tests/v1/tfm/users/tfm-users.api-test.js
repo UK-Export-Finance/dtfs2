@@ -1,8 +1,8 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const { expectMongoIds } = require('../../../expectMongoIds');
-const { DB_COLLECTIONS } = require('../../../../src/constants');
 
 const mockUsers = [
   {
@@ -38,7 +38,7 @@ const orderUsers = (users) => users.sort((u1, u2) => (u1.username.localeCompare(
 
 describe('/v1/tfm/users', () => {
   beforeEach(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.TFM_USERS]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_USERS]);
   });
 
   describe('POST /v1/tfm/users', () => {

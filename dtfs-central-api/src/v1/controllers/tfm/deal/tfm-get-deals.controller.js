@@ -1,3 +1,4 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const moment = require('moment');
 const escapeStringRegexp = require('escape-string-regexp');
 const db = require('../../../../drivers/db-client').default;
@@ -50,7 +51,7 @@ const sortDeals = (deals, sortBy) =>
   });
 
 const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
-  const dealsCollection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_DEALS);
+  const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
 
   let dealsArray;
   let deals;

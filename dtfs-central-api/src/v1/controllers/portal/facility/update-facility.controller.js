@@ -1,10 +1,10 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
 const { updateDealEditedByPortal } = require('../deal/update-deal.controller');
 const db = require('../../../../drivers/db-client').default;
 const { PORTAL_ROUTE } = require('../../../../constants/routes');
-const { DB_COLLECTIONS } = require('../../../../constants');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -14,7 +14,7 @@ const withoutId = (obj) => {
 
 const updateFacility = async (facilityId, facilityBody, dealId, user, routePath) => {
   if (ObjectId.isValid(dealId) && ObjectId.isValid(facilityId)) {
-    const collection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
 
     const update = { ...facilityBody, dealId: ObjectId(dealId), updatedAt: Date.now() };
 

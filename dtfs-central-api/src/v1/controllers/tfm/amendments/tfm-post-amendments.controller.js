@@ -1,3 +1,4 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { getUnixTime } = require('date-fns');
 const db = require('../../../../drivers/db-client').default;
@@ -32,7 +33,7 @@ exports.postTfmAmendment = async (req, res) => {
         if (latestCompletedAmendmentVersion) {
           amendment.version = latestCompletedAmendmentVersion + 1;
         }
-        const collection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_FACILITIES);
+        const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
         await collection.updateOne(
           { _id: { $eq: ObjectId(facilityId) } },
           { $push: { amendments: amendment } },
