@@ -1,9 +1,9 @@
 import { MONGO_DB_COLLECTIONS, ReportPeriod } from '@ukef/dtfs2-common';
 import { saveUtilisationData, getAllUtilisationDataForReport } from './utilisation-data-repo';
-import db from '../drivers/db-client';
-import { MOCK_UTILISATION_DATA } from '../../api-tests/mocks/utilisation-reports/utilisation-data';
-import { MOCK_UTILISATION_REPORT } from '../../api-tests/mocks/utilisation-reports/utilisation-reports';
-import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
+import db from '../../drivers/db-client';
+import { MOCK_UTILISATION_DATA } from '../../../api-tests/mocks/utilisation-reports/utilisation-data';
+import { MOCK_UTILISATION_REPORT } from '../../../api-tests/mocks/utilisation-reports/utilisation-reports';
+import { UtilisationReportRawCsvData } from '../../types/utilisation-reports';
 
 describe('utilisation-data-repo', () => {
   describe('saveUtilisationData', () => {

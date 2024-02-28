@@ -1,9 +1,9 @@
 import { OptionalId } from 'mongodb';
 import { MONGO_DB_COLLECTIONS, UtilisationData, UtilisationReport, ReportPeriod } from '@ukef/dtfs2-common';
-import db from '../drivers/db-client';
-import { SessionBank } from '../types/session-bank';
-import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
-import { UTILISATION_REPORT_HEADERS } from '../constants';
+import db from '../../drivers/db-client';
+import { SessionBank } from '../../types/session-bank';
+import { UtilisationReportRawCsvData } from '../../types/utilisation-reports';
+import { UTILISATION_REPORT_HEADERS } from '../../constants';
 
 export const saveUtilisationData = async (reportData: UtilisationReportRawCsvData[], reportPeriod: ReportPeriod, bank: SessionBank, reportId: string) => {
   const utilisationDataObjects = reportData.map(
