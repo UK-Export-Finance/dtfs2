@@ -222,7 +222,7 @@ describe('user validation', () => {
           mockASingleRuleToError: ({ rule, error }) => rule.mockResolvedValue([error]),
         },
       ])('when all rules are $description', ({ mockASingleRuleToError }) => {
-        let expectedErrors = [];
+        const expectedErrors = [];
         beforeEach(() => {
           expectedRulesTestCases.forEach(({ rule, description }) => {
             const error = { error: `${description} error` };
