@@ -1,3 +1,5 @@
+import { add, format } from 'date-fns';
+import { cloneDeep } from 'lodash';
 import relative from '../../relativeURL';
 import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
@@ -9,16 +11,50 @@ import {
 } from '../../../../../e2e-fixtures';
 import { CURRENCY } from '../../../../../e2e-fixtures/constants.fixture';
 
+const getCoverEndDateValues = () => {
+  const todayIsEndOfMonth = dateConstants.tomorrowDay === '01';
+  const todayIs28thFebruaryAndLeapYear = !todayIsEndOfMonth && dateConstants.todayDay === '28' && dateConstants.todayMonth === '02';
+
+  if (todayIsEndOfMonth) {
+    const oneMonthOneDay = add(dateConstants.today, { months: 1, days: 1 });
+
+    return {
+      'coverEndDate-day': format(oneMonthOneDay, 'dd'),
+      'coverEndDate-month': format(oneMonthOneDay, 'MM'),
+      'coverEndDate-year': format(oneMonthOneDay, 'yyyy'),
+    };
+  }
+
+  if (todayIs28thFebruaryAndLeapYear) {
+    const oneMonthTwoDays = add(dateConstants.today, { months: 1, days: 2 });
+
+    return {
+      'coverEndDate-day': format(oneMonthTwoDays, 'dd'),
+      'coverEndDate-month': format(oneMonthTwoDays, 'MM'),
+      'coverEndDate-year': format(oneMonthTwoDays, 'yyyy'),
+    };
+  }
+
+  return {};
+};
+
 context('Amendments - automatic approval journey', () => {
   describe('Amendment details - Change the Cover end date AND Facility value', () => {
+    const mockDealToInsert = cloneDeep(MOCK_DEAL_AIN);
+
+    mockDealToInsert.mockFacilities[0] = {
+      ...mockDealToInsert.mockFacilities[0],
+      ...getCoverEndDateValues(),
+    };
+
     let dealId;
     const dealFacilities = [];
 
     before(() => {
-      cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
+      cy.insertOneDeal(mockDealToInsert, BANK1_MAKER1).then((insertedDeal) => {
         dealId = insertedDeal._id;
 
-        const { dealType, mockFacilities } = MOCK_DEAL_AIN;
+        const { dealType, mockFacilities } = mockDealToInsert;
 
         cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
