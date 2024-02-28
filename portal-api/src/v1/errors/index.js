@@ -6,6 +6,7 @@ const InvalidUsernameError = require('./invalid-username.error');
 const InvalidSessionIdentifierError = require('./invalid-session-identifier.error');
 const UserNotFoundError = require('./user-not-found.error');
 const InvalidEmailError = require('./invalid-email.error');
+
 module.exports = {
   InvalidDatabaseQueryError,
   InvalidEnvironmentVariableError,
