@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 import axios, { AxiosResponse, HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
-import { ENTITY_TYPE, NUMBER_TYPE, USER, ERRORS } from '../../constants';
+import { ENTITY_TYPE, NUMBER_TYPE, USER } from '../../constants';
 import { InvalidEntityTypeError } from '../errors';
 
 dotenv.config();
@@ -72,7 +72,7 @@ export const get = async (req: Request, res: Response): Promise<object> => {
   } catch (error: any) {
     console.error('❌ Error getting number from number generator: %o', error);
 
-    if (error.name === ERRORS.ENTITY_TYPE.INVALID) {
+    if (error instanceof InvalidEntityTypeError) {
       return res.status(HttpStatusCode.BadRequest).send({
         status: HttpStatusCode.BadRequest,
         error,
