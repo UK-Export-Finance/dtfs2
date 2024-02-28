@@ -3,7 +3,6 @@ import {
   updateUtilisationReportDetailsWithUploadDetails,
   getManyUtilisationReportDetailsByBankId,
   getOneUtilisationReportDetailsByBankId,
-  getUtilisationReportDetailsById,
   getOpenReportsBeforeReportPeriodForBankId,
   saveNotReceivedUtilisationReport,
   GetUtilisationReportDetailsOptions,
@@ -301,26 +300,6 @@ describe('utilisation-reports-repo', () => {
         // Assert
         expect(findSpy).toHaveBeenCalledWith(expectedFilter);
       });
-    });
-  });
-
-  describe('getUtilisationReportDetailsById', () => {
-    it('makes a request to the DB with the expected _id', async () => {
-      // Arrange
-      const reportId = '5099803df3f4948bd2f98391';
-
-      const findOneSpy = jest.fn().mockResolvedValue(MOCK_UTILISATION_REPORT);
-      const getCollectionMock = jest.fn().mockResolvedValue({
-        findOne: findOneSpy,
-      });
-      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
-
-      // Act
-      const response = await getUtilisationReportDetailsById(reportId);
-
-      // Assert
-      expect(findOneSpy).toHaveBeenCalledWith({ _id: { $eq: new ObjectId(reportId) } });
-      expect(response).toEqual(MOCK_UTILISATION_REPORT);
     });
   });
 

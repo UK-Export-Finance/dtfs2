@@ -318,14 +318,10 @@ const getUtilisationReports = async (bankId, options) => {
 
 /**
  * @param {number} id
- * @returns {Promise<import('@ukef/dtfs2-common/').UtilisationReportResponseBody>}
+ * @returns {Promise<import('@ukef/dtfs2-common').UtilisationReportResponseBody>}
  */
 const getUtilisationReportById = async (id) => {
   try {
-    if (!Number.isInteger(id)) {
-      throw new Error(`Invalid report id provided: ${id}`);
-    }
-
     const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${id}`, {
       headers: headers.central,
     });

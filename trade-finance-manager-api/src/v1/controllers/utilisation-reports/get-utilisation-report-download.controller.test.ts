@@ -1,10 +1,10 @@
 import httpMocks from 'node-mocks-http';
 import events from 'events';
+import { UtilisationReportResponseBody } from '@ukef/dtfs2-common';
 import api from '../../api';
 import { getUtilisationReportDownload } from './get-utilisation-report-download.controller';
 import fileshare from '../../../drivers/fileshare';
 import { FILESHARES } from '../../../constants';
-import { UtilisationReportResponseBody } from '../../../types/utilisation-reports';
 
 jest.mock('../../api');
 jest.mock('../../../drivers/fileshare');

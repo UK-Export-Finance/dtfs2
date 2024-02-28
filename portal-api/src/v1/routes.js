@@ -5,7 +5,7 @@ const { param } = require('express-validator');
 const { handleValidationResult } = require('./validation/validation-handler');
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
 const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-bank-id-match');
-const { bankIdValidation } = require('./validation/route-validators/route-validators');
+const { bankIdValidation, sqlIdValidation } = require('./validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('./validation/route-validators/express-validator-result-handler');
 const { MAKER, CHECKER, READ_ONLY, ADMIN, PAYMENT_REPORT_OFFICER } = require('./roles/roles');
 
@@ -293,6 +293,7 @@ authRouter
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,
+    sqlIdValidation,
     handleExpressValidatorResult,
     validateUserAndBankIdMatch,
     utilisationReportControllers.getReportDownload,

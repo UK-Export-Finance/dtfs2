@@ -136,6 +136,7 @@ authRouter
 authRouter
   .route('/utilisation-reports/:id/download')
   .get(
+    validation.sqlIdValidation,
     handleExpressValidatorResult,
     utilisationReportsController.getUtilisationReportDownload,
   );

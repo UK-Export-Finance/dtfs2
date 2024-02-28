@@ -21,6 +21,8 @@ const bankIdValidation = param('bankId')
 
 const mongoIdValidation = param('_id').isMongoId().withMessage("Invalid MongoDB '_id' path param provided");
 
+const sqlIdValidation = param('id').isInt().withMessage("Invalid 'id' path param provided");
+
 const isoMonthValidation = (fields) =>
   param(fields)
     .custom(isValidIsoMonth)
@@ -47,6 +49,8 @@ exports.partyUrnValidation = [partyURNValidation];
 exports.bankIdValidation = [bankIdValidation];
 
 exports.mongoIdValidation = [mongoIdValidation];
+
+exports.sqlIdValidation = [sqlIdValidation];
 
 exports.updateReportStatusPayloadValidation = updateReportStatusPayloadValidation;
 
