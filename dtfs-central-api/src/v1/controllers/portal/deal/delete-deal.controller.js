@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./get-deal.controller');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const { DB_COLLECTIONS } = require('../../../../constants');
 
 exports.deleteDeal = async (req, res) => {

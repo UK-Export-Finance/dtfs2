@@ -1,6 +1,6 @@
 const moment = require('moment');
 const escapeStringRegexp = require('escape-string-regexp');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const CONSTANTS = require('../../../../constants');
 const getObjectPropertyValueFromStringPath = require('../../../../utils/getObjectPropertyValueFromStringPath');
 const mapDataModel = require('../../../../mapping/mapDataModel');

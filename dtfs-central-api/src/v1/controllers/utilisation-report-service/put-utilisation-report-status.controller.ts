@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { getClient } from '../../../drivers/db-client';
+import db from '../../../drivers/db-client';
 import { ReportWithStatus } from '../../../types/utilisation-reports';
 import { UploadedByUserDetails } from '../../../types/db-models/utilisation-reports';
 import { TfmSessionUser } from '../../../types/tfm/tfm-session-user';
@@ -39,7 +39,7 @@ export const putUtilisationReportStatus = async (req: PutUtilisationReportStatus
     }
     reportsWithStatus.forEach(assertReportWithStatusIsPopulated);
 
-    const client = await getClient();
+    const client = await db.getClient();
     const session = client.startSession();
     await session.withTransaction(async () => {
       await updateManyUtilisationReportStatuses(reportsWithStatus, uploadedByUserDetails);

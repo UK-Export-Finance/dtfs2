@@ -6,7 +6,7 @@ const {
   validateFileInfo,
   validateBankId,
 } = require('../../validation/utilisation-report-service/utilisation-report-validator');
-const db = require('../../../drivers/db-client');
+const db = require('../../../drivers/db-client').default;
 
 const validatePayload = (reportData, reportPeriod, fileInfo, bankId) => {
   const validationErrors = validateUtilisationReportData(reportData);

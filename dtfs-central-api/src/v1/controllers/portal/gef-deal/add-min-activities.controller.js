@@ -1,6 +1,6 @@
 const { getUnixTime } = require('date-fns');
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 
 const { findOneDeal } = require('./get-gef-deal.controller');
 const { updateDeal } = require('./update-deal.controller');

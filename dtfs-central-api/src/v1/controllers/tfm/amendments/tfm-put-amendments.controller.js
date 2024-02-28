@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { getUnixTime } = require('date-fns');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const { findAmendmentById } = require('./tfm-get-amendments.controller');
 const { DB_COLLECTIONS } = require('../../../../constants');
 

@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
 const CONSTANTS = require('../../../../constants');

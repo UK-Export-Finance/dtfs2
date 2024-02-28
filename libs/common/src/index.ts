@@ -5,3 +5,4 @@ export * from './sql-db-entities';
 export * from './test-helpers';
 export * from './types';
 export * from './dtfs-central-api-response-types';
+export * from './mongo-db-client';
