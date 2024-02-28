@@ -51,59 +51,6 @@ describe('controllers - deals', () => {
     data: mockAmendments,
   };
 
-  const shouldMakeRequestsForDealsDataWithDefaultArguments = (mockReq) => {
-    it('should make requests to TFM API for the deals data with the default arguments', async () => {
-      await caseController.getDeals(mockReq, mockRes);
-      expect(api.getDeals).toHaveBeenCalledWith(
-        {
-          sortBy: {
-            field: 'tfm.dateReceivedTimestamp',
-            order: 'descending',
-          },
-          pagesize: 20,
-          page: 0,
-        },
-        'userToken',
-      );
-      expect(api.getAllAmendmentsInProgress).toHaveBeenCalledWith('userToken');
-    });
-  };
-
-  const shouldRenderDealsTemplateWithDefaultArguments = ({ mockReq, overrideDealStage }) => {
-    it('should render the deals template with the deals data and the default arguments', async () => {
-      await caseController.getDeals(mockReq, mockRes);
-      expect(mockRes.render).toHaveBeenCalledWith('deals/deals.njk', {
-        heading: 'All deals',
-        deals: [
-          {
-            _id: '0',
-            tfm: {
-              stage: overrideDealStage ? CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS : CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS,
-            },
-          },
-          {
-            _id: '1',
-            tfm: {
-              stage: CONSTANTS.DEAL.DEAL_STAGE.APPROVED_WITHOUT_CONDITIONS,
-            },
-          },
-        ],
-        activePrimaryNavigation: 'all deals',
-        activeSubNavigation: 'deal',
-        sortButtonWasClicked: false,
-        user: mockReq.session.user,
-        activeSortByField: 'tfm.dateReceivedTimestamp',
-        activeSortByOrder: 'descending',
-        pages: {
-          totalPages: 1,
-          currentPage: 0,
-          totalItems: mockDeals.length,
-        },
-        queryString: '',
-      });
-    });
-  };
-
   beforeEach(() => {
     mockRes = generateMockRes();
   });
@@ -118,8 +65,8 @@ describe('controllers - deals', () => {
       describe('when the pageNumber, sortfield, sortorder and search are not specified in the request', () => {
         const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
 
-        shouldMakeRequestsForDealsDataWithDefaultArguments(mockReq);
-        shouldRenderDealsTemplateWithDefaultArguments({ mockReq });
+        itShouldMakeRequestsForDealsDataWithDefaultArguments(mockReq);
+        itShouldRenderDealsTemplateWithDefaultArguments({ mockReq });
       });
 
       describe('when the pageNumber is less than 0', () => {
@@ -138,8 +85,8 @@ describe('controllers - deals', () => {
 
         mockReq.params.pageNumber = 'hello world';
 
-        shouldMakeRequestsForDealsDataWithDefaultArguments(mockReq);
-        shouldRenderDealsTemplateWithDefaultArguments({ mockReq });
+        itShouldMakeRequestsForDealsDataWithDefaultArguments(mockReq);
+        itShouldRenderDealsTemplateWithDefaultArguments({ mockReq });
       });
 
       describe('when the pageNumber is out of bounds', () => {
@@ -258,8 +205,8 @@ describe('controllers - deals', () => {
         });
         const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
 
-        shouldMakeRequestsForDealsDataWithDefaultArguments(mockReq);
-        shouldRenderDealsTemplateWithDefaultArguments({ mockReq, overrideDealStage: true });
+        itShouldMakeRequestsForDealsDataWithDefaultArguments(mockReq);
+        itShouldRenderDealsTemplateWithDefaultArguments({ mockReq, overrideDealStage: true });
       });
     });
 
@@ -411,4 +358,57 @@ describe('controllers - deals', () => {
       });
     });
   });
+
+  function itShouldMakeRequestsForDealsDataWithDefaultArguments(mockReq) {
+    it('should make requests to TFM API for the deals data with the default arguments', async () => {
+      await caseController.getDeals(mockReq, mockRes);
+      expect(api.getDeals).toHaveBeenCalledWith(
+        {
+          sortBy: {
+            field: 'tfm.dateReceivedTimestamp',
+            order: 'descending',
+          },
+          pagesize: 20,
+          page: 0,
+        },
+        'userToken',
+      );
+      expect(api.getAllAmendmentsInProgress).toHaveBeenCalledWith('userToken');
+    });
+  };
+
+  function itShouldRenderDealsTemplateWithDefaultArguments({ mockReq, overrideDealStage }) {
+    it('should render the deals template with the deals data and the default arguments', async () => {
+      await caseController.getDeals(mockReq, mockRes);
+      expect(mockRes.render).toHaveBeenCalledWith('deals/deals.njk', {
+        heading: 'All deals',
+        deals: [
+          {
+            _id: '0',
+            tfm: {
+              stage: overrideDealStage ? CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS : CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS,
+            },
+          },
+          {
+            _id: '1',
+            tfm: {
+              stage: CONSTANTS.DEAL.DEAL_STAGE.APPROVED_WITHOUT_CONDITIONS,
+            },
+          },
+        ],
+        activePrimaryNavigation: 'all deals',
+        activeSubNavigation: 'deal',
+        sortButtonWasClicked: false,
+        user: mockReq.session.user,
+        activeSortByField: 'tfm.dateReceivedTimestamp',
+        activeSortByOrder: 'descending',
+        pages: {
+          totalPages: 1,
+          currentPage: 0,
+          totalItems: mockDeals.length,
+        },
+        queryString: '',
+      });
+    });
+  };
 });

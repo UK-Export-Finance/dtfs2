@@ -32,3 +32,5 @@ Cypress.Commands.add('getUser', require('./trade-finance-manager-api/getUser'));
 Cypress.Commands.add('typeWithoutDelay', { prevSubject: true }, require('./ui/type-without-delay'));
 Cypress.Commands.add('insertManyTfmDealsIntoDb', require('./trade-finance-manager-api/insertManyTfmDealsIntoDb'));
 Cypress.Commands.add('deleteAllTfmDealsFromDb', require('./trade-finance-manager-api/deleteAllTfmDealsFromDb'));
+Cypress.Commands.add('checkDealIdCell', require('./trade-finance-manager-api/checkDealIdCell'));
+Cypress.Commands.add('checkDealsTableRowsTotal', require('./trade-finance-manager-api/checkDealsTableRowsTotal'));

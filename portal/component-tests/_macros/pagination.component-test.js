@@ -6,13 +6,481 @@ const render = componentRenderer(component);
 
 describe(component, () => {
   let wrapper;
-  let totalPages;
-  let currentPage;
   const totalItems = 2000;
   const paginationRoute = '/testRoute';
   const queryString = '?testQuery=test';
 
-  const shouldRenderOuterDivAndDisplayTotalItems = () => {
+  describe('when totalPages is small enough that all page links can be rendered on all pages (and an ellipsis is never rendered)', () => {
+    describe('when totalPages is 0', () => {
+      const totalPages = 0;
+      const currentPage = 0;
+
+      beforeEach(() => {
+        wrapper = render({
+          totalPages,
+          currentPage,
+          totalItems,
+          paginationRoute,
+          queryString,
+        });
+      });
+
+      itShouldRenderOuterDivAndDisplayTotalItems();
+
+      itShouldNOTRenderNavigationList();
+
+      itShouldNOTRenderFirstAndPreviousLinks();
+
+      itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+
+      itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+
+      itShouldNOTRenderNextAndLastLinks();
+    });
+
+    describe('when totalPages is 1', () => {
+      const totalPages = 1;
+      const currentPage = 0;
+
+      beforeEach(() => {
+        wrapper = render({
+          totalPages,
+          currentPage,
+          totalItems,
+          paginationRoute,
+          queryString,
+        });
+      });
+
+      itShouldRenderOuterDivAndDisplayTotalItems();
+
+      itShouldNOTRenderNavigationList();
+
+      itShouldNOTRenderFirstAndPreviousLinks();
+
+      itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+
+      itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+
+      itShouldNOTRenderNextAndLastLinks();
+    });
+
+    describe('when totalPages is 2', () => {
+      const totalPages = 2;
+
+      describe('when on the first page', () => {
+        const currentPage = 0;
+
+        beforeEach(() => {
+          wrapper = render({
+            totalPages,
+            currentPage,
+            totalItems,
+            paginationRoute,
+            queryString,
+          });
+        });
+
+        itShouldRenderOuterDivAndDisplayTotalItems();
+
+        itShouldRenderNavigationList();
+
+        itShouldNOTRenderFirstAndPreviousLinks();
+
+        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+
+        itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 1, currentPage });
+
+        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+
+        itShouldRenderNextAndLastLinks({ currentPage, totalPages });
+      });
+
+      describe('when on the last page', () => {
+        const currentPage = 1;
+
+        beforeEach(() => {
+          wrapper = render({
+            totalPages,
+            currentPage,
+            totalItems,
+            paginationRoute,
+            queryString,
+          });
+        });
+
+        itShouldRenderOuterDivAndDisplayTotalItems();
+
+        itShouldRenderNavigationList();
+
+        itShouldRenderFirstAndPreviousLinks(currentPage);
+
+        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+
+        itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 1, currentPage });
+
+        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+
+        itShouldNOTRenderNextAndLastLinks();
+      });
+    });
+
+    describe('when totalPages is 3', () => {
+      const totalPages = 3;
+
+      describe('when on the first page', () => {
+        const currentPage = 0;
+
+        beforeEach(() => {
+          wrapper = render({
+            totalPages,
+            currentPage,
+            totalItems,
+            paginationRoute,
+            queryString,
+          });
+        });
+
+        itShouldRenderOuterDivAndDisplayTotalItems();
+
+        itShouldRenderNavigationList();
+
+        itShouldNOTRenderFirstAndPreviousLinks();
+
+        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+
+        itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 2, currentPage });
+
+        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+
+        itShouldRenderNextAndLastLinks({ currentPage, totalPages });
+      });
+
+      describe('when on the middle page', () => {
+        const currentPage = 1;
+
+        beforeEach(() => {
+          wrapper = render({
+            totalPages,
+            currentPage,
+            totalItems,
+            paginationRoute,
+            queryString,
+          });
+        });
+
+        itShouldRenderOuterDivAndDisplayTotalItems();
+
+        itShouldRenderNavigationList();
+
+        itShouldRenderFirstAndPreviousLinks(currentPage);
+
+        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+
+        itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 2, currentPage });
+
+        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+
+        itShouldRenderNextAndLastLinks({ currentPage, totalPages });
+      });
+
+      describe('when on the last page', () => {
+        const currentPage = 2;
+
+        beforeEach(() => {
+          wrapper = render({
+            totalPages,
+            currentPage,
+            totalItems,
+            paginationRoute,
+            queryString,
+          });
+        });
+
+        itShouldRenderOuterDivAndDisplayTotalItems();
+
+        itShouldRenderNavigationList();
+
+        itShouldRenderFirstAndPreviousLinks(currentPage);
+
+        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+
+        itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 2, currentPage });
+
+        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+
+        itShouldNOTRenderNextAndLastLinks();
+      });
+    });
+
+    describe('when totalPages is 5', () => {
+      const totalPages = 5;
+
+      describe('when on the first page', () => {
+        const currentPage = 0;
+
+        beforeEach(() => {
+          wrapper = render({
+            totalPages,
+            currentPage,
+            totalItems,
+            paginationRoute,
+            queryString,
+          });
+        });
+
+        itShouldRenderOuterDivAndDisplayTotalItems();
+
+        itShouldRenderNavigationList();
+
+        itShouldNOTRenderFirstAndPreviousLinks();
+
+        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+
+        itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 4, currentPage });
+
+        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+
+        itShouldRenderNextAndLastLinks({ currentPage, totalPages });
+      });
+
+      describe('when on a middle page', () => {
+        const currentPage = 2;
+
+        beforeEach(() => {
+          wrapper = render({
+            totalPages,
+            currentPage,
+            totalItems,
+            paginationRoute,
+            queryString,
+          });
+        });
+
+        itShouldRenderOuterDivAndDisplayTotalItems();
+
+        itShouldRenderNavigationList();
+
+        itShouldRenderFirstAndPreviousLinks(currentPage);
+
+        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+
+        itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 4, currentPage });
+
+        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+
+        itShouldRenderNextAndLastLinks({ currentPage, totalPages });
+      });
+
+      describe('when on the last page', () => {
+        const currentPage = 4;
+
+        beforeEach(() => {
+          wrapper = render({
+            totalPages,
+            currentPage,
+            totalItems,
+            paginationRoute,
+            queryString,
+          });
+        });
+
+        itShouldRenderOuterDivAndDisplayTotalItems();
+
+        itShouldRenderNavigationList();
+
+        itShouldRenderFirstAndPreviousLinks(currentPage);
+
+        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+
+        itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 4, currentPage });
+
+        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+
+        itShouldNOTRenderNextAndLastLinks();
+      });
+    });
+  });
+
+  describe(`when totalPages is large enough that not all page links can be rendered on every page and an ellipsis is rendered on some pages`, () => {
+    describe('when totalPages is 6', () => {
+      const totalPages = 6;
+
+      describe('when on the first page', () => {
+        const currentPage = 0;
+
+        beforeEach(() => {
+          wrapper = render({
+            totalPages,
+            currentPage,
+            totalItems,
+            paginationRoute,
+            queryString,
+          });
+        });
+
+        itShouldRenderOuterDivAndDisplayTotalItems();
+
+        itShouldRenderNavigationList();
+
+        itShouldNOTRenderFirstAndPreviousLinks();
+
+        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+
+        itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 4, currentPage });
+
+        itShouldRenderEllipsisBeforeNextAndLastLinks();
+
+        itShouldRenderNextAndLastLinks({ currentPage, totalPages });
+      });
+
+      describe('when on a middle page', () => {
+        const currentPage = 2;
+
+        beforeEach(() => {
+          wrapper = render({
+            totalPages,
+            currentPage,
+            totalItems,
+            paginationRoute,
+            queryString,
+          });
+        });
+
+        itShouldRenderOuterDivAndDisplayTotalItems();
+
+        itShouldRenderNavigationList();
+
+        itShouldRenderFirstAndPreviousLinks(currentPage);
+
+        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+
+        itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 5, currentPage });
+
+        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+
+        itShouldRenderNextAndLastLinks({ currentPage, totalPages });
+      });
+
+      describe('when on the last page', () => {
+        const currentPage = 5;
+
+        beforeEach(() => {
+          wrapper = render({
+            totalPages,
+            currentPage,
+            totalItems,
+            paginationRoute,
+            queryString,
+          });
+        });
+
+        itShouldRenderOuterDivAndDisplayTotalItems();
+
+        itShouldRenderNavigationList();
+
+        itShouldRenderFirstAndPreviousLinks(currentPage);
+
+        itShouldRenderEllipsisAfterFirstAndPreviousLinks();
+
+        itShouldRenderLinksToPagesInRange({ firstPage: 1, lastPage: 5, currentPage });
+
+        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+
+        itShouldNOTRenderNextAndLastLinks();
+      });
+    });
+
+    describe('when totalPages is 100', () => {
+      const totalPages = 100;
+
+      describe('when on the first page', () => {
+        const currentPage = 0;
+
+        beforeEach(() => {
+          wrapper = render({
+            totalPages,
+            currentPage,
+            totalItems,
+            paginationRoute,
+            queryString,
+          });
+        });
+
+        itShouldRenderOuterDivAndDisplayTotalItems();
+
+        itShouldRenderNavigationList();
+
+        itShouldNOTRenderFirstAndPreviousLinks();
+
+        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+
+        itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 4, currentPage });
+
+        itShouldRenderEllipsisBeforeNextAndLastLinks();
+
+        itShouldRenderNextAndLastLinks({ currentPage, totalPages });
+      });
+
+      describe('when on a middle page', () => {
+        const currentPage = 49;
+
+        beforeEach(() => {
+          wrapper = render({
+            totalPages,
+            currentPage,
+            totalItems,
+            paginationRoute,
+            queryString,
+          });
+        });
+
+        itShouldRenderOuterDivAndDisplayTotalItems();
+
+        itShouldRenderNavigationList();
+
+        itShouldRenderFirstAndPreviousLinks(currentPage);
+
+        itShouldRenderEllipsisAfterFirstAndPreviousLinks();
+
+        itShouldRenderLinksToPagesInRange({ firstPage: 45, lastPage: 53, currentPage });
+
+        itShouldRenderEllipsisBeforeNextAndLastLinks();
+
+        itShouldRenderNextAndLastLinks({ currentPage, totalPages });
+      });
+
+      describe('when on the last page', () => {
+        const currentPage = 99;
+
+        beforeEach(() => {
+          wrapper = render({
+            totalPages,
+            currentPage,
+            totalItems,
+            paginationRoute,
+            queryString,
+          });
+        });
+
+        itShouldRenderOuterDivAndDisplayTotalItems();
+
+        itShouldRenderNavigationList();
+
+        itShouldRenderFirstAndPreviousLinks(currentPage);
+
+        itShouldRenderEllipsisAfterFirstAndPreviousLinks();
+
+        itShouldRenderLinksToPagesInRange({ firstPage: 95, lastPage: 99, currentPage });
+
+        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+
+        itShouldNOTRenderNextAndLastLinks();
+      });
+    });
+  });
+
+  function itShouldRenderOuterDivAndDisplayTotalItems() {
     it('should render a div with a class of \'breadcrumbs\' and a role of \'navigation\'', () => {
       wrapper.expectElement('.breadcrumbs').toHaveAttribute('role', 'navigation');
     });
@@ -22,7 +490,7 @@ describe(component, () => {
     });
   };
 
-  const shouldRenderNavigationList = () => {
+  function itShouldRenderNavigationList() {
     it('should render a div with a role of \'navigation\'', () => {
       wrapper.expectElement('[data-cy="pagination"]').toHaveAttribute('role', 'navigation');
     });
@@ -37,7 +505,7 @@ describe(component, () => {
     });
   };
 
-  const shouldNOTRenderNavigationList = () => {
+  function itShouldNOTRenderNavigationList() {
     it('should NOT render a div with a role of \'navigation\'', () => {
       wrapper.expectElement('[data-cy="navigation"]').notToExist();
     });
@@ -51,7 +519,7 @@ describe(component, () => {
     });
   };
 
-  const shouldRenderFirstAndPreviousLinksAndEllipsis = (activePage) => {
+  function itShouldRenderFirstAndPreviousLinks(currentPage) {
     it('should render a \'First\' link', () => {
       wrapper.expectElement('[data-cy="First_listItem"]').hasClass('govuk-body');
       wrapper.expectElement('[data-cy="First_listItem"]').hasClass('govuk-!-margin-bottom-3');
@@ -64,18 +532,12 @@ describe(component, () => {
       wrapper.expectElement('[data-cy="Previous_listItem"]').hasClass('govuk-body');
       wrapper.expectElement('[data-cy="Previous_listItem"]').hasClass('govuk-!-margin-bottom-3');
 
-      wrapper.expectLink('[data-cy="Previous"]').toLinkTo(`/testRoute/${activePage - 1}?testQuery=test`, 'Previous');
+      wrapper.expectLink('[data-cy="Previous"]').toLinkTo(`/testRoute/${currentPage - 1}?testQuery=test`, 'Previous');
       wrapper.expectElement('[data-cy="Previous"]').hasClass('govuk-link');
-    });
-
-    it('should render an ellipsis after the \'First\' and \'Previous\' links', () => {
-      wrapper.expectElement('[data-cy="firstPreviousEllipsis"]').hasClass('govuk-body');
-      wrapper.expectElement('[data-cy="firstPreviousEllipsis"]').hasClass('govuk-!-margin-bottom-3');
-      wrapper.expectText('[data-cy="firstPreviousEllipsis"]').toRead('...');
     });
   };
 
-  const shouldNOTRenderFirstAndPreviousLinksAndEllipsis = () => {
+  function itShouldNOTRenderFirstAndPreviousLinks() {
     it('should NOT render a \'First\' link', () => {
       wrapper.expectElement('[data-cy="First_listItem"]').notToExist();
 
@@ -87,24 +549,66 @@ describe(component, () => {
 
       wrapper.expectLink('[data-cy="Previous"]').notToExist();
     });
+  };
 
+  function itShouldRenderEllipsisAfterFirstAndPreviousLinks() {
+    it('should render an ellipsis after the \'First\' and \'Previous\' links', () => {
+      wrapper.expectElement('[data-cy="firstPreviousEllipsis"]').hasClass('govuk-body');
+      wrapper.expectElement('[data-cy="firstPreviousEllipsis"]').hasClass('govuk-!-margin-bottom-3');
+      wrapper.expectText('[data-cy="firstPreviousEllipsis"]').toRead('...');
+    });
+  };
+
+  function itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks() {
     it('should NOT render an ellipsis after the \'First\' and \'Previous\' links', () => {
       wrapper.expectElement('[data-cy="firstPreviousEllipsis"]').notToExist();
     });
   };
 
-  const shouldRenderEllipsisAndNextAndLastLinks = (activePage) => {
+  function itShouldRenderLinksToPagesInRange({ firstPage, lastPage, currentPage }) {
+    it(`should render direct links to pages in the range ${firstPage} to ${lastPage} inclusive (zero-indexed)`, () => {
+      wrapper.expectElement(`[data-cy="Page_${firstPage - 1}_listItem"]`).notToExist();
+      wrapper.expectLink(`[data-cy="Page_${firstPage - 1}"]`).notToExist();
+
+      for (let i = firstPage; i <= lastPage; i += 1) {
+        wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).hasClass('govuk-body');
+        wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).hasClass('govuk-!-margin-bottom-3');
+
+        wrapper.expectLink(`[data-cy="Page_${i}"]`).toLinkTo(`/testRoute/${i}?testQuery=test`, (i + 1).toString());
+        wrapper.expectElement(`[data-cy="Page_${i}"]`).hasClass('govuk-link');
+
+        if (i === currentPage) {
+          wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).hasClass('active');
+        } else {
+          wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).doesNotHaveClass('active');
+        }
+      }
+
+      wrapper.expectElement(`[data-cy="Page_${lastPage + 1}_listItem"]`).notToExist();
+      wrapper.expectLink(`[data-cy="Page_${lastPage + 1}"]`).notToExist();
+    });
+  };
+
+  function itShouldRenderEllipsisBeforeNextAndLastLinks() {
     it('should render an ellipsis before the \'Next\' and \'Last\' links', () => {
       wrapper.expectText('[data-cy="nextLastEllipsis"]').toRead('...');
       wrapper.expectElement('[data-cy="nextLastEllipsis"]').hasClass('govuk-body');
       wrapper.expectElement('[data-cy="nextLastEllipsis"]').hasClass('govuk-!-margin-bottom-3');
     });
+  };
 
+  function itShouldNOTRenderEllipsisBeforeNextAndLastLinks() {
+    it('should NOT render an ellipsis before the \'Next\' and \'Last\' links', () => {
+      wrapper.expectText('[data-cy="nextLastEllipsis"]').notToExist();
+    });
+  };
+
+  function itShouldRenderNextAndLastLinks({ currentPage, totalPages }) {
     it('should render a \'Next\' link', () => {
       wrapper.expectElement('[data-cy="Next_listItem"]').hasClass('govuk-body');
       wrapper.expectElement('[data-cy="Next_listItem"]').hasClass('govuk-!-margin-bottom-3');
 
-      wrapper.expectLink('[data-cy="Next"]').toLinkTo(`/testRoute/${activePage + 1}?testQuery=test`, 'Next');
+      wrapper.expectLink('[data-cy="Next"]').toLinkTo(`/testRoute/${currentPage + 1}?testQuery=test`, 'Next');
       wrapper.expectElement('[data-cy="Next"]').hasClass('govuk-link');
     });
 
@@ -112,16 +616,12 @@ describe(component, () => {
       wrapper.expectElement('[data-cy="Last_listItem"]').hasClass('govuk-body');
       wrapper.expectElement('[data-cy="Last_listItem"]').hasClass('govuk-!-margin-bottom-3');
 
-      wrapper.expectLink('[data-cy="Last"]').toLinkTo('/testRoute/99?testQuery=test', 'Last');
+      wrapper.expectLink('[data-cy="Last"]').toLinkTo(`/testRoute/${totalPages - 1}?testQuery=test`, 'Last');
       wrapper.expectElement('[data-cy="Last"]').hasClass('govuk-link');
     });
   };
 
-  const shouldNOTRenderEllipsisAndNextAndLastLinks = () => {
-    it('should NOT render an ellipsis before the \'Next\' and \'Last\' links', () => {
-      wrapper.expectText('[data-cy="nextLastEllipsis"]').notToExist();
-    });
-
+  function itShouldNOTRenderNextAndLastLinks() {
     it('should NOT render a \'Next\' link', () => {
       wrapper.expectElement('[data-cy="Next_listItem"]').notToExist();
 
@@ -134,155 +634,4 @@ describe(component, () => {
       wrapper.expectLink('[data-cy="Last"]').notToExist();
     });
   };
-
-  describe('when totalPages is 1 or less', () => {
-    beforeEach(() => {
-      totalPages = 1;
-      currentPage = 0;
-
-      wrapper = render({
-        totalPages,
-        currentPage,
-        totalItems,
-        paginationRoute,
-        queryString,
-      });
-    });
-
-    shouldRenderOuterDivAndDisplayTotalItems();
-
-    shouldNOTRenderNavigationList();
-
-    shouldNOTRenderFirstAndPreviousLinksAndEllipsis();
-
-    shouldNOTRenderEllipsisAndNextAndLastLinks();
-  });
-
-  describe('when totalPages is more than 1', () => {
-    describe('when currentPage is 0', () => {
-      beforeEach(() => {
-        totalPages = 100;
-        currentPage = 0;
-        wrapper = render({
-          totalPages,
-          currentPage,
-          totalItems,
-          paginationRoute,
-          queryString,
-        });
-      });
-
-      shouldRenderOuterDivAndDisplayTotalItems();
-
-      shouldRenderNavigationList();
-
-      it('should render direct links to the first 4 pages', () => {
-        for (let i = 0; i < 4; i += 1) {
-          wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).hasClass('govuk-body');
-          wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).hasClass('govuk-!-margin-bottom-3');
-
-          wrapper.expectLink(`[data-cy="Page_${i}"]`).toLinkTo(`/testRoute/${i}?testQuery=test`, (i + 1).toString());
-          wrapper.expectElement(`[data-cy="Page_${i}"]`).hasClass('govuk-link');
-
-          if (i === currentPage) {
-            wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).hasClass('active');
-          } else {
-            wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).doesNotHaveClass('active');
-          }
-        }
-
-        wrapper.expectElement('[data-cy="Page_4_listItem"]').notToExist();
-        wrapper.expectLink('[data-cy="Page_4"]').notToExist();
-      });
-
-      shouldRenderEllipsisAndNextAndLastLinks(0);
-
-      shouldNOTRenderFirstAndPreviousLinksAndEllipsis();
-    });
-
-    describe('when currentPage is the last page', () => {
-      beforeEach(() => {
-        totalPages = 100;
-        currentPage = 99;
-        wrapper = render({
-          totalPages,
-          currentPage,
-          totalItems,
-          paginationRoute,
-          queryString,
-        });
-      });
-
-      shouldRenderOuterDivAndDisplayTotalItems();
-
-      shouldRenderNavigationList();
-
-      shouldRenderFirstAndPreviousLinksAndEllipsis(99);
-
-      it('should render direct links to the last 6 pages', () => {
-        wrapper.expectElement('[data-cy="Page_93_listItem"]').notToExist();
-        wrapper.expectLink('[data-cy="Page_93"]').notToExist();
-
-        for (let i = 94; i < 100; i += 1) {
-          wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).hasClass('govuk-body');
-          wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).hasClass('govuk-!-margin-bottom-3');
-
-          wrapper.expectLink(`[data-cy="Page_${i}"]`).toLinkTo(`/testRoute/${i}?testQuery=test`, (i + 1).toString());
-          wrapper.expectElement(`[data-cy="Page_${i}"]`).hasClass('govuk-link');
-
-          if (i === currentPage) {
-            wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).hasClass('active');
-          } else {
-            wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).doesNotHaveClass('active');
-          }
-        }
-      });
-
-      shouldNOTRenderEllipsisAndNextAndLastLinks();
-    });
-
-    describe('when currentPage is neither 0 nor the last page', () => {
-      beforeEach(() => {
-        totalPages = 100;
-        currentPage = 49;
-        wrapper = render({
-          totalPages,
-          currentPage,
-          totalItems,
-          paginationRoute,
-          queryString,
-        });
-      });
-
-      shouldRenderOuterDivAndDisplayTotalItems();
-
-      shouldRenderNavigationList();
-
-      shouldRenderFirstAndPreviousLinksAndEllipsis(49);
-
-      it('should render direct links to the 5 pages before and the 3 pages after the current page, as well as the current page itself', () => {
-        wrapper.expectElement('[data-cy="Page_43_listItem"]').notToExist();
-        wrapper.expectLink('[data-cy="Page_43"]').notToExist();
-
-        for (let i = 44; i < 53; i += 1) {
-          wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).hasClass('govuk-body');
-          wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).hasClass('govuk-!-margin-bottom-3');
-
-          wrapper.expectLink(`[data-cy="Page_${i}"]`).toLinkTo(`/testRoute/${i}?testQuery=test`, (i + 1).toString());
-          wrapper.expectElement(`[data-cy="Page_${i}"]`).hasClass('govuk-link');
-
-          if (i === currentPage) {
-            wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).hasClass('active');
-          } else {
-            wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).doesNotHaveClass('active');
-          }
-        }
-
-        wrapper.expectElement('[data-cy="Page_53_listItem"]').notToExist();
-        wrapper.expectLink('[data-cy="Page_53"]').notToExist();
-      });
-
-      shouldRenderEllipsisAndNextAndLastLinks(49);
-    });
-  });
 });

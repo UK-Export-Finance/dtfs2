@@ -22,14 +22,15 @@
             <li data-cy="Previous_listItem" class="govuk-body govuk-!-margin-bottom-3">
               <a data-cy="Previous" href="{{paginationRoute}}/{{currentPage-1}}{{queryString}}" class="govuk-link">Previous</a>
             </li>
+          {% endif %}
 
+          {% if currentPage > 4 %}
             <li data-cy="firstPreviousEllipsis" class="govuk-body govuk-!-margin-bottom-3">
               ...
             </li>
-
           {% endif %}
 
-          {% for i in range(currentPage - 5, totalPages) %}
+          {% for i in range(currentPage - 4, totalPages) %}
             {% if loop.index < 10 and i + 1 > 0 %}
               <li data-cy="Page_{{i}}_listItem" class="govuk-body govuk-!-margin-bottom-3 {%if i === currentPage %}active{% endif %}">
                 <a data-cy="Page_{{i}}" href="{{paginationRoute}}/{{i}}{{queryString}}" class="govuk-link">{{ i + 1 }}</a>
@@ -37,11 +38,14 @@
             {% endif %}
           {%- endfor %}
 
-          {% if currentPage !== (totalPages-1) %}
+          {% if totalPages - currentPage > 5 %}
             <li data-cy="nextLastEllipsis" class="govuk-body govuk-!-margin-bottom-3">
               ...
             </li>
+          {% endif %}
 
+
+          {% if currentPage !== (totalPages-1) %}
             <li data-cy="Next_listItem" class="govuk-body govuk-!-margin-bottom-3">
               <a data-cy="Next" href="{{paginationRoute}}/{{currentPage+1}}{{queryString}}" class="govuk-link">Next</a>
             </li>

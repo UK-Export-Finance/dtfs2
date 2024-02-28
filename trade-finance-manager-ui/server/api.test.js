@@ -19,6 +19,18 @@ describe('getFacilities()', () => {
 });
 
 describe('getDeals()', () => {
+  const token = 'testToken';
+
+  const baseExpectedArgumentsForAxiosCall = {
+    method: 'get',
+    url: `${TFM_API_URL}/v1/deals`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+      'x-api-key': TFM_API_KEY,
+    }
+  };
+
   it('should return deals data and pagination metadata when TFM API returns this data', async () => {
     const mockResponse = {
       data: {
@@ -29,18 +41,11 @@ describe('getDeals()', () => {
     axios.mockResolvedValueOnce(mockResponse);
 
     const queryParams = { page: 0 };
-    const token = 'testToken';
     const response = await api.getDeals(queryParams, token);
 
     expect(axios).toHaveBeenCalledTimes(1);
     expect(axios).toHaveBeenCalledWith({
-      method: 'get',
-      url: `${TFM_API_URL}/v1/deals`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-        'x-api-key': TFM_API_KEY,
-      },
+      ...baseExpectedArgumentsForAxiosCall,
       params: queryParams,
     });
     expect(response).toEqual({
@@ -54,18 +59,11 @@ describe('getDeals()', () => {
     axios.mockResolvedValueOnce(mockResponse);
 
     const queryParams = { page: 1 };
-    const token = 'testToken';
     const response = await api.getDeals(queryParams, token);
 
     expect(axios).toHaveBeenCalledTimes(1);
     expect(axios).toHaveBeenCalledWith({
-      method: 'get',
-      url: `${TFM_API_URL}/v1/deals`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-        'x-api-key': TFM_API_KEY,
-      },
+      ...baseExpectedArgumentsForAxiosCall,
       params: queryParams,
     });
     expect(response).toEqual({
@@ -80,18 +78,11 @@ describe('getDeals()', () => {
     axios.mockRejectedValueOnce(error);
 
     const queryParams = { page: 0 };
-    const token = 'testToken';
     const response = await api.getDeals(queryParams, token);
 
     expect(axios).toHaveBeenCalledTimes(1);
     expect(axios).toHaveBeenCalledWith({
-      method: 'get',
-      url: `${TFM_API_URL}/v1/deals`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-        'x-api-key': TFM_API_KEY,
-      },
+      ...baseExpectedArgumentsForAxiosCall,
       params: queryParams,
     });
     expect(consoleErrorMock).toHaveBeenCalledWith('Unable to get deals %O', error);
@@ -103,18 +94,11 @@ describe('getDeals()', () => {
     axios.mockResolvedValueOnce(mockResponse);
 
     const queryParams = { page: 0 };
-    const token = 'testToken';
     const response = await api.getDeals(queryParams, token);
 
     expect(axios).toHaveBeenCalledTimes(1);
     expect(axios).toHaveBeenCalledWith({
-      method: 'get',
-      url: `${TFM_API_URL}/v1/deals`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-        'x-api-key': TFM_API_KEY,
-      },
+      ...baseExpectedArgumentsForAxiosCall,
       params: queryParams,
     });
     expect(response).toEqual({});
@@ -125,18 +109,11 @@ describe('getDeals()', () => {
     axios.mockResolvedValueOnce(mockResponse);
 
     const queryParams = { page: 0 };
-    const token = 'testToken';
     const response = await api.getDeals(queryParams, token);
 
     expect(axios).toHaveBeenCalledTimes(1);
     expect(axios).toHaveBeenCalledWith({
-      method: 'get',
-      url: `${TFM_API_URL}/v1/deals`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-        'x-api-key': TFM_API_KEY,
-      },
+      ...baseExpectedArgumentsForAxiosCall,
       params: queryParams,
     });
     expect(response).toEqual({
