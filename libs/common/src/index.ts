@@ -4,3 +4,4 @@ export * from './helpers';
 export * from './sql-db-entities';
 export * from './test-helpers';
 export * from './types';
+export * from './mongo-db-client';

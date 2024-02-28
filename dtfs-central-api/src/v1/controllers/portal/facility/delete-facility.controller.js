@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { findOneFacility } = require('./get-facility.controller');
 const { removeFacilityIdFromDeal } = require('../deal/update-deal.controller');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const { DB_COLLECTIONS } = require('../../../../constants');
 
 // eslint-disable-next-line consistent-return

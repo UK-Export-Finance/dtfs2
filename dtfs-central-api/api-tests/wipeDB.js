@@ -1,12 +1,8 @@
-const db = require('../src/drivers/db-client');
+const db = require('../src/drivers/db-client').default;
 const { DB_COLLECTIONS } = require('../src/constants');
 
 /**
- * @typedef {import('../src/types/db-models/db-collection-name').DbCollectionName} DbCollectionName
- */
-
-/**
- * @param {DbCollectionName[]} collections
+ * @param {import('@ukef/dtfs2-common').MongoDbCollectionName[]} collections
  */
 const wipe = async (collections) => {
   const drop = async (collection) => new Promise((resolve) => {

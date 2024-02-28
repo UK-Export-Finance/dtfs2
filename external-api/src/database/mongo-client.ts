@@ -1,34 +1,11 @@
-const { MongoClient } = require('mongodb'); // eslint-disable-line @typescript-eslint/no-var-requires
+import { MongoDbClient, MongoDbCollectionName } from '@ukef/dtfs2-common';
 import { dbName, url } from '../config';
 
-let client: any;
-let connection: any = null;
+const mongoDbClient = new MongoDbClient({ dbName, dbConnectionString: url });
 
-const dbConnect = async () => {
-  client = await MongoClient.connect(url);
-  connection = await client.db(dbName);
-  return connection;
-};
+export const getConnection = async () => mongoDbClient.getConnection();
 
-export const getConnection = async () => {
-  if (!connection) {
-    connection = await dbConnect();
-  }
+export const getCollection = async <CollectionName extends MongoDbCollectionName>(collectionName: CollectionName) =>
+  mongoDbClient.getCollection<CollectionName>(collectionName);
 
-  return connection;
-};
-
-export const getCollection = async (collectionName: any) => {
-  if (!connection) {
-    await getConnection();
-  }
-  const collection = await connection.collection(collectionName);
-
-  return collection;
-};
-
-export const close = async () => {
-  if (client) {
-    await client.close();
-  }
-};
+export const close = async () => mongoDbClient.close();

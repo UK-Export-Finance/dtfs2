@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const db = require('../../../drivers/db-client');
+const db = require('../../../drivers/db-client').default;
 const { DB_COLLECTIONS } = require('../../../constants');
 
 const findOneUser = async (_id) => {

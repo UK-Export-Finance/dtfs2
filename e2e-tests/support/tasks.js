@@ -1,13 +1,13 @@
 const crypto = require('node:crypto');
-const db = require('./db-client');
+const { MongoDbClient } = require('@ukef/dtfs2-common');
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
 
 module.exports = {
   createTasks: ({ dbName, dbConnectionString }) => {
-    const connectionOptions = { dbName, dbConnectionString };
-    const usersCollectionName = 'users';
+    const db = new MongoDbClient({ dbName, dbConnectionString });
 
-    const getUsersCollection = () => db.getCollection(usersCollectionName, connectionOptions);
+    const usersCollectionName = 'users';
+    const getUsersCollection = () => db.getCollection(usersCollectionName);
 
     return {
       log(message) {
@@ -82,17 +82,17 @@ module.exports = {
       },
 
       async insertUtilisationReportDetailsIntoDb(utilisationReportDetails) {
-        const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
+        const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
         return utilisationReports.insertMany(utilisationReportDetails);
       },
 
       async removeAllUtilisationReportDetailsFromDb() {
-        const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
+        const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
         return utilisationReports.deleteMany({});
       },
 
       async getAllBanks() {
-        const banks = await db.getCollection(DB_COLLECTIONS.BANKS, connectionOptions);
+        const banks = await db.getCollection(DB_COLLECTIONS.BANKS);
         return banks.find().toArray();
       },
     };

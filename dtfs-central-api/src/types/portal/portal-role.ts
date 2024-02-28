@@ -1,6 +1,1 @@
-export type PortalRole =
-  | 'maker'
-  | 'checker'
-  | 'admin'
-  | 'read-only'
-  | 'payment-report-officer';
+export { PortalRole } from '@ukef/dtfs2-common';

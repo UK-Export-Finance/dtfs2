@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./get-gef-deal.controller');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const { isNumber } = require('../../../../helpers');
 const { DB_COLLECTIONS } = require('../../../../constants');
 

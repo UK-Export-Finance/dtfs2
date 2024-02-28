@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
 const { updateDealEditedByPortal } = require('../deal/update-deal.controller');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const { PORTAL_ROUTE } = require('../../../../constants/routes');
 const { DB_COLLECTIONS } = require('../../../../constants');
 
