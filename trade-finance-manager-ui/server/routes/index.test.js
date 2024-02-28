@@ -8,7 +8,8 @@ import feedbackRoutes from './feedback';
 import feedbackThankYouRoutes from './feedback-thank-you';
 import utilisationReportsRoutes from './utilisation-reports';
 import footerRoutes from './footer';
-import { validateUser } from '../middleware/user-validation';
+
+const { validateUser, validateToken } = require('../middleware');
 
 describe('routes index', () => {
   beforeEach(() => {
@@ -20,15 +21,15 @@ describe('routes index', () => {
   });
 
   it('should setup all routes', () => {
-    expect(use).toHaveBeenCalledTimes(10);
-    expect(use).toHaveBeenCalledWith('/home', homeRoutes);
+    expect(use).toHaveBeenCalledTimes(9);
+    expect(use).toHaveBeenCalledWith('/home', validateToken, homeRoutes);
     expect(use).toHaveBeenCalledWith('/', loginRoutes);
-    expect(use).toHaveBeenCalledWith('/case', validateUser, caseRoutes);
-    expect(use).toHaveBeenCalledWith('/deals', validateUser, dealsRoutes);
-    expect(use).toHaveBeenCalledWith('/facilities', validateUser, facilitiesRoutes);
+    expect(use).toHaveBeenCalledWith('/case', validateUser, validateToken, caseRoutes);
+    expect(use).toHaveBeenCalledWith('/deals', validateUser, validateToken, dealsRoutes);
+    expect(use).toHaveBeenCalledWith('/facilities', validateUser, validateToken, facilitiesRoutes);
     expect(use).toHaveBeenCalledWith('/feedback', feedbackRoutes);
     expect(use).toHaveBeenCalledWith('/thank-you-feedback', feedbackThankYouRoutes);
-    expect(use).toHaveBeenCalledWith('/utilisation-reports', validateUser, utilisationReportsRoutes);
+    expect(use).toHaveBeenCalledWith('/utilisation-reports', validateUser, validateToken, utilisationReportsRoutes);
     expect(use).toHaveBeenCalledWith('/', footerRoutes);
   });
 });
