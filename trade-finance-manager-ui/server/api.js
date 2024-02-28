@@ -383,24 +383,6 @@ const createActivity = async (dealId, activityUpdate, token) => {
   }
 };
 
-// const login = async (username, password) => {
-//   try {
-//     const response = await axios({
-//       method: 'post',
-//       url: `${TFM_API_URL}/v1/login`,
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       data: { username, password },
-//     });
-
-//     return response.data;
-//   } catch (error) {
-//     console.error('Unable to log in %s', error?.response?.data);
-//     return { status: error?.response?.status || 500, data: 'Failed to login' };
-//   }
-// };
-
 const getAuthLoginUrl = async () => {
   try {
     const response = await axios({
@@ -462,32 +444,6 @@ const validateToken = async (token) => {
   }).catch((error) => error.response);
   return response.status === 200;
 };
-
-// const updateUserPassword = async (userId, update, token) => {
-//   try {
-//     const isValidUserId = isValidMongoId(userId);
-
-//     if (!isValidUserId) {
-//       console.error('updateUserPassword: Invalid user id provided: %s', userId);
-//       return { status: 400, data: 'Invalid user id' };
-//     }
-
-//     const response = await axios({
-//       method: 'put',
-//       url: `${TFM_API_URL}/v1/users/${userId}`,
-//       headers: generateHeaders(token),
-//       data: update,
-//     }).catch((error) => {
-//       console.error('Unable to update user details in axios request %s', error);
-//       return { status: error?.response?.status || 500, data: 'Failed to update user password' };
-//     });
-
-//     return response;
-//   } catch (error) {
-//     console.error('Unable to update user details %s', error);
-//     return { status: error?.response?.status || 500, data: 'Failed to update user password' };
-//   }
-// };
 
 const createFeedback = async (formData, token) => {
   const response = await axios({
@@ -923,8 +879,6 @@ module.exports = {
   updateFacilityRiskProfile,
   getTeamMembers,
   getUser,
-  // createUser,
-  // updateUserPassword,
   updateParty,
   updateFacility,
   updateTask,
