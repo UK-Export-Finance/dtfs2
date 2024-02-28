@@ -1,4 +1,5 @@
 const DB_COLLECTIONS = {
+  BANKS: 'banks',
   UTILISATION_REPORTS: 'utilisationReports',
 };
 

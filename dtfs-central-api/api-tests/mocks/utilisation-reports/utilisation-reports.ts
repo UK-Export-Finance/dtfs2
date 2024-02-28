@@ -3,6 +3,7 @@ import { UtilisationReport } from '../../../src/types/db-models/utilisation-repo
 import { MOCK_BANKS } from '../banks';
 import { MOCK_AZURE_FILE_INFO } from '../azure-file-info';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../src/constants/utilisation-report-reconciliation-status';
+import { MOCK_MONTHLY_REPORT_PERIOD } from '../report-period';
 
 export const MOCK_UTILISATION_REPORT: UtilisationReport = {
   _id: new ObjectId('5099803df3f4948bd2f98391'),
@@ -10,8 +11,7 @@ export const MOCK_UTILISATION_REPORT: UtilisationReport = {
     id: MOCK_BANKS.HSBC.id,
     name: MOCK_BANKS.HSBC.name,
   },
-  month: 11,
-  year: 2023,
+  reportPeriod: MOCK_MONTHLY_REPORT_PERIOD,
   dateUploaded: new Date('2023-11-15'),
   azureFileInfo: MOCK_AZURE_FILE_INFO,
   status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
@@ -20,4 +20,12 @@ export const MOCK_UTILISATION_REPORT: UtilisationReport = {
     firstname: 'test',
     surname: 'user',
   },
+};
+
+export const MOCK_NOT_RECEIVED_UTILISATION_REPORT: UtilisationReport = {
+  ...MOCK_UTILISATION_REPORT,
+  status: 'REPORT_NOT_RECEIVED',
+  azureFileInfo: null,
+  uploadedBy: undefined,
+  dateUploaded: undefined,
 };

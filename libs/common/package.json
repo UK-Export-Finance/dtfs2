@@ -1,0 +1,47 @@
+{
+  "name": "@ukef/dtfs2-common",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Common code that can be shared across the dtfs2 project",
+  "keywords": [
+    "export",
+    "finance"
+  ],
+  "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
+  "bugs": {
+    "url": "https://github.com/UK-Export-Finance/dtfs2/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UK-Export-Finance/dtfs2.git"
+  },
+  "license": "MIT",
+  "author": "UK Export Finance",
+  "main": "src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "lint": "eslint \"src/**/*.{ts,js}\" && npm run type-check",
+    "lint:fix": "eslint \"src/**/*.{ts,js}\"",
+    "prettier": "prettier --check \"src/**/*.{ts,js}\"",
+    "prettier:fix": "prettier --write \"src/**/*.{ts,js}\"",
+    "type-check": "tsc --noEmit",
+    "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
+    "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
+  },
+  "dependencies": {
+    "node-cron": "^3.0.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.11",
+    "@types/node-cron": "^3.0.11",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=20",
+    "npm": ">=10"
+  },
+  "engineStrict": true
+}

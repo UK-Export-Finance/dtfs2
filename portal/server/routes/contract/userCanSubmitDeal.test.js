@@ -1,5 +1,7 @@
-import { CHECKER, MAKER } from '../../constants/roles';
+import { ROLES } from '../../constants';
 import userCanSubmitDeal from './userCanSubmitDeal';
+
+const { MAKER, CHECKER } = ROLES;
 
 describe('userCanSubmitDeal', () => {
   describe('when deal has `Submitted` status', () => {

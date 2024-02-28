@@ -10,18 +10,42 @@ describe(page, () => {
     surname: 'Smith',
     roles: [ROLES.PAYMENT_REPORT_OFFICER],
   };
-  const dueReportDates = [{
-    month: 12,
-    year: 2022,
-    reportPeriod: 'December 2022',
+  const dueReportPeriods = [{
+    reportPeriod: {
+      start: {
+        month: 12,
+        year: 2022,
+      },
+      end: {
+        month: 12,
+        year: 2022,
+      },
+    },
+    formattedReportPeriod: 'December 2022',
   }, {
-    month: 1,
-    year: 2023,
-    reportPeriod: 'January 2023',
+    reportPeriod: {
+      start: {
+        month: 1,
+        year: 2023,
+      },
+      end: {
+        month: 1,
+        year: 2023,
+      },
+    },
+    formattedReportPeriod: 'January 2023',
   }, {
-    month: 2,
-    year: 2023,
-    reportPeriod: 'February 2023',
+    reportPeriod: {
+      start: {
+        month: 2,
+        year: 2023,
+      },
+      end: {
+        month: 2,
+        year: 2023,
+      },
+    },
+    formattedReportPeriod: 'February 2023',
   }];
 
   const decemberOverdueReportText = 'December 2022 report is overdue';
@@ -34,7 +58,7 @@ describe(page, () => {
       wrapper = render({
         user,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-        dueReportDates,
+        dueReportPeriods,
       });
     });
 
@@ -67,7 +91,7 @@ describe(page, () => {
       wrapper = render({
         user,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-        dueReportDates: dueReportDates.slice(1),
+        dueReportPeriods: dueReportPeriods.slice(1),
       });
     });
 
@@ -100,7 +124,7 @@ describe(page, () => {
       wrapper = render({
         user,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-        dueReportDates: dueReportDates.slice(2),
+        dueReportPeriods: dueReportPeriods.slice(2),
         nextDueReportDueDate,
       });
     });
@@ -129,7 +153,7 @@ describe(page, () => {
       wrapper = render({
         user,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-        dueReportDates: [],
+        dueReportPeriods: [],
         nextReportPeriod,
         nextReportPeriodSubmissionStart,
         lastUploadedReportPeriod,

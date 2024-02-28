@@ -1,6 +1,5 @@
-/* eslint-disable no-underscore-dangle */
 const componentRenderer = require('../../componentRenderer');
-const formatDateString = require('../../../server/nunjucks-configuration/filter-formatDateString');
+const { formatDateString } = require('../../../server/nunjucks-configuration/filter-formatDateString');
 
 const component = '../templates/deals/_macros/deals-table.njk';
 const render = componentRenderer(component);
@@ -186,7 +185,7 @@ describe(component, () => {
       it('should render', () => {
         params.deals.forEach((deal) => {
           const cellSelector = `[data-cy="deal-${deal._id}-date-received"]`;
-          const expected = formatDateString(deal.tfm.dateReceived, 'DD-MM-YYYY', 'D MMM YYYY');
+          const expected = formatDateString(deal.tfm.dateReceived, 'dd-MM-yyyy', 'd MMM yyyy');
           wrapper.expectText(cellSelector).toRead(expected);
         });
       });

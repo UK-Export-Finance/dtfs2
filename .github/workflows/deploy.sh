@@ -32,7 +32,7 @@ if [ -n "$selection" ]; then
         elif [ "$destination" = "staging" ]; then
             branch=dev
         ############### PRODUCTION ###############
-        elif [ "$destination" = "production" ]; then
+        elif [ "$destination" = "prod" ]; then
             branch=staging
         fi
     ############### ACR PURGE ###############

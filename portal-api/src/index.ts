@@ -1,9 +1,10 @@
 import dotenv from 'dotenv';
-import initScheduler from './scheduler';
+import { initialiseCronJobScheduler } from '@ukef/dtfs2-common';
+import { cronSchedulerJobs } from './cron-scheduler-jobs';
 
 dotenv.config();
 
-initScheduler();
+initialiseCronJobScheduler(cronSchedulerJobs);
 
 // eslint-disable-next-line import/first
 import app from './createApp';

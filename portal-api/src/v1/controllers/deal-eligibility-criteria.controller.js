@@ -3,16 +3,35 @@ const { userHasAccessTo } = require('../users/checks');
 const { getEligibilityErrors, getCriteria11Errors, getEligibilityStatus } = require('../validation/eligibility-criteria');
 const { getDocumentationErrors } = require('../validation/eligibility-documentation');
 const CONSTANTS = require('../../constants');
-const { findOneCountry } = require('./countries.controller');
+const { getCountry } = require('./countries.controller');
 
+/**
+ * Retrieves the country object encompassing `name` and `code` for a specified country code.
+ * Returns `{}` when either the country code specified is void or upon an unexpected response.
+ *
+ * @param {string} countryCode - The country code.
+ * @returns {Promise<Object>} - The country object with properties 'name' and 'code' returned as a promise.
+ */
 const countryObject = async (countryCode) => {
-  const { data: countryObj } = await findOneCountry(countryCode);
-
-  if (!countryObj) {
+  if (!countryCode) {
+    console.error('Void country code specified %s', countryCode);
     return {};
   }
 
-  const { name, code } = countryObj;
+  const response = await getCountry(countryCode);
+
+  if (!response?.data) {
+    console.error('Unexpected response received whilst fetching country with code %o', response);
+    return {};
+  }
+
+  const { data: country } = response;
+
+  if (!country) {
+    return {};
+  }
+
+  const { name, code } = country;
 
   return {
     name,
@@ -31,7 +50,10 @@ exports.update = async (req, res) => {
         res.status(401).send();
       }
 
-      const { eligibility: { criteria }, supportingInformation = {} } = deal;
+      const {
+        eligibility: { criteria },
+        supportingInformation = {},
+      } = deal;
       let criteriaComplete = true;
       let criteriaAllTrue = true;
 
@@ -59,7 +81,7 @@ exports.update = async (req, res) => {
       // Special case for criteria 11 - must add agents name & address if criteria 11 === false
       const criteria11 = updatedCriteria.find((c) => c.id === 11);
 
-      const criteria11IsFalse = (typeof criteria11.answer !== 'undefined' && criteria11.answer === false);
+      const criteria11IsFalse = typeof criteria11.answer !== 'undefined' && criteria11.answer === false;
 
       const criteria11Additional = {
         agentName: criteria11IsFalse && req.body.agentName ? req.body.agentName.substring(0, 150) : '',

@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
@@ -754,5 +753,3 @@ describe('controllers - case', () => {
     });
   });
 });
-
-/* eslint-enable no-underscore-dangle */

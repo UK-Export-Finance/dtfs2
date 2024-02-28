@@ -5,14 +5,11 @@
   "license": "ISC",
   "author": "",
   "main": "migrate-users.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "dependencies": {
-    "axios": "^1.6.5",
+    "axios": "^1.6.7",
     "bson": "^6.2.0",
     "date-fns": "^2.30.0",
-    "dotenv": "^16.4.0",
+    "dotenv": "^16.4.1",
     "generate-password": "^1.7.1",
     "html-entities": "^2.4.0",
     "json2csv": "^5.0.7",

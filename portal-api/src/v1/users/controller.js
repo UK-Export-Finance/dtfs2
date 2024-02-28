@@ -156,11 +156,8 @@ exports.create = async (user, userService, callback) => {
 
     const sanitizedUser = sanitizeUser(createdUser);
 
-    // TODO DTFS2-6621 - Remove conditional check
-    if (sanitizedUser.username && sanitizedUser.username.includes('@')) {
-      const resetPasswordToken = await createPasswordToken(sanitizedUser.email, userService);
-      await sendNewAccountEmail(sanitizedUser, resetPasswordToken);
-    }
+    const resetPasswordToken = await createPasswordToken(sanitizedUser.email, userService);
+    await sendNewAccountEmail(sanitizedUser, resetPasswordToken);
 
     return callback(null, sanitizedUser);
   }
@@ -180,7 +177,7 @@ exports.update = async (_id, update, callback) => {
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
     if (existingUser['user-status'] !== USER.STATUS.BLOCKED && userSetUpdate['user-status'] === USER.STATUS.BLOCKED) {
       // User is being blocked.
-      await sendBlockedEmail(existingUser.username);
+      await sendBlockedEmail(existingUser.email);
     }
 
     if (existingUser['user-status'] === USER.STATUS.BLOCKED && userSetUpdate['user-status'] === USER.STATUS.ACTIVE) {
@@ -192,7 +189,7 @@ exports.update = async (_id, update, callback) => {
         blockedStatusReason: '',
       };
 
-      await sendUnblockedEmail(existingUser.username);
+      await sendUnblockedEmail(existingUser.email);
     }
 
     // Password update
@@ -284,12 +281,13 @@ exports.incrementFailedLoginCount = async (user) => {
 
   const update = thresholdReached
     ? {
-      'user-status': USER.STATUS.BLOCKED,
-      blockedStatusReason: USER.STATUS_BLOCKED_REASON.INVALID_PASSWORD,
-    } : {
-      loginFailureCount: failureCount,
-      lastLoginFailure: now()
-    };
+        'user-status': USER.STATUS.BLOCKED,
+        blockedStatusReason: USER.STATUS_BLOCKED_REASON.INVALID_PASSWORD,
+      }
+    : {
+        loginFailureCount: failureCount,
+        lastLoginFailure: now(),
+      };
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 

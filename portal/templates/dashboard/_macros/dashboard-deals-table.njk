@@ -55,7 +55,7 @@
           attributes: { "data-cy": "deal__status--" + deal._id }
         },
         {
-          text: deal.updatedAt | localiseTimestamp("D MMM YYYY", userTimezone) or "-",
+          text: deal.updatedAt | localiseTimestamp("d MMM yyyy", userTimezone) or "-",
           attributes: {
           'data-cy': 'deal__updated--' + deal._id }
         }

@@ -19,15 +19,17 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     healthcheck:
-      test: echo "rs.status()" | mongo --quiet
-      interval: 5s
-      timeout: 30s
-      retries: 30
+      test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --quiet) -eq 1
+      interval: 10s
+      start_period: 30s
+    command: "--bind_ip_all --keyFile /mongo-keyfile --replSet rs0"
     volumes:
       - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
 
   dtfs-central-api:
-    build: ./dtfs-central-api
+    build:
+      context: .
+      dockerfile: ./dtfs-central-api/Dockerfile
     image: dtfs/dtfs-central-api
     restart: always
     depends_on:
@@ -37,7 +39,8 @@ services:
       - '5005:5005' # http
       - '9223:9223' # debug
     volumes:
-      - ./dtfs-central-api/src:/app/src:ro
+      - ./dtfs-central-api/src:/app/dtfs-central-api/src:ro
+      - ./libs:/app/libs:ro
     environment:
       - PORT=5005
       - CORS_ORIGIN
@@ -55,9 +58,12 @@ services:
       - AUDIT_API_USERNAME
       - AUDIT_API_PASSWORD
       - CHANGE_STREAM_ENABLED
+      - UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
 
   trade-finance-manager-ui:
-    build: ./trade-finance-manager-ui
+    build:
+      context: .
+      dockerfile: ./trade-finance-manager-ui/Dockerfile
     image: dtfs/trade-finance-manager-ui
     depends_on:
       - trade-finance-manager-api
@@ -65,9 +71,10 @@ services:
       - '5003:5003' # http
       - '9224:9224' # debug
     volumes:
-      - ./trade-finance-manager-ui/server:/app/server:ro
-      - ./trade-finance-manager-ui/public:/app/public:ro
-      - ./trade-finance-manager-ui/templates:/app/templates:ro
+      - ./trade-finance-manager-ui/server:/app/trade-finance-manager-ui/server:ro
+      - ./trade-finance-manager-ui/public:/app/trade-finance-manager-ui/public:ro
+      - ./trade-finance-manager-ui/templates:/app/trade-finance-manager-ui/templates:ro
+      - ./libs:/app/libs:ro
     environment:
       - PORT=5003
       - PORTAL_API_KEY
@@ -87,7 +94,9 @@ services:
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
 
   trade-finance-manager-api:
-    build: ./trade-finance-manager-api
+    build:
+      context: .
+      dockerfile: ./trade-finance-manager-api/Dockerfile
     image: dtfs/trade-finance-manager-api
     restart: always
     depends_on:
@@ -98,7 +107,8 @@ services:
       - '5004:5004' # http
       - '9225:9225' # debug
     volumes:
-      - ./trade-finance-manager-api/src:/app/src:ro
+      - ./trade-finance-manager-api/src:/app/trade-finance-manager-api/src:ro
+      - ./libs:/app/libs:ro
     environment:
       - PORT=5004
       - CORS_ORIGIN
@@ -127,7 +137,9 @@ services:
       - RATE_LIMIT_THRESHOLD
 
   portal:
-    build: ./portal
+    build:
+      context: .
+      dockerfile: ./portal/Dockerfile
     image: dtfs/portal
     restart: always
     depends_on:
@@ -138,9 +150,10 @@ services:
       - '5000:5000' # http
       - '9226:9226' # debug
     volumes:
-      - ./portal/server:/app/server:ro
-      - ./portal/public:/app/public:ro
-      - ./portal/templates:/app/templates:ro
+      - ./portal/server:/app/portal/server:ro
+      - ./portal/public:/app/portal/public:ro
+      - ./portal/templates:/app/portal/templates:ro
+      - ./libs:/app/libs:ro
     environment:
       - PORTAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
@@ -162,7 +175,9 @@ services:
       - UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=1048576
 
   portal-api:
-    build: ./portal-api
+    build:
+      context: .
+      dockerfile: ./portal-api/Dockerfile
     image: dtfs/portal-api
     restart: always
     depends_on:
@@ -172,7 +187,8 @@ services:
       - '5001:5001' # http
       - '9227:9227' # debug
     volumes:
-      - ./portal-api/src:/app/src:ro
+      - ./portal-api/src:/app/portal-api/src:ro
+      - ./libs:/app/libs:ro
     environment:
       - PORT=5001
       - CORS_ORIGIN
@@ -206,7 +222,9 @@ services:
       - UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE
 
   external-api:
-    build: ./external-api
+    build:
+      context: .
+      dockerfile: ./external-api/Dockerfile
     image: dtfs/external-api
     restart: always
     depends_on:
@@ -215,7 +233,8 @@ services:
       - '5002:5002' # http
       - '9228:9228' # debug
     volumes:
-      - ./external-api/src:/app/src:ro
+      - ./external-api/src:/app/external-api/src:ro
+      - ./libs:/app/libs:ro
     environment:
       - PORT=5002
       - PORTAL_API_KEY
@@ -245,10 +264,12 @@ services:
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
-    entrypoint: npx ts-node src/index.ts
+    entrypoint: npx ts-node external-api/src/index.ts
 
   gef-ui:
-    build: ./gef-ui
+    build:
+      context: .
+      dockerfile: ./gef-ui/Dockerfile
     image: dtfs/gef-ui
     restart: always
     depends_on:
@@ -258,9 +279,10 @@ services:
       - '5006:5006' # http
       - '9229:9229' # debug
     volumes:
-      - ./gef-ui/server:/app/server:ro
-      - ./gef-ui/public:/app/public:ro
-      - ./gef-ui/templates:/app/templates:ro
+      - ./gef-ui/server:/app/gef-ui/server:ro
+      - ./gef-ui/public:/app/gef-ui/public:ro
+      - ./gef-ui/templates:/app/gef-ui/templates:ro
+      - ./libs:/app/libs:ro
     environment:
       - PORTAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk

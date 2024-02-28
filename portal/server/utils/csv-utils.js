@@ -185,7 +185,8 @@ const csvBasedCsvToJsonPromise = async (csvBuffer) => {
             const keys = Object.keys(row);
             const rowData = row;
             for (const key of keys) {
-              rowData[key].row = index + 1;
+              // Add 2 to the index because the first row is the header and the index is 0 based
+              rowData[key].row = index + 2;
             }
             return rowData;
           });

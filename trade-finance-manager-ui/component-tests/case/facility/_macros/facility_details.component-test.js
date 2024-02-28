@@ -1,7 +1,7 @@
 const componentRenderer = require('../../../componentRenderer');
 
 const component = '../templates/case/facility/_macros/facility_details.njk';
-const localiseTimestamp = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
+const { localiseTimestamp } = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
 
 const render = componentRenderer(component);
 
@@ -127,7 +127,7 @@ describe(component, () => {
     });
 
     it('should render maximum ukefExposure', () => {
-      const expectedTimestamp = localiseTimestamp(params.facilityTfm.ukefExposure.timestamp, 'D MMMM YYYY', params.user.timezone);
+      const expectedTimestamp = localiseTimestamp(params.facilityTfm.ukefExposure.timestamp, 'd MMMM yyyy', params.user.timezone);
       const expected = `${params.facilityTfm.ukefExposure.exposure} as at ${expectedTimestamp}`;
       wrapper.expectText('[data-cy="facility-maximum-ukef-exposure"]').toRead(expected);
     });
@@ -150,17 +150,17 @@ describe(component, () => {
 
   describe('`dates` section', () => {
     it('should render inclusionNoticeReceived', () => {
-      const expected = localiseTimestamp(params.facility.dates.inclusionNoticeReceived, 'D MMMM YYYY', params.user.timezone);
+      const expected = localiseTimestamp(params.facility.dates.inclusionNoticeReceived, 'd MMMM yyyy', params.user.timezone);
       wrapper.expectText('[data-cy="facility-inclusion-notice-received"]').toRead(expected);
     });
 
     it('should render bankIssueNoticeReceived', () => {
-      const expected = localiseTimestamp(params.facility.dates.bankIssueNoticeReceived, 'D MMMM YYYY', params.user.timezone);
+      const expected = localiseTimestamp(params.facility.dates.bankIssueNoticeReceived, 'd MMMM yyyy', params.user.timezone);
       wrapper.expectText('[data-cy="facility-bank-issue-notice-received"]').toRead(expected);
     });
 
     it('should render coverStartDate', () => {
-      const expected = localiseTimestamp(params.facility.dates.coverStartDate, 'D MMMM YYYY', params.user.timezone);
+      const expected = localiseTimestamp(params.facility.dates.coverStartDate, 'd MMMM yyyy', params.user.timezone);
 
       wrapper.expectText('[data-cy="facility-cover-start-date"]').toRead(expected);
     });

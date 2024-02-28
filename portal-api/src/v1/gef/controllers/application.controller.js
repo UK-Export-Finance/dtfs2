@@ -7,7 +7,7 @@ const { supportingInfoStatus } = require('./validation/supportingInfo');
 
 const { eligibilityCriteriaStatus } = require('./validation/eligibilityCriteria');
 const { isSuperUser } = require('../../users/checks');
-const { getLatestCriteria: getLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
+const { getLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
 
 const { Application } = require('../models/application');
 const { addSubmissionData } = require('./application-submit');

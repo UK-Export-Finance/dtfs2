@@ -1,8 +1,9 @@
 import { WithId } from 'mongodb';
 import { AzureFileInfo } from '../azure-file-info';
-import { UtilisationReportReconciliationStatus } from '../utilisation-reports';
+import { UtilisationReportReconciliationStatus, ReportPeriod } from '../utilisation-reports';
 import { SessionBank } from '../session-bank';
 import { Prettify } from '../types-helper';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 
 export type UploadedByUserDetails = {
   id: string;
@@ -17,19 +18,15 @@ export type UtilisationReport = Prettify<
      */
     bank: SessionBank;
     /**
-     * 1-indexed month of the start of the report period
-     * example: 6 (for June)
+     * Start and end dates of the report period.
+     * @example
+     * { start: { month: 1, year: 2023 }, end: { month: 1, year: 2023 } }
      */
-    month: number;
-    /**
-     * year of the start of the report period
-     * example: 2023
-     */
-    year: number;
+    reportPeriod: ReportPeriod;
     /**
      * The date and time that the report was originally uploaded
      */
-    dateUploaded: Date;
+    dateUploaded?: Date;
     /**
      * Metadata about the file uploaded to Azure Storage
      */
@@ -41,6 +38,14 @@ export type UtilisationReport = Prettify<
     /**
      * Details of the user that uploaded the report
      */
-    uploadedBy: UploadedByUserDetails;
+    uploadedBy?: UploadedByUserDetails;
   }>
+>;
+
+export type UtilisationReportUploadDetails = Prettify<
+  Required<
+    Pick<UtilisationReport, 'azureFileInfo' | 'dateUploaded' | 'uploadedBy'> & {
+      status: typeof UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
+    }
+  >
 >;
