@@ -12,14 +12,7 @@ const hasAllRequestedCoverStartDateValues = (facility) => {
     'requestedCoverStartDate-year': requestedCoverStartDateYear,
   } = facility;
 
-  const hasRequestedCoverStartDate =
-    dateHasAllValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear);
-
-  if (hasRequestedCoverStartDate) {
-    return true;
-  }
-
-  return false;
+  return dateHasAllValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear);
 };
 
 exports.hasAllRequestedCoverStartDateValues = hasAllRequestedCoverStartDateValues;
