@@ -28,7 +28,7 @@ const createLoggedInUserSession = async (user) => {
     const userCollection = await db.getCollection('users');
     const userFromDatabase = await userCollection.findOne({ username: { $eq: user.username } }, { collation: { locale: 'en', strength: 2 } });
     if (!userFromDatabase) {
-      throw new UserNotFoundError({userIdentifier:user.username});
+      throw new UserNotFoundError({ userIdentifier: user.username });
     }
     const sessionIdentifier = crypto.randomBytes(32).toString('hex');
     const token = issueValid2faJWT(userFromDatabase, sessionIdentifier);

@@ -49,7 +49,7 @@ const deleteInitialUser = async (token) => {
 const createAndLogInAsInitialTfmUser = async () => {
   try {
     console.info('TFM login as user %s', mockDataLoaderTFMUser.username);
-    let token = await api.loginTfmUser(mockDataLoaderTFMUser);
+    const token = await api.loginTfmUser(mockDataLoaderTFMUser);
 
     if (!token) {
       throw new FailedToCreateLoggedInUserSessionError({ username: mockDataLoaderTFMUser.username, cause: 'No token was present on response' });
