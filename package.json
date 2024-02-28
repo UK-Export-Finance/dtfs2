@@ -36,7 +36,7 @@
     "install:all": "npm install --if-present",
     "lint:all": "npm run lint --workspaces --if-present",
     "lint:fix:all": "npm run lint --fix --workspaces --if-present",
-    "load": "ts-node utils/mock-data-loader/re-insert-mocks.js && (cd libs/common && npm run db:reset)",
+    "load": "ts-node utils/mock-data-loader/re-insert-mocks.js",
     "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color '**/*'",
     "type-check:all": "npm run type-check --workspaces --if-present",
     "update:all": "npm update --save --if-present"

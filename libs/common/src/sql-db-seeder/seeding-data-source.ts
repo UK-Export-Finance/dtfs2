@@ -1,8 +1,8 @@
 import { DataSource } from 'typeorm';
 import { SeederOptions } from 'typeorm-extension';
-import { SqlDbDataSource } from '../sql-db-connection/data-source';
+import { SqlDbDataSource } from '../sql-db-connection';
 
-const sqlDbDataSourceOptions = SqlDbDataSource.options;
+const dataSourceOptions = SqlDbDataSource.options;
 
 const seederOptions: SeederOptions = {
   seeds: ['./**/*.seed.ts'],
@@ -11,6 +11,6 @@ const seederOptions: SeederOptions = {
 };
 
 export default new DataSource({
-  ...sqlDbDataSourceOptions,
+  ...dataSourceOptions,
   ...seederOptions,
 });
