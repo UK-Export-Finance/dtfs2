@@ -50,7 +50,7 @@ exports.updateFacilityPut = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'User details are required' });
   }
 
-  const {user} = req.body;
+  const { user } = req.body;
 
   delete req.body.user;
   const facilityUpdate = req.body;
