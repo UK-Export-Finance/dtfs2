@@ -38,10 +38,6 @@ const newDeal = aDeal({
   bankInternalRefName: 'test',
   submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
   updatedAt: 123456789,
-  auditDetails: {
-    lastUpdatedBy: mockUser._id,
-    lastUpdatedAt: 123456789,
-  }
 });
 
 describe('/v1/portal/deals', () => {
@@ -190,15 +186,9 @@ describe('/v1/portal/deals', () => {
         const { status, body } = await api.get(`/v1/portal/deals/${dealId}`);
 
         expect(status).toEqual(200);
-        expect(body.deal.bondTransactions.items).toEqual([
-          bond1,
-          bond2,
-        ]);
+        expect(body.deal.bondTransactions.items).toEqual([bond1, bond2]);
 
-        expect(body.deal.loanTransactions.items).toEqual([
-          loan1,
-          loan2,
-        ]);
+        expect(body.deal.loanTransactions.items).toEqual([loan1, loan2]);
       });
     });
   });
@@ -307,7 +297,7 @@ describe('/v1/portal/deals', () => {
       const dealWithSubmittedStatus = {
         ...newDeal,
         status: 'Submitted',
-        previousStatus: 'Checker\'s approval',
+        previousStatus: "Checker's approval",
       };
       const postResult = await api.post({ deal: dealWithSubmittedStatus, user: mockUser }).to('/v1/portal/deals');
       const createdDeal = postResult.body;
@@ -327,7 +317,7 @@ describe('/v1/portal/deals', () => {
       const dealWithSubmittedStatus = {
         ...newDeal,
         status: 'Submitted',
-        previousStatus: 'Checker\'s approval',
+        previousStatus: "Checker's approval",
       };
 
       const postResult = await api.post({ deal: dealWithSubmittedStatus, user: mockUser }).to('/v1/portal/deals');

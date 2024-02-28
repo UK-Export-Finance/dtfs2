@@ -115,7 +115,7 @@ describe('/v1/portal/facilities', () => {
       expect(typeof body.deal.editedBy[1].date).toEqual('number');
     });
 
-    it('updates the facility when no req.body.user is provided', async () => {
+    it('does not update the facility when no req.body.user is provided', async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const createdFacility = postResult.body;
 
@@ -124,11 +124,9 @@ describe('/v1/portal/facilities', () => {
         value: 123456,
       };
 
-      await api.put(updatedFacility).to(`/v1/portal/facilities/${createdFacility._id}`);
+      const { status } = await api.put(updatedFacility).to(`/v1/portal/facilities/${createdFacility._id}`);
 
-      const { body } = await api.get(`/v1/portal/facilities/${createdFacility._id}`);
-
-      expect(body.value).toEqual(updatedFacility.value);
+      expect(status).toEqual(400);
     });
   });
 
