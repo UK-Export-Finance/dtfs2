@@ -17,8 +17,15 @@ const isEpoch = (epoch) => moment(epoch, 'x', true).isValid() || moment(epoch, '
  * @returns true if the value is a string and not an epoch
  */
 const isString = (dateStr) => typeof dateStr === 'string' && !isEpoch(dateStr);
+/**
+ * @returns current date in format `yyyy-MM-dd`
+ */
 const now = () => moment().format('YYYY-MM-DD');
 
+/**
+ * @param {number | string} year as a 2 or 4 digit number
+ * @returns year formatted as 4 digits (adds 2000 if < 1000)
+ */
 const formatYear = (year) => (year < 1000 ? (2000 + parseInt(year, 10)).toString() : year && year.toString());
 const formatDate = (dateStr) => moment(isDate(dateStr) || isString(dateStr) ? dateStr : Number(dateStr)).format('YYYY-MM-DD');
 const formatTimestamp = (dateStr) => moment(isDate(dateStr) || isString(dateStr) ? dateStr : Number(dateStr)).format('YYYY-MM-DD');
