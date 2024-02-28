@@ -235,7 +235,7 @@ describe('user validation', () => {
   }
 
   function whenMultipleRulesReturnErrorsItReturnsAllErrors({ makeApplyRulesCall, expectedRulesTestCases }) {
-    describe.only('when multiple rules return errors', () => {
+    describe('when multiple rules return errors', () => {
       describe.each([
         {
           description: 'synchronous',
