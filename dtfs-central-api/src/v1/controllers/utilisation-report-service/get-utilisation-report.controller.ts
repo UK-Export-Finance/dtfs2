@@ -12,7 +12,7 @@ export const getUtilisationReportById = async (req: GetUtilisationReportByIdRequ
   const { id } = req.params;
 
   try {
-    const utilisationReport = await UtilisationReportRepo.findOneById(Number(id));
+    const utilisationReport = await UtilisationReportRepo.findOneBy({ id: Number(id) });
 
     if (!utilisationReport) {
       return res.status(404).send();

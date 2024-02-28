@@ -9,7 +9,6 @@ const {
 const putUtilisationReportStatusController = require('../controllers/utilisation-report-service/put-utilisation-report-status.controller');
 const { sqlIdValidation } = require('../validation/route-validators/route-validators');
 
-
 const utilisationReportsRouter = express.Router();
 
 /**
@@ -137,10 +136,6 @@ utilisationReportsRouter
  *       500:
  *         description: Internal Server Error
  */
-utilisationReportsRouter
-  .route('/set-status')
-  .put(
-    putUtilisationReportStatusController.putUtilisationReportStatus,
-  );
+utilisationReportsRouter.route('/set-status').put(putUtilisationReportStatusController.putUtilisationReportStatus);
 
 module.exports = utilisationReportsRouter;

@@ -16,9 +16,9 @@ import { MonthAndYearPartialEntity } from '../sql-db-entities/partial-entities';
  */
 export type UnixTimestamp = number;
 
-export type MonthAndYear = Prettify<MonthAndYearPartialEntity>;
-
 /**
  * ISO 8601 date time string in format 'yyyy-MM-ddThh:mm:ssZ'
  */
 export type IsoDateTimeStamp = string;
+
+export type MonthAndYear = Prettify<MonthAndYearPartialEntity>;

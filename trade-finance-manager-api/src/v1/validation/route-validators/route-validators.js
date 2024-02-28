@@ -28,8 +28,6 @@ const isoMonthValidation = (fields) =>
     .custom(isValidIsoMonth)
     .withMessage((value, { path }) => `'${path}' parameter must be an ISO month string (format 'yyyy-MM')`);
 
-
-
 exports.userIdEscapingSanitization = [userParamEscapingSanitization];
 
 exports.userIdValidation = [userParamValidation];

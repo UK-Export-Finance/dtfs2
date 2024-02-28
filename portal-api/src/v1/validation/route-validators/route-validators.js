@@ -15,5 +15,5 @@ const sqlIdValidation = param('id').isInt().withMessage("Invalid 'id' path param
 module.exports = {
   bankIdValidation,
   mongoIdValidation,
-  sqlIdValidation
+  sqlIdValidation,
 };

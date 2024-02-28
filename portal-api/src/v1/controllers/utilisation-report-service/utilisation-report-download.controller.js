@@ -15,7 +15,7 @@ const getUtilisationReportFileMetadata = async (bankId, id) => {
   const { azureFileInfo, bankId: reportBankId } = response;
 
   if (reportBankId !== bankId) {
-    throw new Error(`Failed to find utilisation report with bankId ${bankId} and report id ${id}`)
+    throw new Error(`Failed to find utilisation report with bankId ${bankId} and report id ${id}`);
   }
 
   if (!azureFileInfo?.filename) {

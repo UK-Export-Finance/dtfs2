@@ -127,19 +127,11 @@ authRouter.route('/bank-holidays').get(bankHolidaysController.getBankHolidays);
 
 authRouter
   .route('/utilisation-reports/reconciliation-summary/:submissionMonth')
-  .get(
-    validation.isoMonthValidation('submissionMonth'),
-    handleExpressValidatorResult,
-    utilisationReportsController.getUtilisationReportsReconciliationSummary,
-  );
+  .get(validation.isoMonthValidation('submissionMonth'), handleExpressValidatorResult, utilisationReportsController.getUtilisationReportsReconciliationSummary);
 
 authRouter
   .route('/utilisation-reports/:id/download')
-  .get(
-    validation.sqlIdValidation,
-    handleExpressValidatorResult,
-    utilisationReportsController.getUtilisationReportDownload,
-  );
+  .get(validation.sqlIdValidation, handleExpressValidatorResult, utilisationReportsController.getUtilisationReportDownload);
 
 authRouter
   .route('/utilisation-reports/set-status')

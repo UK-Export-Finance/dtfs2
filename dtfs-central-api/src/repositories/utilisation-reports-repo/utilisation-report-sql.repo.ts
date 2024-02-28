@@ -8,8 +8,4 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
   async findOneByBankIdAndReportPeriod(bankId: string, reportPeriod: ReportPeriod): Promise<UtilisationReportEntity | null> {
     return await this.findOneBy({ bankId, reportPeriod });
   },
-
-  async findOneById(id: number) {
-    return await this.findOneBy({ id });
-  }
 });
