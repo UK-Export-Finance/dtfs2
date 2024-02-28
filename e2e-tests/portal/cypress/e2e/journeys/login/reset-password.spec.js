@@ -3,6 +3,7 @@ const {
 } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { TEST_EMAIL_NO_GOV_NOTIFY } = require('../../../../../e2e-fixtures/portal-users.fixture');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -40,7 +41,7 @@ context('Password management screens', () => {
     });
 
     it('should redirect to login page on successful request for reset password', () => {
-      resetPassword.emailInput().type('test_no_notify@ukexportfinance.gov.uk');
+      resetPassword.emailInput().type(TEST_EMAIL_NO_GOV_NOTIFY.email);
       resetPassword.submit().click();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
@@ -48,7 +49,7 @@ context('Password management screens', () => {
     });
 
     it('should be case insensitive when accepting email', () => {
-      resetPassword.emailInput().type('Test_No_Notify@ukexportfinance.gov.uk');
+      resetPassword.emailInput().type(TEST_EMAIL_NO_GOV_NOTIFY.email.toUpperCase());
       resetPassword.submit().click();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));

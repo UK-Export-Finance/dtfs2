@@ -4,7 +4,7 @@ const { MAKER, CHECKER } = require('../../constants/roles');
 const chance = new Chance();
 
 const MOCK_REQUEST = {
-  username: 'BANK1_MAKER1',
+  username: 'maker1@ukexportfinance.gov.uk',
   firstname: chance.first(),
   surname: chance.last(),
   email: chance.email(),
@@ -27,7 +27,7 @@ const MOCK_REQUEST = {
 };
 
 const MOCK_REQUEST_CHECKER = {
-  username: 'BANK1_CHECKER1',
+  username: 'checker1@ukexportfinance.gov.uk',
   firstname: chance.first(),
   surname: chance.last(),
   email: chance.email(),

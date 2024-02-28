@@ -7,7 +7,7 @@ const UKEF_GEF_ONLY_BANK = BANKS.find((bank) => bank.name === 'GEF Only Bank');
 
 const USERS = {
   BANK1_MAKER1: {
-    username: 'BANK1_MAKER1',
+    username: 'maker1@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'First',
     surname: 'Last',
@@ -17,7 +17,7 @@ const USERS = {
     bank: UKEF_TEST_BANK_1,
   },
   BANK1_MAKER2: {
-    username: 'BANK1_MAKER2',
+    username: 'maker2@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Tamara',
     surname: 'last',
@@ -27,7 +27,7 @@ const USERS = {
     bank: UKEF_TEST_BANK_1,
   },
   BANK1_MAKER3: {
-    username: 'BANK1_MAKER3',
+    username: 'maker33@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'First',
     surname: 'Last',
@@ -36,8 +36,8 @@ const USERS = {
     roles: [ROLES.MAKER],
     bank: UKEF_TEST_BANK_1,
   },
-  BANK1_READ_ONLY: {
-    username: 'BANK1_READ_ONLY',
+  BANK1_READ_ONLY1: {
+    username: 'readOnly1@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Bank1',
     surname: 'Read-only',
@@ -47,7 +47,7 @@ const USERS = {
     bank: UKEF_TEST_BANK_1,
   },
   BANK3_GEF_MAKER1: {
-    username: 'BANK3_GEF_MAKER1',
+    username: 'maker3@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Benito',
     surname: 'Sutton',
@@ -57,7 +57,7 @@ const USERS = {
     bank: UKEF_GEF_ONLY_BANK,
   },
   BANK3_GEF_CHECKER1: {
-    username: 'BANK3_GEF_CHECKER1',
+    username: 'maker4@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Tony',
     surname: 'Sheridan',
@@ -67,7 +67,7 @@ const USERS = {
     bank: UKEF_GEF_ONLY_BANK,
   },
   BANK1_CHECKER1: {
-    username: 'BANK1_CHECKER1',
+    username: 'checker1@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Mister',
     surname: 'Checker',
@@ -77,7 +77,7 @@ const USERS = {
     bank: UKEF_TEST_BANK_1,
   },
   BANK1_MAKER_CHECKER1: {
-    username: 'BANK1_MAKER_CHECKER1',
+    username: 'checker2@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Vladimir',
     surname: 'Scorpius',
@@ -86,8 +86,8 @@ const USERS = {
     roles: [ROLES.MAKER, ROLES.CHECKER],
     bank: UKEF_TEST_BANK_1,
   },
-  BANK1_MAKENCHECK2: {
-    username: 'BANK1_MAKENCHECK2',
+  BANK1_MAKER_CHECKER2: {
+    username: 'checker3@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Vladimir',
     surname: 'Scorpius',
@@ -97,7 +97,7 @@ const USERS = {
     bank: UKEF_TEST_BANK_1,
   },
   BANK1_PAYMENT_REPORT_OFFICER1: {
-    username: 'BANK1_PAYMENT_REPORT_OFFICER1',
+    username: 'payment-officer1@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Payton',
     surname: 'Archer',
@@ -107,7 +107,7 @@ const USERS = {
     bank: UKEF_TEST_BANK_1,
   },
   BANK1_MAKER_PAYMENT_REPORT_OFFICER1: {
-    username: 'BANK1_MAKER_PAYMENT_REPORT_OFFICER1',
+    username: 'payment-officer2@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Payton',
     surname: 'Archer',
@@ -116,18 +116,8 @@ const USERS = {
     roles: [ROLES.MAKER, ROLES.PAYMENT_REPORT_OFFICER],
     bank: UKEF_TEST_BANK_1,
   },
-  BANK1_READ_ONLY1: {
-    username: 'BANK1_READ_ONLY1',
-    password: 'AbC!2345',
-    firstname: 'Reid',
-    surname: 'Oakley',
-    email: 'readonly1@ukexportfinance.gov.uk',
-    timezone: 'Europe/London',
-    roles: [ROLES.READ_ONLY],
-    bank: UKEF_TEST_BANK_1,
-  },
   BANK2_MAKER2: {
-    username: 'BANK2_MAKER2',
+    username: 'maker5@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Tamara',
     surname: 'last',
@@ -137,7 +127,7 @@ const USERS = {
     bank: UKEF_TEST_BANK_2,
   },
   BANK2_MAKER1: {
-    username: 'BANK2_MAKER1',
+    username: 'maker6@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'First',
     surname: 'Last',
@@ -147,7 +137,7 @@ const USERS = {
     bank: UKEF_TEST_BANK_2,
   },
   BANK2_CHECKER1: {
-    username: 'BANK2_CHECKER1',
+    username: 'checker4@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Mister',
     surname: 'Checker',
@@ -157,7 +147,7 @@ const USERS = {
     bank: UKEF_TEST_BANK_2,
   },
   BANK2_READ_ONLY1: {
-    username: 'BANK2_READ_ONLY1',
+    username: 'readonly2@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Reid',
     surname: 'Oakley',
@@ -167,7 +157,7 @@ const USERS = {
     bank: UKEF_TEST_BANK_2,
   },
   NOBODY: {
-    username: 'NOBODY',
+    username: 'test1@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'first',
     surname: 'Spang',
@@ -177,7 +167,7 @@ const USERS = {
     bank: UKEF_TEST_BANK_1,
   },
   ADMIN: {
-    username: 'ADMIN',
+    username: 'test2@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Julius',
     surname: 'No',
@@ -189,7 +179,7 @@ const USERS = {
     },
   },
   READ_ONLY: {
-    username: 'READ_ONLY',
+    username: 'readonly@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Reid',
     surname: 'Oakley',
@@ -201,7 +191,7 @@ const USERS = {
     },
   },
   ADMINNOMAKER: {
-    username: 'ADMINNOMAKER',
+    username: 'adminnomaker@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Julius',
     surname: 'No',
@@ -213,7 +203,7 @@ const USERS = {
     },
   },
   TEST_EMAIL_NO_GOV_NOTIFY: {
-    username: 'TEST_EMAIL_NO_GOV_NOTIFY',
+    username: 'test_no_notify@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Wolfgang',
     surname: 'Weisen',
