@@ -2,6 +2,7 @@ const { produce } = require('immer');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const users = require('./test-data');
 const testUserCache = require('../../api-test-users');
+const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
 const { wipe } = require('../../database-helper');
@@ -10,19 +11,22 @@ const { as } = require('../../api')(app);
 
 const withValidateEmailIsUniqueTests = ({ payload, makeRequest }) => {
   describe('when validating the email is unique', () => {
-    let aNonAdmin;
+    let anAdmin;
 
-    const EMAIL_MUST_BE_UNIQUE_ERROR = { text: 'Enter an email address in the correct format, for example, name@example.com' };
+    const EMAIL_MUST_BE_UNIQUE_ERROR = { text: 'Email address already in use' };
     const A_MATCHING_EMAIL = 'aMatchingEmail@ukexportfinance.gov.uk';
     const EXISTING_USER_WITH_SAME_EMAIL = produce(users.barclaysBankMaker1, (draftUser) => {
       draftUser.username = A_MATCHING_EMAIL;
       draftUser.email = A_MATCHING_EMAIL;
     });
 
-    beforeEach(async () => {
-      await wipe([DB_COLLECTIONS.USERS]);
+    beforeAll(async () => {
       const testUsers = await testUserCache.initialise(app);
-      aNonAdmin = testUsers().withoutRole(ADMIN).one();
+      anAdmin = testUsers().withRole(ADMIN).one();
+    });
+
+    beforeEach(async () => {
+      await databaseHelper.deleteUser(EXISTING_USER_WITH_SAME_EMAIL);
     });
 
     afterAll(async () => {
@@ -41,11 +45,11 @@ const withValidateEmailIsUniqueTests = ({ payload, makeRequest }) => {
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
-      expect(body.errors.errorList.email.text).toEqual(EMAIL_MUST_BE_UNIQUE_ERROR);
+      expect(body.errors.errorList.email.text).toEqual(EMAIL_MUST_BE_UNIQUE_ERROR.text);
     });
 
     async function createUser(userToCreate) {
-      return as(aNonAdmin).post(userToCreate).to('/v1/users');
+      return as(anAdmin).post(userToCreate).to('/v1/users');
     }
   });
 };

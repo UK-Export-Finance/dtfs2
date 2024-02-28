@@ -60,7 +60,7 @@ const combineErrors = (listOfErrors) =>
 
 module.exports.create = async (req, res, next) => {
   const userToCreate = req.body;
-  const errors = applyCreateRules(userToCreate);
+  const errors = await applyCreateRules(userToCreate);
 
   if (errors.length) {
     return res.status(400).json({
@@ -112,17 +112,18 @@ module.exports.findById = (req, res, next) => {
   });
 };
 
-module.exports.updateById = (req, res, next) => {
+module.exports.updateById = async (req, res, next) => {
   try {
     const userIsAdmin = req.user?.roles?.includes(ADMIN);
     const userIsChangingTheirOwnPassword =
       req.user?._id?.toString() === req.params._id &&
       Object.keys(req.body).every((property) => ['password', 'passwordConfirm', 'currentPassword'].includes(property));
-      
+
     if (!userIsAdmin && !userIsChangingTheirOwnPassword) {
       return res.status(403).send();
     }
-    return findOne(req.params._id, (error, user) => {
+
+    return await findOne(req.params._id, async (error, user) => {
       if (error) {
         return next(error);
       }
@@ -130,7 +131,8 @@ module.exports.updateById = (req, res, next) => {
         console.error('Failed to find user with _id', req.params._id);
         return res.status(404).send();
       }
-      const errors = applyUpdateRules(user, req.body);
+      const errors = await applyUpdateRules(user, req.body);
+
       if (errors.length) {
         return res.status(400).json({
           success: false,
