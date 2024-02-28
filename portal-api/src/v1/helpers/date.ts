@@ -25,11 +25,11 @@ export const getStartOfDateFromEpochMillisecondString = (value: string) => start
 
 /**
  * @param day the day of the month as a string
- * @param month month of the year as a string, starting at `'1'` = January
+ * @param month month of the year as a string, starting at `1` = January
  * @param year year as a string
  * @returns start of the date
  */
-export const getDateFromDayMonthYearStrings = (day: string, month: string, year: string) =>
+export const getStartOfDateFromDayMonthYearStrings = (day: string, month: string, year: string) =>
   set(startOfDay(new Date()), {
     date: Number(day),
     month: Number(month) - 1, // Months are zero indexed
@@ -47,7 +47,7 @@ export const getDateFromDayMonthYearStrings = (day: string, month: string, year:
  *  - If the month is invalid return NaN
  *  - If the day/year is invalid, use the current day/year instead
  */
-export const getDateFromDayMonthYearStringsReplicatingMoment = (day: string, month: string, year: string) => {
+export const getStartOfDateFromDayMonthYearStringsReplicatingMoment = (day: string, month: string, year: string) => {
   // moment().set() returns invalid date if the month is invalid
   if (Number.isNaN(Number(month))) {
     return new Date(NaN);

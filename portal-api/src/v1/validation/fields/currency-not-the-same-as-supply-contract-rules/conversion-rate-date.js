@@ -1,10 +1,8 @@
-const moment = require('moment');
-const {
-  dateHasAllValues,
-  dateValidationText,
-} = require('../date');
+const { isAfter, sub, isBefore, startOfDay } = require('date-fns');
+const { dateValidationText, dateHasAllValues } = require('../date');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
 const coverDatesValidation = require('../../helpers/coverDatesValidation.helpers');
+const { getStartOfDateFromDayMonthYearStrings, getLongFormattedDate } = require('../../../helpers/date');
 
 module.exports = (facility, errorList, deal) => {
   const newErrorList = { ...errorList };
@@ -12,37 +10,43 @@ module.exports = (facility, errorList, deal) => {
     'conversionRateDate-day': conversionRateDateDay,
     'conversionRateDate-month': conversionRateDateMonth,
     'conversionRateDate-year': conversionRateDateYear,
-    v1ExtraInfo
+    v1ExtraInfo,
   } = facility;
 
   // only run this validation if first submission - submissionDate does not exist on first submission
   if (!deal?.details?.submissionDate) {
-    const {
-      coverDayValidation,
-      coverMonthValidation,
-      coverYearValidation
-    } = coverDatesValidation(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear);
+    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(
+      conversionRateDateDay,
+      conversionRateDateMonth,
+      conversionRateDateYear,
+    );
+
 
     if (dateHasAllValues(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear)) {
-      const formattedDate = `${conversionRateDateYear}-${conversionRateDateMonth}-${conversionRateDateDay}`;
-      const nowDate = moment().format('YYYY-MM-DD');
+      const conversionRateDateStartOfDay = getStartOfDateFromDayMonthYearStrings(
+        conversionRateDateDay,
+        conversionRateDateMonth,
+        conversionRateDateYear,
+      )
+      const startOfToday = startOfDay(new Date());
 
-      if (moment(formattedDate).isAfter(nowDate) && !v1ExtraInfo) {
+      if (isAfter(conversionRateDateStartOfDay, startOfToday) && !v1ExtraInfo) {
         newErrorList.conversionRateDate = {
           text: 'Conversion rate date must be today or in the past',
           order: orderNumber(newErrorList),
         };
       }
 
-      const MAX_DAYS_FROM_NOW = moment(nowDate).subtract(29, 'day');
+      const MAX_DAYS_FROM_NOW = 29;
+      const earliestAllowedDate = sub(startOfToday, { days: MAX_DAYS_FROM_NOW });
 
-      if (moment(formattedDate).isBefore(MAX_DAYS_FROM_NOW) && !v1ExtraInfo) {
+      if (isBefore(conversionRateDateStartOfDay, earliestAllowedDate) && !v1ExtraInfo) {
         newErrorList.conversionRateDate = {
-          text: `Conversion rate date must be between ${moment(MAX_DAYS_FROM_NOW).format('Do MMMM YYYY')} and ${moment(nowDate).format('Do MMMM YYYY')}`,
+          text: `Conversion rate date must be between ${getLongFormattedDate(earliestAllowedDate)} and ${getLongFormattedDate(startOfToday)}`,
           order: orderNumber(newErrorList),
         };
       }
-    } else if (!dateHasAllValues(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear)) {
+    } else {
       newErrorList.conversionRateDate = {
         text: dateValidationText(
           'Conversion rate date',

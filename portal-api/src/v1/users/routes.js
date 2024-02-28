@@ -118,7 +118,7 @@ module.exports.updateById = (req, res, next) => {
     const userIsChangingTheirOwnPassword =
       req.user?._id?.toString() === req.params._id &&
       Object.keys(req.body).every((property) => ['password', 'passwordConfirm', 'currentPassword'].includes(property));
-
+      
     if (!userIsAdmin && !userIsChangingTheirOwnPassword) {
       return res.status(403).send();
     }
