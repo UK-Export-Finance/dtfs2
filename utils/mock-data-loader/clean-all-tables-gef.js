@@ -1,15 +1,16 @@
 const api = require('./gef/api');
+const { logger } = require('./helpers/logger.helper');
 
 const cleanEligibilityCriteria = async (token) => {
-  console.info('cleaning GEF eligibility-criteria');
-
+  logger({ message: 'cleaning GEF tables' });
+  logger({ message: 'cleaning GEF eligibility-criteria', depth: 1 });
   for (const data of await api.listEligibilityCriteria(token)) {
     await api.deleteEligibilityCriteria(data, token);
   }
 };
 
 const cleanMandatoryCriteriaVersioned = async (token) => {
-  console.info('cleaning GEF mandatory-criteria-versioned');
+  logger({ message: 'cleaning GEF mandatory-criteria-versioned', depth: 1 });
 
   for (const mandatoryCriteria of await api.listMandatoryCriteriaVersioned(token)) {
     await api.deleteMandatoryCriteriaVersioned(mandatoryCriteria, token);
@@ -17,12 +18,12 @@ const cleanMandatoryCriteriaVersioned = async (token) => {
 };
 
 const cleanDurableFunctions = async (token) => {
-  console.info('cleaning durable-functions-log');
+  logger({ message: 'cleaning durable-functions-log', depth: 1 });
   await api.getDurableFunctions(token);
 };
 
 const deleteCronJobs = async (token) => {
-  console.info('cleaning cron-job-logs');
+  logger({ message: 'cleaning cron-job-logs', depth: 1 });
   await api.deleteCronJobs(token);
 };
 

@@ -1,7 +1,8 @@
+const { logger } = require('../helpers/logger.helper');
 const api = require('./api');
 
 const cleanTeams = async () => {
-  console.info('cleaning TFM teams');
+  logger({ message: 'cleaning TFM teams', depth: 1 });
 
   for (const team of await api.listTeams()) {
     await api.deleteTeam(team);
@@ -9,7 +10,7 @@ const cleanTeams = async () => {
 };
 
 const cleanUsers = async () => {
-  console.info('cleaning TFM users');
+  logger({ message: 'cleaning TFM users', depth: 1 });
 
   for (const user of await api.listUsers()) {
     if (user.username !== 're-insert-mocks') {
@@ -19,7 +20,7 @@ const cleanUsers = async () => {
 };
 
 const cleanTfmDeals = async () => {
-  console.info('cleaning TFM deals and facilities');
+  logger({ message: 'cleaning TFM deals and facilities', depth: 1 });
 
   const tfmDeals = await api.listDeals();
 
@@ -31,6 +32,7 @@ const cleanTfmDeals = async () => {
 };
 
 const cleanAllTables = async () => {
+  logger({ message: 'cleaning TFM tables' });
   await cleanTeams();
   await cleanUsers();
   await cleanTfmDeals();
