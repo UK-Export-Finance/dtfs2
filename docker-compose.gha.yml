@@ -15,9 +15,9 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
     ports:
-      - '27017:27017'
+      - "27017:27017"
     extra_hosts:
-      - 'host.docker.internal:host-gateway'
+      - "host.docker.internal:host-gateway"
     healthcheck:
       test: echo "rs.status()" | mongo --quiet
       interval: 5s
