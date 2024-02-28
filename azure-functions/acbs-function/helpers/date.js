@@ -12,6 +12,10 @@ const isDate = (dateStr) => moment(dateStr, 'YYYY-MM-DD', true).isValid();
  * Epoch time must be less than 8640000000000000 {@link https://262.ecma-international.org/5.1/#sec-15.9.1.1 | (see docs)}
  */
 const isEpoch = (epoch) => moment(epoch, 'x', true).isValid() || moment(epoch, 'X', true).isValid();
+/**
+ * @param {unknown} dateStr
+ * @returns true if the value is a string and not an epoch
+ */
 const isString = (dateStr) => typeof dateStr === 'string' && !isEpoch(dateStr);
 const now = () => moment().format('YYYY-MM-DD');
 
