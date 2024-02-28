@@ -168,8 +168,6 @@ const createInitialUser = async (user) => {
     },
     url: `${PORTAL_API_URL}/v1/user`,
     data: user,
-  }).catch((error) => {
-    console.error('Unable to create initial portal user:', error);
   });
 
   return response.data;
@@ -197,8 +195,6 @@ const loginTfmUser = async (user) => {
       'Content-Type': 'application/json',
     },
     data: { username: user.username, password: user.password },
-  }).catch((error) => {
-    console.error('Unable to login as TFM user %s', error);
   });
 
   return response?.data?.token;

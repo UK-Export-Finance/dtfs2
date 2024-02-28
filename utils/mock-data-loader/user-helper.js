@@ -1,6 +1,7 @@
 const api = require('./api');
 const tfmApi = require('./tfm/api');
 const { MAKER, ADMIN } = require('./portal/roles');
+const FailedToCreateLoggedInUserSessionError = require('./errors/failed-to-create-logged-in-user-session.error');
 
 const mockDataLoaderUser = {
   username: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
@@ -27,8 +28,12 @@ const createAndLogInAsInitialUser = async () => {
   console.info('Portal login as user %s', mockDataLoaderUser.username);
   try {
     return await api.loginViaPortal(mockDataLoaderUser);
-  } catch {
-    console.info('Creating portal user %s', mockDataLoaderUser.username);
+  } catch (error) {
+    console.info(
+      // cspell:disable-next-line
+      `\u001b[1;33mlogin failed for initial portal user ${mockDataLoaderUser.username}:\
+        \n  - ${error.message}\nrecreating initial portal user ${mockDataLoaderUser.username}\x1b[0m`,
+    );
     await api.createInitialUser(mockDataLoaderUser);
     return api.loginViaPortal(mockDataLoaderUser);
   }
@@ -42,17 +47,24 @@ const deleteInitialUser = async (token) => {
 };
 
 const createAndLogInAsInitialTfmUser = async () => {
-  console.info('TFM login as user %s', mockDataLoaderTFMUser.username);
-  let token = await api.loginTfmUser(mockDataLoaderTFMUser);
+  try {
+    console.info('TFM login as user %s', mockDataLoaderTFMUser.username);
+    let token = await api.loginTfmUser(mockDataLoaderTFMUser);
 
-  if (!token) {
-    console.info('Creating TFM user %s', mockDataLoaderTFMUser.username);
+    if (!token) {
+      throw new FailedToCreateLoggedInUserSessionError({ username: mockDataLoaderTFMUser.username, cause: 'No token was present on response' });
+    }
 
+    return token;
+  } catch (error) {
+    console.info(
+      // cspell:disable-next-line
+      `\u001b[1;33mlogin failed for initial TFM user ${mockDataLoaderTFMUser.username}:\
+        \n  - ${error.message}\nrecreating initial TFM user ${mockDataLoaderTFMUser.username}\x1b[0m`,
+    );
     await api.createInitialTfmUser(mockDataLoaderTFMUser);
-    token = await api.loginTfmUser(mockDataLoaderTFMUser);
+    return api.loginTfmUser(mockDataLoaderTFMUser);
   }
-
-  return token;
 };
 
 const deleteInitialTFMUser = async (token) => {
