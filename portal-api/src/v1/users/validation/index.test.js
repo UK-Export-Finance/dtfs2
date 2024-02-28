@@ -173,46 +173,38 @@ describe('user validation', () => {
 
   function whenNoRulesReturnAnErrorItReturnsAnEmptyArray({ makeApplyRulesCall }) {
     describe('when no rules return an error', () => {
-      describe('when all rules are synchronous', () => {
+      describe.each([
+        { description: 'synchronous', mockAllRulesToNotReturnAnError: mockAllRulesToNotReturnAnErrorSynchronously },
+        { description: 'asynchronous', mockAllRulesToNotReturnAnError: mockAllRulesToNotReturnAnErrorAsynchronously },
+      ])('when the failing rule is $description', ({ mockAllRulesToNotReturnAnError }) => {
         beforeEach(() => {
-          mockAllRulesToNotReturnAnErrorSynchronously();
+          mockAllRulesToNotReturnAnError();
         });
 
-        itReturnsAnEmptyArray({ makeApplyRulesCall });
-      });
-      describe('when all rules are asynchronous', () => {
-        beforeEach(() => {
-          mockAllRulesToNotReturnAnErrorAsynchronously();
-        });
-
-        itReturnsAnEmptyArray({ makeApplyRulesCall });
+        itReturnsAnEmptyArray(makeApplyRulesCall);
       });
     });
   }
 
   function whenASingleRuleReturnsAnErrorItReturnsTheError({ makeApplyRulesCall, expectedRulesTestCases }) {
     describe('when a single rule returns an error', () => {
-      describe('when the failing rule is synchronous', () => {
-        it.each(expectedRulesTestCases)('returns the error when $description returns an error', async ({ description, rule }) => {
-          mockAllRulesToNotReturnAnErrorSynchronously();
-          const expectedError = { error: `${description} error` };
-          rule.mockReturnValue([expectedError]);
-
-          const result = await makeApplyRulesCall();
-
-          expect(result).toEqual([expectedError]);
-        });
-      });
-
-      describe('when the failing rule is asynchronous', () => {
-        it.each(expectedRulesTestCases)('returns the error when $description returns an error', async ({ description, rule }) => {
-          mockAllRulesToNotReturnAnErrorSynchronously();
-          const expectedError = { error: `${description} error` };
-          rule.mockResolvedValue([expectedError]);
-
-          const result = await makeApplyRulesCall();
-
-          expect(result).toEqual([expectedError]);
+      describe.each([
+        {
+          description: 'synchronous',
+          mockAllRulesToNotReturnAnError: mockAllRulesToNotReturnAnErrorSynchronously,
+          mockASingleRuleToError: ({ rule, error }) => rule.mockReturnValue([error]),
+        },
+        {
+          description: 'asynchronous',
+          mockAllRulesToNotReturnAnError: mockAllRulesToNotReturnAnErrorAsynchronously,
+          mockASingleRuleToError: ({ rule, error }) => rule.mockResolvedValue([error]),
+        },
+      ])('when the failing rule is $description', ({ mockAllRulesToNotReturnAnError, mockASingleRuleToError }) => {
+        itReturnsTheErrorWhenTheSpecifiedRuleReturnsAnError({
+          mockAllRulesToNotReturnAnError,
+          mockASingleRuleToError,
+          expectedRulesTestCases,
+          makeApplyRulesCall,
         });
       });
     });
@@ -220,55 +212,28 @@ describe('user validation', () => {
 
   function whenMultipleRulesReturnErrorsItReturnsAllErrors({ makeApplyRulesCall, expectedRulesTestCases }) {
     describe('when multiple rules return errors', () => {
-      describe('when all rules are synchronous', () => {
-        it('returns all errors', async () => {
-          const expectedErrors = [];
+      describe.each([
+        {
+          description: 'synchronous',
+          mockASingleRuleToError: ({ rule, error }) => rule.mockReturnValue([error]),
+        },
+        {
+          description: 'asynchronous',
+          mockASingleRuleToError: ({ rule, error }) => rule.mockResolvedValue([error]),
+        },
+      ])('when all rules are $description', ({ mockASingleRuleToError }) => {
+        let expectedErrors = [];
+        beforeEach(() => {
           expectedRulesTestCases.forEach(({ rule, description }) => {
             const error = { error: `${description} error` };
-            rule.mockReturnValue([error]);
+            mockASingleRuleToError({ rule, error });
             expectedErrors.push(error);
           });
-
-          const result = await makeApplyRulesCall();
-
-          expect(result).toEqual(expectedErrors);
         });
-      });
 
-      describe('when all rules are asynchronous', () => {
-        it('returns all errors', async () => {
-          const expectedErrors = [];
-          expectedRulesTestCases.forEach(({ rule, description }) => {
-            const error = { error: `${description} error` };
-            rule.mockResolvedValue([error]);
-            expectedErrors.push(error);
-          });
-
-          const result = await makeApplyRulesCall();
-
-          expect(result).toEqual(expectedErrors);
-        });
+        itReturnsAllErrors({ makeApplyRulesCall, expectedErrors });
       });
     });
-  }
-
-  function itReturnsAnEmptyArray({ makeApplyRulesCall }) {
-    it('returns an empty array', async () => {
-      const result = await makeApplyRulesCall();
-      expect(result).toEqual([]);
-    });
-  }
-
-  function mockAllRulesToNotReturnAnErrorSynchronously() {
-    for (const key of Object.keys(allRules)) {
-      allRules[key].mockReturnValue([]);
-    }
-  }
-
-  function mockAllRulesToNotReturnAnErrorAsynchronously() {
-    for (const key of Object.keys(allRules)) {
-      allRules[key].mockResolvedValue([]);
-    }
   }
 
   function getExpectedRuleAndOtherRulesTestCases({ expectedRules }) {
@@ -290,5 +255,49 @@ describe('user validation', () => {
     });
 
     return { expectedRulesTestCases, otherRulesTestCases };
+  }
+
+  function mockAllRulesToNotReturnAnErrorSynchronously() {
+    for (const key of Object.keys(allRules)) {
+      allRules[key].mockReturnValue([]);
+    }
+  }
+
+  function mockAllRulesToNotReturnAnErrorAsynchronously() {
+    for (const key of Object.keys(allRules)) {
+      allRules[key].mockResolvedValue([]);
+    }
+  }
+
+  function itReturnsAnEmptyArray(makeApplyRulesCall) {
+    it('returns an empty array', async () => {
+      const result = await makeApplyRulesCall();
+      expect(result).toEqual([]);
+    });
+  }
+
+  function itReturnsTheErrorWhenTheSpecifiedRuleReturnsAnError({
+    mockAllRulesToNotReturnAnError,
+    mockASingleRuleToError,
+    expectedRulesTestCases,
+    makeApplyRulesCall,
+  }) {
+    it.each(expectedRulesTestCases)('returns the error when $description returns an error', async ({ description, rule }) => {
+      mockAllRulesToNotReturnAnError();
+      const expectedError = { error: `${description} error` };
+      mockASingleRuleToError({ rule, error: expectedError });
+
+      const result = await makeApplyRulesCall();
+
+      expect(result).toEqual([expectedError]);
+    });
+  }
+
+  function itReturnsAllErrors({ makeApplyRulesCall, expectedErrors }) {
+    it('returns all errors', async () => {
+      const result = await makeApplyRulesCall();
+
+      expect(result).toEqual(expectedErrors);
+    });
   }
 });
