@@ -1,6 +1,42 @@
+const { add, format } = require('date-fns');
 const CONSTANTS = require('./constants');
 const dateConstants = require('../../../e2e-fixtures/dateConstants');
 const { BANK1_MAKER1 } = require('../../../e2e-fixtures/portal-users.fixture');
+
+/**
+ * @returns {object} cover end date values as a month today, unless
+ * today is 28th February or the end of the month, in which case adds 1/2 days
+ */
+const getCoverEndDateValues = () => {
+  const todayIsEndOfMonth = dateConstants.tomorrowDay === '01';
+  const todayIs28thFebruaryAndLeapYear = !todayIsEndOfMonth && dateConstants.todayDay === '28' && dateConstants.todayMonth === '02';
+
+  if (todayIsEndOfMonth) {
+    const oneMonthOneDay = add(dateConstants.today, { months: 1, days: 1 });
+
+    return {
+      'coverEndDate-day': format(oneMonthOneDay, 'dd'),
+      'coverEndDate-month': format(oneMonthOneDay, 'MM'),
+      'coverEndDate-year': format(oneMonthOneDay, 'yyyy'),
+    };
+  }
+
+  if (todayIs28thFebruaryAndLeapYear) {
+    const oneMonthTwoDays = add(dateConstants.today, { months: 1, days: 2 });
+
+    return {
+      'coverEndDate-day': format(oneMonthTwoDays, 'dd'),
+      'coverEndDate-month': format(oneMonthTwoDays, 'MM'),
+      'coverEndDate-year': format(oneMonthTwoDays, 'yyyy'),
+    };
+  }
+
+  return {
+    'coverEndDate-day': dateConstants.oneMonthDay,
+    'coverEndDate-month': dateConstants.oneMonthMonth,
+    'coverEndDate-year': dateConstants.oneMonthYear,
+  };
+};
 
 const MOCK_DEAL = {
   dealType: CONSTANTS.DEAL_TYPE.BSS_EWCS,
@@ -195,9 +231,7 @@ const MOCK_DEAL = {
         text: 'GBP - UK Sterling',
         id: 'GBP',
       },
-      'coverEndDate-day': dateConstants.oneMonthDay,
-      'coverEndDate-month': dateConstants.oneMonthMonth,
-      'coverEndDate-year': dateConstants.oneMonthYear,
+      ...getCoverEndDateValues(),
       issuedDate: `${dateConstants.twoYearsAgoUnix}000`,
       requestedCoverStartDate: `${dateConstants.twoYearsAgoUnix}000`,
       name: 'Test-123',
