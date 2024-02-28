@@ -1,21 +1,14 @@
-const externalApi = require('../../../external-api/api');
+const { numberGenerator } = require('../../../external-api/api');
 const { updateDeal } = require('../deal.controller');
 const facilitiesController = require('../facilities.controller');
-const CONSTANTS = require('../../../constants');
 
 const createUkefIds = async (entityId, deal, user) => {
-  const dealType = CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS;
-
   let numGenDeal;
 
   try {
-    // TODO: Refactor the arguments being supplied
-    numGenDeal = await externalApi.numberGenerator.create({
-      dealType,
+    numGenDeal = await numberGenerator.get({
       entityType: 'deal',
-      entityId,
       dealId: deal._id,
-      user,
     });
   } catch (error) {
     throw new Error('Error creating numGenDeal');
@@ -37,15 +30,11 @@ const createUkefIds = async (entityId, deal, user) => {
   }
 
   const facilitiesNumGenPromises = [];
-  // TODO: Refactor the arguments being supplied
-  deal.facilities.forEach(async (facilityId) => {
+  deal.facilities.forEach(async () => {
     facilitiesNumGenPromises.push(
-      externalApi.numberGenerator.create({
-        dealType,
-        entityId: facilityId,
+      numberGenerator.get({
         entityType: 'facility',
         dealId: deal._id,
-        user,
       }),
     );
   });

@@ -21,7 +21,7 @@ const headers = {
  * @returns A number based on the value of entityType.
  * @throws {Error} If entityType is invalid.
  */
-const getNumberTypeId = (entityType: string): number => {
+export const getNumberTypeId = (entityType: string): number => {
   switch (entityType) {
     case ENTITY_TYPE.DEAL:
       return NUMBER_TYPE.DEAL;
@@ -33,12 +33,10 @@ const getNumberTypeId = (entityType: string): number => {
 };
 
 /**
- * Handles an HTTP GET request to retrieve a number from a number generator API.
+ * Retrieves a number from a number generator API based on the provided `entityType` and `dealId`.
  * @param req - The HTTP request object containing the `entityType` and `dealId` in the `body` property.
- * @param res - The HTTP response object used to send the generated number as a response.
- * @returns The generated number as a response with a status code of 200 (OK) and the `status` and `message` properties containing the generated number.
- *          If an error occurs, an error response is sent with a status code of 500 (Internal Server Error)
- *          and the `status` and `message` properties containing the error message.
+ * @param res - The HTTP response object used to send the response back to the client.
+ * @returns {Promise<Object>} The retrieved number in the response body.
  */
 export const get = async (req: Request, res: Response): Promise<object> => {
   try {
@@ -83,7 +81,10 @@ export const get = async (req: Request, res: Response): Promise<object> => {
 
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
-      error,
+      error: {
+        cause: error.message,
+        code: error.code,
+      },
     });
   }
 };

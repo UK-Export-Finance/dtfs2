@@ -10,7 +10,7 @@ const headers = {
   'x-api-key': EXTERNAL_API_KEY,
 };
 
-const create = async ({ entityType, dealId }) => {
+const get = async ({ entityType, dealId }) => {
   let response;
   try {
     response = await axios({
@@ -35,5 +35,5 @@ const create = async ({ entityType, dealId }) => {
 };
 
 module.exports = {
-  create,
+  get,
 };
