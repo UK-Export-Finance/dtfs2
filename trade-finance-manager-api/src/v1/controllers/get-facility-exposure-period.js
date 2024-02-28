@@ -15,7 +15,7 @@ const getFacilityExposurePeriod = async (facility) => {
 
     if (hasBeenIssued) {
       const startDate = new Date(Number(coverStartDate));
-      const formattedStartDate = isValid(startDate) ? format(new Date(startDate), 'yyyy-MM-dd') : 'Invalid date';
+      const formattedStartDate = isValid(startDate) ? format(startDate, 'yyyy-MM-dd') : 'Invalid date';
 
       const formattedEndDate = dateHelpers.formatDate(coverEndDate);
 
