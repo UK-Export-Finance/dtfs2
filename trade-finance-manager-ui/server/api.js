@@ -75,6 +75,7 @@ const getFacilities = async (token, searchString = '') => {
  * @param {Object} queryParams Query parameters
  * @param {string} token Authorisation token
  * @returns {Object} Deals data and pagination metadata
+ * @throws {PageOutOfBoundsError} Will throw if the requested page number exceeds the maximum page number
  */
 const getDeals = async (queryParams, token) => {
   const response = await axios({
@@ -86,7 +87,7 @@ const getDeals = async (queryParams, token) => {
   const { deals, pagination } = response.data;
 
   if (queryParams.page >= pagination?.totalPages && !(queryParams.page === 0 && pagination?.totalPages === 0)) {
-    throw new PageOutOfBoundsError('Page number exceeds the maximum page number');
+    throw new PageOutOfBoundsError('Requested page number exceeds the maximum page number');
   }
 
   return {
