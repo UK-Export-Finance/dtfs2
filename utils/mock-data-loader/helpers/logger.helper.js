@@ -23,7 +23,7 @@ const logger = ({ message, depth = 0, colour = null }) => {
   let formattedMessage = message;
 
   if (depth === 0) {
-    formattedMessage = `\n ${message}`;
+    formattedMessage = `\n${message}`;
   }
 
   const lines = formattedMessage.split('\n');

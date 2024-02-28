@@ -26,7 +26,7 @@ const mockDataLoaderTFMUser = {
 };
 
 const createAndLogInAsInitialUser = async () => {
-  logger({ message: `logging in as initial portal user` });
+  logger({ message: 'logging in as initial portal user' });
   try {
     return await api.loginViaPortal(mockDataLoaderUser);
   } catch (error) {
@@ -50,7 +50,7 @@ const deleteInitialUser = async (token) => {
 
 const createAndLogInAsInitialTfmUser = async () => {
   try {
-    logger({ message: `logging in as initial TFM user` });
+    logger({ message: 'logging in as initial TFM user' });
     const token = await api.loginTfmUser(mockDataLoaderTFMUser);
 
     if (!token) {
