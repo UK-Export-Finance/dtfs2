@@ -5,7 +5,6 @@ const swaggerUi = require('swagger-ui-express');
 const mongoSanitise = require('express-mongo-sanitize');
 const healthcheck = require('./healthcheck');
 const { authRouter, openRouter } = require('./v1/routes');
-// const loginController = require('./v1/controllers/user/user.routes');
 const initScheduler = require('./scheduler');
 const seo = require('./v1/middleware/headers/seo');
 const security = require('./v1/middleware/headers/security');
@@ -28,8 +27,6 @@ const generateApp = () => {
   app.use(removeCsrfToken);
   app.use(healthcheck);
   app.use(passport.initialize());
-  // TODO: cleanup
-  // app.post('/v1/login', loginController.login);
   app.use('/v1', openRouter);
   app.use('/v1', authRouter);
 
