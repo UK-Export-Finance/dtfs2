@@ -28,7 +28,7 @@ const logger = ({ message, depth = 0, colour = null }) => {
 
   const lines = formattedMessage.split('\n');
   lines.forEach((line) => {
-    console.info(`${colour ? colour : ''}${indent}${line}${colour ? LOGGER_COLOURS.reset : ''}`);
+    console.info(`${colour || ''}${indent}${line}${colour ? LOGGER_COLOURS.reset : ''}`);
   });
 };
 
