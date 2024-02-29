@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm';
 import { UtilisationReportEntity } from '../../sql-db-entities';
 import { createNotReceivedReport, createMarkedAsCompletedReport, createUploadedReport } from './utilisation-report.helper';
 import { getCurrentReportPeriodForBankSchedule } from '../../helpers/utilisation-reports';
-import { MOCK_BANKS } from '../../test-helpers/mock-data/banks';
+import { MOCK_BANKS } from '../../test-helpers/mock-data';
 import { getUsersFromMongoDb } from '../helpers';
 
 export default class UtilisationReportSeeder implements Seeder {

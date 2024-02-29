@@ -1,6 +1,6 @@
+const { ROLES } = require('@ukef/dtfs2-common');
 const { nowTimestamp } = require('../dates');
 const MANDATORY_CRITERIA = require('../mandatoryCriteria');
-const { MAKER } = require('../../portal/roles');
 
 // de-structure and create a new array, so `sort` doesn't impact 'MANDATORY_CRITERIA'
 let mandatoryCriteria = [...MANDATORY_CRITERIA].sort((a, b) => (a.version > b.version ? 1 : -1));
@@ -24,7 +24,7 @@ module.exports = {
     maker: {
       _id: '60f7d72654f99900074c0a6d',
       username: 'maker1@ukexportfinance.gov.uk',
-      roles: [MAKER],
+      roles: [ROLES.MAKER],
       bank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -98,7 +98,7 @@ module.exports = {
         _id: '60f7d72854f99900074c0a98',
         id: 18,
         description:
-          'Any applicable fees, interest rate and/or Risk Margin Fee apply to the whole Cover Period of the Covered Transaction, and have been set in accordance with the Bank\'s normal pricing policies and include, if any, overall pricing requirements notified by UKEF.',
+          "Any applicable fees, interest rate and/or Risk Margin Fee apply to the whole Cover Period of the Covered Transaction, and have been set in accordance with the Bank's normal pricing policies and include, if any, overall pricing requirements notified by UKEF.",
         answer: true,
       },
     ],
@@ -198,7 +198,7 @@ module.exports = {
     {
       date: '1626968578071',
       username: 'maker1@ukexportfinance.gov.uk',
-      roles: [MAKER],
+      roles: [ROLES.MAKER],
       bank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -209,7 +209,7 @@ module.exports = {
     {
       date: '1626971072253',
       username: 'maker1@ukexportfinance.gov.uk',
-      roles: [MAKER],
+      roles: [ROLES.MAKER],
       bank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
