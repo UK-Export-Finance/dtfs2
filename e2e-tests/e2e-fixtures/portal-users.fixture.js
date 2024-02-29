@@ -1,5 +1,4 @@
-const { PORTAL_USER_ROLES } = require('./constants.fixture');
-const MOCK_USERS = require('../../utils/mock-data-loader/portal/users');
+const { MOCK_USERS, ROLES } = require('@ukef/dtfs2-common');
 
 const USER_WITH_INJECTION = {
   username: '{ "$gt": "" }',
@@ -8,7 +7,7 @@ const USER_WITH_INJECTION = {
   firstname: 'test',
   surname: 'injection',
   bank: 'HSBC',
-  roles: [PORTAL_USER_ROLES.MAKER],
+  roles: [ROLES.MAKER],
 };
 
 module.exports = {

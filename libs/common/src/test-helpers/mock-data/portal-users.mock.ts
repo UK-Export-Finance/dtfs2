@@ -1,11 +1,11 @@
-const BANKS = require('../banks');
-const ROLES = require('./roles');
+import { MOCK_BANKS } from './banks.mock';
+import { ROLES } from '../../constants/portal/roles';
 
-const UKEF_TEST_BANK_1 = BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated)');
-const UKEF_TEST_BANK_2 = BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated) 2');
-const UKEF_GEF_ONLY_BANK = BANKS.find((bank) => bank.name === 'GEF Only Bank');
+const UKEF_TEST_BANK_1 = MOCK_BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated)');
+const UKEF_TEST_BANK_2 = MOCK_BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated) 2');
+const UKEF_GEF_ONLY_BANK = MOCK_BANKS.find((bank) => bank.name === 'GEF Only Bank');
 
-const USERS = {
+export const MOCK_USERS = {
   BANK1_MAKER1: {
     username: 'BANK1_MAKER1',
     password: 'AbC!2345',
@@ -224,6 +224,4 @@ const USERS = {
       id: '*',
     },
   },
-};
-
-module.exports = USERS;
+} as const;

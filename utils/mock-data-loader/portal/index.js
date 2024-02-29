@@ -1,7 +1,3 @@
-const USERS = require('./users');
+const { MOCK_USERS } = require('@ukef/dtfs2-common');
 
-const MOCKS = {
-  USERS,
-};
-
-module.exports = MOCKS;
+module.exports = MOCK_USERS;
