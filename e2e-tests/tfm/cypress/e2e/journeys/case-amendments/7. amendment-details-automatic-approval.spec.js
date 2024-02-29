@@ -11,8 +11,8 @@ import { CURRENCY } from '../../../../../e2e-fixtures/constants.fixture';
 
 context('Amendments - automatic approval journey', () => {
   const todayIsEndOfMonth = dateConstants.tomorrowDay === '01';
-  const todayIs28thFebruary = dateConstants.todayDay === '28' && dateConstants.todayMonth === '02';
-  const facilityTenor = (todayIsEndOfMonth || todayIs28thFebruary) ? '25 months' : '26 months';
+  const todayIs28thFebruaryAndLeapYear = !todayIsEndOfMonth && dateConstants.todayDay === '28' && dateConstants.todayMonth === '02';
+  const facilityTenor = (todayIsEndOfMonth || todayIs28thFebruaryAndLeapYear) ? '25 months' : '26 months';
 
   describe('Amendment details - Change the Cover end date AND Facility value', () => {
     let dealId;
