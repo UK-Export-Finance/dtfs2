@@ -77,14 +77,13 @@ const populateTfmUserWithEntraData = (tfmUser, entraUser) => ({
  * 5) Update TFM user data.
  * 6) Get redirect URL
  * 7) Return user data, token and redirect URL.
- * @param {Object} pkceCode: PKCE Code object
- * @param {Object} origAuthCodeRequest: Original auth code request
- * @param {Object} req: Request object
+ * @param {Object} pkceCodes: PKCE Codes object
+ * @param {Object} authCodeRequest: Auth code request
+ * @param {String} code: authZ code
+ * @param {String} state: MSAL state guid
  * @returns {Object} TFM user, token and redirect URL.
  */
-
-// TODO: consume values from req.body instead of passing req.
-const processSsoRedirect = async (pkceCode, origAuthCodeRequest, req) => {
+const processSsoRedirect = async ({ pkceCodes, authCodeRequest, code, state }) => {
   console.info('TFM auth service - processing SSO redirect');
 
   let tfmUser;
@@ -92,7 +91,7 @@ const processSsoRedirect = async (pkceCode, origAuthCodeRequest, req) => {
   let mappedTfmUser;
 
   try {
-    entraUser = await authProvider.handleRedirect(pkceCode, origAuthCodeRequest, req.body.code, req.body);
+    entraUser = await authProvider.handleRedirect(pkceCodes, authCodeRequest, code);
 
     if (!entraUser?.idTokenClaims) {
       throw new Error('TFM auth service - processing SSO redirect - Entra user details are missing: %O', entraUser);
@@ -115,7 +114,7 @@ const processSsoRedirect = async (pkceCode, origAuthCodeRequest, req) => {
       mappedTfmUser = populateTfmUserWithEntraData(tfmUser, entraUser);
     }
 
-    const redirectUrl = authProvider.loginRedirectUrl(req.body.state);
+    const redirectUrl = authProvider.loginRedirectUrl(state);
 
     return { tfmUser: mappedTfmUser, token: tokenObject.token, redirectUrl };
   } catch (error) {

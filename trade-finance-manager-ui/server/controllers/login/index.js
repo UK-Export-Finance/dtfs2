@@ -27,15 +27,26 @@ const getLogin = async (req, res) => {
 };
 
 const handleSsoRedirect = async (req, res) => {
-  if (!req.body.formId) {
+  const { body, session } = req;
+
+  if (!body.formId) {
     return loginService.acceptExternalSsoPost(req, res);
   }
-  if (!req.session?.auth?.pkceCodes) {
+  if (!session?.auth?.pkceCodes) {
     console.error('SSO login session details are missing. Start login from beginning.');
     return res.redirect('/');
   }
 
-  const apiResponse = await api.processSsoRedirect(req.session.auth.pkceCodes, req.session.auth.authCodeUrlRequest, req.session.auth.authCodeRequest, req.body.code, req.body.state);
+  const {
+    auth: {
+      pkceCodes,
+      authCodeUrlRequest,
+      authCodeRequest,
+    },
+  } = session;
+  const { code, state } = body;
+
+  const apiResponse = await api.processSsoRedirect({ pkceCodes, authCodeUrlRequest, authCodeRequest, code, state });
 
   if (apiResponse.token) {
     req.session.userToken = apiResponse.token;

@@ -15,8 +15,9 @@ exports.getLoginUrl = async (req, res) => {
 
 exports.processSsoRedirect = async (req, res) => {
   try {
+    const { pkceCodes, authCodeRequest, code, state } = req.body;
 
-    const loginResult = await authService.processSsoRedirect(req.body.pkceCodes, req.body.authCodeRequest, req);
+    const loginResult = await authService.processSsoRedirect({ pkceCodes, authCodeRequest, code, state });
 
     return res.status(200).send(loginResult);
   } catch (err) {

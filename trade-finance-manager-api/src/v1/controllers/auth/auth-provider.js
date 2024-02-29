@@ -34,6 +34,7 @@ class AuthProvider {
       state,
 
       /**
+       * Do not allow any scopes, e.g read/write calendars, send emails as the user etc.
        * By default, MSAL Node will add OIDC scopes to the auth code url request. For more information, visit:
        * https://docs.microsoft.com/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
        */
@@ -44,6 +45,7 @@ class AuthProvider {
       state,
 
       /**
+       * Do not allow any scopes, e.g read/write calendars, send emails as the user etc.
        * By default, MSAL Node will add OIDC scopes to the auth code request. For more information, visit:
        * https://docs.microsoft.com/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
        */
@@ -129,11 +131,9 @@ class AuthProvider {
    * @param {Object} origAuthCodeRequest: Original auth code request
    * @param {String} code: authZ code
    * @param {Object} req: Request object
+   * @returns {Object}
    */
-  // TODO: "returns" documentation
-  // TODO: update body param to consume required property in the body,
-  // instead of passing around req.body
-  async handleRedirect(pkceCode, origAuthCodeRequest, code, body) {
+  async handleRedirect(pkceCode, origAuthCodeRequest, code) {
     const authCodeRequest = {
       ...origAuthCodeRequest,
       code, // authZ code
@@ -144,7 +144,7 @@ class AuthProvider {
 
     // TODO: do we need token cache?
     // msalInstance.getTokenCache().deserialize(req.session.tokenCache);
-    const tokenResponse = await msalInstance.acquireTokenByCode(authCodeRequest, body);
+    const tokenResponse = await msalInstance.acquireTokenByCode(authCodeRequest);
 
     return tokenResponse.account;
   }
