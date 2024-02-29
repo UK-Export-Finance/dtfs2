@@ -23,6 +23,13 @@ const mockSuccessfulResponse = {
   ],
 };
 
+/**
+ * This code snippet demonstrates the usage of the `get` function from the `number-generator.controller` module.
+ * The `get` function is responsible for retrieving a number from the number generator API based on the provided entityType and dealId.
+ * It makes use of the `axios` library to send a POST request to the API and handles the response accordingly.
+ * The function also handles various error scenarios, such as when the entityType is invalid or when the number generator response is void.
+ * The code snippet includes test cases that validate the behavior of the `get` function in different scenarios.
+ */
 describe('get', () => {
   it('should retrieve a number from the number generator API when valid entityType and dealId are provided', async () => {
     const request = createRequest({ body });
