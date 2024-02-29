@@ -12,15 +12,13 @@ const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { ADMIN } = require('../../../src/v1/roles/roles');
 const { STATUS } = require('../../../src/constants/user');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { withValidateEmailIsUniqueTests } = require('./validate-email-is-unique.api-tests');
-const { withValidateUsernameAndEmailMatchTests } = require('./validate-username-and-email-match.api-tests');
-const { withValidateEmailIsCorrectFormatTests } = require('./validate-email-is-correct-format.api-tests').default;
+const { withValidateEmailIsUniqueTests } = require('./with-validate-email-is-unique.api-tests');
+const { withValidateUsernameAndEmailMatchTests } = require('./with-validate-username-and-email-match.api-tests');
+const { withValidatePasswordOnCreateUserTests } = require('./with-validate-password.api-tests');
+const { withValidateEmailIsCorrectFormatTests } = require('./with-validate-email-is-correct-format.api-tests').default;
 
 const MOCK_USER = users.barclaysBankMaker1;
 
-const PASSWORD_ERROR = {
-  text: 'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
-};
 const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: "You cannot combine 'Read-only' with any of the other roles" };
 
 const BASE_URL = '/v1/users';
@@ -49,72 +47,7 @@ describe('a user', () => {
       makeRequestWithAuthHeader: (authHeader) => post(BASE_URL, MOCK_USER, { headers: { Authorization: authHeader } }),
     });
 
-    describe('when validating the password', () => {
-      it('rejects if the provided password contains zero numeric characters', async () => {
-        const newUser = {
-          ...MOCK_USER,
-          password: 'No-numeric-characters',
-        };
-
-        const { status, body } = await createUser(newUser);
-
-        expect(status).toEqual(400);
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR);
-      });
-
-      it('rejects if the provided password contains zero upper-case characters', async () => {
-        const newUser = {
-          ...MOCK_USER,
-          password: '0-upper-case-characters',
-        };
-
-        const { status, body } = await createUser(newUser);
-
-        expect(status).toEqual(400);
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR);
-      });
-
-      it('rejects if the provided password contains zero lower-case characters', async () => {
-        const newUser = {
-          ...MOCK_USER,
-          password: '0-LOWER-CASE-CHARACTERS',
-        };
-
-        const { status, body } = await createUser(newUser);
-
-        expect(status).toEqual(400);
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR);
-      });
-
-      it('rejects if the provided password contains zero special characters', async () => {
-        const newUser = {
-          ...MOCK_USER,
-          password: '0specialCharacters',
-        };
-
-        const { status, body } = await createUser(newUser);
-
-        expect(status).toEqual(400);
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR);
-      });
-
-      it('rejects if the provided password contains fewer than 8 characters', async () => {
-        const newUser = {
-          ...MOCK_USER,
-          password: '1234567',
-        };
-
-        const { status, body } = await createUser(newUser);
-
-        expect(status).toEqual(400);
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR);
-      });
-    });
+    withValidatePasswordOnCreateUserTests({ payload: MOCK_USER, makeRequest: async (user) => await createUser(user) });
 
     withValidateEmailIsUniqueTests({
       payload: MOCK_USER,

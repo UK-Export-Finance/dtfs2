@@ -105,6 +105,7 @@ describe('user validation', () => {
       'emailMustBeValidEmailAddress',
       'emailMustBeUnique',
     ];
+
     const ruleSetWithPassword = [...baseRuleSetWhenCurrentPasswordIsNotProvided, 'currentPasswordMustMatch'];
 
     const testCases = [

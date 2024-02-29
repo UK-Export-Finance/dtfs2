@@ -12,9 +12,10 @@ const { NON_READ_ONLY_ROLES } = require('../../../test-helpers/common-role-lists
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { ADMIN } = require('../../../src/v1/roles/roles');
 const { STATUS } = require('../../../src/constants/user');
-const { withValidateUsernameAndEmailMatchTests } = require('./validate-username-and-email-match.api-tests');
-const { withValidateEmailIsCorrectFormatTests } = require('./validate-email-is-correct-format.api-tests').default;
-const { withValidateEmailIsUniqueTests } = require('./validate-email-is-unique.api-tests');
+const { withValidateUsernameAndEmailMatchTests } = require('./with-validate-username-and-email-match.api-tests');
+const { withValidateEmailIsCorrectFormatTests } = require('./with-validate-email-is-correct-format.api-tests').default;
+const { withValidateEmailIsUniqueTests } = require('./with-validate-email-is-unique.api-tests');
+const { withValidatePasswordOnUpdateUserTests } = require('./with-validate-password.api-tests');
 
 const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
 const MOCK_USER = { ...users.barclaysBankMaker1, username: temporaryUsernameAndEmail, email: temporaryUsernameAndEmail };
@@ -121,6 +122,11 @@ describe('a user', () => {
 
         expect(status).toEqual(200);
         expect(body.roles).toStrictEqual([READ_ONLY, READ_ONLY]);
+      });
+
+      withValidatePasswordOnUpdateUserTests({
+        payload: {},
+        makeRequest: async (updatedUserCredentials) => await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`),
       });
 
       withValidateEmailIsUniqueTests({
