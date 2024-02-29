@@ -8,7 +8,7 @@ const {
   errorHref,
   generateErrorSummary,
   constructPayload,
-} = require('../../../helpers');
+  } = require('../../../helpers');
 
 const {
   provide, DEAL, INDUSTRY_SECTORS, COUNTRIES,
@@ -22,6 +22,7 @@ const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData'
 const industryFields = require('./industryFields');
 const { validateRole } = require('../../middleware');
 const { ROLES: { MAKER } } = require('../../../constants');
+const { isValidCompaniesHouseNumber } = require('../../../validation/validate-ids');
 
 const router = express.Router();
 
@@ -41,7 +42,6 @@ router.get('/contract/:_id/about/supplier', [validateRole({ role: [MAKER] }), pr
       ...validationErrors.errorList,
       ...req.session.companiesHouseSearchValidationErrors.errorList,
     };
-
     delete req.session.companiesHouseSearchValidationErrors;
   }
 
@@ -57,6 +57,20 @@ router.get('/contract/:_id/about/supplier', [validateRole({ role: [MAKER] }), pr
       ...req.session.aboutSupplierFormData,
     };
     req.session.aboutSupplierFormData = null;
+  }
+
+  if(deal.submissionDetails['supplier-companies-house-registration-number']){
+    if (!isValidCompaniesHouseNumber(deal.submissionDetails['supplier-companies-house-registration-number'])) {
+      validationErrors.count += 1;
+      validationErrors.errorList = {
+        ...validationErrors.errorList,
+          'supplier-companies-house-registration-number': {
+            order: '1',
+            text: 'Enter a valid Companies House registration number',
+          }
+
+      };
+    }
   }
 
   const mappedIndustrySectors = mapIndustrySectors(industrySectors, deal.submissionDetails['industry-sector']);
@@ -173,7 +187,7 @@ router.post('/contract/:_id/about/supplier', provide([INDUSTRY_SECTORS]), async 
 
   await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
 
-  const redirectUrl = `/contract/${_id}/about/buyer`;
+  const redirectUrl = `/contract/${_id}/about/buyer?firstVisit=true`;
   return res.redirect(redirectUrl);
 });
 

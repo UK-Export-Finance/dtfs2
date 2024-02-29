@@ -63,7 +63,6 @@ const hasSubmittedAlwaysShowErrorFields = (allFields, submittedFields) => {
 
   if (hasAlwaysShowFields) {
     const pageFields = Object.keys(submittedFields).filter((fieldName) => ALWAYS_SHOW_ERROR_FIELDS.includes(fieldName));
-
     if (pageFields.length > 0) {
       return true;
     }
@@ -85,7 +84,7 @@ const mapAlwaysShowErrorFields = (validationErrors, fields) => {
 const mapRequiredAndAlwaysShowErrorFields = (validationErrors, allFields) => {
   const mappedErrors = validationErrors;
   const allRequiredFields = requiredFieldsArray(allFields);
-  const alwaysShowErrorFields = allFields.ALWAYS_SHOW_ERROR_FIELDS;
+  const alwaysShowErrorFields = allFields.ALWAYS_SHOW_ERROR_FIELDS?allFields.ALWAYS_SHOW_ERROR_FIELDS:[];
 
   const fieldsToReturn = [...allRequiredFields, ...alwaysShowErrorFields];
 
@@ -98,16 +97,19 @@ const mapRequiredAndAlwaysShowErrorFields = (validationErrors, allFields) => {
 
 const pageSpecificValidationErrors = (validationErrors, fields, submittedFields) => {
   if (validationErrors && validationErrors.errorList) {
-    if (submittedFields.viewedPreviewPage && !submittedFields.viewedPreviewPage.status && hasSubmittedAlwaysShowErrorFields(fields, submittedFields)) {
+    if (!submittedFields.viewedPreviewPage && hasSubmittedAlwaysShowErrorFields(fields, submittedFields)) {
+      if (submittedFields.status === 'Incomplete') {
+        return mapRequiredAndAlwaysShowErrorFields(validationErrors, fields);
+      }
       return mapAlwaysShowErrorFields(validationErrors, fields);
-    }
+     }
 
     if (shouldReturnRequiredValidation(fields, submittedFields)) {
       if (hasSubmittedAlwaysShowErrorFields(fields, submittedFields)) {
         return mapRequiredAndAlwaysShowErrorFields(validationErrors, fields);
       }
-
       return mapRequiredValidationErrors(validationErrors, fields);
+
     }
   }
 

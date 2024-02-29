@@ -160,7 +160,7 @@ context('about-supply-contract', () => {
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
 
     // should only see companies house validation errors
-    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+    partials.errorSummary.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     //---------------------------------------------------------------
@@ -172,7 +172,7 @@ context('about-supply-contract', () => {
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
 
     // should only see companies house validation errors
-    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+    partials.errorSummary.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     //---------------------------------------------------------------
@@ -208,7 +208,7 @@ context('about-supply-contract', () => {
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
 
     // should only see companies house validation errors
-    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+    partials.errorSummary.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     // the unrelated form field we provided earlier should be populated
@@ -247,7 +247,7 @@ context('about-supply-contract', () => {
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
 
     // should only see companies house validation errors
-    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+    partials.errorSummary.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     //---------------------------------------------------------------
@@ -260,7 +260,7 @@ context('about-supply-contract', () => {
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
 
     // should only see companies house validation errors
-    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+    partials.errorSummary.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     //---------------------------------------------------------------------------
@@ -273,7 +273,7 @@ context('about-supply-contract', () => {
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
 
     // should only see companies house validation errors
-    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+    partials.errorSummary.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     //---------------------------------------------------------------------------------------
@@ -286,7 +286,7 @@ context('about-supply-contract', () => {
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
 
     // should only see companies house validation errors
-    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+    partials.errorSummary.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     //--------------------------------------------------------------------------
@@ -299,7 +299,7 @@ context('about-supply-contract', () => {
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
 
     // should only see companies house validation errors
-    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+    partials.errorSummary.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     // companies house input value should be retained
@@ -321,5 +321,32 @@ context('about-supply-contract', () => {
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
     partials.errorSummary.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
+  });
+
+  it('A maker picks up a deal in status=Draft, misses mandatory field then trigger missed validation error.', () => {
+    cy.login(BANK1_MAKER1);
+
+    contractAboutSupplier.visit(deal);
+    // click through
+    contractAboutSupplier.supplierType().select('Exporter');
+    contractAboutSupplier.supplierName().type('test');
+    contractAboutSupplier.supplierAddress().line1().type('test');
+    contractAboutSupplier.supplierAddress().town().type('test');
+    contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();
+    contractAboutSupplier.supplierCorrespondenceAddress().line1().type('test');
+    contractAboutSupplier.supplierCorrespondenceAddress().town().type('test');
+    contractAboutSupplier.supplierCorrespondenceAddress().country().select('GBR');
+    contractAboutSupplier.industrySector().select('Education');
+    contractAboutSupplier.industryClass().select('Cultural education');
+    contractAboutSupplier.smeTypeMicro().click();
+    contractAboutSupplier.supplyContractDescription().type('test');
+    contractAboutSupplier.legallyDistinct().click();
+    contractAboutSupplier.nextPage().click();
+    // re-visit supplier page
+    partials.taskListHeader.itemLink('supplier-and-counter-indemnifier/guarantor').click();
+    // should display missed validation errors
+    partials.errorSummary.errorSummaryLinks().should('have.length', 6);
+    contractAboutSupplier.expectError('Supplier country is required');
+    contractAboutSupplier.expectError('Supplier correspondence postcode is required for UK addresses');
   });
 });

@@ -250,6 +250,58 @@ describe('page specific validation errors', () => {
       expect(result).toEqual(expected);
     });
 
+    it('displays validation errors when user skips mandatory fields', () => {
+
+  const mockErrorList = {
+    ...mockErrors,
+    [ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS[0]]: { order: '1', text: 'Field error' },
+    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supply-contract-description']]: { order: '2', text: 'Field is required' },
+  };
+
+  const mockValidationErrors = {
+    errorList: mockErrorList,
+    count: mockErrorList.length,
+  };
+
+  const mockSubmittedValues = {
+    _id: '1234',
+    status: 'Incomplete',
+    [ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS[0]]: 'test',
+    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-type']]: 'Exporter',
+    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['industry-class']]: '84220',
+    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-name']]: '1014',
+    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-address-line-1']]: 'Test',
+    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-address-town']]: 'Test',
+    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-correspondence-address-is-different']]: false,
+    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['legallyDistinct']]: false,
+    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supply-contract-description']]: 'Test',
+    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['sme-type']]: 'Small',
+  };
+
+
+  const result = pageSpecificValidationErrors(
+    mockValidationErrors,
+    ABOUT_CONTRACT_FIELDS.SUPPLIER,
+    mockSubmittedValues,
+  );
+
+  const expected = {
+    count: 1,
+    errorList: {
+      'supplier-companies-house-registration-number': { order: '1', text: 'Field error' }
+    },
+    summary: [
+      {
+        text: 'Field error',
+        href: '#supplier-companies-house-registration-number'
+      }
+    ]
+  }
+  // Check that the function returned the correct validation errors
+  expect(result).toEqual(expected);
+});
+
+
     describe('when submittedValues contains an `always show error`, field', () => {
       it('should return mapRequiredAndAlwaysShowErrorFields result', () => {
         const mockErrorList = {

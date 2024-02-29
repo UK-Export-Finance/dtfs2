@@ -29,6 +29,7 @@ router.get('/contract/:_id/about/financial', [validateRole({ role: [MAKER] }), p
   const { deal, currencies } = req.apiData;
 
   const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
+  const {firstVisit} =  req.query
   const errorSummary = generateErrorSummary(
     validationErrors,
     errorHref,
@@ -38,7 +39,7 @@ router.get('/contract/:_id/about/financial', [validateRole({ role: [MAKER] }), p
 
   return res.render('contract/about/about-supply-financial.njk', {
     deal,
-    validationErrors: financialPageValidationErrors(validationErrors, deal.submissionDetails),
+    validationErrors: !firstVisit && financialPageValidationErrors(validationErrors, deal.submissionDetails),
     currencies: mapCurrencies(currencies, deal.submissionDetails.supplyContractCurrency),
     user: req.session.user,
     taskListItems: aboutTaskList(completedForms),
