@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
+const { generateArrayOfEmailsRegex } = require('./helpers/generateArrayOfEmailsRegex');
 const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { USER, PAYLOAD } = require('../../../constants');
@@ -21,10 +22,10 @@ exports.findByEmails = async (emails) => {
 
     const collection = await db.getCollection('tfm-users');
 
-    const emailsRegex = emails.map(email => new RegExp(`^${email}$`, 'i'));
+    const emailsRegex = generateArrayOfEmailsRegex(emails);
+
     const users = await collection.find({ 'email': { $in: emailsRegex }}).toArray();
 
-    // TODO: switch case?
     if (users.length === 0) {
       console.info('Getting TFM user by emails - no user found');
 
