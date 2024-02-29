@@ -314,7 +314,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
     });
   }
 
-  const errors = applyUpdateRules(user, {
+  const errors = await applyUpdateRules(user, {
     password,
     passwordConfirm,
   });
