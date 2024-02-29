@@ -109,7 +109,8 @@ class AuthProvider {
      * auth artifacts with desired claims. For more information, visit:
      * https://azuread.github.io/microsoft-authentication-library-for-js/ref/modules/_azure_msal_node.html#authorizationurlrequest
      * https://azuread.github.io/microsoft-authentication-library-for-js/ref/modules/_azure_msal_node.html#authorizationcoderequest
-     * */
+     *
+     */
     response = {
       ...response,
       authCodeUrlRequest: {
@@ -124,8 +125,9 @@ class AuthProvider {
         redirectUri: this.config.redirectUri,
         code: '',
       },
-      loginUrl: await msalInstance.getAuthCodeUrl(response.authCodeUrlRequest),
     };
+
+    response.loginUrl = await msalInstance.getAuthCodeUrl(response.authCodeUrlRequest);
 
     return response;
   }
