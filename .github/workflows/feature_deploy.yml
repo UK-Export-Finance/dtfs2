@@ -122,12 +122,8 @@ jobs:
     strategy:
       matrix:
         repository:
-          - azure-function-number-generator
           - azure-function-acbs
         include:
-          - path: azure-functions/number-generator-function
-            repository: azure-function-number-generator
-            name: function-number-generator
           - path: azure-functions/acbs-function
             repository: azure-function-acbs
             name: function-acbs
