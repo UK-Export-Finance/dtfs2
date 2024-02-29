@@ -86,7 +86,7 @@ const getDeals = async (queryParams, token) => {
   });
   const { deals, pagination } = response.data;
 
-  if (queryParams.page >= pagination?.totalPages && !(queryParams.page === 0 && pagination?.totalPages === 0)) {
+  if (queryParams.page >= pagination.totalPages) {
     throw new PageOutOfBoundsError('Requested page number exceeds the maximum page number');
   }
 
