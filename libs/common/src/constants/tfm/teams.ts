@@ -1,12 +1,8 @@
-import { Prettify } from '../..';
-import { TeamId } from '../../types/tfm/team-id';
+import { Prettify } from '../../types/types-helper';
+import { TeamId, Team } from '../../types/tfm';
 
 type TeamRecord = {
-  readonly [Id in TeamId]: Readonly<{
-    id: Id;
-    name: string;
-    email: string;
-  }>;
+  readonly [Id in TeamId]: Readonly<Team & { id: Id }>;
 };
 
 export const TEAMS: Prettify<TeamRecord> = {

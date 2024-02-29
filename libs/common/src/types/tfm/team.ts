@@ -1,4 +1,7 @@
-import { ValuesOf } from '..';
-import { TEAMS } from '../../constants/tfm/teams';
+import { TeamId } from './team-id';
 
-export type Team = ValuesOf<typeof TEAMS>;
+export type Team = {
+  id: TeamId;
+  name: string;
+  email: string;
+};
