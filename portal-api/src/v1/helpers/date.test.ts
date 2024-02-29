@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import {
   getDateAsEpochMillisecondString,
   getStartOfDateFromDayMonthYearStrings,
@@ -88,42 +87,138 @@ describe('getStartOfDateFromDayMonthYearStrings', () => {
 
 describe('getStartOfDateFromDayMonthYearStringsReplicatingMoment', () => {
   const mockDay = '12';
-  const mockMonth = '05';
+  const mockMonth = '11';
   const mockYear = '2022';
-  it('returns the correct value when given valid dates', () => {
-    const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment(mockDay, mockMonth, mockYear);
 
-    const expectedEpoch = 1652310000000; // Thu May 12 2022 00:00:00 GMT+0100
-    expect(result.valueOf()).toEqual(expectedEpoch);
-  });
-
-  it('returns NaN when given an invalid month', () => {
-    const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment(mockDay, '##', mockYear);
-
-    expect(result.valueOf()).toEqual(NaN);
-  });
-
-  describe('should maintain moment js behaviour for date construction', () => {
-    it('should use todays date if invalid date', () => {
-      const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment('##', mockMonth, mockYear);
-
-      const expectedDay = new Date().getDate();
-      // Need to pass this into date to allow js to wrap dates
-      // e.g. if current date is 31st December but mockMonth is November then 31st November is invalid
-      // so js will wrap that into 1st December.
-      const expectedDate = new Date(Number(mockYear), Number(mockMonth), expectedDay);
-
-      expect(format(result, 'dd')).toEqual(format(expectedDate, 'dd'));
-      expect(format(result, 'MM')).toEqual(mockMonth);
-      expect(format(result, 'yyyy')).toEqual(mockYear);
+  describe('when currentDate is 8th March 2023', () => {
+    beforeAll(() => {
+      jest.useFakeTimers()
+        .setSystemTime(new Date('2023-03-08'));
     });
 
-    it('should use the current year if invalid year', () => {
-      const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment(mockDay, mockMonth, '####');
+    afterAll(() => {
+      jest.useRealTimers();
+    });
 
-      expect(format(result, 'dd')).toEqual(mockDay);
-      expect(format(result, 'MM')).toEqual(mockMonth);
-      expect(format(result, 'yyyy')).toEqual(format(new Date(), 'yyyy'));
+    const testData = [
+      {
+        description: 'returns the correct value when given valid dates',
+        day: mockDay,
+        month: mockMonth,
+        year: mockYear,
+        expectedEpoch: 1668211200000, // Sat Nov 12 2022 00:00:00 GMT+0000 
+      },
+      {
+        description: 'returns NaN when given an invalid month',
+        day: mockDay,
+        month: '##',
+        year: mockYear,
+        expectedEpoch: NaN,
+      },
+    ]
+
+    it.each(testData)('$description', ({ day, month, year, expectedEpoch }) => {
+      const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment(day, month, year);
+  
+      expect(result.valueOf()).toEqual(expectedEpoch);
+    });
+  
+    describe('should maintain moment js behaviour for date construction', () => {
+      const momentBehaviourTestData = [
+        {
+          description: 'should use todays date if invalid date',
+          day: '##',
+          month: mockMonth,
+          year: mockYear,
+          expectedEpoch: 1667865600000, // Tue Nov 08 2022 00:00:00 GMT+0000
+        },
+        {
+          description: 'should use the current year if invalid year',
+          day: mockDay,
+          month: mockMonth,
+          year: '##',
+          expectedEpoch: 1699747200000, // Sun Nov 12 2023 00:00:00 GMT+0000
+        },
+        {
+          description: 'should round wrap date if too large for the month',
+          day: '31',
+          month: '02',
+          year: '2023',
+          expectedEpoch: 1677801600000, // Fri Mar 03 2023 00:00:00 GMT+0000
+        },
+      ];
+
+      it.each(momentBehaviourTestData)('$description', ({ day, month, year, expectedEpoch }) => {
+        const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment(day, month, year);
+    
+        expect(result.valueOf()).toEqual(expectedEpoch);
+      });
+    });
+  });
+
+  describe('when currentDate is 29th February 2024', () => {
+    beforeAll(() => {
+      jest.useFakeTimers()
+        .setSystemTime(new Date('2024-02-29'));
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    it('returns NaN when given an invalid month', () => {
+      const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment(mockDay, '##', mockYear);
+  
+      expect(result.valueOf()).toEqual(NaN);
+    });
+  
+    describe('should maintain moment js behaviour for date construction', () => {
+      it('should use the 28th if invalid date', () => {
+        const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment('##', mockMonth, mockYear);
+  
+        const expectedEpoch = 1669593600000; // Thu Dec 01 2022 00:00:00 GMT+0000
+        expect(result.valueOf()).toEqual(expectedEpoch);
+      });
+  
+      it('should use the current year if invalid year', () => {
+        const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment(mockDay, mockMonth, '####');
+  
+        const expectedEpoch = 1731369600000; // Tue Nov 12 2024 00:00:00 GMT+0000
+        expect(result.valueOf()).toEqual(expectedEpoch);
+      });
+    });
+  });
+
+  describe('when current date is 31st December', () => {
+    beforeAll(() => {
+      jest.useFakeTimers()
+        .setSystemTime(new Date('2024-12-31'));
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    it('returns NaN when given an invalid month', () => {
+      const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment(mockDay, '##', mockYear);
+  
+      expect(result.valueOf()).toEqual(NaN);
+    });
+  
+    describe('should maintain moment js behaviour for date construction', () => {
+      it('should use todays date if invalid date, and wrap to the next month', () => {
+        const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment('##', mockMonth, mockYear);
+  
+        const expectedEpoch = 1669852800000; // Thu Dec 01 2022 00:00:00 GMT+0000
+        expect(result.valueOf()).toEqual(expectedEpoch);
+      });
+  
+      it('should use the current year if invalid year', () => {
+        const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment(mockDay, mockMonth, '####');
+  
+        const expectedEpoch = 1731369600000; // Tue Nov 12 2024 00:00:00 GMT+0000
+        expect(result.valueOf()).toEqual(expectedEpoch);
+      });
     });
   });
 });

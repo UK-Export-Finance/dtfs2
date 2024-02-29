@@ -1,4 +1,4 @@
-import { format, set, startOfDay } from 'date-fns';
+import { format, isLeapYear, set, startOfDay } from 'date-fns';
 import { DATE_FORMATS } from '../../constants';
 
 /**
@@ -46,17 +46,38 @@ export const getStartOfDateFromDayMonthYearStrings = (day: string, month: string
  * This function has odd behaviour inherited from moment js:
  *  - If the month is invalid return NaN
  *  - If the day/year is invalid, use the current day/year instead
+ *  - If the current date is 29th February, and setting year to a non-leap year, use 28th instead
+ *  - If the current date is too large for the given month (e.g. 31st November), wrap (e.g to 1st December)
  */
 export const getStartOfDateFromDayMonthYearStringsReplicatingMoment = (day: string, month: string, year: string) => {
   // moment().set() returns invalid date if the month is invalid
   if (Number.isNaN(Number(month))) {
     return new Date(NaN);
   }
+
+  const currentYear = new Date().getFullYear();
+  const currentDate = new Date().getDate();
+  const parsedYear = Number.isNaN(Number(year)) ? currentYear : Number(year);
+
+  // If the current date is 29th February, and the parsedYear is not a leap year should use the current date as 28 instead
+  const use28thFebruary = !isLeapYear(parsedYear) && currentDate === 29 && (new Date).getMonth() === 1;
+  let parsedDay: number;
+  if (Number.isNaN(Number(day))) {
+    if (use28thFebruary) {
+      parsedDay = 28
+    } else {
+      parsedDay = currentDate
+    }
+  } else {
+    parsedDay = Number(day);
+  }
+
+
   // moment().set() treats NaN date & year like undefined
   return set(startOfDay(new Date()), {
-    date: Number.isNaN(Number(day)) ? undefined : Number(day),
+    date: parsedDay,
     month: Number(month) - 1, // months are zero indexed
-    year: Number.isNaN(Number(year)) ? undefined : Number(year),
+    year: parsedYear,
   });
 };
 
