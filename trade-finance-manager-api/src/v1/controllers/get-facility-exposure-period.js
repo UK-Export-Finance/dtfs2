@@ -13,10 +13,11 @@ const getFacilityExposurePeriod = async (facility) => {
     let facilityUpdate;
 
     if (hasBeenIssued) {
-      const startDate = new Date(Number(coverStartDate));
+      const startDate = toDate(coverStartDate);
       const formattedStartDate = isValid(startDate) ? format(startDate, 'yyyy-MM-dd') : 'Invalid date';
 
-      const endDate = toDate(coverEndDate);
+      console.log({ testCoverEndDate: coverEndDate });
+      const endDate = new Date(coverEndDate);
       const formattedEndDate = isValid(endDate) ? format(endDate, 'yyyy-MM-dd') : 'Invalid date';
 
       const exposurePeriodResponse = await api.getFacilityExposurePeriod(
