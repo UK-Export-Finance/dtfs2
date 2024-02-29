@@ -29,16 +29,6 @@ const payloadVerification = (payload, template) => {
     return payloadKeyDataType.toLowerCase() === templateKeyDataType.toLowerCase();
   });
 
-  if(!propertiesExists) {
-    console.error('ERROR no required property', propertiesExists);
-  }
-  if(!noAdditionalProperties) {
-    console.error('ERROR extra properties', noAdditionalProperties);
-  }
-  if(!propertiesDataTypeMatch) {
-    console.error('Error property type is wrong', propertiesDataTypeMatch);
-  }
-
   // Compound comparison condition
   return propertiesExists && noAdditionalProperties && propertiesDataTypeMatch;
 };
