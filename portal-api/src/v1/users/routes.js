@@ -227,73 +227,7 @@ module.exports.resetPassword = async (req, res) => {
  */
 module.exports.resetPasswordWithToken = async (req, res, next) => {
   const { resetPwdToken } = req.params;
-  const { currentPassword, password, passwordConfirm } = req.body;
-
-  // Only valid for user initiated password reset operation
-  if (Object.prototype.hasOwnProperty.call(req.body, 'currentPassword')) {
-    if (currentPassword.trim() === '') {
-      return res.status(400).json({
-        success: false,
-        errors: {
-          count: 1,
-          errorList: {
-            currentPassword: {
-              text: 'Empty password',
-            },
-          },
-        },
-      });
-    }
-  }
-
-  // First password
-  if (password.trim() === '') {
-    return res.status(400).json({
-      success: false,
-      errors: {
-        count: 1,
-        errorList: {
-          password: {
-            text: 'Empty password',
-          },
-        },
-      },
-    });
-  }
-
-  // Second password
-  if (passwordConfirm.trim() === '') {
-    return res.status(400).json({
-      success: false,
-      errors: {
-        count: 1,
-        errorList: {
-          passwordConfirm: {
-            text: 'Empty password',
-          },
-        },
-      },
-    });
-  }
-
-  // Match passwords
-  if (password.trim() !== passwordConfirm.trim()) {
-    return res.status(400).json({
-      success: false,
-      errors: {
-        count: 1,
-        errorList: {
-          password: {
-            text: 'Password do not match',
-          },
-          passwordConfirm: {
-            text: 'Password do not match',
-          },
-        },
-      },
-    });
-  }
-
+  const { password, passwordConfirm } = req.body;
   // Void token - Token expired
   const user = await getUserByPasswordToken(resetPwdToken);
   // Stale token - Generated over 24 hours ago

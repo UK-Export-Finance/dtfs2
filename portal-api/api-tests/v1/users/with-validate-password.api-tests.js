@@ -16,14 +16,24 @@ const withValidatePasswordOnCreateUserTests = ({ payload, makeRequest }) => {
   });
 };
 
-const withValidatePasswordOnUpdateUserTests = ({ payload, makeRequest, existingUserPassword }) => {
+const withValidatePasswordOnUpdateUserWithoutCurrentPasswordProvidedTests = ({ payload, makeRequest, existingUserPassword }) => {
   describe(WHEN_VALIDATING_PASSWORD_TEXT, () => {
-    itShouldReturnAnErrorIf(getUpdateUserRuleTestCases({ payload, makeRequest, existingUserPassword }));
+    itShouldReturnAnErrorIf(getUpdateUserRuleWithoutCurrentPasswordProvidedTestCases({ payload, makeRequest, existingUserPassword }));
+  });
+};
+
+const withValidatePasswordOnUpdateUserWithCurrentPasswordProvidedTests = ({ payload, makeRequest, existingUserPassword }) => {
+  describe(WHEN_VALIDATING_PASSWORD_TEXT, () => {
+    itShouldReturnAnErrorIf(getUpdateUserRuleWithCurrentPasswordProvidedTestCases({ payload, makeRequest, existingUserPassword }));
   });
 };
 
 function getCreatePasswordRuleTestCases({ makeRequest, payload }) {
   return [
+    {
+      description: 'the password is an empty string',
+      makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: '' })),
+    },
     {
       description: 'the password is less than 8 characters',
       makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: 'aA1!' })),
@@ -47,7 +57,7 @@ function getCreatePasswordRuleTestCases({ makeRequest, payload }) {
   ];
 }
 
-function getUpdateUserRuleTestCases({ makeRequest, payload, existingUserPassword }) {
+function getUpdateUserRuleWithoutCurrentPasswordProvidedTestCases({ makeRequest, payload, existingUserPassword }) {
   const updateSpecificTestCases = [
     {
       description: 'the password does not match the password confirmation',
@@ -64,23 +74,30 @@ function getUpdateUserRuleTestCases({ makeRequest, payload, existingUserPassword
       description: 'the password matches the existing password',
       makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: existingUserPassword })),
     },
+  ];
+  return [...getCreatePasswordRuleTestCases({ makeRequest, payload }), ...updateSpecificTestCases];
+}
+
+function getUpdateUserRuleWithCurrentPasswordProvidedTestCases({ makeRequest, payload, existingUserPassword }) {
+  const updateWithCurrentPasswordSpecificTestCases = [
     {
       description: 'the provided the current password does not match the current password in the database',
       makeRequestWithModifiedPayload: async () =>
         await makeRequest(
           produce(payload, (draftRequest) => {
             draftRequest.password = A_VALID_PASSWORD;
-            draftRequest.passwordConfirm = ANOTHER_VALID_PASSWORD;
+            draftRequest.passwordConfirm = A_VALID_PASSWORD;
             draftRequest.currentPassword = 'ThisIsNotTheCurrentPassword';
           }),
         ),
-      expectResponseErrorToMatchExpected: (body) =>
-        expect(body.errors.errorList.currentPassword.text).toEqual('Current password is not correct.'),
+      expectResponseErrorToMatchExpected: (body) => expect(body.errors.errorList.currentPassword.text).toEqual('Current password is not correct.'),
     },
   ];
-  return [...getCreatePasswordRuleTestCases({ makeRequest, payload }), ...updateSpecificTestCases];
+  return [
+    getUpdateUserRuleWithoutCurrentPasswordProvidedTestCases({ makeRequest, payload, existingUserPassword }),
+    ...updateWithCurrentPasswordSpecificTestCases,
+  ];
 }
-
 function itShouldReturnAnErrorIf(testCases) {
   it.each(testCases)(
     'should return an error if $description',
@@ -104,4 +121,8 @@ function replacePassword({ payload, replacementPassword }) {
   });
 }
 
-module.exports = { withValidatePasswordOnCreateUserTests, withValidatePasswordOnUpdateUserTests };
+module.exports = {
+  withValidatePasswordOnCreateUserTests,
+  withValidatePasswordOnUpdateUserWithoutCurrentPasswordProvidedTests,
+  withValidatePasswordOnUpdateUserWithCurrentPasswordProvidedTests,
+};
