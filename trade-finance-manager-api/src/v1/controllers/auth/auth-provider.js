@@ -88,13 +88,20 @@ class AuthProvider {
      */
     const { verifier, challenge } = await this.cryptoProvider.generatePkceCodes();
 
-    // Set generated PKCE codes and method as session vars
-    const response = { csrfToken };
-
-    response.pkceCodes = {
-      challengeMethod: 'S256',
-      verifier,
-      challenge,
+    /**
+     * Create a response object with:
+     * - CSRF token
+     * - Generated PKCE codes
+     * - Verifier
+     * - Challenge
+     */
+    let response = {
+      csrfToken,
+      pkceCodes: {
+        challengeMethod: 'S256',
+        verifier,
+        challenge,
+      },
     };
 
     /**
@@ -103,21 +110,22 @@ class AuthProvider {
      * https://azuread.github.io/microsoft-authentication-library-for-js/ref/modules/_azure_msal_node.html#authorizationurlrequest
      * https://azuread.github.io/microsoft-authentication-library-for-js/ref/modules/_azure_msal_node.html#authorizationcoderequest
      * */
-    response.authCodeUrlRequest = {
-      ...authCodeUrlRequestParams,
-      redirectUri: this.config.redirectUri,
-      responseMode: 'form_post', // recommended for confidential clients
-      codeChallenge: response.pkceCodes.challenge,
-      codeChallengeMethod: response.pkceCodes.challengeMethod,
+    response = {
+      ...response,
+      authCodeUrlRequest: {
+        ...authCodeUrlRequestParams,
+        redirectUri: this.config.redirectUri,
+        responseMode: 'form_post', // recommended for confidential clients
+        codeChallenge: response.pkceCodes.challenge,
+        codeChallengeMethod: response.pkceCodes.challengeMethod,
+      },
+      authCodeRequest: {
+        ...authCodeRequestParams,
+        redirectUri: this.config.redirectUri,
+        code: '',
+      },
+      loginUrl: await msalInstance.getAuthCodeUrl(response.authCodeUrlRequest),
     };
-
-    response.authCodeRequest = {
-      ...authCodeRequestParams,
-      redirectUri: this.config.redirectUri,
-      code: '',
-    };
-
-    response.loginUrl = await msalInstance.getAuthCodeUrl(response.authCodeUrlRequest);
 
     return response;
   }
