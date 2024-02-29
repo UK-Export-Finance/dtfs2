@@ -79,6 +79,7 @@ function itShouldReturnAnErrorIf(testCases) {
 function replacePassword({ payload, replacementPassword }) {
   return produce(payload, (draftRequest) => {
     draftRequest.password = replacementPassword;
+    draftRequest.passwordConfirm = replacementPassword;
   });
 }
 
