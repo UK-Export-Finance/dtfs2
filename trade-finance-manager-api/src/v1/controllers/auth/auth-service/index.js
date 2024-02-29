@@ -58,13 +58,13 @@ const createTfmUser = async (entraUser) => {
 /**
  * populateTfmUserWithEntraData
  * Populate TFM user data with Entra user data.
- * @param {Object} existingTfmUser: Existing TFM user data
+ * @param {Object} tfmUser: Existing TFM user data
  * @param {Object} entraUser: Entra user data
  * @returns 
  */
-const populateTfmUserWithEntraData = (existingTfmUser, entraUser) => ({
-  ...existingTfmUser,
-  ...mapEntraUserData(entraUser, existingTfmUser),
+const populateTfmUserWithEntraData = (tfmUser, entraUser) => ({
+  ...tfmUser,
+  ...mapEntraUserData(entraUser, tfmUser),
 });
 
 /**
@@ -88,6 +88,7 @@ const processSsoRedirect = async (pkceCode, origAuthCodeRequest, req) => {
 
   let tfmUser;
   let entraUser;
+  let mappedTfmUser;
 
   try {
     entraUser = await authProvider.handleRedirect(pkceCode, origAuthCodeRequest, req.body.code, req.body);
@@ -99,24 +100,25 @@ const processSsoRedirect = async (pkceCode, origAuthCodeRequest, req) => {
     const existingTfmUser = await getExistingTfmUser(entraUser);
 
     // TODO: update user in DB
-    tfmUser = populateTfmUserWithEntraData(existingTfmUser, entraUser);
 
-    const { sessionIdentifier, ...tokenObject } = utils.issueJWT(tfmUser);
+    mappedTfmUser = populateTfmUserWithEntraData(existingTfmUser, entraUser);
 
-    updateLastLoginAndResetSignInData(tfmUser, sessionIdentifier, () => { });
+    if (!existingTfmUser) {
+      tfmUser = await createTfmUser(entraUser);
+      mappedTfmUser = populateTfmUserWithEntraData(tfmUser, entraUser);
+    }
+
+    const { sessionIdentifier, ...tokenObject } = utils.issueJWT(mappedTfmUser);
+
+    updateLastLoginAndResetSignInData(mappedTfmUser, sessionIdentifier, () => { });
 
     const redirectUrl = authProvider.loginRedirectUrl(req.body.state);
 
-    return { tfmUser, token: tokenObject.token, redirectUrl };
-  } catch (err) {
-    console.error('TFM auth service - Error processing SSO redirect %s', err);
+    return { tfmUser: mappedTfmUser, token: tokenObject.token, redirectUrl };
+  } catch (error) {
+    console.error('TFM auth service - Error processing SSO redirect: %s', error);
    
-    // TODO: couldn't get instanceof working
-    if (err.name === 'UserNotFoundError') {
-      tfmUser = await createTfmUser(entraUser);
-    }
-
-    throw new Error('TFM auth service - Error processing SSO redirect %s', err);
+    throw new Error('TFM auth service - Error processing SSO redirect: %s', error);
   }
 };
 
