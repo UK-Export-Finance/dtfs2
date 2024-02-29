@@ -132,7 +132,7 @@ exports.update = async (req, res) => {
         user: req.user,
       };
 
-      updateDeal(newReq, res);
+      updateDeal(newReq, res, req.user);
     }
   });
 };

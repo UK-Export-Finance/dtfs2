@@ -4,14 +4,8 @@ const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, 
 const CONSTANTS = require('../constants');
 require('dotenv').config();
 
-const {
-  DTFS_CENTRAL_API_URL,
-  EXTERNAL_API_URL,
-  DTFS_CENTRAL_API_KEY,
-  EXTERNAL_API_KEY,
-  AZURE_ACBS_FUNCTION_URL,
-  AZURE_NUMBER_GENERATOR_FUNCTION_URL
-} = process.env;
+const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL, AZURE_NUMBER_GENERATOR_FUNCTION_URL } =
+  process.env;
 
 const { DURABLE_FUNCTIONS } = CONSTANTS;
 const headers = {
@@ -59,6 +53,7 @@ const updatePortalDeal = async (dealId, update) => {
       headers: headers.central,
       data: {
         dealUpdate: update,
+        user: { _id: '123' },
       },
     });
 
@@ -133,6 +128,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
       headers: headers.central,
       data: {
         status,
+        user: { _id: '123' },
       },
     });
 
@@ -190,11 +186,7 @@ const findOneDeal = async (dealId) => {
   }
 };
 
-const updateDeal = async (
-  dealId,
-  dealUpdate,
-  onError = ({ status, message }) => ({ status, data: message }),
-) => {
+const updateDeal = async (dealId, dealUpdate, onError = ({ status, message }) => ({ status, data: message })) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 

@@ -1,6 +1,8 @@
 const { PORTAL_USER_ROLES } = require('./constants.fixture');
 const MOCK_USERS = require('../../utils/mock-data-loader/portal/users');
 
+const MOCK_USER_ID = '123456789';
+
 const USER_WITH_INJECTION = {
   username: '{ "$gt": "" }',
   email: '{ "$gt": "" }',
@@ -15,4 +17,5 @@ module.exports = {
   ...MOCK_USERS,
   READ_ONLY_ALL_BANKS: MOCK_USERS.READ_ONLY,
   USER_WITH_INJECTION,
+  MOCK_USER_ID,
 };

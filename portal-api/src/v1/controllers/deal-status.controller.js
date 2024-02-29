@@ -143,7 +143,7 @@ exports.update = (req, res) => {
     // check for approvals back from UKEF and date stamp it for countdown indicator
     if (toStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
       || toStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS) {
-      dealAfterAllUpdates = await createApprovalDate(req.params.id);
+      dealAfterAllUpdates = await createApprovalDate(req.params.id, user);
     }
 
     if (toStatus !== fromStatus) {

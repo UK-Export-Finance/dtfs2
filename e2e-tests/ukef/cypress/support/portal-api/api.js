@@ -1,4 +1,5 @@
 const { SIGN_IN_TOKEN_LINK_TOKEN } = require('../../../../../portal-api/api-tests/fixtures/sign-in-token-constants');
+const { MOCK_USER_ID } = require('../../../../e2e-fixtures/portal-users.fixture');
 
 const api = () => {
   const url = `${Cypress.config('dealApiProtocol')}${Cypress.config('dealApiHost')}:${Cypress.config('dealApiPort')}`;
@@ -80,7 +81,10 @@ module.exports.createFacilities = (dealId, facilities, user, token) =>
       body: {
         facilities,
         dealId,
-        user,
+        user: {
+          ...user,
+          _id: MOCK_USER_ID,
+        },
       },
       headers: {
         'Content-Type': 'application/json',

@@ -1,7 +1,7 @@
 const { updateDeal } = require('../deal.controller');
 const now = require('../../../now');
 
-const createMiaSubmissionDate = async (dealId) => {
+const createMiaSubmissionDate = async (dealId, user) => {
   const modifiedDeal = {
     details: {
       manualInclusionApplicationSubmissionDate: now(),
@@ -11,6 +11,7 @@ const createMiaSubmissionDate = async (dealId) => {
   const updatedDeal = await updateDeal(
     dealId,
     modifiedDeal,
+    user,
   );
 
   return updatedDeal;
