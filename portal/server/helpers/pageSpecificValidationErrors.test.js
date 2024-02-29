@@ -273,7 +273,7 @@ describe('page specific validation errors', () => {
     [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-address-line-1']]: 'Test',
     [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-address-town']]: 'Test',
     [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-correspondence-address-is-different']]: false,
-    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['legallyDistinct']]: false,
+    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS.legallyDistinct]: false,
     [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supply-contract-description']]: 'Test',
     [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['sme-type']]: 'Small',
   };
