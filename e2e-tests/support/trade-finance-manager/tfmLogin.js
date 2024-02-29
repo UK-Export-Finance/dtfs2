@@ -59,6 +59,10 @@ const tfmLogin = ({
   console.info('Mock login::');
 
   return cy.getTfmUserByUsername(username).then(async (tfmUser) => {
+    if (!tfmUser) {
+      throw new Error(`No TFM user found with username ${username}`);
+    }
+
     const sessionIdentifier = crypto.randomBytes(32).toString('hex');
     const userToken = issueValidJWT(tfmUser, sessionIdentifier);
     const maxAge = 60 * 30; // 30 min
