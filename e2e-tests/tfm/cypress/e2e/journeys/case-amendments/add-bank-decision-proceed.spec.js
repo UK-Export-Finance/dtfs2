@@ -1,3 +1,4 @@
+import { add } from 'date-fns';
 import relative from '../../relativeURL';
 import caseSubNavigation from '../../partials/caseSubNavigation';
 import facilityPage from '../../pages/facilityPage';
@@ -12,9 +13,15 @@ import pages from '../../pages';
 import { CURRENCY } from '../../../../../e2e-fixtures/constants.fixture';
 
 context('Amendments underwriting - add banks decision - proceed', () => {
-  const todayIsEndOfMonth = dateConstants.tomorrowDay === '01';
-  const todayIs28thFebruaryAndLeapYear = !todayIsEndOfMonth && dateConstants.todayDay === '28' && dateConstants.todayMonth === '02';
-  const facilityTenor = (todayIsEndOfMonth || todayIs28thFebruaryAndLeapYear) ? '25 months' : '26 months';
+  // If the expiry & commencement date are the same day of the month then we add one to the month
+  // difference for BS (but not for EWCS)
+  // BUT... If the commencement date is end of month and the expiry date isn't then we don't add one
+  //
+  // In these tests, the mock start date is two years ago today & the mock end date is a month today.
+  // Therefore if today is EOM and a month from now is not EOM we need to NOT add one to the tenor
+  const todayIsEndOfMonth = add(new Date(), { days: 1 }) === 1;
+  const aMonthFromNowIsEndOfMonth = add(new Date(), { months: 1, days: 1 }).getDate() === 1;
+  const facilityTenor = (todayIsEndOfMonth && !aMonthFromNowIsEndOfMonth) ? '25 months' : '26 months';
 
   let dealId;
   const dealFacilities = [];
