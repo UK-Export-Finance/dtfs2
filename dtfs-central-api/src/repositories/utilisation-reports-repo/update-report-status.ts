@@ -1,7 +1,6 @@
 import { Collection, DeleteResult, ObjectId, UpdateResult, WithoutId } from 'mongodb';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS, MONGO_DB_COLLECTIONS, UtilisationReport, UploadedByUserDetails } from '@ukef/dtfs2-common';
 import { ReportWithStatus } from '../../types/utilisation-reports';
-import { UploadedByUserDetails, UtilisationReport } from '../../types/db-models/utilisation-reports';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, DB_COLLECTIONS } from '../../constants';
 import db from '../../drivers/db-client';
 
 type ReportFilter = {
@@ -47,7 +46,7 @@ const setToPendingReconciliationOrReportNotReceived = async (
 };
 
 export const updateManyUtilisationReportStatuses = async (reportsWithStatus: ReportWithStatus[], uploadedByUserDetails: UploadedByUserDetails) => {
-  const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+  const utilisationReportsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.UTILISATION_REPORTS);
 
   const statusUpdates: Promise<UpdateResult | DeleteResult>[] = reportsWithStatus.map((reportWithStatus) => {
     const { status, reportId } = reportWithStatus;

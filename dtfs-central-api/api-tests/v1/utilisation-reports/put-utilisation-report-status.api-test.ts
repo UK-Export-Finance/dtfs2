@@ -1,4 +1,5 @@
 import { Collection, ObjectId, OptionalId, WithoutId } from 'mongodb';
+import { MONGO_DB_COLLECTIONS, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReport } from '@ukef/dtfs2-common';
 import wipeDB from '../../wipeDB';
 import app from '../../../src/createApp';
 import createApi from '../../api';
@@ -6,9 +7,6 @@ import db from '../../../src/drivers/db-client';
 import { MOCK_UTILISATION_REPORT } from '../../mocks/utilisation-reports/utilisation-reports';
 import { MOCK_TFM_USER } from '../../mocks/test-users/mock-tfm-user';
 import { MOCK_BANKS } from '../../mocks/banks';
-import { DB_COLLECTIONS } from '../../../src/constants/db-collections';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../src/constants';
-import { UtilisationReport } from '../../../src/types/db-models/utilisation-reports';
 import { withoutMongoId } from '../../../src/helpers/mongodb';
 
 const api = createApi(app);
@@ -64,9 +62,9 @@ describe('/v1/utilisation-reports/set-status', () => {
   ];
 
   beforeAll(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS, DB_COLLECTIONS.BANKS]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.UTILISATION_REPORTS, MONGO_DB_COLLECTIONS.BANKS]);
 
-    utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+    utilisationReportsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.UTILISATION_REPORTS);
     for (const mockUtilisationReport of mockUtilisationReports) {
       try {
         const { insertedId } = await utilisationReportsCollection.insertOne(mockUtilisationReport);
@@ -77,7 +75,7 @@ describe('/v1/utilisation-reports/set-status', () => {
       }
     }
 
-    const banksCollection = await db.getCollection(DB_COLLECTIONS.BANKS);
+    const banksCollection = await db.getCollection(MONGO_DB_COLLECTIONS.BANKS);
     await banksCollection.insertOne(MOCK_BANKS.HSBC);
   });
 

@@ -1,8 +1,7 @@
-import { asString } from '@ukef/dtfs2-common';
+import { asString, Bank } from '@ukef/dtfs2-common';
 import { getOneUtilisationReportDetailsByBankId, saveNotReceivedUtilisationReport } from '../../../repositories/utilisation-reports-repo';
 import { getAllBanks } from '../../../repositories/banks-repo';
 import { SchedulerJob } from '../../../types/scheduler-job';
-import { Bank } from '../../../types/db-models/banks';
 import { getCurrentReportPeriodForBankSchedule } from '../../../utils/report-period';
 
 const { UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE } = process.env;

@@ -1,15 +1,11 @@
+import { Bank, UtilisationReport } from '@ukef/dtfs2-common';
 import { MOCK_BANKS } from '../../../../../api-tests/mocks/banks';
-import {
-  getOpenReportsBeforeReportPeriodForBankId,
-  getOneUtilisationReportDetailsByBankId,
-} from '../../../../repositories/utilisation-reports-repo';
+import { getOpenReportsBeforeReportPeriodForBankId, getOneUtilisationReportDetailsByBankId } from '../../../../repositories/utilisation-reports-repo';
 import { MOCK_UTILISATION_REPORT } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-reports';
 import { getMockUtilisationDataForReport } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-data';
 import { getAllUtilisationDataForReport } from '../../../../repositories/utilisation-data-repo';
 import { getAllReportsForSubmissionMonth, getPreviousOpenReportsBySubmissionMonth } from './helpers';
 import { IsoMonthStamp } from '../../../../types/date';
-import { Bank } from '../../../../types/db-models/banks';
-import { UtilisationReport } from '../../../../types/db-models/utilisation-reports';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
 
 jest.mock('../../../../repositories/banks-repo');

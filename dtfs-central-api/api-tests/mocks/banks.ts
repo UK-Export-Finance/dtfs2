@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { Bank } from '../../src/types/db-models/banks';
+import { Bank } from '@ukef/dtfs2-common';
 
 const MONTHLY_REPORT_PERIOD_SCHEDULE = [
   { startMonth: 1, endMonth: 1 },

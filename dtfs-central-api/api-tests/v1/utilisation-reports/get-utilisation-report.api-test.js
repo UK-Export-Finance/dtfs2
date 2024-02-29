@@ -1,15 +1,15 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const db = require('../../../src/drivers/db-client').default;
-const { DB_COLLECTIONS } = require('../../../src/constants/db-collections');
 const { MOCK_UTILISATION_REPORT } = require('../../mocks/utilisation-reports/utilisation-reports');
 
 const getUrl = (_id) => `/v1/utilisation-reports/${_id}`;
 
 describe('/v1/utilisation-reports/:_id', () => {
   beforeAll(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.UTILISATION_REPORTS]);
   });
 
   describe('GET /v1/utilisation-reports/:_id', () => {
@@ -24,7 +24,7 @@ describe('/v1/utilisation-reports/:_id', () => {
 
     it('gets a utilisation report', async () => {
       // Arrange
-      const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+      const collection = await db.getCollection(MONGO_DB_COLLECTIONS.UTILISATION_REPORTS);
       const { insertedId } = await collection.insertOne(MOCK_UTILISATION_REPORT);
       const _id = insertedId.toString();
       const dateUploadedAsISOString = MOCK_UTILISATION_REPORT.dateUploaded.toISOString();

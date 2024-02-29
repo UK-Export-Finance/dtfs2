@@ -1,10 +1,9 @@
 import { Response } from 'supertest';
+import { MONGO_DB_COLLECTIONS, UtilisationReport } from '@ukef/dtfs2-common';
 import wipeDB from '../../wipeDB';
 import app from '../../../src/createApp';
 import db from '../../../src/drivers/db-client';
-import { DB_COLLECTIONS } from '../../../src/constants/db-collections';
 import { MOCK_UTILISATION_REPORT } from '../../mocks/utilisation-reports/utilisation-reports';
-import { UtilisationReport } from '../../../src/types/db-models/utilisation-reports';
 import createApi from '../../api';
 
 const api = createApi(app);
@@ -23,7 +22,7 @@ interface CustomResponse extends Response {
 
 describe('GET /v1/bank/:bankId/utilisation-reports', () => {
   beforeAll(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.UTILISATION_REPORTS]);
   });
 
   it('returns 400 when an invalid bank id is provided', async () => {
@@ -38,7 +37,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
 
   it('gets a utilisation report', async () => {
     // Arrange
-    const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.UTILISATION_REPORTS);
     const { insertedId } = await collection.insertOne(MOCK_UTILISATION_REPORT);
     const _id = insertedId.toString();
     const dateUploadedAsISOString = MOCK_UTILISATION_REPORT.dateUploaded?.toISOString();

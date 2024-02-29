@@ -1,5 +1,4 @@
-import { UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { ReportPeriod } from '../../../../../types/utilisation-reports';
+import { UtilisationReportEntity, ReportPeriod } from '@ukef/dtfs2-common';
 import { NotImplementedError } from '../../../../../errors';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 

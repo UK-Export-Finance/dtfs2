@@ -1,9 +1,8 @@
 import groupBy from 'lodash/groupBy';
 import orderBy from 'lodash/orderBy';
-import { Bank } from '../../../../types/db-models/banks';
+import { Bank, UtilisationReport } from '@ukef/dtfs2-common';
 import { IsoMonthStamp } from '../../../../types/date';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
-import { UtilisationReport } from '../../../../types/db-models/utilisation-reports';
 import { getAllBanks } from '../../../../repositories/banks-repo';
 import { getAllUtilisationDataForReport } from '../../../../repositories/utilisation-data-repo';
 import { getOneUtilisationReportDetailsByBankId, getOpenReportsBeforeReportPeriodForBankId } from '../../../../repositories/utilisation-reports-repo';
