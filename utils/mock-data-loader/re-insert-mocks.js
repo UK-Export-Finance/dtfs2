@@ -1,6 +1,4 @@
-const {
-  createAndLogInAsInitialTfmUser, createAndLogInAsInitialUser, deleteInitialUser, deleteInitialTFMUser
-} = require('./user-helper');
+const { createAndLogInAsInitialTfmUser, createAndLogInAsInitialUser, deleteInitialUser, deleteInitialTFMUser } = require('./user-helper');
 const db = require('./database/database-client');
 
 const cleanAllTables = require('./clean-all-tables');
@@ -16,7 +14,7 @@ const insertMocksTfm = require('./tfm/insert-mocks-tfm');
 const { logger, LOGGER_COLOURS } = require('./helpers/logger.helper');
 
 const init = async () => {
-  logger({ message: 'REINSERTING MOCKS', colour: LOGGER_COLOURS.bright });
+  logger.info('REINSERTING MOCKS', { colour: LOGGER_COLOURS.bright });
 
   const portalToken = await createAndLogInAsInitialUser();
 
@@ -35,7 +33,7 @@ const init = async () => {
 
   db.close();
 
-  logger({ message: 'REINSERTING MOCKS COMPLETE', colour: LOGGER_COLOURS.bright });
+  logger.info('REINSERTING MOCKS SUCCESSFUL', { colour: LOGGER_COLOURS.bright });
 };
 
 init();

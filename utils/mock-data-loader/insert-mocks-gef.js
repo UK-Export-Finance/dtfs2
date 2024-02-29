@@ -5,18 +5,18 @@ const { BANK1_MAKER1 } = require('./portal/users');
 const { logger } = require('./helpers/logger.helper');
 
 const insertMocks = async (token) => {
-  logger({ message: 'inserting GEF mocks' });
-  logger({ message: 'inserting GEF mandatory-criteria-versioned', depth: 1 });
+  logger.info('inserting GEF mocks');
+  logger.info('inserting GEF mandatory-criteria-versioned', { depth: 1 });
   for (const item of MOCKS.MANDATORY_CRITERIA_VERSIONED) {
     await api.createMandatoryCriteriaVersioned(item, token);
   }
 
-  logger({ message: 'inserting GEF eligibility-criteria', depth: 1 });
+  logger.info('inserting GEF eligibility-criteria', { depth: 1 });
   for (const item of MOCKS.ELIGIBILITY_CRITERIA) {
     await api.createEligibilityCriteria(item, token);
   }
 
-  logger({ message: 'inserting GEF deals', depth: 1 });
+  logger.info('inserting GEF deals', { depth: 1 });
 
   const allUsers = await portalApi.listUsers(token);
   const makerUserId = allUsers.find((user) => user.username === BANK1_MAKER1.username)._id;
@@ -38,7 +38,7 @@ const insertMocks = async (token) => {
 
   const gefDeals = await api.listDeals(token);
 
-  logger({ message: 'inserting and updating GEF facilities', depth: 1 });
+  logger.info('inserting and updating GEF facilities', { depth: 1 });
   for (const [index, item] of MOCKS.FACILITIES.entries()) {
     // eslint-disable-next-line no-restricted-syntax
     for (const subitem of item) {

@@ -3,10 +3,12 @@ require('dotenv').config();
 
 const { gef } = require('./gef/api');
 const { createLoggedInUserSession } = require('./database/user-repository');
+const FailedToCreateUserError = require('./errors/failed-to-create-user.error');
+const ApiError = require('./errors/api.error');
+const FailedToDeleteBankError = require('./errors/failed-to-delete-bank.error');
+const FailedToGetBanksError = require('./errors/get-banks.error');
 
-const {
-  PORTAL_API_URL, PORTAL_API_KEY, TFM_API_URL, TFM_API_KEY
-} = process.env;
+const { PORTAL_API_URL, PORTAL_API_KEY, TFM_API_URL, TFM_API_KEY } = process.env;
 
 const createBank = async (bank, token) => {
   const response = await axios({
@@ -19,7 +21,7 @@ const createBank = async (bank, token) => {
     url: `${PORTAL_API_URL}/v1/banks`,
     data: bank,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -36,7 +38,7 @@ const createCurrency = async (currency, token) => {
     url: `${PORTAL_API_URL}/v1/currencies`,
     data: currency,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -53,7 +55,7 @@ const createCountry = async (country, token) => {
     url: `${PORTAL_API_URL}/v1/countries`,
     data: country,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -70,7 +72,7 @@ const createDeal = async (deal, token) => {
     url: `${PORTAL_API_URL}/v1/deals`,
     data: deal,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -86,7 +88,7 @@ const getDeal = async (dealId, token) => {
     },
     url: `${PORTAL_API_URL}/v1/deals/${dealId}`,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -103,7 +105,7 @@ const createIndustrySector = async (industrySector, token) => {
     url: `${PORTAL_API_URL}/v1/industry-sectors`,
     data: industrySector,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -120,7 +122,7 @@ const createMandatoryCriteria = async (mandatoryCriteria, token) => {
     url: `${PORTAL_API_URL}/v1/mandatory-criteria`,
     data: mandatoryCriteria,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -137,7 +139,7 @@ const createEligibilityCriteria = async (eligibilityCriteria, token) => {
     url: `${PORTAL_API_URL}/v1/eligibility-criteria`,
     data: eligibilityCriteria,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -154,7 +156,7 @@ const createUser = async (user, token) => {
     url: `${PORTAL_API_URL}/v1/users`,
     data: user,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -185,7 +187,7 @@ const createInitialTfmUser = async (user) => {
     },
     data: user,
   }).catch((error) => {
-    console.error('Unable to create initial TFM user %s', error);
+    throw FailedToCreateUserError({ username: user.username, cause: error });
   });
 };
 
@@ -212,7 +214,7 @@ const deleteBank = async (deal, token) => {
     },
     url: `${PORTAL_API_URL}/v1/banks/${deal.id}`,
   }).catch((error) => {
-    console.error('Error when deleting bank %s', error);
+    throw new FailedToDeleteBankError({ bankId: deal.id, cause: error });
   });
 
   return response.data;
@@ -228,7 +230,7 @@ const deleteCurrency = async (currency, token) => {
     },
     url: `${PORTAL_API_URL}/v1/currencies/${currency.id}`,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -244,7 +246,7 @@ const deleteCountry = async (country, token) => {
     },
     url: `${PORTAL_API_URL}/v1/countries/${country.code}`,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -260,7 +262,7 @@ const deleteDeal = async (dealId, token) => {
     },
     url: `${PORTAL_API_URL}/v1/deals/${dealId}`,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -276,7 +278,7 @@ const deleteIndustrySector = async (industrySector, token) => {
     },
     url: `${PORTAL_API_URL}/v1/industry-sectors/${industrySector.code}`,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -292,7 +294,7 @@ const deleteMandatoryCriteria = async (version, token) => {
     },
     url: `${PORTAL_API_URL}/v1/mandatory-criteria/${version}`,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -308,7 +310,7 @@ const deleteEligibilityCriteria = async (version, token) => {
     },
     url: `${PORTAL_API_URL}/v1/eligibility-criteria/${version}`,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -324,7 +326,7 @@ const deleteUser = async (user, token) => {
     },
     url: `${PORTAL_API_URL}/v1/users/${user._id}`,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
   return response.data;
 };
@@ -339,7 +341,7 @@ const listBanks = async (token) => {
     },
     url: `${PORTAL_API_URL}/v1/banks`,
   }).catch((error) => {
-    console.error('Error when listing banks %s', error);
+    FailedToGetBanksError({ cause: error });
   });
 
   return response.data.banks;
@@ -355,7 +357,7 @@ const listCurrencies = async (token) => {
     },
     url: `${PORTAL_API_URL}/v1/currencies`,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data.currencies;
@@ -371,7 +373,7 @@ const listCountries = async (token) => {
     },
     url: `${PORTAL_API_URL}/v1/countries`,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data.countries;
@@ -387,7 +389,7 @@ const listDeals = async (token) => {
     },
     url: `${PORTAL_API_URL}/v1/deals`,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data.deals;
@@ -403,7 +405,7 @@ const listIndustrySectors = async (token) => {
     },
     url: `${PORTAL_API_URL}/v1/industry-sectors`,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data.industrySectors;
@@ -419,7 +421,7 @@ const listMandatoryCriteria = async (token) => {
     },
     url: `${PORTAL_API_URL}/v1/mandatory-criteria`,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data.mandatoryCriteria;
@@ -435,7 +437,7 @@ const listEligibilityCriteria = async (token) => {
     },
     url: `${PORTAL_API_URL}/v1/eligibility-criteria`,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data.eligibilityCriteria;
@@ -451,7 +453,7 @@ const listUsers = async (token) => {
     },
     url: `${PORTAL_API_URL}/v1/users`,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data.users;
@@ -474,7 +476,7 @@ const updateCurrency = async (currency, token) => {
     url: `${PORTAL_API_URL}/v1/currencies/${currency.id}`,
     data: currency,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -491,7 +493,7 @@ const updateCountry = async (country, token) => {
     url: `${PORTAL_API_URL}/v1/countries/${country.code}`,
     data: country,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    throw new ApiError({ cause: error });
   });
 
   return response.data;

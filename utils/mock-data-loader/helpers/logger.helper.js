@@ -17,7 +17,16 @@ const LOGGER_COLOURS = {
   white: '\x1b[37m',
 };
 
-const logger = ({ message, depth = 0, colour = null }) => {
+const formatAndLogMessage = (
+  message,
+  {
+    depth = 0,
+    colour = null,
+    printLog = (line) => {
+      console.info(line);
+    },
+  } = {},
+) => {
   const indent = ' '.repeat(4 * depth);
 
   let formattedMessage = message;
@@ -28,8 +37,22 @@ const logger = ({ message, depth = 0, colour = null }) => {
 
   const lines = formattedMessage.split('\n');
   lines.forEach((line) => {
-    console.info(`${colour || ''}${indent}${line}${colour ? LOGGER_COLOURS.reset : ''}`);
+    printLog(`${colour || ''}${indent}${line}${colour ? LOGGER_COLOURS.reset : ''}`);
   });
+};
+
+const logger = {
+  info: (message, options) => {
+    formatAndLogMessage(message, options);
+  },
+  error: (message, options) => {
+    formatAndLogMessage(message, {
+      ...options,
+      printLog: (line) => {
+        console.error(line);
+      },
+    });
+  },
 };
 
 module.exports = {

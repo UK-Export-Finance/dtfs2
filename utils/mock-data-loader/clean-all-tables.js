@@ -5,7 +5,7 @@ const { mockDataLoaderUser } = require('./user-helper');
 const { logger } = require('./helpers/logger.helper');
 
 const cleanBanks = async (token) => {
-  logger({ message: 'cleaning banks', depth: 1 });
+  logger.info('cleaning banks', { depth: 1 });
   const banks = await api.listBanks(token);
 
   if (banks.length > 0) {
@@ -16,7 +16,7 @@ const cleanBanks = async (token) => {
 };
 
 const cleanFacilities = async (token) => {
-  logger({ message: 'cleaning all facilities', depth: 1 });
+  logger.info('cleaning all facilities', { depth: 1 });
 
   const facilities = await centralApi.listFacilities();
   for (const facility of facilities) {
@@ -31,7 +31,7 @@ const cleanFacilities = async (token) => {
 };
 
 const cleanDeals = async (token) => {
-  logger({ message: 'cleaning Portal deals', depth: 1 });
+  logger.info('cleaning Portal deals', { depth: 1 });
 
   const deals = await api.listDeals(token);
 
@@ -54,7 +54,7 @@ const cleanDeals = async (token) => {
 };
 
 const cleanMandatoryCriteria = async (token) => {
-  logger({ message: 'cleaning BSS mandatory-criteria', depth: 1 });
+  logger.info('cleaning BSS mandatory-criteria', { depth: 1 });
 
   for (const mandatoryCriteria of await api.listMandatoryCriteria(token)) {
     await api.deleteMandatoryCriteria(mandatoryCriteria.version, token);
@@ -62,7 +62,7 @@ const cleanMandatoryCriteria = async (token) => {
 };
 
 const cleanEligibilityCriteria = async (token) => {
-  logger({ message: 'cleaning BSS eligibility-criteria', depth: 1 });
+  logger.info('cleaning BSS eligibility-criteria', { depth: 1 });
 
   for (const eligibilityCriteria of await api.listEligibilityCriteria(token)) {
     await api.deleteEligibilityCriteria(eligibilityCriteria.version, token);
@@ -70,7 +70,7 @@ const cleanEligibilityCriteria = async (token) => {
 };
 
 const cleanUsers = async (token) => {
-  logger({ message: 'cleaning Portal users', depth: 1 });
+  logger.info('cleaning Portal users', { depth: 1 });
 
   for (const user of await api.listUsers(token)) {
     if (user.username !== mockDataLoaderUser.username) {
@@ -80,7 +80,7 @@ const cleanUsers = async (token) => {
 };
 
 const cleanAllTables = async (token) => {
-  logger({ message: 'cleaning portal tables' });
+  logger.info('cleaning portal tables');
   await cleanBanks(token);
   await cleanDeals(token);
   await cleanFacilities(token);
