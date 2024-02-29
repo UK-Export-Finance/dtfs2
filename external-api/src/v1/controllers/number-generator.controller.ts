@@ -1,9 +1,9 @@
 import * as dotenv from 'dotenv';
-import axios, { AxiosResponse, HttpStatusCode } from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
-import { ENTITY_TYPE, NUMBER_TYPE, USER } from '../../constants';
+import { NumberGeneratorResponse, NumberGeneratorErrorResponse } from '../../interfaces';
 import { InvalidEntityTypeError } from '../errors';
-
+import { ENTITY_TYPE, NUMBER_TYPE, USER } from '../../constants';
 dotenv.config();
 
 const { APIM_MDM_URL, APIM_MDM_VALUE, APIM_MDM_KEY } = process.env;
@@ -38,7 +38,7 @@ export const getNumberTypeId = (entityType: string): number => {
  * @param res - The HTTP response object used to send the response back to the client.
  * @returns {Promise<Object>} The retrieved number in the response body.
  */
-export const get = async (req: Request, res: Response): Promise<object> => {
+export const get = async (req: Request, res: Response): Promise<Response<NumberGeneratorResponse> | Response<NumberGeneratorErrorResponse>> => {
   try {
     const { entityType, dealId } = req.body;
     const numberTypeId = getNumberTypeId(entityType);
@@ -51,7 +51,7 @@ export const get = async (req: Request, res: Response): Promise<object> => {
 
     console.info('⚡️ Invoking number generator for deal %s', dealId);
 
-    const response: AxiosResponse = await axios.post(endpoint, [payload], headers);
+    const response: NumberGeneratorResponse = await axios.post(endpoint, [payload], headers);
 
     if (!response.data) {
       console.error('❌ Void number generator response received for deal %s %o', dealId, response);
@@ -68,7 +68,10 @@ export const get = async (req: Request, res: Response): Promise<object> => {
 
     console.info('✅ UKEF ID received %d for deal %s', ukefId, dealId);
 
-    return res.status(HttpStatusCode.Ok).send({ status, data });
+    return res.status(HttpStatusCode.Ok).send({
+      status,
+      data,
+    });
   } catch (error: any) {
     console.error('❌ Error getting number from number generator: %o', error);
 
@@ -83,7 +86,6 @@ export const get = async (req: Request, res: Response): Promise<object> => {
       status: HttpStatusCode.InternalServerError,
       error: {
         cause: error.message,
-        code: error.code,
       },
     });
   }

@@ -41,6 +41,7 @@
     "express-rate-limit": "^6.11.2",
     "joi": "^17.12.2",
     "mongodb": "4.17.0",
+    "node-mocks-http": "^1.14.1",
     "notifications-node-client": "^7.0.6",
     "supertest": "^6.3.3",
     "swagger-jsdoc": "^6.2.8",
