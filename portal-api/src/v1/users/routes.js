@@ -115,9 +115,10 @@ module.exports.findById = (req, res, next) => {
 module.exports.updateById = async (req, res, next) => {
   try {
     const userIsAdmin = req.user?.roles?.includes(ADMIN);
-    const userIsChangingTheirOwnPassword =
-      req.user?._id?.toString() === req.params._id &&
-      Object.keys(req.body).every((property) => ['password', 'passwordConfirm', 'currentPassword'].includes(property));
+
+    // TODO: DTFS2-7031 - update password changing rules
+    const requestOnlyHasPasswordFields = Object.keys(req.body).every((property) => ['password', 'passwordConfirm', 'currentPassword'].includes(property));
+    const userIsChangingTheirOwnPassword = req.user?._id?.toString() === req.params._id && requestOnlyHasPasswordFields;
 
     if (!userIsAdmin && !userIsChangingTheirOwnPassword) {
       return res.status(403).send();
