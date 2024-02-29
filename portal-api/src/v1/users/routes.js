@@ -227,7 +227,7 @@ module.exports.resetPassword = async (req, res) => {
  */
 module.exports.resetPasswordWithToken = async (req, res, next) => {
   const { resetPwdToken } = req.params;
-  const { password, passwordConfirm } = req.body;
+  const { currentPassword, password, passwordConfirm } = req.body;
   // Void token - Token expired
   const user = await getUserByPasswordToken(resetPwdToken);
   // Stale token - Generated over 24 hours ago
@@ -251,6 +251,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
   const errors = await applyUpdateRules(user, {
     password,
     passwordConfirm,
+    currentPassword,
   });
 
   if (errors.length) {
