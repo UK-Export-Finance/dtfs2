@@ -1,5 +1,6 @@
 const CONSTANTS = require('./constants');
 const dateConstants = require('../../../e2e-fixtures/dateConstants');
+const { BANK1_MAKER1 } = require('../../../e2e-fixtures/portal-users.fixture');
 
 const MOCK_DEAL = {
   dealType: CONSTANTS.DEAL_TYPE.BSS_EWCS,
@@ -17,10 +18,10 @@ const MOCK_DEAL = {
     ],
   },
   maker: {
-    username: 'JOE',
+    username: BANK1_MAKER1.username,
     firstname: 'Joe',
     surname: 'Bloggs',
-    email: 'maker1@ukexportfinance.gov.uk',
+    email: BANK1_MAKER1.email,
   },
   details: {
     bank: 'Mock bank',

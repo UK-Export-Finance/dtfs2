@@ -11,8 +11,8 @@ const BANK_1 = {
 };
 
 export const getUserWithRoles = (roles) => {
-  const username = `BANK1_${roles.join('_').toUpperCase()}_1`;
   const email = `${roles.join('').toLowerCase()}@ukexportfinance.gov.uk`;
+  const username = email;
   const userId = crypto.randomBytes(8).toString('hex');
   const lastLogin = Date.now().toString();
   return {

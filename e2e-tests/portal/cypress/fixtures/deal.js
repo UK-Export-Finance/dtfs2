@@ -1,4 +1,5 @@
 const { mandatoryCriteria } = require('../../../e2e-fixtures');
+const { BANK1_MAKER1, BANK1_CHECKER1 } = require('../../../e2e-fixtures/portal-users.fixture');
 const CONSTANTS = require('./constants');
 
 const deal = {
@@ -18,7 +19,7 @@ const deal = {
   },
   maker: {
     _id: '5f3ab3f705e6630007dcfb25',
-    username: 'maker1@ukexportfinance.gov.uk',
+    username: BANK1_MAKER1.username,
     roles: [
       'maker',
     ],
@@ -33,7 +34,7 @@ const deal = {
     lastLogin: '1606899737029',
     firstname: 'Hugo',
     surname: 'Drax',
-    email: 'maker1@ukexportfinance.gov.uk',
+    email: BANK1_MAKER1.email,
     timezone: 'Europe/London',
     'user-status': 'active',
   },
@@ -42,7 +43,7 @@ const deal = {
     submissionDate: '1606900616651',
     checker: {
       _id: '5f3ab3f705e6630007dcfb29',
-      username: 'checker1@ukexportfinance.gov.uk',
+      username: BANK1_CHECKER1.username,
       roles: [
         'checker',
       ],
@@ -57,7 +58,7 @@ const deal = {
       lastLogin: '1606900578887',
       firstname: 'Emilio',
       surname: 'Largo',
-      email: 'checker1@ukexportfinance.gov.uk',
+      email: BANK1_CHECKER1.email,
       timezone: 'Europe/London',
       'user-status': 'active',
     },
@@ -66,7 +67,7 @@ const deal = {
     approvalDate: '1606912140306',
     makerMIN: {
       _id: '5f3ab3f705e6630007dcfb25',
-      username: 'maker1@ukexportfinance.gov.uk',
+      username: BANK1_MAKER1.username,
       roles: [
         'maker',
       ],
@@ -81,14 +82,14 @@ const deal = {
       lastLogin: '1606901020715',
       firstname: 'Hugo',
       surname: 'Drax',
-      email: 'maker1@ukexportfinance.gov.uk',
+      email: BANK1_MAKER1.email,
       timezone: 'Europe/London',
       'user-status': 'active',
     },
     manualInclusionNoticeSubmissionDate: '1606912256510',
     checkerMIN: {
       _id: '5f3ab3f705e6630007dcfb29',
-      username: 'checker1@ukexportfinance.gov.uk',
+      username: BANK1_CHECKER1.username,
       roles: [
         'checker',
       ],
@@ -103,7 +104,7 @@ const deal = {
       lastLogin: '1606912247772',
       firstname: 'Emilio',
       surname: 'Largo',
-      email: 'checker1@ukexportfinance.gov.uk',
+      email: BANK1_CHECKER1.email,
       timezone: 'Europe/London',
       'user-status': 'active',
     },
@@ -289,7 +290,7 @@ const deal = {
     {
       user: {
         _id: '5f3ab3f705e6630007dcfb25',
-        username: 'maker1@ukexportfinance.gov.uk',
+        username: BANK1_MAKER1.username,
         roles: [
           'maker',
         ],
@@ -304,7 +305,7 @@ const deal = {
         lastLogin: '1606912269649',
         firstname: 'Hugo',
         surname: 'Drax',
-        email: 'maker1@ukexportfinance.gov.uk',
+        email: BANK1_MAKER1.email,
         timezone: 'Europe/London',
         'user-status': 'active',
       },
@@ -314,7 +315,7 @@ const deal = {
     {
       user: {
         _id: '5f3ab3f705e6630007dcfb25',
-        username: 'maker1@ukexportfinance.gov.uk',
+        username: BANK1_MAKER1.username,
         roles: [
           'maker',
         ],
@@ -329,7 +330,7 @@ const deal = {
         lastLogin: '1606901020715',
         firstname: 'Hugo',
         surname: 'Drax',
-        email: 'maker1@ukexportfinance.gov.uk',
+        email: BANK1_MAKER1.email,
         timezone: 'Europe/London',
         'user-status': 'active',
       },
@@ -339,7 +340,7 @@ const deal = {
     {
       user: {
         _id: '5f3ab3f705e6630007dcfb25',
-        username: 'maker1@ukexportfinance.gov.uk',
+        username: BANK1_MAKER1.username,
         roles: [
           'maker',
         ],
@@ -354,7 +355,7 @@ const deal = {
         lastLogin: '1606899737029',
         firstname: 'Hugo',
         surname: 'Drax',
-        email: 'maker1@ukexportfinance.gov.uk',
+        email: BANK1_MAKER1.email,
         timezone: 'Europe/London',
         'user-status': 'active',
       },
