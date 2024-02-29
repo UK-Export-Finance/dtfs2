@@ -127,6 +127,7 @@ describe('a user', () => {
       withValidatePasswordOnUpdateUserTests({
         payload: {},
         makeRequest: async (updatedUserCredentials) => await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`),
+        existingUserPassword: MOCK_USER.password,
       });
 
       withValidateEmailIsUniqueTests({
