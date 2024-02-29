@@ -17,7 +17,7 @@ context('Amendments - automatic approval journey', () => {
   //
   // In these tests, the mock start date is two years ago today & the mock end date is a month today.
   // Therefore if today is EOM and a month from now is not EOM we need to NOT add one to the tenor
-  const todayIsEndOfMonth = add(new Date(), { days: 1 }) === 1;
+  const todayIsEndOfMonth = add(new Date(), { days: 1 }).getDate() === 1;
   const aMonthFromNowIsEndOfMonth = add(new Date(), { months: 1, days: 1 }).getDate() === 1;
   const facilityTenor = (todayIsEndOfMonth && !aMonthFromNowIsEndOfMonth) ? '25 months' : '26 months';
 
