@@ -37,9 +37,7 @@ context('Password management screens', () => {
       resetPassword.submit().click();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
-      cy.get('[data-cy="password-reset-notification').contains(
-        "We've sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. If you require further assistance please contact DigitalService.TradeFinance@ukexportfinance.gov.uk.",
-      );
+      cy.get('[data-cy="password-reset-notification').contains('We\'ve sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. If you require further assistance please contact DigitalService.TradeFinance@ukexportfinance.gov.uk.');
     });
 
     it('should redirect to login page on successful request for reset password', () => {
@@ -47,9 +45,7 @@ context('Password management screens', () => {
       resetPassword.submit().click();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
-      cy.get('[data-cy="password-reset-notification').contains(
-        "We've sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. If you require further assistance please contact DigitalService.TradeFinance@ukexportfinance.gov.uk.",
-      );
+      cy.get('[data-cy="password-reset-notification').contains('We\'ve sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. If you require further assistance please contact DigitalService.TradeFinance@ukexportfinance.gov.uk.');
     });
 
     it('should be case insensitive when accepting email', () => {
@@ -57,9 +53,7 @@ context('Password management screens', () => {
       resetPassword.submit().click();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
-      cy.get('[data-cy="password-reset-notification').contains(
-        "We've sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. If you require further assistance please contact DigitalService.TradeFinance@ukexportfinance.gov.uk.",
-      );
+      cy.get('[data-cy="password-reset-notification').contains('We\'ve sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. If you require further assistance please contact DigitalService.TradeFinance@ukexportfinance.gov.uk.');
     });
   });
 
@@ -79,11 +73,7 @@ context('Password management screens', () => {
       changePassword.submit().click();
 
       changePassword.passwordError().should('exist');
-      changePassword
-        .passwordError()
-        .contains(
-          'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
-        );
+      changePassword.passwordError().contains('Empty password');
     });
 
     it('Should display error message on an empty confirm new password field submit', () => {
@@ -92,11 +82,7 @@ context('Password management screens', () => {
       changePassword.submit().click();
 
       changePassword.passwordConfirmError().should('exist');
-      changePassword
-        .passwordConfirmError()
-        .contains(
-          'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
-        );
+      changePassword.passwordConfirmError().contains('Empty password');
     });
   });
 

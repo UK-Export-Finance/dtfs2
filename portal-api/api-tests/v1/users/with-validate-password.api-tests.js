@@ -31,10 +31,6 @@ const withValidatePasswordOnUpdateUserWithCurrentPasswordProvidedTests = ({ payl
 function getCreatePasswordRuleTestCases({ makeRequest, payload }) {
   return [
     {
-      description: 'the password is an empty string',
-      makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: '' })),
-    },
-    {
       description: 'the password is less than 8 characters',
       makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: 'aA1!' })),
     },
