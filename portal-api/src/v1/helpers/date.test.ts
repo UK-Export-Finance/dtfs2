@@ -107,7 +107,13 @@ describe('getStartOfDateFromDayMonthYearStringsReplicatingMoment', () => {
     it('should use todays date if invalid date', () => {
       const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment('##', mockMonth, mockYear);
 
-      expect(format(result, 'dd')).toEqual(format(new Date(), 'dd'));
+      const expectedDay = new Date().getDate();
+      // Need to pass this into date to allow js to wrap dates
+      // e.g. if current date is 31st December but mockMonth is November then 31st November is invalid
+      // so js will wrap that into 1st December.
+      const expectedDate = new Date(Number(mockYear), Number(mockMonth), expectedDay);
+
+      expect(format(result, 'dd')).toEqual(format(expectedDate, 'dd'));
       expect(format(result, 'MM')).toEqual(mockMonth);
       expect(format(result, 'yyyy')).toEqual(mockYear);
     });
