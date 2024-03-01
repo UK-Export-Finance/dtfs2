@@ -79,7 +79,7 @@
     "@types/jest": "^29.5.11",
     "@types/node": "^20.11.13",
     "axios-mock-adapter": "^1.22.0",
-    "babel-jest": "29.5.0",
+    "babel-jest": "29.7.0",
     "babel-loader": "9.1.2",
     "copy-webpack-plugin": "^11.0.0",
     "css-minimizer-webpack-plugin": "^5.0.1",
