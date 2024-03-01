@@ -23,8 +23,9 @@ const getGuaranteeDates = (facility, dealSubmissionDate) => {
 
   if (hasBeenIssued) {
     guaranteeCommencementDate = formatTimestamp(coverStartDate);
-    // coverEndDate is stored as an ISO-8601 timestamp (e.g 2023-01-11T14:30:01.459Z)
-    guaranteeExpiryDate = formatDate(parseISO(coverEndDate));
+
+    // coverEndDate is a Date or an ISO-8601 timestamp (e.g 2023-01-11T14:30:01.459Z)
+    guaranteeExpiryDate = formatDate(coverEndDate instanceof Date ? coverEndDate : parseISO(coverEndDate));
   } else {
     guaranteeCommencementDate = formatTimestamp(Number(dealSubmissionDate));
     guaranteeExpiryDate = formatTimestamp(

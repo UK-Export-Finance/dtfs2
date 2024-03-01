@@ -19,7 +19,7 @@ describe('utils - date', () => {
 
   describe('formatDate', () => {
     it('should return a date in the correct format', () => {
-      const mockDate = '20210419';
+      const mockDate = new Date('2021-04-19');
       const result = formatDate(mockDate);
 
       const expected = '2021-04-19';
