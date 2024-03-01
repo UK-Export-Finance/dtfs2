@@ -68,7 +68,10 @@ const createTasks = ({
      */
     async getTfmUserFromDbByUsername(username) {
       const tfmUsers = await getTfmUsersCollection(connectionOptions);
-      return tfmUsers.findOne({ username: { $eq: username } });
+
+      const user = tfmUsers.findOne({ username: { $eq: username } });
+
+      return user;
     },
 
     /**
