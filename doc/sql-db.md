@@ -106,19 +106,13 @@ Use as a quick way to start from scratch instead of deleting and re-building the
 
 #### - Seeding data
 
-The seeder can be run directly via
+The seeder can be run from `libs/common` via the
 
 ```shell
 npm run db:seed-run
 ```
 
-or as part of the database reset via the [rebuild](#rebuild-the-database) command. It can also be ran from the project root using
-
-```shell
-npm run load
-```
-
-These commands run the seeders to insert mock data into the SQL database. Seeds and factories are defined as files in the `libs/common/src/sql-db-seeder` directory with `<name_of_entity>.seed.ts` and `<name_of_entity>.factory.ts` file extensions respectively (see the [utilisation reports seeder](../libs/common/src/sql-db-seeder/utilisation-report/) for an example). Seed tracking is set to `true` by default such that, once a seed successfully runs, it will not run again through the `npm run db:seed-run` command. If you want to run the seeder again, you will need to run it via `npm run db:reset`.
+command. This commands run the seeder to insert mock data into the SQL database. Seeds and factories are defined as files in the `libs/common/src/sql-db-seeder` directory with `<name_of_entity>.seed.ts` and `<name_of_entity>.factory.ts` file extensions respectively (see the [utilisation reports seeder](../libs/common/src/sql-db-seeder/utilisation-report/) for an example). Seed tracking is set to `true` by default such that, once a seed successfully runs, it will not run again through the `npm run db:seed-run` command. If you want to run the seeder again, you will first need to run the `npm run db:reset` command.
 
 ## Adding DB access to a package
 

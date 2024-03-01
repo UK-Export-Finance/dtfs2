@@ -7,7 +7,7 @@ const dataSourceOptions = SqlDbDataSource.options;
 const seederOptions: SeederOptions = {
   seeds: ['./**/*.seed.ts'],
   factories: ['./**/*.factory.ts'],
-  seedTracking: false,
+  seedTracking: true,
 };
 
 export default new DataSource({

@@ -10,7 +10,7 @@ export default class UtilisationReportSeeder implements Seeder {
   /**
    * Track seeder execution.
    *
-   * Default: false
+   * Default: true
    */
   track = true;
 
