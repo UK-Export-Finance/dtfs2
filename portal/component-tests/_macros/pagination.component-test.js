@@ -27,15 +27,15 @@ describe(component, () => {
 
       itShouldRenderOuterDivAndDisplayTotalItems();
 
-      itShouldNOTRenderNavigationList();
+      itShouldNotRenderNavigationList();
 
-      itShouldNOTRenderFirstAndPreviousLinks();
+      itShouldNotRenderFirstAndPreviousLinks();
 
-      itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+      itShouldNotRenderEllipsisAfterFirstAndPreviousLinks();
 
-      itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+      itShouldNotRenderEllipsisBeforeNextAndLastLinks();
 
-      itShouldNOTRenderNextAndLastLinks();
+      itShouldNotRenderNextAndLastLinks();
     });
 
     describe('when totalPages is 1', () => {
@@ -54,15 +54,15 @@ describe(component, () => {
 
       itShouldRenderOuterDivAndDisplayTotalItems();
 
-      itShouldNOTRenderNavigationList();
+      itShouldNotRenderNavigationList();
 
-      itShouldNOTRenderFirstAndPreviousLinks();
+      itShouldNotRenderFirstAndPreviousLinks();
 
-      itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+      itShouldNotRenderEllipsisAfterFirstAndPreviousLinks();
 
-      itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+      itShouldNotRenderEllipsisBeforeNextAndLastLinks();
 
-      itShouldNOTRenderNextAndLastLinks();
+      itShouldNotRenderNextAndLastLinks();
     });
 
     describe('when totalPages is 2', () => {
@@ -85,13 +85,13 @@ describe(component, () => {
 
         itShouldRenderNavigationList();
 
-        itShouldNOTRenderFirstAndPreviousLinks();
+        itShouldNotRenderFirstAndPreviousLinks();
 
-        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+        itShouldNotRenderEllipsisAfterFirstAndPreviousLinks();
 
         itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 1, currentPage });
 
-        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+        itShouldNotRenderEllipsisBeforeNextAndLastLinks();
 
         itShouldRenderNextAndLastLinks({ currentPage, totalPages });
       });
@@ -115,13 +115,13 @@ describe(component, () => {
 
         itShouldRenderFirstAndPreviousLinks(currentPage);
 
-        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+        itShouldNotRenderEllipsisAfterFirstAndPreviousLinks();
 
         itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 1, currentPage });
 
-        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+        itShouldNotRenderEllipsisBeforeNextAndLastLinks();
 
-        itShouldNOTRenderNextAndLastLinks();
+        itShouldNotRenderNextAndLastLinks();
       });
     });
 
@@ -145,13 +145,13 @@ describe(component, () => {
 
         itShouldRenderNavigationList();
 
-        itShouldNOTRenderFirstAndPreviousLinks();
+        itShouldNotRenderFirstAndPreviousLinks();
 
-        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+        itShouldNotRenderEllipsisAfterFirstAndPreviousLinks();
 
         itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 2, currentPage });
 
-        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+        itShouldNotRenderEllipsisBeforeNextAndLastLinks();
 
         itShouldRenderNextAndLastLinks({ currentPage, totalPages });
       });
@@ -175,11 +175,11 @@ describe(component, () => {
 
         itShouldRenderFirstAndPreviousLinks(currentPage);
 
-        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+        itShouldNotRenderEllipsisAfterFirstAndPreviousLinks();
 
         itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 2, currentPage });
 
-        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+        itShouldNotRenderEllipsisBeforeNextAndLastLinks();
 
         itShouldRenderNextAndLastLinks({ currentPage, totalPages });
       });
@@ -203,13 +203,13 @@ describe(component, () => {
 
         itShouldRenderFirstAndPreviousLinks(currentPage);
 
-        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+        itShouldNotRenderEllipsisAfterFirstAndPreviousLinks();
 
         itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 2, currentPage });
 
-        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+        itShouldNotRenderEllipsisBeforeNextAndLastLinks();
 
-        itShouldNOTRenderNextAndLastLinks();
+        itShouldNotRenderNextAndLastLinks();
       });
     });
 
@@ -233,13 +233,13 @@ describe(component, () => {
 
         itShouldRenderNavigationList();
 
-        itShouldNOTRenderFirstAndPreviousLinks();
+        itShouldNotRenderFirstAndPreviousLinks();
 
-        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+        itShouldNotRenderEllipsisAfterFirstAndPreviousLinks();
 
         itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 4, currentPage });
 
-        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+        itShouldNotRenderEllipsisBeforeNextAndLastLinks();
 
         itShouldRenderNextAndLastLinks({ currentPage, totalPages });
       });
@@ -263,11 +263,11 @@ describe(component, () => {
 
         itShouldRenderFirstAndPreviousLinks(currentPage);
 
-        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+        itShouldNotRenderEllipsisAfterFirstAndPreviousLinks();
 
         itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 4, currentPage });
 
-        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+        itShouldNotRenderEllipsisBeforeNextAndLastLinks();
 
         itShouldRenderNextAndLastLinks({ currentPage, totalPages });
       });
@@ -291,13 +291,13 @@ describe(component, () => {
 
         itShouldRenderFirstAndPreviousLinks(currentPage);
 
-        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+        itShouldNotRenderEllipsisAfterFirstAndPreviousLinks();
 
         itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 4, currentPage });
 
-        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+        itShouldNotRenderEllipsisBeforeNextAndLastLinks();
 
-        itShouldNOTRenderNextAndLastLinks();
+        itShouldNotRenderNextAndLastLinks();
       });
     });
   });
@@ -323,9 +323,9 @@ describe(component, () => {
 
         itShouldRenderNavigationList();
 
-        itShouldNOTRenderFirstAndPreviousLinks();
+        itShouldNotRenderFirstAndPreviousLinks();
 
-        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+        itShouldNotRenderEllipsisAfterFirstAndPreviousLinks();
 
         itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 4, currentPage });
 
@@ -353,11 +353,11 @@ describe(component, () => {
 
         itShouldRenderFirstAndPreviousLinks(currentPage);
 
-        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+        itShouldNotRenderEllipsisAfterFirstAndPreviousLinks();
 
         itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 5, currentPage });
 
-        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+        itShouldNotRenderEllipsisBeforeNextAndLastLinks();
 
         itShouldRenderNextAndLastLinks({ currentPage, totalPages });
       });
@@ -385,9 +385,9 @@ describe(component, () => {
 
         itShouldRenderLinksToPagesInRange({ firstPage: 1, lastPage: 5, currentPage });
 
-        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+        itShouldNotRenderEllipsisBeforeNextAndLastLinks();
 
-        itShouldNOTRenderNextAndLastLinks();
+        itShouldNotRenderNextAndLastLinks();
       });
     });
 
@@ -411,9 +411,9 @@ describe(component, () => {
 
         itShouldRenderNavigationList();
 
-        itShouldNOTRenderFirstAndPreviousLinks();
+        itShouldNotRenderFirstAndPreviousLinks();
 
-        itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks();
+        itShouldNotRenderEllipsisAfterFirstAndPreviousLinks();
 
         itShouldRenderLinksToPagesInRange({ firstPage: 0, lastPage: 4, currentPage });
 
@@ -473,9 +473,9 @@ describe(component, () => {
 
         itShouldRenderLinksToPagesInRange({ firstPage: 95, lastPage: 99, currentPage });
 
-        itShouldNOTRenderEllipsisBeforeNextAndLastLinks();
+        itShouldNotRenderEllipsisBeforeNextAndLastLinks();
 
-        itShouldNOTRenderNextAndLastLinks();
+        itShouldNotRenderNextAndLastLinks();
       });
     });
   });
@@ -505,7 +505,7 @@ describe(component, () => {
     });
   }
 
-  function itShouldNOTRenderNavigationList() {
+  function itShouldNotRenderNavigationList() {
     it('should NOT render a div with a role of \'navigation\'', () => {
       wrapper.expectElement('[data-cy="navigation"]').notToExist();
     });
@@ -537,7 +537,7 @@ describe(component, () => {
     });
   }
 
-  function itShouldNOTRenderFirstAndPreviousLinks() {
+  function itShouldNotRenderFirstAndPreviousLinks() {
     it('should NOT render a \'First\' link', () => {
       wrapper.expectElement('[data-cy="First_listItem"]').notToExist();
 
@@ -559,7 +559,7 @@ describe(component, () => {
     });
   }
 
-  function itShouldNOTRenderEllipsisAfterFirstAndPreviousLinks() {
+  function itShouldNotRenderEllipsisAfterFirstAndPreviousLinks() {
     it('should NOT render an ellipsis after the \'First\' and \'Previous\' links', () => {
       wrapper.expectElement('[data-cy="firstPreviousEllipsis"]').notToExist();
     });
@@ -597,7 +597,7 @@ describe(component, () => {
     });
   }
 
-  function itShouldNOTRenderEllipsisBeforeNextAndLastLinks() {
+  function itShouldNotRenderEllipsisBeforeNextAndLastLinks() {
     it('should NOT render an ellipsis before the \'Next\' and \'Last\' links', () => {
       wrapper.expectText('[data-cy="nextLastEllipsis"]').notToExist();
     });
@@ -621,7 +621,7 @@ describe(component, () => {
     });
   }
 
-  function itShouldNOTRenderNextAndLastLinks() {
+  function itShouldNotRenderNextAndLastLinks() {
     it('should NOT render a \'Next\' link', () => {
       wrapper.expectElement('[data-cy="Next_listItem"]').notToExist();
 
