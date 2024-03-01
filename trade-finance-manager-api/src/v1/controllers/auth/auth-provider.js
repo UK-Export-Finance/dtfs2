@@ -57,11 +57,11 @@ class AuthProvider {
      * make a request to the relevant endpoints to retrieve the metadata. This allows MSAL to avoid making
      * metadata discovery calls, thereby improving performance of token acquisition process.
      */
-
     if (!this.config.msalConfig.auth.authorityMetadata) {
       const authorityMetadata = await this.getAuthorityMetadata();
       this.config.msalConfig.auth.authorityMetadata = JSON.stringify(authorityMetadata);
     }
+
     const msalInstance = this.getMsalInstance(this.config.msalConfig);
 
     // trigger the first leg of auth code flow
@@ -82,54 +82,62 @@ class AuthProvider {
    * @return {Object} PKCE codes, auth code request, login URL.
    */
   async getAuthCodeUrl(csrfToken, authCodeUrlRequestParams, authCodeRequestParams, msalInstance) {
-    /**
-     * Generate Proof Key of Code Exchange (PKCE) Codes,
-     * before starting the authorization flow.
-     */
-    const { verifier, challenge } = await this.cryptoProvider.generatePkceCodes();
+    try {
+      console.info('TFM auth service - getAuthCodeUrl');
 
-    /**
-     * Create a response object with:
-     * - CSRF token
-     * - Generated PKCE codes
-     * - Verifier
-     * - Challenge
-     */
-    let response = {
-      csrfToken,
-      pkceCodes: {
-        challengeMethod: 'S256',
-        verifier,
-        challenge,
-      },
-    };
+      /**
+       * Generate Proof Key of Code Exchange (PKCE) Codes,
+       * before starting the authorization flow.
+       */
+      const { verifier, challenge } = await this.cryptoProvider.generatePkceCodes();
 
-    /**
-     * By manipulating the request objects below before each request, we can obtain
-     * auth artifacts with desired claims. For more information, visit:
-     * https://azuread.github.io/microsoft-authentication-library-for-js/ref/modules/_azure_msal_node.html#authorizationurlrequest
-     * https://azuread.github.io/microsoft-authentication-library-for-js/ref/modules/_azure_msal_node.html#authorizationcoderequest
-     *
-     */
-    response = {
-      ...response,
-      authCodeUrlRequest: {
-        ...authCodeUrlRequestParams,
-        redirectUri: this.config.redirectUri,
-        responseMode: 'form_post', // recommended for confidential clients
-        codeChallenge: response.pkceCodes.challenge,
-        codeChallengeMethod: response.pkceCodes.challengeMethod,
-      },
-      authCodeRequest: {
-        ...authCodeRequestParams,
-        redirectUri: this.config.redirectUri,
-        code: '',
-      },
-    };
+      /**
+       * Create a response object with:
+       * - CSRF token
+       * - Generated PKCE codes
+       * - Verifier
+       * - Challenge
+       */
+      let response = {
+        csrfToken,
+        pkceCodes: {
+          challengeMethod: 'S256',
+          verifier,
+          challenge,
+        },
+      };
 
-    response.loginUrl = await msalInstance.getAuthCodeUrl(response.authCodeUrlRequest);
+      /**
+       * By manipulating the request objects below before each request, we can obtain
+       * auth artifacts with desired claims. For more information, visit:
+       * https://azuread.github.io/microsoft-authentication-library-for-js/ref/modules/_azure_msal_node.html#authorizationurlrequest
+       * https://azuread.github.io/microsoft-authentication-library-for-js/ref/modules/_azure_msal_node.html#authorizationcoderequest
+       *
+       */
+      response = {
+        ...response,
+        authCodeUrlRequest: {
+          ...authCodeUrlRequestParams,
+          redirectUri: this.config.redirectUri,
+          responseMode: 'form_post', // recommended for confidential clients
+          codeChallenge: response.pkceCodes.challenge,
+          codeChallengeMethod: response.pkceCodes.challengeMethod,
+        },
+        authCodeRequest: {
+          ...authCodeRequestParams,
+          redirectUri: this.config.redirectUri,
+          code: '',
+        },
+      };
 
-    return response;
+      response.loginUrl = await msalInstance.getAuthCodeUrl(response.authCodeUrlRequest);
+
+      return response;
+    } catch (error) {
+      console.error('Error TFM auth service - getAuthCodeUrl %s', error);
+
+      throw new Error('Error TFM auth service - getAuthCodeUrl %s', error);
+    }
   }
 
   /**
@@ -144,19 +152,27 @@ class AuthProvider {
    * @returns {Object}
    */
   async handleRedirect(pkceCode, origAuthCodeRequest, code) {
-    const authCodeRequest = {
-      ...origAuthCodeRequest,
-      code, // authZ code
-      codeVerifier: pkceCode.verifier, // PKCE Code Verifier
-    };
+    try {
+      console.info('TFM auth service - handleRedirect');
 
-    const msalInstance = this.getMsalInstance(this.config.msalConfig);
+      const authCodeRequest = {
+        ...origAuthCodeRequest,
+        code, // authZ code
+        codeVerifier: pkceCode.verifier, // PKCE Code Verifier
+      };
 
-    // TODO: do we need token cache?
-    // msalInstance.getTokenCache().deserialize(req.session.tokenCache);
-    const tokenResponse = await msalInstance.acquireTokenByCode(authCodeRequest);
+      const msalInstance = this.getMsalInstance(this.config.msalConfig);
 
-    return tokenResponse.account;
+      // TODO: do we need token cache?
+      // msalInstance.getTokenCache().deserialize(req.session.tokenCache);
+      const tokenResponse = await msalInstance.acquireTokenByCode(authCodeRequest);
+
+      return tokenResponse.account;
+    } catch (error) {
+      console.error('Error TFM auth service - handleRedirect %s', error);
+
+      throw new Error('Error TFM auth service - handleRedirect %s', error);
+    }
   }
 
   /**
@@ -194,16 +210,18 @@ class AuthProvider {
    * @returns {Object} OIDC metadata
    */
   async getAuthorityMetadata() {
-    const endpoint = `${this.config.msalConfig.auth.authority}${AZURE_SSO_TENANT_SUBDOMAIN}.onmicrosoft.com/v2.0/.well-known/openid-configuration`;
-
     try {
+      console.info('TFM auth service - getting getAuthorityMetadata');
+
+      const endpoint = `${this.config.msalConfig.auth.authority}${AZURE_SSO_TENANT_SUBDOMAIN}.onmicrosoft.com/v2.0/.well-known/openid-configuration`;
+
       const response = await axios.get(endpoint);
 
       return response.data;
     } catch (error) {
-      console.error('Error MSAL - getting getAuthorityMetadata %s', error);
+      console.error('Error TFM auth service - getting getAuthorityMetadata %s', error);
 
-      throw new Error('Error MSAL - getting getAuthorityMetadata %s', error);
+      throw new Error('Error TFM auth service - getting getAuthorityMetadata %s', error);
     }
   }
 }
