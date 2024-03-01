@@ -1,11 +1,6 @@
 import { addMonths, subMonths } from 'date-fns';
 import { getOneIndexedMonth, toIsoMonthStamp } from './date';
-import { 
-  IsoMonthStamp, 
-  MonthAndYear, 
-  BankReportPeriodSchedule, 
-  ReportPeriod,
-} from '../types';
+import { IsoMonthStamp, MonthAndYear, BankReportPeriodSchedule, ReportPeriod } from '../types';
 
 /**
  * Gets the report period start for the inputted submission month
@@ -99,17 +94,22 @@ const getReportPeriodForBankScheduleByTargetDate = (bankReportPeriodSchedule: Ba
 };
 
 /**
-* Get the previous report period for the inputted bank schedule by the target date by getting the index of
-* the current report period and getting the previous element.
-* @param bankReportPeriodSchedule - The bank report period schedule
-* @param dateInTargetReportPeriod - A date in the target report period
-* @returns The previous report period for the target report period
-*/
-const getPreviousReportPeriodForBankScheduleByTargetDate = (bankReportPeriodSchedule: BankReportPeriodSchedule, dateInTargetReportPeriod: Date): ReportPeriod => {
+ * Get the previous report period for the inputted bank schedule by the target date by getting the index of
+ * the current report period and getting the previous element.
+ * @param bankReportPeriodSchedule - The bank report period schedule
+ * @param dateInTargetReportPeriod - A date in the target report period
+ * @returns The previous report period for the target report period
+ */
+const getPreviousReportPeriodForBankScheduleByTargetDate = (
+  bankReportPeriodSchedule: BankReportPeriodSchedule,
+  dateInTargetReportPeriod: Date,
+): ReportPeriod => {
   const targetMonth = getOneIndexedMonth(dateInTargetReportPeriod);
   const targetYear = dateInTargetReportPeriod.getFullYear();
 
-  const currentScheduleIndexInCurrentYear = bankReportPeriodSchedule.findIndex((schedule) => targetMonth >= schedule.startMonth && targetMonth <= schedule.endMonth);
+  const currentScheduleIndexInCurrentYear = bankReportPeriodSchedule.findIndex(
+    (schedule) => targetMonth >= schedule.startMonth && targetMonth <= schedule.endMonth,
+  );
 
   if (currentScheduleIndexInCurrentYear >= 0) {
     const targetReportSchedule = bankReportPeriodSchedule[currentScheduleIndexInCurrentYear - 1];
@@ -126,19 +126,18 @@ const getPreviousReportPeriodForBankScheduleByTargetDate = (bankReportPeriodSche
             year: targetYear,
           },
         };
-      } else {
-        return {
-          start: {
-            month: targetReportSchedule.startMonth,
-            year: targetYear,
-          },
-          end: {
-            month: targetReportSchedule.endMonth,
-            year: targetYear,
-          },
-        };
+      }
+      return {
+        start: {
+          month: targetReportSchedule.startMonth,
+          year: targetYear,
+        },
+        end: {
+          month: targetReportSchedule.endMonth,
+          year: targetYear,
+        },
       };
-    };
+    }
     if (currentScheduleIndexInCurrentYear === 0) {
       const targetReportScheduleNotCurrentYearNotCurrentYear = bankReportPeriodSchedule.at(-1);
       return {
@@ -151,8 +150,8 @@ const getPreviousReportPeriodForBankScheduleByTargetDate = (bankReportPeriodSche
           year: targetYear - 1,
         },
       };
-    };
-  };
+    }
+  }
 
   const currentScheduleIndexOverlappingYear = bankReportPeriodSchedule.findIndex((schedule) => schedule.startMonth > schedule.endMonth);
   if (currentScheduleIndexOverlappingYear < 0) {

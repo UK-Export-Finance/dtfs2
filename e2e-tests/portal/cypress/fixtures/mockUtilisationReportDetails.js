@@ -14,7 +14,7 @@ const BANK1 = {
 const BANK2 = {
   id: BANK2_PAYMENT_REPORT_OFFICER1.bank.id,
   name: BANK2_PAYMENT_REPORT_OFFICER1.bank.name,
-}
+};
 
 const generateReportDetails = (year, month) => {
   const bank = BANK1;

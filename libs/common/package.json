@@ -28,6 +28,9 @@
     "unit-test": "jest --coverage --verbose",
     "unit-test-quick": "jest"
   },
+  "dependencies": {
+    "date-fns": "^3.3.1"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.11",
     "eslint": "^8.56.0",
@@ -39,8 +42,5 @@
     "node": ">=20",
     "npm": ">=10"
   },
-  "engineStrict": true,
-  "dependencies": {
-    "date-fns": "^3.3.1"
-  }
+  "engineStrict": true
 }

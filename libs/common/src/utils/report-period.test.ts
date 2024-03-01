@@ -7,12 +7,7 @@ import {
   getSubmissionMonthForReportPeriodStart,
   isEqualReportPeriodStart,
 } from './report-period';
-import { 
-  MonthAndYear, 
-  OneIndexedMonth, 
-  BankReportPeriodSchedule, 
-  ReportPeriod,
-} from '../types';
+import { MonthAndYear, OneIndexedMonth, BankReportPeriodSchedule, ReportPeriod } from '../types';
 
 describe('report-period utils', () => {
   describe('getReportPeriodStartForSubmissionMonth', () => {
@@ -73,7 +68,6 @@ describe('report-period utils', () => {
   });
 
   describe('getNextReportPeriodForBankSchedule', () => {
-
     beforeAll(() => {
       jest.useFakeTimers();
     });

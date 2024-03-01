@@ -8,8 +8,7 @@ const getMonthsInSchedule = (utilisationReportPeriodSchedule: BankReportPeriodSc
     utilisationReportPeriodSchedule.forEach(utilisationReportPeriod => {
       if (utilisationReportPeriod.startMonth === utilisationReportPeriod.endMonth) {
         monthsInSchedule.push(utilisationReportPeriod.startMonth);
-      } else {
-        if (utilisationReportPeriod.startMonth > utilisationReportPeriod.endMonth) {
+      } else if (utilisationReportPeriod.startMonth > utilisationReportPeriod.endMonth) {
           for (let i = utilisationReportPeriod.startMonth; i <= 12; i += 1) {
             monthsInSchedule.push(i);
           }
@@ -21,7 +20,6 @@ const getMonthsInSchedule = (utilisationReportPeriodSchedule: BankReportPeriodSc
             monthsInSchedule.push(i);
           }
         }
-      }
     });
   } else {
     firstScheduleError = 'Utilisation Report Period Schedule does not start from January or period which spans 2 years';
@@ -44,15 +42,13 @@ const isScheduleInOrder = (monthsInSchedule: number[]): boolean => {
       } else if (firstMonthInSchedule - monthInSchedule !== 1) {
         scheduleInOrder = false;
       }
-    } else {
-      if (monthInSchedule === 12) {
+    } else if (monthInSchedule === 12) {
         if (nextMonthInSchedule !== 1) {
           scheduleInOrder = false;
         }
       } else if (nextMonthInSchedule - monthInSchedule !== 1) {
         scheduleInOrder = false;
       }
-    }
   })
 
   return scheduleInOrder;

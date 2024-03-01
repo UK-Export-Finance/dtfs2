@@ -1,4 +1,4 @@
 export type BankReportPeriodSchedule = {
-    startMonth: number;
-    endMonth: number;
+  startMonth: number;
+  endMonth: number;
 }[];

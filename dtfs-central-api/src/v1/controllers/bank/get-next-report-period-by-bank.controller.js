@@ -1,5 +1,5 @@
-const { findOneBank } = require('./get-bank.controller');
 const { getNextReportPeriodForBankSchedule } = require('@ukef/dtfs2-common');
+const { findOneBank } = require('./get-bank.controller');
 
 exports.getNextReportPeriodByBankId = async (req, res) => {
   const bank = await findOneBank(req.params.bankId);
