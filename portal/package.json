@@ -75,7 +75,7 @@
     "@babel/preset-env": "7.21.5",
     "@types/connect-flash": "^0.0.39",
     "@types/connect-redis": "^0.0.22",
-    "@types/cookie-parser": "^1.4.6",
+    "@types/cookie-parser": "^1.4.7",
     "@types/csurf": "^1.11.5",
     "@types/express": "^4.17.21",
     "@types/express-session": "^1.18.0",
