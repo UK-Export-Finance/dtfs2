@@ -9,7 +9,7 @@ const CONSTANTS = require('../../constants');
 const { isValidEmail } = require('../../utils/string');
 const { USER, PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
-const { InvalidUserIdError, InvalidEmailError, UserNotFoundError } = require('../errors');
+const { InvalidUserIdError, InvalidEmailAddressError, UserNotFoundError } = require('../errors');
 const InvalidSessionIdentifierError = require('../errors/invalid-session-identifier.error');
 const { transformDatabaseUser } = require('./transform-database-user');
 
@@ -125,7 +125,7 @@ exports.findByUsername = async (username, callback) => {
 
 exports.findByEmail = async (email) => {
   if (!isValidEmail(email)) {
-    throw new InvalidEmailError(email);
+    throw new InvalidEmailAddressError(email);
   }
   const collection = await db.getCollection('users');
   const user = await collection.findOne({ email: { $eq: email } });

@@ -3,7 +3,7 @@ const emailMustBeUnique = require('./email-must-be-unique');
 
 const userController = require('../../controller');
 const { TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../../../test-helpers/unit-test-mocks/mock-user');
-const { InvalidEmailError, UserNotFoundError } = require('../../../errors');
+const { InvalidEmailAddressError, UserNotFoundError } = require('../../../errors');
 
 jest.mock('../../controller');
 
@@ -71,7 +71,7 @@ describe('emailMustBeUniqueTest', () => {
     });
 
     it('should not return error when email is not a valid email', async () => {
-      userController.findByEmail.mockRejectedValue(new InvalidEmailError(exampleEmail));
+      userController.findByEmail.mockRejectedValue(new InvalidEmailAddressError(exampleEmail));
 
       const errors = await emailMustBeUnique(user, changeRequest);
 

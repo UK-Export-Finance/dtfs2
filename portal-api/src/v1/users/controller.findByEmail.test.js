@@ -1,5 +1,5 @@
 const { resetAllWhenMocks, when } = require('jest-when');
-const { InvalidEmailError, UserNotFoundError } = require('../errors');
+const { InvalidEmailAddressError, UserNotFoundError } = require('../errors');
 const { findByEmail } = require('./controller');
 const { TEST_DATABASE_USER, TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const db = require('../../drivers/db-client');
@@ -39,12 +39,12 @@ describe('user controller', () => {
           when(isValidEmail).calledWith(TEST_DATABASE_USER_EMAIL).mockReturnValue(false);
         });
 
-        it('throws an InvalidEmailError', async () => {
+        it('throws an InvalidEmailAddressError', async () => {
           when(usersCollection.findOne)
             .calledWith({ email: { $eq: TEST_DATABASE_USER_EMAIL } })
             .mockImplementation(() => TEST_DATABASE_USER);
 
-          await expect(findByEmail(TEST_DATABASE_USER_EMAIL)).rejects.toThrow(InvalidEmailError);
+          await expect(findByEmail(TEST_DATABASE_USER_EMAIL)).rejects.toThrow(InvalidEmailAddressError);
         });
       });
 
