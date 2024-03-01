@@ -26,9 +26,6 @@ type SummaryItemForSubmissionMonth = {
 
 const mapToSummaryItem = async (bank: Bank, report: UtilisationReportEntity): Promise<UtilisationReportReconciliationSummaryItem> => {
   const reportData = await UtilisationDataRepo.findByReport(report);
-  if (!reportData) {
-    throw new Error(`Failed to find any utilisation data for utilisation report with id ${report.id}`);
-  }
 
   // TODO FN-1398 - status to be added to report data to allow us to calculate how
   //  many facilities are left to reconcile
@@ -69,7 +66,7 @@ const getPreviousOpenReportsForBank = async (bank: Bank, currentSubmissionMonth:
 
   const openReportsBeforeCurrentReportPeriod = await UtilisationReportRepo.findOpenReportsBeforeReportPeriodStartForBankId(bank.id, currentReportPeriodStart);
 
-  if (!openReportsBeforeCurrentReportPeriod?.length) {
+  if (!openReportsBeforeCurrentReportPeriod.length) {
     return [];
   }
 
