@@ -17,11 +17,12 @@
             <li class="govuk-body govuk-!-margin-bottom-3">
               <a data-cy="Previous" href="{{paginationRoute}}/{{currentPage-1}}{{queryString}}" class="govuk-link">Previous</a>
             </li>
+          {% endif %}
 
+          {% if currentPage > 5 %}
             <li class="govuk-body govuk-!-margin-bottom-3">
               ...
             </li>
-
           {% endif %}
 
           {% for i in range(currentPage - 5, totalPages) %}
@@ -32,11 +33,14 @@
             {% endif %}
           {%- endfor %}
 
-          {% if currentPage !== (totalPages-1) %}
+          {% if totalPages - currentPage > 4 %}
             <li class="govuk-body govuk-!-margin-bottom-3">
               ...
             </li>
+          {% endif %}
 
+
+          {% if currentPage !== (totalPages-1) %}
             <li class="govuk-body govuk-!-margin-bottom-3">
               <a data-cy="Next" href="{{paginationRoute}}/{{currentPage+1}}{{queryString}}" class="govuk-link">Next</a>
             </li>
