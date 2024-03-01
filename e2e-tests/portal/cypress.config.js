@@ -1,5 +1,6 @@
 const { defineConfig } = require('cypress');
 const { createTasks } = require('../support/tasks');
+const { CYPRESS_ENV } = require('../support/cypress-env');
 
 module.exports = defineConfig({
   apiProtocol: 'http://',
@@ -30,4 +31,5 @@ module.exports = defineConfig({
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],
+  env: CYPRESS_ENV,
 });
