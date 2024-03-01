@@ -103,15 +103,15 @@ const processSsoRedirect = async ({ pkceCodes, authCodeRequest, code, state }) =
 
     const { sessionIdentifier, ...tokenObject } = utils.issueJWT(mappedTfmUser);
 
-    if (existingTfmUser) {
-      console.info('TFM auth service - found an existing TFM user. Updating the user.');
-
-      await updateLastLoginAndResetSignInData(mappedTfmUser, sessionIdentifier, () => { });
-    } else {
+    if (existingTfmUser.notFound) {
       console.info('TFM auth service - no existing TFM user found. Creating a new TFM user.');
 
       tfmUser = await createTfmUser(entraUser);
       mappedTfmUser = populateTfmUserWithEntraData(tfmUser, entraUser);
+    } else if (existingTfmUser.found && existingTfmUser.canProceed) {
+      console.info('TFM auth service - found an existing TFM user. Updating the user.');
+
+      await updateLastLoginAndResetSignInData(mappedTfmUser, sessionIdentifier, () => { });
     }
 
     const redirectUrl = authProvider.loginRedirectUrl(state);

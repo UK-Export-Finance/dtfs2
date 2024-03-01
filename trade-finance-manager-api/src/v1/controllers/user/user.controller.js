@@ -14,7 +14,7 @@ const { USER, PAYLOAD } = require('../../../constants');
  * - User is disabled.
  * - Unexpected DB response.
  * @param {Array} emails
- * @returns {Object | Boolean}
+ * @returns {Object}
  */
 exports.findByEmails = async (emails) => {
   try {
@@ -29,22 +29,32 @@ exports.findByEmails = async (emails) => {
     if (users.length === 0) {
       console.info('Getting TFM user by emails - no user found');
 
-      return false;
+      return { notFound: true }
     }
 
     if (users.length > 1) {
-      throw new Error('Getting TFM user by emails - More than 1 matching user found: %O', users);
+      console.info('Getting TFM user by emails - More than 1 matching user found: %O', users);
+
+      return { found: true, canProceed: false };
     }
 
     if (users[0].disabled) {
-      throw new Error('Getting TFM user by emails - User is disabled: %O', users[0]);
+      console.info('Getting TFM user by emails - User is disabled: %O', users[0]);
+
+      return { found: true, canProceed: false };
     }
 
     if (users[0].status === 'blocked') {
-      throw new Error('Getting TFM user by emails - User is blocked: %O', users[0]);
+      console.info('Getting TFM user by emails - User is blocked: %O', users[0]);
+
+      return { found: true, canProceed: false };
     }
 
-    return users[0];
+    return {
+      found: true,
+      canProceed: true,
+      ...users[0],
+    };
   } catch (error) {
     console.error('Error getting TFM user by emails - Unexpected DB response %O', error);
 
