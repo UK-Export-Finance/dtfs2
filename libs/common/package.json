@@ -39,5 +39,8 @@
     "node": ">=20",
     "npm": ">=10"
   },
-  "engineStrict": true
+  "engineStrict": true,
+  "dependencies": {
+    "date-fns": "^3.3.1"
+  }
 }

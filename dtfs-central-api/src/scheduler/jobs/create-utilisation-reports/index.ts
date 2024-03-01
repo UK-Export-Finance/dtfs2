@@ -1,9 +1,9 @@
-import { asString } from '@ukef/dtfs2-common';
+import { asString, getCurrentReportPeriodForBankSchedule } from '@ukef/dtfs2-common';
 import { getOneUtilisationReportDetailsByBankId, saveNotReceivedUtilisationReport } from '../../../services/repositories/utilisation-reports-repo';
 import { getAllBanks } from '../../../services/repositories/banks-repo';
 import { SchedulerJob } from '../../../types/scheduler-job';
 import { Bank } from '../../../types/db-models/banks';
-import { getCurrentReportPeriodForBankSchedule } from '../../../utils/report-period';
+import { validateUtilisationReportPeriodSchedule } from './utilisation-report-period-schedule-validator';
 
 const { UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE } = process.env;
 
@@ -19,13 +19,26 @@ const isCurrentBankReportMissing = async (bank: Bank): Promise<boolean> => {
 };
 
 /**
- * Gets the banks that do not have reports
+ * Checks if the current bank has a valid utilisation report period schedule
+ * @param bank - The bank
+ * @returns Whether or not the bank utilisation report period schedule is valid
+ */
+const isValidUtilisationReportPeriodScheduleOnBank = (bank: Bank): boolean => {
+  const validationError = validateUtilisationReportPeriodSchedule(bank.utilisationReportPeriodSchedule);
+  if (validationError) {
+    console.info('Invalid utilisation report period schedule for bank with id %s. %s', bank.id, validationError);
+  }
+  return !validationError;
+}
+
+/**
+ * Gets the banks that have a valid utilisation report period schedule and do not have reports
  * @returns The banks which do not have reports
  */
 const getBanksWithoutReports = async () => {
   const banks = await getAllBanks();
-
-  const isMissingBankReport = await Promise.all(banks.map(isCurrentBankReportMissing));
+  const banksWithValidUtilisationReportPeriodSchedule = banks.filter(isValidUtilisationReportPeriodScheduleOnBank);
+  const isMissingBankReport = await Promise.all(banksWithValidUtilisationReportPeriodSchedule.map(isCurrentBankReportMissing));
   return banks.filter((bank, index) => isMissingBankReport[index]);
 };
 
@@ -41,6 +54,7 @@ const createUtilisationReportForBanks = async (): Promise<void> => {
   await Promise.all(
     banksWithoutReports.map(async ({ id, name, utilisationReportPeriodSchedule }) => {
       console.info('Attempting to insert report for bank with id %s', id);
+
       const reportPeriod = getCurrentReportPeriodForBankSchedule(utilisationReportPeriodSchedule);
       const sessionBank = { id, name };
 

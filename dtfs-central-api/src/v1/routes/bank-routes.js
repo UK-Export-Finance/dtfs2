@@ -5,6 +5,7 @@ const bankRouter = express.Router();
 const getBankController = require('../controllers/bank/get-bank.controller');
 const getBanksController = require('../controllers/bank/get-banks.controller');
 const createBankController = require('../controllers/bank/create-bank.controller');
+const getNextReportPeriodController = require('../controllers/bank/get-next-report-period-by-bank.controller');
 const getUtilisationReportsController = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
 
 const validation = require('../validation/route-validators/route-validators');
@@ -139,7 +140,7 @@ bankRouter
 
 /**
 * @openapi
-* /bank/:bankId/next-due-report:
+* /bank/:bankId/next-report-period:
 *   get:
 *     summary: Get utilisation reports by bank ID
 *     tags: [UtilisationReport]
@@ -182,7 +183,7 @@ bankRouter
 *         description: Not found
 */
 bankRouter
-  .route('/:bankId/next-due-report')
-  .get(validation.bankIdValidation, handleExpressValidatorResult, getUtilisationReportsController.getUtilisationReports);
+  .route('/:bankId/next-report-period')
+  .get(validation.bankIdValidation, handleExpressValidatorResult, getNextReportPeriodController.getNextReportPeriodByBankId);
 
 module.exports = bankRouter;

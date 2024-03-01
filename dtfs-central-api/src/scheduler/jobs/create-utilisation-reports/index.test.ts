@@ -1,19 +1,20 @@
-import { asString } from '@ukef/dtfs2-common';
+import { asString, getCurrentReportPeriodForBankSchedule } from '@ukef/dtfs2-common';
 import { createUtilisationReportForBanksJob } from '.';
 import { getAllBanks } from '../../../services/repositories/banks-repo';
 import * as utilisationReportsRepo from '../../../services/repositories/utilisation-reports-repo';
-import { getCurrentReportPeriodForBankSchedule } from '../../../utils/report-period';
 import { Bank } from '../../../types/db-models/banks';
 import { UtilisationReport } from '../../../types/db-models/utilisation-reports';
 import { ReportPeriod } from '../../../types/utilisation-reports';
+import { validateUtilisationReportPeriodSchedule } from './utilisation-report-period-schedule-validator';
 
 console.info = jest.fn();
 
+jest.mock('./utilisation-report-period-schedule-validator');
 jest.mock('../../../services/repositories/banks-repo');
 jest.mock('../../../services/repositories/utilisation-reports-repo');
-jest.mock('../../../utils/report-period');
-jest.mock('../../../helpers/validation', () => ({
+jest.mock('@ukef/dtfs2-common', () => ({
   asString: jest.fn(),
+  getCurrentReportPeriodForBankSchedule: jest.fn(),
 }));
 
 const originalProcessEnv = process.env;
@@ -87,6 +88,7 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       const job = getJob();
       const bank = { id: '123', name: 'Test bank' } as Bank;
       jest.mocked(getAllBanks).mockResolvedValue([bank]);
+      jest.mocked(validateUtilisationReportPeriodSchedule).mockReturnValue(undefined);
       const getOneUtilisationReportDetailsByBankIdSpy = jest
         .mocked(utilisationReportsRepo.getOneUtilisationReportDetailsByBankId)
         .mockResolvedValue({} as UtilisationReport);
@@ -100,6 +102,23 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       expect(saveNotReceivedUtilisationReportSpy).not.toHaveBeenCalled();
     });
 
+    it('does not try to create any utilisation reports when bank has invalid utilisation report period schedule', async () => {
+      // Arrange
+      const job = getJob();
+      const bank = { id: '123', name: 'Test bank' } as Bank;
+      jest.mocked(getAllBanks).mockResolvedValue([bank]);
+      jest.mocked(validateUtilisationReportPeriodSchedule).mockReturnValue('Validation Error');
+      const getOneUtilisationReportDetailsByBankIdSpy = jest.spyOn(utilisationReportsRepo, 'getOneUtilisationReportDetailsByBankId');
+      const saveNotReceivedUtilisationReportSpy = jest.spyOn(utilisationReportsRepo, 'saveNotReceivedUtilisationReport');
+
+      // Act
+      await job.task(new Date());
+
+      // Assert
+      expect(getOneUtilisationReportDetailsByBankIdSpy).not.toHaveBeenCalled();
+      expect(saveNotReceivedUtilisationReportSpy).not.toHaveBeenCalled();
+    });
+
     const banks = [
       { id: '1', name: 'Bank 1' },
       { id: '2', name: 'Bank 2' },
@@ -110,6 +129,7 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       // Arrange
       const job = getJob();
       jest.mocked(getAllBanks).mockResolvedValue(banks);
+      jest.mocked(validateUtilisationReportPeriodSchedule).mockReturnValue(undefined);
       const getOneUtilisationReportDetailsByBankIdSpy = jest.mocked(utilisationReportsRepo.getOneUtilisationReportDetailsByBankId).mockResolvedValue(null);
       const saveNotReceivedUtilisationReportSpy = jest.spyOn(utilisationReportsRepo, 'saveNotReceivedUtilisationReport');
 
@@ -129,6 +149,7 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       jest.mocked(getAllBanks).mockResolvedValue(banks);
 
       const bankWithoutReport = banks[0];
+      jest.mocked(validateUtilisationReportPeriodSchedule).mockReturnValue(undefined);
       const getOneUtilisationReportDetailsByBankIdSpy = jest
         .mocked(utilisationReportsRepo.getOneUtilisationReportDetailsByBankId)
         .mockImplementation((bankId: string) => {

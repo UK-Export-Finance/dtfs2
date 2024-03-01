@@ -13,7 +13,7 @@ import {
   getReportPeriodStartForSubmissionMonth,
   getSubmissionMonthForReportPeriodStart,
   isEqualReportPeriodStart,
-} from '../../../../utils/report-period';
+} from '@ukef/dtfs2-common';
 
 type UtilisationReportForSubmissionMonth = {
   submissionMonth: IsoMonthStamp;

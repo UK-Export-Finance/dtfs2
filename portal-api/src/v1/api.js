@@ -378,7 +378,7 @@ const getNextReportPeriodByBankId = async (bankId) => {
       headers: headers.central,
     });
 
-    return { status: 200, data: response.data };
+    return response.data;
   } catch (error) {
     console.error('Unable to get next report period by bank ID %s', error);
     return { status: error?.response?.status || 500, data: 'Failed to get next report period by bank ID' };

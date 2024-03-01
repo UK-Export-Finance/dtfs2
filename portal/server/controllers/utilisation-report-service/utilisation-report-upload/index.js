@@ -6,6 +6,7 @@ const { getDueReportPeriodsByBankId, getReportDueDate } = require('./utilisation
 const api = require('../../../api');
 const { getReportAndUserDetails } = require('./utilisation-report-details');
 const { PRIMARY_NAV_KEY } = require('../../../constants');
+const { getFormattedReportPeriod } = require('../../../helpers');
 
 const setSessionUtilisationReport = (req, nextDueReportPeriod) => {
   req.session.utilisationReport = {
@@ -44,14 +45,13 @@ const getLastUploadedReportDetails = async (userToken, bankId) => {
   const lastUploadedReport = await api.getLastUploadedReportByBankId(userToken, bankId);
   const reportAndUserDetails = getReportAndUserDetails(lastUploadedReport);
 
-  // TODO FN-1249 adjust for quarterly
-  const nextReportDate = await api.getNextReportPeriodByBankId(userToken, bankId);
-  const nextReportPeriod = format(nextReportDate, 'MMMM yyyy');
+  const nextReportPeriod = await api.getNextReportPeriodByBankId(userToken, bankId);
+  const nextReportPeriodFormatted = getFormattedReportPeriod(nextReportPeriod);
 
-  const nextReportPeriodSubmissionStartDate = addMonths(nextReportDate, 1);
-  const nextReportPeriodSubmissionStart = format(startOfMonth(nextReportPeriodSubmissionStartDate), 'd MMMM yyyy');
+  const nextReportPeriodSubmissionEndDate = addMonths(new Date(nextReportPeriod.end.year, nextReportPeriod.end.month - 1), 1);
+  const nextReportPeriodSubmissionStart = format(startOfMonth(nextReportPeriodSubmissionEndDate), 'd MMMM yyyy');
 
-  return { ...reportAndUserDetails, nextReportPeriod, nextReportPeriodSubmissionStart };
+  return { ...reportAndUserDetails, nextReportPeriodFormatted, nextReportPeriodSubmissionStart };
 };
 
 const getUtilisationReportUpload = async (req, res) => {

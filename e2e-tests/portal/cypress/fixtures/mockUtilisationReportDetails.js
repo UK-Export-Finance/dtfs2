@@ -4,12 +4,17 @@ const {
   getMonth,
   subMonths,
 } = require('date-fns');
-const { BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../e2e-fixtures');
+const { BANK1_PAYMENT_REPORT_OFFICER1, BANK2_PAYMENT_REPORT_OFFICER1 } = require('../../../e2e-fixtures');
 
 const BANK1 = {
   id: BANK1_PAYMENT_REPORT_OFFICER1.bank.id,
   name: BANK1_PAYMENT_REPORT_OFFICER1.bank.name,
 };
+
+const BANK2 = {
+  id: BANK2_PAYMENT_REPORT_OFFICER1.bank.id,
+  name: BANK2_PAYMENT_REPORT_OFFICER1.bank.name,
+}
 
 const generateReportDetails = (year, month) => {
   const bank = BANK1;
@@ -60,8 +65,28 @@ const february2023ReportDetails = [
         year: 2023,
       },
     },
-    dateUploaded: new Date(2023, 1),
+    dateUploaded: new Date(2023, 3),
     uploadedBy: BANK1_PAYMENT_REPORT_OFFICER1,
+    azureFileInfo: null,
+    status: 'REPORT_NOT_RECEIVED',
+  },
+];
+
+const december2023ToFebruary2024ReportDetails = [
+  {
+    bank: BANK2,
+    reportPeriod: {
+      start: {
+        month: 12,
+        year: 2023,
+      },
+      end: {
+        month: 2,
+        year: 2024,
+      },
+    },
+    dateUploaded: new Date(2024, 3),
+    uploadedBy: BANK2_PAYMENT_REPORT_OFFICER1,
     azureFileInfo: null,
     status: 'REPORT_NOT_RECEIVED',
   },
@@ -81,4 +106,5 @@ module.exports = {
   previousReportDetails,
   february2023ReportDetails,
   upToDateReportDetails,
+  december2023ToFebruary2024ReportDetails,
 };
