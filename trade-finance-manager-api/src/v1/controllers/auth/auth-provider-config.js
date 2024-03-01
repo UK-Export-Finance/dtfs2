@@ -25,7 +25,7 @@ const REDIRECT_URI = `${TFM_UI_URL}/${AZURE_SSO_REDIRECT_URI}`;
 const msalConfig = {
   auth: {
     clientId: AZURE_SSO_CLIENT_ID, // 'Application (client) ID' of app registration in Azure portal - this value is a GUID
-    authority: AZURE_SSO_AUTHORITY, // Replace the placeholder with your tenant subdomain
+    authority: `${AZURE_SSO_AUTHORITY}/`, // Replace the placeholder with your tenant subdomain
     clientSecret: AZURE_SSO_CLIENT_SECRET, // Client secret generated from the app registration in Azure portal
   },
   system: {
