@@ -1,4 +1,4 @@
-const { hasValue } = require('../../utils/string');
+const { dateHasAllValues } = require('../validation/fields/date');
 
 exports.hasAllIssuedDateValues = (facility) => {
   const {
@@ -7,9 +7,7 @@ exports.hasAllIssuedDateValues = (facility) => {
     'issuedDate-year': issuedDateYear,
   } = facility;
 
-  const hasIssuedDate = (hasValue(issuedDateDay)
-    && hasValue(issuedDateMonth)
-    && hasValue(issuedDateYear));
+  const hasIssuedDate = (dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear));
 
   if (hasIssuedDate) {
     return true;

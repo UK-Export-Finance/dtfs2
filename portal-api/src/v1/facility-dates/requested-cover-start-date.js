@@ -1,59 +1,50 @@
-const moment = require('moment');
-const { hasValue } = require('../../utils/string');
+const { cloneDeep } = require('lodash');
+const { dateHasAllValues } = require('../validation/fields/date');
+const {
+  getDateAsEpochMillisecondString,
+  getStartOfDateFromDayMonthYearStringsReplicatingMoment
+} = require('../helpers/date');
 
-const getRequestedCoverStartDateValues = (facility) => {
+const hasAllRequestedCoverStartDateValues = (facility) => {
   const {
     'requestedCoverStartDate-day': requestedCoverStartDateDay,
     'requestedCoverStartDate-month': requestedCoverStartDateMonth,
     'requestedCoverStartDate-year': requestedCoverStartDateYear,
   } = facility;
 
-  return {
-    requestedCoverStartDateDay,
-    requestedCoverStartDateMonth,
-    requestedCoverStartDateYear,
-  };
-};
-
-const hasAllRequestedCoverStartDateValues = (facility) => {
-  const {
-    requestedCoverStartDateDay,
-    requestedCoverStartDateMonth,
-    requestedCoverStartDateYear,
-  } = getRequestedCoverStartDateValues(facility);
-
-  const hasRequestedCoverStartDate = (hasValue(requestedCoverStartDateDay)
-    && hasValue(requestedCoverStartDateMonth)
-    && hasValue(requestedCoverStartDateYear));
-
-  if (hasRequestedCoverStartDate) {
-    return true;
-  }
-
-  return false;
+  return dateHasAllValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear);
 };
 
 exports.hasAllRequestedCoverStartDateValues = hasAllRequestedCoverStartDateValues;
 
+// TODO: DTFS2-7024 remove this dependence on moment behaviour
+/**
+ * Returns facility object with added requestedCoverStartDate property, if the day
+ * month, year are given. This is stored as a UTC timestamp
+ * @param {Object} facility
+ * @returns {Object}
+ *
+ * This function has odd behaviour inherited from moment js
+ *  - If the month is invalid set requestedCoverStartDate to NaN
+ *  - If the day/year is invalid, use the current day/year instead
+ */
 exports.updateRequestedCoverStartDate = (facility) => {
-  // if we have all requestedCoverStartDate fields (day, month and year)
-  // generate UTC timestamp in a single requestedCoverStartDate property.
-  const modifiedFacility = facility;
+  const modifiedFacility = cloneDeep(facility);
 
   if (hasAllRequestedCoverStartDateValues(facility)) {
     const {
-      requestedCoverStartDateDay,
-      requestedCoverStartDateMonth,
-      requestedCoverStartDateYear,
-    } = getRequestedCoverStartDateValues(facility);
+      'requestedCoverStartDate-day': requestedCoverStartDateDay,
+      'requestedCoverStartDate-month': requestedCoverStartDateMonth,
+      'requestedCoverStartDate-year': requestedCoverStartDateYear,
+    } = facility;
 
-    const momentDate = moment().set({
-      date: Number(requestedCoverStartDateDay),
-      month: Number(requestedCoverStartDateMonth) - 1, // months are zero indexed
-      year: Number(requestedCoverStartDateYear),
-    });
-
-    modifiedFacility.requestedCoverStartDate = moment(momentDate).utc().valueOf().toString();
+    modifiedFacility.requestedCoverStartDate = getDateAsEpochMillisecondString(
+      getStartOfDateFromDayMonthYearStringsReplicatingMoment(
+        requestedCoverStartDateDay,
+        requestedCoverStartDateMonth,
+        requestedCoverStartDateYear,
+      )
+    );
   }
   return modifiedFacility;
 };
