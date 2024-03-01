@@ -44,7 +44,7 @@ describe('getDateFromSearchString', () => {
     expectedDate: startOfDay(mockDateWithCurrentYear)
   }))
 
-  it.each([...testDataWithYear, ...testDataWithoutYear])('should correctly parse a date in the format `$formatString` ($mockString) to $expectedDate', ({ mockString, expectedDate }) => {
+  it.each([...testDataWithYear, ...testDataWithoutYear])('should correctly parse a date in the format `$formatString` ($mockString to $expectedDate)', ({ mockString, expectedDate }) => {
     const result = getDateFromSearchString(mockString);
 
     expect(result).toEqual(expectedDate);
