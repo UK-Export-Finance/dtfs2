@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const now = require('../../now');
+const { getNowAsEpochMillisecondString } = require('../helpers/date');
 const db = require('../../drivers/db-client');
 const sendEmail = require('../email');
 const businessRules = require('../../config/businessRules');
@@ -261,7 +261,7 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
 
   const collection = await db.getCollection('users');
   const update = {
-    lastLogin: now(),
+    lastLogin: getNowAsEpochMillisecondString(),
     loginFailureCount: 0,
     sessionIdentifier,
   };
@@ -286,7 +286,7 @@ exports.incrementFailedLoginCount = async (user) => {
       }
     : {
         loginFailureCount: failureCount,
-        lastLoginFailure: now(),
+        lastLoginFailure: getNowAsEpochMillisecondString(),
       };
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
