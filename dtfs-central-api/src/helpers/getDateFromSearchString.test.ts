@@ -1,4 +1,4 @@
-import { format, getYear, set, startOfDay } from "date-fns";
+import { format, getYear, isValid, set, startOfDay } from "date-fns";
 import { getDateFromSearchString } from "./getDateFromSearchString";
 
 describe('getDateFromSearchString', () => {
@@ -41,13 +41,33 @@ describe('getDateFromSearchString', () => {
   const testDataWithoutYear = acceptedFormatsWithoutYear.map((formatString) => ({
     formatString,
     mockString: format(mockDate, formatString),
-    expectedDate: mockDateWithCurrentYear
+    expectedDate: startOfDay(mockDateWithCurrentYear)
   }))
 
-
-  it.each([...testDataWithYear, ...testDataWithoutYear])('should correctly parse a date in the format $formatString', ({ mockString, expectedDate }) => {
+  it.each([...testDataWithYear, ...testDataWithoutYear])('should correctly parse a date in the format `$formatString` ($mockString) to $expectedDate', ({ mockString, expectedDate }) => {
     const result = getDateFromSearchString(mockString);
 
-    expect(result).toEqual(startOfDay(expectedDate));
+    expect(result).toEqual(expectedDate);
   });
+
+  const invalidSearchStrings = [
+    'January',
+    '1st Jan',
+    '1st 01',
+    '1st 01 2024',
+    '1st January 2024',
+    '1124',
+    '2024',
+    "01-##-2024",
+    "**/01/2024",
+    "01 01 ....",
+    "01 01 XX",
+    "1 # 24",
+  ];
+
+  it.each(invalidSearchStrings)('should not parse the string `%s` into a valid date', (searchString) => {
+    const result = getDateFromSearchString(searchString);
+
+    expect(isValid(result)).toEqual(false);
+  })
 });
