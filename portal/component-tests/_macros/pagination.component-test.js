@@ -10,7 +10,7 @@ describe(component, () => {
   const paginationRoute = '/testRoute';
   const queryString = '?testQuery=test';
 
-  describe('when totalPages is small enough that all page links can be rendered on all pages (and an ellipsis is never rendered)', () => {
+  describe('when totalPages is small enough that an ellipsis is never rendered', () => {
     describe('when totalPages is 0', () => {
       const totalPages = 0;
       const currentPage = 0;
