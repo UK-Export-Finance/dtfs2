@@ -27,7 +27,32 @@ const now = () => moment().format('YYYY-MM-DD');
  * @returns year formatted as 4 digits (adds 2000 if < 1000)
  */
 const formatYear = (year) => (year < 1000 ? (2000 + parseInt(year, 10)).toString() : year && year.toString());
+/**
+ * @param {string | number} dateStr
+ * @returns date formatted as `yyyy-MM-dd`
+ * Accepted date strings:
+ *  - MM/dd/yyyy
+ *  - MM dd yyyy
+ *  - MM-dd-yy
+ *  - MM/dd/yy
+ *  - MM dd yy
+ *  - yyyy-MM-dd
+ *  - yyyy/MM/dd
+ *  - yyyy MM dd
+ *
+ * Not accepted:
+ *  - yy-MM-dd
+ *  - yy/MM/dd
+ *  - yy MM dd
+ */
 const formatDate = (dateStr) => moment(isDate(dateStr) || isString(dateStr) ? dateStr : Number(dateStr)).format('YYYY-MM-DD');
+
+/**
+ * @param {string | number} dateStr
+ * @returns date formatted as `yyyy-MM-dd`
+ *
+ * @deprecated this function is the same as `formatDate`
+ */
 const formatTimestamp = (dateStr) => moment(isDate(dateStr) || isString(dateStr) ? dateStr : Number(dateStr)).format('YYYY-MM-DD');
 
 const addDay = (date, day) => moment(date).add({ day }).format('YYYY-MM-DD');
