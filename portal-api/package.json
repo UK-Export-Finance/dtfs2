@@ -61,7 +61,7 @@
     "notifications-node-client": "6.0.0",
     "passport": "0.6.0",
     "passport-jwt": "^4.0.1",
-    "sanitize-html": "^2.11.0",
+    "sanitize-html": "^2.12.1",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.2",
     "validator": "^13.11.0",
