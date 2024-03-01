@@ -3,22 +3,38 @@ const jws = require('jws');
 const cookieSignature = require('cookie-signature');
 const { TFM_URL } = require('../../e2e-fixtures/constants.fixture');
 
+/**
+ * issueValidJWT
+ * Issue a valid JWT
+ * @param {Object} user
+ * @param {String} sessionIdentifier
+ * @returns {String} JWT
+ */
 const issueValidJWT = (user, sessionIdentifier) => {
-  const { _id } = user;
+  const {
+    _id,
+    username,
+    teams,
+    firstName,
+    lastName,
+  } = user;
+
   const payload = {
     sub: _id,
-    username: user.username,
-    teams: user.teams,
-    firstName: user.firstName,
-    lastName: user.lastName,
+    username,
+    teams,
+    firstName,
+    lastName,
     sessionIdentifier,
   };
+
   const secret = Buffer.from(Cypress.config('jwtSigningKey'), 'base64').toString('ascii');
 
   const header = {
     alg: 'RS256',
     typ: 'JWT',
   };
+
   return jws.sign({
     header,
     payload,
@@ -93,10 +109,12 @@ const tfmLogin = ({
 
     await cy.overrideTfmUserSessionId(username, sessionIdentifier);
     await cy.overrideRedisUserSession(sessionIdentifier, sessionValue, maxAge);
+
     if (!isSessionForAPICall) {
       await cy.setCookie('dtfs-session', encodeURIComponent(signedCookieValue), cookieOptions);
       await cy.visit(TFM_URL);
     }
+
     return `Bearer ${userToken}`;
   });
 };

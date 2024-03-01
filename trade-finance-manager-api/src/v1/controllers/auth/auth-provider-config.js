@@ -13,9 +13,8 @@ const {
   AZURE_SSO_POST_LOGOUT_URI,
   AZURE_SSO_TENANT_SUBDOMAIN,
   TFM_UI_URL,
-} = process.env
+} = process.env;
 
-// TODO: new env var?
 const REDIRECT_URI = `${TFM_UI_URL}/${AZURE_SSO_REDIRECT_URI}`;
 
 /**
