@@ -1,4 +1,4 @@
-const withValidateEmailIsCorrectFormatTests = ({ createRequestWithUpdatedEmailAddress, makeRequest }) => {
+const withValidateEmailIsCorrectFormatTests = ({ createPayloadWithUpdatedEmailAddress, makeRequest }) => {
   describe('when validating the email is correctly formatted', () => {
     const EMAIL_ERROR = { text: 'Enter an email address in the correct format, for example, name@example.com' };
     const AN_INVALID_EMAIL_ADDRESS = 'notAValidEmailAddress';
@@ -26,7 +26,7 @@ const withValidateEmailIsCorrectFormatTests = ({ createRequestWithUpdatedEmailAd
     ];
     describe('when validating the email', () => {
       it.each(errorTestCases)(`rejects if the provided email $description`, async ({ valueToSetField }) => {
-        const request = createRequestWithUpdatedEmailAddress({ fieldToUpdate: 'email', valueToSetField });
+        const request = createPayloadWithUpdatedEmailAddress({ fieldToUpdate: 'email', valueToSetField });
 
         const { status, body } = await makeRequest(request);
 

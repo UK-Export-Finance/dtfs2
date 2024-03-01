@@ -137,7 +137,7 @@ describe('a user', () => {
       });
 
       withValidateUsernameAndEmailMatchTests({
-        createRequestWithUpdatedEmailAddress: (email) =>
+        createPayloadWithUpdatedEmailAddress: (email) =>
           produce({}, (draftRequest) => {
             draftRequest.email = email;
           }),
@@ -145,7 +145,7 @@ describe('a user', () => {
       });
 
       withValidateEmailIsCorrectFormatTests({
-        createRequestWithUpdatedEmailAddress: (email) =>
+        createPayloadWithUpdatedEmailAddress: (email) =>
           produce({}, (draftRequest) => {
             draftRequest.username = email;
             draftRequest.email = email;
