@@ -481,8 +481,8 @@ describe(component, () => {
   });
 
   function itShouldRenderOuterDivAndDisplayTotalItems() {
-    it('should render a div with a class of \'breadcrumbs\' and a role of \'navigation\'', () => {
-      wrapper.expectElement('.breadcrumbs').toHaveAttribute('role', 'navigation');
+    it('should render a div with a class of \'pagination\' and a role of \'navigation\'', () => {
+      wrapper.expectElement('.pagination').toHaveAttribute('role', 'navigation');
     });
 
     it('should display the total number of items', () => {
