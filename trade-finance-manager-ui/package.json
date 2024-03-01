@@ -53,7 +53,7 @@
     "express-validator": "7.0.1",
     "express-xss-sanitizer": "^1.1.8",
     "govuk-frontend": "4.6.0",
-    "imask": "^6.6.3",
+    "imask": "^7.5.0",
     "joi": "^17.12.1",
     "jquery": "3.6.4",
     "lodash.isequal": "^4.5.0",
