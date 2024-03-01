@@ -34,6 +34,7 @@ module.exports = defineConfig({
   },
   jwtSigningKey: process.env.JWT_SIGNING_KEY,
   cookieSigningKey: process.env.SESSION_SECRET,
+  azureSsoAuthority: 'https://login.microsoftonline.com/',
   e2e: {
     baseUrl: 'http://localhost:5003',
     specPattern: 'cypress/e2e/**/*.spec.js',
