@@ -1,5 +1,5 @@
 const { getNowAsEpochMillisecondString } = require('../../helpers/date');
-const { numberGenerator } = require('../../../external-api/api');
+const { number } = require('../../../external-api/api');
 const { getAllFacilitiesByDealId, update: updateFacility } = require('./facilities.controller');
 const { ukefSubmissionPortalActivity, facilityChangePortalActivity } = require('./portal-activities.controller');
 
@@ -19,29 +19,61 @@ const generateSubmissionData = async (existingApplication) => {
   return result;
 };
 
-const generateId = async ({ entityId, entityType, dealId, user }) =>
-  numberGenerator.get({
-    dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
-    entityId,
-    entityType,
-    dealId,
-    user,
-  });
+/**
+ * Generates an ID based on the provided entityType and dealId.
+ * @param {string} options.entityType - The type of entity for which the ID is being generated.
+ * @param {string} options.dealId - The ID of the deal or facility.
+ * @returns {Promise<object>} Response from the number generator API.
+ */
+const generateId = async (entityType, dealId) => number.get(entityType, dealId);
 
-const generateUkefDealId = async (application) =>
-  generateId({
-    entityId: application._id,
-    entityType: 'deal',
-    dealId: application._id,
-    user: application.checkerId,
-  });
+/**
+ * Generates a unique ID for a deal.
+ * @param {Object} application - An object representing an application.
+ * @returns {Promise<object>} - A promise that resolves to a unique ID for the deal.
+ * @throws {Error} - If unable to generate the deal id.
+ */
+const generateUkefDealId = async (application) => {
+  try {
+    const { _id: dealId } = application;
+    const entityType = 'deal';
 
-const generateUkefFacilityId = async (facility) =>
-  generateId({
-    entityId: facility._id,
-    entityType: 'facility',
-    dealId: facility.dealId,
-  });
+    if (!dealId) {
+      throw new Error('Void deal id');
+    }
+
+    const { data } = await generateId(entityType, dealId);
+
+    return data;
+  } catch (error) {
+    console.error('Unable to generate deal id %o', error);
+    throw new Error('Unable to generate deal id');
+  }
+};
+
+/**
+ * Generates a unique ID for a facility.
+ * @param {Object} facility - The facility object for which the unique ID needs to be generated.
+ * @returns {Promise<object>} - The generated unique ID for the facility.
+ * @throws {Error} - If unable to generate the facility id.
+ */
+const generateUkefFacilityId = async (facility) => {
+  try {
+    const entityType = 'facility';
+    const { dealId } = facility;
+
+    if (!dealId) {
+      throw new Error('Void deal id');
+    }
+
+    const { data } = await generateId(entityType, dealId);
+
+    return data;
+  } catch (error) {
+    console.error('Unable to generate facility id %o', error);
+    throw new Error('Unable to generate facility id');
+  }
+};
 
 const addSubmissionDateToIssuedFacilities = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
@@ -103,9 +135,9 @@ const addUkefFacilityIdToFacilities = async (dealId) => {
   await Promise.all(
     facilities.map(async (facility) => {
       if (!facility.ukefFacilityId) {
-        const { ukefId } = await generateUkefFacilityId(facility);
+        const { maskedId } = await generateUkefFacilityId(facility);
         const update = {
-          ukefFacilityId: ukefId,
+          ukefFacilityId: maskedId,
         };
         await updateFacility(facility._id, update);
       }
@@ -211,14 +243,17 @@ const addSubmissionData = async (dealId, existingApplication) => {
   };
 
   if (!existingApplication.ukefDealId) {
-    const { ukefId } = await generateUkefDealId(existingApplication);
-    submissionData.ukefDealId = ukefId;
+    const { maskedId } = await generateUkefDealId(existingApplication);
+    submissionData.ukefDealId = maskedId;
   }
 
   return submissionData;
 };
 
 module.exports = {
+  generateId,
+  generateUkefDealId,
+  generateUkefFacilityId,
   addSubmissionData,
   submissionPortalActivity,
   addSubmissionDateToIssuedFacilities,

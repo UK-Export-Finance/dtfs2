@@ -6,7 +6,7 @@ const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
-const externalApis = require('../../../src/external-api/api');
+const { number } = require('../../../src/external-api/api');
 const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
 const { as } = require('../../api')(app);
@@ -38,9 +38,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
     await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
 
     api.tfmDealSubmit = tfmDealSubmitSpy;
-    externalApis.numberGenerator = {
-      create: () => Promise.resolve({ ukefId: MOCK_NUMBER_GENERATOR_ID }),
-    };
+    number.get = () => Promise.resolve({ ukefId: MOCK_NUMBER_GENERATOR_ID });
   });
 
   afterEach(() => {

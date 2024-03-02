@@ -1,7 +1,7 @@
-const create = async () => ({
+const get = async () => ({
   ukefId: '12345678910',
 });
 
 module.exports = {
-  create,
+  get,
 };

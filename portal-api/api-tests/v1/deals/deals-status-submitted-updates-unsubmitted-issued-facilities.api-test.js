@@ -7,7 +7,7 @@ const completedDeal = require('../../fixtures/deal-fully-completed-issued-and-un
 const { as } = require('../../api')(app);
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
-const externalApis = require('../../../src/external-api/api');
+const { number } = require('../../../src/external-api/api');
 const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
 describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facility submission details', () => {
@@ -116,14 +116,13 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
       ];
 
       const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(completedDeal))).to('/v1/deals');
+      const MOCK_NUMBER_GENERATOR_ID = 'MOCK_NUMBER_GENERATOR_ID';
 
       dealId = postResult.body._id;
 
       api.tfmDealSubmit = () => Promise.resolve();
 
-      externalApis.numberGenerator = {
-        create: () => Promise.resolve({ ukefId: 'TEST-MOCK' }),
-      };
+      number.get = () => Promise.resolve({ ukefId: MOCK_NUMBER_GENERATOR_ID });
 
       const createdFacilities = await createFacilities(aBarclaysMaker, dealId, originalFacilities);
       completedDeal.mockFacilities = createdFacilities;

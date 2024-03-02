@@ -1,64 +1,58 @@
-const { numberGenerator } = require('../../../external-api/api');
+const { number } = require('../../../external-api/api');
 const { updateDeal } = require('../deal.controller');
 const facilitiesController = require('../facilities.controller');
 
 const createUkefIds = async (entityId, deal, user) => {
-  let numGenDeal;
-
   try {
-    numGenDeal = await numberGenerator.get({
+    const facilitiesNumber = [];
+    const facilitiesUpdatePromises = [];
+
+    const { data: dealNumber } = await number.get({
       entityType: 'deal',
       dealId: deal._id,
     });
-  } catch (error) {
-    throw new Error('Error creating numGenDeal');
-  }
 
-  let updatedDeal;
-  try {
-    updatedDeal = await updateDeal(
+    const updatedDeal = await updateDeal(
       entityId,
       {
         details: {
-          ukefDealId: numGenDeal.ukefId,
+          ukefDealId: dealNumber.maskedId,
         },
       },
       user,
     );
-  } catch (error) {
-    throw new Error('Error updating deal');
-  }
 
-  const facilitiesNumGenPromises = [];
-  deal.facilities.forEach(async () => {
-    facilitiesNumGenPromises.push(
-      numberGenerator.get({
+    deal.facilities.forEach(async () => {
+      const { data: facilityNumber } = await number.get({
         entityType: 'facility',
         dealId: deal._id,
-      }),
-    );
-  });
+      });
 
-  const facilitiesNumGenRes = await Promise.all(facilitiesNumGenPromises);
+      facilitiesNumber.push(facilityNumber);
+    });
 
-  const facilitiesUpdatePromises = [];
+    const facilitiesNumberResponse = await Promise.all(facilitiesNumber);
 
-  // Assign the generated ukefIds to each facility and update
-  deal.facilities.forEach((facilityId) => {
-    const { ukefId } = facilitiesNumGenRes.pop();
+    deal.facilities.forEach((facilityId) => {
+      const { maskedId } = facilitiesNumberResponse.pop();
 
-    const modifiedFacility = {
-      ukefFacilityId: ukefId,
-    };
+      const modifiedFacility = {
+        ukefFacilityId: maskedId,
+      };
 
-    facilitiesUpdatePromises.push(facilitiesController.update(deal._id, facilityId, modifiedFacility, user));
+      facilitiesUpdatePromises.push(facilitiesController.update(deal._id, facilityId, modifiedFacility, user));
 
-    return facilityId;
-  });
+      return facilityId;
+    });
 
-  await Promise.all(facilitiesUpdatePromises);
+    await Promise.all(facilitiesUpdatePromises);
 
-  return updatedDeal;
+    return updatedDeal;
+  } catch (error) {
+    console.error('❌ Unable to get UKEF IDs from the number generator %o', error);
+
+    throw new Error('Unable to get UKEF IDs from the number generator', { cause: error });
+  }
 };
 
 module.exports = createUkefIds;

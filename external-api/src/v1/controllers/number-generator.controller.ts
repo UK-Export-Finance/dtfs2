@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import { NumberGeneratorResponse, NumberGeneratorErrorResponse } from '../../interfaces';
 import { InvalidEntityTypeError } from '../errors';
 import { ENTITY_TYPE, NUMBER_TYPE, USER } from '../../constants';
+
 dotenv.config();
 
 const { APIM_MDM_URL, APIM_MDM_VALUE, APIM_MDM_KEY } = process.env;
