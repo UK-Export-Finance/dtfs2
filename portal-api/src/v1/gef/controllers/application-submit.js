@@ -28,50 +28,44 @@ const generateSubmissionData = async (existingApplication) => {
 const generateId = async (entityType, dealId) => number.get(entityType, dealId);
 
 /**
- * Generates a unique ID for a deal.
- * @param {Object} application - An object representing an application.
- * @returns {Promise<object>} - A promise that resolves to a unique ID for the deal.
- * @throws {Error} - If unable to generate the deal id.
+ * Generates a unique identifier for a given entity (either a 'deal' or a 'facility') based on the provided application data.
+ * @param {string} entity - The type of entity for which the unique identifier needs to be generated ('deal' or 'facility').
+ * @param {object} application - The application data containing the necessary information to generate the identifier.
+ * @returns {Promise<Object>} - The generated unique identifier for the specified entity.
+ * @throws {Error} - If unable to generate the identifier.
  */
-const generateUkefDealId = async (application) => {
+const generateUkefId = async (entity, application) => {
   try {
-    const { _id: dealId } = application;
-    const entityType = 'deal';
+    let dealId;
+
+    switch (entity) {
+      case 'deal':
+        dealId = application._id;
+        break;
+      case 'facility':
+        dealId = application.dealId;
+        break;
+      default:
+        dealId = null;
+        break;
+    }
 
     if (!dealId) {
       throw new Error('Void deal id');
     }
 
-    const { data } = await generateId(entityType, dealId);
+    const { data } = await generateId(entity, dealId);
 
-    return data;
-  } catch (error) {
-    console.error('Unable to generate deal id %o', error);
-    throw new Error('Unable to generate deal id');
-  }
-};
-
-/**
- * Generates a unique ID for a facility.
- * @param {Object} facility - The facility object for which the unique ID needs to be generated.
- * @returns {Promise<object>} - The generated unique ID for the facility.
- * @throws {Error} - If unable to generate the facility id.
- */
-const generateUkefFacilityId = async (facility) => {
-  try {
-    const entityType = 'facility';
-    const { dealId } = facility;
-
-    if (!dealId) {
-      throw new Error('Void deal id');
+    if (!data.data?.length) {
+      throw new Error('Void response received');
     }
 
-    const { data } = await generateId(entityType, dealId);
+    const { data: ukefId } = data;
 
-    return data;
+    return ukefId[0];
   } catch (error) {
-    console.error('Unable to generate facility id %o', error);
-    throw new Error('Unable to generate facility id');
+    console.error('Unable to generate id %o', error);
+    throw new Error('Unable to generate id');
   }
 };
 
@@ -129,16 +123,24 @@ const updateChangedToIssued = async (dealId) => {
   });
 };
 
+/**
+ * Adds UKEF facility ID to facilities.
+ *
+ * @param {string} dealId - The ID of the deal.
+ * @returns {Promise<Array>} - A promise that resolves to an array of facilities.
+ * @throws {Error} - If unable to generate facility ID.
+ */
 const addUkefFacilityIdToFacilities = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
 
   await Promise.all(
     facilities.map(async (facility) => {
       if (!facility.ukefFacilityId) {
-        const { maskedId } = await generateUkefFacilityId(facility);
+        const { maskedId } = await generateUkefId('facility', facility);
         const update = {
           ukefFacilityId: maskedId,
         };
+
         await updateFacility(facility._id, update);
       }
     }),
@@ -222,16 +224,16 @@ const checkCoverDateConfirmed = async (app) => {
   return hasUpdated;
 };
 
+/**
+ * Adds submission data to an existing application.
+ * @param {string} dealId - The ID of the deal.
+ * @param {object} existingApplication - An object representing the existing application.
+ * @returns {Promise<object>} - An object containing the submission count, submission date, portal activities, and UKEF deal ID.
+ */
 const addSubmissionData = async (dealId, existingApplication) => {
-  await checkCoverDateConfirmed(existingApplication);
   const { count, date } = await generateSubmissionData(existingApplication);
   const updatedPortalActivity = await submissionPortalActivity(existingApplication);
-  await addSubmissionDateToIssuedFacilities(dealId);
-  await addUkefFacilityIdToFacilities(dealId);
-  /**
-   * If AIN or MIN, portalActivities are handled by portal-API
-   * If MIA -> MIN, then handled by tfm-API and central-API to add portalActivities
-   */
+
   if (existingApplication.submissionType !== CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
     await updateChangedToIssued(dealId);
   }
@@ -243,17 +245,20 @@ const addSubmissionData = async (dealId, existingApplication) => {
   };
 
   if (!existingApplication.ukefDealId) {
-    const { maskedId } = await generateUkefDealId(existingApplication);
+    const { maskedId } = await generateUkefId('deal', existingApplication);
     submissionData.ukefDealId = maskedId;
   }
+
+  await checkCoverDateConfirmed(existingApplication);
+  await addSubmissionDateToIssuedFacilities(dealId);
+  await addUkefFacilityIdToFacilities(dealId);
 
   return submissionData;
 };
 
 module.exports = {
   generateId,
-  generateUkefDealId,
-  generateUkefFacilityId,
+  generateUkefId,
   addSubmissionData,
   submissionPortalActivity,
   addSubmissionDateToIssuedFacilities,

@@ -1,6 +1,6 @@
 import { HttpStatusCode } from 'axios';
 import { number } from '../../../external-api/api';
-import { generateId, generateUkefDealId, generateUkefFacilityId } from './application-submit';
+import { generateId, generateUkefId } from './application-submit';
 
 const body = {
   entityType: 'deal',
@@ -8,17 +8,19 @@ const body = {
 };
 
 const mockSuccessfulResponse = {
-  status: 200,
-  data: [
-    {
-      id: 12345678,
-      maskedId: '0010000000',
-      type: 1,
-      createdBy: 'Portal v2/TFM',
-      createdDatetime: '2024-01-01T00:00:00.000Z',
-      requestingSystem: 'Portal v2/TFM',
-    },
-  ],
+  data: {
+    status: 200,
+    data: [
+      {
+        id: 12345678,
+        maskedId: '0010000000',
+        type: 1,
+        createdBy: 'Portal v2/TFM',
+        createdDatetime: '2024-01-01T00:00:00.000Z',
+        requestingSystem: 'Portal v2/TFM',
+      },
+    ],
+  },
 };
 
 describe('generateId', () => {
@@ -61,64 +63,38 @@ describe('generateId', () => {
   });
 });
 
-describe('generateUkefDealId', () => {
+describe('generateUkefId', () => {
   beforeEach(() => {
     number.get = jest.fn().mockResolvedValue(mockSuccessfulResponse);
   });
 
-  it('should generate a maskedId when a valid application is provided', async () => {
-    const application = { _id: '12345' };
+  it('should generate a maskedId when a valid application is provided for deal entity type', async () => {
+    const result = await generateUkefId('deal', { _id: '12345' });
 
-    const result = await generateUkefDealId(application);
-    expect(result).toEqual(mockSuccessfulResponse.data);
+    expect(result.maskedId).toEqual('0010000000');
+    expect(result).toEqual(mockSuccessfulResponse.data.data[0]);
+  });
+
+  it('should generate a maskedId when a valid application is provided for facility entity type', async () => {
+    const result = await generateUkefId('facility', { dealId: '12345' });
+
+    expect(result.maskedId).toEqual('0010000000');
+    expect(result).toEqual(mockSuccessfulResponse.data.data[0]);
+  });
+
+  it('Should throw an error when an invalid entity and deal id are provided', async () => {
+    await expect(generateUkefId('invalid', undefined)).rejects.toThrow('Unable to generate id');
   });
 
   it('Should throw an error when an invalid deal id is provided', async () => {
-    const application = undefined;
-
-    await expect(generateUkefDealId(application)).rejects.toThrow('Unable to generate deal id');
+    await expect(generateUkefId('deal', undefined)).rejects.toThrow('Unable to generate id');
   });
 
   it('Should throw an error when an application is provided', async () => {
-    const application = null;
-
-    await expect(generateUkefDealId(application)).rejects.toThrow('Unable to generate deal id');
+    await expect(generateUkefId('deal', null)).rejects.toThrow('Unable to generate id');
   });
 
   it('Should throw an error when an application is provided', async () => {
-    const application = {};
-
-    await expect(generateUkefDealId(application)).rejects.toThrow('Unable to generate deal id');
-  });
-});
-
-describe('generateUkefFacilityId', () => {
-  beforeEach(() => {
-    number.get = jest.fn().mockResolvedValue(mockSuccessfulResponse);
-  });
-
-  it('should generate a maskedId when a valid application is provided', async () => {
-    const application = { dealId: '12345' };
-
-    const result = await generateUkefFacilityId(application);
-    expect(result).toEqual(mockSuccessfulResponse.data);
-  });
-
-  it('Should throw an error when an invalid deal id is provided', async () => {
-    const application = undefined;
-
-    await expect(generateUkefFacilityId(application)).rejects.toThrow('Unable to generate facility id');
-  });
-
-  it('Should throw an error when an application is provided', async () => {
-    const application = null;
-
-    await expect(generateUkefFacilityId(application)).rejects.toThrow('Unable to generate facility id');
-  });
-
-  it('Should throw an error when an application is provided', async () => {
-    const application = {};
-
-    await expect(generateUkefFacilityId(application)).rejects.toThrow('Unable to generate facility id');
+    await expect(generateUkefId('deal', {})).rejects.toThrow('Unable to generate id');
   });
 });
