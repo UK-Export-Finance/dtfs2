@@ -53,7 +53,7 @@ const updatePortalDeal = async (dealId, update) => {
       headers: headers.central,
       data: {
         dealUpdate: update,
-        user: { _id: '123' },
+        user: { _id: 'TFM_USER' },
       },
     });
 
@@ -80,6 +80,7 @@ const updatePortalBssDealStatus = async (dealId, status) => {
       headers: headers.central,
       data: {
         status,
+        user: { _id: 'TFM_USER' },
       },
     });
 
@@ -107,6 +108,7 @@ const addPortalDealComment = async (dealId, commentType, comment) => {
       dealId,
       commentType,
       comment,
+      user: { _id: 'TFM_USER' },
     },
   });
 
@@ -128,7 +130,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
       headers: headers.central,
       data: {
         status,
-        user: { _id: '123' },
+        user: { _id: 'TFM_USER' },
       },
     });
 
@@ -1038,6 +1040,7 @@ const updatePortalGefDealStatus = async (dealId, status) => {
       headers: headers.central,
       data: {
         status,
+        user: { _id: 'TFM_USER' },
       },
     });
 
@@ -1064,6 +1067,7 @@ const updatePortalGefDeal = async (dealId, update) => {
       headers: headers.central,
       data: {
         dealUpdate: update,
+        user: { _id: 'TFM_USER' },
       },
     });
 
@@ -1110,7 +1114,7 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
     method: 'post',
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}/comment`,
     headers: headers.central,
-    data: { dealId, commentType, comment },
+    data: { dealId, commentType, comment, user: { _id: 'TFM_USER' } },
   });
 
   return response.data;
