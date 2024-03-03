@@ -17,7 +17,7 @@ export interface NumberGeneratorResponse {
   readonly status: number;
   readonly data: Array<{
     id: number;
-    maskedId: number;
+    maskedId: string;
     type: number;
     createdBy: string;
     createdDatetime: IsoDateTimeStamp;

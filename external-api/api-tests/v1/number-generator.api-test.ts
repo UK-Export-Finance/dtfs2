@@ -121,7 +121,7 @@ describe('get', () => {
     expect(response.send).toHaveBeenCalledWith({
       status: HttpStatusCode.InternalServerError,
       error: {
-        cause: 'Void number generator response received for deal 1234',
+        cause: 'Invalid number generator response received for deal 1234',
       },
     });
   });

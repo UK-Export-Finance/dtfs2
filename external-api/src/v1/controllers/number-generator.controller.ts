@@ -55,8 +55,8 @@ export const get = async (req: Request, res: Response): Promise<Response<NumberG
     const response: NumberGeneratorResponse = await axios.post(endpoint, [payload], headers);
 
     if (!response.data) {
-      console.error('❌ Void number generator response received for deal %s %o', dealId, response);
-      throw new Error(`Void number generator response received for deal ${dealId}`, { cause: 'Void response from APIM MDM' });
+      console.error('❌ Invalid number generator response received for deal %s %o', dealId, response);
+      throw new Error(`Invalid number generator response received for deal ${dealId}`, { cause: 'Invalid response from APIM MDM' });
     }
 
     const { status, data } = response;

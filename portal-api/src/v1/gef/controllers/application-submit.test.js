@@ -28,21 +28,21 @@ describe('generateId', () => {
     const result = await generateId(null, null);
 
     expect(result.status).toEqual(HttpStatusCode.InternalServerError);
-    expect(result.error).toEqual(Error('Void argument provided for null'));
+    expect(result.error).toEqual(Error('Invalid argument provided for null'));
   });
 
   it('Should throw an error when an invalid deal id is provided', async () => {
     const result = await generateId(body.entityType, null);
 
     expect(result.status).toEqual(HttpStatusCode.InternalServerError);
-    expect(result.error).toEqual(Error('Void argument provided for null'));
+    expect(result.error).toEqual(Error('Invalid argument provided for null'));
   });
 
   it('Should throw an error when an invalid entity type is provided', async () => {
     const result = await generateId(null, body.dealId);
 
     expect(result.status).toEqual(HttpStatusCode.InternalServerError);
-    expect(result.error).toEqual(Error('Void argument provided for 1234'));
+    expect(result.error).toEqual(Error('Invalid argument provided for 1234'));
   });
 
   it('Should throw a internal server error when an invalid entity type is specified', async () => {

@@ -51,13 +51,13 @@ const generateUkefId = async (entity, application) => {
     }
 
     if (!dealId) {
-      throw new Error('Void deal id');
+      throw new Error('Invalid deal id');
     }
 
     const { data } = await generateId(entity, dealId);
 
     if (!data.data?.length) {
-      throw new Error('Void response received');
+      throw new Error('Invalid response received');
     }
 
     const { data: ukefId } = data;

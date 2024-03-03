@@ -20,8 +20,8 @@ const headers = {
 export const get = async (entityType: string, dealId: string): Promise<object> => {
   try {
     if (!entityType || !dealId) {
-      console.error('❌ Void argument provided %s %s', entityType, dealId);
-      throw new Error(`Void argument provided for ${dealId}`);
+      console.error('❌ Invalid argument provided %s %s', entityType, dealId);
+      throw new Error(`Invalid argument provided for ${dealId}`);
     }
 
     const response: AxiosResponse = await axios.post(`${EXTERNAL_API_URL}/number-generator`, {
@@ -32,8 +32,8 @@ export const get = async (entityType: string, dealId: string): Promise<object> =
     });
 
     if (!response.data) {
-      console.error('❌ Void number generator response received from external-api for deal %s %o', dealId, response);
-      throw new Error(`Void number generator response received from external-api for deal ${dealId}`, { cause: 'Void response from external-api' });
+      console.error('❌ Invalid number generator response received from external-api for deal %s %o', dealId, response);
+      throw new Error(`Invalid number generator response received from external-api for deal ${dealId}`, { cause: 'Invalid response from external-api' });
     }
 
     return response;
