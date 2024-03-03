@@ -92,7 +92,8 @@ describe('/v1/deals/:id/status', () => {
     });
   });
 
-  describe('PUT /v1/deals/:id/status', () => {
+  // This endpoint is no longer used and was superceded by PUT /v1/deals/:id
+  describe.skip('PUT /v1/deals/:id/status', () => {
     let dealId;
     let urlForDealStatus;
     let urlForDeal;

@@ -12,7 +12,7 @@ const expectAddedFields = (obj) => {
       createdAt: expect.any(Number),
       criteria: expect.any(Array),
       isInDraft: expect.any(Boolean),
-      status: expect.any(String)
+      status: expect.any(String),
     },
     submissionDetails: {
       status: 'Not started',
@@ -36,6 +36,10 @@ const expectAddedFields = (obj) => {
     editedBy: [],
     exporter: expect.any(Object),
     updatedAt: expect.any(Number),
+    auditDetails: {
+      lastUpdatedAt: expect.any(String),
+      lastUpdatedByPortalUser: expect.any(String),
+    },
   });
 
   return expectation;

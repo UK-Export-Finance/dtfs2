@@ -369,6 +369,10 @@ describe('/v1/deals/:id/bond', () => {
           'conversionRateDate-day': null,
           'conversionRateDate-month': null,
           'conversionRateDate-year': null,
+          auditDetails: {
+            lastUpdatedAt: expect.any(String),
+            lastUpdatedByPortalUser: aBarclaysMaker._id,
+          }
         };
         expect(updatedBond).toEqual(expectedUpdatedBond);
       });
@@ -444,6 +448,10 @@ describe('/v1/deals/:id/bond', () => {
           'conversionRateDate-day': null,
           'conversionRateDate-month': null,
           'conversionRateDate-year': null,
+          auditDetails: {
+            lastUpdatedAt: expect.any(String),
+            lastUpdatedByPortalUser: aBarclaysMaker._id,
+          },
         };
 
         expect(updatedBond).toEqual(expectedBond);
@@ -524,6 +532,10 @@ describe('/v1/deals/:id/bond', () => {
           'conversionRateDate-day': null,
           'conversionRateDate-month': null,
           'conversionRateDate-year': null,
+          auditDetails: {
+            lastUpdatedAt: expect.any(String),
+            lastUpdatedByPortalUser: aBarclaysMaker._id,
+          },
         };
         expect(updatedBond).toEqual(expectedBond);
       });
@@ -577,6 +589,10 @@ describe('/v1/deals/:id/bond', () => {
         'conversionRateDate-day': null,
         'conversionRateDate-month': null,
         'conversionRateDate-year': null,
+        auditDetails: {
+          lastUpdatedAt: expect.any(String),
+          lastUpdatedByPortalUser: aBarclaysMaker._id,
+        },
       });
     });
 
