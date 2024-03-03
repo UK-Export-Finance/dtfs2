@@ -1,3 +1,5 @@
+import { IsoDateTimeStamp } from '../types/date';
+
 /**
  * Defines the interfaces for the response of the number generator.
  *
@@ -18,7 +20,7 @@ export interface NumberGeneratorResponse {
     maskedId: number;
     type: number;
     createdBy: string;
-    createdDatetime: string;
+    createdDatetime: IsoDateTimeStamp;
     requestingSystem: string;
   }>;
 }

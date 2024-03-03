@@ -113,7 +113,7 @@ const checkAzureAcbsFunction = async () => {
       status: { $eq: 'Running' },
     }).toArray();
     const tasks = await runningTasks.map(({ acbsTaskLinks = {} }) =>
-      api.getFunctionsAPI(CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, acbsTaskLinks.statusQueryGetUri));
+      api.getFunctionsAPI(acbsTaskLinks.statusQueryGetUri));
     const taskList = await Promise.all(tasks);
 
     taskList.forEach(async (task) => {

@@ -1,7 +1,6 @@
 const axios = require('axios');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
-const CONSTANTS = require('../constants');
 require('dotenv').config();
 
 const {
@@ -10,10 +9,8 @@ const {
   DTFS_CENTRAL_API_KEY,
   EXTERNAL_API_KEY,
   AZURE_ACBS_FUNCTION_URL,
-  AZURE_NUMBER_GENERATOR_FUNCTION_URL
 } = process.env;
 
-const { DURABLE_FUNCTIONS } = CONSTANTS;
 const headers = {
   central: {
     'Content-Type': 'application/json',
@@ -943,25 +940,9 @@ const amendACBSfacility = async (amendments, facility, deal) => {
   return null;
 };
 
-const getFunctionsAPI = async (type = DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => {
-  let functionUrl;
-  switch (type) {
-    case DURABLE_FUNCTIONS.TYPE.ACBS:
-      functionUrl = AZURE_ACBS_FUNCTION_URL;
-      break;
-
-    case DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR:
-      functionUrl = AZURE_NUMBER_GENERATOR_FUNCTION_URL;
-      break;
-
-    default:
-  }
-
-  let modifiedUrl = url.replace(/http:\/\/localhost:[\d]*/, functionUrl);
-  if (type === DURABLE_FUNCTIONS.TYPE.ACBS) {
-    modifiedUrl = url ? url.replace(/http:\/\/localhost:[\d]*/, functionUrl) : functionUrl;
-  }
-
+const getFunctionsAPI = async (url = '') => {
+  const modifiedUrl = url ? url.replace(/http:\/\/localhost:[\d]*/, AZURE_ACBS_FUNCTION_URL) : AZURE_ACBS_FUNCTION_URL;
+  
   try {
     const response = await axios({
       method: 'get',
