@@ -5,7 +5,7 @@ export const apiRoutes = express.Router();
 import * as countries from '../controllers/countries.controller';
 import * as currencies from '../controllers/currencies.controller';
 import * as industrySectors from '../controllers/industry-sectors.controller';
-import * as numberGenerator from '../controllers/number-generator.controller';
+import * as number from '../controllers/number-generator.controller';
 import * as partyDb from '../controllers/party-db.controller';
 import * as partyUrn from '../controllers/party-urn.controller';
 import * as acbs from '../controllers/acbs.controller';
@@ -209,7 +209,7 @@ apiRoutes.get('/industry-sectors/:code/acbs-sector', industrySectors.getACBSIndu
  *                   type: string
  *                   example: 'PENDING'
  */
-apiRoutes.post('/number-generator', numberGenerator.get);
+apiRoutes.post('/number-generator', number.get);
 
 /**
  * @openapi

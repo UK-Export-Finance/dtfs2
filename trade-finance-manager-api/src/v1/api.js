@@ -184,7 +184,7 @@ const findOneDeal = async (dealId) => {
     });
     return response.data.deal;
   } catch ({ response }) {
-    console.error('TFM API - error finding deal: %s', dealId);
+    console.error('Unable to find the deal %s', dealId);
 
     return false;
   }

@@ -25,7 +25,7 @@ const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 jest.mock('../../../src/external-api/api', () => ({
   sendEmail: jest.fn(() => Promise.resolve({})),
-  numberGenerator: {
+  number: {
     get: () => ({ ukefId: 'MOCK_NUMBER_GENERATOR_ID' }),
   },
 }));

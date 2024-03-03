@@ -231,6 +231,9 @@ const checkCoverDateConfirmed = async (app) => {
  * @returns {Promise<object>} - An object containing the submission count, submission date, portal activities, and UKEF deal ID.
  */
 const addSubmissionData = async (dealId, existingApplication) => {
+  await checkCoverDateConfirmed(existingApplication);
+  await addSubmissionDateToIssuedFacilities(dealId);
+
   const { count, date } = await generateSubmissionData(existingApplication);
   const updatedPortalActivity = await submissionPortalActivity(existingApplication);
 
@@ -249,8 +252,6 @@ const addSubmissionData = async (dealId, existingApplication) => {
     submissionData.ukefDealId = maskedId;
   }
 
-  await checkCoverDateConfirmed(existingApplication);
-  await addSubmissionDateToIssuedFacilities(dealId);
   await addUkefFacilityIdToFacilities(dealId);
 
   return submissionData;

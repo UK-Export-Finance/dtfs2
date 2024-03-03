@@ -34,24 +34,6 @@ const getDeal = async (dealId, dealType) => {
   return deal;
 };
 
-/** Only create the TFM record until UKEFids have been generated, then process the submission
- * This allows a deal in Pending state to be seen in TFM,
- * which indicates to UKEF that a deal has been submitted before UKEFids are generated
- * */
-
-const submitDealBeforeUkefIds = async (dealId, dealType) => {
-  console.info('Submitting deal before UKEF IDs');
-  const deal = await getDeal(dealId, dealType);
-
-  if (!deal) {
-    console.error('TFM API - submitDealBeforeUkefIds - deal not found');
-    return false;
-  }
-
-  return api.submitDeal(dealType, dealId);
-};
-exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
-
 /**
  * Following function is only triggered once
  * the number has been granted by the number generator
@@ -59,10 +41,10 @@ exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   const deal = await getDeal(dealId, dealType);
-  console.info('Submitting deal after UKEF IDs');
+  console.info('Setting essential deal properties in TFM for deal %s', dealId);
 
   if (!deal) {
-    console.error('TFM API - submitDealAfterUkefIds - deal not found %s', dealId);
+    console.error('Unable to find deal %s upon submission to TFM', dealId);
     return false;
   }
 
@@ -175,6 +157,38 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
 exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
 
+/**
+ * Submits a deal to TFM before the UKEF IDs are generated.
+ * @param {string} dealId - The ID of the deal to be submitted.
+ * @param {string} dealType - The type of the deal.
+ * @param {string} checker - The name of the checker.
+ * @returns {Promise<Object>} - A promise that resolves to true if the submission is successful, false otherwise.
+ * @throws {Error} - If there is an error during the submission process.
+ */
+const submitDealBeforeUkefIds = async (dealId, dealType, checker) => {
+  try {
+    console.info('Submitting new deal %s to TFM', dealId);
+    const deal = await getDeal(dealId, dealType);
+
+    if (!deal) {
+      console.error('Deal does not exist in TFM, submitting new deal %s', dealId);
+      return false;
+    }
+
+    const response = await api.submitDeal(dealType, dealId);
+
+    if (!response) {
+      throw new Error('Unable to submit deal %s to TFM', dealId);
+    }
+
+    return submitDealAfterUkefIds(dealId, dealType, checker);
+  } catch (error) {
+    console.error('❌ Unable to submit new deal %s to TFM %o', dealId, error);
+    throw new Error('Unable to submit new deal to TFM');
+  }
+};
+exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
+
 const submitDealPUT = async (req, res) => {
   const { dealId, dealType, checker } = req.body;
   let deal;
@@ -186,7 +200,7 @@ const submitDealPUT = async (req, res) => {
     if (status) {
       deal = await submitDealAfterUkefIds(dealId, dealType, checker);
     } else {
-      deal = await submitDealBeforeUkefIds(dealId, dealType);
+      deal = await submitDealBeforeUkefIds(dealId, dealType, checker);
     }
 
     if (!deal) {
