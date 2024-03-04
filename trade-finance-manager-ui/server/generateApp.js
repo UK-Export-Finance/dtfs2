@@ -55,7 +55,7 @@ const generateApp = () => {
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
   app.use('/', feedbackRoutes);
-  // Traffic to /login/sso/redirect comes from login.microsoftonline.com, so no CSRF cookie is present.
+  // Traffic to /login/sso/redirect comes from AZURE_SSO_AUTHORITY, so no CSRF cookie is present.
   app.use('/login/sso/redirect', express.Router().post('/', loginController.handleSsoRedirect));
   app.use(csrf({
     cookie: {

@@ -3,6 +3,8 @@ import httpMocks from 'node-mocks-http';
 import api from '../../api';
 import loginController from '.';
 
+const { AZURE_SSO_AUTHORITY } = process.env;
+
 describe('controllers - login', () => {
 
   beforeEach(() => {
@@ -13,7 +15,7 @@ describe('controllers - login', () => {
     it('should redirect to login.microsoftonline.com if no user object in session', async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({ session: {} });
-      api.getAuthLoginUrl = () => Promise.resolve({ loginUrl: 'https://login.microsoftonline.com/?something' });
+      api.getAuthLoginUrl = () => Promise.resolve({ loginUrl: `${AZURE_SSO_AUTHORITY}?something` });
 
       // Act
       await loginController.getLogin(req, res);
@@ -25,7 +27,7 @@ describe('controllers - login', () => {
     it('should redirect to /home if user object exist in session', async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({ session: { user: {} } });
-      api.getAuthLoginUrl = () => Promise.resolve({ loginUrl: 'https://login.microsoftonline.com/?something' });
+      api.getAuthLoginUrl = () => Promise.resolve({ loginUrl: `${AZURE_SSO_AUTHORITY}?something` });
 
       // Act
       await loginController.getLogin(req, res);
@@ -98,7 +100,7 @@ describe('controllers - login', () => {
       // Arrange
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       const { req, res } = httpMocks.createMocks({ session: { user: {}, destroy: jest.fn((callback) => callback()) } });
-      api.getAuthLogoutUrl = () => Promise.resolve({ logoutUrl: 'https://login.microsoftonline.com?something=' });
+      api.getAuthLogoutUrl = () => Promise.resolve({ logoutUrl: `${AZURE_SSO_AUTHORITY}?something=` });
 
       // Act
       await loginController.logout(req, res);

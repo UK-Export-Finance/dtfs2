@@ -1,7 +1,13 @@
 const { submitDeal, submitDealAfterUkefIds } = require('./api');
 const { ALIAS_KEY } = require('../../fixtures/constants');
 
-module.exports = (deals, user) => {
+/**
+ * submitManyDeals
+ * Login to TFM and submit many deals.
+ * @param {Array} deals: Deals
+ * @param {Object} user: User object
+ */
+const submitManyDeals = (deals, user) => {
   console.info('submitManyDeals::');
   const persistedDeals = [];
 
@@ -20,3 +26,5 @@ module.exports = (deals, user) => {
     cy.wrap(persistedDeals).as(ALIAS_KEY.SUBMIT_MANY_DEALS);
   });
 };
+
+module.exports = submitManyDeals;

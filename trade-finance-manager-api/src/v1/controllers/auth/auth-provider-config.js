@@ -13,9 +13,8 @@ const {
   AZURE_SSO_POST_LOGOUT_URI,
   AZURE_SSO_TENANT_SUBDOMAIN,
   TFM_UI_URL,
-} = process.env
+} = process.env;
 
-// TODO: new env var?
 const REDIRECT_URI = `${TFM_UI_URL}/${AZURE_SSO_REDIRECT_URI}`;
 
 /**
@@ -26,15 +25,13 @@ const REDIRECT_URI = `${TFM_UI_URL}/${AZURE_SSO_REDIRECT_URI}`;
 const msalConfig = {
   auth: {
     clientId: AZURE_SSO_CLIENT_ID, // 'Application (client) ID' of app registration in Azure portal - this value is a GUID
-    authority: AZURE_SSO_AUTHORITY, // Replace the placeholder with your tenant subdomain
+    authority: `${AZURE_SSO_AUTHORITY}/`, // Replace the placeholder with your tenant subdomain
     clientSecret: AZURE_SSO_CLIENT_SECRET, // Client secret generated from the app registration in Azure portal
   },
   system: {
     loggerOptions: {
-      // TODO: Do we want a logger that supports containsPii handling
-      // loggerCallback(loglevel, message, containsPii) {
-      loggerCallback(loglevel, message, ) {
-        console.info('MSAL: ', message);
+      loggerCallback(loglevel, message, containsPii) {
+        console.info('MSAL: ', containsPii ? '' : message);
       },
       piiLoggingEnabled: false,
       logLevel: 'Info',

@@ -36,10 +36,9 @@ module.exports = (passport) => {
       if (!user) {
         console.error('User is not found in DB');
       }
+
       if (user && user.sessionIdentifier !== jwtPayload.sessionIdentifier) {
-        console.error("SESSION ID doesn't match");
-        console.error('DB user.sessionIdentifier', user.sessionIdentifier);
-        console.error('REQ jwtPayload.sessionIdentifier', jwtPayload.sessionIdentifier);
+        console.error('Passport session does not match JWT payload');
       }
 
       if (user && user.sessionIdentifier === jwtPayload.sessionIdentifier) {

@@ -58,39 +58,40 @@ const createTfmUser = async (entraUser) => {
 /**
  * populateTfmUserWithEntraData
  * Populate TFM user data with Entra user data.
- * @param {Object} existingTfmUser: Existing TFM user data
+ * @param {Object} tfmUser: Existing TFM user data
  * @param {Object} entraUser: Entra user data
  * @returns 
  */
-const populateTfmUserWithEntraData = (existingTfmUser, entraUser) => ({
-  ...existingTfmUser,
-  ...mapEntraUserData(entraUser, existingTfmUser),
+const populateTfmUserWithEntraData = (tfmUser, entraUser) => ({
+  ...tfmUser,
+  ...mapEntraUserData(entraUser, tfmUser),
 });
 
 /**
  * processSsoRedirect
  * Process SSO redirect.
  * 1) Get Entra user.
- * 2) Get and populate Entra user data with TFM user data.
- * 3) Issue a JWT.
- * 4) Update user sign in data.
- * 5) Get redirect URL
- * 6) Return user data, token and redirect URL.
- * @param {Object} pkceCode: PKCE Code object
- * @param {Object} origAuthCodeRequest: Original auth code request
- * @param {Object} req: Request object
+ * 2) Get TFM user. If no user exists, create a new one.
+ * 3) Populate Entra and TFM user data.
+ * 4) Issue a JWT.
+ * 5) Update TFM user data.
+ * 6) Get redirect URL
+ * 7) Return user data, token and redirect URL.
+ * @param {Object} pkceCodes: PKCE Codes object
+ * @param {Object} authCodeRequest: Auth code request
+ * @param {String} code: authZ code
+ * @param {String} state: MSAL state guid
  * @returns {Object} TFM user, token and redirect URL.
  */
-
-// TODO: consume values from req.body instead of passing req.
-const processSsoRedirect = async (pkceCode, origAuthCodeRequest, req) => {
+const processSsoRedirect = async ({ pkceCodes, authCodeRequest, code, state }) => {
   console.info('TFM auth service - processing SSO redirect');
 
   let tfmUser;
   let entraUser;
+  let mappedTfmUser;
 
   try {
-    entraUser = await authProvider.handleRedirect(pkceCode, origAuthCodeRequest, req.body.code, req.body);
+    entraUser = await authProvider.handleRedirect(pkceCodes, authCodeRequest, code);
 
     if (!entraUser?.idTokenClaims) {
       throw new Error('TFM auth service - processing SSO redirect - Entra user details are missing: %O', entraUser);
@@ -98,25 +99,28 @@ const processSsoRedirect = async (pkceCode, origAuthCodeRequest, req) => {
 
     const existingTfmUser = await getExistingTfmUser(entraUser);
 
-    // TODO: update user in DB
-    tfmUser = populateTfmUserWithEntraData(existingTfmUser, entraUser);
+    mappedTfmUser = populateTfmUserWithEntraData(existingTfmUser, entraUser);
 
-    const { sessionIdentifier, ...tokenObject } = utils.issueJWT(tfmUser);
+    const { sessionIdentifier, ...tokenObject } = utils.issueJWT(mappedTfmUser);
 
-    updateLastLoginAndResetSignInData(tfmUser, sessionIdentifier, () => { });
+    if (existingTfmUser.notFound) {
+      console.info('TFM auth service - no existing TFM user found. Creating a new TFM user.');
 
-    const redirectUrl = authProvider.loginRedirectUrl(req.body.state);
-
-    return { tfmUser, token: tokenObject.token, redirectUrl };
-  } catch (err) {
-    console.error('TFM auth service - Error processing SSO redirect %s', err);
-   
-    // TODO: couldn't get instanceof working
-    if (err.name === 'UserNotFoundError') {
       tfmUser = await createTfmUser(entraUser);
+      mappedTfmUser = populateTfmUserWithEntraData(tfmUser, entraUser);
+    } else if (existingTfmUser.found && existingTfmUser.canProceed) {
+      console.info('TFM auth service - found an existing TFM user. Updating the user.');
+
+      await updateLastLoginAndResetSignInData(mappedTfmUser, sessionIdentifier, () => { });
     }
 
-    throw new Error('TFM auth service - Error processing SSO redirect %s', err);
+    const redirectUrl = authProvider.loginRedirectUrl(state);
+
+    return { tfmUser: mappedTfmUser, token: tokenObject.token, redirectUrl };
+  } catch (error) {
+    console.error('TFM auth service - Error processing SSO redirect: %s', error);
+   
+    throw new Error('TFM auth service - Error processing SSO redirect: %s', error);
   }
 };
 

@@ -1,30 +1,65 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
+const { generateArrayOfEmailsRegex } = require('./helpers/generateArrayOfEmailsRegex');
 const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { USER, PAYLOAD } = require('../../../constants');
-const { UserNotFoundError } = require('../../errors');
 
+/**
+ * findByEmails
+ * Find a TFM user by email(s).
+ * Throw an error if any of the following conditions are met:
+ * - More than 1 matching user found.
+ * - User is blocked.
+ * - User is disabled.
+ * - Unexpected DB response.
+ * @param {Array} emails
+ * @returns {Object}
+ */
 exports.findByEmails = async (emails) => {
-  const collection = await db.getCollection('tfm-users');
-  const emailsRegex = emails.map(email => new RegExp(`^${email}$`, 'i'));
-  const users = await collection.find({ 'email': { $in: emailsRegex }}).toArray();
-  if (users.length === 0) {
-    throw new UserNotFoundError('No matching users found', emails);
+  try {
+    console.info('Getting TFM user by emails');
+
+    const collection = await db.getCollection('tfm-users');
+
+    const emailsRegex = generateArrayOfEmailsRegex(emails);
+
+    const users = await collection.find({ 'email': { $in: emailsRegex }}).toArray();
+
+    if (users.length === 0) {
+      console.info('Getting TFM user by emails - no user found');
+
+      return { notFound: true }
+    }
+
+    if (users.length > 1) {
+      console.info('Getting TFM user by emails - More than 1 matching user found: %O', users);
+
+      return { found: true, canProceed: false };
+    }
+
+    if (users[0].disabled) {
+      console.info('Getting TFM user by emails - User is disabled: %O', users[0]);
+
+      return { found: true, canProceed: false };
+    }
+
+    if (users[0].status === 'blocked') {
+      console.info('Getting TFM user by emails - User is blocked: %O', users[0]);
+
+      return { found: true, canProceed: false };
+    }
+
+    return {
+      found: true,
+      canProceed: true,
+      ...users[0],
+    };
+  } catch (error) {
+    console.error('Error getting TFM user by emails - Unexpected DB response %O', error);
+
+    throw new Error('Error getting TFM user by emails - Unexpected DB response %O', error);
   }
-  if (users.length > 1) {
-    throw new Error('More than 1 matching user found %O', users);
-  }
-  if (users[0].disabled) {
-    throw new Error('User is disabled %O', users[0]);
-  }
-  if (users[0].status === 'blocked') {
-    throw new Error('User is blocked %O', users[0]);
-  }
-  if (users[0]?.username) {
-    return users[0];
-  }
-  throw new Error('Unexpected DB response %O', users);
 };
 
 exports.findByUsername = async (username, callback) => {
