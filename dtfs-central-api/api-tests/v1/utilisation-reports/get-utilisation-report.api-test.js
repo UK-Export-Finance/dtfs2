@@ -5,7 +5,7 @@ const { MOCK_BANKS } = require('../../mocks/banks');
 const getUrl = (id) => `/v1/utilisation-reports/${id}`;
 
 describe('/v1/utilisation-reports/:id', () => {
-  describe('GET /v1/utilisation-reports/:_id', () => {
+  describe('GET /v1/utilisation-reports/:id', () => {
     it('returns 400 when an invalid report ID is provided', async () => {
       // Act
       const { status, body } = await api.get(getUrl('invalid-id'));
