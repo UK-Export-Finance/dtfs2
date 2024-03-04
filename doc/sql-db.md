@@ -21,14 +21,14 @@ Use the `SQL_DB...` values in the common package [.env.sample](../libs/common/.e
 
 ### Seeding mock data
 
-To add a new seed to the project, navigate to the `libs/common/src/sql-db-seeder` directory and create a directory for the entity you wish to create a seeder for. Seeds are defined as files which have the `.seed.ts` extension, whilst factories are defined using the `.factory.ts` extension (see the [seeder data source](../libs/common/src/sql-db-seeder/seeding-data-source.ts) `seederOptions` parameter). Note: a factory is not required, but can be useful if you want to create many rows with randomised data.
+To add a new seed to the project, navigate to the `utils/sql-db-seeder/src` directory and create a directory for the entity you wish to create a seeder for. Seeds are defined as files which have the `.seed.ts` extension, whilst factories are defined using the `.factory.ts` extension (see the [seeder data source](../utils/sql-db-seeder/src/seeding-data-source.ts) `seederOptions` parameter). Note: a factory is not required, but can be useful if you want to create many rows with randomised data.
 
 To run the seeder, see the [seeding data command](#seeding-data) below.
 
 In order to generate data which is in line with the data in MongoDB, the SQL seeder needs to query data inserted by the [mock data loader](../utils/mock-data-loader/). This results in two things which are important to remember:
 
 1. Mock data loader must be run _before_ the SQL seeder
-2. The common `.env` file must include the connection strings required to initialise the [MongoDbClient](../libs/common/src/mongo-db-client/index.ts) (see [.env.sample](../libs/common/.env.sample))
+2. The `utils/sql-db-seeder` `.env` file must include the connection strings required to initialise the [MongoDbClient](../libs/common/src/mongo-db-client/index.ts) _and_ the [SqlDbDataSource](../libs/common/src/sql-db-connection/data-source.ts) (see [.env.sample](../utils/sql-db-seeder/.env.sample))
 
 ### DB Commands
 
@@ -106,13 +106,13 @@ Use as a quick way to start from scratch instead of deleting and re-building the
 
 #### - Seeding data
 
-The seeder can be run from `libs/common` via the
+The seeder can be run from `utils/sql-db-seeder` via the
 
 ```shell
-npm run db:seed-run
+npm run db:seed
 ```
 
-command. This commands run the seeder to insert mock data into the SQL database. Seeds and factories are defined as files in the `libs/common/src/sql-db-seeder` directory with `<name_of_entity>.seed.ts` and `<name_of_entity>.factory.ts` file extensions respectively (see the [utilisation reports seeder](../libs/common/src/sql-db-seeder/utilisation-report/) for an example). Seed tracking is set to `true` by default such that, once a seed successfully runs, it will not run again through the `npm run db:seed-run` command. If you want to run the seeder again, you will first need to run the `npm run db:reset` command.
+command. This commands run the seeder to insert mock data into the SQL database. Seeds and factories are defined as files in the `utils/sql-db-seeder/src/<name-of-entity>` directory with `<name-of-entity>.seed.ts` and `<name-of-entity>.factory.ts` file extensions respectively (see the [utilisation reports seeder](../libs/common/src/sql-db-seeder/utilisation-report/) for an example). Seed tracking is set to `true` by default such that, once a seed successfully runs, it will not run again through the `npm run db:seed` command. If you want to run the seeder again, you will first need to run the `npm run db:reset` command from `libs/common`.
 
 ## Adding DB access to a package
 

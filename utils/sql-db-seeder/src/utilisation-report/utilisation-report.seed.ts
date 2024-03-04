@@ -1,8 +1,7 @@
 import { Seeder } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
-import { UtilisationReportEntity } from '../../sql-db-entities';
+import { UtilisationReportEntity, getCurrentReportPeriodForBankSchedule } from '@ukef/dtfs2-common';
 import { createNotReceivedReport, createMarkedAsCompletedReport, createUploadedReport } from './utilisation-report.helper';
-import { getCurrentReportPeriodForBankSchedule } from '../../helpers/utilisation-reports';
 import { getUsersFromMongoDb, getAllBanksFromMongoDb } from '../helpers';
 
 export default class UtilisationReportSeeder implements Seeder {

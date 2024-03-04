@@ -1,8 +1,14 @@
-import { AzureFileInfoEntity, SafeExclude, UtilisationReportEntity, UtilisationReportReconciliationStatus } from '../..';
-import { PortalUser, TfmUser } from '../../types/mongo-db-models';
-import { getDbAuditUpdatedByUserId } from '../../sql-db-entities/helpers';
-import { ReportPeriodPartialEntity } from '../../sql-db-entities/partial-entities';
-import { MOCK_AZURE_FILE_INFO } from '../../test-helpers/mock-data';
+import {
+  AzureFileInfoEntity,
+  SafeExclude,
+  UtilisationReportEntity,
+  UtilisationReportReconciliationStatus,
+  MOCK_AZURE_FILE_INFO,
+  PortalUser,
+  TfmUser,
+  getDbAuditUpdatedByUserId,
+  ReportPeriod,
+} from '@ukef/dtfs2-common';
 
 /**
  * Generates a report in a not received state, effectively mocking the scheduled
@@ -11,7 +17,7 @@ import { MOCK_AZURE_FILE_INFO } from '../../test-helpers/mock-data';
  * @param reportPeriod - The report period
  * @returns The utilisation report entity to insert
  */
-export const createNotReceivedReport = (bankId: string, reportPeriod: ReportPeriodPartialEntity): UtilisationReportEntity =>
+export const createNotReceivedReport = (bankId: string, reportPeriod: ReportPeriod): UtilisationReportEntity =>
   UtilisationReportEntity.createNotReceived({
     bankId,
     reportPeriod,
@@ -32,7 +38,7 @@ export const createNotReceivedReport = (bankId: string, reportPeriod: ReportPeri
 export const createMarkedAsCompletedReport = (
   bankId: string,
   tfmUser: TfmUser,
-  reportPeriod: ReportPeriodPartialEntity,
+  reportPeriod: ReportPeriod,
   status: SafeExclude<UtilisationReportReconciliationStatus, 'REPORT_NOT_RECEIVED'>,
 ): UtilisationReportEntity => {
   const utilisationReport = new UtilisationReportEntity();
@@ -59,7 +65,7 @@ export const createMarkedAsCompletedReport = (
  */
 export const createUploadedReport = (
   portalUser: PortalUser,
-  reportPeriod: ReportPeriodPartialEntity,
+  reportPeriod: ReportPeriod,
   status: SafeExclude<UtilisationReportReconciliationStatus, 'REPORT_NOT_RECEIVED'>,
 ): UtilisationReportEntity => {
   const utilisationReport = new UtilisationReportEntity();

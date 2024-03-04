@@ -215,11 +215,11 @@ jobs:
         run: npm run db:migrate
       
       - name: Seeding
-        working-directory: ./libs/common
+        working-directory: ./utils/sql-db-seeder
         env:
           MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT
           SQL_DB_HOST: localhost
-        run: npm run db:seed-run
+        run: npm run db:seed
 
       - name: Execute
         run: docker-compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
@@ -451,11 +451,11 @@ jobs:
         run: npm run db:migrate
       
       - name: Seeding
-        working-directory: ./libs/common
+        working-directory: ./utils/sql-db-seeder
         env:
           MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT
           SQL_DB_HOST: localhost
-        run: npm run db:seed-run
+        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -514,11 +514,11 @@ jobs:
         run: npm run db:migrate
       
       - name: Seeding
-        working-directory: ./libs/common
+        working-directory: ./utils/sql-db-seeder
         env:
           MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT
           SQL_DB_HOST: localhost
-        run: npm run db:seed-run
+        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -585,11 +585,11 @@ jobs:
         run: npm run db:migrate
       
       - name: Seeding
-        working-directory: ./libs/common
+        working-directory: ./utils/sql-db-seeder
         env:
           MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT
           SQL_DB_HOST: localhost
-        run: npm run db:seed-run
+        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -665,11 +665,11 @@ jobs:
         run: npm run db:migrate
       
       - name: Seeding
-        working-directory: ./libs/common
+        working-directory: ./utils/sql-db-seeder
         env:
           MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT
           SQL_DB_HOST: localhost
-        run: npm run db:seed-run
+        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests

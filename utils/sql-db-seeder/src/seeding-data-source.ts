@@ -1,6 +1,9 @@
 import { DataSource } from 'typeorm';
 import { SeederOptions } from 'typeorm-extension';
-import { SqlDbDataSource } from '../sql-db-connection';
+import dotenv from 'dotenv';
+import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
+
+dotenv.config();
 
 const dataSourceOptions = SqlDbDataSource.options;
 
