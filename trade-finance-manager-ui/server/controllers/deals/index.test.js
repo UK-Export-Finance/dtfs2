@@ -1,5 +1,6 @@
 import caseController from '.';
 import api from '../../api';
+import PageOutOfBoundsError from '../../errors/page-out-of-bounds.error';
 import { mockRes as generateMockRes } from '../../test-mocks';
 
 const CONSTANTS = require('../../constants');
@@ -87,32 +88,6 @@ describe('controllers - deals', () => {
 
         itShouldMakeRequestsForDealsDataWithDefaultArguments(mockReq);
         itShouldRenderDealsTemplateWithDefaultArguments({ mockReq });
-      });
-
-      describe('when the pageNumber is out of bounds', () => {
-        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
-
-        mockReq.params.pageNumber = '1';
-
-        it('should make a request to TFM API for the deals data with the correct arguments', async () => {
-          await caseController.getDeals(mockReq, mockRes);
-          expect(api.getDeals).toHaveBeenCalledWith(
-            {
-              sortBy: {
-                field: 'tfm.dateReceivedTimestamp',
-                order: 'descending',
-              },
-              pagesize: 20,
-              page: 1,
-            },
-            'userToken',
-          );
-        });
-
-        it('should redirect to not-found route', async () => {
-          await caseController.getDeals(mockReq, mockRes);
-          expect(mockRes.redirect).toHaveBeenCalledWith('/not-found');
-        });
       });
 
       describe('when the sortfield and sortorder are specified in the request', () => {
@@ -203,6 +178,7 @@ describe('controllers - deals', () => {
         beforeEach(() => {
           api.getAllAmendmentsInProgress = jest.fn().mockImplementation(() => Promise.resolve(mockApiGetAllAmendmentsInProgressResponse));
         });
+
         const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
 
         itShouldMakeRequestsForDealsDataWithDefaultArguments(mockReq);
@@ -212,20 +188,78 @@ describe('controllers - deals', () => {
 
     describe('when there are no deals', () => {
       beforeEach(() => {
-        api.getDeals = () => Promise.resolve({});
+        api.getDeals = () => Promise.resolve({
+          deals: [],
+          pagination: {
+            totalItems: 0,
+            currentPage: 0,
+            totalPages: 1,
+          }
+        });
+      });
+
+      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+      it('should render the deals template with the correct arguments and no data', async () => {
+        await caseController.getDeals(mockReq, mockRes);
+        expect(mockRes.render).toHaveBeenCalledWith('deals/deals.njk', {
+          heading: 'All deals',
+          deals: [],
+          activePrimaryNavigation: 'all deals',
+          activeSubNavigation: 'deal',
+          sortButtonWasClicked: false,
+          user: mockReq.session.user,
+          activeSortByField: 'tfm.dateReceivedTimestamp',
+          activeSortByOrder: 'descending',
+          pages: {
+            totalPages: 1,
+            currentPage: 0,
+            totalItems: 0,
+          },
+          queryString: '',
+        });
+      });
+    });
+
+    describe('when api.getDeals throws a PageOutOfBoundsError', () => {
+      const error = new PageOutOfBoundsError('Requested page number exceeds the maximum page number');
+      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+      beforeEach(() => {
+        api.getDeals = () => Promise.reject(error);
+      });
+
+      it('should log the error thrown by api.getDeals', async () => {
+        const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
+        await caseController.getDeals(mockReq, mockRes);
+        expect(consoleErrorMock).toHaveBeenCalledWith(error);
+        consoleErrorMock.mockRestore();
       });
 
       it('should redirect to not-found route', async () => {
-        const mockReq = {
-          session: {
-            user: {},
-          },
-          params: {},
-          query: {},
-        };
-
         await caseController.getDeals(mockReq, mockRes);
         expect(mockRes.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+
+    describe('when api.getDeals throws any other error', () => {
+      const error = new Error('some error');
+      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+      beforeEach(() => {
+        api.getDeals = () => Promise.reject(error);
+      });
+
+      it('should log the error thrown by api.getDeals', async () => {
+        const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
+        await caseController.getDeals(mockReq, mockRes);
+        expect(consoleErrorMock).toHaveBeenCalledWith(error);
+        consoleErrorMock.mockRestore();
+      });
+
+      it('should render the problem-with-service page', async () => {
+        await caseController.getDeals(mockReq, mockRes);
+        expect(mockRes.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
       });
     });
   });
