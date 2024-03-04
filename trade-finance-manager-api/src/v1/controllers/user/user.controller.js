@@ -39,12 +39,14 @@ exports.findByEmails = async (emails) => {
     }
 
     if (users[0].disabled) {
+      // TODO: should we remove functionality to disable users in TFM, so disabling is done in Active directory.
       console.info('Getting TFM user by emails - User is disabled: %O', users[0]);
 
       return { found: true, canProceed: false };
     }
 
     if (users[0].status === 'blocked') {
+      // TODO: should we remove functionality to block users in TFM, so block is done in Active directory.
       console.info('Getting TFM user by emails - User is blocked: %O', users[0]);
 
       return { found: true, canProceed: false };
@@ -120,6 +122,6 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
   } catch (error) {
     console.error('Error Updating TFM user - last login, reset sign in data');
 
-    throw new Error('Error Updating TFM user - last login, reset sign in data');    
+    throw new Error('Error Updating TFM user - last login, reset sign in data');
   }
 };

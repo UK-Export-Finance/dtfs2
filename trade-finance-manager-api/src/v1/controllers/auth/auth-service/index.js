@@ -60,7 +60,7 @@ const createTfmUser = async (entraUser) => {
  * Populate TFM user data with Entra user data.
  * @param {Object} tfmUser: Existing TFM user data
  * @param {Object} entraUser: Entra user data
- * @returns 
+ * @returns
  */
 const populateTfmUserWithEntraData = (tfmUser, entraUser) => ({
   ...tfmUser,
@@ -86,7 +86,6 @@ const populateTfmUserWithEntraData = (tfmUser, entraUser) => ({
 const processSsoRedirect = async ({ pkceCodes, authCodeRequest, code, state }) => {
   console.info('TFM auth service - processing SSO redirect');
 
-  let tfmUser;
   let entraUser;
   let mappedTfmUser;
 
@@ -101,25 +100,31 @@ const processSsoRedirect = async ({ pkceCodes, authCodeRequest, code, state }) =
 
     mappedTfmUser = populateTfmUserWithEntraData(existingTfmUser, entraUser);
 
-    const { sessionIdentifier, ...tokenObject } = utils.issueJWT(mappedTfmUser);
-
     if (existingTfmUser.notFound) {
       console.info('TFM auth service - no existing TFM user found. Creating a new TFM user.');
 
-      tfmUser = await createTfmUser(entraUser);
-      mappedTfmUser = populateTfmUserWithEntraData(tfmUser, entraUser);
-    } else if (existingTfmUser.found && existingTfmUser.canProceed) {
-      console.info('TFM auth service - found an existing TFM user. Updating the user.');
-
-      await updateLastLoginAndResetSignInData(mappedTfmUser, sessionIdentifier, () => { });
+      mappedTfmUser = await createTfmUser(entraUser);
     }
+    else if (existingTfmUser.found && existingTfmUser.canProceed === false) {
+      console.info("TFM auth service - found an existing TFM user, but can't proceed");
+      throw new Error("TFM auth service - found an existing TFM user, but can't proceed");
+    }
+    else if (existingTfmUser.found && existingTfmUser.canProceed) {
+      console.info('TFM auth service - found an existing TFM user. Updating the user.');
+      // TODO: add updating of user teams, first name and last name. Maybe merge with last login and session update.
+
+    }
+
+    const { sessionIdentifier, ...tokenObject } = utils.issueJWT(mappedTfmUser);
+
+    await updateLastLoginAndResetSignInData(mappedTfmUser, sessionIdentifier, () => { });
 
     const redirectUrl = authProvider.loginRedirectUrl(state);
 
     return { tfmUser: mappedTfmUser, token: tokenObject.token, redirectUrl };
   } catch (error) {
     console.error('TFM auth service - Error processing SSO redirect: %s', error);
-   
+
     throw new Error('TFM auth service - Error processing SSO redirect: %s', error);
   }
 };
