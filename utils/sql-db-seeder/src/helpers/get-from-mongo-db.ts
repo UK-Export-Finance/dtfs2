@@ -15,9 +15,10 @@ const getMongoDbClient = (): MongoDbClient => {
   });
 };
 
-const getPaymentReportOfficerOrFail = async (mongoDbClient: MongoDbClient): Promise<PortalUser> => {
+const getPaymentReportOfficerOrFail = async (mongoDbClient: MongoDbClient, username: string): Promise<PortalUser> => {
   const usersCollection = await mongoDbClient.getCollection('users');
   const paymentReportOfficer: PortalUser | null = await usersCollection.findOne({
+    username: { $eq: username },
     roles: { $in: [ROLES.PAYMENT_REPORT_OFFICER] },
   });
   if (!paymentReportOfficer) {
@@ -26,9 +27,10 @@ const getPaymentReportOfficerOrFail = async (mongoDbClient: MongoDbClient): Prom
   return paymentReportOfficer;
 };
 
-const getPdcReconcileTfmUserOrFail = async (mongoDbClient: MongoDbClient): Promise<TfmUser> => {
+const getPdcReconcileTfmUserOrFail = async (mongoDbClient: MongoDbClient, username: string): Promise<TfmUser> => {
   const tfmUsersCollection = await mongoDbClient.getCollection('tfm-users');
   const pdcReconcileUser: TfmUser | null = await tfmUsersCollection.findOne({
+    username: { $eq: username },
     teams: { $in: [TEAM_IDS.PDC_RECONCILE] },
   });
   if (!pdcReconcileUser) {
@@ -37,14 +39,20 @@ const getPdcReconcileTfmUserOrFail = async (mongoDbClient: MongoDbClient): Promi
   return pdcReconcileUser;
 };
 
-export const getUsersFromMongoDb = async (): Promise<{
+export const getUsersFromMongoDbOrFail = async ({
+  paymentReportOfficerUsername,
+  pdcReconcileUserUsername,
+}: {
+  paymentReportOfficerUsername: string;
+  pdcReconcileUserUsername: string;
+}): Promise<{
   paymentReportOfficer: PortalUser;
   pdcReconcileUser: TfmUser;
 }> => {
   const mongoDbClient = getMongoDbClient();
 
-  const paymentReportOfficer = await getPaymentReportOfficerOrFail(mongoDbClient);
-  const pdcReconcileUser = await getPdcReconcileTfmUserOrFail(mongoDbClient);
+  const paymentReportOfficer = await getPaymentReportOfficerOrFail(mongoDbClient, paymentReportOfficerUsername);
+  const pdcReconcileUser = await getPdcReconcileTfmUserOrFail(mongoDbClient, pdcReconcileUserUsername);
 
   return {
     paymentReportOfficer,

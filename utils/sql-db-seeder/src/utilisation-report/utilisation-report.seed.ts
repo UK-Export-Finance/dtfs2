@@ -2,7 +2,7 @@ import { Seeder } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
 import { UtilisationReportEntity, getCurrentReportPeriodForBankSchedule } from '@ukef/dtfs2-common';
 import { createNotReceivedReport, createMarkedAsCompletedReport, createUploadedReport } from './utilisation-report.helper';
-import { getUsersFromMongoDb, getAllBanksFromMongoDb } from '../helpers';
+import { getAllBanksFromMongoDb, getUsersFromMongoDbOrFail } from '../helpers';
 
 export default class UtilisationReportSeeder implements Seeder {
   /**
@@ -13,40 +13,43 @@ export default class UtilisationReportSeeder implements Seeder {
   track = true;
 
   public async run(dataSource: DataSource): Promise<void> {
-    const { paymentReportOfficer, pdcReconcileUser } = await getUsersFromMongoDb();
-    const allBanks = await getAllBanksFromMongoDb();
+    const { paymentReportOfficer, pdcReconcileUser } = await getUsersFromMongoDbOrFail({
+      paymentReportOfficerUsername: 'BANK1_PAYMENT_REPORT_OFFICER1',
+      pdcReconcileUserUsername: 'PDC_RECONCILE',
+    });
+
+    const banksVisibleInTfm = (await getAllBanksFromMongoDb()).filter((bank) => bank.isVisibleInTfmUtilisationReports);
+
+    const paymentReportOfficerBank = banksVisibleInTfm.find((bank) => bank.id === paymentReportOfficer.bank.id);
+    if (!paymentReportOfficerBank) {
+      throw new Error(`Failed to find a bank for portal user with username '${paymentReportOfficer.username}'`);
+    }
+    const uploadedReportReportPeriod = getCurrentReportPeriodForBankSchedule(paymentReportOfficerBank.utilisationReportPeriodSchedule);
+    const uploadedReport = createUploadedReport(paymentReportOfficer, uploadedReportReportPeriod, 'PENDING_RECONCILIATION');
+
+    const [bankToCreateMarkedAsCompletedReportFor, ...banksToCreateNotReceivedReportsFor] = banksVisibleInTfm.filter(
+      (bank) => bank.id !== paymentReportOfficer.bank.id,
+    );
+    if (!bankToCreateMarkedAsCompletedReportFor || banksToCreateNotReceivedReportsFor.length === 0) {
+      throw new Error(`Expected there to be at least 3 banks to create reports for (found ${banksVisibleInTfm.length})`);
+    }
+
+    const markedAsCompletedReportReportPeriod = getCurrentReportPeriodForBankSchedule(bankToCreateMarkedAsCompletedReportFor.utilisationReportPeriodSchedule);
+    const markedAsCompletedReport = createMarkedAsCompletedReport(
+      bankToCreateMarkedAsCompletedReportFor.id,
+      pdcReconcileUser,
+      markedAsCompletedReportReportPeriod,
+      'RECONCILIATION_COMPLETED',
+    );
+
+    const notReceivedReports = banksToCreateNotReceivedReportsFor.map((bank) => {
+      const reportPeriod = getCurrentReportPeriodForBankSchedule(bank.utilisationReportPeriodSchedule);
+      return createNotReceivedReport(bank.id, reportPeriod);
+    });
+
+    const reportsToInsert: UtilisationReportEntity[] = [uploadedReport, markedAsCompletedReport, ...notReceivedReports];
 
     const utilisationReportRepository = dataSource.getRepository(UtilisationReportEntity);
-
-    let createdUploadedReport = false;
-    let createdMarkedAsCompletedReport = false;
-    const reportsToInsert = allBanks
-      .filter((bank) => bank.isVisibleInTfmUtilisationReports)
-      .map((bank) => {
-        const { id: bankId, utilisationReportPeriodSchedule } = bank;
-        const reportPeriod = getCurrentReportPeriodForBankSchedule(utilisationReportPeriodSchedule);
-
-        if (paymentReportOfficer.bank.id === bankId && !createdUploadedReport) {
-          createdUploadedReport = true;
-          return createUploadedReport(paymentReportOfficer, reportPeriod, 'PENDING_RECONCILIATION');
-        }
-        if (!createdMarkedAsCompletedReport) {
-          createdMarkedAsCompletedReport = true;
-          return createMarkedAsCompletedReport(bankId, pdcReconcileUser, reportPeriod, 'RECONCILIATION_COMPLETED');
-        }
-        return createNotReceivedReport(bankId, reportPeriod);
-      });
-
-    if (reportsToInsert.length < 3) {
-      throw new Error(`Expected there to be at least three banks to seed data for (only found ${reportsToInsert.length})`);
-    }
-    if (!createdUploadedReport) {
-      throw new Error('Failed to create an uploaded report');
-    }
-    if (!createdMarkedAsCompletedReport) {
-      throw new Error('Failed to create a "marked as completed" report');
-    }
-
     for (const reportToInsert of reportsToInsert) {
       await utilisationReportRepository.save(reportToInsert);
     }
