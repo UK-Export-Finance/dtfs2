@@ -155,7 +155,10 @@ const updatePortalFacility = async (facilityId, update) => {
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
       headers: headers.central,
-      data: update,
+      data: {
+        ...update,
+        user: { _id: 'TFM_USER' },
+      },
     });
 
     return response.data;
@@ -612,7 +615,10 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/facilities/${facilityId}`,
       headers: headers.central,
-      data: facilityUpdate,
+      data: {
+        ...facilityUpdate,
+        user: { _id: 'TFM_USER' },
+      },
     });
 
     return response.data;
