@@ -1,11 +1,28 @@
 const moment = require('moment');
+const { isValid, parse, format, startOfDay } = require('date-fns');
+
+const validDateFormats = [
+  'MM-dd-yy',
+  'MM/dd/yy',
+  'MM dd yy',
+  'MM/dd/yyyy',
+  'MM dd yyyy',
+  'yyyy-MM-dd',
+  'yyyy/MM/dd',
+  'yyyy MM dd',
+  'MM/dd/yyyyyy',
+  'MM dd yyyyyy',
+  'yyyyyy-MM-dd',
+  'yyyyyy/MM/dd',
+  'yyyyyy MM dd',
+];
 
 /**
  * @param {string} dateStr
  * @returns {boolean} true if the date string is a valid date in the format `yyyy-MM-dd`
  * Does not allow date of month to wrap or months > 12 (e.g 2024-13-32 is invalid)
  */
-const isDate = (dateStr) => moment(dateStr, 'YYYY-MM-DD', true).isValid();
+const isDate = (dateStr) => dateStr.length === 10 && isValid(parse(dateStr, 'yyyy-MM-dd', startOfDay(new Date())));
 /**
  * @param {string | number} epoch
  * @returns {boolean} true if the value given is a unix epoch in seconds or milliseconds
@@ -20,7 +37,7 @@ const isString = (dateStr) => typeof dateStr === 'string' && !isEpoch(dateStr);
 /**
  * @returns current date in format `yyyy-MM-dd`
  */
-const now = () => moment().format('YYYY-MM-DD');
+const now = () => format(new Date(), 'yyyy-MM-dd');
 
 /**
  * @param {number | string} year as a 2 or 4 digit number
@@ -39,13 +56,22 @@ const formatYear = (year) => (year < 1000 ? (2000 + parseInt(year, 10)).toString
  *  - yyyy-MM-dd
  *  - yyyy/MM/dd
  *  - yyyy MM dd
- *
- * Not accepted:
- *  - yy-MM-dd
- *  - yy/MM/dd
- *  - yy MM dd
  */
-const formatDate = (dateStr) => moment(isDate(dateStr) || isString(dateStr) ? dateStr : Number(dateStr)).format('YYYY-MM-DD');
+const formatDate = (dateStr) => {
+  const dateFromString = validDateFormats
+    .map((formatString) => parse(dateStr, formatString, startOfDay(new Date())))
+    .find(isValid);
+
+  if (dateFromString) {
+    return format(dateFromString, 'yyyy-MM-dd');
+  }
+
+  if (dateStr !== '' && Number.isInteger(Number(dateStr)) && isValid(Number(dateStr))) {
+    return format(Number(dateStr), 'yyyy-MM-dd');
+  }
+
+  return 'Invalid date';
+};
 
 /**
  * @param {string | number} dateStr
