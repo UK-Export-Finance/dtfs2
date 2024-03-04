@@ -73,7 +73,39 @@ const formatTimestamp = (dateStr) => moment(isDate(dateStr) || isString(dateStr)
  */
 // This function is never actually used
 const addDay = (date, day) => moment(date).add({ day }).format('YYYY-MM-DD');
+/**
+ * @param {string | number | Date} date as a date string, epoch time or Date object
+ * @param {number} day number of months to add
+ * @returns in the format `yyyy-MM-dd`.
+ * Rounds down the date if target month is too short (e.g. 2024-01-31 plus 1 month is 2024-02-29)
+ *
+ * Accepted date strings:
+ *  - MM/dd/yyyy
+ *  - MM dd yyyy
+ *  - MM-dd-yy
+ *  - MM/dd/yy
+ *  - MM dd yy
+ *  - yyyy-MM-dd
+ *  - yyyy/MM/dd
+ *  - yyyy MM dd
+ */
 const addMonth = (date, months) => moment(date).add({ months }).format('YYYY-MM-DD');
+/**
+ * @param {string | number | Date} date as a date string, epoch time or Date object
+ * @param {number} day number of months to add
+ * @returns in the format `yyyy-MM-dd`.
+ * Rounds down the date if target month is too short (e.g. 2024-02-29 plus 1 year is 2025-02-28)
+ *
+ * Accepted date strings:
+ *  - MM/dd/yyyy
+ *  - MM dd yyyy
+ *  - MM-dd-yy
+ *  - MM/dd/yy
+ *  - MM dd yy
+ *  - yyyy-MM-dd
+ *  - yyyy/MM/dd
+ *  - yyyy MM dd
+ */
 const addYear = (date, years) => moment(date).add({ years }).format('YYYY-MM-DD');
 
 /**
