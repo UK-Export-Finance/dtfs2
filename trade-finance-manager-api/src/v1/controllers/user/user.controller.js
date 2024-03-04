@@ -29,7 +29,7 @@ exports.findByEmails = async (emails) => {
     if (users.length === 0) {
       console.info('Getting TFM user by emails - no user found');
 
-      return { notFound: true }
+      return { found: false }
     }
 
     if (users.length > 1) {

@@ -1,6 +1,5 @@
 const authProvider = require('../auth-provider');
-const existingTfmUser = require('./get-and-map-existing-tfm-user');
-const tfmUser = require('./create-tfm-user');
+const getOrCreateTfmUser = require('./get-or-create-tfm-user');
 const issueJwtAndUpdateUser = require('./issue-jwt-and-update-user');
 
 /**
@@ -9,10 +8,9 @@ const issueJwtAndUpdateUser = require('./issue-jwt-and-update-user');
  * 1) Get Entra user.
  * 2) Get TFM user. If no user exists, create a new one.
  * 3) Populate Entra and TFM user data.
- * 4) Issue a JWT.
- * 5) Update TFM user data.
- * 6) Get redirect URL
- * 7) Return user data, token and redirect URL.
+ * 4) Issue a JWT and update TFM user data.
+ * 7) Get redirect URL
+ * 8) Return user data, token and redirect URL.
  * @param {Object} pkceCodes: PKCE Codes object
  * @param {Object} authCodeRequest: Auth code request
  * @param {String} code: authZ code
@@ -25,28 +23,13 @@ const processSsoRedirect = async ({ pkceCodes, authCodeRequest, code, state }) =
 
     const entraUser = await authProvider.handleRedirect(pkceCodes, authCodeRequest, code);
 
-    const { user, mapped } = await existingTfmUser.getAndMap(entraUser);
+    const tfmUser = await getOrCreateTfmUser(entraUser);
 
-    let mappedTfmUser = mapped;
-
-    if (user.notFound) {
-      console.info('TFM auth service - no existing TFM user found. Creating a new TFM user.');
-
-      mappedTfmUser = await tfmUser.create(entraUser);
-    } else if (user.found && user.canProceed === false) {
-      console.info("TFM auth service - found an existing TFM user, but can't proceed");
-      throw new Error("TFM auth service - found an existing TFM user, but can't proceed");
-    }
-    else if (user.found && user.canProceed) {
-      console.info('TFM auth service - found an existing TFM user. Updating the user.');
-      // TODO: add updating of user teams, first name and last name. Maybe merge with last login and session update.
-    }
-
-    const token = await issueJwtAndUpdateUser(mappedTfmUser);
+    const token = await issueJwtAndUpdateUser(tfmUser);
 
     const redirectUrl = authProvider.loginRedirectUrl(state);
 
-    return { tfmUser: mappedTfmUser, token, redirectUrl };
+    return { tfmUser, token, redirectUrl };
   } catch (error) {
     console.error('TFM auth service - Error processing SSO redirect: %s', error);
 
