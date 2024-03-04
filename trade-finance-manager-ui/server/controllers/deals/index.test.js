@@ -194,7 +194,7 @@ describe('controllers - deals', () => {
             totalItems: 0,
             currentPage: 0,
             totalPages: 1,
-          }
+          },
         });
       });
 
