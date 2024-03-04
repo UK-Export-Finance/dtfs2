@@ -23,10 +23,26 @@ const api = require('../../../src/v1/api');
 const { STATUS } = require('../../../src/constants/user');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
+const mockSuccessfulResponse = {
+  data: {
+    status: 200,
+    data: [
+      {
+        id: 12345678,
+        maskedId: '0010000000',
+        type: 1,
+        createdBy: 'Portal v2/TFM',
+        createdDatetime: '2024-01-01T00:00:00.000Z',
+        requestingSystem: 'Portal v2/TFM',
+      },
+    ],
+  },
+};
+
 jest.mock('../../../src/external-api/api', () => ({
   sendEmail: jest.fn(() => Promise.resolve({})),
   number: {
-    get: () => ({ ukefId: 'MOCK_NUMBER_GENERATOR_ID' }),
+    get: jest.fn(() => Promise.resolve(mockSuccessfulResponse)),
   },
 }));
 

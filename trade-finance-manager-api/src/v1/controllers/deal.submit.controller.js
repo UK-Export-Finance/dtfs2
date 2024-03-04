@@ -189,13 +189,50 @@ const submitDealBeforeUkefIds = async (dealId, dealType, checker) => {
 };
 exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
 
-const submitDealPUT = async (req, res) => {
-  const { dealId, dealType, checker } = req.body;
-  let deal;
+/**
+ * Handles a PUT request to submit a deal after validating the deal ID, deal type, and checker.
+ * Calls the `submitDealAfterUkefIds` function to process the deal submission and returns the updated deal if successful.
+ * @param {Object} req - The request object containing the request body with `dealId`, `dealType`, and `checker` properties.
+ * @param {Object} res - The response object representing the response object with `status` and `send` methods.
+ * @returns {Promise<Response>} A promise that resolves with the updated deal or rejects with an error.
+ */
+const submitDealAfterUkefIdsPUT = async (req, res) => {
+  try {
+    const { dealId, dealType, checker } = req.body;
 
-  if (dealId) {
-    // Ensure all IDs are valid
+    const deal = await submitDealAfterUkefIds(dealId, dealType, checker);
+
+    if (!deal) {
+      console.error('Deal does not exist in TFM %s', dealId);
+      return res.status(404).send();
+    }
+
+    return res.status(200).send(deal);
+  } catch (error) {
+    console.error('❌ Unable to submit deal with IDs to TFM %o', error);
+    return res.status(500).send();
+  }
+};
+
+exports.submitDealAfterUkefIdsPUT = submitDealAfterUkefIdsPUT;
+
+/**
+ * Handles the submission of a deal to TFM (Trade Finance Manager).
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The response object.
+ */
+const submitDealPUT = async (req, res) => {
+  try {
+    const { dealId, dealType, checker } = req.body;
+
+    if (!dealId) {
+      console.error('Invalid deal id provided %s', dealId);
+      return res.status(400).send();
+    }
+
     const { status } = await dealHasAllUkefIds(dealId);
+    let deal;
 
     if (status) {
       deal = await submitDealAfterUkefIds(dealId, dealType, checker);
@@ -204,28 +241,15 @@ const submitDealPUT = async (req, res) => {
     }
 
     if (!deal) {
+      console.error('Deal does not exist in TFM %s', dealId);
       return res.status(404).send();
     }
 
     return res.status(200).send(deal);
+  } catch (error) {
+    console.error('❌ Unable to update deal in TFM %o', error);
+    return res.status(500).send();
   }
-
-  // Upon failure
-  return res.status(400).send();
 };
 
 exports.submitDealPUT = submitDealPUT;
-
-const submitDealAfterUkefIdsPUT = async (req, res) => {
-  const { dealId, dealType, checker } = req.body;
-
-  const deal = await submitDealAfterUkefIds(dealId, dealType, checker);
-
-  if (!deal) {
-    return res.status(404).send();
-  }
-
-  return res.status(200).send(deal);
-};
-
-exports.submitDealAfterUkefIdsPUT = submitDealAfterUkefIdsPUT;
