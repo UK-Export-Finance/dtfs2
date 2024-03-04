@@ -57,10 +57,6 @@ Additionally, it includes values for handling timeouts and retries: `pageLoadTim
 
 ⚠️ The `pageLoadTimeout` was added because deal submissions can sometimes take time, especially if there are many external API calls involved. Eventually, these API calls will be optimized to reduce submission time and make the E2E tests run more efficiently.
 
-### Importing from `@ukef/dtfs2-common`
-
-Some test fixtures which are used by both `utils/mock-data-loader` and `e2e-tests` are defined in the `libs/common` workspace (see [portal users](../libs/common/src/test-helpers/mock-data/portal-users.mock.ts), for example). However, we cannot import these modules directly in cypress files which are served to the cypress client as the import requires a `node` environment, whereas cypress runs in-browser. To overcome this, constants imported from `libs/common` should be stored as cypress environment variables which can be accessed via the `Cypress.env` command. These env variables are defined in [`e2e-tests/support/cypress-env.ts`](./support/cypress-env.ts), with a `getCypressEnvVariable` helper function and `CYPRESS_ENV_KEY` constant defined in [e2e-fixtures](./e2e-fixtures/). An example implementation of the helper function and constant can be seen in [the portal users fixture](./e2e-fixtures//portal-users.fixture.js). The types have also been defined in such a way that you will get a `tsc` failure if you add a new environment variable to [`e2e-tests/support/cypress-env.ts`](./support/cypress-env.ts) without updating the `CYPRESS_ENV_KEY` constant.
-
 ## Directory structure 📂
 
 Each test suite shares a similar directory structure:

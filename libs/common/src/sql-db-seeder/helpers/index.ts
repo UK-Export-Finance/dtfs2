@@ -1,1 +1,1 @@
-export * from './get-mongo-db-users';
+export * from './get-from-mongo-db';

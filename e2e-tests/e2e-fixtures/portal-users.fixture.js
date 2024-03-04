@@ -1,8 +1,5 @@
-const { getCypressEnvVariable } = require('./get-cypress-env-variable.fixture');
-const { CYPRESS_ENV_KEY } = require('./cypress-env-keys.fixture');
-
-const MOCK_USERS = getCypressEnvVariable(CYPRESS_ENV_KEY.MOCK_USERS);
-const ROLES = getCypressEnvVariable(CYPRESS_ENV_KEY.ROLES);
+const { PORTAL_USER_ROLES } = require('./constants.fixture');
+const MOCK_USERS = require('../../utils/mock-data-loader/portal-users');
 
 const USER_WITH_INJECTION = {
   username: '{ "$gt": "" }',
@@ -11,7 +8,7 @@ const USER_WITH_INJECTION = {
   firstname: 'test',
   surname: 'injection',
   bank: 'HSBC',
-  roles: [ROLES.MAKER],
+  roles: [PORTAL_USER_ROLES.MAKER],
 };
 
 module.exports = {
