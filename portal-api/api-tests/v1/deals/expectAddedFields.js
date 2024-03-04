@@ -38,7 +38,7 @@ const expectAddedFields = (obj) => {
     updatedAt: expect.any(Number),
     auditDetails: {
       lastUpdatedAt: expect.any(String),
-      lastUpdatedByPortalUser: expect.any(String),
+      lastUpdatedByPortalUserId: expect.any(String),
     },
   });
 

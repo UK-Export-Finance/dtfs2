@@ -521,7 +521,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             dealId,
             auditDetails: {
               lastUpdatedAt: expect.any(String),
-              lastUpdatedByPortalUser: aSuperuser._id,
+              lastUpdatedByPortalUserId: aSuperuser._id,
             },
           });
 
@@ -538,7 +538,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             dealId,
             auditDetails: {
               lastUpdatedAt: expect.any(String),
-              lastUpdatedByPortalUser: aSuperuser._id,
+              lastUpdatedByPortalUserId: aSuperuser._id,
             },
           });
         });
@@ -564,7 +564,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             dealId,
             auditDetails: {
               lastUpdatedAt: expect.any(String),
-              lastUpdatedByPortalUser: aSuperuser._id,
+              lastUpdatedByPortalUserId: aSuperuser._id,
             },
           });
 
@@ -581,7 +581,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             dealId,
             auditDetails: {
               lastUpdatedAt: expect.any(String),
-              lastUpdatedByPortalUser: aSuperuser._id,
+              lastUpdatedByPortalUserId: aSuperuser._id,
             },
           });
         });
