@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template ">
   <head>
-    <meta charset="utf-8" />
-    <title>{% block pageTitle %}{% endblock %} - UK Export Finance</title>
+    <meta charset="utf-8"/>
+    <title>
+      {% block pageTitle %}{% endblock %} - UK Export Finance</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#0b0c0c" />
+    <meta name="theme-color" content="#0b0c0c"/>
 
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 
-    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="/assets/images/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="/assets/images/favicon.ico" type="image/x-icon"/>
     <link rel="mask-icon" href="/assets/images/govuk-mask-icon.svg" color="#0b0c0c">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/govuk-apple-touch-icon-180x180.png">
     <link rel="apple-touch-icon" sizes="167x167" href="/assets/images/govuk-apple-touch-icon-167x167.png">
     <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/govuk-apple-touch-icon-152x152.png">
     <link rel="apple-touch-icon" href="/assets/images/govuk-apple-touch-icon.png">
-    <link rel="stylesheet" href="/gef/assets/css/styles.css" />
+    <link rel="stylesheet" href="/gef/assets/css/styles.css"/>
     <meta property="og:image" content="/assets/images/govuk-opengraph-image.png">
   </head>
 
@@ -24,7 +25,10 @@
 
     {% include "includes/skip-link.njk" %}
 
-    {% if user and user.roles and user.roles.includes('admin') %}
+    {% if user and user
+      .roles and user
+      .roles
+      .includes('admin') %}
       {% include "includes/admin-header.njk" %}
     {% endif %}
 
@@ -40,11 +44,10 @@
     </div>
 
     {% include "includes/footer.njk" %}
-    <script src="/gef/assets/js/main.js" type="text/javascript" integrity="sha512-gyJhmnJp/jdqurk5bn0WXX8fCOdVCARsK74YobqCxygOOrKV2Xs833JiKrR4lErWesD196X5nEbTkNIirrIXkg==" crossorigin="anonymous"></script>
+    <script src="/gef/assets/js/main.js" type="text/javascript" integrity="sha512-FzbNufq1YfgPho6SYcKW4eZ4wBHJEPnFN50f/9WNFwLltqksUhSAJ93AP+7AQdYfTCSLPD79pjUai2fvfasFPg==" crossorigin="anonymous"></script>
     <script src="/assets/js/govukFrontend.js" type="text/javascript" integrity="sha512-I1Jdj+zpeRra1n0yK5AnISUZ4vJugD+b4LOtOkYEn9flOvVx/QjW11FmwOGEP+KBYk/mwTqQ1MDFvpBmXeKJqw==" crossorigin="anonymous"></script>
-    <script src="/assets/js/mojFrontend.js" type="text/javascript" integrity="sha512-Bd+pLW+a0XIdzmEnPxwZ3DaDHhfElmrC2FozCVIf//x47qYwaKcy2Mz30n2ePAoDHfv0idwOONxabd2bcY9t0A==" crossorigin="anonymous"></script>
+    <script src="/assets/js/mojFrontend.js" type="text/javascript" integrity="sha512-Ap7qengYJPIRuxlVyln9ThfoCD/SIeefliy26hN7ZG1ywrC9y2YL9o3kpKHAXT5S2gcUOuMi/GkfYLJtAaIJig==" crossorigin="anonymous"></script>
     <script src="/assets/js/maskedInputs.js" type="text/javascript" integrity="sha512-4XTH3IT3oQN/60lRAdBZWXMXq4/L1n5kUoGEftu+nY0Bba/7T0RDIZ62es6v+dCyNJ+uaYZTjWl3nPYv0rR6WA==" crossorigin="anonymous"></script>
-
     {% block scripts %}{% endblock %}
   </body>
 </html>
