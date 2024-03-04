@@ -24,6 +24,22 @@ const mockSuccessfulResponse = {
   },
 };
 
+const mockUnsuccessfulResponse = {
+  status: 500,
+  error: {
+    response: {
+      data: {
+        status: 400,
+        error: {
+          name: 'Error',
+          message: 'INVALID_ENTITY_TYPE',
+          cause: 'Invalid entity type: invalid',
+        },
+      },
+    },
+  },
+};
+
 describe('generateId', () => {
   it('Should throw an error when an invalid argument is provided', async () => {
     const result = await generateId(null, null);
@@ -47,6 +63,7 @@ describe('generateId', () => {
   });
 
   it('Should throw a internal server error when an invalid entity type is specified', async () => {
+    number.get = jest.fn().mockResolvedValue(mockUnsuccessfulResponse);
     const result = await generateId('invalid', body.dealId);
     const { status, error } = result;
     const { response: externalApi } = error;
