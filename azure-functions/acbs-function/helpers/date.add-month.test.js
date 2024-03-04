@@ -1,6 +1,6 @@
 const { format } = require('date-fns');
 const { addMonth } = require('./date');
-const { validDateFormats, invalidDateFormats } = require('./date.common.test');
+const { validDateFormats, invalidDateFormats } = require('../test-helpers/date-formats');
 
 describe('addMonth', () => {
   const testDate = new Date('2024-05-12');

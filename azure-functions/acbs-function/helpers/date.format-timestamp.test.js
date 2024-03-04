@@ -1,6 +1,6 @@
 const { format } = require('date-fns');
 const { formatTimestamp } = require('./date');
-const { validDateFormats, invalidDateFormats } = require('./date.common.test');
+const { validDateFormats, invalidDateFormats } = require('../test-helpers/date-formats');
 
 describe('formatTimestamp', () => {
   const date = new Date();

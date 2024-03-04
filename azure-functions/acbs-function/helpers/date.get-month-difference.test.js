@@ -1,6 +1,6 @@
 const { format } = require('date-fns');
 const { getMonthDifference } = require('./date');
-const { validDateFormats, invalidDateFormats } = require('./date.common.test');
+const { validDateFormats, invalidDateFormats } = require('../test-helpers/date-formats');
 
 describe('getMonthDifference', () => {
   const mockDate1 = new Date(1709337600000); // Sat Mar 02 2024 00:00:00 GMT+0000
