@@ -71,7 +71,7 @@ export const validateUtilisationReportPeriodSchedule = (utilisationReportPeriodS
   }
 
   for (let i = 0; i < utilisationReportPeriodSchedule.length; i += 1) {
-    if (!('startMonth' in utilisationReportPeriodSchedule[i]) || ! ('endMonth' in utilisationReportPeriodSchedule[i])) {
+    if (!('startMonth' in utilisationReportPeriodSchedule[i]) || !('endMonth' in utilisationReportPeriodSchedule[i])) {
       validationError = 'Utilisation Report Period Schedule does not have start or end month';
       return validationError;
     };

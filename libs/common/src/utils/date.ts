@@ -24,7 +24,7 @@ export const eachIsoMonthOfInterval = (start: IsoMonthStamp, end: IsoMonthStamp,
 };
 
 /**
-* Checks if the {@link MonthAndYear} objects are equal
-*/
+ * Checks if the {@link MonthAndYear} objects are equal
+ */
 export const isEqualMonthAndYear = (monthAndYear1: MonthAndYear, monthAndYear2: MonthAndYear): boolean =>
- monthAndYear1.year === monthAndYear2.year && monthAndYear1.month === monthAndYear2.month;
+  monthAndYear1.year === monthAndYear2.year && monthAndYear1.month === monthAndYear2.month;
