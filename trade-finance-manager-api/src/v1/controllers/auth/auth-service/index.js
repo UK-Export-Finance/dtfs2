@@ -1,9 +1,7 @@
-const getExistingTfmUser = require('./get-existing-tfm-user');
-const createTfmUser = require('./create-tfm-user');
-const populateTfmUserWithEntraData = require('./populate-tfm-user-with-entra-data');
 const authProvider = require('../auth-provider');
-const utils = require('../../../../utils/crypto.util');
-const { updateLastLoginAndResetSignInData } = require('../../user/user.controller');
+const existingTfmUser = require('./get-and-map-existing-tfm-user');
+const tfmUser = require('./create-tfm-user');
+const issueJwtAndUpdateUser = require('./issue-jwt-and-update-user');
 
 /**
  * processSsoRedirect
@@ -22,44 +20,33 @@ const { updateLastLoginAndResetSignInData } = require('../../user/user.controlle
  * @returns {Object} TFM user, token and redirect URL.
  */
 const processSsoRedirect = async ({ pkceCodes, authCodeRequest, code, state }) => {
-  console.info('TFM auth service - processing SSO redirect');
-
-  let entraUser;
-  let mappedTfmUser;
-
   try {
-    entraUser = await authProvider.handleRedirect(pkceCodes, authCodeRequest, code);
+    console.info('TFM auth service - processing SSO redirect');
 
-    if (!entraUser?.idTokenClaims) {
-      throw new Error('TFM auth service - processing SSO redirect - Entra user details are missing: %O', entraUser);
-    }
+    const entraUser = await authProvider.handleRedirect(pkceCodes, authCodeRequest, code);
 
-    const existingTfmUser = await getExistingTfmUser(entraUser);
+    const { user, mapped } = await existingTfmUser.getAndMap(entraUser);
 
-    mappedTfmUser = populateTfmUserWithEntraData(existingTfmUser, entraUser);
+    let mappedTfmUser = mapped;
 
-    if (existingTfmUser.notFound) {
+    if (user.notFound) {
       console.info('TFM auth service - no existing TFM user found. Creating a new TFM user.');
 
-      mappedTfmUser = await createTfmUser(entraUser);
-    }
-    else if (existingTfmUser.found && existingTfmUser.canProceed === false) {
+      mappedTfmUser = await tfmUser.create(entraUser);
+    } else if (user.found && user.canProceed === false) {
       console.info("TFM auth service - found an existing TFM user, but can't proceed");
       throw new Error("TFM auth service - found an existing TFM user, but can't proceed");
     }
-    else if (existingTfmUser.found && existingTfmUser.canProceed) {
+    else if (user.found && user.canProceed) {
       console.info('TFM auth service - found an existing TFM user. Updating the user.');
       // TODO: add updating of user teams, first name and last name. Maybe merge with last login and session update.
-
     }
 
-    const { sessionIdentifier, ...tokenObject } = utils.issueJWT(mappedTfmUser);
-
-    await updateLastLoginAndResetSignInData(mappedTfmUser, sessionIdentifier, () => { });
+    const token = await issueJwtAndUpdateUser(mappedTfmUser);
 
     const redirectUrl = authProvider.loginRedirectUrl(state);
 
-    return { tfmUser: mappedTfmUser, token: tokenObject.token, redirectUrl };
+    return { tfmUser: mappedTfmUser, token, redirectUrl };
   } catch (error) {
     console.error('TFM auth service - Error processing SSO redirect: %s', error);
 

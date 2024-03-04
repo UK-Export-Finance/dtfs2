@@ -1,4 +1,4 @@
-const createTfmUser = require('./create-tfm-user');
+const tfmUser = require('./create-tfm-user');
 const mapEntraUserData = require('./map-entra-user-data');
 const userController = require('../../user/user.controller');
 const MOCK_ENTRA_USER = require('../../../__mocks__/mock-entra-user');
@@ -11,7 +11,7 @@ describe('auth-service/create-tfm-user', () => {
   });
 
   it('should call userController.createUser with mapEntraUserData', async () => {
-    await createTfmUser(MOCK_ENTRA_USER);
+    await tfmUser.create(MOCK_ENTRA_USER);
 
     expect(userController.createUser).toHaveBeenCalledTimes(1);
 
@@ -21,7 +21,7 @@ describe('auth-service/create-tfm-user', () => {
   });
 
   it('should return the response of userController.createUser', async () => {
-    const result = await createTfmUser(MOCK_ENTRA_USER);
+    const result = await tfmUser.create(MOCK_ENTRA_USER);
 
     expect(result).toEqual(mockCreatedUser);
   });

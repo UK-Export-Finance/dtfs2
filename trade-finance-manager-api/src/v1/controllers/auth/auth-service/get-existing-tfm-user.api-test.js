@@ -1,4 +1,4 @@
-const getExistingTfmUser = require('./get-existing-tfm-user');
+const existingTfmUser = require('./get-existing-tfm-user');
 const userController = require('../../user/user.controller');
 const MOCK_ENTRA_USER = require('../../../__mocks__/mock-entra-user');
 const MOCK_TFM_USERS = require('../../../__mocks__/mock-users');
@@ -12,7 +12,7 @@ describe('auth-service/get-existing-tfm-user', () => {
 
   describe('when the provided entra user does not have a secondary_email', () => {
     it('should call userController.findByEmails with entra user user email', async () => {
-      await getExistingTfmUser(MOCK_ENTRA_USER);
+      await existingTfmUser.get(MOCK_ENTRA_USER);
 
       expect(userController.findByEmails).toHaveBeenCalledTimes(1);
 
@@ -22,7 +22,7 @@ describe('auth-service/get-existing-tfm-user', () => {
     });
 
     it('should return the result of userController.findByEmails', async () => {
-      const result = await getExistingTfmUser(MOCK_ENTRA_USER);
+      const result = await existingTfmUser.get(MOCK_ENTRA_USER);
 
       const expected = MOCK_TFM_USER;
 
@@ -46,8 +46,7 @@ describe('auth-service/get-existing-tfm-user', () => {
     });
 
     it('should call userController.findByEmails with entra user user email', async () => {
-
-      await getExistingTfmUser(mockEntraUserWithSecondaryEmail);
+      await existingTfmUser.get(mockEntraUserWithSecondaryEmail);
 
       expect(userController.findByEmails).toHaveBeenCalledTimes(1);
 
@@ -62,11 +61,27 @@ describe('auth-service/get-existing-tfm-user', () => {
     });
 
     it('should return the result of userController.findByEmails', async () => {
-      const result = await getExistingTfmUser(mockEntraUserWithSecondaryEmail);
+      const result = await existingTfmUser.get(mockEntraUserWithSecondaryEmail);
 
       const expected = MOCK_TFM_USER;
 
       expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when the provided entra user does not have a idTokenClaims property', () => {
+    it('should return an empty object', async () => {
+      const result = await existingTfmUser.get({});
+
+      expect(result).toEqual({});
+    });
+  });
+
+  describe('when the no entra user is provided', () => {
+    it('should return an empty object', async () => {
+      const result = await existingTfmUser.get();
+
+      expect(result).toEqual({});
     });
   });
 });

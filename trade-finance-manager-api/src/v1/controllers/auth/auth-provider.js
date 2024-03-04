@@ -167,6 +167,12 @@ class AuthProvider {
       // msalInstance.getTokenCache().deserialize(req.session.tokenCache);
       const tokenResponse = await msalInstance.acquireTokenByCode(authCodeRequest);
 
+      const { account } = tokenResponse;
+
+      if (!account?.idTokenClaims) {
+        throw new Error('TFM auth service - handleRedirect - Entra user missing token claims: %O', account);
+      }
+
       return tokenResponse.account;
     } catch (error) {
       console.error('Error TFM auth service - handleRedirect %s', error);

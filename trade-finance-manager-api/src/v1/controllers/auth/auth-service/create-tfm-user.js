@@ -2,12 +2,12 @@ const mapEntraUserData = require('./map-entra-user-data');
 const userController = require('../../user/user.controller');
 
 /**
- * createTfmUser
+ * create
  * Create a TFM user from Entra user data.
  * @param {Object} entraUser: Entra user data
  * @returns {Object} New TFM user.
  */
-const createTfmUser = async (entraUser) => {
+const create = async (entraUser) => {
   try {
     console.info('TFM auth service - mapping Entra user and creating TFM user');
 
@@ -17,10 +17,10 @@ const createTfmUser = async (entraUser) => {
 
     return createdUser;
   } catch {
-    console.error("TFM auth service - Error - User creation didn't pass validation");
+    console.error("TFM auth service - Error mapping Entra user and creating TFM user");
 
-    throw new Error("TFM auth service - Error - User creation didn't pass validation");
+    throw new Error("TFM auth service - Error mapping Entra user and creating TFM user");
   }
 };
 
-module.exports = createTfmUser;
+module.exports = { create };

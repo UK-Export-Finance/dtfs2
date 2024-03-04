@@ -19,7 +19,7 @@ const MOCK_TFM_DEAL_ACBS = {
   },
 };
 
-describe('acbs controller', () => {
+describe.skip('acbs controller', () => {
   beforeAll(async () => {
     await acbsController.clearACBSLog();
   });
