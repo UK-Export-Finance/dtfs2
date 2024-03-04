@@ -1,5 +1,5 @@
 const express = require('express');
-const { validateBankIdForUser, validateToken, validateRole } = require('../../middleware');
+const { validateBankIdForUser, validateToken, validateRole, validateSqlId } = require('../../middleware');
 const {
   ROLES: { PAYMENT_REPORT_OFFICER },
 } = require('../../../constants');
@@ -11,6 +11,7 @@ router.get(
   '/banks/:bankId/utilisation-report-download/:id',
   [validateToken, validateRole({ role: [PAYMENT_REPORT_OFFICER] })],
   validateBankIdForUser,
+  validateSqlId,
   (req, res) => getReportDownload(req, res),
 );
 

@@ -317,8 +317,9 @@ const getUtilisationReports = async (bankId, options) => {
 };
 
 /**
+ * Gets utilisation report by id
  * @param {number} id
- * @returns {Promise<import('@ukef/dtfs2-common').UtilisationReportResponseBody>}
+ * @returns {Promise<import('./api-response-types/UtilisationReportResponseBody').UtilisationReportResponseBody>}
  */
 const getUtilisationReportById = async (id) => {
   try {
@@ -328,7 +329,7 @@ const getUtilisationReportById = async (id) => {
 
     return response.data;
   } catch (error) {
-    console.error(`Unable to get utilisation report with id '${id}'`, error);
+    console.error('Unable to get utilisation report with id %s: %O', id, error);
     throw error;
   }
 };

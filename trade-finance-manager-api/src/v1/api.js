@@ -1194,8 +1194,9 @@ const getUtilisationReportsReconciliationSummary = async (submissionMonth) => {
 };
 
 /**
+ * Get utilisation report by id
  * @param {string} id
- * @returns {Promise<import('@ukef/dtfs2-common').UtilisationReportResponseBody>}
+ * @returns {Promise<import('./api-response-types/UtilisationReportResponseBody').UtilisationReportResponseBody>}
  */
 const getUtilisationReportById = async (id) => {
   const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${id}`, {

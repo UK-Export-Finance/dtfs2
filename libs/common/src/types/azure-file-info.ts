@@ -1,3 +1,7 @@
-import { AzureFileInfoEntity } from '../sql-db-entities/azure-file-info';
-
-export type AzureFileInfo = Pick<AzureFileInfoEntity, 'folder' | 'filename' | 'fullPath' | 'url' | 'mimetype'>;
+export type AzureFileInfo = {
+  folder: string;
+  filename: string;
+  fullPath: string;
+  url: string;
+  mimetype: string;
+};

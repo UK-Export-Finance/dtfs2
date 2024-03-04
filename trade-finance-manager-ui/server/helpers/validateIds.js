@@ -27,6 +27,14 @@ const isValidGroupId = (groupId) => isValidRegex(REGEX.INT, groupId);
 const isValidTaskId = (taskId) => isValidRegex(REGEX.INT, taskId);
 
 /**
+  Validates if a value is a valid sql id
+
+ * @param id - the value to validate
+ * @returns Boolean - true if valid, false if not
+ */
+  const isValidSqlId = (id) => isValidRegex(REGEX.INT, id);
+
+/**
   Validates if a value is a valid mongo id
 
  * @param mongoId - the value to validate
@@ -47,4 +55,5 @@ module.exports = {
   isValidGroupId,
   isValidTaskId,
   isValidPartyUrn,
+  isValidSqlId
 };

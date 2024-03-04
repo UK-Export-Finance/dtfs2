@@ -9,7 +9,7 @@ const mongoIdValidation = param('_id').isMongoId().withMessage("Invalid MongoDB 
 
 exports.mongoIdValidation = [mongoIdValidation];
 
-const sqlIdValidation = param('id').isInt().withMessage("Invalid 'id' path param provided");
+const sqlIdValidation = param('id').isInt({ min: 0 }).withMessage("Invalid 'id' path param provided");
 
 exports.sqlIdValidation = [sqlIdValidation];
 
