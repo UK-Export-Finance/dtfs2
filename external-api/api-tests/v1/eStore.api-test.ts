@@ -75,7 +75,7 @@ describe('/estore', () => {
 
   describe('when the input is not valid - dealIdentifier contains 0010000000', () => {
     it('should return a status of 200 and an empty data response', async () => {
-      const { status, body } = await post({ ...payload, dealIdentifier: '0010000000' }).to('/estore');
+      const { status, body } = await post({ ...payload, dealIdentifier: UKEF_ID.TEST }).to('/estore');
 
       expect(status).toEqual(200);
       expect(body).toEqual({});
