@@ -1,20 +1,10 @@
 const { format } = require('date-fns');
 const { addDay } = require('./date');
+const { validDateFormats, invalidDateFormats } = require('./date.common.test');
 
 describe('addDay', () => {
   const testDay = new Date('2024-05-12');
   const testDayPlusOneFormatted = '2024-05-13';
-
-  const validDateFormats = [
-    'MM/dd/yyyy',
-    'MM dd yyyy',
-    'MM-dd-yy',
-    'MM/dd/yy',
-    'MM dd yy',
-    'yyyy-MM-dd',
-    'yyyy/MM/dd',
-    'yyyy MM dd',
-  ];
 
   const validTestData = validDateFormats.map((formatString) => ({
     description: `parses date formatted as ${formatString} and adds days correctly`,
@@ -23,12 +13,6 @@ describe('addDay', () => {
     daysToAdd: 1,
     expected: testDayPlusOneFormatted,
   }));
-
-  const invalidDateFormats = [
-    'yy-MM-dd',
-    'yy/MM/dd',
-    'yy MM dd',
-  ];
 
   const invalidTestData = invalidDateFormats.map((formatString) => ({
     description: `does not parse a date formatted as ${formatString}`,

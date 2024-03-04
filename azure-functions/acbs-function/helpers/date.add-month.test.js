@@ -1,20 +1,10 @@
 const { format } = require('date-fns');
 const { addMonth } = require('./date');
+const { validDateFormats, invalidDateFormats } = require('./date.common.test');
 
 describe('addMonth', () => {
   const testDate = new Date('2024-05-12');
   const testDatePlusOneMonthFormatted = '2024-06-12';
-
-  const validDateFormats = [
-    'MM/dd/yyyy',
-    'MM dd yyyy',
-    'MM-dd-yy',
-    'MM/dd/yy',
-    'MM dd yy',
-    'yyyy-MM-dd',
-    'yyyy/MM/dd',
-    'yyyy MM dd',
-  ];
 
   const validTestData = validDateFormats.map((formatString) => ({
     description: `parses date formatted as ${formatString} and adds months correctly`,
@@ -23,12 +13,6 @@ describe('addMonth', () => {
     monthsToAdd: 1,
     expected: testDatePlusOneMonthFormatted,
   }));
-
-  const invalidDateFormats = [
-    'yy-MM-dd',
-    'yy/MM/dd',
-    'yy MM dd',
-  ];
 
   const invalidTestData = invalidDateFormats.map((formatString) => ({
     description: `does not parse a date formatted as ${formatString}`,

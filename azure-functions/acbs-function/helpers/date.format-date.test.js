@@ -1,31 +1,15 @@
 const { format } = require('date-fns');
 const { formatDate } = require('./date');
+const { validDateFormats, invalidDateFormats } = require('./date.common.test');
 
 describe('formatDate', () => {
   const date = new Date();
-
-  const invalidDateFormats = [
-    'yy-MM-dd',
-    'yy/MM/dd',
-    'yy MM dd',
-  ];
 
   const invalidStringTestCases = invalidDateFormats.map((formatString) => ({
     description: `should not parse a date in the format '${formatString}'`,
     mockValue: format(date, formatString),
     expected: 'Invalid date',
   }));
-
-  const validDateFormats = [
-    'MM/dd/yyyy',
-    'MM dd yyyy',
-    'MM-dd-yy',
-    'MM/dd/yy',
-    'MM dd yy',
-    'yyyy-MM-dd',
-    'yyyy/MM/dd',
-    'yyyy MM dd',
-  ];
 
   const validStringTestCases = validDateFormats.map((formatString) => ({
     description: `should parse the date correctly when input is formatted as '${formatString}'`,

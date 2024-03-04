@@ -59,6 +59,7 @@ describe('getExposurePeriod', () => {
 
         expect(result).toEqual('12');
       });
+
       it('returns the correct value when it has not been issued', () => {
         const mockFacility = cloneDeep(defaultFacility);
         mockFacility.facilitySnapshot.hasBeenIssued = false;

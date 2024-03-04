@@ -7,7 +7,6 @@
     "api-test": "jest --coverage --verbose --runInBand --config=api-test.jest.config.js ",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js",
-    "unit-test-quick": "jest --config=unit.jest.config.js",
     "lint": "eslint ./"
   },
   "dependencies": {
