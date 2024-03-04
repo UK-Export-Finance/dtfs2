@@ -1,4 +1,4 @@
-import { AzureFileInfo } from '../../src/types/azure-file-info';
+import { AzureFileInfo } from '@ukef/dtfs2-common';
 
 export const MOCK_FILE_INFO = {
   folder: 'folder_name',

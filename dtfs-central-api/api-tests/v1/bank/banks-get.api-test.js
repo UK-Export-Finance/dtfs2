@@ -1,13 +1,13 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const { MOCK_BANKS } = require('../../mocks/banks');
-const { DB_COLLECTIONS } = require('../../../src/constants');
 const { withoutMongoId } = require('../../../src/helpers/mongodb');
 const api = require('../../api')(app);
 
 describe('/v1/bank', () => {
   beforeAll(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.BANKS]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.BANKS]);
   });
 
   describe('GET /v1/bank', () => {

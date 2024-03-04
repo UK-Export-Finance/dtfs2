@@ -1,5 +1,5 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const db = require('../src/drivers/db-client').default;
-const { DB_COLLECTIONS } = require('../src/constants');
 
 /**
  * @param {import('@ukef/dtfs2-common').MongoDbCollectionName[]} collections
@@ -20,7 +20,7 @@ const wipe = async (collections) => {
 };
 
 const wipeAll = async () => {
-  const wiped = await wipe(Object.values(DB_COLLECTIONS));
+  const wiped = await wipe(Object.values(MONGO_DB_COLLECTIONS));
   return wiped;
 };
 

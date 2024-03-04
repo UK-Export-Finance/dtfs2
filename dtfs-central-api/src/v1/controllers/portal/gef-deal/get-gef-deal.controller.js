@@ -1,10 +1,10 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client').default;
-const { DB_COLLECTIONS } = require('../../../../constants');
 
 const findOneDeal = async (_id, callback) => {
   if (ObjectId.isValid(_id)) {
-    const dealsCollection = await db.getCollection(DB_COLLECTIONS.DEALS);
+    const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
     const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
 

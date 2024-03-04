@@ -1,9 +1,9 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const db = require('../../../drivers/db-client').default;
-const { DB_COLLECTIONS } = require('../../../constants');
 
 exports.deleteAllDurableFunctions = async (req, res) => {
   try {
-    const collection = await db.getCollection(DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG);
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG);
     // delete all documents from `durable-functions-log` collection
     await collection.deleteMany({});
 

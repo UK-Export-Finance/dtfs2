@@ -1,7 +1,7 @@
 import { Response } from 'express';
+import { UploadedByUserDetails } from '@ukef/dtfs2-common';
 import db from '../../../drivers/db-client';
 import { ReportWithStatus } from '../../../types/utilisation-reports';
-import { UploadedByUserDetails } from '../../../types/db-models/utilisation-reports';
 import { TfmSessionUser } from '../../../types/tfm/tfm-session-user';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { updateManyUtilisationReportStatuses } from '../../../repositories/utilisation-reports-repo';

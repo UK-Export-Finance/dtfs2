@@ -1,5 +1,5 @@
+import { MonthAndYear } from '@ukef/dtfs2-common';
 import { eachIsoMonthOfInterval, getOneIndexedMonth, isEqualMonthAndYear, isValidIsoMonth, toIsoMonthStamp } from './date';
-import { MonthAndYear } from '../types/date';
 
 describe('date utils', () => {
   describe('getOneIndexedMonth', () => {

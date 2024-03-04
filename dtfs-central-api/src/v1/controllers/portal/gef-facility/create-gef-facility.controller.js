@@ -1,11 +1,11 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client').default;
 const { findOneDeal } = require('../gef-deal/get-gef-deal.controller');
-const { DB_COLLECTIONS } = require('../../../../constants');
 
 const createFacility = async (newFacility) => {
   const facility = newFacility;
-  const collection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
 
   facility.dealId = new ObjectId(facility.dealId);
 

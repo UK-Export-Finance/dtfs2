@@ -1,4 +1,5 @@
 import { Filter, ObjectId } from 'mongodb';
+import { MONGO_DB_COLLECTIONS, UTILISATION_REPORT_RECONCILIATION_STATUS, ReportPeriod, UtilisationReport, MonthAndYear } from '@ukef/dtfs2-common';
 import {
   updateUtilisationReportDetailsWithUploadDetails,
   getManyUtilisationReportDetailsByBankId,
@@ -8,13 +9,8 @@ import {
   GetUtilisationReportDetailsOptions,
 } from './utilisation-reports-repo';
 import db from '../../drivers/db-client';
-import { DB_COLLECTIONS } from '../../constants/db-collections';
 import { MOCK_NOT_RECEIVED_UTILISATION_REPORT, MOCK_UTILISATION_REPORT } from '../../../api-tests/mocks/utilisation-reports/utilisation-reports';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 import { PortalSessionUser } from '../../types/portal/portal-session-user';
-import { MonthAndYear } from '../../types/date';
-import { UtilisationReport } from '../../types/db-models/utilisation-reports';
-import { ReportPeriod } from '../../types/utilisation-reports';
 
 describe('utilisation-reports-repo', () => {
   describe('updateUtilisationReportDetailsWithUploadDetails', () => {
@@ -51,7 +47,7 @@ describe('utilisation-reports-repo', () => {
       await updateUtilisationReportDetailsWithUploadDetails(existingReport, mockAzureFileInfo, mockUploadedUser);
 
       // Assert
-      expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_REPORTS);
+      expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.UTILISATION_REPORTS);
       expect(updateOneSpy).toHaveBeenCalledWith(
         {
           _id: { $eq: existingReport._id },
@@ -106,7 +102,7 @@ describe('utilisation-reports-repo', () => {
       await saveNotReceivedUtilisationReport(mockReportPeriod, mockSessionBank);
 
       // Assert
-      expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_REPORTS);
+      expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.UTILISATION_REPORTS);
       expect(insertOneSpy).toHaveBeenCalledWith({
         bank: mockSessionBank,
         reportPeriod: {

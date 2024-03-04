@@ -1,8 +1,6 @@
 import { ObjectId } from 'mongodb';
+import { UtilisationData, UtilisationReport, CURRENCY } from '@ukef/dtfs2-common';
 import { MOCK_UTILISATION_REPORT } from './utilisation-reports';
-import { UtilisationData } from '../../../src/types/db-models/utilisation-data';
-import { UtilisationReport } from '../../../src/types/db-models/utilisation-reports';
-import { CURRENCIES } from '../../../src/constants';
 import { MOCK_MONTHLY_REPORT_PERIOD } from '../report-period';
 
 export const MOCK_UTILISATION_DATA: UtilisationData = {
@@ -12,14 +10,14 @@ export const MOCK_UTILISATION_DATA: UtilisationData = {
   bankId: MOCK_UTILISATION_REPORT.bank.id,
   reportPeriod: MOCK_MONTHLY_REPORT_PERIOD,
   exporter: 'Exporter 1',
-  baseCurrency: CURRENCIES.GBP,
+  baseCurrency: CURRENCY.GBP,
   facilityUtilisation: 100000,
   totalFeesAccruedForTheMonth: 456,
-  totalFeesAccruedForTheMonthCurrency: CURRENCIES.GBP,
+  totalFeesAccruedForTheMonthCurrency: CURRENCY.GBP,
   totalFeesAccruedForTheMonthExchangeRate: 1,
   monthlyFeesPaidToUkef: 123,
-  monthlyFeesPaidToUkefCurrency: CURRENCIES.GBP,
-  paymentCurrency: CURRENCIES.GBP,
+  monthlyFeesPaidToUkefCurrency: CURRENCY.GBP,
+  paymentCurrency: CURRENCY.GBP,
   paymentExchangeRate: 1,
   payments: null,
 };

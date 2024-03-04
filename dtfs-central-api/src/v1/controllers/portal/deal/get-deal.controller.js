@@ -1,10 +1,11 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client').default;
 const CONSTANTS = require('../../../../constants');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
 
 const extendDealWithFacilities = async (deal) => {
-  const facilitiesCollection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.FACILITIES);
+  const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
   const mappedDeal = { ...deal };
   const mappedBonds = [];
   const mappedLoans = [];
@@ -52,7 +53,7 @@ const findOneDeal = async (_id, callback) => {
     throw new Error('Invalid Deal Id');
   }
 
-  const dealsCollection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.DEALS);
+  const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
   const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
 
@@ -79,7 +80,7 @@ exports.findOneDeal = findOneDeal;
 
 const findOneGefDeal = async (_id, callback) => {
   if (ObjectId.isValid(_id)) {
-    const dealsCollection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.DEALS);
+    const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
     const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
 

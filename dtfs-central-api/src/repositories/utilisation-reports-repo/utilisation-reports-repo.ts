@@ -1,12 +1,16 @@
 import { Filter, InsertOneResult, OptionalId } from 'mongodb';
 import sortBy from 'lodash/sortBy';
+import {
+  AzureFileInfo,
+  UtilisationReport,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  MONGO_DB_COLLECTIONS,
+  MonthAndYear,
+  ReportPeriod,
+} from '@ukef/dtfs2-common';
 import db from '../../drivers/db-client';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, DB_COLLECTIONS } from '../../constants';
-import { AzureFileInfo } from '../../types/azure-file-info';
-import { UtilisationReport, UtilisationReportUploadDetails } from '../../types/db-models/utilisation-reports';
 import { PortalSessionUser } from '../../types/portal/portal-session-user';
-import { ReportPeriod } from '../../types/utilisation-reports';
-import { MonthAndYear } from '../../types/date';
+import { UtilisationReportUploadDetails } from '../../types/utilisation-reports';
 import { SessionBank } from '../../types/session-bank';
 
 export const updateUtilisationReportDetailsWithUploadDetails = async (
@@ -25,7 +29,7 @@ export const updateUtilisationReportDetailsWithUploadDetails = async (
     },
   };
 
-  const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+  const utilisationReportDetailsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.UTILISATION_REPORTS);
   await utilisationReportDetailsCollection.updateOne(
     {
       _id: { $eq: existingReport._id },
@@ -50,7 +54,7 @@ export const saveNotReceivedUtilisationReport = async (reportPeriod: ReportPerio
     status: 'REPORT_NOT_RECEIVED',
   };
 
-  const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+  const utilisationReportsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.UTILISATION_REPORTS);
   return await utilisationReportsCollection.insertOne(utilisationReportInfo);
 };
 
@@ -90,7 +94,7 @@ export const getOneUtilisationReportDetailsByBankId = async (
   bankId: string,
   options?: GetUtilisationReportDetailsOptions,
 ): Promise<UtilisationReport | null> => {
-  const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+  const utilisationReportsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.UTILISATION_REPORTS);
   const utilisationReportDetailsFilter: Filter<UtilisationReport> = {
     'bank.id': { $eq: bankId },
     ...getUtilisationReportDetailsFilterFromOptions(options),
@@ -104,7 +108,7 @@ export const getOneUtilisationReportDetailsByBankId = async (
  * @returns The found bank reports (`[]` if none found)
  */
 export const getManyUtilisationReportDetailsByBankId = async (bankId: string, options?: GetUtilisationReportDetailsOptions): Promise<UtilisationReport[]> => {
-  const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+  const utilisationReportsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.UTILISATION_REPORTS);
   const utilisationReportDetailsFilter: Filter<UtilisationReport> = {
     'bank.id': { $eq: bankId },
     ...getUtilisationReportDetailsFilterFromOptions(options),
@@ -114,7 +118,7 @@ export const getManyUtilisationReportDetailsByBankId = async (bankId: string, op
 };
 
 export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStart: MonthAndYear, bankId: string): Promise<UtilisationReport[]> => {
-  const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.UTILISATION_REPORTS);
 
   return await collection
     .find({
