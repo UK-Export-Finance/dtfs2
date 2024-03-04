@@ -373,13 +373,6 @@ jobs:
       - name: Docker
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
-      - name: Initialise
-        working-directory: ./
-        run: |
-          sleep 60s
-          npm run load
-          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-
       - name: Execute
         working-directory: ./e2e-tests
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec "./portal/cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
@@ -422,13 +415,6 @@ jobs:
 
       - name: Docker
         run: docker-compose -f docker-compose.gha.yml up --build -d
-
-      - name: Initialise
-        working-directory: ./
-        run: |
-          sleep 60s
-          npm run load
-          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -480,13 +466,6 @@ jobs:
 
       - name: Docker
         run: docker-compose -f docker-compose.gha.yml up --build -d
-
-      - name: Initialise
-        working-directory: ./
-        run: |
-          sleep 60s
-          npm run load
-          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -547,13 +526,6 @@ jobs:
 
       - name: Docker
         run: docker-compose -f docker-compose.gha.yml up --build -d
-
-      - name: Initialise
-        working-directory: ./
-        run: |
-          sleep 60s
-          npm run load
-          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
       - name: Execute
         working-directory: ./e2e-tests

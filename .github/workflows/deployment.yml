@@ -135,11 +135,11 @@ jobs:
           username: ${{ env.ACR_USER }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Dockerfile Location 🐳
+      - name: Dockerfile 🐳
         if: ${{ 'portal-ui' == matrix.webapp }}
         run: echo "DOCKERFILE=portal/Dockerfile" >> $GITHUB_ENV
 
-      - name: Dockerfile Location 🐳
+      - name: Dockerfile 🐳
         if: ${{ 'portal-ui' != matrix.webapp }}
         run: echo "DOCKERFILE=${{ matrix.webapp }}/Dockerfile" >> $GITHUB_ENV
 
