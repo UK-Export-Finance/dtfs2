@@ -1,4 +1,5 @@
-import { MongoDbClient, MongoDbCollectionName } from '@ukef/dtfs2-common';
+import { MongoDbClient } from '@ukef/dtfs2-common/mongo-db-client';
+import { MongoDbCollectionName } from '@ukef/dtfs2-common';
 import { dbName, url } from '../config';
 
 const mongoDbClient = new MongoDbClient({ dbName, dbConnectionString: url });

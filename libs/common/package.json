@@ -19,7 +19,8 @@
   "author": "UK Export Finance",
   "exports": {
     ".": "./src/index.ts",
-    "./sql-db-connection": "./src/sql-db-connection/index.ts"
+    "./sql-db-connection": "./src/sql-db-connection/index.ts",
+    "./mongo-db-client": "./src/mongo-db-client/index.ts"
   },
   "main": "src/index.ts",
   "scripts": {
