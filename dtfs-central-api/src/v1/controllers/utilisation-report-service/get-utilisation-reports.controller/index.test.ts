@@ -1,9 +1,11 @@
 import httpMocks from 'node-mocks-http';
-import { UtilisationReport, ReportPeriod } from '@ukef/dtfs2-common';
+import { ReportPeriod, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { GetUtilisationReportsRequest, getUtilisationReports } from './index';
-import { getManyUtilisationReportDetailsByBankId } from '../../../../repositories/utilisation-reports-repo';
+import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 
 jest.mock('../../../../repositories/utilisation-reports-repo');
+
+jest.mock('../../../../repositories/utilisation-reports-repo/utilisation-report-sql.repo');
 
 console.error = jest.fn();
 
@@ -36,8 +38,7 @@ describe('getUtilisationReports', () => {
   it('returns a 500 response if any errors are thrown', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
-
-    jest.mocked(getManyUtilisationReportDetailsByBankId).mockRejectedValue(new Error());
+    jest.spyOn(UtilisationReportRepo, 'findAllByBankId').mockImplementation(jest.fn().mockRejectedValue(new Error()));
 
     // Act
     await getUtilisationReports(req, res);
@@ -50,14 +51,15 @@ describe('getUtilisationReports', () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
-    const mockUtilisationReports: UtilisationReport[] = [];
-    jest.mocked(getManyUtilisationReportDetailsByBankId).mockResolvedValue(mockUtilisationReports);
+    const mockUtilisationReports: UtilisationReportEntity[] = [];
+    const findAllByBankIdMock = jest.fn().mockResolvedValue(mockUtilisationReports);
+    jest.spyOn(UtilisationReportRepo, 'findAllByBankId').mockImplementation(findAllByBankIdMock);
 
     // Act
     await getUtilisationReports(req, res);
 
     // Assert
-    expect(getManyUtilisationReportDetailsByBankId).toHaveBeenCalledWith(bankId, {
+    expect(findAllByBankIdMock).toHaveBeenCalledWith(bankId, {
       reportPeriod: undefined,
       excludeNotUploaded: false,
     });
@@ -80,8 +82,9 @@ describe('getUtilisationReports', () => {
       },
     };
 
-    const mockUtilisationReports: UtilisationReport[] = [];
-    jest.mocked(getManyUtilisationReportDetailsByBankId).mockResolvedValue(mockUtilisationReports);
+    const mockUtilisationReports: UtilisationReportEntity[] = [];
+    const findAllByBankIdMock = jest.fn().mockResolvedValue(mockUtilisationReports);
+    jest.spyOn(UtilisationReportRepo, 'findAllByBankId').mockImplementation(findAllByBankIdMock);
 
     const { req, res } = getHttpMocks({ reportPeriod: getReportPeriodJsonObject(validReportPeriod) });
 
@@ -89,7 +92,7 @@ describe('getUtilisationReports', () => {
     await getUtilisationReports(req, res);
 
     // Assert
-    expect(getManyUtilisationReportDetailsByBankId).toHaveBeenCalledWith(bankId, {
+    expect(findAllByBankIdMock).toHaveBeenCalledWith(bankId, {
       reportPeriod: validReportPeriod,
       excludeNotUploaded: false,
     });
@@ -103,8 +106,9 @@ describe('getUtilisationReports', () => {
     // Arrange
     const excludeNotUploaded = 'true';
 
-    const mockUtilisationReports: UtilisationReport[] = [];
-    jest.mocked(getManyUtilisationReportDetailsByBankId).mockResolvedValue(mockUtilisationReports);
+    const mockUtilisationReports: UtilisationReportEntity[] = [];
+    const findAllByBankIdMock = jest.fn().mockResolvedValue(mockUtilisationReports);
+    jest.spyOn(UtilisationReportRepo, 'findAllByBankId').mockImplementation(findAllByBankIdMock);
 
     const { req, res } = getHttpMocks({ excludeNotUploaded });
 
@@ -112,7 +116,7 @@ describe('getUtilisationReports', () => {
     await getUtilisationReports(req, res);
 
     // Assert
-    expect(getManyUtilisationReportDetailsByBankId).toHaveBeenCalledWith(bankId, {
+    expect(findAllByBankIdMock).toHaveBeenCalledWith(bankId, {
       excludeNotUploaded: true,
       reportPeriod: undefined,
     });
@@ -137,8 +141,9 @@ describe('getUtilisationReports', () => {
 
     const excludeNotUploaded = 'true';
 
-    const mockUtilisationReports: UtilisationReport[] = [];
-    jest.mocked(getManyUtilisationReportDetailsByBankId).mockResolvedValue(mockUtilisationReports);
+    const mockUtilisationReports: UtilisationReportEntity[] = [];
+    const findAllByBankIdMock = jest.fn().mockResolvedValue(mockUtilisationReports);
+    jest.spyOn(UtilisationReportRepo, 'findAllByBankId').mockImplementation(findAllByBankIdMock);
 
     const { req, res } = getHttpMocks({ reportPeriod: getReportPeriodJsonObject(validReportPeriod), excludeNotUploaded });
 
@@ -146,7 +151,7 @@ describe('getUtilisationReports', () => {
     await getUtilisationReports(req, res);
 
     // Assert
-    expect(getManyUtilisationReportDetailsByBankId).toHaveBeenCalledWith(bankId, {
+    expect(findAllByBankIdMock).toHaveBeenCalledWith(bankId, {
       reportPeriod: validReportPeriod,
       excludeNotUploaded: true,
     });

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
-import { getManyUtilisationReportDetailsByBankId } from '../../../../repositories/utilisation-reports-repo';
+import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { parseReportPeriod } from '../../../../utils/report-period';
 
 export type GetUtilisationReportsRequest = CustomExpressRequest<{
@@ -27,7 +27,7 @@ export const getUtilisationReports = async (req: GetUtilisationReportsRequest, r
 
     const parsedReportPeriod = parseReportPeriod(reportPeriod);
 
-    const utilisationReports = await getManyUtilisationReportDetailsByBankId(bankId, {
+    const utilisationReports = await UtilisationReportRepo.findAllByBankId(bankId, {
       reportPeriod: parsedReportPeriod,
       excludeNotUploaded: excludeNotUploaded === 'true',
     });

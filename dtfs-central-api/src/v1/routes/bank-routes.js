@@ -126,8 +126,8 @@ bankRouter.route('/').get(getBanksController.getAllBanksGet);
  *                   - $ref: '#/definitions/UtilisationReport'
  *                   - type: object
  *                     properties:
- *                       _id:
- *                         example: 123456abc
+ *                       id:
+ *                         example: 12345
  *       400:
  *         description: Bad request
  *       404:

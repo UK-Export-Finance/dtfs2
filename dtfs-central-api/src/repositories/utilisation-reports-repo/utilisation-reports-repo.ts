@@ -1,5 +1,4 @@
 import { Filter, InsertOneResult, OptionalId } from 'mongodb';
-import sortBy from 'lodash/sortBy';
 import {
   AzureFileInfo,
   UtilisationReport,
@@ -12,6 +11,7 @@ import db from '../../drivers/db-client';
 import { PortalSessionUser } from '../../types/portal/portal-session-user';
 import { UtilisationReportUploadDetails } from '../../types/utilisation-reports';
 import { SessionBank } from '../../types/session-bank';
+import { GetUtilisationReportDetailsOptions } from '.';
 
 export const updateUtilisationReportDetailsWithUploadDetails = async (
   existingReport: UtilisationReport,
@@ -58,11 +58,6 @@ export const saveNotReceivedUtilisationReport = async (reportPeriod: ReportPerio
   return await utilisationReportsCollection.insertOne(utilisationReportInfo);
 };
 
-export type GetUtilisationReportDetailsOptions = {
-  reportPeriod?: UtilisationReport['reportPeriod'];
-  excludeNotUploaded?: boolean;
-};
-
 /**
  * Gets the utilisation report collection filter from the passed in options
  * @param options - The options
@@ -100,21 +95,6 @@ export const getOneUtilisationReportDetailsByBankId = async (
     ...getUtilisationReportDetailsFilterFromOptions(options),
   };
   return await utilisationReportsCollection.findOne(utilisationReportDetailsFilter);
-};
-
-/**
- * Gets utilisation reports by bank id
- * @param bankId - The bank id
- * @returns The found bank reports (`[]` if none found)
- */
-export const getManyUtilisationReportDetailsByBankId = async (bankId: string, options?: GetUtilisationReportDetailsOptions): Promise<UtilisationReport[]> => {
-  const utilisationReportsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.UTILISATION_REPORTS);
-  const utilisationReportDetailsFilter: Filter<UtilisationReport> = {
-    'bank.id': { $eq: bankId },
-    ...getUtilisationReportDetailsFilterFromOptions(options),
-  };
-  const filteredUtilisationReports: UtilisationReport[] = await utilisationReportsCollection.find(utilisationReportDetailsFilter).toArray();
-  return sortBy(filteredUtilisationReports, ['reportPeriod.start.year', 'reportPeriod.start.month']);
 };
 
 export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStart: MonthAndYear, bankId: string): Promise<UtilisationReport[]> => {
