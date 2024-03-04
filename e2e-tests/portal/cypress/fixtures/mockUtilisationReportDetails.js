@@ -34,7 +34,8 @@ const generateReportDetails = (year, month) => {
     },
     dateUploaded,
     uploadedBy,
-    azureFileInfo: null,
+    // Azure file info must be non-null if in 'PENDING_RECONCILIATION' state
+    azureFileInfo: {},
     status: 'PENDING_RECONCILIATION',
   };
 };

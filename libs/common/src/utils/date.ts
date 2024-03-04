@@ -1,6 +1,6 @@
 import { eachMonthOfInterval, format, isValid, parseISO } from 'date-fns';
 import { isString } from '../helpers';
-import { IsoMonthStamp, OneIndexedMonth } from '../types';
+import { IsoMonthStamp, MonthAndYear, OneIndexedMonth } from '../types';
 
 /**
  * Converts date with index-0 month value to numeric index-1 month
@@ -22,3 +22,9 @@ export const eachIsoMonthOfInterval = (start: IsoMonthStamp, end: IsoMonthStamp,
   const resultDates = options?.exclusive ? monthsBetweenDatesInclusive.slice(1, -1) : monthsBetweenDatesInclusive;
   return resultDates.map(toIsoMonthStamp);
 };
+
+/**
+* Checks if the {@link MonthAndYear} objects are equal
+*/
+export const isEqualMonthAndYear = (monthAndYear1: MonthAndYear, monthAndYear2: MonthAndYear): boolean =>
+ monthAndYear1.year === monthAndYear2.year && monthAndYear1.month === monthAndYear2.month;

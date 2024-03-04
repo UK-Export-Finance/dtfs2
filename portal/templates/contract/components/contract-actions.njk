@@ -6,7 +6,7 @@
 
 {% macro render(params) %}
 
-  {% if params.dealFormsCompleted %}
+  {% if params.isEveryDealFormComplete %}
 
     {% if params.deal.status %}
       {% if params.user.roles.includes('maker') %}

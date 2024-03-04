@@ -14,9 +14,11 @@ module.exports = defineConfig({
   // TODO: Read value from environment variable
   apiKey: 'test',
   dbName: 'dtfs-submissions',
-  dbConnectionString: 'mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT',
+  dbConnectionString: 'mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true',
   pageLoadTimeout: 180000,
   numTestsKeptInMemory: 1,
+  viewportWidth: 3840,
+  viewportHeight: 2400,
   retries: {
     runMode: 2,
     openMode: 0,

@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 services:
   clamav:
     image: mkodockx/docker-clamav:alpine
@@ -7,21 +7,29 @@ services:
       - '3310:3310'
 
   dtfs-submissions-data:
-    image: mongo:5.0.5
-    restart: always
+    build:
+      context: ./mongodb
+      dockerfile: Dockerfile
     environment:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
+    ports:
+      - "27017:27017"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --quiet) -eq 1
+      interval: 10s
+      start_period: 30s
+    command: "--bind_ip_all --keyFile /mongo-keyfile --replSet rs0"
     volumes:
       - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
     deploy:
       resources:
         limits:
-          cpus: "0.1"
+          cpus: '0.1'
           memory: 300M
-    ports:
-      - "27017-27019:27017-27019"
 
   dtfs-central-api:
     build:
@@ -33,14 +41,14 @@ services:
       - dtfs-submissions-data
       - external-api
     ports:
-      - "5005:5005"
+      - '5005:5005'
     volumes:
       - ./dtfs-central-api/src:/app/dtfs-central-api/src:ro
       - ./libs:/app/libs:ro
     deploy:
       resources:
         limits:
-          cpus: "0.1"
+          cpus: '0.1'
           memory: 400M
     environment:
       - PORT=5005
@@ -56,6 +64,10 @@ services:
       - EXTERNAL_API_KEY
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
+      - AUDIT_API_URL
+      - AUDIT_API_USERNAME
+      - AUDIT_API_PASSWORD
+      - CHANGE_STREAM_ENABLED
       - UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
     entrypoint: npx ts-node dtfs-central-api/src/index.ts
 
@@ -67,7 +79,7 @@ services:
     depends_on:
       - trade-finance-manager-api
     ports:
-      - "5003:5003"
+      - '5003:5003'
     volumes:
       - ./trade-finance-manager-ui/server:/app/trade-finance-manager-ui/server:ro
       - ./trade-finance-manager-ui/public:/app/trade-finance-manager-ui/public:ro
@@ -76,7 +88,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.1"
+          cpus: '0.1'
           memory: 300M
     environment:
       - PORT=5003
@@ -106,7 +118,7 @@ services:
       - dtfs-central-api
       - external-api
     ports:
-      - "5004:5004"
+      - '5004:5004'
     volumes:
       - ./trade-finance-manager-api/src:/app/trade-finance-manager-api/src:ro
       - ./libs:/app/libs:ro
@@ -138,7 +150,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.2"
+          cpus: '0.2'
           memory: 600M
     entrypoint: npx ts-node trade-finance-manager-api/src/index.ts
 
@@ -153,7 +165,7 @@ services:
       - portal-api
       - clamav
     ports:
-      - "5000:5000"
+      - '5000:5000'
     volumes:
       - ./portal/server:/app/portal/server:ro
       - ./portal/public:/app/portal/public:ro
@@ -162,7 +174,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.2"
+          cpus: '0.2'
           memory: 700M
     environment:
       - COMPANIES_HOUSE_API_KEY
@@ -194,14 +206,14 @@ services:
       - dtfs-central-api
       - external-api
     ports:
-      - "5001:5001"
+      - '5001:5001'
     volumes:
       - ./portal-api/src:/app/portal-api/src:ro
       - ./libs:/app/libs:ro
     deploy:
       resources:
         limits:
-          cpus: "0.25"
+          cpus: '0.25'
           memory: 950M
     environment:
       - PORT=5001
@@ -245,14 +257,14 @@ services:
     depends_on:
       - dtfs-submissions-data
     ports:
-      - "5002:5002"
+      - '5002:5002'
     volumes:
       - ./external-api/src:/app/external-api/src:ro
       - ./libs:/app/libs:ro
     deploy:
       resources:
         limits:
-          cpus: "0.1"
+          cpus: '0.1'
           memory: 400M
     environment:
       - PORT=5002
@@ -295,7 +307,7 @@ services:
       - redis
       - portal-api
     ports:
-      - "5006:5006"
+      - '5006:5006'
     volumes:
       - ./gef-ui/server:/app/gef-ui/server:ro
       - ./gef-ui/public:/app/gef-ui/public:ro
@@ -304,7 +316,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.1"
+          cpus: '0.1'
           memory: 300M
     environment:
       - PORTAL_API_URL=http://portal-api:5001
@@ -326,11 +338,11 @@ services:
     image: dtfs/azure-function-number-generator
     restart: always
     ports:
-      - "7072:80"
+      - '7072:80'
     deploy:
       resources:
         limits:
-          cpus: "0.1"
+          cpus: '0.1'
           memory: 300M
     environment:
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
@@ -346,28 +358,28 @@ services:
       - NODE_ENV=${NODE_ENV}
 
   redis:
-    image: "redis:alpine"
+    image: 'redis:alpine'
     ports:
-      - "6379:6379"
+      - '6379:6379'
     deploy:
       resources:
         limits:
-          cpus: "0.1"
+          cpus: '0.1'
           memory: 300M
 
   reverse-proxy:
     build: ./reverse-proxy
-    image: "dtfs/reverse-proxy"
+    image: 'dtfs/reverse-proxy'
     depends_on:
       - portal
       - gef-ui
     ports:
-      - "80:80"
+      - '80:80'
     environment:
       - PORTAL_UI=portal:5000
       - GEF_UI=gef-ui:5006
     deploy:
       resources:
         limits:
-          cpus: "0.01"
+          cpus: '0.01'
           memory: 150M

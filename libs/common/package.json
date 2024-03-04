@@ -25,14 +25,16 @@
     "prettier": "prettier --check \"src/**/*.{ts,js}\"",
     "prettier:fix": "prettier --write \"src/**/*.{ts,js}\"",
     "type-check": "tsc --noEmit",
-    "unit-test": "jest --coverage --verbose",
-    "unit-test-quick": "jest"
+    "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
+    "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },
   "dependencies": {
+    "node-cron": "^3.0.3",
     "date-fns": "^3.3.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.11",
+    "@types/node-cron": "^3.0.11",
     "eslint": "^8.56.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.1",

@@ -44,7 +44,6 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
       await updateUtilisationReportStatus(req, res);
 
       // Assert
-      // eslint-disable-next-line no-underscore-dangle
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(errorSpy).toHaveBeenCalledWith('Expected request body to be an object');
     });
@@ -61,7 +60,6 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
       await updateUtilisationReportStatus(req, res);
 
       // Assert
-      // eslint-disable-next-line no-underscore-dangle
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
     });
 
@@ -77,7 +75,6 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
       await updateUtilisationReportStatus(req, res);
 
       // Assert
-      // eslint-disable-next-line no-underscore-dangle
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(errorSpy).toHaveBeenCalledWith("form-button body parameter of 'invalid-value' does not match either 'completed' or 'not-completed'");
     });

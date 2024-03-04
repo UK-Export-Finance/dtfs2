@@ -4,10 +4,7 @@ const MIADealWithAcceptedStatusIssuedFacilities = require('./MIA-deal-with-accep
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const DATE_CONSTANTS = require('../../../../../../e2e-fixtures/dateConstants');
 
-const {
-  ADMIN,
-  BANK1_MAKER1,
-} = MOCK_USERS;
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('Given a deal that has `Accepted` status with Issued, Unissued, Unconditional and Conditional facilities', () => {
   let deal;
@@ -19,30 +16,27 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MIADealWithAcceptedStatusIssuedFacilities, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id;
+    cy.insertOneDeal(MIADealWithAcceptedStatusIssuedFacilities, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
 
-        const { mockFacilities } = MIADealWithAcceptedStatusIssuedFacilities;
+      const { mockFacilities } = MIADealWithAcceptedStatusIssuedFacilities;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-          const loans = createdFacilities.filter((f) => f.type === 'Loan');
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-          dealFacilities.bonds = bonds;
-          dealFacilities.loans = loans;
-        });
+        dealFacilities.bonds = bonds;
+        dealFacilities.loans = loans;
       });
+    });
   });
 
   after(() => {
     cy.deleteDeals(ADMIN);
-
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
-
     dealFacilities.loans.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
@@ -58,32 +52,34 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 
-    const issuedSubmittedBond = dealFacilities.bonds.find((b) =>
-      b.facilityStage === 'Issued' && b.status === 'Submitted');
+    const issuedSubmittedBond = dealFacilities.bonds.find((b) => b.facilityStage === 'Issued' && b.status === 'Submitted');
 
-    const issuedCompletedBond = dealFacilities.bonds.find((b) =>
-      b.facilityStage === 'Issued' && b.status !== 'Submitted'); // `Completed` is generated dynamically
+    const issuedCompletedBond = dealFacilities.bonds.find((b) => b.facilityStage === 'Issued' && b.status !== 'Submitted'); // `Completed` is generated dynamically
 
-    const unissuedBond = dealFacilities.bonds.find((b) =>
-      b.facilityStage === 'Unissued');
+    const unissuedBond = dealFacilities.bonds.find((b) => b.facilityStage === 'Unissued');
 
-    const unconditionalSubmittedLoan = dealFacilities.loans.find((l) =>
-      l.facilityStage === 'Unconditional' && l.status === 'Submitted');
+    const unconditionalSubmittedLoan = dealFacilities.loans.find((l) => l.facilityStage === 'Unconditional' && l.status === 'Submitted');
 
-    const unconditionalCompletedLoan = dealFacilities.loans.find((l) =>
-      l.facilityStage === 'Unconditional' && l.status !== 'Submitted'); // `Completed` is generated dynamically
+    const unconditionalCompletedLoan = dealFacilities.loans.find((l) => l.facilityStage === 'Unconditional' && l.status !== 'Submitted'); // `Completed` is generated dynamically
 
-    const conditionalLoan = dealFacilities.loans.find((l) =>
-      l.facilityStage === 'Conditional');
+    const conditionalLoan = dealFacilities.loans.find((l) => l.facilityStage === 'Conditional');
 
     const issuedSubmittedBondId = issuedSubmittedBond._id;
     const issuedSubmittedBondRow = pages.contract.bondTransactionsTable.row(issuedSubmittedBondId);
 
-    const secondIssuedSubmittedBond = dealFacilities.bonds.find((b) =>
-      b.facilityStage === 'Issued' && b.status === 'Submitted' && b._id !== issuedSubmittedBondId);
+    const secondIssuedSubmittedBond = dealFacilities.bonds.find(
+      (b) => b.facilityStage === 'Issued' && b.status === 'Submitted' && b._id !== issuedSubmittedBondId,
+    );
+
+    const fourthIssuedSubmittedBond = dealFacilities.bonds.find(
+      (b) => b.facilityStage === 'Issued' && b.status === 'Submitted' && b._id !== secondIssuedSubmittedBond,
+    );
 
     const secondIssuedSubmittedBondId = secondIssuedSubmittedBond._id;
     const secondIssuedSubmittedBondRow = pages.contract.bondTransactionsTable.row(secondIssuedSubmittedBondId);
+
+    const fourthIssuedSubmittedBondId = fourthIssuedSubmittedBond._id;
+    const fourthIssuedSubmittedBondRow = pages.contract.bondTransactionsTable.row(fourthIssuedSubmittedBondId);
 
     const issuedCompletedBondId = issuedCompletedBond._id;
     const issuedCompletedBondRow = pages.contract.bondTransactionsTable.row(issuedCompletedBondId);
@@ -94,14 +90,19 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     const unconditionalSubmittedLoanId = unconditionalSubmittedLoan._id;
     const unconditionalSubmittedLoanRow = pages.contract.loansTransactionsTable.row(unconditionalSubmittedLoanId);
 
-    // secondUnconditionalSubmittedLoanRow
-    const secondUnconditionalSubmittedLoan = dealFacilities.loans.find((l) =>
-      l.facilityStage === 'Unconditional' && l.status === 'Submitted' && l._id !== unconditionalSubmittedLoanId);
+    const secondUnconditionalSubmittedLoan = dealFacilities.loans.find(
+      (l) => l.facilityStage === 'Unconditional' && l.status === 'Submitted' && l._id !== unconditionalSubmittedLoanId,
+    );
 
     const secondUnconditionalSubmittedLoanId = secondUnconditionalSubmittedLoan._id;
-    const secondUnconditionalSubmittedLoanRow = pages.contract.loansTransactionsTable.row(
-      secondUnconditionalSubmittedLoanId,
+    const secondUnconditionalSubmittedLoanRow = pages.contract.loansTransactionsTable.row(secondUnconditionalSubmittedLoanId);
+
+    const fourthUnconditionalSubmittedLoan = dealFacilities.loans.find(
+      (l) => l.facilityStage === 'Unconditional' && l.status === 'Submitted' && l._id !== secondUnconditionalSubmittedLoanId,
     );
+
+    const fourthUnconditionalSubmittedLoanId = fourthUnconditionalSubmittedLoan._id;
+    const fourthUnconditionalSubmittedLoanRow = pages.contract.loansTransactionsTable.row(fourthUnconditionalSubmittedLoanId);
 
     const unconditionalCompletedLoanId = unconditionalCompletedLoan._id;
     const unconditionalCompletedLoanRow = pages.contract.loansTransactionsTable.row(unconditionalCompletedLoanId);
@@ -139,7 +140,6 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
     const NEW_BOND_COVER_START_DATE = () => {
       const date = new Date(parseInt(deal.details.submissionDate, 10));
-      date.setDate(date.getDate() + 7);
       return date;
     };
 
@@ -185,7 +185,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     // Maker cannot resubmit deal until all facility cover start dates have been confirmed
     // at this point, only 1 facility has NOT had the date confirmed
     //---------------------------------------------------------------
-    pages.contract.proceedToReview().should('be.disabled');
+    pages.contract.proceedToReview().should('not.exist');
 
     //---------------------------------------------------------------
     // Maker can change Cover start date for an Unconditional facility with 'Completed' status
@@ -205,6 +205,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     // Maker selects 'no, do not change date, keep existing date' for a Bond
     // in Confirm start date form
     //---------------------------------------------------------------
+    // Second bond
     secondIssuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().should('be.visible');
     secondIssuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Confirm start date');
 
@@ -214,10 +215,18 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
     pages.facilityConfirmCoverStartDate.submit().click();
 
+    /**
+     * Maker should still not be able to submit the deal for check,
+     * until all the pending issued facilities cover start date has
+     * been confirmed.
+     */
+    pages.contract.proceedToReview().should('not.exist');
+
     //---------------------------------------------------------------
     // Maker selects 'no, do not change date, keep existing date' for a Loan
     // in Confirm start date form
     //---------------------------------------------------------------
+    // Second loan
     secondUnconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('be.visible');
     secondUnconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Confirm start date');
 
@@ -239,10 +248,21 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     issuedCompletedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
     const expectedLoanDate = NEW_LOAN_COVER_START_DATE.toLocaleDateString('en-GB');
-    unconditionalSubmittedLoanRow.requestedCoverStartDate().should('contain.text', expectedLoanDate);
+
+    unconditionalSubmittedLoanRow
+      .requestedCoverStartDate()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(expectedLoanDate);
+      });
     unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
-    unconditionalCompletedLoanRow.requestedCoverStartDate().should('contain.text', expectedLoanDate);
+    unconditionalCompletedLoanRow
+      .requestedCoverStartDate()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(expectedLoanDate);
+      });
     unconditionalCompletedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
     //---------------------------------------------------------------
@@ -250,19 +270,55 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     // - `confirm start date` link/text should be updated
     //---------------------------------------------------------------
 
-    secondIssuedSubmittedBondRow.requestedCoverStartDate().should(
-      'contain.text',
-      new Date(issuedSubmittedBond.requestedCoverStartDate).toLocaleDateString('en-GB'),
-    );
+    const expectedIssuedBondDate = new Date(secondIssuedSubmittedBond.requestedCoverStartDate).toLocaleDateString('en-GB');
+
+    secondIssuedSubmittedBondRow
+      .requestedCoverStartDate()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(expectedIssuedBondDate);
+      });
 
     secondIssuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
-    secondUnconditionalSubmittedLoanRow.requestedCoverStartDate().should(
-      'contain.text',
-      new Date(issuedSubmittedBond.requestedCoverStartDate).toLocaleDateString('en-GB'),
-    );
+    secondUnconditionalSubmittedLoanRow
+      .requestedCoverStartDate()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(expectedIssuedBondDate);
+      });
 
     secondUnconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
+
+    //---------------------------------------------------------------
+    // Maker selects 'no, do not change date, keep existing date' for a Bond
+    // in Confirm start date form
+    //---------------------------------------------------------------
+
+    // Fourth bond
+    fourthIssuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().should('be.visible');
+    fourthIssuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
+
+    fourthIssuedSubmittedBondRow
+      .requestedCoverStartDate()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(expectedIssuedBondDate);
+      });
+    //---------------------------------------------------------------
+    // Maker selects 'no, do not change date, keep existing date' for a Loan
+    // in Confirm start date form
+    //---------------------------------------------------------------
+    // Fourth loan
+    fourthUnconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('be.visible');
+    fourthUnconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
+
+    fourthUnconditionalSubmittedLoanRow
+      .requestedCoverStartDate()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(expectedLoanDate);
+      });
 
     //---------------------------------------------------------------
     // Maker can resubmit deal now, after all cover start dates have been confirmed
@@ -301,18 +357,24 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
       const bondRow = pages.contract.bondTransactionsTable.row(bond._id);
       bondRow.changeOrConfirmCoverStartDateLink().should('not.exist');
 
-      issuedSubmittedBondRow.issueFacilityLink().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
+      issuedSubmittedBondRow
+        .issueFacilityLink()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Facility issued');
+        });
     });
 
     dealFacilities.loans.forEach((loan) => {
       const loanRow = pages.contract.loansTransactionsTable.row(loan._id);
       loanRow.changeOrConfirmCoverStartDateLink().should('not.exist');
 
-      unconditionalSubmittedLoanRow.issueFacilityLink().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
+      unconditionalSubmittedLoanRow
+        .issueFacilityLink()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Facility issued');
+        });
     });
   });
 });

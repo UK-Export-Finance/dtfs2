@@ -1,6 +1,7 @@
 const { nowTimestamp } = require('../dates');
 const MANDATORY_CRITERIA = require('../mandatoryCriteria');
 const { MAKER } = require('../../portal/roles');
+const { BANK1_MAKER1 } = require('../../portal/users');
 
 // de-structure and create a new array, so `sort` doesn't impact 'MANDATORY_CRITERIA'
 let mandatoryCriteria = [...MANDATORY_CRITERIA].sort((a, b) => (a.version > b.version ? 1 : -1));
@@ -23,7 +24,7 @@ module.exports = {
     status: 'Draft',
     maker: {
       _id: '60f7d72654f99900074c0a6d',
-      username: 'maker1@ukexportfinance.gov.uk',
+      username: BANK1_MAKER1.username,
       roles: [MAKER],
       bank: {
         id: '9',
@@ -33,7 +34,7 @@ module.exports = {
       lastLogin: '1626968154830',
       firstname: 'Hugo',
       surname: 'Drax',
-      email: 'maker1@ukexportfinance.gov.uk',
+      email: BANK1_MAKER1.email,
       timezone: 'Europe/London',
       'user-status': 'active',
     },
@@ -197,7 +198,7 @@ module.exports = {
   editedBy: [
     {
       date: '1626968578071',
-      username: 'maker1@ukexportfinance.gov.uk',
+      username: BANK1_MAKER1.username,
       roles: [MAKER],
       bank: {
         id: '9',
@@ -208,7 +209,7 @@ module.exports = {
     },
     {
       date: '1626971072253',
-      username: 'maker1@ukexportfinance.gov.uk',
+      username: BANK1_MAKER1.username,
       roles: [MAKER],
       bank: {
         id: '9',

@@ -5,7 +5,7 @@ import {
   getReportPeriodForBankScheduleBySubmissionMonth,
   getReportPeriodStartForSubmissionMonth,
   getSubmissionMonthForReportPeriodStart,
-  isEqualReportPeriodStart,
+  isEqualMonthAndYear,
 } from '@ukef/dtfs2-common';
 import { Bank } from '../../../../types/db-models/banks';
 import { IsoMonthStamp } from '../../../../types/date';
@@ -109,7 +109,7 @@ const isBankDueToSubmitReport =
   (currentSubmissionMonth: IsoMonthStamp) =>
   (bank: Bank): boolean => {
     const currentReportPeriodForBank = getCurrentReportPeriodForBankSchedule(bank.utilisationReportPeriodSchedule);
-    return isEqualReportPeriodStart(currentReportPeriodForBank.start, getReportPeriodStartForSubmissionMonth(currentSubmissionMonth));
+    return isEqualMonthAndYear(currentReportPeriodForBank.start, getReportPeriodStartForSubmissionMonth(currentSubmissionMonth));
   };
 
 export const generateReconciliationSummaries = async (currentSubmissionMonth: IsoMonthStamp): Promise<UtilisationReportReconciliationSummary[]> => {

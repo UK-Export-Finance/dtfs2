@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const componentRenderer = require('../../componentRenderer');
 
 const component = '../templates/deals/_macros/deals-table-heading.njk';
