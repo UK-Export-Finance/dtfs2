@@ -1,1 +1,1 @@
-export * from './pagination-assertions';
+export * from './pagination';
