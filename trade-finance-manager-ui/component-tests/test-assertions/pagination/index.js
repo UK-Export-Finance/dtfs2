@@ -11,7 +11,6 @@ const itShouldNotRenderEllipsisBeforeNextAndLastLinks = require('./itShouldNotRe
 const itShouldRenderNextAndLastLinks = require('./itShouldRenderNextAndLastLinks');
 const itShouldNotRenderNextAndLastLinks = require('./itShouldNotRenderNextAndLastLinks');
 
-
 module.exports = {
   itShouldRenderOuterDivAndDisplayTotalItems,
   itShouldRenderNavigationList,
