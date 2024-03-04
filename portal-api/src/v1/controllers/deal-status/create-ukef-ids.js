@@ -1,6 +1,7 @@
 const { number } = require('../../../external-api/api');
 const { updateDeal } = require('../deal.controller');
 const facilitiesController = require('../facilities.controller');
+const { NUMBER } = require('../../../constants');
 
 const createUkefIds = async (entityId, deal, user) => {
   try {
@@ -8,7 +9,7 @@ const createUkefIds = async (entityId, deal, user) => {
     const facilitiesUpdatePromises = [];
 
     const { data: dealNumber } = await number.get({
-      entityType: 'deal',
+      entityType: NUMBER.ENTITY_TYPE.DEAL,
       dealId: deal._id,
     });
 

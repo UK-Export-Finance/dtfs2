@@ -17,7 +17,7 @@ const CONSTANTS = require('../../../src/constants');
 const mockApplications = require('../../fixtures/gef/application');
 const mockEligibilityCriteria = require('../../fixtures/gef/eligibilityCriteria');
 const mockFacilities = require('../../fixtures/gef/facilities');
-const referenceData = require('../../../src/external-api/api');
+const externalApi = require('../../../src/external-api/api');
 
 const api = require('../../../src/v1/api');
 const { STATUS } = require('../../../src/constants/user');
@@ -29,11 +29,11 @@ const mockSuccessfulResponse = {
     data: [
       {
         id: 12345678,
-        maskedId: '0010000000',
+        maskedId: CONSTANTS.NUMBER.UKEF_ID.TEST,
         type: 1,
-        createdBy: 'Portal v2/TFM',
+        createdBy: CONSTANTS.NUMBER.USER.DTFS,
         createdDatetime: '2024-01-01T00:00:00.000Z',
-        requestingSystem: 'Portal v2/TFM',
+        requestingSystem: CONSTANTS.NUMBER.USER.DTFS,
       },
     ],
   },
@@ -433,7 +433,7 @@ describe(baseUrl, () => {
           const dealId = body._id;
           await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL }).to(`${baseUrl}/status/${dealId}`);
 
-          const firstSendEmailCall = referenceData.sendEmail.mock.calls[0][0];
+          const firstSendEmailCall = externalApi.sendEmail.mock.calls[0][0];
 
           expect(firstSendEmailCall).toEqual(
             CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,
@@ -452,7 +452,7 @@ describe(baseUrl, () => {
           const dealId = body._id;
           await as(aChecker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED }).to(`${baseUrl}/status/${dealId}`);
 
-          const firstSendEmailCall = referenceData.sendEmail.mock.calls[0][0];
+          const firstSendEmailCall = externalApi.sendEmail.mock.calls[0][0];
 
           expect(firstSendEmailCall).toEqual(
             CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,
@@ -471,7 +471,7 @@ describe(baseUrl, () => {
           const dealId = body._id;
           await as(aChecker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${dealId}`);
 
-          const firstSendEmailCall = referenceData.sendEmail.mock.calls[0][0];
+          const firstSendEmailCall = externalApi.sendEmail.mock.calls[0][0];
 
           expect(firstSendEmailCall).toEqual(
             CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,

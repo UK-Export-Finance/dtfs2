@@ -1,5 +1,19 @@
+const { NUMBER } = require('../../constants');
+
 const get = async () => ({
-  ukefId: '12345678910',
+  data: {
+    status: 200,
+    data: [
+      {
+        id: 12345678,
+        maskedId: NUMBER.UKEF_ID.TEST,
+        type: 1,
+        createdBy: NUMBER.USER.DTFS,
+        createdDatetime: '2024-01-01T00:00:00.000Z',
+        requestingSystem: NUMBER.USER.DTFS,
+      },
+    ],
+  },
 });
 
 module.exports = {
