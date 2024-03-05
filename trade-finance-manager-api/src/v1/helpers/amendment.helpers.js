@@ -543,12 +543,7 @@ const calculateAcbsUkefExposure = (payload) => {
  */
 const formatCoverEndDate = (payload) => {
   if (payload?.coverEndDate) {
-    // Should this be covered by 6998?
-    /**
-     * TODO: date-fns and moment.js convergence
-     * Convert EPOCH to millisecond compatible epoch.
-     * date-fns outputs non-ms EPOCH.
-     * */
+    // TODO: DTFS2-7047 convert EPOCH to millisecond compatible epoch.
     const epoch = payload.coverEndDate.toString().length > 10
       ? payload.coverEndDate
       : payload.coverEndDate * 1000;

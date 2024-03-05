@@ -1,17 +1,18 @@
-import { format, isValid, parseISO, set, startOfDay } from 'date-fns';
+import { format, formatISO, isValid, parseISO, set, startOfDay } from 'date-fns';
+import { IsoDayStamp, IsoMonthStamp, UnixTimestampString } from '../types/date';
 
 /**
  * @param date 
  * @returns Date as Unix timestamp representing the number of milliseconds between this date and 1st
  * January 1970 (UTC), stored as a string.
  */
-export const getDateAsEpochMillisecondString = (date: Date) => date.valueOf().toString();
+export const getDateAsEpochMillisecondString = (date: Date): UnixTimestampString => date.valueOf().toString();
 
 /**
  * @returns Current date as Unix timestamp representing the number of milliseconds between now and 1st
  * January 1970 (UTC), stored as a string.
  */
-export const getNowAsEpochMillisecondString = () => getDateAsEpochMillisecondString(new Date());
+export const getNowAsEpochMillisecondString = (): UnixTimestampString => getDateAsEpochMillisecondString(new Date());
 
 /**
  * @param year as 2 or 4 digit number
@@ -23,14 +24,14 @@ export const formatYear = (year: string | number) => (Number(year) < 1000 ? (200
  * @param date 
  * @returns date formatted as `yyyy-MM-dd` or 'Invalid date' if not a valid format
  */
-export const formatDate = (date: Date) => isValid(date) ? format(date, 'yyyy-MM-dd') : 'Invalid date'
+export const formatDate = (date: Date): IsoDayStamp => isValid(date) ? format(date, 'yyyy-MM-dd') : 'Invalid date'
 
 /**
  * @param dateStr Unix timestamp representing number of milliseconds between this date and 1st January 1970 (UTC),
  * stored as a string 
  * @returns date formatted as `yyyy-MM-dd` or 'Invalid date' if not a number
  */
-export const formatTimestamp = (dateStr: string) => {
+export const formatTimestamp = (dateStr: string): IsoDayStamp => {
   const date = new Date(Number(dateStr));
 
   return isValid(date) ? format(date, 'yyyy-MM-dd') : 'Invalid date';
@@ -41,15 +42,15 @@ export const formatTimestamp = (dateStr: string) => {
  * @returns Unix timestamp representing number of milliseconds between this date and 1st January 1970 (UTC),
  * stored as a string
  */
-export const convertDateToTimestamp = (dateStr: string) => getDateAsEpochMillisecondString(new Date(dateStr));
+export const convertDateToTimestamp = (dateStr: string): UnixTimestampString => getDateAsEpochMillisecondString(new Date(dateStr));
 
 const ISO_MONTH_REGEX = /^\d{4}-\d{2}$/;
 /**
  * Checks whether the provided value is an ISO month string in format 'yyyy-MM'
- * @param {unknown} value - the value to test
- * @returns {boolean}
+ * @param value - the value to test
+ * @returns
  */
-export const isValidIsoMonth = (value: unknown) => typeof value === 'string' && ISO_MONTH_REGEX.test(value) && isValid(parseISO(value));
+export const isValidIsoMonth = (value: unknown): value is IsoMonthStamp => typeof value === 'string' && ISO_MONTH_REGEX.test(value) && isValid(parseISO(value));
 
 /**
  * @param day the day of the month as a string
@@ -87,3 +88,13 @@ export const getDateFromDayMonthYearStringsReplicatingMoment = (day: string, mon
     year: Number.isNaN(Number(year)) ? undefined : Number(year),
   });
 };
+
+/**
+ * @param date
+ * @returns ISO-8601 string with a UTC offset e.g. 2024-03-01T13:52:20+00:00 
+ * 
+ * This is needed to maintain exact consistency with old moment behaviour:
+ *  - `moment().format()` returns an ISO-8601 string with an offset, e.g. '+00:00'
+ *  - `formatISO()` returns an ISO-8601 string with a 'Z' if the timezone is UTC
+ */
+export const getIsoStringWithOffset = (date: Date) => formatISO(date).replace('Z', '+00:00');
