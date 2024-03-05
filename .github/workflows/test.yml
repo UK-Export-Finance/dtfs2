@@ -8,7 +8,7 @@ run-name: Executing test QA on ${{ github.repository }} 🚀
 
 on:
   pull_request:
-    branches: [main, feat/dtfs2-6113/add-pagination-to-tfm-deals]
+    branches: [main]
     paths:
       - "package*.json"
       - "docker*.yml"
