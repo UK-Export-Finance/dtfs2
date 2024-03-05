@@ -1,12 +1,9 @@
-const moment = require('moment');
+const { isBefore, add, isAfter, startOfDay } = require('date-fns');
+const { hasValue } = require('../../../../utils/string');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
-const {
-  dateHasSomeValues,
-  dateIsInTimeframe,
-  dateValidationText,
-} = require('../../fields/date');
-const { formattedTimestamp } = require('../../../facility-dates/timestamp');
+const { dateValidationText } = require('../../fields/date');
 const coverDatesValidation = require('../../helpers/coverDatesValidation.helpers');
+const { getStartOfDateFromEpochMillisecondString, getLongFormattedDate } = require('../../../helpers/date');
 
 module.exports = (submittedValues, deal, errorList) => {
   const newErrorList = errorList;
@@ -17,7 +14,7 @@ module.exports = (submittedValues, deal, errorList) => {
     'requestedCoverStartDate-year': requestedCoverStartDateYear,
   } = submittedValues;
 
-  const requestedCoverStartDateTimestamp = formattedTimestamp(submittedValues.requestedCoverStartDate);
+  const requestedCoverStartDate = getStartOfDateFromEpochMillisecondString(submittedValues.requestedCoverStartDate);
 
   // EC 15 is: 'Cover Start Date is no more than three months from the date of submission'
   const eligibilityCriteria15 = deal.eligibility.criteria.find((c) => c.id === 15);
@@ -25,17 +22,17 @@ module.exports = (submittedValues, deal, errorList) => {
 
   const dealHasBeenSubmitted = deal.details.submissionDate;
 
-  const nowDate = moment().startOf('day');
+  const startOfToday = startOfDay(new Date());
 
   if (!dealHasBeenSubmitted) {
-    const {
-      coverDayValidation,
-      coverMonthValidation,
-      coverYearValidation
-    } = coverDatesValidation(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear);
+    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(
+      requestedCoverStartDateDay,
+      requestedCoverStartDateMonth,
+      requestedCoverStartDateYear,
+    );
 
-    if (requestedCoverStartDateTimestamp) {
-      if (moment(requestedCoverStartDateTimestamp).isBefore(nowDate)) {
+    if (submittedValues.requestedCoverStartDate) {
+      if (isBefore(requestedCoverStartDate, startOfToday)) {
         newErrorList.requestedCoverStartDate = {
           text: 'Requested Cover Start Date must be on the application submission date or in the future',
           order: orderNumber(newErrorList),
@@ -43,37 +40,25 @@ module.exports = (submittedValues, deal, errorList) => {
       } else if (!canEnterDateGreaterThan3Months) {
         const MAX_MONTHS_FROM_NOW = 3;
 
-        const day = moment(requestedCoverStartDateTimestamp).format('DD');
-        const month = moment(requestedCoverStartDateTimestamp).format('MM');
-        const year = moment(requestedCoverStartDateTimestamp).format('YYYY');
+        const dateIsBeforeNow = isBefore(requestedCoverStartDate, startOfToday);
+        const maxDate = add(startOfToday, { months: MAX_MONTHS_FROM_NOW });
+        const dateIsAfterMaximum = isAfter(requestedCoverStartDate, maxDate);
 
-        if (!dateIsInTimeframe(
-          day,
-          month,
-          year,
-          nowDate,
-          moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months'),
-        )) {
+        if (dateIsBeforeNow || dateIsAfterMaximum) {
           newErrorList.requestedCoverStartDate = {
-            text: `Requested Cover Start Date must be between ${moment().format('Do MMMM YYYY')} and ${moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months').format('Do MMMM YYYY')}`,
+            text: `Requested Cover Start Date must be between ${getLongFormattedDate(startOfToday)} and ${getLongFormattedDate(maxDate)}`,
             order: orderNumber(newErrorList),
           };
         }
       }
     }
 
-    if (!requestedCoverStartDateTimestamp && dateHasSomeValues(
-      requestedCoverStartDateDay,
-      requestedCoverStartDateMonth,
-      requestedCoverStartDateYear,
-    )) {
+    const requestedCoverStartDateHasSomeValues =
+      hasValue(requestedCoverStartDateDay) || hasValue(requestedCoverStartDateMonth) || hasValue(requestedCoverStartDateYear);
+
+    if (!submittedValues.requestedCoverStartDate && requestedCoverStartDateHasSomeValues) {
       newErrorList.requestedCoverStartDate = {
-        text: dateValidationText(
-          'Requested Cover Start Date',
-          requestedCoverStartDateDay,
-          requestedCoverStartDateMonth,
-          requestedCoverStartDateYear,
-        ),
+        text: dateValidationText('Requested Cover Start Date', requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear),
         order: orderNumber(newErrorList),
       };
     }

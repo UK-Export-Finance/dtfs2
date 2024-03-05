@@ -1,11 +1,11 @@
-const moment = require('moment');
+const { isBefore, startOfDay, isAfter } = require('date-fns');
 const CONSTANTS = require('../../../constants');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 const {
   dateHasAllValues,
   dateValidationText,
 } = require('./date');
-const { formattedTimestamp } = require('../../facility-dates/timestamp');
+const { getStartOfDateFromEpochMillisecondString, getLongFormattedDate } = require('../../helpers/date');
 
 module.exports = (facility, errorList, deal) => {
   const newErrorList = errorList;
@@ -22,45 +22,39 @@ module.exports = (facility, errorList, deal) => {
     manualInclusionNoticeSubmissionDate: minSubmissionDateTimestamp,
   } = deal.details;
 
-  const dealSubmissionDate = formattedTimestamp(dealSubmissionDateTimestamp);
-  const minSubmissionDate = formattedTimestamp(minSubmissionDateTimestamp);
-  const issuedDate = formattedTimestamp(facility.issuedDate);
-  const today = moment();
+  const issuedDate = getStartOfDateFromEpochMillisecondString(facility.issuedDate);
+  const today = startOfDay(new Date());
 
-  let dateOfSubmission = moment().utc().valueOf();
+  let dealSubmissionDate = startOfDay(new Date());
 
   if (dealSubmissionDateTimestamp || minSubmissionDateTimestamp) {
     if (submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN) {
-      dateOfSubmission = dealSubmissionDate;
+      dealSubmissionDate = getStartOfDateFromEpochMillisecondString(dealSubmissionDateTimestamp);
     } else if (minSubmissionDateTimestamp) {
-      dateOfSubmission = minSubmissionDate;
+      dealSubmissionDate = getStartOfDateFromEpochMillisecondString(minSubmissionDateTimestamp);
     }
   }
 
-  if (dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear)) {
-    if (!moment(issuedDate).isSameOrAfter(dateOfSubmission, 'day')) {
-      const formattedDealSubmissionDate = moment(dateOfSubmission).format('Do MMMM YYYY');
+  const issuedDayHasValues = dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear);
 
+  if (issuedDayHasValues) {
+    if (isBefore(issuedDate, dealSubmissionDate)) {
       newErrorList.issuedDate = {
-        text: `Issued Date must be on or after ${formattedDealSubmissionDate}`,
+        text: `Issued Date must be on or after ${getLongFormattedDate(dealSubmissionDate)}`,
         order: orderNumber(newErrorList),
       };
     }
 
-    if (moment(issuedDate).isAfter(today, 'day')) {
+    if (isAfter(issuedDate, today)) {
       newErrorList.issuedDate = {
         text: 'Issued Date must be today or in the past',
         order: orderNumber(newErrorList),
       };
     }
-  } else if (!facility.issuedDate && !dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear)) {
+  }
+  if (!facility.issuedDate && !issuedDayHasValues) {
     newErrorList.issuedDate = {
-      text: dateValidationText(
-        'Issued Date',
-        issuedDateDay,
-        issuedDateMonth,
-        issuedDateYear,
-      ),
+      text: dateValidationText('Issued Date', issuedDateDay, issuedDateMonth, issuedDateYear),
       order: orderNumber(newErrorList),
     };
   }

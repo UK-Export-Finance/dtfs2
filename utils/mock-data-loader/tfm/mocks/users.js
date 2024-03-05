@@ -1,7 +1,7 @@
 const TEAMS = require('./teams');
 
-module.exports = [
-  {
+module.exports = {
+  T1_USER_1: {
     username: 'T1_USER_1',
     email: 'test@testing.com',
     teams: ['TEAM1'],
@@ -9,7 +9,7 @@ module.exports = [
     firstName: 'Joe',
     lastName: 'Bloggs',
   },
-  {
+  T1_USER_2: {
     username: 'T1_USER_2',
     email: 'test@testing.com',
     teams: ['TEAM1'],
@@ -17,7 +17,7 @@ module.exports = [
     firstName: 'Joe',
     lastName: 'Bloggs',
   },
-  {
+  T1_USER_3: {
     username: 'T1_USER_3',
     email: 'test@testing.com',
     teams: ['TEAM1'],
@@ -25,7 +25,7 @@ module.exports = [
     firstName: 'Joe',
     lastName: 'Bloggs',
   },
-  {
+  T2_USER_1: {
     username: 'T2_USER_1',
     email: 'test@testing.com',
     teams: ['TEAM2'],
@@ -33,7 +33,7 @@ module.exports = [
     firstName: 'Joe',
     lastName: 'Bloggs',
   },
-  {
+  T2_USER_2: {
     username: 'T2_USER_2',
     email: 'test@testing.com',
     teams: ['TEAM2'],
@@ -41,7 +41,7 @@ module.exports = [
     firstName: 'Joe',
     lastName: 'Bloggs',
   },
-  {
+  T2_USER_3: {
     username: 'T2_USER_3',
     email: 'test@testing.com',
     teams: ['TEAM2'],
@@ -49,7 +49,7 @@ module.exports = [
     firstName: 'Joe',
     lastName: 'Bloggs',
   },
-  {
+  BUSINESS_SUPPORT_USER_1: {
     username: 'BUSINESS_SUPPORT_USER_1',
     email: 'test@testing.com',
     teams: [TEAMS.BUSINESS_SUPPORT.id],
@@ -57,7 +57,7 @@ module.exports = [
     firstName: 'John',
     lastName: 'Davies',
   },
-  {
+  BUSINESS_SUPPORT_USER_2: {
     username: 'BUSINESS_SUPPORT_USER_2',
     email: 'test@testing.com',
     teams: [TEAMS.BUSINESS_SUPPORT.id],
@@ -65,7 +65,7 @@ module.exports = [
     firstName: 'Sarah',
     lastName: 'Walker',
   },
-  {
+  UNDERWRITING_SUPPORT_1: {
     username: 'UNDERWRITING_SUPPORT_1',
     email: 'test@testing.com',
     teams: [TEAMS.UNDERWRITING_SUPPORT.id],
@@ -73,7 +73,7 @@ module.exports = [
     firstName: 'Ben',
     lastName: 'Wilson',
   },
-  {
+  UNDERWRITING_SUPPORT_2: {
     username: 'UNDERWRITING_SUPPORT_2',
     email: 'test@testing.com',
     teams: [TEAMS.UNDERWRITING_SUPPORT.id],
@@ -81,7 +81,7 @@ module.exports = [
     firstName: 'Rachel',
     lastName: 'Smith',
   },
-  {
+  UNDERWRITER_MANAGER_1: {
     username: 'UNDERWRITER_MANAGER_1',
     email: 'test@testing.com',
     teams: [TEAMS.UNDERWRITER_MANAGERS.id],
@@ -89,7 +89,7 @@ module.exports = [
     firstName: 'Benjamin',
     lastName: 'Jones',
   },
-  {
+  UNDERWRITER_MANAGER_2: {
     username: 'UNDERWRITER_MANAGER_2',
     email: 'test@testing.com',
     teams: [TEAMS.UNDERWRITER_MANAGERS.id],
@@ -97,7 +97,7 @@ module.exports = [
     firstName: 'Jonathan',
     lastName: 'Roberts',
   },
-  {
+  UNDERWRITER_1: {
     username: 'UNDERWRITER_1',
     email: 'test@testing.com',
     teams: [TEAMS.UNDERWRITERS.id],
@@ -105,7 +105,7 @@ module.exports = [
     firstName: 'Olivia',
     lastName: 'Williams',
   },
-  {
+  UNDERWRITER_2: {
     username: 'UNDERWRITER_2',
     email: 'test@testing.com',
     teams: [TEAMS.UNDERWRITERS.id],
@@ -113,7 +113,7 @@ module.exports = [
     firstName: 'James',
     lastName: 'Smith',
   },
-  {
+  UNDERWRITER_3: {
     username: 'UNDERWRITER_3',
     email: 'test@testing.com',
     teams: [TEAMS.UNDERWRITERS.id],
@@ -121,7 +121,7 @@ module.exports = [
     firstName: 'Rachel',
     lastName: 'Jones',
   },
-  {
+  RISK_MANAGER_1: {
     username: 'RISK_MANAGER_1',
     email: 'test@testing.com',
     teams: [TEAMS.RISK_MANAGERS.id],
@@ -129,7 +129,7 @@ module.exports = [
     firstName: 'Steven',
     lastName: 'Robinson',
   },
-  {
+  PIM_USER_1: {
     username: 'PIM_USER_1',
     email: 'test@testing.com',
     teams: [TEAMS.PIM.id],
@@ -137,7 +137,7 @@ module.exports = [
     firstName: 'Adam',
     lastName: 'Last',
   },
-  {
+  QA: {
     username: 'QA',
     email: 'test@testing.com',
     teams: [TEAMS.UNDERWRITER_MANAGERS.id, TEAMS.PIM.id],
@@ -145,7 +145,7 @@ module.exports = [
     firstName: 'Caroline-Test',
     lastName: 'O’Test Taylor',
   },
-  {
+  ESTORE: {
     username: 'ESTORE',
     email: 'test@testing.com',
     teams: ['ESTORE'],
@@ -153,7 +153,7 @@ module.exports = [
     firstName: 'ESTORE',
     lastName: 'ESTORE',
   },
-  {
+  PDC_READ: {
     username: 'PDC_READ',
     email: 'test@testing.com',
     teams: [TEAMS.PDC_READ.id],
@@ -161,7 +161,7 @@ module.exports = [
     firstName: 'PDC',
     lastName: 'Read',
   },
-  {
+  PDC_RECONCILE: {
     username: 'PDC_RECONCILE',
     email: 'test@testing.com',
     teams: [TEAMS.PDC_RECONCILE.id],
@@ -169,4 +169,13 @@ module.exports = [
     firstName: 'PDC',
     lastName: 'Reconcile',
   },
-];
+  PIM_PDC_RECONCILE: {
+    username: 'PIM_PDC_RECONCILE',
+    password: 'AbC!2345',
+    email: 'test@testing.com',
+    teams: [TEAMS.PIM.id, TEAMS.PDC_RECONCILE.id],
+    timezone: 'Europe/London',
+    firstName: 'PIM and',
+    lastName: 'PDC Reconcile',
+  },
+};

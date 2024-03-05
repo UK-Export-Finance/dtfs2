@@ -37,7 +37,7 @@ context('A maker is informed of a loan\'s status before submitting an issued loa
   it('Starting to fill in the Issue Loan Facility form should change the Loan status from `Not started` to `Incomplete` and the Issue Facility link to `Facility issued`', () => {
     cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
-    pages.contract.proceedToReview().should('be.disabled');
+    pages.contract.proceedToReview().should('not.exist');
 
     const loanId = dealFacilities.loans[0]._id;
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);

@@ -1,4 +1,5 @@
-import { eachIsoMonthOfInterval, getOneIndexedMonth, isValidIsoMonth, toIsoMonthStamp } from './date';
+import { eachIsoMonthOfInterval, getOneIndexedMonth, isEqualMonthAndYear, isValidIsoMonth, toIsoMonthStamp } from './date';
+import { MonthAndYear } from '../types/date';
 
 describe('date utils', () => {
   describe('getOneIndexedMonth', () => {
@@ -66,6 +67,36 @@ describe('date utils', () => {
       ])('returns $expected when $testCase (start: $start, end: $end)', ({ start, end, expected }) => {
         expect(eachIsoMonthOfInterval(start, end, { exclusive: true })).toEqual(expected);
       });
+    });
+  });
+
+  describe('isEqualMonthAndYear', () => {
+    it.each([
+      {
+        testCase: 'months are the same but years are different',
+        values: [
+          { month: 1, year: 2023 },
+          { month: 1, year: 2024 },
+        ],
+      },
+      {
+        testCase: 'years are the same but months are different',
+        values: [
+          { month: 1, year: 2024 },
+          { month: 2, year: 2024 },
+        ],
+      },
+    ])('returns false when $testCase', ({ values }) => {
+      expect(isEqualMonthAndYear(values[0], values[1])).toBe(false);
+    });
+
+    it('returns true when values are equal', () => {
+      // Arrange
+      const value1: MonthAndYear = { month: 2, year: 2024 };
+      const value2: MonthAndYear = { month: 2, year: 2024 };
+
+      // Act / Assert
+      expect(isEqualMonthAndYear(value1, value2)).toBe(true);
     });
   });
 });

@@ -1,7 +1,7 @@
 const path = require('path');
 const nunjucks = require('nunjucks');
 let mojFilters = require('@ministryofjustice/frontend/moj/filters/all')();
-const filterLocaliseTimestamp = require('./filter-localiseTimestamp');
+const { filterLocaliseTimestamp } = require('./filter-localiseTimestamp');
 const dashIfEmpty = require('./filter-dashIfEmpty');
 const displayName = require('./filter-displayName');
 const formatAsCurrency = require('./formatAsCurrency');

@@ -7,7 +7,7 @@ const insertMocks = async (token) => {
   await Promise.all(createTeams);
 
   console.info('inserting TFM users');
-  const createUsers = MOCKS.USERS.map(async (user) => api.createTfmUser({ ...user, azureOid: user.username }, token));
+  const createUsers = Object.values(MOCKS.USERS).map((user) => api.createTfmUser(user, token));
   await Promise.all(createUsers);
 };
 

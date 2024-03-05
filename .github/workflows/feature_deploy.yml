@@ -2,7 +2,8 @@ name: Feature environment deployment
 
 on:
   push:
-    branches: [main-stbr-tfm-5]
+    branches:
+      - feat/e2etf-sql
     paths:
       - 'portal/**'
       - 'portal-api/**'

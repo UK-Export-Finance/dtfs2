@@ -1,4 +1,4 @@
-const now = require('../../../now');
+const { getNowAsEpochMillisecondString } = require('../../helpers/date');
 const externalApi = require('../../../external-api/api');
 const {
   getAllFacilitiesByDealId,
@@ -19,7 +19,7 @@ const generateSubmissionData = async (existingApplication) => {
   result.count = existingApplication.submissionCount + 1;
 
   if (!existingApplication.submissionDate) {
-    result.date = now();
+    result.date = getNowAsEpochMillisecondString();
   }
 
   return result;
@@ -61,7 +61,7 @@ const addSubmissionDateToIssuedFacilities = async (dealId) => {
      */
     if (hasBeenIssued && !hasBeenIssuedAndAcknowledged) {
       const update = {
-        submittedAsIssuedDate: now(),
+        submittedAsIssuedDate: getNowAsEpochMillisecondString(),
       };
       /**
        * if canResubmitIssuedFacilities and shouldCoverStartOnSubmission is true

@@ -2,11 +2,10 @@ const express = require('express');
 const passport = require('passport');
 const { param } = require('express-validator');
 
-const { handleValidationResult } = require('./validation/validation-handler');
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
 const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-bank-id-match');
 const { bankIdValidation, mongoIdValidation } = require('./validation/route-validators/route-validators');
-const handleExpressValidatorResult = require('./validation/route-validators/express-validator-result-handler');
+const { handleExpressValidatorResult } = require('./validation/route-validators/express-validator-result-handler');
 const { MAKER, CHECKER, READ_ONLY, ADMIN, PAYMENT_REPORT_OFFICER } = require('./roles/roles');
 
 const dealsController = require('./controllers/deal.controller');
@@ -70,7 +69,7 @@ openRouter
       .withMessage('Value must be a hexadecimal string')
       .isLength({ min: SIGN_IN_LINK.TOKEN_HEX_LENGTH, max: SIGN_IN_LINK.TOKEN_HEX_LENGTH })
       .withMessage(`Value must be ${SIGN_IN_LINK.TOKEN_HEX_LENGTH} characters long`),
-    handleValidationResult,
+    handleExpressValidatorResult,
     users.loginWithSignInLink,
   );
 
@@ -237,7 +236,8 @@ authRouter
 authRouter.get('/validate', (_req, res) => res.status(200).send());
 
 openRouter.get('/validate-partial-2fa-token', passport.authenticate(partial2faTokenPassportStrategy, { session: false }), (_req, res) =>
-  res.status(200).send(),);
+  res.status(200).send(),
+);
 
 // bank-validator
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
@@ -268,23 +268,23 @@ authRouter
   );
 
 authRouter
-  .route('/banks/:bankId/utilisation-reports/latest')
+  .route('/banks/:bankId/utilisation-reports/last-uploaded')
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,
     handleExpressValidatorResult,
     validateUserAndBankIdMatch,
-    utilisationReportControllers.getLatestReport,
+    utilisationReportControllers.getLastUploadedReportByBankId,
   );
 
 authRouter
-  .route('/banks/:bankId/due-report-dates')
+  .route('/banks/:bankId/due-report-periods')
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,
     handleExpressValidatorResult,
     validateUserAndBankIdMatch,
-    utilisationReportControllers.getDueReportDates,
+    utilisationReportControllers.getDueReportPeriodsByBankId,
   );
 
 authRouter

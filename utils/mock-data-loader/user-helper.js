@@ -3,7 +3,7 @@ const tfmApi = require('./tfm/api');
 const { MAKER, ADMIN } = require('./portal/roles');
 
 const mockDataLoaderUser = {
-  username: 're-insert-mocks',
+  username: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
   password: 'AbC!2345',
   firstname: 'Mock',
   surname: 'DataLoader',

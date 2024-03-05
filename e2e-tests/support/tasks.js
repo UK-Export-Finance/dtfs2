@@ -1,6 +1,7 @@
 const crypto = require('node:crypto');
 const db = require('./db-client');
 const redis = require('./redis-client');
+const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
 
 const COLLECTION_NAMES = {
   USERS: 'users',
@@ -10,7 +11,6 @@ const COLLECTION_NAMES = {
 
 const getUsersCollection = (connectionOptions) => db.getCollection(COLLECTION_NAMES.USERS, connectionOptions);
 const getTfmUsersCollection = (connectionOptions) => db.getCollection(COLLECTION_NAMES.TFM_USERS, connectionOptions);
-const getUtilisationReportsCollection = (connectionOptions) => db.getCollection(COLLECTION_NAMES.UTILISATION_REPORTS, connectionOptions);
 
 /**
  * createTasks
@@ -198,7 +198,7 @@ const createTasks = ({
      * @returns {Array} Created Utilisation report details
      */
     async insertUtilisationReportDetailsIntoDb(utilisationReportDetails) {
-      const utilisationReports = await getUtilisationReportsCollection(connectionOptions);
+      const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
       return utilisationReports.insertMany(utilisationReportDetails);
     },
 
@@ -208,8 +208,13 @@ const createTasks = ({
      * @returns {Array} Empty array.
      */
     async removeAllUtilisationReportDetailsFromDb() {
-      const utilisationReports = await getUtilisationReportsCollection(connectionOptions);
+      const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
       return utilisationReports.deleteMany({});
+    },
+
+    async getAllBanks() {
+      const banks = await db.getCollection(DB_COLLECTIONS.BANKS, connectionOptions);
+      return banks.find().toArray();
     },
   };
 };

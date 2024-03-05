@@ -1,12 +1,11 @@
 import pages from '../../pages';
 import { primaryNavigation } from '../../partials';
 import USERS from '../../../fixtures/users';
-import TEAMS from '../../../fixtures/teams';
+import { TFM_USER_TEAMS, PDC_TEAMS } from '../../../fixtures/teams';
 
-const findOneUserByTeamId = (teamId) => USERS.find((user) => user?.teams?.includes(teamId));
+const findOneUserByTeamId = (teamId) => Object.values(USERS).find((user) => user?.teams?.includes(teamId));
 
-const NON_PDC_TEAMS = Object.values(TEAMS).filter((team) => !team.includes('PDC'));
-const PDC_TEAMS = Object.values(TEAMS).filter((team) => team.includes('PDC'));
+const NON_PDC_TEAMS = Object.values(TFM_USER_TEAMS).filter((team) => !team.includes('PDC'));
 
 context('Users see correct primary navigation items', () => {
   beforeEach(() => {
@@ -31,13 +30,22 @@ context('Users see correct primary navigation items', () => {
   });
 
   PDC_TEAMS.forEach((team) => {
-    it(`should show the 'All Deals', 'All Facilities' and 'Bank Reports' navigation item for a user in '${team.id}' team`, () => {
+    it(`should show the 'Bank Reports' navigation item for a user in '${team.id}' team`, () => {
       const userInTeam = findOneUserByTeamId(team);
       cy.tfmLogin({ user: userInTeam });
 
-      primaryNavigation.allDealsLink().should('exist');
-      primaryNavigation.allFacilitiesLink().should('exist');
+      primaryNavigation.allDealsLink().should('not.exist');
+      primaryNavigation.allFacilitiesLink().should('not.exist');
       primaryNavigation.bankReportsLink().should('exist');
     });
+  });
+
+  it(`should show the 'All Deals', 'All Facilities' and 'Bank Reports' navigation items for a user in '${TFM_USER_TEAMS.PIM}' and '${PDC_TEAMS.PDC_RECONCILE}' teams`, () => {
+    const pimPdcReconcileUser = USERS.PIM_PDC_RECONCILE;
+    cy.login(pimPdcReconcileUser);
+
+    primaryNavigation.allDealsLink().should('exist');
+    primaryNavigation.allFacilitiesLink().should('exist');
+    primaryNavigation.bankReportsLink().should('exist');
   });
 });

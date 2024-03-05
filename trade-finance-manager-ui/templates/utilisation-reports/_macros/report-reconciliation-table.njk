@@ -8,9 +8,8 @@
   {% set submissionMonth = params.submissionMonth %}
   {% set csrfToken = params.csrfToken %}
 
-  <form method="POST" data-cy="form">
+  <form method="POST" data-cy="utilisation-reports-form--{{ submissionMonth }}">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-    <input type="hidden" name="submission-month" value="{{ submissionMonth }}"/>
     <table class="govuk-table" data-module="moj-sortable-table" data-cy="utilisation-report-reconciliation-table">
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
@@ -25,10 +24,7 @@
 
       <tbody class="govuk-table__body">
       {% for summaryItem in summaryItems %}
-        {% set checkboxId = ['set-status--bankId-', summaryItem.bank.id] | join %}
-        {% if summaryItem.reportId %}
-          {% set checkboxId = ['set-status--reportId-', summaryItem.reportId] | join %}
-        {% endif %}
+        {% set checkboxId = ['set-status--reportId-', summaryItem.reportId] | join %}
         {% set checkboxLabel %}
           {# TODO FN-1603 - link to individual bank report page (replace `div` with `a`) #}
           {# <a class="govuk-link govuk-link--no-visited-state table-cell-checkbox-text" href="#">#}

@@ -1,3 +1,4 @@
+import { add } from 'date-fns';
 import relative from '../../relativeURL';
 import caseSubNavigation from '../../partials/caseSubNavigation';
 import facilityPage from '../../pages/facilityPage';
@@ -12,6 +13,16 @@ import pages from '../../pages';
 import { CURRENCY } from '../../../../../e2e-fixtures/constants.fixture';
 
 context('Amendments underwriting - add banks decision - proceed', () => {
+  // If the expiry & commencement date are the same day of the month then we add one to the month
+  // difference for BS (but not for EWCS)
+  // BUT... If the commencement date is end of month and the expiry date isn't then we don't add one
+  //
+  // In these tests, the mock start date is two years ago today & the mock end date is a month today.
+  // Therefore if today is EOM and a month from now is not EOM we need to NOT add one to the tenor
+  const todayIsEndOfMonth = add(new Date(), { days: 1 }).getDate() === 1;
+  const aMonthFromNowIsEndOfMonth = add(new Date(), { months: 1, days: 1 }).getDate() === 1;
+  const facilityTenor = (todayIsEndOfMonth && !aMonthFromNowIsEndOfMonth) ? '25 months' : '26 months';
+
   let dealId;
   const dealFacilities = [];
 
@@ -41,7 +52,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/deal`));
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains('26 months');
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains(dateConstants.oneMonthFormattedTable);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
@@ -54,7 +65,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
 
     facilityPage.facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
-    facilityPage.facilityTenor().contains('26 months');
+    facilityPage.facilityTenor().contains(facilityTenor);
   });
 
   it('should submit an amendment request', () => {
@@ -189,7 +200,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/deal`));
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains('26 months');
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains(dateConstants.oneMonthFormattedTable);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
@@ -202,7 +213,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
 
     facilityPage.facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
-    facilityPage.facilityTenor().contains('26 months');
+    facilityPage.facilityTenor().contains(facilityTenor);
   });
 
   it('should show add decision button if logged in as PIM user', () => {
@@ -478,7 +489,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/deal`));
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains('26 months');
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains(dateConstants.oneMonthFormattedTable);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
@@ -491,6 +502,6 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at 5 June 2022`);
 
     facilityPage.facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
-    facilityPage.facilityTenor().contains('26 months');
+    facilityPage.facilityTenor().contains(facilityTenor);
   });
 });

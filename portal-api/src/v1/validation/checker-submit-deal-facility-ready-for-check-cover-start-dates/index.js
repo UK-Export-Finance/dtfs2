@@ -1,32 +1,28 @@
-const moment = require('moment');
+const { startOfDay, isBefore } = require('date-fns');
 const { orderNumber } = require('../../../utils/error-list-order-number');
-const { formattedTimestamp } = require('../../facility-dates/timestamp');
 const CONSTANTS = require('../../../constants');
+const { getStartOfDateFromEpochMillisecondString } = require('../../helpers/date');
 
 const facilityReadyForCheckRequestedCoverStartDateRule = (deal, facility, errorList) => {
-  const {
-    requestedCoverStartDate,
-    status,
-  } = facility;
+  const { status } = facility;
   const { details, submissionType } = deal;
   const { submissionDate, manualInclusionNoticeSubmissionDate } = details;
-  let dateOfSubmission = moment().utc().valueOf();
+  let dateOfSubmission = new Date();
   const newErrorList = errorList;
 
   if (submissionDate || manualInclusionNoticeSubmissionDate) {
     if (submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN) {
-      dateOfSubmission = submissionDate;
+      dateOfSubmission = getStartOfDateFromEpochMillisecondString(submissionDate);
     } else if (manualInclusionNoticeSubmissionDate) {
-      dateOfSubmission = manualInclusionNoticeSubmissionDate;
+      dateOfSubmission = getStartOfDateFromEpochMillisecondString(manualInclusionNoticeSubmissionDate);
     }
   }
 
-  if (requestedCoverStartDate) {
+  if (facility.requestedCoverStartDate) {
     if (status === CONSTANTS.FACILITIES.DEAL_STATUS.READY_FOR_APPROVAL) {
-      const requestedCoverStartDateTimestamp = formattedTimestamp(facility.requestedCoverStartDate);
-      const submissionDateFormatted = formattedTimestamp(dateOfSubmission);
+      const requestedCoverStartDate = getStartOfDateFromEpochMillisecondString(facility.requestedCoverStartDate);
 
-      if (moment(requestedCoverStartDateTimestamp).isBefore(submissionDateFormatted, 'day')) {
+      if (isBefore(requestedCoverStartDate, startOfDay(dateOfSubmission))) {
         newErrorList.requestedCoverStartDate = {
           text: 'Requested Cover Start Date must be on the application submission date or in the future',
           order: orderNumber(newErrorList),
@@ -38,17 +34,10 @@ const facilityReadyForCheckRequestedCoverStartDateRule = (deal, facility, errorL
   return newErrorList;
 };
 
-module.exports = (
-  deal,
-  facility,
-) => {
+module.exports = (deal, facility) => {
   let errorList = {};
 
-  errorList = facilityReadyForCheckRequestedCoverStartDateRule(
-    deal,
-    facility,
-    errorList,
-  );
+  errorList = facilityReadyForCheckRequestedCoverStartDateRule(deal, facility, errorList);
 
   return errorList;
 };
