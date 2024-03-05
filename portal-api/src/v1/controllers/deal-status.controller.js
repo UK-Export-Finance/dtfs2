@@ -23,8 +23,8 @@ const CONSTANTS = require('../../constants');
  * @param {Response} res - The response object used to send the response.
  * @returns {Response} - Response with status code, if Ok then with deal status
  */
-exports.findOne = (req, res) => {
-  const deal = findOneDeal(req.params.id);
+exports.findOne = async (req, res) => {
+  const deal = await findOneDeal(req.params.id);
 
   if (!deal) {
     return res.status(HttpStatusCode.NotFound).send();
