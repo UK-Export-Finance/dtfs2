@@ -33,15 +33,15 @@ describe('getNumberTypeId', () => {
 
   describe('Unhappy paths', () => {
     it.each`
-      value        | expected
-      ${'term'}    | ${InvalidEntityTypeError}
-      ${'123'}     | ${InvalidEntityTypeError}
-      ${'!"£'}     | ${InvalidEntityTypeError}
-      ${''}        | ${InvalidEntityTypeError}
-      ${[]}        | ${InvalidEntityTypeError}
-      ${{}}        | ${InvalidEntityTypeError}
-      ${null}      | ${InvalidEntityTypeError}
-      ${undefined} | ${InvalidEntityTypeError}
+      value
+      ${'term'}
+      ${'123'}
+      ${'!"£'}
+      ${''}
+      ${[]}
+      ${{}}
+      ${null}
+      ${undefined}
     `('Throws InvalidEntityTypeError exception when the value provided is $value', ({ value }: { value: string }) => {
       expect(() => getNumberTypeId(value)).toThrow(InvalidEntityTypeError);
     });

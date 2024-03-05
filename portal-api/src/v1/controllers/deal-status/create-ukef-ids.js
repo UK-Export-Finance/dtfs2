@@ -5,22 +5,26 @@ const { NUMBER } = require('../../../constants');
 
 /**
  * Generates and updates UKEF IDs for a given deal and its facilities.
- * @param {string} entityId - The ID of the entity associated with the deal.
  * @param {object} deal - An object representing the deal, including its ID and facilities.
  * @param {object} user - An object representing the user performing the operation.
  * @returns {Promise<object>} - The updated deal object with UKEF IDs for the deal and its facilities.
  * @throws {Error} - If unable to get UKEF IDs from the number generator.
  */
-const createUkefIds = async (entityId, deal, user) => {
+const createUkefIds = async (deal, user) => {
   try {
+    if (!deal?._id || !user?._id) {
+      throw new Error('Invalid argument provided');
+    }
+
     const facilitiesUpdatePromises = [];
+    const { _id: dealId } = deal;
 
     // Get the deal number
-    const { data: dealNumber } = await number.get(NUMBER.ENTITY_TYPE.DEAL, deal._id);
+    const { data: dealNumber } = await number.get(NUMBER.ENTITY_TYPE.DEAL, dealId);
 
     // Update the deal object with the obtained deal number
     const updatedDeal = await updateDeal(
-      entityId,
+      dealId,
       {
         details: {
           ukefDealId: dealNumber.data[0].maskedId,

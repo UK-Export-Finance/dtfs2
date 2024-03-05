@@ -118,7 +118,7 @@ exports.update = async (req, res) => {
       }
 
       if (updatedDeal.details.submissionCount === 1) {
-        updatedDeal = await createUkefIds(dealId, updatedDeal, user);
+        updatedDeal = await createUkefIds(updatedDeal, user);
       }
 
       await api.tfmDealSubmit(dealId, CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS, user);
