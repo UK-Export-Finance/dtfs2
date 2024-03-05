@@ -147,7 +147,7 @@ jobs:
         working-directory: .
         run: |
           # Build images
-          docker build -f ${{ env.DOCKERFILE }} \
+          docker build -f ./${{ env.DOCKERFILE }} . \
           -t ${{ env.ACR }}/${{ matrix.webapp }}:${{ github.sha }} \
           -t ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }} \
           --build-arg GITHUB_SHA=${{ github.sha }}
