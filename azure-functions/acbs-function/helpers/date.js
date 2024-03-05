@@ -116,28 +116,8 @@ const getNowAsIsoString = () => moment().format();
 /**
  * @param {string | Date | number | null} startDate
  * @param {string | Date | number | null} endDate
- * @returns {number} difference in months between dates, rounded down
- *
- * returns NaN if can't parse either date
- *
- * Accepted date strings:
- *  - MM/dd/yyyy
- *  - MM dd yyyy
- *  - MM-dd-yy
- *  - MM/dd/yy
- *  - MM dd yy
- *  - yyyy-MM-dd
- *  - yyyy/MM/dd
- *  - yyyy MM dd
- */
-const getMonthDifference = (startDate, endDate) => moment(endDate).diff(moment(startDate), 'months');
-
-/**
- * @param {string | Date | number | null} date1
- * @param {string | Date | number | null} date2
- * @returns {boolean}
- *
- * returns false if can't parse either date
+ * @returns {number} difference in months between dates, rounded up
+ * The start date should be before the end date for this to have any meaning
  *
  * Accepted date strings:
  *  - MM/dd/yyyy
@@ -149,7 +129,11 @@ const getMonthDifference = (startDate, endDate) => moment(endDate).diff(moment(s
  *  - yyyy/MM/dd
  *  - yyyy MM dd
  */
-const isSameDayOfMonth = (date1, date2) => moment(date1).date() === moment(date2).date();
+const getInclusiveMonthDifference = (startDate, endDate) => {
+  const monthDifference = moment(endDate).diff(moment(startDate), 'months');
+  const isSameDayOfMonth = moment(startDate).date() === moment(endDate).date();
+  return isSameDayOfMonth ? monthDifference : monthDifference + 1;
+};
 
 /**
  * @param {string | number} day day of the month
@@ -175,7 +159,6 @@ module.exports = {
   addMonth,
   addYear,
   getNowAsIsoString,
-  getMonthDifference,
-  isSameDayOfMonth,
+  getInclusiveMonthDifference,
   getDateStringFromYearMonthDay,
 };

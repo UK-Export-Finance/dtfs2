@@ -1,8 +1,8 @@
 const { format } = require('date-fns');
-const { getMonthDifference } = require('./date');
+const { getInclusiveMonthDifference } = require('./date');
 const { validDateFormats, invalidDateFormats } = require('../test-helpers/date-formats');
 
-describe('getMonthDifference', () => {
+describe('getInclusiveMonthDifference', () => {
   beforeAll(() => {
     jest.useFakeTimers()
       .setSystemTime(1809632593030); // Thu May 06 2027 20:43:13 GMT+0100
@@ -40,14 +40,14 @@ describe('getMonthDifference', () => {
     description: `calculates difference when formatted as '${formatString}'`,
     date1: format(mockDate1, formatString),
     date2: format(mockDate2, formatString),
-    expected: 1,
+    expected: 2,
   }));
 
   const differentValidDatesTestCases = validDateFormats.map((formatString) => ({
     description: `calculates difference when second date is formatted as '${formatString}' and first as 'yyyy-MM-dd'`,
     date1: format(mockDate1, 'yyyy-MM-dd'),
     date2: format(mockDate2, formatString),
-    expected: 1,
+    expected: 2,
   }));
 
   const testData = [
@@ -60,19 +60,37 @@ describe('getMonthDifference', () => {
       description: 'calculates difference when dates are Date objects',
       date1: mockDate1,
       date2: mockDate2,
-      expected: 1,
+      expected: 2,
     },
     {
       description: 'calculates difference when dates are epochs',
       date1: mockDate1.valueOf(),
       date2: mockDate2.valueOf(),
-      expected: 1,
+      expected: 2,
     },
     {
       description: 'does not parse epochs stored as strings',
       date1: mockDate1.valueOf().toString(),
       date2: mockDate2.valueOf().toString(),
       expected: NaN,
+    },
+    {
+      description: 'rounds up difference when just less than a month after',
+      date1: '2024-03-02',
+      date2: '2024-04-01',
+      expected: 1,
+    },
+    {
+      description: 'calculates difference when exactly a month after',
+      date1: '2024-03-02',
+      date2: '2024-04-02',
+      expected: 1,
+    },
+    {
+      description: 'rounds up difference when just over a month after',
+      date1: '2024-03-02',
+      date2: '2024-04-03',
+      expected: 2,
     },
     {
       description: 'calculates difference when same dates',
@@ -84,7 +102,7 @@ describe('getMonthDifference', () => {
       description: 'calculates difference when 1st date is after 2nd date',
       date1: '2024-03-02',
       date2: '2024-01-01',
-      expected: -2,
+      expected: -1,
     },
     {
       description: 'calculates difference when 1st date is after 2nd date',
@@ -96,19 +114,19 @@ describe('getMonthDifference', () => {
       description: 'calculates difference when 1st date is after 2nd date',
       date1: '2024-03-02',
       date2: '2024-01-03',
-      expected: -1,
+      expected: 0,
     },
     {
       description: 'parses first undefined date as today',
       date1: undefined, // will be handled as Thu May 06 2027 20:43:13 GMT+0100
       date2: 1815632593030, // Thu Jul 15 2027 07:23:13 GMT+0100
-      expected: 2,
+      expected: 3,
     },
     {
       description: 'parses second undefined date as today',
       date1: 1815632593030, // Thu Jul 15 2027 07:23:13 GMT+0100
       date2: undefined, // will be handled as today = Thu May 06 2027 20:43:13 GMT+0100
-      expected: -2,
+      expected: -1,
     },
     {
       description: 'parses two undefined dates as today',
@@ -155,7 +173,7 @@ describe('getMonthDifference', () => {
   ];
 
   it.each(testData)('$description ($date1 & $date2 to $expected)', ({ date1, date2, expected }) => {
-    const result = getMonthDifference(date1, date2);
+    const result = getInclusiveMonthDifference(date1, date2);
 
     expect(result).toBe(expected);
   });
