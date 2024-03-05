@@ -55,13 +55,13 @@
   "devDependencies": {
     "@commitlint/cli": "^17.8.1",
     "@commitlint/config-conventional": "^17.8.1",
-    "@typescript-eslint/eslint-plugin": "^6.20.0",
-    "@typescript-eslint/parser": "^6.20.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
     "bson": "^6.2.0",
     "chance": "^1.1.11",
     "cookie-signature": "^1.2.1",
     "cspell": "^7.3.9",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
@@ -71,7 +71,7 @@
     "lint-staged": "^14.0.1",
     "prettier": "3.0.3",
     "redis": "^4.6.13",
-    "sort-package-json": "^2.7.0"
+    "sort-package-json": "^2.8.0"
   },
   "engines": {
     "node": ">=20",
