@@ -1,5 +1,5 @@
 const utils = require('../../../../utils/crypto.util');
-const { updateLastLoginAndResetSignInData } = require('../../user/user.controller');
+const userController = require('../../user/user.controller');
 
 /**
  * execute
@@ -13,7 +13,7 @@ const execute = async (tfmUser) => {
 
     const { sessionIdentifier, ...tokenObject } = utils.issueJWT(tfmUser);
 
-    await updateLastLoginAndResetSignInData(tfmUser, sessionIdentifier, () => { });
+    await userController.updateLastLoginAndResetSignInData(tfmUser, sessionIdentifier);
 
     const { token } = tokenObject;
 
