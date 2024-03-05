@@ -35,6 +35,8 @@ const createAndLogInAsInitialUser = async () => {
 };
 
 const deleteInitialUser = async (token) => {
+  console.info(`Deleting initial user ${mockDataLoaderUser.username}`);
+
   const allUsers = await api.listUsers(token);
   const userToDelete = allUsers.find((user) => user.username === mockDataLoaderUser.username);
   console.info(`deleting user ${userToDelete.username}`);
@@ -57,6 +59,8 @@ const createAndLogInAsInitialTfmUser = async () => {
 };
 
 const deleteInitialTFMUser = async (token) => {
+  console.info('TFM deleting initial TFM user "re-insert-mocks"');
+
   const allUsers = await tfmApi.listUsers(token);
   const userToDelete = allUsers.filter((user) => user.username === 're-insert-mocks');
 

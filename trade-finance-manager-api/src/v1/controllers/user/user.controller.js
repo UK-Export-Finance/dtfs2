@@ -94,7 +94,6 @@ exports.createUser = async (user) => {
 
     const createdUser = await collection.findOne({ _id: { $eq: userId } });
     const mapUser = mapUserData(createdUser);
-
     return mapUser;
   }
 
@@ -124,4 +123,15 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
 
     throw new Error('Error Updating TFM user - last login, reset sign in data');
   }
+};
+
+exports.removeTfmUserById = async (_id, callback) => {
+  if (ObjectId.isValid(_id)) {
+    const collection = await db.getCollection('tfm-users');
+    const status = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
+
+    return callback(null, status);
+  }
+
+  return callback('Invalid TFM user id', 400);
 };

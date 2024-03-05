@@ -14,7 +14,7 @@ const authController = require('./controllers/auth/auth.controller');
 const partyController = require('./controllers/party.controller');
 const bankHolidaysController = require('./controllers/bank-holidays');
 const utilisationReportsController = require('./controllers/utilisation-reports');
-// const users = require('./controllers/user/user.routes');
+const users = require('./controllers/user/user.routes');
 const party = require('./controllers/deal.party-db');
 const validation = require('./validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('./validation/route-validators/express-validator-result-handler');
@@ -25,6 +25,16 @@ const { tasksRouter } = require('./tasks/routes');
 
 openRouter.use(checkApiKey);
 authRouter.use(passport.authenticate('jwt', { session: false }));
+
+// Used for creating initial user for data load.
+openRouter.route('/user').post(users.createTfmUser);
+// Used for creating mock user.
+authRouter.route('/users').post(users.createTfmUser);
+
+// Used for clearing test data.
+authRouter
+  .route('/users/:user')
+  .delete(validation.userIdValidation, handleExpressValidatorResult, users.removeTfmUserById);
 
 authRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
 
