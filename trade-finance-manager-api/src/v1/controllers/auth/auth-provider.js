@@ -157,8 +157,8 @@ class AuthProvider {
 
       const authCodeRequest = {
         ...origAuthCodeRequest,
-        code, // authZ code
-        codeVerifier: pkceCode.verifier, // PKCE Code Verifier
+        code,
+        codeVerifier: pkceCode.verifier,
       };
 
       const msalInstance = this.getMsalInstance(this.config.msalConfig);
