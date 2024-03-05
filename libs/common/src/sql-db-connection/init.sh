@@ -49,5 +49,6 @@ execute_sql_command "USE [$SQL_DB_NAME]; CREATE USER $SQL_DB_USERNAME FOR LOGIN 
 # Grant the new user required permissions
 execute_sql_command "USE [$SQL_DB_NAME]; ALTER ROLE db_datareader ADD MEMBER $SQL_DB_USERNAME;"
 execute_sql_command "USE [$SQL_DB_NAME]; ALTER ROLE db_datawriter ADD MEMBER $SQL_DB_USERNAME;"
+execute_sql_command "USE [$SQL_DB_NAME]; ALTER ROLE db_ddladmin ADD MEMBER $SQL_DB_USERNAME;"
 
 fg
