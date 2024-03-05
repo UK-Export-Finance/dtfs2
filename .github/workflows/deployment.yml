@@ -40,11 +40,6 @@ name: Deployment
 run-name: 🚀 Deploying to ${{ github.event.workflow_run.head_branch }}
 
 on:
-  # TODO - Remove prior to merge
-  pull_request:
-    branches:
-      - main
-
   workflow_run:
     workflows: ["QAT"]
     types:
@@ -57,8 +52,7 @@ on:
 
 env:
   PRODUCT: dtfs
-  # ENVIRONMENT: ${{ github.event.workflow_run.head_branch }}
-  ENVIRONMENT: "dev"
+  ENVIRONMENT: ${{ github.event.workflow_run.head_branch }}
   TIMEZONE: "Europe/London"
   # Base artifact
   FROM: latest
@@ -66,7 +60,7 @@ env:
 jobs:
   setup:
     name: Setup 🔧
-    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: [self-hosted, linux, deployment]
     outputs:
       product: ${{ env.PRODUCT }}
@@ -81,7 +75,7 @@ jobs:
 
   webapp:
     name: WebApp 🌐
-    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     needs: setup
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
@@ -193,7 +187,7 @@ jobs:
 
   functions:
     name: Functions ⚡
-    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     needs: [setup, webapp]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
