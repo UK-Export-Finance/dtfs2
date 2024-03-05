@@ -48,12 +48,12 @@
 
           {{ table }}
 
-          {{ pagination.pagination(
-            totalPages = pages.totalPages,
-            currentPage = pages.currentPage,
-            totalItems = pages.totalItems,
-            paginationRoute = '/dashboard' + route
-          )}}
+          {{ pagination.render({
+            totalPages: pages.totalPages,
+            currentPage: pages.currentPage,
+            totalItems: pages.totalItems,
+            paginationRoute: '/dashboard' + route
+          })}}
 
         </div>
 

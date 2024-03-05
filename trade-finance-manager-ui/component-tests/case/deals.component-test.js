@@ -9,6 +9,11 @@ describe(page, () => {
     heading: 'All deals',
     deals: [],
     user: {},
+    pages: {
+      totalPages: 2,
+      currentPage: 0,
+      totalItems: 40,
+    },
   };
 
   beforeEach(() => {
@@ -26,5 +31,9 @@ describe(page, () => {
 
   it('should render deals table component', () => {
     wrapper.expectElement('[data-cy="deals-table"]').toExist();
+  });
+
+  it('should render pagination component', () => {
+    wrapper.expectElement('[data-cy="pagination"]').toExist();
   });
 });

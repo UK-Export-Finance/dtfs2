@@ -125,11 +125,6 @@ const getDeals = async (req, res) => {
  * @returns {Object} The result from redirecting
  */
 const queryDeals = (req, res) => {
-  const pageNumber = Number(req.params.pageNumber) || 0;
-  if (pageNumber < 0) {
-    return res.redirect('/not-found');
-  }
-
   const { search: newSearch, ascending, descending } = req.body;
   let newSortOrder;
   let newSortField;
@@ -144,7 +139,7 @@ const queryDeals = (req, res) => {
   const sortfield = newSortField ?? oldSortField;
   const sortorder = newSortOrder ?? oldSortOrder;
 
-  const redirectUrl = `/deals/${pageNumber}${buildQueryStringFromQueryParameterValues(search, sortfield, sortorder)}`;
+  const redirectUrl = `/deals/0${buildQueryStringFromQueryParameterValues(search, sortfield, sortorder)}`;
   return res.redirect(redirectUrl);
 };
 

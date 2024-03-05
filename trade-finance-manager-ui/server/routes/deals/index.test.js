@@ -12,10 +12,12 @@ describe('routes - deals', () => {
   });
 
   it('should setup routes with controllers', () => {
-    expect(get).toHaveBeenCalledTimes(1);
-    expect(post).toHaveBeenCalledTimes(1);
+    expect(get).toHaveBeenCalledTimes(2);
+    expect(post).toHaveBeenCalledTimes(2);
 
-    expect(get).toHaveBeenCalledWith('/', getDeals);
+    expect(get).toHaveBeenCalledWith('/', expect.any(Function));
+    expect(get).toHaveBeenCalledWith('/:pageNumber', getDeals);
     expect(post).toHaveBeenCalledWith('/', queryDeals);
+    expect(post).toHaveBeenCalledWith('/:pageNumber', queryDeals);
   });
 });
