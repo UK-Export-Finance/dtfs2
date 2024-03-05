@@ -40,23 +40,20 @@ name: Deployment
 run-name: 🚀 Deploying to ${{ github.event.workflow_run.head_branch }}
 
 on:
+  # TODO - Remove prior to merge
+  pull_request:
+    branches:
+      - main
+
   workflow_run:
-    # TODO - Remove prior to merge
-    pull_request:
-      branches:
-        - main
-
-    paths:
-      - "*"
-
-    # workflows: ["QAT"]
-    # types:
-    #   - completed
-    # branches:
-    #   - dev
-    #   - feature
-    #   - staging
-    #   - prod
+    workflows: ["QAT"]
+    types:
+      - completed
+    branches:
+      - dev
+      - feature
+      - staging
+      - prod
 
 env:
   PRODUCT: dtfs
