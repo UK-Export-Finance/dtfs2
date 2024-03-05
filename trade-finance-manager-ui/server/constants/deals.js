@@ -11,5 +11,5 @@ const TFM_SORT_BY_DEFAULT = {
 module.exports = {
   TFM_SORT_BY,
   TFM_SORT_BY_DEFAULT,
-  PAGE_SIZE: 20,
+  TFM_PAGE_SIZE: 20,
 };

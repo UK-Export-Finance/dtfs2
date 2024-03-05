@@ -48,6 +48,16 @@ module.exports = {
         );
       },
 
+      /**
+       * Generates the specified number of TFM deals and inserts them directly
+       * into the db. The UKEF deal ID of the first generated deal is 10000001;
+       * this is incremented for each subsequent deal. The deal exporter is
+       * 'Company 1' for the deals with odd numbered UKEF deal IDs and 'Company 2'
+       * for those with even numbered UKEF deal IDs. This is to allow easy testing
+       * of searching and sorting
+       * @param {Object} numberOfDealsToInsert The number of deals to insert
+       * @returns {Object} MongoDB document representing the result of the insertion
+      */
       async insertManyTfmDeals(numberOfDealsToInsert) {
         const deals = await getTfmDealsCollection();
         const dealsToInsert = [];
