@@ -29,7 +29,7 @@ const now = () => moment().format('YYYY-MM-DD');
 const formatYear = (year) => (year < 1000 ? (2000 + parseInt(year, 10)).toString() : year && year.toString());
 /**
  * @param {string | number} dateStr
- * @returns date formatted as `yyyy-MM-dd`
+ * @returns {string} date formatted as `yyyy-MM-dd`, returns `Invalid date` if can't parse input
  * Accepted date strings:
  *  - MM/dd/yyyy
  *  - MM dd yyyy
@@ -114,16 +114,40 @@ const addYear = (date, years) => moment(date).add({ years }).format('YYYY-MM-DD'
 const getNowAsIsoString = () => moment().format();
 
 /**
- * @param {string} startDate
- * @param {string} endDate
+ * @param {string | Date | number | null} startDate
+ * @param {string | Date | number | null} endDate
  * @returns {number} difference in months between dates, rounded down
+ *
+ * returns NaN if can't parse either date
+ *
+ * Accepted date strings:
+ *  - MM/dd/yyyy
+ *  - MM dd yyyy
+ *  - MM-dd-yy
+ *  - MM/dd/yy
+ *  - MM dd yy
+ *  - yyyy-MM-dd
+ *  - yyyy/MM/dd
+ *  - yyyy MM dd
  */
 const getMonthDifference = (startDate, endDate) => moment(endDate).diff(moment(startDate), 'months');
 
 /**
- * @param {string} date1
- * @param {string} date2
+ * @param {string | Date | number | null} date1
+ * @param {string | Date | number | null} date2
  * @returns {boolean}
+ *
+ * returns false if can't parse either date
+ *
+ * Accepted date strings:
+ *  - MM/dd/yyyy
+ *  - MM dd yyyy
+ *  - MM-dd-yy
+ *  - MM/dd/yy
+ *  - MM dd yy
+ *  - yyyy-MM-dd
+ *  - yyyy/MM/dd
+ *  - yyyy MM dd
  */
 const isSameDayOfMonth = (date1, date2) => moment(date1).date() === moment(date2).date();
 
