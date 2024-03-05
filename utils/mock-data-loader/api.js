@@ -4,7 +4,9 @@ require('dotenv').config();
 const { gef } = require('./gef/api');
 const { createLoggedInUserSession, createLoggedInTfmUserSession } = require('./database/user-repository');
 
-const { PORTAL_API_URL, PORTAL_API_KEY, TFM_API_URL, TFM_API_KEY } = process.env;
+const {
+  PORTAL_API_URL, PORTAL_API_KEY, TFM_API_URL, TFM_API_KEY
+} = process.env;
 
 const createBank = async (bank, token) => {
   const response = await axios({
