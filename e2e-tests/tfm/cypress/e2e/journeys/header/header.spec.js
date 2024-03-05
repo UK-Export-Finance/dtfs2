@@ -1,11 +1,12 @@
 import pages from '../../pages';
 import { primaryNavigation } from '../../partials';
 import USERS from '../../../fixtures/users';
-import { TFM_USER_TEAMS, PDC_TEAMS } from '../../../fixtures/teams';
+import { TFM_USER_TEAMS, PDC_TEAMS as PDC_TEAMS_OBJECT } from '../../../fixtures/teams';
 
 const findOneUserByTeamId = (teamId) => Object.values(USERS).find((user) => user?.teams?.includes(teamId));
 
 const NON_PDC_TEAMS = Object.values(TFM_USER_TEAMS).filter((team) => !team.includes('PDC'));
+const PDC_TEAMS = Object.values(PDC_TEAMS_OBJECT);
 
 context('Users see correct primary navigation items', () => {
   beforeEach(() => {
@@ -42,7 +43,7 @@ context('Users see correct primary navigation items', () => {
 
   it(`should show the 'All Deals', 'All Facilities' and 'Bank Reports' navigation items for a user in '${TFM_USER_TEAMS.PIM}' and '${PDC_TEAMS.PDC_RECONCILE}' teams`, () => {
     const pimPdcReconcileUser = USERS.PIM_PDC_RECONCILE;
-    cy.login(pimPdcReconcileUser);
+    cy.tfmLogin({ user: pimPdcReconcileUser });
 
     primaryNavigation.allDealsLink().should('exist');
     primaryNavigation.allFacilitiesLink().should('exist');

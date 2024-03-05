@@ -1,10 +1,11 @@
 import USERS from '../../../fixtures/users';
-import { PDC_TEAMS, TFM_USER_TEAMS } from '../../../fixtures/teams';
+import { PDC_TEAMS as PDC_TEAMS_OBJECT, TFM_USER_TEAMS } from '../../../fixtures/teams';
 import relativeURL from '../../relativeURL';
 
-const findOneUserByTeamId = (teamId) => USERS.find((user) => user?.teams?.includes(teamId));
+const findOneUserByTeamId = (teamId) => Object.values(USERS).find((user) => user?.teams?.includes(teamId));
 
 const NON_PDC_TEAMS = Object.values(TFM_USER_TEAMS).filter((team) => !team.includes('PDC'));
+const PDC_TEAMS = Object.values(PDC_TEAMS_OBJECT);
 
 context('Login to tfm with specific roles', () => {
   NON_PDC_TEAMS.forEach((teamName) => {
@@ -28,7 +29,7 @@ context('Login to tfm with specific roles', () => {
 
   it(`should redirect to /deals after a login for a user with both the '${PDC_TEAMS.PDC_RECONCILE}' and '${TFM_USER_TEAMS.PIM}' teams`, () => {
     const pimPdcReconcileUser = USERS.PIM_PDC_RECONCILE;
-    cy.login(pimPdcReconcileUser);
+    cy.tfmLogin({ user: pimPdcReconcileUser });
 
     cy.url().should('eq', relativeURL('/deals'));
   });
