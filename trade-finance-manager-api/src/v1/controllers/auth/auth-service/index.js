@@ -1,5 +1,5 @@
 const authProvider = require('../auth-provider');
-const getOrCreateTfmUser = require('./get-or-create-tfm-user');
+const tfmUser = require('./get-or-create-tfm-user');
 const issueJwtAndUpdateUser = require('./issue-jwt-and-update-user');
 
 /**
@@ -19,17 +19,21 @@ const issueJwtAndUpdateUser = require('./issue-jwt-and-update-user');
  */
 const processSsoRedirect = async ({ pkceCodes, authCodeRequest, code, state }) => {
   try {
-    console.info('TFM auth service - processing SSO redirect');
+    if (pkceCodes && authCodeRequest && code && state) {
+      console.info('TFM auth service - processing SSO redirect');
 
-    const entraUser = await authProvider.handleRedirect(pkceCodes, authCodeRequest, code);
+      const entraUser = await authProvider.handleRedirect(pkceCodes, authCodeRequest, code);
 
-    const tfmUser = await getOrCreateTfmUser(entraUser);
+      const user = await tfmUser.getOrCreate(entraUser);
 
-    const token = await issueJwtAndUpdateUser(tfmUser);
+      const token = await issueJwtAndUpdateUser.execute(user);
 
-    const redirectUrl = authProvider.loginRedirectUrl(state);
+      const redirectUrl = authProvider.loginRedirectUrl(state);
 
-    return { tfmUser, token, redirectUrl };
+      return { tfmUser: user, token, redirectUrl };
+    }
+
+    return {};
   } catch (error) {
     console.error('TFM auth service - Error processing SSO redirect: %s', error);
 

@@ -16,10 +16,7 @@ const getAndMap = async (entraUser) => {
 
       const mapped = populateTfmUserWithEntraData(user, entraUser);
 
-      return {
-        user,
-        mapped
-      };
+      return mapped;
     }
 
     return {};

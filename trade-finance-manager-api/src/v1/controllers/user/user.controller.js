@@ -100,7 +100,14 @@ exports.createUser = async (user) => {
   return false;
 };
 
-exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, callback) => {
+/**
+ * updateLastLoginAndResetSignInData
+ * Update a user's "last login" and reset sign in data.
+ * @param {Object} user
+ * @param {String} sessionIdentifier
+ * @param {Function} callback: Callback function. defaults to an empty function.
+ */
+exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, callback = () => { }) => {
   try {
     console.info('Updating TFM user - last login, reset sign in data');
 
@@ -115,6 +122,7 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
       loginFailureCount: 0,
       sessionIdentifier,
     };
+
     await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 
     callback();

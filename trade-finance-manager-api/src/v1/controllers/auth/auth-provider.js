@@ -157,14 +157,12 @@ class AuthProvider {
 
       const authCodeRequest = {
         ...origAuthCodeRequest,
-        code, // authZ code
-        codeVerifier: pkceCode.verifier, // PKCE Code Verifier
+        code,
+        codeVerifier: pkceCode.verifier,
       };
 
       const msalInstance = this.getMsalInstance(this.config.msalConfig);
 
-      // TODO: do we need token cache?
-      // msalInstance.getTokenCache().deserialize(req.session.tokenCache);
       const tokenResponse = await msalInstance.acquireTokenByCode(authCodeRequest);
 
       const { account } = tokenResponse;

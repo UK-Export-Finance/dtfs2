@@ -1,19 +1,19 @@
 const utils = require('../../../../utils/crypto.util');
-const { updateLastLoginAndResetSignInData } = require('../../user/user.controller');
+const userController = require('../../user/user.controller');
 
 /**
- * issueJwtAndUpdateUser
+ * execute
  * Issue a JWT and update the user.
  * @param {Object} tfmUser: TFM user
  * @returns {String} JWT token
  */
-const issueJwtAndUpdateUser = async (tfmUser) => {
+const execute = async (tfmUser) => {
   try {
     console.info('TFM auth service - issuing JWT and updating user');
 
     const { sessionIdentifier, ...tokenObject } = utils.issueJWT(tfmUser);
 
-    await updateLastLoginAndResetSignInData(tfmUser, sessionIdentifier, () => { });
+    await userController.updateLastLoginAndResetSignInData(tfmUser, sessionIdentifier);
 
     const { token } = tokenObject;
 
@@ -25,4 +25,4 @@ const issueJwtAndUpdateUser = async (tfmUser) => {
   }
 };
 
-module.exports = issueJwtAndUpdateUser;
+module.exports = { execute };
