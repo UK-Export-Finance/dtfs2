@@ -29,10 +29,7 @@ describe('auth-service/get-and-map-existing-tfm-user', () => {
   it('should return a mapped TFM user', async () => {
     const result = await existingTfmUser.getAndMap(MOCK_ENTRA_USER);
 
-    const expected = {
-      user: MOCK_TFM_USER,
-      mapped: populateTfmUserWithEntraData(MOCK_TFM_USER, MOCK_ENTRA_USER)
-    };
+    const expected = populateTfmUserWithEntraData(MOCK_TFM_USER, MOCK_ENTRA_USER);
 
     expect(result).toEqual(expected);    
   });

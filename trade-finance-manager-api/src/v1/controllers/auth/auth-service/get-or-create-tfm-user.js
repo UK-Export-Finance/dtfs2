@@ -14,7 +14,7 @@ const getOrCreate = async (entraUser) => {
   try {
     console.info('TFM auth service - Getting or creating a TFM user');
 
-    const { user, mapped } = await existingTfmUser.getAndMap(entraUser);
+    const user = await existingTfmUser.getAndMap(entraUser);
     
     if (user.found) {
       console.info('TFM auth service - found an existing user');
@@ -25,11 +25,11 @@ const getOrCreate = async (entraUser) => {
         // TODO: add updating of user teams, first name and last name.
         // Maybe merge with last login and session update.
 
-        return mapped;
-      } 
-        console.info("TFM auth service - user cannot proceed");
-        throw new Error("TFM auth service - user cannot proceed");
-      
+        return user;
+      }
+
+      console.info("TFM auth service - user cannot proceed");
+      throw new Error("TFM auth service - user cannot proceed");
     } else {
       console.info('TFM auth service - no existing TFM user found. Creating a new TFM user');
 
