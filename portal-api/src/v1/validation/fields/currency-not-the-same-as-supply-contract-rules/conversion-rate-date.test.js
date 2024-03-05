@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { sub, format } = require('date-fns');
 const checkConversionRate = require('./conversion-rate-date');
 
 describe('validation - conversion rate date', () => {
@@ -85,12 +85,12 @@ describe('validation - conversion rate date', () => {
       'conversionRateDate-year': '0000',
     };
 
-    const nowDate = moment().format('YYYY-MM-DD');
-    const MAX_DAYS_FROM_NOW = moment(nowDate).subtract(29, 'day');
+    const nowDate = new Date();
+    const MAX_DAYS_FROM_NOW = sub(nowDate, { days: 29 });
 
     const errorsLess = checkConversionRate(facilityLess, errorList, deal);
 
-    expect(errorsLess.conversionRateDate.text).toEqual(`Conversion rate date must be between ${moment(MAX_DAYS_FROM_NOW).format('Do MMMM YYYY')} and ${moment(nowDate).format('Do MMMM YYYY')}`);
+    expect(errorsLess.conversionRateDate.text).toEqual(`Conversion rate date must be between ${format( MAX_DAYS_FROM_NOW, 'do MMMM yyyy')} and ${format(nowDate, 'do MMMM yyyy')}`);
   });
 
   it('should return validation error if the conversion date month has more than 2 numbers', () => {

@@ -1,6 +1,7 @@
 const portalApi = require('./api');
 const api = require('./gef/api');
 const MOCKS = require('./gef');
+const { BANK1_MAKER1 } = require('./portal/users');
 
 const insertMocks = async (token) => {
   console.info('inserting GEF mandatory-criteria-versioned');
@@ -16,7 +17,7 @@ const insertMocks = async (token) => {
   console.info('inserting GEF deals');
 
   const allUsers = await portalApi.listUsers(token);
-  const makerUserId = allUsers.find((user) => user.username === 'BANK1_MAKER1')._id;
+  const makerUserId = allUsers.find((user) => user.username === BANK1_MAKER1.username)._id;
   const latestEligibilityCriteria = await api.latestEligibilityCriteria(token);
 
   // eslint-disable-next-line no-unused-vars

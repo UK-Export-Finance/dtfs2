@@ -1,4 +1,5 @@
 module.exports = {
+  preset: 'ts-jest/presets/js-with-babel',
   collectCoverageFrom: [
     'server/routes/**/*.{js,}',
     'server/controllers/**/*.{js,}',

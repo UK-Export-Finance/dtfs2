@@ -24,6 +24,7 @@ module.exports = {
     'no-restricted-syntax': 'off',
     'no-return-await': 'off',
     'no-use-before-define': ['error', { functions: false }],
+    '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
   },
   settings: {
     'import/resolver': {
