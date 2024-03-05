@@ -26,10 +26,10 @@ const getOrCreate = async (entraUser) => {
         // Maybe merge with last login and session update.
 
         return mapped;
-      } else {
+      } 
         console.info("TFM auth service - user cannot proceed");
         throw new Error("TFM auth service - user cannot proceed");
-      }
+      
     } else {
       console.info('TFM auth service - no existing TFM user found. Creating a new TFM user');
 
