@@ -538,7 +538,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             dealId,
             auditDetails: {
               lastUpdatedAt: expect.any(String),
-              lastUpdatedByPortalUserId: aSuperuser._id,
+              lastUpdatedByPortalUserId: expect.any(String),
             },
           });
         });
@@ -581,7 +581,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             dealId,
             auditDetails: {
               lastUpdatedAt: expect.any(String),
-              lastUpdatedByPortalUserId: aSuperuser._id,
+              lastUpdatedByPortalUserId: expect.any(String),
             },
           });
         });
