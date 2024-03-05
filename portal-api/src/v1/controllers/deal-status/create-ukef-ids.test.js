@@ -1,7 +1,7 @@
 import createUkefIds from './create-ukef-ids';
 import { number } from '../../../external-api/api';
 import { NUMBER } from '../../../constants';
-import dealController from '../deal.controller';
+import api from '../../api';
 import facilitiesController from '../facilities.controller';
 
 const mockSuccessfulResponse = {
@@ -31,7 +31,7 @@ const mockFacility2 = {
 };
 
 const mockDeal = {
-  _id: '65e63b838d019aac793619b3',
+  _id: '6597dffeb5ef5ff4267e5044',
   facilities: [mockFacility1, mockFacility2],
 };
 
@@ -49,11 +49,11 @@ const mockUser = {
 describe('createUkefIds', () => {
   beforeEach(() => {
     number.get = jest.fn().mockResolvedValue(mockSuccessfulResponse);
-    dealController.updateDeal = jest.fn().mockResolvedValue(updatedDeal);
+    api.updateDeal = jest.fn().mockResolvedValue(updatedDeal);
     facilitiesController.update = jest.fn().mockResolvedValue({});
   });
 
-  it('Should generate and update UKEF IDs for a given deal and its facilities', async () => {
+  it.only('Should generate and update UKEF IDs for a given deal and its facilities', async () => {
     // Arrange
     const modifiedMockFacility1 = {
       ukefFacilityId: NUMBER.UKEF_ID.TEST,
@@ -68,7 +68,7 @@ describe('createUkefIds', () => {
     const result = await createUkefIds(mockDeal, mockUser);
 
     // Assert
-    expect(result._id).toEqual(mockDeal._id);
+    expect(result).toEqual(updatedDeal);
     expect(number.get).toHaveBeenCalledWith(NUMBER.ENTITY_TYPE.DEAL, mockDeal._id);
     expect(number.get).toHaveBeenCalledWith(NUMBER.ENTITY_TYPE.FACILITY, mockDeal._id);
     expect(facilitiesControllerUpdateSpy).toHaveBeenCalledWith(mockDeal._id, mockFacility1, modifiedMockFacility1, mockUser);
