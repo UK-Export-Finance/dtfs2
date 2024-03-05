@@ -1,5 +1,5 @@
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
-{% import './facilities-table-heading.njk' as tableHeading %}
+{% import '../../_macros/table-heading.njk' as tableHeading %}
 
 {% macro render(params) %}
   {% set facilities = params.facilities %}
@@ -20,6 +20,7 @@
         <tr>
 
           {{tableHeading.render({
+            tableName: 'facilities',
             fieldName: 'ukefFacilityId',
             buttonText: 'Facility ID',
             buttonValue: 'ukefFacilityId',
@@ -29,6 +30,7 @@
           })}}
 
           {{tableHeading.render({
+            tableName: 'facilities',
             fieldName: 'dealType',
             buttonText: 'Product',
             buttonValue: 'tfmFacilities.dealType',
@@ -38,6 +40,7 @@
           })}}
 
           {{tableHeading.render({
+            tableName: 'facilities',
             fieldName: 'type',
             buttonText: 'Type',
             buttonValue: 'tfmFacilities.type',
@@ -47,6 +50,7 @@
           })}}
 
           {{tableHeading.render({
+            tableName: 'facilities',
             fieldName: 'companyName',
             buttonText: 'Exporter',
             buttonValue: 'tfmFacilities.companyName',
@@ -56,6 +60,7 @@
           })}}
 
           {{tableHeading.render({
+            tableName: 'facilities',
             fieldName: 'value',
             buttonText: 'Value (export currency)',
             buttonValue: 'tfmFacilities.value',
@@ -65,6 +70,7 @@
           })}}
 
           {{tableHeading.render({
+            tableName: 'facilities',
             fieldName: 'coverEndDate',
             buttonText: 'Cover end date',
             buttonValue: 'tfmFacilities.coverEndDate',
@@ -74,6 +80,7 @@
           })}}
 
           {{tableHeading.render({
+            tableName: 'facilities',
             fieldName: 'facilityStage',
             buttonText: 'Facility stage',
             buttonValue: 'facilityStage',
