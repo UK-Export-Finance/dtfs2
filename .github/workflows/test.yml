@@ -373,8 +373,11 @@ jobs:
       - name: Docker
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
-      - name: Wait
-        run: sleep 60s
+      - name: Initialise
+        working-directory: ./
+        run: |
+          sleep 60s
+          npm run load
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -419,8 +422,11 @@ jobs:
       - name: Docker
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
-      - name: Wait
-        run: sleep 60s
+      - name: Initialise
+        working-directory: ./
+        run: |
+          sleep 60s
+          npm run load
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -473,8 +479,11 @@ jobs:
       - name: Docker
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
-      - name: Wait
-        run: sleep 60s
+      - name: Initialise
+        working-directory: ./
+        run: |
+          sleep 60s
+          npm run load
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -536,8 +545,11 @@ jobs:
       - name: Docker
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
-      - name: Wait
-        run: sleep 60s
+      - name: Initialise
+        working-directory: ./
+        run: |
+          sleep 60s
+          npm run load
 
       - name: Execute
         working-directory: ./e2e-tests
