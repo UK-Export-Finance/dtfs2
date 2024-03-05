@@ -46,14 +46,17 @@ on:
       branches:
         - main
 
-    workflows: ["QAT"]
-    types:
-      - completed
-    branches:
-      - dev
-      - feature
-      - staging
-      - prod
+    paths:
+      - "*"
+
+    # workflows: ["QAT"]
+    # types:
+    #   - completed
+    # branches:
+    #   - dev
+    #   - feature
+    #   - staging
+    #   - prod
 
 env:
   PRODUCT: dtfs
