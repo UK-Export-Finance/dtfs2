@@ -2,7 +2,7 @@ const api = require('./api');
 const tfmApi = require('./tfm/api');
 const { MAKER, ADMIN } = require('./portal/roles');
 const FailedToCreateLoggedInUserSessionError = require('./errors/failed-to-create-logged-in-user-session.error');
-const { LOGGER_COLOURS, logger } = require('./helpers/logger.helper');
+const { logger } = require('./helpers/logger.helper');
 
 const mockDataLoaderUser = {
   username: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
@@ -30,10 +30,10 @@ const createAndLogInAsInitialUser = async () => {
   try {
     return await api.loginViaPortal(mockDataLoaderUser);
   } catch (error) {
-    logger.info(
+    logger.warn(
       `login failed for initial portal user:\
     \n    ${error.message}\nrecreating initial portal user`,
-      { colour: LOGGER_COLOURS.yellow, depth: 1 },
+      { depth: 1 },
     );
     await api.createInitialUser(mockDataLoaderUser);
     return api.loginViaPortal(mockDataLoaderUser);
@@ -58,12 +58,11 @@ const createAndLogInAsInitialTfmUser = async () => {
 
     return token;
   } catch (error) {
-    logger.info(
+    logger.warn(
       `login failed for initial TFM user:\
         \n    ${error.message}\nrecreating initial TFM user`,
       {
         depth: 1,
-        colour: LOGGER_COLOURS.yellow,
       },
     );
     await api.createInitialTfmUser(mockDataLoaderTFMUser);

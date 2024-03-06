@@ -21,16 +21,16 @@ const getGuaranteeDates = (facility, dealSubmissionDate) => {
 
   const {
     hasBeenIssued,
-    coverStartDate, // epoch
+    coverStartDate,
     coverEndDate,
     ukefGuaranteeInMonths,
   } = facility;
 
   if (hasBeenIssued) {
-    guaranteeCommencementDate = dateHelpers.formatTimestamp(coverStartDate); // var input is epoch
-    guaranteeExpiryDate = dateHelpers.formatDate(coverEndDate); //     modifiedFacility.coverEndDate = moment(momentDate).utc().valueOf().toString();
+    guaranteeCommencementDate = dateHelpers.formatTimestamp(coverStartDate);
+    guaranteeExpiryDate = dateHelpers.formatDate(coverEndDate);
   } else {
-    guaranteeCommencementDate = dateHelpers.formatTimestamp(Number(dealSubmissionDate)); // var input is epoch
+    guaranteeCommencementDate = dateHelpers.formatTimestamp(Number(dealSubmissionDate));
     guaranteeExpiryDate = dateHelpers.formatTimestamp(
       moment(guaranteeCommencementDate).add(ukefGuaranteeInMonths, 'months').valueOf(),
     );

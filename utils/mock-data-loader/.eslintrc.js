@@ -6,14 +6,19 @@ module.exports = {
   },
   root: true,
   rules: {
-    'max-len': ['error', 160, 2, {
-      ignoreUrls: true,
-      ignoreComments: false,
-      ignoreRegExpLiterals: true,
-      ignoreStrings: true,
-      ignoreTemplateLiterals: true,
-    }],
-    'no-console': ['error', { allow: ['info', 'error'] }],
+    'max-len': [
+      'error',
+      160,
+      2,
+      {
+        ignoreUrls: true,
+        ignoreComments: false,
+        ignoreRegExpLiterals: true,
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true,
+      },
+    ],
+    'no-console': ['error', { allow: ['info', 'warn', 'error'] }],
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
     'import/no-named-as-default': 'off',
     'implicit-arrow-linebreak': 'off',
@@ -24,9 +29,9 @@ module.exports = {
     'no-use-before-define': [
       'error',
       {
-        functions: false
-      }
-    ]
+        functions: false,
+      },
+    ],
   },
   parserOptions: {
     ecmaVersion: 2020,

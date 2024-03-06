@@ -17,6 +17,13 @@ const LOGGER_COLOURS = {
   white: '\x1b[37m',
 };
 
+const applyDefaultColourIfNoneProvided = ({ options, defaultColour }) => {
+  if (options?.colour) {
+    return options;
+  }
+  return { ...options, colour: defaultColour };
+};
+
 const formatAndLogMessage = (
   message,
   {
@@ -45,12 +52,25 @@ const logger = {
   info: (message, options) => {
     formatAndLogMessage(message, options);
   },
-  error: (message, options) => {
+  warn: (message, options) => {
+    const printLogAsWarning = (line) => {
+      console.warn(line);
+    };
+    const optionsWithDefaultColour = applyDefaultColourIfNoneProvided({options, defaultColour: LOGGER_COLOURS.yellow});
     formatAndLogMessage(message, {
-      ...options,
-      printLog: (line) => {
-        console.error(line);
-      },
+      ...optionsWithDefaultColour,
+      printLog: printLogAsWarning,
+    });
+  },
+  error: (message, options) => {
+    const printLogAsError = (line) => {
+      console.error(line);
+    };
+    const optionsWithDefaultColour = applyDefaultColourIfNoneProvided({options,  defaultColour:LOGGER_COLOURS.red});
+
+    formatAndLogMessage(message, {
+      ...optionsWithDefaultColour,
+      printLog: printLogAsError,
     });
   },
 };

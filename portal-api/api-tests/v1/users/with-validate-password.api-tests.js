@@ -10,18 +10,35 @@ const ANOTHER_VALID_PASSWORD = 'AnotherValidPassword1!';
 
 const WHEN_VALIDATING_PASSWORD_TEXT = 'when validating password';
 
+/*
+* The following tests are for the password validation rules
+* that are applied when creating a new user.
+* These rule test cases correspond to the createRules in the validation/index.js file
+*/
 const withValidatePasswordOnCreateUserTests = ({ payload, makeRequest }) => {
   describe(WHEN_VALIDATING_PASSWORD_TEXT, () => {
     itShouldReturnAnErrorIf(getCreatePasswordRuleTestCases({ payload, makeRequest }));
   });
 };
 
+/* 
+* The following tests are for the password validation rules
+* that are applied when updating a user without providing the current password.
+* These rule test cases correspond to the applyUpdateRules in the validation/index.js file
+* when the current password field is not provided.
+*/
 const withValidatePasswordOnUpdateUserWithoutCurrentPasswordProvidedTests = ({ payload, makeRequest, existingUserPassword }) => {
   describe(WHEN_VALIDATING_PASSWORD_TEXT, () => {
     itShouldReturnAnErrorIf(getUpdateUserRuleWithoutCurrentPasswordProvidedTestCases({ payload, makeRequest, existingUserPassword }));
   });
 };
 
+/* 
+* The following tests are for the password validation rules
+* that are applied when updating a user with providing the current password.
+* These rule test cases correspond to the applyUpdateRules in the validation/index.js file
+* when the current password field is provided.
+*/
 const withValidatePasswordOnUpdateUserWithCurrentPasswordProvidedTests = ({ payload, makeRequest, existingUserPassword }) => {
   describe(WHEN_VALIDATING_PASSWORD_TEXT, () => {
     itShouldReturnAnErrorIf(getUpdateUserRuleWithCurrentPasswordProvidedTestCases({ payload, makeRequest, existingUserPassword }));
