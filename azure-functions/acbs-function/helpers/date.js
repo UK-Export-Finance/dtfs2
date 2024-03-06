@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { isValid, parse, format, startOfDay, add, getDaysInMonth } = require('date-fns');
+const { isValid, parse, format, startOfDay, add, getDaysInMonth, formatISO } = require('date-fns');
 
 const validDateFormats = [
   'MM-dd-yy',
@@ -166,8 +166,12 @@ const addYear = (date, years) => {
 
 /**
  * @returns {string} current date as ISO-8601 string without milliseconds & with UTC offset (e.g. 2024-02-16T16:57:23+00:00)
- */
-const getNowAsIsoString = () => moment().format();
+ *
+ * This maintains exact consistency with old moment behaviour:
+ *  - `moment().format()` returns an ISO-8601 string with an offset, e.g. '+00:00'
+ *  - `formatISO()` returns an ISO-8601 string with a 'Z' if the timezone is UTC
+*/
+const getNowAsIsoString = () => formatISO(new Date()).replace('Z', '+00:00');
 
 /**
  * @param {string | Date | number | null} startDate
