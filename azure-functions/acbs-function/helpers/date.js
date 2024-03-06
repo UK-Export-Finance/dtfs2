@@ -73,14 +73,6 @@ const formatDate = (dateStr) => {
 };
 
 /**
- * @param {string | number} dateStr
- * @returns date formatted as `yyyy-MM-dd`
- *
- * @deprecated this function is the same as `formatDate`
- */
-const formatTimestamp = (dateStr) => moment(isDate(dateStr) || isString(dateStr) ? dateStr : Number(dateStr)).format('YYYY-MM-DD');
-
-/**
  * @param {string | number | Date} date as a date string, epoch time or Date object
  * @param {number} day number of days to add
  * @returns in the format `yyyy-MM-dd`
@@ -178,7 +170,6 @@ module.exports = {
   isString,
   now,
   formatDate,
-  formatTimestamp,
   formatYear,
   addDay,
   addMonth,
