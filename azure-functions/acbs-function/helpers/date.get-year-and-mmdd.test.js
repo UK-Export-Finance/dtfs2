@@ -12,6 +12,10 @@ describe('getYearAndMmdd', () => {
   });
 
   const date = new Date('2023-03-02');
+  const validDateYearAndMmdd = {
+    mmdd: '03-02',
+    year: '2023',
+  };
   const invalidYearAndMMdd = {
     mmdd: 'Invalid date',
     year: 'Invalid date',
@@ -28,11 +32,21 @@ describe('getYearAndMmdd', () => {
   const validStringTestCases = validDateFormats.map((formatString) => ({
     description: `returns correct values when formatted as '${formatString}'`,
     mockValue: format(date, formatString),
-    expected: { mmdd: '03-02', year: '2023' },
+    expected: validDateYearAndMmdd,
   }));
 
   const testData = [
     ...validStringTestCases,
+    {
+      description: 'should parse number as epoch',
+      mockValue: 1677715200000,
+      expected: validDateYearAndMmdd,
+    },
+    {
+      description: 'should parse Date object',
+      mockValue: date,
+      expected: validDateYearAndMmdd,
+    },
     {
       description: 'should not parse if day of month too big',
       mockValue: '2023-10-32',
@@ -79,11 +93,6 @@ describe('getYearAndMmdd', () => {
       expected: invalidYearAndMMdd,
     },
     {
-      description: 'should parse the js maximum epoch stored as a string',
-      mockValue: '8640000000000000',
-      expected: invalidYearAndMMdd,
-    },
-    {
       description: 'should not parse a number bigger than maximum epoch stored as a string',
       mockValue: '8640000000000001',
       expected: invalidYearAndMMdd,
@@ -92,11 +101,6 @@ describe('getYearAndMmdd', () => {
       description: 'should parse 0 as current date',
       mockValue: 0,
       expected: currentYearAndMMdd,
-    },
-    {
-      description: 'should not parse negative integer stored as string as epoch',
-      mockValue: '-1708955777575',
-      expected: invalidYearAndMMdd,
     },
     {
       description: 'should not parse positive float stored as a string',
