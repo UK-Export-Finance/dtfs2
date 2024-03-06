@@ -47,6 +47,7 @@ export class AzureFileInfoEntity extends AuditableBaseEntity {
    */
   @OneToOne(() => UtilisationReportEntity, (report) => report.azureFileInfo, {
     nullable: false,
+    onDelete: 'CASCADE',
   })
   @JoinColumn()
   utilisationReport!: UtilisationReportEntity;
