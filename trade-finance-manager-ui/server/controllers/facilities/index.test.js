@@ -32,7 +32,14 @@ describe('controllers - facilities', () => {
     },
   ];
 
-  const mockGetFacilities = { facilities: mockFacilities };
+  const mockGetFacilities = {
+    facilities: mockFacilities,
+    pagination: {
+      totalItems: 2,
+      currentPage: 0,
+      totalPages: 1,
+    }
+  };
 
   beforeEach(() => {
     res = mockRes();
@@ -41,12 +48,14 @@ describe('controllers - facilities', () => {
   describe('GET all facilities', () => {
     describe('when there are facilities', () => {
       beforeEach(() => {
-        api.getFacilities = () => Promise.resolve(mockGetFacilities);
+        api.getFacilities = () => Promise.resolve(mockGetFacilities); // TODO: look at this line
         api.getAllAmendmentsInProgress = () => Promise.resolve({ data: [] });
       });
 
       it('should render facilities template with data', async () => {
         const mockReq = {
+          params: {},
+          query: {},
           session: { user: {} },
         };
 
@@ -57,17 +66,28 @@ describe('controllers - facilities', () => {
           activePrimaryNavigation: 'all facilities',
           activeSubNavigation: 'facility',
           user: mockReq.session.user,
+          sortButtonWasClicked: false,
+          activeSortByField: CONSTANTS.FACILITY.TFM_SORT_BY_DEFAULT.field,
+          activeSortByOrder: CONSTANTS.FACILITY.TFM_SORT_BY_DEFAULT.order,
+          pages: {
+            totalPages: 1,
+            currentPage: 0,
+            totalItems: 2,
+          },
+          queryString: '',
         });
       });
     });
 
     describe('when there are no facilities', () => {
       beforeEach(() => {
-        api.getFacilities = () => Promise.resolve();
+        api.getFacilities = () => Promise.resolve({});
       });
 
       it('should redirect to not-found route', async () => {
         const mockReq = {
+          params: {},
+          query: {},
           session: { user: {} },
         };
 
@@ -85,25 +105,19 @@ describe('controllers - facilities', () => {
         api.getFacilities = getFacilitiesSpy;
       });
 
-      it('should call api and render template with data', async () => {
+      it('should redirect to GET /facilities with a query string based on the searchString', async () => {
         const searchString = 'test';
 
         const mockReq = {
+          params: {},
+          query: {},
           session: { user: {} },
           body: { search: searchString },
         };
 
         await caseController.queryFacilities(mockReq, res);
 
-        expect(getFacilitiesSpy).toHaveBeenCalledWith(undefined, searchString);
-
-        expect(res.render).toHaveBeenCalledWith('facilities/facilities.njk', {
-          heading: 'All facilities',
-          facilities: mockFacilities,
-          activePrimaryNavigation: 'all facilities',
-          activeSubNavigation: 'facility',
-          user: mockReq.session.user,
-        });
+        expect(res.redirect).toHaveBeenCalledWith('/facilities/0?search=test');
       });
     });
 
@@ -116,21 +130,15 @@ describe('controllers - facilities', () => {
 
       it('should call api and render template with data', async () => {
         const mockReq = {
+          params: {},
+          query: {},
           session: { user: {} },
           body: {},
         };
 
         await caseController.queryFacilities(mockReq, res);
 
-        expect(getFacilitiesSpy).toHaveBeenCalled();
-
-        expect(res.render).toHaveBeenCalledWith('facilities/facilities.njk', {
-          heading: 'All facilities',
-          facilities: mockFacilities,
-          activePrimaryNavigation: 'all facilities',
-          activeSubNavigation: 'facility',
-          user: mockReq.session.user,
-        });
+        expect(res.redirect).toHaveBeenCalledWith('/facilities/0');
       });
     });
   });
