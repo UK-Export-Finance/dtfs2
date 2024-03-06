@@ -1,9 +1,11 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const { generateArrayOfEmailsRegex } = require('./helpers/generateArrayOfEmailsRegex');
+const handleFindByEmailsResult = require('./helpers/handleFindByEmailsResult');
 const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { USER, PAYLOAD } = require('../../../constants');
+
 
 /**
  * findByEmails
@@ -26,37 +28,7 @@ exports.findByEmails = async (emails) => {
 
     const users = await collection.find({ 'email': { $in: emailsRegex }}).toArray();
 
-    if (users.length === 0) {
-      console.info('Getting TFM user by emails - no user found');
-
-      return { found: false }
-    }
-
-    if (users.length > 1) {
-      console.info('Getting TFM user by emails - More than 1 matching user found: %O', users);
-
-      return { found: true, canProceed: false };
-    }
-
-    if (users[0].disabled) {
-      // TODO: should we remove functionality to disable users in TFM, so disabling is done in Active directory.
-      console.info('Getting TFM user by emails - User is disabled: %O', users[0]);
-
-      return { found: true, canProceed: false };
-    }
-
-    if (users[0].status === 'blocked') {
-      // TODO: should we remove functionality to block users in TFM, so block is done in Active directory.
-      console.info('Getting TFM user by emails - User is blocked: %O', users[0]);
-
-      return { found: true, canProceed: false };
-    }
-
-    return {
-      found: true,
-      canProceed: true,
-      ...users[0],
-    };
+    return handleFindByEmailsResult(users);
   } catch (error) {
     console.error('Error getting TFM user by emails - Unexpected DB response %O', error);
 
