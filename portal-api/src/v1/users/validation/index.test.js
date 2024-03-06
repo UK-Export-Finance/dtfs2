@@ -69,7 +69,7 @@ describe('user validation', () => {
       'emailMustBeUnique',
     ];
 
-    const { expectedRulesTestCases, otherRulesTestCases } = getExpectedRuleAndOtherRulesTestCases({
+    const { expectedRulesTestCases, otherRulesTestCases } = getTestCasesFromRules({
       expectedRules,
     });
 
@@ -124,7 +124,7 @@ describe('user validation', () => {
     ];
 
     describe.each(testCases)('when $description', ({ makeApplyRulesCall, expectedRules, expectedArgumentsToCallRuleWith }) => {
-      const { expectedRulesTestCases, otherRulesTestCases } = getExpectedRuleAndOtherRulesTestCases({ expectedRules });
+      const { expectedRulesTestCases, otherRulesTestCases } = getTestCasesFromRules({ expectedRules });
       whenApplyingRulesItAppliesOnlyTheExpectedRules({
         makeApplyRulesCall,
         expectedRulesTestCases,
@@ -261,7 +261,7 @@ describe('user validation', () => {
     });
   }
 
-  function getExpectedRuleAndOtherRulesTestCases({ expectedRules }) {
+  function getTestCasesFromRules({ expectedRules }) {
     const expectedRulesTestCases = [];
     const otherRulesTestCases = [];
     let allRulesNames = Object.keys(allRules);
