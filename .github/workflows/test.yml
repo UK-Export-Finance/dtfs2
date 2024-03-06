@@ -423,7 +423,13 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Repository
+        uses: actions/checkout@v4
+      
+      - name: Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node }}
 
       - name: Timezone
         uses: szenius/set-timezone@v1.2
@@ -459,6 +465,8 @@ jobs:
 
       - name: Execute
         working-directory: ./e2e-tests
+        env:
+          SQL_DB_HOST: localhost
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec "./portal/cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
 
   # 6. E2E - GEF
@@ -486,7 +494,13 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Repository
+        uses: actions/checkout@v4
+      
+      - name: Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node }}
 
       - name: Timezone
         uses: szenius/set-timezone@v1.2
@@ -522,6 +536,8 @@ jobs:
 
       - name: Execute
         working-directory: ./e2e-tests
+        env:
+          SQL_DB_HOST: localhost
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec "./gef/cypress/e2e/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
 
   #7. E2E - TFM
@@ -557,7 +573,13 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Repository
+        uses: actions/checkout@v4
+      
+      - name: Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node }}
 
       - name: Timezone
         uses: szenius/set-timezone@v1.2
@@ -593,6 +615,8 @@ jobs:
 
       - name: Execute
         working-directory: ./e2e-tests
+        env:
+          SQL_DB_HOST: localhost
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./tfm --record false --spec "./tfm/cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
 
   #8. E2E - UKEF
@@ -637,7 +661,13 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Repository
+        uses: actions/checkout@v4
+      
+      - name: Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node }}
 
       - name: Timezone
         uses: szenius/set-timezone@v1.2
@@ -673,4 +703,6 @@ jobs:
 
       - name: Execute
         working-directory: ./e2e-tests
+        env:
+          SQL_DB_HOST: localhost
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec "./ukef/cypress/e2e/journeys/portal/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}

@@ -1,6 +1,12 @@
 const crypto = require('node:crypto');
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
+const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
+const { UtilisationReportEntity } = require('@ukef/dtfs2-common');
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
+
+SqlDbDataSource.initialize()
+  .then(() => console.info('🗄️ Successfully initialised connection to SQL database'))
+  .catch((error) => console.error('❌ Failed to initialise connection to SQL database:', error));
 
 module.exports = {
   createTasks: ({ dbName, dbConnectionString }) => {
@@ -87,6 +93,9 @@ module.exports = {
       },
 
       async removeAllUtilisationReportDetailsFromDb() {
+        await SqlDbDataSource.manager.getRepository(UtilisationReportEntity).delete({});
+
+        // TODO FN-1853 Remove mongo db operation
         const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
         return utilisationReports.deleteMany({});
       },
