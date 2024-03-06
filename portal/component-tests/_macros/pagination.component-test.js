@@ -17,7 +17,7 @@ const {
   itShouldNotRenderEllipsisBeforeNextAndLastLinks,
   itShouldRenderNextAndLastLinks,
   itShouldNotRenderNextAndLastLinks,
-} = require('../test-assertions');
+} = require('../test-helpers');
 
 describe(component, () => {
   let wrapper;
