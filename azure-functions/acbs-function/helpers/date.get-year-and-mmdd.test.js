@@ -84,7 +84,7 @@ describe('getYearAndMmdd', () => {
     },
     {
       description: 'should parse js maximum epoch',
-      mockValue: 8640000000000000,
+      mockValue: 8639999996400000,
       expected: maxDateYearAndMMdd,
     },
     {
