@@ -38,7 +38,7 @@ describe('controllers - facilities', () => {
       totalItems: 2,
       currentPage: 0,
       totalPages: 1,
-    }
+    },
   };
 
   beforeEach(() => {
