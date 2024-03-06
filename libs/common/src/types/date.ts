@@ -22,3 +22,7 @@ export type UnixTimestamp = number;
 export type IsoDateTimeStamp = string;
 
 export type MonthAndYear = Prettify<MonthAndYearPartialEntity>;
+
+export type OneIndexedMonth = number;
+
+export type IsoMonthStamp = string;

@@ -1,6 +1,6 @@
+const { ROLES } = require('@ukef/dtfs2-common');
 const { nowTimestamp } = require('../dates');
 const MANDATORY_CRITERIA = require('../mandatoryCriteria');
-const { MAKER } = require('../../portal/roles');
 
 // de-structure and create a new array, so `sort` doesn't impact 'MANDATORY_CRITERIA'
 let mandatoryCriteria = [...MANDATORY_CRITERIA].sort((a, b) => (a.version > b.version ? 1 : -1));
@@ -24,7 +24,7 @@ module.exports = {
     maker: {
       _id: '60f7d72654f99900074c0a6d',
       username: 'maker1@ukexportfinance.gov.uk',
-      roles: [MAKER],
+      roles: [ROLES.MAKER],
       bank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
@@ -49,25 +49,29 @@ module.exports = {
       {
         _id: '60f7d72854f99900074c0a91',
         id: 11,
-        description: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
+        description:
+          'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
         answer: true,
       },
       {
         _id: '60f7d72854f99900074c0a92',
         id: 12,
-        description: 'The period between the Cover Start Date and the Cover End Date does not exceed: for a Bond, the Bond Maximum Cover Period; and for a Loan, the Loan Maximum Cover Period.',
+        description:
+          'The period between the Cover Start Date and the Cover End Date does not exceed: for a Bond, the Bond Maximum Cover Period; and for a Loan, the Loan Maximum Cover Period.',
         answer: false,
       },
       {
         _id: '60f7d72854f99900074c0a93',
         id: 13,
-        description: 'The Covered Bank Exposure under the Transaction (converted (as at the date this representation is made) for this purpose into the Base Currency) is not more than the lesser of: the Available Facility; and the Available Obligor Covered Exposure Limit.',
+        description:
+          'The Covered Bank Exposure under the Transaction (converted (as at the date this representation is made) for this purpose into the Base Currency) is not more than the lesser of: the Available Facility; and the Available Obligor Covered Exposure Limit.',
         answer: true,
       },
       {
         _id: '60f7d72854f99900074c0a94',
         id: 14,
-        description: 'For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 3 months prior to the submission of this Inclusion Notice. For a loan Transaction, the loan has not yet been advanced.',
+        description:
+          'For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 3 months prior to the submission of this Inclusion Notice. For a loan Transaction, the loan has not yet been advanced.',
         answer: true,
       },
       {
@@ -79,19 +83,22 @@ module.exports = {
       {
         _id: '60f7d72854f99900074c0a96',
         id: 16,
-        description: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco, gambling, coal, oil, gas or fossil fuel energy and the Bank is not aware that any of the information contained within it is inaccurate.',
+        description:
+          'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco, gambling, coal, oil, gas or fossil fuel energy and the Bank is not aware that any of the information contained within it is inaccurate.',
         answer: true,
       },
       {
         _id: '60f7d72854f99900074c0a97',
         id: 17,
-        description: 'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate to any Relevant Person.',
+        description:
+          'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate to any Relevant Person.',
         answer: true,
       },
       {
         _id: '60f7d72854f99900074c0a98',
         id: 18,
-        description: 'Any applicable fees, interest rate and/or Risk Margin Fee apply to the whole Cover Period of the Covered Transaction, and have been set in accordance with the Bank\'s normal pricing policies and include, if any, overall pricing requirements notified by UKEF.',
+        description:
+          "Any applicable fees, interest rate and/or Risk Margin Fee apply to the whole Cover Period of the Covered Transaction, and have been set in accordance with the Bank's normal pricing policies and include, if any, overall pricing requirements notified by UKEF.",
         answer: true,
       },
     ],
@@ -192,7 +199,7 @@ module.exports = {
     {
       date: '1626971977437',
       username: 'maker1@ukexportfinance.gov.uk',
-      roles: [MAKER],
+      roles: [ROLES.MAKER],
       bank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',

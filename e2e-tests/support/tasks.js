@@ -1,5 +1,5 @@
 const crypto = require('node:crypto');
-const { MongoDbClient } = require('@ukef/dtfs2-common');
+const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
 
 module.exports = {

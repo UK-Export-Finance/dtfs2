@@ -2,7 +2,7 @@ const {
   EXPORTER_COMPLETED,
   EXPORTER_NO_INDUSTRIES,
 } = require('./exporter');
-const USERS = require('../portal/users');
+const USERS = require('../portal-users');
 
 const A_MAKER = USERS.BANK1_MAKER1;
 

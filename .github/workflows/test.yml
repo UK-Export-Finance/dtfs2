@@ -207,6 +207,19 @@ jobs:
         run: |
           sleep 60s
           npm run load
+      
+      - name: Migrations
+        working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: localhost
+        run: npm run db:migrate
+      
+      - name: Seeding
+        working-directory: ./utils/sql-db-seeder
+        env:
+          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT
+          SQL_DB_HOST: localhost
+        run: npm run db:seed
 
       - name: Execute
         run: docker-compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
@@ -430,6 +443,19 @@ jobs:
           sleep 60s
           npm run load
           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+      
+      - name: Migrations
+        working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: localhost
+        run: npm run db:migrate
+      
+      - name: Seeding
+        working-directory: ./utils/sql-db-seeder
+        env:
+          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT
+          SQL_DB_HOST: localhost
+        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -480,6 +506,19 @@ jobs:
           sleep 60s
           npm run load
           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+      
+      - name: Migrations
+        working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: localhost
+        run: npm run db:migrate
+      
+      - name: Seeding
+        working-directory: ./utils/sql-db-seeder
+        env:
+          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT
+          SQL_DB_HOST: localhost
+        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -538,6 +577,19 @@ jobs:
           sleep 60s
           npm run load
           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+      
+      - name: Migrations
+        working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: localhost
+        run: npm run db:migrate
+      
+      - name: Seeding
+        working-directory: ./utils/sql-db-seeder
+        env:
+          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT
+          SQL_DB_HOST: localhost
+        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -605,6 +657,19 @@ jobs:
           sleep 60s
           npm run load
           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+      
+      - name: Migrations
+        working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: localhost
+        run: npm run db:migrate
+      
+      - name: Seeding
+        working-directory: ./utils/sql-db-seeder
+        env:
+          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT
+          SQL_DB_HOST: localhost
+        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
