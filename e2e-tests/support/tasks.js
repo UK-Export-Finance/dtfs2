@@ -87,17 +87,22 @@ module.exports = {
         );
       },
 
+      /**
+       * Inserts utilisation report details to the SQL database
+       * @param {Partial<import('@ukef/dtfs2-common').UtilisationReportEntity[]>} utilisationReportDetails
+       * @returns {import('@ukef/dtfs2-common').UtilisationReportEntity[]} The inserted reports
+       */
       async insertUtilisationReportDetailsIntoDb(utilisationReportDetails) {
-        const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-        return utilisationReports.insertMany(utilisationReportDetails);
+        const utilisationReportRepo = SqlDbDataSource.getRepository(UtilisationReportEntity);
+        const saveOperations = utilisationReportDetails.map((utilisationReport) => utilisationReportRepo.save(utilisationReport));
+        return await Promise.all(saveOperations);
       },
 
+      /**
+       * Deletes all the rows from the utilisation report and azure file info tables
+       */
       async removeAllUtilisationReportDetailsFromDb() {
-        await SqlDbDataSource.manager.getRepository(UtilisationReportEntity).delete({});
-
-        // TODO FN-1853 Remove mongo db operation
-        const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-        return utilisationReports.deleteMany({});
+        return await SqlDbDataSource.manager.getRepository(UtilisationReportEntity).delete({});
       },
 
       async getAllBanks() {
