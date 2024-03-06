@@ -5,7 +5,7 @@ const {
   hasAllRequestedCoverStartDateValues,
   updateRequestedCoverStartDate,
 } = require('../facility-dates/requested-cover-start-date');
-const { createTimestampFromSubmittedValues } = require('../facility-dates/timestamp');
+const { getStartOfDateFromDayMonthYearStrings } = require("../helpers/date")
 const bondIssueFacilityValidationErrors = require('../validation/bond-issue-facility');
 const { hasValue } = require('../../utils/string');
 const canIssueFacility = require('../facility-issuance');
@@ -60,7 +60,11 @@ exports.updateBondIssueFacility = async (req, res) => {
       }
 
       if (hasAllIssuedDateValues(modifiedBond)) {
-        modifiedBond.issuedDate = createTimestampFromSubmittedValues(req.body, 'issuedDate');
+        modifiedBond.issuedDate = getStartOfDateFromDayMonthYearStrings(
+          req.body['issuedDate-day'],
+          req.body['issuedDate-month'],
+          req.body['issuedDate-year']
+        ).valueOf().toString();
       } else {
         modifiedBond.issuedDate = null;
       }
