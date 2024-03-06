@@ -1,6 +1,6 @@
 const { format } = require('date-fns');
 const { addYear } = require('./date');
-const { validDateFormats, invalidDateFormats } = require('../test-helpers/date-formats');
+const { validDateFormats } = require('../test-helpers/date-formats');
 
 describe('addYear', () => {
   const testDate = new Date('2024-05-12');
@@ -14,17 +14,8 @@ describe('addYear', () => {
     expected: testDatePlusOneYearFormatted,
   }));
 
-  const invalidTestData = invalidDateFormats.map((formatString) => ({
-    description: `does not parse a date formatted as ${formatString}`,
-    formatString,
-    date: format(testDate, formatString),
-    yearsToAdd: 1,
-    expected: 'Invalid date',
-  }));
-
   const testData = [
     ...validTestData,
-    ...invalidTestData,
     {
       description: 'parses Date object',
       date: testDate,
@@ -38,10 +29,10 @@ describe('addYear', () => {
       expected: testDatePlusOneYearFormatted,
     },
     {
-      description: 'does not parse epoch as a string',
+      description: 'parses epoch as a string',
       date: testDate.valueOf().toString(),
       yearsToAdd: 1,
-      expected: 'Invalid date',
+      expected: testDatePlusOneYearFormatted,
     },
     {
       description: 'rounds down date if going from 29th Feb to a non-leap year',
@@ -72,12 +63,6 @@ describe('addYear', () => {
       date: format(testDate, 'yyyy-MM-dd'),
       yearsToAdd: '12x1',
       expected: format(testDate, 'yyyy-MM-dd'),
-    },
-    {
-      description: 'adds 1 year if years to add is true',
-      date: format(testDate, 'yyyy-MM-dd'),
-      yearsToAdd: true,
-      expected: testDatePlusOneYearFormatted,
     },
   ];
 

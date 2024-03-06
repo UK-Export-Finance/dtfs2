@@ -131,7 +131,11 @@ const addDay = (date, days) => {
  *  - yyyy/MM/dd
  *  - yyyy MM dd
  */
-const addMonth = (date, months) => moment(date).add({ months }).format('YYYY-MM-DD');
+const addMonth = (date, months) => {
+  const parsedDate = date instanceof Date ? date : getDateFromStringOrNumber(date);
+
+  return isValid(parsedDate) ? format(add(parsedDate, { months }), 'yyyy-MM-dd') : 'Invalid date';
+};
 /**
  * @param {string | number | Date} date as a date string, epoch time or Date object
  * @param {number} day number of months to add
@@ -148,7 +152,11 @@ const addMonth = (date, months) => moment(date).add({ months }).format('YYYY-MM-
  *  - yyyy/MM/dd
  *  - yyyy MM dd
  */
-const addYear = (date, years) => moment(date).add({ years }).format('YYYY-MM-DD');
+const addYear = (date, years) => {
+  const parsedDate = date instanceof Date ? date : getDateFromStringOrNumber(date);
+
+  return isValid(parsedDate) ? format(add(parsedDate, { years }), 'yyyy-MM-dd') : 'Invalid date';
+};
 
 /**
  * @returns {string} current date as ISO-8601 string without milliseconds & with UTC offset (e.g. 2024-02-16T16:57:23+00:00)
