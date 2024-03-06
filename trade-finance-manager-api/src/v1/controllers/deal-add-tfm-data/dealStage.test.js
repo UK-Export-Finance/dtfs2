@@ -4,7 +4,7 @@ import CONSTANTS from '../../../constants';
 describe('dealStage', () => {
   it('should return DEAL_STAGE_TFM.APPLICATION when status is not PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED and submissionType is not AIN or MIN', () => {
     const status = CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED;
-    const submissionType = 'SOME_SUBMISSION_TYPE';
+    const submissionType = 'INVALID';
 
     const result = dealStage(status, submissionType);
 
@@ -31,67 +31,67 @@ describe('dealStage', () => {
 
   it('should return DEAL_STAGE_TFM.APPLICATION when status is PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED and submissionType is not AIN or MIN', () => {
     const status = CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED;
-    const submissionType = 'SOME_SUBMISSION_TYPE';
+    const submissionType = 'INVALID';
 
     const result = dealStage(status, submissionType);
 
     expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
   });
 
-  it('should return false when status is not PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED and submissionType is not AIN or MIN', () => {
-    const status = 'SOME_STATUS';
-    const submissionType = 'SOME_SUBMISSION_TYPE';
+  it('should return `Application` when status is not PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED and submissionType is not AIN or MIN', () => {
+    const status = 'INVALID';
+    const submissionType = 'INVALID';
 
     console.info = jest.fn();
 
     const result = dealStage(status, submissionType);
 
-    expect(result).toBe(false);
-    expect(console.info).toHaveBeenCalledWith('Invalid deal stage with status %s and submission type %s', status, submissionType);
+    expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
+    expect(console.info).toHaveBeenCalledWith('Invalid deal stage with status %s and submission type %s, setting status to Application', status, submissionType);
   });
 
-  it('should return false when status is null', () => {
+  it('should return `Application` when status is null', () => {
     const status = null;
-    const submissionType = 'SOME_SUBMISSION_TYPE';
+    const submissionType = 'INVALID';
 
     const result = dealStage(status, submissionType);
 
-    expect(result).toBe(false);
+    expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
   });
 
-  it('should return false when submissionType is null', () => {
-    const status = 'SOME_STATUS';
+  it('should return `Application` when submissionType is null', () => {
+    const status = 'INVALID';
     const submissionType = null;
 
     const result = dealStage(status, submissionType);
 
-    expect(result).toBe(false);
+    expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
   });
 
-  it('should return false when status is not a string', () => {
+  it('should return `Application` when status is not a string', () => {
     const status = 123;
-    const submissionType = 'SOME_SUBMISSION_TYPE';
+    const submissionType = 'INVALID';
 
     const result = dealStage(status, submissionType);
 
-    expect(result).toBe(false);
+    expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
   });
 
-  it('should return false when submissionType is not a string', () => {
-    const status = 'SOME_STATUS';
+  it('should return `Application` when submissionType is not a string', () => {
+    const status = 'INVALID';
     const submissionType = 123;
 
     const result = dealStage(status, submissionType);
 
-    expect(result).toBe(false);
+    expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
   });
 
-  it('should return false when status is an empty string', () => {
+  it('should return `Application` when status is an empty string', () => {
     const status = '';
-    const submissionType = 'SOME_SUBMISSION_TYPE';
+    const submissionType = 'INVALID';
 
     const result = dealStage(status, submissionType);
 
-    expect(result).toBe(false);
+    expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
   });
 });

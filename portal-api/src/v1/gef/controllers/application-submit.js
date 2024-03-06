@@ -136,7 +136,7 @@ const addUkefFacilityIdToFacilities = async (dealId) => {
   await Promise.all(
     facilities.map(async (facility) => {
       if (!facility.ukefFacilityId) {
-        const { maskedId } = await generateUkefId('facility', facility);
+        const { maskedId } = await generateUkefId(CONSTANTS.NUMBER.ENTITY_TYPE.FACILITY, facility);
         const update = {
           ukefFacilityId: maskedId,
         };
@@ -248,7 +248,7 @@ const addSubmissionData = async (dealId, existingApplication) => {
   };
 
   if (!existingApplication.ukefDealId) {
-    const { maskedId } = await generateUkefId('deal', existingApplication);
+    const { maskedId } = await generateUkefId(CONSTANTS.NUMBER.ENTITY_TYPE.DEAL, existingApplication);
     submissionData.ukefDealId = maskedId;
   }
 
