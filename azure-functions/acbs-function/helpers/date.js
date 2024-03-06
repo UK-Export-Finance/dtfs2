@@ -92,34 +92,10 @@ const formatYear = (year) => (year < 1000 ? (2000 + parseInt(year, 10)).toString
  *  - yyyy/MM/dd
  *  - yyyy MM dd
  */
-const formatDate = (dateStr) => {
-  const date = getDateFromStringOrNumber(dateStr);
+const formatDate = (dateStr) => formatOrReturnInvalidDate(
+  getDateFromStringOrNumber(dateStr),
+);
 
-  return formatOrReturnInvalidDate(date);
-};
-
-/**
- * @param {string | number | Date} date as a date string, epoch time or Date object
- * @param {number} days number of days to add
- * @returns {string} in the format `yyyy-MM-dd`
- *
- * Accepted date strings:
- *  - MM/dd/yyyy
- *  - MM dd yyyy
- *  - MM-dd-yy
- *  - MM/dd/yy
- *  - MM dd yy
- *  - yyyy-MM-dd
- *  - yyyy/MM/dd
- *  - yyyy MM dd
- *
- */
-// This function is never actually used
-const addDay = (date, days) => {
-  const parsedDate = date instanceof Date ? date : getDateFromStringOrNumber(date);
-
-  return isValid(parsedDate) ? format(add(parsedDate, { days }), 'yyyy-MM-dd') : 'Invalid date';
-};
 /**
  * @param {string | number | Date} date as a date string, epoch time or Date object
  * @param {number} day number of months to add
@@ -139,7 +115,7 @@ const addDay = (date, days) => {
 const addMonth = (date, months) => {
   const parsedDate = date instanceof Date ? date : getDateFromStringOrNumber(date);
 
-  return isValid(parsedDate) ? format(add(parsedDate, { months }), 'yyyy-MM-dd') : 'Invalid date';
+  return formatOrReturnInvalidDate(add(parsedDate, { months }));
 };
 /**
  * @param {string | number | Date} date as a date string, epoch time or Date object
@@ -160,7 +136,7 @@ const addMonth = (date, months) => {
 const addYear = (date, years) => {
   const parsedDate = date instanceof Date ? date : getDateFromStringOrNumber(date);
 
-  return isValid(parsedDate) ? format(add(parsedDate, { years }), 'yyyy-MM-dd') : 'Invalid date';
+  return formatOrReturnInvalidDate(add(parsedDate, { years }));
 };
 
 /**
@@ -274,7 +250,6 @@ module.exports = {
   now,
   formatDate,
   formatYear,
-  addDay,
   addMonth,
   addYear,
   getNowAsIsoString,
