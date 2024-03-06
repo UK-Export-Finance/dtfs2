@@ -1,3 +1,4 @@
+const { SSO } = require('../../constants');
 const api = require('../../api');
 const loginService = require('./loginService');
 
@@ -7,15 +8,17 @@ const getLogin = async (req, res) => {
     return res.redirect('/home');
   }
 
-  // Track redirects
-  const ssoRedirectNo = req?.cookies?.ssoRedirectNo ? parseInt(req?.cookies?.ssoRedirectNo, 10) + 1 : 1;
-  // TODO: try adding cookie parameter `sameSite: 'none'`
-  res.cookie('ssoRedirectNo', ssoRedirectNo, { maxAge: 60000, httpOnly: true });
-  // Stop redirects
-  if (ssoRedirectNo > 5) {
-    console.error('Redirect loop');
-    return res.status(500).send({ error: 'Detected redirect loop, to reset counter remove cookie "ssoRedirectNo", or wait for 1 minute'});
+  const ssoRedirectNo = req.cookies[SSO.REDIRECT_COUNTER.COOKIE_NAME] ? (parseInt(req.cookies[SSO.REDIRECT_COUNTER.COOKIE_NAME], 10) + 1) : 1;
+
+  // Stop redirect loop
+  if (ssoRedirectNo > SSO.REDIRECT_COUNTER.MAX_REDIRECTS) {
+    console.error('TFM-UI - stopping redirect loop in sso getLogin');
+    const errorMessage = `Detected login issue please wait for ${SSO.REDIRECT_COUNTER.TIME_PERIOD/1000} seconds or contact us using details bellow.`;
+    return res.render('_partials/problem-with-service.njk', { error: { message: errorMessage }});
   }
+
+  // Track redirects
+  res.cookie(SSO.REDIRECT_COUNTER.COOKIE_NAME, ssoRedirectNo, { maxAge: SSO.REDIRECT_COUNTER.TIME_PERIOD, httpOnly: true, sameSite: 'none', secure: true });
 
   const apiResponse = await api.getAuthLoginUrl();
   if (apiResponse.loginUrl) {
@@ -55,7 +58,8 @@ const handleSsoRedirect = async (req, res) => {
     // Unset data used for SSO validation.
     delete req.session.auth;
 
-    res.cookie('ssoRedirectNo', 0, { maxAge: 3600000, httpOnly: true });
+    res.clearCookie(SSO.REDIRECT_COUNTER.COOKIE_NAME);
+
     return res.redirect(apiResponse.redirectUrl);
   }
   return res.redirect('/');

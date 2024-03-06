@@ -9,6 +9,7 @@ const DECISIONS = require('./decisions.constant');
 const PARTY = require('./party');
 const { BANK_HOLIDAY_REGION } = require('./bank-holiday-region');
 const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('./utilisation-report-reconciliation-status');
+const SSO = require('./sso');
 
 module.exports = {
   DEAL,
@@ -23,4 +24,5 @@ module.exports = {
   PARTY,
   BANK_HOLIDAY_REGION,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
+  SSO,
 };
