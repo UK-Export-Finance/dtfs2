@@ -1,3 +1,4 @@
+const moment = require('moment');
 const { isValid, parse, format, startOfDay, add, getDaysInMonth, formatISO, differenceInMonths } = require('date-fns');
 
 const validDateFormats = [
@@ -241,6 +242,24 @@ const getDateStringFromYearMonthDay = (year, month, day) => {
   );
 };
 
+/**
+ * @param {string | number | Date} dateStr
+ * @returns
+ */
+const getYearAndMmdd = (dateStr) => {
+  if (dateStr) {
+    return {
+      mmdd: moment(dateStr).format('MM-DD'),
+      year: moment(dateStr).format('YYYY'),
+    };
+  }
+
+  return {
+    mmdd: moment().format('MM-DD'),
+    year: moment().format('YYYY'),
+  };
+};
+
 module.exports = {
   isDate,
   isEpoch,
@@ -254,4 +273,5 @@ module.exports = {
   getNowAsIsoString,
   getInclusiveMonthDifference,
   getDateStringFromYearMonthDay,
+  getYearAndMmdd,
 };
