@@ -26,9 +26,8 @@ const isDate = (dateStr) => dateStr.length === 10 && isValid(parse(dateStr, 'yyy
 /**
  * @param {string | number} epoch
  * @returns {boolean} true if the value given is a unix epoch in seconds or milliseconds
- * Epoch time must be less than 8640000000000000 {@link https://262.ecma-international.org/5.1/#sec-15.9.1.1 | (see docs)}
  */
-const isEpoch = (epoch) => moment(epoch, 'x', true).isValid() || moment(epoch, 'X', true).isValid();
+const isEpoch = (epoch) => Number.isInteger(Number(epoch)) && epoch !== '';
 /**
  * @param {unknown} dateStr
  * @returns true if the value is a string and not an epoch

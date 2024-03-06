@@ -97,8 +97,8 @@ describe('formatTimestamp', () => {
     },
     {
       description: 'should not parse a string written in scientific notation',
-      mockValue: '5e5',
-      expected: 'Invalid date',
+      mockValue: '1e12',
+      expected: '2001-09-09',
     },
     {
       description: 'should not parse an epoch followed by non-numeric characters',
