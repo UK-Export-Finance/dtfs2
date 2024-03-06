@@ -56,7 +56,7 @@ const logger = {
     const printLogAsWarning = (line) => {
       console.warn(line);
     };
-    const optionsWithDefaultColour = applyDefaultColourIfNoneProvided({options, defaultColour: LOGGER_COLOURS.yellow});
+    const optionsWithDefaultColour = applyDefaultColourIfNoneProvided({ options, defaultColour: LOGGER_COLOURS.yellow });
     formatAndLogMessage(message, {
       ...optionsWithDefaultColour,
       printLog: printLogAsWarning,
@@ -66,7 +66,7 @@ const logger = {
     const printLogAsError = (line) => {
       console.error(line);
     };
-    const optionsWithDefaultColour = applyDefaultColourIfNoneProvided({options,  defaultColour:LOGGER_COLOURS.red});
+    const optionsWithDefaultColour = applyDefaultColourIfNoneProvided({ options, defaultColour: LOGGER_COLOURS.red });
 
     formatAndLogMessage(message, {
       ...optionsWithDefaultColour,
