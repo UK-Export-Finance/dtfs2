@@ -101,11 +101,40 @@ exports.createUser = async (user) => {
 };
 
 /**
+ * updateUser
+ * Update TFM user data
+ * @param {String} userId: User ID
+ * @param {Object} update: Update object
+ * @param {Function} callback: Callback function. defaults to an empty function.
+ * @returns {Function} Callback function
+ */
+exports.updateUser = async (userId, userData, callback = () => { }) => {
+  try {
+    console.info('Updating TFM user');
+
+    if (!ObjectId.isValid(userId)) {
+      throw new Error('Error Updating TFM user - Invalid User Id');
+    }
+
+    const collection = await db.getCollection('tfm-users');
+
+    await collection.updateOne({ _id: { $eq: userId } }, { $set: userData }, {});
+
+    callback();
+  } catch (error) {
+    console.error('Error Updating TFM user %s', error);
+
+    throw new Error('Error Updating TFM user %s', error);
+  }
+};
+
+/**
  * updateLastLoginAndResetSignInData
  * Update a user's "last login" and reset sign in data.
  * @param {Object} user
  * @param {String} sessionIdentifier
  * @param {Function} callback: Callback function. defaults to an empty function.
+ * @returns {Function} Callback function
  */
 exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, callback = () => { }) => {
   try {
@@ -127,9 +156,9 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
 
     callback();
   } catch (error) {
-    console.error('Error Updating TFM user - last login, reset sign in data');
+    console.error('Error Updating TFM user - last login, reset sign in data %s', error);
 
-    throw new Error('Error Updating TFM user - last login, reset sign in data');
+    throw new Error('Error Updating TFM user - last login, reset sign in data %s', error);
   }
 };
 
