@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { format } = require('date-fns');
 const mapCoverEndDate = require('../facilities/mapCoverEndDate');
 const mapTenor = require('../facilities/mapTenor');
 const { convertDateToTimestamp } = require('../../../../utils/date');
@@ -24,10 +24,12 @@ const mapGefFacilityDates = (facility, facilityTfm, dealSnapshot) => {
 
   // only set coverEndDate if not null, else is undefined
   if (coverEndDate) {
+    const date = new Date(coverEndDate);
+
     mapped.coverEndDate = mapCoverEndDate(
-      moment(coverEndDate).format('DD'),
-      moment(coverEndDate).format('MM'),
-      moment(coverEndDate).format('YYYY'),
+      format(date, 'dd'),
+      format(date, 'MM'),
+      format(date, 'yyyy'),
       facility,
     );
   }

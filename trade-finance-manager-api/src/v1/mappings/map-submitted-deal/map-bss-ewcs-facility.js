@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { set } = require('date-fns');
 const isIssued = require('../../helpers/is-issued');
 const { stripCommas } = require('../../../utils/string');
 
@@ -18,7 +18,7 @@ const mapCoverEndDate = (facility) => {
   } = facility;
 
   if (hasCoverEndDate(day, month, year)) {
-    return moment().set({
+    return set( new Date(), {
       date: Number(day),
       month: Number(month) - 1, // months are zero indexed
       year: Number(year),

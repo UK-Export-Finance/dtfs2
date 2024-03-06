@@ -1,4 +1,4 @@
-const now = require('../../now');
+const { getNowAsEpochMillisecondString } = require('../../utils/date');
 const {
   decimalsCount,
   roundNumber,
@@ -18,7 +18,7 @@ const calculateUkefExposure = (facilityValueInGBP, coverPercentage) => {
 
   return {
     ukefExposure,
-    ukefExposureCalculationTimestamp: now(),
+    ukefExposureCalculationTimestamp: getNowAsEpochMillisecondString(),
   };
 };
 
