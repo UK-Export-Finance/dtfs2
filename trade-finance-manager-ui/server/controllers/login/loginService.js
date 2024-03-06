@@ -1,8 +1,23 @@
+const { SSO } = require("../../constants");
+
+const verifyReferrerForExternalSsoPost = (req) => {
+  const hostnameWithoutPort = req.get('host').split(':')[0];
+  const referrer = req.get('Referrer');
+  // Referrer is not available in localhost because of policy "no-referrer-when-downgrade".
+  if (hostnameWithoutPort !== 'localhost' && referrer.indexOf(SSO.AUTHORITY) !== 0) {
+    console.error('Login request comming from unexpected website: %s', referrer);
+    return 'Login request comming from unexpected website.';
+  }
+  return false;
+}
+
 const acceptExternalSsoPost = (req, res) => {
   const { code, client_info: clientInfo, state, session_state: sessionState } = req.body;
 
-  // TODO: validate referrer, it should be login.microsoft.com
-  // TODO: !!! referrer is not available in localhost because of header "Referrer-Policy": "no-referrer-when-downgrade".
+  const referrerValidationError = verifyReferrerForExternalSsoPost(req);
+  if (referrerValidationError) {
+    return res.render('_partials/problem-with-service.njk', { error: { message: referrerValidationError }});
+  }
   // TODO: validate incoming variables, they should be alphanumeric/safe
   return res.render('sso/accept-external-sso-post.njk', {
     code,
@@ -11,7 +26,5 @@ const acceptExternalSsoPost = (req, res) => {
     sessionState
   });
 };
-
-
 
 module.exports = { acceptExternalSsoPost };
