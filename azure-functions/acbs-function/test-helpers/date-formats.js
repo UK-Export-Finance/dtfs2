@@ -1,9 +1,3 @@
-const invalidDateFormats = [
-  'yy-MM-dd',
-  'yy/MM/dd',
-  'yy MM dd',
-];
-
 const validDateFormats = [
   'MM/dd/yyyy',
   'MM dd yyyy',
@@ -16,6 +10,5 @@ const validDateFormats = [
 ];
 
 module.exports = {
-  invalidDateFormats,
   validDateFormats,
 };

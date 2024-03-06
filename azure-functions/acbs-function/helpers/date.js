@@ -1,5 +1,4 @@
-const moment = require('moment');
-const { isValid, parse, format, startOfDay, add, getDaysInMonth, formatISO } = require('date-fns');
+const { isValid, parse, format, startOfDay, add, getDaysInMonth, formatISO, differenceInMonths } = require('date-fns');
 
 const validDateFormats = [
   'MM-dd-yy',
@@ -190,8 +189,29 @@ const getNowAsIsoString = () => formatISO(new Date()).replace('Z', '+00:00');
  *  - yyyy MM dd
  */
 const getInclusiveMonthDifference = (startDate, endDate) => {
-  const monthDifference = moment(endDate).diff(moment(startDate), 'months');
-  const isSameDayOfMonth = moment(startDate).date() === moment(endDate).date();
+  let date1;
+  let date2;
+  if (startDate === null || endDate === null) {
+    return NaN;
+  }
+
+  // if the date is undefined, use today
+  if (startDate === undefined) {
+    date1 = new Date();
+  } else {
+    date1 = startDate instanceof Date ? startDate : getDateFromStringOrNumber(startDate);
+  }
+
+  // if the date is undefined, use today
+  if (endDate === undefined) {
+    date2 = new Date();
+  } else {
+    date2 = endDate instanceof Date ? endDate : getDateFromStringOrNumber(endDate);
+  }
+
+  const monthDifference = differenceInMonths(date2, date1);
+  const isSameDayOfMonth = date1.getDate() === date2.getDate();
+
   return isSameDayOfMonth ? monthDifference : monthDifference + 1;
 };
 

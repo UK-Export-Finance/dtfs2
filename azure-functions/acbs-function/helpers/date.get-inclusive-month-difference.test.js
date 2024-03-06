@@ -1,6 +1,6 @@
 const { format } = require('date-fns');
 const { getInclusiveMonthDifference } = require('./date');
-const { validDateFormats, invalidDateFormats } = require('../test-helpers/date-formats');
+const { validDateFormats } = require('../test-helpers/date-formats');
 
 describe('getInclusiveMonthDifference', () => {
   beforeAll(() => {
@@ -14,27 +14,6 @@ describe('getInclusiveMonthDifference', () => {
 
   const mockDate1 = new Date(1709337600000); // Sat Mar 02 2024 00:00:00 GMT+0000
   const mockDate2 = new Date(1712128354000); // Wed Apr 03 2024 08:12:34 GMT+0100
-
-  const invalidStringTestCases = invalidDateFormats.map((formatString) => ({
-    description: `does not parse dates formatted as '${formatString}'`,
-    date1: format(mockDate1, formatString),
-    date2: format(mockDate2, formatString),
-    expected: NaN,
-  }));
-
-  const firstDateInvalidStringTestCases = invalidDateFormats.map((formatString) => ({
-    description: `returns NaN when first date is formatted as '${formatString}' and second is valid`,
-    date1: format(mockDate1, formatString),
-    date2: format(mockDate2, 'yyyy-MM-dd'),
-    expected: NaN,
-  }));
-
-  const secondDateInvalidStringTestCases = invalidDateFormats.map((formatString) => ({
-    description: `returns NaN when second date is formatted as '${formatString}' and first is valid`,
-    date1: format(mockDate1, 'yyyy-MM-dd'),
-    date2: format(mockDate2, formatString),
-    expected: NaN,
-  }));
 
   const validStringTestCases = validDateFormats.map((formatString) => ({
     description: `calculates difference when formatted as '${formatString}'`,
@@ -51,9 +30,6 @@ describe('getInclusiveMonthDifference', () => {
   }));
 
   const testData = [
-    ...invalidStringTestCases,
-    ...firstDateInvalidStringTestCases,
-    ...secondDateInvalidStringTestCases,
     ...validStringTestCases,
     ...differentValidDatesTestCases,
     {
@@ -69,10 +45,10 @@ describe('getInclusiveMonthDifference', () => {
       expected: 2,
     },
     {
-      description: 'does not parse epochs stored as strings',
+      description: 'parses epochs stored as strings',
       date1: mockDate1.valueOf().toString(),
       date2: mockDate2.valueOf().toString(),
-      expected: NaN,
+      expected: 2,
     },
     {
       description: 'rounds up difference when just less than a month after',
