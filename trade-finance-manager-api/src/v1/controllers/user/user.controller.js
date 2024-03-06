@@ -1,9 +1,11 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const { generateArrayOfEmailsRegex } = require('./helpers/generateArrayOfEmailsRegex');
+const handleFindByEmailsResult = require('./helpers/handleFindByEmailsResult');
 const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { USER, PAYLOAD } = require('../../../constants');
+
 
 /**
  * findByEmails
@@ -26,37 +28,7 @@ exports.findByEmails = async (emails) => {
 
     const users = await collection.find({ 'email': { $in: emailsRegex }}).toArray();
 
-    if (users.length === 0) {
-      console.info('Getting TFM user by emails - no user found');
-
-      return { found: false }
-    }
-
-    if (users.length > 1) {
-      console.info('Getting TFM user by emails - More than 1 matching user found: %O', users);
-
-      return { found: true, canProceed: false };
-    }
-
-    if (users[0].disabled) {
-      // TODO: should we remove functionality to disable users in TFM, so disabling is done in Active directory.
-      console.info('Getting TFM user by emails - User is disabled: %O', users[0]);
-
-      return { found: true, canProceed: false };
-    }
-
-    if (users[0].status === 'blocked') {
-      // TODO: should we remove functionality to block users in TFM, so block is done in Active directory.
-      console.info('Getting TFM user by emails - User is blocked: %O', users[0]);
-
-      return { found: true, canProceed: false };
-    }
-
-    return {
-      found: true,
-      canProceed: true,
-      ...users[0],
-    };
+    return handleFindByEmailsResult(users);
   } catch (error) {
     console.error('Error getting TFM user by emails - Unexpected DB response %O', error);
 
@@ -101,11 +73,40 @@ exports.createUser = async (user) => {
 };
 
 /**
+ * updateUser
+ * Update TFM user data
+ * @param {String} userId: User ID
+ * @param {Object} update: Update object
+ * @param {Function} callback: Callback function. defaults to an empty function.
+ * @returns {Function} Callback function
+ */
+exports.updateUser = async (userId, userData, callback = () => { }) => {
+  try {
+    console.info('Updating TFM user');
+
+    if (!ObjectId.isValid(userId)) {
+      throw new Error('Error Updating TFM user - Invalid User Id');
+    }
+
+    const collection = await db.getCollection('tfm-users');
+
+    await collection.updateOne({ _id: { $eq: userId } }, { $set: userData }, {});
+
+    callback();
+  } catch (error) {
+    console.error('Error Updating TFM user %s', error);
+
+    throw new Error('Error Updating TFM user %s', error);
+  }
+};
+
+/**
  * updateLastLoginAndResetSignInData
  * Update a user's "last login" and reset sign in data.
  * @param {Object} user
  * @param {String} sessionIdentifier
  * @param {Function} callback: Callback function. defaults to an empty function.
+ * @returns {Function} Callback function
  */
 exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, callback = () => { }) => {
   try {
@@ -127,9 +128,9 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
 
     callback();
   } catch (error) {
-    console.error('Error Updating TFM user - last login, reset sign in data');
+    console.error('Error Updating TFM user - last login, reset sign in data %s', error);
 
-    throw new Error('Error Updating TFM user - last login, reset sign in data');
+    throw new Error('Error Updating TFM user - last login, reset sign in data %s', error);
   }
 };
 

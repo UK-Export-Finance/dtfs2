@@ -1,0 +1,52 @@
+const mapEntraUserData = require('./map-entra-user-data');
+const userController = require('../../user/user.controller');
+
+/**
+ * create
+ * Create a TFM user from Entra user data.
+ * @param {Object} entraUser: Entra user data
+ * @returns {Object} New TFM user.
+ */
+const create = async (entraUser) => {
+  try {
+    console.info('TFM auth service - mapping Entra user and creating TFM user');
+
+    const userData = mapEntraUserData(entraUser);
+
+    const createdUser = await userController.createUser(userData);
+
+    return createdUser;
+  } catch {
+    console.error("TFM auth service - Error mapping Entra user and creating TFM user");
+
+    throw new Error("TFM auth service - Error mapping Entra user and creating TFM user");
+  }
+};
+
+/**
+ * update
+ * Update a TFM user from Entra user data.
+ * @param {Object} entraUser: Entra user data
+ * @returns {Object} updated TFM user.
+ */
+const update = async (userId, entraUser) => {
+  try {
+    console.info('TFM auth service - mapping Entra user and updating TFM user');
+
+    const entraUserData = mapEntraUserData(entraUser);
+
+    const updatedUser = await userController.updateUser(
+      userId,
+      entraUserData,
+    );
+
+    return updatedUser;
+  } catch {
+    console.error("TFM auth service - Error mapping Entra user and updating TFM user");
+
+    throw new Error("TFM auth service - Error mapping Entra user and updating TFM user");
+  }
+};
+
+
+module.exports = { create, update };
