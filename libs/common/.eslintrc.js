@@ -9,7 +9,10 @@ module.exports = {
   root: true,
   rules: {
     'no-console': ['error', { allow: ['info', 'error'] }],
-    'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
+    'no-underscore-dangle': [
+      'error',
+      { allow: ['_id', '_csrf', '_getBuffer', '_getData', '_getHeaders', '_getStatusCode', '_getRedirectUrl', '_getRenderData', '_getRenderView'] },
+    ],
     'import/extensions': 'off',
     'import/no-named-as-default': 'off',
     'implicit-arrow-linebreak': 'off',
@@ -21,6 +24,7 @@ module.exports = {
     'no-restricted-syntax': 'off',
     'no-return-await': 'off',
     'no-use-before-define': ['error', { functions: false }],
+    '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
   },
   settings: {
     'import/resolver': {

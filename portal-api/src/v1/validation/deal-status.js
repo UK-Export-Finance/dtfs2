@@ -1,6 +1,6 @@
 const validate = require('./completeDealValidation-flat');
 
-module.exports = (deal, requestedUpdate) => {
+module.exports = async (deal, requestedUpdate) => {
   let errorList = {};
 
   if (requestedUpdate.status === 'Abandoned') {
@@ -38,7 +38,7 @@ module.exports = (deal, requestedUpdate) => {
       };
     }
 
-    const validationOfExistingDeal = validate(deal);
+    const validationOfExistingDeal = await validate(deal);
 
     if (validationOfExistingDeal) {
       errorList = {

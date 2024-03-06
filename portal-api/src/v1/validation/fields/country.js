@@ -1,6 +1,15 @@
-const { findOneCountry } = require('../../controllers/countries.controller');
+const { getCountry } = require('../../controllers/countries.controller');
 
-module.exports.countryIsDisabled = (code) => {
-  const { data: country } = findOneCountry(code);
-  return country && country.disabled;
+/**
+ * Retrieves the disabled status of a country based on its country code.
+ * @param {string} code - The country code.
+ * @returns {Promise<Boolean>} - The disabled status of the country.
+ */
+const isCountryDisabled = async (code) => {
+  const { data } = await getCountry(code);
+  return Boolean(data?.disabled);
+};
+
+module.exports = {
+  isCountryDisabled ,
 };

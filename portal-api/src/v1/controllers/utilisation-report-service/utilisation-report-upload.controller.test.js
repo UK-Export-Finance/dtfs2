@@ -3,6 +3,9 @@ const { saveFileToAzure } = require('./utilisation-report-upload.controller');
 const { uploadFile } = require('../../../drivers/fileshare');
 const { MOCK_FILE_INFO } = require('../../../../test-helpers/mock-azure-file-info');
 
+console.error = jest.fn();
+console.info = jest.fn();
+
 jest.mock('../../../drivers/fileshare', () => ({ uploadFile: jest.fn() }));
 
 describe('controllers/utilisation-report-service/utilisation-report-upload', () => {
@@ -32,7 +35,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       when(uploadFile).calledWith(expect.anything()).mockResolvedValueOnce(false);
 
       // Act / Assert
-      await expect(saveFileToAzure(file, bankId)).rejects.toThrowError('Failed to save utilisation report - cause unknown');
+      await expect(saveFileToAzure(file, bankId)).rejects.toThrow('Failed to save utilisation report to Azure - cause unknown');
     });
 
     it('should throw an error when the uploadFile response is an error object', async () => {
@@ -44,7 +47,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       when(uploadFile).calledWith(expect.anything()).mockResolvedValueOnce(errorObject);
 
       // Act / Assert
-      await expect(saveFileToAzure(file, bankId)).rejects.toThrowError(`Failed to save utilisation report - ${errorObject.error.message}`);
+      await expect(saveFileToAzure(file, bankId)).rejects.toThrow(`Failed to save utilisation report to Azure - ${errorObject.error.message}`);
     });
 
     it('should rethrow the error when uploadFile throws', async () => {
@@ -53,7 +56,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       when(uploadFile).calledWith(expect.anything()).mockRejectedValueOnce(uploadFileError);
 
       // Act / Assert
-      await expect(saveFileToAzure(file, bankId)).rejects.toThrowError(uploadFileError);
+      await expect(saveFileToAzure(file, bankId)).rejects.toThrow(uploadFileError);
     });
   });
 });

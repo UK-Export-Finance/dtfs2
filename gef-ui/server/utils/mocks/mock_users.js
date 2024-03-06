@@ -5,7 +5,7 @@ const chance = new Chance();
 
 const MOCK_MAKER = {
   _id: '61cdde40055cf301acf98064',
-  username: 'BANK1_MAKER1',
+  username: 'maker1@ukexportfinance.gov.uk',
   roles: [
     MAKER,
   ],
@@ -33,7 +33,7 @@ const MOCK_MAKER = {
 
 const MOCK_CHECKER = {
   _id: '61cdde40055cf301acf98065',
-  username: 'BANK1_CHECKER1',
+  username: 'checker1@ukexportfinance.gov.uk',
   roles: [
     CHECKER,
   ],

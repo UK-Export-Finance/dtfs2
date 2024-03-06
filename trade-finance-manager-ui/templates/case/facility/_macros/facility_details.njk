@@ -81,7 +81,7 @@
         <dt class="govuk-grid-column-one-quarter govuk-body-s ukef-list-highlight">Maximum UKEF exposure</dt>
         <dd class="govuk-grid-column-three-quarters govuk-body-s ukef-list-highlight" data-cy="facility-maximum-ukef-exposure">
           {% if facilityTfm.ukefExposure.exposure and facilityTfm.ukefExposure.timestamp %}
-            {{ facilityTfm.ukefExposure.exposure }} as at {{ facilityTfm.ukefExposure.timestamp | localiseTimestamp("D MMMM YYYY", user.timezone) }}
+            {{ facilityTfm.ukefExposure.exposure }} as at {{ facilityTfm.ukefExposure.timestamp | localiseTimestamp("d MMMM yyyy", user.timezone) }}
 
             {% else %}
             -
@@ -99,13 +99,13 @@
 
       <dl class="govuk-grid-row ukef-list ukef-list-one-column">
         <dt class="govuk-grid-column-one-quarter govuk-body-s">Inclusion notice received</dt>
-        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-inclusion-notice-received">{{ facility.dates.inclusionNoticeReceived | localiseTimestamp("D MMMM YYYY", user.timezone) | dashIfEmpty }}</dd>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-inclusion-notice-received">{{ facility.dates.inclusionNoticeReceived | localiseTimestamp("d MMMM yyyy", user.timezone) | dashIfEmpty }}</dd>
 
         <dt class="govuk-grid-column-one-quarter govuk-body-s">Bank issue notice received</dt>
-        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-bank-issue-notice-received">{{ facility.dates.bankIssueNoticeReceived | localiseTimestamp('D MMMM YYYY', user.timezone) | dashIfEmpty }}</dd>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-bank-issue-notice-received">{{ facility.dates.bankIssueNoticeReceived | localiseTimestamp('d MMMM yyyy', user.timezone) | dashIfEmpty }}</dd>
 
         <dt class="govuk-grid-column-one-quarter govuk-body-s">Cover start date</dt>
-        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-cover-start-date">{{ facility.dates.coverStartDate | localiseTimestamp('D MMMM YYYY', user.timezone) | dashIfEmpty }}</dd>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-cover-start-date">{{ facility.dates.coverStartDate | localiseTimestamp('d MMMM yyyy', user.timezone) | dashIfEmpty }}</dd>
 
         <dt class="govuk-grid-column-one-quarter govuk-body-s">Cover end date</dt>
         <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-cover-end-date">{{ facility.dates.coverEndDate | dashIfEmpty }}</dd>

@@ -10,7 +10,7 @@ describe(page, () => {
     surname: 'Smith',
     roles: [ROLES.PAYMENT_REPORT_OFFICER],
   };
-  const dueReportDates = [{
+  const dueReportPeriods = [{
     reportPeriod: {
       start: {
         month: 12,
@@ -58,7 +58,7 @@ describe(page, () => {
       wrapper = render({
         user,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-        dueReportDates,
+        dueReportPeriods,
       });
     });
 
@@ -91,7 +91,7 @@ describe(page, () => {
       wrapper = render({
         user,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-        dueReportDates: dueReportDates.slice(1),
+        dueReportPeriods: dueReportPeriods.slice(1),
       });
     });
 
@@ -124,7 +124,7 @@ describe(page, () => {
       wrapper = render({
         user,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-        dueReportDates: dueReportDates.slice(2),
+        dueReportPeriods: dueReportPeriods.slice(2),
         nextDueReportDueDate,
       });
     });
@@ -153,7 +153,7 @@ describe(page, () => {
       wrapper = render({
         user,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-        dueReportDates: [],
+        dueReportPeriods: [],
         nextReportPeriod,
         nextReportPeriodSubmissionStart,
         lastUploadedReportPeriod,
