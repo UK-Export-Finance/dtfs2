@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { isValid, parse, format, startOfDay, add } = require('date-fns');
+const { isValid, parse, format, startOfDay, add, getDaysInMonth } = require('date-fns');
 
 const validDateFormats = [
   'MM-dd-yy',
@@ -70,6 +70,12 @@ const getDateFromStringOrNumber = (dateStr) => {
 };
 
 /**
+ * @param {Date} date
+ * @returns {string} date formatted as `yyyy-MM-dd` if valid or `Invalid date` otherwise
+ */
+const formatOrReturnInvalidDate = (date) => (isValid(date) ? format(date, 'yyyy-MM-dd') : 'Invalid date');
+
+/**
  * @param {number | string} year as a 2 or 4 digit number
  * @returns year formatted as 4 digits (adds 2000 if < 1000)
  */
@@ -90,7 +96,7 @@ const formatYear = (year) => (year < 1000 ? (2000 + parseInt(year, 10)).toString
 const formatDate = (dateStr) => {
   const date = getDateFromStringOrNumber(dateStr);
 
-  return isValid(date) ? format(date, 'yyyy-MM-dd') : 'Invalid date';
+  return formatOrReturnInvalidDate(date);
 };
 
 /**
@@ -191,11 +197,25 @@ const getInclusiveMonthDifference = (startDate, endDate) => {
  * @param {string | number} year
  * @returns {string} formatted as `yyyy-MM-dd`
  */
-const getDateStringFromYearMonthDay = (year, month, day) => moment([
-  Number(formatYear(year)),
-  Number(month) - 1,
-  Number(day),
-]).format('YYYY-MM-DD');
+const getDateStringFromYearMonthDay = (year, month, day) => {
+  if (!month || !day || month > 12) {
+    return 'Invalid date';
+  }
+
+  const daysInMonth = getDaysInMonth(new Date(Number(formatYear(year)), Number(month) - 1));
+
+  if (daysInMonth < Number(day)) {
+    return 'Invalid date';
+  }
+
+  return formatOrReturnInvalidDate(
+    new Date(
+      Number(formatYear(year)),
+      Number(month) - 1,
+      Number(day),
+    ),
+  );
+};
 
 module.exports = {
   isDate,
