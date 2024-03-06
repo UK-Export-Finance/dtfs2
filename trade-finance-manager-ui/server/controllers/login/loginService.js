@@ -4,7 +4,7 @@ const verifyReferrerForExternalSsoPost = (req) => {
   const hostnameWithoutPort = req.get('host').split(':')[0];
   const referrer = req.get('Referrer');
   // Referrer is not available in localhost because of policy "no-referrer-when-downgrade".
-  if (hostnameWithoutPort !== 'localhost' && referrer.indexOf(SSO.AUTHORITY) !== 0) {
+  if (hostnameWithoutPort !== 'localhost' && referrer.indexOf(`${SSO.AUTHORITY}/`) !== 0) {
     console.error('Login request comming from unexpected website: %s', referrer);
     return 'Login request comming from unexpected website.';
   }

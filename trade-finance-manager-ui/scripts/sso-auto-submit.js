@@ -5,6 +5,6 @@ const ssoForm = document.getElementById('acceptExternalSsoPostForm');
 const { referrer } = document;
 const { hostname } = window.location;
 if (ssoForm
-  && (hostname === 'localhost' || referrer.indexOf('https://login.microsoftonline.com') === 0)) {
+  && (hostname === 'localhost' || referrer.indexOf('https://login.microsoftonline.com/') === 0)) {
   ssoForm.submit();
 }
