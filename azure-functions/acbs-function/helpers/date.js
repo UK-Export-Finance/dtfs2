@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { isValid, parse, format, startOfDay } = require('date-fns');
+const { isValid, parse, format, startOfDay, add } = require('date-fns');
 
 const validDateFormats = [
   'MM-dd-yy',
@@ -39,6 +39,37 @@ const isString = (dateStr) => typeof dateStr === 'string' && !isEpoch(dateStr);
 const now = () => format(new Date(), 'yyyy-MM-dd');
 
 /**
+ * @param {string | number} dateStr
+ * @returns {Date}
+ *
+ * Accepted date strings:
+ *  - MM/dd/yyyy
+ *  - MM dd yyyy
+ *  - MM-dd-yy
+ *  - MM/dd/yy
+ *  - MM dd yy
+ *  - yyyy-MM-dd
+ *  - yyyy/MM/dd
+ *  - yyyy MM dd
+ */
+const getDateFromStringOrNumber = (dateStr) => {
+  const dateFromString = validDateFormats
+    .map((formatString) => parse(dateStr, formatString, startOfDay(new Date())))
+    .find(isValid);
+
+  if (dateFromString) {
+    return dateFromString;
+  }
+
+  if (isEpoch(dateStr)) {
+    return new Date(Number(dateStr));
+  }
+
+  // Invalid date object if can't parse
+  return new Date(NaN);
+};
+
+/**
  * @param {number | string} year as a 2 or 4 digit number
  * @returns year formatted as 4 digits (adds 2000 if < 1000)
  */
@@ -57,25 +88,15 @@ const formatYear = (year) => (year < 1000 ? (2000 + parseInt(year, 10)).toString
  *  - yyyy MM dd
  */
 const formatDate = (dateStr) => {
-  const dateFromString = validDateFormats
-    .map((formatString) => parse(dateStr, formatString, startOfDay(new Date())))
-    .find(isValid);
+  const date = getDateFromStringOrNumber(dateStr);
 
-  if (dateFromString) {
-    return format(dateFromString, 'yyyy-MM-dd');
-  }
-
-  if (dateStr !== '' && Number.isInteger(Number(dateStr)) && isValid(Number(dateStr))) {
-    return format(Number(dateStr), 'yyyy-MM-dd');
-  }
-
-  return 'Invalid date';
+  return isValid(date) ? format(date, 'yyyy-MM-dd') : 'Invalid date';
 };
 
 /**
  * @param {string | number | Date} date as a date string, epoch time or Date object
- * @param {number} day number of days to add
- * @returns in the format `yyyy-MM-dd`
+ * @param {number} days number of days to add
+ * @returns {string} in the format `yyyy-MM-dd`
  *
  * Accepted date strings:
  *  - MM/dd/yyyy
@@ -89,7 +110,11 @@ const formatDate = (dateStr) => {
  *
  */
 // This function is never actually used
-const addDay = (date, day) => moment(date).add({ day }).format('YYYY-MM-DD');
+const addDay = (date, days) => {
+  const parsedDate = date instanceof Date ? date : getDateFromStringOrNumber(date);
+
+  return isValid(parsedDate) ? format(add(parsedDate, { days }), 'yyyy-MM-dd') : 'Invalid date';
+};
 /**
  * @param {string | number | Date} date as a date string, epoch time or Date object
  * @param {number} day number of months to add

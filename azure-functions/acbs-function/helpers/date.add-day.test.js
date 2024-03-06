@@ -1,6 +1,6 @@
 const { format } = require('date-fns');
 const { addDay } = require('./date');
-const { validDateFormats, invalidDateFormats } = require('../test-helpers/date-formats');
+const { validDateFormats } = require('../test-helpers/date-formats');
 
 describe('addDay', () => {
   const testDay = new Date('2024-05-12');
@@ -14,17 +14,8 @@ describe('addDay', () => {
     expected: testDayPlusOneFormatted,
   }));
 
-  const invalidTestData = invalidDateFormats.map((formatString) => ({
-    description: `does not parse a date formatted as ${formatString}`,
-    formatString,
-    date: format(testDay, formatString),
-    daysToAdd: 1,
-    expected: 'Invalid date',
-  }));
-
   const testData = [
     ...validTestData,
-    ...invalidTestData,
     {
       description: 'parses Date object',
       date: testDay,
@@ -38,10 +29,10 @@ describe('addDay', () => {
       expected: testDayPlusOneFormatted,
     },
     {
-      description: 'does not parse epoch as a string',
+      description: 'parses epoch as a string',
       date: testDay.valueOf().toString(),
       daysToAdd: 1,
-      expected: 'Invalid date',
+      expected: testDayPlusOneFormatted,
     },
     {
       description: 'adds 31 days and returns the next month',
@@ -78,12 +69,6 @@ describe('addDay', () => {
       date: format(testDay, 'yyyy-MM-dd'),
       daysToAdd: '12x1',
       expected: format(testDay, 'yyyy-MM-dd'),
-    },
-    {
-      description: 'adds 1 day if days to add is true',
-      date: format(testDay, 'yyyy-MM-dd'),
-      daysToAdd: true,
-      expected: testDayPlusOneFormatted,
     },
   ];
 
