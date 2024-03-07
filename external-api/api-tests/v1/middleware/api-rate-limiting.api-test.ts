@@ -47,7 +47,7 @@ describe('api rate limiting', () => {
       Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => post(body).to('/number-generator')));
   });
 
-  afterEach(() => {
+  afterAll(() => {
     // Set to pre-test value
     process.env.RATE_LIMIT_THRESHOLD = originalRateLimitThreshold;
   });

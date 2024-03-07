@@ -162,7 +162,7 @@ exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
  * @param {string} dealId - The ID of the deal to be submitted.
  * @param {string} dealType - The type of the deal.
  * @param {string} checker - The name of the checker.
- * @returns {Promise<Object>} - A promise that resolves to true if the submission is successful, false otherwise.
+ * @returns {Promise<Object> | Boolean} - A promise that resolves to an object, other false.
  * @throws {Error} - If there is an error during the submission process.
  */
 const submitDealBeforeUkefIds = async (dealId, dealType, checker) => {

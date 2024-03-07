@@ -63,7 +63,7 @@ describe('generateId', () => {
   });
 
   it('Should throw a internal server error when an invalid entity type is specified', async () => {
-    number.get = jest.fn().mockResolvedValue(mockUnsuccessfulResponse);
+    number.getNumber = jest.fn().mockResolvedValue(mockUnsuccessfulResponse);
     const result = await generateId('invalid', body.dealId);
     const { status, error } = result;
     const { response: externalApi } = error;
@@ -74,7 +74,7 @@ describe('generateId', () => {
   });
 
   it('Should call number generator', async () => {
-    number.get = jest.fn().mockResolvedValue(mockSuccessfulResponse);
+    number.getNumber = jest.fn().mockResolvedValue(mockSuccessfulResponse);
     const result = await generateId(body.entityType, body.dealId);
 
     expect(result).toEqual(mockSuccessfulResponse);
@@ -83,7 +83,7 @@ describe('generateId', () => {
 
 describe('generateUkefId', () => {
   beforeEach(() => {
-    number.get = jest.fn().mockResolvedValue(mockSuccessfulResponse);
+    number.getNumber = jest.fn().mockResolvedValue(mockSuccessfulResponse);
   });
 
   it('should generate a maskedId when a valid application is provided for deal entity type', async () => {

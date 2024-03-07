@@ -17,7 +17,7 @@ const headers = {
  * @param dealId - The ID of the deal.
  * @returns A Promise that resolves to an AxiosResponse object.
  */
-export const get = async (entityType: string, dealId: string): Promise<object> => {
+export const getNumber = async (entityType: string, dealId: string): Promise<object> => {
   try {
     if (!entityType || !dealId) {
       console.error('❌ Invalid argument provided %s %s', entityType, dealId);

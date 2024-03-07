@@ -39,7 +39,7 @@ export const getNumberTypeId = (entityType: string): number => {
  * @param res - The HTTP response object used to send the response back to the client.
  * @returns {Promise<Object>} The retrieved number in the response body.
  */
-export const get = async (req: Request, res: Response): Promise<Response<NumberGeneratorResponse> | Response<NumberGeneratorErrorResponse>> => {
+export const getNumber = async (req: Request, res: Response): Promise<Response<NumberGeneratorResponse> | Response<NumberGeneratorErrorResponse>> => {
   try {
     const { entityType, dealId } = req.body;
     const numberTypeId = getNumberTypeId(entityType);

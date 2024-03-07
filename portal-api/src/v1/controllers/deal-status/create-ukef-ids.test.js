@@ -48,12 +48,12 @@ const mockUser = {
 
 describe('createUkefIds', () => {
   beforeEach(() => {
-    number.get = jest.fn().mockResolvedValue(mockSuccessfulResponse);
+    number.getNumber = jest.fn().mockResolvedValue(mockSuccessfulResponse);
     api.updateDeal = jest.fn().mockResolvedValue(updatedDeal);
     facilitiesController.update = jest.fn().mockResolvedValue({});
   });
 
-  it.only('Should generate and update UKEF IDs for a given deal and its facilities', async () => {
+  it('Should generate and update UKEF IDs for a given deal and its facilities', async () => {
     // Arrange
     const modifiedMockFacility1 = {
       ukefFacilityId: NUMBER.UKEF_ID.TEST,
@@ -69,8 +69,8 @@ describe('createUkefIds', () => {
 
     // Assert
     expect(result).toEqual(updatedDeal);
-    expect(number.get).toHaveBeenCalledWith(NUMBER.ENTITY_TYPE.DEAL, mockDeal._id);
-    expect(number.get).toHaveBeenCalledWith(NUMBER.ENTITY_TYPE.FACILITY, mockDeal._id);
+    expect(number.getNumber).toHaveBeenCalledWith(NUMBER.ENTITY_TYPE.DEAL, mockDeal._id);
+    expect(number.getNumber).toHaveBeenCalledWith(NUMBER.ENTITY_TYPE.FACILITY, mockDeal._id);
     expect(facilitiesControllerUpdateSpy).toHaveBeenCalledWith(mockDeal._id, mockFacility1, modifiedMockFacility1, mockUser);
     expect(facilitiesControllerUpdateSpy).toHaveBeenCalledWith(mockDeal._id, mockFacility2, modifiedMockFacility2, mockUser);
 

@@ -25,7 +25,7 @@ const generateSubmissionData = async (existingApplication) => {
  * @param {string} options.dealId - The ID of the deal or facility.
  * @returns {Promise<object>} Response from the number generator API.
  */
-const generateId = async (entityType, dealId) => number.get(entityType, dealId);
+const generateId = async (entityType, dealId) => number.getNumber(entityType, dealId);
 
 /**
  * Generates a unique identifier for a given entity (either a 'deal' or a 'facility') based on the provided application data.

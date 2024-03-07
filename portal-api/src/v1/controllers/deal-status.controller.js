@@ -24,17 +24,22 @@ const CONSTANTS = require('../../constants');
  * @returns {Response} - Response with status code, if Ok then with deal status
  */
 exports.findOne = async (req, res) => {
-  const deal = await findOneDeal(req.params.id);
+  try {
+    const deal = await findOneDeal(req.params.id);
 
-  if (!deal) {
-    return res.status(HttpStatusCode.NotFound).send();
+    if (!deal) {
+      return res.status(HttpStatusCode.NotFound).send();
+    }
+
+    if (!userHasAccessTo(req.user, deal)) {
+      return res.status(HttpStatusCode.Unauthorized).send();
+    }
+
+    return res.status(HttpStatusCode.Ok).send(deal.status);
+  } catch (error) {
+    console.error('❌ Unable to find deal %s %o', req.params.id, error);
+    return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: 'Unable to find deal' });
   }
-
-  if (!userHasAccessTo(req.user, deal)) {
-    return res.status(HttpStatusCode.Unauthorized).send();
-  }
-
-  return res.status(HttpStatusCode.Ok).send(deal.status);
 };
 
 /**

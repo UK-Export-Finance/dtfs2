@@ -209,7 +209,7 @@ apiRoutes.get('/industry-sectors/:code/acbs-sector', industrySectors.getACBSIndu
  *                   type: string
  *                   example: 'PENDING'
  */
-apiRoutes.post('/number-generator', number.get);
+apiRoutes.post('/number-generator', number.getNumber);
 
 /**
  * @openapi

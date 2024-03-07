@@ -20,7 +20,7 @@ const createUkefIds = async (deal, user) => {
     const { _id: dealId } = deal;
 
     // Get the deal number
-    const { data: dealNumber } = await number.get(NUMBER.ENTITY_TYPE.DEAL, dealId);
+    const { data: dealNumber } = await number.getNumber(NUMBER.ENTITY_TYPE.DEAL, dealId);
 
     // Update the deal object with the obtained deal number
     const updatedDeal = await updateDeal(
@@ -36,7 +36,7 @@ const createUkefIds = async (deal, user) => {
     // Generate and update UKEF IDs for each facility in the deal's facilities array
     for (const facilityId of deal.facilities) {
       // Get the facility number
-      const { data: facilityNumber } = await number.get(NUMBER.ENTITY_TYPE.FACILITY, deal._id);
+      const { data: facilityNumber } = await number.getNumber(NUMBER.ENTITY_TYPE.FACILITY, deal._id);
 
       const modifiedFacility = {
         ukefFacilityId: facilityNumber.data[0].maskedId,
