@@ -16,7 +16,7 @@ const { USER, PAYLOAD } = require('../../../constants');
  * - User is disabled.
  * - Unexpected DB response.
  * @param {Array} emails
- * @returns {Object}
+ * @returns {Object} handleFindByEmailsResult
  */
 exports.findByEmails = async (emails) => {
   try {
