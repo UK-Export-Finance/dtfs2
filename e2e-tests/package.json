@@ -23,14 +23,14 @@
     "load": "cd .. && npm run load"
   },
   "devDependencies": {
-    "bson": "^6.2.0",
+    "bson": "^6.4.0",
     "chance": "^1.1.11",
-    "cypress": "^13.6.3",
+    "cypress": "^13.6.6",
     "cypress-file-upload": "^5.0.8",
     "cypress-plugin-tab": "^1.0.5",
     "cypress-v10-preserve-cookie": "^1.2.1",
     "date-fns": "^2.30.0",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "eslint-plugin-cypress": "^2.15.1",
     "mongodb": "^6.3.0"
   },

@@ -1,10 +1,10 @@
 const { updateDeal } = require('../deal.controller');
-const now = require('../../../now');
+const { getNowAsEpochMillisecondString } = require('../../helpers/date');
 
 const createApprovalDate = async (dealId, user) => {
   const modifiedDeal = {
     details: {
-      approvalDate: now(),
+      approvalDate: getNowAsEpochMillisecondString(),
     },
   };
 
