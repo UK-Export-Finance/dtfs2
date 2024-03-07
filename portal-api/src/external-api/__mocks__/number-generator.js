@@ -1,6 +1,6 @@
 const { NUMBER } = require('../../constants');
 
-const get = async () => ({
+const getNumber = async () => ({
   data: {
     status: 200,
     data: [
@@ -17,5 +17,5 @@ const get = async () => ({
 });
 
 module.exports = {
-  get,
+  getNumber,
 };
