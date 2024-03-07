@@ -74,7 +74,6 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     return report;
   }
 
-  // TODO FN-1859 - maybe just update 'this' (and rename back to updateWithUploadDetails) rather than clone and update?
   public toReportWithUploadDetails({ azureFileInfo, data, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): UtilisationReportEntity {
     return produce(this, (draftReport: UtilisationReportEntity) => {
       draftReport.dateUploaded = new Date();

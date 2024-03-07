@@ -1,24 +1,37 @@
-import { MOCK_AZURE_FILE_INFO, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { DbRequestSource, MOCK_AZURE_FILE_INFO, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { handleUtilisationReportReportUploadedEvent } from './report-uploaded.event-handler';
-import { NotImplementedError } from '../../../../../errors';
+import { UtilisationReportRawCsvData } from '../../../../../types/utilisation-reports';
+import { UtilisationReportRepo } from '../../../../../repositories/utilisation-reports-repo';
 
 describe('handleUtilisationReportReportUploadedEvent', () => {
-  // TODO FN-1859 - update tests when functionality implemented
-  it('throws a NotImplementedError', () => {
+  it('calls the repo method to update the report', async () => {
     // Arrange
     const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
 
-    // Act / Assert
-    expect(() =>
-      handleUtilisationReportReportUploadedEvent(report, {
-        azureFileInfo: MOCK_AZURE_FILE_INFO,
-        reportCsvData: [],
-        uploadedByUserId: 'TODO',
-        requestSource: {
-          platform: 'PORTAL',
-          userId: 'TODO',
-        },
-      }),
-    ).toThrow(NotImplementedError);
+    const azureFileInfo = MOCK_AZURE_FILE_INFO;
+    const reportCsvData: UtilisationReportRawCsvData[] = [];
+    const uploadedByUserId = 'abc123';
+    const requestSource: DbRequestSource = {
+      platform: 'PORTAL',
+      userId: uploadedByUserId,
+    };
+
+    const updateWithUploadDetailsSpy = jest.spyOn(UtilisationReportRepo, 'updateWithUploadDetails').mockResolvedValue(report);
+
+    // Act
+    await handleUtilisationReportReportUploadedEvent(report, {
+      azureFileInfo,
+      reportCsvData,
+      uploadedByUserId,
+      requestSource,
+    });
+
+    // Assert
+    expect(updateWithUploadDetailsSpy).toHaveBeenCalledWith(report, {
+      azureFileInfo,
+      reportCsvData,
+      uploadedByUserId,
+      requestSource,
+    });
   });
 });

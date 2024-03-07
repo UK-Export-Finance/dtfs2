@@ -67,7 +67,6 @@ describe('UtilisationReportRepo', () => {
         requestSource,
       });
 
-      // TODO FN-1862 why is this type unhappy - public method should not need to be written :(
       const saveSpy = jest.spyOn(UtilisationReportRepo, 'save').mockResolvedValue(expectedUpdatedReport);
 
       // Act

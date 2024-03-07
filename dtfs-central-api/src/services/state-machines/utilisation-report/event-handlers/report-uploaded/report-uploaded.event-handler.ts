@@ -1,7 +1,6 @@
-import { DbRequestSource, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, UtilisationReportEntity, AzureFileInfo } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { UtilisationReportRepo } from '../../../../../repositories/utilisation-reports-repo';
-import { AzureFileInfo } from '../../../../../types/azure-file-info';
 import { UtilisationReportRawCsvData } from '../../../../../types/utilisation-reports';
 
 type ReportUploadedEventPayload = {
