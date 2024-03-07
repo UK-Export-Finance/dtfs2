@@ -1,7 +1,7 @@
-import { UtilisationReportEntity, MOCK_UTILISATION_REPORT_ENTITY, Bank } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, UtilisationReportEntityMockBuilder, Bank } from '@ukef/dtfs2-common';
 import { MOCK_BANKS } from '../../../../../api-tests/mocks/banks';
 import { UtilisationReportRepo, getOneUtilisationReportDetailsByBankId } from '../../../../repositories/utilisation-reports-repo';
-import { getMockUtilisationDataForReport, } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-data';
+import { getMockUtilisationDataForReport } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-data';
 import { UtilisationDataRepo } from '../../../../repositories/utilisation-data-repo';
 import { getAllReportsForSubmissionMonth, getPreviousOpenReportsBySubmissionMonth } from './helpers';
 import { IsoMonthStamp } from '../../../../types/date';
@@ -36,16 +36,9 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       // Arrange
       const banks = [MOCK_BANKS.BARCLAYS, MOCK_BANKS.HSBC];
 
-      const barclaysReport: UtilisationReportEntity = {
-        ...MOCK_UTILISATION_REPORT_ENTITY,
-        bankId: MOCK_BANKS.BARCLAYS.id,
-        status: 'RECONCILIATION_IN_PROGRESS',
-      };
-      const hsbcReport: UtilisationReportEntity = {
-        ...MOCK_UTILISATION_REPORT_ENTITY,
-        bankId: MOCK_BANKS.HSBC.id,
-        status: 'PENDING_RECONCILIATION',
-      };
+      const barclaysReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withBankId(MOCK_BANKS.BARCLAYS.id).build();
+      const hsbcReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withBankId(MOCK_BANKS.HSBC.id).build();
+
       // eslint-disable-next-line @typescript-eslint/require-await
       jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod').mockImplementation(async (bankId) => {
         switch (bankId) {
@@ -95,11 +88,9 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       const banks: Bank[] = [MOCK_BANKS.BARCLAYS];
       const currentSubmissionMonth: IsoMonthStamp = '2023-12';
 
-      const augustPeriodReport: UtilisationReportEntity = {
-        ...MOCK_UTILISATION_REPORT_ENTITY,
-        bankId: MOCK_BANKS.BARCLAYS.id,
-        status: 'RECONCILIATION_IN_PROGRESS',
-        reportPeriod: {
+      const augustPeriodReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
+        .withBankId(MOCK_BANKS.BARCLAYS.id)
+        .withReportPeriod({
           start: {
             month: 8,
             year: 2023,
@@ -108,14 +99,12 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
             month: 8,
             year: 2023,
           },
-        },
-      };
+        })
+        .build();
 
-      const septemberPeriodReport: UtilisationReportEntity = {
-        ...MOCK_UTILISATION_REPORT_ENTITY,
-        bankId: MOCK_BANKS.BARCLAYS.id,
-        status: 'PENDING_RECONCILIATION',
-        reportPeriod: {
+      const septemberPeriodReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+        .withBankId(MOCK_BANKS.BARCLAYS.id)
+        .withReportPeriod({
           start: {
             month: 9,
             year: 2023,
@@ -124,14 +113,12 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
             month: 9,
             year: 2023,
           },
-        },
-      };
+        })
+        .build();
 
-      const octoberPeriodReport: UtilisationReportEntity = {
-        ...MOCK_UTILISATION_REPORT_ENTITY,
-        bankId: MOCK_BANKS.BARCLAYS.id,
-        status: 'REPORT_NOT_RECEIVED',
-        reportPeriod: {
+      const octoberPeriodReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+        .withBankId(MOCK_BANKS.BARCLAYS.id)
+        .withReportPeriod({
           start: {
             month: 10,
             year: 2023,
@@ -140,8 +127,8 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
             month: 10,
             year: 2023,
           },
-        },
-      };
+        })
+        .build();
 
       const openReports: UtilisationReportEntity[] = [augustPeriodReport, septemberPeriodReport, octoberPeriodReport];
 
@@ -181,21 +168,20 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       ]);
     });
 
-    const getOpenReport = ({ bank, month }: { bank: Bank; month: number }): UtilisationReportEntity => ({
-      ...MOCK_UTILISATION_REPORT_ENTITY,
-      bankId: bank.id,
-      reportPeriod: {
-        start: {
-          month,
-          year: 2023,
-        },
-        end: {
-          month,
-          year: 2023,
-        },
-      },
-      status: 'PENDING_RECONCILIATION',
-    });
+    const getOpenReport = ({ bank, month }: { bank: Bank; month: number }): UtilisationReportEntity =>
+      UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+        .withBankId(bank.id)
+        .withReportPeriod({
+          start: {
+            month,
+            year: 2023,
+          },
+          end: {
+            month,
+            year: 2023,
+          },
+        })
+        .build();
 
     it('orders results by submissionMonth then bank name', async () => {
       const bankA: Bank = { ...MOCK_BANKS.BARCLAYS, id: 'A', name: 'Bank A' };

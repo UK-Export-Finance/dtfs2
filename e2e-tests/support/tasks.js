@@ -89,19 +89,19 @@ module.exports = {
 
       /**
        * Inserts utilisation report details to the SQL database
-       * @param {Partial<import('@ukef/dtfs2-common').UtilisationReportEntity[]>} utilisationReportDetails
+       * @param {Partial<import('@ukef/dtfs2-common').UtilisationReportEntity[]>} utilisationReports
        * @returns {import('@ukef/dtfs2-common').UtilisationReportEntity[]} The inserted reports
        */
-      async insertUtilisationReportDetailsIntoDb(utilisationReportDetails) {
+      async insertUtilisationReportsIntoDb(utilisationReports) {
         const utilisationReportRepo = SqlDbDataSource.getRepository(UtilisationReportEntity);
-        const saveOperations = utilisationReportDetails.map((utilisationReport) => utilisationReportRepo.save(utilisationReport));
+        const saveOperations = utilisationReports.map((utilisationReport) => utilisationReportRepo.save(utilisationReport));
         return await Promise.all(saveOperations);
       },
 
       /**
        * Deletes all the rows from the utilisation report and azure file info tables
        */
-      async removeAllUtilisationReportDetailsFromDb() {
+      async removeAllUtilisationReportsFromDb() {
         return await SqlDbDataSource.manager.getRepository(UtilisationReportEntity).delete({});
       },
 
