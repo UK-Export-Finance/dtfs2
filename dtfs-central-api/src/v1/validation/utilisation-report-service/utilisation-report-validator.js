@@ -35,7 +35,7 @@ const validateReportId = (reportId) => {
  * @returns {string | null} - Error message or null if valid.
  */
 const validateMonth = (month, propertyName = 'Month') => {
-  if (!month) {
+  if (!month && month !== 0) {
     return `${propertyName} is required`;
   }
   if (!REGEXES.INTEGER_REGEX.test(month) || month < 1 || month > 12) {
@@ -51,7 +51,7 @@ const validateMonth = (month, propertyName = 'Month') => {
  * @returns {string | null} - Error message or null if valid.
  */
 const validateYear = (year, propertyName = 'Year') => {
-  if (!year) {
+  if (!year && year !== 0) {
     return `${propertyName} is required`;
   }
   if (!REGEXES.INTEGER_REGEX.test(year) || year < 2020 || year > 2100) {
@@ -59,49 +59,6 @@ const validateYear = (year, propertyName = 'Year') => {
   }
   return null;
 };
-
-// TODO FN-1859 -  MOVE TO REPORT-PERIOD UTILS
-/**
- * Validates the report period for the utilisation report
- * @param {unknown} reportPeriod - details of the report period.
- * @returns {string[]} - an array of errors or an empty array if valid.
- */
-const validateReportPeriod = (reportPeriod) => {
-  if (!reportPeriod?.start || !reportPeriod?.end) {
-    return ['Report period is required'];
-  }
-
-  const reportPeriodErrors = [];
-  const { month: startMonth, year: startYear } = reportPeriod.start;
-  const { month: endMonth, year: endYear } = reportPeriod.end;
-
-  const startMonthError = validateMonth(startMonth, 'startMonth');
-  if (startMonthError !== null) {
-    reportPeriodErrors.push(startMonthError);
-  }
-  const startYearError = validateYear(startYear, 'startYear');
-  if (startYearError !== null) {
-    reportPeriodErrors.push(startYearError);
-  }
-
-  const endMonthError = validateMonth(endMonth, 'endMonth');
-  if (endMonthError !== null) {
-    reportPeriodErrors.push(endMonthError);
-  }
-  const endYearError = validateYear(endYear, 'endYear');
-  if (endYearError !== null) {
-    reportPeriodErrors.push(endYearError);
-  }
-
-  return reportPeriodErrors;
-};
-
-/**
- * Checks whether or not the supplied report period is a valid report period object
- * @param {unknown} reportPeriod - details of the report period
- * @returns {reportPeriod is import('../../../types/utilisation-reports').ReportPeriod}
- */
-const isValidReportPeriod = (reportPeriod) => validateReportPeriod(reportPeriod).length === 0;
 
 /**
  * Validates the details of the file storage for the utilisation report in azure
@@ -228,8 +185,6 @@ module.exports = {
   validateUtilisationReportData,
   validateMonth,
   validateYear,
-  validateReportPeriod,
-  isValidReportPeriod,
   validateFileInfo,
   validateReportUser,
 };
