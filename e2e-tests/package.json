@@ -22,23 +22,21 @@
     "lint:fix": "eslint \"**/*.{ts,js}\"",
     "load": "cd .. && npm run load"
   },
-  "dependencies": {
-    "cookie-signature": "^1.2.1",
-    "dotenv": "^16.4.5",
-    "jws": "^4.0.0",
-    "redis": "^4.6.13"
-  },
   "devDependencies": {
     "bson": "^6.4.0",
     "chance": "^1.1.11",
+    "cookie-signature": "^1.2.1",
     "cypress": "^13.6.6",
     "cypress-file-upload": "^5.0.8",
     "cypress-plugin-tab": "^1.0.5",
     "cypress-v10-preserve-cookie": "^1.2.1",
     "date-fns": "^2.30.0",
+    "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "eslint-plugin-cypress": "^2.15.1",
-    "mongodb": "^6.3.0"
+    "jws": "^4.0.0",
+    "mongodb": "^6.3.0",
+    "redis": "^4.6.13"
   },
   "engines": {
     "node": ">=20",
