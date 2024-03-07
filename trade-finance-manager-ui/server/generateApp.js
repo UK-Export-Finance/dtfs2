@@ -54,17 +54,6 @@ const generateApp = () => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
-  app.use('/', feedbackRoutes);
-  // Traffic to /login/sso/redirect comes from AZURE_SSO_AUTHORITY, so no CSRF cookie is present.
-  app.use('/login/sso/redirect', express.Router().post('/', loginController.handleSsoRedirect));
-  app.use(csrf({
-    cookie: {
-      ...cookie,
-      maxAge: 43200, // 12 hours
-    },
-  }));
-  app.use(csrfToken());
-  app.use(sanitizeXss());
 
   app.use(morgan('dev', {
     skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
@@ -77,6 +66,21 @@ const generateApp = () => {
   );
 
   app.use(createRateLimit());
+
+  app.use('/', feedbackRoutes);
+  // Traffic to /login/sso/redirect comes from AZURE_SSO_AUTHORITY, so no CSRF cookie is present.
+  app.use('/login/sso/redirect', express.Router().post('/', loginController.handleSsoRedirect));
+
+  app.use(csrf({
+    cookie: {
+      ...cookie,
+      maxAge: 43200, // 12 hours
+    },
+  }));
+  app.use(csrfToken());
+  app.use(sanitizeXss());
+
+
   app.use(healthcheck);
   app.use('/', routes);
 
