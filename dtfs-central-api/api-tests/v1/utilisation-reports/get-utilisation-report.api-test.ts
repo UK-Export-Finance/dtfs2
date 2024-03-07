@@ -8,12 +8,6 @@ import { anUploadedUtilisationReportEntity } from '../../mocks/entities/utilisat
 const api = apiModule(app);
 const getUrl = (id: string) => `/v1/utilisation-reports/${id}`;
 
-const givenUploadedReport = async (): Promise<string> => {
-  const uploadedReport = anUploadedUtilisationReportEntity();
-  const savedReport = await SqlDbDataSource.getRepository(UtilisationReportEntity).save(uploadedReport);
-  return savedReport.id.toString();
-};
-
 type UtilisationReportResponseBody = {
   id: number;
   bankId: string;
@@ -51,7 +45,9 @@ describe('/v1/utilisation-reports/:id', () => {
 
     it('gets a utilisation report', async () => {
       // Arrange
-      const id = await givenUploadedReport();
+      const uploadedReport = anUploadedUtilisationReportEntity();
+      const savedReport = await SqlDbDataSource.getRepository(UtilisationReportEntity).save(uploadedReport);
+      const id = savedReport.id.toString();
 
       // Act
       const { status } = await api.get(getUrl(id));
