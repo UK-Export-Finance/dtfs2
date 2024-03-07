@@ -1,6 +1,6 @@
 import axios, { HttpStatusCode } from 'axios';
 import { createRequest, createResponse } from 'node-mocks-http';
-import { get } from '../../src/v1/controllers/number-generator.controller';
+import { getNumber } from '../../src/v1/controllers/number-generator.controller';
 import { InvalidEntityTypeError } from '../../src/v1/errors';
 import { ENTITY_TYPE, UKEF_ID, USER } from '../../src/constants';
 
@@ -34,7 +34,7 @@ describe('get', () => {
   it('should retrieve a number from the number generator API when valid entityType and dealId are provided', async () => {
     const request = createRequest({ body });
     const response = createResponse();
-    const result = await get(request, response);
+    const result = await getNumber(request, response);
 
     expect(result).not.toBeNull();
     expect(result.statusCode).toEqual(200);
@@ -54,7 +54,7 @@ describe('get', () => {
     axios.post = jest.fn().mockResolvedValue(mockSuccessfulResponse);
 
     // Call the get function
-    await get(request, response);
+    await getNumber(request, response);
 
     // Assertions
     expect(response.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
@@ -87,7 +87,7 @@ describe('get', () => {
     };
 
     // Call the get function
-    await get(request, response);
+    await getNumber(request, response);
 
     // Assertions
     expect(response.status).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
@@ -114,7 +114,7 @@ describe('get', () => {
     });
 
     // Call the get function
-    await get(request, response);
+    await getNumber(request, response);
 
     // Assertions
     expect(response.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
