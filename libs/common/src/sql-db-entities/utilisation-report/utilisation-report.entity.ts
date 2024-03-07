@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { produce } from 'immer';
+import { produce, immerable } from 'immer';
 import { UtilisationReportReconciliationStatus } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import { ReportPeriodPartialEntity } from '../partial-entities';
@@ -10,6 +10,8 @@ import { getDbAuditUpdatedByUserId } from '../helpers';
 
 @Entity('UtilisationReport')
 export class UtilisationReportEntity extends AuditableBaseEntity {
+  [immerable] = true;
+
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -73,7 +75,7 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
   }
 
   // TODO FN-1859 - maybe just update 'this' (and rename back to updateWithUploadDetails) rather than clone and update?
-  public updatedWithUploadDetails({ azureFileInfo, data, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): UtilisationReportEntity {
+  public toReportWithUploadDetails({ azureFileInfo, data, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): UtilisationReportEntity {
     return produce(this, (draftReport: UtilisationReportEntity) => {
       draftReport.dateUploaded = new Date();
       draftReport.azureFileInfo = azureFileInfo;
