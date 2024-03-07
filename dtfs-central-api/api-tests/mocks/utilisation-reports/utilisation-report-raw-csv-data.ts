@@ -1,7 +1,7 @@
 import { UtilisationReportRawCsvData } from '../../../src/types/utilisation-reports';
 
 export const MOCK_UTILISATION_REPORT_RAW_CSV_DATA: UtilisationReportRawCsvData = {
-  'ukef facility id': '1',
+  'ukef facility id': '0123456789',
   'base currency': 'GBP',
   'facility utilisation': '100.00',
   'total fees accrued for the period': '80.00',

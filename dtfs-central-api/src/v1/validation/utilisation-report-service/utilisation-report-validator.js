@@ -149,6 +149,11 @@ const validateFileInfo = (fileInfo) => {
  * @returns {import('./utilisation-data-validator.types').UtilisationDataValidatorError[]} - Array of error objects.
  */
 const validateUtilisationReportData = (utilisationReportData) => {
+  if (!Array.isArray(utilisationReportData)) {
+    const errors = ['utilisationReportData must be an array'];
+    return errors;
+  }
+
   const errors = utilisationReportData.flatMap((utilisationReportDataEntry, index) => {
     const facilityIdValidationError = validateUkefId(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID], index);
     const exporterValidationError = validateExporter(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.EXPORTER], index);
@@ -199,8 +204,20 @@ const validateReportUser = (user) => {
   /** @type {string[]} */
   const errors = [];
 
-  if (!isMongoId(user?._id)) {
-    errors.push(`User '_id' is not a valid MongoDB ID: '${user?._id}'`);
+  if (!user || typeof user !== 'object') {
+    errors.push('User is not an object');
+    return errors;
+  }
+
+  if (!('_id' in user)) {
+    errors.push("User object does not contain '_id' property");
+    return errors;
+  }
+
+  const { _id } = user;
+  if (typeof _id !== 'string' || !isMongoId(_id)) {
+    errors.push(`User '_id' is not a valid MongoDB ID: '${_id}'`);
+    return errors;
   }
 
   return errors;

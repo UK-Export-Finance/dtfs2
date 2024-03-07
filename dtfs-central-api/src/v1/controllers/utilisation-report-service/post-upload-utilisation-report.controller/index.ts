@@ -1,5 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { HttpStatusCode } from 'axios';
+import { AzureFileInfo } from '@ukef/dtfs2-common';
 import {
   validateReportId,
   validateUtilisationReportData,
@@ -8,11 +9,10 @@ import {
 } from '../../../validation/utilisation-report-service/utilisation-report-validator';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
-import { AzureFileInfo } from '../../../../types/azure-file-info';
 import { UtilisationReportRawCsvData } from '../../../../types/utilisation-reports';
 import { ApiError } from '../../../../errors';
 
-type PostUploadUtilisationReportRequest2 = CustomExpressRequest<{
+export type PostUploadUtilisationReportRequest2 = CustomExpressRequest<{
   reqBody: {
     reportId: unknown;
     fileInfo: unknown;
@@ -39,7 +39,7 @@ export const postUploadUtilisationReportPayloadValidator = (req: PostUploadUtili
   return next();
 };
 
-type PostUploadUtilisationReportRequest = CustomExpressRequest<{
+export type PostUploadUtilisationReportRequest = CustomExpressRequest<{
   reqBody: {
     reportId: number;
     fileInfo: AzureFileInfo;

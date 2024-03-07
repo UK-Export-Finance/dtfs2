@@ -16,9 +16,6 @@ import { InvalidStateMachineTransitionError } from '../../../errors';
 
 jest.mock('./event-handlers');
 
-jest.mock('../../../repositories/utilisation-reports-repo/utilisation-report-sql.repo');
-const mockedUtilisationReportRepo = jest.mocked(UtilisationReportRepo);
-
 describe('UtilisationReportStateMachine', () => {
   afterEach(() => {
     jest.resetAllMocks();
@@ -32,7 +29,7 @@ describe('UtilisationReportStateMachine', () => {
 
   describe('when no report yet exists in the database', () => {
     beforeEach(() => {
-      mockedUtilisationReportRepo.findOneByBankIdAndReportPeriod.mockResolvedValue(null);
+      jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod').mockResolvedValue(null);
     });
 
     const BANK_ID = '956';

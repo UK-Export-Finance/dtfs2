@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const {
   validateMonth,
   validateYear,
@@ -5,6 +6,7 @@ const {
   isValidReportPeriod,
   validateFileInfo,
   validateUtilisationReportData,
+  validateReportUser,
 } = require('./utilisation-report-validator');
 
 describe('utilisation-report-validator', () => {
@@ -227,6 +229,17 @@ describe('utilisation-report-validator', () => {
       expect(validationError).toEqual([]);
     });
 
+    it('returns an error array of length 1 if the report data is not an array', async () => {
+      // Arrange
+      const invalidCsvData = {};
+
+      // Act
+      const validationErrors = validateUtilisationReportData(invalidCsvData);
+
+      // Assert
+      expect(validationErrors).toHaveLength(1);
+    });
+
     it('returns an array of errors if the report has any errors', async () => {
       const invalidCsvData = [
         {
@@ -241,6 +254,38 @@ describe('utilisation-report-validator', () => {
       const validationError = validateUtilisationReportData(invalidCsvData);
 
       expect(validationError.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('validateReportUser', () => {
+    it.each`
+      condition                                            | user                 | errorMessage
+      ${'the user is null'}                                | ${null}              | ${'User is not an object'}
+      ${'the user is undefined'}                           | ${undefined}         | ${'User is not an object'}
+      ${'the user is a string'}                            | ${''}                | ${'User is not an object'}
+      ${'the user is an empty object'}                     | ${{}}                | ${"User object does not contain '_id' property"}
+      ${"the 'user._id' property is not a string"}         | ${{ _id: 1 }}        | ${"User '_id' is not a valid MongoDB ID: '1'"}
+      ${"the 'user._id' property is not a valid mongo id"} | ${{ _id: 'abc123' }} | ${"User '_id' is not a valid MongoDB ID: 'abc123'"}
+    `('returns an error array of length 1 when $condition', ({ user, errorMessage }) => {
+      // Act
+      const errors = validateReportUser(user);
+
+      // Assert
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toEqual(errorMessage);
+    });
+
+    it('returns an empty array when the user object is valid', () => {
+      // Arrange
+      const user = {
+        _id: new ObjectId().toString(),
+      };
+
+      // Act
+      const errors = validateReportUser(user);
+
+      // Assert
+      expect(errors).toHaveLength(0);
     });
   });
 });
