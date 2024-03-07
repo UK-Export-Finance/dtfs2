@@ -8,7 +8,7 @@ const {
   errorHref,
   generateErrorSummary,
   constructPayload,
-  } = require('../../../helpers');
+} = require('../../../helpers');
 
 const {
   provide, DEAL, INDUSTRY_SECTORS, COUNTRIES,
@@ -31,9 +31,7 @@ router.get('/contract/:_id/about/supplier', [validateRole({ role: [MAKER] }), pr
   let { deal } = req.apiData;
 
   const { _id, userToken } = requestParams(req);
-
   const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
-
   // if companies house submit button was pressed and there are validation errors,
   // combine with existing deal validation errors.
   if (req.session.companiesHouseSearchValidationErrors) {
@@ -58,7 +56,6 @@ router.get('/contract/:_id/about/supplier', [validateRole({ role: [MAKER] }), pr
     };
     req.session.aboutSupplierFormData = null;
   }
-
   if(deal.submissionDetails['supplier-companies-house-registration-number']){
     if (!isValidCompaniesHouseNumber(deal.submissionDetails['supplier-companies-house-registration-number'])) {
       validationErrors.count += 1;
@@ -72,7 +69,6 @@ router.get('/contract/:_id/about/supplier', [validateRole({ role: [MAKER] }), pr
       };
     }
   }
-
   const mappedIndustrySectors = mapIndustrySectors(industrySectors, deal.submissionDetails['industry-sector']);
   const mappedIndustryClasses = mapIndustryClasses(industrySectors, deal.submissionDetails['industry-sector'], deal.submissionDetails['industry-class']);
 
@@ -87,7 +83,6 @@ router.get('/contract/:_id/about/supplier', [validateRole({ role: [MAKER] }), pr
     'indemnifier-address-country': mapCountries(countries, indemnifierAddressCountryCode),
     'indemnifier-correspondence-address-country': mapCountries(countries, indemnifierCorrespondenceAddressCountryCode),
   };
-
   return res.render('contract/about/about-supplier.njk', {
     deal,
     validationErrors: supplierValidationErrors(validationErrors, deal.submissionDetails),
@@ -142,7 +137,7 @@ const supplierSubmissionDetailsFields = [
 router.post('/contract/:_id/about/supplier', provide([INDUSTRY_SECTORS]), async (req, res) => {
   const { industrySectors } = req.apiData;
   const { _id, userToken } = requestParams(req);
-  let submissionDetails = constructPayload(req.body, supplierSubmissionDetailsFields);
+  let submissionDetails = constructPayload(req.body, supplierSubmissionDetailsFields,true);
 
   if (submissionDetails['supplier-correspondence-address-is-different'] === 'false') {
     // clear supplier correspondence address fields:
@@ -187,7 +182,7 @@ router.post('/contract/:_id/about/supplier', provide([INDUSTRY_SECTORS]), async 
 
   await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
 
-  const redirectUrl = `/contract/${_id}/about/buyer?firstVisit=true`;
+  const redirectUrl = `/contract/${_id}/about/buyer`;
   return res.redirect(redirectUrl);
 });
 
@@ -213,7 +208,7 @@ router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL, INDUSTR
     'indemnifier-correspondence-address-country': (indemnifierCorrespondenceAddressCountry && indemnifierCorrespondenceAddressCountry.code) ? indemnifierCorrespondenceAddressCountry.code : '',
   };
 
-  let submissionDetails = constructPayload(req.body, supplierSubmissionDetailsFields);
+  let submissionDetails = constructPayload(req.body, supplierSubmissionDetailsFields,true);
 
   if (submissionDetails['supplier-correspondence-address-is-different'] === 'false') {
     // clear supplier correspondence address fields:
@@ -255,7 +250,6 @@ router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL, INDUSTR
   }
 
   submissionDetails = industryFields(submissionDetails, industrySectors);
-
   if (!formDataMatchesOriginalData(submissionDetails, mappedOriginalData)) {
     await updateSubmissionDetails(deal, submissionDetails, userToken);
   }

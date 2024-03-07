@@ -28,7 +28,6 @@ router.get('/contract/:_id/about/buyer', [validateRole({ role: [MAKER] }), provi
   const { deal, countries } = req.apiData;
 
   const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
-  const {firstVisit} =  req.query
   const errorSummary = generateErrorSummary(
     validationErrors,
     errorHref,
@@ -47,7 +46,7 @@ router.get('/contract/:_id/about/buyer', [validateRole({ role: [MAKER] }), provi
 
   return res.render('contract/about/about-supply-buyer.njk', {
     deal,
-    validationErrors: !firstVisit && buyerValidationErrors(validationErrors, deal.submissionDetails),
+    validationErrors: buyerValidationErrors(validationErrors, deal.submissionDetails),
     mappedCountries,
     user: req.session.user,
     taskListItems: aboutTaskList(completedForms),
@@ -67,11 +66,11 @@ const buyerSubmissionDetailsProperties = [
 router.post('/contract/:_id/about/buyer', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  const submissionDetailsPayload = constructPayload(req.body, buyerSubmissionDetailsProperties);
+  const submissionDetailsPayload = constructPayload(req.body, buyerSubmissionDetailsProperties,true);
 
   await updateSubmissionDetails(req.apiData[DEAL], submissionDetailsPayload, userToken);
 
-  const redirectUrl = `/contract/${_id}/about/financial?firstVisit=true`;
+  const redirectUrl = `/contract/${_id}/about/financial`;
   return res.redirect(redirectUrl);
 });
 
@@ -94,7 +93,7 @@ router.post('/contract/:_id/about/buyer/save-go-back', provide([DEAL]), async (r
     destinationOfGoodsAndServices: destinationOfGoodsAndServicesCode,
   };
 
-  const submissionDetailsPayload = constructPayload(req.body, buyerSubmissionDetailsProperties);
+  const submissionDetailsPayload = constructPayload(req.body, buyerSubmissionDetailsProperties,true);
 
   if (!formDataMatchesOriginalData(submissionDetailsPayload, mappedOriginalData)) {
     await updateSubmissionDetails(deal, submissionDetailsPayload, userToken);
