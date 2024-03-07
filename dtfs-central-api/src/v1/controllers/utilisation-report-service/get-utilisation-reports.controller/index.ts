@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { parseReportPeriod } from '../../../../utils/report-period';
@@ -27,7 +28,7 @@ export const getUtilisationReports = async (req: GetUtilisationReportsRequest, r
 
     const parsedReportPeriod = parseReportPeriod(reportPeriod);
 
-    const utilisationReports = await UtilisationReportRepo.findAllByBankId(bankId, {
+    const utilisationReports: UtilisationReportEntity[] = await UtilisationReportRepo.findAllByBankId(bankId, {
       reportPeriod: parsedReportPeriod,
       excludeNotUploaded: excludeNotUploaded === 'true',
     });

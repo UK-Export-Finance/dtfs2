@@ -25,9 +25,9 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
     if (options?.reportPeriod) {
       query = query
         .andWhere('report.reportPeriodStartMonth = :startMonth', { startMonth: options.reportPeriod.start.month })
-        .andWhere('report.reportPeriodEndMonth = :endMonth', { startMonth: options.reportPeriod.end.month })
-        .andWhere('report.reportPeriodStartYear = :startYear', { startMonth: options.reportPeriod.start.year })
-        .andWhere('report.reportPeriodEndYear = :endYear', { startMonth: options.reportPeriod.end.year });
+        .andWhere('report.reportPeriodEndMonth = :endMonth', { endMonth: options.reportPeriod.end.month })
+        .andWhere('report.reportPeriodStartYear = :startYear', { startYear: options.reportPeriod.start.year })
+        .andWhere('report.reportPeriodEndYear = :endYear', { endYear: options.reportPeriod.end.year });
     }
 
     return await query.getMany();
