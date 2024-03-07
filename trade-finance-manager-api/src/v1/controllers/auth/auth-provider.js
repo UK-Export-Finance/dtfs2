@@ -22,7 +22,6 @@ class AuthProvider {
      * The state parameter can also be used to encode information of the app's state before redirect.
      * You can pass the user's state in the app, such as the page or view they were on, as input to this parameter.
      */
-
     const state = this.cryptoProvider.base64Encode(
       JSON.stringify({
         csrfToken,
@@ -30,30 +29,21 @@ class AuthProvider {
       }),
     );
 
-    const authCodeUrlRequestParams = {
+    /**
+     * Do not allow any scopes, e.g read/write calendars, send emails as the user etc.
+     * By default, MSAL Node will add OIDC scopes to the auth code url request. For more information, visit:
+     * https://docs.microsoft.com/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
+     */
+    const requestParams = {
       state,
-
-      /**
-       * Do not allow any scopes, e.g read/write calendars, send emails as the user etc.
-       * By default, MSAL Node will add OIDC scopes to the auth code url request. For more information, visit:
-       * https://docs.microsoft.com/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
-       */
       scopes: [],
     };
 
-    const authCodeRequestParams = {
-      state,
-
-      /**
-       * Do not allow any scopes, e.g read/write calendars, send emails as the user etc.
-       * By default, MSAL Node will add OIDC scopes to the auth code request. For more information, visit:
-       * https://docs.microsoft.com/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
-       */
-      scopes: [],
-    };
+    const authCodeUrlRequestParams = requestParams;
+    const authCodeRequestParams = requestParams;
 
     /**
-     * If the current msal configuration does not have cloudDiscoveryMetadata or authorityMetadata, we will
+     * If the current MSAL configuration does not have cloudDiscoveryMetadata or authorityMetadata, we will
      * make a request to the relevant endpoints to retrieve the metadata. This allows MSAL to avoid making
      * metadata discovery calls, thereby improving performance of token acquisition process.
      */
@@ -65,12 +55,12 @@ class AuthProvider {
     const msalInstance = this.getMsalInstance(this.config.msalConfig);
 
     // trigger the first leg of auth code flow
-    return this.getAuthCodeUrl(
+    return this.getAuthCodeUrl({
       csrfToken,
       authCodeUrlRequestParams,
       authCodeRequestParams,
       msalInstance,
-    );
+    });
   }
 
   /**
@@ -81,7 +71,12 @@ class AuthProvider {
    * @param {Object} msalInstance: MSAL instance
    * @return {Object} PKCE codes, auth code request, login URL.
    */
-  async getAuthCodeUrl(csrfToken, authCodeUrlRequestParams, authCodeRequestParams, msalInstance) {
+  async getAuthCodeUrl({
+    csrfToken,
+    authCodeUrlRequestParams,
+    authCodeRequestParams,
+    msalInstance
+  }) {
     try {
       console.info('TFM auth service - getAuthCodeUrl');
 

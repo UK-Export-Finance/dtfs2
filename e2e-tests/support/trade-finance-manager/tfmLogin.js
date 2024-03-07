@@ -71,7 +71,6 @@ const tfmLogin = ({
 }) => {
   const { username } = user;
 
-  // TODO: try reuse login session.
   console.info('Mock login::');
 
   return cy.getTfmUserByUsername(username).then(async (tfmUser) => {
