@@ -114,7 +114,7 @@ exports.update = async (req, res) => {
 
       updatedDeal = await updateSubmissionCount(updatedDeal, user);
 
-      if (!updatedDeal.details.submissionDate) {
+      if (!updatedDeal?.details?.submissionDate) {
         updatedDeal = await createSubmissionDate(dealId, user);
       }
 
@@ -122,7 +122,7 @@ exports.update = async (req, res) => {
         updatedDeal = await createMiaSubmissionDate(dealId, user);
       }
 
-      if (updatedDeal.details.submissionCount === 1) {
+      if (updatedDeal?.details?.submissionCount === 1) {
         updatedDeal = await createUkefIds(updatedDeal, user);
       }
 

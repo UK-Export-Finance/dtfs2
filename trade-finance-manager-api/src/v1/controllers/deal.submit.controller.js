@@ -20,7 +20,13 @@ const { sendDealSubmitEmails, sendAinMinAcknowledgement } = require('./send-deal
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const { dealHasAllUkefIds, dealHasAllValidUkefIds } = require('../helpers/dealHasAllUkefIds');
 
-const getDeal = async (dealId, dealType) => {
+/**
+ * Retrieves a deal from the portal based on the provided deal ID and deal type.
+ * @param {string} dealId - The ID of the deal to retrieve from the portal.
+ * @param {string} dealType - The type of the deal to retrieve from the portal.
+ * @returns {Promise<object>} - The retrieved deal from the portal.
+ */
+const getPortalDeal = async (dealId, dealType) => {
   let deal;
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
@@ -40,7 +46,7 @@ const getDeal = async (dealId, dealType) => {
  * Azure function
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
-  const deal = await getDeal(dealId, dealType);
+  const deal = await getPortalDeal(dealId, dealType);
   console.info('Setting essential deal properties in TFM for deal %s', dealId);
 
   if (!deal) {
@@ -56,21 +62,39 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   const dealHasBeenResubmit = submissionCount > 1;
 
   if (firstDealSubmission) {
+    // Updates portal deal status
     await updatePortalDealStatus(mappedDeal);
-    const dealWithTfmData = await addTfmDealData(mappedDeal);
+
+    /**
+     * Below action is performed to retrieve the latest portal application status.
+     * Which at the time of first fetch would have been changed to `Acknowledged`
+     * if AIN/MIN from `Submitted`.
+     *
+     * Not fetching the latest portal deal status would cause TFM deal status to be
+     * an `Application` rather than `Confirmed`.
+     */
+
+    const updatedPortalDeal = await getPortalDeal(dealId, dealType);
+    const { status } = updatedPortalDeal;
+    const updatedMappedDeal = {
+      ...mappedDeal,
+      status,
+    };
+
+    const dealWithTfmData = await addTfmDealData(updatedMappedDeal);
     const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData);
     const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn);
     const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions);
     const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
 
-    if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+    if (updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
       /**
        * Current requirement only allows AIN & MIN deals to be sent to ACBS
        * This calls CREATES Deal & Facility ACBS records
        */
-      if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType) && dealHasAllValidUkefIds(dealId)) {
+      if (dealController.canDealBeSubmittedToACBS(updatedMappedDeal.submissionType) && dealHasAllValidUkefIds(dealId)) {
         await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
       }
 
@@ -168,7 +192,7 @@ exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
 const submitDealBeforeUkefIds = async (dealId, dealType, checker) => {
   try {
     console.info('Submitting new deal %s to TFM', dealId);
-    const deal = await getDeal(dealId, dealType);
+    const deal = await getPortalDeal(dealId, dealType);
 
     if (!deal) {
       console.error('Deal does not exist in TFM, submitting new deal %s', dealId);
