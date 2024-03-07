@@ -42,7 +42,7 @@ const mockSuccessfulResponse = {
 jest.mock('../../../src/external-api/api', () => ({
   sendEmail: jest.fn(() => Promise.resolve({})),
   number: {
-    get: jest.fn(() => Promise.resolve(mockSuccessfulResponse)),
+    getNumber: jest.fn(() => Promise.resolve(mockSuccessfulResponse)),
   },
 }));
 

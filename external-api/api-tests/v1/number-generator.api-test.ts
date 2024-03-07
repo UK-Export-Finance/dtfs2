@@ -30,7 +30,7 @@ const mockSuccessfulResponse = {
  * The function also handles various error scenarios, such as when the entityType is invalid or when the number generator response is void.
  * The code snippet includes test cases that validate the behavior of the `get` function in different scenarios.
  */
-describe('get', () => {
+describe('getNumber', () => {
   it('should retrieve a number from the number generator API when valid entityType and dealId are provided', async () => {
     const request = createRequest({ body });
     const response = createResponse();
