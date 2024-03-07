@@ -36,23 +36,23 @@ context('Case tasks - MIA deal - all tasks', () => {
   const underwritingLastTaskId = 3;
 
   before(() => {
-    cy.getUser(BUSINESS_SUPPORT_USER_1.username, BUSINESS_SUPPORT_USER_1).then((userObj) => {
+    cy.getUser(BUSINESS_SUPPORT_USER_1.username).then((userObj) => {
       userId = userObj._id;
     });
 
-    cy.getUser(UNDERWRITING_SUPPORT_1.username, BUSINESS_SUPPORT_USER_1).then((userObj) => {
+    cy.getUser(UNDERWRITING_SUPPORT_1.username).then((userObj) => {
       underWriterSupportId = userObj._id;
     });
 
-    cy.getUser(UNDERWRITER_MANAGER_1.username, BUSINESS_SUPPORT_USER_1).then((userObj) => {
+    cy.getUser(UNDERWRITER_MANAGER_1.username).then((userObj) => {
       underWriterManagerId = userObj._id;
     });
 
-    cy.getUser(UNDERWRITER_1.username, BUSINESS_SUPPORT_USER_1).then((userObj) => {
+    cy.getUser(UNDERWRITER_1.username).then((userObj) => {
       underwriterId = userObj._id;
     });
 
-    cy.getUser(RISK_MANAGER_1.username, BUSINESS_SUPPORT_USER_1).then((userObj) => {
+    cy.getUser(RISK_MANAGER_1.username).then((userObj) => {
       riskManagerId = userObj._id;
     });
   });

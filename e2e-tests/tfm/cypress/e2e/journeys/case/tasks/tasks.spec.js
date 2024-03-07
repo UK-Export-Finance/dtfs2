@@ -10,7 +10,7 @@ const TOTAL_DEFAULT_AIN_TASKS = 2;
 const { T1_USER_1 } = MOCK_USERS;
 
 const assignTaskToSomeoneElseInMyTeam = (dealId, differentUserInSameTeam) => new Cypress.Promise((resolve) => {
-  cy.getUser(differentUserInSameTeam.username, T1_USER_1).then((userObj) => {
+  cy.getUser(differentUserInSameTeam.username).then((userObj) => {
     const differentUserInSameTeamObj = userObj;
 
     // choose a user in `assigned to` select input, that is not the currently logged in
@@ -34,7 +34,7 @@ context('Case tasks - AIN deal', () => {
   let usersInTeam;
 
   before(() => {
-    cy.getUser(MOCK_USERS.BUSINESS_SUPPORT_USER_1.username, T1_USER_1).then((userObj) => {
+    cy.getUser(MOCK_USERS.BUSINESS_SUPPORT_USER_1.username).then((userObj) => {
       userId = userObj._id;
     });
 

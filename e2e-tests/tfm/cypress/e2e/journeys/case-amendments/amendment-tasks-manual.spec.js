@@ -47,19 +47,19 @@ context('Amendments tasks - manual amendment tasks', () => {
 
       cy.submitDeal(dealId, dealType, UNDERWRITER_1);
 
-      cy.getUser(PIM_USER_1.username, UNDERWRITER_1).then((userObj) => {
+      cy.getUser(PIM_USER_1.username).then((userObj) => {
         userId = userObj._id;
       });
-      cy.getUser(UNDERWRITING_SUPPORT_1.username, UNDERWRITER_1).then((userObj) => {
+      cy.getUser(UNDERWRITING_SUPPORT_1.username).then((userObj) => {
         UWSupportId = userObj._id;
       });
-      cy.getUser(UNDERWRITER_MANAGER_1.username, UNDERWRITER_1).then((userObj) => {
+      cy.getUser(UNDERWRITER_MANAGER_1.username).then((userObj) => {
         UWManagerId = userObj._id;
       });
-      cy.getUser(UNDERWRITER_1.username, UNDERWRITER_1).then((userObj) => {
+      cy.getUser(UNDERWRITER_1.username).then((userObj) => {
         UWId = userObj._id;
       });
-      cy.getUser(RISK_MANAGER_1.username, UNDERWRITER_1).then((userObj) => {
+      cy.getUser(RISK_MANAGER_1.username).then((userObj) => {
         riskId = userObj._id;
       });
     });

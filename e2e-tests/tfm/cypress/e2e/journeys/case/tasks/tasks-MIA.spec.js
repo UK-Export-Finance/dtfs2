@@ -19,7 +19,7 @@ context('Case tasks - MIA deal', () => {
   let usersInTeam;
 
   before(() => {
-    cy.getUser(MOCK_USERS.BUSINESS_SUPPORT_USER_1.username, T1_USER_1).then((userObj) => {
+    cy.getUser(MOCK_USERS.BUSINESS_SUPPORT_USER_1.username).then((userObj) => {
       userId = userObj._id;
     });
 
@@ -201,7 +201,7 @@ context('Case tasks - MIA deal', () => {
     thirdTask.title().contains('File all deal emails in this deal');
 
     // task should be open for correct user
-    cy.login(MOCK_USERS.UNDERWRITING_SUPPORT_1);
+    cy.tfmLogin({ user: MOCK_USERS.UNDERWRITING_SUPPORT_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
