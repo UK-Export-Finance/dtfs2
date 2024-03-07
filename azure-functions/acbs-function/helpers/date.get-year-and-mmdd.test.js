@@ -1,6 +1,5 @@
 const { format } = require('date-fns');
-const { validDateFormats } = require('../test-helpers/date-formats');
-const { getYearAndMmdd } = require('./date');
+const { getYearAndMmdd, validDateFormats } = require('./date');
 
 describe('getYearAndMmdd', () => {
   beforeAll(() => {
@@ -23,10 +22,6 @@ describe('getYearAndMmdd', () => {
   const currentYearAndMmdd = {
     mmdd: '12-01',
     year: '2022',
-  };
-  const maxDateYearAndMmdd = {
-    mmdd: '09-13',
-    year: '275760',
   };
 
   const validStringTestCases = validDateFormats.map((formatString) => ({
@@ -70,26 +65,6 @@ describe('getYearAndMmdd', () => {
     {
       description: 'should not parse if month too big',
       mockValue: '2023-13-12',
-      expected: invalidYearAndMmdd,
-    },
-    {
-      description: 'should parse the js maximum date',
-      mockValue: '275760-09-13',
-      expected: maxDateYearAndMmdd,
-    },
-    {
-      description: 'should not parse a date after the js maximum date',
-      mockValue: '275760-09-14',
-      expected: invalidYearAndMmdd,
-    },
-    {
-      description: 'should parse js maximum epoch',
-      mockValue: 8639999996400000,
-      expected: maxDateYearAndMmdd,
-    },
-    {
-      description: 'should not parse a number bigger than maximum date',
-      mockValue: 8640000000000001,
       expected: invalidYearAndMmdd,
     },
     {

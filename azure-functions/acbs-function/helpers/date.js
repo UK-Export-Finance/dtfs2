@@ -1,19 +1,9 @@
 const { isValid, parse, format, startOfDay, add, getDaysInMonth, formatISO, differenceInMonths } = require('date-fns');
 
 const validDateFormats = [
-  'MM-dd-yy',
-  'MM/dd/yy',
-  'MM dd yy',
-  'MM/dd/yyyy',
-  'MM dd yyyy',
   'yyyy-MM-dd',
   'yyyy/MM/dd',
   'yyyy MM dd',
-  'MM/dd/yyyyyy',
-  'MM dd yyyyyy',
-  'yyyyyy-MM-dd',
-  'yyyyyy/MM/dd',
-  'yyyyyy MM dd',
 ];
 
 /**
@@ -38,10 +28,8 @@ const isString = (dateStr) => typeof dateStr === 'string' && !isEpoch(dateStr);
 const now = () => format(new Date(), 'yyyy-MM-dd');
 
 /**
- * @param {string | number} dateStr
+ * @param {string | number} dateStr either epoch or {@link validDateFormats}
  * @returns {Date}
- *
- * @see {@link validDateFormats}
  */
 const getDateFromStringOrNumber = (dateStr) => {
   const dateFromString = validDateFormats
@@ -64,7 +52,6 @@ const getDateFromStringOrNumber = (dateStr) => {
  * @param {Date} date
  * @returns {string} date formatted as `yyyy-MM-dd` if valid or `Invalid date` otherwise
  *
- * @see {@link validDateFormats}
  */
 const formatOrReturnInvalidDate = (date) => (isValid(date) ? format(date, 'yyyy-MM-dd') : 'Invalid date');
 
@@ -74,22 +61,18 @@ const formatOrReturnInvalidDate = (date) => (isValid(date) ? format(date, 'yyyy-
  */
 const formatYear = (year) => (year < 1000 ? (2000 + parseInt(year, 10)).toString() : year && year.toString());
 /**
- * @param {string | number} dateStr
+ * @param {string | number} dateStr either epoch or {@link validDateFormats}
  * @returns {string} date formatted as `yyyy-MM-dd`, returns `Invalid date` if can't parse input
- *
- * @see {@link validDateFormats}
  */
 const formatDate = (dateStr) => formatOrReturnInvalidDate(
   getDateFromStringOrNumber(dateStr),
 );
 
 /**
- * @param {string | number | Date} date as a date string, epoch time or Date object
+ * @param {string | number | Date} date either Date object, epoch or {@link validDateFormats}
  * @param {number} months number of months to add
  * @returns in the format `yyyy-MM-dd`.
  * Rounds down the date if target month is too short (e.g. 2024-01-31 plus 1 month is 2024-02-29)
- *
- * @see {@link validDateFormats}
  */
 const addMonth = (date, months) => {
   const parsedDate = date instanceof Date ? date : getDateFromStringOrNumber(date);
@@ -97,12 +80,10 @@ const addMonth = (date, months) => {
   return formatOrReturnInvalidDate(add(parsedDate, { months }));
 };
 /**
- * @param {string | number | Date} date as a date string, epoch time or Date object
+ * @param {string | number | Date} date either Date object, epoch or {@link validDateFormats}
  * @param {number} years number of years to add
  * @returns in the format `yyyy-MM-dd`.
  * Rounds down the date if target month is too short (e.g. 2024-02-29 plus 1 year is 2025-02-28)
- *
- * @see {@link validDateFormats}
  */
 const addYear = (date, years) => {
   const parsedDate = date instanceof Date ? date : getDateFromStringOrNumber(date);
@@ -120,12 +101,10 @@ const addYear = (date, years) => {
 const getNowAsIsoString = () => formatISO(new Date()).replace('Z', '+00:00');
 
 /**
- * @param {string | Date | number | null} startDate
- * @param {string | Date | number | null} endDate
+ * @param {string | Date | number | null} startDate either Date object, epoch or {@link validDateFormats}
+ * @param {string | Date | number | null} endDate either Date object, epoch or {@link validDateFormats}
  * @returns {number} difference in months between dates, rounded up
  * The start date should be before the end date for this to have any meaning
- *
- * @see {@link validDateFormats}
  */
 const getInclusiveMonthDifference = (startDate, endDate) => {
   let date1;
@@ -181,10 +160,8 @@ const getDateStringFromYearMonthDay = (year, month, day) => {
 };
 
 /**
- * @param {string | number | Date} date
+ * @param {string | number | Date} date either Date object, epoch or {@link validDateFormats}
  * @returns
- *
- * @see {@link validDateFormats}
  */
 const getYearAndMmdd = (date) => {
   let parsedDate;
@@ -209,6 +186,7 @@ const getYearAndMmdd = (date) => {
 };
 
 module.exports = {
+  validDateFormats,
   isDate,
   isEpoch,
   isString,

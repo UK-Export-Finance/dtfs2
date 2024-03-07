@@ -1,6 +1,5 @@
 const { format } = require('date-fns');
-const { addYear } = require('./date');
-const { validDateFormats } = require('../test-helpers/date-formats');
+const { addYear, validDateFormats } = require('./date');
 
 describe('addYear', () => {
   const testDate = new Date('2024-05-12');
@@ -33,6 +32,12 @@ describe('addYear', () => {
       date: testDate.valueOf().toString(),
       yearsToAdd: 1,
       expected: testDatePlusOneYearFormatted,
+    },
+    {
+      description: 'does not parse `Invalid date`',
+      date: 'Invalid date',
+      yearsToAdd: 1,
+      expected: 'Invalid date',
     },
     {
       description: 'rounds down date if going from 29th Feb to a non-leap year',

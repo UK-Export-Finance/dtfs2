@@ -1,6 +1,5 @@
 const { format } = require('date-fns');
-const { addMonth } = require('./date');
-const { validDateFormats } = require('../test-helpers/date-formats');
+const { addMonth, validDateFormats } = require('./date');
 
 describe('addMonth', () => {
   const testDate = new Date('2024-05-12');
@@ -33,6 +32,12 @@ describe('addMonth', () => {
       date: testDate.valueOf().toString(),
       monthsToAdd: 1,
       expected: testDatePlusOneMonthFormatted,
+    },
+    {
+      description: 'does not parse `Invalid date`',
+      date: 'Invalid date',
+      monthsToAdd: 1,
+      expected: 'Invalid date',
     },
     {
       description: 'adds 12 months and returns the next year',

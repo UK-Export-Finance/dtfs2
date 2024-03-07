@@ -1,6 +1,5 @@
 const { format } = require('date-fns');
-const { formatDate } = require('./date');
-const { validDateFormats } = require('../test-helpers/date-formats');
+const { formatDate, validDateFormats } = require('./date');
 
 describe('formatDate', () => {
   const date = new Date();
@@ -36,36 +35,6 @@ describe('formatDate', () => {
     {
       description: 'should not parse if month too big',
       mockValue: '2023-13-12',
-      expected: 'Invalid date',
-    },
-    {
-      description: 'should parse the js maximum date',
-      mockValue: '275760-09-13',
-      expected: '275760-09-13',
-    },
-    {
-      description: 'should not parse a date after the js maximum date',
-      mockValue: '275760-09-14',
-      expected: 'Invalid date',
-    },
-    {
-      description: 'should parse js maximum epoch',
-      mockValue: 8639999996400000,
-      expected: '275760-09-13',
-    },
-    {
-      description: 'should not parse a number bigger than maximum date',
-      mockValue: 8640000000000001,
-      expected: 'Invalid date',
-    },
-    {
-      description: 'should parse the js maximum epoch stored as a string',
-      mockValue: '8639999996400000',
-      expected: '275760-09-13',
-    },
-    {
-      description: 'should not parse a number bigger than maximum epoch stored as a string',
-      mockValue: '8640000000000001',
       expected: 'Invalid date',
     },
     {

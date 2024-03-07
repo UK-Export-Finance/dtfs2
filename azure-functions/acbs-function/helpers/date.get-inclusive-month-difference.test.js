@@ -1,6 +1,5 @@
 const { format } = require('date-fns');
-const { getInclusiveMonthDifference } = require('./date');
-const { validDateFormats } = require('../test-helpers/date-formats');
+const { getInclusiveMonthDifference, validDateFormats } = require('./date');
 
 describe('getInclusiveMonthDifference', () => {
   beforeAll(() => {
