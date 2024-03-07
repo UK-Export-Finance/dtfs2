@@ -1,4 +1,4 @@
-const redis = require('redis');
+const { createClient } = require('redis');
 
 let connection = null;
 
@@ -17,7 +17,7 @@ const redisConnect = async (config) => {
       tls: { servername: config.redisHost },
     };
   }
-  const redisClient = await redis.createClient(config.redisHost, config.redisPort, redisOptions);
+  const redisClient = await createClient(config.redisHost, config.redisPort, redisOptions);
   await redisClient.connect();
 
   return redisClient;

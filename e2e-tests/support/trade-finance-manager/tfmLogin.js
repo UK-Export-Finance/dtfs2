@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const jws = require('jws');
+const { sign } = require('jws');
 const cookieSignature = require('cookie-signature');
 const { TFM_URL } = require('../../e2e-fixtures/constants.fixture');
 
@@ -35,7 +35,7 @@ const issueValidJWT = (user, sessionIdentifier) => {
     typ: 'JWT',
   };
 
-  return jws.sign({
+  return sign({
     header,
     payload,
     secret,
