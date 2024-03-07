@@ -16,15 +16,15 @@ describe('getYearAndMmdd', () => {
     mmdd: '03-02',
     year: '2023',
   };
-  const invalidYearAndMMdd = {
+  const invalidYearAndMmdd = {
     mmdd: 'Invalid date',
     year: 'Invalid date',
   };
-  const currentYearAndMMdd = {
+  const currentYearAndMmdd = {
     mmdd: '12-01',
     year: '2022',
   };
-  const maxDateYearAndMMdd = {
+  const maxDateYearAndMmdd = {
     mmdd: '09-13',
     year: '275760',
   };
@@ -50,77 +50,77 @@ describe('getYearAndMmdd', () => {
     {
       description: 'should not parse if day of month too big',
       mockValue: '2023-10-32',
-      expected: invalidYearAndMMdd,
+      expected: invalidYearAndMmdd,
     },
     {
       description: 'should not parse if day of month too big',
       mockValue: '2023-11-31',
-      expected: invalidYearAndMMdd,
+      expected: invalidYearAndMmdd,
     },
     {
       description: 'should not parse if day of month too big',
       mockValue: '2024-02-30',
-      expected: invalidYearAndMMdd,
+      expected: invalidYearAndMmdd,
     },
     {
       description: 'should not parse if day of month too big',
       mockValue: '2023-02-29',
-      expected: invalidYearAndMMdd,
+      expected: invalidYearAndMmdd,
     },
     {
       description: 'should not parse if month too big',
       mockValue: '2023-13-12',
-      expected: invalidYearAndMMdd,
+      expected: invalidYearAndMmdd,
     },
     {
       description: 'should parse the js maximum date',
       mockValue: '275760-09-13',
-      expected: maxDateYearAndMMdd,
+      expected: maxDateYearAndMmdd,
     },
     {
       description: 'should not parse a date after the js maximum date',
       mockValue: '275760-09-14',
-      expected: invalidYearAndMMdd,
+      expected: invalidYearAndMmdd,
     },
     {
       description: 'should parse js maximum epoch',
       mockValue: 8639999996400000,
-      expected: maxDateYearAndMMdd,
+      expected: maxDateYearAndMmdd,
     },
     {
       description: 'should not parse a number bigger than maximum date',
       mockValue: 8640000000000001,
-      expected: invalidYearAndMMdd,
+      expected: invalidYearAndMmdd,
     },
     {
       description: 'should not parse a number bigger than maximum epoch stored as a string',
       mockValue: '8640000000000001',
-      expected: invalidYearAndMMdd,
+      expected: invalidYearAndMmdd,
     },
     {
       description: 'should parse 0 as current date',
       mockValue: 0,
-      expected: currentYearAndMMdd,
+      expected: currentYearAndMmdd,
     },
     {
       description: 'should not parse positive float stored as a string',
       mockValue: '170895577.7575',
-      expected: invalidYearAndMMdd,
+      expected: invalidYearAndMmdd,
     },
     {
       description: 'should not parse an epoch followed by non-numeric characters',
       mockValue: '1708955777575##',
-      expected: invalidYearAndMMdd,
+      expected: invalidYearAndMmdd,
     },
     {
       description: 'should parse empty string to current date',
       mockValue: '',
-      expected: currentYearAndMMdd,
+      expected: currentYearAndMmdd,
     },
     {
       description: 'should not parse only letters',
       mockValue: 'test',
-      expected: invalidYearAndMMdd,
+      expected: invalidYearAndMmdd,
     },
   ];
 

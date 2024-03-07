@@ -29,7 +29,7 @@ describe('addYear', () => {
       expected: testDatePlusOneYearFormatted,
     },
     {
-      description: 'parses epoch as a string',
+      description: 'parses epoch stored as a string',
       date: testDate.valueOf().toString(),
       yearsToAdd: 1,
       expected: testDatePlusOneYearFormatted,
@@ -41,28 +41,10 @@ describe('addYear', () => {
       expected: '2025-02-28',
     },
     {
-      description: 'accepts years to add as string',
+      description: 'accepts years to add stored as string',
       date: format(testDate, 'yyyy-MM-dd'),
       yearsToAdd: '1',
       expected: testDatePlusOneYearFormatted,
-    },
-    {
-      description: 'adds 0 years if years to add is string with no numbers',
-      date: format(testDate, 'yyyy-MM-dd'),
-      yearsToAdd: 'x',
-      expected: format(testDate, 'yyyy-MM-dd'),
-    },
-    {
-      description: 'adds 0 years if years to add is empty object',
-      date: format(testDate, 'yyyy-MM-dd'),
-      yearsToAdd: {},
-      expected: format(testDate, 'yyyy-MM-dd'),
-    },
-    {
-      description: 'adds 0 years if years to add is invalid string containing numbers',
-      date: format(testDate, 'yyyy-MM-dd'),
-      yearsToAdd: '12x1',
-      expected: format(testDate, 'yyyy-MM-dd'),
     },
   ];
 

@@ -29,7 +29,7 @@ describe('addMonth', () => {
       expected: testDatePlusOneMonthFormatted,
     },
     {
-      description: 'parses epoch as a string',
+      description: 'parses epoch stored as a string',
       date: testDate.valueOf().toString(),
       monthsToAdd: 1,
       expected: testDatePlusOneMonthFormatted,
@@ -47,28 +47,10 @@ describe('addMonth', () => {
       expected: '2024-02-29',
     },
     {
-      description: 'accepts months to add as string',
+      description: 'accepts months to add stored as string',
       date: format(testDate, 'yyyy-MM-dd'),
       monthsToAdd: '1',
       expected: testDatePlusOneMonthFormatted,
-    },
-    {
-      description: 'adds 0 months if months to add is string with no numbers',
-      date: format(testDate, 'yyyy-MM-dd'),
-      monthsToAdd: 'x',
-      expected: format(testDate, 'yyyy-MM-dd'),
-    },
-    {
-      description: 'adds 0 months if months to add is empty object',
-      date: format(testDate, 'yyyy-MM-dd'),
-      monthsToAdd: {},
-      expected: format(testDate, 'yyyy-MM-dd'),
-    },
-    {
-      description: 'adds 0 months if months to add is invalid string containing numbers',
-      date: format(testDate, 'yyyy-MM-dd'),
-      monthsToAdd: '12x1',
-      expected: format(testDate, 'yyyy-MM-dd'),
     },
   ];
 

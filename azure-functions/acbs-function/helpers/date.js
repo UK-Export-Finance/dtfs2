@@ -41,15 +41,7 @@ const now = () => format(new Date(), 'yyyy-MM-dd');
  * @param {string | number} dateStr
  * @returns {Date}
  *
- * Accepted date strings:
- *  - MM/dd/yyyy
- *  - MM dd yyyy
- *  - MM-dd-yy
- *  - MM/dd/yy
- *  - MM dd yy
- *  - yyyy-MM-dd
- *  - yyyy/MM/dd
- *  - yyyy MM dd
+ * @see {@link validDateFormats}
  */
 const getDateFromStringOrNumber = (dateStr) => {
   const dateFromString = validDateFormats
@@ -71,6 +63,8 @@ const getDateFromStringOrNumber = (dateStr) => {
 /**
  * @param {Date} date
  * @returns {string} date formatted as `yyyy-MM-dd` if valid or `Invalid date` otherwise
+ *
+ * @see {@link validDateFormats}
  */
 const formatOrReturnInvalidDate = (date) => (isValid(date) ? format(date, 'yyyy-MM-dd') : 'Invalid date');
 
@@ -82,15 +76,8 @@ const formatYear = (year) => (year < 1000 ? (2000 + parseInt(year, 10)).toString
 /**
  * @param {string | number} dateStr
  * @returns {string} date formatted as `yyyy-MM-dd`, returns `Invalid date` if can't parse input
- * Accepted date strings:
- *  - MM/dd/yyyy
- *  - MM dd yyyy
- *  - MM-dd-yy
- *  - MM/dd/yy
- *  - MM dd yy
- *  - yyyy-MM-dd
- *  - yyyy/MM/dd
- *  - yyyy MM dd
+ *
+ * @see {@link validDateFormats}
  */
 const formatDate = (dateStr) => formatOrReturnInvalidDate(
   getDateFromStringOrNumber(dateStr),
@@ -98,19 +85,11 @@ const formatDate = (dateStr) => formatOrReturnInvalidDate(
 
 /**
  * @param {string | number | Date} date as a date string, epoch time or Date object
- * @param {number} day number of months to add
+ * @param {number} months number of months to add
  * @returns in the format `yyyy-MM-dd`.
  * Rounds down the date if target month is too short (e.g. 2024-01-31 plus 1 month is 2024-02-29)
  *
- * Accepted date strings:
- *  - MM/dd/yyyy
- *  - MM dd yyyy
- *  - MM-dd-yy
- *  - MM/dd/yy
- *  - MM dd yy
- *  - yyyy-MM-dd
- *  - yyyy/MM/dd
- *  - yyyy MM dd
+ * @see {@link validDateFormats}
  */
 const addMonth = (date, months) => {
   const parsedDate = date instanceof Date ? date : getDateFromStringOrNumber(date);
@@ -119,19 +98,11 @@ const addMonth = (date, months) => {
 };
 /**
  * @param {string | number | Date} date as a date string, epoch time or Date object
- * @param {number} day number of months to add
+ * @param {number} years number of years to add
  * @returns in the format `yyyy-MM-dd`.
  * Rounds down the date if target month is too short (e.g. 2024-02-29 plus 1 year is 2025-02-28)
  *
- * Accepted date strings:
- *  - MM/dd/yyyy
- *  - MM dd yyyy
- *  - MM-dd-yy
- *  - MM/dd/yy
- *  - MM dd yy
- *  - yyyy-MM-dd
- *  - yyyy/MM/dd
- *  - yyyy MM dd
+ * @see {@link validDateFormats}
  */
 const addYear = (date, years) => {
   const parsedDate = date instanceof Date ? date : getDateFromStringOrNumber(date);
@@ -154,15 +125,7 @@ const getNowAsIsoString = () => formatISO(new Date()).replace('Z', '+00:00');
  * @returns {number} difference in months between dates, rounded up
  * The start date should be before the end date for this to have any meaning
  *
- * Accepted date strings:
- *  - MM/dd/yyyy
- *  - MM dd yyyy
- *  - MM-dd-yy
- *  - MM/dd/yy
- *  - MM dd yy
- *  - yyyy-MM-dd
- *  - yyyy/MM/dd
- *  - yyyy MM dd
+ * @see {@link validDateFormats}
  */
 const getInclusiveMonthDifference = (startDate, endDate) => {
   let date1;
@@ -220,6 +183,8 @@ const getDateStringFromYearMonthDay = (year, month, day) => {
 /**
  * @param {string | number | Date} date
  * @returns
+ *
+ * @see {@link validDateFormats}
  */
 const getYearAndMmdd = (date) => {
   let parsedDate;
