@@ -14,18 +14,14 @@ export const postAuditDetails: (changeStreamDocument: ChangeStreamDocument) => P
     throw new InvalidEnvironmentVariableError('AUDIT_API_URL, AUDIT_API_USERNAME or AUDIT_API_PASSWORD not set');
   }
   // TODO DTFS2-6967 enable delete functionality
-  if (
-    changeStreamDocument.operationType !== 'insert' &&
-    changeStreamDocument.operationType !== 'update' &&
-    changeStreamDocument.operationType !== 'replace'
-  ) {
+  if (changeStreamDocument.operationType !== 'insert' && changeStreamDocument.operationType !== 'update' && changeStreamDocument.operationType !== 'replace') {
     console.info('Change stream document is not suitable event for audit API, skipping');
     return;
   }
 
   // TODO DTFS2-6967 enable delete functionality
   // const fullDocument = changeStreamDocument.operationType !== 'delete' ? changeStreamDocument.fullDocument : null;
-  const {fullDocument} = changeStreamDocument;
+  const { fullDocument } = changeStreamDocument;
   console.info('Sending change stream update to API for document', changeStreamDocument);
 
   const authorizationHeader = Buffer.from(`${AUDIT_API_USERNAME}:${AUDIT_API_PASSWORD}`).toString('base64');
@@ -38,7 +34,7 @@ export const postAuditDetails: (changeStreamDocument: ChangeStreamDocument) => P
       integrationHubCollectionName: changeStreamDocument.ns.coll,
       integrationHubProcess: 'dtfs',
       Accept: 'application/json',
-      'Content-Type': 'text/plain'
+      'Content-Type': 'text/plain',
     },
     data: fullDocument,
   });
