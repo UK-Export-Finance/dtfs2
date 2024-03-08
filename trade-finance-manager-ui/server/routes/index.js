@@ -7,7 +7,6 @@ const dealsRoutes = require('./deals');
 const facilitiesRoutes = require('./facilities');
 const feedbackRoutes = require('./feedback');
 const thankYouFeedbackRoutes = require('./feedback-thank-you');
-// const userRoutes = require('./user');
 const utilisationReportsRoutes = require('./utilisation-reports');
 const footerRoutes = require('./footer');
 
@@ -23,7 +22,6 @@ router.use('/deals', validateUser, validateToken, dealsRoutes);
 router.use('/facilities', validateUser, validateToken, facilitiesRoutes);
 router.use('/feedback', feedbackRoutes);
 router.use('/thank-you-feedback', thankYouFeedbackRoutes);
-// router.use('/user', userRoutes);
 router.use('/utilisation-reports', validateUser, validateToken, utilisationReportsRoutes);
 router.use('/', footerRoutes);
 
