@@ -4,9 +4,14 @@ on:
     branches:
       - chore/setup-push-alerts
 
+env:
+  environment: dev
+
 jobs:
   notify-teams:
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
 
     steps:
       - name: Extract Commit Information
@@ -15,8 +20,6 @@ jobs:
           echo "::set-output name=message::$(git log --format='%s' -n 1 ${{ github.sha }}) - ${{ github.sha }} by ${{ github.actor }}"
 
       - name: Notify dedicated teams channel
-        environment:
-          name: dev
         uses: jdcargile/ms-teams-notification@v1.4
         with:
           github-token: ${{ github.token }} # this will use the runner's token.
