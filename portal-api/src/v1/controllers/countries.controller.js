@@ -42,7 +42,7 @@ const getCountry = async (code) => {
     const response = await externalApi.countries.getCountry(code);
 
     if (!response) {
-      throw new Error('Void response');
+      throw new Error('Invalid response');
     }
 
     return response;
@@ -67,7 +67,7 @@ const findOne = async (req, res) => {
     const response = await getCountry(req.params.code);
 
     if (!response) {
-      throw new Error('Void response');
+      throw new Error('Invalid response');
     }
 
     const { status, data } = response;

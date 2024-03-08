@@ -12,5 +12,9 @@ export const ENTITY_TYPE = {
 
 export const UKEF_ID = {
   PENDING: 'PENDING',
-  TEST: '100000',
+  TEST: '0010000000',
+};
+
+export const USER = {
+  DTFS: 'Portal v2/TFM',
 };

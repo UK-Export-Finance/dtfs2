@@ -17,7 +17,7 @@ const getCompany = async (req, res) => {
     const company = await api.getCompanyInfo(urn);
 
     if (!company) {
-      console.error('Void company response received');
+      console.error('Invalid company response received');
       return res.status(404).send(false);
     }
 

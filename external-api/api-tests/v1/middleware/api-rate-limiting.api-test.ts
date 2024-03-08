@@ -1,73 +1,70 @@
+import * as dotenv from 'dotenv';
+import axios from 'axios';
 import { generateApp } from '../../../src/generateApp';
 import { api } from '../../api';
+import { ENTITY_TYPE, UKEF_ID, USER } from '../../../src/constants';
 
-const mockResponse = {
-  status: 202,
-  data: {
-    id: '7b7475ca5c984a808cb56abdc9b75a61',
-    statusQueryGetUri:
-      'http://localhost:7072/runtime/webhooks/durabletask/instances/7b7475ca5c984a808cb56abdc9b75a61?taskHub=numbergenerator&connection=Storage&code=Xm80X2xSRGxNKd9YtLYDBkynz49/knUL5lI/7KauDj0/duawyQb06A==',
-    sendEventPostUri:
-      'http://localhost:7072/runtime/webhooks/durabletask/instances/7b7475ca5c984a808cb56abdc9b75a61/raiseEvent/{eventName}?taskHub=numbergenerator&connection=Storage&code=Xm80X2xSRGxNKd9YtLYDBkynz49/knUL5lI/7KauDj0/duawyQb06A==',
-    terminatePostUri:
-      'http://localhost:7072/runtime/webhooks/durabletask/instances/7b7475ca5c984a808cb56abdc9b75a61/terminate?reason={text}&taskHub=numbergenerator&connection=Storage&code=Xm80X2xSRGxNKd9YtLYDBkynz49/knUL5lI/7KauDj0/duawyQb06A==',
-    rewindPostUri:
-      'http://localhost:7072/runtime/webhooks/durabletask/instances/7b7475ca5c984a808cb56abdc9b75a61/rewind?reason={text}&taskHub=numbergenerator&connection=Storage&code=Xm80X2xSRGxNKd9YtLYDBkynz49/knUL5lI/7KauDj0/duawyQb06A==',
-    purgeHistoryDeleteUri:
-      'http://localhost:7072/runtime/webhooks/durabletask/instances/7b7475ca5c984a808cb56abdc9b75a61?taskHub=numbergenerator&connection=Storage&code=Xm80X2xSRGxNKd9YtLYDBkynz49/knUL5lI/7KauDj0/duawyQb06A==',
-  },
+dotenv.config();
+
+const { RATE_LIMIT_THRESHOLD } = process.env;
+
+const rateLimit = 2;
+
+const body = {
+  entityType: ENTITY_TYPE.DEAL,
+  dealId: '1234',
+};
+const mockSuccessfulResponse = {
+  status: 200,
+  data: [
+    {
+      id: 12345678,
+      maskedId: UKEF_ID.TEST,
+      type: 1,
+      createdBy: USER.DTFS,
+      createdDatetime: '2024-01-01T00:00:00.000Z',
+      requestingSystem: USER.DTFS,
+    },
+  ],
 };
 
-jest.mock('../../../src/v1/controllers/durable-functions-log.controller');
-
-jest.mock('axios', () =>
-  jest.fn(() => {
-    return Promise.resolve(mockResponse);
-  }),
-);
+axios.post = jest.fn().mockResolvedValue(mockSuccessfulResponse);
 
 describe('api rate limiting', () => {
-  const rateLimit = 2;
-
-  const requestBody = {
-    dealId: 111,
-    dealType: 'dealType',
-    entityId: 222,
-    entityType: 'deal',
-    user: { id: 'userId' },
-  };
-
   let originalRateLimitThreshold: string | undefined;
-  let app;
-  let post: any;
   let sendRequestTimes: any;
 
   beforeEach(() => {
-    originalRateLimitThreshold = process.env.RATE_LIMIT_THRESHOLD;
+    // Initialise environment variable
+    originalRateLimitThreshold = RATE_LIMIT_THRESHOLD;
     process.env.RATE_LIMIT_THRESHOLD = rateLimit.toString();
-    app = generateApp();
-    ({ post } = api(app));
+
+    // Initialise external-api
+    const app = generateApp();
+    const { post } = api(app);
+
     sendRequestTimes = (numberOfRequestsToSend: number) =>
-      Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => post(requestBody).to('/number-generator')));
+      Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => post(body).to('/number-generator')));
   });
 
-  afterEach(() => {
+  afterAll(() => {
+    // Set to pre-test value
     process.env.RATE_LIMIT_THRESHOLD = originalRateLimitThreshold;
   });
 
   it('returns a 429 response if more than RATE_LIMIT_THRESHOLD requests are made from the same IP to the same endpoint in 1 minute', async () => {
     await sendRequestTimes(rateLimit);
 
-    const responseAfterRateLimitExceeded = (await sendRequestTimes(1))[0].value;
+    const responseAfterRateLimitExceeded = await sendRequestTimes(1);
 
-    expect(responseAfterRateLimitExceeded.status).toBe(429);
+    expect(responseAfterRateLimitExceeded[0].value.status).toBe(429);
   });
 
   it('returns a 200 response if exactly RATE_LIMIT_THRESHOLD requests are made from the same IP to the same endpoint in 1 minute', async () => {
     await sendRequestTimes(rateLimit - 1);
 
-    const responseThatMeetsRateLimit = (await sendRequestTimes(1))[0].value;
+    const responseThatMeetsRateLimit = await sendRequestTimes(1);
 
-    expect(responseThatMeetsRateLimit.status).toBe(200);
+    expect(responseThatMeetsRateLimit[0].value.status).toBe(200);
   });
 });
