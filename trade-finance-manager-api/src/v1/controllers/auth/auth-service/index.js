@@ -37,7 +37,7 @@ const processSsoRedirect = async ({ pkceCodes, authCodeRequest, code, state }) =
   } catch (error) {
     console.error('TFM auth service - Error processing SSO redirect: %s', error);
 
-    throw new Error('TFM auth service - Error processing SSO redirect: %s', error);
+    return error;
   }
 };
 

@@ -10,6 +10,10 @@ describe('auth controller', () => {
     send: jest.fn().mockReturnThis(),
   };
 
+  const mockError = {
+    message: 'mock error message'
+  };
+
   describe('getLoginUrl()', () => {
     const mockLoginUrl = 'mock-login-url';
 
@@ -27,6 +31,18 @@ describe('auth controller', () => {
       expect(res.status).toHaveBeenCalledWith(200);
 
       expect(res.send).toHaveBeenCalledWith(mockLoginUrl);
+    });
+
+    describe('when there is an error', () => {
+      it('should call res.status=500 with an error message', async () => {
+        authProvider.getLoginUrl = jest.fn().mockRejectedValue(mockError);
+
+        await getLoginUrl(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+
+        expect(res.send).toHaveBeenCalledWith({ data: mockError.message });
+      });
     });
   });
 
@@ -55,6 +71,18 @@ describe('auth controller', () => {
       expect(res.status).toHaveBeenCalledWith(200);
 
       expect(res.send).toHaveBeenCalledWith(mockProcessSsoRedirectResponse);
+    });
+
+    describe('when there is an error', () => {
+      it('should call res.status=500 with an error message', async () => {
+        authService.processSsoRedirect = jest.fn().mockRejectedValue(mockError);
+
+        await processSsoRedirect(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+
+        expect(res.send).toHaveBeenCalledWith({ data: mockError.message });
+      });
     });
   });
 });
