@@ -23,7 +23,7 @@ exports.processSsoRedirect = async (req, res) => {
   } catch (err) {
     console.error('Error processing sso login: %O', err);
 
-    throw new Error('Error processing sso login: %O', err);
+    return res.status(500).send({ data: err.message });
   }
 };
 
