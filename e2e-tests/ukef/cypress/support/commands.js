@@ -49,7 +49,7 @@ Cypress.Commands.add('submitDeal', require('./trade-finance-manager-api/submitDe
 Cypress.Commands.add('submitManyDeals', require('./trade-finance-manager-api/submitManyDeals'));
 
 // shared commands for TFM
-Cypress.Commands.add('login', require('../../../support/trade-finance-manager/login'));
+Cypress.Commands.add('tfmLogin', require('../../../support/trade-finance-manager/login'));
 Cypress.Commands.add('getTfmUserByUsername', require('../../../support/trade-finance-manager/getTfmUserByUsername'));
 Cypress.Commands.add('overrideTfmUserSessionId', require('../../../support/trade-finance-manager/overrideTfmUserSessionId'));
 Cypress.Commands.add('overrideRedisUserSession', require('../../../support/trade-finance-manager/overrideRedisUserSession'));
