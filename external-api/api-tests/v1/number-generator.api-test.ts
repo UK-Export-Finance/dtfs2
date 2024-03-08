@@ -1,103 +1,128 @@
-import axios from 'axios';
-import { app } from '../../src/createApp';
-import { api } from '../api';
-import { addDurableFunctionLog } from '../../src/v1/controllers/durable-functions-log.controller';
+import axios, { HttpStatusCode } from 'axios';
+import { createRequest, createResponse } from 'node-mocks-http';
+import { getNumber } from '../../src/v1/controllers/number-generator.controller';
+import { InvalidEntityTypeError } from '../../src/v1/errors';
+import { ENTITY_TYPE, UKEF_ID, USER } from '../../src/constants';
 
-const { post } = api(app);
-
-const mockId = '0030007215';
-
-const mockResponses = {
-  numberGeneratorFunction: {
-    status: 202,
-    data: {
-      id: '7b7475ca5c984a808cb56abdc9b75a61',
-      statusQueryGetUri:
-        'http://localhost:7072/runtime/webhooks/durabletask/instances/7b7475ca5c984a808cb56abdc9b75a61?taskHub=numbergenerator&connection=Storage&code=Xm80X2xSRGxNKd9YtLYDBkynz49/knUL5lI/7KauDj0/duawyQb06A==',
-      sendEventPostUri:
-        'http://localhost:7072/runtime/webhooks/durabletask/instances/7b7475ca5c984a808cb56abdc9b75a61/raiseEvent/{eventName}?taskHub=numbergenerator&connection=Storage&code=Xm80X2xSRGxNKd9YtLYDBkynz49/knUL5lI/7KauDj0/duawyQb06A==',
-      terminatePostUri:
-        'http://localhost:7072/runtime/webhooks/durabletask/instances/7b7475ca5c984a808cb56abdc9b75a61/terminate?reason={text}&taskHub=numbergenerator&connection=Storage&code=Xm80X2xSRGxNKd9YtLYDBkynz49/knUL5lI/7KauDj0/duawyQb06A==',
-      rewindPostUri:
-        'http://localhost:7072/runtime/webhooks/durabletask/instances/7b7475ca5c984a808cb56abdc9b75a61/rewind?reason={text}&taskHub=numbergenerator&connection=Storage&code=Xm80X2xSRGxNKd9YtLYDBkynz49/knUL5lI/7KauDj0/duawyQb06A==',
-      purgeHistoryDeleteUri:
-        'http://localhost:7072/runtime/webhooks/durabletask/instances/7b7475ca5c984a808cb56abdc9b75a61?taskHub=numbergenerator&connection=Storage&code=Xm80X2xSRGxNKd9YtLYDBkynz49/knUL5lI/7KauDj0/duawyQb06A==',
-    },
-  },
-  numberGenerator: {
-    status: 201,
-    data: {
-      id: 20018971,
-      maskedId: mockId,
-      numberTypeId: 1,
-      createdBy: 'Portal v2/TFM',
-      createdDatetime: '2020-12-16T15:12:28.13Z',
-      requestingSystem: 'Portal v2/TFM',
-    },
-  },
-  acbs: {
-    status: 404,
-    data: {
-      id: mockId,
-    },
-  },
+const body = {
+  entityType: ENTITY_TYPE.DEAL,
+  dealId: '1234',
 };
 
-jest.mock('../../src/v1/controllers/durable-functions-log.controller');
-
-jest.mock('axios', () =>
-  jest.fn((args: any) => {
-    const { method, url } = args;
-
-    if (method === 'post') {
-      if (url.startsWith(process.env.AZURE_NUMBER_GENERATOR_FUNCTION_URL)) {
-        return Promise.resolve(mockResponses.numberGeneratorFunction);
-      }
-    }
-
-    if (method === 'get') {
-      if (url === `${process.env.APIM_TFS_URL}/${mockId}`) {
-        return Promise.resolve(mockResponses.acbs);
-      }
-    }
-
-    if (method === 'get') {
-      if (url === `${process.env.APIM_TFS_URL}/${mockId}`) {
-        return Promise.resolve(mockResponses.acbs);
-      }
-    }
-  }),
-);
-
-const mockNumGenParams = {
-  dealId: 111,
-  dealType: 'dealType',
-  entityId: 222,
-  entityType: 'deal',
-  user: { id: 'userId' },
+const mockSuccessfulResponse = {
+  status: 200,
+  data: [
+    {
+      id: 12345678,
+      maskedId: UKEF_ID.TEST,
+      type: 1,
+      createdBy: USER.DTFS,
+      createdDatetime: '2024-01-01T00:00:00.000Z',
+      requestingSystem: USER.DTFS,
+    },
+  ],
 };
 
-describe('/number-generator', () => {
-  describe('Trigger Number Generator Function', () => {
-    it('should return status error and log error if unsuccessful', async () => {
-      const apiError = {
-        toJSON: () => ({
-          msg: 'mockApi Error',
-        }),
-      };
-      (axios as unknown as jest.Mock).mockImplementation(() => Promise.resolve({ status: 404, error: apiError }));
-      const { status } = await post(mockNumGenParams).to('/number-generator');
-      expect(status).toEqual(404);
+/**
+ * This code snippet demonstrates the usage of the `get` function from the `number-generator.controller` module.
+ * The `get` function is responsible for retrieving a number from the number generator API based on the provided entityType and dealId.
+ * It makes use of the `axios` library to send a POST request to the API and handles the response accordingly.
+ * The function also handles various error scenarios, such as when the entityType is invalid or when the number generator response is void.
+ * The code snippet includes test cases that validate the behavior of the `get` function in different scenarios.
+ */
+describe('getNumber', () => {
+  it('should retrieve a number from the number generator API when valid entityType and dealId are provided', async () => {
+    const request = createRequest({ body });
+    const response = createResponse();
+    const result = await getNumber(request, response);
 
-      const logCallParams = {
-        data: {
-          ...mockNumGenParams,
-          error: apiError.toJSON(),
+    expect(result).not.toBeNull();
+    expect(result.statusCode).toEqual(200);
+  });
+
+  it('should generate a number for a deal with valid entityType and dealId', async () => {
+    // Mock request and response objects
+    const request: any = {
+      body,
+    };
+    const response: any = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    };
+
+    // Mock axios.post method
+    axios.post = jest.fn().mockResolvedValue(mockSuccessfulResponse);
+
+    // Call the get function
+    await getNumber(request, response);
+
+    // Assertions
+    expect(response.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+    expect(response.send).toHaveBeenCalledWith({
+      status: 200,
+      data: [
+        {
+          id: 12345678,
+          maskedId: UKEF_ID.TEST,
+          type: 1,
+          createdBy: USER.DTFS,
+          createdDatetime: '2024-01-01T00:00:00.000Z',
+          requestingSystem: USER.DTFS,
         },
-        type: 'NUMBER_GENERATOR',
-      };
+      ],
+    });
+  });
 
-      expect(addDurableFunctionLog).toHaveBeenCalledWith(logCallParams);
+  it('should throw an error when entityType is not valid', async () => {
+    // Mock request and response objects
+    const request: any = {
+      body: {
+        entityType: 'invalid',
+        dealId: '12345',
+      },
+    };
+    const response: any = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    };
+
+    // Call the get function
+    await getNumber(request, response);
+
+    // Assertions
+    expect(response.status).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
+    expect(response.send).toHaveBeenCalledWith({
+      status: HttpStatusCode.BadRequest,
+      error: new InvalidEntityTypeError('invalid'),
+    });
+  });
+
+  it('should throw an error when number generator response is void', async () => {
+    // Mock request and response objects
+    const request: any = {
+      body,
+    };
+    const response: any = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    };
+
+    // Mock axios.post method
+    axios.post = jest.fn().mockResolvedValue({
+      status: 200,
+      data: null,
+    });
+
+    // Call the get function
+    await getNumber(request, response);
+
+    // Assertions
+    expect(response.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
+    expect(response.send).toHaveBeenCalledWith({
+      status: HttpStatusCode.InternalServerError,
+      error: {
+        cause: 'Invalid number generator response received for deal 1234',
+      },
     });
   });
 });

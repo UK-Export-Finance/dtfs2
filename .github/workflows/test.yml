@@ -6,7 +6,7 @@
 # Runs tests for API endpoints in parallel:
 # portal-api, gef-ui, trade-finance-manager-ui, portal, dtfs-central-api, external-api
 # DOF-specific API tests:
-# acbs-function and number-generator-function
+# acbs-function
 # Generates code coverage reports for API tests.
 #
 # 3. Unit Tests:
@@ -76,7 +76,6 @@ on:
       - "trade-finance-manager-api/**"
       - "external-api/**"
       - "azure-functions/acbs-function/**"
-      - "azure-functions/number-generator-function/**"
 
 env:
   environment: dev
@@ -244,7 +243,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        functions: ["acbs-function", "number-generator-function"]
+        functions: ["acbs-function"]
 
     concurrency:
       group: dof-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
@@ -394,7 +393,6 @@ jobs:
         run: |
           sleep 60s
           npm run load
-          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -444,7 +442,6 @@ jobs:
         run: |
           sleep 60s
           npm run load
-          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -502,7 +499,6 @@ jobs:
         run: |
           sleep 60s
           npm run load
-          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -569,7 +565,6 @@ jobs:
         run: |
           sleep 60s
           npm run load
-          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
       - name: Execute
         working-directory: ./e2e-tests

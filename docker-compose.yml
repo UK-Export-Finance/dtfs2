@@ -131,7 +131,6 @@ services:
       - EXTERNAL_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI
-      - AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
       - AZURE_PORTAL_STORAGE_ACCOUNT
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
       - AZURE_UTILISATION_REPORTS_FILESHARE_NAME
@@ -141,7 +140,6 @@ services:
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - EXTERNAL_API_URL=http://external-api:5002
-      - AZURE_NUMBER_GENERATOR_FUNCTION_URL=http://number-generator-function
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
       - TZ=Europe/London
@@ -300,7 +298,6 @@ services:
       - APIM_ESTORE_KEY
       - APIM_ESTORE_VALUE
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
-      - AZURE_NUMBER_GENERATOR_FUNCTION_URL=http://number-generator-function
       - GOV_NOTIFY_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI
@@ -346,30 +343,6 @@ services:
       - NODE_ENV=${NODE_ENV}
       - EXTERNAL_API_URL=http://external-api:5002
       - RATE_LIMIT_THRESHOLD
-
-  number-generator-function:
-    build: ./azure-functions/number-generator-function
-    image: dtfs/azure-function-number-generator
-    restart: always
-    ports:
-      - '7072:80'
-    deploy:
-      resources:
-        limits:
-          cpus: '0.1'
-          memory: 300M
-    environment:
-      - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
-      - FUNCTIONS_WORKER_RUNTIME=node
-      - WEBSITE_HOSTNAME=localhost:7072
-      - APIM_TFS_URL
-      - APIM_TFS_KEY
-      - APIM_TFS_VALUE
-      - APIM_MDM_URL
-      - APIM_MDM_KEY
-      - APIM_MDM_VALUE
-      - TZ=Europe/London
-      - NODE_ENV=${NODE_ENV}
 
   redis:
     image: 'redis:alpine'

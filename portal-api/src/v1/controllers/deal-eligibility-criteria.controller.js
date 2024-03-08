@@ -14,7 +14,7 @@ const { getCountry } = require('./countries.controller');
  */
 const countryObject = async (countryCode) => {
   if (!countryCode) {
-    console.error('Void country code specified %s', countryCode);
+    console.error('Invalid country code specified %s', countryCode);
     return {};
   }
 
