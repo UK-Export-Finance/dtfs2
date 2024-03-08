@@ -1,4 +1,3 @@
-const moment = require('moment');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const api = require('../api');
@@ -6,6 +5,7 @@ const db = require('../../drivers/db-client');
 const tfmController = require('./tfm.controller');
 const CONSTANTS = require('../../constants');
 const { formatCoverEndDate } = require('../helpers/amendment.helpers');
+const { getIsoStringWithOffset } = require("../../utils/date");
 
 const addToACBSLog = async ({
   deal = {}, facility = {}, bank = {}, acbsTaskLinks,
@@ -22,7 +22,7 @@ const addToACBSLog = async ({
       status: 'Running',
       instanceId: acbsTaskLinks.id,
       acbsTaskLinks,
-      submittedDate: moment().format(),
+      submittedDate: getIsoStringWithOffset(new Date()),
     });
   }
 

@@ -80,7 +80,6 @@ describe('mapDates', () => {
     const result = mapDates(mockFacility, mockFacility.facilitySnapshot, mockFacilityTfm, mockDealDetails);
 
     const expected = mapTenorDate(
-      mockFacility.facilitySnapshot.facilityStage,
       mockFacility.facilitySnapshot.ukefGuaranteeInMonths,
       mockFacilityTfm.exposurePeriodInMonths,
     );
@@ -107,7 +106,6 @@ describe('mapDates', () => {
     );
 
     const expectedTenor = mapTenorDate(
-      mockFacility.facilitySnapshot.facilityStage,
       mockFacility.facilitySnapshot.ukefGuaranteeInMonths,
       mockFacilityTfm.exposurePeriodInMonths,
     );
@@ -134,7 +132,6 @@ describe('mapDates', () => {
     const expectedCoverEndDate = format(fromUnixTime(coverEndDateUnix), 'd MMMM yyyy');
 
     const expectedTenor = mapTenorDate(
-      mockFacility.facilitySnapshot.facilityStage,
       mockFacility.facilitySnapshot.ukefGuaranteeInMonths,
       amendmentTenorPeriod,
     );
