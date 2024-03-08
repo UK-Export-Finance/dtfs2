@@ -229,7 +229,7 @@ const tfmDealSubmit = async (dealId, dealType, checker) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to submit tfm deal %o', error);
+    console.error('Unable to submit deal %s to TFM %o', dealId, error);
     return false;
   }
 };

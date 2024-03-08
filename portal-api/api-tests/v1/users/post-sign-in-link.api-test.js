@@ -24,8 +24,8 @@ const { SIGN_IN_TOKEN_HEX_EXAMPLES, SIGN_IN_TOKEN_SALT_EXAMPLES } = require('../
 
 const originalSignInLinkDurationMinutes = SIGN_IN_LINK.DURATION_MINUTES;
 
-const aMaker = users.find((user) => user.username === 'MAKER');
-const anotherMaker = users.find((user) => user.username === 'MAKER-2');
+const aMaker = users.barclaysBankMaker1;
+const anotherMaker = users.barclaysBankMaker2;
 
 describe('POST /users/me/sign-in-link', () => {
   const url = '/v1/users/me/sign-in-link';
@@ -39,8 +39,8 @@ describe('POST /users/me/sign-in-link', () => {
 
   const saltBytes = Buffer.from(saltHexOne, 'hex');
   const signInToken = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
-  const username = 'TEMPORARY_USER';
-  const userToCreateAsPartiallyLoggedIn = { ...aMaker, username };
+  const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
+  const userToCreateAsPartiallyLoggedIn = { ...aMaker, username: temporaryUsernameAndEmail, email: temporaryUsernameAndEmail };
   const userToCreateFullyLoggedIn = { ...anotherMaker };
 
   let userToCreateOtherUsers;
@@ -82,8 +82,11 @@ describe('POST /users/me/sign-in-link', () => {
 
   beforeEach(async () => {
     userToken = partiallyLoggedInUserToken;
-    await databaseHelper.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate', 'signInTokens', 'disabled'] });
-    await databaseHelper.setUserProperties({ username, update: { 'user-status': USER.STATUS.ACTIVE } });
+    await databaseHelper.unsetUserProperties({
+      username: temporaryUsernameAndEmail,
+      properties: ['signInLinkSendCount', 'signInLinkSendDate', 'signInTokens', 'disabled'],
+    });
+    await databaseHelper.setUserProperties({ username: temporaryUsernameAndEmail, update: { 'user-status': USER.STATUS.ACTIVE } });
 
     jest.resetAllMocks();
     resetAllWhenMocks();
@@ -105,7 +108,7 @@ describe('POST /users/me/sign-in-link', () => {
     const initialSignInLinkSendCount = 4;
     beforeEach(async () => {
       databaseHelper.setUserProperties({
-        username,
+        username: temporaryUsernameAndEmail,
         update: { 'user-status': USER.STATUS.BLOCKED, signInLinkSendCount: initialSignInLinkSendCount, signInLinkSendDate: dateNow },
       });
     });
@@ -140,7 +143,7 @@ describe('POST /users/me/sign-in-link', () => {
 
     beforeEach(async () => {
       databaseHelper.setUserProperties({
-        username,
+        username: temporaryUsernameAndEmail,
         update: { disabled: true, signInLinkSendCount: initialSignInLinkSendCount, signInLinkSendDate: dateNow },
       });
     });
@@ -179,7 +182,7 @@ describe('POST /users/me/sign-in-link', () => {
         { hashHex: hashHexOne, saltHex: saltHexOne, expiry: dateNow },
       ];
       databaseHelper.setUserProperties({
-        username,
+        username: temporaryUsernameAndEmail,
         update: {
           signInLinkSendCount: 3,
           signInLinkSendDate: dateNow,
@@ -340,7 +343,10 @@ describe('POST /users/me/sign-in-link', () => {
 
             describe('when the user has not been sent a sign in link before', () => {
               beforeEach(async () => {
-                await databaseHelper.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate', 'signInTokens'] });
+                await databaseHelper.unsetUserProperties({
+                  username: temporaryUsernameAndEmail,
+                  properties: ['signInLinkSendCount', 'signInLinkSendDate', 'signInTokens'],
+                });
               });
 
               it('updates the signInLinkSendDate', async () => {
@@ -379,7 +385,7 @@ describe('POST /users/me/sign-in-link', () => {
                   ];
 
                   await databaseHelper.setUserProperties({
-                    username,
+                    username: temporaryUsernameAndEmail,
                     update: {
                       signInLinkSendCount: initialSignInLinkSendCount,
                       signInLinkSendDate: dateTwelveHoursAgo,
@@ -416,7 +422,7 @@ describe('POST /users/me/sign-in-link', () => {
               describe('when a link has not been sent in the last 12hrs', () => {
                 beforeEach(async () => {
                   await databaseHelper.setUserProperties({
-                    username,
+                    username: temporaryUsernameAndEmail,
                     update: {
                       signInLinkSendCount: 2,
                       signInLinkSendDate: dateOverTwelveHoursAgo,

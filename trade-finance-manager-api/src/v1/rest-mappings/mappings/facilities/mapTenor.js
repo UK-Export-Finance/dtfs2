@@ -3,8 +3,6 @@ const { findLatestCompletedAmendment } = require('../../helpers/amendment.helper
 
 // maps tenor from new amendment coverEndDate or from original facility
 const mapTenor = (facilitySnapshot, facilityTfm, facility) => {
-  // Facility stage
-  const { hasBeenIssued } = facilitySnapshot;
   /**
    * `monthsOfCover`: GEF
    * `ukefGuaranteeInMonths`: BSS/EWCS
@@ -25,7 +23,7 @@ const mapTenor = (facilitySnapshot, facilityTfm, facility) => {
     }
   }
 
-  return mapTenorDate(hasBeenIssued, months, exposurePeriod);
+  return mapTenorDate(months, exposurePeriod);
 };
 
 module.exports = mapTenor;

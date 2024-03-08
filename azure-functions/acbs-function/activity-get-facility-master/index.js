@@ -42,7 +42,7 @@ const getFacilityMaster = async (context) => {
       };
     }
 
-    throw new Error('Void argument set');
+    throw new Error('Invalid argument set');
   } catch (error) {
     console.error('Error getting facility master record: %o', error);
     throw new Error('Error getting facility master record %o', error);

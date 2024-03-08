@@ -8,7 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
-const moment = require('moment');
+const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
@@ -33,7 +33,7 @@ const createDeal = async (context) => {
       return Promise.resolve({ missingMandatory });
     }
 
-    const submittedToACBS = moment().format();
+    const submittedToACBS = getNowAsIsoString();
 
     const { status, data } = await api.createDeal(deal);
 
@@ -45,7 +45,7 @@ const createDeal = async (context) => {
             status,
             dealIdentifier: deal.dealIdentifier,
             submittedToACBS,
-            receivedFromACBS: moment().format(),
+            receivedFromACBS: getNowAsIsoString(),
             dataReceived: data,
             dataSent: deal,
           },
@@ -59,7 +59,7 @@ const createDeal = async (context) => {
       status,
       dataSent: deal,
       submittedToACBS,
-      receivedFromACBS: moment().format(),
+      receivedFromACBS: getNowAsIsoString(),
       ...data,
     };
   } catch (error) {

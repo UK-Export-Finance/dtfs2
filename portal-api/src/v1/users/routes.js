@@ -5,7 +5,6 @@ const { create, update, remove, list, findOne, disable, findByEmail } = require(
 const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
-const { isValidEmail } = require('../../utils/string');
 const { LOGIN_STATUSES } = require('../../constants');
 const { SignInLinkController } = require('./sign-in-link.controller');
 const { SignInLinkService } = require('./sign-in-link.service');
@@ -15,6 +14,7 @@ const { Hasher } = require('../../crypto/hasher');
 const { UserRepository } = require('./repository');
 const { UserService } = require('./user.service');
 const { ADMIN } = require('../roles/roles');
+const { isValidEmail } = require('../../utils/string');
 
 const randomGenerator = new CryptographicallyStrongGenerator();
 
@@ -159,8 +159,10 @@ module.exports.findById = (req, res, next) => {
 module.exports.updateById = (req, res, next) => {
   try {
     const userIsAdmin = req.user?.roles?.includes(ADMIN);
-    const userIsChangingTheirOwnPassword = req.user?._id?.toString() === req.params._id
-      && !Object.keys(req.body).some((property) => !['password', 'passwordConfirm', 'currentPassword'].includes(property));
+    const userIsChangingTheirOwnPassword =
+      req.user?._id?.toString() === req.params._id &&
+      Object.keys(req.body).every((property) => ['password', 'passwordConfirm', 'currentPassword'].includes(property));
+      
     if (!userIsAdmin && !userIsChangingTheirOwnPassword) {
       return res.status(403).send();
     }
@@ -334,7 +336,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
     });
   }
 
-  // Void token - Token expired
+  // Invalid token - Token expired
   const user = await getUserByPasswordToken(resetPwdToken);
   // Stale token - Generated over 24 hours ago
   const hoursSincePasswordResetRequest = user.resetPwdTimestamp ? (Date.now() - user.resetPwdTimestamp) / 1000 / 60 / 60 : 9999;

@@ -33,7 +33,7 @@ module.exports = {
     getIndustrySectors,
     getIndustrySector,
   },
-  numberGenerator: MOCK_NUMBER_GENERATOR,
+  number: MOCK_NUMBER_GENERATOR,
   ordnanceSurvey,
   sendEmail,
 };

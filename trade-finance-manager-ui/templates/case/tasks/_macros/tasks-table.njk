@@ -55,13 +55,13 @@
                 <td
                   class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0 govuk-body-s ukef-tasks-table__cell-width-14-5"
                   data-cy="task-table-row-group-{{ task.groupId }}-task-{{ task.id }}-date-started">
-                  {{ task.dateStarted | localiseTimestamp('DD MMM YYYY', userTimezone) | dashIfEmpty }}
+                  {{ task.dateStarted | localiseTimestamp('dd MMM yyyy', userTimezone) | dashIfEmpty }}
                 </td>
 
                 <td
                   class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0 govuk-body-s ukef-tasks-table__cell-width-14-5"
                   data-cy="task-table-row-group-{{ task.groupId }}-task-{{ task.id }}-date-completed">
-                  {{ task.dateCompleted | localiseTimestamp('DD MMM YYYY', userTimezone) | dashIfEmpty }}
+                  {{ task.dateCompleted | localiseTimestamp('dd MMM yyyy', userTimezone) | dashIfEmpty }}
                 </td>
 
                 <td

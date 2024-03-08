@@ -1,4 +1,4 @@
-const { formatYear, formatDate, formatTimestamp, convertDateToTimestamp, isValidIsoMonth } = require('./date');
+const { formatYear, formatDate, formatTimestamp, convertDateToTimestamp, isValidIsoMonth, getIsoStringWithOffset } = require('./date');
 
 describe('utils - date', () => {
   describe('formatYear', () => {
@@ -19,7 +19,7 @@ describe('utils - date', () => {
 
   describe('formatDate', () => {
     it('should return a date in the correct format', () => {
-      const mockDate = '20210419';
+      const mockDate = new Date('2021-04-19');
       const result = formatDate(mockDate);
 
       const expected = '2021-04-19';
@@ -53,4 +53,22 @@ describe('utils - date', () => {
       expect(isValidIsoMonth('2023-11')).toBe(true);
     });
   });
+
+  describe('getIsoStringWithOffset', () => {
+    it('returns an ISO-8601 string with offset when timezone is GMT', () => {
+      const date = new Date('2024-03-02');
+
+      const result = getIsoStringWithOffset(date);
+
+      expect(result).toBe('2024-03-02T00:00:00+00:00')
+    });
+
+    it('returns an ISO-8601 string with offset when timezone is BST', () => {
+      const date = new Date('2024-07-02');
+
+      const result = getIsoStringWithOffset(date);
+
+      expect(result).toBe('2024-07-02T01:00:00+01:00')
+    });
+  })
 });

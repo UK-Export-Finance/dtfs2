@@ -1,13 +1,7 @@
-const now = require('../../../now');
-const externalApi = require('../../../external-api/api');
-const {
-  getAllFacilitiesByDealId,
-  update: updateFacility,
-} = require('./facilities.controller');
-const {
-  ukefSubmissionPortalActivity,
-  facilityChangePortalActivity,
-} = require('./portal-activities.controller');
+const { getNowAsEpochMillisecondString } = require('../../helpers/date');
+const { number } = require('../../../external-api/api');
+const { getAllFacilitiesByDealId, update: updateFacility } = require('./facilities.controller');
+const { ukefSubmissionPortalActivity, facilityChangePortalActivity } = require('./portal-activities.controller');
 
 const CONSTANTS = require('../../../constants');
 
@@ -19,49 +13,74 @@ const generateSubmissionData = async (existingApplication) => {
   result.count = existingApplication.submissionCount + 1;
 
   if (!existingApplication.submissionDate) {
-    result.date = now();
+    result.date = getNowAsEpochMillisecondString();
   }
 
   return result;
 };
 
-const generateId = async ({
-  entityId, entityType, dealId, user,
-}) => externalApi.numberGenerator.create({
-  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
-  entityId,
-  entityType,
-  dealId,
-  user,
-});
+/**
+ * Generates an ID based on the provided entityType and dealId.
+ * @param {string} options.entityType - The type of entity for which the ID is being generated.
+ * @param {string} options.dealId - The ID of the deal or facility.
+ * @returns {Promise<object>} Response from the number generator API.
+ */
+const generateId = async (entityType, dealId) => number.getNumber(entityType, dealId);
 
-const generateUkefDealId = async (application) => generateId({
-  entityId: application._id,
-  entityType: 'deal',
-  dealId: application._id,
-  user: application.checkerId,
-});
+/**
+ * Generates a unique identifier for a given entity (either a 'deal' or a 'facility') based on the provided application data.
+ * @param {string} entity - The type of entity for which the unique identifier needs to be generated ('deal' or 'facility').
+ * @param {object} application - The application data containing the necessary information to generate the identifier.
+ * @returns {Promise<Object>} - The generated unique identifier for the specified entity.
+ * @throws {Error} - If unable to generate the identifier.
+ */
+const generateUkefId = async (entity, application) => {
+  try {
+    let dealId;
 
-const generateUkefFacilityId = async (facility) => generateId({
-  entityId: facility._id,
-  entityType: 'facility',
-  dealId: facility.dealId,
-});
+    switch (entity) {
+      case 'deal':
+        dealId = application._id;
+        break;
+      case 'facility':
+        dealId = application.dealId;
+        break;
+      default:
+        dealId = null;
+        break;
+    }
+
+    if (!dealId) {
+      throw new Error('Invalid deal id');
+    }
+
+    const { data } = await generateId(entity, dealId);
+
+    if (!data.data?.length) {
+      throw new Error('Invalid response received');
+    }
+
+    const { data: ukefId } = data;
+
+    return ukefId[0];
+  } catch (error) {
+    console.error('Unable to generate id %o', error);
+    throw new Error('Unable to generate id');
+  }
+};
 
 const addSubmissionDateToIssuedFacilities = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
   // eslint-disable-next-line no-restricted-syntax
   for (const facility of facilities) {
-    const {
-      _id, hasBeenIssued, canResubmitIssuedFacilities, shouldCoverStartOnSubmission, issueDate, hasBeenIssuedAndAcknowledged
-    } = facility;
+    const { _id, hasBeenIssued, canResubmitIssuedFacilities, shouldCoverStartOnSubmission, issueDate, hasBeenIssuedAndAcknowledged } = facility;
     /**
      * checks if hasBeenIssued and if not hasBeenIssuedAndAcknowledged
      * ensures that once submitted to UKEF, the coverStartDate is not overwritten to the new resubmission date
      */
     if (hasBeenIssued && !hasBeenIssuedAndAcknowledged) {
       const update = {
-        submittedAsIssuedDate: now(),
+        submittedAsIssuedDate: getNowAsEpochMillisecondString(),
       };
       /**
        * if canResubmitIssuedFacilities and shouldCoverStartOnSubmission is true
@@ -71,9 +90,9 @@ const addSubmissionDateToIssuedFacilities = async (dealId) => {
        */
       if (shouldCoverStartOnSubmission) {
         if (canResubmitIssuedFacilities) {
-          update.coverStartDate = (new Date(issueDate)).setHours(0, 0, 0, 0);
+          update.coverStartDate = new Date(issueDate).setHours(0, 0, 0, 0);
         } else {
-          update.coverStartDate = (new Date()).setHours(0, 0, 0, 0);
+          update.coverStartDate = new Date().setHours(0, 0, 0, 0);
         }
       }
       // eslint-disable-next-line no-await-in-loop
@@ -104,18 +123,28 @@ const updateChangedToIssued = async (dealId) => {
   });
 };
 
+/**
+ * Adds UKEF facility ID to facilities.
+ *
+ * @param {string} dealId - The ID of the deal.
+ * @returns {Promise<Array>} - A promise that resolves to an array of facilities.
+ * @throws {Error} - If unable to generate facility ID.
+ */
 const addUkefFacilityIdToFacilities = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
 
-  await Promise.all(facilities.map(async (facility) => {
-    if (!facility.ukefFacilityId) {
-      const { ukefId } = await generateUkefFacilityId(facility);
-      const update = {
-        ukefFacilityId: ukefId,
-      };
-      await updateFacility(facility._id, update);
-    }
-  }));
+  await Promise.all(
+    facilities.map(async (facility) => {
+      if (!facility.ukefFacilityId) {
+        const { maskedId } = await generateUkefId(CONSTANTS.NUMBER.ENTITY_TYPE.FACILITY, facility);
+        const update = {
+          ukefFacilityId: maskedId,
+        };
+
+        await updateFacility(facility._id, update);
+      }
+    }),
+  );
 
   return facilities;
 };
@@ -168,20 +197,24 @@ const checkCoverDateConfirmed = async (app) => {
 
       if (notYetSubmittedToUKEF && haveFacilities) {
         // Iterate through issued facilities
-        facilities.filter((f) => f.hasBeenIssued && !f.coverDateConfirmed).map(async (f) => {
-          hasUpdated = true;
-          await updateFacility(f._id, {
-            coverDateConfirmed: Boolean(isAIN),
+        facilities
+          .filter((f) => f.hasBeenIssued && !f.coverDateConfirmed)
+          .map(async (f) => {
+            hasUpdated = true;
+            await updateFacility(f._id, {
+              coverDateConfirmed: Boolean(isAIN),
+            });
           });
-        });
 
         // Iterate through unissued facilities
-        facilities.filter((f) => !f.hasBeenIssued && f.coverDateConfirmed).map(async (f) => {
-          hasUpdated = true;
-          await updateFacility(f._id, {
-            coverDateConfirmed: false,
+        facilities
+          .filter((f) => !f.hasBeenIssued && f.coverDateConfirmed)
+          .map(async (f) => {
+            hasUpdated = true;
+            await updateFacility(f._id, {
+              coverDateConfirmed: false,
+            });
           });
-        });
         return hasUpdated;
       }
     } catch (error) {
@@ -191,16 +224,19 @@ const checkCoverDateConfirmed = async (app) => {
   return hasUpdated;
 };
 
+/**
+ * Adds submission data to an existing application.
+ * @param {string} dealId - The ID of the deal.
+ * @param {object} existingApplication - An object representing the existing application.
+ * @returns {Promise<object>} - An object containing the submission count, submission date, portal activities, and UKEF deal ID.
+ */
 const addSubmissionData = async (dealId, existingApplication) => {
   await checkCoverDateConfirmed(existingApplication);
+  await addSubmissionDateToIssuedFacilities(dealId);
+
   const { count, date } = await generateSubmissionData(existingApplication);
   const updatedPortalActivity = await submissionPortalActivity(existingApplication);
-  await addSubmissionDateToIssuedFacilities(dealId);
-  await addUkefFacilityIdToFacilities(dealId);
-  /**
-   * If AIN or MIN, portalActivities are handled by portal-API
-   * If MIA -> MIN, then handled by tfm-API and central-API to add portalActivities
-   */
+
   if (existingApplication.submissionType !== CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
     await updateChangedToIssued(dealId);
   }
@@ -212,14 +248,18 @@ const addSubmissionData = async (dealId, existingApplication) => {
   };
 
   if (!existingApplication.ukefDealId) {
-    const { ukefId } = await generateUkefDealId(existingApplication);
-    submissionData.ukefDealId = ukefId;
+    const { maskedId } = await generateUkefId(CONSTANTS.NUMBER.ENTITY_TYPE.DEAL, existingApplication);
+    submissionData.ukefDealId = maskedId;
   }
+
+  await addUkefFacilityIdToFacilities(dealId);
 
   return submissionData;
 };
 
 module.exports = {
+  generateId,
+  generateUkefId,
   addSubmissionData,
   submissionPortalActivity,
   addSubmissionDateToIssuedFacilities,

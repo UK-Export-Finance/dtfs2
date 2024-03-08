@@ -76,7 +76,7 @@ const mockChecker = {
   surname: 'User',
   roles: ['checker'],
   timezone: 'Europe/London',
-  username: 'BANK1_CHECKER1',
+  username: 'checker1@ukexportfinance.gov.uk',
 };
 
 describe('/v1/deals', () => {

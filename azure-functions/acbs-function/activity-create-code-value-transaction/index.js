@@ -9,7 +9,7 @@
  *   function app in Kudu
  */
 
-const moment = require('moment');
+const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
@@ -26,7 +26,7 @@ const createCodeValueTransaction = async (context) => {
       return Promise.resolve({ missingMandatory });
     }
 
-    const submittedToACBS = moment().format();
+    const submittedToACBS = getNowAsIsoString();
     const { status, data } = await api.createCodeValueTransaction(facilityIdentifier, acbsCodeValueTransactionInput);
 
     if (isHttpErrorStatus(status)) {
@@ -37,7 +37,7 @@ const createCodeValueTransaction = async (context) => {
             status,
             facilityIdentifier,
             submittedToACBS,
-            receivedFromACBS: moment().format(),
+            receivedFromACBS: getNowAsIsoString(),
             dataReceived: data,
             dataSent: acbsCodeValueTransactionInput,
           },
@@ -51,7 +51,7 @@ const createCodeValueTransaction = async (context) => {
       status,
       dataSent: acbsCodeValueTransactionInput,
       submittedToACBS,
-      receivedFromACBS: moment().format(),
+      receivedFromACBS: getNowAsIsoString(),
       ...data,
     };
   } catch (error) {

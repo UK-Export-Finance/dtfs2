@@ -8,7 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
-const moment = require('moment');
+const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const mdm = require('../apim-mdm');
 const CONSTANTS = require('../constants');
@@ -67,7 +67,7 @@ const createFacilityCovenant = async (context) => {
     }
 
     // Call create covenant API
-    const submittedToACBS = moment().format();
+    const submittedToACBS = getNowAsIsoString();
     const { status, data } = await api.createFacilityCovenant(facilityIdentifier, acbsFacilityCovenantInput);
 
     // Throw error upon an unsuccessful response
@@ -78,7 +78,7 @@ const createFacilityCovenant = async (context) => {
             name: 'ACBS Facility Covenant create error',
             facilityIdentifier,
             submittedToACBS,
-            receivedFromACBS: moment().format(),
+            receivedFromACBS: getNowAsIsoString(),
             dataReceived: data,
             dataSent: acbsFacilityCovenantInput,
           },
@@ -92,7 +92,7 @@ const createFacilityCovenant = async (context) => {
       status,
       dataSent: acbsFacilityCovenantInput,
       submittedToACBS,
-      receivedFromACBS: moment().format(),
+      receivedFromACBS: getNowAsIsoString(),
       ...data,
     };
   } catch (error) {
