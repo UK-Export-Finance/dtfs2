@@ -1,0 +1,22 @@
+name: Notify Teams on Push
+on:
+  push:
+    branches:
+      - chore/setup-push-alerts
+jobs:
+  notify-teams:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Extract Commit Information
+        id: commit_info
+        run: |
+          echo "::set-output name=message::$(git log --format='%s' -n 1 ${{ github.sha }}) - ${{ github.sha }} by ${{ github.actor }}"
+
+      - name: Notify dedicated teams channel
+        uses: jdcargile/ms-teams-notification@v1.4
+        with:
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK }}
+          notification-summary: ${{ steps.commit_info.outputs.message }}
+          notification-color: 17a2b8
