@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - chore/setup-push-alerts
+
+env:
+  environment: dev
+
 jobs:
   notify-teams:
     runs-on: ubuntu-latest
