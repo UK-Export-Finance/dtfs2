@@ -31,7 +31,7 @@ exports.findAll = async (req, res) => {
     if (!industrySectors) {
       return res.status(400).send({
         status: 400,
-        message: 'Void industry sectors returned',
+        message: 'Invalid industry sectors returned',
       });
     }
 
