@@ -112,6 +112,11 @@ router.post('/contract/:_id/delete', [validateRole({ role: [MAKER] }), validateB
 
   const { data } = await api.updateDealStatus(updateToSend, userToken);
 
+  if (!data) {
+    console.error('Invalid response received for deal %s %o', _id, data);
+    return res.status(500).render('_partials/problem-with-service.njk');
+  }
+
   const validationErrors = {
     count: data.count,
     errorList: data.errorList,
@@ -155,6 +160,11 @@ router.post('/contract/:_id/ready-for-review', [validateRole({ role: [MAKER] }),
   };
 
   const { data } = await api.updateDealStatus(updateToSend, userToken);
+
+  if (!data) {
+    console.error('Invalid response received for deal %s %o', _id, data);
+    return res.status(500).render('_partials/problem-with-service.njk');
+  }
 
   const validationErrors = {
     count: data.count,
@@ -234,6 +244,11 @@ router.post('/contract/:_id/return-to-maker', [validateRole({ role: [CHECKER] })
 
   const { data } = await api.updateDealStatus(updateToSend, userToken);
 
+  if (!data) {
+    console.error('Invalid response received for deal %s %o', _id, data);
+    return res.status(500).render('_partials/problem-with-service.njk');
+  }
+
   const validationErrors = {
     count: data.count,
     errorList: data.errorList,
@@ -276,6 +291,11 @@ router.post('/contract/:_id/confirm-submission', [validateRole({ role: [CHECKER]
   };
 
   const { data } = await api.updateDealStatus(updateToSend, userToken);
+
+  if (!data) {
+    console.error('Invalid response received for deal %s %o', _id, data);
+    return res.status(500).render('_partials/problem-with-service.njk');
+  }
 
   let validationErrors;
   if (data.errorList) {
