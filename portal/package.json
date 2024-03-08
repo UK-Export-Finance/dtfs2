@@ -30,7 +30,7 @@
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "1.8.0",
+    "@ministryofjustice/frontend": "2.1.1",
     "axios": "^1.6.7",
     "axios-mock-adapter": "^1.22.0",
     "cheerio": "^1.0.0-rc.12",
