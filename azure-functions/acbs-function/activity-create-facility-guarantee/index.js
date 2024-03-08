@@ -9,7 +9,7 @@
  *   function app in Kudu
  */
 
-const moment = require('moment');
+const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
@@ -25,17 +25,21 @@ const createFacilityGuarantee = async (context) => {
       return Promise.resolve({ missingMandatory });
     }
 
-    const submittedToACBS = moment().format();
+    const submittedToACBS = getNowAsIsoString();
     const { status, data } = await api.createFacilityGuarantee(facilityIdentifier, acbsFacilityGuaranteeInput);
 
-    if (isHttpErrorStatus(status)) {
+    /**
+     * Multiple guarantee records are possible.
+     * Adding `400` (Facility guarantee exists) to status ignore list.
+     */
+    if (isHttpErrorStatus(status, 400)) {
       throw new Error(
         JSON.stringify(
           {
             name: 'ACBS Facility Guarantee create error',
             facilityIdentifier,
             submittedToACBS,
-            receivedFromACBS: moment().format(),
+            receivedFromACBS: getNowAsIsoString(),
             dataReceived: data,
             dataSent: acbsFacilityGuaranteeInput,
           },
@@ -49,12 +53,12 @@ const createFacilityGuarantee = async (context) => {
       status,
       dataSent: acbsFacilityGuaranteeInput,
       submittedToACBS,
-      receivedFromACBS: moment().format(),
+      receivedFromACBS: getNowAsIsoString(),
       ...data,
     };
   } catch (error) {
     console.error('Unable to create facility guarantee record. %s', error);
-    throw new Error('Unable to create facility guarantee record');
+    throw new Error('Unable to create facility guarantee record. %s', error);
   }
 };
 

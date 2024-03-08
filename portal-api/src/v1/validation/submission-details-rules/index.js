@@ -36,14 +36,22 @@ const rules = [
   supplyContractConversionRateDateIsRequired,
 ];
 
-module.exports = (submissionDetails, deal) => {
-  let errorList = {};
+/**
+ * Applies a set of rules to the submission details and returns any errors found.
+ * @param {object} submissionDetails - An object containing details of the submission.
+ * @param {object} deal - An object containing details of the deal.
+ * @returns {Promise<object>} - An object containing any errors found during the rule checks.
+ */
+module.exports = async (submissionDetails, deal) => {
+  let errors = {};
 
-  if (!submissionDetails.v1Status) {
-    for (let i = 0; i < rules.length; i += 1) {
-      errorList = rules[i](submissionDetails, errorList, deal);
-    }
+  if (submissionDetails.v1Status) {
+    return errors;
   }
 
-  return errorList;
+  for (const rule of rules) {
+    errors = await rule(submissionDetails, errors, deal);
+  }
+
+  return errors;
 };

@@ -62,10 +62,10 @@ describe('validation()', () => {
     };
 
     // formatted to remove the millisecond mismatch (lag)
-    const resultCoverStartFormatted = format(result.coverStartDate, 'dd mm yyyy');
-    const resultCoverEndFormatted = format(result.coverEndDate, 'dd mm yyyy');
-    const expectedCoverStartFormatted = format(expected.coverStartDate, 'dd mm yyyy');
-    const expectedCoverEndFormatted = format(expected.coverEndDate, 'dd mm yyyy');
+    const resultCoverStartFormatted = format(result.coverStartDate, 'dd MM yyyy');
+    const resultCoverEndFormatted = format(result.coverEndDate, 'dd MM yyyy');
+    const expectedCoverStartFormatted = format(expected.coverStartDate, 'dd MM yyyy');
+    const expectedCoverEndFormatted = format(expected.coverEndDate, 'dd MM yyyy');
 
     // as no errors expected, compare objects being passed back
     expect(resultCoverStartFormatted).toEqual(expectedCoverStartFormatted);
@@ -113,10 +113,10 @@ describe('validation()', () => {
     };
 
     // formatted to remove the millisecond mismatch (lag)
-    const resultCoverStartFormatted = format(result.coverStartDate, 'dd mm yyyy');
-    const resultCoverEndFormatted = format(result.coverEndDate, 'dd mm yyyy');
-    const expectedCoverStartFormatted = format(expected.coverStartDate, 'dd mm yyyy');
-    const expectedCoverEndFormatted = format(expected.coverEndDate, 'dd mm yyyy');
+    const resultCoverStartFormatted = format(result.coverStartDate, 'dd MM yyyy');
+    const resultCoverEndFormatted = format(result.coverEndDate, 'dd MM yyyy');
+    const expectedCoverStartFormatted = format(expected.coverStartDate, 'dd MM yyyy');
+    const expectedCoverEndFormatted = format(expected.coverEndDate, 'dd MM yyyy');
 
     // as no errors expected, compare objects being passed back
     expect(resultCoverStartFormatted).toEqual(expectedCoverStartFormatted);

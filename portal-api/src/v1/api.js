@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { isValidMongoId, isValidBankId, isValidMonth, isValidYear } = require('./validation/validateIds');
+const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 
 require('dotenv').config();
 
@@ -229,7 +229,7 @@ const tfmDealSubmit = async (dealId, dealType, checker) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to submit tfm deal %s', error);
+    console.error('Unable to submit deal %s to TFM %o', dealId, error);
     return false;
   }
 };
@@ -249,7 +249,7 @@ const findLatestGefMandatoryCriteria = async () => {
   }
 };
 
-const saveUtilisationReport = async (reportData, month, year, user, fileInfo) => {
+const saveUtilisationReport = async (reportData, reportPeriod, user, fileInfo) => {
   try {
     return await axios({
       method: 'post',
@@ -257,8 +257,7 @@ const saveUtilisationReport = async (reportData, month, year, user, fileInfo) =>
       headers: headers.central,
       data: {
         reportData,
-        month,
-        year,
+        reportPeriod,
         user,
         fileInfo,
       },
@@ -268,36 +267,51 @@ const saveUtilisationReport = async (reportData, month, year, user, fileInfo) =>
   }
 };
 
-const getUtilisationReports = async (bankId, month, year) => {
+/**
+ * @typedef {Object} GetUtilisationReportsOptions
+ * @property {import('../types/utilisation-reports').ReportPeriod} [reportPeriod] - a report period to filter reports by
+ * @property {boolean} [excludeNotUploaded] - whether or not to exclude reports which have not been uploaded
+ */
+
+/**
+ * Gets utilisation reports for a specific bank. If a report
+ * period or statuses are not provided, all reports for that bank are
+ * returned. If a report period is provided, the report
+ * submitted for that report period is returned. If an array of report
+ * statuses are provided, the reports returned are filtered by status.
+ * Returned reports are ordered by year and month ascending.
+ * @param {string} bankId
+ * @param {GetUtilisationReportsOptions} [options]
+ */
+const getUtilisationReports = async (bankId, options) => {
+  const reportPeriod = options?.reportPeriod;
+  const excludeNotUploaded = options?.excludeNotUploaded;
+
   try {
     if (!isValidBankId(bankId)) {
-      console.error('Get utilisation reports failed with the following bank ID %s', bankId);
+      console.error('Get utilisation reports failed with the following bank ID: %s', bankId);
       throw new Error('Invalid bank ID provided: %s', bankId);
     }
 
-    if (month && !isValidMonth(parseInt(month, 10))) {
-      console.error('Get utilisation reports failed with the following month %s', month);
-      throw new Error('Invalid month provided: %s', month);
+    if (reportPeriod && !isValidReportPeriod(reportPeriod)) {
+      console.error('Get utilisation reports failed with the following report period: %s', reportPeriod);
+      throw new Error('Invalid report period provided: %s', reportPeriod);
     }
 
-    if (year && !isValidYear(parseInt(year, 10))) {
-      console.error('Get utilisation reports failed with the following year %s', year);
-      throw new Error('Invalid year provided: %s', year);
+    if (excludeNotUploaded && typeof excludeNotUploaded !== 'boolean') {
+      console.error('Get utilisation reports failed with the following excludeNotUploaded query: %s', excludeNotUploaded);
+      throw new Error(`Invalid excludeNotUploaded provided: ${excludeNotUploaded} (expected a boolean)`);
     }
 
-    const response = await axios({
-      method: 'get',
-      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports`,
-      params: {
-        month,
-        year,
-      },
+    const params = { reportPeriod, excludeNotUploaded };
+
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports`, {
       headers: headers.central,
+      params,
     });
-
     return response.data;
   } catch (error) {
-    console.error('Unable to get previous utilisation reports %s', error);
+    console.error('Unable to get previous utilisation reports: %s', error);
     throw error;
   }
 };

@@ -7,8 +7,11 @@ const { withRoleAuthorisationTests } = require('../../common-tests/role-authoris
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { insertManyUtilisationReportDetails } = require('../../insertUtilisationReportDetails');
+const { MOCK_PENDING_RECONCILIATION_REPORT_DETAILS_WITHOUT_ID } = require('../../../test-helpers/mock-utilisation-report-details');
 
-describe('GET /v1/previous-reports/:bankId', () => {
+console.error = jest.fn();
+
+describe('GET /v1/banks/:bankId/utilisation-reports', () => {
   const previousReportsUrl = (bankId) => `/v1/banks/${bankId}/utilisation-reports`;
   let aPaymentReportOfficer;
   let testUsers;
@@ -41,24 +44,53 @@ describe('GET /v1/previous-reports/:bankId', () => {
     };
     reportDetails = [
       {
+        ...MOCK_PENDING_RECONCILIATION_REPORT_DETAILS_WITHOUT_ID,
         bank,
-        month: 1,
-        year,
+        reportPeriod: {
+          start: {
+            month: 1,
+            year,
+          },
+          end: {
+            month: 1,
+            year,
+          },
+        },
         dateUploaded: new Date(year, 0),
         azureFileInfo,
         uploadedBy,
       },
       {
+        ...MOCK_PENDING_RECONCILIATION_REPORT_DETAILS_WITHOUT_ID,
         bank,
-        month: 2,
+        reportPeriod: {
+          start: {
+            month: 2,
+            year,
+          },
+          end: {
+            month: 2,
+            year,
+          },
+        },
         year,
         dateUploaded: new Date(year, 1),
         azureFileInfo,
         uploadedBy,
       },
       {
+        ...MOCK_PENDING_RECONCILIATION_REPORT_DETAILS_WITHOUT_ID,
         bank,
-        month: 3,
+        reportPeriod: {
+          start: {
+            month: 3,
+            year,
+          },
+          end: {
+            month: 3,
+            year,
+          },
+        },
         year,
         dateUploaded: new Date(year, 2),
         azureFileInfo,

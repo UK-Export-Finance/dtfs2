@@ -1,6 +1,5 @@
 const validateBank = require('.');
-const { ALL_BANKS_ID } = require('../../../constants');
-const { ADMIN, READ_ONLY } = require('../../../constants/roles');
+const { ALL_BANKS_ID, ROLES: { ADMIN, READ_ONLY } } = require('../../../constants');
 
 describe('validateBank', () => {
   const dealId = 'deal id';

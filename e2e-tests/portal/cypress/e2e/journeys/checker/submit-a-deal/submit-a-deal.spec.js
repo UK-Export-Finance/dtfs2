@@ -200,10 +200,10 @@ context('A checker selects to submit a contract from the view-contract page', ()
     // visit the deal and confirm the updates have been made
     contract.visit(goodDeal);
     contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submitted');
+      expect(text.trim()).to.equal('Acknowledged');
     });
     contract.previousStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Ready for Checker\'s approval');
+      expect(text.trim()).to.equal('Submitted');
     });
   });
 });

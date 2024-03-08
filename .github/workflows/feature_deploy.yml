@@ -1,19 +1,21 @@
+# TODO: Remove file post MSSQL migration
+
 name: Feature environment deployment
 
 on:
   push:
-    branches: [ main-stbr-tfm-5 ]
+    branches:
+      - feat/e2etf-sql
     paths:
-    - 'portal/**'
-    - 'portal-api/**'
-    - 'gef-ui/**'
-    - 'trade-finance-manager-ui/**'
-    - 'trade-finance-manager-api/**'
-    - 'dtfs-central-api/**'
-    - 'external-api/**'
-    - 'azure-functions/number-generator-function/**'
-    - 'azure-functions/acbs-function/**'
-  
+      - "portal/**"
+      - "portal-api/**"
+      - "gef-ui/**"
+      - "trade-finance-manager-ui/**"
+      - "trade-finance-manager-api/**"
+      - "dtfs-central-api/**"
+      - "external-api/**"
+      - "azure-functions/acbs-function/**"
+
 env:
   environment: feature
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
@@ -33,8 +35,8 @@ jobs:
     outputs:
       environment: ${{ env.environment }}
     steps:
-    - name: Initialise Environment
-      run: echo "Setting up ${{ env.environment }} environment"
+      - name: Initialise Environment
+        run: echo "Setting up ${{ env.environment }} environment"
 
   deploy-webapps:
     needs: deployment-environment
@@ -48,7 +50,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        repository: 
+        repository:
           - portal-ui
           - portal-api
           - gef-ui
@@ -70,7 +72,8 @@ jobs:
           username: ${{ env.acr_username }}
           password: ${{ env.acr_password }}
           repository: ${{ matrix.repository }}
-          path: ${{ matrix.path || matrix.repository }}
+          context: .
+          dockerfile: ${{ matrix.path || matrix.repository }}/Dockerfile
           tags: latest
           build_args: GITHUB_SHA=${{ github.sha }}
           add_git_labels: true
@@ -113,23 +116,18 @@ jobs:
     runs-on: [self-hosted, linux, deployment]
     # TODO: FN-1077 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much.
     # Restore the parameterised version throughout!
-    environment:
-      dev
+    environment: dev
     # environment:
     #   name: ${{ needs.deployment-environment.outputs.environment }}
     strategy:
       matrix:
-        repository: 
-          - azure-function-number-generator
+        repository:
           - azure-function-acbs
         include:
-          - path: azure-functions/number-generator-function
-            repository: azure-function-number-generator
-            name: function-number-generator
           - path: azure-functions/acbs-function
             repository: azure-function-acbs
             name: function-acbs
-            
+
     steps:
       - name: 1. Latest commit hash
         uses: actions/checkout@v4
@@ -174,10 +172,3 @@ jobs:
             az functionapp deployment slot create --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ matrix.name }}
             az functionapp deployment slot swap --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }} --action swap
             az functionapp deployment slot delete --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }}
-
-# There has been an issue with number generator not working after a slot swap. A restart appears to fix it.
-      - name: 7. Restart
-        uses: azure/cli@v1.0.0
-        with:
-          inlineScript: |
-            az functionapp restart --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }}

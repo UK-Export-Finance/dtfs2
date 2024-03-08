@@ -1,6 +1,6 @@
 const df = require('durable-functions');
 const httpFunction = require('./index');
-const context = require('../testing/defaultContext');
+const context = require('../test-helpers/defaultContext');
 
 test('Http trigger should return known text', async () => {
   const request = {

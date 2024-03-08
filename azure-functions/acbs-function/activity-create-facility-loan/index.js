@@ -8,7 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
-const moment = require('moment');
+const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
@@ -38,7 +38,7 @@ const createFacilityLoan = async (context) => {
       return Promise.resolve({ missingMandatory });
     }
 
-    const submittedToACBS = moment().format();
+    const submittedToACBS = getNowAsIsoString();
     const { status, data } = await api.createFacilityLoan(facilityIdentifier, acbsFacilityLoanInput);
 
     if (isHttpErrorStatus(status)) {
@@ -47,7 +47,7 @@ const createFacilityLoan = async (context) => {
           name: 'ACBS Facility loan record create error',
           facilityIdentifier,
           submittedToACBS,
-          receivedFromACBS: moment().format(),
+          receivedFromACBS: getNowAsIsoString(),
           dataReceived: data,
           dataSent: acbsFacilityLoanInput,
         }, null, 4),
@@ -58,12 +58,12 @@ const createFacilityLoan = async (context) => {
       status,
       dataSent: acbsFacilityLoanInput,
       submittedToACBS,
-      receivedFromACBS: moment().format(),
+      receivedFromACBS: getNowAsIsoString(),
       ...data,
     };
   } catch (error) {
     console.error('Unable to create facility loan record. %s', error);
-    throw new Error('Unable to create facility loan record');
+    throw new Error('Unable to create facility loan record %s', error);
   }
 };
 

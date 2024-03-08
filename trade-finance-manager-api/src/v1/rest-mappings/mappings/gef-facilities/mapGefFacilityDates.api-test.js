@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { format } = require('date-fns');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
 const mapCoverEndDate = require('../facilities/mapCoverEndDate');
 const mapTenorDate = require('../facilities/mapTenorDate');
@@ -53,10 +53,12 @@ describe('mapGefFacilityDates', () => {
   it('should return mapped coverEndDate', () => {
     const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
 
+    const mockCoverEndDate = new Date(mockFacility.facilitySnapshot.coverEndDate);
+
     const expected = mapCoverEndDate(
-      moment(mockFacility.facilitySnapshot.coverEndDate).format('DD'),
-      moment(mockFacility.facilitySnapshot.coverEndDate).format('MM'),
-      moment(mockFacility.facilitySnapshot.coverEndDate).format('YYYY'),
+      format(mockCoverEndDate, 'dd'),
+      format(mockCoverEndDate, 'MM'),
+      format(mockCoverEndDate, 'yyyy'),
       mockFacility,
     );
 
@@ -67,7 +69,6 @@ describe('mapGefFacilityDates', () => {
     const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
 
     const expected = mapTenorDate(
-      mockFacility.facilityStage,
       mockFacility.monthsOfCover,
       mockFacilityTfm.exposurePeriodInMonths,
     );

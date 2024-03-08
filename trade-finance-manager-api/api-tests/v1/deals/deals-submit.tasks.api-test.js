@@ -7,11 +7,10 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   submitACBSIfAllPartiesHaveUrn: jest.fn(),
 }));
 
-const moment = require('moment');
+const { format } = require('date-fns');
 const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const CONSTANTS = require('../../../src/constants');
-const formattedTimestamp = require('../../../src/v1/formattedTimestamp');
 const { createDealTasks } = require('../../../src/v1/controllers/deal.tasks');
 const { generateTaskEmailVariables } = require('../../../src/v1/helpers/generate-task-email-variables');
 const submitDeal = require('../utils/submitDeal');
@@ -123,6 +122,8 @@ describe('/v1/deals', () => {
 
           const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((t) => t.id === firstTask.team.id);
 
+          const submissionDate = new Date(Number(body.dealSnapshot.details.submissionDate));
+
           const expected = {
             templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
             sendToEmailAddress: expectedTeamEmailAddress,
@@ -131,7 +132,7 @@ describe('/v1/deals', () => {
               firstTask,
               body.dealSnapshot.exporter.companyName,
               body.dealSnapshot.details.submissionType,
-              moment(formattedTimestamp(body.dealSnapshot.details.submissionDate)).format('Do MMMM YYYY'),
+              format(submissionDate, 'do MMMM yyyy'),
               body.dealSnapshot.bank.name,
             ),
           };

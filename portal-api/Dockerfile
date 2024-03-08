@@ -9,9 +9,12 @@ ENV GITHUB_SHA=$GITHUB_SHA
 WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
-RUN npm ci
+
+COPY libs libs
+COPY portal-api portal-api
+
+RUN npm run ci:all
 RUN npm cache clean --force
-COPY . .
 
 # Execute Script
-CMD ["npx", "ts-node", "src/index.ts"]
+CMD ["npx", "ts-node", "portal-api/src/index.ts"]

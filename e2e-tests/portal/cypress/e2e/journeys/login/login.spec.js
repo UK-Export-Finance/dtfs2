@@ -4,7 +4,9 @@ const {
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
-const { BANK1_MAKER1 } = MOCK_USERS;
+const {
+  BANK1_MAKER1, BANK1_CHECKER1, ADMINNOMAKER, BANK1_READ_ONLY1, BANK1_PAYMENT_REPORT_OFFICER1,
+} = MOCK_USERS;
 
 const BAD_LOGIN = { username: 'invalid', password: 'valid' };
 
@@ -69,6 +71,36 @@ context('Login', () => {
 
     beforeYouStart.visit();
     cy.url().should('eq', relative('/login'));
+  });
+
+  it('A successful login with maker role takes the user to the /dashboard/deals/0 page', () => {
+    cy.login(BANK1_MAKER1);
+
+    cy.url().should('eq', relative('/dashboard/deals/0'));
+  });
+
+  it('A successful login with checker role takes the user to the /dashboard/deals/0 page', () => {
+    cy.login(BANK1_CHECKER1);
+
+    cy.url().should('eq', relative('/dashboard/deals/0'));
+  });
+
+  it('A successful login with admin role takes the user to the /dashboard/deals/0 page', () => {
+    cy.login(ADMINNOMAKER);
+
+    cy.url().should('eq', relative('/dashboard/deals/0'));
+  });
+
+  it('A successful login with read-only role takes the user to the /dashboard/deals/0 page', () => {
+    cy.login(BANK1_READ_ONLY1);
+
+    cy.url().should('eq', relative('/dashboard/deals/0'));
+  });
+
+  it('A successful login with payment report officer role takes the user to the /utilisation-report-upload page', () => {
+    cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
+
+    cy.url().should('eq', relative('/utilisation-report-upload'));
   });
 
   it('Logged-in user home link should point to gov.uk', () => {

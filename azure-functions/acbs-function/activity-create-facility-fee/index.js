@@ -8,7 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
-const moment = require('moment');
+const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
@@ -35,7 +35,7 @@ const createFacilityFee = async (context) => {
       return Promise.resolve({ missingMandatory });
     }
 
-    const submittedToACBS = moment().format();
+    const submittedToACBS = getNowAsIsoString();
     const { status, data } = await api.createFacilityFee(facilityIdentifier, acbsFacilityFeeInput);
 
     if (isHttpErrorStatus(status)) {
@@ -44,7 +44,7 @@ const createFacilityFee = async (context) => {
           name: 'ACBS Facility fee record create error',
           facilityIdentifier,
           submittedToACBS,
-          receivedFromACBS: moment().format(),
+          receivedFromACBS: getNowAsIsoString(),
           dataReceived: data,
           dataSent: acbsFacilityFeeInput,
         }, null, 4),
@@ -55,12 +55,12 @@ const createFacilityFee = async (context) => {
       status,
       dataSent: acbsFacilityFeeInput,
       submittedToACBS,
-      receivedFromACBS: moment().format(),
+      receivedFromACBS: getNowAsIsoString(),
       ...data,
     };
   } catch (error) {
     console.error('Unable to create facility fee record. %s', error);
-    throw new Error('Unable to create facility fee record');
+    throw new Error('Unable to create facility fee record %s', error);
   }
 };
 

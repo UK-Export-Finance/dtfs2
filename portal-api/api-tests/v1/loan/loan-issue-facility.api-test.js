@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { sub, format, add } = require('date-fns');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
@@ -9,13 +9,18 @@ const { MAKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('/v1/deals/:id/loan/:id/issue-facility', () => {
+  const nowDate = new Date();
+  const yesterday = sub(nowDate, { days: 1 });
+  const nextWeek = add(nowDate, { weeks: 1 });
+  const nextMonth = add(nowDate, { months: 1 });
+
   const newDeal = aDeal({
     submissionType: 'Manual Inclusion Notice',
     additionalRefName: 'mock name',
     bankInternalRefName: 'mock id',
     status: 'Ready for Checker\'s approval',
     details: {
-      submissionDate: moment().subtract(1, 'day').utc().valueOf(),
+      submissionDate: yesterday.valueOf(),
     },
     submissionDetails: {
       supplyContractCurrency: {
@@ -24,10 +29,10 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
     },
   });
 
-  const createCoverDateFields = (prefix, value) => ({
-    [`${prefix}-day`]: moment(value).format('DD'),
-    [`${prefix}-month`]: moment(value).format('MM'),
-    [`${prefix}-year`]: moment(value).format('YYYY'),
+  const createCoverDateFields = (prefix, date) => ({
+    [`${prefix}-day`]: format(date, 'dd'),
+    [`${prefix}-month`]: format(date, 'MM'),
+    [`${prefix}-year`]: format(date, 'yyyy'),
   });
 
   const allLoanFields = {
@@ -42,14 +47,14 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
     coveredPercentage: '40',
     premiumType: 'At maturity',
     dayCountBasis: '365',
-    ...createCoverDateFields('coverEndDate', moment().add(1, 'month')),
+    ...createCoverDateFields('coverEndDate', nextMonth),
     status: 'Ready for check',
   };
 
   const issueFacilityBody = {
-    ...createCoverDateFields('requestedCoverStartDate', moment().add(1, 'week')),
-    ...createCoverDateFields('coverEndDate', moment().add(1, 'month')),
-    ...createCoverDateFields('issuedDate', moment()),
+    ...createCoverDateFields('requestedCoverStartDate', nextWeek),
+    ...createCoverDateFields('coverEndDate', nextMonth),
+    ...createCoverDateFields('issuedDate', nowDate),
     name: '1234',
   };
 
@@ -155,7 +160,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
 
     describe('with validation errors', () => {
       const incompleteIssueFacilityBody = {
-        ...createCoverDateFields('requestedCoverStartDate', moment().add(1, 'week')),
+        ...createCoverDateFields('requestedCoverStartDate', nextWeek),
       };
 
       it('should return 400 with validationErrors, the loan,  and add issueFacilityDetailsProvided=false', async () => {
@@ -187,8 +192,8 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
           await putIssueFacility(dealId, loanId, issueFacilityBody);
 
           const incompleteDate = {
-            'requestedCoverStartDate-day': moment().format('DD'),
-            'requestedCoverStartDate-month': moment().format('MM'),
+            'requestedCoverStartDate-day': format(nowDate, 'dd'),
+            'requestedCoverStartDate-month': format(nowDate, 'MM'),
             'requestedCoverStartDate-year': '',
           };
 
@@ -202,8 +207,8 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
           await putIssueFacility(dealId, loanId, issueFacilityBody);
 
           const incompleteDate = {
-            'issuedDate-day': moment().format('DD'),
-            'issuedDate-month': moment().format('MM'),
+            'issuedDate-day': format(nowDate, 'dd'),
+            'issuedDate-month': format(nowDate, 'MM'),
             'issuedDate-year': '',
           };
 

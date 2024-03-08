@@ -155,8 +155,38 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
     it('generated postcode validation error if criteria11 is false and country = GBR but postcode not entered', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
+      
+      const updatedECCountry = {
+        ...updatedECCriteria11NoExtraInfo,
+        agentAddressCountry: 'GBR',
+      };
 
-      const { status, body } = await as(aBarclaysMaker).put(updatedECCriteria11NoExtraInfo).to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await as(aBarclaysMaker).put(updatedECCountry).to(`/v1/deals/${newId}/eligibility-criteria`);
+
+      expect(status).toEqual(200);
+      expect(body.eligibility.validationErrors.count).toEqual(8);
+
+      const errorIdList = [];
+      Object.entries(body.eligibility.validationErrors.errorList).forEach(([key, value]) => {
+        if (value.text) {
+          errorIdList.push(key);
+        }
+      });
+
+      expect(errorIdList).toEqual(['13', '15', '16', '17', '18', 'agentAddressLine1', 'agentAddressPostcode', 'agentName']);
+    });
+
+    it('should generate address country validation error if the the country is `undefined`', async () => {
+      const ec11UndefinedCountry = {
+        ...updatedECCriteria11NoExtraInfo,
+      };
+
+      delete ec11UndefinedCountry.agentAddressCountry;
+
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const newId = postResult.body._id;
+
+      const { status, body } = await as(aBarclaysMaker).put(ec11UndefinedCountry).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
       expect(body.eligibility.validationErrors.count).toEqual(8);

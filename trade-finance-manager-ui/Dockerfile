@@ -9,9 +9,12 @@ ENV GITHUB_SHA=$GITHUB_SHA
 WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
-RUN npm ci --legacy-peer-deps
+
+COPY libs libs
+COPY trade-finance-manager-ui trade-finance-manager-ui
+
+RUN npm run ci:all
 RUN npm cache clean --force
-COPY . .
 
 # Execute Script
-CMD ["npx", "ts-node", "server/index.ts"]
+CMD ["npx", "ts-node", "trade-finance-manager-ui/server/index.ts"]

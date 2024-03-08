@@ -6,7 +6,7 @@
 # Runs tests for API endpoints in parallel:
 # portal-api, gef-ui, trade-finance-manager-ui, portal, dtfs-central-api, external-api
 # DOF-specific API tests:
-# acbs-function and number-generator-function
+# acbs-function
 # Generates code coverage reports for API tests.
 #
 # 3. Unit Tests:
@@ -40,9 +40,9 @@ run-name: ✅ Quality assurance testing on ${{ github.event.number }}
 
 on:
   pull_request:
-    branches: 
+    branches:
       - main
-      
+
     paths:
       - "package*.json"
       - "docker*.yml"
@@ -57,6 +57,7 @@ on:
       - "azure-functions/**"
       - "e2e-tests/**"
       - "utils/mock-data-loader/**"
+      - "libs/**"
 
   push:
     branches:
@@ -75,7 +76,6 @@ on:
       - "trade-finance-manager-api/**"
       - "external-api/**"
       - "azure-functions/acbs-function/**"
-      - "azure-functions/number-generator-function/**"
 
 env:
   environment: dev
@@ -125,6 +125,11 @@ env:
   UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE }}
   UTILISATION_REPORT_DUE_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }}
   UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE }}
+  CHANGE_STREAM_ENABLED: ${{ vars.CHANGE_STREAM_ENABLED }}
+  AUDIT_API_URL: ${{ secrets.AUDIT_API_URL }}
+  AUDIT_API_USERNAME: ${{ secrets.AUDIT_API_USERNAME }}
+  AUDIT_API_PASSWORD: ${{ secrets.AUDIT_API_PASSWORD }}
+  UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: ${{ vars.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}
 
 jobs:
   # 1. Setup test infrastructure
@@ -198,7 +203,7 @@ jobs:
           npm run load
 
       - name: Execute
-        run: docker-compose exec -T ${{ matrix.services }} npm run api-test
+        run: docker-compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
 
       - name: Stop
         working-directory: ./
@@ -224,7 +229,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        functions: ["acbs-function", "number-generator-function"]
+        functions: ["acbs-function"]
 
     concurrency:
       group: dof-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
@@ -274,10 +279,15 @@ jobs:
       matrix:
         services:
           [
+            "./portal",
+            "./gef-ui",
+            "./trade-finance-manager-ui",
             "./portal-api",
             "./dtfs-central-api",
             "./external-api",
             "./trade-finance-manager-api",
+            "./libs/common",
+            "./azure-functions/acbs-function"
           ]
 
     concurrency:
@@ -313,55 +323,7 @@ jobs:
           flags: unit-test
           verbose: true
 
-  # 4. UI integration tests
-  integration-tests:
-    name: UI 🎨
-    needs: setup
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services: ["./portal", "./gef-ui", "./trade-finance-manager-ui"]
-
-    concurrency:
-      group: integration-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Timezone
-        uses: szenius/set-timezone@v1.2
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
-
-      - name: Repository
-        uses: actions/checkout@v4
-
-      - name: Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.node }}
-
-      - name: Dependencies
-        working-directory: ./
-        run: npm run ci:all
-
-      - name: Execute
-        working-directory: ${{ matrix.services }}
-        run: npm run test
-
-      - name: Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: ui-test
-          verbose: true
-
-  # 5. E2E - PORTAL
+  # 4. E2E - PORTAL
   e2e-tests-portal:
     name: E2E Portal 👷
     needs: setup
@@ -417,20 +379,12 @@ jobs:
         run: |
           sleep 60s
           npm run load
-          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
       - name: Execute
-        working-directory: ./e2e-tests/portal
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+        working-directory: ./e2e-tests
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec "./portal/cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
 
-      - name: Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: e2e-test
-          verbose: true
-
-  # 6. E2E - GEF
+  # 5. E2E - GEF
   e2e-tests-gef:
     name: E2E GEF 👷
     needs: setup
@@ -474,20 +428,12 @@ jobs:
         run: |
           sleep 60s
           npm run load
-          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
       - name: Execute
-        working-directory: ./e2e-tests/gef
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+        working-directory: ./e2e-tests
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec "./gef/cypress/e2e/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
 
-      - name: Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: e2e-test
-          verbose: true
-
-  #7. E2E - TFM
+  #6. E2E - TFM
   e2e-tests-tfm:
     name: E2E TFM 👷
     needs: setup
@@ -512,6 +458,7 @@ jobs:
             "header/**/*.spec.js",
             "login/**/*.spec.js",
             "users/**/*.spec.js",
+            "utilisation-reports/**/*.spec.js",
           ]
 
     concurrency:
@@ -538,20 +485,12 @@ jobs:
         run: |
           sleep 60s
           npm run load
-          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
       - name: Execute
-        working-directory: ./e2e-tests/tfm
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+        working-directory: ./e2e-tests
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./tfm --record false --spec "./tfm/cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
 
-      - name: Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: e2e-test
-          verbose: true
-
-  #8. E2E - UKEF
+  #7. E2E - UKEF
   e2e-tests-ukef:
     name: E2E UKEF 👷
     needs: setup
@@ -612,15 +551,7 @@ jobs:
         run: |
           sleep 60s
           npm run load
-          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
       - name: Execute
-        working-directory: ./e2e-tests/ukef
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/portal/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
-
-      - name: Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: e2e-test
-          verbose: true
+        working-directory: ./e2e-tests
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec "./ukef/cypress/e2e/journeys/portal/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}

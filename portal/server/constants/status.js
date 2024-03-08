@@ -1,7 +1,7 @@
-const STATUS = {
+const DEAL = {
   DRAFT: 'Draft',
-  READY_FOR_APPROVAL: 'Ready for Checker\'s approval',
-  CHANGES_REQUIRED: 'Further Maker\'s input required',
+  READY_FOR_APPROVAL: "Ready for Checker's approval",
+  CHANGES_REQUIRED: "Further Maker's input required",
   ABANDONED: 'Abandoned',
   SUBMITTED_TO_UKEF: 'Submitted',
   UKEF_ACKNOWLEDGED: 'Acknowledged',
@@ -11,4 +11,19 @@ const STATUS = {
   UKEF_REFUSED: 'Rejected by UKEF',
 };
 
-module.exports = STATUS;
+const FACILITY = {
+  COMPLETED: 'Completed',
+  INCOMPLETE: 'Incomplete',
+  NOT_STARTED: 'Not started',
+}
+
+const SECTION = {
+  COMPLETED: 'Completed',
+  NOT_COMPLETED: 'Not completed',
+};
+
+module.exports = {
+  DEAL,
+  FACILITY,
+  SECTION,
+};

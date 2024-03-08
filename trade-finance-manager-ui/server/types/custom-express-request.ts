@@ -24,8 +24,8 @@ type CustomExpressRequestOptions = {
 export type CustomExpressRequest<Options extends CustomExpressRequestOptions> = Request<
   'params' extends keyof Options ? Options['params'] : RequestParams,
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  'resBody' extends keyof Options  ? Options['resBody'] : any,
-  'reqBody' extends keyof Options  ? Options['reqBody'] : any,
+  'resBody' extends keyof Options ? Options['resBody'] : any,
+  'reqBody' extends keyof Options ? Options['reqBody'] : any,
   /* eslint-enable @typescript-eslint/no-explicit-any */
   'query' extends keyof Options ? Options['query'] : RequestQuery
 >;

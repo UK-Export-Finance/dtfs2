@@ -8,7 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
-const moment = require('moment');
+const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
@@ -48,7 +48,7 @@ const createFacilityMaster = async (context) => {
       return Promise.resolve({ missingMandatory });
     }
 
-    const submittedToACBS = moment().format();
+    const submittedToACBS = getNowAsIsoString();
 
     const { status, data } = await api.createFacility(acbsFacilityMasterInput);
 
@@ -59,7 +59,7 @@ const createFacilityMaster = async (context) => {
             name: 'ACBS Facility Master create error',
             dealIdentifier: acbsFacilityMasterInput.dealIdentifier,
             submittedToACBS,
-            receivedFromACBS: moment().format(),
+            receivedFromACBS: getNowAsIsoString(),
             dataReceived: data,
             dataSent: acbsFacilityMasterInput,
           },
@@ -73,12 +73,12 @@ const createFacilityMaster = async (context) => {
       status,
       dataSent: acbsFacilityMasterInput,
       submittedToACBS,
-      receivedFromACBS: moment().format(),
+      receivedFromACBS: getNowAsIsoString(),
       ...data,
     };
   } catch (error) {
     console.error('Unable to create facility master record. %s', error);
-    throw new Error('Unable to create facility master record');
+    throw new Error('Unable to create facility master record %s', error);
   }
 };
 

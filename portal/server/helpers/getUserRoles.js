@@ -1,4 +1,6 @@
-const { MAKER, CHECKER, PAYMENT_REPORT_OFFICER, ADMIN, READ_ONLY } = require('../constants/roles');
+const { ROLES } = require('../constants');
+
+const { MAKER, CHECKER, PAYMENT_REPORT_OFFICER, ADMIN, READ_ONLY } = ROLES;
 
 const noRolesDefault = {
   isMaker: false,

@@ -28,7 +28,7 @@
     user: user,
     deal: deal,
     editable: editable,
-    dealFormsCompleted: dealFormsCompleted,
+    isEveryDealFormComplete: isEveryDealFormComplete,
     canFullyCalculateDealSummary: canFullyCalculateDealSummary,
     selected: 'view',
     userCanSubmit: userCanSubmit,
@@ -116,7 +116,7 @@
           <span class="govuk-heading-m govuk-grid-column-one-quarter govuk-!-font-weight-regular govuk-!-font-size-16 govuk-!-padding-right-0 govuk-!-padding-left-0 width-auto"  data-cy="manual-inclusion-notice-submission-date">
             <span class="govuk-!-font-weight-bold">Submission date: </span>
             <br/>
-            {{ deal.details.manualInclusionNoticeSubmissionDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
+            {{ deal.details.manualInclusionNoticeSubmissionDate | localiseTimestamp('dd/MM/yyyy', user.timezone) }}
           </span>
         {% endif %}
 
