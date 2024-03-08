@@ -26,10 +26,7 @@ module.exports = {
     'import/no-named-as-default': 'off',
     'implicit-arrow-linebreak': 'off',
     'import/prefer-default-export': 'off',
-    'import/no-extraneous-dependencies': [
-      'error',
-      { devDependencies: ['**/e2e.js', '**/*.test.{js,ts}', '**/*.api-test.{js,ts}', '**/*.spec.{js,ts}', '**/webpack.*.{js,ts}', '**/api-test*/**', '**/__mocks__/**'] },
-    ],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     'cypress/no-assigning-return-values': 'error',
     'cypress/no-unnecessary-waiting': 'error',
     'cypress/assertion-before-screenshot': 'warn',
