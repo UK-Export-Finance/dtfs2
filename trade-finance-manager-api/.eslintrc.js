@@ -11,7 +11,7 @@ const baseRules = {
   'import/extensions': 'off',
   'import/no-extraneous-dependencies': [
     'error',
-    { devDependencies: ['**/*.test.{js,ts}', '**/*.spec.{js,ts}', '**/webpack.*.{js,ts}', '**/api-tests/**', '**/__mocks__/**'] },
+    { devDependencies: ['**/*.test.{js,ts}', '**/*.api-test.{js,ts}', '**/*.spec.{js,ts}', '**/webpack.*.{js,ts}', '**/api-test*/**', '**/__mocks__/**'] },
   ],
   'import/no-named-as-default': 'off',
   'import/prefer-default-export': 'off',
