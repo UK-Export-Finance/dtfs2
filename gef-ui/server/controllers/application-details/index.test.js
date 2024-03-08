@@ -62,89 +62,92 @@ describe('controllers/application-details', () => {
       api.getFacilities.mockResolvedValueOnce(mockFacilityResponse);
 
       await applicationDetails(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
-        // header
-        ukefDealId: mockApplicationResponse.ukefDealId,
-        submissionDate: mockApplicationResponse.submissionDate,
-        manualInclusionNoticeSubmissionDate: mockApplicationResponse.manualInclusionNoticeSubmissionDate,
-        companyName: mockApplicationResponse.exporter.companyName,
-        applicationStatus: mockApplicationResponse.status,
-        dateCreated: mockApplicationResponse.createdAt,
-        timezone: mockApplicationResponse.maker.timezone,
-        createdBy: `${mockApplicationResponse.maker.firstname} ${mockApplicationResponse.maker.surname}`,
-        comments: mockApplicationResponse.comments,
-        applicationType: mockApplicationResponse.submissionType,
-        submissionCount: mockApplicationResponse.submissionCount,
-        activeSubNavigation: '/',
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/application-details.njk',
+        expect.objectContaining({
+          // header
+          ukefDealId: mockApplicationResponse.ukefDealId,
+          submissionDate: mockApplicationResponse.submissionDate,
+          manualInclusionNoticeSubmissionDate: mockApplicationResponse.manualInclusionNoticeSubmissionDate,
+          companyName: mockApplicationResponse.exporter.companyName,
+          applicationStatus: mockApplicationResponse.status,
+          dateCreated: mockApplicationResponse.createdAt,
+          timezone: mockApplicationResponse.maker.timezone,
+          createdBy: `${mockApplicationResponse.maker.firstname} ${mockApplicationResponse.maker.surname}`,
+          comments: mockApplicationResponse.comments,
+          applicationType: mockApplicationResponse.submissionType,
+          submissionCount: mockApplicationResponse.submissionCount,
+          activeSubNavigation: '/',
 
-        // body
-        application: {
-          ...mockApplicationResponse,
+          // body
+          application: {
+            ...mockApplicationResponse,
+            userRoles: mockRequest.session.user.roles,
+          },
+          status: mockApplicationResponse.status,
+          isAutomaticCover: expect.any(Boolean),
+          exporter: {
+            rows: expect.any(Array),
+            status: {
+              code: expect.any(String),
+              text: expect.any(String),
+              class: expect.any(String),
+            },
+          },
+          eligibility: {
+            status: {
+              code: expect.any(String),
+              text: expect.any(String),
+              class: expect.any(String),
+            },
+          },
+          facilities: {
+            data: expect.any(Array),
+            status: {
+              code: expect.any(String),
+              text: expect.any(String),
+              class: expect.any(String),
+            },
+          },
+          supportingInfo: {
+            requiredFields: expect.any(Array),
+            status: {
+              code: expect.any(String),
+              text: expect.any(String),
+              class: expect.any(String),
+            },
+          },
+          bankInternalRefName: mockApplicationResponse.bankInternalRefName,
+          additionalRefName: mockApplicationResponse.additionalRefName,
+          dealId: expect.any(String),
+          makerCanSubmit: expect.any(Boolean),
+          makerCanReSubmit: expect.any(Boolean),
+          checkerCanSubmit: expect.any(Boolean),
+          link: expect.any(String),
+          isUkefReviewAvailable: expect.any(Boolean),
+          isUkefReviewPositive: expect.any(Boolean),
+          ukefDecisionAccepted: expect.any(Boolean),
+          coverDatesConfirmed: expect.any(Boolean),
+          renderReviewDecisionLink: expect.any(Boolean),
+          previewMode: expect.any(Boolean),
+          unissuedFacilitiesPresent: expect.any(Boolean),
+          facilitiesChangedToIssued: expect.any(Array),
+          displayComments: expect.any(Boolean),
+          hasChangedFacilities: expect.any(Boolean),
+          displayChangeSupportingInfo: expect.any(Boolean),
+          canUpdateUnissuedFacilities: expect.any(Boolean),
+          MIAReturnToMaker: expect.any(Boolean),
+          returnToMakerNoFacilitiesChanged: expect.any(Boolean),
+
+          // actions
+          submit: expect.any(Boolean),
+          abandon: expect.any(Boolean),
+
+          // user in session
+          user: mockRequest.session.user,
           userRoles: mockRequest.session.user.roles,
-        },
-        status: mockApplicationResponse.status,
-        isAutomaticCover: expect.any(Boolean),
-        exporter: {
-          rows: expect.any(Array),
-          status: {
-            code: expect.any(String),
-            text: expect.any(String),
-            class: expect.any(String),
-          },
-        },
-        eligibility: {
-          status: {
-            code: expect.any(String),
-            text: expect.any(String),
-            class: expect.any(String),
-          },
-        },
-        facilities: {
-          data: expect.any(Array),
-          status: {
-            code: expect.any(String),
-            text: expect.any(String),
-            class: expect.any(String),
-          },
-        },
-        supportingInfo: {
-          requiredFields: expect.any(Array),
-          status: {
-            code: expect.any(String),
-            text: expect.any(String),
-            class: expect.any(String),
-          },
-        },
-        bankInternalRefName: mockApplicationResponse.bankInternalRefName,
-        additionalRefName: mockApplicationResponse.additionalRefName,
-        dealId: expect.any(String),
-        makerCanSubmit: expect.any(Boolean),
-        makerCanReSubmit: expect.any(Boolean),
-        checkerCanSubmit: expect.any(Boolean),
-        link: expect.any(String),
-        isUkefReviewAvailable: expect.any(Boolean),
-        isUkefReviewPositive: expect.any(Boolean),
-        ukefDecisionAccepted: expect.any(Boolean),
-        coverDatesConfirmed: expect.any(Boolean),
-        renderReviewDecisionLink: expect.any(Boolean),
-        previewMode: expect.any(Boolean),
-        unissuedFacilitiesPresent: expect.any(Boolean),
-        facilitiesChangedToIssued: expect.any(Array),
-        displayComments: expect.any(Boolean),
-        hasChangedFacilities: expect.any(Boolean),
-        displayChangeSupportingInfo: expect.any(Boolean),
-        canUpdateUnissuedFacilities: expect.any(Boolean),
-        MIAReturnToMaker: expect.any(Boolean),
-        returnToMakerNoFacilitiesChanged: expect.any(Boolean),
-
-        // actions
-        submit: expect.any(Boolean),
-        abandon: expect.any(Boolean),
-
-        // user in session
-        user: mockRequest.session.user,
-        userRoles: mockRequest.session.user.roles,
-      }));
+        }),
+      );
     });
 
     describe('template rendering from deal.status', () => {
@@ -420,7 +423,7 @@ describe('controllers/application-details', () => {
         it('when a success message is present and req.flash is not present in request it passes the success message from the request to the template', async () => {
           // Arrange
           const testReq = cloneDeep(mockRequest);
-          testReq.success = 'Success message';
+          testReq.success = { message: 'Success message' };
           testReq.flash = mockUnsuccessfulFlashResponse();
           // Act
           await applicationDetails(testReq, mockResponse);
@@ -428,7 +431,7 @@ describe('controllers/application-details', () => {
           expect(mockResponse.render).toHaveBeenCalledWith(
             expect.any(String),
             expect.objectContaining({
-              success: 'Success message',
+              success: { message: 'Success message' },
             }),
           );
         });
@@ -436,7 +439,7 @@ describe('controllers/application-details', () => {
         it('when a success message is present and req.flash is present in request it passes the req.flash success message to template', async () => {
           // Arrange
           const testReq = cloneDeep(mockRequest);
-          testReq.success = 'Success message';
+          testReq.success = { message: 'Success message' };
           testReq.flash = mockSuccessfulFlashResponse();
 
           // Act
@@ -447,7 +450,7 @@ describe('controllers/application-details', () => {
             expect.any(String),
             expect.objectContaining({
               success: {
-                success: 'Facility is updated',
+                message: 'Facility is updated',
               },
             }),
           );
@@ -467,7 +470,7 @@ describe('controllers/application-details', () => {
             expect.any(String),
             expect.objectContaining({
               success: {
-                success: 'Facility is updated',
+                message: 'Facility is updated',
               },
             }),
           );
@@ -561,7 +564,7 @@ describe('controllers/application-details', () => {
   });
 
   function mockSuccessfulFlashResponse() {
-    return jest.fn().mockReturnValue([{ success: 'Facility is updated' }]);
+    return jest.fn().mockReturnValue([{ message: 'Facility is updated' }]);
   }
   function mockUnsuccessfulFlashResponse() {
     return jest.fn().mockReturnValue([]);

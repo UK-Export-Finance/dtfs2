@@ -171,7 +171,7 @@ describe('postChangeUnissuedFacility()', () => {
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
     api.updateFacility.mockResolvedValue({});
     api.updateApplication = updateApplicationSpy;
-    mockRequest.flash = jest.fn().mockReturnValue('Facility is updated');
+    mockRequest.flash = jest.fn();
   });
 
   afterEach(() => {
