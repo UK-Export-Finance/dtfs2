@@ -22,7 +22,7 @@ const facilityGuarantee = (deal, facility, acbsData, guaranteeTypeCode) => {
       guaranteeTypeCode,
     };
   } catch (error) {
-    console.error('Unable to map facility guarantee record. %s', error);
+    console.error('Unable to map facility guarantee record. %o', error);
     return {};
   }
 };

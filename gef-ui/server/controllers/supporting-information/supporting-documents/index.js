@@ -133,7 +133,7 @@ const getSupportingDocuments = async (req, res, next) => {
       uploadCsrf: uploadCsrf.token,
     });
   } catch (error) {
-    console.error('GEF UI - Error getting Supporting Documents %s', error);
+    console.error('GEF UI - Error getting Supporting Documents %o', error);
     return handleError(error, req, res, next);
   }
 };
@@ -234,7 +234,7 @@ const postSupportingDocuments = async (req, res, next) => {
 
     return res.redirect(nextDocument(application, dealId, fieldName));
   } catch (error) {
-    console.error('Supporting document post failed %s', error);
+    console.error('Supporting document post failed %o', error);
     return handleError(error, req, res, next);
   }
 };
@@ -278,7 +278,7 @@ const uploadSupportingDocument = async (req, res, next) => {
 
     return res.status(200).send({ file, error: { message: file.error } });
   } catch (error) {
-    console.error('Supporting document upload failed %s', error);
+    console.error('Supporting document upload failed %o', error);
     return handleError(error, req, res, next);
   }
 };

@@ -78,7 +78,7 @@ const resetPassword = async (email) => {
 
 const resetPasswordFromToken = async (resetPwdToken, formData) => {
   if (!isValidResetPasswordToken(resetPwdToken)) {
-    console.error('Reset password from token API call failed for token %s', resetPwdToken);
+    console.error('Reset password from token API call failed for token %o', resetPwdToken);
     return false;
   }
 
@@ -96,7 +96,7 @@ const resetPasswordFromToken = async (resetPwdToken, formData) => {
       data: response.data,
     };
   } catch (error) {
-    console.error('Reset password failed %s', error?.response?.data);
+    console.error('Reset password failed %o', error?.response?.data);
     return {
       status: error?.response?.status || 500,
       data: error?.response?.data,
@@ -162,7 +162,7 @@ const createDeal = async (deal, token) => {
 
 const updateDealName = async (id, newName, token) => {
   if (!isValidMongoId(id)) {
-    console.error('Update deal name API call failed for id %s', id);
+    console.error('Update deal name API call failed for id %o', id);
     return {
       status: 400,
     };
@@ -193,7 +193,7 @@ const updateDealName = async (id, newName, token) => {
  */
 const updateDealStatus = async (statusUpdate, token) => {
   if (!isValidMongoId(statusUpdate._id)) {
-    console.error('Update deal status API call failed for id %s', statusUpdate._id);
+    console.error('Update deal status API call failed for id %o', statusUpdate._id);
     return false;
   }
 
@@ -220,7 +220,7 @@ const updateDealStatus = async (statusUpdate, token) => {
 
 const getSubmissionDetails = async (id, token) => {
   if (!isValidMongoId(id)) {
-    console.error('Get submission details API call failed for id %s', id);
+    console.error('Get submission details API call failed for id %o', id);
     return {
       status: 400,
     };
@@ -262,7 +262,7 @@ const updateSubmissionDetails = async (deal, submissionDetails, token) => {
 
 const cloneDeal = async (dealId, newDealData, token) => {
   if (!isValidMongoId(dealId)) {
-    console.error('Clone deal API call failed for id %s', dealId);
+    console.error('Clone deal API call failed for id %o', dealId);
     return false;
   }
 
@@ -281,7 +281,7 @@ const cloneDeal = async (dealId, newDealData, token) => {
 
 const updateEligibilityCriteria = async (dealId, criteria, token) => {
   if (!isValidMongoId(dealId)) {
-    console.error('Update eligibility criteria API call failed for id %s', dealId);
+    console.error('Update eligibility criteria API call failed for id %o', dealId);
     return false;
   }
 
@@ -299,7 +299,7 @@ const updateEligibilityCriteria = async (dealId, criteria, token) => {
 
 const updateEligibilityDocumentation = async (dealId, body, files, token) => {
   if (!isValidMongoId(dealId)) {
-    console.error('Update eligibility documentation API call failed for id %s', dealId);
+    console.error('Update eligibility documentation API call failed for id %o', dealId);
     return false;
   }
 
@@ -336,7 +336,7 @@ const updateEligibilityDocumentation = async (dealId, body, files, token) => {
 
 const createLoan = async (dealId, token) => {
   if (!isValidMongoId(dealId)) {
-    console.error('Create loan API call failed for id %s', dealId);
+    console.error('Create loan API call failed for id %o', dealId);
     return false;
   }
 
@@ -353,7 +353,7 @@ const createLoan = async (dealId, token) => {
 
 const getLoan = async (dealId, loanId, token) => {
   if (!isValidMongoId(dealId) || !isValidMongoId(loanId)) {
-    console.error('Get loan API call failed for id %s %s', dealId, loanId);
+    console.error('Get loan API call failed for id %o %o', dealId, loanId);
     return false;
   }
   const response = await axios({
@@ -369,7 +369,7 @@ const getLoan = async (dealId, loanId, token) => {
 
 const updateLoan = async (dealId, loanId, formData, token) => {
   if (!isValidMongoId(dealId) || !isValidMongoId(loanId)) {
-    console.error('Update loan API call failed for id %s %s', dealId, loanId);
+    console.error('Update loan API call failed for id %o %o', dealId, loanId);
     return false;
   }
 
@@ -387,7 +387,7 @@ const updateLoan = async (dealId, loanId, formData, token) => {
 
 const updateLoanIssueFacility = async (dealId, loanId, formData, token) => {
   if (!isValidMongoId(dealId) || !isValidMongoId(loanId)) {
-    console.error('Update loan issue facility API call failed for id %s %s', dealId, loanId);
+    console.error('Update loan issue facility API call failed for id %o %o', dealId, loanId);
     return false;
   }
 
@@ -405,7 +405,7 @@ const updateLoanIssueFacility = async (dealId, loanId, formData, token) => {
 
 const updateLoanCoverStartDate = async (dealId, loanId, formData, token) => {
   if (!isValidMongoId(dealId) || !isValidMongoId(loanId)) {
-    console.error('Get loan cover start date API call failed for id %s %s', dealId, loanId);
+    console.error('Get loan cover start date API call failed for id %o %o', dealId, loanId);
     return false;
   }
 
@@ -423,7 +423,7 @@ const updateLoanCoverStartDate = async (dealId, loanId, formData, token) => {
 
 const deleteLoan = async (dealId, loanId, token) => {
   if (!isValidMongoId(dealId) || !isValidMongoId(loanId)) {
-    console.error('Delete loan API call failed for id %s %s', dealId, loanId);
+    console.error('Delete loan API call failed for id %o %o', dealId, loanId);
     return false;
   }
 
@@ -440,7 +440,7 @@ const deleteLoan = async (dealId, loanId, token) => {
 
 const createBond = async (dealId, token) => {
   if (!isValidMongoId(dealId)) {
-    console.error('Create bond API call failed for id %s', dealId);
+    console.error('Create bond API call failed for id %o', dealId);
     return false;
   }
 
@@ -457,7 +457,7 @@ const createBond = async (dealId, token) => {
 
 const contractBond = async (dealId, bondId, token) => {
   if (!isValidMongoId(dealId) || !isValidMongoId(bondId)) {
-    console.error('Get contract bond API call failed for id %s %s', dealId, bondId);
+    console.error('Get contract bond API call failed for id %d %d', dealId, bondId);
     return false;
   }
   const response = await axios({
@@ -473,7 +473,7 @@ const contractBond = async (dealId, bondId, token) => {
 
 const updateBond = async (dealId, bondId, formData, token) => {
   if (!isValidMongoId(dealId) || !isValidMongoId(bondId)) {
-    console.error('Update bond API call failed for id %s %s', dealId, bondId);
+    console.error('Update bond API call failed for id %d %d', dealId, bondId);
     return false;
   }
 
@@ -491,7 +491,7 @@ const updateBond = async (dealId, bondId, formData, token) => {
 
 const updateBondIssueFacility = async (dealId, bondId, formData, token) => {
   if (!isValidMongoId(dealId) || !isValidMongoId(bondId)) {
-    console.error('Update bond issue facility API call failed for id %s %s', dealId, bondId);
+    console.error('Update bond issue facility API call failed for id %d %d', dealId, bondId);
     return false;
   }
 
@@ -509,7 +509,7 @@ const updateBondIssueFacility = async (dealId, bondId, formData, token) => {
 
 const updateBondCoverStartDate = async (dealId, bondId, formData, token) => {
   if (!isValidMongoId(dealId) || !isValidMongoId(bondId)) {
-    console.error('Update bond cover start date API call failed for id %s %s', dealId, bondId);
+    console.error('Update bond cover start date API call failed for id %d %d', dealId, bondId);
     return false;
   }
 
@@ -527,7 +527,7 @@ const updateBondCoverStartDate = async (dealId, bondId, formData, token) => {
 
 const deleteBond = async (dealId, bondId, token) => {
   if (!isValidMongoId(dealId) || !isValidMongoId(bondId)) {
-    console.error('Delete bond API call failed for id %s %s', dealId, bondId);
+    console.error('Delete bond API call failed for id %d %d', dealId, bondId);
     return false;
   }
 
@@ -644,7 +644,7 @@ const validateBank = async (dealId, bankId, token) => {
     });
     return data;
   } catch (error) {
-    console.error('Unable to validate the bank %s', error);
+    console.error('Unable to validate the bank %o', error);
     return 'Failed to validate the bank';
   }
 };
@@ -674,7 +674,7 @@ const user = async (id, token) => {
   }
 
   if (!isValidMongoId(id)) {
-    console.error('User API call failed for id %s', id);
+    console.error('User API call failed for id %o', id);
     return false;
   }
 
@@ -719,7 +719,7 @@ const updateUser = async (id, update, token) => {
   }
 
   if (!isValidMongoId(id)) {
-    console.error('Update user API call failed for id %s', id);
+    console.error('Update user API call failed for id %o', id);
     return false;
   }
 
@@ -732,7 +732,7 @@ const updateUser = async (id, update, token) => {
     },
     data: update,
   }).catch((error) => {
-    console.error('Unable to update user %s', error);
+    console.error('Unable to update user %o', error);
     return error.response;
   });
 
@@ -741,7 +741,7 @@ const updateUser = async (id, update, token) => {
 
 const getDeal = async (id, token) => {
   if (!isValidMongoId(id)) {
-    console.error('Get deal API call failed for deal id %s', id);
+    console.error('Get deal API call failed for deal id %o', id);
     return {
       status: 400,
     };
@@ -778,17 +778,17 @@ const getLatestMandatoryCriteria = async (token) => {
 
 const downloadEligibilityDocumentationFile = async (id, fieldname, filename, token) => {
   if (!isValidMongoId(id)) {
-    console.error('Download file API call failed for id %s', id);
+    console.error('Download file API call failed for id %o', id);
     return false;
   }
 
   if (!isValidDocumentType(fieldname)) {
-    console.error('Download file API call failed for fieldname %s', fieldname);
+    console.error('Download file API call failed for fieldname %o', fieldname);
     return false;
   }
 
   if (!isValidFileName(filename)) {
-    console.error('Download file API call failed for filename %s', filename);
+    console.error('Download file API call failed for filename %o', filename);
     return false;
   }
 
@@ -830,7 +830,7 @@ const getUnissuedFacilitiesReport = async (token) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to return unissued facilities %s', error);
+    console.error('Unable to return unissued facilities %o', error);
     return { status: error?.code || 500, data: 'Error getting unissued facilities report.' };
   }
 };
@@ -848,7 +848,7 @@ const getUkefDecisionReport = async (token, payload) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to return UKEF decision report %s', error);
+    console.error('Unable to return UKEF decision report %o', error);
     return { status: error?.code || 500, data: 'Error getting Ukef decision report.' };
   }
 };
@@ -882,7 +882,7 @@ const uploadUtilisationReportData = async (uploadingUser, reportPeriod, csvData,
 
     return response;
   } catch (error) {
-    console.error('Unable to upload utilisation report %s', error);
+    console.error('Unable to upload utilisation report %o', error);
     return { status: error?.code || 500, data: 'Error uploading utilisation report.' };
   }
 };

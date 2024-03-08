@@ -21,7 +21,7 @@ jobs:
     runs-on: [self-hosted, linux]
     steps:
 
-    - uses: azure/login@v1
+    - uses: azure/login@v2
       with:
         creds: ${{ env.credentials }}
 

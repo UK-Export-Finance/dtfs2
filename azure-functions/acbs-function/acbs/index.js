@@ -199,7 +199,7 @@ module.exports = df.orchestrator(function* HDeal(context) {
     }
     console.error('No input specified');
   } catch (error) {
-    console.error('Error processing ACBS payload: %s', error);
+    console.error('Error processing ACBS payload: %o', error);
     return false;
   }
 });

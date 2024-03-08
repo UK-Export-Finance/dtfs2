@@ -19,7 +19,7 @@ const headers = {
 const findOneDeal = async (dealId) => {
   try {
     if (!isValidMongoId(dealId)) {
-      console.error('Find one deal API failed for deal id %s', dealId);
+      console.error('Find one deal API failed for deal id %o', dealId);
       return false;
     }
 
@@ -31,7 +31,7 @@ const findOneDeal = async (dealId) => {
 
     return response.data.deal;
   } catch (error) {
-    console.error('Unable to find one deal %s', error);
+    console.error('Unable to find one deal %o', error);
     return false;
   }
 };
@@ -55,7 +55,7 @@ const createDeal = async (deal, user) => {
 const updateDeal = async (dealId, dealUpdate, user) => {
   try {
     if (!isValidMongoId(dealId)) {
-      console.error('Update deal API failed for deal id %s', dealId);
+      console.error('Update deal API failed for deal id %o', dealId);
       return false;
     }
 
@@ -71,7 +71,7 @@ const updateDeal = async (dealId, dealUpdate, user) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to update deal %s', error);
+    console.error('Unable to update deal %o', error);
     return false;
   }
 };
@@ -79,7 +79,7 @@ const updateDeal = async (dealId, dealUpdate, user) => {
 const deleteDeal = async (dealId) => {
   try {
     if (!isValidMongoId(dealId)) {
-      console.error('Delete deal API failed for deal id %s', dealId);
+      console.error('Delete deal API failed for deal id %o', dealId);
       return false;
     }
 
@@ -89,7 +89,7 @@ const deleteDeal = async (dealId) => {
       headers: headers.central,
     });
   } catch (error) {
-    console.error('Unable to delete deal %s', error);
+    console.error('Unable to delete deal %o', error);
     return { status: error?.code || 500, data: 'Error when deleting deal' };
   }
 };
@@ -97,7 +97,7 @@ const deleteDeal = async (dealId) => {
 const addDealComment = async (dealId, commentType, comment) => {
   try {
     if (!isValidMongoId(dealId)) {
-      console.error('Add deal comment API failed for deal id %s', dealId);
+      console.error('Add deal comment API failed for deal id %o', dealId);
       return false;
     }
 
@@ -113,7 +113,7 @@ const addDealComment = async (dealId, commentType, comment) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to add deal comment %s', error);
+    console.error('Unable to add deal comment %o', error);
     return false;
   }
 };
@@ -154,7 +154,7 @@ const createMultipleFacilities = async (facilities, dealId, user) => {
 const findOneFacility = async (facilityId) => {
   try {
     if (!isValidMongoId(facilityId)) {
-      console.error('Find one facility API failed for facility id %s', facilityId);
+      console.error('Find one facility API failed for facility id %o', facilityId);
       return false;
     }
 
@@ -166,7 +166,7 @@ const findOneFacility = async (facilityId) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to find one facility %s', error);
+    console.error('Unable to find one facility %o', error);
     return false;
   }
 };
@@ -174,7 +174,7 @@ const findOneFacility = async (facilityId) => {
 const updateFacility = async (facilityId, facility, user) => {
   try {
     if (!isValidMongoId(facilityId)) {
-      console.error('Update facility API failed for facility id %s', facilityId);
+      console.error('Update facility API failed for facility id %o', facilityId);
       return false;
     }
 
@@ -188,7 +188,7 @@ const updateFacility = async (facilityId, facility, user) => {
       },
     });
   } catch (error) {
-    console.error('Unable to update facility %s', error);
+    console.error('Unable to update facility %o', error);
     return { status: error?.code || 500, data: 'Error when updating facility' };
   }
 };
@@ -196,7 +196,7 @@ const updateFacility = async (facilityId, facility, user) => {
 const deleteFacility = async (facilityId, user) => {
   try {
     if (!isValidMongoId(facilityId)) {
-      console.error('Delete facility API failed for facility id %s', facilityId);
+      console.error('Delete facility API failed for facility id %o', facilityId);
       return false;
     }
 
@@ -209,7 +209,7 @@ const deleteFacility = async (facilityId, user) => {
       },
     });
   } catch (error) {
-    console.error('Unable to delete facility %s', error);
+    console.error('Unable to delete facility %o', error);
     return { status: error?.response?.status || 500, data: 'Error when deleting facility' };
   }
 };
@@ -244,7 +244,7 @@ const findLatestGefMandatoryCriteria = async () => {
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get the latest mandatory criteria for GEF deals %s', error);
+    console.error('Unable to get the latest mandatory criteria for GEF deals %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get latest mandatory criteria for GEF deals' };
   }
 };
@@ -289,13 +289,13 @@ const getUtilisationReports = async (bankId, options) => {
 
   try {
     if (!isValidBankId(bankId)) {
-      console.error('Get utilisation reports failed with the following bank ID: %s', bankId);
-      throw new Error('Invalid bank ID provided: %s', bankId);
+      console.error('Get utilisation reports failed with the following bank ID: %o', bankId);
+      throw new Error('Invalid bank ID provided: %o', bankId);
     }
 
     if (reportPeriod && !isValidReportPeriod(reportPeriod)) {
-      console.error('Get utilisation reports failed with the following report period: %s', reportPeriod);
-      throw new Error('Invalid report period provided: %s', reportPeriod);
+      console.error('Get utilisation reports failed with the following report period: %o', reportPeriod);
+      throw new Error('Invalid report period provided: %o', reportPeriod);
     }
 
     if (excludeNotUploaded && typeof excludeNotUploaded !== 'boolean') {
@@ -311,7 +311,7 @@ const getUtilisationReports = async (bankId, options) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to get previous utilisation reports: %s', error);
+    console.error('Unable to get previous utilisation reports: %o', error);
     throw error;
   }
 };
@@ -336,7 +336,7 @@ const getUtilisationReportById = async (_id) => {
 const getBankById = async (bankId) => {
   try {
     if (!isValidBankId(bankId)) {
-      console.error('Get bank failed with the following bank ID %s', bankId);
+      console.error('Get bank failed with the following bank ID %o', bankId);
       return false;
     }
 
@@ -348,7 +348,7 @@ const getBankById = async (bankId) => {
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get bank by ID %s', error);
+    console.error('Unable to get bank by ID %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get bank by ID' };
   }
 };

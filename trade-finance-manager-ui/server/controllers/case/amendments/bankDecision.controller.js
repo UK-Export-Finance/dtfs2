@@ -67,7 +67,7 @@ const postAmendmentBankDecisionChoice = async (req, res) => {
     console.error('Unable to add the bank\'s decision');
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (error) {
-    console.error('There was a problem adding the bank\'s decision %s', error?.response?.data);
+    console.error('There was a problem adding the bank\'s decision %o', error?.response?.data);
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };
@@ -153,7 +153,7 @@ const postAmendmentBankDecisionReceivedDate = async (req, res) => {
     console.error('Unable to add the bank\'s decision received date');
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (error) {
-    console.error('There was a problem adding the bank\'s decision received date %s', error?.response?.data);
+    console.error('There was a problem adding the bank\'s decision received date %o', error?.response?.data);
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };
@@ -231,7 +231,7 @@ const postAmendmentBankDecisionEffectiveDate = async (req, res) => {
     console.error('Unable to add the bank\'s decision effective date');
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (error) {
-    console.error('There was a problem adding the bank\'s decision effective date %s', error?.response?.data);
+    console.error('There was a problem adding the bank\'s decision effective date %o', error?.response?.data);
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };
@@ -296,7 +296,7 @@ const postAmendmentBankDecisionAnswers = async (req, res) => {
 
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (error) {
-    console.error('There was a problem submitting the bank\'s decision %s', error?.response?.data);
+    console.error('There was a problem submitting the bank\'s decision %o', error?.response?.data);
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };

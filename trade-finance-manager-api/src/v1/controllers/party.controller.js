@@ -24,7 +24,7 @@ const updateParty = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Unable to update party %O', error);
+    console.error('Unable to update party %o', error);
     return res.status(500).send(error.message);
   }
 };

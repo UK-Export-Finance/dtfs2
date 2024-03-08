@@ -37,12 +37,12 @@ module.exports.loginWithSignInLink = async (req, res) => {
     } = req;
 
     if (!isValidUserId(userId)) {
-      console.error('Error validating sign in link: invalid userId %s', userId);
+      console.error('Error validating sign in link invalid userId %o', userId);
       return res.status(400).render('_partials/problem-with-service.njk');
     }
 
     if (!isValidSignInToken(signInToken)) {
-      console.error('Error validating sign in token: invalid signInToken %s', signInToken);
+      console.error('Error validating sign in token: invalid signInToken %o', signInToken);
       return res.status(400).render('_partials/problem-with-service.njk');
     }
 
@@ -60,22 +60,22 @@ module.exports.loginWithSignInLink = async (req, res) => {
     return res.render('login/post-login-redirect.njk', {
       redirectUrl,
     });
-  } catch (e) {
-    console.error(`Error validating sign in link: ${e}`);
+  } catch (error) {
+    console.error('Error validating sign in link %o', error);
 
     /**
      * These are known error codes -- user has not got correct active session
      * 401 is no active session
      * 404 is no token found
      * */
-    if (e.response?.status === 401 || e.response?.status === 404) {
+    if (error.response?.status === 401 || error.response?.status === 404) {
       return res.redirect('/login');
     }
 
-    if (e.response?.status === 403) {
+    if (error.response?.status === 403) {
       if (
-        e.response?.data?.errors?.find(
-          (error) => error.cause === HTTP_ERROR_CAUSES.USER_BLOCKED || error.cause === HTTP_ERROR_CAUSES.USER_DISABLED,
+        error.response?.data?.errors?.find(
+          (exception) => exception.cause === HTTP_ERROR_CAUSES.USER_BLOCKED || exception.cause === HTTP_ERROR_CAUSES.USER_DISABLED,
         )
       ) {
         return res.status(403).render('login/temporarily-suspended.njk');

@@ -15,7 +15,7 @@ const sendUpdatedTaskEmail = async (task, deal, urlOrigin) => {
 
     return sendTfmEmail(templateId, sendToEmailAddress, emailVariables);
   } catch (error) {
-    console.error('TFM-API - Error sending updated task email %s', error);
+    console.error('TFM-API - Error sending updated task email %o', error);
     return null;
   }
 };

@@ -66,7 +66,7 @@ exports.create = async (req, res) => {
 
     return res.status(201).json(application);
   } catch (error) {
-    console.error('Unable to create an application %s', error);
+    console.error('Unable to create an application %o', error);
     return res.status(500).send({ status: 500, message: 'Unable to create an application' });
   }
 };

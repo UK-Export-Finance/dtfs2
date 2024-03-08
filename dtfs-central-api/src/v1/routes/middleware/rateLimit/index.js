@@ -8,7 +8,7 @@ const getRateLimitThresholdFromEnvironmentVariables = () => {
   const rateLimitThresholdPerMinuteAsNumber = Number(RATE_LIMIT_THRESHOLD);
 
   if (!rateLimitThresholdPerMinuteAsNumber || rateLimitThresholdPerMinuteAsNumber < 0) {
-    console.error('Invalid rate limit threshold value %s.', RATE_LIMIT_THRESHOLD);
+    console.error('Invalid rate limit threshold value %d.', RATE_LIMIT_THRESHOLD);
     throw new InvalidEnvironmentVariableError('Invalid rate limit threshold value.');
   }
 

@@ -22,7 +22,7 @@ const getFacility = async (req, res) => {
       facility: tfmFacility
     });
   } catch (error) {
-    console.error('Error fetching facility %O', error);
+    console.error('Error fetching facility %o', error);
     return res.status(500).send(error.message);
   }
 };
@@ -82,7 +82,7 @@ const getFacilities = async (req, res) => {
 
     return res.status(200).send({ tfmFacilities: facilities });
   } catch (error) {
-    console.error('Error fetching facilities %O', error);
+    console.error('Error fetching facilities %o', error);
     return res.status(500).send(error.message);
   }
 };
@@ -96,7 +96,7 @@ const updateFacility = async (req, res) => {
       updateFacility: updatedFacility.tfm
     });
   } catch (error) {
-    console.error('Unable to update facility: %O', error);
+    console.error('Unable to update facility: %d', error);
     return res.status(500).send({ data: 'Unable to update facility' });
   }
 };

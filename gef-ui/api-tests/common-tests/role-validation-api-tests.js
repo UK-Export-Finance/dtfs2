@@ -44,7 +44,7 @@ const withRoleValidationApiTests = ({
 
     if (includeWhitelistedRolesTests) {
       describe('whitelisted roles', () => {
-        it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%s' role`, async (allowedRole) => {
+        it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%o' role`, async (allowedRole) => {
           const { sessionCookie } = await storage.saveUserSession([allowedRole]);
 
           const response = await makeRequestWithHeaders({ Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] });

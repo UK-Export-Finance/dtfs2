@@ -23,7 +23,7 @@ const facilityCovenant = (deal, facility, covenantType) => {
       effectiveDate,
     };
   } catch (error) {
-    console.error('Unable to map facility covenant record. %s', error);
+    console.error('Unable to map facility covenant record. %o', error);
     return {};
   }
 };

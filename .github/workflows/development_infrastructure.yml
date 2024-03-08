@@ -50,7 +50,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -92,7 +92,7 @@ jobs:
     runs-on: [self-hosted, linux, deployment]
 
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -202,7 +202,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -253,7 +253,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -289,7 +289,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -378,7 +378,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -443,7 +443,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -523,7 +523,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -613,7 +613,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -712,7 +712,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -794,7 +794,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -851,7 +851,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -981,7 +981,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -1146,7 +1146,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -1315,7 +1315,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -1512,7 +1512,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -1693,7 +1693,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -1861,7 +1861,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -2022,7 +2022,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -2186,7 +2186,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -2390,7 +2390,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -2485,7 +2485,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -2539,7 +2539,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
     steps:
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
