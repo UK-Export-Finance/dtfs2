@@ -131,6 +131,7 @@ describe('controllers - login', () => {
 
       // Assert
       expect(res._getRedirectUrl()).toEqual('/after-login-test-url');
+      expect(res._getStatusCode()).toEqual(302);
     });
   });
 
@@ -146,6 +147,7 @@ describe('controllers - login', () => {
 
       // Assert
       expect(res._getRedirectUrl()).toMatch(/^https:\/\/login\.microsoftonline\.com\/*/);
+      expect(res._getStatusCode()).toEqual(302);
     });
   });
 });
