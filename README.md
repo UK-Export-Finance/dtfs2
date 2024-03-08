@@ -87,8 +87,8 @@ docker-compose down
 
 ## Different docker-compose files
 
-There are 4 different docker-compose files right now.
-- docker-compose.yml and docker-compose.dev.yml are used for local development, docker-compose has resource limits imposed on it for weaker machines.
+There are 3 different docker-compose files right now.
+- docker-compose.yml is used for local development
 - docker-compose.gha.yml is used for the pipelines to run our tests against
 - docker-compose.replica-set.yml is used when you need a replica set enabled on your local database, e.g. when working with the mongodb change stream
 

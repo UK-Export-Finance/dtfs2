@@ -13,14 +13,11 @@ export const postAuditDetails: (changeStreamDocument: ChangeStreamDocument) => P
   if (!AUDIT_API_URL || !AUDIT_API_USERNAME || !AUDIT_API_PASSWORD) {
     throw new InvalidEnvironmentVariableError('AUDIT_API_URL, AUDIT_API_USERNAME or AUDIT_API_PASSWORD not set');
   }
-  // TODO DTFS2-6967 enable delete functionality
   if (changeStreamDocument.operationType !== 'insert' && changeStreamDocument.operationType !== 'update' && changeStreamDocument.operationType !== 'replace') {
     console.info('Change stream document is not suitable event for audit API, skipping');
     return;
   }
 
-  // TODO DTFS2-6967 enable delete functionality
-  // const fullDocument = changeStreamDocument.operationType !== 'delete' ? changeStreamDocument.fullDocument : null;
   const { fullDocument } = changeStreamDocument;
   console.info('Sending change stream update to API for document', changeStreamDocument);
 
