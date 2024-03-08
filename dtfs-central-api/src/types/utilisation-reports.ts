@@ -28,7 +28,7 @@ export type UtilisationReportReconciliationSummary = {
 
 export type ReportWithStatus = {
   status: UtilisationReportReconciliationStatus;
-  reportId: string;
+  reportId: number;
 };
 
 type UtilisationReportHeader = ValuesOf<typeof UTILISATION_REPORT_HEADERS>;

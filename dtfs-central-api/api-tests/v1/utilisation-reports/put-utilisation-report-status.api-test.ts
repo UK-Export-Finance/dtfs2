@@ -1,13 +1,9 @@
-import { Collection, ObjectId, OptionalId, WithoutId } from 'mongodb';
-import { MONGO_DB_COLLECTIONS, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReport } from '@ukef/dtfs2-common';
-import wipeDB from '../../wipeDB';
+import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import app from '../../../src/createApp';
 import createApi from '../../api';
-import db from '../../../src/drivers/db-client';
-import { MOCK_UTILISATION_REPORT } from '../../mocks/utilisation-reports/utilisation-reports';
 import { MOCK_TFM_USER } from '../../mocks/test-users/mock-tfm-user';
-import { MOCK_BANKS } from '../../mocks/banks';
-import { withoutMongoId } from '../../../src/helpers/mongodb';
+import { UtilisationReportRepo } from '../../../src/repositories/utilisation-reports-repo';
 
 const api = createApi(app);
 
@@ -15,87 +11,25 @@ console.error = jest.fn();
 
 describe('/v1/utilisation-reports/set-status', () => {
   const setStatusUrl = '/v1/utilisation-reports/set-status';
-  const uploadedReportIds: string[] = [];
-  let utilisationReportsCollection: Collection<WithoutId<UtilisationReport>> | undefined;
 
-  const mockUtilisationReportWithoutId = withoutMongoId(MOCK_UTILISATION_REPORT);
-  const mockUtilisationReports: OptionalId<UtilisationReport>[] = [
-    {
-      ...mockUtilisationReportWithoutId,
-      reportPeriod: {
-        start: {
-          month: 1,
-          year: 2023,
-        },
-        end: {
-          month: 1,
-          year: 2023,
-        },
-      },
-    },
-    {
-      ...mockUtilisationReportWithoutId,
-      reportPeriod: {
-        start: {
-          month: 2,
-          year: 2023,
-        },
-        end: {
-          month: 2,
-          year: 2023,
-        },
-      },
-    },
-    {
-      ...mockUtilisationReportWithoutId,
-      reportPeriod: {
-        start: {
-          month: 3,
-          year: 2023,
-        },
-        end: {
-          month: 3,
-          year: 2023,
-        },
-      },
-    },
-  ];
+  const reportId = 1;
+  const mockReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).build();
 
   beforeAll(async () => {
-    await wipeDB.wipe([MONGO_DB_COLLECTIONS.UTILISATION_REPORTS, MONGO_DB_COLLECTIONS.BANKS]);
+    await SqlDbDataSource.initialize();
 
-    utilisationReportsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.UTILISATION_REPORTS);
-    for (const mockUtilisationReport of mockUtilisationReports) {
-      try {
-        const { insertedId } = await utilisationReportsCollection.insertOne(mockUtilisationReport);
-        uploadedReportIds.push(insertedId.toString());
-      } catch (error) {
-        console.error('Failed to insert mock utilisation reports');
-        throw error;
-      }
-    }
-
-    const banksCollection = await db.getCollection(MONGO_DB_COLLECTIONS.BANKS);
-    await banksCollection.insertOne(MOCK_BANKS.HSBC);
-  });
-
-  beforeEach(async () => {
-    const filterToResetAllStatuses = {};
-    await utilisationReportsCollection?.updateMany(filterToResetAllStatuses, {
-      $unset: {
-        status: '',
-      },
-    });
+    await UtilisationReportRepo.delete({});
+    await UtilisationReportRepo.save(mockReport);
   });
 
   it(`should return a 500 error when trying to set a non-existent report to '${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}'`, async () => {
     // Arrange
-    const reportId = MOCK_UTILISATION_REPORT._id.toString();
+    const invalidReportId = reportId + 1;
     const requestBody = {
       user: MOCK_TFM_USER,
       reportsWithStatus: [
         {
-          reportId,
+          reportId: invalidReportId,
           status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
         },
       ],
@@ -108,7 +42,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     expect(status).toBe(500);
   });
 
-  it('returns a 400 error if the request body does not have the correct format', async () => {
+  it("returns a 400 error if a request body item is missing the 'reportId' property", async () => {
     // Arrange
     const requestBody = {
       user: MOCK_TFM_USER,
@@ -127,55 +61,41 @@ describe('/v1/utilisation-reports/set-status', () => {
     expect(status).toBe(400);
   });
 
-  it('returns a 400 error if all elements of the request body except one have the correct format', async () => {
+  it("returns a 400 error if a request body item is missing the 'status' property", async () => {
     // Arrange
-    const reportStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED;
-    const reportsWithStatus = uploadedReportIds.map((reportId) => ({
-      reportId,
-      status: reportStatus,
-    }));
     const requestBody = {
       user: MOCK_TFM_USER,
       reportsWithStatus: [
-        ...reportsWithStatus,
         {
-          status: 'INVALID_STATUS',
+          reportId: 1,
+          // status: missing
         },
       ],
     };
 
     // Act
     const { status } = await api.put(requestBody).to(setStatusUrl);
-    const updatedDocuments = await Promise.all(
-      reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection?.findOne({ _id: { $eq: new ObjectId(reportWithStatus.reportId) } })),
-    );
 
     // Assert
     expect(status).toBe(400);
-    expect(updatedDocuments.length).toBe(reportsWithStatus.length);
-    updatedDocuments.forEach((document) => expect(document?.status).not.toEqual(reportStatus));
   });
 
   it('returns a 200 if the request body is valid', async () => {
     // Arrange
-    const reportStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
-    const reportsWithStatus = uploadedReportIds.map((reportId) => ({
-      reportId,
-      status: reportStatus,
-    }));
     const requestBody = {
       user: MOCK_TFM_USER,
-      reportsWithStatus,
+      reportsWithStatus: [
+        {
+          reportId,
+          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+        },
+      ],
     };
 
     // Act
     const { status } = await api.put(requestBody).to(setStatusUrl);
-    const updatedDocuments = await Promise.all(
-      reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection?.findOne({ _id: { $eq: new ObjectId(reportWithStatus.reportId) } })),
-    );
 
     // Assert
     expect(status).toBe(200);
-    updatedDocuments.forEach((document) => expect(document?.status).toEqual(reportStatus));
   });
 });

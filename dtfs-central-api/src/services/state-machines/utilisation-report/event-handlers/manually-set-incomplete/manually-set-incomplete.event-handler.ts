@@ -1,12 +1,18 @@
-import { UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { NotImplementedError } from '../../../../../errors';
+import { EntityManager } from 'typeorm';
+import { DbRequestSource, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 
-export type UtilisationReportManuallySetIncompleteEvent = BaseUtilisationReportEvent<'MANUALLY_SET_INCOMPLETE', undefined>;
+type ManuallySetIncompleteEventPayload = {
+  requestSource: DbRequestSource;
+  transactionEntityManager: EntityManager;
+};
 
-export const handleUtilisationReportManuallySetIncompleteEvent = (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+export type UtilisationReportManuallySetIncompleteEvent = BaseUtilisationReportEvent<'MANUALLY_SET_INCOMPLETE', ManuallySetIncompleteEventPayload>;
+
+export const handleUtilisationReportManuallySetIncompleteEvent = async (
   report: UtilisationReportEntity,
+  { requestSource, transactionEntityManager }: ManuallySetIncompleteEventPayload,
 ): Promise<UtilisationReportEntity> => {
-  throw new NotImplementedError('TODO FN-1862');
+  report.setAsNotCompleted({ requestSource });
+  return await transactionEntityManager.getRepository(UtilisationReportEntity).save(report);
 };

@@ -71,6 +71,11 @@ export class UtilisationReportEntityMockBuilder {
     return this;
   }
 
+  public withoutAzureFileInfo(): UtilisationReportEntityMockBuilder {
+    this.report.azureFileInfo = undefined;
+    return this;
+  }
+
   public withUploadedByUserId(uploadedByUserId: string | null): UtilisationReportEntityMockBuilder {
     this.report.uploadedByUserId = uploadedByUserId;
     return this;

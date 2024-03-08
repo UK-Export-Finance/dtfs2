@@ -130,7 +130,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
   it('should allow the user to mark reports as completed and not completed, resetting the reports to their previous "not completed" status', () => {
     cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
       const { id, bankId } = utilisationReport;
-      const statusWithSpecificBankId = statusWithBankId.find(({ bankId: bankIdToMatch }) => bankIdToMatch === bankId);
+      const statusWithSpecificBankId = statusWithBankId.find(({ bankId: bankIdToMatch }) => bankId === bankIdToMatch);
       if (!statusWithSpecificBankId) {
         return;
       }
@@ -149,7 +149,10 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     pages.utilisationReportsPage.clickMarkReportAsCompletedButton(submissionMonth);
 
     cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
-      const { id, bankId } = utilisationReport;
+      const { bankId, id } = utilisationReport;
+      if (!statusWithBankId.find(({ bankId: bankIdToMatch }) => bankId === bankIdToMatch)) {
+        return;
+      }
 
       const displayStatus = getDisplayStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
       pages.utilisationReportsPage
@@ -191,14 +194,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     const previousUtilisationReportAlias = 'previousUtilisationReport';
     const previousSubmissionMonth = '2023-12';
     const previousReportPeriod = getMonthlyReportPeriodFromIsoSubmissionMonth(previousSubmissionMonth);
-
+    
     cy.get(aliasSelector(utilisationReportsAlias)).then((utilisationReports) => {
-      const { bank } = utilisationReports[0];
-      const bankId = bank.id;
-      const reportId = bankId;
+      const { bankId } = utilisationReports[0];
 
       const previousUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
-        .withId(reportId)
+        .withId(999) // this report id should always be unique
         .withBankId(bankId)
         .withReportPeriod(previousReportPeriod)
         .build();
