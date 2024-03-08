@@ -96,7 +96,7 @@
     "node-mocks-http": "^1.14.1",
     "rimraf": "^5.0.5",
     "sass": "^1.71.1",
-    "sass-loader": "13.2.2",
+    "sass-loader": "14.1.1",
     "style-loader": "3.3.2",
     "terser-webpack-plugin": "^5.3.10",
     "ts-jest": "^29.1.2",
