@@ -36,13 +36,13 @@ export const createEstore = async (req: Request, res: Response) => {
   if (Object.keys(eStoreData).length) {
     // 1. Void IDs check
     if (!isValidId(eStoreData)) {
-      console.error('Void eStore IDs');
-      return res.status(400).send({ status: 400, message: 'Void IDs' });
+      console.error('Invalid eStore IDs');
+      return res.status(400).send({ status: 400, message: 'Invalid IDs' });
     }
 
     if (!ObjectId.isValid(eStoreData.dealId)) {
-      console.error('Void eStore deal ObjectId');
-      return res.status(400).send({ status: 400, message: 'Void deal ObjectId' });
+      console.error('Invalid eStore deal ObjectId');
+      return res.status(400).send({ status: 400, message: 'Invalid deal ObjectId' });
     }
 
     // Ensure new CRON job creation
@@ -179,8 +179,8 @@ export const createEstore = async (req: Request, res: Response) => {
       res.status(201).send({ status: 201, message: 'eStore job in queue' });
     }
   } else {
-    console.error('Void eStore payload %O', eStoreData);
-    return res.status(400).send({ status: 400, message: 'Void eStore payload' });
+    console.error('Invalid eStore payload %O', eStoreData);
+    return res.status(400).send({ status: 400, message: 'Invalid eStore payload' });
   }
 
   return res.status(201).send();

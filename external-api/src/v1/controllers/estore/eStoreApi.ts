@@ -43,7 +43,7 @@ const headers = {
  */
 export const siteExists = async (exporterName: string): Promise<SiteExistsResponse> => {
   if (!exporterName || !isValidExporterName(exporterName)) {
-    console.error('Void exporter name provided %s', exporterName);
+    console.error('Invalid exporter name provided %s', exporterName);
 
     return {
       status: 400,
@@ -135,7 +135,7 @@ export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promi
  */
 export const createBuyerFolder = async (siteId: string, buyerName: EstoreBuyer): Promise<BuyerFolderResponse> => {
   if (!isValidSiteId(siteId)) {
-    console.error('Void site ID %s', siteId);
+    console.error('Invalid site ID %s', siteId);
 
     return {
       data: {
@@ -158,7 +158,7 @@ export const createBuyerFolder = async (siteId: string, buyerName: EstoreBuyer):
  */
 export const createDealFolder = async (siteId: string, data: EstoreDealFolder): Promise<DealFolderResponse> => {
   if (!isValidSiteId(siteId)) {
-    console.error('Void site ID %s', siteId);
+    console.error('Invalid site ID %s', siteId);
 
     return {
       data: {
@@ -182,7 +182,7 @@ export const createDealFolder = async (siteId: string, data: EstoreDealFolder): 
  */
 export const createFacilityFolder = async (siteId: string, dealIdentifier: string, data: EstoreFacilityFolder): Promise<FacilityFolderResponse> => {
   if (!isValidSiteId(siteId) || !validUkefId(dealIdentifier)) {
-    console.error('Void site or deal ID %s %s', siteId, dealIdentifier);
+    console.error('Invalid site or deal ID %s %s', siteId, dealIdentifier);
 
     return {
       data: {
@@ -206,7 +206,7 @@ export const createFacilityFolder = async (siteId: string, dealIdentifier: strin
  */
 export const uploadSupportingDocuments = async (siteId: string, dealIdentifier: string, file: EstoreDealFiles): Promise<UploadDocumentsResponse> => {
   if (!isValidSiteId(siteId) || !validUkefId(dealIdentifier)) {
-    console.error('Void site or deal ID %s %s', siteId, dealIdentifier);
+    console.error('Invalid site or deal ID %s %s', siteId, dealIdentifier);
 
     return {
       data: {
