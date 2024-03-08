@@ -81,9 +81,9 @@ openRouter.route('/feedback').post(feedbackController.create);
 // token-validator
 authRouter.get('/validate-user-token', (_req, res) => res.status(200).send());
 
-openRouter.route('/auth/getLoginUrl').get(authController.getLoginUrl);
-openRouter.route('/auth/processSsoRedirect').post(authController.processSsoRedirect);
-authRouter.route('/auth/getLogoutUrl').get(authController.getLogoutUrl);
+openRouter.route('/auth/login-url').get(authController.getLoginUrl);
+openRouter.route('/auth/process-sso-redirect').post(authController.processSsoRedirect);
+authRouter.route('/auth/logout-url').get(authController.getLogoutUrl);
 
 authRouter.route('/facilities').get(facilityController.getFacilities);
 

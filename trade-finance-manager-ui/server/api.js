@@ -387,7 +387,7 @@ const getAuthLoginUrl = async () => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${TFM_API_URL}/v1/auth/getLoginUrl`,
+      url: `${TFM_API_URL}/v1/auth/login-url`,
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': TFM_API_KEY,
@@ -405,7 +405,7 @@ const getAuthLogoutUrl = async (token) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${TFM_API_URL}/v1/auth/getLogoutUrl`,
+      url: `${TFM_API_URL}/v1/auth/logout-url`,
       headers: generateHeaders(token),
     });
 
@@ -430,7 +430,7 @@ const processSsoRedirect = async ({ pkceCodes, authCodeUrlRequest, authCodeReque
   try {
     const response = await axios({
       method: 'post',
-      url: `${TFM_API_URL}/v1/auth/processSsoRedirect`,
+      url: `${TFM_API_URL}/v1/auth/process-sso-redirect`,
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': TFM_API_KEY,
