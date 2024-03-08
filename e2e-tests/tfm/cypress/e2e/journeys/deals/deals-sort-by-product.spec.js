@@ -73,7 +73,7 @@ context('User can view and sort deals by product', () => {
   });
 
   beforeEach(() => {
-    cy.tfmLogin({ user: T1_USER_1 });
+    cy.login(T1_USER_1);
     cy.url().should('eq', relative('/deals'));
   });
 

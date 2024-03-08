@@ -81,7 +81,7 @@ context('Portal to TFM deal submission', () => {
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
 
-    cy.tfmLogin({ user: BUSINESS_SUPPORT_USER_1 });
+    cy.login(BUSINESS_SUPPORT_USER_1);
 
     let tfmFacilityPage = `${TFM_URL}/case/${dealId}/facility/${bondId}`;
     cy.forceVisit(tfmFacilityPage);
@@ -152,7 +152,7 @@ context('Portal to TFM deal submission', () => {
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
 
-    cy.tfmLogin({ user: BUSINESS_SUPPORT_USER_1 });
+    cy.login(BUSINESS_SUPPORT_USER_1);
 
     tfmFacilityPage = `${TFM_URL}/case/${dealId}/facility/${bondId}`;
     cy.forceVisit(tfmFacilityPage);

@@ -44,7 +44,7 @@ const issueValidJWT = (user, sessionIdentifier) => {
 };
 
 /**
- * tfmLogin
+ * login
  * Ensure a user is logged in to TFM.
  * Return JWT token for API use.
  * 1) Create season id
@@ -58,17 +58,14 @@ const issueValidJWT = (user, sessionIdentifier) => {
  *
  * @example
  * // Returns "Bearer ..."
- * cy.tfmLogin({user});
+ * cy.login({user});
  *
  * @example
  * // Returns "Bearer ..."
- * cy.tfmLogin({user, isSessionForAPICall: true}).then((token) => apiCall(token));
+ * cy.login({user, isSessionForAPICall: true}).then((token) => apiCall(token));
  *
  */
-const tfmLogin = ({
-  user,
-  isSessionForAPICall = false,
-}) => {
+const login = (user, isSessionForAPICall = false) => {
   const { username } = user;
 
   console.info('Mock login::');
@@ -118,4 +115,4 @@ const tfmLogin = ({
   });
 };
 
-export default tfmLogin;
+export default login;

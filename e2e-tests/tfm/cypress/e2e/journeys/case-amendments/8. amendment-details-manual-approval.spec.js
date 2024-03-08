@@ -48,7 +48,7 @@ context('Amendments - Manual approval journey', () => {
     });
 
     it('should display facility details and values on deal and facility page', () => {
-      cy.tfmLogin({ user: PIM_USER_1 });
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
@@ -71,7 +71,7 @@ context('Amendments - Manual approval journey', () => {
     });
 
     it('should take you to `Check your answers page` page', () => {
-      cy.tfmLogin({ user: PIM_USER_1 });
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -117,7 +117,7 @@ context('Amendments - Manual approval journey', () => {
     });
 
     it('should validate the content on `Check your answers` page', () => {
-      cy.tfmLogin({ user: PIM_USER_1 });
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -148,7 +148,7 @@ context('Amendments - Manual approval journey', () => {
     });
 
     it('should display the `Not added` decision for Cover end date AND Facility value', () => {
-      cy.tfmLogin({ user: PIM_USER_1 });
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -166,7 +166,7 @@ context('Amendments - Manual approval journey', () => {
     });
 
     it('should display facility details and values on deal and facility page as amendment not completed', () => {
-      cy.tfmLogin({ user: PIM_USER_1 });
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
@@ -215,7 +215,7 @@ context('Amendments - Manual approval journey', () => {
     });
 
     it('should display facility details and values on deal and facility page', () => {
-      cy.tfmLogin({ user: PIM_USER_1 });
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
@@ -236,7 +236,7 @@ context('Amendments - Manual approval journey', () => {
     });
 
     it('should take you to `Check your answers page` page', () => {
-      cy.tfmLogin({ user: PIM_USER_1 });
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -276,7 +276,7 @@ context('Amendments - Manual approval journey', () => {
     });
 
     it('should validate the content on `Check your answers` page', () => {
-      cy.tfmLogin({ user: PIM_USER_1 });
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -305,7 +305,7 @@ context('Amendments - Manual approval journey', () => {
     });
 
     it('should display the `Not added` decision for Cover end date', () => {
-      cy.tfmLogin({ user: PIM_USER_1 });
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -323,7 +323,7 @@ context('Amendments - Manual approval journey', () => {
     });
 
     it('should display facility details and values on deal and facility page as amendment not completed', () => {
-      cy.tfmLogin({ user: PIM_USER_1 });
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
@@ -370,7 +370,7 @@ context('Amendments - Manual approval journey', () => {
     });
 
     it('should display facility details and values on deal and facility page', () => {
-      cy.tfmLogin({ user: PIM_USER_1 });
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
@@ -391,7 +391,7 @@ context('Amendments - Manual approval journey', () => {
     });
 
     it('should take you to `Check your answers page` page', () => {
-      cy.tfmLogin({ user: PIM_USER_1 });
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -430,7 +430,7 @@ context('Amendments - Manual approval journey', () => {
     });
 
     it('should validate the content on `Check your answers` page', () => {
-      cy.tfmLogin({ user: PIM_USER_1 });
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -459,7 +459,7 @@ context('Amendments - Manual approval journey', () => {
     });
 
     it('should display the `Not added` decision for Facility value', () => {
-      cy.tfmLogin({ user: PIM_USER_1 });
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -477,7 +477,7 @@ context('Amendments - Manual approval journey', () => {
     });
 
     it('should display facility details and values on deal and facility page as amendment not completed', () => {
-      cy.tfmLogin({ user: PIM_USER_1 });
+      cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
