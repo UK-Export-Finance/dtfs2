@@ -15,7 +15,7 @@ describe('controllers/utilisation-reports/report-download', () => {
     const getHttpMocks = () =>
       httpMocks.createMocks({
         session: { userToken: 'user-token', user: MOCK_TFM_SESSION_USER },
-        params: { _id: '6581aa7ad727816f9301f75a' },
+        params: { id: '6581' },
       });
 
     it("renders the 'problem-with-service' page on error", async () => {
@@ -54,7 +54,7 @@ describe('controllers/utilisation-reports/report-download', () => {
       await getReportDownload(req, res);
 
       // Assert
-      expect(api.downloadUtilisationReport).toHaveBeenCalledWith(req.session.userToken, req.params._id);
+      expect(api.downloadUtilisationReport).toHaveBeenCalledWith(req.session.userToken, req.params.id);
 
       expect(res._getHeaders()).toEqual(mockHeaders);
       expect(dataPipeSpy).toHaveBeenCalledTimes(1);

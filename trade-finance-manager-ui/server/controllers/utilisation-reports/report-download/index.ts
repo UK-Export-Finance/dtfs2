@@ -5,9 +5,9 @@ import { asUserSession } from '../../../helpers/express-session';
 export const getReportDownload = async (req: Request, res: Response) => {
   try {
     const { userToken } = asUserSession(req.session);
-    const { _id } = req.params;
+    const { id } = req.params;
 
-    const { data, headers } = await api.downloadUtilisationReport(userToken, _id);
+    const { data, headers } = await api.downloadUtilisationReport(userToken, id);
 
     res.set('content-disposition', headers['content-disposition']);
     res.set('content-type', headers['content-type']);
