@@ -121,8 +121,8 @@ exports.findOne = (req, res) => {
   });
 };
 
-const updateDeal = async (dealId, dealUpdate, user) => {
-  const updatedDeal = await api.updateDeal(dealId, dealUpdate, user);
+const updateDeal = async (dealId, dealUpdate, user, userForAudit) => {
+  const updatedDeal = await api.updateDeal(dealId, dealUpdate, user, userForAudit);
 
   return updatedDeal;
 };
@@ -133,6 +133,7 @@ exports.updateDeal = updateDeal;
  */
 exports.update = async (req, res) => {
   const dealId = req.params.id;
+  const { user } = req.session;
 
   await findOneDeal(dealId, async (deal) => {
     if (!deal) res.status(404).send();
@@ -141,7 +142,7 @@ exports.update = async (req, res) => {
       return res.status(401).send();
     }
 
-    const updatedDeal = await updateDeal(dealId, req.body, req.user, deal);
+    const updatedDeal = await updateDeal(dealId, req.body, user);
 
     return res.status(200).json(updatedDeal);
   });

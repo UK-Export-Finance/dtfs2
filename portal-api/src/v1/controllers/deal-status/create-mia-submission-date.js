@@ -11,6 +11,7 @@ const createMiaSubmissionDate = async (dealId, user) => {
   const updatedDeal = await updateDeal(
     dealId,
     modifiedDeal,
+    null,
     user,
   );
 

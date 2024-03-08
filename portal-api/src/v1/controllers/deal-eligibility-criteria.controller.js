@@ -130,9 +130,10 @@ exports.update = async (req, res) => {
         params: req.params,
         body: updatedDeal,
         user: req.user,
+        ...req,
       };
 
-      updateDeal(newReq, res, req.user);
+      updateDeal(newReq, res);
     }
   });
 };

@@ -52,7 +52,7 @@ const createDeal = async (deal, user) => {
   }
 };
 
-const updateDeal = async (dealId, dealUpdate, user) => {
+const updateDeal = async (dealId, dealUpdate, user, userForAudit) => {
   try {
     if (!isValidMongoId(dealId)) {
       console.error('Update deal API failed for deal id %s', dealId);
@@ -66,6 +66,7 @@ const updateDeal = async (dealId, dealUpdate, user) => {
       data: {
         dealUpdate,
         user,
+        userForAudit
       },
     });
 

@@ -13,6 +13,7 @@ const updateStatus = async (dealId, from, to, user) => {
   const updatedDeal = await updateDeal(
     dealId,
     modifiedDeal,
+    null,
     user,
   );
 
