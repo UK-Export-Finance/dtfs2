@@ -1,5 +1,5 @@
 const { getDealEffectiveDate, getDealValue, getDealId, getDealCurrency } = require('./helpers');
-const { formatTimestamp } = require('../../helpers/date');
+const { formatDate } = require('../../helpers/date');
 const getDealSubmissionDate = require('./helpers/get-deal-submission-date');
 
 /*
@@ -31,7 +31,7 @@ const initialDeal = (deal, obligorPartyIdentifier, acbsReference) => ({
   obligorPartyIdentifier,
   obligorName: deal.dealSnapshot.exporter.companyName.substring(0, 35),
   obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
-  creditReviewRiskDate: formatTimestamp(getDealSubmissionDate(deal)),
+  creditReviewRiskDate: formatDate(getDealSubmissionDate(deal)),
 });
 
 module.exports = initialDeal;
