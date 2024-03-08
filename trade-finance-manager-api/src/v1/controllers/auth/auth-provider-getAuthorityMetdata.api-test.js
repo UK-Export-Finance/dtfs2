@@ -27,9 +27,22 @@ describe('AuthProvider - getAuthorityMetadata', () => {
   });
 
   it('should return the response from axios/microsoft', () => {
-
     expect(axios.get).toHaveBeenCalled()
 
     expect(result).toEqual(mockAxiosResponse.data);
+  });
+
+  describe('when the axios call fails', () => {
+    it('should thrown an error', async () => {
+      axios.get = jest.fn().mockRejectedValue();
+
+      try {
+        result = await AuthProvider.getAuthorityMetadata();
+      } catch (error) {
+        const expectedError = 'Error TFM auth service - getting getAuthorityMetadata';
+
+        expect(String(error).includes(expectedError)).toEqual(true);
+      }
+    });
   });
 });
