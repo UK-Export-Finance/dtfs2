@@ -7,11 +7,11 @@ const { BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
 
 context('List previous utilisation reports', () => {
   before(() => {
-    cy.insertUtilisationReportDetails(previousReportDetails);
+    cy.insertUtilisationReports(previousReportDetails);
   });
 
   after(() => {
-    cy.removeAllUtilisationReportDetails();
+    cy.removeAllUtilisationReports();
   });
 
   describe('On initial page load ', () => {

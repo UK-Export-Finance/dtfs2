@@ -7,15 +7,15 @@ const { BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
 
 context('Utilisation report upload', () => {
   before(() => {
-    cy.removeAllUtilisationReportDetails();
+    cy.removeAllUtilisationReports();
   });
 
   after(() => {
-    cy.removeAllUtilisationReportDetails();
+    cy.removeAllUtilisationReports();
   });
 
   it('should not allow you to upload a report if the current report period report has been submitted', () => {
-    cy.insertUtilisationReportDetails(upToDateReportDetails);
+    cy.insertUtilisationReports(upToDateReportDetails);
 
     cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
     cy.visit(relativeURL('/utilisation-report-upload'));

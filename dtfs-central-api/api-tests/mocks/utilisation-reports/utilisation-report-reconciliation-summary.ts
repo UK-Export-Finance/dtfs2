@@ -1,10 +1,9 @@
-import { ObjectId } from 'mongodb';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../src/types/utilisation-reports';
 import { MOCK_BANKS } from '../banks';
 
 const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEM: UtilisationReportReconciliationSummaryItem = {
-  reportId: new ObjectId('6598162ce10f06e419170321'),
+  reportId: 12,
   bank: {
     id: MOCK_BANKS.BARCLAYS.id,
     name: MOCK_BANKS.BARCLAYS.name,
