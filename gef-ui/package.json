@@ -65,7 +65,7 @@
     "nodemon": "^3.1.0",
     "nunjucks": "3.2.4",
     "path": "0.12.7",
-    "redis": "^3.1.2",
+    "redis": "^4.6.13",
     "sanitize-html": "^2.12.1",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.2",
