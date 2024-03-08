@@ -99,7 +99,7 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: 6. Slot
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v2.0.0
         with:
           inlineScript: |
             az config get defaults
@@ -165,7 +165,7 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: 6. Slot
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v2.0.0
         with:
           inlineScript: |
             az config get defaults
