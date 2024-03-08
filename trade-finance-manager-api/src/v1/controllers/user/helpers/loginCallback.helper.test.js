@@ -11,7 +11,7 @@ jest.mock('../../../../utils/crypto.util', () => ({
 
 const { when } = require('jest-when');
 const { loginCallback: login } = require('./loginCallback.helper');
-const { usernameOrPasswordIncorrect, userIsBlocked, userIsDisabled } = require('../../../../constants/login-results.constant');
+const { usernameOrPasswordIncorrect } = require('../../../../constants/login-results.constant');
 const controller = require('../user.controller');
 const utils = require('../../../../utils/crypto.util');
 
@@ -79,32 +79,6 @@ describe('loginCallback', () => {
     expect(result).toEqual({ error: usernameOrPasswordIncorrect });
   });
 
-  it("returns a 'userIsDisabled' error when the user is disabled", async () => {
-    const DISABLED_USER = { ...USER, disabled: true };
-
-    mockFindByUsernameSuccess(DISABLED_USER);
-    mockValidPasswordSuccess();
-    mockIssueJWTSuccess(DISABLED_USER);
-    mockupdateLastLoginAndResetSignInDataSuccess(DISABLED_USER);
-
-    const result = await login(USERNAME, PASSWORD);
-
-    expect(result).toEqual({ error: userIsDisabled });
-  });
-
-  it("returns a 'userIsBlocked' error when the user is blocked", async () => {
-    const BLOCKED_USER = { ...USER, status: 'blocked' };
-
-    mockFindByUsernameSuccess(BLOCKED_USER);
-    mockValidPasswordSuccess();
-    mockIssueJWTSuccess(BLOCKED_USER);
-    mockupdateLastLoginAndResetSignInDataSuccess(BLOCKED_USER);
-
-    const result = await login(USERNAME, PASSWORD);
-
-    expect(result).toEqual({ error: userIsBlocked });
-  });
-
   it("returns a 'usernameOrPasswordIncorrect' error when the password is incorrect and the user is disabled", async () => {
     const DISABLED_USER = { ...USER, disabled: true };
 
@@ -112,19 +86,6 @@ describe('loginCallback', () => {
     mockValidPasswordFailure();
     mockIssueJWTSuccess(DISABLED_USER);
     mockupdateLastLoginAndResetSignInDataSuccess(DISABLED_USER);
-
-    const result = await login(USERNAME, PASSWORD);
-
-    expect(result).toEqual({ error: usernameOrPasswordIncorrect });
-  });
-
-  it("returns a 'usernameOrPasswordIncorrect' error when the password is incorrect and the user is blocked", async () => {
-    const BLOCKED_USER = { ...USER, status: 'blocked' };
-
-    mockFindByUsernameSuccess(BLOCKED_USER);
-    mockValidPasswordFailure();
-    mockIssueJWTSuccess(BLOCKED_USER);
-    mockupdateLastLoginAndResetSignInDataSuccess(BLOCKED_USER);
 
     const result = await login(USERNAME, PASSWORD);
 

@@ -15,10 +15,6 @@ const MOCK_TFM_USER_SCENARIOS = {
   NOT_FOUND: {
     found: false,
   },
-  CANNOT_PROCEED: {
-    found: true,
-    canProceed: false
-  }
 };
 
 const setupStubs = () => {

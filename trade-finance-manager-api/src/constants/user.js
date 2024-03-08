@@ -1,5 +1,4 @@
 const STATUS = {
-  BLOCKED: 'blocked',
   ACTIVE: 'active',
 };
 

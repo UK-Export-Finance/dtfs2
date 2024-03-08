@@ -12,8 +12,6 @@ const { USER, PAYLOAD } = require('../../../constants');
  * Find a TFM user by email(s).
  * Throw an error if any of the following conditions are met:
  * - More than 1 matching user found.
- * - User is blocked.
- * - User is disabled.
  * - Unexpected DB response.
  * @param {Array} emails
  * @returns {Object} handleFindByEmailsResult

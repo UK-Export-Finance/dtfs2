@@ -16,7 +16,7 @@ const getOrCreate = async (entraUser) => {
 
     const user = await existingTfmUser.getAndMap(entraUser);
 
-    if (user.found) {
+    if (user?.found) {
       console.info('TFM auth service - found an existing user');
 
       if (user.canProceed) {
