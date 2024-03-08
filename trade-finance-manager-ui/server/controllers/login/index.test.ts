@@ -139,7 +139,9 @@ describe('controllers - login', () => {
     it('should return to login page on logout', async () => {
       // Arrange
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      const { req, res } = createMocks({ session: { user: {}, destroy: jest.fn((callback) => callback()) } });
+      const session = { user: {}, destroy: jest.fn((callback) => callback()) };
+
+      const { req, res } = createMocks({ session });
       api.getAuthLogoutUrl = () => Promise.resolve({ logoutUrl: `${AZURE_SSO_AUTHORITY}?something=` });
 
       // Act
@@ -148,6 +150,7 @@ describe('controllers - login', () => {
       // Assert
       expect(res._getRedirectUrl()).toMatch(/^https:\/\/login\.microsoftonline\.com\/*/);
       expect(res._getStatusCode()).toEqual(302);
+      expect(session.destroy).toHaveBeenCalled();
     });
   });
 });
