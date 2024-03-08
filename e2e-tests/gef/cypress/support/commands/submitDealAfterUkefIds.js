@@ -11,7 +11,7 @@ const { submitDealAfterUkefIds } = require('./api');
 const submitDealAfterUkefIdsCall = (dealId, dealType, checker) => {
   const isSessionForAPICall = true;
 
-  cy.login(T1_USER_1, isSessionForAPICall).then((token) => submitDealAfterUkefIds(dealId, dealType, checker, token));
+  cy.tfmLogin(T1_USER_1, isSessionForAPICall).then((token) => submitDealAfterUkefIds(dealId, dealType, checker, token));
 };
 
 module.exports = submitDealAfterUkefIdsCall;

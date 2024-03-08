@@ -6,6 +6,6 @@ module.exports = (dealId, dealType) => {
 
   const isSessionForAPI = true;
 
-  return cy.login(T1_USER_1, isSessionForAPI)
+  return cy.tfmLogin(T1_USER_1, isSessionForAPI)
     .then((token) => submitDealAfterUkefIds(dealId, dealType, null, token));
 };
