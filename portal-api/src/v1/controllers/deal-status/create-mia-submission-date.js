@@ -1,7 +1,7 @@
 const { updateDeal } = require('../deal.controller');
 const { getNowAsEpochMillisecondString } = require('../../helpers/date');
 
-const createMiaSubmissionDate = async (dealId) => {
+const createMiaSubmissionDate = async (dealId, user) => {
   const modifiedDeal = {
     details: {
       manualInclusionApplicationSubmissionDate: getNowAsEpochMillisecondString(),
@@ -11,6 +11,8 @@ const createMiaSubmissionDate = async (dealId) => {
   const updatedDeal = await updateDeal(
     dealId,
     modifiedDeal,
+    null,
+    user,
   );
 
   return updatedDeal;

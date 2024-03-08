@@ -26,6 +26,7 @@ const insertMocks = async (mockDataLoaderToken) => {
   }
 
   const maker = PORTAL_MOCKS.USERS.BANK1_MAKER3;
+  const makerWithId = { ...maker, _id: '123456789' };
   const makerToken = await api.loginViaPortal(maker);
 
   console.info('inserting BSS deals');
@@ -44,7 +45,7 @@ const insertMocks = async (mockDataLoaderToken) => {
       ...facility,
       dealId: associatedDeal._id,
     };
-    await centralApi.createFacility(facilityToInsert, facilityToInsert.dealId, makerToken);
+    await centralApi.createFacility(facilityToInsert, facilityToInsert.dealId, makerWithId);
   });
 };
 

@@ -30,6 +30,10 @@ const expectAddedFields = (obj) => {
     editedBy: [],
     exporter: expect.any(Object),
     updatedAt: expect.any(Number),
+    auditDetails: {
+      lastUpdatedByPortalUserId: expect.any(String),
+      lastUpdatedAt: expect.any(String),
+    },
   });
 
   return expectation;

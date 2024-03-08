@@ -33,7 +33,8 @@ describe('changeStreamApi', () => {
         url: expect.any(String) as string,
         headers: {
           Authorization: expect.any(String) as string,
-          'Content-Type': 'application/json',
+          'Content-Type': 'text/plain',
+          Accept: 'application/json',
           integrationHubCollectionName: 'mockCollection',
           integrationHubItemId: mockChangeStreamDocument.documentKey._id.toString(),
           integrationHubProcess: 'dtfs',

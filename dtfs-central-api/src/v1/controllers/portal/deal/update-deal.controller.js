@@ -5,6 +5,7 @@ const db = require('../../../../drivers/db-client');
 const { PORTAL_ROUTE } = require('../../../../constants/routes');
 const { isNumber } = require('../../../../helpers');
 const { DB_COLLECTIONS } = require('../../../../constants');
+const { generatePortalUserAuditDetails } = require('../../../../helpers/generateAuditDetails');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -79,7 +80,7 @@ const updateDealEditedByPortal = async (dealId, user) => {
 };
 exports.updateDealEditedByPortal = updateDealEditedByPortal;
 
-const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) => {
+const updateDeal = async (dealId, dealChanges, user, userForAudit, existingDeal, routePath) => {
   try {
     if (ObjectId.isValid(dealId)) {
       const collection = await db.getCollection(DB_COLLECTIONS.DEALS);
@@ -109,6 +110,7 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
       if (dealChanges?.eligibility) {
         dealChangesEligibility = dealChanges.eligibility;
       }
+      const auditDetails = generatePortalUserAuditDetails(user?._id ?? userForAudit._id);
 
       const update = {
         ...dealChanges,
@@ -121,6 +123,7 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
           ...originalDealEligibility,
           ...dealChangesEligibility,
         },
+        auditDetails,
       };
 
       if (routePath === PORTAL_ROUTE) {
@@ -178,7 +181,7 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => 
         facilities: updatedFacilities,
       };
 
-      const response = await updateDeal(dealId, dealUpdate, user, null, routePath);
+      const response = await updateDeal(dealId, dealUpdate, user, null, null, routePath);
       const status = isNumber(response?.status, 3);
 
       if (status) {
@@ -204,7 +207,7 @@ exports.updateDealPut = async (req, res) => {
     }
 
     const dealId = req.params.id;
-    const { user, dealUpdate } = req.body;
+    const { user, userForAudit, dealUpdate } = req.body;
 
     // TODO: Refactor callback with status check
     return await findOneDeal(dealId, async (deal) => {
@@ -213,6 +216,7 @@ exports.updateDealPut = async (req, res) => {
           dealId,
           dealUpdate,
           user,
+          userForAudit,
           deal,
           req.routePath,
         );

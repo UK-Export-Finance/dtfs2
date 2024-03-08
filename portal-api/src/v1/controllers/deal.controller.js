@@ -121,8 +121,8 @@ exports.findOne = (req, res) => {
   });
 };
 
-const updateDeal = async (dealId, dealUpdate, user) => {
-  const updatedDeal = await api.updateDeal(dealId, dealUpdate, user);
+const updateDeal = async (dealId, dealUpdate, user, userForAudit) => {
+  const updatedDeal = await api.updateDeal(dealId, dealUpdate, user, userForAudit);
 
   return updatedDeal;
 };
@@ -141,7 +141,7 @@ exports.update = async (req, res) => {
       return res.status(401).send();
     }
 
-    const updatedDeal = await updateDeal(dealId, req.body, req.user, deal);
+    const updatedDeal = await updateDeal(dealId, req.body, req.user);
 
     return res.status(200).json(updatedDeal);
   });

@@ -56,6 +56,8 @@ const updatePortalDeal = async (dealId, update) => {
       headers: headers.central,
       data: {
         dealUpdate: update,
+        // TODO DTFS2-6967 replace with real user
+        user: { _id: 'TFM_USER' },
       },
     });
 
@@ -82,6 +84,8 @@ const updatePortalBssDealStatus = async (dealId, status) => {
       headers: headers.central,
       data: {
         status,
+        // TODO DTFS2-6967 replace with real user
+        user: { _id: 'TFM_USER' },
       },
     });
 
@@ -109,6 +113,8 @@ const addPortalDealComment = async (dealId, commentType, comment) => {
       dealId,
       commentType,
       comment,
+      // TODO DTFS2-6967 replace with real user
+      user: { _id: 'TFM_USER' },
     },
   });
 
@@ -130,6 +136,8 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
       headers: headers.central,
       data: {
         status,
+        // TODO DTFS2-6967 replace with real user
+        user: { _id: 'TFM_USER' },
       },
     });
 
@@ -154,7 +162,11 @@ const updatePortalFacility = async (facilityId, update) => {
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
       headers: headers.central,
-      data: update,
+      data: {
+        ...update,
+        // TODO DTFS2-6967 replace with real user
+        user: { _id: 'TFM_USER' },
+      },
     });
 
     return response.data;
@@ -187,11 +199,7 @@ const findOneDeal = async (dealId) => {
   }
 };
 
-const updateDeal = async (
-  dealId,
-  dealUpdate,
-  onError = ({ status, message }) => ({ status, data: message }),
-) => {
+const updateDeal = async (dealId, dealUpdate, onError = ({ status, message }) => ({ status, data: message })) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -615,7 +623,11 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/facilities/${facilityId}`,
       headers: headers.central,
-      data: facilityUpdate,
+      data: {
+        ...facilityUpdate,
+        // TODO DTFS2-6967 replace with real user
+        user: { _id: 'TFM_USER' },
+      },
     });
 
     return response.data;
@@ -1027,6 +1039,8 @@ const updatePortalGefDealStatus = async (dealId, status) => {
       headers: headers.central,
       data: {
         status,
+        // TODO DTFS2-6967 replace with real user
+        user: { _id: 'TFM_USER' },
       },
     });
 
@@ -1053,6 +1067,8 @@ const updatePortalGefDeal = async (dealId, update) => {
       headers: headers.central,
       data: {
         dealUpdate: update,
+        // TODO DTFS2-6967 replace with real user
+        user: { _id: 'TFM_USER' },
       },
     });
 
@@ -1099,7 +1115,8 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
     method: 'post',
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}/comment`,
     headers: headers.central,
-    data: { dealId, commentType, comment },
+    // TODO DTFS2-6967 replace with real user
+    data: { dealId, commentType, comment, user: { _id: 'TFM_USER' } },
   });
 
   return response.data;

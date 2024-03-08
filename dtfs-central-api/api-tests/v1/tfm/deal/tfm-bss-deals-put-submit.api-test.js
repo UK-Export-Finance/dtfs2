@@ -38,17 +38,21 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
   });
 
   it('returns dealSnapshot with tfm object', async () => {
-    const { body: createDealBody } = await api.post({
-      deal: newDeal,
-      user: mockUser,
-    }).to('/v1/portal/deals');
+    const { body: createDealBody } = await api
+      .post({
+        deal: newDeal,
+        user: mockUser,
+      })
+      .to('/v1/portal/deals');
 
     const dealId = createDealBody._id;
 
-    const { status, body } = await api.put({
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-      dealId,
-    }).to('/v1/tfm/deals/submit');
+    const { status, body } = await api
+      .put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+        dealId,
+      })
+      .to('/v1/tfm/deals/submit');
 
     expect(status).toEqual(200);
 
@@ -68,10 +72,12 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
 
   it('creates facility snapshots and tfm object', async () => {
     // create deal
-    const { body: createDealBody } = await api.post({
-      deal: newDeal,
-      user: mockUser,
-    }).to('/v1/portal/deals');
+    const { body: createDealBody } = await api
+      .post({
+        deal: newDeal,
+        user: mockUser,
+      })
+      .to('/v1/portal/deals');
 
     const dealId = createDealBody._id;
 
@@ -79,24 +85,30 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
     const newFacility1 = { ...newFacility, dealId };
     const newFacility2 = { ...newFacility, dealId };
 
-    const { body: facility1Body } = await api.post({
-      facility: newFacility1,
-      user: mockUser,
-    }).to('/v1/portal/facilities');
+    const { body: facility1Body } = await api
+      .post({
+        facility: newFacility1,
+        user: mockUser,
+      })
+      .to('/v1/portal/facilities');
 
-    const { body: facility2Body } = await api.post({
-      facility: newFacility2,
-      user: mockUser,
-    }).to('/v1/portal/facilities');
+    const { body: facility2Body } = await api
+      .post({
+        facility: newFacility2,
+        user: mockUser,
+      })
+      .to('/v1/portal/facilities');
 
     const facility1Id = facility1Body._id;
     const facility2Id = facility2Body._id;
 
     // submit deal
-    const { status } = await api.put({
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-      dealId,
-    }).to('/v1/tfm/deals/submit');
+    const { status } = await api
+      .put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+        dealId,
+      })
+      .to('/v1/tfm/deals/submit');
 
     expect(status).toEqual(200);
 
@@ -111,6 +123,10 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
         ...newFacility1,
         createdDate: expect.any(Number),
         updatedAt: expect.any(Number),
+        auditDetails: {
+          lastUpdatedAt: expect.any(String),
+          lastUpdatedByPortalUserId: '123456789',
+        },
       },
       tfm: DEFAULTS.FACILITY_TFM,
     });
@@ -125,6 +141,10 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
         ...newFacility2,
         createdDate: expect.any(Number),
         updatedAt: expect.any(Number),
+        auditDetails: {
+          lastUpdatedAt: expect.any(String),
+          lastUpdatedByPortalUserId: '123456789',
+        },
       },
       tfm: DEFAULTS.FACILITY_TFM,
     });

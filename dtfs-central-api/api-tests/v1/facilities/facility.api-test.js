@@ -81,6 +81,10 @@ describe('/v1/portal/facilities', () => {
         ...newFacility,
         createdDate: expect.any(Number),
         updatedAt: expect.any(Number),
+        auditDetails: {
+          lastUpdatedByPortalUserId: mockUser._id,
+          lastUpdatedAt: expect.any(String),
+        }
       });
     });
 

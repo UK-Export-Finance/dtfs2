@@ -4,14 +4,16 @@ const { findOneDeal } = require('../deal/get-deal.controller');
 const { updateDeal } = require('../deal/update-deal.controller');
 const { isNumber } = require('../../../../helpers');
 const { DB_COLLECTIONS } = require('../../../../constants');
+const { generatePortalUserAuditDetails } = require('../../../../helpers/generateAuditDetails');
 
-const createFacilities = async (facilities, dealId) => {
+const createFacilities = async (facilities, dealId, user) => {
   try {
     if (!ObjectId.isValid(dealId)) {
       return { status: 400, message: 'Invalid Deal Id' };
     }
 
     const collection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
+    const auditDetails = generatePortalUserAuditDetails(user._id);
 
     const facilitiesWithId = await Promise.all(facilities.map(async (f) => {
       const facility = f;
@@ -20,6 +22,7 @@ const createFacilities = async (facilities, dealId) => {
       facility.createdDate = Date.now();
       facility.updatedAt = Date.now();
       facility.dealId = new ObjectId(dealId);
+      facility.auditDetails = auditDetails;
       return facility;
     }));
 
@@ -37,6 +40,7 @@ const createFacilities = async (facilities, dealId) => {
     const response = await updateDeal(
       dealId,
       dealUpdate,
+      user,
     );
 
     const status = isNumber(response?.status, 3);
@@ -70,7 +74,7 @@ exports.createMultipleFacilitiesPost = async (req, res) => {
 
   return findOneDeal(dealId, async (deal) => {
     if (deal) {
-      const response = await createFacilities(facilities, dealId);
+      const response = await createFacilities(facilities, dealId, user);
       const status = isNumber(response?.status, 3);
       const code = status ? response.status : 200;
 
