@@ -34,7 +34,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
   });
 
   it('should submit and complete and amendment', () => {
-    cy.tfmLogin({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -79,7 +79,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
     cy.url().should('contain', 'check-answers');
     amendmentsPage.continueAmendment().click();
 
-    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
+    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -107,7 +107,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
 
     amendmentsPage.amendmentSendToBankButton().click();
 
-    cy.tfmLogin({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().should('exist');
@@ -138,7 +138,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
   });
 
   it('should show the correct details for amendment 1 on facility amendments page', () => {
-    cy.tfmLogin({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
     facilityPage.facilityTabAmendments().click();
@@ -149,7 +149,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
   });
 
   it('should submit and complete and withdraw a second amendment', () => {
-    cy.tfmLogin({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -193,7 +193,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
     cy.url().should('contain', 'check-answers');
     amendmentsPage.continueAmendment().click();
 
-    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
+    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -217,7 +217,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
 
     amendmentsPage.amendmentSendToBankButton().click();
 
-    cy.tfmLogin({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().should('exist');
@@ -241,7 +241,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
   });
 
   it('should show the correct details for amendment 2 on facility amendments page', () => {
-    cy.tfmLogin({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
     facilityPage.facilityTabAmendments().click();
@@ -256,7 +256,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
   });
 
   it('should submit and complete a third amendment', () => {
-    cy.tfmLogin({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -300,7 +300,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
     cy.url().should('contain', 'check-answers');
     amendmentsPage.continueAmendment().click();
 
-    cy.tfmLogin({ user: UNDERWRITER_MANAGER_1 });
+    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -324,7 +324,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
 
     amendmentsPage.amendmentSendToBankButton().click();
 
-    cy.tfmLogin({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().should('exist');
@@ -355,7 +355,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
   });
 
   it('should show the correct details for amendment 3 on facility amendments page', () => {
-    cy.tfmLogin({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
     facilityPage.facilityTabAmendments().click();

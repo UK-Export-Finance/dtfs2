@@ -28,4 +28,4 @@ Cypress.Commands.add('addCommentObjToDeal', api.addCommentObjToDeal);
 Cypress.Commands.add('submitDealToTfm', api.submitDealToTfm);
 Cypress.Commands.add('addUnderwriterCommentToTfm', api.addUnderwriterCommentToTfm);
 
-Cypress.Commands.add('tfmLogin', require('../../../support/trade-finance-manager/tfmLogin'));
+Cypress.Commands.add('login', require('../../../support/trade-finance-manager/login'));

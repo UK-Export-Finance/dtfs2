@@ -44,7 +44,7 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
     */
     describe('when the TFM user is in `BUSINESS_SUPPORT` team', () => {
       beforeEach(() => {
-        cy.tfmLogin({ user: BUSINESS_SUPPORT_USER_1 });
+        cy.login(BUSINESS_SUPPORT_USER_1);
         cy.visit(relative(`/case/${dealId}/parties`));
       });
 
@@ -209,7 +209,7 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
 
   describe('when the TFM user is NOT in `BUSINESS_SUPPORT` team', () => {
     beforeEach(() => {
-      cy.tfmLogin({ user: T1_USER_1 });
+      cy.login(T1_USER_1);
     });
 
     it('ensure user cannot add or edit party URN', () => {

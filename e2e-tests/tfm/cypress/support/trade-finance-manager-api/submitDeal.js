@@ -11,10 +11,10 @@ const { ALIAS_KEY } = require('../../fixtures/constants');
 const submitDeal = (dealId, dealType, user) => {
   console.info('submitDeal::');
 
-  cy.tfmLogin({
-    user,
-    isSessionForAPI: true,
-  }).then((token) => submitDealAfterUkefIds(dealId, dealType, null, token))
+  const isSessionForAPI = true;
+
+  cy.login(user, isSessionForAPI)
+    .then((token) => submitDealAfterUkefIds(dealId, dealType, null, token))
     .then((deal) => {
       cy.wrap(deal).as(ALIAS_KEY.SUBMIT_DEAL);
     });

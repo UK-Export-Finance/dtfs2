@@ -30,7 +30,7 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
 
   describe('users in the `RISK_MANAGERS` group should be able to edit', () => {
     beforeEach(() => {
-      cy.tfmLogin({ user: RISK_MANAGER_1 });
+      cy.login(RISK_MANAGER_1);
 
       cy.visit(`/case/${dealId}/underwriting`);
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
@@ -80,7 +80,7 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
 
   describe('Risk Managers can edit once logged in', () => {
     beforeEach(() => {
-      cy.tfmLogin({ user: RISK_MANAGER_1 });
+      cy.login(RISK_MANAGER_1);
 
       cy.visit(`/case/${dealId}/underwriting`);
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));

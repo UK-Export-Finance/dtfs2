@@ -2,7 +2,7 @@
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 
 // commands used to interact directly with TFM UI
-Cypress.Commands.add('tfmLogin', require('../../../support/trade-finance-manager/tfmLogin'));
+Cypress.Commands.add('login', require('../../../support/trade-finance-manager/login'));
 Cypress.Commands.add('getTfmUserByUsername', require('../../../support/trade-finance-manager/getTfmUserByUsername'));
 Cypress.Commands.add('overrideTfmUserSessionId', require('../../../support/trade-finance-manager/overrideTfmUserSessionId'));
 Cypress.Commands.add('overrideRedisUserSession', require('../../../support/trade-finance-manager/overrideRedisUserSession'));

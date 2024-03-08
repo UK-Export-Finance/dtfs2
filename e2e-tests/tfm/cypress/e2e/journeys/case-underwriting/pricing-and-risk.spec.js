@@ -35,7 +35,7 @@ context('Case Underwriting - Pricing and risk', () => {
 
   describe('when unable to edit', () => {
     beforeEach(() => {
-      cy.tfmLogin({ user: UNDERWRITING_SUPPORT_1 });
+      cy.login(UNDERWRITING_SUPPORT_1);
       cy.visit(relative(`/case/${dealId}/deal`));
 
       // go to pricing and risk page
@@ -52,7 +52,7 @@ context('Case Underwriting - Pricing and risk', () => {
 
   describe('when able to edit', () => {
     beforeEach(() => {
-      cy.tfmLogin({ user: UNDERWRITER_1 });
+      cy.login(UNDERWRITER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
 
       // go to pricing and risk page
@@ -180,7 +180,7 @@ context('Case Underwriting - Pricing and risk', () => {
 
   describe('a user that is not in the `underwriters` or `underwriter managers`', () => {
     beforeEach(() => {
-      cy.tfmLogin({ user: UNDERWRITING_SUPPORT_1 });
+      cy.login(UNDERWRITING_SUPPORT_1);
 
       cy.visit(`/case/${dealId}/underwriting`);
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));

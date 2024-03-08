@@ -11,10 +11,9 @@ const submitManyDeals = (deals, user) => {
   console.info('submitManyDeals::');
   const persistedDeals = [];
 
-  cy.tfmLogin({
-    user,
-    isSessionForAPI: true,
-  }).then((token) => {
+  const isSessionForAPI = true;
+
+  cy.login(user, isSessionForAPI).then((token) => {
     cy.wrap(deals).each((dealToInsert) => {
       submitDeal(dealToInsert._id, dealToInsert.dealType, null, token);
 
