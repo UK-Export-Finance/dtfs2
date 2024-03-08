@@ -1,85 +1,93 @@
-// Number Generator API is used to get a new deal/facility id.
-// However, the id might already be in use so we need to check it with ACBS.
-//
-// the flow is:
-// 1) Call number generator Azure function
-// 2) return a PENDING status while Azure function runs independently
-// 3) Create a scheduled job to keep checking the Azure function status
-
-import axios from 'axios';
 import * as dotenv from 'dotenv';
+import axios, { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
-import * as durableFunctionsLogController from './durable-functions-log.controller';
+import { NumberGeneratorResponse, NumberGeneratorErrorResponse } from '../../interfaces';
+import { InvalidEntityTypeError } from '../errors';
+import { ENTITY_TYPE, NUMBER_TYPE, USER } from '../../constants';
 
 dotenv.config();
-const numberGeneratorFunctionUrl = process.env.AZURE_NUMBER_GENERATOR_FUNCTION_URL;
 
-const callNumberGenerator = async ({ dealType, entityType, entityId, dealId, user }: any) => {
-  const response: any = await axios({
-    method: 'POST',
-    url: `${numberGeneratorFunctionUrl}/api/orchestrators/numbergenerator`,
-    data: {
-      dealType,
-      entityType,
-      entityId,
-      dealId,
-      user,
-    },
-  }).catch((error: any) => ({
-    error,
-  }));
+const { APIM_MDM_URL, APIM_MDM_VALUE, APIM_MDM_KEY } = process.env;
 
-  if (response.error) {
-    await durableFunctionsLogController.addDurableFunctionLog({
-      type: 'NUMBER_GENERATOR',
-      data: {
-        dealType,
-        entityType,
-        entityId,
-        dealId,
-        user,
-        error: await response.error.toJSON(),
-      },
-    });
-
-    return {
-      status: response.status || 500,
-    };
-  }
-
-  const { id: instanceId, ...numberGeneratorFunctionUrls } = response.data;
-
-  await durableFunctionsLogController.addDurableFunctionLog({
-    type: 'NUMBER_GENERATOR',
-    data: {
-      instanceId,
-      dealType,
-      entityType,
-      entityId,
-      dealId,
-      numberGeneratorFunctionUrls,
-      user,
-    },
-  });
-
-  return response;
+const headers = {
+  headers: {
+    [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
+    'Content-Type': 'application/json',
+  },
 };
 
-export const callNumberGeneratorPOST = async (req: Request, res: Response) => {
-  const { dealType, entityType, entityId, dealId, user } = req.body;
+/**
+ * Determines the number type based on the entity type.
+ * @param entityType - The type of entity for which the number type needs to be determined.
+ * @returns A number based on the value of entityType.
+ * @throws {Error} If entityType is invalid.
+ */
+export const getNumberTypeId = (entityType: string): number => {
+  switch (entityType) {
+    case ENTITY_TYPE.DEAL:
+      return NUMBER_TYPE.DEAL;
+    case ENTITY_TYPE.FACILITY:
+      return NUMBER_TYPE.FACILITY;
+    default:
+      throw new InvalidEntityTypeError(entityType);
+  }
+};
 
-  console.info('External API - calling Number Generator');
+/**
+ * Retrieves a number from a number generator API based on the provided `entityType` and `dealId`.
+ * @param req - The HTTP request object containing the `entityType` and `dealId` in the `body` property.
+ * @param res - The HTTP response object used to send the response back to the client.
+ * @returns {Promise<Object>} The retrieved number in the response body.
+ */
+export const getNumber = async (req: Request, res: Response): Promise<Response<NumberGeneratorResponse> | Response<NumberGeneratorErrorResponse>> => {
+  try {
+    const { entityType, dealId } = req.body;
+    const numberTypeId = getNumberTypeId(entityType);
+    const endpoint = `${APIM_MDM_URL}numbers`;
+    const payload = {
+      numberTypeId,
+      createdBy: USER.DTFS,
+      requestingSystem: USER.DTFS,
+    };
 
-  const { status } = await callNumberGenerator({
-    dealType,
-    entityType,
-    entityId,
-    dealId,
-    user,
-  });
+    console.info('⚡️ Invoking number generator for deal %s', dealId);
 
-  // Azure function returns 202 status but 200 is more relevant here as we're returning data
-  const returnStatus = status === 202 ? 200 : status;
+    const response: NumberGeneratorResponse = await axios.post(endpoint, [payload], headers);
 
-  return res.status(returnStatus).send({ ukefId: 'PENDING' });
+    if (!response.data) {
+      console.error('❌ Invalid number generator response received for deal %s %o', dealId, response);
+      throw new Error(`Invalid number generator response received for deal ${dealId}`, { cause: 'Invalid response from APIM MDM' });
+    }
+
+    const { status, data } = response;
+
+    if (!data.length) {
+      throw new Error(`Empty number generator response received for deal ${dealId}`, { cause: 'Empty response from APIM MDM' });
+    }
+
+    const { maskedId: ukefId } = data[0];
+
+    console.info('✅ UKEF ID received %d for deal %s', ukefId, dealId);
+
+    return res.status(HttpStatusCode.Ok).send({
+      status,
+      data,
+    });
+  } catch (error: any) {
+    console.error('❌ Error getting number from number generator: %o', error);
+
+    if (error instanceof InvalidEntityTypeError) {
+      return res.status(HttpStatusCode.BadRequest).send({
+        status: HttpStatusCode.BadRequest,
+        error,
+      });
+    }
+
+    return res.status(HttpStatusCode.InternalServerError).send({
+      status: HttpStatusCode.InternalServerError,
+      error: {
+        cause: error.message,
+      },
+    });
+  }
 };

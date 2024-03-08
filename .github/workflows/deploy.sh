@@ -39,7 +39,7 @@ if [ -n "$selection" ]; then
     elif [ "$selection" = "2" ]; then
         destination=""
         branch=""
-        az acr run --cmd "acr purge --filter 'portal-ui:.*' --filter 'gef-ui:.*' --filter 'trade-finance-manager-ui:.*' --filter 'portal-api:.*' --filter 'trade-finance-manager-api:.*' --filter 'dtfs-central-api:.*' --filter 'external-api:.*' --filter 'azure-function-number-generator:.*' --filter 'azure-function-acbs:.*' --ago 15d" --registry "${ACR}" /dev/null
+        az acr run --cmd "acr purge --filter 'portal-ui:.*' --filter 'gef-ui:.*' --filter 'trade-finance-manager-ui:.*' --filter 'portal-api:.*' --filter 'trade-finance-manager-api:.*' --filter 'dtfs-central-api:.*' --filter 'external-api:.*' --filter 'azure-function-acbs:.*' --ago 15d" --registry "${ACR}" /dev/null
     ############### ACR PURGE ###############
     fi
 

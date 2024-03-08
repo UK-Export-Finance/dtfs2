@@ -17,16 +17,32 @@ const CONSTANTS = require('../../../src/constants');
 const mockApplications = require('../../fixtures/gef/application');
 const mockEligibilityCriteria = require('../../fixtures/gef/eligibilityCriteria');
 const mockFacilities = require('../../fixtures/gef/facilities');
-const referenceData = require('../../../src/external-api/api');
+const externalApi = require('../../../src/external-api/api');
 
 const api = require('../../../src/v1/api');
 const { STATUS } = require('../../../src/constants/user');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
+const mockSuccessfulResponse = {
+  data: {
+    status: 200,
+    data: [
+      {
+        id: 12345678,
+        maskedId: CONSTANTS.NUMBER.UKEF_ID.TEST,
+        type: 1,
+        createdBy: CONSTANTS.NUMBER.USER.DTFS,
+        createdDatetime: '2024-01-01T00:00:00.000Z',
+        requestingSystem: CONSTANTS.NUMBER.USER.DTFS,
+      },
+    ],
+  },
+};
+
 jest.mock('../../../src/external-api/api', () => ({
   sendEmail: jest.fn(() => Promise.resolve({})),
-  numberGenerator: {
-    create: () => ({ ukefId: '1' }),
+  number: {
+    getNumber: jest.fn(() => Promise.resolve(mockSuccessfulResponse)),
   },
 }));
 
@@ -417,7 +433,7 @@ describe(baseUrl, () => {
           const dealId = body._id;
           await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL }).to(`${baseUrl}/status/${dealId}`);
 
-          const firstSendEmailCall = referenceData.sendEmail.mock.calls[0][0];
+          const firstSendEmailCall = externalApi.sendEmail.mock.calls[0][0];
 
           expect(firstSendEmailCall).toEqual(
             CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,
@@ -436,7 +452,7 @@ describe(baseUrl, () => {
           const dealId = body._id;
           await as(aChecker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED }).to(`${baseUrl}/status/${dealId}`);
 
-          const firstSendEmailCall = referenceData.sendEmail.mock.calls[0][0];
+          const firstSendEmailCall = externalApi.sendEmail.mock.calls[0][0];
 
           expect(firstSendEmailCall).toEqual(
             CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,
@@ -455,7 +471,7 @@ describe(baseUrl, () => {
           const dealId = body._id;
           await as(aChecker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${dealId}`);
 
-          const firstSendEmailCall = referenceData.sendEmail.mock.calls[0][0];
+          const firstSendEmailCall = externalApi.sendEmail.mock.calls[0][0];
 
           expect(firstSendEmailCall).toEqual(
             CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,
