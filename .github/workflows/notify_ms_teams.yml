@@ -24,4 +24,19 @@ jobs:
           MICROSOFT_TEAMS_WEBHOOK: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK  }}
           MESSAGE: ${{ github.event.inputs.message }}
         run: |
-          curl -X POST -H 'Content-Type: application/json' -d "{\"text\": \"${MESSAGE}\"}" "${MICROSOFT_TEAMS_WEBHOOK }"
+          curl -X POST -H 'Content-Type: application/json' -d '{
+          "@type": "MessageCard",
+          "@context": "http://schema.org/extensions",
+          "themeColor": "0072C6",
+          "title": "GitHub Action Notification",
+          "text": "This is a notification from a GitHub Actions workflow!",
+          "potentialAction": [
+              {
+                  "@type": "OpenUri",
+                  "name": "View Workflow",
+                  "targets": [
+                      { "os": "default", "uri": "https://github.com/" }
+                  ]
+              }
+            ]
+          }' ${MICROSOFT_TEAMS_WEBHOOK}
