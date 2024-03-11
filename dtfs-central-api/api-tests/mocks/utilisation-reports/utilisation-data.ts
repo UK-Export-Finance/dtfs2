@@ -1,8 +1,9 @@
+import { UtilisationDataEntity, MOCK_UTILISATION_DATA_ENTITY, UtilisationReportEntity, UtilisationData, CURRENCY } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
-import { UtilisationData, UtilisationReport, CURRENCY } from '@ukef/dtfs2-common';
 import { MOCK_UTILISATION_REPORT } from './utilisation-reports';
 import { MOCK_MONTHLY_REPORT_PERIOD } from '../report-period';
 
+// TODO FN-1853 This constant should be removed after the SQL refactor
 export const MOCK_UTILISATION_DATA: UtilisationData = {
   _id: new ObjectId('65646e1d1621576fd7a6bc9b'),
   facilityId: '',
@@ -22,10 +23,8 @@ export const MOCK_UTILISATION_DATA: UtilisationData = {
   payments: null,
 };
 
-export const getMockUtilisationDataForReport = (report: UtilisationReport, overrides?: Partial<UtilisationData>): UtilisationData => ({
-  ...MOCK_UTILISATION_DATA,
-  reportId: report._id.toString(),
-  bankId: report.bank.id,
-  reportPeriod: report.reportPeriod,
+export const getMockUtilisationDataForReport = (report: UtilisationReportEntity, overrides?: Partial<UtilisationDataEntity>): UtilisationDataEntity => ({
+  ...MOCK_UTILISATION_DATA_ENTITY,
+  report,
   ...overrides,
 });

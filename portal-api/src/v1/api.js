@@ -327,19 +327,20 @@ const getUtilisationReports = async (bankId, options) => {
   }
 };
 
-const getUtilisationReportById = async (_id) => {
+/**
+ * Gets utilisation report by id
+ * @param {number} id
+ * @returns {Promise<import('./api-response-types/UtilisationReportResponseBody').UtilisationReportResponseBody>}
+ */
+const getUtilisationReportById = async (id) => {
   try {
-    if (!isValidMongoId(_id)) {
-      throw new Error(`Invalid MongoDB _id provided: '${_id}'`);
-    }
-
-    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${_id}`, {
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${id}`, {
       headers: headers.central,
     });
 
     return response.data;
   } catch (error) {
-    console.error(`Unable to get utilisation report with MongoDB _id '${_id}'`, error);
+    console.error('Unable to get utilisation report with id %s: %O', id, error);
     throw error;
   }
 };

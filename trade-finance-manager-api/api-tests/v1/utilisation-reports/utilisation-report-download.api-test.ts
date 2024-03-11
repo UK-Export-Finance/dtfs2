@@ -4,15 +4,15 @@ import api from '../../api';
 
 const { as, get } = api(app);
 
-describe('/v1/utilisation-reports/:_id/download', () => {
-  describe('GET /v1/utilisation-reports/:_id/download', () => {
-    const validMongoId = '6581aa7ad727816f9301f75a';
+describe('/v1/utilisation-reports/:id/download', () => {
+  describe('GET /v1/utilisation-reports/:id/download', () => {
+    const integerId = '12';
 
-    const getUtilisationReportDownloadUrl = ({ _id }: { _id: string }) => `/v1/utilisation-reports/${_id}/download`;
+    const getUtilisationReportDownloadUrl = ({ id }: { id: string }) => `/v1/utilisation-reports/${id}/download`;
 
     it('returns a 401 response when user is not authenticated', async () => {
       // Arrange
-      const url = getUtilisationReportDownloadUrl({ _id: validMongoId });
+      const url = getUtilisationReportDownloadUrl({ id: integerId });
 
       // Act
       const response = await get(url);
@@ -21,10 +21,10 @@ describe('/v1/utilisation-reports/:_id/download', () => {
       expect(response.status).toEqual(401);
     });
 
-    it('returns a 400 response when the _id path param is invalid', async () => {
+    it('returns a 400 response when the id path param is invalid', async () => {
       // Arrange
       const tokenUser = await testUserCache.initialise(app);
-      const url = getUtilisationReportDownloadUrl({ _id: 'invalid' });
+      const url = getUtilisationReportDownloadUrl({ id: 'invalid' });
 
       // Act
       const response = await as(tokenUser).get(url);
@@ -36,7 +36,7 @@ describe('/v1/utilisation-reports/:_id/download', () => {
     it('gets report download for authenticated user', async () => {
       // Arrange
       const tokenUser = await testUserCache.initialise(app);
-      const url = getUtilisationReportDownloadUrl({ _id: validMongoId });
+      const url = getUtilisationReportDownloadUrl({ id: integerId });
 
       // Act
       const response = await as(tokenUser).get(url);

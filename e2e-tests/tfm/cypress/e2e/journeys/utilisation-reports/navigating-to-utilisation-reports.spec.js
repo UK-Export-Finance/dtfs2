@@ -1,7 +1,7 @@
+import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
 import { getMonthlyReportPeriodFromIsoSubmissionMonth, toIsoMonthStamp } from '../../../support/utils/dateHelpers';
-import { MOCK_UTILISATION_REPORT_DETAILS_WITHOUT_ID, UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../fixtures/mock-utilisation-report-details';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import { aliasSelector } from '../../../../../support/alias-selector';
 
@@ -24,17 +24,15 @@ context('PDC_READ users can route to the payments page for a bank', () => {
       cy.wrap(visibleBanks).its('length').should('be.gte', 1);
     });
 
-    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORT_DETAILS_FROM_DB);
+    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
 
     cy.wrap(visibleBanks).each((bank) => {
-      const mockUtilisationReportDetailsWithoutId = {
-        ...MOCK_UTILISATION_REPORT_DETAILS_WITHOUT_ID,
-        bank: { id: bank.id, name: bank.name },
-        status,
-        reportPeriod,
-      };
-
-      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORT_DETAILS_INTO_DB, [mockUtilisationReportDetailsWithoutId]);
+      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(status)
+        .withId(bank.id)
+        .withBankId(bank.id)
+        .withReportPeriod(reportPeriod)
+        .build();
+      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [mockUtilisationReport]);
     });
 
     pages.landingPage.visit();
@@ -59,7 +57,7 @@ context('PDC_READ users can route to the payments page for a bank', () => {
   });
 
   it('should show the problem with service page if there are no reports in the database', () => {
-    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORT_DETAILS_FROM_DB);
+    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
 
     pages.utilisationReportsPage.visit();
 

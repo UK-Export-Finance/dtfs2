@@ -2,6 +2,7 @@
 //  methods have been migrated from MongoDB to SQL
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { AzureFileInfoEntity, DbRequestSource, UtilisationDataEntity, UtilisationReportEntity, ReportPeriod, AzureFileInfo } from '@ukef/dtfs2-common';
+import { Not, Equal, FindOptionsWhere, LessThan } from 'typeorm';
 import { UtilisationReportRawCsvData } from '../../types/utilisation-reports';
 import { utilisationDataCsvRowToSqlEntity } from '../../helpers';
 
@@ -41,5 +42,36 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
     });
 
     return await this.save(report);
+  },
+
+  async findOpenReportsBeforeReportPeriodStartForBankId(bankId: string, reportPeriodStart: ReportPeriod['start']): Promise<UtilisationReportEntity[]> {
+    const bankIdAndStatusFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
+      bankId,
+      status: Not('RECONCILIATION_COMPLETED'),
+    };
+
+    const previousYearFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
+      reportPeriod: {
+        start: {
+          year: LessThan(reportPeriodStart.year),
+        },
+      },
+    };
+
+    const sameYearPreviousMonthsFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
+      reportPeriod: {
+        start: {
+          year: Equal(reportPeriodStart.year),
+          month: LessThan(reportPeriodStart.month),
+        },
+      },
+    };
+
+    return await this.find({
+      where: [
+        { ...bankIdAndStatusFindOptions, ...previousYearFindOptions },
+        { ...bankIdAndStatusFindOptions, ...sameYearPreviousMonthsFindOptions },
+      ],
+    });
   },
 });

@@ -10,7 +10,7 @@ const {
   getUtilisationReportsReconciliationSummary,
 } = require('../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller');
 const putUtilisationReportStatusController = require('../controllers/utilisation-report-service/put-utilisation-report-status.controller');
-const { mongoIdValidation } = require('../validation/route-validators/route-validators');
+const { sqlIdValidation } = require('../validation/route-validators/route-validators');
 
 const utilisationReportsRouter = express.Router();
 
@@ -49,18 +49,18 @@ utilisationReportsRouter.route('/').post(postUploadUtilisationReportPayloadValid
 
 /**
  * @openapi
- * /utilisation-reports/:_id:
+ * /utilisation-reports/:id:
  *   get:
- *     summary: Get utilisation report with the specified MongoDB ID ('_id')
+ *     summary: Get utilisation report with the specified id ('id')
  *     tags: [UtilisationReport]
- *     description: Get utilisation report with the specified MongoDB ID ('_id')
+ *     description: Get utilisation report with the specified id ('id')
  *     parameters:
  *       - in: path
- *         name: _id
+ *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: the MongoDB ID for the required report
+ *         description: the id for the required report
  *     responses:
  *       200:
  *         description: OK
@@ -71,14 +71,14 @@ utilisationReportsRouter.route('/').post(postUploadUtilisationReportPayloadValid
  *                 - $ref: '#/definitions/UtilisationReport'
  *                 - type: object
  *                   properties:
- *                     _id:
- *                       example: 123456abc
+ *                     id:
+ *                       example: 5
  *       400:
  *         description: Bad request
  *       404:
  *         description: Not found
  */
-utilisationReportsRouter.route('/:_id').get(mongoIdValidation, handleExpressValidatorResult, getUtilisationReportById);
+utilisationReportsRouter.route('/:id').get(sqlIdValidation, handleExpressValidatorResult, getUtilisationReportById);
 
 /**
  * @openapi

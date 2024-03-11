@@ -34,7 +34,7 @@ export class UtilisationDataEntity extends AuditableBaseEntity {
   /**
    * Currency of the facility that the fee record is for
    */
-  @Column()
+  @Column({ type: 'varchar' })
   baseCurrency!: Currency;
 
   /**
@@ -52,7 +52,7 @@ export class UtilisationDataEntity extends AuditableBaseEntity {
   /**
    * The currency of the total amount of money accrued by UKEF for the GEF
    */
-  @Column()
+  @Column({ type: 'varchar' })
   totalFeesAccruedForTheMonthCurrency!: Currency;
 
   /**
@@ -70,13 +70,13 @@ export class UtilisationDataEntity extends AuditableBaseEntity {
   /**
    * The currency of the fees actually paid to UKEF by the bank
    */
-  @Column()
+  @Column({ type: 'varchar' })
   monthlyFeesPaidToUkefCurrency!: Currency;
 
   /**
    * The currency of the payment made to UKEF by the bank
    */
-  @Column()
+  @Column({ type: 'varchar' })
   paymentCurrency!: Currency;
 
   /**

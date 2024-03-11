@@ -1,10 +1,8 @@
-import { Filter, ObjectId } from 'mongodb';
-import { MONGO_DB_COLLECTIONS, UTILISATION_REPORT_RECONCILIATION_STATUS, ReportPeriod, UtilisationReport, MonthAndYear } from '@ukef/dtfs2-common';
+import { Filter } from 'mongodb';
+import { MONGO_DB_COLLECTIONS, UTILISATION_REPORT_RECONCILIATION_STATUS, ReportPeriod, UtilisationReport } from '@ukef/dtfs2-common';
 import {
   getManyUtilisationReportDetailsByBankId,
   getOneUtilisationReportDetailsByBankId,
-  getUtilisationReportDetailsById,
-  getOpenReportsBeforeReportPeriodForBankId,
   saveNotReceivedUtilisationReport,
   GetUtilisationReportDetailsOptions,
 } from './utilisation-reports-repo';
@@ -234,62 +232,6 @@ describe('utilisation-reports-repo', () => {
         // Assert
         expect(findSpy).toHaveBeenCalledWith(expectedFilter);
       });
-    });
-  });
-
-  describe('getUtilisationReportDetailsById', () => {
-    it('makes a request to the DB with the expected _id', async () => {
-      // Arrange
-      const reportId = '5099803df3f4948bd2f98391';
-
-      const findOneSpy = jest.fn().mockResolvedValue(MOCK_UTILISATION_REPORT);
-      const getCollectionMock = jest.fn().mockResolvedValue({
-        findOne: findOneSpy,
-      });
-      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
-
-      // Act
-      const response = await getUtilisationReportDetailsById(reportId);
-
-      // Assert
-      expect(findOneSpy).toHaveBeenCalledWith({ _id: { $eq: new ObjectId(reportId) } });
-      expect(response).toEqual(MOCK_UTILISATION_REPORT);
-    });
-  });
-
-  describe('getOpenReportsBeforeReportPeriodForBankId', () => {
-    it('makes a request to the DB with the expected values', async () => {
-      // Arrange
-      const reportPeriodStart: MonthAndYear = { month: 12, year: 2023 };
-      const bankId = '1004';
-
-      const findMock = jest.fn().mockReturnValue({
-        toArray: async () => Promise.resolve(MOCK_UTILISATION_REPORT),
-      });
-      const getCollectionMock = jest.fn().mockResolvedValue({
-        find: findMock,
-      });
-      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
-
-      // Act
-      const response = await getOpenReportsBeforeReportPeriodForBankId(reportPeriodStart, bankId);
-
-      // Assert
-      expect(findMock).toHaveBeenCalledWith({
-        $and: [
-          { 'bank.id': { $eq: bankId } },
-          { status: { $ne: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED } },
-          {
-            $or: [
-              { 'reportPeriod.start.year': { $lt: reportPeriodStart.year } },
-              {
-                $and: [{ 'reportPeriod.start.year': { $eq: reportPeriodStart.year } }, { 'reportPeriod.start.month': { $lt: reportPeriodStart.month } }],
-              },
-            ],
-          },
-        ],
-      });
-      expect(response).toEqual(MOCK_UTILISATION_REPORT);
     });
   });
 });

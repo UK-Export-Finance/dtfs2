@@ -28,6 +28,7 @@ const baseRules = {
       functions: false,
     },
   ],
+  'no-return-await': 'off',
 };
 
 module.exports = {
