@@ -5,6 +5,16 @@ module.exports.createTfmUser = async (req, res) => {
   const userToCreate = req.body;
 
   const user = await createUser(userToCreate);
+
+  if (user === false) {
+    return res.status(400).json({
+      success: false,
+      errors: {
+        count: 1,
+        errorList: ['User creation failed'],
+      },
+    });
+  }
   return res.json({
     success: true,
     user,

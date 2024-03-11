@@ -11,7 +11,7 @@ describe('/v1/utilisation-reports/set-status', () => {
   let tokenUser: unknown;
 
   beforeEach(async () => {
-    tokenUser = await testUserCache.initialise(app);
+    tokenUser = await testUserCache.initialise();
   });
 
   it('should return a 400 status code if the body does not contain the expected payload', async () => {

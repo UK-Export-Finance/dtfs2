@@ -51,7 +51,6 @@ exports.createUser = async (user) => {
   };
 
   delete tfmUser.token;
-  delete tfmUser.password;
 
   if (payloadVerification(tfmUser, PAYLOAD.TFM.USER)) {
     const createUserResult = await collection.insertOne(tfmUser);
@@ -67,6 +66,7 @@ exports.createUser = async (user) => {
     return mapUser;
   }
 
+  console.error('Error in createUser - payload validation failed');
   return false;
 };
 

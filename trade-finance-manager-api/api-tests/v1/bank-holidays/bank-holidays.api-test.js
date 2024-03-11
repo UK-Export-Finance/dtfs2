@@ -6,7 +6,7 @@ describe('/v1/bank-holidays', () => {
   describe('GET /v1/bank-holidays', () => {
     it('gets bank holidays for authenticated user', async () => {
       // Arrange
-      const user = await testUserCache.initialise(app);
+      const user = await testUserCache.initialise();
 
       // Act
       const { status, body } = await as(user).get('/v1/bank-holidays');
