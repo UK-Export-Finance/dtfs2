@@ -117,5 +117,5 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     expect(response.status).toEqual(200);
     expect((response.body as UtilisationReportResponseBody[]).length).toEqual(1);
     expect((response.body as UtilisationReportResponseBody[])[0].id).toEqual(idOfReportForReportPeriod);
-  }, 10000);
+  });
 });
