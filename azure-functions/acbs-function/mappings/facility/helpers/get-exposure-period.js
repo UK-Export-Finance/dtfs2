@@ -3,7 +3,7 @@ const CONSTANTS = require('../../../constants');
 const {
   isDate,
   formatYear,
-  formatTimestamp,
+  formatDate,
   getDateStringFromYearMonthDay,
   getInclusiveMonthDifference,
 } = require('../../../helpers/date');
@@ -28,8 +28,8 @@ const getExposurePeriod = (facility, dealType, fmr = null) => {
     const { issueDate } = fmr;
     const { coverEndDate } = facility.amendment;
     // Format in YYYY-MM-DD format
-    const startDate = formatTimestamp(issueDate);
-    const endDate = formatTimestamp(coverEndDate);
+    const startDate = formatDate(issueDate);
+    const endDate = formatDate(coverEndDate);
 
     return String(getInclusiveMonthDifference(startDate, endDate));
   }
@@ -55,7 +55,7 @@ const getExposurePeriod = (facility, dealType, fmr = null) => {
   const { requestedCoverStartDate, ukefGuaranteeInMonths } = facilitySnapshot;
 
   const coverStartDate = requestedCoverStartDate
-    ? formatTimestamp(requestedCoverStartDate)
+    ? formatDate(requestedCoverStartDate)
     : getDateStringFromYearMonthDay(
       formatYear(facilitySnapshot['requestedCoverStartDate-year']),
       facilitySnapshot['requestedCoverStartDate-month'],

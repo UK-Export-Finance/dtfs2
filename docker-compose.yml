@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   clamav:
     image: mkodockx/docker-clamav:alpine
@@ -7,29 +7,16 @@ services:
       - '3310:3310'
 
   dtfs-submissions-data:
-    build:
-      context: ./mongodb
-      dockerfile: Dockerfile
+    image: mongo:5.0.5
+    restart: always
     environment:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
     ports:
-      - "27017:27017"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    healthcheck:
-      test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --quiet) -eq 1
-      interval: 10s
-      start_period: 30s
-    command: "--bind_ip_all --keyFile /mongo-keyfile --replSet rs0"
+      - '27017-27019:27017-27019'
     volumes:
       - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
-    deploy:
-      resources:
-        limits:
-          cpus: '0.1'
-          memory: 300M
 
   dtfs-central-api:
     build:
@@ -41,22 +28,17 @@ services:
       - dtfs-submissions-data
       - external-api
     ports:
-      - '5005:5005'
+      - '5005:5005' # http
+      - '9223:9223' # debug
     volumes:
       - ./dtfs-central-api/src:/app/dtfs-central-api/src:ro
       - ./libs:/app/libs:ro
-    deploy:
-      resources:
-        limits:
-          cpus: '0.1'
-          memory: 400M
     environment:
       - PORT=5005
       - CORS_ORIGIN
       - EXTERNAL_API_URL=http://external-api:5002
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI
-      - DTFS_CENTRAL_API_URL=http://localhost:5005
       - TZ=Europe/London
       - PORTAL_API_KEY
       - TFM_API_KEY
@@ -69,7 +51,6 @@ services:
       - AUDIT_API_PASSWORD
       - CHANGE_STREAM_ENABLED
       - UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
-    entrypoint: npx ts-node dtfs-central-api/src/index.ts
 
   trade-finance-manager-ui:
     build:
@@ -79,33 +60,31 @@ services:
     depends_on:
       - trade-finance-manager-api
     ports:
-      - '5003:5003'
+      - '5003:5003' # http
+      - '9224:9224' # debug
     volumes:
       - ./trade-finance-manager-ui/server:/app/trade-finance-manager-ui/server:ro
       - ./trade-finance-manager-ui/public:/app/trade-finance-manager-ui/public:ro
       - ./trade-finance-manager-ui/templates:/app/trade-finance-manager-ui/templates:ro
       - ./libs:/app/libs:ro
-    deploy:
-      resources:
-        limits:
-          cpus: '0.1'
-          memory: 300M
     environment:
       - PORT=5003
-      - TFM_API_URL=http://trade-finance-manager-api:5004
-      - EXTERNAL_API_URL=http://external-api:5002
-      - UKEF_TFM_API_SYSTEM_KEY
-      - ESTORE_URL=${ESTORE_URL}
-      - REDIS_HOSTNAME=redis
-      - SESSION_SECRET
-      - TZ=Europe/London
-      - NODE_ENV=${NODE_ENV}
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
+      - TFM_API_URL=http://trade-finance-manager-api:5004
+      - EXTERNAL_API_URL=http://external-api:5002
+      - UKEF_TFM_API_SYSTEM_KEY=${UKEF_TFM_API_SYSTEM_KEY}
+      - ESTORE_URL=${ESTORE_URL}
+      - REDIS_HOSTNAME=redis
+      - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
+      - SESSION_SECRET
+      - TZ=Europe/London
+      - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
+      - AZURE_SSO_AUTHORITY
 
   trade-finance-manager-api:
     build:
@@ -118,31 +97,33 @@ services:
       - dtfs-central-api
       - external-api
     ports:
-      - '5004:5004'
+      - '5004:5004' # http
+      - '9225:9225' # debug
     volumes:
       - ./trade-finance-manager-api/src:/app/trade-finance-manager-api/src:ro
       - ./libs:/app/libs:ro
     environment:
       - PORT=5004
       - CORS_ORIGIN
+      - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI
+      - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - AZURE_PORTAL_STORAGE_ACCOUNT
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
       - AZURE_UTILISATION_REPORTS_FILESHARE_NAME
-      - UKEF_TFM_API_SYSTEM_KEY
+      - UKEF_TFM_API_SYSTEM_KEY=${UKEF_TFM_API_SYSTEM_KEY}
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_UI_URL=http://localhost:5003
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
-      - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
-      - EXTERNAL_API_URL=http://external-api:5002
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
       - TZ=Europe/London
+      - UKEF_INTERNAL_NOTIFICATION=test
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
       - AZURE_SSO_TENANT_SUBDOMAIN
@@ -177,19 +158,18 @@ services:
       - portal-api
       - clamav
     ports:
-      - '5000:5000'
+      - '5000:5000' # http
+      - '9226:9226' # debug
     volumes:
       - ./portal/server:/app/portal/server:ro
       - ./portal/public:/app/portal/public:ro
       - ./portal/templates:/app/portal/templates:ro
       - ./libs:/app/libs:ro
-    deploy:
-      resources:
-        limits:
-          cpus: '0.2'
-          memory: 700M
     environment:
+      - PORTAL_API_URL=http://portal-api:5001
+      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
+      - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
@@ -198,9 +178,6 @@ services:
       - SESSION_SECRET
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
-      - PORTAL_API_URL=http://portal-api:5001
-      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
-      - EXTERNAL_API_URL=http://external-api:5002
       - RATE_LIMIT_THRESHOLD
       - CLAMAV_PORT=3310
       - CLAMAV_HOST=clamav
@@ -218,15 +195,11 @@ services:
       - dtfs-central-api
       - external-api
     ports:
-      - '5001:5001'
+      - '5001:5001' # http
+      - '9227:9227' # debug
     volumes:
       - ./portal-api/src:/app/portal-api/src:ro
       - ./libs:/app/libs:ro
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 950M
     environment:
       - PORT=5001
       - CORS_ORIGIN
@@ -241,6 +214,7 @@ services:
       - AZURE_UTILISATION_REPORTS_FILESHARE_NAME
       - GOV_NOTIFY_API_KEY
       - GOV_NOTIFY_EMAIL_RECIPIENT
+      - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
@@ -248,7 +222,6 @@ services:
       - PORTAL_UI_URL
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - TFM_API_URL=http://trade-finance-manager-api:5004
-      - EXTERNAL_API_URL=http://external-api:5002
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
@@ -258,7 +231,6 @@ services:
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
       - UTILISATION_REPORT_DUE_EMAIL_SCHEDULE
       - UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE
-    entrypoint: npx ts-node portal-api/src/index.ts
 
   external-api:
     build:
@@ -269,22 +241,19 @@ services:
     depends_on:
       - dtfs-submissions-data
     ports:
-      - '5002:5002'
+      - '5002:5002' # http
+      - '9228:9228' # debug
     volumes:
       - ./external-api/src:/app/external-api/src:ro
       - ./libs:/app/libs:ro
-    deploy:
-      resources:
-        limits:
-          cpus: '0.1'
-          memory: 400M
     environment:
       - PORT=5002
-      - CORS_ORIGIN
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
+      - CORS_ORIGIN
+      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
       - ORDNANCE_SURVEY_API_URL=https://api.os.co.uk
       - ORDNANCE_SURVEY_API_KEY
@@ -301,12 +270,11 @@ services:
       - GOV_NOTIFY_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI
-      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - EXTERNAL_API_URL=http://external-api:5002
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
-    entrypoint: npx nodemon external-api/src/index.ts -L --max-old-space-size=350
+    entrypoint: npx ts-node external-api/src/index.ts
 
   gef-ui:
     build:
@@ -318,30 +286,28 @@ services:
       - redis
       - portal-api
     ports:
-      - '5006:5006'
+      - '5006:5006' # http
+      - '9229:9229' # debug
     volumes:
       - ./gef-ui/server:/app/gef-ui/server:ro
       - ./gef-ui/public:/app/gef-ui/public:ro
       - ./gef-ui/templates:/app/gef-ui/templates:ro
       - ./libs:/app/libs:ro
-    deploy:
-      resources:
-        limits:
-          cpus: '0.1'
-          memory: 300M
     environment:
       - PORTAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
+      - EXTERNAL_API_URL=http://external-api:5002
+      - REDIS_HOSTNAME=redis
+      - SESSION_SECRET
+      - AZURE_PORTAL_STORAGE_ACCOUNT
+      - AZURE_PORTAL_STORAGE_ACCESS_KEY
+      - TZ=Europe/London
+      - NODE_ENV=${NODE_ENV}
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
-      - REDIS_HOSTNAME=redis
-      - SESSION_SECRET
-      - TZ=Europe/London
-      - NODE_ENV=${NODE_ENV}
-      - EXTERNAL_API_URL=http://external-api:5002
       - RATE_LIMIT_THRESHOLD
 
   redis:
