@@ -65,13 +65,13 @@ jobs:
                                         {
                                             "type": "TextBlock",
                                             "weight": "bolder",
-                                            "text": "${COMMIT_AUTHOR}",
+                                            "text": "'"${COMMIT_AUTHOR}"'",
                                             "wrap": true
                                         },
                                         {
                                             "type": "TextBlock",
                                             "spacing": "none",
-                                            "text": "${COMMIT_TIMESTAMP}",
+                                            "text": "'"$COMMIT_TIMESTAMP"'",
                                             "isSubtle": true,
                                             "wrap": true
                                         }
@@ -82,7 +82,7 @@ jobs:
                         },
                         {
                             "type": "TextBlock",
-                            "text": "${COMMIT_MESSAGE} - ${COMMIT_SHA}",
+                            "text": "'"$COMMIT_MESSAGE"' - '"$COMMIT_SHA"'",
                             "wrap": true
                         }
                     ],
