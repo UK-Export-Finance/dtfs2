@@ -3,7 +3,7 @@ import { AzureFileInfo, IsoDateTimeStamp, ReportPeriod, UtilisationReportEntity,
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import axios from 'axios';
 import {
-  aNonUploadedMarkedReconciledUtilisationReportEntity as aNonUploadedMarkedReconciledUtilisationReportEntity,
+  aNonUploadedMarkedReconciledUtilisationReportEntity,
   aNotReceivedUtilisationReportEntity,
   anUploadedUtilisationReportEntity,
 } from '../../mocks/entities/utilisation-report-entity';
