@@ -2018,7 +2018,8 @@ jobs:
                 UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
                 ESTORE_URL="${{ secrets.ESTORE_URL }}" \
                 HTTPS=1 \
-                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
+                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
+                AZURE_SSO_AUTHORITY="${{ secrets.AZURE_SSO_AUTHORITY }}"
 
       - name: Secrets
         uses: azure/cli@v1.0.9
