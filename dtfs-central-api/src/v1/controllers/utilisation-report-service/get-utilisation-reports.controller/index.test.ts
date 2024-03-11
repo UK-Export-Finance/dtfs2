@@ -20,7 +20,7 @@ describe('getUtilisationReports', () => {
       params: { bankId },
       query: {
         reportPeriod: queryOpts?.reportPeriod ?? undefined,
-        excludeNotUploaded: queryOpts?.excludeNotUploaded ?? false,
+        excludeNotReceived: queryOpts?.excludeNotReceived ?? false,
       },
     });
 
@@ -61,7 +61,7 @@ describe('getUtilisationReports', () => {
     // Assert
     expect(findAllByBankIdMock).toHaveBeenCalledWith(bankId, {
       reportPeriod: undefined,
-      excludeNotUploaded: false,
+      excludeNotReceived: false,
     });
 
     expect(res.statusCode).toEqual(200);
@@ -94,7 +94,7 @@ describe('getUtilisationReports', () => {
     // Assert
     expect(findAllByBankIdMock).toHaveBeenCalledWith(bankId, {
       reportPeriod: validReportPeriod,
-      excludeNotUploaded: false,
+      excludeNotReceived: false,
     });
 
     expect(res.statusCode).toEqual(200);
@@ -102,22 +102,22 @@ describe('getUtilisationReports', () => {
     expect(res._getData()).toEqual(mockUtilisationReports);
   });
 
-  it("calls the repo method with the correct values and sends a 200 when the 'excludeNotUploaded' query is defined", async () => {
+  it("calls the repo method with the correct values and sends a 200 when the 'excludeNotReceived' query is defined", async () => {
     // Arrange
-    const excludeNotUploaded = 'true';
+    const excludeNotReceived = 'true';
 
     const mockUtilisationReports: UtilisationReportEntity[] = [];
     const findAllByBankIdMock = jest.fn().mockResolvedValue(mockUtilisationReports);
     jest.spyOn(UtilisationReportRepo, 'findAllByBankId').mockImplementation(findAllByBankIdMock);
 
-    const { req, res } = getHttpMocks({ excludeNotUploaded });
+    const { req, res } = getHttpMocks({ excludeNotReceived });
 
     // Act
     await getUtilisationReports(req, res);
 
     // Assert
     expect(findAllByBankIdMock).toHaveBeenCalledWith(bankId, {
-      excludeNotUploaded: true,
+      excludeNotReceived: true,
       reportPeriod: undefined,
     });
 
@@ -139,13 +139,13 @@ describe('getUtilisationReports', () => {
       },
     };
 
-    const excludeNotUploaded = 'true';
+    const excludeNotReceived = 'true';
 
     const mockUtilisationReports: UtilisationReportEntity[] = [];
     const findAllByBankIdMock = jest.fn().mockResolvedValue(mockUtilisationReports);
     jest.spyOn(UtilisationReportRepo, 'findAllByBankId').mockImplementation(findAllByBankIdMock);
 
-    const { req, res } = getHttpMocks({ reportPeriod: getReportPeriodJsonObject(validReportPeriod), excludeNotUploaded });
+    const { req, res } = getHttpMocks({ reportPeriod: getReportPeriodJsonObject(validReportPeriod), excludeNotReceived });
 
     // Act
     await getUtilisationReports(req, res);
@@ -153,7 +153,7 @@ describe('getUtilisationReports', () => {
     // Assert
     expect(findAllByBankIdMock).toHaveBeenCalledWith(bankId, {
       reportPeriod: validReportPeriod,
-      excludeNotUploaded: true,
+      excludeNotReceived: true,
     });
 
     expect(res.statusCode).toEqual(200);

@@ -72,7 +72,7 @@ const getUtilisationReportDetailsFilterFromOptions = (options?: GetUtilisationRe
   if (options.reportPeriod) {
     utilisationReportDetailsFilter.reportPeriod = { $eq: options.reportPeriod };
   }
-  if (options.excludeNotUploaded) {
+  if (options.excludeNotReceived) {
     utilisationReportDetailsFilter.status = { $not: { $in: ['REPORT_NOT_RECEIVED'] } };
     utilisationReportDetailsFilter.azureFileInfo = { $not: { $eq: null } };
   }

@@ -3,8 +3,8 @@ import { AzureFileInfo, IsoDateTimeStamp, ReportPeriod, UtilisationReportEntity,
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import axios from 'axios';
 import {
-  aNonUploadedMarkedCompletedUtilisationReportEntity,
-  aNonUploadedUtilisationReportEntity,
+  aNonUploadedMarkedReconciledUtilisationReportEntity as aNonUploadedMarkedReconciledUtilisationReportEntity,
+  aNotReceivedUtilisationReportEntity,
   anUploadedUtilisationReportEntity,
 } from '../../mocks/entities/utilisation-report-entity';
 import app from '../../../src/createApp';
@@ -62,7 +62,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     // Arrange
     const bankId = '13';
     const uploadedReport: UtilisationReportEntity = { ...anUploadedUtilisationReportEntity(), bankId };
-    const nonUploadedReport: UtilisationReportEntity = { ...aNonUploadedUtilisationReportEntity(), bankId };
+    const nonUploadedReport: UtilisationReportEntity = { ...aNotReceivedUtilisationReportEntity(), bankId };
     await saveReportToDatabase(uploadedReport);
     await saveReportToDatabase(nonUploadedReport);
 
@@ -74,23 +74,25 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     expect((response.body as UtilisationReportResponseBody[]).length).toEqual(2);
   });
 
-  it('gets uploaded utilisation reports when excludeNotUploaded query param is true', async () => {
+  it('gets received and reconciled utilisation reports when excludeNotReceived query param is true', async () => {
     // Arrange
     const bankId = '13';
     const uploadedReport: UtilisationReportEntity = { ...anUploadedUtilisationReportEntity(), bankId };
-    const nonUploadedReport: UtilisationReportEntity = { ...aNonUploadedUtilisationReportEntity(), bankId };
-    const nonUploadedMarkedCompleteReport: UtilisationReportEntity = { ...aNonUploadedMarkedCompletedUtilisationReportEntity(), bankId };
+    const notReceivedReport: UtilisationReportEntity = { ...aNotReceivedUtilisationReportEntity(), bankId };
+    const nonUploadedMarkedReconciledReport: UtilisationReportEntity = { ...aNonUploadedMarkedReconciledUtilisationReportEntity(), bankId };
     const { id: idOfUploadedReport } = await saveReportToDatabase(uploadedReport);
-    await saveReportToDatabase(nonUploadedReport);
-    await saveReportToDatabase(nonUploadedMarkedCompleteReport);
+    await saveReportToDatabase(notReceivedReport);
+    const { id: idOfReconciledReport } = await saveReportToDatabase(nonUploadedMarkedReconciledReport);
 
     // Act
-    const response: CustomResponse = await api.get(`${getUrl(bankId)}?excludeNotUploaded=true`);
+    const response: CustomResponse = await api.get(`${getUrl(bankId)}?excludeNotReceived=true`);
 
     // Assert
     expect(response.status).toEqual(200);
-    expect((response.body as UtilisationReportResponseBody[]).length).toEqual(1);
-    expect((response.body as UtilisationReportResponseBody[])[0].id).toEqual(idOfUploadedReport);
+    expect((response.body as UtilisationReportResponseBody[]).length).toEqual(2);
+    const ids = (response.body as UtilisationReportResponseBody[]).map(report => report.id);
+    expect(ids).toContain(idOfUploadedReport);
+    expect(ids).toContain(idOfReconciledReport);
   });
 
   it('gets uploaded utilisation reports for specified period', async () => {
@@ -110,7 +112,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     await saveReportToDatabase(uploadedReportForDifferentReportPeriod);
 
     // Act
-    const urlWithQueryParams = axios.getUri({ url: getUrl(bankId), params: { reportPeriod, excludeNotUploaded: true } });
+    const urlWithQueryParams = axios.getUri({ url: getUrl(bankId), params: { reportPeriod, excludeNotReceived: true } });
     const response: CustomResponse = await api.get(urlWithQueryParams);
 
     // Assert

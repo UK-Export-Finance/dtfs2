@@ -108,7 +108,7 @@ bankRouter.route('/').get(getBanksController.getAllBanksGet);
  *         schema:
  *           - $ref: '#/definitions/ReportPeriod'
  *       - in: query
- *         name: excludeNotUploaded
+ *         name: excludeNotReceived
  *         schema:
  *           type: string
  *           enum:

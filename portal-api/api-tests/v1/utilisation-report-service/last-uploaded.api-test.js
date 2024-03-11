@@ -1,6 +1,6 @@
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
-const { anUploadedUtilisationReportEntity, aNonUploadedUtilisationReportEntity } = require('../../mocks/entities/utilisation-report-entity.ts');
+const { anUploadedUtilisationReportEntity, aNotReceivedUtilisationReportEntity } = require('../../mocks/entities/utilisation-report-entity.ts');
 const { wipeAllUtilisationReports, saveUtilisationReportToDatabase } = require('../../sql-db-helper.ts');
 const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
@@ -47,7 +47,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
     const { bank } = aPaymentReportOfficer;
     lastUploadedReport.bankId = bank.id;
     const notReceivedReport = {
-      ...aNonUploadedUtilisationReportEntity(),
+      ...aNotReceivedUtilisationReportEntity(),
       bankId: bank.id,
       status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
       reportPeriod: {

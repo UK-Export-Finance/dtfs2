@@ -10,7 +10,7 @@ export type GetUtilisationReportsRequest = CustomExpressRequest<{
   };
   query: {
     reportPeriod?: Request['query'];
-    excludeNotUploaded?: 'true' | 'false';
+    excludeNotReceived?: 'true' | 'false';
   };
 }>;
 
@@ -24,13 +24,13 @@ export type GetUtilisationReportsRequest = CustomExpressRequest<{
 export const getUtilisationReports = async (req: GetUtilisationReportsRequest, res: Response) => {
   try {
     const { bankId } = req.params;
-    const { reportPeriod, excludeNotUploaded } = req.query;
+    const { reportPeriod, excludeNotReceived } = req.query;
 
     const parsedReportPeriod = parseReportPeriod(reportPeriod);
 
     const utilisationReports: UtilisationReportEntity[] = await UtilisationReportRepo.findAllByBankId(bankId, {
       reportPeriod: parsedReportPeriod,
-      excludeNotUploaded: excludeNotUploaded === 'true',
+      excludeNotReceived: excludeNotReceived === 'true',
     });
     return res.status(200).send(utilisationReports);
   } catch (error) {

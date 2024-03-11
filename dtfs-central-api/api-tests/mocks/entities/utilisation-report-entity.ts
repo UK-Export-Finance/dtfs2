@@ -13,7 +13,7 @@ export const anUploadedUtilisationReportEntity = (): UtilisationReportEntity => 
   return mock;
 };
 
-export const aNonUploadedUtilisationReportEntity = (): UtilisationReportEntity => {
+export const aNotReceivedUtilisationReportEntity = (): UtilisationReportEntity => {
   const mock = new UtilisationReportEntity();
   mock.bankId = '123';
   mock.azureFileInfo = undefined;
@@ -24,7 +24,7 @@ export const aNonUploadedUtilisationReportEntity = (): UtilisationReportEntity =
   return mock;
 };
 
-export const aNonUploadedMarkedCompletedUtilisationReportEntity = (): UtilisationReportEntity => {
+export const aNonUploadedMarkedReconciledUtilisationReportEntity = (): UtilisationReportEntity => {
   const mock = new UtilisationReportEntity();
   mock.bankId = '123';
   mock.azureFileInfo = undefined;

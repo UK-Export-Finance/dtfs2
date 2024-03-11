@@ -13,12 +13,23 @@ export const anUploadedUtilisationReportEntity = (): UtilisationReportEntity => 
   return mock;
 };
 
-export const aNonUploadedUtilisationReportEntity = (): UtilisationReportEntity => {
+export const aNotReceivedUtilisationReportEntity = (): UtilisationReportEntity => {
   const mock = new UtilisationReportEntity();
   mock.bankId = '123';
   mock.azureFileInfo = undefined;
   mock.reportPeriod = aReportPeriodPartialEntity();
   mock.status = UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED;
+  mock.data = [];
+  mock.updatedByUserId = 'SYSTEM';
+  return mock;
+};
+
+export const aNonUploadedMarkedReconciledUtilisationReportEntity = (): UtilisationReportEntity => {
+  const mock = new UtilisationReportEntity();
+  mock.bankId = '123';
+  mock.azureFileInfo = undefined;
+  mock.reportPeriod = aReportPeriodPartialEntity();
+  mock.status = UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED;
   mock.data = [];
   mock.updatedByUserId = 'SYSTEM';
   return mock;

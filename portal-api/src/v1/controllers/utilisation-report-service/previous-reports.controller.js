@@ -63,10 +63,11 @@ const getPreviousReportsByBankId = async (req, res) => {
     const { bankId } = req.params;
 
     const uploadedReports = await api.getUtilisationReports(bankId, {
-      excludeNotUploaded: true,
+      excludeNotReceived: true,
     });
 
-    const sortedReports = groupAndSortReports(uploadedReports);
+    const filteredReports = uploadedReports.filter(report => report.azureFileInfo);
+    const sortedReports = groupAndSortReports(filteredReports);
 
     return res.status(200).send(sortedReports);
   } catch (error) {

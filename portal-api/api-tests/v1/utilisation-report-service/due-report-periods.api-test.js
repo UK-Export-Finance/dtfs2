@@ -9,7 +9,7 @@ const { withClientAuthenticationTests } = require('../../common-tests/client-aut
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
-const { aNonUploadedUtilisationReportEntity } = require('../../mocks/entities/utilisation-report-entity.ts');
+const { aNotReceivedUtilisationReportEntity } = require('../../mocks/entities/utilisation-report-entity.ts');
 
 describe('GET /v1/banks/:bankId/due-report-periods', () => {
   const dueReportPeriodsUrl = (bankId) => `/v1/banks/${bankId}/due-report-periods`;
@@ -31,7 +31,7 @@ describe('GET /v1/banks/:bankId/due-report-periods', () => {
     const year = 2022;
     const dateUploaded = new Date(year, month - 1);
     mockUtilisationReport = {
-      ...aNonUploadedUtilisationReportEntity(),
+      ...aNotReceivedUtilisationReportEntity(),
       bankId: bank.id,
       reportPeriod: {
         start: {
