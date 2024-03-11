@@ -5,7 +5,8 @@ const { EXCHANGE_RATE_REGEX } = require('../../../../constants/regex');
 const generatePaymentExchangeRateError = (csvDataRow) => {
   if (
     !csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value
-    || csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY]?.value
+    || (csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY]?.value
+      && !csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value)
   ) {
     return null;
   }

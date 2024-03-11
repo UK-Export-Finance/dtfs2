@@ -9,9 +9,10 @@ const { EXCHANGE_RATE_REGEX } = require('../../../../constants/regex');
  */
 const generateTotalFeesAccruedExchangeRateError = (csvDataRow) => {
   if (
-    !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value ||
-    csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]?.value
-  ) {
+    !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value 
+    || (csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]?.value
+      && !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value)
+      ) {
     return null;
   }
   if (!csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value) {
