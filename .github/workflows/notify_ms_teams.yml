@@ -17,13 +17,21 @@ jobs:
       - name: Extract Commit Information
         id: commit_info
         run: |
-          echo "::set-output name=message::$(git log --format='%s' -n 1 ${{ github.sha }}) - ${{ github.sha }} by ${{ github.actor }}"
-          echo "${{ github.event.inputs.message }}"
+          COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
+          COMMIT_SHA=${{ github.sha }}
+          COMMIT_AUTHOR=${{ github.actor }}
+
+          echo "Commit Message: $COMMIT_MESSAGE"
+          echo "Commit SHA: $COMMIT_SHA"
+          echo "Commit Author: $COMMIT_AUTHOR"
+
+          echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
+          echo "COMMIT_SHA=$COMMIT_SHA" >> $GITHUB_ENV
+          echo "COMMIT_AUTHOR=$COMMIT_AUTHOR" >> $GITHUB_ENV
 
       - name: Notify Teams
         env:
           MICROSOFT_TEAMS_WEBHOOK: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK  }}
-          MESSAGE: ${{ github.event.inputs.message }}
         run: |
           curl -g -X POST -H 'Content-Type: application/json' -d "{
             \"type\":\"message\",
@@ -38,7 +46,7 @@ jobs:
                       \"body\":[
                           {
                           \"type\": \"TextBlock\",
-                          \"text\": \"${MESSAGE}\"
+                          \"text\": \"${COMMIT_SHA} - ${COMMIT_MESSAGE} by ${COMMIT_AUTHOR}\"
                           }
                       ]
                   }
