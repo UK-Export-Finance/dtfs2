@@ -124,7 +124,7 @@ module.exports.updateById = async (req, res, next) => {
       return res.status(403).send();
     }
 
-    return await findOne(req.params._id, async (error, user) => {
+    return findOne(req.params._id, async (error, user) => {
       if (error) {
         return next(error);
       }
