@@ -18,29 +18,30 @@ jobs:
         id: commit_info
         run: |
           echo "::set-output name=message::$(git log --format='%s' -n 1 ${{ github.sha }}) - ${{ github.sha }} by ${{ github.actor }}"
+          echo "${{ github.event.inputs.message }}"
 
       - name: Notify Teams
         env:
           MICROSOFT_TEAMS_WEBHOOK: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK  }}
           MESSAGE: ${{ github.event.inputs.message }}
         run: |
-          curl -X POST -H 'Content-Type: application/json' -d '{
-            "type":"message",
-            "attachments":[
+          curl -X POST -H 'Content-Type: application/json' -d "{
+            \"type\":\"message\",
+            \"attachments\":[
                 {
-                  "contentType":"application/vnd.microsoft.card.adaptive",
-                  "contentUrl":null,
-                  "content":{
-                      "$schema":"http://adaptivecards.io/schemas/adaptive-card.json",
-                      "type":"AdaptiveCard",
-                      "version":"1.2",
-                      "body":[
+                  \"contentType\":\"application/vnd.microsoft.card.adaptive\",
+                  \"contentUrl\":null,
+                  \"content\":{
+                      \"\$schema\":\"http://adaptivecards.io/schemas/adaptive-card.json\",
+                      \"type\":\"AdaptiveCard\",
+                      \"version\":\"1.2\",
+                      \"body\":[
                           {
-                          "type": "TextBlock",
-                          "text": "${MESSAGE}"
+                          \"type\": \"TextBlock\",
+                          \"text\": \"${MESSAGE}\"
                           }
                       ]
                   }
                 }
             ]
-          }' "${MICROSOFT_TEAMS_WEBHOOK}"
+          }" "${MICROSOFT_TEAMS_WEBHOOK}"
