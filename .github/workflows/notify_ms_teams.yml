@@ -43,4 +43,4 @@ jobs:
                   }
                 }
             ]
-          }' "${MICROSOFT_TEAMS_WEBHOOK}""
+          }' "${MICROSOFT_TEAMS_WEBHOOK}"
