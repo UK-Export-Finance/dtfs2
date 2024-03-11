@@ -76,4 +76,50 @@ describe('AuthProvider - getAuthCodeUrl', () => {
 
     expect(result).toEqual(expected);
   });
+
+  describe('when AuthProvider.cryptoProvider.generatePkceCodes errors', () => {
+    beforeAll(() => {
+      AuthProvider.cryptoProvider.generatePkceCodes = jest.fn().mockRejectedValue();
+    });
+
+    it('should throw an error', async () => {
+      try {
+        await AuthProvider.getAuthCodeUrl({
+          csrfToken: mockCsrfToken,
+          authCodeUrlRequestParams: mockRequestParams,
+          authCodeRequestParams: mockRequestParams,
+          msalInstance: mockMsalInstance,
+        });
+      } catch (error) {
+        const expectedError = 'Error TFM auth service - getAuthCodeUrl';
+
+        expect(String(error).includes(expectedError)).toEqual(true);
+      }
+    });
+  });
+
+  describe('when AuthProvider.cryptoProvider.generatePkceCodes errors', () => {
+    const mockErrorMslInstance = {
+      getAuthCodeUrl: jest.fn().mockRejectedValue(),
+    };
+
+    beforeAll(() => {
+      AuthProvider.cryptoProvider.generatePkceCodes = jest.fn().mockResolvedValue(mockGeneratePkceCodesResponse);
+    });
+
+    it('should throw an error', async () => {
+      try {
+        await AuthProvider.getAuthCodeUrl({
+          csrfToken: mockCsrfToken,
+          authCodeUrlRequestParams: mockRequestParams,
+          authCodeRequestParams: mockRequestParams,
+          msalInstance: mockErrorMslInstance,
+        });
+      } catch (error) {
+        const expectedError = 'Error TFM auth service - getAuthCodeUrl';
+
+        expect(String(error).includes(expectedError)).toEqual(true);
+      }
+    });
+  });
 });
