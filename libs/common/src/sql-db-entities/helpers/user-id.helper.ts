@@ -4,10 +4,10 @@ import { AuditableBaseEntity } from '../base-entities';
 type UserId = string;
 export type DbAuditUpdatedByUserId = `PORTAL-${UserId}` | `TFM-${UserId}` | 'SYSTEM';
 
-type RequestSource = { platform: 'PORTAL' | 'TFM'; userId: UserId } | { platform: 'SYSTEM' };
+export type DbRequestSource = { platform: 'PORTAL' | 'TFM'; userId: UserId } | { platform: 'SYSTEM' };
 
 export type DbRequestSourceParam = {
-  requestSource: RequestSource;
+  requestSource: DbRequestSource;
 };
 
 /**
@@ -27,5 +27,5 @@ export type DbRequestSourceParam = {
  * // returns 'SYSTEM'
  * this.updatedByUserId = getDbAuditUpdatedByUserId({ platform: 'SYSTEM' });
  */
-export const getDbAuditUpdatedByUserId = (requestSource: RequestSource): DbAuditUpdatedByUserId =>
+export const getDbAuditUpdatedByUserId = (requestSource: DbRequestSource): DbAuditUpdatedByUserId =>
   requestSource.platform === 'SYSTEM' ? requestSource.platform : `${requestSource.platform}-${requestSource.userId}`;

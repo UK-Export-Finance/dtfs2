@@ -42,7 +42,7 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
   /**
    * Status code representing reconciliation progress of the report
    */
-  @Column()
+  @Column({ type: 'varchar' })
   status!: UtilisationReportReconciliationStatus;
 
   /**

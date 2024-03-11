@@ -2,9 +2,7 @@ import { Filter, InsertOneResult, OptionalId } from 'mongodb';
 import {
   AzureFileInfo,
   UtilisationReport,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
   MONGO_DB_COLLECTIONS,
-  MonthAndYear,
   ReportPeriod,
 } from '@ukef/dtfs2-common';
 import db from '../../drivers/db-client';
@@ -95,25 +93,4 @@ export const getOneUtilisationReportDetailsByBankId = async (
     ...getUtilisationReportDetailsFilterFromOptions(options),
   };
   return await utilisationReportsCollection.findOne(utilisationReportDetailsFilter);
-};
-
-export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStart: MonthAndYear, bankId: string): Promise<UtilisationReport[]> => {
-  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.UTILISATION_REPORTS);
-
-  return await collection
-    .find({
-      $and: [
-        { 'bank.id': { $eq: bankId } },
-        { status: { $ne: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED } },
-        {
-          $or: [
-            { 'reportPeriod.start.year': { $lt: reportPeriodStart.year } },
-            {
-              $and: [{ 'reportPeriod.start.year': { $eq: reportPeriodStart.year } }, { 'reportPeriod.start.month': { $lt: reportPeriodStart.month } }],
-            },
-          ],
-        },
-      ],
-    })
-    .toArray();
 };

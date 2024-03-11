@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb';
 import {
   ValuesOf,
   UtilisationReportReconciliationStatus,
@@ -11,7 +10,7 @@ import { IsoMonthStamp } from './date';
 import { UTILISATION_REPORT_HEADERS } from '../constants';
 
 export type UtilisationReportReconciliationSummaryItem = {
-  reportId: ObjectId;
+  reportId: number;
   bank: {
     id: string;
     name: string;

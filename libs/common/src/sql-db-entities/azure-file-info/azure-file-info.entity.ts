@@ -1,6 +1,8 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { UtilisationReportEntity } from '../utilisation-report/utilisation-report.entity';
+import { UtilisationReportEntity } from '../utilisation-report';
 import { AuditableBaseEntity } from '../base-entities';
+import { CreateAzureFileInfoParams } from './azure-file-info.types';
+import { getDbAuditUpdatedByUserId } from '../helpers';
 
 @Entity('AzureFileInfo')
 export class AzureFileInfoEntity extends AuditableBaseEntity {
@@ -47,7 +49,19 @@ export class AzureFileInfoEntity extends AuditableBaseEntity {
    */
   @OneToOne(() => UtilisationReportEntity, (report) => report.azureFileInfo, {
     nullable: false,
+    onDelete: 'CASCADE',
   })
   @JoinColumn()
   utilisationReport!: UtilisationReportEntity;
+
+  static create({ folder, filename, fullPath, url, mimetype, requestSource }: CreateAzureFileInfoParams): AzureFileInfoEntity {
+    const azureFileInfo = new AzureFileInfoEntity();
+    azureFileInfo.folder = folder;
+    azureFileInfo.filename = filename;
+    azureFileInfo.fullPath = fullPath;
+    azureFileInfo.url = url;
+    azureFileInfo.mimetype = mimetype;
+    azureFileInfo.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
+    return azureFileInfo;
+  }
 }

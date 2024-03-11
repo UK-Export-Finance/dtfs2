@@ -1,6 +1,12 @@
 const crypto = require('node:crypto');
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
+const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
+const { UtilisationReportEntity } = require('@ukef/dtfs2-common');
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
+
+SqlDbDataSource.initialize()
+  .then(() => console.info('🗄️ Successfully initialised connection to SQL database'))
+  .catch((error) => console.error('❌ Failed to initialise connection to SQL database:', error));
 
 module.exports = {
   createTasks: ({ dbName, dbConnectionString }) => {
@@ -81,14 +87,22 @@ module.exports = {
         );
       },
 
-      async insertUtilisationReportDetailsIntoDb(utilisationReportDetails) {
-        const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-        return utilisationReports.insertMany(utilisationReportDetails);
+      /**
+       * Inserts utilisation report details to the SQL database
+       * @param {Partial<import('@ukef/dtfs2-common').UtilisationReportEntity[]>} utilisationReports
+       * @returns {import('@ukef/dtfs2-common').UtilisationReportEntity[]} The inserted reports
+       */
+      async insertUtilisationReportsIntoDb(utilisationReports) {
+        const utilisationReportRepo = SqlDbDataSource.getRepository(UtilisationReportEntity);
+        const saveOperations = utilisationReports.map((utilisationReport) => utilisationReportRepo.save(utilisationReport));
+        return await Promise.all(saveOperations);
       },
 
-      async removeAllUtilisationReportDetailsFromDb() {
-        const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-        return utilisationReports.deleteMany({});
+      /**
+       * Deletes all the rows from the utilisation report and azure file info tables
+       */
+      async removeAllUtilisationReportsFromDb() {
+        return await SqlDbDataSource.manager.getRepository(UtilisationReportEntity).delete({});
       },
 
       async getAllBanks() {
