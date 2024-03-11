@@ -9,8 +9,9 @@ const CONSTANTS = require('../../constants');
 const { isValidEmail } = require('../../utils/string');
 const { USER, PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
-const { InvalidUserIdError } = require('../errors');
+const { InvalidUserIdError, InvalidEmailAddressError, UserNotFoundError } = require('../errors');
 const InvalidSessionIdentifierError = require('../errors/invalid-session-identifier.error');
+const { transformDatabaseUser } = require('./transform-database-user');
 
 /**
  * Send a password update confirmation email with update timestamp.
@@ -122,13 +123,18 @@ exports.findByUsername = async (username, callback) => {
   collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
-exports.findByEmail = async (email, callback) => {
+exports.findByEmail = async (email) => {
   if (!isValidEmail(email)) {
-    throw new Error('Invalid Email');
+    throw new InvalidEmailAddressError(email);
+  }
+  const collection = await db.getCollection('users');
+  const user = await collection.findOne({ email: { $eq: email } });
+
+  if (!user) {
+    throw new UserNotFoundError(email);
   }
 
-  const collection = await db.getCollection('users');
-  collection.findOne({ email: { $eq: email } }, callback);
+  return transformDatabaseUser(user);
 };
 
 exports.create = async (user, userService, callback) => {
