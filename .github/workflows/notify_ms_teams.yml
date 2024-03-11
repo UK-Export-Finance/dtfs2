@@ -25,7 +25,7 @@ jobs:
           MICROSOFT_TEAMS_WEBHOOK: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK  }}
           MESSAGE: ${{ github.event.inputs.message }}
         run: |
-          curl -X POST -H 'Content-Type: application/json' -d "{
+          curl -g -X POST -H 'Content-Type: application/json' -d "{
             \"type\":\"message\",
             \"attachments\":[
                 {
