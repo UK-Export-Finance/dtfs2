@@ -5,8 +5,10 @@ import { MOCK_BANK_HOLIDAYS } from '../../test-mocks/mock-bank-holidays';
 import { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } from '../../test-mocks/mock-utilisation-report-reconciliation-summary';
 import { MOCK_TFM_SESSION_USER } from '../../test-mocks/mock-tfm-session-user';
 import { getReportReconciliationSummariesViewModel } from './helpers';
+import { PRIMARY_NAVIGATION_KEYS } from '../../constants';
 
 jest.mock('../../api');
+jest.mock('express-validator');
 
 console.error = jest.fn();
 
@@ -34,9 +36,8 @@ describe('controllers/utilisation-reports', () => {
       await getUtilisationReports(req, res);
 
       // Assert
-      /* eslint-disable no-underscore-dangle */
+      // eslint-disable-next-line no-underscore-dangle
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
-      /* eslint-enable no-underscore-dangle */
     });
 
     it('renders the utilisation-reports.njk view with required data', async () => {
@@ -63,7 +64,7 @@ describe('controllers/utilisation-reports', () => {
       /* eslint-disable no-underscore-dangle */
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-reports.njk');
       expect(res._getRenderData()).toMatchObject({
-        activePrimaryNavigation: 'utilisation reports',
+        activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         reportPeriodSummaries: expectedViewModel,
       });
       /* eslint-enable no-underscore-dangle */
