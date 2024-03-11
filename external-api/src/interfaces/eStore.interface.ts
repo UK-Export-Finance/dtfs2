@@ -93,3 +93,14 @@ export interface TermStoreResponse {
     message: string;
   };
 }
+
+/**
+ * Interface representing the response object for an error in the Estore system.
+ *
+ * @property {number} status - The status code of the error.
+ * @property {object} error - The error object containing additional information about the error.
+ */
+export interface EstoreErrorResponse {
+  readonly status: number;
+  readonly error: object;
+}
