@@ -1,5 +1,6 @@
 import CronJobManager from 'cron-job-manager';
 import { getCollection } from '../database';
+import { generateSystemAuditDetails } from '@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails';
 
 const cronJobTimer = new Date();
 
@@ -18,7 +19,11 @@ export const eStoreCronJobManager = new CronJobManager(
     start: true,
     onComplete: async () => {
       const collection = await getCollection('cron-job-logs');
-      await collection.insertOne({ status: 'eStore Cron Job Manager started successfully', timestamp: cronJobTimer });
+      await collection.insertOne({
+        status: 'eStore Cron Job Manager started successfully',
+        timestamp: cronJobTimer,
+        auditDetails: generateSystemAuditDetails(),
+      });
       console.info('eStore Cron Job Manager started successfully at %s', cronJobTimer);
     },
     timezone: 'Europe/London',
