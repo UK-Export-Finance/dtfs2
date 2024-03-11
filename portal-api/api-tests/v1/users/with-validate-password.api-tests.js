@@ -65,7 +65,7 @@ function getCreatePasswordRuleTestCases({ makeRequest, payload }) {
     },
     {
       description: 'the password does not have at least one special character',
-      makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: 'APASSWORD123' })),
+      makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: 'APassword123' })),
     },
   ];
 }
