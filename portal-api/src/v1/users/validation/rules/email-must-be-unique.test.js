@@ -7,7 +7,7 @@ const { InvalidEmailAddressError, UserNotFoundError } = require('../../../errors
 
 jest.mock('../../controller');
 
-describe('emailMustBeUniqueTest', () => {
+describe('emailMustBeUnique', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });

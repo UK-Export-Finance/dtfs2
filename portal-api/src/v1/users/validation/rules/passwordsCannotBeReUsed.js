@@ -1,3 +1,4 @@
+const { cloneDeep } = require('lodash');
 const utils = require('../../../../crypto/utils');
 
 /**
@@ -9,9 +10,10 @@ const utils = require('../../../../crypto/utils');
 const passwordsCannotBeReUsed = (user, change) => {
   if (change && change.password) {
     const { password } = change;
-    const { blockedPasswordList = [] } = user;
+    const { blockedPasswordList: existingBlockedPasswordList = [] } = user;
 
     // Add current password to check
+    const blockedPasswordList = cloneDeep(existingBlockedPasswordList);
     blockedPasswordList.push({ oldHash: user.hash, oldSalt: user.salt });
 
     const passwordAlreadyUsed = blockedPasswordList.reduce((soFar, blockedPasswordEntry) => {
