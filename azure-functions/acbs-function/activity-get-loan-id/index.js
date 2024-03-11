@@ -53,7 +53,7 @@ const getLoanId = async (context) => {
       // Throw an error upon data validation failure
       throw new Error(
         JSON.stringify({
-          name: 'Void dataset returned',
+          name: 'Invalid dataset returned',
           facilityId,
           dataReceived: data,
         }, null, 4),
