@@ -14,7 +14,7 @@ const { STATUS } = require('../../../src/constants/user');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withValidateEmailIsUniqueTests } = require('./with-validate-email-is-unique.api-tests');
 const { withValidateUsernameAndEmailMatchTests } = require('./with-validate-username-and-email-match.api-tests');
-const { withValidatePasswordOnCreateUserTests } = require('./with-validate-password.api-tests');
+const { withValidatePasswordWhenCreatingUserTests } = require('./with-validate-password.api-tests');
 const { withValidateEmailIsCorrectFormatTests } = require('./with-validate-email-is-correct-format.api-tests').default;
 
 const MOCK_USER = users.barclaysBankMaker1;
@@ -47,7 +47,7 @@ describe('a user', () => {
       makeRequestWithAuthHeader: (authHeader) => post(BASE_URL, MOCK_USER, { headers: { Authorization: authHeader } }),
     });
 
-    withValidatePasswordOnCreateUserTests({ payload: MOCK_USER, makeRequest: async (user) => await createUser(user) });
+    withValidatePasswordWhenCreatingUserTests({ payload: MOCK_USER, makeRequest: async (user) => await createUser(user) });
 
     withValidateEmailIsUniqueTests({
       payload: MOCK_USER,

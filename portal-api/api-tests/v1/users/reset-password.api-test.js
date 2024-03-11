@@ -17,7 +17,7 @@ jest.mock('../../../src/v1/email');
 const sendEmail = require('../../../src/v1/email');
 const { UserService } = require('../../../src/v1/users/user.service');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
-const { withValidatePasswordOnUpdateUserWithoutCurrentPasswordProvidedTests } = require('./with-validate-password.api-tests');
+const { withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests } = require('./with-validate-password.api-tests');
 
 jest.mock('../../../src/v1/users/login.controller', () => ({
   ...jest.requireActual('../../../src/v1/users/login.controller'),
@@ -123,7 +123,7 @@ describe('password reset', () => {
     });
 
     describe('/v1/users/reset-password/:token', () => {
-      describe('when the user token is not valid', () => {
+      describe('when the password reset token is not valid', () => {
         it('should return error for invalid token', async () => {
           const { body } = await as()
             .post({ currentPassword: 'currentPassword', password: 'newPassword', passwordConfirm: 'newPassword' })
@@ -133,14 +133,14 @@ describe('password reset', () => {
         });
       });
 
-      describe('when the user token is valid', () => {
+      describe('when the password reset token is valid', () => {
         const passwordResetToken = 'passwordResetToken';
         const validTokenUrl = `/v1/users/reset-password/${passwordResetToken}`;
         beforeEach(async () => {
           jest.spyOn(utils, 'genPasswordResetToken').mockImplementation(mockKnownTokenResponse(passwordResetToken));
         });
 
-        withValidatePasswordOnUpdateUserWithoutCurrentPasswordProvidedTests({
+        withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests({
           payload: {},
           existingUserPassword: MOCK_USER.password,
           makeRequest: (payload) => as().post(payload).to(validTokenUrl),

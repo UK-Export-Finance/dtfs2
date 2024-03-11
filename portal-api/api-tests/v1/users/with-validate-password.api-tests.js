@@ -11,37 +11,37 @@ const ANOTHER_VALID_PASSWORD = 'AnotherValidPassword1!';
 const WHEN_VALIDATING_PASSWORD_TEXT = 'when validating password';
 
 /*
-* The following tests are for the password validation rules
-* that are applied when creating a new user.
-* These rule test cases correspond to the createRules in the validation/index.js file
-*/
-const withValidatePasswordOnCreateUserTests = ({ payload, makeRequest }) => {
+ * The following tests are for the password validation rules
+ * that are applied when creating a new user.
+ * These rule test cases correspond to the createRules in the validation/index.js file
+ */
+const withValidatePasswordWhenCreatingUserTests = ({ payload, makeRequest }) => {
   describe(WHEN_VALIDATING_PASSWORD_TEXT, () => {
     itShouldReturnAnErrorIf(getCreatePasswordRuleTestCases({ payload, makeRequest }));
   });
 };
 
-/* 
-* The following tests are for the password validation rules
-* that are applied when updating a user without providing the current password.
-* These rule test cases correspond to the applyUpdateRules in the validation/index.js file
-* when the current password field is not provided.
-*/
-const withValidatePasswordOnUpdateUserWithoutCurrentPasswordProvidedTests = ({ payload, makeRequest, existingUserPassword }) => {
+/*
+ * The following tests are for the password validation rules
+ * that are applied when updating a user without providing the current password.
+ * These rule test cases correspond to the applyUpdateRules in the validation/index.js file
+ * when the current password field is not provided.
+ */
+const withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests = ({ payload, makeRequest, existingUserPassword }) => {
   describe(WHEN_VALIDATING_PASSWORD_TEXT, () => {
-    itShouldReturnAnErrorIf(getUpdateUserRuleWithoutCurrentPasswordProvidedTestCases({ payload, makeRequest, existingUserPassword }));
+    itShouldReturnAnErrorIf(getUpdateUserRuleWithoutCurrentPasswordTestCases({ payload, makeRequest, existingUserPassword }));
   });
 };
 
-/* 
-* The following tests are for the password validation rules
-* that are applied when updating a user with providing the current password.
-* These rule test cases correspond to the applyUpdateRules in the validation/index.js file
-* when the current password field is provided.
-*/
-const withValidatePasswordOnUpdateUserWithCurrentPasswordProvidedTests = ({ payload, makeRequest, existingUserPassword }) => {
+/*
+ * The following tests are for the password validation rules
+ * that are applied when updating a user with providing the current password.
+ * These rule test cases correspond to the applyUpdateRules in the validation/index.js file
+ * when the current password field is provided.
+ */
+const withValidatePasswordWhenUpdateUserWithCurrentPasswordTests = ({ payload, makeRequest, existingUserPassword }) => {
   describe(WHEN_VALIDATING_PASSWORD_TEXT, () => {
-    itShouldReturnAnErrorIf(getUpdateUserRuleWithCurrentPasswordProvidedTestCases({ payload, makeRequest, existingUserPassword }));
+    itShouldReturnAnErrorIf(getUpdateUserRuleWithCurrentPasswordTestCases({ payload, makeRequest, existingUserPassword }));
   });
 };
 
@@ -70,7 +70,7 @@ function getCreatePasswordRuleTestCases({ makeRequest, payload }) {
   ];
 }
 
-function getUpdateUserRuleWithoutCurrentPasswordProvidedTestCases({ makeRequest, payload, existingUserPassword }) {
+function getUpdateUserRuleWithoutCurrentPasswordTestCases({ makeRequest, payload, existingUserPassword }) {
   const updateSpecificTestCases = [
     {
       description: 'the password does not match the password confirmation',
@@ -91,7 +91,7 @@ function getUpdateUserRuleWithoutCurrentPasswordProvidedTestCases({ makeRequest,
   return [...getCreatePasswordRuleTestCases({ makeRequest, payload }), ...updateSpecificTestCases];
 }
 
-function getUpdateUserRuleWithCurrentPasswordProvidedTestCases({ makeRequest, payload, existingUserPassword }) {
+function getUpdateUserRuleWithCurrentPasswordTestCases({ makeRequest, payload, existingUserPassword }) {
   const updateWithCurrentPasswordSpecificTestCases = [
     {
       description: 'the provided the current password does not match the current password in the database',
@@ -106,10 +106,7 @@ function getUpdateUserRuleWithCurrentPasswordProvidedTestCases({ makeRequest, pa
       expectResponseErrorToMatchExpected: (body) => expect(body.errors.errorList.currentPassword.text).toEqual('Current password is not correct.'),
     },
   ];
-  return [
-    getUpdateUserRuleWithoutCurrentPasswordProvidedTestCases({ makeRequest, payload, existingUserPassword }),
-    ...updateWithCurrentPasswordSpecificTestCases,
-  ];
+  return [getUpdateUserRuleWithoutCurrentPasswordTestCases({ makeRequest, payload, existingUserPassword }), ...updateWithCurrentPasswordSpecificTestCases];
 }
 function itShouldReturnAnErrorIf(testCases) {
   it.each(testCases)(
@@ -135,7 +132,7 @@ function replacePassword({ payload, replacementPassword }) {
 }
 
 module.exports = {
-  withValidatePasswordOnCreateUserTests,
-  withValidatePasswordOnUpdateUserWithoutCurrentPasswordProvidedTests,
-  withValidatePasswordOnUpdateUserWithCurrentPasswordProvidedTests,
+  withValidatePasswordWhenCreatingUserTests,
+  withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests,
+  withValidatePasswordWhenUpdateUserWithCurrentPasswordTests,
 };
