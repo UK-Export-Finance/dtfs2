@@ -25,18 +25,22 @@ jobs:
           MESSAGE: ${{ github.event.inputs.message }}
         run: |
           curl -X POST -H 'Content-Type: application/json' -d '{
-          "@type": "MessageCard",
-          "@context": "http://schema.org/extensions",
-          "themeColor": "0072C6",
-          "title": "GitHub Action Notification",
-          "text": "This is a notification from a GitHub Actions workflow!",
-          "potentialAction": [
-              {
-                  "@type": "OpenUri",
-                  "name": "View Workflow",
-                  "targets": [
-                      { "os": "default", "uri": "https://github.com/" }
-                  ]
-              }
+            "type":"message",
+            "attachments":[
+                {
+                  "contentType":"application/vnd.microsoft.card.adaptive",
+                  "contentUrl":null,
+                  "content":{
+                      "$schema":"http://adaptivecards.io/schemas/adaptive-card.json",
+                      "type":"AdaptiveCard",
+                      "version":"1.2",
+                      "body":[
+                          {
+                          "type": "TextBlock",
+                          "text": "${MESSAGE}"
+                          }
+                      ]
+                  }
+                }
             ]
-          }' ${MICROSOFT_TEAMS_WEBHOOK}
+          }' "${MICROSOFT_TEAMS_WEBHOOK}""
