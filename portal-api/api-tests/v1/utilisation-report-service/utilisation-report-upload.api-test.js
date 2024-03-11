@@ -1,5 +1,7 @@
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 
+const api = require('../../../src/v1/api');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
@@ -15,11 +17,6 @@ const { MOCK_FILE_INFO } = require('../../../test-helpers/mock-azure-file-info')
 jest.mock('../../../src/drivers/fileshare', () => ({
   getConfig: jest.fn(() => ({ EXPORT_FOLDER: 'mock-folder' })),
   uploadFile: jest.fn(),
-}));
-
-jest.mock('../../../src/v1/api', () => ({
-  saveUtilisationReport: jest.fn().mockResolvedValue({ dateUploaded: new Date() }),
-  getUtilisationReports: jest.fn().mockResolvedValue([]),
 }));
 
 uploadFile.mockImplementation(() => MOCK_FILE_INFO);
@@ -71,10 +68,43 @@ describe('/v1/utilisation-reports', () => {
     ],
   };
 
-  const testFiles = [{
-    fieldname: 'csvFile',
-    filepath: 'api-tests/fixtures/utilisation-report.csv',
-  }]
+  const testFiles = [
+    {
+      fieldname: 'csvFile',
+      filepath: 'api-tests/fixtures/utilisation-report.csv',
+    },
+  ];
+
+  const saveUtilisationReportSpy = jest.spyOn(api, 'saveUtilisationReport');
+  /**
+   * @type {import('../../../src/v1/api-response-types').SaveUtilisationReportResponseBody}
+   */
+  const saveUtilisationReportResponseBody = { dateUploaded: new Date() };
+
+  const getUtilisationReportsSpy = jest.spyOn(api, 'getUtilisationReports');
+  /**
+   * @type {import('../../../src/v1/api-response-types').UtilisationReportResponseBody[]}
+   */
+  const getUtilisationReportsResponseBody = [
+    {
+      id: 1,
+      bankId: uploadingUser.bank.id,
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+      uploadedByUserId: undefined,
+      reportPeriod: {
+        start: {
+          month: 1,
+          year: 2024,
+        },
+        end: {
+          month: 1,
+          year: 2024,
+        },
+      },
+      azureFileInfo: null,
+      dateUploaded: undefined,
+    },
+  ];
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
@@ -83,6 +113,9 @@ describe('/v1/utilisation-reports', () => {
 
   beforeEach(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
+
+    saveUtilisationReportSpy.mockResolvedValue(saveUtilisationReportResponseBody);
+    getUtilisationReportsSpy.mockResolvedValue(getUtilisationReportsResponseBody);
   });
 
   describe('POST /v1/utilisation-reports', () => {

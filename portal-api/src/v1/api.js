@@ -255,7 +255,7 @@ const findLatestGefMandatoryCriteria = async () => {
  * @param {object} reportData - The report data
  * @param {object} user - The user object
  * @param {import('@ukef/dtfs2-common').AzureFileInfo} fileInfo - The azure file info
- * @returns {{ dateUploaded: Date }}
+ * @returns {Promise<import('./api-response-types').SaveUtilisationReportResponseBody>}
  */
 const saveUtilisationReport = async (reportId, reportData, user, fileInfo) => {
   try {
@@ -293,6 +293,7 @@ const saveUtilisationReport = async (reportId, reportData, user, fileInfo) => {
  * Returned reports are ordered by year and month ascending.
  * @param {string} bankId
  * @param {GetUtilisationReportsOptions} [options]
+ * @returns {Promise<import('./api-response-types').UtilisationReportResponseBody[]>}
  */
 const getUtilisationReports = async (bankId, options) => {
   const reportPeriod = options?.reportPeriod;
@@ -330,7 +331,7 @@ const getUtilisationReports = async (bankId, options) => {
 /**
  * Gets utilisation report by id
  * @param {number} id
- * @returns {Promise<import('./api-response-types/UtilisationReportResponseBody').UtilisationReportResponseBody>}
+ * @returns {Promise<import('./api-response-types').UtilisationReportResponseBody>}
  */
 const getUtilisationReportById = async (id) => {
   try {
