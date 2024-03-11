@@ -11,6 +11,7 @@ const bondBeneficiaryFacilities = require('./filter-bondBeneficiaryFacilities');
 const bondIssuerFacilities = require('./filter-bondIssuerFacilities');
 const formatAsDecimal = require('./filter-formatAsDecimal');
 const sentenceCase = require('./filter-sentenceCase');
+const getObjectPropertyValueFromStringPath = require('./getObjectPropertyValueFromStringPath');
 
 const configureNunjucks = (opts) => {
   const appViews = [
@@ -33,6 +34,7 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('bondIssuerFacilities', bondIssuerFacilities);
   nunjucksEnvironment.addFilter('formatAsDecimal', formatAsDecimal);
   nunjucksEnvironment.addFilter('sentence', sentenceCase);
+  nunjucksEnvironment.addFilter('getObjectPropertyValueFromStringPath', getObjectPropertyValueFromStringPath);
 
   mojFilters = Object.assign(mojFilters);
   Object.keys(mojFilters).forEach((filterName) => {

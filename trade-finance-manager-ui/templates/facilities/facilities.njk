@@ -1,5 +1,5 @@
-{% import './_macros/facilities-table.njk' as facilitiesTable %}
-{% import './_macros/facilities-table-search-form.njk' as facilitiesTableSearchForm %}
+{% import '../_macros/table.njk' as table %}
+{% import '../_macros/table-search-form.njk' as tableSearchForm %}
 {% import '../_macros/pagination.njk' as pagination %}
 
 {% extends "index.njk" %}
@@ -16,7 +16,10 @@
     </div>
 
     <div class="govuk-grid-column-one-quarter govuk-!-padding-top-7">
-      {{ facilitiesTableSearchForm.render(csrfToken) }}
+      {{ tableSearchForm.render({
+        tableName: 'facilities',
+        csrfToken: csrfToken
+      }) }}
     </div>
   </div>
 
@@ -24,15 +27,61 @@
     <div class="govuk-grid-column-full">
 
       {% set componentData = {
-        facilities: facilities,
-        user: user,
+        csrfToken: csrfToken,
+        itemNamePlural: 'facilities',
+        itemNameSingular: 'facility',
+        headings: [
+          {
+            isSortable: true,
+            fieldName: 'ukefFacilityId',
+            buttonText: 'Facility ID',
+            buttonValue: 'ukefFacilityId'
+          },
+          {
+            isSortable: true,
+            fieldName: 'dealType',
+            buttonText: 'Product',
+            buttonValue: 'tfmFacilities.dealType'
+          },
+          {
+            isSortable: true,
+            fieldName: 'type',
+            buttonText: 'Type',
+            buttonValue: 'tfmFacilities.type'
+          },
+          {
+            isSortable: true,
+            fieldName: 'companyName',
+            buttonText: 'Exporter',
+            buttonValue: 'tfmFacilities.companyName'
+          },
+          {
+            isSortable: true,
+            fieldName: 'value',
+            buttonText: 'Value (export currency)',
+            buttonValue: 'tfmFacilities.value'
+          },
+          {
+            isSortable: true,
+            fieldName: 'coverEndDate',
+            buttonText: 'Cover end date',
+            buttonValue: 'tfmFacilities.coverEndDate'
+          },
+          {
+            isSortable: true,
+            fieldName: 'facilityStage',
+            buttonText: 'Facility stage',
+            buttonValue: 'facilityStage'
+          }
+        ],
         sortButtonWasClicked: sortButtonWasClicked,
         activeSortByOrder: activeSortByOrder,
         activeSortByField: activeSortByField,
-        csrfToken: csrfToken
+        items: facilities,
+        idFieldName: 'facilityId'
       } %}
 
-      {{ facilitiesTable.render(componentData) }}
+      {{ table.render(componentData) }}
 
       {{ pagination.render({
         totalPages: pages.totalPages,

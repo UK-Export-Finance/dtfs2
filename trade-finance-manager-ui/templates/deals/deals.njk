@@ -1,5 +1,5 @@
-{% import './_macros/deals-table.njk' as dealsTable %}
-{% import './_macros/deals-table-search-form.njk' as dealsTableSearchForm %}
+{% import '../_macros/table.njk' as table %}
+{% import '../_macros/table-search-form.njk' as tableSearchForm %}
 {% import '_macros/pagination.njk' as pagination %}
 
 {% extends "index.njk" %}
@@ -16,7 +16,10 @@
     </div>
 
     <div class="govuk-grid-column-one-quarter govuk-!-padding-top-7">
-      {{ dealsTableSearchForm.render(csrfToken) }}
+      {{ tableSearchForm.render({
+        tableName: 'deals',
+        csrfToken: csrfToken
+      }) }}
     </div>
 
   </div>
@@ -25,15 +28,60 @@
     <div class="govuk-grid-column-full">
 
       {% set componentData = {
-        deals: deals,
-        user: user,
+        csrfToken: csrfToken,
+        itemNamePlural: 'deals',
+        itemNameSingular: 'deal',
+        headings: [
+          {
+            fieldName: 'ukefDealId',
+            buttonText: 'Deal ID',
+            buttonValue: 'dealSnapshot.details.ukefDealId'
+          },
+          {
+            fieldName: 'product',
+            buttonText: 'Product',
+            buttonValue: 'tfm.product'
+          },
+          {
+            fieldName: 'type',
+            buttonText: 'Type',
+            buttonValue: 'dealSnapshot.submissionType',
+            isNotSortable: true
+          },
+          {
+            fieldName: 'exporter',
+            buttonText: 'Exporter',
+            buttonValue: 'dealSnapshot.exporter.companyName'
+          },
+          {
+            fieldName: 'buyer',
+            buttonText: 'Buyer',
+            buttonValue: 'dealSnapshot.buyer.companyName'
+          },
+          {
+            fieldName: 'bank',
+            buttonText: 'Bank',
+            buttonValue: 'dealSnapshot.bank.name'
+          },
+          {
+            fieldName: 'stage',
+            buttonText: 'Stage',
+            buttonValue: 'tfm.stage'
+          },
+          {
+            fieldName: 'dateReceived',
+            buttonText: 'Date received',
+            buttonValue: 'tfm.dateReceivedTimestamp'
+          }
+        ],
         sortButtonWasClicked: sortButtonWasClicked,
         activeSortByOrder: activeSortByOrder,
         activeSortByField: activeSortByField,
-        csrfToken: csrfToken
+        items: deals,
+        idFieldName: '_id'
       } %}
 
-      {{ dealsTable.render(componentData) }}
+      {{ table.render(componentData) }}
 
       {{ pagination.render({
         totalPages: pages.totalPages,

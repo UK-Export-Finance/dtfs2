@@ -1,0 +1,104 @@
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% import './table-heading.njk' as tableHeading %}
+
+{% macro render(params) %}
+  {% set csrfToken = params.csrfToken %}
+  {% set itemNamePlural = params.itemNamePlural %}
+  {% set itemNameSingular = params.itemNameSingular %}
+  {% set headings = params.headings %}
+  {% set sortButtonWasClicked = params.sortButtonWasClicked %}
+  {% set activeSortByOrder = params.activeSortByOrder %}
+  {% set activeSortByField = params.activeSortByField %}
+  {% set items = params.items %}
+  {% set idFieldName = params.idFieldName %}
+
+  <form method="POST" autocomplete="off" novalidate>
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <input type="hidden" name="formId" value="{{itemNamePlural}}-table-sorting">
+    <table class="govuk-table {{itemNamePlural}}-table sortable" data-cy="{{itemNamePlural}}-table">
+      <caption class="govuk-visually-hidden">
+        {{itemNameSingular}} results table, column headers with buttons are sortable.
+      </caption>
+
+      <thead class="govuk-table__head">
+        <tr>
+          {% for heading in headings %}
+
+            {% if heading.isNotSortable %}
+              <th class="govuk-table__header" data-cy="{{itemNamePlural}}-table-heading-{{heading.fieldName}}">{{heading.buttonText}}</th>
+            {% else %}
+
+              {{tableHeading.render({
+                tableName: itemNamePlural,
+                fieldName: heading.fieldName,
+                buttonText: heading.buttonText,
+                buttonValue: heading.buttonValue,
+                sortButtonWasClicked: sortButtonWasClicked,
+                activeSortByOrder: activeSortByOrder,
+                activeSortByField: activeSortByField
+              })}}
+
+            {% endif %}
+
+          {% endfor %}
+        </tr>
+      </thead>
+
+      <tbody class="govuk-table__body">
+        {% for item in items %}
+
+          <tr class="govuk-table__row tfm-{{itemNameSingular}}-table-row" data-cy="{{itemNameSingular}}-{{ item[idFieldName] }}">
+
+            {% for heading in headings %}
+
+              {% if (heading.fieldName == 'stage') or (heading.fieldName == 'facilityStage') %}
+
+                <td class="govuk-table__cell govuk-body-s" data-cy="{{itemNameSingular}}-{{ item[idFieldName] }}-{{heading.fieldName}}">
+                  {{govukTag({
+                    text: item|getObjectPropertyValueFromStringPath(heading.buttonValue) | dashIfEmpty,
+                    classes: "govuk-tag--blue"
+                  })}}
+                </td>
+
+              {% elif (heading.fieldName == 'dateReceived') %}
+
+                <td class="govuk-table__cell govuk-body-s" data-cy="{{itemNameSingular}}-{{ item[idFieldName] }}-date-received">
+                  {% if item|getObjectPropertyValueFromStringPath(heading.buttonValue) %}
+                    {{ item|getObjectPropertyValueFromStringPath(heading.buttonValue) | formatDateString("DD-MM-YYYY", "D MMM YYYY") }}
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+
+              {% elif (heading.fieldName == 'ukefDealId') or (heading.fieldName == 'ukefFacilityId') %}
+
+                {% set idLinkUrl %}
+                  {% if itemNamePlural == 'deals' %}
+                    /case/{{ item[idFieldName] }}/deal
+                  {% else %}
+                    /case/{{ item.dealId }}/facility/{{ item[idFieldName] }}
+                  {% endif %}
+                {% endset %}
+
+                <td class="govuk-table__cell govuk-body-s">
+                  <a
+                    class="govuk-link"
+                    href="{{idLinkUrl}}"
+                    data-cy="{{itemNameSingular}}-{{ item[idFieldName] }}-ukef-{{itemNameSingular}}-id-link">
+                    <span class="govuk-visually-hidden">View {{itemNameSingular}}</span> <span data-cy="{{itemNameSingular}}-{{ item[idFieldName] }}-ukef-{{itemNameSingular}}-id-link-text">{{ item|getObjectPropertyValueFromStringPath(heading.buttonValue) }}</span> <span class="govuk-visually-hidden">details</span>
+                  </a>
+                </td>
+
+              {% else %}
+                <td class="govuk-table__cell govuk-body-s" data-cy="{{itemNameSingular}}-{{item[idFieldName]}}-{{heading.fieldName}}">{{ item|getObjectPropertyValueFromStringPath(heading.buttonValue) | dashIfEmpty }}</td>
+              {% endif %}
+
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+  </form>
+
+{% endmacro %}
