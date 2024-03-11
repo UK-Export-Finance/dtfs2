@@ -33,13 +33,13 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
       }),
     );
 
-    const updatedReport = report.toReportWithUploadDetails({
+    report.updateWithUploadDetails({
       azureFileInfo: azureFileInfoEntity,
       data: dataEntities,
       uploadedByUserId,
       requestSource,
     });
 
-    return await this.save(updatedReport);
+    return await this.save(report);
   },
 });

@@ -1,5 +1,4 @@
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { produce, immerable } from 'immer';
 import { UtilisationReportReconciliationStatus } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import { ReportPeriodPartialEntity } from '../partial-entities';
@@ -10,8 +9,6 @@ import { getDbAuditUpdatedByUserId } from '../helpers';
 
 @Entity('UtilisationReport')
 export class UtilisationReportEntity extends AuditableBaseEntity {
-  [immerable] = true;
-
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -74,14 +71,12 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     return report;
   }
 
-  public toReportWithUploadDetails({ azureFileInfo, data, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): UtilisationReportEntity {
-    return produce(this, (draftReport: UtilisationReportEntity) => {
-      draftReport.dateUploaded = new Date();
-      draftReport.azureFileInfo = azureFileInfo;
-      draftReport.status = 'PENDING_RECONCILIATION';
-      draftReport.uploadedByUserId = uploadedByUserId;
-      draftReport.data = data;
-      draftReport.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
-    });
+  public updateWithUploadDetails({ azureFileInfo, data, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): void {
+    this.dateUploaded = new Date();
+    this.azureFileInfo = azureFileInfo;
+    this.status = 'PENDING_RECONCILIATION';
+    this.uploadedByUserId = uploadedByUserId;
+    this.data = data;
+    this.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
   }
 }

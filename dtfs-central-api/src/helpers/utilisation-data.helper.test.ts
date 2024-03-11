@@ -1,4 +1,4 @@
-import { DbRequestSource, UtilisationDataEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, UtilisationDataEntity, getDbAuditUpdatedByUserId } from '@ukef/dtfs2-common';
 import { utilisationDataCsvRowToSqlEntity } from '.';
 import { MOCK_UTILISATION_REPORT_RAW_CSV_DATA } from '../../api-tests/mocks/utilisation-reports/utilisation-report-raw-csv-data';
 import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
@@ -21,12 +21,28 @@ describe('utilisation-data.helper', () => {
       jest.useRealTimers();
     });
 
-    it('returns an SQL entity', () => {
+    it('returns an SQL entity with the correct data', () => {
       // Act
       const utilisationDataEntity = utilisationDataCsvRowToSqlEntity({ dataEntry: MOCK_UTILISATION_REPORT_RAW_CSV_DATA, requestSource });
 
       // Assert
       expect(utilisationDataEntity instanceof UtilisationDataEntity).toBe(true);
+      expect(utilisationDataEntity).toEqual(
+        expect.objectContaining({
+          facilityId: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['ukef facility id'],
+          exporter: MOCK_UTILISATION_REPORT_RAW_CSV_DATA.exporter,
+          baseCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['base currency'],
+          facilityUtilisation: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['facility utilisation']),
+          totalFeesAccruedForTheMonth: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['total fees accrued for the period']),
+          totalFeesAccruedForTheMonthCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['accrual currency'],
+          totalFeesAccruedForTheMonthExchangeRate: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['accrual exchange rate']),
+          monthlyFeesPaidToUkef: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['fees paid to ukef for the period']),
+          monthlyFeesPaidToUkefCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['fees paid to ukef currency'],
+          paymentCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['payment currency'],
+          paymentExchangeRate: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['payment exchange rate']),
+          updatedByUserId: getDbAuditUpdatedByUserId(requestSource),
+        }),
+      );
     });
 
     it('converts the numeric string columns to numbers', () => {

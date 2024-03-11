@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { HttpStatusCode } from 'axios';
-import { AzureFileInfo } from '@ukef/dtfs2-common';
+import { AzureFileInfo, Unknown } from '@ukef/dtfs2-common';
 import {
   validateReportId,
   validateUtilisationReportData,
@@ -12,16 +12,18 @@ import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { UtilisationReportRawCsvData } from '../../../../types/utilisation-reports';
 import { ApiError } from '../../../../errors';
 
-export type PostUploadUtilisationReportRequest2 = CustomExpressRequest<{
-  reqBody: {
-    reportId: unknown;
-    fileInfo: unknown;
-    reportData: unknown;
-    user: unknown;
-  };
+export type PostUploadUtilisationReportRequestBody = {
+  reportId: number;
+  fileInfo: AzureFileInfo;
+  reportData: UtilisationReportRawCsvData[];
+  user: { _id: string };
+};
+
+type PreValidationPostUploadUtilisationReportRequest = CustomExpressRequest<{
+  reqBody: Unknown<PostUploadUtilisationReportRequestBody>;
 }>;
 
-export const postUploadUtilisationReportPayloadValidator = (req: PostUploadUtilisationReportRequest2, res: Response, next: NextFunction) => {
+export const postUploadUtilisationReportPayloadValidator = (req: PreValidationPostUploadUtilisationReportRequest, res: Response, next: NextFunction) => {
   const { reportId, fileInfo, reportData, user } = req.body;
 
   const validationErrors = [
@@ -39,13 +41,8 @@ export const postUploadUtilisationReportPayloadValidator = (req: PostUploadUtili
   return next();
 };
 
-export type PostUploadUtilisationReportRequest = CustomExpressRequest<{
-  reqBody: {
-    reportId: number;
-    fileInfo: AzureFileInfo;
-    reportData: UtilisationReportRawCsvData[];
-    user: { _id: string };
-  };
+type PostUploadUtilisationReportRequest = CustomExpressRequest<{
+  reqBody: PostUploadUtilisationReportRequestBody;
 }>;
 
 export const postUploadUtilisationReport = async (req: PostUploadUtilisationReportRequest, res: Response) => {

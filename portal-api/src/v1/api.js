@@ -249,6 +249,14 @@ const findLatestGefMandatoryCriteria = async () => {
   }
 };
 
+/**
+ * Saves a utilisation report to the database
+ * @param {number} reportId - The report id
+ * @param {object} reportData - The report data
+ * @param {object} user - The user object
+ * @param {import('@ukef/dtfs2-common').AzureFileInfo} fileInfo - The azure file info
+ * @returns {{ dateUploaded: Date }}
+ */
 const saveUtilisationReport = async (reportId, reportData, user, fileInfo) => {
   try {
     const response = await axios({

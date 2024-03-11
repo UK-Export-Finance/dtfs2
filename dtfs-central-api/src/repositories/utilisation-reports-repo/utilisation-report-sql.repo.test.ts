@@ -34,7 +34,7 @@ describe('UtilisationReportRepo', () => {
           year: 2024,
         },
       };
-      const existingReport = UtilisationReportEntity.createNotReceived({
+      const report = UtilisationReportEntity.createNotReceived({
         bankId,
         reportPeriod,
         requestSource: {
@@ -60,25 +60,24 @@ describe('UtilisationReportRepo', () => {
         requestSource,
       });
 
-      const expectedUpdatedReport = existingReport.toReportWithUploadDetails({
-        azureFileInfo: azureFileInfoEntity,
-        data: [utilisationDataEntity],
-        uploadedByUserId,
-        requestSource,
-      });
-
-      const saveSpy = jest.spyOn(UtilisationReportRepo, 'save').mockResolvedValue(expectedUpdatedReport);
-
+      const saveSpy = jest.spyOn(UtilisationReportRepo, 'save').mockResolvedValue(report);
+      
       // Act
-      await UtilisationReportRepo.updateWithUploadDetails(existingReport, {
+      await UtilisationReportRepo.updateWithUploadDetails(report, {
         azureFileInfo,
         reportCsvData: [reportCsvData],
         uploadedByUserId,
         requestSource,
       });
-
+      
       // Assert
-      expect(saveSpy).toHaveBeenCalledWith(expectedUpdatedReport);
+      report.updateWithUploadDetails({
+        azureFileInfo: azureFileInfoEntity,
+        data: [utilisationDataEntity],
+        uploadedByUserId,
+        requestSource,
+      });
+      expect(saveSpy).toHaveBeenCalledWith(report);
     });
   });
 });
