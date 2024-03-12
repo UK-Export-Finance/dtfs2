@@ -9,28 +9,42 @@ const payloadVerification = (payload, template) => {
     || !template
     || !Object.keys(payload).length
     || !Object.keys(template).length) {
+    console.error('Payload verification error - no data');
     return false;
   }
 
-  // 1. Properties key validation
   const payloadKeys = Object.keys(payload);
   const templateKeys = Object.keys(template);
 
-  const propertiesExists = templateKeys.every((propertyKey) => payloadKeys.includes(propertyKey));
+  // 1. Properties key validation
+  const missingProperties = templateKeys.filter(x => !payloadKeys.includes(x));
 
   // 2. Ensure no additional properties
-  const noAdditionalProperties = !payloadKeys.filter((propertyKey) => !templateKeys.includes(propertyKey)).length;
+  const extraProperties = payloadKeys.filter(x => !templateKeys.includes(x));
 
   // 3. Properties data type validation
   const propertiesDataTypeMatch = payloadKeys.every((key) => {
     const payloadKeyDataType = typeof payload[key];
     const templateKeyDataType = template[key] ? template[key].name : '';
-
+    if (payloadKeyDataType.toLowerCase() !== templateKeyDataType.toLowerCase()) {
+      console.error(`Payload verification error - type mismatch for field "${key}"`);
+      console.error(`Payload verification error - payload type "${payloadKeyDataType}"`);
+      console.error(`Payload verification error - template type "${templateKeyDataType}"`);
+    }
     return payloadKeyDataType.toLowerCase() === templateKeyDataType.toLowerCase();
   });
 
+  if (missingProperties.length) {
+    console.error('Payload verification error - missing properties %s', missingProperties);
+  }
+  if (extraProperties.length) {
+    console.error('Payload verification error - extra properties %s', extraProperties);
+  }
+  if (!propertiesDataTypeMatch) {
+    console.error('Payload verification error - field type mismatch');
+  }
   // Compound comparison condition
-  return propertiesExists && noAdditionalProperties && propertiesDataTypeMatch;
+  return !missingProperties.length && !extraProperties.length && propertiesDataTypeMatch;
 };
 
 module.exports = payloadVerification;

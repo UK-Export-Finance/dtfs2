@@ -17,6 +17,7 @@ jest.mock('../../../src/v1/email');
 const sendEmail = require('../../../src/v1/email');
 const { UserService } = require('../../../src/v1/users/user.service');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
+const { withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests } = require('./with-validate-password.api-tests');
 
 jest.mock('../../../src/v1/users/login.controller', () => ({
   ...jest.requireActual('../../../src/v1/users/login.controller'),
@@ -90,7 +91,7 @@ describe('password reset', () => {
 
   it('should not return a token if the token is invalid', async () => {
     // We set this field as part of createUser -- and this test checks it is not set by resetPassword
-    await databaseHelper.unsetUserProperties({username:MOCK_USER.username, properties:["resetPwdToken","resetPwdTimestamp"] })
+    await databaseHelper.unsetUserProperties({ username: MOCK_USER.username, properties: ['resetPwdToken', 'resetPwdTimestamp'] });
     await databaseHelper.setUserProperties({ username: MOCK_USER.username, update: { disabled: true } });
 
     await resetPassword(MOCK_USER.email, userService);
@@ -122,58 +123,47 @@ describe('password reset', () => {
     });
 
     describe('/v1/users/reset-password/:token', () => {
-      it('should return error for empty current password field', async () => {
-        const { body } = await as().post({ currentPassword: '', password: '1', passwordConfirm: '1' }).to('/v1/users/reset-password/mock123');
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.currentPassword.text).toEqual('Empty password');
-      });
-
-      it('should return error for empty new password field', async () => {
-        const { body } = await as().post({ currentPassword: '1', password: '', passwordConfirm: '1' }).to('/v1/users/reset-password/mock123');
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.password.text).toEqual('Empty password');
-      });
-
-      it('should return error for empty new confirm password field', async () => {
-        const { body } = await as().post({ currentPassword: '1', password: '1', passwordConfirm: '' }).to('/v1/users/reset-password/mock123');
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.passwordConfirm.text).toEqual('Empty password');
-      });
-
-      it('should return error for new passwords do not match', async () => {
-        const { body } = await as().post({ currentPassword: '123', password: '1', passwordConfirm: '2' }).to('/v1/users/reset-password/mock123');
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.password.text).toEqual('Password do not match');
-        expect(body.errors.errorList.passwordConfirm.text).toEqual('Password do not match');
-      });
-
-      it('should return error for invalid token', async () => {
-        const { body } = await as()
-          .post({ currentPassword: 'currentPassword', password: 'newPassword', passwordConfirm: 'newPassword' })
-          .to('/v1/users/reset-password/madeUpToken123');
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.password.text).toEqual('Password reset link is not valid');
-      });
-
-      it('should reset the users password when using correct reset token', async () => {
-        const newPassword = 'XyZ!2345';
-        const passwordResetToken = 'passwordResetToken';
-        jest.spyOn(utils, 'genPasswordResetToken').mockImplementation(mockKnownTokenResponse(passwordResetToken));
-        await resetPassword(MOCK_USER.email, userService);
-
-        const { status, body } = await as()
-          .post({ currentPassword: MOCK_USER.password, password: newPassword, passwordConfirm: newPassword })
-          .to(`/v1/users/reset-password/${passwordResetToken}`);
-
-        expect(status).toEqual(200);
-        expect(body.success).toEqual(true);
-        expect(sendEmail).toHaveBeenCalledWith(PASSWORD_UPDATE_CONFIRMATION_TEMPLATE_ID, MOCK_USER.email, {
-          timestamp: expect.any(String),
+      describe('when the password reset token is not valid', () => {
+        it('should return error for invalid token', async () => {
+          const { body } = await as()
+            .post({ currentPassword: 'currentPassword', password: 'newPassword', passwordConfirm: 'newPassword' })
+            .to('/v1/users/reset-password/madeUpToken123');
+          expect(body.success).toEqual(false);
+          expect(body.errors.errorList.password.text).toEqual('Password reset link is not valid');
         });
-        const login = await as().post({ username: MOCK_USER.username, password: newPassword }).to('/v1/login');
+      });
 
-        expect(login.body).toMatchObject({
-          success: true,
+      describe('when the password reset token is valid', () => {
+        const passwordResetToken = 'passwordResetToken';
+        const validTokenUrl = `/v1/users/reset-password/${passwordResetToken}`;
+        beforeEach(async () => {
+          jest.spyOn(utils, 'genPasswordResetToken').mockImplementation(mockKnownTokenResponse(passwordResetToken));
+        });
+
+        withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests({
+          payload: {},
+          existingUserPassword: MOCK_USER.password,
+          makeRequest: (payload) => as().post(payload).to(validTokenUrl),
+        });
+
+        it('should reset the users password when using correct reset token', async () => {
+          const newPassword = 'XyZ!2345';
+          await resetPassword(MOCK_USER.email, userService);
+
+          const { status, body } = await as()
+            .post({ currentPassword: MOCK_USER.password, password: newPassword, passwordConfirm: newPassword })
+            .to(validTokenUrl);
+
+          expect(status).toEqual(200);
+          expect(body.success).toEqual(true);
+          expect(sendEmail).toHaveBeenCalledWith(PASSWORD_UPDATE_CONFIRMATION_TEMPLATE_ID, MOCK_USER.email, {
+            timestamp: expect.any(String),
+          });
+          const login = await as().post({ username: MOCK_USER.username, password: newPassword }).to('/v1/login');
+
+          expect(login.body).toMatchObject({
+            success: true,
+          });
         });
       });
     });
