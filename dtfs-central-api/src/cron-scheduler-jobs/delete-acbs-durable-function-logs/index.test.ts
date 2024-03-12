@@ -12,17 +12,12 @@ jest.mock('@ukef/dtfs2-common', () => ({
   asString: jest.fn(),
 }));
 
-const originalProcessEnv = process.env;
 describe('scheduler/jobs/delete-acbs-durable-function-logs', () => {
-  beforeEach(() => {
-    jest.mocked(asString).mockImplementation((value) => value as string);
-  });
-
-  afterEach(() => {
-    process.env = { ...originalProcessEnv };
-  });
-
   describe('the task', () => {
+    beforeEach(() => {
+      jest.mocked(asString).mockImplementation((value) => value as string);
+    });
+
     afterEach(() => {
       jest.resetAllMocks();
     });

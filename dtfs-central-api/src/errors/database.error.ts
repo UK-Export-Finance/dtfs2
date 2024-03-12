@@ -1,3 +1,7 @@
+/**
+ * A base class for all database errors.
+ * This should be extended from to create more specific database errors
+ */
 export class DatabaseError extends Error {
   constructor(message: string) {
     super(message);
