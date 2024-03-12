@@ -2,12 +2,11 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UtilisationReportEntity } from '../utilisation-report';
 import { Currency } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
-import { CreateUtilisationDataParams } from './utilisation-data.types';
+import { CreateFeeRecordParams } from './fee-record.types';
 import { getDbAuditUpdatedByUserId } from '../helpers';
 
-// TODO FN-2183 - should this name maybe refer to `payments`, `feeRecords`, or something else?
-@Entity('UtilisationData')
-export class UtilisationDataEntity extends AuditableBaseEntity {
+@Entity('FeeRecord')
+export class FeeRecordEntity extends AuditableBaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -20,7 +19,7 @@ export class UtilisationDataEntity extends AuditableBaseEntity {
   /**
    * The associated report from the UtilisationReport table
    */
-  @ManyToOne(() => UtilisationReportEntity, (report) => report.data, {
+  @ManyToOne(() => UtilisationReportEntity, (report) => report.feeRecords, {
     nullable: false,
   })
   report!: UtilisationReportEntity;
@@ -99,20 +98,20 @@ export class UtilisationDataEntity extends AuditableBaseEntity {
     paymentCurrency,
     paymentExchangeRate,
     requestSource,
-  }: CreateUtilisationDataParams): UtilisationDataEntity {
-    const data = new UtilisationDataEntity();
-    data.facilityId = facilityId;
-    data.exporter = exporter;
-    data.baseCurrency = baseCurrency;
-    data.facilityUtilisation = facilityUtilisation;
-    data.totalFeesAccruedForTheMonth = totalFeesAccruedForTheMonth;
-    data.totalFeesAccruedForTheMonthCurrency = totalFeesAccruedForTheMonthCurrency;
-    data.totalFeesAccruedForTheMonthExchangeRate = totalFeesAccruedForTheMonthExchangeRate;
-    data.monthlyFeesPaidToUkef = monthlyFeesPaidToUkef;
-    data.monthlyFeesPaidToUkefCurrency = monthlyFeesPaidToUkefCurrency;
-    data.paymentCurrency = paymentCurrency;
-    data.paymentExchangeRate = paymentExchangeRate;
-    data.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
-    return data;
+  }: CreateFeeRecordParams): FeeRecordEntity {
+    const feeRecord = new FeeRecordEntity();
+    feeRecord.facilityId = facilityId;
+    feeRecord.exporter = exporter;
+    feeRecord.baseCurrency = baseCurrency;
+    feeRecord.facilityUtilisation = facilityUtilisation;
+    feeRecord.totalFeesAccruedForTheMonth = totalFeesAccruedForTheMonth;
+    feeRecord.totalFeesAccruedForTheMonthCurrency = totalFeesAccruedForTheMonthCurrency;
+    feeRecord.totalFeesAccruedForTheMonthExchangeRate = totalFeesAccruedForTheMonthExchangeRate;
+    feeRecord.monthlyFeesPaidToUkef = monthlyFeesPaidToUkef;
+    feeRecord.monthlyFeesPaidToUkefCurrency = monthlyFeesPaidToUkefCurrency;
+    feeRecord.paymentCurrency = paymentCurrency;
+    feeRecord.paymentExchangeRate = paymentExchangeRate;
+    feeRecord.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
+    return feeRecord;
   }
 }

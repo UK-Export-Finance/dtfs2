@@ -1,7 +1,7 @@
 import { DbRequestSourceParam } from '../helpers';
 import { Currency } from '../../types';
 
-export type CreateUtilisationDataParams = DbRequestSourceParam & {
+export type CreateFeeRecordParams = DbRequestSourceParam & {
   facilityId: string;
   exporter: string;
   baseCurrency: Currency;

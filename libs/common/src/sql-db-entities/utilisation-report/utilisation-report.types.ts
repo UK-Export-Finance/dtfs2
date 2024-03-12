@@ -1,7 +1,7 @@
 import { ReportPeriodPartialEntity } from '../partial-entities';
 import { DbRequestSourceParam } from '../helpers';
 import { AzureFileInfoEntity } from '../azure-file-info';
-import { UtilisationDataEntity } from '../utilisation-data';
+import { FeeRecordEntity } from '../fee-record';
 
 export type CreateNotReceivedUtilisationReportEntityParams = DbRequestSourceParam & {
   bankId: string;
@@ -10,6 +10,6 @@ export type CreateNotReceivedUtilisationReportEntityParams = DbRequestSourcePara
 
 export type UpdateWithUploadDetailsParams = DbRequestSourceParam & {
   azureFileInfo: AzureFileInfoEntity;
-  data: UtilisationDataEntity[];
+  feeRecords: FeeRecordEntity[];
   uploadedByUserId: string;
 };

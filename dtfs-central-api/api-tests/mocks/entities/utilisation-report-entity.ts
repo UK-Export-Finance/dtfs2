@@ -8,7 +8,7 @@ export const anUploadedUtilisationReportEntity = (): UtilisationReportEntity => 
   mock.azureFileInfo = anAzureFileInfoEntity();
   mock.reportPeriod = aReportPeriodPartialEntity();
   mock.status = UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
-  mock.data = [];
+  mock.feeRecords = [];
   mock.updatedByUserId = 'SYSTEM';
   return mock;
 };

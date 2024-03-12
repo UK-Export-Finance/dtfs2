@@ -1,10 +1,10 @@
-import { DbRequestSource, UtilisationDataEntity, getDbAuditUpdatedByUserId } from '@ukef/dtfs2-common';
-import { utilisationDataCsvRowToSqlEntity } from '.';
+import { DbRequestSource, FeeRecordEntity, getDbAuditUpdatedByUserId } from '@ukef/dtfs2-common';
+import { feeRecordCsvRowToSqlEntity } from './fee-record.helper';
 import { MOCK_UTILISATION_REPORT_RAW_CSV_DATA } from '../../api-tests/mocks/utilisation-reports/utilisation-report-raw-csv-data';
 import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
 
-describe('utilisation-data.helper', () => {
-  describe('utilisationDataCsvRowToSqlEntity', () => {
+describe('fee-record.helper', () => {
+  describe('feeRecordCsvRowToSqlEntity', () => {
     const mockDate = new Date('2024-01');
 
     const requestSource: DbRequestSource = {
@@ -23,11 +23,11 @@ describe('utilisation-data.helper', () => {
 
     it('returns an SQL entity with the correct data', () => {
       // Act
-      const utilisationDataEntity = utilisationDataCsvRowToSqlEntity({ dataEntry: MOCK_UTILISATION_REPORT_RAW_CSV_DATA, requestSource });
+      const feeRecordEntity = feeRecordCsvRowToSqlEntity({ dataEntry: MOCK_UTILISATION_REPORT_RAW_CSV_DATA, requestSource });
 
       // Assert
-      expect(utilisationDataEntity instanceof UtilisationDataEntity).toBe(true);
-      expect(utilisationDataEntity).toEqual(
+      expect(feeRecordEntity instanceof FeeRecordEntity).toBe(true);
+      expect(feeRecordEntity).toEqual(
         expect.objectContaining({
           facilityId: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['ukef facility id'],
           exporter: MOCK_UTILISATION_REPORT_RAW_CSV_DATA.exporter,
@@ -62,13 +62,13 @@ describe('utilisation-data.helper', () => {
       };
 
       // Act
-      const utilisationDataEntity = utilisationDataCsvRowToSqlEntity({
+      const feeRecordEntity = feeRecordCsvRowToSqlEntity({
         dataEntry: utilisationReportRawCsvData,
         requestSource,
       });
 
       // Assert
-      expect(utilisationDataEntity).toEqual(
+      expect(feeRecordEntity).toEqual(
         expect.objectContaining({
           facilityUtilisation,
           totalFeesAccruedForTheMonth,
@@ -86,20 +86,20 @@ describe('utilisation-data.helper', () => {
       ${'empty strings'} | ${''}
     `('uses the default value of 1 when the exchange rate entries are $condition', ({ testValue }) => {
       // Arrange
-      const utilisationDataCsvRow: UtilisationReportRawCsvData = {
+      const feeRecordCsvRow: UtilisationReportRawCsvData = {
         ...MOCK_UTILISATION_REPORT_RAW_CSV_DATA,
         'accrual exchange rate': testValue as string,
         'payment exchange rate': testValue as string,
       };
 
       // Act
-      const utilisationDataEntity = utilisationDataCsvRowToSqlEntity({
-        dataEntry: utilisationDataCsvRow,
+      const feeRecordEntity = feeRecordCsvRowToSqlEntity({
+        dataEntry: feeRecordCsvRow,
         requestSource,
       });
 
       // Assert
-      expect(utilisationDataEntity).toEqual(
+      expect(feeRecordEntity).toEqual(
         expect.objectContaining({
           totalFeesAccruedForTheMonthExchangeRate: 1,
           paymentExchangeRate: 1,

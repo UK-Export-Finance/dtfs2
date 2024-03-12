@@ -1,4 +1,4 @@
-import { AzureFileInfoEntity, DbRequestSource, UtilisationDataEntity, UtilisationReportEntity } from '../../sql-db-entities';
+import { AzureFileInfoEntity, DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '../../sql-db-entities';
 import { UtilisationReportReconciliationStatus } from '../../types';
 import { getDbAuditUpdatedByUserId } from '../../sql-db-entities/helpers';
 import { ReportPeriodPartialEntity } from '../../sql-db-entities/partial-entities';
@@ -81,8 +81,8 @@ export class UtilisationReportEntityMockBuilder {
     return this;
   }
 
-  public withData(data: UtilisationDataEntity[]): UtilisationReportEntityMockBuilder {
-    this.report.data = data;
+  public withFeeRecords(feeRecords: FeeRecordEntity[]): UtilisationReportEntityMockBuilder {
+    this.report.feeRecords = feeRecords;
     return this;
   }
 

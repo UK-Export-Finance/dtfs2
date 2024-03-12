@@ -1,10 +1,10 @@
 // TODO FN-1853 - rename this to `utilisation-report.repo.ts` when all repo
 //  methods have been migrated from MongoDB to SQL
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { AzureFileInfoEntity, DbRequestSource, UtilisationDataEntity, UtilisationReportEntity, ReportPeriod, AzureFileInfo } from '@ukef/dtfs2-common';
+import { AzureFileInfoEntity, DbRequestSource, UtilisationReportEntity, ReportPeriod, AzureFileInfo, FeeRecordEntity } from '@ukef/dtfs2-common';
 import { Not, Equal, FindOptionsWhere, LessThan } from 'typeorm';
 import { UtilisationReportRawCsvData } from '../../types/utilisation-reports';
-import { utilisationDataCsvRowToSqlEntity } from '../../helpers';
+import { feeRecordCsvRowToSqlEntity } from '../../helpers';
 
 type UpdateWithUploadDetailsParams = {
   azureFileInfo: AzureFileInfo;
@@ -39,8 +39,8 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
       requestSource,
     });
 
-    const dataEntities: UtilisationDataEntity[] = reportCsvData.map((dataEntry) =>
-      utilisationDataCsvRowToSqlEntity({
+    const feeRecordEntities: FeeRecordEntity[] = reportCsvData.map((dataEntry) =>
+      feeRecordCsvRowToSqlEntity({
         dataEntry,
         requestSource,
       }),
@@ -48,7 +48,7 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
 
     report.updateWithUploadDetails({
       azureFileInfo: azureFileInfoEntity,
-      data: dataEntities,
+      feeRecords: feeRecordEntities,
       uploadedByUserId,
       requestSource,
     });

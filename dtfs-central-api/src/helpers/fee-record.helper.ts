@@ -1,8 +1,8 @@
-import { DbRequestSource, UtilisationDataEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, FeeRecordEntity } from '@ukef/dtfs2-common';
 import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
 import { UTILISATION_REPORT_HEADERS } from '../constants';
 
-type UtilisationDataCsvRowToSqlEntityParams = {
+type FeeRecordCsvRowToSqlEntityParams = {
   dataEntry: UtilisationReportRawCsvData;
   requestSource: DbRequestSource;
 };
@@ -20,8 +20,8 @@ const asNumberOrDefault = (maybeString: string | undefined, defaultNumber: numbe
  * @param param0 - The parameters required to create the SQL entity
  * @returns The SQL entity
  */
-export const utilisationDataCsvRowToSqlEntity = ({ dataEntry, requestSource }: UtilisationDataCsvRowToSqlEntityParams): UtilisationDataEntity =>
-  UtilisationDataEntity.create({
+export const feeRecordCsvRowToSqlEntity = ({ dataEntry, requestSource }: FeeRecordCsvRowToSqlEntityParams): FeeRecordEntity =>
+  FeeRecordEntity.create({
     facilityId: dataEntry[UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID],
     exporter: dataEntry[UTILISATION_REPORT_HEADERS.EXPORTER],
     baseCurrency: dataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY],

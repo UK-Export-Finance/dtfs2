@@ -3,7 +3,7 @@ import { UtilisationReportReconciliationStatus } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import { ReportPeriodPartialEntity } from '../partial-entities';
 import { AzureFileInfoEntity } from '../azure-file-info';
-import { UtilisationDataEntity } from '../utilisation-data';
+import { FeeRecordEntity } from '../fee-record';
 import { CreateNotReceivedUtilisationReportEntityParams, UpdateWithUploadDetailsParams } from './utilisation-report.types';
 import { DbRequestSource, getDbAuditUpdatedByUserId } from '../helpers';
 
@@ -55,10 +55,10 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
    * Breakdown of utilisation per facility and currency combination
    * TODO FN-2183 - should this maybe be called `payments`, `feeRecords`, or something else?
    */
-  @OneToMany(() => UtilisationDataEntity, (data) => data.report, {
+  @OneToMany(() => FeeRecordEntity, (feeRecord) => feeRecord.report, {
     cascade: ['insert', 'update'],
   })
-  data!: UtilisationDataEntity[];
+  feeRecords!: FeeRecordEntity[];
 
   static createNotReceived({ bankId, reportPeriod, requestSource }: CreateNotReceivedUtilisationReportEntityParams): UtilisationReportEntity {
     const report = new UtilisationReportEntity();
@@ -71,12 +71,12 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     return report;
   }
 
-  public updateWithUploadDetails({ azureFileInfo, data, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): void {
+  public updateWithUploadDetails({ azureFileInfo, feeRecords, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): void {
     this.dateUploaded = new Date();
     this.azureFileInfo = azureFileInfo;
     this.status = 'PENDING_RECONCILIATION';
     this.uploadedByUserId = uploadedByUserId;
-    this.data = data;
+    this.feeRecords = feeRecords;
     this.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
   }
 
