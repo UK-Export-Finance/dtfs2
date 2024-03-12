@@ -1,3 +1,11 @@
+
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+// The api-test does not run within the container and requires localhost domain to access DB.
+process.env.MONGODB_URI = process.env.MONGODB_URI.replace('dtfs-submissions-data', 'localhost');
+
 const db = require('./src/drivers/db-client');
 
 const mockFiles = [
