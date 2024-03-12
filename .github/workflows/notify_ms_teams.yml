@@ -45,50 +45,22 @@ jobs:
                 {
                   "contentType":"application/vnd.microsoft.card.adaptive",
                   "contentUrl":null,
-                  "content":{
+                  "content": {
                     "type": "AdaptiveCard",
                     "body": [
-                        {
-                            "type": "TextBlock",
-                            "size": "medium",
-                            "weight": "bolder",
-                            "text": "Commit to main",
-                            "style": "heading",
-                            "wrap": true
-                        },
-                        {
-                            "type": "ColumnSet",
-                            "columns": [
-                                {
-                                    "type": "Column",
-                                    "items": [
-                                        {
-                                            "type": "TextBlock",
-                                            "weight": "bolder",
-                                            "text": "'"${COMMIT_AUTHOR}"'",
-                                            "wrap": true
-                                        },
-                                        {
-                                            "type": "TextBlock",
-                                            "spacing": "none",
-                                            "text": "'"$COMMIT_TIMESTAMP"'",
-                                            "isSubtle": true,
-                                            "wrap": true
-                                        }
-                                    ],
-                                    "width": "stretch"
-                                }
-                            ]
-                        },
-                        {
-                            "type": "TextBlock",
-                            "text": "'"$COMMIT_MESSAGE"' - '"$COMMIT_SHA"'",
-                            "wrap": true
-                        }
+                      {
+                        "type": "FactSet",
+                        "facts": [
+                          { "title": "By", "value": "'"${COMMIT_AUTHOR}"'" },
+                          { "title": "At", "value": "'"${COMMIT_TIMESTAMP}"'" },
+                          { "title": "Change", "value": "'"${COMMIT_MESSAGE}"'" },
+                          { "title": "SHA", "value": "'"${COMMIT_SHA}"'" }
+                        ]
+                      }
                     ],
                     "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
                     "version": "1.2"
-                }
+                  }
                 }
             ]
           }' "${MICROSOFT_TEAMS_WEBHOOK}"
