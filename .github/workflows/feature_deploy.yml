@@ -52,13 +52,13 @@ jobs:
       max-parallel: 2
       matrix:
         repository:
-          - portal-ui
-          - portal-api
-          - gef-ui
-          - trade-finance-manager-ui
-          - trade-finance-manager-api
+          # - portal-ui
+          # - portal-api
+          # - gef-ui
+          # - trade-finance-manager-ui
+          # - trade-finance-manager-api
           - dtfs-central-api
-          - external-api
+          # - external-api
         include:
           - path: portal
             repository: portal-ui

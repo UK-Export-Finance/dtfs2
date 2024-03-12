@@ -10,7 +10,7 @@ export const setupChangeStream = async () => {
   try {
     console.info('Setting up mongodb change stream');
     const database = await getClient();
-    const changeStream = database.watch(
+    const changeStream = database.db('dtfs-submissions').collection('users').watch(
       [{ $match: { operationType: { $in: ['insert', 'update', 'replace'] } } }, { $project: { _id: 1, fullDocument: 1, ns: 1, documentKey: 1 } }],
       { fullDocument: 'updateLookup' },
     );
