@@ -14,7 +14,7 @@ const retryOptions = require('../helpers/retryOptions');
 const mappings = require('../mappings');
 const CONSTANTS = require('../constants');
 
-df.app.orchestration('durableOrchestrator', function* updateACBSfacility(context) {
+df.app.orchestration('acbs-issue-facility', function* updateACBSfacility(context) {
   try {
     const { facilityId, facility, deal } = context.df.getInput();
 
