@@ -33,7 +33,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   /**
    * Currency of the facility that the fee record is for
    */
-  @Column({ type: 'varchar' })
+  @Column({ type: 'nvarchar' })
   baseCurrency!: Currency;
 
   /**
@@ -51,7 +51,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   /**
    * The currency of the total amount of money accrued by UKEF for the GEF
    */
-  @Column({ type: 'varchar' })
+  @Column({ type: 'nvarchar' })
   totalFeesAccruedForTheMonthCurrency!: Currency;
 
   /**
@@ -69,13 +69,13 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   /**
    * The currency of the fees actually paid to UKEF by the bank
    */
-  @Column({ type: 'varchar' })
+  @Column({ type: 'nvarchar' })
   monthlyFeesPaidToUkefCurrency!: Currency;
 
   /**
    * The currency of the payment made to UKEF by the bank
    */
-  @Column({ type: 'varchar' })
+  @Column({ type: 'nvarchar' })
   paymentCurrency!: Currency;
 
   /**

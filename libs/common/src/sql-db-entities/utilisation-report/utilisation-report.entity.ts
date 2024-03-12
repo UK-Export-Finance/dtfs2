@@ -27,7 +27,7 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
   /**
    * The date and time that the report was originally uploaded
    */
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'datetime2', nullable: true })
   dateUploaded!: Date | null;
 
   /**
@@ -42,13 +42,13 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
   /**
    * Status code representing reconciliation progress of the report
    */
-  @Column({ type: 'varchar' })
+  @Column({ type: 'nvarchar' })
   status!: UtilisationReportReconciliationStatus;
 
   /**
    * The `_id` of the user (from the 'users' MongoDB collection) that uploaded the report
    */
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'nvarchar', nullable: true })
   uploadedByUserId!: string | null;
 
   /**
