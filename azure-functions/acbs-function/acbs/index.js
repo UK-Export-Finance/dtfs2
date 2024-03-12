@@ -14,7 +14,7 @@ const mappings = require('../mappings');
 const retryOptions = require('../helpers/retryOptions');
 const CONSTANTS = require('../constants');
 
-module.exports = df.orchestrator(function* HDeal(context) {
+df.app.orchestration('durableOrchestrator', function* HDeal(context) {
   try {
     if (context.df.getInput()) {
       const { deal, bank } = context.df.getInput();

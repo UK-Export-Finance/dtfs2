@@ -14,7 +14,7 @@ const mappings = require('../mappings');
 const CONSTANTS = require('../constants');
 const retryOptions = require('../helpers/retryOptions');
 
-module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
+df.app.orchestration('durableOrchestrator', function* createACBSfacilityBond(context) {
   try {
     const { deal, facility, dealAcbsData } = context.df.getInput();
 

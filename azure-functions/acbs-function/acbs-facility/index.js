@@ -15,7 +15,7 @@ const mappings = require('../mappings');
 const CONSTANTS = require('../constants');
 const helpers = require('../mappings/facility/helpers');
 
-module.exports = df.orchestrator(function* createACBSfacility(context) {
+df.app.orchestration('durableOrchestrator', function* createACBSfacility(context) {
   const { deal, facility, dealAcbsData, acbsReference } = context.df.getInput();
   let facilityLoan;
   let facilityFee;
