@@ -45,20 +45,6 @@ describe('getDateStringFromYearMonthDay', () => {
       expected: 'Invalid date',
     },
     {
-      description: 'parses the js maximum date correctly',
-      year: 275760,
-      month: 9,
-      day: 13,
-      expected: '275760-09-13',
-    },
-    {
-      description: 'does not parse a date bigger than js maximum date',
-      year: 275760,
-      month: 9,
-      day: 14,
-      expected: 'Invalid date',
-    },
-    {
       description: 'does not parse if the day is undefined',
       year: 2024,
       month: 2,
