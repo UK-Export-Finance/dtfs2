@@ -4,7 +4,7 @@ import { Currency } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import { CreateFeeRecordParams } from './fee-record.types';
 import { getDbAuditUpdatedByUserId } from '../helpers';
-import { CURRENCY_NUMBER_COLUMN_OPTIONS, CURRENCY_EXCHANGE_RATE_COLUMN_OPTIONS } from '../constants';
+import { MonetaryColumn, ExchangeRateColumn } from '../custom-columns';
 
 @Entity('FeeRecord')
 export class FeeRecordEntity extends AuditableBaseEntity {
@@ -40,13 +40,13 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   /**
    * The current utilisation (drawdown) of the facility by the exporter
    */
-  @Column(CURRENCY_NUMBER_COLUMN_OPTIONS)
+  @MonetaryColumn()
   facilityUtilisation!: number;
 
   /**
    * Total amount of money accrued by UKEF for the GEF
    */
-  @Column(CURRENCY_NUMBER_COLUMN_OPTIONS)
+  @MonetaryColumn()
   totalFeesAccruedForThePeriod!: number;
 
   /**
@@ -58,13 +58,13 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   /**
    * The exchange rate from the `baseCurrency` to the `totalFeesAccruedForTheMonthCurrency`
    */
-  @Column(CURRENCY_EXCHANGE_RATE_COLUMN_OPTIONS)
+  @ExchangeRateColumn()
   totalFeesAccruedForThePeriodExchangeRate!: number;
 
   /**
    * The fees actually paid to UKEF by the bank
    */
-  @Column(CURRENCY_NUMBER_COLUMN_OPTIONS)
+  @MonetaryColumn()
   feesPaidToUkefForThePeriod!: number;
 
   /**
@@ -82,7 +82,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   /**
    * The exchange rate from the `baseCurrency` to the `paymentCurrency`
    */
-  @Column(CURRENCY_EXCHANGE_RATE_COLUMN_OPTIONS)
+  @ExchangeRateColumn()
   paymentExchangeRate!: number;
 
   // TODO FN-1726 - when we have a status on this entity we should make this method name specific to the initial status
