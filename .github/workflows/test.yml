@@ -44,20 +44,20 @@ on:
       - main
 
     paths:
-      - "package*.json"
-      - "docker*.yml"
-      - ".github/workflows/**"
-      - "gef-ui/**"
-      - "portal/**"
-      - "portal-api/**"
-      - "trade-finance-manager-ui/**"
-      - "trade-finance-manager-api/**"
-      - "external-api/**"
-      - "dtfs-central-api/**"
-      - "azure-functions/**"
-      - "e2e-tests/**"
-      - "utils/mock-data-loader/**"
-      - "libs/**"
+      - 'package*.json'
+      - 'docker*.yml'
+      - '.github/workflows/**'
+      - 'gef-ui/**'
+      - 'portal/**'
+      - 'portal-api/**'
+      - 'trade-finance-manager-ui/**'
+      - 'trade-finance-manager-api/**'
+      - 'external-api/**'
+      - 'dtfs-central-api/**'
+      - 'azure-functions/**'
+      - 'e2e-tests/**'
+      - 'utils/mock-data-loader/**'
+      - 'libs/**'
 
   push:
     branches:
@@ -67,15 +67,15 @@ on:
       - prod
 
     paths:
-      - ".github/workflows/deployment.yml"
-      - "portal/**"
-      - "gef-ui/**"
-      - "trade-finance-manager-ui/**"
-      - "portal-api/**"
-      - "dtfs-central-api/**"
-      - "trade-finance-manager-api/**"
-      - "external-api/**"
-      - "azure-functions/acbs-function/**"
+      - '.github/workflows/deployment.yml'
+      - 'portal/**'
+      - 'gef-ui/**'
+      - 'trade-finance-manager-ui/**'
+      - 'portal-api/**'
+      - 'dtfs-central-api/**'
+      - 'trade-finance-manager-api/**'
+      - 'external-api/**'
+      - 'azure-functions/acbs-function/**'
 
 env:
   environment: dev
@@ -93,7 +93,7 @@ env:
   GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
   JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
   JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
-  ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"
+  ORDNANCE_SURVEY_API_URL: 'https://api.os.co.uk'
   ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
   APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
   APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
@@ -105,7 +105,7 @@ env:
   APIM_ESTORE_KEY: ${{ secrets.APIM_ESTORE_KEY }}
   APIM_ESTORE_VALUE: ${{ secrets.APIM_ESTORE_VALUE }}
   SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-  COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
+  COMPANIES_HOUSE_API_URL: 'https://api.companieshouse.gov.uk'
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
   UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
@@ -130,6 +130,7 @@ env:
   AUDIT_API_USERNAME: ${{ secrets.AUDIT_API_USERNAME }}
   AUDIT_API_PASSWORD: ${{ secrets.AUDIT_API_PASSWORD }}
   UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: ${{ vars.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}
+  ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE: ${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }}
 
 jobs:
   # 1. Setup test infrastructure
@@ -159,16 +160,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        services:
-          [
-            "portal",
-            "gef-ui",
-            "trade-finance-manager-ui",
-            "portal-api",
-            "trade-finance-manager-api",
-            "dtfs-central-api",
-            "external-api",
-          ]
+        services: ['portal', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'trade-finance-manager-api', 'dtfs-central-api', 'external-api']
 
     concurrency:
       group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
@@ -229,7 +221,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        functions: ["acbs-function"]
+        functions: ['acbs-function']
 
     concurrency:
       group: dof-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
@@ -279,15 +271,15 @@ jobs:
       matrix:
         services:
           [
-            "./portal",
-            "./gef-ui",
-            "./trade-finance-manager-ui",
-            "./portal-api",
-            "./dtfs-central-api",
-            "./external-api",
-            "./trade-finance-manager-api",
-            "./libs/common",
-            "./azure-functions/acbs-function"
+            './portal',
+            './gef-ui',
+            './trade-finance-manager-ui',
+            './portal-api',
+            './dtfs-central-api',
+            './external-api',
+            './trade-finance-manager-api',
+            './libs/common',
+            './azure-functions/acbs-function',
           ]
 
     concurrency:
@@ -338,21 +330,21 @@ jobs:
       matrix:
         spec:
           [
-            "*.spec.js",
-            "admin/**/*.spec.js",
-            "checker/**/*.spec.js",
-            "dashboard/**/*.spec.js",
-            "feedback/**/*.spec.js",
-            "login/**/*.spec.js",
-            "maker/**/*.spec.js",
-            "maker-about-supply-contract/**/*.spec.js",
-            "maker-bond/**/*.spec.js",
-            "maker-facilities/**/*.spec.js",
-            "maker-loan/**/*.spec.js",
-            "number-generator/**/*.spec.js",
-            "read-only/**/*.spec.js",
-            "reports/**/*.spec.js",
-            "payment-report-officer/**/*.spec.js",
+            '*.spec.js',
+            'admin/**/*.spec.js',
+            'checker/**/*.spec.js',
+            'dashboard/**/*.spec.js',
+            'feedback/**/*.spec.js',
+            'login/**/*.spec.js',
+            'maker/**/*.spec.js',
+            'maker-about-supply-contract/**/*.spec.js',
+            'maker-bond/**/*.spec.js',
+            'maker-facilities/**/*.spec.js',
+            'maker-loan/**/*.spec.js',
+            'number-generator/**/*.spec.js',
+            'read-only/**/*.spec.js',
+            'reports/**/*.spec.js',
+            'payment-report-officer/**/*.spec.js',
           ]
 
     concurrency:
@@ -397,12 +389,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        spec:
-          [
-            "*.spec.js",
-            "scenarios/**/*.spec.js",
-            "unissued-facilities/**/*.spec.js",
-          ]
+        spec: ['*.spec.js', 'scenarios/**/*.spec.js', 'unissued-facilities/**/*.spec.js']
 
     concurrency:
       group: e2e-tests-gef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
@@ -448,17 +435,17 @@ jobs:
       matrix:
         spec:
           [
-            "case/**/*.spec.js",
-            "case-amendments/**/*.spec.js",
-            "case-underwriting/**/*.spec.js",
-            "deals/**/*.spec.js",
-            "facility/**/*.spec.js",
-            "feedback/**/*.spec.js",
-            "footer/**/*.spec.js",
-            "header/**/*.spec.js",
-            "login/**/*.spec.js",
-            "users/**/*.spec.js",
-            "utilisation-reports/**/*.spec.js",
+            'case/**/*.spec.js',
+            'case-amendments/**/*.spec.js',
+            'case-underwriting/**/*.spec.js',
+            'deals/**/*.spec.js',
+            'facility/**/*.spec.js',
+            'feedback/**/*.spec.js',
+            'footer/**/*.spec.js',
+            'header/**/*.spec.js',
+            'login/**/*.spec.js',
+            'users/**/*.spec.js',
+            'utilisation-reports/**/*.spec.js',
           ]
 
     concurrency:
@@ -505,26 +492,26 @@ jobs:
       matrix:
         spec:
           [
-            "MIA-underwriter-managers-approved-decision-updates-portal-deal-and-submission-type-to-MIN/**/*.spec.js",
-            "MIA-underwriter-managers-decision-updates-portal-deal/**/*.spec.js",
-            "submit-AIN-deal-creates-default-credit-rating-in-tfm/**/*.spec.js",
-            "submit-AIN-deal-creates-tasks-in-tfm/**/*.spec.js",
-            "submit-AIN-deal-creates-tfm-deal-stage-and-product/**/*.spec.js",
-            "submit-AIN-deal-updates-portal-deal-status/**/*.spec.js",
-            "submit-MIA-deal-TFM-approves-resubmit-MIA-deal-becomes-MIN/**/*.spec.js",
-            "submit-MIA-deal-creates-tasks-in-tfm/**/*.spec.js",
-            "submit-MIA-deal-creates-tfm-deal-stage-and-product/**/*.spec.js",
-            "submit-MIA-deal-updates-portal-deal-status/**/*.spec.js",
-            "submit-MIN-changes-tfm-stage-to-confirmed/**/*.spec.js",
-            "submit-MIN-deal-does-not-create-credit-rating-in-tfm/**/*.spec.js",
-            "submit-MIN-deal-updates-portal-deal-status/**/*.spec.js",
-            "submit-MIN-with-unissued-facilities-and-resubmit-issued-facilities-updates-facilities-in-tfm/**/*.spec.js",
-            "submit-deal-adds-risk-profile-to-facilities/**/*.spec.js",
-            "submit-deal-converts-contract-value-to-gbp/**/*.spec.js",
-            "submit-deal-creates-loss-given-and-probability-defaults-in-tfm/**/*.spec.js",
-            "submit-deal-with-issued-facilities/**/*.spec.js",
-            "submit-deal-with-non-gbp-facilities/**/*.spec.js",
-            "submit-deal-with-unissued-facilities-and-resubmit-as-issued/**/*.spec.js",
+            'MIA-underwriter-managers-approved-decision-updates-portal-deal-and-submission-type-to-MIN/**/*.spec.js',
+            'MIA-underwriter-managers-decision-updates-portal-deal/**/*.spec.js',
+            'submit-AIN-deal-creates-default-credit-rating-in-tfm/**/*.spec.js',
+            'submit-AIN-deal-creates-tasks-in-tfm/**/*.spec.js',
+            'submit-AIN-deal-creates-tfm-deal-stage-and-product/**/*.spec.js',
+            'submit-AIN-deal-updates-portal-deal-status/**/*.spec.js',
+            'submit-MIA-deal-TFM-approves-resubmit-MIA-deal-becomes-MIN/**/*.spec.js',
+            'submit-MIA-deal-creates-tasks-in-tfm/**/*.spec.js',
+            'submit-MIA-deal-creates-tfm-deal-stage-and-product/**/*.spec.js',
+            'submit-MIA-deal-updates-portal-deal-status/**/*.spec.js',
+            'submit-MIN-changes-tfm-stage-to-confirmed/**/*.spec.js',
+            'submit-MIN-deal-does-not-create-credit-rating-in-tfm/**/*.spec.js',
+            'submit-MIN-deal-updates-portal-deal-status/**/*.spec.js',
+            'submit-MIN-with-unissued-facilities-and-resubmit-issued-facilities-updates-facilities-in-tfm/**/*.spec.js',
+            'submit-deal-adds-risk-profile-to-facilities/**/*.spec.js',
+            'submit-deal-converts-contract-value-to-gbp/**/*.spec.js',
+            'submit-deal-creates-loss-given-and-probability-defaults-in-tfm/**/*.spec.js',
+            'submit-deal-with-issued-facilities/**/*.spec.js',
+            'submit-deal-with-non-gbp-facilities/**/*.spec.js',
+            'submit-deal-with-unissued-facilities-and-resubmit-as-issued/**/*.spec.js',
           ]
 
     concurrency:
