@@ -8,6 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const mdm = require('../apim-mdm');
@@ -101,4 +102,6 @@ const createFacilityCovenant = async (context) => {
   }
 };
 
-module.exports = createFacilityCovenant;
+df.app.activity('create-facility-covenant', {
+  handler: createFacilityCovenant,
+});

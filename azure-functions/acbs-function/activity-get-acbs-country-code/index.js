@@ -8,6 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
+const df = require('durable-functions');
 const mdm = require('../apim-mdm');
 const CONSTANTS = require('../constants');
 
@@ -22,4 +23,6 @@ const getAcbsCountryCode = async (context) => {
   }
 };
 
-module.exports = getAcbsCountryCode;
+df.app.activity('get-acbs-country-code', {
+  handler: getAcbsCountryCode,
+});

@@ -14,7 +14,7 @@
  * HTTP -> DOF -> DAF
  * ------------------
  */
-
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
@@ -89,4 +89,6 @@ const updateFacilityMaster = async (context) => {
   }
 };
 
-module.exports = updateFacilityMaster;
+df.app.activity('update-facility-master', {
+  handler: updateFacilityMaster,
+});

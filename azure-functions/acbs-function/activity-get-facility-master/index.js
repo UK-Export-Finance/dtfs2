@@ -8,6 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
+const df = require('durable-functions');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 
@@ -49,4 +50,6 @@ const getFacilityMaster = async (context) => {
   }
 };
 
-module.exports = getFacilityMaster;
+df.app.activity('get-facility-master', {
+  handler: getFacilityMaster,
+});

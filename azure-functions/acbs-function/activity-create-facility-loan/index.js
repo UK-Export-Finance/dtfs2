@@ -8,6 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
@@ -71,4 +72,6 @@ const createFacilityLoan = async (context) => {
   }
 };
 
-module.exports = createFacilityLoan;
+df.app.activity('create-facility-loan', {
+  handler: createFacilityLoan,
+});

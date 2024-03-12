@@ -8,6 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
@@ -60,4 +61,6 @@ const createDealGuarantee = async (context) => {
   }
 };
 
-module.exports = createDealGuarantee;
+df.app.activity('create-deal-guarantee', {
+  handler: createDealGuarantee,
+});
