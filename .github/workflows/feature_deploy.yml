@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - feat/e2etf-sql
+      - feat/DTFS2-6965/test-change-stream-in-azure
     paths:
       - "portal/**"
       - "portal-api/**"
@@ -48,7 +49,7 @@ jobs:
     # environment:
     #   name: ${{ needs.deployment-environment.outputs.environment }}
     strategy:
-      max-parallel: 4
+      max-parallel: 2
       matrix:
         repository:
           - portal-ui
