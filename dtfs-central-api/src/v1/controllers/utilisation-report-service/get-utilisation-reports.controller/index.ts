@@ -3,6 +3,7 @@ import { UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { parseReportPeriod } from '../../../../utils/report-period';
+import { mapUtilisationReportEntityToGetUtilisationReportResponse } from '../../../../mapping/mapUtilisationReport';
 
 export type GetUtilisationReportsRequest = CustomExpressRequest<{
   params: {
@@ -32,7 +33,7 @@ export const getUtilisationReports = async (req: GetUtilisationReportsRequest, r
       reportPeriod: parsedReportPeriod,
       excludeNotReceived: excludeNotReceived === 'true',
     });
-    return res.status(200).send(utilisationReports);
+    return res.status(200).send(utilisationReports.map((report) => mapUtilisationReportEntityToGetUtilisationReportResponse(report)));
   } catch (error) {
     console.error('Unable to get utilisation reports:', error);
     return res.status(500).send({ status: 500, message: 'Failed to get utilisation reports' });
