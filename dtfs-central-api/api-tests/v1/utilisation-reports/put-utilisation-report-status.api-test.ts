@@ -1,9 +1,8 @@
-import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import app from '../../../src/createApp';
 import createApi from '../../api';
 import { MOCK_TFM_USER } from '../../mocks/test-users/mock-tfm-user';
-import { UtilisationReportRepo } from '../../../src/repositories/utilisation-reports-repo';
+import { SqlDbHelper } from '../../sql-db-helper';
 
 const api = createApi(app);
 
@@ -16,10 +15,10 @@ describe('/v1/utilisation-reports/set-status', () => {
   const mockReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).build();
 
   beforeAll(async () => {
-    await SqlDbDataSource.initialize();
+    await SqlDbHelper.initialize();
 
-    await UtilisationReportRepo.delete({});
-    await UtilisationReportRepo.save(mockReport);
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+    await SqlDbHelper.saveNewEntry('UtilisationReport', mockReport);
   });
 
   it(`should return a 500 error when trying to set a non-existent report to '${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}'`, async () => {

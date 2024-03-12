@@ -63,8 +63,8 @@ export class UtilisationDataEntityMockBuilder {
     return this;
   }
 
-  public withTotalFeesAccruedForTheMonthCurrency(totalFeesAccruedForTheMonthCurrency: Currency): UtilisationDataEntityMockBuilder {
-    this.data.totalFeesAccruedForTheMonthCurrency = totalFeesAccruedForTheMonthCurrency;
+  public withTotalFeesAccruedForTheMonthCurrency(currency: Currency): UtilisationDataEntityMockBuilder {
+    this.data.totalFeesAccruedForTheMonthCurrency = currency;
     return this;
   }
 
