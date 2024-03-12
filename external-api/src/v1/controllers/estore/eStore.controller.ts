@@ -78,10 +78,6 @@ export const create = async (req: Request, res: Response) => {
         console.info('Initiating eStore site existence check for exporter %s', eStoreData.exporterName);
         const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(eStoreData.exporterName);
 
-        if (siteExistsResponse instanceof SiteExistsResponse) {
-          /* empty */
-        }
-
         // Step 3: Site already exists in eStore
         if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
           /**
@@ -108,7 +104,7 @@ export const create = async (req: Request, res: Response) => {
           );
 
           // Update object
-          eStoreData.siteId = siteExistsResponse.data.siteId;
+          eStoreData.siteId = String(siteExistsResponse.data.siteId);
 
           // Add facility IDs to term store and create the buyer folder
           eStoreTermStoreAndBuyerFolder(eStoreData);

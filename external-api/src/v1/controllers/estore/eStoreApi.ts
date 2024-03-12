@@ -8,6 +8,7 @@ import {
   EstoreFacilityFolder,
   EstoreDealFiles,
   EstoreTermStore,
+  EstoreResponse,
   SiteCreationResponse,
   SiteExistsResponse,
   BuyerFolderResponse,
@@ -34,9 +35,10 @@ const headers = {
 };
 
 /**
- * Checks if a site exists in the eStore system for the given exporter name.
- * @param exporterName - The name of the exporter for which the site existence needs to be checked.
- * @returns A promise that resolves to a response indicating whether the site exists or not.
+ * Checks if a site exists in eStore for a given exporter name.
+ *
+ * @param {string} exporterName - The name of the exporter.
+ * @returns {Promise<SiteExistsResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
  */
 export const siteExists = async (exporterName: string): Promise<SiteExistsResponse | EstoreErrorResponse> => {
   try {
@@ -45,7 +47,7 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
       console.error('❌ Invalid exporter name provided %s', exporterName);
 
       return {
-        status: 400,
+        status: HttpStatusCode.BadRequest,
         data: {
           status: ESTORE_CRON_STATUS.FAILED,
           siteId: '',
@@ -66,24 +68,28 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
 
     return {
       status: HttpStatusCode.InternalServerError,
-      error,
+      data: {
+        status: HttpStatusCode.InternalServerError,
+        message: error,
+      },
     };
   }
 };
 
 /**
- * Sends a POST request to an eStore endpoint.
- * @param endpoint - The URL endpoint to send the POST request to.
- * @param data - The payload data to send in the request.
- * @param timeout - The timeout value for the request in milliseconds. Default is 0.
- * @returns A Promise that resolves to an object with the response data and status if successful,
- * or an error object with the status code and error details if there is an error.
+ * Makes a POST request to the eStore API.
+ *
+ * @param {string} endpoint - The endpoint to call.
+ * @param {Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[]}
+ * data - The data to send in the request.
+ * @param {number} timeout - The timeout for the request.
+ * @returns {Promise<EstoreResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
  */
 const postToEstore = async (
   endpoint: string,
   data: Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
   timeout = 0,
-): Promise<any | EstoreErrorResponse> => {
+): Promise<EstoreResponse | EstoreErrorResponse> => {
   try {
     console.info('Invoking eStore endpoint %s with payload %s', endpoint, data);
     const response = await axios.post(`${APIM_ESTORE_URL}${endpoint}`, data, { headers, timeout });
@@ -102,125 +108,202 @@ const postToEstore = async (
 
     return {
       status: HttpStatusCode.InternalServerError,
-      error,
+      data: {
+        status: HttpStatusCode.InternalServerError,
+        message: error,
+      },
     };
   }
 };
 
 /**
- * Creates a Sharepoint site, where all directories and files and uploaded.
- * @param exporterName - An object of type EstoreSite that contains the exporter name.
- * @returns A Promise that resolves to a SiteCreationResponse object.
- */
-export const createExporterSite = async (exporterName: EstoreSite): Promise<SiteCreationResponse | EstoreErrorResponse> =>
-  postToEstore(ENDPOINT.SITE, [exporterName], oneMinute);
-
-/**
- * Adds a facility to the term store.
- * @param facilityId - An object of type EstoreTermStore that contains the facility ID.
- * @returns A Promise that resolves to a TermStoreResponse object.
- */
-export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promise<TermStoreResponse | EstoreErrorResponse> =>
-  postToEstore(ENDPOINT.TERM, [facilityId], oneMinute);
-
-/**
- * Creates a buyer directory on Sharepoint.
+ * Creates a site in eStore for a given exporter name.
  *
- * @param siteId - The ID of the site where the directory should be created.
- * @param buyerName - An object containing the buyer's name and other properties.
- * @returns A Promise that resolves to a BuyerFolderResponse object containing the response data and status.
+ * @param {EstoreSite} exporterName - The name of the exporter.
+ * @returns {Promise<SiteCreationResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
+ * @throws {Error} If the request to create the site fails.
+ */
+export const createExporterSite = async (exporterName: EstoreSite): Promise<SiteCreationResponse | EstoreErrorResponse> => {
+  try {
+    const response = await postToEstore(ENDPOINT.SITE, [exporterName], oneMinute);
+
+    if (!response) {
+      throw new Error('❌ Invalid response received');
+    }
+
+    return response;
+  } catch (error: any) {
+    console.error('❌ eStore create exporter site has failed %O', { data: error?.response?.data, status: error?.response?.status });
+
+    return {
+      status: HttpStatusCode.InternalServerError,
+      data: {
+        status: HttpStatusCode.InternalServerError,
+        message: error,
+      },
+    };
+  }
+};
+
+/**
+ * Adds a facility to the term store in eStore.
+ *
+ * @param {EstoreTermStore} facilityId - The ID of the facility to add to the term store.
+ * @returns {Promise<TermStoreResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
+ * @throws {Error} If the request to add the facility to the term store fails.
+ */
+export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promise<TermStoreResponse | EstoreErrorResponse> => {
+  try {
+    const response = await postToEstore(ENDPOINT.TERM, [facilityId], oneMinute);
+
+    if (!response) {
+      throw new Error('❌ Invalid response received');
+    }
+
+    return response;
+  } catch (error: any) {
+    console.error('❌ eStore adding facility term has failed %O', { data: error?.response?.data, status: error?.response?.status });
+
+    return {
+      status: HttpStatusCode.InternalServerError,
+      data: {
+        status: HttpStatusCode.InternalServerError,
+        message: error,
+      },
+    };
+  }
+};
+
+/**
+ * Creates a buyer folder in eStore for a given site ID.
+ *
+ * @param {string} siteId - The ID of the site where the buyer folder will be created.
+ * @param {EstoreBuyer} buyerName - The name of the buyer.
+ * @returns {Promise<BuyerFolderResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
+ * @throws {Error} If the site ID is invalid.
+ * @throws {Error} If the request to create the buyer folder fails.
  */
 export const createBuyerFolder = async (siteId: string, buyerName: EstoreBuyer): Promise<BuyerFolderResponse | EstoreErrorResponse> => {
-  if (!isValidSiteId(siteId)) {
-    console.error('Invalid site ID %s', siteId);
+  try {
+    if (!isValidSiteId(siteId)) {
+      console.error('Invalid site ID %s', siteId);
+      throw new Error('Invalid site ID');
+    }
+
+    const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.BUYER}`;
+    return postToEstore(endpoint, [buyerName], oneMinute);
+  } catch (error: any) {
+    console.error('❌ eStore create buyer folder request has failed %O', { data: error?.response?.data, status: error?.response?.status });
 
     return {
+      status: HttpStatusCode.InternalServerError,
       data: {
-        error: ESTORE_CRON_STATUS.FAILED,
+        status: HttpStatusCode.InternalServerError,
+        message: error,
       },
-      status: 400,
     };
   }
-
-  const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.BUYER}`;
-  return postToEstore(endpoint, [buyerName], oneMinute);
 };
 
 /**
- * Creates a deal directory on Sharepoint.
+ * Creates a deal folder in eStore for a given site ID.
  *
- * @param siteId - The ID of the site where the directory should be created.
- * @param data - An object containing the necessary data for creating the directory.
- * @returns A Promise that resolves to a DealFolderResponse object containing the response data and status.
+ * @param {string} siteId - The ID of the site where the deal folder will be created.
+ * @param {EstoreDealFolder} data - The deal folder data.
+ * @returns {Promise<DealFolderResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
+ * @throws {Error} If the site ID is invalid.
+ * @throws {Error} If the request to create the deal folder fails.
  */
 export const createDealFolder = async (siteId: string, data: EstoreDealFolder): Promise<DealFolderResponse | EstoreErrorResponse> => {
-  if (!isValidSiteId(siteId)) {
-    console.error('Invalid site ID %s', siteId);
+  try {
+    if (!isValidSiteId(siteId)) {
+      console.error('Invalid site ID %s', siteId);
+      throw new Error('Invalid site ID');
+    }
+
+    const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}`;
+    return postToEstore(endpoint, [data], twoMinutes);
+  } catch (error: any) {
+    console.error('❌ eStore create deal folder request has failed %O', { data: error?.response?.data, status: error?.response?.status });
 
     return {
+      status: HttpStatusCode.InternalServerError,
       data: {
-        error: ESTORE_CRON_STATUS.FAILED,
+        status: HttpStatusCode.InternalServerError,
+        message: error,
       },
-      status: 400,
     };
   }
-
-  const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}`;
-  return postToEstore(endpoint, [data], twoMinutes);
 };
 
 /**
- * Creates a facility directory on Sharepoint.
+ * Creates a facility folder in eStore for a given site ID and deal identifier.
  *
- * @param siteId - The ID of the site where the directory should be created.
- * @param dealIdentifier - The identifier of the deal associated with the directory.
- * @param data - An object containing the necessary data for creating the directory.
- * @returns A Promise that resolves to a FacilityFolderResponse object containing the response data and status.
+ * @param {string} siteId - The ID of the site where the facility folder will be created.
+ * @param {string} dealIdentifier - The identifier of the deal.
+ * @param {EstoreFacilityFolder} data - The facility folder data.
+ * @returns {Promise<FacilityFolderResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
+ * @throws {Error} If the site ID or deal identifier is invalid.
+ * @throws {Error} If the request to create the facility folder fails.
  */
 export const createFacilityFolder = async (
   siteId: string,
   dealIdentifier: string,
   data: EstoreFacilityFolder,
 ): Promise<FacilityFolderResponse | EstoreErrorResponse> => {
-  if (!isValidSiteId(siteId) || !validUkefId(dealIdentifier)) {
-    console.error('Invalid site or deal ID %s %s', siteId, dealIdentifier);
+  try {
+    if (!isValidSiteId(siteId) || !validUkefId(dealIdentifier)) {
+      console.error('Invalid site or deal ID %s %s', siteId, dealIdentifier);
+      throw new Error('Invalid site or deal ID');
+    }
+
+    const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}/${dealIdentifier}/${ENDPOINT.FACILITY}`;
+    return postToEstore(endpoint, [data], twoMinutes);
+  } catch (error: any) {
+    console.error('❌ eStore create facility folder request has failed %O', { data: error?.response?.data, status: error?.response?.status });
 
     return {
+      status: HttpStatusCode.InternalServerError,
       data: {
-        error: ESTORE_CRON_STATUS.FAILED,
+        status: HttpStatusCode.InternalServerError,
+        message: error,
       },
-      status: 400,
     };
   }
-
-  const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}/${dealIdentifier}/${ENDPOINT.FACILITY}`;
-  return postToEstore(endpoint, [data], twoMinutes);
 };
 
 /**
- * Uploads supporting documents to Sharepoint.
+ * Uploads supporting documents to eStore for a given site ID and deal identifier.
  *
- * @param siteId - The ID of the site where the documents should be uploaded.
- * @param dealIdentifier - The identifier of the deal associated with the documents.
- * @param file - An object containing the details of the document to be uploaded.
- * @returns A Promise that resolves to an UploadDocumentsResponse object containing the response data and status.
+ * @param {string} siteId - The ID of the site where the documents will be uploaded.
+ * @param {string} dealIdentifier - The identifier of the deal.
+ * @param {EstoreDealFiles} file - The file to upload.
+ * @returns {Promise<UploadDocumentsResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
+ * @throws {Error} If the site ID or deal identifier is invalid.
+ * @throws {Error} If the request to upload the documents fails.
  */
 export const uploadSupportingDocuments = async (
   siteId: string,
   dealIdentifier: string,
   file: EstoreDealFiles,
 ): Promise<UploadDocumentsResponse | EstoreErrorResponse> => {
-  if (!isValidSiteId(siteId) || !validUkefId(dealIdentifier)) {
-    console.error('Invalid site or deal ID %s %s', siteId, dealIdentifier);
+  try {
+    if (!isValidSiteId(siteId) || !validUkefId(dealIdentifier)) {
+      console.error('Invalid site or deal ID %s %s', siteId, dealIdentifier);
+      throw new Error('Invalid site or deal ID');
+    }
+
+    const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}/${dealIdentifier}/${ENDPOINT.DOCUMENT}`;
+    return postToEstore(endpoint, [file], oneMinute);
+  } catch (error: any) {
+    console.error('❌ eStore uploading document has failed %O', { data: error?.response?.data, status: error?.response?.status });
 
     return {
+      status: HttpStatusCode.InternalServerError,
       data: {
-        error: ESTORE_CRON_STATUS.FAILED,
+        status: HttpStatusCode.InternalServerError,
+        message: error,
       },
-      status: 400,
     };
   }
-
-  const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}/${dealIdentifier}/${ENDPOINT.DOCUMENT}`;
-  return postToEstore(endpoint, [file], oneMinute);
 };
