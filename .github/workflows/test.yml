@@ -131,7 +131,6 @@ env:
   AUDIT_API_PASSWORD: ${{ secrets.AUDIT_API_PASSWORD }}
   ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE: ${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }}
 
-
 jobs:
   # 1. Setup test infrastructure
   setup:
