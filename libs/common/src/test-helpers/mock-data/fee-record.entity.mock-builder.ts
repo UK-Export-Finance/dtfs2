@@ -22,11 +22,11 @@ export class FeeRecordEntityMockBuilder {
     data.exporter = 'test exporter';
     data.baseCurrency = 'GBP';
     data.facilityUtilisation = 100;
-    data.totalFeesAccruedForTheMonth = 100;
-    data.totalFeesAccruedForTheMonthCurrency = 'GBP';
-    data.totalFeesAccruedForTheMonthExchangeRate = 1;
-    data.monthlyFeesPaidToUkef = 100;
-    data.monthlyFeesPaidToUkefCurrency = 'GBP';
+    data.totalFeesAccruedForThePeriod = 100;
+    data.totalFeesAccruedForThePeriodCurrency = 'GBP';
+    data.totalFeesAccruedForThePeriodExchangeRate = 1;
+    data.feesPaidToUkefForThePeriod = 100;
+    data.feesPaidToUkefForThePeriodCurrency = 'GBP';
     data.paymentCurrency = 'GBP';
     data.paymentExchangeRate = 1;
     data.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
@@ -58,28 +58,28 @@ export class FeeRecordEntityMockBuilder {
     return this;
   }
 
-  public withTotalFeesAccruedForTheMonth(totalFeesAccruedForTheMonth: number): FeeRecordEntityMockBuilder {
-    this.feeRecord.totalFeesAccruedForTheMonth = totalFeesAccruedForTheMonth;
+  public withTotalFeesAccruedForThePeriod(totalFeesAccruedForThePeriod: number): FeeRecordEntityMockBuilder {
+    this.feeRecord.totalFeesAccruedForThePeriod = totalFeesAccruedForThePeriod;
     return this;
   }
 
-  public withTotalFeesAccruedForTheMonthCurrency(currency: Currency): FeeRecordEntityMockBuilder {
-    this.feeRecord.totalFeesAccruedForTheMonthCurrency = currency;
+  public withTotalFeesAccruedForThePeriodCurrency(currency: Currency): FeeRecordEntityMockBuilder {
+    this.feeRecord.totalFeesAccruedForThePeriodCurrency = currency;
     return this;
   }
 
-  public withTotalFeesAccruedForTheMonthExchangeRate(exchangeRate: number): FeeRecordEntityMockBuilder {
-    this.feeRecord.totalFeesAccruedForTheMonthExchangeRate = exchangeRate;
+  public withTotalFeesAccruedForThePeriodExchangeRate(exchangeRate: number): FeeRecordEntityMockBuilder {
+    this.feeRecord.totalFeesAccruedForThePeriodExchangeRate = exchangeRate;
     return this;
   }
 
-  public withMonthlyFeesPaidToUkef(monthlyFeesPaidToUkef: number): FeeRecordEntityMockBuilder {
-    this.feeRecord.monthlyFeesPaidToUkef = monthlyFeesPaidToUkef;
+  public withFeesPaidToUkefForThePeriod(feesPaidToUkefForThePeriod: number): FeeRecordEntityMockBuilder {
+    this.feeRecord.feesPaidToUkefForThePeriod = feesPaidToUkefForThePeriod;
     return this;
   }
 
-  public withMonthlyFeesPaidToUkefCurrency(currency: Currency): FeeRecordEntityMockBuilder {
-    this.feeRecord.monthlyFeesPaidToUkefCurrency = currency;
+  public withFeesPaidToUkefForThePeriodCurrency(currency: Currency): FeeRecordEntityMockBuilder {
+    this.feeRecord.feesPaidToUkefForThePeriodCurrency = currency;
     return this;
   }
 

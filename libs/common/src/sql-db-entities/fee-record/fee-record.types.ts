@@ -6,11 +6,11 @@ export type CreateFeeRecordParams = DbRequestSourceParam & {
   exporter: string;
   baseCurrency: Currency;
   facilityUtilisation: number;
-  totalFeesAccruedForTheMonth: number;
-  totalFeesAccruedForTheMonthCurrency: Currency;
-  totalFeesAccruedForTheMonthExchangeRate: number;
-  monthlyFeesPaidToUkef: number;
-  monthlyFeesPaidToUkefCurrency: Currency;
+  totalFeesAccruedForThePeriod: number;
+  totalFeesAccruedForThePeriodCurrency: Currency;
+  totalFeesAccruedForThePeriodExchangeRate: number;
+  feesPaidToUkefForThePeriod: number;
+  feesPaidToUkefForThePeriodCurrency: Currency;
   paymentCurrency: Currency;
   paymentExchangeRate: number;
 };

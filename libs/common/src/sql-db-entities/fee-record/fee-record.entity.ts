@@ -4,6 +4,7 @@ import { Currency } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import { CreateFeeRecordParams } from './fee-record.types';
 import { getDbAuditUpdatedByUserId } from '../helpers';
+import { CURRENCY_NUMBER_COLUMN_OPTIONS, CURRENCY_EXCHANGE_RATE_COLUMN_OPTIONS } from '../constants';
 
 @Entity('FeeRecord')
 export class FeeRecordEntity extends AuditableBaseEntity {
@@ -39,38 +40,38 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   /**
    * The current utilisation (drawdown) of the facility by the exporter
    */
-  @Column()
+  @Column(CURRENCY_NUMBER_COLUMN_OPTIONS)
   facilityUtilisation!: number;
 
   /**
    * Total amount of money accrued by UKEF for the GEF
    */
-  @Column()
-  totalFeesAccruedForTheMonth!: number;
+  @Column(CURRENCY_NUMBER_COLUMN_OPTIONS)
+  totalFeesAccruedForThePeriod!: number;
 
   /**
    * The currency of the total amount of money accrued by UKEF for the GEF
    */
   @Column({ type: 'nvarchar' })
-  totalFeesAccruedForTheMonthCurrency!: Currency;
+  totalFeesAccruedForThePeriodCurrency!: Currency;
 
   /**
    * The exchange rate from the `baseCurrency` to the `totalFeesAccruedForTheMonthCurrency`
    */
-  @Column()
-  totalFeesAccruedForTheMonthExchangeRate!: number;
+  @Column(CURRENCY_EXCHANGE_RATE_COLUMN_OPTIONS)
+  totalFeesAccruedForThePeriodExchangeRate!: number;
 
   /**
    * The fees actually paid to UKEF by the bank
    */
-  @Column()
-  monthlyFeesPaidToUkef!: number;
+  @Column(CURRENCY_NUMBER_COLUMN_OPTIONS)
+  feesPaidToUkefForThePeriod!: number;
 
   /**
    * The currency of the fees actually paid to UKEF by the bank
    */
   @Column({ type: 'nvarchar' })
-  monthlyFeesPaidToUkefCurrency!: Currency;
+  feesPaidToUkefForThePeriodCurrency!: Currency;
 
   /**
    * The currency of the payment made to UKEF by the bank
@@ -81,7 +82,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   /**
    * The exchange rate from the `baseCurrency` to the `paymentCurrency`
    */
-  @Column()
+  @Column(CURRENCY_EXCHANGE_RATE_COLUMN_OPTIONS)
   paymentExchangeRate!: number;
 
   // TODO FN-1726 - when we have a status on this entity we should make this method name specific to the initial status
@@ -90,11 +91,11 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     exporter,
     baseCurrency,
     facilityUtilisation,
-    totalFeesAccruedForTheMonth,
-    totalFeesAccruedForTheMonthCurrency,
-    totalFeesAccruedForTheMonthExchangeRate,
-    monthlyFeesPaidToUkef,
-    monthlyFeesPaidToUkefCurrency,
+    totalFeesAccruedForThePeriod,
+    totalFeesAccruedForThePeriodCurrency,
+    totalFeesAccruedForThePeriodExchangeRate,
+    feesPaidToUkefForThePeriod,
+    feesPaidToUkefForThePeriodCurrency,
     paymentCurrency,
     paymentExchangeRate,
     requestSource,
@@ -104,11 +105,11 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     feeRecord.exporter = exporter;
     feeRecord.baseCurrency = baseCurrency;
     feeRecord.facilityUtilisation = facilityUtilisation;
-    feeRecord.totalFeesAccruedForTheMonth = totalFeesAccruedForTheMonth;
-    feeRecord.totalFeesAccruedForTheMonthCurrency = totalFeesAccruedForTheMonthCurrency;
-    feeRecord.totalFeesAccruedForTheMonthExchangeRate = totalFeesAccruedForTheMonthExchangeRate;
-    feeRecord.monthlyFeesPaidToUkef = monthlyFeesPaidToUkef;
-    feeRecord.monthlyFeesPaidToUkefCurrency = monthlyFeesPaidToUkefCurrency;
+    feeRecord.totalFeesAccruedForThePeriod = totalFeesAccruedForThePeriod;
+    feeRecord.totalFeesAccruedForThePeriodCurrency = totalFeesAccruedForThePeriodCurrency;
+    feeRecord.totalFeesAccruedForThePeriodExchangeRate = totalFeesAccruedForThePeriodExchangeRate;
+    feeRecord.feesPaidToUkefForThePeriod = feesPaidToUkefForThePeriod;
+    feeRecord.feesPaidToUkefForThePeriodCurrency = feesPaidToUkefForThePeriodCurrency;
     feeRecord.paymentCurrency = paymentCurrency;
     feeRecord.paymentExchangeRate = paymentExchangeRate;
     feeRecord.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);

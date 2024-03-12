@@ -33,11 +33,11 @@ describe('fee-record.helper', () => {
           exporter: MOCK_UTILISATION_REPORT_RAW_CSV_DATA.exporter,
           baseCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['base currency'],
           facilityUtilisation: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['facility utilisation']),
-          totalFeesAccruedForTheMonth: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['total fees accrued for the period']),
-          totalFeesAccruedForTheMonthCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['accrual currency'],
-          totalFeesAccruedForTheMonthExchangeRate: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['accrual exchange rate']),
-          monthlyFeesPaidToUkef: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['fees paid to ukef for the period']),
-          monthlyFeesPaidToUkefCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['fees paid to ukef currency'],
+          totalFeesAccruedForThePeriod: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['total fees accrued for the period']),
+          totalFeesAccruedForThePeriodCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['accrual currency'],
+          totalFeesAccruedForThePeriodExchangeRate: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['accrual exchange rate']),
+          feesPaidToUkefForThePeriod: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['fees paid to ukef for the period']),
+          feesPaidToUkefForThePeriodCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['fees paid to ukef currency'],
           paymentCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['payment currency'],
           paymentExchangeRate: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['payment exchange rate']),
           updatedByUserId: getDbAuditUpdatedByUserId(requestSource),
@@ -48,16 +48,16 @@ describe('fee-record.helper', () => {
     it('converts the numeric string columns to numbers', () => {
       // Arrange
       const facilityUtilisation = 100;
-      const totalFeesAccruedForTheMonth = 213.4;
-      const totalFeesAccruedForTheMonthExchangeRate = 1.01;
-      const monthlyFeesPaidToUkef = 35.41;
+      const totalFeesAccruedForThePeriod = 213.4;
+      const totalFeesAccruedForThePeriodExchangeRate = 1.01;
+      const feesPaidToUkefForThePeriod = 35.41;
       const paymentExchangeRate = 2.5;
       const utilisationReportRawCsvData: UtilisationReportRawCsvData = {
         ...MOCK_UTILISATION_REPORT_RAW_CSV_DATA,
         'facility utilisation': facilityUtilisation.toString(),
-        'total fees accrued for the period': totalFeesAccruedForTheMonth.toString(),
-        'accrual exchange rate': totalFeesAccruedForTheMonthExchangeRate.toString(),
-        'fees paid to ukef for the period': monthlyFeesPaidToUkef.toString(),
+        'total fees accrued for the period': totalFeesAccruedForThePeriod.toString(),
+        'accrual exchange rate': totalFeesAccruedForThePeriodExchangeRate.toString(),
+        'fees paid to ukef for the period': feesPaidToUkefForThePeriod.toString(),
         'payment exchange rate': paymentExchangeRate.toString(),
       };
 
@@ -71,9 +71,9 @@ describe('fee-record.helper', () => {
       expect(feeRecordEntity).toEqual(
         expect.objectContaining({
           facilityUtilisation,
-          totalFeesAccruedForTheMonth,
-          totalFeesAccruedForTheMonthExchangeRate,
-          monthlyFeesPaidToUkef,
+          totalFeesAccruedForThePeriod,
+          totalFeesAccruedForThePeriodExchangeRate,
+          feesPaidToUkefForThePeriod,
           paymentExchangeRate,
         }),
       );
@@ -101,7 +101,7 @@ describe('fee-record.helper', () => {
       // Assert
       expect(feeRecordEntity).toEqual(
         expect.objectContaining({
-          totalFeesAccruedForTheMonthExchangeRate: 1,
+          totalFeesAccruedForThePeriodExchangeRate: 1,
           paymentExchangeRate: 1,
         }),
       );
