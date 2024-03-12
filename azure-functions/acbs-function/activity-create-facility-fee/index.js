@@ -32,7 +32,7 @@ const createFacilityFee = async (context) => {
 
     const missingMandatory = findMissingMandatory(acbsFacilityFeeInput, mandatoryFields);
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();

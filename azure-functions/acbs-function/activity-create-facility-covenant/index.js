@@ -63,7 +63,7 @@ const createFacilityCovenant = async (context) => {
     const missingMandatory = findMissingMandatory(acbsFacilityCovenantInput, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     // Call create covenant API

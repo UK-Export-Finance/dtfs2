@@ -23,7 +23,7 @@ const createCodeValueTransaction = async (context) => {
     const missingMandatory = findMissingMandatory(acbsCodeValueTransactionInput, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();

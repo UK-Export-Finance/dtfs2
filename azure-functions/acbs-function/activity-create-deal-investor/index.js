@@ -22,7 +22,7 @@ const createDealInvestor = async (context) => {
     const missingMandatory = findMissingMandatory(investor, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();

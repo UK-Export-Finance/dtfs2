@@ -24,7 +24,7 @@ const createParty = async (context) => {
       const missingMandatory = findMissingMandatory(party, mandatoryFields);
 
       if (missingMandatory.length) {
-        return Promise.resolve({ missingMandatory });
+        return { missingMandatory };
       }
 
       const submittedToACBS = getNowAsIsoString();

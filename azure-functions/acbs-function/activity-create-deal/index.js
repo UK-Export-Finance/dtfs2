@@ -30,7 +30,7 @@ const createDeal = async (context) => {
     const missingMandatory = findMissingMandatory(deal, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();

@@ -22,7 +22,7 @@ const createFacilityGuarantee = async (context) => {
     const missingMandatory = findMissingMandatory(acbsFacilityGuaranteeInput, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();

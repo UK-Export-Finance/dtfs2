@@ -52,7 +52,7 @@ const updateFacilityMaster = async (context) => {
     const missingMandatory = findMissingMandatory(acbsFacilityMasterInput, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();
