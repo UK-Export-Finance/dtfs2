@@ -29,3 +29,6 @@ Cypress.Commands.add('submitDealToTfm', api.submitDealToTfm);
 Cypress.Commands.add('addUnderwriterCommentToTfm', api.addUnderwriterCommentToTfm);
 
 Cypress.Commands.add('tfmLogin', require('../../../support/trade-finance-manager/login'));
+Cypress.Commands.add('getTfmUserByUsername', require('../../../support/trade-finance-manager/getTfmUserByUsername'));
+Cypress.Commands.add('overrideTfmUserSessionId', require('../../../support/trade-finance-manager/overrideTfmUserSessionId'));
+Cypress.Commands.add('overrideRedisUserSession', require('../../../support/trade-finance-manager/overrideRedisUserSession'));

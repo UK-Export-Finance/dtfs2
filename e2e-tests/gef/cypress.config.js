@@ -1,5 +1,8 @@
 const { defineConfig } = require('cypress');
 const { createTasks } = require('../support/tasks');
+const path = require('path');
+
+require('dotenv').config({ path: `${path.resolve(__dirname, '../..')}/.env` });
 
 module.exports = defineConfig({
   dealApiProtocol: 'http://',
@@ -20,6 +23,8 @@ module.exports = defineConfig({
   numTestsKeptInMemory: 1,
   viewportWidth: 3840,
   viewportHeight: 2400,
+  jwtSigningKey: process.env.JWT_SIGNING_KEY,
+  cookieSigningKey: process.env.SESSION_SECRET,
   retries: {
     runMode: 2,
     openMode: 0,
