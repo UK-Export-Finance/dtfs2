@@ -1,6 +1,8 @@
 import { ChangeStreamDocument } from 'mongodb';
-import { getClient } from '../../drivers/db-client';
+import { getCollection } from '../../drivers/db-client';
 import { postAuditDetails } from './changeStreamApi';
+import { DB_COLLECTIONS } from '../../constants/db-collections';
+import { DbCollectionName } from '../../types/db-models/db-collection-name';
 
 /**
  * Sets up a change stream on the mongodb database and sends any changes to the audit API
@@ -9,26 +11,30 @@ import { postAuditDetails } from './changeStreamApi';
 export const setupChangeStream = async () => {
   try {
     console.info('Setting up mongodb change stream');
-    const database = await getClient();
-    const changeStream = database.db('dtfs-submissions').collection('users').watch(
-      [{ $match: { operationType: { $in: ['insert', 'update', 'replace'] } } }, { $project: { _id: 1, fullDocument: 1, ns: 1, documentKey: 1 } }],
-      { fullDocument: 'updateLookup' },
-    );
-    changeStream.on('change', (changeStreamDocument: ChangeStreamDocument) => {
-      console.info('Testing: ', changeStreamDocument);
-      postAuditDetails(changeStreamDocument).catch((error) => {
-        console.error('Error sending change stream update to API', error);
-      });
-    });
+    for (const collectionName in DB_COLLECTIONS) {
+      await setupChangeStreamForCollection(collectionName as DbCollectionName);
+    }
     console.info('Mongodb change stream initialised');
   } catch (error: any) {
     console.error('Error setting up mongodb change stream', error);
   }
 };
 
-// var cursor = database.watch(
-//   [
-//       { $match: { "operationType": { $in: ["insert", "update", "replace"] } } },
-//       { $project: { "_id": 1, "fullDocument": 1, "ns": 1, "documentKey": 1 } }
-//   ],
-//   { fullDocument: "updateLookup" });
+/**
+ * Sets up a change stream on the mongodb database for a specific collection and sends any changes to the audit API
+ * @param collectionName Name of the collection to set up the change stream for
+ * @returns
+ */
+const setupChangeStreamForCollection = async (collectionName: DbCollectionName) => {
+  const changeStream = (await getCollection(collectionName)).watch(
+    [{ $match: { operationType: { $in: ['insert', 'update', 'replace'] } } }, { $project: { _id: 1, fullDocument: 1, ns: 1, documentKey: 1 } }],
+    { fullDocument: 'updateLookup' },
+  );
+  console.info('Setting up change stream for collection', collectionName);
+  changeStream.on('change', (changeStreamDocument: ChangeStreamDocument) => {
+    console.info('Testing: ', changeStreamDocument);
+    postAuditDetails(changeStreamDocument).catch((error) => {
+      console.error('Error sending change stream update to API', error);
+    });
+  });
+};
