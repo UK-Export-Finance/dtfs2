@@ -6,7 +6,7 @@ import {
   aNonUploadedMarkedReconciledUtilisationReportEntity,
   aNotReceivedUtilisationReportEntity,
   anUploadedUtilisationReportEntity,
-} from '../../mocks/entities/utilisation-report-entity';
+} from '../../../test-helpers/mocks/entities/utilisation-report-entity';
 import app from '../../../src/createApp';
 import createApi from '../../api';
 import { wipeAllUtilisationReports } from '../../test-helpers/wipe-sql-db';

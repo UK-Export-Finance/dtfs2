@@ -15,7 +15,7 @@ export type GetUtilisationReportResponse = {
   id: number;
   bankId: string;
   status: UtilisationReportReconciliationStatus;
-  uploadedByUserId: string;
+  uploadedByUserId: string | null;
   reportPeriod: ReportPeriod;
   azureFileInfo: AzureFileInfo | null;
   dateUploaded: Date | null;

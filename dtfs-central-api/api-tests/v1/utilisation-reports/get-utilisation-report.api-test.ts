@@ -3,7 +3,7 @@ import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { IsoDateTimeStamp, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import app from '../../../src/createApp';
 import apiModule from '../../api';
-import { anUploadedUtilisationReportEntity } from '../../mocks/entities/utilisation-report-entity';
+import { anUploadedUtilisationReportEntity } from '../../../test-helpers/mocks/entities/utilisation-report-entity';
 import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
 
 const api = apiModule(app);

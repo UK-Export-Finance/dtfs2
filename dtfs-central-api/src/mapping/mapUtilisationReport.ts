@@ -24,7 +24,7 @@ export const mapUtilisationReportEntityToGetUtilisationReportResponse = (reportE
   bankId: reportEntity.bankId,
   id: reportEntity.id,
   status: reportEntity.status,
-  uploadedByUserId: reportEntity.status,
+  uploadedByUserId: reportEntity.uploadedByUserId,
   reportPeriod: mapReportPeriodEntityToReportPeriod(reportEntity.reportPeriod),
   azureFileInfo: reportEntity.azureFileInfo ? mapAzureFileInfoEntityToAzureFileInfo(reportEntity.azureFileInfo) : null,
   dateUploaded: reportEntity.dateUploaded,

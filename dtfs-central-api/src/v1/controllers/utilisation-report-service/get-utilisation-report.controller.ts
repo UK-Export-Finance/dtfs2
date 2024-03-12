@@ -3,7 +3,7 @@ import { UtilisationReportRepo } from '../../../repositories/utilisation-reports
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { mapUtilisationReportEntityToGetUtilisationReportResponse } from '../../../mapping/mapUtilisationReport';
 
-type GetUtilisationReportByIdRequest = CustomExpressRequest<{
+export type GetUtilisationReportByIdRequest = CustomExpressRequest<{
   params: {
     id: string;
   };
