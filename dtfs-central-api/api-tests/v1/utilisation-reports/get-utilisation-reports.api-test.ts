@@ -50,9 +50,11 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     // Arrange
     const bankId = '13';
     const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      .withId(1)
       .withBankId(bankId)
       .build();
     const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      .withId(2)
       .withBankId(bankId)
       .build();
     await saveReportToDatabase(uploadedReport);
@@ -70,18 +72,21 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     // Arrange
     const bankId = '13';
     const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      .withId(1)
       .withBankId(bankId)
       .build();
     const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      .withId(2)
       .withBankId(bankId)
       .build();
     const nonUploadedMarkedReconciledReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
-    .withBankId(bankId)
-    .withAzureFileInfo(undefined)
-    .build();
-    const { id: idOfUploadedReport } = await saveReportToDatabase(uploadedReport);
+      .withId(3)
+      .withBankId(bankId)
+      .withAzureFileInfo(undefined)
+      .build();
+    await saveReportToDatabase(uploadedReport);
     await saveReportToDatabase(notReceivedReport);
-    const { id: idOfReconciledReport } = await saveReportToDatabase(nonUploadedMarkedReconciledReport);
+    await saveReportToDatabase(nonUploadedMarkedReconciledReport);
 
     // Act
     const response: CustomSuccessResponse = await api.get(`${getUrl(bankId)}?excludeNotReceived=true`);
@@ -90,8 +95,8 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     expect(response.status).toEqual(200);
     expect(response.body.length).toEqual(2);
     const ids = response.body.map((report) => report.id);
-    expect(ids).toContain(idOfUploadedReport);
-    expect(ids).toContain(idOfReconciledReport);
+    expect(ids).toContain(1);
+    expect(ids).toContain(3);
   });
 
   it('gets uploaded utilisation reports for specified period', async () => {
@@ -102,14 +107,16 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
       end: { month: 12, year: 2021 },
     };
     const uploadedReportForReportPeriod = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      .withId(1)
       .withBankId(bankId)
       .withReportPeriod(reportPeriod)
       .build();
     const uploadedReportForDifferentReportPeriod = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      .withId(2)
       .withBankId(bankId)
       .withReportPeriod({ start: { month: 12, year: 2021 }, end: { month: 1, year: 2022 } })
       .build();
-    const { id: idOfReportForReportPeriod } = await saveReportToDatabase(uploadedReportForReportPeriod);
+    await saveReportToDatabase(uploadedReportForReportPeriod);
     await saveReportToDatabase(uploadedReportForDifferentReportPeriod);
 
     // Act
@@ -119,6 +126,6 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     // Assert
     expect(response.status).toEqual(200);
     expect(response.body.length).toEqual(1);
-    expect(response.body[0].id).toEqual(idOfReportForReportPeriod);
+    expect(response.body[0].id).toEqual(1);
   });
 });

@@ -17,10 +17,11 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
   let matchingBankId;
 
   const year = 2023;
-  let lastUploadedReportId;
+  const lastUploadedReportId = 5;
   const lastUploadedReportPeriodMonth = 1;
   const lastUploadedReportDateUploaded = new Date('2023-01-01');
   const lastUploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+    .withId(lastUploadedReportId)
     .withReportPeriod({
       start: {
         month: lastUploadedReportPeriodMonth,
@@ -45,8 +46,9 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
     const { bank } = aPaymentReportOfficer;
     lastUploadedReport.bankId = bank.id;
     const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      .withId(6)
       .withBankId(bank.id)
-      .reportPeriod({
+      .withReportPeriod({
         start: {
           month: lastUploadedReportPeriodMonth + 1,
           year,
@@ -58,7 +60,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
       })
       .build();
 
-    lastUploadedReportId = (await saveUtilisationReportToDatabase(lastUploadedReport)).id;
+    await saveUtilisationReportToDatabase(lastUploadedReport);
     await saveUtilisationReportToDatabase(notReceivedReport);
   });
 

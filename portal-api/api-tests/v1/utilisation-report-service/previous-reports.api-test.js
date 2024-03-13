@@ -17,7 +17,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
   let aPaymentReportOfficer;
   let testUsers;
   let bankId;
-  let receivedReportId;
+  const receivedReportId = 123;
 
   beforeAll(async () => {
     await SqlDbDataSource.initialize();
@@ -31,6 +31,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
     const uploadedByUserId = aPaymentReportOfficer._id;
     const aReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
       .withBankId(bankId)
+      .withId(receivedReportId)
       .withReportPeriod({
         start: {
           month: 1,
@@ -45,6 +46,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
       .withUploadedByUserId(uploadedByUserId)
       .build();
     const aNotReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      .withId(8)
       .withBankId(bankId)
       .withReportPeriod({
         start: {
@@ -58,6 +60,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
       })
       .build();
     const aMarkedReconciledReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
+      .withId(9)
       .withAzureFileInfo(undefined)
       .withBankId(bankId)
       .withReportPeriod({
@@ -69,8 +72,9 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
           month: 4,
           year,
         },
-      });
-    receivedReportId = (await saveUtilisationReportToDatabase(aReceivedReport)).id;
+      })
+      .build();
+    await saveUtilisationReportToDatabase(aReceivedReport);
     await saveUtilisationReportToDatabase(aNotReceivedReport);
     await saveUtilisationReportToDatabase(aMarkedReconciledReport);
   });
