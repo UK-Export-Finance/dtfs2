@@ -38,7 +38,11 @@ exports.create = async (req, res) => {
     howCanWeImprove,
     emailAddress,
     submittedBy,
-    created: getUnixTime(new Date())
+    created: getUnixTime(new Date()),
+    auditDetails: {
+      lastUpdatedAt: new Date(),
+      lastUpdatedByPortalUserId: null,
+    },
   };
 
   const collection = await db.getCollection('tfm-feedback');
