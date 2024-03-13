@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - feat/e2etf-sql
-      - feat/DTFS2-6965/test-change-stream-in-azure
     paths:
       - "portal/**"
       - "portal-api/**"
@@ -52,13 +51,13 @@ jobs:
       max-parallel: 2
       matrix:
         repository:
-          # - portal-ui
-          # - portal-api
-          # - gef-ui
-          # - trade-finance-manager-ui
-          # - trade-finance-manager-api
+          - portal-ui
+          - portal-api
+          - gef-ui
+          - trade-finance-manager-ui
+          - trade-finance-manager-api
           - dtfs-central-api
-          # - external-api
+          - external-api
         include:
           - path: portal
             repository: portal-ui

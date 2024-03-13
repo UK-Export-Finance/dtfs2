@@ -5,7 +5,6 @@ import { postAuditDetails } from './changeStreamApi';
 /**
  * Sets up a change stream on the mongodb database for a specific collection and sends any changes to the audit API
  * @param collectionName Name of the collection to set up the change stream for
- * @returns
  */
 const setupChangeStreamForCollection = async (collectionName: string) => {
   console.info('Setting up change stream for collection', collectionName);
@@ -24,7 +23,6 @@ const setupChangeStreamForCollection = async (collectionName: string) => {
 
 /**
  * Sets up a change stream on the mongodb database and sends any changes to the audit API
- * @returns
  */
 export const setupChangeStream = async () => {
   try {
