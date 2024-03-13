@@ -111,7 +111,7 @@ const checkAzureAcbsFunction = async () => {
     const collection = await db.getCollection('durable-functions-log');
     const runningTasks = await collection
       .find({
-        type: { $eq: 'ACBS' },
+        type: { $eq: DURABLE_FUNCTIONS_LOG.TYPE.ACBS },
         status: { $eq: 'Running' },
       })
       .toArray();
