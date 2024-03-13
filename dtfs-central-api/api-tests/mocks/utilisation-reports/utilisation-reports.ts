@@ -1,7 +1,6 @@
 import { ObjectId } from 'mongodb';
-import { UtilisationReport, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import { UtilisationReport, UTILISATION_REPORT_RECONCILIATION_STATUS, MOCK_AZURE_FILE_INFO } from '@ukef/dtfs2-common';
 import { MOCK_BANKS } from '../banks';
-import { MOCK_AZURE_FILE_INFO } from '../azure-file-info';
 import { MOCK_MONTHLY_REPORT_PERIOD } from '../report-period';
 
 export const MOCK_UTILISATION_REPORT: UtilisationReport = {
@@ -19,12 +18,4 @@ export const MOCK_UTILISATION_REPORT: UtilisationReport = {
     firstname: 'test',
     surname: 'user',
   },
-};
-
-export const MOCK_NOT_RECEIVED_UTILISATION_REPORT: UtilisationReport = {
-  ...MOCK_UTILISATION_REPORT,
-  status: 'REPORT_NOT_RECEIVED',
-  azureFileInfo: null,
-  uploadedBy: undefined,
-  dateUploaded: undefined,
 };

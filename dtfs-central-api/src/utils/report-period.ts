@@ -2,7 +2,7 @@ import { addMonths, subMonths } from 'date-fns';
 import { MonthAndYear, BankReportPeriodSchedule, ReportPeriod } from '@ukef/dtfs2-common';
 import { getOneIndexedMonth, toIsoMonthStamp } from './date';
 import { IsoMonthStamp } from '../types/date';
-import { isValidReportPeriod } from '../v1/validation/utilisation-report-service/utilisation-report-validator';
+import { validateMonth, validateYear } from '../v1/validation/utilisation-report-service/utilisation-report-validator';
 
 /**
  * Gets the report period start for the inputted submission month
@@ -138,6 +138,66 @@ const extractReportPeriodFromJsonObject = (reportPeriodJson: object): ReportPeri
   };
   return reportPeriod;
 };
+
+/**
+ * Validates the report period for the utilisation report
+ * @param reportPeriod - details of the report period.
+ * @returns an array of errors or an empty array if valid.
+ */
+export const validateReportPeriod = (reportPeriod: unknown): string[] => {
+  if (!reportPeriod || typeof reportPeriod !== 'object') {
+    return ["Report period is not valid: 'reportPeriod' must be an object"];
+  }
+
+  if (!('start' in reportPeriod) || !reportPeriod.start || typeof reportPeriod.start !== 'object') {
+    return ["Report period is not valid: 'reportPeriod.start' must be an object"];
+  }
+
+  if (!('end' in reportPeriod) || !reportPeriod.end || typeof reportPeriod.end !== 'object') {
+    return ["Report period is not valid: 'reportPeriod.end' must be an object"];
+  }
+
+  const { start, end } = reportPeriod;
+
+  if (!('month' in start) || !('year' in start)) {
+    return ["Report period is not valid: 'reportPeriod.start' must contain 'month' and 'year' properties"];
+  }
+
+  if (!('month' in end) || !('year' in end)) {
+    return ["Report period is not valid: 'reportPeriod.end' must contain 'month' and 'year' properties"];
+  }
+
+  const reportPeriodErrors = [];
+  const { month: startMonth, year: startYear } = start;
+  const { month: endMonth, year: endYear } = end;
+
+  const startMonthError = validateMonth(startMonth, "'reportPeriod.start.month'");
+  if (startMonthError !== null) {
+    reportPeriodErrors.push(`Report period is not valid: ${startMonthError}`);
+  }
+  const startYearError = validateYear(startYear, "'reportPeriod.start.year'");
+  if (startYearError !== null) {
+    reportPeriodErrors.push(`Report period is not valid: ${startYearError}`);
+  }
+
+  const endMonthError = validateMonth(endMonth, "'reportPeriod.end.month'");
+  if (endMonthError !== null) {
+    reportPeriodErrors.push(`Report period is not valid: ${endMonthError}`);
+  }
+  const endYearError = validateYear(endYear, "'reportPeriod.end.year'");
+  if (endYearError !== null) {
+    reportPeriodErrors.push(`Report period is not valid: ${endYearError}`);
+  }
+
+  return reportPeriodErrors;
+};
+
+/**
+ * Checks whether or not the supplied report period is a valid report period object
+ * @param reportPeriod - details of the report period
+ * @returns whether or not the report period is a valid report period
+ */
+export const isValidReportPeriod = (reportPeriod: unknown): reportPeriod is ReportPeriod => validateReportPeriod(reportPeriod).length === 0;
 
 /**
  * Parses the report period

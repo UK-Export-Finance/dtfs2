@@ -73,13 +73,13 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       // Arrange
       const job = getJob();
       jest.mocked(getAllBanks).mockResolvedValue([]);
-      const updateUtilisationReportDetailsWithUploadDetailsSpy = jest.spyOn(utilisationReportsRepo, 'updateUtilisationReportDetailsWithUploadDetails');
+      const saveNotReceivedUtilisationReportSpy = jest.spyOn(utilisationReportsRepo, 'saveNotReceivedUtilisationReport');
 
       // Act
       await job.task(new Date());
 
       // Assert
-      expect(updateUtilisationReportDetailsWithUploadDetailsSpy).not.toHaveBeenCalled();
+      expect(saveNotReceivedUtilisationReportSpy).not.toHaveBeenCalled();
     });
 
     it('does not try to create any utilisation reports when reports for all banks in the current period already exist', async () => {
