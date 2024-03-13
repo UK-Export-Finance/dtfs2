@@ -23,13 +23,10 @@ const api = require('../../../src/v1/api');
 const { STATUS } = require('../../../src/constants/user');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
-jest.mock('../../../src/external-api/api', () => ({
-  sendEmail: jest.fn(() => Promise.resolve({})),
-  numberGenerator: {
-    create: () => ({ ukefId: '1' }),
-  },
+jest.mock('../../../src/external-api/send-email', () => jest.fn(() => Promise.resolve()));
+jest.mock('../../../src/external-api/number-generator', () => ({
+  create: () => ({ ukefId: '1' }),
 }));
-
 const baseUrl = '/v1/gef/application';
 const facilitiesUrl = '/v1/gef/facilities';
 const collectionName = DB_COLLECTIONS.DEALS;
