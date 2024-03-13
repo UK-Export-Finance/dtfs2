@@ -2,7 +2,6 @@ const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const api = require('../../../src/v1/api');
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_ACBS = require('../../../src/v1/__mocks__/mock-deal-acbs');
-const CONSTANTS = require('../../../src/constants');
 
 jest.mock('../../../src/v1/controllers/banks.controller', () => ({
   findOneBank: (mockBankId) =>
@@ -109,13 +108,13 @@ describe('acbs controller', () => {
     it('should update any azure deal tasks in acbs log', async () => {
       await acbsController.addToACBSLog({ deal: { _id: '64da2f74de0f97235921b09b' }, acbsTaskLinks: { statusQueryGetUri: 'mock.url' } });
       await acbsController.checkAzureAcbsFunction();
-      expect(api.getFunctionsAPI).toHaveBeenCalledWith(CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, 'mock.url');
+      expect(api.getFunctionsAPI).toHaveBeenCalledWith('mock.url');
     });
 
     it('should update any azure issue facility tasks in acbs log', async () => {
       await acbsController.addToACBSLog({ deal: { _id: '64da2f74de0f97235921b09b' }, acbsTaskLinks: { statusQueryGetUri: 'acbs-issue-facility' } });
       await acbsController.checkAzureAcbsFunction();
-      expect(api.getFunctionsAPI).toHaveBeenCalledWith(CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, 'acbs-issue-facility');
+      expect(api.getFunctionsAPI).toHaveBeenCalledWith('acbs-issue-facility');
     });
   });
 });

@@ -1,4 +1,10 @@
-module.exports = (user, change) => {
+/**
+ * Ensures that if the change has either an email or username property, both exist and are the same
+ * @param {Object} user the existing user
+ * @param {Object} change the changes to make
+ * @returns {Array} either an empty array or an array containing an error object
+ */
+const usernameAndEmailMustMatch = (user, change) => {
   const error = [
     {
       email: {
@@ -14,3 +20,5 @@ module.exports = (user, change) => {
 
   return [];
 };
+
+module.exports = usernameAndEmailMustMatch;
