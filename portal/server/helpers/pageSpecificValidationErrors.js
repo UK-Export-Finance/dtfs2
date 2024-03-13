@@ -4,48 +4,45 @@
 // - - the entities 'Check your answers' page (AKA 'Preview' page) has been viewed
 // - - one of entities forms has had a value submitted
 // by having pageSpecificValidationErrors logic in the UI, we remain decoupled = require(the API).
-const cloneDeep = require('lodash/cloneDeep')
+const cloneDeep = require('lodash/cloneDeep');
 const errorHref = require('./errorHref');
 const generateErrorSummary = require('./generateErrorSummary');
 const { requiredFieldsArray, filterErrorList } = require('./pageFields');
 
 const allFieldsArray = (fields) => {
- const { OPTIONAL_FIELDS } = fields;
- const allFields = requiredFieldsArray(fields);
+  const { OPTIONAL_FIELDS } = fields;
+  const allFields = requiredFieldsArray(fields);
 
- if (OPTIONAL_FIELDS) {
-   allFields.push(...OPTIONAL_FIELDS);
- }
+  if (OPTIONAL_FIELDS) {
+    allFields.push(...OPTIONAL_FIELDS);
+  }
 
- return allFields;
+  return allFields;
 };
 
 const shouldReturnRequiredValidation = (fields, fieldValues) => {
- const allFields = allFieldsArray(fields);
+  const allFields = allFieldsArray(fields);
 
- if (fieldValues.viewedPreviewPage) {
-   return true;
- }
- const totalFieldValues = Object.keys(fieldValues).filter(
-   (fieldName) =>allFields.includes(fieldName)
- );
- if (totalFieldValues.length > 0) {
-   return true;
- }
+  if (fieldValues.viewedPreviewPage) {
+    return true;
+  }
+  const totalFieldValues = Object.keys(fieldValues).filter((fieldName) => allFields.includes(fieldName));
+  if (totalFieldValues.length > 0) {
+    return true;
+  }
 
- return false;
+  return false;
 };
 
 const mapRequiredValidationErrors = (validationErrors, fields) => {
- const mappedErrors = validationErrors;
- const allRequiredFields = requiredFieldsArray(fields);
+  const mappedErrors = validationErrors;
+  const allRequiredFields = requiredFieldsArray(fields);
 
- mappedErrors.errorList = filterErrorList(validationErrors.errorList,
-allRequiredFields);
+  mappedErrors.errorList = filterErrorList(validationErrors.errorList, allRequiredFields);
 
- return {
-   ...generateErrorSummary(mappedErrors, errorHref),
- };
+  return {
+    ...generateErrorSummary(mappedErrors, errorHref),
+  };
 };
 
 /*
@@ -56,58 +53,61 @@ allRequiredFields);
  - this is currently only used for Companies House validation.
 */
 const hasSubmittedAlwaysShowErrorFields = (allFields, submittedFields) => {
- const { ALWAYS_SHOW_ERROR_FIELDS } = allFields;
+  const { ALWAYS_SHOW_ERROR_FIELDS } = allFields;
 
   const hasAlwaysShowFields = ALWAYS_SHOW_ERROR_FIELDS && ALWAYS_SHOW_ERROR_FIELDS.length > 0;
 
- if (hasAlwaysShowFields) {
-    const pageFields = Object.keys(submittedFields).filter((fieldName) =>
-      ALWAYS_SHOW_ERROR_FIELDS.includes(fieldName));
+  if (hasAlwaysShowFields) {
+    const pageFields = Object.keys(submittedFields).filter((fieldName) => ALWAYS_SHOW_ERROR_FIELDS.includes(fieldName));
 
-   if (pageFields.length > 0) {
-     return true;
-   }
- }
+    if (pageFields.length > 0) {
+      return true;
+    }
+  }
 
- return false;
+  return false;
 };
 
 const mapAlwaysShowErrorFields = (validationErrors, fields) => {
- const mappedErrors = { ...validationErrors };
+  const mappedErrors = { ...validationErrors };
 
- const filteredErrorList =
-filterErrorList(validationErrors.errorList,
-fields.ALWAYS_SHOW_ERROR_FIELDS);
+  const filteredErrorList = filterErrorList(validationErrors.errorList, fields.ALWAYS_SHOW_ERROR_FIELDS);
 
- return {
-   ...generateErrorSummary({ ...mappedErrors, errorList:
-filteredErrorList }, errorHref),
- };
+  return {
+    ...generateErrorSummary({ ...mappedErrors, errorList: filteredErrorList }, errorHref),
+  };
 };
 
 const mapRequiredAndAlwaysShowErrorFields = (validationErrors, allFields) => {
- const mappedErrors = cloneDeep(validationErrors);
- const allRequiredFields = requiredFieldsArray(allFields);
- const alwaysShowErrorFields =
-allFields.ALWAYS_SHOW_ERROR_FIELDS?allFields.ALWAYS_SHOW_ERROR_FIELDS:[];
+  // Guard clause: if no validation errors, return an empty object
+  if (!validationErrors || Object.keys(validationErrors).length === 0) {
+    return {};
+  }
+  const mappedErrors = cloneDeep(validationErrors);
+  const allRequiredFields = requiredFieldsArray(allFields);
+  const alwaysShowErrorFields = allFields.ALWAYS_SHOW_ERROR_FIELDS ? allFields.ALWAYS_SHOW_ERROR_FIELDS : [];
 
- const fieldsToReturn = [...allRequiredFields, ...alwaysShowErrorFields];
+  const fieldsToReturn = [...allRequiredFields, ...alwaysShowErrorFields];
 
- mappedErrors.errorList = filterErrorList(validationErrors.errorList,
-fieldsToReturn);
+  mappedErrors.errorList = filterErrorList(validationErrors.errorList, fieldsToReturn);
 
- return {
-   ...generateErrorSummary(mappedErrors, errorHref),
- };
+  // Guard clause: if no errorList, return an empty object
+  if (!mappedErrors.errorList || Object.keys(mappedErrors.errorList).length === 0) {
+    return {};
+  }
+
+  return {
+    ...generateErrorSummary(mappedErrors, errorHref),
+  };
 };
 const pageSpecificValidationErrors = (validationErrors, fields, submittedFields) => {
   if (validationErrors && validationErrors.errorList) {
     if (!submittedFields.viewedPreviewPage && hasSubmittedAlwaysShowErrorFields(fields, submittedFields)) {
-      if(submittedFields.status==='Incomplete'){
+      if (submittedFields.status === 'Incomplete') {
         return mapRequiredAndAlwaysShowErrorFields(validationErrors, fields);
       }
       return mapAlwaysShowErrorFields(validationErrors, fields);
-     }
+    }
 
     if (shouldReturnRequiredValidation(fields, submittedFields)) {
       if (hasSubmittedAlwaysShowErrorFields(fields, submittedFields)) {
@@ -121,11 +121,11 @@ const pageSpecificValidationErrors = (validationErrors, fields, submittedFields)
 };
 
 module.exports = {
- allFieldsArray,
- shouldReturnRequiredValidation,
- mapAlwaysShowErrorFields,
- mapRequiredAndAlwaysShowErrorFields,
- mapRequiredValidationErrors,
- hasSubmittedAlwaysShowErrorFields,
- pageSpecificValidationErrors,
+  allFieldsArray,
+  shouldReturnRequiredValidation,
+  mapAlwaysShowErrorFields,
+  mapRequiredAndAlwaysShowErrorFields,
+  mapRequiredValidationErrors,
+  hasSubmittedAlwaysShowErrorFields,
+  pageSpecificValidationErrors,
 };

@@ -7,10 +7,7 @@ import {
   mapAlwaysShowErrorFields,
   mapRequiredAndAlwaysShowErrorFields,
 } from './pageSpecificValidationErrors';
-import {
-  requiredFieldsArray,
-  filterErrorList,
-} from './pageFields';
+import { requiredFieldsArray, filterErrorList } from './pageFields';
 import errorHref from './errorHref';
 import generateErrorSummary from './generateErrorSummary';
 import FIELDS from '../routes/contract/bond/pageFields';
@@ -31,11 +28,7 @@ describe('page specific validation errors', () => {
       };
 
       const result = allFieldsArray(mockFields);
-      const expected = [
-        ...mockFields.REQUIRED_FIELDS,
-        ...mockFields.CONDITIONALLY_REQUIRED_FIELDS,
-        ...mockFields.OPTIONAL_FIELDS,
-      ];
+      const expected = [...mockFields.REQUIRED_FIELDS, ...mockFields.CONDITIONALLY_REQUIRED_FIELDS, ...mockFields.OPTIONAL_FIELDS];
       expect(result).toEqual(expected);
     });
   });
@@ -85,17 +78,11 @@ describe('page specific validation errors', () => {
         count: mockErrorList.length,
       };
 
-      const expectedRequiredErrorList = filterErrorList(
-        mockValidationErrors.errorList,
-        requiredFieldsArray(FIELDS.FEE_DETAILS),
-      );
+      const expectedRequiredErrorList = filterErrorList(mockValidationErrors.errorList, requiredFieldsArray(FIELDS.FEE_DETAILS));
 
       const result = mapRequiredValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
 
-      const expectedErrorList = generateErrorSummary(
-        { errorList: expectedRequiredErrorList },
-        errorHref,
-      ).errorList;
+      const expectedErrorList = generateErrorSummary({ errorList: expectedRequiredErrorList }, errorHref).errorList;
 
       expect(result.errorList).toEqual(expectedErrorList);
     });
@@ -103,10 +90,7 @@ describe('page specific validation errors', () => {
     it('should return summary and count from errorSummary with only validationErrors that are included in REQUIRED_FIELDS CONDITIONALLY_REQUIRED_FIELDS', () => {
       const mockFeeDetailsFields = {
         ...FIELDS.FEE_DETAILS,
-        CONDITIONALLY_REQUIRED_FIELDS: [
-          'a',
-          'b',
-        ],
+        CONDITIONALLY_REQUIRED_FIELDS: ['a', 'b'],
       };
 
       const mockErrorList = {
@@ -130,10 +114,7 @@ describe('page specific validation errors', () => {
 
       const result = mapRequiredValidationErrors(mockValidationErrors, mockFeeDetailsFields);
 
-      const expectedSummary = generateErrorSummary(
-        { errorList: expectedErrorList },
-        errorHref,
-      ).summary;
+      const expectedSummary = generateErrorSummary({ errorList: expectedErrorList }, errorHref).summary;
 
       expect(result.summary).toEqual(expectedSummary);
       expect(result.count).toEqual(Object.keys(expectedErrorList).length);
@@ -174,17 +155,11 @@ describe('page specific validation errors', () => {
         count: mockErrorList.length,
       };
 
-      const expectedErrorList = filterErrorList(
-        mockValidationErrors.errorList,
-        ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS,
-      );
+      const expectedErrorList = filterErrorList(mockValidationErrors.errorList, ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS);
 
       const result = mapAlwaysShowErrorFields(mockValidationErrors, ABOUT_CONTRACT_FIELDS.SUPPLIER);
 
-      const expected = generateErrorSummary(
-        { errorList: expectedErrorList },
-        errorHref,
-      ).errorList;
+      const expected = generateErrorSummary({ errorList: expectedErrorList }, errorHref).errorList;
 
       expect(result.errorList).toEqual(expected);
     });
@@ -205,22 +180,13 @@ describe('page specific validation errors', () => {
         count: mockErrorList.length,
       };
 
-      const fieldsThatShouldBeReturned = [
-        ...ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS,
-        ...ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS,
-      ];
+      const fieldsThatShouldBeReturned = [...ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS, ...ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS];
 
-      const expectedErrorList = filterErrorList(
-        mockValidationErrors.errorList,
-        fieldsThatShouldBeReturned,
-      );
+      const expectedErrorList = filterErrorList(mockValidationErrors.errorList, fieldsThatShouldBeReturned);
 
       const result = mapRequiredAndAlwaysShowErrorFields(mockValidationErrors, ABOUT_CONTRACT_FIELDS.SUPPLIER);
 
-      const expected = generateErrorSummary(
-        { errorList: expectedErrorList },
-        errorHref,
-      ).errorList;
+      const expected = generateErrorSummary({ errorList: expectedErrorList }, errorHref).errorList;
 
       expect(result.errorList).toEqual(expected);
     });
@@ -251,56 +217,49 @@ describe('page specific validation errors', () => {
     });
 
     it('displays validation errors when user skips mandatory fields', () => {
+      const mockErrorList = {
+        ...mockErrors,
+        [ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS[0]]: { order: '1', text: 'Field error' },
+        [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supply-contract-description']]: { order: '2', text: 'Field is required' },
+      };
 
-  const mockErrorList = {
-    ...mockErrors,
-    [ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS[0]]: { order: '1', text: 'Field error' },
-    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supply-contract-description']]: { order: '2', text: 'Field is required' },
-  };
+      const mockValidationErrors = {
+        errorList: mockErrorList,
+        count: mockErrorList.length,
+      };
 
-  const mockValidationErrors = {
-    errorList: mockErrorList,
-    count: mockErrorList.length,
-  };
+      const mockSubmittedValues = {
+        _id: '1234',
+        status: 'Incomplete',
+        [ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS[0]]: 'test',
+        [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-type']]: 'Exporter',
+        [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['industry-class']]: '84220',
+        [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-name']]: '1014',
+        [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-address-line-1']]: 'Test',
+        [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-address-town']]: 'Test',
+        [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-correspondence-address-is-different']]: false,
+        [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS.legallyDistinct]: false,
+        [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supply-contract-description']]: 'Test',
+        [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['sme-type']]: 'Small',
+      };
 
-  const mockSubmittedValues = {
-    _id: '1234',
-    status: 'Incomplete',
-    [ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS[0]]: 'test',
-    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-type']]: 'Exporter',
-    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['industry-class']]: '84220',
-    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-name']]: '1014',
-    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-address-line-1']]: 'Test',
-    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-address-town']]: 'Test',
-    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supplier-correspondence-address-is-different']]: false,
-    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS.legallyDistinct]: false,
-    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supply-contract-description']]: 'Test',
-    [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['sme-type']]: 'Small',
-  };
+      const result = pageSpecificValidationErrors(mockValidationErrors, ABOUT_CONTRACT_FIELDS.SUPPLIER, mockSubmittedValues);
 
-
-  const result = pageSpecificValidationErrors(
-    mockValidationErrors,
-    ABOUT_CONTRACT_FIELDS.SUPPLIER,
-    mockSubmittedValues,
-  );
-
-  const expected = {
-    count: 1,
-    errorList: {
-      'supplier-companies-house-registration-number': { order: '1', text: 'Field error' }
-    },
-    summary: [
-      {
-        text: 'Field error',
-        href: '#supplier-companies-house-registration-number'
-      }
-    ]
-  }
-  // Check that the function returned the correct validation errors
-  expect(result).toEqual(expected);
-});
-
+      const expected = {
+        count: 1,
+        errorList: {
+          'supplier-companies-house-registration-number': { order: '1', text: 'Field error' },
+        },
+        summary: [
+          {
+            text: 'Field error',
+            href: '#supplier-companies-house-registration-number',
+          },
+        ],
+      };
+      // Check that the function returned the correct validation errors
+      expect(result).toEqual(expected);
+    });
 
     describe('when submittedValues contains an `always show error`, field', () => {
       it('should return mapRequiredAndAlwaysShowErrorFields result', () => {
@@ -323,11 +282,7 @@ describe('page specific validation errors', () => {
           [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS[1]]: 'test',
         };
 
-        const result = pageSpecificValidationErrors(
-          mockValidationErrors,
-          ABOUT_CONTRACT_FIELDS.SUPPLIER,
-          mockSubmittedValues,
-        );
+        const result = pageSpecificValidationErrors(mockValidationErrors, ABOUT_CONTRACT_FIELDS.SUPPLIER, mockSubmittedValues);
 
         const expected = mapRequiredAndAlwaysShowErrorFields(mockValidationErrors, ABOUT_CONTRACT_FIELDS.SUPPLIER);
         expect(result).toEqual(expected);
@@ -351,11 +306,7 @@ describe('page specific validation errors', () => {
           [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS[1]]: 'test',
         };
 
-        const result = pageSpecificValidationErrors(
-          mockValidationErrors,
-          ABOUT_CONTRACT_FIELDS.SUPPLIER,
-          mockSubmittedValues,
-        );
+        const result = pageSpecificValidationErrors(mockValidationErrors, ABOUT_CONTRACT_FIELDS.SUPPLIER, mockSubmittedValues);
 
         const expected = mapAlwaysShowErrorFields(mockValidationErrors, ABOUT_CONTRACT_FIELDS.SUPPLIER);
         expect(result).toEqual(expected);
