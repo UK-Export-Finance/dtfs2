@@ -1,4 +1,6 @@
-const { createUser, removeTfmUserById } = require('./user.controller');
+const { ObjectId } = require('mongodb');
+const { createUser, removeTfmUserById, findOne } = require('./user.controller');
+const { mapUserData } = require('./helpers/mapUserData.helper');
 
 // This route is used for mock data loader.
 module.exports.createTfmUser = async (req, res) => {
@@ -19,6 +21,20 @@ module.exports.createTfmUser = async (req, res) => {
     success: true,
     user,
   });
+};
+
+module.exports.findTfmUser = (req, res, next) => {
+  if (ObjectId.isValid(req.params.user)) {
+    findOne(req.params.user, (error, user) => {
+      if (error) {
+        next(error);
+      } else if (user) {
+        res.status(200).json({ user: mapUserData(user), status: 200 });
+      } else {
+        res.status(404).json({ user: {}, status: 404, message: 'User does not exist' });
+      }
+    });
+  }
 };
 
 // This route is used for mock data loader.

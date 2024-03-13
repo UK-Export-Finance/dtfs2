@@ -1,5 +1,6 @@
 const mapUserData = (user) => ({
   username: user.username,
+  azureOid: user.azureOid,
   firstName: user.firstName,
   lastName: user.lastName,
   email: user.email,

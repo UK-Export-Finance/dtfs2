@@ -34,6 +34,7 @@ authRouter.route('/users').post(users.createTfmUser);
 // Used for clearing test data.
 authRouter
   .route('/users/:user')
+  .get(validation.userIdEscapingSanitization, handleExpressValidatorResult, users.findTfmUser)
   .delete(validation.userIdValidation, handleExpressValidatorResult, users.removeTfmUserById);
 
 authRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));

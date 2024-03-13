@@ -6,6 +6,15 @@ const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { USER, PAYLOAD } = require('../../../constants');
 
+exports.findOne = async (_id, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid User Id');
+  }
+
+  const collection = await db.getCollection('tfm-users');
+
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
+};
 
 /**
  * findByEmails
