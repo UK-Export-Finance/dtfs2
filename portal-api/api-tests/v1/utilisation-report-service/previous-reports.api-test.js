@@ -85,6 +85,10 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
     console.info("Third report saved!!");
   });
 
+  afterAll(async () => {
+    SqlDbDataSource.destroy();
+  });
+
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => get(previousReportsUrl(bankId)),
     makeRequestWithAuthHeader: (authHeader) => get(previousReportsUrl(bankId), { headers: { Authorization: authHeader } }),

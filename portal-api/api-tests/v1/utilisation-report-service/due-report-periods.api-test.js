@@ -42,6 +42,10 @@ describe('GET /v1/banks/:bankId/due-report-periods', () => {
     await saveUtilisationReportToDatabase(mockUtilisationReport);
   });
 
+  afterAll(async () => {
+    SqlDbDataSource.destroy();
+  });
+
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => get(dueReportPeriodsUrl(matchingBankId)),
     makeRequestWithAuthHeader: (authHeader) => get(dueReportPeriodsUrl(matchingBankId), { headers: { Authorization: authHeader } }),

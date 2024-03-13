@@ -64,6 +64,10 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
     await saveUtilisationReportToDatabase(notReceivedReport);
   });
 
+  afterAll(async () => {
+    SqlDbDataSource.destroy();
+  });
+
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => get(lastUploadedUrl(matchingBankId)),
     makeRequestWithAuthHeader: (authHeader) => get(lastUploadedUrl(matchingBankId), { headers: { Authorization: authHeader } }),
