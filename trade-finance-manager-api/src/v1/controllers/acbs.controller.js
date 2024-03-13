@@ -5,16 +5,15 @@ const db = require('../../drivers/db-client');
 const tfmController = require('./tfm.controller');
 const CONSTANTS = require('../../constants');
 const { formatCoverEndDate } = require('../helpers/amendment.helpers');
-const { getIsoStringWithOffset } = require("../../utils/date");
+const { getIsoStringWithOffset } = require('../../utils/date');
+const { DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
 
-const addToACBSLog = async ({
-  deal = {}, facility = {}, bank = {}, acbsTaskLinks,
-}) => {
+const addToACBSLog = async ({ deal = {}, facility = {}, bank = {}, acbsTaskLinks }) => {
   const collection = await db.getCollection('durable-functions-log');
 
   if (ObjectId.isValid(deal._id)) {
     return collection.insertOne({
-      type: 'ACBS',
+      type: DURABLE_FUNCTIONS_LOG.TYPE.ACBS,
       dealId: deal._id,
       deal,
       facility,
@@ -62,11 +61,13 @@ const updateDealAcbs = async (taskOutput) => {
    */
   await tfmController.updateAcbs(taskOutput);
 
-  const facilitiesUpdates = facilities.filter((facility) => facility.facilityId).map((facility) => {
-    const { facilityId, ...acbsFacility } = facility;
-    // Add `acbs` object to tfm-facilities
-    return tfmController.updateFacilityAcbs(facilityId, acbsFacility);
-  });
+  const facilitiesUpdates = facilities
+    .filter((facility) => facility.facilityId)
+    .map((facility) => {
+      const { facilityId, ...acbsFacility } = facility;
+      // Add `acbs` object to tfm-facilities
+      return tfmController.updateFacilityAcbs(facilityId, acbsFacility);
+    });
   await Promise.all(facilitiesUpdates);
 };
 
@@ -106,19 +107,20 @@ const updateAmendedFacilityAcbs = (taskResult) => {
 
 const checkAzureAcbsFunction = async () => {
   try {
-  // Fetch outstanding functions
+    // Fetch outstanding functions
     const collection = await db.getCollection('durable-functions-log');
-    const runningTasks = await collection.find({
-      type: { $eq: 'ACBS' },
-      status: { $eq: 'Running' },
-    }).toArray();
-    const tasks = await runningTasks.map(({ acbsTaskLinks = {} }) =>
-      api.getFunctionsAPI(acbsTaskLinks.statusQueryGetUri));
+    const runningTasks = await collection
+      .find({
+        type: { $eq: 'ACBS' },
+        status: { $eq: 'Running' },
+      })
+      .toArray();
+    const tasks = await runningTasks.map(({ acbsTaskLinks = {} }) => api.getFunctionsAPI(acbsTaskLinks.statusQueryGetUri));
     const taskList = await Promise.all(tasks);
 
     taskList.forEach(async (task) => {
       if (task.runtimeStatus) {
-      // Update
+        // Update
         if (task.runtimeStatus !== 'Running') {
           await collection.findOneAndUpdate(
             { instanceId: { $eq: task.instanceId } },
@@ -167,21 +169,23 @@ const issueAcbsFacilities = async (deal) => {
    * const facilityStageInAcbs = facility.tfm.acbs && facility.tfm.acbs.facilityStage;
    */
 
-  const acbsIssuedFacilitiesPromises = deal.facilities.filter((facility) => facility.hasBeenIssued).map((facility) => api.updateACBSfacility(facility, {
-    dealSnapshot: {
-      dealType: deal.dealType,
-      submissionType: deal.submissionType,
-      submissionDate: deal.submissionDate,
-    },
-    exporter: {
-      ...deal.exporter,
-    },
-  }));
+  const acbsIssuedFacilitiesPromises = deal.facilities
+    .filter((facility) => facility.hasBeenIssued)
+    .map((facility) =>
+      api.updateACBSfacility(facility, {
+        dealSnapshot: {
+          dealType: deal.dealType,
+          submissionType: deal.submissionType,
+          submissionDate: deal.submissionDate,
+        },
+        exporter: {
+          ...deal.exporter,
+        },
+      }),
+    );
   const acbsIssuedFacilities = await Promise.all(acbsIssuedFacilitiesPromises);
 
-  return Promise.all(
-    acbsIssuedFacilities.map((acbsTaskLinks) => addToACBSLog({ acbsTaskLinks })),
-  );
+  return Promise.all(acbsIssuedFacilities.map((acbsTaskLinks) => addToACBSLog({ acbsTaskLinks })));
 };
 /**
  * Amend facility controller function responsible for invoking
@@ -198,13 +202,15 @@ const amendAcbsFacility = (amendments, facility, deal) => {
     payload = formatCoverEndDate(amendments);
   }
 
-  api.amendACBSfacility(payload, facility, deal).then((acbsTaskLinks) => {
-    if (acbsTaskLinks?.id) {
-      return addToACBSLog({ acbsTaskLinks });
-    }
+  api
+    .amendACBSfacility(payload, facility, deal)
+    .then((acbsTaskLinks) => {
+      if (acbsTaskLinks?.id) {
+        return addToACBSLog({ acbsTaskLinks });
+      }
 
-    return null;
-  })
+      return null;
+    })
     .catch((e) => {
       console.error('Unable to amend facility: %O', e);
       return null;
