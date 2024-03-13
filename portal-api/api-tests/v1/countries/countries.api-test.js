@@ -9,8 +9,6 @@ const { withNoRoleAuthorisationTests } = require('../../common-tests/role-author
 
 const { as, get } = require('../../api')(app);
 
-jest.unmock('../../../src/external-api/api');
-
 describe('/v1/countries', () => {
   let noRoles;
   let testUsers;

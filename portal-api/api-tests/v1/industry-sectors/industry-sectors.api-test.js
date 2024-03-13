@@ -10,8 +10,6 @@ const { withNoRoleAuthorisationTests } = require('../../common-tests/role-author
 const { as, get } = require('../../api')(app);
 const { MAKER } = require('../../../src/v1/roles/roles');
 
-jest.unmock('../../../src/external-api/api');
-
 const mockIndustrySectorCode = '1008';
 
 describe('/v1/industry-sectors', () => {
