@@ -9,7 +9,7 @@ export const anUploadedUtilisationReportEntity = (): UtilisationReportEntity => 
   mock.reportPeriod = aReportPeriodPartialEntity();
   mock.status = UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
   mock.data = [];
-  mock.updatedByUserId = 'SYSTEM';
+  mock.updatedByUserId = 'PORTAL-abc123';
   return mock;
 };
 
@@ -31,6 +31,6 @@ export const aNonUploadedMarkedReconciledUtilisationReportEntity = (): Utilisati
   mock.reportPeriod = aReportPeriodPartialEntity();
   mock.status = UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED;
   mock.data = [];
-  mock.updatedByUserId = 'SYSTEM';
+  mock.updatedByUserId = 'TFM-abc123';
   return mock;
 };
