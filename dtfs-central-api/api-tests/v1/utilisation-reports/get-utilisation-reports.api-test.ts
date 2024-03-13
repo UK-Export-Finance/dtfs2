@@ -1,12 +1,7 @@
 import { Response } from 'supertest';
-import { IsoDateTimeStamp, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { IsoDateTimeStamp, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import axios from 'axios';
-import {
-  aNonUploadedMarkedReconciledUtilisationReportEntity,
-  aNotReceivedUtilisationReportEntity,
-  anUploadedUtilisationReportEntity,
-} from '../../../test-helpers/mocks/entities/utilisation-report-entity';
 import app from '../../../src/createApp';
 import createApi from '../../api';
 import { wipeAllUtilisationReports } from '../../test-helpers/wipe-sql-db';
@@ -54,8 +49,12 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
   it('gets utilisation reports', async () => {
     // Arrange
     const bankId = '13';
-    const uploadedReport: UtilisationReportEntity = { ...anUploadedUtilisationReportEntity(), bankId };
-    const nonUploadedReport: UtilisationReportEntity = { ...aNotReceivedUtilisationReportEntity(), bankId };
+    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      .withBankId(bankId)
+      .build();
+    const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      .withBankId(bankId)
+      .build();
     await saveReportToDatabase(uploadedReport);
     await saveReportToDatabase(nonUploadedReport);
 
@@ -70,9 +69,16 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
   it('gets received and reconciled utilisation reports when excludeNotReceived query param is true', async () => {
     // Arrange
     const bankId = '13';
-    const uploadedReport: UtilisationReportEntity = { ...anUploadedUtilisationReportEntity(), bankId };
-    const notReceivedReport: UtilisationReportEntity = { ...aNotReceivedUtilisationReportEntity(), bankId };
-    const nonUploadedMarkedReconciledReport: UtilisationReportEntity = { ...aNonUploadedMarkedReconciledUtilisationReportEntity(), bankId };
+    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      .withBankId(bankId)
+      .build();
+    const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      .withBankId(bankId)
+      .build();
+    const nonUploadedMarkedReconciledReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
+    .withBankId(bankId)
+    .withAzureFileInfo(undefined)
+    .build();
     const { id: idOfUploadedReport } = await saveReportToDatabase(uploadedReport);
     await saveReportToDatabase(notReceivedReport);
     const { id: idOfReconciledReport } = await saveReportToDatabase(nonUploadedMarkedReconciledReport);
@@ -95,12 +101,14 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
       start: { month: 11, year: 2021 },
       end: { month: 12, year: 2021 },
     };
-    const uploadedReportForReportPeriod: UtilisationReportEntity = { ...anUploadedUtilisationReportEntity(), bankId, reportPeriod: { ...reportPeriod } };
-    const uploadedReportForDifferentReportPeriod: UtilisationReportEntity = {
-      ...anUploadedUtilisationReportEntity(),
-      bankId,
-      reportPeriod: { start: { month: 12, year: 2021 }, end: { month: 1, year: 2022 } },
-    };
+    const uploadedReportForReportPeriod = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      .withBankId(bankId)
+      .withReportPeriod(reportPeriod)
+      .build();
+    const uploadedReportForDifferentReportPeriod = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      .withBankId(bankId)
+      .withReportPeriod({ start: { month: 12, year: 2021 }, end: { month: 1, year: 2022 } })
+      .build();
     const { id: idOfReportForReportPeriod } = await saveReportToDatabase(uploadedReportForReportPeriod);
     await saveReportToDatabase(uploadedReportForDifferentReportPeriod);
 

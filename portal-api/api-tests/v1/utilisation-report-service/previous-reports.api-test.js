@@ -1,9 +1,5 @@
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
-const {
-  anUploadedUtilisationReportEntity,
-  aNotReceivedUtilisationReportEntity,
-  aNonUploadedMarkedReconciledUtilisationReportEntity,
-} = require('../../mocks/entities/utilisation-report-entity.ts');
+const { UtilisationReportEntityMockBuilder, UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
 const { wipeAllUtilisationReports, saveUtilisationReportToDatabase } = require('../../sql-db-helper.ts');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
@@ -33,10 +29,9 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
 
     const year = 2023;
     const uploadedByUserId = aPaymentReportOfficer._id;
-    const aReceivedReport = {
-      ...anUploadedUtilisationReportEntity(),
-      bankId,
-      reportPeriod: {
+    const aReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      .withBankId(bankId)
+      .withReportPeriod({
         start: {
           month: 1,
           year,
@@ -45,14 +40,13 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
           month: 2,
           year,
         },
-      },
-      dateUploaded: new Date(year, 0),
-      uploadedByUserId,
-    };
-    const aNotReceivedReport = {
-      ...aNonUploadedMarkedReconciledUtilisationReportEntity(),
-      bankId,
-      reportPeriod: {
+      })
+      .withDateUploaded(new Date(year, 0))
+      .withUploadedByUserId(uploadedByUserId)
+      .build();
+    const aNotReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      .withBankId(bankId)
+      .withReportPeriod({
         start: {
           month: 2,
           year,
@@ -61,12 +55,12 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
           month: 3,
           year,
         },
-      },
-    };
-    const aMarkedReconciledReport = {
-      ...aNotReceivedUtilisationReportEntity(),
-      bankId,
-      reportPeriod: {
+      })
+      .build();
+    const aMarkedReconciledReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
+      .withAzureFileInfo(undefined)
+      .withBankId(bankId)
+      .withReportPeriod({
         start: {
           month: 3,
           year,
@@ -75,8 +69,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
           month: 4,
           year,
         },
-      },
-    };
+      });
     receivedReportId = (await saveUtilisationReportToDatabase(aReceivedReport)).id;
     await saveUtilisationReportToDatabase(aNotReceivedReport);
     await saveUtilisationReportToDatabase(aMarkedReconciledReport);

@@ -1,8 +1,7 @@
 import httpMocks from 'node-mocks-http';
-import { ReportPeriod, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { ReportPeriod, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { GetUtilisationReportsRequest, getUtilisationReports } from './index';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
-import { anUploadedUtilisationReportEntity } from '../../../../../test-helpers/mocks/entities/utilisation-report-entity';
 import { GetUtilisationReportResponse } from '../../../../types/utilisation-reports';
 
 jest.mock('../../../../repositories/utilisation-reports-repo');
@@ -178,7 +177,7 @@ describe('getUtilisationReports', () => {
 
     const excludeNotReceived = 'true';
 
-    const mockUtilisationReports: UtilisationReportEntity[] = [anUploadedUtilisationReportEntity()];
+    const mockUtilisationReports = [UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build()];
     const findAllByBankIdMock = jest.fn().mockResolvedValue(mockUtilisationReports);
     jest.spyOn(UtilisationReportRepo, 'findAllByBankId').mockImplementation(findAllByBankIdMock);
 

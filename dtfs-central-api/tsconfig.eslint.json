@@ -4,8 +4,7 @@
         "src",
         "api-tests",
         "./*.jest.config.js/",
-        ".eslintrc.js",
-        "test-helpers"
+        ".eslintrc.js"
     ],
     "exclude": []
  }

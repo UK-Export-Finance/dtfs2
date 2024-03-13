@@ -1,6 +1,5 @@
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
-const { anUploadedUtilisationReportEntity, aNotReceivedUtilisationReportEntity } = require('../../mocks/entities/utilisation-report-entity.ts');
+const { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } = require('@ukef/dtfs2-common');
 const { wipeAllUtilisationReports, saveUtilisationReportToDatabase } = require('../../sql-db-helper.ts');
 const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
@@ -21,9 +20,8 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
   let lastUploadedReportId;
   const lastUploadedReportPeriodMonth = 1;
   const lastUploadedReportDateUploaded = new Date('2023-01-01');
-  const lastUploadedReport = {
-    ...anUploadedUtilisationReportEntity(),
-    reportPeriod: {
+  const lastUploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+    .withReportPeriod({
       start: {
         month: lastUploadedReportPeriodMonth,
         year,
@@ -32,9 +30,9 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
         month: lastUploadedReportPeriodMonth,
         year,
       },
-    },
-    dateUploaded: lastUploadedReportDateUploaded,
-  };
+    })
+    .withDateUploaded(lastUploadedReportDateUploaded)
+    .build();
 
   beforeAll(async () => {
     await SqlDbDataSource.initialize();
@@ -46,11 +44,9 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
 
     const { bank } = aPaymentReportOfficer;
     lastUploadedReport.bankId = bank.id;
-    const notReceivedReport = {
-      ...aNotReceivedUtilisationReportEntity(),
-      bankId: bank.id,
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
-      reportPeriod: {
+    const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      .withBankId(bank.id)
+      .reportPeriod({
         start: {
           month: lastUploadedReportPeriodMonth + 1,
           year,
@@ -59,8 +55,8 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
           month: lastUploadedReportPeriodMonth + 1,
           year,
         },
-      },
-    }
+      })
+      .build();
 
     lastUploadedReportId = (await saveUtilisationReportToDatabase(lastUploadedReport)).id;
     await saveUtilisationReportToDatabase(notReceivedReport);

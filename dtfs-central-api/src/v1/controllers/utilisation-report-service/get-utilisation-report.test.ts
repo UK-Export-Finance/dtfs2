@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
-import { anUploadedUtilisationReportEntity } from '../../../../test-helpers/mocks/entities/utilisation-report-entity';
 import { GetUtilisationReportResponse } from '../../../types/utilisation-reports';
 import { GetUtilisationReportByIdRequest, getUtilisationReportById } from './get-utilisation-report.controller';
 
@@ -22,7 +22,7 @@ describe('getUtilisationReport', () => {
 
   it('sends a 200 and maps entity to response', async () => {
     // Arrange
-    const mockUtilisationReport = anUploadedUtilisationReportEntity();
+    const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
     const findOneByMock = jest.fn().mockResolvedValue(mockUtilisationReport);
     jest.spyOn(UtilisationReportRepo, 'findOneBy').mockImplementation(findOneByMock);
 

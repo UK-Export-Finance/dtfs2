@@ -1,5 +1,5 @@
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
+const { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } = require('@ukef/dtfs2-common');
 const { wipeAllUtilisationReports, saveUtilisationReportToDatabase } = require('../../sql-db-helper.ts');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
@@ -9,7 +9,6 @@ const { withClientAuthenticationTests } = require('../../common-tests/client-aut
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
-const { aNotReceivedUtilisationReportEntity } = require('../../mocks/entities/utilisation-report-entity.ts');
 
 describe('GET /v1/banks/:bankId/due-report-periods', () => {
   const dueReportPeriodsUrl = (bankId) => `/v1/banks/${bankId}/due-report-periods`;
@@ -29,11 +28,8 @@ describe('GET /v1/banks/:bankId/due-report-periods', () => {
     const { bank } = aPaymentReportOfficer;
     const month = 11;
     const year = 2022;
-    const dateUploaded = new Date(year, month - 1);
-    mockUtilisationReport = {
-      ...aNotReceivedUtilisationReportEntity(),
-      bankId: bank.id,
-      reportPeriod: {
+    mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      .withReportPeriod({
         start: {
           month,
           year,
@@ -42,11 +38,8 @@ describe('GET /v1/banks/:bankId/due-report-periods', () => {
           month,
           year,
         },
-      },
-      dateUploaded,
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
-      uploadedByUserId: aPaymentReportOfficer.id,
-    };
+      })
+      .withBankId(bank.id);
     await saveUtilisationReportToDatabase(mockUtilisationReport);
   });
 

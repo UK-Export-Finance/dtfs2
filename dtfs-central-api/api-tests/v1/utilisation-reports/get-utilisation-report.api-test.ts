@@ -1,9 +1,8 @@
 import { Response } from 'supertest';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { IsoDateTimeStamp, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { IsoDateTimeStamp, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import app from '../../../src/createApp';
 import apiModule from '../../api';
-import { anUploadedUtilisationReportEntity } from '../../../test-helpers/mocks/entities/utilisation-report-entity';
 import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
 
 const api = apiModule(app);
@@ -41,7 +40,7 @@ describe('/v1/utilisation-reports/:id', () => {
 
     it('gets a utilisation report', async () => {
       // Arrange
-      const uploadedReport = anUploadedUtilisationReportEntity();
+      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
       const { id } = await SqlDbDataSource.getRepository(UtilisationReportEntity).save(uploadedReport);
 
       // Act
