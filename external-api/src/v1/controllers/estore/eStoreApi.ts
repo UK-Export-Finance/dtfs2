@@ -56,15 +56,43 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
     }
 
     // Make a GET request to the eStore API to check if a site exists
-    const response = await axios.get(`${APIM_ESTORE_URL}sites?exporterName=${exporterName}`, { headers });
+    const response = await axios.get(`${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`, { headers }).catch((error: any) => error);
 
     if (!response) {
       throw new Error('❌ Invalid site exist response received');
     }
 
-    return response;
+    let status;
+    let siteId;
+
+    /**
+     * `404` response is returned inside `response`
+     * object if the site does not exist.
+     */
+    if (response.response) {
+      status = response.response?.data?.statusCode;
+      siteId = '';
+    }
+
+    /**
+     * If not `404` response is returned inside
+     * `data` object.
+     * @example data: { siteId: '1234567', status: 'Provisioning' }
+     */
+    if (response.data) {
+      status = response.data.status;
+      siteId = response.data.siteId;
+    }
+
+    return {
+      status,
+      data: {
+        status,
+        siteId,
+      },
+    };
   } catch (error: any) {
-    console.error('❌ eStore site exist check failed %O', { data: error?.response?.data, status: error?.response?.status });
+    console.error('❌ eStore site exist check failed %O', error?.response?.data);
 
     return {
       status: HttpStatusCode.InternalServerError,
@@ -91,8 +119,8 @@ const postToEstore = async (
   timeout = 0,
 ): Promise<EstoreResponse | EstoreErrorResponse> => {
   try {
-    console.info('Invoking eStore endpoint %s with payload %s', endpoint, data);
-    const response = await axios.post(`${APIM_ESTORE_URL}${endpoint}`, data, { headers, timeout });
+    console.info('Invoking eStore endpoint %s with payload %o', endpoint, data);
+    const response = await axios.post(`${APIM_ESTORE_URL}${endpoint}`, data, { headers, timeout }).catch((error: any) => error);
 
     if (!response) {
       throw new Error('❌ Invalid post to estore response received');

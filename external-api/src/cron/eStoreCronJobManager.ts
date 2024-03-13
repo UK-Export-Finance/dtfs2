@@ -1,5 +1,10 @@
+import * as dotenv from 'dotenv';
 import CronJobManager from 'cron-job-manager';
+
+dotenv.config();
+
 const timer = new Date();
+const { TZ } = process.env;
 
 /**
  * eStore CRON job manager, responsible for managing
@@ -15,7 +20,7 @@ export const eStoreCronJobManager = new CronJobManager(
   // Options passed to node-cron
   {
     start: true,
-    timezone: 'Europe/London',
+    timezone: TZ,
     onComplete: () => {
       // Executed once the job has stopped
       console.info('eStore CRON job manager intitiated successfully at %s', timer);

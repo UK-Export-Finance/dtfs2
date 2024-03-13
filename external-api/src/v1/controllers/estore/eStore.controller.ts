@@ -15,6 +15,10 @@ export const create = async (req: Request, res: Response) => {
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid request' });
     }
 
+    // Ensure new CRON job creation
+    const cronJobLogs = await getCollection('cron-job-logs');
+    const tfmDeals = await getCollection('tfm-deals');
+
     const { dealId, siteId, facilityIdentifiers, supportingInformation, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = req.body;
 
     let eStoreData = {} as Estore;
@@ -47,10 +51,6 @@ export const create = async (req: Request, res: Response) => {
         return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid deal ObjectId' });
       }
 
-      // Ensure new CRON job creation
-      const cronJobLogs = await getCollection('cron-job-logs');
-      const tfmDeals = await getCollection('tfm-deals');
-
       const cronJobExists = await cronJobLogs.findOne({ 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } });
 
       if (!cronJobExists) {
@@ -78,8 +78,12 @@ export const create = async (req: Request, res: Response) => {
         console.info('Initiating eStore site existence check for exporter %s', eStoreData.exporterName);
         const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(eStoreData.exporterName);
 
+        const created = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED;
+        const provisioning = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING;
+        const absent = siteExistsResponse?.data?.status === HttpStatusCode.NotFound;
+
         // Step 3: Site already exists in eStore
-        if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
+        if (created) {
           /**
            * Update record-set with the site name.
            * Update `cron-job-logs`
@@ -89,10 +93,11 @@ export const create = async (req: Request, res: Response) => {
             {
               $set: {
                 'response.site.siteId': siteExistsResponse.data.siteId,
-                'cron.site': {
+                'cron.site.create': {
                   status: ESTORE_CRON_STATUS.COMPLETED,
                   timestamp: new Date().valueOf(),
                 },
+                'cron.site.status': ESTORE_CRON_STATUS.COMPLETED,
               },
             },
           );
@@ -108,12 +113,18 @@ export const create = async (req: Request, res: Response) => {
 
           // Add facility IDs to term store and create the buyer folder
           eStoreTermStoreAndBuyerFolder(eStoreData);
-        } else if (siteExistsResponse?.status === HttpStatusCode.NotFound) {
+        } else if (absent || provisioning) {
+          let siteCreationResponse;
           // Step 3: Site does not exists in eStore
 
           // Create a new eStore site
-          console.info('eStore site creation initiated for exporter %s with deal %s', eStoreData.exporterName, eStoreData.dealIdentifier);
-          const siteCreationResponse = await createExporterSite({ exporterName: eStoreData.exporterName });
+          if (provisioning) {
+            // When site status is provisioning
+            console.info('eStore site creation in progress for deal %s', eStoreData.dealIdentifier);
+          } else {
+            console.info('eStore site creation initiated for exporter %s with deal %s', eStoreData.exporterName, eStoreData.dealIdentifier);
+            siteCreationResponse = await createExporterSite({ exporterName: eStoreData.exporterName });
+          }
 
           // Check if the siteCreation endpoint returns a siteId - this is usually a number (i.e. 12345)
           if (siteCreationResponse?.data?.siteId) {
@@ -132,10 +143,13 @@ export const create = async (req: Request, res: Response) => {
               { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
               {
                 $set: {
-                  'cron.site': {
+                  'cron.site.create': {
+                    response: siteExistsResponse.data,
                     status: ESTORE_CRON_STATUS.RUNNING,
                     timestamp: new Date().valueOf(),
                   },
+                  'cron.site.status': ESTORE_CRON_STATUS.RUNNING,
+                  'cron.site.id': siteCreationResponse?.data?.siteId,
                 },
               },
             );
@@ -151,46 +165,61 @@ export const create = async (req: Request, res: Response) => {
               {
                 $set: {
                   'cron.site.create': {
-                    response: siteCreationResponse,
+                    response: siteCreationResponse?.data,
                     status: ESTORE_CRON_STATUS.FAILED,
                     timestamp: new Date().valueOf(),
                   },
+                  'cron.site.status': ESTORE_CRON_STATUS.FAILED,
                 },
               },
             );
           }
         } else {
-          console.error('❌ eStore site exist check failed for deal %s %O', eStoreData.dealIdentifier, siteExistsResponse?.data);
+          console.error('❌ eStore site exist check failed for deal %s %O', eStoreData.dealIdentifier, siteExistsResponse);
 
           // CRON job log update
           await cronJobLogs.updateOne(
             { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
             {
               $set: {
-                'cron.site.exist': {
-                  response: siteExistsResponse,
+                'cron.site.create': {
                   status: ESTORE_CRON_STATUS.FAILED,
                   timestamp: new Date().valueOf(),
                 },
+                'cron.site.status': ESTORE_CRON_STATUS.FAILED,
               },
             },
           );
         }
       } else {
+        // When CRON job already exists for provided deal id.
         console.info('eStore CRON job exists for deal %s', eStoreData.dealIdentifier);
-        res.status(HttpStatusCode.Created).send({ status: HttpStatusCode.Created, message: 'eStore job in queue' });
+        res.status(HttpStatusCode.Accepted).send({ status: HttpStatusCode.Accepted, message: 'eStore job in queue' });
       }
     } else {
       console.error('❌ Invalid eStore payload %O', eStoreData);
+
+      // CRON job log update
+      await cronJobLogs.updateOne(
+        { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
+        {
+          $set: {
+            cron: {
+              site: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: new Date().valueOf() },
+              term: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: new Date().valueOf() },
+              buyer: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: new Date().valueOf() },
+              deal: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: new Date().valueOf() },
+              facility: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: new Date().valueOf() },
+            },
+          },
+        },
+      );
+
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid eStore payload' });
     }
 
     return res.status(HttpStatusCode.Created).send();
   } catch (error: any) {
     console.error('❌ Unable to create eStore directories %o', error);
-    return res.status(HttpStatusCode.InternalServerError).send({
-      status: HttpStatusCode.InternalServerError,
-      message: 'Unable to create eStore directories',
-    });
   }
 };

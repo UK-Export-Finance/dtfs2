@@ -1,11 +1,12 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import { ObjectId } from 'mongodb';
 import { getCollection } from '../database';
-import { TermStoreResponse, BuyerFolderResponse } from '../interfaces';
+import { TermStoreResponse, BuyerFolderResponse, EstoreErrorResponse } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { createBuyerFolder, addFacilityToTermStore } from '../v1/controllers/estore/eStoreApi';
+import { HttpStatusCode } from 'axios';
 
-const acceptableStatus = [200, 201];
+const acceptableStatus = [HttpStatusCode.Ok, HttpStatusCode.Created];
 
 export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
   const cronJobLogs = await getCollection('cron-job-logs');
@@ -14,7 +15,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
   if (eStoreData?.facilityIdentifiers?.length) {
     console.info('Adding facilities to term store for deal %s', eStoreData.dealIdentifier);
 
-    const response: TermStoreResponse[] = await Promise.all(
+    const response: TermStoreResponse[] | EstoreErrorResponse[] = await Promise.all(
       eStoreData.facilityIdentifiers.map((id: number) => {
         return id ? addFacilityToTermStore({ id: id.toString() }) : id;
       }),
@@ -58,7 +59,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
     console.info('Creating buyer directory %s for deal %s', eStoreData.buyerName, eStoreData.dealIdentifier);
 
     // Create the buyer directory
-    const response: BuyerFolderResponse = await createBuyerFolder(eStoreData.siteId, {
+    const response: BuyerFolderResponse | EstoreErrorResponse = await createBuyerFolder(eStoreData.siteId, {
       exporterName: eStoreData.exporterName,
       buyerName: eStoreData.buyerName,
     });

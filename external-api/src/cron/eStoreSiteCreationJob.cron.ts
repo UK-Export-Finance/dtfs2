@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { getCollection } from '../database';
-import { SiteExistsResponse } from '../interfaces';
+import { EstoreErrorResponse, SiteExistsResponse } from '../interfaces';
 import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../constants';
 import { eStoreCronJobManager } from './eStoreCronJobManager';
 import { eStoreTermStoreAndBuyerFolder } from './eStoreTermStoreAndBuyerFolder.cron';
@@ -19,7 +19,7 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
 
   // Step 1: Site exists check
   console.info('CRON - eStore site exist check for deal %s', eStoreData.dealIdentifier);
-  const siteExistsResponse: SiteExistsResponse = await siteExists(eStoreData.exporterName);
+  const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(eStoreData.exporterName);
 
   // Step 2: Site already exists in eStore
   if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
@@ -34,10 +34,10 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
       { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
       {
         $set: {
-          siteId: siteExistsResponse.data.siteId,
           'cron.site': {
             status: ESTORE_CRON_STATUS.COMPLETED,
             timestamp: new Date().valueOf(),
+            id: siteExistsResponse.data.siteId,
           },
         },
       },
@@ -57,7 +57,7 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
     // Increment site creation by `1`
     await cronJobLogs.findOneAndUpdate(
       { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
-      { $inc: { 'cron.site.siteCreationRetries': 1 } },
+      { $inc: { 'cron.site.create.execution': 1 } },
       { returnNewDocument: true, returnDocument: 'after' },
     );
   } else {
@@ -71,8 +71,8 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
       { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
       {
         $set: {
-          'cron.site.exist': {
-            response: siteExistsResponse,
+          'cron.site.create': {
+            response: siteExistsResponse.data,
             status: ESTORE_CRON_STATUS.FAILED,
             timestamp: new Date().valueOf(),
           },
