@@ -1,14 +1,12 @@
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 const { UtilisationReportEntityMockBuilder, UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
 const { wipeAllUtilisationReports, saveUtilisationReportToDatabase } = require('../../sql-db-helper.ts');
-const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
-const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 console.error = jest.fn();
 
@@ -77,10 +75,6 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
     await saveUtilisationReportToDatabase(aReceivedReport);
     await saveUtilisationReportToDatabase(aNotReceivedReport);
     await saveUtilisationReportToDatabase(aMarkedReconciledReport);
-  });
-
-  afterAll(async () => {
-    await databaseHelper.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
   });
 
   withClientAuthenticationTests({
