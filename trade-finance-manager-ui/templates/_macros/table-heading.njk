@@ -1,8 +1,7 @@
 {% macro render(params) %}
-  {% set tableName = params.tableName %}
-
   {% set defaultSortByOrder = 'ascending' %}
 
+  {% set tableName = params.tableName %}
   {% set fieldName = params.fieldName %}
   {% set buttonText = params.buttonText %}
   {% set buttonValue = params.buttonValue %}

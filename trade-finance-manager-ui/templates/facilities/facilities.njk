@@ -1,6 +1,6 @@
 {% import './_macros/facilities-table.njk' as facilitiesTable %}
-{% import './_macros/facilities-table-search-form.njk' as facilitiesTableSearchForm %}
-{% import '../_macros/pagination.njk' as pagination %}
+{% import '_macros/table-search-form.njk' as tableSearchForm %}
+{% import '_macros/pagination.njk' as pagination %}
 
 {% extends "index.njk" %}
 
@@ -16,7 +16,12 @@
     </div>
 
     <div class="govuk-grid-column-one-quarter govuk-!-padding-top-7">
-      {{ facilitiesTableSearchForm.render(csrfToken) }}
+      {{ tableSearchForm.render(
+        {
+          tableName: 'facilities',
+          csrfToken: csrfToken
+        }
+      ) }}
     </div>
   </div>
 

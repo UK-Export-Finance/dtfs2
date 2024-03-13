@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 
-const createTfmDealToInsertIntoDb = (ukefDealId, companyName) => ({
-  _id: new ObjectId(),
+const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => ({
+  _id: new ObjectId(dealObjectId),
   dealSnapshot: {
     _id: new ObjectId(),
     additionalRefName: 'Mock supply contract name',

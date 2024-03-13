@@ -114,15 +114,15 @@
               <a
                 class="govuk-link"
                 href="/case/{{ facility.dealId }}/facility/{{ facility.facilityId }}"
-                data-cy="deal-{{ facility.facilityId }}-ukef-facility-id-link">
-                <span class="govuk-visually-hidden">View facility</span> <span data-cy="deal-{{ facility.facilityId }}-ukef-facility-id-link-text">{{ facility.ukefFacilityId }}</span> <span class="govuk-visually-hidden">details</span>
+                data-cy="facility-{{ facility.facilityId }}-ukefFacilityId-link">
+                <span class="govuk-visually-hidden">View facility</span> <span data-cy="facility-{{ facility.facilityId }}-ukefFacilityId-link-text">{{ facility.ukefFacilityId }}</span> <span class="govuk-visually-hidden">details</span>
 
               </a>
             </td>
-            <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-product">{{ facility.dealType | dashIfEmpty }}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-dealType">{{ facility.dealType | dashIfEmpty }}</td>
             <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-type">{{ facility.type | dashIfEmpty}}</td>
-            <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-exporterName">{{ facility.companyName | dashIfEmpty}}</td>
-            <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-facilityValue">{{ facility.currencyAndValue | dashIfEmpty}}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-companyNameName">{{ facility.companyName | dashIfEmpty}}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-value">{{ facility.currencyAndValue | dashIfEmpty}}</td>
             <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-coverEndDate">{{ facility.coverEndDate | dashIfEmpty }}</td>
             <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-facilityStage">
               {{govukTag({

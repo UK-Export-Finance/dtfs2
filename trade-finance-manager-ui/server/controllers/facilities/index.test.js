@@ -1,145 +1,440 @@
-import caseController from '.';
+import facilityController from '.';
 import api from '../../api';
-import { mockRes } from '../../test-mocks';
-import CONSTANTS from '../../constants';
+import PageOutOfBoundsError from '../../errors/page-out-of-bounds.error';
+import { mockRes as generateMockRes } from '../../test-mocks';
+
+const CONSTANTS = require('../../constants');
 
 describe('controllers - facilities', () => {
-  let res;
+  let mockRes;
+  const mockReqTemplate = {
+    session: {
+      user: {},
+      userToken: 'userToken',
+    },
+    body: {},
+    params: {},
+    query: {},
+  };
   const mockFacilities = [
     {
-      dealId: '121212',
-      facilityId: '112233',
-      ukefFacilityId: '123456',
-      type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
-      companyName: 'Mock Company Name',
-      value: 'GBP 1,000,000.00',
-      coverEndDate: '2021-08-12T00:00:00.000Z',
-      dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
-      hasBeenIssued: true,
-      currency: 'GBP',
+      facilityId: '0',
+      hasAmendmentInProgress: false
     },
     {
-      dealId: '122122',
-      facilityId: '223344',
-      ukefFacilityId: '1234567',
-      type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
-      companyName: 'Mock Company Name',
-      value: 'EUR 18,000,000.00',
-      coverEndDate: null,
-      dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
-      hasBeenIssued: false,
-      currency: 'EUR',
+      facilityId: '1',
+      hasAmendmentInProgress: false
     },
   ];
-
-  const mockGetFacilities = {
+  const mockApiGetFacilitiesResponse = {
     facilities: mockFacilities,
     pagination: {
-      totalItems: 2,
+      totalItems: mockFacilities.length,
       currentPage: 0,
       totalPages: 1,
     },
   };
+  const mockAmendments = [
+    {
+      status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
+      facilityId: '0',
+    },
+    {
+      status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.NOT_STARTED,
+      facilityId: '1',
+    },
+  ];
+  const mockApiGetAllAmendmentsInProgressResponse = {
+    data: mockAmendments,
+  };
 
   beforeEach(() => {
-    res = mockRes();
+    mockRes = generateMockRes();
   });
 
-  describe('GET all facilities', () => {
+  describe('GET facilities', () => {
     describe('when there are facilities', () => {
       beforeEach(() => {
-        api.getFacilities = () => Promise.resolve(mockGetFacilities); // TODO: look at this line
-        api.getAllAmendmentsInProgress = () => Promise.resolve({ data: [] });
+        api.getFacilities = jest.fn().mockImplementation(() => Promise.resolve(mockApiGetFacilitiesResponse));
+        api.getAllAmendmentsInProgress = jest.fn().mockImplementation(() => Promise.resolve({}));
       });
 
-      it('should render facilities template with data', async () => {
-        const mockReq = {
-          params: {},
-          query: {},
-          session: { user: {} },
-        };
+      describe('when the pageNumber, sortfield, sortorder and search are not specified in the request', () => {
+        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
 
-        await caseController.getFacilities(mockReq, res);
-        expect(res.render).toHaveBeenCalledWith('facilities/facilities.njk', {
+        itShouldMakeRequestsForFacilitiesDataWithDefaultArguments(mockReq);
+        itShouldRenderFacilitiesTemplateWithDefaultArguments({ mockReq, hasAmendmentInProgress: false });
+      });
+
+      describe('when the pageNumber is less than 0', () => {
+        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+        mockReq.params.pageNumber = '-1';
+
+        it('should redirect to not-found route', async () => {
+          await facilityController.getFacilities(mockReq, mockRes);
+          expect(mockRes.redirect).toHaveBeenCalledWith('/not-found');
+        });
+      });
+
+      describe('when the pageNumber cannot be converted to a number', () => {
+        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+        mockReq.params.pageNumber = 'hello world';
+
+        itShouldMakeRequestsForFacilitiesDataWithDefaultArguments(mockReq);
+        itShouldRenderFacilitiesTemplateWithDefaultArguments({ mockReq, hasAmendmentInProgress: false });
+      });
+
+      describe('when the sortfield and sortorder are specified in the request', () => {
+        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+        mockReq.query.sortfield = 'tfmFacilities.dealType';
+        mockReq.query.sortorder = 'ascending';
+
+        it('should make requests to TFM API for the facilities data with the correct arguments', async () => {
+          await facilityController.getFacilities(mockReq, mockRes);
+          expect(api.getFacilities).toHaveBeenCalledWith(
+            {
+              sortBy: {
+                field: 'tfmFacilities.dealType',
+                order: 'ascending',
+              },
+              pagesize: 20,
+              page: 0,
+            },
+            'userToken',
+          );
+        });
+
+        it('should render the facilities template with the facilities data and the correct arguments', async () => {
+          await facilityController.getFacilities(mockReq, mockRes);
+          expect(mockRes.render).toHaveBeenCalledWith('facilities/facilities.njk', {
+            heading: 'All facilities',
+            facilities: mockFacilities,
+            activePrimaryNavigation: 'all facilities',
+            activeSubNavigation: 'facility',
+            sortButtonWasClicked: true,
+            user: mockReq.session.user,
+            activeSortByField: 'tfmFacilities.dealType',
+            activeSortByOrder: 'ascending',
+            pages: {
+              totalPages: 1,
+              currentPage: 0,
+              totalItems: mockFacilities.length,
+            },
+            queryString: '?sortfield=tfmFacilities.dealType&sortorder=ascending',
+          });
+        });
+      });
+
+      describe('when a search is specified in the request', () => {
+        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+        mockReq.query.search = 'test';
+
+        it('should make requests to TFM API for the facilities data with the correct arguments', async () => {
+          await facilityController.getFacilities(mockReq, mockRes);
+          expect(api.getFacilities).toHaveBeenCalledWith(
+            {
+              sortBy: {
+                field: 'ukefFacilityId',
+                order: 'ascending'
+              },
+              pagesize: 20,
+              page: 0,
+              searchString: 'test',
+            },
+            'userToken',
+          );
+        });
+
+        it('should render the facilities template with the facilities data and the correct arguments', async () => {
+          await facilityController.getFacilities(mockReq, mockRes);
+          expect(mockRes.render).toHaveBeenCalledWith('facilities/facilities.njk', {
+            heading: `${mockFacilities.length} results for "${mockReq.query.search}"`,
+            facilities: mockFacilities,
+            activePrimaryNavigation: 'all facilities',
+            activeSubNavigation: 'facility',
+            sortButtonWasClicked: false,
+            user: mockReq.session.user,
+            activeSortByField: 'ukefFacilityId',
+            activeSortByOrder: 'ascending',
+            pages: {
+              totalPages: 1,
+              currentPage: 0,
+              totalItems: mockFacilities.length,
+            },
+            queryString: `?search=${mockReq.query.search}`,
+          });
+        });
+      });
+
+      describe('when there is an in-progress amendment corresponding to one of the facilities', () => {
+        beforeEach(() => {
+          api.getAllAmendmentsInProgress = jest.fn().mockImplementation(() => Promise.resolve(mockApiGetAllAmendmentsInProgressResponse));
+        });
+
+        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+        itShouldMakeRequestsForFacilitiesDataWithDefaultArguments(mockReq);
+        itShouldRenderFacilitiesTemplateWithDefaultArguments({ mockReq, hasAmendmentInProgress: true });
+      });
+    });
+
+    describe('when there are no facilities', () => {
+      beforeEach(() => {
+        api.getFacilities = () => Promise.resolve({
+          facilities: [],
+          pagination: {
+            totalItems: 0,
+            currentPage: 0,
+            totalPages: 1,
+          },
+        });
+      });
+
+      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+      it('should render the facilities template with the correct arguments and no data', async () => {
+        await facilityController.getFacilities(mockReq, mockRes);
+        expect(mockRes.render).toHaveBeenCalledWith('facilities/facilities.njk', {
           heading: 'All facilities',
-          facilities: mockFacilities,
+          facilities: [],
           activePrimaryNavigation: 'all facilities',
           activeSubNavigation: 'facility',
-          user: mockReq.session.user,
           sortButtonWasClicked: false,
-          activeSortByField: CONSTANTS.FACILITY.TFM_SORT_BY_DEFAULT.field,
-          activeSortByOrder: CONSTANTS.FACILITY.TFM_SORT_BY_DEFAULT.order,
+          user: mockReq.session.user,
+          activeSortByField: 'ukefFacilityId',
+          activeSortByOrder: 'ascending',
           pages: {
             totalPages: 1,
             currentPage: 0,
-            totalItems: 2,
+            totalItems: 0,
           },
           queryString: '',
         });
       });
     });
 
-    describe('when there are no facilities', () => {
+    describe('when api.getFacilities throws a PageOutOfBoundsError', () => {
+      const error = new PageOutOfBoundsError('Requested page number exceeds the maximum page number');
+      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
       beforeEach(() => {
-        api.getFacilities = () => Promise.resolve({});
+        api.getFacilities = () => Promise.reject(error);
+      });
+
+      it('should log the error thrown by api.getFacilities', async () => {
+        const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
+        await facilityController.getFacilities(mockReq, mockRes);
+        expect(consoleErrorMock).toHaveBeenCalledWith(error);
+        consoleErrorMock.mockRestore();
       });
 
       it('should redirect to not-found route', async () => {
-        const mockReq = {
-          params: {},
-          query: {},
-          session: { user: {} },
-        };
+        await facilityController.getFacilities(mockReq, mockRes);
+        expect(mockRes.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
 
-        await caseController.getFacilities(mockReq, res);
-        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+    describe('when api.getFacilities throws any other error', () => {
+      const error = new Error('some error');
+      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+      beforeEach(() => {
+        api.getFacilities = () => Promise.reject(error);
+      });
+
+      it('should log the error thrown by api.getFacilities', async () => {
+        const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
+        await facilityController.getFacilities(mockReq, mockRes);
+        expect(consoleErrorMock).toHaveBeenCalledWith(error);
+        consoleErrorMock.mockRestore();
+      });
+
+      it('should render the problem-with-service page', async () => {
+        await facilityController.getFacilities(mockReq, mockRes);
+        expect(mockRes.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
       });
     });
   });
 
   describe('POST facilities', () => {
-    describe('with searchString parameter', () => {
-      const getFacilitiesSpy = jest.fn(() => Promise.resolve(mockGetFacilities));
+    describe('when the pageNumber, sort field/order and search are not specified in the request', () => {
+      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
 
-      beforeEach(() => {
-        api.getFacilities = getFacilitiesSpy;
-      });
+      it('should redirect to GET facilities without query parameters', async () => {
+        await facilityController.queryFacilities(mockReq, mockRes);
 
-      it('should redirect to GET /facilities with a query string based on the searchString', async () => {
-        const searchString = 'test';
-
-        const mockReq = {
-          params: {},
-          query: {},
-          session: { user: {} },
-          body: { search: searchString },
-        };
-
-        await caseController.queryFacilities(mockReq, res);
-
-        expect(res.redirect).toHaveBeenCalledWith('/facilities/0?search=test');
+        expect(mockRes.redirect).toHaveBeenCalledWith('/facilities/0');
       });
     });
 
-    describe('without searchString parameter', () => {
-      const getFacilitiesSpy = jest.fn(() => Promise.resolve(mockGetFacilities));
+    describe('when the pageNumber is less than 0', () => {
+      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
 
-      beforeEach(() => {
-        api.getFacilities = getFacilitiesSpy;
+      mockReq.params.pageNumber = '-1';
+
+      it('should redirect to GET facilities (page 0) without query parameters', async () => {
+        await facilityController.queryFacilities(mockReq, mockRes);
+
+        expect(mockRes.redirect).toHaveBeenCalledWith('/facilities/0');
+      });
+    });
+
+    describe('when the pageNumber cannot be converted to a number', () => {
+      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+      mockReq.params.pageNumber = 'hello world';
+
+      it('should redirect to GET facilities (page 0) without query parameters', async () => {
+        await facilityController.queryFacilities(mockReq, mockRes);
+
+        expect(mockRes.redirect).toHaveBeenCalledWith('/facilities/0');
+      });
+    });
+
+    describe('when the pageNumber is a non-negative integer', () => {
+      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+      mockReq.params.pageNumber = '2';
+
+      it('should redirect to GET facilities (page 0) without query parameters', async () => {
+        await facilityController.queryFacilities(mockReq, mockRes);
+
+        expect(mockRes.redirect).toHaveBeenCalledWith('/facilities/0');
+      });
+    });
+
+    describe.each([
+      'ascending',
+      'descending',
+    ])('', (order) => {
+      describe(`when a ${order} sort field is specified in the request body`, () => {
+        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+        mockReq.body[order] = 'tfmFacilities.dealType';
+
+        it('should redirect to GET facilities with the correct query parameters', async () => {
+          await facilityController.queryFacilities(mockReq, mockRes);
+
+          expect(mockRes.redirect).toHaveBeenCalledWith(`/facilities/0?sortfield=tfmFacilities.dealType&sortorder=${order}`);
+        });
       });
 
-      it('should call api and render template with data', async () => {
-        const mockReq = {
-          params: {},
-          query: {},
-          session: { user: {} },
-          body: {},
-        };
+      describe(`when a ${order} sort field is specified in the query parameters`, () => {
+        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
 
-        await caseController.queryFacilities(mockReq, res);
+        mockReq.query.sortfield = 'tfmFacilities.dealType';
+        mockReq.query.sortorder = order;
 
-        expect(res.redirect).toHaveBeenCalledWith('/facilities/0');
+        it('should redirect to GET facilities with the correct query parameters', async () => {
+          await facilityController.queryFacilities(mockReq, mockRes);
+
+          expect(mockRes.redirect).toHaveBeenCalledWith(`/facilities/0?sortfield=tfmFacilities.dealType&sortorder=${order}`);
+        });
+      });
+    });
+
+    describe('when a sort is specified in the both the request body and the query parameters', () => {
+      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+      mockReq.body.descending = 'tfmFacilities.type';
+      mockReq.query.sortfield = 'tfmFacilities.dealType';
+      mockReq.query.sortorder = 'ascending';
+
+      it('should redirect to GET facilities with query parameters based on the sort specified in the request body', async () => {
+        await facilityController.queryFacilities(mockReq, mockRes);
+
+        expect(mockRes.redirect).toHaveBeenCalledWith('/facilities/0?sortfield=tfmFacilities.type&sortorder=descending');
+      });
+    });
+
+    describe('when a search is specified in the request body', () => {
+      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+      mockReq.body.search = 'test';
+
+      it('should redirect to GET facilities with the correct query parameters', async () => {
+        await facilityController.queryFacilities(mockReq, mockRes);
+
+        expect(mockRes.redirect).toHaveBeenCalledWith('/facilities/0?search=test');
+      });
+    });
+
+    describe('when a search is specified in the query parameters', () => {
+      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+      mockReq.query.search = 'test';
+
+      it('should redirect to GET facilities with the correct query parameters', async () => {
+        await facilityController.queryFacilities(mockReq, mockRes);
+
+        expect(mockRes.redirect).toHaveBeenCalledWith('/facilities/0?search=test');
+      });
+    });
+
+    describe('when a search is specified in the both the request body and the query parameters', () => {
+      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+      mockReq.body.search = 'searchFromBody';
+      mockReq.query.search = 'searchFromQuery';
+
+      it('should redirect to GET facilities with query parameters based on the search specified in the request body', async () => {
+        await facilityController.queryFacilities(mockReq, mockRes);
+
+        expect(mockRes.redirect).toHaveBeenCalledWith('/facilities/0?search=searchFromBody');
       });
     });
   });
+
+  function itShouldMakeRequestsForFacilitiesDataWithDefaultArguments(mockReq) {
+    it('should make requests to TFM API for the facilities data with the default arguments', async () => {
+      await facilityController.getFacilities(mockReq, mockRes);
+      expect(api.getFacilities).toHaveBeenCalledWith(
+        {
+          sortBy: {
+            field: 'ukefFacilityId',
+            order: 'ascending',
+          },
+          pagesize: 20,
+          page: 0,
+        },
+        'userToken',
+      );
+      expect(api.getAllAmendmentsInProgress).toHaveBeenCalledWith('userToken');
+    });
+  }
+
+  function itShouldRenderFacilitiesTemplateWithDefaultArguments({ mockReq, hasAmendmentInProgress }) {
+    it('should render the facilities template with the facilities data and the default arguments', async () => {
+      await facilityController.getFacilities(mockReq, mockRes);
+      expect(mockRes.render).toHaveBeenCalledWith('facilities/facilities.njk', {
+        heading: 'All facilities',
+        facilities: [
+          {
+            facilityId: '0',
+            hasAmendmentInProgress
+          },
+          {
+            facilityId: '1',
+            hasAmendmentInProgress: false
+          },
+        ],
+        activePrimaryNavigation: 'all facilities',
+        activeSubNavigation: 'facility',
+        sortButtonWasClicked: false,
+        user: mockReq.session.user,
+        activeSortByField: 'ukefFacilityId',
+        activeSortByOrder: 'ascending',
+        pages: {
+          totalPages: 1,
+          currentPage: 0,
+          totalItems: mockFacilities.length,
+        },
+        queryString: '',
+      });
+    });
+  }
 });
