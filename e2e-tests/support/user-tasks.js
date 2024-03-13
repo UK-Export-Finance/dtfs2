@@ -119,7 +119,7 @@ module.exports = {
       insertManyTfmDeals,
       deleteAllTfmDeals,
       insertManyTfmFacilitiesAndTwoLinkedDeals,
-      deleteAllTfmFacilities
+      deleteAllTfmFacilities,
     };
   },
 };

@@ -4,13 +4,13 @@ const SORT_BY = {
   DEFAULT: {
     DEALS: {
       field: 'tfm.dateReceivedTimestamp',
-      order: 'descending'
+      order: 'descending',
     },
     FACILITIES: {
       field: 'ukefFacilityId',
-      order: 'ascending'
-    }
-  }
+      order: 'ascending',
+    },
+  },
 };
 
 module.exports = {

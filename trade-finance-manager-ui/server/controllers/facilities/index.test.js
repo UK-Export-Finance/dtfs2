@@ -19,11 +19,11 @@ describe('controllers - facilities', () => {
   const mockFacilities = [
     {
       facilityId: '0',
-      hasAmendmentInProgress: false
+      hasAmendmentInProgress: false,
     },
     {
       facilityId: '1',
-      hasAmendmentInProgress: false
+      hasAmendmentInProgress: false,
     },
   ];
   const mockApiGetFacilitiesResponse = {
@@ -139,7 +139,7 @@ describe('controllers - facilities', () => {
             {
               sortBy: {
                 field: 'ukefFacilityId',
-                order: 'ascending'
+                order: 'ascending',
               },
               pagesize: 20,
               page: 0,
@@ -415,11 +415,11 @@ describe('controllers - facilities', () => {
         facilities: [
           {
             facilityId: '0',
-            hasAmendmentInProgress
+            hasAmendmentInProgress,
           },
           {
             facilityId: '1',
-            hasAmendmentInProgress: false
+            hasAmendmentInProgress: false,
           },
         ],
         activePrimaryNavigation: 'all facilities',

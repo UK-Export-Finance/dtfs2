@@ -21,7 +21,7 @@ describe(component, () => {
         hasBeenIssued: true,
         coverEndDateEpoch: 1712793600,
         currencyAndValue: 'GBP 1,234,567,890.1',
-        hasAmendmentInProgress: true
+        hasAmendmentInProgress: true,
       },
       {
         dealId: '456',
@@ -36,7 +36,7 @@ describe(component, () => {
         hasBeenIssued: true,
         coverEndDateEpoch: 1712793600,
         currencyAndValue: 'GBP 1,234,567,890.1',
-        hasAmendmentInProgress: true
+        hasAmendmentInProgress: true,
       },
     ],
     user: {
@@ -98,7 +98,7 @@ describe(component, () => {
   describe('for each facility', () => {
     it('should render ukefFacilityId link, linking to facility id', () => {
       params.facilities.forEach((facility) => {
-        const selector = `[data-cy="facility-${ facility.facilityId }-ukef-facility-id-link"]`;
+        const selector = `[data-cy="facility-${facility.facilityId}-ukef-facility-id-link"]`;
 
         wrapper.expectLink(selector).toLinkTo(
           `/case/${facility.dealId}/facility/${facility.facilityId}`,
@@ -160,7 +160,7 @@ describe(component, () => {
 
           it('should render `Issued (amendment in progress)`', () => {
             paramsIssuedWithAmendmentInProgress.facilities.forEach((facility) => {
-              const cellSelector = `[data-cy="facility-${ facility.facilityId }-facilityStage"]`;
+              const cellSelector = `[data-cy="facility-${facility.facilityId}-facilityStage"]`;
               wrapper.expectText(cellSelector).toMatch(/Issued\s*\(amendment in progress\)/);
             });
           });
@@ -169,7 +169,7 @@ describe(component, () => {
         describe('when the facility does not have an amendment in progress', () => {
           const issuedFacilityWithoutAmendmentInProgress = {
             ...params.facilities[0],
-            hasAmendmentInProgress: false
+            hasAmendmentInProgress: false,
           };
 
           const paramsIssuedWithoutAmendmentInProgress = {
@@ -183,7 +183,7 @@ describe(component, () => {
 
           it('should render `Issued`', () => {
             paramsIssuedWithoutAmendmentInProgress.facilities.forEach((facility) => {
-              const cellSelector = `[data-cy="facility-${ facility.facilityId }-facilityStage"]`;
+              const cellSelector = `[data-cy="facility-${facility.facilityId}-facilityStage"]`;
               wrapper.expectText(cellSelector).toRead('Issued');
             });
           });
@@ -194,7 +194,7 @@ describe(component, () => {
         describe('when the facility has an amendment in progress', () => {
           const unissuedFacilityWithAmendmentInProgress = {
             ...params.facilities[0],
-            hasBeenIssued: false
+            hasBeenIssued: false,
           };
 
           const paramsUnissuedWithAmendmentInProgress = {
@@ -208,7 +208,7 @@ describe(component, () => {
 
           it('should render `Unissued (amendment in progress)`', () => {
             paramsUnissuedWithAmendmentInProgress.facilities.forEach((facility) => {
-              const cellSelector = `[data-cy="facility-${ facility.facilityId }-facilityStage"]`;
+              const cellSelector = `[data-cy="facility-${facility.facilityId}-facilityStage"]`;
               wrapper.expectText(cellSelector).toMatch(/Unissued\s*\(amendment in progress\)/);
             });
           });
@@ -218,7 +218,7 @@ describe(component, () => {
           const unissuedFacilityWithoutAmendmentInProgress = {
             ...params.facilities[0],
             hasBeenIssued: false,
-            hasAmendmentInProgress: false
+            hasAmendmentInProgress: false,
           };
 
           const paramsUnissuedWithoutAmendmentInProgress = {
@@ -232,7 +232,7 @@ describe(component, () => {
 
           it('should render `Unissued`', () => {
             paramsUnissuedWithoutAmendmentInProgress.facilities.forEach((facility) => {
-              const cellSelector = `[data-cy="facility-${ facility.facilityId }-facilityStage"]`;
+              const cellSelector = `[data-cy="facility-${facility.facilityId}-facilityStage"]`;
               wrapper.expectText(cellSelector).toRead('Unissued');
             });
           });

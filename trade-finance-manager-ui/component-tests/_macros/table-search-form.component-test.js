@@ -8,7 +8,7 @@ const render = componentRenderer(component);
 describe(component, () => {
   let wrapper;
   const params = {
-    tableName: 'table name'
+    tableName: 'table name',
   };
 
   beforeEach(() => {

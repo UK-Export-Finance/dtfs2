@@ -6,5 +6,5 @@ const FACILITY_TYPE = {
 };
 
 module.exports = {
-  FACILITY_TYPE
+  FACILITY_TYPE,
 };

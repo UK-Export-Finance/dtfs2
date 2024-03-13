@@ -31,5 +31,5 @@ module.exports = {
   overrideDealsIfAmendmentsInProgress,
   overrideFacilitiesIfAmendmentsInProgress,
   getDealsOrFacilities,
-  queryDealsOrFacilities
+  queryDealsOrFacilities,
 };

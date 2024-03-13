@@ -17,7 +17,7 @@ const buildQueryParametersObject = (sortBy, page, searchString) => {
   const queryParams = {
     sortBy,
     pagesize: CONSTANTS.TABLE.PAGE_SIZE,
-    page
+    page,
   };
   if (searchString) {
     queryParams.searchString = searchString;
@@ -74,7 +74,7 @@ const getDealsOrFacilities = async (collectionName, req, res) => {
     const { sortfield, sortorder, search } = req.query;
     const sortBy = {
       field: sortfield ?? sortByDefault.field,
-      order: sortorder ?? sortByDefault.order
+      order: sortorder ?? sortByDefault.order,
     };
     const queryParams = buildQueryParametersObject(sortBy, pageNumber, search);
 
@@ -87,17 +87,17 @@ const getDealsOrFacilities = async (collectionName, req, res) => {
     let singularItemName;
 
     if (collectionName === 'deals') {
-        ({ deals: items, pagination } = await api.getDeals(queryParams, userToken));
-        items = overrideDealsIfAmendmentsInProgress(items, amendments);
+      ({ deals: items, pagination } = await api.getDeals(queryParams, userToken));
+      items = overrideDealsIfAmendmentsInProgress(items, amendments);
 
-        singularItemName = 'deal';
+      singularItemName = 'deal';
     }
 
     if (collectionName === 'facilities') {
-        ({ facilities: items, pagination } = await api.getFacilities(queryParams, userToken));
-        items = overrideFacilitiesIfAmendmentsInProgress(items, amendments);
+      ({ facilities: items, pagination } = await api.getFacilities(queryParams, userToken));
+      items = overrideFacilitiesIfAmendmentsInProgress(items, amendments);
 
-        singularItemName = 'facility';
+      singularItemName = 'facility';
     }
 
     const activeSortByField = sortBy.field;
