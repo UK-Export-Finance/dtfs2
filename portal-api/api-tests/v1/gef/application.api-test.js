@@ -23,19 +23,10 @@ const api = require('../../../src/v1/api');
 const { STATUS } = require('../../../src/constants/user');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
-jest.mock('../../../src/external-api/api', () => {
-  const actualExternalApi = jest.requireActual('../../../src/external-api/api');
-
-  const sendEmails = jest.fn(() => Promise.resolve());
-  const create = () => ({ ukefId: '1' });
-
-  return {
-    ...actualExternalApi,
-    sendEmails,
-    create,
-  };
-});
-
+jest.mock('../../../src/external-api/send-email', () => jest.fn(() => Promise.resolve()));
+jest.mock('../../../src/external-api/number-generator', () => ({
+  create: () => ({ ukefId: '1' }),
+}));
 const baseUrl = '/v1/gef/application';
 const facilitiesUrl = '/v1/gef/facilities';
 const collectionName = DB_COLLECTIONS.DEALS;
@@ -47,11 +38,6 @@ describe(baseUrl, () => {
   let aChecker;
   let testUsers;
   const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
-
-  afterAll(() => {
-    jest.resetAllMocks();
-    jest.restoreAllMocks();
-  });
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
