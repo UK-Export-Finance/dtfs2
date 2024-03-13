@@ -39,7 +39,8 @@ describe('GET /v1/banks/:bankId/due-report-periods', () => {
           year,
         },
       })
-      .withBankId(bank.id);
+      .withBankId(bank.id)
+      .build();
     await saveUtilisationReportToDatabase(mockUtilisationReport);
   });
 
