@@ -5,7 +5,7 @@ const acbsHttp = async (context, req) => {
   console.info('⚡️ Invoking ACBS DOF via Azure HTTP trigger');
 
   const client = df.getClient(context);
-  const instanceId = await client.startNew(req.params.functionName, undefined, req.body);
+  const instanceId = await client.startNew(req.params.functionName, { input: req.body });
 
   return client.createCheckStatusResponse(context.bindingData.req, instanceId);
 };
