@@ -1,3 +1,4 @@
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const sendEmail = require('../../email');
 const { EMAIL_TEMPLATE_IDS, FILESHARES } = require('../../../constants');
@@ -100,7 +101,6 @@ const uploadReportAndSendNotification = async (req, res) => {
     const { file } = req;
 
     const { formattedReportPeriod, reportData, reportPeriod, user } = req.body;
-    // TODO FN-1859 - do we need to parse here?
     const parsedReportData = JSON.parse(reportData);
     const parsedUser = JSON.parse(user);
     const parsedReportPeriod = JSON.parse(reportPeriod);
@@ -121,8 +121,8 @@ const uploadReportAndSendNotification = async (req, res) => {
 
     const existingReport = existingReports[0];
 
-    // If a report has already been uploaded, we should not overwrite it
-    if (existingReport.azureFileInfo) {
+    // If a report is not in a not received state, we should not overwrite it
+    if (existingReport.status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) {
       return res.status(409).send('Report for the supplied report period has already been uploaded');
     }
 

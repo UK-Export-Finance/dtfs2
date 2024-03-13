@@ -11,7 +11,12 @@ type ReportUploadedEventPayload = {
 };
 
 export type UtilisationReportReportUploadedEvent = BaseUtilisationReportEvent<'REPORT_UPLOADED', ReportUploadedEventPayload>;
-
+/**
+ * Handler for the utilisation report "report uploaded" event
+ * @param report - The report to update
+ * @param param1 - The payload for the event
+ * @returns The updated report
+ */
 export const handleUtilisationReportReportUploadedEvent = async (
   report: UtilisationReportEntity,
   { azureFileInfo, reportCsvData, uploadedByUserId, requestSource }: ReportUploadedEventPayload,

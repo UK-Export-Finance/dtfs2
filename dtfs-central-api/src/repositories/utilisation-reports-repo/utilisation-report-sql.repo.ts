@@ -14,10 +14,22 @@ type UpdateWithUploadDetailsParams = {
 };
 
 export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationReportEntity).extend({
+  /**
+   * Finds one report by bank id and report period
+   * @param bankId - The bank id
+   * @param reportPeriod - The report period
+   * @returns The found report
+   */
   async findOneByBankIdAndReportPeriod(bankId: string, reportPeriod: ReportPeriod): Promise<UtilisationReportEntity | null> {
     return await this.findOneBy({ bankId, reportPeriod });
   },
 
+  /**
+   * Updates a report with upload details
+   * @param report - The report to update
+   * @param param1 - The upload data required to populate the report with
+   * @returns The updated entity
+   */
   async updateWithUploadDetails(
     report: UtilisationReportEntity,
     { azureFileInfo, reportCsvData, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams,
@@ -44,6 +56,13 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
     return await this.save(report);
   },
 
+  /**
+   * Finds open reports by bank id which have report periods before
+   * the supplied report period start
+   * @param bankId - The bank id
+   * @param reportPeriodStart - The report period start
+   * @returns The found report
+   */
   async findOpenReportsBeforeReportPeriodStartForBankId(bankId: string, reportPeriodStart: ReportPeriod['start']): Promise<UtilisationReportEntity[]> {
     const bankIdAndStatusFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
       bankId,

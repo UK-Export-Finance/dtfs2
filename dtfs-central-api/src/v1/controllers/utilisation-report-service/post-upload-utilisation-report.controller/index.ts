@@ -23,6 +23,12 @@ type PreValidationPostUploadUtilisationReportRequest = CustomExpressRequest<{
   reqBody: Unknown<PostUploadUtilisationReportRequestBody>;
 }>;
 
+/**
+ * Validates the payload for the utilisation report upload request
+ * @param req - The request object
+ * @param res - The response object
+ * @param next - The next function
+ */
 export const postUploadUtilisationReportPayloadValidator = (req: PreValidationPostUploadUtilisationReportRequest, res: Response, next: NextFunction) => {
   const { reportId, fileInfo, reportData, user } = req.body;
 
@@ -45,6 +51,11 @@ type PostUploadUtilisationReportRequest = CustomExpressRequest<{
   reqBody: PostUploadUtilisationReportRequestBody;
 }>;
 
+/**
+ * Controller for the utilisation report upload
+ * @param req - The request object
+ * @param res - The response object
+ */
 export const postUploadUtilisationReport = async (req: PostUploadUtilisationReportRequest, res: Response) => {
   try {
     const { reportId, reportData, user, fileInfo } = req.body;

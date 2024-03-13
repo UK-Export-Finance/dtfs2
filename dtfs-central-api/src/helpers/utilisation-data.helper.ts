@@ -7,8 +7,19 @@ type UtilisationDataCsvRowToSqlEntityParams = {
   requestSource: DbRequestSource;
 };
 
+/**
+ * Casts a value to a number or defaults
+ * @param maybeString - A value which may be a string
+ * @param defaultNumber - The number to default the value to
+ * @returns Either the `maybeString` as a number or the default number
+ */
 const asNumberOrDefault = (maybeString: string | undefined, defaultNumber: number) => (maybeString ? Number(maybeString) : defaultNumber);
 
+/**
+ * Converts a csv data row to the SQL entity
+ * @param param0 - The parameters required to create the SQL entity
+ * @returns The SQL entity
+ */
 export const utilisationDataCsvRowToSqlEntity = ({ dataEntry, requestSource }: UtilisationDataCsvRowToSqlEntityParams): UtilisationDataEntity =>
   UtilisationDataEntity.create({
     facilityId: dataEntry[UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID],
