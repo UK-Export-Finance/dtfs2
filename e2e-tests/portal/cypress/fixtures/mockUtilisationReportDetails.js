@@ -61,9 +61,6 @@ const february2023ReportDetails = [
         year: 2023,
       },
     },
-    dateUploaded: null,
-    uploadedByUserId: null,
-    azureFileInfo: null,
     status: 'REPORT_NOT_RECEIVED',
     updatedByUserId: `SYSTEM`
   },
