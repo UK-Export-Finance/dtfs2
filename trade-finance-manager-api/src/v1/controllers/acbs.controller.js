@@ -1,12 +1,12 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
+const { DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const db = require('../../drivers/db-client');
 const tfmController = require('./tfm.controller');
 const CONSTANTS = require('../../constants');
 const { formatCoverEndDate } = require('../helpers/amendment.helpers');
 const { getIsoStringWithOffset } = require('../../utils/date');
-const { DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
 
 const addToACBSLog = async ({ deal = {}, facility = {}, bank = {}, acbsTaskLinks }) => {
   const collection = await db.getCollection('durable-functions-log');

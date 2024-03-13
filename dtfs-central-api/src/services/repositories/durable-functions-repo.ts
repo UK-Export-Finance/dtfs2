@@ -1,7 +1,8 @@
 import { Collection, DeleteResult } from 'mongodb';
+import { DURABLE_FUNCTIONS_LOG } from '@ukef/dtfs2-common';
 import db from '../../drivers/db-client';
 import { DB_COLLECTIONS } from '../../constants';
-import { DURABLE_FUNCTIONS_LOG } from '@ukef/dtfs2-common';
+
 const getDurableFunctionsLogCollection = async (): Promise<Collection> => db.getCollection(DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG);
 
 export const deleteAllDurableFunctionLogs = async (): Promise<DeleteResult> => {
