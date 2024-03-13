@@ -26,7 +26,7 @@ const createApplication = async (data, token) => {
     url: `${PORTAL_API_URL}/v1/gef/application`,
     data,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -42,7 +42,7 @@ const updateApplication = async (id, data, token) => {
     url: `${PORTAL_API_URL}/v1/gef/application/${id}`,
     data,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -57,7 +57,7 @@ const listDeals = async (token) => {
     },
     url: `${PORTAL_API_URL}/v1/gef/application`,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
   return response.data.items;
 };
@@ -71,7 +71,7 @@ const deleteDeal = async (dealId, token) => {
     },
     url: `${PORTAL_API_URL}/v1/gef/application/${dealId}`,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -87,7 +87,7 @@ const createFacilities = async (data, token) => {
     url: `${PORTAL_API_URL}/v1/gef/facilities`,
     data,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -102,7 +102,7 @@ const listFacilities = async (token) => {
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/facilities`,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
   if (!response) return [];
   return response.data;
@@ -117,7 +117,7 @@ const deleteFacilities = async (facility, token) => {
     },
     url: `${PORTAL_API_URL}/v1/gef/facilities/${facility._id}`,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response;
@@ -133,7 +133,7 @@ const updateFacilities = async (facility, data, token) => {
     url: `${PORTAL_API_URL}/v1/gef/facilities/${facility._id}`,
     data,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response;
@@ -149,7 +149,7 @@ const createEligibilityCriteria = async (data, token) => {
     url: `${PORTAL_API_URL}/v1/gef/eligibility-criteria`,
     data,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -164,7 +164,7 @@ const deleteEligibilityCriteria = async (eligibilityCriteria, token) => {
     },
     url: `${PORTAL_API_URL}/v1/gef/eligibility-criteria/${eligibilityCriteria.version}`,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -179,7 +179,7 @@ const listEligibilityCriteria = async (token) => {
     },
     url: `${PORTAL_API_URL}/v1/gef/eligibility-criteria`,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data.items;
@@ -194,7 +194,7 @@ const latestEligibilityCriteria = async (token) => {
     },
     url: `${PORTAL_API_URL}/v1/gef/eligibility-criteria/latest`,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
   return response.data;
 };
@@ -211,7 +211,7 @@ const createMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
     url: `${PORTAL_API_URL}/v1/gef/mandatory-criteria-versioned`,
     data: mandatoryCriteria,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -226,7 +226,7 @@ const deleteMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
     },
     url: `${PORTAL_API_URL}/v1/gef/mandatory-criteria-versioned/${mandatoryCriteria._id}`,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -241,7 +241,7 @@ const listMandatoryCriteriaVersioned = async (token) => {
     },
     url: `${PORTAL_API_URL}/v1/gef/mandatory-criteria-versioned`,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data.items;
@@ -256,7 +256,7 @@ const deleteDurableFunctions = async (token) => {
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/durable-functions`,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
   return response;
 };
@@ -270,7 +270,7 @@ const deleteCronJobs = async (token) => {
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/cron-jobs`,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
   return response;
 };
