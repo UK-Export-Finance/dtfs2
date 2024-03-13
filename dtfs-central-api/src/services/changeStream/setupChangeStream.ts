@@ -1,7 +1,6 @@
 import { ChangeStreamDocument } from 'mongodb';
-import { getCollection, getClient } from '../../drivers/db-client';
+import { getConnection } from '../../drivers/db-client';
 import { postAuditDetails } from './changeStreamApi';
-import { DbCollectionName } from '../../types/db-models/db-collection-name';
 
 /**
  * Sets up a change stream on the mongodb database for a specific collection and sends any changes to the audit API
@@ -10,7 +9,8 @@ import { DbCollectionName } from '../../types/db-models/db-collection-name';
  */
 const setupChangeStreamForCollection = async (collectionName: string) => {
   console.info('Setting up change stream for collection', collectionName);
-  const changeStream = (await getCollection(collectionName as DbCollectionName)).watch(
+  const databaseConnection = await getConnection();
+  const changeStream = (databaseConnection.collection(collectionName)).watch(
     [{ $match: { operationType: { $in: ['insert', 'update', 'replace'] } } }, { $project: { _id: 1, fullDocument: 1, ns: 1, documentKey: 1 } }],
     { fullDocument: 'updateLookup' },
   );
@@ -29,8 +29,8 @@ const setupChangeStreamForCollection = async (collectionName: string) => {
 export const setupChangeStream = async () => {
   try {
     console.info('Setting up mongodb change stream');
-    const databaseClient = await getClient();
-    const collections = await databaseClient.db('dtfs').listCollections().toArray();
+    const databaseConnection = await getConnection();
+    const collections = await databaseConnection.listCollections().toArray();
     await Promise.all(
       collections.map(async (collection) => {
         await setupChangeStreamForCollection(collection.name);
