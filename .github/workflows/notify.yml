@@ -1,4 +1,4 @@
-name: Notify Teams on Push
+name: Notify
 on:
   push:
     branches:
@@ -6,19 +6,21 @@ on:
 
 env:
   environment: dev
+  timezone: ${{ vars.TIMEZONE }}
+  MICROSOFT_TEAMS_WEBHOOK: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK  }}
 
 jobs:
   notify-teams:
     runs-on: ubuntu-latest
     environment:
-      name: dev
+      environment: ${{ env.environment }}
+      timezone: ${{ env.timezone }}
 
     steps:
-      - name: Checkout code
+      - name: Repository
         uses: actions/checkout@v4
 
       - name: Extract Commit Information
-        id: commit_info
         run: |
           COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
           COMMIT_SHA=$(git log --format=%H --abbrev=7 -n 1 ${{ github.sha }})
@@ -35,9 +37,7 @@ jobs:
           echo "COMMIT_AUTHOR=$COMMIT_AUTHOR" >> $GITHUB_ENV
           echo "COMMIT_TIMESTAMP=$COMMIT_TIMESTAMP" >> $GITHUB_ENV
 
-      - name: Notify Teams
-        env:
-          MICROSOFT_TEAMS_WEBHOOK: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK  }}
+      - name: Notify
         run: |
           curl -g -X POST -H 'Content-Type: application/json' -d '{
             "type":"message",
