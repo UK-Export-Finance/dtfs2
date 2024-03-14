@@ -2,7 +2,10 @@ const express = require('express');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
-const { postUtilisationReportData } = require('../controllers/utilisation-report-service/upload-utilisation-report.controller');
+const {
+  postUploadUtilisationReport,
+  postUploadUtilisationReportPayloadValidator,
+} = require('../controllers/utilisation-report-service/post-upload-utilisation-report.controller');
 const {
   getUtilisationReportsReconciliationSummary,
 } = require('../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller');
@@ -42,7 +45,7 @@ const utilisationReportsRouter = express.Router();
  *       409:
  *         description: Server conflict
  */
-utilisationReportsRouter.route('/').post(postUtilisationReportData);
+utilisationReportsRouter.route('/').post(postUploadUtilisationReportPayloadValidator, postUploadUtilisationReport);
 
 /**
  * @openapi

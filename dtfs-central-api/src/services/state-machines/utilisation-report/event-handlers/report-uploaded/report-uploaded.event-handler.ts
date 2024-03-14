@@ -1,19 +1,29 @@
-import { UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { NotImplementedError } from '../../../../../errors';
+import { DbRequestSource, UtilisationReportEntity, AzureFileInfo } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
+import { UtilisationReportRepo } from '../../../../../repositories/utilisation-reports-repo';
+import { UtilisationReportRawCsvData } from '../../../../../types/utilisation-reports';
 
-// TODO FN-1859 - define payload
 type ReportUploadedEventPayload = {
-  csvData: string[];
+  azureFileInfo: AzureFileInfo;
+  reportCsvData: UtilisationReportRawCsvData[];
+  uploadedByUserId: string;
+  requestSource: DbRequestSource;
 };
 
 export type UtilisationReportReportUploadedEvent = BaseUtilisationReportEvent<'REPORT_UPLOADED', ReportUploadedEventPayload>;
-
-export const handleUtilisationReportReportUploadedEvent = (
-  /* eslint-disable @typescript-eslint/no-unused-vars */
+/**
+ * Handler for the utilisation report "report uploaded" event
+ * @param report - The report to update
+ * @param param1 - The payload for the event
+ * @returns The updated report
+ */
+export const handleUtilisationReportReportUploadedEvent = async (
   report: UtilisationReportEntity,
-  payload: ReportUploadedEventPayload,
-  /* eslint-enable @typescript-eslint/no-unused-vars */
-): Promise<UtilisationReportEntity> => {
-  throw new NotImplementedError('TODO FN-1859');
-};
+  { azureFileInfo, reportCsvData, uploadedByUserId, requestSource }: ReportUploadedEventPayload,
+): Promise<UtilisationReportEntity> =>
+  await UtilisationReportRepo.updateWithUploadDetails(report, {
+    azureFileInfo,
+    reportCsvData,
+    uploadedByUserId,
+    requestSource,
+  });

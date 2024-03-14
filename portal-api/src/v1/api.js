@@ -249,21 +249,32 @@ const findLatestGefMandatoryCriteria = async () => {
   }
 };
 
-const saveUtilisationReport = async (reportData, reportPeriod, user, fileInfo) => {
+/**
+ * Saves a utilisation report to the database
+ * @param {number} reportId - The report id
+ * @param {object} reportData - The report data
+ * @param {object} user - The user object
+ * @param {import('@ukef/dtfs2-common').AzureFileInfo} fileInfo - The azure file info
+ * @returns {Promise<import('./api-response-types').SaveUtilisationReportResponseBody>}
+ */
+const saveUtilisationReport = async (reportId, reportData, user, fileInfo) => {
   try {
-    return await axios({
+    const response = await axios({
       method: 'post',
       url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports`,
       headers: headers.central,
       data: {
+        reportId,
         reportData,
-        reportPeriod,
         user,
         fileInfo,
       },
     });
-  } catch ({ response }) {
-    return { status: response?.status || 500 };
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to save utilisation report', error);
+    throw error;
   }
 };
 
@@ -282,6 +293,7 @@ const saveUtilisationReport = async (reportData, reportPeriod, user, fileInfo) =
  * Returned reports are ordered by year and month ascending.
  * @param {string} bankId
  * @param {GetUtilisationReportsOptions} [options]
+ * @returns {Promise<import('./api-response-types').UtilisationReportResponseBody[]>}
  */
 const getUtilisationReports = async (bankId, options) => {
   const reportPeriod = options?.reportPeriod;
@@ -319,7 +331,7 @@ const getUtilisationReports = async (bankId, options) => {
 /**
  * Gets utilisation report by id
  * @param {number} id
- * @returns {Promise<import('./api-response-types/UtilisationReportResponseBody').UtilisationReportResponseBody>}
+ * @returns {Promise<import('./api-response-types').UtilisationReportResponseBody>}
  */
 const getUtilisationReportById = async (id) => {
   try {

@@ -1,42 +1,12 @@
 import { Filter, InsertOneResult, OptionalId } from 'mongodb';
 import {
-  AzureFileInfo,
   UtilisationReport,
   MONGO_DB_COLLECTIONS,
   ReportPeriod,
 } from '@ukef/dtfs2-common';
 import db from '../../drivers/db-client';
-import { PortalSessionUser } from '../../types/portal/portal-session-user';
-import { UtilisationReportUploadDetails } from '../../types/utilisation-reports';
 import { SessionBank } from '../../types/session-bank';
 import { GetUtilisationReportDetailsOptions } from '.';
-
-export const updateUtilisationReportDetailsWithUploadDetails = async (
-  existingReport: UtilisationReport,
-  azureFileInfo: AzureFileInfo,
-  uploadedByUser: PortalSessionUser,
-): Promise<{ reportId: string; dateUploaded: Date }> => {
-  const utilisationReportInfo: UtilisationReportUploadDetails = {
-    dateUploaded: new Date(),
-    azureFileInfo,
-    status: 'PENDING_RECONCILIATION',
-    uploadedBy: {
-      id: uploadedByUser._id.toString(),
-      firstname: uploadedByUser.firstname,
-      surname: uploadedByUser.surname,
-    },
-  };
-
-  const utilisationReportDetailsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.UTILISATION_REPORTS);
-  await utilisationReportDetailsCollection.updateOne(
-    {
-      _id: { $eq: existingReport._id },
-    },
-    { $set: utilisationReportInfo },
-  );
-
-  return { reportId: existingReport._id.toString(), dateUploaded: utilisationReportInfo.dateUploaded };
-};
 
 /**
  * Saves the inputted utilisation report with the inputted bank in the not received state
