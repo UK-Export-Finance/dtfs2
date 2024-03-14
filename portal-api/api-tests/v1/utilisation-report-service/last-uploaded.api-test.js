@@ -1,4 +1,3 @@
-const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 const { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } = require('@ukef/dtfs2-common');
 const { wipeAllUtilisationReports, saveUtilisationReportToDatabase } = require('../../sql-db-helper.ts');
 const app = require('../../../src/createApp');
@@ -36,7 +35,6 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
     .build();
 
   beforeAll(async () => {
-    await SqlDbDataSource.initialize();
     await wipeAllUtilisationReports();
 
     testUsers = await testUserCache.initialise(app);
@@ -62,10 +60,6 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
 
     await saveUtilisationReportToDatabase(lastUploadedReport);
     await saveUtilisationReportToDatabase(notReceivedReport);
-  });
-
-  afterAll(async () => {
-    SqlDbDataSource.destroy();
   });
 
   withClientAuthenticationTests({

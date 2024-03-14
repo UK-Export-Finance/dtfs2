@@ -1,4 +1,3 @@
-const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 const { UtilisationReportEntityMockBuilder, UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
 const { wipeAllUtilisationReports, saveUtilisationReportToDatabase } = require('../../sql-db-helper.ts');
 const app = require('../../../src/createApp');
@@ -19,8 +18,6 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
 
   beforeAll(async () => {
     console.info('At start of before all block');
-    await SqlDbDataSource.initialize();
-    console.info('Data source initialized!!');
     await wipeAllUtilisationReports();
     console.info('Wiped all reports!!');
 
@@ -83,10 +80,6 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
     console.info("Second report saved!!");
     await saveUtilisationReportToDatabase(aMarkedReconciledReport);
     console.info("Third report saved!!");
-  });
-
-  afterAll(async () => {
-    SqlDbDataSource.destroy();
   });
 
   withClientAuthenticationTests({
