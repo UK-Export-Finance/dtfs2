@@ -1,7 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import * as homeController from '.';
 import { PDC_TEAM_IDS, TEAM_IDS } from '../../constants';
-import { PdcTeamId, TeamId } from '../../types/team-id';
+import { TeamId } from '../../types/team-id';
 
 describe('controllers - home', () => {
   const getHttpMocksWithTeams = (...teamIds: TeamId[]) =>
@@ -24,13 +24,13 @@ describe('controllers - home', () => {
     expect(res._getRedirectUrl()).toEqual('/');
   });
 
-  const pdcTeams: {id: PdcTeamId; redirectLocation: string}[] = Object.values(PDC_TEAM_IDS as PdcTeamId[]).map((id: string) => ({
+  const pdcTeams = Object.values(PDC_TEAM_IDS).map((id: string) => ({
     id,
     redirectLocation: '/utilisation-reports',
   }));
 
-  const nonPdcTeams = Object.values(TEAM_IDS as TeamId[])
-    .filter((id: TeamId) => !Object.values(PDC_TEAM_IDS as PdcTeamId[]).includes(id))
+  const nonPdcTeams = Object.values(TEAM_IDS)
+    .filter((id: TeamId) => !Object.values(PDC_TEAM_IDS).includes(id))
     .map((id: string) => ({
       id,
       redirectLocation: '/deals',
@@ -47,7 +47,7 @@ describe('controllers - home', () => {
     expect(res._getRedirectUrl()).toEqual(team.redirectLocation);
   });
 
-  describe.each(Object.values(PDC_TEAM_IDS as PdcTeamId[]))("when the user is in the '%s' team", (pdcTeamId) => {
+  describe.each(Object.values(PDC_TEAM_IDS))("when the user is in the '%s' team", (pdcTeamId) => {
     it.each(nonPdcTeams)("should redirect to $redirectLocation if the user is also in the '$id' team", (team) => {
       // Arrange
       const { req, res } = getHttpMocksWithTeams(team.id, pdcTeamId);

@@ -2,7 +2,6 @@ export const PDC_TEAM_IDS = {
   PDC_READ: 'PDC_READ',
   PDC_RECONCILE: 'PDC_RECONCILE',
 };
-// } as const;
 
 export const TEAM_IDS = {
   UNDERWRITING_SUPPORT: 'UNDERWRITING_SUPPORT',
@@ -13,4 +12,3 @@ export const TEAM_IDS = {
   PIM: 'PIM',
   ...PDC_TEAM_IDS,
 };
-// } as const;
