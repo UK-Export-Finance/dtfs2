@@ -1,5 +1,5 @@
-import { asString, Bank } from '@ukef/dtfs2-common';
-import { getOneUtilisationReportDetailsByBankId, saveNotReceivedUtilisationReport } from '../../../repositories/utilisation-reports-repo';
+import { asString, Bank, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
 import { getAllBanks } from '../../../repositories/banks-repo';
 import { SchedulerJob } from '../../../types/scheduler-job';
 import { getCurrentReportPeriodForBankSchedule } from '../../../utils/report-period';
@@ -13,7 +13,7 @@ const { UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE } = process.env;
  */
 const isCurrentBankReportMissing = async (bank: Bank): Promise<boolean> => {
   const currentReportPeriod = getCurrentReportPeriodForBankSchedule(bank.utilisationReportPeriodSchedule);
-  const currentUtilisationReportForBank = await getOneUtilisationReportDetailsByBankId(bank.id, { reportPeriod: currentReportPeriod });
+  const currentUtilisationReportForBank = await UtilisationReportRepo.findOneByBankIdAndReportPeriod(bank.id, currentReportPeriod);
   return !currentUtilisationReportForBank;
 };
 
@@ -39,12 +39,18 @@ const createUtilisationReportForBanks = async (): Promise<void> => {
   }
 
   await Promise.all(
-    banksWithMissingReports.map(async ({ id, name, utilisationReportPeriodSchedule }) => {
+    banksWithMissingReports.map(async ({ id, utilisationReportPeriodSchedule }) => {
       console.info('Attempting to insert report for bank with id %s', id);
       const reportPeriod = getCurrentReportPeriodForBankSchedule(utilisationReportPeriodSchedule);
-      const sessionBank = { id, name };
 
-      await saveNotReceivedUtilisationReport(reportPeriod, sessionBank);
+      const newUtilisationReport = UtilisationReportEntity.createNotReceived({
+        bankId: id,
+        reportPeriod,
+        requestSource: {
+          platform: 'SYSTEM',
+        },
+      });
+      await UtilisationReportRepo.save(newUtilisationReport);
       console.info('Successfully inserted report for bank with id %s', id);
     }),
   );
