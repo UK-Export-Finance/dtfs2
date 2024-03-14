@@ -1,5 +1,5 @@
 import difference from 'lodash/difference';
-import { MOCK_UTILISATION_REPORT_ENTITY, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder, MOCK_AZURE_FILE_INFO } from '@ukef/dtfs2-common';
 import {
   handleUtilisationReportDueReportInitialisedEvent,
   handleUtilisationReportFeeRecordKeyedEvent,
@@ -16,9 +16,6 @@ import { InvalidStateMachineTransitionError } from '../../../errors';
 
 jest.mock('./event-handlers');
 
-jest.mock('../../../repositories/utilisation-reports-repo/utilisation-report-sql.repo');
-const mockedUtilisationReportRepo = jest.mocked(UtilisationReportRepo);
-
 describe('UtilisationReportStateMachine', () => {
   afterEach(() => {
     jest.resetAllMocks();
@@ -32,7 +29,7 @@ describe('UtilisationReportStateMachine', () => {
 
   describe('when no report yet exists in the database', () => {
     beforeEach(() => {
-      mockedUtilisationReportRepo.findOneByBankIdAndReportPeriod.mockResolvedValue(null);
+      jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod').mockResolvedValue(null);
     });
 
     const BANK_ID = '956';
@@ -70,19 +67,23 @@ describe('UtilisationReportStateMachine', () => {
   });
 
   describe(`when report is in '${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}' status`, () => {
-    const REPORT_NOT_RECEIVED_REPORT: UtilisationReportEntity = {
-      ...MOCK_UTILISATION_REPORT_ENTITY,
-      status: 'REPORT_NOT_RECEIVED',
-    };
+    // Arrange
+    const REPORT_NOT_RECEIVED_REPORT = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.REPORT_UPLOADED}' event`, async () => {
       // Arrange
       const stateMachine = UtilisationReportStateMachine.forReport(REPORT_NOT_RECEIVED_REPORT);
+      const userId = '5ce819935e539c343f141ece';
 
       // Act
       await stateMachine.handleEvent({
         type: 'REPORT_UPLOADED',
-        payload: { csvData: [] },
+        payload: {
+          azureFileInfo: MOCK_AZURE_FILE_INFO,
+          reportCsvData: [],
+          uploadedByUserId: userId,
+          requestSource: { platform: 'PORTAL', userId },
+        },
       });
 
       // Assert
@@ -117,10 +118,7 @@ describe('UtilisationReportStateMachine', () => {
   });
 
   describe(`when report is in '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}' status`, () => {
-    const PENDING_RECONCILIATION_REPORT: UtilisationReportEntity = {
-      ...MOCK_UTILISATION_REPORT_ENTITY,
-      status: 'PENDING_RECONCILIATION',
-    };
+    const PENDING_RECONCILIATION_REPORT = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.PAYMENT_ADDED_TO_FEE_RECORD}' event`, async () => {
       // Arrange
@@ -167,10 +165,7 @@ describe('UtilisationReportStateMachine', () => {
   });
 
   describe(`when report is in '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS}' status`, () => {
-    const RECONCILIATION_IN_PROGRESS_REPORT: UtilisationReportEntity = {
-      ...MOCK_UTILISATION_REPORT_ENTITY,
-      status: 'RECONCILIATION_IN_PROGRESS',
-    };
+    const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.PAYMENT_ADDED_TO_FEE_RECORD}' event`, async () => {
       // Arrange
@@ -233,10 +228,7 @@ describe('UtilisationReportStateMachine', () => {
   });
 
   describe(`when report is in '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}' status`, () => {
-    const RECONCILIATION_COMPLETED_REPORT: UtilisationReportEntity = {
-      ...MOCK_UTILISATION_REPORT_ENTITY,
-      status: 'RECONCILIATION_COMPLETED',
-    };
+    const RECONCILIATION_COMPLETED_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').build();
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_INCOMPLETE}' event`, async () => {
       // Arrange

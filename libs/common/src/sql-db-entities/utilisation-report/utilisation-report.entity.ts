@@ -4,7 +4,7 @@ import { AuditableBaseEntity } from '../base-entities';
 import { ReportPeriodPartialEntity } from '../partial-entities';
 import { AzureFileInfoEntity } from '../azure-file-info';
 import { UtilisationDataEntity } from '../utilisation-data';
-import { CreateNotReceivedUtilisationReportEntityParams } from './utilisation-report.types';
+import { CreateNotReceivedUtilisationReportEntityParams, UpdateWithUploadDetailsParams } from './utilisation-report.types';
 import { getDbAuditUpdatedByUserId } from '../helpers';
 
 @Entity('UtilisationReport')
@@ -69,5 +69,14 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     report.uploadedByUserId = null;
     report.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
     return report;
+  }
+
+  public updateWithUploadDetails({ azureFileInfo, data, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): void {
+    this.dateUploaded = new Date();
+    this.azureFileInfo = azureFileInfo;
+    this.status = 'PENDING_RECONCILIATION';
+    this.uploadedByUserId = uploadedByUserId;
+    this.data = data;
+    this.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
   }
 }

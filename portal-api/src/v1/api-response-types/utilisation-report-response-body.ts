@@ -4,8 +4,8 @@ export type UtilisationReportResponseBody = {
   id: number;
   bankId: string;
   status: UtilisationReportReconciliationStatus;
-  uploadedByUserId: string;
+  uploadedByUserId?: string;
   reportPeriod: ReportPeriod;
   azureFileInfo: AzureFileInfo | null;
-  dateUploaded: IsoDateTimeStamp;
+  dateUploaded?: IsoDateTimeStamp;
 };
