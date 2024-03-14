@@ -33,9 +33,9 @@ context('Amendments all facilities table - should show amendment value and cover
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities/0'));
 
-    // cy.get('tr:nth-child(n+1) [data-cy="facility__ukefFacilityId"]').contains('1000000');
-    // cy.get('tr:nth-child(n+1) [data-cy="facility__facilityValue"]').contains('GBP 12,345');
-    // cy.get('tr:nth-child(n+1) [data-cy="facility__coverEndDate"]').contains(dateConstants.oneMonthFormattedShort);
+    cy.get('tr:nth-child(n+1)').children('td').eq(0).contains('1000000');
+    cy.get('tr:nth-child(n+1)').children('td').eq(4).contains('GBP 12,345');
+    cy.get('tr:nth-child(n+1)').children('td').eq(5).contains(dateConstants.oneMonthFormattedShort);
   });
 
   it('should submit an automatic amendment request for coverEndDate', () => {
@@ -130,8 +130,8 @@ context('Amendments all facilities table - should show amendment value and cover
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities/0'));
 
-    // cy.get('tr:nth-child(n+1) [data-cy="facility__ukefFacilityId"]').contains('1000000');
-    // cy.get('tr:nth-child(n+1) [data-cy="facility__facilityValue"]').contains('GBP 123');
-    // cy.get('tr:nth-child(n+1) [data-cy="facility__coverEndDate"]').contains(dateConstants.tomorrowFormattedFacilityPage);
+    cy.get('tr:nth-child(n+1)').children('td').eq(0).contains('1000000');
+    cy.get('tr:nth-child(n+1)').children('td').eq(4).contains('GBP 123');
+    cy.get('tr:nth-child(n+1)').children('td').eq(5).contains(dateConstants.tomorrowFormattedFacilityPage);
   });
 });

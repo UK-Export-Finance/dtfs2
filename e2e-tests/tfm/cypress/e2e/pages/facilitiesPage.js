@@ -4,9 +4,15 @@ const facilitiesPage = {
   searchFormSubmitButton: () => cy.get('[data-cy="submit-button"]'),
   facilitiesTableRows: () => cy.get('[data-cy="facilities-table"] tbody tr'),
   facilityIdCell: (rowNumber) => cy.get('[data-cy="facilities-table"] tbody tr').eq(rowNumber).children('td').eq(0),
+  dealTypeCell: (rowNumber) => cy.get('[data-cy="facilities-table"] tbody tr').eq(rowNumber).children('td').eq(1),
+  typeCell: (rowNumber) => cy.get('[data-cy="facilities-table"] tbody tr').eq(rowNumber).children('td').eq(2),
+  companyNameCell: (rowNumber) => cy.get('[data-cy="facilities-table"] tbody tr').eq(rowNumber).children('td').eq(3),
+  valueCell: (rowNumber) => cy.get('[data-cy="facilities-table"] tbody tr').eq(rowNumber).children('td').eq(4),
+  coverEndDateCell: (rowNumber) => cy.get('[data-cy="facilities-table"] tbody tr').eq(rowNumber).children('td').eq(5),
+  facilityStageCell: (rowNumber) => cy.get('[data-cy="facilities-table"] tbody tr').eq(rowNumber).children('td').eq(6),
   facilitiesTable: {
     headings: {
-      ukefFacilityId: () => cy.get('[data-cy="facilities-table-heading-ukefFacilityId]'),
+      ukefFacilityId: () => cy.get('[data-cy="facilities-table-heading-ukefFacilityId"]'),
       ukefFacilityIdSortButton: () => cy.get('[data-cy="facilities-table-heading-ukefFacilityId-button"]'),
       dealType: () => cy.get('[data-cy="facilities-table-heading-dealType"]'),
       dealTypeSortButton: () => cy.get('[data-cy="facilities-table-heading-dealType-button"]'),
