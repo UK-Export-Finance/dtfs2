@@ -167,7 +167,7 @@ exports.getAllFacilities = async (req, res) => {
     const pagination = {
       totalItems: 0,
       currentPage: page,
-      totalPages: 0,
+      totalPages: 1,
     };
     return res.status(200).send({ facilities: [], pagination });
   }

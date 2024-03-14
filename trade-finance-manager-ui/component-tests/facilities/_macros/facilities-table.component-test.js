@@ -98,7 +98,7 @@ describe(component, () => {
   describe('for each facility', () => {
     it('should render ukefFacilityId link, linking to facility id', () => {
       params.facilities.forEach((facility) => {
-        const selector = `[data-cy="facility-${facility.facilityId}-ukef-facility-id-link"]`;
+        const selector = `[data-cy="facility-${facility.facilityId}-ukefFacilityId-link"]`;
 
         wrapper.expectLink(selector).toLinkTo(
           `/case/${facility.dealId}/facility/${facility.facilityId}`,
@@ -109,7 +109,7 @@ describe(component, () => {
 
     it('should render `product` table cell', () => {
       params.facilities.forEach((facility) => {
-        const cellSelector = `[data-cy="facility-${facility.facilityId}-product"]`;
+        const cellSelector = `[data-cy="facility-${facility.facilityId}-dealType"]`;
         wrapper.expectText(cellSelector).toRead(facility.dealType);
       });
     });
@@ -123,14 +123,14 @@ describe(component, () => {
 
     it('should render `exporter` table cell', () => {
       params.facilities.forEach((facility) => {
-        const cellSelector = `[data-cy="facility-${facility.facilityId}-exporterName"]`;
+        const cellSelector = `[data-cy="facility-${facility.facilityId}-companyName"]`;
         wrapper.expectText(cellSelector).toRead(facility.companyName);
       });
     });
 
     it('should render `value (export currency)` table cell', () => {
       params.facilities.forEach((facility) => {
-        const cellSelector = `[data-cy="facility-${facility.facilityId}-facilityValue"]`;
+        const cellSelector = `[data-cy="facility-${facility.facilityId}-value"]`;
         wrapper.expectText(cellSelector).toRead(facility.currencyAndValue);
       });
     });

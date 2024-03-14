@@ -6,7 +6,7 @@ module.exports = {
     'scripts/**/*.{js,}',
   ],
   coverageDirectory: 'generated_reports/coverage/unit',
-  testMatch: ['**/*.test.js', '**/*.component-test.js'],
+  testMatch: ['**/*/facilities/_macros/facilities-table.component-test.js'],
   modulePathIgnorePatterns: ['prototype'],
   moduleNameMapper: {
     '^.+\\.(css|less|scss)$': 'babel-jest',

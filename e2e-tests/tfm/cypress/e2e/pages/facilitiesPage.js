@@ -28,7 +28,7 @@ const facilitiesPage = {
       facilityStageSortButton: () => cy.get('[data-cy="facilities-table-heading-facilityStage-button"]'),
     },
     row: (facilityId) => {
-      cy.get(`[data-cy="deal-${facilityId}"]`).as('row');
+      cy.get(`[data-cy="facility-${facilityId}"]`).as('row');
       return {
         facilityLink: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-ukefFacilityId-link"]`),
         facilityLinkText: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-ukefFacilityId-link-text"]`),
