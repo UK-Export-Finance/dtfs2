@@ -58,14 +58,14 @@ context('Facility page', () => {
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities/0'));
 
-    pages.facilitiesPage.facilitiesTable.headings.ukefFacilityId().should('contain', 'Facility ID');
+    pages.facilitiesPage.facilitiesTable.headings.ukefFacilityId().contains('Facility ID');
     pages.facilitiesPage.facilitiesTable.headings.ukefFacilityId().invoke('attr', 'aria-sort').should('eq', 'ascending');
-    pages.facilitiesPage.facilitiesTable.headings.dealType().should('contain', 'Product');
-    pages.facilitiesPage.facilitiesTable.headings.type().should('contain', 'Type');
-    pages.facilitiesPage.facilitiesTable.headings.companyName().should('contain', 'Exporter');
-    pages.facilitiesPage.facilitiesTable.headings.value().should('contain', 'Value (export currency)');
-    pages.facilitiesPage.facilitiesTable.headings.coverEndDate().should('contain', 'Cover end date');
-    pages.facilitiesPage.facilitiesTable.headings.facilityStage().should('contain', 'Facility stage');
+    pages.facilitiesPage.facilitiesTable.headings.dealType().contains('Product');
+    pages.facilitiesPage.facilitiesTable.headings.type().contains('Type');
+    pages.facilitiesPage.facilitiesTable.headings.companyName().contains('Exporter');
+    pages.facilitiesPage.facilitiesTable.headings.value().contains('Value (export currency)');
+    pages.facilitiesPage.facilitiesTable.headings.coverEndDate().contains('Cover end date');
+    pages.facilitiesPage.facilitiesTable.headings.facilityStage().contains('Facility stage');
 
     for (let i = 0; i < 4; i += 1) {
       pages.facilitiesPage.facilityIdCell(i).contains('1000000');
