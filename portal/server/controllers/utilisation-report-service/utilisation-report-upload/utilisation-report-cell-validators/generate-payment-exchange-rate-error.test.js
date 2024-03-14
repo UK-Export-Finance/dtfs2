@@ -135,7 +135,7 @@ describe('generatePaymentExchangeRateError', () => {
     expect(exchangeRateError).toEqual(null);
   });
 
-  it('returns an error if payment currency is the same as fees paid to ukef currency and payment exchange rate is not a number', async () => {
+  it('returns null if payment currency is the same as fees paid to ukef currency and payment exchange rate is 1', async () => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,
@@ -153,26 +153,18 @@ describe('generatePaymentExchangeRateError', () => {
         row: 1,
       },
       'payment exchange rate': {
-        value: 'abc',
+        value: '1',
         row: 1,
         column: 3,
       },
-    };
-
-    const expectedError = {
-      errorMessage: 'Payment exchange rate must be a number',
-      column: 3,
-      row: 1,
-      value: 'abc',
-      exporter: testExporterName,
     };
 
     const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
-    expect(exchangeRateError).toEqual(expectedError);
+    expect(exchangeRateError).toEqual(null);
   });
 
-  it('returns an error if payment currency is the same as fees paid to ukef currency and payment exchange rate is too long', async () => {
+  it('returns an error if payment currency is the same as fees paid to ukef currency and payment exchange rate is not 1 or null', async () => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,
@@ -190,17 +182,17 @@ describe('generatePaymentExchangeRateError', () => {
         row: 1,
       },
       'payment exchange rate': {
-        value: '1.738491847362543',
+        value: '2',
         row: 1,
         column: 3,
       },
     };
 
     const expectedError = {
-      errorMessage: `Payment exchange rate must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
+      errorMessage: 'Payment exchange rate must be 1 or blank when accrual currency and base currency are the same',
       column: 3,
       row: 1,
-      value: '1.738491847362543',
+      value: '2',
       exporter: testExporterName,
     };
 
