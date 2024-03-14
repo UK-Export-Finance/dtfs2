@@ -101,6 +101,7 @@ describe('controller/ukef-cover-start-date', () => {
     api.getUserDetails.mockResolvedValue(mockUserResponse);
     api.updateApplication = updateApplicationSpy;
     api.getFacility.mockResolvedValue(mockFacilityResponse.items[0]);
+    mockRequest.flash = jest.fn().mockReturnValue([{ message: 'Facility is updated' }]);
   });
 
   afterEach(() => {
@@ -110,7 +111,6 @@ describe('controller/ukef-cover-start-date', () => {
   describe('Process cover start date for the facility', () => {
     it('Render the expected behaviour', async () => {
       expect(await processCoverStartDate(mockRequest, mockResponse));
-
       expect(mockResponse.render)
         .toHaveBeenCalledWith('partials/cover-start-date.njk', expect.objectContaining({
           applicationStatus: mockApplicationResponse.status,
