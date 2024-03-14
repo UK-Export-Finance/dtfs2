@@ -1,9 +1,10 @@
-const PDC_TEAM_IDS = {
+export const PDC_TEAM_IDS = {
   PDC_READ: 'PDC_READ',
   PDC_RECONCILE: 'PDC_RECONCILE',
-} as const;
+};
+// } as const;
 
-const TEAM_IDS = {
+export const TEAM_IDS = {
   UNDERWRITING_SUPPORT: 'UNDERWRITING_SUPPORT',
   UNDERWRITER_MANAGERS: 'UNDERWRITER_MANAGERS',
   UNDERWRITERS: 'UNDERWRITERS',
@@ -11,9 +12,5 @@ const TEAM_IDS = {
   BUSINESS_SUPPORT: 'BUSINESS_SUPPORT',
   PIM: 'PIM',
   ...PDC_TEAM_IDS,
-} as const;
-
-module.exports = {
-  TEAM_IDS,
-  PDC_TEAM_IDS,
 };
+// } as const;
