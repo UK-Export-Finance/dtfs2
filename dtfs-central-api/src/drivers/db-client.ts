@@ -14,7 +14,7 @@ const dbConnect = async (): Promise<{ client: MongoClient; connection: DbConnect
   return { client, connection };
 };
 
-const getConnection = async (): Promise<DbConnection> => {
+export const getConnection = async (): Promise<DbConnection> => {
   if (!connection) {
     return (await dbConnect()).connection;
   }
