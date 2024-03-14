@@ -17,12 +17,9 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
   const receivedReportId = 123;
 
   beforeAll(async () => {
-    console.info('At start of before all block');
     await wipeAllUtilisationReports();
-    console.info('Wiped all reports!!');
 
     testUsers = await testUserCache.initialise(app);
-    console.info('Uncached those users!!');
     aPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).one();
     bankId = aPaymentReportOfficer.bank.id;
 
@@ -73,13 +70,9 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
         },
       })
       .build();
-    console.info("Let's save those reports!!");
     await saveUtilisationReportToDatabase(aReceivedReport);
-    console.info("First report saved!!");
     await saveUtilisationReportToDatabase(aNotReceivedReport);
-    console.info("Second report saved!!");
     await saveUtilisationReportToDatabase(aMarkedReconciledReport);
-    console.info("Third report saved!!");
   });
 
   withClientAuthenticationTests({
