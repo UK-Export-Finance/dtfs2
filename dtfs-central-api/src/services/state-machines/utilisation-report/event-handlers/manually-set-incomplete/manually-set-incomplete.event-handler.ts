@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, UtilisationReportEntity, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 
 type ManuallySetIncompleteEventPayload = {
@@ -13,6 +13,7 @@ export const handleUtilisationReportManuallySetIncompleteEvent = async (
   report: UtilisationReportEntity,
   { requestSource, transactionEntityManager }: ManuallySetIncompleteEventPayload,
 ): Promise<UtilisationReportEntity> => {
-  report.setAsNotCompleted({ requestSource });
+  const incompleteStatusForReport: UtilisationReportReconciliationStatus = report.azureFileInfo ? 'PENDING_RECONCILIATION' : 'REPORT_NOT_RECEIVED';
+  report.updateWithStatus({ status: incompleteStatusForReport, requestSource });
   return await transactionEntityManager.getRepository(UtilisationReportEntity).save(report);
 };

@@ -4,8 +4,8 @@ import { AuditableBaseEntity } from '../base-entities';
 import { ReportPeriodPartialEntity } from '../partial-entities';
 import { AzureFileInfoEntity } from '../azure-file-info';
 import { UtilisationDataEntity } from '../utilisation-data';
-import { CreateNotReceivedUtilisationReportEntityParams, UpdateWithUploadDetailsParams } from './utilisation-report.types';
-import { DbRequestSource, getDbAuditUpdatedByUserId } from '../helpers';
+import { CreateNotReceivedUtilisationReportEntityParams, UpdateWithStatusParams, UpdateWithUploadDetailsParams } from './utilisation-report.types';
+import { getDbAuditUpdatedByUserId } from '../helpers';
 
 @Entity('UtilisationReport')
 export class UtilisationReportEntity extends AuditableBaseEntity {
@@ -80,13 +80,8 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     this.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
   }
 
-  public setAsCompleted({ requestSource }: { requestSource: DbRequestSource }): void {
-    this.status = 'RECONCILIATION_COMPLETED';
-    this.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
-  }
-
-  public setAsNotCompleted({ requestSource }: { requestSource: DbRequestSource }): void {
-    this.status = this.azureFileInfo ? 'PENDING_RECONCILIATION' : 'REPORT_NOT_RECEIVED';
+  public updateWithStatus({ status, requestSource }: UpdateWithStatusParams): void {
+    this.status = status;
     this.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
   }
 }

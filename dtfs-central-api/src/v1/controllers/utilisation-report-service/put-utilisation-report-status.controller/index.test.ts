@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import httpMocks from 'node-mocks-http';
 import { QueryRunner } from 'typeorm';
-import { DbRequestSource, UtilisationReportEntity, UtilisationReportEntityMockBuilder, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
+import { DbRequestSource, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { PutUtilisationReportStatusRequest, putUtilisationReportStatus } from '.';
 import { ReportWithStatus } from '../../../../types/utilisation-reports';
@@ -161,7 +161,7 @@ describe('put-utilisation-report-status.controller', () => {
       expect(mockRepository.save).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsCompleted.length);
 
       existingReports.forEach((report) => {
-        report.setAsCompleted({ requestSource });
+        report.updateWithStatus({ status: 'RECONCILIATION_COMPLETED', requestSource });
         expect(mockRepository.save).toHaveBeenCalledWith(report);
       });
     });
@@ -258,45 +258,47 @@ describe('put-utilisation-report-status.controller', () => {
       expect(mockTransactionManager.getRepository).toHaveBeenCalledWith(UtilisationReportEntity);
       expect(mockRepository.save).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsNotCompleted.length);
 
-      existingReports.forEach((report) => {
-        report.setAsNotCompleted({ requestSource });
+      existingReports.forEach((report, index) => {
+        const expectedStatus = reportsWithStatusForMarkingAsNotCompleted[index].status;
+        report.updateWithStatus({ status: expectedStatus, requestSource });
         expect(mockRepository.save).toHaveBeenCalledWith(report);
       });
     });
 
-    const reportStatusesToTest: UtilisationReportReconciliationStatus[] = ['PENDING_RECONCILIATION', 'REPORT_NOT_RECEIVED'];
+    it.each([UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION, UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED])(
+      "responds with an error if trying to mark a report with status '%s' as not completed",
+      async (reportStatus) => {
+        // Arrange
+        const reportWithStatus: ReportWithStatus = {
+          reportId: 1,
+          status: 'REPORT_NOT_RECEIVED',
+        };
 
-    it.each(reportStatusesToTest)("responds with an error if trying to mark a report with status '%s' as not completed", async (reportStatus) => {
-      // Arrange
-      const reportWithStatus: ReportWithStatus = {
-        reportId: 1,
-        status: 'REPORT_NOT_RECEIVED',
-      };
+        const { req, res } = getHttpMocks();
+        req.body.reportsWithStatus = [reportWithStatus];
 
-      const { req, res } = getHttpMocks();
-      req.body.reportsWithStatus = [reportWithStatus];
+        const existingReport = UtilisationReportEntityMockBuilder.forStatus(reportStatus).withId(reportWithStatus.reportId).build();
 
-      const existingReport = UtilisationReportEntityMockBuilder.forStatus(reportStatus).withId(reportWithStatus.reportId).build();
+        const existingReportStateMachine = UtilisationReportStateMachine.forReport(existingReport);
+        jest.spyOn(UtilisationReportStateMachine, 'forReportId').mockImplementation(() => Promise.resolve(existingReportStateMachine));
 
-      const existingReportStateMachine = UtilisationReportStateMachine.forReport(existingReport);
-      jest.spyOn(UtilisationReportStateMachine, 'forReportId').mockImplementation(() => Promise.resolve(existingReportStateMachine));
+        const createQueryRunnerSpy = jest.spyOn(SqlDbDataSource, 'createQueryRunner').mockReturnValue(mockQueryRunner);
 
-      const createQueryRunnerSpy = jest.spyOn(SqlDbDataSource, 'createQueryRunner').mockReturnValue(mockQueryRunner);
+        // Act
+        await putUtilisationReportStatus(req, res);
 
-      // Act
-      await putUtilisationReportStatus(req, res);
-
-      // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-      expect(res._getData()).toEqual('Failed to update utilisation report statuses: Transaction failed');
-      expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-      expect(mockConnect).toHaveBeenCalledTimes(1);
-      expect(mockStartTransaction).toHaveBeenCalledTimes(1);
-      expect(mockCommitTransaction).not.toHaveBeenCalled();
-      expect(mockRollbackTransaction).toHaveBeenCalledTimes(1);
-      expect(mockRelease).toHaveBeenCalled();
-      expect(mockTransactionManager.getRepository).not.toHaveBeenCalled();
-      expect(mockRepository.save).not.toHaveBeenCalled();
-    });
+        // Assert
+        expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+        expect(res._getData()).toEqual('Failed to update utilisation report statuses: Transaction failed');
+        expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
+        expect(mockConnect).toHaveBeenCalledTimes(1);
+        expect(mockStartTransaction).toHaveBeenCalledTimes(1);
+        expect(mockCommitTransaction).not.toHaveBeenCalled();
+        expect(mockRollbackTransaction).toHaveBeenCalledTimes(1);
+        expect(mockRelease).toHaveBeenCalled();
+        expect(mockTransactionManager.getRepository).not.toHaveBeenCalled();
+        expect(mockRepository.save).not.toHaveBeenCalled();
+      },
+    );
   });
 });
