@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feat/e2etf-sql
+      - chore/trigger-deployment
     # paths:
     #   - 'portal/**'
     #   - 'portal-api/**'
