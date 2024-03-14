@@ -53,7 +53,7 @@ describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
       getRepository: mockGetRepository,
     } as unknown as EntityManager;
 
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withoutAzureFileInfo().build();
+    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withAzureFileInfo(undefined).build();
 
     // Act
     await handleUtilisationReportManuallySetIncompleteEvent(report, {

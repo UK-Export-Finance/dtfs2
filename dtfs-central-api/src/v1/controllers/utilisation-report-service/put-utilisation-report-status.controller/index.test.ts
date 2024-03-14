@@ -229,11 +229,11 @@ describe('put-utilisation-report-status.controller', () => {
       const existingReports = [
         UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
           .withId(reportsWithStatusForMarkingAsNotCompleted[0].reportId)
-          .withoutAzureFileInfo()
+          .withAzureFileInfo(undefined)
           .build(),
         UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
           .withId(reportsWithStatusForMarkingAsNotCompleted[1].reportId)
-          .withoutAzureFileInfo()
+          .withAzureFileInfo(undefined)
           .build(),
         UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withId(reportsWithStatusForMarkingAsNotCompleted[2].reportId).build(),
       ];
