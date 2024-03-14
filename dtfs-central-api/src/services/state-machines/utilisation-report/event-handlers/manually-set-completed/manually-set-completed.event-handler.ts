@@ -14,5 +14,5 @@ export const handleUtilisationReportManuallySetCompletedEvent = async (
   { requestSource, transactionEntityManager }: ManuallySetCompletedEventPayload,
 ): Promise<UtilisationReportEntity> => {
   report.updateWithStatus({ status: 'RECONCILIATION_COMPLETED', requestSource });
-  return await transactionEntityManager.getRepository(UtilisationReportEntity).save(report);
+  return await transactionEntityManager.save(UtilisationReportEntity, report);
 };

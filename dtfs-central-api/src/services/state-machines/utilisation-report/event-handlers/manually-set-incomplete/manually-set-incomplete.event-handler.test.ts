@@ -19,52 +19,36 @@ describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
 
   const mockSave = jest.fn();
 
-  const mockRepository = {
+  const mockEntityManager = {
     save: mockSave,
-  };
+  } as unknown as EntityManager;
 
-  it(`calls the correct repo methods and sets the report to '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}' when the report was previously uploaded`, async () => {
-    // Arrange
-    const mockGetRepository = jest.fn().mockReturnValue(mockRepository);
-    const mockEntityManager = {
-      getRepository: mockGetRepository,
-    } as unknown as EntityManager;
+  describe.each([
+    {
+      condition: 'a report has been uploaded',
+      azureFileInfo: AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource }),
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+    },
+    {
+      condition: 'a report has not been uploaded',
+      azureFileInfo: undefined,
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+    },
+  ])('when $condition', ({ status, azureFileInfo }) => {
+    it(`sets the report status to '${status}' and saves the report using the transaction entity manager`, async () => {
+      // Arrange
+      const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withAzureFileInfo(azureFileInfo).build();
 
-    const azureFileInfo = AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource });
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withAzureFileInfo(azureFileInfo).build();
+      // Act
+      await handleUtilisationReportManuallySetIncompleteEvent(report, {
+        requestSource,
+        transactionEntityManager: mockEntityManager,
+      });
 
-    // Act
-    await handleUtilisationReportManuallySetIncompleteEvent(report, {
-      requestSource,
-      transactionEntityManager: mockEntityManager,
+      // Assert
+      expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
+      expect(report.status).toEqual(status);
+      expect(report.updatedByUserId).toEqual(updatedByUserId);
     });
-
-    // Assert
-    expect(mockGetRepository).toHaveBeenCalledWith(UtilisationReportEntity);
-    expect(mockSave).toHaveBeenCalledWith(report);
-    expect(report.status).toEqual(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION);
-    expect(report.updatedByUserId).toEqual(updatedByUserId);
-  });
-
-  it(`calls the correct repo methods and sets the report to '${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}' when the report was not previously uploaded`, async () => {
-    // Arrange
-    const mockGetRepository = jest.fn().mockReturnValue(mockRepository);
-    const mockEntityManager = {
-      getRepository: mockGetRepository,
-    } as unknown as EntityManager;
-
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withAzureFileInfo(undefined).build();
-
-    // Act
-    await handleUtilisationReportManuallySetIncompleteEvent(report, {
-      requestSource,
-      transactionEntityManager: mockEntityManager,
-    });
-
-    // Assert
-    expect(mockGetRepository).toHaveBeenCalledWith(UtilisationReportEntity);
-    expect(mockSave).toHaveBeenCalledWith(report);
-    expect(report.status).toEqual(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED);
-    expect(report.updatedByUserId).toEqual(updatedByUserId);
   });
 });

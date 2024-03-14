@@ -17,15 +17,10 @@ describe('handleUtilisationReportManuallySetCompletedEvent', () => {
 
   const mockSave = jest.fn();
 
-  const mockRepository = {
-    save: mockSave,
-  };
-
-  it('calls the correct repo methods and updates the report', async () => {
+  it('updates the report to a completed state and saves the report', async () => {
     // Arrange
-    const mockGetRepository = jest.fn().mockReturnValue(mockRepository);
     const mockEntityManager = {
-      getRepository: mockGetRepository,
+      save: mockSave,
     } as unknown as EntityManager;
 
     const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
@@ -37,8 +32,7 @@ describe('handleUtilisationReportManuallySetCompletedEvent', () => {
     });
 
     // Assert
-    expect(mockGetRepository).toHaveBeenCalledWith(UtilisationReportEntity);
-    expect(mockSave).toHaveBeenCalledWith(report);
+    expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
     expect(report.status).toEqual(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
     expect(report.updatedByUserId).toEqual(updatedByUserId);
   });

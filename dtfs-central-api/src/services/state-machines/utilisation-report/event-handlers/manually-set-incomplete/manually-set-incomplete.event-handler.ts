@@ -15,5 +15,5 @@ export const handleUtilisationReportManuallySetIncompleteEvent = async (
 ): Promise<UtilisationReportEntity> => {
   const incompleteStatusForReport: UtilisationReportReconciliationStatus = report.azureFileInfo ? 'PENDING_RECONCILIATION' : 'REPORT_NOT_RECEIVED';
   report.updateWithStatus({ status: incompleteStatusForReport, requestSource });
-  return await transactionEntityManager.getRepository(UtilisationReportEntity).save(report);
+  return await transactionEntityManager.save(UtilisationReportEntity, report);
 };
