@@ -14,7 +14,7 @@ export default class UtilisationReportSeeder implements Seeder {
 
   public async run(dataSource: DataSource): Promise<void> {
     const { paymentReportOfficer, pdcReconcileUser } = await getUsersFromMongoDbOrFail({
-      paymentReportOfficerUsername: 'BANK1_PAYMENT_REPORT_OFFICER1',
+      paymentReportOfficerUsername: 'payment-officer1@ukexportfinance.gov.uk',
       pdcReconcileUserUsername: 'PDC_RECONCILE',
     });
 

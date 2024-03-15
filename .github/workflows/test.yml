@@ -207,6 +207,8 @@ jobs:
 
       - name: Initialise
         working-directory: ./
+        env:
+          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
         run: |
           sleep 60s
           npm run load
@@ -220,7 +222,7 @@ jobs:
       - name: Seeding
         working-directory: ./utils/sql-db-seeder
         env:
-          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT
+          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
           SQL_DB_HOST: localhost
         run: npm run db:seed
 
@@ -404,6 +406,8 @@ jobs:
 
       - name: Initialise
         working-directory: ./
+        env:
+          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
         run: |
           sleep 60s
           npm run load
@@ -417,7 +421,7 @@ jobs:
       - name: Seeding
         working-directory: ./utils/sql-db-seeder
         env:
-          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT
+          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
           SQL_DB_HOST: localhost
         run: npm run db:seed
 
@@ -475,6 +479,8 @@ jobs:
 
       - name: Initialise
         working-directory: ./
+        env:
+          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
         run: |
           sleep 60s
           npm run load
@@ -488,7 +494,7 @@ jobs:
       - name: Seeding
         working-directory: ./utils/sql-db-seeder
         env:
-          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT
+          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
           SQL_DB_HOST: localhost
         run: npm run db:seed
 
@@ -554,6 +560,8 @@ jobs:
 
       - name: Initialise
         working-directory: ./
+        env:
+          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
         run: |
           sleep 60s
           npm run load
@@ -567,7 +575,7 @@ jobs:
       - name: Seeding
         working-directory: ./utils/sql-db-seeder
         env:
-          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT
+          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
           SQL_DB_HOST: localhost
         run: npm run db:seed
 
@@ -642,6 +650,8 @@ jobs:
 
       - name: Initialise
         working-directory: ./
+        env:
+          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
         run: |
           sleep 60s
           npm run load
@@ -655,7 +665,7 @@ jobs:
       - name: Seeding
         working-directory: ./utils/sql-db-seeder
         env:
-          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT
+          MONGODB_URI: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
           SQL_DB_HOST: localhost
         run: npm run db:seed
 
