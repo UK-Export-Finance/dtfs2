@@ -189,7 +189,7 @@ const createInitialTfmUser = async (user) => {
     },
     data: user,
   }).catch((error) => {
-    throw FailedToCreateUserError({ username: user.username, cause: error });
+    throw new FailedToCreateUserError({ username: user.username, cause: error });
   });
 };
 
@@ -330,7 +330,7 @@ const listBanks = async (token) => {
     },
     url: `${PORTAL_API_URL}/v1/banks`,
   }).catch((error) => {
-    FailedToGetBanksError({ cause: error });
+    throw new FailedToGetBanksError({ cause: error });
   });
 
   return response.data.banks;
