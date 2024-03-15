@@ -68,7 +68,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     expect(response.body.length).toEqual(2);
   });
 
-  it('gets received and reconciled utilisation reports when excludeNotReceived query param is true', async () => {
+  it('gets all utilisation reports not in the REPORT_NOT_RECEIVED state when excludeNotReceived query param is true', async () => {
     // Arrange
     const bankId = '13';
     const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
