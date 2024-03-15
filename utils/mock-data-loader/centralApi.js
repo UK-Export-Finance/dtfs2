@@ -16,7 +16,7 @@ const getDeal = async (dealId) => {
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
     headers,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -35,7 +35,7 @@ const createFacility = async (facility, dealId, user) => {
       user,
     },
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -51,7 +51,7 @@ const updateFacility = async (facilityId, facilityUpdate, user) => {
       user,
     },
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -63,7 +63,7 @@ const listFacilities = async () => {
     method: 'get',
     headers,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   if (!response) return [];
@@ -76,7 +76,7 @@ const deleteFacility = async (facilityId) => {
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
     headers,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
