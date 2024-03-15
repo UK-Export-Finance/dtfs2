@@ -23,19 +23,11 @@ describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
     save: mockSave,
   } as unknown as EntityManager;
 
-  describe.each([
-    {
-      condition: 'a report has been uploaded',
-      azureFileInfo: AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource }),
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
-    },
-    {
-      condition: 'a report has not been uploaded',
-      azureFileInfo: undefined,
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
-    },
-  ])('when $condition', ({ status, azureFileInfo }) => {
-    it(`sets the report status to '${status}' and saves the report using the transaction entity manager`, async () => {
+  describe('when a report has been uploaded', () => {
+    const azureFileInfo = AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource });
+    const expectedNewStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
+
+    it(`sets the report status to '${expectedNewStatus}' and saves the report using the transaction entity manager`, async () => {
       // Arrange
       const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withAzureFileInfo(azureFileInfo).build();
 
@@ -47,7 +39,28 @@ describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
 
       // Assert
       expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
-      expect(report.status).toEqual(status);
+      expect(report.status).toEqual(expectedNewStatus);
+      expect(report.updatedByUserId).toEqual(updatedByUserId);
+    });
+  });
+
+  describe('when a report has not been uploaded', () => {
+    const azureFileInfo = undefined;
+    const expectedNewStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED;
+
+    it(`sets the report status to '${expectedNewStatus}' and saves the report using the transaction entity manager`, async () => {
+      // Arrange
+      const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withAzureFileInfo(azureFileInfo).build();
+
+      // Act
+      await handleUtilisationReportManuallySetIncompleteEvent(report, {
+        requestSource,
+        transactionEntityManager: mockEntityManager,
+      });
+
+      // Assert
+      expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
+      expect(report.status).toEqual(expectedNewStatus);
       expect(report.updatedByUserId).toEqual(updatedByUserId);
     });
   });
