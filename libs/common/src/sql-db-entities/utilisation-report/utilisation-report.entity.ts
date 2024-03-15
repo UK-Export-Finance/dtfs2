@@ -53,7 +53,6 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
 
   /**
    * Breakdown of utilisation per facility and currency combination
-   * TODO FN-2183 - should this maybe be called `payments`, `feeRecords`, or something else?
    */
   @OneToMany(() => FeeRecordEntity, (feeRecord) => feeRecord.report, {
     cascade: ['insert', 'update'],

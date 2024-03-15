@@ -56,7 +56,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   totalFeesAccruedForThePeriodCurrency!: Currency;
 
   /**
-   * The exchange rate from the `baseCurrency` to the `totalFeesAccruedForTheMonthCurrency`
+   * The exchange rate from the {@link baseCurrency} to the {@link totalFeesAccruedForThePeriodCurrency}
    */
   @ExchangeRateColumn()
   totalFeesAccruedForThePeriodExchangeRate!: number;
@@ -80,7 +80,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   paymentCurrency!: Currency;
 
   /**
-   * The exchange rate from the `baseCurrency` to the `paymentCurrency`
+   * The exchange rate from the {@link baseCurrency} to the {@link paymentCurrency}
    */
   @ExchangeRateColumn()
   paymentExchangeRate!: number;
