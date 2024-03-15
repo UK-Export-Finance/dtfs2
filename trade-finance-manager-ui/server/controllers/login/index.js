@@ -11,7 +11,7 @@ const loginService = require('./loginService');
  * 4) Redirect user to login URL (SSO Authority login page)
  * @param {Object} req: Express request
  * @param {Object} res: Express response
- * @returns {Object} Express response with redirect or error.
+ * @returns {Promise<Object>} Express response with redirect or error.
  */
 const getLogin = async (req, res) => {
   if (req?.session?.user) {
@@ -51,7 +51,7 @@ const getLogin = async (req, res) => {
  * 4) Redirect user to original location, most likely /.
  * @param {Object} req: Express request
  * @param {Object} res: Express response
- * @returns {Object} Express response with redirect or error.
+ * @returns {Promise<Object>} Express response with redirect or error.
  */
 const handleSsoRedirect = async (req, res) => {
   const { body, session } = req;
@@ -97,7 +97,7 @@ const handleSsoRedirect = async (req, res) => {
  * 2) Destroy TFM-UI user login session and redirect to SSO authority logout form.
  * @param {Object} req: Express request
  * @param {Object} res: Express response
- * @returns {Object} Express response with redirect or error.
+ * @returns {Promise<Object>} Express response with redirect or error.
  */
 const logout = async (req, res) => {
   const apiResponse = await api.getAuthLogoutUrl(req.session.userToken);

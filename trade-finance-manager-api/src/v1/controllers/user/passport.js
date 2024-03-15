@@ -34,11 +34,11 @@ module.exports = (passport) => {
       }
 
       if (!user) {
-        console.error('User is not found in DB');
+        console.error('TFM API - passport - user is not found in DB');
       }
 
       if (user && user.sessionIdentifier !== jwtPayload.sessionIdentifier) {
-        console.error('Passport session does not match JWT payload');
+        console.error('TFM API - passport - db session id does not match JWT payload');
       }
 
       if (user && user.sessionIdentifier === jwtPayload.sessionIdentifier) {

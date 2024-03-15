@@ -439,8 +439,8 @@ const processSsoRedirect = async ({ pkceCodes, authCodeUrlRequest, authCodeReque
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to get logout url %s', error?.response?.data);
-    return { status: error?.response?.status || 500, data: 'Unable to get logout url' };
+    console.error('Unable to process login %s', error?.response?.data);
+    return { status: error?.response?.status || 500, data: 'Unable to process login' };
   }
 }
 

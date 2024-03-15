@@ -456,7 +456,6 @@ const loginViaPortal = async (user) => createLoggedInUserSession(user);
 
 /*
  * Due to SSO changes, we now do not call endpoints to login to TFM.
- * This is due to TFM now using a email link to complete login.
  */
 const loginViaTfm = async (user) => createLoggedInTfmUserSession(user);
 

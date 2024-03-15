@@ -28,7 +28,7 @@ module.exports = defineConfig({
   pageLoadTimeout: 120000,
   redirectionLimit: 100,
   numTestsKeptInMemory: 1,
-  viewportWidth: 3840,
+  viewportWidth: 1450, // TFM website max width is 1440px
   viewportHeight: 2400,
   retries: {
     runMode: 2,
@@ -36,7 +36,7 @@ module.exports = defineConfig({
   },
   jwtSigningKey: process.env.JWT_SIGNING_KEY,
   cookieSigningKey: process.env.SESSION_SECRET,
-  azureSsoAuthority: 'https://login.microsoftonline.com/',
+  azureSsoAuthority: `${process.env.AZURE_SSO_AUTHORITY}/`,
   e2e: {
     baseUrl: 'http://localhost:5003',
     specPattern: 'cypress/e2e/**/*.spec.js',

@@ -24,14 +24,14 @@ describe('controllers - home', () => {
     expect(res._getRedirectUrl()).toEqual('/');
   });
 
-  const pdcTeams = Object.values(PDC_TEAM_IDS).map((id: string) => ({
+  const pdcTeams = Object.values(PDC_TEAM_IDS).map((id) => ({
     id,
     redirectLocation: '/utilisation-reports',
   }));
 
   const nonPdcTeams = Object.values(TEAM_IDS)
     .filter((id: TeamId) => !Object.values(PDC_TEAM_IDS).includes(id))
-    .map((id: string) => ({
+    .map((id) => ({
       id,
       redirectLocation: '/deals',
     }));
