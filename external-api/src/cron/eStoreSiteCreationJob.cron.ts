@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { getCollection } from '../database';
-import { EstoreErrorResponse, SiteExistsResponse } from '../interfaces';
+import { Estore, EstoreErrorResponse, SiteExistsResponse } from '../interfaces';
 import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../constants';
 import { eStoreTermStoreAndBuyerFolder } from './eStoreTermStoreAndBuyerFolder.cron';
 import { siteExists } from '../v1/controllers/estore/eStoreApi';
@@ -10,19 +10,20 @@ import { siteExists } from '../v1/controllers/estore/eStoreApi';
  * @param {any} eStoreData - An object containing the necessary data for creating the eStore site.
  * @returns {Promise<void>} - None
  */
-export const eStoreSiteCreationCron = async (eStoreData: any) => {
+export const eStoreSiteCreationCron = async (eStoreData: Estore) => {
   const cronJobLogs = await getCollection('cron-job-logs');
   const tfmDeals = await getCollection('tfm-deals');
   const data = eStoreData;
+  const now = new Date().toISOString();
 
   // Step 1: Site exists check
   const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(eStoreData.exporterName);
 
   // Step 2: Site already exists in eStore
   if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
-    console.info('⚡ CRON: eStore site %s has been created successfully for deal %s', siteExistsResponse.data.siteId, eStoreData.dealIdentifier);
+    console.info('⚡ CRON: eStore site %s has been created successfully for deal %s %s', siteExistsResponse.data.siteId, eStoreData.dealIdentifier, now);
 
-    data.siteId = siteExistsResponse.data.siteId;
+    data.siteId = String(siteExistsResponse.data.siteId);
 
     // Update `cron-job-logs`
     await cronJobLogs.updateOne(
@@ -47,7 +48,7 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
     // Add facility IDs to term store and create the buyer folder
     eStoreTermStoreAndBuyerFolder(data);
   } else if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING) {
-    console.info('⚡ CRON: eStore site creation %s is still in progress for deal %s', siteExistsResponse.data.siteId, eStoreData.dealIdentifier);
+    console.info('⚡ CRON: eStore site creation %s is still in progress for deal %s %s', siteExistsResponse.data.siteId, eStoreData.dealIdentifier, now);
 
     // Increment site creation by `1`
     await cronJobLogs.findOneAndUpdate(
@@ -57,10 +58,11 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
     );
   } else {
     console.error(
-      '❌ CRON: eStore site existence %s check has failed for deal %s %o',
+      '❌ CRON: eStore site existence %s check has failed for deal %s %o %s',
       siteExistsResponse.data.siteId,
       eStoreData.dealIdentifier,
       siteExistsResponse,
+      now,
     );
 
     // CRON job log update

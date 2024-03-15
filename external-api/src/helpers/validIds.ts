@@ -4,11 +4,12 @@
  * @param eStoreData - An object containing the `dealIdentifier` and `facilityIdentifiers` properties.
  * @returns `true` if the `dealIdentifier` and `facilityIdentifiers` are present and do not contain temporary IDs, `false` otherwise.
  */
+import { Estore } from '../interfaces/eStore.interface';
 import { UKEF_ID } from '../constants';
 import { validUkefId } from './validUkefId';
 
-export const isValidId = (eStoreData: any): boolean => {
-  const voidIds = [UKEF_ID.TEST, UKEF_ID.PENDING];
+export const areValidUkefIds = (eStoreData: Estore): boolean => {
+  const invalidIds = [UKEF_ID.TEST, UKEF_ID.PENDING];
   const { dealIdentifier, facilityIdentifiers } = eStoreData;
 
   // Falsy check
@@ -17,12 +18,12 @@ export const isValidId = (eStoreData: any): boolean => {
   }
 
   // Void ID check
-  if (voidIds.includes(dealIdentifier) || voidIds.some((id: string) => facilityIdentifiers.includes(id))) {
+  if (invalidIds.includes(dealIdentifier) || invalidIds.some((id: string) => facilityIdentifiers.includes(Number(id)))) {
     return false;
   }
 
   // Format check
-  if (!validUkefId(dealIdentifier) || !facilityIdentifiers.every((id: string) => validUkefId(id))) {
+  if (!validUkefId(dealIdentifier) || !facilityIdentifiers.every((id: number) => validUkefId(String(id)))) {
     return false;
   }
 

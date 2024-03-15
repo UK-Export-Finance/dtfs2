@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { getCollection } from '../../../database';
 import { Estore, SiteExistsResponse, EstoreErrorResponse } from '../../../interfaces';
 import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../../../constants';
-import { isValidId, objectIsEmpty } from '../../../helpers';
+import { areValidUkefIds, objectIsEmpty } from '../../../helpers';
 import { eStoreTermStoreAndBuyerFolder, eStoreSiteCreationCron } from '../../../cron';
 import { createExporterSite, siteExists } from './eStoreApi';
 import dotenv from 'dotenv';
@@ -12,7 +12,7 @@ import { CronJob } from 'cron';
 
 dotenv.config();
 
-const { TZ, ESTORE_CRON_MANAGER_SCHEDULE } = process.env;
+const { ESTORE_CRON_MANAGER_SCHEDULE, TZ } = process.env;
 
 export const create = async (req: Request, res: Response) => {
   try {
@@ -47,7 +47,7 @@ export const create = async (req: Request, res: Response) => {
      */
     if (Object.keys(eStoreData).length) {
       // 1. Void IDs check
-      if (!isValidId(eStoreData)) {
+      if (!areValidUkefIds(eStoreData)) {
         console.error('Invalid eStore IDs');
         return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid IDs' });
       }
@@ -142,13 +142,12 @@ export const create = async (req: Request, res: Response) => {
             const job = new CronJob(
               String(ESTORE_CRON_MANAGER_SCHEDULE), // Cron schedule
               () => {
-                console.info('===CRON=======', new Date());
                 eStoreSiteCreationCron(eStoreData);
               }, // On tick
               () => {
                 console.info('✅ eStore site creation has been completed successfully for deal %s', eStoreData.dealId);
               }, // On complete
-              false, // Start
+              false, // Start the job
               TZ, // Timezone
             );
 

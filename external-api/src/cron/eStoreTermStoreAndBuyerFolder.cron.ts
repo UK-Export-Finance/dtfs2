@@ -1,14 +1,13 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 import { ObjectId } from 'mongodb';
 import { getCollection } from '../database';
-import { TermStoreResponse, BuyerFolderResponse, EstoreErrorResponse } from '../interfaces';
+import { TermStoreResponse, BuyerFolderResponse, EstoreErrorResponse, Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { createBuyerFolder, addFacilityToTermStore } from '../v1/controllers/estore/eStoreApi';
 import { HttpStatusCode } from 'axios';
 
 const acceptableStatus = [HttpStatusCode.Ok, HttpStatusCode.Created];
 
-export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
+export const eStoreTermStoreAndBuyerFolder = async (eStoreData: Estore) => {
   const cronJobLogs = await getCollection('cron-job-logs');
 
   // 1. Facilities existence check for addition to term store
@@ -16,9 +15,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
     console.info('Adding facilities to term store for deal %s', eStoreData.dealIdentifier);
 
     const response: TermStoreResponse[] | EstoreErrorResponse[] = await Promise.all(
-      eStoreData.facilityIdentifiers.map((id: number) => {
-        return id ? addFacilityToTermStore({ id: id.toString() }) : id;
-      }),
+      eStoreData.facilityIdentifiers.map((id: number) => addFacilityToTermStore({ id: id.toString() })),
     );
 
     if (response.every((term) => acceptableStatus.includes(term?.status))) {
