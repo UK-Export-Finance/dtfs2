@@ -76,7 +76,7 @@ context('User login', () => {
     });
 
     it('should display the beta banner correctly', () => {
-      partials.header.betaBanner().contains('This is a new service - your feedback will help us to improve it.');
+      partials.header.betaBanner().contains('This is a new service – your feedback will help us to improve it.');
       partials.header.betaBanner().contains('beta');
       partials.header.betaBannerHref().contains('feedback');
       partials.header.betaBannerHref().invoke('attr', 'href').then((href) => {
