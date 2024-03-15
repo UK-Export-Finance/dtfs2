@@ -152,35 +152,21 @@ bankRouter
 *           type: string
 *         required: true
 *         description: bank ID to fetch reports for
-*       - in: query
-*         name: reportPeriod
-*         schema:
-*           - $ref: '#/definitions/ReportPeriod'
-*       - in: query
-*         name: reportStatuses
-*         schema:
-*           type: array
-*           items:
-*             anyOf:
-*               - $ref: '#/definitions/UtilisationReportReconciliationStatus'
 *     responses:
 *       200:
 *         description: OK
 *         content:
 *           application/json:
 *             schema:
-*               type: array
-*               items:
-*                 allOf:
-*                   - $ref: '#/definitions/UtilisationReport'
-*                   - type: object
-*                     properties:
-*                       _id:
-*                         example: 123456abc
+*               allOf:
+*                 - $ref: '#/definitions/ReportPeriod'
+*                 - type: object
 *       400:
 *         description: Bad request
 *       404:
 *         description: Not found
+*       500:
+*         description: Internal server error
 */
 bankRouter
   .route('/:bankId/next-report-period')

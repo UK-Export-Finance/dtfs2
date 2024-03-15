@@ -25,9 +25,10 @@ const isCurrentBankReportMissing = async (bank: Bank): Promise<boolean> => {
 const isValidUtilisationReportPeriodScheduleOnBank = (bank: Bank): boolean => {
   const validationError = validateUtilisationReportPeriodSchedule(bank.utilisationReportPeriodSchedule);
   if (validationError) {
-    console.info('Invalid utilisation report period schedule for bank with id %s. %s', bank.id, validationError);
+    console.warn('Invalid utilisation report period schedule for bank with id %s. %s', bank.id, validationError);
+    return false;
   }
-  return !validationError;
+  return true;
 }
 
 /**
