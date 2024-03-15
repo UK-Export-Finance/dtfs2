@@ -81,190 +81,96 @@ describe('put-utilisation-report-status.controller', () => {
     );
   });
 
-  const mockConnect = jest.fn();
-  const mockStartTransaction = jest.fn();
-  const mockCommitTransaction = jest.fn();
-  const mockRollbackTransaction = jest.fn();
-  const mockRelease = jest.fn();
+  describe('when the payload is valid', () => {
+    const mockConnect = jest.fn();
+    const mockStartTransaction = jest.fn();
+    const mockCommitTransaction = jest.fn();
+    const mockRollbackTransaction = jest.fn();
+    const mockRelease = jest.fn();
 
-  const mockTransactionManager = {
-    save: jest.fn(),
-  };
+    const mockTransactionManager = {
+      save: jest.fn(),
+    };
 
-  const mockQueryRunner = {
-    connect: mockConnect,
-    startTransaction: mockStartTransaction,
-    commitTransaction: mockCommitTransaction,
-    rollbackTransaction: mockRollbackTransaction,
-    release: mockRelease,
-    manager: mockTransactionManager,
-  } as unknown as QueryRunner;
+    const mockQueryRunner = {
+      connect: mockConnect,
+      startTransaction: mockStartTransaction,
+      commitTransaction: mockCommitTransaction,
+      rollbackTransaction: mockRollbackTransaction,
+      release: mockRelease,
+      manager: mockTransactionManager,
+    } as unknown as QueryRunner;
 
-  const utilisationReportRepoFindOneByOrFailSpy = jest.spyOn(UtilisationReportRepo, 'findOneByOrFail');
+    const utilisationReportRepoFindOneByOrFailSpy = jest.spyOn(UtilisationReportRepo, 'findOneByOrFail');
 
-  const mockFindOneByOrFail = (reports: UtilisationReportEntity[]) => (where: Parameters<typeof UtilisationReportRepo.findOneByOrFail>[0]) => {
-    const reportWithMatchingId = reports.find(({ id: reportId }) => reportId === (where as FindOptionsWhere<UtilisationReportEntity>).id);
-    if (!reportWithMatchingId) {
-      throw new Error('Failed to find a report with the matching id');
-    }
-    return Promise.resolve(reportWithMatchingId);
-  };
+    const mockFindOneByOrFail = (reports: UtilisationReportEntity[]) => (where: Parameters<typeof UtilisationReportRepo.findOneByOrFail>[0]) => {
+      const reportWithMatchingId = reports.find(({ id: reportId }) => reportId === (where as FindOptionsWhere<UtilisationReportEntity>).id);
+      if (!reportWithMatchingId) {
+        throw new Error('Failed to find a report with the matching id');
+      }
+      return Promise.resolve(reportWithMatchingId);
+    };
 
-  describe('when trying to only mark reports as completed', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
-
-    it('tries to update the correct reports', async () => {
-      // Arrange
-      const reportsWithStatusForMarkingAsCompleted: ReportWithStatus[] = [
-        {
-          reportId: 1,
-          status: 'RECONCILIATION_COMPLETED',
-        },
-        {
-          reportId: 2,
-          status: 'RECONCILIATION_COMPLETED',
-        },
-      ];
-
-      const { req, res } = getHttpMocks();
-      req.body.reportsWithStatus = reportsWithStatusForMarkingAsCompleted;
-
-      const existingReports = [
-        UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportsWithStatusForMarkingAsCompleted[0].reportId).build(),
-        UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportsWithStatusForMarkingAsCompleted[1].reportId).build(),
-      ];
-
-      utilisationReportRepoFindOneByOrFailSpy.mockImplementation(mockFindOneByOrFail(existingReports));
-
-      const createQueryRunnerSpy = jest.spyOn(SqlDbDataSource, 'createQueryRunner').mockReturnValue(mockQueryRunner);
-
-      // Act
-      await putUtilisationReportStatus(req, res);
-
-      // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-      expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-      expect(mockConnect).toHaveBeenCalledTimes(1);
-      expect(mockStartTransaction).toHaveBeenCalledTimes(1);
-      expect(mockCommitTransaction).toHaveBeenCalledTimes(1);
-      expect(mockRollbackTransaction).not.toHaveBeenCalled();
-      expect(mockRelease).toHaveBeenCalled();
-      expect(mockTransactionManager.save).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsCompleted.length);
-
-      existingReports.forEach((report) => {
-        report.updateWithStatus({ status: 'RECONCILIATION_COMPLETED', requestSource });
-        expect(mockTransactionManager.save).toHaveBeenCalledWith(UtilisationReportEntity, report);
+    describe('when trying to only mark reports as completed', () => {
+      beforeEach(() => {
+        jest.resetAllMocks();
       });
-    });
 
-    it('responds with an error if trying to mark an already completed report as completed', async () => {
-      // Arrange
-      const reportWithStatus: ReportWithStatus = {
-        reportId: 1,
-        status: 'RECONCILIATION_COMPLETED',
-      };
+      it('tries to update the correct reports', async () => {
+        // Arrange
+        const reportsWithStatusForMarkingAsCompleted: ReportWithStatus[] = [
+          {
+            reportId: 1,
+            status: 'RECONCILIATION_COMPLETED',
+          },
+          {
+            reportId: 2,
+            status: 'RECONCILIATION_COMPLETED',
+          },
+        ];
 
-      const { req, res } = getHttpMocks();
-      req.body.reportsWithStatus = [reportWithStatus];
+        const { req, res } = getHttpMocks();
+        req.body.reportsWithStatus = reportsWithStatusForMarkingAsCompleted;
 
-      const existingReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withId(reportWithStatus.reportId).build();
+        const existingReports = [
+          UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportsWithStatusForMarkingAsCompleted[0].reportId).build(),
+          UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportsWithStatusForMarkingAsCompleted[1].reportId).build(),
+        ];
 
-      utilisationReportRepoFindOneByOrFailSpy.mockResolvedValue(existingReport);
+        utilisationReportRepoFindOneByOrFailSpy.mockImplementation(mockFindOneByOrFail(existingReports));
 
-      const createQueryRunnerSpy = jest.spyOn(SqlDbDataSource, 'createQueryRunner').mockReturnValue(mockQueryRunner);
+        const createQueryRunnerSpy = jest.spyOn(SqlDbDataSource, 'createQueryRunner').mockReturnValue(mockQueryRunner);
 
-      // Act
-      await putUtilisationReportStatus(req, res);
+        // Act
+        await putUtilisationReportStatus(req, res);
 
-      // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-      expect(res._getData()).toEqual('Failed to update utilisation report statuses: Transaction failed');
-      expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-      expect(mockConnect).toHaveBeenCalledTimes(1);
-      expect(mockStartTransaction).toHaveBeenCalledTimes(1);
-      expect(mockCommitTransaction).not.toHaveBeenCalled();
-      expect(mockRollbackTransaction).toHaveBeenCalledTimes(1);
-      expect(mockRelease).toHaveBeenCalled();
-      expect(mockTransactionManager.save).not.toHaveBeenCalled();
-    });
-  });
+        // Assert
+        expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+        expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
+        expect(mockConnect).toHaveBeenCalledTimes(1);
+        expect(mockStartTransaction).toHaveBeenCalledTimes(1);
+        expect(mockCommitTransaction).toHaveBeenCalledTimes(1);
+        expect(mockRollbackTransaction).not.toHaveBeenCalled();
+        expect(mockRelease).toHaveBeenCalled();
+        expect(mockTransactionManager.save).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsCompleted.length);
 
-  describe('when trying to only mark reports as not completed', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
-
-    it('tries to update the correct reports', async () => {
-      // Arrange
-      const reportsWithStatusForMarkingAsNotCompleted: ReportWithStatus[] = [
-        {
-          reportId: 1,
-          status: 'PENDING_RECONCILIATION',
-        },
-        {
-          reportId: 2,
-          status: 'REPORT_NOT_RECEIVED',
-        },
-        {
-          reportId: 3,
-          status: 'REPORT_NOT_RECEIVED',
-        },
-      ];
-
-      const { req, res } = getHttpMocks();
-      req.body.reportsWithStatus = reportsWithStatusForMarkingAsNotCompleted;
-
-      const existingReports = [
-        UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
-          .withId(reportsWithStatusForMarkingAsNotCompleted[0].reportId)
-          .withAzureFileInfo(undefined)
-          .build(),
-        UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
-          .withId(reportsWithStatusForMarkingAsNotCompleted[1].reportId)
-          .withAzureFileInfo(undefined)
-          .build(),
-        UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withId(reportsWithStatusForMarkingAsNotCompleted[2].reportId).build(),
-      ];
-
-      utilisationReportRepoFindOneByOrFailSpy.mockImplementation(mockFindOneByOrFail(existingReports));
-
-      const createQueryRunnerSpy = jest.spyOn(SqlDbDataSource, 'createQueryRunner').mockReturnValue(mockQueryRunner);
-
-      // Act
-      await putUtilisationReportStatus(req, res);
-
-      // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-      expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-      expect(mockConnect).toHaveBeenCalledTimes(1);
-      expect(mockStartTransaction).toHaveBeenCalledTimes(1);
-      expect(mockCommitTransaction).toHaveBeenCalledTimes(1);
-      expect(mockRollbackTransaction).not.toHaveBeenCalled();
-      expect(mockRelease).toHaveBeenCalled();
-      expect(mockTransactionManager.save).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsNotCompleted.length);
-
-      existingReports.forEach((report, index) => {
-        const expectedStatus = reportsWithStatusForMarkingAsNotCompleted[index].status;
-        report.updateWithStatus({ status: expectedStatus, requestSource });
-        expect(mockTransactionManager.save).toHaveBeenCalledWith(UtilisationReportEntity, report);
+        existingReports.forEach((report) => {
+          report.updateWithStatus({ status: 'RECONCILIATION_COMPLETED', requestSource });
+          expect(mockTransactionManager.save).toHaveBeenCalledWith(UtilisationReportEntity, report);
+        });
       });
-    });
 
-    it.each([UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION, UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED])(
-      "responds with an error if trying to mark a report with status '%s' as not completed",
-      async (reportStatus) => {
+      it('responds with an error if trying to mark an already completed report as completed', async () => {
         // Arrange
         const reportWithStatus: ReportWithStatus = {
           reportId: 1,
-          status: 'REPORT_NOT_RECEIVED',
+          status: 'RECONCILIATION_COMPLETED',
         };
 
         const { req, res } = getHttpMocks();
         req.body.reportsWithStatus = [reportWithStatus];
 
-        const existingReport = UtilisationReportEntityMockBuilder.forStatus(reportStatus).withId(reportWithStatus.reportId).build();
+        const existingReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withId(reportWithStatus.reportId).build();
 
         utilisationReportRepoFindOneByOrFailSpy.mockResolvedValue(existingReport);
 
@@ -283,7 +189,103 @@ describe('put-utilisation-report-status.controller', () => {
         expect(mockRollbackTransaction).toHaveBeenCalledTimes(1);
         expect(mockRelease).toHaveBeenCalled();
         expect(mockTransactionManager.save).not.toHaveBeenCalled();
-      },
-    );
+      });
+    });
+
+    describe('when trying to only mark reports as not completed', () => {
+      beforeEach(() => {
+        jest.resetAllMocks();
+      });
+
+      it('tries to update the correct reports', async () => {
+        // Arrange
+        const reportsWithStatusForMarkingAsNotCompleted: ReportWithStatus[] = [
+          {
+            reportId: 1,
+            status: 'PENDING_RECONCILIATION',
+          },
+          {
+            reportId: 2,
+            status: 'REPORT_NOT_RECEIVED',
+          },
+          {
+            reportId: 3,
+            status: 'REPORT_NOT_RECEIVED',
+          },
+        ];
+
+        const { req, res } = getHttpMocks();
+        req.body.reportsWithStatus = reportsWithStatusForMarkingAsNotCompleted;
+
+        const existingReports = [
+          UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
+            .withId(reportsWithStatusForMarkingAsNotCompleted[0].reportId)
+            .withAzureFileInfo(undefined)
+            .build(),
+          UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
+            .withId(reportsWithStatusForMarkingAsNotCompleted[1].reportId)
+            .withAzureFileInfo(undefined)
+            .build(),
+          UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withId(reportsWithStatusForMarkingAsNotCompleted[2].reportId).build(),
+        ];
+
+        utilisationReportRepoFindOneByOrFailSpy.mockImplementation(mockFindOneByOrFail(existingReports));
+
+        const createQueryRunnerSpy = jest.spyOn(SqlDbDataSource, 'createQueryRunner').mockReturnValue(mockQueryRunner);
+
+        // Act
+        await putUtilisationReportStatus(req, res);
+
+        // Assert
+        expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+        expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
+        expect(mockConnect).toHaveBeenCalledTimes(1);
+        expect(mockStartTransaction).toHaveBeenCalledTimes(1);
+        expect(mockCommitTransaction).toHaveBeenCalledTimes(1);
+        expect(mockRollbackTransaction).not.toHaveBeenCalled();
+        expect(mockRelease).toHaveBeenCalled();
+        expect(mockTransactionManager.save).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsNotCompleted.length);
+
+        existingReports.forEach((report, index) => {
+          const expectedStatus = reportsWithStatusForMarkingAsNotCompleted[index].status;
+          report.updateWithStatus({ status: expectedStatus, requestSource });
+          expect(mockTransactionManager.save).toHaveBeenCalledWith(UtilisationReportEntity, report);
+        });
+      });
+
+      it.each([UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION, UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED])(
+        "responds with an error if trying to mark a report with status '%s' as not completed",
+        async (reportStatus) => {
+          // Arrange
+          const reportWithStatus: ReportWithStatus = {
+            reportId: 1,
+            status: 'REPORT_NOT_RECEIVED',
+          };
+
+          const { req, res } = getHttpMocks();
+          req.body.reportsWithStatus = [reportWithStatus];
+
+          const existingReport = UtilisationReportEntityMockBuilder.forStatus(reportStatus).withId(reportWithStatus.reportId).build();
+
+          utilisationReportRepoFindOneByOrFailSpy.mockResolvedValue(existingReport);
+
+          const createQueryRunnerSpy = jest.spyOn(SqlDbDataSource, 'createQueryRunner').mockReturnValue(mockQueryRunner);
+
+          // Act
+          await putUtilisationReportStatus(req, res);
+
+          // Assert
+          expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+          expect(res._getData()).toEqual('Failed to update utilisation report statuses: Transaction failed');
+          expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
+          expect(mockConnect).toHaveBeenCalledTimes(1);
+          expect(mockStartTransaction).toHaveBeenCalledTimes(1);
+          expect(mockCommitTransaction).not.toHaveBeenCalled();
+          expect(mockRollbackTransaction).toHaveBeenCalledTimes(1);
+          expect(mockRelease).toHaveBeenCalled();
+          expect(mockTransactionManager.save).not.toHaveBeenCalled();
+        },
+      );
+    });
   });
 });
