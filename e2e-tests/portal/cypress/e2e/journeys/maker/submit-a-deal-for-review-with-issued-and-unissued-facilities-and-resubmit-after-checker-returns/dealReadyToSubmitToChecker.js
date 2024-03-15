@@ -1,6 +1,6 @@
 const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
 
-const now = new Date().valueOf;
+const now = new Date().valueOf();
 const nowFormatted = new Date();
 const nowDay = (dateConstants.todayDay).toString();
 const nowMonth = (dateConstants.todayMonth).toString();

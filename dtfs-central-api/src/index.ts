@@ -1,7 +1,8 @@
+import { initialiseCronJobScheduler } from '@ukef/dtfs2-common';
 import app from './createApp';
-import { initScheduler } from './scheduler';
+import { cronSchedulerJobs } from './cron-scheduler-jobs';
 
-initScheduler();
+initialiseCronJobScheduler(cronSchedulerJobs);
 
 const PORT = process.env.PORT || 5005;
 

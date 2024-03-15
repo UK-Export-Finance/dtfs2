@@ -190,12 +190,12 @@ describe('/v1/deals', () => {
     describe('TFM deal stage (GEF)', () => {
       describe('when deal is AIN', () => {
         describe('when deal status is `Submitted`', () => {
-          it('should add `Confirmed` tfm stage', async () => {
+          it('should add `Application` tfm stage', async () => {
             const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));
 
             expect(status).toEqual(200);
 
-            expect(body.tfm.stage).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.CONFIRMED);
+            expect(body.tfm.stage).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
           });
         });
       });
@@ -212,10 +212,10 @@ describe('/v1/deals', () => {
       });
 
       describe('when deal is MIN', () => {
-        it('should add `Confirmed` tfm stage', async () => {
+        it('should add `Application` tfm stage', async () => {
           const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIN));
           expect(status).toEqual(200);
-          expect(body.tfm.stage).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.CONFIRMED);
+          expect(body.tfm.stage).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
         });
       });
     });

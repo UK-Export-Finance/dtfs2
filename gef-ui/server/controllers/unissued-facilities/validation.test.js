@@ -58,20 +58,20 @@ describe('validation()', () => {
       coverEndDate: tomorrow,
       aboutFacilityErrors: [],
       facilityId: 'xyz',
-      dealId: '123',
+      dealId: '1234567890abcdf123456789',
     };
 
     // formatted to remove the millisecond mismatch (lag)
-    const resultCoverStartFormatted = format(result.coverStartDate, 'dd mm yyyy');
-    const resultCoverEndFormatted = format(result.coverEndDate, 'dd mm yyyy');
-    const expectedCoverStartFormatted = format(expected.coverStartDate, 'dd mm yyyy');
-    const expectedCoverEndFormatted = format(expected.coverEndDate, 'dd mm yyyy');
+    const resultCoverStartFormatted = format(result.coverStartDate, 'dd MM yyyy');
+    const resultCoverEndFormatted = format(result.coverEndDate, 'dd MM yyyy');
+    const expectedCoverStartFormatted = format(expected.coverStartDate, 'dd MM yyyy');
+    const expectedCoverEndFormatted = format(expected.coverEndDate, 'dd MM yyyy');
 
     // as no errors expected, compare objects being passed back
     expect(resultCoverStartFormatted).toEqual(expectedCoverStartFormatted);
     expect(resultCoverEndFormatted).toEqual(expectedCoverEndFormatted);
-    expect(result.facilityId).toEqual('xyz');
-    expect(result.dealId).toEqual('123');
+    expect(result.facilityId).toEqual(expected.facilityId);
+    expect(result.dealId).toEqual(expected.dealId);
     expect(result.aboutFacilityErrors).toEqual(expected.aboutFacilityErrors);
   });
 
@@ -109,20 +109,20 @@ describe('validation()', () => {
       coverEndDate: tomorrow,
       aboutFacilityErrors: [],
       facilityId: 'xyz',
-      dealId: '123',
+      dealId: '1234567890abcdf123456789',
     };
 
     // formatted to remove the millisecond mismatch (lag)
-    const resultCoverStartFormatted = format(result.coverStartDate, 'dd mm yyyy');
-    const resultCoverEndFormatted = format(result.coverEndDate, 'dd mm yyyy');
-    const expectedCoverStartFormatted = format(expected.coverStartDate, 'dd mm yyyy');
-    const expectedCoverEndFormatted = format(expected.coverEndDate, 'dd mm yyyy');
+    const resultCoverStartFormatted = format(result.coverStartDate, 'dd MM yyyy');
+    const resultCoverEndFormatted = format(result.coverEndDate, 'dd MM yyyy');
+    const expectedCoverStartFormatted = format(expected.coverStartDate, 'dd MM yyyy');
+    const expectedCoverEndFormatted = format(expected.coverEndDate, 'dd MM yyyy');
 
     // as no errors expected, compare objects being passed back
     expect(resultCoverStartFormatted).toEqual(expectedCoverStartFormatted);
     expect(resultCoverEndFormatted).toEqual(expectedCoverEndFormatted);
-    expect(result.facilityId).toEqual('xyz');
-    expect(result.dealId).toEqual('123');
+    expect(result.facilityId).toEqual(expected.facilityId);
+    expect(result.dealId).toEqual(expected.dealId);
     expect(result.aboutFacilityErrors).toEqual(expected.aboutFacilityErrors);
   });
 
