@@ -1,7 +1,7 @@
+import { DURABLE_FUNCTIONS_LOG } from '@ukef/dtfs2-common';
 import db from '../../drivers/db-client';
 import { DB_COLLECTIONS } from '../../constants';
 import { deleteAllCompleteAcbsDurableFunctionLogs, deleteAllDurableFunctionLogs } from './durable-functions-repo';
-import { DURABLE_FUNCTIONS_LOG } from '@ukef/dtfs2-common';
 
 describe('durable-functions-repo', () => {
   afterEach(() => {
