@@ -2,6 +2,17 @@ const { SSO } = require('../../constants');
 const api = require('../../api');
 const loginService = require('./loginService');
 
+/**
+ * getLogin
+ * Check if user is logged in and if not redirect to SSO Authority login page.
+ * 1) Is user logged in, if yes, go to /home
+ * 2) Did we reached redirect loop maximum, if yes show error
+ * 3) Get login URL from TFM-API
+ * 4) Redirect user to login URL (SSO Authority login page)
+ * @param {Object} req: Express request
+ * @param {Object} res: Express response
+ * @returns {Object} Express response with redirect or error.
+ */
 const getLogin = async (req, res) => {
   if (req?.session?.user) {
     // User is already logged in.
@@ -31,6 +42,17 @@ const getLogin = async (req, res) => {
   return res.status(500).render('_partials/problem-with-service.njk', { error: { message: errorMessage } });
 };
 
+/**
+ * handleSsoRedirect
+ * Because of security restrictions we need to handle 2 POST calls in same URL.
+ * 1) Step1 - POST is from SSO Authority we don't have session cookie and will prepare local form that will autosubmit.
+ * 2) Step2 - POST is from our form and now we have session cookie and can verify SSO authority data.
+ * 3) Send SSO authority data to TFM-API for verification and login.
+ * 4) Redirect user to original location, most likely /.
+ * @param {Object} req: Express request
+ * @param {Object} res: Express response
+ * @returns {Object} Express response with redirect or error.
+ */
 const handleSsoRedirect = async (req, res) => {
   const { body, session } = req;
 
@@ -57,9 +79,10 @@ const handleSsoRedirect = async (req, res) => {
     req.session.userToken = apiResponse.token;
     req.session.user = apiResponse.tfmUser;
 
-    // Unset data used for SSO validation.
+    // Unset data used for SSO validation
     delete req.session.auth;
 
+    // Unset cookie used for SSO redirect counting
     res.clearCookie(SSO.REDIRECT_COUNTER.COOKIE_NAME);
 
     return res.redirect(apiResponse.redirectUrl);
@@ -67,6 +90,15 @@ const handleSsoRedirect = async (req, res) => {
   return res.redirect('/');
 }
 
+/**
+ * logout
+ * Delete local session and redirect to SSO authority logout page.
+ * 1) Get logout url from TFM-API.
+ * 2) Destroy TFM-UI user login session and redirect to SSO authority logout form.
+ * @param {Object} req: Express request
+ * @param {Object} res: Express response
+ * @returns {Object} Express response with redirect or error.
+ */
 const logout = async (req, res) => {
   const apiResponse = await api.getAuthLogoutUrl(req.session.userToken);
 
