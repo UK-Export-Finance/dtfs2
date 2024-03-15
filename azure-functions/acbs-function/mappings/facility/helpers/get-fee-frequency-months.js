@@ -4,7 +4,7 @@ const CONSTANTS = require('../../../constants');
 /**
  * Returns numerical months from facility's fee frequency.
  * @param {Object} facility Facility object
- * @returns {number} Number of months
+ * @returns {Integer} Number of months
  */
 const getFeeFrequencyMonths = (facility) => {
   const feeFrequency = mapFeeFrequency(facility.facilitySnapshot);

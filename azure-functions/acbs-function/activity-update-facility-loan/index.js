@@ -15,7 +15,7 @@
  * ------------------
  */
 
-const { getNowAsIsoString } = require('../helpers/date');
+const moment = require('moment');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
@@ -38,7 +38,7 @@ const updateFacilityLoan = async (context) => {
       return Promise.resolve({ missingMandatory });
     }
 
-    const submittedToACBS = getNowAsIsoString();
+    const submittedToACBS = moment().format();
 
     const { status, data } = await api.updateFacilityLoan(facilityId, loanId, acbsFacilityLoanInput);
 
@@ -47,7 +47,7 @@ const updateFacilityLoan = async (context) => {
         JSON.stringify({
           name: 'ACBS Facility loan amend error',
           submittedToACBS,
-          receivedFromACBS: getNowAsIsoString(),
+          receivedFromACBS: moment().format(),
           dataReceived: data,
           dataSent: acbsFacilityLoanInput,
         }, null, 4),
@@ -57,7 +57,7 @@ const updateFacilityLoan = async (context) => {
     return {
       status,
       submittedToACBS,
-      receivedFromACBS: getNowAsIsoString(),
+      receivedFromACBS: moment().format(),
       dataSent: acbsFacilityLoanInput,
       ...data,
     };

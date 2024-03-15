@@ -287,7 +287,6 @@ jobs:
             "./external-api",
             "./trade-finance-manager-api",
             "./libs/common",
-            "./azure-functions/acbs-function"
           ]
 
     concurrency:
