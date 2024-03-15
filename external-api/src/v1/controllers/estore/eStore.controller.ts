@@ -5,8 +5,14 @@ import { getCollection } from '../../../database';
 import { Estore, SiteExistsResponse, EstoreErrorResponse } from '../../../interfaces';
 import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../../../constants';
 import { isValidId, objectIsEmpty } from '../../../helpers';
-import { eStoreCronJobManager, eStoreTermStoreAndBuyerFolder, eStoreSiteCreationCron } from '../../../cron';
+import { eStoreTermStoreAndBuyerFolder, eStoreSiteCreationCron } from '../../../cron';
 import { createExporterSite, siteExists } from './eStoreApi';
+import dotenv from 'dotenv';
+import { CronJob } from 'cron';
+
+dotenv.config();
+
+const { TZ, ESTORE_CRON_MANAGER_SCHEDULE } = process.env;
 
 export const create = async (req: Request, res: Response) => {
   try {
@@ -121,6 +127,7 @@ export const create = async (req: Request, res: Response) => {
           if (provisioning) {
             // When site status is provisioning
             console.info('eStore site creation in progress for deal %s', eStoreData.dealIdentifier);
+            siteCreationResponse = siteExistsResponse;
           } else {
             console.info('eStore site creation initiated for exporter %s with deal %s', eStoreData.exporterName, eStoreData.dealIdentifier);
             siteCreationResponse = await createExporterSite({ exporterName: eStoreData.exporterName });
@@ -129,13 +136,17 @@ export const create = async (req: Request, res: Response) => {
           // Check if the siteCreation endpoint returns a siteId - this is usually a number (i.e. 12345)
           if (siteCreationResponse?.data?.siteId) {
             /**
-             * Add a new site specific CRON job, which is initialised upon addition to the
-             * CRON Job manager. Site creation timeframe can vary.
+             * Add a new site specific CRON job, which is initialised upon creation
              */
             const cron = `estore_cron_site_${eStoreData.dealId}`;
-            eStoreCronJobManager.add(cron, new Date(), () => {
-              eStoreSiteCreationCron(eStoreData);
-            });
+            const job = new CronJob(
+              String(ESTORE_CRON_MANAGER_SCHEDULE), // Cron schedule
+              () => { eStoreSiteCreationCron(eStoreData); }, // On tick
+              () => { console.info('✅ eStore site creation has been completed successfully for deal %s', eStoreData.dealId); }, // On complete
+              true, // Start cron job
+              TZ, // Timezone
+            );
+            job.start();
 
             // Update `cron-job-logs`
             console.info('eStore site %s CRON job %s initiated.', siteCreationResponse.data.siteId, cron);
@@ -153,11 +164,8 @@ export const create = async (req: Request, res: Response) => {
                 },
               },
             );
-
-            // Start CRON job
-            eStoreCronJobManager.start(cron);
           } else {
-            console.error('eStore site creation failed for deal %s %O', eStoreData.dealIdentifier, siteCreationResponse?.data);
+            console.error('eStore site creation failed for deal %s %o', eStoreData.dealIdentifier, siteCreationResponse?.data);
 
             // CRON job log update
             await cronJobLogs.updateOne(

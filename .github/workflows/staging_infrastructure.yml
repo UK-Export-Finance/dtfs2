@@ -1986,6 +1986,7 @@ jobs:
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
                 UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
                 ESTORE_URL="${{ secrets.ESTORE_URL }}" \
+                ESTORE_CRON_MANAGER_SCHEDULE="${{ vars.ESTORE_CRON_MANAGER_SCHEDULE }}" \
                 HTTPS=1 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 

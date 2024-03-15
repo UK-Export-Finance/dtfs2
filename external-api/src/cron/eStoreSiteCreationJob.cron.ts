@@ -2,7 +2,6 @@ import { ObjectId } from 'mongodb';
 import { getCollection } from '../database';
 import { EstoreErrorResponse, SiteExistsResponse } from '../interfaces';
 import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../constants';
-import { eStoreCronJobManager } from './eStoreCronJobManager';
 import { eStoreTermStoreAndBuyerFolder } from './eStoreTermStoreAndBuyerFolder.cron';
 import { siteExists } from '../v1/controllers/estore/eStoreApi';
 
@@ -14,7 +13,6 @@ import { siteExists } from '../v1/controllers/estore/eStoreApi';
 export const eStoreSiteCreationCron = async (eStoreData: any) => {
   const cronJobLogs = await getCollection('cron-job-logs');
   const tfmDeals = await getCollection('tfm-deals');
-  const cron = `estore_cron_site_${eStoreData.dealId}`;
   const data = eStoreData;
 
   // Step 1: Site exists check
@@ -25,8 +23,6 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
   if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
     console.info('CRON - eStore site %s exist check successful for deal %s', siteExistsResponse.data.siteId, eStoreData.dealIdentifier);
 
-    // Stop CRON job
-    eStoreCronJobManager.deleteJob(cron);
     data.siteId = siteExistsResponse.data.siteId;
 
     // Update `cron-job-logs`
@@ -62,9 +58,6 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
     );
   } else {
     console.error('CRON - eStore site existence check failed for deal %s %O', eStoreData.dealIdentifier, siteExistsResponse);
-
-    // Stop CRON job
-    eStoreCronJobManager.deleteJob(cron);
 
     // CRON job log update
     await cronJobLogs.updateOne(
