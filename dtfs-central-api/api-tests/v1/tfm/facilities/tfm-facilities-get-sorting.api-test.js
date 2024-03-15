@@ -65,7 +65,6 @@ describe('/v1/tfm/facilities', () => {
           getFieldPathAndExpectedFieldValues
         }
       ) => {
-
         const facilities = generateFacilities(fieldValuesInAscendingOrder, sortByField);
 
         beforeEach(async () => {
@@ -76,12 +75,12 @@ describe('/v1/tfm/facilities', () => {
           'ascending',
           'descending'
         ])('in %s order', (sortByOrder) => {
-            const queryParams = {
-                sortBy: {
-                  order: sortByOrder,
-                  field: sortByField
-                }
-            };
+          const queryParams = {
+            sortBy: {
+              order: sortByOrder,
+              field: sortByField
+            }
+          };
 
           it('without pagination', async () => {
             const { status, body } = await api.get('/v1/tfm/facilities', { queryParams });
@@ -110,9 +109,9 @@ describe('/v1/tfm/facilities', () => {
             );
 
             const { status: page2Status, body: page2Body } = await api.get(
-                '/v1/tfm/facilities',
-                { queryParams: { ...queryParams, page: 1, pagesize } }
-              );
+              '/v1/tfm/facilities',
+              { queryParams: { ...queryParams, page: 1, pagesize } }
+            );
 
             expect(page1Status).toEqual(200);
             expect(page1Body.facilities.length).toEqual(2);
@@ -129,15 +128,15 @@ describe('/v1/tfm/facilities', () => {
             const { fieldPath, expectedFieldValues } = getFieldPathAndExpectedFieldValues(fieldValuesInAscendingOrder, sortByOrder, sortByField);
 
             for (let i = 0; i < 2; i += 1) {
-                const fieldValue = getObjectPropertyValueFromStringPath(page1Body.facilities[i], fieldPath);
+              const fieldValue = getObjectPropertyValueFromStringPath(page1Body.facilities[i], fieldPath);
 
-                expect(fieldValue).toEqual(expectedFieldValues[i]);
+              expect(fieldValue).toEqual(expectedFieldValues[i]);
             }
 
             for (let i = 0; i < 2; i += 1) {
-                const fieldValue = getObjectPropertyValueFromStringPath(page2Body.facilities[i], fieldPath);
+              const fieldValue = getObjectPropertyValueFromStringPath(page2Body.facilities[i], fieldPath);
 
-                expect(fieldValue).toEqual(expectedFieldValues[i + 2]);
+              expect(fieldValue).toEqual(expectedFieldValues[i + 2]);
             }
           });
         });
@@ -145,97 +144,97 @@ describe('/v1/tfm/facilities', () => {
     });
   });
 
-    function newDeal(overrides) {
-        return {
-            dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-            exporter: { companyName: 'Mock Company name' },
-            ...overrides
-        };
+  function newDeal(overrides) {
+    return {
+      dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+      exporter: { companyName: 'Mock Company name' },
+      ...overrides
     };
+  }
 
-    function newFacility(overrides) {
-        return {
-            ukefFacilityId: '10000001',
-            type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
-            value: '1000',
-            currency: { id: 'GBP' },
-            coverEndDate: '2021-08-12T00:00:00.000Z',
-            hasBeenIssued: true,
-            ...overrides
-        };
+  function newFacility(overrides) {
+    return {
+      ukefFacilityId: '10000001',
+      type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+      value: '1000',
+      currency: { id: 'GBP' },
+      coverEndDate: '2021-08-12T00:00:00.000Z',
+      hasBeenIssued: true,
+      ...overrides
     };
+  }
 
-    function generateFacilitiesFromValues(values, fieldPath) {
-        const fieldPathSplit = fieldPath.split('.');
-        const fieldPathExcludingTfmFacilities = fieldPathSplit[fieldPathSplit.length - 1];
+  function generateFacilitiesFromValues(values, fieldPath) {
+    const fieldPathSplit = fieldPath.split('.');
+    const fieldPathExcludingTfmFacilities = fieldPathSplit[fieldPathSplit.length - 1];
 
-        const facilities = [];
-        values.forEach((value) => {
-            const overrides = {};
-            setObjectPropertyValueFromStringPath(overrides, fieldPathExcludingTfmFacilities, value);
-            facilities.push({
-                facility: newFacility(overrides),
-                deal: newDeal({})
-            });
-        });
-        return facilities;
-    };
+    const facilities = [];
+    values.forEach((value) => {
+      const overrides = {};
+      setObjectPropertyValueFromStringPath(overrides, fieldPathExcludingTfmFacilities, value);
+      facilities.push({
+        facility: newFacility(overrides),
+        deal: newDeal({})
+      });
+    });
+    return facilities;
+  }
 
-    function generateFacilitiesFromCompanyNameValues(companyNameValues) {
-        const facilities = [];
-        companyNameValues.forEach((companyName) => {
-            facilities.push({
-                facility: newFacility({}),
-                deal: newDeal({ exporter: { companyName } })
-            });
-        });
-        return facilities;
-    };
+  function generateFacilitiesFromCompanyNameValues(companyNameValues) {
+    const facilities = [];
+    companyNameValues.forEach((companyName) => {
+      facilities.push({
+        facility: newFacility({}),
+        deal: newDeal({ exporter: { companyName } })
+      });
+    });
+    return facilities;
+  }
 
-    function generateFacilitiesFromFacilityStageValues(facilityStageValues) {
-        const facilities = [];
-        facilityStageValues.forEach((facilityStage) => {
-            facilities.push({
-                facility: newFacility({ hasBeenIssued: facilityStage === 'Issued'}),
-                deal: newDeal({})
-            });
-        });
-        return facilities;
-    };
+  function generateFacilitiesFromFacilityStageValues(facilityStageValues) {
+    const facilities = [];
+    facilityStageValues.forEach((facilityStage) => {
+      facilities.push({
+        facility: newFacility({ hasBeenIssued: facilityStage === 'Issued' }),
+        deal: newDeal({})
+      });
+    });
+    return facilities;
+  }
 
-    async function createAndSubmitFacilities(facilities) {
-        for (const facilityAndAssociatedDeal of facilities) {
-            const { facility, deal } = facilityAndAssociatedDeal;
+  async function createAndSubmitFacilities(facilities) {
+    for (const facilityAndAssociatedDeal of facilities) {
+      const { facility, deal } = facilityAndAssociatedDeal;
 
-            const { body: createdDeal } = await api.post(deal).to('/v1/portal/gef/deals');
+      const { body: createdDeal } = await api.post(deal).to('/v1/portal/gef/deals');
 
-            const dealId = createdDeal._id;
+      const dealId = createdDeal._id;
 
-            facility.dealId = dealId;
-            await api.post(facility).to('/v1/portal/gef/facilities');
+      facility.dealId = dealId;
+      await api.post(facility).to('/v1/portal/gef/facilities');
 
-            await api.put({ dealType: deal.dealType, dealId }).to('/v1/tfm/deals/submit');
-        }
-    };
+      await api.put({ dealType: deal.dealType, dealId }).to('/v1/tfm/deals/submit');
+    }
+  }
 
-    function getFieldPathAndExpectedFieldValuesForField(fieldValuesInAscendingOrder, sortByOrder, sortByField) {
-        let expectedFieldValues;
-        if (sortByOrder === 'ascending') {
-            expectedFieldValues = fieldValuesInAscendingOrder;
-        } else {
-            expectedFieldValues = fieldValuesInAscendingOrder.slice().reverse();
-        }
-        return { fieldPath: sortByField, expectedFieldValues};
-    };
+  function getFieldPathAndExpectedFieldValuesForField(fieldValuesInAscendingOrder, sortByOrder, sortByField) {
+    let expectedFieldValues;
+    if (sortByOrder === 'ascending') {
+      expectedFieldValues = fieldValuesInAscendingOrder;
+    } else {
+      expectedFieldValues = fieldValuesInAscendingOrder.slice().reverse();
+    }
+    return { fieldPath: sortByField, expectedFieldValues };
+  }
 
-    function getFieldPathAndExpectedFieldValuesForFacilityStage(fieldValuesInAscendingOrder, sortByOrder) {
-        const mapFacilityStageToHasBeenIssued = (facilityStage) => facilityStage === 'Issued';
-        let expectedFieldValues;
-        if (sortByOrder === 'ascending') {
-            expectedFieldValues = fieldValuesInAscendingOrder.map(mapFacilityStageToHasBeenIssued);
-        } else {
-            expectedFieldValues = fieldValuesInAscendingOrder.slice().reverse().map(mapFacilityStageToHasBeenIssued);
-        }
-        return { fieldPath: 'tfmFacilities.hasBeenIssued', expectedFieldValues};
-    };
+  function getFieldPathAndExpectedFieldValuesForFacilityStage(fieldValuesInAscendingOrder, sortByOrder) {
+    const mapFacilityStageToHasBeenIssued = (facilityStage) => facilityStage === 'Issued';
+    let expectedFieldValues;
+    if (sortByOrder === 'ascending') {
+      expectedFieldValues = fieldValuesInAscendingOrder.map(mapFacilityStageToHasBeenIssued);
+    } else {
+      expectedFieldValues = fieldValuesInAscendingOrder.slice().reverse().map(mapFacilityStageToHasBeenIssued);
+    }
+    return { fieldPath: 'tfmFacilities.hasBeenIssued', expectedFieldValues };
+  }
 });
