@@ -6,16 +6,15 @@ on:
   push:
     branches:
       - feat/e2etf-sql
-      - feat/DTFS2-6965/fix-operation-types
-    # paths:
-    #   - "portal/**"
-    #   - "portal-api/**"
-    #   - "gef-ui/**"
-    #   - "trade-finance-manager-ui/**"
-    #   - "trade-finance-manager-api/**"
-    #   - "dtfs-central-api/**"
-    #   - "external-api/**"
-    #   - "azure-functions/acbs-function/**"
+    paths:
+      - "portal/**"
+      - "portal-api/**"
+      - "gef-ui/**"
+      - "trade-finance-manager-ui/**"
+      - "trade-finance-manager-api/**"
+      - "dtfs-central-api/**"
+      - "external-api/**"
+      - "azure-functions/acbs-function/**"
 
 env:
   environment: feature
@@ -52,16 +51,16 @@ jobs:
       max-parallel: 2
       matrix:
         repository:
-          # - portal-ui
-          # - portal-api
-          # - gef-ui
-          # - trade-finance-manager-ui
-          # - trade-finance-manager-api
+          - portal-ui
+          - portal-api
+          - gef-ui
+          - trade-finance-manager-ui
+          - trade-finance-manager-api
           - dtfs-central-api
-          # - external-api
-        # include:
-        #   - path: portal
-        #     repository: portal-ui
+          - external-api
+        include:
+          - path: portal
+            repository: portal-ui
     steps:
       - name: 1. Latest commit hash
         uses: actions/checkout@v4
