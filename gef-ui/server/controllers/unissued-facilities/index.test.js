@@ -171,6 +171,7 @@ describe('postChangeUnissuedFacility()', () => {
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
     api.updateFacility.mockResolvedValue({});
     api.updateApplication = updateApplicationSpy;
+    mockRequest.flash = jest.fn();
   });
 
   afterEach(() => {
@@ -212,7 +213,6 @@ describe('postChangeUnissuedFacility()', () => {
     mockRequest.session.userToken = userToken;
 
     await postChangeUnissuedFacility(mockRequest, mockResponse);
-
     expect(api.updateFacility).toHaveBeenCalledWith({
       facilityId: 'xyz',
       payload: {
@@ -229,6 +229,55 @@ describe('postChangeUnissuedFacility()', () => {
       },
       userToken,
     });
+  });
+
+  it('adds a successMessage to flash storage', async () => {
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.query.saveAndReturn = 'true';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+
+    mockRequest.body['issue-date-day'] = format(now, 'd');
+    mockRequest.body['issue-date-month'] = format(now, 'M');
+    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+
+    mockRequest.body['cover-start-date-day'] = format(now, 'd');
+    mockRequest.body['cover-start-date-month'] = format(now, 'M');
+    mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
+
+    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+    mockRequest.session.userToken = userToken;
+
+    await postChangeUnissuedFacility(mockRequest, mockResponse);
+    expect(mockRequest.flash).toHaveBeenCalledWith('success', { message: 'UKEF123 is updated' });
+  });
+
+  it('redirects the user to the unissued facilities page', async () => {
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.query.saveAndReturn = 'true';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+
+    mockRequest.body['issue-date-day'] = format(now, 'd');
+    mockRequest.body['issue-date-month'] = format(now, 'M');
+    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+
+    mockRequest.body['cover-start-date-day'] = format(now, 'd');
+    mockRequest.body['cover-start-date-month'] = format(now, 'M');
+    mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
+
+    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+    mockRequest.session.userToken = userToken;
+    const { dealId } = mockRequest.params;
+
+    await postChangeUnissuedFacility(mockRequest, mockResponse);
+    expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${dealId}/unissued-facilities`);
   });
 
   it('calls api.updateApplication with editorId if successfully updates facility', async () => {
@@ -701,7 +750,7 @@ describe('postChangeIssuedToUnissuedFacility', () => {
 
     await postChangeIssuedToUnissuedFacility(mockRequest, mockResponse);
 
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/1234567890abcdf123456789');
     expect(api.updateFacility).not.toHaveBeenCalled();
   });
 
@@ -739,7 +788,7 @@ describe('changeIssuedToUnissuedFacility()', () => {
     await changeIssuedToUnissuedFacility(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/issued-facility-to-unissued.njk', expect.objectContaining({
-      dealId: '123',
+      dealId: '1234567890abcdf123456789',
       facilityType: 'contingent',
       hasBeenIssued: 'true',
     }));
@@ -752,7 +801,7 @@ describe('changeIssuedToUnissuedFacility()', () => {
     await changeIssuedToUnissuedFacility(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/issued-facility-to-unissued.njk', expect.objectContaining({
-      dealId: '123',
+      dealId: '1234567890abcdf123456789',
       facilityType: 'cash',
       hasBeenIssued: 'true',
     }));

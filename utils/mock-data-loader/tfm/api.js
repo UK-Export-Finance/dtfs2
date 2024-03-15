@@ -2,9 +2,7 @@ const axios = require('axios');
 const ApiError = require('../errors/api.error');
 require('dotenv').config({ path: `${__dirname}/../.env` });
 
-const {
-  TFM_API_URL, TFM_API_KEY, DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY
-} = process.env;
+const { TFM_API_URL, TFM_API_KEY, DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY } = process.env;
 
 const createTeam = async (team) => {
   const response = await axios({
@@ -17,7 +15,7 @@ const createTeam = async (team) => {
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams`,
     data: { team },
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -33,7 +31,7 @@ const listTeams = async () => {
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams`,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data.teams;
@@ -49,7 +47,7 @@ const deleteTeam = async (team) => {
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${team.id}`,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -67,7 +65,7 @@ const createTfmUser = async (user, token) => {
     url: `${TFM_API_URL}/v1/users`,
     data: { azureOid: user.username, ...user },
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -83,7 +81,7 @@ const listUsers = async () => {
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users`,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data.users;
@@ -99,7 +97,7 @@ const deleteUser = async (user) => {
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users/${user.username}`,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data;
@@ -115,7 +113,7 @@ const listDeals = async () => {
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals`,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response.data.deals;
@@ -131,7 +129,7 @@ const deleteDeal = async (deal) => {
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${deal._id}`,
   }).catch((error) => {
-    ApiError({ cause: error });
+    throw new ApiError({ cause: error });
   });
 
   return response && response.data;
