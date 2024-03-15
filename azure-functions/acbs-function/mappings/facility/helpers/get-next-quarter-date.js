@@ -7,10 +7,19 @@ populates with Forecast Year based on when the deal was issued -
 https://ukef-dtfs.atlassian.net/browse/DTFS2-3845
 */
 
-const { getYearAndMmdd } = require('../../../helpers/date');
+const moment = require('moment');
 
 const getNextQuarterDate = (issuedDate) => {
-  const { mmdd, year } = getYearAndMmdd(issuedDate);
+  let mmdd;
+  let year;
+
+  if (issuedDate) {
+    mmdd = moment(issuedDate).format('MM-DD');
+    year = moment(issuedDate).format('YYYY');
+  } else {
+    mmdd = moment().format('MM-DD');
+    year = moment().format('YYYY');
+  }
 
   if (mmdd <= '03-31') {
     return `${year}-03-31`;

@@ -58,6 +58,11 @@ describe('isEpoch', () => {
       expected: true,
     },
     {
+      description: 'should return false when input is a string written in scientific notation',
+      mockValue: '5e5',
+      expected: false,
+    },
+    {
       description: 'should return true when input is the Date object maximum value',
       mockValue: 8640000000000000, // https://262.ecma-international.org/5.1/#sec-15.9.1.1
       expected: true,
@@ -66,6 +71,16 @@ describe('isEpoch', () => {
       description: 'should return true when input is the Date object maximum value stored as string',
       mockValue: '8640000000000000', // https://262.ecma-international.org/5.1/#sec-15.9.1.1
       expected: true,
+    },
+    {
+      description: 'should return false when input is more than the Date object maximum value',
+      mockValue: 8640000000000001,
+      expected: false,
+    },
+    {
+      description: 'should return false when input is more than Date object maximum value stored as string',
+      mockValue: '8640000000000001',
+      expected: false,
     },
     {
       description: 'should return false when the input contains any non-numeric characters',
@@ -84,7 +99,7 @@ describe('isEpoch', () => {
     },
   ];
 
-  it.each(testData)('$description ($mockValue)', ({ mockValue, expected }) => {
+  it.each(testData)('$description', ({ mockValue, expected }) => {
     const result = isEpoch(mockValue);
 
     expect(result).toBe(expected);

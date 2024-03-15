@@ -1,5 +1,6 @@
 const { format } = require('date-fns');
-const { addYear, validDateFormats } = require('./date');
+const { addYear } = require('./date');
+const { validDateFormats, invalidDateFormats } = require('../test-helpers/date-formats');
 
 describe('addYear', () => {
   const testDate = new Date('2024-05-12');
@@ -13,8 +14,17 @@ describe('addYear', () => {
     expected: testDatePlusOneYearFormatted,
   }));
 
+  const invalidTestData = invalidDateFormats.map((formatString) => ({
+    description: `does not parse a date formatted as ${formatString}`,
+    formatString,
+    date: format(testDate, formatString),
+    yearsToAdd: 1,
+    expected: 'Invalid date',
+  }));
+
   const testData = [
     ...validTestData,
+    ...invalidTestData,
     {
       description: 'parses Date object',
       date: testDate,
@@ -28,14 +38,8 @@ describe('addYear', () => {
       expected: testDatePlusOneYearFormatted,
     },
     {
-      description: 'parses epoch stored as a string',
+      description: 'does not parse epoch as a string',
       date: testDate.valueOf().toString(),
-      yearsToAdd: 1,
-      expected: testDatePlusOneYearFormatted,
-    },
-    {
-      description: 'does not parse `Invalid date`',
-      date: 'Invalid date',
       yearsToAdd: 1,
       expected: 'Invalid date',
     },
@@ -46,9 +50,33 @@ describe('addYear', () => {
       expected: '2025-02-28',
     },
     {
-      description: 'accepts years to add stored as string',
+      description: 'accepts years to add as string',
       date: format(testDate, 'yyyy-MM-dd'),
       yearsToAdd: '1',
+      expected: testDatePlusOneYearFormatted,
+    },
+    {
+      description: 'adds 0 years if years to add is string with no numbers',
+      date: format(testDate, 'yyyy-MM-dd'),
+      yearsToAdd: 'x',
+      expected: format(testDate, 'yyyy-MM-dd'),
+    },
+    {
+      description: 'adds 0 years if years to add is empty object',
+      date: format(testDate, 'yyyy-MM-dd'),
+      yearsToAdd: {},
+      expected: format(testDate, 'yyyy-MM-dd'),
+    },
+    {
+      description: 'adds 0 years if years to add is invalid string containing numbers',
+      date: format(testDate, 'yyyy-MM-dd'),
+      yearsToAdd: '12x1',
+      expected: format(testDate, 'yyyy-MM-dd'),
+    },
+    {
+      description: 'adds 1 year if years to add is true',
+      date: format(testDate, 'yyyy-MM-dd'),
+      yearsToAdd: true,
       expected: testDatePlusOneYearFormatted,
     },
   ];

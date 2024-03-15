@@ -18,6 +18,11 @@ describe('isString', () => {
       expected: false,
     },
     {
+      description: 'should return true when input is a number bigger than maximum date stored as a string',
+      mockValue: '8640000000000001',
+      expected: true,
+    },
+    {
       description: 'should return false with input `0`',
       mockValue: '0',
       expected: false,
@@ -30,6 +35,11 @@ describe('isString', () => {
     {
       description: 'should return true when input is positive float stored as a string',
       mockValue: '170895577.7575',
+      expected: true,
+    },
+    {
+      description: 'should return true when input is a string written in scientific notation',
+      mockValue: '5e5',
       expected: true,
     },
     {
@@ -49,7 +59,7 @@ describe('isString', () => {
     },
   ];
 
-  it.each(testData)('$description ($mockValue)', ({ mockValue, expected }) => {
+  it.each(testData)('$description', ({ mockValue, expected }) => {
     const result = isString(mockValue);
 
     expect(result).toBe(expected);

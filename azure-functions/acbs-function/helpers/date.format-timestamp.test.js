@@ -1,8 +1,8 @@
 const { format } = require('date-fns');
-const { formatDate } = require('./date');
+const { formatTimestamp } = require('./date');
 const { validDateFormats, invalidDateFormats } = require('../test-helpers/date-formats');
 
-describe('formatDate', () => {
+describe('formatTimestamp', () => {
   const date = new Date();
 
   const invalidStringTestCases = invalidDateFormats.map((formatString) => ({
@@ -118,7 +118,7 @@ describe('formatDate', () => {
   ];
 
   it.each(testData)('$description ($mockValue to $expected)', ({ mockValue, expected }) => {
-    const result = formatDate(mockValue);
+    const result = formatTimestamp(mockValue);
 
     expect(result).toBe(expected);
   });
