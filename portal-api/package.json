@@ -18,7 +18,7 @@
   "author": "UK Export Finance",
   "main": "src/index.ts",
   "scripts": {
-    "api-test": "jest --logHeapUsage --coverage --verbose --runInBand --forceExit --clearMocks --config=api-test.jest.config.js",
+    "api-test": "jest --coverage --verbose --runInBand --forceExit --clearMocks --config=api-test.jest.config.js",
     "lint": "eslint ./src ./api-tests ./test-helpers ./__mocks__ && npm run type-check",
     "lint:fix": "eslint ./src ./api-tests ./test-helpers ./__mocks__ --fix",
     "start": "npx ts-node src/index.ts",
