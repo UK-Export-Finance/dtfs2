@@ -1,6 +1,7 @@
 import db from '../../drivers/db-client';
 import { DB_COLLECTIONS } from '../../constants';
-import { deleteAllAcbsDurableFunctionLogs, deleteAllDurableFunctionLogs } from './durable-functions-repo';
+import { deleteAllCompleteAcbsDurableFunctionLogs, deleteAllDurableFunctionLogs } from './durable-functions-repo';
+import { DURABLE_FUNCTIONS_LOG } from '@ukef/dtfs2-common';
 
 describe('durable-functions-repo', () => {
   afterEach(() => {
@@ -14,9 +15,9 @@ describe('durable-functions-repo', () => {
       expectedDeleteManyCalledWith: {},
     },
     {
-      testCase: 'deleteAllAcbsDurableFunctionLogs',
-      makeRequest: deleteAllAcbsDurableFunctionLogs,
-      expectedDeleteManyCalledWith: { type: { $eq: 'ACBS' } },
+      testCase: 'deleteAllCompleteAcbsDurableFunctionLogs',
+      makeRequest: deleteAllCompleteAcbsDurableFunctionLogs,
+      expectedDeleteManyCalledWith: { $and: [{ type: { $eq: DURABLE_FUNCTIONS_LOG.TYPE.ACBS } }, { status: { $eq: DURABLE_FUNCTIONS_LOG.STATUS.COMPLETED } }] },
     },
   ];
 

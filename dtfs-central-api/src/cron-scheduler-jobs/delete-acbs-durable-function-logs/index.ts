@@ -1,18 +1,22 @@
 import { asString, CronSchedulerJob } from '@ukef/dtfs2-common';
 import { WriteConcernError } from '../../errors';
-import { deleteAllAcbsDurableFunctionLogs } from '../../services/repositories/durable-functions-repo';
+import { deleteAllCompleteAcbsDurableFunctionLogs } from '../../services/repositories/durable-functions-repo';
 
 const { ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE } = process.env;
 
-const deleteAcbsDurableFunctionLogs = async (): Promise<void> => {
-  const { acknowledged } = await deleteAllAcbsDurableFunctionLogs();
+/**
+ * Deletes all durable function logs that have the type "ACBS" and status "Complete"
+ * @throws {WriteConcernError} If the deletion fails to write
+ */
+const deleteCompleteAcbsDurableFunctionLogs = async (): Promise<void> => {
+  const { acknowledged } = await deleteAllCompleteAcbsDurableFunctionLogs();
   if (!acknowledged) {
     throw new WriteConcernError();
   }
 };
 
-export const deleteAcbsDurableFunctionLogsJob: CronSchedulerJob = {
+export const deleteCompleteAcbsDurableFunctionLogsJob: CronSchedulerJob = {
   cronExpression: asString(ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE, 'ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE'),
-  description: 'Deletes durable function logs that have the type "ACBS"',
-  task: deleteAcbsDurableFunctionLogs,
+  description: 'Deletes durable function logs that have the type "ACBS" and status "Complete"',
+  task: deleteCompleteAcbsDurableFunctionLogs,
 };

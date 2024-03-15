@@ -1,6 +1,9 @@
 export const DURABLE_FUNCTIONS_LOG = {
   TYPE: {
     ACBS: 'ACBS',
-    NUMBER_GENERATOR: 'NUMBER_GENERATOR',
+  },
+  STATUS: {
+    RUNNING: 'Running',
+    COMPLETED: 'Completed',
   },
 };

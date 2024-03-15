@@ -10,7 +10,13 @@ export const deleteAllDurableFunctionLogs = async (): Promise<DeleteResult> => {
   return durableFunctionLogsCollection.deleteMany({});
 };
 
-export const deleteAllAcbsDurableFunctionLogs = async (): Promise<DeleteResult> => {
+/**
+ * Deletes all durable function logs that have the type "ACBS" and status "Complete"
+ * @returns The result of the deletion
+ */
+export const deleteAllCompleteAcbsDurableFunctionLogs = async (): Promise<DeleteResult> => {
   const durableFunctionLogsCollection = await getDurableFunctionsLogCollection();
-  return durableFunctionLogsCollection.deleteMany({ type: { $eq: DURABLE_FUNCTIONS_LOG.TYPE.ACBS } });
+  return durableFunctionLogsCollection.deleteMany({
+    $and: [{ type: { $eq: DURABLE_FUNCTIONS_LOG.TYPE.ACBS } }, { status: { $eq: DURABLE_FUNCTIONS_LOG.STATUS.COMPLETED } }],
+  });
 };
