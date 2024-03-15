@@ -13,6 +13,8 @@ export const postAuditDetails: (changeStreamDocument: ChangeStreamDocument) => P
   if (!AUDIT_API_URL || !AUDIT_API_USERNAME || !AUDIT_API_PASSWORD) {
     throw new InvalidEnvironmentVariableError('AUDIT_API_URL, AUDIT_API_USERNAME or AUDIT_API_PASSWORD not set');
   }
+  console.info(123123123);
+  console.info(changeStreamDocument);
   if (changeStreamDocument.operationType !== 'insert' && changeStreamDocument.operationType !== 'update' && changeStreamDocument.operationType !== 'replace') {
     console.info('Change stream document is not suitable event for audit API, skipping');
     return;

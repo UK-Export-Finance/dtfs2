@@ -6,15 +6,16 @@ on:
   push:
     branches:
       - feat/e2etf-sql
-    paths:
-      - "portal/**"
-      - "portal-api/**"
-      - "gef-ui/**"
-      - "trade-finance-manager-ui/**"
-      - "trade-finance-manager-api/**"
-      - "dtfs-central-api/**"
-      - "external-api/**"
-      - "azure-functions/acbs-function/**"
+      - feat/DTFS2-6965/fix-operation-types
+    # paths:
+    #   - "portal/**"
+    #   - "portal-api/**"
+    #   - "gef-ui/**"
+    #   - "trade-finance-manager-ui/**"
+    #   - "trade-finance-manager-api/**"
+    #   - "dtfs-central-api/**"
+    #   - "external-api/**"
+    #   - "azure-functions/acbs-function/**"
 
 env:
   environment: feature
