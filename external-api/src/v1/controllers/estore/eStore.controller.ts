@@ -142,14 +142,16 @@ export const create = async (req: Request, res: Response) => {
             const job = new CronJob(
               String(ESTORE_CRON_MANAGER_SCHEDULE), // Cron schedule
               () => {
+                console.info('===CRON=======', new Date());
                 eStoreSiteCreationCron(eStoreData);
               }, // On tick
               () => {
                 console.info('✅ eStore site creation has been completed successfully for deal %s', eStoreData.dealId);
               }, // On complete
-              true, // Start cron job
+              false, // Start
               TZ, // Timezone
             );
+
             job.start();
 
             // Update `cron-job-logs`

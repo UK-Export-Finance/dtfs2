@@ -16,12 +16,11 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
   const data = eStoreData;
 
   // Step 1: Site exists check
-  console.info('CRON - eStore site exist check for deal %s', eStoreData.dealIdentifier);
   const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(eStoreData.exporterName);
 
   // Step 2: Site already exists in eStore
   if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
-    console.info('CRON - eStore site %s exist check successful for deal %s', siteExistsResponse.data.siteId, eStoreData.dealIdentifier);
+    console.info('⚡ CRON: eStore site %s has been created successfully for deal %s', siteExistsResponse.data.siteId, eStoreData.dealIdentifier);
 
     data.siteId = siteExistsResponse.data.siteId;
 
@@ -48,7 +47,7 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
     // Add facility IDs to term store and create the buyer folder
     eStoreTermStoreAndBuyerFolder(data);
   } else if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING) {
-    console.info('CRON - eStore site creation in progress for deal %s', eStoreData.dealIdentifier);
+    console.info('⚡ CRON: eStore site creation %s is still in progress for deal %s', siteExistsResponse.data.siteId, eStoreData.dealIdentifier);
 
     // Increment site creation by `1`
     await cronJobLogs.findOneAndUpdate(
@@ -57,7 +56,12 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
       { returnNewDocument: true, returnDocument: 'after' },
     );
   } else {
-    console.error('CRON - eStore site existence check failed for deal %s %O', eStoreData.dealIdentifier, siteExistsResponse);
+    console.error(
+      '❌ CRON: eStore site existence %s check has failed for deal %s %o',
+      siteExistsResponse.data.siteId,
+      eStoreData.dealIdentifier,
+      siteExistsResponse,
+    );
 
     // CRON job log update
     await cronJobLogs.updateOne(
