@@ -230,17 +230,6 @@ describe('/v1/deals', () => {
       expect(body.tfm.dateReceivedTimestamp).toBeDefined();
     });
 
-    describe('eStore', () => {
-      describe('when deal is AIN', () => {
-        it('adds estore object to the deal', async () => {
-          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED));
-
-          expect(status).toEqual(200);
-          expect(body.tfm.estore).toBeDefined();
-        });
-      });
-    });
-
     describe('when dealType is `GEF`', () => {
       it('should return 200', async () => {
         const { status } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));

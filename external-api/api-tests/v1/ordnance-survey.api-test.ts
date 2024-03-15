@@ -1,6 +1,9 @@
 import { app } from '../../src/createApp';
 import { api } from '../api';
+import MockAdapter from 'axios-mock-adapter';
+import axios, { HttpStatusCode } from 'axios';
 
+const { ORDNANCE_SURVEY_API_URL, ORDNANCE_SURVEY_API_KEY } = process.env;
 const { get } = api(app);
 
 const mockResponse = {
@@ -83,7 +86,9 @@ const mockResponse = {
   },
 };
 
-jest.mock('axios', () => jest.fn(() => Promise.resolve(mockResponse)));
+// Mock Axios
+const mock = new MockAdapter(axios);
+mock.onGet(`${ORDNANCE_SURVEY_API_URL}/search/places/v1/postcode?postcode=WR90DJ&key=${ORDNANCE_SURVEY_API_KEY}`).reply(HttpStatusCode.Ok, mockResponse.data);
 
 describe('/ordnance-survey', () => {
   describe('GET /ordnance-survey', () => {
