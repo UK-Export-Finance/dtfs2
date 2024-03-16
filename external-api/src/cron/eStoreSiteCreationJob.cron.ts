@@ -50,6 +50,22 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore) => {
   } else if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING) {
     console.info('⚡ CRON: eStore site creation %s is still in progress for deal %s %s', siteExistsResponse.data.siteId, eStoreData.dealIdentifier, now);
 
+    // Update status
+    await cronJobLogs.updateOne(
+      { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
+      {
+        $set: {
+          'cron.site.create': {
+            response: siteExistsResponse.data,
+            status: ESTORE_CRON_STATUS.RUNNING,
+            timestamp: new Date().valueOf(),
+          },
+          'cron.site.status': ESTORE_CRON_STATUS.RUNNING,
+          'cron.site.id': siteExistsResponse?.data?.siteId,
+        },
+      },
+    );
+
     // Increment site creation by `1`
     await cronJobLogs.findOneAndUpdate(
       { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },

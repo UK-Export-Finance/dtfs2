@@ -138,8 +138,8 @@ export const create = async (req: Request, res: Response) => {
             /**
              * Add a new site specific CRON job, which is initialised upon creation
              */
-            const cron = `estore_cron_site_${eStoreData.dealId}`;
-            const job = new CronJob(
+            const siteCreateCronId = `estore_cron_site_${eStoreData.dealId}`;
+            const siteCreateCronJob = new CronJob(
               String(ESTORE_CRON_MANAGER_SCHEDULE), // Cron schedule
               () => {
                 eStoreSiteCreationCron(eStoreData);
@@ -151,24 +151,13 @@ export const create = async (req: Request, res: Response) => {
               TZ, // Timezone
             );
 
-            job.start();
+            // Only start if job is not already running
+            if (!siteCreateCronJob.running) {
+              siteCreateCronJob.start();
+            }
 
             // Update `cron-job-logs`
-            console.info('eStore site %s CRON job %s initiated.', siteCreationResponse.data.siteId, cron);
-            await cronJobLogs.updateOne(
-              { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
-              {
-                $set: {
-                  'cron.site.create': {
-                    response: siteExistsResponse.data,
-                    status: ESTORE_CRON_STATUS.RUNNING,
-                    timestamp: new Date().valueOf(),
-                  },
-                  'cron.site.status': ESTORE_CRON_STATUS.RUNNING,
-                  'cron.site.id': siteCreationResponse?.data?.siteId,
-                },
-              },
-            );
+            console.info('eStore site %s CRON job %s initiated.', siteCreationResponse.data.siteId, siteCreateCronId);
           } else {
             console.error('eStore site creation failed for deal %s %o', eStoreData.dealIdentifier, siteCreationResponse?.data);
 
