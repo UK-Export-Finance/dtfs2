@@ -6,7 +6,7 @@
   "author": "",
   "main": "migrate-users.js",
   "dependencies": {
-    "axios": "^1.6.7",
+    "axios": "^1.6.8",
     "bson": "^6.5.0",
     "date-fns": "^2.30.0",
     "dotenv": "^16.4.5",

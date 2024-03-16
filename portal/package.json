@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "1.8.0",
-    "axios": "^1.6.7",
+    "axios": "^1.6.8",
     "axios-mock-adapter": "^1.22.0",
     "cheerio": "^1.0.0-rc.12",
     "clamscan": "^2.1.2",
