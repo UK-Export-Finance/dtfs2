@@ -65,13 +65,6 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore) => {
         },
       },
     );
-
-    // Increment site creation by `1`
-    await cronJobLogs.findOneAndUpdate(
-      { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
-      { $inc: { 'cron.site.create.execution': 1 } },
-      { returnNewDocument: true, returnDocument: 'after' },
-    );
   } else {
     console.error(
       '❌ CRON: eStore site existence %s check has failed for deal %s %o %s',
