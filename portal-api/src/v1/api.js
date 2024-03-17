@@ -366,6 +366,11 @@ const getAllBanks = async () => {
   }
 };
 
+/**
+ * Call the central API to get the next report period for a bank
+ * @param {string} bankId
+ * @returns {object} response of API call or wrapped error response
+ */
 const getNextReportPeriodByBankId = async (bankId) => {
   try {
     if (!isValidBankId(bankId)) {

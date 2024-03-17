@@ -1,4 +1,4 @@
 import { ValuesOf } from '@ukef/dtfs2-common';
-import { CURRENCIES } from '../constants';
+import { CURRENCY } from '../constants';
 
-export type Currency = ValuesOf<typeof CURRENCIES>;
+export type Currency = ValuesOf<typeof CURRENCY>;

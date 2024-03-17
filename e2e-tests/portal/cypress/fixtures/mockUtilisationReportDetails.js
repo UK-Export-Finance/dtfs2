@@ -11,11 +11,6 @@ const BANK1 = {
   name: BANK1_PAYMENT_REPORT_OFFICER1.bank.name,
 };
 
-const BANK2 = {
-  id: BANK2_PAYMENT_REPORT_OFFICER1.bank.id,
-  name: BANK2_PAYMENT_REPORT_OFFICER1.bank.name,
-};
-
 const generateReportDetails = (year, month) => {
   const bank = BANK1;
   const uploadedBy = BANK1_PAYMENT_REPORT_OFFICER1;
@@ -75,7 +70,10 @@ const february2023ReportDetails = [
 
 const december2023ToFebruary2024ReportDetails = [
   {
-    bank: BANK2,
+    bank: {
+      id: BANK2_PAYMENT_REPORT_OFFICER1.bank.id,
+      name: BANK2_PAYMENT_REPORT_OFFICER1.bank.name,
+    },
     reportPeriod: {
       start: {
         month: 12,

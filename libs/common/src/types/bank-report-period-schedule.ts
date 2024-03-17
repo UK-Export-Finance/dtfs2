@@ -1,4 +1,6 @@
+import { OneIndexedMonth } from './date';
+
 export type BankReportPeriodSchedule = {
-  startMonth: number;
-  endMonth: number;
+  startMonth: OneIndexedMonth;
+  endMonth: OneIndexedMonth;
 }[];
