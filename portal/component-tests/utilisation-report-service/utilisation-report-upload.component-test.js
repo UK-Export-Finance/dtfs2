@@ -154,7 +154,7 @@ describe(page, () => {
         user,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
         dueReportPeriods: [],
-        nextReportPeriodFormatted: formattedNextReportPeriod,
+        formattedNextReportPeriod,
         nextReportPeriodSubmissionStart,
         lastUploadedReportPeriod,
         uploadedByFullName,

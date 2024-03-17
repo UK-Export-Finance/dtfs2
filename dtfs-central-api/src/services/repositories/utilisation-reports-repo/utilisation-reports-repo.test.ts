@@ -110,16 +110,7 @@ describe('utilisation-reports-repo', () => {
       expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_REPORTS);
       expect(insertOneSpy).toHaveBeenCalledWith({
         bank: mockSessionBank,
-        reportPeriod: {
-          start: {
-            month: 1,
-            year: 2021,
-          },
-          end: {
-            month: 1,
-            year: 2021,
-          },
-        },
+        reportPeriod: mockReportPeriod,
         azureFileInfo: null,
         status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
       });

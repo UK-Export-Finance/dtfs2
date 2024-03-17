@@ -106,68 +106,26 @@ const getPreviousReportPeriodForBankScheduleByTargetDate = (
 ): ReportPeriod => {
   const targetMonth = getOneIndexedMonth(dateInTargetReportPeriod);
   const targetYear = dateInTargetReportPeriod.getFullYear();
-
-  const currentScheduleIndexInCurrentYear = bankReportPeriodSchedule.findIndex(
-    (schedule) => targetMonth >= schedule.startMonth && targetMonth <= schedule.endMonth,
+  const indexOfCurrentSchedule = bankReportPeriodSchedule.findIndex(
+    (schedule) =>
+      (schedule.startMonth <= targetMonth && targetMonth <= schedule.endMonth) ||
+      (schedule.startMonth > schedule.endMonth && targetMonth >= schedule.endMonth && targetMonth >= schedule.startMonth) ||
+      (schedule.startMonth > schedule.endMonth && targetMonth <= schedule.endMonth && targetMonth <= schedule.startMonth),
   );
-
-  if (currentScheduleIndexInCurrentYear >= 0) {
-    const targetReportSchedule = bankReportPeriodSchedule[currentScheduleIndexInCurrentYear - 1];
-
-    if (targetReportSchedule) {
-      if (targetReportSchedule?.startMonth > targetReportSchedule?.endMonth) {
-        return {
-          start: {
-            month: targetReportSchedule.startMonth,
-            year: targetYear - 1,
-          },
-          end: {
-            month: targetReportSchedule.endMonth,
-            year: targetYear,
-          },
-        };
-      }
-      return {
-        start: {
-          month: targetReportSchedule.startMonth,
-          year: targetYear,
-        },
-        end: {
-          month: targetReportSchedule.endMonth,
-          year: targetYear,
-        },
-      };
-    }
-    if (currentScheduleIndexInCurrentYear === 0) {
-      const targetReportScheduleNotCurrentYearNotCurrentYear = bankReportPeriodSchedule.at(-1);
-      return {
-        start: {
-          month: targetReportScheduleNotCurrentYearNotCurrentYear!.startMonth,
-          year: targetYear - 1,
-        },
-        end: {
-          month: targetReportScheduleNotCurrentYearNotCurrentYear!.endMonth,
-          year: targetYear - 1,
-        },
-      };
-    }
+  if (indexOfCurrentSchedule === -1) {
+    throw new Error('Failed to find a schedule');
   }
-
-  const currentScheduleIndexOverlappingYear = bankReportPeriodSchedule.findIndex((schedule) => schedule.startMonth > schedule.endMonth);
-  if (currentScheduleIndexOverlappingYear < 0) {
-    throw new Error('Failed to get a report period');
-  }
-
-  const targetReportSchedule = bankReportPeriodSchedule.at(-1);
-  const reportPeriodStartsInPreviousYear = targetMonth <= targetReportSchedule!.endMonth;
+  const targetReportSchedule = bankReportPeriodSchedule[indexOfCurrentSchedule - 1] ?? bankReportPeriodSchedule.at(-1)!;
+  const isTargetReportPeriodStartInPreviousYear = targetMonth < targetReportSchedule.startMonth;
+  const isTargetReportPeriodEndInPreviousYear = targetMonth < targetReportSchedule.endMonth;
   return {
     start: {
-      month: targetReportSchedule!.startMonth,
-      year: reportPeriodStartsInPreviousYear ? targetYear - 1 : targetYear,
+      month: targetReportSchedule.startMonth,
+      year: isTargetReportPeriodStartInPreviousYear ? targetYear - 1 : targetYear,
     },
     end: {
-      month: targetReportSchedule!.endMonth,
-      year: reportPeriodStartsInPreviousYear ? targetYear - 1 : targetYear,
+      month: targetReportSchedule.endMonth,
+      year: isTargetReportPeriodEndInPreviousYear ? targetYear - 1 : targetYear,
     },
   };
 };

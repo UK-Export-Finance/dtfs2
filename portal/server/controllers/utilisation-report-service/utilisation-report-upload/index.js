@@ -46,12 +46,12 @@ const getLastUploadedReportDetails = async (userToken, bankId) => {
   const reportAndUserDetails = getReportAndUserDetails(lastUploadedReport);
 
   const nextReportPeriod = await api.getNextReportPeriodByBankId(userToken, bankId);
-  const nextReportPeriodFormatted = getFormattedReportPeriod(nextReportPeriod);
+  const formattedNextReportPeriod = getFormattedReportPeriod(nextReportPeriod);
 
   const nextReportPeriodSubmissionEndDate = addMonths(new Date(nextReportPeriod.end.year, nextReportPeriod.end.month - 1), 1);
   const nextReportPeriodSubmissionStart = format(startOfMonth(nextReportPeriodSubmissionEndDate), 'd MMMM yyyy');
 
-  return { ...reportAndUserDetails, nextReportPeriodFormatted, nextReportPeriodSubmissionStart };
+  return { ...reportAndUserDetails, formattedNextReportPeriod, nextReportPeriodSubmissionStart };
 };
 
 const getUtilisationReportUpload = async (req, res) => {
