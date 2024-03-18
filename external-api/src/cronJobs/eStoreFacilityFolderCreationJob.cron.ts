@@ -3,6 +3,7 @@ import { Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { eStoreCronJobManager } from './eStoreCronJobManager';
 import { createFacilityFolder, uploadSupportingDocuments } from '../v1/controllers/estore/eStoreApi';
+import { generateSystemAuditDetails } from '@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails';
 
 const FACILITY_FOLDER_MAX_RETRIES = 3;
 
@@ -11,7 +12,7 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
     const cronJobLogsCollection = await getCollection('cron-job-logs');
     const response = await cronJobLogsCollection.findOneAndUpdate(
       { dealId: { $eq: eStoreData.dealId } },
-      { $inc: { facilityFolderRetries: 1 } },
+      { $inc: { facilityFolderRetries: 1 }, $set: { auditDetails: generateSystemAuditDetails() } },
       { returnNewDocument: true, returnDocument: 'after' },
     );
 
@@ -40,6 +41,7 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
             $set: {
               'facilityCronJob.status': ESTORE_CRON_STATUS.COMPLETED,
               'facilityCronJob.completionDate': new Date(),
+              auditDetails: generateSystemAuditDetails(),
             },
           },
         );
@@ -62,7 +64,9 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed
       await cronJobLogsCollection.updateOne(
         { dealId: { $eq: eStoreData.dealId } },
-        { $set: { 'facilityCronJob.status': ESTORE_CRON_STATUS.FAILED, 'facilityCronJob.failureDate': new Date() } },
+        {
+          $set: { 'facilityCronJob.status': ESTORE_CRON_STATUS.FAILED, 'facilityCronJob.failureDate': new Date(), auditDetails: generateSystemAuditDetails() },
+        },
       );
     }
   } catch (error) {

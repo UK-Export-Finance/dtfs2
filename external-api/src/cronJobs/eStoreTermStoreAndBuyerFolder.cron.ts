@@ -7,6 +7,7 @@ import { ESTORE_CRON_STATUS } from '../constants';
 import { eStoreCronJobManager } from './eStoreCronJobManager';
 import { eStoreDealFolderCreationJob } from './eStoreDealFolderCreationJob.cron';
 import { createBuyerFolder, addFacilityToTermStore } from '../v1/controllers/estore/eStoreApi';
+import { generateSystemAuditDetails } from '@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails';
 
 const DEAL_FOLDER_TIMEOUT = 6;
 
@@ -23,7 +24,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
     // increment the termStoreRetries by 1
     const response = await cronJobLogsCollection.findOneAndUpdate(
       { dealId: { $eq: eStoreData.dealId } },
-      { $inc: { termStoreRetries: 1 } },
+      { $inc: { termStoreRetries: 1 }, $set: { auditDetails: generateSystemAuditDetails() } },
       { returnNewDocument: true, returnDocument: 'after' },
     );
 
@@ -43,7 +44,10 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
       } else {
         console.error('API Call failed: Unable to add the facilityIds to TermStore %O', termStoreResponse);
         // update the database to indicate that there was an issue adding the facilityIds to TermStore
-        await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: { termStoreResponse } });
+        await cronJobLogsCollection.updateOne(
+          { dealId: { $eq: eStoreData.dealId } },
+          { $set: { termStoreResponse, auditDetails: generateSystemAuditDetails() } },
+        );
       }
     }
   }
@@ -52,7 +56,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
   // increment the buyerFolderRetries by 1
   const response = await cronJobLogsCollection.findOneAndUpdate(
     { dealId: { $eq: eStoreData.dealId } },
-    { $inc: { buyerFolderRetries: 1 } },
+    { $inc: { buyerFolderRetries: 1 }, $set: { auditDetails: generateSystemAuditDetails() } },
     { returnNewDocument: true, returnDocument: 'after' },
   );
 
@@ -69,7 +73,10 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
 
       const tfmDealsCollection = await getCollection('tfm-deals');
       // update the `tfm-deals` collection once the buyer folder has been created
-      tfmDealsCollection.updateOne({ _id: { $eq: ObjectId(eStoreData.dealId) } }, { $set: { 'tfm.estore.siteName': eStoreData.siteId } });
+      tfmDealsCollection.updateOne(
+        { _id: { $eq: ObjectId(eStoreData.dealId) } },
+        { $set: { 'tfm.estore.siteName': eStoreData.siteId, auditDetails: generateSystemAuditDetails() } },
+      );
 
       const folderCreationTimer = addMinutes(new Date(), DEAL_FOLDER_TIMEOUT);
       eStoreCronJobManager.add(`Deal${eStoreData.dealId}`, folderCreationTimer, () => {
@@ -78,7 +85,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
       // update the database to indicate that the deal cron job started
       await cronJobLogsCollection.updateOne(
         { dealId: { $eq: eStoreData.dealId } },
-        { $set: { 'dealCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'dealCronJob.startDate': new Date() } },
+        { $set: { 'dealCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'dealCronJob.startDate': new Date(), auditDetails: generateSystemAuditDetails() } },
       );
 
       console.info('Cron job started: eStore Deal folder Cron Job started');
@@ -86,7 +93,10 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
     } else {
       console.error('API Call failed: Unable to create the Buyer folder %O', buyerFolderResponse);
       // update the database to indicate that there was an issue creating the buyer Folder
-      await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: { buyerFolderResponse } });
+      await cronJobLogsCollection.updateOne(
+        { dealId: { $eq: eStoreData.dealId } },
+        { $set: { buyerFolderResponse, auditDetails: generateSystemAuditDetails() } },
+      );
     }
   }
 };
