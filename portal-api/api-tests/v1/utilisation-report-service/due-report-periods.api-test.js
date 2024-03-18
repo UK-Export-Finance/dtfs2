@@ -1,13 +1,11 @@
-const databaseHelper = require('../../database-helper');
+const { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } = require('@ukef/dtfs2-common');
+const { wipeAllUtilisationReports, saveUtilisationReportToDatabase } = require('../../sql-db-helper.ts');
 const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
-const { DB_COLLECTIONS } = require('../../fixtures/constants');
-const { insertOneUtilisationReportDetails } = require('../../insertUtilisationReportDetails');
-const { MOCK_NOT_RECEIVED_REPORT_WITHOUT_ID } = require('../../../test-helpers/mock-utilisation-report-details');
 
 describe('GET /v1/banks/:bankId/due-report-periods', () => {
   const dueReportPeriodsUrl = (bankId) => `/v1/banks/${bankId}/due-report-periods`;
@@ -17,7 +15,7 @@ describe('GET /v1/banks/:bankId/due-report-periods', () => {
   let matchingBankId;
 
   beforeAll(async () => {
-    await databaseHelper.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
+    await wipeAllUtilisationReports();
 
     testUsers = await testUserCache.initialise(app);
     aPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).one();
@@ -26,11 +24,8 @@ describe('GET /v1/banks/:bankId/due-report-periods', () => {
     const { bank } = aPaymentReportOfficer;
     const month = 11;
     const year = 2022;
-    const dateUploaded = new Date(year, month - 1);
-    mockUtilisationReport = {
-      ...MOCK_NOT_RECEIVED_REPORT_WITHOUT_ID,
-      bank,
-      reportPeriod: {
+    mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      .withReportPeriod({
         start: {
           month,
           year,
@@ -39,15 +34,10 @@ describe('GET /v1/banks/:bankId/due-report-periods', () => {
           month,
           year,
         },
-      },
-      dateUploaded,
-      uploadedBy: aPaymentReportOfficer,
-    };
-    await insertOneUtilisationReportDetails(mockUtilisationReport);
-  });
-
-  afterAll(async () => {
-    await databaseHelper.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
+      })
+      .withBankId(bank.id)
+      .build();
+    await saveUtilisationReportToDatabase(mockUtilisationReport);
   });
 
   withClientAuthenticationTests({

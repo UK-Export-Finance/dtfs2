@@ -13,12 +13,12 @@ console.error = jest.fn();
 
 describe('get-utilisation-report-download controller', () => {
   describe('getUtilisationReportDownload', () => {
-    const mockReportMongoId = '5099803df3f4948bd2f98391';
+    const mockReportId = '5099';
 
     const getHttpMocks = () =>
       httpMocks.createMocks(
         {
-          params: { _id: mockReportMongoId },
+          params: { id: mockReportId },
         },
         { eventEmitter: events.EventEmitter },
       );

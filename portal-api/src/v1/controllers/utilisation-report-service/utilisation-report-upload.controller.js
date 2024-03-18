@@ -1,4 +1,3 @@
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const sendEmail = require('../../email');
 const { EMAIL_TEMPLATE_IDS, FILESHARES } = require('../../../constants');
@@ -113,6 +112,7 @@ const uploadReportAndSendNotification = async (req, res) => {
 
     const existingReports = await api.getUtilisationReports(bankId, {
       reportPeriod: parsedReportPeriod,
+      excludeNotReceived: true,
     });
 
     if (existingReports.length !== 1) {
@@ -120,11 +120,6 @@ const uploadReportAndSendNotification = async (req, res) => {
     }
 
     const existingReport = existingReports[0];
-
-    // If a report is not in a not received state, we should not overwrite it
-    if (existingReport.status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) {
-      return res.status(409).send('Report for the supplied report period has already been uploaded');
-    }
 
     const fileInfo = await saveFileToAzure(file, bankId);
 

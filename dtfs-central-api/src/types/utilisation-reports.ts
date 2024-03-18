@@ -5,9 +5,21 @@ import {
   Prettify,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   Currency,
+  ReportPeriod,
+  AzureFileInfo,
 } from '@ukef/dtfs2-common';
 import { IsoMonthStamp } from './date';
 import { UTILISATION_REPORT_HEADERS } from '../constants';
+
+export type GetUtilisationReportResponse = {
+  id: number;
+  bankId: string;
+  status: UtilisationReportReconciliationStatus;
+  uploadedByUserId: string | null;
+  reportPeriod: ReportPeriod;
+  azureFileInfo: AzureFileInfo | null;
+  dateUploaded: Date | null;
+};
 
 export type UtilisationReportReconciliationSummaryItem = {
   reportId: number;
