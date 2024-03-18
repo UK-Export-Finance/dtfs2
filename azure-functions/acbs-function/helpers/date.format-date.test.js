@@ -13,6 +13,36 @@ describe('formatDate', () => {
   const testData = [
     ...validStringTestCases,
     {
+      description: 'should parse null as legacy implimentation',
+      mockValue: null,
+      expected: '1970-01-01',
+    },
+    {
+      description: 'should parse undefined as legacy implimentation',
+      mockValue: undefined,
+      expected: 'Invalid date',
+    },
+    {
+      description: 'should parse `0` as epoch',
+      mockValue: '0',
+      expected: '1970-01-01',
+    },
+    {
+      description: 'should parse 0 as epoch',
+      mockValue: 0,
+      expected: '1970-01-01',
+    },
+    {
+      description: 'should parse iso date with zulu time',
+      mockValue: '2024-03-14T00:00:00Z',
+      expected: '2024-03-14',
+    },
+    {
+      description: 'should parse iso date with timezone',
+      mockValue: '2024-03-14T00:00:00+00:00',
+      expected: '2024-03-14',
+    },
+    {
       description: 'should not parse if day of month too big',
       mockValue: '2023-10-32',
       expected: 'Invalid date',
@@ -36,16 +66,6 @@ describe('formatDate', () => {
       description: 'should not parse if month too big',
       mockValue: '2023-13-12',
       expected: 'Invalid date',
-    },
-    {
-      description: 'should parse `0` as epoch',
-      mockValue: '0',
-      expected: '1970-01-01',
-    },
-    {
-      description: 'should parse 0 as epoch',
-      mockValue: 0,
-      expected: '1970-01-01',
     },
     {
       description: 'should parse negative integer stored as string as epoch',
