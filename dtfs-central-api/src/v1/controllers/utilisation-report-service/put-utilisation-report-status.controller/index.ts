@@ -18,6 +18,11 @@ export type PutUtilisationReportStatusRequest = CustomExpressRequest<{
   };
 }>;
 
+/**
+ * Asserts that the `reportWithStatus` contains the required fields
+ * @param reportWithStatus - The report with status to set
+ * @throws {InvalidPayloadError}
+ */
 const assertReportWithStatusIsPopulated = (reportWithStatus: ReportWithStatus) => {
   const { status, reportId } = reportWithStatus;
   if (!status || !reportId) {
@@ -25,7 +30,14 @@ const assertReportWithStatusIsPopulated = (reportWithStatus: ReportWithStatus) =
   }
 };
 
-const executeEventHandlerWithQueryRunner = async (
+/**
+ * Execute the specific event handler depending on the status defined
+ * in the `reportWithStatus` parameter
+ * @param reportWithStatus - The report with status to set
+ * @param transactionEntityManager - The entity manager for the transaction
+ * @param requestSource - The request source
+ */
+const executeEventHandler = async (
   reportWithStatus: ReportWithStatus,
   transactionEntityManager: EntityManager,
   requestSource: DbRequestSource,
@@ -51,6 +63,34 @@ const executeEventHandlerWithQueryRunner = async (
   });
 };
 
+/**
+ * Updates the reports statuses within a transaction
+ * @param reportsWithStatus - The reports with status to set
+ * @param requestSource - The request source
+ * @throws {TransactionFailedError}
+ */
+const updateReportStatusesInTransaction = async (reportsWithStatus: ReportWithStatus[], requestSource: DbRequestSource): Promise<void> => {
+  const queryRunner = SqlDbDataSource.createQueryRunner();
+  await queryRunner.connect();
+
+  await queryRunner.startTransaction();
+  try {
+    const transactionEntityManager = queryRunner.manager;
+    await Promise.all(reportsWithStatus.map((reportWithStatus) => executeEventHandler(reportWithStatus, transactionEntityManager, requestSource)));
+    await queryRunner.commitTransaction();
+  } catch (error) {
+    await queryRunner.rollbackTransaction();
+    throw new TransactionFailedError();
+  } finally {
+    await queryRunner.release();
+  }
+};
+
+/**
+ * Controller for setting multiple utilisation report statuses
+ * @param req - The request object
+ * @param res - The response object
+ */
 export const putUtilisationReportStatus = async (req: PutUtilisationReportStatusRequest, res: Response) => {
   try {
     const { reportsWithStatus, user } = req.body;
@@ -69,22 +109,7 @@ export const putUtilisationReportStatus = async (req: PutUtilisationReportStatus
     }
     reportsWithStatus.forEach(assertReportWithStatusIsPopulated);
 
-    const queryRunner = SqlDbDataSource.createQueryRunner();
-    await queryRunner.connect();
-
-    await queryRunner.startTransaction();
-    try {
-      const transactionEntityManager = queryRunner.manager;
-      await Promise.all(
-        reportsWithStatus.map((reportWithStatus) => executeEventHandlerWithQueryRunner(reportWithStatus, transactionEntityManager, requestSource)),
-      );
-      await queryRunner.commitTransaction();
-    } catch (error) {
-      await queryRunner.rollbackTransaction();
-      throw new TransactionFailedError();
-    } finally {
-      await queryRunner.release();
-    }
+    await updateReportStatusesInTransaction(reportsWithStatus, requestSource);
 
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
