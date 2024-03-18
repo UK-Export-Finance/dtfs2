@@ -62,7 +62,7 @@ const february2023ReportDetails = [
       },
     },
     status: 'REPORT_NOT_RECEIVED',
-    updatedByUserId: `SYSTEM`
+    lastUpdatedByIsSystemUser: true,
   },
 ];
 

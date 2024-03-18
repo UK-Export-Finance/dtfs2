@@ -3,7 +3,6 @@ import { UtilisationReportEntity } from '../utilisation-report';
 import { Currency } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import { CreateFeeRecordParams } from './fee-record.types';
-import { getDbAuditUpdatedByUserId } from '../helpers';
 import { MonetaryColumn, ExchangeRateColumn } from '../custom-columns';
 
 @Entity('FeeRecord')
@@ -112,7 +111,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     feeRecord.feesPaidToUkefForThePeriodCurrency = feesPaidToUkefForThePeriodCurrency;
     feeRecord.paymentCurrency = paymentCurrency;
     feeRecord.paymentExchangeRate = paymentExchangeRate;
-    feeRecord.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
+    feeRecord.updateActivityDetails(requestSource);
     return feeRecord;
   }
 }

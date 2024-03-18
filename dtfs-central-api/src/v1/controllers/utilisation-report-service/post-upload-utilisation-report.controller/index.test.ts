@@ -7,7 +7,6 @@ import {
   MOCK_AZURE_FILE_INFO,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
-  getDbAuditUpdatedByUserId,
 } from '@ukef/dtfs2-common';
 import { postUploadUtilisationReport, postUploadUtilisationReportPayloadValidator, PostUploadUtilisationReportRequestBody } from '.';
 import { MOCK_UTILISATION_REPORT_RAW_CSV_DATA } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-report-raw-csv-data';
@@ -22,7 +21,6 @@ describe('post-upload-utilisation-report controller', () => {
     platform: 'PORTAL',
     userId,
   };
-  const updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
   const reportData = [MOCK_UTILISATION_REPORT_RAW_CSV_DATA];
 
   const validPostUploadUtilisationReportRequestBody: PostUploadUtilisationReportRequestBody = {
@@ -157,7 +155,9 @@ describe('post-upload-utilisation-report controller', () => {
         expect(utilisationReportRepoSaveSpy).toHaveBeenCalledWith(
           expect.objectContaining<Partial<UtilisationReportEntity>>({
             status: 'PENDING_RECONCILIATION',
-            updatedByUserId,
+            lastUpdatedByIsSystemUser: false,
+            lastUpdatedByTfmUserId: null,
+            lastUpdatedByPortalUserId: userId,
             uploadedByUserId: userId,
             azureFileInfo,
             feeRecords: [feeRecord],

@@ -1,15 +1,16 @@
 import { AzureFileInfoEntity } from '../azure-file-info';
 import { MOCK_AZURE_FILE_INFO, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
-import { DbRequestSource, getDbAuditUpdatedByUserId } from '../helpers';
+import { DbRequestSource } from '../helpers';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 
 describe('UtilisationReportEntity', () => {
   describe('updateReportWithUploadDetails', () => {
+    const uploadedByUserId = 'abc123';
+
     const requestSource: DbRequestSource = {
       platform: 'PORTAL',
-      userId: 'abc123',
+      userId: uploadedByUserId,
     };
-    const uploadedByUserId = getDbAuditUpdatedByUserId(requestSource);
 
     const mockDate = new Date('2024-01');
 
@@ -39,10 +40,13 @@ describe('UtilisationReportEntity', () => {
       // Assert
       expect(report.dateUploaded).toEqual(mockDate);
       expect(report.uploadedByUserId).toEqual(uploadedByUserId);
-      expect(report.updatedByUserId).toEqual(uploadedByUserId);
       expect(report.azureFileInfo).toEqual(azureFileInfo);
       expect(report.status).toEqual(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION);
       expect(report.feeRecords).toEqual([feeRecord]);
+
+      expect(report.lastUpdatedByIsSystemUser).toBe(false);
+      expect(report.lastUpdatedByPortalUserId).toBe(uploadedByUserId);
+      expect(report.lastUpdatedByTfmUserId).toBeNull();
     });
   });
 
@@ -51,10 +55,9 @@ describe('UtilisationReportEntity', () => {
       platform: 'TFM',
       userId: 'abc123',
     };
-    const updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
 
     const allStatuses = Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS);
-    it.each(allStatuses)(`sets the report status to '%s' and the updatedByUserId to '${updatedByUserId}'`, (status) => {
+    it.each(allStatuses)(`sets the report status to '%s' and updated the activity logs fields`, (status) => {
       // Arrange
       const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
 
@@ -63,7 +66,9 @@ describe('UtilisationReportEntity', () => {
 
       // Assert
       expect(report.status).toBe(status);
-      expect(report.updatedByUserId).toBe(updatedByUserId);
+      expect(report.lastUpdatedByIsSystemUser).toBe(false);
+      expect(report.lastUpdatedByPortalUserId).toBeNull();
+      expect(report.lastUpdatedByTfmUserId).toBe(requestSource.userId);
     });
   });
 });

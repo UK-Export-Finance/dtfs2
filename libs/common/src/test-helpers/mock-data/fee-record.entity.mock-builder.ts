@@ -1,4 +1,4 @@
-import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity, getDbAuditUpdatedByUserId } from '../../sql-db-entities';
+import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '../../sql-db-entities';
 import { Currency } from '../../types';
 
 export class FeeRecordEntityMockBuilder {
@@ -29,7 +29,7 @@ export class FeeRecordEntityMockBuilder {
     data.feesPaidToUkefForThePeriodCurrency = 'GBP';
     data.paymentCurrency = 'GBP';
     data.paymentExchangeRate = 1;
-    data.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
+    data.updateActivityDetails(requestSource);
     return new FeeRecordEntityMockBuilder(data);
   }
 

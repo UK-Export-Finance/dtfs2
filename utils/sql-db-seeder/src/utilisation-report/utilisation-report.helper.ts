@@ -6,8 +6,8 @@ import {
   MOCK_AZURE_FILE_INFO,
   PortalUser,
   TfmUser,
-  getDbAuditUpdatedByUserId,
   ReportPeriod,
+  DbRequestSource,
 } from '@ukef/dtfs2-common';
 
 /**
@@ -51,7 +51,7 @@ export const createMarkedAsCompletedReport = (
   utilisationReport.status = status;
   utilisationReport.dateUploaded = new Date();
   utilisationReport.uploadedByUserId = null;
-  utilisationReport.updatedByUserId = getDbAuditUpdatedByUserId({ platform: 'TFM', userId: tfmUser._id.toString() });
+  utilisationReport.updateActivityDetails({ platform: 'TFM', userId: tfmUser._id.toString() });
 
   return utilisationReport;
 };
@@ -74,12 +74,17 @@ export const createUploadedReport = (
   const { id: bankId } = portalUser.bank;
   utilisationReport.id = Number(bankId);
 
+  const requestSource: DbRequestSource = {
+    platform: 'TFM',
+    userId: portalUser._id.toString(),
+  };
+
   utilisationReport.bankId = bankId;
   utilisationReport.reportPeriod = reportPeriod;
   utilisationReport.status = status;
   utilisationReport.dateUploaded = new Date();
   utilisationReport.uploadedByUserId = null;
-  utilisationReport.updatedByUserId = getDbAuditUpdatedByUserId({ platform: 'TFM', userId: portalUser._id.toString() });
+  utilisationReport.updateActivityDetails(requestSource);
 
   const azureFileInfo = new AzureFileInfoEntity();
 
@@ -88,8 +93,7 @@ export const createUploadedReport = (
   azureFileInfo.fullPath = MOCK_AZURE_FILE_INFO.fullPath;
   azureFileInfo.url = MOCK_AZURE_FILE_INFO.url;
   azureFileInfo.mimetype = MOCK_AZURE_FILE_INFO.mimetype;
-
-  azureFileInfo.updatedByUserId = utilisationReport.updatedByUserId;
+  azureFileInfo.updateActivityDetails(requestSource);
 
   utilisationReport.azureFileInfo = azureFileInfo;
 

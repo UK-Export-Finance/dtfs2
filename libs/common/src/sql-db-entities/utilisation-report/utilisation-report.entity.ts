@@ -5,7 +5,6 @@ import { ReportPeriodPartialEntity } from '../partial-entities';
 import { AzureFileInfoEntity } from '../azure-file-info';
 import { FeeRecordEntity } from '../fee-record';
 import { CreateNotReceivedUtilisationReportEntityParams, UpdateWithStatusParams, UpdateWithUploadDetailsParams } from './utilisation-report.types';
-import { getDbAuditUpdatedByUserId } from '../helpers';
 
 @Entity('UtilisationReport')
 export class UtilisationReportEntity extends AuditableBaseEntity {
@@ -66,7 +65,7 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     report.dateUploaded = null;
     report.status = 'REPORT_NOT_RECEIVED';
     report.uploadedByUserId = null;
-    report.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
+    report.updateActivityDetails(requestSource);
     return report;
   }
 
@@ -76,11 +75,11 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     this.status = 'PENDING_RECONCILIATION';
     this.uploadedByUserId = uploadedByUserId;
     this.feeRecords = feeRecords;
-    this.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
+    this.updateActivityDetails(requestSource);
   }
 
   public updateWithStatus({ status, requestSource }: UpdateWithStatusParams): void {
     this.status = status;
-    this.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
+    this.updateActivityDetails(requestSource);
   }
 }
