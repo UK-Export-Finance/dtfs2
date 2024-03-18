@@ -13,6 +13,6 @@ export const handleUtilisationReportManuallySetCompletedEvent = async (
   report: UtilisationReportEntity,
   { requestSource, transactionEntityManager }: ManuallySetCompletedEventPayload,
 ): Promise<UtilisationReportEntity> => {
-  report.setAsCompleted({ requestSource });
-  return await transactionEntityManager.getRepository(UtilisationReportEntity).save(report);
+  report.updateWithStatus({ status: 'RECONCILIATION_COMPLETED', requestSource });
+  return await transactionEntityManager.save(UtilisationReportEntity, report);
 };

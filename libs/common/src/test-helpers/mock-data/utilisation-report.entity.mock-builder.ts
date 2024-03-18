@@ -66,13 +66,8 @@ export class UtilisationReportEntityMockBuilder {
     return this;
   }
 
-  public withAzureFileInfo(azureFileInfo: AzureFileInfoEntity): UtilisationReportEntityMockBuilder {
+  public withAzureFileInfo(azureFileInfo: AzureFileInfoEntity | undefined): UtilisationReportEntityMockBuilder {
     this.report.azureFileInfo = azureFileInfo;
-    return this;
-  }
-
-  public withoutAzureFileInfo(): UtilisationReportEntityMockBuilder {
-    this.report.azureFileInfo = undefined;
     return this;
   }
 

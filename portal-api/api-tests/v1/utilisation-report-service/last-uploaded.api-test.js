@@ -1,33 +1,27 @@
-const databaseHelper = require('../../database-helper');
+const { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } = require('@ukef/dtfs2-common');
+const { wipeAllUtilisationReports, saveUtilisationReportToDatabase } = require('../../sql-db-helper.ts');
 const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
-const { DB_COLLECTIONS } = require('../../fixtures/constants');
-const { insertManyUtilisationReportDetails } = require('../../insertUtilisationReportDetails');
-const {
-  MOCK_NOT_RECEIVED_REPORT_WITHOUT_ID,
-  MOCK_PENDING_RECONCILIATION_REPORT_DETAILS_WITHOUT_ID,
-} = require('../../../test-helpers/mock-utilisation-report-details');
 
 console.error = jest.fn();
 
 describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
   const lastUploadedUrl = (bankId) => `/v1/banks/${bankId}/utilisation-reports/last-uploaded`;
   let aPaymentReportOfficer;
-  let mockUtilisationReports;
   let testUsers;
   let matchingBankId;
 
   const year = 2023;
-  let lastUploadedReportId;
+  const lastUploadedReportId = 5;
   const lastUploadedReportPeriodMonth = 1;
   const lastUploadedReportDateUploaded = new Date('2023-01-01');
-  const lastUploadedReport = {
-    ...MOCK_PENDING_RECONCILIATION_REPORT_DETAILS_WITHOUT_ID,
-    reportPeriod: {
+  const lastUploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+    .withId(lastUploadedReportId)
+    .withReportPeriod({
       start: {
         month: lastUploadedReportPeriodMonth,
         year,
@@ -36,47 +30,36 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
         month: lastUploadedReportPeriodMonth,
         year,
       },
-    },
-    dateUploaded: lastUploadedReportDateUploaded,
-  };
+    })
+    .withDateUploaded(lastUploadedReportDateUploaded)
+    .build();
 
   beforeAll(async () => {
-    await databaseHelper.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
+    await wipeAllUtilisationReports();
 
     testUsers = await testUserCache.initialise(app);
     aPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).one();
     matchingBankId = aPaymentReportOfficer.bank.id;
 
     const { bank } = aPaymentReportOfficer;
-    lastUploadedReport.bank = bank;
-
-    mockUtilisationReports = [
-      lastUploadedReport,
-      {
-        ...MOCK_NOT_RECEIVED_REPORT_WITHOUT_ID,
-        bank,
-        reportPeriod: {
-          start: {
-            month: lastUploadedReportPeriodMonth + 1,
-            year,
-          },
-          end: {
-            month: lastUploadedReportPeriodMonth + 1,
-            year,
-          },
+    lastUploadedReport.bankId = bank.id;
+    const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      .withId(6)
+      .withBankId(bank.id)
+      .withReportPeriod({
+        start: {
+          month: lastUploadedReportPeriodMonth + 1,
+          year,
         },
-        azureFileInfo: null,
-      },
-    ];
+        end: {
+          month: lastUploadedReportPeriodMonth + 1,
+          year,
+        },
+      })
+      .build();
 
-    const insertManyResult = await insertManyUtilisationReportDetails(mockUtilisationReports);
-    const { insertedIds } = insertManyResult;
-    const lastUploadedReportIndex = mockUtilisationReports.indexOf(lastUploadedReport);
-    lastUploadedReportId = insertedIds[lastUploadedReportIndex].toString();
-  });
-
-  afterAll(async () => {
-    await databaseHelper.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
+    await saveUtilisationReportToDatabase(lastUploadedReport);
+    await saveUtilisationReportToDatabase(notReceivedReport);
   });
 
   withClientAuthenticationTests({
@@ -98,7 +81,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
     expect(status).toEqual(400);
   });
 
-  it('401s requests if users bank != request bank', async () => {
+  it('401s requests if users bank is not the requested bank', async () => {
     const { status } = await as(aPaymentReportOfficer).get(lastUploadedUrl(matchingBankId - 1));
 
     expect(status).toEqual(401);
@@ -108,10 +91,6 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
     const response = await as(aPaymentReportOfficer).get(lastUploadedUrl(matchingBankId));
 
     expect(response.status).toEqual(200);
-    expect(JSON.parse(response.text)).toEqual({
-      ...lastUploadedReport,
-      _id: lastUploadedReportId,
-      dateUploaded: lastUploadedReportDateUploaded.toISOString(),
-    });
+    expect(response.body.id).toEqual(lastUploadedReportId);
   });
 });

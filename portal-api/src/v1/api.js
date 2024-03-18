@@ -281,7 +281,7 @@ const saveUtilisationReport = async (reportId, reportData, user, fileInfo) => {
 /**
  * @typedef {Object} GetUtilisationReportsOptions
  * @property {import('../types/utilisation-reports').ReportPeriod} [reportPeriod] - a report period to filter reports by
- * @property {boolean} [excludeNotUploaded] - whether or not to exclude reports which have not been uploaded
+ * @property {boolean} [excludeNotReceived] - whether or not to exclude reports which have not been uploaded
  */
 
 /**
@@ -297,7 +297,7 @@ const saveUtilisationReport = async (reportId, reportData, user, fileInfo) => {
  */
 const getUtilisationReports = async (bankId, options) => {
   const reportPeriod = options?.reportPeriod;
-  const excludeNotUploaded = options?.excludeNotUploaded;
+  const excludeNotReceived = options?.excludeNotReceived;
 
   try {
     if (!isValidBankId(bankId)) {
@@ -310,12 +310,12 @@ const getUtilisationReports = async (bankId, options) => {
       throw new Error('Invalid report period provided: %s', reportPeriod);
     }
 
-    if (excludeNotUploaded && typeof excludeNotUploaded !== 'boolean') {
-      console.error('Get utilisation reports failed with the following excludeNotUploaded query: %s', excludeNotUploaded);
-      throw new Error(`Invalid excludeNotUploaded provided: ${excludeNotUploaded} (expected a boolean)`);
+    if (excludeNotReceived && typeof excludeNotReceived !== 'boolean') {
+      console.error('Get utilisation reports failed with the following excludeNotReceived query: %s', excludeNotReceived);
+      throw new Error(`Invalid excludeNotReceived provided: ${excludeNotReceived} (expected a boolean)`);
     }
 
-    const params = { reportPeriod, excludeNotUploaded };
+    const params = { reportPeriod, excludeNotReceived };
 
     const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports`, {
       headers: headers.central,
