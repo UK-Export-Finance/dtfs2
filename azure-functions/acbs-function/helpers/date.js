@@ -8,23 +8,26 @@ const validDateFormats = ['yyyy-MM-dd', 'yyyy/MM/dd', 'yyyy MM dd'];
  * Does not allow date of month to wrap or months > 12 (e.g 2024-13-32 is invalid)
  */
 const isDate = (dateStr) => dateStr.length === 10 && isValid(parse(dateStr, 'yyyy-MM-dd', startOfDay(new Date())));
+
 /**
  * @param {string | number} epoch
  * @returns {boolean} true if the value given is a unix epoch in seconds or milliseconds
  */
 const isEpoch = (epoch) => Number.isInteger(Number(epoch)) && epoch !== '';
+
 /**
  * @param {unknown} dateStr
  * @returns true if the value is a string and not an epoch
  */
 const isString = (dateStr) => typeof dateStr === 'string' && !isEpoch(dateStr);
+
 /**
  * @returns current date in format `yyyy-MM-dd`
  */
 const now = () => format(new Date(), 'yyyy-MM-dd');
 
 /**
- * @param {string | number} dateStr either epoch or {@link validDateFormats}
+ * @param {string | number} dateStr accepts epoch, iso date string, or {@link validDateFormats}
  * @returns {Date}
  */
 const getDateFromStringOrNumber = (dateStr) => {
@@ -176,13 +179,13 @@ const getYearAndMmdd = (date) => {
 
   return isValid(parsedDate)
     ? {
-      mmdd: format(parsedDate, 'MM-dd'),
-      year: format(parsedDate, 'yyyy'),
-    }
+        mmdd: format(parsedDate, 'MM-dd'),
+        year: format(parsedDate, 'yyyy'),
+      }
     : {
-      mmdd: 'Invalid date',
-      year: 'Invalid date',
-    };
+        mmdd: 'Invalid date',
+        year: 'Invalid date',
+      };
 };
 
 module.exports = {
