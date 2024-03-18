@@ -1,3 +1,4 @@
+import { ROLES } from '@ukef/dtfs2-common';
 import { STATUS } from '../../server/constants';
 
 const pageRenderer = require('../pageRenderer');
@@ -5,9 +6,10 @@ const pageRenderer = require('../pageRenderer');
 const page = 'contract/contract-view.njk';
 const render = pageRenderer(page);
 const dealFullyCompleted = require('../fixtures/deal-fully-completed');
-const { ROLES: { MAKER, CHECKER } } = require('../../server/constants');
 const { NON_MAKER_ROLES } = require('../../test-helpers/common-role-lists');
-const { DATE: { LONDON_TIMEZONE } } = require('../../server/constants')
+const { DATE: { LONDON_TIMEZONE } } = require('../../server/constants');
+
+const { MAKER, CHECKER } = ROLES;
 
 const mockDeal = { _id: '61f6fbaea2460c018a4189d7', ...dealFullyCompleted };
 mockDeal.bondTransactions.items[0]._id = '61f6fbaea2460c018a4189d8';

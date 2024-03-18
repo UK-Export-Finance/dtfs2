@@ -1,5 +1,5 @@
+const { ROLES } = require('@ukef/dtfs2-common');
 const getUserRoles = require('./getUserRoles');
-const { ROLES } = require('../constants');
 
 const { MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_REPORT_OFFICER } = ROLES;
 

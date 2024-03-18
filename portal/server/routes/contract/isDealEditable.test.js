@@ -1,4 +1,4 @@
-import { ROLES } from '../../constants';
+import { ROLES } from '@ukef/dtfs2-common';
 import isDealEditable from './isDealEditable';
 
 const { NON_MAKER_ROLES } = require('../../../test-helpers/common-role-lists');

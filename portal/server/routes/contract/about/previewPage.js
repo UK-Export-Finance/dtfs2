@@ -1,4 +1,5 @@
 const express = require('express');
+const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const {
   requestParams,
@@ -12,7 +13,6 @@ const { aboutSupplyContractPreviewValidationErrors } = require('./pageSpecificVa
 const calculateStatusOfEachPage = require('./navStatusCalculations');
 const aboutTaskList = require('./aboutTaskList');
 const { validateRole } = require('../../middleware');
-const { ROLES: { MAKER } } = require('../../../constants');
 
 const router = express.Router();
 

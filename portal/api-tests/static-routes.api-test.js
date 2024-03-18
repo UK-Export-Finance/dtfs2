@@ -10,9 +10,9 @@ jest.mock('../server/api', () => ({
   validateToken: () => true,
 }));
 
+const { ROLES } = require('@ukef/dtfs2-common');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
-const { ROLES } = require('../server/constants');
 const { get } = require('./create-api').createApi(app);
 
 const allRoles = Object.values(ROLES);

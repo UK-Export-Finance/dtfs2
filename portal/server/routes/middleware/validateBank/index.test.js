@@ -1,5 +1,6 @@
+const { ROLES: { ADMIN, READ_ONLY } } = require('@ukef/dtfs2-common');
 const validateBank = require('.');
-const { ALL_BANKS_ID, ROLES: { ADMIN, READ_ONLY } } = require('../../../constants');
+const { ALL_BANKS_ID } = require('../../../constants');
 
 describe('validateBank', () => {
   const dealId = 'deal id';

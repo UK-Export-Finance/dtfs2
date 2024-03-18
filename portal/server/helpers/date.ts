@@ -1,4 +1,4 @@
-import { MonthAndYear } from '../types/date';
+import { MonthAndYear } from '@ukef/dtfs2-common';
 
 /**
  * Returns the current datetime as a 13 digit Unix timestamp: the time in

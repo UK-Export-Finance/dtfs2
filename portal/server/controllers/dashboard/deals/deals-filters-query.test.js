@@ -1,10 +1,10 @@
+import { ROLES } from '@ukef/dtfs2-common';
 import { dashboardDealsFiltersQuery } from './deals-filters-query';
 import {
   STATUS,
   SUBMISSION_TYPE,
   FIELD_NAMES,
   ALL_BANKS_ID,
-  ROLES,
 } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 import keywordQuery from './deals-filters-keyword-query';

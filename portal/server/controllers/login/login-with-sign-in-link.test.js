@@ -1,4 +1,5 @@
 const { when } = require('jest-when');
+const { ROLES } = require('@ukef/dtfs2-common');
 const { loginWithSignInLink } = require('./login-with-sign-in-link');
 const CONSTANTS = require('../../constants');
 
@@ -70,11 +71,11 @@ describe('loginWithSignInLink', () => {
 
   it.each`
     role                                      | redirectUrl
-    ${CONSTANTS.ROLES.ADMIN}                  | ${CONSTANTS.LANDING_PAGES.DEFAULT}
-    ${CONSTANTS.ROLES.CHECKER}                | ${CONSTANTS.LANDING_PAGES.DEFAULT}
-    ${CONSTANTS.ROLES.MAKER}                  | ${CONSTANTS.LANDING_PAGES.DEFAULT}
-    ${CONSTANTS.ROLES.PAYMENT_REPORT_OFFICER} | ${CONSTANTS.LANDING_PAGES.UTILISATION_REPORT_UPLOAD}
-    ${CONSTANTS.ROLES.READ_ONLY}              | ${CONSTANTS.LANDING_PAGES.DEFAULT}
+    ${ROLES.ADMIN}                  | ${CONSTANTS.LANDING_PAGES.DEFAULT}
+    ${ROLES.CHECKER}                | ${CONSTANTS.LANDING_PAGES.DEFAULT}
+    ${ROLES.MAKER}                  | ${CONSTANTS.LANDING_PAGES.DEFAULT}
+    ${ROLES.PAYMENT_REPORT_OFFICER} | ${CONSTANTS.LANDING_PAGES.UTILISATION_REPORT_UPLOAD}
+    ${ROLES.READ_ONLY}              | ${CONSTANTS.LANDING_PAGES.DEFAULT}
   `("renders the post-login-redirect template with the '$redirectUrl' url when the user has the '$role' role", async ({ role, redirectUrl }) => {
     mockSuccessfulLoginApiCall({ userRoles: role });
 

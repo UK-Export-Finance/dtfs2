@@ -1,9 +1,9 @@
 import express from 'express';
+import { ROLES } from '@ukef/dtfs2-common';
 
 import userAdminRoutes from './users';
 
 import { validateToken, validateRole } from '../middleware';
-import { ROLES } from '../../constants';
 
 const router = express.Router();
 

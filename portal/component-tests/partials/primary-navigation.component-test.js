@@ -1,4 +1,4 @@
-const { ROLES } = require('../../server/constants');
+const { ROLES } = require('@ukef/dtfs2-common');
 const pageRenderer = require('../pageRenderer');
 
 const page = '_partials/primary-navigation.njk';
