@@ -1,7 +1,7 @@
-import { asString, Bank, UtilisationReport, ReportPeriod } from '@ukef/dtfs2-common';
+import { asString, Bank, ReportPeriod, UtilisationReportEntityMockBuilder, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { createUtilisationReportForBanksJob } from '.';
 import { getAllBanks } from '../../../repositories/banks-repo';
-import * as utilisationReportsRepo from '../../../repositories/utilisation-reports-repo';
+import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
 import { getCurrentReportPeriodForBankSchedule } from '../../../utils/report-period';
 
 console.info = jest.fn();
@@ -57,6 +57,9 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
   });
 
   describe('the task', () => {
+    const saveUtilisationReportSpy = jest.spyOn(UtilisationReportRepo, 'save');
+    const findOneByBankIdAndReportPeriodSpy = jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod');
+
     const getJob = () => createUtilisationReportForBanksJob.init();
 
     const mockReportPeriod = {} as ReportPeriod;
@@ -73,13 +76,12 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       // Arrange
       const job = getJob();
       jest.mocked(getAllBanks).mockResolvedValue([]);
-      const saveNotReceivedUtilisationReportSpy = jest.spyOn(utilisationReportsRepo, 'saveNotReceivedUtilisationReport');
 
       // Act
       await job.task(new Date());
 
       // Assert
-      expect(saveNotReceivedUtilisationReportSpy).not.toHaveBeenCalled();
+      expect(saveUtilisationReportSpy).not.toHaveBeenCalled();
     });
 
     it('does not try to create any utilisation reports when reports for all banks in the current period already exist', async () => {
@@ -87,17 +89,16 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       const job = getJob();
       const bank = { id: '123', name: 'Test bank', isVisibleInTfmUtilisationReports: true } as Bank;
       jest.mocked(getAllBanks).mockResolvedValue([bank]);
-      const getOneUtilisationReportDetailsByBankIdSpy = jest
-        .mocked(utilisationReportsRepo.getOneUtilisationReportDetailsByBankId)
-        .mockResolvedValue({} as UtilisationReport);
-      const saveNotReceivedUtilisationReportSpy = jest.spyOn(utilisationReportsRepo, 'saveNotReceivedUtilisationReport');
+
+      const existingReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withBankId(bank.id).build();
+      findOneByBankIdAndReportPeriodSpy.mockResolvedValue(existingReport);
 
       // Act
       await job.task(new Date());
 
       // Assert
-      expect(getOneUtilisationReportDetailsByBankIdSpy).toHaveBeenCalledWith(bank.id, { reportPeriod: mockReportPeriod });
-      expect(saveNotReceivedUtilisationReportSpy).not.toHaveBeenCalled();
+      expect(findOneByBankIdAndReportPeriodSpy).toHaveBeenCalledWith(bank.id, mockReportPeriod);
+      expect(saveUtilisationReportSpy).not.toHaveBeenCalled();
     });
 
     it('does not try to create reports when the bank is not visible in TFM utilisation reports', async () => {
@@ -106,15 +107,13 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
 
       const bank = { id: '1', name: 'Bank 1', isVisibleInTfmUtilisationReports: false } as Bank;
       jest.mocked(getAllBanks).mockResolvedValue([bank]);
-      const getOneUtilisationReportDetailsByBankIdSpy = jest.mocked(utilisationReportsRepo.getOneUtilisationReportDetailsByBankId).mockResolvedValue(null);
-      const saveNotReceivedUtilisationReportSpy = jest.spyOn(utilisationReportsRepo, 'saveNotReceivedUtilisationReport');
 
       // Act
       await job.task(new Date());
 
       // Assert
-      expect(getOneUtilisationReportDetailsByBankIdSpy).not.toHaveBeenCalled();
-      expect(saveNotReceivedUtilisationReportSpy).not.toHaveBeenCalled();
+      expect(findOneByBankIdAndReportPeriodSpy).not.toHaveBeenCalled();
+      expect(saveUtilisationReportSpy).not.toHaveBeenCalled();
     });
 
     const banks = [
@@ -127,17 +126,27 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       // Arrange
       const job = getJob();
       jest.mocked(getAllBanks).mockResolvedValue(banks);
-      const getOneUtilisationReportDetailsByBankIdSpy = jest.mocked(utilisationReportsRepo.getOneUtilisationReportDetailsByBankId).mockResolvedValue(null);
-      const saveNotReceivedUtilisationReportSpy = jest.spyOn(utilisationReportsRepo, 'saveNotReceivedUtilisationReport');
+
+      findOneByBankIdAndReportPeriodSpy.mockResolvedValue(null);
 
       // Act
       await job.task(new Date());
 
       // Assert
-      expect(getOneUtilisationReportDetailsByBankIdSpy).toHaveBeenCalledTimes(banks.length);
-      banks.forEach(({ id }) => expect(getOneUtilisationReportDetailsByBankIdSpy).toHaveBeenCalledWith(id, { reportPeriod: mockReportPeriod }));
-      expect(saveNotReceivedUtilisationReportSpy).toHaveBeenCalledTimes(banks.length);
-      banks.forEach((bank) => expect(saveNotReceivedUtilisationReportSpy).toHaveBeenCalledWith(mockReportPeriod, { id: bank.id, name: bank.name }));
+      expect(findOneByBankIdAndReportPeriodSpy).toHaveBeenCalledTimes(banks.length);
+      banks.forEach(({ id }) => expect(findOneByBankIdAndReportPeriodSpy).toHaveBeenCalledWith(id, mockReportPeriod));
+      expect(saveUtilisationReportSpy).toHaveBeenCalledTimes(banks.length);
+
+      banks.forEach((bank) => {
+        const newReport = UtilisationReportEntity.createNotReceived({
+          bankId: bank.id,
+          reportPeriod: mockReportPeriod,
+          requestSource: {
+            platform: 'SYSTEM',
+          },
+        });
+        expect(saveUtilisationReportSpy).toHaveBeenCalledWith(newReport);
+      });
     });
 
     it('only tries to create reports for banks which do not have a report for the current report period', async () => {
@@ -146,26 +155,33 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       jest.mocked(getAllBanks).mockResolvedValue(banks);
 
       const bankWithoutReport = banks[0];
-      const getOneUtilisationReportDetailsByBankIdSpy = jest
-        .mocked(utilisationReportsRepo.getOneUtilisationReportDetailsByBankId)
-        .mockImplementation((bankId: string) => {
-          switch (bankId) {
-            case bankWithoutReport.id:
-              return Promise.resolve(null);
-            default:
-              return Promise.resolve({} as UtilisationReport);
-          }
-        });
-      const saveNotReceivedUtilisationReportSpy = jest.spyOn(utilisationReportsRepo, 'saveNotReceivedUtilisationReport');
+
+      const existingReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
+      findOneByBankIdAndReportPeriodSpy.mockImplementation((bankId: string) => {
+        switch (bankId) {
+          case bankWithoutReport.id:
+            return Promise.resolve(null);
+          default:
+            return Promise.resolve(existingReport);
+        }
+      });
 
       // Act
       await job.task(new Date());
 
       // Assert
-      expect(getOneUtilisationReportDetailsByBankIdSpy).toHaveBeenCalledTimes(banks.length);
-      banks.forEach(({ id }) => expect(getOneUtilisationReportDetailsByBankIdSpy).toHaveBeenCalledWith(id, { reportPeriod: mockReportPeriod }));
-      expect(saveNotReceivedUtilisationReportSpy).toHaveBeenCalledTimes(1);
-      expect(saveNotReceivedUtilisationReportSpy).toHaveBeenCalledWith(mockReportPeriod, { id: bankWithoutReport.id, name: bankWithoutReport.name });
+      expect(findOneByBankIdAndReportPeriodSpy).toHaveBeenCalledTimes(banks.length);
+      banks.forEach(({ id }) => expect(findOneByBankIdAndReportPeriodSpy).toHaveBeenCalledWith(id, mockReportPeriod));
+      expect(saveUtilisationReportSpy).toHaveBeenCalledTimes(1);
+
+      const newReportForBankWithoutReport = UtilisationReportEntity.createNotReceived({
+        bankId: bankWithoutReport.id,
+        reportPeriod: mockReportPeriod,
+        requestSource: {
+          platform: 'SYSTEM',
+        },
+      });
+      expect(saveUtilisationReportSpy).toHaveBeenCalledWith(newReportForBankWithoutReport);
     });
   });
 });
