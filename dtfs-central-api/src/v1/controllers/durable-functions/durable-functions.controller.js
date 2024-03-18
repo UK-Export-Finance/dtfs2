@@ -1,12 +1,8 @@
-const db = require('../../../drivers/db-client');
-const { DB_COLLECTIONS } = require('../../../constants');
+const { deleteAllDurableFunctionLogs } = require('../../../services/repositories/durable-functions-repo');
 
 exports.deleteAllDurableFunctions = async (req, res) => {
   try {
-    const collection = await db.getCollection(DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG);
-    // delete all documents from `durable-functions-log` collection
-    await collection.deleteMany({});
-
+    await deleteAllDurableFunctionLogs();
     return res.status(200).send();
   } catch (error) {
     console.error('ACBS DOF error %s', error);
