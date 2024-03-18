@@ -4,7 +4,7 @@ const loanRules = require('./loan');
 const facilityReadyForCheckRequestedCoverStartDateRule = require('./checker-submit-deal-facility-ready-for-check-cover-start-dates');
 const isValidationRequired = require('./is-validation-required');
 
-module.exports = (deal) => {
+module.exports = async (deal) => {
   // ideally we want this to recursively call into everything inside the deal..
   // at time of writing this is being used solely for the 'real-time' validation of cover start dates
   // - so this probably wants revisiting and causes us to shuffle our validation methods around a bit
@@ -20,8 +20,10 @@ module.exports = (deal) => {
     return {};
   }
 
+  const errors = await submissionDetailsRules(deal.submissionDetails, deal);
+
   let validationErrors = {
-    ...submissionDetailsRules(deal.submissionDetails, deal),
+    ...errors,
   };
 
   deal.bondTransactions.items.filter((bond) => {

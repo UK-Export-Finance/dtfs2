@@ -13,7 +13,7 @@ describe('controllers/dashboard/deals - selected-filters', () => {
         keyword: ['test'],
         dealType: [CONSTANTS.PRODUCT.GEF, CONSTANTS.PRODUCT.BSS_EWCS],
         submissionType: [CONSTANTS.SUBMISSION_TYPE.AIN],
-        status: [CONSTANTS.STATUS.SUBMITTED],
+        status: [CONSTANTS.STATUS.DEAL.SUBMITTED],
       };
 
       const result = selectedFilters(mockSubmittedFilters);

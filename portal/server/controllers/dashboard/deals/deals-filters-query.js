@@ -24,7 +24,7 @@ const dashboardDealsFiltersQuery = (filters, user) => {
 
   if (isChecker && !isMaker) {
     query.AND.push({
-      [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: CONSTANTS.STATUS.READY_FOR_APPROVAL,
+      [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: CONSTANTS.STATUS.DEAL.READY_FOR_APPROVAL,
     });
   }
   const filtered = [];

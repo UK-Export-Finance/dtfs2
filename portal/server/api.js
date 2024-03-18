@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const axios = require('axios');
 const FormData = require('form-data');
 const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName, isValidBankId } = require('./validation/validate-ids');
@@ -183,26 +184,38 @@ const updateDealName = async (id, newName, token) => {
   };
 };
 
+/**
+ * Updates the status of a deal by making an API call to a specified URL.
+ * @param {Object} statusUpdate - An object containing the `_id` property representing
+ * the deal ID and the `status` property representing the new status of the deal.
+ * @param {string} token - A token used for authorization in the API call.
+ * @returns {Object|boolean} - An object containing the `status` code and the `data` from the API response, or `false` if the `_id` is not valid.
+ */
 const updateDealStatus = async (statusUpdate, token) => {
   if (!isValidMongoId(statusUpdate._id)) {
     console.error('Update deal status API call failed for id %s', statusUpdate._id);
     return false;
   }
 
-  const response = await axios({
-    method: 'put',
-    url: `${PORTAL_API_URL}/v1/deals/${statusUpdate._id}/status`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-    data: statusUpdate,
-  });
+  try {
+    const response = await axios.put(`${PORTAL_API_URL}/v1/deals/${statusUpdate._id}/status`, statusUpdate, {
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+    });
 
-  return {
-    status: response.status,
-    data: response.data,
-  };
+    return {
+      status: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    console.error('❌ Unable to update the deal status of deal %o', error);
+    return {
+      status: HttpStatusCode.InternalServerError,
+      data: null,
+    };
+  }
 };
 
 const getSubmissionDetails = async (id, token) => {

@@ -203,7 +203,7 @@ const applicationDetails = async (req, res, next) => {
 
     if (!application) {
       // 404 not found or unauthorised
-      console.error('Void application or access %s', dealId);
+      console.error('Invalid application or access %s', dealId);
       return res.redirect('/dashboard');
     }
 
@@ -250,6 +250,13 @@ const applicationDetails = async (req, res, next) => {
 
     if (req.success) {
       params.success = req.success;
+    }
+
+    // Using req.flash to pass success message when facility is updated from unissued to issued. More info regarding req.flash can be found here:https://www.npmjs.com/package/connect-flash
+    const [successMessage] = req.flash('success');
+
+    if (successMessage) {
+      params.success = successMessage;
     }
 
     if (params.unissuedFacilitiesPresent) {

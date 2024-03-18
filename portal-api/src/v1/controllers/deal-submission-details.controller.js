@@ -2,23 +2,34 @@ const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const validateSubmissionDetails = require('../validation/submission-details');
 const { sanitizeCurrency } = require('../../utils/number');
-const { findOneCountry } = require('./countries.controller');
+const { getCountry } = require('./countries.controller');
 const { getCurrencyObject } = require('../section-currency');
+const { FACILITIES } = require('../../constants');
 
-exports.findOne = (req, res) => {
-  findOneDeal(req.params.id, (deal) => {
+/**
+ * Retrieves a deal by its ID and checks if the user has access to it.
+ * If the deal is found and the user has access, validates the submission details of the deal and returns them as a response.
+ * @param {object} req - The request object containing information about the HTTP request.
+ * @param {object} res - The response object used to send the HTTP response.
+ */
+exports.findOne = async (req, res) => {
+  try {
+    const deal = await findOneDeal(req.params.id);
     if (!deal) {
       res.status(404).send();
     } else if (!userHasAccessTo(req.user, deal)) {
       res.status(401).send();
     } else {
-      const validationErrors = validateSubmissionDetails(deal.submissionDetails);
+      const validationErrors = await validateSubmissionDetails(deal.submissionDetails);
       res.status(200).json({
         validationErrors,
         data: deal.submissionDetails,
       });
     }
-  });
+  } catch (error) {
+    console.error('Unable to validate submission details %o', error);
+    res.status(500).send({ status: 500, message: 'Unable to validate submission details' });
+  }
 };
 
 const updateSubmissionDetails = async (dealId, submissionDetails, user) => {
@@ -40,16 +51,12 @@ const updateSubmissionDetails = async (dealId, submissionDetails, user) => {
     };
   }
 
-  const updateDealResponse = await updateDeal(
-    dealId,
-    update,
-    user,
-  );
+  const updateDealResponse = await updateDeal(dealId, update, user);
   return updateDealResponse;
 };
 
 const countryObject = async (countryCode) => {
-  const { data } = await findOneCountry(countryCode);
+  const { data } = await getCountry(countryCode);
 
   if (!data) {
     return {};
@@ -67,7 +74,7 @@ const checkCountryCode = async (existingDeal, submitted, fieldName) => {
   const existingCountryCode = existingDeal[fieldName] && existingDeal[fieldName].code;
   const submittedCountryCode = submitted[fieldName];
 
-  const shouldUpdateCountry = (!existingCountryCode || existingCountryCode.code !== submittedCountryCode);
+  const shouldUpdateCountry = !existingCountryCode || existingCountryCode.code !== submittedCountryCode;
 
   if (shouldUpdateCountry) {
     const countryObj = await countryObject(submittedCountryCode);
@@ -109,7 +116,7 @@ const checkAllCountryCodes = async (deal, fields) => {
 const checkCurrency = async (existingCurrencyObj, submitted) => {
   const hasExistingCurrencyId = existingCurrencyObj?.id;
   const hasSubmittedId = submitted?.id;
-  const shouldUpdateCurrency = (hasSubmittedId && (!hasExistingCurrencyId || existingCurrencyObj.id !== submitted.id));
+  const shouldUpdateCurrency = hasSubmittedId && (!hasExistingCurrencyId || existingCurrencyObj.id !== submitted.id);
 
   if (shouldUpdateCurrency) {
     const currencyObj = await getCurrencyObject(submitted.id);
@@ -123,20 +130,29 @@ const checkCurrency = async (existingCurrencyObj, submitted) => {
   return {};
 };
 
-exports.update = (req, res) => {
-  const { user } = req;
-  let submissionDetails = req.body;
+/**
+ * Updates a deal with new submission details.
+ * @param {Object} req - The request object containing information about the HTTP request.
+ * @param {Object} res - The response object used to send the HTTP response.
+ */
+exports.update = async (req, res) => {
+  try {
+    const { user } = req;
+    let submissionDetails = req.body;
 
-  findOneDeal(req.params.id, async (deal) => {
-    if (!deal) return res.status(404).send();
-    if (!userHasAccessTo(user, deal)) return res.status(401).send();
+    const deal = await findOneDeal(req.params.id);
 
-    submissionDetails.status = 'Incomplete';
+    if (!deal) {
+      return res.status(404).send();
+    }
 
-    // build a date out of the conversion-date fields if we have them
-    const day = submissionDetails['supplyContractConversionDate-day'];
-    const month = submissionDetails['supplyContractConversionDate-month'];
-    const year = submissionDetails['supplyContractConversionDate-year'];
+    if (!userHasAccessTo(user, deal)) {
+      return res.status(401).send();
+    }
+
+    submissionDetails.status = FACILITIES.DEAL_STATUS.INCOMPLETE;
+
+    const { day, month, year } = submissionDetails.supplyContractConversionDate || {};
     if (day && month && year) {
       submissionDetails.supplyContractConversionDate = `${day}/${month}/${year}`;
     }
@@ -149,15 +165,12 @@ exports.update = (req, res) => {
     submissionDetails = await checkAllCountryCodes(deal, submissionDetails);
 
     if (submissionDetails.supplyContractCurrency) {
-      submissionDetails.supplyContractCurrency = await checkCurrency(
-        deal.supplyContractCurrency,
-        submissionDetails.supplyContractCurrency,
-      );
+      submissionDetails.supplyContractCurrency = await checkCurrency(deal.supplyContractCurrency, submissionDetails.supplyContractCurrency);
     }
 
     const dealAfterAllUpdates = await updateSubmissionDetails(req.params.id, submissionDetails, user);
 
-    const validationErrors = validateSubmissionDetails({ ...dealAfterAllUpdates.submissionDetails, ...req.body });
+    const validationErrors = await validateSubmissionDetails({ ...dealAfterAllUpdates.submissionDetails, ...req.body });
 
     const response = {
       validationErrors,
@@ -165,5 +178,8 @@ exports.update = (req, res) => {
     };
 
     return res.status(200).json(response);
-  });
+  } catch (error) {
+    console.error('Unable to update the deal with submission details %o', error);
+    return res.status(500).send({ status: 500, message: 'Unable to update the deal with submission details'});
+  }
 };

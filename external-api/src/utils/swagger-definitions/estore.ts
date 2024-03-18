@@ -46,7 +46,7 @@
  *           properties:
  *             name:
  *               type: string
- *               example: D 0100000000
+ *               example: D 0010000000
  *             contentType:
  *               type: string
  *               example: TFIS Case
