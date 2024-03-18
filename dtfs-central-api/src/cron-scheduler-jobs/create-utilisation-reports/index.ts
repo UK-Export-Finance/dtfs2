@@ -23,16 +23,17 @@ const isCurrentBankReportMissing = async (bank: Bank): Promise<boolean> => {
  * @returns Whether or not the bank utilisation report period schedule is valid
  */
 const isValidUtilisationReportPeriodScheduleOnBank = (bank: Bank): boolean => {
-  const validationError = validateUtilisationReportPeriodSchedule(bank.utilisationReportPeriodSchedule);
-  if (validationError) {
-    console.warn('Invalid utilisation report period schedule for bank with id %s. %s', bank.id, validationError);
+  try {
+    validateUtilisationReportPeriodSchedule(bank.utilisationReportPeriodSchedule);
+    return true;
+  } catch (validationError) {
+    console.info('Invalid utilisation report period schedule for bank with id %s. %s', bank.id, validationError);
     return false;
   }
-  return true;
 }
 
 /**
- * Gets the banks which are visible in TFM utilisation reports, have a valid utilisation report 
+ * Gets the banks which are visible in TFM utilisation reports, have a valid utilisation report
  * period schedule and do not have a report in the database for the current period
  * @returns The banks which do not have reports
  */
@@ -41,7 +42,7 @@ const getBanksWithMissingReports = async (): Promise<Bank[]> => {
 
   const banksWithValidUtilisationReportPeriodSchedule = banksVisibleInTfm
     .filter(isValidUtilisationReportPeriodScheduleOnBank);
-    
+
   const isMissingBankReport = await Promise.all(banksWithValidUtilisationReportPeriodSchedule.map(isCurrentBankReportMissing));
   return banksVisibleInTfm.filter((bank, index) => isMissingBankReport[index]);
 };
