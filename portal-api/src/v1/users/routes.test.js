@@ -134,7 +134,7 @@ describe('users routes', () => {
       res.status.mockReturnThis();
     });
 
-    it('allows user to change their own password', () => {
+    it('allows user to change their own password', async () => {
       const req = {
         params: {
           _id: '1234',
@@ -149,14 +149,14 @@ describe('users routes', () => {
         },
       };
 
-      updateById(req, res);
+      await updateById(req, res);
 
       expect(mockUserControllerFindOne).toHaveBeenCalledWith(req.params._id, expect.any(Function));
       expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(req.params._id, req.body, expect.any(Function));
       expect(res.status).toHaveBeenCalledWith(200);
     });
 
-    it('does not allow a user to change their status', () => {
+    it('does not allow a user to change their status', async () => {
       const req = {
         params: {
           _id: '1234',
@@ -170,12 +170,12 @@ describe('users routes', () => {
         },
       };
 
-      updateById(req, res);
+      await updateById(req, res);
 
       expect(res.status).toHaveBeenCalledWith(403);
     });
 
-    it('allows admin to change another users status and password', () => {
+    it('allows admin to change another users status and password', async () => {
       const req = {
         params: {
           _id: '1234',
@@ -191,14 +191,14 @@ describe('users routes', () => {
         },
       };
 
-      updateById(req, res);
+      await updateById(req, res);
 
       expect(mockUserControllerFindOne).toHaveBeenCalledWith(req.params._id, expect.any(Function));
       expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(req.params._id, req.body, expect.any(Function));
       expect(res.status).toHaveBeenCalledWith(200);
     });
 
-    it('does not allow a non-admin user to change someone elses password', () => {
+    it('does not allow a non-admin user to change someone elses password', async () => {
       const req = {
         params: {
           _id: '1234',
@@ -212,7 +212,7 @@ describe('users routes', () => {
           passwordConfirm: 'AbC!234',
         },
       };
-      updateById(req, res);
+      await updateById(req, res);
 
       expect(res.status).toHaveBeenCalledWith(403);
     });

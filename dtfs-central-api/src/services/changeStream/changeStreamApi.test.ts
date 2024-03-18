@@ -1,4 +1,4 @@
-import { Binary, ChangeStreamDocument, ChangeStreamCollModDocument, ObjectId } from 'mongodb';
+import { Binary, ChangeStreamInsertDocument, ObjectId } from 'mongodb';
 import axios from 'axios';
 import { postAuditDetails } from './changeStreamApi.ts';
 
@@ -6,7 +6,7 @@ jest.mock('axios', () => jest.fn(() => Promise.resolve('mockResponse')));
 
 describe('changeStreamApi', () => {
   describe('postAuditDetails', () => {
-    const mockChangeStreamDocument: ChangeStreamDocument = {
+    const mockChangeStreamDocument: ChangeStreamInsertDocument = {
       _id: '123',
       collectionUUID: new Binary(Buffer.from('123')),
       fullDocument: {},
@@ -41,18 +41,6 @@ describe('changeStreamApi', () => {
         },
         data: mockChangeStreamDocument.fullDocument,
       });
-    });
-
-    it('should not call the audit api if the change document is not of correct type', async () => {
-      const changeStreamCollModDocument: ChangeStreamCollModDocument = {
-        _id: '123',
-        collectionUUID: new Binary(Buffer.from('123')),
-        operationType: 'modify',
-      };
-
-      await postAuditDetails(changeStreamCollModDocument);
-
-      expect(axios).not.toHaveBeenCalled();
     });
 
     const envVarTestCases = [{ envVarName: 'AUDIT_API_URL' }, { envVarName: 'AUDIT_API_USERNAME' }, { envVarName: 'AUDIT_API_PASSWORD' }];
