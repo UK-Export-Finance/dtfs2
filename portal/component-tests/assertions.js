@@ -101,4 +101,4 @@ const assertions = (wrapper) => ({
   }),
 });
 
-export default assertions;
+module.exports = assertions;

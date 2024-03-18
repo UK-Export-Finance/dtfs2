@@ -24,25 +24,13 @@ You can find mock login credentials in the `utils/mock-data-loader/portal/users.
 Verbose with coverage:
 
 ```shell
-npm run test
-```
-
-Verbose:
-
-```shell
-npm run test-dev
-```
-
-Quick:
-
-```shell
-npm run test-quick
+npm run unit-test
 ```
 
 ### **Run a single UI test**
 
 ```shell
-npm run test ./path/to/file.test.js
+npm run unit-test ./path/to/file.test.js
 ```
 
 ### **Run UI component tests**

@@ -21,7 +21,7 @@ const dealHasAllUkefIds = async (dealId) => {
     return { status: dealHasId && facilitiesHaveIds };
   }
 
-  return { status: false, message: 'TFM Deal not found' };
+  return { status: false, message: 'TFM deal not found' };
 };
 
 /**

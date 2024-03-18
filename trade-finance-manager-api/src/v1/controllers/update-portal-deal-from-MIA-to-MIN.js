@@ -1,6 +1,6 @@
 const CONSTANTS = require('../../constants');
 const api = require('../api');
-const now = require('../../now');
+const { getNowAsEpochMillisecondString } = require('../../utils/date');
 
 const updatePortalDealFromMIAtoMIN = async (dealId, dealType, checker) => {
   console.info('Updating Portal deal from MIA to MIN');
@@ -10,7 +10,7 @@ const updatePortalDealFromMIAtoMIN = async (dealId, dealType, checker) => {
     dealUpdate = {
       submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
       checkerMIN: checker,
-      manualInclusionNoticeSubmissionDate: now(),
+      manualInclusionNoticeSubmissionDate: getNowAsEpochMillisecondString(),
     };
 
     await api.updatePortalGefDeal(dealId, dealUpdate);
@@ -22,7 +22,7 @@ const updatePortalDealFromMIAtoMIN = async (dealId, dealType, checker) => {
       submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
       details: {
         checkerMIN: checker,
-        manualInclusionNoticeSubmissionDate: now(),
+        manualInclusionNoticeSubmissionDate: getNowAsEpochMillisecondString(),
       },
     };
 

@@ -29,7 +29,7 @@
     "audit:all": "npm audit --if-present",
     "audit:fix:all": "npm audit --fix --if-present",
     "ci:all": "npm ci --if-present",
-    "dev": "docker-compose -f docker-compose.dev.yml up --build",
+    "dev": "docker-compose up --build",
     "dev:detach": "npm run dev -- --detach",
     "housekeeping": "npm run update:all && npm run install:all && npm run lint:fix:all && npm run audit:fix:all && npm run spellcheck",
     "postinstall": "husky install",
@@ -55,10 +55,10 @@
   "devDependencies": {
     "@commitlint/cli": "^17.8.1",
     "@commitlint/config-conventional": "^17.8.1",
-    "@typescript-eslint/eslint-plugin": "^6.20.0",
-    "@typescript-eslint/parser": "^6.20.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
     "cspell": "^7.3.9",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
@@ -66,7 +66,7 @@
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
     "prettier": "3.0.3",
-    "sort-package-json": "^2.7.0"
+    "sort-package-json": "^2.8.0"
   },
   "engines": {
     "node": ">=20",

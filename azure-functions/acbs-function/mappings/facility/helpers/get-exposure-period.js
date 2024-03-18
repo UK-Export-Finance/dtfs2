@@ -1,7 +1,12 @@
 /* calculating exposure period based on Portal V2 algorithm */
-const moment = require('moment');
 const CONSTANTS = require('../../../constants');
-const { formatYear, formatTimestamp } = require('../../../helpers/date');
+const {
+  isDate,
+  formatYear,
+  formatDate,
+  getDateStringFromYearMonthDay,
+  getInclusiveMonthDifference,
+} = require('../../../helpers/date');
 
 const { PRODUCT } = CONSTANTS;
 
@@ -9,14 +14,13 @@ const { PRODUCT } = CONSTANTS;
  * Evaluates facility's exposure period in months.
  * If `Unissued` then guarantee month value is returned.
  * If `Issued` then cover start and end date difference in months.
- * @param {Object} facility Facility object
- * @param {String} dealType Deal type `GEF`, `BSS`, `EWCS`
- * @param {Object} FMR Facility master record object, particularly used for amendments. `null` as default when no argument is provided.
- * @returns {String} Exposure period in months as a `String`
+ * @param {object} facility Facility object
+ * @param {string} dealType Deal type `GEF`, `BSS`, `EWCS`
+ * @param {object | null} FMR Facility master record object, particularly used for amendments. `null` as default when no argument is provided.
+ * @returns {string} Exposure period in months
  */
 const getExposurePeriod = (facility, dealType, fmr = null) => {
   const { facilitySnapshot } = facility;
-  let exposure = 0;
 
   // Facility amendment exposure calculation
   if (facility.amendment && fmr) {
@@ -24,16 +28,10 @@ const getExposurePeriod = (facility, dealType, fmr = null) => {
     const { issueDate } = fmr;
     const { coverEndDate } = facility.amendment;
     // Format in YYYY-MM-DD format
-    const startDate = formatTimestamp(issueDate);
-    const endDate = formatTimestamp(coverEndDate);
+    const startDate = formatDate(issueDate);
+    const endDate = formatDate(coverEndDate);
 
-    // Calculate exposure period (+1 for inclusive calculation)
-    let exposurePeriod = moment(endDate).diff(moment(startDate), 'months') + 1;
-    // Month offset
-    const offset = moment(startDate).date() === moment(endDate).date() ? -1 : 0;
-    exposurePeriod += offset;
-
-    return String(exposurePeriod);
+    return String(getInclusiveMonthDifference(startDate, endDate));
   }
 
   // New facility exposure calculation
@@ -44,60 +42,37 @@ const getExposurePeriod = (facility, dealType, fmr = null) => {
     // GEF
     const { monthsOfCover } = facilitySnapshot;
 
-    exposure = hasBeenIssued ? exposurePeriodInMonths : monthsOfCover;
-  } else if (dealType === PRODUCT.TYPE.BSS_EWCS) {
-    // BSS/EWCS
+    return String(hasBeenIssued ? exposurePeriodInMonths : monthsOfCover);
+  }
+  // BSS/EWCS
 
-    // If already calculated by TFM then return
-    if (hasBeenIssued && exposurePeriodInMonths) {
-      return String(exposurePeriodInMonths);
-    }
-
-    // If not already calculated
-    let coverStartDate;
-    const {
-      requestedCoverStartDate,
-      ukefGuaranteeInMonths,
-    } = facilitySnapshot;
-
-    if (requestedCoverStartDate) {
-      const startDate = moment(formatTimestamp(requestedCoverStartDate));
-
-      coverStartDate = moment([
-        formatYear(startDate.year()),
-        startDate.month(),
-        startDate.date(),
-      ]);
-    } else {
-      coverStartDate = moment([
-        formatYear(facilitySnapshot['requestedCoverStartDate-year']),
-        facilitySnapshot['requestedCoverStartDate-month'] - 1,
-        facilitySnapshot['requestedCoverStartDate-day'],
-      ]);
-    }
-
-    const coverEndDate = moment([
-      formatYear(facilitySnapshot['coverEndDate-year']),
-      facilitySnapshot['coverEndDate-month'] - 1,
-      facilitySnapshot['coverEndDate-day'],
-    ]);
-
-    if ((!coverStartDate.isValid() || !coverEndDate.isValid()) && ukefGuaranteeInMonths) {
-      exposure = ukefGuaranteeInMonths;
-    }
-
-    const durationMonths = coverEndDate.diff(coverStartDate, 'months') + 1;
-    const monthOffset = moment(coverStartDate).date() === moment(coverEndDate).date() ? -1 : 0;
-
-    // Return `exposure` when `coverStartDate` and `coverEndDate` are null
-    if (!durationMonths && !monthOffset) {
-      return String(exposure);
-    }
-
-    exposure = durationMonths + monthOffset;
+  // If already calculated by TFM then return
+  if (hasBeenIssued && exposurePeriodInMonths) {
+    return String(exposurePeriodInMonths);
   }
 
-  return String(exposure);
+  // If not already calculated
+  const { requestedCoverStartDate, ukefGuaranteeInMonths } = facilitySnapshot;
+
+  const coverStartDate = requestedCoverStartDate
+    ? formatDate(requestedCoverStartDate)
+    : getDateStringFromYearMonthDay(
+      formatYear(facilitySnapshot['requestedCoverStartDate-year']),
+      facilitySnapshot['requestedCoverStartDate-month'],
+      facilitySnapshot['requestedCoverStartDate-day'],
+    );
+
+  const coverEndDate = getDateStringFromYearMonthDay(
+    formatYear(facilitySnapshot['coverEndDate-year']),
+    facilitySnapshot['coverEndDate-month'],
+    facilitySnapshot['coverEndDate-day'],
+  );
+
+  if (!isDate(coverStartDate) || !isDate(coverEndDate)) {
+    return (ukefGuaranteeInMonths ? String(ukefGuaranteeInMonths) : '0');
+  }
+
+  return String(getInclusiveMonthDifference(coverStartDate, coverEndDate));
 };
 
 module.exports = getExposurePeriod;

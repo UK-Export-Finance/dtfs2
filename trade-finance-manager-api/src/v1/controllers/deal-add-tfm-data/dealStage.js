@@ -1,23 +1,23 @@
 const CONSTANTS = require('../../../constants');
 
+/**
+ * Calculates the deal stage based on the given status and submission type.
+ *
+ * @param {string} status - The status of the deal.
+ * @param {string} submissionType - The type of submission.
+ * @returns {string} - The calculated deal stage.
+ */
 const dealStage = (status, submissionType) => {
-  let tfmDealStage;
+  const { PORTAL_DEAL_STATUS, SUBMISSION_TYPE, DEAL_STAGE_TFM } = CONSTANTS.DEALS;
+  const isSubmissionTypeAinOrMin = [SUBMISSION_TYPE.AIN, SUBMISSION_TYPE.MIN].includes(submissionType);
+  const isStatusAcceptable = status === PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED;
 
-  if (status === CONSTANTS.DEALS.PORTAL_DEAL_STATUS.SUBMITTED_TO_UKEF) {
-    if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
-      tfmDealStage = CONSTANTS.DEALS.DEAL_STAGE_TFM.CONFIRMED;
-    }
-
-    if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-      tfmDealStage = CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION;
-    }
-
-    if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) {
-      tfmDealStage = CONSTANTS.DEALS.DEAL_STAGE_TFM.CONFIRMED;
-    }
+  if (isStatusAcceptable && isSubmissionTypeAinOrMin) {
+    return DEAL_STAGE_TFM.CONFIRMED;
   }
 
-  return tfmDealStage;
+  console.info('Invalid deal stage with status %s and submission type %s, setting status to Application', status, submissionType);
+  return DEAL_STAGE_TFM.APPLICATION;
 };
 
 module.exports = dealStage;

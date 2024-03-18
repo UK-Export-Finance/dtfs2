@@ -2,23 +2,19 @@ const mockSignInLinkControllerLoginWithSignInLink = jest.fn();
 jest.mock('./sign-in-link.controller', () => ({
   SignInLinkController: jest.fn().mockImplementation(() => ({ loginWithSignInLink: mockSignInLinkControllerLoginWithSignInLink })),
 }));
-const mockUserControllerUpdateUser = jest.fn(
-  (_id, user, callback) => {
-    const mockUser = { ...user, _id };
-    callback(null, mockUser);
-  }
-);
-const mockUserControllerFindOne = jest.fn(
-  (_id, callback) => {
-    const mockUser = { _id };
-    callback(null, mockUser);
-  }
-);
+const mockUserControllerUpdateUser = jest.fn((_id, user, callback) => {
+  const mockUser = { ...user, _id };
+  callback(null, mockUser);
+});
+const mockUserControllerFindOne = jest.fn((_id, callback) => {
+  const mockUser = { _id };
+  callback(null, mockUser);
+});
 jest.mock('./controller', () => ({ update: mockUserControllerUpdateUser, findOne: mockUserControllerFindOne }));
 const mockValidationApplyUpdateRules = jest.fn(() => []);
 jest.mock('./validation', () => ({
   applyUpdateRules: mockValidationApplyUpdateRules,
-  applyCreateRules: mockValidationApplyUpdateRules
+  applyCreateRules: mockValidationApplyUpdateRules,
 }));
 
 const { ObjectId } = require('mongodb');
@@ -73,12 +69,10 @@ describe('users routes', () => {
 
     beforeEach(() => {
       jest.clearAllMocks();
-      when(getUserByPasswordToken)
-        .calledWith(resetPwdToken)
-        .mockResolvedValueOnce(user);
+      when(getUserByPasswordToken).calledWith(resetPwdToken).mockResolvedValueOnce(user);
     });
 
-    it('updates the user\'s password and reset password details', async () => {
+    it("updates the user's password and reset password details", async () => {
       await resetPasswordWithToken(req, res, next);
 
       expect(update).toHaveBeenCalledWith(
@@ -92,7 +86,7 @@ describe('users routes', () => {
           loginFailureCount: 0,
           passwordUpdatedAt: expect.any(String),
         },
-        expect.any(Function)
+        expect.any(Function),
       );
     });
 
@@ -110,7 +104,7 @@ describe('users routes', () => {
           loginFailureCount: 0,
           passwordUpdatedAt: expect.any(String),
         },
-        expect.any(Function)
+        expect.any(Function),
       );
     });
   });
@@ -132,7 +126,7 @@ describe('users routes', () => {
     const res = {
       send: jest.fn(),
       status: jest.fn(),
-      json: jest.fn()
+      json: jest.fn(),
     };
 
     beforeEach(() => {
@@ -140,85 +134,85 @@ describe('users routes', () => {
       res.status.mockReturnThis();
     });
 
-    it('allows user to change their own password', () => {
+    it('allows user to change their own password', async () => {
       const req = {
         params: {
-          _id: '1234'
+          _id: '1234',
         },
         user: {
           _id: '1234',
-          roles: []
-        },
-        body: {
-          password: 'AbC!234',
-          passwordConfirm: 'AbC!234'
-        },
-      };
-
-      updateById(req, res);
-
-      expect(mockUserControllerFindOne).toHaveBeenCalledWith(req.params._id, expect.any(Function));
-      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(req.params._id, req.body, expect.any(Function));
-      expect(res.status).toHaveBeenCalledWith(200);
-    });
-
-    it('does not allow a user to change their status', () => {
-      const req = {
-        params: {
-          _id: '1234'
-        },
-        user: {
-          _id: '1234',
-          roles: []
-        },
-        body: {
-          'user-status': USER.STATUS.ACTIVE
-        },
-      };
-
-      updateById(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(403);
-    });
-
-    it('allows admin to change another users status and password', () => {
-      const req = {
-        params: {
-          _id: '1234'
-        },
-        user: {
-          _id: 'NOT1234',
-          roles: [ADMIN]
+          roles: [],
         },
         body: {
           password: 'AbC!234',
           passwordConfirm: 'AbC!234',
-          'user-status': USER.STATUS.ACTIVE
         },
       };
 
-      updateById(req, res);
+      await updateById(req, res);
 
       expect(mockUserControllerFindOne).toHaveBeenCalledWith(req.params._id, expect.any(Function));
       expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(req.params._id, req.body, expect.any(Function));
       expect(res.status).toHaveBeenCalledWith(200);
     });
 
-    it('does not allow a non-admin user to change someone elses password', () => {
+    it('does not allow a user to change their status', async () => {
       const req = {
         params: {
-          _id: '1234'
+          _id: '1234',
+        },
+        user: {
+          _id: '1234',
+          roles: [],
+        },
+        body: {
+          'user-status': USER.STATUS.ACTIVE,
+        },
+      };
+
+      await updateById(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(403);
+    });
+
+    it('allows admin to change another users status and password', async () => {
+      const req = {
+        params: {
+          _id: '1234',
         },
         user: {
           _id: 'NOT1234',
-          roles: []
+          roles: [ADMIN],
         },
         body: {
           password: 'AbC!234',
-          passwordConfirm: 'AbC!234'
+          passwordConfirm: 'AbC!234',
+          'user-status': USER.STATUS.ACTIVE,
         },
       };
-      updateById(req, res);
+
+      await updateById(req, res);
+
+      expect(mockUserControllerFindOne).toHaveBeenCalledWith(req.params._id, expect.any(Function));
+      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(req.params._id, req.body, expect.any(Function));
+      expect(res.status).toHaveBeenCalledWith(200);
+    });
+
+    it('does not allow a non-admin user to change someone elses password', async () => {
+      const req = {
+        params: {
+          _id: '1234',
+        },
+        user: {
+          _id: 'NOT1234',
+          roles: [],
+        },
+        body: {
+          password: 'AbC!234',
+          passwordConfirm: 'AbC!234',
+        },
+      };
+      await updateById(req, res);
 
       expect(res.status).toHaveBeenCalledWith(403);
     });

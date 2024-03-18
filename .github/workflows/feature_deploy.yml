@@ -1,19 +1,20 @@
+# TODO: Remove file post MSSQL migration
+
 name: Feature environment deployment
 
 on:
   push:
     branches:
       - feat/e2etf-sql
-    # paths:
-    #   - 'portal/**'
-    #   - 'portal-api/**'
-    #   - 'gef-ui/**'
-    #   - 'trade-finance-manager-ui/**'
-    #   - 'trade-finance-manager-api/**'
-    #   - 'dtfs-central-api/**'
-    #   - 'external-api/**'
-    #   - 'azure-functions/number-generator-function/**'
-    #   - 'azure-functions/acbs-function/**'
+    paths:
+      - "portal/**"
+      - "portal-api/**"
+      - "gef-ui/**"
+      - "trade-finance-manager-ui/**"
+      - "trade-finance-manager-api/**"
+      - "dtfs-central-api/**"
+      - "external-api/**"
+      - "azure-functions/acbs-function/**"
 
 env:
   environment: feature
@@ -77,7 +78,7 @@ jobs:
     # environment:
     #   name: ${{ needs.deployment-environment.outputs.environment }}
     strategy:
-      max-parallel: 4
+      max-parallel: 2
       matrix:
         repository:
           - portal-ui
@@ -151,12 +152,8 @@ jobs:
     strategy:
       matrix:
         repository:
-          - azure-function-number-generator
           - azure-function-acbs
         include:
-          - path: azure-functions/number-generator-function
-            repository: azure-function-number-generator
-            name: function-number-generator
           - path: azure-functions/acbs-function
             repository: azure-function-acbs
             name: function-acbs
@@ -205,10 +202,3 @@ jobs:
             az functionapp deployment slot create --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ matrix.name }}
             az functionapp deployment slot swap --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }} --action swap
             az functionapp deployment slot delete --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }}
-
-      # There has been an issue with number generator not working after a slot swap. A restart appears to fix it.
-      - name: 7. Restart
-        uses: azure/cli@v1.0.0
-        with:
-          inlineScript: |
-            az functionapp restart --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }}

@@ -118,7 +118,7 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
 
     pages.contract.status().invoke('text').then((text) => {
       // Status is submitted until TFM background process has created UKEF IDs
-      expect(text.trim()).to.equal('Submitted');
+      expect(text.trim()).to.equal('Acknowledged');
     });
 
     //---------------------------------------------------------------
@@ -126,11 +126,11 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     //---------------------------------------------------------------
 
     bondRow.bondStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submitted');
+      expect(text.trim()).to.equal('Acknowledged');
     });
 
     loanRow.loanStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submitted');
+      expect(text.trim()).to.equal('Acknowledged');
     });
 
     //---------------------------------------------------------------

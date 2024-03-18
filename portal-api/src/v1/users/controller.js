@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const now = require('../../now');
+const { getNowAsEpochMillisecondString } = require('../helpers/date');
 const db = require('../../drivers/db-client');
 const sendEmail = require('../email');
 const businessRules = require('../../config/businessRules');
@@ -9,8 +9,9 @@ const CONSTANTS = require('../../constants');
 const { isValidEmail } = require('../../utils/string');
 const { USER, PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
-const { InvalidUserIdError } = require('../errors');
+const { InvalidUserIdError, InvalidEmailAddressError, UserNotFoundError } = require('../errors');
 const InvalidSessionIdentifierError = require('../errors/invalid-session-identifier.error');
+const { transformDatabaseUser } = require('./transform-database-user');
 
 /**
  * Send a password update confirmation email with update timestamp.
@@ -122,13 +123,18 @@ exports.findByUsername = async (username, callback) => {
   collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
-exports.findByEmail = async (email, callback) => {
+exports.findByEmail = async (email) => {
   if (!isValidEmail(email)) {
-    throw new Error('Invalid Email');
+    throw new InvalidEmailAddressError(email);
+  }
+  const collection = await db.getCollection('users');
+  const user = await collection.findOne({ email: { $eq: email } });
+
+  if (!user) {
+    throw new UserNotFoundError(email);
   }
 
-  const collection = await db.getCollection('users');
-  collection.findOne({ email: { $eq: email } }, callback);
+  return transformDatabaseUser(user);
 };
 
 exports.create = async (user, userService, callback) => {
@@ -156,11 +162,8 @@ exports.create = async (user, userService, callback) => {
 
     const sanitizedUser = sanitizeUser(createdUser);
 
-    // TODO DTFS2-6621 - Remove conditional check
-    if (sanitizedUser.username && sanitizedUser.username.includes('@')) {
-      const resetPasswordToken = await createPasswordToken(sanitizedUser.email, userService);
-      await sendNewAccountEmail(sanitizedUser, resetPasswordToken);
-    }
+    const resetPasswordToken = await createPasswordToken(sanitizedUser.email, userService);
+    await sendNewAccountEmail(sanitizedUser, resetPasswordToken);
 
     return callback(null, sanitizedUser);
   }
@@ -264,7 +267,7 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
 
   const collection = await db.getCollection('users');
   const update = {
-    lastLogin: now(),
+    lastLogin: getNowAsEpochMillisecondString(),
     loginFailureCount: 0,
     sessionIdentifier,
   };
@@ -284,12 +287,13 @@ exports.incrementFailedLoginCount = async (user) => {
 
   const update = thresholdReached
     ? {
-      'user-status': USER.STATUS.BLOCKED,
-      blockedStatusReason: USER.STATUS_BLOCKED_REASON.INVALID_PASSWORD,
-    } : {
-      loginFailureCount: failureCount,
-      lastLoginFailure: now()
-    };
+        'user-status': USER.STATUS.BLOCKED,
+        blockedStatusReason: USER.STATUS_BLOCKED_REASON.INVALID_PASSWORD,
+      }
+    : {
+        loginFailureCount: failureCount,
+        lastLoginFailure: getNowAsEpochMillisecondString(),
+      };
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 

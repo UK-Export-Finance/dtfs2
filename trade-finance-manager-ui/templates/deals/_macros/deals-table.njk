@@ -111,7 +111,7 @@
             </td>
             <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-date-received">
               {% if deal.tfm.dateReceived %}
-                {{ deal.tfm.dateReceived | formatDateString("DD-MM-YYYY", "D MMM YYYY") }}
+                {{ deal.tfm.dateReceived | formatDateString("dd-MM-yyyy", "d MMM yyyy") }}
               {% else %}
                 -
               {% endif %}
