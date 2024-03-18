@@ -3,7 +3,7 @@ import {
   UtilisationData as MongoUtilisationData,
   UtilisationReport as MongoUtilisationReport,
   AzureFileInfoEntity,
-  UtilisationDataEntity,
+  FeeRecordEntity,
   UtilisationReportEntity,
 } from '@ukef/dtfs2-common';
 
@@ -24,20 +24,20 @@ const toSqlAzureFileInfo = (mongoAzureFileInfo: MongoAzureFileInfo | null): Azur
   return fileInfo;
 };
 
-const toSqlUtilisationData = (mongoReportData: MongoUtilisationData): UtilisationDataEntity => {
-  const reportData = new UtilisationDataEntity();
+const toSqlUtilisationData = (mongoReportData: MongoUtilisationData): FeeRecordEntity => {
+  const reportData = new FeeRecordEntity();
 
   reportData.facilityId = mongoReportData.facilityId;
   reportData.exporter = mongoReportData.exporter;
   reportData.baseCurrency = mongoReportData.baseCurrency;
   reportData.facilityUtilisation = mongoReportData.facilityUtilisation;
 
-  reportData.totalFeesAccruedForTheMonth = mongoReportData.totalFeesAccruedForTheMonth;
-  reportData.totalFeesAccruedForTheMonthCurrency = mongoReportData.totalFeesAccruedForTheMonthCurrency ?? mongoReportData.baseCurrency;
-  reportData.totalFeesAccruedForTheMonthExchangeRate = mongoReportData.totalFeesAccruedForTheMonthExchangeRate ?? 1;
+  reportData.totalFeesAccruedForThePeriod = mongoReportData.totalFeesAccruedForTheMonth;
+  reportData.totalFeesAccruedForThePeriodCurrency = mongoReportData.totalFeesAccruedForTheMonthCurrency ?? mongoReportData.baseCurrency;
+  reportData.totalFeesAccruedForThePeriodExchangeRate = mongoReportData.totalFeesAccruedForTheMonthExchangeRate ?? 1;
 
-  reportData.monthlyFeesPaidToUkef = mongoReportData.monthlyFeesPaidToUkef;
-  reportData.monthlyFeesPaidToUkefCurrency = mongoReportData.monthlyFeesPaidToUkefCurrency;
+  reportData.feesPaidToUkefForThePeriod = mongoReportData.monthlyFeesPaidToUkef;
+  reportData.feesPaidToUkefForThePeriodCurrency = mongoReportData.monthlyFeesPaidToUkefCurrency;
 
   reportData.paymentCurrency = mongoReportData.paymentCurrency ?? mongoReportData.monthlyFeesPaidToUkefCurrency;
   reportData.paymentExchangeRate = mongoReportData.paymentExchangeRate ?? 1;
@@ -65,7 +65,7 @@ export const toSqlUtilisationReport = ({
 
   // Cascaded child entities
   report.azureFileInfo = toSqlAzureFileInfo(mongoReport.azureFileInfo);
-  report.data = mongoReportData.map(toSqlUtilisationData);
+  report.feeRecords = mongoReportData.map(toSqlUtilisationData);
 
   return report;
 };
