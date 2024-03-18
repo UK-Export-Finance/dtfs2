@@ -6,6 +6,7 @@ import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS, UKEF_ID } from '../../../consta
 import { eStoreCronJobManager, eStoreTermStoreAndBuyerFolder, eStoreSiteCreationJob } from '../../../cronJobs';
 import { createExporterSite, siteExists } from './eStoreApi';
 import { objectIsEmpty } from '../../../utils';
+import { generateSystemAuditDetails } from '@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails';
 
 const validateEstoreInput = (eStoreData: any) => {
   const { dealIdentifier, facilityIdentifiers } = eStoreData;
@@ -70,6 +71,7 @@ export const createEstore = async (req: Request, res: Response) => {
         siteId: null,
         facilityCronJob: { status: ESTORE_CRON_STATUS.PENDING },
         dealCronJob: { status: ESTORE_CRON_STATUS.PENDING },
+        auditDetails: generateSystemAuditDetails(),
       });
 
       console.info('API Call: Checking if the site exists');
@@ -77,7 +79,10 @@ export const createEstore = async (req: Request, res: Response) => {
       // check if site exists in eStore
       if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
         // update the database to indicate that the site exists in eStore
-        await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: { siteExists: true, siteId: siteExistsResponse.data.siteId } });
+        await cronJobLogsCollection.updateOne(
+          { dealId: { $eq: eStoreData.dealId } },
+          { $set: { siteExists: true, siteId: siteExistsResponse.data.siteId, auditDetails: generateSystemAuditDetails() } },
+        );
 
         eStoreData.siteId = siteExistsResponse.data.siteId;
 
@@ -85,7 +90,10 @@ export const createEstore = async (req: Request, res: Response) => {
         eStoreTermStoreAndBuyerFolder(eStoreData);
       } else if (siteExistsResponse?.status === 404) {
         // update the database to indicate that a new cron job needs to be created to add a new site to Sharepoint
-        await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: { siteCronJob: { status: ESTORE_CRON_STATUS.PENDING } } });
+        await cronJobLogsCollection.updateOne(
+          { dealId: { $eq: eStoreData.dealId } },
+          { $set: { siteCronJob: { status: ESTORE_CRON_STATUS.PENDING }, auditDetails: generateSystemAuditDetails() } },
+        );
 
         // send a request to eStore to start creating the eStore site
         console.info('API Call started: Create a new eStore site for ', eStoreData.exporterName);
@@ -94,7 +102,10 @@ export const createEstore = async (req: Request, res: Response) => {
         // check if the siteCreation endpoint returns a siteId - this is usually a number (i.e. 12345)
         if (siteCreationResponse?.data?.siteId) {
           // update the database with the new siteId
-          await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: { siteId: siteCreationResponse.data.siteId } });
+          await cronJobLogsCollection.updateOne(
+            { dealId: { $eq: eStoreData.dealId } },
+            { $set: { siteId: siteCreationResponse.data.siteId, auditDetails: generateSystemAuditDetails() } },
+          );
           // add a new job to the `Cron Job Manager` queue that runs every 50 seconds
           // in general, the site creation should take around 4 minutes, but we can check regularly to see if the site was created
           const siteCreationTimer = addMinutes(new Date(), 7);
@@ -105,7 +116,7 @@ export const createEstore = async (req: Request, res: Response) => {
           // update the database to indicate that the `site cron job` started
           await cronJobLogsCollection.updateOne(
             { dealId: { $eq: eStoreData.dealId } },
-            { $set: { 'siteCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'siteCronJob.startDate': new Date() } },
+            { $set: { 'siteCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'siteCronJob.startDate': new Date(), auditDetails: generateSystemAuditDetails() } },
           );
           eStoreCronJobManager.start(`Site${eStoreData.dealId}`);
         } else {
@@ -113,7 +124,14 @@ export const createEstore = async (req: Request, res: Response) => {
           // update the database to indicate that the API call failed
           await cronJobLogsCollection.updateOne(
             { dealId: { $eq: eStoreData.dealId } },
-            { $set: { siteCreationResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.failureDate': new Date() } },
+            {
+              $set: {
+                siteCreationResponse,
+                'siteCronJob.status': ESTORE_CRON_STATUS.FAILED,
+                'siteCronJob.failureDate': new Date(),
+                auditDetails: generateSystemAuditDetails(),
+              },
+            },
           );
         }
       } else {
@@ -121,7 +139,14 @@ export const createEstore = async (req: Request, res: Response) => {
         // update the database to indicate that the API call failed
         await cronJobLogsCollection.updateOne(
           { dealId: { $eq: eStoreData.dealId } },
-          { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.failureDate': new Date() } },
+          {
+            $set: {
+              siteExistsResponse,
+              'siteCronJob.status': ESTORE_CRON_STATUS.FAILED,
+              'siteCronJob.failureDate': new Date(),
+              auditDetails: generateSystemAuditDetails(),
+            },
+          },
         );
       }
     } else {
