@@ -41,6 +41,7 @@ context('Confirmation', () => {
       cy.visit(relativeURL('/utilisation-report-upload/confirm-and-send'));
 
       confirmAndSend.currentUrl().should('contain', '/utilisation-report-upload');
+      confirmAndSend.currentUrl().should('not.contain', '/confirm-and-send');
     });
   });
 });
