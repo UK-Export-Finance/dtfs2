@@ -24,7 +24,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
     comments: [
       {
         roles: ['checker'],
-        userName: 'BANK1_CHECKER1',
+        userName: 'checker1@ukexportfinance.gov.uk',
         createdAt: 1643735218306,
         comment: '123123',
       },
@@ -110,7 +110,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
       surname: 'Last',
       timezone: 'Europe/London',
       'user-status': 'active',
-      username: 'BANK1_MAKER1',
+      username: 'maker1@ukexportfinance.gov.uk',
     },
     mandatoryVersionId: null,
     portalActivities: [

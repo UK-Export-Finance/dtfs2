@@ -1,12 +1,9 @@
-const moment = require('moment');
+const { isBefore, startOfDay, isSameDay } = require('date-fns');
 const { orderNumber } = require('../../../utils/error-list-order-number');
-const {
-  dateHasAllValues,
-  dateValidationText,
-} = require('./date');
-const { formattedTimestamp } = require('../../facility-dates/timestamp');
+const { dateValidationText, dateHasAllValues } = require('./date');
 const isReadyForValidation = require('../helpers/isReadyForValidation.helper');
 const coverDatesValidation = require('../helpers/coverDatesValidation.helpers');
+const { getStartOfDateFromEpochMillisecondString, getStartOfDateFromDayMonthYearStrings } = require('../../helpers/date');
 
 module.exports = (submittedValues, deal, errorList) => {
   const newErrorList = errorList;
@@ -18,16 +15,16 @@ module.exports = (submittedValues, deal, errorList) => {
   } = submittedValues;
 
   if (isReadyForValidation(deal, submittedValues)) {
-    const {
-      coverDayValidation,
-      coverMonthValidation,
-      coverYearValidation
-    } = coverDatesValidation(coverEndDateDay, coverEndDateMonth, coverEndDateYear);
+    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(
+      coverEndDateDay,
+      coverEndDateMonth,
+      coverEndDateYear,
+    );
 
     if (dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
-      const formattedDate = `${coverEndDateYear}-${coverEndDateMonth}-${coverEndDateDay}`;
-      const nowDate = moment().format('YYYY-MM-DD');
-      if (moment(formattedDate).isBefore(nowDate)) {
+      const coverEndDate = getStartOfDateFromDayMonthYearStrings(coverEndDateDay, coverEndDateMonth, coverEndDateYear);
+      const startOfToday = startOfDay(new Date());
+      if (isBefore(coverEndDate, startOfToday)) {
         newErrorList.coverEndDate = {
           text: 'Cover End Date must be today or in the future',
           order: orderNumber(newErrorList),
@@ -41,30 +38,23 @@ module.exports = (submittedValues, deal, errorList) => {
        * throws error if dates are the same
        */
       if (requestedCoverStartDate) {
-        // converts from UTC
-        const coverStartDate = formattedTimestamp(requestedCoverStartDate);
-        // formats to the same format as formatted date for checking
-        const requestedCoverStartDateFormatted = moment(coverStartDate).format('YYYY-MM-DD');
-        if (moment(formattedDate).isSame(requestedCoverStartDateFormatted)) {
+        const coverStartDate = getStartOfDateFromEpochMillisecondString(requestedCoverStartDate);
+
+        if (isSameDay(coverEndDate, coverStartDate)) {
           newErrorList.coverEndDate = {
             text: 'Cover End Date must be after the Requested Cover Start Date',
             order: orderNumber(newErrorList),
           };
         }
-      } else if (moment(formattedDate).isSame(nowDate)) {
+      } else if (isSameDay(coverEndDate, startOfToday)) {
         newErrorList.coverEndDate = {
           text: 'Cover End Date must be after the Requested Cover Start Date',
           order: orderNumber(newErrorList),
         };
       }
-    } else if (!dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
+    } else {
       newErrorList.coverEndDate = {
-        text: dateValidationText(
-          'Cover End Date',
-          coverEndDateDay,
-          coverEndDateMonth,
-          coverEndDateYear,
-        ),
+        text: dateValidationText('Cover End Date', coverEndDateDay, coverEndDateMonth, coverEndDateYear),
         order: orderNumber(newErrorList),
       };
     }

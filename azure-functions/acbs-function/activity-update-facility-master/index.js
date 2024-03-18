@@ -15,7 +15,7 @@
  * ------------------
  */
 
-const moment = require('moment');
+const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
@@ -55,7 +55,7 @@ const updateFacilityMaster = async (context) => {
       return Promise.resolve({ missingMandatory });
     }
 
-    const submittedToACBS = moment().format();
+    const submittedToACBS = getNowAsIsoString();
 
     const { status, data } = await api.updateFacility(facilityId, updateType, acbsFacilityMasterInput, etag);
 
@@ -65,7 +65,7 @@ const updateFacilityMaster = async (context) => {
           {
             name: 'ACBS Facility update error',
             submittedToACBS,
-            receivedFromACBS: moment().format(),
+            receivedFromACBS: getNowAsIsoString(),
             dataReceived: data,
             dataSent: acbsFacilityMasterInput,
           },
@@ -79,7 +79,7 @@ const updateFacilityMaster = async (context) => {
       status,
       updateType,
       submittedToACBS,
-      receivedFromACBS: moment().format(),
+      receivedFromACBS: getNowAsIsoString(),
       dataSent: acbsFacilityMasterInput,
       ...data,
     };

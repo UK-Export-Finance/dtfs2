@@ -2,6 +2,7 @@ import Chance from 'chance';
 import todayUnix from '../../../e2e-fixtures/dateConstants';
 
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE } from './constants';
+import { BANK1_CHECKER1, BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 
 const chance = new Chance();
 
@@ -173,10 +174,10 @@ const commonApplicationDetails = {
   canSubmit: false,
   checkerCanSubmit: false,
   maker: {
-    username: 'BANK1_MAKER1',
+    username: BANK1_MAKER1.username,
     firstname: chance.first(),
     surname: chance.last(),
-    email: chance.email(),
+    email: BANK1_MAKER1.email,
     roles: [],
     bank: {},
     timezone: 'Europe/London',
@@ -185,10 +186,10 @@ const commonApplicationDetails = {
     _id: '619bae3467cc7c002069fc1e',
   },
   checker: {
-    username: 'BANK1_CHECKER1',
+    username: BANK1_CHECKER1.username,
     firstname: chance.first(),
     surname: chance.last(),
-    email: chance.email(),
+    email: BANK1_CHECKER1.email,
     roles: ['maker'],
     bank: {},
     timezone: 'Europe/London',

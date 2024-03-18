@@ -1,158 +1,147 @@
+const { HttpStatusCode } = require('axios');
 const { findOneDeal, updateDeal } = require('./deal.controller');
-
 const { addComment } = require('./deal-comments.controller');
-
 const { userHasAccessTo } = require('../users/checks');
-
 const validateStateChange = require('../validation/deal-status');
-
 const userCanSubmitDeal = require('./deal-status/user-can-submit-deal');
 const updateStatus = require('./deal-status/update-status');
 const createSubmissionDate = require('./deal-status/create-submission-date');
 const createMiaSubmissionDate = require('./deal-status/create-mia-submission-date');
-
 const updateSubmissionCount = require('./deal-status/update-submission-count');
-
 const sendStatusUpdateEmails = require('./deal-status/send-status-update-emails');
 const createApprovalDate = require('./deal-status/create-approval-date');
-
 const updateFacilityCoverStartDates = require('./deal-status/update-facility-cover-start-dates');
 const updateIssuedFacilities = require('./deal-status/update-issued-facilities');
 const updateSubmittedIssuedFacilities = require('./deal-status/update-submitted-issued-facilities');
 const createUkefIds = require('./deal-status/create-ukef-ids');
 const api = require('../api');
-
 const CONSTANTS = require('../../constants');
 
-exports.findOne = (req, res) => {
-  findOneDeal(req.params.id, (deal) => {
+/**
+ * Finds a specific deal by its ID and sends the deal's status as the response.
+ * @param {Request} req - The request object containing the parameters.
+ * @param {Response} res - The response object used to send the response.
+ * @returns {Response} - Response with status code, if Ok then with deal status
+ */
+exports.findOne = async (req, res) => {
+  try {
+    const deal = await findOneDeal(req.params.id);
+
     if (!deal) {
-      res.status(404).send();
-    } else if (!userHasAccessTo(req.user, deal)) {
-      res.status(401).send();
-    } else {
-      res.status(200).send(deal.status);
+      return res.status(HttpStatusCode.NotFound).send();
     }
-  });
+
+    if (!userHasAccessTo(req.user, deal)) {
+      return res.status(HttpStatusCode.Unauthorized).send();
+    }
+
+    return res.status(HttpStatusCode.Ok).send(deal.status);
+  } catch (error) {
+    console.error('❌ Unable to find deal %s %o', req.params.id, error);
+    return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: 'Unable to find deal' });
+  }
 };
 
-exports.update = (req, res) => {
-  const { user } = req;
+/**
+ * Updates the status of a deal based on the new status provided in the request body.
+ * @param {Response} req - The request object.
+ * @param {Request} res - The response object.
+ * @returns {Promise<Response>} - The latest deal information.
+ */
+exports.update = async (req, res) => {
+  try {
+    const { user } = req;
+    const dealId = req.params.id;
+    const newStatus = req.body.status;
 
-  findOneDeal(req.params.id, async (deal) => {
-    if (!deal) return res.status(404).send();
-    if (!userHasAccessTo(req.user, deal)) return res.status(401).send();
+    const deal = await findOneDeal(dealId);
 
-    const fromStatus = deal.status;
-    const toStatus = req.body.status;
+    if (!deal) {
+      return res.status(HttpStatusCode.NotFound).send();
+    }
 
-    if (toStatus !== 'Ready for Checker\'s approval' && toStatus !== 'Abandoned') {
-      if (!userCanSubmitDeal(deal, req.user)) {
-        return res.status(401).send();
+    if (!userHasAccessTo(user, deal)) {
+      return res.status(HttpStatusCode.Unauthorized).send();
+    }
+
+    const currentStatus = deal.status;
+
+    if (newStatus !== CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL && newStatus !== CONSTANTS.DEAL.DEAL_STATUS.ABANDONED) {
+      if (!userCanSubmitDeal(deal, user)) {
+        return res.status(HttpStatusCode.Unauthorized).send();
       }
     }
 
-    const validationErrors = validateStateChange(deal, req.body, user);
+    const validationErrors = await validateStateChange(deal, req.body, user);
 
     if (validationErrors) {
-      return res.status(200).send({
+      return res.status(HttpStatusCode.Ok).send({
         success: false,
         ...validationErrors,
       });
     }
 
-    const updatedDeal = await updateStatus(req.params.id, fromStatus, toStatus, user);
+    let updatedDeal = await updateStatus(dealId, currentStatus, newStatus, user);
 
-    const updatedDealStatus = updatedDeal.status;
-
-    const shouldCheckFacilityDates = (fromStatus === 'Draft' && updatedDealStatus === 'Ready for Checker\'s approval');
-
-    if (shouldCheckFacilityDates) {
-      await updateFacilityCoverStartDates(req.user, updatedDeal);
+    if (currentStatus === CONSTANTS.DEAL.DEAL_STATUS.DRAFT && newStatus === CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL) {
+      await updateFacilityCoverStartDates(user, updatedDeal);
     }
-
-    let dealAfterAllUpdates = updatedDeal;
 
     if (req.body.comments) {
-      dealAfterAllUpdates = await addComment(req.params.id, req.body.comments, user);
+      updatedDeal = await addComment(dealId, req.body.comments, user);
     }
 
-    // only trigger updateDeal (which updates the deal's `editedBy` array),
-    // if a checker is NOT changing the status to either:
-    // `Maker input required` or 'Submitted'
-    if (toStatus !== 'Further Maker\'s input required' && toStatus !== 'Submitted') {
-      const dealAfterEditedByUpdate = await updateDeal(
-        req.params.id,
-        dealAfterAllUpdates,
-        req.user,
-      );
-      dealAfterAllUpdates = dealAfterEditedByUpdate;
+    if (newStatus !== CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED && newStatus !== CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF) {
+      updatedDeal = await updateDeal(dealId, updatedDeal, user);
     }
 
-    if (toStatus === 'Ready for Checker\'s approval') {
+    if (newStatus === CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL) {
       const canUpdateIssuedFacilitiesCoverStartDates = true;
       const newIssuedFacilityStatus = 'Ready for check';
 
-      dealAfterAllUpdates = await updateIssuedFacilities(
-        req.user,
-        fromStatus,
-        dealAfterAllUpdates,
-        canUpdateIssuedFacilitiesCoverStartDates,
-        newIssuedFacilityStatus,
-      );
+      updatedDeal = await updateIssuedFacilities(user, currentStatus, updatedDeal, canUpdateIssuedFacilitiesCoverStartDates, newIssuedFacilityStatus);
     }
 
-    if (toStatus === 'Further Maker\'s input required') {
+    if (newStatus === CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED) {
       const canUpdateIssuedFacilitiesCoverStartDates = false;
-      const newIssuedFacilityStatus = 'Maker\'s input required';
+      const newIssuedFacilityStatus = "Maker's input required";
 
-      dealAfterAllUpdates = await updateIssuedFacilities(
-        req.user,
-        fromStatus,
-        dealAfterAllUpdates,
-        canUpdateIssuedFacilitiesCoverStartDates,
-        newIssuedFacilityStatus,
-      );
+      updatedDeal = await updateIssuedFacilities(user, currentStatus, updatedDeal, canUpdateIssuedFacilitiesCoverStartDates, newIssuedFacilityStatus);
     }
 
-    if (toStatus === 'Submitted') {
-      await updateSubmittedIssuedFacilities(req.user, dealAfterAllUpdates);
+    if (newStatus === CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF) {
+      await updateSubmittedIssuedFacilities(user, updatedDeal);
 
-      dealAfterAllUpdates = await updateSubmissionCount(dealAfterAllUpdates, user);
+      updatedDeal = await updateSubmissionCount(updatedDeal, user);
 
-      if (!dealAfterAllUpdates.details.submissionDate) {
-        dealAfterAllUpdates = await createSubmissionDate(req.params.id, user);
+      if (!updatedDeal?.details?.submissionDate) {
+        updatedDeal = await createSubmissionDate(dealId, user);
       }
 
-      if (dealAfterAllUpdates.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
-        && !dealAfterAllUpdates.details.manualInclusionApplicationSubmissionDate) {
-        dealAfterAllUpdates = await createMiaSubmissionDate(req.params.id, user);
+      if (updatedDeal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA && !updatedDeal.details.manualInclusionApplicationSubmissionDate) {
+        updatedDeal = await createMiaSubmissionDate(dealId, user);
       }
 
-      if (dealAfterAllUpdates.details.submissionCount === 1) {
-        dealAfterAllUpdates = await createUkefIds(
-          req.params.id,
-          dealAfterAllUpdates,
-          user,
-        );
+      if (updatedDeal?.details?.submissionCount === 1) {
+        updatedDeal = await createUkefIds(updatedDeal, user);
       }
 
-      await api.tfmDealSubmit(deal._id, CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS, req.user);
+      await api.tfmDealSubmit(dealId, CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS, user);
     }
 
-    // check for approvals back from UKEF and date stamp it for countdown indicator
-    if (toStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
-      || toStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS) {
-      dealAfterAllUpdates = await createApprovalDate(req.params.id);
+    if (newStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS || newStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS) {
+      updatedDeal = await createApprovalDate(dealId);
     }
 
-    if (toStatus !== fromStatus) {
-      await sendStatusUpdateEmails(dealAfterAllUpdates, fromStatus, req.user);
+    if (newStatus !== currentStatus) {
+      await sendStatusUpdateEmails(updatedDeal, currentStatus, user);
     }
 
-    // make sure we have the latest deal in DB with bonds and loans populated
-    const dealLatest = await findOneDeal(deal._id);
+    const dealLatest = await findOneDeal(dealId);
 
-    return res.status(200).send(dealLatest);
-  });
+    return res.status(HttpStatusCode.Ok).send(dealLatest);
+  } catch (error) {
+    console.error('❌ Unable to update the deal %o', error);
+    return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: 'Unable to update the deal' });
+  }
 };

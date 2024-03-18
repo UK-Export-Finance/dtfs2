@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { sub } = require('date-fns');
 const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
@@ -6,7 +6,6 @@ const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
-const externalApis = require('../../../src/external-api/api');
 const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
 const { as } = require('../../api')(app);
@@ -21,7 +20,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   let aSuperuser;
   const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
   const originalFacilities = completedDeal.mockFacilities;
-  const MOCK_NUMBER_GENERATOR_ID = 'MOCK_NUMBER_GENERATOR_ID';
+  const nowDate = new Date();
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
@@ -37,9 +36,6 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
     await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
 
     api.tfmDealSubmit = tfmDealSubmitSpy;
-    externalApis.numberGenerator = {
-      create: () => Promise.resolve({ ukefId: MOCK_NUMBER_GENERATOR_ID }),
-    };
   });
 
   afterEach(() => {
@@ -147,16 +143,16 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
       expect(body.deal.details.ukefDealId).toBeDefined();
-      expect(body.deal.details.ukefDealId).toEqual(MOCK_NUMBER_GENERATOR_ID);
+      expect(body.deal.details.ukefDealId).toEqual(CONSTANTS.NUMBER.UKEF_ID.TEST);
 
       body.deal.bondTransactions.items.forEach((bond) => {
         expect(bond.ukefFacilityId).toBeDefined();
-        expect(bond.ukefFacilityId).toEqual(MOCK_NUMBER_GENERATOR_ID);
+        expect(bond.ukefFacilityId).toEqual(CONSTANTS.NUMBER.UKEF_ID.TEST);
       });
 
       body.deal.loanTransactions.items.forEach((loan) => {
         expect(loan.ukefFacilityId).toBeDefined();
-        expect(loan.ukefFacilityId).toEqual(MOCK_NUMBER_GENERATOR_ID);
+        expect(loan.ukefFacilityId).toEqual(CONSTANTS.NUMBER.UKEF_ID.TEST);
       });
     });
 
@@ -187,15 +183,13 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
         expect(dealAfterSecondSubmission.body.deal.details.ukefDealId).toEqual(dealAfterFirstSubmission.body.details.ukefDealId);
 
         dealAfterSecondSubmission.body.deal.bondTransactions.items.forEach((bond) => {
-          const bondInFirstSubmission = dealAfterFirstSubmission.body.bondTransactions.items.find((b) =>
-            b._id === bond._id);
+          const bondInFirstSubmission = dealAfterFirstSubmission.body.bondTransactions.items.find((b) => b._id === bond._id);
 
           expect(bond.ukefFacilityId).toEqual(bondInFirstSubmission.ukefFacilityId);
         });
 
         dealAfterSecondSubmission.body.deal.loanTransactions.items.forEach((loan) => {
-          const loanInFirstSubmission = dealAfterFirstSubmission.body.loanTransactions.items.find((l) =>
-            l._id === loan._id);
+          const loanInFirstSubmission = dealAfterFirstSubmission.body.loanTransactions.items.find((l) => l._id === loan._id);
 
           expect(loan.ukefFacilityId).toEqual(loanInFirstSubmission.ukefFacilityId);
         });
@@ -247,7 +241,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const firstBond = modifiedMockFacilities.find((f) => f.type === 'Bond');
 
       firstBond.status = 'Ready for check';
-      firstBond.requestedCoverStartDate = moment().subtract(1, 'day').utc().valueOf();
+      firstBond.requestedCoverStartDate = sub(nowDate, { days: 1 }).valueOf();
 
       await createFacilities(aBarclaysMaker, dealId, [firstBond]);
 
@@ -258,7 +252,9 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
 
       const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
       expect(updatedDeal.status).toEqual(200);
-      expect(updatedDeal.body.errorList.requestedCoverStartDate.text).toEqual('Requested Cover Start Date must be on the application submission date or in the future');
+      expect(updatedDeal.body.errorList.requestedCoverStartDate.text).toEqual(
+        'Requested Cover Start Date must be on the application submission date or in the future',
+      );
     });
   });
 
@@ -273,7 +269,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const firstLoan = modifiedMockFacilities.find((f) => f.type === 'Loan');
 
       firstLoan.status = 'Ready for check';
-      firstLoan.requestedCoverStartDate = moment().subtract(1, 'day').utc().valueOf();
+      firstLoan.requestedCoverStartDate = sub(nowDate, { days: 1 }).valueOf();
 
       await createFacilities(aBarclaysMaker, dealId, [firstLoan]);
 
@@ -284,7 +280,9 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
 
       const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
       expect(updatedDeal.status).toEqual(200);
-      expect(updatedDeal.body.errorList.requestedCoverStartDate.text).toEqual('Requested Cover Start Date must be on the application submission date or in the future');
+      expect(updatedDeal.body.errorList.requestedCoverStartDate.text).toEqual(
+        'Requested Cover Start Date must be on the application submission date or in the future',
+      );
     });
   });
 
@@ -300,7 +298,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const mockFacilities = [
         {
           ...completedDeal.mockFacilities[0],
-          requestedCoverStartDate: moment().utc().valueOf(),
+          requestedCoverStartDate: nowDate.valueOf(),
         },
       ];
 

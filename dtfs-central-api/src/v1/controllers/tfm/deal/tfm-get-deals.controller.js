@@ -1,6 +1,7 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const moment = require('moment');
 const escapeStringRegexp = require('escape-string-regexp');
+const { isValid, format } = require('date-fns');
+const { getDateFromSearchString } = require("../../../../helpers/getDateFromSearchString");
 const db = require('../../../../drivers/db-client').default;
 const CONSTANTS = require('../../../../constants');
 const getObjectPropertyValueFromStringPath = require('../../../../utils/getObjectPropertyValueFromStringPath');
@@ -61,16 +62,6 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
    * - Only certain fields are supported. I.e, what is displayed in the UI.
   */
   if (searchString) {
-    let dateString;
-
-    const date = moment(searchString, 'DD-MM-YYYY');
-
-    const isValidDate = moment(date).isValid();
-
-    if (isValidDate) {
-      dateString = String(moment(date).format('DD-MM-YYYY'));
-    }
-
     const searchStringRegex = escapeStringRegexp(searchString);
 
     const query = {
@@ -87,7 +78,11 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
       ],
     };
 
-    if (dateString) {
+    const date = getDateFromSearchString(searchString);
+
+    if (isValid(date)) {
+      // tfm.dateReceived is stored in the database in the form `dd-MM-yyyy`
+      const dateString = format(date, 'dd-MM-yyyy');
       const dateStringEscaped = escapeStringRegexp(dateString);
       query.$or.push({
         'tfm.dateReceived': { $regex: dateStringEscaped, $options: 'i' },

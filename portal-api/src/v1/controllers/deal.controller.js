@@ -97,7 +97,7 @@ exports.findOne = (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid id provided' });
   }
 
-  return findOneDeal(req.params.id, (deal) => {
+  return findOneDeal(req.params.id, async (deal) => {
     if (!deal) {
       res.status(404).send();
     } else if (!userHasAccessTo(req.user, deal)) {
@@ -105,7 +105,7 @@ exports.findOne = (req, res) => {
     } else {
       // apply realtime validation so we catch any time-dependent fields
       //  that have -become- invalid..
-      const validationErrors = validate(deal);
+      const validationErrors = await validate(deal);
       const dealWithStatuses = calculateStatuses(deal, validationErrors);
 
       const dealWithSummary = {
