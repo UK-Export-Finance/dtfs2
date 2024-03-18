@@ -80,7 +80,7 @@ const getIsReportSubmitted = async (bank) => {
   const reportPeriod = getReportPeriod();
   const uploadedReportsInReportPeriod = await api.getUtilisationReports(bank.id, {
     reportPeriod,
-    excludeNotUploaded: true,
+    excludeNotReceived: true,
   });
   return uploadedReportsInReportPeriod.length > 0;
 };

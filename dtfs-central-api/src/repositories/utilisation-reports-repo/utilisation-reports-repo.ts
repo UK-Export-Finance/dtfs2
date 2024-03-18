@@ -1,5 +1,4 @@
 import { Filter, InsertOneResult, OptionalId } from 'mongodb';
-import sortBy from 'lodash/sortBy';
 import {
   UtilisationReport,
   MONGO_DB_COLLECTIONS,
@@ -7,6 +6,7 @@ import {
 } from '@ukef/dtfs2-common';
 import db from '../../drivers/db-client';
 import { SessionBank } from '../../types/session-bank';
+import { GetUtilisationReportDetailsOptions } from '.';
 
 /**
  * Saves the inputted utilisation report with the inputted bank in the not received state
@@ -26,11 +26,6 @@ export const saveNotReceivedUtilisationReport = async (reportPeriod: ReportPerio
   return await utilisationReportsCollection.insertOne(utilisationReportInfo);
 };
 
-export type GetUtilisationReportDetailsOptions = {
-  reportPeriod?: UtilisationReport['reportPeriod'];
-  excludeNotUploaded?: boolean;
-};
-
 /**
  * Gets the utilisation report collection filter from the passed in options
  * @param options - The options
@@ -45,7 +40,7 @@ const getUtilisationReportDetailsFilterFromOptions = (options?: GetUtilisationRe
   if (options.reportPeriod) {
     utilisationReportDetailsFilter.reportPeriod = { $eq: options.reportPeriod };
   }
-  if (options.excludeNotUploaded) {
+  if (options.excludeNotReceived) {
     utilisationReportDetailsFilter.status = { $not: { $in: ['REPORT_NOT_RECEIVED'] } };
     utilisationReportDetailsFilter.azureFileInfo = { $not: { $eq: null } };
   }
@@ -68,19 +63,4 @@ export const getOneUtilisationReportDetailsByBankId = async (
     ...getUtilisationReportDetailsFilterFromOptions(options),
   };
   return await utilisationReportsCollection.findOne(utilisationReportDetailsFilter);
-};
-
-/**
- * Gets utilisation reports by bank id
- * @param bankId - The bank id
- * @returns The found bank reports (`[]` if none found)
- */
-export const getManyUtilisationReportDetailsByBankId = async (bankId: string, options?: GetUtilisationReportDetailsOptions): Promise<UtilisationReport[]> => {
-  const utilisationReportsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.UTILISATION_REPORTS);
-  const utilisationReportDetailsFilter: Filter<UtilisationReport> = {
-    'bank.id': { $eq: bankId },
-    ...getUtilisationReportDetailsFilterFromOptions(options),
-  };
-  const filteredUtilisationReports: UtilisationReport[] = await utilisationReportsCollection.find(utilisationReportDetailsFilter).toArray();
-  return sortBy(filteredUtilisationReports, ['reportPeriod.start.year', 'reportPeriod.start.month']);
 };

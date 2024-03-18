@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
+import { UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
-import { getManyUtilisationReportDetailsByBankId } from '../../../../repositories/utilisation-reports-repo';
+import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { parseReportPeriod } from '../../../../utils/report-period';
+import { mapUtilisationReportEntityToGetUtilisationReportResponse } from '../../../../mapping/mapUtilisationReport';
 
 export type GetUtilisationReportsRequest = CustomExpressRequest<{
   params: {
@@ -9,7 +11,7 @@ export type GetUtilisationReportsRequest = CustomExpressRequest<{
   };
   query: {
     reportPeriod?: Request['query'];
-    excludeNotUploaded?: 'true' | 'false';
+    excludeNotReceived?: 'true' | 'false';
   };
 }>;
 
@@ -23,15 +25,15 @@ export type GetUtilisationReportsRequest = CustomExpressRequest<{
 export const getUtilisationReports = async (req: GetUtilisationReportsRequest, res: Response) => {
   try {
     const { bankId } = req.params;
-    const { reportPeriod, excludeNotUploaded } = req.query;
+    const { reportPeriod, excludeNotReceived } = req.query;
 
     const parsedReportPeriod = parseReportPeriod(reportPeriod);
 
-    const utilisationReports = await getManyUtilisationReportDetailsByBankId(bankId, {
+    const utilisationReports: UtilisationReportEntity[] = await UtilisationReportRepo.findAllByBankId(bankId, {
       reportPeriod: parsedReportPeriod,
-      excludeNotUploaded: excludeNotUploaded === 'true',
+      excludeNotReceived: excludeNotReceived === 'true',
     });
-    return res.status(200).send(utilisationReports);
+    return res.status(200).send(utilisationReports.map((report) => mapUtilisationReportEntityToGetUtilisationReportResponse(report)));
   } catch (error) {
     console.error('Unable to get utilisation reports:', error);
     return res.status(500).send({ status: 500, message: 'Failed to get utilisation reports' });

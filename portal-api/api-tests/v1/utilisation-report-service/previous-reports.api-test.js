@@ -1,13 +1,11 @@
-const databaseHelper = require('../../database-helper');
+const { UtilisationReportEntityMockBuilder, UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
+const { wipeAllUtilisationReports, saveUtilisationReportToDatabase } = require('../../sql-db-helper.ts');
 const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
-const { DB_COLLECTIONS } = require('../../fixtures/constants');
-const { insertManyUtilisationReportDetails } = require('../../insertUtilisationReportDetails');
-const { MOCK_PENDING_RECONCILIATION_REPORT_DETAILS_WITHOUT_ID } = require('../../../test-helpers/mock-utilisation-report-details');
 
 console.error = jest.fn();
 
@@ -15,105 +13,78 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
   const previousReportsUrl = (bankId) => `/v1/banks/${bankId}/utilisation-reports`;
   let aPaymentReportOfficer;
   let testUsers;
-  let matchingBankId;
-  let reportDetails;
+  let bankId;
+  const receivedReportId = 123;
 
   beforeAll(async () => {
-    await databaseHelper.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
+    await wipeAllUtilisationReports();
 
     testUsers = await testUserCache.initialise(app);
     aPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).one();
-    matchingBankId = aPaymentReportOfficer.bank.id;
+    bankId = aPaymentReportOfficer.bank.id;
 
-    const bank = {
-      id: aPaymentReportOfficer.bank.id,
-      name: aPaymentReportOfficer.bank.name,
-    };
     const year = 2023;
-    const azureFileInfo = {
-      folder: 'test_bank',
-      filename: '2021_January_test_bank_utilisation_report.csv',
-      fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
-      url: 'test.url.csv',
-      mimetype: 'text/csv',
-    };
-    const uploadedBy = {
-      id: aPaymentReportOfficer._id,
-      firstname: aPaymentReportOfficer.firstname,
-      surname: aPaymentReportOfficer.surname,
-    };
-    reportDetails = [
-      {
-        ...MOCK_PENDING_RECONCILIATION_REPORT_DETAILS_WITHOUT_ID,
-        bank,
-        reportPeriod: {
-          start: {
-            month: 1,
-            year,
-          },
-          end: {
-            month: 1,
-            year,
-          },
+    const uploadedByUserId = aPaymentReportOfficer._id;
+    const aReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      .withBankId(bankId)
+      .withId(receivedReportId)
+      .withReportPeriod({
+        start: {
+          month: 1,
+          year,
         },
-        dateUploaded: new Date(year, 0),
-        azureFileInfo,
-        uploadedBy,
-      },
-      {
-        ...MOCK_PENDING_RECONCILIATION_REPORT_DETAILS_WITHOUT_ID,
-        bank,
-        reportPeriod: {
-          start: {
-            month: 2,
-            year,
-          },
-          end: {
-            month: 2,
-            year,
-          },
+        end: {
+          month: 2,
+          year,
         },
-        year,
-        dateUploaded: new Date(year, 1),
-        azureFileInfo,
-        uploadedBy,
-      },
-      {
-        ...MOCK_PENDING_RECONCILIATION_REPORT_DETAILS_WITHOUT_ID,
-        bank,
-        reportPeriod: {
-          start: {
-            month: 3,
-            year,
-          },
-          end: {
-            month: 3,
-            year,
-          },
+      })
+      .withDateUploaded(new Date(year, 0))
+      .withUploadedByUserId(uploadedByUserId)
+      .build();
+    const aNotReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      .withId(8)
+      .withBankId(bankId)
+      .withReportPeriod({
+        start: {
+          month: 2,
+          year,
         },
-        year,
-        dateUploaded: new Date(year, 2),
-        azureFileInfo,
-        uploadedBy,
-      },
-    ];
-    await insertManyUtilisationReportDetails(reportDetails);
-  });
-
-  afterAll(async () => {
-    await databaseHelper.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
+        end: {
+          month: 3,
+          year,
+        },
+      })
+      .build();
+    const aMarkedReconciledReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
+      .withId(9)
+      .withAzureFileInfo(undefined)
+      .withBankId(bankId)
+      .withReportPeriod({
+        start: {
+          month: 3,
+          year,
+        },
+        end: {
+          month: 4,
+          year,
+        },
+      })
+      .build();
+    await saveUtilisationReportToDatabase(aReceivedReport);
+    await saveUtilisationReportToDatabase(aNotReceivedReport);
+    await saveUtilisationReportToDatabase(aMarkedReconciledReport);
   });
 
   withClientAuthenticationTests({
-    makeRequestWithoutAuthHeader: () => get(previousReportsUrl(matchingBankId)),
-    makeRequestWithAuthHeader: (authHeader) => get(previousReportsUrl(matchingBankId), { headers: { Authorization: authHeader } }),
+    makeRequestWithoutAuthHeader: () => get(previousReportsUrl(bankId)),
+    makeRequestWithAuthHeader: (authHeader) => get(previousReportsUrl(bankId), { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({
     allowedRoles: [PAYMENT_REPORT_OFFICER],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
     getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-    makeRequestAsUser: (user) => as(user).get(previousReportsUrl(matchingBankId)),
+    makeRequestAsUser: (user) => as(user).get(previousReportsUrl(bankId)),
     successStatusCode: 200,
   });
 
@@ -124,22 +95,18 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
   });
 
   it('401s requests if users bank != request bank', async () => {
-    const { status } = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId - 1));
+    const { status } = await as(aPaymentReportOfficer).get(previousReportsUrl(bankId - 1));
 
     expect(status).toEqual(401);
   });
 
-  it('returns the requested resource', async () => {
-    const expectedResponse = [
-      {
-        year: 2023,
-        reports: reportDetails,
-      },
-    ];
+  it('returns the previous uploaded reports', async () => {
+    const response = await as(aPaymentReportOfficer).get(previousReportsUrl(bankId));
 
-    const { status, text } = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId));
-
-    expect(status).toEqual(200);
-    expect(JSON.parse(text)).toEqual(JSON.parse(JSON.stringify(expectedResponse)));
+    expect(response.status).toEqual(200);
+    expect(response.body.length).toEqual(1);
+    expect(response.body[0].year).toEqual(2023);
+    expect(response.body[0].reports.length).toEqual(1);
+    expect(response.body[0].reports[0].id).toEqual(receivedReportId);
   });
 });
