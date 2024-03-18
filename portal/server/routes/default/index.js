@@ -1,5 +1,6 @@
 const express = require('express');
-const { ROLES, LANDING_PAGES } = require('../../constants');
+const { ROLES } = require('@ukef/dtfs2-common');
+const { LANDING_PAGES } = require('../../constants');
 
 const router = express.Router();
 

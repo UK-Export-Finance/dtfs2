@@ -12,10 +12,8 @@ const TRANSACTION_STAGE = require('./transaction-stage');
 const TRANSACTION_TYPE = require('./transaction-type');
 const PORTAL_URL = require('./portalUrl.constant');
 const SORT_BY = require('./sort');
-const CURRENCY = require('./currency');
 const UTILISATION_REPORT_HEADERS = require('./utilisation-report-headers');
 const { FILE_UPLOAD } = require('./file-upload');
-const { ROLES } = require('./roles');
 const { MONTH_NAMES } = require('./month-names');
 const ALL_BANKS_ID = require('./all-banks-id');
 const HTTP_ERROR_CAUSES = require('./http-error-causes');
@@ -36,10 +34,8 @@ module.exports = {
   TRANSACTION_TYPE,
   PORTAL_URL,
   SORT_BY,
-  CURRENCY,
   UTILISATION_REPORT_HEADERS,
   FILE_UPLOAD,
-  ROLES,
   MONTH_NAMES,
   ALL_BANKS_ID,
   LOGIN_STATUS,

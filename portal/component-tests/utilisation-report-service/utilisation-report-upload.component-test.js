@@ -1,5 +1,6 @@
+const { ROLES} = require('@ukef/dtfs2-common');
 const pageRenderer = require('../pageRenderer');
-const { ROLES, PRIMARY_NAV_KEY } = require('../../server/constants');
+const { PRIMARY_NAV_KEY } = require('../../server/constants');
 
 const page = 'utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk';
 const render = pageRenderer(page);
