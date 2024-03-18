@@ -69,7 +69,6 @@ describe('mapGefFacilityDates', () => {
     const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
 
     const expected = mapTenorDate(
-      mockFacility.facilityStage,
       mockFacility.monthsOfCover,
       mockFacilityTfm.exposurePeriodInMonths,
     );

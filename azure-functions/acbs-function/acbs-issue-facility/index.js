@@ -97,7 +97,7 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
       }
     }
 
-    throw new Error('Void argument set');
+    throw new Error('Invalid argument set');
   } catch (error) {
     console.error('Error processing facility issuance: %s', error);
     throw new Error('Error processing facility issuance %s', error);

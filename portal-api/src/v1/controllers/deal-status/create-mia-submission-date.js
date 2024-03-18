@@ -1,10 +1,10 @@
 const { updateDeal } = require('../deal.controller');
-const now = require('../../../now');
+const { getNowAsEpochMillisecondString } = require('../../helpers/date');
 
 const createMiaSubmissionDate = async (dealId) => {
   const modifiedDeal = {
     details: {
-      manualInclusionApplicationSubmissionDate: now(),
+      manualInclusionApplicationSubmissionDate: getNowAsEpochMillisecondString(),
     },
   };
 

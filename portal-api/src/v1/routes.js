@@ -2,11 +2,10 @@ const express = require('express');
 const passport = require('passport');
 const { param } = require('express-validator');
 
-const { handleValidationResult } = require('./validation/validation-handler');
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
 const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-bank-id-match');
 const { bankIdValidation, sqlIdValidation } = require('./validation/route-validators/route-validators');
-const handleExpressValidatorResult = require('./validation/route-validators/express-validator-result-handler');
+const { handleExpressValidatorResult } = require('./validation/route-validators/express-validator-result-handler');
 const { MAKER, CHECKER, READ_ONLY, ADMIN, PAYMENT_REPORT_OFFICER } = require('./roles/roles');
 
 const dealsController = require('./controllers/deal.controller');
@@ -70,7 +69,7 @@ openRouter
       .withMessage('Value must be a hexadecimal string')
       .isLength({ min: SIGN_IN_LINK.TOKEN_HEX_LENGTH, max: SIGN_IN_LINK.TOKEN_HEX_LENGTH })
       .withMessage(`Value must be ${SIGN_IN_LINK.TOKEN_HEX_LENGTH} characters long`),
-    handleValidationResult,
+    handleExpressValidatorResult,
     users.loginWithSignInLink,
   );
 

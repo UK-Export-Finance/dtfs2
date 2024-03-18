@@ -8,7 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
-const moment = require('moment');
+const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
@@ -25,7 +25,7 @@ const createFacilityInvestor = async (context) => {
       return Promise.resolve({ missingMandatory });
     }
 
-    const submittedToACBS = moment().format();
+    const submittedToACBS = getNowAsIsoString();
 
     const { status, data } = await api.createFacilityInvestor(facilityIdentifier, acbsFacilityInvestorInput);
 
@@ -36,7 +36,7 @@ const createFacilityInvestor = async (context) => {
             name: 'ACBS Facility Investor create error',
             facilityIdentifier,
             submittedToACBS,
-            receivedFromACBS: moment().format(),
+            receivedFromACBS: getNowAsIsoString(),
             dataReceived: data,
             dataSent: acbsFacilityInvestorInput,
           },
@@ -50,7 +50,7 @@ const createFacilityInvestor = async (context) => {
       status,
       dataSent: acbsFacilityInvestorInput,
       submittedToACBS,
-      receivedFromACBS: moment().format(),
+      receivedFromACBS: getNowAsIsoString(),
       ...data,
     };
   } catch (error) {

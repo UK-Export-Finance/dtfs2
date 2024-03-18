@@ -9,13 +9,11 @@ const monthString = (period) => (Number(period) === 1 ? 'month' : 'months');
 /**
  * Maps tenor dates and return as string with singular
  * or plural `months` text.
- * @param {Boolean} hasBeenIssued Facility issuance stage
  * @param {Integer} months Number of cover months
  * @param {Integer} exposurePeriodMonths Exposure period in months
  * @returns {String} Tenor dates with `month(s)` appended, otherwise null
  */
 const mapTenorDate = (
-  hasBeenIssued,
   months,
   exposurePeriodMonths,
 ) => {
@@ -28,17 +26,7 @@ const mapTenorDate = (
     return null;
   }
 
-  // Un-issued facility
-  if (!hasBeenIssued) {
-    return `${months} ${monthString(months)}`;
-  }
-
-  // Issued facility
-  if (hasBeenIssued) {
-    return `${months} ${monthString(months)}`;
-  }
-
-  return null;
+  return `${months} ${monthString(months)}`;
 };
 
 module.exports = mapTenorDate;

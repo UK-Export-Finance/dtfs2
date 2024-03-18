@@ -6,8 +6,8 @@ import { formatInTimeZone } from 'date-fns-tz';
  * @param utcTimestamp milliseconds since midnight 1970 UTC
  * @param format Unicode date token string
  * @param targetTimezone IANA time zone name or offset string (e.g. 'Europe/London')
- * @returns 
- * 
+ * @returns
+ *
  * https://www.npmjs.com/package/date-fns-tz#formatintimezone
  */
 export const filterLocaliseTimestamp = (
