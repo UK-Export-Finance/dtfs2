@@ -13,6 +13,8 @@ env:
 jobs:
   notify-teams:
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ env.environment }}
 
     steps:
       - name: Repository
