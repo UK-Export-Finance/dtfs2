@@ -10,11 +10,24 @@ env:
   MICROSOFT_TEAMS_WEBHOOK: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK  }}
 
 jobs:
+  # 1. Setup test infrastructure
+  setup:
+    name: Infrastructure setup 🔧
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ env.environment }}
+      timezone: ${{ env.timezone }}
+    steps:
+      - name: Environment 🧪
+        run: echo "Environment set to ${{ env.environment }}"
+
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.timezone }}"
+
   notify-teams:
     runs-on: ubuntu-latest
     environment:
-      environment: ${{ env.environment }}
-      timezone: ${{ env.timezone }}
+      name: ${{ needs.setup.outputs.environment }}
 
     steps:
       - name: Repository
