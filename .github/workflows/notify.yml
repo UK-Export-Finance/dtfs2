@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - chore/fix-teams-notification
 
 env:
   environment: dev
@@ -12,9 +13,6 @@ env:
 jobs:
   notify-teams:
     runs-on: ubuntu-latest
-    environment:
-      environment: ${{ env.environment }}
-      timezone: ${{ env.timezone }}
 
     steps:
       - name: Repository
