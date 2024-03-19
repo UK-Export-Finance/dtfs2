@@ -1,6 +1,6 @@
-const { getDealsOrFacilities, queryDealsOrFacilities } = require('../helpers');
+const { renderDealsOrFacilitiesPage, queryDealsOrFacilities } = require('../helpers');
 
-const getFacilities = (req, res) => getDealsOrFacilities('facilities', req, res);
+const getFacilities = (req, res) => renderDealsOrFacilitiesPage('facilities', req, res);
 const queryFacilities = (req, res) => queryDealsOrFacilities('facilities', req, res);
 
 module.exports = {

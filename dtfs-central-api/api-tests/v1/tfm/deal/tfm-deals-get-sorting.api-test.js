@@ -86,15 +86,10 @@ describe('/v1/tfm/deals', () => {
           'ascending',
           'descending'
         ])('in %s order', (order) => {
-          const queryParams = {
-            sortBy: {
-              order,
-              field: nonBssPath
-            }
-          };
+          const urlWithoutPagination = `/v1/tfm/deals?sortBy[order]=${order}&sortBy[field]=${nonBssPath}`
 
           it('without pagination', async () => {
-            const { status, body } = await api.get('/v1/tfm/deals', { queryParams });
+            const { status, body } = await api.get(urlWithoutPagination);
 
             expect(status).toEqual(200);
             expect(body.deals.length).toEqual(4);
@@ -116,10 +111,9 @@ describe('/v1/tfm/deals', () => {
           it('with pagination', async () => {
             const pagesize = 2;
 
-            const { status: page1Status, body: page1Body } = await api.get(
-              '/v1/tfm/deals',
-              { queryParams: { ...queryParams, page: 0, pagesize } }
-            );
+            const urlWithPagination = (page) => urlWithoutPagination + `&pagesize=${pagesize}&page=${page}`;
+
+            const { status: page1Status, body: page1Body } = await api.get(urlWithPagination(0));
 
             expect(page1Status).toEqual(200);
             expect(page1Body.deals.length).toEqual(2);
@@ -153,10 +147,7 @@ describe('/v1/tfm/deals', () => {
               expect(secondFieldValue).toEqual(values[2]);
             }
 
-            const { status: page2Status, body: page2Body } = await api.get(
-              '/v1/tfm/deals',
-              { queryParams: { ...queryParams, page: 1, pagesize } }
-            );
+            const { status: page2Status, body: page2Body } = await api.get(urlWithPagination(1));
 
             expect(page2Status).toEqual(200);
             expect(page2Body.deals.length).toEqual(2);
@@ -245,12 +236,7 @@ describe('/v1/tfm/deals', () => {
           'ascending',
           'descending'
         ])('in %s order', (order) => {
-          const queryParams = {
-            sortBy: {
-              order,
-              field: 'tfm.product'
-            }
-          };
+          const urlWithoutPagination = `/v1/tfm/deals?sortBy[field]=tfm.product&sortBy[order]=${order}`
 
           it('without pagination', async () => {
             const expectedDeals = [
@@ -259,7 +245,7 @@ describe('/v1/tfm/deals', () => {
               { _id: submittedDealWith1Loan?._id },
             ];
 
-            const { status, body } = await api.get('/v1/tfm/deals', { queryParams });
+            const { status, body } = await api.get(urlWithoutPagination);
 
             expect(status).toEqual(200);
             expect(body.pagination.totalItems).toEqual(3);
@@ -282,16 +268,15 @@ describe('/v1/tfm/deals', () => {
           it('with pagination', async () => {
             const pagesize = 2;
 
+            const urlWithPagination = (page) => urlWithoutPagination + `&pagesize=${pagesize}&page=${page}`;
+
             const expectedDeals = [
               { _id: submittedDealWith1Bond?._id },
               { _id: submittedDealWithBondAndLoans?._id },
               { _id: submittedDealWith1Loan?._id },
             ];
 
-            const { status: page1Status, body: page1Body } = await api.get(
-              '/v1/tfm/deals',
-              { queryParams: { ...queryParams, page: 0, pagesize } }
-            );
+            const { status: page1Status, body: page1Body } = await api.get(urlWithPagination(0));
 
             expect(page1Status).toEqual(200);
             expect(page1Body.deals.length).toEqual(2);
@@ -311,10 +296,7 @@ describe('/v1/tfm/deals', () => {
               expect(getDealsPage1OnlyIds).toEqual(JSON.parse(JSON.stringify(expectedDeals)).reverse().slice(0, 2));
             }
 
-            const { status: page2Status, body: page2Body } = await api.get(
-              '/v1/tfm/deals',
-              { queryParams: { ...queryParams, page: 1, pagesize } }
-            );
+            const { status: page2Status, body: page2Body } = await api.get(urlWithPagination(1));
 
             expect(page2Status).toEqual(200);
             expect(page2Body.deals.length).toEqual(1);

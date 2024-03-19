@@ -75,15 +75,10 @@ describe('/v1/tfm/facilities', () => {
           'ascending',
           'descending'
         ])('in %s order', (sortByOrder) => {
-          const queryParams = {
-            sortBy: {
-              order: sortByOrder,
-              field: sortByField
-            }
-          };
+          const urlWithoutPagination = `/v1/tfm/facilities?sortBy[order]=${sortByOrder}&sortBy[field]=${sortByField}`;
 
           it('without pagination', async () => {
-            const { status, body } = await api.get('/v1/tfm/facilities', { queryParams });
+            const { status, body } = await api.get(urlWithoutPagination);
 
             expect(status).toEqual(200);
             expect(body.facilities.length).toEqual(4);
@@ -103,15 +98,11 @@ describe('/v1/tfm/facilities', () => {
           it('with pagination', async () => {
             const pagesize = 2;
 
-            const { status: page1Status, body: page1Body } = await api.get(
-              '/v1/tfm/facilities',
-              { queryParams: { ...queryParams, page: 0, pagesize } }
-            );
+            const urlWithPagination = (page) => urlWithoutPagination + `&pagesize=${pagesize}&page=${page}`;
 
-            const { status: page2Status, body: page2Body } = await api.get(
-              '/v1/tfm/facilities',
-              { queryParams: { ...queryParams, page: 1, pagesize } }
-            );
+            const { status: page1Status, body: page1Body } = await api.get(urlWithPagination(0));
+
+            const { status: page2Status, body: page2Body } = await api.get(urlWithPagination(1));
 
             expect(page1Status).toEqual(200);
             expect(page1Body.facilities.length).toEqual(2);

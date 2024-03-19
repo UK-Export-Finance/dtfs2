@@ -1,4 +1,4 @@
-import caseController from '.';
+import caseController from '../deals';
 import api from '../../api';
 import PageOutOfBoundsError from '../../errors/page-out-of-bounds.error';
 import { mockRes as generateMockRes } from '../../test-mocks';
@@ -64,14 +64,14 @@ describe('controllers - deals', () => {
       });
 
       describe('when the pageNumber, sortfield, sortorder and search are not specified in the request', () => {
-        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+        const mockReq = structuredClone(mockReqTemplate);
 
         itShouldMakeRequestsForDealsDataWithDefaultArguments(mockReq);
         itShouldRenderDealsTemplateWithDefaultArguments({ mockReq });
       });
 
       describe('when the pageNumber is less than 0', () => {
-        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+        const mockReq = structuredClone(mockReqTemplate);
 
         mockReq.params.pageNumber = '-1';
 
@@ -82,7 +82,7 @@ describe('controllers - deals', () => {
       });
 
       describe('when the pageNumber cannot be converted to a number', () => {
-        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+        const mockReq = structuredClone(mockReqTemplate);
 
         mockReq.params.pageNumber = 'hello world';
 
@@ -91,7 +91,7 @@ describe('controllers - deals', () => {
       });
 
       describe('when the sortfield and sortorder are specified in the request', () => {
-        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+        const mockReq = structuredClone(mockReqTemplate);
 
         mockReq.query.sortfield = 'dealSnapshot.ukefDealId';
         mockReq.query.sortorder = 'ascending';
@@ -133,7 +133,7 @@ describe('controllers - deals', () => {
       });
 
       describe('when a search is specified in the request', () => {
-        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+        const mockReq = structuredClone(mockReqTemplate);
 
         mockReq.query.search = 'test';
 
@@ -179,7 +179,7 @@ describe('controllers - deals', () => {
           api.getAllAmendmentsInProgress = jest.fn().mockImplementation(() => Promise.resolve(mockApiGetAllAmendmentsInProgressResponse));
         });
 
-        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+        const mockReq = structuredClone(mockReqTemplate);
 
         itShouldMakeRequestsForDealsDataWithDefaultArguments(mockReq);
         itShouldRenderDealsTemplateWithDefaultArguments({ mockReq, overrideDealStage: true });
@@ -198,7 +198,7 @@ describe('controllers - deals', () => {
         });
       });
 
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       it('should render the deals template with the correct arguments and no data', async () => {
         await caseController.getDeals(mockReq, mockRes);
@@ -223,7 +223,7 @@ describe('controllers - deals', () => {
 
     describe('when api.getDeals throws a PageOutOfBoundsError', () => {
       const error = new PageOutOfBoundsError('Requested page number exceeds the maximum page number');
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       beforeEach(() => {
         api.getDeals = () => Promise.reject(error);
@@ -244,7 +244,7 @@ describe('controllers - deals', () => {
 
     describe('when api.getDeals throws any other error', () => {
       const error = new Error('some error');
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       beforeEach(() => {
         api.getDeals = () => Promise.reject(error);
@@ -266,7 +266,7 @@ describe('controllers - deals', () => {
 
   describe('POST deals', () => {
     describe('when the pageNumber, sort field/order and search are not specified in the request', () => {
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       it('should redirect to GET deals without query parameters', async () => {
         await caseController.queryDeals(mockReq, mockRes);
@@ -276,7 +276,7 @@ describe('controllers - deals', () => {
     });
 
     describe('when the pageNumber is less than 0', () => {
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       mockReq.params.pageNumber = '-1';
 
@@ -288,7 +288,7 @@ describe('controllers - deals', () => {
     });
 
     describe('when the pageNumber cannot be converted to a number', () => {
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       mockReq.params.pageNumber = 'hello world';
 
@@ -300,7 +300,7 @@ describe('controllers - deals', () => {
     });
 
     describe('when the pageNumber is a non-negative integer', () => {
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       mockReq.params.pageNumber = '2';
 
@@ -316,7 +316,7 @@ describe('controllers - deals', () => {
       'descending',
     ])('', (order) => {
       describe(`when a ${order} sort field is specified in the request body`, () => {
-        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+        const mockReq = structuredClone(mockReqTemplate);
 
         mockReq.body[order] = 'dealSnapshot.ukefDealId';
 
@@ -328,7 +328,7 @@ describe('controllers - deals', () => {
       });
 
       describe(`when a ${order} sort field is specified in the query parameters`, () => {
-        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+        const mockReq = structuredClone(mockReqTemplate);
 
         mockReq.query.sortfield = 'dealSnapshot.ukefDealId';
         mockReq.query.sortorder = order;
@@ -342,7 +342,7 @@ describe('controllers - deals', () => {
     });
 
     describe('when a sort is specified in the both the request body and the query parameters', () => {
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       mockReq.body.descending = 'dealSnapshot.exporter.companyName';
       mockReq.query.sortfield = 'dealSnapshot.ukefDealId';
@@ -356,7 +356,7 @@ describe('controllers - deals', () => {
     });
 
     describe('when a search is specified in the request body', () => {
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       mockReq.body.search = 'test';
 
@@ -368,7 +368,7 @@ describe('controllers - deals', () => {
     });
 
     describe('when a search is specified in the query parameters', () => {
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       mockReq.query.search = 'test';
 
@@ -380,7 +380,7 @@ describe('controllers - deals', () => {
     });
 
     describe('when a search is specified in the both the request body and the query parameters', () => {
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       mockReq.body.search = 'searchFromBody';
       mockReq.query.search = 'searchFromQuery';

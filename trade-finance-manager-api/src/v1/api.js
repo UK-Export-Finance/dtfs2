@@ -634,9 +634,9 @@ const queryDeals = async ({ queryParams }) => {
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals`,
       headers: headers.central,
-      data: {
-        queryParams
-      },
+      query: {
+        ...queryParams
+      }
     });
 
     return response.data;
@@ -1126,8 +1126,8 @@ const getAllFacilities = async ({ queryParams }) => {
   try {
     const response = await axios({
       method: 'GET',
-      data: {
-        queryParams
+      query: {
+        ...queryParams
       },
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities`,
       headers: headers.central,

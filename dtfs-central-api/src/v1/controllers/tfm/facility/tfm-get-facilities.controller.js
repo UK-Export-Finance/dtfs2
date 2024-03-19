@@ -23,7 +23,9 @@ exports.getAllFacilities = async (req, res) => {
 
   const {
     searchString, sortBy, pagesize, page = 0
-  } = req.body.queryParams;
+  } = req.query;
+
+  const pageNumber = Number(page);
 
   const fieldsToSortOn = {};
   if (sortBy) {
@@ -151,7 +153,7 @@ exports.getAllFacilities = async (req, res) => {
     {
       $facet: {
         count: [{ $count: 'total' }],
-        facilities: [{ $skip: page * (pagesize ?? 0) }, ...(pagesize ? [{ $limit: parseInt(pagesize, 10) }] : [])],
+        facilities: [{ $skip: pageNumber * (pagesize ?? 0) }, ...(pagesize ? [{ $limit: parseInt(pagesize, 10) }] : [])],
       },
     },
     { $unwind: '$count' },
@@ -166,7 +168,7 @@ exports.getAllFacilities = async (req, res) => {
   if (!doc.length) {
     const pagination = {
       totalItems: 0,
-      currentPage: page,
+      currentPage: pageNumber,
       totalPages: 1,
     };
     return res.status(200).send({ facilities: [], pagination });
@@ -175,7 +177,7 @@ exports.getAllFacilities = async (req, res) => {
 
   const pagination = {
     totalItems: count,
-    currentPage: page,
+    currentPage: pageNumber,
     totalPages: pagesize ? Math.ceil(count / pagesize) : 1,
   };
 

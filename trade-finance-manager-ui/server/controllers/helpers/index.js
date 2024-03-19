@@ -12,7 +12,7 @@ const { validateCommentField, validateSubmittedValues } = require('./validateSub
 const { probabilityOfDefaultValidation } = require('./probabilityOfDefault.validate');
 const { overrideDealsIfAmendmentsInProgress } = require('./overrideDealsIfAmendmentsInProgress.helper');
 const { overrideFacilitiesIfAmendmentsInProgress } = require('./overrideFacilitiesIfAmendmentsInProgress.helper');
-const { getDealsOrFacilities, queryDealsOrFacilities } = require('./dealsAndFacilities.helper');
+const { renderDealsOrFacilitiesPage, queryDealsOrFacilities } = require('./dealsAndFacilities.helper');
 
 module.exports = {
   showAmendmentButton,
@@ -30,6 +30,6 @@ module.exports = {
   probabilityOfDefaultValidation,
   overrideDealsIfAmendmentsInProgress,
   overrideFacilitiesIfAmendmentsInProgress,
-  getDealsOrFacilities,
+  renderDealsOrFacilitiesPage,
   queryDealsOrFacilities,
 };

@@ -1,4 +1,4 @@
-import facilityController from '.';
+import facilityController from '../facilities';
 import api from '../../api';
 import PageOutOfBoundsError from '../../errors/page-out-of-bounds.error';
 import { mockRes as generateMockRes } from '../../test-mocks';
@@ -60,14 +60,14 @@ describe('controllers - facilities', () => {
       });
 
       describe('when the pageNumber, sortfield, sortorder and search are not specified in the request', () => {
-        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+        const mockReq = structuredClone(mockReqTemplate);
 
         itShouldMakeRequestsForFacilitiesDataWithDefaultArguments(mockReq);
         itShouldRenderFacilitiesTemplateWithDefaultArguments({ mockReq, hasAmendmentInProgress: false });
       });
 
       describe('when the pageNumber is less than 0', () => {
-        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+        const mockReq = structuredClone(mockReqTemplate);
 
         mockReq.params.pageNumber = '-1';
 
@@ -78,7 +78,7 @@ describe('controllers - facilities', () => {
       });
 
       describe('when the pageNumber cannot be converted to a number', () => {
-        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+        const mockReq = structuredClone(mockReqTemplate);
 
         mockReq.params.pageNumber = 'hello world';
 
@@ -87,7 +87,7 @@ describe('controllers - facilities', () => {
       });
 
       describe('when the sortfield and sortorder are specified in the request', () => {
-        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+        const mockReq = structuredClone(mockReqTemplate);
 
         mockReq.query.sortfield = 'tfmFacilities.dealType';
         mockReq.query.sortorder = 'ascending';
@@ -129,7 +129,7 @@ describe('controllers - facilities', () => {
       });
 
       describe('when a search is specified in the request', () => {
-        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+        const mockReq = structuredClone(mockReqTemplate);
 
         mockReq.query.search = 'test';
 
@@ -175,7 +175,7 @@ describe('controllers - facilities', () => {
           api.getAllAmendmentsInProgress = jest.fn().mockImplementation(() => Promise.resolve(mockApiGetAllAmendmentsInProgressResponse));
         });
 
-        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+        const mockReq = structuredClone(mockReqTemplate);
 
         itShouldMakeRequestsForFacilitiesDataWithDefaultArguments(mockReq);
         itShouldRenderFacilitiesTemplateWithDefaultArguments({ mockReq, hasAmendmentInProgress: true });
@@ -194,7 +194,7 @@ describe('controllers - facilities', () => {
         });
       });
 
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       it('should render the facilities template with the correct arguments and no data', async () => {
         await facilityController.getFacilities(mockReq, mockRes);
@@ -219,7 +219,7 @@ describe('controllers - facilities', () => {
 
     describe('when api.getFacilities throws a PageOutOfBoundsError', () => {
       const error = new PageOutOfBoundsError('Requested page number exceeds the maximum page number');
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       beforeEach(() => {
         api.getFacilities = () => Promise.reject(error);
@@ -240,7 +240,7 @@ describe('controllers - facilities', () => {
 
     describe('when api.getFacilities throws any other error', () => {
       const error = new Error('some error');
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       beforeEach(() => {
         api.getFacilities = () => Promise.reject(error);
@@ -262,7 +262,7 @@ describe('controllers - facilities', () => {
 
   describe('POST facilities', () => {
     describe('when the pageNumber, sort field/order and search are not specified in the request', () => {
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       it('should redirect to GET facilities without query parameters', async () => {
         await facilityController.queryFacilities(mockReq, mockRes);
@@ -272,7 +272,7 @@ describe('controllers - facilities', () => {
     });
 
     describe('when the pageNumber is less than 0', () => {
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       mockReq.params.pageNumber = '-1';
 
@@ -284,7 +284,7 @@ describe('controllers - facilities', () => {
     });
 
     describe('when the pageNumber cannot be converted to a number', () => {
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       mockReq.params.pageNumber = 'hello world';
 
@@ -296,7 +296,7 @@ describe('controllers - facilities', () => {
     });
 
     describe('when the pageNumber is a non-negative integer', () => {
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       mockReq.params.pageNumber = '2';
 
@@ -312,7 +312,7 @@ describe('controllers - facilities', () => {
       'descending',
     ])('', (order) => {
       describe(`when a ${order} sort field is specified in the request body`, () => {
-        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+        const mockReq = structuredClone(mockReqTemplate);
 
         mockReq.body[order] = 'tfmFacilities.dealType';
 
@@ -324,7 +324,7 @@ describe('controllers - facilities', () => {
       });
 
       describe(`when a ${order} sort field is specified in the query parameters`, () => {
-        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+        const mockReq = structuredClone(mockReqTemplate);
 
         mockReq.query.sortfield = 'tfmFacilities.dealType';
         mockReq.query.sortorder = order;
@@ -338,7 +338,7 @@ describe('controllers - facilities', () => {
     });
 
     describe('when a sort is specified in the both the request body and the query parameters', () => {
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       mockReq.body.descending = 'tfmFacilities.type';
       mockReq.query.sortfield = 'tfmFacilities.dealType';
@@ -352,7 +352,7 @@ describe('controllers - facilities', () => {
     });
 
     describe('when a search is specified in the request body', () => {
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       mockReq.body.search = 'test';
 
@@ -364,7 +364,7 @@ describe('controllers - facilities', () => {
     });
 
     describe('when a search is specified in the query parameters', () => {
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       mockReq.query.search = 'test';
 
@@ -376,7 +376,7 @@ describe('controllers - facilities', () => {
     });
 
     describe('when a search is specified in the both the request body and the query parameters', () => {
-      const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+      const mockReq = structuredClone(mockReqTemplate);
 
       mockReq.body.search = 'searchFromBody';
       mockReq.query.search = 'searchFromQuery';

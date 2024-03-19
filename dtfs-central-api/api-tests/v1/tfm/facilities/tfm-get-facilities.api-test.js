@@ -38,12 +38,7 @@ describe('/v1/tfm/facilities', () => {
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF, dealId }).to('/v1/tfm/deals/submit');
 
       // get facilities after they've been created so we have all the data
-      const { body: allFacilitiesAfterCreation } = (await api.get('/v1/tfm/facilities', {
-        queryParams: {
-          pagesize: 20,
-          page: 0,
-        }
-      }));
+      const { body: allFacilitiesAfterCreation } = await api.get('/v1/tfm/facilities?page=0&pagesize=20&sortBy[order]=ascending&sortBy[field]=ukefFacilityId');
 
       const expectedFacilityShape = {
         companyName: expect.any(String),

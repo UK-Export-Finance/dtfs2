@@ -15,6 +15,8 @@ const findDeals = async (queryParameters) => {
     searchString, sortBy, fieldQueries, pagesize, page = 0
   } = queryParameters;
 
+  const pageNumber = Number(page);
+
   let databaseQuery = {};
 
   let nonBssField;
@@ -140,7 +142,7 @@ const findDeals = async (queryParameters) => {
       {
         $facet: {
           count: [{ $count: 'total' }],
-          deals: [{ $skip: page * (pagesize ?? 0) }, ...(pagesize ? [{ $limit: parseInt(pagesize, 10) }] : [])],
+          deals: [{ $skip: pageNumber * (pagesize ?? 0) }, ...(pagesize ? [{ $limit: parseInt(pagesize, 10) }] : [])],
         },
       },
       { $unwind: '$count' },
@@ -156,7 +158,7 @@ const findDeals = async (queryParameters) => {
   if (!doc.length) {
     const pagination = {
       totalItems: 0,
-      currentPage: page,
+      currentPage: pageNumber,
       totalPages: 1,
     };
     return { deals: [], pagination };
@@ -165,7 +167,7 @@ const findDeals = async (queryParameters) => {
 
   const pagination = {
     totalItems: count,
-    currentPage: page,
+    currentPage: pageNumber,
     totalPages: pagesize ? Math.ceil(count / pagesize) : 1,
   };
 
@@ -173,7 +175,7 @@ const findDeals = async (queryParameters) => {
 };
 
 exports.findDealsGet = async (req, res) => {
-  const queryParameters = { ...req.body.queryParams, fieldQueries: req.body.queryParams?.byField };
+  const queryParameters = { ...req.query, fieldQueries: req.query?.byField };
 
   const { deals, pagination } = await findDeals(queryParameters);
 
