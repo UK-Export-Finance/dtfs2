@@ -26,9 +26,9 @@ const redisConnect = async (config) => {
 /**
  * set
  * Set the redis connection.
- * @param {String} key: Session identifier key
- * @param {String} value: Session identifier value
- * @param {String} maxAge: Session age
+ * @param {String} key: DB storage key
+ * @param {Object} value: value to store
+ * @param {Number} maxAge: keep value for
  * @param {Object} config: Redis configuration
  */
 const set = async ({

@@ -131,11 +131,31 @@ const createTasks = ({
      * overrideRedisUserSession
      * Override a redis user session.
      * @param {String} sessionIdentifier: Redis session identifier
-     * @param {String} value: New session identifier value
-     * @param {String} maxAge: Session age
+     * @param {Object} tfmUser: New session identifier value
+     * @param {String} userToken: TFM token string value
+     * @param {Number} maxAge: Session age
      * @returns {Boolean}
      */
-    async overrideRedisUserSession({ sessionIdentifier, value, maxAge }) {
+    async overrideRedisUserSession({
+      sessionIdentifier,
+      tfmUser,
+      userToken,
+      maxAge,
+    }) {
+      const maxAgeInMilliseconds = maxAge * 1000;
+
+      const value = {
+        cookie: {
+          originalMaxAge: maxAgeInMilliseconds,
+          expires: new Date(new Date().getTime() + (maxAgeInMilliseconds)).toISOString(),
+          secure: false,
+          httpOnly: true,
+          path: '/',
+          sameSite: 'strict',
+        },
+        user: tfmUser,
+        userToken: `Bearer ${userToken}`,
+      };
       await redis.set({
         key: `sess:${sessionIdentifier}`,
         value,

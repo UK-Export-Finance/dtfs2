@@ -452,7 +452,7 @@ const validateToken = async (token) => {
     headers: generateHeaders(token),
     url: `${TFM_API_URL}/v1/validate-user-token`,
   }).catch((error) => error.response);
-  return response.status === 200;
+  return response && response.status === 200;
 };
 
 const createFeedback = async (formData, token) => {

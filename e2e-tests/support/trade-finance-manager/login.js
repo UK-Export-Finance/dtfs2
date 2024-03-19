@@ -1,47 +1,9 @@
+import { issueValidJWT } from '../utils/crypto';
+
 const crypto = require('crypto');
-const { sign } = require('jws');
-const cookieSignature = require('cookie-signature');
 const { TFM_URL } = require('../../e2e-fixtures/constants.fixture');
 
-/**
- * issueValidJWT
- * Issue a valid JWT
- * @param {Object} user
- * @param {String} sessionIdentifier
- * @returns {String} JWT
- */
-const issueValidJWT = (user, sessionIdentifier) => {
-  const {
-    _id,
-    username,
-    teams,
-    firstName,
-    lastName,
-  } = user;
-
-  const payload = {
-    sub: _id,
-    username,
-    teams,
-    firstName,
-    lastName,
-    sessionIdentifier,
-  };
-
-  const secret = Buffer.from(Cypress.config('jwtSigningKey'), 'base64').toString('ascii');
-
-  const header = {
-    alg: 'RS256',
-    typ: 'JWT',
-  };
-
-  return sign({
-    header,
-    payload,
-    secret,
-    encoding: 'utf8',
-  });
-};
+const LOGIN_SESSION_MAX_AGE = 1800; // 30 min
 
 /**
  * login
@@ -76,38 +38,13 @@ const login = (user, isSessionForAPICall = false) => {
     }
 
     const sessionIdentifier = crypto.randomBytes(32).toString('hex');
-    const userToken = issueValidJWT(tfmUser, sessionIdentifier);
-    const maxAge = 60 * 30; // 30 min
-
-    const sessionValue = {
-      cookie: {
-        originalMaxAge: maxAge * 1000,
-        expires: new Date(new Date().getTime() + (maxAge * 1000)).toISOString(),
-        secure: false,
-        httpOnly: true,
-        path: '/',
-        sameSite: 'strict',
-      },
-      user: tfmUser,
-      userToken: `Bearer ${userToken}`,
-    };
-
-    const cookieOptions = {
-      hostOnly: true,
-      httpOnly: true,
-      path: '/',
-      sameSite: 'strict',
-      maxAge,
-    };
-
-    const cookieSigningKey = Cypress.config('cookieSigningKey');
-    const signedCookieValue = `s:${cookieSignature.sign(sessionIdentifier, cookieSigningKey)}`;
+    const userToken = issueValidJWT(tfmUser, sessionIdentifier, LOGIN_SESSION_MAX_AGE);
 
     await cy.overrideTfmUserSessionId(username, sessionIdentifier);
-    await cy.overrideRedisUserSession(sessionIdentifier, sessionValue, maxAge);
+    await cy.overrideRedisUserSession(sessionIdentifier, tfmUser, userToken, LOGIN_SESSION_MAX_AGE);
 
     if (!isSessionForAPICall) {
-      await cy.setCookie('dtfs-session', encodeURIComponent(signedCookieValue), cookieOptions);
+      await cy.setSessionCookie(sessionIdentifier, LOGIN_SESSION_MAX_AGE);
       await cy.visit(TFM_URL);
     }
 
