@@ -33,7 +33,7 @@ export abstract class AuditableBaseEntity {
         this.lastUpdatedByIsSystemUser = true;
         return;
       default:
-        throw new Error(`Request source did not match any expected request source`);
+        throw new Error(`Request source platform did not match any expected request source`);
     }
   }
 }

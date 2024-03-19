@@ -1,4 +1,5 @@
 import { AuditableBaseEntity } from '.';
+import { DbRequestSource } from '../helpers';
 
 // We cannot create instances of abstract classes, so we define a test class below
 class TestAuditableBaseEntity extends AuditableBaseEntity {}
@@ -61,6 +62,19 @@ describe('AuditableBaseEntity', () => {
         // Assert
         expect(testAuditableBaseEntity[field]).toBe(value);
       });
+    });
+
+    it('throws an error when the request source platform is invalid', () => {
+      // Arrange
+      const testAuditableBaseEntity = new TestAuditableBaseEntity();
+
+      // @ts-expect-error the request source should be invalid for this test
+      const invalidRequestSource: DbRequestSource = { platform: 'Invalid' };
+
+      // Act/Assert
+      expect(() => testAuditableBaseEntity.updateActivityDetails(invalidRequestSource)).toThrow(
+        new Error('Request source platform did not match any expected request source'),
+      );
     });
   });
 });
