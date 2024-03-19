@@ -3,6 +3,7 @@ import { Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 // import { eStoreFacilityFolderCreationJob } from './eStoreFacilityFolderCreationJob.cron';
 import { createDealFolder } from '../v1/controllers/estore/eStoreApi';
+import { generateSystemAuditDetails } from '@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails';
 
 /**
  * Performs the following tasks:
@@ -38,6 +39,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
             'dealCronJob.completionDate': new Date(),
             'facilityCronJob.status': ESTORE_CRON_STATUS.RUNNING,
             'facilityCronJob.startDate': new Date(),
+            auditDetails: generateSystemAuditDetails(),
           },
         },
       );
@@ -53,7 +55,14 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed
       await cronJobLogsCollection.updateOne(
         { dealId: { $eq: eStoreData.dealId } },
-        { $set: { dealFolderResponse, 'dealCronJob.status': ESTORE_CRON_STATUS.FAILED, 'dealCronJob.failureDate': new Date() } },
+        {
+          $set: {
+            dealFolderResponse,
+            'dealCronJob.status': ESTORE_CRON_STATUS.FAILED,
+            'dealCronJob.failureDate': new Date(),
+            auditDetails: generateSystemAuditDetails(),
+          },
+        },
       );
     }
   } catch (error) {

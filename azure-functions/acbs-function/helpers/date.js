@@ -1,10 +1,6 @@
-const { isValid, parse, format, startOfDay, add, getDaysInMonth, formatISO, differenceInMonths } = require('date-fns');
+const { isValid, parse, format, startOfDay, add, getDaysInMonth, formatISO, differenceInMonths, parseISO } = require('date-fns');
 
-const validDateFormats = [
-  'yyyy-MM-dd',
-  'yyyy/MM/dd',
-  'yyyy MM dd',
-];
+const validDateFormats = ['yyyy-MM-dd', 'yyyy/MM/dd', 'yyyy MM dd'];
 
 /**
  * @param {string} dateStr
@@ -12,35 +8,43 @@ const validDateFormats = [
  * Does not allow date of month to wrap or months > 12 (e.g 2024-13-32 is invalid)
  */
 const isDate = (dateStr) => dateStr.length === 10 && isValid(parse(dateStr, 'yyyy-MM-dd', startOfDay(new Date())));
+
 /**
  * @param {string | number} epoch
  * @returns {boolean} true if the value given is a unix epoch in seconds or milliseconds
  */
 const isEpoch = (epoch) => Number.isInteger(Number(epoch)) && epoch !== '';
+
 /**
  * @param {unknown} dateStr
  * @returns true if the value is a string and not an epoch
  */
 const isString = (dateStr) => typeof dateStr === 'string' && !isEpoch(dateStr);
+
 /**
  * @returns current date in format `yyyy-MM-dd`
  */
 const now = () => format(new Date(), 'yyyy-MM-dd');
 
 /**
- * @param {string | number} dateStr either epoch or {@link validDateFormats}
+ * @param {string | number} dateStr accepts epoch, iso date string, or {@link validDateFormats}
  * @returns {Date}
  */
 const getDateFromStringOrNumber = (dateStr) => {
-  const dateFromString = validDateFormats
-    .map((formatString) => parse(dateStr, formatString, startOfDay(new Date())))
-    .find(isValid);
+  const isoDate = parseISO(dateStr);
+  const isValidIsoDate = isValid(isoDate);
+  const dateFromString = validDateFormats.map((formatString) => parse(dateStr, formatString, startOfDay(new Date()))).find(isValid);
+  const isValidEpoch = isEpoch(dateStr);
+
+  if (isValidIsoDate) {
+    return isoDate;
+  }
 
   if (dateFromString) {
     return dateFromString;
   }
 
-  if (isEpoch(dateStr)) {
+  if (isValidEpoch) {
     return new Date(Number(dateStr));
   }
 
@@ -64,9 +68,7 @@ const formatYear = (year) => (year < 1000 ? (2000 + parseInt(year, 10)).toString
  * @param {string | number} dateStr either epoch or {@link validDateFormats}
  * @returns {string} date formatted as `yyyy-MM-dd`, returns `Invalid date` if can't parse input
  */
-const formatDate = (dateStr) => formatOrReturnInvalidDate(
-  getDateFromStringOrNumber(dateStr),
-);
+const formatDate = (dateStr) => formatOrReturnInvalidDate(getDateFromStringOrNumber(dateStr));
 
 /**
  * @param {string | number | Date} date either Date object, epoch or {@link validDateFormats}
@@ -97,7 +99,7 @@ const addYear = (date, years) => {
  * This maintains exact consistency with old moment behaviour:
  *  - `moment().format()` returns an ISO-8601 string with an offset, e.g. '+00:00'
  *  - `formatISO()` returns an ISO-8601 string with a 'Z' if the timezone is UTC
-*/
+ */
 const getNowAsIsoString = () => formatISO(new Date()).replace('Z', '+00:00');
 
 /**
@@ -144,19 +146,20 @@ const getDateStringFromYearMonthDay = (year, month, day) => {
     return 'Invalid date';
   }
 
-  const daysInMonth = getDaysInMonth(new Date(Number(formatYear(year)), Number(month) - 1));
+  const yearAsNumber = Number(formatYear(year));
+  const monthAsZeroIndexedNumber = Number(month) - 1;
+  const dayAsNumber = Number(day);
+  const startOfMonth = new Date(yearAsNumber, monthAsZeroIndexedNumber);
 
-  if (daysInMonth < Number(day)) {
+  const daysInMonth = getDaysInMonth(startOfMonth);
+
+  if (daysInMonth < dayAsNumber) {
     return 'Invalid date';
   }
 
-  return formatOrReturnInvalidDate(
-    new Date(
-      Number(formatYear(year)),
-      Number(month) - 1,
-      Number(day),
-    ),
-  );
+  const date = new Date(yearAsNumber, monthAsZeroIndexedNumber, dayAsNumber);
+
+  return formatOrReturnInvalidDate(date);
 };
 
 /**
