@@ -12,7 +12,7 @@ import {
 import { postUploadUtilisationReport, postUploadUtilisationReportPayloadValidator, PostUploadUtilisationReportRequestBody } from '.';
 import { MOCK_UTILISATION_REPORT_RAW_CSV_DATA } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-report-raw-csv-data';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
-import { utilisationDataCsvRowToSqlEntity } from '../../../../helpers';
+import { feeRecordCsvRowToSqlEntity } from '../../../../helpers';
 
 console.error = jest.fn();
 
@@ -153,14 +153,14 @@ describe('post-upload-utilisation-report controller', () => {
         expect(utilisationReportRepoSaveSpy).toHaveBeenCalledTimes(1);
 
         const azureFileInfo = AzureFileInfoEntity.create({ ...validPostUploadUtilisationReportRequestBody.fileInfo, requestSource });
-        const utilisationData = utilisationDataCsvRowToSqlEntity({ dataEntry: reportData[0], requestSource });
+        const feeRecord = feeRecordCsvRowToSqlEntity({ dataEntry: reportData[0], requestSource });
         expect(utilisationReportRepoSaveSpy).toHaveBeenCalledWith(
           expect.objectContaining<Partial<UtilisationReportEntity>>({
             status: 'PENDING_RECONCILIATION',
             updatedByUserId,
             uploadedByUserId: userId,
             azureFileInfo,
-            data: [utilisationData],
+            feeRecords: [feeRecord],
             dateUploaded: mockDate,
           }),
         );

@@ -43,7 +43,7 @@ export const createMarkedAsCompletedReport = (
 ): UtilisationReportEntity => {
   const utilisationReport = new UtilisationReportEntity();
 
-  // Bank ids are unique and will make it easier to link the report to utilisation data (as long as we have one report per bank)
+  // Bank ids are unique and will make it easier to link the report to fee record (as long as we have one report per bank)
   utilisationReport.id = Number(bankId);
 
   utilisationReport.bankId = bankId;
@@ -70,7 +70,7 @@ export const createUploadedReport = (
 ): UtilisationReportEntity => {
   const utilisationReport = new UtilisationReportEntity();
 
-  // Bank ids are unique and will make it easier to link the report to utilisation data (as long as we have one report per bank)
+  // Bank ids are unique and will make it easier to link the report to fee record (as long as we have one report per bank)
   const { id: bankId } = portalUser.bank;
   utilisationReport.id = Number(bankId);
 

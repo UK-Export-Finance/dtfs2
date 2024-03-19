@@ -8,6 +8,6 @@ export abstract class AuditableBaseEntity {
   @UpdateDateColumn()
   updatedDate!: Date;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'nvarchar' })
   updatedByUserId!: DbAuditUpdatedByUserId;
 }

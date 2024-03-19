@@ -1,4 +1,4 @@
-import { UtilisationDataEntity, MOCK_UTILISATION_DATA_ENTITY, UtilisationReportEntity, UtilisationData, CURRENCY } from '@ukef/dtfs2-common';
+import { UtilisationData, CURRENCY } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { MOCK_UTILISATION_REPORT } from './utilisation-reports';
 import { MOCK_MONTHLY_REPORT_PERIOD } from '../report-period';
@@ -22,9 +22,3 @@ export const MOCK_UTILISATION_DATA: UtilisationData = {
   paymentExchangeRate: 1,
   payments: null,
 };
-
-export const getMockUtilisationDataForReport = (report: UtilisationReportEntity, overrides?: Partial<UtilisationDataEntity>): UtilisationDataEntity => ({
-  ...MOCK_UTILISATION_DATA_ENTITY,
-  report,
-  ...overrides,
-});

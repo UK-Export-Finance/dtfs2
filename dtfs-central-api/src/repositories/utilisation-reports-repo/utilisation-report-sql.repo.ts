@@ -1,10 +1,18 @@
 // TODO FN-1853 - rename this to `utilisation-report.repo.ts` when all repo
 //  methods have been migrated from MongoDB to SQL
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { AzureFileInfoEntity, DbRequestSource, UtilisationDataEntity, UtilisationReportEntity, ReportPeriod, AzureFileInfo, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import {
+  AzureFileInfoEntity,
+  DbRequestSource,
+  UtilisationReportEntity,
+  ReportPeriod,
+  AzureFileInfo,
+  FeeRecordEntity,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+} from '@ukef/dtfs2-common';
 import { Not, Equal, FindOptionsWhere, LessThan } from 'typeorm';
 import { UtilisationReportRawCsvData } from '../../types/utilisation-reports';
-import { utilisationDataCsvRowToSqlEntity } from '../../helpers';
+import { feeRecordCsvRowToSqlEntity } from '../../helpers';
 
 type UpdateWithUploadDetailsParams = {
   azureFileInfo: AzureFileInfo;
@@ -18,7 +26,6 @@ export type GetUtilisationReportDetailsOptions = {
   excludeNotReceived?: boolean;
 };
 
-
 export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationReportEntity).extend({
   /**
    * Finds one report by bank id and report period
@@ -29,7 +36,6 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
   async findOneByBankIdAndReportPeriod(bankId: string, reportPeriod: ReportPeriod): Promise<UtilisationReportEntity | null> {
     return await this.findOneBy({ bankId, reportPeriod });
   },
-
 
   /**
    * Finds all reports with bankId and matching options
@@ -44,7 +50,6 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
       ...(options?.excludeNotReceived && { status: Not(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) }),
     });
   },
-
 
   /**
    * Updates a report with upload details
@@ -61,8 +66,8 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
       requestSource,
     });
 
-    const dataEntities: UtilisationDataEntity[] = reportCsvData.map((dataEntry) =>
-      utilisationDataCsvRowToSqlEntity({
+    const feeRecordEntities: FeeRecordEntity[] = reportCsvData.map((dataEntry) =>
+      feeRecordCsvRowToSqlEntity({
         dataEntry,
         requestSource,
       }),
@@ -70,7 +75,7 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
 
     report.updateWithUploadDetails({
       azureFileInfo: azureFileInfoEntity,
-      data: dataEntities,
+      feeRecords: feeRecordEntities,
       uploadedByUserId,
       requestSource,
     });

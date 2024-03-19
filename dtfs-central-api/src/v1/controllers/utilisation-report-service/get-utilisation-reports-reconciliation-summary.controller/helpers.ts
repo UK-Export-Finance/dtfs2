@@ -4,7 +4,7 @@ import { Bank, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { IsoMonthStamp } from '../../../../types/date';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
 import { getAllBanks } from '../../../../repositories/banks-repo';
-import { UtilisationDataRepo } from '../../../../repositories/utilisation-data-repo';
+import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import {
   getCurrentReportPeriodForBankSchedule,
@@ -25,11 +25,11 @@ type SummaryItemForSubmissionMonth = {
 };
 
 const mapToSummaryItem = async (bank: Bank, report: UtilisationReportEntity): Promise<UtilisationReportReconciliationSummaryItem> => {
-  const reportData = await UtilisationDataRepo.findByReport(report);
+  const reportFeeRecords = await FeeRecordRepo.findByReport(report);
 
-  // TODO FN-1398 - status to be added to report data to allow us to calculate how
+  // TODO FN-1398 - status to be added to report fee records to allow us to calculate how
   //  many facilities are left to reconcile
-  const reportedFeesLeftToReconcile = reportData.length;
+  const reportedFeesLeftToReconcile = reportFeeRecords.length;
 
   return {
     reportId: report.id,
@@ -39,7 +39,7 @@ const mapToSummaryItem = async (bank: Bank, report: UtilisationReportEntity): Pr
     },
     status: report.status,
     dateUploaded: report.dateUploaded ?? undefined,
-    totalFeesReported: reportData.length,
+    totalFeesReported: reportFeeRecords.length,
     reportedFeesLeftToReconcile,
   };
 };

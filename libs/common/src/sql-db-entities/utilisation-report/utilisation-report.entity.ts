@@ -3,7 +3,7 @@ import { UtilisationReportReconciliationStatus } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import { ReportPeriodPartialEntity } from '../partial-entities';
 import { AzureFileInfoEntity } from '../azure-file-info';
-import { UtilisationDataEntity } from '../utilisation-data';
+import { FeeRecordEntity } from '../fee-record';
 import { CreateNotReceivedUtilisationReportEntityParams, UpdateWithStatusParams, UpdateWithUploadDetailsParams } from './utilisation-report.types';
 import { getDbAuditUpdatedByUserId } from '../helpers';
 
@@ -27,7 +27,7 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
   /**
    * The date and time that the report was originally uploaded
    */
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'datetime2', nullable: true })
   dateUploaded!: Date | null;
 
   /**
@@ -42,23 +42,22 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
   /**
    * Status code representing reconciliation progress of the report
    */
-  @Column({ type: 'varchar' })
+  @Column({ type: 'nvarchar' })
   status!: UtilisationReportReconciliationStatus;
 
   /**
    * The `_id` of the user (from the 'users' MongoDB collection) that uploaded the report
    */
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'nvarchar', nullable: true })
   uploadedByUserId!: string | null;
 
   /**
    * Breakdown of utilisation per facility and currency combination
-   * TODO FN-2183 - should this maybe be called `payments`, `feeRecords`, or something else?
    */
-  @OneToMany(() => UtilisationDataEntity, (data) => data.report, {
+  @OneToMany(() => FeeRecordEntity, (feeRecord) => feeRecord.report, {
     cascade: ['insert', 'update'],
   })
-  data!: UtilisationDataEntity[];
+  feeRecords!: FeeRecordEntity[];
 
   static createNotReceived({ bankId, reportPeriod, requestSource }: CreateNotReceivedUtilisationReportEntityParams): UtilisationReportEntity {
     const report = new UtilisationReportEntity();
@@ -71,12 +70,12 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     return report;
   }
 
-  public updateWithUploadDetails({ azureFileInfo, data, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): void {
+  public updateWithUploadDetails({ azureFileInfo, feeRecords, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): void {
     this.dateUploaded = new Date();
     this.azureFileInfo = azureFileInfo;
     this.status = 'PENDING_RECONCILIATION';
     this.uploadedByUserId = uploadedByUserId;
-    this.data = data;
+    this.feeRecords = feeRecords;
     this.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
   }
 
