@@ -6,7 +6,7 @@
 {% block content %}
     {% if not navItems.length %}
         <h1 class="govuk-heading-l" data-cy="main-heading">
-            Previous GEF reports
+            Download previous GEF reports
         </h1>
         <p class="govuk-body" data-cy="paragraph">No reports have been submitted.</p>
     {% else %}
@@ -21,7 +21,7 @@
             </div>
             <div class="govuk-grid-column-three-quarters">
                 <h1 class="govuk-heading-l" data-cy="main-heading">
-                    {{ year }} GEF reports
+                    Download {{ year }} GEF reports
                 </h1>
                 {% if not reportLinks.length %}
                     <p class="govuk-body" data-cy="paragraph">No reports have been submitted.</p>
@@ -34,9 +34,9 @@
                                   class="govuk-link"
                                   href="{{ reportLink.path }}"
                                   data-cy="list-item-link-{{ reportLink.month }}"
-                                  aria-label="Download {{ reportLink.month }} {{ year }} report"
+                                  aria-label="{{ reportLink.month }} {{ year }} GEF report"
                                 >
-                                    {{ reportLink.month }} {{ year }}
+                                    {{ reportLink.month }} {{ year }} GEF report
                                 </a>
                             </li>
                         {% endfor %}
