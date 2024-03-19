@@ -1,8 +1,8 @@
 /**
  * Unit test cases for `constructPayload` method
  */
+import { ROLES } from '@ukef/dtfs2-common';
 import constructPayload from './constructPayload';
-import { ROLES } from '../constants';
 
 const { CHECKER, MAKER } = ROLES;
 

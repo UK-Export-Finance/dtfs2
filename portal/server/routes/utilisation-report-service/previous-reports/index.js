@@ -1,7 +1,7 @@
 const express = require('express');
+const { ROLES: { PAYMENT_REPORT_OFFICER } } = require('@ukef/dtfs2-common');
 const { getPreviousReports } = require('../../../controllers/utilisation-report-service');
 const { validateRole, validateToken } = require('../../middleware');
-const { ROLES: { PAYMENT_REPORT_OFFICER } } = require('../../../constants');
 
 const router = express.Router();
 

@@ -1,6 +1,6 @@
+import { ROLES } from '@ukef/dtfs2-common';
 import dealWithCanIssueOrEditIssueFacilityFlags from './dealWithCanIssueOrEditIssueFacilityFlags';
 import canIssueOrEditIssueFacility from './canIssueOrEditIssueFacility';
-import { ROLES } from '../../constants';
 
 const { MAKER } = ROLES;
 

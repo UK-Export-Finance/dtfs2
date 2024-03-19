@@ -1,4 +1,4 @@
-const { ROLES: { MAKER } } = require('../../server/constants');
+const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
 
 const pageRenderer = require('../pageRenderer');
 const dealFullyCompleted = require('../fixtures/deal-fully-completed');

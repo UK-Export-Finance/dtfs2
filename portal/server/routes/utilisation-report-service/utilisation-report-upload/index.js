@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const { ROLES } = require('@ukef/dtfs2-common');
 const {
   getUtilisationReportUpload,
   postUtilisationReportUpload,
@@ -9,7 +10,6 @@ const {
 } = require('../../../controllers/utilisation-report-service');
 const { validateRole, validateToken, virusScanUpload } = require('../../middleware');
 const { utilisationReportMulterFilter, formatBytes } = require('../../../utils/multer-filter.utils');
-const { ROLES } = require('../../../constants');
 
 const { UTILISATION_REPORT_MAX_FILE_SIZE_BYTES } = process.env;
 

@@ -1,5 +1,5 @@
+import { MonthAndYear } from '@ukef/dtfs2-common';
 import { getDateFromMonthAndYear, isEqualMonthAndYear } from './date';
-import { MonthAndYear } from '../types/date';
 
 describe('helpers - date', () => {
   describe('isEqualMonthAndYear', () => {

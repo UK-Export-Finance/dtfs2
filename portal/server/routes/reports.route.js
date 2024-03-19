@@ -1,7 +1,7 @@
 const express = require('express');
+const { ROLES: { MAKER, CHECKER } } = require('@ukef/dtfs2-common');
 const reportsController = require('../controllers/dashboard/reports.controller');
 const { validateToken, validateRole } = require('./middleware');
-const { ROLES: { MAKER, CHECKER } } = require('../constants');
 
 const reportsRouter = express.Router();
 

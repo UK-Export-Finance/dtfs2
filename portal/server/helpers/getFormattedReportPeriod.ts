@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { ReportPeriod } from '../types/utilisation-reports';
+import { ReportPeriod } from '@ukef/dtfs2-common';
 import { getDateFromMonthAndYear, isEqualMonthAndYear } from './date';
 
 /**

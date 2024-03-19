@@ -1,4 +1,4 @@
-import { ROLES } from '../../constants';
+import { ROLES } from '@ukef/dtfs2-common';
 import canIssueOrEditIssueFacility from './canIssueOrEditIssueFacility';
 
 const { CHECKER, MAKER } = ROLES;

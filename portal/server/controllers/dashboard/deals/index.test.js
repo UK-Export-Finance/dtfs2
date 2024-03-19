@@ -1,3 +1,4 @@
+import { ROLES } from '@ukef/dtfs2-common';
 import {
   getAllDealsData,
   getTemplateVariables,
@@ -19,7 +20,7 @@ import { dealsTemplateFilters as templateFilters } from './template-filters';
 import { selectedFilters } from './selected-filters';
 import CONSTANTS from '../../../constants';
 
-const { MAKER, CHECKER } = CONSTANTS.ROLES;
+const { MAKER, CHECKER } = ROLES;
 
 jest.mock('../../../api', () => ({
   allDeals: jest.fn(),
