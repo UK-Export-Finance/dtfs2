@@ -1,7 +1,7 @@
 const api = require('../../api');
 const CONSTANTS = require('../../constants');
 const PageOutOfBoundsError = require('../../errors/page-out-of-bounds.error');
-const InvalidCollectionNameError = require('../../errors/invalid-collection-name.error')
+const InvalidCollectionNameError = require('../../errors/invalid-collection-name.error');
 const { generateHeadingText } = require('./generateHeadingText.helper');
 const { overrideDealsIfAmendmentsInProgress } = require('./overrideDealsIfAmendmentsInProgress.helper');
 const { overrideFacilitiesIfAmendmentsInProgress } = require('./overrideFacilitiesIfAmendmentsInProgress.helper');
@@ -50,7 +50,6 @@ const buildQueryStringFromQueryParameterValues = (search, sortfield, sortorder) 
   return queryString;
 };
 
-
 const getPageNumber = (page) => {
   const pageNumber = Number(page) || 0;
 
@@ -84,7 +83,8 @@ const generateSortByQuery = ({ collectionName, reqQuery }) => {
 };
 
 const getDealsOrFacilitiesItems = async (collectionName, queryParams, userToken, amendments) => {
-  let items, pagination;
+  let items; let
+    pagination;
   if (collectionName === 'deals') {
     ({ deals: items, pagination } = await api.getDeals(queryParams, userToken));
     items = overrideDealsIfAmendmentsInProgress(items, amendments);

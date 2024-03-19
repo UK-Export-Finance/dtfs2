@@ -98,7 +98,7 @@ describe('/v1/tfm/facilities', () => {
           it('with pagination', async () => {
             const pagesize = 2;
 
-            const urlWithPagination = (page) => urlWithoutPagination + `&pagesize=${pagesize}&page=${page}`;
+            const urlWithPagination = (page) => `${urlWithoutPagination}&pagesize=${pagesize}&page=${page}`;
 
             const { status: page1Status, body: page1Body } = await api.get(urlWithPagination(0));
 

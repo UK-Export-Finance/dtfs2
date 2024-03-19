@@ -86,7 +86,7 @@ describe('/v1/tfm/deals', () => {
           'ascending',
           'descending'
         ])('in %s order', (order) => {
-          const urlWithoutPagination = `/v1/tfm/deals?sortBy[order]=${order}&sortBy[field]=${nonBssPath}`
+          const urlWithoutPagination = `/v1/tfm/deals?sortBy[order]=${order}&sortBy[field]=${nonBssPath}`;
 
           it('without pagination', async () => {
             const { status, body } = await api.get(urlWithoutPagination);
@@ -111,7 +111,7 @@ describe('/v1/tfm/deals', () => {
           it('with pagination', async () => {
             const pagesize = 2;
 
-            const urlWithPagination = (page) => urlWithoutPagination + `&pagesize=${pagesize}&page=${page}`;
+            const urlWithPagination = (page) => `${urlWithoutPagination}&pagesize=${pagesize}&page=${page}`;
 
             const { status: page1Status, body: page1Body } = await api.get(urlWithPagination(0));
 
@@ -236,7 +236,7 @@ describe('/v1/tfm/deals', () => {
           'ascending',
           'descending'
         ])('in %s order', (order) => {
-          const urlWithoutPagination = `/v1/tfm/deals?sortBy[field]=tfm.product&sortBy[order]=${order}`
+          const urlWithoutPagination = `/v1/tfm/deals?sortBy[field]=tfm.product&sortBy[order]=${order}`;
 
           it('without pagination', async () => {
             const expectedDeals = [
@@ -268,7 +268,7 @@ describe('/v1/tfm/deals', () => {
           it('with pagination', async () => {
             const pagesize = 2;
 
-            const urlWithPagination = (page) => urlWithoutPagination + `&pagesize=${pagesize}&page=${page}`;
+            const urlWithPagination = (page) => `${urlWithoutPagination}&pagesize=${pagesize}&page=${page}`;
 
             const expectedDeals = [
               { _id: submittedDealWith1Bond?._id },
