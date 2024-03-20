@@ -1,6 +1,6 @@
 const DEAL = require('./deal');
 const FACILITY = require('./facility');
-const DEALS = require('./deals');
+const TABLE = require('./table');
 const TASKS = require('./tasks');
 const TEAMS = require('./teams');
 const ACTIVITIES = require('./activities');
@@ -11,7 +11,7 @@ const PARTY = require('./party');
 module.exports = {
   DEAL,
   FACILITY,
-  DEALS,
+  TABLE,
   TASKS,
   TEAMS,
   ACTIVITIES,

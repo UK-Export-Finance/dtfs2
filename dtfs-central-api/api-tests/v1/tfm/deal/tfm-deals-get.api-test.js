@@ -124,8 +124,10 @@ describe('/v1/tfm/deals', () => {
       it('with pagination', async () => {
         const pagesize = 4;
 
+        const urlWithPagination = (page) => `/v1/tfm/deals?&pagesize=${pagesize}&page=${page}`;
+
         const queryParams = { page: 0, pagesize };
-        const { status: page1Status, body: page1Body } = await api.get('/v1/tfm/deals', { queryParams });
+        const { status: page1Status, body: page1Body } = await api.get(urlWithPagination(0));
 
         const expectedTotalDeals = 5;
 
@@ -136,7 +138,7 @@ describe('/v1/tfm/deals', () => {
         expect(page1Body.pagination.totalPages).toEqual(2);
 
         queryParams.page = 1;
-        const { status: page2Status, body: page2Body } = await api.get('/v1/tfm/deals', { queryParams });
+        const { status: page2Status, body: page2Body } = await api.get(urlWithPagination(1));
 
         expect(page2Status).toEqual(200);
         expect(page2Body.deals.length).toEqual(1);

@@ -7,7 +7,6 @@ context('User can navigate through a paginated table of deals using the paginati
 
   before(() => {
     cy.deleteAllTfmDealsFromDb();
-    cy.deleteAllTfmDealsFromDb();
     cy.insertManyTfmDealsIntoDb(numberOfDeals);
   });
 

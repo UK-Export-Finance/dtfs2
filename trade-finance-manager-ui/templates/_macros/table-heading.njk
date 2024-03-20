@@ -1,6 +1,7 @@
 {% macro render(params) %}
   {% set defaultSortByOrder = 'ascending' %}
 
+  {% set tableName = params.tableName %}
   {% set fieldName = params.fieldName %}
   {% set buttonText = params.buttonText %}
   {% set buttonValue = params.buttonValue %}
@@ -20,14 +21,14 @@
   <div>
     <th
       class="govuk-table__header"
-      data-cy="deals-table-heading-{{ fieldName }}"
+      data-cy="{{ tableName }}-table-heading-{{ fieldName }}"
       aria-sort="{{ (fieldHasActiveSortBy and activeSortByOrder) or (fieldHasActiveSortBy and defaultSortByOrder) or 'none' }}"
     >
       <button
         type="submit"
         name="{{ buttonName }}"
         value="{{ buttonValue }}"
-        data-cy="deals-table-heading-{{ fieldName }}-button"
+        data-cy="{{ tableName }}-table-heading-{{ fieldName }}-button"
         {{ autofocusAttribute }} >
         {{ buttonText }}
         <span aria-hidden="true"></span>
