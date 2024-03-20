@@ -31,7 +31,6 @@ const TFM = {
     timezone: String,
     firstName: String,
     lastName: String,
-    status: String,
   },
   TEAM: {
     id: String,

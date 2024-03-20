@@ -4,7 +4,7 @@ const { generateArrayOfEmailsRegex } = require('./helpers/generateArrayOfEmailsR
 const handleFindByEmailsResult = require('./helpers/handleFindByEmailsResult');
 const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
-const { USER, PAYLOAD } = require('../../../constants');
+const { PAYLOAD } = require('../../../constants');
 
 exports.findOne = async (_id, callback) => {
   if (!ObjectId.isValid(_id)) {
@@ -54,10 +54,7 @@ exports.findByUsername = async (username, callback) => {
 
 exports.createUser = async (user) => {
   const collection = await db.getCollection('tfm-users');
-  const tfmUser = {
-    ...user,
-    status: USER.STATUS.ACTIVE,
-  };
+  const tfmUser = { ...user };
 
   delete tfmUser.token;
 
@@ -127,7 +124,6 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
 
     const update = {
       lastLogin: Date.now(),
-      loginFailureCount: 0,
       sessionIdentifier,
     };
 

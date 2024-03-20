@@ -7,7 +7,6 @@ const mapUserData = (user) => ({
   timezone: user.timezone,
   teams: user.teams,
   lastLogin: user.lastLogin,
-  status: user.status,
   _id: user._id,
 });
 

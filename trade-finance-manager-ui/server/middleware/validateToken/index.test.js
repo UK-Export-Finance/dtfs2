@@ -23,6 +23,12 @@ const mockNext = jest.fn();
 
 describe('Validate Token', () => {
   it('redirects to `/` if user token is not supplied', async () => {
+    api.validateToken = () => Promise.resolve(true);
+    await validateToken(mockRequest, mockResponse);
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/');
+  });
+
+  it('redirects to `/` if user empty token is not supplied', async () => {
     mockRequest.session.userToken = '';
     api.validateToken = () => Promise.resolve(true);
     await validateToken(mockRequest, mockResponse);

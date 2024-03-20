@@ -1,5 +1,4 @@
 const { ObjectId } = require('mongodb');
-const { USER } = require('../src/constants/index.js');
 const MOCK_USERS = require('../src/v1/__mocks__/mock-users');
 const db = require('../src/drivers/db-client');
 const utils = require('../src/utils/crypto.util');
@@ -7,8 +6,7 @@ const utils = require('../src/utils/crypto.util');
 module.exports.initialise = async () => {
   let user = {
     ...MOCK_USERS[0],
-    _id: ObjectId(MOCK_USERS[0]._id),
-    status: USER.STATUS.ACTIVE
+    _id: ObjectId(MOCK_USERS[0]._id)
   };
 
   const collection = await db.getCollection('tfm-users');
@@ -24,7 +22,6 @@ module.exports.initialise = async () => {
 
   const update = {
     lastLogin: Date.now(),
-    loginFailureCount: 0,
     sessionIdentifier,
   };
   await collection.updateOne({ username: { $eq: user.username } }, { $set: update }, {});

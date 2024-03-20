@@ -29,7 +29,7 @@ describe('user controller', () => {
   });
 
   it('returns the requested user if matched', async () => {
-    const expectedResponse = { _id: userId, ...MOCK_USERS[0], status: 'active' };
+    const expectedResponse = { _id: userId, ...MOCK_USERS[0] };
     delete expectedResponse.password;
 
     const { status, body } = await as(tokenUser).get(`/v1/users/${userId}`);

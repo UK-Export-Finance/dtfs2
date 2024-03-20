@@ -87,6 +87,7 @@ const handleSsoRedirect = async (req, res) => {
 
     return res.redirect(apiResponse.redirectUrl);
   }
+  console.error('TFM-UI - login failed in TFM-API, redirect to /');
   return res.redirect('/');
 }
 
