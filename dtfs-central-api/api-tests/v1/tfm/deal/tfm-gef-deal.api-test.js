@@ -27,6 +27,7 @@ describe('/v1/tfm/deal/:id', () => {
       await api.put({
         dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
         dealId,
+        checker: { _id: 'checker-id' },
       }).to('/v1/tfm/deals/submit');
 
       const { status, body } = await api.get(`/v1/tfm/deals/${dealId}`);
@@ -57,11 +58,13 @@ describe('/v1/tfm/deal/:id', () => {
       await api.put({
         dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
         dealId,
+        checker: { _id: 'checker-id' },
       }).to('/v1/tfm/deals/submit');
 
       // add some dummy data to deal.tfm
       await api.put({
         dealUpdate: mockTfm,
+        user: { _id: 'tfm-user-id' }
       }).to(`/v1/tfm/deals/${dealId}`);
 
       const snapshotUpdate = {
@@ -80,6 +83,10 @@ describe('/v1/tfm/deal/:id', () => {
         ...mockTfm.tfm,
         lastUpdated: expect.any(Number),
       });
+      expect(body.auditDetails).toEqual({
+        lastUpdatedByTfmUserId: 'tfm-user-id',
+        lastUpdatedAt: expect.any(String),
+      })
     });
   });
 });

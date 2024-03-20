@@ -31,7 +31,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal, sessionUser) => {
    * */
     const { tfm } = dealChanges;
 
-    const dealUpdate = { tfm, auditDetails: generateTfmUserAuditDetails(sessionUser) };
+    const dealUpdate = { tfm };
     const tfmUpdate = dealUpdate.tfm;
 
     if (tfmUpdate) {
@@ -76,9 +76,17 @@ const updateDeal = async (dealId, dealChanges, existingDeal, sessionUser) => {
 
       dealUpdate.tfm.lastUpdated = new Date().valueOf();
     }
+    const updateQuery = {
+      ...$.flatten(withoutId(dealUpdate)),
+      $set: {
+        ...$.flatten(withoutId(dealUpdate)).$set,
+        auditDetails: generateTfmUserAuditDetails(sessionUser?._id), 
+      },
+    }
+
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: { $eq: ObjectId(dealId) } },
-      $.flatten(withoutId(dealUpdate)),
+      updateQuery,
       { returnNewDocument: true, returnDocument: 'after' }
     );
 
