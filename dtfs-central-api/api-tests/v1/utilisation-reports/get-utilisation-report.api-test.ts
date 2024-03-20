@@ -1,9 +1,9 @@
 import { Response } from 'supertest';
-import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { IsoDateTimeStamp, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { IsoDateTimeStamp, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import app from '../../../src/createApp';
 import apiModule from '../../api';
 import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
+import { SqlDbHelper } from '../../sql-db-helper';
 
 const api = apiModule(app);
 const getUrl = (id: string) => `/v1/utilisation-reports/${id}`;
@@ -25,7 +25,7 @@ interface CustomSuccessResponse extends Response {
 
 describe('/v1/utilisation-reports/:id', () => {
   beforeAll(async () => {
-    await SqlDbDataSource.initialize();
+    await SqlDbHelper.initialize();
   });
 
   describe('GET /v1/utilisation-reports/:id', () => {
@@ -40,8 +40,8 @@ describe('/v1/utilisation-reports/:id', () => {
 
     it('gets a utilisation report', async () => {
       // Arrange
-      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
-      const { id } = await SqlDbDataSource.getRepository(UtilisationReportEntity).save(uploadedReport);
+      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+      const { id } = await SqlDbHelper.saveNewEntry('UtilisationReport', uploadedReport);
 
       // Act
       const response: CustomSuccessResponse = await api.get(getUrl(id.toString()));

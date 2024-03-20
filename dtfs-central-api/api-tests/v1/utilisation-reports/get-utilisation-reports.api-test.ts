@@ -1,6 +1,5 @@
 import { Response } from 'supertest';
-import { IsoDateTimeStamp, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
+import { IsoDateTimeStamp, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import axios from 'axios';
 import app from '../../../src/createApp';
 import createApi from '../../api';
@@ -12,7 +11,7 @@ const api = createApi(app);
 const getUrl = (bankId: string) => `/v1/bank/${bankId}/utilisation-reports`;
 
 const saveReportToDatabase = async (report: UtilisationReportEntity): Promise<UtilisationReportEntity> =>
-  await SqlDbDataSource.getRepository(UtilisationReportEntity).save(report);
+  await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
 type UtilisationReportResponse = GetUtilisationReportResponse & {
   dateUploaded: IsoDateTimeStamp;
@@ -49,14 +48,8 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
   it('gets utilisation reports', async () => {
     // Arrange
     const bankId = '13';
-    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
-      .withId(1)
-      .withBankId(bankId)
-      .build();
-    const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
-      .withId(2)
-      .withBankId(bankId)
-      .build();
+    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(1).withBankId(bankId).build();
+    const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(2).withBankId(bankId).build();
     await saveReportToDatabase(uploadedReport);
     await saveReportToDatabase(nonUploadedReport);
 
@@ -71,15 +64,9 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
   it('gets all utilisation reports not in the REPORT_NOT_RECEIVED state when excludeNotReceived query param is true', async () => {
     // Arrange
     const bankId = '13';
-    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
-      .withId(1)
-      .withBankId(bankId)
-      .build();
-    const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
-      .withId(2)
-      .withBankId(bankId)
-      .build();
-    const nonUploadedMarkedReconciledReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
+    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(1).withBankId(bankId).build();
+    const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(2).withBankId(bankId).build();
+    const nonUploadedMarkedReconciledReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
       .withId(3)
       .withBankId(bankId)
       .withAzureFileInfo(undefined)
@@ -95,8 +82,8 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     expect(response.status).toEqual(200);
     expect(response.body.length).toEqual(2);
     const ids = response.body.map((report) => report.id);
-    expect(ids).toContain(1);
-    expect(ids).toContain(3);
+    expect(ids).toContain(uploadedReport.id);
+    expect(ids).toContain(nonUploadedMarkedReconciledReport.id);
   });
 
   it('gets uploaded utilisation reports for specified period', async () => {
@@ -106,12 +93,12 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
       start: { month: 11, year: 2021 },
       end: { month: 12, year: 2021 },
     };
-    const uploadedReportForReportPeriod = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+    const uploadedReportForReportPeriod = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
       .withId(1)
       .withBankId(bankId)
       .withReportPeriod(reportPeriod)
       .build();
-    const uploadedReportForDifferentReportPeriod = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+    const uploadedReportForDifferentReportPeriod = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
       .withId(2)
       .withBankId(bankId)
       .withReportPeriod({ start: { month: 12, year: 2021 }, end: { month: 1, year: 2022 } })
@@ -126,6 +113,6 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     // Assert
     expect(response.status).toEqual(200);
     expect(response.body.length).toEqual(1);
-    expect(response.body[0].id).toEqual(1);
+    expect(response.body[0].id).toEqual(uploadedReportForReportPeriod.id);
   });
 });
