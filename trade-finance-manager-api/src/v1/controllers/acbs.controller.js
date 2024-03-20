@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
-const generateSystemAuditDetails = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails')
+const { generateSystemAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails')
 const api = require('../api');
 const db = require('../../drivers/db-client');
 const tfmController = require('./tfm.controller');
@@ -28,6 +28,11 @@ const addToACBSLog = async ({ deal = {}, facility = {}, bank = {}, acbsTaskLinks
   }
 
   return false;
+};
+
+const clearACBSLog = async () => {
+  const collection = await db.getCollection('durable-functions-log');
+  return collection.remove({});
 };
 
 const createACBS = async (deal) => {
@@ -217,6 +222,7 @@ const amendAcbsFacility = (amendments, facility, deal) => {
 
 module.exports = {
   addToACBSLog,
+  clearACBSLog,
   createACBS,
   checkAzureAcbsFunction,
   issueAcbsFacilities,
