@@ -1,10 +1,13 @@
 import { Response } from 'supertest';
-import { IsoDateTimeStamp, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import { IsoDateTimeStamp, PortalUser, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import axios from 'axios';
 import app from '../../../src/createApp';
 import createApi from '../../api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
+import mongoDbClient from '../../../src/drivers/db-client';
+import { wipe } from '../../wipeDB';
 
 const api = createApi(app);
 
@@ -26,13 +29,28 @@ interface CustomSuccessResponse extends Response {
 }
 
 describe('GET /v1/bank/:bankId/utilisation-reports', () => {
+  const portalUser = {
+    _id: new ObjectId(),
+    firstname: 'Test',
+    surname: 'User',
+  } as PortalUser;
+  const portalUserId = portalUser._id.toString();
+
   beforeAll(async () => {
     await SqlDbHelper.initialize();
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
+
+    await wipe(['users']);
+    const usersCollection = await mongoDbClient.getCollection('users');
+    await usersCollection.insertOne(portalUser);
   });
 
   afterEach(async () => {
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
+  });
+
+  afterAll(async () => {
+    await wipe(['users']);
   });
 
   it('returns 400 when an invalid bank id is provided', async () => {
@@ -48,8 +66,16 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
   it('gets utilisation reports', async () => {
     // Arrange
     const bankId = '13';
-    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(1).withBankId(bankId).build();
-    const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(2).withBankId(bankId).build();
+    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+      .withId(1)
+      .withUploadedByUserId(portalUserId)
+      .withBankId(bankId)
+      .build();
+    const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+      .withId(2)
+      .withUploadedByUserId(portalUserId)
+      .withBankId(bankId)
+      .build();
     await saveReportToDatabase(uploadedReport);
     await saveReportToDatabase(nonUploadedReport);
 
@@ -64,10 +90,19 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
   it('gets all utilisation reports not in the REPORT_NOT_RECEIVED state when excludeNotReceived query param is true', async () => {
     // Arrange
     const bankId = '13';
-    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(1).withBankId(bankId).build();
-    const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(2).withBankId(bankId).build();
+    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+      .withId(1)
+      .withUploadedByUserId(portalUserId)
+      .withBankId(bankId)
+      .build();
+    const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+      .withId(2)
+      .withUploadedByUserId(portalUserId)
+      .withBankId(bankId)
+      .build();
     const nonUploadedMarkedReconciledReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
       .withId(3)
+      .withUploadedByUserId(portalUserId)
       .withBankId(bankId)
       .withAzureFileInfo(undefined)
       .build();
@@ -95,11 +130,13 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     };
     const uploadedReportForReportPeriod = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
       .withId(1)
+      .withUploadedByUserId(portalUserId)
       .withBankId(bankId)
       .withReportPeriod(reportPeriod)
       .build();
     const uploadedReportForDifferentReportPeriod = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
       .withId(2)
+      .withUploadedByUserId(portalUserId)
       .withBankId(bankId)
       .withReportPeriod({ start: { month: 12, year: 2021 }, end: { month: 1, year: 2022 } })
       .build();

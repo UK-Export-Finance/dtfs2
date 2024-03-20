@@ -28,6 +28,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
     const aReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
       .withBankId(bankId)
       .withId(receivedReportId)
+      .withUploadedByUserId(aPaymentReportOfficer._id.toString())
       .withReportPeriod({
         start: {
           month: 1,

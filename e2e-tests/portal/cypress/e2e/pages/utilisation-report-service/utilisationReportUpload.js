@@ -9,9 +9,9 @@ const page = {
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
   assertOnThisPage: () => {
-    this.url().should('contain', '/utilisation-report-upload');
-    this.utilisationReportFileInput().should('exist');
-    this.continueButton().should('exist');
+    page.url().should('contain', '/utilisation-report-upload');
+    page.utilisationReportFileInput().should('exist');
+    page.continueButton().should('exist');
   },
 };
 

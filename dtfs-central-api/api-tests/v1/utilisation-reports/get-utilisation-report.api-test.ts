@@ -1,9 +1,12 @@
 import { Response } from 'supertest';
-import { IsoDateTimeStamp, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import { IsoDateTimeStamp, PortalUser, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import app from '../../../src/createApp';
 import apiModule from '../../api';
 import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
 import { SqlDbHelper } from '../../sql-db-helper';
+import { wipe } from '../../wipeDB';
+import mongoDbClient from '../../../src/drivers/db-client';
 
 const api = apiModule(app);
 const getUrl = (id: string) => `/v1/utilisation-reports/${id}`;
@@ -24,8 +27,23 @@ interface CustomSuccessResponse extends Response {
 }
 
 describe('/v1/utilisation-reports/:id', () => {
+  const portalUser = {
+    _id: new ObjectId(),
+    firstname: 'Test',
+    surname: 'User',
+  } as PortalUser;
+  const portalUserId = portalUser._id.toString();
+
   beforeAll(async () => {
     await SqlDbHelper.initialize();
+
+    await wipe(['users']);
+    const usersCollection = await mongoDbClient.getCollection('users');
+    await usersCollection.insertOne(portalUser);
+  });
+
+  afterAll(async () => {
+    await wipe(['users']);
   });
 
   describe('GET /v1/utilisation-reports/:id', () => {
@@ -40,7 +58,7 @@ describe('/v1/utilisation-reports/:id', () => {
 
     it('gets a utilisation report', async () => {
       // Arrange
-      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withUploadedByUserId(portalUserId).build();
       const { id } = await SqlDbHelper.saveNewEntry('UtilisationReport', uploadedReport);
 
       // Act
