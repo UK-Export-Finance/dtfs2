@@ -8,10 +8,10 @@ const page = {
   currentUrl: () => cy.url(),
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
-  assertOnThisPage: () => {
-    page.url().should('contain', '/utilisation-report-upload');
-    page.utilisationReportFileInput().should('exist');
-    page.continueButton().should('exist');
+  assertOnThisPage() {
+    this.currentUrl().should('contain', '/utilisation-report-upload');
+    this.utilisationReportFileInput().should('exist');
+    this.continueButton().should('exist');
   },
 };
 

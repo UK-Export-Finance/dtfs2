@@ -15,7 +15,11 @@ context('Utilisation report upload', () => {
   });
 
   it('should not allow you to upload a report if the current report period report has been submitted', () => {
-    cy.insertUtilisationReports(upToDateReportDetails);
+    cy.task('getUserFromDbByEmail', BANK1_PAYMENT_REPORT_OFFICER1.email).then((user) => {
+      const { _id } = user;
+      upToDateReportDetails[0].uploadedByUserId = _id.toString();
+      cy.insertUtilisationReports(upToDateReportDetails);
+    });
 
     cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
     cy.visit(relativeURL('/utilisation-report-upload'));
