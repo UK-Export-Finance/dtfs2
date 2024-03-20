@@ -1,4 +1,4 @@
-const { utilisationReportUpload, confirmAndSend } = require('../../../pages');
+const { utilisationReportUpload, confirmAndSend, problemWithService } = require('../../../pages');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
 const { february2023ReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
@@ -16,22 +16,22 @@ context('Confirm and send', () => {
 
       utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-February_2023.xlsx');
       utilisationReportUpload.continueButton().click();
+
+      problemWithService.heading().should('not.exist');
     });
 
     it('Should route to the Upload Report page when the back button is selected', () => {
       confirmAndSend.backLink().click();
 
       confirmAndSend.mainHeading().should('not.exist');
-      confirmAndSend.currentUrl().should('contain', '/utilisation-report-upload');
-      confirmAndSend.currentUrl().should('not.contain', '/confirm-and-send');
+      utilisationReportUpload.assertOnThisPage();
     });
 
     it('Should route to the Upload Report page when the change button is selected', () => {
       confirmAndSend.changeLink().click();
 
       confirmAndSend.mainHeading().should('not.exist');
-      confirmAndSend.currentUrl().should('contain', '/utilisation-report-upload');
-      confirmAndSend.currentUrl().should('not.contain', '/confirm-and-send');
+      utilisationReportUpload.assertOnThisPage();
     });
 
     it('Should route to the Confirmation page when the Confirm and Send button is selected', () => {
@@ -47,8 +47,7 @@ context('Confirm and send', () => {
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload/confirm-and-send'));
 
-      confirmAndSend.currentUrl().should('contain', '/utilisation-report-upload');
-      confirmAndSend.currentUrl().should('not.contain', '/confirm-and-send');
+      utilisationReportUpload.assertOnThisPage();
     });
   });
 });
