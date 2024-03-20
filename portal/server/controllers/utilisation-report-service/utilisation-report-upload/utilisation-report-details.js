@@ -20,9 +20,9 @@ const getReportAndUserDetails = (report) => {
     throw new Error("Failed to get report and user details: 'report' was undefined");
   }
 
-  const { dateUploaded, uploadedBy, reportPeriod } = report;
+  const { dateUploaded, uploadedByUser, reportPeriod } = report;
 
-  const { firstname, surname } = uploadedBy;
+  const { firstname, surname } = uploadedByUser;
   const uploadedByFullName = `${firstname} ${surname}`;
 
   const date = parseISO(dateUploaded);
