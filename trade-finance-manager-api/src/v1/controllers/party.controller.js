@@ -10,7 +10,7 @@ const updateParty = async (req, res) => {
   };
 
   try {
-    const updatedDeal = await api.updateDeal(dealId, partyUpdate);
+    const updatedDeal = await api.updateDeal(dealId, partyUpdate, req.user);
 
     if (updatedDeal.dealSnapshot) {
       if (canDealBeSubmittedToACBS(updatedDeal.dealSnapshot.submissionType)) {

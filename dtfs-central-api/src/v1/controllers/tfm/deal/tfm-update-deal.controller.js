@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
+const { generateTfmUserAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
@@ -11,7 +12,15 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateDeal = async (dealId, dealChanges, existingDeal) => {
+/**
+ * 
+ * @param {string} dealId - deal to be updated
+ * @param {object} dealChanges - updates to make
+ * @param {object} existingDeal
+ * @param {object} sessionUser - user making the update
+ * @returns 
+ */
+const updateDeal = async (dealId, dealChanges, existingDeal, sessionUser) => {
   if (ObjectId.isValid(dealId)) {
     const collection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_DEALS);
 
@@ -22,7 +31,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
    * */
     const { tfm } = dealChanges;
 
-    const dealUpdate = { tfm };
+    const dealUpdate = { tfm, auditDetails: generateTfmUserAuditDetails(sessionUser) };
     const tfmUpdate = dealUpdate.tfm;
 
     if (tfmUpdate) {
@@ -82,7 +91,7 @@ exports.updateDealPut = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const dealId = req.params.id;
 
-    const { dealUpdate } = req.body;
+    const { dealUpdate, user } = req.body;
 
     const deal = await findOneDeal(dealId, false, 'tfm');
 
@@ -91,6 +100,7 @@ exports.updateDealPut = async (req, res) => {
         dealId,
         dealUpdate,
         deal,
+        user,
       );
 
       const status = isNumber(response?.status, 3);
