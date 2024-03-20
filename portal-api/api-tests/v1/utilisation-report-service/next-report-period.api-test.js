@@ -4,21 +4,9 @@ const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
+const { getNextReportPeriodByBankId } = require('../../../src/v1/api');
 
-const expectedReportPeriod = {
-  start: {
-    month: 12,
-    year: 2023,
-  },
-  end: {
-    month: 2,
-    year: 2024,
-  },
-};
-
-jest.mock('../../../src/v1/api', () => ({
-  getNextReportPeriodByBankId: jest.fn().mockResolvedValue({ expectedReportPeriod }),
-}));
+jest.mock('../../../src/v1/api');
 
 describe('GET /v1/banks/:bankId/next-report-period', () => {
   const nextReportPeriodUrl = (bankId) => `/v1/banks/${bankId}/next-report-period`;
@@ -58,8 +46,21 @@ describe('GET /v1/banks/:bankId/next-report-period', () => {
   });
 
   it('returns the requested resource', async () => {
+    const expectedResponse = {
+      start: {
+        month: 12,
+        year: 2023,
+      },
+      end: {
+        month: 2,
+        year: 2024,
+      },
+    }
+    jest.mocked(getNextReportPeriodByBankId).mockResolvedValueOnce(expectedResponse);
+
     const response = await as(aPaymentReportOfficer).get(nextReportPeriodUrl(matchingBankId));
+
     expect(response.status).toEqual(200);
-    expect(JSON.parse(response.text)).toEqual({ expectedReportPeriod });
+    expect(JSON.parse(response.text)).toEqual(expectedResponse);
   });
 });
