@@ -17,9 +17,9 @@ const mockStartDate = '2017-07-04';
 const mockEndDate = '2018-07-04';
 
 // Mock Axios
-const mock = new MockAdapter(axios);
-mock.onGet(`${APIM_MDM_URL}exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=BS`).reply(HttpStatusCode.Ok, mockResponse.data);
-mock.onGet(`${APIM_MDM_URL}exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=EW`).reply(HttpStatusCode.Ok, mockResponse.data);
+const axiosMock = new MockAdapter(axios);
+axiosMock.onGet(`${APIM_MDM_URL}exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=BS`).reply(HttpStatusCode.Ok, mockResponse.data);
+axiosMock.onGet(`${APIM_MDM_URL}exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=EW`).reply(HttpStatusCode.Ok, mockResponse.data);
 
 describe('/exposure-period', () => {
   describe('GET /v1/exposure-period/:startDate/:endDate/:facilityType', () => {

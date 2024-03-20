@@ -7,7 +7,7 @@ const { COMPANIES_HOUSE_API_URL } = process.env;
 const { get } = api(app);
 
 // Mock Axios
-const mock = new MockAdapter(axios);
+const axiosMock = new MockAdapter(axios);
 
 const mockResponse = {
   status: 200,
@@ -54,7 +54,7 @@ const mockResponse = {
   },
 };
 
-mock.onGet(`${COMPANIES_HOUSE_API_URL}/company/00000006`).reply(HttpStatusCode.Ok, mockResponse.data);
+axiosMock.onGet(`${COMPANIES_HOUSE_API_URL}/company/00000006`).reply(HttpStatusCode.Ok, mockResponse.data);
 
 const companyHouseNumberTestCases = ['abc', '127.0.0.1', '{}', '[]'];
 

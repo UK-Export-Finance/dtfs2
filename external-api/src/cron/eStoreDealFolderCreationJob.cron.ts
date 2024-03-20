@@ -1,7 +1,6 @@
 import { getCollection } from '../database';
 import { Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
-// import { eStoreFacilityFolderCreationJob } from './eStoreFacilityFolderCreationJob.cron';
 import { createDealFolder } from '../v1/controllers/estore/eStoreApi';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails';
 
@@ -46,9 +45,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
 
       // check if there are any facilityIds
       if (eStoreData.facilityIdentifiers.length) {
-        // eStoreCronJobManager.add(`Facility${eStoreData.dealId}`, facilityCreationTimer, () => {
-        //   eStoreFacilityFolderCreationJob(eStoreData);
-        // });
+        // Create eStore Facility directories
       }
     } else {
       console.error('API Call failed: Unable to create a Deal Folder %O', dealFolderResponse);

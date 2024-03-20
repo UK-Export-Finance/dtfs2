@@ -32,7 +32,7 @@ describe('areValidUkefIds', () => {
     expect(result).toBe(false);
   });
 
-  it('should return false when dealIdentifier is falsy', () => {
+  it('should return false when dealIdentifier is empty', () => {
     const eStoreDataModified = {
       ...eStoreData,
       dealIdentifier: '',
@@ -46,7 +46,7 @@ describe('areValidUkefIds', () => {
   it('should return false when facilityIdentifiers is falsy', () => {
     const eStoreDataModified = {
       ...eStoreData,
-      facilityIdentifiers: [Number(null)],
+      facilityIdentifiers: [0],
     };
 
     const result = areValidUkefIds(eStoreDataModified);
@@ -54,7 +54,7 @@ describe('areValidUkefIds', () => {
     expect(result).toBe(false);
   });
 
-  it('should return false when dealIdentifier contains temporary ID', () => {
+  it('should return false when dealIdentifier contains temporary (pending) ID', () => {
     const eStoreDataModified = {
       ...eStoreData,
       dealIdentifier: UKEF_ID.PENDING,
@@ -65,7 +65,7 @@ describe('areValidUkefIds', () => {
     expect(result).toBe(false);
   });
 
-  it('should return false when dealIdentifier contains temporary ID', () => {
+  it('should return false when dealIdentifier contains test ID', () => {
     const eStoreDataModified = {
       ...eStoreData,
       dealIdentifier: UKEF_ID.TEST,
@@ -76,7 +76,7 @@ describe('areValidUkefIds', () => {
     expect(result).toBe(false);
   });
 
-  it('should return false when facilityIdentifiers contain temporary ID', () => {
+  it('should return false when facilityIdentifiers contain test ID and a valid ID', () => {
     const eStoreDataModified = {
       ...eStoreData,
       facilityIdentifiers: [Number(UKEF_ID.TEST), 1234567890],
@@ -87,7 +87,7 @@ describe('areValidUkefIds', () => {
     expect(result).toBe(false);
   });
 
-  it('should return false when facilityIdentifiers contain temporary ID', () => {
+  it('should return false when facilityIdentifiers contain temporary (pending) ID', () => {
     const eStoreDataModified = {
       ...eStoreData,
       facilityIdentifiers: [Number(UKEF_ID.PENDING), 1234567890],
@@ -98,7 +98,7 @@ describe('areValidUkefIds', () => {
     expect(result).toBe(false);
   });
 
-  it('should return false when facilityIdentifiers contain temporary ID', () => {
+  it('should return false when facilityIdentifiers contain test and pending ID', () => {
     const eStoreDataModified = {
       ...eStoreData,
       facilityIdentifiers: [Number(UKEF_ID.TEST), Number(UKEF_ID.PENDING)],

@@ -4,6 +4,7 @@ import { TermStoreResponse, BuyerFolderResponse, EstoreErrorResponse, Estore } f
 import { ESTORE_CRON_STATUS } from '../constants';
 import { createBuyerFolder, addFacilityToTermStore } from '../v1/controllers/estore/eStoreApi';
 import { HttpStatusCode } from 'axios';
+import { getNowAsEpoch } from '../helpers/date';
 
 const acceptableStatus = [HttpStatusCode.Ok, HttpStatusCode.Created];
 
@@ -14,11 +15,11 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: Estore) => {
   if (eStoreData?.facilityIdentifiers?.length) {
     console.info('Adding facilities to term store for deal %s', eStoreData.dealIdentifier);
 
-    const response: TermStoreResponse[] | EstoreErrorResponse[] = await Promise.all(
+    const responses: TermStoreResponse[] | EstoreErrorResponse[] = await Promise.all(
       eStoreData.facilityIdentifiers.map((id: number) => addFacilityToTermStore({ id: id.toString() })),
     );
 
-    if (response.every((term) => acceptableStatus.includes(term?.status))) {
+    if (responses.every((term) => acceptableStatus.includes(term?.status))) {
       console.info('Facilities have been added to term store for deal %s', eStoreData.dealIdentifier);
 
       // Update `cron-job-logs`
@@ -28,13 +29,13 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: Estore) => {
           $set: {
             'cron.term': {
               status: ESTORE_CRON_STATUS.COMPLETED,
-              timestamp: new Date().valueOf(),
+              timestamp: getNowAsEpoch,
             },
           },
         },
       );
     } else {
-      console.error('Facilities have not been added to term store for deal %s %s', eStoreData.dealIdentifier, response);
+      console.error('Facilities have not been added to term store for deal %s %o', eStoreData.dealIdentifier, responses);
 
       // Update `cron-job-logs`
       await cronJobLogs.updateOne(
@@ -43,7 +44,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: Estore) => {
           $set: {
             'cron.term': {
               status: ESTORE_CRON_STATUS.FAILED,
-              timestamp: new Date().valueOf(),
+              timestamp: getNowAsEpoch,
             },
           },
         },
@@ -71,13 +72,13 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: Estore) => {
           $set: {
             'cron.buyer': {
               status: ESTORE_CRON_STATUS.COMPLETED,
-              timestamp: new Date().valueOf(),
+              timestamp: getNowAsEpoch,
             },
           },
         },
       );
     } else {
-      console.error('eStore buyer directory creation has failed for deal %s %s', eStoreData.dealIdentifier, response);
+      console.error('eStore buyer directory creation has failed for deal %s %o', eStoreData.dealIdentifier, response);
 
       // Update `cron-job-logs`
       await cronJobLogs.updateOne(
@@ -86,7 +87,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: Estore) => {
           $set: {
             'cron.buyer': {
               status: ESTORE_CRON_STATUS.FAILED,
-              timestamp: new Date().valueOf(),
+              timestamp: getNowAsEpoch,
             },
           },
         },

@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { Request, Response } from 'express';
@@ -7,8 +8,8 @@ import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../../../constants';
 import { areValidUkefIds, objectIsEmpty } from '../../../helpers';
 import { eStoreTermStoreAndBuyerFolder, eStoreSiteCreationCron } from '../../../cron';
 import { createExporterSite, siteExists } from './eStoreApi';
-import dotenv from 'dotenv';
 import { CronJob } from 'cron';
+import { getNowAsEpoch } from '../../../helpers/date';
 
 dotenv.config();
 
@@ -70,7 +71,7 @@ export const create = async (req: Request, res: Response) => {
         // Step 1: Add CRON job to the collection
         await cronJobLogs.insertOne({
           payload: eStoreData,
-          timestamp: new Date().valueOf(),
+          timestamp: getNowAsEpoch,
           cron: {
             site: { status: ESTORE_CRON_STATUS.PENDING },
             term: { status: ESTORE_CRON_STATUS.PENDING },
@@ -101,7 +102,7 @@ export const create = async (req: Request, res: Response) => {
                 'response.site.siteId': siteExistsResponse.data.siteId,
                 'cron.site.create': {
                   status: ESTORE_CRON_STATUS.COMPLETED,
-                  timestamp: new Date().valueOf(),
+                  timestamp: getNowAsEpoch,
                 },
                 'cron.site.status': ESTORE_CRON_STATUS.COMPLETED,
               },
@@ -169,7 +170,7 @@ export const create = async (req: Request, res: Response) => {
                   'cron.site.create': {
                     response: siteCreationResponse?.data,
                     status: ESTORE_CRON_STATUS.FAILED,
-                    timestamp: new Date().valueOf(),
+                    timestamp: getNowAsEpoch,
                   },
                   'cron.site.status': ESTORE_CRON_STATUS.FAILED,
                 },
@@ -186,7 +187,7 @@ export const create = async (req: Request, res: Response) => {
               $set: {
                 'cron.site.create': {
                   status: ESTORE_CRON_STATUS.FAILED,
-                  timestamp: new Date().valueOf(),
+                  timestamp: getNowAsEpoch,
                 },
                 'cron.site.status': ESTORE_CRON_STATUS.FAILED,
               },
@@ -207,11 +208,11 @@ export const create = async (req: Request, res: Response) => {
         {
           $set: {
             cron: {
-              site: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: new Date().valueOf() },
-              term: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: new Date().valueOf() },
-              buyer: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: new Date().valueOf() },
-              deal: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: new Date().valueOf() },
-              facility: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: new Date().valueOf() },
+              site: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: getNowAsEpoch },
+              term: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: getNowAsEpoch },
+              buyer: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: getNowAsEpoch },
+              deal: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: getNowAsEpoch },
+              facility: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: getNowAsEpoch },
             },
           },
         },

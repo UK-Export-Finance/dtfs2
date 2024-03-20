@@ -1,19 +1,21 @@
+import { cloneDeep } from 'lodash';
 import { ObjectId } from 'mongodb';
 import { getCollection } from '../database';
 import { Estore, EstoreErrorResponse, SiteExistsResponse } from '../interfaces';
 import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../constants';
 import { eStoreTermStoreAndBuyerFolder } from './eStoreTermStoreAndBuyerFolder.cron';
 import { siteExists } from '../v1/controllers/estore/eStoreApi';
+import { getNowAsEpoch } from '../helpers/date';
 
 /**
  * Creates a new eStore site based on the provided eStoreData.
- * @param {any} eStoreData - An object containing the necessary data for creating the eStore site.
+ * @param {Estore} eStoreData - An object containing the necessary data for creating the eStore site.
  * @returns {Promise<void>} - None
  */
 export const eStoreSiteCreationCron = async (eStoreData: Estore) => {
   const cronJobLogs = await getCollection('cron-job-logs');
   const tfmDeals = await getCollection('tfm-deals');
-  const data = eStoreData;
+  const data = cloneDeep(eStoreData);
   const now = new Date().toISOString();
 
   // Step 1: Site exists check
@@ -32,7 +34,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore) => {
         $set: {
           'cron.site': {
             status: ESTORE_CRON_STATUS.COMPLETED,
-            timestamp: new Date().valueOf(),
+            timestamp: getNowAsEpoch,
             id: siteExistsResponse.data.siteId,
           },
         },
@@ -58,7 +60,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore) => {
           'cron.site.create': {
             response: siteExistsResponse.data,
             status: ESTORE_CRON_STATUS.RUNNING,
-            timestamp: new Date().valueOf(),
+            timestamp: getNowAsEpoch,
           },
           'cron.site.status': ESTORE_CRON_STATUS.RUNNING,
           'cron.site.id': siteExistsResponse?.data?.siteId,
@@ -82,7 +84,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore) => {
           'cron.site.create': {
             response: siteExistsResponse.data,
             status: ESTORE_CRON_STATUS.FAILED,
-            timestamp: new Date().valueOf(),
+            timestamp: getNowAsEpoch,
           },
         },
       },

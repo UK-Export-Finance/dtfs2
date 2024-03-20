@@ -28,6 +28,7 @@
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },
   "dependencies": {
+    "@types/lodash": "^4.17.0",
     "@ukef/dtfs2-common": "1.0.0",
     "axios": "^1.6.8",
     "axios-mock-adapter": "^1.22.0",
@@ -40,6 +41,7 @@
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.11.2",
     "joi": "^17.12.2",
+    "loadash": "^1.0.0",
     "mongodb": "4.17.0",
     "notifications-node-client": "^7.0.6",
     "supertest": "^6.3.3",

@@ -87,8 +87,10 @@ const mockResponse = {
 };
 
 // Mock Axios
-const mock = new MockAdapter(axios);
-mock.onGet(`${ORDNANCE_SURVEY_API_URL}/search/places/v1/postcode?postcode=WR90DJ&key=${ORDNANCE_SURVEY_API_KEY}`).reply(HttpStatusCode.Ok, mockResponse.data);
+const axiosMock = new MockAdapter(axios);
+axiosMock
+  .onGet(`${ORDNANCE_SURVEY_API_URL}/search/places/v1/postcode?postcode=WR90DJ&key=${ORDNANCE_SURVEY_API_KEY}`)
+  .reply(HttpStatusCode.Ok, mockResponse.data);
 
 describe('/ordnance-survey', () => {
   describe('GET /ordnance-survey', () => {

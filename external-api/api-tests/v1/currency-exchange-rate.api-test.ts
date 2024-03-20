@@ -7,7 +7,7 @@ const { APIM_MDM_URL } = process.env;
 const { get } = api(app);
 
 // Mock Axios
-const mock = new MockAdapter(axios);
+const axiosMock = new MockAdapter(axios);
 
 // Mock responses
 const mockResponses = {
@@ -167,7 +167,7 @@ const response = (endpoint: string) => {
 // Send mock responses
 currencies.forEach((currency) => {
   const url = `${APIM_MDM_URL}currencies/exchange?${currency}`;
-  mock.onGet(url).reply(HttpStatusCode.Ok, response(currency));
+  axiosMock.onGet(url).reply(HttpStatusCode.Ok, response(currency));
 });
 
 describe('/currency-exchange-rate', () => {

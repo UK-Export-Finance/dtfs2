@@ -9,10 +9,10 @@ const { VALID_1, VALID_2, VALID_WITH_LETTERS } = COMPANIES_HOUSE_NUMBER;
 const { get } = api(app);
 
 // Mock Axios
-const mock = new MockAdapter(axios);
-mock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_1}`).reply(HttpStatusCode.Ok, {});
-mock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_2}`).reply(HttpStatusCode.Ok, {});
-mock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
+const axiosMock = new MockAdapter(axios);
+axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_1}`).reply(HttpStatusCode.Ok, {});
+axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_2}`).reply(HttpStatusCode.Ok, {});
+axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
 
 describe('/party-db', () => {
   describe('GET /party-db', () => {

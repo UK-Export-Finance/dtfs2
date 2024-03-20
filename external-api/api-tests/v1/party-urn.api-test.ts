@@ -7,8 +7,8 @@ const { APIM_MDM_URL } = process.env;
 const { get } = api(app);
 
 // Mock Axios
-const mock = new MockAdapter(axios);
-mock.onGet(`${APIM_MDM_URL}customers?partyUrn=03827491`).reply(HttpStatusCode.Ok, {});
+const axiosMock = new MockAdapter(axios);
+axiosMock.onGet(`${APIM_MDM_URL}customers?partyUrn=03827491`).reply(HttpStatusCode.Ok, {});
 
 describe('/party-db/urn', () => {
   describe('GET /party-db/urn', () => {

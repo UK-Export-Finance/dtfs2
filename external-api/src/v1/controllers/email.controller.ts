@@ -1,7 +1,8 @@
-import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
-const { NotifyClient } = require('notifications-node-client'); // eslint-disable-line @typescript-eslint/no-var-requires
 import axios from 'axios';
+import { Request, Response } from 'express';
+import { getNowAsEpoch } from '../../helpers/date';
+const { NotifyClient } = require('notifications-node-client'); // eslint-disable-line @typescript-eslint/no-var-requires
 
 dotenv.config();
 
@@ -13,7 +14,7 @@ export const emailNotification = async (req: Request, res: Response) => {
   try {
     const { templateId, sendToEmailAddress, emailVariables } = req.body;
     // Add a unique reference to an email
-    const reference = `${templateId}-${new Date().valueOf()}`;
+    const reference = `${templateId}-${getNowAsEpoch}`;
 
     console.info('Calling Notify API. templateId: %s', templateId);
 

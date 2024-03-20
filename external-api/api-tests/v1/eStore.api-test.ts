@@ -34,7 +34,7 @@ jest.mock('../../src/cron', () => ({
   })),
 }));
 
-const mock = new MockAdapter(axios);
+const axiosMock = new MockAdapter(axios);
 jest.mock('axios', () => jest.requireActual('axios'));
 
 const mockExporterResponse = {
@@ -47,9 +47,9 @@ const mockApiResponse = {
 };
 
 // mocks test for estore if exists
-mock.onPost(`${APIM_ESTORE_URL}site/sites?exporterName=testName`).reply(200, mockExporterResponse);
+axiosMock.onPost(`${APIM_ESTORE_URL}site/sites?exporterName=testName`).reply(200, mockExporterResponse);
 const estoreSitesRegex = new RegExp(`${APIM_ESTORE_URL}sites/.+`);
-mock.onPost(estoreSitesRegex).reply(200, mockApiResponse);
+axiosMock.onPost(estoreSitesRegex).reply(200, mockApiResponse);
 
 describe('/estore', () => {
   const payload = {

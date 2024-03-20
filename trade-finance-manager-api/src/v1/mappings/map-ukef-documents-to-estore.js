@@ -1,5 +1,6 @@
 /**
- * Map
+ * Map UKEF documents to eStore documents
+ * 
  * Exporter_questionnaire
  * Audited_financial_statements
  * Year_to_date_management
@@ -25,7 +26,6 @@ const estoreFiles = {
   yearToDateManagement: {
     eStoreName: 'Year_to_date_management',
   },
-
   financialForecasts: {
     eStoreName: 'Financial_forecasts',
   },
