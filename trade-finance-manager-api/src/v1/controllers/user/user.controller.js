@@ -1,6 +1,5 @@
 const { ObjectId } = require('mongodb');
 const { generateSystemAuditDetails, generateTfmUserAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
-const { cloneDeep } = require('lodash');
 const db = require('../../../drivers/db-client');
 const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
@@ -74,8 +73,10 @@ exports.update = async (_id, update, sessionUser, callback) => {
     throw new Error('Invalid User Id');
   }
 
-  const userUpdate = cloneDeep(update);
-  userUpdate.auditDetails = generateTfmUserAuditDetails(sessionUser._id);
+  const userUpdate = {
+    ...update,
+    auditDetails: generateTfmUserAuditDetails(sessionUser._id)
+  };
   const collection = await db.getCollection('tfm-users');
 
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
@@ -127,7 +128,7 @@ exports.incrementFailedLoginCount = async (user) => {
   }
 
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
-  const thresholdReached = (failureCount >= businessRules.loginFailureCount);
+  const thresholdReached = failureCount >= businessRules.loginFailureCount;
 
   const collection = await db.getCollection('tfm-users');
   const update = {

@@ -41,7 +41,7 @@ exports.create = async (req, res) => {
     created: getUnixTime(new Date()),
     auditDetails: {
       lastUpdatedAt: new Date(),
-      lastUpdatedByPortalUserId: null,
+      noUserLoggedIn: true,
     },
   };
 

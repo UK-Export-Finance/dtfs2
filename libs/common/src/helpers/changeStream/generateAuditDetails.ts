@@ -1,18 +1,20 @@
+import { ObjectId } from 'mongodb';
+
 type AuditDetails = {
   lastUpdatedAt: Date;
-  lastUpdatedByPortalUserId?: string;
-  lastUpdatedByTfmUserId?: string;
+  lastUpdatedByPortalUserId?: ObjectId;
+  lastUpdatedByTfmUserId?: ObjectId;
   lastUpdatedByIsSystem?: boolean;
 };
 
-export const generatePortalUserAuditDetails = (userId: string): AuditDetails => ({
+export const generatePortalUserAuditDetails = (userId: string | ObjectId): AuditDetails => ({
   lastUpdatedAt: new Date(),
-  lastUpdatedByPortalUserId: userId,
+  lastUpdatedByPortalUserId: new ObjectId(userId),
 });
 
-export const generateTfmUserAuditDetails = (userId: string): AuditDetails => ({
+export const generateTfmUserAuditDetails = (userId: string | ObjectId): AuditDetails => ({
   lastUpdatedAt: new Date(),
-  lastUpdatedByTfmUserId: userId,
+  lastUpdatedByTfmUserId: new ObjectId(userId),
 });
 
 export const generateSystemAuditDetails = (): AuditDetails => ({
