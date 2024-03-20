@@ -1,10 +1,12 @@
+const escapeStringRegexp = require('escape-string-regexp');
+
 /**
  * regex
  * Email regex.
  * @param {String} email
  * @returns {Object} Regular expression
  */
-const regex = (email) => new RegExp(`^${email}$`, 'i');
+const regex = (email) => new RegExp(`^${escapeStringRegexp(email)}$`, 'i');
 
 /**
  * generateArrayOfEmailsRegex
