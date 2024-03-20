@@ -1,26 +1,27 @@
 import { Response } from 'express';
-import { getUtilisationReportDetailsById } from '../../../services/repositories/utilisation-reports-repo';
+import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
+import { mapUtilisationReportEntityToGetUtilisationReportResponse } from '../../../mapping/mapUtilisationReport';
 
-type GetUtilisationReportByIdRequest = CustomExpressRequest<{
+export type GetUtilisationReportByIdRequest = CustomExpressRequest<{
   params: {
-    _id: string;
+    id: string;
   };
 }>;
 
 export const getUtilisationReportById = async (req: GetUtilisationReportByIdRequest, res: Response) => {
-  const { _id } = req.params;
+  const { id } = req.params;
 
   try {
-    const utilisationReport = await getUtilisationReportDetailsById(_id);
+    const utilisationReport = await UtilisationReportRepo.findOneBy({ id: Number(id) });
 
     if (!utilisationReport) {
       return res.status(404).send();
     }
 
-    return res.status(200).send(utilisationReport);
+    return res.status(200).send(mapUtilisationReportEntityToGetUtilisationReportResponse(utilisationReport));
   } catch (error) {
-    const errorMessage = `Failed to get utilisation report with _id '${_id}'`;
+    const errorMessage = `Failed to get utilisation report with id '${id}'`;
     console.error(errorMessage, error);
     return res.status(500).send(errorMessage);
   }

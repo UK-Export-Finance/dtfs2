@@ -12,7 +12,7 @@ const MockResponse = () => ({
 });
 
 const MockRequest = () => ({
-  params: { dealId: '123' },
+  params: { dealId: '1234567890abcdf123456789' },
   query: {},
   session: {
     user: {
@@ -26,7 +26,7 @@ const MockRequest = () => ({
 });
 
 const MockRequestChecker = () => ({
-  params: { dealId: '123' },
+  params: { dealId: '1234567890abcdf123456789' },
   query: {},
   session: {
     user: {
@@ -39,7 +39,7 @@ const MockRequestChecker = () => ({
 });
 
 const MockRequestUrl = (url) => ({
-  params: { dealId: '123' },
+  params: { dealId: '1234567890abcdf123456789' },
   query: {},
   url,
   session: {
@@ -53,7 +53,7 @@ const MockRequestUrl = (url) => ({
 });
 
 const MockRequestUrlChecker = (url) => ({
-  params: { dealId: '123' },
+  params: { dealId: '1234567890abcdf123456789' },
   query: {},
   url,
   session: {
@@ -225,7 +225,7 @@ const MockFacilityResponseNotChangedIssued = {
 
 const MockApplicationResponseSubmission = () => {
   const res = {};
-  res._id = '1234';
+  res._id = '1234567890abcdf123456789';
   res.exporter = {};
   res.bank = { id: 'BANKID' };
   res.bankInternalRefName = 'My test';
@@ -243,7 +243,7 @@ const MockApplicationResponseSubmission = () => {
 
 const MockSubmissionRequest = () => ({
   params: {
-    dealId: '1234',
+    dealId: '1234567890abcdf123456789',
   },
   query: {},
   body: {
@@ -275,7 +275,7 @@ const MockRequestUnissued = () => {
   req.params = {};
   req.query = {};
   req.body = {};
-  req.params.dealId = '123';
+  req.params.dealId = '1234567890abcdf123456789';
   req.params.facilityId = 'xyz';
   req.params.facilityName = 'UKEF123';
   req.session = {
@@ -291,7 +291,7 @@ const MockRequestUnissued = () => {
   req.success = {
     message: 'UKEF123 is updated',
   };
-  req.url = '/gef/application-details/123/unissued-facilities';
+  req.url = '/gef/application-details/1234567890abcdf123456789/unissued-facilities';
   return req;
 };
 
@@ -300,7 +300,7 @@ const MockRequestIssuedToUnissued = () => {
   req.params = {};
   req.query = {};
   req.body = {};
-  req.params.dealId = '123';
+  req.params.dealId = '1234567890abcdf123456789';
   req.params.facilityId = 'xyz';
   req.params.facilityName = 'UKEF123';
   req.session = {
@@ -363,7 +363,7 @@ const MockExpectedFacilityRenderChange = (change) => ({
   coverEndDateMonth: '1',
   coverEndDateYear: '2030',
   facilityTypeString: 'cash',
-  dealId: '123',
+  dealId: '1234567890abcdf123456789',
   facilityId: 'xyz',
   status: 'change',
   change,

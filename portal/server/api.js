@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const axios = require('axios');
 const FormData = require('form-data');
 const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName, isValidBankId } = require('./validation/validate-ids');
@@ -183,26 +184,38 @@ const updateDealName = async (id, newName, token) => {
   };
 };
 
+/**
+ * Updates the status of a deal by making an API call to a specified URL.
+ * @param {Object} statusUpdate - An object containing the `_id` property representing
+ * the deal ID and the `status` property representing the new status of the deal.
+ * @param {string} token - A token used for authorization in the API call.
+ * @returns {Object|boolean} - An object containing the `status` code and the `data` from the API response, or `false` if the `_id` is not valid.
+ */
 const updateDealStatus = async (statusUpdate, token) => {
   if (!isValidMongoId(statusUpdate._id)) {
     console.error('Update deal status API call failed for id %s', statusUpdate._id);
     return false;
   }
 
-  const response = await axios({
-    method: 'put',
-    url: `${PORTAL_API_URL}/v1/deals/${statusUpdate._id}/status`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-    data: statusUpdate,
-  });
+  try {
+    const response = await axios.put(`${PORTAL_API_URL}/v1/deals/${statusUpdate._id}/status`, statusUpdate, {
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+    });
 
-  return {
-    status: response.status,
-    data: response.data,
-  };
+    return {
+      status: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    console.error('❌ Unable to update the deal status of deal %o', error);
+    return {
+      status: HttpStatusCode.InternalServerError,
+      data: null,
+    };
+  }
 };
 
 const getSubmissionDetails = async (id, token) => {
@@ -850,9 +863,7 @@ const uploadUtilisationReportData = async (uploadingUser, reportPeriod, csvData,
     formData.append('formattedReportPeriod', formattedReportPeriod);
 
     const buffer = Buffer.from(csvFileBuffer);
-    const month = reportPeriod.start.month === reportPeriod.end.month
-      ? `${reportPeriod.start.month}`
-      : `${reportPeriod.start.month}_${reportPeriod.end.month}`;
+    const month = reportPeriod.start.month === reportPeriod.end.month ? `${reportPeriod.start.month}` : `${reportPeriod.start.month}_${reportPeriod.end.month}`;
     const filename = `${reportPeriod.start.year}_${month}_${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}_${uploadingUser.bank.name}_utilisation_report.csv`;
     formData.append('csvFile', buffer, { filename });
 
@@ -925,7 +936,7 @@ const getDueReportPeriodsByBankId = async (token, bankId) => {
 const getNextReportPeriodByBankId = async (token, bankId) => {
   if (!isValidBankId(bankId)) {
     throw new Error(`Getting next report period failed for id ${bankId}`);
-  };
+  }
 
   const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/next-report-period`, {
     headers: {
@@ -936,8 +947,8 @@ const getNextReportPeriodByBankId = async (token, bankId) => {
   return response.data;
 };
 
-const downloadUtilisationReport = async (userToken, bankId, _id) =>
-  await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-report-download/${_id}`, {
+const downloadUtilisationReport = async (userToken, bankId, id) =>
+  await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-report-download/${id}`, {
     responseType: 'stream',
     headers: { Authorization: userToken },
   });

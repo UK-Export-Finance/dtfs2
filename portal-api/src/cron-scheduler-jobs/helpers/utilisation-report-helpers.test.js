@@ -216,7 +216,7 @@ describe('utilisation-report-helpers', () => {
       // Assert
       expect(api.getUtilisationReports).toHaveBeenCalledWith(bank.id, {
         reportPeriod,
-        excludeNotUploaded: true,
+        excludeNotReceived: true,
       });
       expect(result).toBe(false);
     });
@@ -237,7 +237,7 @@ describe('utilisation-report-helpers', () => {
       // Assert
       expect(api.getUtilisationReports).toHaveBeenCalledWith(bank.id, {
         reportPeriod,
-        excludeNotUploaded: true,
+        excludeNotReceived: true,
       });
       expect(result).toBe(true);
     });

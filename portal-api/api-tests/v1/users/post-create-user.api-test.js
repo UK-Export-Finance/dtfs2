@@ -12,23 +12,25 @@ const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { ADMIN } = require('../../../src/v1/roles/roles');
 const { STATUS } = require('../../../src/constants/user');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const withValidateUsernameAndEmailTests = require('./validate-username-and-email.api-tests');
+const { withValidateEmailIsUniqueTests } = require('./with-validate-email-is-unique.api-tests');
+const { withValidateUsernameAndEmailMatchTests } = require('./with-validate-username-and-email-match.api-tests');
+const { withValidatePasswordWhenCreatingUserTests } = require('./with-validate-password.api-tests');
+const { withValidateEmailIsCorrectFormatTests } = require('./with-validate-email-is-correct-format.api-tests').default;
 
 const MOCK_USER = users.barclaysBankMaker1;
 
-const PASSWORD_ERROR = {
-  text: 'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
-};
 const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: "You cannot combine 'Read-only' with any of the other roles" };
 
 const BASE_URL = '/v1/users';
 describe('a user', () => {
   let aNonAdmin;
+  let anAdmin;
 
   beforeAll(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
     const testUsers = await testUserCache.initialise(app);
     aNonAdmin = testUsers().withoutRole(ADMIN).one();
+    anAdmin = testUsers().withRole(ADMIN).one();
   });
 
   beforeEach(async () => {
@@ -45,91 +47,29 @@ describe('a user', () => {
       makeRequestWithAuthHeader: (authHeader) => post(BASE_URL, MOCK_USER, { headers: { Authorization: authHeader } }),
     });
 
-    describe('when validating the password', () => {
-      it('rejects if the provided password contains zero numeric characters', async () => {
-        const newUser = {
-          ...MOCK_USER,
-          password: 'No-numeric-characters',
-        };
+    withValidatePasswordWhenCreatingUserTests({ payload: MOCK_USER, makeRequest: async (user) => await createUser(user) });
 
-        const { status, body } = await createUser(newUser);
-
-        expect(status).toEqual(400);
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR);
-      });
-
-      it('rejects if the provided password contains zero upper-case characters', async () => {
-        const newUser = {
-          ...MOCK_USER,
-          password: '0-upper-case-characters',
-        };
-
-        const { status, body } = await createUser(newUser);
-
-        expect(status).toEqual(400);
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR);
-      });
-
-      it('rejects if the provided password contains zero lower-case characters', async () => {
-        const newUser = {
-          ...MOCK_USER,
-          password: '0-LOWER-CASE-CHARACTERS',
-        };
-
-        const { status, body } = await createUser(newUser);
-
-        expect(status).toEqual(400);
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR);
-      });
-
-      it('rejects if the provided password contains zero special characters', async () => {
-        const newUser = {
-          ...MOCK_USER,
-          password: '0specialCharacters',
-        };
-
-        const { status, body } = await createUser(newUser);
-
-        expect(status).toEqual(400);
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR);
-      });
-
-      it('rejects if the provided password contains fewer than 8 characters', async () => {
-        const newUser = {
-          ...MOCK_USER,
-          password: '1234567',
-        };
-
-        const { status, body } = await createUser(newUser);
-
-        expect(status).toEqual(400);
-        expect(body.success).toEqual(false);
-        expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR);
-      });
+    withValidateEmailIsUniqueTests({
+      payload: MOCK_USER,
+      makeRequest: async (user) => await createUser(user),
+      getAdminUser: () => anAdmin,
     });
 
-    withValidateUsernameAndEmailTests({
-      createRequestBodyWithUpdatedField: ({ fieldToUpdate, valueToSetField }) => produce(MOCK_USER, (draftRequest) => {
-          draftRequest.username = 'AValid@ukexportfinance.gov.uk';
-          draftRequest.email = 'Avalid@ukepxortfinance.gov.uk';
-          draftRequest[fieldToUpdate] = valueToSetField;
+    withValidateUsernameAndEmailMatchTests({
+      createPayloadWithUpdatedEmailAddress: (email) =>
+        produce(MOCK_USER, (draftRequest) => {
+          draftRequest.email = email;
         }),
       makeRequest: async (user) => await createUser(user),
     });
-    describe('when a user already exists', () => {
-      it('returns a 400', async () => {
-        // User creation - first instance
-        const first = await createUser(MOCK_USER);
-        expect(first.status).toEqual(200);
 
-        // User creation - second instance
-        const second = await createUser(MOCK_USER);
-        expect(second.status).toEqual(400);
-      });
+    withValidateEmailIsCorrectFormatTests({
+      createPayloadWithUpdatedEmailAddress: (email) =>
+        produce(MOCK_USER, (draftRequest) => {
+          draftRequest.username = email;
+          draftRequest.email = email;
+        }),
+      makeRequest: async (user) => await createUser(user),
     });
 
     it.each(NON_READ_ONLY_ROLES)('rejects if the user creation request has the read-only role and the %s role', async (otherRole) => {

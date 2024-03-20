@@ -4,3 +4,4 @@ export * from './eStore.constant';
 export * from './deal.constant';
 export * from './emailTemplates.constant';
 export * from './amendment.constant';
+export * from './errors.constant';

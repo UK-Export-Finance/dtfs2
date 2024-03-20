@@ -50,7 +50,7 @@ const previousReportDetails = generateReports(new Date('2020-01-01'), new Date('
 
 const february2023ReportDetails = [
   {
-    bank: BANK1,
+    bankId: BANK1.id,
     reportPeriod: {
       start: {
         month: 2,
@@ -61,10 +61,8 @@ const february2023ReportDetails = [
         year: 2023,
       },
     },
-    dateUploaded: new Date(2023, 3),
-    uploadedBy: BANK1_PAYMENT_REPORT_OFFICER1,
-    azureFileInfo: null,
     status: 'REPORT_NOT_RECEIVED',
+    updatedByUserId: `SYSTEM`
   },
 ];
 

@@ -13,17 +13,12 @@ export const postAuditDetails: (changeStreamDocument: ChangeStreamDocument) => P
   if (!AUDIT_API_URL || !AUDIT_API_USERNAME || !AUDIT_API_PASSWORD) {
     throw new InvalidEnvironmentVariableError('AUDIT_API_URL, AUDIT_API_USERNAME or AUDIT_API_PASSWORD not set');
   }
-  if (
-    changeStreamDocument.operationType !== 'insert' &&
-    changeStreamDocument.operationType !== 'update' &&
-    changeStreamDocument.operationType !== 'replace' &&
-    changeStreamDocument.operationType !== 'delete'
-  ) {
+  if (changeStreamDocument.operationType !== 'insert' && changeStreamDocument.operationType !== 'update' && changeStreamDocument.operationType !== 'replace') {
     console.info('Change stream document is not suitable event for audit API, skipping');
     return;
   }
 
-  const fullDocument = changeStreamDocument.operationType !== 'delete' ? changeStreamDocument.fullDocument : null;
+  const { fullDocument } = changeStreamDocument;
   console.info('Sending change stream update to API for document', changeStreamDocument);
 
   const authorizationHeader = Buffer.from(`${AUDIT_API_USERNAME}:${AUDIT_API_PASSWORD}`).toString('base64');
@@ -35,7 +30,8 @@ export const postAuditDetails: (changeStreamDocument: ChangeStreamDocument) => P
       integrationHubItemId: changeStreamDocument.documentKey._id.toString(),
       integrationHubCollectionName: changeStreamDocument.ns.coll,
       integrationHubProcess: 'dtfs',
-      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'Content-Type': 'text/plain',
     },
     data: fullDocument,
   });

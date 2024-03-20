@@ -12,6 +12,7 @@ const HTTP_ERROR_CAUSES = require('./http-error-causes');
 const PASSPORT_VALIDATION_RESULTS = require('./passport-validation-results');
 const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('./utilisation-report-reconciliation-status');
 const DATE_FORMATS = require('./date-formats');
+const NUMBER = require('./number');
 
 module.exports = {
   FACILITIES,
@@ -29,4 +30,5 @@ module.exports = {
   PASSPORT_VALIDATION_RESULTS,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   DATE_FORMATS,
+  NUMBER,
 };

@@ -13,7 +13,7 @@ const MONTHLY_REPORT_PERIOD_SCHEDULE = [
   { startMonth: 12, endMonth: 12 },
 ];
 
-const BANKS = [
+const MOCK_BANKS = [
   {
     id: '956',
     name: 'Barclays Bank',
@@ -161,4 +161,4 @@ const BANKS = [
   },
 ];
 
-module.exports = BANKS;
+module.exports = MOCK_BANKS;

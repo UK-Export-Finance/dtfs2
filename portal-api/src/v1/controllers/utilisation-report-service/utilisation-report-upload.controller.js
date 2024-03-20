@@ -108,34 +108,33 @@ const uploadReportAndSendNotification = async (req, res) => {
       return res.status(400).send();
     }
 
-    // If a report has already been uploaded, we should not overwrite it
-    const uploadedReportsInReportPeriod = await api.getUtilisationReports(parsedUser?.bank?.id, {
+    const bankId = parsedUser?.bank?.id;
+
+    const existingReports = await api.getUtilisationReports(bankId, {
       reportPeriod: parsedReportPeriod,
-      excludeNotUploaded: true,
+      excludeNotReceived: true,
     });
-    if (uploadedReportsInReportPeriod.length > 0) {
-      return res.status(409).send('Report for the supplied report period has already been uploaded');
+
+    if (existingReports.length !== 1) {
+      return res.status(500).send(`Expected 1 report but found ${existingReports.length} with bank ID ${bankId} and report period '${parsedReportPeriod}'`);
     }
 
-    const fileInfo = await saveFileToAzure(file, parsedUser.bank.id);
+    const existingReport = existingReports[0];
+
+    const fileInfo = await saveFileToAzure(file, bankId);
 
     const azureFileInfo = {
       ...fileInfo,
       mimetype: file.mimetype,
     };
 
-    const saveDataResponse = await api.saveUtilisationReport(parsedReportData, parsedReportPeriod, parsedUser, azureFileInfo);
+    const saveDataResponse = await api.saveUtilisationReport(existingReport.id, parsedReportData, parsedUser, azureFileInfo);
 
-    if (saveDataResponse.status !== 201) {
-      const status = saveDataResponse.status || 500;
-      console.error('Failed to save utilisation report: %O', saveDataResponse);
-      return res.status(status).send('Failed to save utilisation report');
-    }
     await sendEmailToPdcInputtersEmail(parsedUser?.bank?.name, formattedReportPeriod);
     const { paymentOfficerEmail } = await sendEmailToBankPaymentOfficerTeam(
       formattedReportPeriod,
       parsedUser?.bank?.id,
-      new Date(saveDataResponse.data.dateUploaded),
+      new Date(saveDataResponse.dateUploaded),
       parsedUser,
     );
     return res.status(201).send({ paymentOfficerEmail });

@@ -1,10 +1,10 @@
-const db = require('../../../../drivers/db-client');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const db = require('../../../../drivers/db-client').default;
 const DEFAULTS = require('../../../defaults');
 const getDealErrors = require('../../../validation/create-deal');
-const { DB_COLLECTIONS } = require('../../../../constants');
 
 const createDeal = async (deal, maker) => {
-  const collection = await db.getCollection(DB_COLLECTIONS.DEALS);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
   const { details } = deal;
 

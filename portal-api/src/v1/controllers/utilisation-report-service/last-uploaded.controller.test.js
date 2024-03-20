@@ -102,7 +102,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
         },
       });
 
-    const excludeNotUploaded = true;
+    const excludeNotReceived = true;
 
     beforeEach(() => {
       jest.resetAllMocks();
@@ -121,7 +121,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       await getLastUploadedReportByBankId(req, res);
 
       // Assert
-      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotUploaded });
+      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotReceived });
 
       // eslint-disable-next-line no-underscore-dangle
       expect(res._getStatusCode()).toBe(errorStatusCode);
@@ -136,7 +136,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       await getLastUploadedReportByBankId(req, res);
 
       // Assert
-      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotUploaded });
+      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotReceived });
 
       // eslint-disable-next-line no-underscore-dangle
       expect(res._getStatusCode()).toBe(500);
@@ -155,7 +155,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       await getLastUploadedReportByBankId(req, res);
 
       // Assert
-      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotUploaded });
+      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotReceived });
 
       // eslint-disable-next-line no-underscore-dangle
       expect(res._getStatusCode()).toBe(200);

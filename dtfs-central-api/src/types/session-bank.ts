@@ -1,3 +1,1 @@
-import { Bank } from './db-models/banks';
-
-export type SessionBank = Pick<Bank, 'id' | 'name'>;
+export { SessionBank } from '@ukef/dtfs2-common';

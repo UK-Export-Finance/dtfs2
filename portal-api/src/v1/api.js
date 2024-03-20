@@ -229,7 +229,7 @@ const tfmDealSubmit = async (dealId, dealType, checker) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to submit tfm deal %s', error);
+    console.error('Unable to submit deal %s to TFM %o', dealId, error);
     return false;
   }
 };
@@ -249,28 +249,39 @@ const findLatestGefMandatoryCriteria = async () => {
   }
 };
 
-const saveUtilisationReport = async (reportData, reportPeriod, user, fileInfo) => {
+/**
+ * Saves a utilisation report to the database
+ * @param {number} reportId - The report id
+ * @param {object} reportData - The report data
+ * @param {object} user - The user object
+ * @param {import('@ukef/dtfs2-common').AzureFileInfo} fileInfo - The azure file info
+ * @returns {Promise<import('./api-response-types').SaveUtilisationReportResponseBody>}
+ */
+const saveUtilisationReport = async (reportId, reportData, user, fileInfo) => {
   try {
-    return await axios({
+    const response = await axios({
       method: 'post',
       url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports`,
       headers: headers.central,
       data: {
+        reportId,
         reportData,
-        reportPeriod,
         user,
         fileInfo,
       },
     });
-  } catch ({ response }) {
-    return { status: response?.status || 500 };
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to save utilisation report', error);
+    throw error;
   }
 };
 
 /**
  * @typedef {Object} GetUtilisationReportsOptions
  * @property {import('../types/utilisation-reports').ReportPeriod} [reportPeriod] - a report period to filter reports by
- * @property {boolean} [excludeNotUploaded] - whether or not to exclude reports which have not been uploaded
+ * @property {boolean} [excludeNotReceived] - whether or not to exclude reports which have not been uploaded
  */
 
 /**
@@ -282,10 +293,11 @@ const saveUtilisationReport = async (reportData, reportPeriod, user, fileInfo) =
  * Returned reports are ordered by year and month ascending.
  * @param {string} bankId
  * @param {GetUtilisationReportsOptions} [options]
+ * @returns {Promise<import('./api-response-types').UtilisationReportResponseBody[]>}
  */
 const getUtilisationReports = async (bankId, options) => {
   const reportPeriod = options?.reportPeriod;
-  const excludeNotUploaded = options?.excludeNotUploaded;
+  const excludeNotReceived = options?.excludeNotReceived;
 
   try {
     if (!isValidBankId(bankId)) {
@@ -298,12 +310,12 @@ const getUtilisationReports = async (bankId, options) => {
       throw new Error('Invalid report period provided: %s', reportPeriod);
     }
 
-    if (excludeNotUploaded && typeof excludeNotUploaded !== 'boolean') {
-      console.error('Get utilisation reports failed with the following excludeNotUploaded query: %s', excludeNotUploaded);
-      throw new Error(`Invalid excludeNotUploaded provided: ${excludeNotUploaded} (expected a boolean)`);
+    if (excludeNotReceived && typeof excludeNotReceived !== 'boolean') {
+      console.error('Get utilisation reports failed with the following excludeNotReceived query: %s', excludeNotReceived);
+      throw new Error(`Invalid excludeNotReceived provided: ${excludeNotReceived} (expected a boolean)`);
     }
 
-    const params = { reportPeriod, excludeNotUploaded };
+    const params = { reportPeriod, excludeNotReceived };
 
     const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports`, {
       headers: headers.central,
@@ -316,19 +328,20 @@ const getUtilisationReports = async (bankId, options) => {
   }
 };
 
-const getUtilisationReportById = async (_id) => {
+/**
+ * Gets utilisation report by id
+ * @param {number} id
+ * @returns {Promise<import('./api-response-types').UtilisationReportResponseBody>}
+ */
+const getUtilisationReportById = async (id) => {
   try {
-    if (!isValidMongoId(_id)) {
-      throw new Error(`Invalid MongoDB _id provided: '${_id}'`);
-    }
-
-    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${_id}`, {
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${id}`, {
       headers: headers.central,
     });
 
     return response.data;
   } catch (error) {
-    console.error(`Unable to get utilisation report with MongoDB _id '${_id}'`, error);
+    console.error('Unable to get utilisation report with id %s: %O', id, error);
     throw error;
   }
 };

@@ -1,22 +1,18 @@
+import { UtilisationReportEntity, UtilisationReportEntityMockBuilder, Bank, FeeRecordEntity, FeeRecordEntityMockBuilder } from '@ukef/dtfs2-common';
 import { MOCK_BANKS } from '../../../../../api-tests/mocks/banks';
-import {
-  getOpenReportsBeforeReportPeriodForBankId,
-  getOneUtilisationReportDetailsByBankId,
-} from '../../../../services/repositories/utilisation-reports-repo';
-import { MOCK_UTILISATION_REPORT } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-reports';
-import { getMockUtilisationDataForReport } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-data';
-import { getAllUtilisationDataForReport } from '../../../../services/repositories/utilisation-data-repo';
+import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
+import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { getAllReportsForSubmissionMonth, getPreviousOpenReportsBySubmissionMonth } from './helpers';
 import { IsoMonthStamp } from '../../../../types/date';
-import { Bank } from '../../../../types/db-models/banks';
-import { UtilisationReport } from '../../../../types/db-models/utilisation-reports';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
 
-jest.mock('../../../../services/repositories/banks-repo');
-jest.mock('../../../../services/repositories/utilisation-reports-repo');
-jest.mock('../../../../services/repositories/utilisation-data-repo');
+jest.mock('../../../../repositories/banks-repo');
+jest.mock('../../../../repositories/utilisation-reports-repo');
+jest.mock('../../../../repositories/utilisation-data-repo');
 
 describe('get-utilisation-reports-reconciliation-summary.controller helper', () => {
+  const getMockFeeRecordForReport = (report: UtilisationReportEntity): FeeRecordEntity => FeeRecordEntityMockBuilder.forReport(report).build();
+
   afterEach(() => {
     jest.resetAllMocks();
   });
@@ -28,8 +24,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       // Arrange
       const banks: Bank[] = [MOCK_BANKS.BARCLAYS];
 
-      jest.mocked(getOneUtilisationReportDetailsByBankId).mockResolvedValue(null);
-      jest.mocked(getOpenReportsBeforeReportPeriodForBankId).mockResolvedValue([]);
+      jest.spyOn(UtilisationReportRepo, 'findOpenReportsBeforeReportPeriodStartForBankId').mockResolvedValue([]);
 
       const expectedError = new Error(`Failed to get report for bank with id ${MOCK_BANKS.BARCLAYS.id} for submission month ${submissionMonth}`);
 
@@ -41,18 +36,11 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       // Arrange
       const banks = [MOCK_BANKS.BARCLAYS, MOCK_BANKS.HSBC];
 
-      const barclaysReport: UtilisationReport = {
-        ...MOCK_UTILISATION_REPORT,
-        bank: { id: MOCK_BANKS.BARCLAYS.id, name: MOCK_BANKS.BARCLAYS.name },
-        status: 'RECONCILIATION_IN_PROGRESS',
-      };
-      const hsbcReport: UtilisationReport = {
-        ...MOCK_UTILISATION_REPORT,
-        bank: { id: MOCK_BANKS.HSBC.id, name: MOCK_BANKS.HSBC.name },
-        status: 'PENDING_RECONCILIATION',
-      };
+      const barclaysReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withBankId(MOCK_BANKS.BARCLAYS.id).build();
+      const hsbcReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withBankId(MOCK_BANKS.HSBC.id).build();
+
       // eslint-disable-next-line @typescript-eslint/require-await
-      jest.mocked(getOneUtilisationReportDetailsByBankId).mockImplementation(async (bankId) => {
+      jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod').mockImplementation(async (bankId) => {
         switch (bankId) {
           case MOCK_BANKS.BARCLAYS.id:
             return barclaysReport;
@@ -62,10 +50,9 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
             return null;
         }
       });
+      jest.spyOn(FeeRecordRepo, 'findByReport').mockImplementation((report) => Promise.resolve([getMockFeeRecordForReport(report)]));
 
-      jest.mocked(getAllUtilisationDataForReport).mockImplementation((report) => Promise.resolve([getMockUtilisationDataForReport(report)]));
-
-      jest.mocked(getOpenReportsBeforeReportPeriodForBankId).mockResolvedValue([]);
+      jest.spyOn(UtilisationReportRepo, 'findOpenReportsBeforeReportPeriodStartForBankId').mockResolvedValue([]);
 
       // Act
       const result = await getAllReportsForSubmissionMonth(banks, submissionMonth);
@@ -75,18 +62,18 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         submissionMonth,
         items: [
           {
-            reportId: barclaysReport._id,
-            bank: barclaysReport.bank,
+            reportId: barclaysReport.id,
+            bank: { id: MOCK_BANKS.BARCLAYS.id, name: MOCK_BANKS.BARCLAYS.name },
             status: barclaysReport.status,
-            dateUploaded: barclaysReport.dateUploaded,
+            dateUploaded: barclaysReport.dateUploaded ?? undefined,
             totalFeesReported: 1,
             reportedFeesLeftToReconcile: 1,
           },
           {
-            reportId: hsbcReport._id,
-            bank: hsbcReport.bank,
+            reportId: hsbcReport.id,
+            bank: { id: MOCK_BANKS.HSBC.id, name: MOCK_BANKS.HSBC.name },
             status: hsbcReport.status,
-            dateUploaded: hsbcReport.dateUploaded,
+            dateUploaded: hsbcReport.dateUploaded ?? undefined,
             totalFeesReported: 1,
             reportedFeesLeftToReconcile: 1,
           },
@@ -101,11 +88,9 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       const banks: Bank[] = [MOCK_BANKS.BARCLAYS];
       const currentSubmissionMonth: IsoMonthStamp = '2023-12';
 
-      const augustPeriodReport: UtilisationReport = {
-        ...MOCK_UTILISATION_REPORT,
-        bank: MOCK_BANKS.BARCLAYS,
-        status: 'RECONCILIATION_IN_PROGRESS',
-        reportPeriod: {
+      const augustPeriodReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
+        .withBankId(MOCK_BANKS.BARCLAYS.id)
+        .withReportPeriod({
           start: {
             month: 8,
             year: 2023,
@@ -114,14 +99,12 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
             month: 8,
             year: 2023,
           },
-        },
-      };
+        })
+        .build();
 
-      const septemberPeriodReport: UtilisationReport = {
-        ...MOCK_UTILISATION_REPORT,
-        bank: MOCK_BANKS.BARCLAYS,
-        status: 'PENDING_RECONCILIATION',
-        reportPeriod: {
+      const septemberPeriodReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+        .withBankId(MOCK_BANKS.BARCLAYS.id)
+        .withReportPeriod({
           start: {
             month: 9,
             year: 2023,
@@ -130,14 +113,12 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
             month: 9,
             year: 2023,
           },
-        },
-      };
+        })
+        .build();
 
-      const octoberPeriodReport: UtilisationReport = {
-        ...MOCK_UTILISATION_REPORT,
-        bank: MOCK_BANKS.BARCLAYS,
-        status: 'REPORT_NOT_RECEIVED',
-        reportPeriod: {
+      const octoberPeriodReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+        .withBankId(MOCK_BANKS.BARCLAYS.id)
+        .withReportPeriod({
           start: {
             month: 10,
             year: 2023,
@@ -146,13 +127,13 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
             month: 10,
             year: 2023,
           },
-        },
-      };
+        })
+        .build();
 
-      const openReports: UtilisationReport[] = [augustPeriodReport, septemberPeriodReport, octoberPeriodReport];
+      const openReports: UtilisationReportEntity[] = [augustPeriodReport, septemberPeriodReport, octoberPeriodReport];
 
-      jest.mocked(getOpenReportsBeforeReportPeriodForBankId).mockResolvedValue(openReports);
-      jest.mocked(getAllUtilisationDataForReport).mockImplementation((report) => Promise.resolve([getMockUtilisationDataForReport(report)]));
+      jest.spyOn(UtilisationReportRepo, 'findOpenReportsBeforeReportPeriodStartForBankId').mockResolvedValue(openReports);
+      jest.spyOn(FeeRecordRepo, 'findByReport').mockImplementation((report) => Promise.resolve([getMockFeeRecordForReport(report)]));
 
       // Act
       const result = await getPreviousOpenReportsBySubmissionMonth(banks, currentSubmissionMonth);
@@ -187,21 +168,20 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       ]);
     });
 
-    const getOpenReport = ({ bank, month }: { bank: Bank; month: number }): UtilisationReport => ({
-      ...MOCK_UTILISATION_REPORT,
-      bank,
-      reportPeriod: {
-        start: {
-          month,
-          year: 2023,
-        },
-        end: {
-          month,
-          year: 2023,
-        },
-      },
-      status: 'PENDING_RECONCILIATION',
-    });
+    const getOpenReport = ({ bank, month }: { bank: Bank; month: number }): UtilisationReportEntity =>
+      UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+        .withBankId(bank.id)
+        .withReportPeriod({
+          start: {
+            month,
+            year: 2023,
+          },
+          end: {
+            month,
+            year: 2023,
+          },
+        })
+        .build();
 
     it('orders results by submissionMonth then bank name', async () => {
       const bankA: Bank = { ...MOCK_BANKS.BARCLAYS, id: 'A', name: 'Bank A' };
@@ -212,7 +192,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       const currentSubmissionMonth: IsoMonthStamp = '2023-12';
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      jest.mocked(getOpenReportsBeforeReportPeriodForBankId).mockImplementation((_, bankId) => {
+      jest.spyOn(UtilisationReportRepo, 'findOpenReportsBeforeReportPeriodStartForBankId').mockImplementation((bankId, _) => {
         switch (bankId) {
           case bankA.id:
             return Promise.resolve([getOpenReport({ bank: bankA, month: 10 })]);
@@ -229,7 +209,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         }
       });
 
-      jest.mocked(getAllUtilisationDataForReport).mockImplementation((report) => Promise.resolve([getMockUtilisationDataForReport(report)]));
+      jest.spyOn(FeeRecordRepo, 'findByReport').mockImplementation((report) => Promise.resolve([getMockFeeRecordForReport(report)]));
 
       // Act
       const result = await getPreviousOpenReportsBySubmissionMonth(banks, currentSubmissionMonth);

@@ -1,8 +1,7 @@
-import { asString, CronSchedulerJob, getCurrentReportPeriodForBankSchedule } from '@ukef/dtfs2-common';
-import { getOneUtilisationReportDetailsByBankId, saveNotReceivedUtilisationReport } from '../../services/repositories/utilisation-reports-repo';
-import { getAllBanks } from '../../services/repositories/banks-repo';
-import { Bank } from '../../types/db-models/banks';
+import { asString, CronSchedulerJob, getCurrentReportPeriodForBankSchedule, Bank, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { validateUtilisationReportPeriodSchedule } from './utilisation-report-period-schedule-validator';
+import { UtilisationReportRepo } from '../../repositories/utilisation-reports-repo';
+import { getAllBanks } from '../../repositories/banks-repo';
 
 const { UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE } = process.env;
 
@@ -13,7 +12,7 @@ const { UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE } = process.env;
  */
 const isCurrentBankReportMissing = async (bank: Bank): Promise<boolean> => {
   const currentReportPeriod = getCurrentReportPeriodForBankSchedule(bank.utilisationReportPeriodSchedule);
-  const currentUtilisationReportForBank = await getOneUtilisationReportDetailsByBankId(bank.id, { reportPeriod: currentReportPeriod });
+  const currentUtilisationReportForBank = await UtilisationReportRepo.findOneByBankIdAndReportPeriod(bank.id, currentReportPeriod);
   return !currentUtilisationReportForBank;
 };
 
@@ -30,7 +29,7 @@ const isValidUtilisationReportPeriodScheduleOnBank = (bank: Bank): boolean => {
     console.info('Invalid utilisation report period schedule for bank with id %s. %s', bank.id, validationError);
     return false;
   }
-}
+};
 
 /**
  * Gets the banks which are visible in TFM utilisation reports, have a valid utilisation report
@@ -40,8 +39,7 @@ const isValidUtilisationReportPeriodScheduleOnBank = (bank: Bank): boolean => {
 const getBanksWithMissingReports = async (): Promise<Bank[]> => {
   const banksVisibleInTfm = (await getAllBanks()).filter((bank) => bank.isVisibleInTfmUtilisationReports);
 
-  const banksWithValidUtilisationReportPeriodSchedule = banksVisibleInTfm
-    .filter(isValidUtilisationReportPeriodScheduleOnBank);
+  const banksWithValidUtilisationReportPeriodSchedule = banksVisibleInTfm.filter(isValidUtilisationReportPeriodScheduleOnBank);
 
   const isMissingBankReport = await Promise.all(banksWithValidUtilisationReportPeriodSchedule.map(isCurrentBankReportMissing));
   return banksVisibleInTfm.filter((bank, index) => isMissingBankReport[index]);
@@ -57,12 +55,18 @@ const createUtilisationReportForBanks = async (): Promise<void> => {
   }
 
   await Promise.all(
-    banksWithMissingReports.map(async ({ id, name, utilisationReportPeriodSchedule }) => {
+    banksWithMissingReports.map(async ({ id, utilisationReportPeriodSchedule }) => {
       console.info('Attempting to insert report for bank with id %s', id);
       const reportPeriod = getCurrentReportPeriodForBankSchedule(utilisationReportPeriodSchedule);
-      const sessionBank = { id, name };
 
-      await saveNotReceivedUtilisationReport(reportPeriod, sessionBank);
+      const newUtilisationReport = UtilisationReportEntity.createNotReceived({
+        bankId: id,
+        reportPeriod,
+        requestSource: {
+          platform: 'SYSTEM',
+        },
+      });
+      await UtilisationReportRepo.save(newUtilisationReport);
       console.info('Successfully inserted report for bank with id %s', id);
     }),
   );

@@ -1,13 +1,28 @@
-import { ObjectId } from 'mongodb';
-import { ValuesOf } from '@ukef/dtfs2-common';
-import { IsoMonthStamp, MonthAndYear } from './date';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, UTILISATION_REPORT_HEADERS } from '../constants';
-import { Currency } from './currency';
+import {
+  ValuesOf,
+  UtilisationReportReconciliationStatus,
+  UtilisationReport,
+  Prettify,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  Currency,
+  ReportPeriod,
+  AzureFileInfo,
+} from '@ukef/dtfs2-common';
+import { IsoMonthStamp } from './date';
+import { UTILISATION_REPORT_HEADERS } from '../constants';
 
-export type UtilisationReportReconciliationStatus = ValuesOf<typeof UTILISATION_REPORT_RECONCILIATION_STATUS>;
+export type GetUtilisationReportResponse = {
+  id: number;
+  bankId: string;
+  status: UtilisationReportReconciliationStatus;
+  uploadedByUserId: string | null;
+  reportPeriod: ReportPeriod;
+  azureFileInfo: AzureFileInfo | null;
+  dateUploaded: Date | null;
+};
 
 export type UtilisationReportReconciliationSummaryItem = {
-  reportId: ObjectId;
+  reportId: number;
   bank: {
     id: string;
     name: string;
@@ -23,14 +38,9 @@ export type UtilisationReportReconciliationSummary = {
   items: UtilisationReportReconciliationSummaryItem[];
 };
 
-export type ReportPeriod = {
-  start: MonthAndYear;
-  end: MonthAndYear;
-};
-
 export type ReportWithStatus = {
   status: UtilisationReportReconciliationStatus;
-  reportId: string;
+  reportId: number;
 };
 
 type UtilisationReportHeader = ValuesOf<typeof UTILISATION_REPORT_HEADERS>;
@@ -38,3 +48,11 @@ type UtilisationReportHeader = ValuesOf<typeof UTILISATION_REPORT_HEADERS>;
 export type UtilisationReportRawCsvData = {
   [HeaderKey in UtilisationReportHeader]: HeaderKey extends `${string}currency` ? Currency : string;
 };
+
+export type UtilisationReportUploadDetails = Prettify<
+  Required<
+    Pick<UtilisationReport, 'azureFileInfo' | 'dateUploaded' | 'uploadedBy'> & {
+      status: typeof UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
+    }
+  >
+>;

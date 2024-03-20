@@ -1,5 +1,5 @@
 const { PORTAL_USER_ROLES } = require('./constants.fixture');
-const MOCK_USERS = require('../../utils/mock-data-loader/portal/users');
+const MOCK_USERS = require('../../utils/mock-data-loader/portal-users');
 
 const USER_WITH_INJECTION = {
   username: '{ "$gt": "" }',
