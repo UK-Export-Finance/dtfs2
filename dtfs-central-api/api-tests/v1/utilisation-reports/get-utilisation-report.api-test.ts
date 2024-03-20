@@ -36,6 +36,7 @@ describe('/v1/utilisation-reports/:id', () => {
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
     await wipe(['users']);
     const usersCollection = await mongoDbClient.getCollection('users');
@@ -43,6 +44,7 @@ describe('/v1/utilisation-reports/:id', () => {
   });
 
   afterAll(async () => {
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
     await wipe(['users']);
   });
 

@@ -6,6 +6,10 @@ const { february2023ReportDetails } = require('../../../../fixtures/mockUtilisat
 const { BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
 
 context('Confirm and send', () => {
+  after(() => {
+    cy.removeAllUtilisationReports();
+  });
+
   describe('After logging in and submitting a valid file', () => {
     beforeEach(() => {
       cy.removeAllUtilisationReports();
@@ -43,6 +47,11 @@ context('Confirm and send', () => {
   });
 
   describe('After logging in but not submitting a file', () => {
+    before(() => {
+      cy.removeAllUtilisationReports();
+      cy.insertUtilisationReports(february2023ReportDetails);
+    });
+
     it('Should route to the Upload Report page when you try and access the confirm and send page directly', () => {
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload/confirm-and-send'));
