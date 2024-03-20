@@ -42,6 +42,7 @@ describe('/v1/tfm/deals/:id/facilities', () => {
       await api.put({
         dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
         dealId,
+        checker: 'checker-id'
       }).to('/v1/tfm/deals/submit');
 
       const { status, body } = await api.get(`/v1/tfm/deals/${dealId}/facilities`);
@@ -56,6 +57,10 @@ describe('/v1/tfm/deals/:id/facilities', () => {
         facilitySnapshot: {
           _id: facility._id,
           ...newFacility,
+        },
+        auditDetails: {
+          lastUpdatedAt: expect.any(String),
+          lastUpdatedByPortalUserId: 'checker-id',
         },
       });
 

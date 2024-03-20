@@ -187,9 +187,20 @@ const findOneDeal = async (dealId) => {
   }
 };
 
+/**
+ * @param {string} dealId - deal to update
+ * @param {Object} dealUpdate - update to make
+ * @param {Object} sessionUser - logged in user
+ * @typedef {Object} ErrorParam
+ * @property {string} message error message
+ * @property {number} status HTTP status code
+ * @param {(Error: ErrorParam) => any} onError 
+ * @returns updated deal on success, or `onError({ status, message })` on failure
+ */
 const updateDeal = async (
   dealId,
   dealUpdate,
+  sessionUser,
   onError = ({ status, message }) => ({ status, data: message }),
 ) => {
   try {
@@ -206,6 +217,7 @@ const updateDeal = async (
       headers: headers.central,
       data: {
         dealUpdate,
+        user: sessionUser,
       },
     });
 

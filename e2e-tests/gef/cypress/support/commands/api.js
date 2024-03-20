@@ -207,7 +207,7 @@ const submitDealToTfm = (dealId, dealType) =>
     .request({
       url: `${centralApiUrl()}/v1/tfm/deals/submit`,
       method: 'PUT',
-      body: { dealId, dealType },
+      body: { dealId, dealType, checker: { _id: 'test-checker-id' } },
       headers,
     })
     .then((resp) => {
@@ -220,7 +220,7 @@ const addUnderwriterCommentToTfm = (dealId, underwriterComment) =>
     .request({
       url: `${centralApiUrl()}/v1/tfm/deals/${dealId}`,
       method: 'put',
-      body: { dealUpdate: underwriterComment },
+      body: { dealUpdate: underwriterComment, user: { _id: 'test-tfm-user-id' } },
       headers,
     })
     .then((resp) => {

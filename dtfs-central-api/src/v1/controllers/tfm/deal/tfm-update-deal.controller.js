@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
+const { generateTfmUserAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
@@ -11,7 +12,15 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateDeal = async (dealId, dealChanges, existingDeal) => {
+/**
+ * 
+ * @param {string} dealId - deal to be updated
+ * @param {object} dealChanges - updates to make
+ * @param {object} existingDeal
+ * @param {object} sessionUser - user making the update
+ * @returns 
+ */
+const updateDeal = async (dealId, dealChanges, existingDeal, sessionUser) => {
   if (ObjectId.isValid(dealId)) {
     const collection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_DEALS);
 
@@ -67,9 +76,17 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
 
       dealUpdate.tfm.lastUpdated = new Date().valueOf();
     }
+    const updateQuery = {
+      ...$.flatten(withoutId(dealUpdate)),
+      $set: {
+        ...$.flatten(withoutId(dealUpdate)).$set,
+        auditDetails: generateTfmUserAuditDetails(sessionUser._id), 
+      },
+    }
+
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: { $eq: ObjectId(dealId) } },
-      $.flatten(withoutId(dealUpdate)),
+      updateQuery,
       { returnNewDocument: true, returnDocument: 'after' }
     );
 
@@ -79,27 +96,33 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
 };
 
 exports.updateDealPut = async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    const dealId = req.params.id;
+  if (!ObjectId.isValid(req.params.id)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  }
+  if (!req.body.user) {
+    return res.status(400).send({ status: 400, message: 'No logged in user provided' });
+  }
 
-    const { dealUpdate } = req.body;
+  const dealId = req.params.id;
 
-    const deal = await findOneDeal(dealId, false, 'tfm');
+  const { dealUpdate, user } = req.body;
 
-    if (deal) {
-      const response = await updateDeal(
-        dealId,
-        dealUpdate,
-        deal,
-      );
+  const deal = await findOneDeal(dealId, false, 'tfm');
 
-      const status = isNumber(response?.status, 3);
-      const code = status ? response.status : 200;
-      return res.status(code).json(response);
-    }
+  if (!deal) {
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
-  return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+
+  const response = await updateDeal(
+    dealId,
+    dealUpdate,
+    deal,
+    user,
+  );
+
+  const status = isNumber(response?.status, 3);
+  const code = status ? response.status : 200;
+  return res.status(code).json(response);
 };
 
 const updateDealSnapshot = async (deal, snapshotChanges) => {

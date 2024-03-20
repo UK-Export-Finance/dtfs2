@@ -13,7 +13,7 @@ const headers = {
 module.exports.submitDeal = (dealId, dealType, token) => cy.request({
   url: `${api()}/v1/deals/submit`,
   method: 'PUT',
-  body: { dealId, dealType },
+  body: { dealId, dealType, checker: { _id: 'test-checker-id' } },
   headers: {
     ...headers,
     Authorization: token,

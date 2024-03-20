@@ -51,6 +51,7 @@ const createAndSubmitDeals = async (deals) => {
     const submitResponse = await api.put({
       dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
       dealId: createResponse.body._id,
+      checker: { _id: 'checker-id' },
     }).to('/v1/tfm/deals/submit');
 
     expect(submitResponse.status).toEqual(200);
@@ -68,6 +69,7 @@ const updateDealsTfm = async (dealsTfmUpdate) => {
       dealUpdate: {
         tfm: deal.tfm,
       },
+      user: { _id: 'tfm-user-id' },
     }).to(`/v1/tfm/deals/${deal._id}`);
 
     expect(updateResponse.status).toEqual(200);

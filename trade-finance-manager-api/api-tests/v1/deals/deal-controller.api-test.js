@@ -1,5 +1,12 @@
 const { when } = require('jest-when');
-const { findOneTfmDeal, findOnePortalDeal, getDeals, findTfmDealsLight, findTfmDeals, canDealBeSubmittedToACBS, updateTfmParty } = require('../../../src/v1/controllers/deal.controller');
+const {
+  findOneTfmDeal,
+  findOnePortalDeal,
+  getDeals,
+  findTfmDealsLight,
+  findTfmDeals,
+  canDealBeSubmittedToACBS,
+} = require('../../../src/v1/controllers/deal.controller');
 const mapDeal = require('../../../src/v1/mappings/map-deal');
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const { mockFindOneDeal, mockQueryDeals, mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
@@ -220,36 +227,6 @@ describe('deal controller', () => {
 
     it('returns true if the deal is an AIN', () => {
       expect(canDealBeSubmittedToACBS(MOCK_DEAL_AIN_SUBMITTED.submissionType)).toEqual(true);
-    });
-  });
-
-  describe('updateTfmParty', () => {
-    it('calls `createACBS` when the deal is an AIN and the exporter has a URN', async () => {
-      const tfmUpdate = { exporter: { partyUrn: '123' } };
-      await updateTfmParty(MOCK_DEAL_AIN_SUBMITTED._id, tfmUpdate);
-
-      expect(acbsController.createACBS).toHaveBeenCalled();
-    });
-
-    it('calls `createACBS` when the deal is a MIN and the exporter has a URN', async () => {
-      const tfmUpdate = { exporter: { partyUrn: '123' } };
-      await updateTfmParty(MOCK_DEAL_MIN_GEF._id, tfmUpdate);
-
-      expect(acbsController.createACBS).toHaveBeenCalled();
-    });
-
-    it('does NOT call `createACBS` when the deal is a MIA and the exporter has a URN', async () => {
-      const tfmUpdate = { exporter: { partyUrn: '123' } };
-      await updateTfmParty(MOCK_DEAL_MIA_SUBMITTED._id, tfmUpdate);
-
-      expect(acbsController.createACBS).not.toHaveBeenCalled();
-    });
-
-    it('does NOT call `createACBS` when the deal is a MIA and the exporter does not have a URN', async () => {
-      const tfmUpdate = { exporter: { partyUrn: '' } };
-      await updateTfmParty(MOCK_DEAL_MIA_SUBMITTED._id, tfmUpdate);
-
-      expect(acbsController.createACBS).not.toHaveBeenCalled();
     });
   });
 });

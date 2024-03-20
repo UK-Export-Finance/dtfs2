@@ -3,7 +3,7 @@ const ALL_MOCK_DEALS = require('../mock-deals');
 
 module.exports = {
   mockUpdateDeal: (mockDealToReturn = undefined) => {
-    api.updateDeal.mockImplementation((dealId, updatedTfmDealData) => {
+    api.updateDeal.mockImplementation((dealId, updatedTfmDealData, sessionUser) => {
       let deal = mockDealToReturn || ALL_MOCK_DEALS.find((d) => d._id === dealId);
 
       // if stage is updated, add to the mock deal.
@@ -26,6 +26,9 @@ module.exports = {
           ...deal,
         },
         ...updatedTfmDealData,
+        auditDetails: {
+          lastUpdatedByTfmUserId: sessionUser?._id,
+        },
       };
     });
   },

@@ -81,14 +81,14 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       status,
     };
 
-    const dealWithTfmData = await addTfmDealData(updatedMappedDeal);
-    const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData);
-    const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn);
+    const dealWithTfmData = await addTfmDealData(updatedMappedDeal, checker);
+    const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData, checker);
+    const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn, checker);
     const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions);
     const updatedDealWithCreateEstore = await createEstoreSite(updatedDealWithUpdatedFacilities);
 
     if (updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-      const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
+      const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore, checker);
 
       /**
        * Current requirement only allows AIN & MIN deals to be sent to ACBS
@@ -111,10 +111,10 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
        * Update the deal with all the above modifications
        * Note: at the time of writing, some functions above update the deal, others do not.
        */
-      return api.updateDeal(dealId, updatedDealWithTasks);
+      return api.updateDeal(dealId, updatedDealWithTasks, checker);
     }
 
-    return api.updateDeal(dealId, updatedDealWithCreateEstore);
+    return api.updateDeal(dealId, updatedDealWithCreateEstore, checker);
   }
 
   if (dealHasBeenResubmit) {
@@ -190,9 +190,9 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       console.info('TFM deal %s stage has been updated to %s', dealId, updatedDealStage);
     }
 
-    return api.updateDeal(dealId, updatedDeal);
+    return api.updateDeal(dealId, updatedDeal, checker);
   }
-  return api.updateDeal(dealId, submittedDeal);
+  return api.updateDeal(dealId, submittedDeal, checker);
 };
 
 exports.submitDealAfterUkefIds = submitDealAfterUkefIds;

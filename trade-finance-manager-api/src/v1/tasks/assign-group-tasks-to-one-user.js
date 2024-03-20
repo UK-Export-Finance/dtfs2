@@ -8,7 +8,7 @@ const getAssigneeFullName = require('../helpers/get-assignee-full-name');
  * @param {String} user ID
  * @returns {Array} Updated tasks
  */
-const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId) => {
+const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId, sessionUser) => {
   const deal = await api.findOneDeal(dealId);
 
   if (!deal) {
@@ -57,7 +57,7 @@ const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId) =>
     },
   };
 
-  await api.updateDeal(dealId, tfmDealUpdate, (status, message) => {
+  await api.updateDeal(dealId, tfmDealUpdate, sessionUser, (status, message) => {
     throw new Error({ status, message });
   });
 

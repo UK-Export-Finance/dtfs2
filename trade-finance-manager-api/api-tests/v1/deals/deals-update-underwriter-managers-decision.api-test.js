@@ -91,6 +91,9 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
             stage: VALID_UNDERWRITER_MANAGERS_DECISION.decision,
           }
         }),
+        expect.objectContaining({
+          _id: expect.anything(),
+        }),
         expect.any(Function),
       );
     });

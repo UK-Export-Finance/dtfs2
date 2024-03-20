@@ -6,7 +6,7 @@ module.exports = (dealId, dealType, opts) => {
   const { username, password } = opts;
 
   login(username, password)
-    .then((token) => submitDealAfterUkefIds(dealId, dealType, null, token))
+    .then((token) => submitDealAfterUkefIds(dealId, dealType, { _id: 'test-checker-id' }, token))
     .then((deal) => {
       cy.wrap(deal).as(ALIAS_KEY.SUBMIT_DEAL);
     });

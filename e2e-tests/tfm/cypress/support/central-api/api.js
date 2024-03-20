@@ -82,6 +82,7 @@ module.exports.updateTFMDeal = (dealId, dealUpdate) =>
     method: 'PUT',
     body: {
       dealUpdate,
+      user: { _id: 'test-tfm-user-id' },
     },
     headers,
   }).then((resp) => {

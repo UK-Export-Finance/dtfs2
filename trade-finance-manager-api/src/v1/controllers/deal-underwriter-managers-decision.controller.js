@@ -10,7 +10,8 @@ const addUnderwriterManagersDecisionToDeal = ({
   decision,
   comments,
   internalComments,
-  userFullName
+  userFullName,
+  sessionUser,
 }) => {
   const managerDecisionUpdate = {
     tfm: {
@@ -27,6 +28,7 @@ const addUnderwriterManagersDecisionToDeal = ({
   return api.updateDeal(
     dealId,
     managerDecisionUpdate,
+    sessionUser,
     (status, message) => {
       throw new Error(`Updating the deal with dealId ${dealId} failed with status ${status} and message: ${message}`);
     }
@@ -109,7 +111,7 @@ const updateUnderwriterManagersDecision = async (req, res) => {
       userFullName,
     } = extractDecisionFromRequest(req);
 
-    const updatedDeal = await addUnderwriterManagersDecisionToDeal({ dealId, decision, comments, internalComments, userFullName });
+    const updatedDeal = await addUnderwriterManagersDecisionToDeal({ dealId, decision, comments, internalComments, userFullName, sessionUser: req.user });
     const mappedDeal = mapSubmittedDeal(updatedDeal);
     const { dealType, submissionType } = mappedDeal;
 

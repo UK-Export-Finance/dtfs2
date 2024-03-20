@@ -131,6 +131,7 @@ describe('/v1/tfm/deal/:id', () => {
       // add some dummy data to deal.tfm
       await api.put({
         dealUpdate: mockTfm,
+        user: mockUser,
       }).to(`/v1/tfm/deals/${dealId}`);
 
       const snapshotUpdate = {
