@@ -2,13 +2,14 @@ const { regex, generateArrayOfEmailsRegex } = require('./generateArrayOfEmailsRe
 const MOCK_USERS = require('../../../__mocks__/mock-users');
 
 const mockEmail = MOCK_USERS[0].email;
+const mockEmailInRegex = mockEmail.replace('.', '\\.');
 
 describe('generateArrayOfEmailsRegex', () => {
   describe('regex', () => {
     it('should return a regular expression', () => {
       const result = regex(mockEmail);
 
-      const expected = new RegExp(`^${mockEmail}$`, 'i');
+      const expected = new RegExp(`^${mockEmailInRegex}$`, 'i');
 
       expect(result).toEqual(expected);
     });
