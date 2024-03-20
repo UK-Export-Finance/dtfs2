@@ -27,11 +27,11 @@ export const feeRecordCsvRowToSqlEntity = ({ dataEntry, requestSource }: FeeReco
     baseCurrency: dataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY],
     facilityUtilisation: Number(dataEntry[UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION]),
     totalFeesAccruedForThePeriod: Number(dataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED]),
-    totalFeesAccruedForThePeriodCurrency: dataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY],
+    totalFeesAccruedForThePeriodCurrency: dataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY] ?? dataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY],
     totalFeesAccruedForThePeriodExchangeRate: asNumberOrDefault(dataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE], 1),
     feesPaidToUkefForThePeriod: Number(dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD]),
     feesPaidToUkefForThePeriodCurrency: dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY],
-    paymentCurrency: dataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY],
+    paymentCurrency: dataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY] ?? dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY],
     paymentExchangeRate: asNumberOrDefault(dataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE], 1),
     requestSource,
   });
