@@ -1,5 +1,85 @@
 # Changelog
 
+## [2.0.0](https://github.com/UK-Export-Finance/dtfs2/compare/v1.2.1...v2.0.0) (2024-03-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deployment:** changed branch name to prod ([#2696](https://github.com/UK-Export-Finance/dtfs2/issues/2696))
+
+### Features
+
+* **dtfs2-2960:** add check for duplicated email addresses ([#2801](https://github.com/UK-Export-Finance/dtfs2/issues/2801)) ([1a5caf6](https://github.com/UK-Export-Finance/dtfs2/commit/1a5caf62b3838168c5000ebebdad825a10309722))
+* **DTFS2-6188:** remove number generator micro-service ([#2748](https://github.com/UK-Export-Finance/dtfs2/issues/2748)) ([f392a40](https://github.com/UK-Export-Finance/dtfs2/commit/f392a4037ef5ce77c178c332e25d897b35398c40))
+* **DTFS2-6621:** ensure usernames are email addresses ([#2708](https://github.com/UK-Export-Finance/dtfs2/issues/2708)) ([324b2c1](https://github.com/UK-Export-Finance/dtfs2/commit/324b2c1d5a5538bd55702d257c6acb26477c208b))
+* **DTFS2-6862:** add cron job to delete acbs logs ([#2892](https://github.com/UK-Export-Finance/dtfs2/issues/2892)) ([1130640](https://github.com/UK-Export-Finance/dtfs2/commit/1130640b775aee64d18760131aa0aa3d8851767c))
+* **DTFS2-6965:** add change stream env vars to other docker compose files ([d1153c1](https://github.com/UK-Export-Finance/dtfs2/commit/d1153c1af536d6654553c9dcf2aab9361a341c23))
+* **DTFS2-6965:** add extra logging ([4c28177](https://github.com/UK-Export-Finance/dtfs2/commit/4c2817722d46df490cf3e48d1fb89ca7fd4406b2))
+* **DTFS2-6965:** debug statements ([c7302a4](https://github.com/UK-Export-Finance/dtfs2/commit/c7302a4d0db9b0c335ff5bc8dbc4820770a3e71e))
+* **DTFS2-6965:** fix operation types ([#2897](https://github.com/UK-Export-Finance/dtfs2/issues/2897)) ([8124694](https://github.com/UK-Export-Finance/dtfs2/commit/81246941dab6a69097d2b46e3e8342353536db8b))
+* **DTFS2-6965:** fix test.yml and remove unnecessary script volume from docker-compose ([0b74c14](https://github.com/UK-Export-Finance/dtfs2/commit/0b74c14f39c662c488a640ddf002a7fa4f759d95))
+* **DTFS2-6965:** fix tests ([6c7d24f](https://github.com/UK-Export-Finance/dtfs2/commit/6c7d24feafdbcb84e87caf76a87e273206c20e04))
+* **DTFS2-6965:** fix tests and revert docker compose changes ([b01cf20](https://github.com/UK-Export-Finance/dtfs2/commit/b01cf20146ea77d0cf2c303a88c13fccc3e53243))
+* **DTFS2-6965:** hard code uri in test.yml ([0b79cbe](https://github.com/UK-Export-Finance/dtfs2/commit/0b79cbe4ed772af3d80edc62773b67cc80793e71))
+* **DTFS2-6965:** hardcode mongodb uri temporarily ([44df02d](https://github.com/UK-Export-Finance/dtfs2/commit/44df02d3a2c721e3f99f7698515a8dde6440db35))
+* **DTFS2-6965:** increase timeout again ([52a63bd](https://github.com/UK-Export-Finance/dtfs2/commit/52a63bdfeb1f8855481c0beac44fd7c821d1a847))
+* **DTFS2-6965:** iterate over collections in database to set up changestream ([#2893](https://github.com/UK-Export-Finance/dtfs2/issues/2893)) ([2633261](https://github.com/UK-Export-Finance/dtfs2/commit/26332613aed554bf63869503a8ca1b69c99769e6))
+* **DTFS2-6965:** move env var destructuring to within function ([1dbe7f5](https://github.com/UK-Export-Finance/dtfs2/commit/1dbe7f559e4335b00f93e2ec4fbbd4d0d804081e))
+* **DTFS2-6965:** override env vars for different steps of testing ([d5c2c6b](https://github.com/UK-Export-Finance/dtfs2/commit/d5c2c6bce86d0bc4a97f999acefe93a0f1eba974))
+* **DTFS2-6965:** reduce sleep back to 60s ([8bcd9f5](https://github.com/UK-Export-Finance/dtfs2/commit/8bcd9f5aefa2f11c00ee99c0558f4ca5aed86bfb))
+* **DTFS2-6965:** refactor change stream API logic and add tests ([c377ac1](https://github.com/UK-Export-Finance/dtfs2/commit/c377ac1401d28c682e38efd0fa34acf71fc715aa))
+* **DTFS2-6965:** remove replica set from GHA db ([0b46d94](https://github.com/UK-Export-Finance/dtfs2/commit/0b46d940affd4cc40f90f8cf88109a5861ca4e4f))
+* **DTFS2-6965:** remove unnecessary env var in test.yml ([307e857](https://github.com/UK-Export-Finance/dtfs2/commit/307e85732c6d50394cb8ee5334df52a50bfbc9b5))
+* **DTFS2-6965:** revert mongo uri change ([30084a6](https://github.com/UK-Export-Finance/dtfs2/commit/30084a63fe33c98f7b0124eed345be2a4e9a9b48))
+* **DTFS2-6965:** review comments ([dabe2d1](https://github.com/UK-Export-Finance/dtfs2/commit/dabe2d1c419eb33dbda105669d0c9d394cd5aa52))
+* **DTFS2-6965:** review mark-ups ([35e6d6f](https://github.com/UK-Export-Finance/dtfs2/commit/35e6d6f16f2fc0ce561cd4f3cea90f4dbd2f6291))
+* **DTFS2-6965:** setup change stream for audit API ([#2707](https://github.com/UK-Export-Finance/dtfs2/issues/2707)) ([c7f088b](https://github.com/UK-Export-Finance/dtfs2/commit/c7f088b055ce29101ef19d438b025ced51616a03))
+* **DTFS2-6965:** setup change stream with mongodb docker file ([34dcc55](https://github.com/UK-Export-Finance/dtfs2/commit/34dcc55e50ea0ef8d09e72b19556d2dac3f4c214))
+* **DTFS2-6965:** setup mongodb change stream to send updates to audit API ([d9c810a](https://github.com/UK-Export-Finance/dtfs2/commit/d9c810a03900c81c7bc690b7e96209fe2d95da48))
+* **DTFS2-6965:** try increasing sleep on tests ([2bb4a1c](https://github.com/UK-Export-Finance/dtfs2/commit/2bb4a1c8021419b2305a0a1b6ede417c7d940f9c))
+* **DTFS2-6965:** try localhost in mongodb uri ([ea2f749](https://github.com/UK-Export-Finance/dtfs2/commit/ea2f74984eb5c15b9bcdfa6b6661f04ee9e43031))
+* **DTFS2-6965:** update api call and docker compose ([#2881](https://github.com/UK-Export-Finance/dtfs2/issues/2881)) ([9b400e7](https://github.com/UK-Export-Finance/dtfs2/commit/9b400e7fa53a09330dd5b7c18c35c5417a76dc47))
+* **DTFS2-6965:** update connection strings in app ([#2795](https://github.com/UK-Export-Finance/dtfs2/issues/2795)) ([1b41ad1](https://github.com/UK-Export-Finance/dtfs2/commit/1b41ad130be2b5eefcb409d88c2bee5de013e9bb))
+* **DTFS2-6965:** update docker files and imports ([53a3e2d](https://github.com/UK-Export-Finance/dtfs2/commit/53a3e2dfbf69976edee7b4acace69ec3fbf0f2dd))
+* **DTFS2-6965:** update test.yml ([c27a94f](https://github.com/UK-Export-Finance/dtfs2/commit/c27a94f60cfd4fc244dad6638fec0c834930846c))
+* **DTFS2-6965:** updating testing env variables ([9054e4a](https://github.com/UK-Export-Finance/dtfs2/commit/9054e4a65240de538d81c183c46dfd487e0645e3))
+* **DTFS2-6968:** include user audit details in external api ([#2882](https://github.com/UK-Export-Finance/dtfs2/issues/2882)) ([6e1fd67](https://github.com/UK-Export-Finance/dtfs2/commit/6e1fd679f45e3acfa5e2ad28b02359223beb6cd8))
+* **FN-1549:** enable github actions on pull request ([24c98a5](https://github.com/UK-Export-Finance/dtfs2/commit/24c98a52fde7d326450db22287207c9aa1049a39))
+* **FN-1549:** refactor utilisation report report period ([#2782](https://github.com/UK-Export-Finance/dtfs2/issues/2782)) ([052a9e1](https://github.com/UK-Export-Finance/dtfs2/commit/052a9e1691f7d2342ef2677077d2f9f4050545a3))
+* **FN-1549:** set feature branch to deploy to feature env ([#2752](https://github.com/UK-Export-Finance/dtfs2/issues/2752)) ([35c2b6e](https://github.com/UK-Export-Finance/dtfs2/commit/35c2b6efd08bf716b5fea4886f72c750f4799e09))
+* **FN-1549:** update feature_deploy and test branches to main ([49d94c3](https://github.com/UK-Export-Finance/dtfs2/commit/49d94c3c2fef01c920c4aa924344215e6cb8872d))
+* **FN-1855:** add npm workspaces and common package ([#2596](https://github.com/UK-Export-Finance/dtfs2/issues/2596)) ([1839fa3](https://github.com/UK-Export-Finance/dtfs2/commit/1839fa3752c3ff799759a8a9017c97d042474a2a))
+* **FN-1946:** refactor to store report period on utilisation reports ([#2582](https://github.com/UK-Export-Finance/dtfs2/issues/2582)) ([ec1f3ed](https://github.com/UK-Export-Finance/dtfs2/commit/ec1f3ed38e16c3c305da03fecab5b355adc183c1))
+* **FN-1947:** add scheduler to create utilisation reports ([#2695](https://github.com/UK-Export-Finance/dtfs2/issues/2695)) ([58825aa](https://github.com/UK-Export-Finance/dtfs2/commit/58825aa2855647edc1e68496e23228d92f8a3e25))
+* **FN-1947:** only upload reports for banks which are visible in TFM ([#2771](https://github.com/UK-Export-Finance/dtfs2/issues/2771)) ([e41eb42](https://github.com/UK-Export-Finance/dtfs2/commit/e41eb4277f098ae3e0d8fed742f4300762496d92))
+* **FN-1947:** refactor mark report as done, saving reports and reconciliation summary ([#2705](https://github.com/UK-Export-Finance/dtfs2/issues/2705)) ([303abf2](https://github.com/UK-Export-Finance/dtfs2/commit/303abf2173069b54ba643367b4009de272f2011b))
+* **FN-1951:** refactor due reports and previous reports ([#2755](https://github.com/UK-Export-Finance/dtfs2/issues/2755)) ([b69c06f](https://github.com/UK-Export-Finance/dtfs2/commit/b69c06f86b85a79c3dd8b1148581c38e882d80c0))
+* **FN-1951:** refactor query options for utilisation reports endpoint ([#2768](https://github.com/UK-Export-Finance/dtfs2/issues/2768)) ([f8907cf](https://github.com/UK-Export-Finance/dtfs2/commit/f8907cfb6fce47b0fdb9f7a220193dbce7ee35aa))
+* **FN-1953:** refactor portal-api scheduled emails ([#2764](https://github.com/UK-Export-Finance/dtfs2/issues/2764)) ([7fbec42](https://github.com/UK-Export-Finance/dtfs2/commit/7fbec423b26195d5efd5905615d242eec5fcc8e1))
+* **FN-2146:** add error logging to cron scheduler. commonise logic ([#2773](https://github.com/UK-Export-Finance/dtfs2/issues/2773)) ([dbba5df](https://github.com/UK-Export-Finance/dtfs2/commit/dbba5df19d789b8cbf9a8c4df19c0305ed8c8976))
+* **FN-2239:** update deployment scripts to set workspace context ([#2762](https://github.com/UK-Export-Finance/dtfs2/issues/2762)) ([e3878ba](https://github.com/UK-Export-Finance/dtfs2/commit/e3878ba819f2680f76ec5d78cc86155a89bc0f23))
+* **FN-2331:** accessibility update title on check report page to mention error ([#2909](https://github.com/UK-Export-Finance/dtfs2/issues/2909)) ([c68aad3](https://github.com/UK-Export-Finance/dtfs2/commit/c68aad3b56034c28324043d50a41dcce3cbca94e))
+* **FN-2334:** accessibility update labels on previous reports page ([#2910](https://github.com/UK-Export-Finance/dtfs2/issues/2910)) ([bceafff](https://github.com/UK-Export-Finance/dtfs2/commit/bceafffce1fa50bf1f5097d1aa35d704248b9c6b))
+
+
+### Bug Fixes
+
+* **deployment:** changed branch name to prod ([#2696](https://github.com/UK-Export-Finance/dtfs2/issues/2696)) ([521d0c0](https://github.com/UK-Export-Finance/dtfs2/commit/521d0c0a7b8b8743bc37a7542a0c4451ab019933))
+* **DTFS2-5227:** redirect URL when saving unissued facility to issued ([#2578](https://github.com/UK-Export-Finance/dtfs2/issues/2578)) ([5bf4cca](https://github.com/UK-Export-Finance/dtfs2/commit/5bf4ccab62e4351b721868bfd5cbed04034364b8))
+* **dTFS2-7007:** Ensure EC wording is correct ([#2701](https://github.com/UK-Export-Finance/dtfs2/issues/2701)) ([1651805](https://github.com/UK-Export-Finance/dtfs2/commit/16518059e5e757d51fbb1a0c9ca637edc0fc9d52))
+* **DTFS2-7011:** refactored dockerfile ([#2702](https://github.com/UK-Export-Finance/dtfs2/issues/2702)) ([ef9d93d](https://github.com/UK-Export-Finance/dtfs2/commit/ef9d93d7338b5e56ff18d357f74664cb3f5611c9))
+* **DTFS2-7014:** pending cover start date facilities stage ([#2746](https://github.com/UK-Export-Finance/dtfs2/issues/2746)) ([e18114b](https://github.com/UK-Export-Finance/dtfs2/commit/e18114b1ea25588d827f9d95fcd99618667351e9))
+* **DTFS2-7018:** NoSQLi mitigation ([#2747](https://github.com/UK-Export-Finance/dtfs2/issues/2747)) ([6c5c9c1](https://github.com/UK-Export-Finance/dtfs2/commit/6c5c9c1bd2710027eaeeef97c6ad446d3f7b9517))
+* **DTFS2-7021:** Ensure EC with draft mode set to `false` are used ([#2749](https://github.com/UK-Export-Finance/dtfs2/issues/2749)) ([6edda3f](https://github.com/UK-Export-Finance/dtfs2/commit/6edda3f797760174388bcd9296080047cdcec528))
+* **DTFS2-7022:** restrict sign in link expired path ([#2750](https://github.com/UK-Export-Finance/dtfs2/issues/2750)) ([1338859](https://github.com/UK-Export-Finance/dtfs2/commit/1338859fcf07acda102a3a4bcbbec04742872681))
+* **DTFS2-7046:** Deployment script failure ([#2850](https://github.com/UK-Export-Finance/dtfs2/issues/2850)) ([84dabc5](https://github.com/UK-Export-Finance/dtfs2/commit/84dabc57d11a10346f5ff01bf6c3035749ef4542))
+* **dtfs2-7063:** facility id record are missing in acbs ([#2907](https://github.com/UK-Export-Finance/dtfs2/issues/2907)) ([#2914](https://github.com/UK-Export-Finance/dtfs2/issues/2914)) ([d5092f1](https://github.com/UK-Export-Finance/dtfs2/commit/d5092f15ccdfc46161fb036108d3db938cd422be))
+* **DTFS2-NONE:** fix error handling in mock data loader ([#2899](https://github.com/UK-Export-Finance/dtfs2/issues/2899)) ([0591abc](https://github.com/UK-Export-Finance/dtfs2/commit/0591abcd53c258d4aed5b5a7286f6006173ec085))
+* **DTFS2-NONE:** fix URNs with e2e tests ([#2895](https://github.com/UK-Export-Finance/dtfs2/issues/2895)) ([24489ac](https://github.com/UK-Export-Finance/dtfs2/commit/24489acd933d3450126fcd2a63f05947e0513c3e))
+* **durable-functions:** Error reporting for `acbs-functions` ([#2657](https://github.com/UK-Export-Finance/dtfs2/issues/2657)) ([1348f20](https://github.com/UK-Export-Finance/dtfs2/commit/1348f201dd5e79f83d6d20fbcf4bfe72ba789f62))
+* **FN-2172:** fix UI with upload error ([#2751](https://github.com/UK-Export-Finance/dtfs2/issues/2751)) ([4203e91](https://github.com/UK-Export-Finance/dtfs2/commit/4203e91414687b9c5f27cfbdacbeeb30ef13bffd))
+* **typo:** ENV sample ([#2912](https://github.com/UK-Export-Finance/dtfs2/issues/2912)) ([7520b30](https://github.com/UK-Export-Finance/dtfs2/commit/7520b301b91e20a74d34fe8649960ec83b9f360d))
+
 ## [1.2.1](https://github.com/UK-Export-Finance/dtfs2/compare/v1.2.0...v1.2.1) (2024-01-29)
 
 
