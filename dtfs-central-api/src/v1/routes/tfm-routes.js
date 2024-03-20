@@ -220,47 +220,47 @@ tfmRouter.route('/deals/:id/snapshot')
  *     description: Get TFM deals
  *     parameters:
  *       - in: query
- *       name: searchString
- *       schema:
- *         type: string
- *       description: A search term to filter the deals table by
+ *         name: searchString
+ *         schema:
+ *           type: string
+ *         description: A search term to filter the deals table by
  *       - in: query
- *       name: byField
- *       schema:
- *         type: array
- *         items:
+ *         name: byField
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: tfm.dateReceived
+ *               value:
+ *                 example: 25-12-2021
+ *         description: An array. Each item in the array contains the name and value of a field to filter the deals table by
+ *       - in: query
+ *         name: sortBy
+ *         schema:
  *           type: object
  *           properties:
- *             name:
+ *             order:
  *               type: string
- *               example: tfm.dateReceived
- *             value:
- *               example: 25-12-2021
- *       description: An array. Each item in the array contains the name and value of a field to filter the deals table by
+ *               example: ascending
+ *             field:
+ *               type: string
+ *               example: dealSnapshot.ukefDealId
+ *         description: A field and order to sort the deals table by
  *       - in: query
- *       name: sortBy
- *       schema:
- *         type: object
- *         properties:
- *           order:
- *             type: string
- *             example: ascending
- *           field:
- *             type: string
- *             example: dealSnapshot.ukefDealId
- *       description: A field and order to sort the deals table by
+ *         name: pagesize
+ *         schema:
+ *           type: number
+ *           example: 20
+ *         description: The number of deals per table page
  *       - in: query
- *       name: pagesize
- *       schema:
- *         type: number
- *         example: 20
- *       description: The number of deals per table page
- *       - in: query
- *       name: page
- *       schema:
- *         type: number
- *         example: 0
- *       description: The requested page number of the deals table
+ *         name: page
+ *         schema:
+ *           type: number
+ *           example: 0
+ *         description: The requested page number of the deals table
  *     responses:
  *       200:
  *         description: OK
@@ -326,34 +326,34 @@ tfmRouter.route('/deals/:id/facilities')
  *     description: Get all facilities from TFM
  *     parameters:
  *       - in: query
- *       name: searchString
- *       schema:
- *         type: string
- *       description: A search term to filter the facilities table by
+ *         name: searchString
+ *         schema:
+ *           type: string
+ *         description: A search term to filter the facilities table by
  *       - in: query
- *       name: sortBy
- *       schema:
- *         type: object
- *         properties:
- *           order:
- *             type: string
- *             example: ascending
- *           field:
- *             type: string
- *             example: ukefFacilityId
- *       description: A field and order to sort the facilities table by
+ *         name: sortBy
+ *         schema:
+ *           type: object
+ *           properties:
+ *             order:
+ *               type: string
+ *               example: ascending
+ *             field:
+ *               type: string
+ *               example: ukefFacilityId
+ *         description: A field and order to sort the facilities table by
  *       - in: query
- *       name: pagesize
- *       schema:
- *         type: number
- *         example: 20
- *       description: The number of facilities per table page
+ *         name: pagesize
+ *         schema:
+ *           type: number
+ *           example: 20
+ *         description: The number of facilities per table page
  *       - in: query
- *       name: page
- *       schema:
- *         type: number
- *         example: 0
- *       description: The requested page number of the facilities table
+ *         name: page
+ *         schema:
+ *           type: number
+ *           example: 0
+ *         description: The requested page number of the facilities table
  *     responses:
  *       200:
  *         description: OK
