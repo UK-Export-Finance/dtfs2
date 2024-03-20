@@ -1,2 +1,2 @@
-var DTFS_TFM;!function(){var o=document.getElementById("acceptExternalSsoPostForm"),t=document.referrer,e=window.location.hostname;!o||"localhost"!==e&&0!==t.indexOf("https://login.microsoftonline.com/")||o.submit(),(DTFS_TFM=void 0===DTFS_TFM?{}:DTFS_TFM).ssoAutoSubmit={}}();
+var DTFS_TFM;!function(){var o,t,e=document.getElementById("acceptExternalSsoPostForm");e&&(o=window.location.hostname,t=document.referrer,"localhost"===o||0===t.indexOf("https://login.microsoftonline.com/"))&&e.submit(),(DTFS_TFM=void 0===DTFS_TFM?{}:DTFS_TFM).ssoAutoSubmit={}}();
 //# sourceMappingURL=ssoAutoSubmit.js.map
