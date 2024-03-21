@@ -79,7 +79,7 @@ const cleanUsers = async (token) => {
   }
 };
 
-const cleanAllTables = async (token) => {
+const cleanAllTablesPortal = async (token) => {
   logger.info('cleaning portal tables');
   await cleanBanks(token);
   await cleanDeals(token);
@@ -89,4 +89,4 @@ const cleanAllTables = async (token) => {
   await cleanUsers(token);
 };
 
-module.exports = cleanAllTables;
+module.exports = cleanAllTablesPortal;
