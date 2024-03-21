@@ -4,8 +4,9 @@ import { createBuyerFolder, createDealFolder, createFacilityFolder, uploadSuppor
 
 const { post } = api(app);
 import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import { UKEF_ID } from '../../src/constants';
+import { ObjectId } from 'mongodb';
 
 const { APIM_ESTORE_URL } = process.env;
 
@@ -43,51 +44,83 @@ const mockExporterResponse = {
 };
 
 const mockApiResponse = {
-  status: 200,
+  status: HttpStatusCode.Ok,
 };
 
 // mocks test for estore if exists
-axiosMock.onPost(`${APIM_ESTORE_URL}site/sites?exporterName=testName`).reply(200, mockExporterResponse);
+axiosMock.onPost(`${APIM_ESTORE_URL}site/sites?exporterName=testName`).reply(HttpStatusCode.Ok, mockExporterResponse);
 const estoreSitesRegex = new RegExp(`${APIM_ESTORE_URL}sites/.+`);
-axiosMock.onPost(estoreSitesRegex).reply(200, mockApiResponse);
+axiosMock.onPost(estoreSitesRegex).reply(HttpStatusCode.Ok, mockApiResponse);
 
 describe('/estore', () => {
   const payload = {
-    dealId: '12345',
+    dealId: new ObjectId('6597dffeb5ef5ff4267e5044'),
     siteId: 'ukef',
-    facilityIdentifiers: '99999',
+    facilityIdentifiers: [1234567890, 1234567891],
     supportingInformation: 'test',
     exporterName: 'testName',
     buyerName: 'testBuyer',
-    dealIdentifier: '12345',
+    dealIdentifier: '1234567890',
     destinationMarket: 'UK',
     riskMarket: '1',
   };
 
-  describe('when the body is empty', () => {
-    it('should return a status of 200 and an empty data response', async () => {
+  describe.only('Empty payload', () => {
+    it('should return a status of 400 and an invalid request message', async () => {
       const { status, body } = await post().to('/estore');
 
-      expect(status).toEqual(200);
-      expect(body).toEqual({});
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body.message).toEqual('Invalid request');
     });
   });
 
-  describe('when the input is not valid - dealIdentifier contains 0010000000', () => {
-    it('should return a status of 200 and an empty data response', async () => {
-      const { status, body } = await post({ ...payload, dealIdentifier: UKEF_ID.TEST }).to('/estore');
+  describe.only('When the deal ID with is not valid', () => {
+    it('should return a status of 400 with Invalid IDs error message', async () => {
+      const invalidPayload = {
+        ...payload,
+        dealIdentifier: UKEF_ID.TEST,
+      };
+      const { status, body } = await post(invalidPayload).to('/estore');
 
-      expect(status).toEqual(200);
-      expect(body).toEqual({});
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body.message).toEqual('Invalid IDs');
+    });
+
+    it('should return a status of 400 with Invalid IDs error message', async () => {
+      const invalidPayload = {
+        ...payload,
+        dealIdentifier: UKEF_ID.PENDING,
+      };
+
+      const { status, body } = await post(invalidPayload).to('/estore');
+
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body.message).toEqual('Invalid IDs');
     });
   });
 
-  describe(`when the input is not valid - facilityIdentifiers contains ${UKEF_ID.PENDING}`, () => {
-    it('should return a status of 200 and an empty data response', async () => {
-      const { status, body } = await post({ ...payload, facilityIdentifiers: UKEF_ID.PENDING }).to('/estore');
+  describe.only('When the facility ID with is not valid', () => {
+    it('should return a status of 400 with Invalid IDs error message', async () => {
+      const invalidPayload = {
+        ...payload,
+        facilityIdentifiers: [UKEF_ID.TEST],
+      };
+      const { status, body } = await post(invalidPayload).to('/estore');
 
-      expect(status).toEqual(200);
-      expect(body).toEqual({});
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body.message).toEqual('Invalid IDs');
+    });
+
+    it('should return a status of 400 with Invalid IDs error message', async () => {
+      const invalidPayload = {
+        ...payload,
+        facilityIdentifiers: [UKEF_ID.PENDING],
+      };
+
+      const { status, body } = await post(invalidPayload).to('/estore');
+
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body.message).toEqual('Invalid IDs');
     });
   });
 
@@ -101,7 +134,7 @@ describe('/estore', () => {
     it('should return an ok response if siteId is valid', async () => {
       const response = await createBuyerFolder('00738459', { buyerName: 'testBuyer', exporterName: 'testName' });
 
-      expect(response.status).toEqual(200);
+      expect(response.status).toEqual(HttpStatusCode.Ok);
     });
   });
 
@@ -129,7 +162,7 @@ describe('/estore', () => {
       };
       const response = await createDealFolder('00748375', createDealFolderPayload);
 
-      expect(response.status).toEqual(200);
+      expect(response.status).toEqual(HttpStatusCode.Ok);
     });
   });
 
@@ -176,7 +209,7 @@ describe('/estore', () => {
 
       const response = await createFacilityFolder('00329453', '0071029412', createFacilityFolderPayload);
 
-      expect(response.status).toEqual(200);
+      expect(response.status).toEqual(HttpStatusCode.Ok);
     });
   });
 
@@ -214,7 +247,7 @@ describe('/estore', () => {
       };
       const response = await uploadSupportingDocuments('00329453', '0071029412', uploadSupportingDocumentsPayload);
 
-      expect(response.status).toEqual(200);
+      expect(response.status).toEqual(HttpStatusCode.Ok);
     });
   });
 });
