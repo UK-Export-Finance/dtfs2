@@ -1,15 +1,7 @@
 // TODO FN-1853 - rename this to `utilisation-report.repo.ts` when all repo
 //  methods have been migrated from MongoDB to SQL
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import {
-  AzureFileInfoEntity,
-  DbRequestSource,
-  UtilisationReportEntity,
-  ReportPeriod,
-  AzureFileInfo,
-  FeeRecordEntity,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
-} from '@ukef/dtfs2-common';
+import { AzureFileInfoEntity, DbRequestSource, FeeRecordEntity, UtilisationReportEntity, ReportPeriod, AzureFileInfo } from '@ukef/dtfs2-common';
 import { Not, Equal, FindOptionsWhere, LessThan } from 'typeorm';
 import { UtilisationReportRawCsvData } from '../../types/utilisation-reports';
 import { feeRecordCsvRowToSqlEntity } from '../../helpers';
@@ -40,15 +32,21 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
   /**
    * Finds all reports with bankId and matching options
    * @param bankId - The id of the bank to fetch reports for
-   * @param otpions - The options determining which reports are retrieved for the given bank
+   * @param options - The options determining which reports are retrieved for the given bank
    * @returns The found reports
    */
   async findAllByBankId(bankId: string, options?: GetUtilisationReportDetailsOptions): Promise<UtilisationReportEntity[]> {
-    return await this.findBy({
-      bankId,
-      ...(options?.reportPeriod && { reportPeriod: options.reportPeriod }),
-      ...(options?.excludeNotReceived && { status: Not(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) }),
-    });
+    const findByOptionsWhere: FindOptionsWhere<UtilisationReportEntity> = { bankId };
+
+    if (options?.reportPeriod) {
+      findByOptionsWhere.reportPeriod = options.reportPeriod;
+    }
+
+    if (options?.excludeNotReceived) {
+      findByOptionsWhere.status = Not('REPORT_NOT_RECEIVED');
+    }
+
+    return await this.findBy(findByOptionsWhere);
   },
 
   /**

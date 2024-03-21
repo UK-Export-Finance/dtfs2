@@ -1,7 +1,7 @@
 const crypto = require('node:crypto');
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
-const { UtilisationReportEntity } = require('@ukef/dtfs2-common');
+const { UtilisationReportEntity, FeeRecordEntity } = require('@ukef/dtfs2-common');
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
 
 SqlDbDataSource.initialize()
@@ -102,6 +102,7 @@ module.exports = {
        * Deletes all the rows from the utilisation report and azure file info tables
        */
       async removeAllUtilisationReportsFromDb() {
+        await SqlDbDataSource.manager.getRepository(FeeRecordEntity).delete({});
         return await SqlDbDataSource.manager.getRepository(UtilisationReportEntity).delete({});
       },
 
