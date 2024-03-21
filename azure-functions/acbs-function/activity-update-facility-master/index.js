@@ -84,8 +84,8 @@ const updateFacilityMaster = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Error updating facility master record: %o', error);
-    throw new Error('Error updating facility master record', { cause: error });
+    console.error('Error updating facility master record: %s', error);
+    throw new Error('Error updating facility master record %s', error);
   }
 };
 

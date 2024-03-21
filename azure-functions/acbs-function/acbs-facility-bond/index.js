@@ -80,7 +80,7 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
       facilityBondBeneficiaryGuarantee,
     };
   } catch (error) {
-    console.error('Error creating facility bond record: %o', error);
-    throw new Error('Error creating facility bond record', { cause: error });
+    console.error('Error creating facility bond record: %s', error);
+    throw new Error('Error creating facility bond record');
   }
 });

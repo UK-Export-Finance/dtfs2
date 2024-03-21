@@ -20,11 +20,18 @@ const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
-const mandatoryFields = ['effectiveDate', 'amountAmendment'];
+const mandatoryFields = [
+  'effectiveDate',
+  'amountAmendment',
+];
 
 const updateFacilityLoanAmount = async (context) => {
   try {
-    const { loanId, facilityId, acbsFacilityLoanInput } = context.bindingData;
+    const {
+      loanId,
+      facilityId,
+      acbsFacilityLoanInput,
+    } = context.bindingData;
 
     const missingMandatory = findMissingMandatory(acbsFacilityLoanInput, mandatoryFields);
 
@@ -37,17 +44,13 @@ const updateFacilityLoanAmount = async (context) => {
     const { status, data } = await api.updateFacilityLoanAmount(facilityId, loanId, acbsFacilityLoanInput);
     if (isHttpErrorStatus(status)) {
       throw new Error(
-        JSON.stringify(
-          {
-            name: 'ACBS Facility loan amount amend error',
-            submittedToACBS,
-            receivedFromACBS: getNowAsIsoString(),
-            dataReceived: data,
-            dataSent: acbsFacilityLoanInput,
-          },
-          null,
-          4,
-        ),
+        JSON.stringify({
+          name: 'ACBS Facility loan amount amend error',
+          submittedToACBS,
+          receivedFromACBS: getNowAsIsoString(),
+          dataReceived: data,
+          dataSent: acbsFacilityLoanInput,
+        }, null, 4),
       );
     }
 
@@ -59,8 +62,8 @@ const updateFacilityLoanAmount = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Error amending facility loan amount: %o', error);
-    throw new Error('Error amending facility loan amount', { cause: error });
+    console.error('Error amending facility loan amount: %s', error);
+    throw new Error('Error amending facility loan amount %s', error);
   }
 };
 

@@ -43,18 +43,14 @@ const createFacilityLoan = async (context) => {
 
     if (isHttpErrorStatus(status)) {
       throw new Error(
-        JSON.stringify(
-          {
-            name: 'ACBS Facility loan record create error',
-            facilityIdentifier,
-            submittedToACBS,
-            receivedFromACBS: getNowAsIsoString(),
-            dataReceived: data,
-            dataSent: acbsFacilityLoanInput,
-          },
-          null,
-          4,
-        ),
+        JSON.stringify({
+          name: 'ACBS Facility loan record create error',
+          facilityIdentifier,
+          submittedToACBS,
+          receivedFromACBS: getNowAsIsoString(),
+          dataReceived: data,
+          dataSent: acbsFacilityLoanInput,
+        }, null, 4),
       );
     }
 
@@ -66,8 +62,8 @@ const createFacilityLoan = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create facility loan record. %o', error);
-    throw new Error('Unable to create facility loan record', { cause: error });
+    console.error('Unable to create facility loan record. %s', error);
+    throw new Error('Unable to create facility loan record %s', error);
   }
 };
 

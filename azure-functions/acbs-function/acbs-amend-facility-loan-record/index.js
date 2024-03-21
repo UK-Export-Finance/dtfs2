@@ -27,7 +27,12 @@ const mappings = require('../mappings');
 module.exports = df.orchestrator(function* Facility(context) {
   try {
     if (context.df.getInput()) {
-      const { facilityId, facility, amendments, fmr } = context.df.getInput();
+      const {
+        facilityId,
+        facility,
+        amendments,
+        fmr,
+      } = context.df.getInput();
       const { amendment } = amendments;
       let facilityLoanRecordAmendments;
 
@@ -77,7 +82,7 @@ module.exports = df.orchestrator(function* Facility(context) {
     }
     console.error('No input specified');
   } catch (error) {
-    console.error('Error amending facility loan record: %o', error);
-    throw new Error('Error amending facility loan record', { cause: error });
+    console.error('Error amending facility loan record: %s', error);
+    throw new Error('Error amending facility loan record %s', error);
   }
 });
