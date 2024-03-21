@@ -1,6 +1,3 @@
-import { Prettify } from '.';
-import { MonthAndYearPartialEntity } from '../sql-db-entities/partial-entities';
-
 /**
  * Unix timestamp, representing the time that has elapsed since 1st January 1970
  * (UTC).
@@ -21,10 +18,16 @@ export type UnixTimestamp = number;
  */
 export type IsoDateTimeStamp = string;
 
-export type MonthAndYear = Prettify<MonthAndYearPartialEntity>;
-
 export type OneIndexedMonth = number;
 
+export type MonthAndYear = {
+  month: OneIndexedMonth;
+  year: number;
+};
+
+/**
+ * ISO 8601 month string in format 'yyyy-MM'
+ */
 export type IsoMonthStamp = string;
 
 /**

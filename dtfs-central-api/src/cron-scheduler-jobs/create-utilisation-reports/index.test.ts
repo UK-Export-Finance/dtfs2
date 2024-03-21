@@ -1,28 +1,22 @@
-import { asString, Bank, ReportPeriod, UtilisationReportEntityMockBuilder, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { getCurrentReportPeriodForBankSchedule, Bank, ReportPeriod, UtilisationReportEntityMockBuilder, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { createUtilisationReportForBanksJob } from '.';
 import { getAllBanks } from '../../repositories/banks-repo';
 import { UtilisationReportRepo } from '../../repositories/utilisation-reports-repo';
-import { getCurrentReportPeriodForBankSchedule } from '../../utils/report-period';
 
 console.info = jest.fn();
 
 jest.mock('../../repositories/banks-repo');
-jest.mock('../../repositories/utilisation-reports-repo');
-jest.mock('../../utils/report-period');
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
-  asString: jest.fn(),
+  asString: (value: unknown) => value as string,
+  getCurrentReportPeriodForBankSchedule: jest.fn(),
 }));
 
 const originalProcessEnv = process.env;
 
 describe('scheduler/jobs/create-utilisation-reports', () => {
-  beforeEach(() => {
-    jest.mocked(asString).mockImplementation((value) => value as string);
-  });
-
   afterEach(() => {
     process.env = { ...originalProcessEnv };
   });
@@ -32,6 +26,21 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
     const findOneByBankIdAndReportPeriodSpy = jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod');
 
     const mockReportPeriod = {} as ReportPeriod;
+
+    const MONTHLY_REPORT_PERIOD_SCHEDULE = [
+      { startMonth: 1, endMonth: 1 },
+      { startMonth: 2, endMonth: 2 },
+      { startMonth: 3, endMonth: 3 },
+      { startMonth: 4, endMonth: 4 },
+      { startMonth: 5, endMonth: 5 },
+      { startMonth: 6, endMonth: 6 },
+      { startMonth: 7, endMonth: 7 },
+      { startMonth: 8, endMonth: 8 },
+      { startMonth: 9, endMonth: 9 },
+      { startMonth: 10, endMonth: 10 },
+      { startMonth: 11, endMonth: 11 },
+      { startMonth: 12, endMonth: 12 },
+    ];
 
     beforeEach(() => {
       jest.mocked(getCurrentReportPeriodForBankSchedule).mockReturnValue(mockReportPeriod);
@@ -54,7 +63,12 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
 
     it('does not try to create any utilisation reports when reports for all banks in the current period already exist', async () => {
       // Arrange
-      const bank = { id: '123', name: 'Test bank', isVisibleInTfmUtilisationReports: true } as Bank;
+      const bank = {
+        id: '123',
+        name: 'Test bank',
+        isVisibleInTfmUtilisationReports: true,
+        utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+      } as Bank;
       jest.mocked(getAllBanks).mockResolvedValue([bank]);
 
       const existingReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withBankId(bank.id).build();
@@ -82,9 +96,9 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
     });
 
     const banks = [
-      { id: '1', name: 'Bank 1', isVisibleInTfmUtilisationReports: true },
-      { id: '2', name: 'Bank 2', isVisibleInTfmUtilisationReports: true },
-      { id: '3', name: 'Bank 3', isVisibleInTfmUtilisationReports: true },
+      { id: '1', name: 'Bank 1', isVisibleInTfmUtilisationReports: true, utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE },
+      { id: '2', name: 'Bank 2', isVisibleInTfmUtilisationReports: true, utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE },
+      { id: '3', name: 'Bank 3', isVisibleInTfmUtilisationReports: true, utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE },
     ] as Bank[];
 
     it('tries to create utilisation reports for all banks when reports for all banks in the current period do not exist', async () => {

@@ -288,6 +288,16 @@ authRouter
   );
 
 authRouter
+  .route('/banks/:bankId/next-report-period')
+  .get(
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+    bankIdValidation,
+    handleExpressValidatorResult,
+    validateUserAndBankIdMatch,
+    utilisationReportControllers.getNextReportPeriodByBankId,
+  );
+
+authRouter
   .route('/banks/:bankId/utilisation-report-download/:id')
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
