@@ -13,8 +13,8 @@ const api = createApi(app);
 
 const getUrl = (bankId: string) => `/v1/bank/${bankId}/utilisation-reports`;
 
-const saveReportToDatabase = async (report: UtilisationReportEntity): Promise<UtilisationReportEntity> =>
-  await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+const saveReportsToDatabase = async (...reports: UtilisationReportEntity[]): Promise<UtilisationReportEntity[]> =>
+  await SqlDbHelper.saveNewEntries('UtilisationReport', reports);
 
 type UtilisationReportResponse = GetUtilisationReportResponse & {
   dateUploaded: IsoDateTimeStamp;
@@ -66,18 +66,20 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
   it('gets utilisation reports', async () => {
     // Arrange
     const bankId = '13';
+
     const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
       .withId(1)
       .withUploadedByUserId(portalUserId)
       .withBankId(bankId)
       .build();
+
     const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
       .withId(2)
       .withUploadedByUserId(portalUserId)
       .withBankId(bankId)
       .build();
-    await saveReportToDatabase(uploadedReport);
-    await saveReportToDatabase(nonUploadedReport);
+
+    await saveReportsToDatabase(uploadedReport, nonUploadedReport);
 
     // Act
     const response: CustomSuccessResponse = await api.get(getUrl(bankId));
@@ -87,38 +89,39 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     expect(response.body.length).toEqual(2);
   });
 
-  it('gets all utilisation reports not in the REPORT_NOT_RECEIVED state when excludeNotReceived query param is true', async () => {
+  it('gets only the utilisation reports which have been uploaded when the excludeNotReceived query param is set to true', async () => {
     // Arrange
     const bankId = '13';
+
     const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
       .withId(1)
       .withUploadedByUserId(portalUserId)
       .withBankId(bankId)
       .build();
+
     const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
       .withId(2)
       .withUploadedByUserId(portalUserId)
       .withBankId(bankId)
       .build();
+
     const nonUploadedMarkedReconciledReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
       .withId(3)
       .withUploadedByUserId(portalUserId)
       .withBankId(bankId)
       .withAzureFileInfo(undefined)
       .build();
-    await saveReportToDatabase(uploadedReport);
-    await saveReportToDatabase(notReceivedReport);
-    await saveReportToDatabase(nonUploadedMarkedReconciledReport);
+
+    await saveReportsToDatabase(uploadedReport, notReceivedReport, nonUploadedMarkedReconciledReport);
 
     // Act
     const response: CustomSuccessResponse = await api.get(`${getUrl(bankId)}?excludeNotReceived=true`);
 
     // Assert
     expect(response.status).toEqual(200);
-    expect(response.body.length).toEqual(2);
+    expect(response.body.length).toEqual(1);
     const ids = response.body.map((report) => report.id);
     expect(ids).toContain(uploadedReport.id);
-    expect(ids).toContain(nonUploadedMarkedReconciledReport.id);
   });
 
   it('gets uploaded utilisation reports for specified period', async () => {
@@ -128,20 +131,22 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
       start: { month: 11, year: 2021 },
       end: { month: 12, year: 2021 },
     };
+
     const uploadedReportForReportPeriod = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
       .withId(1)
       .withUploadedByUserId(portalUserId)
       .withBankId(bankId)
       .withReportPeriod(reportPeriod)
       .build();
+
     const uploadedReportForDifferentReportPeriod = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
       .withId(2)
       .withUploadedByUserId(portalUserId)
       .withBankId(bankId)
       .withReportPeriod({ start: { month: 12, year: 2021 }, end: { month: 1, year: 2022 } })
       .build();
-    await saveReportToDatabase(uploadedReportForReportPeriod);
-    await saveReportToDatabase(uploadedReportForDifferentReportPeriod);
+
+    await saveReportsToDatabase(uploadedReportForReportPeriod, uploadedReportForDifferentReportPeriod);
 
     // Act
     const urlWithQueryParams = axios.getUri({ url: getUrl(bankId), params: { reportPeriod, excludeNotReceived: true } });
