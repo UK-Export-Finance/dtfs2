@@ -887,6 +887,12 @@ const uploadUtilisationReportData = async (uploadingUser, reportPeriod, csvData,
   }
 };
 
+/**
+ * Gets all previous reports for the supplied bank
+ * @param {string} token - The user token
+ * @param {string} bankId - The bank id
+ * @returns {Promise<import('./api-response-types').PreviousUtilisationReportsResponseBody>} The previous reports grouped by year
+ */
 const getPreviousUtilisationReportsByBank = async (token, bankId) => {
   if (!isValidBankId(bankId)) {
     throw new Error(`Getting previous utilisation reports failed for id ${bankId}`);

@@ -34,6 +34,9 @@ module.exports = {
         project: './tsconfig.eslint.json',
         tsconfigRootDir: __dirname,
       },
+      rules: {
+        '@typescript-eslint/restrict-template-expressions': ['error', { allowNever: true }],
+      },
     },
     {
       files: ['*.{j,t}s'],
