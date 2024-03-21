@@ -18,8 +18,11 @@ const mapCreateEstore = (deal) => {
     supportingInformation,
   } = deal;
 
-  // Set values as per deal type
-  const buyerName = buyer.name
+  /**
+   * Set value as per deal type.
+   * `buyer` can be undefined.
+   */
+  const buyerName = buyer?.name
     ? formatNameForSharepoint(buyer.name)
     : CONSTANTS.DEALS.DEAL_TYPE.GEF;
   const destinationMarket = destinationOfGoodsAndServices?.name ?? CONSTANTS.DEALS.DEFAULT_COUNTRY;
