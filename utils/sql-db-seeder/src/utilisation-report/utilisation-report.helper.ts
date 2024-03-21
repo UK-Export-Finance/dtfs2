@@ -51,7 +51,7 @@ export const createMarkedAsCompletedReport = (
   utilisationReport.status = status;
   utilisationReport.dateUploaded = new Date();
   utilisationReport.uploadedByUserId = null;
-  utilisationReport.updateActivityDetails({ platform: 'TFM', userId: tfmUser._id.toString() });
+  utilisationReport.updateLastUpdatedBy({ platform: 'TFM', userId: tfmUser._id.toString() });
 
   return utilisationReport;
 };
@@ -84,7 +84,7 @@ export const createUploadedReport = (
   utilisationReport.status = status;
   utilisationReport.dateUploaded = new Date();
   utilisationReport.uploadedByUserId = null;
-  utilisationReport.updateActivityDetails(requestSource);
+  utilisationReport.updateLastUpdatedBy(requestSource);
 
   const azureFileInfo = new AzureFileInfoEntity();
 
@@ -93,7 +93,7 @@ export const createUploadedReport = (
   azureFileInfo.fullPath = MOCK_AZURE_FILE_INFO.fullPath;
   azureFileInfo.url = MOCK_AZURE_FILE_INFO.url;
   azureFileInfo.mimetype = MOCK_AZURE_FILE_INFO.mimetype;
-  azureFileInfo.updateActivityDetails(requestSource);
+  azureFileInfo.updateLastUpdatedBy(requestSource);
 
   utilisationReport.azureFileInfo = azureFileInfo;
 

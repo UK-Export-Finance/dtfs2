@@ -60,7 +60,7 @@ export class AzureFileInfoEntity extends AuditableBaseEntity {
     azureFileInfo.fullPath = fullPath;
     azureFileInfo.url = url;
     azureFileInfo.mimetype = mimetype;
-    azureFileInfo.updateActivityDetails(requestSource);
+    azureFileInfo.updateLastUpdatedBy(requestSource);
     return azureFileInfo;
   }
 }

@@ -57,7 +57,7 @@ describe('UtilisationReportEntity', () => {
     };
 
     const allStatuses = Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS);
-    it.each(allStatuses)(`sets the report status to '%s' and updated the activity logs fields`, (status) => {
+    it.each(allStatuses)(`sets the report status to '%s' and updates the 'lastUpdatedBy...' fields`, (status) => {
       // Arrange
       const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
 

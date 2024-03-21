@@ -5,7 +5,7 @@ import { DbRequestSource } from '../helpers';
 class TestAuditableBaseEntity extends AuditableBaseEntity {}
 
 describe('AuditableBaseEntity', () => {
-  describe('updateActivityDetails', () => {
+  describe('updateLastUpdatedBy', () => {
     describe("when the request source platform is 'PORTAL'", () => {
       const userId = 'abc123';
 
@@ -19,7 +19,7 @@ describe('AuditableBaseEntity', () => {
         const testAuditableBaseEntity = new TestAuditableBaseEntity();
 
         // Act
-        testAuditableBaseEntity.updateActivityDetails({ platform: 'PORTAL', userId });
+        testAuditableBaseEntity.updateLastUpdatedBy({ platform: 'PORTAL', userId });
 
         // Assert
         expect(testAuditableBaseEntity[field]).toBe(value);
@@ -39,7 +39,7 @@ describe('AuditableBaseEntity', () => {
         const testAuditableBaseEntity = new TestAuditableBaseEntity();
 
         // Act
-        testAuditableBaseEntity.updateActivityDetails({ platform: 'TFM', userId });
+        testAuditableBaseEntity.updateLastUpdatedBy({ platform: 'TFM', userId });
 
         // Assert
         expect(testAuditableBaseEntity[field]).toBe(value);
@@ -57,7 +57,7 @@ describe('AuditableBaseEntity', () => {
         const testAuditableBaseEntity = new TestAuditableBaseEntity();
 
         // Act
-        testAuditableBaseEntity.updateActivityDetails({ platform: 'SYSTEM' });
+        testAuditableBaseEntity.updateLastUpdatedBy({ platform: 'SYSTEM' });
 
         // Assert
         expect(testAuditableBaseEntity[field]).toBe(value);
@@ -68,12 +68,13 @@ describe('AuditableBaseEntity', () => {
       // Arrange
       const testAuditableBaseEntity = new TestAuditableBaseEntity();
 
+      const invalidPlatform = 'Invalid';
       // @ts-expect-error the request source should be invalid for this test
-      const invalidRequestSource: DbRequestSource = { platform: 'Invalid' };
+      const invalidRequestSource: DbRequestSource = { platform: invalidPlatform };
 
       // Act/Assert
-      expect(() => testAuditableBaseEntity.updateActivityDetails(invalidRequestSource)).toThrow(
-        new Error('Request source platform did not match any expected request source'),
+      expect(() => testAuditableBaseEntity.updateLastUpdatedBy(invalidRequestSource)).toThrow(
+        new Error(`Request source platform '${invalidPlatform}' not recognised`),
       );
     });
   });

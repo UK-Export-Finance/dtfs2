@@ -29,7 +29,7 @@ export class FeeRecordEntityMockBuilder {
     data.feesPaidToUkefForThePeriodCurrency = 'GBP';
     data.paymentCurrency = 'GBP';
     data.paymentExchangeRate = 1;
-    data.updateActivityDetails(requestSource);
+    data.updateLastUpdatedBy(requestSource);
     return new FeeRecordEntityMockBuilder(data);
   }
 

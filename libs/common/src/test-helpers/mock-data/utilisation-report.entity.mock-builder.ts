@@ -41,7 +41,7 @@ export class UtilisationReportEntityMockBuilder {
     report.azureFileInfo = AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource });
     report.status = status;
     report.uploadedByUserId = userId;
-    report.updateActivityDetails({ platform: 'PORTAL', userId });
+    report.updateLastUpdatedBy({ platform: 'PORTAL', userId });
     return new UtilisationReportEntityMockBuilder(report);
   }
 

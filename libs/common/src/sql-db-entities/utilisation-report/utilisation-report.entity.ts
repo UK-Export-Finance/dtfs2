@@ -65,7 +65,7 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     report.dateUploaded = null;
     report.status = 'REPORT_NOT_RECEIVED';
     report.uploadedByUserId = null;
-    report.updateActivityDetails(requestSource);
+    report.updateLastUpdatedBy(requestSource);
     return report;
   }
 
@@ -75,11 +75,11 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     this.status = 'PENDING_RECONCILIATION';
     this.uploadedByUserId = uploadedByUserId;
     this.feeRecords = feeRecords;
-    this.updateActivityDetails(requestSource);
+    this.updateLastUpdatedBy(requestSource);
   }
 
   public updateWithStatus({ status, requestSource }: UpdateWithStatusParams): void {
     this.status = status;
-    this.updateActivityDetails(requestSource);
+    this.updateLastUpdatedBy(requestSource);
   }
 }

@@ -14,7 +14,7 @@ export abstract class AuditableBaseEntity {
   @Column()
   lastUpdatedByIsSystemUser!: boolean;
 
-  public updateActivityDetails(requestSource: DbRequestSource): void {
+  public updateLastUpdatedBy(requestSource: DbRequestSource): void {
     const { platform } = requestSource;
     switch (platform) {
       case 'PORTAL':
@@ -33,7 +33,7 @@ export abstract class AuditableBaseEntity {
         this.lastUpdatedByIsSystemUser = true;
         return;
       default:
-        throw new Error(`Request source platform did not match any expected request source`);
+        throw new Error(`Request source platform '${platform}' not recognised`);
     }
   }
 }

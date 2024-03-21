@@ -111,7 +111,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     feeRecord.feesPaidToUkefForThePeriodCurrency = feesPaidToUkefForThePeriodCurrency;
     feeRecord.paymentCurrency = paymentCurrency;
     feeRecord.paymentExchangeRate = paymentExchangeRate;
-    feeRecord.updateActivityDetails(requestSource);
+    feeRecord.updateLastUpdatedBy(requestSource);
     return feeRecord;
   }
 }
