@@ -147,8 +147,7 @@ module.exports = df.orchestrator(function* HDeal(context) {
           dealAcbsData,
           acbsReference,
           bank,
-        }),
-      );
+        }));
 
       yield context.df.Task.all([...facilityTasks]);
 

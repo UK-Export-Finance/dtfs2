@@ -74,6 +74,6 @@ module.exports = df.orchestrator(function* Facility(context) {
     console.error('No input specified');
   } catch (error) {
     console.error('Error amending facility master record: %o', error);
-    throw new Error('Error amending facility master record', {cause: error});
+    throw new Error('Error amending facility master record', { cause: error });
   }
 });
