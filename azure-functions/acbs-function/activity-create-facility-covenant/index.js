@@ -55,9 +55,10 @@ const createFacilityCovenant = async (context) => {
     const currencyReq = await mdm.getCurrency(currency);
 
     // Default currency code to GBP (O)
-    acbsFacilityCovenantInput.currency = currencyReq.status === 200 && currencyReq.data.length > 1
-      ? currencyReq.data[0].acbsCode
-      : CONSTANTS.FACILITY.ACBS_CURRENCY_CODE.DEFAULT;
+    acbsFacilityCovenantInput.currency =
+      currencyReq.status === 200 && currencyReq.data.length > 1
+        ? currencyReq.data[0].acbsCode
+        : CONSTANTS.FACILITY.ACBS_CURRENCY_CODE.DEFAULT;
 
     // Check for mandatory fields
     const missingMandatory = findMissingMandatory(acbsFacilityCovenantInput, mandatoryFields);
@@ -96,8 +97,8 @@ const createFacilityCovenant = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create facility covenant record. %s', error);
-    throw new Error('Unable to create facility covenant record %s', error);
+    console.error('Unable to create facility covenant record. %o', error);
+    throw new Error('Unable to create facility covenant record', { cause: error });
   }
 };
 

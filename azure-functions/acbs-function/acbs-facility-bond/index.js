@@ -22,9 +22,10 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
     const facilityIdentifier = facilitySnapshot.ukefFacilityId.padStart(10, 0);
 
     // BOND specific data
-    const code = facilitySnapshot.currency.id === CONSTANTS.DEAL.CURRENCY.DEFAULT
-      ? CONSTANTS.FACILITY.COVENANT_TYPE.CHARGEABLE_AMOUNT_GBP
-      : CONSTANTS.FACILITY.COVENANT_TYPE.CHARGEABLE_AMOUNT_NON_GBP;
+    const code =
+      facilitySnapshot.currency.id === CONSTANTS.DEAL.CURRENCY.DEFAULT
+        ? CONSTANTS.FACILITY.COVENANT_TYPE.CHARGEABLE_AMOUNT_GBP
+        : CONSTANTS.FACILITY.COVENANT_TYPE.CHARGEABLE_AMOUNT_NON_GBP;
 
     // Facility Covenant
     const acbsFacilityBondCovenantInput = mappings.facility.facilityCovenant(deal, facility, code);
@@ -80,7 +81,7 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
       facilityBondBeneficiaryGuarantee,
     };
   } catch (error) {
-    console.error('Error creating facility bond record: %s', error);
-    throw new Error('Error creating facility bond record');
+    console.error('Error creating facility bond record: %o', error);
+    throw new Error('Error creating facility bond record', { cause: error });
   }
 });

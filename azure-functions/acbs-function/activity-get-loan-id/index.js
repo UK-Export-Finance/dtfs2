@@ -33,11 +33,15 @@ const getLoanId = async (context) => {
       // Non 200 HTTP response code
       if (isHttpErrorStatus(status)) {
         throw new Error(
-          JSON.stringify({
-            name: 'ACBS Loan ID fetch error',
-            facilityId,
-            dataReceived: data,
-          }, null, 4),
+          JSON.stringify(
+            {
+              name: 'ACBS Loan ID fetch error',
+              facilityId,
+              dataReceived: data,
+            },
+            null,
+            4,
+          ),
         );
       }
 
@@ -52,18 +56,22 @@ const getLoanId = async (context) => {
 
       // Throw an error upon data validation failure
       throw new Error(
-        JSON.stringify({
-          name: 'Invalid dataset returned',
-          facilityId,
-          dataReceived: data,
-        }, null, 4),
+        JSON.stringify(
+          {
+            name: 'Invalid dataset returned',
+            facilityId,
+            dataReceived: data,
+          },
+          null,
+          4,
+        ),
       );
     }
 
     return null;
   } catch (error) {
-    console.error('Error getting loan id for facility: %s', error);
-    throw new Error('Error getting loan id for facility %s', error);
+    console.error('Error getting loan id for facility: %o', error);
+    throw new Error('Error getting loan id for facility', { cause: error });
   }
 };
 
