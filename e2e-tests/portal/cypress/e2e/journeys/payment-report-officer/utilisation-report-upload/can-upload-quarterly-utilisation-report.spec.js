@@ -7,12 +7,12 @@ const { BANK2_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
 
 context('Quarterly utilisation report upload', () => {
   beforeEach(() => {
-    cy.removeAllUtilisationReportDetails();
+    cy.removeAllUtilisationReports();
     cy.insertUtilisationReportDetails(december2023ToFebruary2024ReportDetails);
   });
 
   after(() => {
-    cy.removeAllUtilisationReportDetails();
+    cy.removeAllUtilisationReports();
   });
 
   describe('Submitting a file to the utilisation report upload', () => {
