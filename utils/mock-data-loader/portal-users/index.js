@@ -116,6 +116,16 @@ const MOCK_USERS = {
     roles: [ROLES.MAKER, ROLES.PAYMENT_REPORT_OFFICER],
     bank: UKEF_TEST_BANK_1,
   },
+  BANK2_PAYMENT_REPORT_OFFICER1: {
+    username: 'payment-officer3@ukexportfinance.gov.uk',
+    password: 'AbC!2345',
+    firstname: 'Payton',
+    surname: 'Archer',
+    email: 'payment-officer3@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: [ROLES.PAYMENT_REPORT_OFFICER],
+    bank: UKEF_TEST_BANK_2,
+  },
   BANK2_MAKER2: {
     username: 'maker5@ukexportfinance.gov.uk',
     password: 'AbC!2345',

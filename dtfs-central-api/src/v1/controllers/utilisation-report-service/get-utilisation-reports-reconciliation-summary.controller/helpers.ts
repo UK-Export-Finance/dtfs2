@@ -1,18 +1,19 @@
 import groupBy from 'lodash/groupBy';
 import orderBy from 'lodash/orderBy';
-import { Bank, UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { IsoMonthStamp } from '../../../../types/date';
-import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
-import { getAllBanks } from '../../../../repositories/banks-repo';
-import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
-import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import {
   getCurrentReportPeriodForBankSchedule,
   getReportPeriodForBankScheduleBySubmissionMonth,
   getReportPeriodStartForSubmissionMonth,
   getSubmissionMonthForReportPeriodStart,
-} from '../../../../utils/report-period';
-import { isEqualMonthAndYear } from '../../../../utils/date';
+  isEqualMonthAndYear,
+  Bank,
+  UtilisationReportEntity,
+} from '@ukef/dtfs2-common';
+import { IsoMonthStamp } from '../../../../types/date';
+import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
+import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
+import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
+import { getAllBanks } from '../../../../repositories/banks-repo';
 
 type UtilisationReportForSubmissionMonth = {
   submissionMonth: IsoMonthStamp;

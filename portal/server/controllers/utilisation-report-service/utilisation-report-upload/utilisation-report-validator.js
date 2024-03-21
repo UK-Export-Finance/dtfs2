@@ -102,41 +102,30 @@ const validateCsvData = (csvData) => {
  * it returns an empty object. Otherwise, it returns an object containing
  * a filename error message related to the specific case reached
  * @param {string} filename - The filename, using either '_' or '-' as a separator
- * @param {string} dueReportPeriod - The current due report period with format 'MMMM yyyy'
+ * @param {string} dueReportPeriod - The current due report period formatted
  * @returns {{ filenameError: string | undefined }}
  */
 const validateFilenameFormat = (filename, dueReportPeriod) => {
-  const expectedFilenameReportPeriod = dueReportPeriod.replace(' ', '_');
-  const [dueReportPeriodMonth, dueReportPeriodYear] = dueReportPeriod.split(' ');
+  const splitReportPeriod = dueReportPeriod.split(' ');
 
-  const numericDueReportPeriodMonth = Object.values(MONTH_NAMES).find(({ long }) => long === dueReportPeriodMonth).numeric;
-  const expectedFilenameReportPeriodNumeric = `${numericDueReportPeriodMonth}_${dueReportPeriodYear}`;
-
-  const regexPatterns = Object.values(MONTH_NAMES).map((monthName) => {
-    const expression = `(${monthName.long}|${monthName.short}|${monthName.numeric})[-_]\\d{4}`;
-    const regex = new RegExp(expression, 'i');
-
-    const expressionWithExactYear = `(${monthName.long}|${monthName.short}|${monthName.numeric})[-_]${dueReportPeriodYear}`;
-    const regexWithExactYear = new RegExp(expressionWithExactYear, 'i');
-
-    return { regex, regexWithExactYear };
+  let expectedExpression = '';
+  splitReportPeriod.map((splitText, index) => {
+    const month = Object.values(MONTH_NAMES).find(({ long }) => long === splitText);
+    if (index !== 0) {
+      expectedExpression += `[-_]`;
+    }
+    if (month) {
+      expectedExpression += `(${month.long}|${month.short}|${month.numeric})`;
+    } else {
+      expectedExpression += `${splitText}`;
+    }
+    return expectedExpression;
   });
-
-  const allMatchingRegex = regexPatterns.filter(({ regex }) => regex.test(filename));
-  if (allMatchingRegex.length === 0) {
-    const filenameError = `The selected file must contain the reporting period as part of its name, for example '${expectedFilenameReportPeriod}' or '${expectedFilenameReportPeriodNumeric}'`;
-    return { filenameError };
-  }
-
-  const specificReportPeriodRegex = allMatchingRegex.filter(({ regex }) => regex.test(expectedFilenameReportPeriod)).at(0);
-  if (!specificReportPeriodRegex) {
-    const filenameError = `The selected file must be the ${dueReportPeriod} report`;
-    return { filenameError };
-  }
-
-  const { regexWithExactYear } = specificReportPeriodRegex;
-  if (!regexWithExactYear.test(filename)) {
-    const filenameError = `The selected file must be the ${dueReportPeriod} report`;
+  
+  const expectedRegex = new RegExp(expectedExpression, 'i');
+  
+  if (!expectedRegex.test(filename)) {
+    const filenameError = `The selected file must contain the reporting period as part of its name, for example '${dueReportPeriod}'`;
     return { filenameError };
   }
 

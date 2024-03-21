@@ -863,7 +863,8 @@ const uploadUtilisationReportData = async (uploadingUser, reportPeriod, csvData,
     formData.append('formattedReportPeriod', formattedReportPeriod);
 
     const buffer = Buffer.from(csvFileBuffer);
-    const filename = `${reportPeriod.start.year}_${reportPeriod.start.month}_${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}_${uploadingUser.bank.name}_utilisation_report.csv`;
+    const month = reportPeriod.start.month === reportPeriod.end.month ? `${reportPeriod.start.month}` : `${reportPeriod.start.month}_${reportPeriod.end.month}`;
+    const filename = `${reportPeriod.start.year}_${month}_${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}_${uploadingUser.bank.name}_utilisation_report.csv`;
     formData.append('csvFile', buffer, { filename });
 
     const formHeaders = formData.getHeaders();
@@ -944,6 +945,20 @@ const getDueReportPeriodsByBankId = async (token, bankId) => {
   return response.data;
 };
 
+const getNextReportPeriodByBankId = async (token, bankId) => {
+  if (!isValidBankId(bankId)) {
+    throw new Error(`Getting next report period failed for id ${bankId}`);
+  }
+
+  const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/next-report-period`, {
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+  return response.data;
+};
+
 const downloadUtilisationReport = async (userToken, bankId, id) =>
   await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-report-download/${id}`, {
     responseType: 'stream',
@@ -1015,5 +1030,6 @@ module.exports = {
   getPreviousUtilisationReportsByBank,
   getLastUploadedReportByBankId,
   getDueReportPeriodsByBankId,
+  getNextReportPeriodByBankId,
   getUkBankHolidays,
 };

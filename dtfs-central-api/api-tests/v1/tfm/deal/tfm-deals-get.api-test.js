@@ -115,6 +115,6 @@ describe('/v1/tfm/deals', () => {
       expect(status).toEqual(200);
       const expectedTotalDeals = 4;
       expect(body.deals.length).toEqual(expectedTotalDeals);
-    }, 10000);
+    });
   });
 });
