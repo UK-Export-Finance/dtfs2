@@ -11,7 +11,7 @@ export const deleteAllDurableFunctionLogs = async (): Promise<DeleteResult> => {
 };
 
 /**
- * Deletes all durable function logs that have the type "ACBS" and status "Complete"
+ * Deletes all durable function logs that have the type "ACBS" and status "Completed"
  * @returns The result of the deletion
  */
 export const deleteAllCompleteAcbsDurableFunctionLogs = async (): Promise<DeleteResult> => {
