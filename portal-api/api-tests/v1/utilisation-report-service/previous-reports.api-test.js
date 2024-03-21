@@ -36,7 +36,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
           year,
         },
         end: {
-          month: 2,
+          month: 1,
           year,
         },
       })
@@ -52,7 +52,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
           year,
         },
         end: {
-          month: 3,
+          month: 2,
           year,
         },
       })
@@ -67,7 +67,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
           year,
         },
         end: {
-          month: 4,
+          month: 3,
           year,
         },
       })

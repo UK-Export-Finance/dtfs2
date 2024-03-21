@@ -44,6 +44,8 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
 
     if (options?.excludeNotReceived) {
       findByOptionsWhere.status = Not('REPORT_NOT_RECEIVED');
+      const notReceivedReports = await this.findBy(findByOptionsWhere);
+      return notReceivedReports.filter((report) => report.azureFileInfo);
     }
 
     return await this.findBy(findByOptionsWhere);
