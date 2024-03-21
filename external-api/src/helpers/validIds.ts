@@ -9,7 +9,7 @@ import { UKEF_ID } from '../constants';
 import { validUkefId } from './validUkefId';
 
 export const areValidUkefIds = (eStoreData: Estore): boolean => {
-  const invalidIds = [UKEF_ID.TEST, UKEF_ID.PENDING];
+  const invalidIds = [UKEF_ID.TEST, Number(UKEF_ID.TEST), UKEF_ID.PENDING];
   const { dealIdentifier, facilityIdentifiers } = eStoreData;
 
   // Falsy check
@@ -18,7 +18,7 @@ export const areValidUkefIds = (eStoreData: Estore): boolean => {
   }
 
   // Void ID check
-  if (invalidIds.includes(dealIdentifier) || invalidIds.some((id: string) => facilityIdentifiers.includes(Number(id)))) {
+  if (invalidIds.includes(dealIdentifier) || invalidIds.some((id: any) => facilityIdentifiers.includes(id))) {
     return false;
   }
 

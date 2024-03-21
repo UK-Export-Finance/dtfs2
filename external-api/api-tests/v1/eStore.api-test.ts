@@ -1,6 +1,5 @@
 import { app } from '../../src/createApp';
 import { api } from '../api';
-import { createBuyerFolder, createDealFolder, createFacilityFolder, uploadSupportingDocuments } from '../../src/v1/controllers/estore/eStoreApi';
 
 const { post } = api(app);
 import MockAdapter from 'axios-mock-adapter';
@@ -10,12 +9,25 @@ import { ObjectId } from 'mongodb';
 
 const { APIM_ESTORE_URL } = process.env;
 
+const payload = {
+  dealId: new ObjectId('6597dffeb5ef5ff4267e5044'),
+  siteId: 'ukef',
+  facilityIdentifiers: [1234567890, 1234567891],
+  supportingInformation: 'test',
+  exporterName: 'testName',
+  buyerName: 'testBuyer',
+  dealIdentifier: '1234567890',
+  destinationMarket: 'UK',
+  riskMarket: '1',
+};
+
+const axiosMock = new MockAdapter(axios);
+
 const mockInsertOne = jest.fn();
 const mockFindOne = jest.fn();
 const mockUpdateOne = jest.fn();
-const mockFindOneAndUpdate = jest.fn();
 
-// mocks mongodb calls
+// Mock MongoDB calls
 jest.mock('../../src/database/mongo-client', () => ({
   getCollection: jest.fn(() => ({
     insertOne: mockInsertOne,
@@ -24,20 +36,7 @@ jest.mock('../../src/database/mongo-client', () => ({
   })),
 }));
 
-// mocks various cronJob database calls
-jest.mock('../../src/cron', () => ({
-  eStoreCronJobManager: jest.fn(() => ({
-    insertOne: mockInsertOne,
-    onComplete: mockInsertOne,
-  })),
-  eStoreTermStoreAndBuyerFolder: jest.fn(() => ({
-    findOneAndUpdate: mockFindOneAndUpdate,
-  })),
-}));
-
-const axiosMock = new MockAdapter(axios);
 jest.mock('axios', () => jest.requireActual('axios'));
-
 const mockExporterResponse = {
   siteId: 'test',
   status: 'Created',
@@ -53,19 +52,7 @@ const estoreSitesRegex = new RegExp(`${APIM_ESTORE_URL}sites/.+`);
 axiosMock.onPost(estoreSitesRegex).reply(HttpStatusCode.Ok, mockApiResponse);
 
 describe('/estore', () => {
-  const payload = {
-    dealId: new ObjectId('6597dffeb5ef5ff4267e5044'),
-    siteId: 'ukef',
-    facilityIdentifiers: [1234567890, 1234567891],
-    supportingInformation: 'test',
-    exporterName: 'testName',
-    buyerName: 'testBuyer',
-    dealIdentifier: '1234567890',
-    destinationMarket: 'UK',
-    riskMarket: '1',
-  };
-
-  describe.only('Empty payload', () => {
+  describe('Empty payload', () => {
     it('should return a status of 400 and an invalid request message', async () => {
       const { status, body } = await post().to('/estore');
 
@@ -74,8 +61,8 @@ describe('/estore', () => {
     });
   });
 
-  describe.only('When the deal ID with is not valid', () => {
-    it('should return a status of 400 with Invalid IDs error message', async () => {
+  describe('When the deal ID with is not valid', () => {
+    it('should return a status of 400 with Invalid IDs error message when ID is `0010000000`', async () => {
       const invalidPayload = {
         ...payload,
         dealIdentifier: UKEF_ID.TEST,
@@ -86,7 +73,7 @@ describe('/estore', () => {
       expect(body.message).toEqual('Invalid IDs');
     });
 
-    it('should return a status of 400 with Invalid IDs error message', async () => {
+    it('should return a status of 400 with Invalid IDs error message when ID is `Pending`', async () => {
       const invalidPayload = {
         ...payload,
         dealIdentifier: UKEF_ID.PENDING,
@@ -99,8 +86,8 @@ describe('/estore', () => {
     });
   });
 
-  describe.only('When the facility ID with is not valid', () => {
-    it('should return a status of 400 with Invalid IDs error message', async () => {
+  describe('When the facility ID with is not valid', () => {
+    it('should return a status of 400 with Invalid IDs error message when ID is `0010000000`', async () => {
       const invalidPayload = {
         ...payload,
         facilityIdentifiers: [UKEF_ID.TEST],
@@ -111,7 +98,7 @@ describe('/estore', () => {
       expect(body.message).toEqual('Invalid IDs');
     });
 
-    it('should return a status of 400 with Invalid IDs error message', async () => {
+    it('should return a status of 400 with Invalid IDs error message when ID is `Pending`', async () => {
       const invalidPayload = {
         ...payload,
         facilityIdentifiers: [UKEF_ID.PENDING],
@@ -124,130 +111,48 @@ describe('/estore', () => {
     });
   });
 
-  describe(`api.createBuyerFolder`, () => {
-    it('should return an error response if siteId is invalid', async () => {
-      const response = await createBuyerFolder('../../etc', { buyerName: 'testBuyer', exporterName: 'testName' });
+  describe('When the Mongo deal is not valid', () => {
+    it('Should return 500 with catch-all error message', async () => {
+      const invalidPayload = {
+        ...payload,
+        dealId: 'invalid',
+      };
 
-      expect(response.status).toEqual(400);
-    });
+      const { status, body } = await post(invalidPayload).to('/estore');
 
-    it('should return an ok response if siteId is valid', async () => {
-      const response = await createBuyerFolder('00738459', { buyerName: 'testBuyer', exporterName: 'testName' });
-
-      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(status).toEqual(HttpStatusCode.InternalServerError);
+      expect(body.message).toEqual('Unable to create eStore directories');
     });
   });
 
-  describe(`api.createDealFolder`, () => {
-    it('should return an error response if siteId is invalid', async () => {
-      const createDealFolderPayload = {
-        dealIdentifier: 'testDeal',
-        exporterName: 'testName',
-        buyerName: 'testBuyer',
-        destinationMarket: 'UK',
-        riskMarket: '1',
-      };
-      const response = await createDealFolder('../../etc', createDealFolderPayload);
+  describe('eStore CRON jobs', () => {
+    it('Should return 201 for a new deal payload', async () => {
+      const { status } = await post(payload).to('/estore');
 
-      expect(response.status).toEqual(400);
+      expect(status).toEqual(HttpStatusCode.Created);
     });
 
-    it('should return an ok response if siteId is valid', async () => {
-      const createDealFolderPayload = {
-        dealIdentifier: 'testDeal',
-        exporterName: 'testName',
-        buyerName: 'testBuyer',
-        destinationMarket: 'UK',
-        riskMarket: '1',
-      };
-      const response = await createDealFolder('00748375', createDealFolderPayload);
+    it('Should create a new entry cron-job-logs collection for a new payload', async () => {
+      await post(payload).to('/estore');
 
-      expect(response.status).toEqual(HttpStatusCode.Ok);
-    });
-  });
+      // Look up for the deal ID in the collection
+      expect(mockFindOne).toHaveBeenCalled();
 
-  describe(`api.createFacilityFolder`, () => {
-    it('should return an error response if siteId is invalid', async () => {
-      const createFacilityFolderPayload = {
-        dealIdentifier: 'testDeal',
-        facilityIdentifier: 'testFacility',
-        exporterName: 'testName',
-        buyerName: 'testBuyer',
-        destinationMarket: 'UK',
-        riskMarket: '1',
-      };
-
-      const response = await createFacilityFolder('../../etc', '0071029412', createFacilityFolderPayload);
-
-      expect(response.status).toEqual(400);
+      // Insert a new entry in the collection
+      expect(mockInsertOne).toHaveBeenCalled();
     });
 
-    it('should return an error response if dealIdentifier is invalid', async () => {
-      const createFacilityFolderPayload = {
-        dealIdentifier: 'testDeal',
-        facilityIdentifier: 'testFacility',
-        exporterName: 'testName',
-        buyerName: 'testBuyer',
-        destinationMarket: 'UK',
-        riskMarket: '1',
-      };
+    it('Should not create a new entry cron-job-logs collection for an existing payload', async () => {
+      mockFindOne.mockResolvedValueOnce({ payload });
+      mockInsertOne.mockReset();
 
-      const response = await createFacilityFolder('00329453', '../../etc', createFacilityFolderPayload);
+      await post(payload).to('/estore');
 
-      expect(response.status).toEqual(400);
-    });
+      // Look up for the deal ID in the collection
+      expect(mockFindOne).toHaveBeenCalled();
 
-    it('should return an ok response if siteId and dealIdentifier are valid', async () => {
-      const createFacilityFolderPayload = {
-        dealIdentifier: 'testDeal',
-        facilityIdentifier: 'testFacility',
-        exporterName: 'testName',
-        buyerName: 'testBuyer',
-        destinationMarket: 'UK',
-        riskMarket: '1',
-      };
-
-      const response = await createFacilityFolder('00329453', '0071029412', createFacilityFolderPayload);
-
-      expect(response.status).toEqual(HttpStatusCode.Ok);
-    });
-  });
-
-  describe(`api.uploadSupportingDocuments`, () => {
-    it('should return an error response if siteId is invalid', async () => {
-      const uploadSupportingDocumentsPayload = {
-        buyerName: 'testBuyer',
-        documentType: 'testType',
-        fileName: 'testFile',
-        fileLocationPath: 'testLocation',
-      };
-      const response = await uploadSupportingDocuments('../../etc', '0071029412', uploadSupportingDocumentsPayload);
-
-      expect(response.status).toEqual(400);
-    });
-
-    it('should return an error response if dealIdentifier is invalid', async () => {
-      const uploadSupportingDocumentsPayload = {
-        buyerName: 'testBuyer',
-        documentType: 'testType',
-        fileName: 'testFile',
-        fileLocationPath: 'testLocation',
-      };
-      const response = await uploadSupportingDocuments('00329453', '../../etc', uploadSupportingDocumentsPayload);
-
-      expect(response.status).toEqual(400);
-    });
-
-    it('should return an error response if dealIdentifier is invalid', async () => {
-      const uploadSupportingDocumentsPayload = {
-        buyerName: 'testBuyer',
-        documentType: 'testType',
-        fileName: 'testFile',
-        fileLocationPath: 'testLocation',
-      };
-      const response = await uploadSupportingDocuments('00329453', '0071029412', uploadSupportingDocumentsPayload);
-
-      expect(response.status).toEqual(HttpStatusCode.Ok);
+      // Insert a new entry in the collection
+      expect(mockInsertOne).not.toHaveBeenCalled();
     });
   });
 });

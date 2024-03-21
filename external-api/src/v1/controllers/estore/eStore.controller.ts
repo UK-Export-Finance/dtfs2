@@ -224,5 +224,6 @@ export const create = async (req: Request, res: Response) => {
     return res.status(HttpStatusCode.Created).send();
   } catch (error: any) {
     console.error('❌ Unable to create eStore directories %o', error);
+    return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: 'Unable to create eStore directories' });
   }
 };
