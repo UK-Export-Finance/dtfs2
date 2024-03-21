@@ -7,6 +7,8 @@ const { withRoleAuthorisationTests } = require('../../common-tests/role-authoris
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
 const { SqlDbHelper } = require('../../sql-db-helper');
 
+console.error = jest.fn();
+
 describe('GET /v1/banks/:bankId/utilisation-reports/latest', () => {
   const latestReportUrl = (bankId) => `/v1/banks/${bankId}/utilisation-reports/latest`;
   let aPaymentReportOfficer;
@@ -29,6 +31,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports/latest', () => {
     const year = 2023;
     mockUtilisationReports = [
       UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+        .withId(1)
         .withBankId(bankId)
         .withUploadedByUserId(uploadedByUserId)
         .withReportPeriod({
@@ -38,6 +41,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports/latest', () => {
         .withDateUploaded(new Date('2023-01-01'))
         .build(),
       UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+        .withId(2)
         .withBankId(bankId)
         .withUploadedByUserId(uploadedByUserId)
         .withReportPeriod({
