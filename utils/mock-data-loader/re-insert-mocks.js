@@ -1,6 +1,4 @@
-const {
-  createAndLogInAsInitialTfmUser, createAndLogInAsInitialUser, deleteInitialUser, deleteInitialTFMUser
-} = require('./user-helper');
+const { createAndLogInAsInitialTfmUser, createAndLogInAsInitialUser, deleteInitialUser, deleteInitialTFMUser } = require('./user-helper');
 const db = require('./database/database-client');
 
 const cleanAllTablesPortal = require('./clean-all-tables-portal');
@@ -33,14 +31,14 @@ const init = async () => {
     await deleteInitialTFMUser(tfmToken);
     await deleteInitialUser(portalToken);
   } catch (error) {
-    logger.warn('An error occurred, attempting to clean all tables');
+    logger.error('An error occurred, attempting to clean all tables');
     try {
       const portalToken = await createAndLogInAsInitialUser();
       await cleanAllTablesPortal(portalToken);
       await cleanAllTablesGef(portalToken);
       await cleanAllTablesTfm();
     } catch {
-      logger.warn('Not all tables could be cleared. Consider manually clearing your database before retrying');
+      logger.error('Not all tables could be cleared. Consider manually clearing your database before retrying');
     }
     logger.error('The following error occurred while attempting to reinsert mocks:');
     throw error;
