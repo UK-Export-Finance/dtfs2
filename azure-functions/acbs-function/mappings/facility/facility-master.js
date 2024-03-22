@@ -66,7 +66,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
       probabilityOfDefault: deal.tfm.probabilityOfDefault,
     };
   } catch (error) {
-    console.error('Unable to map facility master record. %s', error);
+    console.error('Unable to map facility master record. %o', error);
     return {};
   }
 };
