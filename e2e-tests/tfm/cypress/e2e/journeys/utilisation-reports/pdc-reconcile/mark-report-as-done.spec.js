@@ -88,6 +88,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
         .withUploadedByUserId(uploadedByUserId)
         .build();
       mockUtilisationReports.push(mockUtilisationReport);
+      statusWithBankId[index].bankId = bankId;
     });
 
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
