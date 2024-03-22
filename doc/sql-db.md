@@ -4,7 +4,7 @@ The project uses the [Microsoft SQL Server](https://learn.microsoft.com/en-gb/sq
 
 ## Why both a SQL Server and Mongo DB?
 
-As of January 2024 the project is in the process of migrating from a MongoDB (NoSQL) database to a SQL Server (SQL) database. MongoDB collections will gradually be replaced with SQL Server tables until MondoDB can be completely removed.
+As of January 2024 the project is in the process of migrating from a MongoDB (NoSQL) database to a SQL Server (SQL) database. MongoDB collections will gradually be replaced with SQL Server tables until MongoDB can be completely removed.
 
 ## Running locally
 
@@ -112,7 +112,7 @@ The seeder can be run from `utils/sql-db-seeder` via the
 npm run db:seed
 ```
 
-command. This commands run the seeder to insert mock data into the SQL database. Seeds and factories are defined as files in the `utils/sql-db-seeder/src/<name-of-entity>` directory with `<name-of-entity>.seed.ts` and `<name-of-entity>.factory.ts` file extensions respectively (see the [utilisation reports seeder](../libs/common/src/sql-db-seeder/utilisation-report/) for an example). Seed tracking is set to `true` by default such that, once a seed successfully runs, it will not run again through the `npm run db:seed` command. If you want to run the seeder again, you will first need to run the `npm run db:reset` command from `libs/common`.
+command. This command runs the seeder to insert mock data into the SQL database. Seeds and factories are defined as files in the `utils/sql-db-seeder/src/<name-of-entity>` directory with `<name-of-entity>.seed.ts` and `<name-of-entity>.factory.ts` file extensions respectively (see the [utilisation reports seeder](../libs/common/src/sql-db-seeder/utilisation-report/) for an example). Seed tracking is set to `true` by default such that, once a seed successfully runs, it will not run again through the `npm run db:seed` command. If you want to run the seeder again, you will first need to run the `npm run db:reset` command from `libs/common`.
 
 ## Adding DB access to a package
 

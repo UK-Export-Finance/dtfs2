@@ -1,8 +1,9 @@
+const { isArray } = require('lodash');
 const { format, subMonths } = require('date-fns');
 const externalApi = require('../../external-api/api');
 const api = require('../../v1/api');
 const { getBusinessDayOfMonth } = require('../../utils/date');
-const { hasValue, isValidEmail } = require('../../utils/string');
+const { isValidEmail } = require('../../utils/string');
 const { BANK_HOLIDAY_REGION } = require('../../constants/bank-holiday-region');
 
 /**
@@ -111,20 +112,25 @@ const getEmailRecipient = (paymentOfficerTeam, bankName) => {
  * @returns {Promise<void>}
  */
 const sendEmailForBank = async ({ emailDescription, sendEmailCallback, bank }) => {
-  const { name: bankName, paymentOfficerTeam } = bank;
-  const paymentOfficerTeamEmail = paymentOfficerTeam?.email;
+  const { name: bankName, paymentOfficerTeam, id: bankId } = bank;
+  const paymentOfficerTeamEmails = paymentOfficerTeam?.emails;
 
   try {
-    if (!hasValue(paymentOfficerTeamEmail)) {
-      console.warn(`Not sending ${emailDescription} email to '${bankName}' - no payment officer team email set`);
-    } else if (!isValidEmail(paymentOfficerTeamEmail)) {
-      console.error(`Failed to send ${emailDescription} email to '${bankName}' - invalid payment officer team email '${paymentOfficerTeamEmail}'`);
+    if (!isArray(paymentOfficerTeamEmails) || !paymentOfficerTeamEmails.length) {
+      console.warn(`Not sending ${emailDescription} email to '${bankName}' - no payment officer team emails set`);
     } else {
-      await sendEmailCallback({
-        emailAddress: paymentOfficerTeamEmail,
-        recipient: getEmailRecipient(paymentOfficerTeam, bankName),
+      paymentOfficerTeamEmails.forEach(async (paymentOfficerTeamEmail) => {
+        if (!isValidEmail(paymentOfficerTeamEmail)) {
+          console.error(`Failed to send ${emailDescription} email to '${paymentOfficerTeamEmail}' - invalid payment officer email`);
+        } else {
+          await sendEmailCallback({
+            emailAddress: paymentOfficerTeamEmail,
+            recipient: getEmailRecipient(paymentOfficerTeam, bankName),
+          });
+          console.info(`Successfully sent '${emailDescription}' email to '${bankName}' (bank ID: ${bankId})`);
+        }
+
       });
-      console.info(`Successfully sent ${emailDescription} email to '${bankName}'`);
     }
   } catch (error) {
     console.error(`Failed to send ${emailDescription} email for bank '${bankName}':`, error);
@@ -158,7 +164,6 @@ const sendEmailToAllBanksWhereReportNotReceived = async ({ emailDescription, sen
         );
       } else {
         await sendEmailForBank({ emailDescription, sendEmailCallback, bank });
-        console.info(`Successfully sent '${emailDescription}' email to '${bankName}' (bank ID: ${bankId})`);
       }
     } catch (error) {
       console.error(`Failed to send '${emailDescription}' email to '${bankName}' (bank ID: ${bankId})`, error);
