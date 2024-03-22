@@ -1,6 +1,5 @@
 const { isSameDay, format } = require('date-fns');
 const {
-  getFormattedReportPeriod,
   getReportOverdueChaserDate,
   getFormattedReportDueDate,
   sendEmailToAllBanksWhereReportNotReceived,
@@ -23,15 +22,14 @@ const sendEmailsOnReportOverdueChaserDate = async () => {
   const reportOverdueChaserDate = await getReportOverdueChaserDate();
 
   if (isSameDay(today, reportOverdueChaserDate)) {
-    const reportPeriod = getFormattedReportPeriod();
     const reportDueDate = await getFormattedReportDueDate();
 
     await sendEmailToAllBanksWhereReportNotReceived({
       emailDescription: EMAIL_DESCRIPTION,
-      sendEmailCallback: async ({ emailAddress, recipient }) =>
+      sendEmailCallback: async (emailAddress, recipient, formattedReportPeriod) =>
         sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_OVERDUE, emailAddress, {
           recipient,
-          reportPeriod,
+          reportPeriod: formattedReportPeriod,
           reportDueDate,
         }),
     });

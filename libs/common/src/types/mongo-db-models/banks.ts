@@ -1,6 +1,11 @@
 import { WithId } from 'mongodb';
 import { BankReportPeriodSchedule } from '../bank-report-period-schedule';
 
+export type PaymentOfficerTeam = {
+  teamName: string;
+  email: string;
+};
+
 export type Bank = WithId<{
   id: string;
   name: string;
@@ -9,10 +14,7 @@ export type Bank = WithId<{
   companiesHouseNo: string;
   partyUrn: string;
   hasGefAccessOnly: boolean;
-  paymentOfficerTeam: {
-    teamName: string;
-    email: string;
-  };
+  paymentOfficerTeam: PaymentOfficerTeam;
   utilisationReportPeriodSchedule: BankReportPeriodSchedule;
   isVisibleInTfmUtilisationReports: boolean;
 }>;

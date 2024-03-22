@@ -1,7 +1,8 @@
-const { format, isSameDay } = require('date-fns');
-const { getReportDueDate, getFormattedReportPeriod, sendEmailToAllBanksWhereReportNotReceived } = require('../helpers/utilisation-report-helpers');
-const sendEmail = require('../../external-api/send-email');
-const EMAIL_TEMPLATE_IDS = require('../../constants/email-template-ids');
+import { format, isSameDay } from 'date-fns';
+import { CronSchedulerJob } from '@ukef/dtfs2-common';
+import { SendEmailCallback, getReportDueDate, sendEmailToAllBanksWhereReportNotReceived } from '../helpers/utilisation-report-helpers';
+import sendEmail from '../../external-api/send-email';
+import EMAIL_TEMPLATE_IDS from '../../constants/email-template-ids';
 
 const { UTILISATION_REPORT_DUE_EMAIL_SCHEDULE } = process.env;
 
@@ -15,17 +16,17 @@ const sendEmailsOnReportDueDate = async () => {
 
   const today = new Date();
   const reportDueDate = await getReportDueDate();
+  const sendEmailCallback: SendEmailCallback = async (emailAddress, recipient, formattedReportPeriod) => {
+    await sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_DUE_TODAY, emailAddress, {
+      recipient,
+      reportPeriod: formattedReportPeriod,
+    });
+  };
 
   if (isSameDay(today, reportDueDate)) {
-    const reportPeriod = getFormattedReportPeriod();
-
     await sendEmailToAllBanksWhereReportNotReceived({
       emailDescription: EMAIL_DESCRIPTION,
-      sendEmailCallback: async ({ emailAddress, recipient }) =>
-        sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_DUE_TODAY, emailAddress, {
-          recipient,
-          reportPeriod,
-        }),
+      sendEmailCallback,
     });
   } else {
     const formattedReportDueDate = format(reportDueDate, 'dd-MMM-yy');
@@ -33,13 +34,8 @@ const sendEmailsOnReportDueDate = async () => {
   }
 };
 
-/**
- * @type {import('@ukef/dtfs2-common').CronSchedulerJob}
- */
-const sendReportDueEmailsJob = {
-  cronExpression: UTILISATION_REPORT_DUE_EMAIL_SCHEDULE,
+export const sendReportDueEmailsJob: CronSchedulerJob = {
+  cronExpression: UTILISATION_REPORT_DUE_EMAIL_SCHEDULE as string,
   description: 'Email banks to notify that this months GEF utilisation report has not yet been received and is due today',
   task: sendEmailsOnReportDueDate,
 };
-
-module.exports = { sendReportDueEmailsJob };
