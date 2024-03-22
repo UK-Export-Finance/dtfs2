@@ -275,17 +275,17 @@ describe('utilisation-report-helpers', () => {
   });
 
   describe('sendEmailToAllBanksWhereReportNotReceived', () => {
-    const setReportDueToday = () => {
-      process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = 10;
-      const dueDate = new Date('2023-11-15');
-      jest.useFakeTimers().setSystemTime(dueDate);
-      return dueDate;
-    };
+    const CURRENT_REPORT_PERIOD_MONTH = 10;
+    const CURRENT_YEAR = 2023;
+    const DUE_DATE = new Date(`${CURRENT_YEAR}-${CURRENT_REPORT_PERIOD_MONTH + 1}-15`);
+    process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = 10;
+
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(DUE_DATE);
+    });
 
     it('does not send an email when the bank has already submitted their report', async () => {
       // Arrange
-      const dueDate = setReportDueToday();
-
       externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue([]);
 
       api.getAllBanks.mockResolvedValue([MOCK_BANKS.HSBC]);
@@ -293,8 +293,8 @@ describe('utilisation-report-helpers', () => {
       const existingReport = {
         ...aUtilisationReportResponse(),
         reportPeriod: {
-          start: { month: dueDate.getMonth(), year: dueDate.getFullYear() },
-          end: { month: dueDate.getMonth(), year: dueDate.getFullYear() },
+          start: { month: CURRENT_REPORT_PERIOD_MONTH, year: CURRENT_YEAR },
+          end: { month: CURRENT_REPORT_PERIOD_MONTH, year: CURRENT_YEAR },
         },
       };
       api.getUtilisationReports.mockResolvedValue([existingReport]);
@@ -314,8 +314,6 @@ describe('utilisation-report-helpers', () => {
 
     it('does not send an email when the bank has no payment officer team email', async () => {
       // Arrange
-      setReportDueToday();
-
       externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue([]);
 
       const bankWithoutPaymentOfficerTeam = produce(MOCK_BANKS.HSBC, (draftBank) => {
@@ -340,8 +338,6 @@ describe('utilisation-report-helpers', () => {
 
     it('does not send an email when the bank has and invalid payment officer team email', async () => {
       // Arrange
-      setReportDueToday();
-
       externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue([]);
 
       const invalidEmail = 'invalid-email';
@@ -367,8 +363,6 @@ describe('utilisation-report-helpers', () => {
 
     it('sends emails using the default team name when bank does not have one set', async () => {
       // Arrange
-      setReportDueToday();
-
       externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue([]);
 
       const validBarclaysEmail = 'valid-barclays-email@example.com';
@@ -400,8 +394,6 @@ describe('utilisation-report-helpers', () => {
 
     it('sends emails to all banks', async () => {
       // Arrange
-      setReportDueToday();
-
       externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue([]);
 
       const validBarclaysEmail = 'valid-barclays-email@example.com';
