@@ -9,6 +9,7 @@ const errorHref = require('./errorHref');
 const generateErrorSummary = require('./generateErrorSummary');
 const { requiredFieldsArray, filterErrorList } = require('./pageFields');
 
+
 const allFieldsArray = (fields) => {
   const { OPTIONAL_FIELDS } = fields;
   const allFields = requiredFieldsArray(fields);
@@ -21,6 +22,11 @@ const allFieldsArray = (fields) => {
 };
 
 const shouldReturnRequiredValidation = (fields, fieldValues) => {
+  // Guard clause: if fieldValues is null or undefined, return false
+  if (!fieldValues) {
+    return false;
+  }
+
   const allFields = allFieldsArray(fields);
 
   if (fieldValues.viewedPreviewPage) {
@@ -79,10 +85,7 @@ const mapAlwaysShowErrorFields = (validationErrors, fields) => {
 };
 
 const mapRequiredAndAlwaysShowErrorFields = (validationErrors, allFields) => {
-  // Guard clause: if no validation errors, return an empty object
-  if (!validationErrors || Object.keys(validationErrors).length === 0) {
-    return {};
-  }
+
   const mappedErrors = cloneDeep(validationErrors);
   const allRequiredFields = requiredFieldsArray(allFields);
   const alwaysShowErrorFields = allFields.ALWAYS_SHOW_ERROR_FIELDS ? allFields.ALWAYS_SHOW_ERROR_FIELDS : [];
@@ -91,15 +94,11 @@ const mapRequiredAndAlwaysShowErrorFields = (validationErrors, allFields) => {
 
   mappedErrors.errorList = filterErrorList(validationErrors.errorList, fieldsToReturn);
 
-  // Guard clause: if no errorList, return an empty object
-  if (!mappedErrors.errorList || Object.keys(mappedErrors.errorList).length === 0) {
-    return {};
-  }
-
   return {
     ...generateErrorSummary(mappedErrors, errorHref),
   };
 };
+
 const pageSpecificValidationErrors = (validationErrors, fields, submittedFields) => {
   if (validationErrors && validationErrors.errorList) {
     if (!submittedFields.viewedPreviewPage && hasSubmittedAlwaysShowErrorFields(fields, submittedFields)) {

@@ -63,6 +63,15 @@ describe('page specific validation errors', () => {
       const result = shouldReturnRequiredValidation(mockFields, mockFieldValues);
       expect(result).toEqual(false);
     });
+
+    it('should return false when field values is null', () => {
+      const mockFields = { ...FIELDS.FEE_DETAILS };
+
+      const mockFieldValues = null;
+
+      const result = shouldReturnRequiredValidation(mockFields, mockFieldValues);
+      expect(result).toEqual(false);
+    });
   });
 
   describe('mapRequiredValidationErrors', () => {
