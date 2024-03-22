@@ -31,6 +31,21 @@ describe('submittedDocumentationMatchesOriginalData', () => {
     expect(result).toEqual(false);
   });
 
+  it('should return false when the form files length is greater than 0 and form data and save deal data matches', () => {
+    const formData = {
+      security: 'test1',
+    };
+    const formFiles = [{ name: 'test.pdf' }];
+    const savedDeal = {
+      securityDetails: {
+        exporter: 'test1',
+      },
+    };
+
+    const result = submittedDocumentationMatchesOriginalData(formData, formFiles, savedDeal);
+    expect(result).toEqual(false);
+  });
+
   it('should return false when the form files is undefined', () => {
     const formData = {
       security: 'test1',
