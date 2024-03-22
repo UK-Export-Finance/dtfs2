@@ -248,7 +248,7 @@ describe('utilisation-report-helpers', () => {
       // Arrange
       const paymentOfficerTeam = {
         teamName: 'A Real Payment Officer Team',
-        email: 'email@example.com',
+        emails: ['email@example.com'],
       };
       const bankName = 'Some Bank Name';
 
@@ -259,7 +259,7 @@ describe('utilisation-report-helpers', () => {
       expect(result).toEqual(paymentOfficerTeam.teamName);
     });
 
-    it.each([{ paymentOfficerTeam: undefined }, { paymentOfficerTeam: { email: 'email@example.com' } }])(
+    it.each([{ paymentOfficerTeam: undefined }, { paymentOfficerTeam: { emails: ['email@example.com'] } }])(
       'returns the default team name when when paymentOfficerTeam is $paymentOfficerTeam',
       ({ paymentOfficerTeam }) => {
         // Arrange
@@ -318,7 +318,7 @@ describe('utilisation-report-helpers', () => {
       externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue([]);
 
       const bankWithoutPaymentOfficerTeam = produce(MOCK_BANKS.HSBC, (draftBank) => {
-        delete draftBank.paymentOfficerTeam.email;
+        delete draftBank.paymentOfficerTeam.emails;
       });
       api.getAllBanks.mockResolvedValue([bankWithoutPaymentOfficerTeam]);
 
@@ -334,7 +334,7 @@ describe('utilisation-report-helpers', () => {
 
       // Assert
       expect(sendEmailCallback).not.toHaveBeenCalled();
-      expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('no payment officer team email set'));
+      expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('no payment officer team emails set'));
     });
 
     it('does not send an email when the bank has and invalid payment officer team email', async () => {
@@ -345,7 +345,7 @@ describe('utilisation-report-helpers', () => {
 
       const invalidEmail = 'invalid-email';
       const bankWithoutPaymentOfficerTeam = produce(MOCK_BANKS.HSBC, (draftBank) => {
-        draftBank.paymentOfficerTeam.email = invalidEmail;
+        draftBank.paymentOfficerTeam.emails = [invalidEmail];
       });
       api.getAllBanks.mockResolvedValue([bankWithoutPaymentOfficerTeam]);
 
@@ -361,7 +361,7 @@ describe('utilisation-report-helpers', () => {
 
       // Assert
       expect(sendEmailCallback).not.toHaveBeenCalled();
-      expect(console.error).toHaveBeenCalledWith(expect.stringContaining(`invalid payment officer team email '${invalidEmail}'`));
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining(`invalid payment officer email`));
     });
 
     it('sends emails using the default team name when bank does not have one set', async () => {
@@ -373,7 +373,7 @@ describe('utilisation-report-helpers', () => {
       const validBarclaysEmail = 'valid-barclays-email@example.com';
       const validBarclaysBank = produce(MOCK_BANKS.BARCLAYS, (draftBank) => {
         delete draftBank.paymentOfficerTeam.teamName;
-        draftBank.paymentOfficerTeam.email = validBarclaysEmail;
+        draftBank.paymentOfficerTeam.emails = [validBarclaysEmail];
       });
       api.getAllBanks.mockResolvedValue([validBarclaysBank]);
 
@@ -406,14 +406,15 @@ describe('utilisation-report-helpers', () => {
       const validBarclaysEmail = 'valid-barclays-email@example.com';
       const validBarclaysTeamName = 'Barclays Payment Officer Team';
       const validBarclaysBank = produce(MOCK_BANKS.BARCLAYS, (draftBank) => {
-        draftBank.paymentOfficerTeam.email = validBarclaysEmail;
+        draftBank.paymentOfficerTeam.emails = [validBarclaysEmail];
         draftBank.paymentOfficerTeam.teamName = validBarclaysTeamName;
       });
 
-      const validHsbcEmail = 'valid-hsbc-email@example.com';
+      const validHsbcEmail1 = 'valid-hsbc-email1@example.com';
+      const validHsbcEmail2 = 'valid-hsbc-email2@example.com';
       const validHsbcTeamName = 'HSBC Payment Officer Team';
       const validHsbcBank = produce(MOCK_BANKS.HSBC, (draftBank) => {
-        draftBank.paymentOfficerTeam.email = validHsbcEmail;
+        draftBank.paymentOfficerTeam.emails = [validHsbcEmail1, validHsbcEmail2];
         draftBank.paymentOfficerTeam.teamName = validHsbcTeamName;
       });
 
@@ -430,13 +431,17 @@ describe('utilisation-report-helpers', () => {
       });
 
       // Assert
-      expect(sendEmailCallback).toHaveBeenCalledTimes(2);
+      expect(sendEmailCallback).toHaveBeenCalledTimes(3);
       expect(sendEmailCallback).toHaveBeenCalledWith({
         emailAddress: validBarclaysEmail,
         recipient: validBarclaysTeamName,
       });
       expect(sendEmailCallback).toHaveBeenCalledWith({
-        emailAddress: validHsbcEmail,
+        emailAddress: validHsbcEmail1,
+        recipient: validHsbcTeamName,
+      });
+      expect(sendEmailCallback).toHaveBeenCalledWith({
+        emailAddress: validHsbcEmail2,
         recipient: validHsbcTeamName,
       });
     });

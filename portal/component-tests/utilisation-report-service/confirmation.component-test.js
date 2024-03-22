@@ -17,7 +17,7 @@ describe(page, () => {
   });
 
   it('should render paragraph', () => {
-    wrapper.expectText('[data-cy="paragraph"]').toRead(`A confirmation email has been sent to ${paymentOfficerEmail}.`);
+    wrapper.expectText('[data-cy="paragraph"]').toRead(`A confirmation email has been sent to:`);
   });
 
   it('should render Signout button', () => {
