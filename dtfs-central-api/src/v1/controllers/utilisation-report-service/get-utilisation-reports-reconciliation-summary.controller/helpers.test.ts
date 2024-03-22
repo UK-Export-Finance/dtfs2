@@ -1,8 +1,7 @@
-import { UtilisationReportEntity, UtilisationReportEntityMockBuilder, Bank } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, UtilisationReportEntityMockBuilder, Bank, FeeRecordEntity, FeeRecordEntityMockBuilder } from '@ukef/dtfs2-common';
 import { MOCK_BANKS } from '../../../../../api-tests/mocks/banks';
-import { UtilisationReportRepo, getOneUtilisationReportDetailsByBankId } from '../../../../repositories/utilisation-reports-repo';
-import { getMockUtilisationDataForReport } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-data';
-import { UtilisationDataRepo } from '../../../../repositories/utilisation-data-repo';
+import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
+import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { getAllReportsForSubmissionMonth, getPreviousOpenReportsBySubmissionMonth } from './helpers';
 import { IsoMonthStamp } from '../../../../types/date';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
@@ -12,6 +11,8 @@ jest.mock('../../../../repositories/utilisation-reports-repo');
 jest.mock('../../../../repositories/utilisation-data-repo');
 
 describe('get-utilisation-reports-reconciliation-summary.controller helper', () => {
+  const getMockFeeRecordForReport = (report: UtilisationReportEntity): FeeRecordEntity => FeeRecordEntityMockBuilder.forReport(report).build();
+
   afterEach(() => {
     jest.resetAllMocks();
   });
@@ -23,7 +24,6 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       // Arrange
       const banks: Bank[] = [MOCK_BANKS.BARCLAYS];
 
-      jest.mocked(getOneUtilisationReportDetailsByBankId).mockResolvedValue(null);
       jest.spyOn(UtilisationReportRepo, 'findOpenReportsBeforeReportPeriodStartForBankId').mockResolvedValue([]);
 
       const expectedError = new Error(`Failed to get report for bank with id ${MOCK_BANKS.BARCLAYS.id} for submission month ${submissionMonth}`);
@@ -50,7 +50,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
             return null;
         }
       });
-      jest.spyOn(UtilisationDataRepo, 'findByReport').mockImplementation((report) => Promise.resolve([getMockUtilisationDataForReport(report)]));
+      jest.spyOn(FeeRecordRepo, 'findByReport').mockImplementation((report) => Promise.resolve([getMockFeeRecordForReport(report)]));
 
       jest.spyOn(UtilisationReportRepo, 'findOpenReportsBeforeReportPeriodStartForBankId').mockResolvedValue([]);
 
@@ -133,7 +133,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       const openReports: UtilisationReportEntity[] = [augustPeriodReport, septemberPeriodReport, octoberPeriodReport];
 
       jest.spyOn(UtilisationReportRepo, 'findOpenReportsBeforeReportPeriodStartForBankId').mockResolvedValue(openReports);
-      jest.spyOn(UtilisationDataRepo, 'findByReport').mockImplementation((report) => Promise.resolve([getMockUtilisationDataForReport(report)]));
+      jest.spyOn(FeeRecordRepo, 'findByReport').mockImplementation((report) => Promise.resolve([getMockFeeRecordForReport(report)]));
 
       // Act
       const result = await getPreviousOpenReportsBySubmissionMonth(banks, currentSubmissionMonth);
@@ -209,7 +209,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         }
       });
 
-      jest.spyOn(UtilisationDataRepo, 'findByReport').mockImplementation((report) => Promise.resolve([getMockUtilisationDataForReport(report)]));
+      jest.spyOn(FeeRecordRepo, 'findByReport').mockImplementation((report) => Promise.resolve([getMockFeeRecordForReport(report)]));
 
       // Act
       const result = await getPreviousOpenReportsBySubmissionMonth(banks, currentSubmissionMonth);

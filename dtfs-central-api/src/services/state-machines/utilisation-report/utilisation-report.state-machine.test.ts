@@ -1,5 +1,6 @@
 import difference from 'lodash/difference';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder, MOCK_AZURE_FILE_INFO } from '@ukef/dtfs2-common';
+import { EntityManager } from 'typeorm';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder, MOCK_AZURE_FILE_INFO, DbRequestSource } from '@ukef/dtfs2-common';
 import {
   handleUtilisationReportDueReportInitialisedEvent,
   handleUtilisationReportFeeRecordKeyedEvent,
@@ -92,11 +93,20 @@ describe('UtilisationReportStateMachine', () => {
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED}' event`, async () => {
       // Arrange
+      const requestSource: DbRequestSource = {
+        platform: 'TFM',
+        userId: 'abc123',
+      };
+      const transactionEntityManager = {} as unknown as EntityManager;
       const stateMachine = UtilisationReportStateMachine.forReport(REPORT_NOT_RECEIVED_REPORT);
 
       // Act
       await stateMachine.handleEvent({
         type: 'MANUALLY_SET_COMPLETED',
+        payload: {
+          requestSource,
+          transactionEntityManager,
+        },
       });
 
       // Assert
@@ -136,11 +146,20 @@ describe('UtilisationReportStateMachine', () => {
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED}' event`, async () => {
       // Arrange
+      const requestSource: DbRequestSource = {
+        platform: 'TFM',
+        userId: 'abc123',
+      };
+      const transactionEntityManager = {} as unknown as EntityManager;
       const stateMachine = UtilisationReportStateMachine.forReport(PENDING_RECONCILIATION_REPORT);
 
       // Act
       await stateMachine.handleEvent({
         type: 'MANUALLY_SET_COMPLETED',
+        payload: {
+          requestSource,
+          transactionEntityManager,
+        },
       });
 
       // Assert
@@ -232,11 +251,20 @@ describe('UtilisationReportStateMachine', () => {
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_INCOMPLETE}' event`, async () => {
       // Arrange
+      const requestSource: DbRequestSource = {
+        platform: 'TFM',
+        userId: 'abc123',
+      };
+      const transactionEntityManager = {} as unknown as EntityManager;
       const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_COMPLETED_REPORT);
 
       // Act
       await stateMachine.handleEvent({
         type: 'MANUALLY_SET_INCOMPLETE',
+        payload: {
+          requestSource,
+          transactionEntityManager,
+        },
       });
 
       // Assert

@@ -1,3 +1,4 @@
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const sendEmail = require('../../email');
 const { EMAIL_TEMPLATE_IDS, FILESHARES } = require('../../../constants');
@@ -112,7 +113,6 @@ const uploadReportAndSendNotification = async (req, res) => {
 
     const existingReports = await api.getUtilisationReports(bankId, {
       reportPeriod: parsedReportPeriod,
-      excludeNotReceived: true,
     });
 
     if (existingReports.length !== 1) {
@@ -120,6 +120,14 @@ const uploadReportAndSendNotification = async (req, res) => {
     }
 
     const existingReport = existingReports[0];
+
+    if (existingReport.status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) {
+      return res
+        .status(500)
+        .send(
+          `Expected report to be in '${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}' state (was actually in '${existingReport.status}' state)`,
+        );
+    }
 
     const fileInfo = await saveFileToAzure(file, bankId);
 

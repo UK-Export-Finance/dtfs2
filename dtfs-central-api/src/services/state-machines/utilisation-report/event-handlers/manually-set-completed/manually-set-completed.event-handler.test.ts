@@ -1,14 +1,39 @@
-import { UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { EntityManager } from 'typeorm';
+import {
+  DbRequestSource,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+  getDbAuditUpdatedByUserId,
+} from '@ukef/dtfs2-common';
 import { handleUtilisationReportManuallySetCompletedEvent } from './manually-set-completed.event-handler';
-import { NotImplementedError } from '../../../../../errors';
 
 describe('handleUtilisationReportManuallySetCompletedEvent', () => {
-  // TODO FN-1862 - update tests when functionality implemented
-  it('throws a NotImplementedError', () => {
+  const requestSource: DbRequestSource = {
+    platform: 'TFM',
+    userId: 'abc123',
+  };
+  const updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
+
+  const mockSave = jest.fn();
+
+  it('updates the report to a completed state and saves the report', async () => {
     // Arrange
+    const mockEntityManager = {
+      save: mockSave,
+    } as unknown as EntityManager;
+
     const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
 
-    // Act / Assert
-    expect(() => handleUtilisationReportManuallySetCompletedEvent(report)).toThrow(NotImplementedError);
+    // Act
+    await handleUtilisationReportManuallySetCompletedEvent(report, {
+      requestSource,
+      transactionEntityManager: mockEntityManager,
+    });
+
+    // Assert
+    expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
+    expect(report.status).toEqual(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
+    expect(report.updatedByUserId).toEqual(updatedByUserId);
   });
 });

@@ -68,7 +68,7 @@ export class UtilisationReportStateMachine {
           case 'REPORT_UPLOADED':
             return handleUtilisationReportReportUploadedEvent(this.report, event.payload);
           case 'MANUALLY_SET_COMPLETED':
-            return handleUtilisationReportManuallySetCompletedEvent(this.report);
+            return handleUtilisationReportManuallySetCompletedEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
@@ -77,7 +77,7 @@ export class UtilisationReportStateMachine {
           case 'PAYMENT_ADDED_TO_FEE_RECORD':
             return handleUtilisationReportPaymentAddedToFeeRecordEvent(this.report, event.payload);
           case 'MANUALLY_SET_COMPLETED':
-            return handleUtilisationReportManuallySetCompletedEvent(this.report);
+            return handleUtilisationReportManuallySetCompletedEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
@@ -95,7 +95,7 @@ export class UtilisationReportStateMachine {
       case 'RECONCILIATION_COMPLETED':
         switch (event.type) {
           case 'MANUALLY_SET_INCOMPLETE':
-            return handleUtilisationReportManuallySetIncompleteEvent(this.report);
+            return handleUtilisationReportManuallySetIncompleteEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }

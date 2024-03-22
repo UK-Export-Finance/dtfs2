@@ -1,12 +1,7 @@
-import {
-  AzureFileInfoEntity,
-  DbRequestSource,
-  MOCK_AZURE_FILE_INFO,
-  UtilisationReportEntity,
-} from '@ukef/dtfs2-common';
+import { AzureFileInfoEntity, DbRequestSource, MOCK_AZURE_FILE_INFO, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '.';
 import { MOCK_UTILISATION_REPORT_RAW_CSV_DATA } from '../../../api-tests/mocks/utilisation-reports/utilisation-report-raw-csv-data';
-import { utilisationDataCsvRowToSqlEntity } from '../../helpers';
+import { feeRecordCsvRowToSqlEntity } from '../../helpers';
 
 describe('UtilisationReportRepo', () => {
   describe('updateWithUploadDetails', () => {
@@ -49,7 +44,7 @@ describe('UtilisationReportRepo', () => {
       };
 
       const reportCsvData = MOCK_UTILISATION_REPORT_RAW_CSV_DATA;
-      const utilisationDataEntity = utilisationDataCsvRowToSqlEntity({
+      const feeRecordEntity = feeRecordCsvRowToSqlEntity({
         dataEntry: reportCsvData,
         requestSource,
       });
@@ -61,7 +56,7 @@ describe('UtilisationReportRepo', () => {
       });
 
       const saveSpy = jest.spyOn(UtilisationReportRepo, 'save').mockResolvedValue(report);
-      
+
       // Act
       await UtilisationReportRepo.updateWithUploadDetails(report, {
         azureFileInfo,
@@ -69,11 +64,11 @@ describe('UtilisationReportRepo', () => {
         uploadedByUserId,
         requestSource,
       });
-      
+
       // Assert
       report.updateWithUploadDetails({
         azureFileInfo: azureFileInfoEntity,
-        data: [utilisationDataEntity],
+        feeRecords: [feeRecordEntity],
         uploadedByUserId,
         requestSource,
       });
