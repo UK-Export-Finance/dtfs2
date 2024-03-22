@@ -12,7 +12,7 @@ describe('/v1/utilisation-reports/set-status', () => {
   const setStatusUrl = '/v1/utilisation-reports/set-status';
 
   const reportId = 1;
-  const mockReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).build();
+  const mockReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).build();
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
@@ -21,7 +21,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', mockReport);
   });
 
-  it(`should return a 500 error when trying to set a non-existent report to '${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}'`, async () => {
+  it(`should return a 500 error when trying to set a non-existent report to '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}'`, async () => {
     // Arrange
     const invalidReportId = reportId + 1;
     const requestBody = {
@@ -29,7 +29,7 @@ describe('/v1/utilisation-reports/set-status', () => {
       reportsWithStatus: [
         {
           reportId: invalidReportId,
-          status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
         },
       ],
     };

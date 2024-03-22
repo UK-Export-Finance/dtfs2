@@ -14,7 +14,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
   let aPaymentReportOfficer;
   let testUsers;
   let bankId;
-  const receivedReportId = 123;
+  const receivedReportIds = [123, 124];
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
@@ -26,10 +26,10 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
 
     const year = 2023;
     const uploadedByUserId = aPaymentReportOfficer._id;
+
     const aReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
       .withBankId(bankId)
-      .withId(receivedReportId)
-      .withUploadedByUserId(aPaymentReportOfficer._id.toString())
+      .withId(receivedReportIds[0])
       .withReportPeriod({
         start: {
           month: 1,
@@ -40,9 +40,10 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
           year,
         },
       })
-      .withDateUploaded(new Date(year, 0))
+      .withDateUploaded(new Date(`${year}-01`))
       .withUploadedByUserId(uploadedByUserId)
       .build();
+
     const aNotReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
       .withId(8)
       .withBankId(bankId)
@@ -57,10 +58,10 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
         },
       })
       .build();
-    const aMarkedReconciledReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
-      .withId(9)
-      .withAzureFileInfo(undefined)
+
+    const aReconciliationCompletedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
       .withBankId(bankId)
+      .withId(receivedReportIds[1])
       .withReportPeriod({
         start: {
           month: 3,
@@ -71,10 +72,11 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
           year,
         },
       })
+      .withDateUploaded(new Date(`${year}-03`))
+      .withUploadedByUserId(uploadedByUserId)
       .build();
-    await SqlDbHelper.saveNewEntry('UtilisationReport', aReceivedReport);
-    await SqlDbHelper.saveNewEntry('UtilisationReport', aNotReceivedReport);
-    await SqlDbHelper.saveNewEntry('UtilisationReport', aMarkedReconciledReport);
+
+    await SqlDbHelper.saveNewEntries('UtilisationReport', [aReceivedReport, aNotReceivedReport, aReconciliationCompletedReport]);
   });
 
   withClientAuthenticationTests({
@@ -108,7 +110,8 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
     expect(response.status).toEqual(200);
     expect(response.body.length).toEqual(1);
     expect(response.body[0].year).toEqual(2023);
-    expect(response.body[0].reports.length).toEqual(1);
-    expect(response.body[0].reports[0].id).toEqual(receivedReportId);
+    expect(response.body[0].reports.length).toEqual(2);
+    expect(response.body[0].reports[0].id).toEqual(receivedReportIds[0]);
+    expect(response.body[0].reports[1].id).toEqual(receivedReportIds[1]);
   });
 });

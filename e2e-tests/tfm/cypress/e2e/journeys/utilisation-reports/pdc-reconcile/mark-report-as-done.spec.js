@@ -1,4 +1,4 @@
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder, getReportPeriodForBankScheduleBySubmissionMonth } from '@ukef/dtfs2-common';
 import pages from '../../../pages';
 import USERS from '../../../../fixtures/users';
 import { PDC_TEAMS } from '../../../../fixtures/teams';
@@ -8,8 +8,9 @@ import { aliasSelector } from '../../../../../../support/alias-selector';
 import { BANK1_PAYMENT_REPORT_OFFICER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 
 context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`, () => {
+  let uploadedByUserId;
+
   const submissionMonth = toIsoMonthStamp(new Date());
-  const reportPeriod = getMonthlyReportPeriodFromIsoSubmissionMonth(submissionMonth);
   const utilisationReportsAlias = 'utilisationReportsAlias';
 
   const displayStatusSelector = 'td > strong[data-cy="utilisation-report-reconciliation-status"]';
@@ -42,7 +43,6 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
   };
 
   beforeEach(() => {
-    let uploadedByUserId;
     cy.getUserByUsername(BANK1_PAYMENT_REPORT_OFFICER1.username).then((user) => {
       uploadedByUserId = user._id.toString();
     });
@@ -60,8 +60,16 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     const mockUtilisationReports = [];
     cy.wrap(visibleBanks).each((bank, index) => {
       const bankId = bank.id;
+
+      // TODO FN-1601 update after TFM is working for quarterly banks
+      if (bankId === '10') {
+        return;
+      }
+
       const reportId = bankId;
       const status = statusWithBankId.at(index)?.status;
+
+      const reportPeriod = getReportPeriodForBankScheduleBySubmissionMonth(bank.utilisationReportPeriodSchedule, submissionMonth);
 
       if (!status) {
         const mockNotReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
@@ -93,7 +101,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     pages.utilisationReportsPage.visit();
   });
 
-  it("should not allow users to mark reports in the 'REPORT_NOT_RECEIVED' state as completed", () => {
+  it(`should only allow users to manually mark a report as completed/not completed if the report is not in the '${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}' state`, () => {
     cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
       const { bankId, id } = utilisationReport;
 
@@ -211,10 +219,11 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     cy.get(aliasSelector(utilisationReportsAlias)).then((utilisationReports) => {
       const { bankId } = utilisationReports[0];
 
-      const previousUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+      const previousUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
         .withId(999) // this report id should always be unique
         .withBankId(bankId)
         .withReportPeriod(previousReportPeriod)
+        .withUploadedByUserId(uploadedByUserId)
         .build();
 
       cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [previousUtilisationReport]);
