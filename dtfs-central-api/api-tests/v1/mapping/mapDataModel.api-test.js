@@ -1,4 +1,4 @@
-const mapDataModel = require('../../../src/mapping/mapDataModel');
+const { mapDataModel } = require('../../../src/mapping/mapDataModel');
 const CONSTANTS = require('../../../src/constants');
 
 const deal = {
