@@ -11,7 +11,7 @@ export type Bank = WithId<{
   hasGefAccessOnly: boolean;
   paymentOfficerTeam: {
     teamName: string;
-    email: string;
+    emails: string[];
   };
   utilisationReportPeriodSchedule: BankReportPeriodSchedule;
   isVisibleInTfmUtilisationReports: boolean;

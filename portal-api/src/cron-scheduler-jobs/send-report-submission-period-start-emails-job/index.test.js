@@ -31,12 +31,12 @@ describe('sendReportSubmissionPeriodStartEmailsJob', () => {
 
     const validBarclaysEmail = 'valid-barclays-email@example.com';
     const validBarclaysBank = produce(MOCK_BANKS.BARCLAYS, (draftBank) => {
-      draftBank.paymentOfficerTeam.email = validBarclaysEmail;
+      draftBank.paymentOfficerTeam.emails = [validBarclaysEmail];
     });
 
     const validHsbcEmail = 'valid-hsbc-email@example.com';
     const validHsbcBank = produce(MOCK_BANKS.HSBC, (draftBank) => {
-      draftBank.paymentOfficerTeam.email = validHsbcEmail;
+      draftBank.paymentOfficerTeam.emails = [validHsbcEmail];
     });
 
     api.getAllBanks.mockResolvedValue([validBarclaysBank, validHsbcBank]);
