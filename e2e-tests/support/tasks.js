@@ -176,7 +176,7 @@ module.exports = {
       insertManyTfmFacilitiesAndTwoLinkedDeals,
       deleteAllTfmFacilities,
       removeAllUtilisationReportDetailsFromDb,
-      getAllBanks
+      getAllBanks,
     };
   },
 };
