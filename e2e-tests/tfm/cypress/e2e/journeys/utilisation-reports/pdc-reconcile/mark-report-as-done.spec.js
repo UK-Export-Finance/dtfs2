@@ -251,5 +251,23 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
 
       pages.utilisationReportsPage.tableRowSelector(bankId, previousSubmissionMonth).should('not.exist');
     });
+
+    // Make sure original reports are still present
+    cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
+      const { bankId } = utilisationReport;
+      const statusWithSpecificBankId = statusWithBankId.find(({ bankId: bankIdToMatch }) => bankId === bankIdToMatch);
+      if (!statusWithSpecificBankId) {
+        return;
+      }
+      const { status } = statusWithSpecificBankId;
+      const displayStatus = getDisplayStatus(status);
+
+      pages.utilisationReportsPage
+        .tableRowSelector(bankId, submissionMonth)
+        .should('exist')
+        .within(($tableRow) => {
+          cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
+        });
+    });
   });
 });
