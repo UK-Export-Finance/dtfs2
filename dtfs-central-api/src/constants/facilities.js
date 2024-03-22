@@ -11,7 +11,13 @@ const FACILITY_PAYMENT_TYPE = {
   AT_MATURITY: 'At maturity',
 };
 
+const SORT_BY = {
+  ASCENDING: 'ascending',
+  DESCENDING: 'descending',
+};
+
 module.exports = {
   FACILITY_TYPE,
   FACILITY_PAYMENT_TYPE,
+  SORT_BY,
 };

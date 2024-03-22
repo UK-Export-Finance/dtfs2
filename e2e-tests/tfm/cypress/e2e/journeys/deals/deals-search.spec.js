@@ -116,7 +116,7 @@ context('User can view and filter multiple deals', () => {
 
   beforeEach(() => {
     cy.login(T1_USER_1);
-    cy.url().should('eq', relative('/deals'));
+    cy.url().should('eq', relative('/deals/0'));
   });
 
   after(() => {
@@ -396,7 +396,7 @@ context('User can view and filter multiple deals', () => {
 
     // click `all deals` link
     partials.primaryNavigation.allDealsLink().click();
-    cy.url().should('eq', relative('/deals'));
+    cy.url().should('eq', relative('/deals/0'));
 
     const TOTAL_DEALS = ALL_SUBMITTED_DEALS.length;
     pages.dealsPage.dealsTableRows().should('have.length', TOTAL_DEALS);

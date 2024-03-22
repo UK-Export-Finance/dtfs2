@@ -1,5 +1,6 @@
-{% from "govuk/components/table/macro.njk" import govukTable %}
-{% import './_macros/facilities-table-search-form.njk' as facilitiesTableSearchForm %}
+{% import './_macros/facilities-table.njk' as facilitiesTable %}
+{% import '_macros/table-search-form.njk' as tableSearchForm %}
+{% import '_macros/pagination.njk' as pagination %}
 
 {% extends "index.njk" %}
 
@@ -8,115 +9,49 @@
 {%- endblock %}
 
 {% block content %}
-
   <div class="govuk-grid-row">
 
     <div class="govuk-grid-column-three-quarters">
-      <h2 class="header-label" data-cy="deals-heading" aria-label="{{ heading }}">{{- heading -}}</h2>
+      <h2 class="header-label" data-cy="facilities-heading" aria-label="{{ heading }}">{{- heading -}}</h2>
     </div>
 
     <div class="govuk-grid-column-one-quarter govuk-!-padding-top-7">
-      {{ facilitiesTableSearchForm.render(csrfToken) }}
+      {{ tableSearchForm.render(
+        {
+          tableName: 'facilities',
+          csrfToken: csrfToken
+        }
+      ) }}
     </div>
   </div>
 
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
 
-  {% set items = [] %}
-  {% for facility in facilities %}
-    {% set facilityLink %}
-      <a
-         class="govuk-link"
-         href="/case/{{ facility.dealId }}/facility/{{ facility.facilityId }}"
-         data-cy="deal-{{ facility.facilityId }}-ukef-facility-id-link">
-         <span class="govuk-visually-hidden">View facility</span> <span data-cy="deal-{{ facility.facilityId }}-ukef-facility-id-link-text">{{ facility.ukefFacilityId }}</span> <span class="govuk-visually-hidden">details</span>
-      </a>
-    {% endset %}
+      {% set componentData = {
+        facilities: facilities,
+        user: user,
+        sortButtonWasClicked: sortButtonWasClicked,
+        activeSortByOrder: activeSortByOrder,
+        activeSortByField: activeSortByField,
+        csrfToken: csrfToken
+      } %}
 
-    {% set stage %}
-      {% if facility.hasBeenIssued %}
-        Issued
-      {% else %}
-        Unissued
-      {% endif %}
-    {% endset %}
+      {{ facilitiesTable.render(componentData) }}
 
-    {% set facilityStage %}
-      {% if facility.hasAmendmentInProgress === true %}
-        {{stage}} (amendment in progress)
-      {% else %}
-        {{stage}}
-      {% endif %}
-    {% endset %}
+      {{ pagination.render({
+        totalPages: pages.totalPages,
+        currentPage: pages.currentPage,
+        totalItems: pages.totalItems,
+        paginationRoute: '/facilities',
+        queryString: queryString
+      })}}
 
-    {% set item = [
-      {
-        html: facilityLink,
-        attributes: { "data-cy": "facility__ukefFacilityId", "data-sort-value": facility.ukefFacilityId  }
-      },
-      {
-        text: facility.dealType or "-",
-        attributes: { "data-cy": "facility__product", "data-sort-value": facility.dealType }
-      },
-      {
-        text: facility.type or "-",
-        attributes: { "data-cy": "facility__type", "data-sort-value": facility.type }
-      },
-      {
-        text: facility.companyName or "-",
-        attributes: { "data-cy": "facility__companyName", "data-sort-value": facility.companyName }
-      },
-      {
-        text: facility.currencyAndValue or "-",
-        attributes: { "data-cy": "facility__facilityValue", "data-sort-value": facility.value }
-      },
-      {
-        html: facility.coverEndDate or "-",
-        attributes: { "data-cy": "facility__coverEndDate", "data-sort-value": facility.coverEndDateEpoch }
-      },
-      {
-        html: facilityStage,
-        attributes: { "data-cy": "facility__facilityStage" }
-      }
-    ] %}
+    </div>
+  </div>
 
-    {% set items = (items.push(item), items) %}
-  {% endfor %}
+{% endblock %}
 
-
-{{ govukTable({
-   attributes: { 'data-module': 'moj-sortable-table', 'data-cy': 'tfm-facilities-table' },
-   classes: 'tfm__facilities-table',
-   head: [
-      {
-        text: "Facility ID",
-        attributes: { "data-cy": "facility__header--ukefFacilityId", "aria-sort": "ascending" }
-      },
-      {
-        text: "Product",
-         attributes: { "data-cy": "facility__header--product", "aria-sort": "none"}
-      },
-      {
-        text: "Type",
-        attributes: { "data-cy": "facility__header--dataType", "aria-sort": "none" }
-      },
-      {
-        text: "Exporter",
-        attributes: { "data-cy": "facility__header--exporter", "aria-sort": "none" }
-      },
-      {
-        text: "Value (export currency)",
-        attributes: { "data-cy": "facility__header--value", "aria-sort": "none" }
-      },
-      {
-        text: "Cover end date",
-        attributes: { "data-cy": "facility__header--coverEndDate", "aria-sort": "none" }
-      },
-      {
-        text: "Facility stage",
-        attributes: { "data-cy": "facility__header--facilityStage", "aria-sort": "none" }
-      }
-    ],
-    rows: items
-  }) }}
+{% block sub_content %}
 
 {% endblock %}
