@@ -1,9 +1,9 @@
 const payloadVerification = require('./payload');
 const isNumber = require('./isNumber');
-const { utilisationDataCsvRowToSqlEntity } = require('./utilisation-data.helper');
+const { feeRecordCsvRowToSqlEntity } = require('./fee-record.helper');
 
 module.exports = {
   payloadVerification,
   isNumber,
-  utilisationDataCsvRowToSqlEntity,
+  feeRecordCsvRowToSqlEntity,
 };

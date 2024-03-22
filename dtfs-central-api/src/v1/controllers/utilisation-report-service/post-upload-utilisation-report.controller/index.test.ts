@@ -1,21 +1,36 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
-import { MOCK_AZURE_FILE_INFO, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  AzureFileInfoEntity,
+  DbRequestSource,
+  MOCK_AZURE_FILE_INFO,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+  getDbAuditUpdatedByUserId,
+} from '@ukef/dtfs2-common';
 import { postUploadUtilisationReport, postUploadUtilisationReportPayloadValidator, PostUploadUtilisationReportRequestBody } from '.';
 import { MOCK_UTILISATION_REPORT_RAW_CSV_DATA } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-report-raw-csv-data';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
-import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
+import { feeRecordCsvRowToSqlEntity } from '../../../../helpers';
 
 console.error = jest.fn();
 
 describe('post-upload-utilisation-report controller', () => {
+  const userId = new ObjectId().toString();
+  const requestSource: DbRequestSource = {
+    platform: 'PORTAL',
+    userId,
+  };
+  const updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
+  const reportData = [MOCK_UTILISATION_REPORT_RAW_CSV_DATA];
+
   const validPostUploadUtilisationReportRequestBody: PostUploadUtilisationReportRequestBody = {
     reportId: 1,
     fileInfo: MOCK_AZURE_FILE_INFO,
-    reportData: [MOCK_UTILISATION_REPORT_RAW_CSV_DATA],
+    reportData,
     user: {
-      _id: new ObjectId().toString(),
+      _id: userId,
     },
   };
 
@@ -85,6 +100,11 @@ describe('post-upload-utilisation-report controller', () => {
   describe('postUploadUtilisationReport', () => {
     const mockDate = new Date('2024-01');
 
+    const utilisationReportRepoFindOneByOrFailSpy = jest.spyOn(UtilisationReportRepo, 'findOneByOrFail');
+    const utilisationReportRepoSaveSpy = jest.spyOn(UtilisationReportRepo, 'save');
+
+    const getNotReceivedReport = () => UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
+
     beforeAll(() => {
       jest.useFakeTimers();
       jest.setSystemTime(mockDate);
@@ -98,56 +118,53 @@ describe('post-upload-utilisation-report controller', () => {
       jest.resetAllMocks();
     });
 
-    const createMockReports = (): { notReceivedReport: UtilisationReportEntity; updatedReport: UtilisationReportEntity } => {
-      const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
-      const updatedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
-        .withId(notReceivedReport.id)
-        .withDateUploaded(mockDate)
-        .build();
-      return { notReceivedReport, updatedReport };
-    };
-
     it('responds with a specific error status code if the state transition is invalid', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const utilisationReportRepoSaveSpy = jest.spyOn(UtilisationReportRepo, 'save');
-
-      const { updatedReport } = createMockReports();
-
-      const mockInvalidStateMachine = UtilisationReportStateMachine.forReport(updatedReport);
-      const createStateMachineForReportIdSpy = jest.spyOn(UtilisationReportStateMachine, 'forReportId').mockResolvedValue(mockInvalidStateMachine);
+      const invalidStatusReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+      utilisationReportRepoFindOneByOrFailSpy.mockResolvedValue(invalidStatusReport);
 
       // Act
       await postUploadUtilisationReport(req, res);
 
       // Assert
-      expect(createStateMachineForReportIdSpy).toHaveBeenCalledWith(validPostUploadUtilisationReportRequestBody.reportId);
+      expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({ id: validPostUploadUtilisationReportRequestBody.reportId });
       expect(utilisationReportRepoSaveSpy).not.toHaveBeenCalled();
       expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
       expect(res._getData()).toEqual(expect.stringContaining('Failed to save utilisation report:'));
     });
 
     describe('when the state transition is valid', () => {
-      const createStateMachineForReportIdSpy = jest.spyOn(UtilisationReportStateMachine, 'forReportId');
-
-      it('calls the correct repo method and responds with a success status code', async () => {
+      it('saves the report and responds with a success status code', async () => {
         // Arrange
         const { req, res } = getHttpMocks();
 
-        const { notReceivedReport, updatedReport } = createMockReports();
+        const notReceivedReport = getNotReceivedReport();
 
-        const mockStateMachine = UtilisationReportStateMachine.forReport(notReceivedReport);
-        createStateMachineForReportIdSpy.mockResolvedValue(mockStateMachine);
-
-        const utilisationReportRepoSaveSpy = jest.spyOn(UtilisationReportRepo, 'save').mockResolvedValue(updatedReport);
+        utilisationReportRepoFindOneByOrFailSpy.mockResolvedValue(notReceivedReport);
+        utilisationReportRepoSaveSpy.mockResolvedValue(notReceivedReport);
 
         // Act
         await postUploadUtilisationReport(req, res);
 
         // Assert
-        expect(createStateMachineForReportIdSpy).toHaveBeenCalledWith(validPostUploadUtilisationReportRequestBody.reportId);
+        expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({ id: validPostUploadUtilisationReportRequestBody.reportId });
         expect(utilisationReportRepoSaveSpy).toHaveBeenCalledTimes(1);
+
+        const azureFileInfo = AzureFileInfoEntity.create({ ...validPostUploadUtilisationReportRequestBody.fileInfo, requestSource });
+        const feeRecord = feeRecordCsvRowToSqlEntity({ dataEntry: reportData[0], requestSource });
+        expect(utilisationReportRepoSaveSpy).toHaveBeenCalledWith(
+          expect.objectContaining<Partial<UtilisationReportEntity>>({
+            status: 'PENDING_RECONCILIATION',
+            updatedByUserId,
+            uploadedByUserId: userId,
+            azureFileInfo,
+            feeRecords: [feeRecord],
+            dateUploaded: mockDate,
+          }),
+        );
+
         expect(res._getStatusCode()).toBe(HttpStatusCode.Created);
         expect(res._getData()).toEqual({ dateUploaded: mockDate });
       });
@@ -156,19 +173,17 @@ describe('post-upload-utilisation-report controller', () => {
         // Arrange
         const { req, res } = getHttpMocks();
 
-        const { notReceivedReport } = createMockReports();
+        const notReceivedReport = getNotReceivedReport();        
+        utilisationReportRepoFindOneByOrFailSpy.mockResolvedValue(notReceivedReport);
 
-        const mockStateMachine = UtilisationReportStateMachine.forReport(notReceivedReport);
-        createStateMachineForReportIdSpy.mockResolvedValue(mockStateMachine);
-
-        const utilisationReportRepoSaveSpy = jest.spyOn(UtilisationReportRepo, 'save').mockRejectedValue(new Error('Some error'));
+        utilisationReportRepoSaveSpy.mockRejectedValue(new Error('Some error'));
 
         // Act
         await postUploadUtilisationReport(req, res);
 
         // Assert
         expect(res._getData()).toEqual('Failed to save utilisation report');
-        expect(createStateMachineForReportIdSpy).toHaveBeenCalledWith(validPostUploadUtilisationReportRequestBody.reportId);
+        expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({ id: validPostUploadUtilisationReportRequestBody.reportId });
         expect(utilisationReportRepoSaveSpy).toHaveBeenCalledTimes(1);
         expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
       });

@@ -4,7 +4,7 @@ import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import axios from 'axios';
 import app from '../../../src/createApp';
 import createApi from '../../api';
-import { wipeAllUtilisationReports } from '../../test-helpers/wipe-sql-db';
+import { SqlDbHelper } from '../../sql-db-helper';
 import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
 
 const api = createApi(app);
@@ -28,12 +28,12 @@ interface CustomSuccessResponse extends Response {
 
 describe('GET /v1/bank/:bankId/utilisation-reports', () => {
   beforeAll(async () => {
-    await SqlDbDataSource.initialize();
-    await wipeAllUtilisationReports();
+    await SqlDbHelper.initialize();
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
   });
 
   afterEach(async () => {
-    await wipeAllUtilisationReports();
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
   });
 
   it('returns 400 when an invalid bank id is provided', async () => {

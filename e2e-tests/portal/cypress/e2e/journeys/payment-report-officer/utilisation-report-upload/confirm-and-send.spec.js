@@ -23,6 +23,7 @@ context('Confirm and send', () => {
 
       confirmAndSend.mainHeading().should('not.exist');
       confirmAndSend.currentUrl().should('contain', '/utilisation-report-upload');
+      confirmAndSend.currentUrl().should('not.contain', '/confirm-and-send');
     });
 
     it('Should route to the Upload Report page when the change button is selected', () => {
@@ -30,6 +31,7 @@ context('Confirm and send', () => {
 
       confirmAndSend.mainHeading().should('not.exist');
       confirmAndSend.currentUrl().should('contain', '/utilisation-report-upload');
+      confirmAndSend.currentUrl().should('not.contain', '/confirm-and-send');
     });
 
     it('Should route to the Confirmation page when the Confirm and Send button is selected', () => {
@@ -46,6 +48,7 @@ context('Confirm and send', () => {
       cy.visit(relativeURL('/utilisation-report-upload/confirm-and-send'));
 
       confirmAndSend.currentUrl().should('contain', '/utilisation-report-upload');
+      confirmAndSend.currentUrl().should('not.contain', '/confirm-and-send');
     });
   });
 });
