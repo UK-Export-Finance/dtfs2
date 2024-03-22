@@ -69,14 +69,14 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
 
     const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
       .withId(1)
-      .withUploadedByUserId(portalUserId)
       .withBankId(bankId)
+      .withUploadedByUserId(portalUserId)
       .build();
 
     const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
       .withId(2)
-      .withUploadedByUserId(portalUserId)
       .withBankId(bankId)
+      .withUploadedByUserId(portalUserId)
       .build();
 
     await saveReportsToDatabase(uploadedReport, nonUploadedReport);
@@ -89,26 +89,23 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     expect(response.body.length).toEqual(2);
   });
 
-  it('gets only the utilisation reports which have been uploaded when the excludeNotReceived query param is set to true', async () => {
+  it("gets only the utilisation reports which are not in the 'REPORT_NOT_RECEIVED' when the excludeNotReceived query param is set to true", async () => {
     // Arrange
     const bankId = '13';
 
     const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
       .withId(1)
-      .withUploadedByUserId(portalUserId)
       .withBankId(bankId)
+      .withUploadedByUserId(portalUserId)
       .build();
 
-    const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
-      .withId(2)
-      .withUploadedByUserId(portalUserId)
-      .withBankId(bankId)
-      .build();
+    const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(2).withBankId(bankId).build();
 
     const nonUploadedMarkedReconciledReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
       .withId(3)
-      .withUploadedByUserId(portalUserId)
       .withBankId(bankId)
+      .withUploadedByUserId(null)
+      .withDateUploaded(null)
       .withAzureFileInfo(undefined)
       .build();
 
@@ -119,12 +116,13 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
 
     // Assert
     expect(response.status).toEqual(200);
-    expect(response.body.length).toEqual(1);
+    expect(response.body.length).toEqual(2);
     const ids = response.body.map((report) => report.id);
     expect(ids).toContain(uploadedReport.id);
+    expect(ids).toContain(nonUploadedMarkedReconciledReport.id);
   });
 
-  it('gets uploaded utilisation reports for specified period', async () => {
+  it('gets utilisation reports for specified period', async () => {
     // Arrange
     const bankId = '13';
     const reportPeriod = {
@@ -134,19 +132,52 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
 
     const uploadedReportForReportPeriod = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
       .withId(1)
+      .withBankId(bankId)
+      .withReportPeriod(reportPeriod)
       .withUploadedByUserId(portalUserId)
+      .build();
+
+    const uploadedReportForDifferentReportPeriod = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+      .withId(2)
+      .withBankId(bankId)
+      .withReportPeriod({ start: { month: 1, year: 2022 }, end: { month: 2, year: 2022 } })
+      .withUploadedByUserId(portalUserId)
+      .build();
+
+    await saveReportsToDatabase(uploadedReportForReportPeriod, uploadedReportForDifferentReportPeriod);
+
+    // Act
+    const urlWithQueryParams = axios.getUri({ url: getUrl(bankId), params: { reportPeriod } });
+    const response: CustomSuccessResponse = await api.get(urlWithQueryParams);
+
+    // Assert
+    expect(response.status).toEqual(200);
+    expect(response.body.length).toEqual(1);
+    expect(response.body[0].id).toEqual(uploadedReportForReportPeriod.id);
+  });
+
+  it("returns no reports when the excludeNotReceived query is true but the report for the specified report period is in the 'REPORT_NOT_RECEIVED' state", async () => {
+    // Arrange
+    const bankId = '13';
+    const reportPeriod = {
+      start: { month: 11, year: 2021 },
+      end: { month: 12, year: 2021 },
+    };
+
+    const notReceivedReportForReportPeriod = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+      .withId(1)
       .withBankId(bankId)
       .withReportPeriod(reportPeriod)
       .build();
 
     const uploadedReportForDifferentReportPeriod = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
       .withId(2)
-      .withUploadedByUserId(portalUserId)
       .withBankId(bankId)
-      .withReportPeriod({ start: { month: 12, year: 2021 }, end: { month: 1, year: 2022 } })
+      .withReportPeriod({ start: { month: 1, year: 2022 }, end: { month: 2, year: 2022 } })
+      .withUploadedByUserId(portalUserId)
       .build();
 
-    await saveReportsToDatabase(uploadedReportForReportPeriod, uploadedReportForDifferentReportPeriod);
+    await saveReportsToDatabase(notReceivedReportForReportPeriod, uploadedReportForDifferentReportPeriod);
 
     // Act
     const urlWithQueryParams = axios.getUri({ url: getUrl(bankId), params: { reportPeriod, excludeNotReceived: true } });
@@ -154,7 +185,6 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
 
     // Assert
     expect(response.status).toEqual(200);
-    expect(response.body.length).toEqual(1);
-    expect(response.body[0].id).toEqual(uploadedReportForReportPeriod.id);
+    expect(response.body.length).toEqual(0);
   });
 });

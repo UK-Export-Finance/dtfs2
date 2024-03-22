@@ -78,10 +78,12 @@ const getFormattedReportPeriod = () => {
  */
 const getIsReportSubmitted = async (bank) => {
   const reportPeriod = getReportPeriod();
-  const uploadedReportsInReportPeriod = await api.getUtilisationReports(bank.id, {
-    reportPeriod,
-    excludeNotReceived: true,
-  });
+  const uploadedReportsInReportPeriod = (
+    await api.getUtilisationReports(bank.id, {
+      reportPeriod,
+      excludeNotReceived: true,
+    })
+  ).filter((report) => !!report.azureFileInfo);
   return uploadedReportsInReportPeriod.length > 0;
 };
 
