@@ -3,7 +3,7 @@ import api from '../../../api';
 import * as getUtilisationReportsController from '..';
 import { UpdateUtilisationReportStatusRequest, UpdateUtilisationReportStatusRequestBody, updateUtilisationReportStatus } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
-import { TEAM_IDS } from '../../../constants';
+import { TEAM_IDS, UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
 import { ReportWithStatus } from '../../../types/utilisation-reports';
 
 console.error = jest.fn();
@@ -24,12 +24,13 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
       user: { ...MOCK_TFM_SESSION_USER, teams: [TEAM_IDS.PDC_RECONCILE] },
     };
 
-    const validMongoObjectId = '5ce819935e539c343f141ece';
+    const validSqlId = '1';
+    // TODO FN-1862 Fix type assertion below
     const validBody: UpdateUtilisationReportStatusRequestBody = {
       _csrf: 'csrf',
       'form-button': 'completed',
-      [`set-status--reportId-${validMongoObjectId}`]: 'on',
-    };
+      [`set-status--reportId-${validSqlId}-currentStatus-${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}`]: 'on',
+    } as UpdateUtilisationReportStatusRequestBody;
 
     const getPostRequestMocks = ({ body }: { body: undefined | Partial<UpdateUtilisationReportStatusRequestBody> }) =>
       httpMocks.createMocks<UpdateUtilisationReportStatusRequest>({ session, body });
@@ -85,7 +86,7 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
       const expectedReportsWithStatus: ReportWithStatus[] = [
         {
           status: 'RECONCILIATION_COMPLETED',
-          reportId: validMongoObjectId,
+          reportId: validSqlId,
         },
       ];
 
