@@ -20,17 +20,11 @@ const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
-const mandatoryFields = [
-  'expiryDate',
-];
+const mandatoryFields = ['expiryDate'];
 
 const updateFacilityLoan = async (context) => {
   try {
-    const {
-      loanId,
-      facilityId,
-      acbsFacilityLoanInput,
-    } = context.bindingData;
+    const { loanId, facilityId, acbsFacilityLoanInput } = context.bindingData;
 
     const missingMandatory = findMissingMandatory(acbsFacilityLoanInput, mandatoryFields);
 
@@ -44,13 +38,17 @@ const updateFacilityLoan = async (context) => {
 
     if (isHttpErrorStatus(status)) {
       throw new Error(
-        JSON.stringify({
-          name: 'ACBS Facility loan amend error',
-          submittedToACBS,
-          receivedFromACBS: getNowAsIsoString(),
-          dataReceived: data,
-          dataSent: acbsFacilityLoanInput,
-        }, null, 4),
+        JSON.stringify(
+          {
+            name: 'ACBS Facility loan amend error',
+            submittedToACBS,
+            receivedFromACBS: getNowAsIsoString(),
+            dataReceived: data,
+            dataSent: acbsFacilityLoanInput,
+          },
+          null,
+          4,
+        ),
       );
     }
 
@@ -62,8 +60,8 @@ const updateFacilityLoan = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Error amending facility loan record: %s', error);
-    throw new Error('Error amending facility loan record %s', error);
+    console.error('Error amending facility loan record: %o', error);
+    throw new Error('Error amending facility loan record', { cause: error });
   }
 };
 

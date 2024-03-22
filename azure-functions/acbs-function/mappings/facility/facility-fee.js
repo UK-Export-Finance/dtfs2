@@ -18,11 +18,7 @@ const getDealSubmissionDate = require('../deal/helpers/get-deal-submission-date'
 const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
   try {
     const effectiveDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
-    const {
-      expirationDate,
-      nextDueDate,
-      nextAccrueToDate,
-    } = helpers.getFeeDates(facility, deal.dealSnapshot.dealType, premiumScheduleIndex);
+    const { expirationDate, nextDueDate, nextAccrueToDate } = helpers.getFeeDates(facility, deal.dealSnapshot.dealType, premiumScheduleIndex);
     const currency = facility.facilitySnapshot.currency.id || CONSTANTS.DEAL.CURRENCY.DEFAULT;
 
     return {
@@ -38,7 +34,7 @@ const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
       spreadToInvestorsIndicator: true,
     };
   } catch (error) {
-    console.error('Unable to map facility fixed fee record. %s', error);
+    console.error('Unable to map facility fixed fee record. %o', error);
     return {};
   }
 };
@@ -49,7 +45,7 @@ const facilityFee = (deal, facility) => {
     // Singular GEF fixed fee record - Object
     feeRecord = constructFeeRecord(deal, facility);
   } else {
-  // Multiple EWCS/BSS Fee records as per premium schedule - Array
+    // Multiple EWCS/BSS Fee records as per premium schedule - Array
     feeRecord = [];
     if (facility.tfm.premiumSchedule) {
       facility.tfm.premiumSchedule.forEach((premiumSchedule, index) => {
