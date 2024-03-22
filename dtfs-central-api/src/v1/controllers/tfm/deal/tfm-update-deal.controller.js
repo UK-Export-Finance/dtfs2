@@ -80,7 +80,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal, sessionUser) => {
       ...$.flatten(withoutId(dealUpdate)),
       $set: {
         ...$.flatten(withoutId(dealUpdate)).$set,
-        auditDetails: generateTfmUserAuditDetails(sessionUser?._id), 
+        auditDetails: generateTfmUserAuditDetails(sessionUser._id), 
       },
     }
 
@@ -96,28 +96,33 @@ const updateDeal = async (dealId, dealChanges, existingDeal, sessionUser) => {
 };
 
 exports.updateDealPut = async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    const dealId = req.params.id;
+  if (!ObjectId.isValid(req.params.id)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  }
+  if (!req.body.user) {
+    return res.status(400).send({ status: 400, message: 'No logged in user provided' });
+  }
 
-    const { dealUpdate, user } = req.body;
+  const dealId = req.params.id;
 
-    const deal = await findOneDeal(dealId, false, 'tfm');
+  const { dealUpdate, user } = req.body;
 
-    if (deal) {
-      const response = await updateDeal(
-        dealId,
-        dealUpdate,
-        deal,
-        user,
-      );
+  const deal = await findOneDeal(dealId, false, 'tfm');
 
-      const status = isNumber(response?.status, 3);
-      const code = status ? response.status : 200;
-      return res.status(code).json(response);
-    }
+  if (!deal) {
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
-  return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+
+  const response = await updateDeal(
+    dealId,
+    dealUpdate,
+    deal,
+    user,
+  );
+
+  const status = isNumber(response?.status, 3);
+  const code = status ? response.status : 200;
+  return res.status(code).json(response);
 };
 
 const updateDealSnapshot = async (deal, snapshotChanges) => {
