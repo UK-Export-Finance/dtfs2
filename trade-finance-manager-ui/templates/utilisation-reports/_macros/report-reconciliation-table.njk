@@ -43,7 +43,7 @@
             class="govuk-table__header govuk-!-font-weight-regular"
             data-sort-value="{{ summaryItem.bank.name }}"
           >
-            {% if user | userIsInTeam(["PDC_RECONCILE"]) %}
+            {% if user | userIsInTeam(["PDC_RECONCILE"]) and summaryItem.status !== 'REPORT_NOT_RECEIVED' %}
               {{ tableCellCheckbox.render({
                 checkboxId: checkboxId,
                 label: checkboxLabel

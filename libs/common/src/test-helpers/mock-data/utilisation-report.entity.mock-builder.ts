@@ -4,14 +4,14 @@ import { getDbAuditUpdatedByUserId } from '../../sql-db-entities/helpers';
 import { ReportPeriodPartialEntity } from '../../sql-db-entities/partial-entities';
 import { MOCK_AZURE_FILE_INFO } from './azure-file-info.mock';
 
-export class UtilisationReportEntityMockBuilder {
+export class UtilisationReportEntityMockBuilder<ReportStatus extends UtilisationReportReconciliationStatus> {
   private readonly report: UtilisationReportEntity;
 
   private constructor(report: UtilisationReportEntity) {
     this.report = report;
   }
 
-  public static forStatus(status: UtilisationReportReconciliationStatus): UtilisationReportEntityMockBuilder {
+  public static forStatus<Status extends UtilisationReportReconciliationStatus>(status: Status): UtilisationReportEntityMockBuilder<Status> {
     const bankId = '123';
     const reportPeriod = {
       start: { month: 11, year: 2023 },
@@ -19,7 +19,7 @@ export class UtilisationReportEntityMockBuilder {
     };
 
     if (status === 'REPORT_NOT_RECEIVED') {
-      return new UtilisationReportEntityMockBuilder(
+      return new UtilisationReportEntityMockBuilder<typeof status>(
         UtilisationReportEntity.createNotReceived({
           bankId,
           reportPeriod,
@@ -46,37 +46,39 @@ export class UtilisationReportEntityMockBuilder {
     return new UtilisationReportEntityMockBuilder(report);
   }
 
-  public withId(id: number): UtilisationReportEntityMockBuilder {
+  public withId(id: number): UtilisationReportEntityMockBuilder<ReportStatus> {
     this.report.id = id;
     return this;
   }
 
-  public withBankId(bankId: string): UtilisationReportEntityMockBuilder {
+  public withBankId(bankId: string): UtilisationReportEntityMockBuilder<ReportStatus> {
     this.report.bankId = bankId;
     return this;
   }
 
-  public withReportPeriod(reportPeriod: ReportPeriodPartialEntity): UtilisationReportEntityMockBuilder {
+  public withReportPeriod(reportPeriod: ReportPeriodPartialEntity): UtilisationReportEntityMockBuilder<ReportStatus> {
     this.report.reportPeriod = reportPeriod;
     return this;
   }
 
-  public withDateUploaded(dateUploaded: Date | null): UtilisationReportEntityMockBuilder {
+  public withDateUploaded(dateUploaded: ReportStatus extends 'REPORT_NOT_RECEIVED' ? null : Date): UtilisationReportEntityMockBuilder<ReportStatus> {
     this.report.dateUploaded = dateUploaded;
     return this;
   }
 
-  public withAzureFileInfo(azureFileInfo: AzureFileInfoEntity | undefined): UtilisationReportEntityMockBuilder {
+  public withAzureFileInfo(
+    azureFileInfo: ReportStatus extends 'REPORT_NOT_RECEIVED' ? undefined : AzureFileInfoEntity,
+  ): UtilisationReportEntityMockBuilder<ReportStatus> {
     this.report.azureFileInfo = azureFileInfo;
     return this;
   }
 
-  public withUploadedByUserId(uploadedByUserId: string | null): UtilisationReportEntityMockBuilder {
+  public withUploadedByUserId(uploadedByUserId: ReportStatus extends 'REPORT_NOT_RECEIVED' ? null : string): UtilisationReportEntityMockBuilder<ReportStatus> {
     this.report.uploadedByUserId = uploadedByUserId;
     return this;
   }
 
-  public withFeeRecords(feeRecords: FeeRecordEntity[]): UtilisationReportEntityMockBuilder {
+  public withFeeRecords(feeRecords: FeeRecordEntity[]): UtilisationReportEntityMockBuilder<ReportStatus> {
     this.report.feeRecords = feeRecords;
     return this;
   }
