@@ -71,7 +71,10 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
         const acbsFacilityLoanInput = mappings.facility.facilityLoan(deal, facilitySnapshot, acbsParties);
 
         // 3.2. Create facility loan record
-        const facilityLoan = yield context.df.callActivityWithRetry('activity-create-facility-loan', retryOptions, { facilityIdentifier: facilityId, acbsFacilityLoanInput });
+        const facilityLoan = yield context.df.callActivityWithRetry('activity-create-facility-loan', retryOptions, {
+          facilityIdentifier: facilityId,
+          acbsFacilityLoanInput,
+        });
 
         // 4.1. Map Facility fixed-fee / premium schedule record(s)
         const acbsFacilityFeeInput = mappings.facility.facilityFee(deal, facilitySnapshot);
@@ -82,10 +85,18 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
           // eslint-disable-next-line no-plusplus
           for (let i = 0; i < acbsFacilityFeeInput.length; i++) {
             const input = acbsFacilityFeeInput[i];
-            facilityFee.push(yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, { facilityIdentifier: facilityId, acbsFacilityFeeInput: input }));
+            facilityFee.push(
+              yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, {
+                facilityIdentifier: facilityId,
+                acbsFacilityFeeInput: input,
+              }),
+            );
           }
         } else {
-          facilityFee = yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, { facilityIdentifier: facilityId, acbsFacilityFeeInput });
+          facilityFee = yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, {
+            facilityIdentifier: facilityId,
+            acbsFacilityFeeInput,
+          });
         }
 
         return {
@@ -99,7 +110,7 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
 
     throw new Error('Invalid argument set');
   } catch (error) {
-    console.error('Error processing facility issuance: %s', error);
-    throw new Error('Error processing facility issuance %s', error);
+    console.error('Error processing facility issuance: %o', error);
+    throw new Error('Error processing facility issuance', { cause: error });
   }
 });
