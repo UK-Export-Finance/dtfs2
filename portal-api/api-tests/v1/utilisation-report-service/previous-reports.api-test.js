@@ -1,5 +1,5 @@
 const { UtilisationReportEntityMockBuilder, UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
-const { wipeAllUtilisationReports, saveUtilisationReportToDatabase } = require('../../sql-db-helper.ts');
+const { SqlDbHelper } = require('../../sql-db-helper.ts');
 const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
@@ -17,7 +17,8 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
   const receivedReportId = 123;
 
   beforeAll(async () => {
-    await wipeAllUtilisationReports();
+    await SqlDbHelper.initialize();
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
     testUsers = await testUserCache.initialise(app);
     aPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).one();
@@ -28,13 +29,14 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
     const aReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
       .withBankId(bankId)
       .withId(receivedReportId)
+      .withUploadedByUserId(aPaymentReportOfficer._id.toString())
       .withReportPeriod({
         start: {
           month: 1,
           year,
         },
         end: {
-          month: 2,
+          month: 1,
           year,
         },
       })
@@ -50,7 +52,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
           year,
         },
         end: {
-          month: 3,
+          month: 2,
           year,
         },
       })
@@ -65,14 +67,14 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
           year,
         },
         end: {
-          month: 4,
+          month: 3,
           year,
         },
       })
       .build();
-    await saveUtilisationReportToDatabase(aReceivedReport);
-    await saveUtilisationReportToDatabase(aNotReceivedReport);
-    await saveUtilisationReportToDatabase(aMarkedReconciledReport);
+    await SqlDbHelper.saveNewEntry('UtilisationReport', aReceivedReport);
+    await SqlDbHelper.saveNewEntry('UtilisationReport', aNotReceivedReport);
+    await SqlDbHelper.saveNewEntry('UtilisationReport', aMarkedReconciledReport);
   });
 
   withClientAuthenticationTests({

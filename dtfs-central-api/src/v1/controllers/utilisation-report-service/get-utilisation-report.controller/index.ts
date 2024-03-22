@@ -1,7 +1,7 @@
 import { Response } from 'express';
-import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
-import { CustomExpressRequest } from '../../../types/custom-express-request';
-import { mapUtilisationReportEntityToGetUtilisationReportResponse } from '../../../mapping/mapUtilisationReport';
+import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
+import { CustomExpressRequest } from '../../../../types/custom-express-request';
+import { mapUtilisationReportEntityToGetUtilisationReportResponse } from '../../../../mapping/mapUtilisationReport';
 
 export type GetUtilisationReportByIdRequest = CustomExpressRequest<{
   params: {
@@ -19,7 +19,8 @@ export const getUtilisationReportById = async (req: GetUtilisationReportByIdRequ
       return res.status(404).send();
     }
 
-    return res.status(200).send(mapUtilisationReportEntityToGetUtilisationReportResponse(utilisationReport));
+    const mappedUtilisationReport = await mapUtilisationReportEntityToGetUtilisationReportResponse(utilisationReport);
+    return res.status(200).send(mappedUtilisationReport);
   } catch (error) {
     const errorMessage = `Failed to get utilisation report with id '${id}'`;
     console.error(errorMessage, error);
