@@ -55,8 +55,8 @@ const createCodeValueTransaction = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Error creating facility code value transaction record: %s', error);
-    throw new Error('Error creating facility code value transaction record %s', error);
+    console.error('Error creating facility code value transaction record: %o', error);
+    throw new Error('Error creating facility code value transaction record', { cause: error });
   }
 };
 
