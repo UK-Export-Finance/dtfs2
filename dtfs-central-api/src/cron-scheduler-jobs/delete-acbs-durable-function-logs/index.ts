@@ -5,7 +5,7 @@ import { deleteAllCompleteAcbsDurableFunctionLogs } from '../../services/reposit
 const { ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE } = process.env;
 
 /**
- * Deletes all durable function logs that have the type "ACBS" and status "Complete"
+ * Deletes all durable function logs that have the type "ACBS" and status "Completed"
  * @throws {WriteConcernError} If the deletion fails to write
  */
 const deleteCompleteAcbsDurableFunctionLogs = async (): Promise<void> => {
@@ -17,6 +17,6 @@ const deleteCompleteAcbsDurableFunctionLogs = async (): Promise<void> => {
 
 export const deleteCompleteAcbsDurableFunctionLogsJob: CronSchedulerJob = {
   cronExpression: asString(ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE, 'ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE'),
-  description: 'Deletes durable function logs that have the type "ACBS" and status "Complete"',
+  description: 'Deletes durable function logs that have the type "ACBS" and status "Completed"',
   task: deleteCompleteAcbsDurableFunctionLogs,
 };
