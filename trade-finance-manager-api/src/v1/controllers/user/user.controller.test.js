@@ -41,8 +41,7 @@ describe('user.controller', () => {
     });
 
     it('should return the result of handleFindByEmailsResult', async () => {
-
-      const result = await findByEmails([[MOCK_TFM_USER.email]]);
+      const result = await findByEmails([MOCK_TFM_USER.email]);
 
       const expected = handleFindByEmailsResult([MOCK_TFM_USER]);
 
