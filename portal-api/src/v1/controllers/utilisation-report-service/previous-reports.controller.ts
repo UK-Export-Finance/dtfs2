@@ -72,11 +72,9 @@ export const getPreviousReportsByBankId = async (req: GetPreviousReportsByBankId
   try {
     const { bankId } = req.params;
 
-    const uploadedReports = (
-      await api.getUtilisationReports(bankId, {
-        excludeNotReceived: true,
-      })
-    ).filter((report) => !!report.azureFileInfo);
+    const uploadedReports = await api.getUtilisationReports(bankId, {
+      excludeNotReceived: true,
+    });
 
     const sortedReports = groupAndSortReports(uploadedReports);
 
