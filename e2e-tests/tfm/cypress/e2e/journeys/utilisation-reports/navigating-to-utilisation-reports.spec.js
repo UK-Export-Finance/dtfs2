@@ -21,6 +21,7 @@ context('PDC_READ users can route to the payments page for a bank', () => {
 
       getAllBanksResult
         .filter((bank) => bank.isVisibleInTfmUtilisationReports)
+        .filter((bank) => bank.id !== '10') // TODO FN-1601 remove after TFM is working for quarterly banks
         .forEach((visibleBank) => {
           visibleBanks.push(visibleBank);
         });
@@ -30,12 +31,7 @@ context('PDC_READ users can route to the payments page for a bank', () => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
 
     cy.wrap(visibleBanks).each((bank) => {
-      // TODO FN-1601 update after TFM is working for quarterly banks
-      if (bank.id === '10') {
-        return;
-      }
-
-      const reportPeriod = getReportPeriodForBankScheduleBySubmissionMonth(bank.utilisationReportPeriodSchedule);
+      const reportPeriod = getReportPeriodForBankScheduleBySubmissionMonth(bank.utilisationReportPeriodSchedule, submissionMonth);
 
       const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(status)
         .withId(bank.id)
