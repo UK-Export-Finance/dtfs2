@@ -3,6 +3,7 @@ const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 const DEFAULTS = require('../../../../src/v1/defaults');
+const { mockUser } = require('../../../mocks/test-users/mock-portal-user');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
@@ -54,7 +55,13 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
         facilities: [],
       },
       tfm: DEFAULTS.DEAL_TFM,
-      auditDetails: expect.any(Object),
+      auditDetails: {
+        lastUpdatedAt: expect.any(String),
+        lastUpdatedByPortalUserId: expect.any(String),
+        lastUpdatedByTfmUserId: null,
+        noUserLoggedIn: null,
+        lastUpdatedByIsSystem: null,
+      },
     };
     expect(body).toEqual(expected);
   });
@@ -78,7 +85,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
     const { status } = await api.put({
       dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
       dealId,
-      checker: 'checker-id',
+      checker: mockUser,
     }).to('/v1/tfm/deals/submit');
 
     expect(status).toEqual(200);
@@ -96,7 +103,10 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
       tfm: DEFAULTS.FACILITY_TFM,
       auditDetails: {
         lastUpdatedAt: expect.any(String),
-        lastUpdatedByPortalUserId: 'checker-id',
+        lastUpdatedByPortalUserId: mockUser._id,
+        lastUpdatedByTfmUserId: null,
+        noUserLoggedIn: null,
+        lastUpdatedByIsSystem: null,
       },
     });
 
@@ -112,7 +122,10 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
       tfm: DEFAULTS.FACILITY_TFM,
       auditDetails: {
         lastUpdatedAt: expect.any(String),
-        lastUpdatedByPortalUserId: 'checker-id',
+        lastUpdatedByPortalUserId: mockUser._id,
+        lastUpdatedByTfmUserId: null,
+        noUserLoggedIn: null,
+        lastUpdatedByIsSystem: null,
       },
     });
   });

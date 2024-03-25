@@ -3,6 +3,7 @@ const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 const DEFAULTS = require('../../../../src/v1/defaults');
+const { mockUser } = require('../../../mocks/test-users/mock-portal-user');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
@@ -15,16 +16,6 @@ const newDeal = {
 
 const newFacility = {
   type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
-};
-
-const mockUser = {
-  _id: '123456789',
-  username: 'temp',
-  roles: [],
-  bank: {
-    id: '956',
-    name: 'Barclays Bank',
-  },
 };
 
 describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
@@ -48,7 +39,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
     const { status, body } = await api.put({
       dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
       dealId,
-      checker: 'checker-id'
+      checker: mockUser,
     }).to('/v1/tfm/deals/submit');
 
     expect(status).toEqual(200);
@@ -64,7 +55,10 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       tfm: DEFAULTS.DEAL_TFM,
       auditDetails: {
         lastUpdatedAt: expect.any(String),
-        lastUpdatedByPortalUserId: 'checker-id',
+        lastUpdatedByPortalUserId: mockUser._id,
+        lastUpdatedByTfmUserId: null,
+        noUserLoggedIn: null,
+        lastUpdatedByIsSystem: null,
       },
     };
 
@@ -101,7 +95,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
     const { status } = await api.put({
       dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
       dealId,
-      checker: 'checker-id',
+      checker: mockUser,
     }).to('/v1/tfm/deals/submit');
 
     expect(status).toEqual(200);
@@ -121,7 +115,10 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       tfm: DEFAULTS.FACILITY_TFM,
       auditDetails: {
         lastUpdatedAt: expect.any(String),
-        lastUpdatedByPortalUserId: 'checker-id',
+        lastUpdatedByPortalUserId: mockUser._id,
+        lastUpdatedByTfmUserId: null,
+        noUserLoggedIn: null,
+        lastUpdatedByIsSystem: null,
       },
     });
 
@@ -139,7 +136,10 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       tfm: DEFAULTS.FACILITY_TFM,
       auditDetails: {
         lastUpdatedAt: expect.any(String),
-        lastUpdatedByPortalUserId: 'checker-id',
+        lastUpdatedByPortalUserId: mockUser._id,
+        lastUpdatedByTfmUserId: null,
+        noUserLoggedIn: null,
+        lastUpdatedByIsSystem: null,
       },
     });
   });

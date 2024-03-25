@@ -10,7 +10,7 @@ module.exports = (deals, opts) => {
     cy.wrap(deals).each((dealToInsert) => {
       submitDeal(dealToInsert._id, dealToInsert.dealType, null, token);
 
-      submitDealAfterUkefIds(dealToInsert._id, dealToInsert.dealType, { _id: 'test-checker-id' }, token)
+      submitDealAfterUkefIds(dealToInsert._id, dealToInsert.dealType, { _id: '6602f568f609ff532522b472' }, token)
         .then((submittedDeal) => {
           persistedDeals.push(submittedDeal);
         });

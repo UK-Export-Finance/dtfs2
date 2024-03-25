@@ -10,6 +10,7 @@ const CONSTANTS = require('../../constants');
 const MOCK_DEAL_MIA = require('../__mocks__/mock-deal-MIA-submitted');
 const { createTasks } = require('../helpers/create-tasks');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
+const MOCK_USERS = require('../__mocks__/mock-users')
 
 describe('createDealTasks', () => {
   const updateDealSpy = jest.fn((dealId, dealUpdate, sessionUser) =>
@@ -22,7 +23,6 @@ describe('createDealTasks', () => {
   let mockSubmittedDeal;
   let mockDealEligibilityCriteria11False;
   let mockDealWithPartyUrn;
-  const sessionUser = { _id: 'tfm-user-id' }
 
   beforeEach(async () => {
     externalApis.updateDeal = updateDealSpy;
@@ -190,7 +190,7 @@ describe('createDealTasks', () => {
     });
 
     it('should call api.updateDeal and return updated deal', async () => {
-      const result = await createDealTasks(mockSubmittedDeal, sessionUser);
+      const result = await createDealTasks(mockSubmittedDeal, MOCK_USERS[0]);
 
       const expectedTasks = createTasks(
         mockSubmittedDeal.submissionType,

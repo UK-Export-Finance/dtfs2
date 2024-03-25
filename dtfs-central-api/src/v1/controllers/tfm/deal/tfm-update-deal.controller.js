@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb');
+const { produce } = require('immer');
 const $ = require('mongo-dot-notation');
-const { generateTfmUserAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
+const { generateTfmUserAuditDetails, generateSystemAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
@@ -13,51 +14,44 @@ const withoutId = (obj) => {
 };
 
 /**
- * 
  * @param {string} dealId - deal to be updated
  * @param {object} dealChanges - updates to make
  * @param {object} existingDeal
  * @param {object} sessionUser - user making the update
- * @returns 
+ * @param {object} options - defaults to empty object
+ * @returns {Promise<object>} updated deal or error object
  */
-const updateDeal = async (dealId, dealChanges, existingDeal, sessionUser) => {
+const updateDeal = async (dealId, dealChanges, existingDeal, sessionUser, options = {}) => {
   if (ObjectId.isValid(dealId)) {
     const collection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_DEALS);
 
     /**
-   * Only use the tfm object. Remove anything else.
-   * Only the tfm object should be updated.
-   * - e.g dealSnapshot or any other root level data should not be updated.
-   * */
-    const { tfm } = dealChanges;
+     * Only the tfm object should be updated.
+     * - e.g dealSnapshot or any other root level data should not be updated.
+     * */
+    const dealUpdate = { tfm: dealChanges.tfm };
 
-    const dealUpdate = { tfm };
-    const tfmUpdate = dealUpdate.tfm;
-
-    if (tfmUpdate) {
-    /**
-   * Ensure that if a tfmUpdate with activities is an empty object,
-   * we do not make activities an empty object.
-   * */
-      if (tfmUpdate.activities && Object.keys(tfmUpdate.activities).length === 0) {
+    if (dealUpdate.tfm) {
+      /**
+       * Ensure that if a tfmUpdate with activities is an empty object,
+       * we do not make activities an empty object.
+       */
+      if (dealUpdate.tfm.activities && Object.keys(dealUpdate.tfm.activities).length === 0) {
         dealUpdate.tfm.activities = [];
       }
 
-      /**
-   * Activities helper variables
-   * */
       const existingDealActivities = (existingDeal?.tfm?.activities);
-      const tfmUpdateHasActivities = (tfmUpdate.activities
-                                  && Object.keys(tfmUpdate.activities).length > 0);
+      const tfmUpdateHasActivities = (dealUpdate.tfm.activities
+                                  && Object.keys(dealUpdate.tfm.activities).length > 0);
       /**
-   * ACBS activities update is an array whereas TFM activity update is an object
-   * Checks if array, then uses spread operator
-   * else if not array, adds the object
-   */
+       * ACBS activities update is an array whereas TFM activity update is an object
+       * Checks if array, then uses spread operator
+       * else if not array, adds the object
+       */
       if (tfmUpdateHasActivities) {
-        if (Array.isArray(tfmUpdate.activities)) {
+        if (Array.isArray(dealUpdate.tfm.activities)) {
           const updatedActivities = [
-            ...tfmUpdate.activities,
+            ...dealUpdate.tfm.activities,
             ...existingDealActivities,
           ];
           // ensures that duplicate entries are not added to activities by comparing timestamp and label
@@ -65,7 +59,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal, sessionUser) => {
             arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index);
         } else {
           const updatedActivities = [
-            tfmUpdate.activities,
+            dealUpdate.tfm.activities,
             ...existingDealActivities,
           ];
           // ensures that duplicate entries are not added to activities by comparing timestamp and label
@@ -76,13 +70,10 @@ const updateDeal = async (dealId, dealChanges, existingDeal, sessionUser) => {
 
       dealUpdate.tfm.lastUpdated = new Date().valueOf();
     }
-    const updateQuery = {
-      ...$.flatten(withoutId(dealUpdate)),
-      $set: {
-        ...$.flatten(withoutId(dealUpdate)).$set,
-        auditDetails: generateTfmUserAuditDetails(sessionUser._id), 
-      },
-    }
+
+    const updateQuery = produce($.flatten(withoutId(dealUpdate)), (draftQuery) => {
+      draftQuery.$set.auditDetails = options.isSystemUpdate ? generateSystemAuditDetails() : generateTfmUserAuditDetails(sessionUser._id);
+    });
 
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: { $eq: ObjectId(dealId) } },
@@ -99,13 +90,14 @@ exports.updateDealPut = async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
-  if (!req.body.user) {
-    return res.status(400).send({ status: 400, message: 'No logged in user provided' });
+
+  if (!req.body.user?._id && !req.body.options?.isSystemUpdate) {
+    return res.status(400).send({ status: 400, message: 'Invalid user' });
   }
 
   const dealId = req.params.id;
 
-  const { dealUpdate, user } = req.body;
+  const { dealUpdate, user, options } = req.body;
 
   const deal = await findOneDeal(dealId, false, 'tfm');
 
@@ -118,6 +110,7 @@ exports.updateDealPut = async (req, res) => {
     dealUpdate,
     deal,
     user,
+    options
   );
 
   const status = isNumber(response?.status, 3);

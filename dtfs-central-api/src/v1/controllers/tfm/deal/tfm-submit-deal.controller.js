@@ -39,7 +39,7 @@ const createDealSnapshot = async (deal, checker) => {
     const submissionCount = getSubmissionCount(deal);
     const tfmInit = submissionCount === 1 ? { tfm: DEFAULTS.DEAL_TFM } : null;
 
-    const dealObj = { dealSnapshot: deal, ...tfmInit, auditDetails: generatePortalUserAuditDetails(checker) };
+    const dealObj = { dealSnapshot: deal, ...tfmInit, auditDetails: generatePortalUserAuditDetails(checker._id) };
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
       const dealFacilities = await findAllFacilitiesByDealId(dealId);
@@ -87,7 +87,7 @@ const createFacilitiesSnapshot = async (deal, checker) => {
             {
               _id: { $eq: ObjectId(facility._id) }
             },
-            $.flatten({ facilitySnapshot: facility, ...tfmInit, auditDetails: generatePortalUserAuditDetails(checker) }),
+            $.flatten({ facilitySnapshot: facility, ...tfmInit, auditDetails: generatePortalUserAuditDetails(checker._id) }),
             {
               returnNewDocument: true,
               returnDocument: 'after',

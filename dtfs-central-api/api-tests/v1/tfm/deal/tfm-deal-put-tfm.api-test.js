@@ -4,16 +4,8 @@ const aDeal = require('../../deal-builder');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
+const { mockUser } = require('../../../mocks/test-users/mock-portal-user');
 
-const mockUser = {
-  _id: '123456789',
-  username: 'temp',
-  roles: [],
-  bank: {
-    id: '956',
-    name: 'Barclays Bank',
-  },
-};
 
 const newDeal = aDeal({
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
@@ -78,6 +70,9 @@ describe('/v1/tfm/deal/:id', () => {
       expect(dealAfterUpdate.auditDetails).toEqual({
         lastUpdatedAt: expect.any(String),
         lastUpdatedByTfmUserId: mockUser._id,
+        lastUpdatedByPortalUserId: null,
+        noUserLoggedIn: null,
+        lastUpdatedByIsSystem: null,
       })
     });
 

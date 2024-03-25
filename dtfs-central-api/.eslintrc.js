@@ -15,6 +15,7 @@ const baseRules = {
     'error',
     { devDependencies: ['**/*.test.{js,ts}', '**/*.api-test.{js,ts}', '**/*.spec.{js,ts}', '**/webpack.*.{js,ts}', '**/api-test*/**', '**/__mocks__/**'] },
   ],
+  'no-param-reassign': ['error', { props: true, ignorePropertyModificationsForRegex: ['^draft', 'req', 'res'] }],
   'import/prefer-default-export': 'off',
   'comma-dangle': 'off',
   'no-loop-func': 'off',

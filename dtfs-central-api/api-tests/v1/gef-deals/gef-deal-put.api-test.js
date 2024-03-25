@@ -2,6 +2,7 @@ const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const CONSTANTS = require('../../../src/constants');
+const { mockUser } = require('../../mocks/test-users/mock-portal-user');
 
 describe('/v1/portal/gef/deals/:id', () => {
   beforeAll(async () => {
@@ -12,18 +13,6 @@ describe('/v1/portal/gef/deals/:id', () => {
     dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
     status: 'Draft',
   };
-
-  const mockUser = {
-    _id: '123456789',
-    username: 'temp',
-    password: '',
-    roles: [],
-    bank: {
-      id: '956',
-      name: 'Barclays Bank',
-    },
-  };
-
   // Update GEF deal
   describe('PUT /v1/portal/gef/deals/:id', () => {
     it('Returns 404 when the deal does not exist ', async () => {

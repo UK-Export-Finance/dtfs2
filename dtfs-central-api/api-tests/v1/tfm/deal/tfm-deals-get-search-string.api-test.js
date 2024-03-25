@@ -8,7 +8,7 @@ const {
 } = require('./tfm-deals-get.api-test');
 const CONSTANTS = require('../../../../src/constants');
 
-const sessionUser = { _id: 'tfm-user-id' }
+const sessionUser = { _id: '6602f646141e3d545a91fbd1' }
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
