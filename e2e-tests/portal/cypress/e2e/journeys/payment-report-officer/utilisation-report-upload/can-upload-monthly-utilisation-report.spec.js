@@ -9,6 +9,9 @@ context('Monthly utilisation report upload', () => {
   beforeEach(() => {
     cy.removeAllUtilisationReports();
     cy.insertUtilisationReports(february2023ReportDetails);
+
+    cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
+    cy.visit(relativeURL('/utilisation-report-upload'));
   });
 
   after(() => {
@@ -17,9 +20,6 @@ context('Monthly utilisation report upload', () => {
 
   describe('Submitting a file to the utilisation report upload', () => {
     it('Should route to the Confirm and Send page when a file is successfully validated', () => {
-      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
-      cy.visit(relativeURL('/utilisation-report-upload'));
-
       utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-February_2023.xlsx');
       utilisationReportUpload.continueButton().click();
 
@@ -28,9 +28,6 @@ context('Monthly utilisation report upload', () => {
     });
 
     it('should display an error if the file selected does not contain the current report period', () => {
-      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
-      cy.visit(relativeURL('/utilisation-report-upload'));
-
       utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-September_2023.xlsx');
       utilisationReportUpload.continueButton().click();
 
@@ -39,9 +36,6 @@ context('Monthly utilisation report upload', () => {
     });
 
     it('should display an error if the file selected does not contain any report period', () => {
-      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
-      cy.visit(relativeURL('/utilisation-report-upload'));
-
       utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-next_week.xlsx');
       utilisationReportUpload.continueButton().click();
 
@@ -50,9 +44,6 @@ context('Monthly utilisation report upload', () => {
     });
 
     it('should display an error when trying to upload the wrong type of file', () => {
-      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
-      cy.visit(relativeURL('/utilisation-report-upload'));
-
       utilisationReportUpload.utilisationReportFileInput().attachFile('questionnaire_February_2023.pdf');
       utilisationReportUpload.continueButton().click();
 
@@ -60,9 +51,6 @@ context('Monthly utilisation report upload', () => {
     });
 
     it('should display an error when trying to upload a file that is too large', () => {
-      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
-      cy.visit(relativeURL('/utilisation-report-upload'));
-
       utilisationReportUpload.utilisationReportFileInput().attachFile('test-large-file-February_2023.xlsx');
       utilisationReportUpload.continueButton().click();
 
@@ -70,18 +58,12 @@ context('Monthly utilisation report upload', () => {
     });
 
     it('should display an error if no file has been selected', () => {
-      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
-      cy.visit(relativeURL('/utilisation-report-upload'));
-
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
     });
 
     it('should display an error if the file selected is password protected', () => {
-      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
-      cy.visit(relativeURL('/utilisation-report-upload'));
-
       utilisationReportUpload.utilisationReportFileInput().attachFile('password-protected-report-February_2023.xlsx');
       utilisationReportUpload.continueButton().click();
 
@@ -91,9 +73,6 @@ context('Monthly utilisation report upload', () => {
     });
 
     it('should display the check the report page with an error if uploading a file with an error on the check the report page', () => {
-      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
-      cy.visit(relativeURL('/utilisation-report-upload'));
-
       utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023.xlsx');
       utilisationReportUpload.continueButton().click();
 
@@ -107,9 +86,6 @@ context('Monthly utilisation report upload', () => {
 
   describe('Failing data validation on file upload', () => {
     it('should display a summary of errors for an invalid .xlsx file', () => {
-      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
-      cy.visit(relativeURL('/utilisation-report-upload'));
-
       utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023.xlsx');
       utilisationReportUpload.continueButton().click();
 
@@ -119,9 +95,6 @@ context('Monthly utilisation report upload', () => {
     });
 
     it('should display a summary of errors for an invalid .csv file', () => {
-      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
-      cy.visit(relativeURL('/utilisation-report-upload'));
-
       utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023.csv');
       utilisationReportUpload.continueButton().click();
 
@@ -132,9 +105,6 @@ context('Monthly utilisation report upload', () => {
     });
 
     it('should allow a file to be re-uploaded after failing the data validation', () => {
-      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
-      cy.visit(relativeURL('/utilisation-report-upload'));
-
       utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023.csv');
       utilisationReportUpload.continueButton().click();
 

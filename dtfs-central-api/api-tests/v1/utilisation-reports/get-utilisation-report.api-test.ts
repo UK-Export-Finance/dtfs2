@@ -1,9 +1,12 @@
 import { Response } from 'supertest';
-import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { IsoDateTimeStamp, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import { IsoDateTimeStamp, PortalUser, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import app from '../../../src/createApp';
 import apiModule from '../../api';
 import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
+import { SqlDbHelper } from '../../sql-db-helper';
+import { wipe } from '../../wipeDB';
+import mongoDbClient from '../../../src/drivers/db-client';
 
 const api = apiModule(app);
 const getUrl = (id: string) => `/v1/utilisation-reports/${id}`;
@@ -24,8 +27,25 @@ interface CustomSuccessResponse extends Response {
 }
 
 describe('/v1/utilisation-reports/:id', () => {
+  const portalUser = {
+    _id: new ObjectId(),
+    firstname: 'Test',
+    surname: 'User',
+  } as PortalUser;
+  const portalUserId = portalUser._id.toString();
+
   beforeAll(async () => {
-    await SqlDbDataSource.initialize();
+    await SqlDbHelper.initialize();
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+
+    await wipe(['users']);
+    const usersCollection = await mongoDbClient.getCollection('users');
+    await usersCollection.insertOne(portalUser);
+  });
+
+  afterAll(async () => {
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+    await wipe(['users']);
   });
 
   describe('GET /v1/utilisation-reports/:id', () => {
@@ -40,8 +60,8 @@ describe('/v1/utilisation-reports/:id', () => {
 
     it('gets a utilisation report', async () => {
       // Arrange
-      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
-      const { id } = await SqlDbDataSource.getRepository(UtilisationReportEntity).save(uploadedReport);
+      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withUploadedByUserId(portalUserId).build();
+      const { id } = await SqlDbHelper.saveNewEntry('UtilisationReport', uploadedReport);
 
       // Act
       const response: CustomSuccessResponse = await api.get(getUrl(id.toString()));

@@ -1,5 +1,5 @@
 const { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } = require('@ukef/dtfs2-common');
-const { wipeAllUtilisationReports, saveUtilisationReportToDatabase } = require('../../sql-db-helper.ts');
+const { SqlDbHelper } = require('../../sql-db-helper.ts');
 const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
@@ -35,17 +35,19 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
     .build();
 
   beforeAll(async () => {
-    await wipeAllUtilisationReports();
+    await SqlDbHelper.initialize();
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
     testUsers = await testUserCache.initialise(app);
     aPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).one();
     matchingBankId = aPaymentReportOfficer.bank.id;
 
-    const { bank } = aPaymentReportOfficer;
-    lastUploadedReport.bankId = bank.id;
+    lastUploadedReport.bankId = aPaymentReportOfficer.bank.id;
+    lastUploadedReport.uploadedByUserId = aPaymentReportOfficer._id.toString();
+
     const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
       .withId(6)
-      .withBankId(bank.id)
+      .withBankId(aPaymentReportOfficer.bank.id)
       .withReportPeriod({
         start: {
           month: lastUploadedReportPeriodMonth + 1,
@@ -58,8 +60,8 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
       })
       .build();
 
-    await saveUtilisationReportToDatabase(lastUploadedReport);
-    await saveUtilisationReportToDatabase(notReceivedReport);
+    await SqlDbHelper.saveNewEntry('UtilisationReport', lastUploadedReport);
+    await SqlDbHelper.saveNewEntry('UtilisationReport', notReceivedReport);
   });
 
   withClientAuthenticationTests({

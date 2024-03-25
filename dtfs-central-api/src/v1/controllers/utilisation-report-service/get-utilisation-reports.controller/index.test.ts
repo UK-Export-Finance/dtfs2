@@ -1,11 +1,22 @@
 import httpMocks from 'node-mocks-http';
-import { ReportPeriod, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import {
+  AzureFileInfoEntity,
+  MOCK_AZURE_FILE_INFO,
+  PortalUser,
+  ReportPeriod,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UploadedByUserDetails,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { GetUtilisationReportsRequest, getUtilisationReports } from './index';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { GetUtilisationReportResponse } from '../../../../types/utilisation-reports';
+import { getUserById } from '../../../../repositories/users-repo';
 
 jest.mock('../../../../repositories/utilisation-reports-repo');
-
+jest.mock('../../../../repositories/users-repo');
 jest.mock('../../../../repositories/utilisation-reports-repo/utilisation-report-sql.repo');
 
 console.error = jest.fn();
@@ -66,7 +77,6 @@ describe('getUtilisationReports', () => {
     });
 
     expect(res.statusCode).toEqual(200);
-    // eslint-disable-next-line no-underscore-dangle
     expect(res._getData()).toEqual(mockUtilisationReports);
   });
 
@@ -99,7 +109,6 @@ describe('getUtilisationReports', () => {
     });
 
     expect(res.statusCode).toEqual(200);
-    // eslint-disable-next-line no-underscore-dangle
     expect(res._getData()).toEqual(mockUtilisationReports);
   });
 
@@ -123,7 +132,6 @@ describe('getUtilisationReports', () => {
     });
 
     expect(res.statusCode).toEqual(200);
-    // eslint-disable-next-line no-underscore-dangle
     expect(res._getData()).toEqual(mockUtilisationReports);
   });
 
@@ -158,7 +166,6 @@ describe('getUtilisationReports', () => {
     });
 
     expect(res.statusCode).toEqual(200);
-    // eslint-disable-next-line no-underscore-dangle
     expect(res._getData()).toEqual(mockUtilisationReports);
   });
 
@@ -177,8 +184,30 @@ describe('getUtilisationReports', () => {
 
     const excludeNotReceived = 'true';
 
-    const mockUtilisationReports = [UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build()];
-    const findAllByBankIdMock = jest.fn().mockResolvedValue(mockUtilisationReports);
+    const azureFileInfo = AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource: { platform: 'PORTAL', userId: 'abc123' } });
+
+    const mockDate = new Date('2024-01');
+
+    const mockUploadedByUser: UploadedByUserDetails = {
+      id: '5ce819935e539c343f141ece',
+      firstname: 'Test',
+      surname: 'User',
+    };
+
+    const mockGetUserByIdResponse = {
+      _id: new ObjectId(mockUploadedByUser.id),
+      firstname: mockUploadedByUser.firstname,
+      surname: mockUploadedByUser.surname,
+    } as PortalUser;
+
+    jest.mocked(getUserById).mockResolvedValue(mockGetUserByIdResponse);
+
+    const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      .withAzureFileInfo(azureFileInfo)
+      .withDateUploaded(mockDate)
+      .withUploadedByUserId(mockUploadedByUser.id)
+      .build();
+    const findAllByBankIdMock = jest.fn().mockResolvedValue([mockUtilisationReport]);
     jest.spyOn(UtilisationReportRepo, 'findAllByBankId').mockImplementation(findAllByBankIdMock);
 
     const { req, res } = getHttpMocks({ reportPeriod: getReportPeriodJsonObject(validReportPeriod), excludeNotReceived });
@@ -192,23 +221,18 @@ describe('getUtilisationReports', () => {
       excludeNotReceived: true,
     });
 
-    expect(res.statusCode).toEqual(200);
-    // eslint-disable-next-line no-underscore-dangle
-    const responseData = res._getData() as GetUtilisationReportResponse[];
-    expect(responseData.length).toEqual(1);
-    expect(responseData[0].id).toEqual(mockUtilisationReports[0].id);
-    expect(responseData[0].bankId).toEqual(mockUtilisationReports[0].bankId);
-    expect(responseData[0].uploadedByUserId).toEqual(mockUtilisationReports[0].uploadedByUserId);
-    expect(responseData[0].dateUploaded).toEqual(mockUtilisationReports[0].dateUploaded);
-    expect(responseData[0].status).toEqual(mockUtilisationReports[0].status);
-    expect(responseData[0].azureFileInfo?.filename).toEqual(mockUtilisationReports[0].azureFileInfo?.filename);
-    expect(responseData[0].azureFileInfo?.folder).toEqual(mockUtilisationReports[0].azureFileInfo?.folder);
-    expect(responseData[0].azureFileInfo?.fullPath).toEqual(mockUtilisationReports[0].azureFileInfo?.fullPath);
-    expect(responseData[0].azureFileInfo?.url).toEqual(mockUtilisationReports[0].azureFileInfo?.url);
-    expect(responseData[0].azureFileInfo?.mimetype).toEqual(mockUtilisationReports[0].azureFileInfo?.mimetype);
-    expect(responseData[0].reportPeriod.start.month).toEqual(mockUtilisationReports[0].reportPeriod.start.month);
-    expect(responseData[0].reportPeriod.start.year).toEqual(mockUtilisationReports[0].reportPeriod.start.year);
-    expect(responseData[0].reportPeriod.end.month).toEqual(mockUtilisationReports[0].reportPeriod.end.month);
-    expect(responseData[0].reportPeriod.end.year).toEqual(mockUtilisationReports[0].reportPeriod.end.year);
+    expect(res._getStatusCode()).toBe(200);
+    expect(res._getData()).toHaveLength(1);
+    expect(res._getData()).toEqual<GetUtilisationReportResponse[]>([
+      {
+        id: mockUtilisationReport.id,
+        bankId: mockUtilisationReport.bankId,
+        status: mockUtilisationReport.status,
+        azureFileInfo: MOCK_AZURE_FILE_INFO,
+        reportPeriod: mockUtilisationReport.reportPeriod,
+        dateUploaded: mockDate,
+        uploadedByUser: mockUploadedByUser,
+      },
+    ]);
   });
 });

@@ -78,8 +78,8 @@ export const createUploadedReport = (
   utilisationReport.reportPeriod = reportPeriod;
   utilisationReport.status = status;
   utilisationReport.dateUploaded = new Date();
-  utilisationReport.uploadedByUserId = null;
-  utilisationReport.updatedByUserId = getDbAuditUpdatedByUserId({ platform: 'TFM', userId: portalUser._id.toString() });
+  utilisationReport.uploadedByUserId = portalUser._id.toString();
+  utilisationReport.updatedByUserId = getDbAuditUpdatedByUserId({ platform: 'PORTAL', userId: portalUser._id.toString() });
 
   const azureFileInfo = new AzureFileInfoEntity();
 
