@@ -23,7 +23,7 @@ exports.findOne = async (_id, callback) => {
  * - More than 1 matching user found.
  * - Unexpected DB response.
  * @param {Array} emails
- * @returns {Object} handleFindByEmailsResult
+ * @returns {Promise<Object>} handleFindByEmailsResult
  */
 exports.findByEmails = async (emails) => {
   try {
@@ -82,7 +82,7 @@ exports.createUser = async (user) => {
  * @param {String} userId: User ID
  * @param {Object} update: Update object
  * @param {Function} callback: Callback function. defaults to an empty function.
- * @returns {Function} Callback function
+ * @returns {Promise<Function>} Callback function
  */
 exports.updateUser = async (userId, userData, callback = () => { }) => {
   try {
@@ -110,7 +110,7 @@ exports.updateUser = async (userId, userData, callback = () => { }) => {
  * @param {Object} user
  * @param {String} sessionIdentifier
  * @param {Function} callback: Callback function. defaults to an empty function.
- * @returns {Function} Callback function
+ * @returns {Promise<Function>} Callback function
  */
 exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, callback = () => { }) => {
   try {

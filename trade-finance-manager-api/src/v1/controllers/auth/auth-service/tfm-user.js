@@ -5,7 +5,7 @@ const userController = require('../../user/user.controller');
  * create
  * Create a TFM user from Entra user data.
  * @param {Object} entraUser: Entra user data
- * @returns {Object} New TFM user.
+ * @returns {Promise<Object>} New TFM user.
  */
 const create = async (entraUser) => {
   try {
@@ -27,7 +27,7 @@ const create = async (entraUser) => {
  * update
  * Update a TFM user from Entra user data.
  * @param {Object} entraUser: Entra user data
- * @returns {Object} updated TFM user.
+ * @returns {Promise<Object>} updated TFM user.
  */
 const update = async (userId, entraUser) => {
   try {

@@ -8,7 +8,7 @@ const tfmUser = require('./tfm-user');
  * - If a user is found, but has canProceed=false, throw an error.
  * - If a user is not found, create a new TFM user from the provided Entra user data.
  * @param {Object} entraUser: Entra user data
- * @returns {Object} New or existing TFM user
+ * @returns {Promise<Object>} New or existing TFM user
  */
 const getOrCreate = async (entraUser) => {
   try {

@@ -5,7 +5,7 @@ const userController = require('../../user/user.controller');
  * Get an existing TFM user with a matching Entra use email(s)
  * Note: an Entra user could have just a primary email, no secondary email.
  * @param {Object} entraUser: Entra user data
- * @returns {Object}
+ * @returns {Promise<Object>}
  */
 const get = async (entraUser) => {
   try {

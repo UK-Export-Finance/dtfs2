@@ -71,7 +71,7 @@ module.exports = {
      * @returns {Object} User
      */
     const getTfmUserFromDbByUsername = async (username) => {
-      const tfmUsers = await getTfmUsersCollection(connectionOptions);
+      const tfmUsers = await getTfmUsersCollection();
 
       const user = tfmUsers.findOne({ username: { $eq: username } });
 
@@ -125,7 +125,7 @@ module.exports = {
      * @returns {Object} Updated user
      */
     const overrideTfmUserSessionId = async ({ username, sessionIdentifier }) => {
-      const tfmUsers = await getTfmUsersCollection(connectionOptions);
+      const tfmUsers = await getTfmUsersCollection();
       return tfmUsers.updateOne({ username: { $eq: username } }, { $set: { sessionIdentifier } });
     };
 

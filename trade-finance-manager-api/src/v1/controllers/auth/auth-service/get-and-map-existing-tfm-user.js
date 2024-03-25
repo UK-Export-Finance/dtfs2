@@ -5,7 +5,7 @@ const populateTfmUserWithEntraData = require('./populate-tfm-user-with-entra-dat
  * getAndMapExistingTfmUser
  * Get and map an existing TFM user from Entra user data.
  * @param {Object} entraUser: Entra user data
- * @returns {Object} TFM user with mapped data
+ * @returns {Promise<Object>} TFM user with mapped data
  */
 const getAndMap = async (entraUser) => {
   try {

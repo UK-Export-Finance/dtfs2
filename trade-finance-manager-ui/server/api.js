@@ -49,7 +49,7 @@ const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
  * and throws an error if the page number is out of bounds
  * @param {Object} queryParams Query parameters
  * @param {string} token Authorisation token
- * @returns {Object} Facilities data and pagination metadata
+ * @returns {Promise<Object>} Facilities data and pagination metadata
  * @throws {PageOutOfBoundsError} Will throw if the requested page number exceeds the maximum page number
  */
 const getFacilities = async (queryParams, token) => {
@@ -76,7 +76,7 @@ const getFacilities = async (queryParams, token) => {
  * and throws an error if the page number is out of bounds
  * @param {Object} queryParams Query parameters
  * @param {string} token Authorisation token
- * @returns {Object} Deals data and pagination metadata
+ * @returns {Promise<Object>} Deals data and pagination metadata
  * @throws {PageOutOfBoundsError} Will throw if the requested page number exceeds the maximum page number
  */
 const getDeals = async (queryParams, token) => {
@@ -435,7 +435,7 @@ const getAuthLogoutUrl = async (token) => {
  * @param {Object} authCodeRequest: Auth code request
  * @param {String} code: authZ code
  * @param {String} state: MSAL state guid
- * @returns {Object}
+ * @returns {Promise<Object>}
  */
 const processSsoRedirect = async ({ pkceCodes, authCodeUrlRequest, authCodeRequest, code, state }) => {
   try {
