@@ -60,7 +60,7 @@ describe(page, () => {
     });
 
     it('should render page heading', () => {
-      wrapper.expectText('[data-cy="main-heading"]').toRead('2023 GEF reports');
+      wrapper.expectText('[data-cy="main-heading"]').toRead('Download 2023 GEF reports');
     });
 
     it('should render paragraph', () => {
@@ -69,13 +69,13 @@ describe(page, () => {
 
     it('should render month links', () => {
       wrapper.expectElement('[data-cy="list-item-link-January"]').toExist();
-      wrapper.expectText('[data-cy="list-item-link-January"]').toRead('January 2023');
+      wrapper.expectText('[data-cy="list-item-link-January"]').toRead('January 2023 GEF report');
       wrapper.expectElement('[data-cy="list-item-link-February"]').toExist();
-      wrapper.expectText('[data-cy="list-item-link-February"]').toRead('February 2023');
+      wrapper.expectText('[data-cy="list-item-link-February"]').toRead('February 2023 GEF report');
       wrapper.expectElement('[data-cy="list-item-link-March"]').toExist();
-      wrapper.expectText('[data-cy="list-item-link-March"]').toRead('March 2023');
+      wrapper.expectText('[data-cy="list-item-link-March"]').toRead('March 2023 GEF report');
       wrapper.expectElement('[data-cy="list-item-link-May"]').toExist();
-      wrapper.expectText('[data-cy="list-item-link-May"]').toRead('May 2023');
+      wrapper.expectText('[data-cy="list-item-link-May"]').toRead('May 2023 GEF report');
     });
   });
 
@@ -96,7 +96,7 @@ describe(page, () => {
     });
 
     it('should render page heading', () => {
-      wrapper.expectText('[data-cy="main-heading"]').toRead('2023 GEF reports');
+      wrapper.expectText('[data-cy="main-heading"]').toRead('Download 2023 GEF reports');
     });
 
     it('should render paragraph', () => {
@@ -110,7 +110,7 @@ describe(page, () => {
     });
 
     it('should render page heading', () => {
-      wrapper.expectText('[data-cy="main-heading"]').toRead('Previous GEF reports');
+      wrapper.expectText('[data-cy="main-heading"]').toRead('Download previous GEF reports');
     });
 
     it('should render paragraph', () => {
