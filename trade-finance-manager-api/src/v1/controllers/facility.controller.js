@@ -91,7 +91,7 @@ const updateFacility = async (req, res) => {
   const { facilityId } = req.params;
   const facilityUpdate = req.body;
   try {
-    const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
+    const updatedFacility = await api.updateFacility(facilityId, facilityUpdate, req.user);
     return res.status(200).send({
       updateFacility: updatedFacility.tfm
     });
@@ -111,15 +111,7 @@ const getAllFacilities = async (searchString) => {
   return allFacilities;
 };
 
-const updateTfmFacility = async (facilityId, tfmUpdate) => {
-  const updatedFacility = await api.updateFacility(facilityId, tfmUpdate);
-  return updatedFacility.tfm;
-};
 
-const updateTfmFacilityRiskProfile = async (facilityId, tfmUpdate) => {
-  const updatedFacility = await api.updateFacility(facilityId, tfmUpdate);
-  return updatedFacility.tfm;
-};
 
 module.exports = {
   getFacility,
@@ -127,6 +119,4 @@ module.exports = {
   updateFacility,
   getAllFacilities,
   findOneFacility,
-  updateTfmFacility,
-  updateTfmFacilityRiskProfile,
 };

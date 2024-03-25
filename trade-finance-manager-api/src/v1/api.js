@@ -316,7 +316,7 @@ const findFacilitiesByDealId = async (dealId) => {
   }
 };
 
-const updateFacility = async (facilityId, facilityUpdate) => {
+const updateFacility = async (facilityId, facilityUpdate, sessionUser, options = {}) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
 
@@ -331,6 +331,8 @@ const updateFacility = async (facilityId, facilityUpdate) => {
       headers: headers.central,
       data: {
         facilityUpdate,
+        user: sessionUser,
+        options,
       },
     });
 

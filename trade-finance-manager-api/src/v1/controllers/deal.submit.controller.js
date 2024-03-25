@@ -86,7 +86,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
     const dealWithTfmData = await addTfmDealData(updatedMappedDeal, auditDetails);
     const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData, auditDetails);
     const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn, auditDetails);
-    const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions);
+    const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions, checker);
     const updatedDealWithCreateEstore = await createEstoreSite(updatedDealWithUpdatedFacilities);
 
     if (updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
