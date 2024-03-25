@@ -1,6 +1,6 @@
 const DEAL = require('./deal');
 const FACILITY = require('./facility');
-const DEALS = require('./deals');
+const TABLE = require('./table');
 const TASKS = require('./tasks');
 const { TEAM_IDS, PDC_TEAM_IDS } = require('./team-ids');
 const ACTIVITIES = require('./activities');
@@ -14,7 +14,7 @@ const SSO = require('./sso');
 module.exports = {
   DEAL,
   FACILITY,
-  DEALS,
+  TABLE,
   TASKS,
   TEAM_IDS,
   PDC_TEAM_IDS,

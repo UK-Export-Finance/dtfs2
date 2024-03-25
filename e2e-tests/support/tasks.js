@@ -1,42 +1,46 @@
 const crypto = require('node:crypto');
 const db = require('./db-client');
 const redis = require('./redis-client');
+
+const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
+const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
 
-const COLLECTION_NAMES = {
-  USERS: 'users',
-  TFM_USERS: 'tfm-users',
-  UTILISATION_REPORTS: 'utilisationReports',
-};
+module.exports = {
+  /**
+   * createTasks
+   * Create tasks that can be executed when running E2E tests.
+   * @param {String} dbName: Database name
+   * @param {String} dbConnectionString: Database connection string
+   * @param {String} redisHost: Redis host address
+   * @param {String} redisPort: Redis port number
+   * @param {String} redisKey: Redis key
+   * @returns {Object} Various tasks
+   */
+  createTasks: ({
+    dbName,
+    dbConnectionString,
+    redisHost,
+    redisPort,
+    redisKey,
+  }) => {
+    const connectionOptions = { dbName, dbConnectionString };
+    const redisConnectionOptions = { redisHost, redisPort, redisKey };
 
-const getUsersCollection = (connectionOptions) => db.getCollection(COLLECTION_NAMES.USERS, connectionOptions);
-const getTfmUsersCollection = (connectionOptions) => db.getCollection(COLLECTION_NAMES.TFM_USERS, connectionOptions);
+    const usersCollectionName = 'users';
+    const tfmUsersCollectionName = 'tfm-users';
+    const tfmDealsCollectionName = 'tfm-deals';
+    const tfmFacilitiesCollectionName = 'tfm-facilities';
 
-/**
- * createTasks
- * Create tasks that can be executed when running E2E tests.
- * @param {String} dbName: Database name
- * @param {String} dbConnectionString: Database connection string
- * @param {String} redisHost: Redis host address
- * @param {String} redisPort: Redis port number
- * @param {String} redisKey: Redis key
- * @returns {Object} Various tasks
- */
-const createTasks = ({
-  dbName,
-  dbConnectionString,
-  redisHost,
-  redisPort,
-  redisKey,
-}) => {
-  const connectionOptions = { dbName, dbConnectionString };
-  const redisConnectionOptions = { redisHost, redisPort, redisKey };
+    const getUsersCollection = () => db.getCollection(usersCollectionName, connectionOptions);
+    const getTfmUsersCollection = () => db.getCollection(tfmUsersCollectionName, connectionOptions);
+    const getTfmDealsCollection = () => db.getCollection(tfmDealsCollectionName, connectionOptions);
+    const getTfmFacilitiesCollection = () => db.getCollection(tfmFacilitiesCollectionName, connectionOptions);
 
-  return {
-    log(message) {
+    const log = (message) => {
       console.info('Cypress log: ', message);
       return null;
-    },
+    };
 
     /**
      * getUserFromDbByEmail
@@ -44,10 +48,10 @@ const createTasks = ({
      * @param {String} email
      * @returns {Object} User
      */
-    async getUserFromDbByEmail(email) {
-      const users = await getUsersCollection(connectionOptions);
+    const getUserFromDbByEmail = async (email) => {
+      const users = await getUsersCollection();
       return users.findOne({ email: { $eq: email } });
-    },
+    };
 
     /**
      * getUserFromDbByUsername
@@ -55,10 +59,10 @@ const createTasks = ({
      * @param {String} username
      * @returns {Object} User
      */
-    async getUserFromDbByUsername(username) {
-      const users = await getUsersCollection(connectionOptions);
+    const getUserFromDbByUsername = async (username) => {
+      const users = await getUsersCollection();
       return users.findOne({ username: { $eq: username } });
-    },
+    };
 
     /**
      * getTfmUserFromDbByUsername
@@ -66,13 +70,13 @@ const createTasks = ({
      * @param {String} username
      * @returns {Object} User
      */
-    async getTfmUserFromDbByUsername(username) {
+    const getTfmUserFromDbByUsername = async (username) => {
       const tfmUsers = await getTfmUsersCollection(connectionOptions);
 
       const user = tfmUsers.findOne({ username: { $eq: username } });
 
       return user;
-    },
+    };
 
     /**
      * overridePortalUserSignInTokenWithValidTokenByUsername
@@ -81,7 +85,7 @@ const createTasks = ({
      * @param {String} newSignInToken
      * @returns {Object} Updated user
      */
-    async overridePortalUserSignInTokenWithValidTokenByUsername({ username, newSignInToken }) {
+    const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username, newSignInToken }) => {
       const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
       const salt = crypto.randomBytes(64);
       const hash = crypto.pbkdf2Sync(newSignInToken, salt, 210000, 64, 'sha512');
@@ -89,9 +93,8 @@ const createTasks = ({
       const hashHex = hash.toString('hex');
       const expiry = Date.now() + thirtyMinutesInMilliseconds;
       const userCollection = await getUsersCollection();
-
       return userCollection.updateOne({ username: { $eq: username } }, { $set: { signInTokens: [{ hashHex, saltHex, expiry }] } });
-    },
+    };
 
     /**
      * overridePortalUserSignInTokensByUsername
@@ -100,20 +103,19 @@ const createTasks = ({
      * @param {Array} newSignInTokens
      * @returns {Object} Updated user
      */
-    async overridePortalUserSignInTokensByUsername({ username, newSignInTokens }) {
+    const overridePortalUserSignInTokensByUsername = async ({ username, newSignInTokens }) => {
       const signInTokens = newSignInTokens.map((newSignInToken) => {
         const { signInTokenFromLink, expiry } = newSignInToken;
         const salt = crypto.randomBytes(64);
         const hash = crypto.pbkdf2Sync(signInTokenFromLink, salt, 210000, 64, 'sha512');
         const saltHex = salt.toString('hex');
         const hashHex = hash.toString('hex');
-
         return { saltHex, hashHex, expiry };
       });
 
       const userCollection = await getUsersCollection();
       return userCollection.updateOne({ username: { $eq: username } }, { $set: { signInTokens } });
-    },
+    };
 
     /**
      * overrideTfmUserSessionId
@@ -122,10 +124,10 @@ const createTasks = ({
      * @param {String} sessionIdentifier
      * @returns {Object} Updated user
      */
-    async overrideTfmUserSessionId({ username, sessionIdentifier }) {
+    const overrideTfmUserSessionId = async ({ username, sessionIdentifier }) => {
       const tfmUsers = await getTfmUsersCollection(connectionOptions);
       return tfmUsers.updateOne({ username: { $eq: username } }, { $set: { sessionIdentifier } });
-    },
+    };
 
     /**
      * overrideRedisUserSession
@@ -136,12 +138,12 @@ const createTasks = ({
      * @param {Number} maxAge: Session age
      * @returns {Boolean}
      */
-    async overrideRedisUserSession({
+    const overrideRedisUserSession = async ({
       sessionIdentifier,
       tfmUser,
       userToken,
       maxAge,
-    }) {
+    }) => {
       const maxAgeInMilliseconds = maxAge * 1000;
 
       const value = {
@@ -164,7 +166,7 @@ const createTasks = ({
       });
 
       return true;
-    },
+    };
 
     /**
      * resetPortalUserStatusAndNumberOfSignInLinks
@@ -172,9 +174,8 @@ const createTasks = ({
      * @param {String} username
      * @returns {Object} Updated user
      */
-    async resetPortalUserStatusAndNumberOfSignInLinks(username) {
-      const users = await getUsersCollection(connectionOptions);
-
+    const resetPortalUserStatusAndNumberOfSignInLinks = async (username) => {
+      const users = await getUsersCollection();
       return users.updateOne(
         { username: { $eq: username } },
         {
@@ -190,7 +191,7 @@ const createTasks = ({
           },
         },
       );
-    },
+    };
 
     /**
      * disablePortalUserByUsername
@@ -198,9 +199,8 @@ const createTasks = ({
      * @param {String} username
      * @returns {Object} Updated user
      */
-    async disablePortalUserByUsername(username) {
-      const users = await getUsersCollection(connectionOptions);
-
+    const disablePortalUserByUsername = async (username) => {
+      const users = await getUsersCollection();
       return users.updateOne(
         { username: { $eq: username } },
         {
@@ -209,7 +209,7 @@ const createTasks = ({
           },
         },
       );
-    },
+    };
 
     /**
      * insertUtilisationReportDetailsIntoDb
@@ -217,26 +217,105 @@ const createTasks = ({
      * @param {Array} utilisationReportDetails: Utilisation report details
      * @returns {Array} Created Utilisation report details
      */
-    async insertUtilisationReportDetailsIntoDb(utilisationReportDetails) {
+    const insertUtilisationReportDetailsIntoDb = async (utilisationReportDetails) => {
       const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
       return utilisationReports.insertMany(utilisationReportDetails);
-    },
+    };
 
     /**
      * removeAllUtilisationReportDetailsFromDb
      * Remove all utilisation report details from the DB.
      * @returns {Array} Empty array.
      */
-    async removeAllUtilisationReportDetailsFromDb() {
+    const removeAllUtilisationReportDetailsFromDb = async () => {
       const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
       return utilisationReports.deleteMany({});
-    },
+    };
 
-    async getAllBanks() {
+    const getAllBanks = async () => {
       const banks = await db.getCollection(DB_COLLECTIONS.BANKS, connectionOptions);
       return banks.find().toArray();
-    },
-  };
-};
+    };
 
-module.exports = { createTasks };
+    /**
+     * Generates the specified number of TFM deals and inserts them directly
+     * into the db. The UKEF deal ID of the first generated deal is 10000001;
+     * this is incremented for each subsequent deal. The deal exporter is
+     * 'Company 1' for the deals with odd numbered UKEF deal IDs and 'Company 2'
+     * for those with even numbered UKEF deal IDs. This is to allow easy testing
+     * of searching and sorting. Optionally, an array of MongoDB deal Object IDs
+     * to use can be passed as the second argument - if the number of deals to
+     * insert exceeds the length of this array (by n, say), then the last n deals
+     * will have their MongoDB Object IDs autogenerated
+     * @param {Object} numberOfDealsToInsert The number of deals to insert
+     * @param {Array} dealObjectIds An array of MongoDB deal Object IDs to use
+     * @returns {Object} MongoDB document representing the result of the insertion
+    */
+    const insertManyTfmDeals = async (numberOfDealsToInsert, dealObjectIds = []) => {
+      const deals = await getTfmDealsCollection();
+      const dealsToInsert = [];
+      for (let i = 0; i < numberOfDealsToInsert; i += 1) {
+        const ukefDealId = (10000001 + i).toString();
+        const companyName = i % 2 === 0 ? 'Company 1' : 'Company 2';
+        const dealObjectId = dealObjectIds[i];
+        dealsToInsert.push(createTfmDealToInsertIntoDb(ukefDealId, companyName, dealObjectId));
+      }
+      return deals.insertMany(dealsToInsert);
+    };
+
+    const deleteAllTfmDeals = async () => {
+      const deals = await getTfmDealsCollection();
+      return deals.deleteMany({});
+    };
+
+    /**
+     * Generates the specified number of TFM facilities and inserts them directly
+     * into the db. It also inserts two deals (to link the facilities to).
+     * The UKEF facility ID of the first generated facility is 10000001;
+     * this is incremented for each subsequent facility. The inserted facilities
+     * alternate with respect to which of the two deals they are linked to. This
+     * is to allow easy testing of searching and sorting
+     * @param {Object} numberOfFacilitiesToInsert The number of facilities to insert
+     * @returns {Object} MongoDB document representing the result of the insertion
+    */
+    const insertManyTfmFacilitiesAndTwoLinkedDeals = async (numberOfFacilitiesToInsert) => {
+      const dealObjectIds = ['65f18fd9cb063105fd4be63f', '65f18fd9cb063105fd4be645'];
+
+      insertManyTfmDeals(2, dealObjectIds);
+
+      const facilities = await getTfmFacilitiesCollection();
+      const facilitiesToInsert = [];
+      for (let i = 0; i < numberOfFacilitiesToInsert; i += 1) {
+        const ukefFacilityId = (10000001 + i).toString();
+        const dealObjectId = dealObjectIds[i % 2];
+        facilitiesToInsert.push(createTfmFacilityToInsertIntoDb(ukefFacilityId, dealObjectId));
+      }
+      return facilities.insertMany(facilitiesToInsert);
+    };
+
+    const deleteAllTfmFacilities = async () => {
+      const facilities = await getTfmFacilitiesCollection();
+      return facilities.deleteMany({});
+    };
+
+    return {
+      log,
+      getUserFromDbByEmail,
+      getUserFromDbByUsername,
+      getTfmUserFromDbByUsername,
+      overridePortalUserSignInTokenWithValidTokenByUsername,
+      overridePortalUserSignInTokensByUsername,
+      overrideTfmUserSessionId,
+      overrideRedisUserSession,
+      resetPortalUserStatusAndNumberOfSignInLinks,
+      disablePortalUserByUsername,
+      insertUtilisationReportDetailsIntoDb,
+      insertManyTfmDeals,
+      deleteAllTfmDeals,
+      insertManyTfmFacilitiesAndTwoLinkedDeals,
+      deleteAllTfmFacilities,
+      removeAllUtilisationReportDetailsFromDb,
+      getAllBanks,
+    };
+  },
+};

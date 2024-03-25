@@ -287,7 +287,7 @@ context('Portal to TFM deal submission', () => {
     });
 
     tfmPages.facilityPage.allFacilitiesLink().click();
-    tfmPages.facilitiesPage.facilityIdLink(dealFacilities.bonds[0]._id).should('exist');
-    tfmPages.facilitiesPage.facilityIdLink(dealFacilities.loans[0]._id).should('exist');
+    tfmPages.facilitiesPage.facilitiesTable.row(dealFacilities.bonds[0]._id).facilityLink().should('exist');
+    tfmPages.facilitiesPage.facilitiesTable.row(dealFacilities.loans[0]._id).facilityLink().should('exist');
   });
 });
