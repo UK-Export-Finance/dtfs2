@@ -1,3 +1,4 @@
+const { generateTfmUserAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails')
 const {
   shouldCreatePartiesTask,
   shouldCreateAgentCheckTask,
@@ -14,9 +15,7 @@ describe('createDealTasks', () => {
   const updateDealSpy = jest.fn((dealId, dealUpdate, sessionUser) =>
     Promise.resolve({
       ...dealUpdate,
-      auditDetails: {
-        lastUpdatedByTfmUserId: sessionUser?._id,
-      },
+      auditDetails: generateTfmUserAuditDetails(sessionUser?._id),
     }),
   );
 

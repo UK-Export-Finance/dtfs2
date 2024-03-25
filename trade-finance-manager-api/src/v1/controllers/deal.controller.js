@@ -176,8 +176,6 @@ const canDealBeSubmittedToACBS = (submissionType) => {
 };
 exports.canDealBeSubmittedToACBS = canDealBeSubmittedToACBS;
 
-
-
 const updateTfmProbabilityOfDefault = async (dealId, probabilityOfDefault) => {
   const probabilityOfDefaultUpdate = {
     tfm: {
@@ -230,4 +228,3 @@ const updateLeadUnderwriter = async (req, res) => {
   }
 };
 exports.updateLeadUnderwriter = updateLeadUnderwriter;
-

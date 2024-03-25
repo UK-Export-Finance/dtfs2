@@ -78,6 +78,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
     const { status } = await api.put({
       dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
       dealId,
+      checker: 'checker-id',
     }).to('/v1/tfm/deals/submit');
 
     expect(status).toEqual(200);
@@ -93,7 +94,10 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
         ...newFacility1,
       },
       tfm: DEFAULTS.FACILITY_TFM,
-      auditDetails: expect.any(Object),
+      auditDetails: {
+        lastUpdatedAt: expect.any(String),
+        lastUpdatedByPortalUserId: 'checker-id',
+      },
     });
 
     const facility2 = await api.get(`/v1/tfm/facilities/${facility2Id}`);
@@ -106,7 +110,10 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
         ...newFacility2,
       },
       tfm: DEFAULTS.FACILITY_TFM,
-      auditDetails: expect.any(Object),
+      auditDetails: {
+        lastUpdatedAt: expect.any(String),
+        lastUpdatedByPortalUserId: 'checker-id',
+      },
     });
   });
 });

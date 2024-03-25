@@ -53,7 +53,6 @@ describe('/v1/tfm/facilities', () => {
           coverEndDate: expect.any(String),
         },
         ukefFacilityId: expect.any(String),
-        auditDetails: expect.any(Object),
       };
 
       expect(allFacilitiesAfterCreation.facilities[0]).toEqual(expectedFacilityShape);
