@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - chore/update-teams-notify-action
 
 env:
   environment: dev
