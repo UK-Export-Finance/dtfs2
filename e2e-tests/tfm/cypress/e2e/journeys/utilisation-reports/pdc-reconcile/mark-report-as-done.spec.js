@@ -204,11 +204,11 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
         .should('exist')
         .within(($tableRow) => {
           cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
-          cy.wrap($tableRow).get(tableCellCheckboxSelector(id)).click();
+          cy.wrap($tableRow).get(tableCellCheckboxSelector(id, status)).click();
         });
     });
 
-    pages.utilisationReportsPage.clickMarkReportAsNotCompletedButton();
+    pages.utilisationReportsPage.clickMarkReportAsNotCompletedButton(submissionMonth);
 
     cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
       const { bankId } = utilisationReport;
@@ -259,7 +259,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
         });
     });
 
-    pages.utilisationReportsPage.clickMarkReportAsCompletedButton();
+    pages.utilisationReportsPage.clickMarkReportAsCompletedButton(submissionMonth);
 
     cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
       const { bankId } = utilisationReport;
