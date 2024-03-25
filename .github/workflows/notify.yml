@@ -6,7 +6,7 @@ on:
       - chore/update-teams-notify-action
 
 env:
-  environment: ${{ github.event.workflow_run.head_branch == 'chore/update-teams-notify-action' && 'dev' || github.event.workflow_run.head_branch }}
+  environment: ${{ github.ref == 'chore/update-teams-notify-action' && 'dev' || github.ref }}
   timezone: ${{ vars.TIMEZONE }}
 
 jobs:
