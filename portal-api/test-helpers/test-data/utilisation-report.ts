@@ -1,10 +1,9 @@
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
-import { UtilisationReportResponseBody } from '../src/v1/api-response-types';
-import MOCK_BANKS from './mock-banks';
+import { UtilisationReportResponseBody } from '../../src/v1/api-response-types';
 
 export const aUtilisationReportResponse = (): UtilisationReportResponseBody => ({
   id: 12,
-  bankId: MOCK_BANKS.HSBC.id,
+  bankId: '12',
   reportPeriod: {
     start: {
       month: 11,
@@ -29,4 +28,23 @@ export const aUtilisationReportResponse = (): UtilisationReportResponseBody => (
     surname: 'last',
   },
   status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+});
+
+export const aNotReceivedUtilisationReportResponse = (): UtilisationReportResponseBody => ({
+  id: 12,
+  bankId: '12',
+  reportPeriod: {
+    start: {
+      month: 11,
+      year: 2023,
+    },
+    end: {
+      month: 11,
+      year: 2023,
+    },
+  },
+  azureFileInfo: null,
+  status: 'REPORT_NOT_RECEIVED',
+  dateUploaded: null,
+  uploadedByUser: null
 });

@@ -3,7 +3,7 @@ const { AxiosError } = require('axios');
 const api = require('../../api');
 const { getLastUploadedReportByBankId } = require('./last-uploaded.controller');
 const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
-const { aUtilisationReportResponse } = require('../../../../test-helpers/mock-utilisation-report');
+const { aUtilisationReportResponse } = require('../../../../test-helpers/test-data/utilisation-report');
 
 console.error = jest.fn();
 

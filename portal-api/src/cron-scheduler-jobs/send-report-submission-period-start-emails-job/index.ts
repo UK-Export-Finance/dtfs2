@@ -1,6 +1,7 @@
-const sendEmail = require('../../external-api/send-email');
-const EMAIL_TEMPLATE_IDS = require('../../constants/email-template-ids');
-const { getFormattedReportDueDate, sendEmailToAllBanksWhereReportNotReceived } = require('../helpers/utilisation-report-helpers');
+import { CronSchedulerJob } from '@ukef/dtfs2-common';
+import sendEmail from '../../external-api/send-email';
+import EMAIL_TEMPLATE_IDS from '../../constants/email-template-ids';
+import { getFormattedReportDueDate, sendEmailToAllBanksWhereReportNotReceived } from '../helpers/utilisation-report-helpers';
 
 const { UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE } = process.env;
 
@@ -23,13 +24,8 @@ const sendEmails = async () => {
   });
 };
 
-/**
- * @type {import('@ukef/dtfs2-common').CronSchedulerJob}
- */
-const sendReportSubmissionPeriodStartEmailsJob = {
-  cronExpression: UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE,
+export const sendReportSubmissionPeriodStartEmailsJob: CronSchedulerJob = {
+  cronExpression: UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE as string,
   description: 'Email banks to notify that the GEF utilisation report submission period has started',
   task: sendEmails,
 };
-
-module.exports = { sendReportSubmissionPeriodStartEmailsJob };
