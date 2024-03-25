@@ -21,7 +21,6 @@ context('PDC_READ users can route to the payments page for a bank', () => {
 
       getAllBanksResult
         .filter((bank) => bank.isVisibleInTfmUtilisationReports)
-        .filter((bank) => bank.id !== '10') // TODO FN-1601 remove after TFM is working for quarterly banks
         .forEach((visibleBank) => {
           visibleBanks.push(visibleBank);
         });
@@ -52,6 +51,11 @@ context('PDC_READ users can route to the payments page for a bank', () => {
 
     cy.get(aliasSelector(allBanksAlias)).each((bank) => {
       const { id, isVisibleInTfmUtilisationReports } = bank;
+
+      // TODO FN-1601 remove after TFM is working for quarterly banks
+      if (id === '10') {
+        return;
+      }
 
       if (isVisibleInTfmUtilisationReports) {
         pages.utilisationReportsPage.tableRowSelector(id, submissionMonth).should('exist');
