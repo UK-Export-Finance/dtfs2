@@ -12,8 +12,7 @@ const updateAcbs = async (taskOutput) => {
     },
   };
 
-  // TODO: Handle system updates
-  return api.updateDeal(taskOutput.portalDealId, acbsUpdate, { _id: 'this-is-a-system-update'});
+  return api.updateDeal(taskOutput.portalDealId, acbsUpdate, undefined, undefined, { isSystemUpdate: true });
 };
 exports.updateAcbs = updateAcbs;
 

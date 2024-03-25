@@ -202,6 +202,7 @@ const updateDeal = async (
   dealUpdate,
   sessionUser,
   onError = ({ status, message }) => ({ status, data: message }),
+  options = undefined,
 ) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -218,6 +219,7 @@ const updateDeal = async (
       data: {
         dealUpdate,
         user: sessionUser,
+        options,
       },
     });
 
