@@ -4,6 +4,7 @@ import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../constants';
 import { eStoreCronJobManager } from './eStoreCronJobManager';
 import { eStoreTermStoreAndBuyerFolder } from './eStoreTermStoreAndBuyerFolder.cron';
 import { siteExists } from '../v1/controllers/estore/eStoreApi';
+import { generateSystemAuditDetails } from '@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails';
 
 export const eStoreSiteCreationJob = async (eStoreData: any) => {
   const cronJobLogsCollection = await getCollection('cron-job-logs');
@@ -29,6 +30,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
           'siteCronJob.completionDate': new Date(),
           'dealCronJob.status': ESTORE_CRON_STATUS.RUNNING,
           'dealCronJob.startDate': new Date(),
+          auditDetails: generateSystemAuditDetails(),
         },
       },
     );
@@ -40,7 +42,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
     // increment the siteCreationRetries by 1
     const response = await cronJobLogsCollection.findOneAndUpdate(
       { dealId: { $eq: eStoreData.dealId } },
-      { $inc: { siteCreationRetries: 1 } },
+      { $inc: { siteCreationRetries: 1 }, $set: { auditDetails: generateSystemAuditDetails() } },
       { returnNewDocument: true, returnDocument: 'after' },
     );
     // stop the siteCreation Cron Job after 25 retries
@@ -51,7 +53,14 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
       // update the record inside `cron-job-logs` collection
       await cronJobLogsCollection.updateOne(
         { dealId: { $eq: eStoreData.dealId } },
-        { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.failureDate': new Date() } },
+        {
+          $set: {
+            siteExistsResponse,
+            'siteCronJob.status': ESTORE_CRON_STATUS.FAILED,
+            'siteCronJob.failureDate': new Date(),
+            auditDetails: generateSystemAuditDetails(),
+          },
+        },
       );
     }
   } else {
@@ -61,7 +70,14 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
     // update the record inside `cron-job-logs` collection
     await cronJobLogsCollection.updateOne(
       { dealId: { $eq: eStoreData.dealId } },
-      { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.failureDate': new Date() } },
+      {
+        $set: {
+          siteExistsResponse,
+          'siteCronJob.status': ESTORE_CRON_STATUS.FAILED,
+          'siteCronJob.failureDate': new Date(),
+          auditDetails: generateSystemAuditDetails(),
+        },
+      },
     );
   }
 };
