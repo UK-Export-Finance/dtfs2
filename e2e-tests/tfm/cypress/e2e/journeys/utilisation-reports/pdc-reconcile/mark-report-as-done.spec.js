@@ -18,7 +18,8 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
   const utilisationReportsAlias = 'utilisationReportsAlias';
 
   const displayStatusSelector = 'td > strong[data-cy="utilisation-report-reconciliation-status"]';
-  const tableCellCheckboxSelector = (reportId) => `th > div > div > input[data-cy="table-cell-checkbox--set-status--reportId-${reportId}"]`;
+  const tableCellCheckboxSelector = (reportId, status) =>
+    `th > div > div > input[data-cy="table-cell-checkbox--set-status--reportId-${reportId}-currentStatus-${status}"]`;
 
   const getDisplayStatus = (utilisationReportReconciliationStatus) => {
     switch (utilisationReportReconciliationStatus) {
@@ -88,13 +89,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
      */
     const notReceivedUtilisationReports = [];
     cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
-      const { bankId, id, reportPeriod } = utilisationReport;
+      const { bankId, id, reportPeriod, status } = utilisationReport;
 
       pages.utilisationReportsPage
         .tableRowSelector(bankId, submissionMonth)
         .should('exist')
         .within(($tableRow) => {
-          cy.wrap($tableRow).get(tableCellCheckboxSelector(id)).should('exist');
+          cy.wrap($tableRow).get(tableCellCheckboxSelector(id, status)).should('exist');
         });
 
       const notReceivedUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
@@ -107,13 +108,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
 
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, notReceivedUtilisationReports).each((notReceivedReport) => {
-      const { bankId, id } = notReceivedReport;
+      const { bankId, id, status } = notReceivedReport;
 
       pages.utilisationReportsPage
         .tableRowSelector(bankId, submissionMonth)
         .should('exist')
         .within(($tableRow) => {
-          cy.wrap($tableRow).get(tableCellCheckboxSelector(id)).should('not.exist');
+          cy.wrap($tableRow).get(tableCellCheckboxSelector(id, status)).should('not.exist');
         });
     });
   });
@@ -128,7 +129,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
         .should('exist')
         .within(($tableRow) => {
           cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
-          cy.wrap($tableRow).get(tableCellCheckboxSelector(id)).click();
+          cy.wrap($tableRow).get(tableCellCheckboxSelector(id, status)).click();
         });
     });
 
@@ -136,8 +137,8 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
 
     cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
       const { bankId } = utilisationReport;
-
       const displayStatus = getDisplayStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
+
       pages.utilisationReportsPage
         .tableRowSelector(bankId, submissionMonth)
         .should('exist')
@@ -157,7 +158,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
         .should('exist')
         .within(($tableRow) => {
           cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
-          cy.wrap($tableRow).get(tableCellCheckboxSelector(id)).click();
+          cy.wrap($tableRow).get(tableCellCheckboxSelector(id, status)).click();
         });
     });
 
@@ -166,13 +167,15 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
       const { bankId, id } = utilisationReport;
 
-      const displayStatus = getDisplayStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
+      const completedStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED;
+      const displayStatus = getDisplayStatus(completedStatus);
+
       pages.utilisationReportsPage
         .tableRowSelector(bankId, submissionMonth)
         .should('exist')
         .within(($tableRow) => {
           cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
-          cy.wrap($tableRow).get(tableCellCheckboxSelector(id)).click();
+          cy.wrap($tableRow).get(tableCellCheckboxSelector(id, completedStatus)).click();
         });
     });
 
@@ -180,12 +183,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
 
     cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
       const { bankId } = utilisationReport;
+      const displayStatus = getDisplayStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION);
 
       pages.utilisationReportsPage
         .tableRowSelector(bankId, submissionMonth)
         .should('exist')
         .within(($tableRow) => {
-          const displayStatus = getDisplayStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION);
           cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
         });
     });
@@ -252,7 +255,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
         .should('exist')
         .within(($tableRow) => {
           cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
-          cy.wrap($tableRow).get(tableCellCheckboxSelector(id)).click();
+          cy.wrap($tableRow).get(tableCellCheckboxSelector(id, status)).click();
         });
     });
 
@@ -293,13 +296,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     cy.reload();
 
     cy.get(aliasSelector(previousUtilisationReportAlias)).then((utilisationReport) => {
-      const { id, bankId } = utilisationReport;
+      const { id, bankId, status } = utilisationReport;
 
       pages.utilisationReportsPage
         .tableRowSelector(bankId, previousSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
-          cy.wrap($tableRow).get(tableCellCheckboxSelector(id)).click();
+          cy.wrap($tableRow).get(tableCellCheckboxSelector(id, status)).click();
         });
     });
 

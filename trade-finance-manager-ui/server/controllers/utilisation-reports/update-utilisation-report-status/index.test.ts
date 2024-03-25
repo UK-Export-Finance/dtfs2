@@ -3,7 +3,7 @@ import api from '../../../api';
 import * as getUtilisationReportsController from '..';
 import { UpdateUtilisationReportStatusRequest, UpdateUtilisationReportStatusRequestBody, updateUtilisationReportStatus } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
-import { TEAM_IDS, UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
+import { TEAM_IDS } from '../../../constants';
 import { ReportWithStatus } from '../../../types/utilisation-reports';
 
 console.error = jest.fn();
@@ -25,12 +25,11 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
     };
 
     const validSqlId = '1';
-    // TODO FN-1862 Fix type assertion below
     const validBody: UpdateUtilisationReportStatusRequestBody = {
       _csrf: 'csrf',
       'form-button': 'completed',
-      [`set-status--reportId-${validSqlId}-currentStatus-${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}`]: 'on',
-    } as UpdateUtilisationReportStatusRequestBody;
+      'set-status--reportId-1-currentStatus-PENDING_RECONCILIATION': 'on',
+    };
 
     const getPostRequestMocks = ({ body }: { body: undefined | Partial<UpdateUtilisationReportStatusRequestBody> }) =>
       httpMocks.createMocks<UpdateUtilisationReportStatusRequest>({ session, body });
