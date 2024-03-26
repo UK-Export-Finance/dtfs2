@@ -47,6 +47,10 @@ exports.updateFacilityPut = async (req, res) => {
   }
   const { facilityUpdate, user, options } = req.body;
 
+  if (!user?._id) {
+    return res.status(400).send({ status: 400, message: 'Invalid user' })
+  }
+
   const facility = await findOneFacility(facilityId);
 
   if (!facility) {

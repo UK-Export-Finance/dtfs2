@@ -250,7 +250,7 @@ const submitDealAfterUkefIdsPUT = async (req, res) => {
 
     const deal = await submitDealAfterUkefIds(dealId, dealType, checker, generatePortalAuditDetails(checker._id));
 
-    if (!deal) {
+    if (!deal) { // this occuring
       console.error('Deal does not exist in TFM %s', dealId);
       return res.status(404).send();
     }
