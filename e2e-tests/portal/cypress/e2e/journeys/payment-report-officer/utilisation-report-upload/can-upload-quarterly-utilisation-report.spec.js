@@ -9,7 +9,7 @@ context('Quarterly utilisation report upload', () => {
   beforeEach(() => {
     cy.removeAllUtilisationReports();
     cy.insertUtilisationReports(december2023ToFebruary2024ReportDetails);
-      
+
     cy.login(BANK2_PAYMENT_REPORT_OFFICER1);
     cy.visit(relativeURL('/utilisation-report-upload'));
   });
@@ -28,19 +28,21 @@ context('Quarterly utilisation report upload', () => {
     });
 
     it('should display an error if the file selected does not contain the current report period', () => {
-      utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-September_2023_monthly.xlsx');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-August_November_2023_quarterly.xlsx');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
-      utilisationReportUpload.utilisationReportFileInputErrorMessage().contains('The selected file must be the December 2023 to February 2024 report');
+      utilisationReportUpload
+        .utilisationReportFileInputErrorMessage()
+        .contains("The selected file must contain the reporting period as part of its name, for example '12-2023-02-2024'");
     });
 
-    it('should display an error if the file selected does not contain any report period', () => {
+    it("should display an error if the file selected does not contain the word 'quarterly'", () => {
       utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-next_week.xlsx');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
-      utilisationReportUpload.utilisationReportFileInputErrorMessage().contains('The selected file must be the December 2023 to February 2024 report');
+      utilisationReportUpload.utilisationReportFileInputErrorMessage().contains("The selected file must contain the word 'quarterly'");
     });
 
     it('should display an error when trying to upload the wrong type of file', () => {

@@ -32,15 +32,17 @@ context('Monthly utilisation report upload', () => {
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
-      utilisationReportUpload.utilisationReportFileInputErrorMessage().contains('The selected file must be the February 2023 report');
+      utilisationReportUpload
+        .utilisationReportFileInputErrorMessage()
+        .contains("The selected file must contain the reporting period as part of its name, for example '02-2023'");
     });
 
-    it('should display an error if the file selected does not contain any report period', () => {
+    it("should display an error if the file selected does not contain the word 'quarterly'", () => {
       utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-next_week.xlsx');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
-      utilisationReportUpload.utilisationReportFileInputErrorMessage().contains('The selected file must be the February 2023 report');
+      utilisationReportUpload.utilisationReportFileInputErrorMessage().contains("The selected file must contain the word 'monthly'");
     });
 
     it('should display an error when trying to upload the wrong type of file', () => {

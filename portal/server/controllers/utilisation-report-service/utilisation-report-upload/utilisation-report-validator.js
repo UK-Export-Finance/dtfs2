@@ -120,10 +120,10 @@ const getMonthRegexString = (oneIndexedMonth) => {
  * const monthRegexString = `(${'January'}|${'Jan'}|${'01'})`;
  * const year = 2024;
  * const filenameReportPeriodRegex = getFilenameReportPeriodRegex(
- *   monthRegexString, 
+ *   monthRegexString,
  *   year,
  * ); // equivalent to '/(January|Jan|01)[-_]2024/i'
- * 
+ *
  * // Quarterly, November 2023 to February 2024
  * const startMonthRegexString = `(${'November'}|${'Nov'}|${'11'})`;
  * const startYear = 2023;
@@ -147,13 +147,18 @@ const getFilenameReportPeriodRegex = (...groups) => {
  * @returns {string} An example filename
  */
 const getExampleFilenameReportPeriod = (dueReportPeriod) => {
+  let exampleFilename;
   if (isEqualMonthAndYear(dueReportPeriod.start, dueReportPeriod.end)) {
-    return `${dueReportPeriod.start.month}-${dueReportPeriod.start.year}`;
+    exampleFilename = `${dueReportPeriod.start.month}-${dueReportPeriod.start.year}`;
+  } else if (dueReportPeriod.start.year === dueReportPeriod.end.year) {
+    exampleFilename = `${dueReportPeriod.start.month}-${dueReportPeriod.end.month}-${dueReportPeriod.start.year}`;
+  } else {
+    exampleFilename = `${dueReportPeriod.start.month}-${dueReportPeriod.start.year}-${dueReportPeriod.end.month}-${dueReportPeriod.end.year}`;
   }
-  if (dueReportPeriod.start.year === dueReportPeriod.end.year) {
-    return `${dueReportPeriod.start.month}-${dueReportPeriod.end.month}-${dueReportPeriod.start.year}`;
-  }
-  return `${dueReportPeriod.start.month}-${dueReportPeriod.start.year}-${dueReportPeriod.end.month}-${dueReportPeriod.end.year}`;
+
+  const singleDigitMonthRegex = /(?<!\d)(\d{1}-)/g;
+  const replacePattern = '0$1';
+  return exampleFilename.replaceAll(singleDigitMonthRegex, replacePattern);
 };
 
 /**

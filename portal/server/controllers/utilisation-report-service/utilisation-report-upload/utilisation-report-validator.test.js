@@ -172,7 +172,7 @@ describe('utilisation-report-validator', () => {
           const incorrectYear = year - 1;
           const filename = `Monthly Bank-${short}-${incorrectYear}.xlsx`;
 
-          const exampleFilenameReportPeriod = `${index}-${year}`;
+          const exampleFilenameReportPeriod = `${numeric}-${year}`;
 
           // Act
           const { filenameError } = validateFilenameFormat(filename, dueReportPeriod);
@@ -234,7 +234,7 @@ describe('utilisation-report-validator', () => {
         const incorrectYear = year - 1;
         const filename = `Quarterly Bank_${startMonthNames[0]}_${endMonthNames[0]}_${incorrectYear}.xlsx`;
 
-        const exampleFilenameReportPeriod = `${startMonth}-${endMonth}-${year}`;
+        const exampleFilenameReportPeriod = `0${startMonth}-0${endMonth}-${year}`;
 
         // Act
         const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
@@ -292,7 +292,7 @@ describe('utilisation-report-validator', () => {
         const incorrectYear = startYear - 1;
         const filename = `Quarterly Bank_${startMonthNames[0]}_${incorrectYear}_${endMonthNames[0]}_${endYear}.xlsx`;
 
-        const exampleFilenameReportPeriod = `${startMonth}-${startYear}-${endMonth}-${endYear}`;
+        const exampleFilenameReportPeriod = `${startMonth}-${startYear}-0${endMonth}-${endYear}`;
 
         // Act
         const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
@@ -306,7 +306,7 @@ describe('utilisation-report-validator', () => {
         const incorrectYear = endYear - 1;
         const filename = `Quarterly Bank_${startMonthNames[0]}_${incorrectYear}_${endMonthNames[0]}_${incorrectYear}.xlsx`;
 
-        const exampleFilenameReportPeriod = `${startMonth}-${startYear}-${endMonth}-${endYear}`;
+        const exampleFilenameReportPeriod = `${startMonth}-${startYear}-0${endMonth}-${endYear}`;
 
         // Act
         const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
