@@ -6,62 +6,57 @@ class TestAuditableBaseEntity extends AuditableBaseEntity {}
 
 describe('AuditableBaseEntity', () => {
   describe('updateLastUpdatedBy', () => {
-    describe("when the request source platform is 'PORTAL'", () => {
+    it("updates the portal audit details and resets the rest when the request source platform is 'PORTAL'", () => {
+      // Arrange
+      const testAuditableBaseEntity = new TestAuditableBaseEntity();
       const userId = 'abc123';
 
-      it.each`
-        field                          | value
-        ${'lastUpdatedByIsSystemUser'} | ${false}
-        ${'lastUpdatedByPortalUserId'} | ${userId}
-        ${'lastUpdatedByTfmUserId'}    | ${null}
-      `("sets '$field' to '$value'", ({ field, value }: { field: keyof AuditableBaseEntity; value: boolean | string | null }) => {
-        // Arrange
-        const testAuditableBaseEntity = new TestAuditableBaseEntity();
+      // Act
+      testAuditableBaseEntity.updateLastUpdatedBy({ platform: 'PORTAL', userId });
 
-        // Act
-        testAuditableBaseEntity.updateLastUpdatedBy({ platform: 'PORTAL', userId });
-
-        // Assert
-        expect(testAuditableBaseEntity[field]).toBe(value);
-      });
+      // Assert
+      expect(testAuditableBaseEntity).toEqual(
+        expect.objectContaining<Partial<AuditableBaseEntity>>({
+          lastUpdatedByPortalUserId: userId,
+          lastUpdatedByTfmUserId: null,
+          lastUpdatedByIsSystemUser: false,
+        }),
+      );
     });
 
-    describe("when the request source platform is 'TFM'", () => {
-      const userId = 'abc123';
+    it("updates the tfm audit details and resets the rest when the request source platform is 'TFM'", () => {
+      // Arrange
+      const testAuditableBaseEntity = new TestAuditableBaseEntity();
+      const userId = 'def456';
 
-      it.each`
-        field                          | value
-        ${'lastUpdatedByIsSystemUser'} | ${false}
-        ${'lastUpdatedByPortalUserId'} | ${null}
-        ${'lastUpdatedByTfmUserId'}    | ${userId}
-      `("sets '$field' to '$value'", ({ field, value }: { field: keyof AuditableBaseEntity; value: boolean | string | null }) => {
-        // Arrange
-        const testAuditableBaseEntity = new TestAuditableBaseEntity();
+      // Act
+      testAuditableBaseEntity.updateLastUpdatedBy({ platform: 'TFM', userId });
 
-        // Act
-        testAuditableBaseEntity.updateLastUpdatedBy({ platform: 'TFM', userId });
-
-        // Assert
-        expect(testAuditableBaseEntity[field]).toBe(value);
-      });
+      // Assert
+      expect(testAuditableBaseEntity).toEqual(
+        expect.objectContaining<Partial<AuditableBaseEntity>>({
+          lastUpdatedByPortalUserId: null,
+          lastUpdatedByTfmUserId: userId,
+          lastUpdatedByIsSystemUser: false,
+        }),
+      );
     });
 
-    describe("when the request source platform is 'SYSTEM'", () => {
-      it.each`
-        field                          | value
-        ${'lastUpdatedByIsSystemUser'} | ${true}
-        ${'lastUpdatedByPortalUserId'} | ${null}
-        ${'lastUpdatedByTfmUserId'}    | ${null}
-      `("sets '$field' to '$value'", ({ field, value }: { field: keyof AuditableBaseEntity; value: boolean | string | null }) => {
-        // Arrange
-        const testAuditableBaseEntity = new TestAuditableBaseEntity();
+    it("updates the system audit details and resets the rest when the request source platform is 'SYSTEM'", () => {
+      // Arrange
+      const testAuditableBaseEntity = new TestAuditableBaseEntity();
 
-        // Act
-        testAuditableBaseEntity.updateLastUpdatedBy({ platform: 'SYSTEM' });
+      // Act
+      testAuditableBaseEntity.updateLastUpdatedBy({ platform: 'SYSTEM' });
 
-        // Assert
-        expect(testAuditableBaseEntity[field]).toBe(value);
-      });
+      // Assert
+      expect(testAuditableBaseEntity).toEqual(
+        expect.objectContaining<Partial<AuditableBaseEntity>>({
+          lastUpdatedByPortalUserId: null,
+          lastUpdatedByTfmUserId: null,
+          lastUpdatedByIsSystemUser: true,
+        }),
+      );
     });
 
     it('throws an error when the request source platform is invalid', () => {
