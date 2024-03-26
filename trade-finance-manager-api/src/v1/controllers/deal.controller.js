@@ -1,5 +1,4 @@
 const mapDeal = require('../mappings/map-deal');
-const mapDeals = require('../mappings/map-deals');
 const api = require('../api');
 const acbsController = require('./acbs.controller');
 const allPartiesHaveUrn = require('../helpers/all-parties-have-urn');
@@ -86,34 +85,6 @@ const findOneTfmDeal = async (dealId) => {
 };
 exports.findOneTfmDeal = findOneTfmDeal;
 
-const queryDeals = async (queryParams) => {
-  const { deals, pagination } = await api.queryDeals({ queryParams });
-
-  if (!deals) {
-    return false;
-  }
-
-  return { deals, pagination };
-};
-
-const findTfmDealsLight = async (queryParams) => {
-  const { deals, pagination } = await queryDeals(queryParams);
-  return { deals, pagination };
-};
-exports.findTfmDealsLight = findTfmDealsLight;
-
-const findTfmDeals = async (queryParams) => {
-  const { deals, pagination } = await queryDeals(queryParams);
-
-  const mapped = await mapDeals(deals);
-
-  return {
-    deals: mapped,
-    pagination
-  };
-};
-exports.findTfmDeals = findTfmDeals;
-
 const findOnePortalDeal = async (dealId) => {
   const deal = await api.findOnePortalDeal(dealId).catch(() => false);
 
@@ -175,19 +146,6 @@ const canDealBeSubmittedToACBS = (submissionType) => {
   return acceptable.includes(submissionType);
 };
 exports.canDealBeSubmittedToACBS = canDealBeSubmittedToACBS;
-
-const updateTfmProbabilityOfDefault = async (dealId, probabilityOfDefault) => {
-  const probabilityOfDefaultUpdate = {
-    tfm: {
-      probabilityOfDefault,
-    },
-  };
-
-  const updatedDeal = await api.updateDeal(dealId, probabilityOfDefaultUpdate, {});
-
-  return updatedDeal.tfm;
-};
-exports.updateTfmProbabilityOfDefault = updateTfmProbabilityOfDefault;
 
 const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest, sessionUser) => {
   const { userId } = leadUnderwriterUpdateRequest;

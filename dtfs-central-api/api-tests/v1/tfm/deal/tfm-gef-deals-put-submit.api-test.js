@@ -54,7 +54,10 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
         facilities: [],
       },
       tfm: DEFAULTS.DEAL_TFM,
-      auditDetails: expect.any(Object),
+      auditDetails: expect.objectContaining({
+        lastUpdatedAt: expect.any(String),
+        lastUpdatedByPortalUserId: expect.any(String),
+      }),
     };
     expect(body).toEqual(expected);
   });
