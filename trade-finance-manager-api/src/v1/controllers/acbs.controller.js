@@ -30,11 +30,6 @@ const addToACBSLog = async ({ deal = {}, facility = {}, bank = {}, acbsTaskLinks
   return false;
 };
 
-const clearACBSLog = async () => {
-  const collection = await db.getCollection('durable-functions-log');
-  return collection.remove({});
-};
-
 const createACBS = async (deal) => {
   // Reference partyUrn in function
   const { dealSnapshot } = deal;
@@ -222,7 +217,6 @@ const amendAcbsFacility = (amendments, facility, deal) => {
 
 module.exports = {
   addToACBSLog,
-  clearACBSLog,
   createACBS,
   checkAzureAcbsFunction,
   issueAcbsFacilities,
