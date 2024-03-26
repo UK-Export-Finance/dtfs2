@@ -1,13 +1,39 @@
-import { Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { DbAuditUpdatedByUserId } from '../helpers';
+import { Column, UpdateDateColumn } from 'typeorm';
+import { DbRequestSource } from '../helpers';
 
 export abstract class AuditableBaseEntity {
-  @CreateDateColumn()
-  createdDate!: Date;
-
   @UpdateDateColumn()
-  updatedDate!: Date;
+  lastUpdatedAt!: Date;
 
-  @Column({ type: 'nvarchar' })
-  updatedByUserId!: DbAuditUpdatedByUserId;
+  @Column({ type: 'nvarchar', nullable: true })
+  lastUpdatedByPortalUserId!: string | null;
+
+  @Column({ type: 'nvarchar', nullable: true })
+  lastUpdatedByTfmUserId!: string | null;
+
+  @Column()
+  lastUpdatedByIsSystemUser!: boolean;
+
+  public updateLastUpdatedBy(requestSource: DbRequestSource): void {
+    const { platform } = requestSource;
+    switch (platform) {
+      case 'PORTAL':
+        this.lastUpdatedByPortalUserId = requestSource.userId;
+        this.lastUpdatedByTfmUserId = null;
+        this.lastUpdatedByIsSystemUser = false;
+        return;
+      case 'TFM':
+        this.lastUpdatedByPortalUserId = null;
+        this.lastUpdatedByTfmUserId = requestSource.userId;
+        this.lastUpdatedByIsSystemUser = false;
+        return;
+      case 'SYSTEM':
+        this.lastUpdatedByPortalUserId = null;
+        this.lastUpdatedByTfmUserId = null;
+        this.lastUpdatedByIsSystemUser = true;
+        return;
+      default:
+        throw new Error(`Request source platform '${platform}' not recognised`);
+    }
+  }
 }

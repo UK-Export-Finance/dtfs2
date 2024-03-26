@@ -1,6 +1,5 @@
 import { AzureFileInfoEntity, DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '../../sql-db-entities';
 import { UtilisationReportReconciliationStatus } from '../../types';
-import { getDbAuditUpdatedByUserId } from '../../sql-db-entities/helpers';
 import { ReportPeriodPartialEntity } from '../../sql-db-entities/partial-entities';
 import { MOCK_AZURE_FILE_INFO } from './azure-file-info.mock';
 
@@ -42,7 +41,7 @@ export class UtilisationReportEntityMockBuilder {
     report.azureFileInfo = AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource });
     report.status = status;
     report.uploadedByUserId = userId;
-    report.updatedByUserId = getDbAuditUpdatedByUserId({ platform: 'PORTAL', userId });
+    report.updateLastUpdatedBy({ platform: 'PORTAL', userId });
     return new UtilisationReportEntityMockBuilder(report);
   }
 
