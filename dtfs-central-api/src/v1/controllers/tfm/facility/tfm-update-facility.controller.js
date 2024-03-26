@@ -45,16 +45,17 @@ exports.updateFacilityPut = async (req, res) => {
   if(!ObjectId.isValid(facilityId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
   }
-  const { facilityUpdate, user, options } = req.body;
-
-  if (!user?._id) {
-    return res.status(400).send({ status: 400, message: 'Invalid user' })
-  }
 
   const facility = await findOneFacility(facilityId);
 
   if (!facility) {
     return res.status(404).send({ status: 404, message: 'Deal not found' });
+  }
+
+  const { facilityUpdate, user, options } = req.body;
+
+  if (!user?._id) {
+    return res.status(400).send({ status: 400, message: 'Invalid user' })
   }
 
   const updatedFacility = await updateFacility(facilityId, facilityUpdate, user, options);
