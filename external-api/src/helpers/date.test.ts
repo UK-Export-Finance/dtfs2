@@ -31,4 +31,10 @@ describe('getNowAsEpoch', () => {
     const result = getNowAsEpoch();
     expect(result).toBeGreaterThanOrEqual(Number.MIN_SAFE_INTEGER);
   });
+
+  it('should return EPOCH as 0', () => {
+    jest.useFakeTimers().setSystemTime(new Date('1970-01-01 01:00:00'));
+    const result = getNowAsEpoch();
+    expect(result).toBe(0);
+  });
 });

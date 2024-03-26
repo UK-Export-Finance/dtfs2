@@ -1,4 +1,5 @@
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
+const { clearACBSLog } = require('../../helpers/clear-acbs-log');
 const api = require('../../../src/v1/api');
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_ACBS = require('../../../src/v1/__mocks__/mock-deal-acbs');
@@ -20,11 +21,11 @@ const MOCK_TFM_DEAL_ACBS = {
 
 describe('acbs controller', () => {
   beforeAll(async () => {
-    await acbsController.clearACBSLog();
+    await clearACBSLog();
   });
 
   afterEach(async () => {
-    await acbsController.clearACBSLog();
+    await clearACBSLog();
   });
 
   describe('addToACBSLog', () => {
@@ -39,17 +40,6 @@ describe('acbs controller', () => {
       expect(result).toEqual({
         acknowledged: true,
         insertedId: expect.any(Object),
-      });
-    });
-  });
-
-  describe('clearACBSLog', () => {
-    it('should clear acbs log', async () => {
-      await acbsController.addToACBSLog({ deal: { _id: '64da2f74de0f97235921b09b' }, acbsTaskLinks: {} });
-      const result = await acbsController.clearACBSLog();
-      expect(result).toEqual({
-        acknowledged: true,
-        deletedCount: 1,
       });
     });
   });

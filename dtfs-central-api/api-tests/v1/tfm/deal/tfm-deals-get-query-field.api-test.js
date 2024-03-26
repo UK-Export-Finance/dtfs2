@@ -57,18 +57,7 @@ describe('/v1/tfm/deals', () => {
           },
         ]);
 
-        const mockReqBody = {
-          queryParams: {
-            byField: [
-              {
-                name: 'tfm.dateReceived',
-                value: '12-11-2021',
-              },
-            ],
-          },
-        };
-
-        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+        const { status, body } = await api.get('/v1/tfm/deals?byField[0][name]=tfm.dateReceived&byField[0][value]=12-11-2021');
 
         expect(status).toEqual(200);
 
@@ -103,18 +92,7 @@ describe('/v1/tfm/deals', () => {
 
         const [submittedMIADeal] = await createAndSubmitDeals([miaDeal, minDeal]);
 
-        const mockReqBody = {
-          queryParams: {
-            byField: [
-              {
-                name: 'dealSnapshot.eligibility.lastUpdated',
-                value: todayFormatted,
-              },
-            ],
-          },
-        };
-
-        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+        const { status, body } = await api.get(`/v1/tfm/deals?byField[0][name]=dealSnapshot.eligibility.lastUpdated&byField[0][value]=${todayFormatted}`);
 
         expect(status).toEqual(200);
 
@@ -177,20 +155,8 @@ describe('/v1/tfm/deals', () => {
           ]);
         }
 
-        // Mock Request Body
-        const mockRequestBody = {
-          queryParams: {
-            byField: [
-              {
-                name: 'tfm.lastUpdated',
-                value: todayFormatted,
-              },
-            ],
-          },
-        };
-
         // GET API CAll
-        const { status, body } = await api.get('/v1/tfm/deals', mockRequestBody);
+        const { status, body } = await api.get(`/v1/tfm/deals?byField[0][name]=tfm.lastUpdated&byField[0][value]=${todayFormatted}`);
 
         // Test evaluation
         expect(status).toEqual(200);

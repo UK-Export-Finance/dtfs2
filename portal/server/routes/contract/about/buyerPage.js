@@ -66,7 +66,7 @@ const buyerSubmissionDetailsProperties = [
 router.post('/contract/:_id/about/buyer', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  const submissionDetailsPayload = constructPayload(req.body, buyerSubmissionDetailsProperties);
+  const submissionDetailsPayload = constructPayload(req.body, buyerSubmissionDetailsProperties,true);
 
   await updateSubmissionDetails(req.apiData[DEAL], submissionDetailsPayload, userToken);
 
@@ -93,7 +93,7 @@ router.post('/contract/:_id/about/buyer/save-go-back', provide([DEAL]), async (r
     destinationOfGoodsAndServices: destinationOfGoodsAndServicesCode,
   };
 
-  const submissionDetailsPayload = constructPayload(req.body, buyerSubmissionDetailsProperties);
+  const submissionDetailsPayload = constructPayload(req.body, buyerSubmissionDetailsProperties,true);
 
   if (!formDataMatchesOriginalData(submissionDetailsPayload, mappedOriginalData)) {
     await updateSubmissionDetails(deal, submissionDetailsPayload, userToken);

@@ -41,7 +41,6 @@
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.11.2",
     "joi": "^17.12.2",
-    "loadash": "^1.0.0",
     "mongodb": "4.17.0",
     "notifications-node-client": "^7.0.6",
     "supertest": "^6.3.3",

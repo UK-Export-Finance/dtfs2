@@ -111,7 +111,7 @@ describe('/estore', () => {
     });
   });
 
-  describe('When the Mongo deal is not valid', () => {
+  describe('When the Mongo deal ID is not a valid Mongo ObjectID', () => {
     it('Should return 500 with catch-all error message', async () => {
       const invalidPayload = {
         ...payload,
