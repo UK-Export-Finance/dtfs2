@@ -97,7 +97,8 @@ const validateCsvData = (csvData) => {
 };
 
 /**
- * Gets the
+ * Gets the regex group for all the possible month representations we
+ * are expecting for the supplied one indexed month
  * @param {import('@ukef/dtfs2-common').OneIndexedMonth} oneIndexedMonth - The one indexed month
  * @returns {string} A regex string for the given month and year combination
  * @throws {Error} If a month matching the supplied `longMonthName` cannot be found
