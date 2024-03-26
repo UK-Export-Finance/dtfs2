@@ -4,8 +4,9 @@ import { api } from '../api';
 const { post } = api(app);
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
-import { UKEF_ID } from '../../src/constants';
+import { UKEF_ID, ESTORE_CRON_STATUS } from '../../src/constants';
 import { ObjectId } from 'mongodb';
+import { getNowAsEpoch } from '../../src/helpers/date';
 
 const { APIM_ESTORE_URL } = process.env;
 
@@ -126,6 +127,10 @@ describe('/estore', () => {
   });
 
   describe('eStore CRON jobs', () => {
+    beforeEach(() => {
+      mockInsertOne.mockReset();
+    });
+
     it('Should return 201 for a new deal payload', async () => {
       const { status } = await post(payload).to('/estore');
 
@@ -136,20 +141,29 @@ describe('/estore', () => {
       await post(payload).to('/estore');
 
       // Look up for the deal ID in the collection
-      expect(mockFindOne).toHaveBeenCalled();
+      expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: new ObjectId(payload.dealId) } });
 
       // Insert a new entry in the collection
-      expect(mockInsertOne).toHaveBeenCalled();
+      expect(mockInsertOne).toHaveBeenCalledWith({
+        payload,
+        timestamp: getNowAsEpoch,
+        cron: {
+          site: { status: ESTORE_CRON_STATUS.PENDING },
+          term: { status: ESTORE_CRON_STATUS.PENDING },
+          buyer: { status: ESTORE_CRON_STATUS.PENDING },
+          deal: { status: ESTORE_CRON_STATUS.PENDING },
+          facility: { status: ESTORE_CRON_STATUS.PENDING },
+        },
+      });
     });
 
     it('Should not create a new entry cron-job-logs collection for an existing payload', async () => {
       mockFindOne.mockResolvedValueOnce({ payload });
-      mockInsertOne.mockReset();
 
       await post(payload).to('/estore');
 
       // Look up for the deal ID in the collection
-      expect(mockFindOne).toHaveBeenCalled();
+      expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: new ObjectId(payload.dealId) } });
 
       // Insert a new entry in the collection
       expect(mockInsertOne).not.toHaveBeenCalled();
