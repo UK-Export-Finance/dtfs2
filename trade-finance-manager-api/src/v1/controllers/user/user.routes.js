@@ -46,7 +46,8 @@ module.exports.createTfmUser = (req, res, next) => {
 
   const newUser = { ...userToCreate, salt, hash };
 
-  return create(newUser, (error, user) => {
+  // This is called on the open and auth router ('v1/user' and 'v1/users') endpoints so req.user may be undefined
+  return create(newUser, req.user, (error, user) => {
     if (error) {
       return next(error);
     }
@@ -96,7 +97,7 @@ module.exports.updateTfmUserById = (req, res, next) => {
           },
         });
       } else {
-        update(req.params.user, req.body, (updateErr, updatedUser) => {
+        update(req.params.user, req.body, req.user, (updateErr, updatedUser) => {
           if (updateErr) {
             next(updateErr);
           } else {

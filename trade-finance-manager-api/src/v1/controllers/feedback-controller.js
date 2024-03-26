@@ -1,5 +1,6 @@
 const { format, getUnixTime, fromUnixTime } = require('date-fns');
 const sanitizeHtml = require('sanitize-html');
+const { generateTfmUserAuditDetails, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
 const db = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
 const sendTfmEmail = require('./send-tfm-email');
@@ -38,7 +39,8 @@ exports.create = async (req, res) => {
     howCanWeImprove,
     emailAddress,
     submittedBy,
-    created: getUnixTime(new Date())
+    created: getUnixTime(new Date()),
+    auditDetails: req.user?._id ? generateTfmUserAuditDetails(req.user._id) : generateNoUserLoggedInAuditDetails(),
   };
 
   const collection = await db.getCollection('tfm-feedback');
