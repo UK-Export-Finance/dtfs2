@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { generateSystemAuditDetails, generateTfmUserAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
+const { generateSystemAuditDetails, generateTfmUserAuditDetails, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
 const db = require('../../../drivers/db-client');
 const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
@@ -35,10 +35,12 @@ exports.findByUsername = async (username, callback) => {
  */
 exports.create = async (user, sessionUser, callback) => {
   const collection = await db.getCollection('tfm-users');
+  // This endpoint is called by mock data loader in development without a logged in user.
+  // This behaviour should never occur in production
   const tfmUser = {
     ...user,
     status: USER.STATUS.ACTIVE,
-    auditDetails: sessionUser?._id ? generateTfmUserAuditDetails(sessionUser._id) : null,
+    auditDetails: sessionUser?._id ? generateTfmUserAuditDetails(sessionUser._id) : generateNoUserLoggedInAuditDetails(),
   };
 
   delete tfmUser.token;
