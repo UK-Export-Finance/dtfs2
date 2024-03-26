@@ -10,6 +10,7 @@ const { swaggerSpec, swaggerUiOptions } = require('./swagger');
 const feedbackController = require('./controllers/feedback-controller');
 const amendmentController = require('./controllers/amendment.controller');
 const facilityController = require('./controllers/facility.controller');
+const authController = require('./controllers/auth/auth.controller');
 const partyController = require('./controllers/party.controller');
 const bankHolidaysController = require('./controllers/bank-holidays');
 const utilisationReportsController = require('./controllers/utilisation-reports');
@@ -24,6 +25,17 @@ const { tasksRouter } = require('./tasks/routes');
 
 openRouter.use(checkApiKey);
 authRouter.use(passport.authenticate('jwt', { session: false }));
+
+// Used for creating initial user for data load.
+openRouter.route('/user').post(users.createTfmUser);
+// Used for creating mock user.
+authRouter.route('/users').post(users.createTfmUser);
+
+// Used for clearing test data.
+authRouter
+  .route('/users/:user')
+  .get(validation.userIdEscapingSanitization, handleExpressValidatorResult, users.findTfmUser)
+  .delete(validation.userIdValidation, handleExpressValidatorResult, users.removeTfmUserById);
 
 authRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
 
@@ -67,14 +79,12 @@ authRouter.use('/', tasksRouter);
  */
 openRouter.route('/feedback').post(feedbackController.create);
 
-openRouter.route('/user').post(users.createTfmUser);
-authRouter.route('/users').post(users.createTfmUser);
+// token-validator
+authRouter.get('/validate-user-token', (_req, res) => res.status(200).send());
 
-authRouter
-  .route('/users/:user')
-  .get(validation.userIdEscapingSanitization, handleExpressValidatorResult, users.findTfmUser)
-  .put(validation.userIdValidation, handleExpressValidatorResult, users.updateTfmUserById)
-  .delete(validation.userIdValidation, handleExpressValidatorResult, users.removeTfmUserById);
+openRouter.route('/auth/login-url').get(authController.getLoginUrl);
+openRouter.route('/auth/process-sso-redirect').post(authController.processSsoRedirect);
+authRouter.route('/auth/logout-url').get(authController.getLogoutUrl);
 
 authRouter.route('/facilities').get(facilityController.getFacilities);
 

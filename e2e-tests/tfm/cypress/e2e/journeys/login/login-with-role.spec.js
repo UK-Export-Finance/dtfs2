@@ -1,31 +1,27 @@
-import pages from '../../pages';
 import USERS from '../../../fixtures/users';
-import { PDC_TEAMS, TFM_USER_TEAMS } from '../../../fixtures/teams';
+import { PDC_TEAMS as PDC_TEAMS_OBJECT, TFM_USER_TEAMS } from '../../../fixtures/teams';
 import relativeURL from '../../relativeURL';
 
+const findOneUserByTeamId = (teamId) => Object.values(USERS).find((user) => user?.teams?.includes(teamId));
+
+const NON_PDC_TEAMS = Object.values(TFM_USER_TEAMS).filter((team) => !team.includes('PDC'));
+const PDC_TEAMS = Object.values(PDC_TEAMS_OBJECT);
+
 context('Login to tfm with specific roles', () => {
-  const findOneUserByTeamId = (teamId) => Object.values(USERS).find((user) => user?.teams?.includes(teamId));
-
-  beforeEach(() => {
-    pages.landingPage.visit();
-  });
-
-  const nonPdcTeams = Object.values(TFM_USER_TEAMS).filter((team) => !PDC_TEAMS[team]);
-  nonPdcTeams.forEach((team) => {
-    it(`should redirect to /deals/0 after a login for users in '${team.id}' team`, () => {
-      const userInTeam = findOneUserByTeamId(team);
+  NON_PDC_TEAMS.forEach((teamName) => {
+    it(`should redirect to /deals after a login for users in '${teamName}' team`, () => {
+      const userInTeam = findOneUserByTeamId(teamName);
       cy.login(userInTeam);
 
       cy.url().should('eq', relativeURL('/deals/0'));
     });
   });
 
-  const pdcTeams = Object.values(PDC_TEAMS);
-  pdcTeams.forEach((team) => {
-    it(`should redirect to /utilisation-reports after a login for users in '${team.id}' team`, () => {
-      const userInTeam = findOneUserByTeamId(team);
-      cy.login(userInTeam);
+  PDC_TEAMS.forEach((teamName) => {
+    it(`should redirect to /utilisation-reports after a login for users in '${teamName}' team`, () => {
+      const userInTeam = findOneUserByTeamId(teamName);
 
+      cy.login(userInTeam);
       cy.url().should('eq', relativeURL('/utilisation-reports'));
     });
   });

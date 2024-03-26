@@ -27,7 +27,7 @@ context('Amendments tasks - automatic amendment tasks', () => {
 
       cy.submitDeal(dealId, dealType, PIM_USER_1);
 
-      cy.getUser(PIM_USER_1.username, UNDERWRITER_MANAGER_1).then((userObj) => {
+      cy.getUser(PIM_USER_1.username).then((userObj) => {
         userId = userObj._id;
       });
     });

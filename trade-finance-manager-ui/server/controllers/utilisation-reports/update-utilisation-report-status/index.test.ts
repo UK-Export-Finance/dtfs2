@@ -3,7 +3,6 @@ import api from '../../../api';
 import * as getUtilisationReportsController from '..';
 import { UpdateUtilisationReportStatusRequest, UpdateUtilisationReportStatusRequestBody, updateUtilisationReportStatus } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
-import { TEAM_IDS } from '../../../constants';
 import { ReportWithStatus } from '../../../types/utilisation-reports';
 
 console.error = jest.fn();
@@ -21,7 +20,7 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
     const userToken = 'user-token';
     const session = {
       userToken,
-      user: { ...MOCK_TFM_SESSION_USER, teams: [TEAM_IDS.PDC_RECONCILE] },
+      user: MOCK_TFM_SESSION_USER,
     };
 
     const validMongoObjectId = '5ce819935e539c343f141ece';

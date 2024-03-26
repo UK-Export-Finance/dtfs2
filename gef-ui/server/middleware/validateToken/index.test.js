@@ -1,5 +1,5 @@
-import validateToken from '.';
-import api from '../../services/api';
+const validateToken = require('.');
+const api = require('../../services/api');
 
 jest.mock('../../services/api');
 

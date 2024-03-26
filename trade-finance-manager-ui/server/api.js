@@ -49,7 +49,7 @@ const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
  * and throws an error if the page number is out of bounds
  * @param {Object} queryParams Query parameters
  * @param {string} token Authorisation token
- * @returns {Object} Facilities data and pagination metadata
+ * @returns {Promise<Object>} Facilities data and pagination metadata
  * @throws {PageOutOfBoundsError} Will throw if the requested page number exceeds the maximum page number
  */
 const getFacilities = async (queryParams, token) => {
@@ -76,7 +76,7 @@ const getFacilities = async (queryParams, token) => {
  * and throws an error if the page number is out of bounds
  * @param {Object} queryParams Query parameters
  * @param {string} token Authorisation token
- * @returns {Object} Deals data and pagination metadata
+ * @returns {Promise<Object>} Deals data and pagination metadata
  * @throws {PageOutOfBoundsError} Will throw if the requested page number exceeds the maximum page number
  */
 const getDeals = async (queryParams, token) => {
@@ -394,48 +394,76 @@ const createActivity = async (dealId, activityUpdate, token) => {
   }
 };
 
-const login = async (username, password) => {
+const getAuthLoginUrl = async () => {
   try {
     const response = await axios({
-      method: 'post',
-      url: `${TFM_API_URL}/v1/login`,
+      method: 'get',
+      url: `${TFM_API_URL}/v1/auth/login-url`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': TFM_API_KEY,
       },
-      data: { username, password },
     });
 
     return response.data;
   } catch (error) {
-    console.error('Unable to log in %s', error?.response?.data);
-    return { status: error?.response?.status || 500, data: 'Failed to login' };
+    console.error('Unable to get login url %s', error?.response);
+    return { status: error?.response?.status || 500, data: 'Unable to get login url' };
   }
-};
+}
 
-const updateUserPassword = async (userId, update, token) => {
+const getAuthLogoutUrl = async (token) => {
   try {
-    const isValidUserId = isValidMongoId(userId);
-
-    if (!isValidUserId) {
-      console.error('updateUserPassword: Invalid user id provided: %s', userId);
-      return { status: 400, data: 'Invalid user id' };
-    }
-
     const response = await axios({
-      method: 'put',
-      url: `${TFM_API_URL}/v1/users/${userId}`,
+      method: 'get',
+      url: `${TFM_API_URL}/v1/auth/logout-url`,
       headers: generateHeaders(token),
-      data: update,
-    }).catch((error) => {
-      console.error('Unable to update user details in axios request %s', error);
-      return { status: error?.response?.status || 500, data: 'Failed to update user password' };
     });
 
-    return response;
+    return response.data;
   } catch (error) {
-    console.error('Unable to update user details %s', error);
-    return { status: error?.response?.status || 500, data: 'Failed to update user password' };
+    console.error('Unable to get logout url %s', error?.response?.data);
+    return { status: error?.response?.status || 500, data: 'Unable to get logout url' };
   }
+}
+
+/**
+ * processSsoRedirect
+ * Process SSO redirect via TFM API
+ * @param {Object} pkceCodes: PKCE Codes object
+ * @param {Object} authCodeUrlRequest: Auth code URL request
+ * @param {Object} authCodeRequest: Auth code request
+ * @param {String} code: authZ code
+ * @param {String} state: MSAL state guid
+ * @returns {Promise<Object>}
+ */
+const processSsoRedirect = async ({ pkceCodes, authCodeUrlRequest, authCodeRequest, code, state }) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${TFM_API_URL}/v1/auth/process-sso-redirect`,
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': TFM_API_KEY,
+      },
+      data: { pkceCodes, authCodeUrlRequest, authCodeRequest, code, state }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Unable to process login %s', error?.response?.data);
+    return { status: error?.response?.status || 500, data: 'Unable to process login' };
+  }
+}
+
+const validateToken = async (token) => {
+  if (!token) return false;
+
+  const response = await axios({
+    method: 'get',
+    headers: generateHeaders(token),
+    url: `${TFM_API_URL}/v1/validate-user-token`,
+  }).catch((error) => error.response);
+  return response && response.status === 200;
 };
 
 const createFeedback = async (formData, token) => {
@@ -872,7 +900,6 @@ module.exports = {
   updateFacilityRiskProfile,
   getTeamMembers,
   getUser,
-  updateUserPassword,
   updateParty,
   updateFacility,
   updateTask,
@@ -882,7 +909,10 @@ module.exports = {
   updateUnderwriterManagersDecision,
   updateLeadUnderwriter,
   createActivity,
-  login,
+  getAuthLoginUrl,
+  getAuthLogoutUrl,
+  processSsoRedirect,
+  validateToken,
   getFacilities,
   createFeedback,
   updateAmendment,

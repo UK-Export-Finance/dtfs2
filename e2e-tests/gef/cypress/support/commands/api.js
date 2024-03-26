@@ -188,20 +188,6 @@ const submitDealAfterUkefIds = (dealId, dealType, checker, token) =>
       return resp.body;
     });
 
-const tfmLogin = (username, password) =>
-  cy
-    .request({
-      url: `${tfmApiUrl()}/v1/login`,
-      method: 'POST',
-      body: { username, password },
-      headers,
-    })
-    .then((resp) => {
-      expect(resp.status).to.equal(200);
-
-      return resp.body.token;
-    });
-
 const submitDealToTfm = (dealId, dealType) =>
   cy
     .request({
@@ -240,7 +226,6 @@ export {
   updateFacility,
   addCommentObjToDeal,
   submitDealAfterUkefIds,
-  tfmLogin,
   submitDealToTfm,
   addUnderwriterCommentToTfm,
 };

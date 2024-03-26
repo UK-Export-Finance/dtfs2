@@ -9,6 +9,7 @@ module.exports = {
     govukFrontend: './scripts/govuk-frontend.js',
     mojFrontend: './scripts/moj-frontend.js',
     jsEnabled: './scripts/js-enabled.js',
+    ssoAutoSubmit: './scripts/sso-auto-submit.js',
   },
   output: {
     path: path.join(__dirname, 'public/js'),

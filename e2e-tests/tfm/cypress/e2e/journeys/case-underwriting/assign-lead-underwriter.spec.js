@@ -19,15 +19,15 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
   const underwriterFullName = `${UNDERWRITER_1.firstName} ${UNDERWRITER_1.lastName}`;
 
   before(() => {
-    cy.getUser(UNDERWRITER_MANAGER_1.username, T1_USER_1).then((userObj) => {
+    cy.getUser(UNDERWRITER_MANAGER_1.username).then((userObj) => {
       underwriterManager1UserId = userObj._id;
     });
 
-    cy.getUser(UNDERWRITER_MANAGER_2.username, T1_USER_1).then((userObj) => {
+    cy.getUser(UNDERWRITER_MANAGER_2.username).then((userObj) => {
       underwriterManager2UserId = userObj._id;
     });
 
-    cy.getUser(UNDERWRITER_1.username, T1_USER_1).then((userObj) => {
+    cy.getUser(UNDERWRITER_1.username).then((userObj) => {
       underwriterUserId = userObj._id;
     });
 

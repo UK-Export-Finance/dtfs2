@@ -8,12 +8,16 @@ describe('user controller', () => {
   let tokenUser;
 
   beforeEach(async () => {
-    tokenUser = await testUserCache.initialise(app);
+    tokenUser = await testUserCache.initialise();
   });
 
   it('should not create a new TFM user with malformed payload', async () => {
-    const { body } = await as(tokenUser).post({}).to('/v1/users');
-    expect(body).toEqual({});
+    const { body, status } = await as(tokenUser).post({}).to('/v1/users');
+    expect(status).toEqual(400);
+    expect(body).toEqual({
+      errors: {count: 1, errorList: [ 'User creation failed']},
+      success: false,
+    });
   });
 
   it('creates a new TFM user', async () => {
@@ -25,7 +29,7 @@ describe('user controller', () => {
   });
 
   it('returns the requested user if matched', async () => {
-    const expectedResponse = { _id: userId, ...MOCK_USERS[0], status: 'active' };
+    const expectedResponse = { _id: userId, ...MOCK_USERS[0] };
     delete expectedResponse.password;
 
     const { status, body } = await as(tokenUser).get(`/v1/users/${userId}`);

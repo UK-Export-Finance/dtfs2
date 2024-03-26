@@ -1,9 +1,5 @@
 import relative from '../../relativeURL';
-
-const {
-  feedbackPage,
-  header,
-} = require('../../pages');
+import { feedbackPage, header } from '../../pages';
 
 context('User submit feedback on portal', () => {
   beforeEach(() => {
@@ -40,7 +36,7 @@ context('User submit feedback on portal', () => {
     feedbackPage.emailAddress().should('exist');
   });
 
-  it('feedback should give errors if incorrectly filled up', () => {
+  it('feedback should give errors if incorrectly entered', () => {
     feedbackPage.emailAddress().type('a');
 
     feedbackPage.submitButton().click();

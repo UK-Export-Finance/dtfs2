@@ -37,7 +37,6 @@ context('PDC_READ users can route to the payments page for a bank', () => {
       cy.task(NODE_TASKS.INSERT_UTILISATION_REPORT_DETAILS_INTO_DB, [mockUtilisationReportDetailsWithoutId]);
     });
 
-    pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
     pages.utilisationReportsPage.visit();

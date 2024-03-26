@@ -16,8 +16,8 @@ const mockDataLoaderUser = {
 };
 
 const mockDataLoaderTFMUser = {
+  azureOid: 're-insert-mocks',
   username: 're-insert-mocks',
-  password: 'AbC!2345',
   firstName: 'Mock',
   lastName: 'DataLoader',
   teams: [],
@@ -50,8 +50,7 @@ const deleteInitialUser = async (token) => {
 const createAndLogInAsInitialTfmUser = async () => {
   try {
     logger.info('logging in as initial TFM user');
-    const token = await api.loginTfmUser(mockDataLoaderTFMUser);
-
+    const token = await api.loginViaTfm(mockDataLoaderTFMUser);
     if (!token) {
       throw new FailedToCreateLoggedInUserSessionError({ username: mockDataLoaderTFMUser.username, cause: 'No token was present on response' });
     }
@@ -66,7 +65,7 @@ const createAndLogInAsInitialTfmUser = async () => {
       },
     );
     await api.createInitialTfmUser(mockDataLoaderTFMUser);
-    return api.loginTfmUser(mockDataLoaderTFMUser);
+    return api.loginViaTfm(mockDataLoaderTFMUser);
   }
 };
 

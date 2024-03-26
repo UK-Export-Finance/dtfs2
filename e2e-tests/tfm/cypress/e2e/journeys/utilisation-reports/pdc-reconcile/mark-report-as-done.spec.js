@@ -101,7 +101,6 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
       cy.wrap(utilisationReportDetailsWithId).as(utilisationReportDetailsAlias);
     });
 
-    pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
     pages.utilisationReportsPage.visit();

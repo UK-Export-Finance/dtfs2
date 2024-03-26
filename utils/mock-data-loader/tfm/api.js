@@ -2,7 +2,9 @@ const axios = require('axios');
 const ApiError = require('../errors/api.error');
 require('dotenv').config({ path: `${__dirname}/../.env` });
 
-const { TFM_API_URL, TFM_API_KEY, DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY } = process.env;
+const {
+  TFM_API_URL, TFM_API_KEY, DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY
+} = process.env;
 
 const createTeam = async (team) => {
   const response = await axios({
@@ -63,7 +65,7 @@ const createTfmUser = async (user, token) => {
       'x-api-key': TFM_API_KEY,
     },
     url: `${TFM_API_URL}/v1/users`,
-    data: user,
+    data: { azureOid: user.username, ...user },
   }).catch((error) => {
     throw new ApiError({ cause: error });
   });

@@ -14,7 +14,7 @@ describe('/feedback', () => {
   };
 
   const postFeedback = async (body) => {
-    const user = await testUserCache.initialise(app);
+    const user = await testUserCache.initialise();
     const response = await as(user).post(body).to('/v1/feedback');
     return response;
   };

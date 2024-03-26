@@ -6,7 +6,7 @@
 
 const loadData = () => {
   // Ensure project root directory
-  cy.exec('if [ -d "dtfs2" ]; then cd dtfs2; fi');
+  cy.exec('if [ -d "dtfs2" ]; then cd dtfs2; fi', { failOnNonZeroExit: false });
   // Load mock data
   cy.exec('npm run load');
 };

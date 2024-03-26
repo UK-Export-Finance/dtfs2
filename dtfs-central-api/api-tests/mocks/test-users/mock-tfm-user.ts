@@ -8,6 +8,5 @@ export const MOCK_TFM_USER: TfmSessionUser = {
   timezone: 'Europe/London',
   firstName: 'Test',
   lastName: 'User',
-  status: 'active',
   lastLogin: 0,
 };

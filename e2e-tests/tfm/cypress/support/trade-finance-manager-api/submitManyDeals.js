@@ -1,12 +1,19 @@
-const { submitDeal, submitDealAfterUkefIds, login } = require('./api');
+const { submitDeal, submitDealAfterUkefIds } = require('./api');
 const { ALIAS_KEY } = require('../../fixtures/constants');
 
-module.exports = (deals, opts) => {
+/**
+ * submitManyDeals
+ * Login to TFM and submit many deals.
+ * @param {Array} deals: Deals
+ * @param {Object} user: User object
+ */
+const submitManyDeals = (deals, user) => {
   console.info('submitManyDeals::');
   const persistedDeals = [];
-  const { username, password } = opts;
 
-  login(username, password).then((token) => {
+  const isSessionForAPI = true;
+
+  cy.login(user, isSessionForAPI).then((token) => {
     cy.wrap(deals).each((dealToInsert) => {
       submitDeal(dealToInsert._id, dealToInsert.dealType, null, token);
 
@@ -18,3 +25,5 @@ module.exports = (deals, opts) => {
     cy.wrap(persistedDeals).as(ALIAS_KEY.SUBMIT_MANY_DEALS);
   });
 };
+
+module.exports = submitManyDeals;

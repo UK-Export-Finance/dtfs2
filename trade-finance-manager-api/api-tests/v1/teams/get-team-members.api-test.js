@@ -12,7 +12,7 @@ describe('GET /teams/:teamId/members', () => {
   let tokenUser;
 
   beforeAll(async () => {
-    tokenUser = await testUserCache.initialise(app);
+    tokenUser = await testUserCache.initialise();
   });
 
   afterAll(() => {
