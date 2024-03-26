@@ -33,7 +33,8 @@ export const getUtilisationReports = async (req: GetUtilisationReportsRequest, r
       reportPeriod: parsedReportPeriod,
       excludeNotReceived: excludeNotReceived === 'true',
     });
-    return res.status(200).send(utilisationReports.map((report) => mapUtilisationReportEntityToGetUtilisationReportResponse(report)));
+    const mappedUtilisationReports = await Promise.all(utilisationReports.map(mapUtilisationReportEntityToGetUtilisationReportResponse));
+    return res.status(200).send(mappedUtilisationReports);
   } catch (error) {
     console.error('Unable to get utilisation reports:', error);
     return res.status(500).send({ status: 500, message: 'Failed to get utilisation reports' });

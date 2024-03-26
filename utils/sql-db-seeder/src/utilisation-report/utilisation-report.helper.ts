@@ -83,7 +83,7 @@ export const createUploadedReport = (
   utilisationReport.reportPeriod = reportPeriod;
   utilisationReport.status = status;
   utilisationReport.dateUploaded = new Date();
-  utilisationReport.uploadedByUserId = null;
+  utilisationReport.uploadedByUserId = portalUser._id.toString();
   utilisationReport.updateLastUpdatedBy(requestSource);
 
   const azureFileInfo = new AzureFileInfoEntity();
