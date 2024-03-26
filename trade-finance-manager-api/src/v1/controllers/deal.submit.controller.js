@@ -84,7 +84,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
     const dealWithTfmData = await addTfmDealData(updatedMappedDeal);
     const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData);
     const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn);
-    const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions, { _id: checker});
+    const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions, checker);
     const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
 
     if (updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
@@ -187,7 +187,7 @@ exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
  * Submits a deal to TFM before the UKEF IDs are generated.
  * @param {string} dealId - The ID of the deal to be submitted.
  * @param {string} dealType - The type of the deal.
- * @param {string} checker - The name of the checker.
+ * @param {unknown} checker
  * @returns {Promise<Object> | Boolean} - A promise that resolves to an object, other false.
  * @throws {Error} - If there is an error during the submission process.
  */
@@ -228,7 +228,7 @@ const submitDealAfterUkefIdsPUT = async (req, res) => {
 
     const deal = await submitDealAfterUkefIds(dealId, dealType, checker);
 
-    if (!deal) {
+    if (!deal) { // this occuring
       console.error('Deal does not exist in TFM %s', dealId);
       return res.status(404).send();
     }
