@@ -66,6 +66,7 @@ on:
       - feature
       - staging
       - prod
+      - release-1.5
 
     paths:
       - ".github/workflows/deployment.yml"
