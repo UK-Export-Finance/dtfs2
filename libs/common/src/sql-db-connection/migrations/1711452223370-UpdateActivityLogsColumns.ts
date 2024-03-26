@@ -35,13 +35,13 @@ export class UpdateActivityLogsColumns1711452223370 implements MigrationInterfac
             ALTER TABLE "UtilisationReport" DROP COLUMN "updatedByUserId"
         `);
     await queryRunner.query(`
-            ALTER TABLE "FeeRecord" DROP CONSTRAINT "DF_045544aa340ca7fc9bf9d43a0b6"
+            ALTER TABLE "FeeRecord" DROP CONSTRAINT "DF_d3be25c51200bc4abc1b997efea"
         `);
     await queryRunner.query(`
             ALTER TABLE "FeeRecord" DROP COLUMN "createdDate"
         `);
     await queryRunner.query(`
-            ALTER TABLE "FeeRecord" DROP CONSTRAINT "DF_0b76ad234503677f7396ccc90b4"
+            ALTER TABLE "FeeRecord" DROP CONSTRAINT "DF_a7cbc91fb5fec8b7a7a8d70bb3c"
         `);
     await queryRunner.query(`
             ALTER TABLE "FeeRecord" DROP COLUMN "updatedDate"
@@ -164,7 +164,7 @@ export class UpdateActivityLogsColumns1711452223370 implements MigrationInterfac
         `);
     await queryRunner.query(`
             ALTER TABLE "FeeRecord"
-            ADD CONSTRAINT "DF_0b76ad234503677f7396ccc90b4" DEFAULT getdate() FOR "updatedDate"
+            ADD CONSTRAINT "DF_a7cbc91fb5fec8b7a7a8d70bb3c" DEFAULT getdate() FOR "updatedDate"
         `);
     await queryRunner.query(`
             ALTER TABLE "FeeRecord"
@@ -172,7 +172,7 @@ export class UpdateActivityLogsColumns1711452223370 implements MigrationInterfac
         `);
     await queryRunner.query(`
             ALTER TABLE "FeeRecord"
-            ADD CONSTRAINT "DF_045544aa340ca7fc9bf9d43a0b6" DEFAULT getdate() FOR "createdDate"
+            ADD CONSTRAINT "DF_d3be25c51200bc4abc1b997efea" DEFAULT getdate() FOR "createdDate"
         `);
     await queryRunner.query(`
             ALTER TABLE "UtilisationReport"
