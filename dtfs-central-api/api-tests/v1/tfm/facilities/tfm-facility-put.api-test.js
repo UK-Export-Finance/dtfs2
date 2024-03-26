@@ -67,7 +67,7 @@ describe('/v1/tfm/facilities', () => {
         facilityUpdate: {
           bondIssuerPartyUrn: 'testUrn',
         },
-        user: { _id: 'tfm-user-id'}
+        user: { _id: 'bbbbbbbbbbbbbbbbbbbbbbbb' }
       };
 
       await api
@@ -84,7 +84,10 @@ describe('/v1/tfm/facilities', () => {
       expect(body.tfm).toEqual(updatedFacility.facilityUpdate);
       expect(body.auditDetails).toEqual({
         lastUpdatedAt: expect.any(String),
-        lastUpdatedByTfmUserId: 'tfm-user-id',
+        lastUpdatedByTfmUserId: 'bbbbbbbbbbbbbbbbbbbbbbbb',
+        lastUpdatedByIsSystem: null,
+        lastUpdatedByPortalUserId: null,
+        noUserLoggedIn: null,
       });
     });
   });

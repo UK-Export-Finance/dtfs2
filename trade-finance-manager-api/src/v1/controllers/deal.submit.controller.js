@@ -150,7 +150,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
     mappedDeal.status = status;
 
     // Update issued facilities
-    const updatedDeal = await updatedIssuedFacilities(mappedDeal);
+    const updatedDeal = await updatedIssuedFacilities(mappedDeal, checker);
     /**
      * Current requirement only allows AIN & MIN deals to be send to ACBS
      * This call UPDATES facility record by updating their stage from
@@ -250,7 +250,7 @@ const submitDealAfterUkefIdsPUT = async (req, res) => {
 
     const deal = await submitDealAfterUkefIds(dealId, dealType, checker, generatePortalAuditDetails(checker._id));
 
-    if (!deal) { // this occuring
+    if (!deal) {
       console.error('Deal does not exist in TFM %s', dealId);
       return res.status(404).send();
     }

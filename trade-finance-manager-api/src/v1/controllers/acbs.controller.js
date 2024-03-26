@@ -63,7 +63,7 @@ const updateDealAcbs = async (taskOutput) => {
     .map((facility) => {
       const { facilityId, ...acbsFacility } = facility;
       // Add `acbs` object to tfm-facilities
-      return tfmController.updateFacilityAcbs(facilityId, acbsFacility, undefined, { isSystemUpdate: true });
+      return tfmController.updateFacilityAcbs(facilityId, acbsFacility);
     });
   await Promise.all(facilitiesUpdates);
 };
@@ -83,7 +83,7 @@ const updateIssuedFacilityAcbs = ({ facilityId, issuedFacilityMaster, facilityLo
     issuedFacilityMaster,
     facilityLoan,
     facilityFee,
-  }, undefined, { isSystemUpdate: true });
+  });
 
 const updateAmendedFacilityAcbs = (taskResult) => {
   if (taskResult.instanceId && taskResult.output) {
@@ -98,7 +98,7 @@ const updateAmendedFacilityAcbs = (taskResult) => {
     };
 
     // Update tfm-facilities `acbs` object with ACBS amendments response
-    tfmController.updateFacilityAcbs(_id, acbsUpdate, undefined, { isSystemUpdate: true });
+    tfmController.updateFacilityAcbs(_id, acbsUpdate);
   }
 };
 

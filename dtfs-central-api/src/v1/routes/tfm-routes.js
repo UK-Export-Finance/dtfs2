@@ -427,6 +427,11 @@ tfmRouter.route('/facilities/:id')
  *                       properties:
  *                         aNewField:
  *                           example: true
+ *                      user
+ *                        type: object
+ *                        properties:
+ *                          _id:
+ *                            example: '1234567890abcdef12345678'
  *       404:
  *         description: Not found
  */

@@ -18,20 +18,12 @@ const updateFacility = async (facilityId, tfmUpdate, sessionUser, options = {}) 
     tfm: {
       ...tfmUpdate,
     },
+    auditDetails: options.isSystemUpdate ? generateSystemAuditDetails() : generateTfmUserAuditDetails(sessionUser._id),
   };
-
-  const queryWithoutAuditDetails = $.flatten(withoutId(update));
-  const query = {
-    ...queryWithoutAuditDetails,
-    $set: {
-      ...queryWithoutAuditDetails.$set,
-      auditDetails: options.isSystemUpdate ? generateSystemAuditDetails() : generateTfmUserAuditDetails(sessionUser._id),
-    },
-  }
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(facilityId) } },
-    query,
+    $.flatten(withoutId(update)),
     { returnNewDocument: true, returnDocument: 'after', upsert: true },
   );
 
@@ -45,16 +37,17 @@ exports.updateFacilityPut = async (req, res) => {
   if(!ObjectId.isValid(facilityId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
   }
-  const { facilityUpdate, user, options } = req.body;
-
-  if (!user?._id) {
-    return res.status(400).send({ status: 400, message: 'Invalid user' })
-  }
 
   const facility = await findOneFacility(facilityId);
 
   if (!facility) {
     return res.status(404).send({ status: 404, message: 'Deal not found' });
+  }
+
+  const { facilityUpdate, user, options } = req.body;
+
+  if (!user?._id) {
+    return res.status(400).send({ status: 400, message: 'Invalid user' })
   }
 
   const updatedFacility = await updateFacility(facilityId, facilityUpdate, user, options);
