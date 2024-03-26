@@ -2,7 +2,6 @@ import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'ty
 import { UtilisationReportEntity } from '../utilisation-report';
 import { AuditableBaseEntity } from '../base-entities';
 import { CreateAzureFileInfoParams } from './azure-file-info.types';
-import { getDbAuditUpdatedByUserId } from '../helpers';
 
 @Entity('AzureFileInfo')
 export class AzureFileInfoEntity extends AuditableBaseEntity {
@@ -61,7 +60,7 @@ export class AzureFileInfoEntity extends AuditableBaseEntity {
     azureFileInfo.fullPath = fullPath;
     azureFileInfo.url = url;
     azureFileInfo.mimetype = mimetype;
-    azureFileInfo.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
+    azureFileInfo.updateLastUpdatedBy(requestSource);
     return azureFileInfo;
   }
 }

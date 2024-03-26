@@ -1,4 +1,4 @@
-import { DbRequestSource, FeeRecordEntity, getDbAuditUpdatedByUserId } from '@ukef/dtfs2-common';
+import { DbRequestSource, FeeRecordEntity } from '@ukef/dtfs2-common';
 import { feeRecordCsvRowToSqlEntity } from './fee-record.helper';
 import { MOCK_UTILISATION_REPORT_RAW_CSV_DATA } from '../../api-tests/mocks/utilisation-reports/utilisation-report-raw-csv-data';
 import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
@@ -28,7 +28,7 @@ describe('fee-record.helper', () => {
       // Assert
       expect(feeRecordEntity instanceof FeeRecordEntity).toBe(true);
       expect(feeRecordEntity).toEqual(
-        expect.objectContaining({
+        expect.objectContaining<Partial<FeeRecordEntity>>({
           facilityId: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['ukef facility id'],
           exporter: MOCK_UTILISATION_REPORT_RAW_CSV_DATA.exporter,
           baseCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['base currency'],
@@ -40,7 +40,9 @@ describe('fee-record.helper', () => {
           feesPaidToUkefForThePeriodCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['fees paid to ukef currency'],
           paymentCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['payment currency'],
           paymentExchangeRate: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['payment exchange rate']),
-          updatedByUserId: getDbAuditUpdatedByUserId(requestSource),
+          lastUpdatedByIsSystemUser: false,
+          lastUpdatedByPortalUserId: requestSource.userId,
+          lastUpdatedByTfmUserId: null,
         }),
       );
     });

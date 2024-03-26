@@ -1,11 +1,5 @@
 import { EntityManager } from 'typeorm';
-import {
-  DbRequestSource,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
-  UtilisationReportEntity,
-  UtilisationReportEntityMockBuilder,
-  getDbAuditUpdatedByUserId,
-} from '@ukef/dtfs2-common';
+import { DbRequestSource, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { handleUtilisationReportManuallySetIncompleteEvent } from '.';
 
 describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
@@ -13,7 +7,6 @@ describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
     platform: 'TFM',
     userId: 'abc123',
   };
-  const updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
 
   const mockSave = jest.fn();
 
@@ -33,7 +26,13 @@ describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
 
     // Assert
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
-    expect(report.status).toEqual(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION);
-    expect(report.updatedByUserId).toEqual(updatedByUserId);
+    expect(report).toEqual(
+      expect.objectContaining<Partial<UtilisationReportEntity>>({
+        status: 'PENDING_RECONCILIATION',
+        lastUpdatedByTfmUserId: requestSource.userId,
+        lastUpdatedByPortalUserId: null,
+        lastUpdatedByIsSystemUser: false,
+      }),
+    );
   });
 });

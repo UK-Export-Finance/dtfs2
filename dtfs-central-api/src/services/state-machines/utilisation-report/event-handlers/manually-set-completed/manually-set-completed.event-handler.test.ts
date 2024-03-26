@@ -4,7 +4,6 @@ import {
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
-  getDbAuditUpdatedByUserId,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportManuallySetCompletedEvent } from './manually-set-completed.event-handler';
 
@@ -13,7 +12,6 @@ describe('handleUtilisationReportManuallySetCompletedEvent', () => {
     platform: 'TFM',
     userId: 'abc123',
   };
-  const updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
 
   const mockSave = jest.fn();
 
@@ -33,7 +31,9 @@ describe('handleUtilisationReportManuallySetCompletedEvent', () => {
 
     // Assert
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
-    expect(report.status).toEqual(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
-    expect(report.updatedByUserId).toEqual(updatedByUserId);
+    expect(report.status).toBe(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
+    expect(report.lastUpdatedByIsSystemUser).toBe(false);
+    expect(report.lastUpdatedByPortalUserId).toBeNull();
+    expect(report.lastUpdatedByTfmUserId).toBe(requestSource.userId);
   });
 });
