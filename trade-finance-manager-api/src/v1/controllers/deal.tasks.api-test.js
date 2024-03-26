@@ -22,7 +22,7 @@ describe('createDealTasks', () => {
   let mockSubmittedDeal;
   let mockDealEligibilityCriteria11False;
   let mockDealWithPartyUrn;
-  const sessionUser = { _id: 'tfm-user-id' }
+  const sessionUser = { _id: '6602f568f609ff532522b472' }
 
   beforeEach(async () => {
     externalApis.updateDeal = updateDealSpy;

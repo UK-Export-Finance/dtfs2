@@ -48,7 +48,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
     const { status, body } = await api.put({
       dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
       dealId,
-      checker: 'checker-id'
+      checker: '6602f568f609ff532522b472'
     }).to('/v1/tfm/deals/submit');
 
     expect(status).toEqual(200);
@@ -64,7 +64,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       tfm: DEFAULTS.DEAL_TFM,
       auditDetails: {
         lastUpdatedAt: expect.any(String),
-        lastUpdatedByPortalUserId: 'checker-id',
+        lastUpdatedByPortalUserId: '6602f568f609ff532522b472',
       },
     };
 
@@ -101,7 +101,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
     const { status } = await api.put({
       dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
       dealId,
-      checker: 'checker-id',
+      checker: '6602f568f609ff532522b472',
     }).to('/v1/tfm/deals/submit');
 
     expect(status).toEqual(200);
@@ -121,7 +121,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       tfm: DEFAULTS.FACILITY_TFM,
       auditDetails: {
         lastUpdatedAt: expect.any(String),
-        lastUpdatedByPortalUserId: 'checker-id',
+        lastUpdatedByPortalUserId: '6602f568f609ff532522b472',
       },
     });
 
@@ -139,7 +139,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       tfm: DEFAULTS.FACILITY_TFM,
       auditDetails: {
         lastUpdatedAt: expect.any(String),
-        lastUpdatedByPortalUserId: 'checker-id',
+        lastUpdatedByPortalUserId: '6602f568f609ff532522b472',
       },
     });
   });

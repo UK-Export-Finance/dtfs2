@@ -42,7 +42,7 @@ describe('/v1/tfm/deals/:id/facilities', () => {
       await api.put({
         dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
         dealId,
-        checker: 'checker-id'
+        checker: '6602f568f609ff532522b472'
       }).to('/v1/tfm/deals/submit');
 
       const { status, body } = await api.get(`/v1/tfm/deals/${dealId}/facilities`);
@@ -60,7 +60,10 @@ describe('/v1/tfm/deals/:id/facilities', () => {
         },
         auditDetails: {
           lastUpdatedAt: expect.any(String),
-          lastUpdatedByPortalUserId: 'checker-id',
+          lastUpdatedByPortalUserId: '6602f568f609ff532522b472',
+          lastUpdatedByIsSystem: null,
+          lastUpdatedByTfmUserId: null,
+          noUserLoggedIn: null,
         },
       });
 

@@ -70,7 +70,7 @@ describe('/v1/tfm/deals', () => {
               lastUpdated: expect.any(Number),
             },
             auditDetails: {
-              lastUpdatedByTfmUserId: 'tfm-user-id',
+              lastUpdatedByTfmUserId: '6602f646141e3d545a91fbd1',
               lastUpdatedAt: expect.any(String),
             }
           },

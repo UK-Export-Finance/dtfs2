@@ -81,7 +81,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
     const { status } = await api.put({
       dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
       dealId,
-      checker: 'checker-id',
+      checker: '6602f568f609ff532522b472',
     }).to('/v1/tfm/deals/submit');
 
     expect(status).toEqual(200);
@@ -99,7 +99,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
       tfm: DEFAULTS.FACILITY_TFM,
       auditDetails: {
         lastUpdatedAt: expect.any(String),
-        lastUpdatedByPortalUserId: 'checker-id',
+        lastUpdatedByPortalUserId: '6602f568f609ff532522b472',
       },
     });
 
@@ -115,7 +115,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
       tfm: DEFAULTS.FACILITY_TFM,
       auditDetails: {
         lastUpdatedAt: expect.any(String),
-        lastUpdatedByPortalUserId: 'checker-id',
+        lastUpdatedByPortalUserId: '6602f568f609ff532522b472',
       },
     });
   });
