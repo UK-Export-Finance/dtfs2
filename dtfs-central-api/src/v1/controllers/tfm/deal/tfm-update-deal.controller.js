@@ -90,8 +90,9 @@ exports.updateDealPut = async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
-  if (!req.body.user && !req.body.options?.isSystemUpdate) {
-    return res.status(400).send({ status: 400, message: 'No logged in user provided' });
+
+  if (!req.body.user?._id && !req.body.options?.isSystemUpdate) {
+    return res.status(400).send({ status: 400, message: 'Invalid user' });
   }
 
   const dealId = req.params.id;
