@@ -11,7 +11,7 @@ export abstract class AuditableBaseEntity {
   @Column({ type: 'nvarchar', nullable: true })
   lastUpdatedByTfmUserId!: string | null;
 
-  @Column()
+  @Column({ default: false })
   lastUpdatedByIsSystemUser!: boolean;
 
   public updateLastUpdatedBy(requestSource: DbRequestSource): void {
