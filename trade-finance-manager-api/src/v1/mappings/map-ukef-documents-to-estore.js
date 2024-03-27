@@ -1,3 +1,5 @@
+const { has } = require("lodash");
+
 /**
  * Map UKEF documents to eStore documents
  * 
@@ -49,7 +51,7 @@ const mapEstoreFiles = (files) => {
   Object.keys(files).forEach((file) => {
     if (!nonDocuments.includes(file)) {
       Object.values(files[file]).forEach((val) => {
-        if (estoreFiles[file]?.eStoreName) {
+        if (has(estoreFiles, file)) {
           documents.push({
             documentType: estoreFiles[file].eStoreName,
             fileName: val.filename,

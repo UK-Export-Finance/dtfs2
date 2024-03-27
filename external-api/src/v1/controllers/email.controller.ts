@@ -14,7 +14,7 @@ export const emailNotification = async (req: Request, res: Response) => {
   try {
     const { templateId, sendToEmailAddress, emailVariables } = req.body;
     // Add a unique reference to an email
-    const reference = `${templateId}-${getNowAsEpoch}`;
+    const reference = `${templateId}-${getNowAsEpoch()}`;
 
     console.info('Calling Notify API. templateId: %s', templateId);
 
