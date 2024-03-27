@@ -9,7 +9,6 @@ context('Quarterly utilisation report upload', () => {
   beforeEach(() => {
     cy.removeAllUtilisationReports();
     cy.insertUtilisationReports(december2023ToFebruary2024ReportDetails);
-
     cy.login(BANK2_PAYMENT_REPORT_OFFICER1);
     cy.visit(relativeURL('/utilisation-report-upload'));
   });
