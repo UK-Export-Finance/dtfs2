@@ -117,25 +117,27 @@ const submitDeal = async (deal, checker) => {
 exports.submitDealPut = async (req, res) => {
   const { dealId, dealType, checker } = req.body;
 
+  if (!ObjectId.isValid(checker._id)) {
+    return res.status(400).send({ status: 400, message: 'Invalid checker id' })
+  }
+
+  if (dealType !== CONSTANTS.DEALS.DEAL_TYPE.GEF && dealType !== CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    return res.status(400).send({ status: 400, message: 'Invalid deal type'})
+  }
+
+  let deal;
+
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    await findOneGefDeal(dealId, async (deal) => {
-      if (deal) {
-        const updatedDeal = await submitDeal(deal, checker);
-        return res.status(200).json(updatedDeal);
-      }
-
-      return res.status(404).send();
-    });
+    deal = await findOneGefDeal(dealId);
   }
-
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    await findOneDeal(dealId, async (deal) => {
-      if (deal) {
-        const updatedDeal = await submitDeal(deal, checker);
-        return res.status(200).json(updatedDeal);
-      }
-
-      return res.status(404).send();
-    });
+    deal = await findOneDeal(dealId);
   }
+
+  if (!deal) {
+    return res.status(404).send();
+  }
+
+  const updatedDeal = await submitDeal(deal, checker);
+  return res.status(200).json(updatedDeal);
 };

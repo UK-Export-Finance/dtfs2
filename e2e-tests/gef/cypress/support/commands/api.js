@@ -1,4 +1,6 @@
 import { SIGN_IN_TOKENS } from '../../fixtures/constants';
+import { BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../e2e-fixtures/portal-users.fixture';
+import { UNDERWRITER_1_WITH_MOCK_ID } from '../../../../e2e-fixtures/tfm-users.fixture';
 
 const portalApi = 'http://localhost:5001/v1';
 const centralApiUrl = () => {
@@ -207,7 +209,7 @@ const submitDealToTfm = (dealId, dealType) =>
     .request({
       url: `${centralApiUrl()}/v1/tfm/deals/submit`,
       method: 'PUT',
-      body: { dealId, dealType, checker: { _id: '6602f568f609ff532522b472' } },
+      body: { dealId, dealType, checker: BANK1_CHECKER1_WITH_MOCK_ID },
       headers,
     })
     .then((resp) => {
@@ -220,7 +222,7 @@ const addUnderwriterCommentToTfm = (dealId, underwriterComment) =>
     .request({
       url: `${centralApiUrl()}/v1/tfm/deals/${dealId}`,
       method: 'put',
-      body: { dealUpdate: underwriterComment, user: { _id: '6602f646141e3d545a91fbd1' } },
+      body: { dealUpdate: underwriterComment, user: UNDERWRITER_1_WITH_MOCK_ID },
       headers,
     })
     .then((resp) => {

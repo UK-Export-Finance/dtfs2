@@ -4,6 +4,7 @@ const api = require('../../../api')(app);
 const getObjectPropertyValueFromStringPath = require('../../../../src/utils/getObjectPropertyValueFromStringPath');
 const setObjectPropertyValueFromStringPath = require('../../../helpers/set-object-property-value-from-string-path');
 const CONSTANTS = require('../../../../src/constants');
+const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
 describe('/v1/tfm/facilities', () => {
   beforeEach(async () => {
@@ -204,7 +205,7 @@ describe('/v1/tfm/facilities', () => {
       facility.dealId = dealId;
       await api.post(facility).to('/v1/portal/gef/facilities');
 
-      await api.put({ dealType: deal.dealType, dealId }).to('/v1/tfm/deals/submit');
+      await api.put({ dealType: deal.dealType, dealId, checker: MOCK_PORTAL_USER }).to('/v1/tfm/deals/submit');
     }
   }
 

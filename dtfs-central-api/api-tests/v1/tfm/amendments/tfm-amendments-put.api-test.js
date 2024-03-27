@@ -4,7 +4,7 @@ const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const aDeal = require('../../deal-builder');
-const { mockUser } = require('../../../mocks/test-users/mock-portal-user');
+const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
 describe('PUT TFM amendments', () => {
   let dealId;
@@ -25,7 +25,7 @@ describe('PUT TFM amendments', () => {
     },
   });
   const createDeal = async () => {
-    const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+    const { body } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
     return body;
   };
 
@@ -42,13 +42,13 @@ describe('PUT TFM amendments', () => {
 
   describe('PUT /v1/tfm/facilities/:id/amendments/:amendmentId', () => {
     it('should update an amendment based on facilityId and amendmentId', async () => {
-      const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
 
-      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
+      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, checker: MOCK_PORTAL_USER}).to('/v1/tfm/deals/submit');
 
       const { status, body } = await api.post().to(`/v1/tfm/facilities/${newId}/amendments/`);
-      const updatePayload = { createdBy: mockUser };
+      const updatePayload = { createdBy: MOCK_PORTAL_USER };
       const { body: bodyPutResponse } = await api.put({ updatePayload }).to(`/v1/tfm/facilities/${newId}/amendments/${body.amendmentId}`);
 
       const expected = {
@@ -66,12 +66,12 @@ describe('PUT TFM amendments', () => {
     });
 
     it('should return 404 if facilityId and amendmentId are valid but are NOT associated to a record', async () => {
-      const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
 
-      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
+      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, checker: MOCK_PORTAL_USER}).to('/v1/tfm/deals/submit');
 
-      const updatePayload = { createdBy: mockUser };
+      const updatePayload = { createdBy: MOCK_PORTAL_USER };
       const { status } = await api.post().to(`/v1/tfm/facilities/${newId}/amendments/`);
       const { body: bodyPutResponse } = await api.put({ updatePayload }).to(`/v1/tfm/facilities/${newId}/amendments/626aa00e2446022434c52148`);
 
@@ -80,8 +80,8 @@ describe('PUT TFM amendments', () => {
     });
 
     it('should return 400 if invalid dealId', async () => {
-      await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
-      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
+      await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, checker: MOCK_PORTAL_USER}).to('/v1/tfm/deals/submit');
       const { status, body } = await api.put({ amendmentsUpdate: {} }).to('/v1/tfm/facilities/123/amendments/1234');
 
       expect(status).toEqual(400);

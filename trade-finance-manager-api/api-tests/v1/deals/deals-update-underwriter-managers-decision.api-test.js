@@ -92,7 +92,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
           }
         }),
         expect.objectContaining({
-          _id: expect.anything(),
+          _id: tokenUser._id,
         }),
         expect.any(Function),
       );

@@ -7,8 +7,7 @@ const {
   createAndSubmitDeals,
 } = require('./tfm-deals-get.api-test');
 const CONSTANTS = require('../../../../src/constants');
-
-const sessionUser = { _id: '6602f646141e3d545a91fbd1' }
+const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
@@ -371,7 +370,7 @@ describe('/v1/tfm/deals', () => {
               dateReceived: yesterdayFormatted,
             },
           },
-          user: sessionUser,
+          user: MOCK_TFM_USER,
         }).to(`/v1/tfm/deals/${dealSubmittedYesterdayResponseBody._id}`);
 
         await api.put({
@@ -380,7 +379,7 @@ describe('/v1/tfm/deals', () => {
               dateReceived: todayFormatted,
             },
           },
-          user: sessionUser,
+          user: MOCK_TFM_USER,
         }).to(`/v1/tfm/deals/${dealSubmittedTodayResponseBody._id}`);
 
         const { status, body } = await api.get(`/v1/tfm/deals?searchString=${String(yesterdayFormatted)}`);
@@ -439,7 +438,7 @@ describe('/v1/tfm/deals', () => {
               dateReceived: yesterdayFormatted,
             },
           },
-          user: sessionUser,
+          user: MOCK_TFM_USER,
         }).to(`/v1/tfm/deals/${dealSubmittedYesterdayResponseBody._id}`);
 
         await api.put({
@@ -448,7 +447,7 @@ describe('/v1/tfm/deals', () => {
               dateReceived: todayFormatted,
             },
           },
-          user: sessionUser,
+          user: MOCK_TFM_USER,
         }).to(`/v1/tfm/deals/${dealSubmittedTodayResponseBody._id}`);
 
         const { status, body } = await api.get(`/v1/tfm/deals?searchString=${String(format(yesterday, 'dd/MM/yyyy'))}`);

@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb')
 const { findOneTfmDeal, findOnePortalDeal, findOneGefDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
@@ -54,7 +55,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
     return false;
   }
 
-  const submittedDeal = await api.submitDeal(dealType, dealId);
+  const submittedDeal = await api.submitDeal(dealType, dealId, checker);
   const mappedDeal = mapSubmittedDeal(submittedDeal);
 
   const { submissionCount } = mappedDeal;
@@ -215,7 +216,7 @@ const submitDealBeforeUkefIds = async (dealId, dealType, checker) => {
       return false;
     }
 
-    const response = await api.submitDeal(dealType, dealId);
+    const response = await api.submitDeal(dealType, dealId, checker);
 
     if (!response) {
       throw new Error(`Unable to submit deal ${dealId} to TFM`);
@@ -239,6 +240,10 @@ exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
 const submitDealAfterUkefIdsPUT = async (req, res) => {
   try {
     const { dealId, dealType, checker } = req.body;
+
+    if(!ObjectId.isValid(checker?._id)) {
+      return res.status(400).send({ status: 400, message: 'Invalid checker _id'});
+    }
 
     const deal = await submitDealAfterUkefIds(dealId, dealType, checker);
 

@@ -1,4 +1,3 @@
-const { generateTfmUserAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails')
 const {
   shouldCreatePartiesTask,
   shouldCreateAgentCheckTask,
@@ -13,12 +12,7 @@ const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const MOCK_USERS = require('../__mocks__/mock-users')
 
 describe('createDealTasks', () => {
-  const updateDealSpy = jest.fn((dealId, dealUpdate, sessionUser) =>
-    Promise.resolve({
-      ...dealUpdate,
-      auditDetails: generateTfmUserAuditDetails(sessionUser?._id),
-    }),
-  );
+  const updateDealSpy = jest.fn((dealId, dealUpdate) => Promise.resolve(dealUpdate));
 
   let mockSubmittedDeal;
   let mockDealEligibilityCriteria11False;
@@ -205,9 +199,7 @@ describe('createDealTasks', () => {
       expect(updateDealSpy).toHaveBeenCalledWith(
         mockSubmittedDeal._id,
         { tfm: expectedDealTfm },
-        expect.objectContaining({
-          _id: expect.any(String),
-        }),
+        MOCK_USERS[0],
       );
 
       const expectedDealReturn = {

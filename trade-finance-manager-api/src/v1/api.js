@@ -253,7 +253,7 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
   }
 };
 
-const submitDeal = async (dealType, dealId) => {
+const submitDeal = async (dealType, dealId, checker) => {
   try {
     const response = await axios({
       method: 'put',
@@ -262,6 +262,7 @@ const submitDeal = async (dealType, dealId) => {
       data: {
         dealType,
         dealId,
+        checker,
       },
     });
 

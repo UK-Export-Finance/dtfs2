@@ -1,5 +1,4 @@
 const { ObjectId } = require('mongodb');
-const { produce } = require('immer');
 const $ = require('mongo-dot-notation');
 const { generateTfmUserAuditDetails, generateSystemAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
 const db = require('../../../../drivers/db-client');
@@ -70,14 +69,11 @@ const updateDeal = async (dealId, dealChanges, existingDeal, sessionUser, option
 
       dealUpdate.tfm.lastUpdated = new Date().valueOf();
     }
-
-    const updateQuery = produce($.flatten(withoutId(dealUpdate)), (draftQuery) => {
-      draftQuery.$set.auditDetails = options.isSystemUpdate ? generateSystemAuditDetails() : generateTfmUserAuditDetails(sessionUser._id);
-    });
+    dealUpdate.auditDetails = options.isSystemUpdate ? generateSystemAuditDetails() : generateTfmUserAuditDetails(sessionUser._id);
 
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: { $eq: ObjectId(dealId) } },
-      updateQuery,
+      $.flatten(withoutId(dealUpdate)),
       { returnNewDocument: true, returnDocument: 'after' }
     );
 
@@ -91,7 +87,7 @@ exports.updateDealPut = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
-  if (!req.body.user?._id && !req.body.options?.isSystemUpdate) {
+  if (!ObjectId.isValid(req.body.user?._id) && !req.body.options?.isSystemUpdate) {
     return res.status(400).send({ status: 400, message: 'Invalid user' });
   }
 

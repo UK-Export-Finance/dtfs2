@@ -4,7 +4,7 @@ const wipeDB = require('../../wipeDB');
 const aDeal = require('../deal-builder');
 const { MOCK_DEAL } = require('../mocks/mock-data');
 const { DB_COLLECTIONS } = require('../../../src/constants');
-const { mockUser } = require('../../mocks/test-users/mock-portal-user');
+const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 
 dotenv.config();
 
@@ -44,7 +44,7 @@ describe('/v1/portal/facilities', () => {
     const { data: deal } = await axios({
       method: 'post',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals`,
-      data: { deal: newDeal, user: mockUser },
+      data: { deal: newDeal, user: MOCK_PORTAL_USER },
       headers,
     });
 
@@ -54,7 +54,7 @@ describe('/v1/portal/facilities', () => {
     const { data: facility } = await axios({
       method: 'post',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities`,
-      data: { facility: newBondFacility, user: mockUser },
+      data: { facility: newBondFacility, user: MOCK_PORTAL_USER },
       headers,
     });
 
@@ -65,7 +65,7 @@ describe('/v1/portal/facilities', () => {
     it('deletes the facility', async () => {
       const removeBody = {
         dealId: newBondFacility.dealId,
-        user: mockUser,
+        user: MOCK_PORTAL_USER,
       };
 
       const { status } = await axios({
