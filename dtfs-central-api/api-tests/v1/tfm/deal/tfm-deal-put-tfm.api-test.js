@@ -70,6 +70,9 @@ describe('/v1/tfm/deal/:id', () => {
       expect(dealAfterUpdate.auditDetails).toEqual({
         lastUpdatedAt: expect.any(String),
         lastUpdatedByTfmUserId: mockUser._id,
+        lastUpdatedByPortalUserId: null,
+        noUserLoggedIn: null,
+        lastUpdatedByIsSystem: null,
       })
     });
 

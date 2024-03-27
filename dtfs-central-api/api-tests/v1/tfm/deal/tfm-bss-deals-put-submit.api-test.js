@@ -56,6 +56,9 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       auditDetails: {
         lastUpdatedAt: expect.any(String),
         lastUpdatedByPortalUserId: '6602f568f609ff532522b472',
+        lastUpdatedByTfmUserId: null,
+        noUserLoggedIn: null,
+        lastUpdatedByIsSystem: null,
       },
     };
 
@@ -113,6 +116,9 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       auditDetails: {
         lastUpdatedAt: expect.any(String),
         lastUpdatedByPortalUserId: '6602f568f609ff532522b472',
+        lastUpdatedByTfmUserId: null,
+        noUserLoggedIn: null,
+        lastUpdatedByIsSystem: null,
       },
     });
 
