@@ -208,33 +208,27 @@ describe('utilisation-report-validator', () => {
         end: { month: endMonth, year },
       };
 
-      const startMonthNames = Object.values(MONTH_NAMES)
-        .filter(({ index }) => index === startMonth)
-        .map(({ long, short, numeric }) => [long, short, numeric])[0];
-
       const endMonthNames = Object.values(MONTH_NAMES)
         .filter(({ index }) => index === endMonth)
         .map(({ long, short, numeric }) => [long, short, numeric])[0];
 
-      describe.each(startMonthNames)("when the start month identifier is '%s'", (startMonthIdentifier) => {
-        it.each(endMonthNames)("returns no errors when the end month identifier is '%s'", (endMonthIdentifier) => {
-          // Arrange
-          const filename = `Quarterly Bank_${startMonthIdentifier}_${endMonthIdentifier}_${year}.xlsx`;
+      it.each(endMonthNames)("returns no errors when the end month identifier is '%s'", (endMonthIdentifier) => {
+        // Arrange
+        const filename = `Quarterly Bank_${endMonthIdentifier}_${year}.xlsx`;
 
-          // Act
-          const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
+        // Act
+        const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
 
-          // Assert
-          expect(filenameError).toBeUndefined();
-        });
+        // Assert
+        expect(filenameError).toBeUndefined();
       });
 
       it('should return an error with an example filename when the filename contains an incorrect year', () => {
         // Arrange
         const incorrectYear = year - 1;
-        const filename = `Quarterly Bank_${startMonthNames[0]}_${endMonthNames[0]}_${incorrectYear}.xlsx`;
+        const filename = `Quarterly Bank_${endMonthNames[0]}_${incorrectYear}.xlsx`;
 
-        const exampleFilenameReportPeriod = `0${startMonth}-0${endMonth}-${year}`;
+        const exampleFilenameReportPeriod = `0${endMonth}-${year}`;
 
         // Act
         const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
@@ -266,33 +260,27 @@ describe('utilisation-report-validator', () => {
         end: { month: endMonth, year: endYear },
       };
 
-      const startMonthNames = Object.values(MONTH_NAMES)
-        .filter(({ index }) => index === startMonth)
-        .map(({ long, short, numeric }) => [long, short, numeric])[0];
-
       const endMonthNames = Object.values(MONTH_NAMES)
         .filter(({ index }) => index === endMonth)
         .map(({ long, short, numeric }) => [long, short, numeric])[0];
 
-      describe.each(startMonthNames)("when the start month identifier is '%s'", (startMonthIdentifier) => {
-        it.each(endMonthNames)("returns no errors when the end month identifier is '%s'", (endMonthIdentifier) => {
-          // Arrange
-          const filename = `Quarterly Bank_${startMonthIdentifier}_${startYear}_${endMonthIdentifier}_${endYear}.xlsx`;
+      it.each(endMonthNames)("returns no errors when the end month identifier is '%s'", (endMonthIdentifier) => {
+        // Arrange
+        const filename = `Quarterly Bank_${endMonthIdentifier}_${endYear}.xlsx`;
 
-          // Act
-          const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
+        // Act
+        const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
 
-          // Assert
-          expect(filenameError).toBeUndefined();
-        });
+        // Assert
+        expect(filenameError).toBeUndefined();
       });
 
       it('should return an error with an example filename when the filename contains an incorrect start year', () => {
         // Arrange
-        const incorrectYear = startYear - 1;
-        const filename = `Quarterly Bank_${startMonthNames[0]}_${incorrectYear}_${endMonthNames[0]}_${endYear}.xlsx`;
+        const incorrectYear = endYear - 1;
+        const filename = `Quarterly Bank_${endMonthNames[0]}_${incorrectYear}.xlsx`;
 
-        const exampleFilenameReportPeriod = `${startMonth}-${startYear}-0${endMonth}-${endYear}`;
+        const exampleFilenameReportPeriod = `0${endMonth}-${endYear}`;
 
         // Act
         const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
@@ -304,9 +292,9 @@ describe('utilisation-report-validator', () => {
       it('should return an error with an example filename when the filename contains an incorrect end year', () => {
         // Arrange
         const incorrectYear = endYear - 1;
-        const filename = `Quarterly Bank_${startMonthNames[0]}_${incorrectYear}_${endMonthNames[0]}_${incorrectYear}.xlsx`;
+        const filename = `Quarterly Bank_${endMonthNames[0]}_${incorrectYear}.xlsx`;
 
-        const exampleFilenameReportPeriod = `${startMonth}-${startYear}-0${endMonth}-${endYear}`;
+        const exampleFilenameReportPeriod = `0${endMonth}-${endYear}`;
 
         // Act
         const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);

@@ -112,33 +112,33 @@ const getMonthRegexString = (oneIndexedMonth) => {
 };
 
 /**
- * Gets the regex instance for the supplied groups using the
- * format which is expected for the filename
- * @param  {...string} groups - The month and year components
- * @returns {RegExp} The regex for the supplied months and years
+ * Gets the regex instance for the supplied report period using
+ * the format which is expected for the filename
+ * @param  {import('@ukef/dtfs2-common').ReportPeriod} dueReportPeriod - The due report period
+ * @returns {RegExp} The regex for the supplied report period
  * @example
  * // Monthly, January 2024
- * const monthRegexString = `(${'January'}|${'Jan'}|${'01'})`;
- * const year = 2024;
+ * const dueReportPeriod = {
+ *   start: { month: 1, year: 2024 },
+ *   end: { month: 1, year: 2024 },
+ * };
  * const filenameReportPeriodRegex = getFilenameReportPeriodRegex(
- *   monthRegexString,
- *   year,
+ *   dueReportPeriod,
  * ); // equivalent to '/(January|Jan|01)[-_]2024/i'
  *
  * // Quarterly, November 2023 to February 2024
- * const startMonthRegexString = `(${'November'}|${'Nov'}|${'11'})`;
- * const startYear = 2023;
- * const endMonthRegexString = `(${'February'}|${'Feb'}|${'02'})`;
- * const endYear = 2024;
+ * const dueReportPeriod = {
+ *   start: { month: 11, year: 2023 },
+ *   end: { month: 2, year: 2024 },
+ * };
  * const filenameReportPeriodRegex = getFilenameReportPeriodRegex(
- *   startMonthRegexString,
- *   startYear,
- *   endMonthRegexString,
- *   endYear,
- * ); // equivalent to '/(November|Nov|11)[-_]2023[-_](February|Feb|02)[-_]2024/i'
+ *   dueReportPeriod,
+ * ); // equivalent to '/(February|Feb|02)[-_]2024/i'
  */
-const getFilenameReportPeriodRegex = (...groups) => {
-  const regexString = groups.join(FILE_UPLOAD.FILENAME_SEPARATOR_GROUP);
+const getFilenameReportPeriodRegex = (dueReportPeriod) => {
+  const endMonthRegexString = getMonthRegexString(dueReportPeriod.end.month);
+  const endYear = dueReportPeriod.end.year.toString();
+  const regexString = [endMonthRegexString, endYear].join(FILE_UPLOAD.FILENAME_SEPARATOR_GROUP);
   return new RegExp(regexString, 'i');
 };
 
@@ -146,84 +146,25 @@ const getFilenameReportPeriodRegex = (...groups) => {
  * Gets an example filename for the specified report period
  * @param {import('@ukef/dtfs2-common').ReportPeriod} dueReportPeriod - The due report period
  * @returns {string} An example filename
+ * @example
+ * const dueReportPeriod = {
+ *   start: { month: 1, year: 2024 },
+ *   end: { month: 3, year: 2024 },
+ * };
+ * const exampleFilenameReportPeriod = getExampleFilenameReportPeriod(dueReportPeriod); // '03-2024'
  */
 const getExampleFilenameReportPeriod = (dueReportPeriod) => {
-  let exampleFilename;
-  if (isEqualMonthAndYear(dueReportPeriod.start, dueReportPeriod.end)) {
-    exampleFilename = `${dueReportPeriod.start.month}-${dueReportPeriod.start.year}`;
-  } else if (dueReportPeriod.start.year === dueReportPeriod.end.year) {
-    exampleFilename = `${dueReportPeriod.start.month}-${dueReportPeriod.end.month}-${dueReportPeriod.start.year}`;
-  } else {
-    exampleFilename = `${dueReportPeriod.start.month}-${dueReportPeriod.start.year}-${dueReportPeriod.end.month}-${dueReportPeriod.end.year}`;
-  }
+  const exampleFilename = `${dueReportPeriod.end.month}-${dueReportPeriod.end.year}`;
 
-  const singleDigitMonthRegex = /(?<!\d)(\d{1}-)/g;
+  const singleDigitMonthRegex = /^(\d{1}-)/;
   const replacePattern = '0$1';
-  return exampleFilename.replaceAll(singleDigitMonthRegex, replacePattern);
+  return exampleFilename.replace(singleDigitMonthRegex, replacePattern);
 };
 
 /**
  * @typedef FilenameValidationError
  * @property {string} [filenameError]
  */
-
-/**
- * Validates that the filename has the correct format for the supplied report period
- * using the monthly formatting options
- * @param {string} filename - The filename
- * @param {import('@ukef/dtfs2-common').ReportPeriod} dueReportPeriod - The due report period in format `MMM YYYY`
- * @returns {FilenameValidationError}
- */
-const validateMonthlyFilename = (filename, dueReportPeriod) => {
-  const filenameContainsMonthly = /monthly/i.test(filename);
-  if (!filenameContainsMonthly) {
-    const filenameError = "The selected file must contain the word 'monthly'";
-    return { filenameError };
-  }
-
-  const { month, year } = dueReportPeriod.start;
-
-  const monthRegexString = getMonthRegexString(month);
-  const filenameReportPeriodRegex = getFilenameReportPeriodRegex(monthRegexString, year);
-
-  const filenameContainsReportPeriod = filenameReportPeriodRegex.test(filename);
-  if (!filenameContainsReportPeriod) {
-    const exampleFilenameReportPeriod = getExampleFilenameReportPeriod(dueReportPeriod);
-    const filenameError = `The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`;
-    return { filenameError };
-  }
-  return {};
-};
-
-/**
- * Validates that the filename has the correct format for the supplied report period
- * using the quarterly formatting options
- * @param {string} filename - The filename
- * @param {import('@ukef/dtfs2-common').ReportPeriod} dueReportPeriod - The due report period
- * @returns {FilenameValidationError}
- */
-const validateQuarterlyFilename = (filename, dueReportPeriod) => {
-  const filenameContainsQuarterly = /quarterly/i.test(filename);
-  if (!filenameContainsQuarterly) {
-    const filenameError = "The selected file must contain the word 'quarterly'";
-    return { filenameError };
-  }
-
-  const startMonthRegexString = getMonthRegexString(dueReportPeriod.start.month);
-  const endMonthRegexString = getMonthRegexString(dueReportPeriod.end.month);
-
-  const isReportPeriodYearOverlapping = dueReportPeriod.start.year === dueReportPeriod.end.year;
-  const filenameReportPeriodRegex = isReportPeriodYearOverlapping
-    ? getFilenameReportPeriodRegex(startMonthRegexString, endMonthRegexString, dueReportPeriod.start.year)
-    : getFilenameReportPeriodRegex(startMonthRegexString, dueReportPeriod.start.year, endMonthRegexString, dueReportPeriod.end.year);
-
-  if (!filenameReportPeriodRegex.test(filename)) {
-    const exampleFilenameReportPeriod = getExampleFilenameReportPeriod(dueReportPeriod);
-    const filenameError = `The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`;
-    return { filenameError };
-  }
-  return {};
-};
 
 /**
  * Given a filename and a report period, this function checks whether
@@ -242,10 +183,22 @@ const validateFilenameFormat = (filename, dueReportPeriod) => {
   }
 
   const isMonthlyReportPeriod = isEqualMonthAndYear(dueReportPeriod.start, dueReportPeriod.end);
-  if (isMonthlyReportPeriod) {
-    return validateMonthlyFilename(filename, dueReportPeriod);
+  if (isMonthlyReportPeriod && !/monthly/i.test(filename)) {
+    const filenameError = "The selected file must contain the word 'monthly'";
+    return { filenameError };
   }
-  return validateQuarterlyFilename(filename, dueReportPeriod);
+  if (!isMonthlyReportPeriod && !/quarterly/i.test(filename)) {
+    const filenameError = "The selected file must contain the word 'quarterly'";
+    return { filenameError };
+  }
+
+  const filenameReportPeriodRegex = getFilenameReportPeriodRegex(dueReportPeriod);
+  if (!filenameReportPeriodRegex.test(filename)) {
+    const exampleFilenameReportPeriod = getExampleFilenameReportPeriod(dueReportPeriod);
+    const filenameError = `The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`;
+    return { filenameError };
+  }
+  return {};
 };
 
 module.exports = {
