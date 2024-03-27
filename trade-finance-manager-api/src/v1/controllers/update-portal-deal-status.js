@@ -8,18 +8,18 @@ const CONSTANTS = require('../../constants');
  */
 const updatePortalDealStatus = async (deal) => {
   const { _id, dealType, submissionType } = deal;
-  const notice = [CONSTANTS.DEALS.SUBMISSION_TYPE.AIN, CONSTANTS.DEALS.SUBMISSION_TYPE.MIN];
-  const application = [CONSTANTS.DEALS.SUBMISSION_TYPE.MIA];
+  const noticeSubmissionType = [CONSTANTS.DEALS.SUBMISSION_TYPE.AIN, CONSTANTS.DEALS.SUBMISSION_TYPE.MIN];
+  const applicationSubmissionType = [CONSTANTS.DEALS.SUBMISSION_TYPE.MIA];
 
   let status;
 
   // Deal is an application (MIA)
-  if (application.includes(submissionType)) {
+  if (applicationSubmissionType.includes(submissionType)) {
     status = CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF;
   }
 
   // Deal is a notice (AIN, MIN)
-  if (notice.includes(submissionType)) {
+  if (noticeSubmissionType.includes(submissionType)) {
     status = CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED;
   }
 
