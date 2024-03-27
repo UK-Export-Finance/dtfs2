@@ -32,7 +32,6 @@ context('Portal to TFM deal submission', () => {
   });
 
   beforeEach(() => {
-    cy.clearCookies();
     cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');

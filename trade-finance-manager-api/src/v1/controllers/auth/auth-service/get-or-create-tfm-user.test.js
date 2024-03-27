@@ -12,6 +12,11 @@ const MOCK_TFM_USER_SCENARIOS = {
     found: true,
     canProceed: true,
   },
+  CANNOT_PROCEED: {
+    ...MOCK_TFM_USER,
+    found: true,
+    canProceed: false,
+  },
   NOT_FOUND: {
     found: false,
   },
@@ -19,7 +24,6 @@ const MOCK_TFM_USER_SCENARIOS = {
 
 const setupStubs = () => {
   jest.resetAllMocks();
-  existingTfmUser.getAndMap = jest.fn().mockResolvedValue(MOCK_TFM_USER_SCENARIOS.CAN_PROCEED);
   tfmUser.create = jest.fn().mockResolvedValue(MOCK_TFM_USER);
   tfmUser.update = jest.fn().mockResolvedValue(MOCK_TFM_USER);
 };
@@ -30,6 +34,8 @@ describe('auth-service/get-or-create-tfm-user', () => {
 
     beforeAll(async () => {
       setupStubs();
+
+      existingTfmUser.getAndMap = jest.fn().mockResolvedValue(MOCK_TFM_USER_SCENARIOS.CAN_PROCEED);
       result = await getOrCreate(MOCK_ENTRA_USER);
     });
 
@@ -46,12 +52,18 @@ describe('auth-service/get-or-create-tfm-user', () => {
       expect(result).toEqual(MOCK_TFM_USER_SCENARIOS.CAN_PROCEED);
     });
   });
-  
+
   describe('when a TFM user is found, but the user cannot proceed', () => {
-    beforeAll(() => {
+    let result;
+    beforeAll( async() => {
       setupStubs();
 
       existingTfmUser.getAndMap = jest.fn().mockResolvedValue(MOCK_TFM_USER_SCENARIOS.CANNOT_PROCEED);
+      try {
+        result = await getOrCreate(MOCK_ENTRA_USER);
+      } catch(error) {
+        // continue tests
+      }
     });
 
     it('should NOT call tfmUser.update', () => {
@@ -60,6 +72,10 @@ describe('auth-service/get-or-create-tfm-user', () => {
 
     it('should NOT call tfmUser.create', () => {
       expect(tfmUser.create).not.toHaveBeenCalled();
+    });
+
+    it('should Not return anything because exception is thrown', () => {
+      expect(result).toBeUndefined();
     });
 
     it('should throw an error', async () => {

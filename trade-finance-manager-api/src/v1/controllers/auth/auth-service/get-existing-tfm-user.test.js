@@ -11,7 +11,7 @@ describe('auth-service/get-existing-tfm-user', () => {
   });
 
   describe('when the provided entra user does not have a secondary_email', () => {
-    it('should call userController.findByEmails with entra user user email', async () => {
+    it('should call userController.findByEmails with entra user primary email', async () => {
       await existingTfmUser.get(MOCK_ENTRA_USER);
 
       expect(userController.findByEmails).toHaveBeenCalledTimes(1);
@@ -45,7 +45,7 @@ describe('auth-service/get-existing-tfm-user', () => {
       userController.findByEmails = jest.fn().mockResolvedValue(MOCK_TFM_USER);
     });
 
-    it('should call userController.findByEmails with entra user user email', async () => {
+    it('should call userController.findByEmails with entra user secondary email', async () => {
       await existingTfmUser.get(mockEntraUserWithSecondaryEmail);
 
       expect(userController.findByEmails).toHaveBeenCalledTimes(1);
