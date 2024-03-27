@@ -87,6 +87,9 @@ describe('/v1/tfm/facilities', () => {
       expect(body.auditDetails).toEqual({
         lastUpdatedAt: expect.any(String),
         lastUpdatedByTfmUserId: 'bbbbbbbbbbbbbbbbbbbbbbbb',
+        lastUpdatedByIsSystem: null,
+        lastUpdatedByPortalUserId: null,
+        noUserLoggedIn: null,
       });
     });
   });
