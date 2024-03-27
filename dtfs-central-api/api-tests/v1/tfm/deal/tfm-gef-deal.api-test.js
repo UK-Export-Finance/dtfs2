@@ -86,7 +86,10 @@ describe('/v1/tfm/deal/:id', () => {
       expect(body.auditDetails).toEqual({
         lastUpdatedByTfmUserId: '6602f646141e3d545a91fbd1',
         lastUpdatedAt: expect.any(String),
-      })
+        lastUpdatedByPortalUserId: null,
+        noUserLoggedIn: null,
+        lastUpdatedByIsSystem: null,
+      });
     });
   });
 });
