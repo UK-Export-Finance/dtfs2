@@ -72,7 +72,7 @@ describe('/v1/tfm/facilities', () => {
         facilityUpdate: {
           bondIssuerPartyUrn: 'testUrn',
         },
-        user: { _id: 'tfm-user-id'}
+        user: { _id: 'bbbbbbbbbbbbbbbbbbbbbbbb' }
       };
 
       await api.put({
