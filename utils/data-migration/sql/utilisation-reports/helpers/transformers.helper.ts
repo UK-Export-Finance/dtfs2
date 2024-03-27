@@ -19,32 +19,32 @@ const toSqlAzureFileInfo = (mongoAzureFileInfo: MongoAzureFileInfo | null): Azur
   fileInfo.fullPath = mongoAzureFileInfo.fullPath;
   fileInfo.url = mongoAzureFileInfo.url;
   fileInfo.mimetype = mongoAzureFileInfo.mimetype;
-  fileInfo.updatedByUserId = 'SYSTEM';
+  fileInfo.updateLastUpdatedBy({ platform: 'SYSTEM' });
 
   return fileInfo;
 };
 
 const toSqlUtilisationData = (mongoReportData: MongoUtilisationData): FeeRecordEntity => {
-  const reportData = new FeeRecordEntity();
+  const feeRecord = new FeeRecordEntity();
 
-  reportData.facilityId = mongoReportData.facilityId;
-  reportData.exporter = mongoReportData.exporter;
-  reportData.baseCurrency = mongoReportData.baseCurrency;
-  reportData.facilityUtilisation = mongoReportData.facilityUtilisation;
+  feeRecord.facilityId = mongoReportData.facilityId;
+  feeRecord.exporter = mongoReportData.exporter;
+  feeRecord.baseCurrency = mongoReportData.baseCurrency;
+  feeRecord.facilityUtilisation = mongoReportData.facilityUtilisation;
 
-  reportData.totalFeesAccruedForThePeriod = mongoReportData.totalFeesAccruedForTheMonth;
-  reportData.totalFeesAccruedForThePeriodCurrency = mongoReportData.totalFeesAccruedForTheMonthCurrency ?? mongoReportData.baseCurrency;
-  reportData.totalFeesAccruedForThePeriodExchangeRate = mongoReportData.totalFeesAccruedForTheMonthExchangeRate ?? 1;
+  feeRecord.totalFeesAccruedForThePeriod = mongoReportData.totalFeesAccruedForTheMonth;
+  feeRecord.totalFeesAccruedForThePeriodCurrency = mongoReportData.totalFeesAccruedForTheMonthCurrency ?? mongoReportData.baseCurrency;
+  feeRecord.totalFeesAccruedForThePeriodExchangeRate = mongoReportData.totalFeesAccruedForTheMonthExchangeRate ?? 1;
 
-  reportData.feesPaidToUkefForThePeriod = mongoReportData.monthlyFeesPaidToUkef;
-  reportData.feesPaidToUkefForThePeriodCurrency = mongoReportData.monthlyFeesPaidToUkefCurrency;
+  feeRecord.feesPaidToUkefForThePeriod = mongoReportData.monthlyFeesPaidToUkef;
+  feeRecord.feesPaidToUkefForThePeriodCurrency = mongoReportData.monthlyFeesPaidToUkefCurrency;
 
-  reportData.paymentCurrency = mongoReportData.paymentCurrency ?? mongoReportData.monthlyFeesPaidToUkefCurrency;
-  reportData.paymentExchangeRate = mongoReportData.paymentExchangeRate ?? 1;
+  feeRecord.paymentCurrency = mongoReportData.paymentCurrency ?? mongoReportData.monthlyFeesPaidToUkefCurrency;
+  feeRecord.paymentExchangeRate = mongoReportData.paymentExchangeRate ?? 1;
 
-  reportData.updatedByUserId = 'SYSTEM';
+  feeRecord.updateLastUpdatedBy({ platform: 'SYSTEM' });
 
-  return reportData;
+  return feeRecord;
 };
 
 export const toSqlUtilisationReport = ({
@@ -61,7 +61,7 @@ export const toSqlUtilisationReport = ({
   report.dateUploaded = mongoReport.dateUploaded ?? null;
   report.status = mongoReport.status;
   report.uploadedByUserId = mongoReport.uploadedBy?.id ?? null;
-  report.updatedByUserId = 'SYSTEM';
+  report.updateLastUpdatedBy({ platform: 'SYSTEM' });
 
   // Cascaded child entities
   report.azureFileInfo = toSqlAzureFileInfo(mongoReport.azureFileInfo);
