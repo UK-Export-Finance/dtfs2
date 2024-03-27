@@ -55,7 +55,7 @@ const createFacilityInvestor = async (context) => {
     };
   } catch (error) {
     console.error('Unable to create facility investor record. %o', error);
-    throw new Error('Unable to create facility investor record', { cause: error });
+    throw new Error(`Unable to create facility investor record ${error}`);
   }
 };
 

@@ -56,7 +56,7 @@ const createDealGuarantee = async (context) => {
     };
   } catch (error) {
     console.error('Unable to create deal guarantee record. %o', error);
-    throw new Error('Unable to create deal guarantee record', { cause: error });
+    throw new Error(`Unable to create deal guarantee record ${error}`);
   }
 };
 

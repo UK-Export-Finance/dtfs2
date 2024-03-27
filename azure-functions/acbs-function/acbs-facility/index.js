@@ -26,7 +26,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
     const { facilityIdentifier } = acbsFacilityMasterInput;
 
     if (facilityIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.PENDING) || facilityIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.TEST)) {
-      throw new Error('Invalid facility ID %s', facilityIdentifier);
+      throw new Error(`Invalid facility ID ${facilityIdentifier}`);
     }
 
     const facilityMaster = yield context.df.callActivityWithRetry('activity-create-facility-master', retryOptions, { acbsFacilityMasterInput });
@@ -122,6 +122,6 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
     };
   } catch (error) {
     console.error('Error creating facility records: %o', error);
-    throw new Error('Error creating facility record', { cause: error });
+    throw new Error(`Error creating facility record ${error}`);
   }
 });

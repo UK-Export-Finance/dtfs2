@@ -18,7 +18,7 @@ const getAcbsCountryCode = async (context) => {
     return status === 200 && data.length > 1 ? data[0].isoCode : CONSTANTS.DEAL.COUNTRY.DEFAULT;
   } catch (error) {
     console.error('Error getting ACBS country code %o', error);
-    throw new Error('Error getting ACBS country code', { cause: error });
+    throw new Error(`Error getting ACBS country code ${error}`);
   }
 };
 
