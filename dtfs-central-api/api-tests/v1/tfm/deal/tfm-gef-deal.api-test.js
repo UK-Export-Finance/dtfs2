@@ -2,7 +2,7 @@ const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
-const { mockUser } = require('../../../mocks/test-users/mock-portal-user');
+const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
@@ -28,7 +28,7 @@ describe('/v1/tfm/deal/:id', () => {
       await api.put({
         dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
         dealId,
-        checker: mockUser,
+        checker: MOCK_PORTAL_USER,
       }).to('/v1/tfm/deals/submit');
 
       const { status, body } = await api.get(`/v1/tfm/deals/${dealId}`);
@@ -59,7 +59,7 @@ describe('/v1/tfm/deal/:id', () => {
       await api.put({
         dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
         dealId,
-        checker: mockUser,
+        checker: MOCK_PORTAL_USER,
       }).to('/v1/tfm/deals/submit');
 
       // add some dummy data to deal.tfm

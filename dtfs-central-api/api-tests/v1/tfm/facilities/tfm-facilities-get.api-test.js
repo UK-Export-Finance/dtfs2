@@ -2,6 +2,7 @@ const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
+const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
@@ -34,7 +35,7 @@ describe('/v1/tfm/facilities', () => {
       await api.post(newFacility).to('/v1/portal/gef/facilities');
 
       // submit deal/facilities
-      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF, dealId }).to('/v1/tfm/deals/submit');
+      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF, dealId, checker: MOCK_PORTAL_USER }).to('/v1/tfm/deals/submit');
 
       // get facilities after they've been created so we have all the data
       const { body: allFacilitiesAfterCreation } = await api.get('/v1/tfm/facilities?page=0&pagesize=20&sortBy[order]=ascending&sortBy[field]=ukefFacilityId');

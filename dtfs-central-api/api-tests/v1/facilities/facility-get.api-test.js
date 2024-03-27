@@ -4,7 +4,7 @@ const api = require('../../api')(app);
 const aDeal = require('../deal-builder');
 const { MOCK_DEAL } = require('../mocks/mock-data');
 const { DB_COLLECTIONS } = require('../../../src/constants');
-const { mockUser } = require('../../mocks/test-users/mock-portal-user');
+const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 
 const newFacility = {
   type: 'Bond',
@@ -23,7 +23,7 @@ const newDeal = aDeal({
 });
 
 const createDeal = async () => {
-  const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+  const { body } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
   return body;
 };
 describe('/v1/portal/facilities', () => {
@@ -42,7 +42,7 @@ describe('/v1/portal/facilities', () => {
 
   describe('GET /v1/portal/facilities/:id', () => {
     it('returns the requested resource', async () => {
-      const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
 
       const { status, body } = await api.get(`/v1/portal/facilities/${newId}`);
