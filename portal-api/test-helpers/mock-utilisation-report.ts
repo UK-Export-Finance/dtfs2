@@ -1,5 +1,5 @@
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
-import { UtilisationReportResponseBody } from "../src/v1/api-response-types";
+import { UtilisationReportResponseBody } from '../src/v1/api-response-types';
 import MOCK_BANKS from './mock-banks';
 
 export const aUtilisationReportResponse = (): UtilisationReportResponseBody => ({
@@ -21,8 +21,12 @@ export const aUtilisationReportResponse = (): UtilisationReportResponseBody => (
     filename: 'test_file.csv',
     fullPath: 'folder_name/test_file.csv',
     url: 'url',
-    mimetype: 'mimetype'
+    mimetype: 'mimetype',
   },
-  uploadedByUserId: '5099803df3f4948bd2f98391',
-  status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED
+  uploadedByUser: {
+    id: '5099803df3f4948bd2f98391',
+    firstname: 'first',
+    surname: 'last',
+  },
+  status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
 });
