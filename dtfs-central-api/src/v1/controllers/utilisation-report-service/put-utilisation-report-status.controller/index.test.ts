@@ -3,12 +3,10 @@ import httpMocks from 'node-mocks-http';
 import { QueryRunner, FindOptionsWhere } from 'typeorm';
 import {
   AzureFileInfoEntity,
-  DbRequestSource,
   MOCK_AZURE_FILE_INFO,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
-  getDbAuditUpdatedByUserId,
 } from '@ukef/dtfs2-common';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { PutUtilisationReportStatusRequest, putUtilisationReportStatus } from '.';
@@ -26,12 +24,6 @@ describe('put-utilisation-report-status.controller', () => {
     },
     reportsWithStatus: [],
   };
-
-  const requestSource: DbRequestSource = {
-    platform: 'TFM',
-    userId,
-  };
-  const updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
 
   const getHttpMocks = () =>
     httpMocks.createMocks<PutUtilisationReportStatusRequest>({
@@ -152,7 +144,9 @@ describe('put-utilisation-report-status.controller', () => {
 
       existingReports.forEach((report) => {
         expect(report.status).toBe(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
-        expect(report.updatedByUserId).toBe(updatedByUserId);
+        expect(report.lastUpdatedByIsSystemUser).toBe(false);
+        expect(report.lastUpdatedByPortalUserId).toBeNull();
+        expect(report.lastUpdatedByTfmUserId).toBe(userId);
         expect(mockTransactionManager.save).toHaveBeenCalledWith(UtilisationReportEntity, report);
       });
     });
@@ -244,7 +238,9 @@ describe('put-utilisation-report-status.controller', () => {
       existingReports.forEach((report, index) => {
         const expectedStatus = reportsWithStatusForMarkingAsNotCompleted[index].status;
         expect(report.status).toBe(expectedStatus);
-        expect(report.updatedByUserId).toBe(updatedByUserId);
+        expect(report.lastUpdatedByIsSystemUser).toBe(false);
+        expect(report.lastUpdatedByPortalUserId).toBeNull();
+        expect(report.lastUpdatedByTfmUserId).toBe(userId);
         expect(mockTransactionManager.save).toHaveBeenCalledWith(UtilisationReportEntity, report);
       });
     });

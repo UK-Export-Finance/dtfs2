@@ -12,7 +12,7 @@ const {
 const externalApi = require('../../external-api/api');
 const api = require('../../v1/api');
 const MOCK_BANKS = require('../../../test-helpers/mock-banks');
-const { MOCK_UTILISATION_REPORT } = require('../../../test-helpers/mock-utilisation-report-details');
+const { aUtilisationReportResponse } = require('../../../test-helpers/mock-utilisation-report');
 const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../constants');
 
 jest.mock('../../external-api/api');
@@ -224,8 +224,8 @@ describe('utilisation-report-helpers', () => {
     it('returns true when there are existing reports', async () => {
       // Arrange
       const existingReport = {
-        ...MOCK_UTILISATION_REPORT,
-        bank,
+        ...aUtilisationReportResponse(),
+        bankId: bank.id,
         status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
         reportPeriod,
       };
@@ -275,26 +275,27 @@ describe('utilisation-report-helpers', () => {
   });
 
   describe('sendEmailToAllBanksWhereReportNotReceived', () => {
-    const setReportDueToday = () => {
-      process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = 10;
-      const dueDate = new Date('2023-11-15');
-      jest.useFakeTimers().setSystemTime(dueDate);
-      return dueDate;
-    };
+    const CURRENT_REPORT_PERIOD_MONTH = 10;
+    const CURRENT_YEAR = 2023;
+    const DUE_DATE = new Date(`${CURRENT_YEAR}-${CURRENT_REPORT_PERIOD_MONTH + 1}-15`);
+    process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = 10;
+
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(DUE_DATE);
+    });
 
     it('does not send an email when the bank has already submitted their report', async () => {
       // Arrange
-      const dueDate = setReportDueToday();
-
       externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue([]);
 
       api.getAllBanks.mockResolvedValue([MOCK_BANKS.HSBC]);
 
       const existingReport = {
-        ...MOCK_UTILISATION_REPORT,
-        // 'month' should be 1-indexed, Date.getMonth() is 0-indexed, so this sets 'month' to the previous month
-        month: dueDate.getMonth(),
-        year: dueDate.getFullYear(),
+        ...aUtilisationReportResponse(),
+        reportPeriod: {
+          start: { month: CURRENT_REPORT_PERIOD_MONTH, year: CURRENT_YEAR },
+          end: { month: CURRENT_REPORT_PERIOD_MONTH, year: CURRENT_YEAR },
+        },
       };
       api.getUtilisationReports.mockResolvedValue([existingReport]);
 
@@ -313,8 +314,6 @@ describe('utilisation-report-helpers', () => {
 
     it('does not send an email when the bank has no payment officer team email', async () => {
       // Arrange
-      setReportDueToday();
-
       externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue([]);
 
       const bankWithoutPaymentOfficerTeam = produce(MOCK_BANKS.HSBC, (draftBank) => {
@@ -339,8 +338,6 @@ describe('utilisation-report-helpers', () => {
 
     it('does not send an email when the bank has and invalid payment officer team email', async () => {
       // Arrange
-      setReportDueToday();
-
       externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue([]);
 
       const invalidEmail = 'invalid-email';
@@ -366,8 +363,6 @@ describe('utilisation-report-helpers', () => {
 
     it('sends emails using the default team name when bank does not have one set', async () => {
       // Arrange
-      setReportDueToday();
-
       externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue([]);
 
       const validBarclaysEmail = 'valid-barclays-email@example.com';
@@ -399,8 +394,6 @@ describe('utilisation-report-helpers', () => {
 
     it('sends emails to all banks', async () => {
       // Arrange
-      setReportDueToday();
-
       externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue([]);
 
       const validBarclaysEmail = 'valid-barclays-email@example.com';

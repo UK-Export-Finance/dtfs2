@@ -1,4 +1,3 @@
-const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 const db = require('./src/drivers/db-client');
 
 const mockFiles = [
@@ -29,10 +28,6 @@ expect.extend({
     };
   },
 });
-
-beforeAll(async () => {
-  await SqlDbDataSource.initialize();
-})
 
 afterAll(async () => {
   await db.close();

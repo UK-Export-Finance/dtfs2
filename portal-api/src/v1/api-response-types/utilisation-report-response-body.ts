@@ -1,11 +1,19 @@
-import { AzureFileInfo, IsoDateTimeStamp, ReportPeriod, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
+import { AzureFileInfo, IsoDateTimeStamp, ReportPeriod, UploadedByUserDetails, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
 
 export type UtilisationReportResponseBody = {
   id: number;
   bankId: string;
   status: UtilisationReportReconciliationStatus;
-  uploadedByUserId?: string;
   reportPeriod: ReportPeriod;
-  azureFileInfo: AzureFileInfo | null;
-  dateUploaded?: IsoDateTimeStamp;
-};
+} & (
+  | {
+      uploadedByUser: UploadedByUserDetails;
+      azureFileInfo: AzureFileInfo;
+      dateUploaded: IsoDateTimeStamp;
+    }
+  | {
+      uploadedByUser: null;
+      azureFileInfo: null;
+      dateUploaded: null;
+    }
+);

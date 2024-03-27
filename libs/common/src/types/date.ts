@@ -20,12 +20,15 @@ export type IsoDateTimeStamp = string;
 
 export type OneIndexedMonth = number;
 
-export type IsoMonthStamp = string;
-
 export type MonthAndYear = {
   month: OneIndexedMonth;
   year: number;
 };
+
+/**
+ * ISO 8601 month string in format 'yyyy-MM'
+ */
+export type IsoMonthStamp = string;
 
 /**
  * Unix timestamp, representing the time that has elapsed since 1st January 1970

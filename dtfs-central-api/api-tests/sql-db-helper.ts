@@ -8,6 +8,8 @@ type SqlTableName = 'UtilisationReport' | 'FeeRecord' | 'AzureFileInfo';
 const deleteAllEntries = async (tableName: SqlTableName): Promise<void> => {
   switch (tableName) {
     case 'UtilisationReport':
+      // Cascade deletes are not enabled for the 'FeeRecord' table
+      await SqlDbDataSource.manager.delete(FeeRecordEntity, {});
       await SqlDbDataSource.manager.delete(UtilisationReportEntity, {});
       return;
     case 'FeeRecord':

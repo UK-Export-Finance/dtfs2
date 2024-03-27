@@ -1,6 +1,6 @@
 import { UtilisationReportEntity, UtilisationReportEntityMockBuilder, Bank, FeeRecordEntity, FeeRecordEntityMockBuilder } from '@ukef/dtfs2-common';
 import { MOCK_BANKS } from '../../../../../api-tests/mocks/banks';
-import { UtilisationReportRepo, getOneUtilisationReportDetailsByBankId } from '../../../../repositories/utilisation-reports-repo';
+import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { getAllReportsForSubmissionMonth, getPreviousOpenReportsBySubmissionMonth } from './helpers';
 import { IsoMonthStamp } from '../../../../types/date';
@@ -24,7 +24,6 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       // Arrange
       const banks: Bank[] = [MOCK_BANKS.BARCLAYS];
 
-      jest.mocked(getOneUtilisationReportDetailsByBankId).mockResolvedValue(null);
       jest.spyOn(UtilisationReportRepo, 'findOpenReportsBeforeReportPeriodStartForBankId').mockResolvedValue([]);
 
       const expectedError = new Error(`Failed to get report for bank with id ${MOCK_BANKS.BARCLAYS.id} for submission month ${submissionMonth}`);
