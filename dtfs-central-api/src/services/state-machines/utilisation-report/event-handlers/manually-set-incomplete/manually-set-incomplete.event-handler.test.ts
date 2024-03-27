@@ -6,7 +6,6 @@ import {
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
-  getDbAuditUpdatedByUserId,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportManuallySetIncompleteEvent } from '.';
 
@@ -15,7 +14,6 @@ describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
     platform: 'TFM',
     userId: 'abc123',
   };
-  const updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
 
   const mockSave = jest.fn();
 
@@ -40,7 +38,9 @@ describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
       // Assert
       expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
       expect(report.status).toEqual(expectedNewStatus);
-      expect(report.updatedByUserId).toEqual(updatedByUserId);
+      expect(report.lastUpdatedByIsSystemUser).toBe(false);
+      expect(report.lastUpdatedByPortalUserId).toBeNull();
+      expect(report.lastUpdatedByTfmUserId).toBe(requestSource.userId);
     });
   });
 
@@ -61,7 +61,9 @@ describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
       // Assert
       expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
       expect(report.status).toEqual(expectedNewStatus);
-      expect(report.updatedByUserId).toEqual(updatedByUserId);
+      expect(report.lastUpdatedByIsSystemUser).toBe(false);
+      expect(report.lastUpdatedByPortalUserId).toBeNull();
+      expect(report.lastUpdatedByTfmUserId).toBe(requestSource.userId);
     });
   });
 });
