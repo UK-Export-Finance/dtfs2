@@ -2,7 +2,7 @@ const httpMocks = require('node-mocks-http');
 const { AxiosError } = require('axios');
 const api = require('../../api');
 const { getNextReportPeriodByBankId } = require('./next-report-period.controller');
-const { MOCK_REPORT_PERIOD } = require('../../../../test-helpers/mock-utilisation-report-details');
+const { aReportPeriod } = require('../../../../test-helpers/mock-report-period');
 
 console.error = jest.fn();
 
@@ -23,14 +23,15 @@ describe('controllers/utilisation-report-service/next-report-period', () => {
     it("returns 200 response when 'api.getNextReportPeriodByBankId' returns a report period", async () => {
       // Arrange
       const { req, res } = getHttpMocks();
-      api.getNextReportPeriodByBankId.mockResolvedValue({ MOCK_REPORT_PERIOD });
+      const reportPeriod = aReportPeriod();
+      api.getNextReportPeriodByBankId.mockResolvedValue(reportPeriod);
 
       // Act
       await getNextReportPeriodByBankId(req, res);
 
       // Assert
       // eslint-disable-next-line no-underscore-dangle
-      expect(res._getData()).toEqual({ MOCK_REPORT_PERIOD });
+      expect(res._getData()).toEqual(reportPeriod);
 
       // eslint-disable-next-line no-underscore-dangle
       expect(res._getStatusCode()).toEqual(200);

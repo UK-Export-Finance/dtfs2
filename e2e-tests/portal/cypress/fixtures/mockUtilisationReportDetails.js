@@ -53,26 +53,14 @@ const february2023ReportDetails = [
 ];
 
 const december2023ToFebruary2024ReportDetails = [
-  {
-    bank: {
-      id: BANK2_PAYMENT_REPORT_OFFICER1.bank.id,
-      name: BANK2_PAYMENT_REPORT_OFFICER1.bank.name,
-    },
-    reportPeriod: {
-      start: {
-        month: 12,
-        year: 2023,
-      },
-      end: {
-        month: 2,
-        year: 2024,
-      },
-    },
-    dateUploaded: new Date(2024, 3),
-    uploadedBy: BANK2_PAYMENT_REPORT_OFFICER1,
-    azureFileInfo: null,
-    status: 'REPORT_NOT_RECEIVED',
-  },
+  UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+  .withId(reportIdGenerator.next().value)
+  .withBankId(BANK2_PAYMENT_REPORT_OFFICER1.bank.id)
+  .withReportPeriod({
+    start: { month: 12, year: 2023 },
+    end: { month: 2, year: 2024 },
+  })
+  .build(),
 ];
 
 const generateUpToDateReportDetails = () => {

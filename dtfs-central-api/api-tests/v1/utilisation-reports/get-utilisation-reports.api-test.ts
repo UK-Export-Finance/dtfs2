@@ -1,18 +1,20 @@
 import { Response } from 'supertest';
-import { IsoDateTimeStamp, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
+import { ObjectId } from 'mongodb';
+import { IsoDateTimeStamp, PortalUser, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import axios from 'axios';
 import app from '../../../src/createApp';
 import createApi from '../../api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
+import mongoDbClient from '../../../src/drivers/db-client';
+import { wipe } from '../../wipeDB';
 
 const api = createApi(app);
 
 const getUrl = (bankId: string) => `/v1/bank/${bankId}/utilisation-reports`;
 
-const saveReportToDatabase = async (report: UtilisationReportEntity): Promise<UtilisationReportEntity> =>
-  await SqlDbDataSource.getRepository(UtilisationReportEntity).save(report);
+const saveReportsToDatabase = async (...reports: UtilisationReportEntity[]): Promise<UtilisationReportEntity[]> =>
+  await SqlDbHelper.saveNewEntries('UtilisationReport', reports);
 
 type UtilisationReportResponse = GetUtilisationReportResponse & {
   dateUploaded: IsoDateTimeStamp;
@@ -27,13 +29,28 @@ interface CustomSuccessResponse extends Response {
 }
 
 describe('GET /v1/bank/:bankId/utilisation-reports', () => {
+  const portalUser = {
+    _id: new ObjectId(),
+    firstname: 'Test',
+    surname: 'User',
+  } as PortalUser;
+  const portalUserId = portalUser._id.toString();
+
   beforeAll(async () => {
     await SqlDbHelper.initialize();
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
+
+    await wipe(['users']);
+    const usersCollection = await mongoDbClient.getCollection('users');
+    await usersCollection.insertOne(portalUser);
   });
 
   afterEach(async () => {
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
+  });
+
+  afterAll(async () => {
+    await wipe(['users']);
   });
 
   it('returns 400 when an invalid bank id is provided', async () => {
@@ -49,16 +66,20 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
   it('gets utilisation reports', async () => {
     // Arrange
     const bankId = '13';
-    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+
+    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
       .withId(1)
       .withBankId(bankId)
+      .withUploadedByUserId(portalUserId)
       .build();
-    const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+
+    const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
       .withId(2)
       .withBankId(bankId)
+      .withUploadedByUserId(portalUserId)
       .build();
-    await saveReportToDatabase(uploadedReport);
-    await saveReportToDatabase(nonUploadedReport);
+
+    await saveReportsToDatabase(uploadedReport, nonUploadedReport);
 
     // Act
     const response: CustomSuccessResponse = await api.get(getUrl(bankId));
@@ -68,25 +89,27 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     expect(response.body.length).toEqual(2);
   });
 
-  it('gets all utilisation reports not in the REPORT_NOT_RECEIVED state when excludeNotReceived query param is true', async () => {
+  it("gets only the utilisation reports which are not in the 'REPORT_NOT_RECEIVED' when the excludeNotReceived query param is set to true", async () => {
     // Arrange
     const bankId = '13';
-    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+
+    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
       .withId(1)
       .withBankId(bankId)
+      .withUploadedByUserId(portalUserId)
       .build();
-    const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
-      .withId(2)
-      .withBankId(bankId)
-      .build();
-    const nonUploadedMarkedReconciledReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
+
+    const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(2).withBankId(bankId).build();
+
+    const nonUploadedMarkedReconciledReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
       .withId(3)
       .withBankId(bankId)
+      .withUploadedByUserId(null)
+      .withDateUploaded(null)
       .withAzureFileInfo(undefined)
       .build();
-    await saveReportToDatabase(uploadedReport);
-    await saveReportToDatabase(notReceivedReport);
-    await saveReportToDatabase(nonUploadedMarkedReconciledReport);
+
+    await saveReportsToDatabase(uploadedReport, notReceivedReport, nonUploadedMarkedReconciledReport);
 
     // Act
     const response: CustomSuccessResponse = await api.get(`${getUrl(bankId)}?excludeNotReceived=true`);
@@ -95,29 +118,66 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     expect(response.status).toEqual(200);
     expect(response.body.length).toEqual(2);
     const ids = response.body.map((report) => report.id);
-    expect(ids).toContain(1);
-    expect(ids).toContain(3);
+    expect(ids).toContain(uploadedReport.id);
+    expect(ids).toContain(nonUploadedMarkedReconciledReport.id);
   });
 
-  it('gets uploaded utilisation reports for specified period', async () => {
+  it('gets utilisation reports for specified period', async () => {
     // Arrange
     const bankId = '13';
     const reportPeriod = {
       start: { month: 11, year: 2021 },
       end: { month: 12, year: 2021 },
     };
-    const uploadedReportForReportPeriod = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+
+    const uploadedReportForReportPeriod = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+      .withId(1)
+      .withBankId(bankId)
+      .withReportPeriod(reportPeriod)
+      .withUploadedByUserId(portalUserId)
+      .build();
+
+    const uploadedReportForDifferentReportPeriod = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+      .withId(2)
+      .withBankId(bankId)
+      .withReportPeriod({ start: { month: 1, year: 2022 }, end: { month: 2, year: 2022 } })
+      .withUploadedByUserId(portalUserId)
+      .build();
+
+    await saveReportsToDatabase(uploadedReportForReportPeriod, uploadedReportForDifferentReportPeriod);
+
+    // Act
+    const urlWithQueryParams = axios.getUri({ url: getUrl(bankId), params: { reportPeriod } });
+    const response: CustomSuccessResponse = await api.get(urlWithQueryParams);
+
+    // Assert
+    expect(response.status).toEqual(200);
+    expect(response.body.length).toEqual(1);
+    expect(response.body[0].id).toEqual(uploadedReportForReportPeriod.id);
+  });
+
+  it("returns no reports when the excludeNotReceived query is true but the report for the specified report period is in the 'REPORT_NOT_RECEIVED' state", async () => {
+    // Arrange
+    const bankId = '13';
+    const reportPeriod = {
+      start: { month: 11, year: 2021 },
+      end: { month: 12, year: 2021 },
+    };
+
+    const notReceivedReportForReportPeriod = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
       .withId(1)
       .withBankId(bankId)
       .withReportPeriod(reportPeriod)
       .build();
-    const uploadedReportForDifferentReportPeriod = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+
+    const uploadedReportForDifferentReportPeriod = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
       .withId(2)
       .withBankId(bankId)
-      .withReportPeriod({ start: { month: 12, year: 2021 }, end: { month: 1, year: 2022 } })
+      .withReportPeriod({ start: { month: 1, year: 2022 }, end: { month: 2, year: 2022 } })
+      .withUploadedByUserId(portalUserId)
       .build();
-    await saveReportToDatabase(uploadedReportForReportPeriod);
-    await saveReportToDatabase(uploadedReportForDifferentReportPeriod);
+
+    await saveReportsToDatabase(notReceivedReportForReportPeriod, uploadedReportForDifferentReportPeriod);
 
     // Act
     const urlWithQueryParams = axios.getUri({ url: getUrl(bankId), params: { reportPeriod, excludeNotReceived: true } });
@@ -125,7 +185,6 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
 
     // Assert
     expect(response.status).toEqual(200);
-    expect(response.body.length).toEqual(1);
-    expect(response.body[0].id).toEqual(1);
+    expect(response.body.length).toEqual(0);
   });
 });

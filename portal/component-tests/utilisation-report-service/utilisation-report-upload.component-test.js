@@ -64,7 +64,7 @@ describe(page, () => {
 
     it('should display a generic warning message about reports being overdue', () => {
       wrapper.expectElement('[data-cy="warning-text"]').toExist();
-      wrapper.expectText('.govuk-warning-text__text').toMatch(/[There are overdue reports, please send them as soon as possible.]/);
+      wrapper.expectText('.govuk-warning-text__text').toMatch(/There are overdue reports, please send them as soon as possible./);
     });
 
     it('should display the two overdue reports with a specific message', () => {
@@ -81,7 +81,8 @@ describe(page, () => {
     });
 
     it('should state which report the page is expecting to be uploaded', () => {
-      wrapper.expectText('[data-cy="upload-report-text"]').toRead('Upload December 2022 report');
+      wrapper.expectText('[data-cy="upload-report-text"]').toMatch(/Upload December 2022 report/);
+      wrapper.expectText('[data-cy="upload-report-text"]').toMatch(/The file must be an XLSX or CSV/);
     });
   });
 
@@ -97,7 +98,7 @@ describe(page, () => {
 
     it('should display a specific warning message about which reports to upload', () => {
       wrapper.expectElement('[data-cy="warning-text"]').toExist();
-      wrapper.expectText('.govuk-warning-text__text').toMatch(/[January 2023 report is overdue, please send it as soon as possible.]/);
+      wrapper.expectText('.govuk-warning-text__text').toMatch(/January 2023 report is overdue, please send it as soon as possible./);
     });
 
     it('should display the one overdue report as being overdue', () => {
@@ -113,7 +114,8 @@ describe(page, () => {
     });
 
     it('should state which report the page is expecting to be uploaded', () => {
-      wrapper.expectText('[data-cy="upload-report-text"]').toRead('Upload January 2023 report');
+      wrapper.expectText('[data-cy="upload-report-text"]').toMatch(/Upload January 2023 report/);
+      wrapper.expectText('[data-cy="upload-report-text"]').toMatch(/The file must be an XLSX or CSV/);
     });
   });
 

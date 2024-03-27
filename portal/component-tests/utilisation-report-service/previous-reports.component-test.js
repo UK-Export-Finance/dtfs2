@@ -8,23 +8,26 @@ describe(page, () => {
   const navItems = [{
     text: 2023,
     href: '?targetYear=2023',
-    active: true,
     attributes: { 'data-cy': 'side-navigation-2023' },
+    active: true,
   }, {
     text: 2022,
     href: '?targetYear=2022',
     attributes: { 'data-cy': 'side-navigation-2022' },
+    active: false,
   }, {
     text: 2021,
     href: '?targetYear=2021',
     attributes: { 'data-cy': 'side-navigation-2021' },
+    active: false,
   }, {
     text: 2020,
     href: '?targetYear=2020',
     attributes: { 'data-cy': 'side-navigation-2020' },
+    active: false,
   }];
 
-  const reports = [{
+  const reportLinks = [{
     month: 'January',
     path: 'www.abc.com',
   }, {
@@ -38,13 +41,11 @@ describe(page, () => {
     path: 'www.abc.com',
   }];
 
-  const noNavItems = [];
-  const noReports = [];
   const year = 2023;
 
   describe('with submitted reports', () => {
     beforeEach(() => {
-      wrapper = render({ navItems, reports, year });
+      wrapper = render({ navItems, reportLinks, year });
     });
 
     it('should render side navigation bar', () => {
@@ -59,7 +60,7 @@ describe(page, () => {
     });
 
     it('should render page heading', () => {
-      wrapper.expectText('[data-cy="main-heading"]').toRead('2023 GEF reports');
+      wrapper.expectText('[data-cy="main-heading"]').toRead('Download 2023 GEF reports');
     });
 
     it('should render paragraph', () => {
@@ -68,19 +69,19 @@ describe(page, () => {
 
     it('should render month links', () => {
       wrapper.expectElement('[data-cy="list-item-link-January"]').toExist();
-      wrapper.expectText('[data-cy="list-item-link-January"]').toRead('January 2023');
+      wrapper.expectText('[data-cy="list-item-link-January"]').toRead('January 2023 GEF report');
       wrapper.expectElement('[data-cy="list-item-link-February"]').toExist();
-      wrapper.expectText('[data-cy="list-item-link-February"]').toRead('February 2023');
+      wrapper.expectText('[data-cy="list-item-link-February"]').toRead('February 2023 GEF report');
       wrapper.expectElement('[data-cy="list-item-link-March"]').toExist();
-      wrapper.expectText('[data-cy="list-item-link-March"]').toRead('March 2023');
+      wrapper.expectText('[data-cy="list-item-link-March"]').toRead('March 2023 GEF report');
       wrapper.expectElement('[data-cy="list-item-link-May"]').toExist();
-      wrapper.expectText('[data-cy="list-item-link-May"]').toRead('May 2023');
+      wrapper.expectText('[data-cy="list-item-link-May"]').toRead('May 2023 GEF report');
     });
   });
 
   describe('with no submitted reports for target year', () => {
     beforeEach(() => {
-      wrapper = render({ navItems, noReports, year });
+      wrapper = render({ navItems, reportLinks: [], year });
     });
 
     it('should render side navigation bar', () => {
@@ -95,7 +96,7 @@ describe(page, () => {
     });
 
     it('should render page heading', () => {
-      wrapper.expectText('[data-cy="main-heading"]').toRead('2023 GEF reports');
+      wrapper.expectText('[data-cy="main-heading"]').toRead('Download 2023 GEF reports');
     });
 
     it('should render paragraph', () => {
@@ -105,11 +106,11 @@ describe(page, () => {
 
   describe('with no submitted reports for any year', () => {
     beforeEach(() => {
-      wrapper = render({ noNavItems, noReports, year });
+      wrapper = render({ navItems: [], reportLinks: [], year });
     });
 
     it('should render page heading', () => {
-      wrapper.expectText('[data-cy="main-heading"]').toRead('Previous GEF reports');
+      wrapper.expectText('[data-cy="main-heading"]').toRead('Download previous GEF reports');
     });
 
     it('should render paragraph', () => {

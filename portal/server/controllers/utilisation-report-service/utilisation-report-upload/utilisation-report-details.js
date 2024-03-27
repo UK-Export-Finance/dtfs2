@@ -11,7 +11,7 @@ const { getFormattedReportPeriod } = require('../../../helpers');
 /**
  * Given a utilisation report, this returns an object containing formatted
  * information about the report and the user who submitted the report
- * @param {Object | undefined} report - A utilisation report
+ * @param {import('server/api-response-types').UtilisationReportResponseBody | undefined} report - A utilisation report
  * @throws If the inputted report is undefined
  * @returns {ReportAndUserDetails}
  */
@@ -20,9 +20,9 @@ const getReportAndUserDetails = (report) => {
     throw new Error("Failed to get report and user details: 'report' was undefined");
   }
 
-  const { dateUploaded, uploadedBy, reportPeriod } = report;
+  const { dateUploaded, uploadedByUser, reportPeriod } = report;
 
-  const { firstname, surname } = uploadedBy;
+  const { firstname, surname } = uploadedByUser;
   const uploadedByFullName = `${firstname} ${surname}`;
 
   const date = parseISO(dateUploaded);

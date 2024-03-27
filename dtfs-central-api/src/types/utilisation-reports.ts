@@ -7,6 +7,7 @@ import {
   Currency,
   ReportPeriod,
   AzureFileInfo,
+  UploadedByUserDetails,
 } from '@ukef/dtfs2-common';
 import { IsoMonthStamp } from './date';
 import { UTILISATION_REPORT_HEADERS } from '../constants';
@@ -15,11 +16,19 @@ export type GetUtilisationReportResponse = {
   id: number;
   bankId: string;
   status: UtilisationReportReconciliationStatus;
-  uploadedByUserId: string | null;
   reportPeriod: ReportPeriod;
-  azureFileInfo: AzureFileInfo | null;
-  dateUploaded: Date | null;
-};
+} & (
+  | {
+      uploadedByUser: UploadedByUserDetails;
+      azureFileInfo: AzureFileInfo;
+      dateUploaded: Date;
+    }
+  | {
+      uploadedByUser: null;
+      azureFileInfo: null;
+      dateUploaded: null;
+    }
+);
 
 export type UtilisationReportReconciliationSummaryItem = {
   reportId: number;
