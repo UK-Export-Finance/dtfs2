@@ -42,7 +42,7 @@ const createAndSubmitDeals = async (deals) => {
     const submitResponse = await api.put({
       dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
       dealId: createResponse.body._id,
-      checker: '6602f568f609ff532522b472',
+      checker: mockUser,
     }).to('/v1/tfm/deals/submit');
 
     expect(submitResponse.status).toEqual(200);
