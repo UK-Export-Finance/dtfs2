@@ -14,7 +14,7 @@ const updateFacilityCoverStartDates = async (user, deal) => {
 
     if (!modifiedDeal.facilities || !modifiedDeal.facilities?.length) {
       console.error('No facilities found in deal %s', modifiedDeal._id);
-      return modifiedDeal;
+      throw new Error(`No facilities found in deal ${modifiedDeal._id}`);
     }
 
     for (const facilityId of modifiedDeal.facilities) {

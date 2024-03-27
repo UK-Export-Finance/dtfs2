@@ -13,7 +13,7 @@ describe('getNowAsEpoch', () => {
     expect(typeof result).toBe('number');
   });
 
-  it('should return a value greater than or equal to the previous value', () => {
+  it('should return EPOCH from getNowAsEpoch function call, whose subsequent value will be either equal or greater than the previous call', () => {
     const previousValue = getNowAsEpoch();
     const result = getNowAsEpoch();
     expect(result).toBeGreaterThanOrEqual(previousValue);
