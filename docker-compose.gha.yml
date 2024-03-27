@@ -84,6 +84,7 @@ services:
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
+      - AZURE_SSO_AUTHORITY
 
   trade-finance-manager-api:
     build:
