@@ -4,19 +4,10 @@ const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const aDeal = require('../../deal-builder');
+const { mockUser } = require('../../../mocks/test-users/mock-portal-user');
 
 describe('POST TFM amendments', () => {
   let dealId;
-
-  const mockUser = {
-    _id: '123456789',
-    username: 'temp',
-    roles: [],
-    bank: {
-      id: '956',
-      name: 'Barclays Bank',
-    },
-  };
 
   const newFacility = {
     type: 'Bond',

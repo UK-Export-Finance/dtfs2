@@ -3,6 +3,7 @@ const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 const DEFAULTS = require('../../../../src/v1/defaults');
+const { mockUser } = require('../../../mocks/test-users/mock-portal-user');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
@@ -15,16 +16,6 @@ const newDeal = {
 
 const newFacility = {
   type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
-};
-
-const mockUser = {
-  _id: '123456789',
-  username: 'temp',
-  roles: [],
-  bank: {
-    id: '956',
-    name: 'Barclays Bank',
-  },
 };
 
 describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {

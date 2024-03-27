@@ -5,20 +5,10 @@ const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const { expectAddedFields, expectAddedFieldsWithEditedBy } = require('./expectAddedFields');
 const CONSTANTS = require('../../../src/constants');
-
-const mockUser = {
-  _id: '123456789',
-  username: 'temp',
-  password: '',
-  roles: [],
-  bank: {
-    id: '956',
-    name: 'Barclays Bank',
-  },
-};
+const { mockUser } = require('../../mocks/test-users/mock-portal-user');
 
 const mockUserNoBank = {
-  _id: '123456789',
+  _id: '6603ebb1b81328945f63a1a2',
   username: 'temp',
   password: '',
   roles: [],
@@ -120,7 +110,7 @@ describe('/v1/portal/deals', () => {
           additionalRefName: 'b'.repeat(101),
         };
         const invalidMaker = {
-          _id: '12345678',
+          _id: '6602f646141e3d545a91fbd1',
         };
 
         const { body, status } = await api.post({ deal: postBody, user: invalidMaker }).to('/v1/portal/deals');

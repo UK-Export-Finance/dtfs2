@@ -4,16 +4,7 @@ const api = require('../../api')(app);
 const aDeal = require('../deal-builder');
 const { MOCK_DEAL } = require('../mocks/mock-data');
 const { DB_COLLECTIONS } = require('../../../src/constants');
-
-const mockUser = {
-  _id: '123456789',
-  username: 'temp',
-  roles: [],
-  bank: {
-    id: '956',
-    name: 'Barclays Bank',
-  },
-};
+const { mockUser } = require('../../mocks/test-users/mock-portal-user');
 
 const newFacility = {
   type: 'Bond',
