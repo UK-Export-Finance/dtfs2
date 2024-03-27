@@ -64,7 +64,7 @@ const createFacilityFee = async (context) => {
     };
   } catch (error) {
     console.error('Unable to create facility fee record. %o', error);
-    throw new Error('Unable to create facility fee record', { cause: error });
+    throw new Error(`Unable to create facility fee record ${error}`);
   }
 };
 
