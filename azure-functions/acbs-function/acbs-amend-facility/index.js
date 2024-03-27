@@ -50,7 +50,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
         let facilityLoanRecord;
 
         if (facilityId.includes(DEAL.UKEF_ID.PENDING) || facilityId.includes(DEAL.UKEF_ID.TEST)) {
-          throw new Error('Invalid facility ID %s', facilityId);
+          throw new Error(`Invalid facility ID ${facilityId}`);
         }
 
         // 1. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
