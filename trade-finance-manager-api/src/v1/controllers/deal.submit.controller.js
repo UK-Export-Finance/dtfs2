@@ -134,7 +134,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       mappedDeal.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
       console.info('TFM deal %s submission type has been updated to %s', dealId, mappedDeal.submissionType);
     }
-    const updatedDeal = await updatedIssuedFacilities(mappedDeal);
+    const updatedDeal = await updatedIssuedFacilities(mappedDeal, checker);
     /**
      * Current requirement only allows AIN & MIN deals to be send to ACBS
      * This call UPDATES facility record by updating their stage from
