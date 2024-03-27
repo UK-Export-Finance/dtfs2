@@ -86,7 +86,7 @@ describe('/v1/tfm/facilities', () => {
       expect(body.tfm).toEqual(updatedFacility.facilityUpdate);
       expect(body.auditDetails).toEqual({
         lastUpdatedAt: expect.any(String),
-        lastUpdatedByTfmUserId: 'tfm-user-id',
+        lastUpdatedByTfmUserId: 'bbbbbbbbbbbbbbbbbbbbbbbb',
       });
     });
   });
