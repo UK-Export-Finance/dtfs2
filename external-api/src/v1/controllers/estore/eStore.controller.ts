@@ -71,7 +71,7 @@ export const create = async (req: Request, res: Response) => {
         // Step 1: Add CRON job to the collection
         await cronJobLogs.insertOne({
           payload: eStoreData,
-          timestamp: getNowAsEpoch,
+          timestamp: getNowAsEpoch(),
           cron: {
             site: { status: ESTORE_CRON_STATUS.PENDING },
             term: { status: ESTORE_CRON_STATUS.PENDING },
@@ -102,7 +102,7 @@ export const create = async (req: Request, res: Response) => {
                 'response.site.siteId': siteExistsResponse.data.siteId,
                 'cron.site.create': {
                   status: ESTORE_CRON_STATUS.COMPLETED,
-                  timestamp: getNowAsEpoch,
+                  timestamp: getNowAsEpoch(),
                 },
                 'cron.site.status': ESTORE_CRON_STATUS.COMPLETED,
               },
@@ -170,7 +170,7 @@ export const create = async (req: Request, res: Response) => {
                   'cron.site.create': {
                     response: siteCreationResponse?.data,
                     status: ESTORE_CRON_STATUS.FAILED,
-                    timestamp: getNowAsEpoch,
+                    timestamp: getNowAsEpoch(),
                   },
                   'cron.site.status': ESTORE_CRON_STATUS.FAILED,
                 },
@@ -187,7 +187,7 @@ export const create = async (req: Request, res: Response) => {
               $set: {
                 'cron.site.create': {
                   status: ESTORE_CRON_STATUS.FAILED,
-                  timestamp: getNowAsEpoch,
+                  timestamp: getNowAsEpoch(),
                 },
                 'cron.site.status': ESTORE_CRON_STATUS.FAILED,
               },

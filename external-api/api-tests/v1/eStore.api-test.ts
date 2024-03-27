@@ -6,7 +6,6 @@ import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
 import { UKEF_ID, ESTORE_CRON_STATUS } from '../../src/constants';
 import { ObjectId } from 'mongodb';
-import { getNowAsEpoch } from '../../src/helpers/date';
 
 const { APIM_ESTORE_URL } = process.env;
 
@@ -146,7 +145,7 @@ describe('/estore', () => {
       // Insert a new entry in the collection
       expect(mockInsertOne).toHaveBeenCalledWith({
         payload,
-        timestamp: getNowAsEpoch,
+        timestamp: expect.any(Number),
         cron: {
           site: { status: ESTORE_CRON_STATUS.PENDING },
           term: { status: ESTORE_CRON_STATUS.PENDING },

@@ -29,7 +29,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: Estore) => {
           $set: {
             'cron.term': {
               status: ESTORE_CRON_STATUS.COMPLETED,
-              timestamp: getNowAsEpoch,
+              timestamp: getNowAsEpoch(),
             },
           },
         },
@@ -44,7 +44,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: Estore) => {
           $set: {
             'cron.term': {
               status: ESTORE_CRON_STATUS.FAILED,
-              timestamp: getNowAsEpoch,
+              timestamp: getNowAsEpoch(),
             },
           },
         },
@@ -72,7 +72,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: Estore) => {
           $set: {
             'cron.buyer': {
               status: ESTORE_CRON_STATUS.COMPLETED,
-              timestamp: getNowAsEpoch,
+              timestamp: getNowAsEpoch(),
             },
           },
         },
@@ -87,7 +87,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: Estore) => {
           $set: {
             'cron.buyer': {
               status: ESTORE_CRON_STATUS.FAILED,
-              timestamp: getNowAsEpoch,
+              timestamp: getNowAsEpoch(),
             },
           },
         },

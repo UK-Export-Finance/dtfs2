@@ -1,6 +1,11 @@
 import { getNowAsEpoch } from './date';
 
 describe('getNowAsEpoch', () => {
+  afterEach(() => {
+    // Ensure `jest.useFakeTimers()` is not in effect after each test
+    jest.useRealTimers();
+  });
+
   it('should return as EPOCH representing the current time in milliseconds', () => {
     const result = getNowAsEpoch();
     expect(typeof result).toBe('number');

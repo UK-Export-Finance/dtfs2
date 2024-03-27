@@ -34,7 +34,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore) => {
         $set: {
           'cron.site': {
             status: ESTORE_CRON_STATUS.COMPLETED,
-            timestamp: getNowAsEpoch,
+            timestamp: getNowAsEpoch(),
             id: siteExistsResponse.data.siteId,
           },
         },
@@ -60,7 +60,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore) => {
           'cron.site.create': {
             response: siteExistsResponse.data,
             status: ESTORE_CRON_STATUS.RUNNING,
-            timestamp: getNowAsEpoch,
+            timestamp: getNowAsEpoch(),
           },
           'cron.site.status': ESTORE_CRON_STATUS.RUNNING,
           'cron.site.id': siteExistsResponse?.data?.siteId,
@@ -84,7 +84,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore) => {
           'cron.site.create': {
             response: siteExistsResponse.data,
             status: ESTORE_CRON_STATUS.FAILED,
-            timestamp: getNowAsEpoch,
+            timestamp: getNowAsEpoch(),
           },
         },
       },
