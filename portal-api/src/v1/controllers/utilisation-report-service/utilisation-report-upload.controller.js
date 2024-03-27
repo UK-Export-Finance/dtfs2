@@ -52,14 +52,16 @@ const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submitted
     const { teamName, emails } = await getPaymentOfficerTeamDetailsFromBank(bankId);
     const formattedSubmittedDate = formatDateForEmail(submittedDate);
 
-    emails.forEach(async (email) => {
-      await sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION, email, {
-        recipient: teamName,
-        reportPeriod,
-        reportSubmittedBy,
-        reportSubmittedDate: formattedSubmittedDate,
-      });
-    });
+    await Promise.all(
+      emails.map(async (email) => {
+        await sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION, email, {
+          recipient: teamName,
+          reportPeriod,
+          reportSubmittedBy,
+          reportSubmittedDate: formattedSubmittedDate,
+        });
+      }),
+    );
     return { paymentOfficerEmails: emails };
   } catch (error) {
     console.error('Unable to get payment officer team details and send email %s', error);

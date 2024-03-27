@@ -1,4 +1,3 @@
-const { isArray } = require('lodash');
 const { format, subMonths } = require('date-fns');
 const externalApi = require('../../external-api/api');
 const api = require('../../v1/api');
@@ -113,13 +112,15 @@ const getEmailRecipient = (paymentOfficerTeam, bankName) => {
  */
 const sendEmailForBank = async ({ emailDescription, sendEmailCallback, bank }) => {
   const { name: bankName, paymentOfficerTeam, id: bankId } = bank;
-  const paymentOfficerTeamEmails = paymentOfficerTeam?.emails;
-
   try {
-    if (!isArray(paymentOfficerTeamEmails) || !paymentOfficerTeamEmails.length) {
-      console.warn(`Not sending ${emailDescription} email to '${bankName}' - no payment officer team emails set`);
-    } else {
-      paymentOfficerTeamEmails.forEach(async (paymentOfficerTeamEmail) => {
+    const paymentOfficerTeamEmails = paymentOfficerTeam?.emails;
+
+    if (!Array.isArray(paymentOfficerTeamEmails) || !paymentOfficerTeamEmails.length) {
+      console.warn(`Not sending ${emailDescription} email to '${bankName}' - paymentOfficerTeam.emails is not an array or is empty`);
+      return;
+    }
+    await Promise.all(
+      paymentOfficerTeamEmails.map(async (paymentOfficerTeamEmail) => {
         if (!isValidEmail(paymentOfficerTeamEmail)) {
           console.error(`Failed to send ${emailDescription} email to '${paymentOfficerTeamEmail}' - invalid payment officer email`);
         } else {
@@ -129,9 +130,8 @@ const sendEmailForBank = async ({ emailDescription, sendEmailCallback, bank }) =
           });
           console.info(`Successfully sent '${emailDescription}' email to '${bankName}' (bank ID: ${bankId})`);
         }
-
-      });
-    }
+      }),
+    );
   } catch (error) {
     console.error(`Failed to send ${emailDescription} email for bank '${bankName}':`, error);
   }

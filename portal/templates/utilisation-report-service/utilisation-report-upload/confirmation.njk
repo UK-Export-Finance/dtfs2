@@ -10,10 +10,11 @@
                 </h1>
             </div>
             <p class="govuk-body" data-cy="paragraph">A confirmation email has been sent to:
+                <ul class="govuk-list govuk-list--bullet">
                 {% for paymentOfficerEmail in paymentOfficerEmails %}
-                    {% set punctuation = '.' if loop.index == loop.length else ',' %}
-                    {{ paymentOfficerEmail }}{{punctuation}}
+                    <li data-cy="list-item-link-{{ paymentOfficerEmail }}">{{ paymentOfficerEmail }}</li>
                 {% endfor %}
+                <ul>
             </p>
             <a href="/logout" role="button" class="govuk-button" data-module="govuk-button" data-cy="logout-button">Sign out</a>
         </div>
