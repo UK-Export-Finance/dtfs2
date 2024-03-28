@@ -11,14 +11,14 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateFacility = async (facilityId, tfmUpdate, sessionUser, options = {}) => {
+const updateFacility = async ({ facilityId, tfmUpdate, sessionUser, isSystemUpdate }) => {
   const collection = await db.getCollection(DB_COLLECTIONS.TFM_FACILITIES);
 
   const update = {
     tfm: {
       ...tfmUpdate,
     },
-    auditDetails: options.isSystemUpdate ? generateSystemAuditDetails() : generateTfmUserAuditDetails(sessionUser._id),
+    auditDetails: isSystemUpdate ? generateSystemAuditDetails() : generateTfmUserAuditDetails(sessionUser._id),
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
@@ -44,13 +44,14 @@ exports.updateFacilityPut = async (req, res) => {
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
 
-  const { facilityUpdate, user, options } = req.body;
+  const { tfmUpdate, user, isSystemUpdate } = req.body;
 
   if (!user?._id) {
     return res.status(400).send({ status: 400, message: 'Invalid user' })
   }
 
-  const updatedFacility = await updateFacility(facilityId, facilityUpdate, user, options);
+  const updatedFacility = await updateFacility({ 
+    facilityId, tfmUpdate, sessionUser: user, isSystemUpdate});
 
   return res.status(200).json(updatedFacility);
 };

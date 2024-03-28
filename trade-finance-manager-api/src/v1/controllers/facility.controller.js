@@ -91,7 +91,7 @@ const updateFacility = async (req, res) => {
   const { facilityId } = req.params;
   const facilityUpdate = req.body;
   try {
-    const updatedFacility = await api.updateFacility(facilityId, facilityUpdate, req.user);
+    const updatedFacility = await api.updateFacility({ facilityId, tfmUpdate: facilityUpdate, sessionUser: req.user});
     return res.status(200).send({
       updateFacility: updatedFacility.tfm
     });

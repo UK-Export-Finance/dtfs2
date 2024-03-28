@@ -105,7 +105,7 @@ const updateFacilities = async (deal, sessionUser) => {
         riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
       };
 
-      const updateFacilityResponse = await api.updateFacility(facilityId, facilityUpdate, sessionUser);
+      const updateFacilityResponse = await api.updateFacility({ facilityId, tfmUpdate: facilityUpdate, sessionUser });
 
       // add the updated tfm object to returned facility.
       // if we return updateFacilityResponse, we'll get facilitySnapshot

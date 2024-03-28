@@ -64,10 +64,10 @@ describe('/v1/tfm/facilities', () => {
       const createdFacility = postResult.body;
 
       const updatedFacility = {
-        facilityUpdate: {
+        tfmUpdate: {
           bondIssuerPartyUrn: 'testUrn',
         },
-        user: { _id: 'bbbbbbbbbbbbbbbbbbbbbbbb' }
+        user: { _id: 'bbbbbbbbbbbbbbbbbbbbbbbb' },
       };
 
       await api
@@ -81,7 +81,7 @@ describe('/v1/tfm/facilities', () => {
       const { body, status } = await api.put(updatedFacility).to(`/v1/tfm/facilities/${createdFacility._id}`);
 
       expect(status).toEqual(200);
-      expect(body.tfm).toEqual(updatedFacility.facilityUpdate);
+      expect(body.tfm).toEqual(updatedFacility.tfmUpdate);
       expect(body.auditDetails).toEqual({
         lastUpdatedAt: expect.any(String),
         lastUpdatedByTfmUserId: 'bbbbbbbbbbbbbbbbbbbbbbbb',

@@ -111,7 +111,7 @@ const updatedIssuedFacilities = async (deal, sessionUser) => {
        * Add the updated properties to the returned facility
        * to retain flat, generic facility mapping used in deal submission calls.
        * */
-        const updateFacilityResponse = await api.updateFacility(facilityId, facilityUpdate, sessionUser);
+        const updateFacilityResponse = await api.updateFacility({ facilityId, tfmUpdate: facilityUpdate, sessionUser });
         facility.tfm = updateFacilityResponse.tfm;
         updatedFacilities.push(facility);
       }

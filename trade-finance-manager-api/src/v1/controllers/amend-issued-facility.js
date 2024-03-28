@@ -130,7 +130,7 @@ const amendIssuedFacility = async (amendment, facility, deal, sessionUser) => {
         };
 
         // Updated `facility.tfm` property
-        await api.updateFacility(facility._id, facilityTfmUpdate, sessionUser);
+        await api.updateFacility({ facilityId: facility._id, tfmUpdate: facilityTfmUpdate, sessionUser });
       }
 
       return true;
