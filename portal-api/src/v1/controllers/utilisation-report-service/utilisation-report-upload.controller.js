@@ -53,14 +53,13 @@ const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submitted
     const formattedSubmittedDate = formatDateForEmail(submittedDate);
 
     await Promise.all(
-      emails.map(async (email) => {
-        await sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION, email, {
+      emails.map((email) =>
+        sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION, email, {
           recipient: teamName,
           reportPeriod,
           reportSubmittedBy,
           reportSubmittedDate: formattedSubmittedDate,
-        });
-      }),
+        })),
     );
     return { paymentOfficerEmails: emails };
   } catch (error) {
