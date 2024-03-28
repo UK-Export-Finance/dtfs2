@@ -5,7 +5,7 @@ const aDeal = require('../../deal-builder');
 const CONSTANTS = require('../../../../src/constants');
 
 const mockUser = {
-  _id: '123456789',
+  _id: 'aaaaaaaaaaaaaaaaaaaaaaaa', // This will be replaced by commonised version from other PR
   username: 'temp',
   roles: [],
   bank: {
@@ -72,6 +72,7 @@ describe('/v1/tfm/facilities', () => {
         facilityUpdate: {
           bondIssuerPartyUrn: 'testUrn',
         },
+        user: { _id: 'bbbbbbbbbbbbbbbbbbbbbbbb' }
       };
 
       await api.put({
@@ -83,6 +84,13 @@ describe('/v1/tfm/facilities', () => {
 
       expect(status).toEqual(200);
       expect(body.tfm).toEqual(updatedFacility.facilityUpdate);
+      expect(body.auditDetails).toEqual({
+        lastUpdatedAt: expect.any(String),
+        lastUpdatedByTfmUserId: 'bbbbbbbbbbbbbbbbbbbbbbbb',
+        lastUpdatedByIsSystem: null,
+        lastUpdatedByPortalUserId: null,
+        noUserLoggedIn: null,
+      });
     });
   });
 });

@@ -84,7 +84,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
     const dealWithTfmData = await addTfmDealData(updatedMappedDeal);
     const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData);
     const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn);
-    const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions);
+    const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions, checker);
     const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
 
     if (updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
@@ -134,7 +134,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       mappedDeal.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
       console.info('TFM deal %s submission type has been updated to %s', dealId, mappedDeal.submissionType);
     }
-    const updatedDeal = await updatedIssuedFacilities(mappedDeal);
+    const updatedDeal = await updatedIssuedFacilities(mappedDeal, checker);
     /**
      * Current requirement only allows AIN & MIN deals to be send to ACBS
      * This call UPDATES facility record by updating their stage from
@@ -187,7 +187,7 @@ exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
  * Submits a deal to TFM before the UKEF IDs are generated.
  * @param {string} dealId - The ID of the deal to be submitted.
  * @param {string} dealType - The type of the deal.
- * @param {string} checker - The name of the checker.
+ * @param {object} checker - Portal session user submitting the deal
  * @returns {Promise<Object> | Boolean} - A promise that resolves to an object, other false.
  * @throws {Error} - If there is an error during the submission process.
  */

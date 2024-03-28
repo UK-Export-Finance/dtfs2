@@ -15,7 +15,7 @@ const { mapBssEwcsFacility } = require('../mappings/map-submitted-deal/map-bss-e
  * @param {Object} deal TFM deal object
  * @returns {Boolean} Boolean upon execution
  */
-const amendIssuedFacility = async (amendment, facility, deal) => {
+const amendIssuedFacility = async (amendment, facility, deal, sessionUser) => {
   try {
     if (amendment && facility && deal) {
       const {
@@ -130,7 +130,7 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
         };
 
         // Updated `facility.tfm` property
-        await api.updateFacility(facility._id, facilityTfmUpdate);
+        await api.updateFacility(facility._id, facilityTfmUpdate, sessionUser);
       }
 
       return true;
