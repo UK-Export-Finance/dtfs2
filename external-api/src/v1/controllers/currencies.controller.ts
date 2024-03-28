@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as utils from '../../utils';
+import { sortArrayAlphabetically } from '../../helpers';
 import { Currency } from '../../interfaces';
 import { CURRENCIES } from '../../external-api';
 const allCurrencies: Currency[] = CURRENCIES;
@@ -9,7 +9,7 @@ export const findOneCurrency = (id: any) => allCurrencies.find((c: any) => c.id.
 export const findAll = (req: Request, res: Response) =>
   res.status(200).send({
     count: allCurrencies.length,
-    currencies: utils.sortArrayAlphabetically(allCurrencies, 'id'),
+    currencies: sortArrayAlphabetically(allCurrencies, 'id'),
   });
 
 export const findOne = (req: Request, res: Response) => {

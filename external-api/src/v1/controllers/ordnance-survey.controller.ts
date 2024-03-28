@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
-import { isValidPostcode } from '../../utils/inputValidations';
+import { isValidPostcode } from '../../helpers';
 dotenv.config();
 
 const ordnanceSurveyBaseUrl = process.env.ORDNANCE_SURVEY_API_URL;

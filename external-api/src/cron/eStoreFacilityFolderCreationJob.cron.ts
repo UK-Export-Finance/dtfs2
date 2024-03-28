@@ -1,7 +1,6 @@
 import { getCollection } from '../database';
 import { Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
-import { eStoreCronJobManager } from './eStoreCronJobManager';
 import { createFacilityFolder, uploadSupportingDocuments } from '../v1/controllers/estore/eStoreApi';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails';
 
@@ -31,8 +30,6 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
 
       if (facilityFoldersResponse.every((item: any) => item.status === 201)) {
         console.info('Cron task completed: Facility folders have been successfully created');
-        // stop and the delete the cron job - this in order to release the memory
-        eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealId}`);
 
         // update the record inside `cron-job-logs` collection to indicate that the cron job finished executing
         await cronJobLogsCollection.updateOne(
@@ -59,7 +56,6 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
         }
       }
     } else {
-      eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealId}`);
       console.error('Unable to create the facility folders');
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed
       await cronJobLogsCollection.updateOne(
@@ -72,6 +68,5 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
   } catch (error) {
     console.error('Unable to create the facility folders %s', error);
     // stop and the delete the cron job - this in order to release the memory
-    eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealId}`);
   }
 };

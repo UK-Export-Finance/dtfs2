@@ -80,6 +80,8 @@ const AMENDMENT_STATUS = {
   NOT_STARTED: 'Not started',
 };
 
+const DEFAULT_COUNTRY = 'United Kingdom';
+
 module.exports = {
   DEAL_TYPE,
   DEAL_PRODUCT_CODE,
@@ -95,4 +97,5 @@ module.exports = {
   AMENDMENT_TYPE,
   AMENDMENT_BANK_DECISION,
   AMENDMENT_STATUS,
+  DEFAULT_COUNTRY,
 };
