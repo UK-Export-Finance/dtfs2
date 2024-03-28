@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
@@ -107,7 +107,7 @@ exports.updateDealPut = async (req, res) => {
   return res.status(code).json(response);
 };
 
-const updateDealSnapshot = async (deal, snapshotChanges) => {
+const updateDealSnapshot = async (deal, snapshotChanges, sessionUser) => {
   const dealId = deal._id;
   if (ObjectId.isValid(dealId)) {
     try {
@@ -116,6 +116,7 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
         dealSnapshot: {
           ...snapshotChanges,
         },
+        auditDetails: generatePortalUserAuditDatabaseRecord(sessionUser._id),
       };
 
       const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(String(dealId)) } }, $.flatten(withoutId(update)), {
@@ -135,21 +136,28 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
 
 exports.updateDealSnapshotPut = async (req, res) => {
   const dealId = req.params.id;
-  if (ObjectId.isValid(dealId)) {
-    const deal = await findOneDeal(dealId);
+  if (!ObjectId.isValid(dealId)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  }
+  const { snapshotUpdate, user } = req.body;
+
+  if (!ObjectId.isValid(user?._id)) {
+    return res.status(400).send({ status: 400, message: 'Invalid User Id' });
+  }
+
+  const deal = await findOneDeal(dealId);
 
     const snapshotUpdate = req.body;
 
-    if (snapshotUpdate.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-      const dealFacilities = await findAllFacilitiesByDealId(dealId);
-      snapshotUpdate.facilities = dealFacilities;
-    }
-
-    if (deal) {
-      const updatedDeal = await updateDealSnapshot(deal, snapshotUpdate);
-      return res.status(200).json(updatedDeal);
-    }
-    return res.status(404).send({ status: 404, message: 'Deal not found' });
+  if (snapshotUpdate.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    const dealFacilities = await findAllFacilitiesByDealId(dealId);
+    snapshotUpdate.facilities = dealFacilities;
   }
-  return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+
+  const updatedDeal = await updateDealSnapshot(
+    deal,
+    snapshotUpdate,
+    user,
+  );
+  return res.status(200).json(updatedDeal);
 };

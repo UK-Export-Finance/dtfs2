@@ -203,6 +203,11 @@ tfmRouter.route('/deals/:id').delete(
  *                       properties:
  *                         aNewField:
  *                           example: true
+ *                     user
+ *                       type: object
+ *                       properties:
+ *                         _id:
+ *                           example: '1234567890abcdef12345678'
  *       404:
  *         description: Not found
  */

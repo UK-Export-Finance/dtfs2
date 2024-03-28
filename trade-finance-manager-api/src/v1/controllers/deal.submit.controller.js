@@ -167,7 +167,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
        * This is the one and only time that TFM updates a snapshot.
        * Without this, it would involve additional API calls going around in circles.
        */
-      const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate);
+      const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate, checker);
 
       updatedDeal.submissionType = dealSnapshot.submissionType;
 

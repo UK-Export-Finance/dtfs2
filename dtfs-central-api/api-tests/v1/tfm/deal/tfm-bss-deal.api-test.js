@@ -99,9 +99,28 @@ describe('/v1/tfm/deal/:id', () => {
   });
 
   describe('PUT /v1/tfm/deal/:id/snapshot', () => {
-    it('404s if updating an unknown id', async () => {
-      const { status } = await api.put({}).to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
+    it('400s if the deal id provided is invalid', async () => {
+      const { status, body } = await api.put({}).to('/v1/tfm/deals/test/snapshot');
+      expect(status).toEqual(400);
+      expect(body.message).toEqual('Invalid Deal Id');
+    });
+
+    it('400s if no user is given', async () => {
+      const { status, body } = await api.put({}).to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
+      expect(status).toEqual(400);
+      expect(body.message).toEqual('Invalid User Id');
+    });
+
+    it('400s if user id is invalid', async () => {
+      const { status, body } = await api.put({ user: { _id: 'test' } }).to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
+      expect(status).toEqual(400);
+      expect(body.message).toEqual('Invalid User Id');
+    });
+
+    it('404s if deal id is valid but does not exist', async () => {
+      const { status, body } = await api.put({ user: mockUser }).to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
       expect(status).toEqual(404);
+      expect(body.message).toEqual('Deal not found');
     });
 
     it('updates deal.dealSnapshot whilst retaining existing snapshot deal.tfm', async () => {
@@ -132,24 +151,35 @@ describe('/v1/tfm/deal/:id', () => {
         .to(`/v1/tfm/deals/${dealId}`);
 
       const snapshotUpdate = {
-        someNewField: true,
-        testing: true,
+        snapshotUpdate: {
+          someNewField: true,
+          testing: true,
+        },
+        user: { _id: '1234567890abcdef12345678' },
       };
 
       const { status } = await api.put(snapshotUpdate).to(`/v1/tfm/deals/${dealId}/snapshot`);
 
       expect(status).toEqual(200);
 
-      const { body: dealAfterUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+      const { body: bodyAfterUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
 
-      expect(dealAfterUpdate.deal.dealSnapshot).toMatchObject({
+      expect(bodyAfterUpdate.deal.dealSnapshot).toMatchObject({
         ...newDeal,
-        ...snapshotUpdate,
+        ...snapshotUpdate.snapshotUpdate,
       });
 
-      expect(dealAfterUpdate.deal.tfm).toEqual({
+      expect(bodyAfterUpdate.deal.tfm).toEqual({
         ...mockTfm.tfm,
         lastUpdated: expect.any(Number),
+      });
+
+      expect(bodyAfterUpdate.deal.auditDetails).toEqual({
+        lastUpdatedAt: expect.any(String),
+        lastUpdatedByPortalUserId: '1234567890abcdef12345678',
+        lastUpdatedByTfmUserId: null,
+        lastUpdatedByIsSystem: null,
+        noUserLoggedIn: null,
       });
     });
   });
