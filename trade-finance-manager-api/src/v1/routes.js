@@ -79,7 +79,6 @@ authRouter.use('/', tasksRouter);
  */
 openRouter.route('/feedback').post(feedbackController.create);
 
-// token-validator
 authRouter.get('/validate-user-token', (_req, res) => res.status(200).send());
 
 openRouter.route('/auth/login-url').get(authController.getLoginUrl);
