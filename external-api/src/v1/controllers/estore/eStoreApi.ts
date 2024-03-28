@@ -21,6 +21,7 @@ import {
 import { sendEmail } from '../email.controller';
 import { EMAIL_TEMPLATES, ESTORE_CRON_STATUS, ENDPOINT } from '../../../constants';
 import { validUkefId, isValidExporterName, isValidSiteId } from '../../../helpers';
+import { estoreInternalServerError } from '../../../helpers/errors/estore-internal-server-error';
 
 dotenv.config();
 
@@ -93,14 +94,7 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
     };
   } catch (error: any) {
     console.error('❌ eStore site exist check failed %O', error?.response?.data);
-
-    return {
-      status: HttpStatusCode.InternalServerError,
-      data: {
-        status: HttpStatusCode.InternalServerError,
-        message: error,
-      },
-    };
+    return estoreInternalServerError(error);
   }
 };
 
@@ -133,14 +127,7 @@ const postToEstore = async (
   } catch (error: any) {
     console.error('❌ Error calling eStore endpoint %s %o, email has been dispatched.', endpoint, error);
     sendEmail(EMAIL_TEMPLATES.ESTORE_FAILED, String(UKEF_INTERNAL_NOTIFICATION), data);
-
-    return {
-      status: HttpStatusCode.InternalServerError,
-      data: {
-        status: HttpStatusCode.InternalServerError,
-        message: error,
-      },
-    };
+    return estoreInternalServerError(error);
   }
 };
 
@@ -162,14 +149,7 @@ export const createExporterSite = async (exporterName: EstoreSite): Promise<Site
     return response;
   } catch (error: any) {
     console.error('❌ eStore create exporter site has failed %O', { data: error?.response?.data, status: error?.response?.status });
-
-    return {
-      status: HttpStatusCode.InternalServerError,
-      data: {
-        status: HttpStatusCode.InternalServerError,
-        message: error,
-      },
-    };
+    return estoreInternalServerError(error);
   }
 };
 
@@ -191,14 +171,7 @@ export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promi
     return response;
   } catch (error: any) {
     console.error('❌ eStore adding facility term has failed %O', { data: error?.response?.data, status: error?.response?.status });
-
-    return {
-      status: HttpStatusCode.InternalServerError,
-      data: {
-        status: HttpStatusCode.InternalServerError,
-        message: error,
-      },
-    };
+    return estoreInternalServerError(error);
   }
 };
 
@@ -222,14 +195,7 @@ export const createBuyerFolder = async (siteId: string, buyerName: EstoreBuyer):
     return postToEstore(endpoint, [buyerName], oneMinute);
   } catch (error: any) {
     console.error('❌ eStore create buyer folder request has failed %O', { data: error?.response?.data, status: error?.response?.status });
-
-    return {
-      status: HttpStatusCode.InternalServerError,
-      data: {
-        status: HttpStatusCode.InternalServerError,
-        message: error,
-      },
-    };
+    return estoreInternalServerError(error);
   }
 };
 
@@ -253,14 +219,7 @@ export const createDealFolder = async (siteId: string, data: EstoreDealFolder): 
     return postToEstore(endpoint, [data], twoMinutes);
   } catch (error: any) {
     console.error('❌ eStore create deal folder request has failed %O', { data: error?.response?.data, status: error?.response?.status });
-
-    return {
-      status: HttpStatusCode.InternalServerError,
-      data: {
-        status: HttpStatusCode.InternalServerError,
-        message: error,
-      },
-    };
+    return estoreInternalServerError(error);
   }
 };
 
@@ -289,14 +248,7 @@ export const createFacilityFolder = async (
     return postToEstore(endpoint, [data], twoMinutes);
   } catch (error: any) {
     console.error('❌ eStore create facility folder request has failed %O', { data: error?.response?.data, status: error?.response?.status });
-
-    return {
-      status: HttpStatusCode.InternalServerError,
-      data: {
-        status: HttpStatusCode.InternalServerError,
-        message: error,
-      },
-    };
+    return estoreInternalServerError(error);
   }
 };
 
@@ -325,13 +277,6 @@ export const uploadSupportingDocuments = async (
     return postToEstore(endpoint, [file], oneMinute);
   } catch (error: any) {
     console.error('❌ eStore uploading document has failed %O', { data: error?.response?.data, status: error?.response?.status });
-
-    return {
-      status: HttpStatusCode.InternalServerError,
-      data: {
-        status: HttpStatusCode.InternalServerError,
-        message: error,
-      },
-    };
+    return estoreInternalServerError(error);
   }
 };

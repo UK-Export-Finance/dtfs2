@@ -174,6 +174,6 @@ export interface EstoreErrorResponse {
   readonly data: {
     status?: number;
     siteId?: string;
-    message?: string;
+    message?: string | object;
   };
 }
