@@ -24,7 +24,7 @@ const df = require('durable-functions');
 const retryOptions = require('../helpers/retryOptions');
 const mappings = require('../mappings');
 
-module.exports = df.orchestrator(function* Facility(context) {
+df.app.orchestration('acbs-amend-facility-loan-record', function* Facility(context) {
   try {
     if (context.df.getInput()) {
       const { facilityId, facility, amendments, fmr } = context.df.getInput();
