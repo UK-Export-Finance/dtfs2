@@ -20,7 +20,7 @@ describe(page, () => {
     wrapper.expectText('[data-cy="paragraph"]').toRead('A confirmation email has been sent to:');
     for (const paymentOfficerEmail of paymentOfficerEmails) {
       wrapper.expectElement(`ul.govuk-list > li:contains("${paymentOfficerEmail}")`).toExist();
-  }
+    }
   });
 
   it('should render Signout button', () => {
