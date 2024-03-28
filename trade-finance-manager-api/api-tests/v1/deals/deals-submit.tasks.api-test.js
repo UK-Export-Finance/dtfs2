@@ -13,7 +13,7 @@ const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const CONSTANTS = require('../../../src/constants');
 const { createDealTasks } = require('../../../src/v1/controllers/deal.tasks');
 const { generateTaskEmailVariables } = require('../../../src/v1/helpers/generate-task-email-variables');
-const submitDeal = require('../utils/submitDeal');
+const { submitDeal, createSubmitBody } = require('../utils/submitDeal');
 const { mockFindOneDeal, mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const MOCK_DEAL_AIN_NO_COMPANIES_HOUSE = require('../../../src/v1/__mocks__/mock-deal-no-companies-house');
 const MOCK_DEAL_MIN = require('../../../src/v1/__mocks__/mock-deal-MIN');
@@ -23,11 +23,6 @@ const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notif
 const MOCK_TEAMS = require('../../../src/v1/__mocks__/mock-teams');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
-
-const createSubmitBody = (mockDeal) => ({
-  dealId: mockDeal._id,
-  dealType: 'BSS/EWCS',
-});
 
 const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
 const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
