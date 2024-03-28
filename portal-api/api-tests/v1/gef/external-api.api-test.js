@@ -3,8 +3,6 @@ const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const { MAKER } = require('../../../src/v1/roles/roles');
 
-jest.unmock('../../../src/external-api/api');
-
 const baseUrl = '/v1/gef';
 
 describe(baseUrl, () => {

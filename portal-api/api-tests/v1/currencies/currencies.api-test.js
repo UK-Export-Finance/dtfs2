@@ -9,8 +9,6 @@ const { withNoRoleAuthorisationTests } = require('../../common-tests/role-author
 
 const { as, get } = require('../../api')(app);
 
-jest.unmock('../../../src/external-api/api');
-
 const usd = {
   currencyId: 37,
   text: 'USD - US Dollars',
