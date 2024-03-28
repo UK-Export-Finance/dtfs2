@@ -65,8 +65,11 @@ describe('/v1/tfm/deal/:id', () => {
       }).to(`/v1/tfm/deals/${dealId}`);
 
       const snapshotUpdate = {
-        someNewField: true,
-        testing: true,
+        snapshotUpdate: {
+          someNewField: true,
+          testing: true,
+        },
+        user: { _id: '1234567890abcdef12345678'},
       };
 
       const { status, body } = await api.put(snapshotUpdate).to(`/v1/tfm/deals/${dealId}/snapshot`);
