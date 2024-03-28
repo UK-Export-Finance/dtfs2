@@ -18,8 +18,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
   const utilisationReportsAlias = 'utilisationReportsAlias';
 
   const displayStatusSelector = 'td > strong[data-cy="utilisation-report-reconciliation-status"]';
-  const tableCellCheckboxSelector = (reportId, status) =>
-    `th > div > div > input[data-cy="table-cell-checkbox--set-status--reportId-${reportId}-currentStatus-${status}"]`;
+  const tableCellCheckboxSelector = (reportId, status) => `input[data-cy="table-cell-checkbox--set-status--reportId-${reportId}-currentStatus-${status}"]`;
 
   const getDisplayStatus = (utilisationReportReconciliationStatus) => {
     switch (utilisationReportReconciliationStatus) {
