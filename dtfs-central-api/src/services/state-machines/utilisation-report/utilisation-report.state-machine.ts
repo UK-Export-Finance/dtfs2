@@ -67,8 +67,6 @@ export class UtilisationReportStateMachine {
         switch (event.type) {
           case 'REPORT_UPLOADED':
             return handleUtilisationReportReportUploadedEvent(this.report, event.payload);
-          case 'MANUALLY_SET_COMPLETED':
-            return handleUtilisationReportManuallySetCompletedEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }

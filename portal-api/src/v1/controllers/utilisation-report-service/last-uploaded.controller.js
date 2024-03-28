@@ -4,11 +4,9 @@ const getLastUploadedReportByBankId = async (req, res) => {
   try {
     const { bankId } = req.params;
 
-    const uploadedReports = (
-      await api.getUtilisationReports(bankId, {
-        excludeNotReceived: true,
-      })
-    ).filter((report) => !!report.azureFileInfo);
+    const uploadedReports = await api.getUtilisationReports(bankId, {
+      excludeNotReceived: true,
+    });
 
     const lastUploadedReport = uploadedReports.at(-1);
     if (!lastUploadedReport) {

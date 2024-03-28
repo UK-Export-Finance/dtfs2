@@ -24,7 +24,7 @@
 
       <tbody class="govuk-table__body">
       {% for summaryItem in summaryItems %}
-        {% set checkboxId = ['set-status--reportId-', summaryItem.reportId] | join %}
+        {% set checkboxId = ['set-status--reportId-', summaryItem.reportId, '-currentStatus-', summaryItem.status] | join %}
         {% set checkboxLabel %}
           {# TODO FN-1603 - link to individual bank report page (replace `div` with `a`) #}
           {# <a class="govuk-link govuk-link--no-visited-state table-cell-checkbox-text" href="#">#}
@@ -43,7 +43,7 @@
             class="govuk-table__header govuk-!-font-weight-regular"
             data-sort-value="{{ summaryItem.bank.name }}"
           >
-            {% if user | userIsInTeam(["PDC_RECONCILE"]) %}
+            {% if user | userIsInTeam(["PDC_RECONCILE"]) and summaryItem.status !== 'REPORT_NOT_RECEIVED' %}
               {{ tableCellCheckbox.render({
                 checkboxId: checkboxId,
                 label: checkboxLabel
