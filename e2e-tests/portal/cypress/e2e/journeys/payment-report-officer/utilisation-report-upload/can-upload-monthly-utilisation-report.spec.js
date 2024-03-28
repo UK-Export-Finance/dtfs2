@@ -37,7 +37,7 @@ context('Monthly utilisation report upload', () => {
         .contains("The selected file must contain the reporting period as part of its name, for example '02-2023'");
     });
 
-    it("should display an error if the file selected does not contain the word 'quarterly'", () => {
+    it("should display an error if the file selected does not contain the word 'monthly'", () => {
       utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-next_week.xlsx');
       utilisationReportUpload.continueButton().click();
 

@@ -143,6 +143,18 @@ const getFilenameReportPeriodRegex = (dueReportPeriod) => {
 };
 
 /**
+ * Checks whether or not the supplied report period exists
+ * in the supplied filename
+ * @param {import('@ukef/dtfs2-common').ReportPeriod} dueReportPeriod - The due report period
+ * @param {string} filename - The filename
+ * @return {boolean}
+ */
+const isReportPeriodInFilename = (dueReportPeriod, filename) => {
+  const filenameReportPeriodRegex = getFilenameReportPeriodRegex(dueReportPeriod);
+  return filenameReportPeriodRegex.test(filename);
+};
+
+/**
  * Gets an example filename for the specified report period
  * @param {import('@ukef/dtfs2-common').ReportPeriod} dueReportPeriod - The due report period
  * @returns {string} An example filename
@@ -192,8 +204,7 @@ const validateFilenameFormat = (filename, dueReportPeriod) => {
     return { filenameError };
   }
 
-  const filenameReportPeriodRegex = getFilenameReportPeriodRegex(dueReportPeriod);
-  if (!filenameReportPeriodRegex.test(filename)) {
+  if (!isReportPeriodInFilename(dueReportPeriod, filename)) {
     const exampleFilenameReportPeriod = getExampleFilenameReportPeriod(dueReportPeriod);
     const filenameError = `The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`;
     return { filenameError };

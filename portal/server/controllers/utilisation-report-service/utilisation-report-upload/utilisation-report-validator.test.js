@@ -167,6 +167,20 @@ describe('utilisation-report-validator', () => {
           });
         });
 
+        it('should return an error with an example filename when the filename contains an incorrect month', () => {
+          // Arrange
+          const incorrectMonth = allMonths.find((month) => month.index === index + 1)?.short ?? MONTH_NAMES.JANUARY.short;
+          const filename = `Monthly Bank-${incorrectMonth}-${year}.xlsx`;
+
+          const exampleFilenameReportPeriod = `${numeric}-${year}`;
+
+          // Act
+          const { filenameError } = validateFilenameFormat(filename, dueReportPeriod);
+
+          // Assert
+          expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+        });
+
         it('should return an error with an example filename when the filename contains an incorrect year', () => {
           // Arrange
           const incorrectYear = year - 1;
@@ -223,6 +237,20 @@ describe('utilisation-report-validator', () => {
         expect(filenameError).toBeUndefined();
       });
 
+      it('should return an error with an example filename when the filename contains an incorrect month', () => {
+        // Arrange
+        const incorrectMonth = MONTH_NAMES.JANUARY.short;
+        const filename = `Quarterly Bank-${incorrectMonth}-${year}.xlsx`;
+
+        const exampleFilenameReportPeriod = `0${endMonth}-${year}`;
+
+        // Act
+        const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
+
+        // Assert
+        expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+      });
+
       it('should return an error with an example filename when the filename contains an incorrect year', () => {
         // Arrange
         const incorrectYear = year - 1;
@@ -275,10 +303,10 @@ describe('utilisation-report-validator', () => {
         expect(filenameError).toBeUndefined();
       });
 
-      it('should return an error with an example filename when the filename contains an incorrect start year', () => {
+      it('should return an error with an example filename when the filename contains an incorrect month', () => {
         // Arrange
-        const incorrectYear = endYear - 1;
-        const filename = `Quarterly Bank_${endMonthNames[0]}_${incorrectYear}.xlsx`;
+        const incorrectMonth = MONTH_NAMES.JANUARY.short;
+        const filename = `Quarterly Bank-${incorrectMonth}-${endYear}.xlsx`;
 
         const exampleFilenameReportPeriod = `0${endMonth}-${endYear}`;
 
