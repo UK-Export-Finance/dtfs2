@@ -63,30 +63,35 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
       throw new Error('❌ Invalid site exist response received');
     }
 
-    let status;
-    let siteId;
+    let statusCode: number = 0;
+    let status: string = '';
+    let siteId: string = '';
 
     /**
      * `404` response is returned inside `response`
      * object if the site does not exist.
+     * @example response: { "message": "Not found", "statusCode": 404 }
      */
     if (response.response) {
-      status = response.response?.data?.statusCode;
+      statusCode = response.response?.data?.statusCode;
+      status = response.response?.data?.message;
       siteId = '';
     }
 
     /**
      * If not `404` response is returned inside
      * `data` object.
-     * @example data: { siteId: '1234567', status: 'Provisioning' }
+     * @example data: { "siteId": "1234567", "status": "Provisioning",  }
+     * @example data: { "siteId": "1234567", "status": "Created" }
      */
     if (response.data) {
+      statusCode = response.status;
       status = response.data.status;
       siteId = response.data.siteId;
     }
 
     return {
-      status,
+      status: statusCode,
       data: {
         status,
         siteId,
