@@ -6,7 +6,7 @@ import { createBuyerFolder, addFacilityToTermStore } from '../v1/controllers/est
 import { HttpStatusCode } from 'axios';
 import { getNowAsEpoch } from '../helpers/date';
 
-const acceptableStatus = [HttpStatusCode.Ok, HttpStatusCode.Created];
+const acceptableStatuses = [HttpStatusCode.Ok, HttpStatusCode.Created];
 
 export const eStoreTermStoreAndBuyerFolder = async (eStoreData: Estore) => {
   const cronJobLogs = await getCollection('cron-job-logs');
@@ -19,7 +19,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: Estore) => {
       eStoreData.facilityIdentifiers.map((id: number) => addFacilityToTermStore({ id: id.toString() })),
     );
 
-    if (responses.every((term) => acceptableStatus.includes(term?.status))) {
+    if (responses.every((term) => acceptableStatuses.includes(term?.status))) {
       console.info('Facilities have been added to term store for deal %s', eStoreData.dealIdentifier);
 
       // Update `cron-job-logs`
@@ -62,7 +62,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: Estore) => {
       buyerName: eStoreData.buyerName,
     });
 
-    if (acceptableStatus.includes(response?.status)) {
+    if (acceptableStatuses.includes(response?.status)) {
       console.info('Creating buyer directory %s for deal %s', eStoreData.buyerName, eStoreData.dealIdentifier);
 
       // Update `cron-job-logs`
