@@ -26,10 +26,13 @@ const payloadVerification = (payload, template) => {
   const propertiesDataTypeMatch = payloadKeys.every((key) => {
     const payloadKeyDataType = typeof payload[key];
     const templateKeyDataType = template[key] ? template[key].name : '';
-    if (payloadKeyDataType.toLowerCase() !== templateKeyDataType.toLowerCase()) {
+    const keysHaveMatchingTypes = payloadKeyDataType.toLowerCase() === templateKeyDataType.toLowerCase();
+
+    if (!keysHaveMatchingTypes) {
       console.error(`Payload verification error - type mismatch for field "${key}": payload type "${payloadKeyDataType}", template type "${templateKeyDataType}"`);
     }
-    return payloadKeyDataType.toLowerCase() === templateKeyDataType.toLowerCase();
+
+    return keysHaveMatchingTypes;
   });
 
   if (missingProperties.length) {
