@@ -144,7 +144,7 @@ export const create = async (req: Request, res: Response) => {
         );
 
         // Update `tfm-deals`
-        await tfmDeals.updateOne({ _id: { $eq: new ObjectId(_id) } }, { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } });
+        await tfmDeals.updateOne({ _id: { $eq: new ObjectId(eStoreData.dealId) } }, { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } });
 
         // Update object
         eStoreData.siteId = String(siteExistsResponse.data.siteId);
