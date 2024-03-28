@@ -127,47 +127,50 @@ const mockResponses = {
   },
 };
 
-// Mock arguments
-const currencies = [
-  'source=GBP&target=GBP',
-  'source=GBP&target=USD',
-  'source=GBP&target=EUR',
-  'source=GBP&target=JPY',
-  'source=GBP&target=CAD',
-  'source=GBP&target=RON',
-  'source=JPY&target=GBP',
-  'source=USD&target=GBP',
-  'source=RON&target=GBP',
+// Mock endpoints with respective responses
+const currencyMockCases = [
+  {
+    endpoint: 'source=GBP&target=GBP',
+    mockResponse: mockResponses.GBP.data,
+  },
+  {
+    endpoint: 'source=GBP&target=USD',
+    mockResponse: mockResponses.USD.data,
+  },
+  {
+    endpoint: 'source=GBP&target=EUR',
+    mockResponse: mockResponses.EUR.data,
+  },
+  {
+    endpoint: 'source=GBP&target=JPY',
+    mockResponse: mockResponses.JPY.data,
+  },
+  {
+    endpoint: 'source=GBP&target=CAD',
+    mockResponse: mockResponses.CAD.data,
+  },
+  {
+    endpoint: 'source=GBP&target=RON',
+    mockResponse: mockResponses.RON.data,
+  },
+  {
+    endpoint: 'source=JPY&target=GBP',
+    mockResponse: mockResponses.JPY.data,
+  },
+  {
+    endpoint: 'source=USD&target=GBP',
+    mockResponse: mockResponses.USD.data,
+  },
+  {
+    endpoint: 'source=RON&target=GBP',
+    mockResponse: mockResponses.RON.data,
+  },
 ];
 
-// Mock responses
-const response = (endpoint: string) => {
-  switch (endpoint) {
-    case 'source=GBP&target=USD':
-      return mockResponses.USD.data;
-    case 'source=GBP&target=EUR':
-      return mockResponses.EUR.data;
-    case 'source=GBP&target=JPY':
-      return mockResponses.JPY.data;
-    case 'source=GBP&target=CAD':
-      return mockResponses.CAD.data;
-    case 'source=GBP&target=RON':
-      return mockResponses.RON.data;
-    case 'source=JPY&target=GBP':
-      return mockResponses.JPY.data;
-    case 'source=USD&target=GBP':
-      return mockResponses.USD.data;
-    case 'source=RON&target=GBP':
-      return mockResponses.RON.data;
-    default:
-      return mockResponses.GBP.data;
-  }
-};
-
-// Send mock responses
-currencies.forEach((currency) => {
-  const url = `${APIM_MDM_URL}currencies/exchange?${currency}`;
-  axiosMock.onGet(url).reply(HttpStatusCode.Ok, response(currency));
+// Axios mock possible currencies responses
+currencyMockCases.forEach(({ endpoint, mockResponse }) => {
+  const url = `${APIM_MDM_URL}currencies/exchange?${endpoint}`;
+  axiosMock.onGet(url).reply(HttpStatusCode.Ok, mockResponse);
 });
 
 describe('/currency-exchange-rate', () => {
