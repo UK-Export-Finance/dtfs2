@@ -268,7 +268,7 @@ describe('utilisation-report-helpers', () => {
       // Arrange
       const paymentOfficerTeam = {
         teamName: 'A Real Payment Officer Team',
-        email: 'email@example.com',
+        emails: ['email@example.com'],
       };
       const bankName = 'Some Bank Name';
 
@@ -279,7 +279,7 @@ describe('utilisation-report-helpers', () => {
       expect(result).toEqual(paymentOfficerTeam.teamName);
     });
 
-    it.each([{ paymentOfficerTeam: undefined }, { paymentOfficerTeam: { email: 'email@example.com' } }])(
+    it.each([{ paymentOfficerTeam: undefined }, { paymentOfficerTeam: { emails: ['email@example.com'] } }])(
       'returns the default team name when paymentOfficerTeam is $paymentOfficerTeam',
       ({ paymentOfficerTeam }) => {
         // Arrange
@@ -335,8 +335,8 @@ describe('utilisation-report-helpers', () => {
       // Arrange
       jest.mocked(externalApi.bankHolidays).getBankHolidayDatesForRegion.mockResolvedValue([]);
 
-      const bankWithoutPaymentOfficerTeam: BankResponse = { ...aBank(), paymentOfficerTeam: undefined } as unknown as BankResponse;
-      jest.mocked(api.getAllBanks).mockResolvedValue([bankWithoutPaymentOfficerTeam]);
+      const bankWithoutPaymentOfficerTeamEmail: BankResponse = { ...aBank(), paymentOfficerTeam: { teamName: 'Team' } } as unknown as BankResponse;
+      jest.mocked(api.getAllBanks).mockResolvedValue([bankWithoutPaymentOfficerTeamEmail]);
 
       jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
 
@@ -350,7 +350,7 @@ describe('utilisation-report-helpers', () => {
 
       // Assert
       expect(sendEmailCallback).not.toHaveBeenCalled();
-      expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('no payment officer team email set'));
+      expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('paymentOfficerTeam.emails property against bank is not an array or is empty'));
     });
 
     it('does not send an email when the bank has an invalid payment officer team email', async () => {
@@ -359,7 +359,7 @@ describe('utilisation-report-helpers', () => {
 
       const invalidEmail = 'invalid-email';
       const bank = aBank();
-      bank.paymentOfficerTeam.email = invalidEmail;
+      bank.paymentOfficerTeam.emails = [invalidEmail];
       jest.mocked(api.getAllBanks).mockResolvedValue([bank]);
 
       jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
@@ -374,7 +374,7 @@ describe('utilisation-report-helpers', () => {
 
       // Assert
       expect(sendEmailCallback).not.toHaveBeenCalled();
-      expect(console.error).toHaveBeenCalledWith(expect.stringContaining(`invalid payment officer team email '${invalidEmail}'`));
+      expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('paymentOfficerTeam.emails property against bank is not an array or is empty'));
     });
 
     it('sends emails using the default team name when bank does not have one set', async () => {
@@ -383,7 +383,7 @@ describe('utilisation-report-helpers', () => {
 
       const validEmail = 'valid-email@example.com';
       const bank = aBank();
-      bank.paymentOfficerTeam = { email: validEmail } as PaymentOfficerTeam;
+      bank.paymentOfficerTeam = { emails: [validEmail] } as PaymentOfficerTeam;
       jest.mocked(api.getAllBanks).mockResolvedValue([bank]);
 
       jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
@@ -407,13 +407,13 @@ describe('utilisation-report-helpers', () => {
       // Arrange
       jest.mocked(externalApi.bankHolidays).getBankHolidayDatesForRegion.mockResolvedValue([]);
 
-      const bankOneEmail = 'banke-one-email@example.com';
+      const bankOneEmail = 'bank-one-email@example.com';
       const bankOneTeamName = 'Bank One Payment Officer Team';
-      const bankOne: BankResponse = { ...aBank(), paymentOfficerTeam: { email: bankOneEmail, teamName: bankOneTeamName } };
+      const bankOne: BankResponse = { ...aBank(), paymentOfficerTeam: { emails: [bankOneEmail], teamName: bankOneTeamName } };
 
-      const bankTwoEmail = 'banke-two-email@example.com';
+      const bankTwoEmail = 'bank-two-email@example.com';
       const bankTwoTeamName = 'Bank Two Payment Officer Team';
-      const bankTwo: BankResponse = { ...aBank(), paymentOfficerTeam: { email: bankTwoEmail, teamName: bankTwoTeamName } };
+      const bankTwo: BankResponse = { ...aBank(), paymentOfficerTeam: { emails: [bankTwoEmail], teamName: bankTwoTeamName } };
 
       jest.mocked(api.getAllBanks).mockResolvedValue([bankOne, bankTwo]);
 
@@ -441,11 +441,12 @@ describe('utilisation-report-helpers', () => {
 
       const validBarclaysEmail = 'valid-barclays-email@example.com';
       const validBarclaysTeamName = 'Barclays Payment Officer Team';
-      const validBarclaysBank: BankResponse = { ...aBank(), paymentOfficerTeam: { email: validBarclaysEmail, teamName: validBarclaysTeamName } };
+      const validBarclaysBank: BankResponse = { ...aBank(), paymentOfficerTeam: { emails: [validBarclaysEmail], teamName: validBarclaysTeamName } };
 
       const validHsbcEmail = 'valid-hsbc-email@example.com';
+      const otherValidHsbcEmail = 'another-valid-hsbc-email@example.com';
       const validHsbcTeamName = 'HSBC Payment Officer Team';
-      const validHsbcBank: BankResponse = { ...aBank(), paymentOfficerTeam: { email: validHsbcEmail, teamName: validHsbcTeamName } };
+      const validHsbcBank: BankResponse = { ...aBank(), paymentOfficerTeam: { emails: [validHsbcEmail, otherValidHsbcEmail], teamName: validHsbcTeamName } };
 
       jest.mocked(api.getAllBanks).mockResolvedValue([validBarclaysBank, validHsbcBank]);
 
@@ -460,9 +461,10 @@ describe('utilisation-report-helpers', () => {
       });
 
       // Assert
-      expect(sendEmailCallback).toHaveBeenCalledTimes(2);
+      expect(sendEmailCallback).toHaveBeenCalledTimes(3);
       expect(sendEmailCallback).toHaveBeenCalledWith(validBarclaysEmail, validBarclaysTeamName, 'October 2023');
       expect(sendEmailCallback).toHaveBeenCalledWith(validHsbcEmail, validHsbcTeamName, 'October 2023');
+      expect(sendEmailCallback).toHaveBeenCalledWith(otherValidHsbcEmail, validHsbcTeamName, 'October 2023');
     });
 
     it('does not send email if it is not the submission month for bank with quarterly reporting schedule', async () => {
@@ -507,7 +509,7 @@ describe('utilisation-report-helpers', () => {
       ];
       const email = 'test-bank-email@ukexportfinance.gov.uk';
       const teamName = 'My Bank';
-      const bank: BankResponse = { ...aBank(), utilisationReportPeriodSchedule: quarterlyReportingSchedule, paymentOfficerTeam: { email, teamName } };
+      const bank: BankResponse = { ...aBank(), utilisationReportPeriodSchedule: quarterlyReportingSchedule, paymentOfficerTeam: { emails: [email], teamName } };
       jest.mocked(api.getAllBanks).mockResolvedValue([bank]);
       jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
 
@@ -532,7 +534,7 @@ describe('utilisation-report-helpers', () => {
       const badReportingSchedule = [{ notAReportPeriod: 'this is not parseable' }] as unknown as BankReportPeriodSchedule;
       const email = 'test-bank-email@ukexportfinance.gov.uk';
       const teamName = 'My Bank';
-      const bank: BankResponse = { ...aBank(), utilisationReportPeriodSchedule: badReportingSchedule, paymentOfficerTeam: { email, teamName } };
+      const bank: BankResponse = { ...aBank(), utilisationReportPeriodSchedule: badReportingSchedule, paymentOfficerTeam: { emails: [email], teamName } };
       jest.mocked(api.getAllBanks).mockResolvedValue([bank]);
       jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
 
@@ -557,7 +559,7 @@ describe('utilisation-report-helpers', () => {
       const badReportingSchedule = undefined as unknown as BankReportPeriodSchedule;
       const email = 'test-bank-email@ukexportfinance.gov.uk';
       const teamName = 'My Bank';
-      const bank: BankResponse = { ...aBank(), utilisationReportPeriodSchedule: badReportingSchedule, paymentOfficerTeam: { email, teamName } };
+      const bank: BankResponse = { ...aBank(), utilisationReportPeriodSchedule: badReportingSchedule, paymentOfficerTeam: { emails: [email], teamName } };
       jest.mocked(api.getAllBanks).mockResolvedValue([bank]);
       jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
 

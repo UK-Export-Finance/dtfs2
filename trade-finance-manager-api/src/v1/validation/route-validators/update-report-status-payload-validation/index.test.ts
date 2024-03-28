@@ -1,7 +1,6 @@
 import { Request } from 'express';
 import { validationResult } from 'express-validator';
 import { createRequest } from 'node-mocks-http';
-import { ObjectId } from 'bson';
 import { updateReportStatusPayloadValidation } from '.';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../../constants';
 import { TfmSessionUser } from '../../../../types/tfm-session-user';
@@ -21,8 +20,8 @@ describe('updateReportStatusPayloadValidation', () => {
     user: opts.user ?? MOCK_TFM_SESSION_USER,
     reportsWithStatus: opts.reportsWithStatus ?? [
       {
-        status: opts.status ?? UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
-        reportId: opts.reportId ?? new ObjectId().toString(),
+        status: opts.status ?? 'PENDING_RECONCILIATION',
+        reportId: opts.reportId ?? '123',
       },
     ],
   });
@@ -50,9 +49,9 @@ describe('updateReportStatusPayloadValidation', () => {
     expect(errors.length).not.toEqual(0);
   });
 
-  it('returns a single error when the report id is not a valid mongo id', async () => {
+  it('returns a single error when the report id is not a valid sql id', async () => {
     // Arrange
-    const reportId = '123';
+    const reportId = 'abc123';
     const body = getValidPayloadBody({ reportId });
     const req = createRequest({ body });
 
@@ -61,7 +60,7 @@ describe('updateReportStatusPayloadValidation', () => {
 
     // Assert
     expect(errors.length).toEqual(1);
-    expect(errors.at(0)?.msg).toEqual('Report id must be a valid mongo id string');
+    expect(errors.at(0)?.msg).toEqual('Report id must be an integer string');
   });
 
   it('returns a single error when the user is not an object', async () => {

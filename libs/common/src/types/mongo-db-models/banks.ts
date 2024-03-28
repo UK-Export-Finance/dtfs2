@@ -3,7 +3,7 @@ import { BankReportPeriodSchedule } from '../bank-report-period-schedule';
 
 export type PaymentOfficerTeam = {
   teamName: string;
-  email: string;
+  emails: string[];
 };
 
 export type Bank = WithId<{

@@ -76,7 +76,6 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
       .withId(2)
       .withBankId(bankId)
-      .withUploadedByUserId(portalUserId)
       .build();
 
     await saveReportsToDatabase(uploadedReport, nonUploadedReport);
@@ -101,15 +100,13 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
 
     const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(2).withBankId(bankId).build();
 
-    const nonUploadedMarkedReconciledReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
+    const reconciliationCompletedReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
       .withId(3)
       .withBankId(bankId)
-      .withUploadedByUserId(null)
-      .withDateUploaded(null)
-      .withAzureFileInfo(undefined)
+      .withUploadedByUserId(portalUserId)
       .build();
 
-    await saveReportsToDatabase(uploadedReport, notReceivedReport, nonUploadedMarkedReconciledReport);
+    await saveReportsToDatabase(uploadedReport, notReceivedReport, reconciliationCompletedReport);
 
     // Act
     const response: CustomSuccessResponse = await api.get(`${getUrl(bankId)}?excludeNotReceived=true`);
@@ -119,7 +116,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     expect(response.body.length).toEqual(2);
     const ids = response.body.map((report) => report.id);
     expect(ids).toContain(uploadedReport.id);
-    expect(ids).toContain(nonUploadedMarkedReconciledReport.id);
+    expect(ids).toContain(reconciliationCompletedReport.id);
   });
 
   it('gets utilisation reports for specified period', async () => {

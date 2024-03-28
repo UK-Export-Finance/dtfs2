@@ -3,7 +3,7 @@ import { MonthAndYear, OneIndexedMonth, PaymentOfficerTeam, ReportPeriod, getCur
 import externalApi from '../../external-api/api';
 import api from '../../v1/api';
 import { getBusinessDayOfMonth } from '../../utils/date';
-import { hasValue, isValidEmail } from '../../utils/string';
+import { isValidEmail } from '../../utils/string';
 import { BANK_HOLIDAY_REGION } from '../../constants/bank-holiday-region';
 import { BankResponse } from '../../v1/api-response-types';
 
@@ -60,7 +60,7 @@ export const getFormattedReportPeriod = (reportPeriod: ReportPeriod): string => 
     return formatMonthAndYear(reportPeriod.end);
   }
   if (reportPeriod.start.year === reportPeriod.end.year) {
-    return `${formatMonth(reportPeriod.start.month)} to ${formatMonthAndYear(reportPeriod.end)}`
+    return `${formatMonth(reportPeriod.start.month)} to ${formatMonthAndYear(reportPeriod.end)}`;
   }
   return `${formatMonthAndYear(reportPeriod.start)} to ${formatMonthAndYear(reportPeriod.end)}`;
 };
@@ -120,18 +120,24 @@ const sendEmailForBank = async (
   sendEmailCallback: SendEmailCallback,
   bank: BankResponse,
 ): Promise<void> => {
-  const { name: bankName, paymentOfficerTeam } = bank;
-  const paymentOfficerTeamEmail = paymentOfficerTeam?.email;
-
+  const { name: bankName, paymentOfficerTeam, id: bankId } = bank;
   try {
-    if (!hasValue(paymentOfficerTeamEmail)) {
-      console.warn(`Not sending ${emailDescription} email to '${bankName}' - no payment officer team email set`);
-    } else if (!isValidEmail(paymentOfficerTeamEmail)) {
-      console.error(`Failed to send ${emailDescription} email to '${bankName}' - invalid payment officer team email '${paymentOfficerTeamEmail}'`);
-    } else {
-      await sendEmailCallback(paymentOfficerTeamEmail, getEmailRecipient(paymentOfficerTeam, bankName), formattedReportPeriod);
-      console.info(`Successfully sent ${emailDescription} email to '${bankName}'`);
+    const paymentOfficerTeamEmails = paymentOfficerTeam?.emails;
+
+    if (!Array.isArray(paymentOfficerTeamEmails) || !paymentOfficerTeamEmails.length) {
+      console.warn(`Not sending ${emailDescription} email to '${bankName}' - paymentOfficerTeam.emails property against bank is not an array or is empty`);
+      return;
     }
+    await Promise.all(
+      paymentOfficerTeamEmails.map(async (paymentOfficerTeamEmail) => {
+        if (!isValidEmail(paymentOfficerTeamEmail)) {
+          console.error(`Failed to send ${emailDescription} email to '${paymentOfficerTeamEmail}' - invalid payment officer email`);
+        } else {
+          await sendEmailCallback(paymentOfficerTeamEmail, getEmailRecipient(paymentOfficerTeam, bankName), formattedReportPeriod);
+          console.info(`Successfully sent '${emailDescription}' email to '${bankName}' (bank ID: ${bankId})`);
+        }
+      }),
+    );
   } catch (error) {
     console.error(`Failed to send ${emailDescription} email for bank '${bankName}':`, error);
   }
@@ -156,7 +162,6 @@ const sendEmailToBankIfReportNotReceived = async (bank: BankResponse, emailDescr
 
     if (isReportDue) {
       await sendEmailForBank(emailDescription, formattedReportPeriod, sendEmailCallback, bank);
-      console.info(`Successfully sent '${emailDescription}' email to '${bankName}' (bank ID: ${bankId})`);
     } else {
       console.info(
         `Not sending '${emailDescription}' email to '${bankName}' (bank ID: ${bankId}) - report has already been submitted for ${formattedReportPeriod} report period`,

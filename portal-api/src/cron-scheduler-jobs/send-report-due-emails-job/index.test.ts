@@ -21,7 +21,7 @@ const originalProcessEnv = process.env;
 describe('sendReportDueEmailsJob', () => {
   const validBarclaysEmail = 'valid-barclays-email@example.com';
   const validBarclaysBank = produce(aBank(), (draftBank) => {
-    draftBank.paymentOfficerTeam.email = validBarclaysEmail;
+    draftBank.paymentOfficerTeam.emails = [validBarclaysEmail];
   });
   const validHsbcEmail = 'valid-hsbc-email@example.com';
   const quarterlyReportingSchedule = [
@@ -31,7 +31,7 @@ describe('sendReportDueEmailsJob', () => {
     { startMonth: 8, endMonth: 10 },
   ];
   const validHsbcBank = produce(aBank(), (draftBank) => {
-    draftBank.paymentOfficerTeam.email = validHsbcEmail;
+    draftBank.paymentOfficerTeam.emails = [validHsbcEmail];
     draftBank.utilisationReportPeriodSchedule = quarterlyReportingSchedule;
   });
 

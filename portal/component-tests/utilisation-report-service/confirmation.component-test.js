@@ -6,10 +6,10 @@ const render = pageRenderer(page);
 describe(page, () => {
   let wrapper;
   const reportPeriod = 'June 2023';
-  const paymentOfficerEmail = 'tradefinance@barclays.com';
+  const paymentOfficerEmails = ['tradefinance1@barclays.com', 'tradefinance2@barclays.com'];
 
   beforeEach(() => {
-    wrapper = render({ reportPeriod, paymentOfficerEmail });
+    wrapper = render({ reportPeriod, paymentOfficerEmails });
   });
 
   it('should render page heading', () => {
@@ -17,7 +17,10 @@ describe(page, () => {
   });
 
   it('should render paragraph', () => {
-    wrapper.expectText('[data-cy="paragraph"]').toRead(`A confirmation email has been sent to ${paymentOfficerEmail}.`);
+    wrapper.expectText('[data-cy="paragraph"]').toRead('A confirmation email has been sent to:');
+    for (const paymentOfficerEmail of paymentOfficerEmails) {
+      wrapper.expectElement(`ul.govuk-list > li:contains("${paymentOfficerEmail}")`).toExist();
+    }
   });
 
   it('should render Signout button', () => {
