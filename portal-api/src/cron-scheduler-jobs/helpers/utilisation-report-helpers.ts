@@ -189,8 +189,9 @@ export const sendEmailToAllBanksWhereReportNotReceived = async ({
   console.info(`Attempting to send ${emailDescription} emails`);
 
   const banks = await api.getAllBanks();
+  const banksVisibleInTfmUtilisationReports = banks.filter((bank) => bank.isVisibleInTfmUtilisationReports);
 
-  for (const bank of banks) {
+  for (const bank of banksVisibleInTfmUtilisationReports) {
     try {
       await sendEmailToBankIfReportNotReceived(bank, emailDescription, sendEmailCallback);
     } catch (error) {

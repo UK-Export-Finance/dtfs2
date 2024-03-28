@@ -315,7 +315,9 @@ describe('utilisation-report-helpers', () => {
         },
       };
       jest.mocked(externalApi.bankHolidays.getBankHolidayDatesForRegion).mockResolvedValue([]);
-      jest.mocked(api.getAllBanks).mockResolvedValue([{ ...aBank(), utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule() }]);
+      jest
+        .mocked(api.getAllBanks)
+        .mockResolvedValue([{ ...aBank(), isVisibleInTfmUtilisationReports: true, utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule() }]);
       jest.mocked(api.getUtilisationReports).mockResolvedValue([existingReport]);
 
       const sendEmailCallback = jest.fn();
@@ -335,7 +337,11 @@ describe('utilisation-report-helpers', () => {
       // Arrange
       jest.mocked(externalApi.bankHolidays).getBankHolidayDatesForRegion.mockResolvedValue([]);
 
-      const bankWithoutPaymentOfficerTeamEmail: BankResponse = { ...aBank(), paymentOfficerTeam: { teamName: 'Team' } } as unknown as BankResponse;
+      const bankWithoutPaymentOfficerTeamEmail: BankResponse = {
+        ...aBank(),
+        isVisibleInTfmUtilisationReports: true,
+        paymentOfficerTeam: { teamName: 'Team' },
+      } as unknown as BankResponse;
       jest.mocked(api.getAllBanks).mockResolvedValue([bankWithoutPaymentOfficerTeamEmail]);
 
       jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
@@ -359,6 +365,7 @@ describe('utilisation-report-helpers', () => {
 
       const invalidEmail = 'invalid-email';
       const bank = aBank();
+      bank.isVisibleInTfmUtilisationReports = true;
       bank.paymentOfficerTeam.emails = [invalidEmail];
       jest.mocked(api.getAllBanks).mockResolvedValue([bank]);
 
@@ -374,7 +381,26 @@ describe('utilisation-report-helpers', () => {
 
       // Assert
       expect(sendEmailCallback).not.toHaveBeenCalled();
-      expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('paymentOfficerTeam.emails property against bank is not an array or is empty'));
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining('invalid payment officer email'));
+    });
+
+    it('does not send an email when the bank is marked as not visible in TFM Utilisation Reports', async () => {
+      // Arrange
+      jest.mocked(externalApi.bankHolidays).getBankHolidayDatesForRegion.mockResolvedValue([]);
+
+      const bank: BankResponse = { ...aBank(), isVisibleInTfmUtilisationReports: false };
+      jest.mocked(api.getAllBanks).mockResolvedValue([bank]);
+
+      const sendEmailCallback = jest.fn();
+
+      // Act
+      await sendEmailToAllBanksWhereReportNotReceived({
+        emailDescription: '',
+        sendEmailCallback,
+      });
+
+      // Assert
+      expect(sendEmailCallback).not.toHaveBeenCalled();
     });
 
     it('sends emails using the default team name when bank does not have one set', async () => {
@@ -383,6 +409,7 @@ describe('utilisation-report-helpers', () => {
 
       const validEmail = 'valid-email@example.com';
       const bank = aBank();
+      bank.isVisibleInTfmUtilisationReports = true;
       bank.paymentOfficerTeam = { emails: [validEmail] } as PaymentOfficerTeam;
       jest.mocked(api.getAllBanks).mockResolvedValue([bank]);
 
@@ -409,11 +436,19 @@ describe('utilisation-report-helpers', () => {
 
       const bankOneEmail = 'bank-one-email@example.com';
       const bankOneTeamName = 'Bank One Payment Officer Team';
-      const bankOne: BankResponse = { ...aBank(), paymentOfficerTeam: { emails: [bankOneEmail], teamName: bankOneTeamName } };
+      const bankOne: BankResponse = {
+        ...aBank(),
+        isVisibleInTfmUtilisationReports: true,
+        paymentOfficerTeam: { emails: [bankOneEmail], teamName: bankOneTeamName },
+      };
 
       const bankTwoEmail = 'bank-two-email@example.com';
       const bankTwoTeamName = 'Bank Two Payment Officer Team';
-      const bankTwo: BankResponse = { ...aBank(), paymentOfficerTeam: { emails: [bankTwoEmail], teamName: bankTwoTeamName } };
+      const bankTwo: BankResponse = {
+        ...aBank(),
+        isVisibleInTfmUtilisationReports: true,
+        paymentOfficerTeam: { emails: [bankTwoEmail], teamName: bankTwoTeamName },
+      };
 
       jest.mocked(api.getAllBanks).mockResolvedValue([bankOne, bankTwo]);
 
@@ -441,12 +476,20 @@ describe('utilisation-report-helpers', () => {
 
       const validBarclaysEmail = 'valid-barclays-email@example.com';
       const validBarclaysTeamName = 'Barclays Payment Officer Team';
-      const validBarclaysBank: BankResponse = { ...aBank(), paymentOfficerTeam: { emails: [validBarclaysEmail], teamName: validBarclaysTeamName } };
+      const validBarclaysBank: BankResponse = {
+        ...aBank(),
+        isVisibleInTfmUtilisationReports: true,
+        paymentOfficerTeam: { emails: [validBarclaysEmail], teamName: validBarclaysTeamName },
+      };
 
       const validHsbcEmail = 'valid-hsbc-email@example.com';
       const otherValidHsbcEmail = 'another-valid-hsbc-email@example.com';
       const validHsbcTeamName = 'HSBC Payment Officer Team';
-      const validHsbcBank: BankResponse = { ...aBank(), paymentOfficerTeam: { emails: [validHsbcEmail, otherValidHsbcEmail], teamName: validHsbcTeamName } };
+      const validHsbcBank: BankResponse = {
+        ...aBank(),
+        isVisibleInTfmUtilisationReports: true,
+        paymentOfficerTeam: { emails: [validHsbcEmail, otherValidHsbcEmail], teamName: validHsbcTeamName },
+      };
 
       jest.mocked(api.getAllBanks).mockResolvedValue([validBarclaysBank, validHsbcBank]);
 
@@ -478,7 +521,7 @@ describe('utilisation-report-helpers', () => {
         { startMonth: 6, endMonth: 8 },
         { startMonth: 9, endMonth: 11 },
       ];
-      const bank: BankResponse = { ...aBank(), utilisationReportPeriodSchedule: quarterlyReportingSchedule };
+      const bank: BankResponse = { ...aBank(), isVisibleInTfmUtilisationReports: true, utilisationReportPeriodSchedule: quarterlyReportingSchedule };
       jest.mocked(api.getAllBanks).mockResolvedValue([bank]);
 
       const sendEmailCallback = jest.fn();
@@ -509,7 +552,12 @@ describe('utilisation-report-helpers', () => {
       ];
       const email = 'test-bank-email@ukexportfinance.gov.uk';
       const teamName = 'My Bank';
-      const bank: BankResponse = { ...aBank(), utilisationReportPeriodSchedule: quarterlyReportingSchedule, paymentOfficerTeam: { emails: [email], teamName } };
+      const bank: BankResponse = {
+        ...aBank(),
+        isVisibleInTfmUtilisationReports: true,
+        utilisationReportPeriodSchedule: quarterlyReportingSchedule,
+        paymentOfficerTeam: { emails: [email], teamName },
+      };
       jest.mocked(api.getAllBanks).mockResolvedValue([bank]);
       jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
 
@@ -534,7 +582,12 @@ describe('utilisation-report-helpers', () => {
       const badReportingSchedule = [{ notAReportPeriod: 'this is not parseable' }] as unknown as BankReportPeriodSchedule;
       const email = 'test-bank-email@ukexportfinance.gov.uk';
       const teamName = 'My Bank';
-      const bank: BankResponse = { ...aBank(), utilisationReportPeriodSchedule: badReportingSchedule, paymentOfficerTeam: { emails: [email], teamName } };
+      const bank: BankResponse = {
+        ...aBank(),
+        isVisibleInTfmUtilisationReports: true,
+        utilisationReportPeriodSchedule: badReportingSchedule,
+        paymentOfficerTeam: { emails: [email], teamName },
+      };
       jest.mocked(api.getAllBanks).mockResolvedValue([bank]);
       jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
 
@@ -559,7 +612,12 @@ describe('utilisation-report-helpers', () => {
       const badReportingSchedule = undefined as unknown as BankReportPeriodSchedule;
       const email = 'test-bank-email@ukexportfinance.gov.uk';
       const teamName = 'My Bank';
-      const bank: BankResponse = { ...aBank(), utilisationReportPeriodSchedule: badReportingSchedule, paymentOfficerTeam: { emails: [email], teamName } };
+      const bank: BankResponse = {
+        ...aBank(),
+        isVisibleInTfmUtilisationReports: true,
+        utilisationReportPeriodSchedule: badReportingSchedule,
+        paymentOfficerTeam: { emails: [email], teamName },
+      };
       jest.mocked(api.getAllBanks).mockResolvedValue([bank]);
       jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
 
