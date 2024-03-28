@@ -122,10 +122,9 @@ describe('put-utilisation-report-status.controller', () => {
       const { req, res } = getHttpMocks();
       req.body.reportsWithStatus = reportsWithStatusForMarkingAsCompleted;
 
-      const existingReports = [
-        UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportsWithStatusForMarkingAsCompleted[0].reportId).build(),
-        UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportsWithStatusForMarkingAsCompleted[1].reportId).build(),
-      ];
+      const existingReports = reportsWithStatusForMarkingAsCompleted.map(({ reportId }) =>
+        UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).build(),
+      );
 
       utilisationReportRepoFindOneByOrFailSpy.mockImplementation(mockFindOneByOrFail(existingReports));
 
@@ -151,34 +150,37 @@ describe('put-utilisation-report-status.controller', () => {
       });
     });
 
-    it('responds with an error if trying to mark an already completed report as completed', async () => {
-      // Arrange
-      const reportWithStatus: ReportWithStatus = {
-        reportId: 1,
-        status: 'RECONCILIATION_COMPLETED',
-      };
+    it.each([UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED, UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED])(
+      "responds with an error if trying to mark a report with status '%s' as completed",
+      async (reportStatus) => {
+        // Arrange
+        const reportWithStatus: ReportWithStatus = {
+          reportId: 1,
+          status: 'RECONCILIATION_COMPLETED',
+        };
 
-      const { req, res } = getHttpMocks();
-      req.body.reportsWithStatus = [reportWithStatus];
+        const { req, res } = getHttpMocks();
+        req.body.reportsWithStatus = [reportWithStatus];
 
-      const existingReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withId(reportWithStatus.reportId).build();
+        const existingReport = UtilisationReportEntityMockBuilder.forStatus(reportStatus).withId(reportWithStatus.reportId).build();
 
-      utilisationReportRepoFindOneByOrFailSpy.mockResolvedValue(existingReport);
+        utilisationReportRepoFindOneByOrFailSpy.mockResolvedValue(existingReport);
 
-      // Act
-      await putUtilisationReportStatus(req, res);
+        // Act
+        await putUtilisationReportStatus(req, res);
 
-      // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-      expect(res._getData()).toEqual('Failed to update utilisation report statuses: Transaction failed');
-      expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-      expect(mockConnect).toHaveBeenCalledTimes(1);
-      expect(mockStartTransaction).toHaveBeenCalledTimes(1);
-      expect(mockCommitTransaction).not.toHaveBeenCalled();
-      expect(mockRollbackTransaction).toHaveBeenCalledTimes(1);
-      expect(mockRelease).toHaveBeenCalled();
-      expect(mockTransactionManager.save).not.toHaveBeenCalled();
-    });
+        // Assert
+        expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+        expect(res._getData()).toEqual('Failed to update utilisation report statuses: Transaction failed');
+        expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
+        expect(mockConnect).toHaveBeenCalledTimes(1);
+        expect(mockStartTransaction).toHaveBeenCalledTimes(1);
+        expect(mockCommitTransaction).not.toHaveBeenCalled();
+        expect(mockRollbackTransaction).toHaveBeenCalledTimes(1);
+        expect(mockRelease).toHaveBeenCalled();
+        expect(mockTransactionManager.save).not.toHaveBeenCalled();
+      },
+    );
   });
 
   describe('when trying to only mark reports as not completed', () => {
@@ -191,11 +193,7 @@ describe('put-utilisation-report-status.controller', () => {
         },
         {
           reportId: 2,
-          status: 'REPORT_NOT_RECEIVED',
-        },
-        {
-          reportId: 3,
-          status: 'REPORT_NOT_RECEIVED',
+          status: 'PENDING_RECONCILIATION',
         },
       ];
 
@@ -210,15 +208,9 @@ describe('put-utilisation-report-status.controller', () => {
         },
       });
 
-      const existingReports = reportsWithStatusForMarkingAsNotCompleted.map((reportWithStatus) => {
-        if (reportWithStatus.status === 'PENDING_RECONCILIATION') {
-          return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
-            .withId(reportWithStatus.reportId)
-            .withAzureFileInfo(azureFileInfo)
-            .build();
-        }
-        return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withId(reportWithStatus.reportId).withAzureFileInfo(undefined).build();
-      });
+      const existingReports = reportsWithStatusForMarkingAsNotCompleted.map((reportWithStatus) =>
+        UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withId(reportWithStatus.reportId).withAzureFileInfo(azureFileInfo).build(),
+      );
 
       utilisationReportRepoFindOneByOrFailSpy.mockImplementation(mockFindOneByOrFail(existingReports));
 
@@ -251,7 +243,7 @@ describe('put-utilisation-report-status.controller', () => {
         // Arrange
         const reportWithStatus: ReportWithStatus = {
           reportId: 1,
-          status: 'REPORT_NOT_RECEIVED',
+          status: 'PENDING_RECONCILIATION',
         };
 
         const { req, res } = getHttpMocks();

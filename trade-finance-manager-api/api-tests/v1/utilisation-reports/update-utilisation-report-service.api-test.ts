@@ -1,4 +1,3 @@
-import { ObjectId } from 'bson';
 import app from '../../../src/createApp';
 import createApi from '../../api';
 import testUserCache from '../../api-test-users';
@@ -91,7 +90,7 @@ describe('/v1/utilisation-reports/set-status', () => {
       reportsWithStatus: [
         {
           status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
-          reportId: (new ObjectId()).toString(),
+          reportId: '1',
         },
       ],
     };
