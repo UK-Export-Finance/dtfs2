@@ -87,7 +87,7 @@ module.exports = {
   addUnderwriterCommentToGefDeal: jest.fn(),
   queryDeals: jest.fn(),
   updateDeal: jest.fn(),
-  updateDealSnapshot: (dealId, snapshotUpdate) => {
+  updateDealSnapshot: (dealId, snapshotUpdate, checker) => {
     const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
 
     const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId);
@@ -95,6 +95,9 @@ module.exports = {
     const updatedDeal = {
       ...deal,
       dealSnapshot: snapshotUpdate,
+      auditDetails: {
+        lastUpdatedByPortalUserId: checker?._id,
+      }
     };
 
     ALL_MOCK_DEALS[dealIndex] = updatedDeal;
