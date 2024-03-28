@@ -136,7 +136,6 @@ const postToEstore = async (
  *
  * @param {EstoreSite} exporterName - The name of the exporter.
  * @returns {Promise<SiteCreationResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
- * @throws {Error} If the request to create the site fails.
  */
 export const createExporterSite = async (exporterName: EstoreSite): Promise<SiteCreationResponse | EstoreErrorResponse> => {
   try {
@@ -158,7 +157,6 @@ export const createExporterSite = async (exporterName: EstoreSite): Promise<Site
  *
  * @param {EstoreTermStore} facilityId - The ID of the facility to add to the term store.
  * @returns {Promise<TermStoreResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
- * @throws {Error} If the request to add the facility to the term store fails.
  */
 export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promise<TermStoreResponse | EstoreErrorResponse> => {
   try {
@@ -181,8 +179,6 @@ export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promi
  * @param {string} siteId - The ID of the site where the buyer folder will be created.
  * @param {EstoreBuyer} buyerName - The name of the buyer.
  * @returns {Promise<BuyerFolderResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
- * @throws {Error} If the site ID is invalid.
- * @throws {Error} If the request to create the buyer folder fails.
  */
 export const createBuyerFolder = async (siteId: string, buyerName: EstoreBuyer): Promise<BuyerFolderResponse | EstoreErrorResponse> => {
   try {
@@ -205,8 +201,6 @@ export const createBuyerFolder = async (siteId: string, buyerName: EstoreBuyer):
  * @param {string} siteId - The ID of the site where the deal folder will be created.
  * @param {EstoreDealFolder} data - The deal folder data.
  * @returns {Promise<DealFolderResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
- * @throws {Error} If the site ID is invalid.
- * @throws {Error} If the request to create the deal folder fails.
  */
 export const createDealFolder = async (siteId: string, data: EstoreDealFolder): Promise<DealFolderResponse | EstoreErrorResponse> => {
   try {
@@ -230,8 +224,6 @@ export const createDealFolder = async (siteId: string, data: EstoreDealFolder): 
  * @param {string} dealIdentifier - The identifier of the deal.
  * @param {EstoreFacilityFolder} data - The facility folder data.
  * @returns {Promise<FacilityFolderResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
- * @throws {Error} If the site ID or deal identifier is invalid.
- * @throws {Error} If the request to create the facility folder fails.
  */
 export const createFacilityFolder = async (
   siteId: string,
@@ -259,8 +251,6 @@ export const createFacilityFolder = async (
  * @param {string} dealIdentifier - The identifier of the deal.
  * @param {EstoreDealFiles} file - The file to upload.
  * @returns {Promise<UploadDocumentsResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
- * @throws {Error} If the site ID or deal identifier is invalid.
- * @throws {Error} If the request to upload the documents fails.
  */
 export const uploadSupportingDocuments = async (
   siteId: string,

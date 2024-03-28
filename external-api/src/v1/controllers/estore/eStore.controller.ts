@@ -91,9 +91,10 @@ export const create = async (req: Request, res: Response) => {
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid deal ObjectId' });
     }
 
-    const cronJobExists = await cronJobLogs.findOne({ 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } });
+    // Returns the document from `cron-job-logs` collection if exists
+    const cronJobEntry = await cronJobLogs.findOne({ 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } });
 
-    if (!cronJobExists) {
+    if (!cronJobEntry) {
       /**
        * Send `201` status code back to avoid
        * `TFM-API` awaiting.
