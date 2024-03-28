@@ -39,7 +39,7 @@ describe('AuthProvider - getAuthCodeUrl', () => {
     });
   });
 
-  it('should call AuthProvider.cryptoProvider.createNewGuid', () => {
+  it('should call AuthProvider.cryptoProvider.generatePkceCodes', () => {
     expect(AuthProvider.cryptoProvider.generatePkceCodes).toHaveBeenCalledTimes(1);
   });
 

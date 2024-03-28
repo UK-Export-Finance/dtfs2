@@ -13,7 +13,7 @@ class AuthProvider {
     return new msal.ConfidentialClientApplication(this.msalConfig);
   }
 
-  async getLoginUrl() {
+  async getLoginUrl({ skipAuthorityMetadataCache = false } = {}) {
     // create a GUID for csrf
     const csrfToken = this.cryptoProvider.createNewGuid();
 
@@ -47,7 +47,7 @@ class AuthProvider {
      * make a request to the relevant endpoints to retrieve the metadata. This allows MSAL to avoid making
      * metadata discovery calls, thereby improving performance of token acquisition process.
      */
-    if (!this.config.msalConfig.auth.authorityMetadata) {
+    if (!this.config.msalConfig.auth.authorityMetadata || skipAuthorityMetadataCache === true) {
       const authorityMetadata = await this.getAuthorityMetadata();
       this.config.msalConfig.auth.authorityMetadata = JSON.stringify(authorityMetadata);
     }
