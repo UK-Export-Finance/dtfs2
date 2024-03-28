@@ -18,20 +18,12 @@ const updateFacility = async (facilityId, tfmUpdate, sessionUser, options = {}) 
     tfm: {
       ...tfmUpdate,
     },
+    auditDetails: options.isSystemUpdate ? generateSystemAuditDetails() : generateTfmUserAuditDetails(sessionUser._id),
   };
-
-  const queryWithoutAuditDetails = $.flatten(withoutId(update));
-  const query = {
-    ...queryWithoutAuditDetails,
-    $set: {
-      ...queryWithoutAuditDetails.$set,
-      auditDetails: options.isSystemUpdate ? generateSystemAuditDetails() : generateTfmUserAuditDetails(sessionUser._id),
-    },
-  }
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(facilityId) } },
-    query,
+    $.flatten(withoutId(update)),
     { returnNewDocument: true, returnDocument: 'after', upsert: true },
   );
 

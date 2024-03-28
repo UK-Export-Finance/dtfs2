@@ -187,7 +187,7 @@ exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
  * Submits a deal to TFM before the UKEF IDs are generated.
  * @param {string} dealId - The ID of the deal to be submitted.
  * @param {string} dealType - The type of the deal.
- * @param {unknown} checker
+ * @param {object} checker - Portal session user submitting the deal
  * @returns {Promise<Object> | Boolean} - A promise that resolves to an object, other false.
  * @throws {Error} - If there is an error during the submission process.
  */
@@ -228,7 +228,7 @@ const submitDealAfterUkefIdsPUT = async (req, res) => {
 
     const deal = await submitDealAfterUkefIds(dealId, dealType, checker);
 
-    if (!deal) { // this occuring
+    if (!deal) {
       console.error('Deal does not exist in TFM %s', dealId);
       return res.status(404).send();
     }
