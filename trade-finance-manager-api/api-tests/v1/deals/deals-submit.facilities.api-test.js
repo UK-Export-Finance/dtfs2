@@ -12,7 +12,7 @@ const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const calculateUkefExposure = require('../../../src/v1/helpers/calculateUkefExposure');
 const { calculateGefFacilityFeeRecord } = require('../../../src/v1/helpers/calculate-gef-facility-fee-record');
 const CONSTANTS = require('../../../src/constants');
-const submitDeal = require('../utils/submitDeal');
+const { submitDeal, createSubmitBody } = require('../utils/submitDeal');
 
 const MOCK_DEAL_BSS = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../src/v1/__mocks__/mock-deal-facilities-USD-currency');
@@ -25,10 +25,6 @@ const { mockFindOneDeal, mockUpdateDeal } = require('../../../src/v1/__mocks__/c
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
-const createSubmitBody = (mockDeal) => ({
-  dealId: mockDeal._id,
-  dealType: mockDeal.dealType,
-});
 
 const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
 const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));

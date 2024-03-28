@@ -245,7 +245,6 @@ exports.changeStatus = async (req, res) => {
 
   let applicationUpdate = { status, ...{ updatedAt: Date.now() } };
 
-  // TODO: DTFS2-4705 - protect so that only a user with checker role and associated bank can submit to UKEF.
   if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
     const submissionData = await addSubmissionData(dealId, existingApplication);
 
@@ -266,7 +265,6 @@ exports.changeStatus = async (req, res) => {
   if (updatedDocument.value) {
     response = updatedDocument.value;
 
-    // TODO: DTFS2-4705 - protect so that only a user with checker role and associated bank can submit to UKEF.
     if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
       await api.tfmDealSubmit(dealId, existingApplication.dealType, req.user);
     }

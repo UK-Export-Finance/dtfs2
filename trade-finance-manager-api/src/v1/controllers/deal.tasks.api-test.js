@@ -1,3 +1,4 @@
+const { generateTfmUserAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails')
 const {
   shouldCreatePartiesTask,
   shouldCreateAgentCheckTask,
@@ -9,9 +10,15 @@ const CONSTANTS = require('../../constants');
 const MOCK_DEAL_MIA = require('../__mocks__/mock-deal-MIA-submitted');
 const { createTasks } = require('../helpers/create-tasks');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
+const MOCK_USERS = require('../__mocks__/mock-users')
 
 describe('createDealTasks', () => {
-  const updateDealSpy = jest.fn((dealId, dealUpdate) => Promise.resolve(dealUpdate));
+  const updateDealSpy = jest.fn((dealId, dealUpdate, sessionUser) =>
+    Promise.resolve({
+      ...dealUpdate,
+      auditDetails: generateTfmUserAuditDetails(sessionUser?._id),
+    }),
+  );
 
   let mockSubmittedDeal;
   let mockDealEligibilityCriteria11False;
@@ -183,7 +190,7 @@ describe('createDealTasks', () => {
     });
 
     it('should call api.updateDeal and return updated deal', async () => {
-      const result = await createDealTasks(mockSubmittedDeal);
+      const result = await createDealTasks(mockSubmittedDeal, MOCK_USERS[0]);
 
       const expectedTasks = createTasks(
         mockSubmittedDeal.submissionType,
@@ -198,6 +205,9 @@ describe('createDealTasks', () => {
       expect(updateDealSpy).toHaveBeenCalledWith(
         mockSubmittedDeal._id,
         { tfm: expectedDealTfm },
+        expect.objectContaining({
+          _id: expect.any(String),
+        }),
       );
 
       const expectedDealReturn = {

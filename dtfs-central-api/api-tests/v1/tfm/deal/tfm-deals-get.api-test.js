@@ -2,23 +2,14 @@ const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
-
-const mockUser = {
-  _id: '123456789',
-  username: 'temp',
-  roles: [],
-  bank: {
-    id: '956',
-    name: 'Barclays Bank',
-  },
-};
+const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
 const newDeal = (dealOverrides) => ({
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
   dealType: 'BSS/EWCS',
   maker: {
-    ...mockUser,
+    ...MOCK_PORTAL_USER,
     ...dealOverrides.maker ? dealOverrides.maker : {},
   },
   details: {
@@ -51,6 +42,7 @@ const createAndSubmitDeals = async (deals) => {
     const submitResponse = await api.put({
       dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
       dealId: createResponse.body._id,
+      checker: MOCK_PORTAL_USER,
     }).to('/v1/tfm/deals/submit');
 
     expect(submitResponse.status).toEqual(200);
@@ -68,6 +60,7 @@ const updateDealsTfm = async (dealsTfmUpdate) => {
       dealUpdate: {
         tfm: deal.tfm,
       },
+      user: { _id: '6602f646141e3d545a91fbd1' },
     }).to(`/v1/tfm/deals/${deal._id}`);
 
     expect(updateResponse.status).toEqual(200);

@@ -3,6 +3,7 @@ const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 const DEFAULTS = require('../../../../src/v1/defaults');
+const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
@@ -15,16 +16,6 @@ const newDeal = {
 
 const newFacility = {
   type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
-};
-
-const mockUser = {
-  _id: '123456789',
-  username: 'temp',
-  roles: [],
-  bank: {
-    id: '956',
-    name: 'Barclays Bank',
-  },
 };
 
 describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
@@ -40,7 +31,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
   it('returns dealSnapshot with tfm object', async () => {
     const { body: createDealBody } = await api.post({
       deal: newDeal,
-      user: mockUser,
+      user: MOCK_PORTAL_USER,
     }).to('/v1/portal/deals');
 
     const dealId = createDealBody._id;
@@ -48,6 +39,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
     const { status, body } = await api.put({
       dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
       dealId,
+      checker: MOCK_PORTAL_USER,
     }).to('/v1/tfm/deals/submit');
 
     expect(status).toEqual(200);
@@ -61,6 +53,13 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
         facilities: [],
       },
       tfm: DEFAULTS.DEAL_TFM,
+      auditDetails: {
+        lastUpdatedAt: expect.any(String),
+        lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
+        lastUpdatedByTfmUserId: null,
+        noUserLoggedIn: null,
+        lastUpdatedByIsSystem: null,
+      },
     };
 
     expect(body).toEqual(expected);
@@ -70,7 +69,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
     // create deal
     const { body: createDealBody } = await api.post({
       deal: newDeal,
-      user: mockUser,
+      user: MOCK_PORTAL_USER,
     }).to('/v1/portal/deals');
 
     const dealId = createDealBody._id;
@@ -81,12 +80,12 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
 
     const { body: facility1Body } = await api.post({
       facility: newFacility1,
-      user: mockUser,
+      user: MOCK_PORTAL_USER,
     }).to('/v1/portal/facilities');
 
     const { body: facility2Body } = await api.post({
       facility: newFacility2,
-      user: mockUser,
+      user: MOCK_PORTAL_USER,
     }).to('/v1/portal/facilities');
 
     const facility1Id = facility1Body._id;
@@ -96,6 +95,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
     const { status } = await api.put({
       dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
       dealId,
+      checker: MOCK_PORTAL_USER,
     }).to('/v1/tfm/deals/submit');
 
     expect(status).toEqual(200);
@@ -113,6 +113,13 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
         updatedAt: expect.any(Number),
       },
       tfm: DEFAULTS.FACILITY_TFM,
+      auditDetails: {
+        lastUpdatedAt: expect.any(String),
+        lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
+        lastUpdatedByTfmUserId: null,
+        noUserLoggedIn: null,
+        lastUpdatedByIsSystem: null,
+      },
     });
 
     const facility2 = await api.get(`/v1/tfm/facilities/${facility2Id}`);
@@ -127,6 +134,13 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
         updatedAt: expect.any(Number),
       },
       tfm: DEFAULTS.FACILITY_TFM,
+      auditDetails: {
+        lastUpdatedAt: expect.any(String),
+        lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
+        lastUpdatedByTfmUserId: null,
+        noUserLoggedIn: null,
+        lastUpdatedByIsSystem: null,
+      },
     });
   });
 });

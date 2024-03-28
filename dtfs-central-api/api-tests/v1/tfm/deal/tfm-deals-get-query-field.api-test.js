@@ -69,6 +69,13 @@ describe('/v1/tfm/deals', () => {
               dateReceived: '12-11-2021',
               lastUpdated: expect.any(Number),
             },
+            auditDetails: {
+              lastUpdatedAt: expect.any(String),
+              lastUpdatedByTfmUserId: '6602f646141e3d545a91fbd1',
+              lastUpdatedByPortalUserId: null,
+              noUserLoggedIn: null,
+              lastUpdatedByIsSystem: null,
+            }
           },
         ];
 

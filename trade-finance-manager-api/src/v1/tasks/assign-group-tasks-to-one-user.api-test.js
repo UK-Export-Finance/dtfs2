@@ -9,6 +9,8 @@ const CONSTANTS = require('../../constants');
 const { mockFindOneDeal, mockFindUserById, mockUpdateDeal, mockFindOneDealFailure } = require('../__mocks__/common-api-mocks');
 const api = require('../api');
 
+const sessionUser = { _id: "mock-session-user" }
+
 describe('assignGroupTasksToOneUser', () => {
   beforeEach(() => {
     api.findOneDeal.mockReset();
@@ -39,7 +41,7 @@ describe('assignGroupTasksToOneUser', () => {
       });
     });
 
-    const result = await assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId);
+    const result = await assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, sessionUser);
 
     let filteredTasksResult = [];
 
@@ -64,7 +66,7 @@ describe('assignGroupTasksToOneUser', () => {
 
   it('should throw an error if update deal fails', async () => {
     when(api.updateDeal)
-      .calledWith(expect.anything(), expect.anything(), expect.anything())
+      .calledWith(expect.anything(), expect.anything(), expect.anything(), expect.anything())
       .mockRejectedValue(new Error({ status: 500, message: 'test error message' }));
 
     mockFindOneDeal();
@@ -76,7 +78,7 @@ describe('assignGroupTasksToOneUser', () => {
     const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
     const userId = mockUser._id;
 
-    await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId)).rejects.toThrow(Error);
+    await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, sessionUser)).rejects.toThrow(Error);
   });
 
   it('should throw an error if find deal fails', async () => {
@@ -90,6 +92,6 @@ describe('assignGroupTasksToOneUser', () => {
     const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
     const userId = mockUser._id;
 
-    await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId)).rejects.toThrow(Error);
+    await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, sessionUser)).rejects.toThrow(Error);
   });
 });

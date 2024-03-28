@@ -1,6 +1,5 @@
 const addTfmDealData = require('.');
 const mapSubmittedDeal = require('../../mappings/map-submitted-deal');
-const generateDateReceived = require('./dateReceived');
 const addDealProduct = require('./dealProduct');
 const addDealPricingAndRisk = require('./dealPricingAndRisk');
 const addDealStage = require('./dealStage');
@@ -25,7 +24,8 @@ describe('deal submit - add TFM data', () => {
     const expected = {
       ...mockDeal,
       tfm: {
-        ...generateDateReceived(),
+        dateReceived: expect.any(String),
+        dateReceivedTimestamp: expect.any(Number),
         parties: {},
         activities: [],
         product: addDealProduct(mockDeal),

@@ -79,7 +79,7 @@ const listAdditionalTasks = (deal) => {
  * @param {Object} deal
  * @returns {Object} deal with tasks
  */
-const createDealTasks = async (deal) => {
+const createDealTasks = async (deal, sessionUser) => {
   if (!deal) {
     return false;
   }
@@ -97,7 +97,7 @@ const createDealTasks = async (deal) => {
     },
   };
 
-  const updatedDeal = await api.updateDeal(dealId, dealUpdate);
+  const updatedDeal = await api.updateDeal(dealId, dealUpdate, sessionUser);
 
   return {
     ...deal,
