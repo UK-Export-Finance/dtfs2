@@ -35,7 +35,7 @@ const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notif
 const MOCK_GEF_DEAL_AIN = require('../../../src/v1/__mocks__/mock-gef-deal');
 const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
 const MOCK_GEF_DEAL_MIN = require('../../../src/v1/__mocks__/mock-gef-deal-MIN');
-const { MOCK_PORTAL_USER } = require('../../../../dtfs-central-api/api-tests/mocks/test-users/mock-portal-user');
+const { MOCK_PORTAL_USERS } = require('../../../src/v1/__mocks__/mock-portal-users');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
@@ -82,7 +82,7 @@ describe('/v1/deals', () => {
 
   describe('PUT /v1/deals/:dealId/submit', () => {
     it('404s submission for unknown id', async () => {
-      const { status } = await submitDeal({ dealId: '12345678910', checker: MOCK_PORTAL_USER });
+      const { status } = await submitDeal({ dealId: '12345678910', checker: MOCK_PORTAL_USERS[0] });
 
       expect(status).toEqual(404);
     });
