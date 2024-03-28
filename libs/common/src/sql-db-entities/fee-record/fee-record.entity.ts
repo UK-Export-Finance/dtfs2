@@ -21,6 +21,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
    */
   @ManyToOne(() => UtilisationReportEntity, (report) => report.feeRecords, {
     nullable: false,
+    onDelete: 'CASCADE',
   })
   report!: UtilisationReportEntity;
 
