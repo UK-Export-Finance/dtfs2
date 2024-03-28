@@ -1,4 +1,4 @@
-const { execute } = require('./issue-jwt-and-update-user');
+const { issueJwtAndUpdateUser } = require('./issue-jwt-and-update-user');
 const utils = require('../../../../utils/crypto.util');
 const userController = require('../../user/user.controller');
 const MOCK_TFM_USERS = require('../../../__mocks__/mock-users');
@@ -16,7 +16,7 @@ describe('auth-service/issue-jwt-and-update-user', () => {
     utils.issueJWT = jest.fn(() => mockIssueJwtResponse);
     userController.updateLastLoginAndResetSignInData = jest.fn().mockResolvedValue();
 
-    result = await execute(MOCK_TFM_USER);
+    result = await issueJwtAndUpdateUser(MOCK_TFM_USER);
   });
 
   it('should call userController.updateLastLoginAndResetSignInData with the provided TFM user and a sessionIdentifier', () => {

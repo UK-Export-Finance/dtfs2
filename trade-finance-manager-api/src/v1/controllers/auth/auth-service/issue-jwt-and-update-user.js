@@ -7,7 +7,7 @@ const userController = require('../../user/user.controller');
  * @param {Object} tfmUser: TFM user
  * @returns {Promise<String>} JWT token
  */
-const execute = async (tfmUser) => {
+const issueJwtAndUpdateUser = async (tfmUser) => {
   try {
     console.info('TFM auth service - issuing JWT and updating user');
 
@@ -25,4 +25,4 @@ const execute = async (tfmUser) => {
   }
 };
 
-module.exports = { execute };
+module.exports = { issueJwtAndUpdateUser };

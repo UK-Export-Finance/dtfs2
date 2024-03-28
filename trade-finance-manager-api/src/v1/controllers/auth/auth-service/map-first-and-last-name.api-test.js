@@ -1,83 +1,81 @@
-const { mapName, mapFirstAndLastName } = require('./map-first-and-last-name');
+const { mapFirstAndLastName } = require('./map-first-and-last-name');
 const MOCK_ENTRA_USER = require('../../../__mocks__/mock-entra-user');
 const { MOCK_TFM_SESSION_USER } = require('../../../__mocks__/mock-tfm-session-user');
 
-const mockEntraPropertyName = 'given_name';
-const mockTfmPropertyName = 'firstName';
-const mockDefaultCopy = 'No name';
-
-const baseParams = {
-  entraUser: MOCK_ENTRA_USER.idTokenClaims,
-  entraPropertyName: mockEntraPropertyName,
-  tfmUser: MOCK_TFM_SESSION_USER,
-  tfmPropertyName: mockTfmPropertyName,
-  defaultCopy: mockDefaultCopy,
-};
 
 describe('auth-service/map-first-and-last-name', () => {
-  describe('mapName', () => {
-    describe('when Entra user data has a value from the provided entraPropertyName', () => {
-      it('returns the value', () => {
-        const result = mapName(baseParams);
-
-        const expected = MOCK_ENTRA_USER.idTokenClaims[mockEntraPropertyName];
-
-        expect(result).toEqual(expected);
-      });
-    });
-
-    describe('when Entra user data does NOT have a value from the provided entraPropertyName', () => {
-      describe('when TFM user data has a value from the provided tfmPropertyName', () => {
-        it('returns the value', () => {
-          const result = mapName({
-            ...baseParams,
-            entraUser: MOCK_ENTRA_USER.idTokenClaims,
-            entraPropertyName: '',
-          });
-
-          const expected = MOCK_TFM_SESSION_USER[mockTfmPropertyName];
-
-          expect(result).toEqual(expected);
-        });
-      });
-
-      describe('when TFM user data does NOT has a value from the provided tfmPropertyName', () => {
-        it('returns the the provided defaultCopy', () => {
-          const result = mapName({
-            ...baseParams,
-            entraUser: MOCK_ENTRA_USER.idTokenClaims,
-            entraPropertyName: '',
-            tfmPropertyName: '',
-          });
-
-          const expected = mockDefaultCopy;
-
-          expect(result).toEqual(expected);
-        });
-      });
-    });
-  });
+  const entraClaimsWithNullForNames = { ...MOCK_ENTRA_USER.idTokenClaims, ...{ given_name: null, family_name: null }};
 
   describe('mapFirstAndLastName', () => {
-    it('returns a firstName and lastName via mapName function', () => {
+    it('returns a firstName and lastName from Entra claims', () => {
       const result = mapFirstAndLastName(MOCK_ENTRA_USER.idTokenClaims, MOCK_TFM_SESSION_USER);
 
-      const expected = {
-        firstName: mapName({
-          entraUser: MOCK_ENTRA_USER.idTokenClaims,
-          tfmUser: MOCK_TFM_SESSION_USER,
-          entraPropertyName: 'given_name',
-          tfmPropertyName: 'firstName',
-          defaultCopy: 'No name',
-        }),
-        lastName: mapName({
-          entraUser: MOCK_ENTRA_USER.idTokenClaims,
-          tfmUser: MOCK_TFM_SESSION_USER,
-          entraPropertyName: 'family_name',
-          tfmPropertyName: 'lastName',
-          defaultCopy: 'No surname',
-        }),
-      };
+      const expected = { firstName: 'Sarah', lastName: 'Walker' };
+
+      expect(result).toEqual(expected);
+    });
+
+    it('returns a firstName and lastName from session user', () => {
+      const result = mapFirstAndLastName(entraClaimsWithNullForNames, MOCK_TFM_SESSION_USER);
+
+      const expected = { firstName: 'Test', lastName: 'User' };
+
+      expect(result).toEqual(expected);
+    });
+
+
+    it('returns default firstName and lastName', () => {
+      const result = mapFirstAndLastName(entraClaimsWithNullForNames, {...MOCK_TFM_SESSION_USER, ...{ firstName: null, lastName: null}});
+
+      const expected = { firstName: 'No name', lastName: 'No surname' };
+
+      expect(result).toEqual(expected);
+    });
+
+    it('returns default firstName and lastName for undefined fields', () => {
+      const result = mapFirstAndLastName({}, {});
+
+      const expected = { firstName: 'No name', lastName: 'No surname' };
+
+      expect(result).toEqual(expected);
+    });
+
+    it('returns default firstName and lastName for empty strings', () => {
+      const result = mapFirstAndLastName({...MOCK_ENTRA_USER.idTokenClaims, ...{ given_name: '', family_name: '' }}, {...MOCK_TFM_SESSION_USER, ...{ firstName: '', lastName: ''}});
+
+      const expected = { firstName: 'No name', lastName: 'No surname' };
+
+      expect(result).toEqual(expected);
+    });
+
+    it('returns a first name from session user and lastName from Entra claims', () => {
+      const result = mapFirstAndLastName({ ...MOCK_ENTRA_USER.idTokenClaims, ...{ given_name: null }}, MOCK_TFM_SESSION_USER);
+
+      const expected = { firstName: 'Test', lastName: 'Walker' };
+
+      expect(result).toEqual(expected);
+    });
+
+    it('returns a first name from Entra claims and lastName from session user', () => {
+      const result = mapFirstAndLastName({ ...MOCK_ENTRA_USER.idTokenClaims, ...{ family_name: null }}, MOCK_TFM_SESSION_USER);
+
+      const expected = { firstName: 'Sarah', lastName: 'User' };
+
+      expect(result).toEqual(expected);
+    });
+
+    it('returns default first name and lastName from Entra claims', () => {
+      const result = mapFirstAndLastName({ ...MOCK_ENTRA_USER.idTokenClaims, ...{ given_name: null }}, { ...MOCK_TFM_SESSION_USER, ...{ firstName: null }});
+
+      const expected = { firstName: 'No name', lastName: 'Walker' };
+
+      expect(result).toEqual(expected);
+    });
+
+    it('returns first name from Entra claims and default lastName', () => {
+      const result = mapFirstAndLastName({ ...MOCK_ENTRA_USER.idTokenClaims, ...{ family_name: null }}, { ...MOCK_TFM_SESSION_USER, ...{ lastName: null}});
+
+      const expected = { firstName: 'Sarah', lastName: 'No surname' };
 
       expect(result).toEqual(expected);
     });

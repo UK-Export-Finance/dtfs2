@@ -1,6 +1,6 @@
 const authProvider = require('../auth-provider');
 const tfmUser = require('./get-or-create-tfm-user');
-const issueJwtAndUpdateUser = require('./issue-jwt-and-update-user');
+const { issueJwtAndUpdateUser } = require('./issue-jwt-and-update-user');
 
 /**
  * processSsoRedirect
@@ -26,7 +26,7 @@ const processSsoRedirect = async ({ pkceCodes, authCodeRequest, code, state }) =
 
       const user = await tfmUser.getOrCreate(entraUser);
 
-      const token = await issueJwtAndUpdateUser.execute(user);
+      const token = await issueJwtAndUpdateUser(user);
 
       const redirectUrl = authProvider.loginRedirectUrl(state);
 
