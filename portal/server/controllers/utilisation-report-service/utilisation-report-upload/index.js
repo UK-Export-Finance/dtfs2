@@ -189,10 +189,10 @@ const postReportConfirmAndSend = async (req, res) => {
     const response = await api.uploadUtilisationReportData(user, reportPeriod, mappedReportData, fileBuffer, formattedReportPeriod, userToken);
 
     if (response?.status === 200 || response?.status === 201) {
-      const { paymentOfficerEmail } = response.data;
+      const { paymentOfficerEmails } = response.data;
       req.session.utilisationReport = {
         ...req.session.utilisationReport,
-        paymentOfficerEmail,
+        paymentOfficerEmails,
       };
       return res.redirect('/utilisation-report-upload/confirmation');
     }
@@ -209,13 +209,13 @@ const getReportConfirmation = async (req, res) => {
     if (!req.session.utilisationReport) {
       return res.redirect('/utilisation-report-upload');
     }
-    const { formattedReportPeriod, paymentOfficerEmail } = req.session.utilisationReport;
+    const { formattedReportPeriod, paymentOfficerEmails } = req.session.utilisationReport;
     delete req.session.utilisationReport;
     return res.render('utilisation-report-service/utilisation-report-upload/confirmation.njk', {
       user: req.session.user,
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       reportPeriod: formattedReportPeriod,
-      paymentOfficerEmail,
+      paymentOfficerEmails,
     });
   } catch (error) {
     console.error(error);
