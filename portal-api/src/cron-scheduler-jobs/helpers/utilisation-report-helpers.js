@@ -118,7 +118,7 @@ const sendEmailForBank = async ({ emailDescription, sendEmailCallback, bank }) =
     const paymentOfficerTeamEmails = paymentOfficerTeam?.emails;
 
     if (!Array.isArray(paymentOfficerTeamEmails) || !paymentOfficerTeamEmails.length) {
-      console.warn(`Not sending ${emailDescription} email to '${bankName}' - paymentOfficerTeam.emails is not an array or is empty`);
+      console.warn(`Not sending ${emailDescription} email to '${bankName}' - paymentOfficerTeam.emails property against bank is not an array or is empty`);
       return;
     }
     await Promise.all(

@@ -333,7 +333,7 @@ describe('utilisation-report-helpers', () => {
 
       // Assert
       expect(sendEmailCallback).not.toHaveBeenCalled();
-      expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('paymentOfficerTeam.emails is not an array or is empty'));
+      expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('paymentOfficerTeam.emails property against bank is not an array or is empty'));
     });
 
     it('does not send an email when the bank has and invalid payment officer team email', async () => {

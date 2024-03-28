@@ -12,7 +12,7 @@
             <p class="govuk-body" data-cy="paragraph">A confirmation email has been sent to:
                 <ul class="govuk-list govuk-list--bullet">
                 {% for paymentOfficerEmail in paymentOfficerEmails %}
-                    <li data-cy="list-item-link-{{ paymentOfficerEmail }}">{{ paymentOfficerEmail }}</li>
+                    <li>{{ paymentOfficerEmail }}</li>
                 {% endfor %}
                 <ul>
             </p>

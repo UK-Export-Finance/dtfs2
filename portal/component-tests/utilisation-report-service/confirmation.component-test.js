@@ -18,10 +18,9 @@ describe(page, () => {
 
   it('should render paragraph', () => {
     wrapper.expectText('[data-cy="paragraph"]').toRead('A confirmation email has been sent to:');
-    wrapper.expectElement('[data-cy="list-item-link-tradefinance1@barclays.com"]').toExist();
-    wrapper.expectText('[data-cy="list-item-link-tradefinance1@barclays.com"]').toRead('tradefinance1@barclays.com');
-    wrapper.expectElement('[data-cy="list-item-link-tradefinance2@barclays.com"]').toExist();
-    wrapper.expectText('[data-cy="list-item-link-tradefinance2@barclays.com"]').toRead('tradefinance2@barclays.com');
+    for (const paymentOfficerEmail of paymentOfficerEmails) {
+      wrapper.expectElement(`ul.govuk-list > li:contains("${paymentOfficerEmail}")`).toExist();
+  }
   });
 
   it('should render Signout button', () => {
