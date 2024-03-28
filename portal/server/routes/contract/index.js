@@ -139,6 +139,7 @@ router.post('/contract/:_id/delete', [validateRole({ role: [MAKER] }), validateB
   return res.redirect('/dashboard');
 });
 
+// Submit to the checker
 router.get('/contract/:_id/ready-for-review', [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank], async (req, res) => {
   const { deal } = req.apiData;
 
@@ -148,6 +149,7 @@ router.get('/contract/:_id/ready-for-review', [validateRole({ role: [MAKER] }), 
   });
 });
 
+// Submit to the checker
 router.post('/contract/:_id/ready-for-review', [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { comments } = req.body;
@@ -271,6 +273,7 @@ router.post('/contract/:_id/return-to-maker', [validateRole({ role: [CHECKER] })
   return res.redirect('/dashboard');
 });
 
+// Submit to TFM
 router.get('/contract/:_id/confirm-submission', [validateRole({ role: [CHECKER] }), validateBank], async (req, res) => {
   const { _id } = req.params;
 
@@ -280,6 +283,7 @@ router.get('/contract/:_id/confirm-submission', [validateRole({ role: [CHECKER] 
   });
 });
 
+// Submit to TFM
 router.post('/contract/:_id/confirm-submission', [validateRole({ role: [CHECKER] }), provide([DEAL]), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { confirmSubmit } = req.body;

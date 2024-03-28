@@ -120,6 +120,9 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   if (dealHasBeenResubmit) {
     const { tfm: tfmDeal } = await findOneTfmDeal(dealId);
 
+    // Update portal deal status
+    await updatePortalDealStatus(mappedDeal);
+
     /**
      * checks if can update to MIN
      * if it can, changes mappedDeal to show MIN to allow gef fee record to be calculated
@@ -172,7 +175,6 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
       console.info('TFM deal %s stage has been updated to %s', dealId, updatedDealStage);
     }
-    await updatePortalDealStatus(updatedDeal);
 
     return api.updateDeal(dealId, updatedDeal);
   }
