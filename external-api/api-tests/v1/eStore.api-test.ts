@@ -30,7 +30,7 @@ const mockUpdateOne = jest.fn();
 // Mock MongoDB calls
 jest.mock('../../src/database/mongo-client', () => ({
   getCollection: jest.fn(() => ({
-    insertOne: mockInsertOne,
+    insertOne: mockInsertOne.mockResolvedValue({ insertedId: '6597dffeb5ef5ff4267e5043' }),
     findOne: mockFindOne,
     updateOne: mockUpdateOne,
   })),
