@@ -18,6 +18,6 @@ export const initialiseCronJobScheduler = (jobs: CronSchedulerJob[]) => {
     console.info("Adding scheduled job '%s' on schedule '%s'", description, cronExpression);
     cron
       .schedule(cronExpression, asyncTaskToSyncTask(taskWithErrorLogging(description, task)))
-      .on('error', (error) => console.error("An error occurred scheduling job '%s': %O", description, error));
+      .on('error', (error) => console.error("An error occurred scheduling job '%s': %o", description, error));
   });
 };
