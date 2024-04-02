@@ -1,4 +1,21 @@
+# Workflow Name: Notify
+# Trigger: Pull requests to the main branch
+#
+# Environment:
+# environment: set to dev
+# timezone: retrieved from vars.TIMEZONE
+#
+# Setup Test Infrastructure:
+# Name: Infrastructure setup
+# Runs on: ubuntu-latest
+# Outputs environment and timezone variables for use in subsequent jobs.
+# Steps:
+# Echoes the environment and timezone for verification.
+#
+
 name: Notify
+run-name: 💬 Notifying on ${{ github.event.number }}
+
 on:
   push:
     branches:
@@ -24,10 +41,12 @@ jobs:
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.timezone }}"
 
-  notify-teams:
-    runs-on: ubuntu-latest
+  # 2. Notify
+  notify:
+    name: Notifying 💬
     environment:
       name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
 
     steps:
       - name: Repository
