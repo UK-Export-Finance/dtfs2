@@ -23,7 +23,7 @@ export const lookup = async (req: Request, res: Response) => {
     url: `${APIM_MDM_URL}customers?companyReg=${companyReg}`,
     headers,
   }).catch((error: any) => {
-    console.error('Error calling Party DB API %s', error);
+    console.error('Error calling Party DB API %o', error);
     return { data: 'Failed to call Party DB API', status: error?.response?.status || 500 };
   });
 

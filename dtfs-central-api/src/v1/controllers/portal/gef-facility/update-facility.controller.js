@@ -41,7 +41,7 @@ const updateFacility = async (id, updateBody) => {
 
     return updatedFacility;
   } catch (error) {
-    console.error('Unable to update the facility %s', error);
+    console.error('Unable to update the facility %o', error);
     return {};
   }
 };

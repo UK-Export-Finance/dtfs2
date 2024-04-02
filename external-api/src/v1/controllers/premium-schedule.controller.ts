@@ -28,7 +28,7 @@ const premiumScheduleCalls = {
     const premiumSchedulePayloadFormatted = premiumSchedulePayload;
 
     if (objectIsEmpty(premiumSchedulePayload) || premiumSchedulePayload.facilityURN === UKEF_ID.PENDING) {
-      console.error('Unable to create premium schedule. %O', premiumSchedulePayload);
+      console.error('Unable to create premium schedule. %o', premiumSchedulePayload);
       return null;
     }
 
@@ -44,7 +44,7 @@ const premiumScheduleCalls = {
         data: [premiumSchedulePayloadFormatted],
       }).catch((error: any) => {
         console.error(
-          'Error calling POST Premium schedule with facilityURN: %s: %O %s',
+          'Error calling POST Premium schedule with facilityURN: %s: %o %s',
           premiumSchedulePayloadFormatted?.facilityURN,
           error?.response?.data,
           error?.response?.status,
@@ -55,7 +55,7 @@ const premiumScheduleCalls = {
       console.info('Premium schedule successfully created for %s', premiumSchedulePayloadFormatted.facilityURN);
       return response.status ? response.status : response;
     } catch (error) {
-      console.error('Error calling POST Premium schedule %s', error);
+      console.error('Error calling POST Premium schedule %o', error);
       return null;
     }
   },
@@ -130,7 +130,7 @@ export const getPremiumSchedule = async (req: Request, res: Response) => {
   const postPremiumScheduleResponse = await premiumScheduleCalls.postPremiumSchedule(premiumScheduleParameters);
 
   if (!postPremiumScheduleResponse) {
-    console.error('Error calling Premium schedule API %O', postPremiumScheduleResponse);
+    console.error('Error calling Premium schedule API %o', postPremiumScheduleResponse);
     return res.status(400).send();
   }
 

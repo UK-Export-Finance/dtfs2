@@ -15,7 +15,7 @@ const getLastUploadedReportByBankId = async (req, res) => {
 
     return res.status(200).send(lastUploadedReport);
   } catch (error) {
-    console.error('Unable to get last uploaded report %O', error);
+    console.error('Unable to get last uploaded report %o', error);
     return res.status(error.response?.status ?? 500).send({ message: 'Failed to get last uploaded report' });
   }
 };

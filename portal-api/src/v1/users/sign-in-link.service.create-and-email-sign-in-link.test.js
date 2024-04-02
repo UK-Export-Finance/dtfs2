@@ -109,7 +109,7 @@ describe('SignInLinkService', () => {
 
           testCreatingAndEmailingTheSignInLinkRejects({
             expectedCause: createSignInLinkTokenError,
-            expectedMessage: 'Failed to create a sign in token.',
+            expectedMessage: 'Failed to create a sign in token %s',
           });
         });
 
@@ -128,7 +128,7 @@ describe('SignInLinkService', () => {
 
             testCreatingAndEmailingTheSignInLinkRejects({
               expectedCause: hashError,
-              expectedMessage: 'Failed to save the sign in token.',
+              expectedMessage: 'Failed to create a sign in token %s',
             });
           });
 
@@ -146,7 +146,7 @@ describe('SignInLinkService', () => {
 
               testCreatingAndEmailingTheSignInLinkRejects({
                 expectedCause: savingTokenError,
-                expectedMessage: 'Failed to save the sign in token.',
+                expectedMessage: 'Failed to create a sign in token %s',
               });
             });
 

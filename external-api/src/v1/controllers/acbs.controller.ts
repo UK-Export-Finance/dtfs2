@@ -109,9 +109,9 @@ const createAcbsRecord = async (deal: any, bank: any) => {
         deal,
         bank,
       },
-    }).catch((e: any) => {
-      console.error('Error creating ACBS record: %O', e);
-      return e;
+    }).catch((error: any) => {
+      console.error('Error creating ACBS record: %o', error);
+      return error;
     });
 
     if (response.status) {
@@ -138,7 +138,7 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
       return res.status(status).send(data);
     }
   } catch (error: any) {
-    console.error('ACBS create POST failed %s', error);
+    console.error('ACBS create POST failed %o', error);
     return res.status(400).send();
   }
 
@@ -164,9 +164,9 @@ const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
         facility,
         deal,
       },
-    }).catch((e) => {
-      console.error('ACBS issue facility POST failed %O', e);
-      return e;
+    }).catch((error) => {
+      console.error('ACBS issue facility POST failed %o', error);
+      return error;
     });
 
     if (response.status) {
@@ -194,7 +194,7 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
       return res.status(status).send(data);
     }
   } catch (error) {
-    console.error('Error during ACBS facility issue POST: %s', error);
+    console.error('Error during ACBS facility issue POST: %o', error);
     return res.status(400).send();
   }
 
@@ -218,9 +218,9 @@ const amendAcbsFacility = async (amendment: Amendment) => {
       data: {
         amendment,
       },
-    }).catch((e: any) => {
-      console.error('Error amending ACBS facility: %O', e);
-      return e;
+    }).catch((error: any) => {
+      console.error('Error amending ACBS facility: %o', error);
+      return error;
     });
 
     if (response.status) {
@@ -275,7 +275,7 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
       return res.status(status).send(data);
     }
   } catch (error) {
-    console.error('Error executing ACBS Facility POST: %s', error);
+    console.error('Error executing ACBS Facility POST: %o', error);
     return res.status(400).send();
   }
 

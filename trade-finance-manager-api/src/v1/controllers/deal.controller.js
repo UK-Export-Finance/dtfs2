@@ -52,7 +52,7 @@ const getDeal = async (req, res) => {
 
     return res.status(200).send(reducedDeal);
   } catch (err) {
-    console.error('Unable to get deal: %O', err);
+    console.error('Unable to get deal: %o', err);
     return res.status(400).send({ data: 'Unable to get deal' });
   }
 };
@@ -145,7 +145,7 @@ const updateDeal = async (req, res) => {
       updateDeal: updatedDeal.tfm,
     });
   } catch (error) {
-    console.error('Unable to update deal: %O', error);
+    console.error('Unable to update deal: %o', error);
     return res.status(400).send({ data: 'Unable to update deal' });
   }
 };
@@ -267,7 +267,7 @@ const updateLeadUnderwriter = async (req, res) => {
 
     return res.status(200).send(updatedDealTfm);
   } catch (error) {
-    console.error('Unable to update lead underwriter: %O', error);
+    console.error('Unable to update lead underwriter: %o', error);
     return res.status(500).send({ data: 'Unable to update lead underwriter' });
   }
 };

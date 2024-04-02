@@ -21,7 +21,7 @@ export const lookup = async (req: Request, res: Response) => {
     url: `${companiesHouseURL}/company/${sanitisedRegNo}`,
     auth: { username, password: '' },
   }).catch((error: any) => {
-    console.error('Error calling Companies House API %O %s', error.response.data, error.response.status);
+    console.error('Error calling Companies House API %o %s', error.response.data, error.response.status);
     return { data: error.response.data, status: error.response.status };
   });
 

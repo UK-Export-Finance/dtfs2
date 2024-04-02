@@ -19,7 +19,7 @@ const getPaymentOfficerTeamDetailsFromBank = async (bankId) => {
     const { teamName, email } = data.paymentOfficerTeam;
     return { teamName, email };
   } catch (error) {
-    console.error('Unable to get bank payment officer team details by ID %s', error);
+    console.error('Unable to get bank payment officer team details by ID %o', error);
     return { status: error?.code || 500, data: 'Failed to get bank payment officer team details by ID' };
   }
 };
@@ -59,7 +59,7 @@ const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submitted
     });
     return { paymentOfficerEmail: email };
   } catch (error) {
-    console.error('Unable to get payment officer team details and send email %s', error);
+    console.error('Unable to get payment officer team details and send email %o', error);
     return { status: error?.code || 500, data: 'Failed to get payment officer team details and send email' };
   }
 };
@@ -128,7 +128,7 @@ const uploadReportAndSendNotification = async (req, res) => {
 
     if (saveDataResponse.status !== 201) {
       const status = saveDataResponse.status || 500;
-      console.error('Failed to save utilisation report: %O', saveDataResponse);
+      console.error('Failed to save utilisation report: %o', saveDataResponse);
       return res.status(status).send('Failed to save utilisation report');
     }
     await sendEmailToPdcInputtersEmail(parsedUser?.bank?.name, formattedReportPeriod);
@@ -140,7 +140,7 @@ const uploadReportAndSendNotification = async (req, res) => {
     );
     return res.status(201).send({ paymentOfficerEmail });
   } catch (error) {
-    console.error('Failed to save utilisation report: %O', error);
+    console.error('Failed to save utilisation report: %o', error);
     return res.status(error.response?.status ?? 500).send('Failed to save utilisation report');
   }
 };

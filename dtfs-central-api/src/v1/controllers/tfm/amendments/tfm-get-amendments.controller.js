@@ -26,7 +26,7 @@ const findAllAmendmentsByStatus = async (status) => {
     // returns the amendment object for the given facilityId and amendmentId
     return amendment[0]?.amendments ?? null;
   } catch (error) {
-    console.error('Unable to find amendments object %s', error);
+    console.error('Unable to find amendments object %o', error);
     return null;
   }
 };
@@ -66,7 +66,7 @@ const findAllAmendmentsByFacilityId = async (facilityId) => {
     // returns the amendment object for the given facilityId and amendmentId
     return amendment[0]?.amendments ?? null;
   } catch (error) {
-    console.error('Unable to find amendments object %s', error);
+    console.error('Unable to find amendments object %o', error);
     return null;
   }
 };
@@ -119,7 +119,7 @@ const findAmendmentById = async (facilityId, amendmentId) => {
     // returns the amendment object for the given facilityId and amendmentId
     return amendment[0]?.amendments ?? null;
   } catch (error) {
-    console.error('Unable to find amendments object %s', error);
+    console.error('Unable to find amendments object %o', error);
     return null;
   }
 };
@@ -161,7 +161,7 @@ const findAmendmentsByDealId = async (dealId) => {
     // returns the amendment object for the given dealId
     return amendment[0]?.amendments ?? null;
   } catch (error) {
-    console.error('Unable to find the amendments object by Deal Id %s', error);
+    console.error('Unable to find the amendments object by Deal Id %o', error);
     return null;
   }
 };
@@ -198,7 +198,7 @@ const findAmendmentByStatusAndFacilityId = async (facilityId, status) => {
     // returns the amendment object for the given facilityId
     return amendment[0]?.amendments ?? null;
   } catch (error) {
-    console.error('Unable to find amendments object %s', error);
+    console.error('Unable to find amendments object %o', error);
     return null;
   }
 };
@@ -241,7 +241,7 @@ const findAmendmentByStatusAndDealId = async (dealId, status) => {
     // returns the amendment object for the given dealId
     return amendment[0]?.amendments ?? null;
   } catch (error) {
-    console.error('Unable to find the amendments object %s', error);
+    console.error('Unable to find the amendments object %o', error);
     return null;
   }
 };
@@ -313,7 +313,7 @@ const findLatestCompletedValueAmendmentByFacilityId = async (facilityId) => {
     }
     return null;
   } catch (error) {
-    console.error('Unable to find latest completed amendments value %s', error);
+    console.error('Unable to find latest completed amendments value %o', error);
     return null;
   }
 };
@@ -384,7 +384,7 @@ const findLatestCompletedDateAmendmentByFacilityId = async (facilityId) => {
     }
     return null;
   } catch (error) {
-    console.error('Unable to find latest completed amendments coverEndDate %s', error);
+    console.error('Unable to find latest completed amendments coverEndDate %o', error);
     return null;
   }
 };
@@ -412,7 +412,7 @@ const findLatestCompletedAmendmentByFacilityIdVersion = async (facilityId) => {
       .toArray();
     return amendment[0]?.amendments?.version ?? null;
   } catch (error) {
-    console.error('Unable to find amendments object %s', error);
+    console.error('Unable to find amendments object %o', error);
     return null;
   }
 };
@@ -448,7 +448,7 @@ const findLatestCompletedAmendmentByDealId = async (dealId) => {
       .toArray();
     return amendment[0]?.amendments ?? null;
   } catch (error) {
-    console.error('Unable to find amendments object %s', error);
+    console.error('Unable to find amendments object %o', error);
     return null;
   }
 };

@@ -59,7 +59,7 @@ export const create = async (req: Request, res: Response) => {
      * 13. Check if the dealId is a valid ObjectId
      */
     if (!Object.keys(eStoreData).length) {
-      console.error('❌ Invalid eStore payload %O', eStoreData);
+      console.error('❌ Invalid eStore payload %o', eStoreData);
 
       // CRON job log update
       await cronJobLogs.updateOne(
@@ -208,7 +208,7 @@ export const create = async (req: Request, res: Response) => {
           );
         }
       } else {
-        console.error('❌ eStore site exist check failed for deal %s %O', eStoreData.dealIdentifier, siteExistsResponse);
+        console.error('❌ eStore site exist check failed for deal %s %o', eStoreData.dealIdentifier, siteExistsResponse);
 
         // CRON job log update
         await cronJobLogs.updateOne(
