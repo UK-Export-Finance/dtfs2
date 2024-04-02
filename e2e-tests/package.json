@@ -23,9 +23,9 @@
     "load": "cd .. && npm run load"
   },
   "devDependencies": {
-    "bson": "^6.4.0",
+    "bson": "^6.5.0",
     "chance": "^1.1.11",
-    "cypress": "^13.6.6",
+    "cypress": "^13.7.1",
     "cypress-file-upload": "^5.0.8",
     "cypress-plugin-tab": "^1.0.5",
     "cypress-v10-preserve-cookie": "^1.2.1",

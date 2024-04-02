@@ -24,15 +24,10 @@ const df = require('durable-functions');
 const retryOptions = require('../helpers/retryOptions');
 const mappings = require('../mappings');
 
-module.exports = df.orchestrator(function* Facility(context) {
+df.app.orchestration('acbs-amend-facility-loan-record', function* Facility(context) {
   try {
     if (context.df.getInput()) {
-      const {
-        facilityId,
-        facility,
-        amendments,
-        fmr,
-      } = context.df.getInput();
+      const { facilityId, facility, amendments, fmr } = context.df.getInput();
       const { amendment } = amendments;
       let facilityLoanRecordAmendments;
 
@@ -83,6 +78,6 @@ module.exports = df.orchestrator(function* Facility(context) {
     console.error('No input specified');
   } catch (error) {
     console.error('Error amending facility loan record: %o', error);
-    throw new Error('Error amending facility loan record %o', error);
+    throw new Error(`Error amending facility loan record ${error}`);
   }
 });

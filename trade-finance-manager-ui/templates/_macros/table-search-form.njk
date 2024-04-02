@@ -1,0 +1,31 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  {% set tableName = params.tableName %}
+  {% set csrfToken = params.csrfToken %}
+
+  {% set buttonText %}
+    Search {{tableName}}
+  {% endset %}
+
+  <form method="post" autocomplete="off" class="ukef-search-form" data-cy="ukef-search-form">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    {{ govukInput({
+      id: 'search',
+      name: 'search',
+      attributes: {
+        'data-cy': 'search-input'
+      }
+    }) }}
+
+    {{ govukButton({
+      text: buttonText,
+      classes: 'ukef-search-form__button',
+      attributes: {
+        'data-cy': 'submit-button'
+      }
+    }) }}
+  </form>
+
+{% endmacro %}

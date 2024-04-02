@@ -14,7 +14,7 @@
  * HTTP -> DOF -> DAF
  * ------------------
  */
-
+const df = require('durable-functions');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 
@@ -33,11 +33,15 @@ const getLoanId = async (context) => {
       // Non 200 HTTP response code
       if (isHttpErrorStatus(status)) {
         throw new Error(
-          JSON.stringify({
-            name: 'ACBS Loan ID fetch error',
-            facilityId,
-            dataReceived: data,
-          }, null, 4),
+          JSON.stringify(
+            {
+              name: 'ACBS Loan ID fetch error',
+              facilityId,
+              dataReceived: data,
+            },
+            null,
+            4,
+          ),
         );
       }
 
@@ -52,19 +56,24 @@ const getLoanId = async (context) => {
 
       // Throw an error upon data validation failure
       throw new Error(
-        JSON.stringify({
-          name: 'Invalid dataset returned',
-          facilityId,
-          dataReceived: data,
-        }, null, 4),
+        JSON.stringify(
+          {
+            name: 'Invalid dataset returned',
+            facilityId,
+            dataReceived: data,
+          },
+          null,
+          4,
+        ),
       );
     }
 
     return null;
   } catch (error) {
-    console.error('Error getting loan id for facility: %d', error);
-    throw new Error('Error getting loan id for facility %o', error);
+    console.error('Error getting loan id for facility: %o', error);
+    throw new Error(`Error getting loan id for facility ${error}`);
   }
 };
-
-module.exports = getLoanId;
+df.app.activity('get-loan-id', {
+  handler: getLoanId,
+});

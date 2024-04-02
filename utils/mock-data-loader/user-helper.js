@@ -1,6 +1,8 @@
 const api = require('./api');
 const tfmApi = require('./tfm/api');
 const { MAKER, ADMIN } = require('./portal/roles');
+const FailedToCreateLoggedInUserSessionError = require('./errors/failed-to-create-logged-in-user-session.error');
+const { logger } = require('./helpers/logger.helper');
 
 const mockDataLoaderUser = {
   username: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
@@ -24,43 +26,56 @@ const mockDataLoaderTFMUser = {
 };
 
 const createAndLogInAsInitialUser = async () => {
-  console.info('Portal login as user %s', mockDataLoaderUser.username);
+  logger.info('logging in as initial portal user');
   try {
     return await api.loginViaPortal(mockDataLoaderUser);
-  } catch {
-    console.info('Creating portal user %s', mockDataLoaderUser.username);
+  } catch (error) {
+    logger.warn(
+      `login failed for initial portal user:\
+    \n    ${error.message}\nrecreating initial portal user`,
+      { depth: 1 },
+    );
     await api.createInitialUser(mockDataLoaderUser);
     return api.loginViaPortal(mockDataLoaderUser);
   }
 };
 
 const deleteInitialUser = async (token) => {
+  logger.info('deleting initial Portal user');
   const allUsers = await api.listUsers(token);
   const userToDelete = allUsers.find((user) => user.username === mockDataLoaderUser.username);
-  console.info(`deleting user ${userToDelete.username}`);
   await api.deleteUser(userToDelete, token);
 };
 
 const createAndLogInAsInitialTfmUser = async () => {
-  console.info('TFM login as user %s', mockDataLoaderTFMUser.username);
-  let token = await api.loginTfmUser(mockDataLoaderTFMUser);
+  try {
+    logger.info('logging in as initial TFM user');
+    const token = await api.loginTfmUser(mockDataLoaderTFMUser);
 
-  if (!token) {
-    console.info('Creating TFM user %s', mockDataLoaderTFMUser.username);
+    if (!token) {
+      throw new FailedToCreateLoggedInUserSessionError({ username: mockDataLoaderTFMUser.username, cause: 'No token was present on response' });
+    }
 
+    return token;
+  } catch (error) {
+    logger.warn(
+      `login failed for initial TFM user:\
+        \n    ${error.message}\nrecreating initial TFM user`,
+      {
+        depth: 1,
+      },
+    );
     await api.createInitialTfmUser(mockDataLoaderTFMUser);
-    token = await api.loginTfmUser(mockDataLoaderTFMUser);
+    return api.loginTfmUser(mockDataLoaderTFMUser);
   }
-
-  return token;
 };
 
 const deleteInitialTFMUser = async (token) => {
+  logger.info('deleting initial TFM user');
   const allUsers = await tfmApi.listUsers(token);
   const userToDelete = allUsers.filter((user) => user.username === 're-insert-mocks');
 
   for (const user of userToDelete) {
-    console.info(`deleting tfm user ${user.username}`);
     await tfmApi.deleteUser(user);
   }
 };

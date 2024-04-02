@@ -48,7 +48,7 @@ jobs:
     # environment:
     #   name: ${{ needs.deployment-environment.outputs.environment }}
     strategy:
-      max-parallel: 4
+      max-parallel: 2
       matrix:
         repository:
           - portal-ui

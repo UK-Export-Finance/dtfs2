@@ -35,10 +35,10 @@ describe('generateHeadingText', () => {
   });
 
   describe('when there is no submittedValue', () => {
-    it('should return `All deals` text', () => {
+    it('should return `All undefined` text', () => {
       const result = generateHeadingText(0, '');
 
-      const expected = 'All deals';
+      const expected = 'All undefined';
       expect(result).toEqual(expected);
     });
   });

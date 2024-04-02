@@ -28,7 +28,7 @@ Additional aspects:
 import { Request, Response } from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
-import { isValidCurrency, isValidDate } from '../../utils/inputValidations';
+import { isValidCurrency, isValidDate } from '../../helpers';
 dotenv.config();
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;

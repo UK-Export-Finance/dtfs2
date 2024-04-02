@@ -37,6 +37,7 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
 - Webpack
 - GovUK and MOJ design systems
 - Nunjucks (UI templates)
+- [Connect-Flash](https://www.npmjs.com/package/connect-flash)
 
 ### Setup :gear:
 
@@ -84,6 +85,13 @@ To stop the local environment, simply exit the running terminal and run:
 ```shell
 docker-compose down
 ```
+
+## Different docker-compose files
+
+There are 3 different docker-compose files right now.
+- docker-compose.yml is used for local development
+- docker-compose.gha.yml is used for the pipelines to run our tests against
+- docker-compose.replica-set.yml is used when you need a replica set enabled on your local database, e.g. when working with the mongodb change stream
 
 ## Login Credentials :key:
 

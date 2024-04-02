@@ -14,29 +14,22 @@
  * HTTP -> DOF -> DAF
  * ------------------
  */
-
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
-const mandatoryFields = [
-  'effectiveDate',
-  'amountAmendment',
-];
+const mandatoryFields = ['effectiveDate', 'amountAmendment'];
 
 const updateFacilityLoanAmount = async (context) => {
   try {
-    const {
-      loanId,
-      facilityId,
-      acbsFacilityLoanInput,
-    } = context.bindingData;
+    const { loanId, facilityId, acbsFacilityLoanInput } = context.bindingData;
 
     const missingMandatory = findMissingMandatory(acbsFacilityLoanInput, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();
@@ -44,13 +37,17 @@ const updateFacilityLoanAmount = async (context) => {
     const { status, data } = await api.updateFacilityLoanAmount(facilityId, loanId, acbsFacilityLoanInput);
     if (isHttpErrorStatus(status)) {
       throw new Error(
-        JSON.stringify({
-          name: 'ACBS Facility loan amount amend error',
-          submittedToACBS,
-          receivedFromACBS: getNowAsIsoString(),
-          dataReceived: data,
-          dataSent: acbsFacilityLoanInput,
-        }, null, 4),
+        JSON.stringify(
+          {
+            name: 'ACBS Facility loan amount amend error',
+            submittedToACBS,
+            receivedFromACBS: getNowAsIsoString(),
+            dataReceived: data,
+            dataSent: acbsFacilityLoanInput,
+          },
+          null,
+          4,
+        ),
       );
     }
 
@@ -63,8 +60,10 @@ const updateFacilityLoanAmount = async (context) => {
     };
   } catch (error) {
     console.error('Error amending facility loan amount: %o', error);
-    throw new Error('Error amending facility loan amount %o', error);
+    throw new Error(`Error amending facility loan amount ${error}`);
   }
 };
 
-module.exports = updateFacilityLoanAmount;
+df.app.activity('update-facility-loan-amount', {
+  handler: updateFacilityLoanAmount,
+});

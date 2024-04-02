@@ -14,28 +14,22 @@
  * HTTP -> DOF -> DAF
  * ------------------
  */
-
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
-const mandatoryFields = [
-  'expiryDate',
-];
+const mandatoryFields = ['expiryDate'];
 
 const updateFacilityLoan = async (context) => {
   try {
-    const {
-      loanId,
-      facilityId,
-      acbsFacilityLoanInput,
-    } = context.bindingData;
+    const { loanId, facilityId, acbsFacilityLoanInput } = context.bindingData;
 
     const missingMandatory = findMissingMandatory(acbsFacilityLoanInput, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();
@@ -44,13 +38,17 @@ const updateFacilityLoan = async (context) => {
 
     if (isHttpErrorStatus(status)) {
       throw new Error(
-        JSON.stringify({
-          name: 'ACBS Facility loan amend error',
-          submittedToACBS,
-          receivedFromACBS: getNowAsIsoString(),
-          dataReceived: data,
-          dataSent: acbsFacilityLoanInput,
-        }, null, 4),
+        JSON.stringify(
+          {
+            name: 'ACBS Facility loan amend error',
+            submittedToACBS,
+            receivedFromACBS: getNowAsIsoString(),
+            dataReceived: data,
+            dataSent: acbsFacilityLoanInput,
+          },
+          null,
+          4,
+        ),
       );
     }
 
@@ -63,8 +61,9 @@ const updateFacilityLoan = async (context) => {
     };
   } catch (error) {
     console.error('Error amending facility loan record: %o', error);
-    throw new Error('Error amending facility loan record %o', error);
+    throw new Error(`Error amending facility loan record ${error}`);
   }
 };
-
-module.exports = updateFacilityLoan;
+df.app.activity('update-facility-loan', {
+  handler: updateFacilityLoan,
+});

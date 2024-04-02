@@ -1,4 +1,5 @@
 const axios = require('axios');
+const ApiError = require('./errors/api.error');
 require('dotenv').config();
 
 const { DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY } = process.env;
@@ -14,7 +15,9 @@ const getDeal = async (dealId) => {
     method: 'get',
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
     headers,
-  }).catch((error) => { console.error('Error calling API %o', error); });
+  }).catch((error) => {
+    throw new ApiError({ cause: error });
+  });
 
   return response.data;
 };
@@ -31,7 +34,9 @@ const createFacility = async (facility, dealId, user) => {
       },
       user,
     },
-  }).catch((error) => { console.error('Error calling API %o', error); });
+  }).catch((error) => {
+    throw new ApiError({ cause: error });
+  });
 
   return response.data;
 };
@@ -45,8 +50,9 @@ const updateFacility = async (facilityId, facilityUpdate, user) => {
       ...facilityUpdate,
       user,
     },
-
-  }).catch((error) => { console.error('Error calling API %o', error); });
+  }).catch((error) => {
+    throw new ApiError({ cause: error });
+  });
 
   return response.data;
 };
@@ -55,8 +61,10 @@ const listFacilities = async () => {
   const response = await axios({
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities`,
     method: 'get',
-    headers
-  }).catch((error) => { console.error('Error calling API %o', error); });
+    headers,
+  }).catch((error) => {
+    throw new ApiError({ cause: error });
+  });
 
   if (!response) return [];
   return response.data;
@@ -67,7 +75,9 @@ const deleteFacility = async (facilityId) => {
     method: 'delete',
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
     headers,
-  }).catch((error) => { console.error('Error calling API %o', error); });
+  }).catch((error) => {
+    throw new ApiError({ cause: error });
+  });
 
   return response.data;
 };

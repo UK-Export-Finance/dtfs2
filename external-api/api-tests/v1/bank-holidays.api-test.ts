@@ -9,10 +9,10 @@ import { BankHolidaysEvent } from '../../src/interfaces';
 const { get } = api(app);
 
 describe('/bank-holidays', () => {
-  const mock = new MockAdapter(axios);
+  const axiosMock = new MockAdapter(axios);
 
   describe('when Bank Holiday API call returns 200 and body contains data', () => {
-    mock.onGet('https://www.gov.uk/bank-holidays.json').reply(200, { data: mockResponseBankHolidays });
+    axiosMock.onGet('https://www.gov.uk/bank-holidays.json').reply(200, { data: mockResponseBankHolidays });
 
     it('should return a status of 200 with expected body', async () => {
       const { status, body } = await get('/bank-holidays');
@@ -27,7 +27,7 @@ describe('/bank-holidays', () => {
   });
 
   describe('when Bank Holiday API call returns 200 but body does not contain data', () => {
-    mock.onGet('https://www.gov.uk/bank-holidays.json').reply(200, undefined);
+    axiosMock.onGet('https://www.gov.uk/bank-holidays.json').reply(200, undefined);
 
     it('should return a status of 200 with backup data body', async () => {
       const { status, body } = await get('/bank-holidays');
@@ -43,7 +43,7 @@ describe('/bank-holidays', () => {
   });
 
   describe('when Bank Holiday API call returns 400', () => {
-    mock.onGet('https://www.gov.uk/bank-holidays.json').reply(400, undefined);
+    axiosMock.onGet('https://www.gov.uk/bank-holidays.json').reply(400, undefined);
 
     it('should return a status of 200 with backup data body', async () => {
       const { status, body } = await get('/bank-holidays');

@@ -35,7 +35,7 @@ const getFacilities = async (req, res) => {
       return res.status(400).send();
     }
 
-    const dbFacilities = await api.getAllFacilities(queryParams);
+    const { facilities: dbFacilities, pagination } = await api.getAllFacilities({ queryParams });
 
     const facilities = dbFacilities.map((dbFacility) => {
       const { tfmFacilities: facility } = dbFacility;
@@ -80,7 +80,7 @@ const getFacilities = async (req, res) => {
       return facility;
     });
 
-    return res.status(200).send({ tfmFacilities: facilities });
+    return res.status(200).send({ facilities, pagination });
   } catch (error) {
     console.error('Error fetching facilities %o', error);
     return res.status(500).send(error.message);

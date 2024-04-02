@@ -625,17 +625,15 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
   }
 };
 
-const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
+const queryDeals = async ({ queryParams }) => {
   try {
     const response = await axios({
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals`,
       headers: headers.central,
-      data: {
-        queryParams,
-        start,
-        pagesize,
-      },
+      params: {
+        ...queryParams
+      }
     });
 
     return response.data;
@@ -955,7 +953,14 @@ const getFunctionsAPI = async (url = '') => {
   }
 };
 
-const createEstoreFolders = async (data) => {
+/**
+ * An external API call, responsible for creating
+ * eStore site, directories and documents (if applicable).
+ * Upon any exception an empty object is returned.
+ * @param {Object} data eStore API object
+ * @returns {Object} eStore API response object
+ */
+const createEstoreSite = async (data) => {
   try {
     const response = await axios({
       method: 'post',
@@ -963,6 +968,7 @@ const createEstoreFolders = async (data) => {
       headers: headers.external,
       data,
     });
+
     return response.data;
   } catch (error) {
     console.error('Unable to create estore folders %o', error);
@@ -1105,11 +1111,13 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
   return response.data;
 };
 
-const getAllFacilities = async (searchString) => {
+const getAllFacilities = async ({ queryParams }) => {
   try {
     const response = await axios({
       method: 'GET',
-      data: searchString,
+      params: {
+        ...queryParams
+      },
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities`,
       headers: headers.central,
     });
@@ -1266,7 +1274,7 @@ module.exports = {
   updateACBSfacility,
   amendACBSfacility,
   getFunctionsAPI,
-  createEstoreFolders,
+  createEstoreSite,
   sendEmail,
   findOneGefDeal,
   updatePortalGefDealStatus,

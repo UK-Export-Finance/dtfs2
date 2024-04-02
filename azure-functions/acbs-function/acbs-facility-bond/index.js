@@ -14,7 +14,7 @@ const mappings = require('../mappings');
 const CONSTANTS = require('../constants');
 const retryOptions = require('../helpers/retryOptions');
 
-module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
+df.app.orchestration('acbs-facility-bond', function* createACBSfacilityBond(context) {
   try {
     const { deal, facility, dealAcbsData } = context.df.getInput();
 
@@ -81,6 +81,6 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
     };
   } catch (error) {
     console.error('Error creating facility bond record: %o', error);
-    throw new Error('Error creating facility bond record');
+    throw new Error(`Error creating facility bond record ${error}`);
   }
 });

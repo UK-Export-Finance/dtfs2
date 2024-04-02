@@ -23,7 +23,7 @@ describe('/premium-schedule', () => {
     cumulativeAmount: 0,
   };
 
-  const mock = new MockAdapter(axios);
+  const axiosMock = new MockAdapter(axios);
   jest.mock('axios', () => jest.requireActual('axios'));
 
   const mockResponse = {
@@ -33,8 +33,8 @@ describe('/premium-schedule', () => {
     },
   };
 
-  mock.onPost(`${process.env.APIM_MDM_URL}premium/schedule`).reply(200, mockResponse);
-  mock.onGet(`${process.env.APIM_MDM_URL}premium/segments/12345678`).reply(200, mockResponse);
+  axiosMock.onPost(`${process.env.APIM_MDM_URL}premium/schedule`).reply(200, mockResponse);
+  axiosMock.onGet(`${process.env.APIM_MDM_URL}premium/segments/12345678`).reply(200, mockResponse);
 
   describe('when premium schedule parameters are empty', () => {
     it('should return a status of 400', async () => {

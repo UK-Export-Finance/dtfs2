@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { Amendment } from '../../interfaces';
 import { ENTITY_TYPE, UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
-import { validUkefId } from '../../utils/validUkefId';
+import { validUkefId } from '../../helpers';
 
 dotenv.config();
 

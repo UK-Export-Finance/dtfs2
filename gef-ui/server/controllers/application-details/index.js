@@ -252,6 +252,13 @@ const applicationDetails = async (req, res, next) => {
       params.success = req.success;
     }
 
+    // Using req.flash to pass success message when facility is updated from unissued to issued. More info regarding req.flash can be found here:https://www.npmjs.com/package/connect-flash
+    const [successMessage] = req.flash('success');
+
+    if (successMessage) {
+      params.success = successMessage;
+    }
+
     if (params.unissuedFacilitiesPresent) {
       params.link += '/unissued-facilities';
     }

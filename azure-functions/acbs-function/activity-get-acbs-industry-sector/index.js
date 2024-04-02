@@ -8,6 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
+const df = require('durable-functions');
 const mdm = require('../apim-mdm');
 
 const getAcbsIndustrySector = async (context) => {
@@ -15,11 +16,13 @@ const getAcbsIndustrySector = async (context) => {
     const { industry } = context.bindingData;
     const { status, data } = await mdm.getACBSIndustrySector(industry);
     // ACBS Industry code `1001` = Information and communication
-    return (status === 200 && data.length > 0) ? data[0].acbsIndustryId : '1001';
+    return status === 200 && data.length > 0 ? data[0].acbsIndustryId : '1001';
   } catch (error) {
     console.error('Error getting ACBS industry sector: %o', error);
-    throw new Error('Error getting ACBS industry sector %o', error);
+    throw new Error(`Error getting ACBS industry sector ${error}`);
   }
 };
 
-module.exports = getAcbsIndustrySector;
+df.app.activity('get-acbs-industry-sector', {
+  handler: getAcbsIndustrySector,
+});

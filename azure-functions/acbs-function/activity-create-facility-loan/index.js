@@ -8,6 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
@@ -35,7 +36,7 @@ const createFacilityLoan = async (context) => {
     const missingMandatory = findMissingMandatory(acbsFacilityLoanInput, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();
@@ -43,14 +44,18 @@ const createFacilityLoan = async (context) => {
 
     if (isHttpErrorStatus(status)) {
       throw new Error(
-        JSON.stringify({
-          name: 'ACBS Facility loan record create error',
-          facilityIdentifier,
-          submittedToACBS,
-          receivedFromACBS: getNowAsIsoString(),
-          dataReceived: data,
-          dataSent: acbsFacilityLoanInput,
-        }, null, 4),
+        JSON.stringify(
+          {
+            name: 'ACBS Facility loan record create error',
+            facilityIdentifier,
+            submittedToACBS,
+            receivedFromACBS: getNowAsIsoString(),
+            dataReceived: data,
+            dataSent: acbsFacilityLoanInput,
+          },
+          null,
+          4,
+        ),
       );
     }
 
@@ -63,8 +68,10 @@ const createFacilityLoan = async (context) => {
     };
   } catch (error) {
     console.error('Unable to create facility loan record. %o', error);
-    throw new Error('Unable to create facility loan record %o', error);
+    throw new Error(`Unable to create facility loan record ${error}`);
   }
 };
 
-module.exports = createFacilityLoan;
+df.app.activity('create-facility-loan', {
+  handler: createFacilityLoan,
+});
