@@ -21,4 +21,4 @@ const generateArrayOfEmailsRegex = (emails) => {
   return mapped;
 };
 
-module.exports = { regex, generateArrayOfEmailsRegex };
+module.exports = { generateArrayOfEmailsRegex };
