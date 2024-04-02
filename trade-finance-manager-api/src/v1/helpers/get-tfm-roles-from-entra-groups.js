@@ -34,5 +34,4 @@ const getTfmRolesFromEntraGroups = (groupIds) => {
 
 module.exports = {
   getTfmRolesFromEntraGroups,
-  getTfmRolesGroupedByEntraId,
 };

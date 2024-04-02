@@ -1,18 +1,11 @@
 import dotenv from 'dotenv';
-import { getTfmRolesGroupedByEntraId, getTfmRolesFromEntraGroups } from './get-tfm-roles-from-entra-groups';
-import { TEAMS } from '../../constants/teams';
+// import { getTfmRolesGroupedByEntraId, getTfmRolesFromEntraGroups } from './get-tfm-roles-from-entra-groups';
+import { getTfmRolesFromEntraGroups } from './get-tfm-roles-from-entra-groups';
+import { TEAM_IDS } from '../../constants/teams';
 
 dotenv.config();
 
 describe('helpers - get-tfm-roles-from-entra-groups', () => {
-  describe('getTfmRolesGroupedByEntraId', () => {
-    it('should return entra groups for all TEAMS', () => {
-      const result = Object.values(getTfmRolesGroupedByEntraId());
-      const expected = Object.values(TEAMS);
-      expect(result.length).toEqual(expected.length);
-    });
-  });
-
   describe('getTfmRolesFromEntraGroups', () => {
     const tfmRoles = ['UNDERWRITING_SUPPORT', 'UNDERWRITER_MANAGERS'];
     const entraGroupIds = [process.env.AZURE_SSO_GROUP_UNDERWRITING_SUPPORT, process.env.AZURE_SSO_GROUP_UNDERWRITER_MANAGERS];
@@ -21,6 +14,41 @@ describe('helpers - get-tfm-roles-from-entra-groups', () => {
       const result = getTfmRolesFromEntraGroups(entraGroupIds);
 
       expect(result).toEqual(tfmRoles);
+    });
+
+    it('should return all tfm roles', () => {
+      const allEntraGroupIds = [
+        process.env.AZURE_SSO_GROUP_UNDERWRITING_SUPPORT,
+        process.env.AZURE_SSO_GROUP_UNDERWRITER_MANAGERS,
+        process.env.AZURE_SSO_GROUP_UNDERWRITERS,
+        process.env.AZURE_SSO_GROUP_RISK_MANAGERS,
+        process.env.AZURE_SSO_GROUP_BUSINESS_SUPPORT,
+        process.env.AZURE_SSO_GROUP_PIM,
+        process.env.AZURE_SSO_GROUP_PDC_READ,
+        process.env.AZURE_SSO_GROUP_PDC_RECONCILE,
+      ];
+
+      const result = getTfmRolesFromEntraGroups(allEntraGroupIds);
+
+      expect(result).toEqual(TEAM_IDS);
+
+      expect(result.length).toEqual(TEAM_IDS.length);
+    });
+
+    it('should skip not existing Entra ids', () => {
+      const notExistingEntraGroupIds = [
+        '123456',
+        null,
+        true,
+        123456,
+        [],
+        {},
+        process.env,
+      ];
+
+      const result = getTfmRolesFromEntraGroups(notExistingEntraGroupIds);
+
+      expect(result).toEqual([]);
     });
 
     it.each`

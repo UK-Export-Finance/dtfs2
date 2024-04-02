@@ -1,5 +1,6 @@
 // TFM UI - SSO support to work around SameSite=Strict
 const ssoForm = document.getElementById('acceptExternalSsoPostForm');
+const ssoAuthority = document.querySelector('script[data-sso-authority]').getAttribute('data-sso-authority');
 
 /**
  * safeReferrer
@@ -16,10 +17,11 @@ const safeReferrer = (hostname, referrer) => {
     return true;
   }
 
-  if (referrer.indexOf('https://login.microsoftonline.com/') === 0) {
+  if (referrer.indexOf(ssoAuthority) === 0) {
     return true;
   }
 
+  console.error('sso auto submit - referrer check failed because referrer is %s', referrer);
   return false
 }
 

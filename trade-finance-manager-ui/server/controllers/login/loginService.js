@@ -54,19 +54,19 @@ const verifyBodyForExternalSsoPost = (templateParams) => {
  */
 const acceptExternalSsoPost = (req, res) => {
   const { code, client_info: clientInfo, state, session_state: sessionState } = req.body;
-  const templateParams = { code, clientInfo, state, sessionState };
+  const externalTemplateParams = { code, clientInfo, state, sessionState };
 
   const referrerValidationError = verifyReferrerForExternalSsoPost(req);
   if (referrerValidationError) {
     return res.status(500).render('_partials/problem-with-service.njk', { error: { message: referrerValidationError }});
   }
 
-  const bodyValidationError = verifyBodyForExternalSsoPost(templateParams);
+  const bodyValidationError = verifyBodyForExternalSsoPost(externalTemplateParams);
   if (bodyValidationError) {
     return res.status(500).render('_partials/problem-with-service.njk', { error: { message: bodyValidationError }});
   }
 
-  return res.render('sso/accept-external-sso-post.njk', templateParams);
+  return res.render('sso/accept-external-sso-post.njk', { ...externalTemplateParams, azureSsoAuthority: `${SSO.AUTHORITY}/`});
 };
 
 module.exports = { acceptExternalSsoPost };
