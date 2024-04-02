@@ -19,7 +19,7 @@ const updateDealStatus = async (dealId, previousStatus, newStatus) => {
       { returnNewDocument: true, returnDocument: 'after' },
     );
 
-    console.info('Updated Portal GEF deal status from %o to %o', previousStatus, newStatus);
+    console.info('Updated Portal GEF deal status from %s to %s', previousStatus, newStatus);
 
     return findAndUpdateResponse.value;
   }

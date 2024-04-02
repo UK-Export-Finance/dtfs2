@@ -162,7 +162,7 @@ const createDeal = async (deal, token) => {
 
 const updateDealName = async (id, newName, token) => {
   if (!isValidMongoId(id)) {
-    console.error('Update deal name API call failed for id %o', id);
+    console.error('Update deal name API call failed for id %s', id);
     return {
       status: 400,
     };
@@ -220,7 +220,7 @@ const updateDealStatus = async (statusUpdate, token) => {
 
 const getSubmissionDetails = async (id, token) => {
   if (!isValidMongoId(id)) {
-    console.error('Get submission details API call failed for id %o', id);
+    console.error('Get submission details API call failed for id %s', id);
     return {
       status: 400,
     };
@@ -262,7 +262,7 @@ const updateSubmissionDetails = async (deal, submissionDetails, token) => {
 
 const cloneDeal = async (dealId, newDealData, token) => {
   if (!isValidMongoId(dealId)) {
-    console.error('Clone deal API call failed for id %o', dealId);
+    console.error('Clone deal API call failed for id %s', dealId);
     return false;
   }
 
@@ -281,7 +281,7 @@ const cloneDeal = async (dealId, newDealData, token) => {
 
 const updateEligibilityCriteria = async (dealId, criteria, token) => {
   if (!isValidMongoId(dealId)) {
-    console.error('Update eligibility criteria API call failed for id %o', dealId);
+    console.error('Update eligibility criteria API call failed for id %s', dealId);
     return false;
   }
 
@@ -299,7 +299,7 @@ const updateEligibilityCriteria = async (dealId, criteria, token) => {
 
 const updateEligibilityDocumentation = async (dealId, body, files, token) => {
   if (!isValidMongoId(dealId)) {
-    console.error('Update eligibility documentation API call failed for id %o', dealId);
+    console.error('Update eligibility documentation API call failed for id %s', dealId);
     return false;
   }
 
@@ -336,7 +336,7 @@ const updateEligibilityDocumentation = async (dealId, body, files, token) => {
 
 const createLoan = async (dealId, token) => {
   if (!isValidMongoId(dealId)) {
-    console.error('Create loan API call failed for id %o', dealId);
+    console.error('Create loan API call failed for id %s', dealId);
     return false;
   }
 
@@ -440,7 +440,7 @@ const deleteLoan = async (dealId, loanId, token) => {
 
 const createBond = async (dealId, token) => {
   if (!isValidMongoId(dealId)) {
-    console.error('Create bond API call failed for id %o', dealId);
+    console.error('Create bond API call failed for id %s', dealId);
     return false;
   }
 
@@ -674,7 +674,7 @@ const user = async (id, token) => {
   }
 
   if (!isValidMongoId(id)) {
-    console.error('User API call failed for id %o', id);
+    console.error('User API call failed for id %s', id);
     return false;
   }
 
@@ -719,7 +719,7 @@ const updateUser = async (id, update, token) => {
   }
 
   if (!isValidMongoId(id)) {
-    console.error('Update user API call failed for id %o', id);
+    console.error('Update user API call failed for id %s', id);
     return false;
   }
 
@@ -741,7 +741,7 @@ const updateUser = async (id, update, token) => {
 
 const getDeal = async (id, token) => {
   if (!isValidMongoId(id)) {
-    console.error('Get deal API call failed for deal id %o', id);
+    console.error('Get deal API call failed for deal id %s', id);
     return {
       status: 400,
     };
@@ -778,7 +778,7 @@ const getLatestMandatoryCriteria = async (token) => {
 
 const downloadEligibilityDocumentationFile = async (id, fieldname, filename, token) => {
   if (!isValidMongoId(id)) {
-    console.error('Download file API call failed for id %o', id);
+    console.error('Download file API call failed for id %s', id);
     return false;
   }
 

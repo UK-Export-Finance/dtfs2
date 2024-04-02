@@ -105,7 +105,7 @@ describe('/ordnance-survey', () => {
   const invalidPostcodeTestCases = [['ABC22'], ['127.0.0.1'], ['{}'], ['[]']];
 
   describe('when postcode is invalid', () => {
-    test.each(invalidPostcodeTestCases)('returns a 400 if you provide an invalid postcode: %o', async (postcode) => {
+    test.each(invalidPostcodeTestCases)('returns a 400 if you provide an invalid postcode %o', async (postcode) => {
       const { status, body } = await get(`/ordnance-survey/${postcode}`);
 
       expect(status).toEqual(400);

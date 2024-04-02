@@ -80,7 +80,7 @@ describe('createRateLimit', () => {
       });
     });
 
-    describe.each(validThresholds)('when the RATE_LIMIT_THRESHOLD env variable is %o, which is valid', (validThresholdValue) => {
+    describe.each(validThresholds)('when the RATE_LIMIT_THRESHOLD env variable is %d, which is valid', (validThresholdValue) => {
       it('does not long an invalid threshold error message', () => {
         setRateLimitThresholdEnvVariableTo(validThresholdValue);
 

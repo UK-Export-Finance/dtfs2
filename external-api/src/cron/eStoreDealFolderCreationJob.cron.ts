@@ -17,7 +17,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
     const cronJobLogsCollection = await getCollection('cron-job-logs');
 
     // create the Deal folder
-    console.info('API Call started: Create the Deal folder for %o', eStoreData.dealIdentifier);
+    console.info('API Call started: Create the Deal folder for %s', eStoreData.dealIdentifier);
     const dealFolderResponse = await createDealFolder(eStoreData.siteId, {
       exporterName: eStoreData.exporterName,
       buyerName: eStoreData.buyerName,

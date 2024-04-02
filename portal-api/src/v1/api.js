@@ -19,7 +19,7 @@ const headers = {
 const findOneDeal = async (dealId) => {
   try {
     if (!isValidMongoId(dealId)) {
-      console.error('Find one deal API failed for deal id %o', dealId);
+      console.error('Find one deal API failed for deal id %s', dealId);
       return false;
     }
 
@@ -55,7 +55,7 @@ const createDeal = async (deal, user) => {
 const updateDeal = async (dealId, dealUpdate, user) => {
   try {
     if (!isValidMongoId(dealId)) {
-      console.error('Update deal API failed for deal id %o', dealId);
+      console.error('Update deal API failed for deal id %s', dealId);
       return false;
     }
 
@@ -79,7 +79,7 @@ const updateDeal = async (dealId, dealUpdate, user) => {
 const deleteDeal = async (dealId) => {
   try {
     if (!isValidMongoId(dealId)) {
-      console.error('Delete deal API failed for deal id %o', dealId);
+      console.error('Delete deal API failed for deal id %s', dealId);
       return false;
     }
 
@@ -97,7 +97,7 @@ const deleteDeal = async (dealId) => {
 const addDealComment = async (dealId, commentType, comment) => {
   try {
     if (!isValidMongoId(dealId)) {
-      console.error('Add deal comment API failed for deal id %o', dealId);
+      console.error('Add deal comment API failed for deal id %s', dealId);
       return false;
     }
 
@@ -154,7 +154,7 @@ const createMultipleFacilities = async (facilities, dealId, user) => {
 const findOneFacility = async (facilityId) => {
   try {
     if (!isValidMongoId(facilityId)) {
-      console.error('Find one facility API failed for facility id %o', facilityId);
+      console.error('Find one facility API failed for facility id %s', facilityId);
       return false;
     }
 
@@ -174,7 +174,7 @@ const findOneFacility = async (facilityId) => {
 const updateFacility = async (facilityId, facility, user) => {
   try {
     if (!isValidMongoId(facilityId)) {
-      console.error('Update facility API failed for facility id %o', facilityId);
+      console.error('Update facility API failed for facility id %s', facilityId);
       return false;
     }
 
@@ -196,7 +196,7 @@ const updateFacility = async (facilityId, facility, user) => {
 const deleteFacility = async (facilityId, user) => {
   try {
     if (!isValidMongoId(facilityId)) {
-      console.error('Delete facility API failed for facility id %o', facilityId);
+      console.error('Delete facility API failed for facility id %s', facilityId);
       return false;
     }
 
@@ -289,17 +289,17 @@ const getUtilisationReports = async (bankId, options) => {
 
   try {
     if (!isValidBankId(bankId)) {
-      console.error('Get utilisation reports failed with the following bank ID: %o', bankId);
-      throw new Error('Invalid bank ID provided: %o', bankId);
+      console.error('Get utilisation reports failed with the following bank ID %o', bankId);
+      throw new Error('Invalid bank ID provided %o', bankId);
     }
 
     if (reportPeriod && !isValidReportPeriod(reportPeriod)) {
-      console.error('Get utilisation reports failed with the following report period: %o', reportPeriod);
-      throw new Error('Invalid report period provided: %o', reportPeriod);
+      console.error('Get utilisation reports failed with the following report period %o', reportPeriod);
+      throw new Error('Invalid report period provided %o', reportPeriod);
     }
 
     if (excludeNotUploaded && typeof excludeNotUploaded !== 'boolean') {
-      console.error('Get utilisation reports failed with the following excludeNotUploaded query: %s', excludeNotUploaded);
+      console.error('Get utilisation reports failed with the following excludeNotUploaded query %s', excludeNotUploaded);
       throw new Error(`Invalid excludeNotUploaded provided: ${excludeNotUploaded} (expected a boolean)`);
     }
 
@@ -311,7 +311,7 @@ const getUtilisationReports = async (bankId, options) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to get previous utilisation reports: %o', error);
+    console.error('Unable to get previous utilisation reports %o', error);
     throw error;
   }
 };

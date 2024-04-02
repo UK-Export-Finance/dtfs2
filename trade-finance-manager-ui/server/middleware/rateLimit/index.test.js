@@ -82,7 +82,7 @@ describe('createRateLimit', () => {
       });
     });
 
-    describe.each(validThresholds)('when the RATE_LIMIT_THRESHOLD env variable is %o, which is valid', (validThresholdValue) => {
+    describe.each(validThresholds)('when the RATE_LIMIT_THRESHOLD env variable is %d, which is valid', (validThresholdValue) => {
       it('does not long an invalid threshold error message', () => {
         setRateLimitThresholdEnvVariableTo(validThresholdValue);
 
@@ -112,7 +112,7 @@ describe('createRateLimit', () => {
   describe('the created rate limit middleware', () => {
     const threshold = 10;
     const originalUrl = '/some/url';
-    const rateLimitErrorLoggedMessageArgs = ['Rate limit threshold exceeded. Rendering error page for request to %o.', originalUrl];
+    const rateLimitErrorLoggedMessageArgs = ['Rate limit threshold exceeded. Rendering error page for request to %s.', originalUrl];
 
     let rateLimitMiddleware;
 

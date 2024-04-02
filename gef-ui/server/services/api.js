@@ -53,7 +53,7 @@ const cloneApplication = async ({ payload, userToken }) => {
 
 const getApplication = async ({ dealId, userToken }) => {
   if (!isValidMongoId(dealId)) {
-    console.error('getApplication: API call failed for dealId %o', dealId);
+    console.error('getApplication: API call failed for dealId %s', dealId);
     return false;
   }
 
@@ -67,7 +67,7 @@ const getApplication = async ({ dealId, userToken }) => {
 
 const updateApplication = async ({ dealId, application, userToken }) => {
   if (!isValidMongoId(dealId)) {
-    console.error('updateApplication: API call failed for dealId %o', dealId);
+    console.error('updateApplication: API call failed for dealId %s', dealId);
     return false;
   }
 
@@ -83,7 +83,7 @@ const updateSupportingInformation = async ({
   dealId, application, field, user, userToken,
 }) => {
   if (!isValidMongoId(dealId)) {
-    console.error('updateSupportingInformation: API call failed for dealId %o', dealId);
+    console.error('updateSupportingInformation: API call failed for dealId %s', dealId);
     return false;
   }
 
@@ -97,7 +97,7 @@ const updateSupportingInformation = async ({
 
 const setApplicationStatus = async ({ dealId, status, userToken }) => {
   if (!isValidMongoId(dealId)) {
-    console.error('setApplicationStatus: API call failed for dealId %o', dealId);
+    console.error('setApplicationStatus: API call failed for dealId %s', dealId);
     return false;
   }
 
@@ -142,7 +142,7 @@ const createFacility = async ({ payload, userToken }) => {
 
 const getFacility = async ({ facilityId, userToken }) => {
   if (!isValidMongoId(facilityId)) {
-    console.error('getFacility: API call failed for facilityId %o', facilityId);
+    console.error('getFacility: API call failed for facilityId %s', facilityId);
     return false;
   }
 
@@ -156,7 +156,7 @@ const getFacility = async ({ facilityId, userToken }) => {
 
 const updateFacility = async ({ facilityId, payload, userToken }) => {
   if (!isValidMongoId(facilityId)) {
-    console.error('updateFacility: API call failed for facilityId %o', facilityId);
+    console.error('updateFacility: API call failed for facilityId %s', facilityId);
     return false;
   }
 
@@ -170,7 +170,7 @@ const updateFacility = async ({ facilityId, payload, userToken }) => {
 
 const deleteFacility = async ({ facilityId, userToken }) => {
   if (!isValidMongoId(facilityId)) {
-    console.error('deleteFacility: API call failed for facilityId %o', facilityId);
+    console.error('deleteFacility: API call failed for facilityId %s', facilityId);
     return false;
   }
 
@@ -238,7 +238,7 @@ const uploadFile = async ({
   }
 
   if (!isValidMongoId(id)) {
-    console.error('uploadFile API call failed for id %o', id);
+    console.error('uploadFile API call failed for id %s', id);
     return false;
   }
 

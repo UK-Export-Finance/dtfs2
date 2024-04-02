@@ -26,7 +26,7 @@ const getCurrencies = async () => {
 
 const getCurrency = async (id) => {
   if (!isValidCurrencyCode(id)) {
-    console.error('currencies.getCurrency: invalid code provided %o', id);
+    console.error('currencies.getCurrency: invalid code provided %s', id);
     return {
       status: 400
     };

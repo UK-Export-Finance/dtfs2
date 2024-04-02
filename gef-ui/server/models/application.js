@@ -141,7 +141,7 @@ class Application {
 
       return application;
     } catch (error) {
-      console.error('Error with GEF application model: %o', error);
+      console.error('Error with GEF application model %o', error);
       throw error;
     }
   }

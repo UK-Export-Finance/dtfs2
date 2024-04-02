@@ -137,7 +137,7 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
     }
     return { status: 400, message: 'Invalid Deal Id' };
   } catch (error) {
-    console.error('Unable to update the deal %d %o', dealId, error);
+    console.error('Unable to update the deal %s %o', dealId, error);
     return { status: 500, message: error };
   }
 };

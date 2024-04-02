@@ -21,7 +21,7 @@ export const lookup = async (req: Request, res: Response) => {
     const { urn } = req.params;
 
     if (!isValidPartyUrn(urn)) {
-      console.error('Invalid party URN provided: %o', urn);
+      console.error('Invalid party URN provided %o', urn);
       return res.status(400).send({ status: 400, data: 'Invalid party URN' });
     }
 

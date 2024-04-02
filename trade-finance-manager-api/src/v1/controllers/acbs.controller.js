@@ -210,7 +210,7 @@ const amendAcbsFacility = (amendments, facility, deal) => {
     return null;
   })
     .catch((error) => {
-      console.error('Unable to amend facility: %o', error);
+      console.error('Unable to amend facility %o', error);
       return null;
     });
 };

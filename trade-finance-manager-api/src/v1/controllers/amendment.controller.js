@@ -269,7 +269,7 @@ const updateFacilityAmendment = async (req, res) => {
       }
     }
   } catch (error) {
-    console.error('Unable to update amendment: %o', error);
+    console.error('Unable to update amendment %o', error);
     return res.status(400).send({ data: 'Unable to update amendment' });
   }
 

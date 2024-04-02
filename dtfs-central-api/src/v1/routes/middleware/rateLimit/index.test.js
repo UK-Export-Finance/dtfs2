@@ -27,7 +27,7 @@ describe('createRateLimit', () => {
   };
 
   const invalidThresholdThrownError = 'Invalid rate limit threshold value.';
-  const invalidThresholdErrorMessageArgs = (threshold) => ['Invalid rate limit threshold value %o.', threshold];
+  const invalidThresholdErrorMessageArgs = (threshold) => ['Invalid rate limit threshold value %d.', threshold];
   const rateLimitingInfoMessageArgs = (threshold) => ['Rate-limiting requests to a maximum of %d requests per 1 minute window.', Number(threshold)];
 
   beforeEach(() => {
@@ -82,7 +82,7 @@ describe('createRateLimit', () => {
       });
     });
 
-    describe.each(validThresholds)('when the RATE_LIMIT_THRESHOLD env variable is %o, which is valid', (validThresholdValue) => {
+    describe.each(validThresholds)('when the RATE_LIMIT_THRESHOLD env variable is %d, which is valid', (validThresholdValue) => {
       it('does not long an invalid threshold error message', () => {
         setRateLimitThresholdEnvVariableTo(validThresholdValue);
 

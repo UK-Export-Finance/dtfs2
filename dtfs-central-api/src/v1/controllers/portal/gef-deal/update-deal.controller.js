@@ -25,7 +25,7 @@ const updateDeal = async (dealId, update) => {
 
     return findAndUpdateResponse.value;
   } catch (error) {
-    console.error('Unable to update deal %d %o', dealId, error);
+    console.error('Unable to update deal %s %o', dealId, error);
     return { status: 500, message: error };
   }
 };

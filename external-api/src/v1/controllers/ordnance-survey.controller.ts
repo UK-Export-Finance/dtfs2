@@ -11,7 +11,7 @@ export const lookup = async (req: Request, res: Response) => {
   const noWhitespacePostcode = OSPostcode.replace(' ', '');
 
   if (!isValidPostcode(noWhitespacePostcode)) {
-    console.error('Invalid postcode: %o', OSPostcode);
+    console.error('Invalid postcode %o', OSPostcode);
     return res.status(400).send({ status: 400, data: 'Invalid postcode' });
   }
 

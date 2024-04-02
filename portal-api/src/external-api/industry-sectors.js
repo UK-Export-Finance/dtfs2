@@ -30,7 +30,7 @@ const getIndustrySectors = async () => {
 
 const getIndustrySector = async (id) => {
   if (!isValidRegex(INDUSTRY_SECTOR_ID, id)) {
-    console.error('industry-sectors.getIndustrySector: invalid id provided %o', id);
+    console.error('industry-sectors.getIndustrySector: invalid id provided %s', id);
     return { status: 400 };
   }
   const { status, data } = await axios({

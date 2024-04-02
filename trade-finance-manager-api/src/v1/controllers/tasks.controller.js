@@ -256,7 +256,7 @@ const updateTask = async (req, res) => {
     const result = await updateTfmTask({ dealId, groupId: parseInt(groupId, 10), taskId, taskUpdate });
     return res.status(200).send(result);
   } catch (error) {
-    console.error('Unable to update the task %o in group %o deal %o: %o', taskId, groupId, dealId, error);
+    console.error('Unable to update the task %o in group %o deal %o %o', taskId, groupId, dealId, error);
     return res.status(500).send({ data: 'Unable to update the task' });
   }
 };
