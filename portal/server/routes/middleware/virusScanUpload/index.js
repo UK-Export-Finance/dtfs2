@@ -40,7 +40,7 @@ const virusScanUpload = async (req, res, next) => {
             }
           })
           .on('error', (error) => {
-            console.error('Clamav virus scan errored with: %o', error);
+            console.error('Clamav virus scan errored with %o', error);
             reject(error);
           })
           .on('timeout', (error) => {

@@ -96,7 +96,7 @@ const updateFacility = async (req, res) => {
       updateFacility: updatedFacility.tfm
     });
   } catch (error) {
-    console.error('Unable to update facility: %o', error);
+    console.error('Unable to update facility %o', error);
     return res.status(500).send({ data: 'Unable to update facility' });
   }
 };

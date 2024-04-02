@@ -38,7 +38,7 @@ export const getNumber = async (entityType: string, dealId: string): Promise<obj
 
     return response;
   } catch (error: unknown) {
-    console.error('❌ Error sending payload to external-api microservice: %o', error);
+    console.error('❌ Error sending payload to external-api microservice %o', error);
 
     return {
       status: HttpStatusCode.InternalServerError,

@@ -58,20 +58,20 @@ export const getExchangeRate = async (req: Request, res: Response) => {
     let sourceCurrency = source;
     let targetCurrency = target;
 
-    console.info('⚡️ Invoking MDM currencies/exchange endpoint: %s %s', sourceCurrency, targetCurrency);
+    console.info('⚡️ Invoking MDM currencies/exchange endpoint %s %s', sourceCurrency, targetCurrency);
 
     if (!isValidCurrency(source)) {
-      console.error('Invalid currency provided: %s', source);
+      console.error('Invalid currency provided %s', source);
       return res.status(400).send({ status: 400, data: 'Invalid currency provided' });
     }
 
     if (!isValidCurrency(target)) {
-      console.error('Invalid currency provided: %s', target);
+      console.error('Invalid currency provided %s', target);
       return res.status(400).send({ status: 400, data: 'Invalid currency provided' });
     }
 
     if (date && !isValidDate(date)) {
-      console.error('Invalid date provided: %s', date);
+      console.error('Invalid date provided %s', date);
       return res.status(400).send({ status: 400, data: 'Invalid date provided' });
     }
 
@@ -118,7 +118,7 @@ export const getExchangeRate = async (req: Request, res: Response) => {
 
     return res.status(status).send(exchange);
   } catch (error) {
-    console.error('🚩 Error occurred during currencies/exchange endpoint call: %o', error);
+    console.error('🚩 Error occurred during currencies/exchange endpoint call %o', error);
     return res.status(400);
   }
 };

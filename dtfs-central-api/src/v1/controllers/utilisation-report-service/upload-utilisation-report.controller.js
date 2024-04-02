@@ -27,7 +27,7 @@ const postUtilisationReportData = async (req, res) => {
     // If there are any data type errors in the report data, return 400
     const validationErrors = validatePayload(reportData, reportPeriod, fileInfo, bank.id);
     if (validationErrors.length > 0) {
-      console.error('Failed to save utilisation report, validation errors: %o', validationErrors);
+      console.error('Failed to save utilisation report, validation errors %o', validationErrors);
       return res.status(400).send(validationErrors);
     }
 

@@ -16,7 +16,7 @@ export const emailNotification = async (req: Request, res: Response) => {
     // Add a unique reference to an email
     const reference = `${templateId}-${getNowAsEpoch()}`;
 
-    console.info('Calling Notify API. templateId: %s', templateId);
+    console.info('Calling Notify API. templateId %s', templateId);
 
     const personalisation = emailVariables;
 
@@ -56,7 +56,7 @@ export const sendEmail = async (templateId: string, sendToEmailAddress: string, 
     });
     return data;
   } catch (error) {
-    console.error('Unable to send the email: %o', error);
+    console.error('Unable to send the email %o', error);
     return null;
   }
 };

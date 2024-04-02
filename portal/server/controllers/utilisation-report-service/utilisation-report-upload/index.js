@@ -196,10 +196,10 @@ const postReportConfirmAndSend = async (req, res) => {
       };
       return res.redirect('/utilisation-report-upload/confirmation');
     }
-    console.error('Error saving utilisation report: %o', response);
+    console.error('Error saving utilisation report %o', response);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   } catch (error) {
-    console.error('Error saving utilisation report: %o', error);
+    console.error('Error saving utilisation report %o', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };

@@ -152,7 +152,7 @@ module.exports.updateById = async (req, res, next) => {
       });
     });
   } catch (error) {
-    console.error('Error updating user', error);
+    console.error('Error updating user %o', error);
     return res.status(500).send();
   }
 };

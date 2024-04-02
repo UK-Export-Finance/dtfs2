@@ -78,7 +78,7 @@ export const generateApp = () => {
   );
 
   redisClient.on('error', (error) => {
-    console.error('Unable to connect to Redis: %s %o', process.env.REDIS_HOSTNAME, error);
+    console.error('Unable to connect to Redis %s %o', process.env.REDIS_HOSTNAME, error);
   });
 
   redisClient.on('ready', () => {

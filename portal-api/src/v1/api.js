@@ -289,17 +289,17 @@ const getUtilisationReports = async (bankId, options) => {
 
   try {
     if (!isValidBankId(bankId)) {
-      console.error('Get utilisation reports failed with the following bank ID: %s', bankId);
-      throw new Error('Invalid bank ID provided: %s', bankId);
+      console.error('Get utilisation reports failed with the following bank ID %s', bankId);
+      throw new Error('Invalid bank ID provided %s', bankId);
     }
 
     if (reportPeriod && !isValidReportPeriod(reportPeriod)) {
-      console.error('Get utilisation reports failed with the following report period: %s', reportPeriod);
-      throw new Error('Invalid report period provided: %s', reportPeriod);
+      console.error('Get utilisation reports failed with the following report period %s', reportPeriod);
+      throw new Error('Invalid report period provided %s', reportPeriod);
     }
 
     if (excludeNotUploaded && typeof excludeNotUploaded !== 'boolean') {
-      console.error('Get utilisation reports failed with the following excludeNotUploaded query: %s', excludeNotUploaded);
+      console.error('Get utilisation reports failed with the following excludeNotUploaded query %s', excludeNotUploaded);
       throw new Error(`Invalid excludeNotUploaded provided: ${excludeNotUploaded} (expected a boolean)`);
     }
 
@@ -311,7 +311,7 @@ const getUtilisationReports = async (bankId, options) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to get previous utilisation reports: %o', error);
+    console.error('Unable to get previous utilisation reports %o', error);
     throw error;
   }
 };

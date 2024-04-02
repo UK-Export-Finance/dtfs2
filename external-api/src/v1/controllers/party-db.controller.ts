@@ -14,7 +14,7 @@ export const lookup = async (req: Request, res: Response) => {
   const { partyDbCompanyRegistrationNumber: companyReg } = req.params;
 
   if (!isValidCompaniesHouseNumber(companyReg)) {
-    console.error('Invalid company registration number provided: %s', companyReg);
+    console.error('Invalid company registration number provided %s', companyReg);
     return res.status(400).send({ status: 400, data: 'Invalid company registration number' });
   }
 

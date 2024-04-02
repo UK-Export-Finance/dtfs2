@@ -77,7 +77,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* Facility(conte
     }
     console.error('No input specified');
   } catch (error) {
-    console.error('Error amending facility loan record: %o', error);
+    console.error('Error amending facility loan record %o', error);
     throw new Error(`Error amending facility loan record ${error}`);
   }
 });

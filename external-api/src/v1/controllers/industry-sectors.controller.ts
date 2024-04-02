@@ -18,7 +18,7 @@ const headers = {
  */
 export const findACBSIndustrySector = async (industryId: any) => {
   if (!isValidIndustryId(industryId.toString())) {
-    console.error('Invalid industry id provided: %s', industryId);
+    console.error('Invalid industry id provided %s', industryId);
     return { data: 'Invalid industry ID', status: 400 };
   }
 

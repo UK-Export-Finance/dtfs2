@@ -26,7 +26,7 @@ const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
   const isValidDealId = isValidMongoId(id);
 
   if (!isValidDealId) {
-    console.error('getDeal: Invalid deal id provided: %s', id);
+    console.error('getDeal: Invalid deal id provided %s', id);
     return { status: 400, data: 'Invalid deal id' };
   }
 
@@ -103,7 +103,7 @@ const getFacility = async (id, token) => {
     const isValidFacilityId = isValidMongoId(id);
 
     if (!isValidFacilityId) {
-      console.error('getFacility: Invalid facility id provided: %s', id);
+      console.error('getFacility: Invalid facility id provided %s', id);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -139,7 +139,7 @@ const updateParty = async (id, partyUpdate, token) => {
     const isValidDealId = isValidMongoId(id);
 
     if (!isValidDealId) {
-      console.error('updateParty: Invalid deal id provided: %s', id);
+      console.error('updateParty: Invalid deal id provided %s', id);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -161,7 +161,7 @@ const updateFacility = async (id, facilityUpdate, token) => {
     const isValidFacilityId = isValidMongoId(id);
 
     if (!isValidFacilityId) {
-      console.error('updateFacility: Invalid facility id provided: %s', id);
+      console.error('updateFacility: Invalid facility id provided %s', id);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -184,7 +184,7 @@ const updateFacilityRiskProfile = async (id, facilityUpdate, token) => {
     const isValidFacilityId = isValidMongoId(id);
 
     if (!isValidFacilityId) {
-      console.error('updateFacilityRiskProfile: Invalid facility id provided: %s', id);
+      console.error('updateFacilityRiskProfile: Invalid facility id provided %s', id);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -206,17 +206,17 @@ const updateTask = async (dealId, groupId, taskId, taskUpdate, token) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updateTask: Invalid deal id provided: %s', dealId);
+      console.error('updateTask: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
     if (!isValidGroupId(groupId)) {
-      console.error('updateTask: Invalid group id provided: %s', groupId);
+      console.error('updateTask: Invalid group id provided %s', groupId);
       return { status: 400, data: 'Invalid group id' };
     }
 
     if (!isValidTaskId(taskId)) {
-      console.error('updateTask: Invalid task id provided: %s', taskId);
+      console.error('updateTask: Invalid task id provided %s', taskId);
       return { status: 400, data: 'Invalid task id' };
     }
 
@@ -245,7 +245,7 @@ const updateCreditRating = async (dealId, creditRatingUpdate, token) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updateCreditRating: Invalid deal id provided: %s', dealId);
+      console.error('updateCreditRating: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -274,7 +274,7 @@ const updateLossGivenDefault = async (dealId, lossGivenDefaultUpdate, token) => 
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updateLossGivenDefault: Invalid deal id provided: %s', dealId);
+      console.error('updateLossGivenDefault: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -303,7 +303,7 @@ const updateProbabilityOfDefault = async (dealId, probabilityOfDefaultUpdate, to
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updateProbabilityOfDefault: Invalid deal id provided: %s', dealId);
+      console.error('updateProbabilityOfDefault: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -326,7 +326,7 @@ const updateUnderwriterManagersDecision = async (dealId, newUnderwriterManagersD
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updateUnderwriterManagersDecision: Invalid deal id provided: %s', dealId);
+      console.error('updateUnderwriterManagersDecision: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
     const response = await axios({
@@ -348,7 +348,7 @@ const updateLeadUnderwriter = async ({ dealId, token, leadUnderwriterUpdate }) =
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updateLeadUnderwriter: Invalid deal id provided: %s', dealId);
+      console.error('updateLeadUnderwriter: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -376,7 +376,7 @@ const createActivity = async (dealId, activityUpdate, token) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('createActivity: Invalid deal id provided: %s', dealId);
+      console.error('createActivity: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -417,7 +417,7 @@ const updateUserPassword = async (userId, update, token) => {
     const isValidUserId = isValidMongoId(userId);
 
     if (!isValidUserId) {
-      console.error('updateUserPassword: Invalid user id provided: %s', userId);
+      console.error('updateUserPassword: Invalid user id provided %s', userId);
       return { status: 400, data: 'Invalid user id' };
     }
 
@@ -453,7 +453,7 @@ const getUser = async (userId, token) => {
     const isValidUserId = isValidMongoId(userId);
 
     if (!isValidUserId) {
-      console.error('getUser: Invalid user id provided: %s', userId);
+      console.error('getUser: Invalid user id provided %s', userId);
       return { status: 400, data: 'Invalid user id' };
     }
 
@@ -475,7 +475,7 @@ const createFacilityAmendment = async (facilityId, token) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      console.error('createFacilityAmendment: Invalid facility id provided: %s', facilityId);
+      console.error('createFacilityAmendment: Invalid facility id provided %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -499,12 +499,12 @@ const updateAmendment = async (facilityId, amendmentId, data, token) => {
     const isValidAmendmentId = isValidMongoId(amendmentId);
 
     if (!isValidFacilityId) {
-      console.error('updateAmendment: Invalid facility id provided: %s', facilityId);
+      console.error('updateAmendment: Invalid facility id provided %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
     if (!isValidAmendmentId) {
-      console.error('updateAmendment: Invalid amendment id provided: %s', amendmentId);
+      console.error('updateAmendment: Invalid amendment id provided %s', amendmentId);
       return { status: 400, data: 'Invalid amendment id' };
     }
 
@@ -527,7 +527,7 @@ const getAmendmentInProgress = async (facilityId, token) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      console.error('getAmendmentInProgress: Invalid facility id provided: %s', facilityId);
+      console.error('getAmendmentInProgress: Invalid facility id provided %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -564,7 +564,7 @@ const getCompletedAmendment = async (facilityId, token) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      console.error('getCompletedAmendment: Invalid facility id provided: %s', facilityId);
+      console.error('getCompletedAmendment: Invalid facility id provided %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -586,7 +586,7 @@ const getLatestCompletedAmendmentValue = async (facilityId, token) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      console.error('getLatestCompletedAmendmentValue: Invalid facility id provided: %s', facilityId);
+      console.error('getLatestCompletedAmendmentValue: Invalid facility id provided %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -608,7 +608,7 @@ const getLatestCompletedAmendmentDate = async (facilityId, token) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      console.error('getLatestCompletedAmendmentDate: Invalid facility id provided: %s', facilityId);
+      console.error('getLatestCompletedAmendmentDate: Invalid facility id provided %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -631,12 +631,12 @@ const getAmendmentById = async (facilityId, amendmentId, token) => {
     const isValidAmendmentId = isValidMongoId(amendmentId);
 
     if (!isValidFacilityId) {
-      console.error('getAmendmentById: Invalid facility id provided: %s', facilityId);
+      console.error('getAmendmentById: Invalid facility id provided %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
     if (!isValidAmendmentId) {
-      console.error('getAmendmentById: Invalid amendment id provided: %s', amendmentId);
+      console.error('getAmendmentById: Invalid amendment id provided %s', amendmentId);
       return { status: 400, data: 'Invalid amendment id' };
     }
 
@@ -658,7 +658,7 @@ const getAmendmentsByFacilityId = async (facilityId, token) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      console.error('getAmendmentsByFacilityId: Invalid facility id provided: %s', facilityId);
+      console.error('getAmendmentsByFacilityId: Invalid facility id provided %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -680,7 +680,7 @@ const getAmendmentsByDealId = async (dealId, token) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('getAmendmentsByDealId: Invalid deal id provided: %s', dealId);
+      console.error('getAmendmentsByDealId: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -702,7 +702,7 @@ const getAmendmentInProgressByDealId = async (dealId, token) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('getAmendmentInProgressByDealId: Invalid deal id provided: %s', dealId);
+      console.error('getAmendmentInProgressByDealId: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -724,7 +724,7 @@ const getCompletedAmendmentByDealId = async (dealId, token) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('getCompletedAmendmentByDealId: Invalid deal id provided: %s', dealId);
+      console.error('getCompletedAmendmentByDealId: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -746,7 +746,7 @@ const getLatestCompletedAmendmentByDealId = async (dealId, token) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('getLatestCompletedAmendmentByDealId: Invalid deal id provided: %s', dealId);
+      console.error('getLatestCompletedAmendmentByDealId: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -768,7 +768,7 @@ const getParty = async (partyUrn, token) => {
     const isValidUrn = isValidPartyUrn(partyUrn);
 
     if (!isValidUrn) {
-      console.error('getParty: Invalid party urn provided: %s', partyUrn);
+      console.error('getParty: Invalid party urn provided %s', partyUrn);
       return { status: 400, data: 'Invalid party urn' };
     }
 

@@ -26,7 +26,7 @@ const findOnePortalDeal = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
     if (!isValidDealId) {
-      console.error('findOnePortalDeal: Invalid deal id: %s', dealId);
+      console.error('findOnePortalDeal: Invalid deal id %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
     const response = await axios({
@@ -46,7 +46,7 @@ const updatePortalDeal = async (dealId, update) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updatePortalDeal: Invalid deal id: %s', dealId);
+      console.error('updatePortalDeal: Invalid deal id %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -61,7 +61,7 @@ const updatePortalDeal = async (dealId, update) => {
 
     return response.data;
   } catch ({ response }) {
-    console.error('TFM API - error updating BSS deal: %s', dealId);
+    console.error('TFM API - error updating BSS deal %s', dealId);
 
     return false;
   }
@@ -72,7 +72,7 @@ const updatePortalBssDealStatus = async (dealId, status) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updatePortalBssDealStatus: Invalid deal id: %s', dealId);
+      console.error('updatePortalBssDealStatus: Invalid deal id %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -87,7 +87,7 @@ const updatePortalBssDealStatus = async (dealId, status) => {
 
     return response.data;
   } catch ({ response }) {
-    console.error('TFM API - error updating BSS deal status: %s', dealId);
+    console.error('TFM API - error updating BSS deal status %s', dealId);
 
     return false;
   }
@@ -97,7 +97,7 @@ const addPortalDealComment = async (dealId, commentType, comment) => {
   const isValidDealId = isValidMongoId(dealId);
 
   if (!isValidDealId) {
-    console.error('addPortalDealComment: Invalid deal id: %s', dealId);
+    console.error('addPortalDealComment: Invalid deal id %s', dealId);
     throw new Error(`Invalid deal id: ${dealId}`);
   }
 
@@ -120,7 +120,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      console.error('updatePortalFacilityStatus: Invalid facility id: %s', facilityId);
+      console.error('updatePortalFacilityStatus: Invalid facility id %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -146,7 +146,7 @@ const updatePortalFacility = async (facilityId, update) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      console.error('updatePortalFacility: Invalid facility id: %s', facilityId);
+      console.error('updatePortalFacility: Invalid facility id %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -159,7 +159,7 @@ const updatePortalFacility = async (facilityId, update) => {
 
     return response.data;
   } catch ({ response }) {
-    console.error('TFM API - error updating BSS facility: %s', facilityId);
+    console.error('TFM API - error updating BSS facility %s', facilityId);
 
     return false;
   }
@@ -170,7 +170,7 @@ const findOneDeal = async (dealId) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('findOneDeal: Invalid deal id: %s', dealId);
+      console.error('findOneDeal: Invalid deal id %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -196,7 +196,7 @@ const updateDeal = async (
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updateDeal: Invalid deal id: %s', dealId);
+      console.error('updateDeal: Invalid deal id %s', dealId);
       return onError({ status: 400, message: 'Invalid deal id' });
     }
 
@@ -211,7 +211,7 @@ const updateDeal = async (
 
     return response.data;
   } catch (error) {
-    console.error('updateDeal: Failed to update deal: %o', error);
+    console.error('updateDeal: Failed to update deal %o', error);
     return onError({ status: error?.code || 500, message: 'Error when updating deal' });
   }
 };
@@ -221,7 +221,7 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updateDealSnapshot: Invalid deal id: %s', dealId);
+      console.error('updateDealSnapshot: Invalid deal id %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -234,7 +234,7 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
 
     return response.data;
   } catch (error) {
-    console.error('updateDealSnapshot: Failed to update deal snapshot: %o', error);
+    console.error('updateDealSnapshot: Failed to update deal snapshot %o', error);
     return { status: error?.code || 500, data: 'Failed to update deal snapshot' };
   }
 };
@@ -253,7 +253,7 @@ const submitDeal = async (dealType, dealId) => {
 
     return response.data;
   } catch (error) {
-    console.error('submitDeal: Failed to submit deal: %o', error);
+    console.error('submitDeal: Failed to submit deal %o', error);
     return { status: error?.code || 500, data: 'Error when submitting deal' };
   }
 };
@@ -263,7 +263,7 @@ const findOneFacility = async (facilityId) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      console.error('findOneFacility: Invalid facility id: %s', facilityId);
+      console.error('findOneFacility: Invalid facility id %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -275,7 +275,7 @@ const findOneFacility = async (facilityId) => {
 
     return response.data;
   } catch (error) {
-    console.error('TFM API - error finding BSS facility: %s', facilityId);
+    console.error('TFM API - error finding BSS facility %s', facilityId);
     return { status: error?.code || 500, data: 'Error finding BSS facility' };
   }
 };
@@ -285,7 +285,7 @@ const findFacilitiesByDealId = async (dealId) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('findFacilitiesByDealId: Invalid deal id: %s', dealId);
+      console.error('findFacilitiesByDealId: Invalid deal id %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -297,7 +297,7 @@ const findFacilitiesByDealId = async (dealId) => {
 
     return response.data;
   } catch (error) {
-    console.error('findFacilitiesByDealId: Failed to find facilities by deal id: %o', error);
+    console.error('findFacilitiesByDealId: Failed to find facilities by deal id %o', error);
     return { status: error?.code || 500, data: 'Failed to find facilities by deal id' };
   }
 };
@@ -307,7 +307,7 @@ const updateFacility = async (facilityId, facilityUpdate) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      console.error('updateFacility: Invalid facility id: %s', facilityId);
+      console.error('updateFacility: Invalid facility id %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -322,7 +322,7 @@ const updateFacility = async (facilityId, facilityUpdate) => {
 
     return response.data;
   } catch (error) {
-    console.error('updateFacility: Failed to update facility: %o', error);
+    console.error('updateFacility: Failed to update facility %o', error);
     return { status: error?.code || 500, data: 'Failed to update facility' };
   }
 };
@@ -387,7 +387,7 @@ const getAmendmentInProgress = async (facilityId) => {
       return { status: error?.response?.status || 500, data: 'Failed to get the amendment in progress' };
     }
   } else {
-    console.error('Invalid facility Id: %s', facilityId);
+    console.error('Invalid facility Id %s', facilityId);
     return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
@@ -408,7 +408,7 @@ const getCompletedAmendment = async (facilityId) => {
       return { status: error?.response?.status || 500, data: 'Failed to get the completed amendment' };
     }
   } else {
-    console.error('Invalid facility Id: %s', facilityId);
+    console.error('Invalid facility Id %s', facilityId);
     return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
@@ -429,7 +429,7 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
       return { status: error?.response?.status || 500, data: 'Failed to get the latest completed value amendment' };
     }
   } else {
-    console.error('Invalid facility Id: %s', facilityId);
+    console.error('Invalid facility Id %s', facilityId);
     return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
@@ -450,7 +450,7 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
       return { status: error?.response?.status || 500, data: 'Failed to get the latest completed coverEndDate amendment' };
     }
   } else {
-    console.error('Invalid facility Id: %s', facilityId);
+    console.error('Invalid facility Id %s', facilityId);
     return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
@@ -492,7 +492,7 @@ const getAmendmentByFacilityId = async (facilityId) => {
       return { status: error?.response?.status || 500, data: 'Failed to get the amendment by facilityId' };
     }
   } else {
-    console.error('Invalid facility Id: %s', facilityId);
+    console.error('Invalid facility Id %s', facilityId);
     return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
@@ -513,7 +513,7 @@ const getAmendmentsByDealId = async (dealId) => {
       return { status: error?.response?.status || 500, data: 'Failed to get the amendments by dealId' };
     }
   } else {
-    console.error('Invalid deal Id: %s', dealId);
+    console.error('Invalid deal Id %s', dealId);
     return { status: 400, data: 'Invalid deal Id provided' };
   }
 };
@@ -534,7 +534,7 @@ const getAmendmentInProgressByDealId = async (dealId) => {
       return { status: error?.response?.status || 500, data: 'Failed to get the amendment in progress by dealId' };
     }
   } else {
-    console.error('Invalid deal Id: %s', dealId);
+    console.error('Invalid deal Id %s', dealId);
     return { status: 400, data: 'Invalid deal Id provided' };
   }
 };
@@ -555,7 +555,7 @@ const getCompletedAmendmentByDealId = async (dealId) => {
       return { status: error?.response?.status || 500, data: 'Failed to get the completed amendment by dealId' };
     }
   } else {
-    console.error('Invalid deal Id: %s', dealId);
+    console.error('Invalid deal Id %s', dealId);
     return { status: 400, data: 'Invalid deal Id provided' };
   }
 };
@@ -607,7 +607,7 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      console.error('updateGefFacility: Invalid facility id: %s', facilityId);
+      console.error('updateGefFacility: Invalid facility id %s', facilityId);
       return { status: 400, data: 'Invalid facility Id provided' };
     }
 
@@ -638,7 +638,7 @@ const queryDeals = async ({ queryParams }) => {
 
     return response.data;
   } catch (error) {
-    console.error('queryDeals: Failed to get deals: %o', error);
+    console.error('queryDeals: Failed to get deals %o', error);
     return { status: error?.code || 500, data: 'Failed to get deals' };
   }
 };
@@ -652,7 +652,7 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to get party DB info: %o', error);
+    console.error('Unable to get party DB info %o', error);
     return false;
   }
 };
@@ -667,7 +667,7 @@ const getCompanyInfo = async (partyUrn) => {
     const isValidUrn = isValidPartyUrn(partyUrn);
 
     if (!isValidUrn) {
-      console.error('getCompanyInfo: Invalid party Urn: %s', partyUrn);
+      console.error('getCompanyInfo: Invalid party Urn %s', partyUrn);
       return { status: 400, data: 'Invalid party urn provided' };
     }
 
@@ -695,7 +695,7 @@ const findUser = async (username) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to find user: %o', error);
+    console.error('Unable to find user %o', error);
     return false;
   }
 };
@@ -705,7 +705,7 @@ const findUserById = async (userId) => {
     const isValidUserId = isValidMongoId(userId);
 
     if (!isValidUserId) {
-      console.error('findUserById: Invalid user id: %s', userId);
+      console.error('findUserById: Invalid user id %s', userId);
       return { status: 400, data: 'Invalid user id provided' };
     }
 
@@ -716,7 +716,7 @@ const findUserById = async (userId) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to find user by id: %o', error);
+    console.error('Unable to find user by id %o', error);
     return false;
   }
 };
@@ -726,7 +726,7 @@ const findPortalUserById = async (userId) => {
     const isValidUserId = isValidMongoId(userId);
 
     if (!isValidUserId) {
-      console.error('findPortalUserById: Invalid user id: %s', userId);
+      console.error('findPortalUserById: Invalid user id %s', userId);
       return { status: 400, data: 'Invalid user id provided' };
     }
 
@@ -737,7 +737,7 @@ const findPortalUserById = async (userId) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error finding portal user: %o', error);
+    console.error('Error finding portal user %o', error);
     return false;
   }
 };
@@ -747,7 +747,7 @@ const updateUserTasks = async (userId, updatedTasks) => {
     const isValidUserId = isValidMongoId(userId);
 
     if (!isValidUserId) {
-      console.error('updateUserTasks: Invalid user id: %s', userId);
+      console.error('updateUserTasks: Invalid user id %s', userId);
       return { status: 400, data: 'Invalid user id provided' };
     }
 
@@ -761,7 +761,7 @@ const updateUserTasks = async (userId, updatedTasks) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to update user tasks: %o', error);
+    console.error('Unable to update user tasks %o', error);
     return false;
   }
 };
@@ -771,7 +771,7 @@ const findOneTeam = async (teamId) => {
     const isValidId = isValidTeamId(teamId);
 
     if (!isValidId) {
-      console.error('findOneTeam: Invalid team id: %s', teamId);
+      console.error('findOneTeam: Invalid team id %s', teamId);
       return { status: 400, data: 'Invalid team id provided' };
     }
 
@@ -783,7 +783,7 @@ const findOneTeam = async (teamId) => {
 
     return response.data.team;
   } catch (error) {
-    console.error('findOneTeam: Failed to find team: %o', error);
+    console.error('findOneTeam: Failed to find team %o', error);
     return { status: error?.code || 500, data: 'Failed to find team' };
   }
 };
@@ -793,7 +793,7 @@ const findTeamMembers = async (teamId) => {
     const isValidId = isValidTeamId(teamId);
 
     if (!isValidId) {
-      console.error('findTeamMembers: Invalid team id: %s', teamId);
+      console.error('findTeamMembers: Invalid team id %s', teamId);
       return { status: 400, data: 'Invalid team id provided' };
     }
 
@@ -805,7 +805,7 @@ const findTeamMembers = async (teamId) => {
 
     return response.data;
   } catch (error) {
-    console.error('findTeamMembers: Failed to find team members: %o', error);
+    console.error('findTeamMembers: Failed to find team members %o', error);
     return { status: error?.code || 500, data: 'Failed to find team members' };
   }
 };
@@ -816,7 +816,7 @@ const getCurrencyExchangeRate = async (source, target) => {
     const targetIsValid = isValidCurrencyCode(target);
 
     if (!sourceIsValid || !targetIsValid) {
-      console.error('getCurrencyExchangeRate: Invalid currency provided: %s, %s', source, target);
+      console.error('getCurrencyExchangeRate: Invalid currency provided %s, %s', source, target);
       return { status: 400, data: 'Invalid currency provided' };
     }
 
@@ -827,7 +827,7 @@ const getCurrencyExchangeRate = async (source, target) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to get currency exchange rate: %o', error);
+    console.error('Unable to get currency exchange rate %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get currency exchange rate' };
   }
 };
@@ -842,7 +842,7 @@ const getFacilityExposurePeriod = async (startDate, endDate, type) => {
 
     return response.data;
   } catch (error) {
-    console.error('TFM-API - Failed api call to getFacilityExposurePeriod: %o', error);
+    console.error('TFM-API - Failed api call to getFacilityExposurePeriod %o', error);
     return { status: error?.code || 500, data: 'Failed to get facility exposure period' };
   }
 };
@@ -861,7 +861,7 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
     }
     return null;
   } catch (error) {
-    console.error('TFM-API error calling premium schedule: %o', error);
+    console.error('TFM-API error calling premium schedule %o', error);
     return null;
   }
 };
@@ -901,7 +901,7 @@ const updateACBSfacility = async (facility, deal) => {
       });
       return response.data;
     } catch (error) {
-      console.error('TFM-API Facility update error: %o', error);
+      console.error('TFM-API Facility update error %o', error);
       return { status: error?.code || 500, data: 'Failed to update ACBS facility' };
     }
   }
@@ -1000,7 +1000,7 @@ const findOneGefDeal = async (dealId) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('findOneGefDeal: Invalid deal Id provided: %s', dealId);
+      console.error('findOneGefDeal: Invalid deal Id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id provided' };
     }
 
@@ -1012,7 +1012,7 @@ const findOneGefDeal = async (dealId) => {
 
     return response.data;
   } catch (error) {
-    console.error('TFM API - error finding GEF deal: %s', dealId);
+    console.error('TFM API - error finding GEF deal %s', dealId);
 
     return false;
   }
@@ -1023,7 +1023,7 @@ const updatePortalGefDealStatus = async (dealId, status) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updatePortalGefDealStatus: Invalid deal Id provided: %s', dealId);
+      console.error('updatePortalGefDealStatus: Invalid deal Id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id provided' };
     }
 
@@ -1038,7 +1038,7 @@ const updatePortalGefDealStatus = async (dealId, status) => {
 
     return response.data;
   } catch (error) {
-    console.error('TFM API - error updating GEF deal status: %s', dealId);
+    console.error('TFM API - error updating GEF deal status %s', dealId);
 
     return false;
   }
@@ -1049,7 +1049,7 @@ const updatePortalGefDeal = async (dealId, update) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updatePortalGefDeal: Invalid deal Id provided: %s', dealId);
+      console.error('updatePortalGefDeal: Invalid deal Id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id provided' };
     }
 
@@ -1075,7 +1075,7 @@ const updateGefMINActivity = async (dealId) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updateGefMINActivity: Invalid deal Id provided: %s', dealId);
+      console.error('updateGefMINActivity: Invalid deal Id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id provided' };
     }
 
@@ -1097,7 +1097,7 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
   const isValidDealId = isValidMongoId(dealId);
 
   if (!isValidDealId) {
-    console.error('addUnderwriterCommentToGefDeal: Invalid deal Id provided: %s', dealId);
+    console.error('addUnderwriterCommentToGefDeal: Invalid deal Id provided %s', dealId);
     throw new Error(`Invalid deal id: ${dealId}`);
   }
 
@@ -1133,7 +1133,7 @@ const findBankById = async (bankId) => {
     const isValidBankId = isValidNumericId(bankId);
 
     if (!isValidBankId) {
-      console.error('findBankById: Invalid bank Id provided: %s', bankId);
+      console.error('findBankById: Invalid bank Id provided %s', bankId);
       return { status: 400, data: 'Invalid bank id provided' };
     }
 
@@ -1154,7 +1154,7 @@ const getGefMandatoryCriteriaByVersion = async (version) => {
     const isValidVersion = isValidNumericId(version);
 
     if (!isValidVersion) {
-      console.error('getGefMandatoryCriteriaByVersion: Invalid version provided: %s', version);
+      console.error('getGefMandatoryCriteriaByVersion: Invalid version provided %s', version);
       return { status: 400, data: 'Invalid mandatory criteria version provided' };
     }
 

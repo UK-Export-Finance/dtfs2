@@ -128,7 +128,7 @@ const uploadReportAndSendNotification = async (req, res) => {
 
     if (saveDataResponse.status !== 201) {
       const status = saveDataResponse.status || 500;
-      console.error('Failed to save utilisation report: %o', saveDataResponse);
+      console.error('Failed to save utilisation report %o', saveDataResponse);
       return res.status(status).send('Failed to save utilisation report');
     }
     await sendEmailToPdcInputtersEmail(parsedUser?.bank?.name, formattedReportPeriod);
@@ -140,7 +140,7 @@ const uploadReportAndSendNotification = async (req, res) => {
     );
     return res.status(201).send({ paymentOfficerEmail });
   } catch (error) {
-    console.error('Failed to save utilisation report: %o', error);
+    console.error('Failed to save utilisation report %o', error);
     return res.status(error.response?.status ?? 500).send('Failed to save utilisation report');
   }
 };
