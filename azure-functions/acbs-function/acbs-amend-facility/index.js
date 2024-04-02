@@ -28,7 +28,7 @@ const { DEAL, FACILITY } = require('../constants');
 
 const acceptableFacilityStage = ['07'];
 
-module.exports = df.orchestrator(function* amendACBSFacility(context) {
+df.app.orchestration('acbs-amend-facility', function* amendACBSFacility(context) {
   try {
     const { amendment } = context.df.getInput();
     if (amendment) {

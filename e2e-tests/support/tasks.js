@@ -16,7 +16,7 @@ module.exports = {
     const getTfmFacilitiesCollection = () => db.getCollection(tfmFacilitiesCollectionName, connectionOptions);
 
     const log = (message) => {
-      console.info('Cypress log: ', message);
+      console.info('Cypress log %s', message);
       return null;
     };
 

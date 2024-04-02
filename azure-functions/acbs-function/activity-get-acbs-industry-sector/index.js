@@ -8,6 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
+const df = require('durable-functions');
 const mdm = require('../apim-mdm');
 
 const getAcbsIndustrySector = async (context) => {
@@ -22,4 +23,6 @@ const getAcbsIndustrySector = async (context) => {
   }
 };
 
-module.exports = getAcbsIndustrySector;
+df.app.activity('get-acbs-industry-sector', {
+  handler: getAcbsIndustrySector,
+});

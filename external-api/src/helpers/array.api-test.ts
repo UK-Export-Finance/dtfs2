@@ -1,4 +1,4 @@
-import { sortArrayAlphabetically } from './array.util';
+import { sortArrayAlphabetically } from './array';
 
 describe('utils - array', () => {
   describe('sortArrayAlphabetically', () => {

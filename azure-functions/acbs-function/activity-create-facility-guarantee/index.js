@@ -8,7 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
-
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
@@ -22,7 +22,7 @@ const createFacilityGuarantee = async (context) => {
     const missingMandatory = findMissingMandatory(acbsFacilityGuaranteeInput, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();
@@ -62,4 +62,6 @@ const createFacilityGuarantee = async (context) => {
   }
 };
 
-module.exports = createFacilityGuarantee;
+df.app.activity('create-facility-guarantee', {
+  handler: createFacilityGuarantee,
+});

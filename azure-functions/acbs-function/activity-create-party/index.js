@@ -8,6 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
@@ -24,7 +25,7 @@ const createParty = async (context) => {
       const missingMandatory = findMissingMandatory(party, mandatoryFields);
 
       if (missingMandatory.length) {
-        return Promise.resolve({ missingMandatory });
+        return { missingMandatory };
       }
 
       const submittedToACBS = getNowAsIsoString();
@@ -63,4 +64,6 @@ const createParty = async (context) => {
   }
 };
 
-module.exports = createParty;
+df.app.activity('create-party', {
+  handler: createParty,
+});
