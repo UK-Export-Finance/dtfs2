@@ -136,7 +136,7 @@ class SignInLinkService {
     try {
       return this.#randomGenerator.randomHexString(SIGN_IN_LINK.TOKEN_BYTE_LENGTH);
     } catch (error) {
-      throw new Error('Failed to create a sign in token %o', error);
+      throw new Error('Failed to create a sign in token %o', { cause: error });
     }
   }
 
@@ -156,7 +156,7 @@ class SignInLinkService {
         expiry,
       });
     } catch (error) {
-      throw new Error('Failed to save the sign in token %o', error);
+      throw new Error('Failed to save the sign in token %o', { cause: error });
     }
   }
 
@@ -178,7 +178,7 @@ class SignInLinkService {
         signInLinkDuration: `${SIGN_IN_LINK.DURATION_MINUTES} minute${SIGN_IN_LINK.DURATION_MINUTES === 1 ? '' : 's'}`,
       });
     } catch (error) {
-      throw new Error('Failed to email the sign in token %o', error);;
+      throw new Error('Failed to email the sign in token %o', { cause: error });
     }
   }
 

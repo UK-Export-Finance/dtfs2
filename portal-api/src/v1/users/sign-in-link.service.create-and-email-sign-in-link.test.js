@@ -128,7 +128,7 @@ describe('SignInLinkService', () => {
 
             testCreatingAndEmailingTheSignInLinkRejects({
               expectedCause: hashError,
-              expectedMessage: 'Failed to create a sign in token %o',
+              expectedMessage: 'Failed to save the sign in token %o',
             });
           });
 
@@ -146,7 +146,7 @@ describe('SignInLinkService', () => {
 
               testCreatingAndEmailingTheSignInLinkRejects({
                 expectedCause: savingTokenError,
-                expectedMessage: 'Failed to create a sign in token %o',
+                expectedMessage: 'Failed to save the sign in token %o',
               });
             });
 
@@ -214,7 +214,7 @@ describe('SignInLinkService', () => {
 
                 testCreatingAndEmailingTheSignInLinkRejects({
                   expectedCause: sendEmailError,
-                  expectedMessage: 'Failed to email the sign in token.',
+                  expectedMessage: 'Failed to email the sign in token %o',
                 });
               });
 
@@ -358,8 +358,8 @@ describe('SignInLinkService', () => {
     it('rejects', async () => {
       const createAndEmailSignInLinkPromise = service.createAndEmailSignInLink(user);
 
-      await expect(createAndEmailSignInLinkPromise).rejects.toThrowError(expectedMessage);
-      await expect(createAndEmailSignInLinkPromise).rejects.toHaveProperty('cause', expectedCause);
+      await expect(() => createAndEmailSignInLinkPromise).rejects.toThrow(expectedMessage);
+      await expect(() => createAndEmailSignInLinkPromise).rejects.toHaveProperty('cause', expectedCause);
     });
   }
 });
