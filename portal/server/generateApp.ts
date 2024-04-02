@@ -11,13 +11,7 @@ import { isHttpError } from 'http-errors';
 import routes from './routes';
 import healthcheck from './healthcheck';
 import configureNunjucks from './nunjucks-configuration';
-import {
-  csrfToken,
-  copyCsrfTokenFromQueryToBody,
-  seo,
-  security,
-  createRateLimit,
-} from './routes/middleware';
+import { csrfToken, copyCsrfTokenFromQueryToBody, seo, security, createRateLimit } from './routes/middleware';
 import InvalidEnvironmentVariableError from './errors/invalid-environment-variable.error';
 import { asLoggedInUserSession, withUnknownLoginStatusUserSession } from './helpers/express-session';
 
@@ -71,11 +65,7 @@ export const generateApp = () => {
     };
   }
 
-  const redisClient = redis.createClient(
-    parseInt(process.env.REDIS_PORT || REDIS_DEFAULT_PORT, 10),
-    process.env.REDIS_HOSTNAME,
-    redisOptions,
-  );
+  const redisClient = redis.createClient(parseInt(process.env.REDIS_PORT || REDIS_DEFAULT_PORT, 10), process.env.REDIS_HOSTNAME, redisOptions);
 
   redisClient.on('error', (error) => {
     console.error('Unable to connect to Redis: %s %O', process.env.REDIS_HOSTNAME, error);
@@ -140,8 +130,7 @@ export const generateApp = () => {
   app.get('*', (req, res) => {
     // This checks the session cookie for a login status & if it's `Valid 2FA`.
     // If so, the user property can be accessed on the session & passed into the template
-    const userIsFullyLoggedIn =
-      'loginStatus' in req.session && withUnknownLoginStatusUserSession(req.session).loginStatus === 'Valid 2FA';
+    const userIsFullyLoggedIn = 'loginStatus' in req.session && withUnknownLoginStatusUserSession(req.session).loginStatus === 'Valid 2FA';
     const user = userIsFullyLoggedIn ? asLoggedInUserSession(req.session).user : undefined;
     return res.render('page-not-found.njk', { user });
   });
