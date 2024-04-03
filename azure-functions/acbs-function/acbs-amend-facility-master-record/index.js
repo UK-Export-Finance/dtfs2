@@ -24,7 +24,7 @@ const df = require('durable-functions');
 const retryOptions = require('../helpers/retryOptions');
 const mappings = require('../mappings');
 
-module.exports = df.orchestrator(function* Facility(context) {
+df.app.orchestration('acbs-amend-facility-master-record', function* Facility(context) {
   try {
     if (context.df.getInput()) {
       const { deal, facilityId, fmr, etag, amendments } = context.df.getInput();
@@ -74,6 +74,6 @@ module.exports = df.orchestrator(function* Facility(context) {
     console.error('No input specified');
   } catch (error) {
     console.error('Error amending facility master record: %o', error);
-    throw new Error('Error amending facility master record', { cause: error });
+    throw new Error(`Error amending facility master record ${error}`);
   }
 });

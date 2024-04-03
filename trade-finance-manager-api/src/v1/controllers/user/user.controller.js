@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { generateTfmUserAuditDetails, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
 const db = require('../../../drivers/db-client');
 const { generateArrayOfEmailsRegex } = require('./helpers/generateArrayOfEmailsRegex');
 const handleFindByEmailsResult = require('./helpers/handleFindByEmailsResult');
@@ -52,9 +53,18 @@ exports.findByUsername = async (username, callback) => {
   collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
-exports.createUser = async (user) => {
+/**
+ * @param {object} user to create
+ * @param {import('../../../types/tfm-session-user').TfmSessionUser | undefined} sessionUser logged in user
+ * @param {(error: string | null, createdUser: object) => void} callback
+ * @returns
+ */
+exports.createUser = async (user, sessionUser) => {
   const collection = await db.getCollection('tfm-users');
-  const tfmUser = { ...user };
+  const tfmUser = {
+    ...user,
+    auditDetails: sessionUser?._id ? generateTfmUserAuditDetails(sessionUser._id) : generateNoUserLoggedInAuditDetails(),
+  };
 
   delete tfmUser.token;
 
@@ -79,22 +89,28 @@ exports.createUser = async (user) => {
 /**
  * updateUser
  * Update TFM user data
- * @param {String} userId: User ID
- * @param {Object} update: Update object
- * @param {Function} callback: Callback function. defaults to an empty function.
+ * @param {string} _id of the user to update
+ * @param {object} update to make to the user
+ * @param {import('../../../types/tfm-session-user').TfmSessionUser | undefined} sessionUser logged in user
+ * @param {(error: string | null, updatedUser: object) => void} callback
  * @returns {Promise<Function>} Callback function
  */
-exports.updateUser = async (userId, userData, callback = () => { }) => {
+exports.updateUser = async (_id, update, sessionUser, callback = () => { }) => {
   try {
     console.info('Updating TFM user');
 
-    if (!ObjectId.isValid(userId)) {
+    if (!ObjectId.isValid(_id)) {
       throw new Error('Error Updating TFM user - Invalid User Id');
     }
 
+    const userUpdate = {
+      ...update,
+      auditDetails: generateTfmUserAuditDetails(sessionUser._id)
+    };
+
     const collection = await db.getCollection('tfm-users');
 
-    await collection.updateOne({ _id: { $eq: userId } }, { $set: userData }, {});
+    await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate }, {});
 
     callback();
   } catch (error) {
@@ -125,6 +141,7 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
     const update = {
       lastLogin: Date.now(),
       sessionIdentifier,
+      auditDetails: generateTfmUserAuditDetails(user._id),
     };
 
     await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});

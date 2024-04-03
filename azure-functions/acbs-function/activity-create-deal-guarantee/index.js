@@ -8,6 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
@@ -22,7 +23,7 @@ const createDealGuarantee = async (context) => {
     const missingMandatory = findMissingMandatory(guarantee, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();
@@ -56,8 +57,10 @@ const createDealGuarantee = async (context) => {
     };
   } catch (error) {
     console.error('Unable to create deal guarantee record. %o', error);
-    throw new Error('Unable to create deal guarantee record', { cause: error });
+    throw new Error(`Unable to create deal guarantee record ${error}`);
   }
 };
 
-module.exports = createDealGuarantee;
+df.app.activity('create-deal-guarantee', {
+  handler: createDealGuarantee,
+});

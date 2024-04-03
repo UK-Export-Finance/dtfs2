@@ -8,6 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
@@ -22,7 +23,7 @@ const createFacilityInvestor = async (context) => {
     const missingMandatory = findMissingMandatory(acbsFacilityInvestorInput, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();
@@ -55,8 +56,10 @@ const createFacilityInvestor = async (context) => {
     };
   } catch (error) {
     console.error('Unable to create facility investor record. %o', error);
-    throw new Error('Unable to create facility investor record', { cause: error });
+    throw new Error(`Unable to create facility investor record ${error}`);
   }
 };
 
-module.exports = createFacilityInvestor;
+df.app.activity('create-facility-investor', {
+  handler: createFacilityInvestor,
+});

@@ -14,12 +14,12 @@ const retryOptions = require('../helpers/retryOptions');
 const mappings = require('../mappings');
 const CONSTANTS = require('../constants');
 
-module.exports = df.orchestrator(function* updateACBSfacility(context) {
+df.app.orchestration('acbs-issue-facility', function* updateACBSfacility(context) {
   try {
     const { facilityId, facility, deal } = context.df.getInput();
 
     if (facilityId.includes(CONSTANTS.DEAL.UKEF_ID.PENDING) || facilityId.includes(CONSTANTS.DEAL.UKEF_ID.TEST)) {
-      throw new Error('Invalid facility ID %s', facilityId);
+      throw new Error(`Invalid facility ID ${facilityId}`);
     }
 
     let facilityFee;
@@ -111,6 +111,6 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
     throw new Error('Invalid argument set');
   } catch (error) {
     console.error('Error processing facility issuance: %o', error);
-    throw new Error('Error processing facility issuance', { cause: error });
+    throw new Error(`Error processing facility issuance ${error}`);
   }
 });

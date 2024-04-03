@@ -31,6 +31,7 @@ const TFM = {
     timezone: String,
     firstName: String,
     lastName: String,
+    auditDetails: Object,
   },
   TEAM: {
     id: String,

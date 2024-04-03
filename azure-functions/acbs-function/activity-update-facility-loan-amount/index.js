@@ -14,7 +14,7 @@
  * HTTP -> DOF -> DAF
  * ------------------
  */
-
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
@@ -29,7 +29,7 @@ const updateFacilityLoanAmount = async (context) => {
     const missingMandatory = findMissingMandatory(acbsFacilityLoanInput, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();
@@ -60,8 +60,10 @@ const updateFacilityLoanAmount = async (context) => {
     };
   } catch (error) {
     console.error('Error amending facility loan amount: %o', error);
-    throw new Error('Error amending facility loan amount', { cause: error });
+    throw new Error(`Error amending facility loan amount ${error}`);
   }
 };
 
-module.exports = updateFacilityLoanAmount;
+df.app.activity('update-facility-loan-amount', {
+  handler: updateFacilityLoanAmount,
+});

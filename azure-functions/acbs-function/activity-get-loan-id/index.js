@@ -14,7 +14,7 @@
  * HTTP -> DOF -> DAF
  * ------------------
  */
-
+const df = require('durable-functions');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 
@@ -71,8 +71,9 @@ const getLoanId = async (context) => {
     return null;
   } catch (error) {
     console.error('Error getting loan id for facility: %o', error);
-    throw new Error('Error getting loan id for facility', { cause: error });
+    throw new Error(`Error getting loan id for facility ${error}`);
   }
 };
-
-module.exports = getLoanId;
+df.app.activity('get-loan-id', {
+  handler: getLoanId,
+});

@@ -214,7 +214,7 @@ module.exports = {
         facilities: [{ facilityId: '1234' }],
       },
     }),),
-  createEstoreFolders: (deal) => deal,
+  createEstoreSite: (deal) => deal,
   getPremiumSchedule: jest.fn(() => MOCK_PREMIUM_SCHEDULE_RESPONSE),
   sendEmail: jest.fn((templateId, sendToEmailAddress, emailVariables) => {
     const mockResponse = {
