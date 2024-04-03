@@ -83,7 +83,7 @@ To access GEF locally, use [http://localhost](http://localhost).
 To stop the local environment, simply exit the running terminal and run:
 
 ```shell
-docker compose down
+npm run stop
 ```
 
 ## Different docker compose files
