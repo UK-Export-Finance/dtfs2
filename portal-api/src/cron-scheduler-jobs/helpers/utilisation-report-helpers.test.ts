@@ -1,4 +1,4 @@
-import { BankReportPeriodSchedule, PaymentOfficerTeam, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
+import { BankReportPeriodSchedule, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
 import {
   getReportDueDate,
   getFormattedReportDueDate,
@@ -286,7 +286,8 @@ describe('utilisation-report-helpers', () => {
         const bankName = 'Some Bank Name';
 
         // Act
-        const result = getEmailRecipient(paymentOfficerTeam as PaymentOfficerTeam, bankName);
+        // @ts-expect-error we are explicitly test the case where the payment officer team object is not in the expected format
+        const result = getEmailRecipient(paymentOfficerTeam, bankName);
 
         // Assert
         expect(result).toEqual('Team');
@@ -337,11 +338,10 @@ describe('utilisation-report-helpers', () => {
       // Arrange
       jest.mocked(externalApi.bankHolidays).getBankHolidayDatesForRegion.mockResolvedValue([]);
 
-      const bankWithoutPaymentOfficerTeamEmail: BankResponse = {
-        ...aBank(),
-        isVisibleInTfmUtilisationReports: true,
-        paymentOfficerTeam: { teamName: 'Team' },
-      } as unknown as BankResponse;
+      const bankWithoutPaymentOfficerTeamEmail: BankResponse = aBank();
+      bankWithoutPaymentOfficerTeamEmail.isVisibleInTfmUtilisationReports = true;
+      // @ts-expect-error we are explicitly test the case where the payment officer team object is not in the expected format
+      bankWithoutPaymentOfficerTeamEmail.paymentOfficerTeam = { teamName: 'Team' };
       jest.mocked(api.getAllBanks).mockResolvedValue([bankWithoutPaymentOfficerTeamEmail]);
 
       jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
@@ -410,10 +410,8 @@ describe('utilisation-report-helpers', () => {
       const validEmail = 'valid-email@example.com';
       const bank = aBank();
       bank.isVisibleInTfmUtilisationReports = true;
-      bank.paymentOfficerTeam = {
-        emails: [validEmail],
-        // teamName is undefined
-      } as PaymentOfficerTeam;
+      // @ts-expect-error we are explicitly test the case where the payment officer team object is not in the expected format
+      bank.paymentOfficerTeam = { emails: [validEmail] };
       jest.mocked(api.getAllBanks).mockResolvedValue([bank]);
 
       jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
@@ -581,8 +579,8 @@ describe('utilisation-report-helpers', () => {
       // Arrange
       jest.mocked(externalApi.bankHolidays).getBankHolidayDatesForRegion.mockResolvedValue([]);
 
-      // Current month within test is November which is the submission month for the August to October report period
-      const badReportingSchedule = [{ notAReportPeriod: 'this is not parseable' }] as unknown as BankReportPeriodSchedule;
+      // @ts-expect-error we are explicitly test the case where the report schedule is not parsable
+      const badReportingSchedule: BankReportPeriodSchedule = [{ notAReportPeriod: 'this is not parseable' }];
       const email = 'test-bank-email@ukexportfinance.gov.uk';
       const teamName = 'My Bank';
       const bank: BankResponse = {
@@ -611,8 +609,8 @@ describe('utilisation-report-helpers', () => {
       // Arrange
       jest.mocked(externalApi.bankHolidays).getBankHolidayDatesForRegion.mockResolvedValue([]);
 
-      // Current month within test is November which is the submission month for the August to October report period
-      const badReportingSchedule = undefined as unknown as BankReportPeriodSchedule;
+      // @ts-expect-error we are explicitly test the case where the report schedule is not parsable
+      const badReportingSchedule: BankReportPeriodSchedule = undefined;
       const email = 'test-bank-email@ukexportfinance.gov.uk';
       const teamName = 'My Bank';
       const bank: BankResponse = {
