@@ -13,13 +13,7 @@ const routes = require('./routes');
 const supportingInformationUploadRoutes = require('./routes/supporting-information-upload');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
-const {
-  csrfToken,
-  copyCsrfTokenFromQueryToBody,
-  security,
-  seo,
-  createRateLimit,
-} = require('./middleware');
+const { csrfToken, copyCsrfTokenFromQueryToBody, security, seo, createRateLimit } = require('./middleware');
 
 dotenv.config();
 
@@ -104,11 +98,17 @@ const generateApp = () => {
     watch: true,
   });
 
-  app.use(morgan('dev', {
-    skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
-  }));
+  app.use(
+    morgan('dev', {
+      skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
+    }),
+  );
 
-  app.use('/assets', express.static(path.join(__dirname, '..', 'public')));
+  app.use(
+    '/assets',
+    express.static(path.join(__dirname, '..', 'node_modules', 'govuk-frontend', 'govuk', 'assets')),
+    express.static(path.join(__dirname, '..', 'public')),
+  );
 
   app.use(createRateLimit());
 
