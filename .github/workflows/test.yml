@@ -198,9 +198,7 @@ jobs:
 
       - name: Start
         working-directory: ./
-        run: |
-          docker compose -f docker-compose.gha.yml build
-          docker compose -f docker-compose.gha.yml up -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
@@ -378,9 +376,7 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: |
-          docker compose -f docker-compose.gha.yml build
-          docker compose -f docker-compose.gha.yml up -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
@@ -429,9 +425,7 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: |
-          docker compose -f docker-compose.gha.yml build
-          docker compose -f docker-compose.gha.yml up -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
@@ -488,9 +482,7 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: |
-          docker compose -f docker-compose.gha.yml build
-          docker compose -f docker-compose.gha.yml up -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
@@ -556,9 +548,7 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: |
-          docker compose -f docker-compose.gha.yml build
-          docker compose -f docker-compose.gha.yml up -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./

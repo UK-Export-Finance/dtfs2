@@ -17,7 +17,7 @@ Ensure you have an `.env` file configured. You can use `.env.sample` as a base. 
 npm run start
 ```
 
-Alternatively, you can start all services from the root directory using `npm run build` and `npm run start`.
+Alternatively, you can start all services from the root directory using `npm run start`.
 
 ## Testing 🧪
 

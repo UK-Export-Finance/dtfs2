@@ -15,7 +15,7 @@ To run the GEF-UI locally, follow these steps:
 
 Note that no port number is specified in the URL due to the reverse proxy.
 
-Alternatively, you can start all services from the root directory using `npm run build` and `npm run start`.
+Alternatively, you can start all services from the root directory using `npm run start`.
 
 ## Login credentials 🔑
 
