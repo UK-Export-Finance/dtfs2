@@ -22,7 +22,7 @@ const generatePaymentExchangeRateError = (csvDataRow) => {
   if (csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY]?.value
     && parseFloat(csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value) !== 1) {
     return {
-      errorMessage: 'Payment exchange rate must be 1 or blank when accrual currency and base currency are the same',
+      errorMessage: 'Payment exchange rate must be 1 or blank when payment currency and fees paid to UKEF currency are the same',
       column: csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.column,
       row: csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.row,
       value: csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value,
