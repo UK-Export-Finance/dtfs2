@@ -1,14 +1,32 @@
-export const PDC_TEAM_IDS = {
+import { TeamIds } from '../types/team-id';
+
+export const PDC_TEAM_IDS: TeamIds = {
   PDC_READ: 'PDC_READ',
   PDC_RECONCILE: 'PDC_RECONCILE',
-};
+} as const;
 
-export const TEAM_IDS = {
+export const BASE_TEAM_IDS: TeamIds = {
   UNDERWRITING_SUPPORT: 'UNDERWRITING_SUPPORT',
   UNDERWRITER_MANAGERS: 'UNDERWRITER_MANAGERS',
   UNDERWRITERS: 'UNDERWRITERS',
   RISK_MANAGERS: 'RISK_MANAGERS',
   BUSINESS_SUPPORT: 'BUSINESS_SUPPORT',
   PIM: 'PIM',
+} as const;
+
+export const TEAM_IDS: TeamIds = {
+  ...BASE_TEAM_IDS,
   ...PDC_TEAM_IDS,
-};
+} as const;
+
+// NON_PDC_TEAM_IDS are similar to BASE_TEAM_IDS at the moment, but can be expanded later.
+export const NON_PDC_TEAM_IDS: TeamIds = {
+  UNDERWRITING_SUPPORT: 'UNDERWRITING_SUPPORT',
+  UNDERWRITER_MANAGERS: 'UNDERWRITER_MANAGERS',
+  UNDERWRITERS: 'UNDERWRITERS',
+  RISK_MANAGERS: 'RISK_MANAGERS',
+  BUSINESS_SUPPORT: 'BUSINESS_SUPPORT',
+  PIM: 'PIM',
+} as const;
+
+

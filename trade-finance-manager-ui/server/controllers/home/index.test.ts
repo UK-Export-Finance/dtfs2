@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import * as homeController from '.';
-import { PDC_TEAM_IDS, TEAM_IDS } from '../../constants';
+import { PDC_TEAM_IDS, NON_PDC_TEAM_IDS } from '../../constants';
 import { TeamId } from '../../types/team-id';
 
 describe('controllers - home', () => {
@@ -29,9 +29,7 @@ describe('controllers - home', () => {
     redirectLocation: '/utilisation-reports',
   }));
 
-  const nonPdcTeams = Object.values(TEAM_IDS)
-    .filter((id: TeamId) => !Object.values(PDC_TEAM_IDS).includes(id))
-    .map((id) => ({
+  const nonPdcTeams = Object.values(NON_PDC_TEAM_IDS).map((id) => ({
       id,
       redirectLocation: '/deals',
     }));

@@ -28,7 +28,7 @@ authRouter.use(passport.authenticate('jwt', { session: false }));
 
 // Used for creating initial user for data load.
 openRouter.route('/user').post(users.createTfmUser);
-// Used for creating mock user.
+// Used for creating mock/test users.
 authRouter.route('/users').post(users.createTfmUser);
 
 // Used for clearing test data.
