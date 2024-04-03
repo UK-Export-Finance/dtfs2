@@ -119,10 +119,6 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
   if (dealHasBeenResubmit) {
     const { tfm: tfmDeal } = await findOneTfmDeal(dealId);
-
-    // Update portal deal status
-    await updatePortalDealStatus(mappedDeal);
-
     /**
      * checks if can update to MIN
      * if it can, changes mappedDeal to show MIN to allow gef fee record to be calculated
@@ -134,6 +130,11 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       mappedDeal.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
       console.info('TFM deal %s submission type has been updated to %s', dealId, mappedDeal.submissionType);
     }
+
+    // Update portal deal status
+    await updatePortalDealStatus(mappedDeal);
+
+    // Update issued facilities
     const updatedDeal = await updatedIssuedFacilities(mappedDeal);
     /**
      * Current requirement only allows AIN & MIN deals to be send to ACBS
