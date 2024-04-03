@@ -1,12 +1,7 @@
-import { WithId } from 'mongodb';
-import { BankReportPeriodSchedule } from '../bank-report-period-schedule';
+import { BankReportPeriodSchedule, PaymentOfficerTeam } from '@ukef/dtfs2-common';
 
-export type PaymentOfficerTeam = {
-  teamName: string;
-  emails: string[];
-};
-
-export type Bank = WithId<{
+export type BankResponse = {
+  _id: string;
   id: string;
   name: string;
   mga: string[];
@@ -17,4 +12,4 @@ export type Bank = WithId<{
   paymentOfficerTeam: PaymentOfficerTeam;
   utilisationReportPeriodSchedule: BankReportPeriodSchedule;
   isVisibleInTfmUtilisationReports: boolean;
-}>;
+};

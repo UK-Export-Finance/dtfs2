@@ -2,7 +2,7 @@ const httpMocks = require('node-mocks-http');
 const { AxiosError } = require('axios');
 const api = require('../../api');
 const { getNextReportPeriodByBankId } = require('./next-report-period.controller');
-const { aReportPeriod } = require('../../../../test-helpers/mock-report-period');
+const { aReportPeriod } = require('../../../../test-helpers/test-data/report-period');
 
 console.error = jest.fn();
 

@@ -366,6 +366,10 @@ const getBankById = async (bankId) => {
   }
 };
 
+/**
+ * Call the central API to get all banks
+ * @returns {Promise<import('./api-response-types').BankResponse[]>} response of API call or wrapped error response
+ */
 const getAllBanks = async () => {
   try {
     const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank`, {
