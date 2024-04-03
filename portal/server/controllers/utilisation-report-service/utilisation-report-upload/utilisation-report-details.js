@@ -1,5 +1,5 @@
 const { format, parseISO } = require('date-fns');
-const { getFormattedReportPeriod } = require('../../../helpers');
+const { getFormattedReportPeriod } = require('@ukef/dtfs2-common');
 
 /**
  * @typedef {Object} ReportAndUserDetails

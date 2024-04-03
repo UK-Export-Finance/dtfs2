@@ -28,3 +28,10 @@ export const eachIsoMonthOfInterval = (start: IsoMonthStamp, end: IsoMonthStamp,
  */
 export const isEqualMonthAndYear = (monthAndYear1: MonthAndYear, monthAndYear2: MonthAndYear): boolean =>
   monthAndYear1.year === monthAndYear2.year && monthAndYear1.month === monthAndYear2.month;
+
+/**
+ * Gets the date from the inputted month and year
+ * @param monthAndYear - The month and year object
+ * @returns The date
+ */
+export const getDateFromMonthAndYear = (monthAndYear: MonthAndYear): Date => new Date(monthAndYear.year, monthAndYear.month - 1);

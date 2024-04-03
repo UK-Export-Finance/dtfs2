@@ -1,4 +1,5 @@
 const { format, startOfMonth, addMonths } = require('date-fns');
+const { getFormattedReportPeriod } = require('@ukef/dtfs2-common');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
 const { getUploadErrors } = require('./utilisation-report-upload-errors');
@@ -6,7 +7,6 @@ const { getDueReportPeriodsByBankId, getReportDueDate } = require('./utilisation
 const api = require('../../../api');
 const { getReportAndUserDetails } = require('./utilisation-report-details');
 const { PRIMARY_NAV_KEY } = require('../../../constants');
-const { getFormattedReportPeriod } = require('../../../helpers');
 
 const setSessionUtilisationReport = (req, nextDueReportPeriod) => {
   req.session.utilisationReport = {
