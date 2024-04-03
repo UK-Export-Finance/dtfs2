@@ -295,7 +295,7 @@ const getUtilisationReports = async (bankId, options) => {
 
     if (reportPeriod && !isValidReportPeriod(reportPeriod)) {
       console.error('Get utilisation reports failed with the following report period %s', reportPeriod);
-      throw new Error('Invalid report period provided %s', reportPeriod);
+      throw new Error(`Invalid report period provided ${reportPeriod}`);
     }
 
     if (excludeNotUploaded && typeof excludeNotUploaded !== 'boolean') {
