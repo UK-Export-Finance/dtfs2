@@ -137,7 +137,7 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
     }
     return { status: 400, message: 'Invalid Deal Id' };
   } catch (error) {
-    console.error('Unable to update the deal %s %s', dealId, error);
+    console.error('Unable to update the deal %s %o', dealId, error);
     return { status: 500, message: error };
   }
 };
@@ -225,7 +225,7 @@ exports.updateDealPut = async (req, res) => {
       return res.status(404).send({ status: 404, message: 'Deal not found' });
     });
   } catch (error) {
-    console.error('Unable to update deal %s', error);
+    console.error('Unable to update deal %o', error);
     return res.status(500).send({ status: 500, message: error });
   }
 };

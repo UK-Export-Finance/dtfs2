@@ -74,7 +74,7 @@ export const getNumber = async (req: Request, res: Response): Promise<Response<N
       data,
     });
   } catch (error: any) {
-    console.error('❌ Error getting number from number generator: %o', error);
+    console.error('❌ Error getting number from number generator %o', error);
 
     if (error instanceof InvalidEntityTypeError) {
       return res.status(HttpStatusCode.BadRequest).send({

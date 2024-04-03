@@ -160,7 +160,7 @@ df.app.orchestration('acbs', function* HDeal(context) {
     }
     console.error('No input specified');
   } catch (error) {
-    console.error('Error processing ACBS payload: %o', error);
+    console.error('Error processing ACBS payload %o', error);
     return false;
   }
 });

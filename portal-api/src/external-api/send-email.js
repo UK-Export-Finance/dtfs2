@@ -26,7 +26,7 @@ const sendEmail = async (
     });
     return data;
   } catch (error) {
-    console.error('Error sending email to %s: %O', sendToEmailAddress, error);
+    console.error('Error sending email to %s %o', sendToEmailAddress, error);
     return false;
   }
 };

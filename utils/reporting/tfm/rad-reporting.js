@@ -135,7 +135,7 @@ const generate = () => {
     .then(() => disconnect())
     .then(() => process.exit(1))
     .catch((error) => {
-      console.error('\n\x1b[31m%s\x1b[0m', '🚩 Report generation failed.\n %s', error);
+      console.error('\n\x1b[31m%s\x1b[0m', '🚩 Report generation failed.\n %o', error);
       process.exit(1);
     });
 };

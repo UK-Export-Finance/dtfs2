@@ -80,7 +80,7 @@ df.app.orchestration('acbs-facility-bond', function* createACBSfacilityBond(cont
       facilityBondBeneficiaryGuarantee,
     };
   } catch (error) {
-    console.error('Error creating facility bond record: %o', error);
+    console.error('Error creating facility bond record %o', error);
     throw new Error(`Error creating facility bond record ${error}`);
   }
 });

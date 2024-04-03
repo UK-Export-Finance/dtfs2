@@ -61,7 +61,7 @@ df.app.orchestration('acbs-facility-loan', function* createACBSfacilityBond(cont
     }
     return response;
   } catch (error) {
-    console.error('Error creating facility loan record: %o', error);
+    console.error('Error creating facility loan record %o', error);
     throw new Error(`Error creating facility loan record ${error}`);
   }
 });
