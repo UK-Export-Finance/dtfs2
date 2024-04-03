@@ -21,6 +21,7 @@
             <form method="POST" data-cy="form">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
                 {{ govukButton({
+                    preventDoubleClick: true,
                     text: "Confirm and send",
                     attributes: {
                         'data-cy': 'confirm-and-send-button'

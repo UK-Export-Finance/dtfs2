@@ -30,6 +30,7 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <div class="govuk-button-group govuk-!-margin-top-7">
           {{ govukButton({
+            preventDoubleClick: true,
             text: "Yes, abandon",
             attributes: {
               'data-cy': 'submit-button'
@@ -37,6 +38,7 @@
             classes: "govuk-!-margin-right-6"
           }) }}
           {{ govukButton({
+            preventDoubleClick: true,
             text: "No, keep",
             attributes: {
               'data-cy': 'cancel-button'

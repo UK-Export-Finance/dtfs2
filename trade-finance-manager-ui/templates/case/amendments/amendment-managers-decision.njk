@@ -17,6 +17,7 @@
             {% if amendment.changeCoverEndDate %}
               <div class="govuk-!-padding-top-0">
                 {{ govukButton({
+                    preventDoubleClick: true,
                     text: "Add decision",
                     href: "/case/" + dealId + "/facility/" + facilityId + "/amendment/" + amendmentId + "/cover-end-date/managers-decision",
                     attributes: { "data-cy":"amendment-manager-add-decision-link" }
@@ -25,6 +26,7 @@
             {% elif amendment.changeFacilityValue %}
               <div class="govuk-!-padding-top-0">
                 {{ govukButton({
+                    preventDoubleClick: true,
                     text: "Add decision",
                     href: "/case/" + dealId + "/facility/" + facilityId + "/amendment/" + amendmentId + "/facility-value/managers-decision",
                     attributes: { "data-cy":"amendment-manager-add-decision-link" }

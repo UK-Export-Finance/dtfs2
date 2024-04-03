@@ -116,6 +116,7 @@
 
         <div class="govuk-button-group">
           {{ govukButton({
+            preventDoubleClick: true,
             text: "Continue",
             attributes: {
               'data-cy': 'continue-button'
@@ -123,6 +124,7 @@
           }) }}
 
           {{ govukButton({
+            preventDoubleClick: true,
             text: "Save and return",
             classes: "govuk-button--secondary",
             attributes: {

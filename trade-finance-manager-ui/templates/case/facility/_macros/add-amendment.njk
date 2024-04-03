@@ -14,6 +14,7 @@
         <form method="post" data-cy="form">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
           {{ govukButton({
+            preventDoubleClick: true,
             text: "Add an amendment request",
             attributes: {
               'data-cy': 'amendment--add-amendment-button'
@@ -22,6 +23,7 @@
         </form>
       {% elif showContinueAmendmentButton === true %}
         {{ govukButton({
+          preventDoubleClick: true,
           text: "Continue with amendment request " + amendmentVersion,
           attributes: {
             'data-cy': 'amendment--continue-amendment-button'

@@ -35,6 +35,7 @@
           {% if isEditable %}
 
             {{ govukButton({
+              preventDoubleClick: true,
               text: "Save",
               attributes: {
                 'data-cy': 'amendment--continue-button'

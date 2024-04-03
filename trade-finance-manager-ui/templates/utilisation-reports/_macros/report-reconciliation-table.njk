@@ -89,6 +89,7 @@
 
       <div class="govuk-button-group">
         {{ govukButton({
+          preventDoubleClick: true,
           text: "Mark report as completed",
           name: "form-button",
           value: "completed",
@@ -97,6 +98,7 @@
           }
         }) }}
         {{ govukButton({
+          preventDoubleClick: true,
           text: "Mark as not completed",
           name: "form-button",
           value: "not-completed",

@@ -18,6 +18,7 @@
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     <div class="govuk-button-group">
       {{ govukButton({
+        preventDoubleClick: true,
         text: "Yes, delete",
         attributes: {
           'data-cy': 'delete-button'
@@ -25,6 +26,7 @@
       }) }}
 
       {{ govukButton({
+        preventDoubleClick: true,
         text: "No, keep",
         classes: "govuk-button--secondary",
         href: "/gef/application-details/" + dealId,

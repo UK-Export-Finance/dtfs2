@@ -47,6 +47,7 @@
       {% else %}
         {% if leadUnderwriter.userCanEdit %}
           {{ govukButton({
+            preventDoubleClick: true,
             text: "Add underwriter",
             href: "/case/" + leadUnderwriter.dealId  + "/underwriting/lead-underwriter/assign",
             attributes: {

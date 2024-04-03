@@ -109,6 +109,7 @@
   </table>
 
   {{ govukButton({
+      preventDoubleClick: true,
       text: "Add user",
       href: "/admin/users/create",
       classes: "govuk-!-margin-right-1",
@@ -118,6 +119,7 @@
   }) }}
 
   {{ govukButton({
+        preventDoubleClick: true,
         text: "Cancel",
         classes: "govuk-button--secondary govuk-!-margin-right-1",
         href: "/dashboard",

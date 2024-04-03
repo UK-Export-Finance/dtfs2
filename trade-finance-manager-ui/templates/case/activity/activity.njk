@@ -31,6 +31,7 @@
       {{ activityCommentFilter.render(filterCommentData) }}
 
       {{ govukButton({
+        preventDoubleClick: true,
         text: "Add a comment",
         classes: "govuk-button--secondary",
         href: "/case/" + dealId + "/activity" + "/post-comment",

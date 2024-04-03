@@ -139,6 +139,7 @@
         <div class="govuk-button-group">
           {% if isEditable %}
             {{ govukButton({
+              preventDoubleClick: true,
               text: "Send to bank",
               attributes: { "data-cy": "amendment--send-to-bank-button" }
               })

@@ -58,6 +58,7 @@
         }) }}
         <p class="govuk-button-group govuk-!-margin-top-7" id="application-details-comments-submit">
           {{ govukButton({
+            preventDoubleClick: true,
             text: "Submit",
             attributes: {
               'data-cy': 'submit-button'

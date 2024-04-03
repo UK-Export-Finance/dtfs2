@@ -128,11 +128,13 @@
     </div>
 
     {{ govukButton({
+      preventDoubleClick: true,
       "text": "Preview",
       "attributes" : { "data-cy" : "Preview" }
     }) }}
 
     {{ govukButton({
+      preventDoubleClick: true,
       "text": "Save and go back to deal",
       "classes" : "govuk-button govuk-button--secondary",
       "attributes" : {

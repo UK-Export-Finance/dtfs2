@@ -7,6 +7,7 @@
     {% if ["Draft", "Further Maker's input required"].includes(params.deal.status) and params.isEveryDealFormComplete %}
 
       {{ govukButton({
+        preventDoubleClick: true,
         "disabled": false,
         "text": "Proceed to review",
         "attributes" : {
@@ -18,6 +19,7 @@
     {% elseif ["Ready for Checker's approval"].includes(params.deal.status) and not params.user.roles.includes('checker')%}
 
       {{ govukButton({
+        preventDoubleClick: true,
         "disabled": true,
         "text": "Proceed to review",
         "attributes" : {
@@ -29,6 +31,7 @@
     {% elseif  ["Draft", "Further Maker's input required", "Abandoned", "Acknowledged"].includes(params.deal.status) and not params.dealHasIssuedFacilitiesToSubmit %}
 
       {{ govukButton({
+        preventDoubleClick: true,
         "disabled": true,
         "text": "Proceed to review",
         "attributes" : {
@@ -41,7 +44,8 @@
 
       {% if params.dealHasIssuedFacilitiesToSubmit or params.allRequestedCoverStartDatesConfirmed %}
         {{ govukButton({
-          "disabled": false,
+          preventDoubleClick: true,
+        "disabled": false,
           "text": "Proceed to review",
           "attributes" : {
             "data-cy" : "ProceedToReview"
@@ -50,7 +54,8 @@
         }) }}
       {% else %}
         {{ govukButton({
-          "disabled": true,
+          preventDoubleClick: true,
+        "disabled": true,
           "text": "Proceed to review",
           "attributes" : {
             "data-cy" : "ProceedToReview"
@@ -61,6 +66,7 @@
 
     {% elseif ["Acknowledged", "Ready for Checker's approval", "Further Maker's input required"].includes(params.deal.status) and params.dealHasIssuedFacilitiesToSubmit %}
       {{ govukButton({
+        preventDoubleClick: true,
         "disabled": false,
         "text": "Proceed to review",
         "attributes" : {

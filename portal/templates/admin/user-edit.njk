@@ -215,12 +215,14 @@
 
   {% if _id %}
     {{ govukButton({
+      preventDoubleClick: true,
       attributes: {"data-cy": "Save"},
       classes: "govuk-!-margin-right-1",
       text: "Save"
     }) }}
 
     {{ govukButton({
+      preventDoubleClick: true,
         text: "Change password",
         href: "/admin/users/change-password/" + _id,
         classes: "govuk-!-margin-right-1",
@@ -231,6 +233,7 @@
     }}
   {% else %}
     {{ govukButton({
+      preventDoubleClick: true,
       attributes: {
         "data-cy": "create-user-add"
         },
@@ -240,6 +243,7 @@
   {% endif %}
 
   {{ govukButton({
+        preventDoubleClick: true,
         text: "Cancel",
         classes: "govuk-button--secondary govuk-!-margin-right-1",
         href: "/admin/users/",

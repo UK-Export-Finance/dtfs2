@@ -20,6 +20,7 @@
         {% if ["Ready for Checker's approval"].includes(params.deal.status) %}
 
           {{ govukButton({
+            preventDoubleClick: true,
             "disabled": false,
             "text": "Proceed to submit",
             "attributes" : {
@@ -31,6 +32,7 @@
         {% elseif  ["Draft", "Abandoned", "Acknowledged", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)", "In progress by UKEF"].includes(params.deal.status) %}
 
           {{ govukButton({
+            preventDoubleClick: true,
             "disabled": true,
             "text": "Proceed to submit",
             "attributes" : {

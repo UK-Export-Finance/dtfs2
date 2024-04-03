@@ -54,6 +54,7 @@
       <div class="govuk-button-group">
         {% if isEditable %}
           {{ govukButton({
+            preventDoubleClick: true,
             text: "Continue",
             attributes: { "data-cy": "amendment--continue-button" }
             })
