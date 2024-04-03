@@ -1,9 +1,9 @@
 import httpMocks from 'node-mocks-http';
+import { TEAM_IDS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import * as getUtilisationReportsController from '..';
 import { UpdateUtilisationReportStatusRequest, UpdateUtilisationReportStatusRequestBody, updateUtilisationReportStatus } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
-import { TEAM_IDS } from '../../../constants';
 import { ReportWithStatus } from '../../../types/utilisation-reports';
 
 console.error = jest.fn();

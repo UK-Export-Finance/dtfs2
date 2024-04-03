@@ -1,4 +1,4 @@
-const { TEAM_IDS } = require('../../../../server/constants');
+const { TEAM_IDS } = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../../componentRenderer');
 const { localiseTimestamp } = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
 

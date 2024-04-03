@@ -1,10 +1,6 @@
+import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
 import MOCK_BANKS from './mock-banks';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../constants';
-import {
-  UtilisationReportReconciliationStatus,
-  UtilisationReportReconciliationSummary,
-  UtilisationReportReconciliationSummaryItem,
-} from '../types/utilisation-reports';
+import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../types/utilisation-reports';
 
 export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<UtilisationReportReconciliationStatus, UtilisationReportReconciliationSummaryItem> = {
   REPORT_NOT_RECEIVED: {

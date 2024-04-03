@@ -1,14 +1,14 @@
+const { TEAM_IDS } = require('@ukef/dtfs2-common');
 const api = require('../../../../../api');
 const { userIsInTeam } = require('../../../../../helpers/user');
 const { probabilityOfDefaultValidation } = require('../../../../helpers');
-const CONSTANTS = require('../../../../../constants');
 
 const getUnderWritingProbabilityOfDefault = async (req, res) => {
   const dealId = req.params._id;
   const { userToken, user } = req.session;
   const deal = await api.getDeal(dealId, userToken);
 
-  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAM_IDS.UNDERWRITERS, CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS]);
+  const userCanEdit = userIsInTeam(user, [TEAM_IDS.UNDERWRITERS, TEAM_IDS.UNDERWRITER_MANAGERS]);
 
   if (!deal || !userCanEdit) {
     return res.redirect('/not-found');
@@ -29,7 +29,7 @@ const postUnderWritingProbabilityOfDefault = async (req, res) => {
   const { user, userToken } = req.session;
   const deal = await api.getDeal(dealId, userToken);
 
-  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAM_IDS.UNDERWRITERS, CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS]);
+  const userCanEdit = userIsInTeam(user, [TEAM_IDS.UNDERWRITERS, TEAM_IDS.UNDERWRITER_MANAGERS]);
 
   if (!deal || !userCanEdit) {
     return res.redirect('/not-found');

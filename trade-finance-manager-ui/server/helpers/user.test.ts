@@ -1,6 +1,6 @@
+import { TeamId } from '@ukef/dtfs2-common';
 import { userFullName, userIsInTeam, userIsOnlyInTeams } from './user';
 import { TfmSessionUser } from '../types/tfm-session-user';
-import { TeamId } from '../types/team-id';
 
 describe('user helpers', () => {
   describe('userFullName', () => {

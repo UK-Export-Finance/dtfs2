@@ -67,7 +67,7 @@ const getBusinessDayOfMonth = (dateInMonth, holidays, businessDay) => {
 /**
  * Converts date with index-0 month value to numeric index-1 month
  * @param {Date} date
- * @returns {import('../types/date').OneIndexedMonth}
+ * @returns {import('@ukef/dtfs2-common').OneIndexedMonth}
  */
 const getOneIndexedMonth = (date) => date.getMonth() + 1;
 
