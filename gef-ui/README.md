@@ -10,12 +10,12 @@ Before running the GEF-UI locally, make sure you have an `.env` file. You can us
 
 To run the GEF-UI locally, follow these steps:
 
-1. Execute `docker-compose up`.
+1. Execute `npm run start`.
 2. Visit http://localhost in your web browser.
 
 Note that no port number is specified in the URL due to the reverse proxy.
 
-Alternatively, you can start all services from the root directory using `docker-compose up`.
+Alternatively, you can start all services from the root directory using `npm run build` and `npm run start`.
 
 ## Login credentials 🔑
 

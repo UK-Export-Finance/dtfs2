@@ -14,10 +14,10 @@ Ensure you have an `.env` file configured. You can use `.env.sample` as a base. 
 ## Running Locally 🏃‍♂️
 
 ```shell
-docker-compose up
+npm run start
 ```
 
-Alternatively, you can start all services from the root directory using `docker-compose up`.
+Alternatively, you can start all services from the root directory using `npm run build` and `npm run start`.
 
 ## Testing 🧪
 

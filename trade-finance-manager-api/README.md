@@ -10,10 +10,10 @@ Before running the TFM API, make sure to have an `.env` file configured. You can
 To run the TFM API locally, use the following command:
 
 ```shell
-docker-compose up
+npm run start
 ```
 
-Alternatively, you can start all services from the project's root directory by running `docker-compose up`.
+Alternatively, you can start all services from the root directory using `npm run build` and `npm run start`.
 
 ## Testing :test_tube:
 
