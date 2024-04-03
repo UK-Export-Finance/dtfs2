@@ -1,6 +1,10 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const { generateTfmUserAuditDetails, generateSystemAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
+const {
+  generateTfmUserAuditDetails,
+  generateSystemAuditDetails,
+  generatePortalUserAuditDetails,
+} = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
 const { findOneFacility } = require('./tfm-get-facility.controller');
 const db = require('../../../../drivers/db-client');
 const { DB_COLLECTIONS } = require('../../../../constants');
@@ -11,21 +15,30 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateFacility = async ({ facilityId, tfmUpdate, sessionUser, isSystemUpdate }) => {
+const updateFacility = async ({ facilityId, tfmUpdate, sessionPortalUser, sessionTfmUser, isSystemUpdate }) => {
   const collection = await db.getCollection(DB_COLLECTIONS.TFM_FACILITIES);
+
+  let auditDetails = {};
+  if (isSystemUpdate) {
+    auditDetails = generateSystemAuditDetails();
+  } else if (sessionTfmUser) {
+    auditDetails = generateTfmUserAuditDetails(sessionTfmUser._id);
+  } else {
+    auditDetails = generatePortalUserAuditDetails(sessionPortalUser._id);
+  }
 
   const update = {
     tfm: {
       ...tfmUpdate,
     },
-    auditDetails: isSystemUpdate ? generateSystemAuditDetails() : generateTfmUserAuditDetails(sessionUser._id),
+    auditDetails,
   };
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(facilityId) } },
-    $.flatten(withoutId(update)),
-    { returnNewDocument: true, returnDocument: 'after', upsert: true },
-  );
+  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, $.flatten(withoutId(update)), {
+    returnNewDocument: true,
+    returnDocument: 'after',
+    upsert: true,
+  });
 
   const { value: updatedFacility } = findAndUpdateResponse;
 
@@ -34,7 +47,7 @@ const updateFacility = async ({ facilityId, tfmUpdate, sessionUser, isSystemUpda
 
 exports.updateFacilityPut = async (req, res) => {
   const facilityId = req.params.id;
-  if(!ObjectId.isValid(facilityId)) {
+  if (!ObjectId.isValid(facilityId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
   }
 
@@ -44,14 +57,19 @@ exports.updateFacilityPut = async (req, res) => {
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
 
-  const { tfmUpdate, user, isSystemUpdate } = req.body;
+  const { tfmUpdate, sessionPortalUser, sessionTfmUser, isSystemUpdate } = req.body;
 
-  if (!user?._id) {
-    return res.status(400).send({ status: 400, message: 'Invalid user' })
+  if (!sessionPortalUser?._id && !sessionTfmUser?._id && !isSystemUpdate) {
+    return res.status(400).send({ status: 400, message: 'Invalid user' });
   }
 
-  const updatedFacility = await updateFacility({ 
-    facilityId, tfmUpdate, sessionUser: user, isSystemUpdate});
+  const updatedFacility = await updateFacility({
+    facilityId,
+    tfmUpdate,
+    sessionPortalUser,
+    sessionTfmUser,
+    isSystemUpdate,
+  });
 
   return res.status(200).json(updatedFacility);
 };

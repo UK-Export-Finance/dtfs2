@@ -427,13 +427,21 @@ tfmRouter.route('/facilities/:id')
  *                       properties:
  *                         aNewField:
  *                           example: true
- *                     user:
+ *                     sessionTfmUser:
  *                       type: object
+ *                       required: false
+ *                       properties:
+ *                         _id:
+ *                           example: '1234567890abcdef12345678'
+ *                     sessionPortalUser:
+ *                       type: object
+ *                       required: false
  *                       properties:
  *                         _id:
  *                           example: '1234567890abcdef12345678'
  *                     isSystemUpdate:
- *                       type: boolean
+  *                     required: false
+*                       type: boolean
  *       404:
  *         description: Not found
  */

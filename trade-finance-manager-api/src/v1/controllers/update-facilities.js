@@ -7,7 +7,7 @@ const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
 const { calculateGefFacilityFeeRecord } = require('../helpers/calculate-gef-facility-fee-record');
 const CONSTANTS = require('../../constants');
 
-const updateFacilities = async (deal, sessionUser) => {
+const updateFacilities = async (deal, sessionPortalUser) => {
   // Create deep clone
   // Note this has the side effect of converting dates to strings
   const modifiedDeal = JSON.parse(JSON.stringify(deal));
@@ -105,7 +105,7 @@ const updateFacilities = async (deal, sessionUser) => {
         riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
       };
 
-      const updateFacilityResponse = await api.updateFacility({ facilityId, tfmUpdate: facilityUpdate, sessionUser });
+      const updateFacilityResponse = await api.updateFacility({ facilityId, tfmUpdate: facilityUpdate, sessionPortalUser });
 
       // add the updated tfm object to returned facility.
       // if we return updateFacilityResponse, we'll get facilitySnapshot
