@@ -1,5 +1,5 @@
 import { isSameDay, format } from 'date-fns';
-import { CronSchedulerJob } from '@ukef/dtfs2-common';
+import { CronSchedulerJob, asString } from '@ukef/dtfs2-common';
 import {
   getReportOverdueChaserDate,
   getFormattedReportDueDate,
@@ -45,7 +45,7 @@ const sendEmailsOnReportOverdueChaserDate = async () => {
 };
 
 export const sendReportOverdueEmailsJob: CronSchedulerJob = {
-  cronExpression: UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE as string,
+  cronExpression: asString(UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE, 'UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE'),
   description: 'Email banks to notify that this months GEF utilisation report is overdue',
   task: sendEmailsOnReportOverdueChaserDate,
 };

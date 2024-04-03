@@ -193,7 +193,7 @@ describe('utilisation-report-helpers', () => {
       jest.mocked(api.getUtilisationReports).mockResolvedValue([]);
 
       // Act + Assert
-      await expect(async () => await getIsReportDue(BANK_ID, reportPeriod)).rejects.toThrow(
+      await expect(() => getIsReportDue(BANK_ID, reportPeriod)).rejects.toThrow(
         `Expected to find one report for bank (id: ${BANK_ID}) for report period January 2098 but found 0`,
       );
     });
@@ -213,7 +213,7 @@ describe('utilisation-report-helpers', () => {
       jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse(), aNotReceivedUtilisationReportResponse()]);
 
       // Act + Assert
-      await expect(async () => await getIsReportDue(BANK_ID, reportPeriod)).rejects.toThrow(
+      await expect(() => getIsReportDue(BANK_ID, reportPeriod)).rejects.toThrow(
         `Expected to find one report for bank (id: ${BANK_ID}) for report period January 2098 but found 2`,
       );
     });
@@ -410,7 +410,10 @@ describe('utilisation-report-helpers', () => {
       const validEmail = 'valid-email@example.com';
       const bank = aBank();
       bank.isVisibleInTfmUtilisationReports = true;
-      bank.paymentOfficerTeam = { emails: [validEmail] } as PaymentOfficerTeam;
+      bank.paymentOfficerTeam = {
+        emails: [validEmail],
+        // teamName is undefined
+      } as PaymentOfficerTeam;
       jest.mocked(api.getAllBanks).mockResolvedValue([bank]);
 
       jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
@@ -539,7 +542,7 @@ describe('utilisation-report-helpers', () => {
       expect(sendEmailCallback).not.toHaveBeenCalled();
     });
 
-    it('Sends email for bank with quarterly reporting schedule if it is the submission month for a report period and the report has not been submitted', async () => {
+    it('sends email for bank with quarterly reporting schedule if it is the submission month for a report period and the report has not been submitted', async () => {
       // Arrange
       jest.mocked(externalApi.bankHolidays).getBankHolidayDatesForRegion.mockResolvedValue([]);
 
@@ -574,7 +577,7 @@ describe('utilisation-report-helpers', () => {
       expect(sendEmailCallback).toHaveBeenCalledWith(email, teamName, 'August to October 2023');
     });
 
-    it("Catches error and doesn't send an email if bank reporting schedule is not parsable", async () => {
+    it("catches error and doesn't send an email if bank reporting schedule is not parsable", async () => {
       // Arrange
       jest.mocked(externalApi.bankHolidays).getBankHolidayDatesForRegion.mockResolvedValue([]);
 
@@ -604,7 +607,7 @@ describe('utilisation-report-helpers', () => {
       expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Failed to send'), expect.any(Error));
     });
 
-    it("Catches error and doesn't send an email if bank reporting schedule is missing", async () => {
+    it("catches error and doesn't send an email if bank reporting schedule is missing", async () => {
       // Arrange
       jest.mocked(externalApi.bankHolidays).getBankHolidayDatesForRegion.mockResolvedValue([]);
 

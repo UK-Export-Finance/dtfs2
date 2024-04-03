@@ -368,7 +368,7 @@ const getBankById = async (bankId) => {
 
 /**
  * Call the central API to get all banks
- * @returns {Promise<import('../../src/v1/api-response-types').BankResponse[]>} response of API call or wrapped error response
+ * @returns {Promise<import('./api-response-types').BankResponse[]>} response of API call or wrapped error response
  */
 const getAllBanks = async () => {
   try {

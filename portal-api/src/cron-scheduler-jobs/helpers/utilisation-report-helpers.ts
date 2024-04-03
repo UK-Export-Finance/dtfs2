@@ -1,5 +1,13 @@
 import { format, subMonths } from 'date-fns';
-import { MonthAndYear, OneIndexedMonth, PaymentOfficerTeam, ReportPeriod, getCurrentReportPeriodForBankSchedule, getOneIndexedMonth } from '@ukef/dtfs2-common';
+import {
+  MonthAndYear,
+  OneIndexedMonth,
+  PaymentOfficerTeam,
+  ReportPeriod,
+  getCurrentReportPeriodForBankSchedule,
+  getOneIndexedMonth,
+  isEqualMonthAndYear,
+} from '@ukef/dtfs2-common';
 import externalApi from '../../external-api/api';
 import api from '../../v1/api';
 import { getBusinessDayOfMonth } from '../../utils/date';
@@ -46,17 +54,18 @@ export const getReportOverdueChaserDate = async (): Promise<Date> => {
 const formatMonthAndYear = (monthAndYear: MonthAndYear): string => format(new Date(`${monthAndYear.year}-${monthAndYear.month}`), 'MMMM yyyy');
 
 /**
- * Returns the given month and year formatted in the 'MMMM yyyy' format.
+ * Returns the given month formatted in the 'MMMM' format.
  */
 const formatMonth = (month: OneIndexedMonth): string => format(new Date(`2023-${month}`), 'MMMM');
 
 /**
  * Returns the given report period as a string.
  * For a single month this is in 'MMMM yyyy' format.
- * For a period of more than one month this is in the 'MMMM yyyy - MMMM yyyy' format.
+ * For a period of more than one month where the start and end month and in the same year this is in the 'MMMM to MMMM yyyy' format.
+ * For a period of more than one month where the start and end months are in different years this is in the 'MMMM yyyy to MMMM yyyy' format.
  */
 export const getFormattedReportPeriod = (reportPeriod: ReportPeriod): string => {
-  if (reportPeriod.start.month === reportPeriod.end.month && reportPeriod.start.year === reportPeriod.end.year) {
+  if (isEqualMonthAndYear(reportPeriod.start, reportPeriod.end)) {
     return formatMonthAndYear(reportPeriod.end);
   }
   if (reportPeriod.start.year === reportPeriod.end.year) {
@@ -106,13 +115,7 @@ const isPreviousCalendarMonth = (month: OneIndexedMonth): boolean => {
 };
 
 /**
- * Sends the email to the specified bank when a valid payment officer team email is present
- * @param emailDescription {string} - a description of the email (used for logging)
- * @param sendEmailCallback {SendEmailCallback} - callback function that sends the required email.
- *   The callback is provided the following argument `{ emailAddress: string; recipient: string }`,
- *   extracted from the provided bank.
- * @param bank {object} - the bank to send the email to
- * @returns {Promise<void>}
+ * Sends the email to the specified bank when a valid payment officer team email is present.
  */
 const sendEmailForBank = async (
   emailDescription: string,
@@ -146,38 +149,32 @@ const sendEmailForBank = async (
 /**
  * For a given bank, check if a utilisation report has been received for the current reporting period
  * then, where not yet received, attempts to call the provided callback function to send the required email
- * @param emailDescription {string} - a description of the email (used for logging)
- * @param sendEmailCallback {SendEmailCallback} - callback function that sends the required email.
- *   The callback is provided the following argument `{ emailAddress: string; recipient: string }`,
- *   extracted from the provided bank.
- * @returns {Promise<void>}
  */
 const sendEmailToBankIfReportNotReceived = async (bank: BankResponse, emailDescription: string, sendEmailCallback: SendEmailCallback): Promise<void> => {
   const { name: bankName, id: bankId, utilisationReportPeriodSchedule: schedule } = bank;
   const currentReportingPeriodForBank = getCurrentReportPeriodForBankSchedule(schedule);
   const formattedReportPeriod = getFormattedReportPeriod(currentReportingPeriodForBank);
 
-  if (isPreviousCalendarMonth(currentReportingPeriodForBank.end.month)) {
-    const isReportDue = await getIsReportDue(bankId, currentReportingPeriodForBank);
-
-    if (isReportDue) {
-      await sendEmailForBank(emailDescription, formattedReportPeriod, sendEmailCallback, bank);
-    } else {
-      console.info(
-        `Not sending '${emailDescription}' email to '${bankName}' (bank ID: ${bankId}) - report has already been submitted for ${formattedReportPeriod} report period`,
-      );
-    }
-  } else {
+  if (!isPreviousCalendarMonth(currentReportingPeriodForBank.end.month)) {
     console.info(
       `Not sending '${emailDescription}' email to '${bankName}' (bank ID: ${bankId}) - report is not due this month, current reporting period for bank is ${formattedReportPeriod}`,
     );
+    return;
   }
+  const isReportDue = await getIsReportDue(bankId, currentReportingPeriodForBank);
+
+  if (!isReportDue) {
+    console.info(
+      `Not sending '${emailDescription}' email to '${bankName}' (bank ID: ${bankId}) - report has already been submitted for ${formattedReportPeriod} report period`,
+    );
+    return;
+  }
+
+  await sendEmailForBank(emailDescription, formattedReportPeriod, sendEmailCallback, bank);
 };
 
 /**
- * For all banks, checks if the current utilisation report period for bank is in it's submission period and
- * if so if utilisation report has been received for the current reporting period
- * then, where not yet received, attempts to call the provided callback function to send the required email
+ * Calls the provided sendEmailCallback for all banks we are expecting a report from in the current submission month
  */
 export const sendEmailToAllBanksWhereReportNotReceived = async ({
   emailDescription,
