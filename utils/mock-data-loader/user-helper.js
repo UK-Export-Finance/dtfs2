@@ -17,7 +17,7 @@ const mockDataLoaderUser = {
 
 const mockDataLoaderTFMUser = {
   azureOid: 're-insert-mocks',
-  username: 're-insert-mocks',
+  username: 're-insert-mocks-data-loader-tfm@ukexportfinance.gov.uk',
   firstName: 'Mock',
   lastName: 'DataLoader',
   teams: [],
