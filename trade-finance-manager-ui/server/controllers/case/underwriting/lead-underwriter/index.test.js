@@ -1,9 +1,9 @@
+import { TEAM_IDS } from '@ukef/dtfs2-common';
 import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
 import mapAssignToSelectOptions from '../../../../helpers/map-assign-to-select-options';
 import underwriterLeadUnderwriterController from '.';
 import { userIsInTeam } from '../../../../helpers/user';
-import CONSTANTS from '../../../../constants';
 import { sortArrayOfObjectsAlphabetically } from '../../../../helpers/array';
 
 const res = mockRes();
@@ -13,7 +13,7 @@ const MOCK_USER_UNDERWRITER_MANAGER = {
   username: 'UNDERWRITER_MANAGER_1',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: [CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS],
+  teams: [TEAM_IDS.UNDERWRITER_MANAGERS],
 };
 
 const MOCK_USER_TEAM_USER = {
@@ -47,7 +47,7 @@ const MOCK_DEAL = {
 const dealId = MOCK_DEAL._id;
 
 describe('GET underwriting - lead underwriter', () => {
-  const userCanEdit = userIsInTeam(SESSION.user, [CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS, CONSTANTS.TEAM_IDS.UNDERWRITERS]);
+  const userCanEdit = userIsInTeam(SESSION.user, [TEAM_IDS.UNDERWRITER_MANAGERS, TEAM_IDS.UNDERWRITERS]);
 
   describe('when deal exists', () => {
     const apiGetUserSpy = jest.fn(() => Promise.resolve(MOCK_USER_UNDERWRITER_MANAGER));
@@ -136,8 +136,8 @@ describe('GET underwriting - assign lead underwriter', () => {
       expect(getTeamMembersSpy).toBeCalledTimes(2);
 
       expect(getTeamMembersSpy.mock.calls).toEqual([
-        [CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS, SESSION.userToken],
-        [CONSTANTS.TEAM_IDS.UNDERWRITERS, SESSION.userToken],
+        [TEAM_IDS.UNDERWRITER_MANAGERS, SESSION.userToken],
+        [TEAM_IDS.UNDERWRITERS, SESSION.userToken],
       ]);
     });
 

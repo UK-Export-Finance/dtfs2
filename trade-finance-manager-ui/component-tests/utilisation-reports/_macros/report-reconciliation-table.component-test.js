@@ -1,10 +1,10 @@
+const { TEAM_IDS } = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
 const { getUkBankHolidays } = require('../../../server/api');
 const { getReportReconciliationSummariesViewModel } = require('../../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper');
 const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } = require('../../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
 const { MOCK_TFM_SESSION_USER } = require('../../../server/test-mocks/mock-tfm-session-user');
 const { MOCK_BANK_HOLIDAYS } = require('../../../server/test-mocks/mock-bank-holidays');
-const { TEAM_IDS } = require('../../../server/constants');
 
 jest.mock('../../../server/api');
 

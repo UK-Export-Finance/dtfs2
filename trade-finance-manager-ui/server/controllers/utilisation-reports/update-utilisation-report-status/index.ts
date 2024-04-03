@@ -1,9 +1,9 @@
 import { Response } from 'express';
+import { UtilisationReportReconciliationStatus, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asString } from '../../../helpers/validation';
-import { ReportWithStatus, UtilisationReportReconciliationStatus } from '../../../types/utilisation-reports';
+import { ReportWithStatus } from '../../../types/utilisation-reports';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
 import { getUtilisationReports } from '..';
 import { asUserSession } from '../../../helpers/express-session';
 

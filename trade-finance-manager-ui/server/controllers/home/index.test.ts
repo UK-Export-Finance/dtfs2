@@ -1,7 +1,6 @@
 import httpMocks from 'node-mocks-http';
+import { TEAM_IDS, PDC_TEAM_IDS, TeamId, PdcTeamId } from '@ukef/dtfs2-common';
 import * as homeController from '.';
-import { PDC_TEAM_IDS, TEAM_IDS } from '../../constants';
-import { PdcTeamId, TeamId } from '../../types/team-id';
 
 describe('controllers - home', () => {
   const getHttpMocksWithTeams = (...teamIds: TeamId[]) =>
