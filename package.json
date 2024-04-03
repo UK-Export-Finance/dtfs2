@@ -28,11 +28,8 @@
   "scripts": {
     "audit:all": "npm audit --if-present",
     "audit:fix:all": "npm audit --fix --if-present",
-    "ci:all": "npm ci --if-present",
     "build": "docker compose build",
-    "start": "docker compose up",
-    "start:detach": "docker compose up -d",
-    "stop": "docker compose down",
+    "ci:all": "npm ci --if-present",
     "housekeeping": "npm run update:all && npm run install:all && npm run lint:fix:all && npm run audit:fix:all && npm run spellcheck",
     "postinstall": "husky install",
     "install:all": "npm install --if-present",
@@ -40,6 +37,9 @@
     "lint:fix:all": "npm run lint --fix --workspaces --if-present",
     "load": "node utils/mock-data-loader/re-insert-mocks.js",
     "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color '**/*'",
+    "start": "docker compose up",
+    "start:detach": "docker compose up -d",
+    "stop": "docker compose down",
     "type-check:all": "npm run type-check --workspaces --if-present",
     "update:all": "npm update --save --if-present"
   },

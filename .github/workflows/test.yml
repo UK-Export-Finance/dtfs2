@@ -213,7 +213,7 @@ jobs:
 
       - name: Stop
         working-directory: ./
-        run: docker compose down-f docker-compose.gha.yml
+        run: docker compose down -f docker-compose.gha.yml
 
       - name: Coverage
         uses: codecov/codecov-action@v3
