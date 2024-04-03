@@ -91,7 +91,7 @@ exports.updateDealPut = async (req, res) => {
   try {
     validateAuditDetails(auditDetails);
   } catch ({ message }) {
-    res.status(400).send({ status: 400, message: `Invalid user information, ${message}` });
+    res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
   }
 
   const existingDeal = await findOneDeal(dealId, false, 'tfm');

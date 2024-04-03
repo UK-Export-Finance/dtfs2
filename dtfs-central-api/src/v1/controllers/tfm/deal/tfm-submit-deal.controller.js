@@ -118,11 +118,11 @@ exports.submitDealPut = async (req, res) => {
   try {
     validateAuditDetails(auditDetails);
   } catch ({ message }) {
-    return res.status(400).send({ status: 400, message: `Invalid user information, ${message}` });
+    return res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
   }
 
   if (auditDetails.userType !== 'portal') {
-    return res.status(400).send({ status: 400, message: `User information must be of type portal` });
+    return res.status(400).send({ status: 400, message: `Invalid auditDetails, userType must be 'portal'` });
   }
 
   if (dealType !== CONSTANTS.DEALS.DEAL_TYPE.GEF && dealType !== CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
