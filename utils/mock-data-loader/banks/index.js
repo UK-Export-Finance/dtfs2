@@ -157,7 +157,8 @@ const BANKS = [
       { startMonth: 9, endMonth: 11 },
       { startMonth: 12, endMonth: 2 },
     ],
-    isVisibleInTfmUtilisationReports: true,
+    // TODO: Set this to `true` once quarterly reporting is implemented
+    isVisibleInTfmUtilisationReports: false,
   },
 ];
 
