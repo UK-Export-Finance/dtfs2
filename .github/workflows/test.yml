@@ -196,7 +196,7 @@ jobs:
 
       - name: Start
         working-directory: ./
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
@@ -205,11 +205,11 @@ jobs:
           npm run load
 
       - name: Execute
-        run: docker-compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
+        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
 
       - name: Stop
         working-directory: ./
-        run: docker-compose -f docker-compose.gha.yml down
+        run: docker compose -f docker-compose.gha.yml down
 
       - name: Coverage
         uses: codecov/codecov-action@v3
@@ -289,7 +289,7 @@ jobs:
             "./external-api",
             "./trade-finance-manager-api",
             "./libs/common",
-            "./azure-functions/acbs-function"
+            "./azure-functions/acbs-function",
           ]
 
     concurrency:
@@ -374,7 +374,7 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
@@ -402,8 +402,18 @@ jobs:
         spec:
           [
             "*.spec.js",
+            "application/**/*.spec.js",
+            "checker/**/*.spec.js",
+            "clone/**/*.spec.js",
+            "eligibility/**/*.spec.js",
+            "exporter/**/*.spec.js",
+            "external/**/*.spec.js",
+            "facility/**/*.spec.js",
+            "maker/**/*.spec.js",
             "scenarios/**/*.spec.js",
-            "unissued-facilities/**/*.spec.js",
+            "security/**/*.spec.js",
+            "ukef/**/*.spec.js",
+            "upload/**/*.spec.js",
           ]
 
     concurrency:
@@ -423,7 +433,7 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
@@ -480,7 +490,7 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
@@ -546,7 +556,7 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
