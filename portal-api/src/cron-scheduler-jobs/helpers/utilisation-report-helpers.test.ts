@@ -3,7 +3,6 @@ import {
   getReportDueDate,
   getFormattedReportDueDate,
   getReportOverdueChaserDate,
-  getFormattedReportPeriod,
   getIsReportDue,
   getEmailRecipient,
   sendEmailToAllBanksWhereReportNotReceived,
@@ -139,40 +138,6 @@ describe('utilisation-report-helpers', () => {
         expect(dueDate).toEqual(expectedDueDate);
       },
     );
-  });
-
-  describe('getFormattedReportPeriod', () => {
-    it('formats month long report period for as "Month Year"', () => {
-      // Act
-      const result = getFormattedReportPeriod({ start: { month: 1, year: 2035 }, end: { month: 1, year: 2035 } });
-
-      // Assert
-      expect(result).toEqual('January 2035');
-    });
-
-    it('formats report period covering more than one month within one year as "StartMonth to EndMonth EndYear"', () => {
-      // Act
-      const result = getFormattedReportPeriod({ start: { month: 2, year: 2025 }, end: { month: 4, year: 2025 } });
-
-      // Assert
-      expect(result).toEqual('February to April 2025');
-    });
-
-    it('formats report period covering more than one year as "StartMonth StartYear to EndMonth EndYear"', () => {
-      // Act
-      const result = getFormattedReportPeriod({ start: { month: 11, year: 2021 }, end: { month: 1, year: 2022 } });
-
-      // Assert
-      expect(result).toEqual('November 2021 to January 2022');
-    });
-
-    it('formats report period with same start and end month but different years as "StartMonth StartYear - EndMonth EndYear"', () => {
-      // Act
-      const result = getFormattedReportPeriod({ start: { month: 8, year: 2021 }, end: { month: 8, year: 2022 } });
-
-      // Assert
-      expect(result).toEqual('August 2021 to August 2022');
-    });
   });
 
   describe('getIsReportDue', () => {

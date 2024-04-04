@@ -1,12 +1,11 @@
 import { format, subMonths } from 'date-fns';
 import {
-  MonthAndYear,
   OneIndexedMonth,
   PaymentOfficerTeam,
   ReportPeriod,
   getCurrentReportPeriodForBankSchedule,
   getOneIndexedMonth,
-  isEqualMonthAndYear,
+  getFormattedReportPeriod,
 } from '@ukef/dtfs2-common';
 import externalApi from '../../external-api/api';
 import api from '../../v1/api';
@@ -46,32 +45,6 @@ export const getReportOverdueChaserDate = async (): Promise<Date> => {
   const businessDay = Number.parseInt(process.env.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH!, 10);
   const dateInReportMonth = new Date();
   return getBusinessDayOfMonth(dateInReportMonth, bankHolidays, businessDay);
-};
-
-/**
- * Returns the given month and year formatted in the 'MMMM yyyy' format.
- */
-const formatMonthAndYear = (monthAndYear: MonthAndYear): string => format(new Date(`${monthAndYear.year}-${monthAndYear.month}`), 'MMMM yyyy');
-
-/**
- * Returns the given month formatted in the 'MMMM' format.
- */
-const formatMonth = (month: OneIndexedMonth): string => format(new Date(`2023-${month}`), 'MMMM');
-
-/**
- * Returns the given report period as a string.
- * For a single month this is in 'MMMM yyyy' format.
- * For a period of more than one month where the start and end month and in the same year this is in the 'MMMM to MMMM yyyy' format.
- * For a period of more than one month where the start and end months are in different years this is in the 'MMMM yyyy to MMMM yyyy' format.
- */
-export const getFormattedReportPeriod = (reportPeriod: ReportPeriod): string => {
-  if (isEqualMonthAndYear(reportPeriod.start, reportPeriod.end)) {
-    return formatMonthAndYear(reportPeriod.end);
-  }
-  if (reportPeriod.start.year === reportPeriod.end.year) {
-    return `${formatMonth(reportPeriod.start.month)} to ${formatMonthAndYear(reportPeriod.end)}`;
-  }
-  return `${formatMonthAndYear(reportPeriod.start)} to ${formatMonthAndYear(reportPeriod.end)}`;
 };
 
 /**

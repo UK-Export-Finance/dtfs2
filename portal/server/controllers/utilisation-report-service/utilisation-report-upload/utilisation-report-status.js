@@ -1,5 +1,6 @@
 const { subMonths, format, addMonths } = require('date-fns');
-const { getBusinessDayOfMonth, getFormattedReportPeriod } = require('../../../helpers');
+const { getFormattedReportPeriod } = require('@ukef/dtfs2-common');
+const { getBusinessDayOfMonth } = require('../../../helpers');
 const api = require('../../../api');
 
 /**
