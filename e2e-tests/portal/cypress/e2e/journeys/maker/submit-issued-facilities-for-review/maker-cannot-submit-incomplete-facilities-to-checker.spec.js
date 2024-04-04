@@ -7,22 +7,9 @@ const { fillAndSubmitIssueLoanFacilityForm } = require('../fill-and-submit-issue
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
-context('A maker can issue and submit issued bond and loan facilities with a deal in `Acknowledged` status', () => {
+context('A maker should not be able to submit the deal if it has atleast one `Incomplete` facility', () => {
   let deal;
   let dealId;
-  let firstBondRow;
-  let firstBondId;
-  let thirdBondRow;
-  let thirdBondId;
-  let firstLoanRow;
-  let firstLoanId;
-  let thirdLoanRow;
-  let thirdLoanId;
-  let incompleteIssueFacilityBondId;
-  let incompleteIssueFacilityBondRow;
-  let incompleteIssueFacilityLoanId;
-  let incompleteIssueFacilityLoanRow;
-
   const dealFacilities = {
     bonds: [],
     loans: [],
@@ -49,24 +36,6 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     // Login and visit the deal
     cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
-
-    firstBondId = dealFacilities.bonds[0]._id;
-    firstBondRow = pages.contract.bondTransactionsTable.row(firstBondId);
-
-    thirdBondId = dealFacilities.bonds[2]._id;
-    thirdBondRow = pages.contract.bondTransactionsTable.row(thirdBondId);
-
-    firstLoanId = dealFacilities.loans[0]._id;
-    firstLoanRow = pages.contract.loansTransactionsTable.row(firstLoanId);
-
-    thirdLoanId = dealFacilities.loans[2]._id;
-    thirdLoanRow = pages.contract.loansTransactionsTable.row(thirdLoanId);
-
-    incompleteIssueFacilityBondId = dealFacilities.bonds[1]._id;
-    incompleteIssueFacilityBondRow = pages.contract.bondTransactionsTable.row(incompleteIssueFacilityBondId);
-
-    incompleteIssueFacilityLoanId = dealFacilities.loans[1]._id;
-    incompleteIssueFacilityLoanRow = pages.contract.loansTransactionsTable.row(incompleteIssueFacilityLoanId);
   });
 
   after(() => {
@@ -81,6 +50,18 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
 
   it('Complete few facilities for submission', () => {
     pages.contract.proceedToReview().should('not.exist');
+
+    const firstBondId = dealFacilities.bonds[0]._id;
+    const firstBondRow = pages.contract.bondTransactionsTable.row(firstBondId);
+
+    const thirdBondId = dealFacilities.bonds[2]._id;
+    const thirdBondRow = pages.contract.bondTransactionsTable.row(thirdBondId);
+
+    const firstLoanId = dealFacilities.loans[0]._id;
+    const firstLoanRow = pages.contract.loansTransactionsTable.row(firstLoanId);
+
+    const thirdLoanId = dealFacilities.loans[2]._id;
+    const thirdLoanRow = pages.contract.loansTransactionsTable.row(thirdLoanId);
 
     //---------------------------------------------------------------
     // check initial facility stage, status and issue facility link
@@ -263,6 +244,8 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     //---------------------------------------------------------------
     // Maker starts, but does not finish, a different Issue Facility form (Bond)
     //---------------------------------------------------------------
+    const incompleteIssueFacilityBondId = dealFacilities.bonds[1]._id;
+    const incompleteIssueFacilityBondRow = pages.contract.bondTransactionsTable.row(incompleteIssueFacilityBondId);
 
     incompleteIssueFacilityBondRow.issueFacilityLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${incompleteIssueFacilityBondId}/issue-facility`));
@@ -294,6 +277,8 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     //---------------------------------------------------------------
     // Maker starts, but does not finish, a different Issue Facility form (Loan)
     //---------------------------------------------------------------
+    const incompleteIssueFacilityLoanId = dealFacilities.loans[1]._id;
+    const incompleteIssueFacilityLoanRow = pages.contract.loansTransactionsTable.row(incompleteIssueFacilityLoanId);
 
     incompleteIssueFacilityLoanRow.issueFacilityLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${incompleteIssueFacilityLoanId}/issue-facility`));
@@ -328,162 +313,5 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     // Ensure Maker cannot submit a deal with `Incomplete` facilities
     //---------------------------------------------------------------
     pages.contract.proceedToReview().should('not.exist');
-  });
-
-  it('Maker completes the incomplete facilities', () => {
-    //---------------------------------------------------------------
-    // Maker resumes the incomplete Issue Facility form (Bond)
-    //---------------------------------------------------------------
-
-    incompleteIssueFacilityBondRow.issueFacilityLink().click();
-    cy.url().should('eq', relative(`/contract/${dealId}/bond/${incompleteIssueFacilityBondId}/issue-facility`));
-
-    fillAndSubmitIssueBondFacilityForm();
-    cy.url().should('eq', relative(`/contract/${dealId}`));
-
-    //---------------------------------------------------------------
-    // Bond facility link and status should be updated
-    //---------------------------------------------------------------
-    incompleteIssueFacilityBondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
-
-    incompleteIssueFacilityBondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
-
-    //---------------------------------------------------------------
-    // Maker resumes the incomplete Issue Facility form (Loan)
-    //---------------------------------------------------------------
-
-    incompleteIssueFacilityLoanRow.issueFacilityLink().click();
-    cy.url().should('eq', relative(`/contract/${dealId}/loan/${incompleteIssueFacilityLoanId}/issue-facility`));
-
-    fillAndSubmitIssueBondFacilityForm();
-    cy.url().should('eq', relative(`/contract/${dealId}`));
-
-    //---------------------------------------------------------------
-    // Bond facility link and status should be updated
-    //---------------------------------------------------------------
-    incompleteIssueFacilityLoanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
-
-    incompleteIssueFacilityLoanRow
-      .loanStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
-  });
-
-  it('Maker is now able to submit the application', () => {
-    //---------------------------------------------------------------
-    // Maker submit's deal for review
-    //---------------------------------------------------------------
-    pages.contract.proceedToReview().should('not.be.disabled');
-    pages.contract.proceedToReview().click();
-
-    pages.contractReadyForReview.comments().type('Issued a bond');
-    pages.contractReadyForReview.readyForCheckersApproval().click();
-
-    cy.url().should('include', '/dashboard');
-
-    //---------------------------------------------------------------
-    // Deal should be updated
-    //---------------------------------------------------------------
-    pages.contract.visit(deal);
-
-    pages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal("Ready for Checker's approval");
-      });
-
-    pages.contract
-      .previousStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Acknowledged');
-      });
-  });
-
-  it('Verify facility stage, status and link post submission to the checker', () => {
-    //---------------------------------------------------------------
-    // Facilities that have been issued should have updated:
-    // - status
-    // - stage
-    // - issue facility link/text
-    //---------------------------------------------------------------
-    firstBondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Ready for check');
-      });
-
-    firstBondRow
-      .facilityStage()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Issued');
-      });
-
-    firstBondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
-
-    firstBondRow
-      .issueFacilityLink()
-      .invoke('attr', 'href')
-      .then((href) => {
-        expect(href).to.equal(`/contract/${dealId}/submission-details#bond-${firstBondId}`);
-      });
-
-    firstLoanRow
-      .loanStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Ready for check');
-      });
-
-    firstLoanRow
-      .facilityStage()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Unconditional');
-      });
-
-    firstLoanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
-
-    firstLoanRow
-      .issueFacilityLink()
-      .invoke('attr', 'href')
-      .then((href) => {
-        expect(href).to.equal(`/contract/${dealId}/submission-details#loan-${firstLoanId}`);
-      });
-  });
-
-  it('Verify buttons are in correct state', () => {
-    pages.contract.proceedToReview().should('not.exist');
-    pages.contract.abandonButton().should('be.disabled');
   });
 });
