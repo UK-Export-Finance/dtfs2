@@ -60,7 +60,7 @@ Note: If you're on Windows and experiencing issues with MongoDB, install mongosh
 ## Running the World Locally :earth_americas:
 
 ```shell
-docker-compose up
+npm run start
 ```
 
 Several services are built:
@@ -83,12 +83,12 @@ To access GEF locally, use [http://localhost](http://localhost).
 To stop the local environment, simply exit the running terminal and run:
 
 ```shell
-docker-compose down
+npm run stop
 ```
 
-## Different docker-compose files
+## Different docker compose files
 
-There are 3 different docker-compose files right now.
+There are 3 different docker compose files right now.
 - docker-compose.yml is used for local development
 - docker-compose.gha.yml is used for the pipelines to run our tests against
 - docker-compose.replica-set.yml is used when you need a replica set enabled on your local database, e.g. when working with the mongodb change stream

@@ -14,10 +14,10 @@ Before running the TFM UI locally, ensure that you have an `.env` file configure
 
 To run the TFM UI locally, follow these steps:
 
-1. Execute `docker-compose up`.
+1. Execute `npm run start`.
 2. Visit [http://localhost:5003](http://localhost:5003) in your web browser.
 
-Alternatively, you can start all services from the project's root directory using `docker-compose up`.
+Alternatively, you can start all services from the project's root directory using `npm run start`.
 
 ## Login Credentials :key:
 
