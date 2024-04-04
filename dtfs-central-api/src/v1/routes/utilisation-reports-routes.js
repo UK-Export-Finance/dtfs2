@@ -10,7 +10,6 @@ const {
   getUtilisationReportsReconciliationSummary,
 } = require('../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller');
 const putUtilisationReportStatusController = require('../controllers/utilisation-report-service/put-utilisation-report-status.controller');
-const { sqlIdValidation } = require('../validation/route-validators/route-validators');
 
 const utilisationReportsRouter = express.Router();
 
@@ -78,7 +77,7 @@ utilisationReportsRouter.route('/').post(postUploadUtilisationReportPayloadValid
  *       404:
  *         description: Not found
  */
-utilisationReportsRouter.route('/:id').get(sqlIdValidation, handleExpressValidatorResult, getUtilisationReportById);
+utilisationReportsRouter.route('/:id').get(validation.sqlIdValidation('id'), handleExpressValidatorResult, getUtilisationReportById);
 
 /**
  * @openapi
