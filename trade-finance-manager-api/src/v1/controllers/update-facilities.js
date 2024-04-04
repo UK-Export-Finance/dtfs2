@@ -113,7 +113,7 @@ const updateFacilities = async (deal) => {
 
       return facility;
     } catch (error) {
-      console.error('TFM-API - error in update-facilities.js %s', error);
+      console.error('TFM-API - error in update-facilities.js %o', error);
       return facility;
     }
   }));

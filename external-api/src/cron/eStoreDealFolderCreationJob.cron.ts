@@ -48,7 +48,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
         // Create eStore Facility directories
       }
     } else {
-      console.error('API Call failed: Unable to create a Deal Folder %O', dealFolderResponse);
+      console.error('API Call failed: Unable to create a Deal Folder %o', dealFolderResponse);
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed
       await cronJobLogsCollection.updateOne(
         { dealId: { $eq: eStoreData.dealId } },
@@ -63,6 +63,6 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
       );
     }
   } catch (error) {
-    console.error('Unable to create the deal folder %s', error);
+    console.error('Unable to create the deal folder %o', error);
   }
 };

@@ -10,7 +10,7 @@
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },
   "dependencies": {
-    "@azure/functions": "^4.3.0",
+    "@azure/functions": "^4.4.0",
     "axios": "^0.27.2",
     "date-fns": "^2.30.0",
     "dotenv": "^16.4.5",

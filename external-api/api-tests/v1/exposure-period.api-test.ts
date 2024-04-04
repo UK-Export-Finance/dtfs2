@@ -55,7 +55,7 @@ describe('/exposure-period', () => {
     ];
 
     describe('when dates are invalid', () => {
-      test.each(invalidDateTestCases)('returns a 400 if you provide invalid dates: %s, %s', async (startDate, endDate) => {
+      test.each(invalidDateTestCases)('returns a 400 if you provide invalid dates %s, %s', async (startDate, endDate) => {
         const { status, body } = await get(`/exposure-period/${startDate}/${endDate}/Loan`);
 
         expect(status).toEqual(400);

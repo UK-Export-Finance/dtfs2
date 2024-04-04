@@ -30,8 +30,8 @@ Some external APIM APIs can take a long time complete, for example ACBS has over
 By running these as background tasks, we take the load off of deal submission calls. Also allows us to retry and endpoints that fail (service could be down or having performance issues for example).
 
 ## Running locally
-1. Run everything as normal (`docker-compose up` from the root directory)
-2. In a separate terminal tab, go to azure-functions directory and run `docker-compose up`
+1. Run everything as normal (`npm run start` from the root directory)
+2. In a separate terminal tab, go to azure-functions directory and run `npm run start`
 
 Ideally, `azure-functions` would be run in the same root docker, but this caused memory issues in github actions.
 Number Generator Function is now run in root `docker-compose.yml`.

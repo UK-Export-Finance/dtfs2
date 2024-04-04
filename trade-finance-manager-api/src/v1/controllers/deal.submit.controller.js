@@ -134,6 +134,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       mappedDeal.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
       console.info('TFM deal %s submission type has been updated to %s', dealId, mappedDeal.submissionType);
     }
+
     const updatedDeal = await updatedIssuedFacilities(mappedDeal);
     /**
      * Current requirement only allows AIN & MIN deals to be send to ACBS
@@ -204,7 +205,7 @@ const submitDealBeforeUkefIds = async (dealId, dealType, checker) => {
     const response = await api.submitDeal(dealType, dealId);
 
     if (!response) {
-      throw new Error('Unable to submit deal %s to TFM', dealId);
+      throw new Error(`Unable to submit deal ${dealId} to TFM`);
     }
 
     return submitDealAfterUkefIds(dealId, dealType, checker);

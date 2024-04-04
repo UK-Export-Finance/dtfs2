@@ -69,7 +69,7 @@ describe('/companies-house', () => {
       expect(body.registered_office_address).toBeDefined();
     });
 
-    test.each(companyHouseNumberTestCases)('returns a 400 if you provide an invalid company registration number: %s', async (companyHouseNumber) => {
+    test.each(companyHouseNumberTestCases)('returns a 400 if you provide an invalid company registration number %s', async (companyHouseNumber) => {
       const { status, body } = await get(`/companies-house/${companyHouseNumber}`);
 
       expect(status).toEqual(400);

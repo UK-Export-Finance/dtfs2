@@ -11,7 +11,7 @@ export const lookup = async (req: Request, res: Response) => {
   const noWhitespacePostcode = OSPostcode.replace(' ', '');
 
   if (!isValidPostcode(noWhitespacePostcode)) {
-    console.error('Invalid postcode: %s', OSPostcode);
+    console.error('Invalid postcode %s', OSPostcode);
     return res.status(400).send({ status: 400, data: 'Invalid postcode' });
   }
 
@@ -21,7 +21,7 @@ export const lookup = async (req: Request, res: Response) => {
     method: 'get',
     url,
   }).catch((error) => {
-    console.error('Error calling Ordnance Survey API %s', error);
+    console.error('Error calling Ordnance Survey API %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to call Ordnance Survey API' };
   });
 

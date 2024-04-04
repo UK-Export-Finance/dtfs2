@@ -26,7 +26,7 @@ const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
   const isValidDealId = isValidMongoId(id);
 
   if (!isValidDealId) {
-    console.error('getDeal: Invalid deal id provided: %s', id);
+    console.error('getDeal: Invalid deal id provided %s', id);
     return { status: 400, data: 'Invalid deal id' };
   }
 
@@ -103,7 +103,7 @@ const getFacility = async (id, token) => {
     const isValidFacilityId = isValidMongoId(id);
 
     if (!isValidFacilityId) {
-      console.error('getFacility: Invalid facility id provided: %s', id);
+      console.error('getFacility: Invalid facility id provided %s', id);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -129,7 +129,7 @@ const getTeamMembers = async (teamId, token) => {
     });
     return response?.data?.teamMembers ? response?.data?.teamMembers : fallbackTeamMembers;
   } catch (error) {
-    console.error('Error getting team members %s', error);
+    console.error('Error getting team members %o', error);
     return fallbackTeamMembers;
   }
 };
@@ -139,7 +139,7 @@ const updateParty = async (id, partyUpdate, token) => {
     const isValidDealId = isValidMongoId(id);
 
     if (!isValidDealId) {
-      console.error('updateParty: Invalid deal id provided: %s', id);
+      console.error('updateParty: Invalid deal id provided %s', id);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -151,7 +151,7 @@ const updateParty = async (id, partyUpdate, token) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to update party %O', error);
+    console.error('Unable to update party %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to update party' };
   }
 };
@@ -161,7 +161,7 @@ const updateFacility = async (id, facilityUpdate, token) => {
     const isValidFacilityId = isValidMongoId(id);
 
     if (!isValidFacilityId) {
-      console.error('updateFacility: Invalid facility id provided: %s', id);
+      console.error('updateFacility: Invalid facility id provided %s', id);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -174,7 +174,7 @@ const updateFacility = async (id, facilityUpdate, token) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to update facility %O', error);
+    console.error('Unable to update facility %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to update facility' };
   }
 };
@@ -184,7 +184,7 @@ const updateFacilityRiskProfile = async (id, facilityUpdate, token) => {
     const isValidFacilityId = isValidMongoId(id);
 
     if (!isValidFacilityId) {
-      console.error('updateFacilityRiskProfile: Invalid facility id provided: %s', id);
+      console.error('updateFacilityRiskProfile: Invalid facility id provided %s', id);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -196,7 +196,7 @@ const updateFacilityRiskProfile = async (id, facilityUpdate, token) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to update facility risk profile %O', error);
+    console.error('Unable to update facility risk profile %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to update facility risk profile' };
   }
 };
@@ -206,17 +206,17 @@ const updateTask = async (dealId, groupId, taskId, taskUpdate, token) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updateTask: Invalid deal id provided: %s', dealId);
+      console.error('updateTask: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
     if (!isValidGroupId(groupId)) {
-      console.error('updateTask: Invalid group id provided: %s', groupId);
+      console.error('updateTask: Invalid group id provided %s', groupId);
       return { status: 400, data: 'Invalid group id' };
     }
 
     if (!isValidTaskId(taskId)) {
-      console.error('updateTask: Invalid task id provided: %s', taskId);
+      console.error('updateTask: Invalid task id provided %s', taskId);
       return { status: 400, data: 'Invalid task id' };
     }
 
@@ -229,7 +229,7 @@ const updateTask = async (dealId, groupId, taskId, taskUpdate, token) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to update task %O', error);
+    console.error('Unable to update task %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to update task' };
   }
 };
@@ -245,7 +245,7 @@ const updateCreditRating = async (dealId, creditRatingUpdate, token) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updateCreditRating: Invalid deal id provided: %s', dealId);
+      console.error('updateCreditRating: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -258,7 +258,7 @@ const updateCreditRating = async (dealId, creditRatingUpdate, token) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to update credit rating request %O', error);
+    console.error('Unable to update credit rating request %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to update credit rating' };
   }
 };
@@ -274,7 +274,7 @@ const updateLossGivenDefault = async (dealId, lossGivenDefaultUpdate, token) => 
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updateLossGivenDefault: Invalid deal id provided: %s', dealId);
+      console.error('updateLossGivenDefault: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -287,7 +287,7 @@ const updateLossGivenDefault = async (dealId, lossGivenDefaultUpdate, token) => 
 
     return response.data;
   } catch (error) {
-    console.error('Unable to update loss given default request %O', error);
+    console.error('Unable to update loss given default request %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to update loss given default' };
   }
 };
@@ -303,7 +303,7 @@ const updateProbabilityOfDefault = async (dealId, probabilityOfDefaultUpdate, to
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updateProbabilityOfDefault: Invalid deal id provided: %s', dealId);
+      console.error('updateProbabilityOfDefault: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -316,7 +316,7 @@ const updateProbabilityOfDefault = async (dealId, probabilityOfDefaultUpdate, to
 
     return response.data;
   } catch (error) {
-    console.error('Unable to update probability of default request %O', error);
+    console.error('Unable to update probability of default request %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to update probability of default' };
   }
 };
@@ -326,7 +326,7 @@ const updateUnderwriterManagersDecision = async (dealId, newUnderwriterManagersD
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updateUnderwriterManagersDecision: Invalid deal id provided: %s', dealId);
+      console.error('updateUnderwriterManagersDecision: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
     const response = await axios({
@@ -338,7 +338,7 @@ const updateUnderwriterManagersDecision = async (dealId, newUnderwriterManagersD
 
     return response.data;
   } catch (error) {
-    console.error("Unable to update underwriter manager's decision %O", error);
+    console.error("Unable to update underwriter manager's decision %o", error);
     return { status: error?.response?.status || 500, data: "Failed to update underwriter manager's decision" };
   }
 };
@@ -348,7 +348,7 @@ const updateLeadUnderwriter = async ({ dealId, token, leadUnderwriterUpdate }) =
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('updateLeadUnderwriter: Invalid deal id provided: %s', dealId);
+      console.error('updateLeadUnderwriter: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -361,7 +361,7 @@ const updateLeadUnderwriter = async ({ dealId, token, leadUnderwriterUpdate }) =
 
     return response.data;
   } catch (error) {
-    console.error('Unable to update lead underwriter %O', error);
+    console.error('Unable to update lead underwriter %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to update lead underwriter' };
   }
 };
@@ -376,7 +376,7 @@ const createActivity = async (dealId, activityUpdate, token) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('createActivity: Invalid deal id provided: %s', dealId);
+      console.error('createActivity: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -389,7 +389,7 @@ const createActivity = async (dealId, activityUpdate, token) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to create activity request %O', error);
+    console.error('Unable to create activity request %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to create activity' };
   }
 };
@@ -407,7 +407,7 @@ const getAuthLoginUrl = async () => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to get login url %s', error?.response);
+    console.error('Unable to get login url %s', error?.response?.data);
     return { status: error?.response?.status || 500, data: 'Unable to get login url' };
   }
 }
@@ -481,7 +481,7 @@ const getUser = async (userId, token) => {
     const isValidUserId = isValidMongoId(userId);
 
     if (!isValidUserId) {
-      console.error('getUser: Invalid user id provided: %s', userId);
+      console.error('getUser: Invalid user id provided %s', userId);
       return { status: 400, data: 'Invalid user id' };
     }
 
@@ -493,7 +493,7 @@ const getUser = async (userId, token) => {
 
     return response.data.user;
   } catch (error) {
-    console.error('Unable to get the user details %s', error?.response?.data);
+    console.error('Unable to get the user details %o', error?.response?.data);
     return { status: error?.response?.status || 500, data: 'Failed to get user' };
   }
 };
@@ -503,7 +503,7 @@ const createFacilityAmendment = async (facilityId, token) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      console.error('createFacilityAmendment: Invalid facility id provided: %s', facilityId);
+      console.error('createFacilityAmendment: Invalid facility id provided %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -516,7 +516,7 @@ const createFacilityAmendment = async (facilityId, token) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to create new amendment %s', error);
+    console.error('Unable to create new amendment %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to create facility amendment' };
   }
 };
@@ -527,12 +527,12 @@ const updateAmendment = async (facilityId, amendmentId, data, token) => {
     const isValidAmendmentId = isValidMongoId(amendmentId);
 
     if (!isValidFacilityId) {
-      console.error('updateAmendment: Invalid facility id provided: %s', facilityId);
+      console.error('updateAmendment: Invalid facility id provided %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
     if (!isValidAmendmentId) {
-      console.error('updateAmendment: Invalid amendment id provided: %s', amendmentId);
+      console.error('updateAmendment: Invalid amendment id provided %s', amendmentId);
       return { status: 400, data: 'Invalid amendment id' };
     }
 
@@ -545,7 +545,7 @@ const updateAmendment = async (facilityId, amendmentId, data, token) => {
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to create amendment request %s', error);
+    console.error('Unable to create amendment request %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to update amendment' };
   }
 };
@@ -555,7 +555,7 @@ const getAmendmentInProgress = async (facilityId, token) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      console.error('getAmendmentInProgress: Invalid facility id provided: %s', facilityId);
+      console.error('getAmendmentInProgress: Invalid facility id provided %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -567,7 +567,7 @@ const getAmendmentInProgress = async (facilityId, token) => {
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get the amendment in progress %s', error);
+    console.error('Unable to get the amendment in progress %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get amendment in progress' };
   }
 };
@@ -582,7 +582,7 @@ const getAllAmendmentsInProgress = async (token) => {
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get the amendments in progress %s', error);
+    console.error('Unable to get the amendments in progress %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get all amendments in progress' };
   }
 };
@@ -592,7 +592,7 @@ const getCompletedAmendment = async (facilityId, token) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      console.error('getCompletedAmendment: Invalid facility id provided: %s', facilityId);
+      console.error('getCompletedAmendment: Invalid facility id provided %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -604,7 +604,7 @@ const getCompletedAmendment = async (facilityId, token) => {
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get the completed amendment %s', error);
+    console.error('Unable to get the completed amendment %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get completed amendment' };
   }
 };
@@ -614,7 +614,7 @@ const getLatestCompletedAmendmentValue = async (facilityId, token) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      console.error('getLatestCompletedAmendmentValue: Invalid facility id provided: %s', facilityId);
+      console.error('getLatestCompletedAmendmentValue: Invalid facility id provided %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -626,7 +626,7 @@ const getLatestCompletedAmendmentValue = async (facilityId, token) => {
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get the latest completed value amendment %s', error);
+    console.error('Unable to get the latest completed value amendment %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get latest completed amendment value' };
   }
 };
@@ -636,7 +636,7 @@ const getLatestCompletedAmendmentDate = async (facilityId, token) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      console.error('getLatestCompletedAmendmentDate: Invalid facility id provided: %s', facilityId);
+      console.error('getLatestCompletedAmendmentDate: Invalid facility id provided %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -648,7 +648,7 @@ const getLatestCompletedAmendmentDate = async (facilityId, token) => {
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get the latest completed coverEndDate amendment %s', error);
+    console.error('Unable to get the latest completed coverEndDate amendment %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get latest completed amendment date' };
   }
 };
@@ -659,12 +659,12 @@ const getAmendmentById = async (facilityId, amendmentId, token) => {
     const isValidAmendmentId = isValidMongoId(amendmentId);
 
     if (!isValidFacilityId) {
-      console.error('getAmendmentById: Invalid facility id provided: %s', facilityId);
+      console.error('getAmendmentById: Invalid facility id provided %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
     if (!isValidAmendmentId) {
-      console.error('getAmendmentById: Invalid amendment id provided: %s', amendmentId);
+      console.error('getAmendmentById: Invalid amendment id provided %s', amendmentId);
       return { status: 400, data: 'Invalid amendment id' };
     }
 
@@ -676,7 +676,7 @@ const getAmendmentById = async (facilityId, amendmentId, token) => {
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get the amendment by Id %s', error);
+    console.error('Unable to get the amendment by Id %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get amendment by id' };
   }
 };
@@ -686,7 +686,7 @@ const getAmendmentsByFacilityId = async (facilityId, token) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      console.error('getAmendmentsByFacilityId: Invalid facility id provided: %s', facilityId);
+      console.error('getAmendmentsByFacilityId: Invalid facility id provided %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -698,7 +698,7 @@ const getAmendmentsByFacilityId = async (facilityId, token) => {
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get the amendment by Id %s', error);
+    console.error('Unable to get the amendment by Id %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get amendments by facility id' };
   }
 };
@@ -708,7 +708,7 @@ const getAmendmentsByDealId = async (dealId, token) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('getAmendmentsByDealId: Invalid deal id provided: %s', dealId);
+      console.error('getAmendmentsByDealId: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -720,7 +720,7 @@ const getAmendmentsByDealId = async (dealId, token) => {
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get the amendment by deal Id %s', error);
+    console.error('Unable to get the amendment by deal Id %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get amendments by dealId' };
   }
 };
@@ -730,7 +730,7 @@ const getAmendmentInProgressByDealId = async (dealId, token) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('getAmendmentInProgressByDealId: Invalid deal id provided: %s', dealId);
+      console.error('getAmendmentInProgressByDealId: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -742,7 +742,7 @@ const getAmendmentInProgressByDealId = async (dealId, token) => {
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get the amendment in progress by deal Id %s', error);
+    console.error('Unable to get the amendment in progress by deal Id %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get amendments in progress by dealId' };
   }
 };
@@ -752,7 +752,7 @@ const getCompletedAmendmentByDealId = async (dealId, token) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('getCompletedAmendmentByDealId: Invalid deal id provided: %s', dealId);
+      console.error('getCompletedAmendmentByDealId: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -764,7 +764,7 @@ const getCompletedAmendmentByDealId = async (dealId, token) => {
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get the completed amendment by deal Id %s', error);
+    console.error('Unable to get the completed amendment by deal Id %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get completed amendment by dealId' };
   }
 };
@@ -774,7 +774,7 @@ const getLatestCompletedAmendmentByDealId = async (dealId, token) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('getLatestCompletedAmendmentByDealId: Invalid deal id provided: %s', dealId);
+      console.error('getLatestCompletedAmendmentByDealId: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -786,7 +786,7 @@ const getLatestCompletedAmendmentByDealId = async (dealId, token) => {
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get the latest completed amendment by deal Id %s', error);
+    console.error('Unable to get the latest completed amendment by deal Id %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get latest completed amendment by dealId' };
   }
 };
@@ -796,7 +796,7 @@ const getParty = async (partyUrn, token) => {
     const isValidUrn = isValidPartyUrn(partyUrn);
 
     if (!isValidUrn) {
-      console.error('getParty: Invalid party urn provided: %s', partyUrn);
+      console.error('getParty: Invalid party urn provided %s', partyUrn);
       return { status: 400, data: 'Invalid party urn' };
     }
 
@@ -811,7 +811,7 @@ const getParty = async (partyUrn, token) => {
       data: response.data,
     };
   } catch (error) {
-    console.error('Unable to get party %s', error);
+    console.error('Unable to get party %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get party' };
   }
 };

@@ -119,7 +119,7 @@ jobs:
             az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
       - name: Azure 🔐
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
@@ -223,7 +223,7 @@ jobs:
             az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
       - name: Azure 🔐
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 

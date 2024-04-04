@@ -51,8 +51,8 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
               uploadSupportingDocuments(eStoreData.siteId, eStoreData.dealIdentifier, { ...file, buyerName: eStoreData.buyerName }),
             ),
           );
-          uploadDocuments.then((res) => console.info('Task completed: Supporting documents uploaded successfully %O', res[0].data));
-          uploadDocuments.catch((e) => console.error('Task failed: There was a problem uploading the documents %O', e));
+          uploadDocuments.then((res) => console.info('Task completed: Supporting documents uploaded successfully %o', res[0].data));
+          uploadDocuments.catch((error) => console.error('Task failed: There was a problem uploading the documents %o', error));
         }
       }
     } else {
@@ -66,7 +66,7 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
       );
     }
   } catch (error) {
-    console.error('Unable to create the facility folders %s', error);
+    console.error('Unable to create the facility folders %o', error);
     // stop and the delete the cron job - this in order to release the memory
   }
 };

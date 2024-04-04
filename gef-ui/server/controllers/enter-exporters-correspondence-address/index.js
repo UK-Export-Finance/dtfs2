@@ -44,7 +44,7 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
       backUrl,
     });
   } catch (error) {
-    console.error('GEF-UI - Error getting exporter\'s correspondence address page %s', error);
+    console.error('GEF-UI - Error getting exporter\'s correspondence address page %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -123,7 +123,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
     }
     return res.redirect(`/gef/application-details/${dealId}/about-exporter`);
   } catch (error) {
-    console.error('Error validating exporter\'s correspondence address %s', error);
+    console.error('Error validating exporter\'s correspondence address %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

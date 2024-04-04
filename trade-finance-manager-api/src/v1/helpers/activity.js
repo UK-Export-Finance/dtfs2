@@ -120,7 +120,7 @@ const getActivities = (deal) => {
     }
     return activities;
   } catch (error) {
-    console.error('Error creating activity object. %s', error);
+    console.error('Error creating activity object. %o', error);
   }
   return {};
 };
