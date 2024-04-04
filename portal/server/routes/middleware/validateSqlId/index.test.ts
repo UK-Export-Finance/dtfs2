@@ -2,33 +2,34 @@ import httpMocks from 'node-mocks-http';
 import { validateSqlId } from '.';
 
 describe('validateSqlId', () => {
-  it(`redirects to '/not-found' if a non-integer id is provided`, () => {
+  const paramName = 'id';
+
+  it(`redirects to '/not-found' if a non integer id is provided`, () => {
     // Arrange
     const { res: mockRes, req: mockReq } = httpMocks.createMocks({
-      params: { id: 'not-a-number' },
+      params: { [paramName]: 'not-an-integer' },
     });
 
     const mockNext = jest.fn();
 
     // Act
-    validateSqlId(mockReq, mockRes, mockNext);
+    validateSqlId(paramName)(mockReq, mockRes, mockNext);
 
     // Assert
     expect(mockNext).not.toHaveBeenCalled();
-    // eslint-disable-next-line no-underscore-dangle
     expect(mockRes._getRedirectUrl()).toBe('/not-found');
   });
 
   it('calls the next middleware function when an integer id is provided', () => {
     // Arrange
     const { res: mockRes, req: mockReq } = httpMocks.createMocks({
-      params: { id: '1234567' },
+      params: { [paramName]: '54321' },
     });
 
     const mockNext = jest.fn();
 
     // Act
-    validateSqlId(mockReq, mockRes, mockNext);
+    validateSqlId(paramName)(mockReq, mockRes, mockNext);
 
     // Assert
     expect(mockNext).toHaveBeenCalled();

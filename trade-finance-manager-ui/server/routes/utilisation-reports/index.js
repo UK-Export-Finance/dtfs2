@@ -11,6 +11,6 @@ router.get('/', validateUserTeam(Object.values(PDC_TEAM_IDS)), getUtilisationRep
 
 router.post('/', validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]), updateUtilisationReportStatus);
 
-router.get('/:id/download', validateUserTeam(Object.values(PDC_TEAM_IDS)), validateSqlId, getReportDownload);
+router.get('/:id/download', validateUserTeam(Object.values(PDC_TEAM_IDS)), validateSqlId('id'), getReportDownload);
 
 module.exports = router;
