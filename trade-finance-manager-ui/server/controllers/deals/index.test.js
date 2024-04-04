@@ -246,7 +246,7 @@ describe('controllers - deals', () => {
         expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
           heading: generateHeadingText(mockGetDeals.count, searchString),
           deals: mockDeals,
-          activePrimaryNavigation: 'all deals',
+          activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
           activeSubNavigation: 'deal',
           sortButtonWasClicked: false,
           user: mockReq.session.user,
