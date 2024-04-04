@@ -432,6 +432,7 @@ tfmRouter.route('/facilities/:id')
  *                       required: false
  *                       properties:
  *                         _id:
+ *                           type: string
  *                           example: '1234567890abcdef12345678'
  *                     sessionPortalUser:
  *                       type: object

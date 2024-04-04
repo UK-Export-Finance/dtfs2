@@ -59,7 +59,7 @@ exports.updateFacilityPut = async (req, res) => {
 
   const { tfmUpdate, sessionPortalUser, sessionTfmUser, isSystemUpdate } = req.body;
 
-  if (!sessionPortalUser?._id && !sessionTfmUser?._id && !isSystemUpdate) {
+  if (!isSystemUpdate && !ObjectId.isValid(sessionPortalUser?._id) && !ObjectId.isValid(sessionTfmUser?._id)) {
     return res.status(400).send({ status: 400, message: 'Invalid user' });
   }
 
