@@ -2,9 +2,10 @@ import { addMonths } from 'date-fns';
 import {
   getCurrentReportPeriodForBankSchedule,
   getNextReportPeriodForBankSchedule,
-  getFormattedReportPeriod,
+  getFormattedReportPeriodWithLongMonth,
   getReportPeriodEndForSubmissionMonth,
   getSubmissionMonthForReportPeriodEnd,
+  getFormattedReportPeriodWithShortMonth,
 } from './report-period';
 import { OneIndexedMonth, BankReportPeriodSchedule, ReportPeriod } from '../types';
 
@@ -170,7 +171,7 @@ describe('report-period utils', () => {
     });
   });
 
-  describe('getFormattedReportPeriod', () => {
+  describe('getFormattedReportPeriodWithLongMonth', () => {
     const testData: { description: string; reportPeriod: ReportPeriod; expectedResponse: string }[] = [
       {
         description: 'report period spans 1 month',
@@ -216,9 +217,30 @@ describe('report-period utils', () => {
       },
     ];
     it.each(testData)('returns $expectedResponse when $description', ({ reportPeriod, expectedResponse }) => {
-      const response = getFormattedReportPeriod(reportPeriod);
+      const response = getFormattedReportPeriodWithLongMonth(reportPeriod);
 
       expect(response).toEqual(expectedResponse);
     });
+  });
+
+  describe('getFormattedReportPeriodWithShortMonth', () => {
+    it.each`
+      description                                                                                   | reportPeriod                                                           | includePeriodicity | expectedResponse
+      ${'"MMM YYYY" when report period spans 1 month'}                                              | ${{ start: { month: 4, year: 2030 }, end: { month: 4, year: 2030 } }}  | ${false}           | ${'Apr 2030'}
+      ${'"MMM YYYY (monthly)" report period spans 1 month'}                                         | ${{ start: { month: 4, year: 2030 }, end: { month: 4, year: 2030 } }}  | ${true}            | ${'Apr 2030 (monthly)'}
+      ${'"MMM to MMM YYYY" when report period spans multiple months over 1 year'}                   | ${{ start: { month: 3, year: 2023 }, end: { month: 5, year: 2023 } }}  | ${false}           | ${'Mar to May 2023'}
+      ${'"MMM to MMM YYYY (quarterly)" when report period spans multiple months over 1 year'}       | ${{ start: { month: 3, year: 2023 }, end: { month: 5, year: 2023 } }}  | ${true}            | ${'Mar to May 2023 (quarterly)'}
+      ${'"MMM YYYY to MMM YYYY" when report period spans multiple months over 2 years'}             | ${{ start: { month: 12, year: 2022 }, end: { month: 2, year: 2023 } }} | ${false}           | ${'Dec 2022 to Feb 2023'}
+      ${'"MMM YYYY to MMM YYYY (quarterly)" when report period spans multiple months over 2 years'} | ${{ start: { month: 12, year: 2022 }, end: { month: 2, year: 2023 } }} | ${true}            | ${'Dec 2022 to Feb 2023 (quarterly)'}
+    `(
+      'returns period formatted $description and includePeriodicity is $includePeriodicity',
+      ({ reportPeriod, includePeriodicity, expectedResponse }: { reportPeriod: ReportPeriod; includePeriodicity: boolean; expectedResponse: string }) => {
+        // Act
+        const response = getFormattedReportPeriodWithShortMonth(reportPeriod, includePeriodicity);
+
+        // Assert
+        expect(response).toEqual(expectedResponse);
+      },
+    );
   });
 });
