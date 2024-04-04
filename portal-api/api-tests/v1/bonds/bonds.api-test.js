@@ -516,6 +516,7 @@ describe('/v1/deals/:id/bond', () => {
           'requestedCoverStartDate-day': null,
           'requestedCoverStartDate-month': null,
           'requestedCoverStartDate-year': null,
+          "coverDateConfirmed": true,
           'coverEndDate-day': null,
           'coverEndDate-month': null,
           'coverEndDate-year': null,
@@ -665,7 +666,7 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
-    it('should generate requestedCoverStartDate timestamp', async () => {
+    it('should generate requestedCoverStartDate and coverDateConfirmed properties', async () => {
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id;
 
@@ -683,6 +684,7 @@ describe('/v1/deals/:id/bond', () => {
       const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
       expect(status).toEqual(200);
+      expect(body.coverDateConfirmed).toEqual(true);
       expect(body.requestedCoverStartDate).toEqual(expect.any(String));
       expect(body['requestedCoverStartDate-day']).toEqual(bond['requestedCoverStartDate-day']);
       expect(body['requestedCoverStartDate-month']).toEqual(bond['requestedCoverStartDate-month']);
