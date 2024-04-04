@@ -4,19 +4,19 @@ const populateTfmUserWithEntraData = require('./populate-tfm-user-with-entra-dat
 /**
  * getAndMapExistingTfmUser
  * Get and map an existing TFM user from Entra user data.
- * @param {Object} entraUser: Entra user data
- * @returns {Promise<Object>} TFM user with mapped data
+ * @param {import('src/types/auth/azure-user-info-response-account').AzureUserInfoResponseAccount} entraUser: Entra user data
+ * @returns {Promise<import('src/types/auth/get-user-response').GetUserResponse>} TFM user with mapped data
  */
 const getAndMap = async (entraUser) => {
   try {
     if (entraUser) {
       console.info('TFM auth service - getting and mapping existing TFM user');
 
-      const user = await tfmUser.get(entraUser);
+      const getUserResponse = await tfmUser.get(entraUser);
 
-      const mapped = populateTfmUserWithEntraData(user, entraUser);
+      const getUserResponseMapped = populateTfmUserWithEntraData(getUserResponse, entraUser);
 
-      return mapped;
+      return getUserResponseMapped;
     }
 
     return {};

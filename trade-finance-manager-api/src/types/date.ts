@@ -28,6 +28,8 @@ export type IsoDayStamp = string;
  */
 export type UnixTimestampString = string;
 
+export type UnixTimestampNumber = number;
+
 export type MonthAndYear = {
   month: number;
   year: number;

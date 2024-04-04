@@ -36,7 +36,9 @@ exports.findByEmails = async (emails) => {
 
     const users = await collection.find({ 'email': { $in: emailsRegex }}).toArray();
 
-    return handleFindByEmailsResult(users);
+    const getUserResponse = handleFindByEmailsResult(users);
+
+    return getUserResponse;
   } catch (error) {
     console.error('Error getting TFM user by emails - Unexpected DB response %O', error);
 

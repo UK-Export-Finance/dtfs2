@@ -158,6 +158,7 @@ class AuthProvider {
 
       const msalInstance = this.getMsalInstance(this.config.msalConfig);
 
+      /** @constant {import('src/types/auth/azure-user-info-response').AzureUserInfoResponse} Entra Response */
       const tokenResponse = await msalInstance.acquireTokenByCode(authCodeRequest);
 
       const { account } = tokenResponse;

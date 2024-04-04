@@ -13,7 +13,7 @@ describe('handleFindByEmailsResult', () => {
       const expected = {
         found: true,
         canProceed: true,
-        ...MOCK_TFM_USER,
+        user: MOCK_TFM_USER,
       };
 
       expect(result).toEqual(expected);

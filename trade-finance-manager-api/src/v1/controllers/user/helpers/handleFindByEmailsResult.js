@@ -25,7 +25,7 @@ const handleFindByEmailsResult = (users) => {
   return {
     found: true,
     canProceed: true,
-    ...users[0],
+    user: users[0],
   };
 };
 

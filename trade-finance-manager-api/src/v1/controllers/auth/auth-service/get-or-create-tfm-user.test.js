@@ -8,12 +8,12 @@ const MOCK_TFM_USER = MOCK_TFM_USERS[0];
 
 const MOCK_TFM_USER_SCENARIOS = {
   CAN_PROCEED: {
-    ...MOCK_TFM_USER,
+    user: MOCK_TFM_USER,
     found: true,
     canProceed: true,
   },
   CANNOT_PROCEED: {
-    ...MOCK_TFM_USER,
+    user: MOCK_TFM_USER,
     found: true,
     canProceed: false,
   },
@@ -49,7 +49,7 @@ describe('auth-service/get-or-create-tfm-user', () => {
     });
 
     it('should return the result of existingTfmUser.getAndMap', () => {
-      expect(result).toEqual(MOCK_TFM_USER_SCENARIOS.CAN_PROCEED);
+      expect(result).toEqual(MOCK_TFM_USER_SCENARIOS.CAN_PROCEED.user);
     });
   });
 
