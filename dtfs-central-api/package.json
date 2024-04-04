@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@ukef/dtfs2-common": "1.0.0",
-    "axios": "^1.6.7",
+    "axios": "^1.6.8",
     "compression": "^1.7.4",
     "date-fns": "^2.30.0",
     "dotenv": "16.0.3",
@@ -50,7 +50,7 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
-    "@types/lodash": "^4.14.202",
+    "@types/lodash": "^4.17.0",
     "@types/supertest": "^2.0.16",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -61,7 +61,7 @@
     "node-mocks-http": "^1.14.1",
     "supertest": "6.3.3",
     "ts-jest": "^29.1.2",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.3"
   },
   "engines": {
     "node": ">=20",
