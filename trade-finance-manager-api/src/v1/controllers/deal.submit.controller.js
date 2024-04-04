@@ -134,6 +134,19 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
     // Update portal deal status
     await updatePortalDealStatus(mappedDeal);
 
+    /**
+     * Below action is performed to retrieve the latest portal application status.
+     * Which should be changed to `Acknowledged` from `In Progress by UKEF` since
+     * the application has been converted to MIN from MIA.
+     *
+     * Not fetching the latest portal deal status would cause TFM deal status to be
+     * an `Application` rather than `Confirmed`.
+     */
+
+    const updatedPortalDeal = await getPortalDeal(dealId, dealType);
+    const { status } = updatedPortalDeal;
+    mappedDeal.status = status;
+
     // Update issued facilities
     const updatedDeal = await updatedIssuedFacilities(mappedDeal);
     /**
