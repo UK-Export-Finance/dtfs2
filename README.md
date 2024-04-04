@@ -1,4 +1,5 @@
 # Digital Trade Finance Service :briefcase:
+
 This repository contains the code for the UK Export Finance Trade Finance Service.
 This documentation provides a comprehensive overview of the UKEF Digital TradeFinance Service (DTFS), including prerequisites, technology stack, setup instructions, testing procedures, deployment guidelines, and other essential information for the developers.
 
@@ -89,6 +90,7 @@ npm run stop
 ## Different docker compose files
 
 There are 3 different docker compose files right now.
+
 - docker-compose.yml is used for local development
 - docker-compose.gha.yml is used for the pipelines to run our tests against
 - docker-compose.replica-set.yml is used when you need a replica set enabled on your local database, e.g. when working with the mongodb change stream
@@ -193,8 +195,9 @@ Client side JavaScript files are protected by SRI security feature which allows 
 This can be done by updating the `integrity` attribute in any HTML/Nunjucks `script` tags that use the file to reflect the new hash of the recompiled file (a good place to check for these `script` tags is the `templates/index.njk` file in the service).
 
 There are two ways to update these:
-- Run `cat FILENAME.js | openssl dgst -sha512 -binary | openssl base64 -A` on each;
-- Or render a template that uses the script in a browser; a console error should give you the hash of the recompiled file.
+
+1. (Preferred) Render a template that uses the script in a browser; a console error should give you the hash of the recompiled file.
+2. Run `cat FILENAME.js | openssl dgst -sha512 -binary | openssl base64 -A` on each. Note -- GEF UI references Portal UI's `govukFrontend.js`
 
 ## Linting :mag_right:
 
