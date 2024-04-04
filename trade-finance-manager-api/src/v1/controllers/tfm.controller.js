@@ -1,5 +1,6 @@
 const activity = require('../helpers/activity');
 const api = require('../api');
+const { generateSystemUserInformation } = require('../helpers/generateUserInformation');
 
 const updateAcbs = async (taskOutput) => {
   const { ...dealAcbs } = taskOutput;
@@ -12,7 +13,7 @@ const updateAcbs = async (taskOutput) => {
     },
   };
 
-  return api.updateDeal(taskOutput.portalDealId, acbsUpdate, undefined, undefined, { isSystemUpdate: true });
+  return api.updateDeal({ dealId: taskOutput.portalDealId, dealUpdate: acbsUpdate, userInformation: generateSystemUserInformation() });
 };
 exports.updateAcbs = updateAcbs;
 

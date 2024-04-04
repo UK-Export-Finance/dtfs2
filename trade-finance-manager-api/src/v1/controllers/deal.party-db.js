@@ -1,4 +1,5 @@
 const api = require('../api');
+const { generatePortalUserInformation } = require('../helpers/generateUserInformation');
 
 /**
  * Gets company information from Party URN
@@ -48,7 +49,7 @@ const identifyDealParties = (deal) => ({
   hasAgent: Boolean(deal.eligibility && deal.eligibility.agentName),
 });
 
-const addPartyUrns = async (deal, sessionUser) => {
+const addPartyUrns = async (deal, sessionPortalUser) => {
   if (!deal) {
     return false;
   }
@@ -81,7 +82,7 @@ const addPartyUrns = async (deal, sessionUser) => {
     },
   };
 
-  const updatedDeal = await api.updateDeal(deal._id, dealUpdate, sessionUser);
+  const updatedDeal = await api.updateDeal({ dealId: deal._id, dealUpdate, userInformation: generatePortalUserInformation(sessionPortalUser._id) });
 
   return {
     ...deal,

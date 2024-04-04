@@ -66,7 +66,7 @@ describe('assignGroupTasksToOneUser', () => {
 
   it('should throw an error if update deal fails', async () => {
     when(api.updateDeal)
-      .calledWith(expect.anything(), expect.anything(), expect.anything(), expect.anything())
+      .calledWith(expect.anything())
       .mockRejectedValue(new Error({ status: 500, message: 'test error message' }));
 
     mockFindOneDeal();

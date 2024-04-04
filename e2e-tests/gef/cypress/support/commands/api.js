@@ -222,7 +222,7 @@ const addUnderwriterCommentToTfm = (dealId, underwriterComment) =>
     .request({
       url: `${centralApiUrl()}/v1/tfm/deals/${dealId}`,
       method: 'put',
-      body: { dealUpdate: underwriterComment, user: UNDERWRITER_1_WITH_MOCK_ID },
+      body: { dealUpdate: underwriterComment, userInformation: { userType: 'tfm', id: UNDERWRITER_1_WITH_MOCK_ID._id } },
       headers,
     })
     .then((resp) => {

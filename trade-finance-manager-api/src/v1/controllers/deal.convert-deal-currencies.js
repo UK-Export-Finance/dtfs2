@@ -1,6 +1,7 @@
 const api = require('../api');
+const { generatePortalUserInformation } = require('../helpers/generateUserInformation');
 
-const convertDealCurrencies = async (deal, sessionUser) => {
+const convertDealCurrencies = async (deal, sessionPortalUser) => {
   if (!deal) {
     return false;
   }
@@ -42,7 +43,7 @@ const convertDealCurrencies = async (deal, sessionUser) => {
       };
     }
 
-    const updatedDeal = await api.updateDeal(dealId, dealUpdate, sessionUser);
+    const updatedDeal = await api.updateDeal({ dealId, dealUpdate, userInformation: generatePortalUserInformation(sessionPortalUser._id) });
 
     return {
       ...deal,

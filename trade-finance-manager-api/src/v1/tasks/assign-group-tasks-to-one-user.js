@@ -1,4 +1,5 @@
 const api = require('../api');
+const { generateTfmUserInformation } = require('../helpers/generateUserInformation');
 const getAssigneeFullName = require('../helpers/get-assignee-full-name');
 
 /**
@@ -8,7 +9,7 @@ const getAssigneeFullName = require('../helpers/get-assignee-full-name');
  * @param {String} user ID
  * @returns {Array} Updated tasks
  */
-const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId, sessionUser) => {
+const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId, sessionTfmUser) => {
   const deal = await api.findOneDeal(dealId);
 
   if (!deal) {
@@ -57,8 +58,13 @@ const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId, se
     },
   };
 
-  await api.updateDeal(dealId, tfmDealUpdate, sessionUser, (status, message) => {
-    throw new Error({ status, message });
+  await api.updateDeal({
+    dealId,
+    dealUpdate: tfmDealUpdate,
+    userInformation: generateTfmUserInformation(sessionTfmUser._id),
+    onError: (status, message) => {
+      throw new Error({ status, message });
+    },
   });
 
   return modifiedTasks;

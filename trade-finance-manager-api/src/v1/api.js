@@ -197,13 +197,12 @@ const findOneDeal = async (dealId) => {
  * @param {(Error: ErrorParam) => any} onError 
  * @returns updated deal on success, or `onError({ status, message })` on failure
  */
-const updateDeal = async (
+const updateDeal = async ({
   dealId,
   dealUpdate,
-  sessionUser,
+  userInformation,
   onError = ({ status, message }) => ({ status, data: message }),
-  options = undefined,
-) => {
+}) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -218,8 +217,7 @@ const updateDeal = async (
       headers: headers.central,
       data: {
         dealUpdate,
-        user: sessionUser,
-        options,
+        userInformation,
       },
     });
 

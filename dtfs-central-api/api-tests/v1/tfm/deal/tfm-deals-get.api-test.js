@@ -3,6 +3,7 @@ const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
+const { generateTfmUserInformation } = require('../../../helpers/generateUserInformation');
 
 const newDeal = (dealOverrides) => ({
   additionalRefName: 'mock name',
@@ -54,13 +55,13 @@ const createAndSubmitDeals = async (deals) => {
 };
 module.exports.createAndSubmitDeals = createAndSubmitDeals;
 
-const updateDealsTfm = async (dealsTfmUpdate, user) => {
+const updateDealsTfm = async (dealsTfmUpdate, sessionTfmUser) => {
   const result = await Promise.all(dealsTfmUpdate.map(async (deal) => {
     const updateResponse = await api.put({
       dealUpdate: {
         tfm: deal.tfm,
       },
-      user,
+      userInformation: generateTfmUserInformation(sessionTfmUser._id),
     }).to(`/v1/tfm/deals/${deal._id}`);
 
     expect(updateResponse.status).toEqual(200);

@@ -118,7 +118,7 @@ describe('/v1/deals', () => {
               partyUrn: '',
             },
           },
-          tasks: createDealTasks(body),
+          tasks: createDealTasks(body, MOCK_PORTAL_USERS[0]),
         },
       };
 
@@ -139,7 +139,7 @@ describe('/v1/deals', () => {
               partyUrn: '',
             },
           },
-          tasks: createDealTasks(body),
+          tasks: createDealTasks(body, MOCK_PORTAL_USERS[0]),
         },
       };
 
@@ -161,7 +161,7 @@ describe('/v1/deals', () => {
               partyUrn: 'testPartyUrn',
             },
           },
-          tasks: createDealTasks(body),
+          tasks: createDealTasks(body, MOCK_PORTAL_USERS[0]),
         },
       };
 

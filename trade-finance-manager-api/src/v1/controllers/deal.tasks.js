@@ -1,6 +1,7 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const { createTasks } = require('../helpers/create-tasks');
+const { generatePortalUserInformation } = require('../helpers/generateUserInformation');
 
 /**
  * Check if the "create or match parties" task should be created
@@ -77,9 +78,10 @@ const listAdditionalTasks = (deal) => {
 /**
  * Get additional/conditional tasks that should be added to tasks, depending on deal data.
  * @param {Object} deal
+ * @param {object} sessionPortalUser - logged in portal user
  * @returns {Object} deal with tasks
  */
-const createDealTasks = async (deal, sessionUser) => {
+const createDealTasks = async (deal, sessionPortalUser) => {
   if (!deal) {
     return false;
   }
@@ -97,7 +99,7 @@ const createDealTasks = async (deal, sessionUser) => {
     },
   };
 
-  const updatedDeal = await api.updateDeal(dealId, dealUpdate, sessionUser);
+  const updatedDeal = await api.updateDeal({ dealId, dealUpdate, userInformation: generatePortalUserInformation(sessionPortalUser._id) });
 
   return {
     ...deal,

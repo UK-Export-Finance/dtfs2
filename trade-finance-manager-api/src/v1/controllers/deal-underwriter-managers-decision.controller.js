@@ -4,6 +4,7 @@ const CONSTANTS = require('../../constants');
 const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');
 const sendDealDecisionEmail = require('./send-deal-decision-email');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
+const { generateTfmUserInformation } = require('../helpers/generateUserInformation');
 
 const addUnderwriterManagersDecisionToDeal = ({
   dealId,
@@ -11,7 +12,7 @@ const addUnderwriterManagersDecisionToDeal = ({
   comments,
   internalComments,
   userFullName,
-  sessionUser,
+  sessionTfmUser,
 }) => {
   const managerDecisionUpdate = {
     tfm: {
@@ -25,14 +26,14 @@ const addUnderwriterManagersDecisionToDeal = ({
       stage: decision,
     },
   };
-  return api.updateDeal(
+  return api.updateDeal({
     dealId,
-    managerDecisionUpdate,
-    sessionUser,
-    (status, message) => {
+    dealUpdate: managerDecisionUpdate,
+    userInformation: generateTfmUserInformation(sessionTfmUser._id),
+    onError: (status, message) => {
       throw new Error(`Updating the deal with dealId ${dealId} failed with status ${status} and message: ${message}`);
     }
-  );
+  });
 };
 
 const updatePortalDealStatusToMatchDecision = ({
@@ -111,7 +112,7 @@ const updateUnderwriterManagersDecision = async (req, res) => {
       userFullName,
     } = extractDecisionFromRequest(req);
 
-    const updatedDeal = await addUnderwriterManagersDecisionToDeal({ dealId, decision, comments, internalComments, userFullName, sessionUser: req.user });
+    const updatedDeal = await addUnderwriterManagersDecisionToDeal({ dealId, decision, comments, internalComments, userFullName, sessionTfmUser: req.user });
     const mappedDeal = mapSubmittedDeal(updatedDeal);
     const { dealType, submissionType } = mappedDeal;
 

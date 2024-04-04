@@ -9,10 +9,11 @@ const CONSTANTS = require('../../constants');
 const MOCK_DEAL_MIA = require('../__mocks__/mock-deal-MIA-submitted');
 const { createTasks } = require('../helpers/create-tasks');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
-const MOCK_USERS = require('../__mocks__/mock-users')
+const { MOCK_PORTAL_USERS } = require('../__mocks__/mock-portal-users');
+const { generatePortalUserInformation } = require("../helpers/generateUserInformation")
 
 describe('createDealTasks', () => {
-  const updateDealSpy = jest.fn((dealId, dealUpdate) => Promise.resolve(dealUpdate));
+  const updateDealSpy = jest.fn(({ dealUpdate }) => Promise.resolve(dealUpdate));
 
   let mockSubmittedDeal;
   let mockDealEligibilityCriteria11False;
@@ -184,7 +185,7 @@ describe('createDealTasks', () => {
     });
 
     it('should call api.updateDeal and return updated deal', async () => {
-      const result = await createDealTasks(mockSubmittedDeal, MOCK_USERS[0]);
+      const result = await createDealTasks(mockSubmittedDeal, MOCK_PORTAL_USERS[0]);
 
       const expectedTasks = createTasks(
         mockSubmittedDeal.submissionType,
@@ -196,11 +197,11 @@ describe('createDealTasks', () => {
         tasks: expectedTasks,
       };
 
-      expect(updateDealSpy).toHaveBeenCalledWith(
-        mockSubmittedDeal._id,
-        { tfm: expectedDealTfm },
-        MOCK_USERS[0],
-      );
+      expect(updateDealSpy).toHaveBeenCalledWith({
+        dealId: mockSubmittedDeal._id,
+        dealUpdate: { tfm: expectedDealTfm },
+        userInformation: generatePortalUserInformation(MOCK_PORTAL_USERS[0]._id),
+      });
 
       const expectedDealReturn = {
         ...mockSubmittedDeal,

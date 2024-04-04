@@ -8,6 +8,7 @@ const dealReducer = require('../rest-mappings/deal');
 const { dealsLightReducer } = require('../rest-mappings/deals-light');
 const { filterTasks } = require('../rest-mappings/filters/filterTasks');
 const { filterActivities } = require('../rest-mappings/filters/filterActivities');
+const { generateTfmUserInformation } = require('../helpers/generateUserInformation');
 
 const getDeal = async (req, res) => {
   try {
@@ -111,7 +112,7 @@ const updateDeal = async (req, res) => {
   const { dealId } = req.params;
   const dealUpdate = req.body;
   try {
-    const updatedDeal = await api.updateDeal(dealId, dealUpdate, req.user);
+    const updatedDeal = await api.updateDeal({ dealId, dealUpdate, userInformation: generateTfmUserInformation(req.user._id) });
     return res.status(200).send({
       updateDeal: updatedDeal.tfm,
     });
@@ -147,7 +148,7 @@ const canDealBeSubmittedToACBS = (submissionType) => {
 };
 exports.canDealBeSubmittedToACBS = canDealBeSubmittedToACBS;
 
-const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest, sessionUser) => {
+const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest, sessionTfmUser) => {
   const { userId } = leadUnderwriterUpdateRequest;
   const leadUnderwriterUpdate = {
     tfm: {
@@ -155,18 +156,18 @@ const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest, se
     },
   };
 
-  const updatedDealOrError = await api.updateDeal(
+  const updatedDealOrError = await api.updateDeal({
     dealId,
-    leadUnderwriterUpdate,
-    sessionUser,
-    (status, message) => {
+    dealUpdate: leadUnderwriterUpdate,
+    userInformation: generateTfmUserInformation(sessionTfmUser._id),
+    onError: (status, message) => {
       throw new Error(`Updating the deal with dealId ${dealId} failed with status ${status} and message: ${message}`);
     }
-  );
+});
 
   const taskGroupsToUpdate = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
 
-  await assignGroupTasksToOneUser(dealId, taskGroupsToUpdate, userId, sessionUser);
+  await assignGroupTasksToOneUser(dealId, taskGroupsToUpdate, userId, sessionTfmUser);
 
   return updatedDealOrError.tfm;
 };

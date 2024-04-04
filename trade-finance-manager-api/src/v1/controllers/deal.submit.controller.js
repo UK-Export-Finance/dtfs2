@@ -20,6 +20,7 @@ const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-
 const { sendDealSubmitEmails, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const { dealHasAllUkefIds, dealHasAllValidUkefIds } = require('../helpers/dealHasAllUkefIds');
+const { generatePortalUserInformation } = require('../helpers/generateUserInformation');
 
 /**
  * Retrieves a deal from the portal based on the provided deal ID and deal type.
@@ -112,10 +113,10 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
        * Update the deal with all the above modifications
        * Note: at the time of writing, some functions above update the deal, others do not.
        */
-      return api.updateDeal(dealId, updatedDealWithTasks, checker);
+      return api.updateDeal({ dealId, dealUpdate: updatedDealWithTasks, userInformation: generatePortalUserInformation(checker._id) });
     }
 
-    return api.updateDeal(dealId, updatedDealWithCreateEstore, checker);
+    return api.updateDeal({ dealId, dealUpdate: updatedDealWithCreateEstore, userInformation: generatePortalUserInformation(checker._id) });
   }
 
   if (dealHasBeenResubmit) {
@@ -191,9 +192,9 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       console.info('TFM deal %s stage has been updated to %s', dealId, updatedDealStage);
     }
 
-    return api.updateDeal(dealId, updatedDeal, checker);
+    return api.updateDeal({ dealId, dealUpdate: updatedDeal, userInformation: generatePortalUserInformation(checker._id) });
   }
-  return api.updateDeal(dealId, submittedDeal, checker);
+  return api.updateDeal({ dealId, dealUpdate: submittedDeal, userInformation: generatePortalUserInformation(checker._id) });
 };
 
 exports.submitDealAfterUkefIds = submitDealAfterUkefIds;

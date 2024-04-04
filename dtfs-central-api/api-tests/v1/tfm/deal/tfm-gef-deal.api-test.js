@@ -4,6 +4,7 @@ const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
+const { generateTfmUserInformation } = require('../../../helpers/generateUserInformation');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
@@ -66,7 +67,7 @@ describe('/v1/tfm/deal/:id', () => {
       // add some dummy data to deal.tfm
       await api.put({
         dealUpdate: mockTfm,
-        user: MOCK_TFM_USER
+        userInformation: generateTfmUserInformation(MOCK_TFM_USER._id),
       }).to(`/v1/tfm/deals/${dealId}`);
 
       const snapshotUpdate = {

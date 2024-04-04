@@ -21,6 +21,7 @@ const MOCK_DEAL_MIA_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-MIA
 
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
 const MOCK_TEAMS = require('../../../src/v1/__mocks__/mock-teams');
+const { MOCK_PORTAL_USERS } = require('../../../src/v1/__mocks__/mock-portal-users');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
@@ -59,7 +60,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const taskCreation = await createDealTasks(submittedDeal);
+          const taskCreation = await createDealTasks(submittedDeal, MOCK_PORTAL_USERS[0]);
 
           const expected = taskCreation.tfm.tasks;
           expected[0].groupTasks[0].emailSent = true;
@@ -102,7 +103,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const taskCreation = await createDealTasks(submittedDeal);
+          const taskCreation = await createDealTasks(submittedDeal, MOCK_PORTAL_USERS[0]);
 
           const expected = taskCreation.tfm.tasks;
           expected[0].groupTasks[0].emailSent = true;

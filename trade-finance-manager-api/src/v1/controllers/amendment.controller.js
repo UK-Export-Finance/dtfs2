@@ -17,6 +17,7 @@ const {
   addLatestAmendmentDates,
 } = require('../helpers/amendment.helpers');
 const CONSTANTS = require('../../constants');
+const { generateTfmUserInformation } = require('../helpers/generateUserInformation');
 
 const sendAmendmentEmail = async (amendmentId, facilityId) => {
   try {
@@ -57,7 +58,7 @@ const sendAmendmentEmail = async (amendmentId, facilityId) => {
 };
 
 // function to update tfm deals lastUpdated once amendment complete
-const updateTFMDealLastUpdated = async (amendmentId, facilityId) => {
+const updateTFMDealLastUpdated = async (amendmentId, facilityId, sessionTfmUser) => {
   const amendment = await api.getAmendmentById(facilityId, amendmentId);
 
   if (amendment?.dealId) {
@@ -69,7 +70,7 @@ const updateTFMDealLastUpdated = async (amendmentId, facilityId) => {
     };
 
     try {
-      return api.updateDeal(dealId, payload);
+      return api.updateDeal({ dealId, dealUpdate: payload, userInformation: generateTfmUserInformation(sessionTfmUser._id) });
     } catch (error) {
       console.error('Error updated tfm deal lastUpdated - amendment completed %o', error);
       return null;
@@ -227,7 +228,7 @@ const updateFacilityAmendment = async (req, res) => {
 
       // if facility successfully updated and completed, then adds tfm lastUpdated and tfm object in amendments
       if (createdAmendment && tfmLastUpdated) {
-        await updateTFMDealLastUpdated(amendmentId, facilityId);
+        await updateTFMDealLastUpdated(amendmentId, facilityId, req.user);
         await createAmendmentTFMObject(amendmentId, facilityId);
       }
 

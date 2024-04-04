@@ -1,4 +1,5 @@
 const api = require('../api');
+const { generateTfmUserInformation } = require('../helpers/generateUserInformation');
 const { canDealBeSubmittedToACBS, submitACBSIfAllPartiesHaveUrn } = require('./deal.controller');
 
 const updateParty = async (req, res) => {
@@ -10,7 +11,7 @@ const updateParty = async (req, res) => {
   };
 
   try {
-    const updatedDeal = await api.updateDeal(dealId, partyUpdate, req.user);
+    const updatedDeal = await api.updateDeal({ dealId, dealUpdate: partyUpdate, userInformation: generateTfmUserInformation(req.user._id) });
 
     if (updatedDeal.dealSnapshot) {
       if (canDealBeSubmittedToACBS(updatedDeal.dealSnapshot.submissionType)) {
