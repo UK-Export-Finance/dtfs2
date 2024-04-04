@@ -53,7 +53,7 @@ exports.bankIdValidation = [bankIdValidation];
 
 exports.mongoIdValidation = [mongoIdValidation];
 
-exports.sqlIdValidation = [sqlIdValidation];
+exports.sqlIdValidation = sqlIdValidation;
 
 exports.updateReportStatusPayloadValidation = updateReportStatusPayloadValidation;
 

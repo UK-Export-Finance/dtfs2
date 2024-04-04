@@ -16,7 +16,7 @@ exports.mongoIdValidation = [mongoIdValidation];
  */
 const sqlIdValidation = (paramName) => param(paramName).isInt({ min: 0 }).withMessage(`Invalid '${paramName}' path param provided`);
 
-exports.sqlIdValidation = [sqlIdValidation];
+exports.sqlIdValidation = sqlIdValidation;
 
 /**
  * Validates that specified route or query parameters are strings in ISO month format 'yyyy-MM'
