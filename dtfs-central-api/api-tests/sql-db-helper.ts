@@ -1,7 +1,12 @@
 import { AzureFileInfoEntity, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 
-const initialize = async () => await SqlDbDataSource.initialize();
+const initialize = async () => {
+  if (SqlDbDataSource.isInitialized) {
+    return SqlDbDataSource;
+  }
+  return await SqlDbDataSource.initialize();
+};
 
 type SqlTableName = 'UtilisationReport' | 'FeeRecord' | 'AzureFileInfo';
 
