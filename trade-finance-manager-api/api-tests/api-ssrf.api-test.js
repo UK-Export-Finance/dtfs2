@@ -1,5 +1,6 @@
 const axios = require('axios');
 const MockAdapter = require('axios-mock-adapter');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails')
 const { MOCK_TFM_SESSION_USER } = require('../src/v1/__mocks__/mock-tfm-session-user');
 
 const api = jest.requireActual('../src/v1/api');
@@ -368,7 +369,7 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
-      const response = await api.updateFacility({ facilityId: urlTraversal, tfmUpdate: 'mock update', sessionTfmUser: MOCK_TFM_SESSION_USER });
+      const response = await api.updateFacility({ facilityId: urlTraversal, tfmUpdate: 'mock update', auditDetails: generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id) });
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -377,7 +378,7 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
-      const response = await api.updateFacility({ facilityId: localIp, tfmUpdate: 'mock update', sessionTfmUser: MOCK_TFM_SESSION_USER });
+      const response = await api.updateFacility({ facilityId: localIp, tfmUpdate: 'mock update', auditDetails: generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id) });
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -385,7 +386,7 @@ describe('API is protected against SSRF attacks', () => {
     it('Makes an axios request when the facility id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
-      const response = await api.updateFacility({ facilityId: validFacilityId, tfmUpdate: 'mock update', sessionTfmUser: MOCK_TFM_SESSION_USER });
+      const response = await api.updateFacility({ facilityId: validFacilityId, tfmUpdate: 'mock update', auditDetails: generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id) });
 
       expect(response).toEqual(mockResponse);
     });

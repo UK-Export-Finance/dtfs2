@@ -86,7 +86,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
     const dealWithTfmData = await addTfmDealData(updatedMappedDeal, auditDetails);
     const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData, auditDetails);
     const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn, auditDetails);
-    const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions, checker);
+    const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions, auditDetails);
     const updatedDealWithCreateEstore = await createEstoreSite(updatedDealWithUpdatedFacilities);
 
     if (updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
@@ -150,7 +150,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
     mappedDeal.status = status;
 
     // Update issued facilities
-    const updatedDeal = await updatedIssuedFacilities(mappedDeal, checker);
+    const updatedDeal = await updatedIssuedFacilities(mappedDeal, auditDetails);
     /**
      * Current requirement only allows AIN & MIN deals to be send to ACBS
      * This call UPDATES facility record by updating their stage from

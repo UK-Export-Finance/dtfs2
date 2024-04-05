@@ -1,10 +1,7 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const {
-  generateTfmUserAuditDetails,
-  generateSystemAuditDetails,
-  generatePortalUserAuditDetails,
-} = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
+const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/validateAuditDetails');
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDatabaseRecord');
 const { findOneFacility } = require('./tfm-get-facility.controller');
 const db = require('../../../../drivers/db-client');
 const { DB_COLLECTIONS } = require('../../../../constants');
@@ -15,23 +12,14 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateFacility = async ({ facilityId, tfmUpdate, sessionPortalUser, sessionTfmUser, isSystemUpdate }) => {
+const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
   const collection = await db.getCollection(DB_COLLECTIONS.TFM_FACILITIES);
-
-  let auditDetails = {};
-  if (isSystemUpdate) {
-    auditDetails = generateSystemAuditDetails();
-  } else if (sessionTfmUser) {
-    auditDetails = generateTfmUserAuditDetails(sessionTfmUser._id);
-  } else {
-    auditDetails = generatePortalUserAuditDetails(sessionPortalUser._id);
-  }
 
   const update = {
     tfm: {
       ...tfmUpdate,
     },
-    auditDetails,
+    auditDetails: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, $.flatten(withoutId(update)), {
@@ -57,18 +45,18 @@ exports.updateFacilityPut = async (req, res) => {
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
 
-  const { tfmUpdate, sessionPortalUser, sessionTfmUser, isSystemUpdate } = req.body;
+  const { tfmUpdate, auditDetails } = req.body;
 
-  if (!isSystemUpdate && !ObjectId.isValid(sessionPortalUser?._id) && !ObjectId.isValid(sessionTfmUser?._id)) {
-    return res.status(400).send({ status: 400, message: 'Invalid user' });
+  try {
+    validateAuditDetails(auditDetails);
+  } catch ({ message }) {
+    return res.status(400).send({ status: 400, message: `Invalid user information - ${message}` });
   }
 
   const updatedFacility = await updateFacility({
     facilityId,
     tfmUpdate,
-    sessionPortalUser,
-    sessionTfmUser,
-    isSystemUpdate,
+    auditDetails,
   });
 
   return res.status(200).json(updatedFacility);

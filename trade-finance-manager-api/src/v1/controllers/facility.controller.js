@@ -1,5 +1,6 @@
 const { format, getUnixTime } = require('date-fns');
 const commaNumber = require('comma-number');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails')
 const api = require('../api');
 const { findOneTfmDeal } = require('./deal.controller');
 const facilityMapper = require('../rest-mappings/facility');
@@ -91,7 +92,7 @@ const updateFacility = async (req, res) => {
   const { facilityId } = req.params;
   const facilityUpdate = req.body;
   try {
-    const updatedFacility = await api.updateFacility({ facilityId, tfmUpdate: facilityUpdate, sessionTfmUser: req.user});
+    const updatedFacility = await api.updateFacility({ facilityId, tfmUpdate: facilityUpdate, auditDetails: generateTfmAuditDetails(req.user._id)});
     return res.status(200).send({
       updateFacility: updatedFacility.tfm
     });

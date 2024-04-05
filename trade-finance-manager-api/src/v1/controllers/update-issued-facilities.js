@@ -6,7 +6,7 @@ const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
 const { calculateGefFacilityFeeRecord } = require('../helpers/calculate-gef-facility-fee-record');
 const { sendIssuedFacilitiesReceivedEmail } = require('./send-issued-facilities-received-email');
 
-const updatedIssuedFacilities = async (deal, sessionPortalUser) => {
+const updatedIssuedFacilities = async (deal, auditDetails) => {
   // Create deep clone
   const modifiedDeal = JSON.parse(JSON.stringify(deal));
 
@@ -111,7 +111,7 @@ const updatedIssuedFacilities = async (deal, sessionPortalUser) => {
        * Add the updated properties to the returned facility
        * to retain flat, generic facility mapping used in deal submission calls.
        * */
-        const updateFacilityResponse = await api.updateFacility({ facilityId, tfmUpdate: facilityUpdate, sessionPortalUser });
+        const updateFacilityResponse = await api.updateFacility({ facilityId, tfmUpdate: facilityUpdate, auditDetails });
         facility.tfm = updateFacilityResponse.tfm;
         updatedFacilities.push(facility);
       }

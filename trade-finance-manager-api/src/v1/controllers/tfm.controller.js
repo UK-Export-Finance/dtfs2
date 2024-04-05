@@ -18,7 +18,7 @@ const updateAcbs = async (taskOutput) => {
 exports.updateAcbs = updateAcbs;
 
 const updateFacilityAcbs = async (facilityId, acbs) => {
-  const updatedFacility = await api.updateFacility({ facilityId, tfmUpdate: { acbs }, isSystemUpdate: true });
+  const updatedFacility = await api.updateFacility({ facilityId, tfmUpdate: { acbs }, auditDetails: generateSystemAuditDetails() });
   // TFM - Update Facility Activity : MVP2
   return updatedFacility.tfm;
 };
