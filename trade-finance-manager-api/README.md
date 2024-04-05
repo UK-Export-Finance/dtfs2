@@ -13,7 +13,7 @@ To run the TFM API locally, use the following command:
 npm run start
 ```
 
-Alternatively, you can start all services from the root directory using `npm run start`.
+Alternatively, you can start all services from the project's root directory by running `npm run start`.
 
 ## Testing :test_tube:
 

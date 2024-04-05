@@ -37,7 +37,7 @@
     "load": "node utils/mock-data-loader/re-insert-mocks.js",
     "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color '**/*'",
     "start": "docker compose up --build",
-    "start:detach": "docker compose up --build -d",
+    "start:detach": "npm run dev -- --detach",
     "stop": "docker compose down",
     "type-check:all": "npm run type-check --workspaces --if-present",
     "update:all": "npm update --save --if-present"
