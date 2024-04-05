@@ -16,7 +16,7 @@ const getDueReportPeriodsByBankId = async (req, res) => {
 
     return res.status(200).send(dueReportPeriods);
   } catch (error) {
-    console.error('Cannot get due reports %s', error);
+    console.error('Cannot get due reports %o', error);
     return res.status(error.response?.status ?? 500).send({ message: 'Failed to get due reports' });
   }
 };

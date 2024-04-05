@@ -122,7 +122,7 @@ const updateUnderwriterManagersDecision = async (req, res) => {
 
     return res.status(200).send();
   } catch (error) {
-    console.error('Unable to update the underwriter manager\'s decision: %O', error);
+    console.error('Unable to update the underwriter manager\'s decision %o', error);
     return res.status(500).send({ data: 'Unable to update the underwriter manager\'s decision' });
   }
 };

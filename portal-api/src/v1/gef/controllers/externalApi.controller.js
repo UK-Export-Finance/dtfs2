@@ -85,7 +85,7 @@ exports.getByRegistrationNumber = async (req, res) => {
 
     return res.status(200).send(mappedData);
   } catch (error) {
-    console.error('getByRegistrationNumber Error %s', error?.response?.data);
+    console.error('getByRegistrationNumber Error %o', error?.response?.data);
     const { status, response } = companiesHouseError(error);
     return res.status(status).send(response);
   }

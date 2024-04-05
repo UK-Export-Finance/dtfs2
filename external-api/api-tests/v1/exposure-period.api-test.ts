@@ -1,6 +1,9 @@
 import { app } from '../../src/createApp';
 import { api } from '../api';
+import MockAdapter from 'axios-mock-adapter';
+import axios, { HttpStatusCode } from 'axios';
 
+const { APIM_MDM_URL } = process.env;
 const { get } = api(app);
 
 const mockResponse = {
@@ -13,19 +16,10 @@ const mockResponse = {
 const mockStartDate = '2017-07-04';
 const mockEndDate = '2018-07-04';
 
-jest.mock('axios', () =>
-  jest.fn((args: any) => {
-    const { url } = args;
-
-    if (url === `${process.env.APIM_MDM_URL}exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=BS`) {
-      return Promise.resolve(mockResponse);
-    }
-
-    if (url === `${process.env.APIM_MDM_URL}exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=EW`) {
-      return Promise.resolve(mockResponse);
-    }
-  }),
-);
+// Mock Axios
+const axiosMock = new MockAdapter(axios);
+axiosMock.onGet(`${APIM_MDM_URL}exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=BS`).reply(HttpStatusCode.Ok, mockResponse.data);
+axiosMock.onGet(`${APIM_MDM_URL}exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=EW`).reply(HttpStatusCode.Ok, mockResponse.data);
 
 describe('/exposure-period', () => {
   describe('GET /v1/exposure-period/:startDate/:endDate/:facilityType', () => {
@@ -61,7 +55,7 @@ describe('/exposure-period', () => {
     ];
 
     describe('when dates are invalid', () => {
-      test.each(invalidDateTestCases)('returns a 400 if you provide invalid dates: %s, %s', async (startDate, endDate) => {
+      test.each(invalidDateTestCases)('returns a 400 if you provide invalid dates %s, %s', async (startDate, endDate) => {
         const { status, body } = await get(`/exposure-period/${startDate}/${endDate}/Loan`);
 
         expect(status).toEqual(400);

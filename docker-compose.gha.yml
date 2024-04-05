@@ -40,7 +40,7 @@ services:
       - MONGODB_URI
       - DTFS_CENTRAL_API_URL=http://localhost:5005
       - TZ=Europe/London
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
@@ -51,6 +51,7 @@ services:
       - AUDIT_API_PASSWORD
       - CHANGE_STREAM_ENABLED
       - UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
+      - ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE
     entrypoint: npx ts-node dtfs-central-api/src/index.ts
 
   trade-finance-manager-ui:
@@ -76,11 +77,11 @@ services:
       - TFM_API_URL=http://trade-finance-manager-api:5004
       - EXTERNAL_API_URL=http://external-api:5002
       - UKEF_TFM_API_SYSTEM_KEY
-      - ESTORE_URL=${ESTORE_URL}
+      - ESTORE_URL
       - REDIS_HOSTNAME=redis
       - SESSION_SECRET
       - TZ=Europe/London
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
 
@@ -122,7 +123,7 @@ services:
       - JWT_SIGNING_KEY=${JWT_SIGNING_KEY}
       - TZ=Europe/London
       - UKEF_INTERNAL_NOTIFICATION=test
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
     entrypoint: npx ts-node trade-finance-manager-api/src/index.ts
 
@@ -154,7 +155,7 @@ services:
       - EXTERNAL_API_KEY
       - SESSION_SECRET
       - TZ=Europe/London
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV
       - REDIS_HOSTNAME=redis
       - RATE_LIMIT_THRESHOLD
       - CLAMAV_PORT=3310
@@ -200,7 +201,7 @@ services:
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - TFM_API_URL=http://trade-finance-manager-api:5004
       - TZ=Europe/London
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - PDC_INPUTTERS_EMAIL_RECIPIENT
       - UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE
@@ -249,8 +250,9 @@ services:
       - MONGODB_URI
       - EXTERNAL_API_URL=http://external-api:5002
       - TZ=Europe/London
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
+      - ESTORE_CRON_MANAGER_SCHEDULE
     entrypoint: npx nodemon external-api/src/index.ts -L
 
   gef-ui:
@@ -276,7 +278,7 @@ services:
       - EXTERNAL_API_URL=http://external-api:5002
       - SESSION_SECRET
       - TZ=Europe/London
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV
       - REDIS_HOSTNAME=redis
       - PORTAL_API_KEY
       - TFM_API_KEY

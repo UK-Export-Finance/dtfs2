@@ -8,7 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
-
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
@@ -23,7 +23,7 @@ const createCodeValueTransaction = async (context) => {
     const missingMandatory = findMissingMandatory(acbsCodeValueTransactionInput, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();
@@ -55,9 +55,11 @@ const createCodeValueTransaction = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Error creating facility code value transaction record: %s', error);
-    throw new Error('Error creating facility code value transaction record %s', error);
+    console.error('Error creating facility code value transaction record %o', error);
+    throw new Error(`Error creating facility code value transaction record ${error}`);
   }
 };
 
-module.exports = createCodeValueTransaction;
+df.app.activity('create-code-value-transation', {
+  handler: createCodeValueTransaction,
+});

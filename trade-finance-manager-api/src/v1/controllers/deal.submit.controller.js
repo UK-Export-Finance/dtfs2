@@ -11,7 +11,7 @@ const { updatedIssuedFacilities } = require('./update-issued-facilities');
 const { updatePortalDealStatus } = require('./update-portal-deal-status');
 const CONSTANTS = require('../../constants');
 const api = require('../api');
-const { createEstoreFolders } = require('./estore.controller');
+const { createEstoreSite } = require('./estore.controller');
 const acbsController = require('./acbs.controller');
 const dealController = require('./deal.controller');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
@@ -85,7 +85,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
     const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData);
     const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn);
     const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions);
-    const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
+    const updatedDealWithCreateEstore = await createEstoreSite(updatedDealWithUpdatedFacilities);
 
     if (updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
@@ -218,7 +218,7 @@ const submitDealBeforeUkefIds = async (dealId, dealType, checker) => {
     const response = await api.submitDeal(dealType, dealId);
 
     if (!response) {
-      throw new Error('Unable to submit deal %s to TFM', dealId);
+      throw new Error(`Unable to submit deal ${dealId} to TFM`);
     }
 
     return submitDealAfterUkefIds(dealId, dealType, checker);
