@@ -44,7 +44,6 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     cy.task(NODE_TASKS.GET_ALL_BANKS).then((getAllBanksResult) => {
       getAllBanksResult
         .filter((bank) => bank.isVisibleInTfmUtilisationReports)
-        .filter((bank) => bank.id !== '10') // TODO FN-1601 remove after TFM is working for quarterly banks
         .forEach((bank) => {
           visibleBanks.push(bank);
         });

@@ -8,7 +8,6 @@ import { IsoMonthStamp, MonthAndYear, BankReportPeriodSchedule, ReportPeriod } f
  * @returns The report period end
  */
 export const getReportPeriodEndForSubmissionMonth = (submissionMonth: IsoMonthStamp): MonthAndYear => {
-  // TODO FN-1456 - calculate report period start month based on bank's report period schedule
   const reportPeriodDate = subMonths(new Date(submissionMonth), 1);
   return {
     month: getOneIndexedMonth(reportPeriodDate),
