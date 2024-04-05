@@ -1,3 +1,24 @@
+# This YAML configuration defines a GitHub Actions workflow named "PR" designed to analyse pull requests
+# for staleness and take action accordingly. Here's a breakdown of the components:
+#
+# name: The name of the workflow.
+# run-name: A custom name for the workflow run.
+# on: Specifies when the workflow should run, in this case,
+# it runs on a scheduled basis using a cron expression (00 00 * * * indicates midnight every day).
+# env: Defines environment variables for the workflow, such as the environment and timezone.
+# jobs: Contains one or more jobs that make up the workflow.
+# setup: The first job named "Infrastructure setup" sets up the test infrastructure.
+# It runs on the latest version of Ubuntu and outputs the environment and timezone variables.
+# steps: Contains the steps to be executed within the job.
+# Environment: Displays the environment set.
+# Timezone: Displays the timezone set.
+# stale: The second job named "Stale" identifies stale pull requests. It depends on the completion of the setup job and runs on Ubuntu. It has permissions to write to pull requests.
+# steps: Contains the steps to identify stale pull requests using the actions/stale@v5 action.
+#
+# Identify: Uses the actions/stale@v5 action with parameters to mark pull requests as stale if they have been inactive for a certain number of days and close them if they exceed another threshold.
+# This workflow helps maintain the health of the pull request queue by identifying and managing stale pull requests automatically.
+#
+
 name: PR
 run-name: 🔎 pull request analysis on ${{ github.event.number }}
 
