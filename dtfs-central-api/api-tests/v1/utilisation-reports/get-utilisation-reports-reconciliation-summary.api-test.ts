@@ -4,7 +4,7 @@ import {
   MONGO_DB_COLLECTIONS,
   UtilisationReportEntityMockBuilder,
   getCurrentReportPeriodForBankSchedule,
-  getSubmissionMonthForReportPeriodStart,
+  getSubmissionMonthForReportPeriodEnd,
 } from '@ukef/dtfs2-common';
 import wipeDB from '../../wipeDB';
 import app from '../../../src/createApp';
@@ -57,7 +57,7 @@ describe('/v1/utilisation-reports/reconciliation-summary/:submissionMonth', () =
     it('returns a 200 response with the correct number of associated fee records', async () => {
       // Arrange
       const reportPeriod = getCurrentReportPeriodForBankSchedule(MOCK_BANKS.BARCLAYS.utilisationReportPeriodSchedule);
-      const submissionMonth = getSubmissionMonthForReportPeriodStart(reportPeriod.start);
+      const submissionMonth = getSubmissionMonthForReportPeriodEnd(reportPeriod.end);
 
       await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
