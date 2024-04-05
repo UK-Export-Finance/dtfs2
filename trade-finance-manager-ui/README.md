@@ -17,11 +17,7 @@ To run the TFM UI locally, follow these steps:
 1. Execute `npm run start`.
 2. Visit [http://localhost:5003](http://localhost:5003) in your web browser.
 
-<<<<<<< HEAD
-Alternatively, you can start all services from the root directory using `npm run start`.
-=======
 Alternatively, you can start all services from the project's root directory using `npm run start`.
->>>>>>> release-1.5
 
 ## Login Credentials :key:
 
