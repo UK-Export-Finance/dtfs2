@@ -4,8 +4,9 @@ import {
   getNextReportPeriodForBankSchedule,
   getFormattedReportPeriodWithLongMonth,
   getReportPeriodEndForSubmissionMonth,
-  getSubmissionMonthForReportPeriodEnd,
+  getSubmissionMonthForReportPeriod,
   getFormattedReportPeriodWithShortMonth,
+  getPreviousReportPeriodForBankScheduleByMonth,
 } from './report-period';
 import { OneIndexedMonth, BankReportPeriodSchedule, ReportPeriod } from '../types';
 
@@ -19,12 +20,42 @@ describe('report-period utils', () => {
     });
   });
 
-  describe('getSubmissionMonthForReportPeriodStart', () => {
+  describe('getSubmissionMonthForReportPeriod', () => {
     it.each([
-      { reportPeriodEnd: { month: 1, year: 2024 }, submissionMonth: '2024-02' },
-      { reportPeriodEnd: { month: 12, year: 2023 }, submissionMonth: '2024-01' },
-    ])('returns $submissionMonth when reportPeriodStart is $reportPeriodStart', ({ reportPeriodEnd, submissionMonth }) => {
-      expect(getSubmissionMonthForReportPeriodEnd(reportPeriodEnd)).toEqual(submissionMonth);
+      { reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 1, year: 2024 } }, submissionMonth: '2024-02', description: 'quarterly' },
+      { reportPeriod: { start: { month: 12, year: 2023 }, end: { month: 12, year: 2023 } }, submissionMonth: '2024-01', description: 'monthly' },
+    ])('returns month after report period end when reportPeriod is a $description period', ({ reportPeriod, submissionMonth }) => {
+      expect(getSubmissionMonthForReportPeriod(reportPeriod)).toEqual(submissionMonth);
+    });
+  });
+
+  describe('getPreviousReportPeriodForBankScheduleByMonth', () => {
+    it('gets report period for bank schedule by submission month for monthly schedule', () => {
+      // Arrange
+      const oneIndexedMonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+      const schedule: BankReportPeriodSchedule = oneIndexedMonths.map((month) => ({ startMonth: month, endMonth: month }));
+
+      // Act
+      const result = getPreviousReportPeriodForBankScheduleByMonth(schedule, '2024-04');
+
+      // Assert
+      expect(result).toEqual({ start: { month: 3, year: 2024 }, end: { month: 3, year: 2024 } });
+    });
+
+    it('gets report period for bank schedule by submission month for quarterly schedule', () => {
+      // Arrange
+      const schedule: BankReportPeriodSchedule = [
+        { startMonth: 12, endMonth: 2 },
+        { startMonth: 3, endMonth: 5 },
+        { startMonth: 6, endMonth: 8 },
+        { startMonth: 9, endMonth: 11 },
+      ];
+
+      // Act
+      const result = getPreviousReportPeriodForBankScheduleByMonth(schedule, '2024-03');
+
+      // Assert
+      expect(result).toEqual({ start: { month: 12, year: 2023 }, end: { month: 2, year: 2024 } });
     });
   });
 

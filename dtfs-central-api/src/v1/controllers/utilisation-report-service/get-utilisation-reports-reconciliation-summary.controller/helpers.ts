@@ -2,9 +2,9 @@ import groupBy from 'lodash/groupBy';
 import orderBy from 'lodash/orderBy';
 import {
   getCurrentReportPeriodForBankSchedule,
-  getReportPeriodForBankScheduleBySubmissionMonth,
+  getPreviousReportPeriodForBankScheduleByMonth,
   getReportPeriodEndForSubmissionMonth,
-  getSubmissionMonthForReportPeriodEnd,
+  getSubmissionMonthForReportPeriod,
   isEqualMonthAndYear,
   Bank,
   UtilisationReportEntity,
@@ -54,7 +54,7 @@ const mapToSubmissionMonth = (reports: UtilisationReportEntity[]): UtilisationRe
   const reportsOrderedByReportPeriodEndAscending = orderBy(reports, ['reportPeriod.end.year', 'reportPeriod.end.month'], ['asc', 'asc']);
 
   return reportsOrderedByReportPeriodEndAscending.map((report) => {
-    const submissionMonth = getSubmissionMonthForReportPeriodEnd(report.reportPeriod.end);
+    const submissionMonth = getSubmissionMonthForReportPeriod(report.reportPeriod);
     return { submissionMonth, report };
   });
 };
@@ -93,7 +93,7 @@ export const getPreviousOpenReportsBySubmissionMonth = async (
 };
 
 const getCurrentReconciliationSummaryItem = async (bank: Bank, submissionMonth: IsoMonthStamp): Promise<UtilisationReportReconciliationSummaryItem> => {
-  const reportPeriod = getReportPeriodForBankScheduleBySubmissionMonth(bank.utilisationReportPeriodSchedule, submissionMonth);
+  const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(bank.utilisationReportPeriodSchedule, submissionMonth);
   const report = await UtilisationReportRepo.findOneByBankIdAndReportPeriod(bank.id, reportPeriod, true);
   if (!report) {
     throw new Error(`Failed to get report for bank with id ${bank.id} for submission month ${submissionMonth}`);

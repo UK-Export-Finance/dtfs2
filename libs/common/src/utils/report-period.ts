@@ -20,8 +20,8 @@ export const getReportPeriodEndForSubmissionMonth = (submissionMonth: IsoMonthSt
  * @param monthAndYear - The month and year
  * @returns The submission month
  */
-export const getSubmissionMonthForReportPeriodEnd = (monthAndYear: MonthAndYear): IsoMonthStamp => {
-  const { month, year } = monthAndYear;
+export const getSubmissionMonthForReportPeriod = (reportPeriod: ReportPeriod): IsoMonthStamp => {
+  const { month, year } = reportPeriod.end;
   const submissionMonthDate = addMonths(new Date(year, month - 1), 1);
   return toIsoMonthStamp(submissionMonthDate);
 };
@@ -126,15 +126,14 @@ export const getCurrentReportPeriodForBankSchedule = (bankReportPeriodSchedule: 
 };
 
 /**
- * Gets the current report period for the inputted bank schedule for the inputted submission month
+ * Gets the most recent report period for the inputted bank schedule for the inputted submission month
  * @param bankReportPeriodSchedule - The bank report period schedule
- * @param submissionMonth - The submission month
+ * @param month - The submission month
  * @returns The report period for the submission month
  */
-export const getReportPeriodForBankScheduleBySubmissionMonth = (bankReportPeriodSchedule: BankReportPeriodSchedule, submissionMonth: IsoMonthStamp) => {
-  const submissionMonthDate = new Date(submissionMonth);
-  const previousMonthDate = subMonths(submissionMonthDate, 1);
-  return getReportPeriodForBankScheduleByTargetDate(bankReportPeriodSchedule, previousMonthDate);
+export const getPreviousReportPeriodForBankScheduleByMonth = (bankReportPeriodSchedule: BankReportPeriodSchedule, month: IsoMonthStamp) => {
+  const monthDate = new Date(month);
+  return getPreviousReportPeriodForBankScheduleByTargetDate(bankReportPeriodSchedule, monthDate);
 };
 
 const getFormattedReportPeriod = (reportPeriod: ReportPeriod, monthFormat: string, includePeriodicity: boolean): string => {
