@@ -3,7 +3,7 @@ run-name: 🔎 pull request analysis on ${{ github.event.number }}
 
 on:
   schedule:
-    - cron: "45 16 * * *"
+    - cron: "00 00 * * *"
 env:
   environment: dev
   timezone: ${{ vars.TIMEZONE }}
