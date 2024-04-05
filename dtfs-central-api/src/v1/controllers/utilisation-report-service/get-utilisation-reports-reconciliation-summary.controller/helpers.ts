@@ -11,7 +11,6 @@ import {
 } from '@ukef/dtfs2-common';
 import { IsoMonthStamp } from '../../../../types/date';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
-import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { getAllBanks } from '../../../../repositories/banks-repo';
 
@@ -25,12 +24,12 @@ type SummaryItemForSubmissionMonth = {
   item: UtilisationReportReconciliationSummaryItem;
 };
 
-const mapToSummaryItem = async (bank: Bank, report: UtilisationReportEntity): Promise<UtilisationReportReconciliationSummaryItem> => {
-  const reportFeeRecords = await FeeRecordRepo.findByReport(report);
+const mapReportToSummaryItem = (bank: Bank, report: UtilisationReportEntity): UtilisationReportReconciliationSummaryItem => {
+  const totalFeesReported = report.feeRecords.length;
 
   // TODO FN-1398 - status to be added to report fee records to allow us to calculate how
   //  many facilities are left to reconcile
-  const reportedFeesLeftToReconcile = reportFeeRecords.length;
+  const reportedFeesLeftToReconcile = totalFeesReported;
 
   return {
     reportId: report.id,
@@ -40,17 +39,14 @@ const mapToSummaryItem = async (bank: Bank, report: UtilisationReportEntity): Pr
     },
     status: report.status,
     dateUploaded: report.dateUploaded ?? undefined,
-    totalFeesReported: reportFeeRecords.length,
+    totalFeesReported,
     reportedFeesLeftToReconcile,
   };
 };
 
-const mapToSummaryItemForSubmissionMonth = async (
-  bank: Bank,
-  { submissionMonth, report }: UtilisationReportForSubmissionMonth,
-): Promise<SummaryItemForSubmissionMonth> => ({
+const mapToSummaryItemForSubmissionMonth = (bank: Bank, { submissionMonth, report }: UtilisationReportForSubmissionMonth): SummaryItemForSubmissionMonth => ({
   submissionMonth,
-  item: await mapToSummaryItem(bank, report),
+  item: mapReportToSummaryItem(bank, report),
 });
 
 const mapToSubmissionMonth = (reports: UtilisationReportEntity[]): UtilisationReportForSubmissionMonth[] => {
@@ -65,7 +61,11 @@ const mapToSubmissionMonth = (reports: UtilisationReportEntity[]): UtilisationRe
 const getPreviousOpenReportsForBank = async (bank: Bank, currentSubmissionMonth: IsoMonthStamp): Promise<SummaryItemForSubmissionMonth[]> => {
   const currentReportPeriodStart = getReportPeriodStartForSubmissionMonth(currentSubmissionMonth);
 
-  const openReportsBeforeCurrentReportPeriod = await UtilisationReportRepo.findOpenReportsBeforeReportPeriodStartForBankId(bank.id, currentReportPeriodStart);
+  const openReportsBeforeCurrentReportPeriod = await UtilisationReportRepo.findOpenReportsBeforeReportPeriodStartForBankId(
+    bank.id,
+    currentReportPeriodStart,
+    true,
+  );
 
   if (!openReportsBeforeCurrentReportPeriod.length) {
     return [];
@@ -93,11 +93,11 @@ export const getPreviousOpenReportsBySubmissionMonth = async (
 
 const getCurrentReconciliationSummaryItem = async (bank: Bank, submissionMonth: IsoMonthStamp): Promise<UtilisationReportReconciliationSummaryItem> => {
   const reportPeriod = getReportPeriodForBankScheduleBySubmissionMonth(bank.utilisationReportPeriodSchedule, submissionMonth);
-  const report = await UtilisationReportRepo.findOneByBankIdAndReportPeriod(bank.id, reportPeriod);
+  const report = await UtilisationReportRepo.findOneByBankIdAndReportPeriod(bank.id, reportPeriod, true);
   if (!report) {
     throw new Error(`Failed to get report for bank with id ${bank.id} for submission month ${submissionMonth}`);
   }
-  return await mapToSummaryItem(bank, report);
+  return mapReportToSummaryItem(bank, report);
 };
 
 export const getAllReportsForSubmissionMonth = async (banks: Bank[], submissionMonth: IsoMonthStamp): Promise<UtilisationReportReconciliationSummary> => ({

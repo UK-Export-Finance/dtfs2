@@ -25,8 +25,13 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
    * @param reportPeriod - The report period
    * @returns The found report
    */
-  async findOneByBankIdAndReportPeriod(bankId: string, reportPeriod: ReportPeriod): Promise<UtilisationReportEntity | null> {
-    return await this.findOneBy({ bankId, reportPeriod });
+  async findOneByBankIdAndReportPeriod(bankId: string, reportPeriod: ReportPeriod, includeFeeRecords = false): Promise<UtilisationReportEntity | null> {
+    return await this.findOne({
+      where: { bankId, reportPeriod },
+      relations: {
+        feeRecords: includeFeeRecords,
+      },
+    });
   },
 
   /**
@@ -88,7 +93,11 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
    * @param reportPeriodStart - The report period start
    * @returns The found report
    */
-  async findOpenReportsBeforeReportPeriodStartForBankId(bankId: string, reportPeriodStart: ReportPeriod['start']): Promise<UtilisationReportEntity[]> {
+  async findOpenReportsBeforeReportPeriodStartForBankId(
+    bankId: string,
+    reportPeriodStart: ReportPeriod['start'],
+    includeFeeRecords = false,
+  ): Promise<UtilisationReportEntity[]> {
     const bankIdAndStatusFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
       bankId,
       status: Not('RECONCILIATION_COMPLETED'),
@@ -116,6 +125,9 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
         { ...bankIdAndStatusFindOptions, ...previousYearFindOptions },
         { ...bankIdAndStatusFindOptions, ...sameYearPreviousMonthsFindOptions },
       ],
+      relations: {
+        feeRecords: includeFeeRecords,
+      },
     });
   },
 });
