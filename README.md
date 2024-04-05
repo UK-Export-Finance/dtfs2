@@ -197,7 +197,7 @@ This can be done by updating the `integrity` attribute in any HTML/Nunjucks `scr
 There are two ways to update these:
 
 1. (Preferred) Render a template that uses the script in a browser; a console error should give you the hash of the recompiled file.
-2. Run `cat FILENAME.js | openssl dgst -sha512 -binary | openssl base64 -A` on each. Note -- GEF UI references Portal UI's javascript files when using the reverse proxy, so use the hashes from Portal UI's `.js` files in GEF-UI.
+2. Run `openssl dgst -sha512 -binary FILENAME.js | openssl base64 -A` on each. Note -- GEF UI references Portal UI's javascript files when using the reverse proxy, so use the hashes from Portal UI's `.js` files in GEF-UI.
 
 ## Linting :mag_right:
 
