@@ -107,7 +107,7 @@ exports.updateUser = async (_id, update, sessionUser, callback = () => { }) => {
 
     const userUpdate = {
       ...update,
-      auditDetails: generateTfmUserAuditDetails(sessionUser._id)
+      auditDetails: sessionUser?._id ? generateTfmUserAuditDetails(sessionUser._id) : generateNoUserLoggedInAuditDetails(),
     };
 
     const collection = await db.getCollection('tfm-users');
