@@ -143,8 +143,7 @@ class AuthProvider {
    * @param {Object} pkceCode: PKCE Code object
    * @param {Object} origAuthCodeRequest: Original auth code request
    * @param {String} code: authZ code
-   * @param {Object} req: Request object
-   * @returns {Object}
+   * @returns {Promise<import('src/types/auth/azure-user-info-response-account').AzureUserInfoResponseAccount>}
    */
   async handleRedirect(pkceCode, origAuthCodeRequest, code) {
     try {
@@ -166,7 +165,7 @@ class AuthProvider {
         throw new Error('TFM auth service - handleRedirect - Entra user missing token claims: %O', account);
       }
 
-      return tokenResponse.account;
+      return account;
     } catch (error) {
       console.error('Error TFM auth service - handleRedirect %s', error);
 

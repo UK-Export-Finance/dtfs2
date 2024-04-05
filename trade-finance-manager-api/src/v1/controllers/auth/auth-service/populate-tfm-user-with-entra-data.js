@@ -4,8 +4,8 @@ const mapEntraUserData = require('./map-entra-user-data');
  * populateTfmUserWithEntraData
  * Populate TFM user data with Entra user data.
  * @param {Object} tfmUser: Existing TFM user data
- * @param {Object} entraUser: Entra user data
- * @returns 
+ * @param {import('src/types/auth/azure-user-info-response-account').AzureUserInfoResponseAccount} entraUser: Entra user data
+ * @returns {import('src/types/auth/get-user-response').GetUserResponse}
  */
 const populateTfmUserWithEntraData = (tfmUser, entraUser) => ({
   ...tfmUser,

@@ -1,7 +1,7 @@
-const authProvider = require('./auth-provider');
+const authProvider = require('./auth-provider.js');
 const authService = require('./auth-service');
 
-exports.getLoginUrl = async (req, res) => {
+exports.getLoginUrl = async (_req, res) => {
   try {
     const loginInfo = await authProvider.getLoginUrl();
 
@@ -23,8 +23,8 @@ exports.processSsoRedirect = async (req, res) => {
   } catch (err) {
     console.error('Error processing sso login: %O', err);
 
-    return res.status(500).send({ data: err.message });
+    return res.status(500).json({ data: err.message });
   }
 };
 
-exports.getLogoutUrl = (req, res) => res.status(200).send({logoutUrl: authProvider.getLogoutUrl()});
+exports.getLogoutUrl = (_req, res) => res.status(200).send({logoutUrl: authProvider.getLogoutUrl()});

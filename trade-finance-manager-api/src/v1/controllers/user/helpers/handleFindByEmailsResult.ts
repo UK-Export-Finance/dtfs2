@@ -1,11 +1,14 @@
+import { GetUserResponse } from "../../../../types/auth/get-user-response";
+import { TfmUser } from "../../../../types/db-models/tfm-users";
+
 /**
  * handleFindByEmailsResult
  * Handle the result of "find user by emails".
  * Depending on the amount of users, return "found" and "canProceed" booleans.
  * @param {Array} users: TFM users
- * @returns {Object}
+ * @returns {GetUserResponse}
  */
-const handleFindByEmailsResult = (users) => {
+export const handleFindByEmailsResult = (users: TfmUser[]): GetUserResponse => {
   if (!users) {
     return { found: false };
   }
@@ -25,8 +28,7 @@ const handleFindByEmailsResult = (users) => {
   return {
     found: true,
     canProceed: true,
-    ...users[0],
+    user: users[0],
   };
 };
 
-module.exports = handleFindByEmailsResult;

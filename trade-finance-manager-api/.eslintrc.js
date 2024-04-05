@@ -22,7 +22,15 @@ const baseRules = {
   'comma-dangle': 'off',
   'no-loop-func': 'off',
   'no-return-await': 'off',
-  'no-unused-vars': ['error'],
+  'no-unused-vars': ['error', {
+    "args": "all",
+    "argsIgnorePattern": "^_",
+    "caughtErrors": "all",
+    "caughtErrorsIgnorePattern": "^_",
+    "destructuredArrayIgnorePattern": "^_",
+    "varsIgnorePattern": "^_",
+    "ignoreRestSiblings": true
+  }],
   'require-await': 'error',
   'no-use-before-define': [
     'error',

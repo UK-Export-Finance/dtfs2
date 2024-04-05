@@ -1,6 +1,9 @@
-const authProvider = require('../auth-provider');
-const tfmUser = require('./get-or-create-tfm-user');
-const { issueJwtAndUpdateUser } = require('./issue-jwt-and-update-user');
+import { AzureUserInfoResponseAccount } from '../../../../types/auth/azure-user-info-response-account';
+
+import authProvider from '../auth-provider.js';
+import tfmUser from './get-or-create-tfm-user';
+import { issueJwtAndUpdateUser } from './issue-jwt-and-update-user';
+import { TfmUser } from '../../../../types/db-models/tfm-users.js';
 
 /**
  * processSsoRedirect
@@ -17,14 +20,15 @@ const { issueJwtAndUpdateUser } = require('./issue-jwt-and-update-user');
  * @param {String} state: MSAL state guid
  * @returns {Promise<Object>} TFM user, token and redirect URL.
  */
-const processSsoRedirect = async ({ pkceCodes, authCodeRequest, code, state }) => {
+export const processSsoRedirect = async ({ pkceCodes, authCodeRequest, code, state }: {pkceCodes: unknown, authCodeRequest: unknown, code: string, state: string}) => {
   try {
     if (pkceCodes && authCodeRequest && code && state) {
       console.info('TFM auth service - processing SSO redirect');
 
-      const entraUser = await authProvider.handleRedirect(pkceCodes, authCodeRequest, code);
+      // await authProvider.handleRedirect(pkceCodes, authCodeRequest, code);
+      const azureUserInfoResponseAccount: AzureUserInfoResponseAccount = await authProvider.handleRedirect(pkceCodes, authCodeRequest, code);
 
-      const user = await tfmUser.getOrCreate(entraUser);
+      const user: TfmUser = await tfmUser.getOrCreate(azureUserInfoResponseAccount);
 
       const token = await issueJwtAndUpdateUser(user);
 
@@ -33,14 +37,10 @@ const processSsoRedirect = async ({ pkceCodes, authCodeRequest, code, state }) =
       return { tfmUser: user, token, redirectUrl };
     }
 
-    return {};
+    return null;
   } catch (error) {
     console.error('TFM auth service - Error processing SSO redirect: %s', error);
 
-    return error;
+    throw error;
   }
-};
-
-module.exports = {
-  processSsoRedirect,
 };

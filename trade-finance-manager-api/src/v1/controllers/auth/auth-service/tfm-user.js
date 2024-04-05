@@ -5,7 +5,7 @@ const userController = require('../../user/user.controller');
  * create
  * Create a TFM user from Entra user data.
  * @param {Object} entraUser: Entra user data
- * @returns {Promise<Object>} New TFM user.
+ * @returns {Promise<import('src/types/db-models/tfm-users').TfmUser>} New TFM user.
  */
 const create = async (entraUser) => {
   try {

@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const { generateTfmUserAuditDetails, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
 const db = require('../../../drivers/db-client');
 const { generateArrayOfEmailsRegex } = require('./helpers/generateArrayOfEmailsRegex');
-const handleFindByEmailsResult = require('./helpers/handleFindByEmailsResult');
+const handleFindByEmailsResult = require('./helpers/handleFindByEmailsResult.ts');
 const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { PAYLOAD } = require('../../../constants');
@@ -24,7 +24,7 @@ exports.findOne = async (_id, callback) => {
  * - More than 1 matching user found.
  * - Unexpected DB response.
  * @param {Array} emails
- * @returns {Promise<Object>} handleFindByEmailsResult
+ * @returns {Promise<import('src/types/auth/get-user-response.ts').GetUserResponse>} result with 1, 2 or more attributes
  */
 exports.findByEmails = async (emails) => {
   try {
@@ -36,7 +36,9 @@ exports.findByEmails = async (emails) => {
 
     const users = await collection.find({ 'email': { $in: emailsRegex }}).toArray();
 
-    return handleFindByEmailsResult(users);
+    const getUserResponse = handleFindByEmailsResult(users);
+
+    return getUserResponse;
   } catch (error) {
     console.error('Error getting TFM user by emails - Unexpected DB response %O', error);
 
