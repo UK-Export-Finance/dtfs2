@@ -1,9 +1,9 @@
+const { generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
-const { generateTfmUserInformation } = require('../../../helpers/generateUserInformation');
 
 const newDeal = (dealOverrides) => ({
   additionalRefName: 'mock name',

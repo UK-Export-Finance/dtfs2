@@ -17,7 +17,7 @@ const withoutId = (obj) => {
  * @param {string} params.dealId - deal to be updated
  * @param {object} params.dealUpdate - updates to make
  * @param {object} params.existingDeal
- * @param {import("../../../../helpers/userInformation").UserInformation} params.userInformation - tfm user making the update
+ * @param {import("@ukef/dtfs2-common/src/types/userInformation").UserInformation} params.userInformation - tfm user making the update
  * @returns {Promise<object>} updated deal or error object
  */
 const updateDeal = async ({dealId, dealUpdate, existingDeal, userInformation }) => {

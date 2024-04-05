@@ -1,7 +1,7 @@
+const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const { createTasks } = require('../helpers/create-tasks');
-const { generatePortalUserInformation } = require('../helpers/generateUserInformation');
 
 /**
  * Check if the "create or match parties" task should be created

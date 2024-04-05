@@ -1,3 +1,4 @@
+const { generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const { sub, format } = require('date-fns');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
@@ -8,7 +9,6 @@ const {
 } = require('./tfm-deals-get.api-test');
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
-const { generateTfmUserInformation } = require('../../../helpers/generateUserInformation');
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {

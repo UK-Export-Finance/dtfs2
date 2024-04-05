@@ -1,5 +1,5 @@
+const { generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const api = require('../api');
-const { generateTfmUserInformation } = require('../helpers/generateUserInformation');
 const getAssigneeFullName = require('../helpers/get-assignee-full-name');
 
 /**

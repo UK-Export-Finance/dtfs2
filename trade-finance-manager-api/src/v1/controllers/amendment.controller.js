@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const api = require('../api');
 const acbs = require('./acbs.controller');
 const { amendIssuedFacility } = require('./amend-issued-facility');
@@ -17,7 +18,6 @@ const {
   addLatestAmendmentDates,
 } = require('../helpers/amendment.helpers');
 const CONSTANTS = require('../../constants');
-const { generateTfmUserInformation } = require('../helpers/generateUserInformation');
 
 const sendAmendmentEmail = async (amendmentId, facilityId) => {
   try {

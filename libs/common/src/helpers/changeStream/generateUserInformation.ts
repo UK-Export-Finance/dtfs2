@@ -1,14 +1,8 @@
-import { ObjectId } from "mongodb";
-
-type UserInformation = {
-  userType: 'tfm' | 'portal';
-  id: string | ObjectId;
-} | {
-  userType: 'system';
-};
+import { ObjectId } from 'mongodb';
+import { UserInformation } from '../../types/userInformation';
 
 export const generateSystemUserInformation = (): UserInformation => ({
-  userType: 'system'
+  userType: 'system',
 });
 
 export const generatePortalUserInformation = (id: string | ObjectId): UserInformation => ({

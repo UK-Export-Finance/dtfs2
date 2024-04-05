@@ -1,10 +1,10 @@
 const { getTime } = require('date-fns');
+const { generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');
 const sendDealDecisionEmail = require('./send-deal-decision-email');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
-const { generateTfmUserInformation } = require('../helpers/generateUserInformation');
 
 const addUnderwriterManagersDecisionToDeal = ({
   dealId,

@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb')
+const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const { findOneTfmDeal, findOnePortalDeal, findOneGefDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
@@ -20,7 +21,6 @@ const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-
 const { sendDealSubmitEmails, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const { dealHasAllUkefIds, dealHasAllValidUkefIds } = require('../helpers/dealHasAllUkefIds');
-const { generatePortalUserInformation } = require('../helpers/generateUserInformation');
 
 /**
  * Retrieves a deal from the portal based on the provided deal ID and deal type.

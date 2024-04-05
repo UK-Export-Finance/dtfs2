@@ -1,3 +1,4 @@
+const { generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const { getGroupById, getTaskInGroupById, isAdverseHistoryTaskIsComplete, shouldUpdateDealStage } = require('../helpers/tasks');
@@ -6,7 +7,6 @@ const mapTaskHistoryObject = require('../tasks/map-task-history-object');
 const { previousTaskIsComplete, taskCanBeEditedWithoutPreviousTaskComplete, handleTaskEditFlagAndStatus } = require('../tasks/tasks-edit-logic');
 const sendUpdatedTaskEmail = require('./task-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
-const { generateTfmUserInformation } = require('../helpers/generateUserInformation');
 
 /**
  * Update a task in the task's group.

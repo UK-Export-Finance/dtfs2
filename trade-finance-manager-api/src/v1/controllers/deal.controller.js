@@ -1,3 +1,4 @@
+const { generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const mapDeal = require('../mappings/map-deal');
 const api = require('../api');
 const acbsController = require('./acbs.controller');
@@ -8,7 +9,6 @@ const dealReducer = require('../rest-mappings/deal');
 const { dealsLightReducer } = require('../rest-mappings/deals-light');
 const { filterTasks } = require('../rest-mappings/filters/filterTasks');
 const { filterActivities } = require('../rest-mappings/filters/filterActivities');
-const { generateTfmUserInformation } = require('../helpers/generateUserInformation');
 
 const getDeal = async (req, res) => {
   try {

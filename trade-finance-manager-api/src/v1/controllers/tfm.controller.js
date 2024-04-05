@@ -1,6 +1,6 @@
+const { generateSystemUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const activity = require('../helpers/activity');
 const api = require('../api');
-const { generateSystemUserInformation } = require('../helpers/generateUserInformation');
 
 const updateAcbs = async (taskOutput) => {
   const { ...dealAcbs } = taskOutput;
