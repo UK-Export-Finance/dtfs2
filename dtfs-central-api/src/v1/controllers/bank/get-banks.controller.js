@@ -1,7 +1,7 @@
 const { getAllBanks } = require('../../../repositories/banks-repo');
 
 /**
- * @typedef {import('../../../types/db-models/banks').Bank} Bank
+ * @typedef {import('@ukef/dtfs2-common').Bank} Bank
  */
 
 /**

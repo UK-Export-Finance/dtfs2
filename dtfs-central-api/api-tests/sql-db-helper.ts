@@ -1,15 +1,18 @@
 import { AzureFileInfoEntity, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 
-const initialize = async () => await SqlDbDataSource.initialize();
+const initialize = async () => {
+  if (SqlDbDataSource.isInitialized) {
+    return SqlDbDataSource;
+  }
+  return await SqlDbDataSource.initialize();
+};
 
 type SqlTableName = 'UtilisationReport' | 'FeeRecord' | 'AzureFileInfo';
 
 const deleteAllEntries = async (tableName: SqlTableName): Promise<void> => {
   switch (tableName) {
     case 'UtilisationReport':
-      // Cascade deletes are not enabled for the 'FeeRecord' table
-      await SqlDbDataSource.manager.delete(FeeRecordEntity, {});
       await SqlDbDataSource.manager.delete(UtilisationReportEntity, {});
       return;
     case 'FeeRecord':

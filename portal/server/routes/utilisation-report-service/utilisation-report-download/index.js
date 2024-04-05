@@ -11,7 +11,7 @@ router.get(
   '/banks/:bankId/utilisation-report-download/:id',
   [validateToken, validateRole({ role: [PAYMENT_REPORT_OFFICER] })],
   validateBankIdForUser,
-  validateSqlId,
+  validateSqlId('id'),
   (req, res) => getReportDownload(req, res),
 );
 

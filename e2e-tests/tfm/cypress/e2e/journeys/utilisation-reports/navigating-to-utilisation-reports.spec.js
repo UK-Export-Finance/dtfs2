@@ -1,14 +1,17 @@
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UtilisationReportEntityMockBuilder,
+  getReportPeriodForBankScheduleBySubmissionMonth,
+} from '@ukef/dtfs2-common';
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
-import { getMonthlyReportPeriodFromIsoSubmissionMonth, toIsoMonthStamp } from '../../../support/utils/dateHelpers';
+import { toIsoMonthStamp } from '../../../support/utils/dateHelpers';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import { aliasSelector } from '../../../../../support/alias-selector';
 
 context('PDC_READ users can route to the payments page for a bank', () => {
   const allBanksAlias = 'allBanksAlias';
   const submissionMonth = toIsoMonthStamp(new Date());
-  const reportPeriod = getMonthlyReportPeriodFromIsoSubmissionMonth(submissionMonth);
   const status = UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
 
   beforeEach(() => {
@@ -27,6 +30,8 @@ context('PDC_READ users can route to the payments page for a bank', () => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
 
     cy.wrap(visibleBanks).each((bank) => {
+      const reportPeriod = getReportPeriodForBankScheduleBySubmissionMonth(bank.utilisationReportPeriodSchedule, submissionMonth);
+
       const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(status)
         .withId(bank.id)
         .withBankId(bank.id)
@@ -47,8 +52,12 @@ context('PDC_READ users can route to the payments page for a bank', () => {
     cy.get(aliasSelector(allBanksAlias)).each((bank) => {
       const { id, isVisibleInTfmUtilisationReports } = bank;
 
-      // TODO FN-1855 use common function to extract specific report period for non-monthly reporting bank (bank with id "10")
-      if (isVisibleInTfmUtilisationReports && id !== '10') {
+      // TODO FN-1601 remove after TFM is working for quarterly banks
+      if (id === '10') {
+        return;
+      }
+
+      if (isVisibleInTfmUtilisationReports) {
         pages.utilisationReportsPage.tableRowSelector(id, submissionMonth).should('exist');
       } else {
         pages.utilisationReportsPage.tableRowSelector(id, submissionMonth).should('not.exist');

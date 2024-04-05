@@ -1,10 +1,10 @@
 import { addDays } from 'date-fns';
+import { IsoMonthStamp, MonthAndYear } from '@ukef/dtfs2-common';
 import { getDueDateText, getReportPeriodHeading, getReportReconciliationSummariesViewModel } from './reconciliation-summary-helper';
 import { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS } from '../../../test-mocks/mock-utilisation-report-reconciliation-summary';
 import { UtilisationReportReconciliationSummary } from '../../../types/utilisation-reports';
 import { getUkBankHolidays } from '../../../api';
 import { MOCK_BANK_HOLIDAYS } from '../../../test-mocks/mock-bank-holidays';
-import { IsoMonthStamp, MonthAndYear } from '../../../types/date';
 
 jest.mock('../../../api');
 

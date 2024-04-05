@@ -1,10 +1,10 @@
+import { TEAM_IDS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 
 import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
 import underwriterController from '.';
-import { TEAM_IDS } from '../../../constants';
 
 describe('GET getUnderwriterPage', () => {
   const res = mockRes();

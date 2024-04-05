@@ -1,17 +1,20 @@
 import { Response } from 'express';
+import { UtilisationReportReconciliationStatus, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asString } from '../../../helpers/validation';
 import { ReportWithStatus } from '../../../types/utilisation-reports';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
 import { getUtilisationReports } from '..';
 import { asUserSession } from '../../../helpers/express-session';
 
 const CHECKBOX_PREFIX_REGEX = 'set-status--';
-const MONGO_ID_REGEX = '[a-f\\d]+';
+const SQL_ID_REGEX = '\\d+';
+const UTILISATION_REPORT_RECONCILIATION_STATUS_REGEX = Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).join('|');
 const CHECKBOX_PATTERN = {
   WITHOUT_GROUPS: new RegExp(CHECKBOX_PREFIX_REGEX),
-  WITH_GROUPS: new RegExp(`${CHECKBOX_PREFIX_REGEX}reportId-(?<id>${MONGO_ID_REGEX})`),
+  WITH_GROUPS: new RegExp(
+    `${CHECKBOX_PREFIX_REGEX}reportId-(?<id>${SQL_ID_REGEX})-currentStatus-(?<currentStatus>${UTILISATION_REPORT_RECONCILIATION_STATUS_REGEX})`,
+  ),
 } as const;
 
 const FORM_BUTTON_VALUES = {
@@ -22,24 +25,26 @@ const FORM_BUTTON_VALUES = {
 export type UpdateUtilisationReportStatusRequestBody = {
   _csrf: string;
   'form-button': string;
-  [key: `set-status--reportId-${string}`]: 'on';
+  [key: `set-status--reportId-${string}-currentStatus-${UtilisationReportReconciliationStatus}`]: 'on';
 };
 
-const getReportIdsFromBody = (body: undefined | UpdateUtilisationReportStatusRequestBody): string[] => {
+const getReportIdsAndStatusesFromBody = (
+  body: undefined | UpdateUtilisationReportStatusRequestBody,
+): { id: string; status: UtilisationReportReconciliationStatus }[] => {
   if (!body || typeof body !== 'object') {
-    throw new Error('Expected request body to be an object');  
+    throw new Error('Expected request body to be an object');
   }
 
   return Object.keys(body)
     .filter((key) => key.match(CHECKBOX_PATTERN.WITHOUT_GROUPS))
-    .map((setStatusKey): string => {
+    .map((setStatusKey) => {
       const match = setStatusKey.match(CHECKBOX_PATTERN.WITH_GROUPS);
       if (!match?.groups) {
         throw new Error(`Failed to parse reportIds from request body key '${setStatusKey}'`);
       }
 
-      const { id } = match.groups;
-      return id;
+      const { id, currentStatus } = match.groups;
+      return { id, status: currentStatus as UtilisationReportReconciliationStatus };
     });
 };
 
@@ -70,11 +75,16 @@ export const updateUtilisationReportStatus = async (req: UpdateUtilisationReport
   const { user, userToken } = asUserSession(req.session);
 
   try {
-    const reportIds = getReportIdsFromBody(req.body);
+    const reportIdsAndStatuses = getReportIdsAndStatusesFromBody(req.body);
 
     const { 'form-button': formButton } = req.body;
-    const reportsWithStatus = reportIds
-      .map((reportId) => getReportWithStatus(reportId, asString(formButton, 'formButton')));
+    const reportsWithStatus = reportIdsAndStatuses.reduce((acc, { id, status }) => {
+      const reportWithStatus = getReportWithStatus(id, asString(formButton, 'formButton'));
+      if (reportWithStatus.status === status) {
+        return acc;
+      }
+      return [...acc, reportWithStatus];
+    }, [] as ReportWithStatus[]);
 
     if (reportsWithStatus.length === 0) {
       return await getUtilisationReports(req, res);

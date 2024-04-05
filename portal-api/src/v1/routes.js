@@ -302,7 +302,7 @@ authRouter
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,
-    sqlIdValidation,
+    sqlIdValidation('id'),
     handleExpressValidatorResult,
     validateUserAndBankIdMatch,
     utilisationReportControllers.getReportDownload,

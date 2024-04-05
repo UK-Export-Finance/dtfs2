@@ -1,3 +1,4 @@
+const { TEAM_IDS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const CONSTANTS = require('../../../constants');
 
@@ -26,7 +27,7 @@ const getAmendmentLeadUnderwriter = async (amendment, user, token) => {
   }
 
   // checks if user has ability to assign or change lead-underwriter to render change link or add button
-  const isEditable = userIsInTeam(user, [CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS, CONSTANTS.TEAM_IDS.UNDERWRITERS]);
+  const isEditable = userIsInTeam(user, [TEAM_IDS.UNDERWRITER_MANAGERS, TEAM_IDS.UNDERWRITERS]);
 
   return {
     isEditable,
@@ -56,7 +57,7 @@ const getAssignAmendmentLeadUnderwriter = async (req, res) => {
   const { user } = req.session;
 
   // checks if can edit
-  const isEditable = userIsInTeam(user, [CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS, CONSTANTS.TEAM_IDS.UNDERWRITERS]);
+  const isEditable = userIsInTeam(user, [TEAM_IDS.UNDERWRITER_MANAGERS, TEAM_IDS.UNDERWRITERS]);
 
   let currentLeadUnderWriterUserId;
   // if already set then shows name of assigned underwriter
@@ -65,8 +66,8 @@ const getAssignAmendmentLeadUnderwriter = async (req, res) => {
   }
 
   // gets all underwriter and managers
-  const allUnderwriterManagers = await api.getTeamMembers(CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS, userToken);
-  const allUnderwriters = await api.getTeamMembers(CONSTANTS.TEAM_IDS.UNDERWRITERS, userToken);
+  const allUnderwriterManagers = await api.getTeamMembers(TEAM_IDS.UNDERWRITER_MANAGERS, userToken);
+  const allUnderwriters = await api.getTeamMembers(TEAM_IDS.UNDERWRITERS, userToken);
   const allTeamMembers = [...allUnderwriterManagers, ...allUnderwriters];
 
   // sorts alphabetically

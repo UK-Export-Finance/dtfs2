@@ -189,7 +189,7 @@ describe('generatePaymentExchangeRateError', () => {
     };
 
     const expectedError = {
-      errorMessage: 'Payment exchange rate must be 1 or blank when accrual currency and base currency are the same',
+      errorMessage: 'Payment exchange rate must be 1 or blank when payment currency and fees paid to UKEF currency are the same',
       column: 3,
       row: 1,
       value: '2',

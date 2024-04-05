@@ -1,5 +1,5 @@
 import { subMonths } from 'date-fns';
-import { IsoMonthStamp, MonthAndYear } from '../types/date';
+import { IsoMonthStamp, MonthAndYear } from '@ukef/dtfs2-common';
 import { getBusinessDayOfMonth, getOneIndexedMonth } from '../helpers/date';
 import { asString } from '../helpers/validation';
 

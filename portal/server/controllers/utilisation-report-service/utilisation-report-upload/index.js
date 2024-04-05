@@ -1,4 +1,5 @@
 const { format, startOfMonth, addMonths } = require('date-fns');
+const { getFormattedReportPeriod } = require('@ukef/dtfs2-common');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
 const { getUploadErrors } = require('./utilisation-report-upload-errors');
@@ -6,7 +7,6 @@ const { getDueReportPeriodsByBankId, getReportDueDate } = require('./utilisation
 const api = require('../../../api');
 const { getReportAndUserDetails } = require('./utilisation-report-details');
 const { PRIMARY_NAV_KEY } = require('../../../constants');
-const { getFormattedReportPeriod } = require('../../../helpers');
 
 const setSessionUtilisationReport = (req, nextDueReportPeriod) => {
   req.session.utilisationReport = {
@@ -189,10 +189,10 @@ const postReportConfirmAndSend = async (req, res) => {
     const response = await api.uploadUtilisationReportData(user, reportPeriod, mappedReportData, fileBuffer, formattedReportPeriod, userToken);
 
     if (response?.status === 200 || response?.status === 201) {
-      const { paymentOfficerEmail } = response.data;
+      const { paymentOfficerEmails } = response.data;
       req.session.utilisationReport = {
         ...req.session.utilisationReport,
-        paymentOfficerEmail,
+        paymentOfficerEmails,
       };
       return res.redirect('/utilisation-report-upload/confirmation');
     }
@@ -209,13 +209,13 @@ const getReportConfirmation = async (req, res) => {
     if (!req.session.utilisationReport) {
       return res.redirect('/utilisation-report-upload');
     }
-    const { formattedReportPeriod, paymentOfficerEmail } = req.session.utilisationReport;
+    const { formattedReportPeriod, paymentOfficerEmails } = req.session.utilisationReport;
     delete req.session.utilisationReport;
     return res.render('utilisation-report-service/utilisation-report-upload/confirmation.njk', {
       user: req.session.user,
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       reportPeriod: formattedReportPeriod,
-      paymentOfficerEmail,
+      paymentOfficerEmails,
     });
   } catch (error) {
     console.error(error);

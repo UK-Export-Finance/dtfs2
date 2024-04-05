@@ -30,7 +30,7 @@ export const MOCK_BANKS: Record<BankName, Bank> = {
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
       teamName: 'Barclays Payment Reporting Team',
-      email: 'payment-officer4@ukexportfinance.gov.uk',
+      emails: ['payment-officer4@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     isVisibleInTfmUtilisationReports: true,
@@ -46,7 +46,7 @@ export const MOCK_BANKS: Record<BankName, Bank> = {
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
       teamName: 'HSBC Payment Reporting Team',
-      email: 'payment-officer4@ukexportfinance.gov.uk',
+      emails: ['payment-officer4@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     isVisibleInTfmUtilisationReports: true,

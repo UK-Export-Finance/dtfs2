@@ -91,29 +91,7 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportReportUploadedEvent).toHaveBeenCalledTimes(1);
     });
 
-    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED}' event`, async () => {
-      // Arrange
-      const requestSource: DbRequestSource = {
-        platform: 'TFM',
-        userId: 'abc123',
-      };
-      const transactionEntityManager = {} as unknown as EntityManager;
-      const stateMachine = UtilisationReportStateMachine.forReport(REPORT_NOT_RECEIVED_REPORT);
-
-      // Act
-      await stateMachine.handleEvent({
-        type: 'MANUALLY_SET_COMPLETED',
-        payload: {
-          requestSource,
-          transactionEntityManager,
-        },
-      });
-
-      // Assert
-      expect(handleUtilisationReportManuallySetCompletedEvent).toHaveBeenCalledTimes(1);
-    });
-
-    const VALID_REPORT_NOT_RECEIVED_EVENT_TYPES = [UTILISATION_REPORT_EVENT_TYPE.REPORT_UPLOADED, UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED];
+    const VALID_REPORT_NOT_RECEIVED_EVENT_TYPES = [UTILISATION_REPORT_EVENT_TYPE.REPORT_UPLOADED];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_REPORT_NOT_RECEIVED_EVENT_TYPES))(
       "throws an 'InvalidStateMachineTransitionError' for event type %p",
