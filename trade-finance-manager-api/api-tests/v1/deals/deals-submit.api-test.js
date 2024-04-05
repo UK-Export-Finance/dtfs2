@@ -91,7 +91,7 @@ describe('/v1/deals', () => {
       const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED));
 
       const mappedDeal = await mapSubmittedDeal(body);
-      const tfmDataObject = await addTfmDealData(mappedDeal);
+      const tfmDataObject = await addTfmDealData(mappedDeal, MOCK_PORTAL_USERS[0]);
 
       // parties object is added further down the line.
       // addTfmDealData returns empty parties object.

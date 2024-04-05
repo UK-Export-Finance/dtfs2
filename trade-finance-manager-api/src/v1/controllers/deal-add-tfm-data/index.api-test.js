@@ -6,6 +6,7 @@ const addDealStage = require('./dealStage');
 const MOCK_DEAL_AIN = require('../../__mocks__/mock-deal');
 const { mockUpdateDeal } = require('../../__mocks__/common-api-mocks');
 const api = require('../../api');
+const { MOCK_PORTAL_USERS } = require('../../__mocks__/mock-portal-users');
 
 describe('deal submit - add TFM data', () => {
   beforeEach(() => {
@@ -19,7 +20,7 @@ describe('deal submit - add TFM data', () => {
       tfm: {},
     });
 
-    const result = await addTfmDealData(mockDeal);
+    const result = await addTfmDealData(mockDeal, MOCK_PORTAL_USERS[0]);
 
     const expected = {
       ...mockDeal,
