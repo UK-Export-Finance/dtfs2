@@ -404,8 +404,18 @@ jobs:
         spec:
           [
             "*.spec.js",
+            "application/**/*.spec.js",
+            "checker/**/*.spec.js",
+            "clone/**/*.spec.js",
+            "eligibility/**/*.spec.js",
+            "exporter/**/*.spec.js",
+            "external/**/*.spec.js",
+            "facility/**/*.spec.js",
+            "maker/**/*.spec.js",
             "scenarios/**/*.spec.js",
-            "unissued-facilities/**/*.spec.js",
+            "security/**/*.spec.js",
+            "ukef/**/*.spec.js",
+            "upload/**/*.spec.js",
           ]
 
     concurrency:

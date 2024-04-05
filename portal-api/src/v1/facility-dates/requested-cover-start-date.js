@@ -45,6 +45,7 @@ exports.updateRequestedCoverStartDate = (facility) => {
         requestedCoverStartDateYear,
       )
     );
+    modifiedFacility.coverDateConfirmed = true;
   }
   return modifiedFacility;
 };

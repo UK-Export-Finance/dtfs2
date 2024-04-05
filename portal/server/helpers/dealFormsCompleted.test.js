@@ -81,7 +81,7 @@ describe('isEveryFacilityInDealComplete', () => {
     expect(isEveryFacilityInDealComplete(deal)).toEqual(false);
   });
 
-  it('should return true if a deal has any bond with status `Incomplete`', () => {
+  it('should return false if a deal has any bond with status `Incomplete`', () => {
     const deal = {
       bondTransactions: incompleteBonds,
       loanTransactions: { items: [] },
@@ -89,10 +89,10 @@ describe('isEveryFacilityInDealComplete', () => {
       eligibility: completeEligibility,
     };
 
-    expect(isEveryFacilityInDealComplete(deal)).toEqual(true);
+    expect(isEveryFacilityInDealComplete(deal)).toEqual(false);
   });
 
-  it('should return true if a deal has any loan with status `Incomplete`', () => {
+  it('should return false if a deal has any loan with status `Incomplete`', () => {
     const deal = {
       bondTransactions: { items: [] },
       loanTransactions: incompleteLoans,
@@ -100,7 +100,7 @@ describe('isEveryFacilityInDealComplete', () => {
       eligibility: completeEligibility,
     };
 
-    expect(isEveryFacilityInDealComplete(deal)).toEqual(true);
+    expect(isEveryFacilityInDealComplete(deal)).toEqual(false);
   });
 
   it('should return true when all the bonds have `Completed` status', () => {
@@ -290,7 +290,7 @@ describe('isEveryDealFormComplete', () => {
     expect(isEveryDealFormComplete(deal)).toEqual(false);
   });
 
-  it("should return true if a deal has any bonds who's bond.status is `Incomplete`", () => {
+  it("should return false if a deal has any bonds who's bond.status is `Incomplete`", () => {
     const deal = {
       bondTransactions: incompleteBonds,
       loanTransactions: { items: [] },
@@ -298,10 +298,10 @@ describe('isEveryDealFormComplete', () => {
       eligibility: completeEligibility,
     };
 
-    expect(isEveryDealFormComplete(deal)).toEqual(true);
+    expect(isEveryDealFormComplete(deal)).toEqual(false);
   });
 
-  it("should return true if a deal has any loan who's loan.status is `Incomplete`", () => {
+  it("should return false if a deal has any loan who's loan.status is `Incomplete`", () => {
     const deal = {
       bondTransactions: { items: [] },
       loanTransactions: incompleteLoans,
@@ -309,7 +309,7 @@ describe('isEveryDealFormComplete', () => {
       eligibility: completeEligibility,
     };
 
-    expect(isEveryDealFormComplete(deal)).toEqual(true);
+    expect(isEveryDealFormComplete(deal)).toEqual(false);
   });
 
   it('If there are 1+ loans, should return true if all sections are in status `Completed`', () => {
