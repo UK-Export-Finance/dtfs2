@@ -24,17 +24,19 @@ module.exports.createTfmUser = async (req, res) => {
 };
 
 module.exports.findTfmUser = (req, res, next) => {
-  if (ObjectId.isValid(req.params.user)) {
-    findOne(req.params.user, (error, user) => {
-      if (error) {
-        next(error);
-      } else if (user) {
-        res.status(200).json({ user: mapUserData(user), status: 200 });
-      } else {
-        res.status(404).json({ user: {}, status: 404, message: 'User does not exist' });
-      }
-    });
+  if (!ObjectId.isValid(req.params.user)) {
+    res.status(400).json({ user: {}, status: 400, message: 'User id is not valid' });
+    return;
   }
+  findOne(req.params.user, (error, user) => {
+    if (error) {
+      next(error);
+    } else if (user) {
+      res.status(200).json({ user: mapUserData(user), status: 200 });
+    } else {
+      res.status(404).json({ user: {}, status: 404, message: 'User does not exist' });
+    }
+  });
 };
 
 // This route is used for mock data loader.
