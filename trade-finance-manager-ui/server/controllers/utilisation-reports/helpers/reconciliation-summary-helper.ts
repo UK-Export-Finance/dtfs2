@@ -1,7 +1,7 @@
 import { endOfDay, format, isPast, isSameMonth, parseISO } from 'date-fns';
-import { IsoMonthStamp, MonthAndYear, ReportPeriod, UtilisationReportReconciliationStatus, getFormattedReportPeriodWithShortMonth } from '@ukef/dtfs2-common';
+import { IsoMonthStamp, ReportPeriod, UtilisationReportReconciliationStatus, getFormattedReportPeriodWithShortMonth } from '@ukef/dtfs2-common';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../types/utilisation-reports';
-import { getReportDueDate, getReportPeriodStart } from '../../../services/utilisation-report-service';
+import { getReportDueDate } from '../../../services/utilisation-report-service';
 import api from '../../../api';
 
 type SummaryItemViewModel = UtilisationReportReconciliationSummaryItem & {
@@ -13,7 +13,6 @@ type SummaryItemViewModel = UtilisationReportReconciliationSummaryItem & {
 type ReportPeriodSummaryViewModel = {
   items: SummaryItemViewModel[];
   submissionMonth: IsoMonthStamp;
-  reportPeriodStart: MonthAndYear;
   reportPeriodHeading: string;
   dueDateText: string;
 };
@@ -78,13 +77,11 @@ export const getReportReconciliationSummariesViewModel = async (
 
   return summariesApiResponse.map(({ items: apiItems, submissionMonth }) => {
     const reportDueDate = getReportDueDate(bankHolidays, submissionMonth);
-    const reportPeriodStart = getReportPeriodStart(submissionMonth);
     const distinctReportPeriods = getDistinctReportPeriodsByStartMonth(apiItems.map((item) => item.reportPeriod));
 
     return {
       items: apiItems.map(getSummaryItemViewModel),
       submissionMonth,
-      reportPeriodStart,
       reportPeriodHeading: getReportPeriodHeading(submissionMonth, distinctReportPeriods),
       dueDateText: getDueDateText(reportDueDate),
     };
