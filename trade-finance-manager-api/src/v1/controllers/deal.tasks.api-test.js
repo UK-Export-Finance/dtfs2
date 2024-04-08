@@ -1,3 +1,4 @@
+const { generatePortalUserInformation } = require("@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation");
 const {
   shouldCreatePartiesTask,
   shouldCreateAgentCheckTask,
@@ -10,7 +11,6 @@ const MOCK_DEAL_MIA = require('../__mocks__/mock-deal-MIA-submitted');
 const { createTasks } = require('../helpers/create-tasks');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const { MOCK_PORTAL_USERS } = require('../__mocks__/mock-portal-users');
-const { generatePortalUserInformation } = require("../helpers/generateUserInformation")
 
 describe('createDealTasks', () => {
   const updateDealSpy = jest.fn(({ dealUpdate }) => Promise.resolve(dealUpdate));

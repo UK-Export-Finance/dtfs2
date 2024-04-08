@@ -1,9 +1,9 @@
+const { generatePortalUserInformation } = require("@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation");
 const api = require('../../api');
 const generateDateReceived = require('./dateReceived');
 const addDealProduct = require('./dealProduct');
 const addDealPricingAndRisk = require('./dealPricingAndRisk');
 const addDealStage = require('./dealStage');
-const { generatePortalUserInformation } = require("../../helpers/generateUserInformation");
 
 const addTfmDealData = async (deal, sessionPortalUser) => {
   if (!deal) {
