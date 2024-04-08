@@ -82,7 +82,7 @@ describe('/v1/deals', () => {
 
   describe('PUT /v1/deals/:dealId/submit', () => {
     it('404s submission for unknown id', async () => {
-      const { status } = await submitDeal({ dealId: '12345678910', checker: MOCK_PORTAL_USERS[0] });
+      const { status } = await submitDeal({ dealId: '12345678910', userInformation: generatePortalUserInformation(MOCK_PORTAL_USERS[0]._id) });
 
       expect(status).toEqual(404);
     });

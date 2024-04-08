@@ -116,13 +116,10 @@ module.exports = {
 
     return Promise.resolve(resetDeal);
   },
-  submitDeal: (dealType, dealId, checker) => ({
+  submitDeal: (dealType, dealId) => ({
     _id: dealId,
     dealSnapshot: ALL_MOCK_DEALS.find((d) => d._id === dealId),
     tfm: {},
-    auditDetails: {
-      lastUpdatedByPortalUserId: checker._id,
-    },
   }),
   findOneFacility: (facilityId) => {
     const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId);

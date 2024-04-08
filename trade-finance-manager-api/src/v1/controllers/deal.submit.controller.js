@@ -58,7 +58,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
   const userInformation = generatePortalUserInformation(checker._id);
 
-  const submittedDeal = await api.submitDeal(dealType, dealId, checker);
+  const submittedDeal = await api.submitDeal(dealType, dealId, userInformation);
   const mappedDeal = mapSubmittedDeal(submittedDeal);
 
   const { submissionCount } = mappedDeal;
@@ -115,10 +115,10 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
        * Update the deal with all the above modifications
        * Note: at the time of writing, some functions above update the deal, others do not.
        */
-      return api.updateDeal({ dealId, dealUpdate: updatedDealWithTasks, userInformation: generatePortalUserInformation(checker._id) });
+      return api.updateDeal({ dealId, dealUpdate: updatedDealWithTasks, userInformation });
     }
 
-    return api.updateDeal({ dealId, dealUpdate: updatedDealWithCreateEstore, userInformation: generatePortalUserInformation(checker._id) });
+    return api.updateDeal({ dealId, dealUpdate: updatedDealWithCreateEstore, userInformation });
   }
 
   if (dealHasBeenResubmit) {
@@ -205,7 +205,7 @@ exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
  * Submits a deal to TFM before the UKEF IDs are generated.
  * @param {string} dealId - The ID of the deal to be submitted.
  * @param {string} dealType - The type of the deal.
- * @param {string} checker - The name of the checker.
+ * @param {object} checker - checker submitting the deal
  * @returns {Promise<Object> | Boolean} - A promise that resolves to an object, other false.
  * @throws {Error} - If there is an error during the submission process.
  */
@@ -219,7 +219,7 @@ const submitDealBeforeUkefIds = async (dealId, dealType, checker) => {
       return false;
     }
 
-    const response = await api.submitDeal(dealType, dealId, checker);
+    const response = await api.submitDeal(dealType, dealId, generatePortalUserInformation(checker._id));
 
     if (!response) {
       throw new Error(`Unable to submit deal ${dealId} to TFM`);

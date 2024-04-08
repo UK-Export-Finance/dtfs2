@@ -1,6 +1,5 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const { generatePortalUserAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal, findOneGefDeal } = require('../../portal/deal/get-deal.controller');
 const tfmController = require('./tfm-get-deal.controller');
@@ -11,6 +10,7 @@ const { findAllGefFacilitiesByDealId } = require('../../portal/gef-facility/get-
 const DEFAULTS = require('../../../defaults');
 const CONSTANTS = require('../../../../constants');
 const { DB_COLLECTIONS } = require('../../../../constants');
+const { generateAuditDetailsFromUserInformation, validateUserInformation } = require("../../../../helpers/userInformation");
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;
@@ -31,7 +31,7 @@ const getSubmissionCount = (deal) => {
   return null;
 };
 
-const createDealSnapshot = async (deal, checker) => {
+const createDealSnapshot = async (deal, userInformation) => {
   if (ObjectId.isValid(deal._id)) {
     const { dealType, _id: dealId } = deal;
     const collection = await db.getCollection(DB_COLLECTIONS.TFM_DEALS);
@@ -39,7 +39,7 @@ const createDealSnapshot = async (deal, checker) => {
     const submissionCount = getSubmissionCount(deal);
     const tfmInit = submissionCount === 1 ? { tfm: DEFAULTS.DEAL_TFM } : null;
 
-    const dealObj = { dealSnapshot: deal, ...tfmInit, auditDetails: generatePortalUserAuditDetails(checker._id) };
+    const dealObj = { dealSnapshot: deal, ...tfmInit, auditDetails: generateAuditDetailsFromUserInformation(userInformation) };
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
       const dealFacilities = await findAllFacilitiesByDealId(dealId);
@@ -61,7 +61,7 @@ const createDealSnapshot = async (deal, checker) => {
   return { status: 400, message: 'Invalid Deal Id' };
 };
 
-const createFacilitiesSnapshot = async (deal, checker) => {
+const createFacilitiesSnapshot = async (deal, userInformation) => {
   if (ObjectId.isValid(deal._id)) {
     const { dealType, _id: dealId } = deal;
 
@@ -87,7 +87,7 @@ const createFacilitiesSnapshot = async (deal, checker) => {
             {
               _id: { $eq: ObjectId(facility._id) }
             },
-            $.flatten({ facilitySnapshot: facility, ...tfmInit, auditDetails: generatePortalUserAuditDetails(checker._id) }),
+            $.flatten({ facilitySnapshot: facility, ...tfmInit, auditDetails: generateAuditDetailsFromUserInformation(userInformation) }),
             {
               returnNewDocument: true,
               returnDocument: 'after',
@@ -104,10 +104,10 @@ const createFacilitiesSnapshot = async (deal, checker) => {
   return { status: 400, message: 'Invalid Deal Id' };
 };
 
-const submitDeal = async (deal, checker) => {
-  await createDealSnapshot(deal, checker);
+const submitDeal = async (deal, userInformation) => {
+  await createDealSnapshot(deal, userInformation);
 
-  await createFacilitiesSnapshot(deal, checker);
+  await createFacilitiesSnapshot(deal, userInformation);
 
   const updatedDeal = await tfmController.findOneDeal(String(deal._id));
 
@@ -115,10 +115,16 @@ const submitDeal = async (deal, checker) => {
 };
 
 exports.submitDealPut = async (req, res) => {
-  const { dealId, dealType, checker } = req.body;
+  const { dealId, dealType, userInformation } = req.body;
 
-  if (!ObjectId.isValid(checker._id)) {
-    return res.status(400).send({ status: 400, message: 'Invalid checker id' })
+  try {
+    validateUserInformation(userInformation);
+  } catch ({ message }) {
+    res.status(400).send({ status: 400, message: `Invalid user information, ${message}`})
+  }
+
+  if (userInformation.userType !== 'portal') {
+    res.status(400).send({ status: 400, message: `User information must be of type portal`})
   }
 
   if (dealType !== CONSTANTS.DEALS.DEAL_TYPE.GEF && dealType !== CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
@@ -138,6 +144,6 @@ exports.submitDealPut = async (req, res) => {
     return res.status(404).send();
   }
 
-  const updatedDeal = await submitDeal(deal, checker);
+  const updatedDeal = await submitDeal(deal, userInformation);
   return res.status(200).json(updatedDeal);
 };
