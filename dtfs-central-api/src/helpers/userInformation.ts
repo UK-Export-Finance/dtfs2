@@ -1,4 +1,8 @@
-import { generatePortalUserAuditDetails, generateSystemAuditDetails, generateTfmUserAuditDetails } from '@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails';
+import {
+  generatePortalUserAuditDetails,
+  generateSystemAuditDetails,
+  generateTfmUserAuditDetails,
+} from '@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails';
 import { UserInformation } from '@ukef/dtfs2-common/src/types/userInformation';
 import { ObjectId } from 'mongodb';
 
@@ -8,21 +12,28 @@ export function validateUserInformation(userInformation: unknown): asserts userI
   }
   switch (userInformation?.userType) {
     case 'tfm':
-      if ('id' in userInformation && typeof userInformation.id === 'string' && ObjectId.isValid(userInformation.id)) {
+      if (!('id' in userInformation)) {
+        throw new Error('Missing property id for tfm user');
+      }
+      if (userInformation.id instanceof ObjectId || (typeof userInformation.id === 'string' && ObjectId.isValid(userInformation.id))) {
         return;
       }
-      throw new Error('Invalid tfm user id');
+      throw new Error(`Invalid tfm user id ${userInformation.id?.toString()}`);
     case 'portal':
-      if ('id' in userInformation && typeof userInformation.id === 'string' && ObjectId.isValid(userInformation.id)) {
+      if (!('id' in userInformation)) {
+        throw new Error('Missing property id for portal user');
+      }
+
+      if (userInformation.id instanceof ObjectId || (typeof userInformation.id === 'string' && ObjectId.isValid(userInformation.id))) {
         return;
       }
-      throw new Error('Invalid portal user id');
+      throw new Error(`Invalid portal user id ${userInformation.id?.toString()}`);
     case 'system':
       return;
     default:
-      throw new Error('Invalid userType');
+      throw new Error(`Invalid userType ${userInformation.userType?.toString()}`);
   }
-};
+}
 
 export const generateAuditDetailsFromUserInformation = (userInformation: UserInformation) => {
   switch (userInformation.userType) {

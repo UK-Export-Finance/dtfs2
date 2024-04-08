@@ -343,7 +343,13 @@ describe('tasks controller', () => {
     };
 
     it('should return the updated task', async () => {
-      const result = await updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateDone, sessionTfmUser: MOCK_USERS[0] });
+      const result = await updateTfmTask({
+        dealId: updatableTaskDealId,
+        groupId,
+        taskId: updatableTaskId,
+        taskUpdate: updatableTaskUpdateDone,
+        sessionTfmUser: MOCK_USERS[0],
+      });
 
       const expectedUpdatedTask = {
         id: updatableTaskId,
@@ -381,7 +387,13 @@ describe('tasks controller', () => {
         const nonExistantGroupId = 567;
 
         await expect(
-          updateTfmTask({ dealId: updatableTaskDealId, groupId: nonExistantGroupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateToDo, sessionTfmUser: MOCK_USERS[0] }),
+          updateTfmTask({
+            dealId: updatableTaskDealId,
+            groupId: nonExistantGroupId,
+            taskId: updatableTaskId,
+            taskUpdate: updatableTaskUpdateToDo,
+            sessionTfmUser: MOCK_USERS[0],
+          }),
         ).rejects.toThrowError(`Group not found ${nonExistantGroupId}`);
       });
     });
@@ -391,14 +403,26 @@ describe('tasks controller', () => {
         const nonExistantTaskId = 789;
 
         await expect(
-          updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: nonExistantTaskId, taskUpdate: updatableTaskUpdateToDo, sessionTfmUser: MOCK_USERS[0] }),
+          updateTfmTask({
+            dealId: updatableTaskDealId,
+            groupId,
+            taskId: nonExistantTaskId,
+            taskUpdate: updatableTaskUpdateToDo,
+            sessionTfmUser: MOCK_USERS[0],
+          }),
         ).rejects.toThrowError(`Task not found ${nonExistantTaskId}`);
       });
     });
 
     describe('when task cannot be updated', () => {
       it('should return the original task', async () => {
-        const result = await updateTfmTask({ dealId: unUpdateableTaskDealId, groupId, taskId: unUpdateableTaskId, taskUpdate: unUpdateableTaskUpdate, sessionTfmUser: MOCK_USERS[0] });
+        const result = await updateTfmTask({
+          dealId: unUpdateableTaskDealId,
+          groupId,
+          taskId: unUpdateableTaskId,
+          taskUpdate: unUpdateableTaskUpdate,
+          sessionTfmUser: MOCK_USERS[0],
+        });
 
         expect(result).toEqual(unUpdateableTask);
       });
@@ -406,7 +430,13 @@ describe('tasks controller', () => {
 
     describe('when an MIA deal has the first task in the first group completed immediately', () => {
       it('should update deal.tfm.stage to `In progress`', async () => {
-        await updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateDone, sessionTfmUser: MOCK_USERS[0] });
+        await updateTfmTask({
+          dealId: updatableTaskDealId,
+          groupId,
+          taskId: updatableTaskId,
+          taskUpdate: updatableTaskUpdateDone,
+          sessionTfmUser: MOCK_USERS[0],
+        });
 
         const deal = await api.findOneDeal(updatableTaskDealId);
 
@@ -416,7 +446,13 @@ describe('tasks controller', () => {
 
     describe('when an MIA deal has the first task in the first group completed after being `In progress`', () => {
       it('should update deal.tfm.stage to `In progress`', async () => {
-        await updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateToDo, sessionTfmUser: MOCK_USERS[0] });
+        await updateTfmTask({
+          dealId: updatableTaskDealId,
+          groupId,
+          taskId: updatableTaskId,
+          taskUpdate: updatableTaskUpdateToDo,
+          sessionTfmUser: MOCK_USERS[0],
+        });
 
         await api.resetDealForApiTest(updatableTaskDealId);
 
@@ -424,13 +460,25 @@ describe('tasks controller', () => {
 
         expect(initialDeal.tfm.stage).toBeUndefined();
 
-        await updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateInProgress, sessionTfmUser: MOCK_USERS[0] });
+        await updateTfmTask({
+          dealId: updatableTaskDealId,
+          groupId,
+          taskId: updatableTaskId,
+          taskUpdate: updatableTaskUpdateInProgress,
+          sessionTfmUser: MOCK_USERS[0],
+        });
 
         const dealAfterFirstUpdate = await api.findOneDeal(updatableTaskDealId);
 
         expect(dealAfterFirstUpdate.tfm.stage).toEqual('In progress');
 
-        await updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateDone, sessionTfmUser: MOCK_USERS[0] });
+        await updateTfmTask({
+          dealId: updatableTaskDealId,
+          groupId,
+          taskId: updatableTaskId,
+          taskUpdate: updatableTaskUpdateDone,
+          sessionTfmUser: MOCK_USERS[0],
+        });
 
         const dealAfterSecondUpdate = await api.findOneDeal(updatableTaskDealId);
 

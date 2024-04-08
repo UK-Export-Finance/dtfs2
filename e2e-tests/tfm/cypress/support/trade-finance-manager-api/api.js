@@ -1,3 +1,5 @@
+const { BANK1_CHECKER1_WITH_MOCK_ID } = require('../../../../e2e-fixtures/portal-users.fixture');
+
 const api = () => {
   const url = `${Cypress.config('tfmApiProtocol')}${Cypress.config('tfmApiHost')}:${Cypress.config('tfmApiPort')}`;
   return url;
@@ -13,7 +15,7 @@ const headers = {
 module.exports.submitDeal = (dealId, dealType, token) => cy.request({
   url: `${api()}/v1/deals/submit`,
   method: 'PUT',
-  body: { dealId, dealType, checker: { _id: '6602f568f609ff532522b472' } },
+  body: { dealId, dealType, checker: BANK1_CHECKER1_WITH_MOCK_ID },
   headers: {
     ...headers,
     Authorization: token,

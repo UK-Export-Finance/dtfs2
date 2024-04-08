@@ -14,7 +14,7 @@ const withoutId = (obj) => {
 
 /**
  * @param {object} params
- * @param {string} params.dealId - deal to be updated
+ * @param {string} params.dealId - id of deal to be updated
  * @param {object} params.dealUpdate - updates to make
  * @param {object} params.existingDeal
  * @param {import("@ukef/dtfs2-common/src/types/userInformation").UserInformation} params.userInformation - tfm user making the update

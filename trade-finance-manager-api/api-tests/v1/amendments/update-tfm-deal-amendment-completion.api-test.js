@@ -23,9 +23,7 @@ describe('update tfm-deals on amendment completion', () => {
     },
   };
 
-  const updateDealSpy = jest.fn(() => Promise.resolve(
-    mockDeal,
-  ));
+  const updateDealSpy = jest.fn(() => Promise.resolve(mockDeal));
 
   beforeEach(() => {
     updateDealSpy.mockClear();
@@ -59,7 +57,11 @@ describe('update tfm-deals on amendment completion', () => {
     mockAmendment.dealId = '123';
 
     await updateFacilityAmendment(mockAmendment.facilityId, mockAmendment.amendmentId, { updateTfmLastUpdated: true });
-    expect(api.updateDeal).toHaveBeenCalledWith({ dealId: mockAmendment.dealId, dealUpdate: { tfm: { lastUpdated: expect.any(Number) } }, userInformation: { userType: 'tfm', id: expect.any(ObjectId)}});
+    expect(api.updateDeal).toHaveBeenCalledWith({
+      dealId: mockAmendment.dealId,
+      dealUpdate: { tfm: { lastUpdated: expect.any(Number) } },
+      userInformation: { userType: 'tfm', id: expect.any(ObjectId) },
+    });
   });
 
   it('updateFacilityAmendment() - should NOT call updateDeal when updateTfmLastUpdated is null', async () => {
