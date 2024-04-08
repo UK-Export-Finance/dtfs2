@@ -54,41 +54,46 @@ const getLogin = async (req, res) => {
  * @returns {Promise<Object>} Express response with redirect or error.
  */
 const handleSsoRedirect = async (req, res) => {
-  const { body, session } = req;
+  try {
+    const { body, session } = req;
 
-  if (!body.formId) {
-    return loginService.acceptExternalSsoPost(req, res);
-  }
-  if (!session?.auth?.pkceCodes) {
-    console.error('SSO login session details are missing. Start login from beginning.');
+    if (!body.formId) {
+      return loginService.acceptExternalSsoPost(req, res);
+    }
+    if (!session?.auth?.pkceCodes) {
+      console.error('SSO login session details are missing. Start login from beginning.');
+      return res.redirect('/');
+    }
+
+    const {
+      auth: {
+        pkceCodes,
+        authCodeUrlRequest,
+        authCodeRequest,
+      },
+    } = session;
+    const { code, state } = body;
+
+    const apiResponse = await api.processSsoRedirect({ pkceCodes, authCodeUrlRequest, authCodeRequest, code, state });
+
+    if (apiResponse.token) {
+      req.session.userToken = apiResponse.token;
+      req.session.user = apiResponse.tfmUser;
+
+      // Unset data used for SSO validation
+      delete req.session.auth;
+
+      // Unset cookie used for SSO redirect counting
+      res.clearCookie(SSO.REDIRECT_COUNTER.COOKIE_NAME);
+
+      return res.redirect(apiResponse.redirectUrl);
+    }
+    console.error('TFM-UI - login failed in TFM-API, redirect to /');
     return res.redirect('/');
+  } catch(error) {
+    const errorMessage = error.message || `Login process failed - try again or contact us using details bellow.`;
+    return res.status(500).render('_partials/problem-with-service.njk', { error: { message: errorMessage } });
   }
-
-  const {
-    auth: {
-      pkceCodes,
-      authCodeUrlRequest,
-      authCodeRequest,
-    },
-  } = session;
-  const { code, state } = body;
-
-  const apiResponse = await api.processSsoRedirect({ pkceCodes, authCodeUrlRequest, authCodeRequest, code, state });
-
-  if (apiResponse.token) {
-    req.session.userToken = apiResponse.token;
-    req.session.user = apiResponse.tfmUser;
-
-    // Unset data used for SSO validation
-    delete req.session.auth;
-
-    // Unset cookie used for SSO redirect counting
-    res.clearCookie(SSO.REDIRECT_COUNTER.COOKIE_NAME);
-
-    return res.redirect(apiResponse.redirectUrl);
-  }
-  console.error('TFM-UI - login failed in TFM-API, redirect to /');
-  return res.redirect('/');
 }
 
 /**

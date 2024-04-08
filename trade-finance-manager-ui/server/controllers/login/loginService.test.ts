@@ -45,6 +45,11 @@ describe('service - loginService', () => {
 
       // Assert
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
+      expect(res._getRenderData()).toMatchObject({
+        error: {
+          message: 'Login request comming from unexpected website.',
+        }
+      });
       expect(res._getStatusCode()).toEqual(500);
     });
 
@@ -57,6 +62,12 @@ describe('service - loginService', () => {
 
       // Assert
       expect(res._getRenderView()).toEqual('sso/accept-external-sso-post.njk');
+      expect(res._getRenderData()).toMatchObject({
+        code: requestBody.code,
+        clientInfo: requestBody.client_info,
+        state: requestBody.state,
+        sessionState: requestBody.session_state,
+      });
       expect(res._getStatusCode()).toEqual(200);
     });
 
@@ -69,6 +80,12 @@ describe('service - loginService', () => {
 
       // Assert
       expect(res._getRenderView()).toEqual('sso/accept-external-sso-post.njk');
+      expect(res._getRenderData()).toMatchObject({
+        code: requestBody.code,
+        clientInfo: requestBody.client_info,
+        state: requestBody.state,
+        sessionState: requestBody.session_state,
+      });
       expect(res._getStatusCode()).toEqual(200);
     });
 
@@ -88,6 +105,11 @@ describe('service - loginService', () => {
 
         // Assert
         expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
+        expect(res._getRenderData()).toMatchObject({
+          error: {
+            message: 'Login request data contains unexpected characters.',
+          }
+        });
         expect(res._getStatusCode()).toEqual(500);
       });
     });

@@ -14,15 +14,15 @@ const verifyReferrerForExternalSsoPost = (req) => {
 
   // Referrer is not available in localhost because of policy "no-referrer-when-downgrade".
   if (hostnameWithoutPort === 'localhost') {
-    return false;
+    return;
   }
 
   if (referrer && referrer.indexOf(`${SSO.AUTHORITY}/`) === 0) {
-    return false;
+    return;
   }
 
   console.error('Login request comming from unexpected website: %s', referrer);
-  return 'Login request comming from unexpected website.';
+  throw new Error('Login request comming from unexpected website.');
 }
 
 /**
@@ -36,10 +36,8 @@ const verifyBodyForExternalSsoPost = (templateParams) => {
 
   if (paramsWithNotAllowedCharacters.length) {
     console.error('Login request data contains unexpected characters in: %O', paramsWithNotAllowedCharacters);
-    return 'Login request data contains unexpected characters.';
+    throw new Error('Login request data contains unexpected characters.');
   }
-
-  return false;
 }
 
 /**
@@ -55,18 +53,15 @@ const verifyBodyForExternalSsoPost = (templateParams) => {
 const acceptExternalSsoPost = (req, res) => {
   const { code, client_info: clientInfo, state, session_state: sessionState } = req.body;
   const externalTemplateParams = { code, clientInfo, state, sessionState };
+  try {
+    verifyReferrerForExternalSsoPost(req);
+    verifyBodyForExternalSsoPost(externalTemplateParams);
 
-  const referrerValidationError = verifyReferrerForExternalSsoPost(req);
-  if (referrerValidationError) {
-    return res.status(500).render('_partials/problem-with-service.njk', { error: { message: referrerValidationError }});
+    return res.render('sso/accept-external-sso-post.njk', { ...externalTemplateParams, azureSsoAuthority: `${SSO.AUTHORITY}/`});
+  } catch(error) {
+    const errorMessage = error.message || `Login process failed - try again or contact us using details bellow.`;
+    return res.status(500).render('_partials/problem-with-service.njk', { error: { message: errorMessage } });
   }
-
-  const bodyValidationError = verifyBodyForExternalSsoPost(externalTemplateParams);
-  if (bodyValidationError) {
-    return res.status(500).render('_partials/problem-with-service.njk', { error: { message: bodyValidationError }});
-  }
-
-  return res.render('sso/accept-external-sso-post.njk', { ...externalTemplateParams, azureSsoAuthority: `${SSO.AUTHORITY}/`});
 };
 
 module.exports = { acceptExternalSsoPost };
