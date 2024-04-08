@@ -1,4 +1,3 @@
-const { generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const api = require('../api');
 const getAssigneeFullName = require('../helpers/get-assignee-full-name');
 
@@ -7,9 +6,10 @@ const getAssigneeFullName = require('../helpers/get-assignee-full-name');
  * @param {String} deal ID
  * @param {Array} array of group titles that the should be assigned to the user
  * @param {String} user ID
+ * @param {import("@ukef/dtfs2-common/src/types/userInformation").UserInformation} userInformation - user making the request
  * @returns {Array} Updated tasks
  */
-const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId, sessionTfmUser) => {
+const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId, userInformation) => {
   const deal = await api.findOneDeal(dealId);
 
   if (!deal) {
@@ -61,7 +61,7 @@ const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId, se
   await api.updateDeal({
     dealId,
     dealUpdate: tfmDealUpdate,
-    userInformation: generateTfmUserInformation(sessionTfmUser._id),
+    userInformation,
     onError: (status, message) => {
       throw new Error({ status, message });
     },

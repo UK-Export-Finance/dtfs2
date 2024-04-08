@@ -1,4 +1,3 @@
-const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const api = require('../api');
 
 /**
@@ -49,7 +48,7 @@ const identifyDealParties = (deal) => ({
   hasAgent: Boolean(deal.eligibility && deal.eligibility.agentName),
 });
 
-const addPartyUrns = async (deal, sessionPortalUser) => {
+const addPartyUrns = async (deal, userInformation) => {
   if (!deal) {
     return false;
   }
@@ -82,7 +81,7 @@ const addPartyUrns = async (deal, sessionPortalUser) => {
     },
   };
 
-  const updatedDeal = await api.updateDeal({ dealId: deal._id, dealUpdate, userInformation: generatePortalUserInformation(sessionPortalUser._id) });
+  const updatedDeal = await api.updateDeal({ dealId: deal._id, dealUpdate, userInformation });
 
   return {
     ...deal,

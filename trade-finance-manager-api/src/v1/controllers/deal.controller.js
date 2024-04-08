@@ -148,7 +148,7 @@ const canDealBeSubmittedToACBS = (submissionType) => {
 };
 exports.canDealBeSubmittedToACBS = canDealBeSubmittedToACBS;
 
-const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest, sessionTfmUser) => {
+const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest, userInformation) => {
   const { userId } = leadUnderwriterUpdateRequest;
   const leadUnderwriterUpdate = {
     tfm: {
@@ -159,7 +159,7 @@ const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest, se
   const updatedDealOrError = await api.updateDeal({
     dealId,
     dealUpdate: leadUnderwriterUpdate,
-    userInformation: generateTfmUserInformation(sessionTfmUser._id),
+    userInformation,
     onError: (status, message) => {
       throw new Error(`Updating the deal with dealId ${dealId} failed with status ${status} and message: ${message}`);
     }
@@ -167,7 +167,7 @@ const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest, se
 
   const taskGroupsToUpdate = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
 
-  await assignGroupTasksToOneUser(dealId, taskGroupsToUpdate, userId, sessionTfmUser);
+  await assignGroupTasksToOneUser(dealId, taskGroupsToUpdate, userId, userInformation);
 
   return updatedDealOrError.tfm;
 };
@@ -178,7 +178,7 @@ const updateLeadUnderwriter = async (req, res) => {
 
     const leadUnderwriterUpdate = req.body;
 
-    const updatedDealTfm = await updateTfmLeadUnderwriter(dealId, leadUnderwriterUpdate, req.user);
+    const updatedDealTfm = await updateTfmLeadUnderwriter(dealId, leadUnderwriterUpdate, generateTfmUserInformation(req.user));
 
     return res.status(200).send(updatedDealTfm);
   } catch (error) {

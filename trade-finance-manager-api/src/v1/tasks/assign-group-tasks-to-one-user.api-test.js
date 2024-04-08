@@ -1,4 +1,5 @@
 const { when } = require('jest-when');
+const { generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation')
 const assignGroupTasksToOneUser = require('./assign-group-tasks-to-one-user');
 
 const MOCK_USERS = require('../__mocks__/mock-users');
@@ -8,8 +9,6 @@ const MOCK_MIA_SECOND_SUBMIT = require('../__mocks__/mock-deal-MIA-second-submit
 const CONSTANTS = require('../../constants');
 const { mockFindOneDeal, mockFindUserById, mockUpdateDeal, mockFindOneDealFailure } = require('../__mocks__/common-api-mocks');
 const api = require('../api');
-
-const sessionUser = { _id: "mock-session-user" }
 
 describe('assignGroupTasksToOneUser', () => {
   beforeEach(() => {
@@ -41,7 +40,7 @@ describe('assignGroupTasksToOneUser', () => {
       });
     });
 
-    const result = await assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, sessionUser);
+    const result = await assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, generateTfmUserInformation(MOCK_USERS[0]._id));
 
     let filteredTasksResult = [];
 
@@ -78,7 +77,7 @@ describe('assignGroupTasksToOneUser', () => {
     const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
     const userId = mockUser._id;
 
-    await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, sessionUser)).rejects.toThrow(Error);
+    await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, generateTfmUserInformation(MOCK_USERS[0]._id))).rejects.toThrow(Error);
   });
 
   it('should throw an error if find deal fails', async () => {
@@ -92,6 +91,6 @@ describe('assignGroupTasksToOneUser', () => {
     const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
     const userId = mockUser._id;
 
-    await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, sessionUser)).rejects.toThrow(Error);
+    await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, generateTfmUserInformation(MOCK_USERS[0]._id))).rejects.toThrow(Error);
   });
 });

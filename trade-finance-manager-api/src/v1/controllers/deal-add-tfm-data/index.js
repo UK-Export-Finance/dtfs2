@@ -1,11 +1,10 @@
-const { generatePortalUserInformation } = require("@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation");
 const api = require('../../api');
 const generateDateReceived = require('./dateReceived');
 const addDealProduct = require('./dealProduct');
 const addDealPricingAndRisk = require('./dealPricingAndRisk');
 const addDealStage = require('./dealStage');
 
-const addTfmDealData = async (deal, sessionPortalUser) => {
+const addTfmDealData = async (deal, userInformation) => {
   if (!deal) {
     console.error('Unable to add TFM object to deal %s', deal._id);
     return false;
@@ -30,7 +29,7 @@ const addTfmDealData = async (deal, sessionPortalUser) => {
     },
   };
 
-  const updatedDeal = await api.updateDeal({ dealId, dealUpdate, userInformation: generatePortalUserInformation(sessionPortalUser._id) });
+  const updatedDeal = await api.updateDeal({ dealId, dealUpdate, userInformation });
 
   return {
     ...deal,

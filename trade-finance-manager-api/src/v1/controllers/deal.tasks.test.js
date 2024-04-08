@@ -185,7 +185,7 @@ describe('createDealTasks', () => {
     });
 
     it('should call api.updateDeal and return updated deal', async () => {
-      const result = await createDealTasks(mockSubmittedDeal, MOCK_PORTAL_USERS[0]);
+      const result = await createDealTasks(mockSubmittedDeal, generatePortalUserInformation(MOCK_PORTAL_USERS[0]._id));
 
       const expectedTasks = createTasks(
         mockSubmittedDeal.submissionType,

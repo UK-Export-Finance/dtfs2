@@ -1,7 +1,6 @@
-const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const api = require('../api');
 
-const convertDealCurrencies = async (deal, sessionPortalUser) => {
+const convertDealCurrencies = async (deal, userInformation) => {
   if (!deal) {
     return false;
   }
@@ -43,7 +42,7 @@ const convertDealCurrencies = async (deal, sessionPortalUser) => {
       };
     }
 
-    const updatedDeal = await api.updateDeal({ dealId, dealUpdate, userInformation: generatePortalUserInformation(sessionPortalUser._id) });
+    const updatedDeal = await api.updateDeal({ dealId, dealUpdate, userInformation });
 
     return {
       ...deal,

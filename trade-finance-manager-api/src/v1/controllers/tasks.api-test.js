@@ -1,3 +1,4 @@
+const { generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const { createUpdatedTask, createAllUpdatedTasks, updateTfmTask } = require('./tasks.controller');
 const { handleTaskEditFlagAndStatus } = require('../tasks/tasks-edit-logic');
 const mapTaskObject = require('../tasks/map-task-object');
@@ -348,7 +349,7 @@ describe('tasks controller', () => {
         groupId,
         taskId: updatableTaskId,
         taskUpdate: updatableTaskUpdateDone,
-        sessionTfmUser: MOCK_USERS[0],
+        userInformation: generateTfmUserInformation(MOCK_USERS[0]._id),
       });
 
       const expectedUpdatedTask = {
@@ -377,7 +378,13 @@ describe('tasks controller', () => {
         api.findOneDeal = findOneDealMock;
 
         await expect(
-          updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateToDo, sessionTfmUser: MOCK_USERS[0] }),
+          updateTfmTask({
+            dealId: updatableTaskDealId,
+            groupId,
+            taskId: updatableTaskId,
+            taskUpdate: updatableTaskUpdateToDo,
+            userInformation: generateTfmUserInformation(MOCK_USERS[0]._id),
+          }),
         ).rejects.toThrowError(`Deal not found ${updatableTaskDealId}`);
       });
     });
@@ -392,7 +399,7 @@ describe('tasks controller', () => {
             groupId: nonExistantGroupId,
             taskId: updatableTaskId,
             taskUpdate: updatableTaskUpdateToDo,
-            sessionTfmUser: MOCK_USERS[0],
+            userInformation: generateTfmUserInformation(MOCK_USERS[0]._id),
           }),
         ).rejects.toThrowError(`Group not found ${nonExistantGroupId}`);
       });
@@ -408,7 +415,7 @@ describe('tasks controller', () => {
             groupId,
             taskId: nonExistantTaskId,
             taskUpdate: updatableTaskUpdateToDo,
-            sessionTfmUser: MOCK_USERS[0],
+            userInformation: generateTfmUserInformation(MOCK_USERS[0]._id),
           }),
         ).rejects.toThrowError(`Task not found ${nonExistantTaskId}`);
       });
@@ -421,7 +428,7 @@ describe('tasks controller', () => {
           groupId,
           taskId: unUpdateableTaskId,
           taskUpdate: unUpdateableTaskUpdate,
-          sessionTfmUser: MOCK_USERS[0],
+          userInformation: generateTfmUserInformation(MOCK_USERS[0]._id),
         });
 
         expect(result).toEqual(unUpdateableTask);
@@ -435,7 +442,7 @@ describe('tasks controller', () => {
           groupId,
           taskId: updatableTaskId,
           taskUpdate: updatableTaskUpdateDone,
-          sessionTfmUser: MOCK_USERS[0],
+          userInformation: generateTfmUserInformation(MOCK_USERS[0]._id),
         });
 
         const deal = await api.findOneDeal(updatableTaskDealId);
@@ -451,7 +458,7 @@ describe('tasks controller', () => {
           groupId,
           taskId: updatableTaskId,
           taskUpdate: updatableTaskUpdateToDo,
-          sessionTfmUser: MOCK_USERS[0],
+          userInformation: generateTfmUserInformation(MOCK_USERS[0]._id),
         });
 
         await api.resetDealForApiTest(updatableTaskDealId);
@@ -465,7 +472,7 @@ describe('tasks controller', () => {
           groupId,
           taskId: updatableTaskId,
           taskUpdate: updatableTaskUpdateInProgress,
-          sessionTfmUser: MOCK_USERS[0],
+          userInformation: generateTfmUserInformation(MOCK_USERS[0]._id),
         });
 
         const dealAfterFirstUpdate = await api.findOneDeal(updatableTaskDealId);
@@ -477,7 +484,7 @@ describe('tasks controller', () => {
           groupId,
           taskId: updatableTaskId,
           taskUpdate: updatableTaskUpdateDone,
-          sessionTfmUser: MOCK_USERS[0],
+          userInformation: generateTfmUserInformation(MOCK_USERS[0]._id),
         });
 
         const dealAfterSecondUpdate = await api.findOneDeal(updatableTaskDealId);
@@ -500,7 +507,13 @@ describe('tasks controller', () => {
 
         const tfmTaskUpdate = createTaskUpdateObj(1, 1);
 
-        await updateTfmTask({ dealId, groupId: tfmTaskUpdate.groupId, taskId: tfmTaskUpdate.id, taskUpdate: tfmTaskUpdate, sessionTfmUser: MOCK_USERS[0] });
+        await updateTfmTask({
+          dealId,
+          groupId: tfmTaskUpdate.groupId,
+          taskId: tfmTaskUpdate.id,
+          taskUpdate: tfmTaskUpdate,
+          userInformation: generateTfmUserInformation(MOCK_USERS[0]._id),
+        });
 
         const mappedTaskObj = await mapTaskObject(MOCK_AIN_TASKS[0].groupTasks[0], tfmTaskUpdate);
 

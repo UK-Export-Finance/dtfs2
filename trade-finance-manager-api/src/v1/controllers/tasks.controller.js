@@ -175,7 +175,7 @@ const createAllUpdatedTasks = async (allTaskGroups, groupId, taskUpdate, statusF
  * - Change the TFM dealStage (if deal is MIA and taskUpdate is first task).
  * - Updates the deal.
  * */
-const updateTfmTask = async ({ dealId, groupId, taskId, taskUpdate, sessionTfmUser }) => {
+const updateTfmTask = async ({ dealId, groupId, taskId, taskUpdate, userInformation }) => {
   const unmappedDeal = await api.findOneDeal(dealId);
   if (!unmappedDeal) {
     throw new Error(`Deal not found ${dealId}`);
@@ -244,7 +244,7 @@ const updateTfmTask = async ({ dealId, groupId, taskId, taskUpdate, sessionTfmUs
   /**
    * Update the deal
    * */
-  await api.updateDeal({ dealId, dealUpdate: tfmDealUpdate, userInformation: generateTfmUserInformation(sessionTfmUser._id) });
+  await api.updateDeal({ dealId, dealUpdate: tfmDealUpdate, userInformation });
 
   return updatedTask;
 };
@@ -254,7 +254,7 @@ const updateTask = async (req, res) => {
   const taskUpdate = req.body;
 
   try {
-    const result = await updateTfmTask({ dealId, groupId: parseInt(groupId, 10), taskId, taskUpdate, sessionTfmUser: req.user });
+    const result = await updateTfmTask({ dealId, groupId: parseInt(groupId, 10), taskId, taskUpdate, userInformation: generateTfmUserInformation(req.user._id) });
     return res.status(200).send(result);
   } catch (error) {
     console.error('Unable to update the task %s in group %s deal %s %o', taskId, groupId, dealId, error);

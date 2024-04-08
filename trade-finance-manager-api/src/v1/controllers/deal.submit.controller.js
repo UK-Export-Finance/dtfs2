@@ -56,6 +56,8 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
     return false;
   }
 
+  const userInformation = generatePortalUserInformation(checker._id);
+
   const submittedDeal = await api.submitDeal(dealType, dealId, checker);
   const mappedDeal = mapSubmittedDeal(submittedDeal);
 
@@ -83,14 +85,14 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       status,
     };
 
-    const dealWithTfmData = await addTfmDealData(updatedMappedDeal, checker);
-    const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData, checker);
-    const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn, checker);
+    const dealWithTfmData = await addTfmDealData(updatedMappedDeal, userInformation);
+    const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData, userInformation);
+    const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn, userInformation);
     const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions);
     const updatedDealWithCreateEstore = await createEstoreSite(updatedDealWithUpdatedFacilities);
 
     if (updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-      const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore, checker);
+      const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore, userInformation);
 
       /**
        * Current requirement only allows AIN & MIN deals to be sent to ACBS
@@ -192,9 +194,9 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       console.info('TFM deal %s stage has been updated to %s', dealId, updatedDealStage);
     }
 
-    return api.updateDeal({ dealId, dealUpdate: updatedDeal, userInformation: generatePortalUserInformation(checker._id) });
+    return api.updateDeal({ dealId, dealUpdate: updatedDeal, userInformation });
   }
-  return api.updateDeal({ dealId, dealUpdate: submittedDeal, userInformation: generatePortalUserInformation(checker._id) });
+  return api.updateDeal({ dealId, dealUpdate: submittedDeal, userInformation });
 };
 
 exports.submitDealAfterUkefIds = submitDealAfterUkefIds;

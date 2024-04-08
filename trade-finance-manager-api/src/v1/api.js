@@ -188,13 +188,14 @@ const findOneDeal = async (dealId) => {
 };
 
 /**
- * @param {string} dealId - deal to update
- * @param {Object} dealUpdate - update to make
- * @param {Object} sessionUser - logged in user
+ * @param {object} params
+ * @param {string} params.dealId - deal to update
+ * @param {Object} params.dealUpdate - update to make
+ * @param {import("@ukef/dtfs2-common/src/types/userInformation").UserInformation} params.userInformation - user making the request
  * @typedef {Object} ErrorParam
  * @property {string} message error message
  * @property {number} status HTTP status code
- * @param {(Error: ErrorParam) => any} onError 
+ * @param {(Error: ErrorParam) => any} params.onError 
  * @returns updated deal on success, or `onError({ status, message })` on failure
  */
 const updateDeal = async ({

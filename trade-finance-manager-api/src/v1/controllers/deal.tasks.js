@@ -1,4 +1,3 @@
-const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const { createTasks } = require('../helpers/create-tasks');
@@ -78,10 +77,10 @@ const listAdditionalTasks = (deal) => {
 /**
  * Get additional/conditional tasks that should be added to tasks, depending on deal data.
  * @param {Object} deal
- * @param {object} sessionPortalUser - logged in portal user
+ * @param {import("@ukef/dtfs2-common/src/types/userInformation").UserInformation} userInformation - user making the request
  * @returns {Object} deal with tasks
  */
-const createDealTasks = async (deal, sessionPortalUser) => {
+const createDealTasks = async (deal, userInformation) => {
   if (!deal) {
     return false;
   }
@@ -99,7 +98,7 @@ const createDealTasks = async (deal, sessionPortalUser) => {
     },
   };
 
-  const updatedDeal = await api.updateDeal({ dealId, dealUpdate, userInformation: generatePortalUserInformation(sessionPortalUser._id) });
+  const updatedDeal = await api.updateDeal({ dealId, dealUpdate, userInformation });
 
   return {
     ...deal,
