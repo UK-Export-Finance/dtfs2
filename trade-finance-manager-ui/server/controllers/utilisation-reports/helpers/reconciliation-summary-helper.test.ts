@@ -143,7 +143,6 @@ describe('reconciliation-summary-helper', () => {
             },
           ],
           submissionMonth,
-          reportPeriodStart: { month: 11, year: 2023 },
           reportPeriodHeading: 'Open reports: Nov 2023 (monthly)',
           dueDateText: 'Reports were due to be received by 14 December 2023.',
         },
