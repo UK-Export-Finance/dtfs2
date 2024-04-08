@@ -1,10 +1,12 @@
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const aDeal = require('../../deal-builder');
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
+const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
+
 
 const newFacility = {
   type: 'Bond',
@@ -67,7 +69,7 @@ describe('/v1/tfm/facilities', () => {
         tfmUpdate: {
           bondIssuerPartyUrn: 'testUrn',
         },
-        sessionTfmUser: { _id: 'bbbbbbbbbbbbbbbbbbbbbbbb' },
+        auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
       };
 
       await api
@@ -84,7 +86,7 @@ describe('/v1/tfm/facilities', () => {
       expect(body.tfm).toEqual(updatedFacility.tfmUpdate);
       expect(body.auditDetails).toEqual({
         lastUpdatedAt: expect.any(String),
-        lastUpdatedByTfmUserId: 'bbbbbbbbbbbbbbbbbbbbbbbb',
+        lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
         lastUpdatedByIsSystem: null,
         lastUpdatedByPortalUserId: null,
         noUserLoggedIn: null,

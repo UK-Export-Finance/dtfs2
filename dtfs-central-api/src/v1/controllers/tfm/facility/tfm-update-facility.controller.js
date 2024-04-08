@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/validateAuditDetails');
-const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDatabaseRecord');
+const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const { findOneFacility } = require('./tfm-get-facility.controller');
 const db = require('../../../../drivers/db-client');
 const { DB_COLLECTIONS } = require('../../../../constants');

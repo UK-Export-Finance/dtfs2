@@ -1,6 +1,6 @@
 const axios = require('axios');
 const MockAdapter = require('axios-mock-adapter');
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails')
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
 const { MOCK_TFM_SESSION_USER } = require('../src/v1/__mocks__/mock-tfm-session-user');
 
 const api = jest.requireActual('../src/v1/api');

@@ -54,7 +54,6 @@ const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
 api.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
 
-
 const createFacilityCoverEndDate = (facility) =>
   set(new Date(), {
     date: Number(facility['coverEndDate-day']),

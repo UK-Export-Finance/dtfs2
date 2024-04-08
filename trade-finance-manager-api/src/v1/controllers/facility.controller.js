@@ -1,6 +1,6 @@
 const { format, getUnixTime } = require('date-fns');
 const commaNumber = require('comma-number');
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails')
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
 const api = require('../api');
 const { findOneTfmDeal } = require('./deal.controller');
 const facilityMapper = require('../rest-mappings/facility');
