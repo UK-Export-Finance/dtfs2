@@ -228,7 +228,7 @@ const updateFacilityAmendment = async (req, res) => {
 
       // if facility successfully updated and completed, then adds tfm lastUpdated and tfm object in amendments
       if (createdAmendment && tfmLastUpdated) {
-        await updateTFMDealLastUpdated(amendmentId, facilityId, generateTfmUserInformation(req.user));
+        await updateTFMDealLastUpdated(amendmentId, facilityId, generateTfmUserInformation(req.user._id));
         await createAmendmentTFMObject(amendmentId, facilityId);
       }
 
