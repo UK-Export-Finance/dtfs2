@@ -28,15 +28,19 @@ describe(page, () => {
   }];
 
   const reportLinks = [{
+    text: 'January 2023',
     month: 'January',
     path: 'www.abc.com',
   }, {
+    text: 'February 2023',
     month: 'February',
     path: 'www.abc.com',
   }, {
+    text: 'March 2023',
     month: 'March',
     path: 'www.abc.com',
   }, {
+    text: 'May 2023',
     month: 'May',
     path: 'www.abc.com',
   }];

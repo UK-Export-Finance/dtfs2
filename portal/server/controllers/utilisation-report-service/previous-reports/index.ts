@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import api from '../../../api';
+import { getFormattedReportPeriodWithLongMonth, getFormattedReportPeriodWithShortMonth, isEqualMonthAndYear } from '@ukef/dtfs2-common';
 import { getMonthName } from '../../../helpers/getMonthName';
+import api from '../../../api';
 import { PRIMARY_NAV_KEY } from '../../../constants';
 import { asLoggedInUserSession } from '../../../helpers/express-session';
 
@@ -40,7 +41,10 @@ export const getPreviousReports = async (req: GetPreviousReportsRequest, res: Re
     const previousReportsInTargetYear = activeYearIndex === -1 ? previousReportsByBank[0] : previousReportsByBank[activeYearIndex];
 
     const reportLinks = previousReportsInTargetYear.reports.map(({ reportPeriod, id }) => ({
-      month: getMonthName(reportPeriod.start.month),
+      month: getMonthName(reportPeriod.end.month),
+      text: isEqualMonthAndYear(reportPeriod.start, reportPeriod.end)
+        ? getFormattedReportPeriodWithLongMonth(reportPeriod)
+        : getFormattedReportPeriodWithShortMonth(reportPeriod, true, true),
       path: `/banks/${bankId}/utilisation-report-download/${id}`,
     }));
 
