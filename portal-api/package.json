@@ -52,7 +52,7 @@
     "express-validator": "^7.0.1",
     "filesize": "^8.0.7",
     "immer": "^10.0.4",
-    "joi": "^17.12.2",
+    "joi": "^17.12.3",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongodb": "4.17.0",
@@ -83,7 +83,7 @@
     "prettier": "^2.8.8",
     "supertest": "6.3.3",
     "ts-jest": "^29.1.2",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.4"
   },
   "engines": {
     "node": ">=20",

@@ -26,9 +26,9 @@ const isEveryFacilityComplete = (facilities = []) => {
    * maker to submit the deal further to the checker.
    *
    * Note: A maker can submit one facility at a time therefore remaining facilities
-   * can be either `Not Started` or `Incomplete`.
+   * can be in `Not Started`.
    */
-  return facilities.length === total && facilities.length !== canNotBeSubmitted;
+  return facilities.length === total && facilities.length !== canNotBeSubmitted && !incomplete;
 };
 
 /**
