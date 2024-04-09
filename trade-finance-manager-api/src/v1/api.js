@@ -229,7 +229,7 @@ const updateDeal = async ({
   }
 };
 
-const updateDealSnapshot = async (dealId, snapshotUpdate, checker) => {
+const updateDealSnapshot = async (dealId, snapshotUpdate, auditDetails) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -244,7 +244,7 @@ const updateDealSnapshot = async (dealId, snapshotUpdate, checker) => {
       headers: headers.central,
       data: {
         snapshotUpdate,
-        user: checker,
+        auditDetails,
       },
     });
 

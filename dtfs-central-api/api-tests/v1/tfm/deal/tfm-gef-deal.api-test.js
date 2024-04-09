@@ -50,14 +50,14 @@ describe('/v1/tfm/deal/:id', () => {
     });
 
     it('400s if invalid user id', async () => {
-      const { status, body } = await api.put({ user: { _id: 'test'}}).to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
+      const { status, body } = await api.put({}).to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
       expect(status).toEqual(400);
-      expect(body.message).toEqual('Invalid User Id');
+      expect(body.message).toEqual('Invalid auditDetails, Missing property `userType`');
     });
 
     it('404s if updating an unknown id', async () => {
       // TODO: refactor this as MOCK_USER
-      const { status, body } = await api.put({ user: { _id: '1234567890abcdef12345678'}}).to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
+      const { status, body } = await api.put({ auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) }).to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
       expect(status).toEqual(404);
       expect(body.message).toEqual('Deal not found');
     });
@@ -95,7 +95,7 @@ describe('/v1/tfm/deal/:id', () => {
           someNewField: true,
           testing: true,
         },
-        user: { _id: '1234567890abcdef12345678'},
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       };
 
       const { status, body } = await api.put(snapshotUpdate).to(`/v1/tfm/deals/${dealId}/snapshot`);
@@ -111,7 +111,7 @@ describe('/v1/tfm/deal/:id', () => {
       });
       expect(body.auditDetails).toEqual({
         lastUpdatedAt: expect.any(String),
-        lastUpdatedByPortalUserId: '1234567890abcdef12345678',
+        lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
         lastUpdatedByTfmUserId: null,
         lastUpdatedByIsSystem: null,
         noUserLoggedIn: null,

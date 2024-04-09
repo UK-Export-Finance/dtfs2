@@ -186,6 +186,16 @@ tfmRouter.route('/deals/:id').delete(
  *         application/json:
  *           schema:
  *             type: object
+ *             properties:
+ *               auditDetails:
+ *                 type: object
+ *                 properties:
+ *                   userType:
+ *                     type: string
+ *                     enum: [portal]
+ *                   id:
+ *                     type: string
+ *                     example: '1234567890abcdef12345678'
  *             example:
  *               aNewField: true
  *     responses:
@@ -203,11 +213,6 @@ tfmRouter.route('/deals/:id').delete(
  *                       properties:
  *                         aNewField:
  *                           example: true
- *                     user
- *                       type: object
- *                       properties:
- *                         _id:
- *                           example: '1234567890abcdef12345678'
  *       404:
  *         description: Not found
  */
@@ -415,6 +420,15 @@ tfmRouter.route('/facilities/:id')
  *             properties:
  *               facilityUpdate:
  *                 type: string
+                 auditDetails:
+ *                 type: object
+ *                 properties:
+ *                   userType:
+ *                     type: string
+ *                     enum: [system, portal, tfm]
+ *                   id:
+ *                     type: string
+ *                     example: '1234567890abcdef12345678'
  *             example:
  *               facilityUpdate: { aNewField: true }
  *     responses:
@@ -432,15 +446,6 @@ tfmRouter.route('/facilities/:id')
  *                       properties:
  *                         aNewField:
  *                           example: true
- *                     auditDetails:
- *                       type: object
- *                       properties:
- *                         userType:
- *                           type: string
- *                           enum: [system, portal, tfm]
- *                         id:
- *                           type: string
- *                           example: '1234567890abcdef12345678'
  *       404:
  *         description: Not found
  */

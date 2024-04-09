@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const { generateAuditDatabaseRecordFromAuditDetails, generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
@@ -107,7 +107,7 @@ exports.updateDealPut = async (req, res) => {
   return res.status(code).json(response);
 };
 
-const updateDealSnapshot = async (deal, snapshotChanges, sessionUser) => {
+const updateDealSnapshot = async (deal, snapshotChanges, auditDetails) => {
   const dealId = deal._id;
   if (ObjectId.isValid(dealId)) {
     try {
@@ -116,7 +116,7 @@ const updateDealSnapshot = async (deal, snapshotChanges, sessionUser) => {
         dealSnapshot: {
           ...snapshotChanges,
         },
-        auditDetails: generatePortalUserAuditDatabaseRecord(sessionUser._id),
+        auditDetails: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       };
 
       const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(String(dealId)) } }, $.flatten(withoutId(update)), {
@@ -139,10 +139,15 @@ exports.updateDealSnapshotPut = async (req, res) => {
   if (!ObjectId.isValid(dealId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
-  const { snapshotUpdate, user } = req.body;
+  const { snapshotUpdate, auditDetails } = req.body;
 
-  if (!ObjectId.isValid(user?._id)) {
-    return res.status(400).send({ status: 400, message: 'Invalid User Id' });
+  try {
+    validateAuditDetails(auditDetails);
+  } catch ({ message }) {
+    return res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
+  }
+  if (auditDetails.userType !== 'portal') {
+    return res.status(400).send({ status: 400, message: 'Invalid auditDetails, userType must be `portal`' });
   }
 
   const deal = await findOneDeal(dealId);
@@ -154,10 +159,6 @@ exports.updateDealSnapshotPut = async (req, res) => {
     snapshotUpdate.facilities = dealFacilities;
   }
 
-  const updatedDeal = await updateDealSnapshot(
-    deal,
-    snapshotUpdate,
-    user,
-  );
+  const updatedDeal = await updateDealSnapshot(deal, snapshotUpdate, auditDetails);
   return res.status(200).json(updatedDeal);
 };
