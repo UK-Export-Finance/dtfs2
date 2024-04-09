@@ -30,8 +30,7 @@ module.exports = defineConfig({
   },
   e2e: {
     baseUrl: 'http://localhost:5003',
-    specPattern: 'tfm/e2e/**/*.spec.js',
-    supportFile: './tfm/cypress/support/e2e.js',
+    specPattern: 'cypress/e2e/**/*.spec.js',
     setupNodeEvents(on, config) {
       const { dbName, dbConnectionString } = config;
       on('task', createTasks({ dbName, dbConnectionString }));
