@@ -10,7 +10,7 @@ const { findAllGefFacilitiesByDealId } = require('../../portal/gef-facility/get-
 const DEFAULTS = require('../../../defaults');
 const CONSTANTS = require('../../../../constants');
 const { DB_COLLECTIONS } = require('../../../../constants');
-const { generateAuditDetailsFromUserInformation, validateUserInformation } = require("../../../../helpers/userInformation");
+const { generateAuditDetailsFromUserInformation, validateUserInformation } = require('../../../../helpers/userInformation');
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;
@@ -46,15 +46,11 @@ const createDealSnapshot = async (deal, userInformation) => {
       dealObj.dealSnapshot.facilities = dealFacilities;
     }
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(deal._id) } },
-      $.flatten(withoutId(dealObj)),
-      {
-        returnNewDocument: true,
-        returnDocument: 'after',
-        upsert: true,
-      }
-    );
+    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(deal._id) } }, $.flatten(withoutId(dealObj)), {
+      returnNewDocument: true,
+      returnDocument: 'after',
+      upsert: true,
+    });
 
     return findAndUpdateResponse.value;
   }
@@ -85,15 +81,16 @@ const createFacilitiesSnapshot = async (deal, userInformation) => {
         dealFacilities.map(async (facility) =>
           collection.findOneAndUpdate(
             {
-              _id: { $eq: ObjectId(facility._id) }
+              _id: { $eq: ObjectId(facility._id) },
             },
             $.flatten({ facilitySnapshot: facility, ...tfmInit, auditDetails: generateAuditDetailsFromUserInformation(userInformation) }),
             {
               returnNewDocument: true,
               returnDocument: 'after',
               upsert: true,
-            }
-          )),
+            },
+          ),
+        ),
       );
 
       return updatedFacilities;
@@ -120,15 +117,15 @@ exports.submitDealPut = async (req, res) => {
   try {
     validateUserInformation(userInformation);
   } catch ({ message }) {
-    res.status(400).send({ status: 400, message: `Invalid user information, ${message}`})
+    return res.status(400).send({ status: 400, message: `Invalid user information, ${message}` });
   }
 
   if (userInformation.userType !== 'portal') {
-    res.status(400).send({ status: 400, message: `User information must be of type portal`})
+    return res.status(400).send({ status: 400, message: `User information must be of type portal` });
   }
 
   if (dealType !== CONSTANTS.DEALS.DEAL_TYPE.GEF && dealType !== CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    return res.status(400).send({ status: 400, message: 'Invalid deal type'})
+    return res.status(400).send({ status: 400, message: 'Invalid deal type' });
   }
 
   let deal;

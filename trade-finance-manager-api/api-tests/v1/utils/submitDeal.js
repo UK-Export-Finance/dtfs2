@@ -1,4 +1,3 @@
-const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
@@ -15,7 +14,7 @@ module.exports.submitDeal = submitDeal;
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,
   dealType: mockDeal.dealType,
-  userInformation: generatePortalUserInformation(MOCK_PORTAL_USERS[0]._id),
+  checker: MOCK_PORTAL_USERS[0],
 });
 
 module.exports.createSubmitBody = createSubmitBody

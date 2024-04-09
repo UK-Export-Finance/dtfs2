@@ -1,4 +1,4 @@
-const { generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
+const { generateTfmUserInformation, generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -11,7 +11,7 @@ const newDeal = (dealOverrides) => ({
   dealType: 'BSS/EWCS',
   maker: {
     ...MOCK_PORTAL_USER,
-    ...dealOverrides.maker ? dealOverrides.maker : {},
+    ...(dealOverrides.maker ? dealOverrides.maker : {}),
   },
   details: {
     ...dealOverrides.details,
@@ -20,7 +20,7 @@ const newDeal = (dealOverrides) => ({
   editedBy: [],
   eligibility: {
     status: 'Not started',
-    criteria: [{ }],
+    criteria: [{}],
     ...dealOverrides.eligibility,
   },
   bondTransactions: dealOverrides.bondTransactions,
@@ -30,43 +30,53 @@ const newDeal = (dealOverrides) => ({
 module.exports.newDeal = newDeal;
 
 const createAndSubmitDeals = async (deals) => {
-  const result = await Promise.all(deals.map(async (deal) => {
-    // create deal
-    const createResponse = await api.post({
-      deal,
-      user: deal.maker,
-    }).to('/v1/portal/deals');
+  const result = await Promise.all(
+    deals.map(async (deal) => {
+      // create deal
+      const createResponse = await api
+        .post({
+          deal,
+          user: deal.maker,
+        })
+        .to('/v1/portal/deals');
 
-    expect(createResponse.status).toEqual(200);
+      expect(createResponse.status).toEqual(200);
 
-    // submit deal
-    const submitResponse = await api.put({
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-      dealId: createResponse.body._id,
-      checker: MOCK_PORTAL_USER,
-    }).to('/v1/tfm/deals/submit');
+      // submit deal
+      const submitResponse = await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId: createResponse.body._id,
+          userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+        })
+        .to('/v1/tfm/deals/submit');
 
-    expect(submitResponse.status).toEqual(200);
+      expect(submitResponse.status).toEqual(200);
 
-    return submitResponse.body;
-  }));
+      return submitResponse.body;
+    }),
+  );
 
   return result;
 };
 module.exports.createAndSubmitDeals = createAndSubmitDeals;
 
 const updateDealsTfm = async (dealsTfmUpdate, sessionTfmUser) => {
-  const result = await Promise.all(dealsTfmUpdate.map(async (deal) => {
-    const updateResponse = await api.put({
-      dealUpdate: {
-        tfm: deal.tfm,
-      },
-      userInformation: generateTfmUserInformation(sessionTfmUser._id),
-    }).to(`/v1/tfm/deals/${deal._id}`);
+  const result = await Promise.all(
+    dealsTfmUpdate.map(async (deal) => {
+      const updateResponse = await api
+        .put({
+          dealUpdate: {
+            tfm: deal.tfm,
+          },
+          userInformation: generateTfmUserInformation(sessionTfmUser._id),
+        })
+        .to(`/v1/tfm/deals/${deal._id}`);
 
-    expect(updateResponse.status).toEqual(200);
-    return updateResponse.body;
-  }));
+      expect(updateResponse.status).toEqual(200);
+      return updateResponse.body;
+    }),
+  );
 
   return result;
 };
@@ -97,13 +107,7 @@ describe('/v1/tfm/deals', () => {
       });
 
       beforeEach(async () => {
-        await createAndSubmitDeals([
-          miaDeal,
-          minDeal,
-          minDeal,
-          ainDeal,
-          ainDeal,
-        ]);
+        await createAndSubmitDeals([miaDeal, minDeal, minDeal, ainDeal, ainDeal]);
       });
 
       it('without pagination', async () => {

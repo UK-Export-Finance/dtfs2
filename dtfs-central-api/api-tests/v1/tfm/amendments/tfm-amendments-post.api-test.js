@@ -1,3 +1,4 @@
+const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -46,7 +47,9 @@ describe('POST TFM amendments', () => {
       const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
 
-      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, checker: MOCK_PORTAL_USER}).to('/v1/tfm/deals/submit');
+      await api
+        .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id) })
+        .to('/v1/tfm/deals/submit');
 
       const { body } = await api.post().to(`/v1/tfm/facilities/${newId}/amendments`);
       expect(body).toEqual({ amendmentId: expect.any(String) });
@@ -56,7 +59,9 @@ describe('POST TFM amendments', () => {
       const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
 
-      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, checker: MOCK_PORTAL_USER}).to('/v1/tfm/deals/submit');
+      await api
+        .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id) })
+        .to('/v1/tfm/deals/submit');
 
       const { body: bodyPostResponse1 } = await api.post().to(`/v1/tfm/facilities/${newId}/amendments`);
       const updatePayload1 = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
@@ -69,7 +74,9 @@ describe('POST TFM amendments', () => {
       const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
 
-      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, checker: MOCK_PORTAL_USER}).to('/v1/tfm/deals/submit');
+      await api
+        .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id) })
+        .to('/v1/tfm/deals/submit');
 
       await api.post().to(`/v1/tfm/facilities/${newId}/amendments`);
       const { body } = await api.post().to('/v1/tfm/facilities/62727d055ca1841f08216353/amendments');
@@ -77,7 +84,9 @@ describe('POST TFM amendments', () => {
     });
 
     it('should return 400 if the facility Id is not valid', async () => {
-      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, checker: MOCK_PORTAL_USER}).to('/v1/tfm/deals/submit');
+      await api
+        .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id) })
+        .to('/v1/tfm/deals/submit');
 
       const { body } = await api.post().to('/v1/tfm/facilities/123/amendments');
       expect(body).toEqual({ status: 400, message: 'Invalid facility id' });

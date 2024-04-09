@@ -1,3 +1,4 @@
+const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -21,7 +22,7 @@ describe('/v1/tfm/facilities', () => {
           sortByField: 'ukefFacilityId',
           fieldValuesInAscendingOrder: ['10000001', '10000002', '10000003', '10000004'],
           generateFacilities: generateFacilitiesFromValues,
-          getFieldPathAndExpectedFieldValues: getFieldPathAndExpectedFieldValuesForField
+          getFieldPathAndExpectedFieldValues: getFieldPathAndExpectedFieldValuesForField,
         },
         {
           sortByField: 'tfmFacilities.type',
@@ -29,53 +30,43 @@ describe('/v1/tfm/facilities', () => {
             CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
             CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
             CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
-            CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN
+            CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
           ],
           generateFacilities: generateFacilitiesFromValues,
-          getFieldPathAndExpectedFieldValues: getFieldPathAndExpectedFieldValuesForField
+          getFieldPathAndExpectedFieldValues: getFieldPathAndExpectedFieldValuesForField,
         },
         {
           sortByField: 'tfmFacilities.companyName',
           fieldValuesInAscendingOrder: ['A Company Name', 'B Company Name', 'C Company Name', 'D Company Name'],
           generateFacilities: generateFacilitiesFromCompanyNameValues,
-          getFieldPathAndExpectedFieldValues: getFieldPathAndExpectedFieldValuesForField
+          getFieldPathAndExpectedFieldValues: getFieldPathAndExpectedFieldValuesForField,
         },
         {
           sortByField: 'tfmFacilities.value',
           fieldValuesInAscendingOrder: ['1000', '2000', '3000', '4000'],
           generateFacilities: generateFacilitiesFromValues,
-          getFieldPathAndExpectedFieldValues: getFieldPathAndExpectedFieldValuesForField
+          getFieldPathAndExpectedFieldValues: getFieldPathAndExpectedFieldValuesForField,
         },
         {
           sortByField: 'tfmFacilities.coverEndDate',
           fieldValuesInAscendingOrder: ['2021-08-12T00:00:00.000Z', '2022-08-12T00:00:00.000Z', '2023-08-12T00:00:00.000Z', '2024-08-12T00:00:00.000Z'],
           generateFacilities: generateFacilitiesFromValues,
-          getFieldPathAndExpectedFieldValues: getFieldPathAndExpectedFieldValuesForField
+          getFieldPathAndExpectedFieldValues: getFieldPathAndExpectedFieldValuesForField,
         },
         {
           sortByField: 'facilityStage',
           fieldValuesInAscendingOrder: ['Issued', 'Issued', 'Unissued', 'Unissued'],
           generateFacilities: generateFacilitiesFromFacilityStageValues,
-          getFieldPathAndExpectedFieldValues: getFieldPathAndExpectedFieldValuesForFacilityStage
+          getFieldPathAndExpectedFieldValues: getFieldPathAndExpectedFieldValuesForFacilityStage,
         },
-      ])('by $sortByField', (
-        {
-          sortByField,
-          fieldValuesInAscendingOrder,
-          generateFacilities,
-          getFieldPathAndExpectedFieldValues
-        }
-      ) => {
+      ])('by $sortByField', ({ sortByField, fieldValuesInAscendingOrder, generateFacilities, getFieldPathAndExpectedFieldValues }) => {
         const facilities = generateFacilities(fieldValuesInAscendingOrder, sortByField);
 
         beforeEach(async () => {
           await createAndSubmitFacilities(facilities);
         });
 
-        describe.each([
-          'ascending',
-          'descending'
-        ])('in %s order', (sortByOrder) => {
+        describe.each(['ascending', 'descending'])('in %s order', (sortByOrder) => {
           const urlWithoutPagination = `/v1/tfm/facilities?sortBy[order]=${sortByOrder}&sortBy[field]=${sortByField}`;
 
           it('without pagination', async () => {
@@ -140,7 +131,7 @@ describe('/v1/tfm/facilities', () => {
     return {
       dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
       exporter: { companyName: 'Mock Company name' },
-      ...overrides
+      ...overrides,
     };
   }
 
@@ -152,7 +143,7 @@ describe('/v1/tfm/facilities', () => {
       currency: { id: 'GBP' },
       coverEndDate: '2021-08-12T00:00:00.000Z',
       hasBeenIssued: true,
-      ...overrides
+      ...overrides,
     };
   }
 
@@ -166,7 +157,7 @@ describe('/v1/tfm/facilities', () => {
       setObjectPropertyValueFromStringPath(overrides, fieldPathExcludingTfmFacilities, value);
       facilities.push({
         facility: newFacility(overrides),
-        deal: newDeal({})
+        deal: newDeal({}),
       });
     });
     return facilities;
@@ -177,7 +168,7 @@ describe('/v1/tfm/facilities', () => {
     companyNameValues.forEach((companyName) => {
       facilities.push({
         facility: newFacility({}),
-        deal: newDeal({ exporter: { companyName } })
+        deal: newDeal({ exporter: { companyName } }),
       });
     });
     return facilities;
@@ -188,7 +179,7 @@ describe('/v1/tfm/facilities', () => {
     facilityStageValues.forEach((facilityStage) => {
       facilities.push({
         facility: newFacility({ hasBeenIssued: facilityStage === 'Issued' }),
-        deal: newDeal({})
+        deal: newDeal({}),
       });
     });
     return facilities;
@@ -205,7 +196,7 @@ describe('/v1/tfm/facilities', () => {
       facility.dealId = dealId;
       await api.post(facility).to('/v1/portal/gef/facilities');
 
-      await api.put({ dealType: deal.dealType, dealId, checker: MOCK_PORTAL_USER }).to('/v1/tfm/deals/submit');
+      await api.put({ dealType: deal.dealType, dealId, userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id) }).to('/v1/tfm/deals/submit');
     }
   }
 

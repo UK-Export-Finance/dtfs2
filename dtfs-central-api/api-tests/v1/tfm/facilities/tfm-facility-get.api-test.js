@@ -1,3 +1,4 @@
+const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -46,11 +47,13 @@ describe('/v1/tfm/facilities', () => {
       const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
 
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-        checker: MOCK_PORTAL_USER,
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+          userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+        })
+        .to('/v1/tfm/deals/submit');
 
       const { status, body } = await api.get(`/v1/tfm/facilities/${newId}`);
 

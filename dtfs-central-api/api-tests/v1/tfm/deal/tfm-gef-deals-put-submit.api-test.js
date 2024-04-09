@@ -1,3 +1,4 @@
+const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -29,11 +30,13 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
   it('404s for an unknown id', async () => {
     const invalidDealId = '61e54e2e532cf2027303e001';
 
-    const { status } = await api.put({
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-      dealId: invalidDealId,
-      checker: MOCK_PORTAL_USER,
-    }).to('/v1/tfm/deals/submit');
+    const { status } = await api
+      .put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+        dealId: invalidDealId,
+        userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+      })
+      .to('/v1/tfm/deals/submit');
     expect(status).toEqual(404);
   });
 
@@ -41,11 +44,13 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
     const { body: createDealBody } = await api.post(newDeal).to('/v1/portal/gef/deals');
     const dealId = createDealBody._id;
 
-    const { status, body } = await api.put({
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-      dealId,
-      checker: MOCK_PORTAL_USER,
-    }).to('/v1/tfm/deals/submit');
+    const { status, body } = await api
+      .put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+        dealId,
+        userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+      })
+      .to('/v1/tfm/deals/submit');
 
     expect(status).toEqual(200);
 
@@ -84,11 +89,13 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
     const facility2Id = facility2Body._id;
 
     // submit deal
-    const { status } = await api.put({
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-      dealId,
-      checker: MOCK_PORTAL_USER,
-    }).to('/v1/tfm/deals/submit');
+    const { status } = await api
+      .put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+        dealId,
+        userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+      })
+      .to('/v1/tfm/deals/submit');
 
     expect(status).toEqual(200);
 

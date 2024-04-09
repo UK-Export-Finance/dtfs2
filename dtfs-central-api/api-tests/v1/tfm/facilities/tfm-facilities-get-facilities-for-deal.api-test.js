@@ -1,9 +1,10 @@
+const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
-const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user')
+const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
@@ -40,11 +41,13 @@ describe('/v1/tfm/deals/:id/facilities', () => {
       await api.post(newFacility).to('/v1/portal/gef/facilities');
 
       // submit deal/facilities
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-        dealId,
-        checker: MOCK_PORTAL_USER,
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+          dealId,
+          userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+        })
+        .to('/v1/tfm/deals/submit');
 
       const { status, body } = await api.get(`/v1/tfm/deals/${dealId}/facilities`);
 

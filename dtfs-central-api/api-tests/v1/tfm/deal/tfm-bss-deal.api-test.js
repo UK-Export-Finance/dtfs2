@@ -7,7 +7,6 @@ const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
-
 const newDeal = aDeal({
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
   additionalRefName: 'mock name',
@@ -34,11 +33,13 @@ describe('/v1/tfm/deal/:id', () => {
       const postResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
       const dealId = postResult.body._id;
 
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-        checker: MOCK_PORTAL_USER,
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+          userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+        })
+        .to('/v1/tfm/deals/submit');
 
       const { status, body } = await api.get(`/v1/tfm/deals/${dealId}`);
 
@@ -78,25 +79,21 @@ describe('/v1/tfm/deal/:id', () => {
         const { body: loan1 } = await api.get(`/v1/portal/facilities/${createdLoan1._id}`);
         const { body: loan2 } = await api.get(`/v1/portal/facilities/${createdLoan2._id}`);
 
-        await api.put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-          dealId,
-          checker: MOCK_PORTAL_USER,
-        }).to('/v1/tfm/deals/submit');
+        await api
+          .put({
+            dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+            dealId,
+            userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+          })
+          .to('/v1/tfm/deals/submit');
 
         const { status, body } = await api.get(`/v1/tfm/deals/${dealId}`);
 
         expect(status).toEqual(200);
 
-        expect(body.deal.dealSnapshot.bondTransactions.items).toEqual([
-          bond1,
-          bond2,
-        ]);
+        expect(body.deal.dealSnapshot.bondTransactions.items).toEqual([bond1, bond2]);
 
-        expect(body.deal.dealSnapshot.loanTransactions.items).toEqual([
-          loan1,
-          loan2,
-        ]);
+        expect(body.deal.dealSnapshot.loanTransactions.items).toEqual([loan1, loan2]);
       });
     });
   });
@@ -118,17 +115,21 @@ describe('/v1/tfm/deal/:id', () => {
           },
         },
       };
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-        checker: MOCK_PORTAL_USER,
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+          userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+        })
+        .to('/v1/tfm/deals/submit');
 
       // add some dummy data to deal.tfm
-      await api.put({
-        dealUpdate: mockTfm,
-        userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
-      }).to(`/v1/tfm/deals/${dealId}`);
+      await api
+        .put({
+          dealUpdate: mockTfm,
+          userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+        })
+        .to(`/v1/tfm/deals/${dealId}`);
 
       const snapshotUpdate = {
         someNewField: true,
