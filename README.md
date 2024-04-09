@@ -1,6 +1,3 @@
-# Workaround to get around favicon issue
-There is an issue regarding duplicated code that requires a workaround when merging small tickets. This is one such ticket. This is to be removed in a subsequent branch.
-
 # Digital Trade Finance Service :briefcase:
 
 This repository contains the code for the UK Export Finance Trade Finance Service.
