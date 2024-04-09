@@ -373,7 +373,7 @@ const updateFacilityAmendment = async (facilityId, amendmentId, payload, auditDe
         url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
         headers: headers.central,
         data: {
-          ...payload,
+          payload,
           auditDetails,
         },
       });

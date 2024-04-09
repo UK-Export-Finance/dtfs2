@@ -21,10 +21,10 @@ const amendmentVariables = require('../__mocks__/amendmentVariables');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
 const MOCK_NOTIFY_EMAIL_BAD_RESPONSE = require('../__mocks__/mock-notify-email-bad-response');
 
+const mockUserInformation = { userType: 'test' };
+
 describe('sendManualDecisionAmendmentEmail()', () => {
-  const sendEmailApiSpy = jest.fn(() => Promise.resolve(
-    MOCK_NOTIFY_EMAIL_RESPONSE,
-  ));
+  const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
   const updateFacilityAmendmentSpy = jest.fn(() => Promise.resolve({}));
 
@@ -39,7 +39,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
   });
 
   it('should send approved without conditions email with correct details for both amendments', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsBothAmendments);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsBothAmendments, mockUserInformation);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS,
@@ -54,27 +54,24 @@ describe('sendManualDecisionAmendmentEmail()', () => {
     );
 
     // PIM email
-    expect(sendEmailApiSpy).toHaveBeenCalledWith(
-      CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS,
-      'pim@test.com',
-      {
-        bankReferenceNumber: expect.any(String),
-        exporterName: expect.any(String),
-        recipientName: expect.any(String),
-        ukefDealId: expect.any(String),
-        ukefFacilityId: expect.any(String),
-      },
-    );
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS, 'pim@test.com', {
+      bankReferenceNumber: expect.any(String),
+      exporterName: expect.any(String),
+      recipientName: expect.any(String),
+      ukefDealId: expect.any(String),
+      ukefFacilityId: expect.any(String),
+    });
 
     expect(updateFacilityAmendmentSpy).toHaveBeenCalledWith(
       amendmentVariables.approvedWithoutConditionsBothAmendments.facilityId,
       amendmentVariables.approvedWithoutConditionsBothAmendments.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
+      mockUserInformation,
     );
   });
 
   it('should send approved without conditions email with correct details for both amendments if BSS', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsBothAmendmentsBSS);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsBothAmendmentsBSS, mockUserInformation);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS,
@@ -89,27 +86,24 @@ describe('sendManualDecisionAmendmentEmail()', () => {
     );
 
     // PIM email
-    expect(sendEmailApiSpy).toHaveBeenCalledWith(
-      CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS,
-      'pim@test.com',
-      {
-        bankReferenceNumber: expect.any(String),
-        exporterName: expect.any(String),
-        recipientName: expect.any(String),
-        ukefDealId: expect.any(String),
-        ukefFacilityId: expect.any(String),
-      },
-    );
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS, 'pim@test.com', {
+      bankReferenceNumber: expect.any(String),
+      exporterName: expect.any(String),
+      recipientName: expect.any(String),
+      ukefDealId: expect.any(String),
+      ukefFacilityId: expect.any(String),
+    });
 
     expect(updateFacilityAmendmentSpy).toHaveBeenCalledWith(
       amendmentVariables.approvedWithoutConditionsBothAmendments.facilityId,
       amendmentVariables.approvedWithoutConditionsBothAmendments.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
+      mockUserInformation,
     );
   });
 
   it('should send approved without conditions email with correct details for a single amendment change', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsOneAmendment);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsOneAmendment, mockUserInformation);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS,
@@ -124,27 +118,24 @@ describe('sendManualDecisionAmendmentEmail()', () => {
     );
 
     // PIM email
-    expect(sendEmailApiSpy).toHaveBeenCalledWith(
-      CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS,
-      'pim@test.com',
-      {
-        bankReferenceNumber: expect.any(String),
-        exporterName: expect.any(String),
-        recipientName: expect.any(String),
-        ukefDealId: expect.any(String),
-        ukefFacilityId: expect.any(String),
-      },
-    );
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS, 'pim@test.com', {
+      bankReferenceNumber: expect.any(String),
+      exporterName: expect.any(String),
+      recipientName: expect.any(String),
+      ukefDealId: expect.any(String),
+      ukefFacilityId: expect.any(String),
+    });
 
     expect(updateFacilityAmendmentSpy).toHaveBeenCalledWith(
       amendmentVariables.approvedWithoutConditionsOneAmendment.facilityId,
       amendmentVariables.approvedWithoutConditionsOneAmendment.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
+      mockUserInformation,
     );
   });
 
   it('should send approved with conditions email with correct details for both amendments being approved w/ conditions', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsBothAmendments);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsBothAmendments, mockUserInformation);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
@@ -160,28 +151,25 @@ describe('sendManualDecisionAmendmentEmail()', () => {
     );
 
     // PIM email
-    expect(sendEmailApiSpy).toHaveBeenCalledWith(
-      CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
-      'pim@test.com',
-      {
-        bankReferenceNumber: expect.any(String),
-        exporterName: expect.any(String),
-        recipientName: expect.any(String),
-        ukefDealId: expect.any(String),
-        ukefFacilityId: expect.any(String),
-        conditions: expect.any(String),
-      },
-    );
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS, 'pim@test.com', {
+      bankReferenceNumber: expect.any(String),
+      exporterName: expect.any(String),
+      recipientName: expect.any(String),
+      ukefDealId: expect.any(String),
+      ukefFacilityId: expect.any(String),
+      conditions: expect.any(String),
+    });
 
     expect(updateFacilityAmendmentSpy).toHaveBeenCalledWith(
       amendmentVariables.approvedWithConditionsBothAmendments.facilityId,
       amendmentVariables.approvedWithConditionsBothAmendments.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
+      mockUserInformation,
     );
   });
 
   it('should send approved with conditions email with correct details for both amendments being approved w/ conditions when BSS', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsBothAmendmentsBSS);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsBothAmendmentsBSS, mockUserInformation);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
@@ -197,28 +185,25 @@ describe('sendManualDecisionAmendmentEmail()', () => {
     );
 
     // PIM email
-    expect(sendEmailApiSpy).toHaveBeenCalledWith(
-      CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
-      'pim@test.com',
-      {
-        bankReferenceNumber: expect.any(String),
-        exporterName: expect.any(String),
-        recipientName: expect.any(String),
-        ukefDealId: expect.any(String),
-        ukefFacilityId: expect.any(String),
-        conditions: expect.any(String),
-      },
-    );
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS, 'pim@test.com', {
+      bankReferenceNumber: expect.any(String),
+      exporterName: expect.any(String),
+      recipientName: expect.any(String),
+      ukefDealId: expect.any(String),
+      ukefFacilityId: expect.any(String),
+      conditions: expect.any(String),
+    });
 
     expect(updateFacilityAmendmentSpy).toHaveBeenCalledWith(
       amendmentVariables.approvedWithConditionsBothAmendments.facilityId,
       amendmentVariables.approvedWithConditionsBothAmendments.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
+      mockUserInformation,
     );
   });
 
   it('should send approved without conditions email with correct details for a single amendment change being approved w/ conditions', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsOneAmendment);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsOneAmendment, mockUserInformation);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
@@ -234,28 +219,25 @@ describe('sendManualDecisionAmendmentEmail()', () => {
     );
 
     // PIM email
-    expect(sendEmailApiSpy).toHaveBeenCalledWith(
-      CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
-      'pim@test.com',
-      {
-        bankReferenceNumber: expect.any(String),
-        exporterName: expect.any(String),
-        recipientName: expect.any(String),
-        ukefDealId: expect.any(String),
-        ukefFacilityId: expect.any(String),
-        conditions: expect.any(String),
-      },
-    );
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS, 'pim@test.com', {
+      bankReferenceNumber: expect.any(String),
+      exporterName: expect.any(String),
+      recipientName: expect.any(String),
+      ukefDealId: expect.any(String),
+      ukefFacilityId: expect.any(String),
+      conditions: expect.any(String),
+    });
 
     expect(updateFacilityAmendmentSpy).toHaveBeenCalledWith(
       amendmentVariables.approvedWithConditionsOneAmendment.facilityId,
       amendmentVariables.approvedWithConditionsOneAmendment.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
+      mockUserInformation,
     );
   });
 
   it('should send approved with conditions email with correct details for both amendments being approved w/ conditions and approved w/o conditions', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithWithoutConditionsBothAmendments);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithWithoutConditionsBothAmendments, mockUserInformation);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
@@ -271,28 +253,25 @@ describe('sendManualDecisionAmendmentEmail()', () => {
     );
 
     // PIM email
-    expect(sendEmailApiSpy).toHaveBeenCalledWith(
-      CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
-      'pim@test.com',
-      {
-        bankReferenceNumber: expect.any(String),
-        exporterName: expect.any(String),
-        recipientName: expect.any(String),
-        ukefDealId: expect.any(String),
-        ukefFacilityId: expect.any(String),
-        conditions: expect.any(String),
-      },
-    );
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS, 'pim@test.com', {
+      bankReferenceNumber: expect.any(String),
+      exporterName: expect.any(String),
+      recipientName: expect.any(String),
+      ukefDealId: expect.any(String),
+      ukefFacilityId: expect.any(String),
+      conditions: expect.any(String),
+    });
 
     expect(updateFacilityAmendmentSpy).toHaveBeenCalledWith(
       amendmentVariables.approvedWithWithoutConditionsBothAmendments.facilityId,
       amendmentVariables.approvedWithWithoutConditionsBothAmendments.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
+      mockUserInformation,
     );
   });
 
   it('should send approved with conditions declined email with correct details for both amendments being approved w/ conditions and declined', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsDeclined);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsDeclined, mockUserInformation);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS_DECLINED,
@@ -311,31 +290,28 @@ describe('sendManualDecisionAmendmentEmail()', () => {
     );
 
     // PIM email
-    expect(sendEmailApiSpy).toHaveBeenCalledWith(
-      CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS_DECLINED,
-      'pim@test.com',
-      {
-        bankReferenceNumber: expect.any(String),
-        exporterName: expect.any(String),
-        recipientName: expect.any(String),
-        ukefDealId: expect.any(String),
-        ukefFacilityId: expect.any(String),
-        conditions: expect.any(String),
-        declined: expect.any(String),
-        amendmentTypeApproved: CONSTANTS.DEALS.AMENDMENT_TYPE.VALUE,
-        amendmentTypeDeclined: CONSTANTS.DEALS.AMENDMENT_TYPE.COVER_END_DATE,
-      },
-    );
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS_DECLINED, 'pim@test.com', {
+      bankReferenceNumber: expect.any(String),
+      exporterName: expect.any(String),
+      recipientName: expect.any(String),
+      ukefDealId: expect.any(String),
+      ukefFacilityId: expect.any(String),
+      conditions: expect.any(String),
+      declined: expect.any(String),
+      amendmentTypeApproved: CONSTANTS.DEALS.AMENDMENT_TYPE.VALUE,
+      amendmentTypeDeclined: CONSTANTS.DEALS.AMENDMENT_TYPE.COVER_END_DATE,
+    });
 
     expect(updateFacilityAmendmentSpy).toHaveBeenCalledWith(
       amendmentVariables.approvedWithConditionsDeclined.facilityId,
       amendmentVariables.approvedWithConditionsDeclined.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
+      mockUserInformation,
     );
   });
 
   it('should send approved with conditions declined email with correct details for both amendments being approved w/ conditions and declined', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsDeclinedSwapped);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsDeclinedSwapped, mockUserInformation);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS_DECLINED,
@@ -354,31 +330,28 @@ describe('sendManualDecisionAmendmentEmail()', () => {
     );
 
     // PIM email
-    expect(sendEmailApiSpy).toHaveBeenCalledWith(
-      CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS_DECLINED,
-      'pim@test.com',
-      {
-        bankReferenceNumber: expect.any(String),
-        exporterName: expect.any(String),
-        recipientName: expect.any(String),
-        ukefDealId: expect.any(String),
-        ukefFacilityId: expect.any(String),
-        conditions: expect.any(String),
-        declined: expect.any(String),
-        amendmentTypeApproved: CONSTANTS.DEALS.AMENDMENT_TYPE.COVER_END_DATE,
-        amendmentTypeDeclined: CONSTANTS.DEALS.AMENDMENT_TYPE.VALUE,
-      },
-    );
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS_DECLINED, 'pim@test.com', {
+      bankReferenceNumber: expect.any(String),
+      exporterName: expect.any(String),
+      recipientName: expect.any(String),
+      ukefDealId: expect.any(String),
+      ukefFacilityId: expect.any(String),
+      conditions: expect.any(String),
+      declined: expect.any(String),
+      amendmentTypeApproved: CONSTANTS.DEALS.AMENDMENT_TYPE.COVER_END_DATE,
+      amendmentTypeDeclined: CONSTANTS.DEALS.AMENDMENT_TYPE.VALUE,
+    });
 
     expect(updateFacilityAmendmentSpy).toHaveBeenCalledWith(
       amendmentVariables.approvedWithConditionsDeclinedSwapped.facilityId,
       amendmentVariables.approvedWithConditionsDeclinedSwapped.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
+      mockUserInformation,
     );
   });
 
   it('should send approved without conditions declined email with correct details for both amendments being approved wo/ conditions and declined', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsDeclined);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsDeclined, mockUserInformation);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS_DECLINED,
@@ -396,30 +369,27 @@ describe('sendManualDecisionAmendmentEmail()', () => {
     );
 
     // PIM email
-    expect(sendEmailApiSpy).toHaveBeenCalledWith(
-      CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS_DECLINED,
-      'pim@test.com',
-      {
-        bankReferenceNumber: expect.any(String),
-        exporterName: expect.any(String),
-        recipientName: expect.any(String),
-        ukefDealId: expect.any(String),
-        ukefFacilityId: expect.any(String),
-        declined: expect.any(String),
-        amendmentTypeApproved: CONSTANTS.DEALS.AMENDMENT_TYPE.VALUE,
-        amendmentTypeDeclined: CONSTANTS.DEALS.AMENDMENT_TYPE.COVER_END_DATE,
-      },
-    );
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS_DECLINED, 'pim@test.com', {
+      bankReferenceNumber: expect.any(String),
+      exporterName: expect.any(String),
+      recipientName: expect.any(String),
+      ukefDealId: expect.any(String),
+      ukefFacilityId: expect.any(String),
+      declined: expect.any(String),
+      amendmentTypeApproved: CONSTANTS.DEALS.AMENDMENT_TYPE.VALUE,
+      amendmentTypeDeclined: CONSTANTS.DEALS.AMENDMENT_TYPE.COVER_END_DATE,
+    });
 
     expect(updateFacilityAmendmentSpy).toHaveBeenCalledWith(
       amendmentVariables.approvedWithoutConditionsDeclined.facilityId,
       amendmentVariables.approvedWithoutConditionsDeclined.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
+      mockUserInformation,
     );
   });
 
   it('should send approved without conditions declined email with correct details for both amendments being approved wo/ conditions and declined', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsDeclinedSwapped);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsDeclinedSwapped, mockUserInformation);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS_DECLINED,
@@ -437,30 +407,27 @@ describe('sendManualDecisionAmendmentEmail()', () => {
     );
 
     // PIM email
-    expect(sendEmailApiSpy).toHaveBeenCalledWith(
-      CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS_DECLINED,
-      'pim@test.com',
-      {
-        bankReferenceNumber: expect.any(String),
-        exporterName: expect.any(String),
-        recipientName: expect.any(String),
-        ukefDealId: expect.any(String),
-        ukefFacilityId: expect.any(String),
-        declined: expect.any(String),
-        amendmentTypeApproved: CONSTANTS.DEALS.AMENDMENT_TYPE.COVER_END_DATE,
-        amendmentTypeDeclined: CONSTANTS.DEALS.AMENDMENT_TYPE.VALUE,
-      },
-    );
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS_DECLINED, 'pim@test.com', {
+      bankReferenceNumber: expect.any(String),
+      exporterName: expect.any(String),
+      recipientName: expect.any(String),
+      ukefDealId: expect.any(String),
+      ukefFacilityId: expect.any(String),
+      declined: expect.any(String),
+      amendmentTypeApproved: CONSTANTS.DEALS.AMENDMENT_TYPE.COVER_END_DATE,
+      amendmentTypeDeclined: CONSTANTS.DEALS.AMENDMENT_TYPE.VALUE,
+    });
 
     expect(updateFacilityAmendmentSpy).toHaveBeenCalledWith(
       amendmentVariables.approvedWithoutConditionsDeclinedSwapped.facilityId,
       amendmentVariables.approvedWithoutConditionsDeclinedSwapped.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
+      mockUserInformation,
     );
   });
 
   it('should send declined email with correct details for both amendments being declined', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.declinedBothAmendments);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.declinedBothAmendments, mockUserInformation);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_DECLINED,
@@ -476,28 +443,25 @@ describe('sendManualDecisionAmendmentEmail()', () => {
     );
 
     // PIM email
-    expect(sendEmailApiSpy).toHaveBeenCalledWith(
-      CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_DECLINED,
-      'pim@test.com',
-      {
-        bankReferenceNumber: expect.any(String),
-        exporterName: expect.any(String),
-        recipientName: expect.any(String),
-        ukefDealId: expect.any(String),
-        ukefFacilityId: expect.any(String),
-        declined: amendmentVariables.declinedBothAmendments.amendment.ukefDecision.declined,
-      },
-    );
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_DECLINED, 'pim@test.com', {
+      bankReferenceNumber: expect.any(String),
+      exporterName: expect.any(String),
+      recipientName: expect.any(String),
+      ukefDealId: expect.any(String),
+      ukefFacilityId: expect.any(String),
+      declined: amendmentVariables.declinedBothAmendments.amendment.ukefDecision.declined,
+    });
 
     expect(updateFacilityAmendmentSpy).toHaveBeenCalledWith(
       amendmentVariables.declinedBothAmendments.facilityId,
       amendmentVariables.declinedBothAmendments.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
+      mockUserInformation,
     );
   });
 
   it('should send declined email with correct details for one amendment change only being declined', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.declinedOneAmendment);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.declinedOneAmendment, mockUserInformation);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_DECLINED,
@@ -513,29 +477,26 @@ describe('sendManualDecisionAmendmentEmail()', () => {
     );
 
     // PIM email
-    expect(sendEmailApiSpy).toHaveBeenCalledWith(
-      CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_DECLINED,
-      'pim@test.com',
-      {
-        bankReferenceNumber: expect.any(String),
-        exporterName: expect.any(String),
-        recipientName: expect.any(String),
-        ukefDealId: expect.any(String),
-        ukefFacilityId: expect.any(String),
-        declined: expect.any(String),
-      },
-    );
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_DECLINED, 'pim@test.com', {
+      bankReferenceNumber: expect.any(String),
+      exporterName: expect.any(String),
+      recipientName: expect.any(String),
+      ukefDealId: expect.any(String),
+      ukefFacilityId: expect.any(String),
+      declined: expect.any(String),
+    });
 
     expect(updateFacilityAmendmentSpy).toHaveBeenCalledWith(
       amendmentVariables.declinedOneAmendment.facilityId,
       amendmentVariables.declinedOneAmendment.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
+      mockUserInformation,
     );
   });
 
   it('should not call APIs if does not meet any conditions', async () => {
     // does not have correct values for value and coverEndDate
-    await sendManualDecisionAmendmentEmail(amendmentVariables.wrongAmendments);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.wrongAmendments, mockUserInformation);
 
     expect(sendEmailApiSpy).not.toHaveBeenCalled();
 
@@ -544,9 +505,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
 });
 
 describe('sendFirstTaskEmail()', () => {
-  const sendEmailApiSpy = jest.fn(() => Promise.resolve(
-    MOCK_NOTIFY_EMAIL_RESPONSE,
-  ));
+  const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
   const updateFacilityAmendmentSpy = jest.fn(() => Promise.resolve({}));
 
@@ -560,7 +519,7 @@ describe('sendFirstTaskEmail()', () => {
   });
 
   it('should send first task email with correct variables with gef deal', async () => {
-    await sendFirstTaskEmail(amendmentVariables.firstTaskVariables);
+    await sendFirstTaskEmail(amendmentVariables.firstTaskVariables, mockUserInformation);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
@@ -577,6 +536,7 @@ describe('sendFirstTaskEmail()', () => {
       amendmentVariables.approvedWithoutConditionsBothAmendments.facilityId,
       amendmentVariables.approvedWithoutConditionsBothAmendments.amendmentId,
       { firstTaskEmailSent: true },
+      mockUserInformation,
     );
   });
 
@@ -585,7 +545,7 @@ describe('sendFirstTaskEmail()', () => {
     firstTaskVariables.dealSnapshot.ukefDealId = null;
     firstTaskVariables.dealSnapshot.details = { ukefDealId: '123' };
 
-    await sendFirstTaskEmail(firstTaskVariables);
+    await sendFirstTaskEmail(firstTaskVariables, mockUserInformation);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
@@ -602,12 +562,13 @@ describe('sendFirstTaskEmail()', () => {
       amendmentVariables.approvedWithoutConditionsBothAmendments.facilityId,
       amendmentVariables.approvedWithoutConditionsBothAmendments.amendmentId,
       { firstTaskEmailSent: true },
+      mockUserInformation,
     );
   });
 
   it('should not call APIs if does not meet any conditions', async () => {
     // does not have correct values for value and coverEndDate
-    await sendFirstTaskEmail(amendmentVariables.noTaskVariables);
+    await sendFirstTaskEmail(amendmentVariables.noTaskVariables, mockUserInformation);
 
     expect(sendEmailApiSpy).not.toHaveBeenCalled();
 
@@ -1005,18 +966,14 @@ describe('addLatestAmendmentValue()', () => {
  */
 describe('internalAmendmentEmail()', () => {
   it('Should expect 400 on a bad request', async () => {
-    const sendEmailApiSpyBadResponse = jest.fn(() => Promise.resolve(
-      MOCK_NOTIFY_EMAIL_BAD_RESPONSE,
-    ));
+    const sendEmailApiSpyBadResponse = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_BAD_RESPONSE));
     api.sendEmail = sendEmailApiSpyBadResponse;
 
     const response = await internalAmendmentEmail('1234567890');
     expect(response.response.status).toEqual(400);
   });
 
-  const sendEmailApiSpy = jest.fn(() => Promise.resolve(
-    MOCK_NOTIFY_EMAIL_RESPONSE,
-  ));
+  const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
   beforeEach(() => {
     sendEmailApiSpy.mockClear();
@@ -1036,12 +993,8 @@ describe('internalAmendmentEmail()', () => {
   it('Should call the expected function with expected arguments set', async () => {
     await internalAmendmentEmail('1234567890');
 
-    expect(sendEmailApiSpy).toHaveBeenCalledWith(
-      CONSTANTS.EMAIL_TEMPLATE_IDS.INTERNAL_AMENDMENT_NOTIFICATION,
-      expect.any(String),
-      {
-        ukefFacilityId: '1234567890',
-      },
-    );
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.INTERNAL_AMENDMENT_NOTIFICATION, expect.any(String), {
+      ukefFacilityId: '1234567890',
+    });
   });
 });

@@ -53,7 +53,9 @@ describe('PUT TFM amendments', () => {
 
       const { status, body } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${newId}/amendments/`);
       const updatePayload = { createdBy: MOCK_PORTAL_USER };
-      const { body: bodyPutResponse } = await api.put({ updatePayload }).to(`/v1/tfm/facilities/${newId}/amendments/${body.amendmentId}`);
+      const { body: bodyPutResponse } = await api
+        .put({ payload: { updatePayload }, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+        .to(`/v1/tfm/facilities/${newId}/amendments/${body.amendmentId}`);
 
       const expected = {
         dealId: expect.any(String),
@@ -86,7 +88,9 @@ describe('PUT TFM amendments', () => {
 
       const updatePayload = { createdBy: MOCK_PORTAL_USER };
       const { status } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${newId}/amendments/`);
-      const { body: bodyPutResponse } = await api.put({ updatePayload }).to(`/v1/tfm/facilities/${newId}/amendments/626aa00e2446022434c52148`);
+      const { body: bodyPutResponse } = await api
+        .put({ payload: updatePayload, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+        .to(`/v1/tfm/facilities/${newId}/amendments/626aa00e2446022434c52148`);
 
       expect(status).toEqual(200);
       expect(bodyPutResponse).toEqual({ status: 404, message: 'The amendment does not exist' });
@@ -97,8 +101,10 @@ describe('PUT TFM amendments', () => {
       await api
         .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
         .to('/v1/tfm/deals/submit');
-      const { status, body } = await api.put({ amendmentsUpdate: {} }).to('/v1/tfm/facilities/123/amendments/1234');
-
+      
+        const { status, body } = await api
+        .put({ payload: { amendmentsUpdate: {} }, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+        .to('/v1/tfm/facilities/123/amendments/1234');
       expect(status).toEqual(400);
       expect(body).toEqual({ status: 400, message: 'Invalid facility or amendment id' });
     });

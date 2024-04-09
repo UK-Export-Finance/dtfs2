@@ -41,5 +41,4 @@ exports.updateTfmAmendment = async (req, res) => {
 
   const updatedAmendment = await findAmendmentById(facilityId, amendmentId);
   return res.status(200).json({ ...updatedAmendment });
-
 };
