@@ -47,7 +47,7 @@ const getPortalDeal = async (dealId, dealType) => {
  * the number has been granted by the number generator
  * Azure function
  */
-const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
+const submitDealAfterUkefIds = async (dealId, dealType, checker, userInformation) => {
   const deal = await getPortalDeal(dealId, dealType);
   console.info('Setting essential deal properties in TFM for deal %s', dealId);
 
@@ -55,8 +55,6 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
     console.error('Unable to find deal %s upon submission to TFM', dealId);
     return false;
   }
-
-  const userInformation = generatePortalUserInformation(checker._id);
 
   const submittedDeal = await api.submitDeal(dealType, dealId, userInformation);
   const mappedDeal = mapSubmittedDeal(submittedDeal);
@@ -206,10 +204,11 @@ exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
  * @param {string} dealId - The ID of the deal to be submitted.
  * @param {string} dealType - The type of the deal.
  * @param {object} checker - checker submitting the deal
+ * @param {import("@ukef/dtfs2-common/src/types/userInformation").UserInformation} userInformation - checker information
  * @returns {Promise<Object> | Boolean} - A promise that resolves to an object, other false.
  * @throws {Error} - If there is an error during the submission process.
  */
-const submitDealBeforeUkefIds = async (dealId, dealType, checker) => {
+const submitDealBeforeUkefIds = async (dealId, dealType, checker, userInformation) => {
   try {
     console.info('Submitting new deal %s to TFM', dealId);
     const deal = await getPortalDeal(dealId, dealType);
@@ -219,13 +218,13 @@ const submitDealBeforeUkefIds = async (dealId, dealType, checker) => {
       return false;
     }
 
-    const response = await api.submitDeal(dealType, dealId, generatePortalUserInformation(checker._id));
+    const response = await api.submitDeal(dealType, dealId, userInformation);
 
     if (!response) {
       throw new Error(`Unable to submit deal ${dealId} to TFM`);
     }
 
-    return submitDealAfterUkefIds(dealId, dealType, checker);
+    return submitDealAfterUkefIds(dealId, dealType, checker, userInformation);
   } catch (error) {
     console.error('❌ Unable to submit new deal %s to TFM %o', dealId, error);
     throw new Error('Unable to submit new deal to TFM');
@@ -240,6 +239,7 @@ exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
  * @param {Object} res - The response object representing the response object with `status` and `send` methods.
  * @returns {Promise<Response>} A promise that resolves with the updated deal or rejects with an error.
  */
+// TODO: DTFS2-7112 this endpoint is obsolete and should be removed
 const submitDealAfterUkefIdsPUT = async (req, res) => {
   try {
     const { dealId, dealType, checker } = req.body;
@@ -248,7 +248,7 @@ const submitDealAfterUkefIdsPUT = async (req, res) => {
       return res.status(400).send({ status: 400, message: 'Invalid checker _id'});
     }
 
-    const deal = await submitDealAfterUkefIds(dealId, dealType, checker);
+    const deal = await submitDealAfterUkefIds(dealId, dealType, checker, generatePortalUserInformation(checker._id));
 
     if (!deal) {
       console.error('Deal does not exist in TFM %s', dealId);
@@ -279,13 +279,20 @@ const submitDealPUT = async (req, res) => {
       return res.status(400).send();
     }
 
+    if (!ObjectId.isValid(checker?._id)) {
+      console.error('Invalid checker id provided %s', checker?._id);
+      return res.status(400).send();
+    }
+
+    const userInformation = generatePortalUserInformation(checker._id);
+
     const { status } = await dealHasAllUkefIds(dealId);
     let deal;
 
     if (status) {
-      deal = await submitDealAfterUkefIds(dealId, dealType, checker);
+      deal = await submitDealAfterUkefIds(dealId, dealType, checker, userInformation);
     } else {
-      deal = await submitDealBeforeUkefIds(dealId, dealType, checker);
+      deal = await submitDealBeforeUkefIds(dealId, dealType, checker, userInformation);
     }
 
     if (!deal) {

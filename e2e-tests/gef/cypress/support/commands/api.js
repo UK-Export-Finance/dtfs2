@@ -174,6 +174,7 @@ const addCommentObjToDeal = (dealId, commentType, comment) =>
     })
     .then((res) => res);
 
+// TODO: DTFS2-7112 this endpoint is obsolete and should be removed
 const submitDealAfterUkefIds = (dealId, dealType, checker, token) =>
   cy
     .request({

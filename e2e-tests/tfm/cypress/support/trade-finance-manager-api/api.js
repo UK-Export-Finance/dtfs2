@@ -25,6 +25,7 @@ module.exports.submitDeal = (dealId, dealType, token) => cy.request({
   return resp.body;
 });
 
+// TODO: DTFS2-7112 this endpoint is obsolete and should be removed
 module.exports.submitDealAfterUkefIds = (dealId, dealType, checker, token) => cy.request({
   url: `${api()}/v1/deals/submitDealAfterUkefIds`,
   method: 'PUT',

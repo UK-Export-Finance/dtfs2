@@ -1,6 +1,7 @@
-const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation')
+const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const addTfmDealData = require('.');
 const mapSubmittedDeal = require('../../mappings/map-submitted-deal');
+const generateDateReceived = require('./dateReceived');
 const addDealProduct = require('./dealProduct');
 const addDealPricingAndRisk = require('./dealPricingAndRisk');
 const addDealStage = require('./dealStage');
@@ -10,6 +11,16 @@ const api = require('../../api');
 const { MOCK_PORTAL_USERS } = require('../../__mocks__/mock-portal-users');
 
 describe('deal submit - add TFM data', () => {
+  beforeAll(() => {
+    jest.useFakeTimers({
+      doNotFake: ['nextTick'],
+    });
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   beforeEach(() => {
     api.updateDeal.mockReset();
     mockUpdateDeal();
@@ -26,8 +37,7 @@ describe('deal submit - add TFM data', () => {
     const expected = {
       ...mockDeal,
       tfm: {
-        dateReceived: expect.any(String),
-        dateReceivedTimestamp: expect.any(Number),
+        ...generateDateReceived(),
         parties: {},
         activities: [],
         product: addDealProduct(mockDeal),
