@@ -16,7 +16,6 @@ const requestParams = require('./requestParams');
 const sanitizeCurrency = require('./sanitizeCurrency');
 const validationErrorHandler = require('./validationErrorHandler');
 const constructPayload = require('./constructPayload');
-const { getOneIndexedMonth } = require('./getOneIndexedMonth');
 const { getBusinessDayOfMonth } = require('./getBusinessDayOfMonth');
 const { getNowAsEpoch } = require('./date');
 
@@ -40,7 +39,6 @@ module.exports = {
   sanitizeCurrency,
   validationErrorHandler,
   constructPayload,
-  getOneIndexedMonth,
   getBusinessDayOfMonth,
   getNowAsEpoch,
 };

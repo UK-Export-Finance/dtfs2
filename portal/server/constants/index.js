@@ -12,7 +12,6 @@ const TRANSACTION_STAGE = require('./transaction-stage');
 const TRANSACTION_TYPE = require('./transaction-type');
 const PORTAL_URL = require('./portalUrl.constant');
 const SORT_BY = require('./sort');
-const UTILISATION_REPORT_HEADERS = require('./utilisation-report-headers');
 const { FILE_UPLOAD } = require('./file-upload');
 const { MONTH_NAMES } = require('./month-names');
 const ALL_BANKS_ID = require('./all-banks-id');
@@ -34,7 +33,6 @@ module.exports = {
   TRANSACTION_TYPE,
   PORTAL_URL,
   SORT_BY,
-  UTILISATION_REPORT_HEADERS,
   FILE_UPLOAD,
   MONTH_NAMES,
   ALL_BANKS_ID,
