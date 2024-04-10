@@ -1,4 +1,7 @@
 const express = require('express');
+const {
+  ROLES: { CHECKER, MAKER },
+} = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const aboutRoutes = require('./about');
 const bondRoutes = require('./bond');
@@ -19,9 +22,6 @@ const userCanSubmitDeal = require('./userCanSubmitDeal');
 const dealHasIssuedFacilitiesToSubmit = require('./dealHasIssuedFacilitiesToSubmit');
 const dealWithCanIssueOrEditIssueFacilityFlags = require('./dealWithCanIssueOrEditIssueFacilityFlags');
 const { validateToken, validateBank, validateRole } = require('../middleware');
-const {
-  ROLES: { CHECKER, MAKER },
-} = require('../../constants');
 
 const router = express.Router();
 
