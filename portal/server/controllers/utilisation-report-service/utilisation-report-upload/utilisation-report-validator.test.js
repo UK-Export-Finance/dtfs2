@@ -1,5 +1,6 @@
+const { UTILISATION_REPORT_HEADERS } = require('@ukef/dtfs2-common');
 const { validateCsvHeaders, validateCsvCellData, validateFilenameFormat } = require('./utilisation-report-validator');
-const { UTILISATION_REPORT_HEADERS, MONTH_NAMES, FILE_UPLOAD } = require('../../../constants');
+const { MONTH_NAMES, FILE_UPLOAD } = require('../../../constants');
 const {
   generateUkefFacilityIdError,
   generateBaseCurrencyError,

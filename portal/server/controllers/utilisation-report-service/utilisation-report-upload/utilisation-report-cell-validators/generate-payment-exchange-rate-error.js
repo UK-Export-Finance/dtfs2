@@ -1,4 +1,4 @@
-const { UTILISATION_REPORT_HEADERS } = require('../../../../constants');
+const { UTILISATION_REPORT_HEADERS } = require('@ukef/dtfs2-common');
 const { FILE_UPLOAD } = require('../../../../constants/file-upload');
 const { EXCHANGE_RATE_REGEX } = require('../../../../constants/regex');
 
