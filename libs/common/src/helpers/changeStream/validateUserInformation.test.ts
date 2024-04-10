@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { generateAuditDetailsFromUserInformation, validateUserInformation } from './userInformation';
+import { validateUserInformation } from './validateUserInformation';
 
 describe('validateUserInformation', () => {
   it('throws if the input is not an object', () => {
@@ -44,51 +44,6 @@ describe('validateUserInformation', () => {
     it('does not throw', () => {
       const returnedValue = validateUserInformation({ userType: 'system' });
       expect(returnedValue).toBe(undefined);
-    });
-  });
-});
-
-describe('generateAuditDetailsFromUserInformation', () => {
-  const defaultAuditDetails = {
-    lastUpdatedAt: new Date(1712574419579),
-    lastUpdatedByPortalUserId: null,
-    lastUpdatedByTfmUserId: null,
-    lastUpdatedByIsSystem: null,
-    noUserLoggedIn: null,
-  };
-
-  beforeAll(() => {
-    jest.useFakeTimers().setSystemTime(defaultAuditDetails.lastUpdatedAt);
-  });
-
-  afterAll(() => {
-    jest.useRealTimers();
-  });
-
-  it('returns the correct audit details for a tfm user', () => {
-    const auditDetails = generateAuditDetailsFromUserInformation({ userType: 'tfm', id: '1234567890abcdef12345678' });
-
-    expect(auditDetails).toEqual({
-      ...defaultAuditDetails,
-      lastUpdatedByTfmUserId: new ObjectId('1234567890abcdef12345678'),
-    });
-  });
-
-  it('returns the correct audit details for a portal user', () => {
-    const auditDetails = generateAuditDetailsFromUserInformation({ userType: 'portal', id: '1234567890abcdef12345678' });
-
-    expect(auditDetails).toEqual({
-      ...defaultAuditDetails,
-      lastUpdatedByPortalUserId: new ObjectId('1234567890abcdef12345678'),
-    });
-  });
-
-  it('returns the correct audit details for a tfm user', () => {
-    const auditDetails = generateAuditDetailsFromUserInformation({ userType: 'system' });
-
-    expect(auditDetails).toEqual({
-      ...defaultAuditDetails,
-      lastUpdatedByIsSystem: true,
     });
   });
 });

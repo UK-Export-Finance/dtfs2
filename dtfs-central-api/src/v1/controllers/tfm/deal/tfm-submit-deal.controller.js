@@ -1,5 +1,7 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
+const { generateAuditDetailsFromUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
+const { validateUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/validateUserInformation');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal, findOneGefDeal } = require('../../portal/deal/get-deal.controller');
 const tfmController = require('./tfm-get-deal.controller');
@@ -10,7 +12,6 @@ const { findAllGefFacilitiesByDealId } = require('../../portal/gef-facility/get-
 const DEFAULTS = require('../../../defaults');
 const CONSTANTS = require('../../../../constants');
 const { DB_COLLECTIONS } = require('../../../../constants');
-const { generateAuditDetailsFromUserInformation, validateUserInformation } = require('../../../../helpers/userInformation');
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;

@@ -1,11 +1,12 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
+const { generateAuditDetailsFromUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
+const { validateUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/validateUserInformation');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
 const CONSTANTS = require('../../../../constants');
 const { isNumber } = require('../../../../helpers');
-const { validateUserInformation, generateAuditDetailsFromUserInformation } = require('../../../../helpers/userInformation');
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;

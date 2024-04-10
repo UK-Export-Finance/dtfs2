@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import {
+  generateAuditDetailsFromUserInformation,
   generateNoUserLoggedInAuditDetails,
   generatePortalUserAuditDetails,
   generateSystemAuditDetails,
@@ -81,6 +82,35 @@ describe('generate audit details', () => {
       expect(auditDetails).toEqual({
         ...defaultAuditDetails,
         noUserLoggedIn: true,
+      });
+    });
+  });
+
+  describe('generateAuditDetailsFromUserInformation', () => {
+    it('returns the correct audit details for a tfm user', () => {
+      const auditDetails = generateAuditDetailsFromUserInformation({ userType: 'tfm', id: '1234567890abcdef12345678' });
+
+      expect(auditDetails).toEqual({
+        ...defaultAuditDetails,
+        lastUpdatedByTfmUserId: new ObjectId('1234567890abcdef12345678'),
+      });
+    });
+
+    it('returns the correct audit details for a portal user', () => {
+      const auditDetails = generateAuditDetailsFromUserInformation({ userType: 'portal', id: '1234567890abcdef12345678' });
+
+      expect(auditDetails).toEqual({
+        ...defaultAuditDetails,
+        lastUpdatedByPortalUserId: new ObjectId('1234567890abcdef12345678'),
+      });
+    });
+
+    it('returns the correct audit details for a tfm user', () => {
+      const auditDetails = generateAuditDetailsFromUserInformation({ userType: 'system' });
+
+      expect(auditDetails).toEqual({
+        ...defaultAuditDetails,
+        lastUpdatedByIsSystem: true,
       });
     });
   });

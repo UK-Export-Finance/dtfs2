@@ -1,10 +1,5 @@
-import {
-  generatePortalUserAuditDetails,
-  generateSystemAuditDetails,
-  generateTfmUserAuditDetails,
-} from '@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails';
-import { UserInformation } from '@ukef/dtfs2-common/src/types/userInformation';
 import { ObjectId } from 'mongodb';
+import { UserInformation } from '../../types/userInformation';
 
 export function validateUserInformation(userInformation: unknown): asserts userInformation is UserInformation {
   if (!(userInformation instanceof Object && 'userType' in userInformation)) {
@@ -34,16 +29,3 @@ export function validateUserInformation(userInformation: unknown): asserts userI
       throw new Error(`Invalid userType ${userInformation.userType?.toString()}`);
   }
 }
-
-export const generateAuditDetailsFromUserInformation = (userInformation: UserInformation) => {
-  switch (userInformation.userType) {
-    case 'tfm':
-      return generateTfmUserAuditDetails(userInformation.id);
-    case 'portal':
-      return generatePortalUserAuditDetails(userInformation.id);
-    case 'system':
-      return generateSystemAuditDetails();
-    default:
-      throw new Error('Invalid userInformation userType');
-  }
-};
