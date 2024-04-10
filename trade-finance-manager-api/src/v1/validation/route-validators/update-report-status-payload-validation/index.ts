@@ -17,5 +17,5 @@ export const updateReportStatusPayloadValidation = [
       },
     },
   }),
-  body('reportsWithStatus.*.reportId', 'Report id must be an integer string').exists().isInt({ gt: 0 }),
+  body('reportsWithStatus.*.reportId', 'Report id must be an integer').exists().isInt({ gt: 0 }),
 ];

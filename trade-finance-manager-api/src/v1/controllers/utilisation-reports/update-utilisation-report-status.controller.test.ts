@@ -11,7 +11,7 @@ console.error = jest.fn();
 describe('updateUtilisationReportStatus', () => {
   const reportsWithStatus: ReportWithStatus[] = [{
     status: 'REPORT_NOT_RECEIVED',
-    reportId: 'abc',
+    reportId: 123,
   }];
   const { req: mockRequest, res: mockResponse } = httpMocks.createMocks<Request<object, object, UpdateUtilisationReportStatusRequestBody>>({
     method: 'PUT',
