@@ -273,5 +273,16 @@ describe('report-period utils', () => {
         expect(response).toEqual(expectedResponse);
       },
     );
+
+    it('should include year for start of report period contained in a single year when "alwaysStateYear" is true', () => {
+      // Arrange
+      const reportPeriod = { start: { month: 3, year: 2023 }, end: { month: 5, year: 2023 } };
+
+      // Act
+      const response = getFormattedReportPeriodWithShortMonth(reportPeriod, false, true);
+
+      // Assert
+      expect(response).toEqual('Mar 2023 to May 2023');
+    });
   });
 });

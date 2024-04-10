@@ -136,7 +136,7 @@ export const getPreviousReportPeriodForBankScheduleByMonth = (bankReportPeriodSc
   return getPreviousReportPeriodForBankScheduleByTargetDate(bankReportPeriodSchedule, monthDate);
 };
 
-const getFormattedReportPeriod = (reportPeriod: ReportPeriod, monthFormat: string, includePeriodicity: boolean): string => {
+const getFormattedReportPeriod = (reportPeriod: ReportPeriod, monthFormat: string, includePeriodicity: boolean, alwaysStateYear = false): string => {
   const startOfReportPeriod = getDateFromMonthAndYear(reportPeriod.start);
   const endOfReportPeriod = getDateFromMonthAndYear(reportPeriod.end);
 
@@ -146,7 +146,9 @@ const getFormattedReportPeriod = (reportPeriod: ReportPeriod, monthFormat: strin
   }
 
   const formattedStartOfPeriod =
-    reportPeriod.start.year === reportPeriod.end.year ? format(startOfReportPeriod, monthFormat) : format(startOfReportPeriod, `${monthFormat} yyyy`);
+    reportPeriod.start.year === reportPeriod.end.year && !alwaysStateYear
+      ? format(startOfReportPeriod, monthFormat)
+      : format(startOfReportPeriod, `${monthFormat} yyyy`);
   return includePeriodicity ? `${formattedStartOfPeriod} to ${formattedEndOfPeriod} (quarterly)` : `${formattedStartOfPeriod} to ${formattedEndOfPeriod}`;
 };
 
@@ -187,6 +189,8 @@ export const getFormattedReportPeriodWithLongMonth = (reportPeriod: ReportPeriod
  * Gets the formatted report period with the month in short format
  * @param reportPeriod - The report period
  * @param includePeriodicity - Whether to suffix the formatted period with the periodicity
+ * @param alwaysStateYear (optional - defaults to false) - Whether to state the year for the
+ * start of the report period when the period spans only a single year
  * @returns The formatted report period
  * @example
  * const reportPeriod = {
@@ -206,6 +210,14 @@ export const getFormattedReportPeriodWithLongMonth = (reportPeriod: ReportPeriod
  * console.log(formattedReportPeriod); // Jan to Feb 2024 (quarterly)
  * @example
  * const reportPeriod = {
+ *   start: { month: 10, year: 2023 },
+ *   end: { month: 12, year: 2023 },
+ * };
+ *
+ * const formattedReportPeriod = getFormattedReportPeriod(reportPeriod, false, true);
+ * console.log(formattedReportPeriod); // Oct 2023 to Dec 2023
+ * @example
+ * const reportPeriod = {
  *   start: { month: 12, year: 2023 },
  *   end: { month: 1, year: 2024 },
  * };
@@ -213,6 +225,6 @@ export const getFormattedReportPeriodWithLongMonth = (reportPeriod: ReportPeriod
  * const formattedReportPeriod = getFormattedReportPeriod(reportPeriod, false);
  * console.log(formattedReportPeriod); // Dec 2023 to Jan 2024
  */
-export const getFormattedReportPeriodWithShortMonth = (reportPeriod: ReportPeriod, includePeriodicity: boolean): string => {
-  return getFormattedReportPeriod(reportPeriod, 'MMM', includePeriodicity);
+export const getFormattedReportPeriodWithShortMonth = (reportPeriod: ReportPeriod, includePeriodicity: boolean, alwaysStateYear = false): string => {
+  return getFormattedReportPeriod(reportPeriod, 'MMM', includePeriodicity, alwaysStateYear);
 };

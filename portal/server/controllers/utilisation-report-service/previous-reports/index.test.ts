@@ -1,12 +1,9 @@
 import httpMocks from 'node-mocks-http';
-import { MonthAndYear } from '@ukef/dtfs2-common';
+import { MonthAndYear, ReportPeriod } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getPreviousReports } from '.';
 import { LOGIN_STATUS, PRIMARY_NAV_KEY } from '../../../constants';
-import { PreviousUtilisationReportsResponseBody } from '../../../api-response-types';
-import { getMonthName } from '../../../helpers/getMonthName';
-
-type PreviousReport = PreviousUtilisationReportsResponseBody[number]['reports'][number];
+import { PreviousUtilisationReportsResponseBody, UtilisationReportResponseBody } from '../../../api-response-types';
 
 describe('previous-reports controller', () => {
   describe('getPreviousReports', () => {
@@ -31,7 +28,17 @@ describe('previous-reports controller', () => {
         },
       });
 
-    const createPreviousMonthlyReport = ({ id, month, year }: { id: number } & MonthAndYear): PreviousReport => ({
+      const createPreviousQuarterlyReport = (id: number, reportPeriod: ReportPeriod): UtilisationReportResponseBody => ({
+        bankId,
+        status: 'PENDING_RECONCILIATION',
+        uploadedByUser: null,
+        azureFileInfo: null,
+        dateUploaded: null,
+        reportPeriod,
+        id,
+      });
+
+    const createPreviousMonthlyReport = ({ id, month, year }: { id: number } & MonthAndYear): UtilisationReportResponseBody => ({
       bankId,
       status: 'PENDING_RECONCILIATION',
       uploadedByUser: null,
@@ -62,6 +69,60 @@ describe('previous-reports controller', () => {
       createPreviousMonthlyReport({ id: 9, month: 3, year: 2022 }),
     ];
 
+    const expectedLinksForPreviousReports2024 = [
+      {
+        text: 'January 2024',
+        month: 'January',
+        path: `/banks/${bankId}/utilisation-report-download/${1}`,
+      },
+      {
+        text: 'February 2024',
+        month: 'February',
+        path: `/banks/${bankId}/utilisation-report-download/${2}`,
+      },
+      {
+        text: 'March 2024',
+        month: 'March',
+        path: `/banks/${bankId}/utilisation-report-download/${3}`,
+      },
+    ];
+
+    const expectedLinksForPreviousReports2023 = [
+      {
+        text: 'January 2023',
+        month: 'January',
+        path: `/banks/${bankId}/utilisation-report-download/${4}`,
+      },
+      {
+        text: 'February 2023',
+        month: 'February',
+        path: `/banks/${bankId}/utilisation-report-download/${5}`,
+      },
+      {
+        text: 'March 2023',
+        month: 'March',
+        path: `/banks/${bankId}/utilisation-report-download/${6}`,
+      },
+    ];
+
+    const expectedLinksForPreviousReports2022 = [
+      {
+        text: 'January 2022',
+        month: 'January',
+        path: `/banks/${bankId}/utilisation-report-download/${7}`,
+      },
+      {
+        text: 'February 2022',
+        month: 'February',
+        path: `/banks/${bankId}/utilisation-report-download/${8}`,
+      },
+      {
+        text: 'March 2022',
+        month: 'March',
+        path: `/banks/${bankId}/utilisation-report-download/${9}`,
+      },
+    ];
+
     const previousReportsResponseBody: PreviousUtilisationReportsResponseBody = [
       {
         year: 2024,
@@ -76,8 +137,6 @@ describe('previous-reports controller', () => {
         reports: previousReports2022,
       },
     ];
-
-    const allTargetYearsToTest = previousReportsResponseBody.map(({ year }) => year);
 
     it('renders the previous reports page with the most recent year as the active nav item when no target year is provided', async () => {
       // Arrange
@@ -97,21 +156,20 @@ describe('previous-reports controller', () => {
         active: groupedReports.year === 2024,
       }));
 
-      const expectedReportLinks = previousReports2024.map(({ reportPeriod, id }) => ({
-        month: getMonthName(reportPeriod.start.month),
-        path: `/banks/${bankId}/utilisation-report-download/${id}`,
-      }));
-
       expect(res._getRenderData()).toEqual({
         user: mockUser,
         primaryNav: PRIMARY_NAV_KEY.PREVIOUS_REPORTS,
         navItems: expectedNavItems,
-        reportLinks: expectedReportLinks,
+        reportLinks: expectedLinksForPreviousReports2024,
         year: 2024,
       });
     });
 
-    it.each(allTargetYearsToTest)('renders the previous reports page with the correct reports when the target year query is %s', async (targetYear) => {
+    it.each([
+      [2024, expectedLinksForPreviousReports2024],
+      [2023, expectedLinksForPreviousReports2023],
+      [2022, expectedLinksForPreviousReports2022],
+    ])('renders the previous reports page with the correct reports when the target year query is %s', async (targetYear, expectedLinks) => {
       // Arrange
       const { req, res } = getHttpMocks(targetYear.toString());
       apiGetPreviousReportsSpy.mockResolvedValue(previousReportsResponseBody);
@@ -129,18 +187,11 @@ describe('previous-reports controller', () => {
         active: groupedReports.year === targetYear,
       }));
 
-      const expectedReportLinks = previousReportsResponseBody
-        .find(({ year }) => year === targetYear)!
-        .reports.map(({ reportPeriod, id }) => ({
-          month: getMonthName(reportPeriod.start.month),
-          path: `/banks/${bankId}/utilisation-report-download/${id}`,
-        }));
-
       expect(res._getRenderData()).toEqual({
         user: mockUser,
         primaryNav: PRIMARY_NAV_KEY.PREVIOUS_REPORTS,
         navItems: expectedNavItems,
-        reportLinks: expectedReportLinks,
+        reportLinks: expectedLinks,
         year: targetYear,
       });
     });
@@ -161,6 +212,59 @@ describe('previous-reports controller', () => {
         navItems: [],
         reportLinks: [],
         year: undefined,
+      });
+    });
+
+    it('renders previous reports page with quarterly reports described with start and end of period', async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      const quarterlyReportOverlappingYears = createPreviousQuarterlyReport(1, { start: { month: 12, year: 2025 }, end: { month: 2, year: 2026 } });
+      const quarterlyReportNotOverlappingYears = createPreviousQuarterlyReport(2, { start: { month: 3, year: 2026 }, end: { month: 5, year: 2026 } });
+      apiGetPreviousReportsSpy.mockResolvedValue([
+        {
+          year: 2026,
+          reports: [quarterlyReportNotOverlappingYears, quarterlyReportOverlappingYears],
+        },
+        {
+          year: 2025,
+          reports: [quarterlyReportOverlappingYears]
+        }
+      ]);
+      const expectedNavItems = [{
+        text: 2026,
+        href: `?targetYear=${2026}`,
+        attributes: { 'data-cy': `side-navigation-${2026}` },
+        active: true,
+      }, {
+        text: 2025,
+        href: `?targetYear=${2025}`,
+        attributes: { 'data-cy': `side-navigation-${2025}` },
+        active: false,
+      }];
+      const expectedLinks = [
+        {
+          text: 'Mar 2026 to May 2026 (quarterly)',
+          month: 'May',
+          path: `/banks/${bankId}/utilisation-report-download/${2}`,
+        },
+        {
+          text: 'Dec 2025 to Feb 2026 (quarterly)',
+          month: 'February',
+          path: `/banks/${bankId}/utilisation-report-download/${1}`,
+        },
+      ];
+
+      // Act
+      await getPreviousReports(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toBe('utilisation-report-service/previous-reports/previous-reports.njk');
+      expect(res._getRenderData()).toEqual({
+        user: mockUser,
+        primaryNav: PRIMARY_NAV_KEY.PREVIOUS_REPORTS,
+        navItems: expectedNavItems,
+        reportLinks: expectedLinks,
+        year: 2026,
       });
     });
   });
