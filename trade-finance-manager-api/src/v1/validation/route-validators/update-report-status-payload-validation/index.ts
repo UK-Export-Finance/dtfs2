@@ -1,5 +1,5 @@
 import { body, checkSchema } from 'express-validator';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../../constants';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 
 const VALID_UPDATE_PAYLOAD_STATUSES = [
   UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,

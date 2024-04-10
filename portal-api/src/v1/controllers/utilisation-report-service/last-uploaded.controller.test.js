@@ -1,8 +1,8 @@
 const httpMocks = require('node-mocks-http');
 const { AxiosError } = require('axios');
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const { getLastUploadedReportByBankId } = require('./last-uploaded.controller');
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
 const { aUtilisationReportResponse } = require('../../../../test-helpers/test-data/utilisation-report');
 
 console.error = jest.fn();
