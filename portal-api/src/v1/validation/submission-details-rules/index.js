@@ -45,7 +45,7 @@ const rules = [
 module.exports = async (submissionDetails, deal) => {
   let errors = {};
 
-  if (submissionDetails.v1Status) {
+  if (submissionDetails?.v1Status) {
     return errors;
   }
 

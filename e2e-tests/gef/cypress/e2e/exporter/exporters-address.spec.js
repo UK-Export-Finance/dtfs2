@@ -11,7 +11,7 @@ context('Exporters Address Page', () => {
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
-        cy.apiFetchAllApplications(token);
+        cy.apiFetchAllGefApplications(token);
       })
       .then(({ body }) => {
         dealId = body.items[2]._id; // 3rd application contains an exporter with address

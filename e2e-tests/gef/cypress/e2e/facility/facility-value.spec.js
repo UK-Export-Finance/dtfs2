@@ -12,7 +12,7 @@ context('Facility Value Page', () => {
       .then((tok) => {
         token = tok;
       })
-      .then(() => cy.apiFetchAllApplications(token))
+      .then(() => cy.apiFetchAllGefApplications(token))
       .then(({ body }) => {
         body.items.forEach((item) => {
           cy.apiFetchAllFacilities(item._id, token)

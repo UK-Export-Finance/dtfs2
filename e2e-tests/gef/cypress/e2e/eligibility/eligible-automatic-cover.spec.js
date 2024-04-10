@@ -10,7 +10,7 @@ context('Eligible Automatic Cover Page', () => {
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
-        cy.apiFetchAllApplications(token);
+        cy.apiFetchAllGefApplications(token);
       })
       .then(({ body }) => {
         dealId = body.items[0]._id;
