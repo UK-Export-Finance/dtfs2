@@ -5,7 +5,7 @@ const { findOneDeal } = require('./tfm-get-deal.controller');
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
 const CONSTANTS = require('../../../../constants');
 const { isNumber } = require('../../../../helpers');
-const { validateUserInformation, generateAuditDetailsFromUserInformation } = require("../../../../helpers/userInformation");
+const { validateUserInformation, generateAuditDetailsFromUserInformation } = require('../../../../helpers/userInformation');
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;
@@ -20,7 +20,7 @@ const withoutId = (obj) => {
  * @param {import("@ukef/dtfs2-common/src/types/userInformation").UserInformation} params.userInformation - tfm user making the update
  * @returns {Promise<object>} updated deal or error object
  */
-const updateDeal = async ({dealId, dealUpdate, existingDeal, userInformation }) => {
+const updateDeal = async ({ dealId, dealUpdate, existingDeal, userInformation }) => {
   const collection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_DEALS);
 
   /**
@@ -29,41 +29,42 @@ const updateDeal = async ({dealId, dealUpdate, existingDeal, userInformation }) 
    * */
   const dealTfmUpdate = { tfm: dealUpdate.tfm };
 
-  if (dealTfmUpdate.tfm) {
-    /**
-     * Ensure that if a tfmUpdate with activities is an empty object,
-     * we do not make activities an empty object.
-     */
-    if (dealTfmUpdate.tfm.activities && Object.keys(dealTfmUpdate.tfm.activities).length === 0) {
-      dealTfmUpdate.tfm.activities = [];
-    }
-
-    const existingDealActivities = existingDeal?.tfm?.activities;
-    const tfmUpdateHasActivities = dealTfmUpdate.tfm.activities && Object.keys(dealTfmUpdate.tfm.activities).length > 0;
-    /**
-     * ACBS activities update is an array whereas TFM activity update is an object
-     * Checks if array, then uses spread operator
-     * else if not array, adds the object
-     */
-    if (tfmUpdateHasActivities) {
-      if (Array.isArray(dealTfmUpdate.tfm.activities)) {
-        const updatedActivities = [...dealTfmUpdate.tfm.activities, ...existingDealActivities];
-        // ensures that duplicate entries are not added to activities by comparing timestamp and label
-        dealTfmUpdate.tfm.activities = updatedActivities.filter(
-          (value, index, arr) => arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index,
-        );
-      } else {
-        const updatedActivities = [dealTfmUpdate.tfm.activities, ...existingDealActivities];
-        // ensures that duplicate entries are not added to activities by comparing timestamp and label
-        dealTfmUpdate.tfm.activities = updatedActivities.filter(
-          (value, index, arr) => arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index,
-        );
-      }
-    }
-
-    dealTfmUpdate.tfm.lastUpdated = new Date().valueOf();
+  if (!dealTfmUpdate.tfm) {
+    throw new Error(`Invalid dealUpdate - ${dealUpdate}`);
   }
 
+  /**
+   * Ensure that if a tfmUpdate with activities is an empty object,
+   * we do not make activities an empty object.
+   */
+  if (dealTfmUpdate.tfm.activities && Object.keys(dealTfmUpdate.tfm.activities).length === 0) {
+    dealTfmUpdate.tfm.activities = [];
+  }
+
+  const existingDealActivities = existingDeal?.tfm?.activities;
+  const tfmUpdateHasActivities = dealTfmUpdate.tfm.activities && Object.keys(dealTfmUpdate.tfm.activities).length > 0;
+  /**
+   * ACBS activities update is an array whereas TFM activity update is an object
+   * Checks if array, then uses spread operator
+   * else if not array, adds the object
+   */
+  if (tfmUpdateHasActivities) {
+    if (Array.isArray(dealTfmUpdate.tfm.activities)) {
+      const updatedActivities = [...dealTfmUpdate.tfm.activities, ...existingDealActivities];
+      // ensures that duplicate entries are not added to activities by comparing timestamp and label
+      dealTfmUpdate.tfm.activities = updatedActivities.filter(
+        (value, index, arr) => arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index,
+      );
+    } else {
+      const updatedActivities = [dealTfmUpdate.tfm.activities, ...existingDealActivities];
+      // ensures that duplicate entries are not added to activities by comparing timestamp and label
+      dealTfmUpdate.tfm.activities = updatedActivities.filter(
+        (value, index, arr) => arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index,
+      );
+    }
+  }
+
+  dealTfmUpdate.tfm.lastUpdated = new Date().valueOf();
   dealTfmUpdate.auditDetails = generateAuditDetailsFromUserInformation(userInformation);
 
   const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(withoutId(dealTfmUpdate)), {
@@ -82,10 +83,14 @@ exports.updateDealPut = async (req, res) => {
 
   const { dealUpdate, userInformation } = req.body;
 
+  if (!dealUpdate?.tfm) {
+    res.status(400).send({ status: 400, message: 'Missing property tfm on dealUpdate' });
+  }
+
   try {
     validateUserInformation(userInformation);
   } catch ({ message }) {
-    res.status(400).send({ status: 400, message: `Invalid user information, ${message}`})
+    res.status(400).send({ status: 400, message: `Invalid user information, ${message}` });
   }
 
   const existingDeal = await findOneDeal(dealId, false, 'tfm');
