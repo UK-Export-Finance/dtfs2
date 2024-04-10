@@ -37,13 +37,14 @@ describe(component, () => {
 
   it('should render the table headings', async () => {
     const wrapper = await getWrapper();
-    wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(6);
+    wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(7);
     wrapper.expectElement(`${tableSelector} thead th:contains("Bank")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Date report received")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Total fees reported")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Reported fees left to reconcile")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Download report as CSV")`).toExist();
+    wrapper.expectElement(`${tableSelector} thead th:contains("Select")`).toExist();
   });
 
   it('should render the table data', async () => {
@@ -56,7 +57,7 @@ describe(component, () => {
       wrapper.expectElement(`${rowSelector} th`).toHaveCount(1);
       wrapper.expectElement(`${rowSelector} th:contains("${summaryItem.bank.name}")`).toExist();
 
-      wrapper.expectElement(`${rowSelector} td`).toHaveCount(5);
+      wrapper.expectElement(`${rowSelector} td`).toHaveCount(6);
       wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.displayStatus}")`).toExist();
       if (summaryItem.formattedDateUploaded) {
         wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.formattedDateUploaded}")`).toExist();
