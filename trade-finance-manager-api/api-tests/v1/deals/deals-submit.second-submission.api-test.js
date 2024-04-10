@@ -63,6 +63,7 @@ const createFacilityCoverEndDate = (facility) =>
   });
 
 const mockChecker = {
+  _id: 'abcdef123456abcdef123456',
   bank: {
     id: '9',
     name: 'UKEF test bank (Delegated) (TFM)',
