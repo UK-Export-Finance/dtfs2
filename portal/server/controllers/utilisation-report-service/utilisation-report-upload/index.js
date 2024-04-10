@@ -1,5 +1,5 @@
 const { format, startOfMonth, addMonths } = require('date-fns');
-const { getFormattedReportPeriod } = require('@ukef/dtfs2-common');
+const { getFormattedReportPeriodWithLongMonth } = require('@ukef/dtfs2-common');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
 const { getUploadErrors } = require('./utilisation-report-upload-errors');
@@ -46,7 +46,7 @@ const getLastUploadedReportDetails = async (userToken, bankId) => {
   const reportAndUserDetails = getReportAndUserDetails(lastUploadedReport);
 
   const nextReportPeriod = await api.getNextReportPeriodByBankId(userToken, bankId);
-  const formattedNextReportPeriod = getFormattedReportPeriod(nextReportPeriod);
+  const formattedNextReportPeriod = getFormattedReportPeriodWithLongMonth(nextReportPeriod);
 
   const nextReportPeriodSubmissionEndDate = addMonths(new Date(nextReportPeriod.end.year, nextReportPeriod.end.month - 1), 1);
   const nextReportPeriodSubmissionStart = format(startOfMonth(nextReportPeriodSubmissionEndDate), 'd MMMM yyyy');

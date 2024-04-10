@@ -32,6 +32,7 @@ export type GetUtilisationReportResponse = {
 
 export type UtilisationReportReconciliationSummaryItem = {
   reportId: number;
+  reportPeriod: ReportPeriod;
   bank: {
     id: string;
     name: string;

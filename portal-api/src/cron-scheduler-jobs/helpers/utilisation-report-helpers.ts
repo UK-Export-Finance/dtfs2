@@ -5,7 +5,7 @@ import {
   ReportPeriod,
   getCurrentReportPeriodForBankSchedule,
   getOneIndexedMonth,
-  getFormattedReportPeriod,
+  getFormattedReportPeriodWithLongMonth,
 } from '@ukef/dtfs2-common';
 import externalApi from '../../external-api/api';
 import api from '../../v1/api';
@@ -57,7 +57,7 @@ export const getIsReportDue = async (bankId: string, reportPeriod: ReportPeriod)
 
   if (reportsInReportPeriod.length !== 1) {
     throw new Error(
-      `Expected to find one report for bank (id: ${bankId}) for report period ${getFormattedReportPeriod(reportPeriod)} but found ${
+      `Expected to find one report for bank (id: ${bankId}) for report period ${getFormattedReportPeriodWithLongMonth(reportPeriod)} but found ${
         reportsInReportPeriod.length
       }`,
     );
@@ -126,7 +126,7 @@ const sendEmailForBank = async (
 const sendEmailToBankIfReportNotReceived = async (bank: BankResponse, emailDescription: string, sendEmailCallback: SendEmailCallback): Promise<void> => {
   const { name: bankName, id: bankId, utilisationReportPeriodSchedule: schedule } = bank;
   const currentReportingPeriodForBank = getCurrentReportPeriodForBankSchedule(schedule);
-  const formattedReportPeriod = getFormattedReportPeriod(currentReportingPeriodForBank);
+  const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(currentReportingPeriodForBank);
 
   if (!isPreviousCalendarMonth(currentReportingPeriodForBank.end.month)) {
     console.info(

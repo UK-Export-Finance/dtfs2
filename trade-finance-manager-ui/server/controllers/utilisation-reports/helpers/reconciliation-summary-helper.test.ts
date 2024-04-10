@@ -1,5 +1,5 @@
 import { addDays } from 'date-fns';
-import { IsoMonthStamp, MonthAndYear } from '@ukef/dtfs2-common';
+import { IsoMonthStamp, ReportPeriod } from '@ukef/dtfs2-common';
 import { getDueDateText, getReportPeriodHeading, getReportReconciliationSummariesViewModel } from './reconciliation-summary-helper';
 import { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS } from '../../../test-mocks/mock-utilisation-report-reconciliation-summary';
 import { UtilisationReportReconciliationSummary } from '../../../types/utilisation-reports';
@@ -50,26 +50,54 @@ describe('reconciliation-summary-helper', () => {
       // Arrange
       jest.useFakeTimers().setSystemTime(new Date('2024-01-05'));
       const submissionMonth: IsoMonthStamp = '2024-01';
-      const reportPeriodStart: MonthAndYear = { month: 12, year: 2023 };
+      const reportPeriod: ReportPeriod = { start: { month: 12, year: 2023 }, end: { month: 12, year: 2023 } };
 
       // Act
-      const result = getReportPeriodHeading(submissionMonth, reportPeriodStart);
+      const result = getReportPeriodHeading(submissionMonth, [reportPeriod]);
 
       // Assert
-      expect(result).toEqual('Current reporting period: Dec 2023');
+      expect(result).toEqual('Current reporting period: Dec 2023 (monthly)');
+    });
+
+    it('includes all report periods when submission month is this month', () => {
+      // Arrange
+      jest.useFakeTimers().setSystemTime(new Date('2024-01-05'));
+      const submissionMonth: IsoMonthStamp = '2024-01';
+      const monthlyReportPeriod: ReportPeriod = { start: { month: 12, year: 2023 }, end: { month: 12, year: 2023 } };
+      const quarterlyReportPeriod: ReportPeriod = { start: { month: 10, year: 2023 }, end: { month: 12, year: 2023 } };
+
+      // Act
+      const result = getReportPeriodHeading(submissionMonth, [monthlyReportPeriod, quarterlyReportPeriod]);
+
+      // Assert
+      expect(result).toEqual('Current reporting period: Dec 2023 (monthly) and Oct to Dec 2023 (quarterly)');
     });
 
     it("refers to 'Open reports' if the submission month is before this month", () => {
       // Arrange
       jest.useFakeTimers().setSystemTime(new Date('2024-01-05'));
       const submissionMonth: IsoMonthStamp = '2023-12';
-      const reportPeriodStart: MonthAndYear = { month: 11, year: 2023 };
+      const reportPeriod: ReportPeriod = { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } };
 
       // Act
-      const result = getReportPeriodHeading(submissionMonth, reportPeriodStart);
+      const result = getReportPeriodHeading(submissionMonth, [reportPeriod]);
 
       // Assert
-      expect(result).toEqual('Open reports: Nov 2023');
+      expect(result).toEqual('Open reports: Nov 2023 (monthly)');
+    });
+
+    it('includes all report periods when submission month is before this month', () => {
+      // Arrange
+      jest.useFakeTimers().setSystemTime(new Date('2024-01-05'));
+      const submissionMonth: IsoMonthStamp = '2024-02';
+      const monthlyReportPeriod: ReportPeriod = { start: { month: 1, year: 2024 }, end: { month: 1, year: 2024 } };
+      const quarterlyReportPeriod: ReportPeriod = { start: { month: 11, year: 2023 }, end: { month: 1, year: 2024 } };
+
+      // Act
+      const result = getReportPeriodHeading(submissionMonth, [monthlyReportPeriod, quarterlyReportPeriod]);
+
+      // Assert
+      expect(result).toEqual('Open reports: Jan 2024 (monthly) and Nov 2023 to Jan 2024 (quarterly)');
     });
   });
 
@@ -78,9 +106,13 @@ describe('reconciliation-summary-helper', () => {
       // Arrange
       const submissionMonth = '2023-12';
 
-      const reportNotReceivedSummaryItem = MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.REPORT_NOT_RECEIVED;
+      const reportNotReceivedSummaryItem = {
+        ...MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.REPORT_NOT_RECEIVED,
+        reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
+      };
       const pendingReconciliationSummaryItem = {
         ...MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.PENDING_RECONCILIATION,
+        reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
         dateUploaded: '2023-12-03T15:45:00Z',
       };
       const summariesApiResponse: UtilisationReportReconciliationSummary[] = [
@@ -111,8 +143,7 @@ describe('reconciliation-summary-helper', () => {
             },
           ],
           submissionMonth,
-          reportPeriodStart: { month: 11, year: 2023 },
-          reportPeriodHeading: 'Open reports: Nov 2023',
+          reportPeriodHeading: 'Open reports: Nov 2023 (monthly)',
           dueDateText: 'Reports were due to be received by 14 December 2023.',
         },
       ];

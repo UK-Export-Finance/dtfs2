@@ -87,15 +87,15 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
   },
 
   /**
-   * Finds open reports by bank id which have report periods before
-   * the supplied report period start
+   * Finds open reports by bank id which have report periods which ended before
+   * the supplied report period end
    * @param bankId - The bank id
-   * @param reportPeriodStart - The report period start
+   * @param reportPeriodEnd - The report period end
    * @returns The found report
    */
-  async findOpenReportsBeforeReportPeriodStartForBankId(
+  async findOpenReportsForBankIdWithReportPeriodEndBefore(
     bankId: string,
-    reportPeriodStart: ReportPeriod['start'],
+    reportPeriodEnd: ReportPeriod['end'],
     includeFeeRecords = false,
   ): Promise<UtilisationReportEntity[]> {
     const bankIdAndStatusFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
@@ -105,17 +105,17 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
 
     const previousYearFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
       reportPeriod: {
-        start: {
-          year: LessThan(reportPeriodStart.year),
+        end: {
+          year: LessThan(reportPeriodEnd.year),
         },
       },
     };
 
     const sameYearPreviousMonthsFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
       reportPeriod: {
-        start: {
-          year: Equal(reportPeriodStart.year),
-          month: LessThan(reportPeriodStart.month),
+        end: {
+          year: Equal(reportPeriodEnd.year),
+          month: LessThan(reportPeriodEnd.month),
         },
       },
     };

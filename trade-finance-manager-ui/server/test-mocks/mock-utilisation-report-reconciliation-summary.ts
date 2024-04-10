@@ -4,6 +4,7 @@ import { UtilisationReportReconciliationSummary, UtilisationReportReconciliation
 
 export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<UtilisationReportReconciliationStatus, UtilisationReportReconciliationSummaryItem> = {
   REPORT_NOT_RECEIVED: {
+    reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
     reportId: '65784d376fe2fe26168990e8',
     bank: {
       id: MOCK_BANKS.BARCLAYS.id,
@@ -13,6 +14,7 @@ export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<Utilis
   },
   PENDING_RECONCILIATION: {
     reportId: '65784d376fe2fe26168990e7',
+    reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
     bank: {
       id: MOCK_BANKS.HSBC.id,
       name: MOCK_BANKS.HSBC.name,
@@ -24,6 +26,7 @@ export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<Utilis
   },
   RECONCILIATION_IN_PROGRESS: {
     reportId: '65784d402e1ea1fbb8414c0b',
+    reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
     bank: {
       id: MOCK_BANKS.NEWABLE.id,
       name: MOCK_BANKS.NEWABLE.name,
@@ -35,6 +38,7 @@ export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<Utilis
   },
   RECONCILIATION_COMPLETED: {
     reportId: '65784d4953165930828976ae',
+    reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
     bank: {
       id: MOCK_BANKS.LLOYDS.id,
       name: MOCK_BANKS.LLOYDS.name,

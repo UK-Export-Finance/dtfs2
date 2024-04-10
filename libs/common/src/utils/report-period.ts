@@ -3,12 +3,11 @@ import { getOneIndexedMonth, toIsoMonthStamp, getDateFromMonthAndYear, isEqualMo
 import { IsoMonthStamp, MonthAndYear, BankReportPeriodSchedule, ReportPeriod } from '../types';
 
 /**
- * Gets the report period start for the inputted submission month
+ * Gets the report period end for the inputted submission month
  * @param submissionMonth - The submission month
- * @returns The report period start
+ * @returns The report period end
  */
-export const getReportPeriodStartForSubmissionMonth = (submissionMonth: IsoMonthStamp): MonthAndYear => {
-  // TODO FN-1456 - calculate report period start month based on bank's report period schedule
+export const getReportPeriodEndForSubmissionMonth = (submissionMonth: IsoMonthStamp): MonthAndYear => {
   const reportPeriodDate = subMonths(new Date(submissionMonth), 1);
   return {
     month: getOneIndexedMonth(reportPeriodDate),
@@ -17,39 +16,15 @@ export const getReportPeriodStartForSubmissionMonth = (submissionMonth: IsoMonth
 };
 
 /**
- * Gets the submission month for the report period starting at the inputted month and year
+ * Gets the submission month for the report period ending at the inputted month and year
  * @param monthAndYear - The month and year
  * @returns The submission month
  */
-export const getSubmissionMonthForReportPeriodStart = (monthAndYear: MonthAndYear): IsoMonthStamp => {
-  const { month, year } = monthAndYear;
+export const getSubmissionMonthForReportPeriod = (reportPeriod: ReportPeriod): IsoMonthStamp => {
+  const { month, year } = reportPeriod.end;
   const submissionMonthDate = addMonths(new Date(year, month - 1), 1);
   return toIsoMonthStamp(submissionMonthDate);
 };
-
-/**
- * Gets the previous report period start relative to the inputted month and year
- * @param monthAndYear - The month and year
- * @returns The previous report period start
- */
-export const getPreviousReportPeriodStart = (monthAndYear: MonthAndYear): MonthAndYear => {
-  const { month, year } = monthAndYear;
-  // TODO FN-1456 - calculate report period start month based on bank's report period schedule
-  const previousReportPeriodDate = subMonths(new Date(year, month - 1), 1);
-  return {
-    month: getOneIndexedMonth(previousReportPeriodDate),
-    year: previousReportPeriodDate.getFullYear(),
-  };
-};
-
-/**
- * Checks if the two report period starts are equal
- * @param reportPeriodStart1 - A report period start
- * @param reportPeriodStart2 - The report period start to check against
- * @returns Whether or not the report period starts are equal
- */
-export const isEqualReportPeriodStart = (reportPeriodStart1: MonthAndYear, reportPeriodStart2: MonthAndYear): boolean =>
-  reportPeriodStart1.year === reportPeriodStart2.year && reportPeriodStart1.month === reportPeriodStart2.month;
 
 /**
  * Get the current report period for the inputted bank schedule by the target date
@@ -151,19 +126,32 @@ export const getCurrentReportPeriodForBankSchedule = (bankReportPeriodSchedule: 
 };
 
 /**
- * Gets the current report period for the inputted bank schedule for the inputted submission month
+ * Gets the most recent report period for the inputted bank schedule for the inputted submission month
  * @param bankReportPeriodSchedule - The bank report period schedule
- * @param submissionMonth - The submission month
+ * @param month - The submission month
  * @returns The report period for the submission month
  */
-export const getReportPeriodForBankScheduleBySubmissionMonth = (bankReportPeriodSchedule: BankReportPeriodSchedule, submissionMonth: IsoMonthStamp) => {
-  const submissionMonthDate = new Date(submissionMonth);
-  const previousMonthDate = subMonths(submissionMonthDate, 1);
-  return getReportPeriodForBankScheduleByTargetDate(bankReportPeriodSchedule, previousMonthDate);
+export const getPreviousReportPeriodForBankScheduleByMonth = (bankReportPeriodSchedule: BankReportPeriodSchedule, month: IsoMonthStamp) => {
+  const monthDate = new Date(month);
+  return getPreviousReportPeriodForBankScheduleByTargetDate(bankReportPeriodSchedule, monthDate);
+};
+
+const getFormattedReportPeriod = (reportPeriod: ReportPeriod, monthFormat: string, includePeriodicity: boolean): string => {
+  const startOfReportPeriod = getDateFromMonthAndYear(reportPeriod.start);
+  const endOfReportPeriod = getDateFromMonthAndYear(reportPeriod.end);
+
+  const formattedEndOfPeriod = format(endOfReportPeriod, `${monthFormat} yyyy`);
+  if (isEqualMonthAndYear(reportPeriod.start, reportPeriod.end)) {
+    return includePeriodicity ? `${formattedEndOfPeriod} (monthly)` : formattedEndOfPeriod;
+  }
+
+  const formattedStartOfPeriod =
+    reportPeriod.start.year === reportPeriod.end.year ? format(startOfReportPeriod, monthFormat) : format(startOfReportPeriod, `${monthFormat} yyyy`);
+  return includePeriodicity ? `${formattedStartOfPeriod} to ${formattedEndOfPeriod} (quarterly)` : `${formattedStartOfPeriod} to ${formattedEndOfPeriod}`;
 };
 
 /**
- * Gets the formatted report period
+ * Gets the formatted report period with the month name in the long format
  * @param reportPeriod - The report period
  * @returns The formatted report period
  * @example
@@ -191,16 +179,40 @@ export const getReportPeriodForBankScheduleBySubmissionMonth = (bankReportPeriod
  * const formattedReportPeriod = getFormattedReportPeriod(reportPeriod);
  * console.log(formattedReportPeriod); // December 2023 to January 2024
  */
-export const getFormattedReportPeriod = (reportPeriod: ReportPeriod): string => {
-  const startOfReportPeriod = getDateFromMonthAndYear(reportPeriod.start);
-  const endOfReportPeriod = getDateFromMonthAndYear(reportPeriod.end);
+export const getFormattedReportPeriodWithLongMonth = (reportPeriod: ReportPeriod): string => {
+  return getFormattedReportPeriod(reportPeriod, 'MMMM', false);
+};
 
-  const formattedEndOfPeriod = format(endOfReportPeriod, 'MMMM yyyy');
-  if (isEqualMonthAndYear(reportPeriod.start, reportPeriod.end)) {
-    return formattedEndOfPeriod;
-  }
-
-  const formattedStartOfPeriod =
-    reportPeriod.start.year === reportPeriod.end.year ? format(startOfReportPeriod, 'MMMM') : format(startOfReportPeriod, 'MMMM yyyy');
-  return `${formattedStartOfPeriod} to ${formattedEndOfPeriod}`;
+/**
+ * Gets the formatted report period with the month in short format
+ * @param reportPeriod - The report period
+ * @param includePeriodicity - Whether to suffix the formatted period with the periodicity
+ * @returns The formatted report period
+ * @example
+ * const reportPeriod = {
+ *   start: { month: 1, year: 2024 },
+ *   end: { month: 1, year: 2024 },
+ * };
+ *
+ * const formattedReportPeriod = getFormattedReportPeriod(reportPeriod, true);
+ * console.log(formattedReportPeriod); // Jan 2024 (monthly)
+ * @example
+ * const reportPeriod = {
+ *   start: { month: 1, year: 2024 },
+ *   end: { month: 2, year: 2024 },
+ * };
+ *
+ * const formattedReportPeriod = getFormattedReportPeriod(reportPeriod, true);
+ * console.log(formattedReportPeriod); // Jan to Feb 2024 (quarterly)
+ * @example
+ * const reportPeriod = {
+ *   start: { month: 12, year: 2023 },
+ *   end: { month: 1, year: 2024 },
+ * };
+ *
+ * const formattedReportPeriod = getFormattedReportPeriod(reportPeriod, false);
+ * console.log(formattedReportPeriod); // Dec 2023 to Jan 2024
+ */
+export const getFormattedReportPeriodWithShortMonth = (reportPeriod: ReportPeriod, includePeriodicity: boolean): string => {
+  return getFormattedReportPeriod(reportPeriod, 'MMM', includePeriodicity);
 };

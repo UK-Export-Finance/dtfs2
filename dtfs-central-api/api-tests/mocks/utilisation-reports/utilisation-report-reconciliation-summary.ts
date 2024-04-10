@@ -4,6 +4,7 @@ import { MOCK_BANKS } from '../banks';
 
 const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEM: UtilisationReportReconciliationSummaryItem = {
   reportId: 12,
+  reportPeriod: { start: { month: 1, year: 2023 }, end: { month: 1, year: 2023 } },
   bank: {
     id: MOCK_BANKS.BARCLAYS.id,
     name: MOCK_BANKS.BARCLAYS.name,

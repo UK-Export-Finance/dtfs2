@@ -2,9 +2,9 @@ import groupBy from 'lodash/groupBy';
 import orderBy from 'lodash/orderBy';
 import {
   getCurrentReportPeriodForBankSchedule,
-  getReportPeriodForBankScheduleBySubmissionMonth,
-  getReportPeriodStartForSubmissionMonth,
-  getSubmissionMonthForReportPeriodStart,
+  getPreviousReportPeriodForBankScheduleByMonth,
+  getReportPeriodEndForSubmissionMonth,
+  getSubmissionMonthForReportPeriod,
   isEqualMonthAndYear,
   Bank,
   UtilisationReportEntity,
@@ -33,6 +33,7 @@ const mapReportToSummaryItem = (bank: Bank, report: UtilisationReportEntity): Ut
 
   return {
     reportId: report.id,
+    reportPeriod: report.reportPeriod,
     bank: {
       id: bank.id,
       name: bank.name,
@@ -50,20 +51,20 @@ const mapToSummaryItemForSubmissionMonth = (bank: Bank, { submissionMonth, repor
 });
 
 const mapToSubmissionMonth = (reports: UtilisationReportEntity[]): UtilisationReportForSubmissionMonth[] => {
-  const reportsOrderedByReportPeriodStartAscending = orderBy(reports, ['reportPeriod.start.year', 'reportPeriod.start.month'], ['asc', 'asc']);
+  const reportsOrderedByReportPeriodEndAscending = orderBy(reports, ['reportPeriod.end.year', 'reportPeriod.end.month'], ['asc', 'asc']);
 
-  return reportsOrderedByReportPeriodStartAscending.map((report) => {
-    const submissionMonth = getSubmissionMonthForReportPeriodStart(report.reportPeriod.start);
+  return reportsOrderedByReportPeriodEndAscending.map((report) => {
+    const submissionMonth = getSubmissionMonthForReportPeriod(report.reportPeriod);
     return { submissionMonth, report };
   });
 };
 
 const getPreviousOpenReportsForBank = async (bank: Bank, currentSubmissionMonth: IsoMonthStamp): Promise<SummaryItemForSubmissionMonth[]> => {
-  const currentReportPeriodStart = getReportPeriodStartForSubmissionMonth(currentSubmissionMonth);
+  const currentReportPeriodEnd = getReportPeriodEndForSubmissionMonth(currentSubmissionMonth);
 
-  const openReportsBeforeCurrentReportPeriod = await UtilisationReportRepo.findOpenReportsBeforeReportPeriodStartForBankId(
+  const openReportsBeforeCurrentReportPeriod = await UtilisationReportRepo.findOpenReportsForBankIdWithReportPeriodEndBefore(
     bank.id,
-    currentReportPeriodStart,
+    currentReportPeriodEnd,
     true,
   );
 
@@ -92,7 +93,7 @@ export const getPreviousOpenReportsBySubmissionMonth = async (
 };
 
 const getCurrentReconciliationSummaryItem = async (bank: Bank, submissionMonth: IsoMonthStamp): Promise<UtilisationReportReconciliationSummaryItem> => {
-  const reportPeriod = getReportPeriodForBankScheduleBySubmissionMonth(bank.utilisationReportPeriodSchedule, submissionMonth);
+  const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(bank.utilisationReportPeriodSchedule, submissionMonth);
   const report = await UtilisationReportRepo.findOneByBankIdAndReportPeriod(bank.id, reportPeriod, true);
   if (!report) {
     throw new Error(`Failed to get report for bank with id ${bank.id} for submission month ${submissionMonth}`);
@@ -109,7 +110,7 @@ const isBankDueToSubmitReport =
   (currentSubmissionMonth: IsoMonthStamp) =>
   (bank: Bank): boolean => {
     const currentReportPeriodForBank = getCurrentReportPeriodForBankSchedule(bank.utilisationReportPeriodSchedule);
-    return isEqualMonthAndYear(currentReportPeriodForBank.start, getReportPeriodStartForSubmissionMonth(currentSubmissionMonth));
+    return isEqualMonthAndYear(currentReportPeriodForBank.end, getReportPeriodEndForSubmissionMonth(currentSubmissionMonth));
   };
 
 export const generateReconciliationSummaries = async (currentSubmissionMonth: IsoMonthStamp): Promise<UtilisationReportReconciliationSummary[]> => {
