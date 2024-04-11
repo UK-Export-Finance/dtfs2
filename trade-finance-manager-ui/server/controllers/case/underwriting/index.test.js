@@ -98,9 +98,10 @@ describe('GET getUnderwriterPage', () => {
     });
 
     it('should render template with the amendment which is submittedByPim and requireUkefApproval (when unsubmitted amendment exists)', async () => {
-      api.getAmendmentsByDealId = () => Promise.resolve({
-        data: [MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_AMENDMENT_AUTOMATIC_APPROVAL, MOCKS.MOCK_AMENDMENT_UNSUBMITTED],
-      });
+      api.getAmendmentsByDealId = () =>
+        Promise.resolve({
+          data: [MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_AMENDMENT_AUTOMATIC_APPROVAL, MOCKS.MOCK_AMENDMENT_UNSUBMITTED],
+        });
       const req = {
         params: {
           _id: dealId,
@@ -119,9 +120,10 @@ describe('GET getUnderwriterPage', () => {
     });
 
     it('should render template with 2 amendments which are submittedByPim and requireUkefApproval (when unsubmitted amendment exists)', async () => {
-      api.getAmendmentsByDealId = () => Promise.resolve({
-        data: [MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_AMENDMENT_AUTOMATIC_APPROVAL, MOCKS.MOCK_AMENDMENT_UNSUBMITTED, MOCKS.MOCK_AMENDMENT],
-      });
+      api.getAmendmentsByDealId = () =>
+        Promise.resolve({
+          data: [MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_AMENDMENT_AUTOMATIC_APPROVAL, MOCKS.MOCK_AMENDMENT_UNSUBMITTED, MOCKS.MOCK_AMENDMENT],
+        });
       const req = {
         params: {
           _id: dealId,
@@ -137,6 +139,30 @@ describe('GET getUnderwriterPage', () => {
         amendmentsInProgress: expect.any(Array),
         hasAmendmentInProgress: true,
       });
+    });
+
+    it('should render problem with service page, when void request is send', async () => {
+      const req = {
+        params: {},
+        session: {},
+      };
+
+      await underwriterController.getUnderwriterPage(req, res);
+
+      expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+    });
+
+    it('should render problem with service page, upon returning an empty deal object', async () => {
+      const req = {
+        params: {
+          _id: dealId,
+        },
+        session: {},
+      };
+
+      await underwriterController.getUnderwriterPage(req, res);
+
+      expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
   });
 });
