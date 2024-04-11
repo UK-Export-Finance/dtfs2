@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
-import { UserInformation } from '../../types/auditDetails';
+import { AuditDetails } from '../../types/auditDetails';
 
-export function validateAuditDetails(auditDetails: unknown): asserts auditDetails is UserInformation {
+export function validateAuditDetails(auditDetails: unknown): asserts auditDetails is AuditDetails {
   if (!(auditDetails instanceof Object && 'userType' in auditDetails)) {
     throw new Error('Missing property `userType`');
   }

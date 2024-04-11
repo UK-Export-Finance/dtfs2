@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { UserInformation } from '../../types/auditDetails';
+import { AuditDetails } from '../../types/auditDetails';
 
 type AuditDatabaseRecord = {
   lastUpdatedAt: Date;
@@ -41,7 +41,7 @@ export const generateNoUserLoggedInAuditDatabaseRecord = (): AuditDatabaseRecord
   noUserLoggedIn: true,
 });
 
-export const generateAuditDatabaseRecordFromAuditDetails = (auditDetails: UserInformation) => {
+export const generateAuditDatabaseRecordFromAuditDetails = (auditDetails: AuditDetails) => {
   switch (auditDetails.userType) {
     case 'tfm':
       return generateTfmUserAuditDatabaseRecord(auditDetails.id);

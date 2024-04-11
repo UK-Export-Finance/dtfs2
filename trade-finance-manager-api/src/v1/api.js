@@ -191,7 +191,7 @@ const findOneDeal = async (dealId) => {
  * @param {object} params
  * @param {string} params.dealId - deal to update
  * @param {Object} params.dealUpdate - update to make
- * @param {import("@ukef/dtfs2-common/src/types/auditDetails").UserInformation} params.auditDetails - user making the request
+ * @param {import("@ukef/dtfs2-common/src/types/auditDetails").AuditDetails} params.auditDetails - user making the request
  * @typedef {Object} ErrorParam
  * @property {string} message error message
  * @property {number} status HTTP status code
