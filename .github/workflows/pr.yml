@@ -1,0 +1,53 @@
+# This YAML configuration defines a GitHub Actions workflow named "PR" designed to analyse pull requests
+# for staleness and take action accordingly.
+#
+# Identify: Uses the actions/stale@v5 action with parameters to mark pull requests as stale if
+# they have been inactive for a certain number of days and close them if they exceed another threshold.
+# This workflow helps maintain the health of the pull request queue by identifying and managing stale pull requests automatically.
+#
+
+name: PR
+run-name: 🔎 pull request analysis on ${{ github.event.number }}
+
+on:
+  schedule:
+    - cron: "00 00 * * *"
+env:
+  environment: dev
+  timezone: ${{ vars.TIMEZONE }}
+
+jobs:
+  # 1. Setup test infrastructure
+  setup:
+    name: Infrastructure setup 🔧
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ env.environment }}
+      timezone: ${{ env.timezone }}
+    steps:
+      - name: Environment 🧪
+        run: echo "Environment set to ${{ env.environment }}"
+
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.timezone }}"
+
+  # 2. Identify stale PRs
+  stale:
+    name: Stale 📅
+    needs: setup
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Identify
+        uses: actions/stale@v9
+        with:
+          days-before-pr-stale: ${{ vars.STALE_PR_DAYS }}
+          stale-pr-message: "Pull request marked as stale due to inactivity."
+          stale-pr-label: "Stale"
+          days-before-pr-close: ${{ vars.CLOSE_PR_DAYS }}
+          close-pr-message: "Pull request has been closed due to inactivity."
+          close-pr-label: "Closed"
