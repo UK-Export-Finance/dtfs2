@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const { generateAuditDetailsFromUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
+const { generateAuditDatabaseRecordFromUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDatabaseRecord');
 const { validateUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/validateUserInformation');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
@@ -66,7 +66,7 @@ const updateDeal = async ({ dealId, dealUpdate, existingDeal, userInformation })
   }
 
   dealTfmUpdate.tfm.lastUpdated = new Date().valueOf();
-  dealTfmUpdate.auditDetails = generateAuditDetailsFromUserInformation(userInformation);
+  dealTfmUpdate.auditRecord = generateAuditDatabaseRecordFromUserInformation(userInformation);
 
   const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(withoutId(dealTfmUpdate)), {
     returnNewDocument: true,

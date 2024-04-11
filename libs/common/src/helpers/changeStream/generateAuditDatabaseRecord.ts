@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { UserInformation } from '../../types/userInformation';
 
-type AuditDetails = {
+type AuditDatabaseRecord = {
   lastUpdatedAt: Date;
   lastUpdatedByPortalUserId: ObjectId | null;
   lastUpdatedByTfmUserId: ObjectId | null;
@@ -9,7 +9,7 @@ type AuditDetails = {
   noUserLoggedIn: boolean | null;
 };
 
-export const generatePortalUserAuditDetails = (userId: string | ObjectId): AuditDetails => ({
+export const generatePortalUserAuditDatabaseRecord = (userId: string | ObjectId): AuditDatabaseRecord => ({
   lastUpdatedAt: new Date(),
   lastUpdatedByPortalUserId: new ObjectId(userId),
   lastUpdatedByTfmUserId: null,
@@ -17,7 +17,7 @@ export const generatePortalUserAuditDetails = (userId: string | ObjectId): Audit
   noUserLoggedIn: null,
 });
 
-export const generateTfmUserAuditDetails = (userId: string | ObjectId): AuditDetails => ({
+export const generateTfmUserAuditDatabaseRecord = (userId: string | ObjectId): AuditDatabaseRecord => ({
   lastUpdatedAt: new Date(),
   lastUpdatedByPortalUserId: null,
   lastUpdatedByTfmUserId: new ObjectId(userId),
@@ -25,7 +25,7 @@ export const generateTfmUserAuditDetails = (userId: string | ObjectId): AuditDet
   noUserLoggedIn: null,
 });
 
-export const generateSystemAuditDetails = (): AuditDetails => ({
+export const generateSystemAuditDatabaseRecord = (): AuditDatabaseRecord => ({
   lastUpdatedAt: new Date(),
   lastUpdatedByPortalUserId: null,
   lastUpdatedByTfmUserId: null,
@@ -33,7 +33,7 @@ export const generateSystemAuditDetails = (): AuditDetails => ({
   noUserLoggedIn: null,
 });
 
-export const generateNoUserLoggedInAuditDetails = (): AuditDetails => ({
+export const generateNoUserLoggedInAuditDatabaseRecord = (): AuditDatabaseRecord => ({
   lastUpdatedAt: new Date(),
   lastUpdatedByPortalUserId: null,
   lastUpdatedByTfmUserId: null,
@@ -41,14 +41,14 @@ export const generateNoUserLoggedInAuditDetails = (): AuditDetails => ({
   noUserLoggedIn: true,
 });
 
-export const generateAuditDetailsFromUserInformation = (userInformation: UserInformation) => {
+export const generateAuditDatabaseRecordFromUserInformation = (userInformation: UserInformation) => {
   switch (userInformation.userType) {
     case 'tfm':
-      return generateTfmUserAuditDetails(userInformation.id);
+      return generateTfmUserAuditDatabaseRecord(userInformation.id);
     case 'portal':
-      return generatePortalUserAuditDetails(userInformation.id);
+      return generatePortalUserAuditDatabaseRecord(userInformation.id);
     case 'system':
-      return generateSystemAuditDetails();
+      return generateSystemAuditDatabaseRecord();
     default:
       throw new Error('Invalid userInformation userType');
   }

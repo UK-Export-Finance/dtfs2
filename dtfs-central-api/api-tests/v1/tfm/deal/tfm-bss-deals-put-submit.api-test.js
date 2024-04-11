@@ -58,7 +58,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
         facilities: [],
       },
       tfm: DEFAULTS.DEAL_TFM,
-      auditDetails: {
+      auditRecord: {
         lastUpdatedAt: expect.any(String),
         lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
         lastUpdatedByTfmUserId: null,
@@ -126,7 +126,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
         updatedAt: expect.any(Number),
       },
       tfm: DEFAULTS.FACILITY_TFM,
-      auditDetails: {
+      auditRecord: {
         lastUpdatedAt: expect.any(String),
         lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
         lastUpdatedByTfmUserId: null,
@@ -147,7 +147,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
         updatedAt: expect.any(Number),
       },
       tfm: DEFAULTS.FACILITY_TFM,
-      auditDetails: {
+      auditRecord: {
         lastUpdatedAt: expect.any(String),
         lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
         lastUpdatedByTfmUserId: null,

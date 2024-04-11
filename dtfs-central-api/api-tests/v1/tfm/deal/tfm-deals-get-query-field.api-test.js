@@ -70,7 +70,7 @@ describe('/v1/tfm/deals', () => {
               dateReceived: '12-11-2021',
               lastUpdated: expect.any(Number),
             },
-            auditDetails: {
+            auditRecord: {
               lastUpdatedAt: expect.any(String),
               lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
               lastUpdatedByPortalUserId: null,

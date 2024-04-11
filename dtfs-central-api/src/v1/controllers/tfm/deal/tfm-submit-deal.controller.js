@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const { generateAuditDetailsFromUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
+const { generateAuditDatabaseRecordFromUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDatabaseRecord');
 const { validateUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/validateUserInformation');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal, findOneGefDeal } = require('../../portal/deal/get-deal.controller');
@@ -40,7 +40,7 @@ const createDealSnapshot = async (deal, userInformation) => {
     const submissionCount = getSubmissionCount(deal);
     const tfmInit = submissionCount === 1 ? { tfm: DEFAULTS.DEAL_TFM } : null;
 
-    const dealObj = { dealSnapshot: deal, ...tfmInit, auditDetails: generateAuditDetailsFromUserInformation(userInformation) };
+    const dealObj = { dealSnapshot: deal, ...tfmInit, auditRecord: generateAuditDatabaseRecordFromUserInformation(userInformation) };
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
       const dealFacilities = await findAllFacilitiesByDealId(dealId);
@@ -84,7 +84,7 @@ const createFacilitiesSnapshot = async (deal, userInformation) => {
             {
               _id: { $eq: ObjectId(facility._id) },
             },
-            $.flatten({ facilitySnapshot: facility, ...tfmInit, auditDetails: generateAuditDetailsFromUserInformation(userInformation) }),
+            $.flatten({ facilitySnapshot: facility, ...tfmInit, auditRecord: generateAuditDatabaseRecordFromUserInformation(userInformation) }),
             {
               returnNewDocument: true,
               returnDocument: 'after',

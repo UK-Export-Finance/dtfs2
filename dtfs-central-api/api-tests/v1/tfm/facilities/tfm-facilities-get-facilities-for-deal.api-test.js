@@ -62,7 +62,7 @@ describe('/v1/tfm/deals/:id/facilities', () => {
           _id: facility._id,
           ...newFacility,
         },
-        auditDetails: {
+        auditRecord: {
           lastUpdatedAt: expect.any(String),
           lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
           lastUpdatedByIsSystem: null,

@@ -62,7 +62,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
         facilities: [],
       },
       tfm: DEFAULTS.DEAL_TFM,
-      auditDetails: {
+      auditRecord: {
         lastUpdatedAt: expect.any(String),
         lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
         lastUpdatedByTfmUserId: null,
@@ -110,7 +110,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
         ...newFacility1,
       },
       tfm: DEFAULTS.FACILITY_TFM,
-      auditDetails: {
+      auditRecord: {
         lastUpdatedAt: expect.any(String),
         lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
         lastUpdatedByTfmUserId: null,
@@ -129,7 +129,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
         ...newFacility2,
       },
       tfm: DEFAULTS.FACILITY_TFM,
-      auditDetails: {
+      auditRecord: {
         lastUpdatedAt: expect.any(String),
         lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
         lastUpdatedByTfmUserId: null,
