@@ -1,4 +1,4 @@
-const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const addTfmDealData = require('.');
 const mapSubmittedDeal = require('../../mappings/map-submitted-deal');
 const generateDateReceived = require('./dateReceived');
@@ -32,7 +32,7 @@ describe('deal submit - add TFM data', () => {
       tfm: {},
     });
 
-    const result = await addTfmDealData(mockDeal, generatePortalUserInformation(MOCK_PORTAL_USERS[0]._id));
+    const result = await addTfmDealData(mockDeal, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
 
     const expected = {
       ...mockDeal,

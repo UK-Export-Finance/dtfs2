@@ -27,7 +27,7 @@ const dealsOpenRouter = express.Router();
  *                 type: string
  *               dealType:
  *                 type: string
- *               userInformation:
+ *               auditDetails:
  *                 type: object
  *                 properties:
  *                   userType:
@@ -38,7 +38,7 @@ const dealsOpenRouter = express.Router();
  *             example:
  *               dealId: 123abc
  *               dealType: BSS/EWCS
- *               userInformation:
+ *               auditDetails:
  *                 id: 1234567890abcdef12345678
  *                 userType: portal
  *     responses:

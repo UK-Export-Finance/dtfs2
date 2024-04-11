@@ -33,7 +33,7 @@ const TFM = {
     firstName: String,
     lastName: String,
     status: String,
-    auditDetails: Object,
+    auditRecord: Object,
   },
   TEAM: {
     id: String,

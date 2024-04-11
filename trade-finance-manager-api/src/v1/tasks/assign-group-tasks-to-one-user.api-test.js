@@ -1,5 +1,5 @@
 const { when } = require('jest-when');
-const { generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation')
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
 const assignGroupTasksToOneUser = require('./assign-group-tasks-to-one-user');
 
 const MOCK_USERS = require('../__mocks__/mock-users');
@@ -40,7 +40,7 @@ describe('assignGroupTasksToOneUser', () => {
       });
     });
 
-    const result = await assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, generateTfmUserInformation(MOCK_USERS[0]._id));
+    const result = await assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, generateTfmAuditDetails(MOCK_USERS[0]._id));
 
     let filteredTasksResult = [];
 
@@ -77,7 +77,7 @@ describe('assignGroupTasksToOneUser', () => {
     const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
     const userId = mockUser._id;
 
-    await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, generateTfmUserInformation(MOCK_USERS[0]._id))).rejects.toThrow(Error);
+    await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, generateTfmAuditDetails(MOCK_USERS[0]._id))).rejects.toThrow(Error);
   });
 
   it('should throw an error if find deal fails', async () => {
@@ -91,6 +91,6 @@ describe('assignGroupTasksToOneUser', () => {
     const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
     const userId = mockUser._id;
 
-    await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, generateTfmUserInformation(MOCK_USERS[0]._id))).rejects.toThrow(Error);
+    await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, generateTfmAuditDetails(MOCK_USERS[0]._id))).rejects.toThrow(Error);
   });
 });

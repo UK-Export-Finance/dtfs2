@@ -1,5 +1,5 @@
 const { getTime } = require('date-fns');
-const { generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');
@@ -12,7 +12,7 @@ const addUnderwriterManagersDecisionToDeal = ({
   comments,
   internalComments,
   userFullName,
-  userInformation,
+  auditDetails,
 }) => {
   const managerDecisionUpdate = {
     tfm: {
@@ -29,7 +29,7 @@ const addUnderwriterManagersDecisionToDeal = ({
   return api.updateDeal({
     dealId,
     dealUpdate: managerDecisionUpdate,
-    userInformation,
+    auditDetails,
     onError: (status, message) => {
       throw new Error(`Updating the deal with dealId ${dealId} failed with status ${status} and message: ${message}`);
     }
@@ -112,7 +112,7 @@ const updateUnderwriterManagersDecision = async (req, res) => {
       userFullName,
     } = extractDecisionFromRequest(req);
 
-    const updatedDeal = await addUnderwriterManagersDecisionToDeal({ dealId, decision, comments, internalComments, userFullName, userInformation: generateTfmUserInformation(req.user._id) });
+    const updatedDeal = await addUnderwriterManagersDecisionToDeal({ dealId, decision, comments, internalComments, userFullName, auditDetails: generateTfmAuditDetails(req.user._id) });
     const mappedDeal = mapSubmittedDeal(updatedDeal);
     const { dealType, submissionType } = mappedDeal;
 

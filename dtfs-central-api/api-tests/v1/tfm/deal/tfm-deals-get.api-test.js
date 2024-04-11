@@ -1,4 +1,4 @@
-const { generateTfmUserInformation, generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
+const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -47,7 +47,7 @@ const createAndSubmitDeals = async (deals) => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId: createResponse.body._id,
-          userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
@@ -69,7 +69,7 @@ const updateDealsTfm = async (dealsTfmUpdate, sessionTfmUser) => {
           dealUpdate: {
             tfm: deal.tfm,
           },
-          userInformation: generateTfmUserInformation(sessionTfmUser._id),
+          auditDetails: generateTfmAuditDetails(sessionTfmUser._id),
         })
         .to(`/v1/tfm/deals/${deal._id}`);
 

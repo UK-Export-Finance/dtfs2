@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb')
-const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const { findOneTfmDeal, findOnePortalDeal, findOneGefDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
@@ -47,7 +47,7 @@ const getPortalDeal = async (dealId, dealType) => {
  * the number has been granted by the number generator
  * Azure function
  */
-const submitDealAfterUkefIds = async (dealId, dealType, checker, userInformation) => {
+const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) => {
   const deal = await getPortalDeal(dealId, dealType);
   console.info('Setting essential deal properties in TFM for deal %s', dealId);
 
@@ -56,7 +56,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, userInformation
     return false;
   }
 
-  const submittedDeal = await api.submitDeal(dealType, dealId, userInformation);
+  const submittedDeal = await api.submitDeal(dealType, dealId, auditDetails);
   const mappedDeal = mapSubmittedDeal(submittedDeal);
 
   const { submissionCount } = mappedDeal;
@@ -83,14 +83,14 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, userInformation
       status,
     };
 
-    const dealWithTfmData = await addTfmDealData(updatedMappedDeal, userInformation);
-    const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData, userInformation);
-    const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn, userInformation);
+    const dealWithTfmData = await addTfmDealData(updatedMappedDeal, auditDetails);
+    const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData, auditDetails);
+    const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn, auditDetails);
     const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions);
     const updatedDealWithCreateEstore = await createEstoreSite(updatedDealWithUpdatedFacilities);
 
     if (updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-      const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore, userInformation);
+      const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore, auditDetails);
 
       /**
        * Current requirement only allows AIN & MIN deals to be sent to ACBS
@@ -113,10 +113,10 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, userInformation
        * Update the deal with all the above modifications
        * Note: at the time of writing, some functions above update the deal, others do not.
        */
-      return api.updateDeal({ dealId, dealUpdate: updatedDealWithTasks, userInformation });
+      return api.updateDeal({ dealId, dealUpdate: updatedDealWithTasks, auditDetails });
     }
 
-    return api.updateDeal({ dealId, dealUpdate: updatedDealWithCreateEstore, userInformation });
+    return api.updateDeal({ dealId, dealUpdate: updatedDealWithCreateEstore, auditDetails });
   }
 
   if (dealHasBeenResubmit) {
@@ -192,9 +192,9 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, userInformation
       console.info('TFM deal %s stage has been updated to %s', dealId, updatedDealStage);
     }
 
-    return api.updateDeal({ dealId, dealUpdate: updatedDeal, userInformation });
+    return api.updateDeal({ dealId, dealUpdate: updatedDeal, auditDetails });
   }
-  return api.updateDeal({ dealId, dealUpdate: submittedDeal, userInformation });
+  return api.updateDeal({ dealId, dealUpdate: submittedDeal, auditDetails });
 };
 
 exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
@@ -204,11 +204,11 @@ exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
  * @param {string} dealId - The ID of the deal to be submitted.
  * @param {string} dealType - The type of the deal.
  * @param {object} checker - checker submitting the deal
- * @param {import("@ukef/dtfs2-common/src/types/userInformation").UserInformation} userInformation - checker information
+ * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} auditDetails - checker information
  * @returns {Promise<Object> | Boolean} - A promise that resolves to an object, other false.
  * @throws {Error} - If there is an error during the submission process.
  */
-const submitDealBeforeUkefIds = async (dealId, dealType, checker, userInformation) => {
+const submitDealBeforeUkefIds = async (dealId, dealType, checker, auditDetails) => {
   try {
     console.info('Submitting new deal %s to TFM', dealId);
     const deal = await getPortalDeal(dealId, dealType);
@@ -218,13 +218,13 @@ const submitDealBeforeUkefIds = async (dealId, dealType, checker, userInformatio
       return false;
     }
 
-    const response = await api.submitDeal(dealType, dealId, userInformation);
+    const response = await api.submitDeal(dealType, dealId, auditDetails);
 
     if (!response) {
       throw new Error(`Unable to submit deal ${dealId} to TFM`);
     }
 
-    return submitDealAfterUkefIds(dealId, dealType, checker, userInformation);
+    return submitDealAfterUkefIds(dealId, dealType, checker, auditDetails);
   } catch (error) {
     console.error('❌ Unable to submit new deal %s to TFM %o', dealId, error);
     throw new Error('Unable to submit new deal to TFM');
@@ -248,7 +248,7 @@ const submitDealAfterUkefIdsPUT = async (req, res) => {
       return res.status(400).send({ status: 400, message: 'Invalid checker _id'});
     }
 
-    const deal = await submitDealAfterUkefIds(dealId, dealType, checker, generatePortalUserInformation(checker._id));
+    const deal = await submitDealAfterUkefIds(dealId, dealType, checker, generatePortalAuditDetails(checker._id));
 
     if (!deal) {
       console.error('Deal does not exist in TFM %s', dealId);
@@ -284,15 +284,15 @@ const submitDealPUT = async (req, res) => {
       return res.status(400).send();
     }
 
-    const userInformation = generatePortalUserInformation(checker._id);
+    const auditDetails = generatePortalAuditDetails(checker._id);
 
     const { status } = await dealHasAllUkefIds(dealId);
     let deal;
 
     if (status) {
-      deal = await submitDealAfterUkefIds(dealId, dealType, checker, userInformation);
+      deal = await submitDealAfterUkefIds(dealId, dealType, checker, auditDetails);
     } else {
-      deal = await submitDealBeforeUkefIds(dealId, dealType, checker, userInformation);
+      deal = await submitDealBeforeUkefIds(dealId, dealType, checker, auditDetails);
     }
 
     if (!deal) {

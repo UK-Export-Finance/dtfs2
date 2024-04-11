@@ -2,7 +2,7 @@ import { getCollection } from '../database';
 import { Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { createDealFolder } from '../v1/controllers/estore/eStoreApi';
-import { generateSystemAuditDetails } from '@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails';
+import { generateSystemAuditDatabaseRecord } from '@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record';
 
 /**
  * Performs the following tasks:
@@ -38,7 +38,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
             'dealCronJob.completionDate': new Date(),
             'facilityCronJob.status': ESTORE_CRON_STATUS.RUNNING,
             'facilityCronJob.startDate': new Date(),
-            auditDetails: generateSystemAuditDetails(),
+            auditRecord: generateSystemAuditDatabaseRecord(),
           },
         },
       );
@@ -57,7 +57,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
             dealFolderResponse,
             'dealCronJob.status': ESTORE_CRON_STATUS.FAILED,
             'dealCronJob.failureDate': new Date(),
-            auditDetails: generateSystemAuditDetails(),
+            auditRecord: generateSystemAuditDatabaseRecord(),
           },
         },
       );

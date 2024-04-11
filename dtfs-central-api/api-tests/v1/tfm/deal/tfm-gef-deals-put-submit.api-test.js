@@ -1,4 +1,4 @@
-const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -34,7 +34,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
       .put({
         dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
         dealId: invalidDealId,
-        userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       })
       .to('/v1/tfm/deals/submit');
     expect(status).toEqual(404);
@@ -48,7 +48,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
       .put({
         dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
         dealId,
-        userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       })
       .to('/v1/tfm/deals/submit');
 
@@ -62,7 +62,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
         facilities: [],
       },
       tfm: DEFAULTS.DEAL_TFM,
-      auditDetails: {
+      auditRecord: {
         lastUpdatedAt: expect.any(String),
         lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
         lastUpdatedByTfmUserId: null,
@@ -93,7 +93,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
       .put({
         dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
         dealId,
-        userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       })
       .to('/v1/tfm/deals/submit');
 
@@ -110,7 +110,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
         ...newFacility1,
       },
       tfm: DEFAULTS.FACILITY_TFM,
-      auditDetails: {
+      auditRecord: {
         lastUpdatedAt: expect.any(String),
         lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
         lastUpdatedByTfmUserId: null,
@@ -129,7 +129,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
         ...newFacility2,
       },
       tfm: DEFAULTS.FACILITY_TFM,
-      auditDetails: {
+      auditRecord: {
         lastUpdatedAt: expect.any(String),
         lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
         lastUpdatedByTfmUserId: null,
