@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Identify
-        uses: actions/stale@v5
+        uses: actions/stale@v9
         with:
           days-before-pr-stale: ${{ vars.STALE_PR_DAYS }}
           stale-pr-message: "Pull request marked as stale due to inactivity."
