@@ -1,9 +1,4 @@
-import { OneIndexedMonth } from "./date";
-
-type BankReportPeriodSchedule = {
-  startMonth: OneIndexedMonth;
-  endMonth: OneIndexedMonth;
-}[];
+import { BankReportPeriodSchedule } from '@ukef/dtfs2-common';
 
 export type Bank = {
   id: string;

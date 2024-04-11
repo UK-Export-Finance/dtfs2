@@ -1,4 +1,5 @@
 const { isEqualMonthAndYear } = require('@ukef/dtfs2-common');
+const { UTILISATION_REPORT_HEADERS } = require('@ukef/dtfs2-common');
 const {
   generateUkefFacilityIdError,
   generateBaseCurrencyError,
@@ -11,7 +12,7 @@ const {
   generatePaymentCurrencyError,
   generatePaymentExchangeRateError,
 } = require('./utilisation-report-cell-validators');
-const { UTILISATION_REPORT_HEADERS, MONTH_NAMES, FILE_UPLOAD } = require('../../../constants');
+const { MONTH_NAMES, FILE_UPLOAD } = require('../../../constants');
 
 const validateCsvHeaders = (csvDataRow) => {
   const headers = Object.keys(csvDataRow);
