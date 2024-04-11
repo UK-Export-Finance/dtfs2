@@ -38,7 +38,7 @@
   "dependencies": {
     "@azure/storage-file-share": "12.14.0",
     "@ukef/dtfs2-common": "1.0.0",
-    "axios": "^1.6.8",
+    "axios": "^0.28.0",
     "axios-mock-adapter": "^1.22.0",
     "comma-number": "^2.1.0",
     "compression": "^1.7.4",
@@ -46,7 +46,7 @@
     "date-fns": "^2.30.0",
     "dotenv": "16.0.3",
     "escape-string-regexp": "^4.0.0",
-    "express": "4.18.2",
+    "express": "4.19.2",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.11.2",
     "express-validator": "^7.0.1",
