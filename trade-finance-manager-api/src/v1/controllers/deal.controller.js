@@ -1,5 +1,5 @@
+const { generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const mapDeal = require('../mappings/map-deal');
-const mapDeals = require('../mappings/map-deals');
 const api = require('../api');
 const acbsController = require('./acbs.controller');
 const allPartiesHaveUrn = require('../helpers/all-parties-have-urn');
@@ -86,34 +86,6 @@ const findOneTfmDeal = async (dealId) => {
 };
 exports.findOneTfmDeal = findOneTfmDeal;
 
-const queryDeals = async (queryParams) => {
-  const { deals, pagination } = await api.queryDeals({ queryParams });
-
-  if (!deals) {
-    return false;
-  }
-
-  return { deals, pagination };
-};
-
-const findTfmDealsLight = async (queryParams) => {
-  const { deals, pagination } = await queryDeals(queryParams);
-  return { deals, pagination };
-};
-exports.findTfmDealsLight = findTfmDealsLight;
-
-const findTfmDeals = async (queryParams) => {
-  const { deals, pagination } = await queryDeals(queryParams);
-
-  const mapped = await mapDeals(deals);
-
-  return {
-    deals: mapped,
-    pagination
-  };
-};
-exports.findTfmDeals = findTfmDeals;
-
 const findOnePortalDeal = async (dealId) => {
   const deal = await api.findOnePortalDeal(dealId).catch(() => false);
 
@@ -140,7 +112,7 @@ const updateDeal = async (req, res) => {
   const { dealId } = req.params;
   const dealUpdate = req.body;
   try {
-    const updatedDeal = await api.updateDeal(dealId, dealUpdate);
+    const updatedDeal = await api.updateDeal({ dealId, dealUpdate, userInformation: generateTfmUserInformation(req.user._id) });
     return res.status(200).send({
       updateDeal: updatedDeal.tfm,
     });
@@ -176,65 +148,7 @@ const canDealBeSubmittedToACBS = (submissionType) => {
 };
 exports.canDealBeSubmittedToACBS = canDealBeSubmittedToACBS;
 
-const updateTfmParty = async (dealId, tfmUpdate) => {
-  const partyUpdate = {
-    tfm: {
-      parties: tfmUpdate,
-    },
-  };
-
-  const updatedDeal = await api.updateDeal(dealId, partyUpdate);
-
-  if (updatedDeal.dealSnapshot) {
-    if (canDealBeSubmittedToACBS(updatedDeal.dealSnapshot.submissionType)) {
-      await submitACBSIfAllPartiesHaveUrn(dealId);
-    }
-  }
-
-  return updatedDeal.tfm;
-};
-exports.updateTfmParty = updateTfmParty;
-
-const updateTfmCreditRating = async (dealId, exporterCreditRating) => {
-  const creditRatingUpdate = {
-    tfm: {
-      exporterCreditRating,
-    },
-  };
-
-  const updatedDeal = await api.updateDeal(dealId, creditRatingUpdate);
-
-  return updatedDeal.tfm;
-};
-exports.updateTfmCreditRating = updateTfmCreditRating;
-
-const updateTfmLossGivenDefault = async (dealId, lossGivenDefault) => {
-  const lossGivenDefaultUpdate = {
-    tfm: {
-      lossGivenDefault,
-    },
-  };
-
-  const updatedDeal = await api.updateDeal(dealId, lossGivenDefaultUpdate);
-
-  return updatedDeal.tfm;
-};
-exports.updateTfmLossGivenDefault = updateTfmLossGivenDefault;
-
-const updateTfmProbabilityOfDefault = async (dealId, probabilityOfDefault) => {
-  const probabilityOfDefaultUpdate = {
-    tfm: {
-      probabilityOfDefault,
-    },
-  };
-
-  const updatedDeal = await api.updateDeal(dealId, probabilityOfDefaultUpdate);
-
-  return updatedDeal.tfm;
-};
-exports.updateTfmProbabilityOfDefault = updateTfmProbabilityOfDefault;
-
-const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest) => {
+const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest, userInformation) => {
   const { userId } = leadUnderwriterUpdateRequest;
   const leadUnderwriterUpdate = {
     tfm: {
@@ -242,17 +156,18 @@ const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest) =>
     },
   };
 
-  const updatedDealOrError = await api.updateDeal(
+  const updatedDealOrError = await api.updateDeal({
     dealId,
-    leadUnderwriterUpdate,
-    (status, message) => {
+    dealUpdate: leadUnderwriterUpdate,
+    userInformation,
+    onError: (status, message) => {
       throw new Error(`Updating the deal with dealId ${dealId} failed with status ${status} and message: ${message}`);
     }
-  );
+});
 
   const taskGroupsToUpdate = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
 
-  await assignGroupTasksToOneUser(dealId, taskGroupsToUpdate, userId);
+  await assignGroupTasksToOneUser(dealId, taskGroupsToUpdate, userId, userInformation);
 
   return updatedDealOrError.tfm;
 };
@@ -263,7 +178,7 @@ const updateLeadUnderwriter = async (req, res) => {
 
     const leadUnderwriterUpdate = req.body;
 
-    const updatedDealTfm = await updateTfmLeadUnderwriter(dealId, leadUnderwriterUpdate);
+    const updatedDealTfm = await updateTfmLeadUnderwriter(dealId, leadUnderwriterUpdate, generateTfmUserInformation(req.user._id));
 
     return res.status(200).send(updatedDealTfm);
   } catch (error) {
@@ -272,14 +187,3 @@ const updateLeadUnderwriter = async (req, res) => {
   }
 };
 exports.updateLeadUnderwriter = updateLeadUnderwriter;
-
-const updateTfmActivity = async (dealId, activityUpdate) => {
-  const updatedActivity = {
-    tfm: {
-      activities: activityUpdate,
-    },
-  };
-  const updatedDeal = await api.updateDeal(dealId, updatedActivity);
-  return updatedDeal.tfm;
-};
-exports.updateTfmActivity = updateTfmActivity;

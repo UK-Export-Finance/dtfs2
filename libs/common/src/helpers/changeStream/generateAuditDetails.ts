@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { UserInformation } from '../../types/userInformation';
 
 type AuditDetails = {
   lastUpdatedAt: Date;
@@ -39,3 +40,16 @@ export const generateNoUserLoggedInAuditDetails = (): AuditDetails => ({
   lastUpdatedByIsSystem: null,
   noUserLoggedIn: true,
 });
+
+export const generateAuditDetailsFromUserInformation = (userInformation: UserInformation) => {
+  switch (userInformation.userType) {
+    case 'tfm':
+      return generateTfmUserAuditDetails(userInformation.id);
+    case 'portal':
+      return generatePortalUserAuditDetails(userInformation.id);
+    case 'system':
+      return generateSystemAuditDetails();
+    default:
+      throw new Error('Invalid userInformation userType');
+  }
+};

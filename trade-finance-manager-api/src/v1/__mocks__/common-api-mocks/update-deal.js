@@ -3,16 +3,16 @@ const ALL_MOCK_DEALS = require('../mock-deals');
 
 module.exports = {
   mockUpdateDeal: (mockDealToReturn = undefined) => {
-    api.updateDeal.mockImplementation((dealId, updatedTfmDealData) => {
+    api.updateDeal.mockImplementation(({ dealId, dealUpdate }) => {
       let deal = mockDealToReturn || ALL_MOCK_DEALS.find((d) => d._id === dealId);
 
       // if stage is updated, add to the mock deal.
-      if (updatedTfmDealData.tfm?.stage) {
+      if (dealUpdate.tfm?.stage) {
         deal = {
           ...deal,
           tfm: {
-            ...updatedTfmDealData.tfm,
-            tasks: updatedTfmDealData.tfm.tasks,
+            ...dealUpdate.tfm,
+            tasks: dealUpdate.tfm.tasks,
           },
         };
         if (!mockDealToReturn) {
@@ -25,7 +25,7 @@ module.exports = {
         dealSnapshot: {
           ...deal,
         },
-        ...updatedTfmDealData,
+        ...dealUpdate,
       };
     });
   },
