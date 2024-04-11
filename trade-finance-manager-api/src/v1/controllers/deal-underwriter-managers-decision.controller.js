@@ -1,5 +1,5 @@
 const { getTime } = require('date-fns');
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');

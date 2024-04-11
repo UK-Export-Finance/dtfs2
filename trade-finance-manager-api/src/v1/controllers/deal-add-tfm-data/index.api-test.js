@@ -1,4 +1,4 @@
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const addTfmDealData = require('.');
 const mapSubmittedDeal = require('../../mappings/map-submitted-deal');
 const generateDateReceived = require('./dateReceived');

@@ -1,5 +1,5 @@
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const wipeDB = require('../../../wipeDB');
 const aDeal = require('../../deal-builder');
 

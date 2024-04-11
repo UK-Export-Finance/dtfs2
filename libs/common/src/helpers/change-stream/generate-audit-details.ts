@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { AuditDetails } from '../../types/auditDetails';
+import { AuditDetails } from '../../types/audit-details';
 
 export const generateSystemAuditDetails = (): AuditDetails => ({
   userType: 'system',

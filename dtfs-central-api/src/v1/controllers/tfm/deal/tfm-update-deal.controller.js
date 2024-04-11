@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDatabaseRecord');
-const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/validateAuditDetails');
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
@@ -18,7 +18,7 @@ const withoutId = (obj) => {
  * @param {string} params.dealId - id of deal to be updated
  * @param {object} params.dealUpdate - updates to make
  * @param {object} params.existingDeal
- * @param {import("@ukef/dtfs2-common/src/types/auditDetails").AuditDetails} params.auditDetails - tfm user making the update
+ * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} params.auditDetails - tfm user making the update
  * @returns {Promise<object>} updated deal or error object
  */
 const updateDeal = async ({ dealId, dealUpdate, existingDeal, auditDetails }) => {

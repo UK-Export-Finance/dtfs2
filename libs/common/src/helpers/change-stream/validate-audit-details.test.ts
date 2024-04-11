@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { validateAuditDetails } from './validateAuditDetails';
+import { validateAuditDetails } from './validate-audit-details';
 
 describe('validateAuditDetails', () => {
   it('throws if the input is not an object', () => {

@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { generateSystemAuditDatabaseRecord, generateTfmUserAuditDatabaseRecord, generateNoUserLoggedInAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDatabaseRecord');
+const { generateSystemAuditDatabaseRecord, generateTfmUserAuditDatabaseRecord, generateNoUserLoggedInAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const db = require('../../../drivers/db-client');
 const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');

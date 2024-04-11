@@ -1,4 +1,4 @@
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails')
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
 const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const { addPartyUrns } = require('../../../src/v1/controllers/deal.party-db');
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');

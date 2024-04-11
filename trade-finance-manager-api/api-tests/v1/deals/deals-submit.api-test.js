@@ -11,7 +11,7 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
   canDealBeSubmittedToACBS: jest.fn(),
 }));
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails')
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
 const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const { submitDeal, createSubmitBody } = require('../utils/submitDeal');

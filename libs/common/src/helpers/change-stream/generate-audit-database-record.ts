@@ -1,13 +1,6 @@
 import { ObjectId } from 'mongodb';
-import { AuditDetails } from '../../types/auditDetails';
-
-type AuditDatabaseRecord = {
-  lastUpdatedAt: Date;
-  lastUpdatedByPortalUserId: ObjectId | null;
-  lastUpdatedByTfmUserId: ObjectId | null;
-  lastUpdatedByIsSystem: boolean | null;
-  noUserLoggedIn: boolean | null;
-};
+import { AuditDetails } from '../../types/audit-details';
+import { AuditDatabaseRecord } from '../../types/audit-database-record';
 
 export const generatePortalUserAuditDatabaseRecord = (userId: string | ObjectId): AuditDatabaseRecord => ({
   lastUpdatedAt: new Date(),

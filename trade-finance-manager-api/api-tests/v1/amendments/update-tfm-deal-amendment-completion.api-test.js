@@ -1,6 +1,6 @@
 const { format } = require('date-fns');
 const { ObjectId } = require('mongodb');
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails')
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
 const amendmentController = require('../../../src/v1/controllers/amendment.controller');
 const { AMENDMENT_STATUS } = require('../../../src/constants/deals');
 const api = require('../../../src/v1/api');

@@ -1,4 +1,4 @@
-import { generatePortalAuditDetails, generateSystemAuditDetails, generateTfmAuditDetails } from './generateAuditDetails';
+import { generatePortalAuditDetails, generateSystemAuditDetails, generateTfmAuditDetails } from './generate-audit-details';
 
 describe('generateSystemAuditDetails', () => {
   it('generates the correct object', () => {

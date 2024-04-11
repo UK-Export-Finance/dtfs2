@@ -2,7 +2,7 @@ import { getCollection } from '../database';
 import { Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { createFacilityFolder, uploadSupportingDocuments } from '../v1/controllers/estore/eStoreApi';
-import { generateSystemAuditDatabaseRecord } from '@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDatabaseRecord';
+import { generateSystemAuditDatabaseRecord } from '@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record';
 
 const FACILITY_FOLDER_MAX_RETRIES = 3;
 

@@ -5,7 +5,7 @@ import {
   generatePortalUserAuditDatabaseRecord,
   generateSystemAuditDatabaseRecord,
   generateTfmUserAuditDatabaseRecord,
-} from './generateAuditDatabaseRecord';
+} from './generate-audit-database-record';
 
 describe('generate audit details', () => {
   const defaultAuditDatabaseRecord = {

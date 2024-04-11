@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb')
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const { findOneTfmDeal, findOnePortalDeal, findOneGefDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
@@ -204,7 +204,7 @@ exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
  * @param {string} dealId - The ID of the deal to be submitted.
  * @param {string} dealType - The type of the deal.
  * @param {object} checker - checker submitting the deal
- * @param {import("@ukef/dtfs2-common/src/types/auditDetails").AuditDetails} auditDetails - checker information
+ * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} auditDetails - checker information
  * @returns {Promise<Object> | Boolean} - A promise that resolves to an object, other false.
  * @throws {Error} - If there is an error during the submission process.
  */

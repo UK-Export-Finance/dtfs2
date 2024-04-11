@@ -1,4 +1,4 @@
-const { generateSystemAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
+const { generateSystemAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const activity = require('../helpers/activity');
 const api = require('../api');
 
