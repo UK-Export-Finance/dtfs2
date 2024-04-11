@@ -157,8 +157,7 @@ const MOCK_BANKS = [
       { startMonth: 6, endMonth: 8 },
       { startMonth: 9, endMonth: 11 },
     ],
-    // TODO DTFS2-7100: Set this to `true` once quarterly reporting is implemented
-    isVisibleInTfmUtilisationReports: false,
+    isVisibleInTfmUtilisationReports: true,
   },
 ];
 
