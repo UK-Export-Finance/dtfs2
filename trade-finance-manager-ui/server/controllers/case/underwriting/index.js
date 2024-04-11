@@ -1,4 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
+const { isEmpty } = require('lodash');
 const api = require('../../../api');
 
 const leadUnderwriter = require('./lead-underwriter');
@@ -24,13 +25,13 @@ const getUnderwriterPage = async (req, res) => {
   const { user, userToken } = req.session;
 
   if (!dealId || !user || !userToken) {
-    console.error('Void request %s %s', dealId, user);
+    console.error('Void request received %s %s %s', dealId, user, userToken);
     return res.render('_partials/problem-with-service.njk');
   }
 
   const deal = await api.getDeal(dealId, userToken);
 
-  if (!deal?.length) {
+  if (isEmpty(deal)) {
     console.error('Invalid deal %s response received', dealId);
     return res.render('_partials/problem-with-service.njk');
   }

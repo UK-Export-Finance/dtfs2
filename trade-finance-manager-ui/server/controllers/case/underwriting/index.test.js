@@ -54,6 +54,14 @@ describe('GET getUnderwriterPage', () => {
         userCanEdit: true,
       },
     };
+
+    const req = {
+      params: {
+        _id: dealId,
+      },
+      session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER, userToken: 'session' },
+    };
+
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(MOCKS.MOCK_DEAL);
       api.getUser = apiGetUserSpy;
@@ -61,12 +69,6 @@ describe('GET getUnderwriterPage', () => {
 
     it('should render template with data if amendment which is submittedByPim and requireUkefApproval', async () => {
       api.getAmendmentsByDealId = () => Promise.resolve({ data: [MOCKS.MOCK_AMENDMENT] });
-      const req = {
-        params: {
-          _id: dealId,
-        },
-        session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER },
-      };
 
       await underwriterController.getUnderwriterPage(req, res);
 
@@ -80,12 +82,6 @@ describe('GET getUnderwriterPage', () => {
 
     it('should render template with the amendment which is submittedByPim and requireUkefApproval (when 1 automatic amendment exists)', async () => {
       api.getAmendmentsByDealId = () => Promise.resolve({ data: [MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_AMENDMENT_AUTOMATIC_APPROVAL] });
-      const req = {
-        params: {
-          _id: dealId,
-        },
-        session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER },
-      };
 
       await underwriterController.getUnderwriterPage(req, res);
 
@@ -102,12 +98,6 @@ describe('GET getUnderwriterPage', () => {
         Promise.resolve({
           data: [MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_AMENDMENT_AUTOMATIC_APPROVAL, MOCKS.MOCK_AMENDMENT_UNSUBMITTED],
         });
-      const req = {
-        params: {
-          _id: dealId,
-        },
-        session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER },
-      };
 
       await underwriterController.getUnderwriterPage(req, res);
 
@@ -124,12 +114,6 @@ describe('GET getUnderwriterPage', () => {
         Promise.resolve({
           data: [MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_AMENDMENT_AUTOMATIC_APPROVAL, MOCKS.MOCK_AMENDMENT_UNSUBMITTED, MOCKS.MOCK_AMENDMENT],
         });
-      const req = {
-        params: {
-          _id: dealId,
-        },
-        session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER },
-      };
 
       await underwriterController.getUnderwriterPage(req, res);
 
@@ -142,25 +126,25 @@ describe('GET getUnderwriterPage', () => {
     });
 
     it('should render problem with service page, when void request is send', async () => {
-      const req = {
+      const mockRequest = {
         params: {},
         session: {},
       };
 
-      await underwriterController.getUnderwriterPage(req, res);
+      await underwriterController.getUnderwriterPage(mockRequest, res);
 
       expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
 
     it('should render problem with service page, upon returning an empty deal object', async () => {
-      const req = {
+      const mockRequest = {
         params: {
           _id: dealId,
         },
         session: {},
       };
 
-      await underwriterController.getUnderwriterPage(req, res);
+      await underwriterController.getUnderwriterPage(mockRequest, res);
 
       expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
