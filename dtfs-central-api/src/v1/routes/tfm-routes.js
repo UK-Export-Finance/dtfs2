@@ -422,11 +422,20 @@ tfmRouter.route('/facilities/:id')
  *                 - $ref: '#/definitions/TFMFacilityGEF'
  *                 - type: object
  *                   properties:
- *                     facilitySnapshot:
+ *                     tfmUpdate:
  *                       type: object
  *                       properties:
  *                         aNewField:
  *                           example: true
+ *                     auditDetails:
+ *                       type: object
+ *                       properties:
+ *                         userType:
+ *                           type: string
+ *                           enum: [system, portal, tfm]
+ *                         id:
+ *                           type: string
+ *                           example: '1234567890abcdef12345678'
  *       404:
  *         description: Not found
  */

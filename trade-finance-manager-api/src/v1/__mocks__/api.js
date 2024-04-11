@@ -159,7 +159,7 @@ module.exports = {
 
     return mapped;
   },
-  updateFacility: (facilityId, tfmUpdate) => {
+  updateFacility: ({ facilityId, tfmUpdate }) => {
     const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId);
 
     // for some reason 2 api tests act differently if tfmUpdate is *not* included in both
