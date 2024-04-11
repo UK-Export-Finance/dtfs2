@@ -257,7 +257,7 @@ const updateFacilityAmendment = async (req, res) => {
         // TFM Facility update + ACBS Interaction
         if (canSendToAcbs(amendment)) {
           // Amend facility TFM properties
-          await amendIssuedFacility(amendment, facility, tfmDeal);
+          await amendIssuedFacility(amendment, facility, tfmDeal, generateTfmAuditDetails(req.user._id));
           // Amendment email notification to PDC
           await internalAmendmentEmail(ukefFacilityId);
           // Amend facility ACBS records

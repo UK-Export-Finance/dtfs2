@@ -316,7 +316,7 @@ const findFacilitiesByDealId = async (dealId) => {
   }
 };
 
-const updateFacility = async (facilityId, facilityUpdate) => {
+const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
 
@@ -330,7 +330,8 @@ const updateFacility = async (facilityId, facilityUpdate) => {
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}`,
       headers: headers.central,
       data: {
-        facilityUpdate,
+        tfmUpdate,
+        auditDetails,
       },
     });
 
