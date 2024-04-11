@@ -1,5 +1,4 @@
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
-const { ObjectId } = require('mongodb');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -70,7 +69,7 @@ describe('GET TFM amendments', () => {
           auditRecord: {
             lastUpdatedAt: expect.any(String),
             lastUpdatedByPortalUserId: null,
-            lastUpdatedByTfmUserId: new ObjectId(MOCK_TFM_USER._id),
+            lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
             lastUpdatedByIsSystem: null,
             noUserLoggedIn: null,
           },
@@ -119,7 +118,7 @@ describe('GET TFM amendments', () => {
         auditRecord: {
           lastUpdatedAt: expect.any(String),
           lastUpdatedByPortalUserId: null,
-          lastUpdatedByTfmUserId: new ObjectId(MOCK_TFM_USER._id),
+          lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
           lastUpdatedByIsSystem: null,
           noUserLoggedIn: null,
         },
@@ -189,7 +188,7 @@ describe('GET TFM amendments', () => {
         auditRecord: {
           lastUpdatedAt: expect.any(String),
           lastUpdatedByPortalUserId: null,
-          lastUpdatedByTfmUserId: new ObjectId(MOCK_TFM_USER._id),
+          lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
           lastUpdatedByIsSystem: null,
           noUserLoggedIn: null,
         },
@@ -259,7 +258,7 @@ describe('GET TFM amendments', () => {
           auditRecord: {
             lastUpdatedAt: expect.any(String),
             lastUpdatedByPortalUserId: null,
-            lastUpdatedByTfmUserId: new ObjectId(MOCK_TFM_USER._id),
+            lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
             lastUpdatedByIsSystem: null,
             noUserLoggedIn: null,
           },
@@ -275,7 +274,7 @@ describe('GET TFM amendments', () => {
           auditRecord: {
             lastUpdatedAt: expect.any(String),
             lastUpdatedByPortalUserId: null,
-            lastUpdatedByTfmUserId: new ObjectId(MOCK_TFM_USER._id),
+            lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
             lastUpdatedByIsSystem: null,
             noUserLoggedIn: null,
           },
@@ -406,7 +405,7 @@ describe('GET TFM amendments', () => {
           auditRecord: {
             lastUpdatedAt: expect.any(String),
             lastUpdatedByPortalUserId: null,
-            lastUpdatedByTfmUserId: new ObjectId(MOCK_TFM_USER._id),
+            lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
             lastUpdatedByIsSystem: null,
             noUserLoggedIn: null,
           },
@@ -422,7 +421,7 @@ describe('GET TFM amendments', () => {
           auditRecord: {
             lastUpdatedAt: expect.any(String),
             lastUpdatedByPortalUserId: null,
-            lastUpdatedByTfmUserId: new ObjectId(MOCK_TFM_USER._id),
+            lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
             lastUpdatedByIsSystem: null,
             noUserLoggedIn: null,
           },
