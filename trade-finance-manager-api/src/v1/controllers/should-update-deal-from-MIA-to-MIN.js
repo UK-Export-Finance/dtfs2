@@ -1,24 +1,26 @@
 const CONSTANTS = require('../../constants');
 
+/**
+ * Determines whether a deal submission type 
+ * can be updated from MIA to MIN.
+ *
+ * @param {Object} deal - The portal deal object.
+ * @param {Object} tfmDeal - The TFM deal object.
+ * @returns {boolean} - True if the deal should be updated, false otherwise.
+ */
 const shouldUpdateDealFromMIAtoMIN = (deal, tfmDeal) => {
-  if (!tfmDeal) {
-    console.error('%s TFM object does not exists', deal._id);
+  if (!deal || !tfmDeal?.underwriterManagersDecision) {
+    console.error('Deal %s does not exist in TFM', deal?._id);
     return false;
   }
 
+  const ukefApprovedDecisions = [CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS, CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS];
   const isMIA = deal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA;
+  const hasApprovedDecision = ukefApprovedDecisions.includes(tfmDeal?.underwriterManagersDecision?.decision);
 
-  if (tfmDeal.underwriterManagersDecision) {
-    const hasApprovedDecision = (tfmDeal.underwriterManagersDecision
-    && (tfmDeal.underwriterManagersDecision.decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS
-    || tfmDeal.underwriterManagersDecision.decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS));
+  console.info('Updating deal %s submission type to MIN %s %s', deal._id, isMIA, hasApprovedDecision);
 
-    if (isMIA && hasApprovedDecision) {
-      return true;
-    }
-  }
-
-  return false;
+  return isMIA && hasApprovedDecision;
 };
 
 exports.shouldUpdateDealFromMIAtoMIN = shouldUpdateDealFromMIAtoMIN;
