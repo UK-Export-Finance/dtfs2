@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { generateSystemAuditDetails, generateTfmUserAuditDetails, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
+const { generateSystemAuditDatabaseRecord, generateTfmUserAuditDatabaseRecord, generateNoUserLoggedInAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const db = require('../../../drivers/db-client');
 const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
@@ -40,7 +40,7 @@ exports.create = async (user, sessionUser, callback) => {
   const tfmUser = {
     ...user,
     status: USER.STATUS.ACTIVE,
-    auditDetails: sessionUser?._id ? generateTfmUserAuditDetails(sessionUser._id) : generateNoUserLoggedInAuditDetails(),
+    auditRecord: sessionUser?._id ? generateTfmUserAuditDatabaseRecord(sessionUser._id) : generateNoUserLoggedInAuditDatabaseRecord(),
   };
 
   delete tfmUser.token;
@@ -77,7 +77,7 @@ exports.update = async (_id, update, sessionUser, callback) => {
 
   const userUpdate = {
     ...update,
-    auditDetails: generateTfmUserAuditDetails(sessionUser._id)
+    auditRecord: generateTfmUserAuditDatabaseRecord(sessionUser._id)
   };
   const collection = await db.getCollection('tfm-users');
 
@@ -117,7 +117,7 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
     lastLogin: Date.now(),
     loginFailureCount: 0,
     sessionIdentifier,
-    auditDetails: generateTfmUserAuditDetails(user._id),
+    auditRecord: generateTfmUserAuditDatabaseRecord(user._id),
   };
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 
@@ -137,7 +137,7 @@ exports.incrementFailedLoginCount = async (user) => {
     loginFailureCount: failureCount,
     lastLoginFailure: Date.now(),
     status: thresholdReached ? USER.STATUS.BLOCKED : user.status,
-    auditDetails: generateSystemAuditDetails(),
+    auditRecord: generateSystemAuditDatabaseRecord(),
   };
 
   await collection.updateOne(

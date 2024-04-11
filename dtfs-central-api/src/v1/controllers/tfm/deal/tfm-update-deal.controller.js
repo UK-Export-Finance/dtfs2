@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const { generateAuditDetailsFromUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
-const { validateUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/validateUserInformation');
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
@@ -18,10 +18,10 @@ const withoutId = (obj) => {
  * @param {string} params.dealId - id of deal to be updated
  * @param {object} params.dealUpdate - updates to make
  * @param {object} params.existingDeal
- * @param {import("@ukef/dtfs2-common/src/types/userInformation").UserInformation} params.userInformation - tfm user making the update
+ * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} params.auditDetails - tfm user making the update
  * @returns {Promise<object>} updated deal or error object
  */
-const updateDeal = async ({ dealId, dealUpdate, existingDeal, userInformation }) => {
+const updateDeal = async ({ dealId, dealUpdate, existingDeal, auditDetails }) => {
   const collection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_DEALS);
 
   /**
@@ -66,7 +66,7 @@ const updateDeal = async ({ dealId, dealUpdate, existingDeal, userInformation })
   }
 
   dealTfmUpdate.tfm.lastUpdated = new Date().valueOf();
-  dealTfmUpdate.auditDetails = generateAuditDetailsFromUserInformation(userInformation);
+  dealTfmUpdate.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
   const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(withoutId(dealTfmUpdate)), {
     returnNewDocument: true,
@@ -82,14 +82,14 @@ exports.updateDealPut = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
-  const { dealUpdate, userInformation } = req.body;
+  const { dealUpdate, auditDetails } = req.body;
 
   if (!dealUpdate?.tfm) {
     res.status(400).send({ status: 400, message: 'Missing property tfm on dealUpdate' });
   }
 
   try {
-    validateUserInformation(userInformation);
+    validateAuditDetails(auditDetails);
   } catch ({ message }) {
     res.status(400).send({ status: 400, message: `Invalid user information, ${message}` });
   }
@@ -100,7 +100,7 @@ exports.updateDealPut = async (req, res) => {
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
 
-  const response = await updateDeal({ dealId, dealUpdate, existingDeal, userInformation });
+  const response = await updateDeal({ dealId, dealUpdate, existingDeal, auditDetails });
 
   const status = isNumber(response?.status, 3);
   const code = status ? response.status : 200;

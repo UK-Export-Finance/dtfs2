@@ -1,4 +1,4 @@
-const { generatePortalUserInformation, generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
+const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -31,7 +31,7 @@ describe('/v1/tfm/deal/:id', () => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
           dealId,
-          userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
@@ -64,7 +64,7 @@ describe('/v1/tfm/deal/:id', () => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
           dealId,
-          userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
@@ -72,7 +72,7 @@ describe('/v1/tfm/deal/:id', () => {
       await api
         .put({
           dealUpdate: mockTfm,
-          userInformation: generateTfmUserInformation(MOCK_TFM_USER._id),
+          auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
         })
         .to(`/v1/tfm/deals/${dealId}`);
 
@@ -92,7 +92,7 @@ describe('/v1/tfm/deal/:id', () => {
         ...mockTfm.tfm,
         lastUpdated: expect.any(Number),
       });
-      expect(body.auditDetails).toEqual({
+      expect(body.auditRecord).toEqual({
         lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
         lastUpdatedAt: expect.any(String),
         lastUpdatedByPortalUserId: null,

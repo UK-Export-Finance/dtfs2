@@ -48,7 +48,7 @@ const identifyDealParties = (deal) => ({
   hasAgent: Boolean(deal.eligibility && deal.eligibility.agentName),
 });
 
-const addPartyUrns = async (deal, userInformation) => {
+const addPartyUrns = async (deal, auditDetails) => {
   if (!deal) {
     return false;
   }
@@ -81,7 +81,7 @@ const addPartyUrns = async (deal, userInformation) => {
     },
   };
 
-  const updatedDeal = await api.updateDeal({ dealId: deal._id, dealUpdate, userInformation });
+  const updatedDeal = await api.updateDeal({ dealId: deal._id, dealUpdate, auditDetails });
 
   return {
     ...deal,

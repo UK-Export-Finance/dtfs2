@@ -11,7 +11,7 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
   canDealBeSubmittedToACBS: jest.fn(),
 }));
-const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation')
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
 const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const { submitDeal, createSubmitBody } = require('../utils/submitDeal');
@@ -91,7 +91,7 @@ describe('/v1/deals', () => {
       const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED));
 
       const mappedDeal = await mapSubmittedDeal(body);
-      const tfmDataObject = await addTfmDealData(mappedDeal, generatePortalUserInformation(MOCK_PORTAL_USERS[0]._id));
+      const tfmDataObject = await addTfmDealData(mappedDeal, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
 
       // parties object is added further down the line.
       // addTfmDealData returns empty parties object.
@@ -118,7 +118,7 @@ describe('/v1/deals', () => {
               partyUrn: '',
             },
           },
-          tasks: createDealTasks(body, generatePortalUserInformation(MOCK_PORTAL_USERS[0]._id)),
+          tasks: createDealTasks(body, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id)),
         },
       };
 
@@ -139,7 +139,7 @@ describe('/v1/deals', () => {
               partyUrn: '',
             },
           },
-          tasks: createDealTasks(body, generatePortalUserInformation(MOCK_PORTAL_USERS[0]._id)),
+          tasks: createDealTasks(body, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id)),
         },
       };
 
@@ -161,7 +161,7 @@ describe('/v1/deals', () => {
               partyUrn: 'testPartyUrn',
             },
           },
-          tasks: createDealTasks(body, generatePortalUserInformation(MOCK_PORTAL_USERS[0]._id)),
+          tasks: createDealTasks(body, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id)),
         },
       };
 
