@@ -9,6 +9,7 @@ const {
 const CONSTANTS = require('../../../../src/constants');
 const getObjectPropertyValueFromStringPath = require('../../../../src/utils/getObjectPropertyValueFromStringPath');
 const setObjectPropertyValueFromStringPath = require('../../../helpers/set-object-property-value-from-string-path');
+const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
@@ -232,7 +233,7 @@ describe('/v1/tfm/deals', () => {
               _id: submittedDealWithBondAndLoans._id,
               tfm: deal3TfmUpdate,
             },
-          ]);
+          ], MOCK_TFM_USER);
         });
 
         describe.each([

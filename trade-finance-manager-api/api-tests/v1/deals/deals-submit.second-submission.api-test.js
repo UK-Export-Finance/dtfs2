@@ -28,7 +28,7 @@ const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
 const MOCK_GEF_DEAL_SECOND_SUBMIT_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-second-submit-MIA');
 const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
 const MOCK_GEF_DEAL_MIN = require('../../../src/v1/__mocks__/mock-gef-deal-MIN');
-const submitDeal = require('../utils/submitDeal');
+const { submitDeal, createSubmitBody } = require('../utils/submitDeal');
 const { mockFindOneDeal, mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
@@ -54,10 +54,6 @@ const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
 api.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
 
-const createSubmitBody = (mockDeal) => ({
-  dealId: mockDeal._id,
-  dealType: mockDeal.dealType,
-});
 
 const createFacilityCoverEndDate = (facility) =>
   set(new Date(), {
@@ -67,6 +63,7 @@ const createFacilityCoverEndDate = (facility) =>
   });
 
 const mockChecker = {
+  _id: 'abcdef123456abcdef123456',
   bank: {
     id: '9',
     name: 'UKEF test bank (Delegated) (TFM)',

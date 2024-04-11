@@ -27,25 +27,20 @@ const dealsOpenRouter = express.Router();
  *                 type: string
  *               dealType:
  *                 type: string
- *               checker:
+ *               userInformation:
  *                 type: object
  *                 properties:
- *                   _id:
+ *                   userType:
  *                     type: string
- *                   username:
- *                     type: string
- *                   firstname:
- *                     type: string
- *                   surname:
+ *                     enum: [portal]
+ *                   id:
  *                     type: string
  *             example:
  *               dealId: 123abc
  *               dealType: BSS/EWCS
- *               checker:
- *                 _id: 123abc
- *                 username: BANK1_CHECKER1
- *                 firstname: Joe
- *                 surname: Bloggs
+ *               userInformation:
+ *                 id: 1234567890abcdef12345678
+ *                 userType: portal
  *     responses:
  *       200:
  *         description: OK

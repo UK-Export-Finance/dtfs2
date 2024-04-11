@@ -1,3 +1,5 @@
+const { UNDERWRITER_1_WITH_MOCK_ID } = require('../../../../e2e-fixtures/tfm-users.fixture');
+
 const api = () => {
   const url = `${Cypress.config('centralApiProtocol')}${Cypress.config('centralApiHost')}:${Cypress.config('centralApiPort')}`;
   return url;
@@ -82,6 +84,7 @@ module.exports.updateTFMDeal = (dealId, dealUpdate) =>
     method: 'PUT',
     body: {
       dealUpdate,
+      userInformation: { userType: 'tfm', id: UNDERWRITER_1_WITH_MOCK_ID._id },
     },
     headers,
   }).then((resp) => {

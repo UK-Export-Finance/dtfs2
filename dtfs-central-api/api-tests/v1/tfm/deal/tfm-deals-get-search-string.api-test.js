@@ -1,3 +1,4 @@
+const { generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const { sub, format } = require('date-fns');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
@@ -7,6 +8,7 @@ const {
   createAndSubmitDeals,
 } = require('./tfm-deals-get.api-test');
 const CONSTANTS = require('../../../../src/constants');
+const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
@@ -369,6 +371,7 @@ describe('/v1/tfm/deals', () => {
               dateReceived: yesterdayFormatted,
             },
           },
+          userInformation: generateTfmUserInformation(MOCK_TFM_USER._id),
         }).to(`/v1/tfm/deals/${dealSubmittedYesterdayResponseBody._id}`);
 
         await api.put({
@@ -377,6 +380,7 @@ describe('/v1/tfm/deals', () => {
               dateReceived: todayFormatted,
             },
           },
+          userInformation: generateTfmUserInformation(MOCK_TFM_USER._id),
         }).to(`/v1/tfm/deals/${dealSubmittedTodayResponseBody._id}`);
 
         const { status, body } = await api.get(`/v1/tfm/deals?searchString=${String(yesterdayFormatted)}`);
@@ -435,6 +439,7 @@ describe('/v1/tfm/deals', () => {
               dateReceived: yesterdayFormatted,
             },
           },
+          userInformation: generateTfmUserInformation(MOCK_TFM_USER._id),
         }).to(`/v1/tfm/deals/${dealSubmittedYesterdayResponseBody._id}`);
 
         await api.put({
@@ -443,6 +448,7 @@ describe('/v1/tfm/deals', () => {
               dateReceived: todayFormatted,
             },
           },
+          userInformation: generateTfmUserInformation(MOCK_TFM_USER._id),
         }).to(`/v1/tfm/deals/${dealSubmittedTodayResponseBody._id}`);
 
         const { status, body } = await api.get(`/v1/tfm/deals?searchString=${String(format(yesterday, 'dd/MM/yyyy'))}`);

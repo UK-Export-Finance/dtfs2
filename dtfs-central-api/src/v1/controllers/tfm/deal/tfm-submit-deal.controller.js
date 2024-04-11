@@ -1,5 +1,7 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
+const { generateAuditDetailsFromUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
+const { validateUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/validateUserInformation');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal, findOneGefDeal } = require('../../portal/deal/get-deal.controller');
 const tfmController = require('./tfm-get-deal.controller');
@@ -30,7 +32,7 @@ const getSubmissionCount = (deal) => {
   return null;
 };
 
-const createDealSnapshot = async (deal) => {
+const createDealSnapshot = async (deal, userInformation) => {
   if (ObjectId.isValid(deal._id)) {
     const { dealType, _id: dealId } = deal;
     const collection = await db.getCollection(DB_COLLECTIONS.TFM_DEALS);
@@ -38,29 +40,25 @@ const createDealSnapshot = async (deal) => {
     const submissionCount = getSubmissionCount(deal);
     const tfmInit = submissionCount === 1 ? { tfm: DEFAULTS.DEAL_TFM } : null;
 
-    const dealObj = { dealSnapshot: deal, ...tfmInit };
+    const dealObj = { dealSnapshot: deal, ...tfmInit, auditDetails: generateAuditDetailsFromUserInformation(userInformation) };
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
       const dealFacilities = await findAllFacilitiesByDealId(dealId);
       dealObj.dealSnapshot.facilities = dealFacilities;
     }
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(deal._id) } },
-      $.flatten(withoutId(dealObj)),
-      {
-        returnNewDocument: true,
-        returnDocument: 'after',
-        upsert: true,
-      }
-    );
+    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(deal._id) } }, $.flatten(withoutId(dealObj)), {
+      returnNewDocument: true,
+      returnDocument: 'after',
+      upsert: true,
+    });
 
     return findAndUpdateResponse.value;
   }
   return { status: 400, message: 'Invalid Deal Id' };
 };
 
-const createFacilitiesSnapshot = async (deal) => {
+const createFacilitiesSnapshot = async (deal, userInformation) => {
   if (ObjectId.isValid(deal._id)) {
     const { dealType, _id: dealId } = deal;
 
@@ -84,15 +82,16 @@ const createFacilitiesSnapshot = async (deal) => {
         dealFacilities.map(async (facility) =>
           collection.findOneAndUpdate(
             {
-              _id: { $eq: ObjectId(facility._id) }
+              _id: { $eq: ObjectId(facility._id) },
             },
-            $.flatten({ facilitySnapshot: facility, ...tfmInit }),
+            $.flatten({ facilitySnapshot: facility, ...tfmInit, auditDetails: generateAuditDetailsFromUserInformation(userInformation) }),
             {
               returnNewDocument: true,
               returnDocument: 'after',
               upsert: true,
-            }
-          )),
+            },
+          ),
+        ),
       );
 
       return updatedFacilities;
@@ -103,10 +102,10 @@ const createFacilitiesSnapshot = async (deal) => {
   return { status: 400, message: 'Invalid Deal Id' };
 };
 
-const submitDeal = async (deal) => {
-  await createDealSnapshot(deal);
+const submitDeal = async (deal, userInformation) => {
+  await createDealSnapshot(deal, userInformation);
 
-  await createFacilitiesSnapshot(deal);
+  await createFacilitiesSnapshot(deal, userInformation);
 
   const updatedDeal = await tfmController.findOneDeal(String(deal._id));
 
@@ -114,27 +113,35 @@ const submitDeal = async (deal) => {
 };
 
 exports.submitDealPut = async (req, res) => {
-  const { dealId, dealType } = req.body;
+  const { dealId, dealType, userInformation } = req.body;
+
+  try {
+    validateUserInformation(userInformation);
+  } catch ({ message }) {
+    return res.status(400).send({ status: 400, message: `Invalid user information, ${message}` });
+  }
+
+  if (userInformation.userType !== 'portal') {
+    return res.status(400).send({ status: 400, message: `User information must be of type portal` });
+  }
+
+  if (dealType !== CONSTANTS.DEALS.DEAL_TYPE.GEF && dealType !== CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    return res.status(400).send({ status: 400, message: 'Invalid deal type' });
+  }
+
+  let deal;
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    await findOneGefDeal(dealId, async (deal) => {
-      if (deal) {
-        const updatedDeal = await submitDeal(deal);
-        return res.status(200).json(updatedDeal);
-      }
-
-      return res.status(404).send();
-    });
+    deal = await findOneGefDeal(dealId);
   }
-
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    await findOneDeal(dealId, async (deal) => {
-      if (deal) {
-        const updatedDeal = await submitDeal(deal);
-        return res.status(200).json(updatedDeal);
-      }
-
-      return res.status(404).send();
-    });
+    deal = await findOneDeal(dealId);
   }
+
+  if (!deal) {
+    return res.status(404).send();
+  }
+
+  const updatedDeal = await submitDeal(deal, userInformation);
+  return res.status(200).json(updatedDeal);
 };

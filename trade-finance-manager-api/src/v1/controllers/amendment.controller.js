@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const api = require('../api');
 const acbs = require('./acbs.controller');
 const { amendIssuedFacility } = require('./amend-issued-facility');
@@ -57,7 +58,7 @@ const sendAmendmentEmail = async (amendmentId, facilityId) => {
 };
 
 // function to update tfm deals lastUpdated once amendment complete
-const updateTFMDealLastUpdated = async (amendmentId, facilityId) => {
+const updateTFMDealLastUpdated = async (amendmentId, facilityId, userInformation) => {
   const amendment = await api.getAmendmentById(facilityId, amendmentId);
 
   if (amendment?.dealId) {
@@ -69,7 +70,7 @@ const updateTFMDealLastUpdated = async (amendmentId, facilityId) => {
     };
 
     try {
-      return api.updateDeal(dealId, payload);
+      return api.updateDeal({ dealId, dealUpdate: payload, userInformation });
     } catch (error) {
       console.error('Error updated tfm deal lastUpdated - amendment completed %o', error);
       return null;
@@ -227,7 +228,7 @@ const updateFacilityAmendment = async (req, res) => {
 
       // if facility successfully updated and completed, then adds tfm lastUpdated and tfm object in amendments
       if (createdAmendment && tfmLastUpdated) {
-        await updateTFMDealLastUpdated(amendmentId, facilityId);
+        await updateTFMDealLastUpdated(amendmentId, facilityId, generateTfmUserInformation(req.user._id));
         await createAmendmentTFMObject(amendmentId, facilityId);
       }
 

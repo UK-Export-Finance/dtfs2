@@ -1,3 +1,4 @@
+const { generateSystemUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const activity = require('../helpers/activity');
 const api = require('../api');
 
@@ -12,7 +13,7 @@ const updateAcbs = async (taskOutput) => {
     },
   };
 
-  return api.updateDeal(taskOutput.portalDealId, acbsUpdate);
+  return api.updateDeal({ dealId: taskOutput.portalDealId, dealUpdate: acbsUpdate, userInformation: generateSystemUserInformation() });
 };
 exports.updateAcbs = updateAcbs;
 

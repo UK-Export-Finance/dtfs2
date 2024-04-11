@@ -227,7 +227,7 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
-      const response = await api.updateDeal(urlTraversal, 'Mock update');
+      const response = await api.updateDeal({ dealId: urlTraversal, dealUpdate: 'Mock update' });
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -236,7 +236,7 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
-      const response = await api.updateDeal(localIp, 'Mock update');
+      const response = await api.updateDeal({ dealId: localIp, dealUpdate: 'Mock update' });
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -244,7 +244,7 @@ describe('API is protected against SSRF attacks', () => {
     it('Makes an axios request when the deal id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
-      const response = await api.updateDeal(validFacilityId, 'Mock update');
+      const response = await api.updateDeal({ dealId: validFacilityId, dealUpdate: 'Mock update' });
 
       expect(response).toEqual(mockResponse);
     });

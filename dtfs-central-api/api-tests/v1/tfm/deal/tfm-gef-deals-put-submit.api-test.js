@@ -1,8 +1,10 @@
+const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 const DEFAULTS = require('../../../../src/v1/defaults');
+const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
@@ -28,10 +30,13 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
   it('404s for an unknown id', async () => {
     const invalidDealId = '61e54e2e532cf2027303e001';
 
-    const { status } = await api.put({
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-      dealId: invalidDealId,
-    }).to('/v1/tfm/deals/submit');
+    const { status } = await api
+      .put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+        dealId: invalidDealId,
+        userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+      })
+      .to('/v1/tfm/deals/submit');
     expect(status).toEqual(404);
   });
 
@@ -39,10 +44,13 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
     const { body: createDealBody } = await api.post(newDeal).to('/v1/portal/gef/deals');
     const dealId = createDealBody._id;
 
-    const { status, body } = await api.put({
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-      dealId,
-    }).to('/v1/tfm/deals/submit');
+    const { status, body } = await api
+      .put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+        dealId,
+        userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+      })
+      .to('/v1/tfm/deals/submit');
 
     expect(status).toEqual(200);
 
@@ -54,6 +62,13 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
         facilities: [],
       },
       tfm: DEFAULTS.DEAL_TFM,
+      auditDetails: {
+        lastUpdatedAt: expect.any(String),
+        lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
+        lastUpdatedByTfmUserId: null,
+        noUserLoggedIn: null,
+        lastUpdatedByIsSystem: null,
+      },
     };
     expect(body).toEqual(expected);
   });
@@ -74,10 +89,13 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
     const facility2Id = facility2Body._id;
 
     // submit deal
-    const { status } = await api.put({
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-      dealId,
-    }).to('/v1/tfm/deals/submit');
+    const { status } = await api
+      .put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+        dealId,
+        userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+      })
+      .to('/v1/tfm/deals/submit');
 
     expect(status).toEqual(200);
 
@@ -92,6 +110,13 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
         ...newFacility1,
       },
       tfm: DEFAULTS.FACILITY_TFM,
+      auditDetails: {
+        lastUpdatedAt: expect.any(String),
+        lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
+        lastUpdatedByTfmUserId: null,
+        noUserLoggedIn: null,
+        lastUpdatedByIsSystem: null,
+      },
     });
 
     const facility2 = await api.get(`/v1/tfm/facilities/${facility2Id}`);
@@ -104,6 +129,13 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
         ...newFacility2,
       },
       tfm: DEFAULTS.FACILITY_TFM,
+      auditDetails: {
+        lastUpdatedAt: expect.any(String),
+        lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
+        lastUpdatedByTfmUserId: null,
+        noUserLoggedIn: null,
+        lastUpdatedByIsSystem: null,
+      },
     });
   });
 });
