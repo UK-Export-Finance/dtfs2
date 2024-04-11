@@ -12,7 +12,7 @@ context('Security Details Page', () => {
       .then((tok) => {
         token = tok;
       })
-      .then(() => cy.apiFetchAllApplications(token))
+      .then(() => cy.apiFetchAllGefApplications(token))
       .then(({ body }) => {
         dealId = body.items[2]._id;
       });

@@ -58,11 +58,27 @@ const login = ({ username, password }) => {
     });
 };
 
-const fetchAllApplications = (token) =>
+// Only extracts GEF deals
+const fetchAllGefApplications = (token) =>
   cy
     .request({
       url: `${portalApi}/gef/application`,
       method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+    })
+    .then((res) => res);
+
+// Extracts all deal types
+const fetchAllApplications = (token) =>
+  cy
+    .request({
+      url: `${portalApi}/deals`,
+      method: 'GET',
+      body: {
+      },
       headers: {
         'Content-Type': 'application/json',
         Authorization: token,
@@ -231,6 +247,7 @@ const addUnderwriterCommentToTfm = (dealId, underwriterComment) =>
 export {
   login,
   fetchAllApplications,
+  fetchAllGefApplications,
   fetchApplicationById,
   fetchAllFacilities,
   updateApplication,
