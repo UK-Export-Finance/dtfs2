@@ -191,7 +191,7 @@ const findOneDeal = async (dealId) => {
  * @param {object} params
  * @param {string} params.dealId - deal to update
  * @param {Object} params.dealUpdate - update to make
- * @param {import("@ukef/dtfs2-common/src/types/userInformation").UserInformation} params.userInformation - user making the request
+ * @param {import("@ukef/dtfs2-common/src/types/auditDetails").UserInformation} params.auditDetails - user making the request
  * @typedef {Object} ErrorParam
  * @property {string} message error message
  * @property {number} status HTTP status code
@@ -201,7 +201,7 @@ const findOneDeal = async (dealId) => {
 const updateDeal = async ({
   dealId,
   dealUpdate,
-  userInformation,
+  auditDetails,
   onError = ({ status, message }) => ({ status, data: message }),
 }) => {
   try {
@@ -218,7 +218,7 @@ const updateDeal = async ({
       headers: headers.central,
       data: {
         dealUpdate,
-        userInformation,
+        auditDetails,
       },
     });
 
@@ -252,7 +252,7 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
   }
 };
 
-const submitDeal = async (dealType, dealId, userInformation) => {
+const submitDeal = async (dealType, dealId, auditDetails) => {
   try {
     const response = await axios({
       method: 'put',
@@ -261,7 +261,7 @@ const submitDeal = async (dealType, dealId, userInformation) => {
       data: {
         dealType,
         dealId,
-        userInformation,
+        auditDetails,
       },
     });
 

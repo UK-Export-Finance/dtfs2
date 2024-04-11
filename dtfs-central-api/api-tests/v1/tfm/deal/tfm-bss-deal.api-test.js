@@ -1,4 +1,4 @@
-const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
 const wipeDB = require('../../../wipeDB');
 const aDeal = require('../../deal-builder');
 
@@ -37,7 +37,7 @@ describe('/v1/tfm/deal/:id', () => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
-          userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
@@ -83,7 +83,7 @@ describe('/v1/tfm/deal/:id', () => {
           .put({
             dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
             dealId,
-            userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+            auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
           })
           .to('/v1/tfm/deals/submit');
 
@@ -119,7 +119,7 @@ describe('/v1/tfm/deal/:id', () => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
-          userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
@@ -127,7 +127,7 @@ describe('/v1/tfm/deal/:id', () => {
       await api
         .put({
           dealUpdate: mockTfm,
-          userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to(`/v1/tfm/deals/${dealId}`);
 

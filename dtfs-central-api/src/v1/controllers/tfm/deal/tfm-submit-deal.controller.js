@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const { generateAuditDatabaseRecordFromUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDatabaseRecord');
-const { validateUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/validateUserInformation');
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDatabaseRecord');
+const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/validateAuditDetails');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal, findOneGefDeal } = require('../../portal/deal/get-deal.controller');
 const tfmController = require('./tfm-get-deal.controller');
@@ -32,7 +32,7 @@ const getSubmissionCount = (deal) => {
   return null;
 };
 
-const createDealSnapshot = async (deal, userInformation) => {
+const createDealSnapshot = async (deal, auditDetails) => {
   if (ObjectId.isValid(deal._id)) {
     const { dealType, _id: dealId } = deal;
     const collection = await db.getCollection(DB_COLLECTIONS.TFM_DEALS);
@@ -40,7 +40,7 @@ const createDealSnapshot = async (deal, userInformation) => {
     const submissionCount = getSubmissionCount(deal);
     const tfmInit = submissionCount === 1 ? { tfm: DEFAULTS.DEAL_TFM } : null;
 
-    const dealObj = { dealSnapshot: deal, ...tfmInit, auditRecord: generateAuditDatabaseRecordFromUserInformation(userInformation) };
+    const dealObj = { dealSnapshot: deal, ...tfmInit, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
       const dealFacilities = await findAllFacilitiesByDealId(dealId);
@@ -58,7 +58,7 @@ const createDealSnapshot = async (deal, userInformation) => {
   return { status: 400, message: 'Invalid Deal Id' };
 };
 
-const createFacilitiesSnapshot = async (deal, userInformation) => {
+const createFacilitiesSnapshot = async (deal, auditDetails) => {
   if (ObjectId.isValid(deal._id)) {
     const { dealType, _id: dealId } = deal;
 
@@ -84,7 +84,7 @@ const createFacilitiesSnapshot = async (deal, userInformation) => {
             {
               _id: { $eq: ObjectId(facility._id) },
             },
-            $.flatten({ facilitySnapshot: facility, ...tfmInit, auditRecord: generateAuditDatabaseRecordFromUserInformation(userInformation) }),
+            $.flatten({ facilitySnapshot: facility, ...tfmInit, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) }),
             {
               returnNewDocument: true,
               returnDocument: 'after',
@@ -102,10 +102,10 @@ const createFacilitiesSnapshot = async (deal, userInformation) => {
   return { status: 400, message: 'Invalid Deal Id' };
 };
 
-const submitDeal = async (deal, userInformation) => {
-  await createDealSnapshot(deal, userInformation);
+const submitDeal = async (deal, auditDetails) => {
+  await createDealSnapshot(deal, auditDetails);
 
-  await createFacilitiesSnapshot(deal, userInformation);
+  await createFacilitiesSnapshot(deal, auditDetails);
 
   const updatedDeal = await tfmController.findOneDeal(String(deal._id));
 
@@ -113,15 +113,15 @@ const submitDeal = async (deal, userInformation) => {
 };
 
 exports.submitDealPut = async (req, res) => {
-  const { dealId, dealType, userInformation } = req.body;
+  const { dealId, dealType, auditDetails } = req.body;
 
   try {
-    validateUserInformation(userInformation);
+    validateAuditDetails(auditDetails);
   } catch ({ message }) {
     return res.status(400).send({ status: 400, message: `Invalid user information, ${message}` });
   }
 
-  if (userInformation.userType !== 'portal') {
+  if (auditDetails.userType !== 'portal') {
     return res.status(400).send({ status: 400, message: `User information must be of type portal` });
   }
 
@@ -142,6 +142,6 @@ exports.submitDealPut = async (req, res) => {
     return res.status(404).send();
   }
 
-  const updatedDeal = await submitDeal(deal, userInformation);
+  const updatedDeal = await submitDeal(deal, auditDetails);
   return res.status(200).json(updatedDeal);
 };

@@ -1,4 +1,4 @@
-const { generatePortalUserInformation } = require("@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation");
+const { generatePortalAuditDetails } = require("@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails");
 const {
   shouldCreatePartiesTask,
   shouldCreateAgentCheckTask,
@@ -185,7 +185,7 @@ describe('createDealTasks', () => {
     });
 
     it('should call api.updateDeal and return updated deal', async () => {
-      const result = await createDealTasks(mockSubmittedDeal, generatePortalUserInformation(MOCK_PORTAL_USERS[0]._id));
+      const result = await createDealTasks(mockSubmittedDeal, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
 
       const expectedTasks = createTasks(
         mockSubmittedDeal.submissionType,
@@ -200,7 +200,7 @@ describe('createDealTasks', () => {
       expect(updateDealSpy).toHaveBeenCalledWith({
         dealId: mockSubmittedDeal._id,
         dealUpdate: { tfm: expectedDealTfm },
-        userInformation: generatePortalUserInformation(MOCK_PORTAL_USERS[0]._id),
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id),
       });
 
       const expectedDealReturn = {

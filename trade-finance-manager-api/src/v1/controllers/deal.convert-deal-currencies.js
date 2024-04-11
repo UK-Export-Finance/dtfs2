@@ -1,6 +1,6 @@
 const api = require('../api');
 
-const convertDealCurrencies = async (deal, userInformation) => {
+const convertDealCurrencies = async (deal, auditDetails) => {
   if (!deal) {
     return false;
   }
@@ -42,7 +42,7 @@ const convertDealCurrencies = async (deal, userInformation) => {
       };
     }
 
-    const updatedDeal = await api.updateDeal({ dealId, dealUpdate, userInformation });
+    const updatedDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
     return {
       ...deal,

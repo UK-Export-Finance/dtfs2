@@ -92,7 +92,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
             stage: VALID_UNDERWRITER_MANAGERS_DECISION.decision,
           }
         }),
-        userInformation: {
+        auditDetails: {
           userType: 'tfm',
           id: expect.any(ObjectId),
         },
@@ -223,7 +223,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
 
   it('should return a 500 if updating the deal via DTFS Central rejects', async () => {
     when(api.updateDeal)
-      .calledWith({ dealId: VALID_DEAL_ID, dealUpdate: expect.any(Object), userInformation: { userType: 'tfm', id: tokenUser._id}})
+      .calledWith({ dealId: VALID_DEAL_ID, dealUpdate: expect.any(Object), auditDetails: { userType: 'tfm', id: tokenUser._id}})
       .mockRejectedValueOnce(new Error(`Updating the deal with dealId ${VALID_DEAL_ID} failed with status 500 and message: test error message`));
 
     const { status, body } = await as(tokenUser)

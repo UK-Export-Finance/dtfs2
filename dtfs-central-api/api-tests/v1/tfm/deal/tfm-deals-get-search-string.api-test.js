@@ -1,4 +1,4 @@
-const { generateTfmUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
 const { sub, format } = require('date-fns');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
@@ -371,7 +371,7 @@ describe('/v1/tfm/deals', () => {
               dateReceived: yesterdayFormatted,
             },
           },
-          userInformation: generateTfmUserInformation(MOCK_TFM_USER._id),
+          auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
         }).to(`/v1/tfm/deals/${dealSubmittedYesterdayResponseBody._id}`);
 
         await api.put({
@@ -380,7 +380,7 @@ describe('/v1/tfm/deals', () => {
               dateReceived: todayFormatted,
             },
           },
-          userInformation: generateTfmUserInformation(MOCK_TFM_USER._id),
+          auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
         }).to(`/v1/tfm/deals/${dealSubmittedTodayResponseBody._id}`);
 
         const { status, body } = await api.get(`/v1/tfm/deals?searchString=${String(yesterdayFormatted)}`);
@@ -439,7 +439,7 @@ describe('/v1/tfm/deals', () => {
               dateReceived: yesterdayFormatted,
             },
           },
-          userInformation: generateTfmUserInformation(MOCK_TFM_USER._id),
+          auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
         }).to(`/v1/tfm/deals/${dealSubmittedYesterdayResponseBody._id}`);
 
         await api.put({
@@ -448,7 +448,7 @@ describe('/v1/tfm/deals', () => {
               dateReceived: todayFormatted,
             },
           },
-          userInformation: generateTfmUserInformation(MOCK_TFM_USER._id),
+          auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
         }).to(`/v1/tfm/deals/${dealSubmittedTodayResponseBody._id}`);
 
         const { status, body } = await api.get(`/v1/tfm/deals?searchString=${String(format(yesterday, 'dd/MM/yyyy'))}`);

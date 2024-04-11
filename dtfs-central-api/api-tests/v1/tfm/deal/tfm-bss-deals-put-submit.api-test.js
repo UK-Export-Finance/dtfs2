@@ -1,4 +1,4 @@
-const { generatePortalUserInformation } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateUserInformation');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -43,7 +43,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       .put({
         dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
         dealId,
-        userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       })
       .to('/v1/tfm/deals/submit');
 
@@ -107,7 +107,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       .put({
         dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
         dealId,
-        userInformation: generatePortalUserInformation(MOCK_PORTAL_USER._id),
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       })
       .to('/v1/tfm/deals/submit');
 

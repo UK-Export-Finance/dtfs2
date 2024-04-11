@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import {
-  generateAuditDatabaseRecordFromUserInformation,
+  generateAuditDatabaseRecordFromAuditDetails,
   generateNoUserLoggedInAuditDatabaseRecord,
   generatePortalUserAuditDatabaseRecord,
   generateSystemAuditDatabaseRecord,
@@ -86,9 +86,9 @@ describe('generate audit details', () => {
     });
   });
 
-  describe('generateAuditDatabaseRecordFromUserInformation', () => {
+  describe('generateAuditDatabaseRecordFromAuditDetails', () => {
     it('returns the correct audit details for a tfm user', () => {
-      const auditRecord = generateAuditDatabaseRecordFromUserInformation({ userType: 'tfm', id: '1234567890abcdef12345678' });
+      const auditRecord = generateAuditDatabaseRecordFromAuditDetails({ userType: 'tfm', id: '1234567890abcdef12345678' });
 
       expect(auditRecord).toEqual({
         ...defaultAuditDatabaseRecord,
@@ -97,7 +97,7 @@ describe('generate audit details', () => {
     });
 
     it('returns the correct audit details for a portal user', () => {
-      const auditRecord = generateAuditDatabaseRecordFromUserInformation({ userType: 'portal', id: '1234567890abcdef12345678' });
+      const auditRecord = generateAuditDatabaseRecordFromAuditDetails({ userType: 'portal', id: '1234567890abcdef12345678' });
 
       expect(auditRecord).toEqual({
         ...defaultAuditDatabaseRecord,
@@ -106,7 +106,7 @@ describe('generate audit details', () => {
     });
 
     it('returns the correct audit details for a tfm user', () => {
-      const auditRecord = generateAuditDatabaseRecordFromUserInformation({ userType: 'system' });
+      const auditRecord = generateAuditDatabaseRecordFromAuditDetails({ userType: 'system' });
 
       expect(auditRecord).toEqual({
         ...defaultAuditDatabaseRecord,

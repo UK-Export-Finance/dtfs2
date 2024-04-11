@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { UserInformation } from '../../types/userInformation';
+import { UserInformation } from '../../types/auditDetails';
 
 type AuditDatabaseRecord = {
   lastUpdatedAt: Date;
@@ -41,15 +41,15 @@ export const generateNoUserLoggedInAuditDatabaseRecord = (): AuditDatabaseRecord
   noUserLoggedIn: true,
 });
 
-export const generateAuditDatabaseRecordFromUserInformation = (userInformation: UserInformation) => {
-  switch (userInformation.userType) {
+export const generateAuditDatabaseRecordFromAuditDetails = (auditDetails: UserInformation) => {
+  switch (auditDetails.userType) {
     case 'tfm':
-      return generateTfmUserAuditDatabaseRecord(userInformation.id);
+      return generateTfmUserAuditDatabaseRecord(auditDetails.id);
     case 'portal':
-      return generatePortalUserAuditDatabaseRecord(userInformation.id);
+      return generatePortalUserAuditDatabaseRecord(auditDetails.id);
     case 'system':
       return generateSystemAuditDatabaseRecord();
     default:
-      throw new Error('Invalid userInformation userType');
+      throw new Error('Invalid auditDetails userType');
   }
 };
