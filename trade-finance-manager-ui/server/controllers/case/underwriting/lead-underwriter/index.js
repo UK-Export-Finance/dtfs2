@@ -8,12 +8,7 @@ const getLeadUnderwriter = async (deal, user, token) => {
   let currentLeadUnderWriter;
   let currentLeadUnderWriterUserId;
 
-  if (!deal || !user || !token) {
-    console.error('Invalid arguments provided');
-    return false;
-  }
-
-  if (deal?.tfm?.leadUnderwriter) {
+  if (deal.tfm.leadUnderwriter) {
     currentLeadUnderWriterUserId = deal.tfm.leadUnderwriter;
   }
 
@@ -86,7 +81,7 @@ const postAssignLeadUnderwriter = async (req, res) => {
   }
 
   if (!req.body.assignedTo) {
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 
   const update = {
