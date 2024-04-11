@@ -43,6 +43,7 @@ on:
     branches:
       - main
       - feat/e2etf-sql
+      - "release-*"
 
     paths:
       - "package*.json"
@@ -66,6 +67,7 @@ on:
       - feature
       - staging
       - prod
+      - release-1.5
 
     paths:
       - ".github/workflows/deployment.yml"
@@ -204,20 +206,20 @@ jobs:
 
       - name: Start
         working-directory: ./
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
         run: |
           sleep 60s
           npm run load
-      
+
       - name: Migrations
         working-directory: ./libs/common
         env:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
-      
+
       - name: Seeding
         working-directory: ./utils/sql-db-seeder
         env:
@@ -225,11 +227,11 @@ jobs:
         run: npm run db:seed
 
       - name: Execute
-        run: docker-compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
+        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
 
       - name: Stop
         working-directory: ./
-        run: docker-compose -f docker-compose.gha.yml down
+        run: docker compose -f docker-compose.gha.yml down
 
       - name: Coverage
         uses: codecov/codecov-action@v3
@@ -309,7 +311,7 @@ jobs:
             "./external-api",
             "./trade-finance-manager-api",
             "./libs/common",
-            "./azure-functions/acbs-function"
+            "./azure-functions/acbs-function",
           ]
 
     concurrency:
@@ -384,7 +386,7 @@ jobs:
     steps:
       - name: Repository
         uses: actions/checkout@v4
-      
+
       - name: Node
         uses: actions/setup-node@v3
         with:
@@ -400,20 +402,20 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
         run: |
           sleep 60s
           npm run load
-      
+
       - name: Migrations
         working-directory: ./libs/common
         env:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
-      
+
       - name: Seeding
         working-directory: ./utils/sql-db-seeder
         env:
@@ -443,8 +445,18 @@ jobs:
         spec:
           [
             "*.spec.js",
+            "application/**/*.spec.js",
+            "checker/**/*.spec.js",
+            "clone/**/*.spec.js",
+            "eligibility/**/*.spec.js",
+            "exporter/**/*.spec.js",
+            "external/**/*.spec.js",
+            "facility/**/*.spec.js",
+            "maker/**/*.spec.js",
             "scenarios/**/*.spec.js",
-            "unissued-facilities/**/*.spec.js",
+            "security/**/*.spec.js",
+            "ukef/**/*.spec.js",
+            "upload/**/*.spec.js",
           ]
 
     concurrency:
@@ -454,7 +466,7 @@ jobs:
     steps:
       - name: Repository
         uses: actions/checkout@v4
-      
+
       - name: Node
         uses: actions/setup-node@v3
         with:
@@ -470,20 +482,20 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
         run: |
           sleep 60s
           npm run load
-      
+
       - name: Migrations
         working-directory: ./libs/common
         env:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
-      
+
       - name: Seeding
         working-directory: ./utils/sql-db-seeder
         env:
@@ -532,7 +544,7 @@ jobs:
     steps:
       - name: Repository
         uses: actions/checkout@v4
-      
+
       - name: Node
         uses: actions/setup-node@v3
         with:
@@ -548,20 +560,20 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
         run: |
           sleep 60s
           npm run load
-      
+
       - name: Migrations
         working-directory: ./libs/common
         env:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
-      
+
       - name: Seeding
         working-directory: ./utils/sql-db-seeder
         env:
@@ -619,7 +631,7 @@ jobs:
     steps:
       - name: Repository
         uses: actions/checkout@v4
-      
+
       - name: Node
         uses: actions/setup-node@v3
         with:
@@ -635,20 +647,20 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
         run: |
           sleep 60s
           npm run load
-      
+
       - name: Migrations
         working-directory: ./libs/common
         env:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
-      
+
       - name: Seeding
         working-directory: ./utils/sql-db-seeder
         env:

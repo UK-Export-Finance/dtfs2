@@ -124,7 +124,7 @@ jobs:
           docker push ${{ env.acr }}/${{ matrix.repository }}:$to
 
       - name: 5. Azure login
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
@@ -190,7 +190,7 @@ jobs:
           docker push ${{ env.acr }}/${{ matrix.repository }}:$to
 
       - name: 5. Azure login
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           creds: ${{ env.credentials }}
 
