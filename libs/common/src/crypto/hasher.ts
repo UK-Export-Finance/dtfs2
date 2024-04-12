@@ -1,6 +1,6 @@
+import crypto from 'node:crypto';
 import { Hasher } from '../types/hasher';
 import hashStrategy from './hash-strategy';
-import crypto from 'node:crypto';
 
 const hasher: Hasher = {
   hash: (target: string) => {

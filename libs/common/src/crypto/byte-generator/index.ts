@@ -6,8 +6,8 @@ const getByteGenerator = (): ByteGenerator => {
   switch (cryptoConfig.byteGeneratorProvider) {
     case 'cryptographically-strong':
       return cryptographicallyStrongGenerator;
-      default:
-        throw new Error('Unsupported byte generator provider');
+    default:
+      throw new Error('Unsupported byte generator provider');
   }
 };
 

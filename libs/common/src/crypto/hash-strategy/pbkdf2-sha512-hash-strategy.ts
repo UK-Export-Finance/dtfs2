@@ -1,6 +1,6 @@
+import crypto from 'node:crypto';
 import { HashStrategy } from '../../types/hash-strategy';
 import byteGenerator from '../byte-generator';
-import crypto from 'node:crypto';
 
 const pbkdf2Sha512HashStrategy: HashStrategy = {
   generateSalt: () => byteGenerator.randomBytes(64),
