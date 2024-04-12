@@ -3,11 +3,11 @@ import { ByteGenerator } from '../../types/byte-generator';
 import cryptographicallyStrongGenerator from './cryptographically-strong-byte-generator';
 
 const getByteGenerator = (): ByteGenerator => {
-  switch (cryptoConfig.byteGeneratorProvider) {
+  switch (cryptoConfig.BYTE_GENERATOR_PROVIDER) {
     case 'cryptographically-strong':
       return cryptographicallyStrongGenerator;
     default:
-      throw new Error('Unsupported byte generator provider');
+      throw new Error(`Unsupported byte generator provider: ${cryptoConfig.BYTE_GENERATOR_PROVIDER}`);
   }
 };
 
