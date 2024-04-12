@@ -2,6 +2,7 @@ const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/c
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
+const { itValidatesAuditDetails } = require('../../../helpers/validate-audit-details.test');
 const CONSTANTS = require('../../../../src/constants');
 const DEFAULTS = require('../../../../src/v1/defaults');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
@@ -27,6 +28,30 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       CONSTANTS.DB_COLLECTIONS.TFM_DEALS,
       CONSTANTS.DB_COLLECTIONS.TFM_FACILITIES,
     ]);
+  });
+
+  describe('auditting', () => {
+    let dealId;
+
+    beforeEach(async () => {
+      const { body: createDealBody } = await api
+        .post({
+          deal: newDeal,
+          user: MOCK_PORTAL_USER,
+        })
+        .to('/v1/portal/deals');
+
+      dealId = createDealBody._id;
+    });
+
+    itValidatesAuditDetails({
+      makeRequest: (payload) => api.put(payload).to('/v1/tfm/deals/submit'),
+      payloadWithoutAuditDetails: {
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+        dealId,
+      },
+      validUserTypes: ['portal'],
+    });
   });
 
   it('returns dealSnapshot with tfm object', async () => {

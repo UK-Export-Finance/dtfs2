@@ -2,6 +2,7 @@ const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/d
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
+const { itValidatesAuditDetails } = require('../../../helpers/validate-audit-details.test');
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const aDeal = require('../../deal-builder');
@@ -56,20 +57,10 @@ describe('POST TFM amendments', () => {
       expect(body).toEqual({ amendmentId: expect.any(String) });
     });
 
-    it('should return 400 if no auditDetails provided', async () => {
-      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
-
-      const { body } = await api.post().to(`/v1/tfm/facilities/62727d055ca1841f08216353/amendments`);
-      expect(body).toEqual({ status: 400, message: 'Invalid auditDetails, Missing property `userType`' });
-    });
-
-    it('should return 400 if portal auditDetails provided', async () => {
-      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
-
-      const { body } = await api
-        .post({ auditDetails: generatePortalAuditDetails(MOCK_TFM_USER._id) })
-        .to(`/v1/tfm/facilities/62727d055ca1841f08216353/amendments`);
-      expect(body).toEqual({ status: 400, message: "Invalid auditDetails, userType must be 'tfm'" });
+    itValidatesAuditDetails({
+      makeRequest: (payload) => api.post(payload).to(`/v1/tfm/facilities/abcdef1234567890abcdef12/amendments`),
+      payloadWithoutAuditDetails: {},
+      validUserTypes: ['tfm'],
     });
 
     it('should return 400 if an amendment already exists', async () => {
