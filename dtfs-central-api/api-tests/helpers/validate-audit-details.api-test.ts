@@ -14,7 +14,7 @@ type Params<T> = {
   successfulStatus?: number;
 };
 
-export const itValidatesAuditDetails = <T extends object>({
+export const withValidateAuditDetailsTests = <T extends object>({
   makeRequest,
   payloadWithoutAuditDetails,
   validUserTypes,
@@ -45,7 +45,7 @@ export const itValidatesAuditDetails = <T extends object>({
   it.each(testCases)('it should have status $expectedStatus if the userType is $auditDetails.usertype', async ({ auditDetails, expectedStatus }) => {
     const { status, body } = await makeRequest({ ...payloadWithoutAuditDetails, auditDetails });
 
-    expect(body).toEqual({ status: 400, message: "Invalid auditDetails, userType must be 'tfm'" });
     expect(status).toBe(expectedStatus);
+    expect('message' in body && body.message).toMatch(/Invalid auditDetails, userType must be/);
   });
 };

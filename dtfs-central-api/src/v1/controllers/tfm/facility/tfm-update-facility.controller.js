@@ -42,7 +42,7 @@ exports.updateFacilityPut = async (req, res) => {
   const facility = await findOneFacility(facilityId);
 
   if (!facility) {
-    return res.status(404).send({ status: 404, message: 'Deal not found' });
+    return res.status(404).send({ status: 404, message: 'Facility not found' });
   }
 
   const { tfmUpdate, auditDetails } = req.body;

@@ -2,7 +2,7 @@ const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/c
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
-const { itValidatesAuditDetails } = require('../../../helpers/validate-audit-details.test');
+const { withValidateAuditDetailsTests } = require('../../../helpers/validate-audit-details.api-test');
 const CONSTANTS = require('../../../../src/constants');
 const DEFAULTS = require('../../../../src/v1/defaults');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
@@ -30,7 +30,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
     ]);
   });
 
-  describe('auditting', () => {
+  describe('when validating audit details', () => {
     let dealId;
 
     beforeEach(async () => {
@@ -44,7 +44,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       dealId = createDealBody._id;
     });
 
-    itValidatesAuditDetails({
+    withValidateAuditDetailsTests({
       makeRequest: (payload) => api.put(payload).to('/v1/tfm/deals/submit'),
       payloadWithoutAuditDetails: {
         dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,

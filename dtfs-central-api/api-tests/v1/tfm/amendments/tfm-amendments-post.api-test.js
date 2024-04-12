@@ -2,7 +2,7 @@ const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/d
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
-const { itValidatesAuditDetails } = require('../../../helpers/validate-audit-details.test');
+const { withValidateAuditDetailsTests } = require('../../../helpers/validate-audit-details.api-test');
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const aDeal = require('../../deal-builder');
@@ -57,7 +57,7 @@ describe('POST TFM amendments', () => {
       expect(body).toEqual({ amendmentId: expect.any(String) });
     });
 
-    itValidatesAuditDetails({
+    withValidateAuditDetailsTests({
       makeRequest: (payload) => api.post(payload).to(`/v1/tfm/facilities/abcdef1234567890abcdef12/amendments`),
       payloadWithoutAuditDetails: {},
       validUserTypes: ['tfm'],

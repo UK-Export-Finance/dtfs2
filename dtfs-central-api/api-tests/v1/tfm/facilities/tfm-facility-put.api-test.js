@@ -2,7 +2,7 @@ const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/d
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
-const { itValidatesAuditDetails } = require('../../../helpers/validate-audit-details.test');
+const { withValidateAuditDetailsTests } = require('../../../helpers/validate-audit-details.api-test');
 const aDeal = require('../../deal-builder');
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
@@ -62,15 +62,23 @@ describe('/v1/tfm/facilities', () => {
       expect(status).toEqual(404);
     });
 
-    describe('auditting', () => {
+    describe('when validating audit details', () => {
       let createdFacility;
 
       beforeEach(async () => {
         const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        await api
+          .put({
+            dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+            dealId,
+            auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          })
+          .to('/v1/tfm/deals/submit');
+
         createdFacility = postResult.body;
       });
 
-      itValidatesAuditDetails({
+      withValidateAuditDetailsTests({
         makeRequest: (payload) => api.put(payload).to(`/v1/tfm/facilities/${createdFacility._id}`),
         validUserTypes: ['system', 'portal', 'tfm'],
         payloadWithoutAuditDetails: {
