@@ -38,6 +38,7 @@ on:
     branches:
       - main
       - feat/e2etf-sql
+      - "release-*"
 
     paths:
       - "package*.json"
