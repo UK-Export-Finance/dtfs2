@@ -48,11 +48,6 @@ export type UtilisationReportReconciliationSummary = {
   items: UtilisationReportReconciliationSummaryItem[];
 };
 
-export type ReportWithStatus = {
-  status: UtilisationReportReconciliationStatus;
-  reportId: number;
-};
-
 type UtilisationReportHeader = ValuesOf<typeof UTILISATION_REPORT_HEADERS>;
 
 export type UtilisationReportRawCsvData = {

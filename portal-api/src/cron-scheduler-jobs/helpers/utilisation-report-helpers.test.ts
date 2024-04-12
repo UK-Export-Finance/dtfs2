@@ -1,4 +1,4 @@
-import { BankReportPeriodSchedule, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
+import { BankReportPeriodSchedule, UtilisationReportReconciliationStatus, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import {
   getReportDueDate,
   getFormattedReportDueDate,
@@ -10,7 +10,6 @@ import {
 import externalApi from '../../external-api/api';
 import api from '../../v1/api';
 import { aNotReceivedUtilisationReportResponse, aUtilisationReportResponse } from '../../../test-helpers/test-data/utilisation-report';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 import { BankResponse, UtilisationReportResponseBody } from '../../v1/api-response-types';
 import { aReportPeriod } from '../../../test-helpers/test-data/report-period';
 import { aBank } from '../../../test-helpers/test-data/banks';

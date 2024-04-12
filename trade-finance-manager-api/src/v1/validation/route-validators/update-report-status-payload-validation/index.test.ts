@@ -1,10 +1,9 @@
 import { Request } from 'express';
 import { validationResult } from 'express-validator';
 import { createRequest } from 'node-mocks-http';
+import { ReportWithStatus, UtilisationReportReconciliationStatus, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import { updateReportStatusPayloadValidation } from '.';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../../constants';
 import { TfmSessionUser } from '../../../../types/tfm-session-user';
-import { ReportWithStatus, UtilisationReportReconciliationStatus } from '../../../../types/utilisation-reports';
 import { UpdateUtilisationReportStatusRequestBody } from '../../../controllers/utilisation-reports/update-utilisation-report-status.controller';
 import { MOCK_TFM_SESSION_USER } from '../../../__mocks__/mock-tfm-session-user';
 
@@ -12,7 +11,7 @@ type ValidPayloadBodyOpts = {
   user?: TfmSessionUser;
   reportsWithStatus?: ReportWithStatus[];
   status?: UtilisationReportReconciliationStatus;
-  reportId?: string;
+  reportId?: number;
 };
 
 describe('updateReportStatusPayloadValidation', () => {
@@ -21,7 +20,7 @@ describe('updateReportStatusPayloadValidation', () => {
     reportsWithStatus: opts.reportsWithStatus ?? [
       {
         status: opts.status ?? 'PENDING_RECONCILIATION',
-        reportId: opts.reportId ?? '123',
+        reportId: opts.reportId ?? 123,
       },
     ],
   });
@@ -52,6 +51,7 @@ describe('updateReportStatusPayloadValidation', () => {
   it('returns a single error when the report id is not a valid sql id', async () => {
     // Arrange
     const reportId = 'abc123';
+    // @ts-expect-error `reportId` is purposefully incorrect type
     const body = getValidPayloadBody({ reportId });
     const req = createRequest({ body });
 
@@ -60,7 +60,7 @@ describe('updateReportStatusPayloadValidation', () => {
 
     // Assert
     expect(errors.length).toEqual(1);
-    expect(errors.at(0)?.msg).toEqual('Report id must be an integer string');
+    expect(errors.at(0)?.msg).toEqual('Report id must be an integer');
   });
 
   it('returns a single error when the user is not an object', async () => {
