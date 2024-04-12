@@ -19,7 +19,7 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
     tfm: {
       ...tfmUpdate,
     },
-    auditDetails: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, $.flatten(withoutId(update)), {

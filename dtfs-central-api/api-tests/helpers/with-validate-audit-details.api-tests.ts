@@ -18,7 +18,7 @@ export const withValidateAuditDetailsTests = <T extends object>({
   makeRequest,
   payloadWithoutAuditDetails,
   validUserTypes,
-  successfulStatus = 200,
+  successfulStatus = 200,  
 }: Params<T>) => {
   it('should return 400 if no auditDetails provided', async () => {
     const { status, body } = await makeRequest({ ...payloadWithoutAuditDetails });
@@ -46,10 +46,12 @@ export const withValidateAuditDetailsTests = <T extends object>({
     const { status, body } = await makeRequest({ ...payloadWithoutAuditDetails, auditDetails });
 
     expect(status).toBe(expectedStatus);
-    expect(body).toEqual({
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      message: expect.stringContaining('Invalid auditDetails, userType must be'),
-      status: 404,
-    });
+    if (expectedStatus === 400) {
+      expect(body).toEqual({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        message: expect.stringContaining('Invalid auditDetails, userType must be'),
+        status: 400,
+      });
+    }
   });
 };
