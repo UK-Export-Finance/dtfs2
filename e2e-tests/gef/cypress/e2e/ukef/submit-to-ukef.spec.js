@@ -19,7 +19,7 @@ context('Submit to UKEF', () => {
     cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
-        cy.apiFetchAllApplications(token);
+        cy.apiFetchAllGefApplications(token);
       })
       .then(({ body }) => {
         dealId = body.items[2]._id;

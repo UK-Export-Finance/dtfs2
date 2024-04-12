@@ -45,6 +45,14 @@ describe('controllers/application-details', () => {
       expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard');
     });
 
+    it('redirects to problem with service page if the deal is not GEF', async () => {
+      mockApplicationResponse.dealType = CONSTANTS.DEAL_TYPE.BSS_EWCS;
+      api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+      await applicationDetails(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    });
+
     it('renders the `Application Details` template', async () => {
       mockFacilityResponse.items = [
         {
