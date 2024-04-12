@@ -67,7 +67,7 @@ describe('POST TFM amendments', () => {
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
       const { body } = await api
-        .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+        .post({ auditDetails: generatePortalAuditDetails(MOCK_TFM_USER._id) })
         .to(`/v1/tfm/facilities/62727d055ca1841f08216353/amendments`);
       expect(body).toEqual({ status: 400, message: "Invalid auditDetails, userType must be 'tfm'" });
     });

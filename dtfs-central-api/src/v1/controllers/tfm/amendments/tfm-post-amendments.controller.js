@@ -22,7 +22,7 @@ exports.postTfmAmendment = async (req, res) => {
   }
 
   if (auditDetails.userType !== 'tfm') {
-    res.status(400).send({ status: 400, message: `Invalid auditDetails, userType must be 'tfm'` });
+    return res.status(400).send({ status: 400, message: `Invalid auditDetails, userType must be 'tfm'` });
   }
 
   const facility = await findOneFacility(facilityId);
