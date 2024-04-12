@@ -14,6 +14,7 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
 ![SCA](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/sca.yml/badge.svg)
 ![QA](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/test.yml/badge.svg)
 ![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/publish.yml/badge.svg)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/1679637fa6fd4778815c0dbf4b3aea5b)](https://app.codacy.com/gh/UK-Export-Finance/dtfs2/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 **CD** 🚀
 

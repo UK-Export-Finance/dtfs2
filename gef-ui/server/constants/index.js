@@ -31,6 +31,7 @@ const DEAL_STATUS = {
 
 const DEAL_TYPE = {
   GEF: 'GEF',
+  BSS_EWCS: 'BSS/EWCS',
 };
 
 const FACILITY_TYPE = {

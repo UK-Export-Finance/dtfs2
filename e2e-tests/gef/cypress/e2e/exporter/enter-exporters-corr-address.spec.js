@@ -15,7 +15,7 @@ context('Enter Exporters Correspondence Address Page', () => {
       .then((tok) => {
         token = tok;
       })
-      .then(() => cy.apiFetchAllApplications(token))
+      .then(() => cy.apiFetchAllGefApplications(token))
       .then(({ body }) => {
         body.items.forEach((item) => {
           dealIds.push({ id: item._id, exporterId: item.exporterId });
@@ -66,7 +66,7 @@ context('Enter Exporters Correspondence Address Page', () => {
         .then((tok) => {
           token = tok;
         })
-        .then(() => cy.apiFetchAllApplications(token))
+        .then(() => cy.apiFetchAllGefApplications(token))
         .then(({ body }) => {
           dealIds = [];
           body.items.forEach((item) => {

@@ -24,7 +24,7 @@ context('Clone GEF (AIN) deal', () => {
   before(() => {
     cy.loadData();
     cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
-      cy.apiFetchAllApplications(token);
+      cy.apiFetchAllGefApplications(token);
     }).then(({ body }) => {
       AINdealId = body.items[2]._id;
       testDealId = body.items[1]._id;
@@ -173,7 +173,7 @@ context('Clone GEF (MIA) deal', () => {
   before(() => {
     cy.loadData();
     cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
-      cy.apiFetchAllApplications(token);
+      cy.apiFetchAllGefApplications(token);
     }).then(({ body }) => {
       MIAdealId = body.items[2]._id;
       cy.login(BANK1_MAKER1);

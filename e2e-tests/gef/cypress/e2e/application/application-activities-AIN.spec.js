@@ -21,7 +21,7 @@ context('Submit AIN deal and check portalActivities', () => {
     cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
-        cy.apiFetchAllApplications(token);
+        cy.apiFetchAllGefApplications(token);
       })
       .then(({ body }) => {
         const { 2: ain } = body.items;
