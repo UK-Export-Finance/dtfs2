@@ -46,6 +46,10 @@ export const withValidateAuditDetailsTests = <T extends object>({
     const { status, body } = await makeRequest({ ...payloadWithoutAuditDetails, auditDetails });
 
     expect(status).toBe(expectedStatus);
-    expect('message' in body && body.message).toMatch(/Invalid auditDetails, userType must be/);
+    expect(body).toEqual({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      message: expect.stringContaining('Invalid auditDetails, userType must be'),
+      status: 404,
+    });
   });
 };

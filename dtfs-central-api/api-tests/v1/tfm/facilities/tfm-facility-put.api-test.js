@@ -113,9 +113,9 @@ describe('/v1/tfm/facilities', () => {
       expect(body.tfm).toEqual(updatedFacility.tfmUpdate);
       expect(body.auditRecord).toEqual({
         lastUpdatedAt: expect.any(String),
-        lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
+        lastUpdatedByTfmUserId: null,
         lastUpdatedByIsSystem: null,
-        lastUpdatedByPortalUserId: null,
+        lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
         noUserLoggedIn: null,
       });
     });

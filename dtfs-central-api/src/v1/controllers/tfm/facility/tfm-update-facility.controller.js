@@ -50,7 +50,7 @@ exports.updateFacilityPut = async (req, res) => {
   try {
     validateAuditDetails(auditDetails);
   } catch ({ message }) {
-    return res.status(400).send({ status: 400, message: `Invalid user information - ${message}` });
+    return res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
   }
 
   const updatedFacility = await updateFacility({
