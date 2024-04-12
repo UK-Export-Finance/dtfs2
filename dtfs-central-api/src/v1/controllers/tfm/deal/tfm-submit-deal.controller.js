@@ -115,6 +115,10 @@ const submitDeal = async (deal, auditDetails) => {
 exports.submitDealPut = async (req, res) => {
   const { dealId, dealType, auditDetails } = req.body;
 
+  if (!ObjectId.isValid(dealId)) {
+    return res.status(400).send({ status: 400, message: `Invalid dealId, ${dealId}`})
+  }
+
   try {
     validateAuditDetails(auditDetails);
   } catch ({ message }) {
