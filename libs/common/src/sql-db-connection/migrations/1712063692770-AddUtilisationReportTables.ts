@@ -6,10 +6,6 @@ export class AddUtilisationReportTables1712063692770 implements MigrationInterfa
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
             CREATE TABLE "AzureFileInfo" (
-                "lastUpdatedAt" datetime2 NOT NULL CONSTRAINT "DF_e2915e153159a656ef90279d58a" DEFAULT getdate(),
-                "lastUpdatedByPortalUserId" nvarchar(255),
-                "lastUpdatedByTfmUserId" nvarchar(255),
-                "lastUpdatedByIsSystemUser" bit NOT NULL CONSTRAINT "DF_5b2813faa091ae4c63bc13a88ec" DEFAULT 0,
                 "id" int NOT NULL IDENTITY(1, 1),
                 "folder" nvarchar(255) NOT NULL,
                 "filename" nvarchar(255) NOT NULL,
@@ -17,6 +13,10 @@ export class AddUtilisationReportTables1712063692770 implements MigrationInterfa
                 "url" nvarchar(255) NOT NULL,
                 "mimetype" nvarchar(255) NOT NULL,
                 "utilisationReportId" int NOT NULL,
+                "lastUpdatedAt" datetime2 NOT NULL CONSTRAINT "DF_e2915e153159a656ef90279d58a" DEFAULT getdate(),
+                "lastUpdatedByPortalUserId" nvarchar(255),
+                "lastUpdatedByTfmUserId" nvarchar(255),
+                "lastUpdatedByIsSystemUser" bit NOT NULL CONSTRAINT "DF_5b2813faa091ae4c63bc13a88ec" DEFAULT 0,
                 CONSTRAINT "PK_ea6ad35b38f9b9e248b432d1a1e" PRIMARY KEY ("id")
             )
         `);
@@ -26,10 +26,6 @@ export class AddUtilisationReportTables1712063692770 implements MigrationInterfa
         `);
     await queryRunner.query(`
             CREATE TABLE "FeeRecord" (
-                "lastUpdatedAt" datetime2 NOT NULL CONSTRAINT "DF_cec2cb2f5a2ccf4ac19cb938fd0" DEFAULT getdate(),
-                "lastUpdatedByPortalUserId" nvarchar(255),
-                "lastUpdatedByTfmUserId" nvarchar(255),
-                "lastUpdatedByIsSystemUser" bit NOT NULL CONSTRAINT "DF_7121ac2f65fd8b070ffd591ed37" DEFAULT 0,
                 "id" int NOT NULL IDENTITY(1, 1),
                 "facilityId" nvarchar(255) NOT NULL,
                 "exporter" nvarchar(255) NOT NULL,
@@ -43,15 +39,15 @@ export class AddUtilisationReportTables1712063692770 implements MigrationInterfa
                 "paymentCurrency" nvarchar(255) NOT NULL,
                 "paymentExchangeRate" decimal(14, 8) NOT NULL,
                 "reportId" int NOT NULL,
+                "lastUpdatedAt" datetime2 NOT NULL CONSTRAINT "DF_cec2cb2f5a2ccf4ac19cb938fd0" DEFAULT getdate(),
+                "lastUpdatedByPortalUserId" nvarchar(255),
+                "lastUpdatedByTfmUserId" nvarchar(255),
+                "lastUpdatedByIsSystemUser" bit NOT NULL CONSTRAINT "DF_7121ac2f65fd8b070ffd591ed37" DEFAULT 0,
                 CONSTRAINT "PK_9488afe4d9d39fec32e7c53d47a" PRIMARY KEY ("id")
             )
         `);
     await queryRunner.query(`
             CREATE TABLE "UtilisationReport" (
-                "lastUpdatedAt" datetime2 NOT NULL CONSTRAINT "DF_268b233fa63b90c8ebda1bad341" DEFAULT getdate(),
-                "lastUpdatedByPortalUserId" nvarchar(255),
-                "lastUpdatedByTfmUserId" nvarchar(255),
-                "lastUpdatedByIsSystemUser" bit NOT NULL CONSTRAINT "DF_edb079a13cd83e211bc24c2b0b9" DEFAULT 0,
                 "id" int NOT NULL IDENTITY(1, 1),
                 "bankId" nvarchar(255) NOT NULL,
                 "dateUploaded" datetime2,
@@ -61,6 +57,10 @@ export class AddUtilisationReportTables1712063692770 implements MigrationInterfa
                 "reportPeriodStartYear" int NOT NULL,
                 "reportPeriodEndMonth" int NOT NULL,
                 "reportPeriodEndYear" int NOT NULL,
+                "lastUpdatedAt" datetime2 NOT NULL CONSTRAINT "DF_268b233fa63b90c8ebda1bad341" DEFAULT getdate(),
+                "lastUpdatedByPortalUserId" nvarchar(255),
+                "lastUpdatedByTfmUserId" nvarchar(255),
+                "lastUpdatedByIsSystemUser" bit NOT NULL CONSTRAINT "DF_edb079a13cd83e211bc24c2b0b9" DEFAULT 0,
                 CONSTRAINT "PK_98a789a9ebdc731bd04ec00860a" PRIMARY KEY ("id")
             )
         `);
