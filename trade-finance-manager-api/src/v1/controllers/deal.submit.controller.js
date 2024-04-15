@@ -28,7 +28,7 @@ const { dealHasAllUkefIds, dealHasAllValidUkefIds } = require('../helpers/dealHa
  * @returns {Promise<object>} - The retrieved deal from the portal.
  */
 const getPortalDeal = async (dealId, dealType) => {
-  let deal;  
+  let deal;
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     deal = await findOneGefDeal(dealId);
