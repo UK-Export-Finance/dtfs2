@@ -1,4 +1,3 @@
-const { delay } = require('lodash');
 const { findOneTfmDeal, findOnePortalDeal, findOneGefDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
@@ -20,6 +19,7 @@ const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-
 const { sendDealSubmitEmails, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const { dealHasAllUkefIds, dealHasAllValidUkefIds } = require('../helpers/dealHasAllUkefIds');
+const { delay } = require('../helpers/delay');
 
 /**
  * Retrieves a deal from the portal based on the provided deal ID and deal type.
@@ -53,7 +53,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
    * where portal deal updates `deals` collection will not be
    * fetched when updated on close proximity calls.
    */
-  await delay(() => {}, 200);
+  await delay(200);
 
   const deal = await getPortalDeal(dealId, dealType);
   console.info('Setting essential deal properties in TFM for deal %s', dealId);
