@@ -55,7 +55,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
    */
   await delay(() => {}, 200);
 
-  const deal = Promise.resolve();
+  const deal = await getPortalDeal(dealId, dealType);
 
   console.info('Setting essential deal properties in TFM for deal %s', dealId);
 
