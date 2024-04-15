@@ -1,3 +1,4 @@
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const api = require('../api');
 const {
   sendManualDecisionAmendmentEmail,
@@ -21,7 +22,7 @@ const amendmentVariables = require('../__mocks__/amendmentVariables');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
 const MOCK_NOTIFY_EMAIL_BAD_RESPONSE = require('../__mocks__/mock-notify-email-bad-response');
 
-const mockUserInformation = { userType: 'test' };
+const mockAuditDetails = generateTfmAuditDetails('test-id');
 
 describe('sendManualDecisionAmendmentEmail()', () => {
   const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
@@ -39,7 +40,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
   });
 
   it('should send approved without conditions email with correct details for both amendments', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsBothAmendments, mockUserInformation);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsBothAmendments, mockAuditDetails);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS,
@@ -66,12 +67,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       amendmentVariables.approvedWithoutConditionsBothAmendments.facilityId,
       amendmentVariables.approvedWithoutConditionsBothAmendments.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
-      mockUserInformation,
+      mockAuditDetails,
     );
   });
 
   it('should send approved without conditions email with correct details for both amendments if BSS', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsBothAmendmentsBSS, mockUserInformation);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsBothAmendmentsBSS, mockAuditDetails);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS,
@@ -98,12 +99,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       amendmentVariables.approvedWithoutConditionsBothAmendments.facilityId,
       amendmentVariables.approvedWithoutConditionsBothAmendments.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
-      mockUserInformation,
+      mockAuditDetails,
     );
   });
 
   it('should send approved without conditions email with correct details for a single amendment change', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsOneAmendment, mockUserInformation);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsOneAmendment, mockAuditDetails);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS,
@@ -130,12 +131,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       amendmentVariables.approvedWithoutConditionsOneAmendment.facilityId,
       amendmentVariables.approvedWithoutConditionsOneAmendment.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
-      mockUserInformation,
+      mockAuditDetails,
     );
   });
 
   it('should send approved with conditions email with correct details for both amendments being approved w/ conditions', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsBothAmendments, mockUserInformation);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsBothAmendments, mockAuditDetails);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
@@ -164,12 +165,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       amendmentVariables.approvedWithConditionsBothAmendments.facilityId,
       amendmentVariables.approvedWithConditionsBothAmendments.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
-      mockUserInformation,
+      mockAuditDetails,
     );
   });
 
   it('should send approved with conditions email with correct details for both amendments being approved w/ conditions when BSS', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsBothAmendmentsBSS, mockUserInformation);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsBothAmendmentsBSS, mockAuditDetails);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
@@ -198,12 +199,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       amendmentVariables.approvedWithConditionsBothAmendments.facilityId,
       amendmentVariables.approvedWithConditionsBothAmendments.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
-      mockUserInformation,
+      mockAuditDetails,
     );
   });
 
   it('should send approved without conditions email with correct details for a single amendment change being approved w/ conditions', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsOneAmendment, mockUserInformation);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsOneAmendment, mockAuditDetails);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
@@ -232,12 +233,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       amendmentVariables.approvedWithConditionsOneAmendment.facilityId,
       amendmentVariables.approvedWithConditionsOneAmendment.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
-      mockUserInformation,
+      mockAuditDetails,
     );
   });
 
   it('should send approved with conditions email with correct details for both amendments being approved w/ conditions and approved w/o conditions', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithWithoutConditionsBothAmendments, mockUserInformation);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithWithoutConditionsBothAmendments, mockAuditDetails);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
@@ -266,12 +267,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       amendmentVariables.approvedWithWithoutConditionsBothAmendments.facilityId,
       amendmentVariables.approvedWithWithoutConditionsBothAmendments.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
-      mockUserInformation,
+      mockAuditDetails,
     );
   });
 
   it('should send approved with conditions declined email with correct details for both amendments being approved w/ conditions and declined', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsDeclined, mockUserInformation);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsDeclined, mockAuditDetails);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS_DECLINED,
@@ -306,12 +307,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       amendmentVariables.approvedWithConditionsDeclined.facilityId,
       amendmentVariables.approvedWithConditionsDeclined.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
-      mockUserInformation,
+      mockAuditDetails,
     );
   });
 
   it('should send approved with conditions declined email with correct details for both amendments being approved w/ conditions and declined', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsDeclinedSwapped, mockUserInformation);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsDeclinedSwapped, mockAuditDetails);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS_DECLINED,
@@ -346,12 +347,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       amendmentVariables.approvedWithConditionsDeclinedSwapped.facilityId,
       amendmentVariables.approvedWithConditionsDeclinedSwapped.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
-      mockUserInformation,
+      mockAuditDetails,
     );
   });
 
   it('should send approved without conditions declined email with correct details for both amendments being approved wo/ conditions and declined', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsDeclined, mockUserInformation);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsDeclined, mockAuditDetails);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS_DECLINED,
@@ -384,12 +385,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       amendmentVariables.approvedWithoutConditionsDeclined.facilityId,
       amendmentVariables.approvedWithoutConditionsDeclined.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
-      mockUserInformation,
+      mockAuditDetails,
     );
   });
 
   it('should send approved without conditions declined email with correct details for both amendments being approved wo/ conditions and declined', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsDeclinedSwapped, mockUserInformation);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsDeclinedSwapped, mockAuditDetails);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS_DECLINED,
@@ -422,12 +423,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       amendmentVariables.approvedWithoutConditionsDeclinedSwapped.facilityId,
       amendmentVariables.approvedWithoutConditionsDeclinedSwapped.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
-      mockUserInformation,
+      mockAuditDetails,
     );
   });
 
   it('should send declined email with correct details for both amendments being declined', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.declinedBothAmendments, mockUserInformation);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.declinedBothAmendments, mockAuditDetails);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_DECLINED,
@@ -456,12 +457,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       amendmentVariables.declinedBothAmendments.facilityId,
       amendmentVariables.declinedBothAmendments.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
-      mockUserInformation,
+      mockAuditDetails,
     );
   });
 
   it('should send declined email with correct details for one amendment change only being declined', async () => {
-    await sendManualDecisionAmendmentEmail(amendmentVariables.declinedOneAmendment, mockUserInformation);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.declinedOneAmendment, mockAuditDetails);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_DECLINED,
@@ -490,13 +491,13 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       amendmentVariables.declinedOneAmendment.facilityId,
       amendmentVariables.declinedOneAmendment.amendmentId,
       { ukefDecision: { managersDecisionEmailSent: true } },
-      mockUserInformation,
+      mockAuditDetails,
     );
   });
 
   it('should not call APIs if does not meet any conditions', async () => {
     // does not have correct values for value and coverEndDate
-    await sendManualDecisionAmendmentEmail(amendmentVariables.wrongAmendments, mockUserInformation);
+    await sendManualDecisionAmendmentEmail(amendmentVariables.wrongAmendments, mockAuditDetails);
 
     expect(sendEmailApiSpy).not.toHaveBeenCalled();
 
@@ -519,7 +520,7 @@ describe('sendFirstTaskEmail()', () => {
   });
 
   it('should send first task email with correct variables with gef deal', async () => {
-    await sendFirstTaskEmail(amendmentVariables.firstTaskVariables, mockUserInformation);
+    await sendFirstTaskEmail(amendmentVariables.firstTaskVariables, mockAuditDetails);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
@@ -536,7 +537,7 @@ describe('sendFirstTaskEmail()', () => {
       amendmentVariables.approvedWithoutConditionsBothAmendments.facilityId,
       amendmentVariables.approvedWithoutConditionsBothAmendments.amendmentId,
       { firstTaskEmailSent: true },
-      mockUserInformation,
+      mockAuditDetails,
     );
   });
 
@@ -545,7 +546,7 @@ describe('sendFirstTaskEmail()', () => {
     firstTaskVariables.dealSnapshot.ukefDealId = null;
     firstTaskVariables.dealSnapshot.details = { ukefDealId: '123' };
 
-    await sendFirstTaskEmail(firstTaskVariables, mockUserInformation);
+    await sendFirstTaskEmail(firstTaskVariables, mockAuditDetails);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
@@ -562,13 +563,13 @@ describe('sendFirstTaskEmail()', () => {
       amendmentVariables.approvedWithoutConditionsBothAmendments.facilityId,
       amendmentVariables.approvedWithoutConditionsBothAmendments.amendmentId,
       { firstTaskEmailSent: true },
-      mockUserInformation,
+      mockAuditDetails,
     );
   });
 
   it('should not call APIs if does not meet any conditions', async () => {
     // does not have correct values for value and coverEndDate
-    await sendFirstTaskEmail(amendmentVariables.noTaskVariables, mockUserInformation);
+    await sendFirstTaskEmail(amendmentVariables.noTaskVariables, mockAuditDetails);
 
     expect(sendEmailApiSpy).not.toHaveBeenCalled();
 
@@ -993,7 +994,7 @@ describe('internalAmendmentEmail()', () => {
   it('Should call the expected function with expected arguments set', async () => {
     await internalAmendmentEmail('1234567890');
 
-    expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.INTERNAL_AMENDMENT_NOTIFICATION, expect.any(String), {
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.INTERNAL_AMENDMENT_NOTIFICATION, process.env.UKEF_INTERNAL_NOTIFICATION, {
       ukefFacilityId: '1234567890',
     });
   });
