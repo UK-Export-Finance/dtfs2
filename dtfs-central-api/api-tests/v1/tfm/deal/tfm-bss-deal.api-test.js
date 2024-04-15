@@ -1,4 +1,4 @@
-const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const wipeDB = require('../../../wipeDB');
 const aDeal = require('../../deal-builder');
 
@@ -6,6 +6,7 @@ const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
+const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 
 const newDeal = aDeal({
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
@@ -105,28 +106,16 @@ describe('/v1/tfm/deal/:id', () => {
       expect(body.message).toEqual('Invalid Deal Id');
     });
 
-    it('400s if no auditDetails is given', async () => {
-      const { status, body } = await api.put({}).to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
-      expect(status).toEqual(400);
-      expect(body.message).toEqual('Invalid auditDetails, Missing property `userType`');
-    });
-
-    it('400s if auditDetails has userType `tfm`', async () => {
-      const { status, body } = await api.put({ auditDetails: generateTfmAuditDetails(MOCK_PORTAL_USER._id) }).to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
-      expect(status).toEqual(400);
-      expect(body.message).toEqual('Invalid auditDetails, userType must be `portal`');
-    });
-
     it('404s if deal id is valid but does not exist', async () => {
-      const { status, body } = await api.put({ auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) }).to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
+      const { status, body } = await api
+        .put({ auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
+        .to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
       expect(status).toEqual(404);
       expect(body.message).toEqual('Deal not found');
     });
 
-    it('updates deal.dealSnapshot whilst retaining existing snapshot deal.tfm', async () => {
-      const { body: portalDeal } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
-      const dealId = portalDeal._id;
-
+    describe('with a valid deal', () => {
+      let dealId;
       const mockTfm = {
         tfm: {
           submissionDetails: {
@@ -134,52 +123,74 @@ describe('/v1/tfm/deal/:id', () => {
           },
         },
       };
-      await api
-        .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-          dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-        })
-        .to('/v1/tfm/deals/submit');
 
-      // add some dummy data to deal.tfm
-      await api
-        .put({
-          dealUpdate: mockTfm,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-        })
-        .to(`/v1/tfm/deals/${dealId}`);
+      beforeEach(async () => {
+        const { body: portalDeal } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+        dealId = portalDeal._id;
 
-      const snapshotUpdate = {
-        snapshotUpdate: {
-          someNewField: true,
-          testing: true,
-        },
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-      };
+        await api
+          .put({
+            dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+            dealId,
+            auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          })
+          .to('/v1/tfm/deals/submit');
 
-      const { status } = await api.put(snapshotUpdate).to(`/v1/tfm/deals/${dealId}/snapshot`);
-
-      expect(status).toEqual(200);
-
-      const { body: bodyAfterUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
-
-      expect(bodyAfterUpdate.deal.dealSnapshot).toMatchObject({
-        ...newDeal,
-        ...snapshotUpdate.snapshotUpdate,
+        // add some dummy data to deal.tfm
+        await api
+          .put({
+            dealUpdate: mockTfm,
+            auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          })
+          .to(`/v1/tfm/deals/${dealId}`);
       });
 
-      expect(bodyAfterUpdate.deal.tfm).toEqual({
-        ...mockTfm.tfm,
-        lastUpdated: expect.any(Number),
+      withValidateAuditDetailsTests({
+        makeRequest: (auditDetails) =>
+          api
+            .put({
+              auditDetails,
+              snapshotUpdate: {
+                someNewField: true,
+                testing: true,
+              },
+            })
+            .to(`/v1/tfm/deals/${dealId}/snapshot`),
+        validUserTypes: ['tfm'],
       });
 
-      expect(bodyAfterUpdate.deal.auditDetails).toEqual({
-        lastUpdatedAt: expect.any(String),
-        lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
-        lastUpdatedByTfmUserId: null,
-        lastUpdatedByIsSystem: null,
-        noUserLoggedIn: null,
+      it('updates deal.dealSnapshot whilst retaining existing snapshot deal.tfm', async () => {
+        const snapshotUpdate = {
+          snapshotUpdate: {
+            someNewField: true,
+            testing: true,
+          },
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+        };
+
+        const { status } = await api.put(snapshotUpdate).to(`/v1/tfm/deals/${dealId}/snapshot`);
+
+        expect(status).toEqual(200);
+
+        const { body: bodyAfterUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+
+        expect(bodyAfterUpdate.deal.dealSnapshot).toMatchObject({
+          ...newDeal,
+          ...snapshotUpdate.snapshotUpdate,
+        });
+
+        expect(bodyAfterUpdate.deal.tfm).toEqual({
+          ...mockTfm.tfm,
+          lastUpdated: expect.any(Number),
+        });
+
+        expect(bodyAfterUpdate.deal.auditDetails).toEqual({
+          lastUpdatedAt: expect.any(String),
+          lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
+          lastUpdatedByTfmUserId: null,
+          lastUpdatedByIsSystem: null,
+          noUserLoggedIn: null,
+        });
       });
     });
   });

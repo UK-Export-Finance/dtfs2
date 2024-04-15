@@ -152,7 +152,9 @@ exports.updateDealSnapshotPut = async (req, res) => {
 
   const deal = await findOneDeal(dealId);
 
-    const snapshotUpdate = req.body;
+  if (!deal) {
+    return res.status(404).send({ status: 404, message: 'Deal not found'});
+  }
 
   if (snapshotUpdate.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     const dealFacilities = await findAllFacilitiesByDealId(dealId);
