@@ -68,6 +68,7 @@ const MockRequestUrlChecker = (url) => ({
 
 const MockApplicationResponseDraft = () => ({
   _id: '1234',
+  dealType: CONSTANTS.DEAL_TYPE.GEF,
   exporter: {},
   bank: { id: 'BANKID' },
   bankInternalRefName: 'Internal reference',

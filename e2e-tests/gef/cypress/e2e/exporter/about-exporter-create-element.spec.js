@@ -14,7 +14,7 @@ context('About Exporter Page - Add element to page', () => {
       .then((tok) => {
         token = tok;
       })
-      .then(() => cy.apiFetchAllApplications(token))
+      .then(() => cy.apiFetchAllGefApplications(token))
       .then(({ body }) => {
         body.items.forEach((item) => {
           dealIds.push(item._id);

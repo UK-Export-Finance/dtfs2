@@ -10,7 +10,7 @@ context('Check GEF GOVUK header displays correctly', () => {
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
-        cy.apiFetchAllApplications(token);
+        cy.apiFetchAllGefApplications(token);
       })
       .then(({ body }) => {
         dealId = body.items[2]._id;

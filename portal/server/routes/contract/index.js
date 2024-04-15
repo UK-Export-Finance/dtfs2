@@ -1,6 +1,7 @@
 const express = require('express');
 const {
   ROLES: { CHECKER, MAKER },
+  PRODUCT
 } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const aboutRoutes = require('./about');
@@ -30,8 +31,15 @@ router.use('/contract/*', validateToken);
 router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) => {
   const { deal } = req.apiData;
   const { user } = req.session;
+  const { _id } = req.params;
 
-  const { _id: dealId } = deal;
+  const { _id: dealId, dealType } = deal;
+
+  // Ensure application is `BSS/EWCS`
+  if (dealType !== PRODUCT.BSS_EWCS) {
+    console.error('Deal ID %s specified is not a BSS/EWCS deal', _id);
+    return res.render('_partials/problem-with-service.njk');
+  }
 
   const canCalculateSupplyContractValues = (submissionDetails) => {
     const { supplyContractCurrency, supplyContractConversionRateToGBP } = submissionDetails;

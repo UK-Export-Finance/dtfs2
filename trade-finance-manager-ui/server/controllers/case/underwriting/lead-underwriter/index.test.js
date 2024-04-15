@@ -45,6 +45,7 @@ const MOCK_DEAL = {
 };
 
 const dealId = MOCK_DEAL._id;
+const mockToken = 'mockToken';
 
 describe('GET underwriting - lead underwriter', () => {
   const userCanEdit = userIsInTeam(SESSION.user, [TEAM_IDS.UNDERWRITER_MANAGERS, TEAM_IDS.UNDERWRITERS]);
@@ -57,7 +58,7 @@ describe('GET underwriting - lead underwriter', () => {
     });
 
     it('should return an object with the correct parameters', async () => {
-      const result = await underwriterLeadUnderwriterController.getLeadUnderwriter(MOCK_DEAL, MOCK_USER_UNDERWRITER_MANAGER);
+      const result = await underwriterLeadUnderwriterController.getLeadUnderwriter(MOCK_DEAL, MOCK_USER_UNDERWRITER_MANAGER, mockToken);
 
       expect(result).toEqual({
         userCanEdit,
@@ -72,8 +73,6 @@ describe('GET underwriting - lead underwriter', () => {
     });
 
     it('should call getUser API to get current lead underwriter user data', async () => {
-      const mockToken = 'mockToken';
-
       await underwriterLeadUnderwriterController.getLeadUnderwriter(MOCK_DEAL, MOCK_USER_UNDERWRITER_MANAGER, mockToken);
 
       expect(apiGetUserSpy).toHaveBeenCalledWith(MOCK_DEAL.tfm.leadUnderwriter, mockToken);
@@ -95,7 +94,7 @@ describe('GET underwriting - lead underwriter', () => {
     });
 
     it('should NOT call getUser API and should return an object with undefined currentLeadUnderWriter', async () => {
-      const result = await underwriterLeadUnderwriterController.getLeadUnderwriter(MOCK_DEAL_UNASSIGNED_LEAD_UNDERWRITER, MOCK_USER_UNDERWRITER_MANAGER);
+      const result = await underwriterLeadUnderwriterController.getLeadUnderwriter(MOCK_DEAL_UNASSIGNED_LEAD_UNDERWRITER, MOCK_USER_UNDERWRITER_MANAGER, mockToken);
 
       expect(apiGetUserSpy).not.toHaveBeenCalled();
 
@@ -200,7 +199,8 @@ describe('POST underwriting - assign lead underwriter', () => {
   const apiUpdateSpy = jest.fn(() =>
     Promise.resolve({
       test: true,
-    }));
+    }),
+  );
 
   beforeEach(() => {
     api.getDeal = () => Promise.resolve(MOCK_DEAL);
