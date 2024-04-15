@@ -660,7 +660,7 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
 /**
  * Get company information from Party URN
  * @param {Integer} partyUrn Party URN
- * @returns {Object} Company information
+ * @returns {Promise<Object>} Company information
  */
 const getCompanyInfo = async (partyUrn) => {
   try {
@@ -940,7 +940,7 @@ const amendACBSfacility = async (amendments, facility, deal) => {
 
 const getFunctionsAPI = async (url = '') => {
   const modifiedUrl = url ? url.replace(/http:\/\/localhost:[\d]*/, AZURE_ACBS_FUNCTION_URL) : AZURE_ACBS_FUNCTION_URL;
-  
+
   try {
     const response = await axios({
       method: 'get',

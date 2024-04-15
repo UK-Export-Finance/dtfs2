@@ -9,10 +9,19 @@ class AuthProvider {
     this.msalConfig = msalConfig;
   }
 
+  /**
+   * MS Auth layer client setup.
+   * @return {Object} MS Auth layer client application.
+   */
   getMsalInstance() {
     return new msal.ConfidentialClientApplication(this.msalConfig);
   }
 
+  /**
+   * Starts login url setup, for first leg of auth code flow
+   * @param {Boolean} [skipAuthorityMetadataCache=false]: Flag to avoid cache, used mostly for testing
+   * @return {Promise<Object>} PKCE codes, auth code request, login URL.
+   */
   async getLoginUrl({ skipAuthorityMetadataCache = false } = {}) {
     // create a GUID for csrf
     const csrfToken = this.cryptoProvider.createNewGuid();
@@ -69,7 +78,7 @@ class AuthProvider {
    * @param {Object} authCodeUrlRequestParams: Parameters for requesting an auth code url
    * @param {Object} authCodeRequestParams: Parameters for requesting tokens using auth code
    * @param {Object} msalInstance: MSAL instance
-   * @return {Object} PKCE codes, auth code request, login URL.
+   * @return {Promise<Object>} PKCE codes, auth code request, login URL.
    */
   async getAuthCodeUrl({
     csrfToken,
@@ -144,7 +153,7 @@ class AuthProvider {
    * @param {Object} origAuthCodeRequest: Original auth code request
    * @param {String} code: authZ code
    * @param {Object} req: Request object
-   * @returns {Object}
+   * @returns {Promise<Object>}
    */
   async handleRedirect(pkceCode, origAuthCodeRequest, code) {
     try {
@@ -207,7 +216,7 @@ class AuthProvider {
   /**
    * getAuthorityMetadata
    * Retrieves OIDC metadata from the openid endpoint
-   * @returns {Object} OIDC metadata
+   * @returns {Promise<Object>} OIDC metadata
    */
   async getAuthorityMetadata() {
     try {
