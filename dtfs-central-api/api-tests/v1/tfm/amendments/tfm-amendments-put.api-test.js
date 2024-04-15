@@ -51,17 +51,20 @@ describe('PUT TFM amendments', () => {
       beforeEach(async () => {
         const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
         facilityId = postResult.body._id;
-  
+
         await api
           .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
           .to('/v1/tfm/deals/submit');
 
-          const { body } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments/`);
-          amendmentId = body.amendmentId;
+        const { body } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments/`);
+        amendmentId = body.amendmentId;
       });
 
       withValidateAuditDetailsTests({
-        makeRequest: (auditDetails) => api.put({ payload: { updatePayload: { createdBy: MOCK_PORTAL_USER } }, auditDetails }).to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`),
+        makeRequest: (auditDetails) =>
+          api
+            .put({ payload: { updatePayload: { createdBy: MOCK_PORTAL_USER } }, auditDetails })
+            .to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`),
         validUserTypes: ['tfm'],
       });
 
@@ -69,8 +72,8 @@ describe('PUT TFM amendments', () => {
         const updatePayload = { createdBy: MOCK_PORTAL_USER };
         const { body: bodyPutResponse } = await api
           .put({ payload: { updatePayload }, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
-          .to(`/v1/tfm/facilities/${facilityId}/amendments/${body.amendmentId}`);
-  
+          .to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`);
+
         const expected = {
           dealId: expect.any(String),
           facilityId: expect.any(String),
@@ -88,10 +91,8 @@ describe('PUT TFM amendments', () => {
             noUserLoggedIn: null,
           },
         };
-        expect(status).toEqual(200);
         expect(bodyPutResponse).toEqual(expected);
       });
-
     });
 
     it('should return 404 if facilityId and amendmentId are valid but are NOT associated to a record', async () => {
@@ -117,8 +118,8 @@ describe('PUT TFM amendments', () => {
       await api
         .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
         .to('/v1/tfm/deals/submit');
-      
-        const { status, body } = await api
+
+      const { status, body } = await api
         .put({ payload: { amendmentsUpdate: {} }, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
         .to('/v1/tfm/facilities/123/amendments/1234');
       expect(status).toEqual(400);

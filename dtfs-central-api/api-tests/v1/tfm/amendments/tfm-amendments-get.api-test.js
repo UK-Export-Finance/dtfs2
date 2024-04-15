@@ -49,7 +49,9 @@ describe('GET TFM amendments', () => {
         .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
         .to('/v1/tfm/deals/submit');
 
-      const { body: bodyPostResponse } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      const { body: bodyPostResponse } = await api
+        .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+        .to(`/v1/tfm/facilities/${facilityId}/amendments`);
       const updatePayload = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
       await api
         .put({ payload: updatePayload, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
@@ -78,7 +80,7 @@ describe('GET TFM amendments', () => {
         },
       ];
 
-      expect(body).toEqual(exp);
+      expect(body).toEqual(exp); // []
     });
 
     it('should return 400 if the facilityId is not valid', async () => {
@@ -173,7 +175,9 @@ describe('GET TFM amendments', () => {
         .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
         .to('/v1/tfm/deals/submit');
 
-      const { body: bodyPostResponse } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      const { body: bodyPostResponse } = await api
+        .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+        .to(`/v1/tfm/facilities/${facilityId}/amendments`);
       const updatePayload = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
       await api
         .put({ payload: updatePayload, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
@@ -196,7 +200,7 @@ describe('GET TFM amendments', () => {
           lastUpdatedByIsSystem: null,
           noUserLoggedIn: null,
         },
-      });
+      }); // {}
     });
 
     it("should return 200 status if the facility does NOT have an amendment that's in progress", async () => {
@@ -255,6 +259,7 @@ describe('GET TFM amendments', () => {
 
       expect(status).toEqual(200);
       expect(body).toEqual([
+        // []
         {
           amendmentId: expect.any(String),
           createdAt: expect.any(Number),
@@ -345,6 +350,7 @@ describe('GET TFM amendments', () => {
       const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments/completed/latest-value`);
       expect(status).toEqual(200);
       expect(body).toEqual({
+        // {}
         amendmentId: expect.any(String),
         value: expect.any(Number),
       });
@@ -386,7 +392,9 @@ describe('GET TFM amendments', () => {
         .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
         .to('/v1/tfm/deals/submit');
 
-      const { body: bodyPostResponse1 } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId1}/amendments`);
+      const { body: bodyPostResponse1 } = await api
+        .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+        .to(`/v1/tfm/facilities/${facilityId1}/amendments`);
       const updatePayload1 = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
       await api
         .put({ payload: updatePayload1, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
@@ -399,7 +407,9 @@ describe('GET TFM amendments', () => {
         .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
         .to('/v1/tfm/deals/submit');
 
-      const { body: bodyPostResponse2 } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId2}/amendments`);
+      const { body: bodyPostResponse2 } = await api
+        .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+        .to(`/v1/tfm/facilities/${facilityId2}/amendments`);
       const updatePayload2 = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
       await api
         .put({ payload: updatePayload2, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
@@ -409,6 +419,7 @@ describe('GET TFM amendments', () => {
 
       expect(status).toEqual(200);
       expect(body).toEqual([
+        // []
         {
           amendmentId: expect.any(String),
           createdAt: expect.any(Number),

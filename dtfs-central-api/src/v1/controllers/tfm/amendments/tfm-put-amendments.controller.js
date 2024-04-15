@@ -8,16 +8,21 @@ const { findAmendmentById } = require('./tfm-get-amendments.controller');
 const { DB_COLLECTIONS } = require('../../../../constants');
 
 exports.updateTfmAmendment = async (req, res) => {
-  const payload = req.body;
-  const { amendmentId, facilityId, auditDetails } = req.params;
-  if (!ObjectId.isValid(facilityId) || ObjectId.isValid(amendmentId)) {
+  const { payload, auditDetails } = req.body;
+  const { amendmentId, facilityId } = req.params;
+
+  if (!ObjectId.isValid(facilityId) || !ObjectId.isValid(amendmentId)) {
     return res.status(400).send({ status: 400, message: 'Invalid facility or amendment id' });
   }
 
   try {
     validateAuditDetails(auditDetails);
   } catch ({ message }) {
-    return res.status(400).send({ status: 400, message: `Invalid user information, ${message}`});
+    return res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}`});
+  }
+
+  if (auditDetails.userType !== 'tfm') {
+    return res.status(400).send({ status: 400, message: `Invalid auditDetails, userType must be 'tfm'`});
   }
 
   const findAmendment = await findAmendmentById(facilityId, amendmentId);
@@ -32,7 +37,7 @@ exports.updateTfmAmendment = async (req, res) => {
     delete payload[property];
   }
 
-  const update = { ...payload, updatedAt: getUnixTime(new Date()), auditDetails: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
+  const update = { ...payload, updatedAt: getUnixTime(new Date()), auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
 
   await collection.updateOne(
     { _id: { $eq: ObjectId(facilityId) }, 'amendments.amendmentId': { $eq: ObjectId(amendmentId) } },
