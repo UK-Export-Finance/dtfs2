@@ -19,6 +19,7 @@ const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-
 const { sendDealSubmitEmails, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const { dealHasAllUkefIds, dealHasAllValidUkefIds } = require('../helpers/dealHasAllUkefIds');
+const delay = require('../helpers/delay');
 
 /**
  * Retrieves a deal from the portal based on the provided deal ID and deal type.
@@ -28,6 +29,14 @@ const { dealHasAllUkefIds, dealHasAllValidUkefIds } = require('../helpers/dealHa
  */
 const getPortalDeal = async (dealId, dealType) => {
   let deal;
+
+  /**
+   * 0.2s (200ms) delay
+   * Below is added to avoid any race condition being build up,
+   * where portal deal updates `deals` collection will not be
+   * fetched when updated on close proximity calls.
+   */
+  delay(200);
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     deal = await findOneGefDeal(dealId);
