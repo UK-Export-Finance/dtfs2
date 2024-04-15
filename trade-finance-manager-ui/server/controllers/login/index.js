@@ -92,6 +92,7 @@ const handleSsoRedirect = async (req, res) => {
     return res.redirect('/');
   } catch(error) {
     const errorMessage = error.message || `Login process failed - try again or contact us using details bellow.`;
+    console.error('TFM-UI - login failed, error %O', error);
     return res.status(500).render('_partials/problem-with-service.njk', { error: { message: errorMessage } });
   }
 }
@@ -112,6 +113,7 @@ const logout = async (req, res) => {
     return req.session.destroy(() => res.redirect(apiResponse.logoutUrl));
   }
 
+  console.error('TFM-UI - logout failed in TFM-API, redirect to /');
   return res.redirect('/');
 };
 

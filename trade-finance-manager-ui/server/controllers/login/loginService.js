@@ -59,6 +59,7 @@ const acceptExternalSsoPost = (req, res) => {
 
     return res.render('sso/accept-external-sso-post.njk', { ...externalTemplateParams, azureSsoAuthority: `${SSO.AUTHORITY}/`});
   } catch(error) {
+    console.error('TFM-UI - acceptExternalSsoPost failed, error %O', error);
     const errorMessage = error.message || `Login process failed - try again or contact us using details bellow.`;
     return res.status(500).render('_partials/problem-with-service.njk', { error: { message: errorMessage } });
   }
