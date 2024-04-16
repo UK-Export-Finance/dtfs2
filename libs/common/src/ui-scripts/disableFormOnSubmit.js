@@ -7,7 +7,7 @@ const addDisableFormOnSubmit = () => {
   // only take the last form on the page, as it is foreseeable to have multiple forms on a page,
   // and the 'continue' button should always be in the last form on a page.
   const lastForm = forms[forms.length - 1];
-  
+
   if (!lastForm) {
     return;
   }
@@ -15,18 +15,18 @@ const addDisableFormOnSubmit = () => {
   let hasSubmitted = false;
 
   lastForm.addEventListener('submit', (e) => {
-      if (hasSubmitted) {
-        // prevent multiple form submissions by keyboard
-        e.preventDefault();
-      }
-      hasSubmitted = true;
+    if (hasSubmitted) {
+      // prevent multiple form submissions by keyboard
+      e.preventDefault();
+    }
+    hasSubmitted = true;
 
-      const buttons = document.querySelectorAll('.govuk-button');
-      buttons.forEach((button) => {
-        button.setAttribute('disabled', '');
-        button.setAttribute('aria-disabled', 'true');
-      });
+    const buttons = document.querySelectorAll('.govuk-button');
+    buttons.forEach((button) => {
+      button.setAttribute('disabled', '');
+      button.setAttribute('aria-disabled', 'true');
     });
+  });
 };
 
 addDisableFormOnSubmit();
