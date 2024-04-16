@@ -16,21 +16,20 @@ type Params = {
 
 export const withValidateAuditDetailsTests = ({ makeRequest, validUserTypes }: Params) => {
   describe('when validating audit details', () => {
+    const { validAuditDetails, invalidAuditDetails } = getValidAndInvalidAuditDetails(validUserTypes);
+
+    withValidAuditDetailsTests(validAuditDetails, makeRequest);
+
+    if (invalidAuditDetails.length) {
+      withInvalidAuditDetailsTests(invalidAuditDetails, makeRequest);
+    }
+
     it('should return 400 if no auditDetails provided', async () => {
       const { status, body } = await makeRequest();
 
       expect(body).toEqual({ status: 400, message: 'Invalid auditDetails, Missing property `userType`' });
       expect(status).toBe(400);
     });
-
-    const { validAuditDetails, invalidAuditDetails } = getValidAndInvalidAuditDetails(validUserTypes);
-
-    withValidAuditDetailsTests(validAuditDetails, makeRequest)
-  
-
-    if (invalidAuditDetails.length) {
-      withInvalidAuditDetailsTests(invalidAuditDetails, makeRequest);
-    }
   });
 };
 
