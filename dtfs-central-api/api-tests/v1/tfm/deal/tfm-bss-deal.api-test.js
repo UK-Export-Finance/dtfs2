@@ -156,7 +156,7 @@ describe('/v1/tfm/deal/:id', () => {
               },
             })
             .to(`/v1/tfm/deals/${dealId}/snapshot`),
-        validUserTypes: ['tfm'],
+        validUserTypes: ['portal'],
       });
 
       it('updates deal.dealSnapshot whilst retaining existing snapshot deal.tfm', async () => {
