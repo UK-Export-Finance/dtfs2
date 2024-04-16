@@ -497,14 +497,22 @@ tfmRouter.route('/deals/:dealId/amendments/:status?/:type?').get(tfmGetAmendment
  *                 type: string
  *               amendment:
  *                 type: object
+ *                 example:
+ *                  {
+ *                    requestDate: 1555662,
+ *                    creationTimestamp: 1555662,
+ *                    createdBy: user
+ *                  }
  *               id:
  *                 type: string
- *             example:
- *              {
- *                requestDate: 1555662,
- *                creationTimestamp: 1555662,
- *                createdBy: user
- *              }
+ *               auditDetails:
+ *                 type: object
+ *                 properties:
+ *                   userType:
+ *                     type: string
+ *                     enum: [tfm]
+ *                   id:
+ *                     type: string
  *     responses:
  *       200:
  *         description: OK

@@ -404,7 +404,7 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
-      const response = await api.createFacilityAmendment(urlTraversal);
+      const response = await api.createFacilityAmendment(urlTraversal,  generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id));
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -413,7 +413,7 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
-      const response = await api.createFacilityAmendment(localIp);
+      const response = await api.createFacilityAmendment(localIp, generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id));
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -421,7 +421,7 @@ describe('API is protected against SSRF attacks', () => {
     it('Makes an axios request when the facility id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
-      const response = await api.createFacilityAmendment(validFacilityId);
+      const response = await api.createFacilityAmendment(validFacilityId, generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id));
 
       expect(response).toEqual(mockResponse);
     });
