@@ -9,6 +9,7 @@ module.exports = {
     govukFrontend: './scripts/govuk-frontend.js',
     mojFrontend: './scripts/moj-frontend.js',
     jsEnabled: './scripts/js-enabled.js',
+    disableFormOnSubmit: '../libs/common/src/ui-scripts/disableFormOnSubmit.js',
   },
   output: {
     path: path.join(__dirname, 'public/js'),
