@@ -38,6 +38,8 @@ const getPortalDeal = async (dealId, dealType) => {
     deal = await findOnePortalDeal(dealId);
   }
 
+  console.info('Fetching portal deal %s %o', dealId, deal);
+
   return deal;
 };
 
@@ -48,15 +50,15 @@ const getPortalDeal = async (dealId, dealType) => {
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   /**
-   * 0.2s (200ms) delay
+   * 1s artificial delay
    * Below is added to avoid any race condition being build up,
    * where portal deal updates `deals` collection will not be
    * fetched when updated on close proximity calls.
    */
-  await delay(200);
+  await delay(1000);
 
   const deal = await getPortalDeal(dealId, dealType);
-  console.info('Setting essential deal properties in TFM for deal %s', dealId);
+  console.info('Setting essential deal properties in TFM for deal %s with returned deal %o', dealId, deal);
 
   if (!deal) {
     console.error('Unable to find deal %s upon submission to TFM', dealId);
