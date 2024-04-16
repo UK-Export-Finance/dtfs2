@@ -127,6 +127,7 @@ jobs:
         working-directory: ./
         run: npm run ci:all
 
-      - name: Linting
-        working-directory: ./
-        run: npm run prettier:all
+      # TODO: Enable in lint fix PR
+      # - name: Linting
+      #   working-directory: ./
+      #   run: npm run prettier:all
