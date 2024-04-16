@@ -129,4 +129,4 @@ jobs:
 
       - name: Linting
         working-directory: ./
-        run: npm run prettier:all -s
+        run: npm run prettier:all
