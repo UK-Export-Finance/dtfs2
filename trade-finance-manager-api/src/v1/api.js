@@ -342,7 +342,7 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
   }
 };
 
-const createFacilityAmendment = async (facilityId) => {
+const createFacilityAmendment = async (facilityId, auditDetails) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
@@ -350,7 +350,7 @@ const createFacilityAmendment = async (facilityId) => {
         method: 'post',
         url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments`,
         headers: headers.central,
-        data: { facilityId },
+        data: { auditDetails },
       });
 
       return response.data;

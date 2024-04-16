@@ -181,7 +181,7 @@ const getAllAmendments = async (req, res) => {
 
 const createFacilityAmendment = async (req, res) => {
   const { facilityId } = req.body;
-  const { amendmentId } = await api.createFacilityAmendment(facilityId);
+  const { amendmentId } = await api.createFacilityAmendment(facilityId, generateTfmAuditDetails(req.user._id));
   if (amendmentId) {
     return res.status(200).send({ amendmentId });
   }

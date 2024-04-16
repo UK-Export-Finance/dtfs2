@@ -91,10 +91,10 @@ exports.updateDealPut = async (req, res) => {
   try {
     validateAuditDetails(auditDetails);
   } catch ({ message }) {
-    res.status(400).send({ status: 400, message: `Invalid user information, ${message}` });
+    res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
   }
 
-  const existingDeal = await findOneDeal(dealId, false, 'tfm');
+  const existingDeal = await findOneDeal(dealId);
 
   if (!existingDeal) {
     return res.status(404).send({ status: 404, message: 'Deal not found' });
@@ -136,7 +136,7 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
 exports.updateDealSnapshotPut = async (req, res) => {
   const dealId = req.params.id;
   if (ObjectId.isValid(dealId)) {
-    const deal = await findOneDeal(dealId, false, 'tfm');
+    const deal = await findOneDeal(dealId);
 
     const snapshotUpdate = req.body;
 

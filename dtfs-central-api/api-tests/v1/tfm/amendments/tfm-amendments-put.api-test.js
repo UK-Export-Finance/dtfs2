@@ -1,4 +1,4 @@
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -6,6 +6,7 @@ const CONSTANTS = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const aDeal = require('../../deal-builder');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
+const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 
 describe('PUT TFM amendments', () => {
   let dealId;
@@ -50,7 +51,7 @@ describe('PUT TFM amendments', () => {
         .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
         .to('/v1/tfm/deals/submit');
 
-      const { status, body } = await api.post().to(`/v1/tfm/facilities/${newId}/amendments/`);
+      const { status, body } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${newId}/amendments/`);
       const updatePayload = { createdBy: MOCK_PORTAL_USER };
       const { body: bodyPutResponse } = await api.put({ updatePayload }).to(`/v1/tfm/facilities/${newId}/amendments/${body.amendmentId}`);
 
@@ -63,6 +64,13 @@ describe('PUT TFM amendments', () => {
         updatePayload,
         updatedAt: expect.any(Number),
         version: 1,
+        auditRecord: {
+          lastUpdatedAt: expect.any(String),
+          lastUpdatedByPortalUserId: null,
+          lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
+          lastUpdatedByIsSystem: null,
+          noUserLoggedIn: null,
+        },
       };
       expect(status).toEqual(200);
       expect(bodyPutResponse).toEqual(expected);
@@ -77,7 +85,7 @@ describe('PUT TFM amendments', () => {
         .to('/v1/tfm/deals/submit');
 
       const updatePayload = { createdBy: MOCK_PORTAL_USER };
-      const { status } = await api.post().to(`/v1/tfm/facilities/${newId}/amendments/`);
+      const { status } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${newId}/amendments/`);
       const { body: bodyPutResponse } = await api.put({ updatePayload }).to(`/v1/tfm/facilities/${newId}/amendments/626aa00e2446022434c52148`);
 
       expect(status).toEqual(200);
