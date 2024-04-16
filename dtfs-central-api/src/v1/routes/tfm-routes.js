@@ -671,6 +671,14 @@ tfmRouter.route('/users').get(
  *         application/json:
  *           schema:
  *             $ref: '#/definitions/TFMUser'
+ *             auditDetails:
+ *               type: object
+ *               properties:
+ *                 userType:
+ *                   type: string
+ *                   enum: [tfm]
+ *                 id:
+ *                   type: string
  *     responses:
  *       200:
  *         description: OK
