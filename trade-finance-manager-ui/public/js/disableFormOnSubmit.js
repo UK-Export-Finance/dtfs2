@@ -1,2 +1,2 @@
-var DTFS_TFM;!function(){const t=document.querySelectorAll("form"),e=t[t.length-1];let r=!1;e&&e.addEventListener("submit",(t=>{r&&t.preventDefault(),r=!0;document.querySelectorAll(".govuk-button").forEach((t=>{t.setAttribute("disabled",""),t.setAttribute("aria-disabled","true")}))})),(DTFS_TFM=void 0===DTFS_TFM?{}:DTFS_TFM).disableFormOnSubmit={}}();
+var DTFS_TFM;(()=>{const e=document.querySelectorAll("form"),t=e[e.length-1];if(!t)return;let r=!1;t.addEventListener("submit",(e=>{r&&e.preventDefault(),r=!0,document.querySelectorAll(".govuk-button").forEach((e=>{e.setAttribute("disabled",""),e.setAttribute("aria-disabled","true")}))}))})(),(DTFS_TFM=void 0===DTFS_TFM?{}:DTFS_TFM).disableFormOnSubmit={};
 //# sourceMappingURL=disableFormOnSubmit.js.map
