@@ -7,8 +7,10 @@ import {
 import { MOCK_TFM_USER } from '../mocks/test-users/mock-tfm-user';
 import { MOCK_PORTAL_USER } from '../mocks/test-users/mock-portal-user';
 
+type MakeRequest = (auditDetails?: AuditDetails) => Promise<{ status: number; body: object }>;
+
 type Params = {
-  makeRequest: (auditDetails?: AuditDetails) => Promise<{ status: number; body: object }>;
+  makeRequest: MakeRequest;
   validUserTypes: ('tfm' | 'portal' | 'system')[];
 };
 
@@ -21,32 +23,54 @@ export const withValidateAuditDetailsTests = ({ makeRequest, validUserTypes }: P
       expect(status).toBe(400);
     });
 
-    const testCases = [
-      {
-        auditDetails: generateSystemAuditDetails(),
-        expectedStatus: validUserTypes.includes('system') ? 200 : 400,
-      },
-      {
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-        expectedStatus: validUserTypes.includes('portal') ? 200 : 400,
-      },
-      {
-        auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
-        expectedStatus: validUserTypes.includes('tfm') ? 200 : 400,
-      },
-    ];
+    const { validAuditDetails, invalidAuditDetails } = getValidAndInvalidAuditDetails(validUserTypes);
 
-    it.each(testCases)('it should have status $expectedStatus if the userType is $auditDetails.userType', async ({ auditDetails, expectedStatus }) => {
-      const { status, body } = await makeRequest(auditDetails);
+    withValidAuditDetailsTests(validAuditDetails, makeRequest)
+  
 
-      expect(status).toBe(expectedStatus);
-      if (expectedStatus === 400) {
-        expect(body).toEqual({
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          message: expect.stringContaining('Invalid auditDetails, userType must be'),
-          status: 400,
-        });
-      }
-    });
+    if (invalidAuditDetails.length) {
+      withInvalidAuditDetailsTests(invalidAuditDetails, makeRequest);
+    }
   });
 };
+
+function withValidAuditDetailsTests(validAuditDetails: AuditDetails[], makeRequest: MakeRequest) {
+  it.each(validAuditDetails)('it should return status 200 if the userType is $userType', async (auditDetails) => {
+    const { status } = await makeRequest(auditDetails);
+
+    expect(status).toBe(200);
+  });
+}
+
+function withInvalidAuditDetailsTests(invalidAuditDetails: AuditDetails[], makeRequest: MakeRequest) {
+  it.each(invalidAuditDetails)('it should return status 400 if the userType is $userType', async (auditDetails) => {
+    const { status, body } = await makeRequest(auditDetails);
+
+    expect(status).toBe(400);
+    expect(body).toEqual({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      message: expect.stringContaining('Invalid auditDetails, userType must be'),
+      status: 400,
+    });
+  });
+}
+
+function getValidAndInvalidAuditDetails(validUserTypes: ('tfm' | 'portal' | 'system')[]) {
+  const allAuditDetails = [
+    generateSystemAuditDetails(),
+    generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+    generateTfmAuditDetails(MOCK_TFM_USER._id),
+  ];
+
+  const validAuditDetails: AuditDetails[] = [];
+  const invalidAuditDetails: AuditDetails[] = [];
+
+  allAuditDetails.forEach((auditDetails) => {
+    if (validUserTypes.includes(auditDetails.userType)) {
+      validAuditDetails.push(auditDetails);
+    } else {
+      invalidAuditDetails.push(auditDetails);
+    }
+  });
+  return { validAuditDetails, invalidAuditDetails };
+}
