@@ -22,10 +22,10 @@
     "api-test-dev": "jest --verbose --runInBand --forceExit --clearMocks --config=api-test.jest.config.js",
     "lint": "eslint --color '**/*.{ts,js}'",
     "lint:fix": "eslint --color '**/*.{ts,js}'",
-    "type-check": "tsc --noEmit",
-    "prettier": "prettier --check '**/*.{ts,js}'",
+    "prettier": "prettier --no-error-on-unmatched-pattern --check '**/*.{ts,js}'",
     "prettier:fix": "prettier --write '**/*.{ts,js}'",
     "start": "npx ts-node src/index.ts",
+    "type-check": "tsc --noEmit",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },

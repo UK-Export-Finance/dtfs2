@@ -20,10 +20,10 @@
   "scripts": {
     "lint": "eslint --color '**/*.{ts,js}'",
     "lint:fix": "eslint --color '**/*.{ts,js}'",
-    "type-check": "tsc --noEmit",
     "load": "cd .. && npm run load",
-    "prettier": "prettier --check '**/*.{ts,js}'",
-    "prettier:fix": "prettier --write '**/*.{ts,js}'"
+    "prettier": "prettier --no-error-on-unmatched-pattern --check '**/*.{ts,js}'",
+    "prettier:fix": "prettier --write '**/*.{ts,js}'",
+    "type-check": "tsc --noEmit"
   },
   "devDependencies": {
     "bson": "^6.6.0",
