@@ -1,0 +1,28 @@
+"use strict";
+/**
+ * hasAdditionalFiltersStart
+ * checks to return currentStartPage or startPage set to 0
+ * checks if any filters are selected (apart from default filters)
+ * If sorting object is populated but additional filters are selected, then returns 0 for startPage
+ * If sorting is set or no additional filters, returns currentStartPage
+ * @param {Number} currentStartPage
+ * @param {Object} filters
+ * @param {Object} sort
+ * @returns {Number} startpage
+ */
+const computeSkipPosition = (currentStartPage, filters, sort) => {
+    var _a;
+    let startPage = currentStartPage;
+    // has additional filters after bank.id match
+    const hasAdditionalFilters = (filters === null || filters === void 0 ? void 0 : filters.AND) && ((_a = filters === null || filters === void 0 ? void 0 : filters.AND[1]) === null || _a === void 0 ? void 0 : _a.OR);
+    /**
+       * if has additional filters selected (apart from bank id match)
+       * and not sort query is not selected
+       * sets start to 0 so all deals / facilities are visible
+       */
+    if (hasAdditionalFilters && !Object.keys(sort).length) {
+        startPage = 0;
+    }
+    return startPage;
+};
+module.exports = computeSkipPosition;

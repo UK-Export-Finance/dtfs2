@@ -1,0 +1,155 @@
+"use strict";
+const tslib_1 = require("tslib");
+const { findOneDeal, updateDeal } = require('./deal.controller');
+const { userHasAccessTo } = require('../users/checks');
+const validateSubmissionDetails = require('../validation/submission-details');
+const { sanitizeCurrency } = require('../../utils/number');
+const { getCountry } = require('./countries.controller');
+const { getCurrencyObject } = require('../section-currency');
+const { FACILITIES } = require('../../constants');
+/**
+ * Retrieves a deal by its ID and checks if the user has access to it.
+ * If the deal is found and the user has access, validates the submission details of the deal and returns them as a response.
+ * @param {object} req - The request object containing information about the HTTP request.
+ * @param {object} res - The response object used to send the HTTP response.
+ */
+exports.findOne = (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const deal = yield findOneDeal(req.params.id);
+        if (!deal) {
+            res.status(404).send();
+        }
+        else if (!userHasAccessTo(req.user, deal)) {
+            res.status(401).send();
+        }
+        else {
+            const validationErrors = yield validateSubmissionDetails(deal.submissionDetails);
+            res.status(200).json({
+                validationErrors,
+                data: deal.submissionDetails,
+            });
+        }
+    }
+    catch (error) {
+        console.error('Unable to validate submission details %o', error);
+        res.status(500).send({ status: 500, message: 'Unable to validate submission details' });
+    }
+});
+const updateSubmissionDetails = (dealId, submissionDetails, user) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    const update = {
+        submissionDetails,
+        updatedAt: Date.now(),
+    };
+    /**
+     * Portal BSS UI gives us a field name called supplier-name.
+     * This maybe eventually changed to 'exporter name'.
+     * Every other service (TFM, ABCS), uses this value
+     * as the 'exporter name'.
+     * Therefore, we add this value to the deal object under exporter.
+     * */
+    if (submissionDetails['supplier-name']) {
+        update.exporter = {
+            companyName: submissionDetails['supplier-name'],
+        };
+    }
+    const updateDealResponse = yield updateDeal(dealId, update, user);
+    return updateDealResponse;
+});
+const countryObject = (countryCode) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    const { data } = yield getCountry(countryCode);
+    if (!data) {
+        return {};
+    }
+    const { name, code } = data;
+    return {
+        name,
+        code,
+    };
+});
+const checkCountryCode = (existingDeal, submitted, fieldName) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    const existingCountryCode = existingDeal[fieldName] && existingDeal[fieldName].code;
+    const submittedCountryCode = submitted[fieldName];
+    const shouldUpdateCountry = !existingCountryCode || existingCountryCode.code !== submittedCountryCode;
+    if (shouldUpdateCountry) {
+        const countryObj = yield countryObject(submittedCountryCode);
+        return countryObj;
+    }
+    return {};
+});
+const checkAllCountryCodes = (deal, fields) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    const modifiedFields = fields;
+    if ('destinationOfGoodsAndServices' in modifiedFields) {
+        modifiedFields.destinationOfGoodsAndServices = yield checkCountryCode(deal, fields, 'destinationOfGoodsAndServices');
+    }
+    if ('buyer-address-country' in modifiedFields) {
+        modifiedFields['buyer-address-country'] = yield checkCountryCode(deal, fields, 'buyer-address-country');
+    }
+    if ('indemnifier-correspondence-address-country' in modifiedFields) {
+        modifiedFields['indemnifier-correspondence-address-country'] = yield checkCountryCode(deal, fields, 'indemnifier-correspondence-address-country');
+    }
+    if ('indemnifier-address-country' in modifiedFields) {
+        modifiedFields['indemnifier-address-country'] = yield checkCountryCode(deal, fields, 'indemnifier-address-country');
+    }
+    if ('supplier-address-country' in modifiedFields) {
+        modifiedFields['supplier-address-country'] = yield checkCountryCode(deal, fields, 'supplier-address-country');
+    }
+    if ('supplier-correspondence-address-country' in modifiedFields) {
+        modifiedFields['supplier-correspondence-address-country'] = yield checkCountryCode(deal, fields, 'supplier-correspondence-address-country');
+    }
+    return modifiedFields;
+});
+const checkCurrency = (existingCurrencyObj, submitted) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    const hasExistingCurrencyId = existingCurrencyObj === null || existingCurrencyObj === void 0 ? void 0 : existingCurrencyObj.id;
+    const hasSubmittedId = submitted === null || submitted === void 0 ? void 0 : submitted.id;
+    const shouldUpdateCurrency = hasSubmittedId && (!hasExistingCurrencyId || existingCurrencyObj.id !== submitted.id);
+    if (shouldUpdateCurrency) {
+        const currencyObj = yield getCurrencyObject(submitted.id);
+        return currencyObj;
+    }
+    if (hasExistingCurrencyId) {
+        return existingCurrencyObj;
+    }
+    return {};
+});
+/**
+ * Updates a deal with new submission details.
+ * @param {Object} req - The request object containing information about the HTTP request.
+ * @param {Object} res - The response object used to send the HTTP response.
+ */
+exports.update = (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { user } = req;
+        let submissionDetails = req.body;
+        const deal = yield findOneDeal(req.params.id);
+        if (!deal) {
+            return res.status(404).send();
+        }
+        if (!userHasAccessTo(user, deal)) {
+            return res.status(401).send();
+        }
+        submissionDetails.status = FACILITIES.DEAL_STATUS.INCOMPLETE;
+        const { day, month, year } = submissionDetails.supplyContractConversionDate || {};
+        if (day && month && year) {
+            submissionDetails.supplyContractConversionDate = `${day}/${month}/${year}`;
+        }
+        const { sanitizedValue } = sanitizeCurrency(submissionDetails.supplyContractValue);
+        if (sanitizedValue) {
+            submissionDetails.supplyContractValue = sanitizedValue;
+        }
+        submissionDetails = yield checkAllCountryCodes(deal, submissionDetails);
+        if (submissionDetails.supplyContractCurrency) {
+            submissionDetails.supplyContractCurrency = yield checkCurrency(deal.supplyContractCurrency, submissionDetails.supplyContractCurrency);
+        }
+        const dealAfterAllUpdates = yield updateSubmissionDetails(req.params.id, submissionDetails, user);
+        const validationErrors = yield validateSubmissionDetails(Object.assign(Object.assign({}, dealAfterAllUpdates.submissionDetails), req.body));
+        const response = {
+            validationErrors,
+            data: dealAfterAllUpdates.submissionDetails,
+        };
+        return res.status(200).json(response);
+    }
+    catch (error) {
+        console.error('Unable to update the deal with submission details %o', error);
+        return res.status(500).send({ status: 500, message: 'Unable to update the deal with submission details' });
+    }
+});

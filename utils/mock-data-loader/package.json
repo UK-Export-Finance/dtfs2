@@ -6,7 +6,12 @@
   "author": "",
   "main": "index.js",
   "scripts": {
-    "load": "node re-insert-mocks.js"
+    "load": "node re-insert-mocks.js",
+    "lint": "eslint --color '**/*.{ts,js}'",
+    "lint:fix": "eslint --color '**/*.{ts,js}'",
+    "type-check": "tsc --noEmit",
+    "prettier": "prettier --check '**/*.{ts,js}'",
+    "prettier:fix": "prettier --write '**/*.{ts,js}'"
   },
   "dependencies": {
     "axios": "^1.6.8",

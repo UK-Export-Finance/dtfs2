@@ -1,0 +1,13 @@
+"use strict";
+const { orderNumber } = require('../../../utils/error-list-order-number');
+module.exports = (submissionDetails, errorList) => {
+    const newErrorList = Object.assign({}, errorList);
+    const industryClass = submissionDetails['industry-class'];
+    if (!industryClass || Object.keys(industryClass).length < 2) {
+        newErrorList['industry-class'] = {
+            order: orderNumber(newErrorList),
+            text: 'Industry Class is required',
+        };
+    }
+    return newErrorList;
+};

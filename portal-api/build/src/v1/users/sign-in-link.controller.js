@@ -1,0 +1,150 @@
+"use strict";
+var _SignInLinkController_signInLinkService;
+const tslib_1 = require("tslib");
+const { HttpStatusCode } = require('axios');
+const { LOGIN_STATUSES, SIGN_IN_LINK, HTTP_ERROR_CAUSES } = require('../../constants');
+const { UserNotFoundError, InvalidSignInTokenError, InvalidUserIdError } = require('../errors');
+const UserBlockedError = require('../errors/user-blocked.error');
+const UserDisabledError = require('../errors/user-disabled.error');
+const { sanitizeUser } = require('./sanitizeUserData');
+class SignInLinkController {
+    constructor(signInLinkService) {
+        _SignInLinkController_signInLinkService.set(this, void 0);
+        tslib_1.__classPrivateFieldSet(this, _SignInLinkController_signInLinkService, signInLinkService, "f");
+    }
+    loginWithSignInLink(req, res) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            try {
+                const { userId, signInToken } = req.params;
+                if (req.user._id.toString() !== userId) {
+                    throw new InvalidUserIdError(userId);
+                }
+                const signInTokenStatus = yield tslib_1.__classPrivateFieldGet(this, _SignInLinkController_signInLinkService, "f").getSignInTokenStatus({ userId, signInToken });
+                switch (signInTokenStatus) {
+                    case SIGN_IN_LINK.STATUS.NOT_FOUND: {
+                        return res.status(HttpStatusCode.NotFound).json({
+                            message: 'Not Found',
+                            errors: [
+                                {
+                                    msg: `No matching token for user with id ${req.params.userId}`,
+                                },
+                            ],
+                        });
+                    }
+                    case SIGN_IN_LINK.STATUS.EXPIRED: {
+                        return res.status(HttpStatusCode.Forbidden).json({
+                            message: 'Forbidden',
+                            errors: [
+                                {
+                                    cause: HTTP_ERROR_CAUSES.TOKEN_EXPIRED,
+                                    msg: `The provided token is no longer valid for user with id ${req.params.userId}`,
+                                },
+                            ],
+                        });
+                    }
+                    case SIGN_IN_LINK.STATUS.VALID: {
+                        yield tslib_1.__classPrivateFieldGet(this, _SignInLinkController_signInLinkService, "f").resetSignInData(userId);
+                        const { user, tokenObject } = yield tslib_1.__classPrivateFieldGet(this, _SignInLinkController_signInLinkService, "f").loginUser(userId);
+                        return res.status(HttpStatusCode.Ok).json({
+                            success: true,
+                            token: tokenObject.token,
+                            user: sanitizeUser(user),
+                            loginStatus: LOGIN_STATUSES.VALID_2FA,
+                            expiresIn: tokenObject.expires,
+                        });
+                    }
+                    default:
+                        throw InvalidSignInTokenError(signInToken);
+                }
+            }
+            catch (error) {
+                console.error('Error during login with sign in link %o', error);
+                if (error instanceof InvalidSignInTokenError) {
+                    return res.status(HttpStatusCode.BadRequest).json({
+                        message: 'Bad Request',
+                        errors: [
+                            {
+                                msg: `Invalid sign in token ${req.params.signInToken}`,
+                            },
+                        ],
+                    });
+                }
+                if (error instanceof InvalidUserIdError) {
+                    return res.status(HttpStatusCode.BadRequest).json({
+                        message: 'Bad Request',
+                        errors: [
+                            {
+                                msg: `Invalid user id ${req.params.userId}`,
+                            },
+                        ],
+                    });
+                }
+                if (error instanceof UserNotFoundError) {
+                    return res.status(HttpStatusCode.NotFound).json({
+                        message: 'Not Found',
+                        errors: [
+                            {
+                                msg: `No user found with id ${req.params.userId}`,
+                            },
+                        ],
+                    });
+                }
+                if (error instanceof UserBlockedError) {
+                    return res.status(HttpStatusCode.Forbidden).json({
+                        message: 'Forbidden',
+                        errors: [
+                            {
+                                cause: HTTP_ERROR_CAUSES.USER_BLOCKED,
+                                msg: error.message,
+                            },
+                        ],
+                    });
+                }
+                if (error instanceof UserDisabledError) {
+                    return res.status(HttpStatusCode.Forbidden).json({
+                        message: 'Forbidden',
+                        errors: [
+                            {
+                                cause: HTTP_ERROR_CAUSES.USER_DISABLED,
+                                msg: error.message,
+                            },
+                        ],
+                    });
+                }
+                return res.status(HttpStatusCode.InternalServerError).json({
+                    message: 'Internal Server Error',
+                    errors: [
+                        {
+                            msg: error.message,
+                        },
+                    ],
+                });
+            }
+        });
+    }
+    createAndEmailSignInLink(req, res) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            try {
+                const numberOfSendSignInLinkAttemptsRemaining = yield tslib_1.__classPrivateFieldGet(this, _SignInLinkController_signInLinkService, "f").createAndEmailSignInLink(req.user);
+                return res.status(201).json({ numberOfSendSignInLinkAttemptsRemaining });
+            }
+            catch (error) {
+                console.error('Error creating email sign in link %o', error);
+                if (error instanceof UserBlockedError) {
+                    return res.status(HttpStatusCode.Forbidden).send({
+                        error: 'Forbidden',
+                        message: error.message,
+                    });
+                }
+                return res.status(HttpStatusCode.InternalServerError).send({
+                    error: 'Internal Server Error',
+                    message: error.message,
+                });
+            }
+        });
+    }
+}
+_SignInLinkController_signInLinkService = new WeakMap();
+module.exports = {
+    SignInLinkController,
+};

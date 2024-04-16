@@ -5,7 +5,9 @@
   "author": "",
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --config=api-test.jest.config.js ",
-    "lint": "eslint ./",
+    "lint": "eslint --color '**/*.{ts,js}'",
+    "lint:fix": "eslint --color '**/*.{ts,js}'",
+    "type-check": "tsc --noEmit",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },

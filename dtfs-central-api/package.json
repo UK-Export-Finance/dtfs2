@@ -20,10 +20,12 @@
   "scripts": {
     "api-test": "jest --coverage --verbose --forceExit --runInBand --config=api-test.jest.config.js",
     "api-test-dev": "jest --verbose --forceExit --runInBand --config=api-test.jest.config.js",
-    "lint": "eslint ./src ./api-tests && npm run type-check",
-    "lint:fix": "eslint ./src ./api-tests --fix",
-    "start": "npx ts-node src/index.ts",
+    "lint": "eslint --color '**/*.{js,ts}'",
     "type-check": "tsc --noEmit",
+    "lint:fix": "eslint ./src ./api-tests --fix",
+    "prettier": "prettier --check '**/*.{ts,js}'",
+    "prettier:fix": "prettier --write '**/*.{ts,js}'",
+    "start": "npx ts-node src/index.ts",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },

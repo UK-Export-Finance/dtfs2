@@ -285,7 +285,7 @@ const submitDealPUT = async (req, res) => {
     }
 
     const auditDetails = generatePortalAuditDetails(checker._id);
-
+    
     const { status } = await dealHasAllUkefIds(dealId);
     let deal;
 
