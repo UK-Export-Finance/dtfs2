@@ -1,5 +1,6 @@
 const { submitDeal, submitDealAfterUkefIds } = require('./api');
 const { ALIAS_KEY } = require('../../fixtures/constants');
+const { BANK1_CHECKER1_WITH_MOCK_ID } = require('../../../../e2e-fixtures/portal-users.fixture');
 
 /**
  * submitManyDeals
@@ -17,7 +18,7 @@ const submitManyDeals = (deals, user) => {
     cy.wrap(deals).each((dealToInsert) => {
       submitDeal(dealToInsert._id, dealToInsert.dealType, null, token);
 
-      submitDealAfterUkefIds(dealToInsert._id, dealToInsert.dealType, null, token)
+      submitDealAfterUkefIds(dealToInsert._id, dealToInsert.dealType, BANK1_CHECKER1_WITH_MOCK_ID, token)
         .then((submittedDeal) => {
           persistedDeals.push(submittedDeal);
         });

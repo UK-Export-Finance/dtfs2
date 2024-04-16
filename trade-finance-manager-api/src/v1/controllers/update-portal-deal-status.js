@@ -13,6 +13,8 @@ const updatePortalDealStatus = async (deal) => {
 
   let status;
 
+  console.info('Updating portal deal %s status with submission type %s.', _id, submissionType)
+
   // Deal is an application (MIA)
   if (applicationSubmissionType.includes(submissionType)) {
     status = CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF;

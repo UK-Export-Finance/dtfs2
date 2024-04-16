@@ -187,11 +187,23 @@ const findOneDeal = async (dealId) => {
   }
 };
 
-const updateDeal = async (
+/**
+ * @param {object} params
+ * @param {string} params.dealId - deal to update
+ * @param {Object} params.dealUpdate - update to make
+ * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} params.auditDetails - user making the request
+ * @typedef {Object} ErrorParam
+ * @property {string} message error message
+ * @property {number} status HTTP status code
+ * @param {(Error: ErrorParam) => any} params.onError 
+ * @returns updated deal on success, or `onError({ status, message })` on failure
+ */
+const updateDeal = async ({
   dealId,
   dealUpdate,
+  auditDetails,
   onError = ({ status, message }) => ({ status, data: message }),
-) => {
+}) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -206,6 +218,7 @@ const updateDeal = async (
       headers: headers.central,
       data: {
         dealUpdate,
+        auditDetails,
       },
     });
 
@@ -239,7 +252,7 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
   }
 };
 
-const submitDeal = async (dealType, dealId) => {
+const submitDeal = async (dealType, dealId, auditDetails) => {
   try {
     const response = await axios({
       method: 'put',
@@ -248,6 +261,7 @@ const submitDeal = async (dealType, dealId) => {
       data: {
         dealType,
         dealId,
+        auditDetails,
       },
     });
 
@@ -302,7 +316,7 @@ const findFacilitiesByDealId = async (dealId) => {
   }
 };
 
-const updateFacility = async (facilityId, facilityUpdate) => {
+const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
 
@@ -316,7 +330,8 @@ const updateFacility = async (facilityId, facilityUpdate) => {
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}`,
       headers: headers.central,
       data: {
-        facilityUpdate,
+        tfmUpdate,
+        auditDetails,
       },
     });
 

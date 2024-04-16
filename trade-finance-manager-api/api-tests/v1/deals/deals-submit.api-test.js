@@ -11,10 +11,10 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
   canDealBeSubmittedToACBS: jest.fn(),
 }));
-
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
 const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
-const submitDeal = require('../utils/submitDeal');
+const { submitDeal, createSubmitBody } = require('../utils/submitDeal');
 const mapSubmittedDeal = require('../../../src/v1/mappings/map-submitted-deal');
 const addTfmDealData = require('../../../src/v1/controllers/deal-add-tfm-data');
 const { createDealTasks } = require('../../../src/v1/controllers/deal.tasks');
@@ -35,6 +35,7 @@ const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notif
 const MOCK_GEF_DEAL_AIN = require('../../../src/v1/__mocks__/mock-gef-deal');
 const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
 const MOCK_GEF_DEAL_MIN = require('../../../src/v1/__mocks__/mock-gef-deal-MIN');
+const { MOCK_PORTAL_USERS } = require('../../../src/v1/__mocks__/mock-portal-users');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
@@ -43,10 +44,6 @@ const updatePortalGefDealStatusSpy = jest.fn(() => Promise.resolve({}));
 const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
 const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 
-const createSubmitBody = (mockDeal) => ({
-  dealId: mockDeal._id,
-  dealType: mockDeal.dealType,
-});
 
 const updateGefFacilitySpy = jest.fn(() => Promise.resolve({}));
 
@@ -85,7 +82,7 @@ describe('/v1/deals', () => {
 
   describe('PUT /v1/deals/:dealId/submit', () => {
     it('404s submission for unknown id', async () => {
-      const { status } = await submitDeal({ dealId: '12345678910' });
+      const { status } = await submitDeal({ dealId: '12345678910', checker: MOCK_PORTAL_USERS[0] });
 
       expect(status).toEqual(404);
     });
@@ -94,7 +91,7 @@ describe('/v1/deals', () => {
       const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED));
 
       const mappedDeal = await mapSubmittedDeal(body);
-      const tfmDataObject = await addTfmDealData(mappedDeal);
+      const tfmDataObject = await addTfmDealData(mappedDeal, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
 
       // parties object is added further down the line.
       // addTfmDealData returns empty parties object.
@@ -121,7 +118,7 @@ describe('/v1/deals', () => {
               partyUrn: '',
             },
           },
-          tasks: createDealTasks(body),
+          tasks: createDealTasks(body, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id)),
         },
       };
 
@@ -142,7 +139,7 @@ describe('/v1/deals', () => {
               partyUrn: '',
             },
           },
-          tasks: createDealTasks(body),
+          tasks: createDealTasks(body, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id)),
         },
       };
 
@@ -164,7 +161,7 @@ describe('/v1/deals', () => {
               partyUrn: 'testPartyUrn',
             },
           },
-          tasks: createDealTasks(body),
+          tasks: createDealTasks(body, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id)),
         },
       };
 

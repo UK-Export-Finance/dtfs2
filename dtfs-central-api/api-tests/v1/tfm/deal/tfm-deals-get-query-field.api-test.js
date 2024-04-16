@@ -8,6 +8,7 @@ const {
   updateDealsTfm,
 } = require('./tfm-deals-get.api-test');
 const CONSTANTS = require('../../../../src/constants');
+const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
@@ -55,7 +56,7 @@ describe('/v1/tfm/deals', () => {
               dateReceived: '12-11-2021',
             },
           },
-        ]);
+        ], MOCK_TFM_USER);
 
         const { status, body } = await api.get('/v1/tfm/deals?byField[0][name]=tfm.dateReceived&byField[0][value]=12-11-2021');
 
@@ -69,6 +70,13 @@ describe('/v1/tfm/deals', () => {
               dateReceived: '12-11-2021',
               lastUpdated: expect.any(Number),
             },
+            auditRecord: {
+              lastUpdatedAt: expect.any(String),
+              lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
+              lastUpdatedByPortalUserId: null,
+              noUserLoggedIn: null,
+              lastUpdatedByIsSystem: null,
+            }
           },
         ];
 
@@ -152,7 +160,7 @@ describe('/v1/tfm/deals', () => {
                 lastUpdated: '20-09-1989',
               },
             },
-          ]);
+          ], MOCK_TFM_USER);
         }
 
         // GET API CAll

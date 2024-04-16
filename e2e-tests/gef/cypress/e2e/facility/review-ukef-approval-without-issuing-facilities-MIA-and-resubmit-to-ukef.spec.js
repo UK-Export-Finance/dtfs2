@@ -11,7 +11,7 @@ import {
   underwriterManagersDecision,
 } from '../../fixtures/mocks/mock-deals';
 
-import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
+import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../e2e-fixtures/portal-users.fixture';
 import {
   MOCK_FACILITY_ONE,
   MOCK_FACILITY_TWO_NULL_MIA,
@@ -53,7 +53,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
       cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
         dealId = body._id;
         cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA_DRAFT);
-        cy.submitDealAfterUkefIds(dealId, 'GEF', BANK1_CHECKER1);
+        cy.submitDealAfterUkefIds(dealId, 'GEF', BANK1_CHECKER1_WITH_MOCK_ID);
         cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA).then(() => {
           cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE));

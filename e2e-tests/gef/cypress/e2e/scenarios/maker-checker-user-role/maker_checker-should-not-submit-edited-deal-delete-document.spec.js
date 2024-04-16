@@ -15,7 +15,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
   before(() => {
     cy.loadData();
     cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
-      cy.apiFetchAllApplications(token);
+      cy.apiFetchAllGefApplications(token);
     }).then(({ body }) => {
       body.items.forEach((item) => {
         dealIds.push(item._id);

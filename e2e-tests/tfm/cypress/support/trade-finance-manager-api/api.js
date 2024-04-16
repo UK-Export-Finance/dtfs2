@@ -1,3 +1,5 @@
+const { BANK1_CHECKER1_WITH_MOCK_ID } = require('../../../../e2e-fixtures/portal-users.fixture');
+
 const api = () => {
   const url = `${Cypress.config('tfmApiProtocol')}${Cypress.config('tfmApiHost')}:${Cypress.config('tfmApiPort')}`;
   return url;
@@ -13,7 +15,7 @@ const headers = {
 module.exports.submitDeal = (dealId, dealType, token) => cy.request({
   url: `${api()}/v1/deals/submit`,
   method: 'PUT',
-  body: { dealId, dealType },
+  body: { dealId, dealType, checker: BANK1_CHECKER1_WITH_MOCK_ID },
   headers: {
     ...headers,
     Authorization: token,
@@ -23,6 +25,7 @@ module.exports.submitDeal = (dealId, dealType, token) => cy.request({
   return resp.body;
 });
 
+// TODO: DTFS2-7112 this endpoint is obsolete and should be removed
 module.exports.submitDealAfterUkefIds = (dealId, dealType, checker, token) => cy.request({
   url: `${api()}/v1/deals/submitDealAfterUkefIds`,
   method: 'PUT',

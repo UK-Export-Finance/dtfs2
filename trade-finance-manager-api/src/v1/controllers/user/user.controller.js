@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { generateTfmUserAuditDetails, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/src/helpers/changeStream/generateAuditDetails');
+const { generateTfmUserAuditDatabaseRecord, generateNoUserLoggedInAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const db = require('../../../drivers/db-client');
 const { generateArrayOfEmailsRegex } = require('./helpers/generateArrayOfEmailsRegex');
 const handleFindByEmailsResult = require('./helpers/handleFindByEmailsResult');
@@ -41,7 +41,6 @@ exports.findByEmails = async (emails) => {
     return getUserResponse;
   } catch (error) {
     console.error('Error getting TFM user by emails - Unexpected DB response %O', error);
-
     throw new Error('Error getting TFM user by emails - Unexpected DB response %O', error);
   }
 };
@@ -65,7 +64,7 @@ exports.createUser = async (user, sessionUser) => {
   const collection = await db.getCollection('tfm-users');
   const tfmUser = {
     ...user,
-    auditDetails: sessionUser?._id ? generateTfmUserAuditDetails(sessionUser._id) : generateNoUserLoggedInAuditDetails(),
+    auditRecord: sessionUser?._id ? generateTfmUserAuditDatabaseRecord(sessionUser._id) : generateNoUserLoggedInAuditDatabaseRecord(),
   };
 
   delete tfmUser.token;
@@ -107,17 +106,15 @@ exports.updateUser = async (_id, update, sessionUser, callback = () => { }) => {
 
     const userUpdate = {
       ...update,
-      auditDetails: sessionUser?._id ? generateTfmUserAuditDetails(sessionUser._id) : generateNoUserLoggedInAuditDetails(),
+
+      auditRecord: sessionUser?._id ? generateTfmUserAuditDatabaseRecord(sessionUser._id) : generateNoUserLoggedInAuditDatabaseRecord(),
     };
 
     const collection = await db.getCollection('tfm-users');
-
     await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate }, {});
-
     callback();
   } catch (error) {
     console.error('Error Updating TFM user %s', error);
-
     throw new Error('Error Updating TFM user %s', error);
   }
 };
@@ -142,8 +139,9 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
 
     const update = {
       lastLogin: Date.now(),
+
       sessionIdentifier,
-      auditDetails: generateTfmUserAuditDetails(user._id),
+      auditRecord: generateTfmUserAuditDatabaseRecord(user._id),
     };
 
     await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
@@ -151,7 +149,6 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
     callback();
   } catch (error) {
     console.error('Error Updating TFM user - last login, reset sign in data %s', error);
-
     throw new Error('Error Updating TFM user - last login, reset sign in data %s', error);
   }
 };

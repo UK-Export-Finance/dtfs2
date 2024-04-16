@@ -6,9 +6,10 @@ const getAssigneeFullName = require('../helpers/get-assignee-full-name');
  * @param {String} deal ID
  * @param {Array} array of group titles that the should be assigned to the user
  * @param {String} user ID
+ * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} auditDetails - user making the request
  * @returns {Array} Updated tasks
  */
-const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId) => {
+const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId, auditDetails) => {
   const deal = await api.findOneDeal(dealId);
 
   if (!deal) {
@@ -57,8 +58,13 @@ const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId) =>
     },
   };
 
-  await api.updateDeal(dealId, tfmDealUpdate, (status, message) => {
-    throw new Error({ status, message });
+  await api.updateDeal({
+    dealId,
+    dealUpdate: tfmDealUpdate,
+    auditDetails,
+    onError: (status, message) => {
+      throw new Error({ status, message });
+    },
   });
 
   return modifiedTasks;

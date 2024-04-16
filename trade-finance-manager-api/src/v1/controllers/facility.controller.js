@@ -1,5 +1,6 @@
 const { format, getUnixTime } = require('date-fns');
 const commaNumber = require('comma-number');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
 const api = require('../api');
 const { findOneTfmDeal } = require('./deal.controller');
 const facilityMapper = require('../rest-mappings/facility');
@@ -91,7 +92,7 @@ const updateFacility = async (req, res) => {
   const { facilityId } = req.params;
   const facilityUpdate = req.body;
   try {
-    const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
+    const updatedFacility = await api.updateFacility({ facilityId, tfmUpdate: facilityUpdate, auditDetails: generateTfmAuditDetails(req.user._id)});
     return res.status(200).send({
       updateFacility: updatedFacility.tfm
     });
@@ -111,15 +112,7 @@ const getAllFacilities = async (searchString) => {
   return allFacilities;
 };
 
-const updateTfmFacility = async (facilityId, tfmUpdate) => {
-  const updatedFacility = await api.updateFacility(facilityId, tfmUpdate);
-  return updatedFacility.tfm;
-};
 
-const updateTfmFacilityRiskProfile = async (facilityId, tfmUpdate) => {
-  const updatedFacility = await api.updateFacility(facilityId, tfmUpdate);
-  return updatedFacility.tfm;
-};
 
 module.exports = {
   getFacility,
@@ -127,6 +120,4 @@ module.exports = {
   updateFacility,
   getAllFacilities,
   findOneFacility,
-  updateTfmFacility,
-  updateTfmFacilityRiskProfile,
 };

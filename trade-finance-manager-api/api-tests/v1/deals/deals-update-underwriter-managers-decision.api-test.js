@@ -1,4 +1,5 @@
 const { when } = require('jest-when');
+const { ObjectId } = require('mongodb');
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
@@ -79,9 +80,9 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
         .put(VALID_UNDERWRITER_MANAGERS_DECISION)
         .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
-      expect(api.updateDeal).toHaveBeenCalledWith(
-        VALID_DEAL_ID,
-        expect.objectContaining({
+      expect(api.updateDeal).toHaveBeenCalledWith({
+        dealId: VALID_DEAL_ID,
+        dealUpdate: expect.objectContaining({
           tfm: {
             underwriterManagersDecision: {
               decision: VALID_UNDERWRITER_MANAGERS_DECISION.decision,
@@ -91,8 +92,12 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
             stage: VALID_UNDERWRITER_MANAGERS_DECISION.decision,
           }
         }),
-        expect.any(Function),
-      );
+        auditDetails: {
+          userType: 'tfm',
+          id: expect.any(ObjectId),
+        },
+        onError: expect.any(Function),
+      });
     });
 
     it('should update the deal\'s status in portal', async () => {
@@ -218,7 +223,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
 
   it('should return a 500 if updating the deal via DTFS Central rejects', async () => {
     when(api.updateDeal)
-      .calledWith(VALID_DEAL_ID, expect.any(Object))
+      .calledWith({ dealId: VALID_DEAL_ID, dealUpdate: expect.any(Object), auditDetails: { userType: 'tfm', id: tokenUser._id}})
       .mockRejectedValueOnce(new Error(`Updating the deal with dealId ${VALID_DEAL_ID} failed with status 500 and message: test error message`));
 
     const { status, body } = await as(tokenUser)
