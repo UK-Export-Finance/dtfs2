@@ -1174,6 +1174,15 @@ const findBankById = async (bankId) => {
   }
 };
 
+const getAllBanks = async () => {
+  const url = `${DTFS_CENTRAL_API_URL}/v1/bank`;
+  const response = await axios.get(url, {
+    headers: headers.central,
+  });
+
+  return response.data;
+};
+
 const getGefMandatoryCriteriaByVersion = async (version) => {
   try {
     const isValidVersion = isValidNumericId(version);
@@ -1317,6 +1326,7 @@ module.exports = {
   addUnderwriterCommentToGefDeal,
   updateGefMINActivity,
   findBankById,
+  getAllBanks,
   getGefMandatoryCriteriaByVersion,
   getBankHolidays,
   getUtilisationReportsReconciliationSummary,

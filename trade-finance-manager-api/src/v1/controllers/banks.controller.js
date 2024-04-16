@@ -1,4 +1,5 @@
 const db = require('../../drivers/db-client');
+const api = require('../api');
 
 const findOneBank = async (id) => {
   if (typeof id !== 'string') {
@@ -11,3 +12,21 @@ const findOneBank = async (id) => {
   return bank;
 };
 exports.findOneBank = findOneBank;
+
+/**
+ * Fetches all banks and filters for visible in TFM.
+ * @param {import('express').Request<{ submissionMonth: string }>} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
+const getBanksVisibleInTfm = async (req, res) => {
+  try {
+    const banks = await api.getAllBanks();
+    const banksVisibleInTfm = banks.filter(bank => bank.isVisibleInTfmUtilisationReports);
+    res.status(200).send(banksVisibleInTfm);
+  } catch (error) {
+    const errorMessage = 'Failed to get banks visible in TFM';
+    console.error(errorMessage, error);
+    res.status(error.response?.status ?? 500).send(errorMessage);
+  }
+};
+exports.getBanksVisibleInTfm = getBanksVisibleInTfm;

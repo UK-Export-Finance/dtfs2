@@ -877,6 +877,24 @@ const getUtilisationReportReconciliationDetailsById = async (reportId, userToken
 
   return response.data;
 };
+  /**
+   * Fetches all banks visible in tfm utilisation reporting
+   * @param {string} userToken - token to validate session
+   * @returns {Promise<import('@ukef/dtfs2-common').Bank[]>}
+   */
+  const getBanksVisibleInTfm = async (userToken) => {
+    try {
+
+      const { data } = await axios.get(`${TFM_API_URL}/v1/banks`, {
+        headers: generateHeaders(userToken),
+      });
+
+      return data;
+    } catch (error) {
+      console.error('Failed to get banks visible in TFM', error);
+      throw error;
+    }
+  };
 
 module.exports = {
   getDeal,
@@ -917,4 +935,5 @@ module.exports = {
   downloadUtilisationReport,
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
+  getBanksVisibleInTfm,
 };
