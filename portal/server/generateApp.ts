@@ -127,7 +127,7 @@ export const generateApp = () => {
 
   app.use(
     '/assets',
-    express.static(path.join(__dirname, '..', 'node_modules', 'govuk-frontend', 'govuk', 'assets')),
+    express.static('node_modules/govuk-frontend/govuk/assets'),
     express.static(path.join(__dirname, '..', 'public')),
   );
 
