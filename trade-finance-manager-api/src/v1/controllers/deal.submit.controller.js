@@ -1,4 +1,4 @@
-const { ObjectId } = require('mongodb')
+const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const { findOneTfmDeal, findOnePortalDeal, findOneGefDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
@@ -244,8 +244,8 @@ const submitDealAfterUkefIdsPUT = async (req, res) => {
   try {
     const { dealId, dealType, checker } = req.body;
 
-    if(!ObjectId.isValid(checker?._id)) {
-      return res.status(400).send({ status: 400, message: 'Invalid checker _id'});
+    if (!ObjectId.isValid(checker?._id)) {
+      return res.status(400).send({ status: 400, message: 'Invalid checker _id' });
     }
 
     const deal = await submitDealAfterUkefIds(dealId, dealType, checker, generatePortalAuditDetails(checker._id));
@@ -285,7 +285,7 @@ const submitDealPUT = async (req, res) => {
     }
 
     const auditDetails = generatePortalAuditDetails(checker._id);
-    
+
     const { status } = await dealHasAllUkefIds(dealId);
     let deal;
 
