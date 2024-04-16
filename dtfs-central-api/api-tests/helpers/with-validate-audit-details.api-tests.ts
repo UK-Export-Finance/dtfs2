@@ -36,7 +36,7 @@ export const withValidateAuditDetailsTests = ({ makeRequest, validUserTypes }: P
       },
     ];
 
-    it.each(testCases)('it should have status $expectedStatus if the userType is $auditDetails.usertype', async ({ auditDetails, expectedStatus }) => {
+    it.each(testCases)('it should have status $expectedStatus if the userType is $auditDetails.userType', async ({ auditDetails, expectedStatus }) => {
       const { status, body } = await makeRequest(auditDetails);
 
       expect(status).toBe(expectedStatus);
