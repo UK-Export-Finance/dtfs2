@@ -8,7 +8,7 @@ on:
 env:
   environment: dev
   timezone: ${{ vars.TIMEZONE }}
-  MICROSOFT_TEAMS_WEBHOOK: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK  }}
+  MICROSOFT_TEAMS_WEBHOOK: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK }}
 
 jobs:
   # 1. Setup test infrastructure
