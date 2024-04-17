@@ -78,4 +78,4 @@ jobs:
                   }
                 }
             ]
-          }' "${MICROSOFT_TEAMS_WEBHOOK}"
+          }' "${{ env.MICROSOFT_TEAMS_WEBHOOK }}"
