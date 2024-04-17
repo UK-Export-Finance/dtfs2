@@ -19,7 +19,6 @@ const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-
 const { sendDealSubmitEmails, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const { dealHasAllUkefIds, dealHasAllValidUkefIds } = require('../helpers/dealHasAllUkefIds');
-const { delay } = require('../helpers/delay');
 
 /**
  * Retrieves a deal from the portal based on the provided deal ID and deal type.
@@ -38,8 +37,6 @@ const getPortalDeal = async (dealId, dealType) => {
     deal = await findOnePortalDeal(dealId);
   }
 
-  console.info('Fetching portal deal %s %o', dealId, deal);
-
   return deal;
 };
 
@@ -49,16 +46,7 @@ const getPortalDeal = async (dealId, dealType) => {
  * Azure function
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
-  /**
-   * 1s artificial delay
-   * Below is added to avoid any race condition being build up,
-   * where portal deal updates `deals` collection will not be
-   * fetched when updated on close proximity calls.
-   */
-  await delay(1000);
-
   const deal = await getPortalDeal(dealId, dealType);
-  console.info('Setting essential deal properties in TFM for deal %s with returned deal %o', dealId, deal);
 
   if (!deal) {
     console.error('Unable to find deal %s upon submission to TFM', dealId);
@@ -203,6 +191,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
     return api.updateDeal(dealId, updatedDeal);
   }
+
   return api.updateDeal(dealId, submittedDeal);
 };
 
