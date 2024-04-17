@@ -35,7 +35,7 @@ jobs:
 
       - name: Extract
         run: |
-          COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
+          COMMIT_MESSAGE=$(git log --format=%s -n 1 ${{ github.sha }})
           COMMIT_SHA=$(git log --format=%H --abbrev=7 -n 1 ${{ github.sha }})
           COMMIT_TIMESTAMP=$(git log --format=%ci -n 1 ${{ github.sha }})
           COMMIT_AUTHOR=${{ github.actor }}
