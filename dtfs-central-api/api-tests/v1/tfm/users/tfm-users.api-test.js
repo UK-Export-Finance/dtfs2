@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
@@ -72,8 +71,8 @@ describe('/v1/tfm/users', () => {
             ...mockUsers,
             auditRecord: {
               lastUpdatedAt: expect.any(String),
-              lastUpdatedByPortalUserId: new ObjectId(MOCK_TFM_USER._id),
-              lastUpdatedByTfmUserId: null,
+              lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
+              lastUpdatedByPortalUserId: null,
               lastUpdatedByIsSystem: null,
               noUserLoggedIn: null,
             },
@@ -98,8 +97,8 @@ describe('/v1/tfm/users', () => {
         ...mockUsers[0],
         auditRecord: {
           lastUpdatedAt: expect.any(String),
-          lastUpdatedByPortalUserId: new ObjectId(MOCK_TFM_USER._id),
-          lastUpdatedByTfmUserId: null,
+          lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
+          lastUpdatedByPortalUserId: null,
           lastUpdatedByIsSystem: null,
           noUserLoggedIn: null,
         },
@@ -121,11 +120,11 @@ describe('/v1/tfm/users', () => {
 
       expect(status).toEqual(200);
       expect(body).toMatchObject({
-        createdUser,
+        ...createdUser,
         auditRecord: {
           lastUpdatedAt: expect.any(String),
-          lastUpdatedByPortalUserId: new ObjectId(MOCK_TFM_USER._id),
-          lastUpdatedByTfmUserId: null,
+          lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
+          lastUpdatedByPortalUserId: null,
           lastUpdatedByIsSystem: null,
           noUserLoggedIn: null,
         },
