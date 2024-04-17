@@ -1,7 +1,6 @@
 import { Response } from 'express';
-import { UtilisationReportReconciliationStatus, UTILISATION_REPORT_RECONCILIATION_STATUS, ReportWithStatus } from '@ukef/dtfs2-common';
+import { UtilisationReportReconciliationStatus, UTILISATION_REPORT_RECONCILIATION_STATUS, ReportWithStatus, asString } from '@ukef/dtfs2-common';
 import api from '../../../api';
-import { asString } from '../../../helpers/validation';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { getUtilisationReports } from '..';
 import { asUserSession } from '../../../helpers/express-session';

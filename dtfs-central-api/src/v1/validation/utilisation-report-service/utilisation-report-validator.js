@@ -1,5 +1,5 @@
 const { isMongoId } = require('validator');
-const { UTILISATION_REPORT_HEADERS } = require('../../../constants');
+const { UTILISATION_REPORT_HEADERS } = require('@ukef/dtfs2-common');
 const REGEXES = require('../../../constants/regex');
 const {
   validateUkefId,
