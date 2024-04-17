@@ -83,15 +83,25 @@ describe('PUT TFM amendments', () => {
           updatePayload,
           updatedAt: expect.any(Number),
           version: 1,
-          auditRecord: {
-            lastUpdatedAt: expect.any(String),
-            lastUpdatedByPortalUserId: null,
-            lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
-            lastUpdatedByIsSystem: null,
-            noUserLoggedIn: null,
-          },
         };
         expect(bodyPutResponse).toEqual(expected);
+      });
+
+      it('should update the auditRecord on the facility document', async () => {
+        const updatePayload = { createdBy: MOCK_PORTAL_USER };
+        await api
+          .put({ payload: { updatePayload }, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+          .to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`);
+
+        const {body: updatedFacility } = await api.get(`/v1/tfm/facilities/${facilityId}`);
+
+        expect(updatedFacility.auditRecord).toEqual({
+          lastUpdatedAt: expect.any(String),
+          lastUpdatedByPortalUserId: null,
+          lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
+          lastUpdatedByIsSystem: null,
+          noUserLoggedIn: null,
+        });
       });
     });
 

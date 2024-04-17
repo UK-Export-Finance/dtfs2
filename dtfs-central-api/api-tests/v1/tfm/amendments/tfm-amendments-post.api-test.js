@@ -62,26 +62,34 @@ describe('POST TFM amendments', () => {
       });
 
       it('should create a new amendment based on facilityId', async () => {
-        await api
-          .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
-          .to('/v1/tfm/deals/submit');
-
         const { body } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
         expect(body).toEqual({ amendmentId: expect.any(String) });
       });
 
-      it('should return 400 if an amendment already exists', async () => {
-        await api
-          .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
-          .to('/v1/tfm/deals/submit');
+      it('should update the auditRecord on the facility document', async () => {
+        await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
 
+        const { body: updatedFacility } = await api.get(`/v1/tfm/facilities/${facilityId}`);
+
+        expect(updatedFacility.auditRecord).toEqual({
+          lastUpdatedAt: expect.any(String),
+          lastUpdatedByPortalUserId: null,
+          lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
+          lastUpdatedByIsSystem: null,
+          noUserLoggedIn: null,
+        });
+      });
+
+      it('should return 400 if an amendment already exists', async () => {
         const { body: bodyPostResponse1 } = await api
           .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
           .to(`/v1/tfm/facilities/${facilityId}/amendments`);
+
         const updatePayload1 = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
         await api
           .put({ payload: updatePayload1, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
           .to(`/v1/tfm/facilities/${facilityId}/amendments/${bodyPostResponse1.amendmentId}`);
+
         const { body } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
         expect(body).toEqual({ status: 400, message: 'The current facility already has an amendment in progress' });
       });

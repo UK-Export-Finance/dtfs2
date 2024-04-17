@@ -70,13 +70,6 @@ describe('GET TFM amendments', () => {
           dealId: expect.any(String),
           facilityId: expect.any(String),
           version: 1,
-          auditRecord: {
-            lastUpdatedAt: expect.any(String),
-            lastUpdatedByPortalUserId: null,
-            lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
-            lastUpdatedByIsSystem: null,
-            noUserLoggedIn: null,
-          },
         },
       ];
 
@@ -119,13 +112,6 @@ describe('GET TFM amendments', () => {
         dealId: expect.any(String),
         facilityId: expect.any(String),
         version: 1,
-        auditRecord: {
-          lastUpdatedAt: expect.any(String),
-          lastUpdatedByPortalUserId: null,
-          lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
-          lastUpdatedByIsSystem: null,
-          noUserLoggedIn: null,
-        },
       });
     });
 
@@ -193,13 +179,6 @@ describe('GET TFM amendments', () => {
         dealId: expect.any(String),
         facilityId: expect.any(String),
         version: 1,
-        auditRecord: {
-          lastUpdatedAt: expect.any(String),
-          lastUpdatedByPortalUserId: null,
-          lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
-          lastUpdatedByIsSystem: null,
-          noUserLoggedIn: null,
-        },
       });
     });
 
@@ -267,13 +246,6 @@ describe('GET TFM amendments', () => {
           dealId: expect.any(String),
           facilityId: expect.any(String),
           version: 1,
-          auditRecord: {
-            lastUpdatedAt: expect.any(String),
-            lastUpdatedByPortalUserId: null,
-            lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
-            lastUpdatedByIsSystem: null,
-            noUserLoggedIn: null,
-          },
         },
         {
           amendmentId: expect.any(String),
@@ -283,13 +255,6 @@ describe('GET TFM amendments', () => {
           dealId: expect.any(String),
           facilityId: expect.any(String),
           version: 2,
-          auditRecord: {
-            lastUpdatedAt: expect.any(String),
-            lastUpdatedByPortalUserId: null,
-            lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
-            lastUpdatedByIsSystem: null,
-            noUserLoggedIn: null,
-          },
         },
       ]);
     });
@@ -425,13 +390,6 @@ describe('GET TFM amendments', () => {
           dealId: expect.any(String),
           facilityId: expect.any(String),
           version: 1,
-          auditRecord: {
-            lastUpdatedAt: expect.any(String),
-            lastUpdatedByPortalUserId: null,
-            lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
-            lastUpdatedByIsSystem: null,
-            noUserLoggedIn: null,
-          },
         },
         {
           amendmentId: expect.any(String),
@@ -441,13 +399,6 @@ describe('GET TFM amendments', () => {
           dealId: expect.any(String),
           facilityId: expect.any(String),
           version: 1,
-          auditRecord: {
-            lastUpdatedAt: expect.any(String),
-            lastUpdatedByPortalUserId: null,
-            lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
-            lastUpdatedByIsSystem: null,
-            noUserLoggedIn: null,
-          },
         },
       ]);
     });
