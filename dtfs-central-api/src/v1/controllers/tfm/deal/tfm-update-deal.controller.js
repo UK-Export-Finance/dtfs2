@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
-const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
+const { validateAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
@@ -142,12 +142,9 @@ exports.updateDealSnapshotPut = async (req, res) => {
   const { snapshotUpdate, auditDetails } = req.body;
 
   try {
-    validateAuditDetails(auditDetails);
+    validateAuditDetailsAndUserType(auditDetails, 'portal');
   } catch ({ message }) {
     return res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
-  }
-  if (auditDetails.userType !== 'portal') {
-    return res.status(400).send({ status: 400, message: 'Invalid auditDetails, userType must be `portal`' });
   }
 
   const deal = await findOneDeal(dealId);
