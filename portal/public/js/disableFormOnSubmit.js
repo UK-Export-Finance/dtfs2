@@ -1,2 +1,0 @@
-var DTFS_PORTAL;(()=>{const e=document.querySelectorAll("form"),t=e[e.length-1];if(!t)return;let r=!1;t.addEventListener("submit",(e=>{r&&e.preventDefault(),r=!0,document.querySelectorAll(".govuk-button").forEach((e=>{e.setAttribute("disabled",""),e.setAttribute("aria-disabled","true")}))}))})(),(DTFS_PORTAL=void 0===DTFS_PORTAL?{}:DTFS_PORTAL).disableFormOnSubmit={};
-//# sourceMappingURL=disableFormOnSubmit.js.map

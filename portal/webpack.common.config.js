@@ -14,7 +14,7 @@ module.exports = {
     guaranteeFeePayableByBank: './scripts/guarantee-fee-payable-by-bank.js',
     printPage: './scripts/print-page.js',
     mojFilters: './scripts/moj-filters.js',
-    disableFormOnSubmit: '../libs/common/src/ui-scripts/disableFormOnSubmit.js',
+    disableFormSubmitOnSubmission: '../libs/common/src/ui-scripts/disable-form-submit-on-submission.js',
   },
   output: {
     path: path.join(__dirname, 'public/js'),

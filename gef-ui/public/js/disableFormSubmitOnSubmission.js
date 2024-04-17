@@ -1,0 +1,2 @@
+var DTFS_GEF;(()=>{const t=document.querySelectorAll("form");if(!t.length)return;const e=t[t.length-1];if(!e)return;let r=!1;e.addEventListener("submit",(t=>{r&&t.preventDefault(),r=!0,document.querySelectorAll(".govuk-button").forEach((t=>{t.setAttribute("disabled",""),t.setAttribute("aria-disabled","true")}))}))})(),(DTFS_GEF=void 0===DTFS_GEF?{}:DTFS_GEF).disableFormSubmitOnSubmission={};
+//# sourceMappingURL=disableFormSubmitOnSubmission.js.map

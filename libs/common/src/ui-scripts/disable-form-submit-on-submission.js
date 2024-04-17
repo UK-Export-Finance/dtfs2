@@ -2,8 +2,13 @@
 // The govukButton component has a preventDoubleClick property, but this only debounces in a one-second window,
 // and is therefore not sufficient for our needs as multiple forms take longer than a second to submit.
 
-const addDisableFormOnSubmit = () => {
+const addDisableFormSubmitOnSubmission = () => {
   const forms = document.querySelectorAll('form');
+
+  if (!forms.length) {
+    return;
+  }
+
   // only take the last form on the page, as it is foreseeable to have multiple forms on a page,
   // and the 'continue' button should always be in the last form on a page.
   const lastForm = forms[forms.length - 1];
@@ -29,4 +34,4 @@ const addDisableFormOnSubmit = () => {
   });
 };
 
-addDisableFormOnSubmit();
+addDisableFormSubmitOnSubmission();

@@ -9,7 +9,7 @@ module.exports = {
     govukFrontend: './scripts/govuk-frontend.js',
     mojFrontend: './scripts/moj-frontend.js',
     jsEnabled: './scripts/js-enabled.js',
-    disableFormOnSubmit: '../libs/common/src/ui-scripts/disableFormOnSubmit.js',
+    disableFormSubmitOnSubmission: '../libs/common/src/ui-scripts/disable-form-submit-on-submission.js',
   },
   output: {
     path: path.join(__dirname, 'public/js'),
@@ -20,10 +20,7 @@ module.exports = {
   target: ['web', 'es5'],
   optimization: {
     minimize: true,
-    minimizer: [
-      new TerserPlugin(),
-      new CssMinimizerPlugin(),
-    ],
+    minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
   },
   resolve: {
     // resolves paths in library files that we don't control, pointing them to the root hoisted dependencies
@@ -55,9 +52,7 @@ module.exports = {
   },
   plugins: [
     new CopyPlugin({
-      patterns: [
-        { from: 'static/images', to: '../images' },
-      ],
+      patterns: [{ from: 'static/images', to: '../images' }],
     }),
   ],
 };
