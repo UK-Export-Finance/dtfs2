@@ -1,6 +1,19 @@
+# Root
+node_modules/
 dist/
-.cache/
+build/
+public/
+generated_reports/
+coverage/
+package*.json
+.cache
+
+# Sub-directories
+**/node_modules/
+**/dist/
+**/build/
+**/public/
+**/generated_reports/
 **/coverage/
-**/node_modules/**
-/node_modules
-/package-lock.json
+**/package*.json
+**/.cache
