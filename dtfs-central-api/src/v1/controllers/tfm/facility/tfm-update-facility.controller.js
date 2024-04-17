@@ -19,7 +19,7 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
     tfm: {
       ...tfmUpdate,
     },
-    auditDetails: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, $.flatten(withoutId(update)), {
@@ -42,7 +42,7 @@ exports.updateFacilityPut = async (req, res) => {
   const facility = await findOneFacility(facilityId);
 
   if (!facility) {
-    return res.status(404).send({ status: 404, message: 'Deal not found' });
+    return res.status(404).send({ status: 404, message: 'Facility not found' });
   }
 
   const { tfmUpdate, auditDetails } = req.body;
@@ -50,7 +50,7 @@ exports.updateFacilityPut = async (req, res) => {
   try {
     validateAuditDetails(auditDetails);
   } catch ({ message }) {
-    return res.status(400).send({ status: 400, message: `Invalid user information - ${message}` });
+    return res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
   }
 
   const updatedFacility = await updateFacility({

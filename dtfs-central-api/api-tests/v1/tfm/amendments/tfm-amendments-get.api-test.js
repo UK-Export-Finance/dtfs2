@@ -1,4 +1,4 @@
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -6,6 +6,7 @@ const CONSTANTS = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const aDeal = require('../../deal-builder');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
+const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 
 describe('GET TFM amendments', () => {
   let dealId;
@@ -48,7 +49,7 @@ describe('GET TFM amendments', () => {
         .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
         .to('/v1/tfm/deals/submit');
 
-      const { body: bodyPostResponse } = await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      const { body: bodyPostResponse } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
       const updatePayload = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
       await api.put(updatePayload).to(`/v1/tfm/facilities/${facilityId}/amendments/${bodyPostResponse.amendmentId}`);
 
@@ -65,6 +66,13 @@ describe('GET TFM amendments', () => {
           dealId: expect.any(String),
           facilityId: expect.any(String),
           version: 1,
+          auditRecord: {
+            lastUpdatedAt: expect.any(String),
+            lastUpdatedByPortalUserId: null,
+            lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
+            lastUpdatedByIsSystem: null,
+            noUserLoggedIn: null,
+          },
         },
       ];
 
@@ -95,7 +103,7 @@ describe('GET TFM amendments', () => {
 
       const {
         body: { amendmentId },
-      } = await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
       const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`);
 
       expect(status).toEqual(200);
@@ -107,6 +115,13 @@ describe('GET TFM amendments', () => {
         dealId: expect.any(String),
         facilityId: expect.any(String),
         version: 1,
+        auditRecord: {
+          lastUpdatedAt: expect.any(String),
+          lastUpdatedByPortalUserId: null,
+          lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
+          lastUpdatedByIsSystem: null,
+          noUserLoggedIn: null,
+        },
       });
     });
 
@@ -156,7 +171,7 @@ describe('GET TFM amendments', () => {
         .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
         .to('/v1/tfm/deals/submit');
 
-      const { body: bodyPostResponse } = await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      const { body: bodyPostResponse } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
       const updatePayload = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
       await api.put(updatePayload).to(`/v1/tfm/facilities/${facilityId}/amendments/${bodyPostResponse.amendmentId}`);
       const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments/in-progress`);
@@ -170,6 +185,13 @@ describe('GET TFM amendments', () => {
         dealId: expect.any(String),
         facilityId: expect.any(String),
         version: 1,
+        auditRecord: {
+          lastUpdatedAt: expect.any(String),
+          lastUpdatedByPortalUserId: null,
+          lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
+          lastUpdatedByIsSystem: null,
+          noUserLoggedIn: null,
+        },
       });
     });
 
@@ -211,15 +233,15 @@ describe('GET TFM amendments', () => {
 
       const {
         body: { amendmentId },
-      } = await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
       await api.put({ status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED }).to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`);
 
       const {
         body: { amendmentId: amendmentId2 },
-      } = await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
       await api.put({ status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED }).to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId2}`);
 
-      await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
 
       const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments/completed`);
 
@@ -233,6 +255,13 @@ describe('GET TFM amendments', () => {
           dealId: expect.any(String),
           facilityId: expect.any(String),
           version: 1,
+          auditRecord: {
+            lastUpdatedAt: expect.any(String),
+            lastUpdatedByPortalUserId: null,
+            lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
+            lastUpdatedByIsSystem: null,
+            noUserLoggedIn: null,
+          },
         },
         {
           amendmentId: expect.any(String),
@@ -242,6 +271,13 @@ describe('GET TFM amendments', () => {
           dealId: expect.any(String),
           facilityId: expect.any(String),
           version: 2,
+          auditRecord: {
+            lastUpdatedAt: expect.any(String),
+            lastUpdatedByPortalUserId: null,
+            lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
+            lastUpdatedByIsSystem: null,
+            noUserLoggedIn: null,
+          },
         },
       ]);
     });
@@ -284,7 +320,7 @@ describe('GET TFM amendments', () => {
 
       const {
         body: { amendmentId },
-      } = await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
       await api
         .put({
           status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED,
@@ -339,7 +375,7 @@ describe('GET TFM amendments', () => {
         .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
         .to('/v1/tfm/deals/submit');
 
-      const { body: bodyPostResponse1 } = await api.post().to(`/v1/tfm/facilities/${facilityId1}/amendments`);
+      const { body: bodyPostResponse1 } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId1}/amendments`);
       const updatePayload1 = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
       await api.put(updatePayload1).to(`/v1/tfm/facilities/${facilityId1}/amendments/${bodyPostResponse1.amendmentId}`);
 
@@ -350,7 +386,7 @@ describe('GET TFM amendments', () => {
         .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
         .to('/v1/tfm/deals/submit');
 
-      const { body: bodyPostResponse2 } = await api.post().to(`/v1/tfm/facilities/${facilityId2}/amendments`);
+      const { body: bodyPostResponse2 } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId2}/amendments`);
       const updatePayload2 = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
       await api.put(updatePayload2).to(`/v1/tfm/facilities/${facilityId2}/amendments/${bodyPostResponse2.amendmentId}`);
 
@@ -366,6 +402,13 @@ describe('GET TFM amendments', () => {
           dealId: expect.any(String),
           facilityId: expect.any(String),
           version: 1,
+          auditRecord: {
+            lastUpdatedAt: expect.any(String),
+            lastUpdatedByPortalUserId: null,
+            lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
+            lastUpdatedByIsSystem: null,
+            noUserLoggedIn: null,
+          },
         },
         {
           amendmentId: expect.any(String),
@@ -375,6 +418,13 @@ describe('GET TFM amendments', () => {
           dealId: expect.any(String),
           facilityId: expect.any(String),
           version: 1,
+          auditRecord: {
+            lastUpdatedAt: expect.any(String),
+            lastUpdatedByPortalUserId: null,
+            lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
+            lastUpdatedByIsSystem: null,
+            noUserLoggedIn: null,
+          },
         },
       ]);
     });
