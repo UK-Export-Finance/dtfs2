@@ -27,29 +27,37 @@ describe(page, () => {
     active: false,
   }];
 
-  const reportLinks = [{
-    text: 'January 2023',
+  const reports = [{
+    linkText: 'January 2023',
     month: 'January',
-    path: 'www.abc.com',
+    downloadPath: 'www.abc.com',
+    status: 'PENDING_RECONCILIATION',
+    displayStatus: 'Pending reconciliation'
   }, {
-    text: 'February 2023',
+    linkText: 'February 2023',
     month: 'February',
-    path: 'www.abc.com',
+    downloadPath: 'www.abc.com',
+    status: 'PENDING_RECONCILIATION',
+    displayStatus: 'Pending reconciliation'
   }, {
-    text: 'March 2023',
+    linkText: 'March 2023',
     month: 'March',
-    path: 'www.abc.com',
+    downloadPath: 'www.abc.com',
+    status: 'RECONCILIATION_IN_PROGRESS',
+    displayStatus: 'Reconciliation in progress'
   }, {
-    text: 'May 2023',
+    linkText: 'May 2023',
     month: 'May',
-    path: 'www.abc.com',
+    downloadPath: 'www.abc.com',
+    status: 'RECONCILIATION_COMPLETED',
+    displayStatus: 'Report completed'
   }];
 
   const year = 2023;
 
   describe('with submitted reports', () => {
     beforeEach(() => {
-      wrapper = render({ navItems, reportLinks, year });
+      wrapper = render({ navItems, reports, year });
     });
 
     it('should render side navigation bar', () => {
@@ -81,11 +89,18 @@ describe(page, () => {
       wrapper.expectElement('[data-cy="list-item-link-May"]').toExist();
       wrapper.expectText('[data-cy="list-item-link-May"]').toRead('May 2023 GEF report');
     });
+
+    it.only('should render report statuses', () => {
+      wrapper.expectElement('[data-cy="utilisation-report-reconciliation-status"]').toHaveCount(4);
+      wrapper.expectText('main').toContain('Report completed');
+      wrapper.expectText('main').toContain('Reconciliation in progress');
+      wrapper.expectText('main').toContain('Pending reconciliation');
+    });
   });
 
   describe('with no submitted reports for target year', () => {
     beforeEach(() => {
-      wrapper = render({ navItems, reportLinks: [], year });
+      wrapper = render({ navItems, reports: [], year });
     });
 
     it('should render side navigation bar', () => {
@@ -110,7 +125,7 @@ describe(page, () => {
 
   describe('with no submitted reports for any year', () => {
     beforeEach(() => {
-      wrapper = render({ navItems: [], reportLinks: [], year });
+      wrapper = render({ navItems: [], reports: [], year });
     });
 
     it('should render page heading', () => {

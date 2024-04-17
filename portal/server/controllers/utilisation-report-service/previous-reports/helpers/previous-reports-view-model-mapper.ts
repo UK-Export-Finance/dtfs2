@@ -1,9 +1,14 @@
-import { UtilisationReportReconciliationStatus, getFormattedReportPeriodWithLongMonth, getFormattedReportPeriodWithShortMonth, isEqualMonthAndYear } from "@ukef/dtfs2-common";
-import { PRIMARY_NAV_KEY } from "../../../../constants";
-import { PreviousUtilisationReportsResponseBody, UtilisationReportResponseBody } from "../../../../api-response-types";
-import { PortalSessionUser } from "../../../../types/portal-session-user";
-import { PreviousReportNavItemViewModel, PreviousReportViewModel, PreviousReportsViewModel } from "../../../../types/view-models/previous-reports";
-import { getMonthName } from "../../../../helpers/getMonthName";
+import {
+  UtilisationReportReconciliationStatus,
+  getFormattedReportPeriodWithLongMonth,
+  getFormattedReportPeriodWithShortMonth,
+  isEqualMonthAndYear,
+} from '@ukef/dtfs2-common';
+import { PRIMARY_NAV_KEY } from '../../../../constants';
+import { PreviousUtilisationReportsResponseBody, UtilisationReportResponseBody } from '../../../../api-response-types';
+import { PortalSessionUser } from '../../../../types/portal-session-user';
+import { PreviousReportNavItemViewModel, PreviousReportViewModel, PreviousReportsViewModel } from '../../../../types/view-models/previous-reports';
+import { getMonthName } from '../../../../helpers/getMonthName';
 
 const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportReconciliationStatus, string> = {
   REPORT_NOT_RECEIVED: 'Not received',
@@ -21,13 +26,13 @@ const mapToPreviousReportNavItemViewModel = (year: number, targetYear: number): 
 
 const mapToPreviousReportViewModel = (report: UtilisationReportResponseBody, user: PortalSessionUser): PreviousReportViewModel => ({
   status: report.status,
-    displayStatus: reconciliationStatusCodeToDisplayStatus[report.status],
-    month: getMonthName(report.reportPeriod.end.month),
-    linkText: isEqualMonthAndYear(report.reportPeriod.start, report.reportPeriod.end)
-      ? getFormattedReportPeriodWithLongMonth(report.reportPeriod)
-      : getFormattedReportPeriodWithShortMonth(report.reportPeriod, true, true),
-    downloadPath: `/banks/${user.bank.id}/utilisation-report-download/${report.id}`,
-})
+  displayStatus: reconciliationStatusCodeToDisplayStatus[report.status],
+  month: getMonthName(report.reportPeriod.end.month),
+  linkText: isEqualMonthAndYear(report.reportPeriod.start, report.reportPeriod.end)
+    ? getFormattedReportPeriodWithLongMonth(report.reportPeriod)
+    : getFormattedReportPeriodWithShortMonth(report.reportPeriod, true, true),
+  downloadPath: `/banks/${user.bank.id}/utilisation-report-download/${report.id}`,
+});
 
 export const mapToPreviousReportsViewModel = (
   targetYearQuery: string | undefined,
