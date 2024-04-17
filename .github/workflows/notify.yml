@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - chore/FN/fix-teams-notifications
 
 env:
   environment: dev
