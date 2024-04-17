@@ -67,16 +67,18 @@ describe('/v1/tfm/users', () => {
       expect(status).toEqual(200);
       expect(orderUsers(body.users)).toMatchObject(
         orderUsers(
-          expectMongoIds({
-            ...mockUsers,
-            auditRecord: {
-              lastUpdatedAt: expect.any(String),
-              lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
-              lastUpdatedByPortalUserId: null,
-              lastUpdatedByIsSystem: null,
-              noUserLoggedIn: null,
-            },
-          }),
+          expectMongoIds(
+            mockUsers.map((mockUser) => ({
+              ...mockUser,
+              auditRecord: {
+                lastUpdatedAt: expect.any(String),
+                lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
+                lastUpdatedByPortalUserId: null,
+                lastUpdatedByIsSystem: null,
+                noUserLoggedIn: null,
+              },
+            })),
+          ),
         ),
       );
     });
