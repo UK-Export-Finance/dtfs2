@@ -8,7 +8,6 @@ on:
 env:
   environment: dev
   timezone: ${{ vars.TIMEZONE }}
-  MICROSOFT_TEAMS_WEBHOOK: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK }}
 
 jobs:
   # 1. Setup test infrastructure
@@ -46,12 +45,9 @@ jobs:
           echo "COMMIT_AUTHOR=$COMMIT_AUTHOR" >> $GITHUB_ENV
           echo "COMMIT_TIMESTAMP=$COMMIT_TIMESTAMP" >> $GITHUB_ENV
 
-      - name: Logging
-        run: |
-          echo "Microsoft Teams Webhook: ${{ env.MICROSOFT_TEAMS_WEBHOOK }}"
-          echo "Microsoft Teams Webhook secret: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK }}"
-
       - name: Notify
+        env:
+          MICROSOFT_TEAMS_WEBHOOK: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK }}
         run: |
           curl -g -X POST -H 'Content-Type: application/json' -d '{
             "type":"message",
