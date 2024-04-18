@@ -37,6 +37,7 @@ on:
   pull_request:
     branches:
       - main
+      - "release-*"
 
     paths:
       - "package*.json"
@@ -99,4 +100,34 @@ jobs:
 
       - name: Linting
         working-directory: ./
-        run: npm run lint:all
+        run:
+          npm run lint:all
+
+  # 3. Lint
+  prettier:
+    name: Prettier 🎨
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm run ci:all
+
+      # TODO: Enable in lint fix PR
+      # - name: Linting
+      #   working-directory: ./
+      #   run: npm run prettier:all

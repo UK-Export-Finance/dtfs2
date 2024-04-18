@@ -9,6 +9,7 @@ const api = require('../../../src/v1/api');
 const CONSTANTS = require('../../../src/constants');
 const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
+const { getNowAsEpoch } = require('../../../src/v1/helpers/date');
 
 describe('/v1/deals/:id/status - facilities', () => {
   let aBarclaysMaker;
@@ -42,7 +43,6 @@ describe('/v1/deals/:id/status - facilities', () => {
   });
 
   describe('PUT /v1/deals/:id/status', () => {
-    const nowDate = new Date();
 
     describe("when the status changes from `Further Maker's input required` to `Ready for Checker's approval`", () => {
       let createdDeal;
@@ -52,7 +52,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
       beforeEach(async () => {
         completedDeal.status = "Further Maker's input required";
-        completedDeal.details.submissionDate = nowDate.valueOf();
+        completedDeal.details.submissionDate = getNowAsEpoch();
 
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
@@ -228,7 +228,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         beforeEach(async () => {
           completedDeal.status = 'Accepted by UKEF (without conditions)';
           completedDeal.submissionType = 'Manual Inclusion Application';
-          completedDeal.details.approvalDate = nowDate.valueOf().toString();
+          completedDeal.details.approvalDate = getNowAsEpoch().toString();
 
           const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
@@ -401,12 +401,21 @@ describe('/v1/deals/:id/status - facilities', () => {
         status: "Ready for Checker's approval",
       };
 
-      const nowPlusOneMonth = add(nowDate, { months: 1 });
+      const nowPlusOneMonth = add(getNowAsEpoch(), { months: 1 });
 
       const coverEndDate = () => ({
         'coverEndDate-day': format(nowPlusOneMonth, 'dd'),
         'coverEndDate-month': format(nowPlusOneMonth, 'MM'),
         'coverEndDate-year': format(nowPlusOneMonth, 'yyyy'),
+      });
+
+      const coverStartDate = () => ({
+        updatedAt: getNowAsEpoch(),
+        coverDateConfirmed: true,
+        requestedCoverStartDate: 0,
+        'requestedCoverStartDate-day': 1,
+        'requestedCoverStartDate-month': 1,
+        'requestedCoverStartDate-year': 1970,
       });
 
       const baseBond = {
@@ -446,6 +455,11 @@ describe('/v1/deals/:id/status - facilities', () => {
           ...baseBond,
           ...issuedBondFields(),
         },
+        {
+          ...baseBond,
+          ...issuedBondFields(),
+          ...coverStartDate(),
+        },
       ];
 
       const conditionalLoan = () => ({
@@ -478,7 +492,28 @@ describe('/v1/deals/:id/status - facilities', () => {
         currency: { id: 'EUR', text: 'Euros' },
       });
 
-      const newLoans = [conditionalLoan(), unconditionalLoan(), unconditionalLoan()];
+      const unconditionalLoanWithCoverDateConfirmed = () => ({
+        type: 'Loan',
+        facilityStage: CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL,
+        hasBeenIssued: true,
+        value: '100',
+        name: '1234',
+        coverDateConfirmed: true,
+        requestedCoverStartDate: 0,
+        'requestedCoverStartDate-day': 1,
+        'requestedCoverStartDate-month': 1,
+        'requestedCoverStartDate-year': 1970,
+        ...coverEndDate(),
+        disbursementAmount: '5',
+        currencySameAsSupplyContractCurrency: 'true',
+        interestMarginFee: '10',
+        coveredPercentage: '40',
+        premiumType: 'At maturity',
+        dayCountBasis: '365',
+        currency: { id: 'EUR', text: 'Euros' },
+      });
+
+      const newLoans = [conditionalLoan(), unconditionalLoan(), unconditionalLoan(), unconditionalLoanWithCoverDateConfirmed()];
 
       const newFacilities = [...newBonds, ...newLoans];
 
@@ -501,7 +536,37 @@ describe('/v1/deals/:id/status - facilities', () => {
         updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
       });
 
-      describe('when a deal contains bonds with an `Issued` facilityStage that do NOT have a requestedCoverStartDate', () => {
+      describe('when a deal contains bonds with an `Issued` facility stage and requestedCoverStartDate and coverDateConfirmed properties exist', () => {
+        it('should not update the facility, as the facility is already issued', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toBeDefined();
+
+          const { body } = await as(aSuperuser).get(`/v1/deals/${dealId}`);
+
+          expect(body.deal.bondTransactions.items[3].coverDateConfirmed).toEqual(true);
+          expect(body.deal.bondTransactions.items[3].requestedCoverStartDate).toEqual(0);
+          expect(body.deal.bondTransactions.items[3]['requestedCoverStartDate-day']).toEqual(1);
+          expect(body.deal.bondTransactions.items[3]['requestedCoverStartDate-month']).toEqual(1);
+          expect(body.deal.bondTransactions.items[3]['requestedCoverStartDate-year']).toEqual(1970);
+        });
+      });
+
+      describe('when a deal contains loan with an `Unconditional` facility stage and requestedCoverStartDate and coverDateConfirmed properties exist', () => {
+        it('should not update the facility, as the facility is already issued', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toBeDefined();
+
+          const { body } = await as(aSuperuser).get(`/v1/deals/${dealId}`);
+
+          expect(body.deal.loanTransactions.items[3].coverDateConfirmed).toEqual(true);
+          expect(body.deal.loanTransactions.items[3].requestedCoverStartDate).toEqual(0);
+          expect(body.deal.loanTransactions.items[3]['requestedCoverStartDate-day']).toEqual(1);
+          expect(body.deal.loanTransactions.items[3]['requestedCoverStartDate-month']).toEqual(1);
+          expect(body.deal.loanTransactions.items[3]['requestedCoverStartDate-year']).toEqual(1970);
+        });
+      });
+
+      describe('when a deal contains bonds with an `Issued` facilityStage that do NOT have a requestedCoverStartDate and coverDateConfirmed', () => {
         it('should add todays date to such bonds', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
@@ -513,6 +578,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             status: 'Completed',
             updatedAt: expect.any(Number),
             createdDate: expect.any(Number),
+            coverDateConfirmed: true,
             requestedCoverStartDate: expect.any(Number),
             'requestedCoverStartDate-day': expect.any(Number),
             'requestedCoverStartDate-month': expect.any(Number),
@@ -530,6 +596,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             status: 'Completed',
             updatedAt: expect.any(Number),
             createdDate: expect.any(Number),
+            coverDateConfirmed: true,
             requestedCoverStartDate: expect.any(Number),
             'requestedCoverStartDate-day': expect.any(Number),
             'requestedCoverStartDate-month': expect.any(Number),
@@ -544,7 +611,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         });
       });
 
-      describe('when a deal contains loans with an `Unconditional` facilityStage that do NOT have a requestedCoverStartDate', () => {
+      describe('when a deal contains loans with an `Unconditional` facilityStage that do NOT have a requestedCoverStartDate and coverDateConfirmed', () => {
         it('should add todays date to such loans', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
@@ -556,6 +623,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             status: 'Completed',
             updatedAt: expect.any(Number),
             createdDate: expect.any(Number),
+            coverDateConfirmed: true,
             requestedCoverStartDate: expect.any(Number),
             'requestedCoverStartDate-day': expect.any(Number),
             'requestedCoverStartDate-month': expect.any(Number),
@@ -573,6 +641,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             status: 'Completed',
             updatedAt: expect.any(Number),
             createdDate: expect.any(Number),
+            coverDateConfirmed: true,
             requestedCoverStartDate: expect.any(Number),
             'requestedCoverStartDate-day': expect.any(Number),
             'requestedCoverStartDate-month': expect.any(Number),

@@ -85,7 +85,7 @@ module.exports = {
   updateGefFacility: (facilityId, facilityUpdate) => Promise.resolve(facilityUpdate),
   addPortalDealComment: jest.fn(),
   addUnderwriterCommentToGefDeal: jest.fn(),
-  queryDeals: () => ALL_MOCK_DEALS,
+  queryDeals: jest.fn(),
   updateDeal: jest.fn(),
   updateDealSnapshot: (dealId, snapshotUpdate) => {
     const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
@@ -159,7 +159,7 @@ module.exports = {
 
     return mapped;
   },
-  updateFacility: (facilityId, tfmUpdate) => {
+  updateFacility: ({ facilityId, tfmUpdate }) => {
     const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId);
 
     // for some reason 2 api tests act differently if tfmUpdate is *not* included in both
@@ -214,7 +214,7 @@ module.exports = {
         facilities: [{ facilityId: '1234' }],
       },
     }),),
-  createEstoreFolders: (deal) => deal,
+  createEstoreSite: (deal) => deal,
   getPremiumSchedule: jest.fn(() => MOCK_PREMIUM_SCHEDULE_RESPONSE),
   sendEmail: jest.fn((templateId, sendToEmailAddress, emailVariables) => {
     const mockResponse = {

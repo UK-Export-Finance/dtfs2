@@ -1,3 +1,4 @@
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const { sub, format } = require('date-fns');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
@@ -7,6 +8,7 @@ const {
   createAndSubmitDeals,
 } = require('./tfm-deals-get.api-test');
 const CONSTANTS = require('../../../../src/constants');
+const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
@@ -38,13 +40,7 @@ describe('/v1/tfm/deals', () => {
           minDeal,
         ]);
 
-        const mockReqBody = {
-          queryParams: {
-            searchString: miaDeal.details.ukefDealId,
-          },
-        };
-
-        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+        const { status, body } = await api.get(`/v1/tfm/deals?searchString=${miaDeal.details.ukefDealId}`);
 
         expect(status).toEqual(200);
 
@@ -70,13 +66,7 @@ describe('/v1/tfm/deals', () => {
           minDeal,
         ]);
 
-        const mockReqBody = {
-          queryParams: {
-            searchString: miaDeal.ukefDealId,
-          },
-        };
-
-        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+        const { status, body } = await api.get(`/v1/tfm/deals?searchString=${miaDeal.ukefDealId}`);
 
         expect(status).toEqual(200);
 
@@ -113,13 +103,7 @@ describe('/v1/tfm/deals', () => {
           minDeal,
         ]);
 
-        const mockReqBody = {
-          queryParams: {
-            searchString: miaDeal.bank.name,
-          },
-        };
-
-        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+        const { status, body } = await api.get(`/v1/tfm/deals?searchString=${miaDeal.bank.name}`);
 
         expect(status).toEqual(200);
 
@@ -145,13 +129,7 @@ describe('/v1/tfm/deals', () => {
           minDeal,
         ]);
 
-        const mockReqBody = {
-          queryParams: {
-            searchString: miaDeal.submissionDetails['supplier-name'],
-          },
-        };
-
-        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+        const { status, body } = await api.get(`/v1/tfm/deals?searchString=${miaDeal.submissionDetails['supplier-name']}`);
 
         expect(status).toEqual(200);
 
@@ -182,13 +160,7 @@ describe('/v1/tfm/deals', () => {
           minDeal,
         ]);
 
-        const mockReqBody = {
-          queryParams: {
-            searchString: ainDeal.submissionType,
-          },
-        };
-
-        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+        const { status, body } = await api.get(`/v1/tfm/deals?searchString=${ainDeal.submissionType}`);
 
         expect(status).toEqual(200);
 
@@ -218,13 +190,7 @@ describe('/v1/tfm/deals', () => {
           miaDeal,
         ]);
 
-        const mockReqBody = {
-          queryParams: {
-            searchString: ainDeal.submissionDetails['buyer-name'],
-          },
-        };
-
-        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+        const { status, body } = await api.get(`/v1/tfm/deals?searchString=${ainDeal.submissionDetails['buyer-name']}`);
 
         expect(status).toEqual(200);
 
@@ -259,13 +225,7 @@ describe('/v1/tfm/deals', () => {
           miaDealWithApplicationStage,
         ]);
 
-        const mockReqBody = {
-          queryParams: {
-            searchString: 'Confirmed',
-          },
-        };
-
-        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+        const { status, body } = await api.get('/v1/tfm/deals?searchString=Confirmed');
 
         expect(status).toEqual(200);
 
@@ -312,13 +272,7 @@ describe('/v1/tfm/deals', () => {
         });
 
         it('returns deals filtered by Bond productCode', async () => {
-          const mockReqBody = {
-            queryParams: {
-              searchString: 'BSS',
-            },
-          };
-
-          const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+          const { status, body } = await api.get('/v1/tfm/deals?searchString=BSS');
 
           expect(status).toEqual(200);
 
@@ -331,13 +285,7 @@ describe('/v1/tfm/deals', () => {
         });
 
         it('returns deals filtered by loan productCode', async () => {
-          const mockReqBody = {
-            queryParams: {
-              searchString: 'EWCS',
-            },
-          };
-
-          const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+          const { status, body } = await api.get('/v1/tfm/deals?searchString=EWCS');
 
           expect(status).toEqual(200);
 
@@ -368,13 +316,7 @@ describe('/v1/tfm/deals', () => {
             dealWithBondsAndLoans,
           ]);
 
-          const mockReqBody = {
-            queryParams: {
-              searchString: 'BSS & EWCS',
-            },
-          };
-
-          const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+          const { status, body } = await api.get('/v1/tfm/deals?searchString=BSS%20&%20EWCS');
 
           expect(status).toEqual(200);
 
@@ -429,6 +371,7 @@ describe('/v1/tfm/deals', () => {
               dateReceived: yesterdayFormatted,
             },
           },
+          auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
         }).to(`/v1/tfm/deals/${dealSubmittedYesterdayResponseBody._id}`);
 
         await api.put({
@@ -437,15 +380,10 @@ describe('/v1/tfm/deals', () => {
               dateReceived: todayFormatted,
             },
           },
+          auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
         }).to(`/v1/tfm/deals/${dealSubmittedTodayResponseBody._id}`);
 
-        const mockReqBody = {
-          queryParams: {
-            searchString: String(yesterdayFormatted),
-          },
-        };
-
-        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+        const { status, body } = await api.get(`/v1/tfm/deals?searchString=${String(yesterdayFormatted)}`);
 
         expect(status).toEqual(200);
 
@@ -501,6 +439,7 @@ describe('/v1/tfm/deals', () => {
               dateReceived: yesterdayFormatted,
             },
           },
+          auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
         }).to(`/v1/tfm/deals/${dealSubmittedYesterdayResponseBody._id}`);
 
         await api.put({
@@ -509,15 +448,10 @@ describe('/v1/tfm/deals', () => {
               dateReceived: todayFormatted,
             },
           },
+          auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
         }).to(`/v1/tfm/deals/${dealSubmittedTodayResponseBody._id}`);
 
-        const mockReqBody = {
-          queryParams: {
-            searchString: String(format(yesterday, 'dd/MM/yyyy')),
-          },
-        };
-
-        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+        const { status, body } = await api.get(`/v1/tfm/deals?searchString=${String(format(yesterday, 'dd/MM/yyyy'))}`);
 
         expect(status).toEqual(200);
 

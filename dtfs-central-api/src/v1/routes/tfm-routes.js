@@ -218,34 +218,73 @@ tfmRouter.route('/deals/:id/snapshot')
  *     summary: Get TFM deals
  *     tags: [TFM]
  *     description: Get TFM deals
- *     requestBody:
- *       description: Search string and sortBy values
- *       content:
- *         application/json:
- *           schema:
+ *     parameters:
+ *       - in: query
+ *         name: searchString
+ *         schema:
+ *           type: string
+ *         description: A search term to filter the deals table by
+ *       - in: query
+ *         name: byField
+ *         schema:
+ *           type: array
+ *           items:
  *             type: object
  *             properties:
- *               queryParams:
- *                 type: object
- *                 properties:
- *                   searchString:
- *                     type: string
- *                     example: HSBC bank
- *                   byField:
- *                     type: array
- *                     items:
- *                       type: object
- *                       example: { name: 'tfm.dateReceived', value: '25-12-2021' }
- *                   sortBy:
- *                     type: object
- *                     example: { order: ascending }
+ *               name:
+ *                 type: string
+ *                 example: tfm.dateReceived
+ *               value:
+ *                 example: 25-12-2021
+ *         description: An array. Each item in the array contains the name and value of a field to filter the deals table by
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: object
+ *           properties:
+ *             order:
+ *               type: string
+ *               example: ascending
+ *             field:
+ *               type: string
+ *               example: dealSnapshot.ukefDealId
+ *         description: A field and order to sort the deals table by
+ *       - in: query
+ *         name: pagesize
+ *         schema:
+ *           type: number
+ *           example: 20
+ *         description: The number of deals per table page
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: number
+ *           example: 0
+ *         description: The requested page number of the deals table
  *     responses:
  *       200:
  *         description: OK
  *         content:
  *           application/json:
- *             example:
- *               deals: [ { _id: '123456abc', allFields: true }, { _id: '123456abc', allFields: true } ]
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 deals:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/definitions/TFMDealBSS'
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     totalItems:
+ *                       type: number
+ *                       example: 2168
+ *                     currentPage:
+ *                       type: number
+ *                       example: 108
+ *                     totalPages:
+ *                       type: number
+ *                       example: 109
  */
 tfmRouter.route('/deals')
   .get(
@@ -285,19 +324,36 @@ tfmRouter.route('/deals/:id/facilities')
  *     summary: Get TFM facilities
  *     tags: [TFM]
  *     description: Get all facilities from TFM
- *     requestBody:
- *       description: Search based on specific string - ukefFacilityId & companyName
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               queryParams:
- *                 type: object
- *                 properties:
- *                   searchString:
- *                     type: string
- *                     example: HSBC bank
+ *     parameters:
+ *       - in: query
+ *         name: searchString
+ *         schema:
+ *           type: string
+ *         description: A search term to filter the facilities table by
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: object
+ *           properties:
+ *             order:
+ *               type: string
+ *               example: ascending
+ *             field:
+ *               type: string
+ *               example: ukefFacilityId
+ *         description: A field and order to sort the facilities table by
+ *       - in: query
+ *         name: pagesize
+ *         schema:
+ *           type: number
+ *           example: 20
+ *         description: The number of facilities per table page
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: number
+ *           example: 0
+ *         description: The requested page number of the facilities table
  *     responses:
  *       200:
  *         description: OK
@@ -366,11 +422,20 @@ tfmRouter.route('/facilities/:id')
  *                 - $ref: '#/definitions/TFMFacilityGEF'
  *                 - type: object
  *                   properties:
- *                     facilitySnapshot:
+ *                     tfmUpdate:
  *                       type: object
  *                       properties:
  *                         aNewField:
  *                           example: true
+ *                     auditDetails:
+ *                       type: object
+ *                       properties:
+ *                         userType:
+ *                           type: string
+ *                           enum: [system, portal, tfm]
+ *                         id:
+ *                           type: string
+ *                           example: '1234567890abcdef12345678'
  *       404:
  *         description: Not found
  */
@@ -432,14 +497,22 @@ tfmRouter.route('/deals/:dealId/amendments/:status?/:type?').get(tfmGetAmendment
  *                 type: string
  *               amendment:
  *                 type: object
+ *                 example:
+ *                  {
+ *                    requestDate: 1555662,
+ *                    creationTimestamp: 1555662,
+ *                    createdBy: user
+ *                  }
  *               id:
  *                 type: string
- *             example:
- *              {
- *                requestDate: 1555662,
- *                creationTimestamp: 1555662,
- *                createdBy: user
- *              }
+ *               auditDetails:
+ *                 type: object
+ *                 properties:
+ *                   userType:
+ *                     type: string
+ *                     enum: [tfm]
+ *                   id:
+ *                     type: string
  *     responses:
  *       200:
  *         description: OK

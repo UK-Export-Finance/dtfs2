@@ -1,13 +1,12 @@
-import {
-  applicationDetails,
-  postApplicationDetails,
-} from '.';
+import { applicationDetails, postApplicationDetails } from '.';
 import api from '../../services/api';
 import { NON_MAKER_ROLES } from '../../../test-helpers/common-role-lists';
 
 import MOCKS from '../mocks';
 import CONSTANTS from '../../constants';
 import { ALL_DEAL_STATUSES } from '../../../test-helpers/common-deal-status-lists';
+
+const { cloneDeep } = require('lodash');
 
 jest.mock('../../services/api');
 
@@ -30,6 +29,7 @@ describe('controllers/application-details', () => {
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
+    mockRequest.flash = mockSuccessfulFlashResponse();
   });
 
   afterEach(() => {
@@ -40,30 +40,39 @@ describe('controllers/application-details', () => {
     it('redirects to dashboard if user is not authorised', async () => {
       mockApplicationResponse.bank = { id: 'ANOTHER_BANK' };
       api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+      await applicationDetails(mockRequest, mockResponse);
+      expect(mockResponse.render).not.toHaveBeenCalled();
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard');
+    });
 
+    it('redirects to problem with service page if the deal is not GEF', async () => {
+      mockApplicationResponse.dealType = CONSTANTS.DEAL_TYPE.BSS_EWCS;
+      api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
       await applicationDetails(mockRequest, mockResponse);
 
-      expect(mockResponse.render).not.toHaveBeenCalled();
-      expect(mockResponse.redirect).toHaveBeenCalled();
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
 
     it('renders the `Application Details` template', async () => {
-      mockFacilityResponse.items = [{
-        details: { type: CONSTANTS.FACILITY_TYPE.CASH },
-        validation: { required: [] },
-        createdAt: 20,
-      },
-      {
-        details: { type: CONSTANTS.FACILITY_TYPE.CONTINGENT },
-        validation: { required: [] },
-        createdAt: 10,
-      }];
+      mockFacilityResponse.items = [
+        {
+          details: { type: CONSTANTS.FACILITY_TYPE.CASH },
+          validation: { required: [] },
+          createdAt: 20,
+        },
+        {
+          details: { type: CONSTANTS.FACILITY_TYPE.CONTINGENT },
+          validation: { required: [] },
+          createdAt: 10,
+        },
+      ];
 
       api.getFacilities.mockResolvedValueOnce(mockFacilityResponse);
 
       await applicationDetails(mockRequest, mockResponse);
-      expect(mockResponse.render)
-        .toHaveBeenCalledWith('partials/application-details.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/application-details.njk',
+        expect.objectContaining({
           // header
           ukefDealId: mockApplicationResponse.ukefDealId,
           submissionDate: mockApplicationResponse.submissionDate,
@@ -145,7 +154,8 @@ describe('controllers/application-details', () => {
           // user in session
           user: mockRequest.session.user,
           userRoles: mockRequest.session.user.roles,
-        });
+        }),
+      );
     });
 
     describe('template rendering from deal.status', () => {
@@ -155,10 +165,12 @@ describe('controllers/application-details', () => {
 
         await applicationDetails(mockRequest, mockResponse);
 
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-details.njk',
+          expect.objectContaining({
             abandon: true,
-          }));
+          }),
+        );
       });
 
       it('renders `application-details` when status is CHANGES_REQUIRED', async () => {
@@ -167,10 +179,12 @@ describe('controllers/application-details', () => {
 
         await applicationDetails(mockRequest, mockResponse);
 
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-details.njk',
+          expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
-          }));
+          }),
+        );
       });
 
       it('renders `application-preview` when status is READY_FOR_APPROVAL', async () => {
@@ -179,11 +193,13 @@ describe('controllers/application-details', () => {
 
         await applicationDetails(mockRequest, mockResponse);
 
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
             abandon: false,
-          }));
+          }),
+        );
       });
 
       it('renders `application-preview` when status is SUBMITTED_TO_UKEF', async () => {
@@ -192,10 +208,12 @@ describe('controllers/application-details', () => {
 
         await applicationDetails(mockRequest, mockResponse);
 
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
-          }));
+          }),
+        );
       });
 
       it('renders `application-preview` when status is ABANDONED', async () => {
@@ -204,10 +222,12 @@ describe('controllers/application-details', () => {
 
         await applicationDetails(mockRequest, mockResponse);
 
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
-          }));
+          }),
+        );
       });
 
       it('renders `application-preview` when status is UKEF_ACKNOWLEDGED', async () => {
@@ -216,10 +236,12 @@ describe('controllers/application-details', () => {
 
         await applicationDetails(mockRequest, mockResponse);
 
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
-          }));
+          }),
+        );
       });
 
       it('renders `application-details` when status is IN_PROGRESS_BY_UKEF', async () => {
@@ -228,10 +250,12 @@ describe('controllers/application-details', () => {
 
         await applicationDetails(mockRequest, mockResponse);
 
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-details.njk',
+          expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
-          }));
+          }),
+        );
       });
 
       it('renders `application-details` with hasChangedFacilities as true when changed facilities present', async () => {
@@ -241,10 +265,12 @@ describe('controllers/application-details', () => {
 
         await applicationDetails(mockRequest, mockResponse);
 
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-details.njk',
+          expect.objectContaining({
             hasChangedFacilities: true,
-          }));
+          }),
+        );
       });
 
       it('renders `application-details` with hasChangedFacilities as false when no changed facilities present', async () => {
@@ -254,10 +280,12 @@ describe('controllers/application-details', () => {
 
         await applicationDetails(mockRequest, mockResponse);
 
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-details.njk',
+          expect.objectContaining({
             hasChangedFacilities: false,
-          }));
+          }),
+        );
       });
 
       it('renders `application-details` with displayChangeSupportingInfo as true when draft', async () => {
@@ -267,10 +295,12 @@ describe('controllers/application-details', () => {
 
         await applicationDetails(mockRequest, mockResponse);
 
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-details.njk',
+          expect.objectContaining({
             displayChangeSupportingInfo: true,
-          }));
+          }),
+        );
       });
 
       it('renders `application-details` with displayChangeSupportingInfo as false when preview mode (IN_PROGRESS_BY_UKEF)', async () => {
@@ -280,10 +310,12 @@ describe('controllers/application-details', () => {
 
         await applicationDetails(mockRequest, mockResponse);
 
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-details.njk',
+          expect.objectContaining({
             displayChangeSupportingInfo: false,
-          }));
+          }),
+        );
       });
 
       it('renders `application-details` with displayChangeSupportingInfo as true when the submission count is 0', async () => {
@@ -293,10 +325,12 @@ describe('controllers/application-details', () => {
 
         await applicationDetails(mockRequest, mockResponse);
 
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-details.njk',
+          expect.objectContaining({
             displayChangeSupportingInfo: true,
-          }));
+          }),
+        );
       });
 
       it('renders `application-details` with displayChangeSupportingInfo as false submission count is 1', async () => {
@@ -307,10 +341,12 @@ describe('controllers/application-details', () => {
 
         await applicationDetails(mockRequest, mockResponse);
 
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-details.njk',
+          expect.objectContaining({
             displayChangeSupportingInfo: false,
-          }));
+          }),
+        );
       });
 
       it('renders `application-preview` when status is UKEF_APPROVED_WITH_CONDITIONS', async () => {
@@ -319,10 +355,12 @@ describe('controllers/application-details', () => {
 
         await applicationDetails(mockRequest, mockResponse);
 
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
-          }));
+          }),
+        );
       });
 
       it('renders `application-preview` when status is UKEF_APPROVED_WITHOUT_CONDITIONS', async () => {
@@ -331,10 +369,12 @@ describe('controllers/application-details', () => {
 
         await applicationDetails(mockRequest, mockResponse);
 
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
-          }));
+          }),
+        );
       });
 
       it('renders `application-preview` when status is UKEF_REFUSED', async () => {
@@ -343,40 +383,125 @@ describe('controllers/application-details', () => {
 
         await applicationDetails(mockRequest, mockResponse);
 
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/application-preview.njk', expect.objectContaining({
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
-          }));
+          }),
+        );
       });
 
       it('renders `review-decision` when page requested is `review-decision`', async () => {
         mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+        const req = {
+          ...MOCKS.MockRequestUrl('/gef/application/123/review-decision'),
+          flash: mockSuccessfulFlashResponse(),
+        };
+        await applicationDetails(req, mockResponse);
 
-        await applicationDetails(MOCKS.MockRequestUrl('/gef/application/123/review-decision'), mockResponse);
-
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/review-decision.njk', expect.objectContaining({
-            applicationStatus: mockApplicationResponse.status,
-          }));
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/review-decision.njk',
+          expect.objectContaining({ applicationStatus: mockApplicationResponse.status }),
+        );
       });
 
       it('renders `unissued-facilities` when page requested is `unissued facilities` ', async () => {
         mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+        const req = {
+          ...MOCKS.MockRequestUrl('/gef/application/123/unissued-facilities'),
+          flash: mockSuccessfulFlashResponse(),
+        };
+        await applicationDetails(req, mockResponse);
 
-        await applicationDetails(MOCKS.MockRequestUrl('/gef/application/123/unissued-facilities'), mockResponse);
-
-        expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/unissued-facilities.njk', expect.objectContaining({
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/unissued-facilities.njk',
+          expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
             unissuedFacilitiesPresent: false,
             facilitiesChangedToIssued: [],
-          }));
+          }),
+        );
       });
     });
 
     describe('params', () => {
+      describe('Success', () => {
+        it('when a success message is present and req.flash is not present in request it passes the success message from the request to the template', async () => {
+          // Arrange
+          const testReq = cloneDeep(mockRequest);
+          testReq.success = { message: 'Success message' };
+          testReq.flash = mockUnsuccessfulFlashResponse();
+          // Act
+          await applicationDetails(testReq, mockResponse);
+          // Assert
+          expect(mockResponse.render).toHaveBeenCalledWith(
+            expect.any(String),
+            expect.objectContaining({
+              success: { message: 'Success message' },
+            }),
+          );
+        });
+
+        it('when a success message is present and req.flash is present in request it passes the req.flash success message to template', async () => {
+          // Arrange
+          const testReq = cloneDeep(mockRequest);
+          testReq.success = { message: 'Success message' };
+          testReq.flash = mockSuccessfulFlashResponse();
+
+          // Act
+          await applicationDetails(testReq, mockResponse);
+
+          // Assert
+          expect(mockResponse.render).toHaveBeenCalledWith(
+            expect.any(String),
+            expect.objectContaining({
+              success: {
+                message: 'Facility is updated',
+              },
+            }),
+          );
+        });
+
+        it('when a success message is not present and req.flash is present in request it passes the req.flash success message to template', async () => {
+          // Arrange
+          const testReq = cloneDeep(mockRequest);
+          testReq.success = [];
+          testReq.flash = mockSuccessfulFlashResponse();
+
+          // Act
+          await applicationDetails(testReq, mockResponse);
+
+          // Assert
+          expect(mockResponse.render).toHaveBeenCalledWith(
+            expect.any(String),
+            expect.objectContaining({
+              success: {
+                message: 'Facility is updated',
+              },
+            }),
+          );
+        });
+
+        it('when neither success messages are present in request it does not pass on a success message to template template', async () => {
+          // Arrange
+          const testReq = cloneDeep(mockRequest);
+          testReq.success = [];
+          testReq.flash = mockUnsuccessfulFlashResponse();
+
+          // Act
+          await applicationDetails(testReq, mockResponse);
+
+          // Assert
+          expect(mockResponse.render).toHaveBeenCalledWith(
+            expect.any(String),
+            expect.not.objectContaining({
+              success: expect.any(String),
+            }),
+          );
+        });
+      });
       describe('abandon', () => {
         const statusesThatAllowDealToBeAbandoned = [CONSTANTS.DEAL_STATUS.DRAFT, CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED];
         const statusesThatDoNotAllowDealToBeAbandoned = ALL_DEAL_STATUSES.filter((status) => !statusesThatAllowDealToBeAbandoned.includes(status));
@@ -389,10 +514,12 @@ describe('controllers/application-details', () => {
 
           await applicationDetails(mockRequest, mockResponse);
 
-          expect(mockResponse.render)
-            .toHaveBeenCalledWith(expect.any(String), expect.objectContaining({
+          expect(mockResponse.render).toHaveBeenCalledWith(
+            expect.any(String),
+            expect.objectContaining({
               abandon: false,
-            }));
+            }),
+          );
         });
 
         it.each(statusesThatAllowDealToBeAbandoned)('is true if the user has the maker role and the deal is in %s status', async (status) => {
@@ -402,10 +529,12 @@ describe('controllers/application-details', () => {
 
           await applicationDetails(mockRequest, mockResponse);
 
-          expect(mockResponse.render)
-            .toHaveBeenCalledWith(expect.any(String), expect.objectContaining({
+          expect(mockResponse.render).toHaveBeenCalledWith(
+            expect.any(String),
+            expect.objectContaining({
               abandon: true,
-            }));
+            }),
+          );
         });
 
         it.each(statusesThatDoNotAllowDealToBeAbandoned)('is false if the user has the maker role and the deal is in %s status', async (status) => {
@@ -415,10 +544,12 @@ describe('controllers/application-details', () => {
 
           await applicationDetails(mockRequest, mockResponse);
 
-          expect(mockResponse.render)
-            .toHaveBeenCalledWith(expect.any(String), expect.objectContaining({
+          expect(mockResponse.render).toHaveBeenCalledWith(
+            expect.any(String),
+            expect.objectContaining({
               abandon: false,
-            }));
+            }),
+          );
         });
       });
     });
@@ -436,8 +567,14 @@ describe('controllers/application-details', () => {
     it('redirects to submission url', async () => {
       postApplicationDetails(mockRequest, mockResponse);
 
-      expect(mockResponse.redirect)
-        .toHaveBeenCalledWith('/gef/application-details/123/submit');
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/1234567890abcdf123456789/submit');
     });
   });
+
+  function mockSuccessfulFlashResponse() {
+    return jest.fn().mockReturnValue([{ message: 'Facility is updated' }]);
+  }
+  function mockUnsuccessfulFlashResponse() {
+    return jest.fn().mockReturnValue([]);
+  }
 });

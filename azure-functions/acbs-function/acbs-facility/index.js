@@ -15,7 +15,7 @@ const mappings = require('../mappings');
 const CONSTANTS = require('../constants');
 const helpers = require('../mappings/facility/helpers');
 
-module.exports = df.orchestrator(function* createACBSfacility(context) {
+df.app.orchestration('acbs-facility', function* createACBSfacility(context) {
   const { deal, facility, dealAcbsData, acbsReference } = context.df.getInput();
   let facilityLoan;
   let facilityFee;
@@ -26,7 +26,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
     const { facilityIdentifier } = acbsFacilityMasterInput;
 
     if (facilityIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.PENDING) || facilityIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.TEST)) {
-      throw new Error('Invalid facility ID %s', facilityIdentifier);
+      throw new Error(`Invalid facility ID ${facilityIdentifier}`);
     }
 
     const facilityMaster = yield context.df.callActivityWithRetry('activity-create-facility-master', retryOptions, { acbsFacilityMasterInput });
@@ -106,7 +106,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
         facilityFee = yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, { facilityIdentifier, acbsFacilityFeeInput });
       }
     } else {
-      console.info('Unissued facility: %s', acbsFacilityMasterInput.facilityIdentifier);
+      console.info('Unissued facility %s', acbsFacilityMasterInput.facilityIdentifier);
     }
 
     return {
@@ -121,7 +121,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
       facilityFee,
     };
   } catch (error) {
-    console.error('Error creating facility records: %s', error);
-    throw new Error('Error creating facility record %s', error);
+    console.error('Error creating facility records %o', error);
+    throw new Error(`Error creating facility record ${error}`);
   }
 });

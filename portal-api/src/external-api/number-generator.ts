@@ -7,7 +7,7 @@ const { EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 
 const headers = {
   'Content-Type': 'application/json',
-  'x-api-key': EXTERNAL_API_KEY,
+  'x-api-key': String(EXTERNAL_API_KEY),
 };
 
 /**
@@ -38,7 +38,7 @@ export const getNumber = async (entityType: string, dealId: string): Promise<obj
 
     return response;
   } catch (error: unknown) {
-    console.error('❌ Error sending payload to external-api microservice: %o', error);
+    console.error('❌ Error sending payload to external-api microservice %o', error);
 
     return {
       status: HttpStatusCode.InternalServerError,

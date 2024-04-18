@@ -42,6 +42,7 @@ on:
   pull_request:
     branches:
       - main
+      - "release-*"
 
     paths:
       - "package*.json"
@@ -65,6 +66,7 @@ on:
       - feature
       - staging
       - prod
+      - release-1.5
 
     paths:
       - ".github/workflows/deployment.yml"
@@ -110,6 +112,7 @@ env:
   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
   UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
+  ESTORE_CRON_MANAGER_SCHEDULE: ${{ vars.ESTORE_CRON_MANAGER_SCHEDULE }}
   TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
   PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
   DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
@@ -130,6 +133,7 @@ env:
   AUDIT_API_USERNAME: ${{ secrets.AUDIT_API_USERNAME }}
   AUDIT_API_PASSWORD: ${{ secrets.AUDIT_API_PASSWORD }}
   UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: ${{ vars.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}
+  ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE: ${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }}
 
 jobs:
   # 1. Setup test infrastructure
@@ -194,7 +198,7 @@ jobs:
 
       - name: Start
         working-directory: ./
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
@@ -203,11 +207,11 @@ jobs:
           npm run load
 
       - name: Execute
-        run: docker-compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
+        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
 
       - name: Stop
         working-directory: ./
-        run: docker-compose -f docker-compose.gha.yml down
+        run: docker compose down
 
       - name: Coverage
         uses: codecov/codecov-action@v3
@@ -287,7 +291,7 @@ jobs:
             "./external-api",
             "./trade-finance-manager-api",
             "./libs/common",
-            "./azure-functions/acbs-function"
+            "./azure-functions/acbs-function",
           ]
 
     concurrency:
@@ -372,7 +376,7 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
@@ -400,8 +404,18 @@ jobs:
         spec:
           [
             "*.spec.js",
+            "application/**/*.spec.js",
+            "checker/**/*.spec.js",
+            "clone/**/*.spec.js",
+            "eligibility/**/*.spec.js",
+            "exporter/**/*.spec.js",
+            "external/**/*.spec.js",
+            "facility/**/*.spec.js",
+            "maker/**/*.spec.js",
             "scenarios/**/*.spec.js",
-            "unissued-facilities/**/*.spec.js",
+            "security/**/*.spec.js",
+            "ukef/**/*.spec.js",
+            "upload/**/*.spec.js",
           ]
 
     concurrency:
@@ -421,7 +435,7 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
@@ -478,7 +492,7 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
@@ -544,7 +558,7 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./

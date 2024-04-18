@@ -8,10 +8,10 @@ Ensure you have an `.env` file set up. You can use `.env.sample` as a starting p
 
 ## Running Locally 🏃‍♂️
 
-1. Run `docker-compose up`.
+1. Run `npm run start`.
 2. Visit http://localhost:5000 in your web browser.
 
-Alternatively, you can start all services from the root directory using `docker-compose up`.
+Alternatively, you can start all services from the root directory using `npm run start`.
 
 ## Login Credentials 🔐
 
@@ -77,7 +77,7 @@ Portal has a login process that requires a user to check their emails to success
 
   - **Portal UI** redirects the user to the `check-your-email` page ² ³
 
-- **user** clicks on login link ²
+- **user** clicks on login link
   - **Portal UI** checks login link with **Portal API**
     - **Portal API** checks this login link against the database login link for validity (including it has been clicked half an hour of being issued)
     - **Portal API** issues a new token to **Portal UI** with `loginStatus: 'Valid 2FA'`, and includes some additional user information ⁴

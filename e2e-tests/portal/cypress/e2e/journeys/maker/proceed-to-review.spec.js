@@ -173,7 +173,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
     });
   });
 
-  it('Ensure proceed to review button is now visible', () => {
+  it('Ensure proceed to review button is not visible', () => {
     // Login as a `Maker`
     cy.login(BANK1_MAKER1);
 
@@ -181,6 +181,6 @@ context('Ensure proceed to review button is only visible once facilities are in 
     pages.contract.visit(deal);
 
     // Proceed to review button
-    pages.contract.proceedToReview().should('exist');
+    pages.contract.proceedToReview().should('not.exist');
   });
 });

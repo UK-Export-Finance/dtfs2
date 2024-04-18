@@ -1,12 +1,9 @@
 const {
-  createAndLogInAsInitialTfmUser,
-  createAndLogInAsInitialUser,
-  deleteInitialUser,
-  deleteInitialTFMUser
+  createAndLogInAsInitialTfmUser, createAndLogInAsInitialUser, deleteInitialUser, deleteInitialTFMUser
 } = require('./user-helper');
 const db = require('./database/database-client');
 
-const cleanAllTables = require('./clean-all-tables');
+const cleanAllTablesPortal = require('./clean-all-tables-portal');
 const insertMocks = require('./insert-mocks');
 
 // GEF specific
@@ -16,24 +13,41 @@ const insertMocksGef = require('./insert-mocks-gef');
 // TFM specific
 const cleanAllTablesTfm = require('./tfm/clean-all-tables-tfm');
 const insertMocksTfm = require('./tfm/insert-mocks-tfm');
+const { logger, LOGGER_COLOURS } = require('./helpers/logger.helper');
 
 const init = async () => {
-  const portalToken = await createAndLogInAsInitialUser();
+  logger.info('REINSERTING MOCKS', { colour: LOGGER_COLOURS.bright });
+  try {
+    const portalToken = await createAndLogInAsInitialUser();
 
-  await cleanAllTables(portalToken);
-  await insertMocks(portalToken);
-  await cleanAllTablesGef(portalToken);
-  await insertMocksGef(portalToken);
+    await cleanAllTablesPortal(portalToken);
+    await cleanAllTablesGef(portalToken);
+    await cleanAllTablesTfm();
 
-  await cleanAllTablesTfm();
+    await insertMocks(portalToken);
+    await insertMocksGef(portalToken);
 
-  const tfmToken = await createAndLogInAsInitialTfmUser();
-  await insertMocksTfm(tfmToken);
+    const tfmToken = await createAndLogInAsInitialTfmUser();
+    await insertMocksTfm(tfmToken);
 
-  await deleteInitialTFMUser(tfmToken);
-  await deleteInitialUser(portalToken);
-
+    await deleteInitialTFMUser(tfmToken);
+    await deleteInitialUser(portalToken);
+  } catch (error) {
+    logger.error('An error occurred, attempting to clean all tables');
+    try {
+      const portalToken = await createAndLogInAsInitialUser();
+      await cleanAllTablesPortal(portalToken);
+      await cleanAllTablesGef(portalToken);
+      await cleanAllTablesTfm();
+    } catch {
+      logger.error('Not all tables could be cleared. Consider manually clearing your database before retrying');
+    }
+    logger.error('The following error occurred while attempting to reinsert mocks:');
+    throw error;
+  }
   db.close();
+
+  logger.info('REINSERTING MOCKS SUCCESSFUL', { colour: LOGGER_COLOURS.bright });
 };
 
 init();

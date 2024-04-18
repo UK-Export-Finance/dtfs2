@@ -18,7 +18,7 @@ To run this reverse-proxy service locally, you can follow these steps:
 1. Start all services from the root directory using Docker Compose:
 
     ```shell
-    docker-compose up
+    npm run start
     ```
 
 This service seems to be an essential part of the overall architecture, enabling seamless access to both the Portal (BSS) and GEF user interfaces for end-users while ensuring that requests are directed to the appropriate service based on the path.

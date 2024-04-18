@@ -13,13 +13,7 @@ const routes = require('./routes');
 const supportingInformationUploadRoutes = require('./routes/supporting-information-upload');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
-const {
-  csrfToken,
-  copyCsrfTokenFromQueryToBody,
-  security,
-  seo,
-  createRateLimit,
-} = require('./middleware');
+const { csrfToken, copyCsrfTokenFromQueryToBody, security, seo, createRateLimit } = require('./middleware');
 
 dotenv.config();
 
@@ -68,7 +62,7 @@ const generateApp = () => {
   const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
 
   redisClient.on('error', (error) => {
-    console.error('Unable to connect to Redis: %s %O', process.env.REDIS_HOSTNAME, error);
+    console.error('Unable to connect to Redis %s %o', process.env.REDIS_HOSTNAME, error);
   });
 
   redisClient.on('ready', () => {
@@ -104,11 +98,16 @@ const generateApp = () => {
     watch: true,
   });
 
-  app.use(morgan('dev', {
-    skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
-  }));
+  app.use(
+    morgan('dev', {
+      skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
+    }),
+  );
 
-  app.use('/assets', express.static(path.join(__dirname, '..', 'public')));
+  app.use(
+    '/assets',
+    express.static(path.join(__dirname, '..', 'public')),
+  );
 
   app.use(createRateLimit());
 

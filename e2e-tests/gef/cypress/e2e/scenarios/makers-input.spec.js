@@ -15,7 +15,7 @@ context('Review application when returned to maker', () => {
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
-        cy.apiFetchAllApplications(token);
+        cy.apiFetchAllGefApplications(token);
       })
       .then(({ body }) => {
         body.items.forEach((item) => {

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ChangeStreamDocument } from 'mongodb';
+import { ChangeStreamUpdateDocument, ChangeStreamInsertDocument, ChangeStreamReplaceDocument } from 'mongodb';
 import { InvalidEnvironmentVariableError } from '../../errors/invalid-environment-variable.error';
 
 /**
@@ -8,22 +8,13 @@ import { InvalidEnvironmentVariableError } from '../../errors/invalid-environmen
  * @param changeStreamDocument Change Stream Document event from mongodb API
  * @returns
  */
-export const postAuditDetails: (changeStreamDocument: ChangeStreamDocument) => Promise<void> = async (changeStreamDocument: ChangeStreamDocument) => {
+export const postAuditDetails: (
+  changeStreamDocument: ChangeStreamInsertDocument | ChangeStreamUpdateDocument | ChangeStreamReplaceDocument,
+) => Promise<void> = async (changeStreamDocument: ChangeStreamInsertDocument | ChangeStreamUpdateDocument | ChangeStreamReplaceDocument) => {
   const { AUDIT_API_URL, AUDIT_API_USERNAME, AUDIT_API_PASSWORD } = process.env;
   if (!AUDIT_API_URL || !AUDIT_API_USERNAME || !AUDIT_API_PASSWORD) {
     throw new InvalidEnvironmentVariableError('AUDIT_API_URL, AUDIT_API_USERNAME or AUDIT_API_PASSWORD not set');
   }
-  if (
-    changeStreamDocument.operationType !== 'insert' &&
-    changeStreamDocument.operationType !== 'update' &&
-    changeStreamDocument.operationType !== 'replace' &&
-    changeStreamDocument.operationType !== 'delete'
-  ) {
-    console.info('Change stream document is not suitable event for audit API, skipping');
-    return;
-  }
-
-  const fullDocument = changeStreamDocument.operationType !== 'delete' ? changeStreamDocument.fullDocument : null;
   console.info('Sending change stream update to API for document', changeStreamDocument);
 
   const authorizationHeader = Buffer.from(`${AUDIT_API_USERNAME}:${AUDIT_API_PASSWORD}`).toString('base64');
@@ -36,8 +27,8 @@ export const postAuditDetails: (changeStreamDocument: ChangeStreamDocument) => P
       integrationHubCollectionName: changeStreamDocument.ns.coll,
       integrationHubProcess: 'dtfs',
       Accept: 'application/json',
-      'Content-Type': 'text/plain'
+      'Content-Type': 'text/plain',
     },
-    data: fullDocument,
+    data: changeStreamDocument.fullDocument,
   });
 };

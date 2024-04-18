@@ -13,7 +13,7 @@ const submitToUkef = async (req, res) => {
       dealId,
     });
   } catch (error) {
-    console.error('GEF UI - error getting submitToUkef page %s', error);
+    console.error('GEF UI - error getting submitToUkef page %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -60,7 +60,7 @@ const createSubmissionToUkef = async (req, res) => {
       hasIssuedFacility,
     });
   } catch (error) {
-    console.error('Unable to post submit to UKEF %s', error);
+    console.error('Unable to post submit to UKEF %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

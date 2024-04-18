@@ -1,4 +1,5 @@
 # Digital Trade Finance Service :briefcase:
+
 This repository contains the code for the UK Export Finance Trade Finance Service.
 This documentation provides a comprehensive overview of the UKEF Digital TradeFinance Service (DTFS), including prerequisites, technology stack, setup instructions, testing procedures, deployment guidelines, and other essential information for the developers.
 
@@ -13,6 +14,7 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
 ![SCA](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/sca.yml/badge.svg)
 ![QA](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/test.yml/badge.svg)
 ![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/publish.yml/badge.svg)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/1679637fa6fd4778815c0dbf4b3aea5b)](https://app.codacy.com/gh/UK-Export-Finance/dtfs2/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 **CD** 🚀
 
@@ -37,6 +39,7 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
 - Webpack
 - GovUK and MOJ design systems
 - Nunjucks (UI templates)
+- [Connect-Flash](https://www.npmjs.com/package/connect-flash)
 
 ### Setup :gear:
 
@@ -59,7 +62,7 @@ Note: If you're on Windows and experiencing issues with MongoDB, install mongosh
 ## Running the World Locally :earth_americas:
 
 ```shell
-docker-compose up
+npm run start
 ```
 
 Several services are built:
@@ -82,8 +85,16 @@ To access GEF locally, use [http://localhost](http://localhost).
 To stop the local environment, simply exit the running terminal and run:
 
 ```shell
-docker-compose down
+npm run stop
 ```
+
+## Different docker compose files
+
+There are 3 different docker compose files right now.
+
+- docker-compose.yml is used for local development
+- docker-compose.gha.yml is used for the pipelines to run our tests against
+- docker-compose.replica-set.yml is used when you need a replica set enabled on your local database, e.g. when working with the mongodb change stream
 
 ## Login Credentials :key:
 
@@ -176,7 +187,18 @@ These CSS and JS files are built from SCSS and JS source files using a tool call
 
 The developer should run `npm run build` inside the service in question to recompile the CSS and JS in the `public` folder after making any changes to the source files or their dependencies.
 
-IMPORTANT: When recompiling JS files, the developer should ensure that they update the `integrity` attribute in any HTML/Nunjucks `script` tags that use the file to reflect the new hash of the recompiled file (a good place to check for these `script` tags is the `templates/index.njk` file in the service). An easy way of finding the new hash is to render a template that uses the script in a browser; a console error should give you the hash of the recompiled file.
+### Sub-resource integrity [(SRI)](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity)
+
+Client side JavaScript files are protected by SRI security feature which allows the browser to verify the authenticity of the JavaScript files in use.
+
+:warning: If a client side JavaScript file is changed and recompiled during `npm run build`, a new file hash will need to be generated. Otherwise, the script will not be executed.
+
+This can be done by updating the `integrity` attribute in any HTML/Nunjucks `script` tags that use the file to reflect the new hash of the recompiled file (a good place to check for these `script` tags is the `templates/index.njk` file in the service).
+
+There are two ways to update these:
+
+1. (Preferred) Render a template that uses the script in a browser; a console error should give you the hash of the recompiled file.
+2. Run `cat FILENAME.js | openssl dgst -sha512 -binary | openssl base64 -A` on each. Note -- GEF UI references Portal UI's javascript files when using the reverse proxy, so use the hashes from Portal UI's `.js` files in GEF-UI.
 
 ## Linting :mag_right:
 

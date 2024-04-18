@@ -1,10 +1,10 @@
 const { format } = require('date-fns');
+const { isValidMongoId } = require('../../utils/validateIds');
 const api = require('../../services/api');
 const { FACILITY_TYPE } = require('../../constants');
 const { isTrueSet } = require('../../utils/helpers');
 const { facilityTypeStringGenerator } = require('../../utils/facility-helpers');
 const CONSTANTS = require('../../constants');
-const { applicationDetails } = require('../application-details');
 const { facilityValidation } = require('./validation');
 const { validationErrorHandler } = require('../../utils/helpers');
 
@@ -128,7 +128,7 @@ const changeIssuedToUnissuedFacility = async (req, res) => {
       dealId,
     });
   } catch (error) {
-    console.error('Facilities error %s', error);
+    console.error('Facilities error %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -184,6 +184,10 @@ const postChangeUnissuedFacility = async (req, res) => {
       });
     }
 
+    if (!isValidMongoId(dealId)) {
+      throw new Error('DealId not valid');
+    }
+
     const userObj = {
       firstname: user.firstname,
       surname: user.surname,
@@ -209,7 +213,6 @@ const postChangeUnissuedFacility = async (req, res) => {
     req.success = {
       message: `${body.facilityName} is updated`,
     };
-    req.url = `/gef/application-details/${dealId}/unissued-facilities`;
 
     // updates application with editorId
     const applicationUpdate = {
@@ -217,10 +220,14 @@ const postChangeUnissuedFacility = async (req, res) => {
     };
     await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
-    // TODO: DTFS2-5227 change redirect
-    return applicationDetails(req, res);
+    req.flash('success', {
+      message: `${body.facilityName} is updated`,
+    });
+    const redirectUrl = `/gef/application-details/${dealId}/unissued-facilities`;
+
+    return res.redirect(redirectUrl);
   } catch (error) {
-    console.error('Cannot update unissued facility %s', error);
+    console.error('Cannot update unissued facility %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -307,7 +314,7 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
     await api.updateApplication({ dealId, application: applicationUpdate, userToken });
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (error) {
-    console.error('Cannot update unissued facility from application preview %s', error);
+    console.error('Cannot update unissued facility from application preview %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -377,7 +384,7 @@ const postChangeIssuedToUnissuedFacility = async (req, res) => {
     }
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (error) {
-    console.error('Error creating a facility %s', error);
+    console.error('Error creating a facility %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

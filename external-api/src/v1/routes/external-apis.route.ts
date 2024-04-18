@@ -566,7 +566,7 @@ apiRoutes.get('/ordnance-survey/:OSPostcode', ordnanceSurvey.lookup);
  *             schema:
  *               $ref: '#/definitions/EstoreResponseBody'
  */
-apiRoutes.post('/estore/', eStore.createEstore);
+apiRoutes.post('/estore/', eStore.create);
 
 /**
  * @openapi

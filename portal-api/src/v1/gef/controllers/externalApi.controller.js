@@ -12,7 +12,7 @@ const { EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 
 const headers = {
   'Content-Type': 'application/json',
-  'x-api-key': EXTERNAL_API_KEY,
+  'x-api-key': String(EXTERNAL_API_KEY),
 };
 
 const findSicCodes = async (companySicCodes) => {
@@ -85,7 +85,7 @@ exports.getByRegistrationNumber = async (req, res) => {
 
     return res.status(200).send(mappedData);
   } catch (error) {
-    console.error('getByRegistrationNumber Error %s', error?.response?.data);
+    console.error('getByRegistrationNumber Error %o', error?.response?.data);
     const { status, response } = companiesHouseError(error);
     return res.status(status).send(response);
   }

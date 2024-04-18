@@ -1,5 +1,6 @@
 const { format, getUnixTime, fromUnixTime } = require('date-fns');
 const sanitizeHtml = require('sanitize-html');
+const { generateTfmUserAuditDatabaseRecord, generateNoUserLoggedInAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const db = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
 const sendTfmEmail = require('./send-tfm-email');
@@ -38,7 +39,8 @@ exports.create = async (req, res) => {
     howCanWeImprove,
     emailAddress,
     submittedBy,
-    created: getUnixTime(new Date())
+    created: getUnixTime(new Date()),
+    auditRecord: req.user?._id ? generateTfmUserAuditDatabaseRecord(req.user._id) : generateNoUserLoggedInAuditDatabaseRecord(),
   };
 
   const collection = await db.getCollection('tfm-feedback');
@@ -73,7 +75,7 @@ exports.create = async (req, res) => {
       emailVariables,
     );
   } catch (error) {
-    console.error('TFM-API feedback controller - error sending email %s', error);
+    console.error('TFM-API feedback controller - error sending email %o', error);
   }
 
   return res.status(200).send({ _id: createdFeedback.insertedId });

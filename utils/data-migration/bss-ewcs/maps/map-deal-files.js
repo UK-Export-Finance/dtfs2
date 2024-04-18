@@ -36,7 +36,7 @@ const mapDealFiles = async (portalDealId, v1Deal) => {
       fileshare.setConfig(AZURE_WORKFLOW_FILESHARE_CONFIG);
       const fileshareConfig = fileshare.getConfig();
 
-      const fileBuffer = await fileshare.readFile(from).catch((err) => console.info({ err }));
+      const fileBuffer = await fileshare.readFile(from).catch((error) => console.info({ error }));
 
       if (fileBuffer.error) {
         logError(`File not found: ${fileshareConfig.STORAGE_ACCOUNT}::${fileshareConfig.FILESHARE_NAME}::${from.folder}/${from.filename}`);

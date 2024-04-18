@@ -28,7 +28,7 @@ const { DEAL, FACILITY } = require('../constants');
 
 const acceptableFacilityStage = ['07'];
 
-module.exports = df.orchestrator(function* amendACBSFacility(context) {
+df.app.orchestration('acbs-amend-facility', function* amendACBSFacility(context) {
   try {
     const { amendment } = context.df.getInput();
     if (amendment) {
@@ -50,7 +50,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
         let facilityLoanRecord;
 
         if (facilityId.includes(DEAL.UKEF_ID.PENDING) || facilityId.includes(DEAL.UKEF_ID.TEST)) {
-          throw new Error('Invalid facility ID %s', facilityId);
+          throw new Error(`Invalid facility ID ${facilityId}`);
         }
 
         // 1. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
@@ -126,7 +126,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
 
     throw new Error('Invalid argument set');
   } catch (error) {
-    console.error('Error amending facility records: %s', error);
+    console.error('Error amending facility records %o', error);
     return false;
   }
 });

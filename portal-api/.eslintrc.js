@@ -59,7 +59,10 @@ module.exports = {
           'error',
           { allow: ['_id', '_csrf', '_getBuffer', '_getData', '_getHeaders', '_getStatusCode', '_getRedirectUrl', '_getRenderData', '_getRenderView'] },
         ],
-        'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.{js,ts}', '**/*.api-test.{js,ts}', '**/api-tests/**'] }],
+        'import/no-extraneous-dependencies': [
+          'error',
+          { devDependencies: ['**/*.test.{js,ts}', '**/*.api-test.{js,ts}', '**/*.spec.{js,ts}', '**/webpack.*.{js,ts}', '**/api-test*/**', '**/__mocks__/**'] },
+        ],
         'import/no-named-as-default': 'off',
         'import/prefer-default-export': 'off',
         'import/extensions': 'off',

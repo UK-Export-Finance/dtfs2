@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const api = require('../api');
 const acbs = require('./acbs.controller');
 const { amendIssuedFacility } = require('./amend-issued-facility');
@@ -52,12 +53,12 @@ const sendAmendmentEmail = async (amendmentId, facilityId) => {
       }
     }
   } catch (error) {
-    console.error('Error sending amendment email %s', error);
+    console.error('Error sending amendment email %o', error);
   }
 };
 
 // function to update tfm deals lastUpdated once amendment complete
-const updateTFMDealLastUpdated = async (amendmentId, facilityId) => {
+const updateTFMDealLastUpdated = async (amendmentId, facilityId, auditDetails) => {
   const amendment = await api.getAmendmentById(facilityId, amendmentId);
 
   if (amendment?.dealId) {
@@ -69,9 +70,9 @@ const updateTFMDealLastUpdated = async (amendmentId, facilityId) => {
     };
 
     try {
-      return api.updateDeal(dealId, payload);
+      return api.updateDeal({ dealId, dealUpdate: payload, auditDetails });
     } catch (error) {
-      console.error('Error updated tfm deal lastUpdated - amendment completed %s', error);
+      console.error('Error updated tfm deal lastUpdated - amendment completed %o', error);
       return null;
     }
   }
@@ -98,7 +99,7 @@ const createAmendmentTFMObject = async (amendmentId, facilityId) => {
     await api.updateFacilityAmendment(facilityId, amendmentId, payload);
     return tfmToAdd;
   } catch (error) {
-    console.error('TFM-API - unable to add TFM object to amendment %s', error);
+    console.error('TFM-API - unable to add TFM object to amendment %o', error);
     return null;
   }
 };
@@ -180,7 +181,7 @@ const getAllAmendments = async (req, res) => {
 
 const createFacilityAmendment = async (req, res) => {
   const { facilityId } = req.body;
-  const { amendmentId } = await api.createFacilityAmendment(facilityId);
+  const { amendmentId } = await api.createFacilityAmendment(facilityId, generateTfmAuditDetails(req.user._id));
   if (amendmentId) {
     return res.status(200).send({ amendmentId });
   }
@@ -227,7 +228,7 @@ const updateFacilityAmendment = async (req, res) => {
 
       // if facility successfully updated and completed, then adds tfm lastUpdated and tfm object in amendments
       if (createdAmendment && tfmLastUpdated) {
-        await updateTFMDealLastUpdated(amendmentId, facilityId);
+        await updateTFMDealLastUpdated(amendmentId, facilityId, generateTfmAuditDetails(req.user._id));
         await createAmendmentTFMObject(amendmentId, facilityId);
       }
 
@@ -256,7 +257,7 @@ const updateFacilityAmendment = async (req, res) => {
         // TFM Facility update + ACBS Interaction
         if (canSendToAcbs(amendment)) {
           // Amend facility TFM properties
-          await amendIssuedFacility(amendment, facility, tfmDeal);
+          await amendIssuedFacility(amendment, facility, tfmDeal, generateTfmAuditDetails(req.user._id));
           // Amendment email notification to PDC
           await internalAmendmentEmail(ukefFacilityId);
           // Amend facility ACBS records
@@ -269,7 +270,7 @@ const updateFacilityAmendment = async (req, res) => {
       }
     }
   } catch (error) {
-    console.error('Unable to update amendment: %s', error);
+    console.error('Unable to update amendment %o', error);
     return res.status(400).send({ data: 'Unable to update amendment' });
   }
 

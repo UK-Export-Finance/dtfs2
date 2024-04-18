@@ -1,4 +1,5 @@
 const { getTime } = require('date-fns');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');
@@ -10,7 +11,8 @@ const addUnderwriterManagersDecisionToDeal = ({
   decision,
   comments,
   internalComments,
-  userFullName
+  userFullName,
+  auditDetails,
 }) => {
   const managerDecisionUpdate = {
     tfm: {
@@ -24,13 +26,14 @@ const addUnderwriterManagersDecisionToDeal = ({
       stage: decision,
     },
   };
-  return api.updateDeal(
+  return api.updateDeal({
     dealId,
-    managerDecisionUpdate,
-    (status, message) => {
+    dealUpdate: managerDecisionUpdate,
+    auditDetails,
+    onError: (status, message) => {
       throw new Error(`Updating the deal with dealId ${dealId} failed with status ${status} and message: ${message}`);
     }
-  );
+  });
 };
 
 const updatePortalDealStatusToMatchDecision = ({
@@ -109,7 +112,7 @@ const updateUnderwriterManagersDecision = async (req, res) => {
       userFullName,
     } = extractDecisionFromRequest(req);
 
-    const updatedDeal = await addUnderwriterManagersDecisionToDeal({ dealId, decision, comments, internalComments, userFullName });
+    const updatedDeal = await addUnderwriterManagersDecisionToDeal({ dealId, decision, comments, internalComments, userFullName, auditDetails: generateTfmAuditDetails(req.user._id) });
     const mappedDeal = mapSubmittedDeal(updatedDeal);
     const { dealType, submissionType } = mappedDeal;
 
@@ -122,7 +125,7 @@ const updateUnderwriterManagersDecision = async (req, res) => {
 
     return res.status(200).send();
   } catch (error) {
-    console.error('Unable to update the underwriter manager\'s decision: %O', error);
+    console.error('Unable to update the underwriter manager\'s decision %o', error);
     return res.status(500).send({ data: 'Unable to update the underwriter manager\'s decision' });
   }
 };

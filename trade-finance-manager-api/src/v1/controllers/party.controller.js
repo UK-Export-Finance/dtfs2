@@ -1,3 +1,4 @@
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const api = require('../api');
 const { canDealBeSubmittedToACBS, submitACBSIfAllPartiesHaveUrn } = require('./deal.controller');
 
@@ -10,7 +11,7 @@ const updateParty = async (req, res) => {
   };
 
   try {
-    const updatedDeal = await api.updateDeal(dealId, partyUpdate);
+    const updatedDeal = await api.updateDeal({ dealId, dealUpdate: partyUpdate, auditDetails: generateTfmAuditDetails(req.user._id) });
 
     if (updatedDeal.dealSnapshot) {
       if (canDealBeSubmittedToACBS(updatedDeal.dealSnapshot.submissionType)) {
@@ -24,7 +25,7 @@ const updateParty = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Unable to update party %O', error);
+    console.error('Unable to update party %o', error);
     return res.status(500).send(error.message);
   }
 };

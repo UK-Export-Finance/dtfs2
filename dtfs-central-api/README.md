@@ -90,10 +90,10 @@ Make sure you have an `.env` file. Use `.env.sample` as a base. Some sensitive v
 ## Running Locally
 
 ```shell
-docker-compose up
+npm run start
 ```
 
-Alternatively, you can start every service from the root directory with `docker-compose up`.
+Alternatively, you can start every service from the root directory with `npm run start`.
 
 ## Testing
 
