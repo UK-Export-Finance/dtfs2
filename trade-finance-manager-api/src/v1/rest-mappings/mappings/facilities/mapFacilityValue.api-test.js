@@ -1,6 +1,6 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const mapFacilityValue = require('./mapFacilityValue');
 const { formattedNumber } = require('../../../../utils/number');
-const { CURRENCY } = require('../../../../constants/currency.constant');
 
 describe('mapFacilityValue', () => {
   describe('when no facility provided', () => {

@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const {
   isNumeric,
   roundNumber,
@@ -119,7 +120,7 @@ const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP,
 
   const hasSupplyContractCurrencyId = (supplyContractCurrency?.id && hasValue(supplyContractCurrency?.id));
   const hasSupplyContractConversionRateToGBP = (hasValue(supplyContractConversionRateToGBP) && isNumeric(Number(supplyContractConversionRateToGBP)));
-  const hasRelevantSupplyContractValues = (hasSupplyContractCurrencyId && supplyContractCurrency.id === CONSTANTS.CURRENCY.CURRENCY.GBP)
+  const hasRelevantSupplyContractValues = (hasSupplyContractCurrencyId && supplyContractCurrency.id === CURRENCY.GBP)
     || (hasSupplyContractCurrencyId && hasSupplyContractConversionRateToGBP);
 
   return !!(hasRelevantSupplyContractValues && (hasCompletedBonds || hasCompletedLoans));
