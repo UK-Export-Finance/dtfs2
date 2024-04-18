@@ -101,7 +101,7 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
        * When multiple simultaneous calls are made to `updateDeal` function, a race condition is developed
        * where chances are increased per number of facilities associated with the deal.
        *
-       * Below validation ensures only latest updates pertanent to the respective deal properties `details`
+       * Below validation ensures only latest updates pertinent to the respective deal properties `details`
        * and `eligibility` are only added to the `update` deal object when applicable. This ensures no outdated
        * `details` and `eligibility` object are spread or injected from other concurrent calls where deal object
        * is extracted at the begining of this function.
