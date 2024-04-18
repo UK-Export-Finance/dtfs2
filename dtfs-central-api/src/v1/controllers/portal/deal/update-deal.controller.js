@@ -92,6 +92,21 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
         originalDealEligibility = originalDeal.eligibility;
       }
 
+      /**
+       * This function is invoked numerous times when a deal status is updated.
+       * For instance upon submitting this deal to the TFM (from checker) the
+       * deal status will be updated to `Submitted` (`deal.status`), the submission count will be
+       * incremented ()`deal.details.submissionCount`) and facilities updated at (`deal.facilitiesUpdated`).
+       *
+       * When multiple simultaneous calls are made to `updateDeal` function, a race condition is developed
+       * where chances are increased per number of facilities associated with the deal.
+       *
+       * Below validation ensures only latest updates pertanent to the respective deal properties `details`
+       * and `eligibility` are only added to the `update` deal object when applicable. This ensures no outdated
+       * `details` and `eligibility` object are spread or injected from other concurrent calls where deal object
+       * is extracted at the begining of this function.
+       */
+
       if (dealChanges?.details) {
         update.details = {
           ...originalDealDetails,
