@@ -102,15 +102,6 @@ class SignInLinkService {
   }
 
   /**
-   * Deletes sign-in tokens for a user.
-   * @param {string} userId - The ID of the user to delete sign-in tokens.
-   * @returns {Promise<number>} - The number of deleted sign-in tokens.
-   */
-  async deleteSignInTokens(userId) {
-    return this.#userRepository.deleteSignInTokensForUser(userId);
-  }
-
-  /**
    * Resets sign-in data for a user.
    * @param {string} userId - The ID of the user to reset sign-in data.
    */

@@ -63,18 +63,6 @@ describe('UserRepository', () => {
     });
   });
 
-  describe('deleteSignInTokensForUser', () => {
-    const userId = 'aaaa1234aaaabbbb5678bbbb';
-
-    withValidateUserIdTests({ methodCall: (invalidUserId) => repository.deleteSignInTokensForUser(invalidUserId) });
-
-    it('deletes the signInToken field on the user document', async () => {
-      await repository.deleteSignInTokensForUser(userId);
-
-      expect(usersCollection.updateOne).toHaveBeenCalledWith({ _id: { $eq: ObjectId(validUserId) } }, { $unset: { signInTokens: '' } });
-    });
-  });
-
   describe('incrementSignInLinkSendCount', () => {
     const expectedSignInLinkSendCount = 2;
 

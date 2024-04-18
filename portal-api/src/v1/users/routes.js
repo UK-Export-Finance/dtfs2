@@ -59,6 +59,7 @@ const combineErrors = (listOfErrors) =>
     return response;
   }, {});
 
+// This is called on the open and auth router ('v1/user' and 'v1/users') endpoints so req.user may be undefined
 module.exports.create = async (req, res, next) => {
   const userToCreate = req.body;
   const errors = await applyCreateRules(userToCreate);
@@ -93,7 +94,7 @@ module.exports.create = async (req, res, next) => {
   };
 
   // Defined `e` since `error` is defined on a higher scope
-  return create(newUser, userService, (e, user) => {
+  return create(newUser, userService, req.user, (e, user) => {
     if (e) {
       return next(e);
     }

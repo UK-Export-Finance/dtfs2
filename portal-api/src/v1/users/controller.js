@@ -2,6 +2,7 @@ const { ObjectId } = require('mongodb');
 const {
   generateSystemAuditDatabaseRecord,
   generatePortalUserAuditDatabaseRecord,
+  generateNoUserLoggedInAuditDatabaseRecord,
 } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const { getNowAsEpochMillisecondString } = require('../helpers/date');
 const db = require('../../drivers/db-client');
@@ -142,11 +143,12 @@ exports.findByEmail = async (email) => {
   return transformDatabaseUser(user);
 };
 
-exports.create = async (user, userService, callback) => {
+exports.create = async (user, userService, sessionUser, callback) => {
   const insert = {
     'user-status': USER.STATUS.ACTIVE,
     timezone: USER.TIMEZONE.DEFAULT,
     ...user,
+    auditRecord: sessionUser?._id ? generatePortalUserAuditDatabaseRecord(sessionUser._id) : generateNoUserLoggedInAuditDatabaseRecord(),
   };
 
   delete insert?.autoCreatePassword;
