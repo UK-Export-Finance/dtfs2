@@ -15,13 +15,16 @@ describe('user controller', () => {
     {
       testName: 'updateSessionIdentifier',
       callTestMethod: (user, sessionIdentifier, callback) => updateSessionIdentifier(user, sessionIdentifier, callback),
-      expectedUpdate: { sessionIdentifier: SESSION_IDENTIFIER, auditRecord: {
-        lastUpdatedAt: expect.any(String),
-        lastUpdatedByPortalUserId: TEST_USER._id,
-        lastUpdatedByTfmUserId: null,
-        lastUpdatedByIsSystem: null,
-        noUserLoggedIn: null,
-      } },
+      expectedUpdate: {
+        sessionIdentifier: SESSION_IDENTIFIER,
+        auditRecord: {
+          lastUpdatedAt: expect.any(Date),
+          lastUpdatedByPortalUserId: new ObjectId(TEST_USER._id),
+          lastUpdatedByTfmUserId: null,
+          lastUpdatedByIsSystem: null,
+          noUserLoggedIn: null,
+        },
+      },
     },
     {
       testName: 'updateLastLoginAndResetSignInData',
@@ -47,11 +50,7 @@ describe('user controller', () => {
 
     it('should update the session identifier', async () => {
       await callTestMethod(TEST_USER, SESSION_IDENTIFIER, () => {});
-      expect(mockUpdateOne).toHaveBeenCalledWith(
-        { _id: { $eq: ObjectId(TEST_USER._id) } },
-        { $set: expectedUpdate },
-        {},
-      );
+      expect(mockUpdateOne).toHaveBeenCalledWith({ _id: { $eq: ObjectId(TEST_USER._id) } }, { $set: expectedUpdate }, {});
     });
 
     it('should call the callback if successful', async () => {

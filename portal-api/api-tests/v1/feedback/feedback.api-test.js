@@ -92,7 +92,14 @@ describe('/v1/feedback', () => {
           submittedBy: {
             username: 'Tester',
             email: 'test@test.test',
-          }
+          },
+          auditRecord: {
+            lastUpdatedAt: expect.any(String),
+            lastUpdatedByPortalUserId: null,
+            lastUpdatedByTfmUserId: null,
+            lastUpdatedByIsSystem: null,
+            noUserLoggedIn: true,
+          },
         });
       });
     });
@@ -173,7 +180,14 @@ describe('/v1/feedback', () => {
         submittedBy: {
           username: 'Tester',
           email: 'test@test.test',
-        }
+        },
+        auditRecord: {
+          lastUpdatedAt: expect.any(String),
+          lastUpdatedByPortalUserId: null,
+          lastUpdatedByTfmUserId: null,
+          lastUpdatedByIsSystem: null,
+          noUserLoggedIn: true,
+        },
       });
     });
   });

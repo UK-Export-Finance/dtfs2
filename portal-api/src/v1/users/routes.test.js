@@ -86,7 +86,7 @@ describe('users routes', () => {
           loginFailureCount: 0,
           passwordUpdatedAt: expect.any(String),
           auditRecord: {
-            lastUpdatedAt: expect.any(String),
+            lastUpdatedAt: expect.any(Date),
             lastUpdatedByIsSystem: null,
             lastUpdatedByPortalUserId: new ObjectId(user._id),
             lastUpdatedByTfmUserId: null,
@@ -111,7 +111,7 @@ describe('users routes', () => {
           loginFailureCount: 0,
           passwordUpdatedAt: expect.any(String),
           auditRecord: {
-            lastUpdatedAt: expect.any(String),
+            lastUpdatedAt: expect.any(Date),
             lastUpdatedByIsSystem: null,
             lastUpdatedByPortalUserId: new ObjectId(user._id),
             lastUpdatedByTfmUserId: null,

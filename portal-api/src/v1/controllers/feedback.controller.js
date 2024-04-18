@@ -2,7 +2,10 @@ const assert = require('assert');
 const { ObjectId } = require('mongodb');
 const sanitizeHtml = require('sanitize-html');
 const { format, getUnixTime, fromUnixTime } = require('date-fns');
-
+const {
+  generatePortalUserAuditDatabaseRecord,
+  generateNoUserLoggedInAuditDatabaseRecord
+} = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const db = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
 const sendEmail = require('../email');
@@ -64,6 +67,7 @@ exports.create = async (req, res) => {
     emailAddress,
     submittedBy,
     created: getUnixTime(new Date()),
+    auditRecord: req.user?._id? generatePortalUserAuditDatabaseRecord(req.user._id) : generateNoUserLoggedInAuditDatabaseRecord(),
   };
 
   const collection = await db.getCollection('feedback');
