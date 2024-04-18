@@ -59,6 +59,7 @@ const createPasswordToken = async (email, userService) => {
   const userUpdate = {
     resetPwdToken: hash,
     resetPwdTimestamp: `${Date.now()}`,
+    auditRecord: generateSystemAuditDatabaseRecord(),
   };
 
   if (!ObjectId.isValid(user._id)) {

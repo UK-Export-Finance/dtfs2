@@ -1,3 +1,4 @@
+const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const utils = require('../../crypto/utils');
 const { login } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
@@ -338,6 +339,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
     currentPassword: '',
     loginFailureCount: 0,
     passwordUpdatedAt: `${Date.now()}`,
+    auditRecord: generatePortalUserAuditDatabaseRecord(user._id)
   };
 
   return update(user._id, updateData, (updateErr) => {

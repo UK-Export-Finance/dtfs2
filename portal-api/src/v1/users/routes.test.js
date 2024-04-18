@@ -85,6 +85,13 @@ describe('users routes', () => {
           currentPassword: '',
           loginFailureCount: 0,
           passwordUpdatedAt: expect.any(String),
+          auditRecord: {
+            lastUpdatedAt: expect.any(String),
+            lastUpdatedByIsSystem: null,
+            lastUpdatedByPortalUserId: new ObjectId(user._id),
+            lastUpdatedByTfmUserId: null,
+            noUserLoggedIn: null,
+          },
         },
         expect.any(Function),
       );
@@ -103,6 +110,13 @@ describe('users routes', () => {
           currentPassword: '',
           loginFailureCount: 0,
           passwordUpdatedAt: expect.any(String),
+          auditRecord: {
+            lastUpdatedAt: expect.any(String),
+            lastUpdatedByIsSystem: null,
+            lastUpdatedByPortalUserId: new ObjectId(user._id),
+            lastUpdatedByTfmUserId: null,
+            noUserLoggedIn: null,
+          },
         },
         expect.any(Function),
       );
