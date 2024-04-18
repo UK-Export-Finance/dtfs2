@@ -121,8 +121,6 @@ exports.update = async (req, res) => {
 
       updatedDeal = await updateSubmissionCount(updatedDeal, user);
 
-      console.info('Submission count has been updated for deal %s %o', dealId, deal);
-
       if (!updatedDeal?.details?.submissionDate) {
         updatedDeal = await createSubmissionDate(dealId, user);
       }
