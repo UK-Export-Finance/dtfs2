@@ -1,4 +1,8 @@
 const { ObjectId } = require('mongodb');
+const {
+  generateSystemAuditDatabaseRecord,
+  generatePortalUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const { getNowAsEpochMillisecondString } = require('../helpers/date');
 const db = require('../../drivers/db-client');
 const sendEmail = require('../email');
@@ -249,6 +253,7 @@ exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
   const collection = await db.getCollection('users');
   const update = {
     sessionIdentifier,
+    auditRecord: generatePortalUserAuditDatabaseRecord(user._id),
   };
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
@@ -289,10 +294,12 @@ exports.incrementFailedLoginCount = async (user) => {
     ? {
         'user-status': USER.STATUS.BLOCKED,
         blockedStatusReason: USER.STATUS_BLOCKED_REASON.INVALID_PASSWORD,
+        auditRecord: generateSystemAuditDatabaseRecord(),
       }
     : {
         loginFailureCount: failureCount,
         lastLoginFailure: getNowAsEpochMillisecondString(),
+        auditRecord: generateSystemAuditDatabaseRecord(),
       };
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});

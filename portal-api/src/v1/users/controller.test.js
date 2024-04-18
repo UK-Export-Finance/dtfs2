@@ -1,6 +1,7 @@
 jest.mock('../../drivers/db-client');
 const { ObjectId } = require('mongodb');
 const { when } = require('jest-when');
+const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const db = require('../../drivers/db-client');
 const { updateSessionIdentifier, updateLastLoginAndResetSignInData, createPasswordToken } = require('./controller');
 const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
@@ -15,7 +16,7 @@ describe('user controller', () => {
     {
       testName: 'updateSessionIdentifier',
       callTestMethod: (user, sessionIdentifier, callback) => updateSessionIdentifier(user, sessionIdentifier, callback),
-      expectedUpdate: { sessionIdentifier: SESSION_IDENTIFIER },
+      expectedUpdate: { sessionIdentifier: SESSION_IDENTIFIER, auditRecord: generatePortalUserAuditDatabaseRecord(TEST_USER._id) },
     },
     {
       testName: 'updateLastLoginAndResetSignInData',
@@ -41,7 +42,11 @@ describe('user controller', () => {
 
     it('should update the session identifier', async () => {
       await callTestMethod(TEST_USER, SESSION_IDENTIFIER, () => {});
-      expect(mockUpdateOne).toHaveBeenCalledWith({ _id: { $eq: ObjectId(TEST_USER._id) } }, { $set: expectedUpdate }, {});
+      expect(mockUpdateOne).toHaveBeenCalledWith(
+        { _id: { $eq: ObjectId(TEST_USER._id) } },
+        { $set: expectedUpdate },
+        {},
+      );
     });
 
     it('should call the callback if successful', async () => {
