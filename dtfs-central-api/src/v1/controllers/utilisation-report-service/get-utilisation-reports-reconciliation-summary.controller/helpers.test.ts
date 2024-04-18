@@ -5,11 +5,11 @@ import {
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   ReportPeriod,
+  IsoMonthStamp,
 } from '@ukef/dtfs2-common';
 
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { generateReconciliationSummaries, getAllReportsForSubmissionMonth, getPreviousOpenReportsBySubmissionMonth } from './helpers';
-import { IsoMonthStamp } from '../../../../types/date';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
 import { aBank } from '../../../../../test-helpers/test-data/bank';
 import { aMonthlyBankReportPeriodSchedule } from '../../../../../test-helpers/test-data/bank-report-period-schedule';
@@ -417,10 +417,12 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       const response = await generateReconciliationSummaries(submissionMonth);
 
       // Assert
-      expect(response).toEqual([{
-        submissionMonth,
-        items: [],
-      }]);
+      expect(response).toEqual([
+        {
+          submissionMonth,
+          items: [],
+        },
+      ]);
       expect(findOneReportSpy).not.toHaveBeenCalled();
       expect(findOpenReportsSpy).not.toHaveBeenCalled();
     });

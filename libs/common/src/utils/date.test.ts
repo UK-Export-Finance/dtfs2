@@ -1,4 +1,4 @@
-import { eachIsoMonthOfInterval, getOneIndexedMonth, isValidIsoMonth, toIsoMonthStamp } from './date';
+import { getOneIndexedMonth, isValidIsoMonth, toIsoMonthStamp } from './date';
 
 describe('date utils', () => {
   describe('getOneIndexedMonth', () => {
@@ -41,31 +41,6 @@ describe('date utils', () => {
       { date: new Date('2023-03-31'), expectedIsoMonthStamp: '2023-03' },
     ])(`converts Date object '$date' to IsoMonthStamp '$expectedIsoMonthStamp'`, ({ date, expectedIsoMonthStamp }) => {
       expect(toIsoMonthStamp(date)).toBe(expectedIsoMonthStamp);
-    });
-  });
-
-  describe('eachIsoMonthOfInterval', () => {
-    describe('inclusive (default)', () => {
-      it.each([
-        { testCase: 'same dates provided', start: '2024-01', end: '2024-01', expected: ['2024-01'] },
-        { testCase: 'one month difference', start: '2024-01', end: '2024-02', expected: ['2024-01', '2024-02'] },
-        { testCase: 'two months difference', start: '2024-01', end: '2024-03', expected: ['2024-01', '2024-02', '2024-03'] },
-        { testCase: 'dates fall over a year', start: '2023-12', end: '2024-01', expected: ['2023-12', '2024-01'] },
-      ])('returns $expected when $testCase (start: $start, end: $end)', ({ start, end, expected }) => {
-        expect(eachIsoMonthOfInterval(start, end)).toEqual(expected);
-      });
-    });
-
-    describe('exclusive', () => {
-      it.each([
-        { testCase: 'same dates provided', start: '2024-01', end: '2024-01', expected: [] },
-        { testCase: 'one month difference', start: '2024-01', end: '2024-02', expected: [] },
-        { testCase: 'two months difference', start: '2024-01', end: '2024-03', expected: ['2024-02'] },
-        { testCase: 'three months difference', start: '2024-01', end: '2024-04', expected: ['2024-02', '2024-03'] },
-        { testCase: 'dates fall over a year', start: '2023-11', end: '2024-02', expected: ['2023-12', '2024-01'] },
-      ])('returns $expected when $testCase (start: $start, end: $end)', ({ start, end, expected }) => {
-        expect(eachIsoMonthOfInterval(start, end, { exclusive: true })).toEqual(expected);
-      });
     });
   });
 });

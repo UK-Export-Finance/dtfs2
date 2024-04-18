@@ -8,9 +8,9 @@ import {
   ReportPeriod,
   AzureFileInfo,
   UploadedByUserDetails,
-  UTILISATION_REPORT_HEADERS
+  UTILISATION_REPORT_HEADERS,
+  IsoMonthStamp,
 } from '@ukef/dtfs2-common';
-import { IsoMonthStamp } from './date';
 
 export type GetUtilisationReportResponse = {
   id: number;
