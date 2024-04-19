@@ -81,6 +81,12 @@ describe('/v1/deals', () => {
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
+    it('400s submission for invalid checker id', async () => {
+      const { status } = await submitDeal({ checker: { _id: '12345678910' } });
+
+      expect(status).toEqual(400);
+    });
+
     it('404s submission for unknown id', async () => {
       const { status } = await submitDeal({ dealId: '12345678910', checker: MOCK_PORTAL_USERS[0] });
 
