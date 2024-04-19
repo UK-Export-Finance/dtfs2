@@ -50,22 +50,27 @@ function getCreatePasswordRuleTestCases({ makeRequest, payload }) {
     {
       description: 'the password is less than 8 characters',
       makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: 'aA1!' })),
+      middleware: 'isUserOrAdmin',
     },
     {
       description: 'the password does not have at least one number',
       makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: 'APassword!' })),
+      middleware: 'isUserOrAdmin',
     },
     {
       description: 'the password does not have at least one upper-case character',
       makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: 'apassword!123' })),
+      middleware: 'isUserOrAdmin',
     },
     {
       description: 'the password does not have at least one lower-case character',
       makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: 'APASSWORD!123' })),
+      middleware: 'isUserOrAdmin',
     },
     {
       description: 'the password does not have at least one special character',
       makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: 'APassword123' })),
+      middleware: 'isUserOrAdmin',
     },
   ];
 }
@@ -114,8 +119,9 @@ function itShouldReturnAnErrorIf(testCases) {
     async ({
       makeRequestWithModifiedPayload,
       expectResponseErrorToMatchExpected = (body) => expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR),
+      middleware,
     }) => {
-      const { status, body } = await makeRequestWithModifiedPayload();
+      const { status, body } = await makeRequestWithModifiedPayload(middleware);
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);

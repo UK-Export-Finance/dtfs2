@@ -164,7 +164,7 @@ describe('a user', () => {
 
         await as(createdUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
-        const { status } = await as(aNonAdmin).get(`/v1/users/${createdUser._id}`);
+        const { status } = await as(createdUser).get(`/v1/users/${createdUser._id}`);
 
         expect(status).toEqual(200);
         // Should check new password works
@@ -177,7 +177,7 @@ describe('a user', () => {
 
         await as(createdUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
-        const { status, body } = await as(aNonAdmin).get(`/v1/users/${createdUser._id}`);
+        const { status, body } = await as(createdUser).get(`/v1/users/${createdUser._id}`);
 
         expect(status).toEqual(200);
         expect(body.roles).toEqual(MOCK_USER.roles);
@@ -209,6 +209,6 @@ describe('a user', () => {
   });
 
   async function createUser(userToCreate) {
-    return as(aNonAdmin).post(userToCreate).to(BASE_URL);
+    return as(anAdmin).post(userToCreate).to(BASE_URL);
   }
 });
