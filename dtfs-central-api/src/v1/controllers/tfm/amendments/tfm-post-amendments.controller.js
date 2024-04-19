@@ -2,7 +2,6 @@ const { ObjectId } = require('mongodb');
 const { getUnixTime } = require('date-fns');
 const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const { validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
-
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 const { findAmendmentByStatusAndFacilityId, findLatestCompletedAmendmentByFacilityIdVersion } = require('./tfm-get-amendments.controller');
