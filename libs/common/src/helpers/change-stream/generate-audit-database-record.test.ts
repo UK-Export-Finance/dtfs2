@@ -1,5 +1,4 @@
 import { ObjectId } from 'mongodb';
-import { formatISO } from 'date-fns';
 import {
   generateAuditDatabaseRecordFromAuditDetails,
   generateNoUserLoggedInAuditDatabaseRecord,
@@ -11,7 +10,7 @@ import {
 describe('generate audit details', () => {
   const now = new Date(1712574419579);
   const defaultAuditDatabaseRecord = {
-    lastUpdatedAt: formatISO(now),
+    lastUpdatedAt: '2024-04-08T11:06:59.579 +00:00',
     lastUpdatedByPortalUserId: null,
     lastUpdatedByTfmUserId: null,
     lastUpdatedByIsSystem: null,

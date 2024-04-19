@@ -90,7 +90,7 @@ describe('UserRepository', () => {
 
       expect(usersCollection.findOneAndUpdate).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(validUserId) } },
-        { $inc: { signInLinkSendCount: 1 } },
+        { $inc: { signInLinkSendCount: 1 }, $set: { auditRecord: generateMockSystemAuditDatabaseRecord() } },
         { returnDocument: 'after' },
       );
     });
