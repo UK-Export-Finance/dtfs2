@@ -1,17 +1,9 @@
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% extends "index.njk" %}
+{% set backLink = { href: "/utilisation-reports" } %}
 {% block pageTitle %}
   Trade Finance Manager
 {% endblock %}
 {% block content %}
-  {# TODO FN-2630 should this be in the index? #}
-  {{ govukBackLink({
-          text: "Back",
-          href: "/utilisation-reports",
-          attributes: {
-            "data-cy": "back-link"
-          }
-        }) }}
 
     <div class="govuk-grid-row govuk-!-padding-top-7"> <div class="govuk-grid-column-full">
       <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="find-reports-by-year-heading">
@@ -26,20 +18,21 @@
             <div class="govuk-radios govuk-radios--small">
               {% for bank in banks %}
                 <div class="govuk-radios__item">
-                  <input class="govuk-radios__input" id="{{ bank.name }}" name="bank" type="radio" value="{{ bank.name }}">
-                    <label class="govuk-label govuk-radios__label" for="{{ bank.name }}">{{ bank.name }}</label>
+                  <input class="govuk-radios__input" id="{{ bank.name }}" name="bank" type="radio" value="{{ bank.name }}" data-cy="{{ bank.name }}-radio-input">
+                    <label class="govuk-label govuk-radios__label" for="{{ bank.name }}" data-cy="{{ bank.name }}-radio-label">{{ bank.name }}</label>
                   </div>
                   {% endfor %}
                 </div>
               </fieldset>
             </div>
             <div class="govuk-form-group">
-              <label class="govuk-label govuk-label--s" for="year">Year</label>
-              <input class="govuk-input govuk-!-width-one-quarter" id="year" name="year" type="number" minlength="4" maxlength="4" required>
+              <label class="govuk-label govuk-label--s" for="year" data-cy="year-label">Year</label>
+              <input class="govuk-input govuk-!-width-one-quarter" id="year" name="year" type="number" minlength="4" maxlength="4">
             </div>
-            <button class="govuk-button">Continue</button>
+            <button class="govuk-button" data-cy="continue-button">Continue</button>
           </form>
         </div>
       </div>
+
     {% endblock %}
     {% block sub_content %}{% endblock %}
