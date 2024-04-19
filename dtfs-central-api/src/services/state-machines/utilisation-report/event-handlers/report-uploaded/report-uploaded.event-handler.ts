@@ -1,7 +1,6 @@
 import { EntityManager } from 'typeorm';
 import { DbRequestSource, UtilisationReportEntity, AzureFileInfo, AzureFileInfoEntity, FeeRecordEntity } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
-// import { UtilisationReportRepo } from '../../../../../repositories/utilisation-reports-repo';
 import { UtilisationReportRawCsvData } from '../../../../../types/utilisation-reports';
 import { feeRecordCsvRowToSqlEntity } from '../../../../../helpers';
 
@@ -33,7 +32,6 @@ export const handleUtilisationReportReportUploadedEvent = async (
     uploadedByUserId,
     requestSource,
   });
-
   await transactionEntityManager.save(UtilisationReportEntity, report);
 
   const feeRecordEntities: FeeRecordEntity[] = reportCsvData.map((dataEntry) =>
@@ -43,8 +41,8 @@ export const handleUtilisationReportReportUploadedEvent = async (
       report,
     }),
   );
-
   await transactionEntityManager.save(FeeRecordEntity, feeRecordEntities, { chunk: 100 });
+
   report.feeRecords = feeRecordEntities;
   return report;
 };
