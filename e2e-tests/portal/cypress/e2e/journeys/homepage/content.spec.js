@@ -2,8 +2,12 @@ const { login } = require('../../pages');
 const relative = require('../../relativeURL');
 
 context('Portal homepage', () => {
-  it('Ensure user is on the login page', () => {
+  beforeEach(() => {
+    // Visit login page
     login.visit();
+  });
+
+  it('Ensure user is on the login page', () => {
     cy.url().should('eq', relative('/login'));
   });
 
@@ -12,18 +16,26 @@ context('Portal homepage', () => {
   });
 
   it('Ensure all bank names are visible on the portal login page', () => {
-    login
-      .banks()
-      .contains(
-        '<li>Barclays Bank</li><li>HSBC UK Bank</li><li>Lloyds Bank</li><li>Bank of Scotland</li><li>Westminster Bank</li><li>Royal Bank of Scotland</li><li>Ulster Bank</li><li>Santander UK plc.</li><li>Newable Bank</li><li>Emirates NBD Bank (P.J.S.C)</li><li>Virgin Money</li><li>Shawbrook Bank</li>',
-      );
+    login.banks().contains('Barclays Bank');
+    login.banks().contains('HSBC UK Bank');
+    login.banks().contains('Lloyds Bank');
+    login.banks().contains('Bank of Scotland');
+    login.banks().contains('Westminster Bank');
+    login.banks().contains('Royal Bank of Scotland');
+    login.banks().contains('Ulster Bank');
+    login.banks().contains('Santander UK plc.');
+    login.banks().contains('Newable Bank');
+    login.banks().contains('Emirates NBD Bank (P.J.S.C)');
+    login.banks().contains('Virgin Money');
+    login.banks().contains('Shawbrook Bank');
   });
 
   it('Ensure product text is visible on the portal login page', () => {
-    login.products().contains('<li>Bond Support and Export Working Capital scheme</li><li>General Export Facility scheme</li>');
+    login.products().contains('Bond Support and Export Working Capital scheme');
+    login.products().contains('General Export Facility scheme');
   });
 
   it('Ensure comply text is visible on the portal login page', () => {
-    login.comply().contains("Your bank must comply with the terms of the MGA you're applying for.  The MGA is signed between your bank and UK Export Finance.");
+    login.comply().contains("Your bank must comply with the terms of the MGA you're applying for. The MGA is signed between your bank and UK Export Finance.");
   });
 });
