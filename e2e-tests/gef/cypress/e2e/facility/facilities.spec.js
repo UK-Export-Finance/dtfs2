@@ -13,7 +13,7 @@ context('Facilities Page', () => {
       .then((tok) => {
         token = tok;
       })
-      .then(() => cy.apiFetchAllApplications(token))
+      .then(() => cy.apiFetchAllGefApplications(token))
       .then(({ body }) => {
         body.items.forEach((item) => {
           dealIds.push(item._id);

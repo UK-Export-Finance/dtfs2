@@ -10,7 +10,7 @@ context('Return to Maker', () => {
     cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
-        cy.apiFetchAllApplications(token);
+        cy.apiFetchAllGefApplications(token);
       })
       .then(({ body }) => {
         dealIds = body.items.map((item) => item._id);

@@ -15,7 +15,7 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
-        cy.apiFetchAllApplications(token);
+        cy.apiFetchAllGefApplications(token);
       })
       .then(({ body }) => {
         body.items.forEach((item) => {

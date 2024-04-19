@@ -18,7 +18,7 @@ context('Changing facility details from application-details page should take you
       .then((tok) => {
         token = tok;
       })
-      .then(() => cy.apiFetchAllApplications(token))
+      .then(() => cy.apiFetchAllGefApplications(token))
       .then(({ body }) => {
         body.items.forEach((item) => {
           cy.apiFetchAllFacilities(item._id, token)

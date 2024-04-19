@@ -17,7 +17,7 @@ context('Return to Maker as MIA', () => {
     cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
-        cy.apiFetchAllApplications(token);
+        cy.apiFetchAllGefApplications(token);
       })
       .then(({ body }) => {
         dealId = body.items[2]._id;

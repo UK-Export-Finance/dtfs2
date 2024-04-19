@@ -9,7 +9,12 @@ const getLeadUnderwriter = async (deal, user, token) => {
   let currentLeadUnderWriter;
   let currentLeadUnderWriterUserId;
 
-  if (deal.tfm.leadUnderwriter) {
+  if (!deal || !user || !token) {
+    console.error('Invalid arguments provided');
+    return false;
+  }
+
+  if (deal?.tfm?.leadUnderwriter) {
     currentLeadUnderWriterUserId = deal.tfm.leadUnderwriter;
   }
 

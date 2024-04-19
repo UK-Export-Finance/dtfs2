@@ -1,4 +1,5 @@
 import 'cypress-file-upload';
+import * as api from '../../../gef/cypress/support/commands/api';
 
 // ***********************************************
 // This example commands.js shows you how to
@@ -33,9 +34,13 @@ Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 // create an element in a div
 Cypress.Commands.add('insertElement', require('./utils/insertElement'));
 
+// Mock data loader
+Cypress.Commands.add('loadData', require('../../../gef/cypress/support/commands/loadData'));
+
 // commands used to interact directly with portal-api
 Cypress.Commands.add('insertOneDeal', require('./portal-api/insertOneDeal'));
 Cypress.Commands.add('getDeal', require('./portal-api/getDeal'));
+Cypress.Commands.add('getAllDeals', require('./portal-api/getAllDeals'));
 Cypress.Commands.add('getFacility', require('./portal-api/getBSSFacility'));
 Cypress.Commands.add('updateDeal', require('./portal-api/updateDeal'));
 Cypress.Commands.add('insertManyDeals', require('./portal-api/insertManyDeals'));
@@ -85,3 +90,7 @@ Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePor
 Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));
 
 Cypress.Commands.add('submitDeal', require('./trade-finance-manager-api/submitDeal'));
+
+// API calls
+Cypress.Commands.add('apiLogin', api.login);
+Cypress.Commands.add('apiFetchAllApplications', api.fetchAllApplications);
