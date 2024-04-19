@@ -1,6 +1,7 @@
 import { Response, NextFunction } from 'express';
 import { HttpStatusCode } from 'axios';
-import { AzureFileInfo, Unknown } from '@ukef/dtfs2-common';
+import { AzureFileInfo, Unknown, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import {
   validateReportId,
   validateUtilisationReportData,
@@ -10,7 +11,7 @@ import {
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { UtilisationReportRawCsvData } from '../../../../types/utilisation-reports';
-import { ApiError } from '../../../../errors';
+import { ApiError, TransactionFailedError } from '../../../../errors';
 
 export type PostUploadUtilisationReportRequestBody = {
   reportId: number;
@@ -51,16 +52,20 @@ type PostUploadUtilisationReportRequest = CustomExpressRequest<{
   reqBody: PostUploadUtilisationReportRequestBody;
 }>;
 
-/**
- * Controller for the utilisation report upload
- * @param req - The request object
- * @param res - The response object
- */
-export const postUploadUtilisationReport = async (req: PostUploadUtilisationReportRequest, res: Response) => {
-  try {
-    const { reportId, reportData, user, fileInfo } = req.body;
-    const uploadedByUserId = user._id.toString();
+export const uploadReportInTransaction = async (
+  reportId: number,
+  reportData: UtilisationReportRawCsvData[],
+  user: { _id: string },
+  fileInfo: AzureFileInfo,
+): Promise<UtilisationReportEntity> => {
+  const uploadedByUserId = user._id.toString();
 
+  const queryRunner = SqlDbDataSource.createQueryRunner();
+  await queryRunner.connect();
+
+  await queryRunner.startTransaction();
+  try {
+    const transactionEntityManager = queryRunner.manager;
     const reportStateMachine = await UtilisationReportStateMachine.forReportId(reportId);
 
     const updatedReport = await reportStateMachine.handleEvent({
@@ -73,8 +78,29 @@ export const postUploadUtilisationReport = async (req: PostUploadUtilisationRepo
           platform: 'PORTAL',
           userId: uploadedByUserId,
         },
+        transactionEntityManager,
       },
     });
+    await queryRunner.commitTransaction();
+    return updatedReport;
+  } catch (error) {
+    await queryRunner.rollbackTransaction();
+    throw new TransactionFailedError();
+  } finally {
+    await queryRunner.release();
+  }
+};
+
+/**
+ * Controller for the utilisation report upload
+ * @param req - The request object
+ * @param res - The response object
+ */
+export const postUploadUtilisationReport = async (req: PostUploadUtilisationReportRequest, res: Response) => {
+  try {
+    const { reportId, reportData, user, fileInfo } = req.body;
+
+    const updatedReport = await uploadReportInTransaction(reportId, reportData, user, fileInfo);
 
     return res.status(HttpStatusCode.Created).send({ dateUploaded: updatedReport.dateUploaded });
   } catch (error) {

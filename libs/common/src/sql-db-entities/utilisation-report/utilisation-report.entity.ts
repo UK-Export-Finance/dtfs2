@@ -69,12 +69,11 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     return report;
   }
 
-  public updateWithUploadDetails({ azureFileInfo, feeRecords, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): void {
+  public updateWithUploadDetails({ azureFileInfo, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): void {
     this.dateUploaded = new Date();
     this.azureFileInfo = azureFileInfo;
     this.status = 'PENDING_RECONCILIATION';
     this.uploadedByUserId = uploadedByUserId;
-    this.feeRecords = feeRecords;
     this.updateLastUpdatedBy(requestSource);
   }
 

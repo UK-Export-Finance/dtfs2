@@ -1,13 +1,16 @@
-import { DbRequestSource, UtilisationReportEntity, AzureFileInfo } from '@ukef/dtfs2-common';
+import { EntityManager } from 'typeorm';
+import { DbRequestSource, UtilisationReportEntity, AzureFileInfo, AzureFileInfoEntity, FeeRecordEntity } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
-import { UtilisationReportRepo } from '../../../../../repositories/utilisation-reports-repo';
+// import { UtilisationReportRepo } from '../../../../../repositories/utilisation-reports-repo';
 import { UtilisationReportRawCsvData } from '../../../../../types/utilisation-reports';
+import { feeRecordCsvRowToSqlEntity } from '../../../../../helpers';
 
 type ReportUploadedEventPayload = {
   azureFileInfo: AzureFileInfo;
   reportCsvData: UtilisationReportRawCsvData[];
   uploadedByUserId: string;
   requestSource: DbRequestSource;
+  transactionEntityManager: EntityManager;
 };
 
 export type UtilisationReportReportUploadedEvent = BaseUtilisationReportEvent<'REPORT_UPLOADED', ReportUploadedEventPayload>;
@@ -19,11 +22,29 @@ export type UtilisationReportReportUploadedEvent = BaseUtilisationReportEvent<'R
  */
 export const handleUtilisationReportReportUploadedEvent = async (
   report: UtilisationReportEntity,
-  { azureFileInfo, reportCsvData, uploadedByUserId, requestSource }: ReportUploadedEventPayload,
-): Promise<UtilisationReportEntity> =>
-  await UtilisationReportRepo.updateWithUploadDetails(report, {
-    azureFileInfo,
-    reportCsvData,
+  { azureFileInfo, reportCsvData, uploadedByUserId, requestSource, transactionEntityManager }: ReportUploadedEventPayload,
+): Promise<UtilisationReportEntity> => {
+  const azureFileInfoEntity = AzureFileInfoEntity.create({
+    ...azureFileInfo,
+    requestSource,
+  });
+  report.updateWithUploadDetails({
+    azureFileInfo: azureFileInfoEntity,
     uploadedByUserId,
     requestSource,
   });
+
+  await transactionEntityManager.save(UtilisationReportEntity, report);
+
+  const feeRecordEntities: FeeRecordEntity[] = reportCsvData.map((dataEntry) =>
+    feeRecordCsvRowToSqlEntity({
+      dataEntry,
+      requestSource,
+      report,
+    }),
+  );
+
+  await transactionEntityManager.save(FeeRecordEntity, feeRecordEntities, { chunk: 100 });
+  report.feeRecords = feeRecordEntities;
+  return report;
+};

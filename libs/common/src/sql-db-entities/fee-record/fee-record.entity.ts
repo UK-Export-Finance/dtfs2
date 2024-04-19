@@ -99,6 +99,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     paymentCurrency,
     paymentExchangeRate,
     requestSource,
+    report,
   }: CreateFeeRecordParams): FeeRecordEntity {
     const feeRecord = new FeeRecordEntity();
     feeRecord.facilityId = facilityId;
@@ -112,6 +113,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     feeRecord.feesPaidToUkefForThePeriodCurrency = feesPaidToUkefForThePeriodCurrency;
     feeRecord.paymentCurrency = paymentCurrency;
     feeRecord.paymentExchangeRate = paymentExchangeRate;
+    feeRecord.report = report;
     feeRecord.updateLastUpdatedBy(requestSource);
     return feeRecord;
   }
