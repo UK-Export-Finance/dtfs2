@@ -1,6 +1,7 @@
 jest.mock('../../drivers/db-client');
 const { ObjectId } = require('mongodb');
 const { when } = require('jest-when');
+const { generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
 const db = require('../../drivers/db-client');
 const { updateSessionIdentifier, updateLastLoginAndResetSignInData, createPasswordToken } = require('./controller');
 const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
@@ -17,13 +18,8 @@ describe('user controller', () => {
       callTestMethod: (user, sessionIdentifier, callback) => updateSessionIdentifier(user, sessionIdentifier, callback),
       expectedUpdate: {
         sessionIdentifier: SESSION_IDENTIFIER,
-        auditRecord: {
-          lastUpdatedAt: expect.any(Date),
-          lastUpdatedByPortalUserId: new ObjectId(TEST_USER._id),
-          lastUpdatedByTfmUserId: null,
-          lastUpdatedByIsSystem: null,
-          noUserLoggedIn: null,
-        },
+        auditRecord: generateMockPortalUserAuditDatabaseRecord(TEST_USER._id),
+
       },
     },
     {

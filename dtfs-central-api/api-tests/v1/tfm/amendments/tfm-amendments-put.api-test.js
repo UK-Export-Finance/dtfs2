@@ -1,4 +1,5 @@
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
@@ -95,13 +96,7 @@ describe('PUT TFM amendments', () => {
 
         const {body: updatedFacility } = await api.get(`/v1/tfm/facilities/${facilityId}`);
 
-        expect(updatedFacility.auditRecord).toEqual({
-          lastUpdatedAt: expect.any(String),
-          lastUpdatedByPortalUserId: null,
-          lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
-          lastUpdatedByIsSystem: null,
-          noUserLoggedIn: null,
-        });
+        expect(updatedFacility.auditRecord).toEqual(generateParsedMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id));
       });
     });
 

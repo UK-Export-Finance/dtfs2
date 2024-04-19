@@ -1,4 +1,5 @@
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -109,13 +110,7 @@ describe('/v1/tfm/deal/:id', () => {
         ...mockTfm.tfm,
         lastUpdated: expect.any(Number),
       });
-      expect(body.auditDetails).toEqual({
-        lastUpdatedAt: expect.any(String),
-        lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
-        lastUpdatedByTfmUserId: null,
-        lastUpdatedByIsSystem: null,
-        noUserLoggedIn: null,
-      });
+      expect(body.auditRecord).toEqual(generateParsedMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id));
     });
   });
 });

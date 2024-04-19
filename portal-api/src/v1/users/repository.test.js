@@ -1,6 +1,10 @@
 const { when, resetAllWhenMocks } = require('jest-when');
 const { ObjectId } = require('mongodb');
 const { cloneDeep } = require('lodash');
+const {
+  generateMockSystemAuditDatabaseRecord,
+  generateMockPortalUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
 const db = require('../../drivers/db-client');
 const { UserRepository } = require('./repository');
 const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError } = require('../errors');
@@ -58,6 +62,9 @@ describe('UserRepository', () => {
           $push: {
             signInTokens: { $each: [{ hashHex: hashHexString, saltHex: saltHexString, expiry }], $slice: -SIGN_IN_LINK.MAX_SEND_COUNT },
           },
+          $set: {
+            auditRecord: generateMockSystemAuditDatabaseRecord(),
+          },
         },
       );
     });
@@ -68,7 +75,11 @@ describe('UserRepository', () => {
 
     beforeEach(() => {
       when(usersCollection.findOneAndUpdate)
-        .calledWith({ _id: { $eq: ObjectId(validUserId) } }, { $inc: { signInLinkSendCount: 1 } }, { returnDocument: 'after' })
+        .calledWith(
+          { _id: { $eq: ObjectId(validUserId) } },
+          { $inc: { signInLinkSendCount: 1 }, $set: { auditRecord: generateMockSystemAuditDatabaseRecord() } },
+          { returnDocument: 'after' },
+        )
         .mockImplementation(() => ({ value: { ...testDatabaseUser, signInLinkSendCount: expectedSignInLinkSendCount } }));
     });
 
@@ -107,7 +118,10 @@ describe('UserRepository', () => {
     it('updates the users signInLinkSendDate to the current date', async () => {
       await repository.setSignInLinkSendDate({ userId: validUserId });
 
-      expect(usersCollection.updateOne).toHaveBeenCalledWith({ _id: { $eq: ObjectId(validUserId) } }, { $set: { signInLinkSendDate: dateNow } });
+      expect(usersCollection.updateOne).toHaveBeenCalledWith(
+        { _id: { $eq: ObjectId(validUserId) } },
+        { $set: { auditRecord: generateMockSystemAuditDatabaseRecord(), signInLinkSendDate: dateNow } },
+      );
     });
   });
 
@@ -119,7 +133,10 @@ describe('UserRepository', () => {
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(validUserId) } },
-        { $unset: { signInLinkSendCount: '', signInLinkSendDate: '', signInTokens: '' } },
+        {
+          $set: { auditRecord: generateMockPortalUserAuditDatabaseRecord(validUserId) },
+          $unset: { signInLinkSendCount: '', signInLinkSendDate: '', signInTokens: '' },
+        },
       );
     });
   });
@@ -151,7 +168,12 @@ describe('UserRepository', () => {
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(validUserId) } },
         {
-          $set: { lastLogin: dateNow, loginFailureCount: 0, sessionIdentifier: aSessionIdentifier },
+          $set: {
+            auditRecord: generateMockPortalUserAuditDatabaseRecord(validUserId),
+            lastLogin: dateNow,
+            loginFailureCount: 0,
+            sessionIdentifier: aSessionIdentifier,
+          },
           $unset: { signInLinkSendCount: '', signInLinkSendDate: '', signInTokens: '' },
         },
       );
@@ -169,6 +191,7 @@ describe('UserRepository', () => {
         { _id: { $eq: ObjectId(validUserId) } },
         {
           $set: {
+            auditRecord: generateMockSystemAuditDatabaseRecord(),
             'user-status': USER.STATUS.BLOCKED,
             blockedStatusReason: aReason,
           },

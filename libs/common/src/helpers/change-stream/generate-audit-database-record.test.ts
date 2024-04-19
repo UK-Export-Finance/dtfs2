@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { formatISO } from 'date-fns';
 import {
   generateAuditDatabaseRecordFromAuditDetails,
   generateNoUserLoggedInAuditDatabaseRecord,
@@ -8,8 +9,9 @@ import {
 } from './generate-audit-database-record';
 
 describe('generate audit details', () => {
+  const now = new Date(1712574419579);
   const defaultAuditDatabaseRecord = {
-    lastUpdatedAt: new Date(1712574419579),
+    lastUpdatedAt: formatISO(now),
     lastUpdatedByPortalUserId: null,
     lastUpdatedByTfmUserId: null,
     lastUpdatedByIsSystem: null,
@@ -17,7 +19,7 @@ describe('generate audit details', () => {
   };
 
   beforeAll(() => {
-    jest.useFakeTimers().setSystemTime(defaultAuditDatabaseRecord.lastUpdatedAt);
+    jest.useFakeTimers().setSystemTime(now);
   });
 
   afterAll(() => {

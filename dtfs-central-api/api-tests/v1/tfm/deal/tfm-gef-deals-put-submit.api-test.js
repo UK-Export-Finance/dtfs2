@@ -1,4 +1,5 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -83,13 +84,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
           facilities: [],
         },
         tfm: DEFAULTS.DEAL_TFM,
-        auditRecord: {
-          lastUpdatedAt: expect.any(String),
-          lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
-          lastUpdatedByTfmUserId: null,
-          noUserLoggedIn: null,
-          lastUpdatedByIsSystem: null,
-        },
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
       };
       expect(body).toEqual(expected);
     });
@@ -127,13 +122,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
           ...newFacility1,
         },
         tfm: DEFAULTS.FACILITY_TFM,
-        auditRecord: {
-          lastUpdatedAt: expect.any(String),
-          lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
-          lastUpdatedByTfmUserId: null,
-          noUserLoggedIn: null,
-          lastUpdatedByIsSystem: null,
-        },
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
       });
 
       const facility2 = await api.get(`/v1/tfm/facilities/${facility2Id}`);
@@ -146,13 +135,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
           ...newFacility2,
         },
         tfm: DEFAULTS.FACILITY_TFM,
-        auditRecord: {
-          lastUpdatedAt: expect.any(String),
-          lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
-          lastUpdatedByTfmUserId: null,
-          noUserLoggedIn: null,
-          lastUpdatedByIsSystem: null,
-        },
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
       });
     });
   });

@@ -1,3 +1,4 @@
+const { generateMockNoUserLoggedInAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -93,13 +94,7 @@ describe('/v1/feedback', () => {
             username: 'Tester',
             email: 'test@test.test',
           },
-          auditRecord: {
-            lastUpdatedAt: expect.any(String),
-            lastUpdatedByPortalUserId: null,
-            lastUpdatedByTfmUserId: null,
-            lastUpdatedByIsSystem: null,
-            noUserLoggedIn: true,
-          },
+          auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord(),
         });
       });
     });
@@ -181,13 +176,8 @@ describe('/v1/feedback', () => {
           username: 'Tester',
           email: 'test@test.test',
         },
-        auditRecord: {
-          lastUpdatedAt: expect.any(String),
-          lastUpdatedByPortalUserId: null,
-          lastUpdatedByTfmUserId: null,
-          lastUpdatedByIsSystem: null,
-          noUserLoggedIn: true,
-        },
+        auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord(),
+
       });
     });
   });

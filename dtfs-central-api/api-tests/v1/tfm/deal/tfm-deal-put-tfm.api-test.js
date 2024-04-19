@@ -1,5 +1,5 @@
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
 const wipeDB = require('../../../wipeDB');
 const aDeal = require('../../deal-builder');
 
@@ -43,9 +43,7 @@ describe('/v1/tfm/deal/:id', () => {
     };
 
     it('404s if updating an unknown id', async () => {
-      const { status } = await api
-        .put({ dealUpdate, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
-        .to('/v1/tfm/deals/61e54e2e532cf2027303e001');
+      const { status } = await api.put({ dealUpdate, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/deals/61e54e2e532cf2027303e001');
       expect(status).toEqual(404);
     });
 
@@ -74,13 +72,7 @@ describe('/v1/tfm/deal/:id', () => {
         ...dealUpdate.tfm,
         lastUpdated: expect.any(Number),
       });
-      expect(dealAfterUpdate.auditRecord).toEqual({
-        lastUpdatedAt: expect.any(String),
-        lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
-        lastUpdatedByPortalUserId: null,
-        noUserLoggedIn: null,
-        lastUpdatedByIsSystem: null,
-      });
+      expect(dealAfterUpdate.auditRecord).toEqual(generateParsedMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id));
     });
 
     it('does NOT add anything to the root if for example deal.dealSnapshot or deal.tfm is not passed', async () => {
