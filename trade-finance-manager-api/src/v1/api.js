@@ -18,7 +18,7 @@ const headers = {
   },
   external: {
     'Content-Type': 'application/json',
-    'x-api-key': EXTERNAL_API_KEY,
+    'x-api-key': String(EXTERNAL_API_KEY),
   },
 };
 

@@ -16,7 +16,7 @@ const sendEmail = async (
       url: `${EXTERNAL_API_URL}/email`,
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': EXTERNAL_API_KEY,
+        'x-api-key': String(EXTERNAL_API_KEY),
       },
       data: {
         templateId,

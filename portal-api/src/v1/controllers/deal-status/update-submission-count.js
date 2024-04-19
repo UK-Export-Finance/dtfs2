@@ -4,7 +4,7 @@ const updateSubmissionCount = async (deal, user) => {
   const dealId = deal._id;
 
   let submissionCount = 1;
-  if (deal.details.submissionCount) {
+  if (deal?.details?.submissionCount) {
     submissionCount = deal.details.submissionCount + 1;
   }
 
