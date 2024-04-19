@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { getUnixTime } = require('date-fns');
 const {  generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record')
-const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
+const { validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 const { findAmendmentByStatusAndFacilityId, findLatestCompletedAmendmentByFacilityIdVersion } = require('./tfm-get-amendments.controller');
@@ -16,13 +16,9 @@ exports.postTfmAmendment = async (req, res) => {
   const { auditDetails } = req.body;
 
   try {
-    validateAuditDetails(auditDetails);
+    validateAuditDetailsAndUserType(auditDetails, 'tfm');
   } catch ({ message }) {
     return res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
-  }
-
-  if (auditDetails.userType !== 'tfm') {
-    return res.status(400).send({ status: 400, message: `Invalid auditDetails, userType must be 'tfm'` });
   }
 
   const facility = await findOneFacility(facilityId);
