@@ -66,7 +66,7 @@ exports.update = async (req, res) => {
 
     const currentStatus = deal.status;
 
-        console.info('Updating portal deal %s status to %s from %s', dealId, newStatus, currentStatus);
+        console.info('Updating portal deal %s status from %s to %s', dealId, currentStatus, newStatus);
 
     if (newStatus !== CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL && newStatus !== CONSTANTS.DEAL.DEAL_STATUS.ABANDONED) {
       if (!userCanSubmitDeal(deal, user)) {
@@ -117,6 +117,8 @@ exports.update = async (req, res) => {
 
     // Submit to UKEF / TFM
     if (newStatus === CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF) {
+      console.info('Submit deal %s to UKEF', dealId);
+  
       await updateSubmittedIssuedFacilities(user, updatedDeal);
 
       updatedDeal = await updateSubmissionCount(updatedDeal, user);
