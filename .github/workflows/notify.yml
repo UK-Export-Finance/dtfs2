@@ -8,6 +8,7 @@ on:
 env:
   environment: dev
   timezone: ${{ vars.TIMEZONE }}
+  MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE}}
 
 jobs:
   # 1. Setup test infrastructure
