@@ -18,7 +18,7 @@ const headers = {
   },
   external: {
     'Content-Type': 'application/json',
-    'x-api-key': EXTERNAL_API_KEY,
+    'x-api-key': String(EXTERNAL_API_KEY),
   },
 };
 
@@ -229,7 +229,7 @@ const updateDeal = async ({
   }
 };
 
-const updateDealSnapshot = async (dealId, snapshotUpdate) => {
+const updateDealSnapshot = async (dealId, snapshotUpdate, auditDetails) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -242,7 +242,10 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/snapshot`,
       headers: headers.central,
-      data: snapshotUpdate,
+      data: {
+        snapshotUpdate,
+        auditDetails,
+      },
     });
 
     return response.data;

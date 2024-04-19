@@ -1,4 +1,4 @@
-const { ObjectId } = require('mongodb')
+const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const { findOneTfmDeal, findOnePortalDeal, findOneGefDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
@@ -167,7 +167,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
        * This is the one and only time that TFM updates a snapshot.
        * Without this, it would involve additional API calls going around in circles.
        */
-      const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate);
+      const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate, auditDetails);
 
       updatedDeal.submissionType = dealSnapshot.submissionType;
 
@@ -244,8 +244,8 @@ const submitDealAfterUkefIdsPUT = async (req, res) => {
   try {
     const { dealId, dealType, checker } = req.body;
 
-    if(!ObjectId.isValid(checker?._id)) {
-      return res.status(400).send({ status: 400, message: 'Invalid checker _id'});
+    if (!ObjectId.isValid(checker?._id)) {
+      return res.status(400).send({ status: 400, message: 'Invalid checker _id' });
     }
 
     const deal = await submitDealAfterUkefIds(dealId, dealType, checker, generatePortalAuditDetails(checker._id));
