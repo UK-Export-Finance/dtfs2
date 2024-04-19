@@ -34,22 +34,24 @@
     "install:all": "npm install --if-present",
     "lint:all": "npm run lint --workspaces --if-present",
     "lint:fix:all": "npm run lint --fix --workspaces --if-present",
-    "type:all": "npm run type-check --workspaces --if-present",
+    "load": "ts-node utils/mock-data-loader/re-insert-mocks.js",
     "prettier:all": "npm run prettier --workspaces --if-present",
     "prettier:fix:all": "npm run prettier:fix --workspaces --if-present",
-    "load": "ts-node utils/mock-data-loader/re-insert-mocks.js",
     "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color '**/*'",
     "start": "docker compose up --build",
     "start:detach": "npm run dev -- --detach",
     "stop": "docker compose down",
     "type-check:all": "npm run type-check --workspaces --if-present",
+    "type:all": "npm run type-check --workspaces --if-present",
     "update:all": "npm update --save --if-present"
   },
   "lint-staged": {
     "**/package.json": "sort-package-json",
     "**/*.{js,ts}": [
       "eslint --fix",
-      "prettier --write",
+      "prettier --write"
+    ],
+    "**/*.ts": [
       "tsc --noEmit"
     ],
     "**/*": [
