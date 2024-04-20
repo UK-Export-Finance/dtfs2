@@ -85,7 +85,11 @@ export const uploadReportInTransaction = async (
     return updatedReport;
   } catch (error) {
     await queryRunner.rollbackTransaction();
-    throw new TransactionFailedError();
+    if (error instanceof ApiError) {
+      throw error;
+    } else {
+      throw new TransactionFailedError();
+    }
   } finally {
     await queryRunner.release();
   }
