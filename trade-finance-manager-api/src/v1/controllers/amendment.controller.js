@@ -19,7 +19,7 @@ const {
 } = require('../helpers/amendment.helpers');
 const CONSTANTS = require('../../constants');
 
-const sendAmendmentEmail = async (amendmentId, facilityId) => {
+const sendAmendmentEmail = async (amendmentId, facilityId, auditDetails) => {
   try {
     const amendment = await api.getAmendmentById(facilityId, amendmentId);
 
@@ -34,21 +34,21 @@ const sendAmendmentEmail = async (amendmentId, facilityId) => {
         if (amendment?.automaticApprovalEmail && !amendment?.automaticApprovalEmailSent) {
           const automaticAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
           // sends email and updates flag if sent
-          await sendAutomaticAmendmentEmail(automaticAmendmentVariables);
+          await sendAutomaticAmendmentEmail(automaticAmendmentVariables, auditDetails);
         }
         if (amendment?.ukefDecision?.managersDecisionEmail && !amendment?.ukefDecision?.managersDecisionEmailSent) {
           // if managers decision email to be sent and not already sent
           const ukefDecisionAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
-          await sendManualDecisionAmendmentEmail(ukefDecisionAmendmentVariables);
+          await sendManualDecisionAmendmentEmail(ukefDecisionAmendmentVariables, auditDetails)
         }
         if (amendment?.bankDecision?.banksDecisionEmail && !amendment?.bankDecision?.banksDecisionEmailSent) {
           const bankDecisionAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
-          await sendManualBankDecisionEmail(bankDecisionAmendmentVariables);
+          await sendManualBankDecisionEmail(bankDecisionAmendmentVariables, auditDetails);
         }
         // if first amendment task email has not already been sent
         if (amendment?.sendFirstTaskEmail && !amendment?.firstTaskEmailSent) {
           const firstTaskVariables = { amendment, dealSnapshot, facilityId, amendmentId };
-          await sendFirstTaskEmail(firstTaskVariables);
+          await sendFirstTaskEmail(firstTaskVariables, auditDetails);
         }
       }
     }
@@ -81,7 +81,7 @@ const updateTFMDealLastUpdated = async (amendmentId, facilityId, auditDetails) =
 };
 
 // creates tfm object in latest amendment with completed mapping for displaying amendment changes in tfm
-const createAmendmentTFMObject = async (amendmentId, facilityId) => {
+const createAmendmentTFMObject = async (amendmentId, facilityId, auditDetails) => {
   try {
     // gets latest amendment value and dates
     const latestValue = await api.getLatestCompletedAmendmentValue(facilityId);
@@ -96,7 +96,7 @@ const createAmendmentTFMObject = async (amendmentId, facilityId) => {
       tfm: tfmToAdd,
     };
 
-    await api.updateFacilityAmendment(facilityId, amendmentId, payload);
+    await api.updateFacilityAmendment(facilityId, amendmentId, payload, auditDetails);
     return tfmToAdd;
   } catch (error) {
     console.error('TFM-API - unable to add TFM object to amendment %o', error);
@@ -220,16 +220,18 @@ const updateFacilityAmendment = async (req, res) => {
 
       // UKEF exposure
       payload = calculateAcbsUkefExposure(payload);
+      
+      const auditDetails = generateTfmAuditDetails(req.user._id);
 
       // Update Amendment
-      const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload);
+      const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload, auditDetails);
       // sends email if conditions are met
-      await sendAmendmentEmail(amendmentId, facilityId);
+      await sendAmendmentEmail(amendmentId, facilityId, auditDetails);
 
       // if facility successfully updated and completed, then adds tfm lastUpdated and tfm object in amendments
       if (createdAmendment && tfmLastUpdated) {
-        await updateTFMDealLastUpdated(amendmentId, facilityId, generateTfmAuditDetails(req.user._id));
-        await createAmendmentTFMObject(amendmentId, facilityId);
+        await updateTFMDealLastUpdated(amendmentId, facilityId, auditDetails);
+        await createAmendmentTFMObject(amendmentId, facilityId, auditDetails);
       }
 
       // Fetch facility object
