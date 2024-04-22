@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const { validateApplicationReferences, validatorStatusCheckEnums } = require('./validation/application');
@@ -51,6 +52,7 @@ exports.create = async (req, res) => {
     if (response?.data?.version) {
       newDeal.mandatoryVersionId = response.data.version;
     }
+    newDeal.auditRecord = generatePortalUserAuditDatabaseRecord(req.user._id);
 
     const createdApplication = await applicationCollection.insertOne(new Application(newDeal, eligibility));
 

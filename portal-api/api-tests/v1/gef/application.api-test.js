@@ -1,4 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
 const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
@@ -139,6 +140,7 @@ describe(baseUrl, () => {
           ukefDealId: null,
           checkerId: null,
           portalActivities: [],
+          auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aMaker._id)
         })),
       };
 
@@ -205,6 +207,7 @@ describe(baseUrl, () => {
         ukefDealId: null,
         checkerId: null,
         portalActivities: [],
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aMaker._id)
       };
       expect(body).toEqual(expectMongoId(expected));
     });
@@ -296,6 +299,7 @@ describe(baseUrl, () => {
           status: expect.any(String),
           updatedAt: expect.any(Number),
         },
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aMaker._id),
       });
 
       expect(body.maker.token).toBeUndefined();
