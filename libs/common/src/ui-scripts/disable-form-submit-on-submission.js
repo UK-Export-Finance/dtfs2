@@ -25,25 +25,25 @@ const getLastFormIfPresent = () => {
  * This hidden input has any name or value attributes that the button has
  * as when we disable the initial button, the disabled button will not submit
  * this information to the server.
- * @param {string} selectedButtonId
+ * @param {HTMLElement | null} buttonThatWasClicked
  */
-const createHiddenInputOfSelectedButton = (selectedButtonId) => {
+const createHiddenInputOfButton = (buttonThatWasClicked) => {
+  if (!buttonThatWasClicked) {
+    throw new Error('An error occurred when handling the form submission.');
+  }
   const attributesToCopy = ['name', 'value'];
+  const hiddenInput = document.createElement('input');
 
-  const buttonThatWasClicked = document.getElementById(selectedButtonId);
-
-  const input = document.createElement('input');
-
-  input.setAttribute('type', 'hidden');
+  hiddenInput.setAttribute('type', 'hidden');
 
   attributesToCopy.forEach((attribute) => {
     const valueToCopy = buttonThatWasClicked.getAttribute(attribute);
     if (valueToCopy) {
-      input.setAttribute(attribute, valueToCopy);
+      hiddenInput.setAttribute(attribute, valueToCopy);
     }
   });
 
-  buttonThatWasClicked.append(input);
+  buttonThatWasClicked.prepend(hiddenInput);
 };
 
 /**
@@ -86,7 +86,7 @@ const addDisableFormSubmitOnSubmission = () => {
       preventFormResubmission(event, hasSubmitted);
       hasSubmitted = true;
 
-      createHiddenInputOfSelectedButton(event.submitter.id);
+      createHiddenInputOfButton(event.submitter);
 
       disableAllGovUkButtons();
     });
