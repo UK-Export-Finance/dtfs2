@@ -628,15 +628,9 @@ tfmRouter.route('/users').get(tfmUsersController.listTfmUser);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/definitions/TFMUser'
+ *             user: $ref: '#/definitions/TFMUser'
  *             auditDetails:
- *               type: object
- *               properties:
- *                 userType:
- *                   type: string
- *                   enum: [tfm]
- *                 id:
- *                   type: string
+ *               $ref: '#/definitions/tfmAuditDetails'
  *     responses:
  *       200:
  *         description: OK
