@@ -11,7 +11,7 @@ import { PreviousReportNavItemViewModel, PreviousReportViewModel, PreviousReport
 import { getMonthName } from '../../../../helpers/getMonthName';
 
 const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportReconciliationStatus, string> = {
-  REPORT_NOT_RECEIVED: 'Not received',
+  REPORT_NOT_RECEIVED: 'Not submitted',
   PENDING_RECONCILIATION: 'Pending reconciliation',
   RECONCILIATION_IN_PROGRESS: 'Reconciliation in progress',
   RECONCILIATION_COMPLETED: 'Report completed',
