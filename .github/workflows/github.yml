@@ -84,4 +84,4 @@ jobs:
 
       - name: Lint
         working-directory: ./
-        run: echo ${{ github.event.head_commit.message }} | npx commitlint --color --last --verbose
+        run: echo ${{ github.event.head_commit }} | npx commitlint --color --last --verbose
