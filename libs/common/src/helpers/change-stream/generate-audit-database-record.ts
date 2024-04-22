@@ -43,6 +43,8 @@ export const generateAuditDatabaseRecordFromAuditDetails = (auditDetails: AuditD
       return generatePortalUserAuditDatabaseRecord(auditDetails.id);
     case 'system':
       return generateSystemAuditDatabaseRecord();
+    case 'none':
+      return generateNoUserLoggedInAuditDatabaseRecord();
     default:
       throw new Error('Invalid auditDetails userType');
   }

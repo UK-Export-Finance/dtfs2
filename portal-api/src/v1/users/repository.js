@@ -53,9 +53,9 @@ class UserRepository {
     const userCollection = await db.getCollection('users');
 
     const unsetUpdate = {
-        signInLinkSendCount: '',
-        signInLinkSendDate: '',
-        signInTokens: '',
+      signInLinkSendCount: '',
+      signInLinkSendDate: '',
+      signInTokens: '',
     };
     const setUpdate = { auditRecord: generatePortalUserAuditDatabaseRecord(userId) };
 
@@ -90,6 +90,8 @@ class UserRepository {
     const setUpdate = {
       'user-status': USER.STATUS.BLOCKED,
       blockedStatusReason: reason,
+      // This is currently only called during the log in flow & will only be a system update.
+      // If the admin blocking/unblocking a user were to call this method then this would need to be updated
       auditRecord: generateSystemAuditDatabaseRecord(),
     };
     await userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: setUpdate });

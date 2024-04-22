@@ -534,7 +534,8 @@ tfmRouter.route('/teams').get(tfmTeamsController.listTfmTeam);
  *       content:
  *         application/json:
  *           schema:
- *             team: $ref: '#/definitions/TFMTeam'
+ *             team:
+ *               $ref: '#/definitions/TFMTeam'
  *             auditDetails:
  *               $ref: '#/definitions/tfmAuditDetails'
  *     responses:
@@ -628,7 +629,8 @@ tfmRouter.route('/users').get(tfmUsersController.listTfmUser);
  *       content:
  *         application/json:
  *           schema:
- *             user: $ref: '#/definitions/TFMUser'
+ *             user:
+ *               $ref: '#/definitions/TFMUser'
  *             auditDetails:
  *               $ref: '#/definitions/tfmAuditDetails'
  *     responses:

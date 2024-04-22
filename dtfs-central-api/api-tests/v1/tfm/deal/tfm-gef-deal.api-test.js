@@ -1,5 +1,5 @@
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
-const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -58,7 +58,9 @@ describe('/v1/tfm/deal/:id', () => {
 
     it('404s if updating an unknown id', async () => {
       // TODO: refactor this as MOCK_USER
-      const { status, body } = await api.put({ auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) }).to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
+      const { status, body } = await api
+        .put({ auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
+        .to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
       expect(status).toEqual(404);
       expect(body.message).toEqual('Deal not found');
     });
@@ -110,7 +112,7 @@ describe('/v1/tfm/deal/:id', () => {
         ...mockTfm.tfm,
         lastUpdated: expect.any(Number),
       });
-      expect(body.auditRecord).toEqual(generateParsedMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id));
+      expect(body.auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id));
     });
   });
 });

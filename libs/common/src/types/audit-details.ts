@@ -9,6 +9,5 @@ export type AuditDetails =
       userType: 'tfm' | 'portal';
       id: string | ObjectId;
     }
-  | {
-      userType: 'system';
-    };
+  | { userType: 'system' }
+  | { userType: 'none' };

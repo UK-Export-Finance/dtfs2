@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "1.8.0",
+    "@ukef/dtfs2-common": "^1.0.0",
     "axios": "^1.6.8",
     "axios-mock-adapter": "^1.22.0",
     "cheerio": "^1.0.0-rc.12",

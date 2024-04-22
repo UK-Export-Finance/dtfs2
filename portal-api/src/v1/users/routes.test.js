@@ -87,7 +87,6 @@ describe('users routes', () => {
           loginFailureCount: 0,
           passwordUpdatedAt: expect.any(String),
           auditRecord: generateMockPortalUserAuditDatabaseRecord(user._id),
-
         },
         expect.any(Function),
       );

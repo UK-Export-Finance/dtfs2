@@ -81,7 +81,7 @@ describe('/v1/tfm/facilities', () => {
       withValidateAuditDetailsTests({
         makeRequest: (auditDetails) =>
           api.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to(`/v1/tfm/facilities/${createdFacility._id}`),
-        validUserTypes: ['system', 'portal', 'tfm'],
+        validUserTypes: ['system', 'portal', 'tfm', 'none'],
       });
 
       it('returns the updated facility', async () => {

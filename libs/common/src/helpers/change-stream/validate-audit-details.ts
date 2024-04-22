@@ -25,6 +25,8 @@ export function validateAuditDetails(auditDetails: unknown): asserts auditDetail
       throw new Error(`Invalid portal user id ${auditDetails.id?.toString()}`);
     case 'system':
       return;
+    case 'none':
+      return;
     default:
       throw new Error(`Invalid userType ${auditDetails.userType?.toString()}`);
   }
