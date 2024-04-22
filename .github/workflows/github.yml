@@ -83,6 +83,5 @@ jobs:
         run: npm ci
 
       - name: Lint
-        if: github.event_name == 'push'
         working-directory: ./
         run: npx commitlint --color --last --verbose
