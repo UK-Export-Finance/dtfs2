@@ -43,6 +43,5 @@ export const handleUtilisationReportReportUploadedEvent = async (
   );
   await transactionEntityManager.save(FeeRecordEntity, feeRecordEntities, { chunk: 100 });
 
-  report.feeRecords = feeRecordEntities;
   return report;
 };

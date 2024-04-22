@@ -12,7 +12,7 @@ describe('fee-record.helper', () => {
       userId: 'abc123',
     };
 
-    const report: UtilisationReportEntity = new UtilisationReportEntity();
+    const report = new UtilisationReportEntity();
 
     beforeAll(() => {
       jest.useFakeTimers();
@@ -45,7 +45,7 @@ describe('fee-record.helper', () => {
           lastUpdatedByIsSystemUser: false,
           lastUpdatedByPortalUserId: requestSource.userId,
           lastUpdatedByTfmUserId: null,
-          report: report,
+          report,
         }),
       );
     });
