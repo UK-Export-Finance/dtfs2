@@ -80,7 +80,7 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm run ci
+        run: npm ci
 
       - name: Lint
         if: github.event_name == 'push'
