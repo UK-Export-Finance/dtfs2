@@ -229,7 +229,7 @@ const updateDeal = async ({
   }
 };
 
-const updateDealSnapshot = async (dealId, snapshotUpdate) => {
+const updateDealSnapshot = async (dealId, snapshotUpdate, auditDetails) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -242,7 +242,10 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/snapshot`,
       headers: headers.central,
-      data: snapshotUpdate,
+      data: {
+        snapshotUpdate,
+        auditDetails,
+      },
     });
 
     return response.data;
@@ -364,7 +367,7 @@ const createFacilityAmendment = async (facilityId, auditDetails) => {
   }
 };
 
-const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
+const updateFacilityAmendment = async (facilityId, amendmentId, payload, auditDetails) => {
   const isValid = isValidMongoId(facilityId) && isValidMongoId(amendmentId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
@@ -372,7 +375,10 @@ const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
         method: 'put',
         url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
         headers: headers.central,
-        data: payload,
+        data: {
+          payload,
+          auditDetails,
+        },
       });
 
       return response.data;

@@ -29,3 +29,11 @@ export function validateAuditDetails(auditDetails: unknown): asserts auditDetail
       throw new Error(`Invalid userType ${auditDetails.userType?.toString()}`);
   }
 }
+
+export function validateAuditDetailsAndUserType(auditDetails: unknown, userType: 'system' | 'tfm' | 'portal'): asserts auditDetails is AuditDetails {
+  validateAuditDetails(auditDetails);
+
+  if (auditDetails.userType !== userType) {
+    throw new Error(`userType must be '${userType}'`);
+  }
+}

@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { getUnixTime } = require('date-fns');
-const {  generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record')
-const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 const { findAmendmentByStatusAndFacilityId, findLatestCompletedAmendmentByFacilityIdVersion } = require('./tfm-get-amendments.controller');
@@ -16,13 +16,9 @@ exports.postTfmAmendment = async (req, res) => {
   const { auditDetails } = req.body;
 
   try {
-    validateAuditDetails(auditDetails);
+    validateAuditDetailsAndUserType(auditDetails, 'tfm');
   } catch ({ message }) {
     return res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
-  }
-
-  if (auditDetails.userType !== 'tfm') {
-    return res.status(400).send({ status: 400, message: `Invalid auditDetails, userType must be 'tfm'` });
   }
 
   const facility = await findOneFacility(facilityId);
@@ -35,7 +31,7 @@ exports.postTfmAmendment = async (req, res) => {
   if (amendmentInProgress) {
     return res.status(400).send({ status: 400, message: 'The current facility already has an amendment in progress' });
   }
-  
+
   const { dealId } = facility.facilitySnapshot;
   // the version of latest completed amendment (proceed or withdraw or auto) or null
   const latestCompletedAmendmentVersion = await findLatestCompletedAmendmentByFacilityIdVersion(facilityId);
@@ -48,7 +44,6 @@ exports.postTfmAmendment = async (req, res) => {
     updatedAt: getUnixTime(new Date()),
     status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED,
     version: 1,
-    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
   if (latestCompletedAmendmentVersion) {
     amendment.version = latestCompletedAmendmentVersion + 1;
@@ -56,9 +51,8 @@ exports.postTfmAmendment = async (req, res) => {
   const collection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_FACILITIES);
   await collection.updateOne(
     { _id: { $eq: ObjectId(facilityId) } },
-    { $push: { amendments: amendment } },
+    { $push: { amendments: amendment }, $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) } },
   );
 
   return res.status(200).json({ amendmentId: amendment.amendmentId.toHexString() });
-
 };
