@@ -138,7 +138,7 @@ exports.update = async (req, res) => {
   }
 
   const collection = await db.getCollection(dealsCollection);
-  const update = new Application(req.body);
+  const update = new Application({ ...req.body, auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id) });
   const validateErrs = validateApplicationReferences(update);
   if (validateErrs) {
     return res.status(422).send(validateErrs);
