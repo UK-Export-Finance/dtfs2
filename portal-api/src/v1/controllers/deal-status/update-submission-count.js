@@ -1,11 +1,17 @@
 const { updateDeal } = require('../deal.controller');
 
+/**
+ * Updates the submission count of a deal and returns the updated deal.
+ * @param {Object} deal - The deal object.
+ * @param {Object} user - The user object.
+ * @returns {Promise<Object>} - The updated deal object with submission count incremented.
+ */
 const updateSubmissionCount = async (deal, user) => {
-  const dealId = deal._id;
-
+  const { _id: dealId } = deal;
   let submissionCount = 1;
-  if (deal.details.submissionCount) {
-    submissionCount = deal.details.submissionCount + 1;
+
+  if (deal?.details?.submissionCount) {
+    submissionCount = Number(deal.details.submissionCount) + 1;
   }
 
   const modifiedDeal = {
@@ -14,11 +20,7 @@ const updateSubmissionCount = async (deal, user) => {
     },
   };
 
-  const updatedDeal = await updateDeal(
-    dealId,
-    modifiedDeal,
-    user,
-  );
+  const updatedDeal = await updateDeal(dealId, modifiedDeal, user);
 
   return updatedDeal;
 };
