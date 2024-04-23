@@ -84,8 +84,7 @@ jobs:
 
       - name: Test
         run: |
-          var=$(git log --format=%B -n 1)
-          echo $var 
+          echo MSG=$(git log --format=%B -n 1) >> $GITHUB_ENV
 
       - name: Lint
         run: git log --format=%B -n 1 | npx commitlint --color --verbose $1
