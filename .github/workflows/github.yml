@@ -53,7 +53,8 @@ jobs:
       - name: Test
         run: |
           echo VAR=${{ github.event.commits[0].message }} >> $GITHUB_ENV
-          echo VA2=${{ github.event.commits }} >> $GITHUB_ENV
+          echo VA1=${{ github.event.number }} >> $GITHUB_ENV
+          echo VA2=${{ github.event.pull_request }} >> $GITHUB_ENV
 
       - name: Lint
         run: echo "${{ github.event.commits[0].message }}" | npx commitlint --color --verbose $1
