@@ -41,24 +41,20 @@ const validateAndEnableSubmitter = (submitter) => {
 };
 
 /**
- * Creates a hidden input of the button used to submit the form.
- * This hidden input copies any name or value attributes that the submission button has,
- * as when we disable the initial button, the disabled button will not submit
+ * Creates a hidden input of the submitter used to submit the form.
+ * This hidden input copies any name or value attributes that the submission submitter has,
+ * as when we disable the initial submitter, the disabled submitter will not submit
  * this information to the server.
- * @param {HTMLButtonElement} button
+ * @param {HTMLElement} submitter
  */
-const createHiddenInputOfSubmitter = (button) => {
-  if (!button) {
-    throw new Error('An error occurred when handling the form submission.');
-  }
-
+const createHiddenInputOfSubmitter = (submitter) => {
   const hiddenInput = document.createElement('input');
 
   hiddenInput.setAttribute('id', 'resubmit-prevention-hidden-input');
   hiddenInput.setAttribute('type', 'hidden');
 
   [('name', 'value')].forEach((attribute) => {
-    const value = button.getAttribute(attribute);
+    const value = submitter.getAttribute(attribute);
 
     if (value) {
       hiddenInput.setAttribute(attribute, value);
@@ -67,7 +63,7 @@ const createHiddenInputOfSubmitter = (button) => {
 
   hiddenInput.classList.add('js-hidden-input');
 
-  button.after(hiddenInput);
+  submitter.after(hiddenInput);
 
   return hiddenInput;
 };
@@ -100,7 +96,7 @@ const addDisableFormSubmitOnSubmission = () => {
     if (hasPreviouslySubmitted) {
       const isSameSubmitterAsPrevious = submitter === priorSubmitter;
       if (isSameSubmitterAsPrevious) {
-        // if the disabled button has been submitted, prevents a duplicate resubmission
+        // prevents a duplicate resubmission if a user resubmits the form not using buttons
         // ie from using keyboard navigation to submit the form
         event.preventDefault();
         return;
