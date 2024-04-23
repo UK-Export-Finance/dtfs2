@@ -53,7 +53,7 @@ const createHiddenInputOfSubmitter = (submitter) => {
   hiddenInput.setAttribute('id', 'resubmit-prevention-hidden-input');
   hiddenInput.setAttribute('type', 'hidden');
 
-  [('name', 'value')].forEach((attribute) => {
+  ['name', 'value'].forEach((attribute) => {
     const value = submitter.getAttribute(attribute);
 
     if (value) {
