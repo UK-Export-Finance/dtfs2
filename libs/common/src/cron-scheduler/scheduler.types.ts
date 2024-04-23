@@ -1,4 +1,4 @@
-import cron from 'node-cron';
+import * as cron from 'node-cron';
 
 export type CronScheduleFunc = Parameters<typeof cron.schedule>[1];
 

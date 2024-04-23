@@ -1,4 +1,4 @@
-import cron from 'node-cron';
+import * as cron from 'node-cron';
 import { CronSchedulerJob } from './scheduler.types';
 import { asyncTaskToSyncTask, taskWithErrorLogging } from './scheduler.helpers';
 
@@ -11,7 +11,11 @@ export const initialiseCronJobScheduler = (jobs: CronSchedulerJob[]) => {
     const { cronExpression, description, task } = job;
 
     if (!cron.validate(cronExpression)) {
-      console.error("Failed to add scheduled job '%s' due to invalid cron expression: '%s'", description, cronExpression);
+      console.error(
+        "Failed to add scheduled job '%s' due to invalid cron expression: '%s'",
+        description,
+        cronExpression,
+      );
       return;
     }
 
