@@ -35,7 +35,7 @@ const preventFormResubmission = (event, hasSubmitted) => {
 /**
  * Disables all govuk buttons on the page.
  * This is to prevent multiple form submissions by clicking on a submit button
- * more than once
+ * more than once.
  */
 const disableAllGovUkButtons = () => {
   const buttons = document.querySelectorAll('.govuk-button');
@@ -83,20 +83,29 @@ const createHiddenInputOfButtonIfRequired = (buttonThatWasClicked) => {
  * and is therefore not sufficient for our needs as multiple forms take longer than a second to submit.
  */
 const addDisableFormSubmitOnSubmission = () => {
-  let hasSubmitted = false;
-
   const lastForm = getLastFormIfPresent();
 
-  if (lastForm) {
-    lastForm.addEventListener('submit', (event) => {
-      preventFormResubmission(event, hasSubmitted);
-      hasSubmitted = true;
-
-      disableAllGovUkButtons();
-
-      createHiddenInputOfButtonIfRequired(event.submitter);
-    });
+  if (!lastForm) {
+    return;
   }
+
+  let hasSubmitted = false;
+
+  lastForm.addEventListener('submit', (event) => {
+    const { submitter } = event;
+
+    if (!(submitter instanceof HTMLElement) || !submitter.classList.contains('govuk-button')) {
+      return;
+    }
+
+    preventFormResubmission(event, hasSubmitted);
+
+    hasSubmitted = true;
+
+    disableAllGovUkButtons();
+
+    createHiddenInputOfButtonIfRequired(submitter);
+  });
 };
 
 addDisableFormSubmitOnSubmission();
