@@ -33,6 +33,15 @@ const preventFormResubmission = (event, hasSubmitted) => {
 };
 
 /**
+ * Disables a button
+ * @param {HTMLButtonElement} button
+ */
+const disableButton = (button) => {
+  button.setAttribute('disabled', '');
+  button.setAttribute('aria-disabled', 'true');
+};
+
+/**
  * Disables all govuk buttons on the page.
  * This is to prevent multiple form submissions by clicking on a submit button
  * more than once.
@@ -40,8 +49,7 @@ const preventFormResubmission = (event, hasSubmitted) => {
 const disableAllGovUkButtons = () => {
   const buttons = document.querySelectorAll('.govuk-button');
   buttons.forEach((button) => {
-    button.setAttribute('disabled', '');
-    button.setAttribute('aria-disabled', 'true');
+    disableButton(button);
   });
 };
 
@@ -81,6 +89,14 @@ const createHiddenInputOfButtonIfRequired = (buttonThatWasClicked) => {
  * Prevent multiple form submissions by pressing enter or clicking the submit button
  * The govukButton component has a preventDoubleClick property, but this only debounces in a one-second window,
  * and is therefore not sufficient for our needs as multiple forms take longer than a second to submit.
+ *
+ * If the submitter is a govuk-button, we disable all gov-uk buttons
+ * This is both to allow us to disable form resubmission by methods other than clicking
+ * and to help prevent any double submissions of forms on two different submission methods
+ *
+ * If the submitter is not a govuk-button, we only disable the button that was used for submission
+ * to avoid double submissions. This is because these buttons should not be making data changes,
+ * but for safety, we disable them anyway.
  */
 const addDisableFormSubmitOnSubmission = () => {
   const lastForm = getLastFormIfPresent();
@@ -94,15 +110,17 @@ const addDisableFormSubmitOnSubmission = () => {
   lastForm.addEventListener('submit', (event) => {
     const { submitter } = event;
 
-    if (!(submitter instanceof HTMLElement) || !submitter.classList.contains('govuk-button')) {
+    if (!(submitter instanceof HTMLElement)) {
       return;
     }
 
-    preventFormResubmission(event, hasSubmitted);
-
-    hasSubmitted = true;
-
-    disableAllGovUkButtons();
+    if (submitter.classList.contains('govuk-button')) {
+      preventFormResubmission(event, hasSubmitted);
+      hasSubmitted = true;
+      disableAllGovUkButtons();
+    } else {
+      disableButton(submitter);
+    }
 
     createHiddenInputOfButtonIfRequired(submitter);
   });
