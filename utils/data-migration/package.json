@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "DTFS Utilities",
   "license": "ISC",
-  "author": "",
+  "author": "UK Export Finance",
   "main": "migrate-users.js",
   "dependencies": {
     "axios": "^1.6.8",
