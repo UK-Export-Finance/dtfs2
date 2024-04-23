@@ -186,7 +186,7 @@ exports.updateSupportingInformation = async (req, res) => {
     {
       $addToSet: { editedBy: editorId },
       // set the updatedAt property to the current time in EPOCH format
-      $set: { updatedAt: Date.now() },
+      $set: { updatedAt: Date.now(), auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id) },
       // insert new documents into the supportingInformation object -> array. i.e. supportingInformation.manualInclusion
       $push: { [`supportingInformation.${field}`]: application },
     },
@@ -253,6 +253,7 @@ exports.changeStatus = async (req, res) => {
     applicationUpdate = {
       ...applicationUpdate,
       ...submissionData,
+      auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id)
     };
   }
 
