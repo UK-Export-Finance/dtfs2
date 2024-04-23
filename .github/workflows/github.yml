@@ -82,5 +82,10 @@ jobs:
         working-directory: ./
         run: npm ci
 
+      - name: Test
+        run: |
+          var=$(git log --format=%B -n 1)
+          echo $var 
+
       - name: Lint
         run: git log --format=%B -n 1 | npx commitlint --color --verbose $1
