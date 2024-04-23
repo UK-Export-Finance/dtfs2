@@ -54,13 +54,13 @@ jobs:
         run: echo "${{ github.event.pull_request.title }}" | npx commitlint --color --verbose $1
 
       - name: Body
-        if: ${{ github.event.pull_request.body == '' }}
+        if: ${{ github.event.pull_request.body }} == ''
         run: exit 1
 
       - name: Label
-        if: ${{ github.event.pull_request.labels == '[]' }}
+        if: ${{ github.event.pull_request.labels }} == '[]'
         run: exit 1
 
       - name: Assignee
-        if: ${{ github.event.pull_request.assignee == '[]' }}
+        if: ${{ github.event.pull_request.assignee }} == '[]'
         run: exit 1
