@@ -43,7 +43,7 @@ const createHiddenInputOfButton = (buttonThatWasClicked) => {
     }
   });
 
-  buttonThatWasClicked.prepend(hiddenInput);
+  buttonThatWasClicked.after(hiddenInput);
 };
 
 /**
