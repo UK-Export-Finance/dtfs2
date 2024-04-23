@@ -1,6 +1,5 @@
-import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity, UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
 import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
-import { UTILISATION_REPORT_HEADERS } from '../constants';
 
 type FeeRecordCsvRowToSqlEntityParams = {
   dataEntry: UtilisationReportRawCsvData;

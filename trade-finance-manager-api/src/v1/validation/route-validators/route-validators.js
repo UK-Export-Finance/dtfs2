@@ -1,5 +1,5 @@
 const { param } = require('express-validator');
-const { isValidIsoMonth } = require('../../../utils/date');
+const { isValidIsoMonth } = require('@ukef/dtfs2-common');
 const { updateReportStatusPayloadValidation } = require('./update-report-status-payload-validation');
 
 const userParamEscapingSanitization = param('user').isString('User ID must be a string').escape();

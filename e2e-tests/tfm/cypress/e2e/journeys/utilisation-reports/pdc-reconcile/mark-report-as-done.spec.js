@@ -2,11 +2,12 @@ import {
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
   getPreviousReportPeriodForBankScheduleByMonth,
+  toIsoMonthStamp,
 } from '@ukef/dtfs2-common';
 import pages from '../../../pages';
 import USERS from '../../../../fixtures/users';
 import { PDC_TEAMS } from '../../../../fixtures/teams';
-import { getMonthlyReportPeriodFromIsoSubmissionMonth, toIsoMonthStamp } from '../../../../support/utils/dateHelpers';
+import { getMonthlyReportPeriodFromIsoSubmissionMonth } from '../../../../support/utils/dateHelpers';
 import { NODE_TASKS } from '../../../../../../e2e-fixtures';
 import { aliasSelector } from '../../../../../../support/alias-selector';
 import { BANK1_PAYMENT_REPORT_OFFICER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
@@ -44,7 +45,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     cy.task(NODE_TASKS.GET_ALL_BANKS).then((getAllBanksResult) => {
       getAllBanksResult
         .filter((bank) => bank.isVisibleInTfmUtilisationReports)
-        .filter((bank) => bank.utilisationReportPeriodSchedule.some((period) => period.endMonth === (new Date()).getMonth()))
+        .filter((bank) => bank.utilisationReportPeriodSchedule.some((period) => period.endMonth === new Date().getMonth()))
         .forEach((bank) => {
           visibleBanksDueToSubmitThisMonth.push(bank);
         });
