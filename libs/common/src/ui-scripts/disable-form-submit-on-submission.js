@@ -20,83 +20,64 @@ const getLastFormIfPresent = () => {
   return lastForm;
 };
 
-/**
- * Prevents form resubmission by other methods other than clicking on buttons
- * (such as pressing enter on a form field or pressing enter on a button)
- * @param {SubmitEvent} event
- * @param {boolean} hasSubmitted
- */
-const preventFormResubmission = (event, hasSubmitted) => {
-  if (hasSubmitted) {
-    event.preventDefault();
+const validateAndDeleteElement = (elementToDelete) => {
+  if (elementToDelete instanceof HTMLElement) {
+    elementToDelete.remove();
+  }
+};
+
+const validateAndDisableSubmitter = (submitter) => {
+  if (submitter instanceof HTMLElement) {
+    submitter.setAttribute('disabled', '');
+    submitter.setAttribute('aria-disabled', 'true');
+  }
+};
+
+const validateAndEnableSubmitter = (submitter) => {
+  if (submitter instanceof HTMLElement) {
+    submitter.removeAttribute('disabled');
+    submitter.removeAttribute('aria-disabled');
   }
 };
 
 /**
- * Disables a button
- * @param {HTMLButtonElement} button
- */
-const disableButton = (button) => {
-  button.setAttribute('disabled', '');
-  button.setAttribute('aria-disabled', 'true');
-};
-
-/**
- * Disables all govuk buttons on the page.
- * This is to prevent multiple form submissions by clicking on a submit button
- * more than once.
- */
-const disableAllGovUkButtons = () => {
-  const buttons = document.querySelectorAll('.govuk-button');
-  buttons.forEach((button) => {
-    disableButton(button);
-  });
-};
-
-/**
- * Creates a hidden input of the button used to submit the form if required.
- * It is required if the button that was used to submit the form has been disabled.
- *
+ * Creates a hidden input of the button used to submit the form.
  * This hidden input copies any name or value attributes that the submission button has,
  * as when we disable the initial button, the disabled button will not submit
  * this information to the server.
- * @param {HTMLElement | null} buttonThatWasClicked
+ * @param {HTMLButtonElement} button
  */
-const createHiddenInputOfButtonIfRequired = (buttonThatWasClicked) => {
-  if (!buttonThatWasClicked) {
+const createHiddenInputOfSubmitter = (button) => {
+  if (!button) {
     throw new Error('An error occurred when handling the form submission.');
   }
-  if (!buttonThatWasClicked.getAttribute('disabled')) {
-    return;
-  }
 
-  const attributesToCopy = ['name', 'value'];
   const hiddenInput = document.createElement('input');
 
+  hiddenInput.setAttribute('id', 'resubmit-prevention-hidden-input');
   hiddenInput.setAttribute('type', 'hidden');
 
-  attributesToCopy.forEach((attribute) => {
-    const valueToCopy = buttonThatWasClicked.getAttribute(attribute);
-    if (valueToCopy) {
-      hiddenInput.setAttribute(attribute, valueToCopy);
+  [('name', 'value')].forEach((attribute) => {
+    const value = button.getAttribute(attribute);
+
+    if (value) {
+      hiddenInput.setAttribute(attribute, value);
     }
   });
 
-  buttonThatWasClicked.after(hiddenInput);
+  hiddenInput.classList.add('js-hidden-input');
+
+  button.after(hiddenInput);
+
+  return hiddenInput;
 };
 
 /**
- * Prevent multiple form submissions by pressing enter or clicking the submit button
- * The govukButton component has a preventDoubleClick property, but this only debounces in a one-second window,
- * and is therefore not sufficient for our needs as multiple forms take longer than a second to submit.
+ * Adds an event listener to disable form resubmission using the same submitter.
  *
- * If the submitter is a govuk-button, we disable all gov-uk buttons
- * This is both to allow us to disable form resubmission by methods other than clicking
- * and to help prevent any double submissions of forms on two different submission methods
- *
- * If the submitter is not a govuk-button, we only disable the button that was used for submission
- * to avoid double submissions. This is because these buttons should not be making data changes,
- * but for safety, we disable them anyway.
+ * This intentionally does not disable all buttons on the form on submission, but can be updated to do so if
+ * issues regarding double submissions are not resolved.
+ * @returns {void}
  */
 const addDisableFormSubmitOnSubmission = () => {
   const lastForm = getLastFormIfPresent();
@@ -105,7 +86,8 @@ const addDisableFormSubmitOnSubmission = () => {
     return;
   }
 
-  let hasSubmitted = false;
+  let priorSubmitter = null;
+  let priorSubmitterHiddenInput = null;
 
   lastForm.addEventListener('submit', (event) => {
     const { submitter } = event;
@@ -114,15 +96,24 @@ const addDisableFormSubmitOnSubmission = () => {
       return;
     }
 
-    if (submitter.classList.contains('govuk-button')) {
-      preventFormResubmission(event, hasSubmitted);
-      hasSubmitted = true;
-      disableAllGovUkButtons();
-    } else {
-      disableButton(submitter);
+    const hasPreviouslySubmitted = !!priorSubmitter;
+    if (hasPreviouslySubmitted) {
+      const isSameSubmitterAsPrevious = submitter === priorSubmitter;
+      if (isSameSubmitterAsPrevious) {
+        // if the disabled button has been submitted, prevents a duplicate resubmission
+        // ie from using keyboard navigation to submit the form
+        event.preventDefault();
+        return;
+      }
+      validateAndDeleteElement(priorSubmitterHiddenInput);
+      validateAndEnableSubmitter(priorSubmitter);
     }
 
-    createHiddenInputOfButtonIfRequired(submitter);
+    validateAndDisableSubmitter(submitter);
+    const hiddenInputElement = createHiddenInputOfSubmitter(submitter);
+
+    priorSubmitter = submitter;
+    priorSubmitterHiddenInput = hiddenInputElement;
   });
 };
 
