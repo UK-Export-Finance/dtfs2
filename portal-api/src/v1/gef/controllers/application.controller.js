@@ -248,7 +248,7 @@ exports.changeStatus = async (req, res) => {
   let applicationUpdate = { status, ...{ updatedAt: Date.now() } };
 
   if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
-    const submissionData = await addSubmissionData(dealId, existingApplication);
+    const submissionData = await addSubmissionData(dealId, existingApplication, req.user);
 
     applicationUpdate = {
       ...applicationUpdate,

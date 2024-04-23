@@ -69,7 +69,7 @@ const generateUkefId = async (entity, application) => {
   }
 };
 
-const addSubmissionDateToIssuedFacilities = async (dealId) => {
+const addSubmissionDateToIssuedFacilities = async (dealId, sessionUser) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
   // eslint-disable-next-line no-restricted-syntax
   for (const facility of facilities) {
@@ -96,7 +96,7 @@ const addSubmissionDateToIssuedFacilities = async (dealId) => {
         }
       }
       // eslint-disable-next-line no-await-in-loop
-      await updateFacility(_id, update);
+      await updateFacility(_id, update, sessionUser);
     }
   }
   return facilities;
@@ -107,7 +107,7 @@ const addSubmissionDateToIssuedFacilities = async (dealId) => {
   When submitting to UKEF, have to remove the canResubmitIssuedFacilities flag
   Ensures that cannot update this facility anymore
 */
-const updateChangedToIssued = async (dealId) => {
+const updateChangedToIssued = async (dealId, sessionUser) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
 
   facilities.forEach(async (facility) => {
@@ -118,7 +118,7 @@ const updateChangedToIssued = async (dealId) => {
         canResubmitIssuedFacilities: false,
       };
 
-      await updateFacility(_id, update);
+      await updateFacility(_id, update, sessionUser);
     }
   });
 };
@@ -127,10 +127,11 @@ const updateChangedToIssued = async (dealId) => {
  * Adds UKEF facility ID to facilities.
  *
  * @param {string} dealId - The ID of the deal.
+ * @param {object} sessionUser - logged in user
  * @returns {Promise<Array>} - A promise that resolves to an array of facilities.
  * @throws {Error} - If unable to generate facility ID.
  */
-const addUkefFacilityIdToFacilities = async (dealId) => {
+const addUkefFacilityIdToFacilities = async (dealId, sessionUser) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
 
   await Promise.all(
@@ -141,7 +142,7 @@ const addUkefFacilityIdToFacilities = async (dealId) => {
           ukefFacilityId: maskedId,
         };
 
-        await updateFacility(facility._id, update);
+        await updateFacility(facility._id, update, sessionUser);
       }
     }),
   );
@@ -182,10 +183,11 @@ const submissionPortalActivity = async (application) => {
 
 /**
  * Check the `coverDateConfirmed` property of the facility has the correct boolean flag.
- * @param {Object} app Application object
- * @returns {Bool} Facility(ies) was(were) updated or not
+ * @param {object} app Application object
+ * @param {object} sessionUser - logged in user
+ * @returns {boolean} Facility(ies) was(were) updated or not
  */
-const checkCoverDateConfirmed = async (app) => {
+const checkCoverDateConfirmed = async (app, sessionUser) => {
   let hasUpdated = false;
 
   if (app) {
@@ -201,9 +203,11 @@ const checkCoverDateConfirmed = async (app) => {
           .filter((f) => f.hasBeenIssued && !f.coverDateConfirmed)
           .map(async (f) => {
             hasUpdated = true;
-            await updateFacility(f._id, {
-              coverDateConfirmed: Boolean(isAIN),
-            });
+            await updateFacility(
+              f._id,
+              { coverDateConfirmed: Boolean(isAIN) },
+              sessionUser,
+            );
           });
 
         // Iterate through unissued facilities
@@ -211,9 +215,11 @@ const checkCoverDateConfirmed = async (app) => {
           .filter((f) => !f.hasBeenIssued && f.coverDateConfirmed)
           .map(async (f) => {
             hasUpdated = true;
-            await updateFacility(f._id, {
-              coverDateConfirmed: false,
-            });
+            await updateFacility(
+              f._id,
+              { coverDateConfirmed: false },
+              sessionUser,
+            );
           });
         return hasUpdated;
       }
@@ -228,17 +234,18 @@ const checkCoverDateConfirmed = async (app) => {
  * Adds submission data to an existing application.
  * @param {string} dealId - The ID of the deal.
  * @param {object} existingApplication - An object representing the existing application.
+ * @param {object} sessionUser - logged in user
  * @returns {Promise<object>} - An object containing the submission count, submission date, portal activities, and UKEF deal ID.
  */
-const addSubmissionData = async (dealId, existingApplication) => {
-  await checkCoverDateConfirmed(existingApplication);
-  await addSubmissionDateToIssuedFacilities(dealId);
+const addSubmissionData = async (dealId, existingApplication, sessionUser) => {
+  await checkCoverDateConfirmed(existingApplication, sessionUser);
+  await addSubmissionDateToIssuedFacilities(dealId, sessionUser);
 
   const { count, date } = await generateSubmissionData(existingApplication);
   const updatedPortalActivity = await submissionPortalActivity(existingApplication);
 
   if (existingApplication.submissionType !== CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
-    await updateChangedToIssued(dealId);
+    await updateChangedToIssued(dealId, sessionUser);
   }
 
   const submissionData = {
@@ -252,7 +259,7 @@ const addSubmissionData = async (dealId, existingApplication) => {
     submissionData.ukefDealId = maskedId;
   }
 
-  await addUkefFacilityIdToFacilities(dealId);
+  await addUkefFacilityIdToFacilities(dealId, sessionUser);
 
   return submissionData;
 };

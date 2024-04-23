@@ -118,7 +118,7 @@ describe('submissionPortalActivity()', () => {
 
     const res = await as(aMaker).post(req.body).to(baseUrl);
 
-    await updateFacility(res.body.details._id, mockFacilities[4]);
+    await updateFacility(res.body.details._id, mockFacilities[4], aMaker);
 
     const result = await submissionPortalActivity(MOCK_APPLICATION_FACILITIES);
 
@@ -155,7 +155,7 @@ describe('submissionPortalActivity()', () => {
 
     const res = await as(aMaker).post(req.body).to(baseUrl);
 
-    await updateFacility(res.body.details._id, mockFacilities[4]);
+    await updateFacility(res.body.details._id, mockFacilities[4], aMaker);
 
     const result = await submissionPortalActivity(MOCK_APPLICATION_FACILITIES);
 
@@ -231,7 +231,7 @@ describe('updateChangedToIssued()', () => {
 
     const { body } = await as(aChecker).get(baseUrl, mockQuery);
     // changes to false to test
-    await updateChangedToIssued(body.items[0].dealId);
+    await updateChangedToIssued(body.items[0].dealId, aMaker);
   });
 
   it('changes canResubmitIssuedFacilities to false', async () => {
@@ -265,7 +265,7 @@ describe('checkCoverDateConfirmed()', () => {
       coverDateConfirmed: null,
     }).to(baseUrl);
 
-    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(true);
+    expect(await checkCoverDateConfirmed(mockApplication.body, aMaker)).toEqual(true);
   });
 
   it('Should return false and set `coverDateConfirmed` to false with following conditions:\n\n1. AIN\n2. Have one unissued facility and cover date is not true \n3. Not yet submitted to UKEF', async () => {
@@ -285,7 +285,7 @@ describe('checkCoverDateConfirmed()', () => {
       coverDateConfirmed: null,
     }).to(baseUrl);
 
-    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(false);
+    expect(await checkCoverDateConfirmed(mockApplication.body, aMaker)).toEqual(false);
   });
 
   it('Should return true and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one issued facility \n3. Not yet submitted to UKEF', async () => {
@@ -305,7 +305,7 @@ describe('checkCoverDateConfirmed()', () => {
       coverDateConfirmed: null,
     }).to(baseUrl);
 
-    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(true);
+    expect(await checkCoverDateConfirmed(mockApplication.body, aMaker)).toEqual(true);
   });
 
   it('Should return false and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one unissued facility \n3. Not yet submitted to UKEF', async () => {
@@ -325,7 +325,7 @@ describe('checkCoverDateConfirmed()', () => {
       coverDateConfirmed: null,
     }).to(baseUrl);
 
-    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(false);
+    expect(await checkCoverDateConfirmed(mockApplication.body, aMaker)).toEqual(false);
   });
 
   it('Should return true and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one issued facility with cover date set to true \n3. Not yet submitted to UKEF', async () => {
@@ -345,7 +345,7 @@ describe('checkCoverDateConfirmed()', () => {
       coverDateConfirmed: true,
     }).to(baseUrl);
 
-    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(true);
+    expect(await checkCoverDateConfirmed(mockApplication.body, aMaker)).toEqual(true);
   });
 
   it('Should return true and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one issued and unissued facilities with cover date set to true \n3. Not yet submitted to UKEF', async () => {
@@ -372,7 +372,7 @@ describe('checkCoverDateConfirmed()', () => {
       coverDateConfirmed: true,
     }).to(baseUrl);
 
-    expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(true);
+    expect(await checkCoverDateConfirmed(mockApplication.body, aMaker)).toEqual(true);
   });
 });
 
@@ -398,13 +398,17 @@ describe('addSubmissionDateToIssuedFacilities()', () => {
     const facility = await getAllFacilitiesByDealId(mockApplication.body._id);
 
     // updates facility and sets flags
-    await updateFacility(facility[0]._id, {
-      hasBeenIssued: true,
-      shouldCoverStartOnSubmission: true,
-      hasBeenIssuedAndAcknowledged: null
-    });
+    await updateFacility(
+      facility[0]._id,
+      {
+        hasBeenIssued: true,
+        shouldCoverStartOnSubmission: true,
+        hasBeenIssuedAndAcknowledged: null
+      },
+      aMaker,
+    );
 
-    await addSubmissionDateToIssuedFacilities(mockApplication.body._id);
+    await addSubmissionDateToIssuedFacilities(mockApplication.body._id, aMaker);
 
     // gets facilities from collection
     const updatedFacility = await getAllFacilitiesByDealId(mockApplication.body._id);
@@ -436,13 +440,17 @@ describe('addSubmissionDateToIssuedFacilities()', () => {
     const facility = await getAllFacilitiesByDealId(mockApplication.body._id);
 
     // sets both flags to true
-    await updateFacility(facility[0]._id, {
-      hasBeenIssued: true,
-      shouldCoverStartOnSubmission: true,
-      hasBeenIssuedAndAcknowledged: true,
-    });
+    await updateFacility(
+      facility[0]._id,
+      {
+        hasBeenIssued: true,
+        shouldCoverStartOnSubmission: true,
+        hasBeenIssuedAndAcknowledged: true,
+      },
+      aMaker,
+    );
 
-    await addSubmissionDateToIssuedFacilities(mockApplication.body._id);
+    await addSubmissionDateToIssuedFacilities(mockApplication.body._id, aMaker);
 
     // gets facilities from collection
     const updatedFacility = await getAllFacilitiesByDealId(mockApplication.body._id);

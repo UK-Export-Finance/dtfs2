@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const { facilitiesValidation, facilitiesStatus, facilitiesOverallStatus, facilitiesCheckEnums } = require('./validation/facilities');
@@ -21,7 +22,7 @@ exports.create = async (req, res) => {
   }
 
   const facilitiesQuery = await db.getCollection(facilitiesCollectionName);
-  const createdFacility = await facilitiesQuery.insertOne(new Facility(req.body));
+  const createdFacility = await facilitiesQuery.insertOne(new Facility({ ...req.body, auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id)}));
 
   const { insertedId } = createdFacility;
 
@@ -109,10 +110,17 @@ exports.getById = async (req, res) => {
   return res.status(204).send();
 };
 
-const update = async (id, updateBody) => {
+/**
+ * 
+ * @param {ObjectId | string} id - facility id to update
+ * @param {object} updateBody - update to make
+ * @param {object} sessionUser - logged in user
+ * @returns 
+ */
+const update = async (id, updateBody, sessionUser) => {
   try {
-    const collection = await db.getCollection(facilitiesCollectionName);
-    const dbQuery = await db.getCollection(dealsCollectionName);
+    const facilitiesCollection = await db.getCollection(facilitiesCollectionName);
+    const dealsCollection = await db.getCollection(dealsCollectionName);
 
     const facilityId = ObjectId(String(id));
 
@@ -120,14 +128,15 @@ const update = async (id, updateBody) => {
       throw new Error('Invalid Facility Id');
     }
 
-    const existingFacility = await collection.findOne({ _id: { $eq: facilityId } });
+    const existingFacility = await facilitiesCollection.findOne({ _id: { $eq: facilityId } });
     const facilityUpdate = new Facility({
       ...updateBody,
       ukefExposure: calculateUkefExposure(updateBody, existingFacility),
       guaranteeFee: calculateGuaranteeFee(updateBody, existingFacility),
+      auditRecord: generatePortalUserAuditDatabaseRecord(sessionUser._id),
     });
 
-    const updatedFacility = await collection.findOneAndUpdate(
+    const updatedFacility = await facilitiesCollection.findOneAndUpdate(
       { _id: { $eq: facilityId } },
       { $set: facilityUpdate },
       { returnNewDocument: true, returnDocument: 'after' },
@@ -137,10 +146,11 @@ const update = async (id, updateBody) => {
       // update facilitiesUpdated timestamp in the deal
       const dealUpdateObj = {
         facilitiesUpdated: new Date().valueOf(),
+        auditRecord: generatePortalUserAuditDatabaseRecord(sessionUser._id),
       };
       const dealUpdate = new Application(dealUpdateObj);
 
-      await dbQuery.findOneAndUpdate(
+      await dealsCollection.findOneAndUpdate(
         { _id: { $eq: ObjectId(existingFacility.dealId) } },
         { $set: dealUpdate },
         { returnNewDocument: true, returnDocument: 'after' },
@@ -161,7 +171,7 @@ exports.updatePUT = async (req, res) => {
   }
 
   let response;
-  const updatedFacility = await update(req.params.id, req.body);
+  const updatedFacility = await update(req.params.id, req.body, req.user);
 
   if (updatedFacility.value) {
     response = {
