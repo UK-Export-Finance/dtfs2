@@ -52,6 +52,13 @@ type PostUploadUtilisationReportRequest = CustomExpressRequest<{
   reqBody: PostUploadUtilisationReportRequestBody;
 }>;
 
+/**
+ * Uploads the report for the utilisation report in a transaction using the state machine
+ * @param reportId - The id of the utilisation report
+ * @param reportData - The array representing the report data
+ * @param user - The user object with just the _id
+ * @param fileInfo - The file info object
+ */
 export const uploadReportInTransaction = async (
   reportId: number,
   reportData: UtilisationReportRawCsvData[],

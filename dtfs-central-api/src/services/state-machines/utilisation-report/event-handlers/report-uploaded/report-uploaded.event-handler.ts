@@ -42,6 +42,9 @@ export const handleUtilisationReportReportUploadedEvent = async (
     }),
   );
   await transactionEntityManager.save(FeeRecordEntity, feeRecordEntities, { chunk: 100 });
+  report.updateWithFeeRecords({
+    feeRecords: feeRecordEntities,
+  });
 
   return report;
 };
