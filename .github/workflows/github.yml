@@ -52,7 +52,8 @@ jobs:
 
       - name: Test
         run: |
-          echo VAR=${{ github.event.head_commit }} >> $GITHUB_ENV
+          echo VAR=${{ github.event.commits[0].message }} >> $GITHUB_ENV
+          echo VA2=${{ github.event.commits }} >> $GITHUB_ENV
 
       - name: Lint
-        run: echo "${{ github.event.head_commit }}" | npx commitlint --color --verbose $1
+        run: echo "${{ github.event.commits[0].message }}" | npx commitlint --color --verbose $1
