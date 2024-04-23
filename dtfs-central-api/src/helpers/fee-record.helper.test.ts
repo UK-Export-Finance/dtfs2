@@ -1,4 +1,4 @@
-import { DbRequestSource, FeeRecordEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { feeRecordCsvRowToSqlEntity } from './fee-record.helper';
 import { MOCK_UTILISATION_REPORT_RAW_CSV_DATA } from '../../api-tests/mocks/utilisation-reports/utilisation-report-raw-csv-data';
 import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
@@ -12,6 +12,8 @@ describe('fee-record.helper', () => {
       userId: 'abc123',
     };
 
+    const report = new UtilisationReportEntity();
+
     beforeAll(() => {
       jest.useFakeTimers();
       jest.setSystemTime(mockDate);
@@ -23,7 +25,7 @@ describe('fee-record.helper', () => {
 
     it('returns an SQL entity with the correct data', () => {
       // Act
-      const feeRecordEntity = feeRecordCsvRowToSqlEntity({ dataEntry: MOCK_UTILISATION_REPORT_RAW_CSV_DATA, requestSource });
+      const feeRecordEntity = feeRecordCsvRowToSqlEntity({ dataEntry: MOCK_UTILISATION_REPORT_RAW_CSV_DATA, requestSource, report });
 
       // Assert
       expect(feeRecordEntity instanceof FeeRecordEntity).toBe(true);
@@ -43,6 +45,7 @@ describe('fee-record.helper', () => {
           lastUpdatedByIsSystemUser: false,
           lastUpdatedByPortalUserId: requestSource.userId,
           lastUpdatedByTfmUserId: null,
+          report,
         }),
       );
     });
@@ -67,6 +70,7 @@ describe('fee-record.helper', () => {
       const feeRecordEntity = feeRecordCsvRowToSqlEntity({
         dataEntry: utilisationReportRawCsvData,
         requestSource,
+        report,
       });
 
       // Assert
@@ -98,6 +102,7 @@ describe('fee-record.helper', () => {
       const feeRecordEntity = feeRecordCsvRowToSqlEntity({
         dataEntry: feeRecordCsvRow,
         requestSource,
+        report,
       });
 
       // Assert

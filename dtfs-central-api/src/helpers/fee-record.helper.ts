@@ -1,9 +1,10 @@
-import { DbRequestSource, FeeRecordEntity, UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
+import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity, UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
 import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
 
 type FeeRecordCsvRowToSqlEntityParams = {
   dataEntry: UtilisationReportRawCsvData;
   requestSource: DbRequestSource;
+  report: UtilisationReportEntity;
 };
 
 /**
@@ -19,7 +20,7 @@ const asNumberOrDefault = (maybeString: string | undefined, defaultNumber: numbe
  * @param param0 - The parameters required to create the SQL entity
  * @returns The SQL entity
  */
-export const feeRecordCsvRowToSqlEntity = ({ dataEntry, requestSource }: FeeRecordCsvRowToSqlEntityParams): FeeRecordEntity =>
+export const feeRecordCsvRowToSqlEntity = ({ dataEntry, requestSource, report }: FeeRecordCsvRowToSqlEntityParams): FeeRecordEntity =>
   FeeRecordEntity.create({
     facilityId: dataEntry[UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID],
     exporter: dataEntry[UTILISATION_REPORT_HEADERS.EXPORTER],
@@ -32,5 +33,6 @@ export const feeRecordCsvRowToSqlEntity = ({ dataEntry, requestSource }: FeeReco
     feesPaidToUkefForThePeriodCurrency: dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY],
     paymentCurrency: dataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY] ?? dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY],
     paymentExchangeRate: asNumberOrDefault(dataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE], 1),
+    report,
     requestSource,
   });

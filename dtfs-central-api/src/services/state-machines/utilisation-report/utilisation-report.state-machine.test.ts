@@ -75,6 +75,7 @@ describe('UtilisationReportStateMachine', () => {
       // Arrange
       const stateMachine = UtilisationReportStateMachine.forReport(REPORT_NOT_RECEIVED_REPORT);
       const userId = '5ce819935e539c343f141ece';
+      const transactionEntityManager = {} as unknown as EntityManager;
 
       // Act
       await stateMachine.handleEvent({
@@ -84,6 +85,7 @@ describe('UtilisationReportStateMachine', () => {
           reportCsvData: [],
           uploadedByUserId: userId,
           requestSource: { platform: 'PORTAL', userId },
+          transactionEntityManager,
         },
       });
 

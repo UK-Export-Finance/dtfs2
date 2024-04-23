@@ -1,5 +1,5 @@
 import { AzureFileInfoEntity } from '../azure-file-info';
-import { MOCK_AZURE_FILE_INFO, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
+import { MOCK_AZURE_FILE_INFO, UtilisationReportEntityMockBuilder } from '../../test-helpers';
 import { DbRequestSource } from '../helpers';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 
@@ -27,12 +27,10 @@ describe('UtilisationReportEntity', () => {
       // Arrange
       const azureFileInfo = AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource });
       const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(report).build();
 
       // Act
       report.updateWithUploadDetails({
         azureFileInfo,
-        feeRecords: [feeRecord],
         uploadedByUserId,
         requestSource,
       });
@@ -42,7 +40,6 @@ describe('UtilisationReportEntity', () => {
       expect(report.uploadedByUserId).toEqual(uploadedByUserId);
       expect(report.azureFileInfo).toEqual(azureFileInfo);
       expect(report.status).toEqual(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION);
-      expect(report.feeRecords).toEqual([feeRecord]);
 
       expect(report.lastUpdatedByIsSystemUser).toBe(false);
       expect(report.lastUpdatedByPortalUserId).toBe(uploadedByUserId);
