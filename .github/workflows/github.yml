@@ -52,7 +52,7 @@ jobs:
 
       - name: Test
         run: |
-          echo VAR=$(git log -1) >> $GITHUB_ENV
+          echo VAR=${{ github.event.head_commit }} >> $GITHUB_ENV
 
       - name: Lint
-        run: github.head_ref | npx commitlint --color --verbose $1
+        run: echo "${{ github.event.head_commit }}" | npx commitlint --color --verbose $1
