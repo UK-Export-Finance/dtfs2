@@ -83,4 +83,4 @@ jobs:
         run: npm ci
 
       - name: Lint
-        run: echo "${{ github.event.number }}" | npx commitlint --color --verbose $1
+        run: echo  git log --format=%B -n 1 | npx commitlint --color --verbose $1
