@@ -1,35 +1,3 @@
-# Workflow Name: Lint
-# Trigger: Pull requests to the main branch that modify specific files (listed in paths).
-#
-# Environment:
-# environment: set to dev
-# timezone: retrieved from vars.TIMEZONE
-#
-# Setup Test Infrastructure:
-# Name: Infrastructure setup
-# Runs on: ubuntu-latest
-# Outputs environment and timezone variables for use in subsequent jobs.
-# Steps:
-# Echoes the environment and timezone for verification.
-#
-# Lint:
-# Name: Scanning
-# Depends on: setup
-# Runs on: ubuntu-latest
-# Steps:
-# Sets the timezone using the specified value.
-# Checks out the repository code.
-# Sets up the specified Node.js version.
-# Installs dependencies using npm run ci:all.
-# Runs linting using the command npm run lint:all.
-#
-# Key Points:
-# The workflow focuses on linting, which checks code for potential errors, style issues, and adherence to best practices.
-# It uses a sequential structure, with the linting job depending on the setup job.
-# Environment variables are shared between jobs for consistency.
-# The workflow leverages actions from the GitHub Marketplace for setting the timezone and installing Node.js.
-#
-
 name: GitHub
 run-name: 🔬Pull request inspection on ${{ github.event.number }}
 
@@ -84,7 +52,7 @@ jobs:
 
       - name: Test
         run: |
-          echo MSG=$(git show -s --format=%s) >> $GITHUB_ENV
+          echo VAR=$(git log -1) >> $GITHUB_ENV
 
       - name: Lint
-        run: git show -s --format=%s | npx commitlint --color --verbose $1
+        run: github.head_ref | npx commitlint --color --verbose $1
