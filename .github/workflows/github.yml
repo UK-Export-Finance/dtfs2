@@ -26,9 +26,9 @@ jobs:
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.timezone }}"
 
-  # 2. Commit message
-  commit:
-    name: Commit 📝
+  # 2. Pull request
+  pullrequest:
+    name: Pull request ⬇️
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -50,10 +50,17 @@ jobs:
         working-directory: ./
         run: npm ci
 
-      - name: Test
-        run: |
-          echo VA2=${{ toJson(github.event) }} >> $GITHUB_ENV
-          echo VA3=${{ toJson(github) }} >> $GITHUB_ENV
+      - name: Title
+        run: echo "${{ github.event.pull_request.title }}" | npx commitlint --color --verbose $1
 
-      - name: Lint
-        run: echo "${{ github.event.commits[0].message }}" | npx commitlint --color --verbose $1
+      - name: Body
+        if: ${{ github.event.pull_request.body }} == ""
+        run: exit 1
+
+      - name: Label
+        if: ${{ github.event.pull_request.labels }} == "[]"
+        run: exit 1
+
+      - name: Assignee
+        if: ${{ github.event.pull_request.assignee }} == "[]"
+        run: exit 1
