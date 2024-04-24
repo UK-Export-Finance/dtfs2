@@ -1,6 +1,5 @@
 const { ObjectId } = require('mongodb');
 const {
-  generateSystemAuditDatabaseRecord,
   generatePortalUserAuditDatabaseRecord,
   generateNoUserLoggedInAuditDatabaseRecord,
 } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
@@ -60,7 +59,7 @@ const createPasswordToken = async (email, userService) => {
   const userUpdate = {
     resetPwdToken: hash,
     resetPwdTimestamp: `${Date.now()}`,
-    auditRecord: generateSystemAuditDatabaseRecord(),
+    auditRecord: generateNoUserLoggedInAuditDatabaseRecord(),
   };
 
   if (!ObjectId.isValid(user._id)) {
@@ -297,12 +296,12 @@ exports.incrementFailedLoginCount = async (user) => {
     ? {
         'user-status': USER.STATUS.BLOCKED,
         blockedStatusReason: USER.STATUS_BLOCKED_REASON.INVALID_PASSWORD,
-        auditRecord: generateSystemAuditDatabaseRecord(),
+        auditRecord: generateNoUserLoggedInAuditDatabaseRecord(),
       }
     : {
         loginFailureCount: failureCount,
         lastLoginFailure: getNowAsEpochMillisecondString(),
-        auditRecord: generateSystemAuditDatabaseRecord(),
+        auditRecord: generateNoUserLoggedInAuditDatabaseRecord(),
       };
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});

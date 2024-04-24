@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const {
   generatePortalUserAuditDatabaseRecord,
-  generateSystemAuditDatabaseRecord,
+  generateNoUserLoggedInAuditDatabaseRecord,
 } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const db = require('../../drivers/db-client');
 const { transformDatabaseUser } = require('./transform-database-user');
@@ -19,7 +19,7 @@ class UserRepository {
 
     const update = {
       $push: { signInTokens: { $each: [{ hashHex, saltHex, expiry }], $slice: -SIGN_IN_LINK.MAX_SEND_COUNT } },
-      $set: { auditRecord: generateSystemAuditDatabaseRecord() },
+      $set: { auditRecord: generateNoUserLoggedInAuditDatabaseRecord() },
     };
 
     return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, update);
@@ -31,7 +31,7 @@ class UserRepository {
     const userCollection = await db.getCollection('users');
 
     const filter = { _id: { $eq: ObjectId(userId) } };
-    const update = { $inc: { signInLinkSendCount: 1 }, $set: { auditRecord: generateSystemAuditDatabaseRecord() } };
+    const update = { $inc: { signInLinkSendCount: 1 }, $set: { auditRecord: generateNoUserLoggedInAuditDatabaseRecord() } };
     const options = { returnDocument: 'after' };
 
     const userUpdate = await userCollection.findOneAndUpdate(filter, update, options);
@@ -43,7 +43,7 @@ class UserRepository {
 
     const userCollection = await db.getCollection('users');
 
-    const setUpdate = { signInLinkSendDate: Date.now(), auditRecord: generateSystemAuditDatabaseRecord() }
+    const setUpdate = { signInLinkSendDate: Date.now(), auditRecord: generateNoUserLoggedInAuditDatabaseRecord() }
     return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: setUpdate });
   }
 
@@ -90,9 +90,9 @@ class UserRepository {
     const setUpdate = {
       'user-status': USER.STATUS.BLOCKED,
       blockedStatusReason: reason,
-      // This is currently only called during the log in flow & will only be a system update.
+      // This is currently only called during the log in flow therefore no user will be logged in.
       // If the admin blocking/unblocking a user were to call this method then this would need to be updated
-      auditRecord: generateSystemAuditDatabaseRecord(),
+      auditRecord: generateNoUserLoggedInAuditDatabaseRecord(),
     };
     await userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: setUpdate });
   }
