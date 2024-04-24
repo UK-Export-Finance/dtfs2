@@ -343,6 +343,7 @@ jobs:
         spec:
           [
             "*.spec.js",
+            "homepage/**/*.spec.js",
             "admin/**/*.spec.js",
             "checker/**/*.spec.js",
             "dashboard/**/*.spec.js",
