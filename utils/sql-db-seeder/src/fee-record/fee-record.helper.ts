@@ -1,4 +1,4 @@
-import { Currency, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { Currency, FeeRecordEntity } from '@ukef/dtfs2-common';
 
 type CreateFeeRecordOptions = {
   facilityId: string;
@@ -29,22 +29,19 @@ type CreateFeeRecordOptions = {
       }
   );
 
-export const createFeeRecordForReportId = (
-  reportId: number,
-  {
-    facilityId,
-    exporter,
-    baseCurrency,
-    facilityUtilisation,
-    totalFeesAccruedForThePeriod,
-    totalFeesAccruedForThePeriodCurrency,
-    totalFeesAccruedForThePeriodExchangeRate,
-    feesPaidToUkefForThePeriod,
-    feesPaidToUkefForThePeriodCurrency,
-    paymentCurrency,
-    paymentExchangeRate,
-  }: CreateFeeRecordOptions,
-): FeeRecordEntity => {
+export const createFeeRecord = ({
+  facilityId,
+  exporter,
+  baseCurrency,
+  facilityUtilisation,
+  totalFeesAccruedForThePeriod,
+  totalFeesAccruedForThePeriodCurrency,
+  totalFeesAccruedForThePeriodExchangeRate,
+  feesPaidToUkefForThePeriod,
+  feesPaidToUkefForThePeriodCurrency,
+  paymentCurrency,
+  paymentExchangeRate,
+}: CreateFeeRecordOptions): FeeRecordEntity => {
   const feeRecord = new FeeRecordEntity();
 
   feeRecord.facilityId = facilityId;
@@ -63,10 +60,6 @@ export const createFeeRecordForReportId = (
   feeRecord.paymentExchangeRate = paymentCurrency ? paymentExchangeRate : 1;
 
   feeRecord.updateLastUpdatedBy({ platform: 'SYSTEM' });
-
-  const reportWithId = new UtilisationReportEntity();
-  reportWithId.id = reportId;
-  feeRecord.report = reportWithId;
 
   return feeRecord;
 };
