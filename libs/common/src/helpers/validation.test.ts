@@ -23,8 +23,11 @@ describe('validation helpers', () => {
       ${undefined}                          | ${'Expected value to be a string'}
       ${['a string in an array']}           | ${'Expected value to be a string'}
       ${{ value: 'a string in an object' }} | ${'Expected value to be a string'}
-    `('throws when given non-string value: $invalidValue', ({ invalidValue, expectedError }: { invalidValue: unknown; expectedError: string }) => {
-      expect(() => asString(invalidValue, 'value')).toThrow(expectedError);
-    });
+    `(
+      'throws when given non-string value: $invalidValue',
+      ({ invalidValue, expectedError }: { invalidValue: unknown; expectedError: string }) => {
+        expect(() => asString(invalidValue, 'value')).toThrow(expectedError);
+      },
+    );
   });
 });
