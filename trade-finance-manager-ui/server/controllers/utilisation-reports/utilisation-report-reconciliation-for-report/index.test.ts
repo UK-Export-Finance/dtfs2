@@ -61,8 +61,40 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
           start: { month: 1, year: 2024 },
           end: { month: 1, year: 2024 },
         },
+        feeRecords: [
+          {
+            facilityId: '12345678',
+            exporter: 'Test exporter',
+            reportedFees: {
+              currency: 'GBP',
+              amount: 100.00,
+            },
+            reportedPayments: {
+              currency: 'GBP',
+              amount: 100.00,
+            },
+            totalReportedPayments: {
+              currency: 'GBP',
+              amount: 100.00,
+            },
+            paymentsReceived: {
+              currency: 'GBP',
+              amount: 100.00,
+            },
+            totalPaymentsReceived: {
+              currency: 'GBP',
+              amount: 100.00,
+            },
+            status: 'TO_DO',
+          },
+        ],
       };
       const formattedReportPeriod = 'January 2024';
+
+      const feeRecordViewModel = {
+        ...utilisationReportReconciliationDetails.feeRecords[0],
+        displayStatus: 'TO DO',
+      };
 
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
 
@@ -77,6 +109,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         bank,
         formattedReportPeriod,
+        feeRecords: [feeRecordViewModel],
       });
     });
   });

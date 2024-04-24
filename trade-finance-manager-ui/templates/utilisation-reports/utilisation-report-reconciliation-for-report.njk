@@ -1,9 +1,43 @@
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% import "./_macros/premium-payments-table.njk" as premiumPaymentsTable %}
 
 {% extends "index.njk" %}
 
 {% set premiumPaymentsHtml %}
-  <div></div>
+  <h2 class="govuk-heading-l" data-cy="premium-payments-heading">Premium payments</h2>
+
+  <p class="govuk-body">Enter received payments against reported fees by selecting them and then selecting the 'Add a payment' button.</p>
+
+  <p class="govuk-body">
+    When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when you select the 'Generate keying data' button.
+  </p>
+
+  <form method="post" data-cy="premium-payments-form">
+    <div class="govuk-button-group">
+      {{ govukButton({
+        text: "Add a payment",
+        name: "add-a-payment",
+        value: "add-a-payment",
+        attributes: {
+          "data-cy": "add-a-payment-button"
+        }
+      }) }}
+      {{ govukButton({
+        text: "Generate keying data",
+        name: "generate-keying-data",
+        value: "generate-keying-data",
+        classes: "govuk-button--secondary",
+        attributes: {
+          "data-cy": "generate-keying-data-button"
+        }
+      }) }}
+    </div>
+    
+    {{ premiumPaymentsTable.render({
+      feeRecords: feeRecords
+    }) }}
+  </form>
 {% endset %}
 
 {% set keyingSheetHtml %}
