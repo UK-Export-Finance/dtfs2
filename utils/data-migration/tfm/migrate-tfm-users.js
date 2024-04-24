@@ -1,8 +1,10 @@
 const api = require('../../mock-data-loader/tfm/api');
-const tokenFor = require('../../mock-data-loader/temporary-token-handler');
+const tokenFor = require('../temporary-token-handler');
 const USERS = require('../../mock-data-loader/tfm/mocks/users');
 const TEAMS = require('../../mock-data-loader/tfm/mocks/teams');
-const { ROLES: { ADMIN } } = require('../constant');
+const {
+  ROLES: { ADMIN },
+} = require('../constant');
 
 const insertTfmUsersAndTeams = async () => {
   const token = await tokenFor({

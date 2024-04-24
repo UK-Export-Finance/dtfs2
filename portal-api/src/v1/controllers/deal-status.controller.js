@@ -66,7 +66,7 @@ exports.update = async (req, res) => {
 
     const currentStatus = deal.status;
 
-        console.info('Updating portal deal %s status from %s to %s', dealId, currentStatus, newStatus);
+    console.info('Updating portal deal %s status from %s to %s', dealId, currentStatus, newStatus);
 
     if (newStatus !== CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL && newStatus !== CONSTANTS.DEAL.DEAL_STATUS.ABANDONED) {
       if (!userCanSubmitDeal(deal, user)) {

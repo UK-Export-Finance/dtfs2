@@ -2,7 +2,7 @@
   "name": "acbs-function",
   "version": "",
   "description": "DTFS ACBS DOF",
-  "author": "",
+  "author": "UK Export Finance",
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --config=api-test.jest.config.js ",
     "lint": "eslint --color '**/*.{ts,js}'",

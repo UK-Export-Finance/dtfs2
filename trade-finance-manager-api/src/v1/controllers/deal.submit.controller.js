@@ -49,7 +49,6 @@ const getPortalDeal = async (dealId, dealType) => {
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) => {
   const deal = await getPortalDeal(dealId, dealType);
-  console.info('Setting essential deal properties in TFM for deal %s', dealId);
 
   if (!deal) {
     console.error('Unable to find deal %s upon submission to TFM', dealId);
@@ -86,10 +85,16 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
     const dealWithTfmData = await addTfmDealData(updatedMappedDeal, auditDetails);
     const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData, auditDetails);
     const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn, auditDetails);
-    const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions, auditDetails);
+    const updatedDealWithUpdatedFacilities = await updateFacilities(
+      updatedDealWithDealCurrencyConversions,
+      auditDetails,
+    );
     const updatedDealWithCreateEstore = await createEstoreSite(updatedDealWithUpdatedFacilities);
 
-    if (updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+    if (
+      updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN ||
+      updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA
+    ) {
       const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore, auditDetails);
 
       /**
@@ -167,7 +172,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
        * This is the one and only time that TFM updates a snapshot.
        * Without this, it would involve additional API calls going around in circles.
        */
-      const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate);
+      const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate, auditDetails);
 
       updatedDeal.submissionType = dealSnapshot.submissionType;
 
