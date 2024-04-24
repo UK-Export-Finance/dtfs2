@@ -14,6 +14,7 @@ module.exports = {
     guaranteeFeePayableByBank: './scripts/guarantee-fee-payable-by-bank.js',
     printPage: './scripts/print-page.js',
     mojFilters: './scripts/moj-filters.js',
+    disableFormSubmitOnSubmission: '../libs/common/src/ui-scripts/disable-form-submit-on-submission.js',
   },
   output: {
     path: path.join(__dirname, 'public/js'),
@@ -24,10 +25,7 @@ module.exports = {
   target: ['web', 'es5'],
   optimization: {
     minimize: true,
-    minimizer: [
-      new TerserPlugin(),
-      new CssMinimizerPlugin(),
-    ],
+    minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
   },
   resolve: {
     // resolves paths in library files that we don't control, pointing them to the root hoisted dependencies
