@@ -23,7 +23,7 @@
     "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
     "dev": "webpack --config webpack.dev.config.js --watch",
     "lint": "eslint --color '**/*.{ts,js}'",
-    "lint:fix": "eslint --color '**/*.{ts,js}'",
+    "lint:fix": "eslint --fix --color '**/*.{ts,js}'",
     "prettier": "prettier --no-error-on-unmatched-pattern --check '**/*.{ts,js}'",
     "prettier:fix": "prettier --write '**/*.{ts,js}'",
     "start": "npx ts-node server/index.ts",

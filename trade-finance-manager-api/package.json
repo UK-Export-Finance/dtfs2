@@ -21,7 +21,7 @@
     "api-test": "jest --coverage --verbose --runInBand --forceExit --config=api-test.jest.config.js",
     "api-test-dev": "jest --verbose --runInBand --forceExit --config=api-test.jest.config.js",
     "lint": "eslint --color '**/*.{ts,js}'",
-    "lint:fix": "eslint --color '**/*.{ts,js}'",
+    "lint:fix": "eslint --fix --color '**/*.{ts,js}'",
     "prettier": "prettier --no-error-on-unmatched-pattern --check '**/*.{ts,js}'",
     "prettier:fix": "prettier --write '**/*.{ts,js}'",
     "start": "npx ts-node src/index.ts",

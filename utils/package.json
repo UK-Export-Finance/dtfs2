@@ -6,7 +6,7 @@
     "author": "UK Export Finance",
     "scripts": {
         "lint": "eslint --color '**/*.{ts,js}'",
-        "lint:fix": "eslint --color '**/*.{ts,js}'",
+        "lint:fix": "eslint --fix --color '**/*.{ts,js}'",
         "load": "ts-node re-insert-mocks.js",
         "prettier": "prettier --no-error-on-unmatched-pattern --check '**/*.{ts,js}'",
         "prettier:fix": "prettier --write '**/*.{ts,js}'",

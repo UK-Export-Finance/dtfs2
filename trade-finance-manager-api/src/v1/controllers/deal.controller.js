@@ -142,12 +142,6 @@ const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
 };
 exports.submitACBSIfAllPartiesHaveUrn = submitACBSIfAllPartiesHaveUrn;
 
-const canDealBeSubmittedToACBS = (submissionType) => {
-  const acceptable = [CONSTANTS.DEALS.SUBMISSION_TYPE.AIN, CONSTANTS.DEALS.SUBMISSION_TYPE.MIN];
-  return acceptable.includes(submissionType);
-};
-exports.canDealBeSubmittedToACBS = canDealBeSubmittedToACBS;
-
 const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest, auditDetails) => {
   const { userId } = leadUnderwriterUpdateRequest;
   const leadUnderwriterUpdate = {
