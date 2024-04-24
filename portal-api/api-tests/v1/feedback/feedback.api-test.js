@@ -87,43 +87,47 @@ describe('/v1/feedback', () => {
     });
 
     describe('when all required fields provided', () => {
-      it('with logged in user creates a new feedback, adding `created` field and auditRecord', async () => {
-        const { status, body: createdFeedback } = await as(aBarclaysMaker).post(getFeedbackToSubmit(aBarclaysMaker)).to('/v1/feedback');
+      describe('when a user is logged in', () => {
+        it('creates a new feedback, adding `created` field and auditRecord', async () => {
+          const { status, body: createdFeedback } = await as(aBarclaysMaker).post(getFeedbackToSubmit(aBarclaysMaker)).to('/v1/feedback');
 
-        expect(status).toEqual(200);
-        expect(createdFeedback._id).toBeDefined();
+          expect(status).toEqual(200);
+          expect(createdFeedback._id).toBeDefined();
 
-        const { body: feedback } = await as(anAdmin).get(`/v1/feedback/${createdFeedback._id}`);
+          const { body: feedback } = await as(anAdmin).get(`/v1/feedback/${createdFeedback._id}`);
 
-        expect(feedback).toEqual({
-          ...defaultFeedbackForm,
-          _id: expect.any(String),
-          created: expect.any(Number),
-          submittedBy: {
-            username: aBarclaysMaker.username,
-            email: aBarclaysMaker.email,
-          },
-          auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id),
+          expect(feedback).toEqual({
+            ...defaultFeedbackForm,
+            _id: expect.any(String),
+            created: expect.any(Number),
+            submittedBy: {
+              username: aBarclaysMaker.username,
+              email: aBarclaysMaker.email,
+            },
+            auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id),
+          });
         });
       });
 
-      it('without logged in user creates a new feedback, adding `created` field and auditRecord', async () => {
-        const { status, body: createdFeedback } = await as().post(getFeedbackToSubmit()).to('/v1/feedback');
+      describe('when no user is logged in', () => {
+        it('creates a new feedback, adding `created` field and auditRecord', async () => {
+          const { status, body: createdFeedback } = await as().post(getFeedbackToSubmit()).to('/v1/feedback');
 
-        expect(status).toEqual(200);
-        expect(createdFeedback._id).toBeDefined();
+          expect(status).toEqual(200);
+          expect(createdFeedback._id).toBeDefined();
 
-        const { body: feedback } = await as(anAdmin).get(`/v1/feedback/${createdFeedback._id}`);
+          const { body: feedback } = await as(anAdmin).get(`/v1/feedback/${createdFeedback._id}`);
 
-        expect(feedback).toEqual({
-          ...defaultFeedbackForm,
-          _id: expect.any(String),
-          created: expect.any(Number),
-          submittedBy: {
-            username: null,
-            email: null,
-          },
-          auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord(),
+          expect(feedback).toEqual({
+            ...defaultFeedbackForm,
+            _id: expect.any(String),
+            created: expect.any(Number),
+            submittedBy: {
+              username: null,
+              email: null,
+            },
+            auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord(),
+          });
         });
       });
     });
