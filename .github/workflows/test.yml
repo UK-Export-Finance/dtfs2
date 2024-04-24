@@ -44,6 +44,7 @@ on:
       - main
       - feat/e2etf-sql
       - "release-*"
+      - feat/tfm-release-6
 
     paths:
       - "package*.json"
