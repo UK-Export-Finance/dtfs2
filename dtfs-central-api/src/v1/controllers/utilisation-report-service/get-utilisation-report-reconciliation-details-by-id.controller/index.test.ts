@@ -91,7 +91,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       expect(getBankNameByIdSpy).toHaveBeenCalledWith(bankId);
     });
 
-    it('responds with a 200 and the mapped report', async () => {
+    it('responds with a 200 and the mapped report for both matching and non-matching payment currencies', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
@@ -108,16 +108,67 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
         .withDateUploaded(dateUploaded)
         .build();
 
-      const facilityIds = ['12345678', '87654321'];
-
-      const feeRecords = facilityIds.map((facilityId) =>
-        FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport).withFacilityId(facilityId).build(),
-      );
+      const feeRecords = [
+        FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport)
+          .withFacilityId('12345678')
+          .withExporter('Test exporter 1')
+          .withFeesPaidToUkefForThePeriodCurrency('GBP')
+          .withFeesPaidToUkefForThePeriod(314.59)
+          .withPaymentCurrency('GBP')
+          .build(),
+        FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport)
+          .withFacilityId('87654321')
+          .withExporter('Test exporter 2')
+          .withFeesPaidToUkefForThePeriodCurrency('EUR')
+          .withFeesPaidToUkefForThePeriod(100.00)
+          .withPaymentCurrency('GBP')
+          .withPaymentExchangeRate(1.1)
+          .build(),
+      ];
       reconciliationInProgressReport.feeRecords = feeRecords;
 
-      const feeRecordItems: FeeRecordItem[] = facilityIds.map((facilityId) => ({ facilityId }));
-
       findOneSpy.mockResolvedValue(reconciliationInProgressReport);
+
+      const feeRecordItems: FeeRecordItem[] = [
+        {
+          facilityId: '12345678',
+          exporter: 'Test exporter 1',
+          reportedFees: {
+            currency: 'GBP',
+            amount: 314.59,
+          },
+          reportedPayments: {
+            currency: 'GBP',
+            amount: 314.59,
+          },
+          totalReportedPayments: {
+            currency: 'GBP',
+            amount: 314.59,
+          },
+          paymentsReceived: null,
+          totalPaymentsReceived: null,
+          status: 'TO_DO',
+        },
+        {
+          facilityId: '87654321',
+          exporter: 'Test exporter 2',
+          reportedFees: {
+            currency: 'EUR',
+            amount: 100.0,
+          },
+          reportedPayments: {
+            currency: 'GBP',
+            amount: 90.91,
+          },
+          totalReportedPayments: {
+            currency: 'GBP',
+            amount: 90.91,
+          },
+          paymentsReceived: null,
+          totalPaymentsReceived: null,
+          status: 'TO_DO',
+        },
+      ];
 
       const bankName = 'Test bank';
       getBankNameByIdSpy.mockResolvedValue(bankName);

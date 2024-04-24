@@ -10,6 +10,8 @@ import {
   UploadedByUserDetails,
   UTILISATION_REPORT_HEADERS,
   IsoMonthStamp,
+  FeeRecordStatus,
+  CurrencyAndAmount,
 } from '@ukef/dtfs2-common';
 
 export type GetUtilisationReportResponse = {
@@ -64,6 +66,13 @@ export type UtilisationReportUploadDetails = Prettify<
 
 export type FeeRecordItem = {
   facilityId: string;
+  exporter: string;
+  reportedFees: CurrencyAndAmount;
+  reportedPayments: CurrencyAndAmount;
+  totalReportedPayments: CurrencyAndAmount;
+  paymentsReceived: CurrencyAndAmount | null;
+  totalPaymentsReceived: CurrencyAndAmount | null;
+  status: FeeRecordStatus;
 };
 
 export type UtilisationReportReconciliationDetails = {

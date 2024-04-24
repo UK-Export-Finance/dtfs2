@@ -80,7 +80,12 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   paymentCurrency!: Currency;
 
   /**
-   * The exchange rate from the {@link baseCurrency} to the {@link paymentCurrency}
+   * The exchange rate from the {@link paymentCurrency} to the {@link feesPaidToUkefForThePeriodCurrency}
+   *
+   * For example, for a fee record with `feesPaidToUkefForThePeriod` equal to `100.00`,
+   * `feesPaidToUkefForThePeriodCurrency` equal to `'EUR'`, `paymentCurrency` equal to `'GBP'` and
+   * `paymentExchangeRate` equal to `1.1`, the fees paid to ukef for the period in the payment currency
+   * would be `100.00 ('EUR') / 1.1 = 90.91 ('GBP')`.
    */
   @ExchangeRateColumn()
   paymentExchangeRate!: number;
