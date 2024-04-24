@@ -13,11 +13,7 @@ const getLastFormIfPresent = () => {
 
   const lastForm = forms[forms.length - 1];
 
-  if (!lastForm) {
-    return null;
-  }
-
-  return lastForm;
+  return lastForm || null;
 };
 
 const validateAndDeleteElement = (elementToDelete) => {
