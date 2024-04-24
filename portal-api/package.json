@@ -54,7 +54,7 @@
     "express-validator": "^7.0.1",
     "filesize": "^8.0.7",
     "immer": "^10.0.4",
-    "joi": "^17.12.3",
+    "joi": "^17.13.0",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongodb": "4.17.0",

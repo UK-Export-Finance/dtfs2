@@ -89,7 +89,10 @@ describe('generate audit details', () => {
 
   describe('generateAuditDatabaseRecordFromAuditDetails', () => {
     it('returns the correct audit details for a tfm user', () => {
-      const auditRecord = generateAuditDatabaseRecordFromAuditDetails({ userType: 'tfm', id: '1234567890abcdef12345678' });
+      const auditRecord = generateAuditDatabaseRecordFromAuditDetails({
+        userType: 'tfm',
+        id: '1234567890abcdef12345678',
+      });
 
       expect(auditRecord).toEqual({
         ...defaultAuditDatabaseRecord,
@@ -98,7 +101,10 @@ describe('generate audit details', () => {
     });
 
     it('returns the correct audit details for a portal user', () => {
-      const auditRecord = generateAuditDatabaseRecordFromAuditDetails({ userType: 'portal', id: '1234567890abcdef12345678' });
+      const auditRecord = generateAuditDatabaseRecordFromAuditDetails({
+        userType: 'portal',
+        id: '1234567890abcdef12345678',
+      });
 
       expect(auditRecord).toEqual({
         ...defaultAuditDatabaseRecord,

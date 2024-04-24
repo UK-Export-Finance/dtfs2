@@ -11,14 +11,35 @@ module.exports = {
     'no-console': ['error', { allow: ['info', 'error'] }],
     'no-underscore-dangle': [
       'error',
-      { allow: ['_id', '_csrf', '_getBuffer', '_getData', '_getHeaders', '_getStatusCode', '_getRedirectUrl', '_getRenderData', '_getRenderView'] },
+      {
+        allow: [
+          '_id',
+          '_csrf',
+          '_getBuffer',
+          '_getData',
+          '_getHeaders',
+          '_getStatusCode',
+          '_getRedirectUrl',
+          '_getRenderData',
+          '_getRenderView',
+        ],
+      },
     ],
     'import/extensions': 'off',
     'import/no-named-as-default': 'off',
     'implicit-arrow-linebreak': 'off',
     'import/no-extraneous-dependencies': [
       'error',
-      { devDependencies: ['**/*.test.{js,ts}', '**/*.api-test.{js,ts}', '**/*.spec.{js,ts}', '**/webpack.*.{js,ts}', '**/api-test*/**', '**/__mocks__/**'] },
+      {
+        devDependencies: [
+          '**/*.test.{js,ts}',
+          '**/*.api-test.{js,ts}',
+          '**/*.spec.{js,ts}',
+          '**/webpack.*.{js,ts}',
+          '**/api-test*/**',
+          '**/__mocks__/**',
+        ],
+      },
     ],
     'import/prefer-default-export': 'off',
     'comma-dangle': 'off',
