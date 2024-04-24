@@ -4,6 +4,8 @@ import { UtilisationReportEntity, getCurrentReportPeriodForBankSchedule } from '
 import { createNotReceivedReport, createMarkedAsCompletedReport, createUploadedReport } from './utilisation-report.helper';
 import { getAllBanksFromMongoDb, getUsersFromMongoDbOrFail } from '../helpers';
 
+export const UPLOADED_REPORT_ID = 50;
+
 export default class UtilisationReportSeeder implements Seeder {
   /**
    * Track seeder execution.
@@ -26,6 +28,7 @@ export default class UtilisationReportSeeder implements Seeder {
     }
     const uploadedReportReportPeriod = getCurrentReportPeriodForBankSchedule(paymentReportOfficerBank.utilisationReportPeriodSchedule);
     const uploadedReport = createUploadedReport(paymentReportOfficer, uploadedReportReportPeriod, 'PENDING_RECONCILIATION');
+    uploadedReport.id = UPLOADED_REPORT_ID;
 
     const [bankToCreateMarkedAsCompletedReportFor, ...banksToCreateNotReceivedReportsFor] = banksVisibleInTfm.filter(
       (bank) => bank.id !== paymentReportOfficer.bank.id,
