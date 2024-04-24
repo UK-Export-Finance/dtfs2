@@ -5,6 +5,7 @@ import {
   createNotReceivedReport,
   createMarkedAsCompletedReport,
   createUploadedReport,
+  createFeeRecordsForReport,
 } from './utilisation-report.helper';
 import { getAllBanksFromMongoDb, getUsersFromMongoDbOrFail } from '../helpers';
 
@@ -36,6 +37,10 @@ export default class UtilisationReportSeeder implements Seeder {
       uploadedReportReportPeriod,
       'PENDING_RECONCILIATION',
     );
+
+    // The reports need to be seeded either before or with the fee records
+    const { feeRecordWithMatchingCurrencies, feeRecordWithDifferingCurrencies } = createFeeRecordsForReport();
+    uploadedReport.feeRecords = [feeRecordWithMatchingCurrencies, feeRecordWithDifferingCurrencies];
 
     const [bankToCreateMarkedAsCompletedReportFor, ...banksToCreateNotReceivedReportsFor] = banksVisibleInTfm.filter(
       (bank) => bank.id !== paymentReportOfficer.bank.id,
