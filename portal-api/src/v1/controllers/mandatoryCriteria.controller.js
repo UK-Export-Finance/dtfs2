@@ -1,4 +1,5 @@
 const assert = require('assert');
+const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const db = require('../../drivers/db-client');
 const { PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
@@ -32,21 +33,20 @@ const findOneMandatoryCriteria = async (version, callback) => {
 };
 
 exports.create = async (req, res) => {
-  const criteria = req?.body;
-
-  if (payloadVerification(criteria, PAYLOAD.CRITERIA.MANDATORY.DEFAULT)) {
-  // MC insertion on non-production environments
-    if (process.env.NODE_ENV !== 'production') {
-      const collection = await db.getCollection('mandatoryCriteria');
-      const result = await collection.insertOne(criteria);
-
-      return res.status(200).send(result);
-    }
-
-    return res.status(400).send({ status: 404, message: 'Unauthorised insertion' });
+  if (!payloadVerification(req.body, PAYLOAD.CRITERIA.MANDATORY.DEFAULT)) {
+    return res.status(400).send({ status: 400, message: 'Invalid mandatory criteria payload' });
   }
 
-  return res.status(400).send({ status: 400, message: 'Invalid mandatory criteria payload' });
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(403).send({ status: 403, message: 'Unauthorised insertion' });
+  }
+
+  // MC insertion on non-production environments
+    const collection = await db.getCollection('mandatoryCriteria');
+    const criteria = { ...req?.body, auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id)};
+    const result = await collection.insertOne(criteria);
+
+    return res.status(200).send(result);
 };
 
 exports.findAll = (req, res) => (

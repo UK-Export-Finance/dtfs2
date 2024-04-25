@@ -1,6 +1,12 @@
+const {
+  generateParsedMockPortalUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
 const databaseHelper = require('../../database-helper');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { withRoleAuthorisationTests, withNoRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const {
+  withRoleAuthorisationTests,
+  withNoRoleAuthorisationTests,
+} = require('../../common-tests/role-authorisation-tests');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -44,7 +50,8 @@ describe('/v1/mandatory-criteria', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(allMandatoryCriteriaUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(allMandatoryCriteriaUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) =>
+        get(allMandatoryCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
     withNoRoleAuthorisationTests({
@@ -62,7 +69,12 @@ describe('/v1/mandatory-criteria', () => {
 
       expect(body).toEqual({
         count: allMandatoryCriteria.length,
-        mandatoryCriteria: expectMongoIds(allMandatoryCriteria),
+        mandatoryCriteria: expectMongoIds(
+          allMandatoryCriteria.map((criteria) => ({
+            ...criteria,
+            auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id),
+          })),
+        ),
       });
     });
   });
@@ -72,7 +84,8 @@ describe('/v1/mandatory-criteria', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(latestMandatoryCriteriaUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(latestMandatoryCriteriaUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) =>
+        get(latestMandatoryCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
     withNoRoleAuthorisationTests({
@@ -89,7 +102,12 @@ describe('/v1/mandatory-criteria', () => {
       const { status, body } = await as(anAdmin).get(latestMandatoryCriteriaUrl);
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectMongoId(newMandatoryCriteria));
+      expect(body).toEqual(
+        expectMongoId({
+          ...newMandatoryCriteria,
+          auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id),
+        }),
+      );
     });
   });
 
@@ -98,7 +116,7 @@ describe('/v1/mandatory-criteria', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(mandatoryCriteria1Url),
-      makeRequestWithAuthHeader: (authHeader) => get(mandatoryCriteria1Url, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(mandatoryCriteria1Url, { headers: { Authorization: authHeader } }),
     });
 
     withNoRoleAuthorisationTests({
@@ -114,7 +132,12 @@ describe('/v1/mandatory-criteria', () => {
       const { status, body } = await as(anAdmin).get(`/v1/mandatory-criteria/${newMandatoryCriteria.version}`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectMongoId(newMandatoryCriteria));
+      expect(body).toEqual(
+        expectMongoId({
+          ...newMandatoryCriteria,
+          auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id),
+        }),
+      );
     });
   });
 
@@ -123,7 +146,8 @@ describe('/v1/mandatory-criteria', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => post(allMandatoryCriteriaUrl, newMandatoryCriteria),
-      makeRequestWithAuthHeader: (authHeader) => post(allMandatoryCriteriaUrl, newMandatoryCriteria, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) =>
+        post(allMandatoryCriteriaUrl, newMandatoryCriteria, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -140,7 +164,8 @@ describe('/v1/mandatory-criteria', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => put(mandatoryCriteria1Url, updatedMandatoryCriteria),
-      makeRequestWithAuthHeader: (authHeader) => put(mandatoryCriteria1Url, updatedMandatoryCriteria, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) =>
+        put(mandatoryCriteria1Url, updatedMandatoryCriteria, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -154,9 +179,7 @@ describe('/v1/mandatory-criteria', () => {
     it('updates a mandatory criteria', async () => {
       const mandatoryCriteria = allMandatoryCriteria[0];
       const update = {
-        criteria: [
-          { title: 'new title' },
-        ],
+        criteria: [{ title: 'new title' }],
       };
 
       await as(anAdmin).post(mandatoryCriteria).to('/v1/mandatory-criteria');
@@ -165,10 +188,13 @@ describe('/v1/mandatory-criteria', () => {
       const { status, body } = await as(anAdmin).get(`/v1/mandatory-criteria/${mandatoryCriteria.version}`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectMongoId({
-        ...mandatoryCriteria,
-        criteria: update.criteria,
-      }));
+      expect(body).toEqual(
+        expectMongoId({
+          ...mandatoryCriteria,
+          criteria: update.criteria,
+          auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id),
+        }),
+      );
     });
   });
 
@@ -177,7 +203,8 @@ describe('/v1/mandatory-criteria', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => remove(mandatoryCriteria1Url),
-      makeRequestWithAuthHeader: (authHeader) => remove(mandatoryCriteria1Url, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) =>
+        remove(mandatoryCriteria1Url, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
