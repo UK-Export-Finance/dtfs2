@@ -82,14 +82,18 @@ exports.update = async (req, res) => {
     res.status(400).send({ status: 400, message: 'Invalid Version' });
   }
 
-  // MC insertion on non-production environments
-  if (process.env.NODE_ENV !== 'production') {
-    const collection = await db.getCollection('mandatoryCriteria');
-    const status = await collection.updateOne({ version: { $eq: Number(req.params.version) } }, { $set: { criteria: req.body.criteria } }, {});
-    return res.status(200).send(status);
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(403).send();
   }
 
-  return res.status(400).send();
+  // MC insertion on non-production environments
+  const collection = await db.getCollection('mandatoryCriteria');
+  const status = await collection.updateOne(
+    { version: { $eq: Number(req.params.version) } },
+    { $set: { criteria: req.body.criteria, auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id) } },
+    {},
+  );
+  return res.status(200).send(status);
 };
 
 exports.delete = async (req, res) => {
