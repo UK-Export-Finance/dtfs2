@@ -8,8 +8,9 @@ import {
 } from './generate-audit-database-record';
 
 describe('generate audit details', () => {
+  const now = new Date(1712574419579);
   const defaultAuditDatabaseRecord = {
-    lastUpdatedAt: new Date(1712574419579),
+    lastUpdatedAt: '2024-04-08T11:06:59.579 +00:00',
     lastUpdatedByPortalUserId: null,
     lastUpdatedByTfmUserId: null,
     lastUpdatedByIsSystem: null,
@@ -17,7 +18,7 @@ describe('generate audit details', () => {
   };
 
   beforeAll(() => {
-    jest.useFakeTimers().setSystemTime(defaultAuditDatabaseRecord.lastUpdatedAt);
+    jest.useFakeTimers().setSystemTime(now);
   });
 
   afterAll(() => {

@@ -39,7 +39,7 @@
     "prettier:fix:all": "npm run prettier:fix --workspaces --if-present",
     "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color '**/*'",
     "start": "docker compose up --build",
-    "start:detach": "npm run dev -- --detach",
+    "start:detach": "npm run start -- --detach",
     "stop": "docker compose down",
     "type-check:all": "npm run type-check --workspaces --if-present",
     "type:all": "npm run type-check --workspaces --if-present",

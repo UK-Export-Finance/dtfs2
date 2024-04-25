@@ -49,7 +49,6 @@ const getPortalDeal = async (dealId, dealType) => {
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) => {
   const deal = await getPortalDeal(dealId, dealType);
-  console.info('Setting essential deal properties in TFM for deal %s', dealId);
 
   if (!deal) {
     console.error('Unable to find deal %s upon submission to TFM', dealId);

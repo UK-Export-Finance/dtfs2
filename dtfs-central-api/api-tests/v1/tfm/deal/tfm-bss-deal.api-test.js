@@ -184,7 +184,7 @@ describe('/v1/tfm/deal/:id', () => {
           lastUpdated: expect.any(Number),
         });
 
-        expect(bodyAfterUpdate.deal.auditDetails).toEqual({
+        expect(bodyAfterUpdate.deal.auditRecord).toEqual({
           lastUpdatedAt: expect.any(String),
           lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
           lastUpdatedByTfmUserId: null,

@@ -116,7 +116,7 @@ const updateDealSnapshot = async (deal, snapshotChanges, auditDetails) => {
         dealSnapshot: {
           ...snapshotChanges,
         },
-        auditDetails: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       };
 
       const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(String(dealId)) } }, $.flatten(withoutId(update)), {
@@ -150,7 +150,7 @@ exports.updateDealSnapshotPut = async (req, res) => {
   const deal = await findOneDeal(dealId);
 
   if (!deal) {
-    return res.status(404).send({ status: 404, message: 'Deal not found'});
+    return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
 
   if (snapshotUpdate.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
