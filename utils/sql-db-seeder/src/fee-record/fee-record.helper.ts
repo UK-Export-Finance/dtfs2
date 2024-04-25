@@ -1,6 +1,6 @@
 import { Currency, FeeRecordEntity } from '@ukef/dtfs2-common';
 
-type CreateFeeRecordOptions = {
+type CreateFeeRecordParams = {
   facilityId: string;
   exporter: string;
   baseCurrency: Currency;
@@ -41,7 +41,7 @@ export const createFeeRecord = ({
   feesPaidToUkefForThePeriodCurrency,
   paymentCurrency,
   paymentExchangeRate,
-}: CreateFeeRecordOptions): FeeRecordEntity => {
+}: CreateFeeRecordParams): FeeRecordEntity => {
   const feeRecord = new FeeRecordEntity();
 
   feeRecord.facilityId = facilityId;
