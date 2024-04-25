@@ -84,6 +84,7 @@ exports.update = async (req, res) => {
   const collection = await db.getCollection(collectionName);
   const update = req.body;
   update.updatedAt = Date.now();
+  update.auditRecord = generatePortalUserAuditDatabaseRecord(req.user._id);
   const response = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(id) } },
     { $set: update },
