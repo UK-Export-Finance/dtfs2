@@ -29,6 +29,7 @@
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },
   "dependencies": {
+    "date-fns-tz": "^2.0.1",
     "mongodb": "^4.17.0",
     "node-cron": "^3.0.3"
   },

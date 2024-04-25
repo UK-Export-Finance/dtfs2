@@ -14,3 +14,7 @@ export const generateTfmAuditDetails = (id: string | ObjectId): AuditDetails => 
   userType: 'tfm',
   id,
 });
+
+export const generateNoUserLoggedInAuditDetails = (): AuditDetails => ({
+  userType: 'none',
+});

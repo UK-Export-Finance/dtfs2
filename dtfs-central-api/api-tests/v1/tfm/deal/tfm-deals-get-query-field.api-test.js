@@ -1,12 +1,9 @@
 const { getTime, format } = require('date-fns');
+const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
-const {
-  newDeal,
-  createAndSubmitDeals,
-  updateDealsTfm,
-} = require('./tfm-deals-get.api-test');
+const { newDeal, createAndSubmitDeals, updateDealsTfm } = require('./tfm-deals-get.api-test');
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 
@@ -35,28 +32,25 @@ describe('/v1/tfm/deals', () => {
           },
         });
 
-        const [
-          submittedMIADeal,
-          submittedMINDeal,
-        ] = await createAndSubmitDeals([
-          miaDeal,
-          minDeal,
-        ]);
+        const [submittedMIADeal, submittedMINDeal] = await createAndSubmitDeals([miaDeal, minDeal]);
 
-        await updateDealsTfm([
-          {
-            _id: submittedMIADeal._id,
-            tfm: {
-              dateReceived: '13-11-2021',
+        await updateDealsTfm(
+          [
+            {
+              _id: submittedMIADeal._id,
+              tfm: {
+                dateReceived: '13-11-2021',
+              },
             },
-          },
-          {
-            _id: submittedMINDeal._id,
-            tfm: {
-              dateReceived: '12-11-2021',
+            {
+              _id: submittedMINDeal._id,
+              tfm: {
+                dateReceived: '12-11-2021',
+              },
             },
-          },
-        ], MOCK_TFM_USER);
+          ],
+          MOCK_TFM_USER,
+        );
 
         const { status, body } = await api.get('/v1/tfm/deals?byField[0][name]=tfm.dateReceived&byField[0][value]=12-11-2021');
 
@@ -70,13 +64,7 @@ describe('/v1/tfm/deals', () => {
               dateReceived: '12-11-2021',
               lastUpdated: expect.any(Number),
             },
-            auditRecord: {
-              lastUpdatedAt: expect.any(String),
-              lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
-              lastUpdatedByPortalUserId: null,
-              noUserLoggedIn: null,
-              lastUpdatedByIsSystem: null,
-            }
+            auditRecord: generateParsedMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id),
           },
         ];
 
@@ -104,9 +92,7 @@ describe('/v1/tfm/deals', () => {
 
         expect(status).toEqual(200);
 
-        const expectedDeals = [
-          submittedMIADeal,
-        ];
+        const expectedDeals = [submittedMIADeal];
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -139,28 +125,27 @@ describe('/v1/tfm/deals', () => {
         });
 
         // Create mock deals
-        const deals = await createAndSubmitDeals([
-          ainDealToday,
-          ainDealPast,
-          ainDealNone,
-        ]);
+        const deals = await createAndSubmitDeals([ainDealToday, ainDealPast, ainDealNone]);
 
         // Update created mock deals
         if (deals.length > 0) {
-          await updateDealsTfm([
-            {
-              _id: deals[0]._id,
-              tfm: {
-                lastUpdated: todayFormatted,
+          await updateDealsTfm(
+            [
+              {
+                _id: deals[0]._id,
+                tfm: {
+                  lastUpdated: todayFormatted,
+                },
               },
-            },
-            {
-              _id: deals[1]._id,
-              tfm: {
-                lastUpdated: '20-09-1989',
+              {
+                _id: deals[1]._id,
+                tfm: {
+                  lastUpdated: '20-09-1989',
+                },
               },
-            },
-          ], MOCK_TFM_USER);
+            ],
+            MOCK_TFM_USER,
+          );
         }
 
         // GET API CAll

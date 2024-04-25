@@ -2,7 +2,8 @@ const assert = require('assert');
 const { ObjectId } = require('mongodb');
 const sanitizeHtml = require('sanitize-html');
 const { format, getUnixTime, fromUnixTime } = require('date-fns');
-
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
 const db = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
 const sendEmail = require('../email');
@@ -49,8 +50,16 @@ exports.create = async (req, res) => {
     satisfied,
     howCanWeImprove,
     emailAddress,
-    submittedBy
+    submittedBy,
+    // Because this is on the open router, information about the user cannot be inferred from req.user
+    auditDetails,
   } = req.body;
+
+  try {
+    validateAuditDetails(auditDetails);
+  } catch ({ message }) {
+    res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
+  }
 
   const modifiedFeedback = {
     role,
@@ -64,6 +73,7 @@ exports.create = async (req, res) => {
     emailAddress,
     submittedBy,
     created: getUnixTime(new Date()),
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   const collection = await db.getCollection('feedback');
@@ -93,16 +103,12 @@ exports.create = async (req, res) => {
   const EMAIL_TEMPLATE_ID = '4214bdb8-b3f5-4081-a664-3bfcfe648b8d';
   const EMAIL_RECIPIENT = process.env.GOV_NOTIFY_EMAIL_RECIPIENT;
 
-  await sendEmail(
-    EMAIL_TEMPLATE_ID,
-    EMAIL_RECIPIENT,
-    emailVariables,
-  );
+  await sendEmail(EMAIL_TEMPLATE_ID, EMAIL_RECIPIENT, emailVariables);
 
   return res.status(200).send({ _id: createdFeedback.insertedId });
 };
 
-exports.findOne = (req, res) => (
+exports.findOne = (req, res) =>
   findOneFeedback(req.params.id, (feedback) => {
     if (!feedback) {
       res.status(404).send();
@@ -111,11 +117,9 @@ exports.findOne = (req, res) => (
     }
 
     return res.status(404).send();
-  })
-);
+  });
 
-exports.findAll = (req, res) => (
-  findFeedbacks((feedbacks) => res.status(200).send(feedbacks)));
+exports.findAll = (req, res) => findFeedbacks((feedbacks) => res.status(200).send(feedbacks));
 
 exports.delete = async (req, res) => {
   const { id } = req.params;
