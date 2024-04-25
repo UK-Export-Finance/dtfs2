@@ -63,6 +63,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
   const dealHasBeenResubmit = submissionCount > 1;
 
   if (firstDealSubmission) {
+    const acceptableTaskSubmissionTypes = [CONSTANTS.DEALS.SUBMISSION_TYPE.AIN, CONSTANTS.DEALS.SUBMISSION_TYPE.MIA];
     // Updates portal deal status
     await updatePortalDealStatus(mappedDeal);
 
@@ -82,50 +83,43 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       status,
     };
 
+    // TFM properties (deal.tfm)
     const dealWithTfmData = await addTfmDealData(updatedMappedDeal, auditDetails);
     const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData, auditDetails);
     const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn, auditDetails);
+
+    // Facilities
     const updatedDealWithUpdatedFacilities = await updateFacilities(
       updatedDealWithDealCurrencyConversions,
       auditDetails,
     );
-    const updatedDealWithCreateEstore = await createEstoreSite(updatedDealWithUpdatedFacilities);
 
-    if (
-      updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN ||
-      updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA
-    ) {
-      const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore, auditDetails);
+    // Estore
+    let dealUpdate = await createEstoreSite(updatedDealWithUpdatedFacilities);
 
-      const { firstTaskEmail } = await sendDealSubmitEmails(dealWithTasks);
+    // TFM tasks
+    if (acceptableTaskSubmissionTypes.includes(updatedMappedDeal.submissionType)) {
+      dealUpdate = await createDealTasks(dealUpdate, auditDetails);
+      const { firstTaskEmail } = await sendDealSubmitEmails(dealUpdate);
 
       /**
        * Add an emailSent flag to the first task.
        * This prevents multiple emails from being sent.
        */
-      const updatedDealWithTasks = dealWithTasks;
-      updatedDealWithTasks.tfm.tasks = addFirstTaskEmailSentFlag(firstTaskEmail, dealWithTasks.tfm.tasks);
-
-      /**
-       * Update the deal with all the above modifications
-       * Note: at the time of writing, some functions above update the deal, others do not.
-       */
-      return api.updateDeal({ dealId, dealUpdate: updatedDealWithTasks, auditDetails });
+      dealUpdate.tfm.tasks = addFirstTaskEmailSentFlag(firstTaskEmail, dealUpdate.tfm.tasks);
     }
 
-    /**
-     * Current requirement only allows AIN & MIN deals to be sent to ACBS
-     * This calls CREATES Deal & Facility ACBS records
-     */
-    console.log('====0', updatedMappedDeal);
-    await submitDealToACBS(updatedMappedDeal);
+    // Update the deal with all the above modifications
+    const tfmDeal = api.updateDeal({ dealId, dealUpdate, auditDetails });
 
-    return api.updateDeal({ dealId, dealUpdate: updatedDealWithCreateEstore, auditDetails });
+    // Submit to ACBS
+    await submitDealToACBS(tfmDeal);
+
+    return tfmDeal;
   }
 
   if (dealHasBeenResubmit) {
-    const tfmDeal = await findOneTfmDeal(dealId);
-    console.log('=====', mappedDeal.tfm, tfmDeal.tfm);
+    let tfmDeal = await findOneTfmDeal(dealId);
     /**
      * checks if can update to MIN
      * if it can, changes mappedDeal to show MIN to allow gef fee record to be calculated
@@ -155,7 +149,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
     mappedDeal.status = status;
 
     // Update issued facilities
-    const updatedDeal = await updatedIssuedFacilities(mappedDeal, auditDetails);
+    const dealUpdate = await updatedIssuedFacilities(mappedDeal, auditDetails);
 
     if (isUpdatingToMIN) {
       const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, dealType, checker);
@@ -166,34 +160,36 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
        */
       const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate, auditDetails);
 
-      updatedDeal.submissionType = dealSnapshot.submissionType;
+      dealUpdate.submissionType = dealSnapshot.submissionType;
 
       if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-        updatedDeal.manualInclusionNoticeSubmissionDate = dealSnapshot.manualInclusionNoticeSubmissionDate;
-        updatedDeal.checkerMIN = dealSnapshot.checkerMIN;
+        dealUpdate.manualInclusionNoticeSubmissionDate = dealSnapshot.manualInclusionNoticeSubmissionDate;
+        dealUpdate.checkerMIN = dealSnapshot.checkerMIN;
       } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-        updatedDeal.manualInclusionNoticeSubmissionDate = dealSnapshot.details.manualInclusionNoticeSubmissionDate;
-        updatedDeal.checkerMIN = dealSnapshot.details.checkerMIN;
+        dealUpdate.manualInclusionNoticeSubmissionDate = dealSnapshot.details.manualInclusionNoticeSubmissionDate;
+        dealUpdate.checkerMIN = dealSnapshot.details.checkerMIN;
       }
 
-      await sendAinMinAcknowledgement(updatedDeal);
+      await sendAinMinAcknowledgement(dealUpdate);
 
       // TFM deal stage should be updated to `Confirmed`
       const updatedDealStage = dealStage(mappedDeal.status, mappedDeal.submissionType);
-      updatedDeal.tfm.stage = updatedDealStage;
+      dealUpdate.tfm.stage = updatedDealStage;
 
       console.info('TFM deal %s stage has been updated to %s', dealId, updatedDealStage);
     }
 
-    console.log('===2', mappedDeal);
-    await submitDealToACBS(mappedDeal);
+    tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
-    if (await submitDealToACBS(mappedDeal, false, true)) {
-      await issueAcbsFacilities(updatedDeal);
+    await submitDealToACBS(tfmDeal);
+
+    if (await submitDealToACBS(tfmDeal, false, true)) {
+      await issueAcbsFacilities(dealUpdate);
     }
 
-    return api.updateDeal({ dealId, dealUpdate: updatedDeal, auditDetails });
+    return tfmDeal;
   }
+
   return api.updateDeal({ dealId, dealUpdate: submittedDeal, auditDetails });
 };
 
