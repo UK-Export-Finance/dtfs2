@@ -39,7 +39,7 @@ context('Eligibility', () => {
       //---------------------------------------------------------------
       // complete and submit second eligibility form/page - Documentation
       //---------------------------------------------------------------
-      eligibilityDocumentation.questionnaireFileInput().attachFile('questionnaire_February_2023.pdf');
+      eligibilityDocumentation.questionnaireFileInput().attachFile('questionnaire_February_2023_monthly.pdf');
       eligibilityDocumentation.saveButton().click();
 
       cy.url().should('include', '/check-your-answers');

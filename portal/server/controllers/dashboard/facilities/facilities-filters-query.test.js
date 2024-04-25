@@ -1,5 +1,6 @@
+import { ROLES } from '@ukef/dtfs2-common';
 import { dashboardFacilitiesFiltersQuery } from './facilities-filters-query';
-import CONSTANTS, { ALL_BANKS_ID, ROLES } from '../../../constants';
+import CONSTANTS, { ALL_BANKS_ID } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 import keywordQuery from './facilities-filters-keyword-query';
 

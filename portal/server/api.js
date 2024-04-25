@@ -863,7 +863,8 @@ const uploadUtilisationReportData = async (uploadingUser, reportPeriod, csvData,
     formData.append('formattedReportPeriod', formattedReportPeriod);
 
     const buffer = Buffer.from(csvFileBuffer);
-    const filename = `${reportPeriod.start.year}_${reportPeriod.start.month}_${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}_${uploadingUser.bank.name}_utilisation_report.csv`;
+    const month = reportPeriod.start.month === reportPeriod.end.month ? `${reportPeriod.start.month}` : `${reportPeriod.start.month}_${reportPeriod.end.month}`;
+    const filename = `${reportPeriod.start.year}_${month}_${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}_${uploadingUser.bank.name}_utilisation_report.csv`;
     formData.append('csvFile', buffer, { filename });
 
     const formHeaders = formData.getHeaders();
@@ -887,6 +888,12 @@ const uploadUtilisationReportData = async (uploadingUser, reportPeriod, csvData,
   }
 };
 
+/**
+ * Gets all previous reports for the supplied bank
+ * @param {string} token - The user token
+ * @param {string} bankId - The bank id
+ * @returns {Promise<import('./api-response-types').PreviousUtilisationReportsResponseBody>} The previous reports grouped by year
+ */
 const getPreviousUtilisationReportsByBank = async (token, bankId) => {
   if (!isValidBankId(bankId)) {
     throw new Error(`Getting previous utilisation reports failed for id ${bankId}`);
@@ -904,6 +911,12 @@ const getPreviousUtilisationReportsByBank = async (token, bankId) => {
   return response.data;
 };
 
+/**
+ * Gets the last uploaded report for the bank with the specified id
+ * @param {string} userToken - The user token
+ * @param {string} bankId - The bank id
+ * @returns {Promise<import('./api-response-types').UtilisationReportResponseBody>} The last uploaded report
+ */
 const getLastUploadedReportByBankId = async (userToken, bankId) => {
   if (!isValidBankId(bankId)) {
     throw new Error(`Error getting last uploaded utilisation report: bank id '${bankId}' is invalid`);
@@ -932,8 +945,22 @@ const getDueReportPeriodsByBankId = async (token, bankId) => {
   return response.data;
 };
 
-const downloadUtilisationReport = async (userToken, bankId, _id) =>
-  await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-report-download/${_id}`, {
+const getNextReportPeriodByBankId = async (token, bankId) => {
+  if (!isValidBankId(bankId)) {
+    throw new Error(`Getting next report period failed for id ${bankId}`);
+  }
+
+  const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/next-report-period`, {
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+  return response.data;
+};
+
+const downloadUtilisationReport = async (userToken, bankId, id) =>
+  await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-report-download/${id}`, {
     responseType: 'stream',
     headers: { Authorization: userToken },
   });
@@ -1003,5 +1030,6 @@ module.exports = {
   getPreviousUtilisationReportsByBank,
   getLastUploadedReportByBankId,
   getDueReportPeriodsByBankId,
+  getNextReportPeriodByBankId,
   getUkBankHolidays,
 };

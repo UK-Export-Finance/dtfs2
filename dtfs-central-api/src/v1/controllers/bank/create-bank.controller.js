@@ -1,9 +1,10 @@
-const db = require('../../../drivers/db-client');
-const { PAYLOAD, DB_COLLECTIONS } = require('../../../constants');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common')
+const db = require('../../../drivers/db-client').default;
+const { PAYLOAD } = require('../../../constants');
 const { payloadVerification } = require('../../../helpers');
 
 const createBank = async (bank) => {
-  const collection = await db.getCollection(DB_COLLECTIONS.BANKS);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.BANKS);
 
   const response = await collection.insertOne(bank);
 

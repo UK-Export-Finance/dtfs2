@@ -37,7 +37,7 @@ describe(page, () => {
   });
 
   it('should render the report period heading', async () => {
-    (await getWrapper()).expectText('[data-cy="2023-12-submission-month-report-period-heading"]').toRead(`Open reports: Nov 2023`);
+    (await getWrapper()).expectText('[data-cy="2023-12-submission-month-report-period-heading"]').toRead(`Open reports: Nov 2023 (monthly)`);
   });
 
   it('should render the report due date for the current period', async () => {

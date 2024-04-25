@@ -1,4 +1,5 @@
-const { addBusinessDays, isSameDay, isWeekend, startOfMonth, isValid, parseISO, format } = require('date-fns');
+const { addBusinessDays, isSameDay, isWeekend, startOfMonth, format } = require('date-fns');
+const { isValidIsoMonth } = require('@ukef/dtfs2-common');
 
 /**
  * @param {Date} date
@@ -65,13 +66,6 @@ const getBusinessDayOfMonth = (dateInMonth, holidays, businessDay) => {
 };
 
 /**
- * Converts date with index-0 month value to numeric index-1 month
- * @param {Date} date
- * @returns {import('../types/date').OneIndexedMonth}
- */
-const getOneIndexedMonth = (date) => date.getMonth() + 1;
-
-/**
  * Returns and ISO month string (format 'yyyy-MM') corresponding to the provided
  * date value
  * @param {Date} dateInMonth - any day in the month of the required ISO month
@@ -84,15 +78,6 @@ const getIsoMonth = (dateInMonth) => {
 
   return format(dateInMonth, 'yyyy-MM');
 };
-
-const ISO_MONTH_REGEX = /^(?<year>\d{4})-(?<month>\d{2})$/;
-
-/**
- * Checks whether the provided value is an ISO month string in format 'yyyy-MM'
- * @param {unknown} value - the value to test
- * @returns {boolean}
- */
-const isValidIsoMonth = (value) => typeof value === 'string' && ISO_MONTH_REGEX.test(value) && isValid(parseISO(value));
 
 /**
  * @param {unknown} value - the value to assert on
@@ -107,7 +92,6 @@ const assertValidIsoMonth = (value) => {
 
 module.exports = {
   getBusinessDayOfMonth,
-  getOneIndexedMonth,
   getIsoMonth,
   assertValidIsoMonth,
 };

@@ -1,6 +1,5 @@
 import { body, checkSchema } from 'express-validator';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../../constants';
-import { isValidMongoId } from '../../validateIds';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 
 const VALID_UPDATE_PAYLOAD_STATUSES = [
   UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
@@ -18,13 +17,5 @@ export const updateReportStatusPayloadValidation = [
       },
     },
   }),
-  body('reportsWithStatus.*.reportId', "'reportsWithStatus' array does not match any expected format")
-    .exists()
-    .isString()
-    .custom((value: string) => {
-      if (!isValidMongoId(value)) {
-        throw new Error('Report id must be a valid mongo id string');
-      }
-      return true;
-    }),
+  body('reportsWithStatus.*.reportId', 'Report id must be an integer').exists().isInt({ gt: 0 }),
 ];

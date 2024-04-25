@@ -1,6 +1,6 @@
 const api = require('./api');
 const centralApi = require('./centralApi');
-const PORTAL_MOCKS = require('./portal');
+const MOCK_PORTAL_USERS = require('./portal-users');
 const MOCK_BANKS = require('./banks');
 const MOCKS = require('./bss');
 const { logger } = require('./helpers/logger.helper');
@@ -8,7 +8,7 @@ const { logger } = require('./helpers/logger.helper');
 const insertMocks = async (mockDataLoaderToken) => {
   logger.info('inserting portal mocks');
   logger.info('inserting portal users', { depth: 1 });
-  for (const user of Object.values(PORTAL_MOCKS.USERS)) {
+  for (const user of Object.values(MOCK_PORTAL_USERS)) {
     await api.createUser(user, mockDataLoaderToken);
   }
 
@@ -27,7 +27,7 @@ const insertMocks = async (mockDataLoaderToken) => {
     await api.createEligibilityCriteria(eligibilityCriteria, mockDataLoaderToken);
   }
 
-  const maker = PORTAL_MOCKS.USERS.BANK1_MAKER3;
+  const maker = MOCK_PORTAL_USERS.BANK1_MAKER3;
   const makerToken = await api.loginViaPortal(maker);
 
   logger.info('inserting BSS deals', { depth: 1 });

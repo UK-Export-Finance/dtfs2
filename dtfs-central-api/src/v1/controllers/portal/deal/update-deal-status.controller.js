@@ -1,8 +1,8 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneDeal } = require('./get-deal.controller');
-const db = require('../../../../drivers/db-client');
-const { DB_COLLECTIONS } = require('../../../../constants');
+const db = require('../../../../drivers/db-client').default;
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -12,7 +12,7 @@ const withoutId = (obj) => {
 
 const updateDealStatus = async (dealId, status, existingDeal) => {
   if (ObjectId.isValid(dealId)) {
-    const dealsCollection = await db.getCollection(DB_COLLECTIONS.DEALS);
+    const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
     const previousStatus = existingDeal.status;
 

@@ -27,7 +27,7 @@
     </h1>
     {% if dueReportPeriods.length === 0 %}
         <p class="govuk-body" data-cy="next-due-report-text">
-            The {{ nextReportPeriod }} report can be uploaded from {{ nextReportPeriodSubmissionStart }}.
+            The {{ formattedNextReportPeriod }} report can be uploaded from {{ nextReportPeriodSubmissionStart }}.
         </p>
         <p class="govuk-body" data-cy="uploaded-report-details">
             The {{ lastUploadedReportPeriod }} report was sent to UKEF by {{ uploadedByFullName }} on {{ formattedDateAndTimeUploaded }}.
@@ -77,10 +77,10 @@
             <div class="govuk-form-group {% if validationError %}govuk-form-group--error{% endif %}">
                 <label class="govuk-label govuk-label--m" for="utilisation-report-file-upload" data-cy="upload-report-text">
                     Upload {{ nextDueReport.formattedReportPeriod }} report
+                    <div id="utilisation-report-file-upload-hint" class="govuk-hint">
+                        The file must be an XLSX or CSV
+                    </div>
                 </label>
-                <div id="utilisation-report-file-upload-hint" class="govuk-hint">
-                    The file must be an XLSX or CSV
-                </div>
                 {% if validationError %}
                     <span class="govuk-error-message" data-cy="utilisation-report-file-upload-error-message">
                         <span class="govuk-visually-hidden">Error:</span>
