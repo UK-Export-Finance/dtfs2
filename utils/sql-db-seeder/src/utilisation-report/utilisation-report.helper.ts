@@ -102,10 +102,7 @@ export const createUploadedReport = (
   return utilisationReport;
 };
 
-export const createFeeRecordsForReport = (): {
-  feeRecordWithMatchingCurrencies: FeeRecordEntity;
-  feeRecordWithDifferingCurrencies: FeeRecordEntity;
-} => {
+export const createFeeRecordsForReport = (): FeeRecordEntity[] => {
   const feeRecordWithMatchingCurrencies = createFeeRecord({
     facilityId: '12345678',
     exporter: 'Test exporter',
@@ -127,8 +124,5 @@ export const createFeeRecordsForReport = (): {
     paymentExchangeRate: 1.1,
   });
 
-  return {
-    feeRecordWithMatchingCurrencies,
-    feeRecordWithDifferingCurrencies,
-  }
+  return [feeRecordWithMatchingCurrencies, feeRecordWithDifferingCurrencies];
 };
