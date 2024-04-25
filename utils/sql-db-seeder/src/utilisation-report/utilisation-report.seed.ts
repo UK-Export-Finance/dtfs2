@@ -1,7 +1,7 @@
 import { Seeder } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
 import { UtilisationReportEntity, getCurrentReportPeriodForBankSchedule } from '@ukef/dtfs2-common';
-import { createNotReceivedReport, createMarkedAsCompletedReport, createUploadedReport, appendFeeRecordsToUtilisationReport } from './utilisation-report.helper';
+import { createNotReceivedReport, createMarkedAsCompletedReport, createUploadedReport, createFeeRecordsForReport } from './utilisation-report.helper';
 import { getAllBanksFromMongoDb, getUsersFromMongoDbOrFail } from '../helpers';
 
 export default class UtilisationReportSeeder implements Seeder {
@@ -28,7 +28,8 @@ export default class UtilisationReportSeeder implements Seeder {
     const uploadedReport = createUploadedReport(paymentReportOfficer, uploadedReportReportPeriod, 'PENDING_RECONCILIATION');
 
     // The reports need to be seeded either before or with the fee records
-    appendFeeRecordsToUtilisationReport(uploadedReport);
+    const { feeRecordWithMatchingCurrencies, feeRecordWithDifferingCurrencies } = createFeeRecordsForReport();
+    uploadedReport.feeRecords = [feeRecordWithMatchingCurrencies, feeRecordWithDifferingCurrencies];
 
     const [bankToCreateMarkedAsCompletedReportFor, ...banksToCreateNotReceivedReportsFor] = banksVisibleInTfm.filter(
       (bank) => bank.id !== paymentReportOfficer.bank.id,

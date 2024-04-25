@@ -8,6 +8,7 @@ import {
   TfmUser,
   ReportPeriod,
   DbRequestSource,
+  FeeRecordEntity,
 } from '@ukef/dtfs2-common';
 import { createFeeRecord } from '../fee-record/fee-record.helper';
 
@@ -101,7 +102,10 @@ export const createUploadedReport = (
   return utilisationReport;
 };
 
-export const appendFeeRecordsToUtilisationReport = (utilisationReport: UtilisationReportEntity): void => {
+export const createFeeRecordsForReport = (): {
+  feeRecordWithMatchingCurrencies: FeeRecordEntity;
+  feeRecordWithDifferingCurrencies: FeeRecordEntity;
+} => {
   const feeRecordWithMatchingCurrencies = createFeeRecord({
     facilityId: '12345678',
     exporter: 'Test exporter',
@@ -123,5 +127,8 @@ export const appendFeeRecordsToUtilisationReport = (utilisationReport: Utilisati
     paymentExchangeRate: 1.1,
   });
 
-  utilisationReport.feeRecords = [feeRecordWithMatchingCurrencies, feeRecordWithDifferingCurrencies];
+  return {
+    feeRecordWithMatchingCurrencies,
+    feeRecordWithDifferingCurrencies,
+  }
 };
