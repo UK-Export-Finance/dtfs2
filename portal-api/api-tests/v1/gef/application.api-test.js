@@ -40,6 +40,11 @@ const mockSuccessfulResponse = {
   },
 };
 
+const expectedEligibilityCriteriaAuditRecord = {
+  ...generateParsedMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
+  lastUpdatedByPortalUserId: expect.any(String),
+}
+
 jest.mock('../../../src/external-api/api', () => ({
   sendEmail: jest.fn(() => Promise.resolve({})),
   number: {
@@ -127,6 +132,7 @@ describe(baseUrl, () => {
               ...criterion,
               answer: null,
             })),
+            auditRecord: expectedEligibilityCriteriaAuditRecord,
           },
           editedBy: expect.any(Array),
           createdAt: expect.any(Number),
@@ -192,6 +198,7 @@ describe(baseUrl, () => {
             answer: null,
           })),
           status: CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED,
+          auditRecord: expectedEligibilityCriteriaAuditRecord,
         },
         status: CONSTANTS.DEAL.DEAL_STATUS.DRAFT,
         editedBy: expect.any(Array),
@@ -290,6 +297,7 @@ describe(baseUrl, () => {
             ...criterion,
             answer: null,
           })),
+          auditRecord: expectedEligibilityCriteriaAuditRecord,
         },
       };
       expect(body).toEqual({

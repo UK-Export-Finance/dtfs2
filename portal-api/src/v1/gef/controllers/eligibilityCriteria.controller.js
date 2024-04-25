@@ -1,3 +1,4 @@
+const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const { EligibilityCriteria } = require('../models/eligibilityCriteria');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
@@ -61,9 +62,9 @@ exports.getLatest = async (req, res) => {
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection('eligibilityCriteria');
-  const criteria = req?.body;
 
-  if (payloadVerification(criteria, PAYLOAD.CRITERIA.ELIGIBILITY)) {
+  if (payloadVerification(req.body, PAYLOAD.CRITERIA.ELIGIBILITY)) {
+    const criteria = { ...req?.body, auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id) };
     const result = await collection.insertOne(new EligibilityCriteria(criteria));
     return res.status(201).send({ _id: result.insertedId });
   }
