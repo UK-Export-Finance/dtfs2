@@ -11,6 +11,6 @@ describe(page, () => {
   });
 
   it('should render link to request a new sign in link', () => {
-    wrapper.expectText('[data-cy="dtfs-email-link"]').toRead('DigitalService.TradeFinance@ukexportfinance.gov.uk');
+    wrapper.expectText('[data-cy="dtfs-email-link"]').toRead('TradeFinanceSupport@ukexportfinance.gov.uk');
   });
 });
