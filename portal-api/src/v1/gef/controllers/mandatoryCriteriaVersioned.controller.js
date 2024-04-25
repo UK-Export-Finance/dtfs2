@@ -1,5 +1,6 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
+const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const { MandatoryCriteria } = require('../models/mandatoryCriteria');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
@@ -40,14 +41,14 @@ const findOneMandatoryCriteria = async (id, callback) => {
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const criteria = req?.body;
 
-  if (payloadVerification(criteria, PAYLOAD.CRITERIA.MANDATORY.VERSIONED)) {
-    const mandatoryCriteria = await collection.insertOne(new MandatoryCriteria(criteria));
-    return res.status(201).send({ _id: mandatoryCriteria.insertedId });
+  if (!payloadVerification(req.body, PAYLOAD.CRITERIA.MANDATORY.VERSIONED)) {
+    return res.status(400).send({ status: 400, message: 'Invalid GEF mandatory criteria payload' });
   }
 
-  return res.status(400).send({ status: 400, message: 'Invalid GEF mandatory criteria payload' });
+  const criteria = { ...req.body, auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id)};
+  const { insertedId } = await collection.insertOne(new MandatoryCriteria(criteria));
+  return res.status(201).send({ _id: insertedId });
 };
 
 exports.findAll = (req, res) => (
