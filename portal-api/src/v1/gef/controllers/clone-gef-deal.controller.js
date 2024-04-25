@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const db = require('../../../drivers/db-client');
 
 const { validateApplicationReferences } = require('./validation/application');
@@ -18,7 +19,7 @@ const cloneExporter = (currentExporter) => {
 
 // TODO: DTFS2-5907 Re-enable cloneSupportingInformation for GEF deals
 
-const cloneFacilities = async (currentDealId, newDealId) => {
+const cloneFacilities = async (currentDealId, newDealId, sessionUser) => {
   if (!ObjectId.isValid(currentDealId)) {
     throw new Error('Invalid Current Deal Id');
   }
@@ -41,36 +42,37 @@ const cloneFacilities = async (currentDealId, newDealId) => {
 
   // check if there are any facilities in the db
   if (allFacilities.length) {
-    Object.entries(allFacilities).forEach((key, val) => {
+    Object.entries(allFacilities).forEach((value, index) => {
       // delete the existing `_id` property - this will be re-created when a new deal is inserted
-      delete allFacilities[val]._id;
+      delete allFacilities[index]._id;
 
       // updated the `dealId` property to match the new application ID
-      allFacilities[val].dealId = ObjectId(newDealId);
+      allFacilities[index].dealId = ObjectId(newDealId);
       // update the `createdAt` property to match the current time in EPOCH format
-      allFacilities[val].createdAt = Date.now();
+      allFacilities[index].createdAt = Date.now();
       // update the `updatedAt` property to match the current time in EPOCH format
-      allFacilities[val].updatedAt = Date.now();
+      allFacilities[index].updatedAt = Date.now();
       // reset the ukefFacilityId
-      allFacilities[val].ukefFacilityId = null;
+      allFacilities[index].ukefFacilityId = null;
       // reset canResubmitIssuedFacilities to null
-      allFacilities[val].canResubmitIssuedFacilities = null;
+      allFacilities[index].canResubmitIssuedFacilities = null;
       // reset issueDate to null
-      allFacilities[val].issueDate = null;
+      allFacilities[index].issueDate = null;
       // reset coverDateConfirmed to null
-      allFacilities[val].coverDateConfirmed = null;
+      allFacilities[index].coverDateConfirmed = null;
       // reset coverDateConfirmed to null
-      allFacilities[val].unissuedToIssuedByMaker = {};
-      allFacilities[val].hasBeenIssuedAndAcknowledged = null;
-      allFacilities[val].submittedAsIssuedDate = null;
+      allFacilities[index].unissuedToIssuedByMaker = {};
+      allFacilities[index].hasBeenIssuedAndAcknowledged = null;
+      allFacilities[index].submittedAsIssuedDate = null;
+      allFacilities[index].auditRecord = generatePortalUserAuditDatabaseRecord(sessionUser);
 
       const currentTime = new Date();
       currentTime.setHours(0, 0, 0, 0);
-      const difference = currentTime - new Date(allFacilities[val].coverStartDate).getTime();
+      const difference = currentTime - new Date(allFacilities[index].coverStartDate).getTime();
       // check if the coverStartDate is in the past
       if (difference > 0) {
         // if it is, then ask the user to update it
-        allFacilities[val].coverStartDate = null;
+        allFacilities[index].coverStartDate = null;
       }
     });
     await collection.insertMany(allFacilities);
@@ -134,6 +136,7 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, maker, 
     clonedDeal.portalActivities = [];
     clonedDeal.supportingInformation = {};
     clonedDeal.clonedDealId = dealId;
+    clonedDeal.auditRecord = generatePortalUserAuditDatabaseRecord(maker._id);
 
     // insert the cloned deal in the database
     const createdApplication = await collection.insertOne(clonedDeal);
@@ -161,7 +164,7 @@ exports.clone = async (req, res) => {
   if (response.status === 200) {
     const { newDealId } = response;
     // clone the corresponding facilities
-    await cloneFacilities(existingDealId, newDealId);
+    await cloneFacilities(existingDealId, newDealId, req.user);
 
     return res.status(200).send({ dealId: newDealId });
   }
