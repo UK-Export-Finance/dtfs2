@@ -8,6 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
@@ -32,7 +33,7 @@ const createFacilityFee = async (context) => {
 
     const missingMandatory = findMissingMandatory(acbsFacilityFeeInput, mandatoryFields);
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();
@@ -40,14 +41,18 @@ const createFacilityFee = async (context) => {
 
     if (isHttpErrorStatus(status)) {
       throw new Error(
-        JSON.stringify({
-          name: 'ACBS Facility fee record create error',
-          facilityIdentifier,
-          submittedToACBS,
-          receivedFromACBS: getNowAsIsoString(),
-          dataReceived: data,
-          dataSent: acbsFacilityFeeInput,
-        }, null, 4),
+        JSON.stringify(
+          {
+            name: 'ACBS Facility fee record create error',
+            facilityIdentifier,
+            submittedToACBS,
+            receivedFromACBS: getNowAsIsoString(),
+            dataReceived: data,
+            dataSent: acbsFacilityFeeInput,
+          },
+          null,
+          4,
+        ),
       );
     }
 
@@ -59,9 +64,11 @@ const createFacilityFee = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create facility fee record. %s', error);
-    throw new Error('Unable to create facility fee record %s', error);
+    console.error('Unable to create facility fee record. %o', error);
+    throw new Error(`Unable to create facility fee record ${error}`);
   }
 };
 
-module.exports = createFacilityFee;
+df.app.activity('create-facility-fee', {
+  handler: createFacilityFee,
+});

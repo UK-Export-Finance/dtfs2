@@ -1,4 +1,8 @@
 const { ObjectId } = require('mongodb');
+const {
+  generatePortalUserAuditDatabaseRecord,
+  generateNoUserLoggedInAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common');
 const { getNowAsEpochMillisecondString } = require('../helpers/date');
 const db = require('../../drivers/db-client');
 const sendEmail = require('../email');
@@ -55,6 +59,7 @@ const createPasswordToken = async (email, userService) => {
   const userUpdate = {
     resetPwdToken: hash,
     resetPwdTimestamp: `${Date.now()}`,
+    auditRecord: generateNoUserLoggedInAuditDatabaseRecord(),
   };
 
   if (!ObjectId.isValid(user._id)) {
@@ -137,11 +142,14 @@ exports.findByEmail = async (email) => {
   return transformDatabaseUser(user);
 };
 
-exports.create = async (user, userService, callback) => {
+exports.create = async (user, userService, sessionUser, callback) => {
   const insert = {
     'user-status': USER.STATUS.ACTIVE,
     timezone: USER.TIMEZONE.DEFAULT,
     ...user,
+    auditRecord: sessionUser?._id
+      ? generatePortalUserAuditDatabaseRecord(sessionUser._id)
+      : generateNoUserLoggedInAuditDatabaseRecord(),
   };
 
   delete insert?.autoCreatePassword;
@@ -232,7 +240,9 @@ exports.update = async (_id, update, callback) => {
     if (userUnsetUpdate) {
       userUpdate.$unset = userUnsetUpdate;
     }
-    const updatedUser = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, { returnDocument: 'after' });
+    const updatedUser = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, {
+      returnDocument: 'after',
+    });
     callback(null, updatedUser);
   });
 };
@@ -249,6 +259,7 @@ exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
   const collection = await db.getCollection('users');
   const update = {
     sessionIdentifier,
+    auditRecord: generatePortalUserAuditDatabaseRecord(user._id),
   };
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
@@ -289,10 +300,12 @@ exports.incrementFailedLoginCount = async (user) => {
     ? {
         'user-status': USER.STATUS.BLOCKED,
         blockedStatusReason: USER.STATUS_BLOCKED_REASON.INVALID_PASSWORD,
+        auditRecord: generateNoUserLoggedInAuditDatabaseRecord(),
       }
     : {
         loginFailureCount: failureCount,
         lastLoginFailure: getNowAsEpochMillisecondString(),
+        auditRecord: generateNoUserLoggedInAuditDatabaseRecord(),
       };
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});

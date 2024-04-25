@@ -14,7 +14,9 @@
 export type UnixTimestamp = number;
 
 /**
- * ISO 8601 date time string in format 'yyyy-MM-ddThh:mm:ssZ'
+ * ISO 8601 date time string
+ * @example '2024-04-08T11:06:59.579 +00:00'
+ * @example '2024-04-08T11:06:59Z'
  */
 export type IsoDateTimeStamp = string;
 

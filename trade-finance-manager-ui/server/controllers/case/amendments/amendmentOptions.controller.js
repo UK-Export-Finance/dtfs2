@@ -80,7 +80,7 @@ const postAmendmentOptions = async (req, res) => {
     console.error('Unable to update the amendment options');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
   } catch (error) {
-    console.error('There was a problem creating the amendment approval %s', error);
+    console.error('There was a problem creating the amendment approval %o', error);
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
 };

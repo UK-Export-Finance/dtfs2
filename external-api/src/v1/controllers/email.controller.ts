@@ -1,7 +1,8 @@
-import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
-const { NotifyClient } = require('notifications-node-client'); // eslint-disable-line @typescript-eslint/no-var-requires
 import axios from 'axios';
+import { Request, Response } from 'express';
+import { getNowAsEpoch } from '../../helpers/date';
+const { NotifyClient } = require('notifications-node-client'); // eslint-disable-line @typescript-eslint/no-var-requires
 
 dotenv.config();
 
@@ -13,9 +14,9 @@ export const emailNotification = async (req: Request, res: Response) => {
   try {
     const { templateId, sendToEmailAddress, emailVariables } = req.body;
     // Add a unique reference to an email
-    const reference = `${templateId}-${new Date().valueOf()}`;
+    const reference = `${templateId}-${getNowAsEpoch()}`;
 
-    console.info('Calling Notify API. templateId: %s', templateId);
+    console.info('Calling Notify API. templateId %s', templateId);
 
     const personalisation = emailVariables;
 
@@ -34,7 +35,7 @@ export const emailNotification = async (req: Request, res: Response) => {
 
     return res.status(status).send(data);
   } catch (error) {
-    console.error('Unable to send email %s', error);
+    console.error('Unable to send email %o', error);
   }
   return res.status(422).send({});
 };
@@ -55,7 +56,7 @@ export const sendEmail = async (templateId: string, sendToEmailAddress: string, 
     });
     return data;
   } catch (error) {
-    console.error('Unable to send the email: %s', error);
+    console.error('Unable to send the email %o', error);
     return null;
   }
 };

@@ -6,20 +6,10 @@ const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const { expectAddedFields, expectAddedFieldsWithEditedBy } = require('./expectAddedFields');
 const CONSTANTS = require('../../../src/constants');
-
-const mockUser = {
-  _id: '123456789',
-  username: 'temp',
-  password: '',
-  roles: [],
-  bank: {
-    id: '956',
-    name: 'Barclays Bank',
-  },
-};
+const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 
 const mockUserNoBank = {
-  _id: '123456789',
+  _id: '6603ebb1b81328945f63a1a2',
   username: 'temp',
   password: '',
   roles: [],
@@ -48,7 +38,7 @@ describe('/v1/portal/deals', () => {
 
   describe('POST /v1/portal/deals', () => {
     it('returns the created deal with correct fields', async () => {
-      const { body, status } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const { body, status } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
 
       expect(status).toEqual(200);
 
@@ -56,8 +46,8 @@ describe('/v1/portal/deals', () => {
 
       expect(createdDeal.deal).toEqual(expectAddedFields(newDeal));
 
-      expect(createdDeal.deal.maker).toEqual(mockUser);
-      expect(createdDeal.deal.bank).toEqual(mockUser.bank);
+      expect(createdDeal.deal.maker).toEqual(MOCK_PORTAL_USER);
+      expect(createdDeal.deal.bank).toEqual(MOCK_PORTAL_USER.bank);
       expect(createdDeal.deal.eligibility.status).toEqual(newDeal.eligibility.status);
       expect(createdDeal.deal.eligibility.criteria).toEqual(newDeal.eligibility.criteria);
       expect(createdDeal.deal.facilities).toEqual([]);
@@ -100,7 +90,7 @@ describe('/v1/portal/deals', () => {
           additionalRefName: '',
         };
 
-        const { body, status } = await api.post({ deal: postBody, user: mockUser }).to('/v1/portal/deals');
+        const { body, status } = await api.post({ deal: postBody, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
 
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(2);
@@ -120,11 +110,8 @@ describe('/v1/portal/deals', () => {
           bankInternalRefName: 'a'.repeat(31),
           additionalRefName: 'b'.repeat(101),
         };
-        const invalidMaker = {
-          _id: '12345678',
-        };
 
-        const { body, status } = await api.post({ deal: postBody, user: invalidMaker }).to('/v1/portal/deals');
+        const { body, status } = await api.post({ deal: postBody, user: mockUserNoBank }).to('/v1/portal/deals');
 
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(3);
@@ -143,7 +130,7 @@ describe('/v1/portal/deals', () => {
 
   describe('GET /v1/portal/deals/:id', () => {
     it('returns the requested resource', async () => {
-      const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const postResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
       const dealId = postResult.body._id;
 
       const { status, body } = await api.get(`/v1/portal/deals/${dealId}`);
@@ -154,14 +141,14 @@ describe('/v1/portal/deals', () => {
 
     describe('when a BSS deal has facilities', () => {
       it('returns facilities mapped to deal.bondTransactions and deal.loanTransactions', async () => {
-        const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+        const postResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
         const dealId = postResult.body._id;
 
         // create some facilities
         const mockFacility = {
           dealId,
           value: 123456,
-          user: mockUser,
+          user: MOCK_PORTAL_USER,
         };
 
         const mockBond = {
@@ -174,10 +161,10 @@ describe('/v1/portal/deals', () => {
           ...mockFacility,
         };
 
-        const { body: createdBond1 } = await api.post({ facility: mockBond, user: mockUser }).to('/v1/portal/facilities');
-        const { body: createdBond2 } = await api.post({ facility: mockBond, user: mockUser }).to('/v1/portal/facilities');
-        const { body: createdLoan1 } = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
-        const { body: createdLoan2 } = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
+        const { body: createdBond1 } = await api.post({ facility: mockBond, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const { body: createdBond2 } = await api.post({ facility: mockBond, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const { body: createdLoan1 } = await api.post({ facility: mockLoan, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const { body: createdLoan2 } = await api.post({ facility: mockLoan, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
 
         const { body: bond1 } = await api.get(`/v1/portal/facilities/${createdBond1._id}`);
         const { body: bond2 } = await api.get(`/v1/portal/facilities/${createdBond2._id}`);
@@ -202,7 +189,7 @@ describe('/v1/portal/deals', () => {
 
   describe('PUT /v1/portal/deals/:id', () => {
     it('returns the updated deal', async () => {
-      const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const postResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
       const createdDeal = postResult.body;
       const updatedDeal = {
         ...newDeal,
@@ -214,15 +201,15 @@ describe('/v1/portal/deals', () => {
         },
       };
 
-      const { status, body } = await api.put({ dealUpdate: updatedDeal, user: mockUser }).to(`/v1/portal/deals/${createdDeal._id}`);
+      const { status, body } = await api.put({ dealUpdate: updatedDeal, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
 
-      expect(body).toEqual(expectAddedFieldsWithEditedBy(updatedDeal, mockUser));
+      expect(body).toEqual(expectAddedFieldsWithEditedBy(updatedDeal, MOCK_PORTAL_USER));
     });
 
     it('handles partial updates', async () => {
-      const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const postResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
       const createdDeal = postResult.body;
 
       const partialUpdate = {
@@ -242,17 +229,17 @@ describe('/v1/portal/deals', () => {
         },
       };
 
-      const { status: putStatus } = await api.put({ dealUpdate: partialUpdate, user: mockUser }).to(`/v1/portal/deals/${createdDeal._id}`);
+      const { status: putStatus } = await api.put({ dealUpdate: partialUpdate, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
       expect(putStatus).toEqual(200);
 
       const { status, body } = await api.get(`/v1/portal/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.deal).toEqual(expectAddedFieldsWithEditedBy(expectedDataIncludingUpdate, mockUser));
+      expect(body.deal).toEqual(expectAddedFieldsWithEditedBy(expectedDataIncludingUpdate, MOCK_PORTAL_USER));
     });
 
     it('updates the deal', async () => {
-      const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const postResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
       const createdDeal = postResult.body;
 
       const updatedDeal = {
@@ -261,24 +248,24 @@ describe('/v1/portal/deals', () => {
         additionalRefName: 'change this field',
       };
 
-      await api.put({ dealUpdate: updatedDeal, user: mockUser }).to(`/v1/portal/deals/${createdDeal._id}`);
+      await api.put({ dealUpdate: updatedDeal, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
 
       const { status, body } = await api.get(`/v1/portal/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
 
-      expect(body.deal).toEqual(expectAddedFieldsWithEditedBy(updatedDeal, mockUser));
+      expect(body.deal).toEqual(expectAddedFieldsWithEditedBy(updatedDeal, MOCK_PORTAL_USER));
     });
 
     it('adds updates and retains `editedBy` array with user data', async () => {
-      const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const postResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
       const createdDeal = postResult.body;
       const firstUpdate = {
         ...createdDeal,
         additionalRefName: 'change this field',
       };
 
-      await api.put({ dealUpdate: firstUpdate, user: mockUser }).to(`/v1/portal/deals/${createdDeal._id}`);
+      await api.put({ dealUpdate: firstUpdate, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
 
       const dealAfterFirstUpdate = await api.get(`/v1/portal/deals/${createdDeal._id}`);
 
@@ -287,14 +274,14 @@ describe('/v1/portal/deals', () => {
         additionalRefName: 'change this field again',
       };
 
-      await api.put({ dealUpdate: secondUpdate, user: mockUser }).to(`/v1/portal/deals/${createdDeal._id}`);
+      await api.put({ dealUpdate: secondUpdate, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
 
       const dealAfterSecondUpdate = await api.get(`/v1/portal/deals/${createdDeal._id}`);
       expect(dealAfterSecondUpdate.status).toEqual(200);
 
       expect(dealAfterSecondUpdate.body.deal.editedBy.length).toEqual(2);
-      expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, mockUser, 1).editedBy[0]);
-      expect(dealAfterSecondUpdate.body.deal.editedBy[1]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, mockUser, 2).editedBy[1]);
+      expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, MOCK_PORTAL_USER, 1).editedBy[0]);
+      expect(dealAfterSecondUpdate.body.deal.editedBy[1]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, MOCK_PORTAL_USER, 2).editedBy[1]);
     });
   });
 
@@ -306,7 +293,7 @@ describe('/v1/portal/deals', () => {
         status: 'Submitted',
         previousStatus: 'Checker\'s approval',
       };
-      const postResult = await api.post({ deal: dealWithSubmittedStatus, user: mockUser }).to('/v1/portal/deals');
+      const postResult = await api.post({ deal: dealWithSubmittedStatus, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
       const createdDeal = postResult.body;
 
       // First status update - 200
@@ -327,7 +314,7 @@ describe('/v1/portal/deals', () => {
         previousStatus: 'Checker\'s approval',
       };
 
-      const postResult = await api.post({ deal: dealWithSubmittedStatus, user: mockUser }).to('/v1/portal/deals');
+      const postResult = await api.post({ deal: dealWithSubmittedStatus, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
       const createdDeal = postResult.body;
       const statusUpdate = 'Acknowledged';
 
@@ -343,7 +330,7 @@ describe('/v1/portal/deals', () => {
 
   describe('DELETE /v1/portal/deals/:id', () => {
     it('deletes the deal', async () => {
-      const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const { body } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
 
       const deleteResponse = await api.remove({}).to(`/v1/portal/deals/${body._id}`);
       expect(deleteResponse.status).toEqual(200);

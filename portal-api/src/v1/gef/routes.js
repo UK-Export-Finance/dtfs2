@@ -78,7 +78,6 @@ router
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteriaVersioned.delete);
 
 // File Uploads
-// TODO: this feels like it should be a service: https://ukef-dtfs.atlassian.net/browse/DTFS2-4842
 router.route('/files').post(
   validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }),
   (req, res, next) => {
@@ -86,7 +85,7 @@ router.route('/files').post(
       if (!error) {
         return next();
       }
-      console.error('Unable to upload file %s', error);
+      console.error('Unable to upload file %o', error);
       return res.status(400).json({ status: 400, data: 'Failed to upload file' });
     });
   },

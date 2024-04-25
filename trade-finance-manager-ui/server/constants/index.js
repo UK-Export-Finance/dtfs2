@@ -1,6 +1,6 @@
 const DEAL = require('./deal');
 const FACILITY = require('./facility');
-const DEALS = require('./deals');
+const TABLE = require('./table');
 const TASKS = require('./tasks');
 const ACTIVITIES = require('./activities');
 const AMENDMENTS = require('./amendments');
@@ -12,7 +12,7 @@ const { PRIMARY_NAVIGATION_KEYS } = require('./primary-navigation-keys');
 module.exports = {
   DEAL,
   FACILITY,
-  DEALS,
+  TABLE,
   TASKS,
   ACTIVITIES,
   AMENDMENTS,

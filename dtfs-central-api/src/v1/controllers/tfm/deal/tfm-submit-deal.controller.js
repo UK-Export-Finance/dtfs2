@@ -1,4 +1,8 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const {
+  MONGO_DB_COLLECTIONS,
+  generateAuditDatabaseRecordFromAuditDetails,
+  validateAuditDetailsAndUserType,
+} = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const db = require('../../../../drivers/db-client').default;
@@ -30,7 +34,7 @@ const getSubmissionCount = (deal) => {
   return null;
 };
 
-const createDealSnapshot = async (deal) => {
+const createDealSnapshot = async (deal, auditDetails) => {
   if (ObjectId.isValid(deal._id)) {
     const { dealType, _id: dealId } = deal;
     const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
@@ -38,7 +42,11 @@ const createDealSnapshot = async (deal) => {
     const submissionCount = getSubmissionCount(deal);
     const tfmInit = submissionCount === 1 ? { tfm: DEFAULTS.DEAL_TFM } : null;
 
-    const dealObj = { dealSnapshot: deal, ...tfmInit };
+    const dealObj = {
+      dealSnapshot: deal,
+      ...tfmInit,
+      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+    };
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
       const dealFacilities = await findAllFacilitiesByDealId(dealId);
@@ -52,7 +60,7 @@ const createDealSnapshot = async (deal) => {
         returnNewDocument: true,
         returnDocument: 'after',
         upsert: true,
-      }
+      },
     );
 
     return findAndUpdateResponse.value;
@@ -60,7 +68,7 @@ const createDealSnapshot = async (deal) => {
   return { status: 400, message: 'Invalid Deal Id' };
 };
 
-const createFacilitiesSnapshot = async (deal) => {
+const createFacilitiesSnapshot = async (deal, auditDetails) => {
   if (ObjectId.isValid(deal._id)) {
     const { dealType, _id: dealId } = deal;
 
@@ -84,15 +92,20 @@ const createFacilitiesSnapshot = async (deal) => {
         dealFacilities.map(async (facility) =>
           collection.findOneAndUpdate(
             {
-              _id: { $eq: ObjectId(facility._id) }
+              _id: { $eq: ObjectId(facility._id) },
             },
-            $.flatten({ facilitySnapshot: facility, ...tfmInit }),
+            $.flatten({
+              facilitySnapshot: facility,
+              ...tfmInit,
+              auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+            }),
             {
               returnNewDocument: true,
               returnDocument: 'after',
               upsert: true,
-            }
-          )),
+            },
+          ),
+        ),
       );
 
       return updatedFacilities;
@@ -103,10 +116,10 @@ const createFacilitiesSnapshot = async (deal) => {
   return { status: 400, message: 'Invalid Deal Id' };
 };
 
-const submitDeal = async (deal) => {
-  await createDealSnapshot(deal);
+const submitDeal = async (deal, auditDetails) => {
+  await createDealSnapshot(deal, auditDetails);
 
-  await createFacilitiesSnapshot(deal);
+  await createFacilitiesSnapshot(deal, auditDetails);
 
   const updatedDeal = await tfmController.findOneDeal(String(deal._id));
 
@@ -114,27 +127,35 @@ const submitDeal = async (deal) => {
 };
 
 exports.submitDealPut = async (req, res) => {
-  const { dealId, dealType } = req.body;
+  const { dealId, dealType, auditDetails } = req.body;
+
+  if (!ObjectId.isValid(dealId)) {
+    return res.status(400).send({ status: 400, message: `Invalid dealId, ${dealId}` });
+  }
+
+  try {
+    validateAuditDetailsAndUserType(auditDetails, 'portal');
+  } catch ({ message }) {
+    return res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
+  }
+
+  if (dealType !== CONSTANTS.DEALS.DEAL_TYPE.GEF && dealType !== CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    return res.status(400).send({ status: 400, message: 'Invalid deal type' });
+  }
+
+  let deal;
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    await findOneGefDeal(dealId, async (deal) => {
-      if (deal) {
-        const updatedDeal = await submitDeal(deal);
-        return res.status(200).json(updatedDeal);
-      }
-
-      return res.status(404).send();
-    });
+    deal = await findOneGefDeal(dealId);
   }
-
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    await findOneDeal(dealId, async (deal) => {
-      if (deal) {
-        const updatedDeal = await submitDeal(deal);
-        return res.status(200).json(updatedDeal);
-      }
-
-      return res.status(404).send();
-    });
+    deal = await findOneDeal(dealId);
   }
+
+  if (!deal) {
+    return res.status(404).send();
+  }
+
+  const updatedDeal = await submitDeal(deal, auditDetails);
+  return res.status(200).json(updatedDeal);
 };

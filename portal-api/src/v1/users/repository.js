@@ -1,7 +1,16 @@
 const { ObjectId } = require('mongodb');
+const {
+  generatePortalUserAuditDatabaseRecord,
+  generateNoUserLoggedInAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common');
 const db = require('../../drivers/db-client');
 const { transformDatabaseUser } = require('./transform-database-user');
-const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError, InvalidSessionIdentifierError } = require('../errors');
+const {
+  InvalidUserIdError,
+  InvalidUsernameError,
+  UserNotFoundError,
+  InvalidSessionIdentifierError,
+} = require('../errors');
 const { USER, SIGN_IN_LINK } = require('../../constants');
 
 class UserRepository {
@@ -13,18 +22,12 @@ class UserRepository {
 
     const userCollection = await db.getCollection('users');
 
-    return userCollection.updateOne(
-      { _id: { $eq: ObjectId(userId) } },
-      { $push: { signInTokens: { $each: [{ hashHex, saltHex, expiry }], $slice: -SIGN_IN_LINK.MAX_SEND_COUNT } } },
-    );
-  }
+    const update = {
+      $push: { signInTokens: { $each: [{ hashHex, saltHex, expiry }], $slice: -SIGN_IN_LINK.MAX_SEND_COUNT } },
+      $set: { auditRecord: generateNoUserLoggedInAuditDatabaseRecord() },
+    };
 
-  async deleteSignInTokensForUser(userId) {
-    this.#validateUserId(userId);
-
-    const userCollection = await db.getCollection('users');
-
-    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $unset: { signInTokens: '' } });
+    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, update);
   }
 
   async incrementSignInLinkSendCount({ userId }) {
@@ -33,7 +36,10 @@ class UserRepository {
     const userCollection = await db.getCollection('users');
 
     const filter = { _id: { $eq: ObjectId(userId) } };
-    const update = { $inc: { signInLinkSendCount: 1 } };
+    const update = {
+      $inc: { signInLinkSendCount: 1 },
+      $set: { auditRecord: generateNoUserLoggedInAuditDatabaseRecord() },
+    };
     const options = { returnDocument: 'after' };
 
     const userUpdate = await userCollection.findOneAndUpdate(filter, update, options);
@@ -44,7 +50,9 @@ class UserRepository {
     this.#validateUserId(userId);
 
     const userCollection = await db.getCollection('users');
-    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: { signInLinkSendDate: Date.now() } });
+
+    const setUpdate = { signInLinkSendDate: Date.now(), auditRecord: generateNoUserLoggedInAuditDatabaseRecord() };
+    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: setUpdate });
   }
 
   async resetSignInData({ userId }) {
@@ -57,8 +65,9 @@ class UserRepository {
       signInLinkSendDate: '',
       signInTokens: '',
     };
+    const setUpdate = { auditRecord: generatePortalUserAuditDatabaseRecord(userId) };
 
-    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $unset: unsetUpdate });
+    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $unset: unsetUpdate, $set: setUpdate });
   }
 
   async updateLastLoginAndResetSignInData({ userId, sessionIdentifier }) {
@@ -72,6 +81,7 @@ class UserRepository {
       lastLogin: Date.now(),
       loginFailureCount: 0,
       sessionIdentifier,
+      auditRecord: generatePortalUserAuditDatabaseRecord(userId),
     };
     const unsetUpdate = {
       signInLinkSendCount: '',
@@ -85,11 +95,14 @@ class UserRepository {
     this.#validateUserId(userId);
 
     const userCollection = await db.getCollection('users');
-    const update = {
+    const setUpdate = {
       'user-status': USER.STATUS.BLOCKED,
       blockedStatusReason: reason,
+      // This is currently only called during the log in flow therefore no user will be logged in.
+      // If the admin blocking/unblocking a user were to call this method then this would need to be updated
+      auditRecord: generateNoUserLoggedInAuditDatabaseRecord(),
     };
-    await userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: update });
+    await userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: setUpdate });
   }
 
   async findById(_id) {

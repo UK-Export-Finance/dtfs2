@@ -1,4 +1,4 @@
-import { ChangeStreamDocument } from 'mongodb';
+import { ChangeStreamUpdateDocument, ChangeStreamInsertDocument, ChangeStreamReplaceDocument } from 'mongodb';
 import mongoDbClient from '../../drivers/db-client';
 import { postAuditDetails } from './changeStreamApi';
 
@@ -9,12 +9,12 @@ import { postAuditDetails } from './changeStreamApi';
 const setupChangeStreamForCollection = async (collectionName: string) => {
   console.info('Setting up change stream for collection', collectionName);
   const databaseConnection = await mongoDbClient.getConnection();
-  const changeStream = (databaseConnection.collection(collectionName)).watch(
-    [{ $match: { operationType: { $in: ['insert', 'update', 'replace'] } } }, { $project: { _id: 1, fullDocument: 1, ns: 1, documentKey: 1 } }],
-    { fullDocument: 'updateLookup' },
-  );
-  changeStream.on('change', (changeStreamDocument: ChangeStreamDocument) => {
-    console.info('Testing: ', changeStreamDocument);
+  const changeStream = databaseConnection
+    .collection(collectionName)
+    .watch([{ $match: { operationType: { $in: ['insert', 'update', 'replace'] } } }, { $project: { _id: 1, fullDocument: 1, ns: 1, documentKey: 1 } }], {
+      fullDocument: 'updateLookup',
+    });
+  changeStream.on('change', (changeStreamDocument: ChangeStreamInsertDocument | ChangeStreamUpdateDocument | ChangeStreamReplaceDocument) => {
     postAuditDetails(changeStreamDocument).catch((error) => {
       console.error('Error sending change stream update to API', error);
     });

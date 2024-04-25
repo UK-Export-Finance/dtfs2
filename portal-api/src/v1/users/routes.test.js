@@ -19,6 +19,7 @@ jest.mock('./validation', () => ({
 
 const { ObjectId } = require('mongodb');
 const { when } = require('jest-when');
+const { generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common');
 const { getUserByPasswordToken } = require('./reset-password.controller');
 const { update } = require('./controller');
 const { resetPasswordWithToken, loginWithSignInLink, updateById } = require('./routes');
@@ -85,6 +86,7 @@ describe('users routes', () => {
           currentPassword: '',
           loginFailureCount: 0,
           passwordUpdatedAt: expect.any(String),
+          auditRecord: generateMockPortalUserAuditDatabaseRecord(user._id),
         },
         expect.any(Function),
       );
@@ -103,6 +105,7 @@ describe('users routes', () => {
           currentPassword: '',
           loginFailureCount: 0,
           passwordUpdatedAt: expect.any(String),
+          auditRecord: generateMockPortalUserAuditDatabaseRecord(user._id),
         },
         expect.any(Function),
       );

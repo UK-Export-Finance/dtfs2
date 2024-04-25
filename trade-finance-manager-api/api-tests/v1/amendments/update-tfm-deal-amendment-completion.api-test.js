@@ -1,10 +1,13 @@
 const { format } = require('date-fns');
+const { ObjectId } = require('mongodb');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common')
 const amendmentController = require('../../../src/v1/controllers/amendment.controller');
 const { AMENDMENT_STATUS } = require('../../../src/constants/deals');
 const api = require('../../../src/v1/api');
 const updateFacilityAmendment = require('../utils/updateFacilityAmendment.util');
 const MOCK_GEF_AIN_DEAL = require('../../../src/v1/__mocks__/mock-TFM-deal-AIN-submitted');
 const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
+const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
 
 describe('update tfm-deals on amendment completion', () => {
   const mockAmendment = {
@@ -21,9 +24,7 @@ describe('update tfm-deals on amendment completion', () => {
     },
   };
 
-  const updateDealSpy = jest.fn(() => Promise.resolve(
-    mockDeal,
-  ));
+  const updateDealSpy = jest.fn(() => Promise.resolve(mockDeal));
 
   beforeEach(() => {
     updateDealSpy.mockClear();
@@ -38,7 +39,7 @@ describe('update tfm-deals on amendment completion', () => {
 
   it('updateTFMDealLastUpdated() - should update lastUpdated to now when dealId exists', async () => {
     mockUpdateDeal();
-    const result = await amendmentController.updateTFMDealLastUpdated(mockAmendment.dealId, mockAmendment.facilityId);
+    const result = await amendmentController.updateTFMDealLastUpdated(mockAmendment.dealId, mockAmendment.facilityId, generateTfmAuditDetails(MOCK_USERS[0]._id));
 
     const expected = format(new Date(), 'dd/MM/yyyy');
     const expectedResult = format(result.tfm.lastUpdated, 'dd/MM/yyyy');
@@ -47,7 +48,7 @@ describe('update tfm-deals on amendment completion', () => {
 
   it('updateTFMDealLastUpdated() - should return null when dealId is null', async () => {
     mockAmendment.dealId = null;
-    const result = await amendmentController.updateTFMDealLastUpdated(mockAmendment.dealId, mockAmendment.facilityId);
+    const result = await amendmentController.updateTFMDealLastUpdated(mockAmendment.dealId, mockAmendment.facilityId, generateTfmAuditDetails(MOCK_USERS[0]._id));
 
     expect(result).toBeNull();
   });
@@ -57,7 +58,11 @@ describe('update tfm-deals on amendment completion', () => {
     mockAmendment.dealId = '123';
 
     await updateFacilityAmendment(mockAmendment.facilityId, mockAmendment.amendmentId, { updateTfmLastUpdated: true });
-    expect(api.updateDeal).toHaveBeenCalledWith(mockAmendment.dealId, { tfm: { lastUpdated: expect.any(Number) } });
+    expect(api.updateDeal).toHaveBeenCalledWith({
+      dealId: mockAmendment.dealId,
+      dealUpdate: { tfm: { lastUpdated: expect.any(Number) } },
+      auditDetails: { userType: 'tfm', id: expect.any(ObjectId) },
+    });
   });
 
   it('updateFacilityAmendment() - should NOT call updateDeal when updateTfmLastUpdated is null', async () => {

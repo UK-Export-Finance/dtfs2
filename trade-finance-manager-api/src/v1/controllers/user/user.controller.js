@@ -1,4 +1,8 @@
 const { ObjectId } = require('mongodb');
+const {
+  generateTfmUserAuditDatabaseRecord,
+  generateNoUserLoggedInAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common');
 const db = require('../../../drivers/db-client');
 const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
@@ -26,11 +30,20 @@ exports.findByUsername = async (username, callback) => {
   collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
-exports.create = async (user, callback) => {
+/**
+ * @param {object} user to create
+ * @param {import('../../../types/tfm-session-user').TfmSessionUser | undefined} sessionUser logged in user
+ * @param {(error: string | null, createdUser: object) => void} callback
+ * @returns
+ */
+exports.create = async (user, sessionUser, callback) => {
   const collection = await db.getCollection('tfm-users');
+  // This endpoint is called by mock data loader in development without a logged in user.
+  // This behaviour should never occur in production
   const tfmUser = {
     ...user,
     status: USER.STATUS.ACTIVE,
+    auditRecord: sessionUser?._id ? generateTfmUserAuditDatabaseRecord(sessionUser._id) : generateNoUserLoggedInAuditDatabaseRecord(),
   };
 
   delete tfmUser.token;
@@ -54,12 +67,21 @@ exports.create = async (user, callback) => {
   return callback('Invalid TFM user payload', user);
 };
 
-exports.update = async (_id, update, callback) => {
+/**
+ * @param {string} _id of the user to update
+ * @param {object} update to make to the user
+ * @param {import('../../../types/tfm-session-user').TfmSessionUser | undefined} sessionUser logged in user
+ * @param {(error: string | null, updatedUser: object) => void} callback
+ */
+exports.update = async (_id, update, sessionUser, callback) => {
   if (!ObjectId.isValid(_id)) {
     throw new Error('Invalid User Id');
   }
 
-  const userUpdate = { ...update };
+  const userUpdate = {
+    ...update,
+    auditRecord: generateTfmUserAuditDatabaseRecord(sessionUser._id),
+  };
   const collection = await db.getCollection('tfm-users');
 
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
@@ -98,6 +120,7 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
     lastLogin: Date.now(),
     loginFailureCount: 0,
     sessionIdentifier,
+    auditRecord: generateTfmUserAuditDatabaseRecord(user._id),
   };
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 
@@ -110,20 +133,17 @@ exports.incrementFailedLoginCount = async (user) => {
   }
 
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
-  const thresholdReached = (failureCount >= businessRules.loginFailureCount);
+  const thresholdReached = failureCount >= businessRules.loginFailureCount;
 
   const collection = await db.getCollection('tfm-users');
   const update = {
     loginFailureCount: failureCount,
     lastLoginFailure: Date.now(),
     status: thresholdReached ? USER.STATUS.BLOCKED : user.status,
+    auditRecord: generateNoUserLoggedInAuditDatabaseRecord(),
   };
 
-  await collection.updateOne(
-    { _id: { $eq: ObjectId(user._id) } },
-    { $set: update },
-    {},
-  );
+  await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 };
 
 exports.removeTfmUserById = async (_id, callback) => {

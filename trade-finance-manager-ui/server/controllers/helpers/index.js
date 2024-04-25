@@ -10,6 +10,9 @@ const { mapDecisionObject, mapDecisionValue } = require('./mapDecisionObject.hel
 const { getGroup, getTask } = require('./tasks.helper');
 const { validateCommentField, validateSubmittedValues } = require('./validateSubmittedValues.helper');
 const { probabilityOfDefaultValidation } = require('./probabilityOfDefault.validate');
+const { overrideDealsIfAmendmentsInProgress } = require('./overrideDealsIfAmendmentsInProgress.helper');
+const { overrideFacilitiesIfAmendmentsInProgress } = require('./overrideFacilitiesIfAmendmentsInProgress.helper');
+const { renderDealsOrFacilitiesPage, queryDealsOrFacilities } = require('./dealsAndFacilities.helper');
 
 module.exports = {
   showAmendmentButton,
@@ -25,4 +28,8 @@ module.exports = {
   ukefDecisionRejected,
   validateUkefDecision,
   probabilityOfDefaultValidation,
+  overrideDealsIfAmendmentsInProgress,
+  overrideFacilitiesIfAmendmentsInProgress,
+  renderDealsOrFacilitiesPage,
+  queryDealsOrFacilities,
 };
