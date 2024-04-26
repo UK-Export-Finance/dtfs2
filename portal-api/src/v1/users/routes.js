@@ -160,7 +160,7 @@ module.exports.updateById = async (req, res, next) => {
 };
 
 module.exports.disable = (req, res, next) => {
-  disable(req.params._id, (error, status) => {
+  disable(req.params._id, req.user, (error, status) => {
     if (error) {
       next(error);
     } else {

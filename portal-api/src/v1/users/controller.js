@@ -313,7 +313,7 @@ exports.incrementFailedLoginCount = async (user) => {
   }
 };
 
-exports.disable = async (_id, callback) => {
+exports.disable = async (_id, sessionUser, callback) => {
   if (!ObjectId.isValid(_id)) {
     throw new InvalidUserIdError(_id);
   }
@@ -321,6 +321,7 @@ exports.disable = async (_id, callback) => {
   const collection = await db.getCollection('users');
   const userUpdate = {
     disabled: true,
+    auditRecord: generatePortalUserAuditDatabaseRecord(sessionUser._id)
   };
 
   const status = await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate }, {});
