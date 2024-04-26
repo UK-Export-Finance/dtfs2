@@ -66,7 +66,8 @@ exports.update = async (req, res) => {
   }
 
   const collection = await db.getCollection('banks');
-  const updatedBank = await collection.updateOne({ id: { $eq: id } }, { $set: req.body }, {});
+  const update = { ... req.body, auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id) }
+  const updatedBank = await collection.updateOne({ id: { $eq: id } }, { $set: update }, {});
 
   return res.status(200).json(updatedBank);
 };
