@@ -146,7 +146,7 @@ module.exports.updateById = async (req, res, next) => {
         });
       }
 
-      return update(req.params._id, req.body, (updateErr, updatedUser) => {
+      return update(req.params._id, req.body, req.user, (updateErr, updatedUser) => {
         if (updateErr) {
           return next(updateErr);
         }
@@ -344,7 +344,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
-  return update(user._id, updateData, (updateErr) => {
+  return update(user._id, updateData, user, (updateErr) => {
     if (updateErr) {
       next(updateErr);
     } else {

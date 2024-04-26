@@ -177,7 +177,7 @@ exports.create = async (user, userService, sessionUser, callback) => {
   return callback('Invalid user payload', user);
 };
 
-exports.update = async (_id, update, callback) => {
+exports.update = async (_id, update, sessionUser, callback) => {
   if (!ObjectId.isValid(_id)) {
     throw new InvalidUserIdError(_id);
   }
@@ -233,6 +233,8 @@ exports.update = async (_id, update, callback) => {
     delete userSetUpdate.password;
     delete userSetUpdate.passwordConfirm;
     delete userSetUpdate.currentPassword;
+
+    userSetUpdate.auditRecord = generatePortalUserAuditDatabaseRecord(sessionUser._id);
 
     const userUpdate = { $set: userSetUpdate };
     if (userUnsetUpdate) {
