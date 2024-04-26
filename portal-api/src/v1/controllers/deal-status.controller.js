@@ -140,7 +140,7 @@ exports.update = async (req, res) => {
 
     // UKEF Approval
     if (newStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS || newStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS) {
-      updatedDeal = await createApprovalDate(dealId);
+      updatedDeal = await createApprovalDate(dealId, user);
     }
 
     // Send status update emails

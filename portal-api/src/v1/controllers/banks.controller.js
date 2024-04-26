@@ -1,5 +1,6 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
+const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const { hasValidObjectId } = require('../validation/validateObjectId');
 const { PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
@@ -38,7 +39,7 @@ exports.create = async (req, res) => {
 
   if (payloadVerification(bank, PAYLOAD.BANK)) {
     const collection = await db.getCollection('banks');
-    const result = await collection.insertOne(bank);
+    const result = await collection.insertOne({ ...bank, auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id) });
 
     return res.status(200).json(result);
   }
