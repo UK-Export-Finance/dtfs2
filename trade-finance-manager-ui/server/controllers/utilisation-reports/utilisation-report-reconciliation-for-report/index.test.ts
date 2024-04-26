@@ -94,6 +94,13 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const feeRecordViewModel = {
         ...utilisationReportReconciliationDetails.feeRecords[0],
         displayStatus: 'TO DO',
+        dataSortValue: {
+          reportedFees: 'GBP 0000100.00',
+          reportedPayments: 'GBP 0000100.00',
+          totalReportedPayments: 'GBP 0000100.00',
+          paymentsReceived: 'GBP 0000100.00',
+          totalPaymentsReceived: 'GBP 0000100.00',
+        },
       };
 
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
