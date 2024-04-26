@@ -22,7 +22,7 @@ const submitDealToACBS = async (deal, firstSubmissionCheck = true, validateOnly 
     const { _id, dealSnapshot, tfm } = deal;
     const acceptable = [CONSTANTS.DEALS.SUBMISSION_TYPE.AIN, CONSTANTS.DEALS.SUBMISSION_TYPE.MIN];
 
-    console.info('⚡ Validating ACBS checks for deal %s', _id);
+    console.info('⚡ Validating ACBS deal %s prerequisites.', _id);
 
     const validSubmissionType = acceptable.includes(dealSnapshot?.submissionType);
     const validFirstSubmission = firstSubmissionCheck ? !tfm?.acbs : true;
@@ -30,6 +30,7 @@ const submitDealToACBS = async (deal, firstSubmissionCheck = true, validateOnly 
     const eligible = validSubmissionType && validFirstSubmission && validIds;
 
     if (eligible && !validateOnly) {
+      console.info('✅ Submitting deal %s to ACBS.', _id);
       await submitACBSIfAllPartiesHaveUrn(_id);
     }
 

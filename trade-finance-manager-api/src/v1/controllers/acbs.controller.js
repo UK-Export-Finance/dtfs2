@@ -170,15 +170,16 @@ const issueAcbsFacilities = async (deal) => {
      * the deal has been submitted to ACBS and acknowledged by the TFM.
      * If the above is false, please do not proceed.
      */
-    console.error('Unable to issue facility in ACBS for deal %s', deal._id);
+    console.error('Unable to issue deal %s facility to ACBS.', deal._id);
     return false;
   }
-  
+
   /**
    * ACBS verification: Facility stage verification ensures facility which are
    * under commitment stage (06) are only eligible for issuance
    */
-  console.error('Issuing facilities in ACBS for deal %s', deal._id);
+  console.info('✅ Submitting deal %s facility to ACBS.', deal._id);
+
   const acbsIssuedFacilitiesPromises = deal.facilities
     .filter((facility) => facility?.hasBeenIssued && !isIssuedInACBS(facility?.tfm?.acbs.facilityStage))
     .map((facility) =>
