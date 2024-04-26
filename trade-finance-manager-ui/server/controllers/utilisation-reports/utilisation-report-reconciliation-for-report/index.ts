@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import { getFormattedReportPeriodWithLongMonth, FeeRecordStatus, CurrencyAndAmountString, getCurrencyAndAmountString, Currency } from '@ukef/dtfs2-common';
+import orderBy from 'lodash/orderBy';
+import { getFormattedReportPeriodWithLongMonth, FeeRecordStatus, CurrencyAndAmountString, getCurrencyAndAmountString } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
@@ -7,57 +8,63 @@ import { UtilisationReportReconciliationDetailsResponseBody } from '../../../api
 
 type FeeRecordItem = UtilisationReportReconciliationDetailsResponseBody['feeRecords'][number];
 
+type AmountWithDataSortValue = {
+  amount: CurrencyAndAmountString | undefined;
+  dataSortValue: number;
+};
+
 type FeeRecordViewModel = {
   facilityId: string;
   exporter: string;
-  reportedFees: CurrencyAndAmountString;
-  reportedPayments: CurrencyAndAmountString;
-  totalReportedPayments: CurrencyAndAmountString;
-  paymentsReceived: CurrencyAndAmountString | undefined;
-  totalPaymentsReceived: CurrencyAndAmountString | undefined;
   status: FeeRecordStatus;
   displayStatus: string;
-  dataSortValue: {
-    reportedFees: string;
-    reportedPayments: string;
-    totalReportedPayments: string;
-    paymentsReceived?: string;
-    totalPaymentsReceived?: string;
-  };
+  reportedFees: AmountWithDataSortValue;
+  reportedPayments: AmountWithDataSortValue;
+  totalReportedPayments: AmountWithDataSortValue;
+  paymentsReceived: AmountWithDataSortValue;
+  totalPaymentsReceived: AmountWithDataSortValue;
 };
 
 const feeRecordStatusToDisplayStatus: Record<FeeRecordStatus, string> = {
   TO_DO: 'TO DO',
 };
 
-const padZerosToAmount = (amount: CurrencyAndAmountString): CurrencyAndAmountString => {
-  const [currency, value] = amount.split(' ') as [Currency, string];
-  return `${currency} ${value.padStart(10, '0')}`;
+const sortFeeRecordItemAmountProperty = <
+  Property extends 'reportedFees' | 'reportedPayments' | 'totalReportedPayments' | 'paymentsReceived' | 'totalPaymentsReceived',
+>(
+  feeRecords: FeeRecordItem[],
+  property: Property,
+): AmountWithDataSortValue[] => {
+  const unsortedList = feeRecords.map((feeRecord, index) => ({ ...feeRecord[property], index }));
+  const sortedList = orderBy(unsortedList, ['currency', 'amount'], ['asc']);
+
+  return feeRecords.map((feeRecord, feeRecordIndex) => {
+    const feeRecordPropertyValue = feeRecord[property];
+    return {
+      amount: feeRecordPropertyValue ? getCurrencyAndAmountString(feeRecordPropertyValue) : undefined,
+      dataSortValue: sortedList.findIndex(({ index }) => index === feeRecordIndex),
+    };
+  });
 };
 
-const getDataSortValuesFromFeeRecordItem = (feeRecord: FeeRecordItem): FeeRecordViewModel['dataSortValue'] => ({
-  reportedFees: padZerosToAmount(getCurrencyAndAmountString(feeRecord.reportedFees)),
-  reportedPayments: padZerosToAmount(getCurrencyAndAmountString(feeRecord.reportedPayments)),
-  totalReportedPayments: padZerosToAmount(getCurrencyAndAmountString(feeRecord.totalReportedPayments)),
-  paymentsReceived: feeRecord.paymentsReceived ? padZerosToAmount(getCurrencyAndAmountString(feeRecord.paymentsReceived)) : undefined,
-  totalPaymentsReceived: feeRecord.totalPaymentsReceived ? padZerosToAmount(getCurrencyAndAmountString(feeRecord.totalPaymentsReceived)) : undefined,
-});
+const mapFeeRecordItemsToFeeRecordViewModel = (feeRecords: FeeRecordItem[]): FeeRecordViewModel[] => {
+  const sortedReportedFees = sortFeeRecordItemAmountProperty(feeRecords, 'reportedFees');
+  const sortedReportedPayments = sortFeeRecordItemAmountProperty(feeRecords, 'reportedPayments');
+  const sortedTotalReportedPayments = sortFeeRecordItemAmountProperty(feeRecords, 'totalReportedPayments');
+  const sortedPaymentsReceived = sortFeeRecordItemAmountProperty(feeRecords, 'paymentsReceived');
+  const sortedTotalPaymentsReceived = sortFeeRecordItemAmountProperty(feeRecords, 'totalPaymentsReceived');
 
-const mapFeeRecordItemToFeeRecordViewModel = (feeRecord: FeeRecordItem): FeeRecordViewModel => {
-  const dataSortValue = getDataSortValuesFromFeeRecordItem(feeRecord);
-
-  return {
+  return feeRecords.map((feeRecord, feeRecordIndex) => ({
     facilityId: feeRecord.facilityId,
     exporter: feeRecord.exporter,
-    reportedFees: getCurrencyAndAmountString(feeRecord.reportedFees),
-    reportedPayments: getCurrencyAndAmountString(feeRecord.reportedPayments),
-    totalReportedPayments: getCurrencyAndAmountString(feeRecord.totalReportedPayments),
-    paymentsReceived: feeRecord.paymentsReceived ? getCurrencyAndAmountString(feeRecord.paymentsReceived) : undefined,
-    totalPaymentsReceived: feeRecord.totalPaymentsReceived ? getCurrencyAndAmountString(feeRecord.totalPaymentsReceived) : undefined,
     status: feeRecord.status,
     displayStatus: feeRecordStatusToDisplayStatus[feeRecord.status],
-    dataSortValue,
-  };
+    reportedFees: sortedReportedFees[feeRecordIndex],
+    reportedPayments: sortedReportedPayments[feeRecordIndex],
+    totalReportedPayments: sortedTotalReportedPayments[feeRecordIndex],
+    paymentsReceived: sortedPaymentsReceived[feeRecordIndex],
+    totalPaymentsReceived: sortedTotalPaymentsReceived[feeRecordIndex],
+  }));
 };
 
 export const getUtilisationReportReconciliationByReportId = async (req: Request, res: Response) => {
@@ -69,7 +76,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
 
     const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(utilisationReportReconciliationDetails.reportPeriod);
 
-    const feeRecordViewModel = utilisationReportReconciliation.feeRecords.map(mapFeeRecordItemToFeeRecordViewModel);
+    const feeRecordViewModel = mapFeeRecordItemsToFeeRecordViewModel(utilisationReportReconciliation.feeRecords);
 
     return res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', {
       user,

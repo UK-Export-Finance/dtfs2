@@ -42,20 +42,20 @@
         <td class="govuk-table__cell" data-sort-value="{{ feeRecord.exported }}">
           {{ feeRecord.exporter }}
         </td>
-        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.dataSortValue.reportedFees }}">
-          {{ feeRecord.reportedFees }}
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.reportedFees.dataSortValue }}">
+          {{ feeRecord.reportedFees.value }}
         </td>
-        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.dataSortValue.reportedPayments }}">
-          {{ feeRecord.reportedPayments }}
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.reportedPayments.dataSortValue }}">
+          {{ feeRecord.reportedPayments.value }}
         </td>
-        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.dataSortValue.totalReportedPayments }}">
-          {{ feeRecord.totalReportedPayments }}
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.totalReportedPayment.dataSortValues }}">
+          {{ feeRecord.totalReportedPayments.value }}
         </td>
-        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.dataSortValue.paymentsReceived }}">
-          {{ feeRecord.paymentsReceived }}
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.paymentsReceive.dataSortValued }}">
+          {{ feeRecord.paymentsReceived.value }}
         </td>
-        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.dataSortValue.totalPaymentsReceived }}">
-          {{ feeRecord.totalPaymentsReceived }}
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.totalPaymentsReceive.dataSortValued }}">
+          {{ feeRecord.totalPaymentsReceived.value }}
         </td>
         <td class="govuk-table__cell" data-sort-value="{{ feeRecord.displayStatus }}">
           {{ feeRecordStatus.render({
