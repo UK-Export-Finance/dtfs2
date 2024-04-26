@@ -60,6 +60,7 @@ on:
       - "azure-functions/**"
       - "e2e-tests/**"
       - "utils/mock-data-loader/**"
+      - "utils/sql-db-seeder/**"
       - "libs/**"
 
   push:

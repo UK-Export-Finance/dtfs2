@@ -8,7 +8,9 @@ import {
   TfmUser,
   ReportPeriod,
   DbRequestSource,
+  FeeRecordEntity,
 } from '@ukef/dtfs2-common';
+import { createFeeRecord } from '../fee-record/fee-record.helper';
 
 /**
  * Generates a report in a not received state, effectively mocking the scheduled
@@ -98,4 +100,29 @@ export const createUploadedReport = (
   utilisationReport.azureFileInfo = azureFileInfo;
 
   return utilisationReport;
+};
+
+export const createFeeRecordsForReport = (): FeeRecordEntity[] => {
+  const feeRecordWithMatchingCurrencies = createFeeRecord({
+    facilityId: '12345678',
+    exporter: 'Test exporter',
+    baseCurrency: 'GBP',
+    facilityUtilisation: 1000000,
+    totalFeesAccruedForThePeriod: 100,
+    feesPaidToUkefForThePeriod: 50,
+  });
+
+  const feeRecordWithDifferingCurrencies = createFeeRecord({
+    facilityId: '22345678',
+    exporter: 'Test exporter 2',
+    baseCurrency: 'GBP',
+    facilityUtilisation: 200000,
+    totalFeesAccruedForThePeriod: 150,
+    feesPaidToUkefForThePeriod: 100,
+    feesPaidToUkefForThePeriodCurrency: 'EUR',
+    paymentCurrency: 'GBP',
+    paymentExchangeRate: 1.1,
+  });
+
+  return [feeRecordWithMatchingCurrencies, feeRecordWithDifferingCurrencies];
 };
