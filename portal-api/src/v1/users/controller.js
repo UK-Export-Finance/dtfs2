@@ -1,8 +1,5 @@
 const { ObjectId } = require('mongodb');
-const {
-  generatePortalUserAuditDatabaseRecord,
-  generateNoUserLoggedInAuditDatabaseRecord,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { getNowAsEpochMillisecondString } = require('../helpers/date');
 const db = require('../../drivers/db-client');
 const sendEmail = require('../email');
@@ -40,7 +37,7 @@ const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
 };
 exports.sendPasswordUpdateEmail = sendPasswordUpdateEmail;
 
-const createPasswordToken = async (email, userService) => {
+const createPasswordToken = async (email, userService, auditDetails) => {
   if (typeof email !== 'string') {
     throw new Error('Invalid Email');
   }
@@ -59,7 +56,7 @@ const createPasswordToken = async (email, userService) => {
   const userUpdate = {
     resetPwdToken: hash,
     resetPwdTimestamp: `${Date.now()}`,
-    auditRecord: generateNoUserLoggedInAuditDatabaseRecord(),
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   if (!ObjectId.isValid(user._id)) {
@@ -142,12 +139,12 @@ exports.findByEmail = async (email) => {
   return transformDatabaseUser(user);
 };
 
-exports.create = async (user, userService, sessionUser, callback) => {
+exports.create = async (user, userService, auditDetails, callback) => {
   const insert = {
     'user-status': USER.STATUS.ACTIVE,
     timezone: USER.TIMEZONE.DEFAULT,
     ...user,
-    auditRecord: sessionUser?._id ? generatePortalUserAuditDatabaseRecord(sessionUser._id) : generateNoUserLoggedInAuditDatabaseRecord(),
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   delete insert?.autoCreatePassword;
@@ -168,7 +165,7 @@ exports.create = async (user, userService, sessionUser, callback) => {
 
     const sanitizedUser = sanitizeUser(createdUser);
 
-    const resetPasswordToken = await createPasswordToken(sanitizedUser.email, userService);
+    const resetPasswordToken = await createPasswordToken(sanitizedUser.email, userService, auditDetails);
     await sendNewAccountEmail(sanitizedUser, resetPasswordToken);
 
     return callback(null, sanitizedUser);
@@ -177,7 +174,7 @@ exports.create = async (user, userService, sessionUser, callback) => {
   return callback('Invalid user payload', user);
 };
 
-exports.update = async (_id, update, sessionUser, callback) => {
+exports.update = async (_id, update, auditDetails, callback) => {
   if (!ObjectId.isValid(_id)) {
     throw new InvalidUserIdError(_id);
   }
@@ -234,18 +231,20 @@ exports.update = async (_id, update, sessionUser, callback) => {
     delete userSetUpdate.passwordConfirm;
     delete userSetUpdate.currentPassword;
 
-    userSetUpdate.auditRecord = generatePortalUserAuditDatabaseRecord(sessionUser._id);
+    userSetUpdate.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
     const userUpdate = { $set: userSetUpdate };
     if (userUnsetUpdate) {
       userUpdate.$unset = userUnsetUpdate;
     }
-    const updatedUser = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, { returnDocument: 'after' });
+    const updatedUser = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, {
+      returnDocument: 'after',
+    });
     callback(null, updatedUser);
   });
 };
 
-exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
+exports.updateSessionIdentifier = async (user, sessionIdentifier, auditDetails, callback) => {
   if (!ObjectId.isValid(user._id)) {
     throw new InvalidUserIdError(user._id);
   }
@@ -257,7 +256,7 @@ exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
   const collection = await db.getCollection('users');
   const update = {
     sessionIdentifier,
-    auditRecord: generatePortalUserAuditDatabaseRecord(user._id),
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
@@ -265,27 +264,7 @@ exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
   callback();
 };
 
-exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, callback = () => {}) => {
-  if (!ObjectId.isValid(user._id)) {
-    throw new InvalidUserIdError(user._id);
-  }
-
-  if (!sessionIdentifier) {
-    throw new InvalidSessionIdentifierError(sessionIdentifier);
-  }
-
-  const collection = await db.getCollection('users');
-  const update = {
-    lastLogin: getNowAsEpochMillisecondString(),
-    loginFailureCount: 0,
-    sessionIdentifier,
-  };
-  await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
-
-  callback();
-};
-
-exports.incrementFailedLoginCount = async (user) => {
+exports.incrementFailedLoginCount = async (user, auditDetails) => {
   if (!ObjectId.isValid(user._id)) {
     throw new InvalidUserIdError(user._id);
   }
@@ -298,12 +277,12 @@ exports.incrementFailedLoginCount = async (user) => {
     ? {
         'user-status': USER.STATUS.BLOCKED,
         blockedStatusReason: USER.STATUS_BLOCKED_REASON.INVALID_PASSWORD,
-        auditRecord: generateNoUserLoggedInAuditDatabaseRecord(),
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       }
     : {
         loginFailureCount: failureCount,
         lastLoginFailure: getNowAsEpochMillisecondString(),
-        auditRecord: generateNoUserLoggedInAuditDatabaseRecord(),
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       };
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
@@ -313,7 +292,7 @@ exports.incrementFailedLoginCount = async (user) => {
   }
 };
 
-exports.disable = async (_id, sessionUser, callback) => {
+exports.disable = async (_id, auditDetails, callback) => {
   if (!ObjectId.isValid(_id)) {
     throw new InvalidUserIdError(_id);
   }
@@ -321,7 +300,7 @@ exports.disable = async (_id, sessionUser, callback) => {
   const collection = await db.getCollection('users');
   const userUpdate = {
     disabled: true,
-    auditRecord: generatePortalUserAuditDatabaseRecord(sessionUser._id)
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   const status = await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate }, {});

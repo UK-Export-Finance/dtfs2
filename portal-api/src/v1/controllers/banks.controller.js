@@ -1,6 +1,7 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
-const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { generatePortalUserAuditDatabaseRecord, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const { hasValidObjectId } = require('../validation/validateObjectId');
 const { PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
@@ -37,14 +38,19 @@ exports.findOneBank = findOneBank;
 exports.create = async (req, res) => {
   const bank = req?.body;
 
-  if (payloadVerification(bank, PAYLOAD.BANK)) {
-    const collection = await db.getCollection('banks');
-    const result = await collection.insertOne({ ...bank, auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id) });
-
-    return res.status(200).json(result);
+  if (!payloadVerification(bank, PAYLOAD.BANK)) {
+    return res.status(400).send({ status: 400, message: 'Invalid bank payload' });
   }
 
-  return res.status(400).send({ status: 400, message: 'Invalid bank payload' });
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
+  const collection = await db.getCollection('banks');
+  const result = await collection.insertOne({
+    ...bank,
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+  });
+
+  return res.status(200).json(result);
 };
 
 exports.findAll = (req, res) => (

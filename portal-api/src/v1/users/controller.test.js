@@ -1,9 +1,9 @@
 jest.mock('../../drivers/db-client');
 const { ObjectId } = require('mongodb');
 const { when } = require('jest-when');
-const { generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
+const { generateMockNoUserLoggedInAuditDatabaseRecord, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
-const { updateSessionIdentifier, updateLastLoginAndResetSignInData, createPasswordToken } = require('./controller');
+const { updateSessionIdentifier, createPasswordToken } = require('./controller');
 const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const { InvalidUserIdError } = require('../errors');
 const InvalidSessionIdentifierError = require('../errors/invalid-session-identifier.error');
@@ -15,17 +15,12 @@ describe('user controller', () => {
   describe.each([
     {
       testName: 'updateSessionIdentifier',
-      callTestMethod: (user, sessionIdentifier, callback) => updateSessionIdentifier(user, sessionIdentifier, callback),
+      callTestMethod: (user, sessionIdentifier, callback) =>
+        updateSessionIdentifier(user, sessionIdentifier, generateNoUserLoggedInAuditDetails(), callback),
       expectedUpdate: {
         sessionIdentifier: SESSION_IDENTIFIER,
-        auditRecord: generateMockPortalUserAuditDatabaseRecord(TEST_USER._id),
-
+        auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord(),
       },
-    },
-    {
-      testName: 'updateLastLoginAndResetSignInData',
-      callTestMethod: (user, sessionIdentifier, callback) => updateLastLoginAndResetSignInData(user, sessionIdentifier, callback),
-      expectedUpdate: { lastLogin: expect.any(String), loginFailureCount: 0, sessionIdentifier: SESSION_IDENTIFIER },
     },
   ])('$testName', ({ callTestMethod, expectedUpdate }) => {
     let mockUpdateOne;
@@ -68,7 +63,7 @@ describe('user controller', () => {
         isUserBlockedOrDisabled: jest.fn().mockImplementationOnce(() => true),
       };
 
-      const token = await createPasswordToken(MOCK_EMAIL, userService);
+      const token = await createPasswordToken(MOCK_EMAIL, userService, generateNoUserLoggedInAuditDetails());
 
       expect(token).toEqual(false);
     });
@@ -80,7 +75,7 @@ describe('user controller', () => {
         isUserBlockedOrDisabled: jest.fn().mockImplementationOnce(() => false),
       };
 
-      const token = await createPasswordToken(MOCK_EMAIL, userService);
+      const token = await createPasswordToken(MOCK_EMAIL, userService, generateNoUserLoggedInAuditDetails());
 
       expect(token).toEqual(false);
     });

@@ -1,8 +1,10 @@
 const mockSignInLinkControllerLoginWithSignInLink = jest.fn();
 jest.mock('./sign-in-link.controller', () => ({
-  SignInLinkController: jest.fn().mockImplementation(() => ({ loginWithSignInLink: mockSignInLinkControllerLoginWithSignInLink })),
+  SignInLinkController: jest
+    .fn()
+    .mockImplementation(() => ({ loginWithSignInLink: mockSignInLinkControllerLoginWithSignInLink })),
 }));
-const mockUserControllerUpdateUser = jest.fn((_id, user, sessionUser, callback) => {
+const mockUserControllerUpdateUser = jest.fn((_id, user, auditDetails, callback) => {
   const mockUser = { ...user, _id };
   callback(null, mockUser);
 });
@@ -19,7 +21,7 @@ jest.mock('./validation', () => ({
 
 const { ObjectId } = require('mongodb');
 const { when } = require('jest-when');
-const { generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
+const { generateMockPortalUserAuditDatabaseRecord, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { getUserByPasswordToken } = require('./reset-password.controller');
 const { resetPasswordWithToken, loginWithSignInLink, updateById } = require('./routes');
 const utils = require('../../crypto/utils');
@@ -87,7 +89,7 @@ describe('users routes', () => {
           passwordUpdatedAt: expect.any(String),
           auditRecord: generateMockPortalUserAuditDatabaseRecord(user._id),
         },
-        user,
+        generatePortalAuditDetails(user._id),
         expect.any(Function),
       );
     });
@@ -107,7 +109,7 @@ describe('users routes', () => {
           passwordUpdatedAt: expect.any(String),
           auditRecord: generateMockPortalUserAuditDatabaseRecord(user._id),
         },
-        user,
+        generatePortalAuditDetails(user._id),
         expect.any(Function),
       );
     });
@@ -156,7 +158,12 @@ describe('users routes', () => {
       await updateById(req, res);
 
       expect(mockUserControllerFindOne).toHaveBeenCalledWith(req.params._id, expect.any(Function));
-      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(req.params._id, req.body, req.user, expect.any(Function));
+      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(
+        req.params._id,
+        req.body,
+        generatePortalAuditDetails(req.user._id),
+        expect.any(Function),
+      );
       expect(res.status).toHaveBeenCalledWith(200);
     });
 
@@ -198,7 +205,12 @@ describe('users routes', () => {
       await updateById(req, res);
 
       expect(mockUserControllerFindOne).toHaveBeenCalledWith(req.params._id, expect.any(Function));
-      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(req.params._id, req.body, req.user, expect.any(Function));
+      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(
+        req.params._id,
+        req.body,
+        generatePortalAuditDetails(req.user._id),
+        expect.any(Function),
+      );
       expect(res.status).toHaveBeenCalledWith(200);
     });
 

@@ -1,5 +1,6 @@
 const assert = require('assert');
-const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const db = require('../../drivers/db-client');
 const { PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
@@ -41,9 +42,11 @@ exports.create = async (req, res) => {
     return res.status(403).send({ status: 403, message: 'Unauthorised insertion' });
   }
 
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
   // MC insertion on non-production environments
     const collection = await db.getCollection('mandatoryCriteria');
-    const criteria = { ...req?.body, auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id)};
+    const criteria = { ...req?.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
     const result = await collection.insertOne(criteria);
 
     return res.status(200).send(result);
@@ -86,11 +89,13 @@ exports.update = async (req, res) => {
     return res.status(403).send();
   }
 
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
   // MC insertion on non-production environments
   const collection = await db.getCollection('mandatoryCriteria');
   const status = await collection.updateOne(
     { version: { $eq: Number(req.params.version) } },
-    { $set: { criteria: req.body.criteria, auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id) } },
+    { $set: { criteria: req.body.criteria, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) } },
     {},
   );
   return res.status(200).send(status);
