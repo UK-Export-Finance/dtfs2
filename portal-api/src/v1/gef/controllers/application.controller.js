@@ -253,7 +253,7 @@ exports.changeStatus = async (req, res) => {
     applicationUpdate = {
       ...applicationUpdate,
       ...submissionData,
-      auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id)
+      auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id),
     };
   }
 

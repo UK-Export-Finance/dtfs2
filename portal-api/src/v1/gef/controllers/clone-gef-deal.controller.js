@@ -64,7 +64,7 @@ const cloneFacilities = async (currentDealId, newDealId, sessionUser) => {
       allFacilities[index].unissuedToIssuedByMaker = {};
       allFacilities[index].hasBeenIssuedAndAcknowledged = null;
       allFacilities[index].submittedAsIssuedDate = null;
-      allFacilities[index].auditRecord = generatePortalUserAuditDatabaseRecord(sessionUser);
+      allFacilities[index].auditRecord = generatePortalUserAuditDatabaseRecord(sessionUser._id);
 
       const currentTime = new Date();
       currentTime.setHours(0, 0, 0, 0);

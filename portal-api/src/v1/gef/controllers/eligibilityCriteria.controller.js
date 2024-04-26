@@ -63,13 +63,13 @@ exports.getLatest = async (req, res) => {
 exports.create = async (req, res) => {
   const collection = await db.getCollection('eligibilityCriteria');
 
-  if (payloadVerification(req.body, PAYLOAD.CRITERIA.ELIGIBILITY)) {
-    const criteria = { ...req?.body, auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id) };
-    const result = await collection.insertOne(new EligibilityCriteria(criteria));
-    return res.status(201).send({ _id: result.insertedId });
+  if (!payloadVerification(req.body, PAYLOAD.CRITERIA.ELIGIBILITY)) {
+    return res.status(400).send({ status: 400, message: 'Invalid GEF eligibility criteria payload' });
   }
 
-  return res.status(400).send({ status: 400, message: 'Invalid GEF eligibility criteria payload' });
+  const criteria = { ...req?.body, auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id) };
+  const result = await collection.insertOne(new EligibilityCriteria(criteria));
+  return res.status(201).send({ _id: result.insertedId });
 };
 
 exports.delete = async (req, res) => {
