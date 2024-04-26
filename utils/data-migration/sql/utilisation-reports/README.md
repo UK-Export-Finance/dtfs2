@@ -29,7 +29,7 @@ SQL_DB_NAME=
 SQL_DB_LOGGING_ENABLED=true
 ```
 
-4. **Run the migrator** - from the [utils/data-migration](../..) directory run
+4. **Run the migrator** - from the [utils](../../../) directory run
 
 ```shell
 npm run mongo-sql-migrator:utilisation-reports
