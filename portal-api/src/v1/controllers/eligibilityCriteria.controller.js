@@ -86,7 +86,11 @@ exports.update = async (req, res) => {
   }
 
   const collection = await db.getCollection('eligibilityCriteria');
-  const status = await collection.updateOne({ version: { $eq: Number(req.params.version) } }, { $set: { criteria: req.body.criteria } }, {});
+  const status = await collection.updateOne(
+    { version: { $eq: Number(req.params.version) } },
+    { $set: { criteria: req.body.criteria, auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id) } },
+    {},
+  );
   return res.status(200).send(status);
 };
 
