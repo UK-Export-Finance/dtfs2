@@ -1,24 +1,33 @@
 import { Request, Response } from 'express';
-import { Bank } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
-import { validateSearchInput, validationError } from './search-input-validator';
+import { validateSearchInput } from './search-input-validator';
+import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 
 export const getReportsByYear = async (req: Request, res: Response) => {
   try {
     const { bank: bankQuery, year: yearQuery } = req.query;
     const { user, userToken } = asUserSession(req.session);
-    const banks: Bank[] = await api.getBanksVisibleInTfm(userToken);
+    const banks = await api.getBanksVisibleInTfm(userToken);
 
     const bankNames = banks.map(bank => bank.name);
+    const bankItems = banks.map(bank => {
+      return {
+        value: bank.name,
+        text: bank.name,
+        attributes: { 'data-cy': `${bank.name}-radio`}
+      }
+    });
+    const {errorSummary, bankError, yearError } = validateSearchInput(bankQuery, yearQuery, bankNames);
 
-    const validationErrors: validationError[] = validateSearchInput(bankQuery, yearQuery, bankNames);
-    
-    if (validationErrors.length || (!bankQuery || !yearQuery)) {
+    if (bankError || yearError || (!bankQuery && !yearQuery)) {
       return res.render('utilisation-reports/find-utilisation-reports-by-year.njk', {
         user,
-        banks,
-        validationErrors,
+        activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
+        bankItems,
+        errorSummary,
+        bankError,
+        yearError,
       });
     }
 

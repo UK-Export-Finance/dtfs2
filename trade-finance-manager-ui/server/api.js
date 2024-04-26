@@ -880,7 +880,7 @@ const getUtilisationReportReconciliationDetailsById = async (reportId, userToken
   /**
    * Fetches all banks visible in TFM.
    * @param {string} userToken - token to validate session
-   * @returns {Promise<import('@ukef/dtfs2-common').Bank[]>}
+   * @returns {Promise<import('./types/banks').Bank[]>}
    */
   const getBanksVisibleInTfm = async (userToken) => {
     try {

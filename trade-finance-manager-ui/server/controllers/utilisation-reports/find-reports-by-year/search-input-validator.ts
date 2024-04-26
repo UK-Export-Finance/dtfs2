@@ -1,31 +1,38 @@
 import { isNonEmptyString } from "@ukef/dtfs2-common";
-import { getYear } from "date-fns";
+import { REGEX } from "../../../constants";
 
-export type validationError = {
-  searchField: string;
-  errorMessage: string;
+type Error = {
+  text: string;
+  href: string;
 }
 
-export const validateSearchInput = (bank: unknown, year: unknown, allBanks: string[]): validationError[] => {
-  const validationErrors: validationError[] = [];
+type ValidationErrors = {
+  errorSummary: Error[];
+  bankError: string | undefined;
+  yearError: string | undefined;
+}
+
+export const validateSearchInput = (bank: unknown, year: unknown, allBanks: string[]): ValidationErrors => {
+  const errorSummary: Error[] = [];
+  let bankError = undefined;
+  let yearError = undefined;
+
   if (!bank && !year) {
-    return validationErrors;
-  }
+    return {errorSummary, bankError, yearError};
+  };
 
-  if (!bank || !isNonEmptyString(bank)) {
-    validationErrors.push({ searchField: "bank", errorMessage: "A bank must be selected" });
-  } else if (!allBanks.includes(bank)) {
-      validationErrors.push({ searchField: "bank", errorMessage: "The bank should be opted in" });
-    }
+  if (!bank || !isNonEmptyString(bank) || !allBanks.includes(bank)) {
+    const errorMessage = "Select a bank";
+    errorSummary.push({ text: errorMessage, href: "#bank" });
+    bankError = errorMessage;
+  };
 
-  if (!year) {
-    validationErrors.push({ searchField: "year", errorMessage: "A year must be entered" });
-  } else {
-    const currentYear: number = getYear(new Date());
-    if (Number(year) < 2023 || Number(year) > currentYear) {
-      validationErrors.push({ searchField: "year", errorMessage: `The year should be between 2023 and ${currentYear}` });
-    }
-  }
+  const validYearRegex = new RegExp(REGEX.YEAR);
+  if (!year || !isNonEmptyString(year) || !validYearRegex.test(year)) {
+    const errorMessage = "Enter a valid year";
+    errorSummary.push({ text: errorMessage, href: "#year" });
+    yearError = errorMessage;
+  };
 
-  return validationErrors;
+  return {errorSummary, bankError, yearError};
 };

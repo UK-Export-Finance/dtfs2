@@ -22,8 +22,7 @@ describe(page, () => {
 
   banks.forEach(bank => {
     it(`should render the ${bank.name} radio button`, async () => {
-      (await getWrapper()).expectElement(`[data-cy="${bank.name}-radio-input"]`).toExist();
-      (await getWrapper()).expectText(`[data-cy="${bank.name}-radio-label"]`).toRead(bank.name);
+      (await getWrapper()).expectElement(`[data-cy="${bank.name}-radio"]`).toExist();
     });
   });
 
