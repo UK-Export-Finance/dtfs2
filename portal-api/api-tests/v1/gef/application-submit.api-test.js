@@ -1,4 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const db = require('../../../src/drivers/db-client');
 const { FACILITY_TYPE } = require('../../../src/v1/gef/enums');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
@@ -231,7 +232,7 @@ describe('updateChangedToIssued()', () => {
 
     const { body } = await as(aChecker).get(baseUrl, mockQuery);
     // changes to false to test
-    await updateChangedToIssued(body.items[0].dealId, aMaker);
+    await updateChangedToIssued(body.items[0].dealId, generatePortalAuditDetails(aMaker._id));
   });
 
   it('changes canResubmitIssuedFacilities to false', async () => {
@@ -265,7 +266,7 @@ describe('checkCoverDateConfirmed()', () => {
       coverDateConfirmed: null,
     }).to(baseUrl);
 
-    expect(await checkCoverDateConfirmed(mockApplication.body, aMaker)).toEqual(true);
+    expect(await checkCoverDateConfirmed(mockApplication.body, generatePortalAuditDetails(aMaker._id))).toEqual(true);
   });
 
   it('Should return false and set `coverDateConfirmed` to false with following conditions:\n\n1. AIN\n2. Have one unissued facility and cover date is not true \n3. Not yet submitted to UKEF', async () => {
@@ -285,7 +286,7 @@ describe('checkCoverDateConfirmed()', () => {
       coverDateConfirmed: null,
     }).to(baseUrl);
 
-    expect(await checkCoverDateConfirmed(mockApplication.body, aMaker)).toEqual(false);
+    expect(await checkCoverDateConfirmed(mockApplication.body, generatePortalAuditDetails(aMaker._id))).toEqual(false);
   });
 
   it('Should return true and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one issued facility \n3. Not yet submitted to UKEF', async () => {
@@ -305,7 +306,7 @@ describe('checkCoverDateConfirmed()', () => {
       coverDateConfirmed: null,
     }).to(baseUrl);
 
-    expect(await checkCoverDateConfirmed(mockApplication.body, aMaker)).toEqual(true);
+    expect(await checkCoverDateConfirmed(mockApplication.body, generatePortalAuditDetails(aMaker._id))).toEqual(true);
   });
 
   it('Should return false and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one unissued facility \n3. Not yet submitted to UKEF', async () => {
@@ -325,7 +326,7 @@ describe('checkCoverDateConfirmed()', () => {
       coverDateConfirmed: null,
     }).to(baseUrl);
 
-    expect(await checkCoverDateConfirmed(mockApplication.body, aMaker)).toEqual(false);
+    expect(await checkCoverDateConfirmed(mockApplication.body, generatePortalAuditDetails(aMaker._id))).toEqual(false);
   });
 
   it('Should return true and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one issued facility with cover date set to true \n3. Not yet submitted to UKEF', async () => {
@@ -345,7 +346,7 @@ describe('checkCoverDateConfirmed()', () => {
       coverDateConfirmed: true,
     }).to(baseUrl);
 
-    expect(await checkCoverDateConfirmed(mockApplication.body, aMaker)).toEqual(true);
+    expect(await checkCoverDateConfirmed(mockApplication.body, generatePortalAuditDetails(aMaker._id))).toEqual(true);
   });
 
   it('Should return true and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one issued and unissued facilities with cover date set to true \n3. Not yet submitted to UKEF', async () => {
@@ -372,7 +373,7 @@ describe('checkCoverDateConfirmed()', () => {
       coverDateConfirmed: true,
     }).to(baseUrl);
 
-    expect(await checkCoverDateConfirmed(mockApplication.body, aMaker)).toEqual(true);
+    expect(await checkCoverDateConfirmed(mockApplication.body, generatePortalAuditDetails(aMaker._id))).toEqual(true);
   });
 });
 
@@ -408,7 +409,7 @@ describe('addSubmissionDateToIssuedFacilities()', () => {
       aMaker,
     );
 
-    await addSubmissionDateToIssuedFacilities(mockApplication.body._id, aMaker);
+    await addSubmissionDateToIssuedFacilities(mockApplication.body._id, generatePortalAuditDetails(aMaker._id));
 
     // gets facilities from collection
     const updatedFacility = await getAllFacilitiesByDealId(mockApplication.body._id);
@@ -450,7 +451,7 @@ describe('addSubmissionDateToIssuedFacilities()', () => {
       aMaker,
     );
 
-    await addSubmissionDateToIssuedFacilities(mockApplication.body._id, aMaker);
+    await addSubmissionDateToIssuedFacilities(mockApplication.body._id, generatePortalAuditDetails(aMaker._id));
 
     // gets facilities from collection
     const updatedFacility = await getAllFacilitiesByDealId(mockApplication.body._id);

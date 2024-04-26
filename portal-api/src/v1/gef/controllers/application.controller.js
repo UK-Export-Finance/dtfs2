@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const { validateApplicationReferences, validatorStatusCheckEnums } = require('./validation/application');
@@ -248,7 +249,7 @@ exports.changeStatus = async (req, res) => {
   let applicationUpdate = { status, ...{ updatedAt: Date.now() } };
 
   if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
-    const submissionData = await addSubmissionData(dealId, existingApplication, req.user);
+    const submissionData = await addSubmissionData(dealId, existingApplication, generatePortalAuditDetails(req.user._id));
 
     applicationUpdate = {
       ...applicationUpdate,

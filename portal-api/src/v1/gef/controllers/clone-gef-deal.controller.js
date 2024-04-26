@@ -1,5 +1,8 @@
 const { ObjectId } = require('mongodb');
-const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const {
+  generateAuditDatabaseRecordFromAuditDetails,
+} = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const db = require('../../../drivers/db-client');
 
 const { validateApplicationReferences } = require('./validation/application');
@@ -19,7 +22,7 @@ const cloneExporter = (currentExporter) => {
 
 // TODO: DTFS2-5907 Re-enable cloneSupportingInformation for GEF deals
 
-const cloneFacilities = async (currentDealId, newDealId, sessionUser) => {
+const cloneFacilities = async (currentDealId, newDealId, auditDetails) => {
   if (!ObjectId.isValid(currentDealId)) {
     throw new Error('Invalid Current Deal Id');
   }
@@ -64,7 +67,7 @@ const cloneFacilities = async (currentDealId, newDealId, sessionUser) => {
       allFacilities[index].unissuedToIssuedByMaker = {};
       allFacilities[index].hasBeenIssuedAndAcknowledged = null;
       allFacilities[index].submittedAsIssuedDate = null;
-      allFacilities[index].auditRecord = generatePortalUserAuditDatabaseRecord(sessionUser._id);
+      allFacilities[index].auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
       const currentTime = new Date();
       currentTime.setHours(0, 0, 0, 0);
@@ -79,7 +82,7 @@ const cloneFacilities = async (currentDealId, newDealId, sessionUser) => {
   }
 };
 
-const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, maker, userId, bank) => {
+const cloneDeal = async ({ dealId, bankInternalRefName, additionalRefName, maker, userId, bank, auditDetails }) => {
   if (!ObjectId.isValid(dealId)) {
     return { status: 400, message: 'Invalid Deal Id' };
   }
@@ -136,7 +139,7 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, maker, 
     clonedDeal.portalActivities = [];
     clonedDeal.supportingInformation = {};
     clonedDeal.clonedDealId = dealId;
-    clonedDeal.auditRecord = generatePortalUserAuditDatabaseRecord(maker._id);
+    clonedDeal.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
     // insert the cloned deal in the database
     const createdApplication = await collection.insertOne(clonedDeal);
@@ -158,13 +161,23 @@ exports.clone = async (req, res) => {
   if (validateErrs) {
     return res.status(422).send(validateErrs);
   }
+
+  const auditDetails = generatePortalAuditDetails(req.user._id);
   // clone GEF deal
-  const response = await cloneDeal(existingDealId, bankInternalRefName, additionalRefName, req.user, userId, bank);
+  const response = await cloneDeal({
+    dealId: existingDealId,
+    bankInternalRefName,
+    additionalRefName,
+    maker: req.user,
+    userId,
+    bank,
+    auditDetails,
+  });
 
   if (response.status === 200) {
     const { newDealId } = response;
     // clone the corresponding facilities
-    await cloneFacilities(existingDealId, newDealId, req.user);
+    await cloneFacilities(existingDealId, newDealId, auditDetails);
 
     return res.status(200).send({ dealId: newDealId });
   }
