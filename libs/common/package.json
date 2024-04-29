@@ -20,7 +20,10 @@
   "exports": {
     ".": "./src/index.ts",
     "./sql-db-connection": "./src/sql-db-connection/index.ts",
-    "./mongo-db-client": "./src/mongo-db-client/index.ts"
+    "./mongo-db-client": "./src/mongo-db-client/index.ts",
+    "./src/helpers/change-stream/generate-audit-details": "./src/helpers/change-stream/generate-audit-details.ts",
+    "./src/helpers/change-stream/generate-audit-database-record": "./src/helpers/change-stream/generate-audit-database-record.ts",
+    "./src/helpers/change-stream/validate-audit-details": "./src/helpers/change-stream/validate-audit-details.ts"
   },
   "main": "src/index.ts",
   "scripts": {

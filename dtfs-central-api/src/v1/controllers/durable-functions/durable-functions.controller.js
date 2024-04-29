@@ -1,4 +1,4 @@
-const { deleteAllDurableFunctionLogs } = require('../../../services/repositories/durable-functions-repo');
+const { deleteAllDurableFunctionLogs } = require('../../../repositories/durable-functions-repo');
 
 exports.deleteAllDurableFunctions = async (req, res) => {
   try {

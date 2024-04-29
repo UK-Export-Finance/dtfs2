@@ -12,7 +12,7 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
     const response = await cronJobLogsCollection.findOneAndUpdate(
       { dealId: { $eq: eStoreData.dealId } },
       { $inc: { facilityFolderRetries: 1 }, $set: { auditRecord: generateSystemAuditDatabaseRecord() } },
-      { returnNewDocument: true, returnDocument: 'after' },
+      { returnDocument: 'after' },
     );
 
     if (response?.value?.facilityFolderRetries <= FACILITY_FOLDER_MAX_RETRIES) {
