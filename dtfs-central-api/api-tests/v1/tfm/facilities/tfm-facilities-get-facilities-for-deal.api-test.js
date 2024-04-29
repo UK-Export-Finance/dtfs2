@@ -1,4 +1,5 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -62,13 +63,7 @@ describe('/v1/tfm/deals/:id/facilities', () => {
           _id: facility._id,
           ...newFacility,
         },
-        auditRecord: {
-          lastUpdatedAt: expect.any(String),
-          lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
-          lastUpdatedByIsSystem: null,
-          lastUpdatedByTfmUserId: null,
-          noUserLoggedIn: null,
-        },
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
       });
 
       // assert all facilities returned from GET against the created facilities

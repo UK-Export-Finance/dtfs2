@@ -23,6 +23,7 @@ const PORTAL = {
     'user-status': String,
     salt: String,
     hash: String,
+    auditRecord: Object,
   },
 };
 

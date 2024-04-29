@@ -1,4 +1,5 @@
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -80,7 +81,7 @@ describe('/v1/tfm/facilities', () => {
       withValidateAuditDetailsTests({
         makeRequest: (auditDetails) =>
           api.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to(`/v1/tfm/facilities/${createdFacility._id}`),
-        validUserTypes: ['system', 'portal', 'tfm'],
+        validUserTypes: ['system', 'portal', 'tfm', 'none'],
       });
 
       it('returns the updated facility', async () => {
@@ -95,13 +96,7 @@ describe('/v1/tfm/facilities', () => {
 
         expect(status).toEqual(200);
         expect(body.tfm).toEqual(updatedFacility.tfmUpdate);
-        expect(body.auditRecord).toEqual({
-          lastUpdatedAt: expect.any(String),
-          lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
-          lastUpdatedByIsSystem: null,
-          lastUpdatedByPortalUserId: null,
-          noUserLoggedIn: null,
-        });
+        expect(body.auditRecord).toEqual(generateParsedMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id));
       });
     });
   });

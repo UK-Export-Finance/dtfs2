@@ -1,5 +1,8 @@
 const { ObjectId } = require('mongodb');
-const { generateSystemAuditDatabaseRecord, generateTfmUserAuditDatabaseRecord, generateNoUserLoggedInAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const {
+  generateTfmUserAuditDatabaseRecord,
+  generateNoUserLoggedInAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const db = require('../../../drivers/db-client');
 const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
@@ -31,7 +34,7 @@ exports.findByUsername = async (username, callback) => {
  * @param {object} user to create
  * @param {import('../../../types/tfm-session-user').TfmSessionUser | undefined} sessionUser logged in user
  * @param {(error: string | null, createdUser: object) => void} callback
- * @returns 
+ * @returns
  */
 exports.create = async (user, sessionUser, callback) => {
   const collection = await db.getCollection('tfm-users');
@@ -77,7 +80,7 @@ exports.update = async (_id, update, sessionUser, callback) => {
 
   const userUpdate = {
     ...update,
-    auditRecord: generateTfmUserAuditDatabaseRecord(sessionUser._id)
+    auditRecord: generateTfmUserAuditDatabaseRecord(sessionUser._id),
   };
   const collection = await db.getCollection('tfm-users');
 
@@ -137,14 +140,10 @@ exports.incrementFailedLoginCount = async (user) => {
     loginFailureCount: failureCount,
     lastLoginFailure: Date.now(),
     status: thresholdReached ? USER.STATUS.BLOCKED : user.status,
-    auditRecord: generateSystemAuditDatabaseRecord(),
+    auditRecord: generateNoUserLoggedInAuditDatabaseRecord(),
   };
 
-  await collection.updateOne(
-    { _id: { $eq: ObjectId(user._id) } },
-    { $set: update },
-    {},
-  );
+  await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 };
 
 exports.removeTfmUserById = async (_id, callback) => {
