@@ -1,11 +1,13 @@
-const { resetPassword, changePassword, header, userProfile } = require('../../pages');
+const {
+  resetPassword, changePassword, header, userProfile,
+} = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const { TEST_EMAIL_NO_GOV_NOTIFY } = require('../../../../../e2e-fixtures/portal-users.fixture');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('Password management screens to del', () => {
+context('Password management screens', () => {
   beforeEach(() => {
     resetPassword.visitRequestEmail();
   });
