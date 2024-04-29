@@ -5,7 +5,7 @@ const { TEST_EMAIL_NO_GOV_NOTIFY } = require('../../../../../e2e-fixtures/portal
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('Password management screens', () => {
+context('Password management screens to del', () => {
   beforeEach(() => {
     resetPassword.visitRequestEmail();
   });
