@@ -1,8 +1,16 @@
 const { ObjectId } = require('mongodb');
-const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const {
+  generateAuditDatabaseRecordFromAuditDetails,
+} = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
-const { facilitiesValidation, facilitiesStatus, facilitiesOverallStatus, facilitiesCheckEnums } = require('./validation/facilities');
+const {
+  facilitiesValidation,
+  facilitiesStatus,
+  facilitiesOverallStatus,
+  facilitiesCheckEnums,
+} = require('./validation/facilities');
 const { Facility } = require('../models/facilities');
 const { Application } = require('../models/application');
 const { calculateUkefExposure, calculateGuaranteeFee } = require('../calculations/facility-calculations');
@@ -14,15 +22,22 @@ const dealsCollectionName = 'deals';
 exports.create = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
   if (!req.body.type || !req.body.dealId) {
-    return res.status(422).send([{ status: 422, errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' }]);
+    return res
+      .status(422)
+      .send([
+        { status: 422, errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' },
+      ]);
   }
 
   if (enumValidationErr) {
     return res.status(422).send(enumValidationErr);
   }
+  const auditDetails = generatePortalAuditDetails(req.user._id);
 
   const facilitiesQuery = await db.getCollection(facilitiesCollectionName);
-  const createdFacility = await facilitiesQuery.insertOne(new Facility({ ...req.body, auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id)}));
+  const createdFacility = await facilitiesQuery.insertOne(
+    new Facility({ ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) }),
+  );
 
   const { insertedId } = createdFacility;
 
@@ -111,13 +126,12 @@ exports.getById = async (req, res) => {
 };
 
 /**
- * 
  * @param {ObjectId | string} id - facility id to update
  * @param {object} updateBody - update to make
- * @param {object} sessionUser - logged in user
- * @returns 
+ * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} auditDetails - user making the request
+ * @returns
  */
-const update = async (id, updateBody, sessionUser) => {
+const update = async (id, updateBody, auditDetails) => {
   try {
     const facilitiesCollection = await db.getCollection(facilitiesCollectionName);
     const dealsCollection = await db.getCollection(dealsCollectionName);
@@ -133,7 +147,7 @@ const update = async (id, updateBody, sessionUser) => {
       ...updateBody,
       ukefExposure: calculateUkefExposure(updateBody, existingFacility),
       guaranteeFee: calculateGuaranteeFee(updateBody, existingFacility),
-      auditRecord: generatePortalUserAuditDatabaseRecord(sessionUser._id),
+      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
     });
 
     const updatedFacility = await facilitiesCollection.findOneAndUpdate(
@@ -146,7 +160,7 @@ const update = async (id, updateBody, sessionUser) => {
       // update facilitiesUpdated timestamp in the deal
       const dealUpdateObj = {
         facilitiesUpdated: new Date().valueOf(),
-        auditRecord: generatePortalUserAuditDatabaseRecord(sessionUser._id),
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       };
       const dealUpdate = new Application(dealUpdateObj);
 
@@ -171,7 +185,7 @@ exports.updatePUT = async (req, res) => {
   }
 
   let response;
-  const updatedFacility = await update(req.params.id, req.body, req.user);
+  const updatedFacility = await update(req.params.id, req.body, generatePortalAuditDetails(req.user._id));
 
   if (updatedFacility.value) {
     response = {

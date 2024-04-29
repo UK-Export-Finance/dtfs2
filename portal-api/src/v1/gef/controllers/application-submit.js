@@ -185,7 +185,7 @@ const submissionPortalActivity = async (application) => {
  * Check the `coverDateConfirmed` property of the facility has the correct boolean flag.
  * @param {object} app Application object
  * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} auditDetails - user making the request
- * @returns {boolean} Facility(ies) was(were) updated or not
+ * @returns {Promise<boolean>} Facility(ies) was(were) updated or not
  */
 const checkCoverDateConfirmed = async (app, auditDetails) => {
   let hasUpdated = false;

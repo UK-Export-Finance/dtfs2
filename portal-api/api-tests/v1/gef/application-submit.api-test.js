@@ -119,7 +119,7 @@ describe('submissionPortalActivity()', () => {
 
     const res = await as(aMaker).post(req.body).to(baseUrl);
 
-    await updateFacility(res.body.details._id, mockFacilities[4], aMaker);
+    await updateFacility(res.body.details._id, mockFacilities[4], generatePortalAuditDetails(aMaker._id));
 
     const result = await submissionPortalActivity(MOCK_APPLICATION_FACILITIES);
 
@@ -156,7 +156,7 @@ describe('submissionPortalActivity()', () => {
 
     const res = await as(aMaker).post(req.body).to(baseUrl);
 
-    await updateFacility(res.body.details._id, mockFacilities[4], aMaker);
+    await updateFacility(res.body.details._id, mockFacilities[4], generatePortalAuditDetails(aMaker._id));
 
     const result = await submissionPortalActivity(MOCK_APPLICATION_FACILITIES);
 
@@ -406,7 +406,7 @@ describe('addSubmissionDateToIssuedFacilities()', () => {
         shouldCoverStartOnSubmission: true,
         hasBeenIssuedAndAcknowledged: null
       },
-      aMaker,
+      generatePortalAuditDetails(aMaker._id),
     );
 
     await addSubmissionDateToIssuedFacilities(mockApplication.body._id, generatePortalAuditDetails(aMaker._id));
@@ -448,7 +448,7 @@ describe('addSubmissionDateToIssuedFacilities()', () => {
         shouldCoverStartOnSubmission: true,
         hasBeenIssuedAndAcknowledged: true,
       },
-      aMaker,
+      generatePortalAuditDetails(aMaker._id),
     );
 
     await addSubmissionDateToIssuedFacilities(mockApplication.body._id, generatePortalAuditDetails(aMaker._id));

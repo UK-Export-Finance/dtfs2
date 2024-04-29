@@ -1,6 +1,7 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
-const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const { MandatoryCriteria } = require('../models/mandatoryCriteria');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
@@ -46,7 +47,9 @@ exports.create = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid GEF mandatory criteria payload' });
   }
 
-  const criteria = { ...req.body, auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id)};
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
+  const criteria = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
   const { insertedId } = await collection.insertOne(new MandatoryCriteria(criteria));
   return res.status(201).send({ _id: insertedId });
 };
@@ -81,10 +84,12 @@ exports.update = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Id' });
   }
 
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
   const collection = await db.getCollection(collectionName);
   const update = req.body;
   update.updatedAt = Date.now();
-  update.auditRecord = generatePortalUserAuditDatabaseRecord(req.user._id);
+  update.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
   const response = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(id) } },
     { $set: update },
