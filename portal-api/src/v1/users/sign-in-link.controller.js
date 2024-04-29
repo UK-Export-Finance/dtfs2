@@ -1,4 +1,5 @@
 const { HttpStatusCode } = require('axios');
+const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common');
 const { LOGIN_STATUSES, SIGN_IN_LINK, HTTP_ERROR_CAUSES } = require('../../constants');
 const { UserNotFoundError, InvalidSignInTokenError, InvalidUserIdError } = require('../errors');
 const UserBlockedError = require('../errors/user-blocked.error');
@@ -15,6 +16,7 @@ class SignInLinkController {
   async loginWithSignInLink(req, res) {
     try {
       const { userId, signInToken } = req.params;
+      const auditDetails = generateNoUserLoggedInAuditDetails();
 
       if (req.user._id.toString() !== userId) {
         throw new InvalidUserIdError(userId);
@@ -45,9 +47,9 @@ class SignInLinkController {
           });
         }
         case SIGN_IN_LINK.STATUS.VALID: {
-          await this.#signInLinkService.resetSignInData(userId);
+          await this.#signInLinkService.resetSignInData(userId, auditDetails);
 
-          const { user, tokenObject } = await this.#signInLinkService.loginUser(userId);
+          const { user, tokenObject } = await this.#signInLinkService.loginUser(userId, auditDetails);
 
           return res.status(HttpStatusCode.Ok).json({
             success: true,
@@ -134,7 +136,11 @@ class SignInLinkController {
 
   async createAndEmailSignInLink(req, res) {
     try {
-      const numberOfSendSignInLinkAttemptsRemaining = await this.#signInLinkService.createAndEmailSignInLink(req.user);
+      const auditDetails = generateNoUserLoggedInAuditDetails();
+      const numberOfSendSignInLinkAttemptsRemaining = await this.#signInLinkService.createAndEmailSignInLink(
+        req.user,
+        auditDetails,
+      );
       return res.status(201).json({ numberOfSendSignInLinkAttemptsRemaining });
     } catch (error) {
       console.error('Error creating email sign in link %o', error);
