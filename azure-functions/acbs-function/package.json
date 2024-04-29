@@ -2,23 +2,30 @@
   "name": "acbs-function",
   "version": "",
   "description": "DTFS ACBS DOF",
-  "author": "",
+  "author": "UK Export Finance",
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --config=api-test.jest.config.js ",
-    "lint": "eslint ./",
+    "lint": "eslint --color '**/*.{ts,js}'",
+    "lint:fix": "eslint --color '**/*.{ts,js}'",
+    "prettier": "prettier --no-error-on-unmatched-pattern --check '**/*.{ts,js}'",
+    "prettier:fix": "prettier --write '**/*.{ts,js}'",
+    "type-check": "tsc --noEmit",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },
   "dependencies": {
+    "@azure/functions": "^4.4.0",
     "axios": "^0.27.2",
     "date-fns": "^2.30.0",
     "dotenv": "^16.4.5",
-    "durable-functions": "^1.5.4",
+    "durable-functions": "^3.1.0",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.29.1",
-    "jest": "29.5.0",
-    "lodash": "^4.17.21"
+    "jest": "^29.7.0"
   },
   "engines": {
     "node": ">=20",

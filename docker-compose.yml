@@ -59,7 +59,7 @@ services:
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - AUDIT_API_URL
       - AUDIT_API_USERNAME
@@ -72,6 +72,7 @@ services:
       - SQL_DB_PASSWORD
       - SQL_DB_NAME
       - SQL_DB_LOGGING_ENABLED
+      - ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE
 
   trade-finance-manager-ui:
     build:
@@ -97,12 +98,12 @@ services:
       - TFM_API_URL=http://trade-finance-manager-api:5004
       - EXTERNAL_API_URL=http://external-api:5002
       - UKEF_TFM_API_SYSTEM_KEY=${UKEF_TFM_API_SYSTEM_KEY}
-      - ESTORE_URL=${ESTORE_URL}
+      - ESTORE_URL
       - REDIS_HOSTNAME=redis
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - SESSION_SECRET
       - TZ=Europe/London
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
 
@@ -144,7 +145,7 @@ services:
       - JWT_VALIDATING_KEY
       - TZ=Europe/London
       - UKEF_INTERNAL_NOTIFICATION=test
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
 
   portal:
@@ -177,7 +178,7 @@ services:
       - REDIS_HOSTNAME=redis
       - SESSION_SECRET
       - TZ=Europe/London
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - CLAMAV_PORT=3310
       - CLAMAV_HOST=clamav
@@ -223,7 +224,7 @@ services:
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - TFM_API_URL=http://trade-finance-manager-api:5004
       - TZ=Europe/London
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - PDC_INPUTTERS_EMAIL_RECIPIENT
       - UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE
@@ -272,8 +273,9 @@ services:
       - MONGODB_URI
       - EXTERNAL_API_URL=http://external-api:5002
       - TZ=Europe/London
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
+      - ESTORE_CRON_MANAGER_SCHEDULE
     entrypoint: npx ts-node external-api/src/index.ts
 
   gef-ui:
@@ -303,7 +305,7 @@ services:
       - AZURE_PORTAL_STORAGE_ACCOUNT
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
       - TZ=Europe/London
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY

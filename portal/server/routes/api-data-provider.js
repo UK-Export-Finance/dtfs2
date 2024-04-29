@@ -16,7 +16,7 @@ const get = async (dataType, req) => {
     const dealId = req.params._id;
     const { deal, validationErrors } = await api.getDeal(dealId, token).catch(
       (error) => {
-        console.error('api-data-provider: querying for deal(%s) => %O', dealId, error);
+        console.error('api-data-provider: querying for deal(%s) => %o', dealId, error);
         return { deal: {}, validationErrors: {} };
       },
     );
@@ -27,7 +27,7 @@ const get = async (dataType, req) => {
   } if (INDUSTRY_SECTORS === dataType) {
     const { industrySectors } = await api.getIndustrySectors(token).catch(
       (error) => {
-        console.error('api-data-provider: querying for industry sectors => %s', error);
+        console.error('api-data-provider: querying for industry sectors => %o', error);
         return { industrySectors: [] };
       },
     );
@@ -36,7 +36,7 @@ const get = async (dataType, req) => {
   } if (COUNTRIES === dataType) {
     const { countries } = await api.getCountries(token).catch(
       (error) => {
-        console.error('api-data-provider: querying for countries => %s', error);
+        console.error('api-data-provider: querying for countries => %o', error);
         return { countries: [] };
       },
     );
@@ -45,7 +45,7 @@ const get = async (dataType, req) => {
   } if (CURRENCIES === dataType) {
     const { currencies } = await api.getCurrencies(token).catch(
       (error) => {
-        console.error('api-data-provider: querying for currencies => %s', error);
+        console.error('api-data-provider: querying for currencies => %o', error);
         return { currencies: [] };
       },
     );
@@ -54,7 +54,7 @@ const get = async (dataType, req) => {
   } if (MANDATORY_CRITERIA === dataType) {
     const mandatoryCriteria = await api.getLatestMandatoryCriteria(token).catch(
       (error) => {
-        console.error('api-data-provider: querying for latest mandatory criteria => %s', error);
+        console.error('api-data-provider: querying for latest mandatory criteria => %o', error);
         return {};
       },
     );
@@ -69,7 +69,7 @@ const get = async (dataType, req) => {
 
     const loan = await api.getLoan(_id, loanId, token).catch(
       (error) => {
-        console.error('api-data-provider: querying for loan => %s', error);
+        console.error('api-data-provider: querying for loan => %o', error);
         return { loan: {} };
       },
     );
@@ -83,7 +83,7 @@ const get = async (dataType, req) => {
 
     const bond = await api.contractBond(_id, bondId, token).catch(
       (error) => {
-        console.error('api-data-provider: querying for bond => %s', error);
+        console.error('api-data-provider: querying for bond => %o', error);
         return { bond: {} };
       },
     );

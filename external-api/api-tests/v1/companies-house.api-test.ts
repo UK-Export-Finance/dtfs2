@@ -1,7 +1,13 @@
 import { app } from '../../src/createApp';
 import { api } from '../api';
+import MockAdapter from 'axios-mock-adapter';
+import axios, { HttpStatusCode } from 'axios';
 
+const { COMPANIES_HOUSE_API_URL } = process.env;
 const { get } = api(app);
+
+// Mock Axios
+const axiosMock = new MockAdapter(axios);
 
 const mockResponse = {
   status: 200,
@@ -48,7 +54,7 @@ const mockResponse = {
   },
 };
 
-jest.mock('axios', () => jest.fn(() => Promise.resolve(mockResponse)));
+axiosMock.onGet(`${COMPANIES_HOUSE_API_URL}/company/00000006`).reply(HttpStatusCode.Ok, mockResponse.data);
 
 const companyHouseNumberTestCases = ['abc', '127.0.0.1', '{}', '[]'];
 
@@ -63,7 +69,7 @@ describe('/companies-house', () => {
       expect(body.registered_office_address).toBeDefined();
     });
 
-    test.each(companyHouseNumberTestCases)('returns a 400 if you provide an invalid company registration number: %s', async (companyHouseNumber) => {
+    test.each(companyHouseNumberTestCases)('returns a 400 if you provide an invalid company registration number %s', async (companyHouseNumber) => {
       const { status, body } = await get(`/companies-house/${companyHouseNumber}`);
 
       expect(status).toEqual(400);

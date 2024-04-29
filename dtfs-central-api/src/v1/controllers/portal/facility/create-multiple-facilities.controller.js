@@ -52,7 +52,7 @@ const createFacilities = async (facilities, dealId) => {
 
     return flattenedIds;
   } catch (error) {
-    console.error('Unable to create the facility for deal %s %s', dealId, error);
+    console.error('Unable to create the facility for deal %s %o', dealId, error);
     return { status: 500, message: error };
   }
 };

@@ -231,7 +231,7 @@ const extractCsvData = async (file) => {
 
     return { csvJson, fileBuffer, error: false };
   } catch (error) {
-    console.error('Error extracting data from csv/xlsx file: %O', error);
+    console.error('Error extracting data from csv/xlsx file %o', error);
     return { csvJson: null, fileBuffer: null, error: true };
   }
 };

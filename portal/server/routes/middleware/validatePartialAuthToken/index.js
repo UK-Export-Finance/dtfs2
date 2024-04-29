@@ -26,7 +26,7 @@ const validatePartialAuthToken = async (req, res, next) => {
     await api.validatePartialAuthToken(userToken);
     return next();
   } catch (error) {
-    console.error('Partial auth token is not valid, destroying the session: %s', error);
+    console.error('Partial auth token is not valid, destroying the session %o', error);
     return destroySessionAndRedirectToStart(req, res);
   }
 };

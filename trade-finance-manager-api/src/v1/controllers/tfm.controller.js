@@ -1,3 +1,4 @@
+const { generateSystemAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const activity = require('../helpers/activity');
 const api = require('../api');
 
@@ -12,12 +13,12 @@ const updateAcbs = async (taskOutput) => {
     },
   };
 
-  return api.updateDeal(taskOutput.portalDealId, acbsUpdate);
+  return api.updateDeal({ dealId: taskOutput.portalDealId, dealUpdate: acbsUpdate, auditDetails: generateSystemAuditDetails() });
 };
 exports.updateAcbs = updateAcbs;
 
 const updateFacilityAcbs = async (facilityId, acbs) => {
-  const updatedFacility = await api.updateFacility(facilityId, { acbs });
+  const updatedFacility = await api.updateFacility({ facilityId, tfmUpdate: { acbs }, auditDetails: generateSystemAuditDetails() });
   // TFM - Update Facility Activity : MVP2
   return updatedFacility.tfm;
 };

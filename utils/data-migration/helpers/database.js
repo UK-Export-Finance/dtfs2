@@ -131,7 +131,7 @@ const tfmDealUpdate = async (updatedDeal) => {
     const response = await connection
       .collection(CONSTANTS.DATABASE.TABLES.TFM_DEAL)
       .updateOne({ _id: { $eq: ObjectId(idAsString) } }, { $set: updatedDeal }, { returnNewDocument: true, returnDocument: 'after' })
-      .catch((e) => new Error(e));
+      .catch((error) => new Error(error));
 
     return response.acknowledged ? Promise.resolve(true) : Promise.reject(response);
   } catch (error) {
@@ -154,7 +154,6 @@ const tfmFacilityUpdate = async (updatedFacility) => {
     delete updatedFacility._id;
 
     if (!connection) await connect();
-
     const response = await connection
       .collection(CONSTANTS.DATABASE.TABLES.TFM_FACILITIES)
       .updateOne(
@@ -165,7 +164,7 @@ const tfmFacilityUpdate = async (updatedFacility) => {
           },
         },
       )
-      .catch((e) => new Error(e));
+      .catch((error) => new Error(error));
 
     return response.acknowledged ? Promise.resolve(true) : Promise.reject(response);
   } catch (error) {

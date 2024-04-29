@@ -8,6 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
@@ -22,7 +23,7 @@ const createDealInvestor = async (context) => {
     const missingMandatory = findMissingMandatory(investor, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();
@@ -55,9 +56,11 @@ const createDealInvestor = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create deal investor record. %s', error);
-    throw new Error('Unable to create deal investor record %s', error);
+    console.error('Unable to create deal investor record. %o', error);
+    throw new Error(`Unable to create deal investor record ${error}`);
   }
 };
 
-module.exports = createDealInvestor;
+df.app.activity('create-deal-investor', {
+  handler: createDealInvestor,
+});

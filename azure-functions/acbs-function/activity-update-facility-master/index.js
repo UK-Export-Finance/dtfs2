@@ -14,7 +14,7 @@
  * HTTP -> DOF -> DAF
  * ------------------
  */
-
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
@@ -52,7 +52,7 @@ const updateFacilityMaster = async (context) => {
     const missingMandatory = findMissingMandatory(acbsFacilityMasterInput, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();
@@ -84,9 +84,11 @@ const updateFacilityMaster = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Error updating facility master record: %s', error);
-    throw new Error('Error updating facility master record %s', error);
+    console.error('Error updating facility master record %o', error);
+    throw new Error(`Error updating facility master record ${error}`);
   }
 };
 
-module.exports = updateFacilityMaster;
+df.app.activity('update-facility-master', {
+  handler: updateFacilityMaster,
+});

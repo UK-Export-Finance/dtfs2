@@ -1,5 +1,7 @@
 const { format, getUnixTime, fromUnixTime } = require('date-fns');
 const sanitizeHtml = require('sanitize-html');
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
 const db = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
 const sendTfmEmail = require('./send-tfm-email');
@@ -27,7 +29,15 @@ exports.create = async (req, res) => {
     howCanWeImprove,
     emailAddress,
     submittedBy,
+    // Because this is on the open router, information about the user cannot be inferred from req.user
+    auditDetails,
   } = req.body;
+
+  try {
+    validateAuditDetails(auditDetails);
+  } catch ({ message }) {
+    res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
+  }
 
   const modifiedFeedback = {
     role,
@@ -38,7 +48,8 @@ exports.create = async (req, res) => {
     howCanWeImprove,
     emailAddress,
     submittedBy,
-    created: getUnixTime(new Date())
+    created: getUnixTime(new Date()),
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   const collection = await db.getCollection('tfm-feedback');
@@ -67,13 +78,9 @@ exports.create = async (req, res) => {
   const EMAIL_RECIPIENT = process.env.GOV_NOTIFY_EMAIL_RECIPIENT;
 
   try {
-    await sendTfmEmail(
-      EMAIL_TEMPLATE_ID,
-      EMAIL_RECIPIENT,
-      emailVariables,
-    );
+    await sendTfmEmail(EMAIL_TEMPLATE_ID, EMAIL_RECIPIENT, emailVariables);
   } catch (error) {
-    console.error('TFM-API feedback controller - error sending email %s', error);
+    console.error('TFM-API feedback controller - error sending email %o', error);
   }
 
   return res.status(200).send({ _id: createdFeedback.insertedId });

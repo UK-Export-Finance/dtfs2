@@ -114,6 +114,7 @@ env:
   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
   UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
+  ESTORE_CRON_MANAGER_SCHEDULE: ${{ vars.ESTORE_CRON_MANAGER_SCHEDULE }}
   TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
   PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
   DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
@@ -142,6 +143,7 @@ env:
   SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD_TEST }}
   SQL_DB_NAME: ${{ secrets.SQL_DB_NAME_TEST }}
   SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
+  ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE: ${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }}
 
 jobs:
   # 1. Setup test infrastructure
@@ -231,7 +233,7 @@ jobs:
 
       - name: Stop
         working-directory: ./
-        run: docker compose -f docker-compose.gha.yml down
+        run: docker compose down
 
       - name: Coverage
         uses: codecov/codecov-action@v3
