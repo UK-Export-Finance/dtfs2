@@ -3,10 +3,10 @@ const { clearACBSLog } = require('../../helpers/clear-acbs-log');
 const api = require('../../../src/v1/api');
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_ACBS = require('../../../src/v1/__mocks__/mock-deal-acbs');
+const CONSTANTS = require('../../../src/constants');
 
 jest.mock('../../../src/v1/controllers/banks.controller', () => ({
-  findOneBank: (mockBankId) =>
-    (mockBankId === '123' ? false : { id: mockBankId }),
+  findOneBank: (mockBankId) => (mockBankId === '123' ? false : { id: mockBankId }),
 }));
 
 const MOCK_TFM_DEAL_ACBS = {
@@ -36,7 +36,10 @@ describe('acbs controller', () => {
     });
 
     it('should add entry to acbs log', async () => {
-      const result = await acbsController.addToACBSLog({ deal: { _id: '64da2f74de0f97235921b09b' }, acbsTaskLinks: {} });
+      const result = await acbsController.addToACBSLog({
+        deal: { _id: '64da2f74de0f97235921b09b' },
+        acbsTaskLinks: { id: '123' },
+      });
       expect(result).toEqual({
         acknowledged: true,
         insertedId: expect.any(Object),
@@ -68,6 +71,50 @@ describe('acbs controller', () => {
       expect(result).toEqual(false);
     });
 
+    it('should not update facility in ACBS if facility is already issued', async () => {
+      const mockDeal = {
+        exporter: { companyName: 'test' },
+        facilities: [
+          {
+            facilityStage: 'Issued',
+            hasBeenIssued: true,
+            tfm: {
+              acbs: {
+                facilityStage: CONSTANTS.FACILITIES.ACBS_FACILITY_STAGE.ISSUED,
+              },
+            },
+          },
+        ],
+        tfm: {
+          acbs: {},
+        },
+      };
+      await acbsController.issueAcbsFacilities(mockDeal);
+      expect(api.updateACBSfacility).not.toHaveBeenCalled();
+    });
+
+    it('should not update facility in ACBS if facility is risk expired', async () => {
+      const mockDeal = {
+        exporter: { companyName: 'test' },
+        facilities: [
+          {
+            facilityStage: 'Issued',
+            hasBeenIssued: true,
+            tfm: {
+              acbs: {
+                facilityStage: CONSTANTS.FACILITIES.ACBS_FACILITY_STAGE.RISK_EXPIRED,
+              },
+            },
+          },
+        ],
+        tfm: {
+          acbs: {},
+        },
+      };
+      await acbsController.issueAcbsFacilities(mockDeal);
+      expect(api.updateACBSfacility).not.toHaveBeenCalled();
+    });
+
     it('should call updateACBSfacility ACBS function', async () => {
       const mockDeal = {
         exporter: { companyName: 'test' },
@@ -76,7 +123,9 @@ describe('acbs controller', () => {
             facilityStage: 'Issued',
             hasBeenIssued: true,
             tfm: {
-              acbs: {},
+              acbs: {
+                facilityStage: CONSTANTS.FACILITIES.ACBS_FACILITY_STAGE.COMMITMENT,
+              },
             },
           },
         ],
@@ -96,13 +145,19 @@ describe('acbs controller', () => {
     });
 
     it('should update any azure deal tasks in acbs log', async () => {
-      await acbsController.addToACBSLog({ deal: { _id: '64da2f74de0f97235921b09b' }, acbsTaskLinks: { statusQueryGetUri: 'mock.url' } });
+      await acbsController.addToACBSLog({
+        deal: { _id: '64da2f74de0f97235921b09b' },
+        acbsTaskLinks: { id: '123', statusQueryGetUri: 'mock.url' },
+      });
       await acbsController.checkAzureAcbsFunction();
       expect(api.getFunctionsAPI).toHaveBeenCalledWith('mock.url');
     });
 
     it('should update any azure issue facility tasks in acbs log', async () => {
-      await acbsController.addToACBSLog({ deal: { _id: '64da2f74de0f97235921b09b' }, acbsTaskLinks: { statusQueryGetUri: 'acbs-issue-facility' } });
+      await acbsController.addToACBSLog({
+        deal: { _id: '64da2f74de0f97235921b09b' },
+        acbsTaskLinks: { id: '123', statusQueryGetUri: 'acbs-issue-facility' },
+      });
       await acbsController.checkAzureAcbsFunction();
       expect(api.getFunctionsAPI).toHaveBeenCalledWith('acbs-issue-facility');
     });
