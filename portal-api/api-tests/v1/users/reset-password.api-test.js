@@ -63,27 +63,25 @@ describe('password reset', () => {
   });
 
   it('should send an email for existing email', async () => {
-    await resetPassword(MOCK_USER.email, userService);
+    await resetPassword(MOCK_USER.email, userService, generateNoUserLoggedInAuditDetails());
     expect(sendEmail).toHaveBeenCalledWith(
       RESET_PASSWORD_EMAIL_TEMPLATE_ID,
       MOCK_USER.email,
       {
         resetToken: expect.any(String),
       },
-      generateNoUserLoggedInAuditDetails(),
     );
   });
 
   it('should be case-insensitive when accepting email', async () => {
     const upperCaseEmail = MOCK_USER.email.toUpperCase();
-    await resetPassword(upperCaseEmail, userService);
+    await resetPassword(upperCaseEmail, userService, generateNoUserLoggedInAuditDetails());
     expect(sendEmail).toHaveBeenCalledWith(
       RESET_PASSWORD_EMAIL_TEMPLATE_ID,
       upperCaseEmail,
       {
         resetToken: expect.any(String),
       },
-      generateNoUserLoggedInAuditDetails(),
     );
   });
 

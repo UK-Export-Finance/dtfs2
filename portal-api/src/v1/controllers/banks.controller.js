@@ -1,6 +1,6 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
-const { generatePortalUserAuditDatabaseRecord, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const { hasValidObjectId } = require('../validation/validateObjectId');
 const { PAYLOAD } = require('../../constants');
@@ -71,8 +71,10 @@ exports.update = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Bank Id' });
   }
 
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
   const collection = await db.getCollection('banks');
-  const update = { ... req.body, auditRecord: generatePortalUserAuditDatabaseRecord(req.user._id) }
+  const update = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) }
   const updatedBank = await collection.updateOne({ id: { $eq: id } }, { $set: update }, {});
 
   return res.status(200).json(updatedBank);

@@ -12,17 +12,7 @@ const MOCK_EMAIL = 'mockEmail';
 
 describe('user controller', () => {
   const SESSION_IDENTIFIER = 'MockSessionId';
-  describe.each([
-    {
-      testName: 'updateSessionIdentifier',
-      callTestMethod: (user, sessionIdentifier, callback) =>
-        updateSessionIdentifier(user, sessionIdentifier, generateNoUserLoggedInAuditDetails(), callback),
-      expectedUpdate: {
-        sessionIdentifier: SESSION_IDENTIFIER,
-        auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord(),
-      },
-    },
-  ])('$testName', ({ callTestMethod, expectedUpdate }) => {
+  describe('updateSessionIdentifier', () => {
     let mockUpdateOne;
 
     beforeEach(() => {
@@ -32,21 +22,40 @@ describe('user controller', () => {
 
     it('should throw an error if the user id is invalid', async () => {
       const TEST_USER_INVALID_ID = { ...TEST_USER, _id: 'invalid' };
-      await expect(callTestMethod(TEST_USER_INVALID_ID, SESSION_IDENTIFIER, () => {})).rejects.toThrow(InvalidUserIdError);
+      await expect(
+        updateSessionIdentifier(
+          TEST_USER_INVALID_ID,
+          SESSION_IDENTIFIER,
+          generateNoUserLoggedInAuditDetails(),
+          () => {},
+        ),
+      ).rejects.toThrow(InvalidUserIdError);
     });
 
     it('should throw an error if the session identifier is not provided', async () => {
-      await expect(callTestMethod(TEST_USER, null, () => {})).rejects.toThrow(InvalidSessionIdentifierError);
+      await expect(
+        updateSessionIdentifier(TEST_USER, null, generateNoUserLoggedInAuditDetails(), () => {}),
+      ).rejects.toThrow(InvalidSessionIdentifierError);
     });
 
     it('should update the session identifier', async () => {
-      await callTestMethod(TEST_USER, SESSION_IDENTIFIER, () => {});
-      expect(mockUpdateOne).toHaveBeenCalledWith({ _id: { $eq: ObjectId(TEST_USER._id) } }, { $set: expectedUpdate }, {});
+      await updateSessionIdentifier(TEST_USER, SESSION_IDENTIFIER, generateNoUserLoggedInAuditDetails(), () => {});
+
+      expect(mockUpdateOne).toHaveBeenCalledWith(
+        { _id: { $eq: ObjectId(TEST_USER._id) } },
+        {
+          $set: {
+            sessionIdentifier: SESSION_IDENTIFIER,
+            auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord(),
+          },
+        },
+        {},
+      );
     });
 
     it('should call the callback if successful', async () => {
       const mockCallback = jest.fn();
-      await callTestMethod(TEST_USER, SESSION_IDENTIFIER, mockCallback);
+      await updateSessionIdentifier(TEST_USER, SESSION_IDENTIFIER, generateNoUserLoggedInAuditDetails(), mockCallback);
       expect(mockCallback).toHaveBeenCalledTimes(1);
     });
   });
