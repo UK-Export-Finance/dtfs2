@@ -10,6 +10,8 @@ const replaceWhiteSpaceWithDash = require('./filter-replaceWhiteSpaceWithDash');
 require('dotenv').config();
 
 const configureNunjucks = (opts) => {
+  const { CONTACT_US_EMAIL_ADDRESS } = process.env;
+
   const appViews = [
     path.resolve(__dirname, '../../../node_modules/govuk-frontend'),
     path.resolve(__dirname, '../../../node_modules/@ministryofjustice/frontend'),
@@ -21,7 +23,7 @@ const configureNunjucks = (opts) => {
 
   nunjucksEnvironment.addGlobal(
     'CONTACT_US_EMAIL_ADDRESS',
-    process.env.CONTACT_US_EMAIL_ADDRESS || 'DigitalService.TradeFinance@ukexportfinance.gov.uk',
+    CONTACT_US_EMAIL_ADDRESS || 'DigitalService.TradeFinance@ukexportfinance.gov.uk',
   );
 
   nunjucksEnvironment.addFilter('localiseTimestamp', filterLocaliseTimestamp);
