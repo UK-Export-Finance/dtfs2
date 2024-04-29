@@ -7,6 +7,7 @@ on:
     - '.github/workflows/dns.yml'
 
 env:
+  contact_us_email_address:  ${{ vars.CONTACT_US_EMAIL_ADDRESS }}
   credentials: ${{ secrets.AZURE_DIGITAL_PROD }}
   resource_group: ${{ secrets.PROD_RESOURCE_GROUP }}
   key_vault_name: ${{ secrets.PROD_KEYVAULT_NAME }}
@@ -66,7 +67,7 @@ jobs:
       with:
         inlineScript: |
           az network dns record-set caa add-record -n '@' --value 'globalsign.com' --tag 'issue' --flags 0 --zone-name ${{ env.domain_name }}
-          az network dns record-set caa add-record -n '@' --value 'mailto:TradeFinanceSupport@ukexportfinance.gov.uk' --tag 'iodef' --flags 0 --zone-name ${{ env.domain_name }}
+          az network dns record-set caa add-record -n '@' --value 'mailto:${{env.contact_us_email_address}}' --tag 'iodef' --flags 0 --zone-name ${{ env.domain_name }}
 
     - name: FD - Add domains
       uses: azure/cli@v1.0.9

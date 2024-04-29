@@ -17,6 +17,11 @@ const configureNunjucks = (opts) => {
 
   const nunjucksEnvironment = nunjucks.configure(appViews, opts);
 
+  nunjucksEnvironment.addGlobal(
+    'CONTACT_US_EMAIL_ADDRESS',
+    process.env.CONTACT_US_EMAIL_ADDRESS || 'DigitalService.TradeFinance@ukexportfinance.gov.uk',
+  );
+
   nunjucksEnvironment.addFilter('localiseTimestamp', filterLocaliseTimestamp);
   nunjucksEnvironment.addFilter('dashIfEmpty', dashIfEmpty);
   nunjucksEnvironment.addFilter('displayName', displayName);
