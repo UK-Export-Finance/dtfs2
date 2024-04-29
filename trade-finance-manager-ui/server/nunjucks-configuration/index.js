@@ -23,12 +23,9 @@ const configureNunjucks = (opts) => {
   ];
 
   const nunjucksEnvironment = nunjucks.configure(appViews, opts);
-  // Configure Nunjucks (adjust the path to your views folder)
-  nunjucks
-    .configure('views', {
-      // ... other configuration options
-    })
-    .addGlobal('NODE_ENV', process.env.NODE_ENV);
+
+  nunjucksEnvironment.addGlobal('UKEF_IT_SELF_SERVICE_PORTAL_URL', process.env.UKEF_IT_SELF_SERVICE_PORTAL_URL);
+
   nunjucksEnvironment.addFilter('localiseTimestamp', localiseTimestamp);
   nunjucksEnvironment.addFilter('formatDateString', formatDateString);
   nunjucksEnvironment.addFilter('dashIfEmpty', dashIfEmpty);
@@ -42,7 +39,6 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('sentence', sentenceCase);
   nunjucksEnvironment.addFilter('userIsInTeam', (user, teamIdList) => userIsInTeam(user, teamIdList));
   nunjucksEnvironment.addFilter('userIsOnlyInTeams', (user, teamIdList) => userIsOnlyInTeams(user, teamIdList));
-  nunjucksEnvironment.addGlobal('UKEF_IT_SELF_SERVICE_PORTAL_URL', process.env.UKEF_IT_SELF_SERVICE_PORTAL_URL);
 
   mojFilters = Object.assign(mojFilters);
   Object.keys(mojFilters).forEach((filterName) => {
