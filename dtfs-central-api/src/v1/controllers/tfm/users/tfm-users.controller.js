@@ -5,10 +5,9 @@ const { PAYLOAD } = require('../../../../constants');
 const { payloadVerification } = require('../../../../helpers');
 const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
 const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
-const { DB_COLLECTIONS, PAYLOAD } = require('../../../../constants');
 
 const createUser = async (user, auditDetails) => {
-  const collection = await db.getCollection(DB_COLLECTIONS.TFM_USERS);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
   return collection.insertOne({ ...user, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) });
 };
 exports.createUser = createUser;
