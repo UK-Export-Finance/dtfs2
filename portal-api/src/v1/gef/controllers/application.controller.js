@@ -1,4 +1,6 @@
 const { ObjectId } = require('mongodb');
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const { validateApplicationReferences, validatorStatusCheckEnums } = require('./validation/application');
@@ -51,6 +53,8 @@ exports.create = async (req, res) => {
     if (response?.data?.version) {
       newDeal.mandatoryVersionId = response.data.version;
     }
+    const auditDetails = generatePortalAuditDetails(req.user._id);
+    newDeal.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
     const createdApplication = await applicationCollection.insertOne(new Application(newDeal, eligibility));
 
@@ -134,9 +138,10 @@ exports.update = async (req, res) => {
   if (!ObjectId.isValid(id)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
+  const auditDetails = generatePortalAuditDetails(req.user._id);
 
   const collection = await db.getCollection(dealsCollection);
-  const update = new Application(req.body);
+  const update = new Application({ ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) });
   const validateErrs = validateApplicationReferences(update);
   if (validateErrs) {
     return res.status(422).send(validateErrs);
@@ -177,6 +182,7 @@ exports.updateSupportingInformation = async (req, res) => {
 
   const { application, field, user } = req.body;
   const { _id: editorId } = user;
+  const auditDetails = generatePortalAuditDetails(req.user._id);
 
   const collection = await db.getCollection(dealsCollection);
   const result = await collection.findOneAndUpdate(
@@ -184,7 +190,7 @@ exports.updateSupportingInformation = async (req, res) => {
     {
       $addToSet: { editedBy: editorId },
       // set the updatedAt property to the current time in EPOCH format
-      $set: { updatedAt: Date.now() },
+      $set: { updatedAt: Date.now(), auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
       // insert new documents into the supportingInformation object -> array. i.e. supportingInformation.manualInclusion
       $push: { [`supportingInformation.${field}`]: application },
     },
@@ -243,10 +249,15 @@ exports.changeStatus = async (req, res) => {
 
   const { status } = req.body;
 
-  let applicationUpdate = { status, ...{ updatedAt: Date.now() } };
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+  let applicationUpdate = {
+    status,
+    updatedAt: Date.now(),
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails)
+  };
 
   if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
-    const submissionData = await addSubmissionData(dealId, existingApplication);
+    const submissionData = await addSubmissionData(dealId, existingApplication, generatePortalAuditDetails(req.user._id));
 
     applicationUpdate = {
       ...applicationUpdate,

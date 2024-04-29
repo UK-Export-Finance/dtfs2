@@ -1,5 +1,7 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const { MandatoryCriteria } = require('../models/mandatoryCriteria');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
@@ -40,14 +42,16 @@ const findOneMandatoryCriteria = async (id, callback) => {
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const criteria = req?.body;
 
-  if (payloadVerification(criteria, PAYLOAD.CRITERIA.MANDATORY.VERSIONED)) {
-    const mandatoryCriteria = await collection.insertOne(new MandatoryCriteria(criteria));
-    return res.status(201).send({ _id: mandatoryCriteria.insertedId });
+  if (!payloadVerification(req.body, PAYLOAD.CRITERIA.MANDATORY.VERSIONED)) {
+    return res.status(400).send({ status: 400, message: 'Invalid GEF mandatory criteria payload' });
   }
 
-  return res.status(400).send({ status: 400, message: 'Invalid GEF mandatory criteria payload' });
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
+  const criteria = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
+  const { insertedId } = await collection.insertOne(new MandatoryCriteria(criteria));
+  return res.status(201).send({ _id: insertedId });
 };
 
 exports.findAll = (req, res) => (
@@ -80,9 +84,12 @@ exports.update = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Id' });
   }
 
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
   const collection = await db.getCollection(collectionName);
   const update = req.body;
   update.updatedAt = Date.now();
+  update.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
   const response = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(id) } },
     { $set: update },

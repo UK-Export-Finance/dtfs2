@@ -1,3 +1,5 @@
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const { EligibilityCriteria } = require('../models/eligibilityCriteria');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
@@ -61,14 +63,16 @@ exports.getLatest = async (req, res) => {
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection('eligibilityCriteria');
-  const criteria = req?.body;
 
-  if (payloadVerification(criteria, PAYLOAD.CRITERIA.ELIGIBILITY)) {
-    const result = await collection.insertOne(new EligibilityCriteria(criteria));
-    return res.status(201).send({ _id: result.insertedId });
+  if (!payloadVerification(req.body, PAYLOAD.CRITERIA.ELIGIBILITY)) {
+    return res.status(400).send({ status: 400, message: 'Invalid GEF eligibility criteria payload' });
   }
 
-  return res.status(400).send({ status: 400, message: 'Invalid GEF eligibility criteria payload' });
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
+  const criteria = { ...req?.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
+  const result = await collection.insertOne(new EligibilityCriteria(criteria));
+  return res.status(201).send({ _id: result.insertedId });
 };
 
 exports.delete = async (req, res) => {
