@@ -4,13 +4,18 @@
       <div class="govuk-footer__meta">
         <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
           <h2 data-cy="contact-us-footer">Contact us</h2>
-
           <dl class="contact-details">
-            <dt><a href="{{ UKEF_IT_SELF_SERVICE_PORTAL_URL }}">UKEF IT Service Desk Self-Service Portal</dt>
+            {% if UKEF_CONTACT_DETAILS %}
+              <dt>
+                <a href="{{ UKEF_IT_SELF_SERVICE_PORTAL_URL }}">UKEF IT Service Desk Self-Service Portal</a>
+              </dt>
+            {% else %}
+              <dt>Email:</dt>
+              <dd>DigitalService.TradeFinance@ukexportfinance.gov.uk</dd>
+            {% endif %}
             <dt>Opening times:</dt>
             <dd>Monday to Friday, 9am to 5pm (excluding public holidays)</dd>
           </dl>
-
           <h2 class="govuk-visually-hidden">Support links</h2>
           <ul class="govuk-footer__inline-list">
             <li class="govuk-footer__inline-list-item">
