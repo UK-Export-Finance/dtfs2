@@ -13,7 +13,7 @@ describe(page, () => {
   });
 
   it('should render email link to contact DTFS team', () => {
-    wrapper.expectText('[data-cy="dtfs-email-link"]').toRead('TradeFinanceSupport@ukexportfinance.gov.uk');
+    wrapper.expectText('[data-cy="dtfs-email-link"]').toRead('DigitalService.TradeFinance@ukexportfinance.gov.uk');
   });
 
   it('should render the email address the sign in link has been sent to', () => {

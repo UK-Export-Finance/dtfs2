@@ -7,6 +7,7 @@ const displayName = require('./filter-displayName');
 const formatAsCurrency = require('./formatAsCurrency');
 const countriesWithEmptyInitialOption = require('./filter-countriesWithEmptyInitialOption');
 const replaceWhiteSpaceWithDash = require('./filter-replaceWhiteSpaceWithDash');
+require('dotenv').config();
 
 const configureNunjucks = (opts) => {
   const appViews = [

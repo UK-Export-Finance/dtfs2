@@ -7,6 +7,7 @@ const displayName = require('./filter-displayName');
 const formatAsCurrency = require('./formatAsCurrency');
 const countriesWithEmptyInitialOption = require('./filter-countriesWithEmptyInitialOption');
 const replaceWhiteSpaceWithDash = require('./filter-replaceWhiteSpaceWithDash');
+require('dotenv').config();
 
 const configureNunjucks = (opts) => {
   const appViews = [
@@ -17,6 +18,11 @@ const configureNunjucks = (opts) => {
   ];
 
   const nunjucksEnvironment = nunjucks.configure(appViews, opts);
+
+  nunjucksEnvironment.addGlobal(
+    'CONTACT_US_EMAIL_ADDRESS',
+    process.env.CONTACT_US_EMAIL_ADDRESS || 'DigitalService.TradeFinance@ukexportfinance.gov.uk',
+  );
 
   nunjucksEnvironment.addFilter('localiseTimestamp', filterLocaliseTimestamp);
   nunjucksEnvironment.addFilter('dashIfEmpty', dashIfEmpty);
