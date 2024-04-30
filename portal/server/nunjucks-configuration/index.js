@@ -1,3 +1,4 @@
+const dotenv = require('dotenv');
 const path = require('path');
 const nunjucks = require('nunjucks');
 let mojFilters = require('@ministryofjustice/frontend/moj/filters/all')();
@@ -7,7 +8,8 @@ const displayName = require('./filter-displayName');
 const formatAsCurrency = require('./formatAsCurrency');
 const countriesWithEmptyInitialOption = require('./filter-countriesWithEmptyInitialOption');
 const replaceWhiteSpaceWithDash = require('./filter-replaceWhiteSpaceWithDash');
-require('dotenv').config();
+
+dotenv.config();
 
 const configureNunjucks = (opts) => {
   const { CONTACT_US_EMAIL_ADDRESS } = process.env;
