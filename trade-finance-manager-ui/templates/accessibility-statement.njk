@@ -37,7 +37,7 @@
   <h2 class="govuk-heading-m" data-cy="feedback-and-contact-information-heading">Feedback and contact information</h2>
   <p class="govuk-body">If you need information on this website in a different format like accessible PDF, large print, easy read, contact us:</p>
   <ul class="govuk-list accessibility-statement-list">
-  {% if UKEF_CONTACT_DETAILS %}
+  {% if UKEF_IT_SELF_SERVICE_PORTAL_URL %}
     <li><a href="{{ UKEF_IT_SELF_SERVICE_PORTAL_URL }}">UKEF IT Service Desk Self-Service Portal</a> </li>
   {% else %}
     <li>DigitalService.TradeFinance@ukexportfinance.gov.uk </li>
@@ -46,7 +46,7 @@
   <p class="govuk-body">We'll consider your request and get back to you in 2 days.</p>
 
   <h2 class="govuk-heading-m" data-cy="reporting-accessibility-problems-heading">Reporting accessibility problems with this website</h2>
-  {% if UKEF_CONTACT_DETAILS %}
+  {% if UKEF_IT_SELF_SERVICE_PORTAL_URL %}
     <p class="govuk-body" data-cy="contact-dtfs">We're always looking to improve the accessibility of this website. If you find any additional problems not listed above or think we're not meeting accessibility requirements, contact: <a href="{{ UKEF_IT_SELF_SERVICE_PORTAL_URL }}">UKEF IT Service Desk Self-Service Portal</a>.</p>
   {% else %}
     <p class="govuk-body" data-cy="contact-dtfs">We're always looking to improve the accessibility of this website. If you find any additional problems not listed above or think we're not meeting accessibility requirements, contact: <a href="mailTo:DigitalService.TradeFinance@ukexportfinance.gov.uk">DigitalService.TradeFinance@ukexportfinance.gov.uk</a>.</p>
