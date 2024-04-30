@@ -6,11 +6,6 @@ const { TEST_EMAIL_NO_GOV_NOTIFY } = require('../../../../../e2e-fixtures/portal
 const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Password management screens', () => {
-  // Due to the use of env vars in different ways both locally and in gha, we match the contact us email address by regex.
-  // This regex should only be used for this test, and is not suitable for production code.
-  // We test which email is displayed more thoroughly in component tests.
-  const expectedPasswordResetRegex =
-    /We've sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. If you require further assistance please contact [^@]+@[^@]+.[^@]+./;
   beforeEach(() => {
     resetPassword.visitRequestEmail();
   });
@@ -19,6 +14,9 @@ context('Password management screens', () => {
     beforeEach(() => {
       resetPassword.visitRequestEmail();
     });
+
+    const contactUsEmailAddress = Cypress.env('CONTACT_US_EMAIL_ADDRESS');
+    const expectedContactUsMessage = `We've sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. If you require further assistance please contact ${contactUsEmailAddress}.`;
 
     it('Should have email address input, submit and cancel buttons on the page', () => {
       cy.url().should('eq', relative('/reset-password'));
@@ -42,7 +40,7 @@ context('Password management screens', () => {
       resetPassword.submit().click();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
-      cy.get('[data-cy="password-reset-notification').contains(expectedPasswordResetRegex);
+      cy.get('[data-cy="password-reset-notification').contains(expectedContactUsMessage);
     });
 
     it('should redirect to login page on successful request for reset password', () => {
@@ -50,7 +48,7 @@ context('Password management screens', () => {
       resetPassword.submit().click();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
-      cy.get('[data-cy="password-reset-notification').contains(expectedPasswordResetRegex);
+      cy.get('[data-cy="password-reset-notification').contains(expectedContactUsMessage);
     });
 
     it('should be case insensitive when accepting email', () => {
@@ -58,7 +56,7 @@ context('Password management screens', () => {
       resetPassword.submit().click();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
-      cy.get('[data-cy="password-reset-notification').contains(expectedPasswordResetRegex);
+      cy.get('[data-cy="password-reset-notification').contains(expectedContactUsMessage);
     });
   });
 
