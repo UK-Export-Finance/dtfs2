@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
+const { PAYLOAD_VERIFICATION, COLLECTIONS } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const db = require('../../../drivers/db-client');
 const { mapUserData } = require('./helpers/mapUserData.helper');
@@ -142,13 +142,44 @@ exports.incrementFailedLoginCount = async (user, auditDetails) => {
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 };
 
-exports.removeTfmUserById = async (_id, callback) => {
-  if (ObjectId.isValid(_id)) {
+exports.removeTfmUserById = async (_id, auditDetails, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    return callback('Invalid TFM user id', 400);
+  }
+
+  if (process.env.CHANGE_STREAM_ENABLED !== 'true') {
     const collection = await db.getCollection('tfm-users');
     const status = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
 
     return callback(null, status);
   }
 
-  return callback('Invalid TFM user id', 400);
+  const client = await db.getClient();
+  const session = client.startSession();
+
+  try {
+    const transactionOptions = { readConcern: { level: 'snapshot' }, writeConcern: { w: 'majority' } };
+    await session.withTransaction(async () => {
+      const deletionCollection = await db.getCollection(COLLECTIONS.DELETION_AUDIT_LOGS);
+      await deletionCollection.insertOne(
+        {
+          collectionName: 'tfm-users',
+          deletedDocumentId: new ObjectId(_id),
+          auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+        },
+        { session },
+      );
+
+      const usersCollection = await db.getCollection('tfm-users');
+      await usersCollection.deleteOne({ _id: { $eq: ObjectId(_id) } }, { session });
+    }, transactionOptions);
+    await session.endSession();
+  } catch (error) {
+    console.error(error);
+    await session.endSession();
+    return callback(error, 500);
+  } finally {
+    await session.endSession();
+  }
+  return callback(null, 200);
 };
