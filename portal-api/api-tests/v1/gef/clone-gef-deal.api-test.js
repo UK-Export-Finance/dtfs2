@@ -1,3 +1,6 @@
+const {
+  generateParsedMockPortalUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -113,6 +116,34 @@ describe(baseUrl, () => {
 
       const { body } = await as(aMaker).post(mockApplication).to(`${baseUrl}/clone`);
       expect(body).toEqual({ dealId: expect.any(String) });
+    });
+
+    it('successfully clones a GEF deal and updates the auditRecord', async () => {
+      const mockDeal = await as(aMaker).post({
+        dealType: 'GEF',
+        maker: aMaker,
+        bank: { id: aMaker.bank.id },
+        bankInternalRefName: 'Bank 1',
+        additionalRefName: 'Team 1',
+        exporter: {},
+        createdAt: '2021-01-01T00:00',
+        mandatoryVersionId: '123',
+        status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
+        updatedAt: null,
+        submissionCount: 0,
+      }).to(baseUrl);
+
+      mockApplication.dealId = mockDeal.body._id;
+      mockApplication.bank = { id: aMaker.bank.id };
+
+      const { status, body: { dealId } } = await as(aMaker).post(mockApplication).to(`${baseUrl}/clone`);
+      expect(status).toEqual(200);
+
+      const { body: { auditRecord } } = await as(aMaker).get(`${baseUrl}/${dealId}`);
+
+      expect(auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(aMaker._id))
+
+      // console.log(getResponse)
     });
 
     it('returns a `404` status if the maker belongs to a different bank', async () => {

@@ -1,3 +1,4 @@
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
 const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
@@ -105,6 +106,7 @@ describe(baseUrl, () => {
         isInDraft: expect.any(Boolean),
         createdAt: expect.any(Number),
         criteria: expect.any(Array),
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id),
       };
       expect(body).toEqual(expected);
     });
