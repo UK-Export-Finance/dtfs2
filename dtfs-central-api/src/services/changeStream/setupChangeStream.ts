@@ -1,6 +1,7 @@
 import { ChangeStreamUpdateDocument, ChangeStreamInsertDocument, ChangeStreamReplaceDocument } from 'mongodb';
+import { DeletionAuditLog, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import mongoDbClient from '../../drivers/db-client';
-import { postAuditDetails } from './changeStreamApi';
+import { postAuditDetails, postDeletionAuditDetails } from './changeStreamApi';
 
 /**
  * Sets up a change stream on the mongodb database for a specific collection and sends any changes to the audit API
@@ -21,6 +22,24 @@ const setupChangeStreamForCollection = async (collectionName: string) => {
   });
 };
 
+const setupChangeStreamForDeletionCollection = async () => {
+  console.info('Setting up deletion change stream');
+  const databaseConnection = await mongoDbClient.getConnection();
+  const changeStream = databaseConnection
+    .collection(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS)
+    .watch(
+      [{ $match: { operationType: 'insert' } }, { $project: { _id: 1, fullDocument: 1, ns: 1, documentKey: 1 } }],
+      {
+        fullDocument: 'updateLookup',
+      },
+    );
+  changeStream.on('change', (changeStreamDocument: ChangeStreamInsertDocument<DeletionAuditLog>) => {
+    postDeletionAuditDetails(changeStreamDocument).catch((error) => {
+      console.error('Error sending change stream update to API', error);
+    });
+  });
+};
+
 /**
  * Sets up a change stream on the mongodb database and sends any changes to the audit API
  */
@@ -31,7 +50,11 @@ export const setupChangeStream = async () => {
     const collections = await databaseConnection.listCollections().toArray();
     await Promise.all(
       collections.map(async (collection) => {
-        await setupChangeStreamForCollection(collection.name);
+        if (collection.name === MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS) {
+          await setupChangeStreamForDeletionCollection();
+        } else {
+          await setupChangeStreamForCollection(collection.name);
+        }
       }),
     );
     console.info('Mongodb change stream initialised');
