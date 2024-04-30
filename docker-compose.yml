@@ -85,6 +85,7 @@ services:
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
+      - UKEF_IT_SELF_SERVICE_PORTAL_URL
 
   trade-finance-manager-api:
     build:
