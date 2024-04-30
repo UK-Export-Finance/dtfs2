@@ -1,5 +1,12 @@
 const { defineConfig } = require('cypress');
 const { createTasks } = require('../support/tasks');
+const dotenv = require('dotenv');
+const path = require('path');
+
+// Read from root `./.env` directory
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+
+const { CONTACT_US_EMAIL_ADDRESS } = process.env;
 
 module.exports = defineConfig({
   apiProtocol: 'http://',
@@ -16,7 +23,7 @@ module.exports = defineConfig({
   dbName: 'dtfs-submissions',
   dbConnectionString: 'mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true',
   pageLoadTimeout: 180000,
-  numTestsKeptInMemory: 1,
+  numTestsKeptInMemory: 10,
   viewportWidth: 3840,
   viewportHeight: 2400,
   retries: {
@@ -29,6 +36,9 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       const { dbName, dbConnectionString } = config;
       on('task', createTasks({ dbName, dbConnectionString }));
+    },
+    env: {
+      CONTACT_US_EMAIL_ADDRESS,
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],

@@ -25,6 +25,9 @@
     "prettier:fix": "prettier --write '**/*.{ts,js}'",
     "type-check": "tsc --noEmit"
   },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
   "devDependencies": {
     "bson": "^6.6.0",
     "chance": "^1.1.11",
