@@ -3,10 +3,10 @@ const db = require('../../../../drivers/db-client').default;
 const { payloadVerification } = require('../../../../helpers');
 const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
 const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
-const { DB_COLLECTIONS, PAYLOAD } = require('../../../../constants');
+const { PAYLOAD } = require('../../../../constants');
 
 const createTeam = async (team, auditDetails) => {
-  const collection = await db.getCollection(DB_COLLECTIONS.TFM_TEAMS);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_TEAMS);
   return collection.insertOne({ ...team, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) });
 };
 exports.createTeam = createTeam;
