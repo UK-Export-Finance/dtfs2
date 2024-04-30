@@ -35,6 +35,7 @@
   <h2 class="govuk-heading-m">Feedback and contact information</h2>
   <p class="govuk-body">If you need information on this website in a different format like accessible PDF, large print, easy read, contact us:</p>
   <ul class="govuk-list accessibility-statement-list">
+    {# TODO: DTFS2-7138 remove contact us env vars #}
     <li>{{ CONTACT_US_EMAIL_ADDRESS }}</li>
   </ul>
   <p class="govuk-body">We'll consider your request and get back to you in 2 days.</p>
@@ -42,6 +43,7 @@
 
 
   <h2 class="govuk-heading-m">Reporting accessibility problems with this website</h2>
+  {# TODO: DTFS2-7138 remove contact us env vars #}
   <p class="govuk-body">We're always looking to improve the accessibility of this website. If you find any additional problems not listed above or think we're not meeting accessibility requirements, contact: <a href="mailTo:{{ CONTACT_US_EMAIL_ADDRESS }}">{{ CONTACT_US_EMAIL_ADDRESS }}</a>.</p>
 
   <h2 class="govuk-heading-m">Enforcement procedure</h2>

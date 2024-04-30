@@ -23,7 +23,7 @@ module.exports = defineConfig({
   dbName: 'dtfs-submissions',
   dbConnectionString: 'mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true',
   pageLoadTimeout: 180000,
-  numTestsKeptInMemory: 10,
+  numTestsKeptInMemory: 1,
   viewportWidth: 3840,
   viewportHeight: 2400,
   retries: {
@@ -38,7 +38,7 @@ module.exports = defineConfig({
       on('task', createTasks({ dbName, dbConnectionString }));
     },
     env: {
-      CONTACT_US_EMAIL_ADDRESS,
+      CONTACT_US_EMAIL_ADDRESS, // TODO: DTFS2-7138 remove contact us env vars
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],

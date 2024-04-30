@@ -12,6 +12,8 @@ module.exports.withContactUsEmailAddressTests = () => {
       render = pageRenderer(page);
       wrapper = render();
     });
+
+    // TODO: DTFS2-7138 remove contact us env vars
     describe('when the contact us email is not set', () => {
       beforeAll(() => {
         originalContactUsEmailAddress = process.env.CONTACT_US_EMAIL_ADDRESS;

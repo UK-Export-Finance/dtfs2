@@ -17,6 +17,7 @@
     }) }}
 {% endif %}
 {% if passwordreset %}
+  {# TODO: DTFS2-7138 remove contact us env vars #}
   {{ govukInsetText({
       classes: "govuk-!-margin-top-0",
       html: '<p>We\'ve sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. </p><p>If you require further assistance please contact <a class="govuk-link" href="mailTo:' + CONTACT_US_EMAIL_ADDRESS + '"> ' + CONTACT_US_EMAIL_ADDRESS + '</a>.</p>',
@@ -81,9 +82,11 @@
               "data-cy": "LogIn"
             }
           }) }}
-  </form>
-  <p class="govuk-!-margin-bottom-6">
-    <a class="govuk-link" href="/reset-password" data-cy="reset-password">I’ve forgotten my password</a>
-  </p>
-  {% include "_partials/before-you-start.njk" %}
-</div></div>{% endblock %}
+        </form>
+        <p class="govuk-!-margin-bottom-6">
+          <a class="govuk-link" href="/reset-password" data-cy="reset-password">I’ve forgotten my password</a>
+        </p>
+        {% include "_partials/before-you-start.njk" %}
+      </div>
+    </div>
+  {% endblock %}
