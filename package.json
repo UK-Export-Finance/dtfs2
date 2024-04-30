@@ -33,7 +33,7 @@
     "postinstall": "husky install",
     "install:all": "npm install --if-present",
     "lint:all": "npm run lint --workspaces --if-present",
-    "lint:fix:all": "npm run lint --fix --workspaces --if-present",
+    "lint:fix:all": "npm run lint --workspaces --if-present -- --fix",
     "load": "ts-node utils/mock-data-loader/re-insert-mocks.js",
     "prettier:all": "npm run prettier --workspaces --if-present",
     "prettier:fix:all": "npm run prettier:fix --workspaces --if-present",

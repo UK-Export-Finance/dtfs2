@@ -8,7 +8,7 @@
   "scripts": {
     "db:seed": "npx ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d src/seeding-data-source.ts",
     "lint": "eslint \"src/**/*.{ts,js}\" && npm run type-check",
-    "lint:fix": "eslint \"src/**/*.{ts,js}\"",
+    "lint:fix": "eslint \"src/**/*.{ts,js}\" --fix",
     "prettier": "prettier --check \"src/**/*.{ts,js}\"",
     "prettier:fix": "prettier --write \"src/**/*.{ts,js}\"",
     "type-check": "tsc --noEmit"

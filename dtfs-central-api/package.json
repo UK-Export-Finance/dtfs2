@@ -20,7 +20,7 @@
   "scripts": {
     "api-test": "jest --coverage --verbose --forceExit --runInBand --config=api-test.jest.config.js",
     "api-test-dev": "jest --verbose --forceExit --runInBand --config=api-test.jest.config.js",
-    "lint": "eslint --color '**/*.{js,ts}'",
+    "lint": "eslint --color **/*.{js,ts}",
     "lint:fix": "eslint ./src ./api-tests --fix",
     "prettier": "prettier --no-error-on-unmatched-pattern --check '**/*.{ts,js}'",
     "prettier:fix": "prettier --write '**/*.{ts,js}'",

@@ -100,9 +100,8 @@ module.exports = {
     /**
      * Deletes all the rows from the utilisation report and azure file info tables
      */
-    const removeAllUtilisationReportsFromDb = async () => {
-      return await SqlDbDataSource.manager.getRepository(UtilisationReportEntity).delete({});
-    };
+    const removeAllUtilisationReportsFromDb = async () =>
+      await SqlDbDataSource.manager.getRepository(UtilisationReportEntity).delete({});
 
     const getAllBanks = async () => {
       const banks = await db.getCollection(DB_COLLECTIONS.BANKS);
