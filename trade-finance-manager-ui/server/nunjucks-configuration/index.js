@@ -29,6 +29,7 @@ const configureNunjucks = (opts) => {
 
   const nunjucksEnvironment = nunjucks.configure(appViews, opts);
 
+  // TODO: DTFS2-7138 remove contact us env vars
   nunjucksEnvironment.addGlobal('CONTACT_US_SELF_SERVICE_PORTAL_URL', CONTACT_US_SELF_SERVICE_PORTAL_URL);
   nunjucksEnvironment.addGlobal(
     'CONTACT_US_EMAIL_ADDRESS',
