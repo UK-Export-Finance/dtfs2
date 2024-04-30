@@ -50,24 +50,29 @@ const addToACBSLog = async (payload) => {
   return false;
 };
 
+/**
+ * Creates an ACBS task and adds it to the ACBS log.
+ * @param {object} deal - The deal object containing the dealSnapshot property with the bank details.
+ * @returns {Promise<Boolean>} - True if the ACBS task is successfully created and added to the log, false otherwise.
+ */
 const createACBS = async (deal) => {
-  // Reference partyUrn in function
-  const { dealSnapshot } = deal;
-  const { bank } = dealSnapshot;
-
-  if (!bank) {
+  // Check if the dealSnapshot has a bank property
+  if (!deal?.dealSnapshot?.bank) {
     return false;
   }
 
+  const { bank } = deal.dealSnapshot;
   const { id, name, partyUrn } = bank;
 
   const acbsTaskLinks = await api.createACBS(deal, { id, name, partyUrn });
 
+  // Check if the ACBS task is successfully created
   if (acbsTaskLinks) {
-    return addToACBSLog({ deal, bank, acbsTaskLinks });
+    // Add the ACBS task to the log using the addToACBSLog function
+    return await addToACBSLog({ deal, bank, acbsTaskLinks });
   }
 
-  return null;
+  return false;
 };
 
 const updateDealAcbs = async (taskOutput) => {

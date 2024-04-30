@@ -2,7 +2,8 @@ const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/chan
 const { HttpStatusCode } = require('axios');
 
 const api = require('../api');
-const submitDealToACBS = require('../helpers/submit-deal-acbs');
+const { createACBS } = require('./acbs.controller');
+const canSubmitToACBS = require('../helpers/can-submit-to-acbs');
 
 /**
  * Updates the parties in TFM associated with the deal.
@@ -22,16 +23,19 @@ const updateParty = async (req, res) => {
 
     const auditDetails = generateTfmAuditDetails(req.user._id);
     const tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
+    const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
 
-    if (tfmDeal) {
-      await submitDealToACBS(tfmDeal);
+    if (canSubmitDealToACBS) {
+      await createACBS(tfmDeal);
     }
 
-    return res.status(HttpStatusCode.Ok).send({
+    const response = res.status(HttpStatusCode.Ok).send({
       updateParty: {
         parties: tfmDeal.tfm.parties,
       },
     });
+
+    return response;
   } catch (error) {
     console.error('Unable to update parties for deal %s %o', req.params.dealId, error);
     return res.status(HttpStatusCode.InternalServerError).send(error);

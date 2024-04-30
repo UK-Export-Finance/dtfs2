@@ -4,11 +4,10 @@ jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
 
 jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
-  submitACBSIfAllPartiesHaveUrn: jest.fn(),
 }));
 
 const { format } = require('date-fns');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const CONSTANTS = require('../../../src/constants');
@@ -61,7 +60,10 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const taskCreation = await createDealTasks(submittedDeal, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
+          const taskCreation = await createDealTasks(
+            submittedDeal,
+            generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id),
+          );
 
           const expected = taskCreation.tfm.tasks;
           expected[0].groupTasks[0].emailSent = true;
@@ -104,7 +106,10 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const taskCreation = await createDealTasks(submittedDeal, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
+          const taskCreation = await createDealTasks(
+            submittedDeal,
+            generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id),
+          );
 
           const expected = taskCreation.tfm.tasks;
           expected[0].groupTasks[0].emailSent = true;
@@ -134,7 +139,11 @@ describe('/v1/deals', () => {
             ),
           };
 
-          expect(sendEmailApiSpy.mock.calls[0][0]).toEqual(expected.templateId, expected.sendToEmailAddress, expected.emailVariables);
+          expect(sendEmailApiSpy.mock.calls[0][0]).toEqual(
+            expected.templateId,
+            expected.sendToEmailAddress,
+            expected.emailVariables,
+          );
         });
       });
 

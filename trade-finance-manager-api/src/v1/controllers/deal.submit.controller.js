@@ -14,13 +14,13 @@ const { updatePortalDealStatus } = require('./update-portal-deal-status');
 const CONSTANTS = require('../../constants');
 const api = require('../api');
 const { createEstoreSite } = require('./estore.controller');
-const { issueAcbsFacilities } = require('./acbs.controller');
+const { issueAcbsFacilities, createACBS } = require('./acbs.controller');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
 const { sendDealSubmitEmails, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const { dealHasAllUkefIds } = require('../helpers/dealHasAllUkefIds');
-const submitDealToACBS = require('../helpers/submit-deal-acbs');
+const canSubmitToACBS = require('../helpers/can-submit-to-acbs');
 
 /**
  * Retrieves a deal from the portal based on the provided deal ID and deal type.
@@ -113,7 +113,11 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
     const tfmDeal = api.updateDeal({ dealId, dealUpdate, auditDetails });
 
     // Submit to ACBS
-    await submitDealToACBS(tfmDeal);
+    const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
+
+    if (canSubmitDealToACBS) {
+      await createACBS(tfmDeal);
+    }
 
     return tfmDeal;
   }
@@ -181,9 +185,15 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
 
     tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
-    await submitDealToACBS(tfmDeal);
+    const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
 
-    if (await submitDealToACBS(tfmDeal, false, true)) {
+    if (canSubmitDealToACBS) {
+      await createACBS(tfmDeal);
+    }
+
+    const canIssueFacilityInACBS = await canSubmitToACBS(tfmDeal, false);
+
+    if (canIssueFacilityInACBS) {
       await issueAcbsFacilities(dealUpdate);
     }
 

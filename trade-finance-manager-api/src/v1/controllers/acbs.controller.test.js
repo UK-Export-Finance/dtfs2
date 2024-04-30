@@ -23,7 +23,7 @@ const mockACBSTaskLink = {
   purgeHistoryDeleteUri: 'acbs',
 };
 const updateACBSfacilityMock = jest.spyOn(api, 'updateACBSfacility');
-updateACBSfacilityMock.mockResolvedValue(Promise.resolve(mockACBSTaskLink));
+updateACBSfacilityMock.mockResolvedValue(mockACBSTaskLink);
 
 describe('addToACBSLog', () => {
   beforeEach(() => {
