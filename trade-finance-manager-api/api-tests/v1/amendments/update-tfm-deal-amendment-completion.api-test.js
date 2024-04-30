@@ -68,8 +68,8 @@ describe('update tfm-deals on amendment completion', () => {
     await updateFacilityAmendment(mockAmendment.facilityId, mockAmendment.amendmentId, { updateTfmLastUpdated: true });
     expect(api.updateDeal).toHaveBeenCalledWith({
       dealId: mockAmendment.dealId,
-      dealUpdate: { tfm: expect.objectContaining({ lastUpdated: expect.any(Number) }) },
-      auditDetails: expect.objectContaining({ userType: 'tfm', id: expect.any(ObjectId) }),
+      dealUpdate: { tfm: { lastUpdated: expect.any(Number) } },
+      userInformation: { userType: 'tfm', id: expect.any(ObjectId) },
     });
   });
 

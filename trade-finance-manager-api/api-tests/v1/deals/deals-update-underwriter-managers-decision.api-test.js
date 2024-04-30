@@ -89,15 +89,15 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
         dealId: VALID_DEAL_ID,
         dealUpdate: expect.objectContaining({
           tfm: {
-            underwriterManagersDecision: expect.objectContaining({
+            underwriterManagersDecision: {
               decision: VALID_UNDERWRITER_MANAGERS_DECISION.decision,
               userFullName: VALID_UNDERWRITER_MANAGERS_DECISION.userFullName,
               timestamp: expect.any(Number),
-            }),
+            },
             stage: VALID_UNDERWRITER_MANAGERS_DECISION.decision,
           },
         }),
-        auditDetails: {
+        userInformation: {
           userType: 'tfm',
           id: expect.any(ObjectId),
         },
