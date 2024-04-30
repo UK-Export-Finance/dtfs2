@@ -1,3 +1,4 @@
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
 const databaseHelper = require('../../database-helper');
 const CONSTANTS = require('../../../src/constants');
 const {
@@ -72,6 +73,7 @@ describe(baseUrl, () => {
         issueDate: null,
         unissuedToIssuedByMaker: expect.any(Object),
         hasBeenIssuedAndAcknowledged: null,
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aMaker._id),
       },
       validation: {
         required: ['monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],

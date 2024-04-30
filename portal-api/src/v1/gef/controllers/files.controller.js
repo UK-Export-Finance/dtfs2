@@ -2,6 +2,7 @@ const stream = require('stream');
 const { ObjectId } = require('mongodb');
 const filesize = require('filesize');
 
+const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const File = require('../models/files');
@@ -89,7 +90,9 @@ exports.create = async (req, res) => {
         const fileObject = { ...file, documentPath };
 
         const collection = await db.getCollection(filesCollection);
-        const insertedFile = await collection.insertOne(new File(fileObject, parentId));
+        const insertedFile = await collection.insertOne(
+          new File(fileObject, parentId, generatePortalUserAuditDatabaseRecord(req.user._id)),
+        );
         const insertedId = String(insertedFile.insertedId);
 
         if (!ObjectId.isValid(insertedId)) {

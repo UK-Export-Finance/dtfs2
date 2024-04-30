@@ -1,4 +1,4 @@
-const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const utils = require('../../crypto/utils');
 const { login } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
@@ -332,6 +332,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
       },
     });
   }
+  const auditDetails = generatePortalAuditDetails(user._id);
   const updateData = {
     password,
     passwordConfirm,
@@ -340,7 +341,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
     currentPassword: '',
     loginFailureCount: 0,
     passwordUpdatedAt: `${Date.now()}`,
-    auditRecord: generatePortalUserAuditDatabaseRecord(user._id)
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   return update(user._id, updateData, (updateErr) => {
