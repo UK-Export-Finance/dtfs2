@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { AuditDetails } from '../../types/audit-details';
+import { AuditDetails } from '../types/audit-details';
 
 export function validateAuditDetails(auditDetails: unknown): asserts auditDetails is AuditDetails {
   if (!(auditDetails instanceof Object && 'userType' in auditDetails)) {

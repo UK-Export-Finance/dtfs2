@@ -1,5 +1,5 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -38,11 +38,17 @@ describe('/v1/tfm/facilities', () => {
 
       // submit deal/facilities
       await api
-        .put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+          dealId,
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+        })
         .to('/v1/tfm/deals/submit');
 
       // get facilities after they've been created so we have all the data
-      const { body: allFacilitiesAfterCreation } = await api.get('/v1/tfm/facilities?page=0&pagesize=20&sortBy[order]=ascending&sortBy[field]=ukefFacilityId');
+      const { body: allFacilitiesAfterCreation } = await api.get(
+        '/v1/tfm/facilities?page=0&pagesize=20&sortBy[order]=ascending&sortBy[field]=ukefFacilityId',
+      );
 
       const expectedFacilityShape = {
         companyName: expect.any(String),

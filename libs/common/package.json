@@ -21,9 +21,7 @@
     ".": "./src/index.ts",
     "./sql-db-connection": "./src/sql-db-connection/index.ts",
     "./mongo-db-client": "./src/mongo-db-client/index.ts",
-    "./src/helpers/change-stream/generate-audit-details": "./src/helpers/change-stream/generate-audit-details.ts",
-    "./src/helpers/change-stream/generate-audit-database-record": "./src/helpers/change-stream/generate-audit-database-record.ts",
-    "./src/helpers/change-stream/validate-audit-details": "./src/helpers/change-stream/validate-audit-details.ts"
+    "./change-stream": "./src/change-stream/index.ts"
   },
   "main": "src/index.ts",
   "scripts": {
@@ -43,14 +41,14 @@
   },
   "dependencies": {
     "date-fns": "^3.3.1",
+    "date-fns-tz": "^2.0.1",
     "dotenv": "^16.3.2",
+    "mongodb": "^4.17.0",
     "mssql": "^10.0.2",
+    "node-cron": "^3.0.3",
     "reflect-metadata": "^0.2.1",
     "typeorm": "^0.3.19",
-    "zod": "^3.22.4",
-    "date-fns-tz": "^2.0.1",
-    "mongodb": "^4.17.0",
-    "node-cron": "^3.0.3"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

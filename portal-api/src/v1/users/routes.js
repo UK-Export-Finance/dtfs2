@@ -1,4 +1,4 @@
-const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
 const utils = require('../../crypto/utils');
 const { login } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');

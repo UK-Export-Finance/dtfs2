@@ -1,8 +1,10 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const {
+  validateAuditDetails,
+  generateAuditDatabaseRecordFromAuditDetails,
+} = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../../drivers/db-client').default;
 const { payloadVerification } = require('../../../../helpers');
-const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
-const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
 const { PAYLOAD } = require('../../../../constants');
 
 const createTeam = async (team, auditDetails) => {

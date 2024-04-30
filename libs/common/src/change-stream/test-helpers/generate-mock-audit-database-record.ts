@@ -4,7 +4,7 @@ import {
   generatePortalUserAuditDatabaseRecord,
   generateSystemAuditDatabaseRecord,
   generateNoUserLoggedInAuditDatabaseRecord,
-} from '../helpers/change-stream/generate-audit-database-record';
+} from '../generate-audit-database-record';
 
 export const generateMockTfmUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
   ...generateTfmUserAuditDatabaseRecord(mockUserId),

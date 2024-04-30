@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
-const { generateSystemAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record')
+const { generateSystemAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../api');
 const db = require('../../drivers/db-client');
 const tfmController = require('./tfm.controller');
@@ -112,7 +112,9 @@ const checkAzureAcbsFunction = async () => {
         status: { $eq: DURABLE_FUNCTIONS_LOG.STATUS.RUNNING },
       })
       .toArray();
-    const tasks = await runningTasks.map(({ acbsTaskLinks = {} }) => api.getFunctionsAPI(acbsTaskLinks.statusQueryGetUri));
+    const tasks = await runningTasks.map(({ acbsTaskLinks = {} }) =>
+      api.getFunctionsAPI(acbsTaskLinks.statusQueryGetUri),
+    );
     const taskList = await Promise.all(tasks);
 
     taskList.forEach(async (task) => {

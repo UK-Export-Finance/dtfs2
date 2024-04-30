@@ -1,9 +1,12 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const {
+  generateAuditDatabaseRecordFromAuditDetails,
+  validateAuditDetails,
+  validateAuditDetailsAndUserType,
+} = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const db = require('../../../../drivers/db-client').default;
-const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
-const { validateAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
 const CONSTANTS = require('../../../../constants');
@@ -55,13 +58,15 @@ const updateDeal = async ({ dealId, dealUpdate, existingDeal, auditDetails }) =>
       const updatedActivities = [...dealTfmUpdate.tfm.activities, ...existingDealActivities];
       // ensures that duplicate entries are not added to activities by comparing timestamp and label
       dealTfmUpdate.tfm.activities = updatedActivities.filter(
-        (value, index, arr) => arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index,
+        (value, index, arr) =>
+          arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index,
       );
     } else {
       const updatedActivities = [dealTfmUpdate.tfm.activities, ...existingDealActivities];
       // ensures that duplicate entries are not added to activities by comparing timestamp and label
       dealTfmUpdate.tfm.activities = updatedActivities.filter(
-        (value, index, arr) => arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index,
+        (value, index, arr) =>
+          arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index,
       );
     }
   }
@@ -69,10 +74,14 @@ const updateDeal = async ({ dealId, dealUpdate, existingDeal, auditDetails }) =>
   dealTfmUpdate.tfm.lastUpdated = new Date().valueOf();
   dealTfmUpdate.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(withoutId(dealTfmUpdate)), {
-    returnNewDocument: true,
-    returnDocument: 'after',
-  });
+  const findAndUpdateResponse = await collection.findOneAndUpdate(
+    { _id: { $eq: ObjectId(dealId) } },
+    $.flatten(withoutId(dealTfmUpdate)),
+    {
+      returnNewDocument: true,
+      returnDocument: 'after',
+    },
+  );
 
   return findAndUpdateResponse.value;
 };
@@ -120,11 +129,15 @@ const updateDealSnapshot = async (deal, snapshotChanges, auditDetails) => {
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       };
 
-      const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(String(dealId)) } }, $.flatten(withoutId(update)), {
-        returnNewDocument: true,
-        returnDocument: 'after',
-        upsert: true,
-      });
+      const findAndUpdateResponse = await collection.findOneAndUpdate(
+        { _id: { $eq: ObjectId(String(dealId)) } },
+        $.flatten(withoutId(update)),
+        {
+          returnNewDocument: true,
+          returnDocument: 'after',
+          upsert: true,
+        },
+      );
 
       return findAndUpdateResponse.value;
     } catch (error) {

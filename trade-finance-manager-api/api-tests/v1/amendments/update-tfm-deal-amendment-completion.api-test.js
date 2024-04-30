@@ -1,6 +1,6 @@
 const { format } = require('date-fns');
 const { ObjectId } = require('mongodb');
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const amendmentController = require('../../../src/v1/controllers/amendment.controller');
 const { AMENDMENT_STATUS } = require('../../../src/constants/deals');
 const api = require('../../../src/v1/api');
@@ -39,7 +39,11 @@ describe('update tfm-deals on amendment completion', () => {
 
   it('updateTFMDealLastUpdated() - should update lastUpdated to now when dealId exists', async () => {
     mockUpdateDeal();
-    const result = await amendmentController.updateTFMDealLastUpdated(mockAmendment.dealId, mockAmendment.facilityId, generateTfmAuditDetails(MOCK_USERS[0]._id));
+    const result = await amendmentController.updateTFMDealLastUpdated(
+      mockAmendment.dealId,
+      mockAmendment.facilityId,
+      generateTfmAuditDetails(MOCK_USERS[0]._id),
+    );
 
     const expected = format(new Date(), 'dd/MM/yyyy');
     const expectedResult = format(result.tfm.lastUpdated, 'dd/MM/yyyy');
@@ -48,7 +52,11 @@ describe('update tfm-deals on amendment completion', () => {
 
   it('updateTFMDealLastUpdated() - should return null when dealId is null', async () => {
     mockAmendment.dealId = null;
-    const result = await amendmentController.updateTFMDealLastUpdated(mockAmendment.dealId, mockAmendment.facilityId, generateTfmAuditDetails(MOCK_USERS[0]._id));
+    const result = await amendmentController.updateTFMDealLastUpdated(
+      mockAmendment.dealId,
+      mockAmendment.facilityId,
+      generateTfmAuditDetails(MOCK_USERS[0]._id),
+    );
 
     expect(result).toBeNull();
   });

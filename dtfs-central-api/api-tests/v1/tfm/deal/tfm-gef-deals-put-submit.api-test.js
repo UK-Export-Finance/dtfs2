@@ -1,6 +1,8 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
+const {
+  generatePortalAuditDetails,
+  generateParsedMockPortalUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -62,7 +64,8 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
     });
 
     withValidateAuditDetailsTests({
-      makeRequest: (auditDetails) => api.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF, dealId }).to('/v1/tfm/deals/submit'),
+      makeRequest: (auditDetails) =>
+        api.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF, dealId }).to('/v1/tfm/deals/submit'),
       validUserTypes: ['portal'],
     });
 

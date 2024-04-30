@@ -2,7 +2,7 @@ import { getCollection } from '../database';
 import { Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { createFacilityFolder, uploadSupportingDocuments } from '../v1/controllers/estore/eStoreApi';
-import { generateSystemAuditDatabaseRecord } from '@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record';
+import { generateSystemAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream';
 
 const FACILITY_FOLDER_MAX_RETRIES = 3;
 
@@ -48,11 +48,18 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
           console.info('Task started: Upload the supporting documents');
           const uploadDocuments = Promise.all(
             eStoreData.supportingInformation.map((file: any) =>
-              uploadSupportingDocuments(eStoreData.siteId, eStoreData.dealIdentifier, { ...file, buyerName: eStoreData.buyerName }),
+              uploadSupportingDocuments(eStoreData.siteId, eStoreData.dealIdentifier, {
+                ...file,
+                buyerName: eStoreData.buyerName,
+              }),
             ),
           );
-          uploadDocuments.then((res) => console.info('Task completed: Supporting documents uploaded successfully %o', res[0].data));
-          uploadDocuments.catch((error) => console.error('Task failed: There was a problem uploading the documents %o', error));
+          uploadDocuments.then((res) =>
+            console.info('Task completed: Supporting documents uploaded successfully %o', res[0].data),
+          );
+          uploadDocuments.catch((error) =>
+            console.error('Task failed: There was a problem uploading the documents %o', error),
+          );
         }
       }
     } else {

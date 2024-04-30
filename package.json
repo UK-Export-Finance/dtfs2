@@ -42,7 +42,6 @@
     "start:detach": "npm run start -- --detach",
     "stop": "docker compose down",
     "type-check:all": "npm run type-check --workspaces --if-present",
-    "type:all": "npm run type-check --workspaces --if-present",
     "update:all": "npm update --save --if-present"
   },
   "lint-staged": {
@@ -50,9 +49,6 @@
     "**/*.{js,ts}": [
       "eslint --fix",
       "prettier --write"
-    ],
-    "**/*.ts": [
-      "tsc --noEmit"
     ],
     "**/*": [
       "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"
