@@ -1,4 +1,5 @@
 const { when } = require('jest-when');
+const { ObjectId } = require('mongodb');
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
@@ -88,17 +89,17 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
         dealId: VALID_DEAL_ID,
         dealUpdate: expect.objectContaining({
           tfm: {
-            underwriterManagersDecision: {
+            underwriterManagersDecision: expect.objectContaining({
               decision: VALID_UNDERWRITER_MANAGERS_DECISION.decision,
               userFullName: VALID_UNDERWRITER_MANAGERS_DECISION.userFullName,
               timestamp: expect.any(Number),
-            },
+            }),
             stage: VALID_UNDERWRITER_MANAGERS_DECISION.decision,
           },
         }),
         auditDetails: {
           userType: 'tfm',
-          id: expect.any(String),
+          id: expect.any(ObjectId),
         },
         onError: expect.any(Function),
       });
