@@ -28,27 +28,27 @@ const userService = new UserService();
 const signInLinkService = new SignInLinkService(randomGenerator, hasher, userRepository, userService);
 const signInLinkController = new SignInLinkController(signInLinkService);
 
-const isAdmin = (req, res, next) => {
-  if (req.user && req.user.roles.includes('admin')) {
-    // User is an admin, allow access to the route
-    next();
-  } else {
-    // User is not an admin, send a 403 Forbidden response
-    res.status(403).json({ error: 'Unauthorized' });
-  }
-};
+// const isAdmin = (req, res, next) => {
+//   if (req.user && req.user.roles.includes('admin')) {
+//     // User is an admin, allow access to the route
+//     next();
+//   } else {
+//     // User is not an admin, send a 403 Forbidden response
+//     res.status(403).json({ error: 'Unauthorized' });
+//   }
+// };
 
-const isUserOrAdmin = (req, res, next) => {
-  if (req.user._id.toString() === req.params._id || req.user.roles.includes('admin')) {
-      next();
-    } else {
-      res.status(403).send('Unauthorized');
-    }
+// const isUserOrAdmin = (req, res, next) => {
+//   if (req.user._id.toString() === req.params._id || req.user.roles.includes('admin')) {
+//       next();
+//     } else {
+//       res.status(403).send('Unauthorized');
+//     }
 
 
-};
+// };
 
-module.exports.list = [isAdmin, (req, res, next) => {
+module.exports.list = (req, res, next) => {
   list((error, users) => {
     if (error) {
       next(error);
@@ -60,7 +60,7 @@ module.exports.list = [isAdmin, (req, res, next) => {
       });
     }
   });
-}];
+};
 
 const combineErrors = (listOfErrors) =>
   listOfErrors.reduce((obj, error) => {
@@ -123,7 +123,7 @@ module.exports.create = async (req, res, next) => {
   });
 };
 
-module.exports.findById = [isUserOrAdmin, (req, res, next) => {
+module.exports.findById = (req, res, next) => {
   findOne(req.params._id, (error, user) => {
     if (error) {
       next(error);
@@ -133,9 +133,9 @@ module.exports.findById = [isUserOrAdmin, (req, res, next) => {
       res.status(200).json({});
     }
   });
-}];
+};
 
-module.exports.updateById = [isUserOrAdmin, async (req, res, next) => {
+module.exports.updateById = async (req, res, next) => {
   try {
     const userIsAdmin = req.user?.roles?.includes(ADMIN);
 
@@ -178,7 +178,7 @@ module.exports.updateById = [isUserOrAdmin, async (req, res, next) => {
     console.error('Error updating user %o', error);
     return res.status(500).send();
   }
-}];
+};
 
 module.exports.disable = (req, res, next) => {
   disable(req.params._id, (error, status) => {
@@ -190,7 +190,7 @@ module.exports.disable = (req, res, next) => {
   });
 };
 
-module.exports.remove = [isAdmin, (req, res, next) => {
+module.exports.remove = (req, res, next) => {
   remove(req.params._id, (error, status) => {
     if (error) {
       next(error);
@@ -198,7 +198,7 @@ module.exports.remove = [isAdmin, (req, res, next) => {
       res.status(200).json(status);
     }
   });
-}];
+};
 
 module.exports.login = async (req, res, next) => {
   const { username, password } = req.body;

@@ -3,13 +3,9 @@ const partials = require('../../../partials');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const relative = require('../../../relativeURL');
 
-const {
-  GEF_DEAL_DRAFT,
-  GEF_FACILITY_CASH,
-  GEF_FACILITY_CONTINGENT,
-} = require('../fixtures');
+const { GEF_DEAL_DRAFT, GEF_FACILITY_CASH, GEF_FACILITY_CONTINGENT } = require('../fixtures');
 
-const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
+const { ADMINNOMAKER } = MOCK_USERS;
 
 context('Admin dashboard', () => {
   let deal;
@@ -22,15 +18,16 @@ context('Admin dashboard', () => {
   };
 
   beforeEach(() => {
-    cy.deleteDeals(ADMIN);
-    cy.deleteGefApplications(ADMIN);
+    cy.deleteDeals(ADMINNOMAKER);
+    cy.deleteGefApplications(ADMINNOMAKER);
     // resets all facilities array
     ALL_FACILITIES.length = 0;
 
-    cy.insertOneDeal(dummyDeal, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(dummyDeal, ADMINNOMAKER).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((dealGef) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMINNOMAKER).then((dealGef) => {
       const { _id: dealId } = dealGef;
 
       gefDeal = dealGef;
@@ -40,7 +37,7 @@ context('Admin dashboard', () => {
         { ...GEF_FACILITY_CONTINGENT, dealId, name: 'Contingent Facility name' },
       ];
 
-      cy.insertManyGefFacilities(facilities, BANK1_MAKER1).then((insertedFacilities) => {
+      cy.insertManyGefFacilities(facilities, ADMINNOMAKER).then((insertedFacilities) => {
         insertedFacilities.forEach((facility) => {
           ALL_FACILITIES.push(facility.details);
         });
@@ -50,7 +47,7 @@ context('Admin dashboard', () => {
 
   it('Bank column should appear for admin user', () => {
     // login and go to dashboard
-    cy.login(ADMIN);
+    cy.login(ADMINNOMAKER);
     dashboardDeals.visit();
 
     // check the fields we understand
@@ -59,21 +56,21 @@ context('Admin dashboard', () => {
   });
 
   it('clicking on a gef deal takes you to application details page (Admin)', () => {
-    cy.login(ADMIN);
+    cy.login(ADMINNOMAKER);
     dashboardDeals.visit();
     dashboardDeals.row.link(gefDeal._id).click();
     cy.url().should('eq', relative(`/gef/application-details/${gefDeal._id}`));
   });
 
   it('clicking on a bss deal takes you to application details page (Admin)', () => {
-    cy.login(ADMIN);
+    cy.login(ADMINNOMAKER);
     dashboardDeals.visit();
     dashboardDeals.row.link(deal._id).click();
     cy.url().should('eq', relative(`/contract/${deal._id}`));
   });
 
   it('renders all facilities (Admin)', () => {
-    cy.login(ADMIN);
+    cy.login(ADMINNOMAKER);
     dashboardFacilities.visit();
     dashboardFacilities.rows().should('be.visible');
     dashboardFacilities.row.nameLink(ALL_FACILITIES[0]._id).should('exist');
@@ -82,7 +79,7 @@ context('Admin dashboard', () => {
   });
 
   it('clicking on a gef facility takes you to application details focussing on the facility (Admin)', () => {
-    cy.login(ADMIN);
+    cy.login(ADMINNOMAKER);
     dashboardFacilities.visit();
     dashboardFacilities.rows().should('be.visible');
     dashboardFacilities.row.nameLink(ALL_FACILITIES[0]._id).click();
@@ -90,7 +87,7 @@ context('Admin dashboard', () => {
   });
 
   it('clicking on a bss facility takes you to application details focussing on the facility (Admin)', () => {
-    cy.login(BANK1_MAKER1);
+    cy.login(ADMINNOMAKER);
     cy.visit(relative(`/contract/${deal._id}`));
     // adds bond
     cy.addBondToDeal();

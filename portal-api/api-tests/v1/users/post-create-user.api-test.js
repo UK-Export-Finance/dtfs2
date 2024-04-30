@@ -87,28 +87,25 @@ describe('a user', () => {
 
     describe('it creates the user', () => {
       it('it creates the user if all provided data is valid', async () => {
-        await createUser(MOCK_USER);
-        const { status, body } = await as(ADMIN).get(BASE_URL);
+        // await createUser(MOCK_USER);
+        // const { status, body } = await as(ADMIN).get(BASE_URL);
+        const { status, body } = await createUser(MOCK_USER);
 
-        expect(status).toEqual(401);
-        expect(body).toStrictEqual(
-          expect.objectContaining({
-            success: true,
-            users: expect.arrayContaining([
-              {
-                username: MOCK_USER.username,
-                email: MOCK_USER.email,
-                roles: MOCK_USER.roles,
-                bank: MOCK_USER.bank,
-                _id: expect.any(String),
-                firstname: MOCK_USER.firstname,
-                surname: MOCK_USER.surname,
-                timezone: 'Europe/London',
-                'user-status': STATUS.ACTIVE,
-              },
-            ]),
-          }),
-        );
+        expect(status).toEqual(200);
+        expect(body).toStrictEqual({
+          success: true,
+          user: {
+            username: MOCK_USER.username,
+            email: MOCK_USER.email,
+            roles: MOCK_USER.roles,
+            bank: MOCK_USER.bank,
+            _id: expect.any(String),
+            firstname: MOCK_USER.firstname,
+            surname: MOCK_USER.surname,
+            timezone: 'Europe/London',
+            'user-status': STATUS.ACTIVE,
+          }
+        });
       });
 
       it('it creates the user if the user creation request has the read-only role repeated', async () => {
@@ -162,6 +159,6 @@ describe('a user', () => {
   });
 
   async function createUser(userToCreate) {
-    return as(aNonAdmin).post(userToCreate).to(BASE_URL);
+    return as(anAdmin).post(userToCreate).to(BASE_URL);
   }
 });

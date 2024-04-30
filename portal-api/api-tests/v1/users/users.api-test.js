@@ -16,11 +16,13 @@ const MOCK_USER = { ...users.barclaysBankMaker1, username: temporaryUsernameAndE
 
 describe('a user', () => {
   let aNonAdmin;
+  let anAdmin;
 
   beforeAll(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
     const testUsers = await testUserCache.initialise(app);
     aNonAdmin = testUsers().withoutRole(ADMIN).one();
+    anAdmin = testUsers().withRole(ADMIN).one();
   });
 
   beforeEach(async () => {
@@ -36,9 +38,9 @@ describe('a user', () => {
       const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
 
-      await as(aNonAdmin).remove(`/v1/users/${createdUser._id}`);
+      await as(anAdmin).remove(`/v1/users/${createdUser._id}`);
 
-      const { status, body } = await as(aNonAdmin).get(`/v1/users/${createdUser._id}`);
+      const { status, body } = await as(anAdmin).get(`/v1/users/${createdUser._id}`);
 
       expect(status).toEqual(200);
       expect(body).toMatchObject({});
@@ -52,7 +54,7 @@ describe('a user', () => {
 
       await as(aNonAdmin).remove(`/v1/users/${createdUser._id}/disable`);
 
-      const { status, body } = await as(aNonAdmin).get(`/v1/users/${createdUser._id}`);
+      const { status, body } = await as(anAdmin).get(`/v1/users/${createdUser._id}`);
 
       expect(status).toEqual(200);
       expect(body).toMatchObject({
@@ -150,11 +152,11 @@ describe('a user', () => {
 
   it('User already exists', async () => {
     // User creation - first instance
-    const first = await as(aNonAdmin).post(MOCK_USER).to('/v1/users');
+    const first = await as(anAdmin).post(MOCK_USER).to('/v1/users');
     expect(first.status).toEqual(200);
 
     // User creation - second instance
-    const second = await as(aNonAdmin).post(MOCK_USER).to('/v1/users');
+    const second = await as(anAdmin).post(MOCK_USER).to('/v1/users');
     expect(second.status).toEqual(400);
   });
 

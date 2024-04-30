@@ -9,9 +9,14 @@ const { userHasAtLeastOneAllowedRole } = require('./user-has-at-least-one-allowe
 const validateUserHasAtLeastOneAllowedRole = ({
   allowedRoles,
 }) => (req, res, next) => {
+
   const { user } = req;
 
-  if (!userHasAtLeastOneAllowedRole({ user, allowedRoles })) {
+  if (!user) {
+    throw new Error(`Failed to create user session with status ${allowedRoles}: user is null`);
+  }
+
+  if (!user || !userHasAtLeastOneAllowedRole({ user, allowedRoles })) {
     console.error('Unauthorised access for %s.', user);
 
     res.status(401).json({ success: false, msg: "You don't have access to this page" });

@@ -16,6 +16,8 @@ const { withValidateUsernameAndEmailMatchTests } = require('./with-validate-user
 const { withValidateEmailIsCorrectFormatTests } = require('./with-validate-email-is-correct-format.api-tests').default;
 const { withValidateEmailIsUniqueTests } = require('./with-validate-email-is-unique.api-tests');
 const { withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests } = require('./with-validate-password.api-tests');
+const { createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
+
 
 const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
 const MOCK_USER = { ...users.barclaysBankMaker1, username: temporaryUsernameAndEmail, email: temporaryUsernameAndEmail };
@@ -28,6 +30,7 @@ describe('a user', () => {
   let aNonAdmin;
   let anAdmin;
   let createdUser;
+  const initialPassword = 'initialPassword1!';
 
   const A_MATCHING_EMAIL_ADDRESS = 'aMatchingEmailAddress@ukexportfinance.gov.uk';
 
@@ -43,6 +46,13 @@ describe('a user', () => {
 
     const response = await createUser(MOCK_USER);
     createdUser = response.body.user;
+    const initialUserCredentials = {
+      password: initialPassword,
+      passwordConfirm: initialPassword,
+};
+      await as(anAdmin).put(initialUserCredentials).to(`/v1/users/${createdUser._id}`);
+      const { token } = await createLoggedInUserSession(createdUser);
+      createdUser.token = token;
   });
 
   afterAll(async () => {
@@ -156,17 +166,18 @@ describe('a user', () => {
 
     describe('as non-admin', () => {
       it('a user can update their own password', async () => {
+        const updatedPassword = 'updatedPassword1!';
         const updatedUserCredentials = {
-          currentPassword: 'AbC!2345',
-          password: 'AbC1234!',
-          passwordConfirm: 'AbC1234!',
+          currentPassword: initialPassword,
+          password: updatedPassword,
+          passwordConfirm: updatedPassword,
         };
-
-        await as(createdUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
-
-        const { status } = await as(createdUser).get(`/v1/users/${createdUser._id}`);
-
-        expect(status).toEqual(200);
+        const { status: updatePasswordStatus } = await as(createdUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+        expect(updatePasswordStatus).toEqual(200);
+        const { status: loginWithInitalPasswordStatus } = await as().post({ username: createdUser.username, password: initialPassword }).to('/v1/login');
+        expect(loginWithInitalPasswordStatus).toEqual(401);
+        const { status: loginWithUpdatedPasswordStatus } = await as().post({ username: createdUser.username, password: updatedPassword }).to('/v1/login');
+        expect(loginWithUpdatedPasswordStatus).toEqual(200);
         // Should check new password works
       });
 
@@ -177,7 +188,7 @@ describe('a user', () => {
 
         await as(createdUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
-        const { status, body } = await as(createdUser).get(`/v1/users/${createdUser._id}`);
+        const { status, body } = await as(anAdmin).get(`/v1/users/${createdUser._id}`);
 
         expect(status).toEqual(200);
         expect(body.roles).toEqual(MOCK_USER.roles);
