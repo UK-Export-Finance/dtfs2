@@ -10,8 +10,13 @@ jest.mock('../../../../utils/crypto.util', () => ({
 }));
 
 const { when } = require('jest-when');
+const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common');
 const { loginCallback: login } = require('./loginCallback.helper');
-const { usernameOrPasswordIncorrect, userIsBlocked, userIsDisabled } = require('../../../../constants/login-results.constant');
+const {
+  usernameOrPasswordIncorrect,
+  userIsBlocked,
+  userIsDisabled,
+} = require('../../../../constants/login-results.constant');
 const controller = require('../user.controller');
 const utils = require('../../../../utils/crypto.util');
 
@@ -41,7 +46,7 @@ describe('loginCallback', () => {
     mockIssueJWTSuccess(USER);
     mockupdateLastLoginAndResetSignInDataSuccess(USER);
 
-    const result = await login(USERNAME, PASSWORD);
+    const result = await login(USERNAME, PASSWORD, generateNoUserLoggedInAuditDetails());
 
     expect(result).toEqual({ user: USER, tokenObject: TOKEN_OBJECT });
   });
@@ -52,7 +57,7 @@ describe('loginCallback', () => {
     mockIssueJWTSuccess(USER);
     mockupdateLastLoginAndResetSignInDataSuccess(USER);
 
-    const result = await login(USERNAME, PASSWORD);
+    const result = await login(USERNAME, PASSWORD, generateNoUserLoggedInAuditDetails());
 
     expect(result).toEqual({ error: usernameOrPasswordIncorrect });
   });
@@ -63,7 +68,7 @@ describe('loginCallback', () => {
     mockIssueJWTSuccess(USER);
     mockupdateLastLoginAndResetSignInDataSuccess(USER);
 
-    const result = await login(USERNAME, PASSWORD);
+    const result = await login(USERNAME, PASSWORD, generateNoUserLoggedInAuditDetails());
 
     expect(result).toEqual({ error: ERROR });
   });
@@ -74,7 +79,7 @@ describe('loginCallback', () => {
     mockIssueJWTSuccess(USER);
     mockupdateLastLoginAndResetSignInDataSuccess(USER);
 
-    const result = await login(USERNAME, PASSWORD);
+    const result = await login(USERNAME, PASSWORD, generateNoUserLoggedInAuditDetails());
 
     expect(result).toEqual({ error: usernameOrPasswordIncorrect });
   });
@@ -87,7 +92,7 @@ describe('loginCallback', () => {
     mockIssueJWTSuccess(DISABLED_USER);
     mockupdateLastLoginAndResetSignInDataSuccess(DISABLED_USER);
 
-    const result = await login(USERNAME, PASSWORD);
+    const result = await login(USERNAME, PASSWORD, generateNoUserLoggedInAuditDetails());
 
     expect(result).toEqual({ error: userIsDisabled });
   });
@@ -100,7 +105,7 @@ describe('loginCallback', () => {
     mockIssueJWTSuccess(BLOCKED_USER);
     mockupdateLastLoginAndResetSignInDataSuccess(BLOCKED_USER);
 
-    const result = await login(USERNAME, PASSWORD);
+    const result = await login(USERNAME, PASSWORD, generateNoUserLoggedInAuditDetails());
 
     expect(result).toEqual({ error: userIsBlocked });
   });
@@ -113,7 +118,7 @@ describe('loginCallback', () => {
     mockIssueJWTSuccess(DISABLED_USER);
     mockupdateLastLoginAndResetSignInDataSuccess(DISABLED_USER);
 
-    const result = await login(USERNAME, PASSWORD);
+    const result = await login(USERNAME, PASSWORD, generateNoUserLoggedInAuditDetails());
 
     expect(result).toEqual({ error: usernameOrPasswordIncorrect });
   });
@@ -126,7 +131,7 @@ describe('loginCallback', () => {
     mockIssueJWTSuccess(BLOCKED_USER);
     mockupdateLastLoginAndResetSignInDataSuccess(BLOCKED_USER);
 
-    const result = await login(USERNAME, PASSWORD);
+    const result = await login(USERNAME, PASSWORD, generateNoUserLoggedInAuditDetails());
 
     expect(result).toEqual({ error: usernameOrPasswordIncorrect });
   });
@@ -165,8 +170,8 @@ describe('loginCallback', () => {
 
   function mockupdateLastLoginAndResetSignInDataSuccess(user) {
     when(controller.updateLastLoginAndResetSignInData)
-      .calledWith(user, SESSION_IDENTIFIER, expect.anything())
-      .mockImplementation((aUser, sessionIdentifier, callback) => {
+      .calledWith(user, SESSION_IDENTIFIER, generateNoUserLoggedInAuditDetails(), expect.anything())
+      .mockImplementation((aUser, sessionIdentifier, auditDetails, callback) => {
         callback();
       });
   }

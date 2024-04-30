@@ -1,8 +1,12 @@
 const utils = require('../../../../utils/crypto.util');
-const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../../../constants/login-results.constant');
+const {
+  userIsBlocked,
+  userIsDisabled,
+  usernameOrPasswordIncorrect,
+} = require('../../../../constants/login-results.constant');
 const { findByUsername, updateLastLoginAndResetSignInData, incrementFailedLoginCount } = require('../user.controller');
 
-const loginCallback = (username, password) =>
+const loginCallback = (username, password, auditDetails) =>
   new Promise((resolve) => {
     findByUsername(username, async (error, user) => {
       if (error) {
@@ -16,7 +20,7 @@ const loginCallback = (username, password) =>
       const passwordIncorrect = !utils.validPassword(password, user.hash, user.salt);
 
       if (passwordIncorrect) {
-        await incrementFailedLoginCount(user);
+        await incrementFailedLoginCount(user, auditDetails);
         return resolve({ error: usernameOrPasswordIncorrect });
       }
 
@@ -30,7 +34,9 @@ const loginCallback = (username, password) =>
 
       const { sessionIdentifier, ...tokenObject } = utils.issueJWT(user);
 
-      return updateLastLoginAndResetSignInData(user, sessionIdentifier, () => resolve({ user, tokenObject }));
+      return updateLastLoginAndResetSignInData(user, sessionIdentifier, auditDetails, () =>
+        resolve({ user, tokenObject }),
+      );
     });
   });
 
