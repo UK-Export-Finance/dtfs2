@@ -222,11 +222,11 @@ jobs:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
 
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
+      # - name: Seeding
+      #   working-directory: ./utils/sql-db-seeder
+      #   env:
+      #     SQL_DB_HOST: localhost
+      #   run: npm run db:seed
 
       - name: Execute
         run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
@@ -419,11 +419,11 @@ jobs:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
 
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
+      # - name: Seeding
+      #   working-directory: ./utils/sql-db-seeder
+      #   env:
+      #     SQL_DB_HOST: localhost
+      #   run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -499,11 +499,11 @@ jobs:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
 
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
+      # - name: Seeding
+      #   working-directory: ./utils/sql-db-seeder
+      #   env:
+      #     SQL_DB_HOST: localhost
+      #   run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -577,11 +577,11 @@ jobs:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
 
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
+      # - name: Seeding
+      #   working-directory: ./utils/sql-db-seeder
+      #   env:
+      #     SQL_DB_HOST: localhost
+      #   run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -664,11 +664,11 @@ jobs:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
 
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
+      # - name: Seeding
+      #   working-directory: ./utils/sql-db-seeder
+      #   env:
+      #     SQL_DB_HOST: localhost
+      #   run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
