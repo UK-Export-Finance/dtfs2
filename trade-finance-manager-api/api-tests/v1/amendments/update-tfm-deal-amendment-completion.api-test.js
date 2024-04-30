@@ -1,5 +1,4 @@
 const { format } = require('date-fns');
-const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const amendmentController = require('../../../src/v1/controllers/amendment.controller');
 const { AMENDMENT_STATUS } = require('../../../src/constants/deals');
@@ -69,7 +68,7 @@ describe('update tfm-deals on amendment completion', () => {
     expect(api.updateDeal).toHaveBeenCalledWith({
       dealId: mockAmendment.dealId,
       dealUpdate: { tfm: { lastUpdated: expect.any(Number) } },
-      userInformation: { userType: 'tfm', id: expect.any(ObjectId) },
+      auditDetails: { userType: 'tfm', id: expect.anything() },
     });
   });
 

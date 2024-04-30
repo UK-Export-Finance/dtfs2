@@ -1,5 +1,4 @@
 const { when } = require('jest-when');
-const { ObjectId } = require('mongodb');
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
@@ -97,9 +96,9 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
             stage: VALID_UNDERWRITER_MANAGERS_DECISION.decision,
           },
         }),
-        userInformation: {
+        auditDetails: {
           userType: 'tfm',
-          id: expect.any(ObjectId),
+          id: expect.anything(),
         },
         onError: expect.any(Function),
       });
