@@ -190,6 +190,7 @@ class Facility {
 
       this.updatedAt = Date.now();
     }
+    this.auditRecord = req.auditRecord;
   }
 }
 
