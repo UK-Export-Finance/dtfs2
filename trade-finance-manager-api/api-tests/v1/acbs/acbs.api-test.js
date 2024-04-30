@@ -29,8 +29,23 @@ describe('acbs controller', () => {
   });
 
   describe('addToACBSLog', () => {
-    it('should not add entry to acbs log upon a malformed payload submission', async () => {
+    it('should not add an entry to `durable-functions-log` if the payload is malformed', async () => {
       const result = await acbsController.addToACBSLog({ deal: { deal: '123' }, acbsTaskLinks: {} });
+
+      expect(result).toEqual(false);
+    });
+
+    it('should not add an entry to `durable-functions-log` if the payload is malformed', async () => {
+      const result = await acbsController.addToACBSLog({ deal: { _id: 'invalid' }, acbsTaskLinks: { id: '123' } });
+
+      expect(result).toEqual(false);
+    });
+
+    it('should not add an entry to `durable-functions-log` if the payload is malformed', async () => {
+      const result = await acbsController.addToACBSLog({
+        deal: { _id: '64da2f74de0f97235921b09b' },
+        acbsTaskLinks: { statusQueryGetUri: '' },
+      });
 
       expect(result).toEqual(false);
     });

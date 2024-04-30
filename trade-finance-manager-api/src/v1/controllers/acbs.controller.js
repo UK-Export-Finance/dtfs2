@@ -22,8 +22,11 @@ const isUnissuedInACBS = require('../helpers/is-facility-unissued-acbs');
  * @returns {Promise<Object|boolean>} - A promise that resolves to the inserted log entry if successful, or false otherwise.
  */
 const addToACBSLog = async (payload) => {
+  if (!payload?.deal || !payload?.acbsTaskLinks) {
+    return false;
+  }
+
   const { deal, facility, bank, acbsTaskLinks } = payload;
-  const collection = await db.getCollection('durable-functions-log');
   const canAddToLog = ObjectId.isValid(deal?._id) && Boolean(deal?._id) && Boolean(acbsTaskLinks?.id);
 
   if (canAddToLog) {
@@ -40,6 +43,7 @@ const addToACBSLog = async (payload) => {
       auditRecord: generateSystemAuditDatabaseRecord(),
     };
 
+    const collection = await db.getCollection('durable-functions-log');
     return collection.insertOne(logEntry);
   }
 

@@ -1,5 +1,5 @@
 const { DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
-const { issueAcbsFacilities } = require('./acbs.controller');
+const { issueAcbsFacilities, addToACBSLog } = require('./acbs.controller');
 const api = require('../api');
 const db = require('../../drivers/db-client');
 const CONSTANTS = require('../../constants');
@@ -9,6 +9,10 @@ consoleErrorMock.mockImplementation();
 
 const consoleInfoMock = jest.spyOn(console, 'info');
 consoleInfoMock.mockImplementation();
+
+const insertOneMock = jest.fn().mockResolvedValue(true);
+const getCollectionMock = jest.spyOn(db, 'getCollection');
+getCollectionMock.mockResolvedValue({ insertOne: insertOneMock });
 
 const mockACBSTaskLink = {
   id: '5ce819935e539c343f141ece',
@@ -20,10 +24,82 @@ const mockACBSTaskLink = {
 };
 const updateACBSfacilityMock = jest.spyOn(api, 'updateACBSfacility');
 updateACBSfacilityMock.mockResolvedValue(Promise.resolve(mockACBSTaskLink));
-const insertOneMock = jest.fn().mockResolvedValue(true);
 
-const getCollectionMock = jest.spyOn(db, 'getCollection');
-getCollectionMock.mockResolvedValue({ insertOne: insertOneMock });
+describe('addToACBSLog', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  const payloads = [
+    {},
+    [],
+    null,
+    undefined,
+    '123',
+    '!£$',
+    123,
+    {
+      deal: {},
+      acbsTaskLinks: {},
+    },
+    {
+      deal: {
+        _id: 'invalid',
+      },
+      acbsTaskLinks: {},
+    },
+    {
+      deal: {
+        _id: '5ce819935e539c343f141ece',
+      },
+      acbsTaskLinks: {},
+    },
+    {
+      deal: {
+        _id: '5ce819935e539c343f141ece',
+      },
+      acbsTaskLinks: {
+        statusQueryGetUri: '123',
+      },
+    },
+  ];
+
+  it.each(payloads)('should return false when sending a malformed payload', async (payload) => {
+    const result = await addToACBSLog(payload);
+
+    expect(getCollectionMock).toHaveBeenCalledTimes(0);
+    expect(insertOneMock).toHaveBeenCalledTimes(0);
+    expect(result).toEqual(false);
+  });
+
+  it('should add an entry to the `durable-functions-log` collection', async () => {
+    const payload = {
+      deal: {
+        _id: '5ce819935e539c343f141ece',
+      },
+      acbsTaskLinks: mockACBSTaskLink,
+    };
+
+    const result = await addToACBSLog(payload);
+
+    expect(getCollectionMock).toHaveBeenCalledTimes(1);
+    expect(insertOneMock).toHaveBeenCalledTimes(1);
+    expect(insertOneMock).toHaveBeenCalledWith({
+      type: DURABLE_FUNCTIONS_LOG.TYPE.ACBS,
+      dealId: payload.deal._id,
+      deal: payload.deal,
+      facility: {},
+      bank: {},
+      status: DURABLE_FUNCTIONS_LOG.STATUS.RUNNING,
+      instanceId: mockACBSTaskLink.id,
+      acbsTaskLinks: mockACBSTaskLink,
+      submittedDate: expect.any(String),
+      auditRecord: expect.any(Object),
+    });
+
+    expect(result).toEqual(true);
+  });
+});
 
 describe('issueAcbsFacilities', () => {
   const invalidDeals = [
@@ -97,7 +173,7 @@ describe('issueAcbsFacilities', () => {
       deal: mockDeal,
       facility: {},
       bank: {},
-      status: 'Running',
+      status: DURABLE_FUNCTIONS_LOG.STATUS.RUNNING,
       instanceId: mockACBSTaskLink.id,
       acbsTaskLinks: mockACBSTaskLink,
       submittedDate: expect.any(String),
