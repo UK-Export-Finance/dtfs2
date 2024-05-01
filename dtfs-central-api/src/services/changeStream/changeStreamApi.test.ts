@@ -1,7 +1,6 @@
 import { Binary, ChangeStreamInsertDocument, ObjectId } from 'mongodb';
 import axios from 'axios';
 import { DeletionAuditLog } from '@ukef/dtfs2-common';
-import { generateNoUserLoggedInAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream';
 import { postAuditDetails, postDeletionAuditDetails } from './changeStreamApi';
 
 jest.mock('axios', () => jest.fn(() => Promise.resolve('mockResponse')));
@@ -68,6 +67,7 @@ describe('changeStreamApi', () => {
     });
   });
   describe('postDeletionAuditDetails', () => {
+    const now = new Date();
     const mockDeletionChangeStreamDocument: ChangeStreamInsertDocument<DeletionAuditLog> = {
       _id: '123',
       collectionUUID: new Binary(Buffer.from('123')),
@@ -75,7 +75,13 @@ describe('changeStreamApi', () => {
         collectionName: 'mockCollection',
         _id: new ObjectId(),
         deletedDocumentId: new ObjectId(),
-        auditRecord: generateNoUserLoggedInAuditDatabaseRecord(),
+        auditRecord: {
+          lastUpdatedAt: now,
+          lastUpdatedByIsSystem: null,
+          lastUpdatedByPortalUserId: null,
+          lastUpdatedByTfmUserId: null,
+          noUserLoggedIn: true,
+        },
       },
       operationType: 'insert',
       ns: {
@@ -104,7 +110,7 @@ describe('changeStreamApi', () => {
         data: {
           auditRecord: {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            deletedAt: expect.any(String),
+            deletedAt: now,
             deletedByPortalUserId: null,
             deletedByTfmUserId: null,
             deletedByIsSystem: null,

@@ -9,25 +9,25 @@ import {
 export const generateMockTfmUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
   ...generateTfmUserAuditDatabaseRecord(mockUserId),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  lastUpdatedAt: expect.any(String),
+  lastUpdatedAt: expect.any(Date),
 });
 
 export const generateMockPortalUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
   ...generatePortalUserAuditDatabaseRecord(mockUserId),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  lastUpdatedAt: expect.any(String),
+  lastUpdatedAt: expect.any(Date),
 });
 
 export const generateMockSystemAuditDatabaseRecord = () => ({
   ...generateSystemAuditDatabaseRecord(),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  lastUpdatedAt: expect.any(String),
+  lastUpdatedAt: expect.any(Date),
 });
 
 export const generateMockNoUserLoggedInAuditDatabaseRecord = () => ({
   ...generateNoUserLoggedInAuditDatabaseRecord(),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  lastUpdatedAt: expect.any(String),
+  lastUpdatedAt: expect.any(Date),
 });
 
 /**
@@ -39,7 +39,7 @@ export const generateMockNoUserLoggedInAuditDatabaseRecord = () => ({
 export const generateParsedMockTfmUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
   ...JSON.parse(JSON.stringify(generateTfmUserAuditDatabaseRecord(mockUserId))),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  lastUpdatedAt: expect.any(String),
+  lastUpdatedAt: expect.any(Date),
 });
 
 /**
@@ -51,5 +51,5 @@ export const generateParsedMockTfmUserAuditDatabaseRecord = (mockUserId: string 
 export const generateParsedMockPortalUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
   ...JSON.parse(JSON.stringify(generatePortalUserAuditDatabaseRecord(mockUserId))),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  lastUpdatedAt: expect.any(String),
+  lastUpdatedAt: expect.any(Date),
 });
