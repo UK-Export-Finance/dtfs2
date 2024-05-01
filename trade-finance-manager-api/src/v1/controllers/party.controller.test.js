@@ -1,5 +1,5 @@
 const { HttpStatusCode } = require('axios');
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { updateParty } = require('./party.controller');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
