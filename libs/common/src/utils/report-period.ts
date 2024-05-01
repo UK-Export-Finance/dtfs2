@@ -211,7 +211,7 @@ export const getFormattedReportPeriodWithLongMonth = (reportPeriod: ReportPeriod
  * Gets the formatted report period with the month in short format
  * @param reportPeriod - The report period
  * @param includePeriodicity - Whether to suffix the formatted period with the periodicity
- * @param alwaysStateYear (optional - defaults to false) - Whether to state the year for the
+ * @param [alwaysStateYear=false] - Whether to state the year for the
  * start of the report period when the period spans only a single year
  * @returns The formatted report period
  * @example

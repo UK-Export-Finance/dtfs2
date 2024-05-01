@@ -10,8 +10,7 @@ const {
 } = require('./validation/validateIds');
 require('dotenv').config();
 
-const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL } =
-  process.env;
+const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL } = process.env;
 
 const headers = {
   central: {
@@ -1221,7 +1220,7 @@ const getUtilisationReportsReconciliationSummary = async (submissionMonth) => {
 /**
  * Get utilisation report by id
  * @param {string} id
- * @returns {Promise<import('./api-response-types/UtilisationReportResponseBody').UtilisationReportResponseBody>}
+ * @returns {Promise<import('./api-response-types').UtilisationReportResponseBody>}
  */
 const getUtilisationReportById = async (id) => {
   const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${id}`, {
@@ -1247,6 +1246,19 @@ const updateUtilisationReportStatus = async (reportsWithStatus, user) => {
       user,
       reportsWithStatus,
     },
+  });
+
+  return response.data;
+};
+
+/**
+ * Gets the utilisation report reconciliation details by report id
+ * @param {string} reportId - The report id
+ * @returns {Promise<import('./api-response-types').UtilisationReportReconciliationDetailsResponseBody>}
+ */
+const getUtilisationReportReconciliationDetailsById = async (reportId) => {
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`, {
+    headers: headers.central,
   });
 
   return response.data;
@@ -1310,4 +1322,5 @@ module.exports = {
   getUtilisationReportsReconciliationSummary,
   getUtilisationReportById,
   updateUtilisationReportStatus,
+  getUtilisationReportReconciliationDetailsById,
 };
