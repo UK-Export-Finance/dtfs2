@@ -1,4 +1,5 @@
 import httpMocks from 'node-mocks-http';
+import * as dtfs2Common from '@ukef/dtfs2-common';
 import api from '../../api';
 import { getUtilisationReports } from '.';
 import { MOCK_BANK_HOLIDAYS } from '../../test-mocks/mock-bank-holidays';
@@ -14,6 +15,8 @@ console.error = jest.fn();
 const originalProcessEnv = process.env;
 
 describe('controllers/utilisation-reports', () => {
+  const isTfmPaymentReconciliationFeatureFlagEnabledSpy = jest.spyOn(dtfs2Common, 'isTfmPaymentReconciliationFeatureFlagEnabled');
+
   afterEach(() => {
     process.env = { ...originalProcessEnv };
     jest.resetAllMocks();
@@ -42,6 +45,9 @@ describe('controllers/utilisation-reports', () => {
       // Arrange
       const userToken = 'user-token';
 
+      const isTfmPaymentReconciliationFeatureFlagEnabledValue = true;
+      isTfmPaymentReconciliationFeatureFlagEnabledSpy.mockReturnValue(isTfmPaymentReconciliationFeatureFlagEnabledValue);
+
       const { res, req } = httpMocks.createMocks({
         session: { userToken, user: MOCK_TFM_SESSION_USER },
       });
@@ -59,10 +65,12 @@ describe('controllers/utilisation-reports', () => {
       await getUtilisationReports(req, res);
 
       // Assert
+      expect(isTfmPaymentReconciliationFeatureFlagEnabledSpy).toHaveBeenCalledTimes(1);
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-reports.njk');
       expect(res._getRenderData()).toMatchObject({
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         reportPeriodSummaries: expectedViewModel,
+        isTfmPaymentReconciliationFeatureFlagEnabled: isTfmPaymentReconciliationFeatureFlagEnabledValue,
       });
     });
   });

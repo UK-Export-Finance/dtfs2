@@ -61,3 +61,19 @@ export type UtilisationReportUploadDetails = Prettify<
     }
   >
 >;
+
+export type FeeRecordItem = {
+  facilityId: string;
+};
+
+export type UtilisationReportReconciliationDetails = {
+  reportId: number;
+  bank: {
+    id: string;
+    name: string;
+  };
+  status: UtilisationReportReconciliationStatus;
+  reportPeriod: ReportPeriod;
+  dateUploaded: Date;
+  feeRecords: FeeRecordItem[];
+};

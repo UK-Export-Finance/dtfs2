@@ -1,5 +1,5 @@
 import { AzureFileInfo, ReportPeriod } from '@ukef/dtfs2-common';
-import { UtilisationReportResponseBody } from '../api-response-types/UtilisationReportResponseBody';
+import { UtilisationReportResponseBody } from '../api-response-types/utilisation-report-response-body';
 
 const MOCK_AZURE_FILE_INFO: AzureFileInfo = {
   folder: 'folder_name',
@@ -21,5 +21,9 @@ export const MOCK_UTILISATION_REPORT: UtilisationReportResponseBody = {
   dateUploaded: '2023-11-15T15:11:14Z',
   azureFileInfo: MOCK_AZURE_FILE_INFO,
   status: 'PENDING_RECONCILIATION',
-  uploadedByUserId: '5099803df3f4948bd2f98391',
+  uploadedByUser: {
+    id: '5099803df3f4948bd2f98391',
+    firstname: 'Test',
+    surname: 'User',
+  },
 };
