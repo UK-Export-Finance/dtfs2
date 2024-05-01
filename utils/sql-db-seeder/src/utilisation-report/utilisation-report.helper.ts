@@ -130,5 +130,5 @@ export const createFeeRecordsForReport = (): {
   return {
     feeRecordWithMatchingCurrencies,
     feeRecordWithDifferingCurrencies,
-  }
+  };
 };
