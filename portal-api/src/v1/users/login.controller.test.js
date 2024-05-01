@@ -1,5 +1,5 @@
 const { when } = require('jest-when');
-const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { login } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
 const { UserService } = require('./user.service');

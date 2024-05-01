@@ -1,6 +1,4 @@
-const {
-  generateNoUserLoggedInAuditDetails,
-} = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const databaseHelper = require('../../database-helper');
 const { setUpApiTestUser } = require('../../api-test-users');
 

@@ -1,6 +1,5 @@
 const assert = require('assert');
-const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
 const { PAYLOAD, DEAL } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
