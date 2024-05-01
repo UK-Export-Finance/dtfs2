@@ -13,7 +13,7 @@ const MONTHLY_REPORT_PERIOD_SCHEDULE = [
   { startMonth: 12, endMonth: 12 },
 ];
 
-const BANKS = [
+const MOCK_BANKS = [
   {
     id: '956',
     name: 'Barclays Bank',
@@ -24,7 +24,7 @@ const BANKS = [
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
       teamName: 'Barclays Payment Reporting Team',
-      email: 'payment-officer4@ukexportfinance.gov.uk',
+      emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     isVisibleInTfmUtilisationReports: true,
@@ -39,7 +39,7 @@ const BANKS = [
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
       teamName: 'HSBC Payment Reporting Team',
-      email: 'payment-officer4@ukexportfinance.gov.uk',
+      emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     isVisibleInTfmUtilisationReports: true,
@@ -54,7 +54,7 @@ const BANKS = [
     hasGefAccessOnly: true,
     paymentOfficerTeam: {
       teamName: 'GEF Only Bank Payment Reporting Team',
-      email: 'payment-officer4@ukexportfinance.gov.uk',
+      emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     isVisibleInTfmUtilisationReports: false,
@@ -69,7 +69,7 @@ const BANKS = [
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
       teamName: 'Newable Payment Reporting Team',
-      email: 'payment-officer4@ukexportfinance.gov.uk',
+      emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     isVisibleInTfmUtilisationReports: false,
@@ -84,13 +84,13 @@ const BANKS = [
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
       teamName: 'LLOYDS Payment Reporting Team',
-      email: 'payment-officer4@ukexportfinance.gov.uk',
+      emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: [
+      { startMonth: 12, endMonth: 2 },
       { startMonth: 3, endMonth: 5 },
       { startMonth: 6, endMonth: 8 },
       { startMonth: 9, endMonth: 11 },
-      { startMonth: 12, endMonth: 2 },
     ],
     isVisibleInTfmUtilisationReports: false,
   },
@@ -104,7 +104,7 @@ const BANKS = [
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
       teamName: 'RBS Payment Reporting Team',
-      email: 'payment-officer4@ukexportfinance.gov.uk',
+      emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     isVisibleInTfmUtilisationReports: false,
@@ -119,7 +119,7 @@ const BANKS = [
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
       teamName: 'Santander Payment Reporting Team',
-      email: 'payment-officer4@ukexportfinance.gov.uk',
+      emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     isVisibleInTfmUtilisationReports: true,
@@ -134,7 +134,7 @@ const BANKS = [
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
       teamName: 'UKEF test bank (Delegated) Payment Reporting Team',
-      email: 'payment-officer4@ukexportfinance.gov.uk',
+      emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     isVisibleInTfmUtilisationReports: true,
@@ -149,17 +149,16 @@ const BANKS = [
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
       teamName: 'UKEF test bank (Delegated) 2 Payment Reporting Team',
-      email: 'payment-officer4@ukexportfinance.gov.uk',
+      emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: [
+      { startMonth: 12, endMonth: 2 },
       { startMonth: 3, endMonth: 5 },
       { startMonth: 6, endMonth: 8 },
       { startMonth: 9, endMonth: 11 },
-      { startMonth: 12, endMonth: 2 },
     ],
-    // TODO DTFS2-7100: Set this to `true` once quarterly reporting is implemented
-    isVisibleInTfmUtilisationReports: false,
+    isVisibleInTfmUtilisationReports: true,
   },
 ];
 
-module.exports = BANKS;
+module.exports = MOCK_BANKS;

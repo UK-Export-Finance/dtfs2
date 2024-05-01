@@ -1,17 +1,17 @@
 const { format, parseISO } = require('date-fns');
-const { getFormattedReportPeriod } = require('../../../helpers');
+const { getFormattedReportPeriodWithLongMonth } = require('@ukef/dtfs2-common');
 
 /**
  * @typedef {Object} ReportAndUserDetails
  * @property {string} uploadedByFullName - The uploaded by users full name with format '{firstname} {surname}'
  * @property {string} formattedDateAndTimeUploaded - The date uploaded formatted as 'd MMMM yyyy at h:mmaaa'
- * @property {string} lastUploadedReportPeriod - The report period of the report formatted as described in {@link getFormattedReportPeriod}
+ * @property {string} lastUploadedReportPeriod - The report period of the report formatted as described in {@link getFormattedReportPeriodWithLongMonth}
  */
 
 /**
  * Given a utilisation report, this returns an object containing formatted
  * information about the report and the user who submitted the report
- * @param {Object | undefined} report - A utilisation report
+ * @param {import('server/api-response-types').UtilisationReportResponseBody | undefined} report - A utilisation report
  * @throws If the inputted report is undefined
  * @returns {ReportAndUserDetails}
  */
@@ -20,9 +20,9 @@ const getReportAndUserDetails = (report) => {
     throw new Error("Failed to get report and user details: 'report' was undefined");
   }
 
-  const { dateUploaded, uploadedBy, reportPeriod } = report;
+  const { dateUploaded, uploadedByUser, reportPeriod } = report;
 
-  const { firstname, surname } = uploadedBy;
+  const { firstname, surname } = uploadedByUser;
   const uploadedByFullName = `${firstname} ${surname}`;
 
   const date = parseISO(dateUploaded);
@@ -30,7 +30,7 @@ const getReportAndUserDetails = (report) => {
   const formattedTime = format(date, 'h:mmaaa');
   const formattedDateAndTimeUploaded = `${formattedDate} at ${formattedTime}`;
 
-  const lastUploadedReportPeriod = getFormattedReportPeriod(reportPeriod);
+  const lastUploadedReportPeriod = getFormattedReportPeriodWithLongMonth(reportPeriod);
 
   return {
     uploadedByFullName,

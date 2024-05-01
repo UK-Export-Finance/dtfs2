@@ -24,7 +24,7 @@ const MOCK_BANKS = {
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
       teamName: 'Barclays Payment Reporting Team',
-      email: 'payment-officer4@ukexportfinance.gov.uk',
+      emails: ['payment-officer4@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
   },
@@ -38,7 +38,7 @@ const MOCK_BANKS = {
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
       teamName: 'HSBC Payment Reporting Team',
-      email: 'payment-officer4@ukexportfinance.gov.uk',
+      emails: ['payment-officer4@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
   },
@@ -52,7 +52,7 @@ const MOCK_BANKS = {
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
       teamName: 'Newable Payment Reporting Team',
-      email: 'payment-officer4@ukexportfinance.gov.uk',
+      emails: ['payment-officer4@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
   },
@@ -66,13 +66,13 @@ const MOCK_BANKS = {
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
       teamName: 'Lloyds Payment Reporting Team',
-      email: 'payment-officer4@ukexportfinance.gov.uk',
+      emails: ['payment-officer4@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: [
+      { startMonth: 12, endMonth: 2 },
       { startMonth: 3, endMonth: 5 },
       { startMonth: 6, endMonth: 8 },
       { startMonth: 9, endMonth: 11 },
-      { startMonth: 12, endMonth: 2 },
     ],
   },
 } as const;

@@ -1,6 +1,6 @@
+import { PDC_TEAM_IDS } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import { userIsOnlyInTeams } from '../../helpers/user';
-import { PDC_TEAM_IDS } from '../../constants';
 
 /**
  * Route to handle default user routing when redirected.

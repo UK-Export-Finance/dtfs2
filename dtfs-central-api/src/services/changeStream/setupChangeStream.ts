@@ -1,5 +1,5 @@
 import { ChangeStreamUpdateDocument, ChangeStreamInsertDocument, ChangeStreamReplaceDocument } from 'mongodb';
-import { getConnection } from '../../drivers/db-client';
+import mongoDbClient from '../../drivers/db-client';
 import { postAuditDetails } from './changeStreamApi';
 
 /**
@@ -8,17 +8,26 @@ import { postAuditDetails } from './changeStreamApi';
  */
 const setupChangeStreamForCollection = async (collectionName: string) => {
   console.info('Setting up change stream for collection', collectionName);
-  const databaseConnection = await getConnection();
+  const databaseConnection = await mongoDbClient.getConnection();
   const changeStream = databaseConnection
     .collection(collectionName)
-    .watch([{ $match: { operationType: { $in: ['insert', 'update', 'replace'] } } }, { $project: { _id: 1, fullDocument: 1, ns: 1, documentKey: 1 } }], {
-      fullDocument: 'updateLookup',
-    });
-  changeStream.on('change', (changeStreamDocument: ChangeStreamInsertDocument | ChangeStreamUpdateDocument | ChangeStreamReplaceDocument) => {
-    postAuditDetails(changeStreamDocument).catch((error) => {
-      console.error('Error sending change stream update to API', error);
-    });
-  });
+    .watch(
+      [
+        { $match: { operationType: { $in: ['insert', 'update', 'replace'] } } },
+        { $project: { _id: 1, fullDocument: 1, ns: 1, documentKey: 1 } },
+      ],
+      {
+        fullDocument: 'updateLookup',
+      },
+    );
+  changeStream.on(
+    'change',
+    (changeStreamDocument: ChangeStreamInsertDocument | ChangeStreamUpdateDocument | ChangeStreamReplaceDocument) => {
+      postAuditDetails(changeStreamDocument).catch((error) => {
+        console.error('Error sending change stream update to API', error);
+      });
+    },
+  );
 };
 
 /**
@@ -27,7 +36,7 @@ const setupChangeStreamForCollection = async (collectionName: string) => {
 export const setupChangeStream = async () => {
   try {
     console.info('Setting up mongodb change stream');
-    const databaseConnection = await getConnection();
+    const databaseConnection = await mongoDbClient.getConnection();
     const collections = await databaseConnection.listCollections().toArray();
     await Promise.all(
       collections.map(async (collection) => {

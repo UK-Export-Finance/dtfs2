@@ -1,4 +1,5 @@
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const aDeal = require('../../deal-builder');
 
@@ -22,10 +23,10 @@ const newDeal = aDeal({
 describe('/v1/tfm/deal/:id', () => {
   beforeEach(async () => {
     await wipeDB.wipe([
-      CONSTANTS.DB_COLLECTIONS.DEALS,
-      CONSTANTS.DB_COLLECTIONS.FACILITIES,
-      CONSTANTS.DB_COLLECTIONS.TFM_DEALS,
-      CONSTANTS.DB_COLLECTIONS.TFM_FACILITIES,
+      MONGO_DB_COLLECTIONS.DEALS,
+      MONGO_DB_COLLECTIONS.FACILITIES,
+      MONGO_DB_COLLECTIONS.TFM_DEALS,
+      MONGO_DB_COLLECTIONS.TFM_FACILITIES,
     ]);
   });
 
@@ -70,10 +71,18 @@ describe('/v1/tfm/deal/:id', () => {
           ...mockFacility,
         };
 
-        const { body: createdBond1 } = await api.post({ facility: mockBond, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
-        const { body: createdBond2 } = await api.post({ facility: mockBond, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
-        const { body: createdLoan1 } = await api.post({ facility: mockLoan, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
-        const { body: createdLoan2 } = await api.post({ facility: mockLoan, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const { body: createdBond1 } = await api
+          .post({ facility: mockBond, user: MOCK_PORTAL_USER })
+          .to('/v1/portal/facilities');
+        const { body: createdBond2 } = await api
+          .post({ facility: mockBond, user: MOCK_PORTAL_USER })
+          .to('/v1/portal/facilities');
+        const { body: createdLoan1 } = await api
+          .post({ facility: mockLoan, user: MOCK_PORTAL_USER })
+          .to('/v1/portal/facilities');
+        const { body: createdLoan2 } = await api
+          .post({ facility: mockLoan, user: MOCK_PORTAL_USER })
+          .to('/v1/portal/facilities');
 
         const { body: bond1 } = await api.get(`/v1/portal/facilities/${createdBond1._id}`);
         const { body: bond2 } = await api.get(`/v1/portal/facilities/${createdBond2._id}`);

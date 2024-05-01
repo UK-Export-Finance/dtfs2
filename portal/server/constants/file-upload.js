@@ -11,6 +11,7 @@ const FILE_UPLOAD = {
   ALLOWED_FORMATS_UTILISATION_REPORT: ['xlsx', 'csv'],
   ALLOWED_MIMETYPES_UTILISATION_REPORT: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel', 'text/csv'],
   FILENAME_SUBMITTED_INDICATOR: 'SUBMITTED',
+  FILENAME_SEPARATOR_GROUP: '[-_]',
   MAX_FILE_SIZE: 12 * 1024 * 1024, // 12mb
   MAX_CELL_CHARACTER_COUNT: 15,
 };

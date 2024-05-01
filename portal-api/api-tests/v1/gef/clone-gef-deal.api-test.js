@@ -1,6 +1,6 @@
 const {
   generateParsedMockPortalUserAuditDatabaseRecord,
-} = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
+} = require('@ukef/dtfs2-common/change-stream');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');

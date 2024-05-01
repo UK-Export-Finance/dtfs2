@@ -1,10 +1,9 @@
 import httpMocks from 'node-mocks-http';
+import { TEAM_IDS, ReportWithStatus } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import * as getUtilisationReportsController from '..';
 import { UpdateUtilisationReportStatusRequest, UpdateUtilisationReportStatusRequestBody, updateUtilisationReportStatus } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
-import { TEAM_IDS } from '../../../constants';
-import { ReportWithStatus } from '../../../types/utilisation-reports';
 
 console.error = jest.fn();
 
@@ -24,11 +23,11 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
       user: { ...MOCK_TFM_SESSION_USER, teams: [TEAM_IDS.PDC_RECONCILE] },
     };
 
-    const validMongoObjectId = '5ce819935e539c343f141ece';
+    const validSqlId = 1;
     const validBody: UpdateUtilisationReportStatusRequestBody = {
       _csrf: 'csrf',
       'form-button': 'completed',
-      [`set-status--reportId-${validMongoObjectId}`]: 'on',
+      'set-status--reportId-1-currentStatus-PENDING_RECONCILIATION': 'on',
     };
 
     const getPostRequestMocks = ({ body }: { body: undefined | Partial<UpdateUtilisationReportStatusRequestBody> }) =>
@@ -85,7 +84,7 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
       const expectedReportsWithStatus: ReportWithStatus[] = [
         {
           status: 'RECONCILIATION_COMPLETED',
-          reportId: validMongoObjectId,
+          reportId: validSqlId,
         },
       ];
 

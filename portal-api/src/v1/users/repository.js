@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const {
   generatePortalUserAuditDatabaseRecord,
   generateNoUserLoggedInAuditDatabaseRecord,
-} = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+} = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
 const { transformDatabaseUser } = require('./transform-database-user');
 const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError, InvalidSessionIdentifierError } = require('../errors');

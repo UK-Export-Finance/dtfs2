@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb';
-import db from '../../src/drivers/db-client';
+import { getCollection } from '../../src/drivers/db-client';
 
 export const clearACBSLog = async () => {
-  const collection = await db.getCollection('durable-functions-log') as Collection;
+  const collection = (await getCollection('durable-functions-log')) as Collection;
   return collection.deleteMany({});
 };

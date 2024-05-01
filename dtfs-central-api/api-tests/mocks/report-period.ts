@@ -1,4 +1,4 @@
-import { ReportPeriod } from '../../src/types/utilisation-reports';
+import { ReportPeriod } from '@ukef/dtfs2-common';
 
 export const MOCK_MONTHLY_REPORT_PERIOD: ReportPeriod = {
   start: {

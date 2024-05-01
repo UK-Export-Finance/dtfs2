@@ -16,10 +16,8 @@ const requestParams = require('./requestParams');
 const sanitizeCurrency = require('./sanitizeCurrency');
 const validationErrorHandler = require('./validationErrorHandler');
 const constructPayload = require('./constructPayload');
-const { getOneIndexedMonth } = require('./getOneIndexedMonth');
 const { getBusinessDayOfMonth } = require('./getBusinessDayOfMonth');
-const { getNowAsEpoch, getDateFromMonthAndYear } = require('./date');
-const { getFormattedReportPeriod } = require('./getFormattedReportPeriod');
+const { getNowAsEpoch } = require('./date');
 
 module.exports = {
   isEveryDealFormComplete,
@@ -41,9 +39,6 @@ module.exports = {
   sanitizeCurrency,
   validationErrorHandler,
   constructPayload,
-  getOneIndexedMonth,
   getBusinessDayOfMonth,
   getNowAsEpoch,
-  getDateFromMonthAndYear,
-  getFormattedReportPeriod,
 };

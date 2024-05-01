@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { IsoMonthStamp } from '../../../../types/date';
+import { IsoMonthStamp } from '@ukef/dtfs2-common';
 import { UtilisationReportReconciliationSummary } from '../../../../types/utilisation-reports';
 import { generateReconciliationSummaries } from './helpers';
 

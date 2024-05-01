@@ -1,4 +1,4 @@
-import { TEAM_IDS } from '../../../../constants';
+import { TEAM_IDS } from '@ukef/dtfs2-common';
 import userCanEditManagersDecision from './helpers';
 
 describe('case - underwriter-managers-decision - helpers', () => {

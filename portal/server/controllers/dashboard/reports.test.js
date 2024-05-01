@@ -1,9 +1,10 @@
+import { ROLES } from '@ukef/dtfs2-common';
 import { reportsController } from '.';
 import api from '../../api';
 import mockResponse from '../../helpers/responseMock';
 import CONSTANTS from '../../constants';
 
-const { MAKER, CHECKER } = CONSTANTS.ROLES;
+const { MAKER, CHECKER } = ROLES;
 
 jest.mock('../../api');
 

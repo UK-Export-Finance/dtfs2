@@ -6,7 +6,7 @@ const { userIsInTeam } = require('../../helpers/user');
  * array. If they are not, they are redirected to
  * the redirectUrl, which defaults to '/home' if
  * it is not explicitly provided.
- * @param {import('../../types/team-id').TeamId[]} requiredTeamIds - List of required team ids
+ * @param {import('@ukef/dtfs2-common').TeamId[]} requiredTeamIds - List of required team ids
  * @param {string} redirectUrl - Url to redirect to if user does not have a required team
  */
 const validateUserTeam = (requiredTeamIds, redirectUrl = '/home') => (req, res, next) => {

@@ -1,6 +1,6 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client');
-const { DB_COLLECTIONS } = require('../../../../constants');
+const db = require('../../../../drivers/db-client').default;
 
 const updateFacility = async (id, updateBody) => {
   if (!ObjectId.isValid(id)) {
@@ -8,8 +8,8 @@ const updateFacility = async (id, updateBody) => {
   }
 
   try {
-    const facilitiesCollection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
-    const dealsCollection = await db.getCollection(DB_COLLECTIONS.DEALS);
+    const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
+    const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
     let updatedFacility;
 

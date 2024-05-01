@@ -12,7 +12,6 @@ const PAYLOAD = require('./payloads');
 const USER = require('./user');
 const REGEX = require('./regex');
 const { FILESHARES } = require('./fileshares');
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('./utilisation-report-reconciliation-status');
 
 module.exports = {
   FACILITIES,
@@ -30,5 +29,4 @@ module.exports = {
   USER,
   REGEX,
   FILESHARES,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
 };

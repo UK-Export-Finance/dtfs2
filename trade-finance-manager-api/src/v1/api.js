@@ -1,15 +1,17 @@
 const axios = require('axios');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
-const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
+const {
+  isValidMongoId,
+  isValidPartyUrn,
+  isValidNumericId,
+  isValidCurrencyCode,
+  sanitizeUsername,
+  isValidTeamId,
+} = require('./validation/validateIds');
 require('dotenv').config();
 
-const {
-  DTFS_CENTRAL_API_URL,
-  EXTERNAL_API_URL,
-  DTFS_CENTRAL_API_KEY,
-  EXTERNAL_API_KEY,
-  AZURE_ACBS_FUNCTION_URL,
-} = process.env;
+const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL } =
+  process.env;
 
 const headers = {
   central: {
@@ -191,11 +193,11 @@ const findOneDeal = async (dealId) => {
  * @param {object} params
  * @param {string} params.dealId - deal to update
  * @param {Object} params.dealUpdate - update to make
- * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} params.auditDetails - user making the request
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
  * @typedef {Object} ErrorParam
  * @property {string} message error message
  * @property {number} status HTTP status code
- * @param {(Error: ErrorParam) => any} params.onError 
+ * @param {(Error: ErrorParam) => any} params.onError
  * @returns updated deal on success, or `onError({ status, message })` on failure
  */
 const updateDeal = async ({
@@ -468,7 +470,10 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the latest completed coverEndDate amendment %o', error);
-      return { status: error?.response?.status || 500, data: 'Failed to get the latest completed coverEndDate amendment' };
+      return {
+        status: error?.response?.status || 500,
+        data: 'Failed to get the latest completed coverEndDate amendment',
+      };
     }
   } else {
     console.error('Invalid facility Id %s', facilityId);
@@ -653,8 +658,8 @@ const queryDeals = async ({ queryParams }) => {
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals`,
       headers: headers.central,
       params: {
-        ...queryParams
-      }
+        ...queryParams,
+      },
     });
 
     return response.data;
@@ -961,7 +966,7 @@ const amendACBSfacility = async (amendments, facility, deal) => {
 
 const getFunctionsAPI = async (url = '') => {
   const modifiedUrl = url ? url.replace(/http:\/\/localhost:[\d]*/, AZURE_ACBS_FUNCTION_URL) : AZURE_ACBS_FUNCTION_URL;
-  
+
   try {
     const response = await axios({
       method: 'get',
@@ -1137,7 +1142,7 @@ const getAllFacilities = async ({ queryParams }) => {
     const response = await axios({
       method: 'GET',
       params: {
-        ...queryParams
+        ...queryParams,
       },
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities`,
       headers: headers.central,
@@ -1214,15 +1219,12 @@ const getUtilisationReportsReconciliationSummary = async (submissionMonth) => {
 };
 
 /**
- * @param {string} _id
- * @returns {Promise<import('../types/utilisation-reports').UtilisationReportResponseBody>}
+ * Get utilisation report by id
+ * @param {string} id
+ * @returns {Promise<import('./api-response-types/UtilisationReportResponseBody').UtilisationReportResponseBody>}
  */
-const getUtilisationReportById = async (_id) => {
-  if (!isValidMongoId(_id)) {
-    throw new Error(`Invalid MongoDB _id provided: '${_id}'`);
-  }
-
-  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${_id}`, {
+const getUtilisationReportById = async (id) => {
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${id}`, {
     headers: headers.central,
   });
 
