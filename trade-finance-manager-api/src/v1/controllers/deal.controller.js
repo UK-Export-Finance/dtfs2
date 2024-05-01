@@ -66,16 +66,21 @@ const getDeals = async (req, res) => {
 exports.getDeals = getDeals;
 
 const findOneTfmDeal = async (dealId) => {
-  const deal = await api.findOneDeal(dealId).catch(() => false);
+  try {
+    const deal = await api.findOneDeal(dealId);
 
-  if (!deal) {
+    if (!deal) {
+      return false;
+    }
+
+    return {
+      ...deal,
+      dealSnapshot: await mapDeal(deal.dealSnapshot),
+    };
+  } catch (error) {
+    console.error('Unable to find TFM deal %s', dealId);
     return false;
   }
-
-  return {
-    ...deal,
-    dealSnapshot: await mapDeal(deal.dealSnapshot),
-  };
 };
 exports.findOneTfmDeal = findOneTfmDeal;
 

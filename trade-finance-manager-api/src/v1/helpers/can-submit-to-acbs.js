@@ -14,7 +14,7 @@ const CONSTANTS = require('../../constants');
  */
 const canSubmitToACBS = async (deal, firstSubmissionCheck = true) => {
   try {
-    if (!deal) {
+    if (!deal?._id || !deal?.dealSnapshot || !deal?.tfm) {
       throw new Error('Invalid deal object supplied');
     }
 
@@ -28,14 +28,16 @@ const canSubmitToACBS = async (deal, firstSubmissionCheck = true) => {
     // Check 2: Ensure ACBS records exist
     const validFirstSubmission = firstSubmissionCheck ? !tfm?.acbs : true;
     // Check 3: Ensure IDs are valid
-    const validIds = await dealHasAllValidUkefIds(_id);
+    const { status: validIds } = await dealHasAllValidUkefIds(_id);
     // Check 4: Ensure all required parties have URN
     const allRequiredPartiesHaveUrn = allPartiesHaveUrn(deal);
 
     // Evaluate
     const eligible = validSubmissionType && validFirstSubmission && validIds && allRequiredPartiesHaveUrn;
 
-    console.info('✅ Deal %s is eligible for submission to ACBS.', _id);
+    if (eligible) {
+      console.info('✅ Deal %s is eligible for submission to ACBS.', _id);
+    }
 
     return eligible;
   } catch (error) {
