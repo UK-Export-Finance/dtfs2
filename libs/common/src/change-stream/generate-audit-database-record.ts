@@ -1,10 +1,9 @@
 import { ObjectId } from 'mongodb';
 import { AuditDetails } from '../types/audit-details';
 import { AuditDatabaseRecord } from '../types/audit-database-record';
-import { getNowAsUtcISOString } from '../helpers/date';
 
 export const generatePortalUserAuditDatabaseRecord = (userId: string | ObjectId): AuditDatabaseRecord => ({
-  lastUpdatedAt: getNowAsUtcISOString(),
+  lastUpdatedAt: new Date(),
   lastUpdatedByPortalUserId: new ObjectId(userId),
   lastUpdatedByTfmUserId: null,
   lastUpdatedByIsSystem: null,
@@ -12,7 +11,7 @@ export const generatePortalUserAuditDatabaseRecord = (userId: string | ObjectId)
 });
 
 export const generateTfmUserAuditDatabaseRecord = (userId: string | ObjectId): AuditDatabaseRecord => ({
-  lastUpdatedAt: getNowAsUtcISOString(),
+  lastUpdatedAt: new Date(),
   lastUpdatedByPortalUserId: null,
   lastUpdatedByTfmUserId: new ObjectId(userId),
   lastUpdatedByIsSystem: null,
@@ -20,7 +19,7 @@ export const generateTfmUserAuditDatabaseRecord = (userId: string | ObjectId): A
 });
 
 export const generateSystemAuditDatabaseRecord = (): AuditDatabaseRecord => ({
-  lastUpdatedAt: getNowAsUtcISOString(),
+  lastUpdatedAt: new Date(),
   lastUpdatedByPortalUserId: null,
   lastUpdatedByTfmUserId: null,
   lastUpdatedByIsSystem: true,
@@ -28,7 +27,7 @@ export const generateSystemAuditDatabaseRecord = (): AuditDatabaseRecord => ({
 });
 
 export const generateNoUserLoggedInAuditDatabaseRecord = (): AuditDatabaseRecord => ({
-  lastUpdatedAt: getNowAsUtcISOString(),
+  lastUpdatedAt: new Date(),
   lastUpdatedByPortalUserId: null,
   lastUpdatedByTfmUserId: null,
   lastUpdatedByIsSystem: null,
