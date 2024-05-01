@@ -53,7 +53,7 @@
     "express-fileupload": "^1.5.0",
     "express-rate-limit": "^6.11.2",
     "express-session": "1.17.3",
-    "filesize": "9.0.11",
+    "filesize": "10.1.1",
     "form-data": "4.0.0",
     "govuk-frontend": "^4.8.0",
     "http-errors": "^2.0.0",
