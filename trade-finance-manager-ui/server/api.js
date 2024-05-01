@@ -815,9 +815,12 @@ const getUtilisationReportsReconciliationSummary = async (submissionMonth, userT
   try {
     assertValidIsoMonth(submissionMonth);
 
-    const { data } = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`, {
-      headers: generateHeaders(userToken),
-    });
+    const { data } = await axios.get(
+      `${TFM_API_URL}/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`,
+      {
+        headers: generateHeaders(userToken),
+      },
+    );
 
     return data;
   } catch (error) {
@@ -877,23 +880,23 @@ const getUtilisationReportReconciliationDetailsById = async (reportId, userToken
 
   return response.data;
 };
-  /**
-   * Fetches all banks visible in TFM.
-   * @param {string} userToken - token to validate session
-   * @returns {Promise<import('./types/banks').Bank[]>}
-   */
-  const getBanksVisibleInTfm = async (userToken) => {
-    try {
-      const { data } = await axios.get(`${TFM_API_URL}/v1/banks`, {
-        headers: generateHeaders(userToken),
-      });
+/**
+ * Fetches all banks visible in TFM utilisation reports.
+ * @param {string} userToken - token to validate session
+ * @returns {Promise<import('./types/banks').Bank[]>}
+ */
+const getBanksVisibleInTfmUtilisationReports = async (userToken) => {
+  try {
+    const { data } = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/banks`, {
+      headers: generateHeaders(userToken),
+    });
 
-      return data;
-    } catch (error) {
-      console.error('Failed to get banks visible in TFM', error);
-      throw error;
-    }
-  };
+    return data;
+  } catch (error) {
+    console.error('Failed to get banks visible in TFM', error);
+    throw error;
+  }
+};
 
 module.exports = {
   getDeal,
@@ -934,5 +937,5 @@ module.exports = {
   downloadUtilisationReport,
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
-  getBanksVisibleInTfm,
+  getBanksVisibleInTfmUtilisationReports,
 };

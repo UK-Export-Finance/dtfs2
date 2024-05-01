@@ -164,6 +164,6 @@ authRouter
     utilisationReportsController.getUtilisationReportReconciliationDetailsById,
   );
 
-authRouter.route('/banks').get(banksController.getBanksVisibleInTfm);
+authRouter.route('/utilisation-reports/banks').get(banksController.getBanksVisibleInTfmUtilisationReports);
 
 module.exports = { authRouter, openRouter };

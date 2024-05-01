@@ -19,7 +19,12 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
   const bankNameTwo = 'HSBC';
   const bankNameThree = 'Newable';
   const banks: Bank[] = [
-    { ...aBank(), id: bankIdOne, name: bankNameOne, utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule() },
+    {
+      ...aBank(),
+      id: bankIdOne,
+      name: bankNameOne,
+      utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule(),
+    },
     {
       ...aBank(),
       id: bankIdTwo,
@@ -31,7 +36,12 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         { startMonth: 10, endMonth: 12 },
       ],
     },
-    { ...aBank(), id: bankIdThree, name: bankNameThree, utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule() },
+    {
+      ...aBank(),
+      id: bankIdThree,
+      name: bankNameThree,
+      utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule(),
+    },
   ];
 
   afterEach(() => {
@@ -45,7 +55,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         session: { userToken: 'user-token', user: MOCK_TFM_SESSION_USER },
       });
 
-      jest.mocked(api.getBanksVisibleInTfm).mockRejectedValue({
+      jest.mocked(api.getBanksVisibleInTfmUtilisationReports).mockRejectedValue({
         response: { status: 404 },
       });
 
@@ -64,15 +74,13 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         session: { userToken, user: MOCK_TFM_SESSION_USER },
       });
 
-      jest.mocked(api.getBanksVisibleInTfm).mockResolvedValue(banks);
-      const expectedBankItems = banks.map(bank => {
-        return {
-          value: bank.name,
-          text: bank.name,
-          attributes: { 'data-cy': `${bank.name}-radio` }
-        }
-      });
-      
+      jest.mocked(api.getBanksVisibleInTfmUtilisationReports).mockResolvedValue(banks);
+      const expectedBankItems = banks.map((bank) => ({
+        value: bank.name,
+        text: bank.name,
+        attributes: { 'data-cy': `${bank.name}-radio` },
+      }));
+
       // Act
       await getReportsByYear(req, res);
 
@@ -97,20 +105,18 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         query: { year: yearQuery },
       });
 
-      jest.mocked(api.getBanksVisibleInTfm).mockResolvedValue(banks);
-      const expectedBankItems = banks.map(bank => {
-        return {
-          value: bank.name,
-          text: bank.name,
-          attributes: { 'data-cy': `${bank.name}-radio` }
-        }
-      });
+      jest.mocked(api.getBanksVisibleInTfmUtilisationReports).mockResolvedValue(banks);
+      const expectedBankItems = banks.map((bank) => ({
+        value: bank.name,
+        text: bank.name,
+        attributes: { 'data-cy': `${bank.name}-radio` },
+      }));
       const expectedBankError = 'Select a bank';
       const expectedYearError = 'Enter a valid year';
       const expectedErrorSummary = [
-        { text: expectedBankError, href: "#bank" },
-        { text: expectedYearError, href: "#year" },
-      ]
+        { text: expectedBankError, href: '#bank' },
+        { text: expectedYearError, href: '#year' },
+      ];
 
       // Act
       await getReportsByYear(req, res);
@@ -137,7 +143,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         query: { bank: bankQuery, year: yearQuery },
       });
 
-      jest.mocked(api.getBanksVisibleInTfm).mockResolvedValue(banks);
+      jest.mocked(api.getBanksVisibleInTfmUtilisationReports).mockResolvedValue(banks);
 
       // Act
       await getReportsByYear(req, res);

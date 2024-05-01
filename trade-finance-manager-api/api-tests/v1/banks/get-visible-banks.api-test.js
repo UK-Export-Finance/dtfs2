@@ -2,8 +2,8 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 
-describe('/v1/banks', () => {
-  describe('GET /v1/banks', () => {
+describe('/v1/utilisation-reports/banks', () => {
+  describe('GET /v1/utilisation-reports/banks', () => {
     it('gets banks for authenticated user', async () => {
       // Arrange
       const user = await testUserCache.initialise(app);
