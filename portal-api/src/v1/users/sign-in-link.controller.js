@@ -1,5 +1,5 @@
 const { HttpStatusCode } = require('axios');
-const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common');
+const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { LOGIN_STATUSES, SIGN_IN_LINK, HTTP_ERROR_CAUSES } = require('../../constants');
 const { UserNotFoundError, InvalidSignInTokenError, InvalidUserIdError } = require('../errors');
 const UserBlockedError = require('../errors/user-blocked.error');

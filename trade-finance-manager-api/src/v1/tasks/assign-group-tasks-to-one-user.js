@@ -6,7 +6,7 @@ const getAssigneeFullName = require('../helpers/get-assignee-full-name');
  * @param {String} deal ID
  * @param {Array} array of group titles that the should be assigned to the user
  * @param {String} user ID
- * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} auditDetails - user making the request
+ * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
  * @returns {Array} Updated tasks
  */
 const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId, auditDetails) => {

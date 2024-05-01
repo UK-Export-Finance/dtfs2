@@ -1,5 +1,5 @@
 const { when, resetAllWhenMocks } = require('jest-when');
-const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common');
+const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { SignInLinkController } = require('./sign-in-link.controller');
 const {
   TEST_USER_SANITISED_FOR_FRONTEND,

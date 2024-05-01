@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { generateTfmAuditDetails, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common');
+const { generateTfmAuditDetails, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const utils = require('../../../utils/crypto.util');
 const {
   userIsDisabled,

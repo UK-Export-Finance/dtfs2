@@ -1,5 +1,5 @@
 const { when, resetAllWhenMocks } = require('jest-when');
-const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common');
+const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { SignInLinkController } = require('./sign-in-link.controller');
 const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const UserBlockedError = require('../errors/user-blocked.error');
