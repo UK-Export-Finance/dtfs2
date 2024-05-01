@@ -84,9 +84,6 @@ const assertions = (wrapper, html) => ({
       const expected = expectedLength + 1; // cheerio html() assertion automatically adds 1.
       expect(wrapper(selector).html().length).toEqual(expected);
     },
-    toHaveAttribute: (attr, value) => {
-      expect(wrapper(selector).attr(attr)).toEqual(value);
-    },
     toHaveCount: (expectedCount) => {
       expect(wrapper(selector).length).toEqual(expectedCount);
     },
