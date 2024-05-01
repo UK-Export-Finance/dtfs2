@@ -1,4 +1,4 @@
-const { userHasAtLeastOneAllowedRole } = require('./user-has-at-least-one-allowed-role');
+// const { userHasAtLeastOneAllowedRole } = require('./user-has-at-least-one-allowed-role');
 
 /**
  * Creates a middleware that returns a 401 error if the current user logs with
@@ -6,27 +6,18 @@ const { userHasAtLeastOneAllowedRole } = require('./user-has-at-least-one-allowe
  * @param {{ allowedRoles: string[] }}
  * @returns {(req, res, next) => void}
  */
-const validateUserIsActingOnSelfToChangePasswordOrIsAdmin = ({ allowedRoles }) => (req, res, next) => {
-
+const validateUserIsActingOnSelfToChangePasswordOrIsAdmin = (req, res, next) => {
   if (!req.user) {
-    return res.status(401).json({ success: false, msg: "You don't have access to this page" });
+    return res.status(401).send('Unauthorized');
   }
 
-  const isOldPassword = req.body.oldPassword === req.user.password;
-  const hasAllowedRole = userHasAtLeastOneAllowedRole(req.user, allowedRoles);
-
-  if (isOldPassword && hasAllowedRole) {
-    next();
-  } else {
-    res.status(401).send('Unauthorized');
+  if (req.user._id !== req.params._id && !req.user.roles.includes('admin')) {
+    return res.status(403).send('Forbidden');
   }
 
-    return next();
-
-
+  return next();
 };
-
 
 module.exports = {
   validateUserIsActingOnSelfToChangePasswordOrIsAdmin,
-};
+}

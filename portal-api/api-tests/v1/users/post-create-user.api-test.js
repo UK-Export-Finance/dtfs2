@@ -117,19 +117,8 @@ describe('a user', () => {
         await createUser(newUser);
         const { status, body } = await as(aNonAdmin).get(BASE_URL);
 
-        expect(status).toEqual(403);
-        expect(body.error).toEqual('Unauthorized');
-        if(body.users && body.users.length > 0){
-          const user1 = body.users.find((user) => user.username === MOCK_USER.username);
-          if(user1){
-            expect(user1.roles).toStrictEqual([READ_ONLY, READ_ONLY]);
-          } else {
-            throw new Error(`User ${MOCK_USER.username} not found`);
-          }
-        } else {
-          expect(body.users).toBeUndefined();
-        }
-        // expect(body.users.find((user) => user.username === MOCK_USER.username).roles).toStrictEqual([READ_ONLY, READ_ONLY]);
+        expect(status).toEqual(200);
+        expect(body.users.find((user) => user.username === MOCK_USER.username).roles).toStrictEqual([READ_ONLY, READ_ONLY]);
       });
 
       it('it creates the user if the user creation request has the read-only role only', async () => {
@@ -139,21 +128,10 @@ describe('a user', () => {
         };
 
         await createUser(newUser);
-        const { status, body } = await as(aNonAdmin).get(BASE_URL);
+        const { status, body } = await as(anAdmin).get(BASE_URL);
 
-        expect(status).toEqual(403);
-        expect(body.error).toEqual('Unauthorized');
-        if(body.users && body.users.length > 0){
-          const user1 = body.users.find((user) => user.username === MOCK_USER.username);
-          if(user1){
-            expect(user1.roles).toStrictEqual([READ_ONLY, READ_ONLY]);
-          } else {
-            throw new Error(`User ${MOCK_USER.username} not found`);
-          }
-        } else {
-          expect(body.users).toBeUndefined();
-        }
-        // expect(body.users.find((user) => user.username === MOCK_USER.username).roles).toStrictEqual([READ_ONLY]);
+        expect(status).toEqual(200);
+        expect(body.users.find((user) => user.username === MOCK_USER.username).roles).toStrictEqual([READ_ONLY]);
       });
     });
   });

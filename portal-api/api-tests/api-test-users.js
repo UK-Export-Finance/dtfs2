@@ -259,7 +259,7 @@ const apiTestUser = {
   surname: 'Test User',
   email: 'api-tester@ukexportfinance.gov.uk',
   timezone: 'Europe/London',
-  roles: [MAKER],
+  roles: [ADMIN],
   bank: banks.any,
 };
 

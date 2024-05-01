@@ -252,6 +252,6 @@ describe('a user', () => {
   });
 
   async function createUser(userToCreate) {
-    return as(aNonAdmin).post(userToCreate).to('/v1/users');
+    return as(anAdmin).post(userToCreate).to('/v1/users');
   }
 });
