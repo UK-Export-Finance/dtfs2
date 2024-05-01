@@ -93,5 +93,6 @@ const assertValidIsoMonth = (value) => {
 module.exports = {
   getBusinessDayOfMonth,
   getIsoMonth,
+  isValidIsoMonth,
   assertValidIsoMonth,
 };

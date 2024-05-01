@@ -179,13 +179,13 @@ module.exports = {
     exposurePeriodInMonths: 12,
   })),
   getPartyDbInfo: ({ companyRegNo }) =>
-    (companyRegNo === 'NO_MATCH'
+    companyRegNo === 'NO_MATCH'
       ? false
       : [
-        {
-          partyUrn: 'testPartyUrn',
-        },
-      ]),
+          {
+            partyUrn: 'testPartyUrn',
+          },
+        ],
   findUser: (username) => {
     if (username === 'invalidUser') {
       return false;
@@ -205,7 +205,8 @@ module.exports = {
       acbsTaskLinks: {
         mockLinkUrl: 'mockLinkUrl',
       },
-    }),),
+    }),
+  ),
   getFunctionsAPI: jest.fn((statusQueryGetUri) =>
     Promise.resolve({
       runtimeStatus: 'Completed',
@@ -233,4 +234,5 @@ module.exports = {
   getUtilisationReportsReconciliationSummary: jest.fn(),
   getUtilisationReportById: jest.fn(() => Promise.resolve(MOCK_UTILISATION_REPORT)),
   updateUtilisationReportStatus: jest.fn(),
+  getUtilisationReportReconciliationDetailsById: jest.fn(),
 };
