@@ -1,5 +1,5 @@
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../api');
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
 
 /**
  * Calls the DTFS Central API to get a banks utilisation reports and

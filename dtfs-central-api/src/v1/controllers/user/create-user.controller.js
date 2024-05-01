@@ -1,9 +1,10 @@
-const db = require('../../../drivers/db-client');
-const { DB_COLLECTIONS, PAYLOAD } = require('../../../constants');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const db = require('../../../drivers/db-client').default;
+const { PAYLOAD } = require('../../../constants');
 const { payloadVerification } = require('../../../helpers');
 
 const createUser = async (user) => {
-  const collection = await db.getCollection(DB_COLLECTIONS.USERS);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   const response = await collection.insertOne(user);
 

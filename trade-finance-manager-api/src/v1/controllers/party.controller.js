@@ -1,6 +1,5 @@
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
 const { HttpStatusCode } = require('axios');
-
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../api');
 const { createACBS } = require('./acbs.controller');
 const canSubmitToACBS = require('../helpers/can-submit-to-acbs');

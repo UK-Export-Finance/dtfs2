@@ -6,7 +6,10 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
 }));
 
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+jest.mock('../../../src/v1/controllers/deal.controller', () => ({
+  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
+}));
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const { submitDeal, createSubmitBody } = require('../utils/submitDeal');

@@ -1,4 +1,4 @@
-import { generateNoUserLoggedInAuditDetails } from '@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details';
+import { generateNoUserLoggedInAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import caseController from '.';
 import { mockRes } from '../../test-mocks';
 

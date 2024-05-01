@@ -1,7 +1,7 @@
 const {
-  STATUS,
   ROLES: { MAKER },
-} = require('../../constants');
+} = require('@ukef/dtfs2-common');
+const { STATUS } = require('../../constants');
 
 /**
  * Determines if a deal is editable for a given user.

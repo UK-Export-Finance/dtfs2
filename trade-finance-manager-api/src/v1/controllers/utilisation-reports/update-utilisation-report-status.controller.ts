@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
+import { ReportWithStatus } from '@ukef/dtfs2-common';
 import { TfmSessionUser } from '../../../types/tfm-session-user';
-import { ReportWithStatus } from '../../../types/utilisation-reports';
 import api from '../../api';
 
 export type UpdateUtilisationReportStatusRequestBody = {

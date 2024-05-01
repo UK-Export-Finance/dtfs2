@@ -1,8 +1,8 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { findOneFacility } = require('./get-facility.controller');
 const { removeFacilityIdFromDeal } = require('../deal/update-deal.controller');
-const db = require('../../../../drivers/db-client');
-const { DB_COLLECTIONS } = require('../../../../constants');
+const db = require('../../../../drivers/db-client').default;
 
 // eslint-disable-next-line consistent-return
 exports.deleteFacility = async (req, res) => {
@@ -11,7 +11,7 @@ exports.deleteFacility = async (req, res) => {
 
     await findOneFacility(facilityId, async (facility) => {
       if (facility && ObjectId.isValid(facilityId)) {
-        const collection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
+        const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
         const status = await collection.deleteOne({ _id: { $eq: ObjectId(facilityId) } });
 
         // remove facility ID from the associated deal

@@ -1,12 +1,8 @@
 import { endOfDay, format, isPast, isSameMonth, parseISO } from 'date-fns';
-import {
-  UtilisationReportReconciliationStatus,
-  UtilisationReportReconciliationSummary,
-  UtilisationReportReconciliationSummaryItem,
-} from '../../../types/utilisation-reports';
-import { getReportDueDate, getReportPeriodStart } from '../../../services/utilisation-report-service';
+import { IsoMonthStamp, ReportPeriod, UtilisationReportReconciliationStatus, getFormattedReportPeriodWithShortMonth } from '@ukef/dtfs2-common';
+import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../types/utilisation-reports';
+import { getReportDueDate } from '../../../services/utilisation-report-service';
 import api from '../../../api';
-import { IsoMonthStamp, MonthAndYear } from '../../../types/date';
 
 type SummaryItemViewModel = UtilisationReportReconciliationSummaryItem & {
   displayStatus: string;
@@ -17,7 +13,6 @@ type SummaryItemViewModel = UtilisationReportReconciliationSummaryItem & {
 type ReportPeriodSummaryViewModel = {
   items: SummaryItemViewModel[];
   submissionMonth: IsoMonthStamp;
-  reportPeriodStart: MonthAndYear;
   reportPeriodHeading: string;
   dueDateText: string;
 };
@@ -42,19 +37,31 @@ const getSummaryItemViewModel = (apiItem: UtilisationReportReconciliationSummary
   };
 };
 
+const getDistinctReportPeriodsByStartMonth = (reportPeriods: ReportPeriod[]): ReportPeriod[] => {
+  const yearMonthConcatenatedSet = new Set<number>();
+  const distinctPeriods: ReportPeriod[] = [];
+  reportPeriods.forEach((period) => {
+    const yearMonthConcatenated = period.start.month + period.start.year * 100;
+    if (!yearMonthConcatenatedSet.has(yearMonthConcatenated)) {
+      yearMonthConcatenatedSet.add(yearMonthConcatenated);
+      distinctPeriods.push(period);
+    }
+  });
+  return distinctPeriods;
+};
+
 export const getDueDateText = (reportDueDate: Date) => {
   const reportIsPastDue = isPast(endOfDay(reportDueDate));
   const formattedReportDueDate = format(reportDueDate, 'd MMMM yyyy');
   return `Reports${reportIsPastDue ? ' were ' : ' '}due to be received by ${formattedReportDueDate}.`;
 };
 
-export const getReportPeriodHeading = (submissionMonth: IsoMonthStamp, reportPeriodStart: MonthAndYear) => {
+export const getReportPeriodHeading = (submissionMonth: IsoMonthStamp, reportPeriods: ReportPeriod[]) => {
   const isCurrentSubmissionMonth = isSameMonth(new Date(submissionMonth), new Date());
 
-  const reportPeriodStartDate = new Date(reportPeriodStart.year, reportPeriodStart.month - 1);
-  const formattedReportPeriod = format(reportPeriodStartDate, 'MMM yyyy');
+  const formattedReportPeriods = reportPeriods.map((reportPeriod) => getFormattedReportPeriodWithShortMonth(reportPeriod, true)).join(' and ');
 
-  return `${isCurrentSubmissionMonth ? 'Current reporting period' : 'Open reports'}: ${formattedReportPeriod}`;
+  return `${isCurrentSubmissionMonth ? 'Current reporting period' : 'Open reports'}: ${formattedReportPeriods}`;
 };
 
 const getBankHolidayDates = async (userToken: string): Promise<Date[]> => {
@@ -70,13 +77,12 @@ export const getReportReconciliationSummariesViewModel = async (
 
   return summariesApiResponse.map(({ items: apiItems, submissionMonth }) => {
     const reportDueDate = getReportDueDate(bankHolidays, submissionMonth);
-    const reportPeriodStart = getReportPeriodStart(submissionMonth);
+    const distinctReportPeriods = getDistinctReportPeriodsByStartMonth(apiItems.map((item) => item.reportPeriod));
 
     return {
       items: apiItems.map(getSummaryItemViewModel),
       submissionMonth,
-      reportPeriodStart,
-      reportPeriodHeading: getReportPeriodHeading(submissionMonth, reportPeriodStart),
+      reportPeriodHeading: getReportPeriodHeading(submissionMonth, distinctReportPeriods),
       dueDateText: getDueDateText(reportDueDate),
     };
   });

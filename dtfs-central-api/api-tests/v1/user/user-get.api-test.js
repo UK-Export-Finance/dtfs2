@@ -1,6 +1,6 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
-const { DB_COLLECTIONS } = require('../../../src/constants');
 const api = require('../../api')(app);
 
 const newUser = {
@@ -26,7 +26,7 @@ const newUser = {
 
 describe('/v1/user/:id', () => {
   beforeAll(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.USERS]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.USERS]);
   });
 
   describe('GET /v1/user/:id', () => {

@@ -7,7 +7,7 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
 }));
 
 const { format } = require('date-fns');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const CONSTANTS = require('../../../src/constants');

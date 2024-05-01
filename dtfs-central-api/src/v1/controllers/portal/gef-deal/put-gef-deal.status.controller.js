@@ -1,11 +1,11 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./get-gef-deal.controller');
-const db = require('../../../../drivers/db-client');
-const { DB_COLLECTIONS } = require('../../../../constants');
+const db = require('../../../../drivers/db-client').default;
 
 const updateDealStatus = async (dealId, previousStatus, newStatus) => {
   if (ObjectId.isValid(dealId)) {
-    const collection = await db.getCollection(DB_COLLECTIONS.DEALS);
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
     const dealUpdate = {
       previousStatus,

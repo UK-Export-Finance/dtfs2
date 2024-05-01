@@ -1,7 +1,7 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const escapeStringRegexp = require('escape-string-regexp');
-const db = require('../../../../drivers/db-client');
-const { DB_COLLECTIONS } = require('../../../../constants');
+const db = require('../../../../drivers/db-client').default;
 const CONSTANTS = require('../../../../constants');
 
 exports.getFacilitiesByDealId = async (req, res) => {
@@ -11,7 +11,7 @@ exports.getFacilitiesByDealId = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
-  const collection = await db.getCollection(DB_COLLECTIONS.TFM_FACILITIES);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
   // NOTE: only GEF facilities have dealId.
   // this could be adapted so that we get the deal, check dealType,
   // then search for either dealId or dealId.
@@ -20,7 +20,7 @@ exports.getFacilitiesByDealId = async (req, res) => {
 };
 
 exports.getAllFacilities = async (req, res) => {
-  const facilitiesCollection = await db.getCollection(DB_COLLECTIONS.TFM_FACILITIES);
+  const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
 
   const {
     searchString, sortBy, pagesize, page = 0
@@ -59,7 +59,7 @@ exports.getAllFacilities = async (req, res) => {
   const doc = await facilitiesCollection.aggregate([
     {
       $lookup: {
-        from: DB_COLLECTIONS.TFM_DEALS,
+        from: MONGO_DB_COLLECTIONS.TFM_DEALS,
         localField: 'facilitySnapshot.dealId',
         foreignField: '_id',
         as: 'tfmDeals'

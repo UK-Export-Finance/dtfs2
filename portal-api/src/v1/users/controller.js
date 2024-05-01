@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const {
   generatePortalUserAuditDatabaseRecord,
   generateNoUserLoggedInAuditDatabaseRecord,
-} = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+} = require('@ukef/dtfs2-common/change-stream');
 const { getNowAsEpochMillisecondString } = require('../helpers/date');
 const db = require('../../drivers/db-client');
 const sendEmail = require('../email');

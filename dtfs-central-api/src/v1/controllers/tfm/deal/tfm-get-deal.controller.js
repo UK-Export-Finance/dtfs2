@@ -1,5 +1,6 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const CONSTANTS = require('../../../../constants');
 
 const findOneDeal = async (_id, callback) => {
@@ -7,8 +8,8 @@ const findOneDeal = async (_id, callback) => {
     throw new Error('Invalid Deal Id');
   }
 
-  const dealsCollection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_DEALS);
-  const facilitiesCollection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_FACILITIES);
+  const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
+  const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
 
   const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
   let returnDeal = deal;
