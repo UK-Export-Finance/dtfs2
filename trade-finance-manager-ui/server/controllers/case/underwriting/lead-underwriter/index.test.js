@@ -58,7 +58,11 @@ describe('GET underwriting - lead underwriter', () => {
     });
 
     it('should return an object with the correct parameters', async () => {
-      const result = await underwriterLeadUnderwriterController.getLeadUnderwriter(MOCK_DEAL, MOCK_USER_UNDERWRITER_MANAGER, mockToken);
+      const result = await underwriterLeadUnderwriterController.getLeadUnderwriter(
+        MOCK_DEAL,
+        MOCK_USER_UNDERWRITER_MANAGER,
+        mockToken,
+      );
 
       expect(result).toEqual({
         userCanEdit,
@@ -73,7 +77,11 @@ describe('GET underwriting - lead underwriter', () => {
     });
 
     it('should call getUser API to get current lead underwriter user data', async () => {
-      await underwriterLeadUnderwriterController.getLeadUnderwriter(MOCK_DEAL, MOCK_USER_UNDERWRITER_MANAGER, mockToken);
+      await underwriterLeadUnderwriterController.getLeadUnderwriter(
+        MOCK_DEAL,
+        MOCK_USER_UNDERWRITER_MANAGER,
+        mockToken,
+      );
 
       expect(apiGetUserSpy).toHaveBeenCalledWith(MOCK_DEAL.tfm.leadUnderwriter, mockToken);
     });
@@ -94,7 +102,11 @@ describe('GET underwriting - lead underwriter', () => {
     });
 
     it('should NOT call getUser API and should return an object with undefined currentLeadUnderWriter', async () => {
-      const result = await underwriterLeadUnderwriterController.getLeadUnderwriter(MOCK_DEAL_UNASSIGNED_LEAD_UNDERWRITER, MOCK_USER_UNDERWRITER_MANAGER, mockToken);
+      const result = await underwriterLeadUnderwriterController.getLeadUnderwriter(
+        MOCK_DEAL_UNASSIGNED_LEAD_UNDERWRITER,
+        MOCK_USER_UNDERWRITER_MANAGER,
+        mockToken,
+      );
 
       expect(apiGetUserSpy).not.toHaveBeenCalled();
 
@@ -132,7 +144,7 @@ describe('GET underwriting - assign lead underwriter', () => {
     it('should call api.getTeamMembers twice with underwriter managers and underwriters', async () => {
       await underwriterLeadUnderwriterController.getAssignLeadUnderwriter(req, res);
 
-      expect(getTeamMembersSpy).toBeCalledTimes(2);
+      expect(getTeamMembersSpy).toHaveBeenCalledTimes(2);
 
       expect(getTeamMembersSpy.mock.calls).toEqual([
         [TEAM_IDS.UNDERWRITER_MANAGERS, SESSION.userToken],
@@ -146,7 +158,11 @@ describe('GET underwriting - assign lead underwriter', () => {
       // NOTE: api.getTeamMembers stub only returns one team.
       const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(MOCK_TEAM_UNDERWRITER_MANAGERS, 'firstName');
 
-      const expectedAssignToSelectOptions = mapAssignToSelectOptions(MOCK_DEAL.tfm.leadUnderwriter, SESSION.user, alphabeticalTeamMembers);
+      const expectedAssignToSelectOptions = mapAssignToSelectOptions(
+        MOCK_DEAL.tfm.leadUnderwriter,
+        SESSION.user,
+        alphabeticalTeamMembers,
+      );
 
       expect(res.render).toHaveBeenCalledWith('case/underwriting/lead-underwriter/assign-lead-underwriter.njk', {
         activeSubNavigation: 'underwriting',
@@ -224,7 +240,11 @@ describe('POST underwriting - assign lead underwriter', () => {
       userId: req.body.assignedTo,
     };
 
-    expect(apiUpdateSpy).toHaveBeenCalledWith({ dealId: MOCK_DEAL._id, leadUnderwriterUpdate: expectedUpdateObj, token: TEST_USER_TOKEN });
+    expect(apiUpdateSpy).toHaveBeenCalledWith({
+      dealId: MOCK_DEAL._id,
+      leadUnderwriterUpdate: expectedUpdateObj,
+      token: TEST_USER_TOKEN,
+    });
   });
 
   describe('when user cannot edit (i.e, NOT in UNDERWRITER_MANAGERS team)', () => {

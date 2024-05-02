@@ -8,7 +8,7 @@
         "predb:seed": "rm -rf sql-db-seeder/node_modules && (cd sql-db-seeder && mkdir node_modules && cp -r ../../node_modules/typeorm-extension node_modules)",
         "db:seed": "npx ts-node sql-db-seeder/node_modules/typeorm-extension/bin/cli.cjs seed:run -r sql-db-seeder -d src/seeding-data-source.ts",
         "lint": "eslint --color **/*.{ts,js}",
-        "lint:fix": "eslint --color **/*.{ts,js} --fix",
+        "lint:fix": "eslint --fix --color **/*.{ts,js}",
         "load": "ts-node mock-data-loader/re-insert-mocks.js",
         "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js}",
         "prettier:fix": "prettier --write **/*.{ts,js}",
@@ -29,11 +29,11 @@
         "moment": "^2.30.1",
         "mongodb": "^6.3.0",
         "mssql": "^10.0.2",
-        "reflect-metadata": "^0.2.1",
-        "typeorm": "^0.3.19",
-        "typeorm-extension": "^3.4.0",
+        "reflect-metadata": "^0.2.2",
+        "typeorm": "^0.3.20",
+        "typeorm-extension": "^3.5.1",
         "xml2js": "^0.5.0",
-        "zod": "^3.22.4"
+        "zod": "^3.23.5"
     },
     "engines": {
         "node": ">=20",
