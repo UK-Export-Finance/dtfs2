@@ -5,10 +5,10 @@
   "author": "UK Export Finance",
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --config=api-test.jest.config.js ",
-    "lint": "eslint --color '**/*.{ts,js}'",
-    "lint:fix": "eslint --fix --color '**/*.{ts,js}'",
-    "prettier": "prettier --no-error-on-unmatched-pattern --check '**/*.{ts,js}'",
-    "prettier:fix": "prettier --write '**/*.{ts,js}'",
+    "lint": "eslint --color **/*.{ts,js}",
+    "lint:fix": "eslint --fix --color **/*.{ts,js}",
+    "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js}",
+    "prettier:fix": "prettier --write **/*.{ts,js}",
     "type-check": "tsc --noEmit",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js"

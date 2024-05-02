@@ -5,13 +5,13 @@
     "license": "MIT",
     "author": "UK Export Finance",
     "scripts": {
-        "lint": "eslint --color '**/*.{ts,js}'",
-        "lint:fix": "eslint --fix --color '**/*.{ts,js}'",
-        "prettier": "prettier --no-error-on-unmatched-pattern --check '**/*.{ts,js}'",
-        "prettier:fix": "prettier --write '**/*.{ts,js}'",
         "predb:seed": "rm -rf sql-db-seeder/node_modules && (cd sql-db-seeder && mkdir node_modules && cp -r ../../node_modules/typeorm-extension node_modules)",
         "db:seed": "npx ts-node sql-db-seeder/node_modules/typeorm-extension/bin/cli.cjs seed:run -r sql-db-seeder -d src/seeding-data-source.ts",
+        "lint": "eslint --color **/*.{ts,js}",
+        "lint:fix": "eslint --fix --color **/*.{ts,js}",
         "load": "ts-node mock-data-loader/re-insert-mocks.js",
+        "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js}",
+        "prettier:fix": "prettier --write **/*.{ts,js}",
         "type-check": "tsc --noEmit"
     },
     "dependencies": {
