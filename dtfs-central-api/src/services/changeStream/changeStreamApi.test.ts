@@ -76,12 +76,13 @@ describe('changeStreamApi', () => {
         _id: new ObjectId(),
         deletedDocumentId: new ObjectId(),
         auditRecord: {
-          lastUpdatedAt: now,
+          lastUpdatedAt: now.toISOString(),
           lastUpdatedByIsSystem: null,
           lastUpdatedByPortalUserId: null,
           lastUpdatedByTfmUserId: null,
           noUserLoggedIn: true,
         },
+        logCreatedAt: now,
       },
       operationType: 'insert',
       ns: {
@@ -109,8 +110,7 @@ describe('changeStreamApi', () => {
         },
         data: {
           auditRecord: {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            deletedAt: now,
+            deletedAt: now.toISOString(),
             deletedByPortalUserId: null,
             deletedByTfmUserId: null,
             deletedByIsSystem: null,

@@ -147,39 +147,40 @@ exports.removeTfmUserById = async (_id, auditDetails, callback) => {
     return callback('Invalid TFM user id', 400);
   }
 
-  if (process.env.CHANGE_STREAM_ENABLED !== 'true') {
-    const collection = await db.getCollection('tfm-users');
-    const status = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
+  // Transactions will only work on a replica set
+  if (process.env.CHANGE_STREAM_ENABLED === 'true') {
+    const client = await db.getClient();
+    const session = client.startSession();
 
-    return callback(null, status);
+    try {
+      const transactionOptions = { readConcern: { level: 'snapshot' }, writeConcern: { w: 'majority' } };
+      await session.withTransaction(async () => {
+        const deletionCollection = await db.getCollection(COLLECTIONS.DELETION_AUDIT_LOGS);
+        await deletionCollection.insertOne(
+          {
+            collectionName: 'tfm-users',
+            deletedDocumentId: new ObjectId(_id),
+            auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+          },
+          { session },
+        );
+
+        const usersCollection = await db.getCollection('tfm-users');
+        await usersCollection.deleteOne({ _id: { $eq: ObjectId(_id) } }, { session });
+      }, transactionOptions);
+      await session.endSession();
+    } catch (error) {
+      console.error(error);
+      await session.endSession();
+      return callback(error, 500);
+    } finally {
+      await session.endSession();
+    }
+    return callback(null, 200);
   }
+  // If the change stream isn't enabled, retain the existing functionality
+  const collection = await db.getCollection('tfm-users');
+  const status = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
 
-  const client = await db.getClient();
-  const session = client.startSession();
-
-  try {
-    const transactionOptions = { readConcern: { level: 'snapshot' }, writeConcern: { w: 'majority' } };
-    await session.withTransaction(async () => {
-      const deletionCollection = await db.getCollection(COLLECTIONS.DELETION_AUDIT_LOGS);
-      await deletionCollection.insertOne(
-        {
-          collectionName: 'tfm-users',
-          deletedDocumentId: new ObjectId(_id),
-          auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-        },
-        { session },
-      );
-
-      const usersCollection = await db.getCollection('tfm-users');
-      await usersCollection.deleteOne({ _id: { $eq: ObjectId(_id) } }, { session });
-    }, transactionOptions);
-    await session.endSession();
-  } catch (error) {
-    console.error(error);
-    await session.endSession();
-    return callback(error, 500);
-  } finally {
-    await session.endSession();
-  }
-  return callback(null, 200);
+  return callback(null, status);
 };
