@@ -99,7 +99,7 @@ context('Eligibility Documentation', () => {
 
   it('should show an error if trying to upload a file that is too large', () => {
     taskListHeader.itemLink('supporting-documentation').click();
-    eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-large-file-February_2023.xlsx');
+    eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-large-file-February_2023_monthly.xlsx');
     eligibilityDocumentation.questionnaireFileInputUploadButton().click();
     eligibilityDocumentation.fieldErrorMessage('exporterQuestionnaire').should('have.length', 1);
   });

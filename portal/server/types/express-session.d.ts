@@ -1,3 +1,4 @@
+import { ReportPeriod } from '@ukef/dtfs2-common';
 import { PortalSessionUser } from './portal-session-user';
 
 export type PartiallyLoggedInSessionData = {
@@ -14,6 +15,7 @@ export type LoggedInSessionData = {
   dashboardFilters?: unknown;
   utilisationReport?: {
     formattedReportPeriod: string;
+    reportPeriod: ReportPeriod;
   };
 };
 

@@ -23,20 +23,20 @@
                 <h1 class="govuk-heading-l" data-cy="main-heading">
                     Download {{ year }} GEF reports
                 </h1>
-                {% if not reports.length %}
+                {% if not reportLinks.length %}
                     <p class="govuk-body" data-cy="paragraph">No reports have been submitted.</p>
                 {% else %}
                     <p class="govuk-body" data-cy="paragraph">Reports are downloaded as CSV files.</p>
                     <ul class="govuk-list">
-                        {% for report in reports %}
+                        {% for reportLink in reportLinks %}
                             <li>
                                 <a
                                   class="govuk-link"
-                                  href="{{ report.path }}"
-                                  data-cy="list-item-link-{{ report.month }}"
-                                  aria-label="{{ report.month }} {{ year }} GEF report"
+                                  href="{{ reportLink.path }}"
+                                  data-cy="list-item-link-{{ reportLink.month }}"
+                                  aria-label="{{ reportLink.month }} {{ year }} GEF report"
                                 >
-                                    {{ report.month }} {{ year }} GEF report
+                                    {{ reportLink.month }} {{ year }} GEF report
                                 </a>
                             </li>
                         {% endfor %}

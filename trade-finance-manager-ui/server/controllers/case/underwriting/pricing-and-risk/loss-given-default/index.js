@@ -1,6 +1,6 @@
+const { TEAM_IDS } = require('@ukef/dtfs2-common');
 const api = require('../../../../../api');
 const { userIsInTeam } = require('../../../../../helpers/user');
-const CONSTANTS = require('../../../../../constants');
 
 const getUnderWritingLossGivenDefault = async (req, res) => {
   const dealId = req.params._id;
@@ -8,7 +8,7 @@ const getUnderWritingLossGivenDefault = async (req, res) => {
   const deal = await api.getDeal(dealId, userToken);
 
   const { user } = req.session;
-  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAM_IDS.UNDERWRITERS, CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS]);
+  const userCanEdit = userIsInTeam(user, [TEAM_IDS.UNDERWRITERS, TEAM_IDS.UNDERWRITER_MANAGERS]);
 
   if (!deal || !userCanEdit) {
     return res.redirect('/not-found');
@@ -29,7 +29,7 @@ const postUnderWritingLossGivenDefault = async (req, res) => {
   const { user, userToken } = req.session;
   const deal = await api.getDeal(dealId, userToken);
 
-  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAM_IDS.UNDERWRITERS, CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS]);
+  const userCanEdit = userIsInTeam(user, [TEAM_IDS.UNDERWRITERS, TEAM_IDS.UNDERWRITER_MANAGERS]);
 
   if (!deal || !userCanEdit) {
     return res.redirect('/not-found');

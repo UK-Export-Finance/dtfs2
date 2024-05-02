@@ -1,6 +1,6 @@
+const { ROLES } = require('@ukef/dtfs2-common');
 const api = require('./api');
 const tfmApi = require('./tfm/api');
-const { MAKER, ADMIN } = require('./portal/roles');
 const FailedToCreateLoggedInUserSessionError = require('./errors/failed-to-create-logged-in-user-session.error');
 const { logger } = require('./helpers/logger.helper');
 
@@ -9,7 +9,7 @@ const mockDataLoaderUser = {
   password: 'AbC!2345',
   firstname: 'Mock',
   surname: 'DataLoader',
-  roles: [MAKER, ADMIN],
+  roles: [ROLES.MAKER, ROLES.ADMIN],
   email: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
   bank: { id: '*' },
   timezone: 'Europe/London',

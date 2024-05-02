@@ -124,6 +124,6 @@ export const PORTAL_USER_SIGN_IN_TOKENS = {
 
 export const NODE_TASKS = {
   GET_ALL_BANKS: 'getAllBanks',
-  INSERT_UTILISATION_REPORT_DETAILS_INTO_DB: 'insertUtilisationReportDetailsIntoDb',
-  REMOVE_ALL_UTILISATION_REPORT_DETAILS_FROM_DB: 'removeAllUtilisationReportDetailsFromDb',
+  INSERT_UTILISATION_REPORTS_INTO_DB: 'insertUtilisationReportsIntoDb',
+  REMOVE_ALL_UTILISATION_REPORTS_FROM_DB: 'removeAllUtilisationReportsFromDb',
 };

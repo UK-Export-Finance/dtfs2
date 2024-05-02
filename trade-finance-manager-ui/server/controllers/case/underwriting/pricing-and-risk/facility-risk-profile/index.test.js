@@ -1,6 +1,6 @@
+import { TEAM_IDS } from '@ukef/dtfs2-common';
 import facilityRiskProfileController from '..';
 import api from '../../../../../api';
-import { TEAM_IDS } from '../../../../../constants';
 import { mockRes } from '../../../../../test-mocks';
 import validateSubmittedValues from './validateSubmittedValues';
 

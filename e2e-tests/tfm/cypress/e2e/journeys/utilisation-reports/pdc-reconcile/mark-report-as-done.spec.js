@@ -1,37 +1,25 @@
+import {
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UtilisationReportEntityMockBuilder,
+  getPreviousReportPeriodForBankScheduleByMonth,
+  toIsoMonthStamp,
+} from '@ukef/dtfs2-common';
 import pages from '../../../pages';
 import USERS from '../../../../fixtures/users';
 import { PDC_TEAMS } from '../../../../fixtures/teams';
-import { getMonthlyReportPeriodFromIsoSubmissionMonth, toIsoMonthStamp } from '../../../../support/utils/dateHelpers';
+import { getMonthlyReportPeriodFromIsoSubmissionMonth } from '../../../../support/utils/dateHelpers';
 import { NODE_TASKS } from '../../../../../../e2e-fixtures';
-import {
-  MOCK_UTILISATION_REPORT_DETAILS_WITHOUT_ID,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
-  createNotReceivedReportDetails,
-} from '../../../../fixtures/mock-utilisation-report-details';
 import { aliasSelector } from '../../../../../../support/alias-selector';
+import { BANK1_PAYMENT_REPORT_OFFICER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 
 context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`, () => {
-  const submissionMonth = toIsoMonthStamp(new Date());
-  const reportPeriod = getMonthlyReportPeriodFromIsoSubmissionMonth(submissionMonth);
-  const utilisationReportDetailsAlias = 'utilisationReportDetailsAlias';
+  let uploadedByUserId;
+
+  const currentSubmissionMonth = toIsoMonthStamp(new Date());
+  const utilisationReportsAlias = 'utilisationReportsAlias';
 
   const displayStatusSelector = 'td > strong[data-cy="utilisation-report-reconciliation-status"]';
-  const tableCellCheckboxSelector = (reportId) => `th > div > div > input[data-cy="table-cell-checkbox--set-status--reportId-${reportId}"]`;
-
-  const statusWithBankId = [
-    {
-      bankId: undefined,
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
-    },
-    {
-      bankId: undefined,
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
-    },
-    {
-      bankId: undefined,
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
-    },
-  ];
+  const tableCellCheckboxSelector = (reportId, status) => `input[data-cy="table-cell-checkbox--set-status--reportId-${reportId}-currentStatus-${status}"]`;
 
   const getDisplayStatus = (utilisationReportReconciliationStatus) => {
     switch (utilisationReportReconciliationStatus) {
@@ -49,57 +37,45 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
   };
 
   beforeEach(() => {
-    const visibleBanks = [];
+    cy.getUserByUsername(BANK1_PAYMENT_REPORT_OFFICER1.username).then((user) => {
+      uploadedByUserId = user._id.toString();
+    });
+
+    const visibleBanksDueToSubmitThisMonth = [];
     cy.task(NODE_TASKS.GET_ALL_BANKS).then((getAllBanksResult) => {
       getAllBanksResult
         .filter((bank) => bank.isVisibleInTfmUtilisationReports)
+        .filter((bank) => bank.utilisationReportPeriodSchedule.some((period) => period.endMonth === new Date().getMonth()))
         .forEach((bank) => {
-          visibleBanks.push(bank);
+          visibleBanksDueToSubmitThisMonth.push(bank);
         });
-      cy.wrap(visibleBanks).its('length').should('be.gte', 3);
+      cy.wrap(visibleBanksDueToSubmitThisMonth).its('length').should('be.gte', 3);
     });
 
-    const mockUtilisationReportDetailsWithoutId = [];
-    cy.wrap(visibleBanks).each((bank, index) => {
-      const reportBank = { id: bank.id, name: bank.name };
-      const status = statusWithBankId.at(index)?.status;
+    /**
+     * @type {import('@ukef/dtfs2-common').UtilisationReportEntity[]}
+     */
+    const utilisationReports = [];
+    cy.wrap(visibleBanksDueToSubmitThisMonth).each((bank) => {
+      const bankId = bank.id;
 
-      if (!status || status === UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) {
-        mockUtilisationReportDetailsWithoutId.push(
-          createNotReceivedReportDetails(reportBank, {
-            reportPeriod,
-          }),
-        );
-        return;
-      }
+      const reportId = bankId;
 
-      mockUtilisationReportDetailsWithoutId.push({
-        ...MOCK_UTILISATION_REPORT_DETAILS_WITHOUT_ID,
-        bank: reportBank,
-        status,
-        reportPeriod,
-      });
+      const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(bank.utilisationReportPeriodSchedule, currentSubmissionMonth);
+
+      const pendingReconciliationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+        .withId(reportId)
+        .withBankId(bankId)
+        .withReportPeriod(reportPeriod)
+        .withUploadedByUserId(uploadedByUserId)
+        .withDateUploaded(new Date(currentSubmissionMonth))
+        .build();
+      utilisationReports.push(pendingReconciliationReport);
     });
 
-    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORT_DETAILS_FROM_DB);
-
-    cy.task(NODE_TASKS.INSERT_UTILISATION_REPORT_DETAILS_INTO_DB, mockUtilisationReportDetailsWithoutId).then((insertManyResult) => {
-      const { insertedIds } = insertManyResult;
-
-      const utilisationReportDetailsWithId = mockUtilisationReportDetailsWithoutId
-        .map((reportDetailsWithoutId, index) => {
-          const _id = insertedIds[index];
-
-          if (index < statusWithBankId.length) {
-            statusWithBankId[index].bankId = reportDetailsWithoutId.bank.id;
-          }
-
-          return { ...reportDetailsWithoutId, _id };
-        })
-        .slice(0, statusWithBankId.length);
-
-      cy.wrap(utilisationReportDetailsWithId).as(utilisationReportDetailsAlias);
-    });
+    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, utilisationReports);
+    cy.wrap(utilisationReports).as(utilisationReportsAlias);
 
     pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
@@ -107,36 +83,64 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     pages.utilisationReportsPage.visit();
   });
 
-  it('should allow the user to mark reports as done and refresh the page with the updated reports', () => {
-    cy.get(aliasSelector(utilisationReportDetailsAlias)).each((utilisationReportDetails) => {
-      const { _id, bank } = utilisationReportDetails;
-      const statusWithSpecificBankId = statusWithBankId.find(({ bankId }) => bankId === bank.id);
-      if (!statusWithSpecificBankId) {
-        return;
-      }
-      const { status } = statusWithSpecificBankId;
+  it(`should only allow users to manually mark a report as completed/not completed if the report is not in the '${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}' state`, () => {
+    /**
+     * @type {import('@ukef/dtfs2-common').UtilisationReportEntity[]}
+     */
+    const notReceivedUtilisationReports = [];
+    cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
+      const { bankId, id, reportPeriod, status } = utilisationReport;
+
+      pages.utilisationReportsPage
+        .tableRowSelector(bankId, currentSubmissionMonth)
+        .should('exist')
+        .within(($tableRow) => {
+          cy.wrap($tableRow).get(tableCellCheckboxSelector(id, status)).should('exist');
+        });
+
+      const notReceivedUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+        .withId(id)
+        .withBankId(bankId)
+        .withReportPeriod(reportPeriod)
+        .build();
+      notReceivedUtilisationReports.push(notReceivedUtilisationReport);
+    });
+
+    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, notReceivedUtilisationReports).each((notReceivedReport) => {
+      const { bankId, id, status } = notReceivedReport;
+
+      pages.utilisationReportsPage
+        .tableRowSelector(bankId, currentSubmissionMonth)
+        .should('exist')
+        .within(($tableRow) => {
+          cy.wrap($tableRow).get(tableCellCheckboxSelector(id, status)).should('not.exist');
+        });
+    });
+  });
+
+  it('should allow the user to mark reports as completed and refresh the page with the updated reports', () => {
+    cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
+      const { id, bankId, status } = utilisationReport;
       const displayStatus = getDisplayStatus(status);
 
       pages.utilisationReportsPage
-        .tableRowSelector(bank.id, submissionMonth)
+        .tableRowSelector(bankId, currentSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
           cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
-          cy.wrap($tableRow).get(tableCellCheckboxSelector(_id)).click();
+          cy.wrap($tableRow).get(tableCellCheckboxSelector(id, status)).click();
         });
     });
 
-    pages.utilisationReportsPage.clickMarkReportAsCompletedButton(submissionMonth);
+    pages.utilisationReportsPage.clickMarkReportAsCompletedButton(currentSubmissionMonth);
 
-    cy.get(aliasSelector(utilisationReportDetailsAlias)).each((utilisationReportDetails) => {
-      const { bank } = utilisationReportDetails;
-      if (!statusWithBankId.find(({ bankId }) => bank.id === bankId)) {
-        return;
-      }
-
+    cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
+      const { bankId } = utilisationReport;
       const displayStatus = getDisplayStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
+
       pages.utilisationReportsPage
-        .tableRowSelector(bank.id, submissionMonth)
+        .tableRowSelector(bankId, currentSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
           cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
@@ -144,106 +148,170 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     });
   });
 
-  it('should allow the user to mark reports as completed and not completed, resetting the reports to their previous "not completed" status', () => {
-    cy.get(aliasSelector(utilisationReportDetailsAlias)).each((utilisationReportDetails) => {
-      const { _id, bank } = utilisationReportDetails;
-      const statusWithSpecificBankId = statusWithBankId.find(({ bankId }) => bankId === bank.id);
-      if (!statusWithSpecificBankId) {
-        return;
-      }
-      const { status } = statusWithSpecificBankId;
+  it('should allow the user to mark reports as completed and not completed and refresh the page with the updated reports', () => {
+    cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
+      const { id, bankId, status } = utilisationReport;
       const displayStatus = getDisplayStatus(status);
 
       pages.utilisationReportsPage
-        .tableRowSelector(bank.id, submissionMonth)
+        .tableRowSelector(bankId, currentSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
           cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
-          cy.wrap($tableRow).get(tableCellCheckboxSelector(_id)).click();
+          cy.wrap($tableRow).get(tableCellCheckboxSelector(id, status)).click();
         });
     });
 
-    pages.utilisationReportsPage.clickMarkReportAsCompletedButton(submissionMonth);
+    pages.utilisationReportsPage.clickMarkReportAsCompletedButton(currentSubmissionMonth);
 
-    cy.get(aliasSelector(utilisationReportDetailsAlias)).each((utilisationReportDetails) => {
-      const { _id, bank } = utilisationReportDetails;
+    cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
+      const { bankId, id } = utilisationReport;
 
+      const completedStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED;
+      const displayStatus = getDisplayStatus(completedStatus);
+
+      pages.utilisationReportsPage
+        .tableRowSelector(bankId, currentSubmissionMonth)
+        .should('exist')
+        .within(($tableRow) => {
+          cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
+          cy.wrap($tableRow).get(tableCellCheckboxSelector(id, completedStatus)).click();
+        });
+    });
+
+    pages.utilisationReportsPage.clickMarkReportAsNotCompletedButton(currentSubmissionMonth);
+
+    cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
+      const { bankId } = utilisationReport;
+      const displayStatus = getDisplayStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION);
+
+      pages.utilisationReportsPage
+        .tableRowSelector(bankId, currentSubmissionMonth)
+        .should('exist')
+        .within(($tableRow) => {
+          cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
+        });
+    });
+  });
+
+  it('should not make any changes and reload the page when trying to mark not completed reports as not completed', () => {
+    cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
+      const { id, bankId, status } = utilisationReport;
+      const displayStatus = getDisplayStatus(status);
+
+      pages.utilisationReportsPage
+        .tableRowSelector(bankId, currentSubmissionMonth)
+        .should('exist')
+        .within(($tableRow) => {
+          cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
+          cy.wrap($tableRow).get(tableCellCheckboxSelector(id, status)).click();
+        });
+    });
+
+    pages.utilisationReportsPage.clickMarkReportAsNotCompletedButton(currentSubmissionMonth);
+
+    cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
+      const { bankId } = utilisationReport;
+      const displayStatus = getDisplayStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION);
+
+      pages.utilisationReportsPage
+        .tableRowSelector(bankId, currentSubmissionMonth)
+        .should('exist')
+        .within(($tableRow) => {
+          cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
+        });
+    });
+  });
+
+  it('should not make any changes and reload the page when trying to mark completed reports as completed', () => {
+    /**
+     * @type {import('@ukef/dtfs2-common').UtilisationReportEntity[]}
+     */
+    const reconciliationCompletedReports = [];
+    cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
+      const { id, bankId, reportPeriod, dateUploaded } = utilisationReport;
+
+      const reconciliationCompletedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
+        .withId(id)
+        .withBankId(bankId)
+        .withReportPeriod(reportPeriod)
+        .withUploadedByUserId(uploadedByUserId)
+        .withDateUploaded(dateUploaded)
+        .build();
+      reconciliationCompletedReports.push(reconciliationCompletedReport);
+    });
+
+    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, reconciliationCompletedReports);
+
+    cy.reload();
+
+    cy.wrap(reconciliationCompletedReports).each((reconciliationCompletedReport) => {
+      const { bankId, id, status } = reconciliationCompletedReport;
+      const displayStatus = getDisplayStatus(status);
+
+      pages.utilisationReportsPage
+        .tableRowSelector(bankId, currentSubmissionMonth)
+        .should('exist')
+        .within(($tableRow) => {
+          cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
+          cy.wrap($tableRow).get(tableCellCheckboxSelector(id, status)).click();
+        });
+    });
+
+    pages.utilisationReportsPage.clickMarkReportAsCompletedButton(currentSubmissionMonth);
+
+    cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
+      const { bankId } = utilisationReport;
       const displayStatus = getDisplayStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
-      pages.utilisationReportsPage
-        .tableRowSelector(bank.id, submissionMonth)
-        .should('exist')
-        .within(($tableRow) => {
-          cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
-          cy.wrap($tableRow).get(tableCellCheckboxSelector(_id)).click();
-        });
-    });
-
-    pages.utilisationReportsPage.clickMarkReportAsNotCompletedButton(submissionMonth);
-
-    cy.get(aliasSelector(utilisationReportDetailsAlias)).each((utilisationReportDetails) => {
-      const { bank } = utilisationReportDetails;
-      const statusWithSpecificBankId = statusWithBankId.find(({ bankId }) => bankId === bank.id);
-      if (!statusWithSpecificBankId) {
-        return;
-      }
-      const { status } = statusWithSpecificBankId;
 
       pages.utilisationReportsPage
-        .tableRowSelector(bank.id, submissionMonth)
+        .tableRowSelector(bankId, currentSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
-          if (status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) {
-            const displayStatus = getDisplayStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION);
-            cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
-            return;
-          }
-
-          const displayStatus = getDisplayStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED);
           cy.wrap($tableRow).get(displayStatusSelector).should('exist').contains(displayStatus);
         });
     });
   });
 
   it('should no longer display previous reports which are marked as completed', () => {
-    const previousUtilisationReportDetailsAlias = 'previousUtilisationReportDetails';
+    const previousUtilisationReportAlias = 'previousUtilisationReport';
     const previousSubmissionMonth = '2023-12';
     const previousReportPeriod = getMonthlyReportPeriodFromIsoSubmissionMonth(previousSubmissionMonth);
 
-    cy.get(aliasSelector(utilisationReportDetailsAlias)).then((utilisationReportDetails) => {
-      const { bank } = utilisationReportDetails[0];
-      const reportBank = { id: bank.id, name: bank.name };
-      const previousUtilisationReportDetailsWithoutId = createNotReceivedReportDetails(reportBank, {
-        reportPeriod: previousReportPeriod,
-      });
+    cy.get(aliasSelector(utilisationReportsAlias)).then((utilisationReports) => {
+      const { bankId } = utilisationReports[0];
 
-      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORT_DETAILS_INTO_DB, [previousUtilisationReportDetailsWithoutId]).then((insertManyResult) => {
-        const _id = insertManyResult.insertedIds[0];
+      const previousUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+        .withId(999) // this report id should always be unique
+        .withBankId(bankId)
+        .withReportPeriod(previousReportPeriod)
+        .withUploadedByUserId(uploadedByUserId)
+        .build();
 
-        const previousUtilisationReportDetails = { ...previousUtilisationReportDetailsWithoutId, _id: _id.toString() };
-        cy.wrap(previousUtilisationReportDetails).as(previousUtilisationReportDetailsAlias);
-      });
+      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [previousUtilisationReport]);
+      cy.wrap(previousUtilisationReport).as(previousUtilisationReportAlias);
     });
 
-    // Refresh the page
     cy.reload();
 
-    cy.get(aliasSelector(previousUtilisationReportDetailsAlias)).then((utilisationReportDetails) => {
-      const { _id, bank } = utilisationReportDetails;
+    cy.get(aliasSelector(previousUtilisationReportAlias)).then((utilisationReport) => {
+      const { id, bankId, status } = utilisationReport;
 
       pages.utilisationReportsPage
-        .tableRowSelector(bank.id, previousSubmissionMonth)
+        .tableRowSelector(bankId, previousSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
-          cy.wrap($tableRow).get(tableCellCheckboxSelector(_id)).click();
+          cy.wrap($tableRow).get(tableCellCheckboxSelector(id, status)).click();
         });
     });
 
     pages.utilisationReportsPage.clickMarkReportAsCompletedButton(previousSubmissionMonth);
 
-    cy.get(aliasSelector(previousUtilisationReportDetailsAlias)).then((utilisationReportDetails) => {
-      const { bank } = utilisationReportDetails;
+    cy.get(aliasSelector(previousUtilisationReportAlias)).then((utilisationReport) => {
+      const { bankId } = utilisationReport;
 
-      pages.utilisationReportsPage.tableRowSelector(bank.id, previousSubmissionMonth).should('not.exist');
+      pages.utilisationReportsPage.tableRowSelector(bankId, previousSubmissionMonth).should('not.exist');
     });
   });
 });

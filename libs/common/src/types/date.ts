@@ -1,5 +1,51 @@
 /**
- * ISO 8601 date time string in format yyyy-MM-ddThh:mm:ss.SSS xxxxxx
- * @example '2024-04-08T11:06:59.579 +00:00'
+ * Unix timestamp, representing the time that has elapsed since 1st January 1970
+ * (UTC).
+ *
+ * e.g. A Unix timestamp of 1702900314 is equivalent to an ISO 8601 date time
+ * stamp of '2023-12-18T11:51:54Z'
+ *
+ * The timestamps can be of varying lengths depending on the precision:
+ *  * 10 digits - seconds
+ *  * 13 digits - milliseconds
+ *  * 16 digits - microseconds
+ *  * 19 digits - nanoseconds
+ */
+export type UnixTimestamp = number;
+
+/**
+ * ISO 8601 date time string in format 'yyyy-MM-ddThh:mm:ssZ'
  */
 export type IsoDateTimeStamp = string;
+
+export type OneIndexedMonth = number;
+
+export type MonthAndYear = {
+  month: OneIndexedMonth;
+  year: number;
+};
+
+/**
+ * ISO 8601 month string in format 'yyyy-MM'
+ */
+export type IsoMonthStamp = string;
+
+/**
+ * Unix timestamp, representing the time that has elapsed since 1st January 1970
+ * (UTC).
+ *
+ * e.g. A Unix timestamp of 1702900314 is equivalent to an ISO 8601 date time
+ * stamp of '2023-12-18T11:51:54Z'
+ *
+ * The timestamps can be of varying lengths depending on the precision:
+ *  * 10 digits - seconds
+ *  * 13 digits - milliseconds
+ *  * 16 digits - microseconds
+ *  * 19 digits - nanoseconds
+ */
+export type UnixTimestampString = string;
+
+/**
+ * ISO 8601 day string in format 'yyyy-MM-dd'
+ */
+export type IsoDayStamp = string;

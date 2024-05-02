@@ -19,7 +19,7 @@ jest.mock('./validation', () => ({
 
 const { ObjectId } = require('mongodb');
 const { when } = require('jest-when');
-const { generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
+const { generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
 const { getUserByPasswordToken } = require('./reset-password.controller');
 const { update } = require('./controller');
 const { resetPasswordWithToken, loginWithSignInLink, updateById } = require('./routes');

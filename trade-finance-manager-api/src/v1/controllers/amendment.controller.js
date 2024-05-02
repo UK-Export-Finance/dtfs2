@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../api');
 const acbs = require('./acbs.controller');
 const { amendIssuedFacility } = require('./amend-issued-facility');
@@ -39,7 +39,7 @@ const sendAmendmentEmail = async (amendmentId, facilityId, auditDetails) => {
         if (amendment?.ukefDecision?.managersDecisionEmail && !amendment?.ukefDecision?.managersDecisionEmailSent) {
           // if managers decision email to be sent and not already sent
           const ukefDecisionAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
-          await sendManualDecisionAmendmentEmail(ukefDecisionAmendmentVariables, auditDetails)
+          await sendManualDecisionAmendmentEmail(ukefDecisionAmendmentVariables, auditDetails);
         }
         if (amendment?.bankDecision?.banksDecisionEmail && !amendment?.bankDecision?.banksDecisionEmailSent) {
           const bankDecisionAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
@@ -220,7 +220,7 @@ const updateFacilityAmendment = async (req, res) => {
 
       // UKEF exposure
       payload = calculateAcbsUkefExposure(payload);
-      
+
       const auditDetails = generateTfmAuditDetails(req.user._id);
 
       // Update Amendment

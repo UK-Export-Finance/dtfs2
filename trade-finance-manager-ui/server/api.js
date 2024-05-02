@@ -833,11 +833,11 @@ const getUtilisationReportsReconciliationSummary = async (submissionMonth, userT
 
 /**
  * @param {string} userToken
- * @param {string} _id
+ * @param {string} id
  * @returns {Promise<{ data: Readable, headers: DownloadUtilisationReportResponseHeaders }>}
  */
-const downloadUtilisationReport = async (userToken, _id) => {
-  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${_id}/download`, {
+const downloadUtilisationReport = async (userToken, id) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${id}/download`, {
     responseType: 'stream',
     headers: generateHeaders(userToken),
   });
@@ -864,6 +864,19 @@ const updateUtilisationReportStatus = async (user, reportsWithStatus, userToken)
       reportsWithStatus,
     },
   });
+
+/**
+ * @param {string} reportId - The report id
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').UtilisationReportReconciliationDetailsResponseBody>}
+ */
+const getUtilisationReportReconciliationDetailsById = async (reportId, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`, {
+    headers: generateHeaders(userToken),
+  });
+
+  return response.data;
+};
 
 module.exports = {
   getDeal,
@@ -903,4 +916,5 @@ module.exports = {
   getUtilisationReportsReconciliationSummary,
   downloadUtilisationReport,
   updateUtilisationReportStatus,
+  getUtilisationReportReconciliationDetailsById,
 };

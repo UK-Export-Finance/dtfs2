@@ -1,4 +1,5 @@
-const assertions = (wrapper) => ({
+const assertions = (wrapper, html) => ({
+  html,
   expectLink: (selector) => ({
     notToExist: () => {
       expect(wrapper(selector).html()).toBeNull();

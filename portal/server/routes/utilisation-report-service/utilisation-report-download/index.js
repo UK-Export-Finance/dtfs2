@@ -1,15 +1,17 @@
 const express = require('express');
-const { validateBankIdForUser, validateMongoId, validateToken, validateRole } = require('../../middleware');
-const { ROLES: { PAYMENT_REPORT_OFFICER } } = require('../../../constants');
+const {
+  ROLES: { PAYMENT_REPORT_OFFICER },
+} = require('@ukef/dtfs2-common');
+const { validateBankIdForUser, validateToken, validateRole, validateSqlId } = require('../../middleware');
 const { getReportDownload } = require('../../../controllers/utilisation-report-service');
 
 const router = express.Router();
 
 router.get(
-  '/banks/:bankId/utilisation-report-download/:_id',
+  '/banks/:bankId/utilisation-report-download/:id',
   [validateToken, validateRole({ role: [PAYMENT_REPORT_OFFICER] })],
   validateBankIdForUser,
-  validateMongoId,
+  validateSqlId('id'),
   (req, res) => getReportDownload(req, res),
 );
 

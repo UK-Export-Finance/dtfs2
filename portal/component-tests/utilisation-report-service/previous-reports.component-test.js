@@ -8,43 +8,48 @@ describe(page, () => {
   const navItems = [{
     text: 2023,
     href: '?targetYear=2023',
-    active: true,
     attributes: { 'data-cy': 'side-navigation-2023' },
+    active: true,
   }, {
     text: 2022,
     href: '?targetYear=2022',
     attributes: { 'data-cy': 'side-navigation-2022' },
+    active: false,
   }, {
     text: 2021,
     href: '?targetYear=2021',
     attributes: { 'data-cy': 'side-navigation-2021' },
+    active: false,
   }, {
     text: 2020,
     href: '?targetYear=2020',
     attributes: { 'data-cy': 'side-navigation-2020' },
+    active: false,
   }];
 
-  const reports = [{
+  const reportLinks = [{
+    text: 'January 2023',
     month: 'January',
     path: 'www.abc.com',
   }, {
+    text: 'February 2023',
     month: 'February',
     path: 'www.abc.com',
   }, {
+    text: 'March 2023',
     month: 'March',
     path: 'www.abc.com',
   }, {
+    text: 'May 2023',
     month: 'May',
     path: 'www.abc.com',
   }];
 
-  const noNavItems = [];
-  const noReports = [];
   const year = 2023;
 
   describe('with submitted reports', () => {
     beforeEach(() => {
-      wrapper = render({ navItems, reports, year });
+      wrapper = render({ navItems, reportLinks, year });
     });
 
     it('should render side navigation bar', () => {
@@ -80,7 +85,7 @@ describe(page, () => {
 
   describe('with no submitted reports for target year', () => {
     beforeEach(() => {
-      wrapper = render({ navItems, noReports, year });
+      wrapper = render({ navItems, reportLinks: [], year });
     });
 
     it('should render side navigation bar', () => {
@@ -105,7 +110,7 @@ describe(page, () => {
 
   describe('with no submitted reports for any year', () => {
     beforeEach(() => {
-      wrapper = render({ noNavItems, noReports, year });
+      wrapper = render({ navItems: [], reportLinks: [], year });
     });
 
     it('should render page heading', () => {

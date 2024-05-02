@@ -1,9 +1,9 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const aDeal = require('../deal-builder');
 const { MOCK_DEAL } = require('../mocks/mock-data');
-const { DB_COLLECTIONS } = require('../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 
 
@@ -31,7 +31,7 @@ describe('/v1/portal/facilities', () => {
   let dealId;
 
   beforeAll(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.DEALS, DB_COLLECTIONS.FACILITIES]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
   });
 
   beforeEach(async () => {
@@ -54,7 +54,7 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('returns 200 with empty array when there are no facilities', async () => {
-      await wipeDB.wipe([DB_COLLECTIONS.FACILITIES]);
+      await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES]);
       const { status, body } = await api.get('/v1/portal/facilities');
 
       expect(status).toEqual(200);
@@ -64,7 +64,7 @@ describe('/v1/portal/facilities', () => {
 
   describe('POST /v1/portal/multiple-facilities', () => {
     it('creates and returns multiple facilities with createdDate and updatedAt', async () => {
-      await wipeDB.wipe([DB_COLLECTIONS.FACILITIES]);
+      await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES]);
 
       const facilities = [
         mockFacility,

@@ -1,5 +1,8 @@
 const express = require('express');
 const { isBefore, set, startOfDay } = require('date-fns');
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { provide, LOAN, DEAL, CURRENCIES } = require('../../api-data-provider');
 const { requestParams, postToApi, errorHref, mapCurrencies, generateErrorSummary, constructPayload, getNowAsEpoch } = require('../../../helpers');
@@ -17,9 +20,6 @@ const isDealEditable = require('../isDealEditable');
 const premiumFrequencyField = require('./premiumFrequencyField');
 const { FACILITY_STAGE, STATUS } = require('../../../constants');
 const { validateRole } = require('../../middleware');
-const {
-  ROLES: { MAKER },
-} = require('../../../constants');
 
 const router = express.Router();
 

@@ -1,5 +1,5 @@
 const { getTime } = require('date-fns');
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');
@@ -32,15 +32,11 @@ const addUnderwriterManagersDecisionToDeal = ({
     auditDetails,
     onError: (status, message) => {
       throw new Error(`Updating the deal with dealId ${dealId} failed with status ${status} and message: ${message}`);
-    }
+    },
   });
 };
 
-const updatePortalDealStatusToMatchDecision = ({
-  dealId,
-  dealType,
-  decision,
-}) => {
+const updatePortalDealStatusToMatchDecision = ({ dealId, dealType, decision }) => {
   const mappedPortalStatus = mapTfmDealStageToPortalStatus(decision);
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
@@ -54,12 +50,7 @@ const updatePortalDealStatusToMatchDecision = ({
   return Promise.reject(new Error(`Unrecognised deal type ${dealType} for deal id ${dealId}.`));
 };
 
-const addUnderwriterManagersCommentToPortalDeal = ({
-  dealId,
-  dealType,
-  decision,
-  comments,
-}) => {
+const addUnderwriterManagersCommentToPortalDeal = ({ dealId, dealType, decision, comments }) => {
   const mappedPortalStatus = mapTfmDealStageToPortalStatus(decision);
   const portalCommentObj = {
     text: comments,
@@ -67,11 +58,11 @@ const addUnderwriterManagersCommentToPortalDeal = ({
   };
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    const portalCommentType = (
-      decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS
-      || decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS
-    ) ? CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION
-      : CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_COMMENT;
+    const portalCommentType =
+      decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS ||
+      decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS
+        ? CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION
+        : CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_COMMENT;
     return api.addPortalDealComment(dealId, portalCommentType, portalCommentObj);
   }
 
@@ -86,12 +77,7 @@ const addUnderwriterManagersCommentToPortalDeal = ({
 const extractDecisionFromRequest = (req) => {
   const {
     params: { dealId },
-    body: {
-      decision,
-      comments,
-      internalComments,
-      userFullName,
-    }
+    body: { decision, comments, internalComments, userFullName },
   } = req;
   return {
     dealId,
@@ -104,15 +90,16 @@ const extractDecisionFromRequest = (req) => {
 
 const updateUnderwriterManagersDecision = async (req, res) => {
   try {
-    const {
+    const { dealId, decision, comments, internalComments, userFullName } = extractDecisionFromRequest(req);
+
+    const updatedDeal = await addUnderwriterManagersDecisionToDeal({
       dealId,
       decision,
       comments,
       internalComments,
       userFullName,
-    } = extractDecisionFromRequest(req);
-
-    const updatedDeal = await addUnderwriterManagersDecisionToDeal({ dealId, decision, comments, internalComments, userFullName, auditDetails: generateTfmAuditDetails(req.user._id) });
+      auditDetails: generateTfmAuditDetails(req.user._id),
+    });
     const mappedDeal = mapSubmittedDeal(updatedDeal);
     const { dealType, submissionType } = mappedDeal;
 
@@ -125,8 +112,8 @@ const updateUnderwriterManagersDecision = async (req, res) => {
 
     return res.status(200).send();
   } catch (error) {
-    console.error('Unable to update the underwriter manager\'s decision %o', error);
-    return res.status(500).send({ data: 'Unable to update the underwriter manager\'s decision' });
+    console.error("Unable to update the underwriter manager's decision %o", error);
+    return res.status(500).send({ data: "Unable to update the underwriter manager's decision" });
   }
 };
 

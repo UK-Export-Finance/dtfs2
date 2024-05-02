@@ -1,4 +1,4 @@
-const { generatePortalAuditDetails } = require("@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details");
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const {
   shouldCreatePartiesTask,
   shouldCreateAgentCheckTask,
@@ -32,9 +32,7 @@ describe('createDealTasks', () => {
     mockDealEligibilityCriteria11False = {
       ...mockSubmittedDeal,
       eligibility: {
-        criteria: [
-          { id: 11, answer: false },
-        ],
+        criteria: [{ id: 11, answer: false }],
       },
     };
 
@@ -187,10 +185,7 @@ describe('createDealTasks', () => {
     it('should call api.updateDeal and return updated deal', async () => {
       const result = await createDealTasks(mockSubmittedDeal, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
 
-      const expectedTasks = createTasks(
-        mockSubmittedDeal.submissionType,
-        listAdditionalTasks(mockSubmittedDeal),
-      );
+      const expectedTasks = createTasks(mockSubmittedDeal.submissionType, listAdditionalTasks(mockSubmittedDeal));
 
       const expectedDealTfm = {
         ...mockSubmittedDeal.tfm,

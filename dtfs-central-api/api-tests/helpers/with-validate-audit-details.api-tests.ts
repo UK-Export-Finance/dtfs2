@@ -1,10 +1,10 @@
-import { AuditDetails } from '@ukef/dtfs2-common/src/types/audit-details';
+import { AuditDetails } from '@ukef/dtfs2-common';
 import {
   generateNoUserLoggedInAuditDetails,
   generatePortalAuditDetails,
   generateSystemAuditDetails,
   generateTfmAuditDetails,
-} from '@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details';
+} from '@ukef/dtfs2-common/change-stream';
 import { MOCK_TFM_USER } from '../mocks/test-users/mock-tfm-user';
 import { MOCK_PORTAL_USER } from '../mocks/test-users/mock-portal-user';
 

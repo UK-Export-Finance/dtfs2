@@ -1,5 +1,5 @@
+const { ROLES } = require('@ukef/dtfs2-common');
 const { login, loginWithSignInLink } = require('../../server/api');
-const { ROLES } = require('../../server/constants');
 const app = require('../../server/createApp');
 const { SIGN_IN_TOKEN_LINK_TOKEN } = require('../fixtures/sign-in-token-constants');
 const extractSessionCookie = require('../helpers/extractSessionCookie');

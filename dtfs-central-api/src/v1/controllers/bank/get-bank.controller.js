@@ -1,12 +1,12 @@
-const db = require('../../../drivers/db-client');
-const { DB_COLLECTIONS } = require("../../../constants");
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const db = require('../../../drivers/db-client').default;
 
 const findOneBank = async (id) => {
   if (typeof id !== 'string') {
     return { status: 400, message: 'Invalid Bank Id' };
   }
 
-  const banksCollection = await db.getCollection(DB_COLLECTIONS.BANKS);
+  const banksCollection = await db.getCollection(MONGO_DB_COLLECTIONS.BANKS);
 
   const bank = await banksCollection.findOne({ id: { $eq: id } });
 

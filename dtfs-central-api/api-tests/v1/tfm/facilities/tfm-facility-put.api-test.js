@@ -1,5 +1,9 @@
-const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
-const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const {
+  generatePortalAuditDetails,
+  generateTfmAuditDetails,
+  generateParsedMockTfmUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -36,7 +40,7 @@ describe('/v1/tfm/facilities', () => {
   let dealId;
 
   beforeAll(async () => {
-    await wipeDB.wipe([CONSTANTS.DB_COLLECTIONS.DEALS, CONSTANTS.DB_COLLECTIONS.FACILITIES]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
   });
 
   beforeEach(async () => {
@@ -57,7 +61,9 @@ describe('/v1/tfm/facilities', () => {
         })
         .to('/v1/tfm/deals/submit');
 
-      const { status } = await api.put({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/tfm/facilities/61e54e2e532cf2027303e001');
+      const { status } = await api
+        .put({ facility: newFacility, user: MOCK_PORTAL_USER })
+        .to('/v1/tfm/facilities/61e54e2e532cf2027303e001');
 
       expect(status).toEqual(404);
     });
@@ -66,7 +72,9 @@ describe('/v1/tfm/facilities', () => {
       let createdFacility;
 
       beforeEach(async () => {
-        const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const postResult = await api
+          .post({ facility: newFacility, user: MOCK_PORTAL_USER })
+          .to('/v1/portal/facilities');
         await api
           .put({
             dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
@@ -80,7 +88,9 @@ describe('/v1/tfm/facilities', () => {
 
       withValidateAuditDetailsTests({
         makeRequest: (auditDetails) =>
-          api.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to(`/v1/tfm/facilities/${createdFacility._id}`),
+          api
+            .put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId })
+            .to(`/v1/tfm/facilities/${createdFacility._id}`),
         validUserTypes: ['system', 'portal', 'tfm', 'none'],
       });
 

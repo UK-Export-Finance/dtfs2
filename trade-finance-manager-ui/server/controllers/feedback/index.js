@@ -1,4 +1,4 @@
-const { generateNoUserLoggedInAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateNoUserLoggedInAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../../api');
 const { generateValidationErrors } = require('../../helpers/validation');
 
@@ -26,7 +26,9 @@ const postFeedback = async (req, res) => {
 
     const feedbackBody = req.body;
     feedbackBody.submittedBy = userDetails;
-    feedbackBody.auditDetails = sessionUserId ? generateTfmAuditDetails(sessionUserId) : generateNoUserLoggedInAuditDetails();
+    feedbackBody.auditDetails = sessionUserId
+      ? generateTfmAuditDetails(sessionUserId)
+      : generateNoUserLoggedInAuditDetails();
 
     const response = await api.createFeedback(feedbackBody);
 
@@ -44,7 +46,12 @@ const postFeedback = async (req, res) => {
         // get error by its key (errorName)
         const error = data.validationErrors.errorList[errorName];
         // generate errors
-        validationErrors = generateValidationErrors(errorName, error.text, data.validationErrors.count, validationErrors);
+        validationErrors = generateValidationErrors(
+          errorName,
+          error.text,
+          data.validationErrors.count,
+          validationErrors,
+        );
       });
     }
 

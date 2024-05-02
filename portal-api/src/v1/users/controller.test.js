@@ -1,7 +1,7 @@
 jest.mock('../../drivers/db-client');
 const { ObjectId } = require('mongodb');
 const { when } = require('jest-when');
-const { generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
+const { generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
 const { updateSessionIdentifier, updateLastLoginAndResetSignInData, createPasswordToken } = require('./controller');
 const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
