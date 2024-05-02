@@ -26,10 +26,16 @@ const getSqlReports = (): {
     }),
   );
 
-  const sqlReports = sqlUtilisationReportAndFeeRecords.reduce<UtilisationReportEntity[]>((acc, { sqlReport }) => [...acc, sqlReport], []);
+  const sqlReports = sqlUtilisationReportAndFeeRecords.reduce<UtilisationReportEntity[]>(
+    (acc, { sqlReport }) => [...acc, sqlReport],
+    [],
+  );
   console.info('sql reports', sqlReports);
 
-  const allSqlFeeRecords = sqlUtilisationReportAndFeeRecords.reduce<FeeRecordEntity[]>((acc, { sqlFeeRecords }) => [...acc, ...sqlFeeRecords], []);
+  const allSqlFeeRecords = sqlUtilisationReportAndFeeRecords.reduce<FeeRecordEntity[]>(
+    (acc, { sqlFeeRecords }) => [...acc, ...sqlFeeRecords],
+    [],
+  );
   console.info('sql fee records', allSqlFeeRecords);
 
   return { sqlReports, sqlFeeRecords: allSqlFeeRecords };
