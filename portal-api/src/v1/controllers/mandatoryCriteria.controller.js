@@ -1,5 +1,8 @@
 const assert = require('assert');
-const db = require('../../drivers/db-client');
+const {
+  generatePortalAuditDetails,
+  generateAuditDatabaseRecordFromAuditDetails,
+} = require('@ukef/dtfs2-common/change-stream');const db = require('../../drivers/db-client');
 const { PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
 
@@ -32,21 +35,22 @@ const findOneMandatoryCriteria = async (version, callback) => {
 };
 
 exports.create = async (req, res) => {
-  const criteria = req?.body;
-
-  if (payloadVerification(criteria, PAYLOAD.CRITERIA.MANDATORY.DEFAULT)) {
-  // MC insertion on non-production environments
-    if (process.env.NODE_ENV !== 'production') {
-      const collection = await db.getCollection('mandatoryCriteria');
-      const result = await collection.insertOne(criteria);
-
-      return res.status(200).send(result);
-    }
-
-    return res.status(400).send({ status: 404, message: 'Unauthorised insertion' });
+  if (!payloadVerification(req.body, PAYLOAD.CRITERIA.MANDATORY.DEFAULT)) {
+    return res.status(400).send({ status: 400, message: 'Invalid mandatory criteria payload' });
   }
 
-  return res.status(400).send({ status: 400, message: 'Invalid mandatory criteria payload' });
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(403).send({ status: 403, message: 'Unauthorised insertion' });
+  }
+
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
+  // MC insertion on non-production environments
+    const collection = await db.getCollection('mandatoryCriteria');
+    const criteria = { ...req?.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
+    const result = await collection.insertOne(criteria);
+
+    return res.status(200).send(result);
 };
 
 exports.findAll = (req, res) => (
@@ -82,14 +86,20 @@ exports.update = async (req, res) => {
     res.status(400).send({ status: 400, message: 'Invalid Version' });
   }
 
-  // MC insertion on non-production environments
-  if (process.env.NODE_ENV !== 'production') {
-    const collection = await db.getCollection('mandatoryCriteria');
-    const status = await collection.updateOne({ version: { $eq: Number(req.params.version) } }, { $set: { criteria: req.body.criteria } }, {});
-    return res.status(200).send(status);
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(403).send();
   }
 
-  return res.status(400).send();
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
+  // MC insertion on non-production environments
+  const collection = await db.getCollection('mandatoryCriteria');
+  const status = await collection.updateOne(
+    { version: { $eq: Number(req.params.version) } },
+    { $set: { criteria: req.body.criteria, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) } },
+    {},
+  );
+  return res.status(200).send(status);
 };
 
 exports.delete = async (req, res) => {
