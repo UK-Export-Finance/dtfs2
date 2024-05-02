@@ -11,4 +11,6 @@ export type FindUtilisationReportsByYearViewModel = FindUtilisationReportByYearV
   user: TfmSessionUser;
   activePrimaryNavigation: string;
   bankItems: FindUtilisationReportsByYearBankViewModel[];
+  selectedBank?: string;
+  selectedYear?: string;
 };

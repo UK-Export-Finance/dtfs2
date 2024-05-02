@@ -6,6 +6,7 @@ import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { aBank } from '../../../../test-helpers/test-data/bank';
 import { aMonthlyBankReportPeriodSchedule } from '../../../../test-helpers/test-data/bank-report-period-schedule';
 import { Bank } from '../../../types/banks';
+import { FindUtilisationReportsByYearViewModel } from '../../../types/view-models/find-utilisation-reports-by-year-view-model';
 
 jest.mock('../../../api');
 
@@ -18,12 +19,13 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
   const BANK_NAME_ONE = 'Barclays Bank';
   const BANK_NAME_TWO = 'HSBC';
   const BANK_NAME_THREE = 'Newable';
-  const banks: Bank[] = [
+  const BANKS: Bank[] = [
     {
       ...aBank(),
       id: BANK_ID_ONE,
       name: BANK_NAME_ONE,
       utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule(),
+      isVisibleInTfmUtilisationReports: true,
     },
     {
       ...aBank(),
@@ -35,12 +37,32 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         { startMonth: 7, endMonth: 9 },
         { startMonth: 10, endMonth: 12 },
       ],
+      isVisibleInTfmUtilisationReports: true,
     },
     {
       ...aBank(),
       id: BANK_ID_THREE,
       name: BANK_NAME_THREE,
       utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule(),
+      isVisibleInTfmUtilisationReports: true,
+    },
+  ];
+
+  const EXPECTED_BANK_ITEMS = [
+    {
+      value: BANK_ID_ONE,
+      text: BANK_NAME_ONE,
+      attributes: { 'data-cy': `${BANK_NAME_ONE}-radio` },
+    },
+    {
+      value: BANK_ID_TWO,
+      text: BANK_NAME_TWO,
+      attributes: { 'data-cy': `${BANK_NAME_TWO}-radio` },
+    },
+    {
+      value: BANK_ID_THREE,
+      text: BANK_NAME_THREE,
+      attributes: { 'data-cy': `${BANK_NAME_THREE}-radio` },
     },
   ];
 
@@ -55,7 +77,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         session: { userToken: 'user-token', user: MOCK_TFM_SESSION_USER },
       });
 
-      jest.mocked(api.getBanksVisibleInTfmUtilisationReports).mockRejectedValue({
+      jest.mocked(api.getAllBanks).mockRejectedValue({
         response: { status: 404 },
       });
 
@@ -74,24 +96,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         session: { userToken, user: MOCK_TFM_SESSION_USER },
       });
 
-      jest.mocked(api.getBanksVisibleInTfmUtilisationReports).mockResolvedValue(banks);
-      const expectedBankItems = [
-        {
-          value: BANK_ID_ONE,
-          text: BANK_NAME_ONE,
-          attributes: { 'data-cy': `${BANK_NAME_ONE}-radio` },
-        },
-        {
-          value: BANK_ID_TWO,
-          text: BANK_NAME_TWO,
-          attributes: { 'data-cy': `${BANK_NAME_TWO}-radio` },
-        },
-        {
-          value: BANK_ID_THREE,
-          text: BANK_NAME_THREE,
-          attributes: { 'data-cy': `${BANK_NAME_THREE}-radio` },
-        },
-      ];
+      jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
 
       // Act
       await getReportsByYear(req, res);
@@ -100,7 +105,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
       expect(res._getRenderData()).toMatchObject({
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
-        bankItems: expectedBankItems,
+        bankItems: EXPECTED_BANK_ITEMS,
         errorSummary: [],
         bankError: undefined,
         yearError: undefined,
@@ -117,24 +122,8 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         query: { year: yearQuery },
       });
 
-      jest.mocked(api.getBanksVisibleInTfmUtilisationReports).mockResolvedValue(banks);
-      const expectedBankItems = [
-        {
-          value: BANK_ID_ONE,
-          text: BANK_NAME_ONE,
-          attributes: { 'data-cy': `${BANK_NAME_ONE}-radio` },
-        },
-        {
-          value: BANK_ID_TWO,
-          text: BANK_NAME_TWO,
-          attributes: { 'data-cy': `${BANK_NAME_TWO}-radio` },
-        },
-        {
-          value: BANK_ID_THREE,
-          text: BANK_NAME_THREE,
-          attributes: { 'data-cy': `${BANK_NAME_THREE}-radio` },
-        },
-      ];
+      jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
+
       const expectedBankError = 'Select a bank';
       const expectedYearError = 'Enter a valid year';
       const expectedErrorSummary = [
@@ -149,11 +138,93 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
       expect(res._getRenderData()).toMatchObject({
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
-        bankItems: expectedBankItems,
+        bankItems: EXPECTED_BANK_ITEMS,
         errorSummary: expectedErrorSummary,
         bankError: expectedBankError,
         yearError: expectedYearError,
       });
+    });
+
+    it("renders the 'find-utilisation-reports-by-year.njk' view with banks not visible in tfm utilisation reports filtered out", async () => {
+      // Arrange
+      const userToken = 'user-token';
+      const { res, req } = httpMocks.createMocks({
+        session: { userToken, user: MOCK_TFM_SESSION_USER },
+      });
+      const bankNotVisibleInTfmUtilisationReports: Bank = {
+        ...aBank(),
+        id: '999',
+        isVisibleInTfmUtilisationReports: false,
+      };
+
+      jest.mocked(api.getAllBanks).mockResolvedValue([...BANKS, bankNotVisibleInTfmUtilisationReports]);
+
+      // Act
+      await getReportsByYear(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
+      const { bankItems } = res._getRenderData() as FindUtilisationReportsByYearViewModel;
+      expect(bankItems).toHaveLength(3);
+      expect(bankItems).toEqual(EXPECTED_BANK_ITEMS);
+      expect(bankItems.filter((bank) => bank.value === '999')).toHaveLength(0);
+    });
+
+    it("renders the 'find-utilisation-reports-by-year.njk' view with bank pre-selected if bank param was provided and there is an error with the year", async () => {
+      // Arrange
+      const userToken = 'user-token';
+
+      const { res, req } = httpMocks.createMocks({
+        session: { userToken, user: MOCK_TFM_SESSION_USER },
+        query: { bank: BANK_ID_TWO, year: 'invalidYear' },
+      });
+
+      jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
+
+      // Act
+      await getReportsByYear(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
+      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.selectedBank).toBe(BANK_ID_TWO);
+    });
+
+    it("renders the 'find-utilisation-reports-by-year.njk' view with year pre-filled with year query param if there is an error with the bank", async () => {
+      // Arrange
+      const userToken = 'user-token';
+
+      const { res, req } = httpMocks.createMocks({
+        session: { userToken, user: MOCK_TFM_SESSION_USER },
+        query: { bank: 'invalidBank', year: '2024' },
+      });
+
+      jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
+
+      // Act
+      await getReportsByYear(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
+      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.selectedYear).toBe('2024');
+    });
+
+    it("renders the 'find-utilisation-reports-by-year.njk' view with year pre-filled with year query param if there is an error with the year", async () => {
+      // Arrange
+      const userToken = 'user-token';
+
+      const { res, req } = httpMocks.createMocks({
+        session: { userToken, user: MOCK_TFM_SESSION_USER },
+        query: { bank: BANK_ID_TWO, year: 'Nonsense' },
+      });
+
+      jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
+
+      // Act
+      await getReportsByYear(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
+      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.selectedYear).toBe('Nonsense');
     });
 
     it("renders the 'bank-previous-years-reports.njk' view with required data when there are valid query params", async () => {
@@ -167,7 +238,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         query: { bank: bankQuery, year: yearQuery },
       });
 
-      jest.mocked(api.getBanksVisibleInTfmUtilisationReports).mockResolvedValue(banks);
+      jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
 
       // Act
       await getReportsByYear(req, res);

@@ -881,19 +881,19 @@ const getUtilisationReportReconciliationDetailsById = async (reportId, userToken
   return response.data;
 };
 /**
- * Fetches all banks visible in TFM utilisation reports.
+ * Fetches all banks
  * @param {string} userToken - token to validate session
  * @returns {Promise<import('./types/banks').Bank[]>}
  */
-const getBanksVisibleInTfmUtilisationReports = async (userToken) => {
+const getAllBanks = async (userToken) => {
   try {
-    const { data } = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/banks`, {
+    const { data } = await axios.get(`${TFM_API_URL}/v1/banks`, {
       headers: generateHeaders(userToken),
     });
 
     return data;
   } catch (error) {
-    console.error('Failed to get banks visible in TFM', error);
+    console.error('Failed to get banks', error);
     throw error;
   }
 };
@@ -937,5 +937,5 @@ module.exports = {
   downloadUtilisationReport,
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
-  getBanksVisibleInTfmUtilisationReports,
+  getAllBanks,
 };

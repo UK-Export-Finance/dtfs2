@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { isNonEmptyString } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { validateSearchInput } from './search-input-validator';
@@ -12,10 +13,11 @@ export const getReportsByYear = async (req: Request, res: Response) => {
   try {
     const { bank: bankQuery, year: yearQuery } = req.query;
     const { user, userToken } = asUserSession(req.session);
-    const banks = await api.getBanksVisibleInTfmUtilisationReports(userToken);
+    const allBanks = await api.getAllBanks(userToken);
+    const visibleBanks = allBanks.filter((bank) => bank.isVisibleInTfmUtilisationReports);
 
-    const bankIds = banks.map((bank) => bank.id);
-    const bankItems = banks.map((bank) => ({
+    const bankIds = visibleBanks.map((bank) => bank.id);
+    const bankItems = visibleBanks.map((bank) => ({
       value: bank.id,
       text: bank.name,
       attributes: { 'data-cy': `${bank.name}-radio` },
@@ -30,6 +32,8 @@ export const getReportsByYear = async (req: Request, res: Response) => {
         errorSummary,
         bankError,
         yearError,
+        selectedBank: isNonEmptyString(bankQuery) ? bankQuery : undefined,
+        selectedYear: isNonEmptyString(yearQuery) ? yearQuery : undefined,
       });
     }
 
