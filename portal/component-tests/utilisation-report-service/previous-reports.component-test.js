@@ -5,53 +5,63 @@ const render = pageRenderer(page);
 
 describe(page, () => {
   let wrapper;
-  const navItems = [{
-    text: 2023,
-    href: '?targetYear=2023',
-    attributes: { 'data-cy': 'side-navigation-2023' },
-    active: true,
-  }, {
-    text: 2022,
-    href: '?targetYear=2022',
-    attributes: { 'data-cy': 'side-navigation-2022' },
-    active: false,
-  }, {
-    text: 2021,
-    href: '?targetYear=2021',
-    attributes: { 'data-cy': 'side-navigation-2021' },
-    active: false,
-  }, {
-    text: 2020,
-    href: '?targetYear=2020',
-    attributes: { 'data-cy': 'side-navigation-2020' },
-    active: false,
-  }];
+  const navItems = [
+    {
+      text: 2023,
+      href: '?targetYear=2023',
+      attributes: { 'data-cy': 'side-navigation-2023' },
+      active: true,
+    },
+    {
+      text: 2022,
+      href: '?targetYear=2022',
+      attributes: { 'data-cy': 'side-navigation-2022' },
+      active: false,
+    },
+    {
+      text: 2021,
+      href: '?targetYear=2021',
+      attributes: { 'data-cy': 'side-navigation-2021' },
+      active: false,
+    },
+    {
+      text: 2020,
+      href: '?targetYear=2020',
+      attributes: { 'data-cy': 'side-navigation-2020' },
+      active: false,
+    },
+  ];
 
-  const reports = [{
-    linkText: 'January 2023',
-    month: 'January',
-    downloadPath: 'www.abc.com',
-    status: 'PENDING_RECONCILIATION',
-    displayStatus: 'Pending reconciliation'
-  }, {
-    linkText: 'February 2023',
-    month: 'February',
-    downloadPath: 'www.abc.com',
-    status: 'PENDING_RECONCILIATION',
-    displayStatus: 'Pending reconciliation'
-  }, {
-    linkText: 'March 2023',
-    month: 'March',
-    downloadPath: 'www.abc.com',
-    status: 'RECONCILIATION_IN_PROGRESS',
-    displayStatus: 'Reconciliation in progress'
-  }, {
-    linkText: 'May 2023',
-    month: 'May',
-    downloadPath: 'www.abc.com',
-    status: 'RECONCILIATION_COMPLETED',
-    displayStatus: 'Report completed'
-  }];
+  const reports = [
+    {
+      linkText: 'January 2023',
+      month: 'January',
+      downloadPath: 'www.abc.com',
+      status: 'PENDING_RECONCILIATION',
+      displayStatus: 'Pending reconciliation',
+    },
+    {
+      linkText: 'February 2023',
+      month: 'February',
+      downloadPath: 'www.abc.com',
+      status: 'PENDING_RECONCILIATION',
+      displayStatus: 'Pending reconciliation',
+    },
+    {
+      linkText: 'March 2023',
+      month: 'March',
+      downloadPath: 'www.abc.com',
+      status: 'RECONCILIATION_IN_PROGRESS',
+      displayStatus: 'Reconciliation in progress',
+    },
+    {
+      linkText: 'May 2023',
+      month: 'May',
+      downloadPath: 'www.abc.com',
+      status: 'RECONCILIATION_COMPLETED',
+      displayStatus: 'Report completed',
+    },
+  ];
 
   const year = 2023;
 

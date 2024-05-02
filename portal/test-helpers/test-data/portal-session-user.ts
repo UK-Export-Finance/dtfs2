@@ -1,5 +1,5 @@
-import { PortalSessionUser } from "../../server/types/portal-session-user";
-import { aBank } from "./bank";
+import { PortalSessionUser } from '../../server/types/portal-session-user';
+import { aBank } from './bank';
 
 export const aPortalSessionUser = (): PortalSessionUser => ({
   _id: 'abc123',

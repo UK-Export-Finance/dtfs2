@@ -29,11 +29,11 @@ describe('previous-reports controller', () => {
         },
       });
 
-      const apiGetPreviousReportsSpy = jest.spyOn(api, 'getPreviousUtilisationReportsByBank');
+    const apiGetPreviousReportsSpy = jest.spyOn(api, 'getPreviousUtilisationReportsByBank');
 
-      afterEach(() => {
-        jest.clearAllMocks();
-      })
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
 
     it('renders the previous reports page', async () => {
       // Arrange
@@ -45,9 +45,11 @@ describe('previous-reports controller', () => {
         navItems: [],
         reports: [],
         year: undefined,
-      }
+      };
       apiGetPreviousReportsSpy.mockResolvedValue(responseBody);
-      const mapToPreviousReportsViewModelSpy = jest.spyOn(mapper, 'mapToPreviousReportsViewModel').mockReturnValue(viewModel);
+      const mapToPreviousReportsViewModelSpy = jest
+        .spyOn(mapper, 'mapToPreviousReportsViewModel')
+        .mockReturnValue(viewModel);
 
       // Act
       await getPreviousReports(req, res);
@@ -72,7 +74,7 @@ describe('previous-reports controller', () => {
       expect(apiGetPreviousReportsSpy).toHaveBeenCalledTimes(1);
       expect(apiGetPreviousReportsSpy).toHaveBeenCalledWith(USER_TOKEN, BANK_ID);
       expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
-      expect(res._getRenderData()).toEqual({ user: mockUser});
+      expect(res._getRenderData()).toEqual({ user: mockUser });
     });
   });
 });

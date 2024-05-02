@@ -7,7 +7,11 @@ import {
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { PreviousUtilisationReportsResponseBody, UtilisationReportResponseBody } from '../../../../api-response-types';
 import { PortalSessionUser } from '../../../../types/portal-session-user';
-import { PreviousReportNavItemViewModel, PreviousReportViewModel, PreviousReportsViewModel } from '../../../../types/view-models/previous-reports';
+import {
+  PreviousReportNavItemViewModel,
+  PreviousReportViewModel,
+  PreviousReportsViewModel,
+} from '../../../../types/view-models/previous-reports';
 import { getMonthName } from '../../../../helpers/getMonthName';
 
 const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportReconciliationStatus, string> = {
@@ -24,7 +28,10 @@ const mapToPreviousReportNavItemViewModel = (year: number, targetYear: number): 
   active: year === targetYear,
 });
 
-const mapToPreviousReportViewModel = (report: UtilisationReportResponseBody, user: PortalSessionUser): PreviousReportViewModel => ({
+const mapToPreviousReportViewModel = (
+  report: UtilisationReportResponseBody,
+  user: PortalSessionUser,
+): PreviousReportViewModel => ({
   status: report.status,
   displayStatus: reconciliationStatusCodeToDisplayStatus[report.status],
   month: getMonthName(report.reportPeriod.end.month),
@@ -52,7 +59,8 @@ export const mapToPreviousReportsViewModel = (
   const targetYear: number = targetYearQuery ? Number(targetYearQuery) : previousReportsByBank[0].year;
   const navItems = previousReportsByBank.map(({ year }) => mapToPreviousReportNavItemViewModel(year, targetYear));
   const activeYearIndex = navItems.findIndex(({ active }) => active);
-  const previousReportsInTargetYear = activeYearIndex === -1 ? previousReportsByBank[0] : previousReportsByBank[activeYearIndex];
+  const previousReportsInTargetYear =
+    activeYearIndex === -1 ? previousReportsByBank[0] : previousReportsByBank[activeYearIndex];
   const reports = previousReportsInTargetYear.reports.map((report) => mapToPreviousReportViewModel(report, user));
 
   return {

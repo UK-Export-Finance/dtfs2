@@ -1,6 +1,5 @@
-
-import { Bank } from "../../server/types/bank";
-import { aMonthlyBankReportPeriodSchedule } from "./bank-report-period-schedule";
+import { Bank } from '../../server/types/bank';
+import { aMonthlyBankReportPeriodSchedule } from './bank-report-period-schedule';
 
 export const aBank = (): Bank => ({
   _id: '6597dffeb5ef5ff4267e5044',

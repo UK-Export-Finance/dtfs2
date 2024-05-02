@@ -232,10 +232,10 @@ describe('previous-reports-view-model-mapper', () => {
     it("sets constructs and sets the report download path using the user's bank id and the report id", () => {
       // Arrange
       const user = aPortalSessionUser();
-      user.bank.id = '123'
+      user.bank.id = '123';
       const report: UtilisationReportResponseBody = {
         ...aUtilisationReportResponse(),
-        id: 456
+        id: 456,
       };
       const responseBody: PreviousUtilisationReportsResponseBody = [{ year: 2024, reports: [report] }];
 
