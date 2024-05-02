@@ -33,13 +33,17 @@ export const setupDeletionAuditLogsCollection = async () => {
             bsonType: 'objectId',
             description: 'deletedDocumentId must be an ObjectId',
           },
+          logCreatedAt: {
+            bsonType: 'date',
+            description: 'logCreatedAt must be a BSON date',
+          },
           auditRecord: {
             bsonType: 'object',
             description: 'auditRecord is required',
             properties: {
               lastUpdatedAt: {
-                bsonType: 'date',
-                description: 'lastUpdatedAt must be a BSON date',
+                bsonType: 'string',
+                description: 'lastUpdatedAt must be a string',
               },
               lastUpdatedByPortalUserId: {
                 bsonType: ['null', 'objectId'],
@@ -79,12 +83,13 @@ export const setupDeletionAuditLogsCollection = async () => {
     collectionName: 'users',
     deletedDocumentId: new ObjectId('6630cd95933028a128c5c081'),
     auditRecord: {
-      lastUpdatedAt: new Date(),
+      lastUpdatedAt: new Date().toISOString(),
       lastUpdatedByPortalUserId: null,
       lastUpdatedByTfmUserId: null,
       lastUpdatedByIsSystem: null,
       noUserLoggedIn: true,
     },
+    logCreatedAt: new Date(),
   });
   // try {
   //   await collection.insertOne({
