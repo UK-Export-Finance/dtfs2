@@ -29,10 +29,6 @@ jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
   createACBS: jest.fn(),
 }));
 
-jest.mock('../../../src/v1/controllers/deal.controller', () => ({
-  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
-}));
-
 jest.mock('../../../src/v1/helpers/can-submit-to-acbs');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));

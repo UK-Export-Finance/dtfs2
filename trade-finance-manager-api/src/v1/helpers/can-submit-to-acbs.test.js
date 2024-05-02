@@ -80,7 +80,7 @@ describe('canSubmiToACBS', () => {
 
   const invalidDeals = [null, undefined, {}, { ukefDealId: '123' }, [], 123, '123', '!$%'];
 
-  it.each(invalidDeals)('should throw an error if the deal object is invalid', async (deal) => {
+  it.each(invalidDeals)('should log an error and return false if the deal object is invalid', async (deal) => {
     // Act
     const result = await canSubmitToACBS(deal);
 
