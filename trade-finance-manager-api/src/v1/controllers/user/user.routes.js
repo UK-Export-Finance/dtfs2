@@ -33,7 +33,7 @@ const combineErrors = (listOfErrors) =>
 module.exports.createTfmUser = (req, res, next) => {
   const userToCreate = req.body;
   const errors = applyCreateRules(userToCreate);
-  const auditDetails = req.user._id ? generateTfmAuditDetails(req.user._id) : generateNoUserLoggedInAuditDetails();
+  const auditDetails = req.user?._id ? generateTfmAuditDetails(req.user._id) : generateNoUserLoggedInAuditDetails();
 
   if (errors.length) {
     return res.status(400).json({

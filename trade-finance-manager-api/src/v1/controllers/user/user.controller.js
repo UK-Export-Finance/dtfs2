@@ -35,8 +35,6 @@ exports.findByUsername = async (username, callback) => {
  */
 exports.create = async (user, auditDetails, callback) => {
   const collection = await db.getCollection('tfm-users');
-  // This endpoint is called by mock data loader in development without a logged in user.
-  // This behaviour should never occur in production
   const tfmUser = {
     ...user,
     status: USER.STATUS.ACTIVE,
