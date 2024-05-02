@@ -12,30 +12,48 @@ export type FindUtilisationReportByYearValidationErrors = {
   yearError: string | undefined;
 };
 
-export const validateSearchInput = (
-  bank: unknown,
-  year: unknown,
-  allBanks: string[],
-): FindUtilisationReportByYearValidationErrors => {
-  const errorSummary: Error[] = [];
-  let bankError;
-  let yearError;
+const isBefore2024 = (year: number): boolean => year < 2024;
 
-  if (!bank && !year) {
-    return { errorSummary, bankError, yearError };
-  }
+const isInTheFuture = (year: number): boolean => year > new Date().getFullYear();
 
-  if (!bank || !isNonEmptyString(bank) || !allBanks.includes(bank)) {
-    const errorMessage = 'Select a bank';
-    errorSummary.push({ text: errorMessage, href: '#bank' });
-    bankError = errorMessage;
-  }
-
+const validateYearInputAndReturnErrorMessageIfInvalid = (year: unknown): string | undefined => {
   const validYearRegex = new RegExp(REGEX.YEAR);
   if (!year || !isNonEmptyString(year) || !validYearRegex.test(year)) {
-    const errorMessage = 'Enter a valid year';
-    errorSummary.push({ text: errorMessage, href: '#year' });
-    yearError = errorMessage;
+    return 'Enter a valid year';
+  }
+  const yearParsed = Number(year);
+  if (isBefore2024(yearParsed) || isInTheFuture(yearParsed)) {
+    return 'Enter a year that is between 2024 and the current year';
+  }
+  return undefined;
+};
+
+const validateBankInputAndReturnErrorMessageIfInvalid = (bankId: unknown, allBankIds: string[]): string | undefined => {
+  if (!bankId || !isNonEmptyString(bankId) || !allBankIds.includes(bankId)) {
+    return 'Select a bank';
+  }
+  return undefined;
+};
+
+export const validateSearchInput = (
+  bankId: unknown,
+  year: unknown,
+  allBankIds: string[],
+): FindUtilisationReportByYearValidationErrors => {
+  if (!bankId && !year) {
+    return { errorSummary: [], bankError: undefined, yearError: undefined };
+  }
+
+  const errorSummary: Error[] = [];
+  const bankError = validateBankInputAndReturnErrorMessageIfInvalid(bankId, allBankIds);
+  const yearError = validateYearInputAndReturnErrorMessageIfInvalid(year);
+
+  if (bankError) {
+    errorSummary.push({ text: bankError, href: '#bank' });
+  }
+
+  if (yearError) {
+    errorSummary.push({ text: yearError, href: '#year' });
   }
 
   return { errorSummary, bankError, yearError };

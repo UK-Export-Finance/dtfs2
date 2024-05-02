@@ -1,5 +1,6 @@
 const pageRenderer = require('../pageRenderer');
 const { MOCK_TFM_SESSION_USER } = require('../../server/test-mocks/mock-tfm-session-user');
+const { PRIMARY_NAVIGATION_KEYS } = require('../../server/constants');
 
 const page = '../templates/utilisation-reports/find-utilisation-reports-by-year.njk';
 const render = pageRenderer(page);
@@ -10,14 +11,15 @@ const bankItems = [
 ];
 
 describe(page, () => {
-  const getWrapper = () => {
-    const params = {
+  const getWrapper = (bankError, yearError, errorSummary = []) =>
+    render({
       user: MOCK_TFM_SESSION_USER,
+      activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       bankItems,
-      validationErrors: [],
-    };
-    return render(params);
-  };
+      errorSummary,
+      bankError,
+      yearError,
+    });
 
   it('should render the main heading', async () => {
     // Arrange
@@ -55,5 +57,35 @@ describe(page, () => {
     // Assert
     wrapper.expectElement('[data-cy="continue-button"]').toExist();
     wrapper.expectText('[data-cy="continue-button"]').toRead('Continue');
+  });
+
+  it('should render bank error when present', async () => {
+    // Arrange
+    const wrapper = await getWrapper('Select a bank');
+
+    // Assert
+    wrapper.expectText('main').toContain('Select a bank');
+  });
+
+  it('should render year error when present', async () => {
+    // Arrange
+    const wrapper = await getWrapper(undefined, 'Enter a valid year');
+
+    // Assert
+    wrapper.expectText('main').toContain('Enter a valid year');
+  });
+
+  it('should render error summary when present', async () => {
+    // Arrange
+    const wrapper = await getWrapper(undefined, undefined, [
+      { text: "You've done something wrong", href: '#id' },
+      { text: "You've done another thing wrong", href: '#other' },
+    ]);
+
+    // Assert
+    wrapper.expectElement('a[href="#id"]').toExist();
+    wrapper.expectText('a[href="#id"]').toRead("You've done something wrong");
+    wrapper.expectElement('a[href="#other"]').toExist();
+    wrapper.expectText('a[href="#other"]').toRead("You've done another thing wrong");
   });
 });

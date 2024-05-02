@@ -14,16 +14,16 @@ export const getReportsByYear = async (req: Request, res: Response) => {
     const { user, userToken } = asUserSession(req.session);
     const banks = await api.getBanksVisibleInTfmUtilisationReports(userToken);
 
-    const bankNames = banks.map((bank) => bank.name);
+    const bankIds = banks.map((bank) => bank.id);
     const bankItems = banks.map((bank) => ({
       value: bank.id,
       text: bank.name,
       attributes: { 'data-cy': `${bank.name}-radio` },
     }));
-    const { errorSummary, bankError, yearError } = validateSearchInput(bankQuery, yearQuery, bankNames);
+    const { errorSummary, bankError, yearError } = validateSearchInput(bankQuery, yearQuery, bankIds);
 
     if (bankError || yearError || (!bankQuery && !yearQuery)) {
-      renderFindUtilisationReportsByYearPage(res, {
+      return renderFindUtilisationReportsByYearPage(res, {
         user,
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         bankItems,

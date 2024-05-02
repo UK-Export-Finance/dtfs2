@@ -4,7 +4,7 @@ import { TfmSessionUser } from '../tfm-session-user';
 export type FindUtilisationReportsByYearBankViewModel = {
   value: string;
   text: string;
-  attributes: Record<string, string>;
+  attributes?: Record<string, string>;
 };
 
 export type FindUtilisationReportsByYearViewModel = FindUtilisationReportByYearValidationErrors & {
