@@ -103,10 +103,10 @@ export const createUploadedReport = (
 };
 
 export const createFeeRecordsForReport = (): {
-  feeRecordWithMatchingCurrencies: FeeRecordEntity;
-  feeRecordWithDifferingCurrencies: FeeRecordEntity;
+  feeRecordWithMatchingPaymentCurrencies: FeeRecordEntity;
+  feeRecordWithDifferingPaymentCurrencies: FeeRecordEntity;
 } => {
-  const feeRecordWithMatchingCurrencies = createFeeRecord({
+  const feeRecordWithMatchingPaymentCurrencies = createFeeRecord({
     facilityId: '12345678',
     exporter: 'Test exporter',
     baseCurrency: 'GBP',
@@ -115,7 +115,7 @@ export const createFeeRecordsForReport = (): {
     feesPaidToUkefForThePeriod: 50,
   });
 
-  const feeRecordWithDifferingCurrencies = createFeeRecord({
+  const feeRecordWithDifferingPaymentCurrencies = createFeeRecord({
     facilityId: '22345678',
     exporter: 'Test exporter 2',
     baseCurrency: 'GBP',
@@ -128,7 +128,7 @@ export const createFeeRecordsForReport = (): {
   });
 
   return {
-    feeRecordWithMatchingCurrencies,
-    feeRecordWithDifferingCurrencies,
+    feeRecordWithMatchingPaymentCurrencies,
+    feeRecordWithDifferingPaymentCurrencies,
   };
 };

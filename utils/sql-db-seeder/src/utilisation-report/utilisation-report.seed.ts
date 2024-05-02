@@ -39,8 +39,9 @@ export default class UtilisationReportSeeder implements Seeder {
     );
 
     // The reports need to be seeded either before or with the fee records
-    const { feeRecordWithMatchingCurrencies, feeRecordWithDifferingCurrencies } = createFeeRecordsForReport();
-    uploadedReport.feeRecords = [feeRecordWithMatchingCurrencies, feeRecordWithDifferingCurrencies];
+    const { feeRecordWithMatchingPaymentCurrencies, feeRecordWithDifferingPaymentCurrencies } =
+      createFeeRecordsForReport();
+    uploadedReport.feeRecords = [feeRecordWithMatchingPaymentCurrencies, feeRecordWithDifferingPaymentCurrencies];
 
     const [bankToCreateMarkedAsCompletedReportFor, ...banksToCreateNotReceivedReportsFor] = banksVisibleInTfm.filter(
       (bank) => bank.id !== paymentReportOfficer.bank.id,
