@@ -3,6 +3,7 @@ import { add } from 'date-fns';
 import { AuditDetails, MongoDbCollectionName } from '../types';
 import { MongoDbClient } from '../mongo-db-client';
 import { generateAuditDatabaseRecordFromAuditDetails } from './generate-audit-database-record';
+import { InvalidEnvironmentVariableError } from '../errors';
 
 type DeleteDocumentWithAuditLogsParams = {
   documentId: ObjectId;
@@ -17,6 +18,12 @@ export const deleteDocumentWithAuditLogs = async ({
   db,
   auditDetails,
 }: DeleteDocumentWithAuditLogsParams) => {
+  const { DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS } = process.env;
+
+  if (!DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS) {
+    throw new InvalidEnvironmentVariableError('DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS not set');
+  }
+
   const client = await db.getClient();
   const session = client.startSession();
 
@@ -34,7 +41,7 @@ export const deleteDocumentWithAuditLogs = async ({
           collectionName,
           deletedDocumentId: documentId,
           auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-          expireAt: add(new Date(), { seconds: 10 }), // TODO: use env variable here
+          expireAt: add(new Date(), { seconds: Number(DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS) }),
         },
         { session },
       );

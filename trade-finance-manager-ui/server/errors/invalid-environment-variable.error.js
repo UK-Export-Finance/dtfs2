@@ -1,8 +1,3 @@
-class InvalidEnvironmentVariableError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = this.constructor.name;
-  }
-}
+const { InvalidEnvironmentVariableError } = require('@ukef/dtfs2-common');
 
 module.exports = InvalidEnvironmentVariableError;
