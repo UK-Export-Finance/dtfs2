@@ -1,16 +1,8 @@
 import { Request, Response } from 'express';
-import { SessionBank, ValuesOf, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { TfmSessionUser } from '../../../types/tfm-session-user';
-
-type RenderOptions = {
-  user: TfmSessionUser;
-  activePrimaryNavigation: ValuesOf<typeof PRIMARY_NAVIGATION_KEYS>;
-  bank: SessionBank;
-  formattedReportPeriod: string;
-};
 
 export const getUtilisationReportReconciliationByReportId = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
@@ -26,7 +18,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
       utilisationReportReconciliationDetails.reportPeriod,
     );
 
-    return res.render<RenderOptions>('utilisation-reports/utilisation-report-reconciliation-for-report.njk', {
+    return res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       bank: utilisationReportReconciliationDetails.bank,
