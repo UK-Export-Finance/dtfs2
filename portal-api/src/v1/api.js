@@ -311,7 +311,10 @@ const getUtilisationReports = async (bankId, options) => {
     }
 
     if (excludeNotReceived && typeof excludeNotReceived !== 'boolean') {
-      console.error('Get utilisation reports failed with the following excludeNotReceived query: %s', excludeNotReceived);
+      console.error(
+        'Get utilisation reports failed with the following excludeNotReceived query: %s',
+        excludeNotReceived,
+      );
       throw new Error(`Invalid excludeNotReceived provided: ${excludeNotReceived} (expected a boolean)`);
     }
 
@@ -348,10 +351,10 @@ const getUtilisationReportById = async (id) => {
 
 /**
  * Call the central API to get a bank
+ * @param {string} bankId
  * @returns {Promise<import('./api-response-types').BankResponse>} response of API call
  */
 const getBankById = async (bankId) => {
-  try {
     if (!isValidBankId(bankId)) {
       throw new Error(`Invalid bank id: ${bankId}`);
     }
@@ -363,10 +366,6 @@ const getBankById = async (bankId) => {
     });
 
     return response.data;
-  } catch (error) {
-    console.error('Unable to get bank by ID %o', error);
-    throw error;
-  }
 };
 
 /**

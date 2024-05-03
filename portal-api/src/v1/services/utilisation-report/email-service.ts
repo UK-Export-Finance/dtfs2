@@ -1,4 +1,4 @@
-import { array, string } from 'zod';
+import z from 'zod';
 import { PaymentOfficerTeam, asString } from '@ukef/dtfs2-common';
 import sendEmail from '../../email';
 import { EMAIL_TEMPLATE_IDS } from '../../../constants';
@@ -7,10 +7,12 @@ import api from '../../api';
 import { InvalidEnvironmentVariableError } from '../../errors';
 
 const getUkefGefReportingEmailRecipients = () => {
-  const EmailsSchema = array(string());
+  const EmailsSchema = z.array(z.string().email());
 
   try {
-    const emails =  EmailsSchema.parse(JSON.parse(asString(process.env.UKEF_GEF_REPORTING_EMAIL_RECIPIENT, 'UKEF_GEF_REPORTING_EMAIL_RECIPIENT')));
+    const emails = EmailsSchema.parse(
+      JSON.parse(asString(process.env.UKEF_GEF_REPORTING_EMAIL_RECIPIENT, 'UKEF_GEF_REPORTING_EMAIL_RECIPIENT')),
+    );
     return emails;
   } catch (error) {
     console.error('Failed to parse UKEF_GEF_REPORTING_EMAIL_RECIPIENTS ', error);
@@ -20,10 +22,13 @@ const getUkefGefReportingEmailRecipients = () => {
 
 /**
  * Sends notification email to UKEF GEF reporting email recipients that a utilisation report has been submitted
- * @param {string} bankName - name of the bank
- * @param {string} reportPeriod - period for which the report covers as a string, eg. June 2023
+ * @param bankName - name of the bank
+ * @param reportPeriod - period for which the report covers as a string, eg. June 2023
  */
-export const sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam = async (bankName: string, reportPeriod: string) => {
+export const sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam = async (
+  bankName: string,
+  reportPeriod: string,
+) => {
   await Promise.all(
     getUkefGefReportingEmailRecipients().map((email) =>
       sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_NOTIFICATION, email, {
@@ -37,6 +42,8 @@ export const sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam 
 /**
  * Calls the DTFS Central API to get bank details by bank ID and
  * returns only the payment officer team
+ * @param bankId - the id of the bank
+ * @returns - payment officer team
  */
 const getPaymentOfficerTeamDetailsFromBank = async (bankId: string): Promise<PaymentOfficerTeam> => {
   try {
@@ -51,16 +58,21 @@ const getPaymentOfficerTeamDetailsFromBank = async (bankId: string): Promise<Pay
 /**
  * Sends notification email to bank payment officer team that a utilisation report has been
  * received and return the payment officer team email address.
+ * @param reportPeriod - period for which the report covers as a string, eg. June 2023
+ * @param bankId - the id of the bank
+ * @param submittedDate - the date the report was submitted
+ * @param submittedByFirstName - the first name of the user who submitted the report
+ * @param submittedBySurname - the surname name of the user who submitted the report
  */
 export const sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam = async (
   reportPeriod: string,
   bankId: string,
   submittedDate: Date,
   submittedByFirstName: string,
-  submittedByLastName: string,
+  submittedBySurname: string,
 ) => {
   try {
-    const reportSubmittedBy = `${submittedByFirstName} ${submittedByLastName}`;
+    const reportSubmittedBy = `${submittedByFirstName} ${submittedBySurname}`;
     const { teamName, emails } = await getPaymentOfficerTeamDetailsFromBank(bankId);
     const formattedSubmittedDate = formatDateForEmail(submittedDate);
 

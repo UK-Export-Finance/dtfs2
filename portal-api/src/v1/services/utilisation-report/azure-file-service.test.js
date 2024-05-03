@@ -1,4 +1,3 @@
-const { when } = require('jest-when');
 const { saveUtilisationReportFileToAzure } = require('./azure-file-service');
 const { uploadFile } = require('../../../drivers/fileshare');
 const { MOCK_FILE_INFO } = require('../../../../test-helpers/mock-azure-file-info');
@@ -6,7 +5,7 @@ const { MOCK_FILE_INFO } = require('../../../../test-helpers/mock-azure-file-inf
 console.error = jest.fn();
 console.info = jest.fn();
 
-jest.mock('../../../drivers/fileshare', () => ({ uploadFile: jest.fn() }));
+jest.mock('../../../drivers/fileshare');
 
 describe('saveUtilisationReportFileToAzure', () => {
   const file = {
@@ -18,9 +17,7 @@ describe('saveUtilisationReportFileToAzure', () => {
   const bankId = '111';
   it('should return file info when azure file upload does not error', async () => {
     // Arrange
-    when(uploadFile)
-      .calledWith(expect.anything())
-      .mockImplementationOnce(() => MOCK_FILE_INFO);
+    jest.mocked(uploadFile).mockImplementationOnce(() => MOCK_FILE_INFO);
 
     // Act
     const fileInfo = await saveUtilisationReportFileToAzure(file, bankId);
@@ -31,10 +28,12 @@ describe('saveUtilisationReportFileToAzure', () => {
 
   it('should throw an error when the uploadFile response is false', async () => {
     // Arrange
-    when(uploadFile).calledWith(expect.anything()).mockResolvedValueOnce(false);
+    jest.mocked(uploadFile).mockResolvedValueOnce(false);
 
     // Act / Assert
-    await expect(saveUtilisationReportFileToAzure(file, bankId)).rejects.toThrow('Failed to save utilisation report to Azure - cause unknown');
+    await expect(saveUtilisationReportFileToAzure(file, bankId)).rejects.toThrow(
+      'Failed to save utilisation report to Azure - cause unknown',
+    );
   });
 
   it('should throw an error when the uploadFile response is an error object', async () => {
@@ -43,16 +42,18 @@ describe('saveUtilisationReportFileToAzure', () => {
       errorCount: 1,
       error: { errorCode: 'SOME_ERROR', message: 'invalid file' },
     };
-    when(uploadFile).calledWith(expect.anything()).mockResolvedValueOnce(errorObject);
+    jest.mocked(uploadFile).mockResolvedValueOnce(errorObject);
 
     // Act / Assert
-    await expect(saveUtilisationReportFileToAzure(file, bankId)).rejects.toThrow(`Failed to save utilisation report to Azure - ${errorObject.error.message}`);
+    await expect(saveUtilisationReportFileToAzure(file, bankId)).rejects.toThrow(
+      `Failed to save utilisation report to Azure - ${errorObject.error.message}`,
+    );
   });
 
   it('should rethrow the error when uploadFile throws', async () => {
     // Arrange
     const uploadFileError = new Error('File is invalid');
-    when(uploadFile).calledWith(expect.anything()).mockRejectedValueOnce(uploadFileError);
+    jest.mocked(uploadFile).mockRejectedValueOnce(uploadFileError);
 
     // Act / Assert
     await expect(saveUtilisationReportFileToAzure(file, bankId)).rejects.toThrow(uploadFileError);

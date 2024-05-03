@@ -28,7 +28,7 @@ export const saveUtilisationReportFileToAzure = async (file, bankId) => {
     console.info(`Successfully saved utilisation report to Azure for bank: ${bankId}`);
     return {
       ...fileInfo,
-      mimetype: file.mimetype
+      mimetype: file.mimetype,
     };
   } catch (error) {
     console.error('Failed to save utilisation report to Azure ', error);

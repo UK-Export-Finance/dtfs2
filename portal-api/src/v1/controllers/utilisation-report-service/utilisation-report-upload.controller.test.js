@@ -1,17 +1,19 @@
 const { HttpStatusCode } = require('axios');
 const httpMocks = require('node-mocks-http');
 const events = require('events');
-const { validateReportForPeriodIsInReportNotReceivedStateAndReturnId } = require('../../validation/utilisation-report/utilisation-report-upload-validator');
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
+const {
+  aUtilisationReportResponse,
+  aNotReceivedUtilisationReportResponse,
+} = require('../../../../test-helpers/test-data/utilisation-report');
 const { saveUtilisationReportFileToAzure } = require('../../services/utilisation-report/azure-file-service');
 const {
   sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam,
   sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam,
 } = require('../../services/utilisation-report/email-service');
 const { uploadReportAndSendNotification } = require('.');
-const { InvalidReportStatusError } = require('../../errors');
-const { saveUtilisationReport } = require('../../api');
+const { saveUtilisationReport, getUtilisationReports } = require('../../api');
 
-jest.mock('../../validation/utilisation-report/utilisation-report-upload-validator');
 jest.mock('../../services/utilisation-report/email-service');
 jest.mock('../../services/utilisation-report/azure-file-service');
 jest.mock('../../api');
@@ -54,33 +56,65 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
   });
 
-  it('does not upload report and returns a 500 with error message if report is not expected to be received', async () => {
+  it('does not upload report and returns a 500 if there are no reports for period', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
-    jest.mocked(validateReportForPeriodIsInReportNotReceivedStateAndReturnId).mockRejectedValue(new InvalidReportStatusError('validation failed!'));
+    jest.mocked(getUtilisationReports).mockResolvedValue([]);
 
     // Act
     await uploadReportAndSendNotification(req, res);
 
     // Assert
-    expect(validateReportForPeriodIsInReportNotReceivedStateAndReturnId).toHaveBeenCalledTimes(1);
     expect(saveUtilisationReportFileToAzure).not.toHaveBeenCalled();
     expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-    expect(res._getData()).toBe('validation failed!');
+  });
+
+  it('does not upload report and returns a 500 if there are more than one reports for period', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    jest
+      .mocked(getUtilisationReports)
+      .mockResolvedValue([aNotReceivedUtilisationReportResponse(), aNotReceivedUtilisationReportResponse()]);
+
+    // Act
+    await uploadReportAndSendNotification(req, res);
+
+    // Assert
+    expect(saveUtilisationReportFileToAzure).not.toHaveBeenCalled();
+    expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+  });
+
+  it('does not upload report and returns a 500 with error message if report has already been received', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    jest
+      .mocked(getUtilisationReports)
+      .mockResolvedValue([{ ...aUtilisationReportResponse(), status: 'PENDING_RECONCILIATION' }]);
+
+    // Act
+    await uploadReportAndSendNotification(req, res);
+
+    // Assert
+    expect(saveUtilisationReportFileToAzure).not.toHaveBeenCalled();
+    expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+    expect(res._getData()).toBe(
+      `Expected report to be in '${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}' state (was actually in '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}' state)`,
+    );
   });
 
   it('uploads report and sends notification emails', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
-    jest.mocked(validateReportForPeriodIsInReportNotReceivedStateAndReturnId).mockResolvedValue(1);
-    jest.mocked(saveUtilisationReportFileToAzure).mockResolvedValue({ folder: 'folder', filename: 'info', fullPath: 'folder/path', url: 'url' });
+    jest.mocked(getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
+    jest
+      .mocked(saveUtilisationReportFileToAzure)
+      .mockResolvedValue({ folder: 'folder', filename: 'info', fullPath: 'folder/path', url: 'url' });
     jest.mocked(saveUtilisationReport).mockResolvedValue({ dateUploaded: '2024-12-21' });
 
     // Act
     await uploadReportAndSendNotification(req, res);
 
     // Assert
-    expect(validateReportForPeriodIsInReportNotReceivedStateAndReturnId).toHaveBeenCalledTimes(1);
     expect(saveUtilisationReportFileToAzure).toHaveBeenCalledTimes(1);
     expect(saveUtilisationReport).toHaveBeenCalledTimes(1);
     expect(sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam).toHaveBeenCalledTimes(1);
@@ -90,10 +124,14 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
   it('responds with a 200 and the bank team recipient emails when uploading is successful', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
-    jest.mocked(validateReportForPeriodIsInReportNotReceivedStateAndReturnId).mockResolvedValue(1);
-    jest.mocked(saveUtilisationReportFileToAzure).mockResolvedValue({ folder: 'folder', filename: 'info', fullPath: 'folder/path', url: 'url' });
+    jest.mocked(getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
+    jest
+      .mocked(saveUtilisationReportFileToAzure)
+      .mockResolvedValue({ folder: 'folder', filename: 'info', fullPath: 'folder/path', url: 'url' });
     jest.mocked(saveUtilisationReport).mockResolvedValue({ dateUploaded: '2024-12-21' });
-    jest.mocked(sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam).mockResolvedValue({ paymentOfficerEmails: ['email'] });
+    jest
+      .mocked(sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam)
+      .mockResolvedValue({ paymentOfficerEmails: ['email'] });
 
     // Act
     await uploadReportAndSendNotification(req, res);
@@ -106,11 +144,17 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
   it('uploads report and returns a 200 if sending report upload notification email to gef reporting team fails', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
-    jest.mocked(validateReportForPeriodIsInReportNotReceivedStateAndReturnId).mockResolvedValue(1);
-    jest.mocked(saveUtilisationReportFileToAzure).mockResolvedValue({ folder: 'folder', filename: 'info', fullPath: 'folder/path', url: 'url' });
+    jest.mocked(getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
+    jest
+      .mocked(saveUtilisationReportFileToAzure)
+      .mockResolvedValue({ folder: 'folder', filename: 'info', fullPath: 'folder/path', url: 'url' });
     jest.mocked(saveUtilisationReport).mockResolvedValue({ dateUploaded: '2024-12-21' });
-    jest.mocked(sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam).mockRejectedValue(new Error('Failed to send email'));
-    jest.mocked(sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam).mockResolvedValue({ paymentOfficerEmails: ['email'] });
+    jest
+      .mocked(sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam)
+      .mockRejectedValue(new Error('Failed to send email'));
+    jest
+      .mocked(sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam)
+      .mockResolvedValue({ paymentOfficerEmails: ['email'] });
 
     // Act
     await uploadReportAndSendNotification(req, res);

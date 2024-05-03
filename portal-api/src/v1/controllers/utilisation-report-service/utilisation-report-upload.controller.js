@@ -1,11 +1,35 @@
+const { getFormattedReportPeriodWithLongMonth } = require('@ukef/dtfs2-common');
 const { saveUtilisationReportFileToAzure } = require('../../services/utilisation-report/azure-file-service');
 const {
   sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam,
   sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam,
 } = require('../../services/utilisation-report/email-service');
-const { validateReportForPeriodIsInReportNotReceivedStateAndReturnId } = require('../../validation/utilisation-report/utilisation-report-upload-validator');
+const {
+  validateReportIsInReportNotReceivedState,
+} = require('../../validation/utilisation-report/utilisation-report-validator');
 const api = require('../../api');
 const { InvalidReportStatusError } = require('../../errors');
+
+/**
+ * Fetches report for bank for given report period
+ * @param {string} bankId
+ * @param {ReportPeriod} reportPeriod
+ */
+const getReportForPeriod = async (bankId, reportPeriod) => {
+  const reportsForPeriod = await api.getUtilisationReports(bankId, {
+    reportPeriod,
+  });
+
+  if (reportsForPeriod.length !== 1) {
+    throw new Error(
+      `Expected 1 report but found ${
+        reportsForPeriod.length
+      } with bank ID ${bankId} and report period '${getFormattedReportPeriodWithLongMonth(reportPeriod)}'`,
+    );
+  }
+
+  return reportsForPeriod[0];
+}
 
 const uploadReportAndSendNotification = async (req, res) => {
   try {
@@ -21,13 +45,17 @@ const uploadReportAndSendNotification = async (req, res) => {
     const parsedReportPeriod = JSON.parse(reportPeriod);
     const bankId = parsedUser?.bank?.id;
 
-    const reportId = await validateReportForPeriodIsInReportNotReceivedStateAndReturnId(bankId, parsedReportPeriod);
+    const report = await getReportForPeriod(bankId, parsedReportPeriod);
+    validateReportIsInReportNotReceivedState(report);
     const azureFileInfo = await saveUtilisationReportFileToAzure(file, bankId);
-    const { dateUploaded } = await api.saveUtilisationReport(reportId, parsedReportData, parsedUser, azureFileInfo);
+    const { dateUploaded } = await api.saveUtilisationReport(report.reportId, parsedReportData, parsedUser, azureFileInfo);
 
     try {
-      await sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam(parsedUser?.bank?.name, formattedReportPeriod);
-    } catch(error) {
+      await sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam(
+        parsedUser?.bank?.name,
+        formattedReportPeriod,
+      );
+    } catch (error) {
       console.error('Failed to send report upload notification to ukef gef reporting team %o', error);
     }
     const { paymentOfficerEmails } = await sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam(
