@@ -10,6 +10,7 @@ const readOnlyRoleCannotBeAssignedWithOtherRoles = require('./rules/read-only-ro
 const usernameAndEmailMustMatch = require('./rules/username-and-email-must-match');
 const emailMustBeValidEmailAddress = require('./rules/email-must-be-valid-email-address');
 const emailMustBeUnique = require('./rules/email-must-be-unique');
+const getIsTrustedFieldValidationRule = require('./rules/get-is-trusted-field-validation-rule');
 
 const createRules = [
   passwordAtLeast8Characters,
@@ -21,6 +22,7 @@ const createRules = [
   usernameAndEmailMustMatch,
   emailMustBeValidEmailAddress,
   emailMustBeUnique,
+  getIsTrustedFieldValidationRule({ required: true }),
 ];
 
 const updateWithoutCurrentPasswordRules = [
@@ -35,6 +37,7 @@ const updateWithoutCurrentPasswordRules = [
   usernameAndEmailMustMatch,
   emailMustBeValidEmailAddress,
   emailMustBeUnique,
+  getIsTrustedFieldValidationRule({ required: false }),
 ];
 
 const updateWithCurrentPasswordRules = [...updateWithoutCurrentPasswordRules, currentPasswordMustMatch];
