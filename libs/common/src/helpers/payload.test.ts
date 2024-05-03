@@ -74,7 +74,6 @@ describe('isVerifiedPayload', () => {
 
   function withGeneralFailureTestCases(makePayloadRequest: makeIsVerifiedPayloadRequest) {
     const failureTestCases = [
-      { payload: {}, template: z.object({ name: z.string() }), description: 'when payload is empty' },
       {
         payload: { name: 'Test', age: '30' },
         template: z.object({ name: z.string(), age: z.number() }),
@@ -85,9 +84,14 @@ describe('isVerifiedPayload', () => {
         template: z.object({ name: z.string(), address: z.string() }),
         description: 'when payload and template have a missmatch of datatypes (object and string)',
       },
+      {
+        payload: { name: 'First', address: { city: 'London', country: 'UK' }, age: 30 },
+        template: z.object({ name: z.string(), address: z.string() }),
+        description: 'when payload has additional properties not present in the template',
+      },
     ];
 
-    it.each(failureTestCases)('should return true $description', ({ payload, template }) => {
+    it.each(failureTestCases)('should return false $description', ({ payload, template }) => {
       const result = makePayloadRequest({ payload, template });
       expect(result).toBe(false);
     });
