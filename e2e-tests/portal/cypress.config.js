@@ -38,7 +38,7 @@ module.exports = defineConfig({
       on('task', createTasks({ dbName, dbConnectionString }));
     },
     env: {
-      CONTACT_US_EMAIL_ADDRESS, // TODO: DTFS2-7138 remove contact us env vars
+      CONTACT_US_EMAIL_ADDRESS,
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],

@@ -164,7 +164,7 @@ services:
       - CLAMAV_DEBUG_MODE_ENABLED=true
       - CLAMAV_SCANNING_ENABLED=true
       - UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=1048576
-      - CONTACT_US_EMAIL_ADDRESS # TODO: DTFS2-7138 remove contact us env vars
+      - CONTACT_US_EMAIL_ADDRESS
 
   portal-api:
     build:

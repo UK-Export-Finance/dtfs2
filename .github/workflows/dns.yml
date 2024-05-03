@@ -13,7 +13,7 @@ env:
   key_vault_secret: ${{ secrets.PROD_KEYVAULT_SECRET }}
   front_door_name: ${{ secrets.PROD_FRONTDOOR_NAME }}
   domain_name: "get-a-guarantee-for-export-finance.service.gov.uk"
-  contact_us_email_address:  ${{ vars.CONTACT_US_EMAIL_ADDRESS }} # TODO: DTFS2-7138 remove contact us env vars
+  contact_us_email_address:  ${{ vars.CONTACT_US_EMAIL_ADDRESS }}
 
 jobs:
 

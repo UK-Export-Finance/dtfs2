@@ -15,7 +15,6 @@ context('Password management screens', () => {
       resetPassword.visitRequestEmail();
     });
 
-    // TODO: DTFS2-7138 remove contact us env vars
     const contactUsEmailAddress = Cypress.env('CONTACT_US_EMAIL_ADDRESS');
     const expectedContactUsMessage = `We've sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. If you require further assistance please contact ${contactUsEmailAddress}.`;
 
