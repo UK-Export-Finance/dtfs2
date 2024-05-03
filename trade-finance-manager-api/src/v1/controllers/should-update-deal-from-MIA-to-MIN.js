@@ -5,7 +5,7 @@ const CONSTANTS = require('../../constants');
  * can be updated from MIA to MIN.
  *
  * @param {Object} deal - The portal deal object.
- * @param {Object} tfmDeal - The TFM deal object.
+ * @param {Object} tfmDeal - The TFM deal object (deal.tfm).
  * @returns {boolean} - True if the deal should be updated, false otherwise.
  */
 const shouldUpdateDealFromMIAtoMIN = (deal, tfmDeal) => {

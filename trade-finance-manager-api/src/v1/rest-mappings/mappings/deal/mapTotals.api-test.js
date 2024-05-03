@@ -1,6 +1,6 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const mapTotals = require('./mapTotals');
 const { formattedNumber } = require('../../../../utils/number');
-const { CURRENCY } = require('../../../../constants/currency.constant');
 
 describe('mapTotals', () => {
   const mockAmendmentValueResponse = {

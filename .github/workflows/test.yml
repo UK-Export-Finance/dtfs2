@@ -57,8 +57,7 @@ on:
       - "dtfs-central-api/**"
       - "azure-functions/**"
       - "e2e-tests/**"
-      - "utils/mock-data-loader/**"
-      - "utils/sql-db-seeder/**"
+      - "utils/**"
       - "libs/**"
 
   push:
