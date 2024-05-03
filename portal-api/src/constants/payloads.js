@@ -24,6 +24,7 @@ const PORTAL = {
     salt: String,
     hash: String,
     auditRecord: Object,
+    isTrusted: Boolean,
   },
 };
 
