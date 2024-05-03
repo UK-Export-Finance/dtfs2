@@ -63,11 +63,11 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       });
     });
 
-    it('converts the fees paid to ukef for the period to the reported fees when the payment currencies match', () => {
-      // Arrange
+    describe("when the fee record 'feesPaidToUkefForThePeriodCurrency' matches the fee record 'paymentCurrency'", () => {
       const feesPaidToUkefForThePeriodCurrency: Currency = 'GBP';
-      const feesPaidToUkefForThePeriod = 100.0;
       const paymentCurrency: Currency = 'GBP';
+
+      const feesPaidToUkefForThePeriod = 100.0;
 
       const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(uploadedReport)
         .withFeesPaidToUkefForThePeriodCurrency(feesPaidToUkefForThePeriodCurrency)
@@ -75,32 +75,37 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         .withPaymentCurrency(paymentCurrency)
         .build();
 
-      // Act
-      const feeRecordItem = mapFeeRecordEntityToReconciliationDetailsFeeRecordItem(feeRecordEntity);
+      it("maps the fee record 'feesPaidToUkefForThePeriod' to the 'reportedPayments'", () => {
+        // Act
+        const feeRecordItem = mapFeeRecordEntityToReconciliationDetailsFeeRecordItem(feeRecordEntity);
 
-      // Assert
-      expect(feeRecordItem.reportedFees).toEqual<CurrencyAndAmount>({
-        currency: feesPaidToUkefForThePeriodCurrency,
-        amount: feesPaidToUkefForThePeriod,
+        // Assert
+        expect(feeRecordItem.reportedPayments).toEqual<CurrencyAndAmount>({
+          currency: paymentCurrency,
+          amount: feesPaidToUkefForThePeriod,
+        });
       });
-      expect(feeRecordItem.reportedPayments).toEqual<CurrencyAndAmount>({
-        currency: paymentCurrency,
-        amount: feesPaidToUkefForThePeriod,
-      });
-      expect(feeRecordItem.totalReportedPayments).toEqual<CurrencyAndAmount>({
-        currency: paymentCurrency,
-        amount: feesPaidToUkefForThePeriod,
+
+      it("maps the fee record 'feesPaidToUkefForThePeriod' to the 'totalReportedPayments'", () => {
+        // Act
+        const feeRecordItem = mapFeeRecordEntityToReconciliationDetailsFeeRecordItem(feeRecordEntity);
+
+        // Assert
+        expect(feeRecordItem.totalReportedPayments).toEqual<CurrencyAndAmount>({
+          currency: paymentCurrency,
+          amount: feesPaidToUkefForThePeriod,
+        });
       });
     });
 
-    it('converts the fees paid to ukef for the period to the reported fees and payments when the payment currencies do not match', () => {
-      // Arrange
+    describe("when the fee record 'feesPaidToUkefForThePeriodCurrency' does not match the fee record 'paymentCurrency'", () => {
       const feesPaidToUkefForThePeriodCurrency: Currency = 'EUR';
-      const feesPaidToUkefForThePeriod = 100.0;
       const paymentCurrency: Currency = 'GBP';
       const paymentExchangeRate = 1.1;
 
-      const feesPaidToUkefForThePeriodInPaymentCurrency = 90.91;
+      const feesPaidToUkefForThePeriod = 100.0;
+
+      const feesPaidToUkefForThePeriodInThePaymentCurrency = 90.91;
 
       const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(uploadedReport)
         .withFeesPaidToUkefForThePeriodCurrency(feesPaidToUkefForThePeriodCurrency)
@@ -109,25 +114,30 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         .withPaymentExchangeRate(paymentExchangeRate)
         .build();
 
-      // Act
-      const feeRecordItem = mapFeeRecordEntityToReconciliationDetailsFeeRecordItem(feeRecordEntity);
+      it("converts and maps the fee record 'feesPaidToUkefForThePeriod' to the 'reportedPayments'", () => {
+        // Act
+        const feeRecordItem = mapFeeRecordEntityToReconciliationDetailsFeeRecordItem(feeRecordEntity);
 
-      // Assert
-      expect(feeRecordItem.reportedFees).toEqual<CurrencyAndAmount>({
-        currency: feesPaidToUkefForThePeriodCurrency,
-        amount: feesPaidToUkefForThePeriod,
+        // Assert
+        expect(feeRecordItem.reportedPayments).toEqual<CurrencyAndAmount>({
+          currency: paymentCurrency,
+          amount: feesPaidToUkefForThePeriodInThePaymentCurrency,
+        });
       });
-      expect(feeRecordItem.reportedPayments).toEqual<CurrencyAndAmount>({
-        currency: paymentCurrency,
-        amount: feesPaidToUkefForThePeriodInPaymentCurrency,
-      });
-      expect(feeRecordItem.totalReportedPayments).toEqual<CurrencyAndAmount>({
-        currency: paymentCurrency,
-        amount: feesPaidToUkefForThePeriodInPaymentCurrency,
+
+      it("converts and maps the fee record 'feesPaidToUkefForThePeriod' to the 'totalReportedPayments'", () => {
+        // Act
+        const feeRecordItem = mapFeeRecordEntityToReconciliationDetailsFeeRecordItem(feeRecordEntity);
+
+        // Assert
+        expect(feeRecordItem.totalReportedPayments).toEqual<CurrencyAndAmount>({
+          currency: paymentCurrency,
+          amount: feesPaidToUkefForThePeriodInThePaymentCurrency,
+        });
       });
     });
 
-    it('sets the payments received to null when the fee record has no payments', () => {
+    it("sets 'paymentsReceived' and 'totalPaymentsReceived' to null when the fee record has no payments", () => {
       // Arrange
       const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(uploadedReport).build();
 

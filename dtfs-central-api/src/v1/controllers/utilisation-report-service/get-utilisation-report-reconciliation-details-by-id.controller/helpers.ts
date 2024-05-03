@@ -1,9 +1,4 @@
-import {
-  CurrencyAndAmount,
-  FeeRecordEntity,
-  UtilisationReportEntity,
-  divideAmountByExchangeRate,
-} from '@ukef/dtfs2-common';
+import { CurrencyAndAmount, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { FeeRecordItem, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
@@ -24,8 +19,7 @@ const mapFeeRecordEntityToReportedFees = (feeRecord: FeeRecordEntity): CurrencyA
  * @returns The reported fees
  */
 const mapFeeRecordEntityToReportedPayments = (feeRecord: FeeRecordEntity): CurrencyAndAmount => {
-  const { paymentCurrency, feesPaidToUkefForThePeriodCurrency, feesPaidToUkefForThePeriod, paymentExchangeRate } =
-    feeRecord;
+  const { paymentCurrency, feesPaidToUkefForThePeriodCurrency, feesPaidToUkefForThePeriod } = feeRecord;
 
   if (paymentCurrency === feesPaidToUkefForThePeriodCurrency) {
     return {
@@ -34,11 +28,7 @@ const mapFeeRecordEntityToReportedPayments = (feeRecord: FeeRecordEntity): Curre
     };
   }
 
-  const feesPaidToUkefForThePeriodInPaymentCurrency = divideAmountByExchangeRate(
-    feesPaidToUkefForThePeriod,
-    paymentExchangeRate,
-    2,
-  );
+  const feesPaidToUkefForThePeriodInPaymentCurrency = feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency();
 
   return {
     amount: feesPaidToUkefForThePeriodInPaymentCurrency,

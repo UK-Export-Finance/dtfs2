@@ -1,4 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import Big from 'big.js';
 import { UtilisationReportEntity } from '../utilisation-report';
 import { Currency } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
@@ -121,5 +122,16 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     feeRecord.report = report;
     feeRecord.updateLastUpdatedBy(requestSource);
     return feeRecord;
+  }
+
+  public getFeesPaidToUkefForThePeriodInThePaymentCurrency(): number {
+    if (this.paymentCurrency === this.feesPaidToUkefForThePeriodCurrency) {
+      return this.feesPaidToUkefForThePeriod;
+    }
+
+    const feesPaidToUkefForThePeriodAsBig = new Big(this.feesPaidToUkefForThePeriod);
+    const paymentExchangeRateAsBig = new Big(this.paymentExchangeRate);
+    const precision = 2;
+    return feesPaidToUkefForThePeriodAsBig.div(paymentExchangeRateAsBig).round(precision).toNumber();
   }
 }
