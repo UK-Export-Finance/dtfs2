@@ -1,12 +1,10 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { formattedNumber } = require('../../../../utils/number');
-const { CURRENCY } = require('../../../../constants/currency.constant');
 const { calculateNewFacilityValue, findLatestCompletedAmendment } = require('../../helpers/amendment.helpers');
 
 const mapFacilityValue = (currencyId, value, facility) => {
   if (facility) {
-    const {
-      tfm: facilityTfm,
-    } = facility;
+    const { tfm: facilityTfm } = facility;
 
     // if there are amendments in facility
     if (facility?.amendments?.length) {
