@@ -17,18 +17,26 @@ const itReturnsTheErrorWhenTheSpecifiedRuleReturnsAnError = ({
   expectedRulesTestCases,
   makeApplyRulesCall,
 }) => {
-  it.each(expectedRulesTestCases)('returns the error when $description returns an error', async ({ description, rule }) => {
-    mockAllRulesToNotReturnAnError();
-    const expectedError = { error: `${description} error` };
-    mockASingleRuleToError({ rule, error: expectedError });
+  it.each(expectedRulesTestCases)(
+    'returns the error when $description returns an error',
+    async ({ description, rule }) => {
+      mockAllRulesToNotReturnAnError();
+      const expectedError = { error: `${description} error` };
+      mockASingleRuleToError({ rule, error: expectedError });
 
-    const result = await makeApplyRulesCall();
+      const result = await makeApplyRulesCall();
 
-    expect(result).toEqual([expectedError]);
-  });
+      expect(result).toEqual([expectedError]);
+    },
+  );
 };
 
-const itThrowsAnError = ({ makeApplyRulesCall, expectedRulesTestCases, mockAllRulesToNotReturnAnError, mockASingleRuleToThrowAnUnhandledError }) => {
+const itThrowsAnError = ({
+  makeApplyRulesCall,
+  expectedRulesTestCases,
+  mockAllRulesToNotReturnAnError,
+  mockASingleRuleToThrowAnUnhandledError,
+}) => {
   it.each(expectedRulesTestCases)('throws an error when $description throws an error', async ({ rule }) => {
     mockAllRulesToNotReturnAnError();
     mockASingleRuleToThrowAnUnhandledError({ rule });
@@ -40,11 +48,18 @@ const itThrowsAnError = ({ makeApplyRulesCall, expectedRulesTestCases, mockAllRu
 const itReturnsAllErrors = ({ makeApplyRulesCall, expectedErrors }) => {
   it('returns all errors', async () => {
     const result = await makeApplyRulesCall();
-    expect(result).toEqual(expectedErrors);
+
+    // The following is used as order is not important and varies
+    expect(result).toHaveLength(expectedErrors.length);
+    expect(result).toEqual(expect.arrayContaining(expectedErrors));
   });
 };
 
-const whenApplyingRulesItAppliesOnlyTheExpectedRules = ({ makeApplyRulesCall, allRulesTestCases, expectedArgumentsToCallRuleWith }) => {
+const whenApplyingRulesItAppliesOnlyTheExpectedRules = ({
+  makeApplyRulesCall,
+  allRulesTestCases,
+  expectedArgumentsToCallRuleWith,
+}) => {
   const { expectedRulesTestCases, otherRulesTestCases } = allRulesTestCases;
   describe('when applying rules', () => {
     const allRules = getAllRulesFromAllRulesTestCases({ allRulesTestCases });
@@ -79,8 +94,14 @@ const whenNoRulesReturnAnErrorItReturnsAnEmptyArray = ({ makeApplyRulesCall, all
 
   describe('when no rules return an error', () => {
     describe.each([
-      { description: 'synchronous', mockAllRulesToNotReturnAnError: () => mockRulesToNotReturnAnErrorSynchronously({ rules: allRules }) },
-      { description: 'asynchronous', mockAllRulesToNotReturnAnError: () => mockRulesToNotReturnAnErrorAsynchronously({ rules: allRules }) },
+      {
+        description: 'synchronous',
+        mockAllRulesToNotReturnAnError: () => mockRulesToNotReturnAnErrorSynchronously({ rules: allRules }),
+      },
+      {
+        description: 'asynchronous',
+        mockAllRulesToNotReturnAnError: () => mockRulesToNotReturnAnErrorAsynchronously({ rules: allRules }),
+      },
     ])('when the failing rule is $description', ({ mockAllRulesToNotReturnAnError }) => {
       beforeEach(() => {
         mockAllRulesToNotReturnAnError();
@@ -135,14 +156,17 @@ const whenASingleRuleThrowsAnUnhandledErrorItThrowsTheError = ({ makeApplyRulesC
         mockAllRulesToNotReturnAnError: () => mockRulesToNotReturnAnErrorAsynchronously({ rules: allRules }),
         mockASingleRuleToThrowAnUnhandledError: ({ rule }) => rule.mockRejectedValue(new Error()),
       },
-    ])('when the throwing rule is $description', ({ mockAllRulesToNotReturnAnError, mockASingleRuleToThrowAnUnhandledError }) => {
-      itThrowsAnError({
-        expectedRulesTestCases: allRulesTestCases.expectedRulesTestCases,
-        makeApplyRulesCall,
-        mockAllRulesToNotReturnAnError,
-        mockASingleRuleToThrowAnUnhandledError,
-      });
-    });
+    ])(
+      'when the throwing rule is $description',
+      ({ mockAllRulesToNotReturnAnError, mockASingleRuleToThrowAnUnhandledError }) => {
+        itThrowsAnError({
+          expectedRulesTestCases: allRulesTestCases.expectedRulesTestCases,
+          makeApplyRulesCall,
+          mockAllRulesToNotReturnAnError,
+          mockASingleRuleToThrowAnUnhandledError,
+        });
+      },
+    );
   });
 };
 
