@@ -1,6 +1,7 @@
 const { add } = require('date-fns');
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const {
-  FACILITY_PROVIDED_DETAILS, FACILITY_TYPE, CURRENCY,
+  FACILITY_PROVIDED_DETAILS, FACILITY_TYPE,
 } = require('../../../portal-api/src/v1/gef/enums');
 
 const FACILITIES = [[],
@@ -98,7 +99,7 @@ const FACILITIES = [[],
       FACILITY_PROVIDED_DETAILS.OTHER,
     ],
     detailsOther: 'This is the other description',
-    currency: { id: CURRENCY.YEN },
+    currency: { id: CURRENCY.JPY },
     value: 30000000,
     coverPercentage: 20,
     interestPercentage: 50.9,
@@ -119,7 +120,7 @@ const FACILITIES = [[],
       FACILITY_PROVIDED_DETAILS.OTHER,
     ],
     detailsOther: 'This is the other description',
-    currency: { id: CURRENCY.YEN },
+    currency: { id: CURRENCY.JPY },
     value: 30000000,
     coverPercentage: 20,
     interestPercentage: 50.9,

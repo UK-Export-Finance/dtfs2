@@ -1,8 +1,4 @@
-/**
- * @param {unknown} value
- * @returns {boolean}
- */
-export const isString = (value) => typeof value === 'string' || value instanceof String;
+const { isString } = require("@ukef/dtfs2-common");
 
 const isEmptyString = (str) => {
   if (!str || (isString(str) && !str.trim().length)) {
@@ -21,7 +17,6 @@ const hasValue = (str) => {
 const containsNumber = (str) => /\d/.test(str);
 
 module.exports = {
-  isString,
   isEmptyString,
   hasValue,
   containsNumber,

@@ -58,7 +58,9 @@ module.exports = {
         project: './tsconfig.eslint.json',
         tsconfigRootDir: __dirname,
       },
-      rules: baseRules,
+      rules: {
+        ...baseRules,
+      },
     },
   ],
 };

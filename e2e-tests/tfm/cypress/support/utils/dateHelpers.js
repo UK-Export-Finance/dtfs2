@@ -1,18 +1,5 @@
-import { format, subMonths } from 'date-fns';
-
-/**
- * Gets the one indexed month
- * @param {Date} dateInMonth - A date in the month
- * @returns {number} The one indexed month
- */
-const getOneIndexedMonth = (dateInMonth) => dateInMonth.getMonth() + 1;
-
-/**
- * Converts the supplied date to an ISO month stamp
- * @param {Date} date - A date in the submission month
- * @returns {string} The current month as an ISO month stamp
- */
-export const toIsoMonthStamp = (date) => format(date, 'yyyy-MM');
+import { subMonths } from 'date-fns';
+import { getOneIndexedMonth } from '@ukef/dtfs2-common'
 
 /**
  * Gets the monthly report period from the submission month

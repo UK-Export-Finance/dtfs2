@@ -4,7 +4,7 @@ const { cloneDeep } = require('lodash');
 const {
   generateMockNoUserLoggedInAuditDatabaseRecord,
   generateMockPortalUserAuditDatabaseRecord,
-} = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
+} = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
 const { UserRepository } = require('./repository');
 const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError } = require('../errors');

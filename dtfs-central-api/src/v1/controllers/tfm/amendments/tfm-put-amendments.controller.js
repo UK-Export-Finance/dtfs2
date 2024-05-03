@@ -1,11 +1,13 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const {
+  validateAuditDetails,
+  generateAuditDatabaseRecordFromAuditDetails,
+} = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { getUnixTime } = require('date-fns');
-const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
-const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const { findAmendmentById } = require('./tfm-get-amendments.controller');
-const { DB_COLLECTIONS } = require('../../../../constants');
 
 exports.updateTfmAmendment = async (req, res) => {
   const { payload, auditDetails } = req.body;
@@ -30,7 +32,7 @@ exports.updateTfmAmendment = async (req, res) => {
     return res.status(404).send({ status: 404, message: 'The amendment does not exist' });
   }
 
-  const collection = await db.getCollection(DB_COLLECTIONS.TFM_FACILITIES);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
   const protectedProperties = ['_id', 'amendmentId', 'facilityId', 'dealId', 'createdAt', 'updatedAt', 'version'];
 
   for (const property of protectedProperties) {

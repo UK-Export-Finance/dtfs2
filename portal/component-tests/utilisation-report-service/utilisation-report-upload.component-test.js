@@ -1,5 +1,6 @@
+const { ROLES} = require('@ukef/dtfs2-common');
 const pageRenderer = require('../pageRenderer');
-const { ROLES, PRIMARY_NAV_KEY } = require('../../server/constants');
+const { PRIMARY_NAV_KEY } = require('../../server/constants');
 
 const page = 'utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk';
 const render = pageRenderer(page);
@@ -64,7 +65,7 @@ describe(page, () => {
 
     it('should display a generic warning message about reports being overdue', () => {
       wrapper.expectElement('[data-cy="warning-text"]').toExist();
-      wrapper.expectText('.govuk-warning-text__text').toMatch(/[There are overdue reports, please send them as soon as possible.]/);
+      wrapper.expectText('.govuk-warning-text__text').toMatch(/There are overdue reports, please send them as soon as possible./);
     });
 
     it('should display the two overdue reports with a specific message', () => {
@@ -81,7 +82,8 @@ describe(page, () => {
     });
 
     it('should state which report the page is expecting to be uploaded', () => {
-      wrapper.expectText('[data-cy="upload-report-text"]').toRead('Upload December 2022 report');
+      wrapper.expectText('[data-cy="upload-report-text"]').toMatch(/Upload December 2022 report/);
+      wrapper.expectText('[data-cy="upload-report-text"]').toMatch(/The file must be an XLSX or CSV/);
     });
   });
 
@@ -97,7 +99,7 @@ describe(page, () => {
 
     it('should display a specific warning message about which reports to upload', () => {
       wrapper.expectElement('[data-cy="warning-text"]').toExist();
-      wrapper.expectText('.govuk-warning-text__text').toMatch(/[January 2023 report is overdue, please send it as soon as possible.]/);
+      wrapper.expectText('.govuk-warning-text__text').toMatch(/January 2023 report is overdue, please send it as soon as possible./);
     });
 
     it('should display the one overdue report as being overdue', () => {
@@ -113,7 +115,8 @@ describe(page, () => {
     });
 
     it('should state which report the page is expecting to be uploaded', () => {
-      wrapper.expectText('[data-cy="upload-report-text"]').toRead('Upload January 2023 report');
+      wrapper.expectText('[data-cy="upload-report-text"]').toMatch(/Upload January 2023 report/);
+      wrapper.expectText('[data-cy="upload-report-text"]').toMatch(/The file must be an XLSX or CSV/);
     });
   });
 
@@ -143,7 +146,7 @@ describe(page, () => {
   });
 
   describe('when no reports are due', () => {
-    const nextReportPeriod = 'March 2023';
+    const formattedNextReportPeriod = 'March 2023';
     const nextReportPeriodSubmissionStart = '1 April 2023';
     const lastUploadedReportPeriod = 'February 2023';
     const uploadedByFullName = 'John Smith';
@@ -154,7 +157,7 @@ describe(page, () => {
         user,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
         dueReportPeriods: [],
-        nextReportPeriod,
+        formattedNextReportPeriod,
         nextReportPeriodSubmissionStart,
         lastUploadedReportPeriod,
         uploadedByFullName,
@@ -168,7 +171,7 @@ describe(page, () => {
 
     it('should display specific text about the next report which can be uploaded', () => {
       wrapper.expectText('[data-cy="next-due-report-text"]')
-        .toRead(`The ${nextReportPeriod} report can be uploaded from ${nextReportPeriodSubmissionStart}.`);
+        .toRead(`The ${formattedNextReportPeriod} report can be uploaded from ${nextReportPeriodSubmissionStart}.`);
     });
 
     it('should display details about the last uploaded report', () => {

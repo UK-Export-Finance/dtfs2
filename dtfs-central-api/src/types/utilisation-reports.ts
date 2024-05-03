@@ -1,13 +1,38 @@
-import { ObjectId } from 'mongodb';
-import { ValuesOf } from '@ukef/dtfs2-common';
-import { IsoMonthStamp, MonthAndYear } from './date';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, UTILISATION_REPORT_HEADERS } from '../constants';
-import { Currency } from './currency';
+import {
+  ValuesOf,
+  UtilisationReportReconciliationStatus,
+  UtilisationReport,
+  Prettify,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  Currency,
+  ReportPeriod,
+  AzureFileInfo,
+  UploadedByUserDetails,
+  UTILISATION_REPORT_HEADERS,
+  IsoMonthStamp,
+} from '@ukef/dtfs2-common';
 
-export type UtilisationReportReconciliationStatus = ValuesOf<typeof UTILISATION_REPORT_RECONCILIATION_STATUS>;
+export type GetUtilisationReportResponse = {
+  id: number;
+  bankId: string;
+  status: UtilisationReportReconciliationStatus;
+  reportPeriod: ReportPeriod;
+} & (
+  | {
+      uploadedByUser: UploadedByUserDetails;
+      azureFileInfo: AzureFileInfo;
+      dateUploaded: Date;
+    }
+  | {
+      uploadedByUser: null;
+      azureFileInfo: null;
+      dateUploaded: null;
+    }
+);
 
 export type UtilisationReportReconciliationSummaryItem = {
-  reportId: ObjectId;
+  reportId: number;
+  reportPeriod: ReportPeriod;
   bank: {
     id: string;
     name: string;
@@ -23,18 +48,32 @@ export type UtilisationReportReconciliationSummary = {
   items: UtilisationReportReconciliationSummaryItem[];
 };
 
-export type ReportPeriod = {
-  start: MonthAndYear;
-  end: MonthAndYear;
-};
-
-export type ReportWithStatus = {
-  status: UtilisationReportReconciliationStatus;
-  reportId: string;
-};
-
 type UtilisationReportHeader = ValuesOf<typeof UTILISATION_REPORT_HEADERS>;
 
 export type UtilisationReportRawCsvData = {
   [HeaderKey in UtilisationReportHeader]: HeaderKey extends `${string}currency` ? Currency : string;
+};
+
+export type UtilisationReportUploadDetails = Prettify<
+  Required<
+    Pick<UtilisationReport, 'azureFileInfo' | 'dateUploaded' | 'uploadedBy'> & {
+      status: typeof UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
+    }
+  >
+>;
+
+export type FeeRecordItem = {
+  facilityId: string;
+};
+
+export type UtilisationReportReconciliationDetails = {
+  reportId: number;
+  bank: {
+    id: string;
+    name: string;
+  };
+  status: UtilisationReportReconciliationStatus;
+  reportPeriod: ReportPeriod;
+  dateUploaded: Date;
+  feeRecords: FeeRecordItem[];
 };

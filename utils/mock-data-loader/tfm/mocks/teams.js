@@ -1,6 +1,6 @@
 const {
   BANK1_MAKER1, BANK1_CHECKER1, BANK1_MAKER_CHECKER1, BANK1_MAKER_PAYMENT_REPORT_OFFICER1
-} = require('../../portal/users');
+} = require('../../portal-users');
 
 const TEAMS = {
   UNDERWRITING_SUPPORT: {

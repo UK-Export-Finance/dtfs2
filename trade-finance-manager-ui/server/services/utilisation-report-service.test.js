@@ -1,4 +1,4 @@
-const { getReportDueDate, getReportPeriodStart } = require('./utilisation-report-service');
+const { getReportDueDate } = require('./utilisation-report-service');
 
 const originalProcessEnv = process.env;
 
@@ -39,15 +39,5 @@ describe('utilisation-report-service', () => {
         expect(dueDate).toEqual(expectedDueDate);
       },
     );
-  });
-
-  describe('getReportPeriodStart', () => {
-    it.each([
-      { submissionMonth: '2023-11', expectedReportPeriodStart: { month: 10, year: 2023 } },
-      { submissionMonth: '2023-03', expectedReportPeriodStart: { month: 2, year: 2023 } },
-      { submissionMonth: '2023-01', expectedReportPeriodStart: { month: 12, year: 2022 } },
-    ])("returns '$expectedReportPeriodStart' when submissionMonth is '$submissionMonth'", ({ submissionMonth, expectedReportPeriodStart }) => {
-      expect(getReportPeriodStart(submissionMonth)).toEqual(expectedReportPeriodStart);
-    });
   });
 });

@@ -38,6 +38,7 @@ module.exports = {
           '**/webpack.*.{js,ts}',
           '**/api-test*/**',
           '**/__mocks__/**',
+          '**/sql-db-seeder/**/*.ts',
         ],
       },
     ],
@@ -48,7 +49,10 @@ module.exports = {
     'no-restricted-syntax': 'off',
     'no-return-await': 'off',
     'no-use-before-define': ['error', { functions: false }],
+    'class-methods-use-this': ['error', { exceptMethods: ['up', 'down', 'run'] }],
     '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
+    '@typescript-eslint/restrict-template-expressions': ['error', { allowNever: true }],
+    'no-param-reassign': ['error', { props: true, ignorePropertyModificationsForRegex: ['^draft'] }],
   },
   settings: {
     'import/resolver': {

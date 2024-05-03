@@ -1,5 +1,5 @@
 const validator = require('validator');
-const { UTILISATION_REPORT_HEADERS } = require('../../../../constants');
+const { UTILISATION_REPORT_HEADERS } = require('@ukef/dtfs2-common');
 
 const generatePaymentCurrencyError = (csvDataRow) => {
   if (

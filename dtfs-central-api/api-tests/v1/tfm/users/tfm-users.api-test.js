@@ -1,10 +1,10 @@
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const { expectMongoIds } = require('../../../expectMongoIds');
-const { DB_COLLECTIONS } = require('../../../../src/constants');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 
 const mockUsers = [
@@ -41,7 +41,7 @@ const orderUsers = (users) => users.sort((u1, u2) => u1.username.localeCompare(u
 
 describe('/v1/tfm/users', () => {
   beforeEach(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.TFM_USERS]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_USERS]);
   });
 
   describe('POST /v1/tfm/users', () => {
@@ -51,7 +51,9 @@ describe('/v1/tfm/users', () => {
     });
 
     it('returns the created resource', async () => {
-      const { status, body } = await api.post({ user: mockUsers[0], auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/users');
+      const { status, body } = await api
+        .post({ user: mockUsers[0], auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+        .to('/v1/tfm/users');
 
       expect(status).toEqual(200);
       expect(typeof body._id).toEqual('string');
@@ -61,7 +63,9 @@ describe('/v1/tfm/users', () => {
   describe('GET /v1/tfm/users', () => {
     it('returns all users', async () => {
       await Promise.all(
-        mockUsers.map(async (mockUser) => api.post({ user: mockUser, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/users')),
+        mockUsers.map(async (mockUser) =>
+          api.post({ user: mockUser, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/users'),
+        ),
       );
       const { status, body } = await api.get('/v1/tfm/users');
       expect(status).toEqual(200);
@@ -91,7 +95,9 @@ describe('/v1/tfm/users', () => {
     });
 
     it('returns the requested resource', async () => {
-      await api.post({ user: mockUsers[0], auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/users');
+      await api
+        .post({ user: mockUsers[0], auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+        .to('/v1/tfm/users');
       const { status, body } = await api.get(`/v1/tfm/users/${mockUsers[0].username}`);
 
       expect(status).toEqual(200);
@@ -115,7 +121,9 @@ describe('/v1/tfm/users', () => {
     });
 
     it('returns the requested resource', async () => {
-      const createdUserResponse = await api.post({ user: mockUsers[0], auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/users');
+      const createdUserResponse = await api
+        .post({ user: mockUsers[0], auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+        .to('/v1/tfm/users');
       const createdUser = createdUserResponse.body;
 
       const { status, body } = await api.get(`/v1/tfm/users/id/${createdUser._id}`);
@@ -137,7 +145,9 @@ describe('/v1/tfm/users', () => {
   describe('DELETE /v1/tfm/users/:id', () => {
     it('deletes the user', async () => {
       await Promise.all(
-        mockUsers.map(async (mockUser) => api.post({ user: mockUser, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/users')),
+        mockUsers.map(async (mockUser) =>
+          api.post({ user: mockUser, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/users'),
+        ),
       );
 
       const { status, body } = await api.remove().to(`/v1/tfm/users/${mockUsers[0].username}`);
@@ -156,7 +166,9 @@ describe('/v1/tfm/users', () => {
   describe('GET /v1/tfm/users/team/:teamId', () => {
     it('returns all users in given team', async () => {
       await Promise.all(
-        mockUsers.map(async (mockUser) => api.post({ user: mockUser, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/users')),
+        mockUsers.map(async (mockUser) =>
+          api.post({ user: mockUser, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/users'),
+        ),
       );
 
       const team1Users = mockUsers.filter((u) => u.teams.includes('TEAM1'));

@@ -127,22 +127,18 @@ authRouter.route('/bank-holidays').get(bankHolidaysController.getBankHolidays);
 
 authRouter
   .route('/utilisation-reports/reconciliation-summary/:submissionMonth')
-  .get(
-    validation.isoMonthValidation('submissionMonth'),
-    handleExpressValidatorResult,
-    utilisationReportsController.getUtilisationReportsReconciliationSummary,
-  );
+  .get(validation.isoMonthValidation('submissionMonth'), handleExpressValidatorResult, utilisationReportsController.getUtilisationReportsReconciliationSummary);
 
 authRouter
-  .route('/utilisation-reports/:_id/download')
-  .get(
-    validation.mongoIdValidation,
-    handleExpressValidatorResult,
-    utilisationReportsController.getUtilisationReportDownload,
-  );
+  .route('/utilisation-reports/:id/download')
+  .get(validation.sqlIdValidation('id'), handleExpressValidatorResult, utilisationReportsController.getUtilisationReportDownload);
 
 authRouter
   .route('/utilisation-reports/set-status')
   .put(validation.updateReportStatusPayloadValidation, handleExpressValidatorResult, utilisationReportsController.updateUtilisationReportStatus);
+
+authRouter
+  .route('/utilisation-reports/reconciliation-details/:reportId')
+  .get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.getUtilisationReportReconciliationDetailsById);
 
 module.exports = { authRouter, openRouter };

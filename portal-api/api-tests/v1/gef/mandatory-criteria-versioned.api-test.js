@@ -1,3 +1,6 @@
+const {
+  generateParsedMockPortalUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/change-stream');
 const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
@@ -125,6 +128,7 @@ describe(baseUrl, () => {
             body: expect.any(String),
           }),
         ]),
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id),
       };
       expect(body).toEqual(expected);
     });
@@ -199,6 +203,7 @@ describe(baseUrl, () => {
         criteria: [
           { id: '1', body: 'Testing' },
         ],
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id)
       }));
     });
   });

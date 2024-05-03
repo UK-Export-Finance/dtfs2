@@ -1,4 +1,5 @@
 import { add, format } from 'date-fns';
+import { TEAM_IDS } from '@ukef/dtfs2-common';
 
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
@@ -14,7 +15,7 @@ const user = {
   username: 'testUser',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: [CONSTANTS.TEAM_IDS.PIM],
+  teams: [TEAM_IDS.PIM],
   email: 'test@localhost',
 };
 

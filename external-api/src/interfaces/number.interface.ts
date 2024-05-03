@@ -1,4 +1,4 @@
-import { IsoDateTimeStamp } from '../types/date';
+import { IsoDateTimeStamp } from '@ukef/dtfs2-common';
 
 /**
  * Defines the interfaces for the response of the number generator.
