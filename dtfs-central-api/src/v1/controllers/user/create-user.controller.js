@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, isVerifiedPayload, PAYLOAD } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, isVerifiedPayload, SCHEMA } = require('@ukef/dtfs2-common');
 const db = require('../../../drivers/db-client').default;
 
 const createUser = async (user) => {
@@ -16,7 +16,7 @@ const createUser = async (user) => {
 exports.createUserPost = async (req, res) => {
   const payload = req.body;
 
-  if (isVerifiedPayload({ payload, template: PAYLOAD.PORTAL.USER })) {
+  if (isVerifiedPayload({ payload, template: SCHEMA.PAYLOAD.PORTAL.USER })) {
     const user = await createUser(payload);
 
     return user ? res.status(200).send(user) : res.status(404).send();

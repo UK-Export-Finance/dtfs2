@@ -1,4 +1,4 @@
-const { isVerifiedPayload, PAYLOAD } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload, SCHEMA } = require('@ukef/dtfs2-common');
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
 const { hasValidObjectId } = require('../validation/validateObjectId');
@@ -35,7 +35,7 @@ exports.findOneBank = findOneBank;
 exports.create = async (req, res) => {
   const bank = req?.body;
 
-  if (isVerifiedPayload({ payload: bank, template: PAYLOAD.BANK })) {
+  if (isVerifiedPayload({ payload: bank, template: SCHEMA.PAYLOAD.BANK })) {
     const collection = await db.getCollection('banks');
     const result = await collection.insertOne(bank);
 

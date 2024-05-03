@@ -1,4 +1,4 @@
-const { isVerifiedPayload, PAYLOAD } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload, SCHEMA } = require('@ukef/dtfs2-common');
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
 const {
@@ -44,7 +44,7 @@ const findOneMandatoryCriteria = async (id, callback) => {
 exports.create = async (req, res) => {
   const collection = await db.getCollection(collectionName);
 
-  if (!isVerifiedPayload({ payload: req.body, template: PAYLOAD.CRITERIA.MANDATORY.VERSIONED })) {
+  if (!isVerifiedPayload({ payload: req.body, template: SCHEMA.PAYLOAD.CRITERIA.MANDATORY.VERSIONED })) {
     return res.status(400).send({ status: 400, message: 'Invalid GEF mandatory criteria payload' });
   }
 

@@ -1,4 +1,4 @@
-const { isVerifiedPayload, PAYLOAD } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload, SCHEMA } = require('@ukef/dtfs2-common');
 const assert = require('assert');
 const db = require('../../drivers/db-client');
 
@@ -33,7 +33,7 @@ const findOneMandatoryCriteria = async (version, callback) => {
 exports.create = async (req, res) => {
   const criteria = req?.body;
 
-  if (isVerifiedPayload({ payload: criteria, template: PAYLOAD.CRITERIA.MANDATORY.DEFAULT })) {
+  if (isVerifiedPayload({ payload: criteria, template: SCHEMA.PAYLOAD.CRITERIA.MANDATORY.DEFAULT })) {
     // MC insertion on non-production environments
     if (process.env.NODE_ENV !== 'production') {
       const collection = await db.getCollection('mandatoryCriteria');

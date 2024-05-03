@@ -5,4 +5,3 @@ export * from './mongo-db-collections';
 export * from './tfm';
 export * from './portal';
 export * from './durable-functions-log.constant';
-export * as PAYLOAD from './payload';

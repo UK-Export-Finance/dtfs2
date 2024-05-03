@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, isVerifiedPayload, PAYLOAD } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, isVerifiedPayload, SCHEMA } = require('@ukef/dtfs2-common');
 const db = require('../../../drivers/db-client').default;
 
 const createBank = async (bank) => {
@@ -16,7 +16,7 @@ const createBank = async (bank) => {
 exports.createBankPost = async (req, res) => {
   const payload = req.body;
 
-  if (isVerifiedPayload({ payload: req.body, template: PAYLOAD.BANK })) {
+  if (isVerifiedPayload({ payload: req.body, template: SCHEMA.PAYLOAD.BANK })) {
     const bank = await createBank(payload);
     return res.status(200).send(bank);
   }

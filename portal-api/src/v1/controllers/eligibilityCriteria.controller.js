@@ -1,7 +1,7 @@
 const { isVerifiedPayload } = require('@ukef/dtfs2-common');
 const assert = require('assert');
 const db = require('../../drivers/db-client');
-const { PAYLOAD, DEAL } = require('../../constants');
+const { SCHEMA, DEAL } = require('../../constants');
 
 const sortEligibilityCriteria = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.id) - Number(b.id));
@@ -38,7 +38,7 @@ const findOneEligibilityCriteria = async (version, callback) => {
 exports.create = async (req, res) => {
   const criteria = req?.body;
 
-  if (isVerifiedPayload({ payload: criteria, template: PAYLOAD.CRITERIA.ELIGIBILITY })) {
+  if (isVerifiedPayload({ payload: criteria, template: SCHEMA.PAYLOAD.CRITERIA.ELIGIBILITY })) {
     const collection = await db.getCollection('eligibilityCriteria');
     const eligibilityCriteria = await collection.insertOne(criteria);
     return res.status(200).send(eligibilityCriteria);
