@@ -36,7 +36,7 @@ export const deleteDocumentWithAuditLogs = async ({
     // TODO: check the transaction works
     await session.withTransaction(async () => {
       const deletionCollection = await db.getCollection('deletion-audit-logs');
-      await deletionCollection.insertOne(
+      const insertResult = await deletionCollection.insertOne(
         {
           collectionName,
           deletedDocumentId: documentId,
@@ -45,9 +45,15 @@ export const deleteDocumentWithAuditLogs = async ({
         },
         { session },
       );
+      if (!insertResult.acknowledged) {
+        throw new Error('Failed to create deletion audit log');
+      }
 
       const usersCollection = await db.getCollection(collectionName);
-      await usersCollection.deleteOne({ _id: { $eq: documentId } }, { session });
+      const deleteResult = await usersCollection.deleteOne({ _id: { $eq: documentId } }, { session });
+      if (!(deleteResult.acknowledged && deleteResult.deletedCount === 1)) {
+        throw new Error('Failed to delete document');
+      }
     }, transactionOptions);
   } catch (error) {
     console.error(
