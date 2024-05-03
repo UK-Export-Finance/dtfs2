@@ -1,7 +1,7 @@
+const { isVerifiedPayload } = require('@ukef/dtfs2-common');
 const assert = require('assert');
 const db = require('../../drivers/db-client');
 const { PAYLOAD, DEAL } = require('../../constants');
-const payloadVerification = require('../helpers/payload');
 
 const sortEligibilityCriteria = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.id) - Number(b.id));
@@ -26,16 +26,19 @@ const findOneEligibilityCriteria = async (version, callback) => {
   }
 
   const collection = await db.getCollection('eligibilityCriteria');
-  collection.findOne({ $and: [{ version: { $eq: Number(version) } }, { product: DEAL.DEAL_TYPE.BSS_EWCS }] }, (error, result) => {
-    assert.equal(error, null);
-    callback(result);
-  });
+  collection.findOne(
+    { $and: [{ version: { $eq: Number(version) } }, { product: DEAL.DEAL_TYPE.BSS_EWCS }] },
+    (error, result) => {
+      assert.equal(error, null);
+      callback(result);
+    },
+  );
 };
 
 exports.create = async (req, res) => {
   const criteria = req?.body;
 
-  if (payloadVerification(criteria, PAYLOAD.CRITERIA.ELIGIBILITY)) {
+  if (isVerifiedPayload({ payload: criteria, template: PAYLOAD.CRITERIA.ELIGIBILITY })) {
     const collection = await db.getCollection('eligibilityCriteria');
     const eligibilityCriteria = await collection.insertOne(criteria);
     return res.status(200).send(eligibilityCriteria);
@@ -54,7 +57,10 @@ exports.findAll = (req, res) =>
     ),
   );
 
-exports.findOne = (req, res) => findOneEligibilityCriteria(Number(req.params.version), (eligibilityCriteria) => res.status(200).send(eligibilityCriteria));
+exports.findOne = (req, res) =>
+  findOneEligibilityCriteria(Number(req.params.version), (eligibilityCriteria) =>
+    res.status(200).send(eligibilityCriteria),
+  );
 
 /**
  * Finds the latest (highest version number whose `isInDraft` is set to false) eligibility
@@ -86,7 +92,11 @@ exports.update = async (req, res) => {
   }
 
   const collection = await db.getCollection('eligibilityCriteria');
-  const status = await collection.updateOne({ version: { $eq: Number(req.params.version) } }, { $set: { criteria: req.body.criteria } }, {});
+  const status = await collection.updateOne(
+    { version: { $eq: Number(req.params.version) } },
+    { $set: { criteria: req.body.criteria } },
+    {},
+  );
   return res.status(200).send(status);
 };
 

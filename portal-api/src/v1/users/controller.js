@@ -1,3 +1,4 @@
+const { isVerifiedPayload } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const {
   generatePortalUserAuditDatabaseRecord,
@@ -12,7 +13,6 @@ const utils = require('../../crypto/utils');
 const CONSTANTS = require('../../constants');
 const { isValidEmail } = require('../../utils/string');
 const { USER, PAYLOAD } = require('../../constants');
-const payloadVerification = require('../helpers/payload');
 const { InvalidUserIdError, InvalidEmailAddressError, UserNotFoundError } = require('../errors');
 const InvalidSessionIdentifierError = require('../errors/invalid-session-identifier.error');
 const { transformDatabaseUser } = require('./transform-database-user');
@@ -147,14 +147,16 @@ exports.create = async (user, userService, sessionUser, callback) => {
     'user-status': USER.STATUS.ACTIVE,
     timezone: USER.TIMEZONE.DEFAULT,
     ...user,
-    auditRecord: sessionUser?._id ? generatePortalUserAuditDatabaseRecord(sessionUser._id) : generateNoUserLoggedInAuditDatabaseRecord(),
+    auditRecord: sessionUser?._id
+      ? generatePortalUserAuditDatabaseRecord(sessionUser._id)
+      : generateNoUserLoggedInAuditDatabaseRecord(),
   };
 
   delete insert?.autoCreatePassword;
   delete insert?.password;
   delete insert?.passwordConfirm;
 
-  if (payloadVerification(insert, PAYLOAD.PORTAL.USER)) {
+  if (isVerifiedPayload({ payload: insert, template: PAYLOAD.PORTAL.USER })) {
     const collection = await db.getCollection('users');
     const createUserResult = await collection.insertOne(insert);
 
@@ -238,7 +240,9 @@ exports.update = async (_id, update, callback) => {
     if (userUnsetUpdate) {
       userUpdate.$unset = userUnsetUpdate;
     }
-    const updatedUser = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, { returnDocument: 'after' });
+    const updatedUser = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, {
+      returnDocument: 'after',
+    });
     callback(null, updatedUser);
   });
 };

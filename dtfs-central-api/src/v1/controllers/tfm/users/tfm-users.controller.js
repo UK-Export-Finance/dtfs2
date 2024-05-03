@@ -1,12 +1,10 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, isVerifiedPayload, PAYLOAD } = require('@ukef/dtfs2-common');
 const {
   validateAuditDetails,
   generateAuditDatabaseRecordFromAuditDetails,
 } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client').default;
-const { PAYLOAD } = require('../../../../constants');
-const { payloadVerification } = require('../../../../helpers');
 
 const createUser = async (user, auditDetails) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
@@ -17,7 +15,7 @@ exports.createUser = createUser;
 exports.createTfmUser = async (req, res) => {
   const { user: payload, auditDetails } = req.body;
 
-  if (!payloadVerification(payload, PAYLOAD.TFM.USER)) {
+  if (!isVerifiedPayload({ payload, template: PAYLOAD.TFM.USER })) {
     return res.status(400).send({ status: 400, message: 'Invalid TFM user payload' });
   }
 
