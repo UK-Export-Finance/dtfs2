@@ -4,7 +4,6 @@ jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
 
 jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
-  submitACBSIfAllPartiesHaveUrn: jest.fn(),
 }));
 
 const { format } = require('date-fns');
@@ -81,7 +80,7 @@ describe('/v1/deals', () => {
 
           const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((t) => t.id === firstTask.team.id);
 
-          expect(sendEmailApiSpy).toBeCalledTimes(3);
+          expect(sendEmailApiSpy).toHaveBeenCalledTimes(3);
 
           const expected = {
             templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
