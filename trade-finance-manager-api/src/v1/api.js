@@ -10,7 +10,8 @@ const {
 } = require('./validation/validateIds');
 require('dotenv').config();
 
-const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL } = process.env;
+const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL } =
+  process.env;
 
 const headers = {
   central: {
@@ -1174,6 +1175,10 @@ const findBankById = async (bankId) => {
   }
 };
 
+/**
+ * Get all banks
+ * @returns {Promise<import('./api-response-types').BankResponseBody[]>}
+ */
 const getAllBanks = async () => {
   const url = `${DTFS_CENTRAL_API_URL}/v1/bank`;
   const response = await axios.get(url, {
@@ -1266,9 +1271,12 @@ const updateUtilisationReportStatus = async (reportsWithStatus, user) => {
  * @returns {Promise<import('./api-response-types').UtilisationReportReconciliationDetailsResponseBody>}
  */
 const getUtilisationReportReconciliationDetailsById = async (reportId) => {
-  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`, {
-    headers: headers.central,
-  });
+  const response = await axios.get(
+    `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`,
+    {
+      headers: headers.central,
+    },
+  );
 
   return response.data;
 };
