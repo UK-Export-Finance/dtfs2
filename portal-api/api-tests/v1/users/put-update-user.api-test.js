@@ -16,14 +16,9 @@ const { withValidateUsernameAndEmailMatchTests } = require('./with-validate-user
 const { withValidateEmailIsCorrectFormatTests } = require('./with-validate-email-is-correct-format.api-tests').default;
 const { withValidateEmailIsUniqueTests } = require('./with-validate-email-is-unique.api-tests');
 const { withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests } = require('./with-validate-password.api-tests');
-const { withValidateIsTrustedFieldTests } = require('./with-validate-is-trusted-field.api-tests');
 
 const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
-const MOCK_USER = {
-  ...users.barclaysBankMaker1,
-  username: temporaryUsernameAndEmail,
-  email: temporaryUsernameAndEmail,
-};
+const MOCK_USER = { ...users.barclaysBankMaker1, username: temporaryUsernameAndEmail, email: temporaryUsernameAndEmail };
 
 const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: "You cannot combine 'Read-only' with any of the other roles" };
 
@@ -91,20 +86,17 @@ describe('a user', () => {
         expect(status).toEqual(200);
       });
 
-      it.each(NON_READ_ONLY_ROLES)(
-        'rejects if the user update request has the read-only role with the %s role',
-        async (otherRole) => {
-          const updatedUserCredentials = {
-            roles: [READ_ONLY, otherRole],
-          };
+      it.each(NON_READ_ONLY_ROLES)('rejects if the user update request has the read-only role with the %s role', async (otherRole) => {
+        const updatedUserCredentials = {
+          roles: [READ_ONLY, otherRole],
+        };
 
-          const { status, body } = await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+        const { status, body } = await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
-          expect(status).toEqual(400);
-          expect(body.success).toEqual(false);
-          expect(body.errors.errorList.roles).toStrictEqual(READ_ONLY_ROLE_EXCLUSIVE_ERROR);
-        },
-      );
+        expect(status).toEqual(400);
+        expect(body.success).toEqual(false);
+        expect(body.errors.errorList.roles).toStrictEqual(READ_ONLY_ROLE_EXCLUSIVE_ERROR);
+      });
 
       it('updates the user if the user update request has the read-only role only', async () => {
         const updatedUserCredentials = {
@@ -132,25 +124,15 @@ describe('a user', () => {
         expect(body.roles).toStrictEqual([READ_ONLY, READ_ONLY]);
       });
 
-      withValidateIsTrustedFieldTests({
-        payload: {},
-        makeRequest: async (updatedUserCredentials) =>
-          await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`),
-        successCode: 200,
-        isRequired: false,
-      });
-
       withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests({
         payload: {},
-        makeRequest: async (updatedUserCredentials) =>
-          await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`),
+        makeRequest: async (updatedUserCredentials) => await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`),
         existingUserPassword: MOCK_USER.password,
       });
 
       withValidateEmailIsUniqueTests({
         payload: { roles: [READ_ONLY] },
-        makeRequest: async (updatedUserCredentials) =>
-          await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`),
+        makeRequest: async (updatedUserCredentials) => await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`),
         getAdminUser: () => anAdmin,
       });
 
@@ -159,8 +141,7 @@ describe('a user', () => {
           produce({}, (draftRequest) => {
             draftRequest.email = email;
           }),
-        makeRequest: async (updatedUserCredentials) =>
-          await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`),
+        makeRequest: async (updatedUserCredentials) => await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`),
       });
 
       withValidateEmailIsCorrectFormatTests({
@@ -169,8 +150,7 @@ describe('a user', () => {
             draftRequest.username = email;
             draftRequest.email = email;
           }),
-        makeRequest: async (updatedUserCredentials) =>
-          await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`),
+        makeRequest: async (updatedUserCredentials) => await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`),
       });
     });
 
