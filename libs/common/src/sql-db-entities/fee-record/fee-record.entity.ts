@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import Big from 'big.js';
 import { UtilisationReportEntity } from '../utilisation-report';
-import { Currency } from '../../types';
+import { Currency, FeeRecordStatus } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import { CreateFeeRecordParams } from './fee-record.types';
 import { MonetaryColumn, ExchangeRateColumn } from '../custom-columns';
@@ -91,6 +91,9 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   @ExchangeRateColumn()
   paymentExchangeRate!: number;
 
+  @Column({ type: 'nvarchar' })
+  status!: FeeRecordStatus;
+
   // TODO FN-1726 - when we have a status on this entity we should make this method name specific to the initial status
   static create({
     facilityId,
@@ -104,6 +107,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     feesPaidToUkefForThePeriodCurrency,
     paymentCurrency,
     paymentExchangeRate,
+    status,
     requestSource,
     report,
   }: CreateFeeRecordParams): FeeRecordEntity {
@@ -119,6 +123,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     feeRecord.feesPaidToUkefForThePeriodCurrency = feesPaidToUkefForThePeriodCurrency;
     feeRecord.paymentCurrency = paymentCurrency;
     feeRecord.paymentExchangeRate = paymentExchangeRate;
+    feeRecord.status = status;
     feeRecord.report = report;
     feeRecord.updateLastUpdatedBy(requestSource);
     return feeRecord;

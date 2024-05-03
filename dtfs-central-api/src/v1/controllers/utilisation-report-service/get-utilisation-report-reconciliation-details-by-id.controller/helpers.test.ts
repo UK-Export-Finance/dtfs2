@@ -2,6 +2,7 @@ import {
   Currency,
   CurrencyAndAmount,
   FeeRecordEntityMockBuilder,
+  FeeRecordStatus,
   ReportPeriod,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -27,6 +28,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       const feesPaidToUkefForThePeriodCurrency: Currency = 'GBP';
       const feesPaidToUkefForThePeriod = 100.0;
       const paymentCurrency: Currency = 'GBP';
+      const status: FeeRecordStatus = 'TO_DO';
 
       const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(uploadedReport)
         .withId(id)
@@ -35,6 +37,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         .withFeesPaidToUkefForThePeriodCurrency(feesPaidToUkefForThePeriodCurrency)
         .withFeesPaidToUkefForThePeriod(feesPaidToUkefForThePeriod)
         .withPaymentCurrency(paymentCurrency)
+        .withStatus(status)
         .build();
 
       // Act
@@ -59,7 +62,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         },
         paymentsReceived: null,
         totalPaymentsReceived: null,
-        status: 'TO_DO',
+        status,
       });
     });
 

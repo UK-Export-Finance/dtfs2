@@ -51,12 +51,12 @@ export const mapFeeRecordEntityToReconciliationDetailsFeeRecordItem = (feeRecord
     id: feeRecord.id,
     facilityId: feeRecord.facilityId,
     exporter: feeRecord.exporter,
+    status: feeRecord.status,
     reportedFees,
     reportedPayments,
     totalReportedPayments,
     paymentsReceived: null,
     totalPaymentsReceived: null,
-    status: 'TO_DO',
   };
 };
 

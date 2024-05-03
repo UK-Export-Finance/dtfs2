@@ -122,6 +122,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
           .withFeesPaidToUkefForThePeriodCurrency('GBP')
           .withFeesPaidToUkefForThePeriod(314.59)
           .withPaymentCurrency('GBP')
+          .withStatus('TO_DO')
           .build(),
         FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport)
           .withId(2)
@@ -131,6 +132,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
           .withFeesPaidToUkefForThePeriod(100.0)
           .withPaymentCurrency('GBP')
           .withPaymentExchangeRate(1.1)
+          .withStatus('TO_DO')
           .build(),
       ];
       reconciliationInProgressReport.feeRecords = feeRecords;
