@@ -31,10 +31,7 @@ const configureNunjucks = (opts) => {
 
   // TODO: DTFS2-7138 remove contact us env vars
   nunjucksEnvironment.addGlobal('CONTACT_US_SELF_SERVICE_PORTAL_URL', CONTACT_US_SELF_SERVICE_PORTAL_URL);
-  nunjucksEnvironment.addGlobal(
-    'CONTACT_US_EMAIL_ADDRESS',
-    CONTACT_US_EMAIL_ADDRESS || 'DigitalService.TradeFinance@ukexportfinance.gov.uk',
-  );
+  nunjucksEnvironment.addGlobal('CONTACT_US_EMAIL_ADDRESS', CONTACT_US_EMAIL_ADDRESS);
 
   nunjucksEnvironment.addFilter('localiseTimestamp', localiseTimestamp);
   nunjucksEnvironment.addFilter('formatDateString', formatDateString);
