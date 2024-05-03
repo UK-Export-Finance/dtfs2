@@ -81,6 +81,7 @@ services:
       - SQL_DB_NAME
       - SQL_DB_LOGGING_ENABLED
       - ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE
+      - DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS
 
   trade-finance-manager-ui:
     build:
@@ -158,6 +159,7 @@ services:
       - UKEF_INTERNAL_NOTIFICATION=test
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
+      - DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS
 
   portal:
     build:
