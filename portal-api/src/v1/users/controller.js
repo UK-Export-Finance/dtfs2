@@ -1,3 +1,4 @@
+const { isVerifiedPayload } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { getNowAsEpochMillisecondString } = require('../helpers/date');
@@ -9,7 +10,6 @@ const utils = require('../../crypto/utils');
 const CONSTANTS = require('../../constants');
 const { isValidEmail } = require('../../utils/string');
 const { USER, PAYLOAD } = require('../../constants');
-const payloadVerification = require('../helpers/payload');
 const { InvalidUserIdError, InvalidEmailAddressError, UserNotFoundError } = require('../errors');
 const InvalidSessionIdentifierError = require('../errors/invalid-session-identifier.error');
 const { transformDatabaseUser } = require('./transform-database-user');
@@ -151,7 +151,7 @@ exports.create = async (user, userService, auditDetails, callback) => {
   delete insert?.password;
   delete insert?.passwordConfirm;
 
-  if (payloadVerification(insert, PAYLOAD.PORTAL.USER)) {
+  if (isVerifiedPayload({ payload: insert, template: PAYLOAD.PORTAL.USER })) {
     const collection = await db.getCollection('users');
     const createUserResult = await collection.insertOne(insert);
 

@@ -1,8 +1,8 @@
+const { isVerifiedPayload } = require('@ukef/dtfs2-common');
 const assert = require('assert');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
 const { PAYLOAD, DEAL } = require('../../constants');
-const payloadVerification = require('../helpers/payload');
 
 const sortEligibilityCriteria = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.id) - Number(b.id));
@@ -27,14 +27,17 @@ const findOneEligibilityCriteria = async (version, callback) => {
   }
 
   const collection = await db.getCollection('eligibilityCriteria');
-  collection.findOne({ $and: [{ version: { $eq: Number(version) } }, { product: DEAL.DEAL_TYPE.BSS_EWCS }] }, (error, result) => {
-    assert.equal(error, null);
-    callback(result);
-  });
+  collection.findOne(
+    { $and: [{ version: { $eq: Number(version) } }, { product: DEAL.DEAL_TYPE.BSS_EWCS }] },
+    (error, result) => {
+      assert.equal(error, null);
+      callback(result);
+    },
+  );
 };
 
 exports.create = async (req, res) => {
-  if (!payloadVerification(req?.body, PAYLOAD.CRITERIA.ELIGIBILITY)) {
+  if (!isVerifiedPayload({ payload: req?.body, template: PAYLOAD.CRITERIA.ELIGIBILITY })) {
     return res.status(400).send({ status: 400, message: 'Invalid eligibility criteria payload' });
   }
 
@@ -56,7 +59,10 @@ exports.findAll = (req, res) =>
     ),
   );
 
-exports.findOne = (req, res) => findOneEligibilityCriteria(Number(req.params.version), (eligibilityCriteria) => res.status(200).send(eligibilityCriteria));
+exports.findOne = (req, res) =>
+  findOneEligibilityCriteria(Number(req.params.version), (eligibilityCriteria) =>
+    res.status(200).send(eligibilityCriteria),
+  );
 
 /**
  * Finds the latest (highest version number whose `isInDraft` is set to false) eligibility

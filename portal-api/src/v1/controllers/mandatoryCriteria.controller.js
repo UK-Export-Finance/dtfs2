@@ -1,10 +1,10 @@
+const { isVerifiedPayload, PAYLOAD } = require('@ukef/dtfs2-common');
 const assert = require('assert');
 const {
   generatePortalAuditDetails,
   generateAuditDatabaseRecordFromAuditDetails,
-} = require('@ukef/dtfs2-common/change-stream');const db = require('../../drivers/db-client');
-const { PAYLOAD } = require('../../constants');
-const payloadVerification = require('../helpers/payload');
+} = require('@ukef/dtfs2-common/change-stream');
+const db = require('../../drivers/db-client');
 
 const sortMandatoryCriteria = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.id) - Number(b.id));
@@ -35,7 +35,7 @@ const findOneMandatoryCriteria = async (version, callback) => {
 };
 
 exports.create = async (req, res) => {
-  if (!payloadVerification(req.body, PAYLOAD.CRITERIA.MANDATORY.DEFAULT)) {
+  if (!isVerifiedPayload({ payload: req.body, template: PAYLOAD.CRITERIA.MANDATORY.DEFAULT })) {
     return res.status(400).send({ status: 400, message: 'Invalid mandatory criteria payload' });
   }
 
@@ -45,7 +45,7 @@ exports.create = async (req, res) => {
 
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
-  // MC insertion on non-production environments
+    // MC insertion on non-production environments
     const collection = await db.getCollection('mandatoryCriteria');
     const criteria = { ...req?.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
     const result = await collection.insertOne(criteria);
@@ -53,21 +53,18 @@ exports.create = async (req, res) => {
     return res.status(200).send(result);
 };
 
-exports.findAll = (req, res) => (
+exports.findAll = (req, res) =>
   findMandatoryCriteria((mandatoryCriteria) =>
     sortMandatoryCriteria(mandatoryCriteria, (sortedMandatoryCriteria) =>
       res.status(200).send({
         count: mandatoryCriteria.length,
         mandatoryCriteria: sortedMandatoryCriteria,
-      })))
-);
+      }),
+    ),
+  );
 
-exports.findOne = (req, res) => (
-  findOneMandatoryCriteria(
-    req.params.version,
-    (mandatoryCriteria) => res.status(200).send(mandatoryCriteria),
-  )
-);
+exports.findOne = (req, res) =>
+  findOneMandatoryCriteria(req.params.version, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria));
 
 const findLatestMandatoryCriteria = async () => {
   const collection = await db.getCollection('mandatoryCriteria');

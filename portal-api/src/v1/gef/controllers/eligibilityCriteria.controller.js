@@ -1,9 +1,12 @@
-const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { isVerifiedPayload } = require('@ukef/dtfs2-common');
+const {
+  generateAuditDatabaseRecordFromAuditDetails,
+  generatePortalAuditDetails,
+} = require('@ukef/dtfs2-common/change-stream');
 const { EligibilityCriteria } = require('../models/eligibilityCriteria');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const { PAYLOAD, DEAL } = require('../../../constants');
-const payloadVerification = require('../../helpers/payload');
 
 const sortByVersion = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.version) - Number(b.version));
@@ -30,7 +33,9 @@ exports.getByVersion = async (req, res) => {
   }
 
   const collection = await db.getCollection('eligibilityCriteria');
-  const item = await collection.findOne({ $and: [{ version: { $eq: Number(version) } }, { product: { $eq: DEAL.DEAL_TYPE.GEF } }] });
+  const item = await collection.findOne({
+    $and: [{ version: { $eq: Number(version) } }, { product: { $eq: DEAL.DEAL_TYPE.GEF } }],
+  });
 
   return item ? res.status(200).send(item) : res.status(404).send();
 };
@@ -63,7 +68,7 @@ exports.getLatest = async (req, res) => {
 exports.create = async (req, res) => {
   const collection = await db.getCollection('eligibilityCriteria');
 
-  if (!payloadVerification(req.body, PAYLOAD.CRITERIA.ELIGIBILITY)) {
+  if (!isVerifiedPayload({ payload: req.body, template: PAYLOAD.CRITERIA.ELIGIBILITY })) {
     return res.status(400).send({ status: 400, message: 'Invalid GEF eligibility criteria payload' });
   }
 

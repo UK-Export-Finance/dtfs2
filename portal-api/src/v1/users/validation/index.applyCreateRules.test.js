@@ -1,4 +1,5 @@
-const { resetAllWhenMocks, when } = require('jest-when');
+const { resetAllWhenMocks } = require('jest-when');
+const { applyCreateRules } = require('.');
 const { TEST_USER } = require('../../../../test-helpers/unit-test-mocks/mock-user');
 const {
   whenApplyingRulesItAppliesOnlyTheExpectedRules,
@@ -20,11 +21,7 @@ const readOnlyRoleCannotBeAssignedWithOtherRoles = require('./rules/read-only-ro
 const usernameAndEmailMustMatch = require('./rules/username-and-email-must-match');
 const emailMustBeValidEmailAddress = require('./rules/email-must-be-valid-email-address');
 const emailMustBeUnique = require('./rules/email-must-be-unique');
-const getIsTrustedFieldValidationRule = require('./rules/get-is-trusted-field-validation-rule');
-
-const {
-  createTestCasesFromRules,
-} = require('../../../../test-helpers/unit-test-helpers/users/validation/user-validation.test-helpers');
+const { createTestCasesFromRules } = require('../../../../test-helpers/unit-test-helpers/users/validation/user-validation.test-helpers');
 
 jest.mock('./rules/passwordAtLeast8Characters');
 jest.mock('./rules/passwordAtLeastOneNumber');
@@ -38,10 +35,6 @@ jest.mock('./rules/read-only-role-cannot-be-assigned-with-other-roles');
 jest.mock('./rules/username-and-email-must-match');
 jest.mock('./rules/email-must-be-valid-email-address');
 jest.mock('./rules/email-must-be-unique');
-jest.mock('./rules/get-is-trusted-field-validation-rule');
-when(getIsTrustedFieldValidationRule).calledWith({ required: true }).mockReturnValue(jest.fn());
-
-const { applyCreateRules } = require('.');
 
 describe('user validation', () => {
   beforeEach(() => {
@@ -68,7 +61,6 @@ describe('user validation', () => {
         usernameAndEmailMustMatch,
         emailMustBeValidEmailAddress,
         emailMustBeUnique,
-        isTrustedFieldValidation: getIsTrustedFieldValidationRule({ required: true }),
       },
       otherRules: {
         passwordsCannotBeReUsed,

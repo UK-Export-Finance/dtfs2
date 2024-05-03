@@ -1,9 +1,8 @@
+const { isVerifiedPayload, PAYLOAD } = require('@ukef/dtfs2-common');
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { hasValidObjectId } = require('../validation/validateObjectId');
-const { PAYLOAD } = require('../../constants');
-const payloadVerification = require('../helpers/payload');
 
 const db = require('../../drivers/db-client');
 
@@ -37,7 +36,7 @@ exports.findOneBank = findOneBank;
 exports.create = async (req, res) => {
   const bank = req?.body;
 
-  if (!payloadVerification(bank, PAYLOAD.BANK)) {
+  if (!isVerifiedPayload({ payload: bank, template: PAYLOAD.BANK })) {
     return res.status(400).send({ status: 400, message: 'Invalid bank payload' });
   }
 
@@ -52,16 +51,15 @@ exports.create = async (req, res) => {
   return res.status(200).json(result);
 };
 
-exports.findAll = (req, res) => (
-  findBanks((banks) => res.status(200).send({
-    count: banks.length,
-    banks,
-  }))
-);
+exports.findAll = (req, res) =>
+  findBanks((banks) =>
+    res.status(200).send({
+      count: banks.length,
+      banks,
+    }),
+  );
 
-exports.findOne = (req, res) => (
-  findOneBank(req.params.id, (deal) => res.status(200).send(deal))
-);
+exports.findOne = (req, res) => findOneBank(req.params.id, (deal) => res.status(200).send(deal));
 
 exports.update = async (req, res) => {
   const { id } = req.params;

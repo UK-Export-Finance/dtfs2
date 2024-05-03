@@ -3,8 +3,8 @@ const {
   generateTfmUserAuditDatabaseRecord,
   generateNoUserLoggedInAuditDatabaseRecord,
 } = require('@ukef/dtfs2-common/change-stream');
+const { isVerifiedPayload } = require('@ukef/dtfs2-common');
 const db = require('../../../drivers/db-client');
-const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { USER, PAYLOAD } = require('../../../constants');
 const utils = require('../../../utils/crypto.util');
@@ -51,7 +51,7 @@ exports.create = async (user, sessionUser, callback) => {
   delete tfmUser.token;
   delete tfmUser.password;
 
-  if (payloadVerification(tfmUser, PAYLOAD.TFM.USER)) {
+  if (isVerifiedPayload({ payload: tfmUser, template: PAYLOAD.TFM.USER })) {
     const createUserResult = await collection.insertOne(tfmUser);
 
     const { insertedId: userId } = createUserResult;
