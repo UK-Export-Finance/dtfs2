@@ -1,6 +1,6 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const amendmentController = require('../../../src/v1/controllers/amendment.controller');
 const { AMENDMENT_STATUS } = require('../../../src/constants/deals');
-const { CURRENCY } = require('../../../src/constants/currency.constant');
 const externalApis = require('../../../src/v1/api');
 const MOCK_GEF_AIN_DEAL = require('../../../src/v1/__mocks__/mock-TFM-deal-AIN-submitted');
 

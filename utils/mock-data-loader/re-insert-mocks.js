@@ -45,7 +45,7 @@ const init = async () => {
     logger.error('The following error occurred while attempting to reinsert mocks:');
     throw error;
   }
-  db.close();
+  await db.close();
 
   logger.info('REINSERTING MOCKS SUCCESSFUL', { colour: LOGGER_COLOURS.bright });
 };

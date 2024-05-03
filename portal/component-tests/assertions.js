@@ -1,4 +1,5 @@
-const assertions = (wrapper) => ({
+const assertions = (wrapper, html) => ({
+  html,
   expectLink: (selector) => ({
     notToExist: () => {
       expect(wrapper(selector).html()).toBeNull();
@@ -59,6 +60,9 @@ const assertions = (wrapper) => ({
     toMatch: (regex) => {
       expect(wrapper(selector).text().trim()).toMatch(regex);
     },
+    toContain: (text) => {
+      expect(wrapper(selector).text().trim()).toContain(text);
+    },
   }),
   expectElement: (selector) => ({
     toExist: () => {
@@ -79,6 +83,9 @@ const assertions = (wrapper) => ({
     lengthToEqual: (expectedLength) => {
       const expected = expectedLength + 1; // cheerio html() assertion automatically adds 1.
       expect(wrapper(selector).html().length).toEqual(expected);
+    },
+    toHaveCount: (expectedCount) => {
+      expect(wrapper(selector).length).toEqual(expectedCount);
     },
   }),
   expectInput: (selector) => ({

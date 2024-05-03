@@ -20,7 +20,7 @@ describe('utilisation-report-details', () => {
     },
     dateUploaded: '2023-04-08T10:35:31',
     path: 'www.abc.com',
-    uploadedBy: user,
+    uploadedByUser: user,
   };
   const afternoonReport = {
     _id: 'def',
@@ -37,7 +37,7 @@ describe('utilisation-report-details', () => {
     },
     dateUploaded: '2023-04-08T15:23:10',
     path: 'www.abc.com',
-    uploadedBy: user,
+    uploadedByUser: user,
   };
 
   it('should throw an error if the report is undefined', () => {

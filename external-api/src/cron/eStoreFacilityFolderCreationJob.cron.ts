@@ -2,7 +2,7 @@ import { getCollection } from '../database';
 import { Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { createFacilityFolder, uploadSupportingDocuments } from '../v1/controllers/estore/eStoreApi';
-import { generateSystemAuditDatabaseRecord } from '@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record';
+import { generateSystemAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream';
 
 const FACILITY_FOLDER_MAX_RETRIES = 3;
 
@@ -12,7 +12,7 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
     const response = await cronJobLogsCollection.findOneAndUpdate(
       { dealId: { $eq: eStoreData.dealId } },
       { $inc: { facilityFolderRetries: 1 }, $set: { auditRecord: generateSystemAuditDatabaseRecord() } },
-      { returnNewDocument: true, returnDocument: 'after' },
+      { returnDocument: 'after' },
     );
 
     if (response?.value?.facilityFolderRetries <= FACILITY_FOLDER_MAX_RETRIES) {
@@ -48,11 +48,20 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
           console.info('Task started: Upload the supporting documents');
           const uploadDocuments = Promise.all(
             eStoreData.supportingInformation.map((file: any) =>
-              uploadSupportingDocuments(eStoreData.siteId, eStoreData.dealIdentifier, { ...file, buyerName: eStoreData.buyerName }),
+              uploadSupportingDocuments(eStoreData.siteId, eStoreData.dealIdentifier, {
+                ...file,
+                buyerName: eStoreData.buyerName,
+              }),
             ),
           );
-          uploadDocuments.then((res) => console.info('Task completed: Supporting documents uploaded successfully %o', res[0].data));
-          uploadDocuments.catch((error) => console.error('Task failed: There was a problem uploading the documents %o', error));
+          // eslint-disable-next-line prettier/prettier
+          uploadDocuments.then((res) =>
+            console.info('Task completed: Supporting documents uploaded successfully %o', res[0].data),
+          );
+          // eslint-disable-next-line prettier/prettier
+          uploadDocuments.catch((error) =>
+            console.error('Task failed: There was a problem uploading the documents %o', error),
+          );
         }
       }
     } else {

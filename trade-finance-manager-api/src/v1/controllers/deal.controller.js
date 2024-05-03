@@ -1,8 +1,6 @@
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const mapDeal = require('../mappings/map-deal');
 const api = require('../api');
-const acbsController = require('./acbs.controller');
-const allPartiesHaveUrn = require('../helpers/all-parties-have-urn');
 const CONSTANTS = require('../../constants');
 const assignGroupTasksToOneUser = require('../tasks/assign-group-tasks-to-one-user');
 const dealReducer = require('../rest-mappings/deal');
@@ -13,12 +11,7 @@ const { filterActivities } = require('../rest-mappings/filters/filterActivities'
 const getDeal = async (req, res) => {
   try {
     const { dealId } = req.params;
-    const {
-      tasksFilterType,
-      tasksTeamId,
-      tasksUserId,
-      activityFilterType,
-    } = req.query;
+    const { tasksFilterType, tasksTeamId, tasksUserId, activityFilterType } = req.query;
     const taskFilter = {
       filterType: tasksFilterType,
       teamId: tasksTeamId,
@@ -73,16 +66,21 @@ const getDeals = async (req, res) => {
 exports.getDeals = getDeals;
 
 const findOneTfmDeal = async (dealId) => {
-  const deal = await api.findOneDeal(dealId).catch(() => false);
+  try {
+    const deal = await api.findOneDeal(dealId);
 
-  if (!deal) {
+    if (!deal) {
+      return false;
+    }
+
+    return {
+      ...deal,
+      dealSnapshot: await mapDeal(deal.dealSnapshot),
+    };
+  } catch (error) {
+    console.error('Unable to find TFM deal %s', dealId);
     return false;
   }
-
-  return {
-    ...deal,
-    dealSnapshot: await mapDeal(deal.dealSnapshot),
-  };
 };
 exports.findOneTfmDeal = findOneTfmDeal;
 
@@ -112,7 +110,11 @@ const updateDeal = async (req, res) => {
   const { dealId } = req.params;
   const dealUpdate = req.body;
   try {
-    const updatedDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails: generateTfmAuditDetails(req.user._id) });
+    const updatedDeal = await api.updateDeal({
+      dealId,
+      dealUpdate,
+      auditDetails: generateTfmAuditDetails(req.user._id),
+    });
     return res.status(200).send({
       updateDeal: updatedDeal.tfm,
     });
@@ -122,31 +124,6 @@ const updateDeal = async (req, res) => {
   }
 };
 exports.updateDeal = updateDeal;
-
-const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
-  const deal = await findOneTfmDeal(dealId);
-
-  if (!deal) {
-    return;
-  }
-
-  /**
-  1. GEF - Check whether the exporter has a URN
-  2. BSS/EWCS - Check all the parties have a URN
-  */
-  const allRequiredPartiesHaveUrn = allPartiesHaveUrn(deal);
-
-  if (allRequiredPartiesHaveUrn) {
-    await acbsController.createACBS(deal);
-  }
-};
-exports.submitACBSIfAllPartiesHaveUrn = submitACBSIfAllPartiesHaveUrn;
-
-const canDealBeSubmittedToACBS = (submissionType) => {
-  const acceptable = [CONSTANTS.DEALS.SUBMISSION_TYPE.AIN, CONSTANTS.DEALS.SUBMISSION_TYPE.MIN];
-  return acceptable.includes(submissionType);
-};
-exports.canDealBeSubmittedToACBS = canDealBeSubmittedToACBS;
 
 const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest, auditDetails) => {
   const { userId } = leadUnderwriterUpdateRequest;
@@ -162,8 +139,8 @@ const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest, au
     auditDetails,
     onError: (status, message) => {
       throw new Error(`Updating the deal with dealId ${dealId} failed with status ${status} and message: ${message}`);
-    }
-});
+    },
+  });
 
   const taskGroupsToUpdate = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
 
@@ -178,7 +155,11 @@ const updateLeadUnderwriter = async (req, res) => {
 
     const leadUnderwriterUpdate = req.body;
 
-    const updatedDealTfm = await updateTfmLeadUnderwriter(dealId, leadUnderwriterUpdate, generateTfmAuditDetails(req.user._id));
+    const updatedDealTfm = await updateTfmLeadUnderwriter(
+      dealId,
+      leadUnderwriterUpdate,
+      generateTfmAuditDetails(req.user._id),
+    );
 
     return res.status(200).send(updatedDealTfm);
   } catch (error) {

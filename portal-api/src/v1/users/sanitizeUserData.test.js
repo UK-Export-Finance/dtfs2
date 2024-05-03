@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { MAKER } = require('../../../../utils/mock-data-loader/portal/roles');
+const { ROLES } = require('@ukef/dtfs2-common');
 const { sanitizeUser } = require('./sanitizeUserData');
 const { STATUS } = require('../../constants/user');
 
@@ -12,7 +12,7 @@ describe('sanitizeUserData', () => {
       surname: 'One',
       email: 'one@email.com',
       timezone: 'Europe/London',
-      roles: [MAKER],
+      roles: [ROLES.MAKER],
       bank: {
         id: '961',
         name: 'HSBC',

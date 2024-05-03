@@ -1,11 +1,14 @@
-const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
-const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
-const db = require('../../../../drivers/db-client');
-const { DB_COLLECTIONS, PAYLOAD } = require('../../../../constants');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const {
+  validateAuditDetails,
+  generateAuditDatabaseRecordFromAuditDetails,
+} = require('@ukef/dtfs2-common/change-stream');
+const db = require('../../../../drivers/db-client').default;
 const { payloadVerification } = require('../../../../helpers');
+const { PAYLOAD } = require('../../../../constants');
 
 const createTeam = async (team, auditDetails) => {
-  const collection = await db.getCollection(DB_COLLECTIONS.TFM_TEAMS);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_TEAMS);
   return collection.insertOne({ ...team, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) });
 };
 exports.createTeam = createTeam;
@@ -35,7 +38,7 @@ exports.createTfmTeam = async (req, res) => {
 };
 
 const listTeams = async () => {
-  const collection = await db.getCollection(DB_COLLECTIONS.TFM_TEAMS);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_TEAMS);
   return collection.find().toArray();
 };
 exports.listTeams = listTeams;
@@ -50,7 +53,7 @@ const findOneTeam = async (id) => {
     throw new Error('Invalid Team Id');
   }
 
-  const collection = await db.getCollection(DB_COLLECTIONS.TFM_TEAMS);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_TEAMS);
   return collection.findOne({ id: { $eq: id } });
 };
 exports.findOneTeam = findOneTeam;
@@ -68,7 +71,7 @@ exports.findOneTfmTeam = async (req, res) => {
 
 const deleteTeam = async (id) => {
   if (typeof id === 'string') {
-    const collection = await db.getCollection(DB_COLLECTIONS.TFM_TEAMS);
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_TEAMS);
     return collection.deleteOne({ id: { $eq: id } });
   }
 

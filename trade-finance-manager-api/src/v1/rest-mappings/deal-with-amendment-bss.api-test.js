@@ -1,8 +1,8 @@
 const { fromUnixTime, format } = require('date-fns');
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const dealReducer = require('./deal');
 const mapDealSnapshot = require('./mappings/deal/mapDealSnapshot');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
-const { CURRENCY } = require('../../constants/currency.constant');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
 
 const MOCK_DEAL_AIN_SUBMITTED = require('../__mocks__/mock-deal-AIN-submitted');

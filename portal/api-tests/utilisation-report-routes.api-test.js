@@ -16,10 +16,10 @@ jest.mock('../server/api', () => ({
   }),
 }));
 
+const { ROLES } = require('@ukef/dtfs2-common');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
 const { get } = require('./create-api').createApi(app);
-const { ROLES } = require('../server/constants');
 const MOCK_BANKS = require('../test-helpers/mock-banks');
 
 describe('utilisation-report routes', () => {

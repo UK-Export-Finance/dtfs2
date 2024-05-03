@@ -1,4 +1,5 @@
 const express = require('express');
+const { CURRENCY, ROLES: { MAKER } } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const {
   requestParams,
@@ -18,7 +19,6 @@ const calculateStatusOfEachPage = require('./navStatusCalculations');
 const aboutTaskList = require('./aboutTaskList');
 const { financialPageValidationErrors } = require('./pageSpecificValidationErrors');
 const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
-const { CURRENCY, ROLES: { MAKER } } = require('../../../constants');
 const { validateRole } = require('../../middleware');
 
 const router = express.Router();

@@ -1,7 +1,6 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
-const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { MandatoryCriteria } = require('../models/mandatoryCriteria');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');

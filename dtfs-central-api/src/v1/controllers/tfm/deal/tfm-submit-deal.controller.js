@@ -1,8 +1,11 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const {
+  generateAuditDatabaseRecordFromAuditDetails,
+  validateAuditDetailsAndUserType,
+} = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
-const { validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const { findOneDeal, findOneGefDeal } = require('../../portal/deal/get-deal.controller');
 const tfmController = require('./tfm-get-deal.controller');
 
@@ -11,7 +14,6 @@ const { findAllGefFacilitiesByDealId } = require('../../portal/gef-facility/get-
 
 const DEFAULTS = require('../../../defaults');
 const CONSTANTS = require('../../../../constants');
-const { DB_COLLECTIONS } = require('../../../../constants');
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;
@@ -35,23 +37,31 @@ const getSubmissionCount = (deal) => {
 const createDealSnapshot = async (deal, auditDetails) => {
   if (ObjectId.isValid(deal._id)) {
     const { dealType, _id: dealId } = deal;
-    const collection = await db.getCollection(DB_COLLECTIONS.TFM_DEALS);
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
 
     const submissionCount = getSubmissionCount(deal);
     const tfmInit = submissionCount === 1 ? { tfm: DEFAULTS.DEAL_TFM } : null;
 
-    const dealObj = { dealSnapshot: deal, ...tfmInit, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
+    const dealObj = {
+      dealSnapshot: deal,
+      ...tfmInit,
+      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+    };
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
       const dealFacilities = await findAllFacilitiesByDealId(dealId);
       dealObj.dealSnapshot.facilities = dealFacilities;
     }
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(deal._id) } }, $.flatten(withoutId(dealObj)), {
-      returnNewDocument: true,
-      returnDocument: 'after',
-      upsert: true,
-    });
+    const findAndUpdateResponse = await collection.findOneAndUpdate(
+      { _id: { $eq: ObjectId(deal._id) } },
+      $.flatten(withoutId(dealObj)),
+      {
+        returnNewDocument: true,
+        returnDocument: 'after',
+        upsert: true,
+      },
+    );
 
     return findAndUpdateResponse.value;
   }
@@ -71,7 +81,7 @@ const createFacilitiesSnapshot = async (deal, auditDetails) => {
       dealFacilities = await findAllGefFacilitiesByDealId(dealId);
     }
 
-    const collection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_FACILITIES);
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
 
     const submissionCount = getSubmissionCount(deal);
 
@@ -84,7 +94,11 @@ const createFacilitiesSnapshot = async (deal, auditDetails) => {
             {
               _id: { $eq: ObjectId(facility._id) },
             },
-            $.flatten({ facilitySnapshot: facility, ...tfmInit, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) }),
+            $.flatten({
+              facilitySnapshot: facility,
+              ...tfmInit,
+              auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+            }),
             {
               returnNewDocument: true,
               returnDocument: 'after',
@@ -116,7 +130,7 @@ exports.submitDealPut = async (req, res) => {
   const { dealId, dealType, auditDetails } = req.body;
 
   if (!ObjectId.isValid(dealId)) {
-    return res.status(400).send({ status: 400, message: `Invalid dealId, ${dealId}`})
+    return res.status(400).send({ status: 400, message: `Invalid dealId, ${dealId}` });
   }
 
   try {

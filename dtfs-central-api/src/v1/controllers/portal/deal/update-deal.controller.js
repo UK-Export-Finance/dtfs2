@@ -1,10 +1,10 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneDeal } = require('./get-deal.controller');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const { PORTAL_ROUTE } = require('../../../../constants/routes');
 const { isNumber } = require('../../../../helpers');
-const { DB_COLLECTIONS } = require('../../../../constants');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -50,7 +50,7 @@ const handleEditedByPortal = async (dealId, dealUpdate, user) => {
 
 const updateDealEditedByPortal = async (dealId, user) => {
   if (ObjectId.isValid(dealId)) {
-    const collection = await db.getCollection(DB_COLLECTIONS.DEALS);
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
     const editedBy = await handleEditedByPortal(dealId, {}, user);
 
     const findAndUpdateResponse = await collection.findOneAndUpdate(
@@ -72,7 +72,7 @@ exports.updateDealEditedByPortal = updateDealEditedByPortal;
 const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) => {
   try {
     if (ObjectId.isValid(dealId)) {
-      const collection = await db.getCollection(DB_COLLECTIONS.DEALS);
+      const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
       let originalDeal = existingDeal;
 
