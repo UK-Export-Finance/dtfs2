@@ -13,7 +13,7 @@ describe(page, () => {
     wrapper = render({ obscuredSignInLinkTargetEmailAddress });
   });
 
-  withContactUsEmailAddressTests();
+  withContactUsEmailAddressTests({ page });
 
   it('should render the email address the sign in link has been sent to', () => {
     wrapper

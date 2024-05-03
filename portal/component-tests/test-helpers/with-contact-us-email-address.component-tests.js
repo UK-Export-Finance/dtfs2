@@ -1,8 +1,6 @@
 const pageRenderer = require('../pageRenderer');
 
-const page = 'login/temporarily-suspended.njk';
-
-module.exports.withContactUsEmailAddressTests = () => {
+module.exports.withContactUsEmailAddressTests = ({ page }) => {
   describe('with contact us email address tests', () => {
     let wrapper;
     let render;

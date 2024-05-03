@@ -3,5 +3,5 @@ const { withContactUsEmailAddressTests } = require('../test-helpers/with-contact
 const page = 'login/temporarily-suspended.njk';
 
 describe(page, () => {
-  withContactUsEmailAddressTests();
+  withContactUsEmailAddressTests({ page });
 });
