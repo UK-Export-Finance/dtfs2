@@ -1,77 +1,32 @@
 const baseParserOptions = {
-  ecmaVersion: 2020,
-};
-
-const baseRules = {
-  'no-console': ['error', { allow: ['info', 'error'] }],
-  'no-underscore-dangle': [
-    'error',
-    { allow: ['_id', '_csrf', '_getBuffer', '_getData', '_getHeaders', '_getStatusCode', '_getRedirectUrl', '_getRenderData', '_getRenderView', '_isEndCalled'] },
-  ],
-  'import/extensions': 'off',
-  'import/no-named-as-default': 'off',
-  'implicit-arrow-linebreak': 'off',
-  'import/no-extraneous-dependencies': [
-    'error',
-    { devDependencies: ['**/*.test.{js,ts}', '**/*.api-test.{js,ts}', '**/*.spec.{js,ts}', '**/webpack.*.{js,ts}', '**/api-test*/**', '**/__mocks__/**'] },
-  ],
-  'import/prefer-default-export': 'off',
-  'object-curly-newline': [
-    'error',
-    {
-      consistent: true,
-    },
-  ],
-  'no-return-await': 'off',
-  'no-unneeded-ternary': 'off',
-  'require-await': 'error',
-  'no-use-before-define': [
-    'error',
-    {
-      functions: false,
-    },
-  ],
+  ecmaVersion: 2022,
 };
 
 module.exports = {
-  extends: ['airbnb-base', 'prettier'],
+  extends: ['airbnb-base', 'plugin:prettier/recommended'],
   env: {
     jest: true,
     browser: true,
   },
   root: true,
-  rules: baseRules,
-  settings: {
-    'import/resolver': {
-      typescript: {},
-    },
-  },
-  ignorePatterns: ['**/node_modules/**', '**/public/**'],
+  ignorePatterns: ['**/node_modules/**'],
   parserOptions: baseParserOptions,
   overrides: [
     {
       files: ['*.ts'],
-      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked', 'prettier'],
-      plugins: ['@typescript-eslint'],
+      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked', 'plugin:prettier/recommended'],
+      plugins: ['@typescript-eslint', 'prettier'],
       parser: '@typescript-eslint/parser',
       parserOptions: {
         ...baseParserOptions,
         project: './tsconfig.eslint.json',
         tsconfigRootDir: __dirname,
       },
-      rules: {
-        ...baseRules,
-      },
     },
     {
-      files: ['server/routes/**/*.ts'],
+      files: ['*.{j,t}s'],
+      plugins: ['prettier'],
       rules: {
-<<<<<<< Updated upstream
-        ...baseRules,
-        '@typescript-eslint/no-misused-promises': ['error', {
-          checksVoidReturn: {
-            arguments: false,
-=======
         'prettier/prettier': 'error',
         'class-methods-use-this': 'off',
         'max-len': [
@@ -122,9 +77,8 @@ module.exports = {
           'error',
           {
             functions: false,
->>>>>>> Stashed changes
           },
-        }],
+        ],
       },
     },
   ],

@@ -1,31 +1,14 @@
+const baseParserOptions = {
+  ecmaVersion: 2022,
+};
+
 module.exports = {
-  extends: 'airbnb-base',
+  extends: ['airbnb-base', 'prettier', 'plugin:prettier/recommended'],
   env: {
     jest: true,
     browser: true,
   },
   root: true,
-<<<<<<< Updated upstream
-  rules: {
-    'max-len': ['error', 160, 2, {
-      ignoreUrls: true,
-      ignoreComments: false,
-      ignoreRegExpLiterals: true,
-      ignoreStrings: true,
-      ignoreTemplateLiterals: true,
-    }],
-    'no-console': ['error', { allow: ['info', 'error'] }],
-    'no-underscore-dangle': ['error', { allow: ['_id'] }],
-    'import/no-named-as-default': 'off',
-    'implicit-arrow-linebreak': 'off',
-    'object-curly-newline': ['error', {
-      consistent: true,
-    }],
-    'no-use-before-define': [
-      'error',
-      {
-        functions: false,
-=======
   ignorePatterns: ['**/node_modules/**'],
   parserOptions: baseParserOptions,
   overrides: [
@@ -96,11 +79,7 @@ module.exports = {
             functions: false,
           },
         ],
->>>>>>> Stashed changes
       },
-    ],
-  },
-  parserOptions: {
-    ecmaVersion: 2020,
-  },
+    },
+  ],
 };
