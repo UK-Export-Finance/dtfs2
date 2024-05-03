@@ -1,6 +1,8 @@
 const { ObjectId } = require('mongodb');
-const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { COLLECTIONS } = require('@ukef/dtfs2-common');
+const {
+  generateAuditDatabaseRecordFromAuditDetails,
+  deleteDocumentWithAuditLogs,
+} = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../drivers/db-client');
 const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
@@ -149,32 +151,15 @@ exports.removeTfmUserById = async (_id, auditDetails, callback) => {
 
   // Transactions will only work on a replica set
   if (process.env.CHANGE_STREAM_ENABLED === 'true') {
-    const client = await db.getClient();
-    const session = client.startSession();
-
     try {
-      const transactionOptions = { readConcern: { level: 'snapshot' }, writeConcern: { w: 'majority' } };
-      await session.withTransaction(async () => {
-        const deletionCollection = await db.getCollection(COLLECTIONS.DELETION_AUDIT_LOGS);
-        await deletionCollection.insertOne(
-          {
-            collectionName: 'tfm-users',
-            deletedDocumentId: new ObjectId(_id),
-            auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-          },
-          { session },
-        );
-
-        const usersCollection = await db.getCollection('tfm-users');
-        await usersCollection.deleteOne({ _id: { $eq: ObjectId(_id) } }, { session });
-      }, transactionOptions);
-      await session.endSession();
+      deleteDocumentWithAuditLogs({
+        documentId: new ObjectId(_id),
+        collectionName: 'tfm-users',
+        db,
+        auditDetails,
+      });
     } catch (error) {
-      console.error(error);
-      await session.endSession();
       return callback(error, 500);
-    } finally {
-      await session.endSession();
     }
     return callback(null, 200);
   }
