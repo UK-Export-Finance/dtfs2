@@ -7,6 +7,7 @@ import {
 } from '@ukef/dtfs2-common';
 
 export type FeeRecordItem = {
+  id: number;
   facilityId: string;
   exporter: string;
   reportedFees: CurrencyAndAmount;
@@ -26,14 +27,5 @@ export type UtilisationReportReconciliationDetailsResponseBody = {
   status: UtilisationReportReconciliationStatus;
   reportPeriod: ReportPeriod;
   dateUploaded: IsoDateTimeStamp;
-  feeRecords: {
-    facilityId: string;
-    exporter: string;
-    reportedFees: CurrencyAndAmount;
-    reportedPayments: CurrencyAndAmount;
-    totalReportedPayments: CurrencyAndAmount;
-    paymentsReceived: CurrencyAndAmount | null;
-    totalPaymentsReceived: CurrencyAndAmount | null;
-    status: FeeRecordStatus;
-  }[];
+  feeRecords: FeeRecordItem[];
 };

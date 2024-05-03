@@ -1,4 +1,10 @@
-import { IsoDateTimeStamp, ReportPeriod, UtilisationReportReconciliationStatus, FeeRecordStatus, CurrencyAndAmount } from '@ukef/dtfs2-common';
+import {
+  IsoDateTimeStamp,
+  ReportPeriod,
+  UtilisationReportReconciliationStatus,
+  FeeRecordStatus,
+  CurrencyAndAmount,
+} from '@ukef/dtfs2-common';
 
 export type UtilisationReportReconciliationDetailsResponseBody = {
   reportId: number;
@@ -10,6 +16,7 @@ export type UtilisationReportReconciliationDetailsResponseBody = {
   reportPeriod: ReportPeriod;
   dateUploaded: IsoDateTimeStamp;
   feeRecords: {
+    id: number;
     facilityId: string;
     exporter: string;
     reportedFees: CurrencyAndAmount;

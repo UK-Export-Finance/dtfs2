@@ -65,13 +65,41 @@ export type UtilisationReportUploadDetails = Prettify<
 >;
 
 export type FeeRecordItem = {
+  /**
+   * The fee record id
+   */
+  id: number;
+  /**
+   * The facility id
+   */
   facilityId: string;
+  /**
+   * The exporter
+   */
   exporter: string;
+  /**
+   * The fees paid to UKEF for the period in the actual payment currency
+   */
   reportedFees: CurrencyAndAmount;
+  /**
+   * The fees paid to UKEF converted to the payment currency
+   */
   reportedPayments: CurrencyAndAmount;
+  /**
+   * The total of reported fees paid to UKEF in the payment currency
+   */
   totalReportedPayments: CurrencyAndAmount;
+  /**
+   * The payments added in TFM
+   */
   paymentsReceived: CurrencyAndAmount | null;
+  /**
+   * The total of the payments added in TFM
+   */
   totalPaymentsReceived: CurrencyAndAmount | null;
+  /**
+   * The status of the fee record
+   */
   status: FeeRecordStatus;
 };
 

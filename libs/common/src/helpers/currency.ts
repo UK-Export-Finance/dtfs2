@@ -1,11 +1,11 @@
 import { CurrencyAndAmount, CurrencyAndAmountString } from '../types';
 
 /**
- * Gets the amount string from a currency and amount object
+ * Gets the formatted currency and amount
  * @param currencyAndAmount - The currency and amount object
- * @returns The currency and value string
+ * @returns The formatted currency and amount
  * @example
- * const amount = getCurrencyAndAmountString({ currency: 'GBP', amount: 3.14159 }); // 'GBP 3.14'
+ * const amount = getFormattedCurrencyAndAmount({ currency: 'GBP', amount: 3.14159 }); // 'GBP 3.14'
  */
-export const getCurrencyAndAmountString = (currencyAndAmount: CurrencyAndAmount): CurrencyAndAmountString =>
+export const getFormattedCurrencyAndAmount = (currencyAndAmount: CurrencyAndAmount): CurrencyAndAmountString =>
   `${currencyAndAmount.currency} ${currencyAndAmount.amount.toFixed(2)}`;

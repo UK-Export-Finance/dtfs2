@@ -22,10 +22,10 @@
 
     <tbody class="govuk-table__body">
     {% for feeRecord in feeRecords %}
-      {% set checkboxId = ['facilityId-', feeRecord.facilityId] | join %}
+      {% set checkboxId = ['feeRecordId-', feeRecord.id] | join %}
       <tr
         class="govuk-table__row"
-        data-cy="premium-payments-table-row-{{ loop.index - 1 }}-facilityId-{{ feeRecord.facilityId }}"
+        data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }}"
       >
         <td class="govuk-table__cell">
           {{ tableCellCheckbox.render({

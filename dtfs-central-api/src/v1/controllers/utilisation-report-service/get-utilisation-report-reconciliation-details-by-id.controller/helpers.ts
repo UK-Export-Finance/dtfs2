@@ -1,36 +1,64 @@
-import { CurrencyAndAmount, FeeRecordEntity, UtilisationReportEntity, applyExchangeRateToAmount } from '@ukef/dtfs2-common';
+import {
+  CurrencyAndAmount,
+  FeeRecordEntity,
+  UtilisationReportEntity,
+  divideAmountByExchangeRate,
+} from '@ukef/dtfs2-common';
 import { FeeRecordItem, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 
 /**
- * Maps the fee record entity to an object with the following properties:
- * - `reportedFees` - the fees paid to UKEF for the period in the actual payment currency
- * - `reportedPayments` - the fees paid to UKEF converted to the payment currency
- * - `totalReportedPayments` - the total reported fees in the payment currency
- * - `paymentsReceived` - the payments added in TFM
- * - `totalPaymentsReceived` - the total of the above
- * - `status` - the status of the fee record
+ * Maps the fee record entity to the reported fees
+ * @param feeRecord - The fee record entity
+ * @returns The reported fees
+ */
+const mapFeeRecordEntityToReportedFees = (feeRecord: FeeRecordEntity): CurrencyAndAmount => ({
+  currency: feeRecord.feesPaidToUkefForThePeriodCurrency,
+  amount: feeRecord.feesPaidToUkefForThePeriod,
+});
+
+/**
+ * Maps the fee record entity to the reported payments
+ * @param feeRecord - The fee record entity
+ * @returns The reported fees
+ */
+const mapFeeRecordEntityToReportedPayments = (feeRecord: FeeRecordEntity): CurrencyAndAmount => {
+  const { paymentCurrency, feesPaidToUkefForThePeriodCurrency, feesPaidToUkefForThePeriod, paymentExchangeRate } =
+    feeRecord;
+
+  if (paymentCurrency === feesPaidToUkefForThePeriodCurrency) {
+    return {
+      currency: paymentCurrency,
+      amount: feesPaidToUkefForThePeriod,
+    };
+  }
+
+  const feesPaidToUkefForThePeriodInPaymentCurrency = divideAmountByExchangeRate(
+    feesPaidToUkefForThePeriod,
+    paymentExchangeRate,
+    2,
+  );
+
+  return {
+    amount: feesPaidToUkefForThePeriodInPaymentCurrency,
+    currency: paymentCurrency,
+  };
+};
+
+/**
+ * Maps a fee record entity to a fee record item
  * @param feeRecord - The fee record entity
  * @returns The mapped fee record
  */
 export const mapFeeRecordEntityToReconciliationDetailsFeeRecordItem = (feeRecord: FeeRecordEntity): FeeRecordItem => {
-  const reportedFees: CurrencyAndAmount = {
-    currency: feeRecord.feesPaidToUkefForThePeriodCurrency,
-    amount: feeRecord.feesPaidToUkefForThePeriod,
-  };
-
-  const reportedPayments: CurrencyAndAmount = {
-    currency: feeRecord.paymentCurrency,
-    amount:
-      feeRecord.paymentCurrency === feeRecord.feesPaidToUkefForThePeriodCurrency
-        ? feeRecord.feesPaidToUkefForThePeriod
-        : applyExchangeRateToAmount(feeRecord.feesPaidToUkefForThePeriod, feeRecord.paymentExchangeRate, 'divide', 2),
-  };
+  const reportedFees = mapFeeRecordEntityToReportedFees(feeRecord);
+  const reportedPayments = mapFeeRecordEntityToReportedPayments(feeRecord);
 
   const totalReportedPayments = reportedPayments;
 
   return {
+    id: feeRecord.id,
     facilityId: feeRecord.facilityId,
     exporter: feeRecord.exporter,
     reportedFees,
@@ -43,10 +71,11 @@ export const mapFeeRecordEntityToReconciliationDetailsFeeRecordItem = (feeRecord
 };
 
 /**
- * Maps the utilisation report entity to the reconciliation item
- * @param utilisationReport - The utilisation report
- * @returns The summary item
- * @throws {Error} If a bank cannot be found with the matching bank id
+ * Maps the utilisation report entity to the reconciliation details
+ * @param utilisationReport - The utilisation report entity
+ * @returns The utilisation report reconciliation details
+ * @throws {Error} If the report has not been uploaded
+ * @throws {NotFoundError} If a bank cannot be found with the matching bank id
  */
 export const mapUtilisationReportEntityToReconciliationDetails = async (
   utilisationReport: UtilisationReportEntity,

@@ -1,4 +1,4 @@
-import { FeeRecordStatus, CurrencyAndAmountString, getCurrencyAndAmountString, ValuesOf } from '@ukef/dtfs2-common';
+import { FeeRecordStatus, CurrencyAndAmountString, getFormattedCurrencyAndAmount, ValuesOf } from '@ukef/dtfs2-common';
 import { FeeRecordItem } from '../../../api-response-types';
 
 const feeRecordStatusToDisplayStatus = {
@@ -6,6 +6,7 @@ const feeRecordStatusToDisplayStatus = {
 } as const;
 
 export type FeeRecordViewModelItem = {
+  id: number;
   facilityId: string;
   exporter: string;
   reportedFees: CurrencyAndAmountString;
@@ -18,14 +19,15 @@ export type FeeRecordViewModelItem = {
 };
 
 export const mapFeeRecordItemToFeeRecordViewModelItem = (feeRecord: FeeRecordItem): FeeRecordViewModelItem => ({
+  id: feeRecord.id,
   facilityId: feeRecord.facilityId,
   exporter: feeRecord.exporter,
-  reportedFees: getCurrencyAndAmountString(feeRecord.reportedFees),
-  reportedPayments: getCurrencyAndAmountString(feeRecord.reportedPayments),
-  totalReportedPayments: getCurrencyAndAmountString(feeRecord.totalReportedPayments),
-  paymentsReceived: feeRecord.paymentsReceived ? getCurrencyAndAmountString(feeRecord.paymentsReceived) : undefined,
+  reportedFees: getFormattedCurrencyAndAmount(feeRecord.reportedFees),
+  reportedPayments: getFormattedCurrencyAndAmount(feeRecord.reportedPayments),
+  totalReportedPayments: getFormattedCurrencyAndAmount(feeRecord.totalReportedPayments),
+  paymentsReceived: feeRecord.paymentsReceived ? getFormattedCurrencyAndAmount(feeRecord.paymentsReceived) : undefined,
   totalPaymentsReceived: feeRecord.totalPaymentsReceived
-    ? getCurrencyAndAmountString(feeRecord.totalPaymentsReceived)
+    ? getFormattedCurrencyAndAmount(feeRecord.totalPaymentsReceived)
     : undefined,
   status: feeRecord.status,
   displayStatus: feeRecordStatusToDisplayStatus[feeRecord.status],

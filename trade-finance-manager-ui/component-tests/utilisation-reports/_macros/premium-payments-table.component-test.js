@@ -14,6 +14,7 @@ describe(component, () => {
    */
   const feeRecords = [
     {
+      id: 1,
       facilityId: '12345678',
       exporter: 'Test exporter',
       reportedFees: 'GBP 100.00',
@@ -25,6 +26,7 @@ describe(component, () => {
       displayStatus: 'TO DO',
     },
     {
+      id: 2,
       facilityId: '87654321',
       exporter: 'Test exporter 2',
       reportedFees: 'EUR 150.00',
@@ -56,10 +58,10 @@ describe(component, () => {
   it('should render the table data', () => {
     const wrapper = getWrapper();
 
-    feeRecords.forEach((feeRecord, index) => {
-      const rowSelector = `[data-cy="premium-payments-table-row-${index}-facilityId-${feeRecord.facilityId}"]`;
+    feeRecords.forEach((feeRecord) => {
+      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecord.id}"]`;
 
-      const checkboxSelector = `${rowSelector} > td > div > div > input#facilityId-${feeRecord.facilityId}`;
+      const checkboxSelector = `${rowSelector} > td > div > div > input#feeRecordId-${feeRecord.id}`;
       wrapper.expectElement(checkboxSelector).toExist();
 
       wrapper.expectElement(`${rowSelector} th`).toHaveCount(1);

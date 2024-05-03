@@ -48,7 +48,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).withDateUploaded(null).build();
+      const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+        .withId(reportId)
+        .withDateUploaded(null)
+        .build();
       findOneSpy.mockResolvedValue(notReceivedReport);
 
       // Act
@@ -70,7 +73,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       const { req, res } = getHttpMocks();
 
       const bankId = '123';
-      const pendingReconciliationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withBankId(bankId).build();
+      const pendingReconciliationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+        .withId(reportId)
+        .withBankId(bankId)
+        .build();
       findOneSpy.mockResolvedValue(pendingReconciliationReport);
 
       getBankNameByIdSpy.mockResolvedValue(undefined);
@@ -110,6 +116,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
 
       const feeRecords = [
         FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport)
+          .withId(1)
           .withFacilityId('12345678')
           .withExporter('Test exporter 1')
           .withFeesPaidToUkefForThePeriodCurrency('GBP')
@@ -117,10 +124,11 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
           .withPaymentCurrency('GBP')
           .build(),
         FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport)
+          .withId(2)
           .withFacilityId('87654321')
           .withExporter('Test exporter 2')
           .withFeesPaidToUkefForThePeriodCurrency('EUR')
-          .withFeesPaidToUkefForThePeriod(100.00)
+          .withFeesPaidToUkefForThePeriod(100.0)
           .withPaymentCurrency('GBP')
           .withPaymentExchangeRate(1.1)
           .build(),
@@ -131,6 +139,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
 
       const feeRecordItems: FeeRecordItem[] = [
         {
+          id: 1,
           facilityId: '12345678',
           exporter: 'Test exporter 1',
           reportedFees: {
@@ -150,6 +159,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
           status: 'TO_DO',
         },
         {
+          id: 2,
           facilityId: '87654321',
           exporter: 'Test exporter 2',
           reportedFees: {
