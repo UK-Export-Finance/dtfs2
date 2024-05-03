@@ -1,4 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const sendTfmEmail = require('../controllers/send-tfm-email');
 const { UNDERWRITER_MANAGER_DECISIONS } = require('../../constants/amendments');
@@ -8,7 +9,6 @@ const {
   AMENDMENT_BANK_DECISION,
   AMENDMENT_STATUS,
 } = require('../../constants/deals');
-const { CURRENCY } = require('../../constants/currency.constant');
 const EMAIL_TEMPLATE_IDS = require('../../constants/email-template-ids');
 const { automaticAmendmentEmailVariables } = require('../emails/amendments/automatic-approval-email-variables');
 const { generateTaskEmailVariables } = require('./generate-task-email-variables');

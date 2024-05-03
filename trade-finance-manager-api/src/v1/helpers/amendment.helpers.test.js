@@ -1,4 +1,5 @@
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const {
   sendManualDecisionAmendmentEmail,
@@ -12,7 +13,6 @@ const {
   internalAmendmentEmail,
 } = require('./amendment.helpers');
 const CONSTANTS = require('../../constants');
-const { CURRENCY } = require('../../constants/currency.constant');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
 const { FACILITY_TYPE } = require('../../constants/facilities');
 const { formattedNumber } = require('../../utils/number');

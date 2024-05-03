@@ -1,5 +1,5 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const amendmentHelpers = require('./amendment.helpers');
-const { CURRENCY } = require('../../../constants/currency.constant');
 
 describe('amendmentChangeValueExportCurrency()', () => {
   const amendment = { currency: CURRENCY.GBP };

@@ -2,15 +2,6 @@ jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
   issueAcbsFacilities: jest.fn(),
 }));
 
-jest.mock('../../../src/v1/controllers/deal.controller', () => ({
-  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
-  submitACBSIfAllPartiesHaveUrn: jest.fn(),
-}));
-
-jest.mock('../../../src/v1/controllers/deal.controller', () => ({
-  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
-  canDealBeSubmittedToACBS: jest.fn(),
-}));
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
