@@ -7,11 +7,15 @@ module.exports.withContactUsEmailAddressTests = ({ page }) => {
     let originalContactUsEmailAddress;
     const exampleContactUsEmail = 'exampleContactUs@ukexportfinance.gov.uk';
 
+    beforeAll(() => {
+      originalContactUsEmailAddress = process.env.CONTACT_US_EMAIL_ADDRESS;
+    });
+
     beforeEach(() => {
+      process.env.CONTACT_US_EMAIL_ADDRESS = exampleContactUsEmail;
+
       render = pageRenderer(page);
       wrapper = render();
-      originalContactUsEmailAddress = process.env.CONTACT_US_EMAIL_ADDRESS;
-      process.env.CONTACT_US_EMAIL_ADDRESS = exampleContactUsEmail;
     });
 
     afterAll(() => {
