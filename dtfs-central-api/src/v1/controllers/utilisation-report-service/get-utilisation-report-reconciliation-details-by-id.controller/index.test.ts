@@ -97,7 +97,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       expect(getBankNameByIdSpy).toHaveBeenCalledWith(bankId);
     });
 
-    it('responds with a 200 and the mapped report for both matching and non-matching payment currencies', async () => {
+    it('responds with a 200 and the mapped report', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 

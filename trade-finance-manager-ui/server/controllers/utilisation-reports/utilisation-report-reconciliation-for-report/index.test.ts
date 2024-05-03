@@ -64,6 +64,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         },
         feeRecords: [
           {
+            id: 1,
             facilityId: '12345678',
             exporter: 'Test exporter',
             reportedFees: {
@@ -94,6 +95,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
       const feeRecordViewModel: FeeRecordViewModelItem[] = [
         {
+          id: 1,
           facilityId: '12345678',
           exporter: 'Test exporter',
           reportedFees: 'GBP 100.00',

@@ -6,6 +6,7 @@ describe('reconciliation-for-report-helper', () => {
     it('maps the fee record item to the fee record view model item ', () => {
       // Arrange
       const feeRecordItem: FeeRecordItem = {
+        id: 1,
         facilityId: '12345678',
         exporter: 'Test exporter',
         reportedFees: {
@@ -36,6 +37,7 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(feeRecordViewModelItem).toEqual<FeeRecordViewModelItem>({
+        id: 1,
         facilityId: '12345678',
         exporter: 'Test exporter',
         reportedFees: 'GBP 314.59',
