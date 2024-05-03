@@ -91,6 +91,9 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   @ExchangeRateColumn()
   paymentExchangeRate!: number;
 
+  /**
+   * Status code representing the reconciliation state of the fee record
+   */
   @Column({ type: 'nvarchar' })
   status!: FeeRecordStatus;
 
