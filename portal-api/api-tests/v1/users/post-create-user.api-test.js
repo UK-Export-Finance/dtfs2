@@ -15,6 +15,7 @@ const { withClientAuthenticationTests } = require('../../common-tests/client-aut
 const { withValidateEmailIsUniqueTests } = require('./with-validate-email-is-unique.api-tests');
 const { withValidateUsernameAndEmailMatchTests } = require('./with-validate-username-and-email-match.api-tests');
 const { withValidatePasswordWhenCreatingUserTests } = require('./with-validate-password.api-tests');
+const { withValidateIsTrustedFieldTests } = require('./with-validate-is-trusted-field.api-tests');
 const { withValidateEmailIsCorrectFormatTests } = require('./with-validate-email-is-correct-format.api-tests').default;
 
 const MOCK_USER = users.barclaysBankMaker1;
@@ -47,7 +48,18 @@ describe('a user', () => {
       makeRequestWithAuthHeader: (authHeader) => post(BASE_URL, MOCK_USER, { headers: { Authorization: authHeader } }),
     });
 
-    withValidatePasswordWhenCreatingUserTests({ payload: MOCK_USER, makeRequest: async (user) => await createUser(user) });
+    withValidateIsTrustedFieldTests({
+      payload: MOCK_USER,
+      makeRequest: async (user) => await createUser(user),
+      successCode: 200,
+      deleteUser: async () => await databaseHelper.deleteUser(MOCK_USER),
+      isRequired: true,
+    });
+
+    withValidatePasswordWhenCreatingUserTests({
+      payload: MOCK_USER,
+      makeRequest: async (user) => await createUser(user),
+    });
 
     withValidateEmailIsUniqueTests({
       payload: MOCK_USER,
@@ -72,18 +84,21 @@ describe('a user', () => {
       makeRequest: async (user) => await createUser(user),
     });
 
-    it.each(NON_READ_ONLY_ROLES)('rejects if the user creation request has the read-only role and the %s role', async (otherRole) => {
-      const newUser = {
-        ...MOCK_USER,
-        roles: [READ_ONLY, otherRole],
-      };
+    it.each(NON_READ_ONLY_ROLES)(
+      'rejects if the user creation request has the read-only role and the %s role',
+      async (otherRole) => {
+        const newUser = {
+          ...MOCK_USER,
+          roles: [READ_ONLY, otherRole],
+        };
 
-      const { status, body } = await createUser(newUser);
+        const { status, body } = await createUser(newUser);
 
-      expect(status).toEqual(400);
-      expect(body.success).toEqual(false);
-      expect(body.errors.errorList.roles).toStrictEqual(READ_ONLY_ROLE_EXCLUSIVE_ERROR);
-    });
+        expect(status).toEqual(400);
+        expect(body.success).toEqual(false);
+        expect(body.errors.errorList.roles).toStrictEqual(READ_ONLY_ROLE_EXCLUSIVE_ERROR);
+      },
+    );
 
     describe('it creates the user', () => {
       it('it creates the user if all provided data is valid', async () => {
@@ -105,6 +120,7 @@ describe('a user', () => {
                 surname: MOCK_USER.surname,
                 timezone: 'Europe/London',
                 'user-status': STATUS.ACTIVE,
+                isTrusted: MOCK_USER.isTrusted
               },
             ]),
           }),
@@ -121,7 +137,10 @@ describe('a user', () => {
         const { status, body } = await as(aNonAdmin).get(BASE_URL);
 
         expect(status).toEqual(200);
-        expect(body.users.find((user) => user.username === MOCK_USER.username).roles).toStrictEqual([READ_ONLY, READ_ONLY]);
+        expect(body.users.find((user) => user.username === MOCK_USER.username).roles).toStrictEqual([
+          READ_ONLY,
+          READ_ONLY,
+        ]);
       });
 
       it('it creates the user if the user creation request has the read-only role only', async () => {

@@ -21,6 +21,7 @@ const PORTAL = {
     timezone: String,
     roles: Object,
     bank: Object,
+    isTrusted: Boolean,
   },
 };
 
@@ -38,7 +39,7 @@ const TFM = {
     id: String,
     name: String,
     email: String,
-  }
+  },
 };
 
 module.exports = {
