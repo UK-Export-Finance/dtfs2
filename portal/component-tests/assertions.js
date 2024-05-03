@@ -60,6 +60,9 @@ const assertions = (wrapper, html) => ({
     toMatch: (regex) => {
       expect(wrapper(selector).text().trim()).toMatch(regex);
     },
+    toContain: (text) => {
+      expect(wrapper(selector).text().trim()).toContain(text);
+    },
   }),
   expectElement: (selector) => ({
     toExist: () => {
@@ -80,6 +83,9 @@ const assertions = (wrapper, html) => ({
     lengthToEqual: (expectedLength) => {
       const expected = expectedLength + 1; // cheerio html() assertion automatically adds 1.
       expect(wrapper(selector).html().length).toEqual(expected);
+    },
+    toHaveCount: (expectedCount) => {
+      expect(wrapper(selector).length).toEqual(expectedCount);
     },
   }),
   expectInput: (selector) => ({
