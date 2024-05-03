@@ -5,7 +5,6 @@
         <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
           <h2 data-cy="contact-us-footer">Contact us</h2>
           <dl class="contact-details">
-            {# TODO: DTFS2-7138 remove env vars #}
             {% if CONTACT_US_SELF_SERVICE_PORTAL_URL %}
               <dd>
                 <a href="{{ CONTACT_US_SELF_SERVICE_PORTAL_URL }}">Get support from IT Service Desk</a>
