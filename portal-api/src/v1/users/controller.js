@@ -1,4 +1,4 @@
-const { isVerifiedPayload } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload, SCHEMA } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { getNowAsEpochMillisecondString } = require('../helpers/date');
@@ -9,7 +9,7 @@ const { sanitizeUser } = require('./sanitizeUserData');
 const utils = require('../../crypto/utils');
 const CONSTANTS = require('../../constants');
 const { isValidEmail } = require('../../utils/string');
-const { USER, SCHEMA } = require('../../constants');
+const { USER } = require('../../constants');
 const { InvalidUserIdError, InvalidEmailAddressError, UserNotFoundError } = require('../errors');
 const InvalidSessionIdentifierError = require('../errors/invalid-session-identifier.error');
 const { transformDatabaseUser } = require('./transform-database-user');
@@ -151,27 +151,27 @@ exports.create = async (user, userService, auditDetails, callback) => {
   delete insert?.password;
   delete insert?.passwordConfirm;
 
-  if (isVerifiedPayload({ payload: insert, template: SCHEMA.PAYLOAD.PORTAL.USER })) {
-    const collection = await db.getCollection('users');
-    const createUserResult = await collection.insertOne(insert);
+  if (!isVerifiedPayload({ payload: insert, template: SCHEMA.PAYLOAD.PORTAL.USER })) {
+    return callback('Invalid user payload', user);
+  }
 
-    const { insertedId: userId } = createUserResult;
+  const collection = await db.getCollection('users');
+  const createUserResult = await collection.insertOne(insert);
 
-    if (!ObjectId.isValid(userId)) {
-      throw new InvalidUserIdError(userId);
-    }
+  const { insertedId: userId } = createUserResult;
 
-    const createdUser = await collection.findOne({ _id: { $eq: userId } });
+  if (!ObjectId.isValid(userId)) {
+    throw new InvalidUserIdError(userId);
+  }
 
-    const sanitizedUser = sanitizeUser(createdUser);
+  const createdUser = await collection.findOne({ _id: { $eq: userId } });
+
+  const sanitizedUser = sanitizeUser(createdUser);
 
     const resetPasswordToken = await createPasswordToken(sanitizedUser.email, userService, auditDetails);
     await sendNewAccountEmail(sanitizedUser, resetPasswordToken);
 
-    return callback(null, sanitizedUser);
-  }
-
-  return callback('Invalid user payload', user);
+  return callback(null, sanitizedUser);
 };
 
 exports.update = async (_id, update, auditDetails, callback) => {
@@ -231,6 +231,16 @@ exports.update = async (_id, update, auditDetails, callback) => {
     delete userSetUpdate.passwordConfirm;
     delete userSetUpdate.currentPassword;
 
+    if (
+      !isVerifiedPayload({
+        payload: userSetUpdate,
+        template: SCHEMA.PAYLOAD.PORTAL.USER,
+        areAllPropertiesRequired: false,
+      })
+    ) {
+      return callback('Invalid user payload', update);
+    }
+
     userSetUpdate.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
     const userUpdate = { $set: userSetUpdate };
@@ -240,7 +250,7 @@ exports.update = async (_id, update, auditDetails, callback) => {
     const updatedUser = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, {
       returnDocument: 'after',
     });
-    callback(null, updatedUser);
+    return callback(null, updatedUser);
   });
 };
 
