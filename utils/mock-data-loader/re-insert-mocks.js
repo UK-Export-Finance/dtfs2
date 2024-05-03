@@ -20,12 +20,13 @@ const init = async () => {
   try {
     const portalToken = await createAndLogInAsInitialUser();
 
-    await deleteDeletionAuditLogsCollection();
+    if (process.env.CHANGE_STREAM_ENABLED === 'true') {
+      await deleteDeletionAuditLogsCollection();
+      await setupDeletionAuditLogsCollection();
+    }
     await cleanAllTablesPortal(portalToken);
     await cleanAllTablesGef(portalToken);
     await cleanAllTablesTfm();
-
-    await setupDeletionAuditLogsCollection();
 
     await insertMocks(portalToken);
     await insertMocksGef(portalToken);
@@ -38,7 +39,9 @@ const init = async () => {
   } catch (error) {
     logger.error('An error occurred, attempting to clean all tables');
     try {
-      await deleteDeletionAuditLogsCollection();
+      if (process.env.CHANGE_STREAM_ENABLED === 'true') {
+        await deleteDeletionAuditLogsCollection();
+      }
       const portalToken = await createAndLogInAsInitialUser();
       await cleanAllTablesPortal(portalToken);
       await cleanAllTablesGef(portalToken);

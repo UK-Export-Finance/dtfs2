@@ -33,9 +33,9 @@ export const setupDeletionAuditLogsCollection = async () => {
             bsonType: 'objectId',
             description: 'deletedDocumentId must be an ObjectId',
           },
-          logCreatedAt: {
+          expireAt: {
             bsonType: 'date',
-            description: 'logCreatedAt must be a BSON date',
+            description: 'expireAt must be a BSON date',
           },
           auditRecord: {
             bsonType: 'object',
@@ -71,14 +71,14 @@ export const setupDeletionAuditLogsCollection = async () => {
 
   await collection.createIndex(
     {
-      'auditRecord.lastUpdatedAt': 1,
-      // 'createdAt': 1,
+      expireAt: 1,
     },
     {
-      expireAfterSeconds: 60, // 1 minute. This should be increased on Dev/Prod
+      expireAfterSeconds: 0,
     },
   );
 
+  // TODO: delete this test data
   await collection.insertOne({
     collectionName: 'users',
     deletedDocumentId: new ObjectId('6630cd95933028a128c5c081'),
@@ -89,21 +89,6 @@ export const setupDeletionAuditLogsCollection = async () => {
       lastUpdatedByIsSystem: null,
       noUserLoggedIn: true,
     },
-    logCreatedAt: new Date(),
+    expireAt: new Date(),
   });
-  // try {
-  //   await collection.insertOne({
-  //     "collectionName": "users",
-  //     "deletedDocumentId": new ObjectId("6630cd95933028a128c5c081"),
-  //     "auditRecord": {
-  //       "lastUpdatedAt": new Date(),
-  //       "lastUpdatedByPortalUserId": "null",
-  //       "lastUpdatedByTfmUserId": null,
-  //       "lastUpdatedByIsSystem": null,
-  //       "noUserLoggedIn": true
-  //     },
-  //   });
-  // } catch (error) {
-  //   console.error(error);
-  // }
 };
