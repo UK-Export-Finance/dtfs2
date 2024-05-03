@@ -1,8 +1,14 @@
+import { Response } from 'supertest';
+import { Bank } from '@ukef/dtfs2-common';
 import app from '../../../src/createApp';
 import testUserCache from '../../api-test-users';
 import createApi from '../../api';
 
 const { as } = createApi(app);
+
+interface CustomResponse extends Response {
+  body: Bank[];
+}
 
 describe('/v1/banks', () => {
   describe('GET /v1/banks', () => {
@@ -11,7 +17,7 @@ describe('/v1/banks', () => {
       const user = await testUserCache.initialise(app);
 
       // Act
-      const response = await as(user).get('/v1/banks');
+      const response: CustomResponse = await as(user).get('/v1/banks');
 
       // Assert
       expect(response.status).toEqual(200);
