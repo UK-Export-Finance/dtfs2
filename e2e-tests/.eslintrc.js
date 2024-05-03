@@ -6,7 +6,19 @@ const baseRules = {
   'no-console': ['error', { allow: ['info', 'error'] }],
   'no-underscore-dangle': [
     'error',
-    { allow: ['_id', '_csrf', '_getBuffer', '_getData', '_getHeaders', '_getStatusCode', '_getRedirectUrl', '_getRenderData', '_getRenderView'] },
+    {
+      allow: [
+        '_id',
+        '_csrf',
+        '_getBuffer',
+        '_getData',
+        '_getHeaders',
+        '_getStatusCode',
+        '_getRedirectUrl',
+        '_getRenderData',
+        '_getRenderView',
+      ],
+    },
   ],
   'import/extensions': 'off',
   'import/first': 'off',

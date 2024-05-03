@@ -1,5 +1,5 @@
 const baseParserOptions = {
-  ecmaVersion: 2020,
+  ecmaVersion: 2022,
 };
 
 const baseRules = {
