@@ -6,7 +6,7 @@ const {
 const { isVerifiedPayload } = require('@ukef/dtfs2-common');
 const db = require('../../../drivers/db-client');
 const { mapUserData } = require('./helpers/mapUserData.helper');
-const { USER, PAYLOAD } = require('../../../constants');
+const { USER, SCHEMA } = require('../../../constants');
 const utils = require('../../../utils/crypto.util');
 
 const businessRules = { loginFailureCount: 5 };
@@ -51,7 +51,7 @@ exports.create = async (user, sessionUser, callback) => {
   delete tfmUser.token;
   delete tfmUser.password;
 
-  if (isVerifiedPayload({ payload: tfmUser, template: PAYLOAD.TFM.USER })) {
+  if (isVerifiedPayload({ payload: tfmUser, template: SCHEMA.PAYLOAD.TFM.USER })) {
     const createUserResult = await collection.insertOne(tfmUser);
 
     const { insertedId: userId } = createUserResult;

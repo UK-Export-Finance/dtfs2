@@ -1,4 +1,4 @@
-const { isVerifiedPayload, PAYLOAD } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload, SCHEMA } = require('@ukef/dtfs2-common');
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
@@ -36,7 +36,7 @@ exports.findOneBank = findOneBank;
 exports.create = async (req, res) => {
   const bank = req?.body;
 
-  if (!isVerifiedPayload({ payload: bank, template: PAYLOAD.BANK })) {
+  if (!isVerifiedPayload({ payload: bank, template: SCHEMA.PAYLOAD.BANK })) {
     return res.status(400).send({ status: 400, message: 'Invalid bank payload' });
   }
 

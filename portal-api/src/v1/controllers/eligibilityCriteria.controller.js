@@ -2,7 +2,7 @@ const { isVerifiedPayload } = require('@ukef/dtfs2-common');
 const assert = require('assert');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
-const { PAYLOAD, DEAL } = require('../../constants');
+const { SCHEMA, DEAL } = require('../../constants');
 
 const sortEligibilityCriteria = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.id) - Number(b.id));
@@ -37,7 +37,7 @@ const findOneEligibilityCriteria = async (version, callback) => {
 };
 
 exports.create = async (req, res) => {
-  if (!isVerifiedPayload({ payload: req?.body, template: PAYLOAD.CRITERIA.ELIGIBILITY })) {
+  if (!isVerifiedPayload({ payload: req?.body, template: SCHEMA.PAYLOAD.CRITERIA.ELIGIBILITY })) {
     return res.status(400).send({ status: 400, message: 'Invalid eligibility criteria payload' });
   }
 

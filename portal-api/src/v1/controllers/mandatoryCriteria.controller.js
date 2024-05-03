@@ -1,4 +1,4 @@
-const { isVerifiedPayload, PAYLOAD } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload, SCHEMA } = require('@ukef/dtfs2-common');
 const assert = require('assert');
 const {
   generatePortalAuditDetails,
@@ -35,7 +35,7 @@ const findOneMandatoryCriteria = async (version, callback) => {
 };
 
 exports.create = async (req, res) => {
-  if (!isVerifiedPayload({ payload: req.body, template: PAYLOAD.CRITERIA.MANDATORY.DEFAULT })) {
+  if (!isVerifiedPayload({ payload: req.body, template: SCHEMA.PAYLOAD.CRITERIA.MANDATORY.DEFAULT })) {
     return res.status(400).send({ status: 400, message: 'Invalid mandatory criteria payload' });
   }
 
