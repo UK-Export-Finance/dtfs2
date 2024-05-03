@@ -1,8 +1,8 @@
 const { sub, isAfter, startOfDay, isBefore } = require('date-fns');
+const { CURRENCY } = require('@ukef/dtfs2-common');
 
 const { orderNumber } = require('../../../utils/error-list-order-number');
 const { hasValue } = require('../../../utils/string');
-const { CURRENCY } = require('../../../constants/currency');
 const { getStartOfDateFromDayMonthYearStrings } = require('../../helpers/date');
 const { dateHasAllValues, dateHasSomeValues } = require('../fields/date');
 

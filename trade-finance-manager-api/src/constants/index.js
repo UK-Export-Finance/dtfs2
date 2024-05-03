@@ -6,7 +6,6 @@ const TASKS_AMENDMENT = require('./tasks-amendment.constant');
 const NDB_TASKS_AMENDMENT = require('./tasks-ndb-amendment.constant');
 const EMAIL_TEMPLATE_IDS = require('./email-template-ids');
 const ACTIVITY = require('./activity');
-const CURRENCY = require('./currency.constant');
 const AMENDMENTS = require('./amendments');
 const PAYLOAD = require('./payloads');
 const USER = require('./user');
@@ -23,7 +22,6 @@ module.exports = {
   ACTIVITY,
   TASKS_AMENDMENT,
   NDB_TASKS_AMENDMENT,
-  CURRENCY,
   AMENDMENTS,
   PAYLOAD,
   USER,
