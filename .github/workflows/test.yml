@@ -42,7 +42,6 @@ on:
   pull_request:
     branches:
       - main
-      - feat/e2etf-sql
       - "release-*"
 
     paths:
@@ -87,7 +86,7 @@ env:
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
   MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
-  MONGODB_URI_FOR_TESTS: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
+  MONGODB_URI_QA: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
   AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
   AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
   AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
@@ -137,11 +136,11 @@ env:
   UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: ${{ vars.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}
   ACCEPT_EULA: ${{ vars.ACCEPT_EULA }}
   MSSQL_SA_PASSWORD: ${{ secrets.MSSQL_SA_PASSWORD }}
-  SQL_DB_HOST: ${{ vars.SQL_DB_HOST_TEST }}
-  SQL_DB_PORT: ${{ secrets.SQL_DB_PORT_TEST }}
-  SQL_DB_USERNAME: ${{ secrets.SQL_DB_USERNAME_TEST }}
-  SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD_TEST }}
-  SQL_DB_NAME: ${{ secrets.SQL_DB_NAME_TEST }}
+  SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_QA }}
+  SQL_DB_PORT: ${{ secrets.SQL_DB_PORT_QA }}
+  SQL_DB_USERNAME: ${{ secrets.SQL_DB_USERNAME_QA }}
+  SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD_QA }}
+  SQL_DB_NAME: ${{ secrets.SQL_DB_NAME_QA }}
   SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
   ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE: ${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }}
   FF_TFM_PAYMENT_RECONCILIATION_ENABLED: "false"
