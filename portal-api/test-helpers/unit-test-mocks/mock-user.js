@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const { produce } = require('immer');
 const { STATUS } = require('../../src/constants/user');
 const { MAKER } = require('../../src/v1/roles/roles');

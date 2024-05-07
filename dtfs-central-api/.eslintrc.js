@@ -90,6 +90,8 @@ module.exports = {
       },
       rules: {
         ...baseRules,
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': ['error'],
         '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
         '@typescript-eslint/restrict-template-expressions': ['error', { allowNever: true }],
       },

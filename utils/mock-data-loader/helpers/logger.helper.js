@@ -54,7 +54,7 @@ const logger = {
   },
   warn: (message, options) => {
     const printLogAsWarning = (line) => {
-      console.warn(line);
+      console.info(line);
     };
     const optionsWithDefaultColour = applyDefaultColourIfNoneProvided({
       options,

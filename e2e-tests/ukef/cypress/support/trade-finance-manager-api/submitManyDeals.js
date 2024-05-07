@@ -17,6 +17,7 @@ module.exports = (deals) => {
             if (persistedDeals.length === deals.length) {
               return persistedDeals;
             }
+            return null;
           },
         );
       }),

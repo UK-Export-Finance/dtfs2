@@ -44,7 +44,7 @@ module.exports.sendNewSignInLink = async (req, res) => {
     if (error.response?.status === 403) {
       req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
     }
-    console.warn(
+    console.info(
       'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o',
       error,
     );

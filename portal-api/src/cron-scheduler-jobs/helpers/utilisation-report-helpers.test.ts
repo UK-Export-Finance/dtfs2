@@ -26,7 +26,6 @@ jest.mock('../../external-api/api');
 jest.mock('../../v1/api');
 
 console.error = jest.fn();
-console.warn = jest.fn();
 console.info = jest.fn();
 
 const originalProcessEnv = process.env;
@@ -335,7 +334,7 @@ describe('utilisation-report-helpers', () => {
 
       // Assert
       expect(sendEmailCallback).not.toHaveBeenCalled();
-      expect(console.warn).toHaveBeenCalledWith(
+      expect(console.info).toHaveBeenCalledWith(
         expect.stringContaining('paymentOfficerTeam.emails property against bank is not an array or is empty'),
       );
     });
@@ -406,7 +405,7 @@ describe('utilisation-report-helpers', () => {
       });
 
       // Assert
-      expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('missing a payment officer team name'));
+      expect(console.info).toHaveBeenCalledWith(expect.stringContaining('missing a payment officer team name'));
 
       expect(sendEmailCallback).toHaveBeenCalledTimes(1);
       expect(sendEmailCallback).toHaveBeenCalledWith(validEmail, 'Team', 'October 2023');

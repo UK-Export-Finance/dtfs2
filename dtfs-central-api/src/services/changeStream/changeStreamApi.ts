@@ -9,7 +9,6 @@ import { InvalidEnvironmentVariableError } from '../../errors/invalid-environmen
  * @returns
  */
 export const postAuditDetails: (
-  // eslint-disable-next-line no-unused-vars
   changeStreamDocument: ChangeStreamInsertDocument | ChangeStreamUpdateDocument | ChangeStreamReplaceDocument,
 ) => Promise<void> = async (
   changeStreamDocument: ChangeStreamInsertDocument | ChangeStreamUpdateDocument | ChangeStreamReplaceDocument,
