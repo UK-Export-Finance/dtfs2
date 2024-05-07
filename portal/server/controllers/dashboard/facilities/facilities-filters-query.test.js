@@ -22,15 +22,10 @@ describe('controllers/dashboard/facilities - filters query', () => {
   it('should return deal.bank.id filter', () => {
     const mockFilters = [];
 
-    const result = dashboardFacilitiesFiltersQuery(
-      mockFilters,
-      mockUser,
-    );
+    const result = dashboardFacilitiesFiltersQuery(mockFilters, mockUser);
 
     const expected = {
-      AND: [
-        { 'deal.bank.id': mockUser.bank.id },
-      ],
+      AND: [{ 'deal.bank.id': mockUser.bank.id }],
     };
 
     expect(result).toEqual(expected);
@@ -40,27 +35,17 @@ describe('controllers/dashboard/facilities - filters query', () => {
     const mockKeyword = 'test';
     const mockFilters = [
       {
-        [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: [
-          CONSTANTS.FACILITY_TYPE.CASH,
-          CONSTANTS.FACILITY_TYPE.BOND,
-        ],
+        [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: [CONSTANTS.FACILITY_TYPE.CASH, CONSTANTS.FACILITY_TYPE.BOND],
       },
       {
-        [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: [
-          true,
-        ],
+        [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: [true],
       },
       {
-        [CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD]: [
-          mockKeyword,
-        ],
+        [CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD]: [mockKeyword],
       },
     ];
 
-    const result = dashboardFacilitiesFiltersQuery(
-      mockFilters,
-      mockUser,
-    );
+    const result = dashboardFacilitiesFiltersQuery(mockFilters, mockUser);
 
     const expected = {
       AND: [
@@ -72,9 +57,7 @@ describe('controllers/dashboard/facilities - filters query', () => {
           ],
         },
         {
-          OR: [
-            { [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: mockFilters[1].hasBeenIssued[0] },
-          ],
+          OR: [{ [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: mockFilters[1].hasBeenIssued[0] }],
         },
         {
           OR: [...keywordQuery(mockKeyword)],
@@ -86,20 +69,12 @@ describe('controllers/dashboard/facilities - filters query', () => {
   });
 
   it('should return maker._id filter', () => {
-    const mockFilters = [
-      { [CONSTANTS.FIELD_NAMES.FACILITY.CREATED_BY]: ['Created by you'] },
-    ];
+    const mockFilters = [{ [CONSTANTS.FIELD_NAMES.FACILITY.CREATED_BY]: ['Created by you'] }];
 
-    const result = dashboardFacilitiesFiltersQuery(
-      mockFilters,
-      mockUser,
-    );
+    const result = dashboardFacilitiesFiltersQuery(mockFilters, mockUser);
 
     const expected = {
-      AND: [
-        { 'deal.bank.id': mockUser.bank.id },
-        { 'deal.maker._id': mockUser._id },
-      ],
+      AND: [{ 'deal.bank.id': mockUser.bank.id }, { 'deal.maker._id': mockUser._id }],
     };
 
     expect(result).toEqual(expected);
@@ -109,28 +84,18 @@ describe('controllers/dashboard/facilities - filters query', () => {
     const mockKeyword = 'test';
     const mockFilters = [
       {
-        [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: [
-          CONSTANTS.FACILITY_TYPE.CASH,
-          CONSTANTS.FACILITY_TYPE.BOND,
-        ],
+        [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: [CONSTANTS.FACILITY_TYPE.CASH, CONSTANTS.FACILITY_TYPE.BOND],
       },
       {
-        [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: [
-          true,
-        ],
+        [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: [true],
       },
       {
-        [CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD]: [
-          mockKeyword,
-        ],
+        [CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD]: [mockKeyword],
       },
       { [CONSTANTS.FIELD_NAMES.FACILITY.CREATED_BY]: ['Created by you'] },
     ];
 
-    const result = dashboardFacilitiesFiltersQuery(
-      mockFilters,
-      mockUser,
-    );
+    const result = dashboardFacilitiesFiltersQuery(mockFilters, mockUser);
 
     const expected = {
       AND: [
@@ -142,9 +107,7 @@ describe('controllers/dashboard/facilities - filters query', () => {
           ],
         },
         {
-          OR: [
-            { [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: mockFilters[1].hasBeenIssued[0] },
-          ],
+          OR: [{ [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: mockFilters[1].hasBeenIssued[0] }],
         },
         {
           OR: [...keywordQuery(mockKeyword)],
@@ -163,15 +126,10 @@ describe('controllers/dashboard/facilities - filters query', () => {
       },
     ];
 
-    const result = dashboardFacilitiesFiltersQuery(
-      mockFilters,
-      mockUser,
-    );
+    const result = dashboardFacilitiesFiltersQuery(mockFilters, mockUser);
 
     const expected = {
-      AND: [
-        { 'deal.bank.id': mockUser.bank.id },
-      ],
+      AND: [{ 'deal.bank.id': mockUser.bank.id }],
     };
 
     expect(result).toEqual(expected);
@@ -180,10 +138,7 @@ describe('controllers/dashboard/facilities - filters query', () => {
   it('should not return deal.bank.id if superuser', () => {
     const mockFilters = [];
 
-    const result = dashboardFacilitiesFiltersQuery(
-      mockFilters,
-      mockUserAdmin,
-    );
+    const result = dashboardFacilitiesFiltersQuery(mockFilters, mockUserAdmin);
 
     const expected = {};
 

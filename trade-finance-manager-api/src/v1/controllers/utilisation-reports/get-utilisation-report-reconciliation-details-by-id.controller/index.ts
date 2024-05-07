@@ -12,7 +12,10 @@ export type GetUtilisationReportReconciliationDetailsByIdRequest = CustomExpress
 
 type ResponseBody = UtilisationReportReconciliationDetailsResponseBody | string;
 
-export const getUtilisationReportReconciliationDetailsById = async (req: GetUtilisationReportReconciliationDetailsByIdRequest, res: Response<ResponseBody>) => {
+export const getUtilisationReportReconciliationDetailsById = async (
+  req: GetUtilisationReportReconciliationDetailsByIdRequest,
+  res: Response<ResponseBody>,
+) => {
   const { reportId } = req.params;
 
   try {
@@ -24,8 +27,12 @@ export const getUtilisationReportReconciliationDetailsById = async (req: GetUtil
     if (error instanceof AxiosError) {
       return res
         .status(error.response?.status ?? HttpStatusCode.InternalServerError)
-        .send(`Failed to get utilisation report reconciliation details for report with id '${reportId}': ${error.message}`);
+        .send(
+          `Failed to get utilisation report reconciliation details for report with id '${reportId}': ${error.message}`,
+        );
     }
-    return res.status(HttpStatusCode.InternalServerError).send(`Failed to get utilisation report reconciliation details for report with id '${reportId}'`);
+    return res
+      .status(HttpStatusCode.InternalServerError)
+      .send(`Failed to get utilisation report reconciliation details for report with id '${reportId}'`);
   }
 };

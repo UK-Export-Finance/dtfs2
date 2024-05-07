@@ -90,8 +90,12 @@ describe(component, () => {
         deal.loanTransactions.items.forEach((facility) => {
           const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
 
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-bank-reference-number-link-${facility._id}"]`).toExist();
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-bank-reference-number-${facility._id}"]`).notToExist();
+          wrapper
+            .expectElement(`${facilityIdSelector} [data-cy="loan-bank-reference-number-link-${facility._id}"]`)
+            .toExist();
+          wrapper
+            .expectElement(`${facilityIdSelector} [data-cy="loan-bank-reference-number-${facility._id}"]`)
+            .notToExist();
         });
       });
 
@@ -109,7 +113,11 @@ describe(component, () => {
           deal.loanTransactions.items.forEach((facility) => {
             const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
 
-            wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-change-or-confirm-cover-start-date-${facility._id}"]`).notToExist();
+            wrapper
+              .expectElement(
+                `${facilityIdSelector} [data-cy="loan-change-or-confirm-cover-start-date-${facility._id}"]`,
+              )
+              .notToExist();
             wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-issue-facility-${facility._id}"]`).toExist();
           });
         });
@@ -126,7 +134,11 @@ describe(component, () => {
           dealWithLoansThatCanChangeCoverDate.loanTransactions.items.forEach((facility) => {
             const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
 
-            wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-change-or-confirm-cover-start-date-${facility._id}"]`).toExist();
+            wrapper
+              .expectElement(
+                `${facilityIdSelector} [data-cy="loan-change-or-confirm-cover-start-date-${facility._id}"]`,
+              )
+              .toExist();
             wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-issue-facility-${facility._id}"]`).notToExist();
           });
         });
@@ -166,8 +178,12 @@ describe(component, () => {
         deal.loanTransactions.items.forEach((facility) => {
           const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
 
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-bank-reference-number-link-${facility._id}"]`).notToExist();
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-bank-reference-number-${facility._id}"]`).toExist();
+          wrapper
+            .expectElement(`${facilityIdSelector} [data-cy="loan-bank-reference-number-link-${facility._id}"]`)
+            .notToExist();
+          wrapper
+            .expectElement(`${facilityIdSelector} [data-cy="loan-bank-reference-number-${facility._id}"]`)
+            .toExist();
         });
       });
     });
@@ -203,15 +219,25 @@ describe(component, () => {
 
           wrapper.expectElement();
 
-          wrapper.expectText(`${facilityIdSelector} [data-cy="loan-ukef-facility-id-${facility._id}"]`).toRead(facility.ukefFacilityId);
+          wrapper
+            .expectText(`${facilityIdSelector} [data-cy="loan-ukef-facility-id-${facility._id}"]`)
+            .toRead(facility.ukefFacilityId);
 
-          wrapper.expectText(`${facilityIdSelector} [data-cy="loan-status-${facility._id}"] [data-cy="status-tag"]`).toRead(facility.status);
+          wrapper
+            .expectText(`${facilityIdSelector} [data-cy="loan-status-${facility._id}"] [data-cy="status-tag"]`)
+            .toRead(facility.status);
 
-          wrapper.expectText(`${facilityIdSelector} [data-cy="loan-facility-value"]`).toRead(`${facility.currency.id} ${facility.value}`);
+          wrapper
+            .expectText(`${facilityIdSelector} [data-cy="loan-facility-value"]`)
+            .toRead(`${facility.currency.id} ${facility.value}`);
 
-          wrapper.expectText(`${facilityIdSelector} [data-cy="loan-facility-stage-${facility._id}"]`).toRead(facility.facilityStage);
+          wrapper
+            .expectText(`${facilityIdSelector} [data-cy="loan-facility-stage-${facility._id}"]`)
+            .toRead(facility.facilityStage);
 
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-requested-cover-start-date-${facility._id}"]`).toExist();
+          wrapper
+            .expectElement(`${facilityIdSelector} [data-cy="loan-requested-cover-start-date-${facility._id}"]`)
+            .toExist();
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-cover-end-date-${facility._id}"]`).toExist();
         });

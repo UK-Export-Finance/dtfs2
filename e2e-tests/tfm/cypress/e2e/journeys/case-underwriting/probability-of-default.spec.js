@@ -2,9 +2,7 @@ import relative from '../../relativeURL';
 import partials from '../../partials';
 import pages from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
-import {
-  T1_USER_1, UNDERWRITER_1, BANK1_MAKER1, ADMIN,
-} from '../../../../../e2e-fixtures';
+import { T1_USER_1, UNDERWRITER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 
 context('Case Underwriting - Pricing and risk - Probability of default', () => {
   let dealId;
@@ -55,9 +53,12 @@ context('Case Underwriting - Pricing and risk - Probability of default', () => {
     });
 
     it('should display the current probability of default value in input field', () => {
-      pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().invoke('val').then((value) => {
-        expect(value.trim()).equal('14.1');
-      });
+      pages.underwritingProbabilityOfDefaultPage
+        .probabilityOfDefaultInput()
+        .invoke('val')
+        .then((value) => {
+          expect(value.trim()).equal('14.1');
+        });
     });
 
     it('should display validation error if necessary', () => {
@@ -73,36 +74,59 @@ context('Case Underwriting - Pricing and risk - Probability of default', () => {
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('45');
       pages.underwritingProbabilityOfDefaultPage.closeLink().click();
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
-      pages.underwritingPricingAndRiskPage.exporterTableProbabilityOfDefault().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Less than 14.1%');
-      });
+      pages.underwritingPricingAndRiskPage
+        .exporterTableProbabilityOfDefault()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Less than 14.1%');
+        });
     });
 
     it('should display validation error if value is not a number, below 0.01, above 14.09 or more than 2 decimal places', () => {
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('15');
       pages.underwritingProbabilityOfDefaultPage.submitButton().click();
-      pages.underwritingProbabilityOfDefaultPage.errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
-      pages.underwritingProbabilityOfDefaultPage.errorList().contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage
+        .errorSummary()
+        .contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage
+        .errorList()
+        .contains('You must enter a percentage between 0.01% to 14.09%');
 
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('14.1');
       pages.underwritingProbabilityOfDefaultPage.submitButton().click();
-      pages.underwritingProbabilityOfDefaultPage.errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
-      pages.underwritingProbabilityOfDefaultPage.errorList().contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage
+        .errorSummary()
+        .contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage
+        .errorList()
+        .contains('You must enter a percentage between 0.01% to 14.09%');
 
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('12.123');
       pages.underwritingProbabilityOfDefaultPage.submitButton().click();
-      pages.underwritingProbabilityOfDefaultPage.errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
-      pages.underwritingProbabilityOfDefaultPage.errorList().contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage
+        .errorSummary()
+        .contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage
+        .errorList()
+        .contains('You must enter a percentage between 0.01% to 14.09%');
 
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('0');
       pages.underwritingProbabilityOfDefaultPage.submitButton().click();
-      pages.underwritingProbabilityOfDefaultPage.errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
-      pages.underwritingProbabilityOfDefaultPage.errorList().contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage
+        .errorSummary()
+        .contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage
+        .errorList()
+        .contains('You must enter a percentage between 0.01% to 14.09%');
 
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('abc');
       pages.underwritingProbabilityOfDefaultPage.submitButton().click();
-      pages.underwritingProbabilityOfDefaultPage.errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
-      pages.underwritingProbabilityOfDefaultPage.errorList().contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage
+        .errorSummary()
+        .contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage
+        .errorList()
+        .contains('You must enter a percentage between 0.01% to 14.09%');
     });
 
     it('should update Probability of default if between 0.01 and 14.09', () => {
@@ -110,9 +134,12 @@ context('Case Underwriting - Pricing and risk - Probability of default', () => {
       pages.underwritingProbabilityOfDefaultPage.submitButton().click();
 
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
-      pages.underwritingPricingAndRiskPage.exporterTableProbabilityOfDefault().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Less than 10.5%');
-      });
+      pages.underwritingPricingAndRiskPage
+        .exporterTableProbabilityOfDefault()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Less than 10.5%');
+        });
     });
   });
 });

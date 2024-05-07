@@ -459,7 +459,9 @@ describe('api', () => {
     it('should return the response object when a valid id is provided', async () => {
       const responseObject = { a: 'a' };
 
-      mock.onPut(`${PORTAL_API_URL}/v1/deals/${validId}/loan/${validId}/change-cover-start-date`).reply(200, responseObject);
+      mock
+        .onPut(`${PORTAL_API_URL}/v1/deals/${validId}/loan/${validId}/change-cover-start-date`)
+        .reply(200, responseObject);
 
       const response = await api.updateLoanCoverStartDate(validId, validId, {}, '');
 
@@ -795,7 +797,9 @@ describe('api', () => {
     it('should return the response object when a valid id is provided', async () => {
       const responseObject = { a: 'a' };
 
-      mock.onPut(`${PORTAL_API_URL}/v1/deals/${validId}/bond/${validId}/change-cover-start-date`).reply(200, responseObject);
+      mock
+        .onPut(`${PORTAL_API_URL}/v1/deals/${validId}/bond/${validId}/change-cover-start-date`)
+        .reply(200, responseObject);
 
       const response = await api.updateBondCoverStartDate(validId, validId, {}, '');
 
@@ -925,9 +929,16 @@ describe('api', () => {
     it('should return the response object when a valid id is provided', async () => {
       const responseObject = { a: 'a' };
 
-      mock.onGet(`${PORTAL_API_URL}/v1/deals/${validId}/eligibility-documentation/exporterQuestionnaire/document.txt`).reply(200, responseObject);
+      mock
+        .onGet(`${PORTAL_API_URL}/v1/deals/${validId}/eligibility-documentation/exporterQuestionnaire/document.txt`)
+        .reply(200, responseObject);
 
-      const response = await api.downloadEligibilityDocumentationFile(validId, 'exporterQuestionnaire', 'document.txt', '');
+      const response = await api.downloadEligibilityDocumentationFile(
+        validId,
+        'exporterQuestionnaire',
+        'document.txt',
+        '',
+      );
 
       expect(response).toEqual(responseObject);
     });

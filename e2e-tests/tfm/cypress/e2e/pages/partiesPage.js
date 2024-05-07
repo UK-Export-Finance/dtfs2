@@ -18,7 +18,10 @@ const partiesPage = {
     row: (facilityId) => {
       cy.get(`[data-cy="bond-issuer-facilities-table"] [data-cy="facility-${facilityId}"]`).as('row');
       return {
-        facilityId: () => cy.get('@row').get(`[data-cy="bond-issuer-facilities-table"] [data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
+        facilityId: () =>
+          cy
+            .get('@row')
+            .get(`[data-cy="bond-issuer-facilities-table"] [data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
       };
     },
   },
@@ -26,7 +29,12 @@ const partiesPage = {
     row: (facilityId) => {
       cy.get(`[data-cy="bond-beneficiary-facilities-table"] [data-cy="facility-${facilityId}"]`).as('row');
       return {
-        facilityId: () => cy.get('@row').get(`[data-cy="bond-beneficiary-facilities-table"] [data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
+        facilityId: () =>
+          cy
+            .get('@row')
+            .get(
+              `[data-cy="bond-beneficiary-facilities-table"] [data-cy="facility-${facilityId}-ukef-facility-id-link"]`,
+            ),
       };
     },
   },

@@ -21,7 +21,8 @@ const updateFacilityCoverStartDates = async (user, deal) => {
       const facility = await facilitiesController.findOne(facilityId);
       const { facilityStage } = facility;
       const canUpdate =
-        (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED || facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL) &&
+        (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED ||
+          facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL) &&
         !facility.requestedCoverStartDate &&
         !facility.coverDateConfirmed;
 

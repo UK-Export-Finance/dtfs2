@@ -25,7 +25,9 @@ describe('GET /v1/banks/:bankId/due-report-periods', () => {
     const { bank } = aPaymentReportOfficer;
     const month = 11;
     const year = 2022;
-    mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+    mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(
+      UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+    )
       .withReportPeriod({
         start: {
           month,
@@ -43,7 +45,8 @@ describe('GET /v1/banks/:bankId/due-report-periods', () => {
 
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => get(dueReportPeriodsUrl(matchingBankId)),
-    makeRequestWithAuthHeader: (authHeader) => get(dueReportPeriodsUrl(matchingBankId), { headers: { Authorization: authHeader } }),
+    makeRequestWithAuthHeader: (authHeader) =>
+      get(dueReportPeriodsUrl(matchingBankId), { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({

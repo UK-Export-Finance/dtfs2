@@ -8,7 +8,10 @@ const {
 const db = require('../../drivers/db-client');
 const { UserRepository } = require('./repository');
 const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError } = require('../errors');
-const { TEST_DATABASE_USER, TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/unit-test-mocks/mock-user');
+const {
+  TEST_DATABASE_USER,
+  TEST_USER_TRANSFORMED_FROM_DATABASE,
+} = require('../../../test-helpers/unit-test-mocks/mock-user');
 const { USER } = require('../../constants');
 const InvalidSessionIdentifierError = require('../errors/invalid-session-identifier.error');
 
@@ -45,7 +48,8 @@ describe('UserRepository', () => {
     const expiry = new Date().getTime() + SIGN_IN_LINK.DURATION_MILLISECONDS;
 
     withValidateUserIdTests({
-      methodCall: (invalidUserId) => repository.saveSignInTokenForUser({ userId: invalidUserId, signInTokenSalt: salt, signInTokenHash: hash }),
+      methodCall: (invalidUserId) =>
+        repository.saveSignInTokenForUser({ userId: invalidUserId, signInTokenSalt: salt, signInTokenHash: hash }),
     });
 
     it('saves the sign in code expiry time and the hex strings for its hash and salt on the user document', async () => {
@@ -60,7 +64,10 @@ describe('UserRepository', () => {
         { _id: { $eq: ObjectId(validUserId) } },
         {
           $push: {
-            signInTokens: { $each: [{ hashHex: hashHexString, saltHex: saltHexString, expiry }], $slice: -SIGN_IN_LINK.MAX_SEND_COUNT },
+            signInTokens: {
+              $each: [{ hashHex: hashHexString, saltHex: saltHexString, expiry }],
+              $slice: -SIGN_IN_LINK.MAX_SEND_COUNT,
+            },
           },
           $set: {
             auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord(),
@@ -80,10 +87,14 @@ describe('UserRepository', () => {
           { $inc: { signInLinkSendCount: 1 }, $set: { auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord() } },
           { returnDocument: 'after' },
         )
-        .mockImplementation(() => ({ value: { ...testDatabaseUser, signInLinkSendCount: expectedSignInLinkSendCount } }));
+        .mockImplementation(() => ({
+          value: { ...testDatabaseUser, signInLinkSendCount: expectedSignInLinkSendCount },
+        }));
     });
 
-    withValidateUserIdTests({ methodCall: (invalidUserId) => repository.incrementSignInLinkSendCount({ userId: invalidUserId }) });
+    withValidateUserIdTests({
+      methodCall: (invalidUserId) => repository.incrementSignInLinkSendCount({ userId: invalidUserId }),
+    });
 
     it("increments the user's signInLinkSendCount by 1", async () => {
       await repository.incrementSignInLinkSendCount({ userId: validUserId });
@@ -113,7 +124,9 @@ describe('UserRepository', () => {
       jest.useRealTimers();
     });
 
-    withValidateUserIdTests({ methodCall: (invalidUserId) => repository.setSignInLinkSendDate({ userId: invalidUserId }) });
+    withValidateUserIdTests({
+      methodCall: (invalidUserId) => repository.setSignInLinkSendDate({ userId: invalidUserId }),
+    });
 
     it('updates the users signInLinkSendDate to the current date', async () => {
       await repository.setSignInLinkSendDate({ userId: validUserId });
@@ -154,16 +167,23 @@ describe('UserRepository', () => {
     });
 
     withValidateUserIdTests({
-      methodCall: (invalidUserId) => repository.updateLastLoginAndResetSignInData({ userId: invalidUserId, sessionIdentifier: aSessionIdentifier }),
+      methodCall: (invalidUserId) =>
+        repository.updateLastLoginAndResetSignInData({ userId: invalidUserId, sessionIdentifier: aSessionIdentifier }),
     });
 
     withValidateSessionIdentifierTests({
       methodCall: (invalidSessionIdentifier) =>
-        repository.updateLastLoginAndResetSignInData({ userId: validUserId, sessionIdentifier: invalidSessionIdentifier }),
+        repository.updateLastLoginAndResetSignInData({
+          userId: validUserId,
+          sessionIdentifier: invalidSessionIdentifier,
+        }),
     });
 
     it('updates the relevant user fields', async () => {
-      await repository.updateLastLoginAndResetSignInData({ userId: validUserId, sessionIdentifier: aSessionIdentifier });
+      await repository.updateLastLoginAndResetSignInData({
+        userId: validUserId,
+        sessionIdentifier: aSessionIdentifier,
+      });
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(validUserId) } },

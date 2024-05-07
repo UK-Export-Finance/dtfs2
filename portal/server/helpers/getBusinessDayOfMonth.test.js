@@ -1,5 +1,9 @@
 import { isSameDay } from 'date-fns';
-import { addOneBusinessDayWithHolidays, getFirstBusinessDayOfMonth, getBusinessDayOfMonth } from './getBusinessDayOfMonth';
+import {
+  addOneBusinessDayWithHolidays,
+  getFirstBusinessDayOfMonth,
+  getBusinessDayOfMonth,
+} from './getBusinessDayOfMonth';
 
 describe('addOneBusinessDayWithHolidays', () => {
   describe('when there are no holidays', () => {

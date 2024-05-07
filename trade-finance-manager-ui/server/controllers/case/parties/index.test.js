@@ -30,7 +30,7 @@ const mockCompany = {
 describe('PartyURN: controllers - case - parties', () => {
   // GET HTTP METHOD
   describe('GET', () => {
-  // All paries
+    // All paries
     describe('GET case parties', () => {
       describe('when deal exists', () => {
         const mockDeal = {
@@ -489,21 +489,18 @@ describe('PartyURN: controllers - case - parties', () => {
           };
 
           await partiesController.getPartyDetails(req, res);
-          expect(res.render).toHaveBeenCalledWith(
-            `case/parties/edit/${party}.njk`,
-            {
-              userCanEdit: userCanEdit(req.session.user),
-              renderEditLink: false,
-              renderEditForm: true,
-              activePrimaryNavigation: 'manage work',
-              activeSubNavigation: 'parties',
-              deal: mockDeal.dealSnapshot,
-              tfm: mockDeal.tfm,
-              dealId: req.params._id,
-              user: session.user,
-              urn: '',
-            },
-          );
+          expect(res.render).toHaveBeenCalledWith(`case/parties/edit/${party}.njk`, {
+            userCanEdit: userCanEdit(req.session.user),
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            tfm: mockDeal.tfm,
+            dealId: req.params._id,
+            user: session.user,
+            urn: '',
+          });
         });
       });
 
@@ -579,21 +576,18 @@ describe('PartyURN: controllers - case - parties', () => {
           };
 
           await partiesController.getPartyDetails(req, res);
-          expect(res.render).toHaveBeenCalledWith(
-            `case/parties/edit/${party}.njk`,
-            {
-              userCanEdit: userCanEdit(req.session.user),
-              renderEditLink: false,
-              renderEditForm: true,
-              activePrimaryNavigation: 'manage work',
-              activeSubNavigation: 'parties',
-              deal: mockDeal.dealSnapshot,
-              tfm: mockDeal.tfm,
-              dealId: req.params._id,
-              user: session.user,
-              urn: '',
-            },
-          );
+          expect(res.render).toHaveBeenCalledWith(`case/parties/edit/${party}.njk`, {
+            userCanEdit: userCanEdit(req.session.user),
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            tfm: mockDeal.tfm,
+            dealId: req.params._id,
+            user: session.user,
+            urn: '',
+          });
         });
       });
 
@@ -665,10 +659,11 @@ describe('PartyURN: controllers - case - parties', () => {
 
         beforeEach(() => {
           api.getDeal = () => Promise.resolve(mockDeal);
-          api.getParty = () => Promise.resolve({
-            status: 200,
-            data: mockCompany,
-          });
+          api.getParty = () =>
+            Promise.resolve({
+              status: 200,
+              data: mockCompany,
+            });
         });
 
         it('should render error page when party type is invalid', () => {
@@ -768,7 +763,9 @@ describe('PartyURN: controllers - case - parties', () => {
           req.body.partyUrn = '1234';
 
           await partiesController.confirmPartyUrn(req, res);
-          expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`);
+          expect(res.redirect).toHaveBeenCalledWith(
+            `/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`,
+          );
         });
       });
 
@@ -844,10 +841,11 @@ describe('PartyURN: controllers - case - parties', () => {
 
         beforeEach(() => {
           api.getDeal = () => Promise.resolve(mockDeal);
-          api.getParty = () => Promise.resolve({
-            status: 200,
-            data: mockCompany,
-          });
+          api.getParty = () =>
+            Promise.resolve({
+              status: 200,
+              data: mockCompany,
+            });
         });
 
         it('should render error page when party type is invalid', () => {
@@ -947,7 +945,9 @@ describe('PartyURN: controllers - case - parties', () => {
           req.body.partyUrn = '1234';
 
           await partiesController.confirmPartyUrn(req, res);
-          expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`);
+          expect(res.redirect).toHaveBeenCalledWith(
+            `/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`,
+          );
         });
       });
 
@@ -1023,10 +1023,11 @@ describe('PartyURN: controllers - case - parties', () => {
 
         beforeEach(() => {
           api.getDeal = () => Promise.resolve(mockDeal);
-          api.getParty = () => Promise.resolve({
-            status: 200,
-            data: mockCompany,
-          });
+          api.getParty = () =>
+            Promise.resolve({
+              status: 200,
+              data: mockCompany,
+            });
         });
 
         it('should render error page when party type is invalid', () => {
@@ -1126,7 +1127,9 @@ describe('PartyURN: controllers - case - parties', () => {
           req.body.partyUrn = '1234';
 
           await partiesController.confirmPartyUrn(req, res);
-          expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`);
+          expect(res.redirect).toHaveBeenCalledWith(
+            `/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`,
+          );
         });
 
         it('should render party edit template with data including agent commission rate', async () => {
@@ -1135,7 +1138,9 @@ describe('PartyURN: controllers - case - parties', () => {
 
           await partiesController.confirmPartyUrn(req, res);
           expect(req.session.commissionRate).toEqual('1.234');
-          expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`);
+          expect(res.redirect).toHaveBeenCalledWith(
+            `/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`,
+          );
         });
       });
 
@@ -1211,10 +1216,11 @@ describe('PartyURN: controllers - case - parties', () => {
 
         beforeEach(() => {
           api.getDeal = () => Promise.resolve(mockDeal);
-          api.getParty = () => Promise.resolve({
-            status: 200,
-            data: mockCompany,
-          });
+          api.getParty = () =>
+            Promise.resolve({
+              status: 200,
+              data: mockCompany,
+            });
         });
 
         it('should render error page when party type is invalid', () => {
@@ -1314,7 +1320,9 @@ describe('PartyURN: controllers - case - parties', () => {
           req.body.partyUrn = '1234';
 
           await partiesController.confirmPartyUrn(req, res);
-          expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`);
+          expect(res.redirect).toHaveBeenCalledWith(
+            `/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`,
+          );
         });
       });
 
@@ -1435,10 +1443,11 @@ describe('PartyURN: controllers - case - parties', () => {
         beforeEach(() => {
           api.getDeal = () => Promise.resolve(mockDeal);
           api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
-          api.getParty = () => Promise.resolve({
-            status: 200,
-            data: mockCompany,
-          });
+          api.getParty = () =>
+            Promise.resolve({
+              status: 200,
+              data: mockCompany,
+            });
           api.updateParty = () => jest.fn();
         });
 
@@ -1543,10 +1552,11 @@ describe('PartyURN: controllers - case - parties', () => {
         beforeEach(() => {
           api.getDeal = () => Promise.resolve(mockDeal);
           api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
-          api.getParty = () => Promise.resolve({
-            status: 200,
-            data: mockCompany,
-          });
+          api.getParty = () =>
+            Promise.resolve({
+              status: 200,
+              data: mockCompany,
+            });
           api.updateParty = () => jest.fn();
         });
 
@@ -1651,10 +1661,11 @@ describe('PartyURN: controllers - case - parties', () => {
         beforeEach(() => {
           api.getDeal = () => Promise.resolve(mockDeal);
           api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
-          api.getParty = () => Promise.resolve({
-            status: 200,
-            data: mockCompany,
-          });
+          api.getParty = () =>
+            Promise.resolve({
+              status: 200,
+              data: mockCompany,
+            });
           api.updateParty = () => jest.fn();
         });
 
@@ -1770,10 +1781,11 @@ describe('PartyURN: controllers - case - parties', () => {
         beforeEach(() => {
           api.getDeal = () => Promise.resolve(mockDeal);
           api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
-          api.getParty = () => Promise.resolve({
-            status: 200,
-            data: mockCompany,
-          });
+          api.getParty = () =>
+            Promise.resolve({
+              status: 200,
+              data: mockCompany,
+            });
           api.updateParty = () => jest.fn();
         });
 

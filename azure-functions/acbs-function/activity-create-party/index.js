@@ -14,7 +14,15 @@ const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
-const mandatoryFields = ['alternateIdentifier', 'industryClassification', 'name1', 'smeType', 'citizenshipClass', 'officerRiskDate', 'countryCode'];
+const mandatoryFields = [
+  'alternateIdentifier',
+  'industryClassification',
+  'name1',
+  'smeType',
+  'citizenshipClass',
+  'officerRiskDate',
+  'countryCode',
+];
 
 const createParty = async (context) => {
   try {

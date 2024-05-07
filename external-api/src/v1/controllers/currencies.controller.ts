@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { sortArrayAlphabetically } from '../../helpers';
 import { Currency } from '../../interfaces';
 import { CURRENCIES } from '../../external-api';
+
 const allCurrencies: Currency[] = CURRENCIES;
 
 export const findOneCurrency = (id: any) => allCurrencies.find((c: any) => c.id.toLowerCase() === id.toLowerCase());

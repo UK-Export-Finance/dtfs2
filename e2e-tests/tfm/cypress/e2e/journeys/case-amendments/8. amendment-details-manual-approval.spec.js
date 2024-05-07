@@ -5,9 +5,7 @@ import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { NOT_ADDED } from '../../../fixtures/constants';
-import {
-  PIM_USER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN,
-} from '../../../../../e2e-fixtures';
+import { PIM_USER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import { CURRENCY } from '../../../../../e2e-fixtures/constants.fixture';
 import caseDealPage from '../../pages/caseDealPage';
 
@@ -20,7 +18,7 @@ context('Amendments - Manual approval journey', () => {
   // Therefore if today is EOM and a month from now is not EOM we need to NOT add one to the tenor
   const todayIsEndOfMonth = add(new Date(), { days: 1 }).getDate() === 1;
   const aMonthFromNowIsEndOfMonth = add(new Date(), { months: 1, days: 1 }).getDate() === 1;
-  const facilityTenor = (todayIsEndOfMonth && !aMonthFromNowIsEndOfMonth) ? '25 months' : '26 months';
+  const facilityTenor = todayIsEndOfMonth && !aMonthFromNowIsEndOfMonth ? '25 months' : '26 months';
 
   describe('Amendment details - Change the Cover end date AND Facility value', () => {
     let dealId;
@@ -155,14 +153,26 @@ context('Amendments - Manual approval journey', () => {
       facilityPage.facilityTabAmendments().click();
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
       amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', NOT_ADDED.DASH);
-      amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', dateConstants.oneMonthFormattedTable);
-      amendmentsPage.amendmentDetails.row(1).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
+      amendmentsPage.amendmentDetails
+        .row(1)
+        .currentCoverEndDate()
+        .should('contain', dateConstants.oneMonthFormattedTable);
+      amendmentsPage.amendmentDetails
+        .row(1)
+        .bankDecision()
+        .should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
       amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
-      amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
+      amendmentsPage.amendmentDetails
+        .row(1)
+        .ukefDecisionCoverEndDate()
+        .should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
 
       amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
       amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
-      amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
+      amendmentsPage.amendmentDetails
+        .row(1)
+        .ukefDecisionFacilityValue()
+        .should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
     });
 
     it('should display facility details and values on deal and facility page as amendment not completed', () => {
@@ -312,10 +322,19 @@ context('Amendments - Manual approval journey', () => {
       facilityPage.facilityTabAmendments().click();
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
       amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', NOT_ADDED.DASH);
-      amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', dateConstants.oneMonthFormattedFull);
-      amendmentsPage.amendmentDetails.row(1).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
+      amendmentsPage.amendmentDetails
+        .row(1)
+        .currentCoverEndDate()
+        .should('contain', dateConstants.oneMonthFormattedFull);
+      amendmentsPage.amendmentDetails
+        .row(1)
+        .bankDecision()
+        .should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
       amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
-      amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
+      amendmentsPage.amendmentDetails
+        .row(1)
+        .ukefDecisionCoverEndDate()
+        .should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
 
       amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('not.exist');
       amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('not.exist');
@@ -464,7 +483,10 @@ context('Amendments - Manual approval journey', () => {
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.amendmentDetails.row(1).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
+      amendmentsPage.amendmentDetails
+        .row(1)
+        .bankDecision()
+        .should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
       amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', NOT_ADDED.DASH);
       amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('not.exist');
@@ -473,7 +495,10 @@ context('Amendments - Manual approval journey', () => {
 
       amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
       amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
-      amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
+      amendmentsPage.amendmentDetails
+        .row(1)
+        .ukefDecisionFacilityValue()
+        .should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
     });
 
     it('should display facility details and values on deal and facility page as amendment not completed', () => {

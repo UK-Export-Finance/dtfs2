@@ -43,7 +43,9 @@ describe('/v1/deals/:id/loan/:loanId', () => {
   };
 
   const updateLoanCoverStartDate = async (bssDealId, bssLoanId, loan) => {
-    const response = await as(aBarclaysMaker).put(loan).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}/change-cover-start-date`);
+    const response = await as(aBarclaysMaker)
+      .put(loan)
+      .to(`/v1/deals/${bssDealId}/loan/${bssLoanId}/change-cover-start-date`);
     return response.body;
   };
 
@@ -198,7 +200,7 @@ describe('/v1/deals/:id/loan/:loanId', () => {
       describe('when deal is MIA with approved deal status', () => {
         let updatedDeal;
         const submissionDate = sub(nowDate, { weeks: 1 });
-        const manualInclusionApplicationSubmissionDate = sub(nowDate, { days: 4});
+        const manualInclusionApplicationSubmissionDate = sub(nowDate, { days: 4 });
         const manualInclusionNoticeSubmissionDate = sub(nowDate, { days: 2 });
 
         beforeEach(async () => {
@@ -279,9 +281,7 @@ describe('/v1/deals/:id/loan/:loanId', () => {
             const dealWithEligibilityCriteria15False = {
               ...updatedDeal,
               eligibility: {
-                criteria: [
-                  { id: 15, answer: false }
-                ],
+                criteria: [{ id: 15, answer: false }],
               },
             };
 
@@ -290,7 +290,6 @@ describe('/v1/deals/:id/loan/:loanId', () => {
               'requestedCoverStartDate-month': format(todayPlus3Months1Day, 'MM'),
               'requestedCoverStartDate-year': format(todayPlus3Months, 'yyyy'),
             };
-
 
             await as(aBarclaysMaker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
 
@@ -303,7 +302,7 @@ describe('/v1/deals/:id/loan/:loanId', () => {
       describe('when deal is MIN with approved status', () => {
         let updatedDeal;
         const submissionDate = sub(nowDate, { weeks: 1 });
-        const minSubmissionDate = sub(nowDate, { days: 2 })
+        const minSubmissionDate = sub(nowDate, { days: 2 });
 
         beforeEach(async () => {
           await createDealAndLoan();
@@ -322,7 +321,7 @@ describe('/v1/deals/:id/loan/:loanId', () => {
           await updateDeal(dealId, updatedDeal);
         });
 
-        describe('when requestedCoverStartDate is before the deal\'s manual inclusion notice submission date', () => {
+        describe("when requestedCoverStartDate is before the deal's manual inclusion notice submission date", () => {
           it('should return validationError', async () => {
             const threeDaysAgo = sub(nowDate, { days: 3 });
             const requestedCoverStartDateFields = {
@@ -359,13 +358,12 @@ describe('/v1/deals/:id/loan/:loanId', () => {
         describe('when is after 3 months from today', () => {
           it('should return validationError', async () => {
             const minPlus3Months = add(minSubmissionDate, { months: 3 });
-            const minPlus3Months1Day = add(minSubmissionDate, { months: 3, days: 1})
+            const minPlus3Months1Day = add(minSubmissionDate, { months: 3, days: 1 });
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': format(minPlus3Months1Day, 'dd'),
               'requestedCoverStartDate-month': format(minPlus3Months1Day, 'MM'),
               'requestedCoverStartDate-year': format(minPlus3Months1Day, 'yyyy'),
             };
-
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
@@ -383,9 +381,7 @@ describe('/v1/deals/:id/loan/:loanId', () => {
             const dealWithEligibilityCriteria15False = {
               ...updatedDeal,
               eligibility: {
-                criteria: [
-                  { id: 15, answer: false }
-                ],
+                criteria: [{ id: 15, answer: false }],
               },
             };
 

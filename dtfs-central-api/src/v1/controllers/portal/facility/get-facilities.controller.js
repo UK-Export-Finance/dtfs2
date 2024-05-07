@@ -18,7 +18,9 @@ const findAllFacilitiesByDealId = async (dealId) => {
   if (ObjectId.isValid(dealId)) {
     const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
     // BSS facilities
-    const facilities = await collection.find({ dealId: { $eq: ObjectId(dealId) }, $or: [{ type: { $eq: 'Bond' } }, { type: { $eq: 'Loan' } }] }).toArray();
+    const facilities = await collection
+      .find({ dealId: { $eq: ObjectId(dealId) }, $or: [{ type: { $eq: 'Bond' } }, { type: { $eq: 'Loan' } }] })
+      .toArray();
     return facilities;
   }
   return { status: 400, message: 'Invalid Deal Id' };

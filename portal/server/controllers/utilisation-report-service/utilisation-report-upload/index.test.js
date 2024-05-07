@@ -46,7 +46,9 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       await postUtilisationReportUpload(req, res);
 
       // Assert
-      expect(res._getRenderView()).toEqual('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk');
+      expect(res._getRenderView()).toEqual(
+        'utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk',
+      );
       expect(res._getRenderData()).toEqual({
         validationError,
         errorSummary,
@@ -76,13 +78,17 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
           href: '#utilisation-report-file-upload',
         },
       ];
-      const expectedExtractDataError = { text: 'The selected file could not be uploaded, try again and make sure it is not password protected' };
+      const expectedExtractDataError = {
+        text: 'The selected file could not be uploaded, try again and make sure it is not password protected',
+      };
 
       // Act
       await postUtilisationReportUpload(req, res);
 
       // Assert
-      expect(res._getRenderView()).toEqual('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk');
+      expect(res._getRenderView()).toEqual(
+        'utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk',
+      );
       expect(res._getRenderData()).toEqual({
         validationError: expectedExtractDataError,
         errorSummary: expectedExtractDataErrorSummary,
@@ -114,9 +120,11 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
         },
       ];
 
-      const csvValidationErrors = [{
-        errorMessage: 'Error',
-      }];
+      const csvValidationErrors = [
+        {
+          errorMessage: 'Error',
+        },
+      ];
       jest.mocked(validateCsvData).mockReturnValueOnce(csvValidationErrors);
 
       // Act

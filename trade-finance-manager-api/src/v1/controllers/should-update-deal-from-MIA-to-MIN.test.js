@@ -147,7 +147,12 @@ describe('shouldUpdateDealFromMIAtoMIN', () => {
 
     shouldUpdateDealFromMIAtoMIN(miaDeal, tfmDealApprovedWithConditions);
 
-    expect(consoleInfoSpy).toHaveBeenCalledWith('Updating deal %s submission type to MIN %s %s', miaDeal._id, true, true);
+    expect(consoleInfoSpy).toHaveBeenCalledWith(
+      'Updating deal %s submission type to MIN %s %s',
+      miaDeal._id,
+      true,
+      true,
+    );
 
     consoleInfoSpy.mockRestore();
   });
@@ -157,7 +162,12 @@ describe('shouldUpdateDealFromMIAtoMIN', () => {
 
     shouldUpdateDealFromMIAtoMIN(miaDeal, tfmDealDeclined);
 
-    expect(consoleInfoSpy).toHaveBeenCalledWith('Updating deal %s submission type to MIN %s %s', miaDeal._id, true, false);
+    expect(consoleInfoSpy).toHaveBeenCalledWith(
+      'Updating deal %s submission type to MIN %s %s',
+      miaDeal._id,
+      true,
+      false,
+    );
 
     consoleInfoSpy.mockRestore();
   });
@@ -167,7 +177,12 @@ describe('shouldUpdateDealFromMIAtoMIN', () => {
 
     shouldUpdateDealFromMIAtoMIN(ainDeal, tfmDealApprovedWithConditions);
 
-    expect(consoleInfoSpy).toHaveBeenCalledWith('Updating deal %s submission type to MIN %s %s', ainDeal._id, false, true);
+    expect(consoleInfoSpy).toHaveBeenCalledWith(
+      'Updating deal %s submission type to MIN %s %s',
+      ainDeal._id,
+      false,
+      true,
+    );
 
     consoleInfoSpy.mockRestore();
   });

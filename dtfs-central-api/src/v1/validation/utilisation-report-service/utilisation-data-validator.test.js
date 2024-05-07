@@ -129,7 +129,10 @@ describe('utilisation-data-validator', () => {
     it('returns an error when an incorrect currency is provided', async () => {
       const validationError = validateTotalFeesAccruedCurrency('AWD', 1);
 
-      expect(validationError).toEqual({ index: 1, error: 'Total fees accrued currency must be an ISO 4217 currency code' });
+      expect(validationError).toEqual({
+        index: 1,
+        error: 'Total fees accrued currency must be an ISO 4217 currency code',
+      });
     });
   });
 
@@ -149,7 +152,10 @@ describe('utilisation-data-validator', () => {
     it('returns an error when an incorrect exchange rate is provided', async () => {
       const validationError = validateTotalFeesAccruedExchangeRate('test', 1);
 
-      expect(validationError).toEqual({ index: 1, error: 'Total fees accrued exchange rate must be a number representing an exchange rate' });
+      expect(validationError).toEqual({
+        index: 1,
+        error: 'Total fees accrued exchange rate must be a number representing an exchange rate',
+      });
     });
   });
 
@@ -189,7 +195,10 @@ describe('utilisation-data-validator', () => {
     it('returns an error when an incorrect currency is provided', async () => {
       const validationError = validateMonthlyFeesPaidCurrency('AWD', 1);
 
-      expect(validationError).toEqual({ index: 1, error: 'Monthly fees paid currency must be an ISO 4217 currency code' });
+      expect(validationError).toEqual({
+        index: 1,
+        error: 'Monthly fees paid currency must be an ISO 4217 currency code',
+      });
     });
   });
 
@@ -229,7 +238,10 @@ describe('utilisation-data-validator', () => {
     it('returns an error when an incorrect exchange rate is provided', async () => {
       const validationError = validatePaymentExchangeRate('test', 1);
 
-      expect(validationError).toEqual({ index: 1, error: 'Payment exchange rate must be a number representing an exchange rate' });
+      expect(validationError).toEqual({
+        index: 1,
+        error: 'Payment exchange rate must be a number representing an exchange rate',
+      });
     });
   });
 });

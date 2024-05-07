@@ -8,12 +8,12 @@ const {
   submissionPortalActivity,
   updateChangedToIssued,
   checkCoverDateConfirmed,
-  addSubmissionDateToIssuedFacilities
+  addSubmissionDateToIssuedFacilities,
 } = require('../../../src/v1/gef/controllers/application-submit');
 
 const {
   update: updateFacility,
-  getAllFacilitiesByDealId
+  getAllFacilitiesByDealId,
 } = require('../../../src/v1/gef/controllers/facilities.controller');
 
 const convertToTimestamp = require('../../../src/v1/helpers/convertToTimestamp');
@@ -37,7 +37,10 @@ const MOCK_APPLICATION = mockApplications[0];
 const MOCK_APPLICATION_FACILITIES = mockApplications[15];
 const CONSTANTS = require('../../../src/constants');
 
-const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../src/v1/portalActivity-object-generator/activityConstants');
+const {
+  PORTAL_ACTIVITY_LABEL,
+  PORTAL_ACTIVITY_TYPE,
+} = require('../../../src/v1/portalActivity-object-generator/activityConstants');
 
 const mockFacilities = require('../../fixtures/gef/facilities');
 const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
@@ -113,8 +116,8 @@ describe('submissionPortalActivity()', () => {
       body: {
         type: 'Cash',
         dealId: MOCK_APPLICATION_FACILITIES._id,
-        paymentType: 'IN_ARREARS_MONTHLY'
-      }
+        paymentType: 'IN_ARREARS_MONTHLY',
+      },
     };
 
     const res = await as(aMaker).post(req.body).to(baseUrl);
@@ -150,8 +153,8 @@ describe('submissionPortalActivity()', () => {
       body: {
         type: 'Cash',
         dealId: MOCK_APPLICATION_FACILITIES._id,
-        paymentType: 'IN_ARREARS_MONTHLY'
-      }
+        paymentType: 'IN_ARREARS_MONTHLY',
+      },
     };
 
     const res = await as(aMaker).post(req.body).to(baseUrl);
@@ -189,7 +192,7 @@ describe('submissionPortalActivity()', () => {
     const checkerInObject = {
       firstname: aChecker.firstname,
       surname: aChecker.surname,
-      _id: JSON.stringify(aChecker._id)
+      _id: JSON.stringify(aChecker._id),
     };
 
     expect(portalActivityObject.checker.firstname).toEqual(checkerInObject.firstname);
@@ -221,12 +224,14 @@ describe('updateChangedToIssued()', () => {
     await databaseHelper.wipe([dealsCollectionName]);
 
     // posts facility with canResubmitIssuedFacilities as true
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: FACILITY_TYPE.CASH,
-      hasBeenIssued: true,
-      canResubmitIssuedFacilities: true,
-    }).to(baseUrl);
+    await as(aMaker)
+      .post({
+        dealId: mockApplication.body._id,
+        type: FACILITY_TYPE.CASH,
+        hasBeenIssued: true,
+        canResubmitIssuedFacilities: true,
+      })
+      .to(baseUrl);
 
     const mockQuery = { dealId: mockApplication.body._id };
 
@@ -254,17 +259,21 @@ describe('checkCoverDateConfirmed()', () => {
     const aMaker = testUsers().withRole(MAKER).one();
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker)
+      .put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN })
+      .to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
     await databaseHelper.wipe([facilitiesCollectionName]);
     await databaseHelper.wipe([dealsCollectionName]);
 
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: FACILITY_TYPE.CASH,
-      hasBeenIssued: true,
-      coverDateConfirmed: null,
-    }).to(baseUrl);
+    await as(aMaker)
+      .post({
+        dealId: mockApplication.body._id,
+        type: FACILITY_TYPE.CASH,
+        hasBeenIssued: true,
+        coverDateConfirmed: null,
+      })
+      .to(baseUrl);
 
     expect(await checkCoverDateConfirmed(mockApplication.body, generatePortalAuditDetails(aMaker._id))).toEqual(true);
   });
@@ -274,17 +283,21 @@ describe('checkCoverDateConfirmed()', () => {
     const aMaker = testUsers().withRole(MAKER).one();
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker)
+      .put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN })
+      .to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
     await databaseHelper.wipe([facilitiesCollectionName]);
     await databaseHelper.wipe([dealsCollectionName]);
 
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: FACILITY_TYPE.CASH,
-      hasBeenIssued: false,
-      coverDateConfirmed: null,
-    }).to(baseUrl);
+    await as(aMaker)
+      .post({
+        dealId: mockApplication.body._id,
+        type: FACILITY_TYPE.CASH,
+        hasBeenIssued: false,
+        coverDateConfirmed: null,
+      })
+      .to(baseUrl);
 
     expect(await checkCoverDateConfirmed(mockApplication.body, generatePortalAuditDetails(aMaker._id))).toEqual(false);
   });
@@ -294,17 +307,21 @@ describe('checkCoverDateConfirmed()', () => {
     const aMaker = testUsers().withRole(MAKER).one();
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker)
+      .put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA })
+      .to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
     await databaseHelper.wipe([facilitiesCollectionName]);
     await databaseHelper.wipe([dealsCollectionName]);
 
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: FACILITY_TYPE.CASH,
-      hasBeenIssued: true,
-      coverDateConfirmed: null,
-    }).to(baseUrl);
+    await as(aMaker)
+      .post({
+        dealId: mockApplication.body._id,
+        type: FACILITY_TYPE.CASH,
+        hasBeenIssued: true,
+        coverDateConfirmed: null,
+      })
+      .to(baseUrl);
 
     expect(await checkCoverDateConfirmed(mockApplication.body, generatePortalAuditDetails(aMaker._id))).toEqual(true);
   });
@@ -314,17 +331,21 @@ describe('checkCoverDateConfirmed()', () => {
     const aMaker = testUsers().withRole(MAKER).one();
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker)
+      .put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA })
+      .to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
     await databaseHelper.wipe([facilitiesCollectionName]);
     await databaseHelper.wipe([dealsCollectionName]);
 
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: FACILITY_TYPE.CASH,
-      hasBeenIssued: false,
-      coverDateConfirmed: null,
-    }).to(baseUrl);
+    await as(aMaker)
+      .post({
+        dealId: mockApplication.body._id,
+        type: FACILITY_TYPE.CASH,
+        hasBeenIssued: false,
+        coverDateConfirmed: null,
+      })
+      .to(baseUrl);
 
     expect(await checkCoverDateConfirmed(mockApplication.body, generatePortalAuditDetails(aMaker._id))).toEqual(false);
   });
@@ -334,17 +355,21 @@ describe('checkCoverDateConfirmed()', () => {
     const aMaker = testUsers().withRole(MAKER).one();
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker)
+      .put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA })
+      .to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
     await databaseHelper.wipe([facilitiesCollectionName]);
     await databaseHelper.wipe([dealsCollectionName]);
 
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: FACILITY_TYPE.CASH,
-      hasBeenIssued: true,
-      coverDateConfirmed: true,
-    }).to(baseUrl);
+    await as(aMaker)
+      .post({
+        dealId: mockApplication.body._id,
+        type: FACILITY_TYPE.CASH,
+        hasBeenIssued: true,
+        coverDateConfirmed: true,
+      })
+      .to(baseUrl);
 
     expect(await checkCoverDateConfirmed(mockApplication.body, generatePortalAuditDetails(aMaker._id))).toEqual(true);
   });
@@ -354,24 +379,30 @@ describe('checkCoverDateConfirmed()', () => {
     const aMaker = testUsers().withRole(MAKER).one();
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker)
+      .put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA })
+      .to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
     await databaseHelper.wipe([facilitiesCollectionName]);
     await databaseHelper.wipe([dealsCollectionName]);
 
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: FACILITY_TYPE.CASH,
-      hasBeenIssued: true,
-      coverDateConfirmed: true,
-    }).to(baseUrl);
+    await as(aMaker)
+      .post({
+        dealId: mockApplication.body._id,
+        type: FACILITY_TYPE.CASH,
+        hasBeenIssued: true,
+        coverDateConfirmed: true,
+      })
+      .to(baseUrl);
 
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: FACILITY_TYPE.CASH,
-      hasBeenIssued: false,
-      coverDateConfirmed: true,
-    }).to(baseUrl);
+    await as(aMaker)
+      .post({
+        dealId: mockApplication.body._id,
+        type: FACILITY_TYPE.CASH,
+        hasBeenIssued: false,
+        coverDateConfirmed: true,
+      })
+      .to(baseUrl);
 
     expect(await checkCoverDateConfirmed(mockApplication.body, generatePortalAuditDetails(aMaker._id))).toEqual(true);
   });
@@ -386,15 +417,19 @@ describe('addSubmissionDateToIssuedFacilities()', () => {
 
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker)
+      .put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA })
+      .to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: FACILITY_TYPE.CASH,
-      hasBeenIssued: true,
-      shouldCoverStartOnSubmission: true,
-      hasBeenIssuedAndAcknowledged: null
-    }).to(baseUrl);
+    await as(aMaker)
+      .post({
+        dealId: mockApplication.body._id,
+        type: FACILITY_TYPE.CASH,
+        hasBeenIssued: true,
+        shouldCoverStartOnSubmission: true,
+        hasBeenIssuedAndAcknowledged: null,
+      })
+      .to(baseUrl);
 
     const facility = await getAllFacilitiesByDealId(mockApplication.body._id);
 
@@ -404,7 +439,7 @@ describe('addSubmissionDateToIssuedFacilities()', () => {
       {
         hasBeenIssued: true,
         shouldCoverStartOnSubmission: true,
-        hasBeenIssuedAndAcknowledged: null
+        hasBeenIssuedAndAcknowledged: null,
       },
       generatePortalAuditDetails(aMaker._id),
     );
@@ -414,7 +449,7 @@ describe('addSubmissionDateToIssuedFacilities()', () => {
     // gets facilities from collection
     const updatedFacility = await getAllFacilitiesByDealId(mockApplication.body._id);
 
-    const expectedCoverStartDate = (new Date()).setHours(0, 0, 0, 0);
+    const expectedCoverStartDate = new Date().setHours(0, 0, 0, 0);
     // expect both to have been set
     expect(updatedFacility[0].coverStartDate).toEqual(new Date(convertToTimestamp(expectedCoverStartDate)));
     expect(updatedFacility[0].submittedAsIssuedDate).toEqual(expect.any(String));
@@ -428,15 +463,19 @@ describe('addSubmissionDateToIssuedFacilities()', () => {
 
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker)
+      .put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA })
+      .to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: FACILITY_TYPE.CASH,
-      hasBeenIssued: true,
-      shouldCoverStartOnSubmission: true,
-      hasBeenIssuedAndAcknowledged: null
-    }).to(baseUrl);
+    await as(aMaker)
+      .post({
+        dealId: mockApplication.body._id,
+        type: FACILITY_TYPE.CASH,
+        hasBeenIssued: true,
+        shouldCoverStartOnSubmission: true,
+        hasBeenIssuedAndAcknowledged: null,
+      })
+      .to(baseUrl);
 
     const facility = await getAllFacilitiesByDealId(mockApplication.body._id);
 

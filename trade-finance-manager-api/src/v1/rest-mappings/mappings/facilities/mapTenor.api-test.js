@@ -38,8 +38,7 @@ describe('mapTenor()', () => {
       ...mockCoverStartDate,
       ukefFacilityType: FACILITY_TYPE.BOND,
     },
-    tfm: {
-    },
+    tfm: {},
   };
 
   const mockAmendmentDateResponse = {
@@ -62,7 +61,11 @@ describe('mapTenor()', () => {
       },
     };
 
-    const result = mapTenor(mockBssEwcsFacilityIssued.facilitySnapshot, mockBssEwcsFacilityIssued.tfm, mockBssEwcsFacilityIssued);
+    const result = mapTenor(
+      mockBssEwcsFacilityIssued.facilitySnapshot,
+      mockBssEwcsFacilityIssued.tfm,
+      mockBssEwcsFacilityIssued,
+    );
 
     const expected = `${mockBssEwcsFacilityIssued.tfm.exposurePeriodInMonths} months`;
 
@@ -78,9 +81,11 @@ describe('mapTenor()', () => {
   });
 
   it('should return tenor from GEF facility when no completed amendment exists', () => {
-    mockGefFacility.amendments = [{
-      coverEndDate: coverEndDateUnix,
-    }];
+    mockGefFacility.amendments = [
+      {
+        coverEndDate: coverEndDateUnix,
+      },
+    ];
     const result = mapTenor(mockGefFacility.facilitySnapshot, mockGefFacility.tfm, mockGefFacility);
 
     const expected = `${mockGefFacility.tfm.exposurePeriodInMonths} months`;

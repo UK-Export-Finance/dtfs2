@@ -34,16 +34,19 @@ describe('controllers - home', () => {
       redirectLocation: '/deals',
     }));
 
-  it.each([...pdcTeams, ...nonPdcTeams])("should redirect to $redirectLocation if the user is in the '$id' team", (team) => {
-    // Arrange
-    const { req, res } = getHttpMocksWithTeams(team.id);
+  it.each([...pdcTeams, ...nonPdcTeams])(
+    "should redirect to $redirectLocation if the user is in the '$id' team",
+    (team) => {
+      // Arrange
+      const { req, res } = getHttpMocksWithTeams(team.id);
 
-    // Act
-    homeController.getUserHomepage(req, res);
+      // Act
+      homeController.getUserHomepage(req, res);
 
-    // Assert
-    expect(res._getRedirectUrl()).toEqual(team.redirectLocation);
-  });
+      // Assert
+      expect(res._getRedirectUrl()).toEqual(team.redirectLocation);
+    },
+  );
 
   describe.each(Object.values(PDC_TEAM_IDS))("when the user is in the '%s' team", (pdcTeamId) => {
     it.each(nonPdcTeams)("should redirect to $redirectLocation if the user is also in the '$id' team", (team) => {

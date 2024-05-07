@@ -61,10 +61,14 @@ const postAmendmentEffectiveDate = async (req, res) => {
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
-      return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
+      return res.redirect(
+        `/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`,
+      );
     }
     console.error('Unable to update the amendment effective date');
-    return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-effective-date`);
+    return res.redirect(
+      `/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-effective-date`,
+    );
   } catch (error) {
     console.error('There was a problem adding the amendment effective date %o', error);
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);

@@ -1,7 +1,7 @@
-import { app } from '../../src/createApp';
-import { api } from '../api';
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
+import { app } from '../../src/createApp';
+import { api } from '../api';
 
 const { APIM_MDM_URL } = process.env;
 const { get } = api(app);
@@ -267,12 +267,15 @@ describe('/currency-exchange-rate', () => {
     ];
 
     describe('Invalid inputs', () => {
-      test.each(invalidCurrencyTestCases)('returns a 400 if you provide invalid currencies %s, %s', async (currencySource, currencyTarget) => {
-        const { status, body } = await get(`/currency-exchange-rate/${currencySource}/${currencyTarget}`);
+      test.each(invalidCurrencyTestCases)(
+        'returns a 400 if you provide invalid currencies %s, %s',
+        async (currencySource, currencyTarget) => {
+          const { status, body } = await get(`/currency-exchange-rate/${currencySource}/${currencyTarget}`);
 
-        expect(status).toEqual(HttpStatusCode.BadRequest);
-        expect(body).toMatchObject({ data: 'Invalid currency provided', status: HttpStatusCode.BadRequest });
-      });
+          expect(status).toEqual(HttpStatusCode.BadRequest);
+          expect(body).toMatchObject({ data: 'Invalid currency provided', status: HttpStatusCode.BadRequest });
+        },
+      );
     });
   });
 });

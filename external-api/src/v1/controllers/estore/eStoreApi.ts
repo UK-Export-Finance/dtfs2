@@ -57,7 +57,9 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
     }
 
     // Make a GET request to the eStore API to check if a site exists
-    const response = await axios.get(`${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`, { headers }).catch((error: any) => error);
+    const response = await axios
+      .get(`${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`, { headers })
+      .catch((error: any) => error);
 
     if (!response) {
       throw new Error('❌ Invalid site exist response received');
@@ -114,12 +116,21 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
  */
 const postToEstore = async (
   endpoint: string,
-  data: Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
+  data:
+    | Estore
+    | EstoreSite[]
+    | EstoreBuyer[]
+    | EstoreTermStore[]
+    | EstoreDealFolder
+    | EstoreFacilityFolder[]
+    | EstoreDealFiles[],
   timeout = 0,
 ): Promise<EstoreResponse | EstoreErrorResponse> => {
   try {
     console.info('Invoking eStore endpoint %s with payload %o', endpoint, data);
-    const response = await axios.post(`${APIM_ESTORE_URL}${endpoint}`, data, { headers, timeout }).catch((error: any) => error);
+    const response = await axios
+      .post(`${APIM_ESTORE_URL}${endpoint}`, data, { headers, timeout })
+      .catch((error: any) => error);
 
     if (!response) {
       throw new Error('❌ Invalid post to estore response received');
@@ -142,7 +153,9 @@ const postToEstore = async (
  * @param {EstoreSite} exporterName - The name of the exporter.
  * @returns {Promise<SiteCreationResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
  */
-export const createExporterSite = async (exporterName: EstoreSite): Promise<SiteCreationResponse | EstoreErrorResponse> => {
+export const createExporterSite = async (
+  exporterName: EstoreSite,
+): Promise<SiteCreationResponse | EstoreErrorResponse> => {
   try {
     const response = await postToEstore(ENDPOINT.SITE, [exporterName], oneMinute);
 
@@ -152,7 +165,10 @@ export const createExporterSite = async (exporterName: EstoreSite): Promise<Site
 
     return response;
   } catch (error: any) {
-    console.error('❌ eStore create exporter site has failed %o', { data: error?.response?.data, status: error?.response?.status });
+    console.error('❌ eStore create exporter site has failed %o', {
+      data: error?.response?.data,
+      status: error?.response?.status,
+    });
     return estoreInternalServerError(error);
   }
 };
@@ -163,7 +179,9 @@ export const createExporterSite = async (exporterName: EstoreSite): Promise<Site
  * @param {EstoreTermStore} facilityId - The ID of the facility to add to the term store.
  * @returns {Promise<TermStoreResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
  */
-export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promise<TermStoreResponse | EstoreErrorResponse> => {
+export const addFacilityToTermStore = async (
+  facilityId: EstoreTermStore,
+): Promise<TermStoreResponse | EstoreErrorResponse> => {
   try {
     const response = await postToEstore(ENDPOINT.TERM, [facilityId], oneMinute);
 
@@ -173,7 +191,10 @@ export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promi
 
     return response;
   } catch (error: any) {
-    console.error('❌ eStore adding facility term has failed %o', { data: error?.response?.data, status: error?.response?.status });
+    console.error('❌ eStore adding facility term has failed %o', {
+      data: error?.response?.data,
+      status: error?.response?.status,
+    });
     return estoreInternalServerError(error);
   }
 };
@@ -185,7 +206,10 @@ export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promi
  * @param {EstoreBuyer} buyerName - The name of the buyer.
  * @returns {Promise<BuyerFolderResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
  */
-export const createBuyerFolder = async (siteId: string, buyerName: EstoreBuyer): Promise<BuyerFolderResponse | EstoreErrorResponse> => {
+export const createBuyerFolder = async (
+  siteId: string,
+  buyerName: EstoreBuyer,
+): Promise<BuyerFolderResponse | EstoreErrorResponse> => {
   try {
     if (!isValidSiteId(siteId)) {
       console.error('Invalid site ID %s', siteId);
@@ -195,7 +219,10 @@ export const createBuyerFolder = async (siteId: string, buyerName: EstoreBuyer):
     const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.BUYER}`;
     return postToEstore(endpoint, [buyerName], oneMinute);
   } catch (error: any) {
-    console.error('❌ eStore create buyer folder request has failed %o', { data: error?.response?.data, status: error?.response?.status });
+    console.error('❌ eStore create buyer folder request has failed %o', {
+      data: error?.response?.data,
+      status: error?.response?.status,
+    });
     return estoreInternalServerError(error);
   }
 };
@@ -207,7 +234,10 @@ export const createBuyerFolder = async (siteId: string, buyerName: EstoreBuyer):
  * @param {EstoreDealFolder} data - The deal folder data.
  * @returns {Promise<DealFolderResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
  */
-export const createDealFolder = async (siteId: string, data: EstoreDealFolder): Promise<DealFolderResponse | EstoreErrorResponse> => {
+export const createDealFolder = async (
+  siteId: string,
+  data: EstoreDealFolder,
+): Promise<DealFolderResponse | EstoreErrorResponse> => {
   try {
     if (!isValidSiteId(siteId)) {
       console.error('Invalid site ID %s', siteId);
@@ -217,7 +247,10 @@ export const createDealFolder = async (siteId: string, data: EstoreDealFolder): 
     const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}`;
     return postToEstore(endpoint, [data], twoMinutes);
   } catch (error: any) {
-    console.error('❌ eStore create deal folder request has failed %o', { data: error?.response?.data, status: error?.response?.status });
+    console.error('❌ eStore create deal folder request has failed %o', {
+      data: error?.response?.data,
+      status: error?.response?.status,
+    });
     return estoreInternalServerError(error);
   }
 };
@@ -244,7 +277,10 @@ export const createFacilityFolder = async (
     const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}/${dealIdentifier}/${ENDPOINT.FACILITY}`;
     return postToEstore(endpoint, [data], twoMinutes);
   } catch (error: any) {
-    console.error('❌ eStore create facility folder request has failed %o', { data: error?.response?.data, status: error?.response?.status });
+    console.error('❌ eStore create facility folder request has failed %o', {
+      data: error?.response?.data,
+      status: error?.response?.status,
+    });
     return estoreInternalServerError(error);
   }
 };
@@ -271,7 +307,10 @@ export const uploadSupportingDocuments = async (
     const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}/${dealIdentifier}/${ENDPOINT.DOCUMENT}`;
     return postToEstore(endpoint, [file], oneMinute);
   } catch (error: any) {
-    console.error('❌ eStore uploading document has failed %o', { data: error?.response?.data, status: error?.response?.status });
+    console.error('❌ eStore uploading document has failed %o', {
+      data: error?.response?.data,
+      status: error?.response?.status,
+    });
     return estoreInternalServerError(error);
   }
 };

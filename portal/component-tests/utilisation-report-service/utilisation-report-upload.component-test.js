@@ -1,4 +1,4 @@
-const { ROLES} = require('@ukef/dtfs2-common');
+const { ROLES } = require('@ukef/dtfs2-common');
 const pageRenderer = require('../pageRenderer');
 const { PRIMARY_NAV_KEY } = require('../../server/constants');
 
@@ -11,43 +11,47 @@ describe(page, () => {
     surname: 'Smith',
     roles: [ROLES.PAYMENT_REPORT_OFFICER],
   };
-  const dueReportPeriods = [{
-    reportPeriod: {
-      start: {
-        month: 12,
-        year: 2022,
+  const dueReportPeriods = [
+    {
+      reportPeriod: {
+        start: {
+          month: 12,
+          year: 2022,
+        },
+        end: {
+          month: 12,
+          year: 2022,
+        },
       },
-      end: {
-        month: 12,
-        year: 2022,
-      },
+      formattedReportPeriod: 'December 2022',
     },
-    formattedReportPeriod: 'December 2022',
-  }, {
-    reportPeriod: {
-      start: {
-        month: 1,
-        year: 2023,
+    {
+      reportPeriod: {
+        start: {
+          month: 1,
+          year: 2023,
+        },
+        end: {
+          month: 1,
+          year: 2023,
+        },
       },
-      end: {
-        month: 1,
-        year: 2023,
-      },
+      formattedReportPeriod: 'January 2023',
     },
-    formattedReportPeriod: 'January 2023',
-  }, {
-    reportPeriod: {
-      start: {
-        month: 2,
-        year: 2023,
+    {
+      reportPeriod: {
+        start: {
+          month: 2,
+          year: 2023,
+        },
+        end: {
+          month: 2,
+          year: 2023,
+        },
       },
-      end: {
-        month: 2,
-        year: 2023,
-      },
+      formattedReportPeriod: 'February 2023',
     },
-    formattedReportPeriod: 'February 2023',
-  }];
+  ];
 
   const decemberOverdueReportText = 'December 2022 report is overdue';
   const januaryOverdueReportText = 'January 2023 report is overdue';
@@ -65,7 +69,9 @@ describe(page, () => {
 
     it('should display a generic warning message about reports being overdue', () => {
       wrapper.expectElement('[data-cy="warning-text"]').toExist();
-      wrapper.expectText('.govuk-warning-text__text').toMatch(/There are overdue reports, please send them as soon as possible./);
+      wrapper
+        .expectText('.govuk-warning-text__text')
+        .toMatch(/There are overdue reports, please send them as soon as possible./);
     });
 
     it('should display the two overdue reports with a specific message', () => {
@@ -78,7 +84,9 @@ describe(page, () => {
     });
 
     it('should display generic inset text about which report needs to be sent', () => {
-      wrapper.expectText('[data-cy="inset-text"]').toRead("Once you've sent the December 2022 report, you can send subsequent reports.");
+      wrapper
+        .expectText('[data-cy="inset-text"]')
+        .toRead("Once you've sent the December 2022 report, you can send subsequent reports.");
     });
 
     it('should state which report the page is expecting to be uploaded', () => {
@@ -99,7 +107,9 @@ describe(page, () => {
 
     it('should display a specific warning message about which reports to upload', () => {
       wrapper.expectElement('[data-cy="warning-text"]').toExist();
-      wrapper.expectText('.govuk-warning-text__text').toMatch(/January 2023 report is overdue, please send it as soon as possible./);
+      wrapper
+        .expectText('.govuk-warning-text__text')
+        .toMatch(/January 2023 report is overdue, please send it as soon as possible./);
     });
 
     it('should display the one overdue report as being overdue', () => {
@@ -111,7 +121,9 @@ describe(page, () => {
     });
 
     it('should display specific inset text about which report needs to be sent and which report is now due', () => {
-      wrapper.expectText('[data-cy="inset-text"]').toRead("Once you've sent the January 2023 report, you can send the February 2023 report.");
+      wrapper
+        .expectText('[data-cy="inset-text"]')
+        .toRead("Once you've sent the January 2023 report, you can send the February 2023 report.");
     });
 
     it('should state which report the page is expecting to be uploaded', () => {
@@ -141,7 +153,9 @@ describe(page, () => {
     });
 
     it('should display inset text showing the report due date', () => {
-      wrapper.expectText('[data-cy="report-due-date"]').toRead(`All issued facilities must be updated and sent to UKEF by ${nextDueReportDueDate}.`);
+      wrapper
+        .expectText('[data-cy="report-due-date"]')
+        .toRead(`All issued facilities must be updated and sent to UKEF by ${nextDueReportDueDate}.`);
     });
   });
 
@@ -170,13 +184,17 @@ describe(page, () => {
     });
 
     it('should display specific text about the next report which can be uploaded', () => {
-      wrapper.expectText('[data-cy="next-due-report-text"]')
+      wrapper
+        .expectText('[data-cy="next-due-report-text"]')
         .toRead(`The ${formattedNextReportPeriod} report can be uploaded from ${nextReportPeriodSubmissionStart}.`);
     });
 
     it('should display details about the last uploaded report', () => {
-      wrapper.expectText('[data-cy="uploaded-report-details"]')
-        .toRead(`The ${lastUploadedReportPeriod} report was sent to UKEF by ${uploadedByFullName} on ${formattedDateAndTimeUploaded}.`);
+      wrapper
+        .expectText('[data-cy="uploaded-report-details"]')
+        .toRead(
+          `The ${lastUploadedReportPeriod} report was sent to UKEF by ${uploadedByFullName} on ${formattedDateAndTimeUploaded}.`,
+        );
     });
 
     it('should not render the report submission form', () => {

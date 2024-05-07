@@ -1,4 +1,6 @@
-const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 const { NON_MAKER_ROLES } = require('../../../test-helpers/common-role-lists');
 
 const componentRenderer = require('../../componentRenderer');
@@ -102,7 +104,10 @@ describe(component, () => {
 
       wrapper
         .expectLink(`[data-cy="loan-bank-reference-number-link-${params.loan._id}"]`)
-        .toLinkTo(`/contract/${params.deal._id}/loan/${params.loan._id}/guarantee-details`, 'Loan’s reference number not entered');
+        .toLinkTo(
+          `/contract/${params.deal._id}/loan/${params.loan._id}/guarantee-details`,
+          'Loan’s reference number not entered',
+        );
     });
   }
 
@@ -110,7 +115,9 @@ describe(component, () => {
     it('should render "Loan’s reference number not entered"', () => {
       const wrapper = render(params);
 
-      wrapper.expectText(`[data-cy="loan-bank-reference-number-${params.loan._id}"]`).toRead('Loan’s reference number not entered');
+      wrapper
+        .expectText(`[data-cy="loan-bank-reference-number-${params.loan._id}"]`)
+        .toRead('Loan’s reference number not entered');
     });
   }
 });

@@ -1,7 +1,10 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 
-const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../portalActivity-object-generator/activityConstants');
+const {
+  PORTAL_ACTIVITY_LABEL,
+  PORTAL_ACTIVITY_TYPE,
+} = require('../../portalActivity-object-generator/activityConstants');
 const portalActivityGenerator = require('../../portalActivity-object-generator');
 
 const CONSTANTS = require('../../../constants');
@@ -13,9 +16,7 @@ const getUserInfo = async (userId) => {
   let surname = '';
 
   const userCollection = await db.getCollection(userCollectionName);
-  const userProfile = userId
-    ? await userCollection.findOne({ _id: { $eq: ObjectId(userId) } })
-    : {};
+  const userProfile = userId ? await userCollection.findOne({ _id: { $eq: ObjectId(userId) } }) : {};
 
   if (userProfile?.firstname) {
     firstname = userProfile.firstname;

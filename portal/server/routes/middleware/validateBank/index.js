@@ -1,11 +1,10 @@
-const { ROLES: { ADMIN, READ_ONLY } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { ADMIN, READ_ONLY },
+} = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { ALL_BANKS_ID } = require('../../../constants');
 
-const validRolesForAccessingAllBanks = [
-  ADMIN,
-  READ_ONLY,
-];
+const validRolesForAccessingAllBanks = [ADMIN, READ_ONLY];
 
 /**
  * Returns `true` if the user has permission to access data from all banks, and `false` otherwise.

@@ -1,6 +1,8 @@
 const express = require('express');
 const { isBefore, set, startOfDay } = require('date-fns');
-const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../constants');
 const api = require('../../../api');
 const { provide, BOND, DEAL, CURRENCIES } = require('../../api-data-provider');
@@ -53,27 +55,31 @@ router.get('/contract/:_id/bond/create', async (req, res) => {
   return res.redirect(`/contract/${dealId}/bond/${bondId}/details`);
 });
 
-router.get('/contract/:_id/bond/:bondId/details', [validateRole({ role: [MAKER] }), provide([DEAL])], async (req, res) => {
-  const { _id, bondId, userToken } = requestParams(req);
+router.get(
+  '/contract/:_id/bond/:bondId/details',
+  [validateRole({ role: [MAKER] }), provide([DEAL])],
+  async (req, res) => {
+    const { _id, bondId, userToken } = requestParams(req);
 
-  if (!(await api.validateToken(userToken)) || !bondCanBeAccessed(req.apiData.deal)) {
-    return res.redirect('/');
-  }
+    if (!(await api.validateToken(userToken)) || !bondCanBeAccessed(req.apiData.deal)) {
+      return res.redirect('/');
+    }
 
-  const apiResponse = await getApiData(api.contractBond(_id, bondId, userToken), res);
+    const apiResponse = await getApiData(api.contractBond(_id, bondId, userToken), res);
 
-  const { dealId, bond, validationErrors } = apiResponse;
+    const { dealId, bond, validationErrors } = apiResponse;
 
-  const completedForms = completedBondForms(validationErrors);
+    const completedForms = completedBondForms(validationErrors);
 
-  return res.render('bond/bond-details.njk', {
-    dealId,
-    bond,
-    validationErrors: bondDetailsValidationErrors(validationErrors, bond),
-    taskListItems: bondTaskList(completedForms),
-    user: req.session.user,
-  });
-});
+    return res.render('bond/bond-details.njk', {
+      dealId,
+      bond,
+      validationErrors: bondDetailsValidationErrors(validationErrors, bond),
+      taskListItems: bondTaskList(completedForms),
+      user: req.session.user,
+    });
+  },
+);
 
 const bondDetailsPayloadProperties = [
   'bondIssuer',
@@ -91,7 +97,7 @@ const bondDetailsPayloadProperties = [
 ];
 
 const filterBondDetailsPayload = (body) => {
-  const payload = constructPayload(body, bondDetailsPayloadProperties,true);
+  const payload = constructPayload(body, bondDetailsPayloadProperties, true);
   if (payload.facilityStage === 'Unissued') {
     delete payload['requestedCoverStartDate-day'];
     delete payload['requestedCoverStartDate-month'];
@@ -118,35 +124,39 @@ router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
 });
 
 router.post('/contract/:_id/bond/:bondId/details/save-go-back', provide([BOND]), async (req, res) => {
-  const bondPayload = constructPayload(req.body, bondDetailsPayloadProperties,true);
+  const bondPayload = constructPayload(req.body, bondDetailsPayloadProperties, true);
   const filteredBondPayload = filterBondDetailsPayload(bondPayload);
   return saveFacilityAndGoBackToDeal(req, res, filteredBondPayload);
 });
 
-router.get('/contract/:_id/bond/:bondId/financial-details', [validateRole({ role: [MAKER] }), provide([CURRENCIES, DEAL])], async (req, res) => {
-  const { _id, bondId, userToken } = requestParams(req);
+router.get(
+  '/contract/:_id/bond/:bondId/financial-details',
+  [validateRole({ role: [MAKER] }), provide([CURRENCIES, DEAL])],
+  async (req, res) => {
+    const { _id, bondId, userToken } = requestParams(req);
 
-  if (!(await api.validateToken(userToken)) || !bondCanBeAccessed(req.apiData.deal)) {
-    return res.redirect('/');
-  }
+    if (!(await api.validateToken(userToken)) || !bondCanBeAccessed(req.apiData.deal)) {
+      return res.redirect('/');
+    }
 
-  const { currencies } = req.apiData;
+    const { currencies } = req.apiData;
 
-  const bondResponse = await getApiData(api.contractBond(_id, bondId, userToken), res);
+    const bondResponse = await getApiData(api.contractBond(_id, bondId, userToken), res);
 
-  const { dealId, bond, validationErrors } = bondResponse;
+    const { dealId, bond, validationErrors } = bondResponse;
 
-  const completedForms = completedBondForms(validationErrors);
+    const completedForms = completedBondForms(validationErrors);
 
-  return res.render('bond/bond-financial-details.njk', {
-    dealId,
-    bond,
-    validationErrors: bondFinancialDetailsValidationErrors(validationErrors, bond),
-    currencies: mapCurrencies(currencies, bondResponse.bond.currency),
-    taskListItems: bondTaskList(completedForms),
-    user: req.session.user,
-  });
-});
+    return res.render('bond/bond-financial-details.njk', {
+      dealId,
+      bond,
+      validationErrors: bondFinancialDetailsValidationErrors(validationErrors, bond),
+      currencies: mapCurrencies(currencies, bondResponse.bond.currency),
+      taskListItems: bondTaskList(completedForms),
+      user: req.session.user,
+    });
+  },
+);
 
 const bondFinancialDetailsPayloadProperties = [
   'value',
@@ -162,7 +172,7 @@ const bondFinancialDetailsPayloadProperties = [
 ];
 
 const filterBondFinancialDetailsPayload = (body) => {
-const sanitizedPayload = constructPayload(body, bondFinancialDetailsPayloadProperties,true);
+  const sanitizedPayload = constructPayload(body, bondFinancialDetailsPayloadProperties, true);
 
   if (sanitizedPayload.currencySameAsSupplyContractCurrency === 'true') {
     delete sanitizedPayload.conversionRate;
@@ -189,33 +199,43 @@ router.post('/contract/:_id/bond/:bondId/financial-details/save-go-back', provid
   return saveFacilityAndGoBackToDeal(req, res, sanitizedPayload);
 });
 
-router.get('/contract/:_id/bond/:bondId/fee-details', [validateRole({ role: [MAKER] }), provide([DEAL])], async (req, res) => {
-  const { _id, bondId, userToken } = requestParams(req);
+router.get(
+  '/contract/:_id/bond/:bondId/fee-details',
+  [validateRole({ role: [MAKER] }), provide([DEAL])],
+  async (req, res) => {
+    const { _id, bondId, userToken } = requestParams(req);
 
-  if (!(await api.validateToken(userToken)) || !bondCanBeAccessed(req.apiData.deal)) {
-    return res.redirect('/');
-  }
+    if (!(await api.validateToken(userToken)) || !bondCanBeAccessed(req.apiData.deal)) {
+      return res.redirect('/');
+    }
 
-  const apiResponse = await getApiData(api.contractBond(_id, bondId, userToken), res);
+    const apiResponse = await getApiData(api.contractBond(_id, bondId, userToken), res);
 
-  const { dealId, bond, validationErrors } = apiResponse;
+    const { dealId, bond, validationErrors } = apiResponse;
 
-  const completedForms = completedBondForms(validationErrors);
+    const completedForms = completedBondForms(validationErrors);
 
-  return res.render('bond/bond-fee-details.njk', {
-    dealId,
-    bond,
-    validationErrors: bondFeeDetailsValidationErrors(validationErrors, bond),
-    taskListItems: bondTaskList(completedForms),
-    user: req.session.user,
-  });
-});
+    return res.render('bond/bond-fee-details.njk', {
+      dealId,
+      bond,
+      validationErrors: bondFeeDetailsValidationErrors(validationErrors, bond),
+      taskListItems: bondTaskList(completedForms),
+      user: req.session.user,
+    });
+  },
+);
 
-const bondFeeDetailsPayloadProperties = ['feeFrequency', 'feeType', 'inAdvanceFeeFrequency', 'inArrearFeeFrequency', 'dayCountBasis'];
+const bondFeeDetailsPayloadProperties = [
+  'feeFrequency',
+  'feeType',
+  'inAdvanceFeeFrequency',
+  'inArrearFeeFrequency',
+  'dayCountBasis',
+];
 
 router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
-  const sanitizedBody = constructPayload(req.body, bondFeeDetailsPayloadProperties,true);
+  const sanitizedBody = constructPayload(req.body, bondFeeDetailsPayloadProperties, true);
   const modifiedBody = feeFrequencyField(sanitizedBody);
 
   await postToApi(api.updateBond(dealId, bondId, modifiedBody, userToken), errorHref);
@@ -225,7 +245,7 @@ router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
 });
 
 router.post('/contract/:_id/bond/:bondId/fee-details/save-go-back', provide([BOND]), async (req, res) => {
-  const sanitizedBody = constructPayload(req.body, bondFeeDetailsPayloadProperties,true);
+  const sanitizedBody = constructPayload(req.body, bondFeeDetailsPayloadProperties, true);
   const modifiedBody = feeFrequencyField(sanitizedBody);
   return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
@@ -259,7 +279,10 @@ router.get('/contract/:_id/bond/:bondId/check-your-answers', validateRole({ role
 
   let formattedValidationErrors;
   if (validationErrors.count !== 0) {
-    formattedValidationErrors = generateErrorSummary(bondPreviewValidationErrors(validationErrors, dealId, bondId), errorHref);
+    formattedValidationErrors = generateErrorSummary(
+      bondPreviewValidationErrors(validationErrors, dealId, bondId),
+      errorHref,
+    );
   }
 
   const completedForms = completedBondForms(validationErrors);
@@ -273,21 +296,25 @@ router.get('/contract/:_id/bond/:bondId/check-your-answers', validateRole({ role
   });
 });
 
-router.get('/contract/:_id/bond/:bondId/issue-facility', [validateRole({ role: [MAKER] }), provide([BOND, DEAL])], async (req, res) => {
-  const { _id: dealId } = requestParams(req);
-  const { bond } = req.apiData.bond;
-  const { user } = req.session;
+router.get(
+  '/contract/:_id/bond/:bondId/issue-facility',
+  [validateRole({ role: [MAKER] }), provide([BOND, DEAL])],
+  async (req, res) => {
+    const { _id: dealId } = requestParams(req);
+    const { bond } = req.apiData.bond;
+    const { user } = req.session;
 
-  if (!canIssueOrEditIssueFacility(user.roles, req.apiData.deal, bond)) {
-    return res.redirect('/');
-  }
+    if (!canIssueOrEditIssueFacility(user.roles, req.apiData.deal, bond)) {
+      return res.redirect('/');
+    }
 
-  return res.render('bond/bond-issue-facility.njk', {
-    dealId,
-    user,
-    bond,
-  });
-});
+    return res.render('bond/bond-issue-facility.njk', {
+      dealId,
+      user,
+      bond,
+    });
+  },
+);
 
 router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
@@ -316,9 +343,12 @@ router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
     coverDateConfirmed: true,
   };
 
-  const payload = constructPayload(payloadValues, payloadProperties,true);
+  const payload = constructPayload(payloadValues, payloadProperties, true);
 
-  const { validationErrors, bond } = await postToApi(api.updateBondIssueFacility(dealId, bondId, payload, userToken), errorHref);
+  const { validationErrors, bond } = await postToApi(
+    api.updateBondIssueFacility(dealId, bondId, payload, userToken),
+    errorHref,
+  );
 
   if (validationErrors) {
     return res.render('bond/bond-issue-facility.njk', {
@@ -376,7 +406,11 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
     const apiData = await getApiData(api.contractBond(dealId, bondId, userToken), res);
     bondToRender = apiData.bond;
 
-    if (!req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-month'] || !req.body['requestedCoverStartDate-year']) {
+    if (
+      !req.body['requestedCoverStartDate-day'] ||
+      !req.body['requestedCoverStartDate-month'] ||
+      !req.body['requestedCoverStartDate-year']
+    ) {
       requestedCoverValidationErrors = {
         count: 1,
         errorList: {
@@ -407,7 +441,7 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
         'requestedCoverStartDate-year',
         'needToChangeRequestedCoverStartDate',
       ];
-      const newRequestedCoverStartDate = constructPayload(req.body, payloadProperties,true);
+      const newRequestedCoverStartDate = constructPayload(req.body, payloadProperties, true);
 
       const newBondDetails = {
         ...newRequestedCoverStartDate,
@@ -415,7 +449,10 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
         dateOfCoverChange: getNowAsEpoch().toString(),
       };
 
-      const { bond, validationErrors } = await postToApi(api.updateBondCoverStartDate(dealId, bondId, newBondDetails, userToken), errorHref);
+      const { bond, validationErrors } = await postToApi(
+        api.updateBondCoverStartDate(dealId, bondId, newBondDetails, userToken),
+        errorHref,
+      );
 
       requestedCoverValidationErrors = {
         ...validationErrors,

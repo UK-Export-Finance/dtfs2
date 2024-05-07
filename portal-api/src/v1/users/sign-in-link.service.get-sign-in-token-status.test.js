@@ -158,7 +158,10 @@ describe('getSignInTokenStatus', () => {
           beforeEach(() => {
             mockDatabaseTestUserWithSignInTokens([lastIssuedTokenInDatabaseNow]);
             mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
-            mockVerifyHashToSucceedWith({ databaseHash: lastIssuedTokenInDatabaseNow.hash, databaseSalt: lastIssuedTokenInDatabaseNow.salt });
+            mockVerifyHashToSucceedWith({
+              databaseHash: lastIssuedTokenInDatabaseNow.hash,
+              databaseSalt: lastIssuedTokenInDatabaseNow.salt,
+            });
           });
 
           itReturnsTokenValid();
@@ -168,7 +171,10 @@ describe('getSignInTokenStatus', () => {
           beforeEach(() => {
             mockDatabaseTestUserWithSignInTokens([lastIssuedTokenInDatabaseInFuture]);
             mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
-            mockVerifyHashToSucceedWith({ databaseHash: lastIssuedTokenInDatabaseInFuture.hash, databaseSalt: lastIssuedTokenInDatabaseInFuture.salt });
+            mockVerifyHashToSucceedWith({
+              databaseHash: lastIssuedTokenInDatabaseInFuture.hash,
+              databaseSalt: lastIssuedTokenInDatabaseInFuture.salt,
+            });
           });
 
           itReturnsTokenValid();
@@ -244,9 +250,16 @@ describe('getSignInTokenStatus', () => {
 
         describe('when the saved token expires now', () => {
           beforeEach(() => {
-            mockDatabaseTestUserWithSignInTokens([thirdLastIssuedTokenInDatabaseInPast, secondLastIssuedTokenInDatabaseInPast, lastIssuedTokenInDatabaseNow]);
+            mockDatabaseTestUserWithSignInTokens([
+              thirdLastIssuedTokenInDatabaseInPast,
+              secondLastIssuedTokenInDatabaseInPast,
+              lastIssuedTokenInDatabaseNow,
+            ]);
             mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
-            mockVerifyHashToSucceedWith({ databaseHash: lastIssuedTokenInDatabaseNow.hash, databaseSalt: lastIssuedTokenInDatabaseNow.salt });
+            mockVerifyHashToSucceedWith({
+              databaseHash: lastIssuedTokenInDatabaseNow.hash,
+              databaseSalt: lastIssuedTokenInDatabaseNow.salt,
+            });
           });
 
           itReturnsTokenValid();
@@ -260,7 +273,10 @@ describe('getSignInTokenStatus', () => {
               lastIssuedTokenInDatabaseInFuture,
             ]);
             mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
-            mockVerifyHashToSucceedWith({ databaseHash: lastIssuedTokenInDatabaseInFuture.hash, databaseSalt: lastIssuedTokenInDatabaseInFuture.salt });
+            mockVerifyHashToSucceedWith({
+              databaseHash: lastIssuedTokenInDatabaseInFuture.hash,
+              databaseSalt: lastIssuedTokenInDatabaseInFuture.salt,
+            });
           });
 
           itReturnsTokenValid();
@@ -285,7 +301,9 @@ describe('getSignInTokenStatus', () => {
   }
 
   function mockVerifyHashToSucceedWith({ databaseHash, databaseSalt }) {
-    hasher.verifyHash.mockImplementation(({ target, hash, salt }) => target === aTokenProvidedByUser && hash === databaseHash && salt === databaseSalt);
+    hasher.verifyHash.mockImplementation(
+      ({ target, hash, salt }) => target === aTokenProvidedByUser && hash === databaseHash && salt === databaseSalt,
+    );
   }
 
   function mockVerifyHashToFail() {
@@ -298,7 +316,9 @@ describe('getSignInTokenStatus', () => {
 
   function itReturnsTheStatus(expectedStatus) {
     it(`returns ${expectedStatus}`, async () => {
-      await expect(service.getSignInTokenStatus({ userId: testUserFromDatabase._id, signInToken: aTokenProvidedByUser })).resolves.toBe(expectedStatus);
+      await expect(
+        service.getSignInTokenStatus({ userId: testUserFromDatabase._id, signInToken: aTokenProvidedByUser }),
+      ).resolves.toBe(expectedStatus);
     });
   }
 
@@ -316,7 +336,9 @@ describe('getSignInTokenStatus', () => {
 
   function itThrowsAnError(errorType = Error) {
     it('throws an error', async () => {
-      await expect(service.getSignInTokenStatus({ userId: testUserFromDatabase._id, signInToken: aTokenProvidedByUser })).rejects.toThrow(errorType);
+      await expect(
+        service.getSignInTokenStatus({ userId: testUserFromDatabase._id, signInToken: aTokenProvidedByUser }),
+      ).rejects.toThrow(errorType);
     });
   }
 });

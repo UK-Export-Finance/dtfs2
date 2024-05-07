@@ -88,10 +88,7 @@ describe('about supply contract page specific validation errors', () => {
 
       const mockDealId = '123';
 
-      const result = aboutSupplyContractPreviewValidationErrors(
-        mockValidationErrors,
-        mockDealId,
-      );
+      const result = aboutSupplyContractPreviewValidationErrors(mockValidationErrors, mockDealId);
 
       const expected = {
         errorList: {

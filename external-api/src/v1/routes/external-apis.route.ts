@@ -1,7 +1,5 @@
 import express from 'express';
 
-export const apiRoutes = express.Router();
-
 import * as countries from '../controllers/countries.controller';
 import * as currencies from '../controllers/currencies.controller';
 import * as industrySectors from '../controllers/industry-sectors.controller';
@@ -17,6 +15,8 @@ import * as eStore from '../controllers/estore/eStore.controller';
 import * as premiumSchedule from '../controllers/premium-schedule.controller';
 import * as email from '../controllers/email.controller';
 import * as bankHolidays from '../controllers/bank-holidays.controller';
+
+export const apiRoutes = express.Router();
 
 /**
  * @openapi

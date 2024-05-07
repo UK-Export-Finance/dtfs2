@@ -15,11 +15,20 @@ describe('renderCheckYourEmailPage', () => {
   });
 
   it.each([
-    { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 2 }, expectedRenderArguments: ['login/check-your-email.njk'] },
-    { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 1 }, expectedRenderArguments: ['login/new-sign-in-link-sent.njk'] },
+    {
+      session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 2 },
+      expectedRenderArguments: ['login/check-your-email.njk'],
+    },
+    {
+      session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 1 },
+      expectedRenderArguments: ['login/new-sign-in-link-sent.njk'],
+    },
     {
       session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 0 },
-      expectedRenderArguments: ['login/we-have-sent-you-another-link.njk', { obscuredSignInLinkTargetEmailAddress: redactedEmail }],
+      expectedRenderArguments: [
+        'login/we-have-sent-you-another-link.njk',
+        { obscuredSignInLinkTargetEmailAddress: redactedEmail },
+      ],
     },
     {
       session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: -1 },
@@ -49,7 +58,11 @@ describe('renderCheckYourEmailPage', () => {
       description: 'if numberOfSendSignInLinkAttemptsRemaining is greater than should be possible',
       session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 3 },
     },
-    { description: 'if numberOfSendSignInLinkAttemptsRemaining is not a number', session: userEmail, numberOfSendSignInLinkAttemptsRemaining: 'Test String' },
+    {
+      description: 'if numberOfSendSignInLinkAttemptsRemaining is not a number',
+      session: userEmail,
+      numberOfSendSignInLinkAttemptsRemaining: 'Test String',
+    },
     { description: 'if numberOfSendSignInLinkAttemptsRemaining is not present', session: userEmail },
   ])('renders the problems with service template $description', ({ session }) => {
     const req = { session };
@@ -137,7 +150,9 @@ describe('sendNewSignInLink', () => {
   });
 
   function mockSuccessfulSendSignInLinkResponse() {
-    when(api.sendSignInLink).calledWith(userToken).mockResolvedValue({ data: { numberOfSendSignInLinkAttemptsRemaining } });
+    when(api.sendSignInLink)
+      .calledWith(userToken)
+      .mockResolvedValue({ data: { numberOfSendSignInLinkAttemptsRemaining } });
   }
 
   function mockUnsuccessfulSendSignInLinkResponseWithStatusCode(statusCode) {

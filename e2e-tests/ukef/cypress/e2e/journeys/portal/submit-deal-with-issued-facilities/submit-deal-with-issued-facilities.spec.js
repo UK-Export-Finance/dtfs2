@@ -84,7 +84,9 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     let facilityRow;
 
-    const issuedBond = dealFacilities.find((facility) => facility.type === 'Bond' && facility.facilityStage === 'Issued');
+    const issuedBond = dealFacilities.find(
+      (facility) => facility.type === 'Bond' && facility.facilityStage === 'Issued',
+    );
 
     const issuedBondId = issuedBond._id;
     facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(issuedBondId);
@@ -126,7 +128,9 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     cy.forceVisit(tfmCaseDealPage);
 
-    const issuedLoan = dealFacilities.find((facility) => facility.type === 'Loan' && facility.facilityStage === 'Unconditional');
+    const issuedLoan = dealFacilities.find(
+      (facility) => facility.type === 'Loan' && facility.facilityStage === 'Unconditional',
+    );
 
     const issuedLoanId = issuedLoan._id;
     facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(issuedLoanId);

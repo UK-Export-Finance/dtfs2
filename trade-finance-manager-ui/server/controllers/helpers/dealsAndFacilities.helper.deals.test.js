@@ -177,7 +177,9 @@ describe('controllers - deals', () => {
 
         describe('when there is an in-progress amendment corresponding to one of the deals', () => {
           beforeEach(() => {
-            api.getAllAmendmentsInProgress = jest.fn().mockImplementation(() => Promise.resolve(mockApiGetAllAmendmentsInProgressResponse));
+            api.getAllAmendmentsInProgress = jest
+              .fn()
+              .mockImplementation(() => Promise.resolve(mockApiGetAllAmendmentsInProgressResponse));
           });
 
           const mockReq = structuredClone(mockReqTemplate);
@@ -189,14 +191,15 @@ describe('controllers - deals', () => {
 
       describe('when there are no deals', () => {
         beforeEach(() => {
-          api.getDeals = () => Promise.resolve({
-            deals: [],
-            pagination: {
-              totalItems: 0,
-              currentPage: 0,
-              totalPages: 1,
-            },
-          });
+          api.getDeals = () =>
+            Promise.resolve({
+              deals: [],
+              pagination: {
+                totalItems: 0,
+                currentPage: 0,
+                totalPages: 1,
+              },
+            });
         });
 
         const mockReq = structuredClone(mockReqTemplate);
@@ -313,10 +316,7 @@ describe('controllers - deals', () => {
           });
         });
 
-        describe.each([
-          'ascending',
-          'descending',
-        ])('', (order) => {
+        describe.each(['ascending', 'descending'])('', (order) => {
           describe(`when a ${order} sort field is specified in the request body`, () => {
             const mockReq = structuredClone(mockReqTemplate);
 
@@ -325,7 +325,9 @@ describe('controllers - deals', () => {
             it('should redirect to GET deals with the correct query parameters', async () => {
               await queryDealsOrFacilities('deals', mockReq, mockRes);
 
-              expect(mockRes.redirect).toHaveBeenCalledWith(`/deals/0?sortfield=dealSnapshot.ukefDealId&sortorder=${order}`);
+              expect(mockRes.redirect).toHaveBeenCalledWith(
+                `/deals/0?sortfield=dealSnapshot.ukefDealId&sortorder=${order}`,
+              );
             });
           });
 
@@ -338,7 +340,9 @@ describe('controllers - deals', () => {
             it('should redirect to GET deals with the correct query parameters', async () => {
               await queryDealsOrFacilities('deals', mockReq, mockRes);
 
-              expect(mockRes.redirect).toHaveBeenCalledWith(`/deals/0?sortfield=dealSnapshot.ukefDealId&sortorder=${order}`);
+              expect(mockRes.redirect).toHaveBeenCalledWith(
+                `/deals/0?sortfield=dealSnapshot.ukefDealId&sortorder=${order}`,
+              );
             });
           });
         });
@@ -353,7 +357,9 @@ describe('controllers - deals', () => {
           it('should redirect to GET deals with query parameters based on the sort specified in the request body', async () => {
             await queryDealsOrFacilities('deals', mockReq, mockRes);
 
-            expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0?sortfield=dealSnapshot.exporter.companyName&sortorder=descending');
+            expect(mockRes.redirect).toHaveBeenCalledWith(
+              '/deals/0?sortfield=dealSnapshot.exporter.companyName&sortorder=descending',
+            );
           });
         });
 
@@ -424,7 +430,9 @@ describe('controllers - deals', () => {
           {
             _id: '0',
             tfm: {
-              stage: overrideDealStage ? CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS : CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS,
+              stage: overrideDealStage
+                ? CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS
+                : CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS,
             },
           },
           {

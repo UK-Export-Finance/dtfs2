@@ -1,7 +1,7 @@
-import { app } from '../../src/createApp';
-import { api } from '../api';
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
+import { app } from '../../src/createApp';
+import { api } from '../api';
 
 const { COMPANIES_HOUSE_API_URL } = process.env;
 const { get } = api(app);
@@ -69,11 +69,14 @@ describe('/companies-house', () => {
       expect(body.registered_office_address).toBeDefined();
     });
 
-    test.each(companyHouseNumberTestCases)('returns a 400 if you provide an invalid company registration number %s', async (companyHouseNumber) => {
-      const { status, body } = await get(`/companies-house/${companyHouseNumber}`);
+    test.each(companyHouseNumberTestCases)(
+      'returns a 400 if you provide an invalid company registration number %s',
+      async (companyHouseNumber) => {
+        const { status, body } = await get(`/companies-house/${companyHouseNumber}`);
 
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid company registration number', status: 400 });
-    });
+        expect(status).toEqual(400);
+        expect(body).toMatchObject({ data: 'Invalid company registration number', status: 400 });
+      },
+    );
   });
 });

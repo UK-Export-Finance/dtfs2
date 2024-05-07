@@ -29,10 +29,7 @@ describe(page, () => {
     });
 
     it('should render `cancel` link', () => {
-      wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(
-        `/case/${params.dealId}/underwriting`,
-        'Cancel',
-      );
+      wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(`/case/${params.dealId}/underwriting`, 'Cancel');
     });
   });
 });

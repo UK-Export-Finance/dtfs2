@@ -1,4 +1,10 @@
-import { getCurrentReportPeriodForBankSchedule, Bank, ReportPeriod, UtilisationReportEntityMockBuilder, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import {
+  getCurrentReportPeriodForBankSchedule,
+  Bank,
+  ReportPeriod,
+  UtilisationReportEntityMockBuilder,
+  UtilisationReportEntity,
+} from '@ukef/dtfs2-common';
 import { createUtilisationReportForBanksJob } from '.';
 import { getAllBanks } from '../../repositories/banks-repo';
 import { UtilisationReportRepo } from '../../repositories/utilisation-reports-repo';
@@ -7,9 +13,8 @@ console.info = jest.fn();
 
 jest.mock('../../repositories/banks-repo');
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
+  ...jest.requireActual<object>('@ukef/dtfs2-common'),
   asString: (value: unknown) => value as string,
   getCurrentReportPeriodForBankSchedule: jest.fn(),
 }));
@@ -71,7 +76,9 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       } as Bank;
       jest.mocked(getAllBanks).mockResolvedValue([bank]);
 
-      const existingReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withBankId(bank.id).build();
+      const existingReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+        .withBankId(bank.id)
+        .build();
       findOneByBankIdAndReportPeriodSpy.mockResolvedValue(existingReport);
 
       // Act
@@ -96,9 +103,24 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
     });
 
     const banks = [
-      { id: '1', name: 'Bank 1', isVisibleInTfmUtilisationReports: true, utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE },
-      { id: '2', name: 'Bank 2', isVisibleInTfmUtilisationReports: true, utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE },
-      { id: '3', name: 'Bank 3', isVisibleInTfmUtilisationReports: true, utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE },
+      {
+        id: '1',
+        name: 'Bank 1',
+        isVisibleInTfmUtilisationReports: true,
+        utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+      },
+      {
+        id: '2',
+        name: 'Bank 2',
+        isVisibleInTfmUtilisationReports: true,
+        utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+      },
+      {
+        id: '3',
+        name: 'Bank 3',
+        isVisibleInTfmUtilisationReports: true,
+        utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+      },
     ] as Bank[];
 
     it('tries to create utilisation reports for all banks when reports for all banks in the current period do not exist', async () => {

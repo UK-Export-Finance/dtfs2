@@ -24,19 +24,20 @@ describe(page, () => {
 
   describe('loss given default', () => {
     it('should render page label heading', () => {
-      wrapper.expectText('[data-cy="label-heading"]').toRead(
-        `What’s the probability of default for ${params.deal.submissionDetails.supplierName} in %?`,
-      );
+      wrapper
+        .expectText('[data-cy="label-heading"]')
+        .toRead(`What’s the probability of default for ${params.deal.submissionDetails.supplierName} in %?`);
     });
 
     it('should render probability of default input', () => {
-      wrapper.expectInput('[data-cy="input-probability-of-default"]').toHaveValue(String(params.tfm.probabilityOfDefault));
+      wrapper
+        .expectInput('[data-cy="input-probability-of-default"]')
+        .toHaveValue(String(params.tfm.probabilityOfDefault));
     });
 
     it('should render save & close buttons', () => {
       wrapper.expectElement('[data-cy="submit-button"]').toExist();
-      wrapper.expectLink('[data-cy="close-link"]')
-        .toLinkTo(`/case/${params.dealId}/underwriting`, 'Cancel');
+      wrapper.expectLink('[data-cy="close-link"]').toLinkTo(`/case/${params.dealId}/underwriting`, 'Cancel');
     });
   });
 });

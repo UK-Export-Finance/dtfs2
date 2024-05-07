@@ -1,5 +1,5 @@
 module.exports = (getWrapper) => {
-  it('should render an ellipsis before the \'Next\' and \'Last\' links', () => {
+  it("should render an ellipsis before the 'Next' and 'Last' links", () => {
     const wrapper = getWrapper();
 
     wrapper.expectText('[data-cy="nextLastEllipsis"]').toRead('...');

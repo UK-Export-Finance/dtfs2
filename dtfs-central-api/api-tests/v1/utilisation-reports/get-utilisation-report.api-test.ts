@@ -60,7 +60,9 @@ describe('/v1/utilisation-reports/:id', () => {
 
     it('gets a utilisation report', async () => {
       // Arrange
-      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withUploadedByUserId(portalUserId).build();
+      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+        .withUploadedByUserId(portalUserId)
+        .build();
       const { id } = await SqlDbHelper.saveNewEntry('UtilisationReport', uploadedReport);
 
       // Act

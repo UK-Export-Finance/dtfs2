@@ -1,6 +1,11 @@
 import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
-import { IsoDateTimeStamp, PortalUser, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  IsoDateTimeStamp,
+  PortalUser,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import axios from 'axios';
 import app from '../../../src/createApp';
 import createApi from '../../api';
@@ -98,7 +103,10 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
       .withUploadedByUserId(portalUserId)
       .build();
 
-    const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(2).withBankId(bankId).build();
+    const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+      .withId(2)
+      .withBankId(bankId)
+      .build();
 
     const reconciliationCompletedReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
       .withId(3)
@@ -134,7 +142,9 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
       .withUploadedByUserId(portalUserId)
       .build();
 
-    const uploadedReportForDifferentReportPeriod = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+    const uploadedReportForDifferentReportPeriod = UtilisationReportEntityMockBuilder.forStatus(
+      'PENDING_RECONCILIATION',
+    )
       .withId(2)
       .withBankId(bankId)
       .withReportPeriod({ start: { month: 1, year: 2022 }, end: { month: 2, year: 2022 } })
@@ -167,7 +177,9 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
       .withReportPeriod(reportPeriod)
       .build();
 
-    const uploadedReportForDifferentReportPeriod = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+    const uploadedReportForDifferentReportPeriod = UtilisationReportEntityMockBuilder.forStatus(
+      'PENDING_RECONCILIATION',
+    )
       .withId(2)
       .withBankId(bankId)
       .withReportPeriod({ start: { month: 1, year: 2022 }, end: { month: 2, year: 2022 } })
@@ -177,7 +189,10 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     await saveReportsToDatabase(notReceivedReportForReportPeriod, uploadedReportForDifferentReportPeriod);
 
     // Act
-    const urlWithQueryParams = axios.getUri({ url: getUrl(bankId), params: { reportPeriod, excludeNotReceived: true } });
+    const urlWithQueryParams = axios.getUri({
+      url: getUrl(bankId),
+      params: { reportPeriod, excludeNotReceived: true },
+    });
     const response: CustomSuccessResponse = await api.get(urlWithQueryParams);
 
     // Assert

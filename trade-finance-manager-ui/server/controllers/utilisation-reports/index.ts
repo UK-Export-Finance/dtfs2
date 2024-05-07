@@ -11,8 +11,14 @@ export const getUtilisationReports = async (req: Request, res: Response) => {
 
   try {
     const currentPeriodSubmissionMonth = getIsoMonth(new Date());
-    const reconciliationSummariesApiResponse = await api.getUtilisationReportsReconciliationSummary(currentPeriodSubmissionMonth, userToken);
-    const reconciliationSummariesViewModel = await getReportReconciliationSummariesViewModel(reconciliationSummariesApiResponse, userToken);
+    const reconciliationSummariesApiResponse = await api.getUtilisationReportsReconciliationSummary(
+      currentPeriodSubmissionMonth,
+      userToken,
+    );
+    const reconciliationSummariesViewModel = await getReportReconciliationSummariesViewModel(
+      reconciliationSummariesApiResponse,
+      userToken,
+    );
 
     return res.render('utilisation-reports/utilisation-reports.njk', {
       user,

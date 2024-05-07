@@ -1,11 +1,6 @@
 import { TEAM_IDS } from '@ukef/dtfs2-common';
 import { showAmendmentButton } from './amendments.helper';
-import {
-  userCanEditBankDecision,
-  userCanEditManagersDecision,
-  ukefDecisionRejected,
-  validateUkefDecision,
-} from '.';
+import { userCanEditBankDecision, userCanEditManagersDecision, ukefDecisionRejected, validateUkefDecision } from '.';
 
 import MOCKS from '../../test-mocks/amendment-test-mocks';
 
@@ -138,7 +133,10 @@ describe('showAmendmentButton()', () => {
 
 describe('userCanEditManagersDecision()', () => {
   it('should return `true` if the user is in Underwriter Managers team and does not have underwriter managers decision', () => {
-    const result = userCanEditManagersDecision(MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_NOT_SUBMITTED, MOCKS.MOCK_USER_UNDERWRITER_MANAGER);
+    const result = userCanEditManagersDecision(
+      MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_NOT_SUBMITTED,
+      MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
+    );
     expect(result).toEqual(true);
   });
 
@@ -148,7 +146,10 @@ describe('userCanEditManagersDecision()', () => {
   });
 
   it('should return `false` if the user is in underwriter managers team and amendment has underwriter managers decision', () => {
-    const result = userCanEditManagersDecision(MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_NOT_SUBMITTED, MOCKS.MOCK_USER_PIM);
+    const result = userCanEditManagersDecision(
+      MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_NOT_SUBMITTED,
+      MOCKS.MOCK_USER_PIM,
+    );
     expect(result).toEqual(false);
   });
 });
@@ -160,11 +161,14 @@ describe('userCanEditBankDecision()', () => {
   });
 
   it('should return `false` if the user is in not in PIM team', () => {
-    const result = userCanEditBankDecision(MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_NOT_SUBMITTED, MOCKS.MOCK_USER_UNDERWRITER_MANAGER);
+    const result = userCanEditBankDecision(
+      MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_NOT_SUBMITTED,
+      MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
+    );
     expect(result).toEqual(false);
   });
 
-  it('should return `true` if the user is in PIM team and bank\'s decision has been NOT submitted', () => {
+  it("should return `true` if the user is in PIM team and bank's decision has been NOT submitted", () => {
     const amendment = {
       ...MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_SUBMITTED,
       bankDecision: { submitted: false },
@@ -197,13 +201,15 @@ describe('ukefDecisionRejected()', () => {
   });
 
   it('should return `false` when only facility value is approved', () => {
-    MOCKS.MOCK_AMENDMENT_FACILITYVALUE.ukefDecision.value = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS;
+    MOCKS.MOCK_AMENDMENT_FACILITYVALUE.ukefDecision.value =
+      CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS;
     const result = ukefDecisionRejected(MOCKS.MOCK_AMENDMENT_FACILITYVALUE);
     expect(result).toEqual(false);
   });
 
   it('should return `true` when only coverEndDate is approved', () => {
-    MOCKS.MOCK_AMENDMENT_COVERENDDATE.ukefDecision.coverEndDate = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS;
+    MOCKS.MOCK_AMENDMENT_COVERENDDATE.ukefDecision.coverEndDate =
+      CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS;
     const result = ukefDecisionRejected(MOCKS.MOCK_AMENDMENT_COVERENDDATE);
     expect(result).toEqual(false);
   });
@@ -211,7 +217,10 @@ describe('ukefDecisionRejected()', () => {
 
 describe('validateUkefDecision()', () => {
   it('should return `true` when facility value and coverEndDate are both declined', () => {
-    const result = validateUkefDecision(MOCKS.MOCK_AMENDMENT_BOTH_DECLINED.ukefDecision, CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+    const result = validateUkefDecision(
+      MOCKS.MOCK_AMENDMENT_BOTH_DECLINED.ukefDecision,
+      CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED,
+    );
     expect(result).toEqual(true);
   });
 
@@ -224,7 +233,8 @@ describe('validateUkefDecision()', () => {
   });
 
   it('should return `false` when only none of coverEndDate or facility value is declined', () => {
-    MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED.ukefDecision.value = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS;
+    MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED.ukefDecision.value =
+      CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS;
     const result = validateUkefDecision(
       MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED.ukefDecision,
       CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED,
@@ -234,19 +244,29 @@ describe('validateUkefDecision()', () => {
 
   it('should return `true` when only facility value is declined', () => {
     MOCKS.MOCK_AMENDMENT_FACILITYVALUE.ukefDecision.value = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED;
-    const result = validateUkefDecision(MOCKS.MOCK_AMENDMENT_FACILITYVALUE.ukefDecision, CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+    const result = validateUkefDecision(
+      MOCKS.MOCK_AMENDMENT_FACILITYVALUE.ukefDecision,
+      CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED,
+    );
     expect(result).toEqual(true);
   });
 
   it('should return `true` when only coverEndDate is declined', () => {
     MOCKS.MOCK_AMENDMENT_COVERENDDATE.ukefDecision.value = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED;
-    const result = validateUkefDecision(MOCKS.MOCK_AMENDMENT_COVERENDDATE.ukefDecision, CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+    const result = validateUkefDecision(
+      MOCKS.MOCK_AMENDMENT_COVERENDDATE.ukefDecision,
+      CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED,
+    );
     expect(result).toEqual(true);
   });
 
   it('should return `false` when only facility value is approved', () => {
-    MOCKS.MOCK_AMENDMENT_FACILITYVALUE.ukefDecision.value = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS;
-    const result = validateUkefDecision(MOCKS.MOCK_AMENDMENT_FACILITYVALUE.ukefDecision, CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+    MOCKS.MOCK_AMENDMENT_FACILITYVALUE.ukefDecision.value =
+      CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS;
+    const result = validateUkefDecision(
+      MOCKS.MOCK_AMENDMENT_FACILITYVALUE.ukefDecision,
+      CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED,
+    );
     expect(result).toEqual(false);
   });
 });

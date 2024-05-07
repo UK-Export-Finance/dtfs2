@@ -22,9 +22,25 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith('/application-details/:dealId/clone', [validateToken, validateBank, expect.any(Function)], expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/clone', [validateToken, validateBank, expect.any(Function)], expect.any(Function));
-    expect(getSpy).toHaveBeenCalledWith('/application-details/:dealId/clone/name-application', [validateToken, validateBank, expect.any(Function)], expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/clone/name-application', [validateToken, validateBank, expect.any(Function)], expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith(
+      '/application-details/:dealId/clone',
+      [validateToken, validateBank, expect.any(Function)],
+      expect.any(Function),
+    );
+    expect(postSpy).toHaveBeenCalledWith(
+      '/application-details/:dealId/clone',
+      [validateToken, validateBank, expect.any(Function)],
+      expect.any(Function),
+    );
+    expect(getSpy).toHaveBeenCalledWith(
+      '/application-details/:dealId/clone/name-application',
+      [validateToken, validateBank, expect.any(Function)],
+      expect.any(Function),
+    );
+    expect(postSpy).toHaveBeenCalledWith(
+      '/application-details/:dealId/clone/name-application',
+      [validateToken, validateBank, expect.any(Function)],
+      expect.any(Function),
+    );
   });
 });

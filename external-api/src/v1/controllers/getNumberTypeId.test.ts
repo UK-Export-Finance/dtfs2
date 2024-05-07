@@ -26,9 +26,12 @@ describe('getNumberTypeId', () => {
       value         | expected
       ${'deal'}     | ${1}
       ${'facility'} | ${1}
-    `('Returns $expected when the value provided is $value', ({ value, expected }: { value: string; expected: number }) => {
-      expect(getNumberTypeId(value)).toEqual(expected);
-    });
+    `(
+      'Returns $expected when the value provided is $value',
+      ({ value, expected }: { value: string; expected: number }) => {
+        expect(getNumberTypeId(value)).toEqual(expected);
+      },
+    );
   });
 
   describe('Unhappy paths', () => {

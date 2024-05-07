@@ -9,7 +9,10 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIN } from '../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import {
-  MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR,
+  MOCK_FACILITY_ONE,
+  MOCK_FACILITY_TWO,
+  MOCK_FACILITY_THREE,
+  MOCK_FACILITY_FOUR,
 } from '../../../fixtures/mocks/mock-facilities';
 
 import applicationPreview from '../../pages/application-preview';
@@ -32,11 +35,7 @@ FACILITY_TWO_SPECIAL.specialIssuePermission = true;
 FACILITY_THREE_SPECIAL.specialIssuePermission = true;
 FACILITY_FOUR_SPECIAL.specialIssuePermission = true;
 
-const unissuedFacilitiesArray = [
-  FACILITY_ONE_SPECIAL,
-  FACILITY_THREE_SPECIAL,
-  FACILITY_FOUR_SPECIAL,
-];
+const unissuedFacilitiesArray = [FACILITY_ONE_SPECIAL, FACILITY_THREE_SPECIAL, FACILITY_FOUR_SPECIAL];
 
 /*
   for changing facilities to issued from preview page.
@@ -44,26 +43,31 @@ const unissuedFacilitiesArray = [
 */
 context('Unissued Facilities MIN - change to issued from preview page - specialIssuedPermission', () => {
   before(() => {
-    cy.apiLogin(BANK1_MAKER1).then((t) => {
-      token = t;
-    }).then(() => {
-      cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
-        dealId = body._id;
-        cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-            facilityOneId = facility.body.details._id;
-            cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_ONE_SPECIAL);
+    cy.apiLogin(BANK1_MAKER1)
+      .then((t) => {
+        token = t;
+      })
+      .then(() => {
+        cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
+          dealId = body._id;
+          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+              facilityOneId = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_ONE_SPECIAL);
+            });
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_TWO_SPECIAL),
+            );
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_THREE_SPECIAL),
+            );
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_FOUR_SPECIAL),
+            );
+            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
           });
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_TWO_SPECIAL));
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_THREE_SPECIAL));
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_FOUR_SPECIAL));
-          cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
         });
       });
-    });
   });
 
   describe('Change facility to issued from application preview', () => {
@@ -91,7 +95,7 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      aboutFacilityUnissued.mainHeading().contains('Tell us you\'ve issued this facility');
+      aboutFacilityUnissued.mainHeading().contains("Tell us you've issued this facility");
       aboutFacilityUnissued.facilityNameLabel().contains('Name for this cash facility');
       aboutFacilityUnissued.facilityName().should('have.value', MOCK_FACILITY_ONE.name);
 
@@ -134,7 +138,9 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
     it('preview review facility stage has correct headers and shows 1 updated facilities', () => {
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
 
-      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
+      applicationPreview
+        .updatedUnissuedFacilitiesHeader()
+        .contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
       // should not be able to go back to unissued-facilities table once updated at least one facility
       applicationPreview.unissuedFacilitiesReviewLink().should('not.exist');
@@ -213,7 +219,9 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
       const coverEnd = format(dateConstants.threeYears, 'd MMMM yyyy');
 
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
-      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
+      applicationPreview
+        .updatedUnissuedFacilitiesHeader()
+        .contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
       // should show new facility four name
       applicationPreview.updatedUnissuedFacilitiesList().contains(`${unissuedFacilitiesArray[2].name}name`);
@@ -245,11 +253,15 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
     it('pressing submit button takes you to submit page and with correct panel once submitted to checker', () => {
       // ensures that can submit even with 1 unissued left still
       applicationPreview.submitButtonPostApproval().click();
-      applicationSubmission.submissionText().contains('Someone at your bank must check your update before they can submit it to UKEF');
+      applicationSubmission
+        .submissionText()
+        .contains('Someone at your bank must check your update before they can submit it to UKEF');
       applicationSubmission.submitButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
-      applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted for checking at your bank');
+      applicationSubmission
+        .confirmationPanelTitleFacilities()
+        .contains('Issued facilities submitted for checking at your bank');
     });
   });
 });

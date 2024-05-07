@@ -138,11 +138,10 @@ describe('controllers/automatic-cover', () => {
         text: 'Test',
       }));
 
-      expect(mockResponse.render)
-        .toHaveBeenCalledWith('partials/automatic-cover.njk', {
-          criteria: expectedCriteria,
-          dealId: '123',
-        });
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/automatic-cover.njk', {
+        criteria: expectedCriteria,
+        dealId: '123',
+      });
     });
 
     it('redirects user to `problem with service` page if there is an issue with the api', async () => {
@@ -186,12 +185,14 @@ describe('controllers/automatic-cover', () => {
         text: 'Test',
       }));
 
-      expect(mockResponse.render)
-        .toHaveBeenCalledWith('partials/automatic-cover.njk', expect.objectContaining({
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/automatic-cover.njk',
+        expect.objectContaining({
           errors: expect.any(Object),
           criteria: expectedCriteria,
           dealId: '123',
-        }));
+        }),
+      );
     });
 
     describe('when user selects at least 1 false answer', () => {

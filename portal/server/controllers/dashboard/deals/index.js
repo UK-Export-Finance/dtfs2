@@ -2,46 +2,25 @@ const api = require('../../../api');
 const { dashboardDealsFiltersQuery } = require('./deals-filters-query');
 const { dealsTemplateFilters: templateFilters } = require('./template-filters');
 const { selectedFilters } = require('./selected-filters');
-const {
-  submittedFiltersArray,
-  submittedFiltersObject,
-  filtersToText,
-} = require('../filters/helpers');
+const { submittedFiltersArray, submittedFiltersObject, filtersToText } = require('../filters/helpers');
 const { dashboardSortQuery } = require('../sort/helpers');
 const { removeSessionFilter } = require('../filters/remove-filter-from-session');
-const {
-  getApiData,
-  requestParams,
-  getFlashSuccessMessage,
-} = require('../../../helpers');
+const { getApiData, requestParams, getFlashSuccessMessage } = require('../../../helpers');
 const CONSTANTS = require('../../../constants');
 
 const { PAGE_SIZE } = CONSTANTS.DASHBOARD;
 
-const getAllDealsData = async (
-  userToken,
-  user,
-  sessionFilters,
-  currentPage,
-  sortBy,
-  res,
-) => {
+const getAllDealsData = async (userToken, user, sessionFilters, currentPage, sortBy, res) => {
   const filtersArray = submittedFiltersArray(sessionFilters);
 
-  const filtersQuery = dashboardDealsFiltersQuery(
-    filtersArray,
-    user,
-  );
+  const filtersQuery = dashboardDealsFiltersQuery(filtersArray, user);
 
   const sortQuery = dashboardSortQuery(sortBy);
 
-  const { count, deals } = await getApiData(api.allDeals(
-    currentPage * PAGE_SIZE,
-    PAGE_SIZE,
-    filtersQuery,
-    userToken,
-    sortQuery,
-  ), res);
+  const { count, deals } = await getApiData(
+    api.allDeals(currentPage * PAGE_SIZE, PAGE_SIZE, filtersQuery, userToken, sortQuery),
+    res,
+  );
 
   return {
     deals,
@@ -51,14 +30,7 @@ const getAllDealsData = async (
 };
 exports.getAllDealsData = getAllDealsData;
 
-const getTemplateVariables = (
-  user,
-  sessionFilters,
-  deals,
-  count,
-  currentPage,
-  filtersArray,
-) => {
+const getTemplateVariables = (user, sessionFilters, deals, count, currentPage, filtersArray) => {
   const pages = {
     totalPages: Math.ceil(count / PAGE_SIZE),
     currentPage: parseInt(currentPage, 10),
@@ -82,14 +54,7 @@ const getTemplateVariables = (
 };
 exports.getTemplateVariables = getTemplateVariables;
 
-const getDataAndTemplateVariables = async (
-  userToken,
-  user,
-  sessionFilters,
-  currentPage,
-  sortBy,
-  res,
-) => {
+const getDataAndTemplateVariables = async (userToken, user, sessionFilters, currentPage, sortBy, res) => {
   const { deals, count, filtersArray } = await getAllDealsData(
     userToken,
     user,
@@ -99,14 +64,7 @@ const getDataAndTemplateVariables = async (
     res,
   );
 
-  const templateVariables = getTemplateVariables(
-    user,
-    sessionFilters,
-    deals,
-    count,
-    currentPage,
-    filtersArray,
-  );
+  const templateVariables = getTemplateVariables(user, sessionFilters, deals, count, currentPage, filtersArray);
 
   return templateVariables;
 };

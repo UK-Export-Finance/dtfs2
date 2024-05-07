@@ -41,7 +41,9 @@ describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
   it('redirects to /login/sign-in-link-expired if the login API request fails with a token expired 403', async () => {
     when(api.loginWithSignInLink)
       .calledWith({ signInToken: validSignInToken, userId: validUserId })
-      .mockRejectedValueOnce({ response: { status: 403, data: { errors: [{ cause: HTTP_ERROR_CAUSES.TOKEN_EXPIRED }] } } });
+      .mockRejectedValueOnce({
+        response: { status: 403, data: { errors: [{ cause: HTTP_ERROR_CAUSES.TOKEN_EXPIRED }] } },
+      });
 
     const { status, headers } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
 
@@ -52,7 +54,9 @@ describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
   it('redirects to /login/sign-in-link-expired if the login API request fails with a user blocked 403', async () => {
     when(api.loginWithSignInLink)
       .calledWith({ signInToken: validSignInToken, userId: validUserId })
-      .mockRejectedValueOnce({ response: { status: 403, data: { errors: [{ cause: HTTP_ERROR_CAUSES.USER_BLOCKED }] } } });
+      .mockRejectedValueOnce({
+        response: { status: 403, data: { errors: [{ cause: HTTP_ERROR_CAUSES.USER_BLOCKED }] } },
+      });
 
     const { status, text } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
 
@@ -83,7 +87,9 @@ describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
   });
 
   it('returns a 500 response if the login API request has an unexpected error', async () => {
-    when(api.loginWithSignInLink).calledWith({ signInToken: validSignInToken, userId: validUserId }).mockRejectedValueOnce(new Error());
+    when(api.loginWithSignInLink)
+      .calledWith({ signInToken: validSignInToken, userId: validUserId })
+      .mockRejectedValueOnce(new Error());
 
     const { status, text } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
 

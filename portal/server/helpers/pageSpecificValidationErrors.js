@@ -9,7 +9,6 @@ const errorHref = require('./errorHref');
 const generateErrorSummary = require('./generateErrorSummary');
 const { requiredFieldsArray, filterErrorList } = require('./pageFields');
 
-
 const allFieldsArray = (fields) => {
   const { OPTIONAL_FIELDS } = fields;
   const allFields = requiredFieldsArray(fields);
@@ -85,7 +84,6 @@ const mapAlwaysShowErrorFields = (validationErrors, fields) => {
 };
 
 const mapRequiredAndAlwaysShowErrorFields = (validationErrors, allFields) => {
-
   const mappedErrors = cloneDeep(validationErrors);
   const allRequiredFields = requiredFieldsArray(allFields);
   const alwaysShowErrorFields = allFields.ALWAYS_SHOW_ERROR_FIELDS ? allFields.ALWAYS_SHOW_ERROR_FIELDS : [];

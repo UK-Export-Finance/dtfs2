@@ -19,12 +19,14 @@ const exporter = ({ deal, acbsReference }) => {
   const countryCode = acbsReference.country.supplierAcbsCountryCode
     ? acbsReference.country.supplierAcbsCountryCode
     : acbsReference.country;
-  const sme = deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
-    ? deal.dealSnapshot.exporter.smeType
-    : deal.dealSnapshot.submissionDetails['sme-type'];
-  const citizenshipClass = countryCode === CONSTANTS.DEAL.COUNTRY.DEFAULT
-    ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM
-    : CONSTANTS.PARTY.CITIZENSHIP_CLASS.ROW;
+  const sme =
+    deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
+      ? deal.dealSnapshot.exporter.smeType
+      : deal.dealSnapshot.submissionDetails['sme-type'];
+  const citizenshipClass =
+    countryCode === CONSTANTS.DEAL.COUNTRY.DEFAULT
+      ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM
+      : CONSTANTS.PARTY.CITIZENSHIP_CLASS.ROW;
   const partyNames = getPartyNames(deal.dealSnapshot.exporter.companyName);
 
   return {

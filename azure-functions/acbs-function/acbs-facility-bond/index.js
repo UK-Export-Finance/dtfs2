@@ -22,17 +22,22 @@ df.app.orchestration('acbs-facility-bond', function* createACBSfacilityBond(cont
     const facilityIdentifier = facilitySnapshot.ukefFacilityId.padStart(10, 0);
 
     // BOND specific data
-    const code = facilitySnapshot.currency.id === CONSTANTS.DEAL.CURRENCY.DEFAULT
-      ? CONSTANTS.FACILITY.COVENANT_TYPE.CHARGEABLE_AMOUNT_GBP
-      : CONSTANTS.FACILITY.COVENANT_TYPE.CHARGEABLE_AMOUNT_NON_GBP;
+    const code =
+      facilitySnapshot.currency.id === CONSTANTS.DEAL.CURRENCY.DEFAULT
+        ? CONSTANTS.FACILITY.COVENANT_TYPE.CHARGEABLE_AMOUNT_GBP
+        : CONSTANTS.FACILITY.COVENANT_TYPE.CHARGEABLE_AMOUNT_NON_GBP;
 
     // Facility Covenant
     const acbsFacilityBondCovenantInput = mappings.facility.facilityCovenant(deal, facility, code);
 
-    const facilityCovenantChargeable = yield context.df.callActivityWithRetry('activity-create-facility-covenant', retryOptions, {
-      facilityIdentifier,
-      acbsFacilityCovenantInput: acbsFacilityBondCovenantInput,
-    });
+    const facilityCovenantChargeable = yield context.df.callActivityWithRetry(
+      'activity-create-facility-covenant',
+      retryOptions,
+      {
+        facilityIdentifier,
+        acbsFacilityCovenantInput: acbsFacilityBondCovenantInput,
+      },
+    );
 
     const parties = {};
     // Create parties
@@ -56,10 +61,14 @@ df.app.orchestration('acbs-facility-bond', function* createACBSfacilityBond(cont
       CONSTANTS.FACILITY.GUARANTEE_TYPE.BOND_GIVER,
     );
 
-    const facilityBondIssuerGuarantee = yield context.df.callActivityWithRetry('activity-create-facility-guarantee', retryOptions, {
-      facilityIdentifier,
-      acbsFacilityGuaranteeInput: acbsFacilityBondIssuerGuaranteeInput,
-    });
+    const facilityBondIssuerGuarantee = yield context.df.callActivityWithRetry(
+      'activity-create-facility-guarantee',
+      retryOptions,
+      {
+        facilityIdentifier,
+        acbsFacilityGuaranteeInput: acbsFacilityBondIssuerGuaranteeInput,
+      },
+    );
 
     const acbsFacilityBondBeneficiaryGuaranteeInput = mappings.facility.facilityGuarantee(
       deal,
@@ -68,10 +77,14 @@ df.app.orchestration('acbs-facility-bond', function* createACBSfacilityBond(cont
       CONSTANTS.FACILITY.GUARANTEE_TYPE.BOND_BENEFICIARY,
     );
 
-    const facilityBondBeneficiaryGuarantee = yield context.df.callActivityWithRetry('activity-create-facility-guarantee', retryOptions, {
-      facilityIdentifier,
-      acbsFacilityGuaranteeInput: acbsFacilityBondBeneficiaryGuaranteeInput,
-    });
+    const facilityBondBeneficiaryGuarantee = yield context.df.callActivityWithRetry(
+      'activity-create-facility-guarantee',
+      retryOptions,
+      {
+        facilityIdentifier,
+        acbsFacilityGuaranteeInput: acbsFacilityBondBeneficiaryGuaranteeInput,
+      },
+    );
 
     return {
       parties,

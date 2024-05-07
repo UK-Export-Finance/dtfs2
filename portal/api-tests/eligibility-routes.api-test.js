@@ -1,6 +1,6 @@
 jest.mock('csurf', () => () => (req, res, next) => next());
 jest.mock('../server/routes/middleware/csrf', () => ({
-  ...(jest.requireActual('../server/routes/middleware/csrf')),
+  ...jest.requireActual('../server/routes/middleware/csrf'),
   csrfToken: () => (req, res, next) => next(),
 }));
 jest.mock('../server/api', () => ({
@@ -71,7 +71,8 @@ describe('eligibility routes', () => {
 
   describe('POST /contract/:_id/eligibility/supporting-documentation', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/eligibility/supporting-documentation`),
+      makeRequestWithHeaders: (headers) =>
+        post({}, headers).to(`/contract/${_id}/eligibility/supporting-documentation`),
       whitelistedRoles: allRoles,
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -80,7 +81,8 @@ describe('eligibility routes', () => {
 
   describe('POST /contract/:_id/eligibility/supporting-documentation/save-go-back', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/eligibility/supporting-documentation/save-go-back`),
+      makeRequestWithHeaders: (headers) =>
+        post({}, headers).to(`/contract/${_id}/eligibility/supporting-documentation/save-go-back`),
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
@@ -88,14 +90,18 @@ describe('eligibility routes', () => {
     });
   });
 
-  describe.each(eligibilityDocumentationGetByFieldnameAndFileNameTestCases)('GET /contract/:_id/eligibility-documentation/$fieldname/$filename', ({ fieldname, filename }) => {
-    withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get(`/contract/:_id/eligibility-documentation/${fieldname}/${filename}`, {}, headers),
-      whitelistedRoles: allRoles,
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
-    });
-  });
+  describe.each(eligibilityDocumentationGetByFieldnameAndFileNameTestCases)(
+    'GET /contract/:_id/eligibility-documentation/$fieldname/$filename',
+    ({ fieldname, filename }) => {
+      withRoleValidationApiTests({
+        makeRequestWithHeaders: (headers) =>
+          get(`/contract/:_id/eligibility-documentation/${fieldname}/${filename}`, {}, headers),
+        whitelistedRoles: allRoles,
+        successCode: 200,
+        disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
+      });
+    },
+  );
 
   describe('GET /contract/:_id/eligibility/check-your-answers', () => {
     withRoleValidationApiTests({

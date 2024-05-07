@@ -1,4 +1,4 @@
-import { LONDON_TIMEZONE} from '../constants/date';
+import { LONDON_TIMEZONE } from '../constants/date';
 import { filterLocaliseTimestamp } from './filter-localiseTimestamp';
 
 describe('nunjuck filters - dashIfEmpty', () => {
@@ -10,7 +10,7 @@ describe('nunjuck filters - dashIfEmpty', () => {
 
     it('should return the day of the month if given format `dd` and timezone `Europe/London`', () => {
       const result = filterLocaliseTimestamp(mockValue, 'dd', LONDON_TIMEZONE);
-  
+
       const expected = '07';
       expect(result).toEqual(expected);
     });
@@ -34,7 +34,7 @@ describe('nunjuck filters - dashIfEmpty', () => {
 
       const expected = '08/02/2024';
       expect(result).toEqual(expected);
-    })
+    });
   });
 
   describe('when timestamp is a valid string', () => {
@@ -45,7 +45,7 @@ describe('nunjuck filters - dashIfEmpty', () => {
 
     it('should return the day of the month if given format `dd` and timezone `Europe/London`', () => {
       const result = filterLocaliseTimestamp(mockValue, 'dd', LONDON_TIMEZONE);
-  
+
       const expected = '07';
       expect(result).toEqual(expected);
     });
@@ -69,7 +69,7 @@ describe('nunjuck filters - dashIfEmpty', () => {
 
       const expected = '08/02/2024';
       expect(result).toEqual(expected);
-    })
+    });
   });
 
   describe('when timestamp is an empty string', () => {
@@ -77,7 +77,7 @@ describe('nunjuck filters - dashIfEmpty', () => {
 
     it('should return an empty string if given format `dd` and timezone `Europe/London`', () => {
       const result = filterLocaliseTimestamp(mockValue, 'dd', LONDON_TIMEZONE);
-  
+
       const expected = '';
       expect(result).toEqual(expected);
     });
@@ -101,7 +101,7 @@ describe('nunjuck filters - dashIfEmpty', () => {
 
       const expected = '';
       expect(result).toEqual(expected);
-    })
+    });
   });
 
   describe('when timestamp is an invalid string', () => {
@@ -109,7 +109,7 @@ describe('nunjuck filters - dashIfEmpty', () => {
 
     it('should return `Invalid date` if given format `dd` and timezone `Europe/London`', () => {
       const result = filterLocaliseTimestamp(mockValue, 'dd', LONDON_TIMEZONE);
-  
+
       const expected = 'Invalid date';
       expect(result).toEqual(expected);
     });
@@ -133,6 +133,6 @@ describe('nunjuck filters - dashIfEmpty', () => {
 
       const expected = 'Invalid date';
       expect(result).toEqual(expected);
-    })
-  })
+    });
+  });
 });

@@ -1,7 +1,7 @@
-import { app } from '../../src/createApp';
-import { api } from '../api';
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
+import { app } from '../../src/createApp';
+import { api } from '../api';
 
 const { ORDNANCE_SURVEY_API_URL, ORDNANCE_SURVEY_API_KEY } = process.env;
 const { get } = api(app);

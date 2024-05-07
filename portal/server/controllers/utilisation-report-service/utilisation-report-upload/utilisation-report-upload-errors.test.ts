@@ -3,7 +3,6 @@ import { GetUploadErrorsRequest, GetUploadErrorsResponse, getUploadErrors } from
 import { validateFilenameFormat } from './utilisation-report-validator';
 import { asLoggedInUserSession, LoggedInUserSession } from '../../../helpers/express-session';
 
-
 jest.mock('./utilisation-report-validator');
 jest.mock('../../../helpers/express-session');
 

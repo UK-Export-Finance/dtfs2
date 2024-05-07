@@ -122,9 +122,15 @@ describe('/v1/utilisation-reports', () => {
     const utilisationReportsUrl = '/v1/utilisation-reports';
 
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => postMultipartForm({ url: utilisationReportsUrl, data: testCsvData, files: [] }),
+      makeRequestWithoutAuthHeader: () =>
+        postMultipartForm({ url: utilisationReportsUrl, data: testCsvData, files: [] }),
       makeRequestWithAuthHeader: (authHeader) =>
-        postMultipartForm({ url: utilisationReportsUrl, data: testCsvData, files: [], headers: { Authorization: authHeader } }),
+        postMultipartForm({
+          url: utilisationReportsUrl,
+          data: testCsvData,
+          files: [],
+          headers: { Authorization: authHeader },
+        }),
     });
 
     withRoleAuthorisationTests({

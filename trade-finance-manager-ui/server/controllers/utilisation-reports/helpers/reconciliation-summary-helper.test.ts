@@ -1,6 +1,10 @@
 import { addDays } from 'date-fns';
 import { IsoMonthStamp, ReportPeriod } from '@ukef/dtfs2-common';
-import { getDueDateText, getReportPeriodHeading, getReportReconciliationSummariesViewModel } from './reconciliation-summary-helper';
+import {
+  getDueDateText,
+  getReportPeriodHeading,
+  getReportReconciliationSummariesViewModel,
+} from './reconciliation-summary-helper';
 import { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS } from '../../../test-mocks/mock-utilisation-report-reconciliation-summary';
 import { UtilisationReportReconciliationSummary } from '../../../types/utilisation-reports';
 import { getUkBankHolidays } from '../../../api';
@@ -22,16 +26,19 @@ describe('reconciliation-summary-helper', () => {
       { now: new Date('2024-01-15T00:00:00') },
       { now: new Date('2024-01-15T12:00:00') },
       { now: new Date('2024-01-15T23:59:59') },
-    ])(`refers to 'Reports due' if the reportDueDate is today or in the future (now: $now, reportDueDate: ${reportDueDate.toISOString()})}`, ({ now }) => {
-      // Arrange
-      jest.useFakeTimers().setSystemTime(now);
+    ])(
+      `refers to 'Reports due' if the reportDueDate is today or in the future (now: $now, reportDueDate: ${reportDueDate.toISOString()})}`,
+      ({ now }) => {
+        // Arrange
+        jest.useFakeTimers().setSystemTime(now);
 
-      // Act
-      const result = getDueDateText(reportDueDate);
+        // Act
+        const result = getDueDateText(reportDueDate);
 
-      // Assert
-      expect(result).toEqual('Reports due to be received by 15 January 2024.');
-    });
+        // Assert
+        expect(result).toEqual('Reports due to be received by 15 January 2024.');
+      },
+    );
 
     it(`refers to 'Reports were due' if the reportDueDate day is in the past`, () => {
       // Arrange

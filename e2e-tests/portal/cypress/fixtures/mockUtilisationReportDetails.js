@@ -4,7 +4,8 @@ const { UtilisationReportEntityMockBuilder, AzureFileInfoEntity, MOCK_AZURE_FILE
 
 const bankId = BANK1_PAYMENT_REPORT_OFFICER1.bank.id;
 
-const createAzureFileInfo = () => AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource: { platform: 'SYSTEM' } });
+const createAzureFileInfo = () =>
+  AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource: { platform: 'SYSTEM' } });
 
 function* idGenerator() {
   let id = 0;
@@ -39,7 +40,9 @@ const generateReports = (startMonthDate, endMonthDate) =>
   });
 
 // Reports to be populated for 2020, 2022 and 2023 (ie. not 2021 to match specific test case)
-const previousReportDetails = generateReports(new Date('2020-01-01'), new Date('2023-01-01')).filter(({ reportPeriod }) => reportPeriod.start.year !== 2021);
+const previousReportDetails = generateReports(new Date('2020-01-01'), new Date('2023-01-01')).filter(
+  ({ reportPeriod }) => reportPeriod.start.year !== 2021,
+);
 
 const february2023ReportDetails = [
   UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
@@ -54,13 +57,13 @@ const february2023ReportDetails = [
 
 const december2023ToFebruary2024ReportDetails = [
   UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
-  .withId(reportIdGenerator.next().value)
-  .withBankId(BANK2_PAYMENT_REPORT_OFFICER1.bank.id)
-  .withReportPeriod({
-    start: { month: 12, year: 2023 },
-    end: { month: 2, year: 2024 },
-  })
-  .build(),
+    .withId(reportIdGenerator.next().value)
+    .withBankId(BANK2_PAYMENT_REPORT_OFFICER1.bank.id)
+    .withReportPeriod({
+      start: { month: 12, year: 2023 },
+      end: { month: 2, year: 2024 },
+    })
+    .build(),
 ];
 
 const generateUpToDateReportDetails = () => {

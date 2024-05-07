@@ -9,11 +9,7 @@ const {
   fillAndSubmitIssueLoanFacilityForm,
 } = require('../../../maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');
 
-const {
-  ADMIN,
-  BANK1_MAKER1,
-  BANK1_CHECKER1,
-} = MOCK_USERS;
+const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 context('A maker issues facilities, submits to checker; checker submits deal to UKEF', () => {
   let deal;
@@ -25,21 +21,20 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
 
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MIADealAcceptedStatusWithUnissuedFacilities, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id;
+    cy.insertOneDeal(MIADealAcceptedStatusWithUnissuedFacilities, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
 
-        const { mockFacilities } = MIADealAcceptedStatusWithUnissuedFacilities;
+      const { mockFacilities } = MIADealAcceptedStatusWithUnissuedFacilities;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-          const loans = createdFacilities.filter((f) => f.type === 'Loan');
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-          dealFacilities.bonds = bonds;
-          dealFacilities.loans = loans;
-        });
+        dealFacilities.bonds = bonds;
+        dealFacilities.loans = loans;
       });
+    });
   });
 
   after(() => {
@@ -77,13 +72,19 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     fillAndSubmitIssueLoanFacilityForm();
 
     // check facility statuses are correct
-    bondRow.bondStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Completed');
-    });
+    bondRow
+      .bondStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Completed');
+      });
 
-    loanRow.loanStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Completed');
-    });
+    loanRow
+      .loanStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Completed');
+      });
 
     // submit deal for review
     pages.contract.proceedToReview().click();
@@ -98,13 +99,19 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     pages.contract.visit(deal);
 
     // check facility statuses have changed
-    bondRow.bondStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Ready for check');
-    });
+    bondRow
+      .bondStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Ready for check');
+      });
 
-    loanRow.loanStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Ready for check');
-    });
+    loanRow
+      .loanStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Ready for check');
+      });
 
     pages.contract.proceedToSubmit().click();
 
@@ -116,33 +123,48 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     //---------------------------------------------------------------
     pages.contract.visit(deal);
 
-    pages.contract.status().invoke('text').then((text) => {
-      // Status is submitted until TFM background process has created UKEF IDs
-      expect(text.trim()).to.equal('Acknowledged');
-    });
+    pages.contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        // Status is submitted until TFM background process has created UKEF IDs
+        expect(text.trim()).to.equal('Acknowledged');
+      });
 
     //---------------------------------------------------------------
     // facility statuses should be updated to `Submitted`
     //---------------------------------------------------------------
 
-    bondRow.bondStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acknowledged');
-    });
+    bondRow
+      .bondStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Acknowledged');
+      });
 
-    loanRow.loanStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acknowledged');
-    });
+    loanRow
+      .loanStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Acknowledged');
+      });
 
     //---------------------------------------------------------------
     // Checker can only review issue facility details
     //---------------------------------------------------------------
-    bondRow.issueFacilityLink().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Facility issued');
-    });
+    bondRow
+      .issueFacilityLink()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Facility issued');
+      });
 
-    loanRow.issueFacilityLink().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Facility issued');
-    });
+    loanRow
+      .issueFacilityLink()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Facility issued');
+      });
 
     bondRow.issueFacilityLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/submission-details#bond-${bondId}`));

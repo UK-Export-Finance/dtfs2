@@ -1,5 +1,11 @@
 import { ObjectId } from 'mongodb';
-import { AzureFileInfoEntity, MOCK_AZURE_FILE_INFO, PortalUser, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  AzureFileInfoEntity,
+  MOCK_AZURE_FILE_INFO,
+  PortalUser,
+  ReportPeriod,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { mapUtilisationReportEntityToGetUtilisationReportResponse } from './mapUtilisationReport';
 import { getUserById } from '../repositories/users-repo';
 import { GetUtilisationReportResponse } from '../types/utilisation-reports';
@@ -48,7 +54,10 @@ describe('mapUtilisationReportEntityToGetUtilisationReportResponse', () => {
     // Arrange
     const reportId = 312;
     const uploadedByUserId = mockPortalUser._id.toString();
-    const azureFileInfo = AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource: { platform: 'PORTAL', userId: uploadedByUserId } });
+    const azureFileInfo = AzureFileInfoEntity.create({
+      ...MOCK_AZURE_FILE_INFO,
+      requestSource: { platform: 'PORTAL', userId: uploadedByUserId },
+    });
     const mockDate = new Date('2024-01');
 
     const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')

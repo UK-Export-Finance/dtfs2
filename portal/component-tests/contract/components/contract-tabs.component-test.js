@@ -18,7 +18,9 @@ describe(component, () => {
     });
 
     it('provides a link to the preview tab', () => {
-      wrapper.expectLink('[data-cy="check-deal-details-tab"]').toLinkTo(`/contract/${deal._id}/submission-details`, 'Check deal details');
+      wrapper
+        .expectLink('[data-cy="check-deal-details-tab"]')
+        .toLinkTo(`/contract/${deal._id}/submission-details`, 'Check deal details');
     });
   });
 
@@ -34,7 +36,9 @@ describe(component, () => {
     });
 
     it('provides a link to the preview tab', () => {
-      wrapper.expectLink('[data-cy="check-deal-details-tab"]').toLinkTo(`/contract/${deal._id}/submission-details`, 'Check deal details');
+      wrapper
+        .expectLink('[data-cy="check-deal-details-tab"]')
+        .toLinkTo(`/contract/${deal._id}/submission-details`, 'Check deal details');
     });
   });
 

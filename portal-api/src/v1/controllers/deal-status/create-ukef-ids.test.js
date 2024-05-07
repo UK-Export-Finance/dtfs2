@@ -71,8 +71,18 @@ describe('createUkefIds', () => {
     expect(result).toEqual(updatedDeal);
     expect(number.getNumber).toHaveBeenCalledWith(NUMBER.ENTITY_TYPE.DEAL, mockDeal._id);
     expect(number.getNumber).toHaveBeenCalledWith(NUMBER.ENTITY_TYPE.FACILITY, mockDeal._id);
-    expect(facilitiesControllerUpdateSpy).toHaveBeenCalledWith(mockDeal._id, mockFacility1, modifiedMockFacility1, mockUser);
-    expect(facilitiesControllerUpdateSpy).toHaveBeenCalledWith(mockDeal._id, mockFacility2, modifiedMockFacility2, mockUser);
+    expect(facilitiesControllerUpdateSpy).toHaveBeenCalledWith(
+      mockDeal._id,
+      mockFacility1,
+      modifiedMockFacility1,
+      mockUser,
+    );
+    expect(facilitiesControllerUpdateSpy).toHaveBeenCalledWith(
+      mockDeal._id,
+      mockFacility2,
+      modifiedMockFacility2,
+      mockUser,
+    );
 
     // Clean up
     facilitiesControllerUpdateSpy.mockRestore();

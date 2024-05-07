@@ -14,10 +14,8 @@ const { validationErrorHandler } = require('../../utils/helpers');
  * else renders back to unissued facilities list
  * @param {req} params, @param {req} query, @param {Boolean} change
  * @returns {Object} body
-*/
-const renderChangeFacilityPartial = async ({
-  params, query, change, userToken,
-}) => {
+ */
+const renderChangeFacilityPartial = async ({ params, query, change, userToken }) => {
   const { dealId, facilityId } = params;
   const { status } = query;
 
@@ -80,11 +78,18 @@ const renderBody = (body) => ({
 // when changing unissued facility from unissued facility list
 // renders about-facility change page for unissued facilities
 const changeUnissuedFacility = async (req, res) => {
-  const { params, query, session: { userToken } } = req;
+  const {
+    params,
+    query,
+    session: { userToken },
+  } = req;
 
   try {
     const body = await renderChangeFacilityPartial({
-      params, query, change: false, userToken,
+      params,
+      query,
+      change: false,
+      userToken,
     });
 
     return res.render('partials/unissued-change-about-facility.njk', renderBody(body));
@@ -96,11 +101,18 @@ const changeUnissuedFacility = async (req, res) => {
 // when changing unissued facility from application preview page
 // renders about-facility change page for unissued facilities
 const changeUnissuedFacilityPreview = async (req, res) => {
-  const { params, query, session: { userToken } } = req;
+  const {
+    params,
+    query,
+    session: { userToken },
+  } = req;
 
   try {
     const body = await renderChangeFacilityPartial({
-      params, query, change: true, userToken,
+      params,
+      query,
+      change: true,
+      userToken,
     });
 
     return res.render('partials/unissued-change-about-facility.njk', renderBody(body));
@@ -112,7 +124,11 @@ const changeUnissuedFacilityPreview = async (req, res) => {
 // when changing unissued facility from application preview page
 // renders about-facility change page for unissued facilities
 const changeIssuedToUnissuedFacility = async (req, res) => {
-  const { params, query, session: { userToken } } = req;
+  const {
+    params,
+    query,
+    session: { userToken },
+  } = req;
   const { dealId, facilityId } = params;
   let { facilityType } = query;
   facilityType = facilityType || FACILITY_TYPE.CASH;
@@ -149,16 +165,14 @@ const postChangeUnissuedFacility = async (req, res) => {
   try {
     const { details } = await api.getFacility({ facilityId, userToken });
 
-    const {
-      issueDate,
-      coverStartDate,
-      coverEndDate,
-      aboutFacilityErrors,
-      dealId,
-      errorsObject,
-    } = await facilityValidation({
-      body, query, params, facility: details, userToken,
-    });
+    const { issueDate, coverStartDate, coverEndDate, aboutFacilityErrors, dealId, errorsObject } =
+      await facilityValidation({
+        body,
+        query,
+        params,
+        facility: details,
+        userToken,
+      });
 
     if (aboutFacilityErrors.length > 0) {
       return res.render('partials/unissued-change-about-facility.njk', {
@@ -247,16 +261,14 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
   try {
     const { details } = await api.getFacility({ facilityId, userToken });
 
-    const {
-      issueDate,
-      coverStartDate,
-      coverEndDate,
-      aboutFacilityErrors,
-      dealId,
-      errorsObject,
-    } = await facilityValidation({
-      body, query, params, facility: details, userToken,
-    });
+    const { issueDate, coverStartDate, coverEndDate, aboutFacilityErrors, dealId, errorsObject } =
+      await facilityValidation({
+        body,
+        query,
+        params,
+        facility: details,
+        userToken,
+      });
 
     if (aboutFacilityErrors.length > 0) {
       return res.render('partials/unissued-change-about-facility.njk', {
@@ -328,9 +340,7 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
  * @returns {res}
  */
 const postChangeIssuedToUnissuedFacility = async (req, res) => {
-  const {
-    body, params, query, session,
-  } = req;
+  const { body, params, query, session } = req;
   const { dealId, facilityId } = params;
   const { user, userToken } = session;
   const { _id: editorId } = user;

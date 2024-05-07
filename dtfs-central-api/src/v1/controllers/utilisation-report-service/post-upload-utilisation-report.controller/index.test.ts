@@ -4,7 +4,11 @@ import { ObjectId } from 'mongodb';
 import { QueryRunner } from 'typeorm';
 import { MOCK_AZURE_FILE_INFO, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { postUploadUtilisationReport, postUploadUtilisationReportPayloadValidator, PostUploadUtilisationReportRequestBody } from '.';
+import {
+  postUploadUtilisationReport,
+  postUploadUtilisationReportPayloadValidator,
+  PostUploadUtilisationReportRequestBody,
+} from '.';
 import { MOCK_UTILISATION_REPORT_RAW_CSV_DATA } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-report-raw-csv-data';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 
@@ -93,19 +97,22 @@ describe('post-upload-utilisation-report controller', () => {
       },
     ] as const;
 
-    it.each(propertyNamesWithInvalidValues)("responds with an error if the '$propertyName' property is invalid", ({ propertyName, value }) => {
-      // Arrange
-      const { req, res } = getHttpMocks({
-        [propertyName]: value,
-      });
+    it.each(propertyNamesWithInvalidValues)(
+      "responds with an error if the '$propertyName' property is invalid",
+      ({ propertyName, value }) => {
+        // Arrange
+        const { req, res } = getHttpMocks({
+          [propertyName]: value,
+        });
 
-      // Act
-      postUploadUtilisationReportPayloadValidator(req, res, mockNext);
+        // Act
+        postUploadUtilisationReportPayloadValidator(req, res, mockNext);
 
-      // Assert
-      expect(mockNext).not.toHaveBeenCalled();
-      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    });
+        // Assert
+        expect(mockNext).not.toHaveBeenCalled();
+        expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+      },
+    );
   });
 
   describe('postUploadUtilisationReport', () => {
@@ -140,7 +147,9 @@ describe('post-upload-utilisation-report controller', () => {
       await postUploadUtilisationReport(req, res);
 
       // Assert
-      expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({ id: validPostUploadUtilisationReportRequestBody.reportId });
+      expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({
+        id: validPostUploadUtilisationReportRequestBody.reportId,
+      });
       expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
       expect(mockTransactionManager.save).not.toHaveBeenCalled();
       expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -160,7 +169,9 @@ describe('post-upload-utilisation-report controller', () => {
         await postUploadUtilisationReport(req, res);
 
         // Assert
-        expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({ id: validPostUploadUtilisationReportRequestBody.reportId });
+        expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({
+          id: validPostUploadUtilisationReportRequestBody.reportId,
+        });
         expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
         expect(mockConnect).toHaveBeenCalledTimes(1);
         expect(mockStartTransaction).toHaveBeenCalledTimes(1);
@@ -187,7 +198,9 @@ describe('post-upload-utilisation-report controller', () => {
 
         // Assert
         expect(res._getData()).toEqual(expect.stringContaining('Failed to save utilisation report'));
-        expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({ id: validPostUploadUtilisationReportRequestBody.reportId });
+        expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({
+          id: validPostUploadUtilisationReportRequestBody.reportId,
+        });
         expect(mockTransactionManager.save).toHaveBeenCalledTimes(1);
         expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
       });

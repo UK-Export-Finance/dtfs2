@@ -1,11 +1,9 @@
 const express = require('express');
-const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
-const api = require('../../../api');
 const {
-  requestParams,
-  errorHref,
-  generateErrorSummary,
-} = require('../../../helpers');
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
+const api = require('../../../api');
+const { requestParams, errorHref, generateErrorSummary } = require('../../../helpers');
 
 const { DEAL } = require('../../api-data-provider');
 
@@ -27,10 +25,7 @@ router.get('/contract/:_id/about/check-your-answers', validateRole({ role: [MAKE
 
   const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
 
-  const errorSummary = generateErrorSummary(
-    validationErrors,
-    errorHref,
-  );
+  const errorSummary = generateErrorSummary(validationErrors, errorHref);
 
   const completedForms = calculateStatusOfEachPage(Object.keys(errorSummary.errorList));
 

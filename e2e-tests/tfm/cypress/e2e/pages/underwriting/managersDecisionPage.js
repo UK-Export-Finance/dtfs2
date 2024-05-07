@@ -11,7 +11,8 @@ const managersDecisionPage = {
   decisionRadioInputValidationError: () => cy.get('[data-cy="decision-input-error"]'),
 
   commentsInputApproveWithConditions: () => cy.get('[data-cy="approveWithConditionsComments-input"]'),
-  commentsInputApproveWithConditionsValidationError: () => cy.get('[data-cy="approveWithConditionsComments-input-error"]'),
+  commentsInputApproveWithConditionsValidationError: () =>
+    cy.get('[data-cy="approveWithConditionsComments-input-error"]'),
 
   commentsInputDecline: () => cy.get('[data-cy="declineComments-input"]'),
   commentsInputDeclineValidationError: () => cy.get('[data-cy="declineComments-input-error"]'),

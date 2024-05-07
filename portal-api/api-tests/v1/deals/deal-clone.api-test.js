@@ -16,12 +16,7 @@ dealToClone.eligibility = {
   criteria: completedDeal.eligibility.criteria,
 };
 
-dealToClone.editedBy = [
-  { userId: '1' },
-  { userId: '2' },
-  { userId: '3' },
-  { userId: '4' },
-];
+dealToClone.editedBy = [{ userId: '1' }, { userId: '2' }, { userId: '3' }, { userId: '4' }];
 
 dealToClone.ukefComments = [
   {
@@ -239,9 +234,7 @@ describe('/v1/deals/:id/clone', () => {
         const clonedDeal = getDealResponse.body.deal;
 
         const firstOriginalBond = createdFacilities.find((f) => f.type === 'Bond');
-        const secondOriginalBond = createdFacilities.find((f) =>
-          f.type === 'Bond'
-          && f._id !== firstOriginalBond._id);
+        const secondOriginalBond = createdFacilities.find((f) => f.type === 'Bond' && f._id !== firstOriginalBond._id);
 
         const expectedFirstBondTransaction = {
           type: 'Bond',
@@ -296,9 +289,7 @@ describe('/v1/deals/:id/clone', () => {
         const clonedDeal = getDealResponse.body.deal;
 
         const firstOriginalLoan = createdFacilities.find((f) => f.type === 'Loan');
-        const secondOriginalLoan = createdFacilities.find((f) =>
-          f.type === 'Loan'
-          && f._id !== firstOriginalLoan._id);
+        const secondOriginalLoan = createdFacilities.find((f) => f.type === 'Loan' && f._id !== firstOriginalLoan._id);
 
         const expectedFirstLoanTransaction = {
           type: 'Loan',
@@ -355,7 +346,9 @@ describe('/v1/deals/:id/clone', () => {
           cloneTransactions: 'true',
         };
 
-        const { body: responseBody } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        const { body: responseBody } = await as(anHSBCMaker)
+          .post(clonePostBody)
+          .to(`/v1/deals/${originalDeal._id}/clone`);
 
         const { body: cloned } = await as(anHSBCMaker).get(`/v1/deals/${responseBody._id}`);
 
@@ -375,7 +368,9 @@ describe('/v1/deals/:id/clone', () => {
             additionalRefName: 'new-bank-deal-name',
             cloneTransactions: 'false',
           };
-          const { body: responseBody } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+          const { body: responseBody } = await as(anHSBCMaker)
+            .post(clonePostBody)
+            .to(`/v1/deals/${originalDeal._id}/clone`);
 
           const { body: cloned } = await as(anHSBCMaker).get(`/v1/deals/${responseBody._id}`);
 

@@ -1,10 +1,7 @@
 const { isBefore, startOfDay, isAfter } = require('date-fns');
 const CONSTANTS = require('../../../constants');
 const { orderNumber } = require('../../../utils/error-list-order-number');
-const {
-  dateHasAllValues,
-  dateValidationText,
-} = require('./date');
+const { dateHasAllValues, dateValidationText } = require('./date');
 const { getStartOfDateFromEpochMillisecondString, getLongFormattedDate } = require('../../helpers/date');
 
 module.exports = (facility, errorList, deal) => {

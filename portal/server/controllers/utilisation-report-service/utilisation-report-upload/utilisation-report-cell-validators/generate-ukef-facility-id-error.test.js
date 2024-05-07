@@ -66,7 +66,10 @@ describe('generateUkefFacilityIdError', () => {
       exporter: testExporterName,
     };
 
-    const ukefFacilityIdError = generateUkefFacilityIdError(invalidFacilityIdWithDifferentRowAndColumn, testExporterName);
+    const ukefFacilityIdError = generateUkefFacilityIdError(
+      invalidFacilityIdWithDifferentRowAndColumn,
+      testExporterName,
+    );
 
     expect(ukefFacilityIdError).toEqual(expectedError);
   });

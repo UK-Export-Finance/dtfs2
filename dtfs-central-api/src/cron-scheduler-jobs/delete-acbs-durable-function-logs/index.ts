@@ -16,7 +16,10 @@ const deleteCompleteAcbsDurableFunctionLogs = async (): Promise<void> => {
 };
 
 export const deleteCompleteAcbsDurableFunctionLogsJob: CronSchedulerJob = {
-  cronExpression: asString(ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE, 'ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE'),
+  cronExpression: asString(
+    ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE,
+    'ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE',
+  ),
   description: 'Deletes durable function logs that have the type "ACBS" and status "Completed"',
   task: deleteCompleteAcbsDurableFunctionLogs,
 };

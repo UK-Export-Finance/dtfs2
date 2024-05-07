@@ -1,9 +1,17 @@
 const stream = require('stream');
 const express = require('express');
 const multer = require('multer');
-const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 const api = require('../../../api');
-const { getApiData, requestParams, generateErrorSummary, formatCountriesForGDSComponent, errorHref } = require('../../../helpers');
+const {
+  getApiData,
+  requestParams,
+  generateErrorSummary,
+  formatCountriesForGDSComponent,
+  errorHref,
+} = require('../../../helpers');
 const { provide, DEAL, COUNTRIES } = require('../../api-data-provider');
 const { submittedEligibilityMatchesOriginalData } = require('./submittedEligibilityMatchesOriginalData');
 const submittedDocumentationMatchesOriginalData = require('./submittedDocumentationMatchesOriginalData');
@@ -21,7 +29,10 @@ const mergeEligibilityValidationErrors = (criteria, files) => {
 
   const count = criteriaCount + filesCount;
 
-  const criteriaErrorList = criteria && criteria.validationErrors && criteria.validationErrors.errorList ? criteria.validationErrors.errorList : {};
+  const criteriaErrorList =
+    criteria && criteria.validationErrors && criteria.validationErrors.errorList
+      ? criteria.validationErrors.errorList
+      : {};
 
   const filesErrorList = files?.validationErrors?.errorList ? files.validationErrors.errorList : {};
 
@@ -40,31 +51,38 @@ const router = express.Router();
 
 const eligibilityErrorHref = (id) => `#criterion-group-${id}`;
 
-router.get('/contract/:_id/eligibility/criteria', [validateRole({ role: [MAKER] }), provide([DEAL, COUNTRIES])], async (req, res) => {
-  const { deal, countries } = req.apiData;
+router.get(
+  '/contract/:_id/eligibility/criteria',
+  [validateRole({ role: [MAKER] }), provide([DEAL, COUNTRIES])],
+  async (req, res) => {
+    const { deal, countries } = req.apiData;
 
-  const allEligibilityValidationErrors = mergeEligibilityValidationErrors(deal.eligibility, deal.supportingInformation);
+    const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
+      deal.eligibility,
+      deal.supportingInformation,
+    );
 
-  const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
+    const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
 
-  const criteriaValidationErrors = generateErrorSummary(deal?.eligibility?.validationErrors, eligibilityErrorHref);
+    const criteriaValidationErrors = generateErrorSummary(deal?.eligibility?.validationErrors, eligibilityErrorHref);
 
-  const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
+    const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
 
-  return res.render('eligibility/eligibility-criteria.njk', {
-    _id: deal._id,
-    countries: formatCountriesForGDSComponent(
-      countries,
-      deal.eligibility.agentAddressCountry && deal.eligibility.agentAddressCountry.code,
-      !deal.eligibility.agentAddressCountry,
-    ),
-    eligibility: deal.eligibility,
-    validationErrors: criteriaValidationErrors,
-    additionalRefName: deal.additionalRefName,
-    user: req.session.user,
-    taskListItems: eligibilityTaskList(completedForms),
-  });
-});
+    return res.render('eligibility/eligibility-criteria.njk', {
+      _id: deal._id,
+      countries: formatCountriesForGDSComponent(
+        countries,
+        deal.eligibility.agentAddressCountry && deal.eligibility.agentAddressCountry.code,
+        !deal.eligibility.agentAddressCountry,
+      ),
+      eligibility: deal.eligibility,
+      validationErrors: criteriaValidationErrors,
+      additionalRefName: deal.additionalRefName,
+      user: req.session.user,
+      taskListItems: eligibilityTaskList(completedForms),
+    });
+  },
+);
 
 router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
   const { _id, userToken } = requestParams(req);
@@ -89,28 +107,38 @@ router.post('/contract/:_id/eligibility/criteria/save-go-back', provide([DEAL]),
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/eligibility/supporting-documentation', [validateRole({ role: [MAKER] }), provide([DEAL])], async (req, res) => {
-  const { deal } = req.apiData;
+router.get(
+  '/contract/:_id/eligibility/supporting-documentation',
+  [validateRole({ role: [MAKER] }), provide([DEAL])],
+  async (req, res) => {
+    const { deal } = req.apiData;
 
-  const { eligibility, supportingInformation = {} } = deal;
+    const { eligibility, supportingInformation = {} } = deal;
 
-  const allEligibilityValidationErrors = mergeEligibilityValidationErrors(deal.eligibility, deal.supportingInformation);
-  const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
+    const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
+      deal.eligibility,
+      deal.supportingInformation,
+    );
+    const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
 
-  const documentationValidationErrors = generateErrorSummary(supportingInformation.validationErrors, eligibilityErrorHref);
+    const documentationValidationErrors = generateErrorSummary(
+      supportingInformation.validationErrors,
+      eligibilityErrorHref,
+    );
 
-  const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
+    const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
 
-  return res.render('eligibility/eligibility-supporting-documentation.njk', {
-    _id: deal._id,
-    supportingInformation,
-    eligibility,
-    validationErrors: documentationValidationErrors,
-    additionalRefName: deal.additionalRefName,
-    user: req.session.user,
-    taskListItems: eligibilityTaskList(completedForms),
-  });
-});
+    return res.render('eligibility/eligibility-supporting-documentation.njk', {
+      _id: deal._id,
+      supportingInformation,
+      eligibility,
+      validationErrors: documentationValidationErrors,
+      additionalRefName: deal.additionalRefName,
+      user: req.session.user,
+      taskListItems: eligibilityTaskList(completedForms),
+    });
+  },
+);
 
 const renderSupportingDocumentationPageWithUploadErrors = (uploadError, deal, req, res) => {
   const { eligibility, supportingInformation = {} } = deal;
@@ -118,7 +146,10 @@ const renderSupportingDocumentationPageWithUploadErrors = (uploadError, deal, re
   const allEligibilityValidationErrors = mergeEligibilityValidationErrors(deal.eligibility, deal.supportingInformation);
   const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
 
-  let documentationValidationErrors = generateErrorSummary(supportingInformation.validationErrors, eligibilityErrorHref);
+  let documentationValidationErrors = generateErrorSummary(
+    supportingInformation.validationErrors,
+    eligibilityErrorHref,
+  );
 
   if (documentationValidationErrors) {
     documentationValidationErrors.errorList[uploadError.fieldName] = uploadError.error;
@@ -198,7 +229,10 @@ router.post(
       return res.redirect(`/contract/${_id}/eligibility/check-your-answers`);
     }
 
-    const allEligibilityValidationErrors = mergeEligibilityValidationErrors(updatedDeal.eligibility, updatedDeal.supportingInformation);
+    const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
+      updatedDeal.eligibility,
+      updatedDeal.supportingInformation,
+    );
     const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
 
     const completedForms = completedEligibilityForms(updatedDeal.eligibility.status, validationErrors);
@@ -255,10 +289,17 @@ router.post(
 
       const { eligibility, supportingInformation } = updatedDeal;
 
-      if (supportingInformation && supportingInformation.validationErrors && supportingInformation.validationErrors.uploadErrorCount) {
+      if (
+        supportingInformation &&
+        supportingInformation.validationErrors &&
+        supportingInformation.validationErrors.uploadErrorCount
+      ) {
         const documentationValidationErrors = generateErrorSummary(supportingInformation.validationErrors, errorHref);
 
-        const allEligibilityValidationErrors = mergeEligibilityValidationErrors(updatedDeal.eligibility, updatedDeal.supportingInformation);
+        const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
+          updatedDeal.eligibility,
+          updatedDeal.supportingInformation,
+        );
         const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
 
         const completedForms = completedEligibilityForms(updatedDeal.eligibility.status, validationErrors);
@@ -292,21 +333,30 @@ router.get('/contract/:_id/eligibility-documentation/:fieldname/:filename', asyn
   fileData.pipe(readStream).pipe(res);
 });
 
-router.get('/contract/:_id/eligibility/check-your-answers', [validateRole({ role: [MAKER] }), provide([DEAL])], async (req, res) => {
-  const { deal } = req.apiData;
+router.get(
+  '/contract/:_id/eligibility/check-your-answers',
+  [validateRole({ role: [MAKER] }), provide([DEAL])],
+  async (req, res) => {
+    const { deal } = req.apiData;
 
-  const allEligibilityValidationErrors = mergeEligibilityValidationErrors(deal.eligibility, deal.supportingInformation);
+    const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
+      deal.eligibility,
+      deal.supportingInformation,
+    );
 
-  const validationErrors = generateErrorSummary(eligibilityCheckYourAnswersValidationErrors(allEligibilityValidationErrors, deal._id));
+    const validationErrors = generateErrorSummary(
+      eligibilityCheckYourAnswersValidationErrors(allEligibilityValidationErrors, deal._id),
+    );
 
-  const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
+    const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
 
-  return res.render('eligibility/eligibility-check-your-answers.njk', {
-    deal,
-    user: req.session.user,
-    validationErrors,
-    taskListItems: eligibilityTaskList(completedForms),
-  });
-});
+    return res.render('eligibility/eligibility-check-your-answers.njk', {
+      deal,
+      user: req.session.user,
+      validationErrors,
+      taskListItems: eligibilityTaskList(completedForms),
+    });
+  },
+);
 
 module.exports = router;

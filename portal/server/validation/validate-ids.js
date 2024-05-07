@@ -40,7 +40,8 @@ const isValidRegex = (regex, value) => regex.test(value);
  * @param {String} companiesHouseNumber
  * @returns {Boolean} asserts if regex is matched
  */
-const isValidCompaniesHouseNumber = (companiesHouseNumber) => isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, companiesHouseNumber);
+const isValidCompaniesHouseNumber = (companiesHouseNumber) =>
+  isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, companiesHouseNumber);
 
 /**
  * isValidResetPasswordToken
@@ -92,5 +93,5 @@ module.exports = {
   isValidDocumentType,
   isValidFileName,
   isValidBankId,
-  isValidSqlId
+  isValidSqlId,
 };

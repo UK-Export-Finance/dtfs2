@@ -7,7 +7,9 @@ const page = 'contract/contract-view.njk';
 const render = pageRenderer(page);
 const dealFullyCompleted = require('../fixtures/deal-fully-completed');
 const { NON_MAKER_ROLES } = require('../../test-helpers/common-role-lists');
-const { DATE: { LONDON_TIMEZONE } } = require('../../server/constants');
+const {
+  DATE: { LONDON_TIMEZONE },
+} = require('../../server/constants');
 
 const { MAKER, CHECKER } = ROLES;
 
@@ -64,7 +66,8 @@ describe(page, () => {
         return wrappers.forEach((wrapper) =>
           wrapper
             .expectLink(`[data-cy="loan-bank-reference-number-link-${loanId}"]`)
-            .toLinkTo(`/contract/${dealId}/loan/${loanId}/guarantee-details`, mockDeal.loanTransactions.items[0].name));
+            .toLinkTo(`/contract/${dealId}/loan/${loanId}/guarantee-details`, mockDeal.loanTransactions.items[0].name),
+        );
       });
     });
   });
@@ -94,7 +97,9 @@ describe(page, () => {
 
         return wrappers.forEach((wrapper) => {
           wrapper.expectLink(`[data-cy="loan-bank-reference-number-link-${loanId}"]`).notToExist();
-          wrapper.expectText(`[data-cy="loan-bank-reference-number-${loanId}"]`).toRead(mockDeal.loanTransactions.items[0].name);
+          wrapper
+            .expectText(`[data-cy="loan-bank-reference-number-${loanId}"]`)
+            .toRead(mockDeal.loanTransactions.items[0].name);
         });
       });
     });
@@ -125,7 +130,9 @@ describe(page, () => {
 
         return wrappers.forEach((wrapper) => {
           wrapper.expectLink(`[data-cy="loan-bank-reference-number-link-${loanId}"]`).notToExist();
-          wrapper.expectText(`[data-cy="loan-bank-reference-number-${loanId}"]`).toRead(mockDeal.loanTransactions.items[0].name);
+          wrapper
+            .expectText(`[data-cy="loan-bank-reference-number-${loanId}"]`)
+            .toRead(mockDeal.loanTransactions.items[0].name);
         });
       });
     });
@@ -148,11 +155,15 @@ describe(page, () => {
       });
 
       it('displays additionalRefName', () =>
-        wrappers.forEach((wrapper) => wrapper.expectText('[data-cy="additionalRefName"]').toRead(mockDeal.additionalRefName)));
+        wrappers.forEach((wrapper) =>
+          wrapper.expectText('[data-cy="additionalRefName"]').toRead(mockDeal.additionalRefName),
+        ));
 
-      it('should render contract overview table', () => wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="contract-overview-table"]').toExist()));
+      it('should render contract overview table', () =>
+        wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="contract-overview-table"]').toExist()));
 
-      it('should render Summary Table component', () => wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="summary-table"]').toExist()));
+      it('should render Summary Table component', () =>
+        wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="summary-table"]').toExist()));
 
       it('should render Forms Incomplete text component', () =>
         wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="forms-incomplete-text"]').toExist()));
@@ -175,29 +186,48 @@ describe(page, () => {
 
       it('links to the about supply contract section', () =>
         wrappers.forEach((wrapper) =>
-          wrapper.expectLink('[data-cy="ViewAboutSupplierDetails"]').toLinkTo(`/contract/${mockDeal._id}/about/supplier`, 'View details')));
+          wrapper
+            .expectLink('[data-cy="ViewAboutSupplierDetails"]')
+            .toLinkTo(`/contract/${mockDeal._id}/about/supplier`, 'View details'),
+        ));
 
       it('links to the eligibility criteria section', () =>
         wrappers.forEach((wrapper) =>
-          wrapper.expectLink('[data-cy="ViewDetails"]').toLinkTo(`/contract/${mockDeal._id}/eligibility/criteria`, 'View details')));
+          wrapper
+            .expectLink('[data-cy="ViewDetails"]')
+            .toLinkTo(`/contract/${mockDeal._id}/eligibility/criteria`, 'View details'),
+        ));
 
       it('allows the user to add a bond', () =>
-        wrappers.forEach((wrapper) => wrapper.expectLink('[data-cy="link-add-bond"]').toLinkTo(`/contract/${mockDeal._id}/bond/create`, 'Add a Bond')));
+        wrappers.forEach((wrapper) =>
+          wrapper
+            .expectLink('[data-cy="link-add-bond"]')
+            .toLinkTo(`/contract/${mockDeal._id}/bond/create`, 'Add a Bond'),
+        ));
 
       it('provides a link to the bond', () => {
         const dealId = mockDeal._id;
         const bondId = mockDeal.bondTransactions.items[0]._id;
 
         return wrappers.forEach((wrapper) =>
-          wrapper.expectLink(`[data-cy="name-link-${bondId}"]`).toLinkTo(`/contract/${dealId}/bond/${bondId}/details`, mockDeal.bondTransactions.items[0].name));
+          wrapper
+            .expectLink(`[data-cy="name-link-${bondId}"]`)
+            .toLinkTo(`/contract/${dealId}/bond/${bondId}/details`, mockDeal.bondTransactions.items[0].name),
+        );
       });
 
-      it('renders bond transactions table', () => wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="bond-transactions-table"]').toExist()));
+      it('renders bond transactions table', () =>
+        wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="bond-transactions-table"]').toExist()));
 
       it('allows the user to add a loan', () =>
-        wrappers.forEach((wrapper) => wrapper.expectLink('[data-cy="link-add-loan"]').toLinkTo(`/contract/${mockDeal._id}/loan/create`, 'Add a Loan')));
+        wrappers.forEach((wrapper) =>
+          wrapper
+            .expectLink('[data-cy="link-add-loan"]')
+            .toLinkTo(`/contract/${mockDeal._id}/loan/create`, 'Add a Loan'),
+        ));
 
-      it('renders loan transactions table', () => wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="loan-transactions-table"]').toExist()));
+      it('renders loan transactions table', () =>
+        wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="loan-transactions-table"]').toExist()));
     });
 
     describe('when viewed with editable=false', () => {
@@ -219,9 +249,11 @@ describe(page, () => {
       it('hides the link to the about supply contract section', () =>
         wrappers.forEach((wrapper) => wrapper.expectLink('[data-cy="ViewAboutSupplierDetails"]').notToExist()));
 
-      it('hides the link to the eligibility criteria section', () => wrappers.forEach((wrapper) => wrapper.expectLink('[data-cy="ViewDetails"]').notToExist()));
+      it('hides the link to the eligibility criteria section', () =>
+        wrappers.forEach((wrapper) => wrapper.expectLink('[data-cy="ViewDetails"]').notToExist()));
 
-      it('hides the link to add a bond', () => wrappers.forEach((wrapper) => wrapper.expectLink('[data-cy="link-add-bond"]').notToExist()));
+      it('hides the link to add a bond', () =>
+        wrappers.forEach((wrapper) => wrapper.expectLink('[data-cy="link-add-bond"]').notToExist()));
 
       it('hides the link to delete a bond', () => {
         const bondId = mockDeal.bondTransactions.items[0]._id;
@@ -233,12 +265,15 @@ describe(page, () => {
         return wrappers.forEach((wrapper) => wrapper.expectLink(`[data-cy="name-link-${bondId}"]`).notToExist());
       });
 
-      it('hides the link to add a loan', () => wrappers.forEach((wrapper) => wrapper.expectLink('[data-cy="link-add-loan"]').notToExist()));
+      it('hides the link to add a loan', () =>
+        wrappers.forEach((wrapper) => wrapper.expectLink('[data-cy="link-add-loan"]').notToExist()));
 
       it('hides the link to the loan', () => {
         const loanId = mockDeal.loanTransactions.items[0]._id;
 
-        return wrappers.forEach((wrapper) => wrapper.expectLink(`[data-cy="loan-bank-reference-number-link-${loanId}"]`).notToExist());
+        return wrappers.forEach((wrapper) =>
+          wrapper.expectLink(`[data-cy="loan-bank-reference-number-link-${loanId}"]`).notToExist(),
+        );
       });
     });
 

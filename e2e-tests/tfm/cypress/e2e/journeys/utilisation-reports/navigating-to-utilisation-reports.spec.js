@@ -31,7 +31,10 @@ context('PDC_READ users can route to the payments page for a bank', () => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
 
     cy.wrap(visibleBanks).each((bank) => {
-      const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(bank.utilisationReportPeriodSchedule, submissionMonth);
+      const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(
+        bank.utilisationReportPeriodSchedule,
+        submissionMonth,
+      );
 
       const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(status)
         .withId(bank.id)

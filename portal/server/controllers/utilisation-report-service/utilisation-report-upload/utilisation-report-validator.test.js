@@ -100,7 +100,10 @@ describe('utilisation-report-validator', () => {
       const availableHeaders = [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID, UTILISATION_REPORT_HEADERS.BASE_CURRENCY];
 
       validateCsvCellData(csvData, availableHeaders);
-      expect(generateUkefFacilityIdError).toHaveBeenCalledWith({ value: '20001371', column: 'B', row: 1 }, 'test exporter');
+      expect(generateUkefFacilityIdError).toHaveBeenCalledWith(
+        { value: '20001371', column: 'B', row: 1 },
+        'test exporter',
+      );
       expect(generateBaseCurrencyError).toHaveBeenCalledWith({ value: 'GBP', column: 'D', row: 1 }, 'test exporter');
       expect(generateFacilityUtilisationError).not.toHaveBeenCalled();
     });
@@ -156,21 +159,25 @@ describe('utilisation-report-validator', () => {
         };
 
         describe.each(['-', '_'])("when the separator is '%s'", (separator) => {
-          it.each([long, short, numeric])("should return no errors when the filename contains '%s' and the correct year", (monthIdentifier) => {
-            // Arrange
-            const filename = `Monthly Bank${separator}${monthIdentifier}${separator}${year}.xlsx`;
+          it.each([long, short, numeric])(
+            "should return no errors when the filename contains '%s' and the correct year",
+            (monthIdentifier) => {
+              // Arrange
+              const filename = `Monthly Bank${separator}${monthIdentifier}${separator}${year}.xlsx`;
 
-            // Act
-            const { filenameError } = validateFilenameFormat(filename, dueReportPeriod);
+              // Act
+              const { filenameError } = validateFilenameFormat(filename, dueReportPeriod);
 
-            // Assert
-            expect(filenameError).toBeUndefined();
-          });
+              // Assert
+              expect(filenameError).toBeUndefined();
+            },
+          );
         });
 
         it('should return an error with an example filename when the filename contains an incorrect month', () => {
           // Arrange
-          const incorrectMonth = allMonths.find((month) => month.index === index + 1)?.short ?? MONTH_NAMES.JANUARY.short;
+          const incorrectMonth =
+            allMonths.find((month) => month.index === index + 1)?.short ?? MONTH_NAMES.JANUARY.short;
           const filename = `Monthly Bank-${incorrectMonth}-${year}.xlsx`;
 
           const exampleFilenameReportPeriod = `${numeric}-${year}`;
@@ -179,7 +186,9 @@ describe('utilisation-report-validator', () => {
           const { filenameError } = validateFilenameFormat(filename, dueReportPeriod);
 
           // Assert
-          expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+          expect(filenameError).toBe(
+            `The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`,
+          );
         });
 
         it('should return an error with an example filename when the filename contains an incorrect year', () => {
@@ -193,7 +202,9 @@ describe('utilisation-report-validator', () => {
           const { filenameError } = validateFilenameFormat(filename, dueReportPeriod);
 
           // Assert
-          expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+          expect(filenameError).toBe(
+            `The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`,
+          );
         });
       });
 
@@ -249,7 +260,9 @@ describe('utilisation-report-validator', () => {
         const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
 
         // Assert
-        expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+        expect(filenameError).toBe(
+          `The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`,
+        );
       });
 
       it('should return an error with an example filename when the filename contains an incorrect year', () => {
@@ -263,7 +276,9 @@ describe('utilisation-report-validator', () => {
         const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
 
         // Assert
-        expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+        expect(filenameError).toBe(
+          `The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`,
+        );
       });
 
       it("should return an error when the filename does not contain the word 'quarterly'", () => {
@@ -315,7 +330,9 @@ describe('utilisation-report-validator', () => {
         const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
 
         // Assert
-        expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+        expect(filenameError).toBe(
+          `The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`,
+        );
       });
 
       it('should return an error with an example filename when the filename contains an incorrect end year', () => {
@@ -329,7 +346,9 @@ describe('utilisation-report-validator', () => {
         const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
 
         // Assert
-        expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+        expect(filenameError).toBe(
+          `The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`,
+        );
       });
 
       it("should return an error when the filename does not contain the word 'quarterly'", () => {

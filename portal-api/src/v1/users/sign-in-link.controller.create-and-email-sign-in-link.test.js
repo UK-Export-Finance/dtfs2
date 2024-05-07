@@ -72,7 +72,9 @@ describe('SignInLinkController', () => {
 
     it('should return a 403 with the error message as a response body if the user is blocked', async () => {
       const errorMessage = 'a test userIsBlockedError';
-      when(signInLinkService.createAndEmailSignInLink).calledWith(TEST_USER).mockRejectedValueOnce(new UserBlockedError(errorMessage));
+      when(signInLinkService.createAndEmailSignInLink)
+        .calledWith(TEST_USER)
+        .mockRejectedValueOnce(new UserBlockedError(errorMessage));
 
       await signInLinkController.createAndEmailSignInLink(req, res);
 
@@ -82,7 +84,9 @@ describe('SignInLinkController', () => {
 
     it('should return a 500 with the error message as a response body if creating or emailing the sign in link fails', async () => {
       const errorMessage = 'a test error';
-      when(signInLinkService.createAndEmailSignInLink).calledWith(TEST_USER).mockRejectedValueOnce(new Error(errorMessage));
+      when(signInLinkService.createAndEmailSignInLink)
+        .calledWith(TEST_USER)
+        .mockRejectedValueOnce(new Error(errorMessage));
 
       await signInLinkController.createAndEmailSignInLink(req, res);
 
@@ -94,7 +98,9 @@ describe('SignInLinkController', () => {
     });
 
     function mockSuccessfulCreateAndEmailSignInLink() {
-      when(signInLinkService.createAndEmailSignInLink).calledWith(TEST_USER).mockResolvedValueOnce(numberOfSendSignInLinkAttemptsRemaining);
+      when(signInLinkService.createAndEmailSignInLink)
+        .calledWith(TEST_USER)
+        .mockResolvedValueOnce(numberOfSendSignInLinkAttemptsRemaining);
     }
   });
 });

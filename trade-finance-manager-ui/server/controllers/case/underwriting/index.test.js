@@ -81,7 +81,8 @@ describe('GET getUnderwriterPage', () => {
     });
 
     it('should render template with the amendment which is submittedByPim and requireUkefApproval (when 1 automatic amendment exists)', async () => {
-      api.getAmendmentsByDealId = () => Promise.resolve({ data: [MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_AMENDMENT_AUTOMATIC_APPROVAL] });
+      api.getAmendmentsByDealId = () =>
+        Promise.resolve({ data: [MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_AMENDMENT_AUTOMATIC_APPROVAL] });
 
       await underwriterController.getUnderwriterPage(req, res);
 
@@ -112,7 +113,12 @@ describe('GET getUnderwriterPage', () => {
     it('should render template with 2 amendments which are submittedByPim and requireUkefApproval (when unsubmitted amendment exists)', async () => {
       api.getAmendmentsByDealId = () =>
         Promise.resolve({
-          data: [MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_AMENDMENT_AUTOMATIC_APPROVAL, MOCKS.MOCK_AMENDMENT_UNSUBMITTED, MOCKS.MOCK_AMENDMENT],
+          data: [
+            MOCKS.MOCK_AMENDMENT,
+            MOCKS.MOCK_AMENDMENT_AUTOMATIC_APPROVAL,
+            MOCKS.MOCK_AMENDMENT_UNSUBMITTED,
+            MOCKS.MOCK_AMENDMENT,
+          ],
         });
 
       await underwriterController.getUnderwriterPage(req, res);

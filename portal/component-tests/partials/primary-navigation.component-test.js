@@ -110,7 +110,9 @@ describe(page, () => {
 
   function itRendersAUtilisationReportUploadLink() {
     it('renders a utilisation report upload link', () => {
-      wrapper.expectLink('[data-cy="upload_report"]').toLinkTo('/utilisation-report-upload', 'Report GEF utilisation and fees');
+      wrapper
+        .expectLink('[data-cy="upload_report"]')
+        .toLinkTo('/utilisation-report-upload', 'Report GEF utilisation and fees');
     });
   }
 

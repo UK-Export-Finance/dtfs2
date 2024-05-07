@@ -8,7 +8,9 @@ const { LOGIN_STATUSES, SIGN_IN_LINK, USER, HTTP_ERROR_CAUSES } = require('../..
 const users = require('./test-data');
 const { setUpApiTestUser } = require('../../api-test-users');
 const databaseHelper = require('../../database-helper');
-const { createPartiallyLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
+const {
+  createPartiallyLoggedInUserSession,
+} = require('../../../test-helpers/api-test-helpers/database/user-repository');
 const { sanitizeUser } = require('../../../src/v1/users/sanitizeUserData');
 
 const aMaker = users.barclaysBankMaker1;
@@ -61,7 +63,10 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
       username: userToCreateAsPartiallyLoggedIn.username,
       properties: ['signInLinkSendCount', 'signInLinkSendDate', 'signInTokens', 'disabled'],
     });
-    await databaseHelper.setUserProperties({ username: userToCreateAsPartiallyLoggedIn.username, update: { 'user-status': USER.STATUS.ACTIVE } });
+    await databaseHelper.setUserProperties({
+      username: userToCreateAsPartiallyLoggedIn.username,
+      update: { 'user-status': USER.STATUS.ACTIVE },
+    });
 
     jest.resetAllMocks();
   });
@@ -73,7 +78,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
 
   describe('validation', () => {
     it('returns a 400 error if userId is not a valid ObjectID', async () => {
-      const { status, body } = await loginWithSignInLink({ userId: invalidUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+      const { status, body } = await loginWithSignInLink({
+        userId: invalidUserId,
+        signInToken: validSignInToken,
+        userToken: partiallyLoggedInUserToken,
+      });
 
       expect(status).toBe(400);
       expect(body).toStrictEqual({
@@ -196,7 +205,8 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     beforeAll(async () => {
       const anotherPartiallyLoggedInUserResponse = await createUser(anotherUserToCreateAsPartiallyLoggedIn);
       anotherPartiallyLoggedInUser = anotherPartiallyLoggedInUserResponse.body.user;
-      ({ token: anotherPartiallyLoggedInUserToken } = await createPartiallyLoggedInUserSession(anotherPartiallyLoggedInUser));
+      ({ token: anotherPartiallyLoggedInUserToken } =
+        await createPartiallyLoggedInUserSession(anotherPartiallyLoggedInUser));
     });
 
     it('returns a 400 error', async () => {
@@ -446,7 +456,9 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
               userToken: partiallyLoggedInUserToken,
             });
             // lastLogin is removed as this will be the login prior to this login (in tests, this is undefined)
-            const { lastLogin, ...expectedSanitisedUser } = sanitizeUser(await databaseHelper.getUserById(partiallyLoggedInUserId));
+            const { lastLogin, ...expectedSanitisedUser } = sanitizeUser(
+              await databaseHelper.getUserById(partiallyLoggedInUserId),
+            );
 
             expect(status).toEqual(200);
             expect(body).toStrictEqual({
@@ -459,7 +471,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
           });
 
           it('deletes the saved sign in token for the user', async () => {
-            await loginWithSignInLink({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+            await loginWithSignInLink({
+              userId: partiallyLoggedInUserId,
+              signInToken: validSignInToken,
+              userToken: partiallyLoggedInUserToken,
+            });
 
             const testUserInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
             expect(testUserInDb.signInTokens).toBe(undefined);

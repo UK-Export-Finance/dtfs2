@@ -20,7 +20,8 @@ describe('api rate limiting', () => {
   });
 
   describe('for non-static routes', () => {
-    const sendRequestTimes = (numberOfRequestsToSend) => Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => get('/mandatory-criteria')));
+    const sendRequestTimes = (numberOfRequestsToSend) =>
+      Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => get('/mandatory-criteria')));
 
     it('returns a 429 response if more than RATE_LIMIT_THRESHOLD requests are made from the same IP to the same endpoint in 1 minute', async () => {
       await sendRequestTimes(rateLimit);
@@ -40,7 +41,8 @@ describe('api rate limiting', () => {
   });
 
   describe('for static routes', () => {
-    const sendRequestTimes = (numberOfRequestsToSend) => Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => get('/assets/js/main.js')));
+    const sendRequestTimes = (numberOfRequestsToSend) =>
+      Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => get('/assets/js/main.js')));
 
     it('returns a 200 response if more than RATE_LIMIT_THRESHOLD requests are made from the same IP to the same endpoint in 1 minute', async () => {
       await sendRequestTimes(rateLimit);

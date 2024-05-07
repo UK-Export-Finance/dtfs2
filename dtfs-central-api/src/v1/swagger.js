@@ -5,7 +5,8 @@ const swaggerDefinition = {
   info: {
     title: 'Central API',
     version: '1.0.0',
-    description: 'API to handle submissions, getting and updating data from one API to another API. (Portal > Central > TFM and vice versa) ',
+    description:
+      'API to handle submissions, getting and updating data from one API to another API. (Portal > Central > TFM and vice versa) ',
   },
   tags: [
     {
@@ -22,7 +23,8 @@ const swaggerDefinition = {
     },
     {
       name: 'TFM',
-      description: 'Create, get and update TFM deals, facilities, users and teams. Consumed by TFM (excluding the /submit endpoint which Portal calls).',
+      description:
+        'Create, get and update TFM deals, facilities, users and teams. Consumed by TFM (excluding the /submit endpoint which Portal calls).',
     },
     {
       name: 'User',
@@ -32,11 +34,7 @@ const swaggerDefinition = {
 };
 const swaggerSpec = swaggerJsdoc({
   swaggerDefinition,
-  apis: [
-    './src/v1/swagger-definitions/*.js',
-    './src/v1/swagger-definitions/*/*.js',
-    './src/v1/routes/*.js',
-  ],
+  apis: ['./src/v1/swagger-definitions/*.js', './src/v1/swagger-definitions/*/*.js', './src/v1/routes/*.js'],
 });
 
 const swaggerUiOptions = {

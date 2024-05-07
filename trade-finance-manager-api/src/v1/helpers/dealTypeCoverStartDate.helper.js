@@ -9,8 +9,12 @@ const dealTypeCoverStartDate = (facilitySnapshot) => {
 
   let dateConstructed;
 
-  if (facilitySnapshot['requestedCoverStartDate-year'] && facilitySnapshot['requestedCoverStartDate-month'] && facilitySnapshot['requestedCoverStartDate-day']) {
-  // BSS stored as separate year month day values
+  if (
+    facilitySnapshot['requestedCoverStartDate-year'] &&
+    facilitySnapshot['requestedCoverStartDate-month'] &&
+    facilitySnapshot['requestedCoverStartDate-day']
+  ) {
+    // BSS stored as separate year month day values
     dateConstructed = new Date(
       facilitySnapshot['requestedCoverStartDate-year'],
       facilitySnapshot['requestedCoverStartDate-month'] - 1,

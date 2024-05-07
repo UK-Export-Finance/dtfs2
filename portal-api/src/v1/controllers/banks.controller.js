@@ -1,6 +1,9 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
-const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const {
+  generateAuditDatabaseRecordFromAuditDetails,
+  generatePortalAuditDetails,
+} = require('@ukef/dtfs2-common/change-stream');
 const { hasValidObjectId } = require('../validation/validateObjectId');
 const { PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
@@ -52,16 +55,15 @@ exports.create = async (req, res) => {
   return res.status(200).json(result);
 };
 
-exports.findAll = (req, res) => (
-  findBanks((banks) => res.status(200).send({
-    count: banks.length,
-    banks,
-  }))
-);
+exports.findAll = (req, res) =>
+  findBanks((banks) =>
+    res.status(200).send({
+      count: banks.length,
+      banks,
+    }),
+  );
 
-exports.findOne = (req, res) => (
-  findOneBank(req.params.id, (deal) => res.status(200).send(deal))
-);
+exports.findOne = (req, res) => findOneBank(req.params.id, (deal) => res.status(200).send(deal));
 
 exports.update = async (req, res) => {
   const { id } = req.params;
@@ -73,7 +75,7 @@ exports.update = async (req, res) => {
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
   const collection = await db.getCollection('banks');
-  const update = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) }
+  const update = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
   const updatedBank = await collection.updateOne({ id: { $eq: id } }, { $set: update }, {});
 
   return res.status(200).json(updatedBank);

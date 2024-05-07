@@ -15,7 +15,10 @@ console.error = jest.fn();
 const originalProcessEnv = process.env;
 
 describe('controllers/utilisation-reports', () => {
-  const isTfmPaymentReconciliationFeatureFlagEnabledSpy = jest.spyOn(dtfs2Common, 'isTfmPaymentReconciliationFeatureFlagEnabled');
+  const isTfmPaymentReconciliationFeatureFlagEnabledSpy = jest.spyOn(
+    dtfs2Common,
+    'isTfmPaymentReconciliationFeatureFlagEnabled',
+  );
 
   afterEach(() => {
     process.env = { ...originalProcessEnv };
@@ -46,7 +49,9 @@ describe('controllers/utilisation-reports', () => {
       const userToken = 'user-token';
 
       const isTfmPaymentReconciliationFeatureFlagEnabledValue = true;
-      isTfmPaymentReconciliationFeatureFlagEnabledSpy.mockReturnValue(isTfmPaymentReconciliationFeatureFlagEnabledValue);
+      isTfmPaymentReconciliationFeatureFlagEnabledSpy.mockReturnValue(
+        isTfmPaymentReconciliationFeatureFlagEnabledValue,
+      );
 
       const { res, req } = httpMocks.createMocks({
         session: { userToken, user: MOCK_TFM_SESSION_USER },
@@ -58,8 +63,13 @@ describe('controllers/utilisation-reports', () => {
       jest.useFakeTimers().setSystemTime(today);
 
       jest.mocked(api.getUkBankHolidays).mockResolvedValue(MOCK_BANK_HOLIDAYS);
-      jest.mocked(api.getUtilisationReportsReconciliationSummary).mockResolvedValue(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY);
-      const expectedViewModel = await getReportReconciliationSummariesViewModel(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY, userToken);
+      jest
+        .mocked(api.getUtilisationReportsReconciliationSummary)
+        .mockResolvedValue(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY);
+      const expectedViewModel = await getReportReconciliationSummariesViewModel(
+        MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY,
+        userToken,
+      );
 
       // Act
       await getUtilisationReports(req, res);

@@ -1,7 +1,11 @@
 import { Request } from 'express';
 import { validationResult } from 'express-validator';
 import { createRequest } from 'node-mocks-http';
-import { ReportWithStatus, UtilisationReportReconciliationStatus, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import {
+  ReportWithStatus,
+  UtilisationReportReconciliationStatus,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+} from '@ukef/dtfs2-common';
 import { updateReportStatusPayloadValidation } from '.';
 import { TfmSessionUser } from '../../../../types/tfm-session-user';
 import { UpdateUtilisationReportStatusRequestBody } from '../../../controllers/utilisation-reports/update-utilisation-report-status.controller';

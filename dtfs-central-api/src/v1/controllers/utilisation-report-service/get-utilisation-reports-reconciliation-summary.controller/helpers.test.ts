@@ -9,8 +9,15 @@ import {
 } from '@ukef/dtfs2-common';
 
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
-import { generateReconciliationSummaries, getAllReportsForSubmissionMonth, getPreviousOpenReportsBySubmissionMonth } from './helpers';
-import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
+import {
+  generateReconciliationSummaries,
+  getAllReportsForSubmissionMonth,
+  getPreviousOpenReportsBySubmissionMonth,
+} from './helpers';
+import {
+  UtilisationReportReconciliationSummary,
+  UtilisationReportReconciliationSummaryItem,
+} from '../../../../types/utilisation-reports';
 import { aBank } from '../../../../../test-helpers/test-data/bank';
 import { aMonthlyBankReportPeriodSchedule } from '../../../../../test-helpers/test-data/bank-report-period-schedule';
 import { getAllBanks } from '../../../../repositories/banks-repo';
@@ -20,10 +27,14 @@ jest.mock('../../../../repositories/utilisation-reports-repo');
 jest.mock('../../../../repositories/utilisation-data-repo');
 
 describe('get-utilisation-reports-reconciliation-summary.controller helper', () => {
-  const getMockFeeRecordForReport = (report: UtilisationReportEntity): FeeRecordEntity => FeeRecordEntityMockBuilder.forReport(report).build();
+  const getMockFeeRecordForReport = (report: UtilisationReportEntity): FeeRecordEntity =>
+    FeeRecordEntityMockBuilder.forReport(report).build();
 
   const getOpenReportWithReportPeriod = (bank: Bank, reportPeriod: ReportPeriod): UtilisationReportEntity => {
-    const openReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withBankId(bank.id).withReportPeriod(reportPeriod).build();
+    const openReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+      .withBankId(bank.id)
+      .withReportPeriod(reportPeriod)
+      .build();
     openReport.feeRecords = [getMockFeeRecordForReport(openReport)];
     return openReport;
   };
@@ -53,7 +64,9 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
 
       jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod').mockResolvedValue(null);
 
-      const expectedError = new Error(`Failed to get report for bank with id ${banks[0].id} for submission month ${submissionMonth}`);
+      const expectedError = new Error(
+        `Failed to get report for bank with id ${banks[0].id} for submission month ${submissionMonth}`,
+      );
 
       // Act/Assert
       await expect(getAllReportsForSubmissionMonth(banks, submissionMonth)).rejects.toThrow(expectedError);
@@ -66,7 +79,12 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       const bankNameOne = 'Barclays';
       const bankNameTwo = 'HSBC';
       const banks: Bank[] = [
-        { ...aBank(), id: bankIdOne, name: bankNameOne, utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule() },
+        {
+          ...aBank(),
+          id: bankIdOne,
+          name: bankNameOne,
+          utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule(),
+        },
         {
           ...aBank(),
           id: bankIdTwo,
@@ -91,17 +109,18 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         .build();
       reportTwo.feeRecords = [getMockFeeRecordForReport(reportTwo)];
 
-      // eslint-disable-next-line @typescript-eslint/require-await
-      const findOneByBankIdAndReportPeriodSpy = jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod').mockImplementation(async (bankId) => {
-        switch (bankId) {
-          case bankIdOne:
-            return reportOne;
-          case bankIdTwo:
-            return reportTwo;
-          default:
-            return null;
-        }
-      });
+      const findOneByBankIdAndReportPeriodSpy = jest
+        .spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod')
+        .mockImplementation((bankId) => {
+          switch (bankId) {
+            case bankIdOne:
+              return reportOne;
+            case bankIdTwo:
+              return reportTwo;
+            default:
+              return null;
+          }
+        });
 
       // Act
       const result = await getAllReportsForSubmissionMonth(banks, submissionMonth);
@@ -202,7 +221,9 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
 
       const openReports: UtilisationReportEntity[] = [augustPeriodReport, septemberPeriodReport, octoberPeriodReport];
 
-      jest.spyOn(UtilisationReportRepo, 'findOpenReportsForBankIdWithReportPeriodEndBefore').mockResolvedValue(openReports);
+      jest
+        .spyOn(UtilisationReportRepo, 'findOpenReportsForBankIdWithReportPeriodEndBefore')
+        .mockResolvedValue(openReports);
 
       // Act
       const result = await getPreviousOpenReportsBySubmissionMonth(banks, currentSubmissionMonth);
@@ -238,30 +259,49 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
     });
 
     it('orders results by submissionMonth then bank name', async () => {
-      const bankA: Bank = { ...aBank(), id: 'A', name: 'Bank A', utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule() };
-      const bankB: Bank = { ...aBank(), id: 'B', name: 'Bank B', utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule() };
-      const bankC: Bank = { ...aBank(), id: 'C', name: 'Bank C', utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule() };
+      const bankA: Bank = {
+        ...aBank(),
+        id: 'A',
+        name: 'Bank A',
+        utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule(),
+      };
+      const bankB: Bank = {
+        ...aBank(),
+        id: 'B',
+        name: 'Bank B',
+        utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule(),
+      };
+      const bankC: Bank = {
+        ...aBank(),
+        id: 'C',
+        name: 'Bank C',
+        utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule(),
+      };
 
       const banks: Bank[] = [bankB, bankA, bankC];
       const currentSubmissionMonth: IsoMonthStamp = '2023-12';
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      jest.spyOn(UtilisationReportRepo, 'findOpenReportsForBankIdWithReportPeriodEndBefore').mockImplementation((bankId, _) => {
-        switch (bankId) {
-          case bankA.id:
-            return Promise.resolve([getOpenMonthlyReport({ bank: bankA, month: 10 })]);
-          case bankB.id:
-            return Promise.resolve([
-              getOpenMonthlyReport({ bank: bankB, month: 10 }),
-              getOpenMonthlyReport({ bank: bankB, month: 9 }),
-              getOpenMonthlyReport({ bank: bankB, month: 8 }),
-            ]);
-          case bankC.id:
-            return Promise.resolve([getOpenMonthlyReport({ bank: bankC, month: 9 }), getOpenMonthlyReport({ bank: bankC, month: 10 })]);
-          default:
-            throw new Error(`unexpected bankId ${bankId}`);
-        }
-      });
+      jest
+        .spyOn(UtilisationReportRepo, 'findOpenReportsForBankIdWithReportPeriodEndBefore')
+        .mockImplementation((bankId) => {
+          switch (bankId) {
+            case bankA.id:
+              return Promise.resolve([getOpenMonthlyReport({ bank: bankA, month: 10 })]);
+            case bankB.id:
+              return Promise.resolve([
+                getOpenMonthlyReport({ bank: bankB, month: 10 }),
+                getOpenMonthlyReport({ bank: bankB, month: 9 }),
+                getOpenMonthlyReport({ bank: bankB, month: 8 }),
+              ]);
+            case bankC.id:
+              return Promise.resolve([
+                getOpenMonthlyReport({ bank: bankC, month: 9 }),
+                getOpenMonthlyReport({ bank: bankC, month: 10 }),
+              ]);
+            default:
+              throw new Error(`unexpected bankId ${bankId}`);
+          }
+        });
 
       // Act
       const result = await getPreviousOpenReportsBySubmissionMonth(banks, currentSubmissionMonth);
@@ -306,7 +346,12 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
     });
 
     it('groups quarterly reports with monthly reports based on end month', async () => {
-      const bankA: Bank = { ...aBank(), id: 'A', name: 'Bank A', utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule() };
+      const bankA: Bank = {
+        ...aBank(),
+        id: 'A',
+        name: 'Bank A',
+        utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule(),
+      };
       const bankB: Bank = {
         ...aBank(),
         id: 'B',
@@ -324,8 +369,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
 
       const findOpenReportsForBankIdWithReportPeriodEndBeforeSpy = jest
         .spyOn(UtilisationReportRepo, 'findOpenReportsForBankIdWithReportPeriodEndBefore')
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        .mockImplementation((bankId, _) => {
+        .mockImplementation((bankId) => {
           switch (bankId) {
             case bankA.id:
               return Promise.resolve([
@@ -335,8 +379,14 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
               ]);
             case bankB.id:
               return Promise.resolve([
-                getOpenReportWithReportPeriod(bankB, { start: { month: 7, year: 2023 }, end: { month: 9, year: 2023 } }),
-                getOpenReportWithReportPeriod(bankB, { start: { month: 4, year: 2023 }, end: { month: 6, year: 2023 } }),
+                getOpenReportWithReportPeriod(bankB, {
+                  start: { month: 7, year: 2023 },
+                  end: { month: 9, year: 2023 },
+                }),
+                getOpenReportWithReportPeriod(bankB, {
+                  start: { month: 4, year: 2023 },
+                  end: { month: 6, year: 2023 },
+                }),
               ]);
             default:
               throw new Error(`unexpected bankId ${bankId}`);
@@ -347,8 +397,16 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       const result = await getPreviousOpenReportsBySubmissionMonth(banks, currentSubmissionMonth);
 
       // Assert
-      expect(findOpenReportsForBankIdWithReportPeriodEndBeforeSpy).toHaveBeenCalledWith(bankA.id, { month: 11, year: 2023 }, true);
-      expect(findOpenReportsForBankIdWithReportPeriodEndBeforeSpy).toHaveBeenCalledWith(bankB.id, { month: 11, year: 2023 }, true);
+      expect(findOpenReportsForBankIdWithReportPeriodEndBeforeSpy).toHaveBeenCalledWith(
+        bankA.id,
+        { month: 11, year: 2023 },
+        true,
+      );
+      expect(findOpenReportsForBankIdWithReportPeriodEndBeforeSpy).toHaveBeenCalledWith(
+        bankB.id,
+        { month: 11, year: 2023 },
+        true,
+      );
       expect(result).toEqual([
         // submissionMonth: '2023-12' (2023-11 report period) is the current submission month, so should not appear
         {
@@ -438,8 +496,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
 
       const findOpenReportsForBankIdWithReportPeriodEndBeforeSpy = jest
         .spyOn(UtilisationReportRepo, 'findOpenReportsForBankIdWithReportPeriodEndBefore')
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        .mockImplementation((bankId, _) => {
+        .mockImplementation((bankId) => {
           switch (bankId) {
             case bankA.id:
               return Promise.resolve([
@@ -449,8 +506,14 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
               ]);
             case bankB.id:
               return Promise.resolve([
-                getOpenReportWithReportPeriod(bankB, { start: { month: 7, year: 2023 }, end: { month: 9, year: 2023 } }),
-                getOpenReportWithReportPeriod(bankB, { start: { month: 4, year: 2023 }, end: { month: 6, year: 2023 } }),
+                getOpenReportWithReportPeriod(bankB, {
+                  start: { month: 7, year: 2023 },
+                  end: { month: 9, year: 2023 },
+                }),
+                getOpenReportWithReportPeriod(bankB, {
+                  start: { month: 4, year: 2023 },
+                  end: { month: 6, year: 2023 },
+                }),
               ]);
             case bankC.id:
               return Promise.resolve([]);
@@ -459,28 +522,52 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
           }
         });
 
-      // eslint-disable-next-line @typescript-eslint/require-await
-      const findOneByBankIdAndReportPeriodSpy = jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod').mockImplementation(async (bankId) => {
-        switch (bankId) {
-          case bankA.id:
-            return getOpenMonthlyReport({ bank: bankA, month: 11 });
-          case bankC.id:
-            return getOpenReportWithReportPeriod(bankA, { start: { month: 9, year: 2023 }, end: { month: 11, year: 2023 } });
-          default:
-            return null;
-        }
-      });
+      const findOneByBankIdAndReportPeriodSpy = jest
+        .spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod')
+        .mockImplementation((bankId) => {
+          switch (bankId) {
+            case bankA.id:
+              return getOpenMonthlyReport({ bank: bankA, month: 11 });
+            case bankC.id:
+              return getOpenReportWithReportPeriod(bankA, {
+                start: { month: 9, year: 2023 },
+                end: { month: 11, year: 2023 },
+              });
+            default:
+              return null;
+          }
+        });
 
       // Act
       const result = await generateReconciliationSummaries(submissionMonth);
 
       // Assert
       expect(findOneByBankIdAndReportPeriodSpy).toHaveBeenCalledTimes(2);
-      expect(findOneByBankIdAndReportPeriodSpy).toHaveBeenCalledWith(bankA.id, { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } }, true);
-      expect(findOneByBankIdAndReportPeriodSpy).toHaveBeenCalledWith(bankC.id, { start: { month: 9, year: 2023 }, end: { month: 11, year: 2023 } }, true);
-      expect(findOpenReportsForBankIdWithReportPeriodEndBeforeSpy).toHaveBeenCalledWith(bankA.id, { month: 11, year: 2023 }, true);
-      expect(findOpenReportsForBankIdWithReportPeriodEndBeforeSpy).toHaveBeenCalledWith(bankB.id, { month: 11, year: 2023 }, true);
-      expect(findOpenReportsForBankIdWithReportPeriodEndBeforeSpy).toHaveBeenCalledWith(bankC.id, { month: 11, year: 2023 }, true);
+      expect(findOneByBankIdAndReportPeriodSpy).toHaveBeenCalledWith(
+        bankA.id,
+        { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
+        true,
+      );
+      expect(findOneByBankIdAndReportPeriodSpy).toHaveBeenCalledWith(
+        bankC.id,
+        { start: { month: 9, year: 2023 }, end: { month: 11, year: 2023 } },
+        true,
+      );
+      expect(findOpenReportsForBankIdWithReportPeriodEndBeforeSpy).toHaveBeenCalledWith(
+        bankA.id,
+        { month: 11, year: 2023 },
+        true,
+      );
+      expect(findOpenReportsForBankIdWithReportPeriodEndBeforeSpy).toHaveBeenCalledWith(
+        bankB.id,
+        { month: 11, year: 2023 },
+        true,
+      );
+      expect(findOpenReportsForBankIdWithReportPeriodEndBeforeSpy).toHaveBeenCalledWith(
+        bankC.id,
+        { month: 11, year: 2023 },
+        true,
+      );
       expect(result).toEqual([
         {
           submissionMonth: '2023-12', // 2023-11 ending report period

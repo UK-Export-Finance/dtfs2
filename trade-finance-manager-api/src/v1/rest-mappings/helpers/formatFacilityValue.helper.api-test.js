@@ -9,7 +9,7 @@ describe('facilityValueFormatted()', () => {
   });
 
   it('should return GEF value which already with 2 decimal places', () => {
-    const value = 30000.00;
+    const value = 30000.0;
     const result = formatFacilityValue(value.toFixed(2));
 
     expect(result).toEqual(value.toFixed(2));

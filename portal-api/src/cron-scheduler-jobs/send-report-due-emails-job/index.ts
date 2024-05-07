@@ -1,6 +1,10 @@
 import { format, isSameDay } from 'date-fns';
 import { CronSchedulerJob, asString } from '@ukef/dtfs2-common';
-import { SendEmailCallback, getReportDueDate, sendEmailToAllBanksWhereReportNotReceived } from '../helpers/utilisation-report-helpers';
+import {
+  SendEmailCallback,
+  getReportDueDate,
+  sendEmailToAllBanksWhereReportNotReceived,
+} from '../helpers/utilisation-report-helpers';
 import sendEmail from '../../external-api/send-email';
 import EMAIL_TEMPLATE_IDS from '../../constants/email-template-ids';
 
@@ -30,12 +34,15 @@ const sendEmailsOnReportDueDate = async () => {
     });
   } else {
     const formattedReportDueDate = format(reportDueDate, 'dd-MMM-yy');
-    console.info(`Not sending ${EMAIL_DESCRIPTION} emails - report is not due today (is/was due on ${formattedReportDueDate})`);
+    console.info(
+      `Not sending ${EMAIL_DESCRIPTION} emails - report is not due today (is/was due on ${formattedReportDueDate})`,
+    );
   }
 };
 
 export const sendReportDueEmailsJob: CronSchedulerJob = {
   cronExpression: asString(UTILISATION_REPORT_DUE_EMAIL_SCHEDULE, 'UTILISATION_REPORT_DUE_EMAIL_SCHEDULE'),
-  description: 'Email banks to notify that this months GEF utilisation report has not yet been received and is due today',
+  description:
+    'Email banks to notify that this months GEF utilisation report has not yet been received and is due today',
   task: sendEmailsOnReportDueDate,
 };

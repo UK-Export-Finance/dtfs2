@@ -11,7 +11,8 @@ const underwritingPage = {
 
   exporterTableChangeOrAddCreditRatingLink: () => cy.get('[data-cy="exporter-table-credit-rating-action-link"]'),
   exporterTableChangeLossGivenDefaultLink: () => cy.get('[data-cy="exporter-table-change-loss-given-default-link"]'),
-  exporterTableChangeProbabilityOfDefaultLink: () => cy.get('[data-cy="exporter-table-change-probability-of-default-link"]'),
+  exporterTableChangeProbabilityOfDefaultLink: () =>
+    cy.get('[data-cy="exporter-table-change-probability-of-default-link"]'),
   facilityTable: (facilityId) => {
     cy.get(`[data-cy="facility-${facilityId}-pricing-risk-table"]`).as('table');
     return {
@@ -32,7 +33,8 @@ const underwritingPage = {
   amendmentChangeLeadUnderwriterLink: () => cy.get('[data-cy="amendment--change-lead-underwriter-link"]'),
 
   addAmendmentUnderwriterManagerDecisionButton: () => cy.get('[data-cy="amendment-manager-add-decision-link"]'),
-  amendmentUnderwriterManagerDecisionNotAdded: () => cy.get('[data-cy="amendment-manager-decision-not-added-readonly"]'),
+  amendmentUnderwriterManagerDecisionNotAdded: () =>
+    cy.get('[data-cy="amendment-manager-decision-not-added-readonly"]'),
   amendmentUnderwriterDecisionStatusTag: () => cy.get('[data-cy="decision-status-tag"]'),
   amendmentUnderwriterDecisionMadeBy: () => cy.get('[data-cy="decision-made-by-value"]'),
   amendmentUnderwriterDecisionDateTime: () => cy.get('[data-cy="date-time-value"]'),

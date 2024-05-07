@@ -1,4 +1,6 @@
-const { ROLES: { CHECKER, MAKER } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { CHECKER, MAKER },
+} = require('@ukef/dtfs2-common');
 const { NON_CHECKER_ROLES } = require('../../../../test-helpers/common-role-lists');
 
 const componentRenderer = require('../../../componentRenderer');
@@ -39,7 +41,9 @@ describe(component, () => {
 
         for (const deal of deals) {
           const wrapper = render({ user, deal, userCanSubmit });
-          wrapper.expectPrimaryButton('[data-cy="ProceedToSubmit"]').toLinkTo(`/contract/${deal._id}/confirm-submission`, 'Proceed to submit');
+          wrapper
+            .expectPrimaryButton('[data-cy="ProceedToSubmit"]')
+            .toLinkTo(`/contract/${deal._id}/confirm-submission`, 'Proceed to submit');
         }
       });
 
@@ -89,7 +93,6 @@ describe(component, () => {
         { _id: 8, status: 'Rejected by UKEF' },
         { _id: 9, status: 'Submitted' },
         { _id: 10, status: 'In progress by UKEF' },
-
       ];
 
       for (const deal of deals) {
@@ -119,7 +122,9 @@ describe(component, () => {
 
       for (const deal of deals) {
         const wrapper = render({ user, deal, userCanSubmit });
-        wrapper.expectPrimaryButton('[data-cy="ProceedToSubmit"]').toLinkTo(`/contract/${deal._id}/confirm-submission`, 'Proceed to submit');
+        wrapper
+          .expectPrimaryButton('[data-cy="ProceedToSubmit"]')
+          .toLinkTo(`/contract/${deal._id}/confirm-submission`, 'Proceed to submit');
       }
     });
 

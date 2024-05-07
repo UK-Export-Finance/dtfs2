@@ -75,7 +75,8 @@ module.exports.loginWithSignInLink = async (req, res) => {
     if (error.response?.status === 403) {
       if (
         error.response?.data?.errors?.find(
-          (exception) => exception.cause === HTTP_ERROR_CAUSES.USER_BLOCKED || exception.cause === HTTP_ERROR_CAUSES.USER_DISABLED,
+          (exception) =>
+            exception.cause === HTTP_ERROR_CAUSES.USER_BLOCKED || exception.cause === HTTP_ERROR_CAUSES.USER_DISABLED,
         )
       ) {
         return res.status(403).render('login/temporarily-suspended.njk');

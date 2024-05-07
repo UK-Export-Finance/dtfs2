@@ -19,10 +19,6 @@ router.get(
   (req, res) => ineligibleAutomaticCover(req, res),
 );
 
-router.get(
-  '/ineligible-gef',
-  [validateToken, validateRole({ role: [MAKER] })],
-  (req, res) => ineligibleGef(req, res),
-);
+router.get('/ineligible-gef', [validateToken, validateRole({ role: [MAKER] })], (req, res) => ineligibleGef(req, res));
 
 module.exports = router;

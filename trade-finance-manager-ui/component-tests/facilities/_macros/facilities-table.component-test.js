@@ -55,13 +55,17 @@ describe(component, () => {
     it('should render `facility id` table heading', () => {
       wrapper.expectText('[data-cy="facilities-table-heading-ukefFacilityId"]').toRead('Facility ID');
       wrapper.expectAriaSort('[data-cy="facilities-table-heading-ukefFacilityId"]').toEqual('ascending');
-      wrapper.expectElement('[data-cy="facilities-table-heading-ukefFacilityId-button"]').toHaveAttribute('autofocus', 'autofocus');
+      wrapper
+        .expectElement('[data-cy="facilities-table-heading-ukefFacilityId-button"]')
+        .toHaveAttribute('autofocus', 'autofocus');
     });
 
     it('should render `product` table heading', () => {
       wrapper.expectText('[data-cy="facilities-table-heading-dealType"]').toRead('Product');
       wrapper.expectAriaSort('[data-cy="facilities-table-heading-dealType"]').toEqual('none');
-      wrapper.expectElement('[data-cy="facilities-table-heading-dealType-button"]').toHaveAttribute('autofocus', undefined);
+      wrapper
+        .expectElement('[data-cy="facilities-table-heading-dealType-button"]')
+        .toHaveAttribute('autofocus', undefined);
     });
 
     it('should render `type` table heading', () => {
@@ -73,25 +77,33 @@ describe(component, () => {
     it('should render `exporter` table heading', () => {
       wrapper.expectText('[data-cy="facilities-table-heading-companyName"]').toRead('Exporter');
       wrapper.expectAriaSort('[data-cy="facilities-table-heading-companyName"]').toEqual('none');
-      wrapper.expectElement('[data-cy="facilities-table-heading-companyName-button"]').toHaveAttribute('autofocus', undefined);
+      wrapper
+        .expectElement('[data-cy="facilities-table-heading-companyName-button"]')
+        .toHaveAttribute('autofocus', undefined);
     });
 
     it('should render `value (export currency)` table heading', () => {
       wrapper.expectText('[data-cy="facilities-table-heading-value"]').toRead('Value (export currency)');
       wrapper.expectAriaSort('[data-cy="facilities-table-heading-value"]').toEqual('none');
-      wrapper.expectElement('[data-cy="facilities-table-heading-value-button"]').toHaveAttribute('autofocus', undefined);
+      wrapper
+        .expectElement('[data-cy="facilities-table-heading-value-button"]')
+        .toHaveAttribute('autofocus', undefined);
     });
 
     it('should render `cover end date` table heading', () => {
       wrapper.expectText('[data-cy="facilities-table-heading-coverEndDate"]').toRead('Cover end date');
       wrapper.expectAriaSort('[data-cy="facilities-table-heading-coverEndDate"]').toEqual('none');
-      wrapper.expectElement('[data-cy="facilities-table-heading-coverEndDate-button"]').toHaveAttribute('autofocus', undefined);
+      wrapper
+        .expectElement('[data-cy="facilities-table-heading-coverEndDate-button"]')
+        .toHaveAttribute('autofocus', undefined);
     });
 
     it('should render `facility stage` table heading', () => {
       wrapper.expectText('[data-cy="facilities-table-heading-facilityStage"]').toRead('Facility stage');
       wrapper.expectAriaSort('[data-cy="facilities-table-heading-facilityStage"]').toEqual('none');
-      wrapper.expectElement('[data-cy="facilities-table-heading-facilityStage-button"]').toHaveAttribute('autofocus', undefined);
+      wrapper
+        .expectElement('[data-cy="facilities-table-heading-facilityStage-button"]')
+        .toHaveAttribute('autofocus', undefined);
     });
   });
 
@@ -100,10 +112,12 @@ describe(component, () => {
       params.facilities.forEach((facility) => {
         const selector = `[data-cy="facility-${facility.facilityId}-ukefFacilityId-link"]`;
 
-        wrapper.expectLink(selector).toLinkTo(
-          `/case/${facility.dealId}/facility/${facility.facilityId}`,
-          `View facility ${facility.ukefFacilityId} details`,
-        );
+        wrapper
+          .expectLink(selector)
+          .toLinkTo(
+            `/case/${facility.dealId}/facility/${facility.facilityId}`,
+            `View facility ${facility.ukefFacilityId} details`,
+          );
       });
     });
 

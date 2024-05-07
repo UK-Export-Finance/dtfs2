@@ -2,7 +2,11 @@ const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/stora
 const fetch = require('node-fetch');
 const { FILESHARES } = require('../constants');
 
-const { AZURE_WORKFLOW_FILESHARE_CONFIG, AZURE_PORTAL_FILESHARE_CONFIG, AZURE_UTILISATION_REPORTS_FILESHARE_CONFIG } = require('../config/fileshare.config');
+const {
+  AZURE_WORKFLOW_FILESHARE_CONFIG,
+  AZURE_PORTAL_FILESHARE_CONFIG,
+  AZURE_UTILISATION_REPORTS_FILESHARE_CONFIG,
+} = require('../config/fileshare.config');
 
 let userDefinedConfig;
 

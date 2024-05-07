@@ -28,7 +28,10 @@ export class UtilisationReportStateMachine {
     return new UtilisationReportStateMachine(report);
   }
 
-  public static async forBankIdAndReportPeriod(bankId: string, reportPeriod: ReportPeriod): Promise<UtilisationReportStateMachine> {
+  public static async forBankIdAndReportPeriod(
+    bankId: string,
+    reportPeriod: ReportPeriod,
+  ): Promise<UtilisationReportStateMachine> {
     const report = await UtilisationReportRepo.findOneByBankIdAndReportPeriod(bankId, reportPeriod);
     return new UtilisationReportStateMachine(report);
   }

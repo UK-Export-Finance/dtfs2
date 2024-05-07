@@ -16,8 +16,7 @@ const mockPayload = {
   submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA,
   submissionDate: '1643223993967',
   exporter: { companyName: 'Test company' },
-  ukefDecision: [{ timestamp: Date.now() }
-  ]
+  ukefDecision: [{ timestamp: Date.now() }],
 };
 
 describe('GET /v1/reports/review-ukef-decision', () => {
@@ -37,12 +36,14 @@ describe('GET /v1/reports/review-ukef-decision', () => {
     await databaseHelper.wipe([dealsCollectionName]);
 
     // create a GEF deal
-    mockApplication = await as(aMaker).post({ ...mockApplications[0], bank: { id: aMaker.bank.id } }).to(gefDealUrl);
+    mockApplication = await as(aMaker)
+      .post({ ...mockApplications[0], bank: { id: aMaker.bank.id } })
+      .to(gefDealUrl);
   });
 
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => get(reviewDecisionReportUrl),
-    makeRequestWithAuthHeader: (authHeader) => get(reviewDecisionReportUrl, { headers: { Authorization: authHeader } })
+    makeRequestWithAuthHeader: (authHeader) => get(reviewDecisionReportUrl, { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({
@@ -61,27 +62,31 @@ describe('GET /v1/reports/review-ukef-decision', () => {
     expect(status).toEqual(200);
 
     // update the `status` to 'UKEF_APPROVED_WITHOUT_CONDITIONS'
-    await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS }).to(`${gefDealUrl}/status/${body._id}`);
+    await as(aMaker)
+      .put({ status: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS })
+      .to(`${gefDealUrl}/status/${body._id}`);
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS };
     // perform a GET request to retrieve the reports for UKEF decision as a MAKER
     const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(reviewDecisionReportUrl, mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
-    expect(reportsBody).toEqual([{
-      dealId: expect.any(String),
-      bankInternalRefName: expect.any(String),
-      dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
-      status: expect.any(String),
-      companyName: expect.any(String),
-      dateCreatedEpoch: expect.any(Number),
-      dateOfApprovalEpoch: expect.any(Number),
-      submissionDateEpoch: expect.any(String),
-      dateCreated: expect.any(String),
-      submissionDate: expect.any(String),
-      dateOfApproval: expect.any(String),
-      daysToReview: 10 // key difference between UKEF_APPROVED_WITH_CONDITIONS and UKEF_APPROVED_WITHOUT_CONDITIONS
-    }]);
+    expect(reportsBody).toEqual([
+      {
+        dealId: expect.any(String),
+        bankInternalRefName: expect.any(String),
+        dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
+        status: expect.any(String),
+        companyName: expect.any(String),
+        dateCreatedEpoch: expect.any(Number),
+        dateOfApprovalEpoch: expect.any(Number),
+        submissionDateEpoch: expect.any(String),
+        dateCreated: expect.any(String),
+        submissionDate: expect.any(String),
+        dateOfApproval: expect.any(String),
+        daysToReview: 10, // key difference between UKEF_APPROVED_WITH_CONDITIONS and UKEF_APPROVED_WITHOUT_CONDITIONS
+      },
+    ]);
   });
 
   it('should return an empty array if the user belongs to a different bank `UKEF_APPROVED_WITHOUT_CONDITIONS`', async () => {
@@ -125,27 +130,31 @@ describe('GET /v1/reports/review-ukef-decision', () => {
     expect(status).toEqual(200);
 
     // update the `status` to 'UKEF_APPROVED_WITH_CONDITIONS'
-    await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS }).to(`${gefDealUrl}/status/${body._id}`);
+    await as(aMaker)
+      .put({ status: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS })
+      .to(`${gefDealUrl}/status/${body._id}`);
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS };
     // perform a GET request to retrieve the reports for UKEF decision as a MAKER
     const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(reviewDecisionReportUrl, mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
-    expect(reportsBody).toEqual([{
-      dealId: expect.any(String),
-      bankInternalRefName: expect.any(String),
-      dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
-      status: expect.any(String),
-      companyName: expect.any(String),
-      dateCreatedEpoch: expect.any(Number),
-      dateOfApprovalEpoch: expect.any(Number),
-      submissionDateEpoch: expect.any(String),
-      dateCreated: expect.any(String),
-      submissionDate: expect.any(String),
-      dateOfApproval: expect.any(String),
-      daysToReview: 20 // key difference between UKEF_APPROVED_WITH_CONDITIONS and UKEF_APPROVED_WITHOUT_CONDITIONS
-    }]);
+    expect(reportsBody).toEqual([
+      {
+        dealId: expect.any(String),
+        bankInternalRefName: expect.any(String),
+        dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
+        status: expect.any(String),
+        companyName: expect.any(String),
+        dateCreatedEpoch: expect.any(Number),
+        dateOfApprovalEpoch: expect.any(Number),
+        submissionDateEpoch: expect.any(String),
+        dateCreated: expect.any(String),
+        submissionDate: expect.any(String),
+        dateOfApproval: expect.any(String),
+        daysToReview: 20, // key difference between UKEF_APPROVED_WITH_CONDITIONS and UKEF_APPROVED_WITHOUT_CONDITIONS
+      },
+    ]);
   });
 
   it('should return an empty array if the status is `Completed` and ukefDecision `UKEF_APPROVED_WITH_CONDITIONS`', async () => {

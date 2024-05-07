@@ -1,8 +1,4 @@
-const {
-  loanStatus,
-  loanHasIncompleteIssueFacilityDetails,
-  addAccurateStatusesToLoans,
-} = require('./loans');
+const { loanStatus, loanHasIncompleteIssueFacilityDetails, addAccurateStatusesToLoans } = require('./loans');
 
 describe('section-status - loan', () => {
   describe('loanStatus', () => {
@@ -52,7 +48,7 @@ describe('section-status - loan', () => {
         { status: 'Acknowledged', previousStatus: 'Test' },
         { status: 'Accepted by UKEF (with conditions)', previousStatus: 'Test' },
         { status: 'Accepted by UKEF (without conditions)', previousStatus: 'Test' },
-        { status: 'Ready for Checker\'s approval', previousStatus: 'Test' },
+        { status: "Ready for Checker's approval", previousStatus: 'Test' },
         { status: 'Submitted', previousStatus: 'Test' },
       ];
 
@@ -87,7 +83,11 @@ describe('section-status - loan', () => {
         hasBeenIssued: true,
       };
 
-      const result = loanHasIncompleteIssueFacilityDetails(validMockDeal.status, validMockDeal.previousStatus, mockLoan);
+      const result = loanHasIncompleteIssueFacilityDetails(
+        validMockDeal.status,
+        validMockDeal.previousStatus,
+        mockLoan,
+      );
       expect(result).toEqual(false);
     });
 
@@ -97,7 +97,11 @@ describe('section-status - loan', () => {
         issueFacilityDetailsSubmitted: true,
       };
 
-      const result = loanHasIncompleteIssueFacilityDetails(validMockDeal.status, validMockDeal.previousStatus, mockLoan);
+      const result = loanHasIncompleteIssueFacilityDetails(
+        validMockDeal.status,
+        validMockDeal.previousStatus,
+        mockLoan,
+      );
       expect(result).toEqual(false);
     });
   });
@@ -119,7 +123,7 @@ describe('section-status - loan', () => {
         ];
 
         const mockDeal = (submissionType) => ({
-          status: 'Further Maker\'s input required',
+          status: "Further Maker's input required",
           submissionType,
           loanTransactions: {
             items: mockLoans,

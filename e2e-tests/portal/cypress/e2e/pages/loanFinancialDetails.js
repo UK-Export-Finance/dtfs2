@@ -4,9 +4,11 @@ const page = {
   facilityValueInput: () => cy.get('[data-cy="facility-value"]'),
   facilityValueInputErrorMessage: () => cy.get('[data-cy="facility-value-error-message"]'),
 
-  currencySameAsSupplyContractCurrencyInputYes: () => cy.get('[data-cy="currency-same-as-supply-contract-currency-yes"]'),
+  currencySameAsSupplyContractCurrencyInputYes: () =>
+    cy.get('[data-cy="currency-same-as-supply-contract-currency-yes"]'),
   currencySameAsSupplyContractCurrencyInputNo: () => cy.get('[data-cy="currency-same-as-supply-contract-currency-no"]'),
-  currencySameAsSupplyContractCurrencyInputErrorMessage: () => cy.get('[data-cy="currencySameAsSupplyContractCurrency-error-message"]'),
+  currencySameAsSupplyContractCurrencyInputErrorMessage: () =>
+    cy.get('[data-cy="currencySameAsSupplyContractCurrency-error-message"]'),
 
   // 'transaction currency NOT the same as supply contract currency' specifics
   currencyInput: () => cy.get('[data-cy="currency"]'),

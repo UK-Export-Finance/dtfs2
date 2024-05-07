@@ -11,7 +11,7 @@ describe('updatePortalDealStatus', () => {
 
   afterEach(() => {
     jest.resetAllMocks();
-  })
+  });
 
   it('should update portal deal status to IN_PROGRESS_BY_UKEF for MIA submission type and BSS_EWCS deal type', async () => {
     const deal = {
@@ -22,7 +22,10 @@ describe('updatePortalDealStatus', () => {
 
     const result = await updatePortalDealStatus(deal);
 
-    expect(updatePortalBssDealStatusMock).toHaveBeenCalledWith('dealId', CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF);
+    expect(updatePortalBssDealStatusMock).toHaveBeenCalledWith(
+      'dealId',
+      CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF,
+    );
     expect(result).toEqual(deal);
   });
 
@@ -35,7 +38,10 @@ describe('updatePortalDealStatus', () => {
 
     const result = await updatePortalDealStatus(deal);
 
-    expect(updatePortalGefDealStatusMock).toHaveBeenCalledWith('dealId', CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED);
+    expect(updatePortalGefDealStatusMock).toHaveBeenCalledWith(
+      'dealId',
+      CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
+    );
     expect(result).toEqual(deal);
   });
 
@@ -48,7 +54,10 @@ describe('updatePortalDealStatus', () => {
 
     const result = await updatePortalDealStatus(deal);
 
-    expect(updatePortalGefDealStatusMock).toHaveBeenCalledWith('dealId', CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED);
+    expect(updatePortalGefDealStatusMock).toHaveBeenCalledWith(
+      'dealId',
+      CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
+    );
     expect(result).toEqual(deal);
   });
 
@@ -66,7 +75,11 @@ describe('updatePortalDealStatus', () => {
 
     expect(updatePortalBssDealStatusMock).not.toHaveBeenCalled();
 
-    expect(consoleErrorMock).toHaveBeenCalledWith('Cannot update portal deal %s status for submission type %s', 'dealId', 'invalid');
+    expect(consoleErrorMock).toHaveBeenCalledWith(
+      'Cannot update portal deal %s status for submission type %s',
+      'dealId',
+      'invalid',
+    );
     expect(result).toEqual(deal);
   });
 
@@ -130,7 +143,11 @@ describe('updatePortalDealStatus', () => {
     expect(updatePortalBssDealStatusMock).not.toHaveBeenCalled();
     expect(updatePortalGefDealStatusMock).not.toHaveBeenCalled();
 
-    expect(consoleErrorMock).toHaveBeenCalledWith('Cannot update portal deal %s status for submission type %s', 'dealId', 'invalid');
+    expect(consoleErrorMock).toHaveBeenCalledWith(
+      'Cannot update portal deal %s status for submission type %s',
+      'dealId',
+      'invalid',
+    );
     expect(result).toEqual(deal);
   });
 });

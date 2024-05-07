@@ -62,7 +62,9 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
  * @returns {Boolean}
  */
 const isTaskInUnderwritingGroup = (group, taskTitle) => {
-  const isUnderwritingGroupTitle = group.groupTitle === TASKS.GROUP_TITLES.UNDERWRITING || group.groupTitle === TASKS_AMENDMENT.GROUP_TITLES.UNDERWRITING;
+  const isUnderwritingGroupTitle =
+    group.groupTitle === TASKS.GROUP_TITLES.UNDERWRITING ||
+    group.groupTitle === TASKS_AMENDMENT.GROUP_TITLES.UNDERWRITING;
 
   const taskTitleIsInGroup = getTaskInGroupByTitle(group.groupTasks, taskTitle);
 

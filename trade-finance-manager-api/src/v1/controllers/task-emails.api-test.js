@@ -29,7 +29,9 @@ describe('task emails functions', () => {
     });
 
     it('should send an email for CREATE_OR_LINK_SALESFORCE task', async () => {
-      const mockTask = MOCK_AIN_TASKS[0].groupTasks.find((t) => t.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE);
+      const mockTask = MOCK_AIN_TASKS[0].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
+      );
 
       await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
 
@@ -42,11 +44,17 @@ describe('task emails functions', () => {
         ukefDealId: mockDeal.ukefDealId,
       };
 
-      expect(api.sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START, salesforceTeam.email, expectedEmailVars);
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        salesforceTeam.email,
+        expectedEmailVars,
+      );
     });
 
     it('should send an email for MIA - FILE_ALL_DEAL_EMAILS task', async () => {
-      const mockTask = MOCK_MIA_TASKS[0].groupTasks.find((t) => t.title === CONSTANTS.TASKS.MIA_GROUP_1_TASKS.FILE_ALL_DEAL_EMAILS);
+      const mockTask = MOCK_MIA_TASKS[0].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_1_TASKS.FILE_ALL_DEAL_EMAILS,
+      );
 
       await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
 
@@ -59,11 +67,17 @@ describe('task emails functions', () => {
         ukefDealId: mockDeal.ukefDealId,
       };
 
-      expect(api.sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START, businessSupportTeam.email, expectedEmailVars);
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        businessSupportTeam.email,
+        expectedEmailVars,
+      );
     });
 
     it('should send an email for MIA - CREATE_CREDIT_ANALYSIS_DOCUMENT task', async () => {
-      const mockTask = MOCK_MIA_TASKS[0].groupTasks.find((t) => t.title === CONSTANTS.TASKS.MIA_GROUP_1_TASKS.CREATE_CREDIT_ANALYSIS_DOCUMENT);
+      const mockTask = MOCK_MIA_TASKS[0].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_1_TASKS.CREATE_CREDIT_ANALYSIS_DOCUMENT,
+      );
 
       await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
 
@@ -76,11 +90,17 @@ describe('task emails functions', () => {
         ukefDealId: mockDeal.ukefDealId,
       };
 
-      expect(api.sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START, businessSupportTeam.email, expectedEmailVars);
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        businessSupportTeam.email,
+        expectedEmailVars,
+      );
     });
 
     it('should send an email for MIA - ASSIGN_AN_UNDERWRITER task', async () => {
-      const mockTask = MOCK_MIA_TASKS[0].groupTasks.find((t) => t.title === CONSTANTS.TASKS.MIA_GROUP_1_TASKS.ASSIGN_AN_UNDERWRITER);
+      const mockTask = MOCK_MIA_TASKS[0].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_1_TASKS.ASSIGN_AN_UNDERWRITER,
+      );
 
       await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
 
@@ -93,11 +113,17 @@ describe('task emails functions', () => {
         ukefDealId: mockDeal.ukefDealId,
       };
 
-      expect(api.sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START, businessSupportTeam.email, expectedEmailVars);
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        businessSupportTeam.email,
+        expectedEmailVars,
+      );
     });
 
     it('should send an email for MIA - COMPLETE_AGENT_CHECK task', async () => {
-      const mockTask = MOCK_MIA_TASKS[0].groupTasks.find((t) => t.title === CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK);
+      const mockTask = MOCK_MIA_TASKS[0].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK,
+      );
 
       await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
 
@@ -110,11 +136,17 @@ describe('task emails functions', () => {
         ukefDealId: mockDeal.ukefDealId,
       };
 
-      expect(api.sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START, businessSupportTeam.email, expectedEmailVars);
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        businessSupportTeam.email,
+        expectedEmailVars,
+      );
     });
 
     it('should send an email for MIA - COMPLETE_ADVERSE_HISTORY_CHECK task', async () => {
-      const mockTask = MOCK_MIA_TASKS[1].groupTasks.find((t) => t.title === CONSTANTS.TASKS.MIA_ADVERSE_HISTORY_GROUP_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK);
+      const mockTask = MOCK_MIA_TASKS[1].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_ADVERSE_HISTORY_GROUP_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK,
+      );
 
       await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
 
@@ -127,11 +159,17 @@ describe('task emails functions', () => {
         ukefDealId: mockDeal.ukefDealId,
       };
 
-      expect(api.sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START, underwritersTeam.email, expectedEmailVars);
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        underwritersTeam.email,
+        expectedEmailVars,
+      );
     });
 
     it('should send an email for MIA - CHECK_EXPOSURE task', async () => {
-      const mockTask = MOCK_MIA_TASKS[2].groupTasks.find((t) => t.title === CONSTANTS.TASKS.MIA_GROUP_3_TASKS.CHECK_EXPOSURE);
+      const mockTask = MOCK_MIA_TASKS[2].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_3_TASKS.CHECK_EXPOSURE,
+      );
 
       await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
 
@@ -144,11 +182,17 @@ describe('task emails functions', () => {
         ukefDealId: mockDeal.ukefDealId,
       };
 
-      expect(api.sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START, underwritersTeam.email, expectedEmailVars);
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        underwritersTeam.email,
+        expectedEmailVars,
+      );
     });
 
     it('should send an email for MIA - GIVE_EXPORTER_A_CREDIT_RATING task', async () => {
-      const mockTask = MOCK_MIA_TASKS[2].groupTasks.find((t) => t.title === CONSTANTS.TASKS.MIA_GROUP_3_TASKS.GIVE_EXPORTER_A_CREDIT_RATING);
+      const mockTask = MOCK_MIA_TASKS[2].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_3_TASKS.GIVE_EXPORTER_A_CREDIT_RATING,
+      );
 
       await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
 
@@ -161,11 +205,17 @@ describe('task emails functions', () => {
         ukefDealId: mockDeal.ukefDealId,
       };
 
-      expect(api.sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START, underwritersTeam.email, expectedEmailVars);
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        underwritersTeam.email,
+        expectedEmailVars,
+      );
     });
 
     it('should send an email for MIA - COMPLETE_CREDIT_ANALYSIS task', async () => {
-      const mockTask = MOCK_MIA_TASKS[2].groupTasks.find((t) => t.title === CONSTANTS.TASKS.MIA_GROUP_3_TASKS.COMPLETE_CREDIT_ANALYSIS);
+      const mockTask = MOCK_MIA_TASKS[2].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_3_TASKS.COMPLETE_CREDIT_ANALYSIS,
+      );
 
       await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
 
@@ -178,11 +228,17 @@ describe('task emails functions', () => {
         ukefDealId: mockDeal.ukefDealId,
       };
 
-      expect(api.sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START, underwritersTeam.email, expectedEmailVars);
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        underwritersTeam.email,
+        expectedEmailVars,
+      );
     });
 
     it('should send an email for MIA - CHECK_ADVERSE_HISTORY_CHECK task', async () => {
-      const mockTask = MOCK_MIA_TASKS[3].groupTasks.find((t) => t.title === CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_ADVERSE_HISTORY_CHECK);
+      const mockTask = MOCK_MIA_TASKS[3].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_ADVERSE_HISTORY_CHECK,
+      );
 
       await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
 
@@ -195,11 +251,17 @@ describe('task emails functions', () => {
         ukefDealId: mockDeal.ukefDealId,
       };
 
-      expect(api.sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START, underwritersTeam.email, expectedEmailVars);
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        underwritersTeam.email,
+        expectedEmailVars,
+      );
     });
 
     it('should send an email for MIA - CHECK_THE_CREDIT_ANALYSIS task', async () => {
-      const mockTask = MOCK_MIA_TASKS[3].groupTasks.find((t) => t.title === CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_THE_CREDIT_ANALYSIS);
+      const mockTask = MOCK_MIA_TASKS[3].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_THE_CREDIT_ANALYSIS,
+      );
 
       await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
 
@@ -212,11 +274,17 @@ describe('task emails functions', () => {
         ukefDealId: mockDeal.ukefDealId,
       };
 
-      expect(api.sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START, underwritersTeam.email, expectedEmailVars);
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        underwritersTeam.email,
+        expectedEmailVars,
+      );
     });
 
     it('should send an email for MIA - COMPLETE_RISK_ANALYSIS task', async () => {
-      const mockTask = MOCK_MIA_TASKS[3].groupTasks.find((t) => t.title === CONSTANTS.TASKS.MIA_GROUP_4_TASKS.COMPLETE_RISK_ANALYSIS);
+      const mockTask = MOCK_MIA_TASKS[3].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_4_TASKS.COMPLETE_RISK_ANALYSIS,
+      );
 
       await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
 
@@ -229,11 +297,17 @@ describe('task emails functions', () => {
         ukefDealId: mockDeal.ukefDealId,
       };
 
-      expect(api.sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START, underwritersTeam.email, expectedEmailVars);
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        underwritersTeam.email,
+        expectedEmailVars,
+      );
     });
 
     it('should send an email for MIA - APPROVE_OR_DECLINE_THE_DEAL task', async () => {
-      const mockTask = MOCK_MIA_TASKS[3].groupTasks.find((t) => t.title === CONSTANTS.TASKS.MIA_GROUP_4_TASKS.APPROVE_OR_DECLINE_THE_DEAL);
+      const mockTask = MOCK_MIA_TASKS[3].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_4_TASKS.APPROVE_OR_DECLINE_THE_DEAL,
+      );
 
       await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
 
@@ -246,7 +320,11 @@ describe('task emails functions', () => {
         ukefDealId: mockDeal.ukefDealId,
       };
 
-      expect(api.sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START, underwritersTeam.email, expectedEmailVars);
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        underwritersTeam.email,
+        expectedEmailVars,
+      );
     });
   });
 });

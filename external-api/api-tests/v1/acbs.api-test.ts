@@ -1,7 +1,7 @@
-import { app } from '../../src/createApp';
-import { api } from '../api';
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
+import { app } from '../../src/createApp';
+import { api } from '../api';
 
 const { APIM_TFS_URL, AZURE_ACBS_FUNCTION_URL } = process.env;
 const testApi = api(app);
@@ -41,7 +41,9 @@ const axiosMock = new MockAdapter(axios);
 describe('/acbs', () => {
   describe('POST /v1/acbs/', () => {
     axiosMock.onPost(`${AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs`, mockACBSInput).reply(HttpStatusCode.Ok, {});
-    axiosMock.onPost(`${AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs`, mockErrorDealInput).reply(HttpStatusCode.BadRequest, {});
+    axiosMock
+      .onPost(`${AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs`, mockErrorDealInput)
+      .reply(HttpStatusCode.BadRequest, {});
 
     it('should catch error on ACBS create record API call', async () => {
       const { status } = await testApi.post(mockErrorDealInput).to('/acbs');
@@ -55,15 +57,23 @@ describe('/acbs', () => {
   });
 
   describe('POST /v1/acbs/facility/:id/issue', () => {
-    axiosMock.onPost(`${AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs-issue-facility`, mockACBSFacilityInput).reply(HttpStatusCode.Ok, {});
-    axiosMock.onPost(`${AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs-issue-facility`, mockACBSFacilityErrorInput).reply(HttpStatusCode.BadRequest, {});
+    axiosMock
+      .onPost(`${AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs-issue-facility`, mockACBSFacilityInput)
+      .reply(HttpStatusCode.Ok, {});
+    axiosMock
+      .onPost(`${AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs-issue-facility`, mockACBSFacilityErrorInput)
+      .reply(HttpStatusCode.BadRequest, {});
     it('should catch error on ACBS issue facility API call', async () => {
-      const { status } = await testApi.post(mockACBSFacilityErrorInput).to(`/acbs/facility/${mockACBSFacilityErrorInput.facilityId}/issue`);
+      const { status } = await testApi
+        .post(mockACBSFacilityErrorInput)
+        .to(`/acbs/facility/${mockACBSFacilityErrorInput.facilityId}/issue`);
       expect(status).toEqual(HttpStatusCode.BadRequest);
     });
 
     it('should return status code from ACBS issue facility API call', async () => {
-      const { status } = await testApi.post(mockACBSFacilityInput).to(`/acbs/facility/${mockACBSFacilityInput.facilityId}/issue`);
+      const { status } = await testApi
+        .post(mockACBSFacilityInput)
+        .to(`/acbs/facility/${mockACBSFacilityInput.facilityId}/issue`);
       expect(status).toEqual(HttpStatusCode.Ok);
     });
   });

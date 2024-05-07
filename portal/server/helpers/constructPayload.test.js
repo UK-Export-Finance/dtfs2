@@ -21,11 +21,7 @@ const mockExtraBody = {
   passwordConfirm: 'AbC!23456',
 };
 
-const payloadProperties = [
-  'currentPassword',
-  'password',
-  'passwordConfirm',
-];
+const payloadProperties = ['currentPassword', 'password', 'passwordConfirm'];
 
 const mockBodyWithEmptyValues = {
   _csrf: '3YyRfYmT',
@@ -146,7 +142,12 @@ describe('Unit test cases for constructPayload method', () => {
       isSameAsDeal: false,
     };
     const canPropertyBeEmpty = false;
-    const returned = constructPayload(mockBodyWithEmptyValues, payloadPropertiesForEmptyValues, canPropertyBeEmpty, false);
+    const returned = constructPayload(
+      mockBodyWithEmptyValues,
+      payloadPropertiesForEmptyValues,
+      canPropertyBeEmpty,
+      false,
+    );
     expect(expected).toEqual(returned);
   });
 
@@ -160,7 +161,12 @@ describe('Unit test cases for constructPayload method', () => {
       isSameAsDeal: false,
     };
     const canPropertyBeEmpty = false;
-    const returned = constructPayload(mockBodyWithEmptyValues, payloadPropertiesForEmptyValues, canPropertyBeEmpty, true);
+    const returned = constructPayload(
+      mockBodyWithEmptyValues,
+      payloadPropertiesForEmptyValues,
+      canPropertyBeEmpty,
+      true,
+    );
     expect(expected).toEqual(returned);
   });
 

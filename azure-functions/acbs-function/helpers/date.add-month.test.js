@@ -59,9 +59,12 @@ describe('addMonth', () => {
     },
   ];
 
-  it.each(testData)('$description ($date plus $monthsToAdd month(s) gives $expected)', ({ date, monthsToAdd, expected }) => {
-    const result = addMonth(date, monthsToAdd);
+  it.each(testData)(
+    '$description ($date plus $monthsToAdd month(s) gives $expected)',
+    ({ date, monthsToAdd, expected }) => {
+      const result = addMonth(date, monthsToAdd);
 
-    expect(result).toEqual(expected);
-  });
+      expect(result).toEqual(expected);
+    },
+  );
 });

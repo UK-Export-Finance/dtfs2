@@ -83,7 +83,9 @@ describe(component, () => {
       };
 
       wrapper = render(params);
-      wrapper.expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`).toHaveAttribute('name', 'ascending');
+      wrapper
+        .expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`)
+        .toHaveAttribute('name', 'ascending');
     });
 
     describe('when fieldHasActiveSortBy and when params.activeSortByOrder equals default `ascending`', () => {
@@ -97,7 +99,9 @@ describe(component, () => {
         };
 
         wrapper = render(params);
-        wrapper.expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`).toHaveAttribute('name', 'descending');
+        wrapper
+          .expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`)
+          .toHaveAttribute('name', 'descending');
       });
     });
   });
@@ -114,7 +118,9 @@ describe(component, () => {
       };
 
       wrapper = render(params);
-      wrapper.expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`).toHaveAttribute('autofocus', undefined);
+      wrapper
+        .expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`)
+        .toHaveAttribute('autofocus', undefined);
     });
 
     it('autofocus not set if this column is sorted, but this was not the last action', () => {
@@ -128,7 +134,9 @@ describe(component, () => {
       };
 
       wrapper = render(params);
-      wrapper.expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`).toHaveAttribute('autofocus', undefined);
+      wrapper
+        .expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`)
+        .toHaveAttribute('autofocus', undefined);
     });
 
     it('autofocus not set if this column is sorted, but no activeSortByField is passed', () => {
@@ -141,7 +149,9 @@ describe(component, () => {
       };
 
       wrapper = render(params);
-      wrapper.expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`).toHaveAttribute('autofocus', undefined);
+      wrapper
+        .expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`)
+        .toHaveAttribute('autofocus', undefined);
     });
 
     it('autofocus set if this column is sorted and this was last action', () => {
@@ -155,7 +165,9 @@ describe(component, () => {
       };
 
       wrapper = render(params);
-      wrapper.expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`).toHaveAttribute('autofocus', 'autofocus');
+      wrapper
+        .expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`)
+        .toHaveAttribute('autofocus', 'autofocus');
     });
   });
 });

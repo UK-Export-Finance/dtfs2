@@ -23,10 +23,13 @@ const amendmentBankDecisionDateValidation = (body, type, message) => {
 
   const amendmentBankDecisionDateErrors = [];
 
-  const amendmentRequestIsFullyComplete = amendmentBankDecisionDateDay && amendmentBankDecisionDateMonth && amendmentBankDecisionDateYear;
-  const amendmentRequestIsPartiallyComplete = !amendmentRequestIsFullyComplete
-    && (amendmentBankDecisionDateDay || amendmentBankDecisionDateMonth || amendmentBankDecisionDateYear);
-  const amendmentRequestIsBlank = !amendmentBankDecisionDateDay && !amendmentBankDecisionDateMonth && !amendmentBankDecisionDateYear;
+  const amendmentRequestIsFullyComplete =
+    amendmentBankDecisionDateDay && amendmentBankDecisionDateMonth && amendmentBankDecisionDateYear;
+  const amendmentRequestIsPartiallyComplete =
+    !amendmentRequestIsFullyComplete &&
+    (amendmentBankDecisionDateDay || amendmentBankDecisionDateMonth || amendmentBankDecisionDateYear);
+  const amendmentRequestIsBlank =
+    !amendmentBankDecisionDateDay && !amendmentBankDecisionDateMonth && !amendmentBankDecisionDateYear;
 
   let amendmentBankRequestDate = null;
 

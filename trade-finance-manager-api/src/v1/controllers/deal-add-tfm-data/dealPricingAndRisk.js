@@ -2,11 +2,7 @@ const CONSTANTS = require('../../../constants');
 const DEFAULTS = require('../../defaults');
 
 const dealPricingAndRisk = (deal) => {
-  const {
-    dealType,
-    submissionType,
-    exporter,
-  } = deal;
+  const { dealType, submissionType, exporter } = deal;
 
   const pricingAndRisk = {
     lossGivenDefault: DEFAULTS.LOSS_GIVEN_DEFAULT,

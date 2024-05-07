@@ -5,7 +5,10 @@ import { validateTfmPaymentReconciliationFeatureFlagIsEnabled } from '.';
 describe('validateTfmPaymentReconciliationFeatureFlagIsEnabled', () => {
   const getHttpMocks = () => httpMocks.createMocks();
 
-  const isTfmPaymentReconciliationFeatureFlagEnabledSpy = jest.spyOn(ukefCommon, 'isTfmPaymentReconciliationFeatureFlagEnabled');
+  const isTfmPaymentReconciliationFeatureFlagEnabledSpy = jest.spyOn(
+    ukefCommon,
+    'isTfmPaymentReconciliationFeatureFlagEnabled',
+  );
 
   afterEach(() => {
     jest.resetAllMocks();

@@ -45,8 +45,9 @@ context('Loan Financial Details', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   describe('Loan financial details title', () => {
@@ -135,9 +136,12 @@ context('Loan Financial Details', () => {
     fillLoanForm.financialDetails.currencyNotTheSameAsSupplyContractCurrency();
     pages.loanFinancialDetails.submit().click();
 
-    partials.taskListHeader.itemStatus('loan-financial-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Completed');
-    });
+    partials.taskListHeader
+      .itemStatus('loan-financial-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Completed');
+      });
 
     partials.taskListHeader.itemLink('loan-financial-details').click();
 
@@ -151,12 +155,16 @@ context('Loan Financial Details', () => {
       let interestMarginFee = '20';
       pages.loanFinancialDetails.guaranteeFeePayableByBankInput().invoke('attr', 'placeholder').should('eq', '0');
       pages.loanFinancialDetails.interestMarginFeeInput().type(interestMarginFee).blur();
-      pages.loanFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFee(interestMarginFee));
+      pages.loanFinancialDetails
+        .guaranteeFeePayableByBankInput()
+        .should('have.value', calculateExpectedGuaranteeFee(interestMarginFee));
 
       pages.loanFinancialDetails.interestMarginFeeInput().clear();
       interestMarginFee = '9.09';
       pages.loanFinancialDetails.interestMarginFeeInput().type(interestMarginFee).blur();
-      pages.loanFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFee(interestMarginFee));
+      pages.loanFinancialDetails
+        .guaranteeFeePayableByBankInput()
+        .should('have.value', calculateExpectedGuaranteeFee(interestMarginFee));
     });
   });
 
@@ -172,13 +180,17 @@ context('Loan Financial Details', () => {
       pages.loanFinancialDetails.facilityValueInput().type(value);
       pages.loanFinancialDetails.coveredPercentageInput().type(coveredPercentage).blur();
 
-      pages.loanFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
+      pages.loanFinancialDetails
+        .ukefExposureInput()
+        .should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
 
       pages.loanFinancialDetails.facilityValueInput().clear();
 
       value = '250';
       pages.loanFinancialDetails.facilityValueInput().type(value).blur();
-      pages.loanFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
+      pages.loanFinancialDetails
+        .ukefExposureInput()
+        .should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
     });
   });
 

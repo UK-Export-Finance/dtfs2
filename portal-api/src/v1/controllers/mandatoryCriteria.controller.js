@@ -2,7 +2,8 @@ const assert = require('assert');
 const {
   generatePortalAuditDetails,
   generateAuditDatabaseRecordFromAuditDetails,
-} = require('@ukef/dtfs2-common/change-stream');const db = require('../../drivers/db-client');
+} = require('@ukef/dtfs2-common/change-stream');
+const db = require('../../drivers/db-client');
 const { PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
 
@@ -46,28 +47,25 @@ exports.create = async (req, res) => {
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
   // MC insertion on non-production environments
-    const collection = await db.getCollection('mandatoryCriteria');
-    const criteria = { ...req?.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
-    const result = await collection.insertOne(criteria);
+  const collection = await db.getCollection('mandatoryCriteria');
+  const criteria = { ...req?.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
+  const result = await collection.insertOne(criteria);
 
-    return res.status(200).send(result);
+  return res.status(200).send(result);
 };
 
-exports.findAll = (req, res) => (
+exports.findAll = (req, res) =>
   findMandatoryCriteria((mandatoryCriteria) =>
     sortMandatoryCriteria(mandatoryCriteria, (sortedMandatoryCriteria) =>
       res.status(200).send({
         count: mandatoryCriteria.length,
         mandatoryCriteria: sortedMandatoryCriteria,
-      })))
-);
+      }),
+    ),
+  );
 
-exports.findOne = (req, res) => (
-  findOneMandatoryCriteria(
-    req.params.version,
-    (mandatoryCriteria) => res.status(200).send(mandatoryCriteria),
-  )
-);
+exports.findOne = (req, res) =>
+  findOneMandatoryCriteria(req.params.version, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria));
 
 const findLatestMandatoryCriteria = async () => {
   const collection = await db.getCollection('mandatoryCriteria');

@@ -2,6 +2,7 @@ import * as dotenv from 'dotenv';
 import axios from 'axios';
 import { Request, Response } from 'express';
 import { getNowAsEpoch } from '../../helpers/date';
+
 const { NotifyClient } = require('notifications-node-client'); // eslint-disable-line @typescript-eslint/no-var-requires
 
 dotenv.config();

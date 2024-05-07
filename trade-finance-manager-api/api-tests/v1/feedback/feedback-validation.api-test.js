@@ -71,7 +71,9 @@ describe('/feedback', () => {
           const { body } = await postFeedback(feedback);
 
           expect(body.validationErrors.errorList.whyUsingService).toBeDefined();
-          expect(body.validationErrors.errorList.whyUsingService.text).toEqual('Enter your reason for using this service today');
+          expect(body.validationErrors.errorList.whyUsingService.text).toEqual(
+            'Enter your reason for using this service today',
+          );
         });
       });
     });
@@ -87,7 +89,9 @@ describe('/feedback', () => {
           const { body } = await postFeedback(feedback);
 
           expect(body.validationErrors.errorList.easyToUse).toBeDefined();
-          expect(body.validationErrors.errorList.easyToUse.text).toEqual('Select a rating for how easy the service is to use');
+          expect(body.validationErrors.errorList.easyToUse.text).toEqual(
+            'Select a rating for how easy the service is to use',
+          );
         });
       });
     });
@@ -103,7 +107,9 @@ describe('/feedback', () => {
           const { body } = await postFeedback(feedback);
 
           expect(body.validationErrors.errorList.satisfied).toBeDefined();
-          expect(body.validationErrors.errorList.satisfied.text).toEqual('Select a rating for how satisfied you are with the service');
+          expect(body.validationErrors.errorList.satisfied.text).toEqual(
+            'Select a rating for how satisfied you are with the service',
+          );
         });
       });
     });

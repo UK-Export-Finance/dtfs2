@@ -336,7 +336,9 @@ describe('SignInLinkService', () => {
                     });
 
                     it('blocks the user', async () => {
-                      await expect(service.createAndEmailSignInLink(userOnThirdSignInLinkCount)).rejects.toThrowError(UserBlockedError);
+                      await expect(service.createAndEmailSignInLink(userOnThirdSignInLinkCount)).rejects.toThrowError(
+                        UserBlockedError,
+                      );
 
                       expect(controller.sendBlockedEmail).toHaveBeenCalledWith(user.email);
                       expect(userRepository.blockUser).toHaveBeenCalledWith({

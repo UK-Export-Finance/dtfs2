@@ -1,7 +1,7 @@
-import { app } from '../../src/createApp';
-import { api } from '../api';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import { app } from '../../src/createApp';
+import { api } from '../api';
 import premiumScheduleController from '../../src/v1/controllers/premium-schedule.controller';
 import { mockResponsePremiumSchedule } from '../test-mocks/premium-schedule';
 
@@ -77,14 +77,17 @@ describe('/premium-schedule', () => {
   const invalidFacilityUrnTestCases = [['123'], ['127.0.0.1'], ['{}'], ['[]']];
 
   describe('when facility urn is invalid', () => {
-    test.each(invalidFacilityUrnTestCases)('returns a 400 if you provide an invalid facility urn %s', async (facilityUrn) => {
-      const invalidPayload = payload;
-      invalidPayload.facilityURN = facilityUrn;
+    test.each(invalidFacilityUrnTestCases)(
+      'returns a 400 if you provide an invalid facility urn %s',
+      async (facilityUrn) => {
+        const invalidPayload = payload;
+        invalidPayload.facilityURN = facilityUrn;
 
-      const { status, body } = await getWithRequestBody(invalidPayload).to('/premium-schedule');
+        const { status, body } = await getWithRequestBody(invalidPayload).to('/premium-schedule');
 
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid facility URN', status: 400 });
-    });
+        expect(status).toEqual(400);
+        expect(body).toMatchObject({ data: 'Invalid facility URN', status: 400 });
+      },
+    );
   });
 });

@@ -1,8 +1,8 @@
+import MockAdapter from 'axios-mock-adapter';
+import axios, { HttpStatusCode } from 'axios';
 import { app } from '../../src/createApp';
 import { api } from '../api';
-import MockAdapter from 'axios-mock-adapter';
 import { COMPANIES_HOUSE_NUMBER } from '../test-mocks/companies-house-number';
-import axios, { HttpStatusCode } from 'axios';
 
 const { APIM_MDM_URL } = process.env;
 const { VALID_1, VALID_2, VALID_WITH_LETTERS } = COMPANIES_HOUSE_NUMBER;
@@ -38,11 +38,14 @@ describe('/party-db', () => {
   const invalidCompaniesHouseNumberTestCases = [['ABC22'], ['127.0.0.1'], ['{}'], ['[]']];
 
   describe('when company house number is invalid', () => {
-    test.each(invalidCompaniesHouseNumberTestCases)('returns a 400 if you provide an invalid company house number %s', async (companyHouseNumber) => {
-      const { status, body } = await get(`/party-db/${companyHouseNumber}`);
+    test.each(invalidCompaniesHouseNumberTestCases)(
+      'returns a 400 if you provide an invalid company house number %s',
+      async (companyHouseNumber) => {
+        const { status, body } = await get(`/party-db/${companyHouseNumber}`);
 
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid company registration number', status: 400 });
-    });
+        expect(status).toEqual(400);
+        expect(body).toMatchObject({ data: 'Invalid company registration number', status: 400 });
+      },
+    );
   });
 });

@@ -22,8 +22,9 @@ context('Bond Details', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   describe('after submitting one form field and navigating back to `Bond Details` page', () => {
@@ -76,25 +77,47 @@ context('Bond Details', () => {
 
     pages.bondDetails.submit().click();
 
-    partials.taskListHeader.itemStatus('bond-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    partials.taskListHeader
+      .itemStatus('bond-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
 
-    partials.taskListHeader.itemStatus('financial-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    partials.taskListHeader
+      .itemStatus('financial-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
 
-    partials.taskListHeader.itemStatus('fee-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    partials.taskListHeader
+      .itemStatus('fee-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
 
     pages.bondDetails.bondDetails().click();
-    pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
-    pages.bondDetails.coverEndDateInputErrorMessage().contains('The day for the cover end date must only include 1 or 2 numbers');
+    pages.bondDetails
+      .requestedCoverStartDateInputErrorMessage()
+      .contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
+    pages.bondDetails
+      .coverEndDateInputErrorMessage()
+      .contains('The day for the cover end date must only include 1 or 2 numbers');
 
-    pages.bondDetails.requestedCoverStartDateDayInput().clear().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
-    pages.bondDetails.requestedCoverStartDateMonthInput().clear().type(`${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}-`);
-    pages.bondDetails.requestedCoverStartDateYearInput().clear().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear);
+    pages.bondDetails
+      .requestedCoverStartDateDayInput()
+      .clear()
+      .type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
+    pages.bondDetails
+      .requestedCoverStartDateMonthInput()
+      .clear()
+      .type(`${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}-`);
+    pages.bondDetails
+      .requestedCoverStartDateYearInput()
+      .clear()
+      .type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear);
     pages.bondDetails.coverEndDateDayInput().clear().type(BOND_FORM_VALUES.DETAILS.coverEndDateDay);
     pages.bondDetails.coverEndDateMonthInput().clear().type(`${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}-`);
     pages.bondDetails.coverEndDateYearInput().clear().type(BOND_FORM_VALUES.DETAILS.coverEndDateYear);
@@ -102,12 +125,25 @@ context('Bond Details', () => {
     pages.bondDetails.submit().click();
 
     pages.bondDetails.bondDetails().click();
-    pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The month for the requested Cover Start Date must include 1 or 2 numbers');
-    pages.bondDetails.coverEndDateInputErrorMessage().contains('The month for the cover end date must only include 1 or 2 numbers');
+    pages.bondDetails
+      .requestedCoverStartDateInputErrorMessage()
+      .contains('The month for the requested Cover Start Date must include 1 or 2 numbers');
+    pages.bondDetails
+      .coverEndDateInputErrorMessage()
+      .contains('The month for the cover end date must only include 1 or 2 numbers');
 
-    pages.bondDetails.requestedCoverStartDateDayInput().clear().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
-    pages.bondDetails.requestedCoverStartDateMonthInput().clear().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth);
-    pages.bondDetails.requestedCoverStartDateYearInput().clear().type(`${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}-`);
+    pages.bondDetails
+      .requestedCoverStartDateDayInput()
+      .clear()
+      .type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
+    pages.bondDetails
+      .requestedCoverStartDateMonthInput()
+      .clear()
+      .type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth);
+    pages.bondDetails
+      .requestedCoverStartDateYearInput()
+      .clear()
+      .type(`${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}-`);
     pages.bondDetails.coverEndDateDayInput().clear().type(BOND_FORM_VALUES.DETAILS.coverEndDateDay);
     pages.bondDetails.coverEndDateMonthInput().clear().type(BOND_FORM_VALUES.DETAILS.coverEndDateMonth);
     pages.bondDetails.coverEndDateYearInput().clear().type(`${BOND_FORM_VALUES.DETAILS.coverEndDateYear}-`);
@@ -115,8 +151,12 @@ context('Bond Details', () => {
     pages.bondDetails.submit().click();
 
     pages.bondDetails.bondDetails().click();
-    pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The year for the requested Cover Start Date must include 4 numbers');
-    pages.bondDetails.coverEndDateInputErrorMessage().contains('The year for the Cover End Date must include 4 numbers');
+    pages.bondDetails
+      .requestedCoverStartDateInputErrorMessage()
+      .contains('The year for the requested Cover Start Date must include 4 numbers');
+    pages.bondDetails
+      .coverEndDateInputErrorMessage()
+      .contains('The year for the Cover End Date must include 4 numbers');
 
     pages.bondDetails.requestedCoverStartDateDayInput().clear().type('##');
     pages.bondDetails.requestedCoverStartDateMonthInput().clear().type('##');
@@ -146,17 +186,26 @@ context('Bond Details', () => {
 
     pages.bondDetails.submit().click();
 
-    partials.taskListHeader.itemStatus('bond-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Completed');
-    });
+    partials.taskListHeader
+      .itemStatus('bond-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Completed');
+      });
 
-    partials.taskListHeader.itemStatus('financial-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    partials.taskListHeader
+      .itemStatus('financial-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
 
-    partials.taskListHeader.itemStatus('fee-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    partials.taskListHeader
+      .itemStatus('fee-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
   });
 
   describe('When a user selects `unissued` facility stage', () => {
@@ -220,13 +269,19 @@ context('Bond Details', () => {
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
-        row.uniqueNumberLink().invoke('text').then((text) => {
-          expect(text.trim()).equal('Bond’s reference number not entered');
-        });
+        row
+          .uniqueNumberLink()
+          .invoke('text')
+          .then((text) => {
+            expect(text.trim()).equal('Bond’s reference number not entered');
+          });
 
-        row.facilityStage().invoke('text').then((text) => {
-          expect(text.trim()).equal('Unissued');
-        });
+        row
+          .facilityStage()
+          .invoke('text')
+          .then((text) => {
+            expect(text.trim()).equal('Unissued');
+          });
 
         // assert that clicking the `unique number` link progesses to the bond page
         row.uniqueNumberLink().click();

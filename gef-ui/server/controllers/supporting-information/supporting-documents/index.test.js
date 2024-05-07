@@ -1,5 +1,9 @@
 import {
-  getSupportingDocuments, postSupportingDocuments, uploadSupportingDocument, deleteSupportingDocument, nextDocument,
+  getSupportingDocuments,
+  postSupportingDocuments,
+  uploadSupportingDocument,
+  deleteSupportingDocument,
+  nextDocument,
 } from '.';
 import Application from '../../../models/application';
 import validateFile from '../../../utils/validateFile';
@@ -59,10 +63,12 @@ describe('controllers/supporting-documents', () => {
       Application.findById.mockResolvedValueOnce({
         ...MOCKS.MockApplicationResponseDraft(),
         supportingInformation: {
-          manualInclusion: [{
-            _id: 'mockFileId',
-            filename: 'mock-file.pdf',
-          }],
+          manualInclusion: [
+            {
+              _id: 'mockFileId',
+              filename: 'mock-file.pdf',
+            },
+          ],
         },
       });
 
@@ -73,15 +79,15 @@ describe('controllers/supporting-documents', () => {
         formHeaderFragment: 'manualInclusion',
         title: 'Add manual inclusion questionnaire',
         user: {
-          roles: [
-            MAKER,
-          ],
+          roles: [MAKER],
         },
         dealId: 'mock-id',
-        files: [{
-          _id: 'mockFileId',
-          filename: 'mock-file.pdf',
-        }],
+        files: [
+          {
+            _id: 'mockFileId',
+            filename: 'mock-file.pdf',
+          },
+        ],
         uploadCsrf: expect.any(String),
       });
     });
@@ -112,10 +118,12 @@ describe('controllers/supporting-documents', () => {
 
     describe('files', () => {
       beforeEach(() => {
-        mockRequest.files = [{
-          filename: 'mock-file.pdf',
-          originalname: 'mock-file.pdf',
-        }];
+        mockRequest.files = [
+          {
+            filename: 'mock-file.pdf',
+            originalname: 'mock-file.pdf',
+          },
+        ];
       });
 
       it('handles file errors without calling upload', async () => {
@@ -125,19 +133,22 @@ describe('controllers/supporting-documents', () => {
 
         expect(uploadAndSaveToDeal).not.toHaveBeenCalled();
         expect(mockResponse.redirect).not.toHaveBeenCalled();
-        expect(mockResponse.render).toHaveBeenCalledWith('partials/upload-supporting-documents.njk', expect.objectContaining({
-          errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#mock-file.pdf', text: expect.any(String) },
-            ]),
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/upload-supporting-documents.njk',
+          expect.objectContaining({
+            errors: expect.objectContaining({
+              errorSummary: expect.arrayContaining([{ href: '#mock-file.pdf', text: expect.any(String) }]),
+            }),
+            files: [
+              {
+                filename: 'mock-file.pdf',
+                originalname: 'mock-file.pdf',
+                error: 'mock error',
+              },
+            ],
+            dealId: 'mock-id',
           }),
-          files: [{
-            filename: 'mock-file.pdf',
-            originalname: 'mock-file.pdf',
-            error: 'mock error',
-          }],
-          dealId: 'mock-id',
-        }));
+        );
       });
 
       it('handles a mix of valid and invalid files', async () => {
@@ -153,34 +164,37 @@ describe('controllers/supporting-documents', () => {
 
         validateFile.mockReturnValueOnce([false, 'mock error']).mockReturnValueOnce([true, null]);
 
-        uploadAndSaveToDeal.mockResolvedValue([{
-          _id: 'mock-file-id',
-          filename: 'another-file.pdf',
-          originalname: 'another-file.pdf',
-        }]);
+        uploadAndSaveToDeal.mockResolvedValue([
+          {
+            _id: 'mock-file-id',
+            filename: 'another-file.pdf',
+            originalname: 'another-file.pdf',
+          },
+        ]);
 
         await postSupportingDocuments(mockRequest, mockResponse, mockNext);
 
         expect(mockResponse.redirect).not.toHaveBeenCalled();
-        expect(mockResponse.render).toHaveBeenCalledWith('partials/upload-supporting-documents.njk', expect.objectContaining({
-          errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#mock-file.pdf', text: expect.any(String) },
-            ]),
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/upload-supporting-documents.njk',
+          expect.objectContaining({
+            errors: expect.objectContaining({
+              errorSummary: expect.arrayContaining([{ href: '#mock-file.pdf', text: expect.any(String) }]),
+            }),
+            files: [
+              {
+                originalname: 'mock-file.pdf',
+                error: 'mock error',
+              },
+              {
+                _id: 'mock-file-id',
+                filename: 'another-file.pdf',
+                originalname: 'another-file.pdf',
+              },
+            ],
+            dealId: 'mock-id',
           }),
-          files: [
-            {
-              originalname: 'mock-file.pdf',
-              error: 'mock error',
-            },
-            {
-              _id: 'mock-file-id',
-              filename: 'another-file.pdf',
-              originalname: 'another-file.pdf',
-            },
-          ],
-          dealId: 'mock-id',
-        }));
+        );
       });
     });
 
@@ -193,10 +207,12 @@ describe('controllers/supporting-documents', () => {
         Application.findById.mockResolvedValueOnce({
           ...MOCKS.MockApplicationResponseDraft(),
           supportingInformation: {
-            manualInclusion: [{
-              _id: 'mockFileId',
-              filename: 'mock-file.pdf',
-            }],
+            manualInclusion: [
+              {
+                _id: 'mockFileId',
+                filename: 'mock-file.pdf',
+              },
+            ],
           },
         });
 
@@ -205,24 +221,27 @@ describe('controllers/supporting-documents', () => {
         await postSupportingDocuments(mockRequest, mockResponse, mockNext);
 
         expect(mockResponse.redirect).not.toHaveBeenCalled();
-        expect(mockResponse.render).toHaveBeenCalledWith('partials/upload-supporting-documents.njk', expect.objectContaining({
-          errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#documents', text: expect.any(String) },
-            ]),
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/upload-supporting-documents.njk',
+          expect.objectContaining({
+            errors: expect.objectContaining({
+              errorSummary: expect.arrayContaining([{ href: '#documents', text: expect.any(String) }]),
+            }),
+            dealId: 'mock-id',
           }),
-          dealId: 'mock-id',
-        }));
+        );
       });
 
       it('deletes a file from application if ID passed', async () => {
         Application.findById.mockResolvedValueOnce({
           ...MOCKS.MockApplicationResponseDraft(),
           supportingInformation: {
-            manualInclusion: [{
-              _id: 'mockFileId',
-              filename: 'mock-file.pdf',
-            }],
+            manualInclusion: [
+              {
+                _id: 'mockFileId',
+                filename: 'mock-file.pdf',
+              },
+            ],
           },
         });
 
@@ -230,13 +249,14 @@ describe('controllers/supporting-documents', () => {
 
         await postSupportingDocuments(mockRequest, mockResponse, mockNext);
 
-        expect(mockResponse.render).toHaveBeenCalledWith('partials/upload-supporting-documents.njk', expect.not.objectContaining({
-          errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#documents', text: expect.any(String) },
-            ]),
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/upload-supporting-documents.njk',
+          expect.not.objectContaining({
+            errors: expect.objectContaining({
+              errorSummary: expect.arrayContaining([{ href: '#documents', text: expect.any(String) }]),
+            }),
           }),
-        }));
+        );
       });
     });
 
@@ -249,14 +269,15 @@ describe('controllers/supporting-documents', () => {
         await postSupportingDocuments(mockRequest, mockResponse, mockNext);
 
         expect(mockResponse.redirect).not.toHaveBeenCalled();
-        expect(mockResponse.render).toHaveBeenCalledWith('partials/upload-supporting-documents.njk', expect.objectContaining({
-          errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#documents', text: expect.any(String) },
-            ]),
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/upload-supporting-documents.njk',
+          expect.objectContaining({
+            errors: expect.objectContaining({
+              errorSummary: expect.arrayContaining([{ href: '#documents', text: expect.any(String) }]),
+            }),
+            dealId: 'mock-id',
           }),
-          dealId: 'mock-id',
-        }));
+        );
       });
 
       it('returns error if there are more than 20 files', async () => {
@@ -273,24 +294,27 @@ describe('controllers/supporting-documents', () => {
         await postSupportingDocuments(mockRequest, mockResponse, mockNext);
 
         expect(mockResponse.redirect).not.toHaveBeenCalled();
-        expect(mockResponse.render).toHaveBeenCalledWith('partials/upload-supporting-documents.njk', expect.objectContaining({
-          errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#documents', text: expect.any(String) },
-            ]),
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/upload-supporting-documents.njk',
+          expect.objectContaining({
+            errors: expect.objectContaining({
+              errorSummary: expect.arrayContaining([{ href: '#documents', text: expect.any(String) }]),
+            }),
+            dealId: 'mock-id',
           }),
-          dealId: 'mock-id',
-        }));
+        );
       });
 
       it('redirects to application details if there is between 1 and 20 files', async () => {
         Application.findById.mockResolvedValueOnce({
           ...MOCKS.MockApplicationResponseDraft(),
           supportingInformation: {
-            manualInclusion: [{
-              _id: 'mockFileId',
-              filename: 'mock-file.pdf',
-            }],
+            manualInclusion: [
+              {
+                _id: 'mockFileId',
+                filename: 'mock-file.pdf',
+              },
+            ],
           },
         });
 
@@ -356,11 +380,13 @@ describe('controllers/supporting-documents', () => {
     });
 
     it('returns any upload errors', async () => {
-      uploadAndSaveToDeal.mockResolvedValueOnce([{
-        filename: 'mock-file.pdf',
-        originalname: 'mock-file.pdf',
-        error: 'mock upload error',
-      }]);
+      uploadAndSaveToDeal.mockResolvedValueOnce([
+        {
+          filename: 'mock-file.pdf',
+          originalname: 'mock-file.pdf',
+          error: 'mock upload error',
+        },
+      ]);
 
       await uploadSupportingDocument(mockRequest, mockResponse, mockNext);
 
@@ -378,11 +404,13 @@ describe('controllers/supporting-documents', () => {
     // TODO: DTFS2-6212 add test for "Check - returns error if error thrown when uploading".
 
     it('returns file with success message if everything valid', async () => {
-      uploadAndSaveToDeal.mockResolvedValueOnce([{
-        _id: 'mock-file-id',
-        filename: 'mock-file.pdf',
-        originalname: 'mock-file.pdf',
-      }]);
+      uploadAndSaveToDeal.mockResolvedValueOnce([
+        {
+          _id: 'mock-file-id',
+          filename: 'mock-file.pdf',
+          originalname: 'mock-file.pdf',
+        },
+      ]);
 
       await uploadSupportingDocument(mockRequest, mockResponse, mockNext);
 
@@ -464,7 +492,8 @@ describe('controllers/supporting-documents', () => {
           'financialForecasts',
           'financialInformationCommentary',
           'corporateStructure',
-          'debtorAndCreditorReports'],
+          'debtorAndCreditorReports',
+        ],
       },
     };
     const dealId = 1234;
@@ -489,7 +518,11 @@ describe('controllers/supporting-documents', () => {
     });
 
     it('skips the management accounts page and moves to the financial forecasts page', () => {
-      application.supportingInformation.requiredFields = ['manualInclusion', 'auditedFinancialStatements', 'financialForecasts'];
+      application.supportingInformation.requiredFields = [
+        'manualInclusion',
+        'auditedFinancialStatements',
+        'financialForecasts',
+      ];
       expect(nextDocument(application, dealId, 'auditedFinancialStatements')).toContain('/financial-forecasts');
     });
     it('returns to the main applications page', () => {

@@ -164,7 +164,11 @@ const shouldUpdateDealStage = (submissionType, taskId, groupId, statusFrom, stat
   const firstTaskInFirstGroup = isFirstTaskInFirstGroup(taskId, groupId);
   const taskCompletedImmediately = taskIsCompletedImmediately(statusFrom, statusTo);
 
-  if (isMiaDeal && firstTaskInFirstGroup && (statusTo === CONSTANTS.TASKS.STATUS.IN_PROGRESS || taskCompletedImmediately)) {
+  if (
+    isMiaDeal &&
+    firstTaskInFirstGroup &&
+    (statusTo === CONSTANTS.TASKS.STATUS.IN_PROGRESS || taskCompletedImmediately)
+  ) {
     return true;
   }
 

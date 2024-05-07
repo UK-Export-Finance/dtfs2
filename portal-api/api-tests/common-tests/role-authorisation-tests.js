@@ -1,9 +1,6 @@
 const ROLES = require('../../src/v1/roles/roles');
 
-const expectNotAuthorisedResponse = ({
-  status,
-  body
-}) => {
+const expectNotAuthorisedResponse = ({ status, body }) => {
   expect(status).toBe(401);
   expect(body).toStrictEqual({
     success: false,
@@ -36,11 +33,14 @@ const withRoleAuthorisationTests = ({
     expectNotAuthorisedResponse(response);
   });
 
-  it.each(allowedRoles)(`returns a ${successStatusCode} response for requests from a user with role %s`, async (role) => {
-    const userWithRole = getUserWithRole(role);
-    const { status } = await makeRequestAsUser(userWithRole);
-    expect(status).toBe(successStatusCode);
-  });
+  it.each(allowedRoles)(
+    `returns a ${successStatusCode} response for requests from a user with role %s`,
+    async (role) => {
+      const userWithRole = getUserWithRole(role);
+      const { status } = await makeRequestAsUser(userWithRole);
+      expect(status).toBe(successStatusCode);
+    },
+  );
 };
 
 const withNoRoleAuthorisationTests = ({

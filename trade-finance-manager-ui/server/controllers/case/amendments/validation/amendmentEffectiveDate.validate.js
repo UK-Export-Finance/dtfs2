@@ -20,8 +20,8 @@ const effectiveDateValidation = (body) => {
   const effectiveDateErrors = [];
 
   const amendmentEffectiveIsFullyComplete = effectiveDateDay && effectiveDateMonth && effectiveDateYear;
-  const amendmentEffectiveIsPartiallyComplete = !amendmentEffectiveIsFullyComplete
-    && (effectiveDateDay || effectiveDateMonth || effectiveDateYear);
+  const amendmentEffectiveIsPartiallyComplete =
+    !amendmentEffectiveIsFullyComplete && (effectiveDateDay || effectiveDateMonth || effectiveDateYear);
   const amendmentEffectiveIsBlank = !effectiveDateDay && !effectiveDateMonth && !effectiveDateYear;
 
   let effectiveDate = null;

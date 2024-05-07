@@ -33,7 +33,9 @@ export const getUtilisationReports = async (req: GetUtilisationReportsRequest, r
       reportPeriod: parsedReportPeriod,
       excludeNotReceived: excludeNotReceived === 'true',
     });
-    const mappedUtilisationReports = await Promise.all(utilisationReports.map(mapUtilisationReportEntityToGetUtilisationReportResponse));
+    const mappedUtilisationReports = await Promise.all(
+      utilisationReports.map(mapUtilisationReportEntityToGetUtilisationReportResponse),
+    );
     return res.status(200).send(mappedUtilisationReports);
   } catch (error) {
     console.error('Unable to get utilisation reports:', error);

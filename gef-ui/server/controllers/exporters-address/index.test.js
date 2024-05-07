@@ -156,7 +156,9 @@ describe('controllers/excorters-address', () => {
 
       await validateExportersAddress(mockRequest, mockResponse);
 
-      expect(mockRequest.session.addresses).toEqual(JSON.stringify([{ addressLine1: 'line 1', addressLine2: 'line 2' }]));
+      expect(mockRequest.session.addresses).toEqual(
+        JSON.stringify([{ addressLine1: 'line 1', addressLine2: 'line 2' }]),
+      );
     });
 
     it('saves postcode to session storage in uppercase format', async () => {
@@ -172,7 +174,10 @@ describe('controllers/excorters-address', () => {
       mockRequest.body.correspondence = 'true';
       mockRequest.body.postcode = postcode;
 
-      api.getAddressesByPostcode.mockRejectedValueOnce({ status: 422, data: [{ errMsg: 'Message', errRef: 'Reference' }] });
+      api.getAddressesByPostcode.mockRejectedValueOnce({
+        status: 422,
+        data: [{ errMsg: 'Message', errRef: 'Reference' }],
+      });
 
       await validateExportersAddress(mockRequest, mockResponse);
 
@@ -209,28 +214,25 @@ describe('controllers/excorters-address', () => {
 
       await validateExportersAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/exporters-address.njk',
-        {
-          errors: {
-            errorSummary: [
-              {
-                text: expectedMsg,
-                href: '#postcode',
-              },
-            ],
-            fieldErrors: {
-              postcode: {
-                text: expectedMsg,
-              },
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
+        errors: {
+          errorSummary: [
+            {
+              text: expectedMsg,
+              href: '#postcode',
+            },
+          ],
+          fieldErrors: {
+            postcode: {
+              text: expectedMsg,
             },
           },
-          companyName,
-          postcode,
-          correspondence,
-          dealId: mockRequest.params.dealId,
         },
-      );
+        companyName,
+        postcode,
+        correspondence,
+        dealId: mockRequest.params.dealId,
+      });
     });
 
     it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {

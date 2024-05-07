@@ -14,14 +14,24 @@ describe(component, () => {
     { _id: 2, status: "Further Maker's input required", submissionType: "Further Maker's input required submission" },
   ];
 
-  const readyForCheckerApprovalDeals = [{ _id: 3, status: "Ready for Checker's approval", submissionType: "Ready for Checker's approval submission" }];
+  const readyForCheckerApprovalDeals = [
+    { _id: 3, status: "Ready for Checker's approval", submissionType: "Ready for Checker's approval submission" },
+  ];
 
   const otherDeals = [
     { _id: 4, status: 'Rejected by UKEF', submissionType: 'Rejected by UKEF submission' },
     { _id: 5, status: 'Abandoned', submissionType: 'Abandoned submission' },
     { _id: 6, status: 'Acknowledged', submissionType: 'Acknowledged submission' },
-    { _id: 7, status: 'Accepted by UKEF (without conditions)', submissionType: 'Accepted by UKEF (without conditions) submission' },
-    { _id: 8, status: 'Accepted by UKEF (with conditions)', submissionType: 'Accepted by UKEF (with conditions) submission' },
+    {
+      _id: 7,
+      status: 'Accepted by UKEF (without conditions)',
+      submissionType: 'Accepted by UKEF (without conditions) submission',
+    },
+    {
+      _id: 8,
+      status: 'Accepted by UKEF (with conditions)',
+      submissionType: 'Accepted by UKEF (with conditions) submission',
+    },
     { _id: 9, status: 'Submitted', submissionType: 'Submitted submission' },
     { _id: 10, status: 'In progress by UKEF', submissionType: 'In progress by UKEF submission' },
   ];
@@ -35,7 +45,9 @@ describe(component, () => {
       it('should render proceed to submit link', () => {
         for (const deal of draftAndFurtherInputRequiredDeals) {
           const wrapper = render({ user, isEveryDealFormComplete, deal });
-          wrapper.expectText('[data-cy="canProceed"]').toRead(`You may now proceed to submit an ${deal.submissionType}.`);
+          wrapper
+            .expectText('[data-cy="canProceed"]')
+            .toRead(`You may now proceed to submit an ${deal.submissionType}.`);
         }
       });
 
@@ -53,7 +65,9 @@ describe(component, () => {
       it('should render please complete all form sections', () => {
         for (const deal of [...draftAndFurtherInputRequiredDeals]) {
           const wrapper = render({ user, isEveryDealFormComplete, deal });
-          wrapper.expectText('[data-cy="canProceed"]').toRead('Please complete all form sections in order to submit your Supply Contract.');
+          wrapper
+            .expectText('[data-cy="canProceed"]')
+            .toRead('Please complete all form sections in order to submit your Supply Contract.');
         }
       });
     });
@@ -68,7 +82,9 @@ describe(component, () => {
       it('should render proceed to submit link', () => {
         for (const deal of readyForCheckerApprovalDeals) {
           const wrapper = render({ user, isEveryDealFormComplete, deal });
-          wrapper.expectText('[data-cy="canProceed"]').toRead(`You may now proceed to submit an ${deal.submissionType}.`);
+          wrapper
+            .expectText('[data-cy="canProceed"]')
+            .toRead(`You may now proceed to submit an ${deal.submissionType}.`);
         }
       });
 

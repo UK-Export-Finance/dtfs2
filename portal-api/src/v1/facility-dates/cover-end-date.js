@@ -1,7 +1,7 @@
 const { cloneDeep } = require('lodash');
 const {
   getDateAsEpochMillisecondString,
-  getStartOfDateFromDayMonthYearStringsReplicatingMoment
+  getStartOfDateFromDayMonthYearStringsReplicatingMoment,
 } = require('../helpers/date');
 const { dateHasAllValues } = require('../validation/fields/date');
 

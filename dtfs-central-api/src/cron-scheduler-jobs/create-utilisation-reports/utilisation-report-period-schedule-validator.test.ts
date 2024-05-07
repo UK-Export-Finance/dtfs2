@@ -62,7 +62,9 @@ describe('utilisation-report-period-schedule-validator', () => {
 
       // Act + Assert
       expect(() => validateUtilisationReportPeriodSchedule(utilisationReportPeriodSchedule)).toThrow(
-        new InvalidReportPeriodScheduleError('Utilisation report period schedule does not start from January or period which spans 2 years'),
+        new InvalidReportPeriodScheduleError(
+          'Utilisation report period schedule does not start from January or period which spans 2 years',
+        ),
       );
     });
 

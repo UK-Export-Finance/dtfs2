@@ -43,13 +43,19 @@ context('User can view a GEF MIA case deal', () => {
   });
 
   it('should render case summary fields', () => {
-    partials.caseSummary.dealSubmissionType().invoke('text').then((text) => {
-      expect(text.trim()).to.contain(MOCK_APPLICATION_MIA.submissionType);
-    });
+    partials.caseSummary
+      .dealSubmissionType()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain(MOCK_APPLICATION_MIA.submissionType);
+      });
 
-    partials.caseSummary.exporterName().invoke('text').then((text) => {
-      expect(text.trim()).to.contain(MOCK_APPLICATION_MIA.exporter.companyName);
-    });
+    partials.caseSummary
+      .exporterName()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain(MOCK_APPLICATION_MIA.exporter.companyName);
+      });
   });
 
   describe('Bank security section', () => {
@@ -58,7 +64,9 @@ context('User can view a GEF MIA case deal', () => {
       pages.caseDealPage.bankSecuritySectionHeading().contains('Bank security');
       pages.caseDealPage.bankSecuritySubHeading().contains('General bank security for this exporter');
       pages.caseDealPage.bankSecurityText().contains('Mock security details');
-      pages.caseDealPage.bankSecurityFacilitySubHeading().contains('Specific bank security for the facilities listed in this application');
+      pages.caseDealPage
+        .bankSecurityFacilitySubHeading()
+        .contains('Specific bank security for the facilities listed in this application');
       pages.caseDealPage.bankSecurityFacilityText().contains('Mock facility details');
     });
   });
@@ -146,13 +154,19 @@ context('User can view a GEF AIN case deal', () => {
   });
 
   it('should render case summary fields', () => {
-    partials.caseSummary.dealSubmissionType().invoke('text').then((text) => {
-      expect(text.trim()).to.contain(MOCK_APPLICATION_AIN.submissionType);
-    });
+    partials.caseSummary
+      .dealSubmissionType()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain(MOCK_APPLICATION_AIN.submissionType);
+      });
 
-    partials.caseSummary.exporterName().invoke('text').then((text) => {
-      expect(text.trim()).to.contain(MOCK_APPLICATION_AIN.exporter.companyName);
-    });
+    partials.caseSummary
+      .exporterName()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain(MOCK_APPLICATION_AIN.exporter.companyName);
+      });
   });
 
   describe('Bank security section', () => {

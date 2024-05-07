@@ -1,7 +1,4 @@
-const {
-  DEAL_STATUS,
-  AUTHORISATION_LEVEL,
-} = require('../constants');
+const { DEAL_STATUS, AUTHORISATION_LEVEL } = require('../constants');
 
 const statesWhereMakerHasEditAccess = [
   DEAL_STATUS.DRAFT,

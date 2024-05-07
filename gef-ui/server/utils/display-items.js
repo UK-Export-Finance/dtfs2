@@ -1,8 +1,6 @@
 const { format, parseISO } = require('date-fns');
 const { isTrueSet } = require('./helpers');
-const {
-  BOOLEAN, STAGE, FACILITY_TYPE,
-} = require('../constants');
+const { BOOLEAN, STAGE, FACILITY_TYPE } = require('../constants');
 
 const exporterItems = (exporterUrl, options = {}) => [
   {
@@ -21,7 +19,9 @@ const exporterItems = (exporterUrl, options = {}) => [
   {
     label: 'Correspondence address, if different',
     id: 'correspondenceAddress',
-    href: options.correspondenceAddressLink ? `${exporterUrl}/exporters-address` : `${exporterUrl}/enter-exporters-correspondence-address?status=change`,
+    href: options.correspondenceAddressLink
+      ? `${exporterUrl}/exporters-address`
+      : `${exporterUrl}/enter-exporters-correspondence-address?status=change`,
   },
   {
     label: 'Industry',
@@ -57,14 +57,10 @@ const eligibilityCriteriaItems = (coverUrl) => [
   },
 ];
 
-const facilityItems = (facilityUrl, {
-  type,
-  hasBeenIssued,
-  shouldCoverStartOnSubmission,
-  ukefFacilityId,
-  feeType,
-  issueDate,
-}) => {
+const facilityItems = (
+  facilityUrl,
+  { type, hasBeenIssued, shouldCoverStartOnSubmission, ukefFacilityId, feeType, issueDate },
+) => {
   const AT_MATURITY = 'At maturity';
   return [
     {
@@ -156,7 +152,8 @@ const facilityItems = (facilityUrl, {
       isCurrency: true,
     },
     {
-      label: type === FACILITY_TYPE.CASH ? 'Interest margin your bank will charge' : 'Risk margin your bank will charge',
+      label:
+        type === FACILITY_TYPE.CASH ? 'Interest margin your bank will charge' : 'Risk margin your bank will charge',
       id: 'interestPercentage',
       href: `${facilityUrl}/facility-value?status=change`,
       suffix: '%',

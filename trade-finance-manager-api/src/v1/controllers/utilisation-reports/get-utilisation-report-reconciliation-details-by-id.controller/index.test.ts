@@ -17,7 +17,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
         },
       });
 
-    const apiGetUtilisationReportReconciliationDetailsByIdSpy = jest.spyOn(api, 'getUtilisationReportReconciliationDetailsById');
+    const apiGetUtilisationReportReconciliationDetailsByIdSpy = jest.spyOn(
+      api,
+      'getUtilisationReportReconciliationDetailsById',
+    );
 
     const utilisationReportReconciliationDetailsResponse: UtilisationReportReconciliationDetailsResponseBody = {
       ...aUtilisationReportReconciliationDetailsResponse(),
@@ -28,7 +31,9 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       // Arrange
       const { req, res } = getHttpMocks();
 
-      apiGetUtilisationReportReconciliationDetailsByIdSpy.mockResolvedValue(utilisationReportReconciliationDetailsResponse);
+      apiGetUtilisationReportReconciliationDetailsByIdSpy.mockResolvedValue(
+        utilisationReportReconciliationDetailsResponse,
+      );
 
       // Act
       await getUtilisationReportReconciliationDetailsById(req, res);
@@ -54,7 +59,9 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
 
       // Assert
       expect(res._getStatusCode()).toBe(errorStatus);
-      expect(res._getData()).toBe(`Failed to get utilisation report reconciliation details for report with id '${reportId}': ${axiosError.message}`);
+      expect(res._getData()).toBe(
+        `Failed to get utilisation report reconciliation details for report with id '${reportId}': ${axiosError.message}`,
+      );
     });
 
     it('responds with a 500 when an unexpected error occurs', async () => {
@@ -68,7 +75,9 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-      expect(res._getData()).toBe(`Failed to get utilisation report reconciliation details for report with id '${reportId}'`);
+      expect(res._getData()).toBe(
+        `Failed to get utilisation report reconciliation details for report with id '${reportId}'`,
+      );
     });
   });
 });

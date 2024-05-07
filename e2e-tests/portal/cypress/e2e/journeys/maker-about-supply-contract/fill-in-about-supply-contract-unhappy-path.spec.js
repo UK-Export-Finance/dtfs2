@@ -9,10 +9,13 @@ context('about-supply-contract', () => {
 
   before(() => {
     const aDealWithAboutSupplyContractInStatus = (status) => {
-      const candidates = twentyOneDeals
-        .filter((aDeal) => (aDeal.submissionDetails && status === aDeal.submissionDetails.status)
-        && (aDeal.status === 'Draft')
-        && (!aDeal.details || !aDeal.details.submissionDate));
+      const candidates = twentyOneDeals.filter(
+        (aDeal) =>
+          aDeal.submissionDetails &&
+          status === aDeal.submissionDetails.status &&
+          aDeal.status === 'Draft' &&
+          (!aDeal.details || !aDeal.details.submissionDate),
+      );
 
       const aDeal = candidates[0];
       if (!aDeal) {
@@ -23,8 +26,9 @@ context('about-supply-contract', () => {
     };
 
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Incomplete'), BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Incomplete'), BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   it('A maker picks up a deal in status=Draft, and fills in the about-supply-contract section, selecting every option that requires more data.', () => {
@@ -33,9 +37,12 @@ context('about-supply-contract', () => {
     // go the long way for the first test- actually clicking via the contract page to prove the link..
     contract.visit(deal);
     // check the status is displaying correctly
-    contract.aboutSupplierDetailsStatus().invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    contract
+      .aboutSupplierDetailsStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
     contract.aboutSupplierDetailsLink().click();
 
     contractAboutSupplier.supplierType().select('Exporter');
@@ -97,9 +104,12 @@ context('about-supply-contract', () => {
 
     contractAboutSupplier.saveAndGoBack().click();
 
-    contract.aboutSupplierDetailsStatus().invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    contract
+      .aboutSupplierDetailsStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
 
     // check that the preview page renders the Submission Details component
     contractAboutPreview.visit(deal);

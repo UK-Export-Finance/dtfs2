@@ -178,10 +178,7 @@ describe('send-deal-submit-emails - BSS', () => {
       it('should call sendEmail and return object of sent emails', async () => {
         const result = await sendDealSubmitEmails(mockDealIssued);
 
-        const facilityLists = generateFacilityLists(
-          mockDealIssued.dealType,
-          mockDealIssued.facilities,
-        );
+        const facilityLists = generateFacilityLists(mockDealIssued.dealType, mockDealIssued.facilities);
 
         const expectedEmailVariables = generateBssDealAinMinConfirmationEmailVariables(mockDealIssued, facilityLists);
 
@@ -297,15 +294,9 @@ describe('send-deal-submit-emails - BSS', () => {
       it('should call sendEmail and return object of sent emails', async () => {
         const result = await sendDealSubmitEmails(mockDealIssued);
 
-        const facilityLists = generateFacilityLists(
-          mockDealIssued.dealType,
-          mockDealIssued.facilities,
-        );
+        const facilityLists = generateFacilityLists(mockDealIssued.dealType, mockDealIssued.facilities);
 
-        const expectedEmailVariables = generateBssDealAinMinConfirmationEmailVariables(
-          mockDealIssued,
-          facilityLists,
-        );
+        const expectedEmailVariables = generateBssDealAinMinConfirmationEmailVariables(mockDealIssued, facilityLists);
 
         expect(sendEmailApiSpy).toHaveBeenCalled();
 

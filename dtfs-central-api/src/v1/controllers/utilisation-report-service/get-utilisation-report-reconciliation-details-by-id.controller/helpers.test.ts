@@ -1,5 +1,8 @@
 import { FeeRecordEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { mapFeeRecordEntityToReconciliationDetailsFeeRecordItem, mapUtilisationReportEntityToReconciliationDetails } from './helpers';
+import {
+  mapFeeRecordEntityToReconciliationDetailsFeeRecordItem,
+  mapUtilisationReportEntityToReconciliationDetails,
+} from './helpers';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 import { FeeRecordItem, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
@@ -36,7 +39,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
     it("throws an error if the 'dateUploaded' property does not exist", async () => {
       // Arrange
-      const notUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).withDateUploaded(null).build();
+      const notUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+        .withId(reportId)
+        .withDateUploaded(null)
+        .build();
 
       // Act / Assert
       await expect(mapUtilisationReportEntityToReconciliationDetails(notUploadedReport)).rejects.toThrow(
@@ -47,7 +53,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
     it('throws an error if a bank with the same id as the report bankId does not exist', async () => {
       // Arrange
-      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withBankId(bankId).build();
+      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+        .withId(reportId)
+        .withBankId(bankId)
+        .build();
 
       jest.mocked(getBankNameById).mockResolvedValue(undefined);
 

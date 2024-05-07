@@ -26,11 +26,22 @@ class SignInLinkService {
    * @throws {UserBlockedError} - If the user is blocked.
    */
   async createAndEmailSignInLink(user) {
-    const { _id: userId, email: userEmail, firstname: userFirstName, surname: userLastName, signInLinkSendDate: userSignInLinkSendDate } = user;
+    const {
+      _id: userId,
+      email: userEmail,
+      firstname: userFirstName,
+      surname: userLastName,
+      signInLinkSendDate: userSignInLinkSendDate,
+    } = user;
 
     const isUserBlockedOrDisabled = await this.#userService.isUserBlockedOrDisabled(user);
 
-    const newSignInLinkCount = await this.#incrementSignInLinkSendCount({ userId, isUserBlockedOrDisabled, userSignInLinkSendDate, userEmail });
+    const newSignInLinkCount = await this.#incrementSignInLinkSendCount({
+      userId,
+      isUserBlockedOrDisabled,
+      userSignInLinkSendDate,
+      userEmail,
+    });
 
     if (isUserBlockedOrDisabled) {
       throw new UserBlockedError(userId);

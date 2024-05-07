@@ -21,7 +21,9 @@ const readOnlyRoleCannotBeAssignedWithOtherRoles = require('./rules/read-only-ro
 const usernameAndEmailMustMatch = require('./rules/username-and-email-must-match');
 const emailMustBeValidEmailAddress = require('./rules/email-must-be-valid-email-address');
 const emailMustBeUnique = require('./rules/email-must-be-unique');
-const { createTestCasesFromRules } = require('../../../../test-helpers/unit-test-helpers/users/validation/user-validation.test-helpers');
+const {
+  createTestCasesFromRules,
+} = require('../../../../test-helpers/unit-test-helpers/users/validation/user-validation.test-helpers');
 
 jest.mock('./rules/passwordAtLeast8Characters');
 jest.mock('./rules/passwordAtLeastOneNumber');

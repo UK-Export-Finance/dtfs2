@@ -68,14 +68,21 @@ const executeEventHandler = async (
  * @param requestSource - The request source
  * @throws {TransactionFailedError}
  */
-const updateReportStatusesInTransaction = async (reportsWithStatus: ReportWithStatus[], requestSource: DbRequestSource): Promise<void> => {
+const updateReportStatusesInTransaction = async (
+  reportsWithStatus: ReportWithStatus[],
+  requestSource: DbRequestSource,
+): Promise<void> => {
   const queryRunner = SqlDbDataSource.createQueryRunner();
   await queryRunner.connect();
 
   await queryRunner.startTransaction();
   try {
     const transactionEntityManager = queryRunner.manager;
-    await Promise.all(reportsWithStatus.map((reportWithStatus) => executeEventHandler(reportWithStatus, transactionEntityManager, requestSource)));
+    await Promise.all(
+      reportsWithStatus.map((reportWithStatus) =>
+        executeEventHandler(reportWithStatus, transactionEntityManager, requestSource),
+      ),
+    );
     await queryRunner.commitTransaction();
   } catch (error) {
     await queryRunner.rollbackTransaction();

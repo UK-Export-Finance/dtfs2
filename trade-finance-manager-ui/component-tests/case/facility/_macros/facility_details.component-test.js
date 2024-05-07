@@ -64,7 +64,9 @@ describe(component, () => {
     });
 
     it('should render firstDrawdownAmountInExportCurrency', () => {
-      wrapper.expectText('[data-cy="first-drawdown-amount-in-export-currency"]').toRead(params.facility.firstDrawdownAmountInExportCurrency);
+      wrapper
+        .expectText('[data-cy="first-drawdown-amount-in-export-currency"]')
+        .toRead(params.facility.firstDrawdownAmountInExportCurrency);
     });
 
     it('should render bankFacilityReference', () => {
@@ -81,10 +83,7 @@ describe(component, () => {
         deal: { dealType: 'GEF' },
         facility: {
           ...params.facility,
-          providedOn: [
-            'Revolving or renewing basis',
-            'Committed basis',
-          ],
+          providedOn: ['Revolving or renewing basis', 'Committed basis'],
           providedOnOther: 'Mock other details',
         },
       };
@@ -104,14 +103,18 @@ describe(component, () => {
         const basis2 = gefParams.facility.providedOn[1];
         wrapper.expectText(`[data-cy="facility-provided-${basis2}"]`).toRead(basis2);
 
-        wrapper.expectText('[data-cy="facility-provided-other-details"]').toRead(`Other - ${gefParams.facility.providedOnOther}`);
+        wrapper
+          .expectText('[data-cy="facility-provided-other-details"]')
+          .toRead(`Other - ${gefParams.facility.providedOnOther}`);
       });
     });
   });
 
   describe('value and exposure section', () => {
     it('should render facilityValueExportCurrency', () => {
-      wrapper.expectText('[data-cy="facility-value-export-currency"]').toRead(params.facility.facilityValueExportCurrency);
+      wrapper
+        .expectText('[data-cy="facility-value-export-currency"]')
+        .toRead(params.facility.facilityValueExportCurrency);
     });
 
     it('Should render exchangeRate (Non-GBP facilities only)', () => {
@@ -127,7 +130,11 @@ describe(component, () => {
     });
 
     it('should render maximum ukefExposure', () => {
-      const expectedTimestamp = localiseTimestamp(params.facilityTfm.ukefExposure.timestamp, 'd MMMM yyyy', params.user.timezone);
+      const expectedTimestamp = localiseTimestamp(
+        params.facilityTfm.ukefExposure.timestamp,
+        'd MMMM yyyy',
+        params.user.timezone,
+      );
       const expected = `${params.facilityTfm.ukefExposure.exposure} as at ${expectedTimestamp}`;
       wrapper.expectText('[data-cy="facility-maximum-ukef-exposure"]').toRead(expected);
     });
@@ -150,12 +157,20 @@ describe(component, () => {
 
   describe('`dates` section', () => {
     it('should render inclusionNoticeReceived', () => {
-      const expected = localiseTimestamp(params.facility.dates.inclusionNoticeReceived, 'd MMMM yyyy', params.user.timezone);
+      const expected = localiseTimestamp(
+        params.facility.dates.inclusionNoticeReceived,
+        'd MMMM yyyy',
+        params.user.timezone,
+      );
       wrapper.expectText('[data-cy="facility-inclusion-notice-received"]').toRead(expected);
     });
 
     it('should render bankIssueNoticeReceived', () => {
-      const expected = localiseTimestamp(params.facility.dates.bankIssueNoticeReceived, 'd MMMM yyyy', params.user.timezone);
+      const expected = localiseTimestamp(
+        params.facility.dates.bankIssueNoticeReceived,
+        'd MMMM yyyy',
+        params.user.timezone,
+      );
       wrapper.expectText('[data-cy="facility-bank-issue-notice-received"]').toRead(expected);
     });
 
@@ -180,7 +195,9 @@ describe(component, () => {
     });
 
     it('should render guaranteeFeePayableToUkef', () => {
-      wrapper.expectText('[data-cy="facility-guarantee-fee-payable-to-ukef"]').toRead(params.facility.guaranteeFeePayableToUkef);
+      wrapper
+        .expectText('[data-cy="facility-guarantee-fee-payable-to-ukef"]')
+        .toRead(params.facility.guaranteeFeePayableToUkef);
     });
 
     it('should render credit rating component', () => {

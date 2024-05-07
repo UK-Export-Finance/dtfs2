@@ -31,9 +31,7 @@ const mapExporter = (v1Exporter) => {
     organisationName: v1Exporter.exporter_name,
     companiesHouseRegistrationNumber: v1Exporter.companies_house_registration || null,
     companyName: v1Exporter.exporter_name,
-    industries: [
-      mapExporterIndustry(v1Exporter),
-    ],
+    industries: [mapExporterIndustry(v1Exporter)],
     probabilityOfDefault: Number(v1Exporter.probability_of_default),
     registeredAddress: mapAddress(v1Exporter.exporter_address_composite),
     selectedIndustry: mapExporterIndustry(v1Exporter),
@@ -86,8 +84,10 @@ const mapEligibility = async (token, v1Eligibility) => {
 };
 
 const mapSubmissionCount = (submissionType) => {
-  if (submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
-    || submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
+  if (
+    submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.AIN ||
+    submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+  ) {
     return 1;
   }
 
@@ -113,7 +113,7 @@ const mapUkefDecision = (v1Deal, status, submissionType) => {
       return [
         {
           decision: V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
-          text: v1Deal.field_special_conditions
+          text: v1Deal.field_special_conditions,
         },
       ];
     }
@@ -164,7 +164,7 @@ const mapDocuments = (documents, path) => {
       v1Url: url[1],
       filename: formatFilenameForSharepoint(filename[filename.length - 1]),
       documentPath: path,
-      size: 'Unknown'
+      size: 'Unknown',
     });
   }
 
@@ -175,8 +175,8 @@ const mapSupportingInformation = (v1Eligibility) => {
   const mapped = {
     securityDetails: {
       exporter: '',
-      facility: ''
-    }
+      facility: '',
+    },
   };
 
   if (v1Eligibility.file_1) {
@@ -184,7 +184,10 @@ const mapSupportingInformation = (v1Eligibility) => {
   }
 
   if (v1Eligibility.file_2) {
-    mapped.auditedFinancialStatements = mapDocuments(v1Eligibility.file_2, MIGRATION_MAP.DEAL.SUPPORTING_INFORMATION.file_2);
+    mapped.auditedFinancialStatements = mapDocuments(
+      v1Eligibility.file_2,
+      MIGRATION_MAP.DEAL.SUPPORTING_INFORMATION.file_2,
+    );
   }
 
   if (v1Eligibility.file_3) {
@@ -196,7 +199,10 @@ const mapSupportingInformation = (v1Eligibility) => {
   }
 
   if (v1Eligibility.file_5) {
-    mapped.financialInformationCommentary = mapDocuments(v1Eligibility.file_5, MIGRATION_MAP.DEAL.SUPPORTING_INFORMATION.file_5);
+    mapped.financialInformationCommentary = mapDocuments(
+      v1Eligibility.file_5,
+      MIGRATION_MAP.DEAL.SUPPORTING_INFORMATION.file_5,
+    );
   }
 
   if (v1Eligibility.file_6) {
@@ -213,8 +219,9 @@ const mapSupportingInformation = (v1Eligibility) => {
 const mapV1Deal = async (token, v1Deal, v2Banks, v2Users) => {
   const submissionType = MIGRATION_MAP.DEAL.SUBMISSION_TYPE[v1Deal.field_submission_type];
   const status = MIGRATION_MAP.DEAL.DEAL_STATUS[v1Deal.field_deal_status];
-  const isManualSubmission = (submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
-                            || submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIN);
+  const isManualSubmission =
+    submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIA ||
+    submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
   const mapped = {
     dataMigration: {
       drupalDealId: String(v1Deal.drupal_id),

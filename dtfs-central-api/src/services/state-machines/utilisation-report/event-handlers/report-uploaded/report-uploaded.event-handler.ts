@@ -1,5 +1,11 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, UtilisationReportEntity, AzureFileInfo, AzureFileInfoEntity, FeeRecordEntity } from '@ukef/dtfs2-common';
+import {
+  DbRequestSource,
+  UtilisationReportEntity,
+  AzureFileInfo,
+  AzureFileInfoEntity,
+  FeeRecordEntity,
+} from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { UtilisationReportRawCsvData } from '../../../../../types/utilisation-reports';
 import { feeRecordCsvRowToSqlEntity } from '../../../../../helpers';
@@ -12,7 +18,10 @@ type ReportUploadedEventPayload = {
   transactionEntityManager: EntityManager;
 };
 
-export type UtilisationReportReportUploadedEvent = BaseUtilisationReportEvent<'REPORT_UPLOADED', ReportUploadedEventPayload>;
+export type UtilisationReportReportUploadedEvent = BaseUtilisationReportEvent<
+  'REPORT_UPLOADED',
+  ReportUploadedEventPayload
+>;
 /**
  * Handler for the utilisation report "report uploaded" event
  * @param report - The report to update
@@ -21,7 +30,13 @@ export type UtilisationReportReportUploadedEvent = BaseUtilisationReportEvent<'R
  */
 export const handleUtilisationReportReportUploadedEvent = async (
   report: UtilisationReportEntity,
-  { azureFileInfo, reportCsvData, uploadedByUserId, requestSource, transactionEntityManager }: ReportUploadedEventPayload,
+  {
+    azureFileInfo,
+    reportCsvData,
+    uploadedByUserId,
+    requestSource,
+    transactionEntityManager,
+  }: ReportUploadedEventPayload,
 ): Promise<UtilisationReportEntity> => {
   const azureFileInfoEntity = AzureFileInfoEntity.create({
     ...azureFileInfo,

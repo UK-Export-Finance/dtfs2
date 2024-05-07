@@ -19,9 +19,11 @@ const amendmentRequestDateValidation = (body, facility) => {
 
   const amendmentRequestDateErrors = [];
 
-  const amendmentRequestIsFullyComplete = amendmentRequestDateDay && amendmentRequestDateMonth && amendmentRequestDateYear;
-  const amendmentRequestIsPartiallyComplete = !amendmentRequestIsFullyComplete
-    && (amendmentRequestDateDay || amendmentRequestDateMonth || amendmentRequestDateYear);
+  const amendmentRequestIsFullyComplete =
+    amendmentRequestDateDay && amendmentRequestDateMonth && amendmentRequestDateYear;
+  const amendmentRequestIsPartiallyComplete =
+    !amendmentRequestIsFullyComplete &&
+    (amendmentRequestDateDay || amendmentRequestDateMonth || amendmentRequestDateYear);
   const amendmentRequestIsBlank = !amendmentRequestDateDay && !amendmentRequestDateMonth && !amendmentRequestDateYear;
 
   let amendmentRequestDate = null;
@@ -54,9 +56,18 @@ const amendmentRequestDateValidation = (body, facility) => {
     });
   } else if (amendmentRequestIsFullyComplete) {
     // set to midnight to stop mismatch if date in past so set to midnight
-    const submissionDate = new Date(Number(facility.facilitySnapshot.dates.inclusionNoticeReceived)).setHours(2, 2, 2, 2);
+    const submissionDate = new Date(Number(facility.facilitySnapshot.dates.inclusionNoticeReceived)).setHours(
+      2,
+      2,
+      2,
+      2,
+    );
     const today = new Date();
-    let requestDateSet = set(new Date(), { year: amendmentRequestDateYear, month: amendmentRequestDateMonth - 1, date: amendmentRequestDateDay });
+    let requestDateSet = set(new Date(), {
+      year: amendmentRequestDateYear,
+      month: amendmentRequestDateMonth - 1,
+      date: amendmentRequestDateDay,
+    });
     requestDateSet = requestDateSet.setHours(2, 2, 2, 2);
     let yearCorrectFormat = true;
 
@@ -70,7 +81,7 @@ const amendmentRequestDateValidation = (body, facility) => {
     }
 
     if (yearCorrectFormat) {
-    // checks amendment date not in the future
+      // checks amendment date not in the future
       if (isAfter(requestDateSet, today)) {
         amendmentRequestDateErrors.push({
           errRef: 'amendmentRequestDate',

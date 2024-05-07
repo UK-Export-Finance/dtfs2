@@ -9,7 +9,10 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIN } from '../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import {
-  MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR,
+  MOCK_FACILITY_ONE,
+  MOCK_FACILITY_TWO,
+  MOCK_FACILITY_THREE,
+  MOCK_FACILITY_FOUR,
 } from '../../../fixtures/mocks/mock-facilities';
 
 import applicationPreview from '../../pages/application-preview';
@@ -22,35 +25,36 @@ let dealId;
 let token;
 let facilityOneId;
 
-const unissuedFacilitiesArray = [
-  MOCK_FACILITY_ONE,
-  MOCK_FACILITY_THREE,
-  MOCK_FACILITY_FOUR,
-];
+const unissuedFacilitiesArray = [MOCK_FACILITY_ONE, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR];
 
 context('Unissued Facilities MIN - change all to issued from unissued table', () => {
   before(() => {
-    cy.apiLogin(BANK1_MAKER1).then((t) => {
-      token = t;
-    }).then(() => {
-      // creates application and inserts facilities and changes status
-      cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
-        dealId = body._id;
-        cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-            facilityOneId = facility.body.details._id;
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
+    cy.apiLogin(BANK1_MAKER1)
+      .then((t) => {
+        token = t;
+      })
+      .then(() => {
+        // creates application and inserts facilities and changes status
+        cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
+          dealId = body._id;
+          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+              facilityOneId = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
+            });
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO),
+            );
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE),
+            );
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+            );
+            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
           });
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO));
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE));
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR));
-          cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
         });
       });
-    });
   });
 
   describe('Change facility to issued from unissued table', () => {
@@ -121,10 +125,14 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.continueButton().click();
 
       aboutFacilityUnissued.issueDateError().contains('Enter the date you issued the facility to the exporter');
-      aboutFacilityUnissued.shouldCoverStartOnSubmissionError().contains('Select if you want UKEF cover to start on the day you issue the facility');
+      aboutFacilityUnissued
+        .shouldCoverStartOnSubmissionError()
+        .contains('Select if you want UKEF cover to start on the day you issue the facility');
       aboutFacilityUnissued.coverEndDateError().contains('Enter a cover end date');
       aboutFacilityUnissued.errorSummary().contains('Enter the date you issued the facility to the exporter');
-      aboutFacilityUnissued.errorSummary().contains('Select if you want UKEF cover to start on the day you issue the facility');
+      aboutFacilityUnissued
+        .errorSummary()
+        .contains('Select if you want UKEF cover to start on the day you issue the facility');
       aboutFacilityUnissued.errorSummary().contains('Enter a cover end date');
 
       // entering date in the past for issue date
@@ -132,8 +140,12 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.issueDateMonth().type(dateConstants.fourDaysAgoMonth);
       aboutFacilityUnissued.issueDateYear().type(dateConstants.fourDaysAgoYear);
       aboutFacilityUnissued.continueButton().click();
-      aboutFacilityUnissued.issueDateError().contains('The issue date must not be before the date of the inclusion notice submission date');
-      aboutFacilityUnissued.errorSummary().contains('The issue date must not be before the date of the inclusion notice submission date');
+      aboutFacilityUnissued
+        .issueDateError()
+        .contains('The issue date must not be before the date of the inclusion notice submission date');
+      aboutFacilityUnissued
+        .errorSummary()
+        .contains('The issue date must not be before the date of the inclusion notice submission date');
 
       // entering issue date in the future
       aboutFacilityUnissued.issueDateDay().clear();
@@ -170,8 +182,12 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.threeMonthsOneDayMonth);
       aboutFacilityUnissued.coverStartDateYear().type(dateConstants.threeMonthsOneDayYear);
       aboutFacilityUnissued.continueButton().click();
-      aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
-      aboutFacilityUnissued.errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued
+        .coverStartDateError()
+        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued
+        .errorSummary()
+        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
 
       // coverEnd date before coverStartDate
       aboutFacilityUnissued.coverStartDateDay().clear();
@@ -272,7 +288,9 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
     // task comments box should show facilities names have changed to unissued
     it('preview review facility stage has correct headers and shows all 3 updated facilities and submit button should be visible', () => {
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
-      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
+      applicationPreview
+        .updatedUnissuedFacilitiesHeader()
+        .contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[1].name);
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[2].name);
@@ -347,11 +365,15 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
     // checks that can submit application to checker with changed facilities
     it('pressing submit button takes you to submit page and with correct panel once submitted to checker', () => {
       applicationPreview.submitButtonPostApproval().click();
-      applicationSubmission.submissionText().contains('Someone at your bank must check your update before they can submit it to UKEF');
+      applicationSubmission
+        .submissionText()
+        .contains('Someone at your bank must check your update before they can submit it to UKEF');
       applicationSubmission.submitButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
-      applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted for checking at your bank');
+      applicationSubmission
+        .confirmationPanelTitleFacilities()
+        .contains('Issued facilities submitted for checking at your bank');
     });
   });
 });

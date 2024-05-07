@@ -7,7 +7,9 @@ exports.getDocumentationErrors = (submissionType, supportingInformation, uploadE
   let order = 0;
 
   const generateError = (fieldname, fieldText, errorText, isMandatory) => {
-    if (!isMandatory) { return {}; }
+    if (!isMandatory) {
+      return {};
+    }
 
     if (supportingInformation[fieldname] && supportingInformation[fieldname].length) {
       return {};
@@ -41,13 +43,33 @@ exports.getDocumentationErrors = (submissionType, supportingInformation, uploadE
 
   // Manual Inclusion Questionnaire if mandatory
   const exporterQuestionnaireMandatory = submissionType !== CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
-  errorList.exporterQuestionnaire = generateError('exporterQuestionnaire', 'Manual Inclusion Questionnaire', 'is required.', exporterQuestionnaireMandatory);
-  uploadErrorList.exporterQuestionnaire = generateUploadErrors('exporterQuestionnaire', 'Manual Inclusion Questionnaire');
+  errorList.exporterQuestionnaire = generateError(
+    'exporterQuestionnaire',
+    'Manual Inclusion Questionnaire',
+    'is required.',
+    exporterQuestionnaireMandatory,
+  );
+  uploadErrorList.exporterQuestionnaire = generateUploadErrors(
+    'exporterQuestionnaire',
+    'Manual Inclusion Questionnaire',
+  );
 
-  uploadErrorList.auditedFinancialStatements = generateUploadErrors('auditedFinancialStatements', 'Financial statements for the past 3 years');
-  uploadErrorList.yearToDateManagement = generateUploadErrors('yearToDateManagement', 'Year to date management accounts');
-  uploadErrorList.financialForecasts = generateUploadErrors('financialForecasts', 'Financial forecasts for the next 3 years');
-  uploadErrorList.financialInformationCommentary = generateUploadErrors('financialInformationCommentary', 'Brief commentary on the financial information');
+  uploadErrorList.auditedFinancialStatements = generateUploadErrors(
+    'auditedFinancialStatements',
+    'Financial statements for the past 3 years',
+  );
+  uploadErrorList.yearToDateManagement = generateUploadErrors(
+    'yearToDateManagement',
+    'Year to date management accounts',
+  );
+  uploadErrorList.financialForecasts = generateUploadErrors(
+    'financialForecasts',
+    'Financial forecasts for the next 3 years',
+  );
+  uploadErrorList.financialInformationCommentary = generateUploadErrors(
+    'financialInformationCommentary',
+    'Brief commentary on the financial information',
+  );
 
   uploadErrorList.corporateStructure = generateUploadErrors('corporateStructure', 'Corporate structure diagram');
 

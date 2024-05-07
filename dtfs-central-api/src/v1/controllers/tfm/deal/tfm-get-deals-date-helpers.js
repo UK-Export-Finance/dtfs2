@@ -1,9 +1,4 @@
-const {
-  parse,
-  getTime,
-  startOfDay,
-  endOfDay,
-} = require('date-fns');
+const { parse, getTime, startOfDay, endOfDay } = require('date-fns');
 
 // date format that the endpoint will receive
 const DATE_INPUT_FORMAT = 'dd-MM-yyyy';
@@ -17,8 +12,7 @@ const TIMESTAMP_FIELDS = [
   'tfm.lastUpdated',
 ];
 
-const isTimestampField = (fieldName) =>
-  TIMESTAMP_FIELDS.includes(fieldName);
+const isTimestampField = (fieldName) => TIMESTAMP_FIELDS.includes(fieldName);
 
 const dayStartAndEndTimestamps = (dateString) => {
   // generate date from provided string

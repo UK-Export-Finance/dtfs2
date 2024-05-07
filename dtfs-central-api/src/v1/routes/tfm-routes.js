@@ -448,7 +448,9 @@ tfmRouter.route('/facilities/:id').put(tfmUpdateFacilityController.updateFacilit
  *         description: Not found
  */
 tfmRouter.route('/amendments').get(tfmGetAmendmentController.getAllAmendmentsInProgress);
-tfmRouter.route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?').get(tfmGetAmendmentController.getAmendmentsByFacilityId);
+tfmRouter
+  .route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?')
+  .get(tfmGetAmendmentController.getAmendmentsByFacilityId);
 tfmRouter.route('/deals/:dealId/amendments/:status?/:type?').get(tfmGetAmendmentController.getAmendmentsByDealId);
 
 /**

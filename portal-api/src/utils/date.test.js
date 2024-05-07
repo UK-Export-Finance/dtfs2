@@ -1,5 +1,10 @@
 const { isSameDay } = require('date-fns');
-const { addOneBusinessDayWithHolidays, getFirstBusinessDayOfMonth, getBusinessDayOfMonth, getMonthName } = require('./date');
+const {
+  addOneBusinessDayWithHolidays,
+  getFirstBusinessDayOfMonth,
+  getBusinessDayOfMonth,
+  getMonthName,
+} = require('./date');
 
 describe('date', () => {
   describe('addOneBusinessDayWithHolidays', () => {
@@ -162,12 +167,15 @@ describe('date', () => {
       { monthNumber: 10, expectedMonthName: 'October' },
       { monthNumber: 11, expectedMonthName: 'November' },
       { monthNumber: 12, expectedMonthName: 'December' },
-    ])("returns month name '$expectedMonthName' from month number '$monthNumber'", ({ monthNumber, expectedMonthName }) => {
-      // Act
-      const monthName = getMonthName(monthNumber);
+    ])(
+      "returns month name '$expectedMonthName' from month number '$monthNumber'",
+      ({ monthNumber, expectedMonthName }) => {
+        // Act
+        const monthName = getMonthName(monthNumber);
 
-      // Assert
-      expect(monthName).toEqual(expectedMonthName);
-    });
+        // Assert
+        expect(monthName).toEqual(expectedMonthName);
+      },
+    );
   });
 });

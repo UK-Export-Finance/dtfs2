@@ -14,13 +14,16 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
 
   before(() => {
     cy.loadData();
-    cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
-      cy.apiFetchAllGefApplications(token);
-    }).then(({ body }) => {
-      body.items.forEach((item) => {
-        dealIds.push(item._id);
+    cy.apiLogin(BANK1_MAKER1)
+      .then((token) => token)
+      .then((token) => {
+        cy.apiFetchAllGefApplications(token);
+      })
+      .then(({ body }) => {
+        body.items.forEach((item) => {
+          dealIds.push(item._id);
+        });
       });
-    });
   });
 
   beforeEach(() => {
@@ -42,8 +45,16 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       automaticCover.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[2]}/ineligible-automatic-cover`));
       automaticCover.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealIds[2]}/supporting-information/document/manual-inclusion-questionnaire`));
-      cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealIds[2]}/supporting-information/document/manual-inclusion-questionnaire/upload`);
+      cy.url().should(
+        'eq',
+        relative(
+          `/gef/application-details/${dealIds[2]}/supporting-information/document/manual-inclusion-questionnaire`,
+        ),
+      );
+      cy.uploadFile(
+        'upload-file-valid.doc',
+        `/gef/application-details/${dealIds[2]}/supporting-information/document/manual-inclusion-questionnaire/upload`,
+      );
       manualInclusion.uploadSuccess('upload_file_valid.doc');
       securityDetails.visit(dealIds[2]);
       securityDetails.exporterSecurity().type('test');
@@ -59,7 +70,11 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
 
       cy.login(BANK1_MAKER1);
 
-      cy.visit(relative(`/gef/application-details/${dealIds[2]}/supporting-information/document/manual-inclusion-questionnaire`));
+      cy.visit(
+        relative(
+          `/gef/application-details/${dealIds[2]}/supporting-information/document/manual-inclusion-questionnaire`,
+        ),
+      );
 
       cy.uploadFile('upload-file-valid.doc', `${manualInclusion.url(dealIds[2])}/upload`);
       manualInclusion.uploadSuccess('upload_file_valid.doc');

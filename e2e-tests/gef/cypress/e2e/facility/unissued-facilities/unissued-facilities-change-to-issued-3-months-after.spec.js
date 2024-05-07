@@ -7,7 +7,10 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIN } from '../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import {
-  MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR,
+  MOCK_FACILITY_ONE,
+  MOCK_FACILITY_TWO,
+  MOCK_FACILITY_THREE,
+  MOCK_FACILITY_FOUR,
 } from '../../../fixtures/mocks/mock-facilities';
 
 import applicationPreview from '../../pages/application-preview';
@@ -24,27 +27,32 @@ FACILITY_THREE_SPECIAL.specialIssuePermission = true;
 
 context('Unissued Facilities MIN - change to issued more than 3 months after MIN submission date', () => {
   before(() => {
-    cy.apiLogin(BANK1_MAKER1).then((t) => {
-      token = t;
-    }).then(() => {
-      cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
-        dealId = body._id;
-        MOCK_APPLICATION_MIN.manualInclusionNoticeSubmissionDate = `${dateConstants.oneYearUnix}608`;
-        cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-            facilityOneId = facility.body.details._id;
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
+    cy.apiLogin(BANK1_MAKER1)
+      .then((t) => {
+        token = t;
+      })
+      .then(() => {
+        cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
+          dealId = body._id;
+          MOCK_APPLICATION_MIN.manualInclusionNoticeSubmissionDate = `${dateConstants.oneYearUnix}608`;
+          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+              facilityOneId = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
+            });
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO),
+            );
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_THREE_SPECIAL),
+            );
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+            );
+            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
           });
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO));
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_THREE_SPECIAL));
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR));
-          cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
         });
       });
-    });
   });
 
   describe('Change facility to issued from application preview', () => {
@@ -72,7 +80,7 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      aboutFacilityUnissued.mainHeading().contains('Tell us you\'ve issued this facility');
+      aboutFacilityUnissued.mainHeading().contains("Tell us you've issued this facility");
       aboutFacilityUnissued.facilityNameLabel().contains('Name for this cash facility');
       aboutFacilityUnissued.facilityName().should('have.value', MOCK_FACILITY_ONE.name);
 
@@ -105,14 +113,22 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeYearsYear);
       aboutFacilityUnissued.continueButton().click();
 
-      aboutFacilityUnissued.errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
-      aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued
+        .errorSummary()
+        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued
+        .coverStartDateError()
+        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
       aboutFacilityUnissued.continueButton().click();
 
-      aboutFacilityUnissued.errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
-      aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued
+        .errorSummary()
+        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued
+        .coverStartDateError()
+        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
     });
 
     it('should be able to update facility and then go back to application preview page with coverStartDate more than 3 months in the future if specialIssuePermission', () => {
@@ -156,14 +172,22 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeYearsYear);
       aboutFacilityUnissued.continueButton().click();
 
-      aboutFacilityUnissued.errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
-      aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued
+        .errorSummary()
+        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued
+        .coverStartDateError()
+        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
       aboutFacilityUnissued.continueButton().click();
 
-      aboutFacilityUnissued.errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
-      aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued
+        .errorSummary()
+        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued
+        .coverStartDateError()
+        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
     });
   });
 });

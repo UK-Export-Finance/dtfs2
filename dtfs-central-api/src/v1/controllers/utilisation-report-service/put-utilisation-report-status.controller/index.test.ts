@@ -53,13 +53,16 @@ describe('put-utilisation-report-status.controller', () => {
 
   const utilisationReportRepoFindOneByOrFailSpy = jest.spyOn(UtilisationReportRepo, 'findOneByOrFail');
 
-  const mockFindOneByOrFail = (reports: UtilisationReportEntity[]) => (where: Parameters<typeof UtilisationReportRepo.findOneByOrFail>[0]) => {
-    const reportWithMatchingId = reports.find(({ id: reportId }) => reportId === (where as FindOptionsWhere<UtilisationReportEntity>).id);
-    if (!reportWithMatchingId) {
-      throw new Error('Failed to find a report with the matching id');
-    }
-    return Promise.resolve(reportWithMatchingId);
-  };
+  const mockFindOneByOrFail =
+    (reports: UtilisationReportEntity[]) => (where: Parameters<typeof UtilisationReportRepo.findOneByOrFail>[0]) => {
+      const reportWithMatchingId = reports.find(
+        ({ id: reportId }) => reportId === (where as FindOptionsWhere<UtilisationReportEntity>).id,
+      );
+      if (!reportWithMatchingId) {
+        throw new Error('Failed to find a report with the matching id');
+      }
+      return Promise.resolve(reportWithMatchingId);
+    };
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -70,40 +73,48 @@ describe('put-utilisation-report-status.controller', () => {
     condition                             | invalidUserObject
     ${"'req.body.user' is undefined"}     | ${undefined}
     ${"'req.body.user._id' is undefined"} | ${{ _id: undefined }}
-  `('responds with an InvalidPayloadError if $condition', async ({ invalidUserObject }: { invalidUserObject?: { _id: undefined } }) => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    req.body.user = invalidUserObject;
+  `(
+    'responds with an InvalidPayloadError if $condition',
+    async ({ invalidUserObject }: { invalidUserObject?: { _id: undefined } }) => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      req.body.user = invalidUserObject;
 
-    // Act
-    await putUtilisationReportStatus(req, res);
+      // Act
+      await putUtilisationReportStatus(req, res);
 
-    // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._getData()).toEqual("Failed to update utilisation report statuses: Request body item 'user' supplied does not match required format");
-    expect(createQueryRunnerSpy).not.toHaveBeenCalled();
-  });
+      // Assert
+      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+      expect(res._getData()).toEqual(
+        "Failed to update utilisation report statuses: Request body item 'user' supplied does not match required format",
+      );
+      expect(createQueryRunnerSpy).not.toHaveBeenCalled();
+    },
+  );
 
   it.each`
     condition                                                  | invalidReportsWithStatus
     ${"'req.body.reportsWithStatus' is undefined"}             | ${undefined}
     ${"'req.body.reportsWithStatus[0].status' is undefined"}   | ${[{ reportId: 1, status: undefined }]}
     ${"'req.body.reportsWithStatus[0].reportId' is undefined"} | ${[{ reportId: undefined, status: 'PENDING_RECONCILIATION' }]}
-  `('responds with an InvalidPayloadError if $condition', async ({ invalidReportsWithStatus }: { invalidReportsWithStatus?: ReportWithStatus[] }) => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    req.body.reportsWithStatus = invalidReportsWithStatus;
+  `(
+    'responds with an InvalidPayloadError if $condition',
+    async ({ invalidReportsWithStatus }: { invalidReportsWithStatus?: ReportWithStatus[] }) => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      req.body.reportsWithStatus = invalidReportsWithStatus;
 
-    // Act
-    await putUtilisationReportStatus(req, res);
+      // Act
+      await putUtilisationReportStatus(req, res);
 
-    // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._getData()).toEqual(
-      "Failed to update utilisation report statuses: Request body item 'reportsWithStatus' supplied does not match required format",
-    );
-    expect(createQueryRunnerSpy).not.toHaveBeenCalled();
-  });
+      // Assert
+      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+      expect(res._getData()).toEqual(
+        "Failed to update utilisation report statuses: Request body item 'reportsWithStatus' supplied does not match required format",
+      );
+      expect(createQueryRunnerSpy).not.toHaveBeenCalled();
+    },
+  );
 
   describe('when trying to only mark reports as completed', () => {
     it('tries to update the correct reports', async () => {
@@ -150,37 +161,39 @@ describe('put-utilisation-report-status.controller', () => {
       });
     });
 
-    it.each([UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED, UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED])(
-      "responds with an error if trying to mark a report with status '%s' as completed",
-      async (reportStatus) => {
-        // Arrange
-        const reportWithStatus: ReportWithStatus = {
-          reportId: 1,
-          status: 'RECONCILIATION_COMPLETED',
-        };
+    it.each([
+      UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+      UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+    ])("responds with an error if trying to mark a report with status '%s' as completed", async (reportStatus) => {
+      // Arrange
+      const reportWithStatus: ReportWithStatus = {
+        reportId: 1,
+        status: 'RECONCILIATION_COMPLETED',
+      };
 
-        const { req, res } = getHttpMocks();
-        req.body.reportsWithStatus = [reportWithStatus];
+      const { req, res } = getHttpMocks();
+      req.body.reportsWithStatus = [reportWithStatus];
 
-        const existingReport = UtilisationReportEntityMockBuilder.forStatus(reportStatus).withId(reportWithStatus.reportId).build();
+      const existingReport = UtilisationReportEntityMockBuilder.forStatus(reportStatus)
+        .withId(reportWithStatus.reportId)
+        .build();
 
-        utilisationReportRepoFindOneByOrFailSpy.mockResolvedValue(existingReport);
+      utilisationReportRepoFindOneByOrFailSpy.mockResolvedValue(existingReport);
 
-        // Act
-        await putUtilisationReportStatus(req, res);
+      // Act
+      await putUtilisationReportStatus(req, res);
 
-        // Assert
-        expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-        expect(res._getData()).toEqual('Failed to update utilisation report statuses: Transaction failed');
-        expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-        expect(mockConnect).toHaveBeenCalledTimes(1);
-        expect(mockStartTransaction).toHaveBeenCalledTimes(1);
-        expect(mockCommitTransaction).not.toHaveBeenCalled();
-        expect(mockRollbackTransaction).toHaveBeenCalledTimes(1);
-        expect(mockRelease).toHaveBeenCalled();
-        expect(mockTransactionManager.save).not.toHaveBeenCalled();
-      },
-    );
+      // Assert
+      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+      expect(res._getData()).toEqual('Failed to update utilisation report statuses: Transaction failed');
+      expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
+      expect(mockConnect).toHaveBeenCalledTimes(1);
+      expect(mockStartTransaction).toHaveBeenCalledTimes(1);
+      expect(mockCommitTransaction).not.toHaveBeenCalled();
+      expect(mockRollbackTransaction).toHaveBeenCalledTimes(1);
+      expect(mockRelease).toHaveBeenCalled();
+      expect(mockTransactionManager.save).not.toHaveBeenCalled();
+    });
   });
 
   describe('when trying to only mark reports as not completed', () => {
@@ -209,7 +222,10 @@ describe('put-utilisation-report-status.controller', () => {
       });
 
       const existingReports = reportsWithStatusForMarkingAsNotCompleted.map((reportWithStatus) =>
-        UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withId(reportWithStatus.reportId).withAzureFileInfo(azureFileInfo).build(),
+        UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
+          .withId(reportWithStatus.reportId)
+          .withAzureFileInfo(azureFileInfo)
+          .build(),
       );
 
       utilisationReportRepoFindOneByOrFailSpy.mockImplementation(mockFindOneByOrFail(existingReports));
@@ -237,36 +253,38 @@ describe('put-utilisation-report-status.controller', () => {
       });
     });
 
-    it.each([UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION, UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED])(
-      "responds with an error if trying to mark a report with status '%s' as not completed",
-      async (reportStatus) => {
-        // Arrange
-        const reportWithStatus: ReportWithStatus = {
-          reportId: 1,
-          status: 'PENDING_RECONCILIATION',
-        };
+    it.each([
+      UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+      UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+    ])("responds with an error if trying to mark a report with status '%s' as not completed", async (reportStatus) => {
+      // Arrange
+      const reportWithStatus: ReportWithStatus = {
+        reportId: 1,
+        status: 'PENDING_RECONCILIATION',
+      };
 
-        const { req, res } = getHttpMocks();
-        req.body.reportsWithStatus = [reportWithStatus];
+      const { req, res } = getHttpMocks();
+      req.body.reportsWithStatus = [reportWithStatus];
 
-        const existingReport = UtilisationReportEntityMockBuilder.forStatus(reportStatus).withId(reportWithStatus.reportId).build();
+      const existingReport = UtilisationReportEntityMockBuilder.forStatus(reportStatus)
+        .withId(reportWithStatus.reportId)
+        .build();
 
-        utilisationReportRepoFindOneByOrFailSpy.mockResolvedValue(existingReport);
+      utilisationReportRepoFindOneByOrFailSpy.mockResolvedValue(existingReport);
 
-        // Act
-        await putUtilisationReportStatus(req, res);
+      // Act
+      await putUtilisationReportStatus(req, res);
 
-        // Assert
-        expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-        expect(res._getData()).toEqual('Failed to update utilisation report statuses: Transaction failed');
-        expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-        expect(mockConnect).toHaveBeenCalledTimes(1);
-        expect(mockStartTransaction).toHaveBeenCalledTimes(1);
-        expect(mockCommitTransaction).not.toHaveBeenCalled();
-        expect(mockRollbackTransaction).toHaveBeenCalledTimes(1);
-        expect(mockRelease).toHaveBeenCalled();
-        expect(mockTransactionManager.save).not.toHaveBeenCalled();
-      },
-    );
+      // Assert
+      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+      expect(res._getData()).toEqual('Failed to update utilisation report statuses: Transaction failed');
+      expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
+      expect(mockConnect).toHaveBeenCalledTimes(1);
+      expect(mockStartTransaction).toHaveBeenCalledTimes(1);
+      expect(mockCommitTransaction).not.toHaveBeenCalled();
+      expect(mockRollbackTransaction).toHaveBeenCalledTimes(1);
+      expect(mockRelease).toHaveBeenCalled();
+      expect(mockTransactionManager.save).not.toHaveBeenCalled();
+    });
   });
 });

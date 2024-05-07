@@ -25,7 +25,7 @@ describe('/v1/bank-holidays', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(urlToGetBankHolidays),
-      makeRequestWithAuthHeader: (authHeader) => get(urlToGetBankHolidays, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(urlToGetBankHolidays, { headers: { Authorization: authHeader } }),
     });
 
     withNoRoleAuthorisationTests({

@@ -20,7 +20,9 @@ const generateTotalFeesAccruedError = (totalFeesAccruedObject, exporterName) => 
     return generateError('Total fees accrued for the period must be a number with a maximum of two decimal places');
   }
   if (value.length > FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT) {
-    return generateError(`Total fees accrued for the period must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`);
+    return generateError(
+      `Total fees accrued for the period must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
+    );
   }
   return null;
 };

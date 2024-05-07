@@ -1,4 +1,7 @@
-const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const {
+  generateAuditDatabaseRecordFromAuditDetails,
+  generatePortalAuditDetails,
+} = require('@ukef/dtfs2-common/change-stream');
 const { EligibilityCriteria } = require('../models/eligibilityCriteria');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
@@ -30,7 +33,9 @@ exports.getByVersion = async (req, res) => {
   }
 
   const collection = await db.getCollection('eligibilityCriteria');
-  const item = await collection.findOne({ $and: [{ version: { $eq: Number(version) } }, { product: { $eq: DEAL.DEAL_TYPE.GEF } }] });
+  const item = await collection.findOne({
+    $and: [{ version: { $eq: Number(version) } }, { product: { $eq: DEAL.DEAL_TYPE.GEF } }],
+  });
 
   return item ? res.status(200).send(item) : res.status(404).send();
 };

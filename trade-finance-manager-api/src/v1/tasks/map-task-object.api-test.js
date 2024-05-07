@@ -6,9 +6,7 @@ const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
 
 const underwriterManagerUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
 
-const findUserByIdApiSpy = jest.fn(() => Promise.resolve(
-  underwriterManagerUser,
-));
+const findUserByIdApiSpy = jest.fn(() => Promise.resolve(underwriterManagerUser));
 
 describe('mapTaskObject', () => {
   beforeEach(() => {

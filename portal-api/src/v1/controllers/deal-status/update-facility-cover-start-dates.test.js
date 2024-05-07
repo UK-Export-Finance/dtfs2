@@ -326,7 +326,11 @@ describe('updateFacilityCoverStartDates', () => {
     });
 
     expect(errorMock).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error updating facility cover start date for facility %s with response %o', '2', undefined);
+    expect(console.error).toHaveBeenCalledWith(
+      'Error updating facility cover start date for facility %s with response %o',
+      '2',
+      undefined,
+    );
   });
 
   it('should handle an error thrown during facility update', async () => {
@@ -352,6 +356,10 @@ describe('updateFacilityCoverStartDates', () => {
     });
 
     expect(errorMock).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith("An error occurred while updating %s deal's facilities cover start date %o", '1', new Error('Mock error'));
+    expect(console.error).toHaveBeenCalledWith(
+      "An error occurred while updating %s deal's facilities cover start date %o",
+      '1',
+      new Error('Mock error'),
+    );
   });
 });

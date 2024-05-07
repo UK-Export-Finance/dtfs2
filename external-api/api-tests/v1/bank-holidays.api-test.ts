@@ -1,9 +1,9 @@
-import { app } from '../../src/createApp';
-import { api } from '../api';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import { mockResponseBankHolidays } from '../test-mocks/bank-holidays';
 import { getYear, addYears } from 'date-fns';
+import { app } from '../../src/createApp';
+import { api } from '../api';
+import { mockResponseBankHolidays } from '../test-mocks/bank-holidays';
 import { BankHolidaysEvent } from '../../src/interfaces';
 
 const { get } = api(app);
@@ -62,7 +62,9 @@ describe('/bank-holidays', () => {
       const nextYear = getYear(addYears(new Date(), 1));
       const { body } = await get('/bank-holidays');
 
-      const resultingBankHolidayYears = body['england-and-wales'].events.map((event: BankHolidaysEvent) => getYear(new Date(event.date)));
+      const resultingBankHolidayYears = body['england-and-wales'].events.map((event: BankHolidaysEvent) =>
+        getYear(new Date(event.date)),
+      );
       expect(resultingBankHolidayYears).toContain(nextYear);
     });
   });

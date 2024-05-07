@@ -2,12 +2,7 @@ const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../pages');
 const { dashboardFilters, dashboardSubNavigation } = require('../../../partials');
-const {
-  BSS_DEAL_DRAFT,
-  GEF_DEAL_DRAFT,
-  GEF_FACILITY_CASH,
-  GEF_FACILITY_CONTINGENT,
-} = require('../fixtures');
+const { BSS_DEAL_DRAFT, GEF_DEAL_DRAFT, GEF_FACILITY_CASH, GEF_FACILITY_CONTINGENT } = require('../fixtures');
 
 const { BANK1_MAKER1, BANK1_CHECKER1, ADMIN } = MOCK_USERS;
 
@@ -120,7 +115,9 @@ context('Dashboard Deals filters', () => {
       dashboardFacilities.filters.panel.form.type.cash.checkbox().should('not.be.checked');
 
       // Contingent
-      dashboardFacilities.filters.panel.form.type.contingent.label().contains(CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT);
+      dashboardFacilities.filters.panel.form.type.contingent
+        .label()
+        .contains(CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT);
       dashboardFacilities.filters.panel.form.type.contingent.checkbox().should('exist');
       dashboardFacilities.filters.panel.form.type.contingent.checkbox().should('not.be.checked');
 
@@ -154,24 +151,34 @@ context('Dashboard Deals filters', () => {
 
     it('bank facility stage/hasBeenIssued', () => {
       // Issued
-      dashboardFacilities.filters.panel.form.hasBeenIssued.issued.label().contains(CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED);
+      dashboardFacilities.filters.panel.form.hasBeenIssued.issued
+        .label()
+        .contains(CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED);
       dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('exist');
       dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('not.be.checked');
 
       // Unissued
-      dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.label().contains(CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED);
+      dashboardFacilities.filters.panel.form.hasBeenIssued.unissued
+        .label()
+        .contains(CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED);
       dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().should('exist');
       dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().should('not.be.checked');
     });
 
     it('contains the correct aria-label for no facility filters selected', () => {
-      dashboardSubNavigation.facilities().invoke('attr', 'aria-label').then((label) => {
-        expect(label).to.equal('facilities: ,Filters selected: none');
-      });
+      dashboardSubNavigation
+        .facilities()
+        .invoke('attr', 'aria-label')
+        .then((label) => {
+          expect(label).to.equal('facilities: ,Filters selected: none');
+        });
 
-      dashboardSubNavigation.deals().invoke('attr', 'aria-label').then((label) => {
-        expect(label).to.equal('');
-      });
+      dashboardSubNavigation
+        .deals()
+        .invoke('attr', 'aria-label')
+        .then((label) => {
+          expect(label).to.equal('');
+        });
     });
   });
 });

@@ -1,4 +1,10 @@
-import { asString, CronSchedulerJob, getCurrentReportPeriodForBankSchedule, Bank, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import {
+  asString,
+  CronSchedulerJob,
+  getCurrentReportPeriodForBankSchedule,
+  Bank,
+  UtilisationReportEntity,
+} from '@ukef/dtfs2-common';
 import { validateUtilisationReportPeriodSchedule } from './utilisation-report-period-schedule-validator';
 import { UtilisationReportRepo } from '../../repositories/utilisation-reports-repo';
 import { getAllBanks } from '../../repositories/banks-repo';
@@ -12,7 +18,10 @@ const { UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE } = process.env;
  */
 const isCurrentBankReportMissing = async (bank: Bank): Promise<boolean> => {
   const currentReportPeriod = getCurrentReportPeriodForBankSchedule(bank.utilisationReportPeriodSchedule);
-  const currentUtilisationReportForBank = await UtilisationReportRepo.findOneByBankIdAndReportPeriod(bank.id, currentReportPeriod);
+  const currentUtilisationReportForBank = await UtilisationReportRepo.findOneByBankIdAndReportPeriod(
+    bank.id,
+    currentReportPeriod,
+  );
   return !currentUtilisationReportForBank;
 };
 
@@ -39,9 +48,13 @@ const isValidUtilisationReportPeriodScheduleOnBank = (bank: Bank): boolean => {
 const getBanksWithMissingReports = async (): Promise<Bank[]> => {
   const banksVisibleInTfm = (await getAllBanks()).filter((bank) => bank.isVisibleInTfmUtilisationReports);
 
-  const banksWithValidUtilisationReportPeriodSchedule = banksVisibleInTfm.filter(isValidUtilisationReportPeriodScheduleOnBank);
+  const banksWithValidUtilisationReportPeriodSchedule = banksVisibleInTfm.filter(
+    isValidUtilisationReportPeriodScheduleOnBank,
+  );
 
-  const isMissingBankReport = await Promise.all(banksWithValidUtilisationReportPeriodSchedule.map(isCurrentBankReportMissing));
+  const isMissingBankReport = await Promise.all(
+    banksWithValidUtilisationReportPeriodSchedule.map(isCurrentBankReportMissing),
+  );
   return banksVisibleInTfm.filter((bank, index) => isMissingBankReport[index]);
 };
 
@@ -73,7 +86,10 @@ const createUtilisationReportForBanks = async (): Promise<void> => {
 };
 
 export const createUtilisationReportForBanksJob: CronSchedulerJob = {
-  cronExpression: asString(UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE, 'UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE'),
+  cronExpression: asString(
+    UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE,
+    'UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE',
+  ),
   description: 'Create utilisation reports in the database for banks which have a report due',
   task: createUtilisationReportForBanks,
 };

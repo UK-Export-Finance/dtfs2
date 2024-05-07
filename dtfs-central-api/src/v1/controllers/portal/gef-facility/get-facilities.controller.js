@@ -25,7 +25,9 @@ exports.findAllGet = async (req, res) => {
 exports.findAllFacilities = async (req, res) => {
   const collection = await db.getCollection(facilitiesCollection);
   // GEF facilities only
-  const facilities = await collection.find({ $or: [{ type: { $eq: 'Cash' } }, { type: { $eq: 'Contingent' } }] }).toArray();
+  const facilities = await collection
+    .find({ $or: [{ type: { $eq: 'Cash' } }, { type: { $eq: 'Contingent' } }] })
+    .toArray();
 
   res.status(200).send(facilities);
 };

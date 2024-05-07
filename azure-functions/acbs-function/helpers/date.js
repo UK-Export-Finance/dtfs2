@@ -1,4 +1,14 @@
-const { isValid, parse, format, startOfDay, add, getDaysInMonth, formatISO, differenceInMonths, parseISO } = require('date-fns');
+const {
+  isValid,
+  parse,
+  format,
+  startOfDay,
+  add,
+  getDaysInMonth,
+  formatISO,
+  differenceInMonths,
+  parseISO,
+} = require('date-fns');
 
 const validDateFormats = ['yyyy-MM-dd', 'yyyy/MM/dd', 'yyyy MM dd'];
 
@@ -33,7 +43,9 @@ const now = () => format(new Date(), 'yyyy-MM-dd');
 const getDateFromStringOrNumber = (dateStr) => {
   const isoDate = parseISO(dateStr);
   const isValidIsoDate = isValid(isoDate);
-  const dateFromString = validDateFormats.map((formatString) => parse(dateStr, formatString, startOfDay(new Date()))).find(isValid);
+  const dateFromString = validDateFormats
+    .map((formatString) => parse(dateStr, formatString, startOfDay(new Date())))
+    .find(isValid);
   const isValidEpoch = isEpoch(dateStr);
 
   if (isValidIsoDate) {
@@ -179,13 +191,13 @@ const getYearAndMmdd = (date) => {
 
   return isValid(parsedDate)
     ? {
-      mmdd: format(parsedDate, 'MM-dd'),
-      year: format(parsedDate, 'yyyy'),
-    }
+        mmdd: format(parsedDate, 'MM-dd'),
+        year: format(parsedDate, 'yyyy'),
+      }
     : {
-      mmdd: 'Invalid date',
-      year: 'Invalid date',
-    };
+        mmdd: 'Invalid date',
+        year: 'Invalid date',
+      };
 };
 
 module.exports = {

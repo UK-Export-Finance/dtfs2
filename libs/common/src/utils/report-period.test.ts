@@ -15,25 +15,42 @@ describe('report-period utils', () => {
     it.each([
       { submissionMonth: '2024-02', reportPeriodEnd: { month: 1, year: 2024 } },
       { submissionMonth: '2024-01', reportPeriodEnd: { month: 12, year: 2023 } },
-    ])('returns $reportPeriodStart when submissionMonth is $submissionMonth', ({ submissionMonth, reportPeriodEnd }) => {
-      expect(getReportPeriodEndForSubmissionMonth(submissionMonth)).toEqual(reportPeriodEnd);
-    });
+    ])(
+      'returns $reportPeriodStart when submissionMonth is $submissionMonth',
+      ({ submissionMonth, reportPeriodEnd }) => {
+        expect(getReportPeriodEndForSubmissionMonth(submissionMonth)).toEqual(reportPeriodEnd);
+      },
+    );
   });
 
   describe('getSubmissionMonthForReportPeriod', () => {
     it.each([
-      { reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 1, year: 2024 } }, submissionMonth: '2024-02', description: 'quarterly' },
-      { reportPeriod: { start: { month: 12, year: 2023 }, end: { month: 12, year: 2023 } }, submissionMonth: '2024-01', description: 'monthly' },
-    ])('returns month after report period end when reportPeriod is a $description period', ({ reportPeriod, submissionMonth }) => {
-      expect(getSubmissionMonthForReportPeriod(reportPeriod)).toEqual(submissionMonth);
-    });
+      {
+        reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 1, year: 2024 } },
+        submissionMonth: '2024-02',
+        description: 'quarterly',
+      },
+      {
+        reportPeriod: { start: { month: 12, year: 2023 }, end: { month: 12, year: 2023 } },
+        submissionMonth: '2024-01',
+        description: 'monthly',
+      },
+    ])(
+      'returns month after report period end when reportPeriod is a $description period',
+      ({ reportPeriod, submissionMonth }) => {
+        expect(getSubmissionMonthForReportPeriod(reportPeriod)).toEqual(submissionMonth);
+      },
+    );
   });
 
   describe('getPreviousReportPeriodForBankScheduleByMonth', () => {
     it('gets report period for bank schedule by submission month for monthly schedule', () => {
       // Arrange
       const oneIndexedMonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-      const schedule: BankReportPeriodSchedule = oneIndexedMonths.map((month) => ({ startMonth: month, endMonth: month }));
+      const schedule: BankReportPeriodSchedule = oneIndexedMonths.map((month) => ({
+        startMonth: month,
+        endMonth: month,
+      }));
 
       // Act
       const result = getPreviousReportPeriodForBankScheduleByMonth(schedule, '2024-04');
@@ -71,7 +88,10 @@ describe('report-period utils', () => {
     describe('for a monthly report schedule', () => {
       const mockYear = 2023;
       const oneIndexedMonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-      const monthlyReportPeriodSchedule: BankReportPeriodSchedule = oneIndexedMonths.map((month) => ({ startMonth: month, endMonth: month }));
+      const monthlyReportPeriodSchedule: BankReportPeriodSchedule = oneIndexedMonths.map((month) => ({
+        startMonth: month,
+        endMonth: month,
+      }));
 
       it.each(oneIndexedMonths)('returns the correct report period for month %s', (oneIndexedMonth) => {
         // Arrange
@@ -99,18 +119,54 @@ describe('report-period utils', () => {
 
       const currentYear = 2023;
       const monthsWithExpectedReportSchedules: { month: OneIndexedMonth; expectedReportPeriod: ReportPeriod }[] = [
-        { month: 1, expectedReportPeriod: { start: { month: 12, year: currentYear - 1 }, end: { month: 2, year: currentYear } } },
-        { month: 2, expectedReportPeriod: { start: { month: 12, year: currentYear - 1 }, end: { month: 2, year: currentYear } } },
-        { month: 3, expectedReportPeriod: { start: { month: 3, year: currentYear }, end: { month: 5, year: currentYear } } },
-        { month: 4, expectedReportPeriod: { start: { month: 3, year: currentYear }, end: { month: 5, year: currentYear } } },
-        { month: 5, expectedReportPeriod: { start: { month: 3, year: currentYear }, end: { month: 5, year: currentYear } } },
-        { month: 6, expectedReportPeriod: { start: { month: 6, year: currentYear }, end: { month: 8, year: currentYear } } },
-        { month: 7, expectedReportPeriod: { start: { month: 6, year: currentYear }, end: { month: 8, year: currentYear } } },
-        { month: 8, expectedReportPeriod: { start: { month: 6, year: currentYear }, end: { month: 8, year: currentYear } } },
-        { month: 9, expectedReportPeriod: { start: { month: 9, year: currentYear }, end: { month: 11, year: currentYear } } },
-        { month: 10, expectedReportPeriod: { start: { month: 9, year: currentYear }, end: { month: 11, year: currentYear } } },
-        { month: 11, expectedReportPeriod: { start: { month: 9, year: currentYear }, end: { month: 11, year: currentYear } } },
-        { month: 12, expectedReportPeriod: { start: { month: 12, year: currentYear }, end: { month: 2, year: currentYear + 1 } } },
+        {
+          month: 1,
+          expectedReportPeriod: { start: { month: 12, year: currentYear - 1 }, end: { month: 2, year: currentYear } },
+        },
+        {
+          month: 2,
+          expectedReportPeriod: { start: { month: 12, year: currentYear - 1 }, end: { month: 2, year: currentYear } },
+        },
+        {
+          month: 3,
+          expectedReportPeriod: { start: { month: 3, year: currentYear }, end: { month: 5, year: currentYear } },
+        },
+        {
+          month: 4,
+          expectedReportPeriod: { start: { month: 3, year: currentYear }, end: { month: 5, year: currentYear } },
+        },
+        {
+          month: 5,
+          expectedReportPeriod: { start: { month: 3, year: currentYear }, end: { month: 5, year: currentYear } },
+        },
+        {
+          month: 6,
+          expectedReportPeriod: { start: { month: 6, year: currentYear }, end: { month: 8, year: currentYear } },
+        },
+        {
+          month: 7,
+          expectedReportPeriod: { start: { month: 6, year: currentYear }, end: { month: 8, year: currentYear } },
+        },
+        {
+          month: 8,
+          expectedReportPeriod: { start: { month: 6, year: currentYear }, end: { month: 8, year: currentYear } },
+        },
+        {
+          month: 9,
+          expectedReportPeriod: { start: { month: 9, year: currentYear }, end: { month: 11, year: currentYear } },
+        },
+        {
+          month: 10,
+          expectedReportPeriod: { start: { month: 9, year: currentYear }, end: { month: 11, year: currentYear } },
+        },
+        {
+          month: 11,
+          expectedReportPeriod: { start: { month: 9, year: currentYear }, end: { month: 11, year: currentYear } },
+        },
+        {
+          month: 12,
+          expectedReportPeriod: { start: { month: 12, year: currentYear }, end: { month: 2, year: currentYear + 1 } },
+        },
       ];
 
       it.each(monthsWithExpectedReportSchedules)(
@@ -142,7 +198,10 @@ describe('report-period utils', () => {
     describe('for a monthly report schedule', () => {
       const mockYear = 2023;
       const oneIndexedMonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-      const monthlyReportPeriodSchedule: BankReportPeriodSchedule = oneIndexedMonths.map((month) => ({ startMonth: month, endMonth: month }));
+      const monthlyReportPeriodSchedule: BankReportPeriodSchedule = oneIndexedMonths.map((month) => ({
+        startMonth: month,
+        endMonth: month,
+      }));
 
       it.each(oneIndexedMonths)('returns the correct report period for month %s', (oneIndexedMonth) => {
         // Arrange
@@ -171,18 +230,60 @@ describe('report-period utils', () => {
 
       const currentYear = 2023;
       const monthsWithExpectedReportSchedules: { month: OneIndexedMonth; expectedReportPeriod: ReportPeriod }[] = [
-        { month: 1, expectedReportPeriod: { start: { month: 9, year: currentYear - 1 }, end: { month: 11, year: currentYear - 1 } } },
-        { month: 2, expectedReportPeriod: { start: { month: 9, year: currentYear - 1 }, end: { month: 11, year: currentYear - 1 } } },
-        { month: 3, expectedReportPeriod: { start: { month: 12, year: currentYear - 1 }, end: { month: 2, year: currentYear } } },
-        { month: 4, expectedReportPeriod: { start: { month: 12, year: currentYear - 1 }, end: { month: 2, year: currentYear } } },
-        { month: 5, expectedReportPeriod: { start: { month: 12, year: currentYear - 1 }, end: { month: 2, year: currentYear } } },
-        { month: 6, expectedReportPeriod: { start: { month: 3, year: currentYear }, end: { month: 5, year: currentYear } } },
-        { month: 7, expectedReportPeriod: { start: { month: 3, year: currentYear }, end: { month: 5, year: currentYear } } },
-        { month: 8, expectedReportPeriod: { start: { month: 3, year: currentYear }, end: { month: 5, year: currentYear } } },
-        { month: 9, expectedReportPeriod: { start: { month: 6, year: currentYear }, end: { month: 8, year: currentYear } } },
-        { month: 10, expectedReportPeriod: { start: { month: 6, year: currentYear }, end: { month: 8, year: currentYear } } },
-        { month: 11, expectedReportPeriod: { start: { month: 6, year: currentYear }, end: { month: 8, year: currentYear } } },
-        { month: 12, expectedReportPeriod: { start: { month: 9, year: currentYear }, end: { month: 11, year: currentYear } } },
+        {
+          month: 1,
+          expectedReportPeriod: {
+            start: { month: 9, year: currentYear - 1 },
+            end: { month: 11, year: currentYear - 1 },
+          },
+        },
+        {
+          month: 2,
+          expectedReportPeriod: {
+            start: { month: 9, year: currentYear - 1 },
+            end: { month: 11, year: currentYear - 1 },
+          },
+        },
+        {
+          month: 3,
+          expectedReportPeriod: { start: { month: 12, year: currentYear - 1 }, end: { month: 2, year: currentYear } },
+        },
+        {
+          month: 4,
+          expectedReportPeriod: { start: { month: 12, year: currentYear - 1 }, end: { month: 2, year: currentYear } },
+        },
+        {
+          month: 5,
+          expectedReportPeriod: { start: { month: 12, year: currentYear - 1 }, end: { month: 2, year: currentYear } },
+        },
+        {
+          month: 6,
+          expectedReportPeriod: { start: { month: 3, year: currentYear }, end: { month: 5, year: currentYear } },
+        },
+        {
+          month: 7,
+          expectedReportPeriod: { start: { month: 3, year: currentYear }, end: { month: 5, year: currentYear } },
+        },
+        {
+          month: 8,
+          expectedReportPeriod: { start: { month: 3, year: currentYear }, end: { month: 5, year: currentYear } },
+        },
+        {
+          month: 9,
+          expectedReportPeriod: { start: { month: 6, year: currentYear }, end: { month: 8, year: currentYear } },
+        },
+        {
+          month: 10,
+          expectedReportPeriod: { start: { month: 6, year: currentYear }, end: { month: 8, year: currentYear } },
+        },
+        {
+          month: 11,
+          expectedReportPeriod: { start: { month: 6, year: currentYear }, end: { month: 8, year: currentYear } },
+        },
+        {
+          month: 12,
+          expectedReportPeriod: { start: { month: 9, year: currentYear }, end: { month: 11, year: currentYear } },
+        },
       ];
 
       it.each(monthsWithExpectedReportSchedules)(
@@ -265,7 +366,15 @@ describe('report-period utils', () => {
       ${'"MMM YYYY to MMM YYYY (quarterly)" when report period spans multiple months over 2 years'} | ${{ start: { month: 12, year: 2022 }, end: { month: 2, year: 2023 } }} | ${true}            | ${'Dec 2022 to Feb 2023 (quarterly)'}
     `(
       'returns period formatted $description and includePeriodicity is $includePeriodicity',
-      ({ reportPeriod, includePeriodicity, expectedResponse }: { reportPeriod: ReportPeriod; includePeriodicity: boolean; expectedResponse: string }) => {
+      ({
+        reportPeriod,
+        includePeriodicity,
+        expectedResponse,
+      }: {
+        reportPeriod: ReportPeriod;
+        includePeriodicity: boolean;
+        expectedResponse: string;
+      }) => {
         // Act
         const response = getFormattedReportPeriodWithShortMonth(reportPeriod, includePeriodicity);
 

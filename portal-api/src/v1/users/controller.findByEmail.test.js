@@ -1,7 +1,10 @@
 const { resetAllWhenMocks, when } = require('jest-when');
 const { InvalidEmailAddressError, UserNotFoundError } = require('../errors');
 const { findByEmail } = require('./controller');
-const { TEST_DATABASE_USER, TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/unit-test-mocks/mock-user');
+const {
+  TEST_DATABASE_USER,
+  TEST_USER_TRANSFORMED_FROM_DATABASE,
+} = require('../../../test-helpers/unit-test-mocks/mock-user');
 const db = require('../../drivers/db-client');
 const { transformDatabaseUser } = require('./transform-database-user');
 const { isValidEmail } = require('../../utils/string');
@@ -83,7 +86,9 @@ describe('user controller', () => {
               .calledWith({ email: { $eq: TEST_DATABASE_USER_EMAIL } })
               .mockResolvedValue(TEST_DATABASE_USER);
 
-            when(transformDatabaseUser).calledWith(TEST_DATABASE_USER).mockReturnValue(TEST_USER_TRANSFORMED_FROM_DATABASE);
+            when(transformDatabaseUser)
+              .calledWith(TEST_DATABASE_USER)
+              .mockReturnValue(TEST_USER_TRANSFORMED_FROM_DATABASE);
           });
 
           it('returns the user', async () => {

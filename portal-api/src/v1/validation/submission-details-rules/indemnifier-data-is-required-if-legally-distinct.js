@@ -26,7 +26,10 @@ module.exports = (submissionDetails, errorList) => {
       };
     }
 
-    if (submissionDetails['indemnifier-address-country'] && submissionDetails['indemnifier-address-country'].code === 'GBR') {
+    if (
+      submissionDetails['indemnifier-address-country'] &&
+      submissionDetails['indemnifier-address-country'].code === 'GBR'
+    ) {
       if (!hasValue(submissionDetails['indemnifier-address-postcode'])) {
         newErrorList['indemnifier-address-postcode'] = {
           order: orderNumber(newErrorList),
@@ -40,8 +43,7 @@ module.exports = (submissionDetails, errorList) => {
       };
     }
 
-    if (!submissionDetails['indemnifier-address-country']
-      || !submissionDetails['indemnifier-address-country'].code) {
+    if (!submissionDetails['indemnifier-address-country'] || !submissionDetails['indemnifier-address-country'].code) {
       newErrorList['indemnifier-address-country'] = {
         order: orderNumber(newErrorList),
         text: 'Indemnifier country is required',

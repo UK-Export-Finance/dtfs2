@@ -1,9 +1,6 @@
 import relative from '../../relativeURL';
 
-const {
-  feedbackPage,
-  header,
-} = require('../../pages');
+const { feedbackPage, header } = require('../../pages');
 
 context('User submit feedback on portal', () => {
   beforeEach(() => {
@@ -49,15 +46,21 @@ context('User submit feedback on portal', () => {
     feedbackPage.organisationErrorMessage().contains('Enter which organisation you work for');
     feedbackPage.reasonForVisitingErrorMessage().contains('Select your reason for visiting the service today');
     feedbackPage.easyToUseErrorMessage().contains('Select a rating for how easy the service is to use');
-    feedbackPage.clearlyExplainedErrorMessage().contains('Select a rating for how clearly explained the information you need to provide is');
+    feedbackPage
+      .clearlyExplainedErrorMessage()
+      .contains('Select a rating for how clearly explained the information you need to provide is');
     feedbackPage.satisfiedErrorMessage().contains('Select a rating for how satisfied you are with the service');
-    feedbackPage.emailAddressErrorMessage().contains('Enter an email address in the correct format, like name@example.com');
+    feedbackPage
+      .emailAddressErrorMessage()
+      .contains('Enter an email address in the correct format, like name@example.com');
 
     feedbackPage.errorSummary().contains('Enter your role');
     feedbackPage.errorSummary().contains('Enter which organisation you work for');
     feedbackPage.errorSummary().contains('Select your reason for visiting the service today');
     feedbackPage.errorSummary().contains('Select a rating for how easy the service is to use');
-    feedbackPage.errorSummary().contains('Select a rating for how clearly explained the information you need to provide is');
+    feedbackPage
+      .errorSummary()
+      .contains('Select a rating for how clearly explained the information you need to provide is');
     feedbackPage.errorSummary().contains('Select a rating for how satisfied you are with the service');
     feedbackPage.errorSummary().contains('Enter an email address in the correct format, like name@example.com');
   });
@@ -77,6 +80,10 @@ context('User submit feedback on portal', () => {
     cy.url().should('eq', relative('/thank-you-feedback'));
 
     feedbackPage.thankYouPageHeading().contains('Feedback');
-    feedbackPage.thankYouPageText().contains('Thank you for your feedback. We will use your feedback for future improvement. Do let us know if there is anything else we need to know to improve this area of concern.');
+    feedbackPage
+      .thankYouPageText()
+      .contains(
+        'Thank you for your feedback. We will use your feedback for future improvement. Do let us know if there is anything else we need to know to improve this area of concern.',
+      );
   });
 });

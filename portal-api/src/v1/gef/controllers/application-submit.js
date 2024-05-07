@@ -73,7 +73,14 @@ const addSubmissionDateToIssuedFacilities = async (dealId, auditDetails) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
   // eslint-disable-next-line no-restricted-syntax
   for (const facility of facilities) {
-    const { _id, hasBeenIssued, canResubmitIssuedFacilities, shouldCoverStartOnSubmission, issueDate, hasBeenIssuedAndAcknowledged } = facility;
+    const {
+      _id,
+      hasBeenIssued,
+      canResubmitIssuedFacilities,
+      shouldCoverStartOnSubmission,
+      issueDate,
+      hasBeenIssuedAndAcknowledged,
+    } = facility;
     /**
      * checks if hasBeenIssued and if not hasBeenIssuedAndAcknowledged
      * ensures that once submitted to UKEF, the coverStartDate is not overwritten to the new resubmission date
@@ -203,11 +210,7 @@ const checkCoverDateConfirmed = async (app, auditDetails) => {
           .filter((f) => f.hasBeenIssued && !f.coverDateConfirmed)
           .map(async (f) => {
             hasUpdated = true;
-            await updateFacility(
-              f._id,
-              { coverDateConfirmed: Boolean(isAIN) },
-              auditDetails,
-            );
+            await updateFacility(f._id, { coverDateConfirmed: Boolean(isAIN) }, auditDetails);
           });
 
         // Iterate through unissued facilities
@@ -215,11 +218,7 @@ const checkCoverDateConfirmed = async (app, auditDetails) => {
           .filter((f) => !f.hasBeenIssued && f.coverDateConfirmed)
           .map(async (f) => {
             hasUpdated = true;
-            await updateFacility(
-              f._id,
-              { coverDateConfirmed: false },
-              auditDetails,
-            );
+            await updateFacility(f._id, { coverDateConfirmed: false }, auditDetails);
           });
         return hasUpdated;
       }

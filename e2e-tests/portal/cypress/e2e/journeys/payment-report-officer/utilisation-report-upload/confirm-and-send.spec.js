@@ -18,7 +18,9 @@ context('Confirm and send', () => {
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
 
-      utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-February_2023_monthly.xlsx');
+      utilisationReportUpload
+        .utilisationReportFileInput()
+        .attachFile('valid-utilisation-report-February_2023_monthly.xlsx');
       utilisationReportUpload.continueButton().click();
 
       problemWithService.heading().should('not.exist');

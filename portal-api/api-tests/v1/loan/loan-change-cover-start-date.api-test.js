@@ -32,7 +32,7 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
   let dealId;
   let loanId;
 
-  const mockCoverStartDate = sub(nowDate, { months: 1});
+  const mockCoverStartDate = sub(nowDate, { months: 1 });
 
   const mockLoan = {
     facilityStage: 'Unconditional',
@@ -48,7 +48,9 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
   };
 
   const updateLoanCoverStartDate = async (bssDealId, bssLoanId, loan) => {
-    const response = await as(aBarclaysMaker).put(loan).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}/change-cover-start-date`);
+    const response = await as(aBarclaysMaker)
+      .put(loan)
+      .to(`/v1/deals/${bssDealId}/loan/${bssLoanId}/change-cover-start-date`);
     return response;
   };
 
@@ -89,13 +91,17 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
 
   describe('GET /v1/deals/:id/loan/:id/change-cover-start-date', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as({}).put({}).to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b/change-cover-start-date`);
+      const { status } = await as({})
+        .put({})
+        .to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put({}).to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b/change-cover-start-date`);
+      const { status } = await as(noRoles)
+        .put({})
+        .to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(401);
     });
@@ -104,13 +110,17 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
       const deal = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       dealId = deal.body._id;
 
-      const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b/change-cover-start-date`);
+      const { status } = await as(aBarclaysMaker)
+        .put({})
+        .to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker).put({}).to('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b/change-cover-start-date');
+      const { status } = await as(aBarclaysMaker)
+        .put({})
+        .to('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b/change-cover-start-date');
 
       expect(status).toEqual(404);
     });
@@ -119,7 +129,9 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       dealId = deal.body._id;
 
-      const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b/change-cover-start-date`);
+      const { status } = await as(aBarclaysMaker)
+        .put({})
+        .to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(404);
     });
@@ -162,9 +174,15 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
 
         const { body, status } = await updateLoanCoverStartDate(dealId, loanId, updateCoverStartDateBody);
         expect(status).toEqual(400);
-        expect(body.loan['requestedCoverStartDate-day']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-day']);
-        expect(body.loan['requestedCoverStartDate-month']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-month']);
-        expect(body.loan['requestedCoverStartDate-year']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-year']);
+        expect(body.loan['requestedCoverStartDate-day']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-day'],
+        );
+        expect(body.loan['requestedCoverStartDate-month']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-month'],
+        );
+        expect(body.loan['requestedCoverStartDate-year']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-year'],
+        );
       });
 
       it('should NOT update the loan', async () => {
@@ -198,9 +216,15 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
 
         const { status, body } = await as(aSuperuser).get(`/v1/deals/${dealId}/loan/${loanId}`);
         expect(status).toEqual(200);
-        expect(body.loan['requestedCoverStartDate-day']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-day']);
-        expect(body.loan['requestedCoverStartDate-month']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-month']);
-        expect(body.loan['requestedCoverStartDate-year']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-year']);
+        expect(body.loan['requestedCoverStartDate-day']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-day'],
+        );
+        expect(body.loan['requestedCoverStartDate-month']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-month'],
+        );
+        expect(body.loan['requestedCoverStartDate-year']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-year'],
+        );
       });
 
       it('should update the loan', async () => {
@@ -209,9 +233,15 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
         await as(aSuperuser).get(`/v1/deals/${dealId}/loan/${loanId}`);
 
         const { body } = await as(aSuperuser).get(`/v1/deals/${dealId}/loan/${loanId}`);
-        expect(body.loan['requestedCoverStartDate-day']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-day']);
-        expect(body.loan['requestedCoverStartDate-month']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-month']);
-        expect(body.loan['requestedCoverStartDate-year']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-year']);
+        expect(body.loan['requestedCoverStartDate-day']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-day'],
+        );
+        expect(body.loan['requestedCoverStartDate-month']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-month'],
+        );
+        expect(body.loan['requestedCoverStartDate-year']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-year'],
+        );
       });
     });
   });

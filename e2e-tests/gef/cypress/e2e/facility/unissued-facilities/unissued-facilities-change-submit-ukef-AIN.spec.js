@@ -9,7 +9,10 @@ import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../e2e-fixtures/portal
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 
 import {
-  MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR,
+  MOCK_FACILITY_ONE,
+  MOCK_FACILITY_TWO,
+  MOCK_FACILITY_THREE,
+  MOCK_FACILITY_FOUR,
 } from '../../../fixtures/mocks/mock-facilities';
 import applicationPreview from '../../pages/application-preview';
 import unissuedFacilityTable from '../../pages/unissued-facilities';
@@ -24,40 +27,39 @@ let dealId;
 let token;
 let facilityOneId;
 
-const unissuedFacilitiesArray = [
-  MOCK_FACILITY_ONE,
-  MOCK_FACILITY_THREE,
-  MOCK_FACILITY_FOUR,
-];
+const unissuedFacilitiesArray = [MOCK_FACILITY_ONE, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR];
 
 context('Unissued Facilities AIN - change all to issued from unissued table', () => {
   before(() => {
-    cy.apiLogin(BANK1_MAKER1).then((t) => {
-      token = t;
-    }).then(() => {
-      // creates application and inserts facilities and changes status
-      cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
-        dealId = body._id;
-        cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-            facilityOneId = facility.body.details._id;
-            MOCK_FACILITY_ONE._id = facility.body.details._id;
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
+    cy.apiLogin(BANK1_MAKER1)
+      .then((t) => {
+        token = t;
+      })
+      .then(() => {
+        // creates application and inserts facilities and changes status
+        cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
+          dealId = body._id;
+          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+              facilityOneId = facility.body.details._id;
+              MOCK_FACILITY_ONE._id = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
+            });
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO),
+            );
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) => {
+              MOCK_FACILITY_THREE._id = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE);
+            });
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+              MOCK_FACILITY_FOUR._id = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR);
+            });
+            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
           });
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO));
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) => {
-            MOCK_FACILITY_THREE._id = facility.body.details._id;
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE);
-          });
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-            MOCK_FACILITY_FOUR._id = facility.body.details._id;
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR);
-          });
-          cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
         });
       });
-    });
   });
 
   describe('Change facility to issued from unissued table', () => {
@@ -115,11 +117,15 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
     // checks that can submit application to checker with changed facilities
     it('pressing submit button takes you to submit page and with correct panel once submitted to checker', () => {
       applicationPreview.submitButtonPostApproval().click();
-      applicationSubmission.submissionText().contains('Someone at your bank must check your update before they can submit it to UKEF');
+      applicationSubmission
+        .submissionText()
+        .contains('Someone at your bank must check your update before they can submit it to UKEF');
       applicationSubmission.submitButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
-      applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted for checking at your bank');
+      applicationSubmission
+        .confirmationPanelTitleFacilities()
+        .contains('Issued facilities submitted for checking at your bank');
     });
   });
 });
@@ -128,7 +134,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
  * Logged in as checker
  * checking all fields are blocked for facilities
  * return to maker
-*/
+ */
 context('Return to maker for unissued to issued facilities', () => {
   describe('Check all fields are populated and return to maker', () => {
     beforeEach(() => {
@@ -139,13 +145,15 @@ context('Return to maker for unissued to issued facilities', () => {
 
     it('should show changed facilities in task comments box with correct heading', () => {
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
-      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
+      applicationPreview
+        .updatedUnissuedFacilitiesHeader()
+        .contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[1].name);
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[2].name);
     });
 
     it('should show correct status', () => {
-      statusBanner.bannerStatus().contains('Ready for Checker\'s approval');
+      statusBanner.bannerStatus().contains("Ready for Checker's approval");
     });
 
     it('should not be able to edit any facilities', () => {
@@ -217,7 +225,7 @@ context('Return to maker for unissued to issued facilities', () => {
    * ensure application details page is locked apart from unissued facilities section
    * change 1 facility to issued and ensure added to changed list
    * submit to checker
-  */
+   */
   describe('Check application details page works as expected with correct fields unlocked', () => {
     beforeEach(() => {
       cy.saveSession();
@@ -226,9 +234,11 @@ context('Return to maker for unissued to issued facilities', () => {
     });
 
     it('Statuses and banners should correct text', () => {
-      statusBanner.bannerStatus().contains('Further Maker\'s input required');
+      statusBanner.bannerStatus().contains("Further Maker's input required");
       applicationPreview.reviewFacilityStage().contains('Change facility details');
-      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
+      applicationPreview
+        .updatedUnissuedFacilitiesHeader()
+        .contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[1].name);
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[2].name);
     });
@@ -351,7 +361,9 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.facilitySummaryListRowAction(0, 10).should('have.value', '');
 
       // check that header updated to include this facility
-      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
+      applicationPreview
+        .updatedUnissuedFacilitiesHeader()
+        .contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[1].name);
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[2].name);
@@ -360,7 +372,9 @@ context('Return to maker for unissued to issued facilities', () => {
     it('should be able to submit to checker after making changes', () => {
       applicationDetails.submitButton().click();
       applicationSubmission.submitButton().click();
-      applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted for checking at your bank');
+      applicationSubmission
+        .confirmationPanelTitleFacilities()
+        .contains('Issued facilities submitted for checking at your bank');
     });
   });
 });
@@ -370,7 +384,7 @@ context('Return to maker for unissued to issued facilities', () => {
  * ensure everything locked
  * submit to UKEF
  * ensure correct success message and text are shown
-*/
+ */
 context('Submit to UKEF with unissued to issued facilities', () => {
   describe('Check all fields are populated and return to maker', () => {
     beforeEach(() => {
@@ -381,14 +395,16 @@ context('Submit to UKEF with unissued to issued facilities', () => {
 
     it('should show changed facilities in task comments box with correct heading including newly issued', () => {
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
-      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
+      applicationPreview
+        .updatedUnissuedFacilitiesHeader()
+        .contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[1].name);
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[2].name);
     });
 
     it('should show correct status', () => {
-      statusBanner.bannerStatus().contains('Ready for Checker\'s approval');
+      statusBanner.bannerStatus().contains("Ready for Checker's approval");
     });
 
     it('should not be able to edit any facilities', () => {
@@ -455,7 +471,9 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationSubmission.submitButton().click();
       applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted to UKEF');
       // check that correct text is displayed under confirmation panel
-      applicationSubmission.confirmationText().contains('We\'ll send you a confirmation email shortly, once we\'ve acknowledged your issued facilities.');
+      applicationSubmission
+        .confirmationText()
+        .contains("We'll send you a confirmation email shortly, once we've acknowledged your issued facilities.");
     });
   });
   /**
@@ -476,11 +494,16 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationActivities.activityTimeline().contains('Bank facility stage changed');
 
       // first facility issued activity
-      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[0].ukefFacilityId).contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
-      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[0].ukefFacilityId).contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+      applicationActivities
+        .facilityActivityChangedBy(unissuedFacilitiesArray[0].ukefFacilityId)
+        .contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
+      applicationActivities
+        .facilityActivityCheckedBy(unissuedFacilitiesArray[0].ukefFacilityId)
+        .contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
       applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Unissued');
       applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Issued');
-      applicationActivities.facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId)
+      applicationActivities
+        .facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId)
         .contains(`${unissuedFacilitiesArray[0].type} facility ${unissuedFacilitiesArray[0].ukefFacilityId}`);
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId).click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[0]._id}`));
@@ -488,11 +511,16 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationActivities.subNavigationBarActivities().click();
 
       // 2nd facility issued activity
-      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[1].ukefFacilityId).contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
-      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[1].ukefFacilityId).contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+      applicationActivities
+        .facilityActivityChangedBy(unissuedFacilitiesArray[1].ukefFacilityId)
+        .contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
+      applicationActivities
+        .facilityActivityCheckedBy(unissuedFacilitiesArray[1].ukefFacilityId)
+        .contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
       applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[1].ukefFacilityId).contains('Unissued');
       applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[1].ukefFacilityId).contains('Issued');
-      applicationActivities.facilityActivityLink(unissuedFacilitiesArray[1].ukefFacilityId)
+      applicationActivities
+        .facilityActivityLink(unissuedFacilitiesArray[1].ukefFacilityId)
         .contains(`${unissuedFacilitiesArray[1].type} facility ${unissuedFacilitiesArray[1].ukefFacilityId}`);
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[1].ukefFacilityId).click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[1]._id}`));
@@ -500,11 +528,16 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationActivities.subNavigationBarActivities().click();
 
       // 3rd facility issued activity
-      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[2].ukefFacilityId).contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
-      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[2].ukefFacilityId).contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+      applicationActivities
+        .facilityActivityChangedBy(unissuedFacilitiesArray[2].ukefFacilityId)
+        .contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
+      applicationActivities
+        .facilityActivityCheckedBy(unissuedFacilitiesArray[2].ukefFacilityId)
+        .contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
       applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[2].ukefFacilityId).contains('Unissued');
       applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[2].ukefFacilityId).contains('Issued');
-      applicationActivities.facilityActivityLink(unissuedFacilitiesArray[2].ukefFacilityId)
+      applicationActivities
+        .facilityActivityLink(unissuedFacilitiesArray[2].ukefFacilityId)
         .contains(`${unissuedFacilitiesArray[2].type} facility ${unissuedFacilitiesArray[2].ukefFacilityId}`);
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[2].ukefFacilityId).click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[2]._id}`));

@@ -3,7 +3,10 @@ const { orderNumber } = require('../../../utils/error-list-order-number');
 const { dateValidationText, dateHasAllValues } = require('./date');
 const isReadyForValidation = require('../helpers/isReadyForValidation.helper');
 const coverDatesValidation = require('../helpers/coverDatesValidation.helpers');
-const { getStartOfDateFromEpochMillisecondString, getStartOfDateFromDayMonthYearStrings } = require('../../helpers/date');
+const {
+  getStartOfDateFromEpochMillisecondString,
+  getStartOfDateFromDayMonthYearStrings,
+} = require('../../helpers/date');
 
 module.exports = (submittedValues, deal, errorList) => {
   const newErrorList = errorList;

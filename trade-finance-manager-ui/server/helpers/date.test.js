@@ -38,13 +38,16 @@ describe('date', () => {
           //                                         '2023-11-11' - Saturday
           //                                         '2023-11-12' - Sunday
           { businessDay: 9, expectedResult: new Date('2023-11-13') },
-        ])(`returns $expectedResult when dateInMonth is ${dateInMonth.toISOString()} and businessDay is $businessDay`, ({ businessDay, expectedResult }) => {
-          // Act
-          const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
+        ])(
+          `returns $expectedResult when dateInMonth is ${dateInMonth.toISOString()} and businessDay is $businessDay`,
+          ({ businessDay, expectedResult }) => {
+            // Act
+            const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
 
-          // Assert
-          expect(isSameDay(result, expectedResult)).toBe(true);
-        });
+            // Assert
+            expect(isSameDay(result, expectedResult)).toBe(true);
+          },
+        );
       });
 
       describe('when the first of the month is a weekend date', () => {
@@ -54,13 +57,16 @@ describe('date', () => {
           //                                               '2023-10-01' - Sunday
           { businessDay: 1, expectedResult: new Date('2023-10-02') },
           { businessDay: 2, expectedResult: new Date('2023-10-03') },
-        ])(`returns $expectedResult when dateInMonth is ${dateInMonth.toISOString()} and businessDay is $businessDay`, ({ businessDay, expectedResult }) => {
-          // Act
-          const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
+        ])(
+          `returns $expectedResult when dateInMonth is ${dateInMonth.toISOString()} and businessDay is $businessDay`,
+          ({ businessDay, expectedResult }) => {
+            // Act
+            const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
 
-          // Assert
-          expect(isSameDay(result, expectedResult)).toBe(true);
-        });
+            // Assert
+            expect(isSameDay(result, expectedResult)).toBe(true);
+          },
+        );
       });
     });
 
@@ -102,25 +108,39 @@ describe('date', () => {
   });
 
   describe('getIsoMonth', () => {
-    it.each(['2023-13', 202311, undefined, null, ['2023-11'], { date: '2023-11' }])('throws when provided with %p instead of an instance of Date', (value) => {
-      expect(() => getIsoMonth(value)).toThrowError("Expected an instance of 'Date'");
-    });
+    it.each(['2023-13', 202311, undefined, null, ['2023-11'], { date: '2023-11' }])(
+      'throws when provided with %p instead of an instance of Date',
+      (value) => {
+        expect(() => getIsoMonth(value)).toThrowError("Expected an instance of 'Date'");
+      },
+    );
 
     it.each([
       { dateInMonth: new Date(2023, 7), expectedIsoMonth: '2023-08' },
       { dateInMonth: new Date('1980-02-28'), expectedIsoMonth: '1980-02' },
-    ])("returns ISO month '$expectedIsoMonth' when provided with Date $dateInMonth", ({ dateInMonth, expectedIsoMonth }) => {
-      expect(getIsoMonth(dateInMonth)).toEqual(expectedIsoMonth);
-    });
+    ])(
+      "returns ISO month '$expectedIsoMonth' when provided with Date $dateInMonth",
+      ({ dateInMonth, expectedIsoMonth }) => {
+        expect(getIsoMonth(dateInMonth)).toEqual(expectedIsoMonth);
+      },
+    );
   });
 
   describe('assertValidIsoMonth', () => {
-    it.each(['2023-11-01', '2023-13', '202-11', 'invalid', '', 202311, undefined, null, ['2023-11'], { date: '2023-11' }])(
-      'throws when provided non-ISO month string value %p',
-      (value) => {
-        expect(() => assertValidIsoMonth(value)).toThrowError('Invalid ISO mont');
-      },
-    );
+    it.each([
+      '2023-11-01',
+      '2023-13',
+      '202-11',
+      'invalid',
+      '',
+      202311,
+      undefined,
+      null,
+      ['2023-11'],
+      { date: '2023-11' },
+    ])('throws when provided non-ISO month string value %p', (value) => {
+      expect(() => assertValidIsoMonth(value)).toThrowError('Invalid ISO mont');
+    });
 
     it('returns when provided with a valid ISO month string', () => {
       expect(() => assertValidIsoMonth('2023-11')).not.toThrow();

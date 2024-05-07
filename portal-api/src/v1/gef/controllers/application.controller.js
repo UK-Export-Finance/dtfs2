@@ -1,5 +1,8 @@
 const { ObjectId } = require('mongodb');
-const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const {
+  generateAuditDatabaseRecordFromAuditDetails,
+  generatePortalAuditDetails,
+} = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const { validateApplicationReferences, validatorStatusCheckEnums } = require('./validation/application');
@@ -140,7 +143,10 @@ exports.update = async (req, res) => {
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
   const collection = await db.getCollection(dealsCollection);
-  const update = new Application({ ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) });
+  const update = new Application({
+    ...req.body,
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+  });
   const validateErrs = validateApplicationReferences(update);
   if (validateErrs) {
     return res.status(422).send(validateErrs);
@@ -160,11 +166,10 @@ exports.update = async (req, res) => {
 
   updateAction.$set = update;
 
-  const result = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(id) } },
-    updateAction,
-    { returnNewDocument: true, returnDocument: 'after' },
-  );
+  const result = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(id) } }, updateAction, {
+    returnNewDocument: true,
+    returnDocument: 'after',
+  });
   let response;
   if (result.value) {
     response = result.value;
@@ -252,11 +257,15 @@ exports.changeStatus = async (req, res) => {
   let applicationUpdate = {
     status,
     updatedAt: Date.now(),
-    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails)
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
-    const submissionData = await addSubmissionData(dealId, existingApplication, generatePortalAuditDetails(req.user._id));
+    const submissionData = await addSubmissionData(
+      dealId,
+      existingApplication,
+      generatePortalAuditDetails(req.user._id),
+    );
 
     applicationUpdate = {
       ...applicationUpdate,
@@ -306,7 +315,9 @@ exports.delete = async (req, res) => {
     await query.deleteMany({ dealId: { $eq: ObjectId(dealId) } });
   }
 
-  return res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
+  return res
+    .status(utils.mongoStatus(applicationResponse))
+    .send(applicationResponse.value ? applicationResponse.value : null);
 };
 
 const dealsFilters = (user, filters = []) => {

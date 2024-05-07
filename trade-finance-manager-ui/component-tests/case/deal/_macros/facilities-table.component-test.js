@@ -147,7 +147,9 @@ describe(component, () => {
     });
 
     it('should render `value (export currency)` table heading', () => {
-      wrapper.expectText('[data-cy="facilities-table-heading-value-export-currency"]').toRead('Value (export currency)');
+      wrapper
+        .expectText('[data-cy="facilities-table-heading-value-export-currency"]')
+        .toRead('Value (export currency)');
     });
 
     it('should render `value (GBP)` table heading', () => {
@@ -164,10 +166,12 @@ describe(component, () => {
       params.facilities.forEach(({ facilitySnapshot: facility }) => {
         const selector = `[data-cy="facility-${facility._id}-ukef-facility-id-link"]`;
 
-        wrapper.expectLink(selector).toLinkTo(
-          `/case/${params.caseId}/facility/${facility._id}`,
-          `View facility ${facility.ukefFacilityId} details`,
-        );
+        wrapper
+          .expectLink(selector)
+          .toLinkTo(
+            `/case/${params.caseId}/facility/${facility._id}`,
+            `View facility ${facility.ukefFacilityId} details`,
+          );
       });
     });
 
@@ -191,7 +195,9 @@ describe(component, () => {
 
     describe('type table cell', () => {
       it('should render type when facility is bond', () => {
-        const { facilitySnapshot: bond } = params.facilities.find(({ facilitySnapshot: f }) => f.facilityProduct.code === 'BSS');
+        const { facilitySnapshot: bond } = params.facilities.find(
+          ({ facilitySnapshot: f }) => f.facilityProduct.code === 'BSS',
+        );
 
         const cellSelector = `[data-cy="facility-${bond._id}-type"]`;
         wrapper.expectText(cellSelector).toRead(bond.type);

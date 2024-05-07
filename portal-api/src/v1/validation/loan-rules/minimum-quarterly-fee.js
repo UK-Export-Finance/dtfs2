@@ -1,9 +1,5 @@
 const { hasValue } = require('../../../utils/string');
-const {
-  isNumeric,
-  decimalsCount,
-  stripDecimals,
-} = require('../../../utils/number');
+const { isNumeric, decimalsCount, stripDecimals } = require('../../../utils/number');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 
 const MIN_VALUE = 0;
@@ -66,10 +62,7 @@ module.exports = (loan, errorList) => {
 
   if (hasValue(loan.minimumQuarterlyFee) && !isValid(loan.minimumQuarterlyFee)) {
     newErrorList.minimumQuarterlyFee = {
-      text: validationText(
-        loan.minimumQuarterlyFee,
-        'Minimum quarterly fee',
-      ),
+      text: validationText(loan.minimumQuarterlyFee, 'Minimum quarterly fee'),
       order: orderNumber(newErrorList),
     };
   }

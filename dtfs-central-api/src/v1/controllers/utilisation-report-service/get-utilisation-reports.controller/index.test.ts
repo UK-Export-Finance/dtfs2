@@ -154,7 +154,10 @@ describe('getUtilisationReports', () => {
     const findAllByBankIdMock = jest.fn().mockResolvedValue(mockUtilisationReports);
     jest.spyOn(UtilisationReportRepo, 'findAllByBankId').mockImplementation(findAllByBankIdMock);
 
-    const { req, res } = getHttpMocks({ reportPeriod: getReportPeriodJsonObject(validReportPeriod), excludeNotReceived });
+    const { req, res } = getHttpMocks({
+      reportPeriod: getReportPeriodJsonObject(validReportPeriod),
+      excludeNotReceived,
+    });
 
     // Act
     await getUtilisationReports(req, res);
@@ -184,7 +187,10 @@ describe('getUtilisationReports', () => {
 
     const excludeNotReceived = 'true';
 
-    const azureFileInfo = AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource: { platform: 'PORTAL', userId: 'abc123' } });
+    const azureFileInfo = AzureFileInfoEntity.create({
+      ...MOCK_AZURE_FILE_INFO,
+      requestSource: { platform: 'PORTAL', userId: 'abc123' },
+    });
 
     const mockDate = new Date('2024-01');
 
@@ -202,7 +208,9 @@ describe('getUtilisationReports', () => {
 
     jest.mocked(getUserById).mockResolvedValue(mockGetUserByIdResponse);
 
-    const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+    const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(
+      UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+    )
       .withAzureFileInfo(azureFileInfo)
       .withDateUploaded(mockDate)
       .withUploadedByUserId(mockUploadedByUser.id)
@@ -210,7 +218,10 @@ describe('getUtilisationReports', () => {
     const findAllByBankIdMock = jest.fn().mockResolvedValue([mockUtilisationReport]);
     jest.spyOn(UtilisationReportRepo, 'findAllByBankId').mockImplementation(findAllByBankIdMock);
 
-    const { req, res } = getHttpMocks({ reportPeriod: getReportPeriodJsonObject(validReportPeriod), excludeNotReceived });
+    const { req, res } = getHttpMocks({
+      reportPeriod: getReportPeriodJsonObject(validReportPeriod),
+      excludeNotReceived,
+    });
 
     // Act
     await getUtilisationReports(req, res);

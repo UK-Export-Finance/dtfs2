@@ -36,7 +36,7 @@ const GEF_FACILITIES_CONTENT_STRINGS = {
     },
     CONTINGENT: {
       ukefFacilityId: GENERIC_LIST_ITEM_TITLES.ukefFacilityId,
-      bankReference: 'Bank\'s Contingent facility ID',
+      bankReference: "Bank's Contingent facility ID",
       hasBeenIssued: GENERIC_LIST_ITEM_TITLES.facilityStage,
       requestedCoverStartDate: GENERIC_LIST_ITEM_TITLES.requestedCoverStartDate,
       coverStartDate: GENERIC_LIST_ITEM_TITLES.coverStartDate,

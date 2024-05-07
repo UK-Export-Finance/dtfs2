@@ -9,7 +9,10 @@ import { sortArrayOfObjectsAlphabetically } from '../../../helpers/array';
 import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
 describe('GET getAmendmentLeadUnderwriter()', () => {
-  const isEditable = userIsInTeam(MOCKS.MOCK_USER_UNDERWRITER_MANAGER, [TEAM_IDS.UNDERWRITER_MANAGERS, TEAM_IDS.UNDERWRITERS]);
+  const isEditable = userIsInTeam(MOCKS.MOCK_USER_UNDERWRITER_MANAGER, [
+    TEAM_IDS.UNDERWRITER_MANAGERS,
+    TEAM_IDS.UNDERWRITERS,
+  ]);
 
   const apiGetUserSpy = jest.fn(() => Promise.resolve(MOCKS.MOCK_USER_UNDERWRITER_MANAGER));
 
@@ -30,7 +33,10 @@ describe('GET getAmendmentLeadUnderwriter()', () => {
   });
 
   it('should not call getUser API to get current lead underwriter user data', async () => {
-    await amendmentLeadUnderwriterController.getAmendmentLeadUnderwriter(MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_USER_UNDERWRITER_MANAGER);
+    await amendmentLeadUnderwriterController.getAmendmentLeadUnderwriter(
+      MOCKS.MOCK_AMENDMENT,
+      MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
+    );
 
     expect(apiGetUserSpy).not.toHaveBeenCalled();
   });
@@ -81,7 +87,10 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
       await amendmentLeadUnderwriterController.getAssignAmendmentLeadUnderwriter(req, res);
 
       // NOTE: api.getTeamMembers stub only returns one team.
-      const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(MOCKS.MOCK_TEAM_UNDERWRITER_MANAGERS, 'firstName');
+      const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(
+        MOCKS.MOCK_TEAM_UNDERWRITER_MANAGERS,
+        'firstName',
+      );
 
       const expectedAssignToSelectOptions = mapAssignToSelectOptions(
         '',
@@ -107,7 +116,10 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
       await amendmentLeadUnderwriterController.getAssignAmendmentLeadUnderwriter(req, res);
 
       // NOTE: api.getTeamMembers stub only returns one team.
-      const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(MOCKS.MOCK_TEAM_UNDERWRITER_MANAGERS, 'firstName');
+      const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(
+        MOCKS.MOCK_TEAM_UNDERWRITER_MANAGERS,
+        'firstName',
+      );
 
       const expectedAssignToSelectOptions = mapAssignToSelectOptions(
         MOCKS.MOCK_AMENDMENT.leadUnderwriter._id,
@@ -125,7 +137,7 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
     });
   });
 
-  describe('when deal or amendments don\'t exist', () => {
+  describe("when deal or amendments don't exist", () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(null);
       api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT, status: 200 });
@@ -171,9 +183,11 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
 describe('postAssignAmendmentLeadUnderwriter()', () => {
   const res = mockRes();
 
-  const apiUpdateSpy = jest.fn(() => Promise.resolve({
-    test: true,
-  }));
+  const apiUpdateSpy = jest.fn(() =>
+    Promise.resolve({
+      test: true,
+    }),
+  );
 
   const apiGetUserSpy = jest.fn(() => Promise.resolve(MOCKS.MOCK_USER_UNDERWRITER_MANAGER));
 

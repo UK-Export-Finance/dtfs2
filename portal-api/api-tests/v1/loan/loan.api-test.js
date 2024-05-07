@@ -7,10 +7,7 @@ const { withRoleAuthorisationTests } = require('../../common-tests/role-authoris
 const { MAKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 const testUserCache = require('../../api-test-users');
 const { as, get } = require('../../api')(app);
-const {
-  calculateGuaranteeFee,
-  calculateUkefExposure,
-} = require('../../../src/v1/section-calculations');
+const { calculateGuaranteeFee, calculateUkefExposure } = require('../../../src/v1/section-calculations');
 const { findOneCurrency } = require('../../../src/v1/controllers/currencies.controller');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
@@ -24,18 +21,16 @@ describe('/v1/deals/:id/loan', () => {
       },
     },
     eligibility: {
-      criteria: [
-        { id: 15, answer: true },
-      ],
+      criteria: [{ id: 15, answer: true }],
     },
   });
 
   const nowDate = new Date();
   const requestedCoverStartDate = () => ({
-      'requestedCoverStartDate-day': format(nowDate, 'dd'),
-      'requestedCoverStartDate-month': format(nowDate, 'MM'),
-      'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
-    });
+    'requestedCoverStartDate-day': format(nowDate, 'dd'),
+    'requestedCoverStartDate-month': format(nowDate, 'MM'),
+    'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
+  });
 
   const coverEndDate = () => {
     const date = add(nowDate, { months: 1 });
@@ -100,7 +95,7 @@ describe('/v1/deals/:id/loan', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(aLoanUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(aLoanUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(aLoanUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -130,7 +125,9 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker).get('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
+      const { status } = await as(aBarclaysMaker).get(
+        '/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b',
+      );
 
       expect(status).toEqual(404);
     });
@@ -215,7 +212,9 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker).put({}).to('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
+      const { status } = await as(aBarclaysMaker)
+        .put({})
+        .to('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
@@ -370,7 +369,7 @@ describe('/v1/deals/:id/loan', () => {
       });
     });
 
-    it('should add the deal\'s supplyContractCurrency to the loan\'s currency', async () => {
+    it("should add the deal's supplyContractCurrency to the loan's currency", async () => {
       const { dealId, loanId } = await createLoan();
 
       const loan = {
@@ -397,7 +396,7 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     describe('when req.body.currencySameAsSupplyContractCurrency is changed from false to true', () => {
-      it('should remove `currency is NOT the same` values from the loan and add the deal\'s supplyContractCurrency', async () => {
+      it("should remove `currency is NOT the same` values from the loan and add the deal's supplyContractCurrency", async () => {
         const { dealId, loanId } = await createLoan();
 
         const loan = {
@@ -441,7 +440,7 @@ describe('/v1/deals/:id/loan', () => {
       });
     });
 
-    describe('when req.body.premiumType is changed to \'At maturity\'', () => {
+    describe("when req.body.premiumType is changed to 'At maturity'", () => {
       it('should remove premiumFrequency from the loan', async () => {
         const { dealId, loanId } = await createLoan();
 
@@ -507,7 +506,7 @@ describe('/v1/deals/:id/loan', () => {
       expect(body.loan.updatedAt).toEqual(expect.any(Number));
     });
 
-    it('should update the associated deal\'s facilitiesUpdated timestamp', async () => {
+    it("should update the associated deal's facilitiesUpdated timestamp", async () => {
       // create deal
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id;
@@ -626,7 +625,9 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker).remove('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
+      const { status } = await as(aBarclaysMaker).remove(
+        '/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b',
+      );
 
       expect(status).toEqual(404);
     });

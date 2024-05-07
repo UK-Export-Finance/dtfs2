@@ -10,7 +10,9 @@ const obscureEmail = (email) => {
   const firstCharacterBeforeAtSign = beforeAtSign[0];
 
   if (!firstCharacterBeforeAtSign) {
-    throw new Error(`Unable to obscure email: there are no non-whitespace characters present before ${emailDomainSeparator} in ${email}.`);
+    throw new Error(
+      `Unable to obscure email: there are no non-whitespace characters present before ${emailDomainSeparator} in ${email}.`,
+    );
   }
   const lastCharacterBeforeAtSign = beforeAtSign[beforeAtSign.length - 1];
   return `${firstCharacterBeforeAtSign}***${lastCharacterBeforeAtSign}@${afterAtSign}`;

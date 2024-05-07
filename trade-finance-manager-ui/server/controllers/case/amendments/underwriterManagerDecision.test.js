@@ -9,7 +9,8 @@ const res = mockRes();
 describe('getAmendmentAddUnderwriterManagersDecisionCoverEndDate()', () => {
   it('should render template with data if user can edit decision', async () => {
     api.getDeal = () => Promise.resolve(MOCKS.MOCK_DEAL);
-    api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_NOT_SUBMITTED, status: 200 });
+    api.getAmendmentById = () =>
+      Promise.resolve({ data: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_NOT_SUBMITTED, status: 200 });
     const req = {
       params: {
         _id: MOCKS.MOCK_DEAL._id,

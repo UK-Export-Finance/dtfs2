@@ -1,14 +1,9 @@
-const expectNotAuthenticatedResponse = ({
-  status,
-  body
-}) => {
+const expectNotAuthenticatedResponse = ({ status, body }) => {
   expect(status).toBe(401);
   expect(body).toStrictEqual({});
 };
 
-const withApiKeyAuthenticationTests = ({
-  makeRequestWithHeaders,
-}) => {
+const withApiKeyAuthenticationTests = ({ makeRequestWithHeaders }) => {
   it('returns a 401 response if the request does not have an x-api-key header', async () => {
     const response = await makeRequestWithHeaders({});
     expectNotAuthenticatedResponse(response);
@@ -20,10 +15,7 @@ const withApiKeyAuthenticationTests = ({
   });
 };
 
-const withClientAuthenticationTests = ({
-  makeRequestWithoutAuthHeader,
-  makeRequestWithAuthHeader,
-}) => {
+const withClientAuthenticationTests = ({ makeRequestWithoutAuthHeader, makeRequestWithAuthHeader }) => {
   it('returns a 401 response if the request does not have a Authorization header', async () => {
     const response = await makeRequestWithoutAuthHeader();
     expectNotAuthenticatedResponse(response);

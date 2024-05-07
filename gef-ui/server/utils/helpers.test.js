@@ -21,9 +21,7 @@ import {
   getCurrentTimePlusMinutes,
 } from './helpers';
 
-import {
-  getFacilityCoverStartDate,
-} from './facility-helpers';
+import { getFacilityCoverStartDate } from './facility-helpers';
 
 import {
   MOCK_ISSUED_FACILITY,
@@ -107,10 +105,12 @@ describe('validationErrorHandler()', () => {
     };
 
     expect(validationErrorHandler(mockedError)).toEqual({
-      errorSummary: [{
-        text: 'message',
-        href: '#abc',
-      }],
+      errorSummary: [
+        {
+          text: 'message',
+          href: '#abc',
+        },
+      ],
       fieldErrors: {
         abc: {
           text: 'message',
@@ -125,10 +125,12 @@ describe('validationErrorHandler()', () => {
       errMsg: 'message',
     };
     expect(validationErrorHandler(mockedError, 'my-link')).toEqual({
-      errorSummary: [{
-        text: 'message',
-        href: 'my-link#abc',
-      }],
+      errorSummary: [
+        {
+          text: 'message',
+          href: 'my-link#abc',
+        },
+      ],
       fieldErrors: {
         abc: {
           text: 'message',
@@ -224,18 +226,22 @@ describe('isEmpty()', () => {
     expect(isEmpty({ foo: '' })).toBeTruthy();
     expect(isEmpty({ foo: null })).toBeTruthy();
     expect(isEmpty({ foo: 'Hello' })).toBeFalsy();
-    expect(isEmpty({
-      foo: {
-        bar: null,
-        foo: null,
-      },
-    })).toBeTruthy();
-    expect(isEmpty({
-      foo: {
-        bar: 'Text',
-        foo: null,
-      },
-    })).toBeFalsy();
+    expect(
+      isEmpty({
+        foo: {
+          bar: null,
+          foo: null,
+        },
+      }),
+    ).toBeTruthy();
+    expect(
+      isEmpty({
+        foo: {
+          bar: 'Text',
+          foo: null,
+        },
+      }),
+    ).toBeFalsy();
   });
 });
 
@@ -275,7 +281,9 @@ describe('mapSummaryList()', () => {
       user: MOCK_REQUEST,
     };
 
-    expect(mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)).toEqual([{ actions: { items: [] }, key: { text: 'Id' }, value: { text: '123456' } }]);
+    expect(mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)).toEqual([
+      { actions: { items: [] }, key: { text: 'Id' }, value: { text: '123456' } },
+    ]);
   });
 
   it('returns populated items array if href property is required', () => {
@@ -587,10 +595,10 @@ describe('mapSummaryList()', () => {
    * This mapping returns back the rows on the facilities table.
    * Testing when changing facility from unissued to issued with AIN
    * ensures that value and issued field cannot be editted on preview page
-  */
+   */
   describe('should not be able to change certain fields on facility which has changed to issued', () => {
     it('cannot change value row', () => {
-    // 'key' for value row
+      // 'key' for value row
       const MockedDisplayItemsIssued = () => [
         {
           label: 'Facility value',
@@ -604,7 +612,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions.items[0];
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions
+        .items[0];
       // should be blank so cannot change
       expect(text).toEqual('');
     });
@@ -623,7 +632,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions.items[0];
+      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions
+        .items[0];
 
       expect(text).toEqual('Change');
       expect(href).toContain('/change-to-unissued');
@@ -634,72 +644,7 @@ describe('mapSummaryList()', () => {
    * This mapping returns back the rows on the facilities table.
    * Testing when changing already changed facility to issued with AIN
    * ensures that name, coverStartDate and coverEndDate fields can be editted on preview page
-  */
-  describe('maps and returns summary list with change button for relevant rows for facilities changed to issued on preview page', () => {
-    it('name', () => {
-    // 'key' for value row
-      const MockedDisplayItemsName = () => [
-        {
-          label: 'Name',
-          id: 'name',
-        },
-      ];
-      const mockedDisplayItemsName = MockedDisplayItemsName();
-
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION,
-        user: MOCK_REQUEST,
-      };
-
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
-      // should be allowed to change so should display change
-      expect(text).toEqual('Change');
-    });
-    it('coverStartDate', () => {
-      const MockedDisplayItemsStartDate = () => [
-        {
-          label: 'Cover start date',
-          id: 'coverStartDate',
-        },
-      ];
-      const mockedDisplayItemsStartDate = MockedDisplayItemsStartDate();
-
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION,
-        user: MOCK_REQUEST,
-      };
-
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items[0];
-      // should be allowed to change so should display change
-      expect(text).toEqual('Change');
-    });
-    it('coverEndDate', () => {
-      const MockedDisplayItemsStartEnd = () => [
-        {
-          label: 'Cover end date',
-          id: 'coverEndDate',
-        },
-      ];
-      const mockedDisplayItemsEnd = MockedDisplayItemsStartEnd();
-
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION,
-        user: MOCK_REQUEST,
-      };
-
-      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items[0];
-      // should be allowed to change so should display change
-      expect(text).toEqual('Change');
-      expect(href).toContain('/unissued-facilities/');
-      expect(href).toContain('/change');
-    });
-  });
-
-  /**
-   * This mapping returns back the rows on the facilities table.
-   * Testing when changing facility from unissued to issued with AIN
-   * ensures that name, coverStartDate and coverEndDate fields cannot be editted yet on preview page
-  */
+   */
   describe('maps and returns summary list with change button for relevant rows for facilities changed to issued on preview page', () => {
     it('name', () => {
       // 'key' for value row
@@ -716,7 +661,76 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
+        .items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('Change');
+    });
+    it('coverStartDate', () => {
+      const MockedDisplayItemsStartDate = () => [
+        {
+          label: 'Cover start date',
+          id: 'coverStartDate',
+        },
+      ];
+      const mockedDisplayItemsStartDate = MockedDisplayItemsStartDate();
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsStartDate, mapSummaryParams, true)[0]
+        .actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('Change');
+    });
+    it('coverEndDate', () => {
+      const MockedDisplayItemsStartEnd = () => [
+        {
+          label: 'Cover end date',
+          id: 'coverEndDate',
+        },
+      ];
+      const mockedDisplayItemsEnd = MockedDisplayItemsStartEnd();
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsEnd, mapSummaryParams, true)[0]
+        .actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('Change');
+      expect(href).toContain('/unissued-facilities/');
+      expect(href).toContain('/change');
+    });
+  });
+
+  /**
+   * This mapping returns back the rows on the facilities table.
+   * Testing when changing facility from unissued to issued with AIN
+   * ensures that name, coverStartDate and coverEndDate fields cannot be editted yet on preview page
+   */
+  describe('maps and returns summary list with change button for relevant rows for facilities changed to issued on preview page', () => {
+    it('name', () => {
+      // 'key' for value row
+      const MockedDisplayItemsName = () => [
+        {
+          label: 'Name',
+          id: 'name',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsName();
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
+        .items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('');
     });
@@ -734,7 +748,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items[0];
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsStartDate, mapSummaryParams, true)[0]
+        .actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('');
     });
@@ -753,7 +768,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items[0];
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions
+        .items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('');
     });
@@ -763,7 +779,7 @@ describe('mapSummaryList()', () => {
    * This mapping returns back the rows on the facilities table.
    * Testing when facility already issued with AIN
    * ensures that name, coverStartDate and coverEndDate hasBeenIssued fields cannot be editted on preview page
-  */
+   */
   describe('facility has already been issued (and not changed)', () => {
     it('name', () => {
       // 'key' for value row
@@ -780,7 +796,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0]
+        .actions.items;
       const response = [];
       expect(result).toEqual(response);
     });
@@ -799,7 +816,12 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items;
+      const result = mapSummaryList(
+        MOCK_ISSUED_FACILITY_UNCHANGED,
+        mockedDisplayItemsStartDate,
+        mapSummaryParams,
+        true,
+      )[0].actions.items;
       const response = [];
       expect(result).toEqual(response);
     });
@@ -818,7 +840,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsEnd, mapSummaryParams, true)[0]
+        .actions.items;
       const response = [];
       expect(result).toEqual(response);
     });
@@ -837,7 +860,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsIssued, mapSummaryParams, true)[0].actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsIssued, mapSummaryParams, true)[0]
+        .actions.items;
       const response = [];
       expect(result).toEqual(response);
     });
@@ -858,14 +882,15 @@ describe('mapSummaryList()', () => {
       user: MOCK_REQUEST,
     };
 
-    const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+    const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
+      .items[0];
     // should be allowed to change so should display change
     expect(text).toEqual('Change');
   });
 
   describe('when with checker when changedToIssuedFacilities', () => {
     it('Should return a blank array with stage', () => {
-    // 'key' for value row
+      // 'key' for value row
       const MockedDisplayItemsStage = () => [
         {
           label: 'Stage',
@@ -879,7 +904,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
+        .items;
       // should be [] as unable to change on checker
       expect(result).toEqual([]);
     });
@@ -899,7 +925,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
+        .items;
       // should be [] as unable to change on checker
       expect(result).toEqual([]);
     });
@@ -919,7 +946,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
+        .items;
       // should be [] as unable to change on checker
       expect(result).toEqual([]);
     });
@@ -927,7 +955,7 @@ describe('mapSummaryList()', () => {
 
   describe('when returning to maker with changed to issued facilities', () => {
     it('should be able to change stage', () => {
-    // 'key' for value row
+      // 'key' for value row
       const MockedDisplayItemsStage = () => [
         {
           label: 'Stage',
@@ -941,7 +969,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0]
+        .actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
       expect(href).toContain('/change-to-unissued');
@@ -962,7 +991,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
+        .items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
     });
@@ -982,7 +1012,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
+        .items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
     });
@@ -1002,7 +1033,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
+        .items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
     });
@@ -1022,7 +1054,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
+        .items[0];
       expect(text).toEqual('');
     });
 
@@ -1041,7 +1074,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
+        .items[0];
       expect(text).toEqual('');
     });
 
@@ -1060,7 +1094,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0]
+        .actions.items;
       expect(result).toEqual([]);
     });
 
@@ -1079,7 +1114,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0]
+        .actions.items;
       expect(result).toEqual([]);
     });
 
@@ -1097,12 +1133,19 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParamsDraft, true)[0].actions.items;
-      expect(result).toEqual([{
-        href: '/gef/application-details/61a7710b2ae62b0013dae687/61a771cc2ae62b0013dae68a/confirm-cover-start-date',
-        text: 'Change',
-        visuallyHiddenText: 'Cover start date',
-      }]);
+      const result = mapSummaryList(
+        MOCK_ISSUED_FACILITY_UNCHANGED,
+        mockedDisplayItemsName,
+        mapSummaryParamsDraft,
+        true,
+      )[0].actions.items;
+      expect(result).toEqual([
+        {
+          href: '/gef/application-details/61a7710b2ae62b0013dae687/61a771cc2ae62b0013dae68a/confirm-cover-start-date',
+          text: 'Change',
+          visuallyHiddenText: 'Cover start date',
+        },
+      ]);
     });
 
     it('Should show not change for coverEndDate when already issued facility', () => {
@@ -1120,7 +1163,8 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0]
+        .actions.items;
       expect(result).toEqual([]);
     });
   });
@@ -1422,7 +1466,7 @@ describe('pastDate', () => {
   });
   it('Should return FALSE for the specified date', () => {
     const date = new Date();
-    expect(pastDate({ day: date.getDate(), month: (date.getMonth() + 1), year: date.getFullYear() })).toEqual(false);
+    expect(pastDate({ day: date.getDate(), month: date.getMonth() + 1, year: date.getFullYear() })).toEqual(false);
   });
 });
 
@@ -1453,7 +1497,9 @@ describe('futureDateInRange', () => {
   });
   it('Should return TRUE for the specified day and range days', () => {
     const date = new Date();
-    expect(futureDateInRange({ day: date.getDate(), month: (date.getMonth() + 1), year: date.getFullYear() }, 365)).toEqual(true);
+    expect(
+      futureDateInRange({ day: date.getDate(), month: date.getMonth() + 1, year: date.getFullYear() }, 365),
+    ).toEqual(true);
   });
 });
 
@@ -1511,44 +1557,68 @@ describe('getFacilityCoverStartDate', () => {
 
 describe('displayChangeSupportingInfo()', () => {
   it('Should return false if preview mode', () => {
-    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 0), true);
+    const result = displayChangeSupportingInfo(
+      MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 0),
+      true,
+    );
     expect(result).toEqual(false);
   });
 
   it('Should return false if preview mode and submission count over 0', () => {
-    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 1), true);
+    const result = displayChangeSupportingInfo(
+      MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 1),
+      true,
+    );
     expect(result).toEqual(false);
   });
 
   it('Should return true if not preview mode and submission count is 0', () => {
-    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.DRAFT, 0), false);
+    const result = displayChangeSupportingInfo(
+      MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.DRAFT, 0),
+      false,
+    );
     expect(result).toEqual(true);
   });
 
   it('Should return true if not preview mode and submission count is 0', () => {
-    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, 0), false);
+    const result = displayChangeSupportingInfo(
+      MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, 0),
+      false,
+    );
     expect(result).toEqual(true);
   });
 });
 
 describe('displayChangeSupportingInfo()', () => {
   it('Should return false if preview mode', () => {
-    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 0), true);
+    const result = displayChangeSupportingInfo(
+      MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 0),
+      true,
+    );
     expect(result).toEqual(false);
   });
 
   it('Should return false if preview mode and submission count over 0', () => {
-    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 1), true);
+    const result = displayChangeSupportingInfo(
+      MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 1),
+      true,
+    );
     expect(result).toEqual(false);
   });
 
   it('Should return true if not preview mode and submission count is 0', () => {
-    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.DRAFT, 0), false);
+    const result = displayChangeSupportingInfo(
+      MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.DRAFT, 0),
+      false,
+    );
     expect(result).toEqual(true);
   });
 
   it('Should return true if not preview mode and submission count is 0', () => {
-    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, 0), false);
+    const result = displayChangeSupportingInfo(
+      MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, 0),
+      false,
+    );
     expect(result).toEqual(true);
   });
 });

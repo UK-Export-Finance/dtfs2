@@ -12,25 +12,26 @@ const { stripCommas, getMaximumLiability } = require('../../data-migration/helpe
 
 // ******************** DEALS *************************
 /**
-   * Return all the TFM deals with `MIA/MIN` filter.
-   * @param {Integer} EPOCH Fetch records greater than.
-   * Defaulted to `1648684800` (31-03-2022). This argument
-   * accepts EPOCH with `ms`
-   * @returns {Object} Collection object
-   */
-const getTfmDeals = (epoch = 1648684800) => getCollection(
-  CONSTANTS.DATABASE.TABLES.TFM_DEAL,
-  { 'tfm.stage': { $eq: 'Confirmed' }, 'tfm.dateReceivedTimestamp': { $gte: epoch } },
-);
+ * Return all the TFM deals with `MIA/MIN` filter.
+ * @param {Integer} EPOCH Fetch records greater than.
+ * Defaulted to `1648684800` (31-03-2022). This argument
+ * accepts EPOCH with `ms`
+ * @returns {Object} Collection object
+ */
+const getTfmDeals = (epoch = 1648684800) =>
+  getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, {
+    'tfm.stage': { $eq: 'Confirmed' },
+    'tfm.dateReceivedTimestamp': { $gte: epoch },
+  });
 
 // ******************** REPORTING *************************
 
 /**
-  * Process TFM deals into bespoke array of data
-  * to match reporting columns.
-  * @param {Array} deals Array of deals object
-  * @return {Promise} Processed deals
-  */
+ * Process TFM deals into bespoke array of data
+ * to match reporting columns.
+ * @param {Array} deals Array of deals object
+ * @return {Promise} Processed deals
+ */
 const constructRows = (deals) => {
   const rows = deals.map((deal) => {
     const processed = [];
@@ -43,13 +44,11 @@ const constructRows = (deals) => {
       const destinationCountry = dealSnapshot.submissionDetails
         ? stripCommas(dealSnapshot.submissionDetails.destinationOfGoodsAndServices.name)
         : '';
-      const exporterName = stripCommas(dealSnapshot.exporter.companyName)
-          ?? stripCommas(dealSnapshot.submissionDetails['supplier-name']);
+      const exporterName =
+        stripCommas(dealSnapshot.exporter.companyName) ?? stripCommas(dealSnapshot.submissionDetails['supplier-name']);
       const exporterUrn = parties.exporter.partyUrn;
       const { exporterCreditRating } = tfm;
-      const buyerName = dealSnapshot.submissionDetails
-        ? stripCommas(dealSnapshot.submissionDetails['buyer-name'])
-        : '';
+      const buyerName = dealSnapshot.submissionDetails ? stripCommas(dealSnapshot.submissionDetails['buyer-name']) : '';
       const buyerUrn = parties.buyer.bankUrn;
       const bankName = bank.name;
       const bankUrn = bank.partyUrn;
@@ -83,10 +82,10 @@ const constructRows = (deals) => {
 };
 
 /**
-  * Generates bespoke report as CSV
-  * @param {Array} rows Array of processed deals
-  * @returns {Null} Null is returned
-  */
+ * Generates bespoke report as CSV
+ * @param {Array} rows Array of processed deals
+ * @returns {Null} Null is returned
+ */
 const generateReport = async (rows) => {
   const path = `${__dirname}/report/csv/TFM_${new Date().valueOf()}.csv`;
   let csv = '';
@@ -131,10 +130,10 @@ const generateReport = async (rows) => {
 // ******************** MAIN *************************
 
 /**
-  * Entry point function.
-  * Initiates report generation process
-  * @returns {Boolean} Execution status
-  */
+ * Entry point function.
+ * Initiates report generation process
+ * @returns {Boolean} Execution status
+ */
 const generate = () => {
   console.info('\n\x1b[33m%s\x1b[0m', '🚀 Initiating TFM reporting.', '\n\n');
 

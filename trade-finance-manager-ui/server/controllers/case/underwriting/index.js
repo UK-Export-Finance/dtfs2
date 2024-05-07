@@ -91,7 +91,9 @@ const getUnderwriterPage = async (req, res) => {
 
       if (amendment?.changeFacilityValue && amendment?.value) {
         amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
-        amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
+        amendment.currentValue = amendment?.currentValue
+          ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}`
+          : null;
       }
 
       if (amendment?.ukefDecision?.submitted) {
@@ -103,10 +105,16 @@ const getUnderwriterPage = async (req, res) => {
       amendment.bankDecisionTags = BANK_DECISIONS_TAGS;
 
       if (amendment?.bankDecision?.receivedDate) {
-        amendment.bankDecision.receivedDateFormatted = format(fromUnixTime(amendment.bankDecision.receivedDate), 'dd MMM yyyy');
+        amendment.bankDecision.receivedDateFormatted = format(
+          fromUnixTime(amendment.bankDecision.receivedDate),
+          'dd MMM yyyy',
+        );
       }
       if (amendment?.bankDecision?.effectiveDate) {
-        amendment.bankDecision.effectiveDateFormatted = format(fromUnixTime(amendment.bankDecision.effectiveDate), 'dd MMM yyyy');
+        amendment.bankDecision.effectiveDateFormatted = format(
+          fromUnixTime(amendment.bankDecision.effectiveDate),
+          'dd MMM yyyy',
+        );
       }
 
       submittedAmendments.push(amendment);

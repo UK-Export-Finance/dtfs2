@@ -51,7 +51,11 @@ const postAmendFacilityValue = async (req, res) => {
     currentFacilityValue = `${currency} ${formattedNumber(latestAmendmentValue.value)}`;
   }
 
-  const { errorsObject, amendFacilityValueErrors } = amendFacilityValueValidation(currentFacilityValue, value, currency);
+  const { errorsObject, amendFacilityValueErrors } = amendFacilityValueValidation(
+    currentFacilityValue,
+    value,
+    currency,
+  );
 
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId } = amendment;

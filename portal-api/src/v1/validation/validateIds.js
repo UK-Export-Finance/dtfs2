@@ -34,7 +34,8 @@ const isValidCurrencyCode = (code) => (code ? validator.isISO4217(String(code)) 
  * @param {string} companiesHouseNumber
  * @returns {boolean} asserts if regex is matched
  */
-const isValidCompaniesHouseNumber = (companiesHouseNumber) => isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, companiesHouseNumber);
+const isValidCompaniesHouseNumber = (companiesHouseNumber) =>
+  isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, companiesHouseNumber);
 
 /**
  * isValidBankId

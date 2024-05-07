@@ -27,7 +27,9 @@ describe('InvalidStateMachineTransitionError', () => {
     const error = InvalidStateMachineTransitionError.forEntity(entityParams);
 
     // Assert
-    expect(error.message).toBe("Event type 'DELETE_ENTITY' is invalid for 'SomeEntity' (ID: '123') in state 'COMPLETED'");
+    expect(error.message).toBe(
+      "Event type 'DELETE_ENTITY' is invalid for 'SomeEntity' (ID: '123') in state 'COMPLETED'",
+    );
   });
 
   it('exposes the 400 (Bad Request) status code', () => {

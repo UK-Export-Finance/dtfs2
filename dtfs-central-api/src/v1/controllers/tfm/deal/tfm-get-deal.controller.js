@@ -27,11 +27,13 @@ const findOneDeal = async (_id, callback) => {
         const mappedDeal = deal.dealSnapshot;
         const mappedBonds = [];
         const mappedLoans = [];
-        const facilities = await facilitiesCollection.find({
-          _id: {
-            $in: facilityIds,
-          },
-        }).toArray();
+        const facilities = await facilitiesCollection
+          .find({
+            _id: {
+              $in: facilityIds,
+            },
+          })
+          .toArray();
 
         facilityIds.forEach((id) => {
           const { facilitySnapshot } = facilities.find((f) => f._id.toHexString() === id.toHexString());

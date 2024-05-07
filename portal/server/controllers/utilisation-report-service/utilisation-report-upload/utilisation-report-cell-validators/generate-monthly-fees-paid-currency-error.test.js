@@ -16,7 +16,10 @@ describe('generateMonthlyFeesPaidCurrencyError', () => {
       exporter: testExporterName,
     };
 
-    const monthlyFeesPaidToUkefCurrencyError = generateMonthlyFeesPaidCurrencyError(nullMonthlyFeesPaidCurrency, testExporterName);
+    const monthlyFeesPaidToUkefCurrencyError = generateMonthlyFeesPaidCurrencyError(
+      nullMonthlyFeesPaidCurrency,
+      testExporterName,
+    );
 
     expect(monthlyFeesPaidToUkefCurrencyError).toEqual(expectedError);
   });
@@ -35,7 +38,10 @@ describe('generateMonthlyFeesPaidCurrencyError', () => {
       exporter: testExporterName,
     };
 
-    const monthlyFeesPaidToUkefCurrencyError = generateMonthlyFeesPaidCurrencyError(invalidBaseCurrency, testExporterName);
+    const monthlyFeesPaidToUkefCurrencyError = generateMonthlyFeesPaidCurrencyError(
+      invalidBaseCurrency,
+      testExporterName,
+    );
 
     expect(monthlyFeesPaidToUkefCurrencyError).toEqual(expectedError);
   });
@@ -47,7 +53,10 @@ describe('generateMonthlyFeesPaidCurrencyError', () => {
       row: 1,
     };
 
-    const monthlyFeesPaidToUkefCurrencyError = generateMonthlyFeesPaidCurrencyError(validBaseCurrency, testExporterName);
+    const monthlyFeesPaidToUkefCurrencyError = generateMonthlyFeesPaidCurrencyError(
+      validBaseCurrency,
+      testExporterName,
+    );
 
     expect(monthlyFeesPaidToUkefCurrencyError).toEqual(null);
   });

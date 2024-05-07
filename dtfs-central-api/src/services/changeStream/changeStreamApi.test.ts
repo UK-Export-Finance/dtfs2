@@ -22,7 +22,12 @@ describe('changeStreamApi', () => {
 
     beforeEach(() => {
       jest.clearAllMocks();
-      process.env = { ...process.env, AUDIT_API_URL: 'audit API url', AUDIT_API_USERNAME: 'audit API username', AUDIT_API_PASSWORD: 'audit API password' };
+      process.env = {
+        ...process.env,
+        AUDIT_API_URL: 'audit API url',
+        AUDIT_API_USERNAME: 'audit API username',
+        AUDIT_API_PASSWORD: 'audit API password',
+      };
     });
 
     it('should call api when called with a valid change stream document', async () => {
@@ -43,7 +48,11 @@ describe('changeStreamApi', () => {
       });
     });
 
-    const envVarTestCases = [{ envVarName: 'AUDIT_API_URL' }, { envVarName: 'AUDIT_API_USERNAME' }, { envVarName: 'AUDIT_API_PASSWORD' }];
+    const envVarTestCases = [
+      { envVarName: 'AUDIT_API_URL' },
+      { envVarName: 'AUDIT_API_USERNAME' },
+      { envVarName: 'AUDIT_API_PASSWORD' },
+    ];
     it.each(envVarTestCases)('should throw an error if the %envVarName env var is missing', async ({ envVarName }) => {
       delete process.env[envVarName];
 

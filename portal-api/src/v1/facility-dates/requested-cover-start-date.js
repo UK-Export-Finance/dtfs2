@@ -2,7 +2,7 @@ const { cloneDeep } = require('lodash');
 const { dateHasAllValues } = require('../validation/fields/date');
 const {
   getDateAsEpochMillisecondString,
-  getStartOfDateFromDayMonthYearStringsReplicatingMoment
+  getStartOfDateFromDayMonthYearStringsReplicatingMoment,
 } = require('../helpers/date');
 
 const hasAllRequestedCoverStartDateValues = (facility) => {
@@ -43,7 +43,7 @@ exports.updateRequestedCoverStartDate = (facility) => {
         requestedCoverStartDateDay,
         requestedCoverStartDateMonth,
         requestedCoverStartDateYear,
-      )
+      ),
     );
     modifiedFacility.coverDateConfirmed = true;
   }

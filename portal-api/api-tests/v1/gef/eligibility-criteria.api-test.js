@@ -6,7 +6,7 @@ const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
-const { DB_COLLECTIONS } = require('../../fixtures/constants')
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const { as, get, post, remove } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
@@ -33,7 +33,7 @@ describe(baseUrl, () => {
   describe(`GET ${baseUrl}`, () => {
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(baseUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(baseUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(baseUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -54,7 +54,8 @@ describe(baseUrl, () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(latestEligibilityCriteriaUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(latestEligibilityCriteriaUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) =>
+        get(latestEligibilityCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -72,11 +73,13 @@ describe(baseUrl, () => {
 
       const { body } = await as(aMaker).get(latestEligibilityCriteriaUrl);
 
-      expect(body).toEqual(expect.objectContaining({
-        ...expectMongoId(mockEligibilityCriteria[1]),
-        createdAt: expect.any(Number),
-        criteria: expect.any(Array),
-      }));
+      expect(body).toEqual(
+        expect.objectContaining({
+          ...expectMongoId(mockEligibilityCriteria[1]),
+          createdAt: expect.any(Number),
+          criteria: expect.any(Array),
+        }),
+      );
     });
   });
 
@@ -89,7 +92,8 @@ describe(baseUrl, () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(eligibilityCriteria1Url),
-      makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteria1Url, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) =>
+        get(eligibilityCriteria1Url, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -124,7 +128,8 @@ describe(baseUrl, () => {
   describe(`POST ${baseUrl}`, () => {
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => post(baseUrl, mockEligibilityCriteria[0]),
-      makeRequestWithAuthHeader: (authHeader) => post(baseUrl, mockEligibilityCriteria[0], { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) =>
+        post(baseUrl, mockEligibilityCriteria[0], { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -145,7 +150,8 @@ describe(baseUrl, () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => remove(eligibilityCriteria1Url),
-      makeRequestWithAuthHeader: (authHeader) => remove(eligibilityCriteria1Url, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) =>
+        remove(eligibilityCriteria1Url, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({

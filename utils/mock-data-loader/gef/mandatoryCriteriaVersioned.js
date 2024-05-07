@@ -5,7 +5,8 @@ const MANDATORY_CRITERIA_VERSIONED = [
     updatedAt: null,
     isInDraft: false,
     title: 'Confirm eligibility (mandatory criteria)',
-    introText: 'You must confirm that all the following will be true for this application on the date that cover starts.',
+    introText:
+      'You must confirm that all the following will be true for this application on the date that cover starts.',
     criteria: [
       {
         id: '1',
@@ -41,11 +42,11 @@ const MANDATORY_CRITERIA_VERSIONED = [
       },
       {
         id: '8',
-        body: 'The bank\'s right, title and interest in and to the facility, and any utilisation thereunder(including any indebtedness, obligation or liability of each obligor) is both:',
+        body: "The bank's right, title and interest in and to the facility, and any utilisation thereunder(including any indebtedness, obligation or liability of each obligor) is both:",
         childList: [
           'free and clear of any security or quasi-security (other than permitted security)',
           'freely assignable by the bank without the need to obtain the consent of any obligor or other person',
-        ]
+        ],
       },
       {
         id: '9',
@@ -64,7 +65,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
         ],
       },
     ],
-  }
+  },
 ];
 
 module.exports = MANDATORY_CRITERIA_VERSIONED;

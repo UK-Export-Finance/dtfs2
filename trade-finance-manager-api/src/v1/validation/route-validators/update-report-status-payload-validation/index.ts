@@ -8,7 +8,9 @@ const VALID_UPDATE_PAYLOAD_STATUSES = [
 
 export const updateReportStatusPayloadValidation = [
   body('user', "Expected body to contain 'user' object").exists().isObject(),
-  body('reportsWithStatus', "Expected body to contain non-empty 'reportsWithStatus' array").exists().isArray({ min: 1 }),
+  body('reportsWithStatus', "Expected body to contain non-empty 'reportsWithStatus' array")
+    .exists()
+    .isArray({ min: 1 }),
   checkSchema({
     'reportsWithStatus.*.status': {
       isIn: {

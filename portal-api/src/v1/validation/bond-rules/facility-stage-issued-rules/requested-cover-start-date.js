@@ -13,7 +13,9 @@ module.exports = (submittedValues, deal, errorList) => {
     'requestedCoverStartDate-year': requestedCoverStartDateYear,
   } = submittedValues;
 
-  const requestedCoverStartDate = getStartOfDateFromEpochMillisecondString(String(submittedValues.requestedCoverStartDate));
+  const requestedCoverStartDate = getStartOfDateFromEpochMillisecondString(
+    String(submittedValues.requestedCoverStartDate),
+  );
 
   // EC 15 is: 'Cover Start Date is no more than three months from the date of submission'
   const eligibilityCriteria15 = deal.eligibility.criteria.find((c) => c.id === 15);
@@ -45,15 +47,19 @@ module.exports = (submittedValues, deal, errorList) => {
 
         if (!isWithinValidDateRange) {
           newErrorList.requestedCoverStartDate = {
-            text: `Requested Cover Start Date must be between ${getLongFormattedDate(startOfToday)} and ${getLongFormattedDate(maximumDate)}`,
+            text: `Requested Cover Start Date must be between ${getLongFormattedDate(
+              startOfToday,
+            )} and ${getLongFormattedDate(maximumDate)}`,
             order: orderNumber(newErrorList),
           };
         }
       }
     }
 
-    if (!isValid(requestedCoverStartDate)
-      && dateHasSomeValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear)) {
+    if (
+      !isValid(requestedCoverStartDate) &&
+      dateHasSomeValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear)
+    ) {
       newErrorList.requestedCoverStartDate = {
         text: dateValidationText(
           'Requested Cover Start Date',

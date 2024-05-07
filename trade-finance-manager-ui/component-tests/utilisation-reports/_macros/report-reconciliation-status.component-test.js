@@ -24,19 +24,28 @@ describe(component, () => {
   it.each([
     { status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED, expectedColourClass: 'govuk-tag--red' },
     { status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION, expectedColourClass: undefined },
-    { status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS, expectedColourClass: 'govuk-tag--blue' },
-    { status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED, expectedColourClass: 'govuk-tag--green' },
-  ])("adds colour class '$expectedColourClass' when the status code is '$statusCode'", ({ status, expectedColourClass }) => {
-    // Arrange
-    const expectedClass = `govuk-tag${expectedColourClass ? ` ${expectedColourClass}` : ''}`;
+    {
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS,
+      expectedColourClass: 'govuk-tag--blue',
+    },
+    {
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+      expectedColourClass: 'govuk-tag--green',
+    },
+  ])(
+    "adds colour class '$expectedColourClass' when the status code is '$statusCode'",
+    ({ status, expectedColourClass }) => {
+      // Arrange
+      const expectedClass = `govuk-tag${expectedColourClass ? ` ${expectedColourClass}` : ''}`;
 
-    // Act
-    const wrapper = render({
-      status,
-      displayStatus: 'some text',
-    });
+      // Act
+      const wrapper = render({
+        status,
+        displayStatus: 'some text',
+      });
 
-    // Assert
-    wrapper.expectElement(statusTagSelector).toHaveAttribute('class', expectedClass);
-  });
+      // Assert
+      wrapper.expectElement(statusTagSelector).toHaveAttribute('class', expectedClass);
+    },
+  );
 });

@@ -26,11 +26,20 @@ const DEFAULT_ALLOWED_FORMATS = [
  * @param {Array} allowedFormats (optional) array of file extensions to allow
  * @returns [isValid, error]
  */
-const validateFile = ({ originalname, size } = {}, maxSize = DEFAULT_MAX_SIZE, allowedFormats = DEFAULT_ALLOWED_FORMATS) => {
+const validateFile = (
+  { originalname, size } = {},
+  maxSize = DEFAULT_MAX_SIZE,
+  allowedFormats = DEFAULT_ALLOWED_FORMATS,
+) => {
   if (!originalname || !size) return [false, 'Invalid file'];
 
   if (!originalname.match(new RegExp(`\\.(${allowedFormats.join('|')})$`))) {
-    return [false, `${originalname} must be a ${allowedFormats.slice(0, -1).join(', ').toUpperCase()} or ${allowedFormats[allowedFormats.length - 1].toUpperCase()}`];
+    return [
+      false,
+      `${originalname} must be a ${allowedFormats.slice(0, -1).join(', ').toUpperCase()} or ${allowedFormats[
+        allowedFormats.length - 1
+      ].toUpperCase()}`,
+    ];
   }
 
   const { value: currentFileSize, unit } = filesize(size, { base: 2, output: 'object' });

@@ -29,7 +29,10 @@ describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
     barclaysBank = aBarclaysPaymentReportOfficer.bank;
     hsbcBank = aHsbcPaymentReportOfficer.bank;
     const getUtilisationSpy = jest.spyOn(api, 'getUtilisationReportById');
-    getUtilisationSpy.mockImplementation(() => ({ azureFileInfo: { filename: 'test-file.csv', mimetype: 'text/csv' }, bankId: barclaysBank.id }));
+    getUtilisationSpy.mockImplementation(() => ({
+      azureFileInfo: { filename: 'test-file.csv', mimetype: 'text/csv' },
+      bankId: barclaysBank.id,
+    }));
   });
 
   beforeEach(async () => {

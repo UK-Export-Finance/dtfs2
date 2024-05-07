@@ -85,7 +85,8 @@ exports.create = async (req, res) => {
           filename: formatFilenameForSharepoint(file.originalname),
         });
 
-        if (fileResult.error) return errorFormat(fileResult, parentId, `${file.originalname} ${fileResult.error.message}`);
+        if (fileResult.error)
+          return errorFormat(fileResult, parentId, `${file.originalname} ${fileResult.error.message}`);
 
         const fileObject = { ...file, documentPath };
 

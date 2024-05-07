@@ -19,7 +19,10 @@ const users = require('./test-data');
 const { withPartial2FaOnlyAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { SIGN_IN_LINK, USER, EMAIL_TEMPLATE_IDS } = require('../../../src/constants');
 const { PORTAL_UI_URL } = require('../../../src/config/sign-in-link.config');
-const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
+const {
+  createPartiallyLoggedInUserSession,
+  createLoggedInUserSession,
+} = require('../../../test-helpers/api-test-helpers/database/user-repository');
 const { SIGN_IN_TOKEN_HEX_EXAMPLES, SIGN_IN_TOKEN_SALT_EXAMPLES } = require('../../fixtures/sign-in-token-constants');
 
 const originalSignInLinkDurationMinutes = SIGN_IN_LINK.DURATION_MINUTES;
@@ -40,7 +43,11 @@ describe('POST /users/me/sign-in-link', () => {
   const saltBytes = Buffer.from(saltHexOne, 'hex');
   const signInToken = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
   const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
-  const userToCreateAsPartiallyLoggedIn = { ...aMaker, username: temporaryUsernameAndEmail, email: temporaryUsernameAndEmail };
+  const userToCreateAsPartiallyLoggedIn = {
+    ...aMaker,
+    username: temporaryUsernameAndEmail,
+    email: temporaryUsernameAndEmail,
+  };
   const userToCreateFullyLoggedIn = { ...anotherMaker };
 
   let userToCreateOtherUsers;
@@ -86,7 +93,10 @@ describe('POST /users/me/sign-in-link', () => {
       username: temporaryUsernameAndEmail,
       properties: ['signInLinkSendCount', 'signInLinkSendDate', 'signInTokens', 'disabled'],
     });
-    await databaseHelper.setUserProperties({ username: temporaryUsernameAndEmail, update: { 'user-status': USER.STATUS.ACTIVE } });
+    await databaseHelper.setUserProperties({
+      username: temporaryUsernameAndEmail,
+      update: { 'user-status': USER.STATUS.ACTIVE },
+    });
 
     jest.resetAllMocks();
     resetAllWhenMocks();
@@ -109,7 +119,11 @@ describe('POST /users/me/sign-in-link', () => {
     beforeEach(async () => {
       databaseHelper.setUserProperties({
         username: temporaryUsernameAndEmail,
-        update: { 'user-status': USER.STATUS.BLOCKED, signInLinkSendCount: initialSignInLinkSendCount, signInLinkSendDate: dateNow },
+        update: {
+          'user-status': USER.STATUS.BLOCKED,
+          signInLinkSendCount: initialSignInLinkSendCount,
+          signInLinkSendDate: dateNow,
+        },
       });
     });
 
@@ -128,13 +142,21 @@ describe('POST /users/me/sign-in-link', () => {
     it('does not email a new sign in link', async () => {
       await sendSignInLink();
 
-      expect(sendEmail).not.toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, userToCreateAsPartiallyLoggedIn.email, expect.anything());
+      expect(sendEmail).not.toHaveBeenCalledWith(
+        EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
+        userToCreateAsPartiallyLoggedIn.email,
+        expect.anything(),
+      );
     });
 
     it('does not email a blocked user email', async () => {
       await sendSignInLink();
 
-      expect(sendEmail).not.toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.BLOCKED, userToCreateAsPartiallyLoggedIn.email, expect.anything());
+      expect(sendEmail).not.toHaveBeenCalledWith(
+        EMAIL_TEMPLATE_IDS.BLOCKED,
+        userToCreateAsPartiallyLoggedIn.email,
+        expect.anything(),
+      );
     });
   });
 
@@ -163,13 +185,21 @@ describe('POST /users/me/sign-in-link', () => {
     it('does not email a new sign in link', async () => {
       await sendSignInLink();
 
-      expect(sendEmail).not.toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, userToCreateAsPartiallyLoggedIn.email, expect.anything());
+      expect(sendEmail).not.toHaveBeenCalledWith(
+        EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
+        userToCreateAsPartiallyLoggedIn.email,
+        expect.anything(),
+      );
     });
 
     it('does not email a blocked user email', async () => {
       await sendSignInLink();
 
-      expect(sendEmail).not.toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.BLOCKED, userToCreateAsPartiallyLoggedIn.email, expect.anything());
+      expect(sendEmail).not.toHaveBeenCalledWith(
+        EMAIL_TEMPLATE_IDS.BLOCKED,
+        userToCreateAsPartiallyLoggedIn.email,
+        expect.anything(),
+      );
     });
   });
 
@@ -213,13 +243,21 @@ describe('POST /users/me/sign-in-link', () => {
     it('does not email a new sign in link', async () => {
       await sendSignInLink();
 
-      expect(sendEmail).not.toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, userToCreateAsPartiallyLoggedIn.email, expect.anything());
+      expect(sendEmail).not.toHaveBeenCalledWith(
+        EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
+        userToCreateAsPartiallyLoggedIn.email,
+        expect.anything(),
+      );
     });
 
     it('emails a blocked user email', async () => {
       await sendSignInLink();
 
-      expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.BLOCKED, userToCreateAsPartiallyLoggedIn.email, expect.anything());
+      expect(sendEmail).toHaveBeenCalledWith(
+        EMAIL_TEMPLATE_IDS.BLOCKED,
+        userToCreateAsPartiallyLoggedIn.email,
+        expect.anything(),
+      );
     });
   });
 
@@ -283,8 +321,14 @@ describe('POST /users/me/sign-in-link', () => {
           let newSignInToken;
 
           beforeEach(() => {
-            newSignInToken = { saltHex: saltHexOne, hashHex: hashHexOne, expiry: dateNow + SIGN_IN_LINK.DURATION_MILLISECONDS };
-            when(pbkdf2Sync).calledWith(signInToken, saltBytes, 210000, 64, 'sha512').mockReturnValueOnce(Buffer.from(hashHexOne, 'hex'));
+            newSignInToken = {
+              saltHex: saltHexOne,
+              hashHex: hashHexOne,
+              expiry: dateNow + SIGN_IN_LINK.DURATION_MILLISECONDS,
+            };
+            when(pbkdf2Sync)
+              .calledWith(signInToken, saltBytes, 210000, 64, 'sha512')
+              .mockReturnValueOnce(Buffer.from(hashHexOne, 'hex'));
           });
 
           afterEach(() => {
@@ -304,12 +348,16 @@ describe('POST /users/me/sign-in-link', () => {
             SIGN_IN_LINK.DURATION_MINUTES = 2;
             await sendSignInLink();
 
-            expect(sendEmail).toHaveBeenCalledWith('2eab0ad2-eb92-43a4-b04c-483c28a4da18', partiallyLoggedInUser.email, {
-              firstName: partiallyLoggedInUser.firstname,
-              lastName: partiallyLoggedInUser.surname,
-              signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}&u=${partiallyLoggedInUser._id}`,
-              signInLinkDuration: '2 minutes',
-            });
+            expect(sendEmail).toHaveBeenCalledWith(
+              '2eab0ad2-eb92-43a4-b04c-483c28a4da18',
+              partiallyLoggedInUser.email,
+              {
+                firstName: partiallyLoggedInUser.firstname,
+                lastName: partiallyLoggedInUser.surname,
+                signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}&u=${partiallyLoggedInUser._id}`,
+                signInLinkDuration: '2 minutes',
+              },
+            );
           });
 
           describe('when sending the sign in link email to the user fails', () => {

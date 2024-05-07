@@ -1,5 +1,10 @@
 import { Response } from 'express';
-import { UtilisationReportReconciliationStatus, UTILISATION_REPORT_RECONCILIATION_STATUS, ReportWithStatus, asString } from '@ukef/dtfs2-common';
+import {
+  UtilisationReportReconciliationStatus,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  ReportWithStatus,
+  asString,
+} from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { getUtilisationReports } from '..';
@@ -7,7 +12,9 @@ import { asUserSession } from '../../../helpers/express-session';
 
 const CHECKBOX_PREFIX_REGEX = 'set-status--';
 const SQL_ID_REGEX = '\\d+';
-const UTILISATION_REPORT_RECONCILIATION_STATUS_REGEX = Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).join('|');
+const UTILISATION_REPORT_RECONCILIATION_STATUS_REGEX = Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).join(
+  '|',
+);
 const CHECKBOX_PATTERN = {
   WITHOUT_GROUPS: new RegExp(CHECKBOX_PREFIX_REGEX),
   WITH_GROUPS: new RegExp(

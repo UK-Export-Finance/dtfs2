@@ -37,8 +37,9 @@ context('Bond Financial Details', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   describe('after submitting one form field and navigating back to `Bond Financial Details` page', () => {
@@ -79,12 +80,16 @@ context('Bond Financial Details', () => {
       let riskMarginFee = '20';
       pages.bondFinancialDetails.guaranteeFeePayableByBankInput().invoke('attr', 'placeholder').should('eq', '0');
       pages.bondFinancialDetails.riskMarginFeeInput().type(riskMarginFee).blur();
-      pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFee(riskMarginFee));
+      pages.bondFinancialDetails
+        .guaranteeFeePayableByBankInput()
+        .should('have.value', calculateExpectedGuaranteeFee(riskMarginFee));
 
       pages.bondFinancialDetails.riskMarginFeeInput().clear();
       riskMarginFee = '9.09';
       pages.bondFinancialDetails.riskMarginFeeInput().type(riskMarginFee).blur();
-      pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFee(riskMarginFee));
+      pages.bondFinancialDetails
+        .guaranteeFeePayableByBankInput()
+        .should('have.value', calculateExpectedGuaranteeFee(riskMarginFee));
     });
   });
 
@@ -103,13 +108,17 @@ context('Bond Financial Details', () => {
       pages.bondFinancialDetails.facilityValueInput().type(value);
       pages.bondFinancialDetails.coveredPercentageInput().type(coveredPercentage).blur();
 
-      pages.bondFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
+      pages.bondFinancialDetails
+        .ukefExposureInput()
+        .should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
 
       pages.bondFinancialDetails.facilityValueInput().clear();
 
       value = '250';
       pages.bondFinancialDetails.facilityValueInput().type(value).blur();
-      pages.bondFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
+      pages.bondFinancialDetails
+        .ukefExposureInput()
+        .should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
     });
   });
 
@@ -131,17 +140,26 @@ context('Bond Financial Details', () => {
     fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
 
     pages.bondFinancialDetails.submit().click();
-    partials.taskListHeader.itemStatus('financial-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Completed');
-    });
+    partials.taskListHeader
+      .itemStatus('financial-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Completed');
+      });
 
-    partials.taskListHeader.itemStatus('bond-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    partials.taskListHeader
+      .itemStatus('bond-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
 
-    partials.taskListHeader.itemStatus('fee-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    partials.taskListHeader
+      .itemStatus('fee-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
   });
 
   describe('When a user submits the `Bond Financial Details` form', () => {
@@ -219,24 +237,30 @@ context('Bond Financial Details', () => {
         pages.bondFinancialDetails.conversionRateDateYearInput().type('2022');
         pages.bondFinancialDetails.submit().click();
         partials.taskListHeader.itemLink('financial-details').click();
-        pages.bondFinancialDetails.conversionRateDateInputErrorMessage().contains('The day for the conversion rate must include 1 or 2 numbers');
+        pages.bondFinancialDetails
+          .conversionRateDateInputErrorMessage()
+          .contains('The day for the conversion rate must include 1 or 2 numbers');
 
         pages.bondFinancialDetails.conversionRateDateDayInput().clear().type('22');
         pages.bondFinancialDetails.conversionRateDateMonthInput().clear().type('022');
         pages.bondFinancialDetails.submit().click();
         partials.taskListHeader.itemLink('financial-details').click();
-        pages.bondFinancialDetails.conversionRateDateInputErrorMessage().contains('The month for the conversion rate must include 1 or 2 numbers');
+        pages.bondFinancialDetails
+          .conversionRateDateInputErrorMessage()
+          .contains('The month for the conversion rate must include 1 or 2 numbers');
 
         pages.bondFinancialDetails.conversionRateDateDayInput().clear().type('22');
         pages.bondFinancialDetails.conversionRateDateMonthInput().clear().type('02');
         pages.bondFinancialDetails.conversionRateDateYearInput().clear().type('2O22');
         pages.bondFinancialDetails.submit().click();
         partials.taskListHeader.itemLink('financial-details').click();
-        pages.bondFinancialDetails.conversionRateDateInputErrorMessage().contains('The year for the conversion rate must include 4 numbers');
+        pages.bondFinancialDetails
+          .conversionRateDateInputErrorMessage()
+          .contains('The year for the conversion rate must include 4 numbers');
       });
     });
 
-    it('should populate the bond\'s `value` in Deal page with the submitted bond currency', () => {
+    it("should populate the bond's `value` in Deal page with the submitted bond currency", () => {
       goToBondFinancialDetailsPage(deal);
 
       pages.bondFinancialDetails.facilityValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.value);
@@ -253,10 +277,13 @@ context('Bond Financial Details', () => {
         cy.url().should('eq', relative(`/contract/${deal._id}`));
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
-        row.facilityValue().invoke('text').then((text) => {
-          const expectedValue = `${BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`;
-          expect(text.trim()).equal(expectedValue);
-        });
+        row
+          .facilityValue()
+          .invoke('text')
+          .then((text) => {
+            const expectedValue = `${BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`;
+            expect(text.trim()).equal(expectedValue);
+          });
       });
     });
   });

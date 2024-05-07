@@ -1,8 +1,8 @@
+import { generateSystemAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream';
 import { getCollection } from '../database';
 import { Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { createDealFolder } from '../v1/controllers/estore/eStoreApi';
-import { generateSystemAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream';
 
 /**
  * Performs the following tasks:

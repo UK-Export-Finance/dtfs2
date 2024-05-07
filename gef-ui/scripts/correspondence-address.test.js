@@ -8,8 +8,10 @@ describe('correspondence-address.js', () => {
   const conditionalCorrespondenceHtml = '<div id="conditional-correspondence"></div>';
   const conditionalCorrespondenceElement = () => document.getElementById('conditional-correspondence');
 
-  const yesCorrespondenceRadioHtml = ({ isChecked }) => `<input type="radio" id="correspondence" data-cy="correspondence-yes" ${isChecked ? 'checked' : ''}>`;
-  const noCorrespondenceRadioHtml = ({ isChecked }) => `<input type="radio" id="correspondence-2" data-cy="correspondence-no" ${isChecked ? 'checked' : ''}>`;
+  const yesCorrespondenceRadioHtml = ({ isChecked }) =>
+    `<input type="radio" id="correspondence" data-cy="correspondence-yes" ${isChecked ? 'checked' : ''}>`;
+  const noCorrespondenceRadioHtml = ({ isChecked }) =>
+    `<input type="radio" id="correspondence-2" data-cy="correspondence-no" ${isChecked ? 'checked' : ''}>`;
 
   const divContaining = (...htmlItems) => `<div>${htmlItems.join('')}</div>`;
 

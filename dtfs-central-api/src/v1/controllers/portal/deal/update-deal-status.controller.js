@@ -26,7 +26,7 @@ const updateDealStatus = async (dealId, status, existingDeal) => {
     const findAndUpdateResponse = await dealsCollection.findOneAndUpdate(
       { _id: { $eq: ObjectId(dealId) } },
       $.flatten(withoutId(modifiedDeal)),
-      { returnNewDocument: true, returnDocument: 'after' }
+      { returnNewDocument: true, returnDocument: 'after' },
     );
 
     console.info('Updated Portal BSS deal status from %s to %s', previousStatus, status);
@@ -37,7 +37,6 @@ const updateDealStatus = async (dealId, status, existingDeal) => {
 };
 exports.updateDealStatus = updateDealStatus;
 
-// eslint-disable-next-line consistent-return
 exports.updateDealStatusPut = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const dealId = req.params.id;
@@ -49,11 +48,7 @@ exports.updateDealStatusPut = async (req, res) => {
         if (existingDeal.status === status) {
           return res.status(400).send();
         }
-        const updatedDeal = await updateDealStatus(
-          dealId,
-          status,
-          existingDeal,
-        );
+        const updatedDeal = await updateDealStatus(dealId, status, existingDeal);
         return res.status(200).json(updatedDeal);
       }
       return res.status(404).send({ status: 404, message: 'Deal not found' });
@@ -61,4 +56,6 @@ exports.updateDealStatusPut = async (req, res) => {
   } else {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
+
+  return res.status(400).send({ status: 400, message: 'Invalid update deal status request' });
 };

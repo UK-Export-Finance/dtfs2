@@ -168,11 +168,7 @@ const csvBasedCsvToJsonPromise = async (csvBuffer) => {
         .pipe(
           csv({
             mapHeaders: ({ header }) =>
-              header
-                .toLowerCase()
-                .replace(/\s/g, ' ')
-                .replace(nonPrintableAsciiCharacterRegex, ' ')
-                .trim(),
+              header.toLowerCase().replace(/\s/g, ' ').replace(nonPrintableAsciiCharacterRegex, ' ').trim(),
             mapValues: ({ index, value }) => ({ value, column: columnIndexToExcelColumn(index), row: null }),
           }),
         )
@@ -208,7 +204,10 @@ const extractCsvData = async (file) => {
   let fileBuffer;
 
   try {
-    if (file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || file.mimetype === 'application/vnd.ms-excel') {
+    if (
+      file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+      file.mimetype === 'application/vnd.ms-excel'
+    ) {
       // Read the .xlsx file using exceljs
       const workbook = new ExcelJS.Workbook();
       await workbook.xlsx.load(file.buffer, { sheetStubs: true }).then(async () => {

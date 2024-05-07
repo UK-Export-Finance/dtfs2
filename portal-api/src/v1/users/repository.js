@@ -5,7 +5,12 @@ const {
 } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
 const { transformDatabaseUser } = require('./transform-database-user');
-const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError, InvalidSessionIdentifierError } = require('../errors');
+const {
+  InvalidUserIdError,
+  InvalidUsernameError,
+  UserNotFoundError,
+  InvalidSessionIdentifierError,
+} = require('../errors');
 const { USER, SIGN_IN_LINK } = require('../../constants');
 
 class UserRepository {
@@ -31,7 +36,10 @@ class UserRepository {
     const userCollection = await db.getCollection('users');
 
     const filter = { _id: { $eq: ObjectId(userId) } };
-    const update = { $inc: { signInLinkSendCount: 1 }, $set: { auditRecord: generateNoUserLoggedInAuditDatabaseRecord() } };
+    const update = {
+      $inc: { signInLinkSendCount: 1 },
+      $set: { auditRecord: generateNoUserLoggedInAuditDatabaseRecord() },
+    };
     const options = { returnDocument: 'after' };
 
     const userUpdate = await userCollection.findOneAndUpdate(filter, update, options);
@@ -43,7 +51,7 @@ class UserRepository {
 
     const userCollection = await db.getCollection('users');
 
-    const setUpdate = { signInLinkSendDate: Date.now(), auditRecord: generateNoUserLoggedInAuditDatabaseRecord() }
+    const setUpdate = { signInLinkSendDate: Date.now(), auditRecord: generateNoUserLoggedInAuditDatabaseRecord() };
     return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: setUpdate });
   }
 

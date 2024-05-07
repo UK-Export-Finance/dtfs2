@@ -36,7 +36,8 @@ describe('facilities routes', () => {
 
   describe('POST /application-details/:dealId/facilities/:facilityId', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/facilities/${facilityId}`),
+      makeRequestWithHeaders: (headers) =>
+        post({}, headers).to(`/application-details/${dealId}/facilities/${facilityId}`),
       whitelistedRoles: [MAKER],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.

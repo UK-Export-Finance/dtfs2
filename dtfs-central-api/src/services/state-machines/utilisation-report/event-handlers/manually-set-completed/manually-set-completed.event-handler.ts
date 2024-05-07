@@ -7,7 +7,10 @@ type ManuallySetCompletedEventPayload = {
   transactionEntityManager: EntityManager;
 };
 
-export type UtilisationReportManuallySetCompletedEvent = BaseUtilisationReportEvent<'MANUALLY_SET_COMPLETED', ManuallySetCompletedEventPayload>;
+export type UtilisationReportManuallySetCompletedEvent = BaseUtilisationReportEvent<
+  'MANUALLY_SET_COMPLETED',
+  ManuallySetCompletedEventPayload
+>;
 
 export const handleUtilisationReportManuallySetCompletedEvent = async (
   report: UtilisationReportEntity,

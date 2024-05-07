@@ -35,7 +35,9 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       when(uploadFile).calledWith(expect.anything()).mockResolvedValueOnce(false);
 
       // Act / Assert
-      await expect(saveFileToAzure(file, bankId)).rejects.toThrow('Failed to save utilisation report to Azure - cause unknown');
+      await expect(saveFileToAzure(file, bankId)).rejects.toThrow(
+        'Failed to save utilisation report to Azure - cause unknown',
+      );
     });
 
     it('should throw an error when the uploadFile response is an error object', async () => {
@@ -47,7 +49,9 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       when(uploadFile).calledWith(expect.anything()).mockResolvedValueOnce(errorObject);
 
       // Act / Assert
-      await expect(saveFileToAzure(file, bankId)).rejects.toThrow(`Failed to save utilisation report to Azure - ${errorObject.error.message}`);
+      await expect(saveFileToAzure(file, bankId)).rejects.toThrow(
+        `Failed to save utilisation report to Azure - ${errorObject.error.message}`,
+      );
     });
 
     it('should rethrow the error when uploadFile throws', async () => {

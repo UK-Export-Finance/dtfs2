@@ -21,7 +21,8 @@ describe('GET /teams/:teamId/members', () => {
 
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => get(validUrlToGetTeamMembers),
-    makeRequestWithAuthHeader: (authHeader) => get(validUrlToGetTeamMembers, { headers: { Authorization: authHeader } }),
+    makeRequestWithAuthHeader: (authHeader) =>
+      get(validUrlToGetTeamMembers, { headers: { Authorization: authHeader } }),
   });
 
   it('returns a 400 response if the teamId is not one of the allowed values', async () => {
@@ -29,17 +30,21 @@ describe('GET /teams/:teamId/members', () => {
 
     const { status, body } = await as(tokenUser).get(`/v1/teams/${unexpectedTeamId}/members`);
 
-    const allTeamsSeparatedByComma = Object.values(TEAMS).map((team) => team.id).join(', ');
+    const allTeamsSeparatedByComma = Object.values(TEAMS)
+      .map((team) => team.id)
+      .join(', ');
     expect(status).toBe(400);
     expect(body).toStrictEqual({
       status: 400,
-      errors: [{
-        location: 'params',
-        msg: `teamId must be one of ${allTeamsSeparatedByComma}`,
-        path: 'teamId',
-        type: 'field',
-        value: 'unexpected team id'
-      }],
+      errors: [
+        {
+          location: 'params',
+          msg: `teamId must be one of ${allTeamsSeparatedByComma}`,
+          path: 'teamId',
+          type: 'field',
+          value: 'unexpected team id',
+        },
+      ],
     });
   });
 
@@ -48,7 +53,7 @@ describe('GET /teams/:teamId/members', () => {
     const dataFromDtfsCentralApiCall = 'Error message';
     when(api.findTeamMembers).calledWith(validTeamId).mockResolvedValueOnce({
       status: statusFromDtfsCentralApiCall,
-      data: dataFromDtfsCentralApiCall
+      data: dataFromDtfsCentralApiCall,
     });
 
     const { status, body } = await as(tokenUser).get(validUrlToGetTeamMembers);
@@ -61,22 +66,31 @@ describe('GET /teams/:teamId/members', () => {
   });
 
   describe.each([
-    TEAMS.BUSINESS_SUPPORT.id, TEAMS.PIM.id, TEAMS.RISK_MANAGERS.id, TEAMS.UNDERWRITERS.id, TEAMS.UNDERWRITER_MANAGERS.id, TEAMS.UNDERWRITING_SUPPORT.id
+    TEAMS.BUSINESS_SUPPORT.id,
+    TEAMS.PIM.id,
+    TEAMS.RISK_MANAGERS.id,
+    TEAMS.UNDERWRITERS.id,
+    TEAMS.UNDERWRITER_MANAGERS.id,
+    TEAMS.UNDERWRITING_SUPPORT.id,
   ])('for teamId %s', (teamId) => {
     it('returns a 200 response with only the _id, first name, and last name of the team members returned by DTFS Central', async () => {
-      const expectedTeamMemberDataToReturn = [{
-        _id: 'mongo-id-1',
-        firstName: 'First1',
-        lastName: 'Last1',
-      }, {
-        _id: 'mongo-id-2',
-        firstName: 'First2',
-        lastName: 'Last2',
-      }, {
-        _id: 'mongo-id-3',
-        firstName: 'First3',
-        lastName: 'Last3',
-      }];
+      const expectedTeamMemberDataToReturn = [
+        {
+          _id: 'mongo-id-1',
+          firstName: 'First1',
+          lastName: 'Last1',
+        },
+        {
+          _id: 'mongo-id-2',
+          firstName: 'First2',
+          lastName: 'Last2',
+        },
+        {
+          _id: 'mongo-id-3',
+          firstName: 'First3',
+          lastName: 'Last3',
+        },
+      ];
       const usersReturnedByDtfsCentral = expectedTeamMemberDataToReturn.map(({ _id, firstName, lastName }, index) => ({
         _id,
         username: `${firstName}.${lastName}.${index}@example.com`,

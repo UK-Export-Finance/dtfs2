@@ -47,7 +47,9 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
   };
 
   const updateBondCoverStartDate = async (bssDealId, bssBondId, bond) => {
-    const response = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${bssDealId}/bond/${bssBondId}/change-cover-start-date`);
+    const response = await as(aBarclaysMaker)
+      .put(bond)
+      .to(`/v1/deals/${bssDealId}/bond/${bssBondId}/change-cover-start-date`);
     return response;
   };
 
@@ -88,13 +90,17 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
 
   describe('GET /v1/deals/:id/bond/:id/change-cover-start-date', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as({}).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
+      const { status } = await as({})
+        .put({})
+        .to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
+      const { status } = await as(noRoles)
+        .put({})
+        .to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(401);
     });
@@ -103,13 +109,17 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
       const deal = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       dealId = deal.body._id;
 
-      const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
+      const { status } = await as(aBarclaysMaker)
+        .put({})
+        .to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker).put({}).to('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b/change-cover-start-date');
+      const { status } = await as(aBarclaysMaker)
+        .put({})
+        .to('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b/change-cover-start-date');
 
       expect(status).toEqual(404);
     });
@@ -118,7 +128,9 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       dealId = deal.body._id;
 
-      const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
+      const { status } = await as(aBarclaysMaker)
+        .put({})
+        .to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(404);
     });
@@ -161,9 +173,15 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
 
         const { body, status } = await updateBondCoverStartDate(dealId, bondId, updateCoverStartDateBody);
         expect(status).toEqual(400);
-        expect(body.bond['requestedCoverStartDate-day']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-day']);
-        expect(body.bond['requestedCoverStartDate-month']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-month']);
-        expect(body.bond['requestedCoverStartDate-year']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-year']);
+        expect(body.bond['requestedCoverStartDate-day']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-day'],
+        );
+        expect(body.bond['requestedCoverStartDate-month']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-month'],
+        );
+        expect(body.bond['requestedCoverStartDate-year']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-year'],
+        );
       });
 
       it('should NOT update the bond', async () => {
@@ -197,9 +215,15 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
 
         const { status, body } = await as(aSuperuser).get(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(status).toEqual(200);
-        expect(body.bond['requestedCoverStartDate-day']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-day']);
-        expect(body.bond['requestedCoverStartDate-month']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-month']);
-        expect(body.bond['requestedCoverStartDate-year']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-year']);
+        expect(body.bond['requestedCoverStartDate-day']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-day'],
+        );
+        expect(body.bond['requestedCoverStartDate-month']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-month'],
+        );
+        expect(body.bond['requestedCoverStartDate-year']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-year'],
+        );
       });
 
       it('should update the bond', async () => {
@@ -208,9 +232,15 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
         await as(aSuperuser).get(`/v1/deals/${dealId}/bond/${bondId}`);
 
         const { body } = await as(aSuperuser).get(`/v1/deals/${dealId}/bond/${bondId}`);
-        expect(body.bond['requestedCoverStartDate-day']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-day']);
-        expect(body.bond['requestedCoverStartDate-month']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-month']);
-        expect(body.bond['requestedCoverStartDate-year']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-year']);
+        expect(body.bond['requestedCoverStartDate-day']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-day'],
+        );
+        expect(body.bond['requestedCoverStartDate-month']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-month'],
+        );
+        expect(body.bond['requestedCoverStartDate-year']).toEqual(
+          updateCoverStartDateBody['requestedCoverStartDate-year'],
+        );
       });
     });
   });

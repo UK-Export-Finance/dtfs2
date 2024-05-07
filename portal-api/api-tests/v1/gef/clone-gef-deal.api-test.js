@@ -1,6 +1,4 @@
-const {
-  generateParsedMockPortalUserAuditDatabaseRecord,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -55,19 +53,21 @@ describe(baseUrl, () => {
 
   describe(`POST ${baseUrl}/clone`, () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const mockDeal = await as(aMaker).post({
-        dealType: 'GEF',
-        maker: aMaker,
-        bank: { id: aMaker.bank.id },
-        bankInternalRefName: 'Bank 1',
-        additionalRefName: 'Team 1',
-        exporter: {},
-        createdAt: '2021-01-01T00:00',
-        mandatoryVersionId: '123',
-        status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
-        updatedAt: null,
-        submissionCount: 0,
-      }).to(baseUrl);
+      const mockDeal = await as(aMaker)
+        .post({
+          dealType: 'GEF',
+          maker: aMaker,
+          bank: { id: aMaker.bank.id },
+          bankInternalRefName: 'Bank 1',
+          additionalRefName: 'Team 1',
+          exporter: {},
+          createdAt: '2021-01-01T00:00',
+          mandatoryVersionId: '123',
+          status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
+          updatedAt: null,
+          submissionCount: 0,
+        })
+        .to(baseUrl);
 
       mockApplication.dealId = mockDeal.body._id;
 
@@ -76,19 +76,21 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const mockDeal = await as(aMaker).post({
-        dealType: 'GEF',
-        maker: aMaker,
-        bank: { id: aMaker.bank.id },
-        bankInternalRefName: 'Bank 1',
-        additionalRefName: 'Team 1',
-        exporter: {},
-        createdAt: '2021-01-01T00:00',
-        mandatoryVersionId: '123',
-        status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
-        updatedAt: null,
-        submissionCount: 0,
-      }).to(baseUrl);
+      const mockDeal = await as(aMaker)
+        .post({
+          dealType: 'GEF',
+          maker: aMaker,
+          bank: { id: aMaker.bank.id },
+          bankInternalRefName: 'Bank 1',
+          additionalRefName: 'Team 1',
+          exporter: {},
+          createdAt: '2021-01-01T00:00',
+          mandatoryVersionId: '123',
+          status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
+          updatedAt: null,
+          submissionCount: 0,
+        })
+        .to(baseUrl);
 
       mockApplication.dealId = mockDeal.body._id;
       mockApplication.bank = { id: aMaker.bank.id };
@@ -97,19 +99,21 @@ describe(baseUrl, () => {
     });
 
     it('successfully clones a GEF deal and returns a new application ID', async () => {
-      const mockDeal = await as(aMaker).post({
-        dealType: 'GEF',
-        maker: aMaker,
-        bank: { id: aMaker.bank.id },
-        bankInternalRefName: 'Bank 1',
-        additionalRefName: 'Team 1',
-        exporter: {},
-        createdAt: '2021-01-01T00:00',
-        mandatoryVersionId: '123',
-        status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
-        updatedAt: null,
-        submissionCount: 0,
-      }).to(baseUrl);
+      const mockDeal = await as(aMaker)
+        .post({
+          dealType: 'GEF',
+          maker: aMaker,
+          bank: { id: aMaker.bank.id },
+          bankInternalRefName: 'Bank 1',
+          additionalRefName: 'Team 1',
+          exporter: {},
+          createdAt: '2021-01-01T00:00',
+          mandatoryVersionId: '123',
+          status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
+          updatedAt: null,
+          submissionCount: 0,
+        })
+        .to(baseUrl);
 
       mockApplication.dealId = mockDeal.body._id;
       mockApplication.bank = { id: aMaker.bank.id };
@@ -119,47 +123,56 @@ describe(baseUrl, () => {
     });
 
     it('successfully clones a GEF deal and updates the auditRecord', async () => {
-      const mockDeal = await as(aMaker).post({
-        dealType: 'GEF',
-        maker: aMaker,
-        bank: { id: aMaker.bank.id },
-        bankInternalRefName: 'Bank 1',
-        additionalRefName: 'Team 1',
-        exporter: {},
-        createdAt: '2021-01-01T00:00',
-        mandatoryVersionId: '123',
-        status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
-        updatedAt: null,
-        submissionCount: 0,
-      }).to(baseUrl);
+      const mockDeal = await as(aMaker)
+        .post({
+          dealType: 'GEF',
+          maker: aMaker,
+          bank: { id: aMaker.bank.id },
+          bankInternalRefName: 'Bank 1',
+          additionalRefName: 'Team 1',
+          exporter: {},
+          createdAt: '2021-01-01T00:00',
+          mandatoryVersionId: '123',
+          status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
+          updatedAt: null,
+          submissionCount: 0,
+        })
+        .to(baseUrl);
 
       mockApplication.dealId = mockDeal.body._id;
       mockApplication.bank = { id: aMaker.bank.id };
 
-      const { status, body: { dealId } } = await as(aMaker).post(mockApplication).to(`${baseUrl}/clone`);
+      const {
+        status,
+        body: { dealId },
+      } = await as(aMaker).post(mockApplication).to(`${baseUrl}/clone`);
       expect(status).toEqual(200);
 
-      const { body: { auditRecord } } = await as(aMaker).get(`${baseUrl}/${dealId}`);
+      const {
+        body: { auditRecord },
+      } = await as(aMaker).get(`${baseUrl}/${dealId}`);
 
-      expect(auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(aMaker._id))
+      expect(auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(aMaker._id));
 
       // console.log(getResponse)
     });
 
     it('returns a `404` status if the maker belongs to a different bank', async () => {
-      const mockDeal = await as(aMaker).post({
-        dealType: 'GEF',
-        maker: aMaker,
-        bank: { id: aMaker.bank.id },
-        bankInternalRefName: 'Bank 1',
-        additionalRefName: 'Team 1',
-        exporter: {},
-        createdAt: '2021-01-01T00:00',
-        mandatoryVersionId: '123',
-        status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
-        updatedAt: null,
-        submissionCount: 0,
-      }).to(baseUrl);
+      const mockDeal = await as(aMaker)
+        .post({
+          dealType: 'GEF',
+          maker: aMaker,
+          bank: { id: aMaker.bank.id },
+          bankInternalRefName: 'Bank 1',
+          additionalRefName: 'Team 1',
+          exporter: {},
+          createdAt: '2021-01-01T00:00',
+          mandatoryVersionId: '123',
+          status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
+          updatedAt: null,
+          submissionCount: 0,
+        })
+        .to(baseUrl);
 
       mockApplication.dealId = mockDeal.body._id;
       mockApplication.bank = { id: anotherMaker.bank.id };
@@ -169,19 +182,21 @@ describe(baseUrl, () => {
     });
 
     it('returns a `401` status if the user role is `Checker`', async () => {
-      const mockDeal = await as(aChecker).post({
-        dealType: 'GEF',
-        maker: aMaker,
-        bank: { id: aMaker.bank.id },
-        bankInternalRefName: 'Bank 1',
-        additionalRefName: 'Team 1',
-        exporter: {},
-        createdAt: '2021-01-01T00:00',
-        mandatoryVersionId: '123',
-        status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
-        updatedAt: null,
-        submissionCount: 0,
-      }).to(baseUrl);
+      const mockDeal = await as(aChecker)
+        .post({
+          dealType: 'GEF',
+          maker: aMaker,
+          bank: { id: aMaker.bank.id },
+          bankInternalRefName: 'Bank 1',
+          additionalRefName: 'Team 1',
+          exporter: {},
+          createdAt: '2021-01-01T00:00',
+          mandatoryVersionId: '123',
+          status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
+          updatedAt: null,
+          submissionCount: 0,
+        })
+        .to(baseUrl);
 
       mockApplication.dealId = mockDeal.body._id;
 
@@ -190,19 +205,21 @@ describe(baseUrl, () => {
     });
 
     it('returns an error message when Bank Internal Ref Name is null', async () => {
-      const mockDeal = await as(aMaker).post({
-        dealType: 'GEF',
-        maker: aMaker,
-        bank: { id: aMaker.bank.id },
-        bankInternalRefName: 'Bank 1',
-        additionalRefName: 'Team 1',
-        exporter: {},
-        createdAt: '2021-01-01T00:00',
-        mandatoryVersionId: '123',
-        status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
-        updatedAt: null,
-        submissionCount: 0,
-      }).to(baseUrl);
+      const mockDeal = await as(aMaker)
+        .post({
+          dealType: 'GEF',
+          maker: aMaker,
+          bank: { id: aMaker.bank.id },
+          bankInternalRefName: 'Bank 1',
+          additionalRefName: 'Team 1',
+          exporter: {},
+          createdAt: '2021-01-01T00:00',
+          mandatoryVersionId: '123',
+          status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
+          updatedAt: null,
+          submissionCount: 0,
+        })
+        .to(baseUrl);
 
       const payload = {
         dealId: mockDeal.body._id,
@@ -210,12 +227,14 @@ describe(baseUrl, () => {
         bankInternalRefName: null,
       };
       const { body, status } = await as(aMaker).post(payload).to(`${baseUrl}/clone`);
-      expect(body).toEqual([{
-        status: 422,
-        errCode: 'MANDATORY_FIELD',
-        errRef: 'bankInternalRefName',
-        errMsg: 'bankInternalRefName is Mandatory',
-      }]);
+      expect(body).toEqual([
+        {
+          status: 422,
+          errCode: 'MANDATORY_FIELD',
+          errRef: 'bankInternalRefName',
+          errMsg: 'bankInternalRefName is Mandatory',
+        },
+      ]);
       expect(status).toEqual(422);
     });
 
@@ -225,12 +244,14 @@ describe(baseUrl, () => {
         bankInternalRefName: '',
       };
       const { body, status } = await as(aMaker).post(payload).to(`${baseUrl}/clone`);
-      expect(body).toEqual([{
-        status: 422,
-        errCode: 'MANDATORY_FIELD',
-        errRef: 'bankInternalRefName',
-        errMsg: 'bankInternalRefName is Mandatory',
-      }]);
+      expect(body).toEqual([
+        {
+          status: 422,
+          errCode: 'MANDATORY_FIELD',
+          errRef: 'bankInternalRefName',
+          errMsg: 'bankInternalRefName is Mandatory',
+        },
+      ]);
       expect(status).toEqual(422);
     });
   });

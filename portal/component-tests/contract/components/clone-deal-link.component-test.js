@@ -1,4 +1,6 @@
-const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
 
 const component = 'contract/components/clone-deal-link.njk';
@@ -26,7 +28,9 @@ describe(component, () => {
     it('should be enabled', () => {
       for (const deal of deals) {
         const wrapper = render({ user: mockUser, deal });
-        wrapper.expectLink('[data-cy="clone-deal-link"]').toLinkTo(`/contract/${deal._id}/clone/before-you-start`, 'Clone');
+        wrapper
+          .expectLink('[data-cy="clone-deal-link"]')
+          .toLinkTo(`/contract/${deal._id}/clone/before-you-start`, 'Clone');
       }
     });
   });

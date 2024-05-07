@@ -155,7 +155,15 @@ const DEAL = {
         },
         16: {
           text: 'The supply contract does not involve one of the following controlled sectors:',
-          textList: ['sharp arms defence', 'nuclear', 'radiological', 'biological', 'human cloning', 'pornography', 'tobacco or gambling'],
+          textList: [
+            'sharp arms defence',
+            'nuclear',
+            'radiological',
+            'biological',
+            'human cloning',
+            'pornography',
+            'tobacco or gambling',
+          ],
         },
         17: {
           text: 'The bank has completed due diligence to its own satisfaction, without needing to escalate to a relevant person.',
@@ -163,7 +171,10 @@ const DEAL = {
         },
         18: {
           text: 'The fees or interest apply to the whole cover period and have  been set in line with:',
-          textList: ['the bank’s normal pricing policies', 'minimum or overall pricing requirements set by UKEF(if any)'],
+          textList: [
+            'the bank’s normal pricing policies',
+            'minimum or overall pricing requirements set by UKEF(if any)',
+          ],
         },
       },
       5: {
@@ -213,7 +224,10 @@ const DEAL = {
         },
         18: {
           text: 'The fees or interest apply to the whole cover period and have  been set in line with:',
-          textList: ['the bank’s normal pricing policies', 'minimum or overall pricing requirements set by UKEF(if any)'],
+          textList: [
+            'the bank’s normal pricing policies',
+            'minimum or overall pricing requirements set by UKEF(if any)',
+          ],
         },
       },
       6: {
@@ -348,7 +362,10 @@ const DEAL = {
         },
         17: {
           text: 'The fees or interest apply to the whole cover period and have been set in line with either:',
-          textList: ['the bank’s normal pricing policies', 'minimum or overall pricing requirements set by UKEF (if any)'],
+          textList: [
+            'the bank’s normal pricing policies',
+            'minimum or overall pricing requirements set by UKEF (if any)',
+          ],
         },
         18: {
           text: 'The facility base currency is an approved currency.',
@@ -390,7 +407,10 @@ const DEAL = {
         },
         18: {
           text: 'The fees or interest apply to the whole cover period and have been set in line with either:',
-          textList: ['the bank’s normal pricing policies', 'minimum or overall pricing requirements set by UKEF (if any)'],
+          textList: [
+            'the bank’s normal pricing policies',
+            'minimum or overall pricing requirements set by UKEF (if any)',
+          ],
         },
         19: {
           text: 'The facility base currency is an approved currency.',
@@ -432,7 +452,10 @@ const DEAL = {
         },
         18: {
           text: 'The fees or interest apply to the whole cover period and have been set in line with either:',
-          textList: ['the bank’s normal pricing policies', 'minimum or overall pricing requirements set by UKEF (if any)'],
+          textList: [
+            'the bank’s normal pricing policies',
+            'minimum or overall pricing requirements set by UKEF (if any)',
+          ],
         },
         19: {
           text: 'The facility base currency is an approved currency.',

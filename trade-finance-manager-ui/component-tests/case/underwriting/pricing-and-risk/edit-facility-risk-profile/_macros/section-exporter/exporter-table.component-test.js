@@ -89,11 +89,19 @@ describe(component, () => {
 
         wrapper = render(params);
 
-        wrapper.expectLink('[data-cy="exporter-table-change-loss-given-default-link"]')
-          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/loss-given-default`, 'Change loss given default');
+        wrapper
+          .expectLink('[data-cy="exporter-table-change-loss-given-default-link"]')
+          .toLinkTo(
+            `/case/${params.caseId}/underwriting/pricing-and-risk/loss-given-default`,
+            'Change loss given default',
+          );
 
-        wrapper.expectLink('[data-cy="exporter-table-change-probability-of-default-link"]')
-          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/probability-of-default`, 'Change probability of default');
+        wrapper
+          .expectLink('[data-cy="exporter-table-change-probability-of-default-link"]')
+          .toLinkTo(
+            `/case/${params.caseId}/underwriting/pricing-and-risk/probability-of-default`,
+            'Change probability of default',
+          );
       });
     });
   });
@@ -108,7 +116,9 @@ describe(component, () => {
     it('should render value', () => {
       wrapper = render(defaultParams);
 
-      wrapper.expectText('[data-cy="exporter-table-loss-given-default-value"]').toRead(`${defaultParams.lossGivenDefault}%`);
+      wrapper
+        .expectText('[data-cy="exporter-table-loss-given-default-value"]')
+        .toRead(`${defaultParams.lossGivenDefault}%`);
     });
 
     describe('when there is no loss given default', () => {
@@ -136,7 +146,10 @@ describe(component, () => {
 
         wrapper
           .expectLink('[data-cy="exporter-table-change-loss-given-default-link"]')
-          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/loss-given-default`, 'Change loss given default');
+          .toLinkTo(
+            `/case/${params.caseId}/underwriting/pricing-and-risk/loss-given-default`,
+            'Change loss given default',
+          );
       });
     });
   });
@@ -151,7 +164,9 @@ describe(component, () => {
     it('should render value', () => {
       wrapper = render(defaultParams);
 
-      wrapper.expectText('[data-cy="exporter-table-probability-of-default-value"]').toRead(`Less than ${defaultParams.probabilityOfDefault}%`);
+      wrapper
+        .expectText('[data-cy="exporter-table-probability-of-default-value"]')
+        .toRead(`Less than ${defaultParams.probabilityOfDefault}%`);
     });
 
     describe('when there is no probability of default', () => {
@@ -179,7 +194,10 @@ describe(component, () => {
 
         wrapper
           .expectLink('[data-cy="exporter-table-change-probability-of-default-link"]')
-          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/probability-of-default`, 'Change probability of default');
+          .toLinkTo(
+            `/case/${params.caseId}/underwriting/pricing-and-risk/probability-of-default`,
+            'Change probability of default',
+          );
       });
     });
   });

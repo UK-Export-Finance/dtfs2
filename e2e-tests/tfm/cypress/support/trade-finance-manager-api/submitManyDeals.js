@@ -11,10 +11,11 @@ module.exports = (deals, opts) => {
     cy.wrap(deals).each((dealToInsert) => {
       submitDeal(dealToInsert._id, dealToInsert.dealType, null, token);
 
-      submitDealAfterUkefIds(dealToInsert._id, dealToInsert.dealType, BANK1_CHECKER1_WITH_MOCK_ID, token)
-        .then((submittedDeal) => {
+      submitDealAfterUkefIds(dealToInsert._id, dealToInsert.dealType, BANK1_CHECKER1_WITH_MOCK_ID, token).then(
+        (submittedDeal) => {
           persistedDeals.push(submittedDeal);
-        });
+        },
+      );
     });
     cy.wrap(persistedDeals).as(ALIAS_KEY.SUBMIT_MANY_DEALS);
   });

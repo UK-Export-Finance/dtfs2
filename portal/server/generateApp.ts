@@ -11,13 +11,7 @@ import { isHttpError } from 'http-errors';
 import routes from './routes';
 import healthcheck from './healthcheck';
 import configureNunjucks from './nunjucks-configuration';
-import {
-  csrfToken,
-  copyCsrfTokenFromQueryToBody,
-  seo,
-  security,
-  createRateLimit,
-} from './routes/middleware';
+import { csrfToken, copyCsrfTokenFromQueryToBody, seo, security, createRateLimit } from './routes/middleware';
 import InvalidEnvironmentVariableError from './errors/invalid-environment-variable.error';
 import { asLoggedInUserSession, withUnknownLoginStatusUserSession } from './helpers/express-session';
 

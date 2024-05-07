@@ -58,13 +58,21 @@ describe('Hasher', () => {
         generateHash: jest.fn(),
       };
 
-      when(hashStrategy.generateHash).calledWith(matchingTarget, saltFromStrategy).mockReturnValueOnce(matchingHashFromStrategy);
-      when(hashStrategy.generateHash).calledWith(nonMatchingTarget, saltFromStrategy).mockReturnValueOnce(nonMatchingHashFromStrategy);
+      when(hashStrategy.generateHash)
+        .calledWith(matchingTarget, saltFromStrategy)
+        .mockReturnValueOnce(matchingHashFromStrategy);
+      when(hashStrategy.generateHash)
+        .calledWith(nonMatchingTarget, saltFromStrategy)
+        .mockReturnValueOnce(nonMatchingHashFromStrategy);
 
       hasher = new Hasher(hashStrategy);
 
-      when(crypto.timingSafeEqual).calledWith(matchingHashFromStrategy, matchingHashFromStrategy).mockReturnValueOnce(true);
-      when(crypto.timingSafeEqual).calledWith(nonMatchingHashFromStrategy, matchingHashFromStrategy).mockReturnValueOnce(false);
+      when(crypto.timingSafeEqual)
+        .calledWith(matchingHashFromStrategy, matchingHashFromStrategy)
+        .mockReturnValueOnce(true);
+      when(crypto.timingSafeEqual)
+        .calledWith(nonMatchingHashFromStrategy, matchingHashFromStrategy)
+        .mockReturnValueOnce(false);
     });
 
     describe('when the hash matches', () => {

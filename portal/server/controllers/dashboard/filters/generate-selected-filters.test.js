@@ -12,16 +12,9 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
     it('should return mapped object', () => {
       const mockHeading = CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.PRODUCT;
       const mockFieldName = CONSTANTS.FIELD_NAMES.DEAL_TYPE;
-      const mockSubmittedFieldFilters = [
-        CONSTANTS.PRODUCT.GEF,
-        CONSTANTS.PRODUCT.BSS_EWCS,
-      ];
+      const mockSubmittedFieldFilters = [CONSTANTS.PRODUCT.GEF, CONSTANTS.PRODUCT.BSS_EWCS];
 
-      const result = generateSelectedFiltersObject(
-        mockHeading,
-        mockFieldName,
-        mockSubmittedFieldFilters,
-      );
+      const result = generateSelectedFiltersObject(mockHeading, mockFieldName, mockSubmittedFieldFilters);
 
       const expectedHref = (name, value) => `filters/remove/${name}/${value}`;
 
@@ -95,10 +88,7 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
 
   describe('selectedSubmissionTypeFilters', () => {
     it('should return result of generateSelectedFiltersObject with provided params', () => {
-      const mockSubmittedFieldFilters = [
-        CONSTANTS.SUBMISSION_TYPE.AIN,
-        CONSTANTS.SUBMISSION_TYPE.MIN,
-      ];
+      const mockSubmittedFieldFilters = [CONSTANTS.SUBMISSION_TYPE.AIN, CONSTANTS.SUBMISSION_TYPE.MIN];
 
       const result = selectedSubmissionTypeFilters(
         CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE,

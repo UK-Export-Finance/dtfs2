@@ -44,33 +44,43 @@ const withRoleValidationApiTests = ({
 
     if (includeWhitelistedRolesTests) {
       describe('whitelisted roles', () => {
-        it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%s' role`, async (allowedRole) => {
-          const { sessionCookie } = await storage.saveUserSession([allowedRole]);
+        it.each(whitelistedRoles)(
+          `returns a ${successCode} response if the user only has the '%s' role`,
+          async (allowedRole) => {
+            const { sessionCookie } = await storage.saveUserSession([allowedRole]);
 
-          const response = await makeRequestWithHeaders({ Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] });
-
-          expect(response.status).toBe(successCode);
-
-          if (successHeaders) {
-            Object.entries(successHeaders).forEach(([key, value]) => {
-              expect(response.headers[key]).toBe(value);
+            const response = await makeRequestWithHeaders({
+              Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],
             });
-          }
-        });
+
+            expect(response.status).toBe(successCode);
+
+            if (successHeaders) {
+              Object.entries(successHeaders).forEach(([key, value]) => {
+                expect(response.headers[key]).toBe(value);
+              });
+            }
+          },
+        );
       });
     }
 
     if (includeNonWhitelistedRolesTests) {
       describe('non-whitelisted roles', () => {
-        it.each(nonWhitelistedRoles)("returns a 302 response if the user only has the '%s' role", async (disallowedRole) => {
-          const { sessionCookie } = await storage.saveUserSession([disallowedRole]);
+        it.each(nonWhitelistedRoles)(
+          "returns a 302 response if the user only has the '%s' role",
+          async (disallowedRole) => {
+            const { sessionCookie } = await storage.saveUserSession([disallowedRole]);
 
-          const response = await makeRequestWithHeaders({ Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] });
+            const response = await makeRequestWithHeaders({
+              Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],
+            });
 
-          expect(response.status).toBe(302);
-          const redirectUrl = redirectUrlForInvalidRoles ?? '/';
-          expect(response.headers.location).toBe(redirectUrl);
-        });
+            expect(response.status).toBe(302);
+            const redirectUrl = redirectUrlForInvalidRoles ?? '/';
+            expect(response.headers.location).toBe(redirectUrl);
+          },
+        );
       });
     }
   });

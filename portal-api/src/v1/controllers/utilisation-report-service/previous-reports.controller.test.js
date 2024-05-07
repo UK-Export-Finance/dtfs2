@@ -1,4 +1,9 @@
-const { getYears, groupReportsByYear, populateOmittedYears, groupAndSortReports } = require('./previous-reports.controller');
+const {
+  getYears,
+  groupReportsByYear,
+  populateOmittedYears,
+  groupAndSortReports,
+} = require('./previous-reports.controller');
 
 describe('controllers/utilisation-report-service/previous-reports', () => {
   const azureFileInfo = {

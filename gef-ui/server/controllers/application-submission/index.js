@@ -45,7 +45,10 @@ const postApplicationSubmission = async (req, res, next) => {
       });
 
       return res.render('application-details-comments.njk', {
-        dealId, maxCommentLength, errors, comment,
+        dealId,
+        maxCommentLength,
+        errors,
+        comment,
       });
     }
 

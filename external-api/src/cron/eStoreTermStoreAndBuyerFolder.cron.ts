@@ -1,9 +1,9 @@
 import { ObjectId } from 'mongodb';
+import { HttpStatusCode } from 'axios';
 import { getCollection } from '../database';
 import { TermStoreResponse, BuyerFolderResponse, EstoreErrorResponse, Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { createBuyerFolder, addFacilityToTermStore } from '../v1/controllers/estore/eStoreApi';
-import { HttpStatusCode } from 'axios';
 import { getNowAsEpoch } from '../helpers/date';
 
 const acceptableStatuses = [HttpStatusCode.Ok, HttpStatusCode.Created];
@@ -35,7 +35,11 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: Estore) => {
         },
       );
     } else {
-      console.error('Facilities have not been added to term store for deal %s %o', eStoreData.dealIdentifier, responses);
+      console.error(
+        'Facilities have not been added to term store for deal %s %o',
+        eStoreData.dealIdentifier,
+        responses,
+      );
 
       // Update `cron-job-logs`
       await cronJobLogs.updateOne(

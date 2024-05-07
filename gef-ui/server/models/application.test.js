@@ -41,11 +41,13 @@ const MockFacilityResponse = () => {
   const res = {};
   res.status = CONSTANTS.DEAL_STATUS.IN_PROGRESS;
   res.data = [];
-  res.items = [{
-    details: { type: CONSTANTS.FACILITY_TYPE.CASH },
-    validation: { required: [] },
-    createdAt: 20,
-  }];
+  res.items = [
+    {
+      details: { type: CONSTANTS.FACILITY_TYPE.CASH },
+      validation: { required: [] },
+      createdAt: 20,
+    },
+  ];
   return res;
 };
 
@@ -82,7 +84,15 @@ describe('models/application', () => {
       it('sets the requiredSupportingDocuments as expected', async () => {
         const application = await Application.findById('', MockUserResponse(), '');
 
-        expect(application.supportingInformation.requiredFields).toEqual(['manualInclusion', 'yearToDateManagement', 'auditedFinancialStatements', 'financialForecasts', 'financialInformationCommentary', 'corporateStructure', 'debtorAndCreditorReports']);
+        expect(application.supportingInformation.requiredFields).toEqual([
+          'manualInclusion',
+          'yearToDateManagement',
+          'auditedFinancialStatements',
+          'financialForecasts',
+          'financialInformationCommentary',
+          'corporateStructure',
+          'debtorAndCreditorReports',
+        ]);
       });
     });
 
@@ -101,7 +111,15 @@ describe('models/application', () => {
       it('sets the requiredSupportingDocuments as expected', async () => {
         const application = await Application.findById('', MockUserResponse(), '');
 
-        expect(application.supportingInformation.requiredFields).toEqual(['manualInclusion', 'yearToDateManagement', 'auditedFinancialStatements', 'financialForecasts', 'financialInformationCommentary', 'corporateStructure', 'debtorAndCreditorReports']);
+        expect(application.supportingInformation.requiredFields).toEqual([
+          'manualInclusion',
+          'yearToDateManagement',
+          'auditedFinancialStatements',
+          'financialForecasts',
+          'financialInformationCommentary',
+          'corporateStructure',
+          'debtorAndCreditorReports',
+        ]);
       });
     });
 

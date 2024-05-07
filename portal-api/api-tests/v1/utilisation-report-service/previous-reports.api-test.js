@@ -27,7 +27,9 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
     const year = 2023;
     const uploadedByUserId = aPaymentReportOfficer._id;
 
-    const aReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+    const aReceivedReport = UtilisationReportEntityMockBuilder.forStatus(
+      UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+    )
       .withBankId(bankId)
       .withId(receivedReportIds[0])
       .withReportPeriod({
@@ -44,7 +46,9 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
       .withUploadedByUserId(uploadedByUserId)
       .build();
 
-    const aNotReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+    const aNotReceivedReport = UtilisationReportEntityMockBuilder.forStatus(
+      UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+    )
       .withId(8)
       .withBankId(bankId)
       .withReportPeriod({
@@ -59,7 +63,9 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
       })
       .build();
 
-    const aReconciliationCompletedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
+    const aReconciliationCompletedReport = UtilisationReportEntityMockBuilder.forStatus(
+      UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+    )
       .withBankId(bankId)
       .withId(receivedReportIds[1])
       .withReportPeriod({
@@ -76,12 +82,17 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
       .withUploadedByUserId(uploadedByUserId)
       .build();
 
-    await SqlDbHelper.saveNewEntries('UtilisationReport', [aReceivedReport, aNotReceivedReport, aReconciliationCompletedReport]);
+    await SqlDbHelper.saveNewEntries('UtilisationReport', [
+      aReceivedReport,
+      aNotReceivedReport,
+      aReconciliationCompletedReport,
+    ]);
   });
 
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => get(previousReportsUrl(bankId)),
-    makeRequestWithAuthHeader: (authHeader) => get(previousReportsUrl(bankId), { headers: { Authorization: authHeader } }),
+    makeRequestWithAuthHeader: (authHeader) =>
+      get(previousReportsUrl(bankId), { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({

@@ -27,7 +27,7 @@ const updateFacilityStatus = async (facilityId, status, existingFacility) => {
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: { $eq: ObjectId(facilityId) } },
       $.flatten(withoutId(update)),
-      { returnNewDocument: true, returnDocument: 'after' }
+      { returnNewDocument: true, returnDocument: 'after' },
     );
 
     console.info('Updated Portal facility status from %s to %s', previousStatus, status);
@@ -38,7 +38,6 @@ const updateFacilityStatus = async (facilityId, status, existingFacility) => {
 };
 exports.updateFacilityStatus = updateFacilityStatus;
 
-// eslint-disable-next-line consistent-return
 exports.updateFacilityStatusPut = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const facilityId = req.params.id;
@@ -47,11 +46,7 @@ exports.updateFacilityStatusPut = async (req, res) => {
 
     await findOneFacility(facilityId, async (existingFacility) => {
       if (existingFacility) {
-        const updatedFacility = await updateFacilityStatus(
-          facilityId,
-          status,
-          existingFacility,
-        );
+        const updatedFacility = await updateFacilityStatus(facilityId, status, existingFacility);
         return res.status(200).json(updatedFacility);
       }
 
@@ -60,4 +55,6 @@ exports.updateFacilityStatusPut = async (req, res) => {
   } else {
     return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
   }
+
+  return res.status(400).send({ status: 400, message: 'Invalid update facility status request' });
 };

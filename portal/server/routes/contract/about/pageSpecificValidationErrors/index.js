@@ -18,13 +18,17 @@ exports.aboutSupplyContractPreviewValidationErrors = (validationErrors, dealId) 
 
   if (mappedValidationErrors && mappedValidationErrors.errorList) {
     Object.keys(mappedValidationErrors.errorList).forEach((fieldName) => {
-      if (FIELDS.SUPPLIER.REQUIRED_FIELDS.includes(fieldName)
-        || FIELDS.SUPPLIER.CONDITIONALLY_REQUIRED_FIELDS.includes(fieldName)) {
+      if (
+        FIELDS.SUPPLIER.REQUIRED_FIELDS.includes(fieldName) ||
+        FIELDS.SUPPLIER.CONDITIONALLY_REQUIRED_FIELDS.includes(fieldName)
+      ) {
         mappedValidationErrors.errorList[fieldName].hrefRoot = `/contract/${dealId}/about/supplier`;
       }
 
-      if (FIELDS.BUYER.REQUIRED_FIELDS.includes(fieldName)
-        || FIELDS.BUYER.CONDITIONALLY_REQUIRED_FIELDS.includes(fieldName)) {
+      if (
+        FIELDS.BUYER.REQUIRED_FIELDS.includes(fieldName) ||
+        FIELDS.BUYER.CONDITIONALLY_REQUIRED_FIELDS.includes(fieldName)
+      ) {
         mappedValidationErrors.errorList[fieldName].hrefRoot = `/contract/${dealId}/about/buyer`;
       }
 

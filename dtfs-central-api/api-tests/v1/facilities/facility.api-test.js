@@ -6,7 +6,6 @@ const aDeal = require('../deal-builder');
 const { MOCK_DEAL } = require('../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 
-
 const newFacility = {
   type: 'Bond',
   dealId: MOCK_DEAL.DEAL_ID,
@@ -30,7 +29,11 @@ const createDeal = async () => {
 
 describe('/v1/portal/facilities', () => {
   beforeEach(async () => {
-    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
+    await wipeDB.wipe([
+      MONGO_DB_COLLECTIONS.DEALS,
+      MONGO_DB_COLLECTIONS.FACILITIES,
+      MONGO_DB_COLLECTIONS.TFM_FACILITIES,
+    ]);
   });
 
   describe('POST /v1/portal/facilities', () => {
@@ -40,7 +43,9 @@ describe('/v1/portal/facilities', () => {
         type: 'Bond',
       };
 
-      const { status } = await api.post({ facility: facilityWithInvalidDealId, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+      const { status } = await api
+        .post({ facility: facilityWithInvalidDealId, user: MOCK_PORTAL_USER })
+        .to('/v1/portal/facilities');
 
       expect(status).toEqual(404);
     });
@@ -60,7 +65,9 @@ describe('/v1/portal/facilities', () => {
       const { _id } = await createDeal();
       newFacility.dealId = _id;
 
-      const { body, status } = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+      const { body, status } = await api
+        .post({ facility: newFacility, user: MOCK_PORTAL_USER })
+        .to('/v1/portal/facilities');
 
       expect(status).toEqual(200);
 
@@ -93,10 +100,9 @@ describe('/v1/portal/facilities', () => {
       const { _id } = await createDeal();
       newFacility.dealId = _id;
 
-      const {
-        status: createdFacilityStatus,
-        body: createdFacility,
-      } = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+      const { status: createdFacilityStatus, body: createdFacility } = await api
+        .post({ facility: newFacility, user: MOCK_PORTAL_USER })
+        .to('/v1/portal/facilities');
 
       expect(createdFacilityStatus).toEqual(200);
 
@@ -105,9 +111,7 @@ describe('/v1/portal/facilities', () => {
       expect(status).toEqual(200);
 
       if (createdFacility) {
-        expect(body.deal.facilities).toEqual([
-          createdFacility._id,
-        ]);
+        expect(body.deal.facilities).toEqual([createdFacility._id]);
       }
     });
 
@@ -121,7 +125,9 @@ describe('/v1/portal/facilities', () => {
           dealId: '',
         };
 
-        const { body, status } = await api.post({ facility: postBody, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const { body, status } = await api
+          .post({ facility: postBody, user: MOCK_PORTAL_USER })
+          .to('/v1/portal/facilities');
 
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(2);
@@ -145,7 +151,9 @@ describe('/v1/portal/facilities', () => {
           user: {},
         };
 
-        const { body, status } = await api.post({ facility: postBody, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const { body, status } = await api
+          .post({ facility: postBody, user: MOCK_PORTAL_USER })
+          .to('/v1/portal/facilities');
 
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(1);

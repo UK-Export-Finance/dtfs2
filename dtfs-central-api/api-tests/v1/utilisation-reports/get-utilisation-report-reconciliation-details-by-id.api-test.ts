@@ -13,7 +13,10 @@ const api = apiModule(app);
 
 const getUrl = (reportId: number | string) => `/v1/utilisation-reports/reconciliation-details/${reportId}`;
 
-type UtilisationReportReconciliationDetailsResponseBody = Omit<UtilisationReportReconciliationDetails, 'dateUploaded'> & {
+type UtilisationReportReconciliationDetailsResponseBody = Omit<
+  UtilisationReportReconciliationDetails,
+  'dateUploaded'
+> & {
   dateUploaded: IsoDateTimeStamp;
 };
 

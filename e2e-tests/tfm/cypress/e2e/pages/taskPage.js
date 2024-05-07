@@ -3,7 +3,8 @@ const taskPage = {
 
   assignedToSelectInput: () => cy.get('[data-cy="assigned-to-select-input"]').first(),
   assignedToSelectInputOption: () => cy.get('[data-cy="assigned-to-select-input"] option'),
-  assignedToSelectInputSelectedOption: () => cy.get('[data-cy="assigned-to-select-input"]').first().find('option:selected'),
+  assignedToSelectInputSelectedOption: () =>
+    cy.get('[data-cy="assigned-to-select-input"]').first().find('option:selected'),
 
   taskStatusRadioInput: () => cy.get('[data-cy="task-status-radios"] input'),
   taskStatusRadioInputTodo: () => cy.get('[data-cy="task-status-to-do"]'),

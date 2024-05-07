@@ -6,7 +6,6 @@ const aDeal = require('../deal-builder');
 const { MOCK_DEAL } = require('../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 
-
 const mockFacility = {
   type: 'Bond',
   dealId: MOCK_DEAL.DEAL_ID,
@@ -66,12 +65,7 @@ describe('/v1/portal/facilities', () => {
     it('creates and returns multiple facilities with createdDate and updatedAt', async () => {
       await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES]);
 
-      const facilities = [
-        mockFacility,
-        mockFacility,
-        mockFacility,
-        mockFacility,
-      ];
+      const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
 
       const postBody = {
         facilities,
@@ -92,12 +86,7 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('returns 400 where user is missing', async () => {
-      const facilities = [
-        mockFacility,
-        mockFacility,
-        mockFacility,
-        mockFacility,
-      ];
+      const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
 
       const postBody = {
         facilities,
@@ -110,12 +99,7 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('returns 400 where deal is not found', async () => {
-      const facilities = [
-        mockFacility,
-        mockFacility,
-        mockFacility,
-        mockFacility,
-      ];
+      const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
 
       const postBody = {
         facilities,

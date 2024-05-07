@@ -6,7 +6,11 @@ const { getAmendFacilityValue, postAmendFacilityValue } = require('./amendFacili
 const { getAmendCoverEndDate, postAmendCoverEndDate } = require('./amendCoverEndDate.controller');
 const { getAmendmentAnswers, postAmendmentAnswers } = require('./amendmentAnswers.controller');
 const { getAmendmentTask, postAmendmentTask } = require('./amendmentTasks.controller');
-const { getAmendmentLeadUnderwriter, getAssignAmendmentLeadUnderwriter, postAssignAmendmentLeadUnderwriter } = require('./leadUnderwriter.controller');
+const {
+  getAmendmentLeadUnderwriter,
+  getAssignAmendmentLeadUnderwriter,
+  postAssignAmendmentLeadUnderwriter,
+} = require('./leadUnderwriter.controller');
 const {
   getManagersConditionsAndComments,
   postManagersConditionsAndComments,
@@ -19,14 +23,16 @@ const {
   getAmendmentAddUnderwriterManagersFacilityValue,
   postAmendmentAddUnderwriterManagersFacilityValue,
 } = require('./underwriterManagerDecision.controller');
-const { getAmendmentBankDecisionChoice,
+const {
+  getAmendmentBankDecisionChoice,
   postAmendmentBankDecisionChoice,
   getAmendmentBankDecisionReceivedDate,
   postAmendmentBankDecisionReceivedDate,
   getAmendmentBankDecisionEffectiveDate,
   postAmendmentBankDecisionEffectiveDate,
   getAmendmentBankDecisionAnswers,
-  postAmendmentBankDecisionAnswers } = require('./bankDecision.controller');
+  postAmendmentBankDecisionAnswers,
+} = require('./bankDecision.controller');
 
 module.exports = {
   getAmendmentRequestDate,

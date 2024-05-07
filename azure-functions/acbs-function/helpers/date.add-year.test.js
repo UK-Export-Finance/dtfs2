@@ -53,9 +53,12 @@ describe('addYear', () => {
     },
   ];
 
-  it.each(testData)('$description ($date plus $yearsToAdd year(s) gives $expected)', ({ date, yearsToAdd, expected }) => {
-    const result = addYear(date, yearsToAdd);
+  it.each(testData)(
+    '$description ($date plus $yearsToAdd year(s) gives $expected)',
+    ({ date, yearsToAdd, expected }) => {
+      const result = addYear(date, yearsToAdd);
 
-    expect(result).toEqual(expected);
-  });
+      expect(result).toEqual(expected);
+    },
+  );
 });

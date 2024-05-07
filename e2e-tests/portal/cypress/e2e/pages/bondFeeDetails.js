@@ -5,7 +5,8 @@ const page = {
   feeTypeAtMaturityInput: () => cy.get('[data-cy="fee-type-at-maturity"]'),
   feeTypeInputErrorMessage: () => cy.get('[data-cy="fee-type-error-message"]'),
 
-  feeFrequencyAnnuallyInput: () => cy.get('[data-cy="in-advance-fee-frequency-radios"] [data-cy="fee-frequency-annually"]'),
+  feeFrequencyAnnuallyInput: () =>
+    cy.get('[data-cy="in-advance-fee-frequency-radios"] [data-cy="fee-frequency-annually"]'),
   feeFrequencyInputErrorMessage: () => cy.get('[data-cy="fee-frequency-error-message"]'),
 
   dayCountBasis365Input: () => cy.get('[data-cy="day-count-basis-365"]'),

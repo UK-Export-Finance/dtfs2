@@ -815,9 +815,12 @@ const getUtilisationReportsReconciliationSummary = async (submissionMonth, userT
   try {
     assertValidIsoMonth(submissionMonth);
 
-    const { data } = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`, {
-      headers: generateHeaders(userToken),
-    });
+    const { data } = await axios.get(
+      `${TFM_API_URL}/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`,
+      {
+        headers: generateHeaders(userToken),
+      },
+    );
 
     return data;
   } catch (error) {

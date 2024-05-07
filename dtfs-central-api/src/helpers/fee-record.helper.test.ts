@@ -25,7 +25,11 @@ describe('fee-record.helper', () => {
 
     it('returns an SQL entity with the correct data', () => {
       // Act
-      const feeRecordEntity = feeRecordCsvRowToSqlEntity({ dataEntry: MOCK_UTILISATION_REPORT_RAW_CSV_DATA, requestSource, report });
+      const feeRecordEntity = feeRecordCsvRowToSqlEntity({
+        dataEntry: MOCK_UTILISATION_REPORT_RAW_CSV_DATA,
+        requestSource,
+        report,
+      });
 
       // Assert
       expect(feeRecordEntity instanceof FeeRecordEntity).toBe(true);
@@ -35,9 +39,13 @@ describe('fee-record.helper', () => {
           exporter: MOCK_UTILISATION_REPORT_RAW_CSV_DATA.exporter,
           baseCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['base currency'],
           facilityUtilisation: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['facility utilisation']),
-          totalFeesAccruedForThePeriod: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['total fees accrued for the period']),
+          totalFeesAccruedForThePeriod: Number(
+            MOCK_UTILISATION_REPORT_RAW_CSV_DATA['total fees accrued for the period'],
+          ),
           totalFeesAccruedForThePeriodCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['accrual currency'],
-          totalFeesAccruedForThePeriodExchangeRate: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['accrual exchange rate']),
+          totalFeesAccruedForThePeriodExchangeRate: Number(
+            MOCK_UTILISATION_REPORT_RAW_CSV_DATA['accrual exchange rate'],
+          ),
           feesPaidToUkefForThePeriod: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['fees paid to ukef for the period']),
           feesPaidToUkefForThePeriodCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['fees paid to ukef currency'],
           paymentCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['payment currency'],

@@ -2,7 +2,11 @@ import httpMocks from 'node-mocks-http';
 import { TEAM_IDS, ReportWithStatus } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import * as getUtilisationReportsController from '..';
-import { UpdateUtilisationReportStatusRequest, UpdateUtilisationReportStatusRequestBody, updateUtilisationReportStatus } from '.';
+import {
+  UpdateUtilisationReportStatusRequest,
+  UpdateUtilisationReportStatusRequestBody,
+  updateUtilisationReportStatus,
+} from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 
 console.error = jest.fn();
@@ -75,7 +79,9 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
 
       // Assert
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
-      expect(errorSpy).toHaveBeenCalledWith("form-button body parameter of 'invalid-value' does not match either 'completed' or 'not-completed'");
+      expect(errorSpy).toHaveBeenCalledWith(
+        "form-button body parameter of 'invalid-value' does not match either 'completed' or 'not-completed'",
+      );
     });
 
     describe('for a valid payload body', () => {
@@ -114,7 +120,11 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
 
         // Assert
         expect(getUtilisationReportsSpy).toHaveBeenCalled();
-        expect(apiUpdateUtilisationReportStatusSpy).toHaveBeenCalledWith(MOCK_TFM_SESSION_USER, expectedReportsWithStatus, userToken);
+        expect(apiUpdateUtilisationReportStatusSpy).toHaveBeenCalledWith(
+          MOCK_TFM_SESSION_USER,
+          expectedReportsWithStatus,
+          userToken,
+        );
       });
     });
   });

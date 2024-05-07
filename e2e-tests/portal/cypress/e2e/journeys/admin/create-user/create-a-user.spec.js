@@ -1,11 +1,7 @@
-const {
-  header, users, createUser, changePassword,
-} = require('../../../pages');
+const { header, users, createUser, changePassword } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const {
-  USER_ROLES: {
-    MAKER, READ_ONLY, CHECKER, PAYMENT_REPORT_OFFICER,
-  },
+  USER_ROLES: { MAKER, READ_ONLY, CHECKER, PAYMENT_REPORT_OFFICER },
 } = require('../../../../fixtures/constants');
 const { ADMIN: AN_ADMIN, USER_WITH_INJECTION } = require('../../../../../../e2e-fixtures/portal-users.fixture');
 
@@ -167,7 +163,9 @@ context('Admin user creates a new user', () => {
     // checks html form validation pop up contains correct error message
     cy.get('input:invalid').should('have.length', 1);
     createUser.username().then(($input) => {
-      expect($input[0].validationMessage).to.eq("Please include an '@' in the email address. '{\"$gt\":\"\"}' is missing an '@'.");
+      expect($input[0].validationMessage).to.eq(
+        "Please include an '@' in the email address. '{\"$gt\":\"\"}' is missing an '@'.",
+      );
     });
 
     /**

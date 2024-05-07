@@ -127,7 +127,9 @@ exports.getAddressesByPostcode = async (req, res) => {
 
         addresses.push({
           organisationName: item.DPA.ORGANISATION_NAME || null,
-          addressLine1: `${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${item.DPA.THOROUGHFARE_NAME || ''}`.trim(),
+          addressLine1: `${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${
+            item.DPA.THOROUGHFARE_NAME || ''
+          }`.trim(),
           addressLine2: item.DPA.DEPENDENT_LOCALITY || null,
           addressLine3: null, // keys to match registered Address as requested, but not available in OS Places
           locality: item.DPA.POST_TOWN || null,
