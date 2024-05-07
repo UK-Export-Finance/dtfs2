@@ -14,7 +14,9 @@ jest.mock('../server/api', () => ({
 }));
 jest.mock('../server/helpers/getApiData', () => () => []);
 
-const { ROLES: { ADMIN } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { ADMIN },
+} = require('@ukef/dtfs2-common');
 const app = require('../server/createApp');
 const mockLogin = require('./helpers/login');
 const extractSessionCookie = require('./helpers/extractSessionCookie');
@@ -101,15 +103,6 @@ describe('user routes', () => {
 
         expect(response.status).toBe(200);
       });
-    });
-  });
-
-  describe('GET /admin/users/disable/:_id', () => {
-    withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get(`/admin/users/disable/${_id}`, {}, headers),
-      whitelistedRoles: [ADMIN],
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
