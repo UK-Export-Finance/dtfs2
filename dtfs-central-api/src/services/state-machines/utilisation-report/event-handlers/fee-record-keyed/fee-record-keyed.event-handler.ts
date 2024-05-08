@@ -12,6 +12,10 @@ export type UtilisationReportFeeRecordKeyedEvent = BaseUtilisationReportEvent<
   FeeRecordKeyedEventPayload
 >;
 
-export const handleUtilisationReportFeeRecordKeyedEvent = (): Promise<UtilisationReportEntity> => {
+export const handleUtilisationReportFeeRecordKeyedEvent = (
+  report: UtilisationReportEntity,
+  payload: FeeRecordKeyedEventPayload,
+): Promise<UtilisationReportEntity> => {
+  console.error('Utilisation report fee record error %o %o', report, payload);
   throw new NotImplementedError('TODO FN-1714');
 };

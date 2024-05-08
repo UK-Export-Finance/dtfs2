@@ -12,6 +12,9 @@ export type UtilisationReportDueReportInitialisedEvent = BaseUtilisationReportEv
   DueReportInitialisedPayload
 >;
 
-export const handleUtilisationReportDueReportInitialisedEvent = (): Promise<UtilisationReportEntity> => {
+export const handleUtilisationReportDueReportInitialisedEvent = (
+  payload: DueReportInitialisedPayload,
+): Promise<UtilisationReportEntity> => {
+  console.error('Utilisation due report error payload %o', payload);
   throw new NotImplementedError('TODO FN-1860');
 };

@@ -13,6 +13,10 @@ export type UtilisationReportPaymentAddedToFeeRecordEvent = BaseUtilisationRepor
   PaymentAddedToFeeRecordEventPayload
 >;
 
-export const handleUtilisationReportPaymentAddedToFeeRecordEvent = (): Promise<UtilisationReportEntity> => {
+export const handleUtilisationReportPaymentAddedToFeeRecordEvent = (
+  report: UtilisationReportEntity,
+  payload: PaymentAddedToFeeRecordEventPayload,
+): Promise<UtilisationReportEntity> => {
+  console.error('Payment added fee record error %o %o', report, payload);
   throw new NotImplementedError('TODO FN-1697');
 };

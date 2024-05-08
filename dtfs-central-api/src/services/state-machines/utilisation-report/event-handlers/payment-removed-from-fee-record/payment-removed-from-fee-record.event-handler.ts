@@ -13,6 +13,10 @@ export type UtilisationReportPaymentRemovedFromFeeRecordEvent = BaseUtilisationR
   PaymentRemovedFromFeeRecordEventPayload
 >;
 
-export const handleUtilisationReportPaymentRemovedFromFeeRecordEvent = (): Promise<UtilisationReportEntity> => {
+export const handleUtilisationReportPaymentRemovedFromFeeRecordEvent = (
+  report: UtilisationReportEntity,
+  payload: PaymentRemovedFromFeeRecordEventPayload,
+): Promise<UtilisationReportEntity> => {
+  console.error('Utilisation report payment removed from fee record error %o %o', report, payload);
   throw new NotImplementedError('TODO FN-1697');
 };
