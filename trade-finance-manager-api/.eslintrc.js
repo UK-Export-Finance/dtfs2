@@ -4,6 +4,8 @@ const baseParserOptions = {
 
 const baseRules = {
   'no-console': ['error', { allow: ['info', 'error'] }],
+  'prettier/prettier': 'error',
+  'class-methods-use-this': 'off',
   'no-underscore-dangle': [
     'error',
     {
@@ -17,10 +19,13 @@ const baseRules = {
         '_getRedirectUrl',
         '_getRenderData',
         '_getRenderView',
+        '_isEndCalled',
       ],
     },
   ],
   'import/extensions': 'off',
+  'import/no-named-as-default': 'off',
+  'implicit-arrow-linebreak': 'off',
   'import/no-extraneous-dependencies': [
     'error',
     {
@@ -34,47 +39,48 @@ const baseRules = {
       ],
     },
   ],
-  'import/no-named-as-default': 'off',
   'import/prefer-default-export': 'off',
-  'implicit-arrow-linebreak': 'off',
-  'object-curly-newline': [
-    'error',
-    {
-      consistent: true,
-    },
-  ],
   'comma-dangle': 'off',
   'no-loop-func': 'off',
+  'no-await-in-loop': 'off',
+  'no-restricted-syntax': 'off',
   'no-return-await': 'off',
-  'no-unused-vars': ['error'],
-  'require-await': 'error',
   'no-use-before-define': [
     'error',
     {
       functions: false,
     },
   ],
+  'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
+  'no-unused-vars': ['error'],
+  'object-curly-newline': [
+    'error',
+    {
+      consistent: true,
+    },
+  ],
 };
 
 module.exports = {
-  extends: ['airbnb-base', 'prettier'],
+  extends: ['airbnb-base', 'plugin:prettier/recommended'],
   env: {
     jest: true,
     browser: true,
   },
   root: true,
+  ignorePatterns: ['**/node_modules/**'],
   rules: baseRules,
   settings: {
     'import/resolver': {
       typescript: {},
     },
   },
-  ignorePatterns: ['**/node_modules/**'],
   parserOptions: baseParserOptions,
   overrides: [
+    // Typescript files only
     {
       files: ['*.ts'],
-      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked', 'prettier'],
+      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked', 'plugin:prettier/recommended'],
       plugins: ['@typescript-eslint'],
       parser: '@typescript-eslint/parser',
       parserOptions: {
@@ -84,6 +90,10 @@ module.exports = {
       },
       rules: {
         ...baseRules,
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': ['error'],
+        '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
+        '@typescript-eslint/restrict-template-expressions': ['error', { allowNever: true }],
       },
     },
   ],
