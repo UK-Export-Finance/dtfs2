@@ -13,10 +13,10 @@ const getSqlReports = (): {
   sqlReports: UtilisationReportEntity[];
   sqlFeeRecords: FeeRecordEntity[];
 } => {
-  const mongoReports = deserialiseEJson<MongoUtilisationReport[]>(reportsEJson);
+  const mongoReports = deserialiseEJson<MongoUtilisationReport[]>(reportsEJson as object);
   console.info('deserialised mongo reports', mongoReports);
 
-  const mongoReportsData = deserialiseEJson<MongoUtilisationData[]>(reportsDataEJson);
+  const mongoReportsData = deserialiseEJson<MongoUtilisationData[]>(reportsDataEJson as object);
   console.info('deserialised mongo reports data', mongoReportsData);
 
   const sqlUtilisationReportAndFeeRecords = mongoReports.map((mongoReport) =>
