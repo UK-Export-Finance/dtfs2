@@ -3,7 +3,11 @@ const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/chan
 const api = require('../api');
 const acbs = require('./acbs.controller');
 const { amendIssuedFacility } = require('./amend-issued-facility');
-const { createAmendmentTasks, updateAmendmentTasks } = require('../helpers/create-tasks-amendment.helper');
+const {
+  createAmendmentTasks,
+  updateAmendmentTasks,
+  getTasksAssignedToUserByGroup,
+} = require('../helpers/create-tasks-amendment.helper');
 const { isRiskAnalysisCompleted } = require('../helpers/tasks');
 const {
   amendmentEmailEligible,
@@ -39,7 +43,7 @@ const sendAmendmentEmail = async (amendmentId, facilityId, auditDetails) => {
         if (amendment?.ukefDecision?.managersDecisionEmail && !amendment?.ukefDecision?.managersDecisionEmailSent) {
           // if managers decision email to be sent and not already sent
           const ukefDecisionAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
-          await sendManualDecisionAmendmentEmail(ukefDecisionAmendmentVariables, auditDetails)
+          await sendManualDecisionAmendmentEmail(ukefDecisionAmendmentVariables, auditDetails);
         }
         if (amendment?.bankDecision?.banksDecisionEmail && !amendment?.bankDecision?.banksDecisionEmailSent) {
           const bankDecisionAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
@@ -198,12 +202,21 @@ const updateFacilityAmendment = async (req, res) => {
   // Tasks
   try {
     if (amendmentId && facilityId && payload) {
+      let amendment = await api.getAmendmentById(facilityId, amendmentId);
       if (payload.createTasks && payload.submittedByPim) {
         const { tfm } = await api.findOneFacility(facilityId);
-        const tasks = createAmendmentTasks(payload.requireUkefApproval, tfm);
-        payload.tasks = tasks;
+        payload.tasks = createAmendmentTasks(payload.requireUkefApproval, tfm);
         delete payload.createTasks;
         delete payload.requireUkefApproval;
+      }
+
+      if (payload.leadUnderwriter) {
+        // Tasks are not present in payload when loadUnderwriter is updated, so it is safe to add `tasks`.
+        payload.tasks = await getTasksAssignedToUserByGroup(
+          amendment.tasks,
+          CONSTANTS.TEAMS.UNDERWRITERS.id,
+          payload.leadUnderwriter._id,
+        );
       }
 
       if (payload?.taskUpdate?.updateTask) {
@@ -220,14 +233,13 @@ const updateFacilityAmendment = async (req, res) => {
 
       // UKEF exposure
       payload = calculateAcbsUkefExposure(payload);
-      
+
       const auditDetails = generateTfmAuditDetails(req.user._id);
 
       // Update Amendment
       const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload, auditDetails);
       // sends email if conditions are met
       await sendAmendmentEmail(amendmentId, facilityId, auditDetails);
-
       // if facility successfully updated and completed, then adds tfm lastUpdated and tfm object in amendments
       if (createdAmendment && tfmLastUpdated) {
         await updateTFMDealLastUpdated(amendmentId, facilityId, auditDetails);
@@ -238,7 +250,7 @@ const updateFacilityAmendment = async (req, res) => {
       const facility = await api.findOneFacility(facilityId);
       const { ukefFacilityId } = facility.facilitySnapshot;
       // Fetch complete amendment object
-      const amendment = await api.getAmendmentById(facilityId, amendmentId);
+      amendment = await api.getAmendmentById(facilityId, amendmentId);
       // Fetch deal object from deal-tfm
       const tfmDeal = await api.findOneDeal(amendment.dealId);
       // Construct acceptable deal object
