@@ -1,3 +1,15 @@
+/* eslint-disable @typescript-eslint/unbound-method */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable no-param-reassign */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable import/no-extraneous-dependencies */
+
 import dotenv from 'dotenv';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
@@ -213,6 +225,7 @@ export const create = async (req: Request, res: Response) => {
           /**
            * Add a new site specific CRON job, which is initialised upon creation
            */
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           const siteCreateCronId = `estore_cron_site_${eStoreData.dealId}`;
           const siteCreateCronJob = new CronJob(
             String(ESTORE_CRON_MANAGER_SCHEDULE), // Cron schedule
@@ -282,7 +295,7 @@ export const create = async (req: Request, res: Response) => {
     }
 
     return res.status(HttpStatusCode.Created).send();
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ Unable to create eStore directories %o', error);
     return res
       .status(HttpStatusCode.InternalServerError)

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { findACBSIndustrySector } from '../../src/v1/controllers/industry-sectors.controller';
 
 describe('findACBSIndustrySector lookup', () => {

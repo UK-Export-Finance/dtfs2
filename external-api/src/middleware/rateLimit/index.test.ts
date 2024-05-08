@@ -1,10 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createRateLimit } from '.';
 import { InvalidEnvironmentVariableError } from '../../errors/invalid-environment-variable.error';
 
 describe('createRateLimit', () => {
   let originalProcessEnv: any;
-  let originalConsoleError: any;
-  let consoleError: any;
+  let originalConsoleerror: any;
+  let consoleerror: any;
   let originalConsoleInfo: any;
 
   const invalidThresholds = [
@@ -33,9 +40,9 @@ describe('createRateLimit', () => {
   beforeEach(() => {
     originalProcessEnv = { ...process.env };
 
-    originalConsoleError = console.error;
-    consoleError = jest.fn();
-    console.error = consoleError;
+    originalConsoleerror = console.error;
+    consoleerror = jest.fn();
+    console.error = consoleerror;
 
     originalConsoleInfo = console.info;
     console.info = jest.fn();
@@ -43,7 +50,7 @@ describe('createRateLimit', () => {
 
   afterEach(() => {
     process.env = originalProcessEnv;
-    console.error = originalConsoleError;
+    console.error = originalConsoleerror;
     console.info = originalConsoleInfo;
   });
 
@@ -198,7 +205,7 @@ describe('createRateLimit', () => {
     it('logs a rate limiting error message for a request that happens immediately after the threshold is reached', async () => {
       const numberOfRequestsToSendEqualToThreshold = threshold;
       await handleRequestTimes(numberOfRequestsToSendEqualToThreshold);
-      consoleError.mockClear();
+      consoleerror.mockClear();
 
       await handleRequestTimes(1);
 
@@ -241,7 +248,7 @@ describe('createRateLimit', () => {
     it('logs a rate limiting error message for a request that happens 59 seconds after the threshold is reached', async () => {
       const numberOfRequestsToSendEqualToThreshold = threshold;
       await handleRequestTimes(numberOfRequestsToSendEqualToThreshold);
-      consoleError.mockClear();
+      consoleerror.mockClear();
 
       jest.advanceTimersByTime(59 * 1000);
       await handleRequestTimes(1);
