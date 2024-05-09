@@ -1,7 +1,7 @@
 const portalApi = require('./api');
 const api = require('./gef/api');
 const MOCKS = require('./gef');
-const { BANK1_MAKER1 } = require('./portal/users');
+const { BANK1_MAKER1 } = require('./portal-users');
 const { logger } = require('./helpers/logger.helper');
 
 const insertMocks = async (token) => {

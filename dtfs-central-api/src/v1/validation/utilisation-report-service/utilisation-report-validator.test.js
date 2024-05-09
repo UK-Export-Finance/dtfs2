@@ -1,11 +1,5 @@
-const {
-  validateMonth,
-  validateYear,
-  validateReportPeriod,
-  isValidReportPeriod,
-  validateFileInfo,
-  validateUtilisationReportData,
-} = require('./utilisation-report-validator');
+const { ObjectId } = require('mongodb');
+const { validateMonth, validateYear, validateFileInfo, validateUtilisationReportData, validateReportUser } = require('./utilisation-report-validator');
 
 describe('utilisation-report-validator', () => {
   describe('validateMonth', () => {
@@ -63,102 +57,6 @@ describe('utilisation-report-validator', () => {
       const validationError = validateMonth(14, propertyName);
 
       expect(validationError).toEqual(`${propertyName} must be between 1 and 12`);
-    });
-  });
-
-  describe('validateReportPeriod', () => {
-    it('returns an empty array when correct report period is provided', () => {
-      const validationErrors = validateReportPeriod({
-        start: {
-          month: 1,
-          year: 2021,
-        },
-        end: {
-          month: 1,
-          year: 2021,
-        },
-      });
-
-      expect(validationErrors).toEqual([]);
-    });
-
-    it('returns an error when no report period is provided', async () => {
-      const validationErrors = validateReportPeriod(undefined);
-
-      expect(validationErrors).toEqual(['Report period is required']);
-    });
-
-    it('returns an error if the report period properties are not numbers in the correct range', async () => {
-      const validationErrors = validateReportPeriod({
-        start: {
-          month: {},
-          year: '1999',
-        },
-        end: {
-          month: true,
-          year: 'x',
-        },
-      });
-
-      expect(validationErrors.length).toBe(4);
-      expect(validationErrors).toContain('startMonth must be between 1 and 12');
-      expect(validationErrors).toContain('startYear must be between 2020 and 2100');
-      expect(validationErrors).toContain('endMonth must be between 1 and 12');
-      expect(validationErrors).toContain('endYear must be between 2020 and 2100');
-    });
-
-    it('returns an error if a report period start and end properties are not provided', async () => {
-      const validationErrors = validateReportPeriod({ start: {}, end: {} });
-
-      expect(validationErrors.length).toBe(4);
-      expect(validationErrors).toContain('startMonth is required');
-      expect(validationErrors).toContain('startYear is required');
-      expect(validationErrors).toContain('endMonth is required');
-      expect(validationErrors).toContain('endYear is required');
-    });
-  });
-
-  describe('isValidReportPeriod', () => {
-    it('returns true when a correct report period is provided', () => {
-      // Arrange
-      const validReportPeriod = {
-        start: {
-          month: 1,
-          year: 2021,
-        },
-        end: {
-          month: 1,
-          year: 2021,
-        },
-      };
-
-      // Act
-      const result = isValidReportPeriod(validReportPeriod);
-
-      // Assert
-      expect(result).toBe(true);
-    });
-
-    const validStart = { month: 1, year: 2021 };
-    const validEnd = { month: 1, year: 2021 };
-
-    it.each`
-      condition                                  | reportPeriod
-      ${'is null'}                               | ${null}
-      ${'is undefined'}                          | ${undefined}
-      ${'is an empty object'}                    | ${{}}
-      ${"is missing the 'start' property"}       | ${{ end: validEnd }}
-      ${"is missing the 'start.month' property"} | ${{ start: { year: 2021 }, end: validEnd }}
-      ${"is missing the 'start.year' property"}  | ${{ start: { month: 1 }, end: validEnd }}
-      ${"is missing the 'end' property"}         | ${{ start: validStart }}
-      ${"is missing the 'end.month' property"}   | ${{ start: validStart, end: { year: 2021 } }}
-      ${"is missing the 'end.year' property"}    | ${{ start: validStart, end: { month: 1 } }}
-    `('returns false when the reportPeriod object $condition', ({ reportPeriod }) => {
-      // Act
-      const result = isValidReportPeriod(reportPeriod);
-
-      // Assert
-      expect(result).toBe(false);
     });
   });
 
@@ -227,6 +125,17 @@ describe('utilisation-report-validator', () => {
       expect(validationError).toEqual([]);
     });
 
+    it('returns an error array of length 1 if the report data is not an array', async () => {
+      // Arrange
+      const invalidCsvData = {};
+
+      // Act
+      const validationErrors = validateUtilisationReportData(invalidCsvData);
+
+      // Assert
+      expect(validationErrors).toHaveLength(1);
+    });
+
     it('returns an array of errors if the report has any errors', async () => {
       const invalidCsvData = [
         {
@@ -241,6 +150,38 @@ describe('utilisation-report-validator', () => {
       const validationError = validateUtilisationReportData(invalidCsvData);
 
       expect(validationError.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('validateReportUser', () => {
+    it.each`
+      condition                                            | user                 | errorMessage
+      ${'the user is null'}                                | ${null}              | ${'User is not an object'}
+      ${'the user is undefined'}                           | ${undefined}         | ${'User is not an object'}
+      ${'the user is a string'}                            | ${''}                | ${'User is not an object'}
+      ${'the user is an empty object'}                     | ${{}}                | ${"User object does not contain '_id' property"}
+      ${"the 'user._id' property is not a string"}         | ${{ _id: 1 }}        | ${"User '_id' is not a valid MongoDB ID: '1'"}
+      ${"the 'user._id' property is not a valid mongo id"} | ${{ _id: 'abc123' }} | ${"User '_id' is not a valid MongoDB ID: 'abc123'"}
+    `('returns an error array of length 1 when $condition', ({ user, errorMessage }) => {
+      // Act
+      const errors = validateReportUser(user);
+
+      // Assert
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toEqual(errorMessage);
+    });
+
+    it('returns an empty array when the user object is valid', () => {
+      // Arrange
+      const user = {
+        _id: new ObjectId().toString(),
+      };
+
+      // Act
+      const errors = validateReportUser(user);
+
+      // Assert
+      expect(errors).toHaveLength(0);
     });
   });
 });

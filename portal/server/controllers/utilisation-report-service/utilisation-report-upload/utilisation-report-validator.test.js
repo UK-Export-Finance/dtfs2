@@ -1,5 +1,6 @@
+const { UTILISATION_REPORT_HEADERS } = require('@ukef/dtfs2-common');
 const { validateCsvHeaders, validateCsvCellData, validateFilenameFormat } = require('./utilisation-report-validator');
-const { UTILISATION_REPORT_HEADERS, MONTH_NAMES, FILE_UPLOAD } = require('../../../constants');
+const { MONTH_NAMES, FILE_UPLOAD } = require('../../../constants');
 const {
   generateUkefFacilityIdError,
   generateBaseCurrencyError,
@@ -128,87 +129,219 @@ describe('utilisation-report-validator', () => {
   });
 
   describe('validateFilenameFormat', () => {
-    const allMonthNameVariations = Object.values(MONTH_NAMES).map(({ long, short, numeric }) => [long, short, numeric]);
-    describe.each(allMonthNameVariations)('when the month is %s', (long, short, numeric) => {
-      const reportPeriod = `${long} 2023`;
+    it(`should return an error when the filename contains '${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}'`, () => {
+      // Arrange
+      const month = 1;
+      const year = 2024;
+      const filename = `Bank_monthly_${month}_${year}_${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}.xlsx`;
+      const dueReportPeriod = {
+        start: { month, year },
+        end: { month, year },
+      };
 
-      it(`should return empty error text when the filename contains ${short}`, () => {
-        const filename = `Bank_${short}_2023.xlsx`;
+      // Act
+      const { filenameError } = validateFilenameFormat(filename, dueReportPeriod);
 
-        const { filenameError } = validateFilenameFormat(filename, reportPeriod);
+      // Assert
+      expect(filenameError).toBe(`Report filename must not contain '${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}'`);
+    });
 
+    describe('when the due report period is a monthly report period', () => {
+      const allMonths = Object.values(MONTH_NAMES);
+      describe.each(allMonths)('when the month is $long', ({ long, short, numeric, index }) => {
+        const year = 2024;
+        const dueReportPeriod = {
+          start: { month: index, year },
+          end: { month: index, year },
+        };
+
+        describe.each(['-', '_'])("when the separator is '%s'", (separator) => {
+          it.each([long, short, numeric])("should return no errors when the filename contains '%s' and the correct year", (monthIdentifier) => {
+            // Arrange
+            const filename = `Monthly Bank${separator}${monthIdentifier}${separator}${year}.xlsx`;
+
+            // Act
+            const { filenameError } = validateFilenameFormat(filename, dueReportPeriod);
+
+            // Assert
+            expect(filenameError).toBeUndefined();
+          });
+        });
+
+        it('should return an error with an example filename when the filename contains an incorrect month', () => {
+          // Arrange
+          const incorrectMonth = allMonths.find((month) => month.index === index + 1)?.short ?? MONTH_NAMES.JANUARY.short;
+          const filename = `Monthly Bank-${incorrectMonth}-${year}.xlsx`;
+
+          const exampleFilenameReportPeriod = `${numeric}-${year}`;
+
+          // Act
+          const { filenameError } = validateFilenameFormat(filename, dueReportPeriod);
+
+          // Assert
+          expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+        });
+
+        it('should return an error with an example filename when the filename contains an incorrect year', () => {
+          // Arrange
+          const incorrectYear = year - 1;
+          const filename = `Monthly Bank-${short}-${incorrectYear}.xlsx`;
+
+          const exampleFilenameReportPeriod = `${numeric}-${year}`;
+
+          // Act
+          const { filenameError } = validateFilenameFormat(filename, dueReportPeriod);
+
+          // Assert
+          expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+        });
+      });
+
+      it("should return an error when the filename does not contain the word 'monthly'", () => {
+        // Arrange
+        const filename = 'Bank_report.xlsx';
+        const dueReportPeriod = {
+          start: { month: 1, year: 2024 },
+          end: { month: 1, year: 2024 },
+        };
+
+        // Act
+        const { filenameError } = validateFilenameFormat(filename, dueReportPeriod);
+
+        // Assert
+        expect(filenameError).toBe("The selected file must contain the word 'monthly'");
+      });
+    });
+
+    describe('when the due report period is quarterly in the same year', () => {
+      const startMonth = 1;
+      const endMonth = 3;
+      const year = 2024;
+
+      const dueQuarterlyReportPeriod = {
+        start: { month: startMonth, year },
+        end: { month: endMonth, year },
+      };
+
+      const endMonthNames = Object.values(MONTH_NAMES)
+        .filter(({ index }) => index === endMonth)
+        .map(({ long, short, numeric }) => [long, short, numeric])[0];
+
+      it.each(endMonthNames)("returns no errors when the end month identifier is '%s'", (endMonthIdentifier) => {
+        // Arrange
+        const filename = `Quarterly Bank_${endMonthIdentifier}_${year}.xlsx`;
+
+        // Act
+        const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
+
+        // Assert
         expect(filenameError).toBeUndefined();
       });
 
-      it(`should return empty error text when the filename contains ${long}`, () => {
-        const filename = `Bank_${long}_2023.xlsx`;
+      it('should return an error with an example filename when the filename contains an incorrect month', () => {
+        // Arrange
+        const incorrectMonth = MONTH_NAMES.JANUARY.short;
+        const filename = `Quarterly Bank-${incorrectMonth}-${year}.xlsx`;
 
-        const { filenameError } = validateFilenameFormat(filename, reportPeriod);
+        const exampleFilenameReportPeriod = `0${endMonth}-${year}`;
 
+        // Act
+        const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
+
+        // Assert
+        expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+      });
+
+      it('should return an error with an example filename when the filename contains an incorrect year', () => {
+        // Arrange
+        const incorrectYear = year - 1;
+        const filename = `Quarterly Bank_${endMonthNames[0]}_${incorrectYear}.xlsx`;
+
+        const exampleFilenameReportPeriod = `0${endMonth}-${year}`;
+
+        // Act
+        const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
+
+        // Assert
+        expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+      });
+
+      it("should return an error when the filename does not contain the word 'quarterly'", () => {
+        // Arrange
+        const filename = 'Bank_report.xlsx';
+
+        // Act
+        const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
+
+        // Assert
+        expect(filenameError).toBe("The selected file must contain the word 'quarterly'");
+      });
+    });
+
+    describe('when the due report period is quarterly in an overlapping year', () => {
+      const startMonth = 11;
+      const startYear = 2023;
+      const endMonth = 2;
+      const endYear = 2024;
+
+      const dueQuarterlyReportPeriod = {
+        start: { month: startMonth, year: startYear },
+        end: { month: endMonth, year: endYear },
+      };
+
+      const endMonthNames = Object.values(MONTH_NAMES)
+        .filter(({ index }) => index === endMonth)
+        .map(({ long, short, numeric }) => [long, short, numeric])[0];
+
+      it.each(endMonthNames)("returns no errors when the end month identifier is '%s'", (endMonthIdentifier) => {
+        // Arrange
+        const filename = `Quarterly Bank_${endMonthIdentifier}_${endYear}.xlsx`;
+
+        // Act
+        const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
+
+        // Assert
         expect(filenameError).toBeUndefined();
       });
 
-      it(`should return empty error text when the filename contains ${numeric}`, () => {
-        const filename = `Bank_${numeric}_2023.xlsx`;
+      it('should return an error with an example filename when the filename contains an incorrect month', () => {
+        // Arrange
+        const incorrectMonth = MONTH_NAMES.JANUARY.short;
+        const filename = `Quarterly Bank-${incorrectMonth}-${endYear}.xlsx`;
 
-        const { filenameError } = validateFilenameFormat(filename, reportPeriod);
+        const exampleFilenameReportPeriod = `0${endMonth}-${endYear}`;
 
-        expect(filenameError).toBeUndefined();
+        // Act
+        const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
+
+        // Assert
+        expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
       });
-    });
 
-    it('should return empty error text when the filename report period matches the report period with a dash separator', () => {
-      const reportPeriod = 'December 2023';
-      const filename = 'Bank-December-2023.xlsx';
+      it('should return an error with an example filename when the filename contains an incorrect end year', () => {
+        // Arrange
+        const incorrectYear = endYear - 1;
+        const filename = `Quarterly Bank_${endMonthNames[0]}_${incorrectYear}.xlsx`;
 
-      const { filenameError } = validateFilenameFormat(filename, reportPeriod);
+        const exampleFilenameReportPeriod = `0${endMonth}-${endYear}`;
 
-      expect(filenameError).toBeUndefined();
-    });
+        // Act
+        const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
 
-    it('should return empty error text when the filename report period matches the report period with unusual cases', () => {
-      const reportPeriod = 'December 2023';
-      const filename = 'Bank_dECembEr_2023.xlsx';
+        // Assert
+        expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+      });
 
-      const { filenameError } = validateFilenameFormat(filename, reportPeriod);
+      it("should return an error when the filename does not contain the word 'quarterly'", () => {
+        // Arrange
+        const filename = 'Bank_report.xlsx';
 
-      expect(filenameError).toBeUndefined();
-    });
+        // Act
+        const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
 
-    it('should return specific error text when the filename contains the incorrect reporting period month', () => {
-      const reportPeriod = 'December 2023';
-      const filename = 'Bank_November_2023.xlsx';
-
-      const { filenameError } = validateFilenameFormat(filename, reportPeriod);
-
-      expect(filenameError).toEqual(`The selected file must be the ${reportPeriod} report`);
-    });
-
-    it('should return specific error text when the filename contains the incorrect reporting period year', () => {
-      const reportPeriod = 'December 2023';
-      const filename = 'Bank_December_2022.xlsx';
-
-      const { filenameError } = validateFilenameFormat(filename, reportPeriod);
-
-      expect(filenameError).toEqual(`The selected file must be the ${reportPeriod} report`);
-    });
-
-    it('should return specific error text when the filename contains no reporting period', () => {
-      const reportPeriod = 'December 2023';
-      const filename = 'Bank_paid_this_much.xlsx';
-
-      const { filenameError } = validateFilenameFormat(filename, reportPeriod);
-
-      expect(filenameError).toEqual(`The selected file must contain the reporting period as part of its name, for example '${reportPeriod.replace(' ', '_')}' or '12_2023'`);
-    });
-
-    it(`should return specific error text when the filename contains '${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}'`, () => {
-      const reportPeriod = 'December 2023';
-      const filename = `Bank_December_2023_${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}.xlsx`;
-
-      const { filenameError } = validateFilenameFormat(filename, reportPeriod);
-
-      expect(filenameError).toEqual(`Report filename must not contain '${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}'`);
+        // Assert
+        expect(filenameError).toBe("The selected file must contain the word 'quarterly'");
+      });
     });
   });
 });

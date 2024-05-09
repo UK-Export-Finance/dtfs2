@@ -1,5 +1,5 @@
 const express = require('express');
-const { generateNoUserLoggedInAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateNoUserLoggedInAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../api');
 const { generateErrorSummary } = require('../helpers');
 
@@ -27,7 +27,9 @@ router.post('/feedback', async (req, res) => {
 
     const feedbackBody = req.body;
     feedbackBody.submittedBy = userDetails;
-    feedbackBody.auditDetails = sessionUserId ? generatePortalAuditDetails(sessionUserId) : generateNoUserLoggedInAuditDetails();
+    feedbackBody.auditDetails = sessionUserId
+      ? generatePortalAuditDetails(sessionUserId)
+      : generateNoUserLoggedInAuditDetails();
 
     const response = await api.createFeedback(feedbackBody);
     if (response) {

@@ -8,7 +8,11 @@
 # Sets environment variables for product, environment, and timezone.
 # Outputs these variables for use in subsequent jobs.
 #
-# 2. WebApp
+# 2. SQL Migrations
+# *****************
+# Runs new SQL migrations on the environment SQL database
+#
+# 3. WebApp
 # *********
 # Runs sequentially for each web app defined in the matrix.webapp list.
 # Sets the Dockerfile location based on the microservice (using the portal directory for portal-ui and the app's name for others).
@@ -17,7 +21,7 @@
 # Swaps the slot to make the new image live.
 # Cleans up the temporary slot.
 #
-# 3. Functions
+# 4. Functions
 # ************
 # Runs sequentially for each function defined in the matrix.functions list.
 # Builds and pushes Docker images for each function.
@@ -49,7 +53,6 @@ on:
       - feature
       - staging
       - prod
-      - release-1.5
 
 env:
   PRODUCT: dtfs
@@ -74,10 +77,41 @@ jobs:
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
+  database:
+    name: MSSQL 🗄️
+    if: ${{ github.event.workflow_run.conclusion == 'success' && '1' == vars.DATABASE }}
+    environment: ${{ needs.setup.outputs.environment }}
+    needs: [setup]
+    runs-on: [self-hosted, DTFS, deployment]
+    env:
+      SQL_DB_HOST: ${{ secrets.SQL_DB_HOST }}
+      SQL_DB_PORT: ${{ secrets.SQL_DB_PORT }}
+      SQL_DB_USERNAME: ${{ secrets.SQL_DB_USERNAME }}
+      SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD }}
+      SQL_DB_NAME: ${{ secrets.SQL_DB_NAME }}
+      SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
+
+    steps:
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Dependencies
+        working-directory: ./libs/common
+        run: npm ci
+
+      - name: Migrate
+        working-directory: ./libs/common
+        run: npm run db:migrate
+
   webapp:
     name: WebApp 🌐
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    needs: setup
+    needs: [setup]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
     env:

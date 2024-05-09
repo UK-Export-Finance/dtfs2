@@ -1,5 +1,9 @@
-const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/test-helpers/generate-mock-audit-database-record');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const {
+  generatePortalAuditDetails,
+  generateTfmAuditDetails,
+  generateParsedMockPortalUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -16,10 +20,10 @@ const newDeal = {
 describe('/v1/tfm/deal/:id', () => {
   beforeEach(async () => {
     await wipeDB.wipe([
-      CONSTANTS.DB_COLLECTIONS.DEALS,
-      CONSTANTS.DB_COLLECTIONS.FACILITIES,
-      CONSTANTS.DB_COLLECTIONS.TFM_DEALS,
-      CONSTANTS.DB_COLLECTIONS.TFM_FACILITIES,
+      MONGO_DB_COLLECTIONS.DEALS,
+      MONGO_DB_COLLECTIONS.FACILITIES,
+      MONGO_DB_COLLECTIONS.TFM_DEALS,
+      MONGO_DB_COLLECTIONS.TFM_FACILITIES,
     ]);
   });
 

@@ -1,9 +1,13 @@
+import { ROLES } from '@ukef/dtfs2-common';
 import { UNCONDITIONAL } from '../../../server/constants/facility-stage';
 
-const { ROLES: { MAKER } } = require('../../../server/constants');
 const { getNowAsEpoch } = require('../../../server/helpers');
 const { NON_MAKER_ROLES } = require('../../../test-helpers/common-role-lists');
-const { DATE: { LONDON_TIMEZONE } } = require('../../../server/constants')
+const {
+  DATE: { LONDON_TIMEZONE },
+} = require('../../../server/constants');
+
+const { MAKER } = ROLES;
 
 const componentRenderer = require('../../componentRenderer');
 

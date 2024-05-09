@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../src/drivers/db-client');
 const { FACILITY_TYPE } = require('../../../src/v1/gef/enums');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');

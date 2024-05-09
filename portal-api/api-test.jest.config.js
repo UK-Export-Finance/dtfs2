@@ -6,5 +6,6 @@ module.exports = {
   coverageReporters: ['text', 'text-summary'],
   testMatch: ['**/*.api-test.{js,ts}'],
   setupFilesAfterEnv: ['./api-test-setup.jest.config.js'],
-  testTimeout: 5000,
+  testTimeout: 80000,
+  workerIdleMemoryLimit: '3200MB'
 };

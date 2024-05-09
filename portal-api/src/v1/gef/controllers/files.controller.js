@@ -2,7 +2,7 @@ const stream = require('stream');
 const { ObjectId } = require('mongodb');
 const filesize = require('filesize');
 
-const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
+const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const File = require('../models/files');

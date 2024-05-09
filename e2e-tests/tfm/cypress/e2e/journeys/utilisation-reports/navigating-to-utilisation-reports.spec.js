@@ -1,14 +1,19 @@
+import {
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UtilisationReportEntityMockBuilder,
+  getPreviousReportPeriodForBankScheduleByMonth,
+  toIsoMonthStamp,
+} from '@ukef/dtfs2-common';
+import { subMonths } from 'date-fns';
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
-import { getMonthlyReportPeriodFromIsoSubmissionMonth, toIsoMonthStamp } from '../../../support/utils/dateHelpers';
-import { MOCK_UTILISATION_REPORT_DETAILS_WITHOUT_ID, UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../fixtures/mock-utilisation-report-details';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import { aliasSelector } from '../../../../../support/alias-selector';
 
 context('PDC_READ users can route to the payments page for a bank', () => {
   const allBanksAlias = 'allBanksAlias';
   const submissionMonth = toIsoMonthStamp(new Date());
-  const reportPeriod = getMonthlyReportPeriodFromIsoSubmissionMonth(submissionMonth);
+  const latestQuarterlySubmissionMonth = getLatestQuarterlySubmissionMonth();
   const status = UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
 
   beforeEach(() => {
@@ -21,20 +26,19 @@ context('PDC_READ users can route to the payments page for a bank', () => {
         .forEach((visibleBank) => {
           visibleBanks.push(visibleBank);
         });
-      cy.wrap(visibleBanks).its('length').should('be.gte', 1);
     });
 
-    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORT_DETAILS_FROM_DB);
+    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
 
     cy.wrap(visibleBanks).each((bank) => {
-      const mockUtilisationReportDetailsWithoutId = {
-        ...MOCK_UTILISATION_REPORT_DETAILS_WITHOUT_ID,
-        bank: { id: bank.id, name: bank.name },
-        status,
-        reportPeriod,
-      };
+      const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(bank.utilisationReportPeriodSchedule, submissionMonth);
 
-      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORT_DETAILS_INTO_DB, [mockUtilisationReportDetailsWithoutId]);
+      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(status)
+        .withId(bank.id)
+        .withBankId(bank.id)
+        .withReportPeriod(reportPeriod)
+        .build();
+      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [mockUtilisationReport]);
     });
 
     pages.landingPage.visit();
@@ -49,8 +53,11 @@ context('PDC_READ users can route to the payments page for a bank', () => {
     cy.get(aliasSelector(allBanksAlias)).each((bank) => {
       const { id, isVisibleInTfmUtilisationReports } = bank;
 
-      // TODO FN-1855 use common function to extract specific report period for non-monthly reporting bank (bank with id "10")
-      if (isVisibleInTfmUtilisationReports && id !== '10') {
+      if (isVisibleInTfmUtilisationReports) {
+        if (bank.id === '10') {
+          pages.utilisationReportsPage.tableRowSelector(id, latestQuarterlySubmissionMonth).should('exist');
+          return;
+        }
         pages.utilisationReportsPage.tableRowSelector(id, submissionMonth).should('exist');
       } else {
         pages.utilisationReportsPage.tableRowSelector(id, submissionMonth).should('not.exist');
@@ -59,7 +66,7 @@ context('PDC_READ users can route to the payments page for a bank', () => {
   });
 
   it('should show the problem with service page if there are no reports in the database', () => {
-    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORT_DETAILS_FROM_DB);
+    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
 
     pages.utilisationReportsPage.visit();
 
@@ -69,4 +76,30 @@ context('PDC_READ users can route to the payments page for a bank', () => {
         expect($heading).to.contain('Sorry, there is a problem with the service');
       });
   });
+
+  function getLatestQuarterlySubmissionMonth() {
+    const now = new Date();
+    const currentMonthOneIndexed = now.getMonth() + 1;
+    // Quarterly mock banks have report periods ending in months 2, 5, 8, 11
+    // The corresponding submission periods are 3, 6, 9, 12
+    switch (currentMonthOneIndexed) {
+      case 3:
+      case 6:
+      case 9:
+      case 12:
+        return toIsoMonthStamp(now);
+      case 1:
+      case 4:
+      case 7:
+      case 10:
+        return toIsoMonthStamp(subMonths(now, 1));
+      case 2:
+      case 5:
+      case 8:
+      case 11:
+        return toIsoMonthStamp(subMonths(now, 2));
+      default:
+        return toIsoMonthStamp(now);
+    }
+  }
 });

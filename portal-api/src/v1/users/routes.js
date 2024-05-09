@@ -1,5 +1,8 @@
-const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const {
+  generateAuditDatabaseRecordFromAuditDetails,
+  generatePortalAuditDetails,
+  generateNoUserLoggedInAuditDetails,
+} = require('@ukef/dtfs2-common/change-stream');
 const utils = require('../../crypto/utils');
 const { login } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
@@ -60,7 +63,6 @@ const combineErrors = (listOfErrors) =>
     return response;
   }, {});
 
-// This is called on the open and auth router ('v1/user' and 'v1/users') endpoints so req.user may be undefined
 module.exports.create = async (req, res, next) => {
   const userToCreate = req.body;
   const errors = await applyCreateRules(userToCreate);
@@ -94,8 +96,10 @@ module.exports.create = async (req, res, next) => {
     hash,
   };
 
-  // Defined `e` since `error` is defined on a higher scope
-  return create(newUser, userService, req.user, (e, user) => {
+  // This is called on the open and auth router ('v1/user' and 'v1/users') endpoints so req.user may be undefined
+  const auditDetails = req.user?._id ? generatePortalAuditDetails(req.user._id) : generateNoUserLoggedInAuditDetails();
+
+  return create(newUser, userService, auditDetails, (e, user) => {
     if (e) {
       return next(e);
     }
@@ -120,7 +124,9 @@ module.exports.updateById = async (req, res, next) => {
     const userIsAdmin = req.user?.roles?.includes(ADMIN);
 
     // TODO: DTFS2-7031 - update password changing rules
-    const requestOnlyHasPasswordFields = Object.keys(req.body).every((property) => ['password', 'passwordConfirm', 'currentPassword'].includes(property));
+    const requestOnlyHasPasswordFields = Object.keys(req.body).every((property) =>
+      ['password', 'passwordConfirm', 'currentPassword'].includes(property),
+    );
     const userIsChangingTheirOwnPassword = req.user?._id?.toString() === req.params._id && requestOnlyHasPasswordFields;
 
     if (!userIsAdmin && !userIsChangingTheirOwnPassword) {
@@ -147,7 +153,7 @@ module.exports.updateById = async (req, res, next) => {
         });
       }
 
-      return update(req.params._id, req.body, (updateErr, updatedUser) => {
+      return update(req.params._id, req.body, generatePortalAuditDetails(req.user._id), (updateErr, updatedUser) => {
         if (updateErr) {
           return next(updateErr);
         }
@@ -161,7 +167,7 @@ module.exports.updateById = async (req, res, next) => {
 };
 
 module.exports.disable = (req, res, next) => {
-  disable(req.params._id, (error, status) => {
+  disable(req.params._id, generatePortalAuditDetails(req.user._id), (error, status) => {
     if (error) {
       next(error);
     } else {
@@ -183,7 +189,7 @@ module.exports.remove = (req, res, next) => {
 module.exports.login = async (req, res, next) => {
   const { username, password } = req.body;
 
-  const loginResult = await login(username, password, userService);
+  const loginResult = await login(username, password, userService, generateNoUserLoggedInAuditDetails());
 
   if (loginResult.error) {
     // pick out the specific cases we understand and could treat differently
@@ -219,7 +225,7 @@ module.exports.loginWithSignInLink = (req, res) => signInLinkController.loginWit
 
 module.exports.resetPassword = async (req, res) => {
   const { email } = req.body;
-  await resetPassword(email, userService);
+  await resetPassword(email, userService, generateNoUserLoggedInAuditDetails());
 
   return res.status(200).send();
 };
@@ -301,7 +307,9 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
   // Invalid token - Token expired
   const user = await getUserByPasswordToken(resetPwdToken);
   // Stale token - Generated over 24 hours ago
-  const hoursSincePasswordResetRequest = user.resetPwdTimestamp ? (Date.now() - user.resetPwdTimestamp) / 1000 / 60 / 60 : 9999;
+  const hoursSincePasswordResetRequest = user.resetPwdTimestamp
+    ? (Date.now() - user.resetPwdTimestamp) / 1000 / 60 / 60
+    : 9999;
 
   // Token check
   if (!user || hoursSincePasswordResetRequest > 24) {
@@ -345,7 +353,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
-  return update(user._id, updateData, (updateErr) => {
+  return update(user._id, updateData, generatePortalAuditDetails(user._id), (updateErr) => {
     if (updateErr) {
       next(updateErr);
     } else {

@@ -2,16 +2,14 @@ const validator = require('validator');
 const REGEXES = require('../../../constants/regex');
 
 /**
- * @typedef {Object} ValidationError
- * @property {number} index - The index of the object
- * @property {string} error - The error message of the object
+ * @typedef {import('./utilisation-data-validator.types').UtilisationDataValidatorError} UtilisationDataValidatorError
  */
 
 /**
  * Validates the UKEF ID to match the UKEF facility ID regex or be falsey, returns an error message or null if valid.
  * @param {unknown} ukefId - ukef facility ID.
  * @param {number} index - index of the facility in the array.
- * @returns {ValidationError | null} - Error message or null if valid.
+ * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
 const validateUkefId = (ukefId, index) => {
   if (ukefId) {
@@ -26,7 +24,7 @@ const validateUkefId = (ukefId, index) => {
  * Validates the exporter to be a string or be falsey, returns an error message or null if valid.
  * @param {unknown} exporter - exporter of the facility.
  * @param {number} index - index of the facility in the array.
- * @returns {ValidationError | null} - Error message or null if valid.
+ * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
 const validateExporter = (exporter, index) => {
   if (exporter) {
@@ -38,11 +36,11 @@ const validateExporter = (exporter, index) => {
 };
 
 /**
- * Validates the exchange rate or be falsey, returns an error message or null if valid.
- * @param {unknown} currencyValue - exchange rate at payment date.
+ * Validates the value to be valid monetary value or be falsey, returns an error message or null if valid.
+ * @param {unknown} monetaryValue - the monetary value to check
  * @param {number} index - index of the facility in the array.
  * @param {string} fieldName - name of field appearing in error message.
- * @returns {ValidationError | null} - Error message or null if valid.
+ * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
 const validateMonetaryValue = (monetaryValue, index, fieldName) => {
   if (monetaryValue) {
@@ -55,10 +53,10 @@ const validateMonetaryValue = (monetaryValue, index, fieldName) => {
 
 /**
  * Validates the currency to be an ISO 4217 currency code or be falsey, returns an error message or null if valid.
- * @param {unknown} currencyValue - exchange rate at payment date.
+ * @param {unknown} currencyValue - the currency code to check
  * @param {number} index - index of the facility in the array.
  * @param {string} fieldName - name of field appearing in error message.
- * @returns {ValidationError | null} - Error message or null if valid.
+ * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
 const validateCurrencyValue = (currencyValue, index, fieldName) => {
   if (currencyValue) {
@@ -74,7 +72,7 @@ const validateCurrencyValue = (currencyValue, index, fieldName) => {
  * @param {unknown} exchangeRate - exchange rate at payment date.
  * @param {number} index - index of the facility in the array.
  * @param {string} fieldName - name of field appearing in error message.
- * @returns {ValidationError | null} - Error message or null if valid.
+ * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
 const validateExchangeRate = (exchangeRate, index, fieldName) => {
   if (exchangeRate) {
@@ -89,7 +87,7 @@ const validateExchangeRate = (exchangeRate, index, fieldName) => {
  * Validates the facility utilisation to be a monetary value or be falsey, returns an error message or null if valid.
  * @param {unknown} facilityUtilisation - utilisation of the facility.
  * @param {number} index - index of the facility in the array.
- * @returns {ValidationError | null} - Error message or null if valid.
+ * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
 const validateFacilityUtilisation = (facilityUtilisation, index) => validateMonetaryValue(facilityUtilisation, index, 'Facility utilisation');
 
@@ -97,7 +95,7 @@ const validateFacilityUtilisation = (facilityUtilisation, index) => validateMone
  * Validates the total fees accrued to be a monetary value or be falsey, returns an error message or null if valid.
  * @param {String | number | null} totalFeesAccrued
  * @param {number} index - index of the facility in the array.
- * @returns {ValidationError | null} - Error message or null if valid.
+ * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
 const validateTotalFeesAccrued = (totalFeesAccrued, index) => validateMonetaryValue(totalFeesAccrued, index, 'Total fees accrued');
 
@@ -105,7 +103,7 @@ const validateTotalFeesAccrued = (totalFeesAccrued, index) => validateMonetaryVa
  * Validates the total fees accrued currency to be an ISO 4217 currency code or be falsey, returns an error message or null if valid.
  * @param {unknown} totalFeesAccruedCurrency - total fees accrued currency of the facility.
  * @param {number} index - index of the facility in the array.
- * @returns {ValidationError | null} - Error message or null if valid.
+ * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
 const validateTotalFeesAccruedCurrency = (totalFeesAccruedCurrency, index) =>
   validateCurrencyValue(totalFeesAccruedCurrency, index, 'Total fees accrued currency');
@@ -114,7 +112,7 @@ const validateTotalFeesAccruedCurrency = (totalFeesAccruedCurrency, index) =>
  * Validates the total fees accrued exchange rate to be a number or be falsey, returns an error message or null if valid.
  * @param {unknown} totalFeesAccruedExchangeRate - total fees accrued exchange rate of the facility.
  * @param {number} index - index of the facility in the array.
- * @returns {ValidationError | null} - Error message or null if valid.
+ * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
 const validateTotalFeesAccruedExchangeRate = (totalFeesAccruedExchangeRate, index) =>
   validateExchangeRate(totalFeesAccruedExchangeRate, index, 'Total fees accrued exchange rate');
@@ -123,7 +121,7 @@ const validateTotalFeesAccruedExchangeRate = (totalFeesAccruedExchangeRate, inde
  * Validates the monthly fees paid to be a monetary value or be falsey, returns an error message or null if valid.
  * @param {unknown} monthlyFeesPaid
  * @param {number} index - index of the facility in the array.
- * @returns {ValidationError | null} - Error message or null if valid.
+ * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
 const validateMonthlyFeesPaid = (monthlyFeesPaid, index) => validateMonetaryValue(monthlyFeesPaid, index, 'Monthly fees paid');
 
@@ -131,7 +129,7 @@ const validateMonthlyFeesPaid = (monthlyFeesPaid, index) => validateMonetaryValu
  * Validates the monthly fees paid currency to be an ISO 4217 currency code or be falsey, returns an error message or null if valid.
  * @param {unknown} monthlyFeesPaidCurrency - monthly fees paid currency of the facility.
  * @param {number} index - index of the facility in the array.
- * @returns {ValidationError | null} - Error message or null if valid.
+ * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
 const validateMonthlyFeesPaidCurrency = (monthlyFeesPaidCurrency, index) => validateCurrencyValue(monthlyFeesPaidCurrency, index, 'Monthly fees paid currency');
 
@@ -139,7 +137,7 @@ const validateMonthlyFeesPaidCurrency = (monthlyFeesPaidCurrency, index) => vali
  * Validates the payment currency to be an ISO 4217 currency code or be falsey, returns an error message or null if valid.
  * @param {unknown} paymentCurrency - payment currency of the facility.
  * @param {number} index - index of the facility in the array.
- * @returns {ValidationError | null} - Error message or null if valid.
+ * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
 const validatePaymentCurrency = (paymentCurrency, index) => validateCurrencyValue(paymentCurrency, index, 'Payment currency');
 
@@ -147,7 +145,7 @@ const validatePaymentCurrency = (paymentCurrency, index) => validateCurrencyValu
  * Validates the base currency to be an ISO 4217 currency code or be falsey, returns an error message or null if valid.
  * @param {unknown} baseCurrency - base currency of the facility.
  * @param {number} index - index of the facility in the array.
- * @returns {ValidationError | null} - Error message or null if valid.
+ * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
 const validateBaseCurrency = (baseCurrency, index) => validateCurrencyValue(baseCurrency, index, 'Base currency');
 
@@ -155,7 +153,7 @@ const validateBaseCurrency = (baseCurrency, index) => validateCurrencyValue(base
  * Validates the payment exchange rate to be a number or be falsey, returns an error message or null if valid.
  * @param {unknown} paymentCurrencyExchangeRate - payment currency exchange rate of the facility.
  * @param {number} index - index of the facility in the array.
- * @returns {ValidationError | null} - Error message or null if valid.
+ * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
 const validatePaymentExchangeRate = (paymentCurrencyExchangeRate, index) => validateExchangeRate(paymentCurrencyExchangeRate, index, 'Payment exchange rate');
 

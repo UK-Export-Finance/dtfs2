@@ -7,11 +7,20 @@ const { BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
 
 context('List previous utilisation reports', () => {
   before(() => {
-    cy.insertUtilisationReportDetails(previousReportDetails);
+    cy.removeAllUtilisationReports();
+
+    cy.task('getUserFromDbByEmail', BANK1_PAYMENT_REPORT_OFFICER1.email).then((user) => {
+      const { _id } = user;
+      const previousReportsWithUploadedByUserId = previousReportDetails.map((reportWithoutId) => ({
+        ...reportWithoutId,
+        uploadedByUserId: _id.toString(),
+      }));
+      cy.insertUtilisationReports(previousReportsWithUploadedByUserId);
+    });
   });
 
   after(() => {
-    cy.removeAllUtilisationReportDetails();
+    cy.removeAllUtilisationReports();
   });
 
   describe('On initial page load ', () => {

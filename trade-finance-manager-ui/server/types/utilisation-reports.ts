@@ -1,11 +1,8 @@
-import { IsoDateTimeStamp, IsoMonthStamp } from './date';
-import { ValuesOf } from './types-helper';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../constants';
-
-export type UtilisationReportReconciliationStatus = ValuesOf<typeof UTILISATION_REPORT_RECONCILIATION_STATUS>;
+import { UtilisationReportReconciliationStatus, IsoDateTimeStamp, IsoMonthStamp, ReportPeriod } from '@ukef/dtfs2-common';
 
 export type UtilisationReportReconciliationSummaryItem = {
   reportId: string;
+  reportPeriod: ReportPeriod;
   bank: {
     id: string;
     name: string;
@@ -19,9 +16,4 @@ export type UtilisationReportReconciliationSummaryItem = {
 export type UtilisationReportReconciliationSummary = {
   submissionMonth: IsoMonthStamp;
   items: UtilisationReportReconciliationSummaryItem[];
-};
-
-export type ReportWithStatus = {
-  status: UtilisationReportReconciliationStatus;
-  reportId: string;
 };

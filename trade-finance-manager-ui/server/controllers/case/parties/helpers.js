@@ -1,3 +1,4 @@
+const { TEAM_IDS } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../constants');
 const { userIsInTeam } = require('../../../helpers/user');
 
@@ -6,7 +7,7 @@ const bondParties = [
   CONSTANTS.PARTY.BOND.BOND_BENEFICIARY,
 ];
 
-const userCanEdit = (user) => userIsInTeam(user, [CONSTANTS.TEAM_IDS.BUSINESS_SUPPORT]);
+const userCanEdit = (user) => userIsInTeam(user, [TEAM_IDS.BUSINESS_SUPPORT]);
 
 /**
  * Returns bond type from party type

@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
+import { asString } from '@ukef/dtfs2-common';
 import { FileshareConfig } from '../types/fileshare';
-import { asString } from '../utils/validation';
 
 dotenv.config();
 

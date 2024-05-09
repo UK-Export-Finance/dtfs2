@@ -1,5 +1,5 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const mapFacilityValueExportCurrency = require('./mapFacilityValueExportCurrency');
-const { CURRENCY } = require('../../../../constants/currency.constant');
 
 describe('mapFacilityValueExportCurrency()', () => {
   const mockFacility = {
