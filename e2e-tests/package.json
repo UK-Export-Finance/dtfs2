@@ -18,7 +18,7 @@
   "license": "MIT",
   "author": "UK Export Finance",
   "scripts": {
-    "lint": "eslint --color **/*.{ts,js}",
+    "lint": "eslint --color **/*.{ts,js} --ignore-path '../.eslintignore'",
     "lint:fix": "eslint --color **/*.{ts,js} --fix",
     "load": "cd .. && npm run load",
     "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js}",

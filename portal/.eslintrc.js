@@ -47,7 +47,14 @@ module.exports = {
         'import/no-extraneous-dependencies': [
           'error',
           {
-            devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js', '**/**api-test**', '**/__mocks__/**'],
+            devDependencies: [
+              '**/*.test.js',
+              '**/*.spec.js',
+              '**/webpack.*.js',
+              '**/api-test*/**',
+              '**/**api-test**',
+              '**/__mocks__/**',
+            ],
           },
         ],
         'import/no-named-as-default': 'off',
