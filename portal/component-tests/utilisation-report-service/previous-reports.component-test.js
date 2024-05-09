@@ -100,7 +100,7 @@ describe(page, () => {
       wrapper.expectText('[data-cy="list-item-link-May"]').toRead('May 2023 GEF report');
     });
 
-    it.only('should render report statuses', () => {
+    it('should render report statuses', () => {
       wrapper.expectElement('[data-cy="utilisation-report-reconciliation-status"]').toHaveCount(4);
       wrapper.expectText('main').toContain('Report completed');
       wrapper.expectText('main').toContain('Reconciliation in progress');

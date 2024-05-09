@@ -53,7 +53,6 @@ on:
       - feature
       - staging
       - prod
-      - release-1.5
 
 env:
   PRODUCT: dtfs
@@ -78,12 +77,12 @@ jobs:
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
-  sql-migrations:
-    name: SQL Migrations 🗄️
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    needs: setup
-    runs-on: [self-hosted, DTFS, deployment]
+  database:
+    name: MSSQL 🗄️
+    if: ${{ github.event.workflow_run.conclusion == 'success' && '1' == vars.DATABASE }}
     environment: ${{ needs.setup.outputs.environment }}
+    needs: [setup]
+    runs-on: [self-hosted, DTFS, deployment]
     env:
       SQL_DB_HOST: ${{ secrets.SQL_DB_HOST }}
       SQL_DB_PORT: ${{ secrets.SQL_DB_PORT }}
@@ -93,26 +92,26 @@ jobs:
       SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
 
     steps:
-      - name: 1. Latest commit hash
+      - name: Repository
         uses: actions/checkout@v4
 
-      - name: 2. Install node
+      - name: Node
         uses: actions/setup-node@v3
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
-      - name: 3. Install dependencies
+      - name: Dependencies
         working-directory: ./libs/common
         run: npm ci
 
-      - name: 4. Run migrations
+      - name: Migrate
         working-directory: ./libs/common
         run: npm run db:migrate
 
   webapp:
     name: WebApp 🌐
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    needs: [setup, sql-migrations]
+    needs: [setup]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
     env:
