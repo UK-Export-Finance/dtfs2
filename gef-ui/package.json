@@ -71,7 +71,7 @@
     "sanitize-html": "^2.13.0",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.2",
-    "validator": "^13.11.0"
+    "validator": "^13.12.0"
   },
   "devDependencies": {
     "@babel/core": "7.21.5",

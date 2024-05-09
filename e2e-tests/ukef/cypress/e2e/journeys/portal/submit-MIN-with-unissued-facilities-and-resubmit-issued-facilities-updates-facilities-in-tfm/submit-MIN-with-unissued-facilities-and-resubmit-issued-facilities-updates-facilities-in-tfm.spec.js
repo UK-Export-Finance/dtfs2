@@ -18,9 +18,9 @@ import {
   fillAndSubmitIssueLoanFacilityForm,
 } from '../../../../../../portal/cypress/e2e/journeys/maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm';
 
-const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
-
 import { UNDERWRITER_MANAGER_1, TFM_URL } from '../../../../../../e2e-fixtures';
+
+const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 context('Portal to TFM deal submission', () => {
   let deal;

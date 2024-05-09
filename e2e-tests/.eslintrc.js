@@ -29,14 +29,7 @@ const baseRules = {
   'import/no-extraneous-dependencies': [
     'error',
     {
-      devDependencies: [
-        '**/*.test.{js,ts}',
-        '**/*.api-test.{js,ts}',
-        '**/*.spec.{js,ts}',
-        '**/webpack.*.{js,ts}',
-        '**/api-test*/**',
-        '**/__mocks__/**',
-      ],
+      devDependencies: true,
     },
   ],
   'import/prefer-default-export': 'off',
@@ -59,10 +52,17 @@ const baseRules = {
       consistent: true,
     },
   ],
+  'cypress/no-assigning-return-values': 'error',
+  'cypress/no-unnecessary-waiting': 'error',
+  'cypress/assertion-before-screenshot': 'warn',
+  'cypress/no-force': 'warn',
+  'cypress/no-async-tests': 'error',
+  'cypress/no-pause': 'error',
+  'cypress/unsafe-to-chain-command': 'warn',
 };
 
 module.exports = {
-  extends: ['airbnb-base', 'plugin:prettier/recommended'],
+  extends: ['airbnb-base', 'plugin:cypress/recommended', 'plugin:prettier/recommended'],
   env: {
     jest: true,
     browser: true,
