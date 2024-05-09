@@ -4,7 +4,7 @@ describe('changeIndustryClasses', () => {
   const elementId = 'mock-element';
 
   beforeEach(() => {
-    document.body.innerHTML = `<div id="${elementId}" class="govuk-visually-hidden">` + '  <p>test</p>' + '</div>';
+    document.body.innerHTML = `<div id="${elementId}" class="govuk-visually-hidden"><p>test</p></div>`;
   });
 
   describe('getElement', () => {

@@ -25,7 +25,7 @@ describe('changeIndustryClasses', () => {
   const maliciousOptionValue = '"></select><img src=no onerror=alert(1)>';
 
   beforeEach(() => {
-    document.body.innerHTML = '<select id="industry-class">' + '  <option value="1">test</option>' + '</select>';
+    document.body.innerHTML = '<select id="industry-class"><option value="1">test</option></select>';
   });
 
   describe('appendSelectOption', () => {

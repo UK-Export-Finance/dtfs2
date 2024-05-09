@@ -94,6 +94,8 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': ['error'],
         '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
         '@typescript-eslint/restrict-template-expressions': ['error', { allowNever: true }],
+        '@typescript-eslint/ban-ts-comment': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
       },
     },
   ],
