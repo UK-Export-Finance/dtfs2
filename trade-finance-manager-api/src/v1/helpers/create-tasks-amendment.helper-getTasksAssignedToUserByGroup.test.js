@@ -13,6 +13,8 @@ const {
   MOCK_TASKS_CHANGE_TIME,
 } = require('../__mocks__/mock-amendment-tasks-assign-by-team');
 
+jest.mock('../api');
+
 describe('getTasksAssignedToUserByGroup()', () => {
   const { underwriter, underwriterManager } = MOCK_USERS_FOR_TASKS;
 
