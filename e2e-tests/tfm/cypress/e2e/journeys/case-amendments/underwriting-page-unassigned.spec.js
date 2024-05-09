@@ -113,7 +113,7 @@ context('Amendments underwriting page', () => {
 
       pages.underwritingPage.amendmentHeading().contains(`Amendment for facility ${ukefFacilityId}`);
 
-      pages.underwritingPage.assignAmendmentLeadUnderwriterButton().contains('Add underwriter');
+      pages.underwritingPage.amendmentAddLeadUnderwriterLink().contains('Add underwriter');
 
       pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
 
