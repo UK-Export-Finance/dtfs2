@@ -3,10 +3,7 @@ const { orderNumber } = require('../../../utils/error-list-order-number');
 const { dateValidationText, dateHasAllValues } = require('./date');
 const isReadyForValidation = require('../helpers/isReadyForValidation.helper');
 const coverDatesValidation = require('../helpers/coverDatesValidation.helpers');
-const {
-  getStartOfDateFromEpochMillisecondString,
-  getStartOfDateFromDayMonthYearStrings,
-} = require('../../helpers/date');
+const { getStartOfDateFromEpochMillisecondString, getStartOfDateFromDayMonthYearStrings } = require('../../helpers/date');
 
 module.exports = (submittedValues, deal, errorList) => {
   const newErrorList = errorList;
@@ -18,11 +15,7 @@ module.exports = (submittedValues, deal, errorList) => {
   } = submittedValues;
 
   if (isReadyForValidation(deal, submittedValues)) {
-    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(
-      coverEndDateDay,
-      coverEndDateMonth,
-      coverEndDateYear,
-    );
+    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(coverEndDateDay, coverEndDateMonth, coverEndDateYear);
 
     if (dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
       const coverEndDate = getStartOfDateFromDayMonthYearStrings(coverEndDateDay, coverEndDateMonth, coverEndDateYear);

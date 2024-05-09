@@ -44,12 +44,7 @@ describe(`should return ${CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED} if no document
   });
 
   it(`should return ${CONSTANTS.DEAL.DEAL_STATUS.COMPLETED} if all required documents (4 in total) have been uploaded`, () => {
-    mockObject.requiredFields = [
-      'manualInclusion',
-      'debtorAndCreditorReports',
-      'corporateStructure',
-      'financialInformationCommentary',
-    ];
+    mockObject.requiredFields = ['manualInclusion', 'debtorAndCreditorReports', 'corporateStructure', 'financialInformationCommentary'];
     mockObject.financialInformationCommentary = [{}];
 
     const result = supportingInfoStatus(mockObject);
@@ -57,13 +52,7 @@ describe(`should return ${CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED} if no document
   });
 
   it(`should return ${CONSTANTS.DEAL.DEAL_STATUS.COMPLETED} if all required documents (5 in total) have been uploaded`, () => {
-    mockObject.requiredFields = [
-      'manualInclusion',
-      'debtorAndCreditorReports',
-      'corporateStructure',
-      'financialInformationCommentary',
-      'financialForecasts',
-    ];
+    mockObject.requiredFields = ['manualInclusion', 'debtorAndCreditorReports', 'corporateStructure', 'financialInformationCommentary', 'financialForecasts'];
     mockObject.financialForecasts = [{}];
 
     const result = supportingInfoStatus(mockObject);

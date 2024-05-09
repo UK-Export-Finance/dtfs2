@@ -1,8 +1,4 @@
-import {
-  submittedEligibilityMatchesOriginalData,
-  flattenOriginalData,
-  originalCriteriaAnswersAsStrings,
-} from './submittedEligibilityMatchesOriginalData';
+import { submittedEligibilityMatchesOriginalData, flattenOriginalData, originalCriteriaAnswersAsStrings } from './submittedEligibilityMatchesOriginalData';
 
 describe('submittedEligibilityMatchesOriginalData', () => {
   describe('flattenOriginalData', () => {

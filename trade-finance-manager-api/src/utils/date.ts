@@ -18,8 +18,7 @@ export const getNowAsEpochMillisecondString = (): UnixTimestampString => getDate
  * @param year as 2 or 4 digit number
  * @returns year in `yyyy` formatting (e.g. 24 becomes 2024)
  */
-export const formatYear = (year: string | number) =>
-  Number(year) < 1000 ? (2000 + parseInt(String(year), 10)).toString() : year && year.toString();
+export const formatYear = (year: string | number) => (Number(year) < 1000 ? (2000 + parseInt(String(year), 10)).toString() : year && year.toString());
 
 /**
  * @param date
@@ -43,8 +42,7 @@ export const formatTimestamp = (dateStr: string): IsoDayStamp => {
  * @returns Unix timestamp representing number of milliseconds between this date and 1st January 1970 (UTC),
  * stored as a string
  */
-export const convertDateToTimestamp = (dateStr: string): UnixTimestampString =>
-  getDateAsEpochMillisecondString(new Date(dateStr));
+export const convertDateToTimestamp = (dateStr: string): UnixTimestampString => getDateAsEpochMillisecondString(new Date(dateStr));
 
 /**
  * @param day the day of the month as a string

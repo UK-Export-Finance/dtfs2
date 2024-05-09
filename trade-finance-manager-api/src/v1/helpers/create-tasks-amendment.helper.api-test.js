@@ -1,8 +1,4 @@
-const {
-  createAmendmentTasks,
-  createTasksAutomaticAmendment,
-  createTasksManualAmendment,
-} = require('./create-tasks-amendment.helper');
+const { createAmendmentTasks, createTasksAutomaticAmendment, createTasksManualAmendment } = require('./create-tasks-amendment.helper');
 
 describe('createAmendmentTasks()', () => {
   const mockFacility = {

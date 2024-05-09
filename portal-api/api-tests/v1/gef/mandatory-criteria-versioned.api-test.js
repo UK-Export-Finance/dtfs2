@@ -60,8 +60,7 @@ describe(baseUrl, () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(latestMandatoryCriteriaVersionedUrl),
-      makeRequestWithAuthHeader: (authHeader) =>
-        get(latestMandatoryCriteriaVersionedUrl, { headers: { Authorization: authHeader } }),
+      makeRequestWithAuthHeader: (authHeader) => get(latestMandatoryCriteriaVersionedUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -108,8 +107,7 @@ describe(baseUrl, () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(oneMandatoryCriteriaVersionedUrl),
-      makeRequestWithAuthHeader: (authHeader) =>
-        get(oneMandatoryCriteriaVersionedUrl, { headers: { Authorization: authHeader } }),
+      makeRequestWithAuthHeader: (authHeader) => get(oneMandatoryCriteriaVersionedUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({

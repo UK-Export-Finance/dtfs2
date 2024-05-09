@@ -20,11 +20,7 @@ function validateFacilityGuarantee({ feeType, dayCountBasis, inAdvanceFrequency,
     errMsg: 'Select how often your bank will pay the fee to UKEF',
   };
 
-  const PAYMENT_TYPES = [
-    CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE,
-    CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ARREARS,
-    CONSTANTS.FACILITY_PAYMENT_TYPE.AT_MATURITY,
-  ];
+  const PAYMENT_TYPES = [CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE, CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ARREARS, CONSTANTS.FACILITY_PAYMENT_TYPE.AT_MATURITY];
 
   if (!PAYMENT_TYPES.includes(feeType)) {
     facilityGuaranteeErrors.push(feeTypeError);

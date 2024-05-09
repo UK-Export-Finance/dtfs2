@@ -44,14 +44,10 @@ context('Eligibility Criterion 21', () => {
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/automatic-cover`));
 
       automaticCover.errorSummary().should('be.visible');
-      automaticCover
-        .errorSummary()
-        .contains('21. Select if the Obligor is involved in any additional UKEF supported facility');
+      automaticCover.errorSummary().contains('21. Select if the Obligor is involved in any additional UKEF supported facility');
 
       automaticCover.fieldError().should('be.visible');
-      automaticCover
-        .fieldError()
-        .contains('21. Select if the Obligor is involved in any additional UKEF supported facility');
+      automaticCover.fieldError().contains('21. Select if the Obligor is involved in any additional UKEF supported facility');
     });
 
     it('The eligibility criteria have the correct aria-labels on radio buttons for true and false', () => {
@@ -90,15 +86,9 @@ context('Eligibility Criterion 21', () => {
       ineligibleAutomaticCover.content().contains("You'll now need to complete a manual inclusion application.");
       ineligibleAutomaticCover.continueButton().click();
 
-      cy.url().should(
-        'eq',
-        relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`),
-      );
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
 
-      cy.uploadFile(
-        'upload-file-valid.doc',
-        `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`,
-      );
+      cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('upload_file_valid.doc');
     });
   });

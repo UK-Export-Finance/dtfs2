@@ -4,10 +4,7 @@ const { userHasAccessTo } = require('../users/checks');
 const loanValidationErrors = require('../validation/loan');
 const { calculateGuaranteeFee, calculateUkefExposure } = require('../section-calculations');
 const { handleTransactionCurrencyFields } = require('../section-currency');
-const {
-  hasAllRequestedCoverStartDateValues,
-  updateRequestedCoverStartDate,
-} = require('../facility-dates/requested-cover-start-date');
+const { hasAllRequestedCoverStartDateValues, updateRequestedCoverStartDate } = require('../facility-dates/requested-cover-start-date');
 const { hasAllCoverEndDateValues, updateCoverEndDate } = require('../facility-dates/cover-end-date');
 const { loanStatus } = require('../section-status/loans');
 const { sanitizeCurrency } = require('../../utils/number');

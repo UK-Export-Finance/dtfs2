@@ -1,8 +1,4 @@
-import {
-  BankReportPeriodSchedule,
-  UtilisationReportReconciliationStatus,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
-} from '@ukef/dtfs2-common';
+import { BankReportPeriodSchedule, UtilisationReportReconciliationStatus, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import {
   getReportDueDate,
   getFormattedReportDueDate,
@@ -13,10 +9,7 @@ import {
 } from './utilisation-report-helpers';
 import externalApi from '../../external-api/api';
 import api from '../../v1/api';
-import {
-  aNotReceivedUtilisationReportResponse,
-  aUtilisationReportResponse,
-} from '../../../test-helpers/test-data/utilisation-report';
+import { aNotReceivedUtilisationReportResponse, aUtilisationReportResponse } from '../../../test-helpers/test-data/utilisation-report';
 import { BankResponse, UtilisationReportResponseBody } from '../../v1/api-response-types';
 import { aReportPeriod } from '../../../test-helpers/test-data/report-period';
 import { aBank } from '../../../test-helpers/test-data/banks';
@@ -180,9 +173,7 @@ describe('utilisation-report-helpers', () => {
           year: 2098,
         },
       };
-      jest
-        .mocked(api.getUtilisationReports)
-        .mockResolvedValue([aNotReceivedUtilisationReportResponse(), aNotReceivedUtilisationReportResponse()]);
+      jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse(), aNotReceivedUtilisationReportResponse()]);
 
       // Act + Assert
       await expect(() => getIsReportDue(BANK_ID, reportPeriod)).rejects.toThrow(
@@ -210,9 +201,7 @@ describe('utilisation-report-helpers', () => {
       expect(result).toBe(true);
     });
 
-    it.each(
-      Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).filter((status) => status !== 'REPORT_NOT_RECEIVED'),
-    )(
+    it.each(Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).filter((status) => status !== 'REPORT_NOT_RECEIVED'))(
       'returns false when there is an existing report with status %s',
       async (status: UtilisationReportReconciliationStatus) => {
         // Arrange
@@ -334,9 +323,7 @@ describe('utilisation-report-helpers', () => {
 
       // Assert
       expect(sendEmailCallback).not.toHaveBeenCalled();
-      expect(console.info).toHaveBeenCalledWith(
-        expect.stringContaining('paymentOfficerTeam.emails property against bank is not an array or is empty'),
-      );
+      expect(console.info).toHaveBeenCalledWith(expect.stringContaining('paymentOfficerTeam.emails property against bank is not an array or is empty'));
     });
 
     it('does not send an email when the bank has an invalid payment officer team email', async () => {
@@ -435,10 +422,7 @@ describe('utilisation-report-helpers', () => {
 
       jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
 
-      const sendEmailCallback = jest
-        .fn()
-        .mockRejectedValueOnce(new Error('Failed to send!'))
-        .mockResolvedValue(undefined);
+      const sendEmailCallback = jest.fn().mockRejectedValueOnce(new Error('Failed to send!')).mockResolvedValue(undefined);
 
       // Act
       await sendEmailToAllBanksWhereReportNotReceived({
@@ -522,9 +506,7 @@ describe('utilisation-report-helpers', () => {
 
       // Assert
       expect(console.info).toHaveBeenCalledWith(
-        expect.stringContaining(
-          'report is not due this month, current reporting period for bank is June to August 2023',
-        ),
+        expect.stringContaining('report is not due this month, current reporting period for bank is June to August 2023'),
       );
       expect(sendEmailCallback).not.toHaveBeenCalled();
     });

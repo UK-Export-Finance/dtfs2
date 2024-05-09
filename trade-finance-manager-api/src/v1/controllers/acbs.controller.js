@@ -135,9 +135,7 @@ const checkAzureAcbsFunction = async () => {
         status: { $eq: DURABLE_FUNCTIONS_LOG.STATUS.RUNNING },
       })
       .toArray();
-    const tasks = await runningTasks.map(({ acbsTaskLinks = {} }) =>
-      api.getFunctionsAPI(acbsTaskLinks.statusQueryGetUri),
-    );
+    const tasks = await runningTasks.map(({ acbsTaskLinks = {} }) => api.getFunctionsAPI(acbsTaskLinks.statusQueryGetUri));
     const taskList = await Promise.all(tasks);
 
     taskList.forEach(async (task) => {
@@ -218,9 +216,7 @@ const issueAcbsFacilities = async (deal) => {
 
   const acbsIssuedFacilities = await Promise.all(acbsIssuedFacilitiesPromises);
   const promises = await Promise.all(
-    acbsIssuedFacilities
-      .filter((acbsTaskLinks) => acbsTaskLinks?.id)
-      .map(async (acbsTaskLinks) => await addToACBSLog({ deal, acbsTaskLinks })),
+    acbsIssuedFacilities.filter((acbsTaskLinks) => acbsTaskLinks?.id).map(async (acbsTaskLinks) => await addToACBSLog({ deal, acbsTaskLinks })),
   );
 
   // Return `false` if promises is an empty array

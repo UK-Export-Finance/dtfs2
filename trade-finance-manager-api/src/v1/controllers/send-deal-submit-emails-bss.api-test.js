@@ -61,10 +61,7 @@ describe('send-deal-submit-emails - BSS', () => {
       exporter: {
         companyName: mockDealMia.dealSnapshot.exporter.companyName,
       },
-      facilities: [
-        ...mockDealMia.dealSnapshot.bondTransactions.items,
-        ...mockDealMia.dealSnapshot.loanTransactions.items,
-      ],
+      facilities: [...mockDealMia.dealSnapshot.bondTransactions.items, ...mockDealMia.dealSnapshot.loanTransactions.items],
       tfm: mockDealMia.tfm,
     };
   });
@@ -117,15 +114,9 @@ describe('send-deal-submit-emails - BSS', () => {
       it('should call sendEmail and return object of sent emails', async () => {
         const result = await sendDealSubmitEmails(mockDealIssuedAndUnissued);
 
-        const facilityLists = generateFacilityLists(
-          mockDealIssuedAndUnissued.dealType,
-          mockDealIssuedAndUnissued.facilities,
-        );
+        const facilityLists = generateFacilityLists(mockDealIssuedAndUnissued.dealType, mockDealIssuedAndUnissued.facilities);
 
-        const expectedEmailVariables = generateBssDealAinMinConfirmationEmailVariables(
-          mockDealIssuedAndUnissued,
-          facilityLists,
-        );
+        const expectedEmailVariables = generateBssDealAinMinConfirmationEmailVariables(mockDealIssuedAndUnissued, facilityLists);
 
         expect(sendEmailApiSpy).toHaveBeenCalled();
 
@@ -233,15 +224,9 @@ describe('send-deal-submit-emails - BSS', () => {
       it('should call sendEmail and return object of sent emails', async () => {
         const result = await sendDealSubmitEmails(mockDealIssuedAndUnissued);
 
-        const facilityLists = generateFacilityLists(
-          mockDealIssuedAndUnissued.dealType,
-          mockDealIssuedAndUnissued.facilities,
-        );
+        const facilityLists = generateFacilityLists(mockDealIssuedAndUnissued.dealType, mockDealIssuedAndUnissued.facilities);
 
-        const expectedEmailVariables = generateBssDealAinMinConfirmationEmailVariables(
-          mockDealIssuedAndUnissued,
-          facilityLists,
-        );
+        const expectedEmailVariables = generateBssDealAinMinConfirmationEmailVariables(mockDealIssuedAndUnissued, facilityLists);
 
         expect(sendEmailApiSpy).toHaveBeenCalled();
 

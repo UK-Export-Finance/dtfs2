@@ -63,11 +63,7 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
   })
   feeRecords!: FeeRecordEntity[];
 
-  static createNotReceived({
-    bankId,
-    reportPeriod,
-    requestSource,
-  }: CreateNotReceivedUtilisationReportEntityParams): UtilisationReportEntity {
+  static createNotReceived({ bankId, reportPeriod, requestSource }: CreateNotReceivedUtilisationReportEntityParams): UtilisationReportEntity {
     const report = new UtilisationReportEntity();
     report.bankId = bankId;
     report.reportPeriod = reportPeriod;
@@ -78,11 +74,7 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     return report;
   }
 
-  public updateWithUploadDetails({
-    azureFileInfo,
-    uploadedByUserId,
-    requestSource,
-  }: UpdateWithUploadDetailsParams): void {
+  public updateWithUploadDetails({ azureFileInfo, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): void {
     this.dateUploaded = new Date();
     this.azureFileInfo = azureFileInfo;
     this.status = 'PENDING_RECONCILIATION';

@@ -52,9 +52,7 @@ context('View dashboard deals as a maker', () => {
   });
 
   beforeEach(() => {
-    gefDeal = ALL_DEALS.find(
-      ({ dealType, maker }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF && maker.username === BANK1_MAKER2.username,
-    );
+    gefDeal = ALL_DEALS.find(({ dealType, maker }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF && maker.username === BANK1_MAKER2.username);
 
     bssDeal = ALL_DEALS.find(({ dealType }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
 

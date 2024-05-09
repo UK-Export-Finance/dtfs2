@@ -16,14 +16,7 @@ const CONSTANTS = require('../constants');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
-const mandatoryFields = [
-  'covenantIdentifier',
-  'covenantType',
-  'maximumLiability',
-  'currency',
-  'guaranteeExpiryDate',
-  'effectiveDate',
-];
+const mandatoryFields = ['covenantIdentifier', 'covenantType', 'maximumLiability', 'currency', 'guaranteeExpiryDate', 'effectiveDate'];
 
 const createFacilityCovenant = async (context) => {
   try {
@@ -64,9 +57,7 @@ const createFacilityCovenant = async (context) => {
 
     // Default currency code to GBP (O)
     acbsFacilityCovenantInput.currency =
-      currencyReq.status === 200 && currencyReq.data.length > 1
-        ? currencyReq.data[0].acbsCode
-        : CONSTANTS.FACILITY.ACBS_CURRENCY_CODE.DEFAULT;
+      currencyReq.status === 200 && currencyReq.data.length > 1 ? currencyReq.data[0].acbsCode : CONSTANTS.FACILITY.ACBS_CURRENCY_CODE.DEFAULT;
 
     // Check for mandatory fields
     const missingMandatory = findMissingMandatory(acbsFacilityCovenantInput, mandatoryFields);

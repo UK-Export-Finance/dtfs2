@@ -17,16 +17,11 @@ module.exports = (submittedValues, errorList, deal) => {
 
   const { submissionType: dealSubmissionType } = deal;
 
-  const {
-    submissionDate: dealSubmissionDateTimestamp,
-    manualInclusionNoticeSubmissionDate: manualInclusionNoticeSubmissionDateTimestamp,
-  } = deal.details;
+  const { submissionDate: dealSubmissionDateTimestamp, manualInclusionNoticeSubmissionDate: manualInclusionNoticeSubmissionDateTimestamp } = deal.details;
 
   const dealSubmissionDate = getStartOfDateFromEpochMillisecondString(dealSubmissionDateTimestamp);
   const requestedCoverStartDate = getStartOfDateFromEpochMillisecondString(submittedValues.requestedCoverStartDate);
-  const manualInclusionNoticeSubmissionDate = getStartOfDateFromEpochMillisecondString(
-    manualInclusionNoticeSubmissionDateTimestamp,
-  );
+  const manualInclusionNoticeSubmissionDate = getStartOfDateFromEpochMillisecondString(manualInclusionNoticeSubmissionDateTimestamp);
   // EC 15 is: 'Cover Start Date is no more than three months from the date of submission'
   const eligibilityCriteria15 = deal.eligibility.criteria.find((c) => c.id === 15);
   const canEnterDateGreaterThan3Months = eligibilityCriteria15 && eligibilityCriteria15.answer === false;
@@ -51,9 +46,7 @@ module.exports = (submittedValues, errorList, deal) => {
       // if 3 months after deal submission date
       if (!specialIssuePermission && isAfter(requestedCoverStartDate, dealSubmissionPlus3Months)) {
         newErrorList.requestedCoverStartDate = {
-          text: `Requested Cover Start Date must be between ${getLongFormattedDate(
-            dealSubmissionDate,
-          )} and ${getLongFormattedDate(dealSubmissionPlus3Months)}`,
+          text: `Requested Cover Start Date must be between ${getLongFormattedDate(dealSubmissionDate)} and ${getLongFormattedDate(dealSubmissionPlus3Months)}`,
           order: orderNumber(newErrorList),
         };
       }
@@ -68,9 +61,7 @@ module.exports = (submittedValues, errorList, deal) => {
       if (manualInclusionNoticeSubmissionDateTimestamp) {
         if (isBefore(requestedCoverStartDate, manualInclusionNoticeSubmissionDate)) {
           newErrorList.requestedCoverStartDate = {
-            text: `Requested Cover Start Date must be after ${getLongFormattedDate(
-              manualInclusionNoticeSubmissionDate,
-            )}`,
+            text: `Requested Cover Start Date must be after ${getLongFormattedDate(manualInclusionNoticeSubmissionDate)}`,
             order: orderNumber(newErrorList),
           };
         }
@@ -93,24 +84,18 @@ module.exports = (submittedValues, errorList, deal) => {
       if (manualInclusionNoticeSubmissionDateTimestamp) {
         if (isBefore(requestedCoverStartDate, manualInclusionNoticeSubmissionDate)) {
           newErrorList.requestedCoverStartDate = {
-            text: `Requested Cover Start Date must be after ${getLongFormattedDate(
-              manualInclusionNoticeSubmissionDate,
-            )}`,
+            text: `Requested Cover Start Date must be after ${getLongFormattedDate(manualInclusionNoticeSubmissionDate)}`,
             order: orderNumber(newErrorList),
           };
         }
       }
 
       // if 3 months after MIN submission date
-      if (
-        !canEnterDateGreaterThan3Months &&
-        !specialIssuePermission &&
-        isAfter(requestedCoverStartDate, minSubmissionPlus3Months)
-      ) {
+      if (!canEnterDateGreaterThan3Months && !specialIssuePermission && isAfter(requestedCoverStartDate, minSubmissionPlus3Months)) {
         newErrorList.requestedCoverStartDate = {
-          text: `Requested Cover Start Date must be between ${getLongFormattedDate(
-            manualInclusionNoticeSubmissionDate,
-          )} and ${getLongFormattedDate(minSubmissionPlus3Months)}`,
+          text: `Requested Cover Start Date must be between ${getLongFormattedDate(manualInclusionNoticeSubmissionDate)} and ${getLongFormattedDate(
+            minSubmissionPlus3Months,
+          )}`,
           order: orderNumber(newErrorList),
         };
       }
@@ -146,12 +131,7 @@ module.exports = (submittedValues, errorList, deal) => {
     }
   } else if (dateHasSomeValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear)) {
     newErrorList.requestedCoverStartDate = {
-      text: dateValidationText(
-        'Requested Cover Start Date',
-        requestedCoverStartDateDay,
-        requestedCoverStartDateMonth,
-        requestedCoverStartDateYear,
-      ),
+      text: dateValidationText('Requested Cover Start Date', requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear),
       order: orderNumber(newErrorList),
     };
   } else {
@@ -159,24 +139,16 @@ module.exports = (submittedValues, errorList, deal) => {
     if (!specialIssuePermission && dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN) {
       if (isAfter(today, dealSubmissionPlus3Months)) {
         newErrorList.requestedCoverStartDate = {
-          text: `Requested Cover Start Date must be between ${getLongFormattedDate(
-            dealSubmissionDate,
-          )} and ${getLongFormattedDate(dealSubmissionPlus3Months)}`,
+          text: `Requested Cover Start Date must be between ${getLongFormattedDate(dealSubmissionDate)} and ${getLongFormattedDate(dealSubmissionPlus3Months)}`,
           order: orderNumber(newErrorList),
         };
       }
     }
 
-    if (
-      !canEnterDateGreaterThan3Months &&
-      !specialIssuePermission &&
-      dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
-    ) {
+    if (!canEnterDateGreaterThan3Months && !specialIssuePermission && dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
       if (isAfter(today, minSubmissionPlus3Months)) {
         newErrorList.requestedCoverStartDate = {
-          text: `Requested Cover Start Date must be between ${getLongFormattedDate(
-            dealSubmissionDate,
-          )} and ${getLongFormattedDate(minSubmissionPlus3Months)}`,
+          text: `Requested Cover Start Date must be between ${getLongFormattedDate(dealSubmissionDate)} and ${getLongFormattedDate(minSubmissionPlus3Months)}`,
           order: orderNumber(newErrorList),
         };
       }

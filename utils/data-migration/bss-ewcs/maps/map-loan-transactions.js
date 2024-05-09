@@ -21,13 +21,7 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
       originalRequestedCoverStartDate: convertV1Date(loan.Extra_fields.Original_requested_cover_start_date),
     };
 
-    const facilityStage = findPortalValue(
-      loan.EWCS_Guarantee_details.EWCS_stage,
-      'EWCS_stage',
-      'FACILITIES',
-      'STAGE_LOAN',
-      logError,
-    );
+    const facilityStage = findPortalValue(loan.EWCS_Guarantee_details.EWCS_stage, 'EWCS_stage', 'FACILITIES', 'STAGE_LOAN', logError);
     const hasBeenIssued = facilityStage === 'Issued';
     const v2loan = {
       type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
@@ -47,28 +41,10 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
       coveredPercentage: loan.EWCS_Financial_details.EWCS_guarantee_perc,
       ukefExposure: loan.EWCS_Financial_details.EWCS_max_liability,
       minimumQuarterlyFee: loan.EWCS_Financial_details.EWCS_min_quarterly_fee,
-      premiumType: findPortalValue(
-        loan.EWCS_Dates_repayments.EWCS_premium_type,
-        'EWCS_premium_type',
-        'FACILITIES',
-        'FEE_TYPE',
-        logError,
-      ),
-      premiumFrequency: findPortalValue(
-        loan.EWCS_Dates_repayments.EWCS_premium_freq,
-        'EWCS_premium_freq',
-        'FACILITIES',
-        'FEE_FREQUENCY',
-        logError,
-      ),
+      premiumType: findPortalValue(loan.EWCS_Dates_repayments.EWCS_premium_type, 'EWCS_premium_type', 'FACILITIES', 'FEE_TYPE', logError),
+      premiumFrequency: findPortalValue(loan.EWCS_Dates_repayments.EWCS_premium_freq, 'EWCS_premium_freq', 'FACILITIES', 'FEE_FREQUENCY', logError),
       ukefGuaranteeInMonths: loan.EWCS_Dates_repayments.EWCS_cover_period,
-      dayCountBasis: findPortalValue(
-        loan.EWCS_Dates_repayments.EWCS_day_basis,
-        'EWCS_day_basis',
-        'FACILITIES',
-        'DAY_COUNT_BASIS',
-        logError,
-      ),
+      dayCountBasis: findPortalValue(loan.EWCS_Dates_repayments.EWCS_day_basis, 'EWCS_day_basis', 'FACILITIES', 'DAY_COUNT_BASIS', logError),
       v1ExtraInfo,
     };
 
@@ -83,28 +59,21 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
     }
 
     if (loan.EWCS_Dates_repayments.EWCS_issue_date) {
-      [v2loan['issuedDate-day'], v2loan['issuedDate-month'], v2loan['issuedDate-year']] =
-        loan.EWCS_Dates_repayments.EWCS_issue_date.split('-');
-      v2loan.issuedDate = convertV1Date(
-        `${v2loan['issuedDate-year']}-${v2loan['issuedDate-month']}-${v2loan['issuedDate-day']}`,
-      );
+      [v2loan['issuedDate-day'], v2loan['issuedDate-month'], v2loan['issuedDate-year']] = loan.EWCS_Dates_repayments.EWCS_issue_date.split('-');
+      v2loan.issuedDate = convertV1Date(`${v2loan['issuedDate-year']}-${v2loan['issuedDate-month']}-${v2loan['issuedDate-day']}`);
     }
 
     if (facilityStage !== CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL) {
       if (loan.EWCS_Dates_repayments.EWCS_cover_start_date) {
-        [
-          v2loan['requestedCoverStartDate-day'],
-          v2loan['requestedCoverStartDate-month'],
-          v2loan['requestedCoverStartDate-year'],
-        ] = loan.EWCS_Dates_repayments.EWCS_cover_start_date.split('-');
+        [v2loan['requestedCoverStartDate-day'], v2loan['requestedCoverStartDate-month'], v2loan['requestedCoverStartDate-year']] =
+          loan.EWCS_Dates_repayments.EWCS_cover_start_date.split('-');
         v2loan.requestedCoverStartDate = convertV1Date(
           `${v2loan['requestedCoverStartDate-year']}-${v2loan['requestedCoverStartDate-month']}-${v2loan['requestedCoverStartDate-day']}`,
         );
       }
 
       if (loan.EWCS_Dates_repayments.EWCS_cover_end_date) {
-        [v2loan['coverEndDate-day'], v2loan['coverEndDate-month'], v2loan['coverEndDate-year']] =
-          loan.EWCS_Dates_repayments.EWCS_cover_end_date.split('-');
+        [v2loan['coverEndDate-day'], v2loan['coverEndDate-month'], v2loan['coverEndDate-year']] = loan.EWCS_Dates_repayments.EWCS_cover_end_date.split('-');
       }
     }
 

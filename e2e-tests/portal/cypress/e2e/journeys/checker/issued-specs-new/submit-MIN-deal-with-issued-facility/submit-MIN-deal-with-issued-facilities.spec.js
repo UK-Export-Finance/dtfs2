@@ -2,12 +2,8 @@ const pages = require('../../../../pages');
 const relative = require('../../../../relativeURL');
 const MIADealAcceptedStatusWithUnissuedFacilities = require('./MIN-deal-accepted-status-with-unissued-facilities');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
-const {
-  fillAndSubmitIssueBondFacilityForm,
-} = require('../../../maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm');
-const {
-  fillAndSubmitIssueLoanFacilityForm,
-} = require('../../../maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');
+const { fillAndSubmitIssueBondFacilityForm } = require('../../../maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm');
+const { fillAndSubmitIssueLoanFacilityForm } = require('../../../maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');
 
 const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 

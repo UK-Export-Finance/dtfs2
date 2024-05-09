@@ -5,8 +5,7 @@ const pricingAndRiskPage = {
   exporterTableLossGivenDefault: () => cy.get('[data-cy="exporter-table-loss-given-default-value"]'),
   exporterTableChangeLossGivenDefaultLink: () => cy.get('[data-cy="exporter-table-change-loss-given-default-link"]'),
   exporterTableProbabilityOfDefault: () => cy.get('[data-cy="exporter-table-probability-of-default-value"]'),
-  exporterTableChangeProbabilityOfDefaultLink: () =>
-    cy.get('[data-cy="exporter-table-change-probability-of-default-link"]'),
+  exporterTableChangeProbabilityOfDefaultLink: () => cy.get('[data-cy="exporter-table-change-probability-of-default-link"]'),
 
   facilityTable: (facilityId) => {
     cy.get(`[data-cy="facility-${facilityId}-pricing-risk-table"]`).as('table');

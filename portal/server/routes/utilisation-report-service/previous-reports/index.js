@@ -7,8 +7,6 @@ const { validateRole, validateToken } = require('../../middleware');
 
 const router = express.Router();
 
-router.get('/previous-reports', [validateToken, validateRole({ role: [PAYMENT_REPORT_OFFICER] })], (req, res) =>
-  getPreviousReports(req, res),
-);
+router.get('/previous-reports', [validateToken, validateRole({ role: [PAYMENT_REPORT_OFFICER] })], (req, res) => getPreviousReports(req, res));
 
 module.exports = router;

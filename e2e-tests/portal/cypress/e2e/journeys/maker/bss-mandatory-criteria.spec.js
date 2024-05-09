@@ -17,10 +17,7 @@ context('BSS Mandatory criteria: Check deal details page', () => {
     cy.login(BANK1_MAKER1);
     cy.visit(relative(`/contract/${deal._id}/submission-details`));
     pages.contractSubmissionDetails.mandatoryCriteriaBox().should('exist');
-    pages.contractSubmissionDetails
-      .mandatoryCriteriaBox()
-      .find('ol > li[value="1"]')
-      .should('contain', 'Bank with a duly completed Supplier Declaration');
+    pages.contractSubmissionDetails.mandatoryCriteriaBox().find('ol > li[value="1"]').should('contain', 'Bank with a duly completed Supplier Declaration');
     pages.contractSubmissionDetails
       .mandatoryCriteriaBox()
       .find('ol > li[value="2"]')
@@ -29,10 +26,7 @@ context('BSS Mandatory criteria: Check deal details page', () => {
       .mandatoryCriteriaBox()
       .find('ol > li[value="3"]')
       .should('contain', 'the Supplier has provided the Bank with a duly completed UK Supplier Declaration');
-    pages.contractSubmissionDetails
-      .mandatoryCriteriaBox()
-      .find('ol > li[value="7"]')
-      .should('contain', 'The Bank is the sole and beneficial owner');
+    pages.contractSubmissionDetails.mandatoryCriteriaBox().find('ol > li[value="7"]').should('contain', 'The Bank is the sole and beneficial owner');
   });
 
   it('should render the mandatory criteria checklist when a deal is cloned', () => {
@@ -68,10 +62,7 @@ context('BSS Mandatory criteria: Check deal details page', () => {
 
     pages.contract.checkDealDetailsTab().click();
     pages.contractSubmissionDetails.mandatoryCriteriaBox().should('exist');
-    pages.contractSubmissionDetails
-      .mandatoryCriteriaBox()
-      .find('ol > li[value="1"]')
-      .should('contain', 'Bank with a duly completed Supplier Declaration');
+    pages.contractSubmissionDetails.mandatoryCriteriaBox().find('ol > li[value="1"]').should('contain', 'Bank with a duly completed Supplier Declaration');
     pages.contractSubmissionDetails
       .mandatoryCriteriaBox()
       .find('ol > li[value="2"]')

@@ -20,10 +20,7 @@ const sortCountries = (countries) => {
   try {
     const countriesWithoutUK = countries.filter((country) => country.code !== 'GBR');
 
-    const sortedArray = [
-      getCountryFromArray(countries, 'GBR'),
-      ...utils.sortArrayAlphabetically(countriesWithoutUK, 'name'),
-    ];
+    const sortedArray = [getCountryFromArray(countries, 'GBR'), ...utils.sortArrayAlphabetically(countriesWithoutUK, 'name')];
 
     return sortedArray;
   } catch (error) {

@@ -27,9 +27,7 @@ context('Password management screens', () => {
       resetPassword.submit().click();
 
       resetPassword.emailInputError().should('exist');
-      resetPassword
-        .emailInputError()
-        .contains('Enter an email address in the correct format, for example, name@example.com');
+      resetPassword.emailInputError().contains('Enter an email address in the correct format, for example, name@example.com');
     });
 
     it('should redirect to login page when a non-existant email is used', () => {

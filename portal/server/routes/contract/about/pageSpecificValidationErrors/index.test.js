@@ -1,9 +1,4 @@
-import {
-  supplierValidationErrors,
-  buyerValidationErrors,
-  financialPageValidationErrors,
-  aboutSupplyContractPreviewValidationErrors,
-} from '.';
+import { supplierValidationErrors, buyerValidationErrors, financialPageValidationErrors, aboutSupplyContractPreviewValidationErrors } from '.';
 import FIELDS from '../pageFields';
 import { pageSpecificValidationErrors } from '../../../../helpers/pageSpecificValidationErrors';
 

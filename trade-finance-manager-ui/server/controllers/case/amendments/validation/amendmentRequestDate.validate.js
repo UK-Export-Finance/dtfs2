@@ -19,11 +19,9 @@ const amendmentRequestDateValidation = (body, facility) => {
 
   const amendmentRequestDateErrors = [];
 
-  const amendmentRequestIsFullyComplete =
-    amendmentRequestDateDay && amendmentRequestDateMonth && amendmentRequestDateYear;
+  const amendmentRequestIsFullyComplete = amendmentRequestDateDay && amendmentRequestDateMonth && amendmentRequestDateYear;
   const amendmentRequestIsPartiallyComplete =
-    !amendmentRequestIsFullyComplete &&
-    (amendmentRequestDateDay || amendmentRequestDateMonth || amendmentRequestDateYear);
+    !amendmentRequestIsFullyComplete && (amendmentRequestDateDay || amendmentRequestDateMonth || amendmentRequestDateYear);
   const amendmentRequestIsBlank = !amendmentRequestDateDay && !amendmentRequestDateMonth && !amendmentRequestDateYear;
 
   let amendmentRequestDate = null;
@@ -56,12 +54,7 @@ const amendmentRequestDateValidation = (body, facility) => {
     });
   } else if (amendmentRequestIsFullyComplete) {
     // set to midnight to stop mismatch if date in past so set to midnight
-    const submissionDate = new Date(Number(facility.facilitySnapshot.dates.inclusionNoticeReceived)).setHours(
-      2,
-      2,
-      2,
-      2,
-    );
+    const submissionDate = new Date(Number(facility.facilitySnapshot.dates.inclusionNoticeReceived)).setHours(2, 2, 2, 2);
     const today = new Date();
     let requestDateSet = set(new Date(), {
       year: amendmentRequestDateYear,

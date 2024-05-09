@@ -52,9 +52,7 @@ const generateFilterObject = (field, text, value, submittedFilters) => {
  * @returns [ { text: 'GEF', value: 'GEF', checked: true }, { text: 'BSS/EWCS', value: 'BSS/EWCS', checked: false } ]
  */
 const generateFiltersArray = (fieldName, fieldInputs, submittedFilters) => {
-  const filtersArray = fieldInputs.map(({ text, value }) =>
-    generateFilterObject(fieldName, text, value, submittedFilters),
-  );
+  const filtersArray = fieldInputs.map(({ text, value }) => generateFilterObject(fieldName, text, value, submittedFilters));
 
   return filtersArray;
 };

@@ -1,7 +1,4 @@
-const {
-  generateSelectedFiltersObject,
-  selectedSubmissionTypeFilters,
-} = require('../filters/generate-selected-filters');
+const { generateSelectedFiltersObject, selectedSubmissionTypeFilters } = require('../filters/generate-selected-filters');
 const CONTENT_STRINGS = require('../../../content-strings');
 const CONSTANTS = require('../../../constants');
 
@@ -30,29 +27,18 @@ const selectedFilters = (submittedFilters) => {
 
   if (submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE]) {
     selected.push(
-      generateSelectedFiltersObject(
-        CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.PRODUCT,
-        CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE,
-        submittedFilters.dealType,
-      ),
+      generateSelectedFiltersObject(CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.PRODUCT, CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE, submittedFilters.dealType),
     );
   }
 
   if (submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE]) {
-    const obj = selectedSubmissionTypeFilters(
-      CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE,
-      submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE],
-    );
+    const obj = selectedSubmissionTypeFilters(CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE, submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE]);
     selected.push(obj);
   }
 
   if (submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.STATUS]) {
     selected.push(
-      generateSelectedFiltersObject(
-        CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.STATUS,
-        CONSTANTS.FIELD_NAMES.DEAL.STATUS,
-        submittedFilters.status,
-      ),
+      generateSelectedFiltersObject(CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.STATUS, CONSTANTS.FIELD_NAMES.DEAL.STATUS, submittedFilters.status),
     );
   }
 

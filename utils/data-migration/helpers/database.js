@@ -40,9 +40,7 @@ const getCollection = async (name, filter = null, raw = null) => {
   if (raw) {
     rows = await connection.collection(name);
   } else {
-    rows = filter
-      ? await connection.collection(name).find(filter).toArray()
-      : await connection.collection(name).find().toArray();
+    rows = filter ? await connection.collection(name).find(filter).toArray() : await connection.collection(name).find().toArray();
   }
 
   return new Promise((resolve, reject) => {
@@ -132,11 +130,7 @@ const tfmDealUpdate = async (updatedDeal) => {
 
     const response = await connection
       .collection(CONSTANTS.DATABASE.TABLES.TFM_DEAL)
-      .updateOne(
-        { _id: { $eq: ObjectId(idAsString) } },
-        { $set: updatedDeal },
-        { returnNewDocument: true, returnDocument: 'after' },
-      )
+      .updateOne({ _id: { $eq: ObjectId(idAsString) } }, { $set: updatedDeal }, { returnNewDocument: true, returnDocument: 'after' })
       .catch((error) => new Error(error));
 
     return response.acknowledged ? Promise.resolve(true) : Promise.reject(response);

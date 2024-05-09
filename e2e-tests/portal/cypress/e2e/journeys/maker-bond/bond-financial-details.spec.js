@@ -4,10 +4,7 @@ const fillBondForm = require('./fill-bond-forms');
 const assertBondFormValues = require('./assert-bond-form-values');
 const BOND_FORM_VALUES = require('./bond-form-values');
 const relative = require('../../relativeURL');
-const {
-  calculateExpectedGuaranteeFee,
-  calculateExpectedUkefExposure,
-} = require('../../../support/portal/sectionCalculations');
+const { calculateExpectedGuaranteeFee, calculateExpectedUkefExposure } = require('../../../support/portal/sectionCalculations');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
@@ -51,9 +48,7 @@ context('Bond Financial Details', () => {
       cy.url().should('include', '/financial-details');
       cy.title().should('eq', `Bond Financial Details${pages.defaults.pageTitleAppend}`);
 
-      pages.bondFinancialDetails
-        .minimumRiskMarginFeeInput()
-        .type(BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
+      pages.bondFinancialDetails.minimumRiskMarginFeeInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
       pages.bondFinancialDetails.submit().click();
 
       cy.url().should('include', '/fee-details');
@@ -80,16 +75,12 @@ context('Bond Financial Details', () => {
       let riskMarginFee = '20';
       pages.bondFinancialDetails.guaranteeFeePayableByBankInput().invoke('attr', 'placeholder').should('eq', '0');
       pages.bondFinancialDetails.riskMarginFeeInput().type(riskMarginFee).blur();
-      pages.bondFinancialDetails
-        .guaranteeFeePayableByBankInput()
-        .should('have.value', calculateExpectedGuaranteeFee(riskMarginFee));
+      pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFee(riskMarginFee));
 
       pages.bondFinancialDetails.riskMarginFeeInput().clear();
       riskMarginFee = '9.09';
       pages.bondFinancialDetails.riskMarginFeeInput().type(riskMarginFee).blur();
-      pages.bondFinancialDetails
-        .guaranteeFeePayableByBankInput()
-        .should('have.value', calculateExpectedGuaranteeFee(riskMarginFee));
+      pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFee(riskMarginFee));
     });
   });
 
@@ -108,17 +99,13 @@ context('Bond Financial Details', () => {
       pages.bondFinancialDetails.facilityValueInput().type(value);
       pages.bondFinancialDetails.coveredPercentageInput().type(coveredPercentage).blur();
 
-      pages.bondFinancialDetails
-        .ukefExposureInput()
-        .should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
+      pages.bondFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
 
       pages.bondFinancialDetails.facilityValueInput().clear();
 
       value = '250';
       pages.bondFinancialDetails.facilityValueInput().type(value).blur();
-      pages.bondFinancialDetails
-        .ukefExposureInput()
-        .should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
+      pages.bondFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
     });
   });
 
@@ -237,26 +224,20 @@ context('Bond Financial Details', () => {
         pages.bondFinancialDetails.conversionRateDateYearInput().type('2022');
         pages.bondFinancialDetails.submit().click();
         partials.taskListHeader.itemLink('financial-details').click();
-        pages.bondFinancialDetails
-          .conversionRateDateInputErrorMessage()
-          .contains('The day for the conversion rate must include 1 or 2 numbers');
+        pages.bondFinancialDetails.conversionRateDateInputErrorMessage().contains('The day for the conversion rate must include 1 or 2 numbers');
 
         pages.bondFinancialDetails.conversionRateDateDayInput().clear().type('22');
         pages.bondFinancialDetails.conversionRateDateMonthInput().clear().type('022');
         pages.bondFinancialDetails.submit().click();
         partials.taskListHeader.itemLink('financial-details').click();
-        pages.bondFinancialDetails
-          .conversionRateDateInputErrorMessage()
-          .contains('The month for the conversion rate must include 1 or 2 numbers');
+        pages.bondFinancialDetails.conversionRateDateInputErrorMessage().contains('The month for the conversion rate must include 1 or 2 numbers');
 
         pages.bondFinancialDetails.conversionRateDateDayInput().clear().type('22');
         pages.bondFinancialDetails.conversionRateDateMonthInput().clear().type('02');
         pages.bondFinancialDetails.conversionRateDateYearInput().clear().type('2O22');
         pages.bondFinancialDetails.submit().click();
         partials.taskListHeader.itemLink('financial-details').click();
-        pages.bondFinancialDetails
-          .conversionRateDateInputErrorMessage()
-          .contains('The year for the conversion rate must include 4 numbers');
+        pages.bondFinancialDetails.conversionRateDateInputErrorMessage().contains('The year for the conversion rate must include 4 numbers');
       });
     });
 

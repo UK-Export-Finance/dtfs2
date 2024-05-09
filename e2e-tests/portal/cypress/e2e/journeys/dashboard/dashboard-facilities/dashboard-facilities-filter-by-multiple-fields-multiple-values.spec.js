@@ -183,8 +183,7 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
   it('renders all facilities that have matching fields - AIN deal, MIA deal, Issued stage, Unissued stage', () => {
     const EXPECTED_FACILITIES = ALL_FACILITIES.filter(
       ({ submissionType, hasBeenIssued }) =>
-        (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN ||
-          submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) &&
+        (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) &&
         (hasBeenIssued || hasBeenIssued === false),
     );
 
@@ -228,8 +227,7 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
 
     const EXPECTED_FACILITIES = ALL_FACILITIES.filter(
       ({ type, submissionType, hasBeenIssued }) =>
-        (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN ||
-          submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) &&
+        (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) &&
         (hasBeenIssued || hasBeenIssued === false) &&
         (type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND || type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN),
     );

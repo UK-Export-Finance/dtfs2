@@ -37,13 +37,7 @@ const sendFirstTaskEmail = async (deal) => {
         const { team } = firstTask;
         const { email: sendToEmailAddress } = await api.findOneTeam(team.id);
 
-        const emailVariables = generateTaskEmailVariables(
-          urlOrigin,
-          firstTask,
-          dealId,
-          exporter.companyName,
-          ukefDealId,
-        );
+        const emailVariables = generateTaskEmailVariables(urlOrigin, firstTask, dealId, exporter.companyName, ukefDealId);
 
         return sendTfmEmail(templateId, sendToEmailAddress, emailVariables, deal);
       }
@@ -131,10 +125,7 @@ const sendAinMinAcknowledgement = async (deal) => {
   try {
     const { dealType, submissionType, maker, facilities } = deal;
 
-    if (
-      submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN &&
-      submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-    ) {
+    if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
       console.info('The current deal is not an AIN or MIN deal %s', deal?._id);
       return null;
     }

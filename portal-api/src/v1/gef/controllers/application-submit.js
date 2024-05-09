@@ -73,14 +73,7 @@ const addSubmissionDateToIssuedFacilities = async (dealId, auditDetails) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
   // eslint-disable-next-line no-restricted-syntax
   for (const facility of facilities) {
-    const {
-      _id,
-      hasBeenIssued,
-      canResubmitIssuedFacilities,
-      shouldCoverStartOnSubmission,
-      issueDate,
-      hasBeenIssuedAndAcknowledged,
-    } = facility;
+    const { _id, hasBeenIssued, canResubmitIssuedFacilities, shouldCoverStartOnSubmission, issueDate, hasBeenIssuedAndAcknowledged } = facility;
     /**
      * checks if hasBeenIssued and if not hasBeenIssuedAndAcknowledged
      * ensures that once submitted to UKEF, the coverStartDate is not overwritten to the new resubmission date

@@ -1,10 +1,6 @@
 const { findOneDeal, update: updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
-const {
-  getEligibilityErrors,
-  getCriteria11Errors,
-  getEligibilityStatus,
-} = require('../validation/eligibility-criteria');
+const { getEligibilityErrors, getCriteria11Errors, getEligibilityStatus } = require('../validation/eligibility-criteria');
 const { getDocumentationErrors } = require('../validation/eligibility-documentation');
 const CONSTANTS = require('../../constants');
 const { getCountry } = require('./countries.controller');

@@ -31,26 +31,14 @@ export const create = async (req: Request, res: Response) => {
   try {
     // Ensure `req.body` is valid
     if (objectIsEmpty(req.body)) {
-      return res
-        .status(HttpStatusCode.BadRequest)
-        .send({ status: HttpStatusCode.BadRequest, message: 'Invalid request' });
+      return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid request' });
     }
 
     // Ensure new CRON job creation
     const cronJobLogs = await getCollection('cron-job-logs');
     const tfmDeals = await getCollection('tfm-deals');
 
-    const {
-      dealId,
-      siteId,
-      facilityIdentifiers,
-      supportingInformation,
-      exporterName,
-      buyerName,
-      dealIdentifier,
-      destinationMarket,
-      riskMarket,
-    } = req.body;
+    const { dealId, siteId, facilityIdentifiers, supportingInformation, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = req.body;
 
     let eStoreData = {} as Estore;
 
@@ -121,9 +109,7 @@ export const create = async (req: Request, res: Response) => {
         },
       );
 
-      return res
-        .status(HttpStatusCode.BadRequest)
-        .send({ status: HttpStatusCode.BadRequest, message: 'Invalid eStore payload' });
+      return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid eStore payload' });
     }
 
     // 1. Void IDs check
@@ -134,9 +120,7 @@ export const create = async (req: Request, res: Response) => {
 
     if (!ObjectId.isValid(eStoreData.dealId)) {
       console.error('Invalid eStore deal ObjectId');
-      return res
-        .status(HttpStatusCode.BadRequest)
-        .send({ status: HttpStatusCode.BadRequest, message: 'Invalid deal ObjectId' });
+      return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid deal ObjectId' });
     }
 
     // Returns the document from `cron-job-logs` collection if exists
@@ -192,10 +176,7 @@ export const create = async (req: Request, res: Response) => {
         );
 
         // Update `tfm-deals`
-        await tfmDeals.updateOne(
-          { _id: { $eq: new ObjectId(eStoreData.dealId) } },
-          { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } },
-        );
+        await tfmDeals.updateOne({ _id: { $eq: new ObjectId(eStoreData.dealId) } }, { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } });
 
         // Update object
         eStoreData.siteId = String(siteExistsResponse.data.siteId);
@@ -212,11 +193,7 @@ export const create = async (req: Request, res: Response) => {
           console.info('eStore site creation in progress for deal %s', eStoreData.dealIdentifier);
           siteCreationResponse = siteExistsResponse;
         } else {
-          console.info(
-            'eStore site creation initiated for exporter %s with deal %s',
-            eStoreData.exporterName,
-            eStoreData.dealIdentifier,
-          );
+          console.info('eStore site creation initiated for exporter %s with deal %s', eStoreData.exporterName, eStoreData.dealIdentifier);
           siteCreationResponse = await createExporterSite({ exporterName: eStoreData.exporterName });
         }
 
@@ -246,11 +223,7 @@ export const create = async (req: Request, res: Response) => {
 
           console.info('eStore site %s CRON job %s initiated.', siteCreationResponse.data.siteId, siteCreateCronId);
         } else {
-          console.error(
-            'eStore site creation failed for deal %s %o',
-            eStoreData.dealIdentifier,
-            siteCreationResponse?.data,
-          );
+          console.error('eStore site creation failed for deal %s %o', eStoreData.dealIdentifier, siteCreationResponse?.data);
 
           // CRON job log update
           await cronJobLogs.updateOne(
@@ -268,11 +241,7 @@ export const create = async (req: Request, res: Response) => {
           );
         }
       } else {
-        console.error(
-          '❌ eStore site exist check failed for deal %s %o',
-          eStoreData.dealIdentifier,
-          siteExistsResponse,
-        );
+        console.error('❌ eStore site exist check failed for deal %s %o', eStoreData.dealIdentifier, siteExistsResponse);
 
         // CRON job log update
         await cronJobLogs.updateOne(
@@ -297,8 +266,6 @@ export const create = async (req: Request, res: Response) => {
     return res.status(HttpStatusCode.Created).send();
   } catch (error: unknown) {
     console.error('❌ Unable to create eStore directories %o', error);
-    return res
-      .status(HttpStatusCode.InternalServerError)
-      .send({ status: HttpStatusCode.InternalServerError, message: 'Unable to create eStore directories' });
+    return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: 'Unable to create eStore directories' });
   }
 };

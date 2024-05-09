@@ -19,8 +19,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
   const utilisationReportsAlias = 'utilisationReportsAlias';
 
   const displayStatusSelector = 'td > strong[data-cy="utilisation-report-reconciliation-status"]';
-  const tableCellCheckboxSelector = (reportId, status) =>
-    `input[data-cy="table-cell-checkbox--set-status--reportId-${reportId}-currentStatus-${status}"]`;
+  const tableCellCheckboxSelector = (reportId, status) => `input[data-cy="table-cell-checkbox--set-status--reportId-${reportId}-currentStatus-${status}"]`;
 
   const getDisplayStatus = (utilisationReportReconciliationStatus) => {
     switch (utilisationReportReconciliationStatus) {
@@ -46,9 +45,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     cy.task(NODE_TASKS.GET_ALL_BANKS).then((getAllBanksResult) => {
       getAllBanksResult
         .filter((bank) => bank.isVisibleInTfmUtilisationReports)
-        .filter((bank) =>
-          bank.utilisationReportPeriodSchedule.some((period) => period.endMonth === new Date().getMonth()),
-        )
+        .filter((bank) => bank.utilisationReportPeriodSchedule.some((period) => period.endMonth === new Date().getMonth()))
         .forEach((bank) => {
           visibleBanksDueToSubmitThisMonth.push(bank);
         });
@@ -64,10 +61,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
 
       const reportId = bankId;
 
-      const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(
-        bank.utilisationReportPeriodSchedule,
-        currentSubmissionMonth,
-      );
+      const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(bank.utilisationReportPeriodSchedule, currentSubmissionMonth);
 
       const pendingReconciliationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
         .withId(reportId)
@@ -237,9 +231,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
       const { id, bankId, reportPeriod, dateUploaded } = utilisationReport;
 
-      const reconciliationCompletedReport = UtilisationReportEntityMockBuilder.forStatus(
-        UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
-      )
+      const reconciliationCompletedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
         .withId(id)
         .withBankId(bankId)
         .withReportPeriod(reportPeriod)
@@ -290,9 +282,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     cy.get(aliasSelector(utilisationReportsAlias)).then((utilisationReports) => {
       const { bankId } = utilisationReports[0];
 
-      const previousUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(
-        UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
-      )
+      const previousUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
         .withId(999) // this report id should always be unique
         .withBankId(bankId)
         .withReportPeriod(previousReportPeriod)

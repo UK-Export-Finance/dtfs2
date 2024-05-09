@@ -28,46 +28,40 @@ const withRoleValidationApiTests = ({
       // TODO DTFS2-6654: remove and test happy paths.
       if (whitelistedRoles.length) {
         describe('whitelisted roles', () => {
-          it.each(whitelistedRoles)(
-            `returns a ${successCode} response if the user only has the '%s' role`,
-            async (allowedRole) => {
-              login.mockImplementation(mockLogin());
-              loginWithSignInLink.mockImplementation(loginWithSignInLinkAsRole(allowedRole));
+          it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%s' role`, async (allowedRole) => {
+            login.mockImplementation(mockLogin());
+            loginWithSignInLink.mockImplementation(loginWithSignInLinkAsRole(allowedRole));
 
-              const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
-              await get('/login/sign-in-link', { t: token, u: userId }, { Cookie: sessionCookie });
-              const response = await makeRequestWithHeaders({ Cookie: sessionCookie });
+            const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
+            await get('/login/sign-in-link', { t: token, u: userId }, { Cookie: sessionCookie });
+            const response = await makeRequestWithHeaders({ Cookie: sessionCookie });
 
-              expect(response.status).toBe(successCode);
+            expect(response.status).toBe(successCode);
 
-              if (successHeaders) {
-                for (const [key, value] of Object.entries(successHeaders)) {
-                  expect(response.headers[key]).toBe(value);
-                }
+            if (successHeaders) {
+              for (const [key, value] of Object.entries(successHeaders)) {
+                expect(response.headers[key]).toBe(value);
               }
-            },
-          );
+            }
+          });
         });
       }
     }
 
     if (nonWhitelistedRoles.length) {
       describe('non-whitelisted roles', () => {
-        it.each(nonWhitelistedRoles)(
-          "returns a 302 response if the user only has the '%s' role",
-          async (disallowedRole) => {
-            login.mockImplementation(mockLogin());
-            loginWithSignInLink.mockImplementation(loginWithSignInLinkAsRole(disallowedRole));
+        it.each(nonWhitelistedRoles)("returns a 302 response if the user only has the '%s' role", async (disallowedRole) => {
+          login.mockImplementation(mockLogin());
+          loginWithSignInLink.mockImplementation(loginWithSignInLinkAsRole(disallowedRole));
 
-            const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
-            await get('/login/sign-in-link', { t: token, u: userId }, { Cookie: sessionCookie });
-            const response = await makeRequestWithHeaders({ Cookie: sessionCookie });
+          const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
+          await get('/login/sign-in-link', { t: token, u: userId }, { Cookie: sessionCookie });
+          const response = await makeRequestWithHeaders({ Cookie: sessionCookie });
 
-            expect(response.status).toBe(302);
-            const redirectUrl = redirectUrlForInvalidRoles ?? '/';
-            expect(response.headers.location).toBe(redirectUrl);
-          },
-        );
+          expect(response.status).toBe(302);
+          const redirectUrl = redirectUrlForInvalidRoles ?? '/';
+          expect(response.headers.location).toBe(redirectUrl);
+        });
       });
     }
   });

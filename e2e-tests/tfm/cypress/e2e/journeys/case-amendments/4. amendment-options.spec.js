@@ -68,9 +68,7 @@ context('Amendments - Amendment options', () => {
     amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
     amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
     amendmentsPage.continueAmendment().click();
-    amendmentsPage
-      .errorSummary()
-      .contains('Select if the bank would like to change the cover end date, facility value or both');
+    amendmentsPage.errorSummary().contains('Select if the bank would like to change the cover end date, facility value or both');
   });
 
   it('should continue to the `What would the bank like to change?`', () => {

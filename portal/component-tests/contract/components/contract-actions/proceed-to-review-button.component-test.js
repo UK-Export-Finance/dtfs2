@@ -21,9 +21,7 @@ describe(component, () => {
 
       for (const deal of deals) {
         const wrapper = render({ user, deal, isEveryDealFormComplete });
-        wrapper
-          .expectPrimaryButton('[data-cy="ProceedToReview"]')
-          .toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
+        wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]').toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
       }
     });
 
@@ -40,9 +38,7 @@ describe(component, () => {
           isEveryDealFormComplete,
           dealHasIssuedFacilitiesToSubmit,
         });
-        wrapper
-          .expectPrimaryButton('[data-cy="ProceedToReview"]')
-          .toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
+        wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]').toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
       }
     });
 
@@ -62,9 +58,7 @@ describe(component, () => {
           isEveryDealFormComplete,
           dealHasIssuedFacilitiesToSubmit,
         });
-        wrapper
-          .expectPrimaryButton('[data-cy="ProceedToReview"]')
-          .toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
+        wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]').toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
       }
     });
 
@@ -98,9 +92,7 @@ describe(component, () => {
           isEveryDealFormComplete: true,
           allRequestedCoverStartDatesConfirmed: true,
         });
-        wrapper
-          .expectPrimaryButton('[data-cy="ProceedToReview"]')
-          .toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
+        wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]').toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
       }
     });
 
@@ -134,9 +126,7 @@ describe(component, () => {
           isEveryDealFormComplete: true,
           dealHasIssuedFacilitiesToSubmit: true,
         });
-        wrapper
-          .expectPrimaryButton('[data-cy="ProceedToReview"]')
-          .toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
+        wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]').toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
       }
     });
 
@@ -190,9 +180,7 @@ describe(component, () => {
           isEveryDealFormComplete,
           dealHasIssuedFacilitiesToSubmit,
         });
-        wrapper
-          .expectPrimaryButton('[data-cy="ProceedToReview"]')
-          .toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
+        wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]').toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
       }
     });
 

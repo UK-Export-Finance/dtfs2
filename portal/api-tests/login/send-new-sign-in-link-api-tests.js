@@ -123,9 +123,7 @@ const withSendNewSignInLinkApiTests = (endpoint) => {
       }
 
       function mockSuccessfulSendSignInLinkResponse() {
-        when(api.sendSignInLink)
-          .calledWith(expect.anything())
-          .mockResolvedValue({ data: { numberOfSendSignInLinkAttemptsRemaining } });
+        when(api.sendSignInLink).calledWith(expect.anything()).mockResolvedValue({ data: { numberOfSendSignInLinkAttemptsRemaining } });
       }
 
       function mockUnsuccessfulSendSignInLinkResponseWithStatusCode(statusCode) {

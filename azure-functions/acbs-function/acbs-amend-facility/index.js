@@ -54,11 +54,7 @@ df.app.orchestration('acbs-amend-facility', function* amendACBSFacility(context)
         }
 
         // 1. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
-        const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry(
-          'activity-get-facility-master',
-          retryOptions,
-          { facilityId },
-        );
+        const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry('activity-get-facility-master', retryOptions, { facilityId });
 
         /**
          * Check 1 - Facility stage `07` only

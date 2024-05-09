@@ -83,11 +83,7 @@ describe('section-status - bond', () => {
         hasBeenIssued: true,
       };
 
-      const result = bondHasIncompleteIssueFacilityDetails(
-        validMockDeal.status,
-        validMockDeal.previousStatus,
-        mockBond,
-      );
+      const result = bondHasIncompleteIssueFacilityDetails(validMockDeal.status, validMockDeal.previousStatus, mockBond);
       expect(result).toEqual(false);
     });
 
@@ -97,11 +93,7 @@ describe('section-status - bond', () => {
         issueFacilityDetailsSubmitted: true,
       };
 
-      const result = bondHasIncompleteIssueFacilityDetails(
-        validMockDeal.status,
-        validMockDeal.previousStatus,
-        mockBond,
-      );
+      const result = bondHasIncompleteIssueFacilityDetails(validMockDeal.status, validMockDeal.previousStatus, mockBond);
       expect(result).toEqual(false);
     });
   });

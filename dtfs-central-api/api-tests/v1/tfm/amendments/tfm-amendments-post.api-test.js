@@ -49,9 +49,7 @@ describe('POST TFM amendments', () => {
     describe('with a valid facility submitted to portal', () => {
       let facilityId;
       beforeEach(async () => {
-        const postResult = await api
-          .post({ facility: newFacility, user: MOCK_PORTAL_USER })
-          .to('/v1/portal/facilities');
+        const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
         facilityId = postResult.body._id;
 
         await api
@@ -69,16 +67,12 @@ describe('POST TFM amendments', () => {
       });
 
       it('should create a new amendment based on facilityId', async () => {
-        const { body } = await api
-          .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
-          .to(`/v1/tfm/facilities/${facilityId}/amendments`);
+        const { body } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
         expect(body).toEqual({ amendmentId: expect.any(String) });
       });
 
       it('should update the auditRecord on the facility document', async () => {
-        await api
-          .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
-          .to(`/v1/tfm/facilities/${facilityId}/amendments`);
+        await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
 
         const { body: updatedFacility } = await api.get(`/v1/tfm/facilities/${facilityId}`);
 
@@ -101,9 +95,7 @@ describe('POST TFM amendments', () => {
           .put({ payload: updatePayload1, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
           .to(`/v1/tfm/facilities/${facilityId}/amendments/${bodyPostResponse1.amendmentId}`);
 
-        const { body } = await api
-          .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
-          .to(`/v1/tfm/facilities/${facilityId}/amendments`);
+        const { body } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
         expect(body).toEqual({ status: 400, message: 'The current facility already has an amendment in progress' });
       });
     });
@@ -125,9 +117,7 @@ describe('POST TFM amendments', () => {
         })
         .to('/v1/tfm/deals/submit');
 
-      const { body } = await api
-        .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
-        .to('/v1/tfm/facilities/123/amendments');
+      const { body } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/facilities/123/amendments');
       expect(body).toEqual({ status: 400, message: 'Invalid facility id' });
     });
   });

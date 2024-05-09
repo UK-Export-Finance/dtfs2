@@ -1,16 +1,9 @@
 const { cloneDeep } = require('lodash');
-const {
-  getDateAsEpochMillisecondString,
-  getStartOfDateFromDayMonthYearStringsReplicatingMoment,
-} = require('../helpers/date');
+const { getDateAsEpochMillisecondString, getStartOfDateFromDayMonthYearStringsReplicatingMoment } = require('../helpers/date');
 const { dateHasAllValues } = require('../validation/fields/date');
 
 const hasAllCoverEndDateValues = (facility) => {
-  const {
-    'coverEndDate-day': coverEndDateDay,
-    'coverEndDate-month': coverEndDateMonth,
-    'coverEndDate-year': coverEndDateYear,
-  } = facility;
+  const { 'coverEndDate-day': coverEndDateDay, 'coverEndDate-month': coverEndDateMonth, 'coverEndDate-year': coverEndDateYear } = facility;
 
   if (dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
     return true;
@@ -36,11 +29,7 @@ const updateCoverEndDate = (facility) => {
   const modifiedFacility = cloneDeep(facility);
 
   if (hasAllCoverEndDateValues(facility)) {
-    const {
-      'coverEndDate-day': coverEndDateDay,
-      'coverEndDate-month': coverEndDateMonth,
-      'coverEndDate-year': coverEndDateYear,
-    } = facility;
+    const { 'coverEndDate-day': coverEndDateDay, 'coverEndDate-month': coverEndDateMonth, 'coverEndDate-year': coverEndDateYear } = facility;
 
     modifiedFacility.coverEndDate = getDateAsEpochMillisecondString(
       getStartOfDateFromDayMonthYearStringsReplicatingMoment(coverEndDateDay, coverEndDateMonth, coverEndDateYear),

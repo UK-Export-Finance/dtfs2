@@ -48,10 +48,7 @@ const getLastUploadedReportDetails = async (userToken, bankId) => {
   const nextReportPeriod = await api.getNextReportPeriodByBankId(userToken, bankId);
   const formattedNextReportPeriod = getFormattedReportPeriodWithLongMonth(nextReportPeriod);
 
-  const nextReportPeriodSubmissionEndDate = addMonths(
-    new Date(nextReportPeriod.end.year, nextReportPeriod.end.month - 1),
-    1,
-  );
+  const nextReportPeriodSubmissionEndDate = addMonths(new Date(nextReportPeriod.end.year, nextReportPeriod.end.month - 1), 1);
   const nextReportPeriodSubmissionStart = format(startOfMonth(nextReportPeriodSubmissionEndDate), 'd MMMM yyyy');
 
   return { ...reportAndUserDetails, formattedNextReportPeriod, nextReportPeriodSubmissionStart };
@@ -191,14 +188,7 @@ const postReportConfirmAndSend = async (req, res) => {
 
     const mappedReportData = removeCellAddressesFromArray(reportData);
 
-    const response = await api.uploadUtilisationReportData(
-      user,
-      reportPeriod,
-      mappedReportData,
-      fileBuffer,
-      formattedReportPeriod,
-      userToken,
-    );
+    const response = await api.uploadUtilisationReportData(user, reportPeriod, mappedReportData, fileBuffer, formattedReportPeriod, userToken);
 
     if (response?.status === 200 || response?.status === 201) {
       const { paymentOfficerEmails } = response.data;

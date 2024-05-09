@@ -14,11 +14,7 @@ import { isValidEmail } from '../../utils/string';
 import { BANK_HOLIDAY_REGION } from '../../constants/bank-holiday-region';
 import { BankResponse } from '../../v1/api-response-types';
 
-export type SendEmailCallback = (
-  emailAddress: string,
-  recipient: string,
-  formattedReportPeriod: string,
-) => Promise<void>;
+export type SendEmailCallback = (emailAddress: string, recipient: string, formattedReportPeriod: string) => Promise<void>;
 
 const DEFAULT_PAYMENT_OFFICER_TEAM_NAME = 'Team';
 
@@ -26,9 +22,7 @@ const DEFAULT_PAYMENT_OFFICER_TEAM_NAME = 'Team';
  * Returns the utilisation report due date for the current month
  */
 export const getReportDueDate = async (): Promise<Date> => {
-  const bankHolidays = await externalApi.bankHolidays.getBankHolidayDatesForRegion(
-    BANK_HOLIDAY_REGION.ENGLAND_AND_WALES,
-  );
+  const bankHolidays = await externalApi.bankHolidays.getBankHolidayDatesForRegion(BANK_HOLIDAY_REGION.ENGLAND_AND_WALES);
   const businessDay = Number.parseInt(process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH!, 10);
   const dateInReportMonth = new Date();
   return getBusinessDayOfMonth(dateInReportMonth, bankHolidays, businessDay);
@@ -47,13 +41,8 @@ export const getFormattedReportDueDate = async (): Promise<string> => {
  * sent to the bank to chase a report if not received by the due date
  */
 export const getReportOverdueChaserDate = async (): Promise<Date> => {
-  const bankHolidays = await externalApi.bankHolidays.getBankHolidayDatesForRegion(
-    BANK_HOLIDAY_REGION.ENGLAND_AND_WALES,
-  );
-  const businessDay = Number.parseInt(
-    process.env.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH!,
-    10,
-  );
+  const bankHolidays = await externalApi.bankHolidays.getBankHolidayDatesForRegion(BANK_HOLIDAY_REGION.ENGLAND_AND_WALES);
+  const businessDay = Number.parseInt(process.env.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH!, 10);
   const dateInReportMonth = new Date();
   return getBusinessDayOfMonth(dateInReportMonth, bankHolidays, businessDay);
 };
@@ -68,9 +57,9 @@ export const getIsReportDue = async (bankId: string, reportPeriod: ReportPeriod)
 
   if (reportsInReportPeriod.length !== 1) {
     throw new Error(
-      `Expected to find one report for bank (id: ${bankId}) for report period ${getFormattedReportPeriodWithLongMonth(
-        reportPeriod,
-      )} but found ${reportsInReportPeriod.length}`,
+      `Expected to find one report for bank (id: ${bankId}) for report period ${getFormattedReportPeriodWithLongMonth(reportPeriod)} but found ${
+        reportsInReportPeriod.length
+      }`,
     );
   }
 
@@ -82,9 +71,7 @@ export const getIsReportDue = async (bankId: string, reportPeriod: ReportPeriod)
  */
 export const getEmailRecipient = (paymentOfficerTeam: PaymentOfficerTeam, bankName: string): string => {
   if (!paymentOfficerTeam?.teamName) {
-    console.info(
-      `Bank '${bankName}' missing a payment officer team name. Using default '${DEFAULT_PAYMENT_OFFICER_TEAM_NAME}'`,
-    );
+    console.info(`Bank '${bankName}' missing a payment officer team name. Using default '${DEFAULT_PAYMENT_OFFICER_TEAM_NAME}'`);
     return DEFAULT_PAYMENT_OFFICER_TEAM_NAME;
   }
 
@@ -114,23 +101,15 @@ const sendEmailForBank = async (
     const paymentOfficerTeamEmails = paymentOfficerTeam?.emails;
 
     if (!Array.isArray(paymentOfficerTeamEmails) || !paymentOfficerTeamEmails.length) {
-      console.info(
-        `Not sending ${emailDescription} email to '${bankName}' - paymentOfficerTeam.emails property against bank is not an array or is empty`,
-      );
+      console.info(`Not sending ${emailDescription} email to '${bankName}' - paymentOfficerTeam.emails property against bank is not an array or is empty`);
       return;
     }
     await Promise.all(
       paymentOfficerTeamEmails.map(async (paymentOfficerTeamEmail) => {
         if (!isValidEmail(paymentOfficerTeamEmail)) {
-          console.error(
-            `Failed to send ${emailDescription} email to '${paymentOfficerTeamEmail}' - invalid payment officer email`,
-          );
+          console.error(`Failed to send ${emailDescription} email to '${paymentOfficerTeamEmail}' - invalid payment officer email`);
         } else {
-          await sendEmailCallback(
-            paymentOfficerTeamEmail,
-            getEmailRecipient(paymentOfficerTeam, bankName),
-            formattedReportPeriod,
-          );
+          await sendEmailCallback(paymentOfficerTeamEmail, getEmailRecipient(paymentOfficerTeam, bankName), formattedReportPeriod);
           console.info(`Successfully sent '${emailDescription}' email to '${bankName}' (bank ID: ${bankId})`);
         }
       }),
@@ -144,11 +123,7 @@ const sendEmailForBank = async (
  * For a given bank, check if a utilisation report has been received for the current reporting period
  * then, where not yet received, attempts to call the provided callback function to send the required email
  */
-const sendEmailToBankIfReportNotReceived = async (
-  bank: BankResponse,
-  emailDescription: string,
-  sendEmailCallback: SendEmailCallback,
-): Promise<void> => {
+const sendEmailToBankIfReportNotReceived = async (bank: BankResponse, emailDescription: string, sendEmailCallback: SendEmailCallback): Promise<void> => {
   const { name: bankName, id: bankId, utilisationReportPeriodSchedule: schedule } = bank;
   const currentReportingPeriodForBank = getCurrentReportPeriodForBankSchedule(schedule);
   const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(currentReportingPeriodForBank);

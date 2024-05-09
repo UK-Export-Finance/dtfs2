@@ -163,16 +163,8 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     cy.url().should('contain', '/managers-conditions');
 
     amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions');
-    amendmentsPage
-      .amendmentsManagersDecisionReasons()
-      .clear()
-      .focused()
-      .type('This is the reason for declining the amendment');
-    amendmentsPage
-      .amendmentsManagersDecisionComments()
-      .clear()
-      .focused()
-      .type('This is a comment visible only to UKEF staff');
+    amendmentsPage.amendmentsManagersDecisionReasons().clear().focused().type('This is the reason for declining the amendment');
+    amendmentsPage.amendmentsManagersDecisionComments().clear().focused().type('This is a comment visible only to UKEF staff');
 
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/managers-conditions/summary');
@@ -276,11 +268,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     cy.url().should('contain', '/managers-conditions');
 
     amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions');
-    amendmentsPage
-      .amendmentsManagersDecisionComments()
-      .clear()
-      .focused()
-      .type('This is a comment visible only to UKEF staff');
+    amendmentsPage.amendmentsManagersDecisionComments().clear().focused().type('This is a comment visible only to UKEF staff');
 
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/managers-conditions/summary');

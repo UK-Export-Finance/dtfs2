@@ -113,58 +113,42 @@ context('Dashboard Deals filters', () => {
       dashboardDeals.filters.panel.form.status.draft.checkbox().should('not.be.checked');
 
       // ready for checker
-      dashboardDeals.filters.panel.form.status.readyForChecker
-        .label()
-        .contains(CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
+      dashboardDeals.filters.panel.form.status.readyForChecker.label().contains(CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
       dashboardDeals.filters.panel.form.status.readyForChecker.checkbox().should('exist');
       dashboardDeals.filters.panel.form.status.readyForChecker.checkbox().should('not.be.checked');
 
       // maker's input required
-      dashboardDeals.filters.panel.form.status.makerInputRequired
-        .label()
-        .contains(CONSTANTS.DEALS.DEAL_STATUS.CHANGES_REQUIRED);
+      dashboardDeals.filters.panel.form.status.makerInputRequired.label().contains(CONSTANTS.DEALS.DEAL_STATUS.CHANGES_REQUIRED);
       dashboardDeals.filters.panel.form.status.makerInputRequired.checkbox().should('exist');
       dashboardDeals.filters.panel.form.status.makerInputRequired.checkbox().should('not.be.checked');
 
       // submitted
-      dashboardDeals.filters.panel.form.status.submitted
-        .label()
-        .contains(CONSTANTS.DEALS.DEAL_STATUS.SUBMITTED_TO_UKEF);
+      dashboardDeals.filters.panel.form.status.submitted.label().contains(CONSTANTS.DEALS.DEAL_STATUS.SUBMITTED_TO_UKEF);
       dashboardDeals.filters.panel.form.status.submitted.checkbox().should('exist');
       dashboardDeals.filters.panel.form.status.submitted.checkbox().should('not.be.checked');
 
       // Acknowledged
-      dashboardDeals.filters.panel.form.status.acknowledgedByUKEF
-        .label()
-        .contains(CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
+      dashboardDeals.filters.panel.form.status.acknowledgedByUKEF.label().contains(CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
       dashboardDeals.filters.panel.form.status.acknowledgedByUKEF.checkbox().should('exist');
       dashboardDeals.filters.panel.form.status.acknowledgedByUKEF.checkbox().should('not.be.checked');
 
       // in progress by UKEF
-      dashboardDeals.filters.panel.form.status.inProgressByUKEF
-        .label()
-        .contains(CONSTANTS.DEALS.DEAL_STATUS.UKEF_IN_PROGRESS);
+      dashboardDeals.filters.panel.form.status.inProgressByUKEF.label().contains(CONSTANTS.DEALS.DEAL_STATUS.UKEF_IN_PROGRESS);
       dashboardDeals.filters.panel.form.status.inProgressByUKEF.checkbox().should('exist');
       dashboardDeals.filters.panel.form.status.inProgressByUKEF.checkbox().should('not.be.checked');
 
       // accepted by UKEF (with conditions)
-      dashboardDeals.filters.panel.form.status.acceptedByUKEFWithConditions
-        .label()
-        .contains(CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS);
+      dashboardDeals.filters.panel.form.status.acceptedByUKEFWithConditions.label().contains(CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS);
       dashboardDeals.filters.panel.form.status.acceptedByUKEFWithConditions.checkbox().should('exist');
       dashboardDeals.filters.panel.form.status.acceptedByUKEFWithConditions.checkbox().should('not.be.checked');
 
       // accepted by UKEF (without conditions)
-      dashboardDeals.filters.panel.form.status.acceptedByUKEFWithoutConditions
-        .label()
-        .contains(CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS);
+      dashboardDeals.filters.panel.form.status.acceptedByUKEFWithoutConditions.label().contains(CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS);
       dashboardDeals.filters.panel.form.status.acceptedByUKEFWithoutConditions.checkbox().should('exist');
       dashboardDeals.filters.panel.form.status.acceptedByUKEFWithoutConditions.checkbox().should('not.be.checked');
 
       // rejected by UKEF
-      dashboardDeals.filters.panel.form.status.rejectedByUKEF
-        .label()
-        .contains(CONSTANTS.DEALS.DEAL_STATUS.UKEF_REFUSED);
+      dashboardDeals.filters.panel.form.status.rejectedByUKEF.label().contains(CONSTANTS.DEALS.DEAL_STATUS.UKEF_REFUSED);
       dashboardDeals.filters.panel.form.status.rejectedByUKEF.checkbox().should('exist');
       dashboardDeals.filters.panel.form.status.rejectedByUKEF.checkbox().should('not.be.checked');
 

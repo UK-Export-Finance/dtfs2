@@ -46,13 +46,9 @@ context('User can view and sort deals', () => {
       cy.get(aliasSelector(ALIAS_KEY.SUBMIT_MANY_DEALS)).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
 
-        dealMostRecent = ALL_SUBMITTED_DEALS.find(
-          (deal) => deal.dealSnapshot.details.submissionDate === DEAL_MOST_RECENT.details.submissionDate,
-        );
+        dealMostRecent = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.details.submissionDate === DEAL_MOST_RECENT.details.submissionDate);
 
-        dealNotRecent = ALL_SUBMITTED_DEALS.find(
-          (deal) => deal.dealSnapshot.details.submissionDate === DEAL_NOT_RECENT.details.submissionDate,
-        );
+        dealNotRecent = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.details.submissionDate === DEAL_NOT_RECENT.details.submissionDate);
       });
     });
   });

@@ -35,11 +35,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: Estore) => {
         },
       );
     } else {
-      console.error(
-        'Facilities have not been added to term store for deal %s %o',
-        eStoreData.dealIdentifier,
-        responses,
-      );
+      console.error('Facilities have not been added to term store for deal %s %o', eStoreData.dealIdentifier, responses);
 
       // Update `cron-job-logs`
       await cronJobLogs.updateOne(

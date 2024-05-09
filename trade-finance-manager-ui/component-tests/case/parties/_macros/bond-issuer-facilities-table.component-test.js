@@ -63,34 +63,23 @@ describe(component, () => {
     });
 
     it('should render `unique reference number` table heading', () => {
-      wrapper
-        .expectText('[data-cy="facilities-table-heading-unique-reference-number"]')
-        .toRead('Unique Reference Number');
+      wrapper.expectText('[data-cy="facilities-table-heading-unique-reference-number"]').toRead('Unique Reference Number');
     });
   });
 
   it('should render ukefFacilityId link, linking to facility id', () => {
-    const expectedFacilities = params.facilities.filter(
-      ({ facilitySnapshot: f }) => f.ukefFacilityType === 'Bond' && f.bondIssuer,
-    );
+    const expectedFacilities = params.facilities.filter(({ facilitySnapshot: f }) => f.ukefFacilityType === 'Bond' && f.bondIssuer);
 
     expectedFacilities.forEach(({ facilitySnapshot: facility }) => {
       const selector = `[data-cy="facility-${facility._id}-ukef-facility-id-link"]`;
 
-      wrapper
-        .expectLink(selector)
-        .toLinkTo(
-          `/case/${params.caseId}/facility/${facility._id}`,
-          `View facility ${facility.ukefFacilityId} details`,
-        );
+      wrapper.expectLink(selector).toLinkTo(`/case/${params.caseId}/facility/${facility._id}`, `View facility ${facility.ukefFacilityId} details`);
     });
   });
 
   describe('unique reference number (bondIssuerPartyUrn) table cell value', () => {
     it('should render', () => {
-      const expectedFacilities = params.facilities.filter(
-        ({ facilitySnapshot: f, tfm }) => f.bondIssuer && tfm.bondIssuerPartyUrn,
-      );
+      const expectedFacilities = params.facilities.filter(({ facilitySnapshot: f, tfm }) => f.bondIssuer && tfm.bondIssuerPartyUrn);
 
       expectedFacilities.forEach((facility) => {
         const selector = `[data-cy="facility-${facility._id}-unique-reference-number"]`;
@@ -100,9 +89,7 @@ describe(component, () => {
     });
 
     it('should render `not matched` tag when there is no bondIssuerPartyUrn value', () => {
-      const expectedFacilities = params.facilities.filter(
-        ({ facilitySnapshot: f, tfm }) => f.bondIssuer && !tfm.bondIssuerPartyUrn,
-      );
+      const expectedFacilities = params.facilities.filter(({ facilitySnapshot: f, tfm }) => f.bondIssuer && !tfm.bondIssuerPartyUrn);
 
       expectedFacilities.forEach((facility) => {
         const cellSelector = `[data-cy="facility-${facility._id}-unique-reference-number-not-matched"]`;

@@ -23,12 +23,7 @@ import {
 
 import { getFacilityCoverStartDate } from './facility-helpers';
 
-import {
-  MOCK_ISSUED_FACILITY,
-  MOCK_FACILITY,
-  MOCK_ISSUED_FACILITY_UNCHANGED,
-  MOCK_UNISSUED_FACILITY,
-} from './mocks/mock_facilities';
+import { MOCK_ISSUED_FACILITY, MOCK_FACILITY, MOCK_ISSUED_FACILITY_UNCHANGED, MOCK_UNISSUED_FACILITY } from './mocks/mock_facilities';
 
 import { makerCanReSubmit } from './deal-helpers';
 
@@ -612,8 +607,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions
-        .items[0];
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions.items[0];
       // should be blank so cannot change
       expect(text).toEqual('');
     });
@@ -632,8 +626,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions
-        .items[0];
+      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions.items[0];
 
       expect(text).toEqual('Change');
       expect(href).toContain('/change-to-unissued');
@@ -661,8 +654,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
-        .items[0];
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
     });
@@ -680,8 +672,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsStartDate, mapSummaryParams, true)[0]
-        .actions.items[0];
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
     });
@@ -699,8 +690,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsEnd, mapSummaryParams, true)[0]
-        .actions.items[0];
+      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
       expect(href).toContain('/unissued-facilities/');
@@ -729,8 +719,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
-        .items[0];
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('');
     });
@@ -748,8 +737,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsStartDate, mapSummaryParams, true)[0]
-        .actions.items[0];
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('');
     });
@@ -768,8 +756,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions
-        .items[0];
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('');
     });
@@ -796,8 +783,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0]
-        .actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
       const response = [];
       expect(result).toEqual(response);
     });
@@ -816,12 +802,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(
-        MOCK_ISSUED_FACILITY_UNCHANGED,
-        mockedDisplayItemsStartDate,
-        mapSummaryParams,
-        true,
-      )[0].actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items;
       const response = [];
       expect(result).toEqual(response);
     });
@@ -840,8 +821,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsEnd, mapSummaryParams, true)[0]
-        .actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items;
       const response = [];
       expect(result).toEqual(response);
     });
@@ -860,8 +840,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsIssued, mapSummaryParams, true)[0]
-        .actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsIssued, mapSummaryParams, true)[0].actions.items;
       const response = [];
       expect(result).toEqual(response);
     });
@@ -882,8 +861,7 @@ describe('mapSummaryList()', () => {
       user: MOCK_REQUEST,
     };
 
-    const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
-      .items[0];
+    const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
     // should be allowed to change so should display change
     expect(text).toEqual('Change');
   });
@@ -904,8 +882,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
-        .items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
       // should be [] as unable to change on checker
       expect(result).toEqual([]);
     });
@@ -925,8 +902,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
-        .items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
       // should be [] as unable to change on checker
       expect(result).toEqual([]);
     });
@@ -946,8 +922,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
-        .items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
       // should be [] as unable to change on checker
       expect(result).toEqual([]);
     });
@@ -969,8 +944,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0]
-        .actions.items[0];
+      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
       expect(href).toContain('/change-to-unissued');
@@ -991,8 +965,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
-        .items[0];
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
     });
@@ -1012,8 +985,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
-        .items[0];
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
     });
@@ -1033,8 +1005,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
-        .items[0];
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
     });
@@ -1054,8 +1025,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
-        .items[0];
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
       expect(text).toEqual('');
     });
 
@@ -1074,8 +1044,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions
-        .items[0];
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
       expect(text).toEqual('');
     });
 
@@ -1094,8 +1063,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0]
-        .actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
       expect(result).toEqual([]);
     });
 
@@ -1114,8 +1082,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0]
-        .actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
       expect(result).toEqual([]);
     });
 
@@ -1133,12 +1100,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(
-        MOCK_ISSUED_FACILITY_UNCHANGED,
-        mockedDisplayItemsName,
-        mapSummaryParamsDraft,
-        true,
-      )[0].actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParamsDraft, true)[0].actions.items;
       expect(result).toEqual([
         {
           href: '/gef/application-details/61a7710b2ae62b0013dae687/61a771cc2ae62b0013dae68a/confirm-cover-start-date',
@@ -1163,8 +1125,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0]
-        .actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
       expect(result).toEqual([]);
     });
   });
@@ -1497,9 +1458,7 @@ describe('futureDateInRange', () => {
   });
   it('Should return TRUE for the specified day and range days', () => {
     const date = new Date();
-    expect(
-      futureDateInRange({ day: date.getDate(), month: date.getMonth() + 1, year: date.getFullYear() }, 365),
-    ).toEqual(true);
+    expect(futureDateInRange({ day: date.getDate(), month: date.getMonth() + 1, year: date.getFullYear() }, 365)).toEqual(true);
   });
 });
 
@@ -1557,68 +1516,44 @@ describe('getFacilityCoverStartDate', () => {
 
 describe('displayChangeSupportingInfo()', () => {
   it('Should return false if preview mode', () => {
-    const result = displayChangeSupportingInfo(
-      MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 0),
-      true,
-    );
+    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 0), true);
     expect(result).toEqual(false);
   });
 
   it('Should return false if preview mode and submission count over 0', () => {
-    const result = displayChangeSupportingInfo(
-      MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 1),
-      true,
-    );
+    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 1), true);
     expect(result).toEqual(false);
   });
 
   it('Should return true if not preview mode and submission count is 0', () => {
-    const result = displayChangeSupportingInfo(
-      MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.DRAFT, 0),
-      false,
-    );
+    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.DRAFT, 0), false);
     expect(result).toEqual(true);
   });
 
   it('Should return true if not preview mode and submission count is 0', () => {
-    const result = displayChangeSupportingInfo(
-      MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, 0),
-      false,
-    );
+    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, 0), false);
     expect(result).toEqual(true);
   });
 });
 
 describe('displayChangeSupportingInfo()', () => {
   it('Should return false if preview mode', () => {
-    const result = displayChangeSupportingInfo(
-      MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 0),
-      true,
-    );
+    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 0), true);
     expect(result).toEqual(false);
   });
 
   it('Should return false if preview mode and submission count over 0', () => {
-    const result = displayChangeSupportingInfo(
-      MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 1),
-      true,
-    );
+    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 1), true);
     expect(result).toEqual(false);
   });
 
   it('Should return true if not preview mode and submission count is 0', () => {
-    const result = displayChangeSupportingInfo(
-      MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.DRAFT, 0),
-      false,
-    );
+    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.DRAFT, 0), false);
     expect(result).toEqual(true);
   });
 
   it('Should return true if not preview mode and submission count is 0', () => {
-    const result = displayChangeSupportingInfo(
-      MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, 0),
-      false,
-    );
+    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, 0), false);
     expect(result).toEqual(true);
   });
 });

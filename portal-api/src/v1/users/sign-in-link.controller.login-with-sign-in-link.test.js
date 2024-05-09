@@ -82,9 +82,7 @@ describe('SignInLinkController', () => {
 
         describe('given loginUser throws a UserBlockedError', () => {
           beforeEach(() => {
-            when(signInLinkService.loginUser)
-              .calledWith(TEST_USER_PARTIAL_2FA._id)
-              .mockRejectedValueOnce(new UserBlockedError(TEST_USER_PARTIAL_2FA._id));
+            when(signInLinkService.loginUser).calledWith(TEST_USER_PARTIAL_2FA._id).mockRejectedValueOnce(new UserBlockedError(TEST_USER_PARTIAL_2FA._id));
           });
 
           itShouldReturnAUserBlocked403();
@@ -117,9 +115,7 @@ describe('SignInLinkController', () => {
           const loginUserError = new Error('test error');
 
           beforeEach(() => {
-            when(signInLinkService.loginUser)
-              .calledWith(TEST_USER_PARTIAL_2FA._id)
-              .mockRejectedValueOnce(loginUserError);
+            when(signInLinkService.loginUser).calledWith(TEST_USER_PARTIAL_2FA._id).mockRejectedValueOnce(loginUserError);
           });
 
           itShouldReturnA500WithMessage(loginUserError.message);
@@ -339,9 +335,7 @@ describe('SignInLinkController', () => {
     }
 
     function mockGetSignInTokenStatusWithResolvedValue(response) {
-      when(signInLinkService.getSignInTokenStatus)
-        .calledWith({ userId: TEST_USER_PARTIAL_2FA._id, signInToken })
-        .mockResolvedValue(response);
+      when(signInLinkService.getSignInTokenStatus).calledWith({ userId: TEST_USER_PARTIAL_2FA._id, signInToken }).mockResolvedValue(response);
     }
 
     function mockGetSignInTokenStatusNotFound() {
@@ -357,9 +351,7 @@ describe('SignInLinkController', () => {
     }
 
     function mockGetSignInTokenStatusToRejectWithError(error) {
-      when(signInLinkService.getSignInTokenStatus)
-        .calledWith({ userId: TEST_USER_PARTIAL_2FA._id, signInToken })
-        .mockRejectedValue(error);
+      when(signInLinkService.getSignInTokenStatus).calledWith({ userId: TEST_USER_PARTIAL_2FA._id, signInToken }).mockRejectedValue(error);
     }
     function mockGetSignInTokenStatusErrorWithInvalidSignInTokenError() {
       mockGetSignInTokenStatusToRejectWithError(new InvalidSignInTokenError(signInToken));

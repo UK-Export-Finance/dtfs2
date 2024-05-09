@@ -41,11 +41,8 @@ const constructRows = (deals) => {
       const { bank, dealType, submissionType } = dealSnapshot;
       const { stage, lastUpdated, parties } = tfm;
       const ukefDealId = dealSnapshot.ukefDealId ?? dealSnapshot.details.ukefDealId;
-      const destinationCountry = dealSnapshot.submissionDetails
-        ? stripCommas(dealSnapshot.submissionDetails.destinationOfGoodsAndServices.name)
-        : '';
-      const exporterName =
-        stripCommas(dealSnapshot.exporter.companyName) ?? stripCommas(dealSnapshot.submissionDetails['supplier-name']);
+      const destinationCountry = dealSnapshot.submissionDetails ? stripCommas(dealSnapshot.submissionDetails.destinationOfGoodsAndServices.name) : '';
+      const exporterName = stripCommas(dealSnapshot.exporter.companyName) ?? stripCommas(dealSnapshot.submissionDetails['supplier-name']);
       const exporterUrn = parties.exporter.partyUrn;
       const { exporterCreditRating } = tfm;
       const buyerName = dealSnapshot.submissionDetails ? stripCommas(dealSnapshot.submissionDetails['buyer-name']) : '';

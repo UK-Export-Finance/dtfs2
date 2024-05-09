@@ -32,9 +32,7 @@ const updateChangedToIssued = async (facilities) => {
 const getUserInfo = async (userId) => {
   if (ObjectId.isValid(userId)) {
     const userCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
-    const { firstname, surname = '' } = userId
-      ? await userCollection.findOne({ _id: { $eq: new ObjectId(userId) } })
-      : {};
+    const { firstname, surname = '' } = userId ? await userCollection.findOne({ _id: { $eq: new ObjectId(userId) } }) : {};
 
     // creates user object which can be used
     const user = {

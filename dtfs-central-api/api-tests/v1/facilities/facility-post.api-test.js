@@ -47,9 +47,7 @@ describe('/v1/portal/facilities', () => {
         type: 'Bond',
       };
 
-      const { status } = await api
-        .post({ facility: facilityWithInvalidDealId, user: MOCK_PORTAL_USER })
-        .to('/v1/portal/facilities');
+      const { status } = await api.post({ facility: facilityWithInvalidDealId, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
 
       expect(status).toEqual(404);
     });
@@ -66,9 +64,7 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('creates a facility with correct fields', async () => {
-      const { body, status } = await api
-        .post({ facility: newFacility, user: MOCK_PORTAL_USER })
-        .to('/v1/portal/facilities');
+      const { body, status } = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
 
       expect(status).toEqual(200);
       expect(typeof body._id).toEqual('string');
@@ -82,9 +78,7 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('adds the facility id to the associated deal', async () => {
-      const createdFacilityResponse = await api
-        .post({ facility: newFacility, user: MOCK_PORTAL_USER })
-        .to('/v1/portal/facilities');
+      const createdFacilityResponse = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
       expect(createdFacilityResponse.status).toEqual(200);
 
       const createdFacility = createdFacilityResponse.body;
@@ -119,9 +113,7 @@ describe('/v1/portal/facilities', () => {
           dealId: '',
         };
 
-        const { body, status } = await api
-          .post({ facility: postBody, user: MOCK_PORTAL_USER })
-          .to('/v1/portal/facilities');
+        const { body, status } = await api.post({ facility: postBody, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
 
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(2);
@@ -142,9 +134,7 @@ describe('/v1/portal/facilities', () => {
           user: {},
         };
 
-        const { body, status } = await api
-          .post({ facility: postBody, user: MOCK_PORTAL_USER })
-          .to('/v1/portal/facilities');
+        const { body, status } = await api.post({ facility: postBody, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
 
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(1);

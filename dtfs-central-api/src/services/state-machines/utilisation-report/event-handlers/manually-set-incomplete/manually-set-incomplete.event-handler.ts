@@ -7,10 +7,7 @@ type ManuallySetIncompleteEventPayload = {
   transactionEntityManager: EntityManager;
 };
 
-export type UtilisationReportManuallySetIncompleteEvent = BaseUtilisationReportEvent<
-  'MANUALLY_SET_INCOMPLETE',
-  ManuallySetIncompleteEventPayload
->;
+export type UtilisationReportManuallySetIncompleteEvent = BaseUtilisationReportEvent<'MANUALLY_SET_INCOMPLETE', ManuallySetIncompleteEventPayload>;
 
 export const handleUtilisationReportManuallySetIncompleteEvent = async (
   report: UtilisationReportEntity,

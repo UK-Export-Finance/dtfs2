@@ -9,8 +9,7 @@ const facilityId = '111';
 describe('facility confirm deletion routes', () => {
   describe('GET /application-details/:dealId/facilities/:facilityId/confirm-deletion', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) =>
-        get(`/application-details/${dealId}/facilities/${facilityId}/confirm-deletion`, {}, headers),
+      makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/facilities/${facilityId}/confirm-deletion`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
@@ -19,8 +18,7 @@ describe('facility confirm deletion routes', () => {
 
   describe('POST /application-details/:dealId/facilities/:facilityId/confirm-deletion', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) =>
-        post({}, headers).to(`/application-details/${dealId}/facilities/${facilityId}/confirm-deletion`),
+      makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/facilities/${facilityId}/confirm-deletion`),
       whitelistedRoles: [MAKER],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.

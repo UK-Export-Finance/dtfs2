@@ -69,9 +69,7 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
     }
 
     // Make a GET request to the eStore API to check if a site exists
-    const response = await axios
-      .get(`${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`, { headers })
-      .catch((error: any) => error);
+    const response = await axios.get(`${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`, { headers }).catch((error: any) => error);
 
     if (!response) {
       throw new Error('❌ Invalid site exist response received');
@@ -128,21 +126,12 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
  */
 const postToEstore = async (
   endpoint: string,
-  data:
-    | Estore
-    | EstoreSite[]
-    | EstoreBuyer[]
-    | EstoreTermStore[]
-    | EstoreDealFolder
-    | EstoreFacilityFolder[]
-    | EstoreDealFiles[],
+  data: Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
   timeout = 0,
 ): Promise<EstoreResponse | EstoreErrorResponse> => {
   try {
     console.info('Invoking eStore endpoint %s with payload %o', endpoint, data);
-    const response = await axios
-      .post(`${APIM_ESTORE_URL}${endpoint}`, data, { headers, timeout })
-      .catch((error: any) => error);
+    const response = await axios.post(`${APIM_ESTORE_URL}${endpoint}`, data, { headers, timeout }).catch((error: any) => error);
 
     if (!response) {
       throw new Error('❌ Invalid post to estore response received');
@@ -165,9 +154,7 @@ const postToEstore = async (
  * @param {EstoreSite} exporterName - The name of the exporter.
  * @returns {Promise<SiteCreationResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
  */
-export const createExporterSite = async (
-  exporterName: EstoreSite,
-): Promise<SiteCreationResponse | EstoreErrorResponse> => {
+export const createExporterSite = async (exporterName: EstoreSite): Promise<SiteCreationResponse | EstoreErrorResponse> => {
   try {
     const response = await postToEstore(ENDPOINT.SITE, [exporterName], oneMinute);
 
@@ -191,9 +178,7 @@ export const createExporterSite = async (
  * @param {EstoreTermStore} facilityId - The ID of the facility to add to the term store.
  * @returns {Promise<TermStoreResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
  */
-export const addFacilityToTermStore = async (
-  facilityId: EstoreTermStore,
-): Promise<TermStoreResponse | EstoreErrorResponse> => {
+export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promise<TermStoreResponse | EstoreErrorResponse> => {
   try {
     const response = await postToEstore(ENDPOINT.TERM, [facilityId], oneMinute);
 
@@ -218,10 +203,7 @@ export const addFacilityToTermStore = async (
  * @param {EstoreBuyer} buyerName - The name of the buyer.
  * @returns {Promise<BuyerFolderResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
  */
-export const createBuyerFolder = async (
-  siteId: string,
-  buyerName: EstoreBuyer,
-): Promise<BuyerFolderResponse | EstoreErrorResponse> => {
+export const createBuyerFolder = async (siteId: string, buyerName: EstoreBuyer): Promise<BuyerFolderResponse | EstoreErrorResponse> => {
   try {
     if (!isValidSiteId(siteId)) {
       console.error('Invalid site ID %s', siteId);
@@ -246,10 +228,7 @@ export const createBuyerFolder = async (
  * @param {EstoreDealFolder} data - The deal folder data.
  * @returns {Promise<DealFolderResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
  */
-export const createDealFolder = async (
-  siteId: string,
-  data: EstoreDealFolder,
-): Promise<DealFolderResponse | EstoreErrorResponse> => {
+export const createDealFolder = async (siteId: string, data: EstoreDealFolder): Promise<DealFolderResponse | EstoreErrorResponse> => {
   try {
     if (!isValidSiteId(siteId)) {
       console.error('Invalid site ID %s', siteId);

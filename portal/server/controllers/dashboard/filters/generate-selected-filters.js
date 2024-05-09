@@ -62,11 +62,7 @@ const generateSelectedFiltersObjectWithMappedValues = (heading, fieldName, submi
  * @returns generateSelectedFiltersObject('Notice Type', 'submissionType', ['Automatic Inclusion Notice', 'Manual Inclusion Notice'])
  */
 const selectedSubmissionTypeFilters = (fieldName, submittedFilters) =>
-  generateSelectedFiltersObject(
-    CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.NOTICE_TYPE,
-    fieldName,
-    submittedFilters,
-  );
+  generateSelectedFiltersObject(CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.NOTICE_TYPE, fieldName, submittedFilters);
 
 module.exports = {
   generateSelectedFiltersObject,

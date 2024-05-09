@@ -22,8 +22,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     updatedAt: null,
     isInDraft: false,
     title: 'Confirm eligibility (mandatory criteria)',
-    introText:
-      'You must confirm that all the following will be true for this application on the date that cover starts.',
+    introText: 'You must confirm that all the following will be true for this application on the date that cover starts.',
     criteria: [
       {
         id: '1',

@@ -1,11 +1,6 @@
 import difference from 'lodash/difference';
 import { EntityManager } from 'typeorm';
-import {
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
-  UtilisationReportEntityMockBuilder,
-  MOCK_AZURE_FILE_INFO,
-  DbRequestSource,
-} from '@ukef/dtfs2-common';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder, MOCK_AZURE_FILE_INFO, DbRequestSource } from '@ukef/dtfs2-common';
 import {
   handleUtilisationReportDueReportInitialisedEvent,
   handleUtilisationReportFeeRecordKeyedEvent,
@@ -17,11 +12,7 @@ import {
 } from './event-handlers';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
 import { UtilisationReportStateMachine } from './utilisation-report.state-machine';
-import {
-  UTILISATION_REPORT_EVENT_TYPE,
-  UTILISATION_REPORT_EVENT_TYPES,
-  UtilisationReportEventType,
-} from './event/utilisation-report.event-type';
+import { UTILISATION_REPORT_EVENT_TYPE, UTILISATION_REPORT_EVENT_TYPES, UtilisationReportEventType } from './event/utilisation-report.event-type';
 import { InvalidStateMachineTransitionError } from '../../../errors';
 
 jest.mock('./event-handlers');
@@ -31,14 +22,9 @@ describe('UtilisationReportStateMachine', () => {
     jest.resetAllMocks();
   });
 
-  const expectInvalidStateMachineTransitionError = async (
-    stateMachine: UtilisationReportStateMachine,
-    eventType: UtilisationReportEventType,
-  ) => {
+  const expectInvalidStateMachineTransitionError = async (stateMachine: UtilisationReportStateMachine, eventType: UtilisationReportEventType) => {
     // @ts-expect-error - expect payload to be invalid when type is variable.
-    await expect(stateMachine.handleEvent({ type: eventType, payload: null })).rejects.toThrow(
-      InvalidStateMachineTransitionError,
-    );
+    await expect(stateMachine.handleEvent({ type: eventType, payload: null })).rejects.toThrow(InvalidStateMachineTransitionError);
   };
 
   describe('when no report yet exists in the database', () => {
@@ -121,8 +107,7 @@ describe('UtilisationReportStateMachine', () => {
   });
 
   describe(`when report is in '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}' status`, () => {
-    const PENDING_RECONCILIATION_REPORT =
-      UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const PENDING_RECONCILIATION_REPORT = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.PAYMENT_ADDED_TO_FEE_RECORD}' event`, async () => {
       // Arrange
@@ -178,8 +163,7 @@ describe('UtilisationReportStateMachine', () => {
   });
 
   describe(`when report is in '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS}' status`, () => {
-    const RECONCILIATION_IN_PROGRESS_REPORT =
-      UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.PAYMENT_ADDED_TO_FEE_RECORD}' event`, async () => {
       // Arrange
@@ -242,8 +226,7 @@ describe('UtilisationReportStateMachine', () => {
   });
 
   describe(`when report is in '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}' status`, () => {
-    const RECONCILIATION_COMPLETED_REPORT =
-      UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').build();
+    const RECONCILIATION_COMPLETED_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').build();
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_INCOMPLETE}' event`, async () => {
       // Arrange

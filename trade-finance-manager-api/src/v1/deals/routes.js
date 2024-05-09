@@ -133,11 +133,7 @@ dealsAuthRouter
  */
 dealsAuthRouter
   .route('/deals/:dealId/underwriting/managers-decision')
-  .put(
-    validation.dealIdValidation,
-    handleExpressValidatorResult,
-    dealUnderwriterManagersDecisionController.updateUnderwriterManagersDecision,
-  );
+  .put(validation.dealIdValidation, handleExpressValidatorResult, dealUnderwriterManagersDecisionController.updateUnderwriterManagersDecision);
 
 module.exports = {
   dealsOpenRouter,

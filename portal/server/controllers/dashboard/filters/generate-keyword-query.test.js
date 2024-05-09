@@ -28,10 +28,7 @@ describe('controllers/dashboard/filters - generate-keyword-query', () => {
 
       const result = generateKeywordQuery(mockFieldNames, mockKeywordValue);
 
-      const expected = [
-        generateObject(mockFieldNames[0], mockKeywordValue),
-        generateObject(mockFieldNames[1], mockKeywordValue),
-      ];
+      const expected = [generateObject(mockFieldNames[0], mockKeywordValue), generateObject(mockFieldNames[1], mockKeywordValue)];
 
       expect(result).toEqual(expected);
     });

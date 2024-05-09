@@ -52,10 +52,7 @@ const mapBssEwcsDeal = (deal) => {
     destinationOfGoodsAndServices: submissionDetails.destinationOfGoodsAndServices,
     eligibility,
     supportingInformation,
-    facilities: [
-      ...bonds.map((facility) => mapBssEwcsFacility(facility)),
-      ...loans.map((facility) => mapBssEwcsFacility(facility)),
-    ],
+    facilities: [...bonds.map((facility) => mapBssEwcsFacility(facility)), ...loans.map((facility) => mapBssEwcsFacility(facility))],
     tfm,
   };
 

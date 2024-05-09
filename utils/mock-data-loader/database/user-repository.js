@@ -40,10 +40,7 @@ const issueValid2faJWT = (user, sessionIdentifier) => {
 const createLoggedInUserSession = async (user) => {
   try {
     const userCollection = await db.getCollection('users');
-    const userFromDatabase = await userCollection.findOne(
-      { username: { $eq: user.username } },
-      { collation: { locale: 'en', strength: 2 } },
-    );
+    const userFromDatabase = await userCollection.findOne({ username: { $eq: user.username } }, { collation: { locale: 'en', strength: 2 } });
 
     const sessionIdentifier = crypto.randomBytes(32).toString('hex');
     const token = issueValid2faJWT(userFromDatabase, sessionIdentifier);

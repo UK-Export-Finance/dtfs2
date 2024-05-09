@@ -139,16 +139,12 @@ context('Dashboard Deals filters - filter by status', () => {
     });
 
     it('renders only Ready for Check deals', () => {
-      const ALL_READY_FOR_CHECK_DEALS = ALL_DEALS.filter(
-        ({ status }) => status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
-      );
+      const ALL_READY_FOR_CHECK_DEALS = ALL_DEALS.filter(({ status }) => status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
       dashboardDeals.rows().should('have.length', ALL_READY_FOR_CHECK_DEALS.length);
 
       const firstReadyToCheckDeal = ALL_READY_FOR_CHECK_DEALS[0];
 
-      dashboardDeals.row
-        .status(firstReadyToCheckDeal._id)
-        .should('have.text', CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
+      dashboardDeals.row.status(firstReadyToCheckDeal._id).should('have.text', CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
     });
   });
 

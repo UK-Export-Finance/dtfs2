@@ -141,9 +141,7 @@ describe('setApplicationStatus()', () => {
 
   it('throws an error if there is an api error', async () => {
     Axios.put.mockReturnValue(Promise.reject());
-    await expect(
-      api.setApplicationStatus({ dealId: validMongoId, status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, userToken }),
-    ).rejects.toThrowError();
+    await expect(api.setApplicationStatus({ dealId: validMongoId, status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, userToken })).rejects.toThrowError();
   });
 
   test.each(invalidMongoIdTestCases)('returns false when given an invalid dealId', async (invalidMongoId) => {
@@ -253,15 +251,11 @@ describe('getCompaniesHouseDetails()', () => {
 
   it('throws an error if there is an api error', async () => {
     Axios.get.mockReturnValue(Promise.reject());
-    await expect(
-      api.getCompaniesHouseDetails({ companyRegNumber: companiesHouseNumber, userToken }),
-    ).rejects.toThrowError();
+    await expect(api.getCompaniesHouseDetails({ companyRegNumber: companiesHouseNumber, userToken })).rejects.toThrowError();
   });
 
   it('throws an appropriate error when given an invalid companiesHouseNumber', async () => {
-    await expect(api.getCompaniesHouseDetails({ companyRegNumber: 'invalid', userToken })).rejects.toThrowError(
-      'Invalid company house number',
-    );
+    await expect(api.getCompaniesHouseDetails({ companyRegNumber: 'invalid', userToken })).rejects.toThrowError('Invalid company house number');
   });
 });
 
@@ -280,8 +274,6 @@ describe('getAddressesByPostcode()', () => {
   });
 
   it('throws an appropriate error when given an invalid postcode', async () => {
-    await expect(api.getAddressesByPostcode({ postcode: 'invalid', userToken })).rejects.toThrowError(
-      'Invalid postcode',
-    );
+    await expect(api.getAddressesByPostcode({ postcode: 'invalid', userToken })).rejects.toThrowError('Invalid postcode');
   });
 });

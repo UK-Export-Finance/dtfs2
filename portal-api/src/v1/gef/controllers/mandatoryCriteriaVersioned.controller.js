@@ -1,9 +1,6 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
-const {
-  generateAuditDatabaseRecordFromAuditDetails,
-  generatePortalAuditDetails,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { MandatoryCriteria } = require('../models/mandatoryCriteria');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
@@ -65,8 +62,7 @@ exports.findAll = (req, res) =>
     ),
   );
 
-exports.findOne = (req, res) =>
-  findOneMandatoryCriteria(req.params.id, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria));
+exports.findOne = (req, res) => findOneMandatoryCriteria(req.params.id, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria));
 
 exports.findLatest = async (req, res) => {
   const criteria = await api.findLatestGefMandatoryCriteria();
@@ -89,11 +85,7 @@ exports.update = async (req, res) => {
   const update = req.body;
   update.updatedAt = Date.now();
   update.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
-  const response = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(id) } },
-    { $set: update },
-    { returnNewDocument: true, returnDocument: 'after' },
-  );
+  const response = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(id) } }, { $set: update }, { returnNewDocument: true, returnDocument: 'after' });
 
   return res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };

@@ -30,12 +30,8 @@ const mockEndDate = '2018-07-04';
 
 // Mock Axios
 const axiosMock = new MockAdapter(axios);
-axiosMock
-  .onGet(`${APIM_MDM_URL}exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=BS`)
-  .reply(HttpStatusCode.Ok, mockResponse.data);
-axiosMock
-  .onGet(`${APIM_MDM_URL}exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=EW`)
-  .reply(HttpStatusCode.Ok, mockResponse.data);
+axiosMock.onGet(`${APIM_MDM_URL}exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=BS`).reply(HttpStatusCode.Ok, mockResponse.data);
+axiosMock.onGet(`${APIM_MDM_URL}exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=EW`).reply(HttpStatusCode.Ok, mockResponse.data);
 
 describe('/exposure-period', () => {
   describe('GET /v1/exposure-period/:startDate/:endDate/:facilityType', () => {
@@ -71,15 +67,12 @@ describe('/exposure-period', () => {
     ];
 
     describe('when dates are invalid', () => {
-      test.each(invalidDateTestCases)(
-        'returns a 400 if you provide invalid dates %s, %s',
-        async (startDate, endDate) => {
-          const { status, body } = await get(`/exposure-period/${startDate}/${endDate}/Loan`);
+      test.each(invalidDateTestCases)('returns a 400 if you provide invalid dates %s, %s', async (startDate, endDate) => {
+        const { status, body } = await get(`/exposure-period/${startDate}/${endDate}/Loan`);
 
-          expect(status).toEqual(400);
-          expect(body).toMatchObject({ data: 'Invalid date provided', status: 400 });
-        },
-      );
+        expect(status).toEqual(400);
+        expect(body).toMatchObject({ data: 'Invalid date provided', status: 400 });
+      });
     });
   });
 });

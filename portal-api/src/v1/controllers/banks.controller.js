@@ -1,9 +1,6 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
-const {
-  generateAuditDatabaseRecordFromAuditDetails,
-  generatePortalAuditDetails,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { hasValidObjectId } = require('../validation/validateObjectId');
 const { PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');

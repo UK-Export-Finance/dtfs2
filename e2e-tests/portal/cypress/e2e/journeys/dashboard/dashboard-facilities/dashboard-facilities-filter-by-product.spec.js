@@ -3,14 +3,7 @@ const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../pages');
 const { dashboardFilters } = require('../../../partials');
-const {
-  BSS_DEAL_MIA,
-  BSS_FACILITY_BOND,
-  BSS_FACILITY_LOAN,
-  GEF_DEAL_DRAFT,
-  GEF_FACILITY_CASH,
-  GEF_FACILITY_CONTINGENT,
-} = require('../fixtures');
+const { BSS_DEAL_MIA, BSS_FACILITY_BOND, BSS_FACILITY_LOAN, GEF_DEAL_DRAFT, GEF_FACILITY_CASH, GEF_FACILITY_CONTINGENT } = require('../fixtures');
 const {
   submitRedirectsToDashboard,
   shouldRenderCheckedCheckbox,

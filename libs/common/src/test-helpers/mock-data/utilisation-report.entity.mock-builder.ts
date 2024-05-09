@@ -10,9 +10,7 @@ export class UtilisationReportEntityMockBuilder<ReportStatus extends Utilisation
     this.report = report;
   }
 
-  public static forStatus<Status extends UtilisationReportReconciliationStatus>(
-    status: Status,
-  ): UtilisationReportEntityMockBuilder<Status> {
+  public static forStatus<Status extends UtilisationReportReconciliationStatus>(status: Status): UtilisationReportEntityMockBuilder<Status> {
     const bankId = '123';
     const reportPeriod = {
       start: { month: 11, year: 2023 },
@@ -62,9 +60,7 @@ export class UtilisationReportEntityMockBuilder<ReportStatus extends Utilisation
     return this;
   }
 
-  public withDateUploaded(
-    dateUploaded: ReportStatus extends 'REPORT_NOT_RECEIVED' ? null : Date,
-  ): UtilisationReportEntityMockBuilder<ReportStatus> {
+  public withDateUploaded(dateUploaded: ReportStatus extends 'REPORT_NOT_RECEIVED' ? null : Date): UtilisationReportEntityMockBuilder<ReportStatus> {
     this.report.dateUploaded = dateUploaded;
     return this;
   }
@@ -76,9 +72,7 @@ export class UtilisationReportEntityMockBuilder<ReportStatus extends Utilisation
     return this;
   }
 
-  public withUploadedByUserId(
-    uploadedByUserId: ReportStatus extends 'REPORT_NOT_RECEIVED' ? null : string,
-  ): UtilisationReportEntityMockBuilder<ReportStatus> {
+  public withUploadedByUserId(uploadedByUserId: ReportStatus extends 'REPORT_NOT_RECEIVED' ? null : string): UtilisationReportEntityMockBuilder<ReportStatus> {
     this.report.uploadedByUserId = uploadedByUserId;
     return this;
   }

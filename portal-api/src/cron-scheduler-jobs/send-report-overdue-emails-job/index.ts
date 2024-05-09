@@ -40,9 +40,7 @@ const sendEmailsOnReportOverdueChaserDate = async () => {
     });
   } else {
     const formattedReportOverdueChaserDate = format(reportOverdueChaserDate, 'dd-MMM-yy');
-    console.info(
-      `Not sending ${EMAIL_DESCRIPTION} emails - report overdue chaser is not due today (is/was due on ${formattedReportOverdueChaserDate})`,
-    );
+    console.info(`Not sending ${EMAIL_DESCRIPTION} emails - report overdue chaser is not due today (is/was due on ${formattedReportOverdueChaserDate})`);
   }
 };
 

@@ -32,9 +32,7 @@ describe('route-validators', () => {
 
       // Assert
       expect(errors.length).toEqual(1);
-      expect(errors[0].msg).toEqual(
-        expect.stringContaining("parameter must be an ISO month string (format 'yyyy-MM')"),
-      );
+      expect(errors[0].msg).toEqual(expect.stringContaining("parameter must be an ISO month string (format 'yyyy-MM')"));
     });
 
     it.each([{ params: { submissionMonth: '2023-11' } }, { params: { paramOne: '1956-01', paramTwo: '2050-11' } }])(

@@ -1,8 +1,5 @@
 const { ObjectId } = require('mongodb');
-const {
-  generateAuditDatabaseRecordFromAuditDetails,
-  generatePortalAuditDetails,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const { validateApplicationReferences, validatorStatusCheckEnums } = require('./validation/application');
@@ -261,11 +258,7 @@ exports.changeStatus = async (req, res) => {
   };
 
   if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
-    const submissionData = await addSubmissionData(
-      dealId,
-      existingApplication,
-      generatePortalAuditDetails(req.user._id),
-    );
+    const submissionData = await addSubmissionData(dealId, existingApplication, generatePortalAuditDetails(req.user._id));
 
     applicationUpdate = {
       ...applicationUpdate,
@@ -315,9 +308,7 @@ exports.delete = async (req, res) => {
     await query.deleteMany({ dealId: { $eq: ObjectId(dealId) } });
   }
 
-  return res
-    .status(utils.mongoStatus(applicationResponse))
-    .send(applicationResponse.value ? applicationResponse.value : null);
+  return res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
 };
 
 const dealsFilters = (user, filters = []) => {

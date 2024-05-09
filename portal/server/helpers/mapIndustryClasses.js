@@ -10,8 +10,7 @@ const mapIndustryClasses = (industrySectors, selectedIndustrySector, selectedInd
     return acc;
   }, []);
 
-  const selectedIndustryClassCode =
-    selectedIndustryClass && selectedIndustryClass.code ? selectedIndustryClass.code : '';
+  const selectedIndustryClassCode = selectedIndustryClass && selectedIndustryClass.code ? selectedIndustryClass.code : '';
 
   const mappedIndustryClasses = [
     { text: 'Select value' },

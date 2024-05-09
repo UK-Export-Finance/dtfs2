@@ -91,9 +91,7 @@ describe(component, () => {
         dealWithBondsThatCanChangeCoverDate.bondTransactions.items.forEach((facility) => {
           const facilityIdSelector = `[data-cy="bond-${facility._id}"]`;
 
-          wrapper
-            .expectElement(`${facilityIdSelector} [data-cy="bond-change-or-confirm-cover-start-date-${facility._id}"]`)
-            .toExist();
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-change-or-confirm-cover-start-date-${facility._id}"]`).toExist();
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-issue-facility-${facility._id}"]`).notToExist();
         });
@@ -134,9 +132,7 @@ describe(component, () => {
         dealWithBondsThatCanChangeCoverDate.bondTransactions.items.forEach((facility) => {
           const facilityIdSelector = `[data-cy="bond-${facility._id}"]`;
 
-          wrapper
-            .expectElement(`${facilityIdSelector} [data-cy="bond-change-or-confirm-cover-start-date-${facility._id}"]`)
-            .notToExist();
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-change-or-confirm-cover-start-date-${facility._id}"]`).notToExist();
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-issue-facility-${facility._id}"]`).notToExist();
         });
@@ -177,9 +173,7 @@ describe(component, () => {
         dealWithBondsThatCanChangeCoverDate.bondTransactions.items.forEach((facility) => {
           const facilityIdSelector = `[data-cy="bond-${facility._id}"]`;
 
-          wrapper
-            .expectElement(`${facilityIdSelector} [data-cy="bond-change-or-confirm-cover-start-date-${facility._id}"]`)
-            .notToExist();
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-change-or-confirm-cover-start-date-${facility._id}"]`).notToExist();
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-issue-facility-${facility._id}"]`).notToExist();
         });
@@ -216,25 +210,15 @@ describe(component, () => {
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="name-link-${facility._id}"]`).toExist();
 
-          wrapper
-            .expectText(`${facilityIdSelector} [data-cy="bond-ukef-facility-id-${facility._id}"]`)
-            .toRead(facility.ukefFacilityId);
+          wrapper.expectText(`${facilityIdSelector} [data-cy="bond-ukef-facility-id-${facility._id}"]`).toRead(facility.ukefFacilityId);
 
-          wrapper
-            .expectText(`${facilityIdSelector} [data-cy="bond-status-${facility._id}"] [data-cy="status-tag"]`)
-            .toRead(facility.status);
+          wrapper.expectText(`${facilityIdSelector} [data-cy="bond-status-${facility._id}"] [data-cy="status-tag"]`).toRead(facility.status);
 
-          wrapper
-            .expectText(`${facilityIdSelector} [data-cy="bond-facility-value"]`)
-            .toRead(`${facility.currency.id} ${facility.value}`);
+          wrapper.expectText(`${facilityIdSelector} [data-cy="bond-facility-value"]`).toRead(`${facility.currency.id} ${facility.value}`);
 
-          wrapper
-            .expectText(`${facilityIdSelector} [data-cy="facility-stage-${facility._id}"]`)
-            .toRead(facility.facilityStage);
+          wrapper.expectText(`${facilityIdSelector} [data-cy="facility-stage-${facility._id}"]`).toRead(facility.facilityStage);
 
-          wrapper
-            .expectElement(`${facilityIdSelector} [data-cy="bond-requested-cover-start-date-${facility._id}"]`)
-            .toExist();
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-requested-cover-start-date-${facility._id}"]`).toExist();
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-cover-end-date-${facility._id}"]`).toExist();
         });

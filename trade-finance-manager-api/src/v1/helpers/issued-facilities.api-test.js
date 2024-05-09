@@ -58,16 +58,8 @@ describe('return list of issued & unissued facilities', () => {
     });
 
     it('should return correct issued/unissued facilities', () => {
-      const {
-        issuedBonds,
-        unissuedBonds,
-        issuedLoans,
-        unissuedLoans,
-        issuedCash,
-        unissuedCash,
-        issuedContingent,
-        unissuedContingent,
-      } = issuedFacilities(facilities);
+      const { issuedBonds, unissuedBonds, issuedLoans, unissuedLoans, issuedCash, unissuedCash, issuedContingent, unissuedContingent } =
+        issuedFacilities(facilities);
 
       expect(issuedBonds).toEqual([issuedBondFacility]);
       expect(unissuedBonds).toEqual([unissuedBondFacility]);

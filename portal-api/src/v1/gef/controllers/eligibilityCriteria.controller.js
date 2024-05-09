@@ -1,7 +1,4 @@
-const {
-  generateAuditDatabaseRecordFromAuditDetails,
-  generatePortalAuditDetails,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { EligibilityCriteria } = require('../models/eligibilityCriteria');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');

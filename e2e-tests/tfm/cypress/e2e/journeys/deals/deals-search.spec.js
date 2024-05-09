@@ -223,9 +223,7 @@ context('User can view and filter multiple deals', () => {
   });
 
   it('search/filter by ukefDealId - GEF', () => {
-    const gefDeal = ALL_SUBMITTED_DEALS.find(
-      ({ dealSnapshot }) => dealSnapshot.dealType === DEAL_TYPE.GEF && dealSnapshot.ukefDealId,
-    );
+    const gefDeal = ALL_SUBMITTED_DEALS.find(({ dealSnapshot }) => dealSnapshot.dealType === DEAL_TYPE.GEF && dealSnapshot.ukefDealId);
 
     const searchString = gefDeal.dealSnapshot.ukefDealId;
 
@@ -250,9 +248,7 @@ context('User can view and filter multiple deals', () => {
     pages.dealsPage.searchFormInput().type(searchString);
     pages.dealsPage.searchFormSubmitButton().click();
 
-    const dealsWithMakerUkefTestBank = ALL_SUBMITTED_DEALS.filter((deal) =>
-      deal.dealSnapshot.bank.name.includes(searchString),
-    );
+    const dealsWithMakerUkefTestBank = ALL_SUBMITTED_DEALS.filter((deal) => deal.dealSnapshot.bank.name.includes(searchString));
 
     pages.dealsPage.dealsTableRows().should('have.length', dealsWithMakerUkefTestBank.length);
 

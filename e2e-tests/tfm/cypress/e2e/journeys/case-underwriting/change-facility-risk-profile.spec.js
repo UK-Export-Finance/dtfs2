@@ -48,9 +48,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
       facilityRow.changeRiskProfileLink().should('not.exist');
 
       // user cannot manually navigate to the page
-      cy.visit(
-        relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${dealFacilities[0]._id}/risk-profile`),
-      );
+      cy.visit(relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${dealFacilities[0]._id}/risk-profile`));
       cy.url().should('eq', relative('/not-found'));
     });
   });
@@ -83,10 +81,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
     facilityRow.changeRiskProfileLink().should('exist');
     facilityRow.changeRiskProfileLink().click({ force: true });
 
-    cy.url().should(
-      'eq',
-      relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${facilityId}/risk-profile`),
-    );
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${facilityId}/risk-profile`));
   });
 
   it('clicking `ukefFacilityId` link in the legend goes to the Facility page', () => {
@@ -101,10 +96,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
 
     facilityRow.changeRiskProfileLink().click({ force: true });
 
-    cy.url().should(
-      'eq',
-      relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${facilityId}/risk-profile`),
-    );
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${facilityId}/risk-profile`));
 
     pages.facilityRiskProfilePage.legendLink().click();
 
@@ -123,10 +115,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
 
     facilityRow.changeRiskProfileLink().click({ force: true });
 
-    cy.url().should(
-      'eq',
-      relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${facilityId}/risk-profile`),
-    );
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${facilityId}/risk-profile`));
 
     pages.facilityRiskProfilePage.cancelLink().click();
 

@@ -1,17 +1,11 @@
 const { when, resetAllWhenMocks } = require('jest-when');
 const { ObjectId } = require('mongodb');
 const { cloneDeep } = require('lodash');
-const {
-  generateMockNoUserLoggedInAuditDatabaseRecord,
-  generateMockPortalUserAuditDatabaseRecord,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generateMockNoUserLoggedInAuditDatabaseRecord, generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
 const { UserRepository } = require('./repository');
 const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError } = require('../errors');
-const {
-  TEST_DATABASE_USER,
-  TEST_USER_TRANSFORMED_FROM_DATABASE,
-} = require('../../../test-helpers/unit-test-mocks/mock-user');
+const { TEST_DATABASE_USER, TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const { USER } = require('../../constants');
 const InvalidSessionIdentifierError = require('../errors/invalid-session-identifier.error');
 
@@ -48,8 +42,7 @@ describe('UserRepository', () => {
     const expiry = new Date().getTime() + SIGN_IN_LINK.DURATION_MILLISECONDS;
 
     withValidateUserIdTests({
-      methodCall: (invalidUserId) =>
-        repository.saveSignInTokenForUser({ userId: invalidUserId, signInTokenSalt: salt, signInTokenHash: hash }),
+      methodCall: (invalidUserId) => repository.saveSignInTokenForUser({ userId: invalidUserId, signInTokenSalt: salt, signInTokenHash: hash }),
     });
 
     it('saves the sign in code expiry time and the hex strings for its hash and salt on the user document', async () => {
@@ -167,8 +160,7 @@ describe('UserRepository', () => {
     });
 
     withValidateUserIdTests({
-      methodCall: (invalidUserId) =>
-        repository.updateLastLoginAndResetSignInData({ userId: invalidUserId, sessionIdentifier: aSessionIdentifier }),
+      methodCall: (invalidUserId) => repository.updateLastLoginAndResetSignInData({ userId: invalidUserId, sessionIdentifier: aSessionIdentifier }),
     });
 
     withValidateSessionIdentifierTests({

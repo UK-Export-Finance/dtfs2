@@ -10,14 +10,7 @@ const setError = (field, message) =>
     errMsg: message,
   });
 
-const updateCoverStartDate = async ({
-  facilityId,
-  coverStartDate,
-  shouldCoverStartOnSubmission,
-  dealId,
-  editorId,
-  userToken,
-}) => {
+const updateCoverStartDate = async ({ facilityId, coverStartDate, shouldCoverStartOnSubmission, dealId, editorId, userToken }) => {
   try {
     const applicationUpdate = {
       editorId,
@@ -49,10 +42,7 @@ const processCoverStartDate = async (req, res) => {
 
   try {
     if (ukefCoverStartDate === undefined) {
-      req.errors = setError(
-        'ukefCoverStartDate',
-        'Select yes if you want UKEF cover to start on the day the notice is submitted to UKEF',
-      );
+      req.errors = setError('ukefCoverStartDate', 'Select yes if you want UKEF cover to start on the day the notice is submitted to UKEF');
     } else if (ukefCoverStartDate === 'true') {
       /**
        * Facility cover start will be set to the

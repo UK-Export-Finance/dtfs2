@@ -48,10 +48,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
-        .withId(reportId)
-        .withDateUploaded(null)
-        .build();
+      const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).withDateUploaded(null).build();
       findOneSpy.mockResolvedValue(notReceivedReport);
 
       // Act
@@ -73,10 +70,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       const { req, res } = getHttpMocks();
 
       const bankId = '123';
-      const pendingReconciliationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
-        .withId(reportId)
-        .withBankId(bankId)
-        .build();
+      const pendingReconciliationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withBankId(bankId).build();
       findOneSpy.mockResolvedValue(pendingReconciliationReport);
 
       getBankNameByIdSpy.mockResolvedValue(undefined);

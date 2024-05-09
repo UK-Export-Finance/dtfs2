@@ -40,11 +40,7 @@ context('Facilities Page', () => {
     });
 
     it('displays the correct elements for contingent facility', () => {
-      cy.visit(
-        relative(
-          `/gef/application-details/${dealIds[0]}/facilities?facilityType=${CONSTANTS.FACILITY_TYPE.CONTINGENT}`,
-        ),
-      );
+      cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities?facilityType=${CONSTANTS.FACILITY_TYPE.CONTINGENT}`));
       facilities.backLink();
       facilities.headingCaption();
       facilities.hasBeenIssuedHeading().contains('contingent');
@@ -81,23 +77,15 @@ context('Facilities Page', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
       facilities.hasBeenIssuedRadioYesRadioButton().click();
       facilities.continueButton().click();
-      Cypress.minimatch(
-        '/gef/application-details/123/facilities/1234/about-facility',
-        '/gef/application-details/*/facilities/*/about-facility',
-        {
-          matchBase: true,
-        },
-      );
+      Cypress.minimatch('/gef/application-details/123/facilities/1234/about-facility', '/gef/application-details/*/facilities/*/about-facility', {
+        matchBase: true,
+      });
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
       facilities.hasBeenIssuedRadioNoRadioButton().click();
       facilities.continueButton().click();
-      Cypress.minimatch(
-        '/gef/application-details/123/facilities/1234/about-facility',
-        '/gef/application-details/*/facilities/*/about-facility',
-        {
-          matchBase: true,
-        },
-      );
+      Cypress.minimatch('/gef/application-details/123/facilities/1234/about-facility', '/gef/application-details/*/facilities/*/about-facility', {
+        matchBase: true,
+      });
     });
   });
 });

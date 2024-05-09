@@ -24,10 +24,7 @@ describe('middleware/security', () => {
 
   describe('response', () => {
     it('should set `Strict-Transport-Security` header', () => {
-      expect(setHeaderSpy).toHaveBeenCalledWith(
-        'Strict-Transport-Security',
-        'max-age=15552000; includeSubDomains; preload',
-      );
+      expect(setHeaderSpy).toHaveBeenCalledWith('Strict-Transport-Security', 'max-age=15552000; includeSubDomains; preload');
     });
 
     it('should set `X-Frame-Options` header', () => {

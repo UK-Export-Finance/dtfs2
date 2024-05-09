@@ -31,10 +31,7 @@ router.get('/contract/:_id/about/check-your-answers', validateRole({ role: [MAKE
 
   let formattedValidationErrors;
   if (validationErrors.count !== 0) {
-    formattedValidationErrors = generateErrorSummary(
-      aboutSupplyContractPreviewValidationErrors(validationErrors, _id),
-      errorHref,
-    );
+    formattedValidationErrors = generateErrorSummary(aboutSupplyContractPreviewValidationErrors(validationErrors, _id), errorHref);
   }
 
   return res.render('contract/about/about-supply-check-your-answers.njk', {

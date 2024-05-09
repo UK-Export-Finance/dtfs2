@@ -58,15 +58,13 @@ const validateAboutFacility = async (req, res) => {
   const coverStartDateMonth = body['cover-start-date-month'];
   const coverStartDateYear = body['cover-start-date-year'];
   const coverStartDateIsFullyComplete = coverStartDateDay && coverStartDateMonth && coverStartDateYear;
-  const coverStartDateIsPartiallyComplete =
-    !coverStartDateIsFullyComplete && (coverStartDateDay || coverStartDateMonth || coverStartDateYear);
+  const coverStartDateIsPartiallyComplete = !coverStartDateIsFullyComplete && (coverStartDateDay || coverStartDateMonth || coverStartDateYear);
   const coverStartDateIsBlank = !coverStartDateDay && !coverStartDateMonth && !coverStartDateYear;
   const coverEndDateDay = body['cover-end-date-day'];
   const coverEndDateMonth = body['cover-end-date-month'];
   const coverEndDateYear = body['cover-end-date-year'];
   const coverEndDateIsFullyComplete = coverEndDateDay && coverEndDateMonth && coverEndDateYear;
-  const coverEndDateIsPartiallyComplete =
-    !coverEndDateIsFullyComplete && (coverEndDateDay || coverEndDateMonth || coverEndDateYear);
+  const coverEndDateIsPartiallyComplete = !coverEndDateIsFullyComplete && (coverEndDateDay || coverEndDateMonth || coverEndDateYear);
   const coverEndDateIsBlank = !coverEndDateDay && !coverEndDateMonth && !coverEndDateYear;
 
   let coverStartDate = null;
@@ -226,8 +224,7 @@ const validateAboutFacility = async (req, res) => {
   if (/[^A-Za-z0-9 .,:;'-]/.test(body.facilityName)) {
     aboutFacilityErrors.push({
       errRef: 'facilityName',
-      errMsg:
-        'Facility name must only include letters a to z, full stops, commas, colons, semi-colons, hyphens, spaces and apostrophes',
+      errMsg: 'Facility name must only include letters a to z, full stops, commas, colons, semi-colons, hyphens, spaces and apostrophes',
     });
   }
 

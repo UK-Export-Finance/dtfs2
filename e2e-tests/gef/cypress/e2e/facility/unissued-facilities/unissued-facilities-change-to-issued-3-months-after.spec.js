@@ -6,12 +6,7 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_MIN } from '../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
-import {
-  MOCK_FACILITY_ONE,
-  MOCK_FACILITY_TWO,
-  MOCK_FACILITY_THREE,
-  MOCK_FACILITY_FOUR,
-} from '../../../fixtures/mocks/mock-facilities';
+import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../fixtures/mocks/mock-facilities';
 
 import applicationPreview from '../../pages/application-preview';
 import unissuedFacilityTable from '../../pages/unissued-facilities';
@@ -113,22 +108,14 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeYearsYear);
       aboutFacilityUnissued.continueButton().click();
 
-      aboutFacilityUnissued
-        .errorSummary()
-        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
-      aboutFacilityUnissued
-        .coverStartDateError()
-        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued.errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
       aboutFacilityUnissued.continueButton().click();
 
-      aboutFacilityUnissued
-        .errorSummary()
-        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
-      aboutFacilityUnissued
-        .coverStartDateError()
-        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued.errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
     });
 
     it('should be able to update facility and then go back to application preview page with coverStartDate more than 3 months in the future if specialIssuePermission', () => {
@@ -172,22 +159,14 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeYearsYear);
       aboutFacilityUnissued.continueButton().click();
 
-      aboutFacilityUnissued
-        .errorSummary()
-        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
-      aboutFacilityUnissued
-        .coverStartDateError()
-        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued.errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
       aboutFacilityUnissued.continueButton().click();
 
-      aboutFacilityUnissued
-        .errorSummary()
-        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
-      aboutFacilityUnissued
-        .coverStartDateError()
-        .contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued.errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
     });
   });
 });

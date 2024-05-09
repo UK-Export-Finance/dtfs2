@@ -78,10 +78,7 @@ context('Dashboard Facilities filters - filter by deal notice type', () => {
 
       filters.showHideButton().click();
 
-      shouldRenderAppliedFilterInMainContainerSelectedFilters(
-        filters.mainContainer.selectedFilters.noticeAIN(),
-        CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
-      );
+      shouldRenderAppliedFilterInMainContainerSelectedFilters(filters.mainContainer.selectedFilters.noticeAIN(), CONSTANTS.DEALS.SUBMISSION_TYPE.AIN);
     });
 
     it('renders only facilities that belong to an AIN deal', () => {

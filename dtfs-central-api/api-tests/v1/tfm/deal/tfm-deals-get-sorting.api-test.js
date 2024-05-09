@@ -9,12 +9,7 @@ const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
-    await wipeDB.wipe([
-      MONGO_DB_COLLECTIONS.DEALS,
-      MONGO_DB_COLLECTIONS.FACILITIES,
-      MONGO_DB_COLLECTIONS.TFM_DEALS,
-      MONGO_DB_COLLECTIONS.TFM_FACILITIES,
-    ]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
   describe('GET /v1/tfm/deals', () => {
@@ -40,114 +35,111 @@ describe('/v1/tfm/deals', () => {
           fieldPathForBssDeal: 'dealSnapshot.additionalRefName',
           fieldValuesInAscendingOrder: ['A Ref Name', 'B Ref Name', 'C Ref Name', 'D Ref Name'],
         },
-      ])(
-        'by $fieldPathForNonBssDeal',
-        ({ fieldPathForNonBssDeal: nonBssPath, fieldPathForBssDeal: bssPath, fieldValuesInAscendingOrder: values }) => {
-          let nonBssPathExcludingDealSnapshot = nonBssPath;
-          if (nonBssPath.slice(0, 12) === 'dealSnapshot') {
-            nonBssPathExcludingDealSnapshot = nonBssPath.slice(13);
-          }
+      ])('by $fieldPathForNonBssDeal', ({ fieldPathForNonBssDeal: nonBssPath, fieldPathForBssDeal: bssPath, fieldValuesInAscendingOrder: values }) => {
+        let nonBssPathExcludingDealSnapshot = nonBssPath;
+        if (nonBssPath.slice(0, 12) === 'dealSnapshot') {
+          nonBssPathExcludingDealSnapshot = nonBssPath.slice(13);
+        }
 
-          let bssPathExcludingDealSnapshot = bssPath;
-          if (bssPath.slice(0, 12) === 'dealSnapshot') {
-            bssPathExcludingDealSnapshot = bssPath.slice(13);
-          }
+        let bssPathExcludingDealSnapshot = bssPath;
+        if (bssPath.slice(0, 12) === 'dealSnapshot') {
+          bssPathExcludingDealSnapshot = bssPath.slice(13);
+        }
 
-          const gefDeal1Data = { dealType: 'GEF' };
-          setObjectPropertyValueFromStringPath(gefDeal1Data, nonBssPathExcludingDealSnapshot, values[0]);
-          const gefDeal1 = newDeal(gefDeal1Data);
+        const gefDeal1Data = { dealType: 'GEF' };
+        setObjectPropertyValueFromStringPath(gefDeal1Data, nonBssPathExcludingDealSnapshot, values[0]);
+        const gefDeal1 = newDeal(gefDeal1Data);
 
-          const gefDeal2Data = { dealType: 'GEF' };
-          setObjectPropertyValueFromStringPath(gefDeal2Data, nonBssPathExcludingDealSnapshot, values[2]);
-          const gefDeal2 = newDeal(gefDeal2Data);
+        const gefDeal2Data = { dealType: 'GEF' };
+        setObjectPropertyValueFromStringPath(gefDeal2Data, nonBssPathExcludingDealSnapshot, values[2]);
+        const gefDeal2 = newDeal(gefDeal2Data);
 
-          const bssDeal1Data = {};
-          setObjectPropertyValueFromStringPath(bssDeal1Data, bssPathExcludingDealSnapshot, values[1]);
-          const bssDeal1 = newDeal(bssDeal1Data);
+        const bssDeal1Data = {};
+        setObjectPropertyValueFromStringPath(bssDeal1Data, bssPathExcludingDealSnapshot, values[1]);
+        const bssDeal1 = newDeal(bssDeal1Data);
 
-          const bssDeal2Data = {};
-          setObjectPropertyValueFromStringPath(bssDeal2Data, bssPathExcludingDealSnapshot, values[3]);
-          const bssDeal2 = newDeal(bssDeal2Data);
+        const bssDeal2Data = {};
+        setObjectPropertyValueFromStringPath(bssDeal2Data, bssPathExcludingDealSnapshot, values[3]);
+        const bssDeal2 = newDeal(bssDeal2Data);
 
-          beforeEach(async () => {
-            await createAndSubmitDeals([gefDeal1, gefDeal2, bssDeal1, bssDeal2]);
+        beforeEach(async () => {
+          await createAndSubmitDeals([gefDeal1, gefDeal2, bssDeal1, bssDeal2]);
+        });
+
+        describe.each(['ascending', 'descending'])('in %s order', (order) => {
+          const urlWithoutPagination = `/v1/tfm/deals?sortBy[order]=${order}&sortBy[field]=${nonBssPath}`;
+
+          it('without pagination', async () => {
+            const { status, body } = await api.get(urlWithoutPagination);
+
+            expect(status).toEqual(200);
+            expect(body.deals.length).toEqual(4);
+            expect(body.pagination.totalItems).toEqual(4);
+            expect(body.pagination.currentPage).toEqual(0);
+            expect(body.pagination.totalPages).toEqual(1);
+
+            for (let i = 0; i < 4; i += 1) {
+              const firstPart = body.deals[order === 'ascending' ? i : 3 - i];
+              const secondPart = i % 2 === 0 ? nonBssPath : bssPath;
+              const fieldValue = getObjectPropertyValueFromStringPath(firstPart, secondPart);
+
+              const expectedFieldValue = values[i];
+
+              expect(fieldValue).toEqual(expectedFieldValue);
+            }
           });
 
-          describe.each(['ascending', 'descending'])('in %s order', (order) => {
-            const urlWithoutPagination = `/v1/tfm/deals?sortBy[order]=${order}&sortBy[field]=${nonBssPath}`;
+          it('with pagination', async () => {
+            const pagesize = 2;
 
-            it('without pagination', async () => {
-              const { status, body } = await api.get(urlWithoutPagination);
+            const urlWithPagination = (page) => `${urlWithoutPagination}&pagesize=${pagesize}&page=${page}`;
 
-              expect(status).toEqual(200);
-              expect(body.deals.length).toEqual(4);
-              expect(body.pagination.totalItems).toEqual(4);
-              expect(body.pagination.currentPage).toEqual(0);
-              expect(body.pagination.totalPages).toEqual(1);
+            const { status: page1Status, body: page1Body } = await api.get(urlWithPagination(0));
 
-              for (let i = 0; i < 4; i += 1) {
-                const firstPart = body.deals[order === 'ascending' ? i : 3 - i];
-                const secondPart = i % 2 === 0 ? nonBssPath : bssPath;
-                const fieldValue = getObjectPropertyValueFromStringPath(firstPart, secondPart);
+            expect(page1Status).toEqual(200);
+            expect(page1Body.deals.length).toEqual(2);
+            expect(page1Body.pagination.totalItems).toEqual(4);
+            expect(page1Body.pagination.currentPage).toEqual(0);
+            expect(page1Body.pagination.totalPages).toEqual(2);
 
-                const expectedFieldValue = values[i];
+            if (order === 'ascending') {
+              const firstFieldValue = getObjectPropertyValueFromStringPath(page1Body.deals[0], nonBssPath);
+              expect(firstFieldValue).toEqual(values[0]);
 
-                expect(fieldValue).toEqual(expectedFieldValue);
-              }
-            });
+              const secondFieldValue = getObjectPropertyValueFromStringPath(page1Body.deals[1], bssPath);
+              expect(secondFieldValue).toEqual(values[1]);
+            } else {
+              const firstFieldValue = getObjectPropertyValueFromStringPath(page1Body.deals[0], bssPath);
+              expect(firstFieldValue).toEqual(values[3]);
 
-            it('with pagination', async () => {
-              const pagesize = 2;
+              const secondFieldValue = getObjectPropertyValueFromStringPath(page1Body.deals[1], nonBssPath);
+              expect(secondFieldValue).toEqual(values[2]);
+            }
 
-              const urlWithPagination = (page) => `${urlWithoutPagination}&pagesize=${pagesize}&page=${page}`;
+            const { status: page2Status, body: page2Body } = await api.get(urlWithPagination(1));
 
-              const { status: page1Status, body: page1Body } = await api.get(urlWithPagination(0));
+            expect(page2Status).toEqual(200);
+            expect(page2Body.deals.length).toEqual(2);
+            expect(page2Body.pagination.totalItems).toEqual(4);
+            expect(page2Body.pagination.currentPage).toEqual(1);
+            expect(page2Body.pagination.totalPages).toEqual(2);
 
-              expect(page1Status).toEqual(200);
-              expect(page1Body.deals.length).toEqual(2);
-              expect(page1Body.pagination.totalItems).toEqual(4);
-              expect(page1Body.pagination.currentPage).toEqual(0);
-              expect(page1Body.pagination.totalPages).toEqual(2);
+            if (order === 'ascending') {
+              const firstFieldValue = getObjectPropertyValueFromStringPath(page2Body.deals[0], nonBssPath);
+              expect(firstFieldValue).toEqual(values[2]);
 
-              if (order === 'ascending') {
-                const firstFieldValue = getObjectPropertyValueFromStringPath(page1Body.deals[0], nonBssPath);
-                expect(firstFieldValue).toEqual(values[0]);
+              const secondFieldValue = getObjectPropertyValueFromStringPath(page2Body.deals[1], bssPath);
+              expect(secondFieldValue).toEqual(values[3]);
+            } else {
+              const firstFieldValue = getObjectPropertyValueFromStringPath(page2Body.deals[0], bssPath);
+              expect(firstFieldValue).toEqual(values[1]);
 
-                const secondFieldValue = getObjectPropertyValueFromStringPath(page1Body.deals[1], bssPath);
-                expect(secondFieldValue).toEqual(values[1]);
-              } else {
-                const firstFieldValue = getObjectPropertyValueFromStringPath(page1Body.deals[0], bssPath);
-                expect(firstFieldValue).toEqual(values[3]);
-
-                const secondFieldValue = getObjectPropertyValueFromStringPath(page1Body.deals[1], nonBssPath);
-                expect(secondFieldValue).toEqual(values[2]);
-              }
-
-              const { status: page2Status, body: page2Body } = await api.get(urlWithPagination(1));
-
-              expect(page2Status).toEqual(200);
-              expect(page2Body.deals.length).toEqual(2);
-              expect(page2Body.pagination.totalItems).toEqual(4);
-              expect(page2Body.pagination.currentPage).toEqual(1);
-              expect(page2Body.pagination.totalPages).toEqual(2);
-
-              if (order === 'ascending') {
-                const firstFieldValue = getObjectPropertyValueFromStringPath(page2Body.deals[0], nonBssPath);
-                expect(firstFieldValue).toEqual(values[2]);
-
-                const secondFieldValue = getObjectPropertyValueFromStringPath(page2Body.deals[1], bssPath);
-                expect(secondFieldValue).toEqual(values[3]);
-              } else {
-                const firstFieldValue = getObjectPropertyValueFromStringPath(page2Body.deals[0], bssPath);
-                expect(firstFieldValue).toEqual(values[1]);
-
-                const secondFieldValue = getObjectPropertyValueFromStringPath(page2Body.deals[1], nonBssPath);
-                expect(secondFieldValue).toEqual(values[0]);
-              }
-            });
+              const secondFieldValue = getObjectPropertyValueFromStringPath(page2Body.deals[1], nonBssPath);
+              expect(secondFieldValue).toEqual(values[0]);
+            }
           });
-        },
-      );
+        });
+      });
 
       describe('by tfm.product', () => {
         // NOTE: deal.tfm is only generated when we update a deal, after deal submission.
@@ -175,9 +167,7 @@ describe('/v1/tfm/deals', () => {
 
           submittedDealWith1Bond = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1-BOND');
           submittedDealWith1Loan = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1-LOAN');
-          submittedDealWithBondAndLoans = submittedDeals.find(
-            (d) => d.dealSnapshot.details.ukefDealId === '1-BOND-1-LOAN',
-          );
+          submittedDealWithBondAndLoans = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1-BOND-1-LOAN');
 
           await updateDealsTfm(
             [
@@ -202,11 +192,7 @@ describe('/v1/tfm/deals', () => {
           const urlWithoutPagination = `/v1/tfm/deals?sortBy[field]=tfm.product&sortBy[order]=${order}`;
 
           it('without pagination', async () => {
-            const expectedDeals = [
-              { _id: submittedDealWith1Bond?._id },
-              { _id: submittedDealWithBondAndLoans?._id },
-              { _id: submittedDealWith1Loan?._id },
-            ];
+            const expectedDeals = [{ _id: submittedDealWith1Bond?._id }, { _id: submittedDealWithBondAndLoans?._id }, { _id: submittedDealWith1Loan?._id }];
 
             const { status, body } = await api.get(urlWithoutPagination);
 
@@ -233,11 +219,7 @@ describe('/v1/tfm/deals', () => {
 
             const urlWithPagination = (page) => `${urlWithoutPagination}&pagesize=${pagesize}&page=${page}`;
 
-            const expectedDeals = [
-              { _id: submittedDealWith1Bond?._id },
-              { _id: submittedDealWithBondAndLoans?._id },
-              { _id: submittedDealWith1Loan?._id },
-            ];
+            const expectedDeals = [{ _id: submittedDealWith1Bond?._id }, { _id: submittedDealWithBondAndLoans?._id }, { _id: submittedDealWith1Loan?._id }];
 
             const { status: page1Status, body: page1Body } = await api.get(urlWithPagination(0));
 

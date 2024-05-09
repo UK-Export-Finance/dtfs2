@@ -53,10 +53,7 @@ describe('controllers/dashboard/filters - helpers', () => {
 
         const result = submittedFiltersArray(mockSubmittedFilters);
 
-        const expected = [
-          { dealType: [...mockSubmittedFilters.dealType] },
-          { submissionType: [mockSubmittedFilters.submissionType] },
-        ];
+        const expected = [{ dealType: [...mockSubmittedFilters.dealType] }, { submissionType: [mockSubmittedFilters.submissionType] }];
 
         expect(result).toEqual(expected);
       });
@@ -178,8 +175,7 @@ describe('controllers/dashboard/filters - helpers', () => {
       ];
       const result = filtersToText(filters);
 
-      const expected =
-        'Filters selected: , Product: , BSS/EWCS, Notice Type: , Automatic Inclusion Notice, Status: , Draft';
+      const expected = 'Filters selected: , Product: , BSS/EWCS, Notice Type: , Automatic Inclusion Notice, Status: , Draft';
 
       expect(result).toEqual(expected);
     });

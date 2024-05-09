@@ -58,10 +58,7 @@ context('Enter Exporters Correspondence Address Page', () => {
       exportersAddress.continueButton().click();
       exportersAddress.postcodeError();
       exportersAddress.manualAddressEntryLink().click();
-      cy.url().should(
-        'eq',
-        relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`),
-      );
+      cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`));
       enterExportersCorAddress.backLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}`));
     });
@@ -137,16 +134,12 @@ context('Enter Exporters Correspondence Address Page', () => {
 
   describe('Status query is set to `change`', () => {
     it('hides `back button`', () => {
-      cy.visit(
-        relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address?status=change`),
-      );
+      cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address?status=change`));
       enterExportersCorAddress.backLink().should('not.exist');
     });
 
     it('redirects user back to application details page when clicking on `Continue` button', () => {
-      cy.visit(
-        relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address?status=change`),
-      );
+      cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address?status=change`));
       enterExportersCorAddress.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}`));
     });

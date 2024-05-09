@@ -9,10 +9,7 @@ import { sortArrayOfObjectsAlphabetically } from '../../../helpers/array';
 import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
 describe('GET getAmendmentLeadUnderwriter()', () => {
-  const isEditable = userIsInTeam(MOCKS.MOCK_USER_UNDERWRITER_MANAGER, [
-    TEAM_IDS.UNDERWRITER_MANAGERS,
-    TEAM_IDS.UNDERWRITERS,
-  ]);
+  const isEditable = userIsInTeam(MOCKS.MOCK_USER_UNDERWRITER_MANAGER, [TEAM_IDS.UNDERWRITER_MANAGERS, TEAM_IDS.UNDERWRITERS]);
 
   const apiGetUserSpy = jest.fn(() => Promise.resolve(MOCKS.MOCK_USER_UNDERWRITER_MANAGER));
 
@@ -21,10 +18,7 @@ describe('GET getAmendmentLeadUnderwriter()', () => {
   });
 
   it('should return an object with the correct parameters when no lead underwriter set', async () => {
-    const result = await amendmentLeadUnderwriterController.getAmendmentLeadUnderwriter(
-      MOCKS.MOCK_AMENDMENT,
-      MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
-    );
+    const result = await amendmentLeadUnderwriterController.getAmendmentLeadUnderwriter(MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_USER_UNDERWRITER_MANAGER);
 
     expect(result).toEqual({
       isEditable,
@@ -33,10 +27,7 @@ describe('GET getAmendmentLeadUnderwriter()', () => {
   });
 
   it('should not call getUser API to get current lead underwriter user data', async () => {
-    await amendmentLeadUnderwriterController.getAmendmentLeadUnderwriter(
-      MOCKS.MOCK_AMENDMENT,
-      MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
-    );
+    await amendmentLeadUnderwriterController.getAmendmentLeadUnderwriter(MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_USER_UNDERWRITER_MANAGER);
 
     expect(apiGetUserSpy).not.toHaveBeenCalled();
   });
@@ -87,16 +78,9 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
       await amendmentLeadUnderwriterController.getAssignAmendmentLeadUnderwriter(req, res);
 
       // NOTE: api.getTeamMembers stub only returns one team.
-      const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(
-        MOCKS.MOCK_TEAM_UNDERWRITER_MANAGERS,
-        'firstName',
-      );
+      const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(MOCKS.MOCK_TEAM_UNDERWRITER_MANAGERS, 'firstName');
 
-      const expectedAssignToSelectOptions = mapAssignToSelectOptions(
-        '',
-        MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
-        alphabeticalTeamMembers,
-      );
+      const expectedAssignToSelectOptions = mapAssignToSelectOptions('', MOCKS.MOCK_USER_UNDERWRITER_MANAGER, alphabeticalTeamMembers);
 
       expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-assign-lead-underwriter.njk', {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
@@ -116,10 +100,7 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
       await amendmentLeadUnderwriterController.getAssignAmendmentLeadUnderwriter(req, res);
 
       // NOTE: api.getTeamMembers stub only returns one team.
-      const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(
-        MOCKS.MOCK_TEAM_UNDERWRITER_MANAGERS,
-        'firstName',
-      );
+      const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(MOCKS.MOCK_TEAM_UNDERWRITER_MANAGERS, 'firstName');
 
       const expectedAssignToSelectOptions = mapAssignToSelectOptions(
         MOCKS.MOCK_AMENDMENT.leadUnderwriter._id,
@@ -221,12 +202,7 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
       },
     };
 
-    expect(apiUpdateSpy).toHaveBeenCalledWith(
-      req.params.facilityId,
-      req.params.amendmentId,
-      expectedUpdateObj,
-      req.session.userToken,
-    );
+    expect(apiUpdateSpy).toHaveBeenCalledWith(req.params.facilityId, req.params.amendmentId, expectedUpdateObj, req.session.userToken);
 
     expect(res.redirect).toHaveBeenCalledWith(`/case/${MOCKS.MOCK_DEAL._id}/underwriting`);
   });
@@ -255,12 +231,7 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
       },
     };
 
-    expect(apiUpdateSpy).toHaveBeenCalledWith(
-      req.params.facilityId,
-      req.params.amendmentId,
-      expectedUpdateObj,
-      req.session.userToken,
-    );
+    expect(apiUpdateSpy).toHaveBeenCalledWith(req.params.facilityId, req.params.amendmentId, expectedUpdateObj, req.session.userToken);
 
     expect(res.redirect).toHaveBeenCalledWith(`/case/${MOCKS.MOCK_DEAL._id}/underwriting`);
   });

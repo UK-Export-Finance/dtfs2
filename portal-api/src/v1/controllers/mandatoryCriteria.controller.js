@@ -1,8 +1,5 @@
 const assert = require('assert');
-const {
-  generatePortalAuditDetails,
-  generateAuditDatabaseRecordFromAuditDetails,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generatePortalAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
 const { PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
@@ -64,8 +61,7 @@ exports.findAll = (req, res) =>
     ),
   );
 
-exports.findOne = (req, res) =>
-  findOneMandatoryCriteria(req.params.version, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria));
+exports.findOne = (req, res) => findOneMandatoryCriteria(req.params.version, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria));
 
 const findLatestMandatoryCriteria = async () => {
   const collection = await db.getCollection('mandatoryCriteria');

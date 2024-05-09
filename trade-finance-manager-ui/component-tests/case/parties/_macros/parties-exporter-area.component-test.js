@@ -124,34 +124,22 @@ describe(page, () => {
       .toRead(params.deal.submissionDetails.supplierCompaniesHouseRegistrationNumber);
   });
   it('should render exporter correspondence address country', () => {
-    wrapper
-      .expectText('[data-cy="exporter-correspondence-address-country"]')
-      .toRead(params.deal.submissionDetails.supplierCorrespondenceAddressCountry);
+    wrapper.expectText('[data-cy="exporter-correspondence-address-country"]').toRead(params.deal.submissionDetails.supplierCorrespondenceAddressCountry);
   });
   it('should render exporter correspondence address line 1', () => {
-    wrapper
-      .expectText('[data-cy="exporter-correspondence-address"]')
-      .toContain(params.deal.submissionDetails.supplierCorrespondenceAddressLine1);
+    wrapper.expectText('[data-cy="exporter-correspondence-address"]').toContain(params.deal.submissionDetails.supplierCorrespondenceAddressLine1);
   });
   it('should render exporter correspondence address line 2', () => {
-    wrapper
-      .expectText('[data-cy="exporter-correspondence-address"]')
-      .toContain(params.deal.submissionDetails.supplierCorrespondenceAddressLine2);
+    wrapper.expectText('[data-cy="exporter-correspondence-address"]').toContain(params.deal.submissionDetails.supplierCorrespondenceAddressLine2);
   });
   it('should render exporter correspondence address  line 3', () => {
-    wrapper
-      .expectText('[data-cy="exporter-correspondence-address"]')
-      .toContain(params.deal.submissionDetails.supplierCorrespondenceAddressLine3);
+    wrapper.expectText('[data-cy="exporter-correspondence-address"]').toContain(params.deal.submissionDetails.supplierCorrespondenceAddressLine3);
   });
   it('should render exporter correspondence address town', () => {
-    wrapper
-      .expectText('[data-cy="exporter-correspondence-address"]')
-      .toContain(params.deal.submissionDetails.supplierCorrespondenceAddressTown);
+    wrapper.expectText('[data-cy="exporter-correspondence-address"]').toContain(params.deal.submissionDetails.supplierCorrespondenceAddressTown);
   });
   it('should render exporter correspondence address post code', () => {
-    wrapper
-      .expectText('[data-cy="exporter-correspondence-address"]')
-      .toContain(params.deal.submissionDetails.supplierCorrespondenceAddressPostcode);
+    wrapper.expectText('[data-cy="exporter-correspondence-address"]').toContain(params.deal.submissionDetails.supplierCorrespondenceAddressPostcode);
   });
 
   it('should render sme size', () => {

@@ -193,10 +193,7 @@ describe('updateParty', () => {
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(2);
-    expect(consoleErrorMock).toHaveBeenCalledWith(
-      'Unable to submit deal to ACBS %o',
-      new Error('Invalid deal object supplied'),
-    );
+    expect(consoleErrorMock).toHaveBeenCalledWith('Unable to submit deal to ACBS %o', new Error('Invalid deal object supplied'));
     expect(consoleErrorMock).toHaveBeenCalledWith(
       'Unable to update parties for deal %s %o',
       mockRequest.params.dealId,

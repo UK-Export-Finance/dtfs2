@@ -2,10 +2,7 @@ import { Request } from 'express';
 import httpMocks from 'node-mocks-http';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ReportWithStatus } from '@ukef/dtfs2-common';
-import {
-  UpdateUtilisationReportStatusRequestBody,
-  updateUtilisationReportStatus,
-} from './update-utilisation-report-status.controller';
+import { UpdateUtilisationReportStatusRequestBody, updateUtilisationReportStatus } from './update-utilisation-report-status.controller';
 import api from '../../api';
 import MOCK_USERS from '../../__mocks__/mock-users';
 
@@ -18,9 +15,7 @@ describe('updateUtilisationReportStatus', () => {
       reportId: 123,
     },
   ];
-  const { req: mockRequest, res: mockResponse } = httpMocks.createMocks<
-    Request<object, object, UpdateUtilisationReportStatusRequestBody>
-  >({
+  const { req: mockRequest, res: mockResponse } = httpMocks.createMocks<Request<object, object, UpdateUtilisationReportStatusRequestBody>>({
     method: 'PUT',
     body: {
       user: MOCK_USERS[0],

@@ -8,9 +8,7 @@ const { LOGIN_STATUSES, SIGN_IN_LINK, USER, HTTP_ERROR_CAUSES } = require('../..
 const users = require('./test-data');
 const { setUpApiTestUser } = require('../../api-test-users');
 const databaseHelper = require('../../database-helper');
-const {
-  createPartiallyLoggedInUserSession,
-} = require('../../../test-helpers/api-test-helpers/database/user-repository');
+const { createPartiallyLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
 const { sanitizeUser } = require('../../../src/v1/users/sanitizeUserData');
 
 const aMaker = users.barclaysBankMaker1;
@@ -205,8 +203,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     beforeAll(async () => {
       const anotherPartiallyLoggedInUserResponse = await createUser(anotherUserToCreateAsPartiallyLoggedIn);
       anotherPartiallyLoggedInUser = anotherPartiallyLoggedInUserResponse.body.user;
-      ({ token: anotherPartiallyLoggedInUserToken } =
-        await createPartiallyLoggedInUserSession(anotherPartiallyLoggedInUser));
+      ({ token: anotherPartiallyLoggedInUserToken } = await createPartiallyLoggedInUserSession(anotherPartiallyLoggedInUser));
     });
 
     it('returns a 400 error', async () => {
@@ -456,9 +453,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
               userToken: partiallyLoggedInUserToken,
             });
             // lastLogin is removed as this will be the login prior to this login (in tests, this is undefined)
-            const { lastLogin, ...expectedSanitisedUser } = sanitizeUser(
-              await databaseHelper.getUserById(partiallyLoggedInUserId),
-            );
+            const { lastLogin, ...expectedSanitisedUser } = sanitizeUser(await databaseHelper.getUserById(partiallyLoggedInUserId));
 
             expect(status).toEqual(200);
             expect(body).toStrictEqual({

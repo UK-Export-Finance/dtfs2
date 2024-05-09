@@ -1,16 +1,8 @@
 const { ObjectId } = require('mongodb');
-const {
-  generatePortalUserAuditDatabaseRecord,
-  generateNoUserLoggedInAuditDatabaseRecord,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generatePortalUserAuditDatabaseRecord, generateNoUserLoggedInAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
 const { transformDatabaseUser } = require('./transform-database-user');
-const {
-  InvalidUserIdError,
-  InvalidUsernameError,
-  UserNotFoundError,
-  InvalidSessionIdentifierError,
-} = require('../errors');
+const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError, InvalidSessionIdentifierError } = require('../errors');
 const { USER, SIGN_IN_LINK } = require('../../constants');
 
 class UserRepository {

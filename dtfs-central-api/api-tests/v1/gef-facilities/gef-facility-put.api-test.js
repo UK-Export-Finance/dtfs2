@@ -48,9 +48,7 @@ describe('PUT updateGefFacilities', () => {
 
     mockApplication = await createDeal();
 
-    const item = await as(aMaker)
-      .post({ dealId: mockApplication._id, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH, hasBeenIssued: false })
-      .to(baseUrl);
+    const item = await as(aMaker).post({ dealId: mockApplication._id, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
     const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body._id}`);
 
@@ -91,9 +89,7 @@ describe('PUT updateGefFacilities', () => {
 
     mockApplication = await createDeal();
 
-    const item = await as(aMaker)
-      .post({ dealId: mockApplication._id, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH, hasBeenIssued: false })
-      .to(baseUrl);
+    const item = await as(aMaker).post({ dealId: mockApplication._id, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
     const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body._id}`);
 

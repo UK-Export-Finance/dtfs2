@@ -11,8 +11,7 @@ const generateTotalFeesAccruedExchangeRateError = (csvDataRow) => {
   if (
     !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value &&
     (!csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value ||
-      csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value ===
-        csvDataRow[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]?.value)
+      csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]?.value)
   ) {
     return null;
   }
@@ -26,8 +25,7 @@ const generateTotalFeesAccruedExchangeRateError = (csvDataRow) => {
     };
   }
   if (
-    csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value ===
-      csvDataRow[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]?.value &&
+    csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]?.value &&
     parseFloat(csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value) !== 1
   ) {
     return {
@@ -47,10 +45,7 @@ const generateTotalFeesAccruedExchangeRateError = (csvDataRow) => {
       exporter: csvDataRow[UTILISATION_REPORT_HEADERS.EXPORTER]?.value,
     };
   }
-  if (
-    csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value.length >
-    FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT
-  ) {
+  if (csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value.length > FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT) {
     return {
       errorMessage: `Accrual exchange rate must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
       column: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.column,

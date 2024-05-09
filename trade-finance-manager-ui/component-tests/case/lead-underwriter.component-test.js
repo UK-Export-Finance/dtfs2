@@ -34,9 +34,7 @@ describe(page, () => {
 
   it('should render lead underwriter email', () => {
     const wrapper = render(params);
-    wrapper
-      .expectText('[data-cy="lead-underwriter-summary-list"]')
-      .toContain(params.leadUnderwriter.currentLeadUnderWriter.email);
+    wrapper.expectText('[data-cy="lead-underwriter-summary-list"]').toContain(params.leadUnderwriter.currentLeadUnderWriter.email);
   });
 
   describe('with params.userCanEdit', () => {
@@ -53,10 +51,7 @@ describe(page, () => {
       const wrapper = render(params);
       wrapper
         .expectLink('[data-cy="change-lead-underwriter-link"]')
-        .toLinkTo(
-          `/case/${params.leadUnderwriter.dealId}/underwriting/lead-underwriter/assign`,
-          'Change contact details',
-        );
+        .toLinkTo(`/case/${params.leadUnderwriter.dealId}/underwriting/lead-underwriter/assign`, 'Change contact details');
     });
   });
 

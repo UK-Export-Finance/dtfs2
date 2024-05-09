@@ -13,10 +13,7 @@ const isEveryFacilityComplete = (facilities = []) => {
   const incomplete = facilities.filter((facility) => facility.status === CONSTANTS.STATUS.FACILITY.INCOMPLETE).length;
   const notStarted = facilities.filter((facility) => facility.status === CONSTANTS.STATUS.FACILITY.NOT_STARTED).length;
   const acknowledged = facilities.filter(
-    (facility) =>
-      facilityProcessedStatus.includes(facility.status) &&
-      facility.requestedCoverStartDate &&
-      facility.coverDateConfirmed,
+    (facility) => facilityProcessedStatus.includes(facility.status) && facility.requestedCoverStartDate && facility.coverDateConfirmed,
   ).length;
 
   const canBeSubmitted = completed + acknowledged;
@@ -80,10 +77,7 @@ const isEveryFacilityInDealComplete = (deal) => {
  * @returns {boolean} - True if all forms are completed, false otherwise.
  */
 const isEveryDealFormComplete = (deal) =>
-  isEligibilityComplete(deal) &&
-  isSubmissionDetailComplete(deal) &&
-  hasAtLeastOneLoanOrBond(deal) &&
-  isEveryFacilityInDealComplete(deal);
+  isEligibilityComplete(deal) && isSubmissionDetailComplete(deal) && hasAtLeastOneLoanOrBond(deal) && isEveryFacilityInDealComplete(deal);
 
 module.exports = {
   isEligibilityComplete,

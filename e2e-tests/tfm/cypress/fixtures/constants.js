@@ -1,9 +1,4 @@
-const {
-  DEAL_TYPE,
-  DEAL_STATUS,
-  SUBMISSION_TYPE: DEAL_SUBMISSION_TYPE,
-  FACILITY_TYPE,
-} = require('../../../e2e-fixtures/constants.fixture');
+const { DEAL_TYPE, DEAL_STATUS, SUBMISSION_TYPE: DEAL_SUBMISSION_TYPE, FACILITY_TYPE } = require('../../../e2e-fixtures/constants.fixture');
 
 const DEAL_STAGE_TFM = {
   CONFIRMED: 'Confirmed',

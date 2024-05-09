@@ -143,9 +143,7 @@ context('Incomplete exporter section - application details page', () => {
         .find('.govuk-link')
         .invoke('attr', 'href')
         .then((href) => {
-          expect(href).to.equal(
-            `/gef/application-details/${dealId}/enter-exporters-correspondence-address?status=change`,
-          );
+          expect(href).to.equal(`/gef/application-details/${dealId}/enter-exporters-correspondence-address?status=change`);
         });
     });
   });

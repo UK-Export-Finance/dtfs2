@@ -17,8 +17,7 @@ describe('eligible automatic cover routes', () => {
 
   describe('GET /application-details/:dealId/ineligible-automatic-cover', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) =>
-        get(`/application-details/${dealId}/ineligible-automatic-cover`, {}, headers),
+      makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/ineligible-automatic-cover`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.

@@ -12,9 +12,7 @@ module.exports.renderCheckYourEmailPage = (req, res) => {
   }
 
   if (numberOfSendSignInLinkAttemptsRemaining > 2) {
-    console.error(
-      `Number of send sign in link attempts remaining was not within expected bounds: ${numberOfSendSignInLinkAttemptsRemaining}`,
-    );
+    console.error(`Number of send sign in link attempts remaining was not within expected bounds: ${numberOfSendSignInLinkAttemptsRemaining}`);
     return res.render('_partials/problem-with-service.njk');
   }
 
@@ -44,10 +42,7 @@ module.exports.sendNewSignInLink = async (req, res) => {
     if (error.response?.status === 403) {
       req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
     }
-    console.info(
-      'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o',
-      error,
-    );
+    console.info('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o', error);
   }
 
   return res.redirect('/login/check-your-email');

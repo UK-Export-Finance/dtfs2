@@ -16,9 +16,7 @@ module.exports.initialise = async (app) => {
   }
 
   await post(mockUser).to('/v1/user');
-  const { body: postBody } = await post({ username: MOCK_USERS[0].username, password: MOCK_USERS[0].password }).to(
-    '/v1/login',
-  );
+  const { body: postBody } = await post({ username: MOCK_USERS[0].username, password: MOCK_USERS[0].password }).to('/v1/login');
   const { token: postToken } = postBody;
 
   mockUser.token = postToken;

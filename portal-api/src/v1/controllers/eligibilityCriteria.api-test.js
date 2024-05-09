@@ -48,9 +48,7 @@ it('should return the latest non-draft eligibility criteria object for BSS_EWCS 
     { id: 2, version: 2, isInDraft: false, product: DEAL.DEAL_TYPE.BSS_EWCS },
     { id: 1, version: 1, isInDraft: false, product: DEAL.DEAL_TYPE.BSS_EWCS },
   ]);
-  mockCollection.toArray = jest
-    .fn()
-    .mockResolvedValue([{ id: 2, version: 2, isInDraft: false, product: DEAL.DEAL_TYPE.BSS_EWCS }]);
+  mockCollection.toArray = jest.fn().mockResolvedValue([{ id: 2, version: 2, isInDraft: false, product: DEAL.DEAL_TYPE.BSS_EWCS }]);
 
   const result = await getLatestEligibilityCriteria();
 

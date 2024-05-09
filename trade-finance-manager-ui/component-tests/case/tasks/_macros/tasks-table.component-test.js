@@ -92,16 +92,9 @@ describe(component, () => {
 
         const linkSelector = `[data-cy="task-table-row-group-${taskWithCanEdit.groupId}-task-${taskWithCanEdit.id}-link"]`;
 
-        wrapper
-          .expectLink(linkSelector)
-          .toLinkTo(
-            `/case/${params.caseId}/tasks/${taskWithCanEdit.groupId}/${taskWithCanEdit.id}`,
-            taskWithCanEdit.title,
-          );
+        wrapper.expectLink(linkSelector).toLinkTo(`/case/${params.caseId}/tasks/${taskWithCanEdit.groupId}/${taskWithCanEdit.id}`, taskWithCanEdit.title);
 
-        wrapper
-          .expectElement(`[data-cy="task-table-row-group-${taskWithCanEdit.groupId}-task-${taskWithCanEdit.id}-title"]`)
-          .notToExist();
+        wrapper.expectElement(`[data-cy="task-table-row-group-${taskWithCanEdit.groupId}-task-${taskWithCanEdit.id}-title"]`).notToExist();
       });
     });
 
@@ -114,9 +107,7 @@ describe(component, () => {
         wrapper.expectElement(linkSelector).notToExist();
 
         wrapper
-          .expectText(
-            `[data-cy="task-table-row-group-${taskWithoutCanEdit.groupId}-task-${taskWithoutCanEdit.id}-title"]`,
-          )
+          .expectText(`[data-cy="task-table-row-group-${taskWithoutCanEdit.groupId}-task-${taskWithoutCanEdit.id}-title"]`)
           .toRead(taskWithoutCanEdit.title);
       });
     });

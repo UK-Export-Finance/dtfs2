@@ -36,10 +36,7 @@ const isUkefReviewAvailable = (applicationStatus, ukefDecision) => {
 
 const isUkefReviewPositive = (applicationStatus, ukefDecision) => {
   if (ukefDecision?.length > 0) {
-    const acceptable = [
-      CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
-      CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
-    ];
+    const acceptable = [CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS, CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS];
     return acceptable.includes(applicationStatus) || acceptable.includes(ukefDecision[0].decision);
   }
   return false;
@@ -57,18 +54,10 @@ const makerCanReSubmit = (maker, application) => {
   if (application.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) {
     facilitiesChangedToIssued = hasChangedToIssued(application);
   }
-  const coverDateConfirmed =
-    getIssuedFacilitiesAsArray(application.facilities).length > 0 ? coverDatesConfirmed(application.facilities) : true;
-  const ukefDecisionAccepted =
-    application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN ? true : application.ukefDecisionAccepted;
+  const coverDateConfirmed = getIssuedFacilitiesAsArray(application.facilities).length > 0 ? coverDatesConfirmed(application.facilities) : true;
+  const ukefDecisionAccepted = application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN ? true : application.ukefDecisionAccepted;
   const makerAuthorised = maker.roles.includes(MAKER) && maker.bank.id === application.bank.id;
-  return (
-    Boolean(ukefDecisionAccepted) &&
-    coverDateConfirmed &&
-    facilitiesChangedToIssued &&
-    acceptableStatus.includes(application.status) &&
-    makerAuthorised
-  );
+  return Boolean(ukefDecisionAccepted) && coverDateConfirmed && facilitiesChangedToIssued && acceptableStatus.includes(application.status) && makerAuthorised;
 };
 
 const getApplicationType = (isAutomaticCover) => {

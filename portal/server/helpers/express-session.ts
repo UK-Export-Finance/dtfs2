@@ -65,8 +65,7 @@ export const asLoggedInUserSession = (session: Session): LoggedInUserSession => 
  * that the values are present.
  */
 export const asPartiallyLoggedInUserSession = (session: Session): PartiallyLoggedInUserSession => {
-  const { userToken, loginStatus, userEmail, numberOfSignInLinkAttemptsRemaining } =
-    session as PartiallyLoggedInUserSession;
+  const { userToken, loginStatus, userEmail, numberOfSignInLinkAttemptsRemaining } = session as PartiallyLoggedInUserSession;
 
   if (loginStatus !== LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD) {
     throw Error('Expected session.loginStatus to be `Valid username and password`', {

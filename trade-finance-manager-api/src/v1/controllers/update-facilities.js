@@ -72,11 +72,7 @@ const updateFacilities = async (deal, auditDetails) => {
 
         // Premium Schedule is only valid for non-GEF facilities
         if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-          facilityPremiumSchedule = await getFacilityPremiumSchedule(
-            facility,
-            facilityExposurePeriod,
-            facilityGuaranteeDates,
-          );
+          facilityPremiumSchedule = await getFacilityPremiumSchedule(facility, facilityExposurePeriod, facilityGuaranteeDates);
           facilityUpdate = {
             premiumSchedule: facilityPremiumSchedule,
           };

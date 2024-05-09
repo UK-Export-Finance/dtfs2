@@ -5,12 +5,7 @@ const DATE_INPUT_FORMAT = 'dd-MM-yyyy';
 
 // Timestamp fields that other systems consume.
 // These fields require special date generation/comparison for MongoDB query.
-const TIMESTAMP_FIELDS = [
-  'dealSnapshot.eligibility.lastUpdated',
-  'dealSnapshot.details.submissionDate',
-  'dealSnapshot.facilitiesUpdated',
-  'tfm.lastUpdated',
-];
+const TIMESTAMP_FIELDS = ['dealSnapshot.eligibility.lastUpdated', 'dealSnapshot.details.submissionDate', 'dealSnapshot.facilitiesUpdated', 'tfm.lastUpdated'];
 
 const isTimestampField = (fieldName) => TIMESTAMP_FIELDS.includes(fieldName);
 

@@ -1,9 +1,4 @@
-import {
-  industryClassElement,
-  appendSelectOption,
-  getIndustryClassesFromSectorCode,
-  changeIndustryClasses,
-} from './change-industry-classes';
+import { industryClassElement, appendSelectOption, getIndustryClassesFromSectorCode, changeIndustryClasses } from './change-industry-classes';
 
 describe('changeIndustryClasses', () => {
   const sector100Class12 = { code: '12', name: 'Hotels and similar accommodation' };

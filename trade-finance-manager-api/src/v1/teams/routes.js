@@ -57,23 +57,21 @@ const teamsRoutes = express.Router();
  *       400:
  *         description: Bad Request.
  */
-teamsRoutes
-  .route('/teams/:teamId/members')
-  .get(teamIdParamValidator(), handleExpressValidatorResult, async (req, res) => {
-    const teamMembersOrError = await teamsController.findTeamMembers(req.params.teamId);
+teamsRoutes.route('/teams/:teamId/members').get(teamIdParamValidator(), handleExpressValidatorResult, async (req, res) => {
+  const teamMembersOrError = await teamsController.findTeamMembers(req.params.teamId);
 
-    if (Object.hasOwn(teamMembersOrError, 'status')) {
-      const { status, data } = teamMembersOrError;
-      return res.status(status).send({ status, data });
-    }
+  if (Object.hasOwn(teamMembersOrError, 'status')) {
+    const { status, data } = teamMembersOrError;
+    return res.status(status).send({ status, data });
+  }
 
-    const sanitizedTeamMembers = teamMembersOrError.map(({ _id, firstName, lastName }) => ({
-      _id,
-      firstName,
-      lastName,
-    }));
-    return res.status(200).send({ teamMembers: sanitizedTeamMembers });
-  });
+  const sanitizedTeamMembers = teamMembersOrError.map(({ _id, firstName, lastName }) => ({
+    _id,
+    firstName,
+    lastName,
+  }));
+  return res.status(200).send({ teamMembers: sanitizedTeamMembers });
+});
 
 module.exports = {
   teamsRoutes,

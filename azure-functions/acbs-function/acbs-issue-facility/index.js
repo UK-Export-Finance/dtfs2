@@ -44,27 +44,19 @@ df.app.orchestration('acbs-issue-facility', function* updateACBSfacility(context
 
     if (facilityId) {
       // 1. GET Facility master record object
-      const { acbsFacility, etag } = yield context.df.callActivityWithRetry(
-        'activity-get-facility-master',
-        retryOptions,
-        { facilityId },
-      );
+      const { acbsFacility, etag } = yield context.df.callActivityWithRetry('activity-get-facility-master', retryOptions, { facilityId });
 
       if (acbsFacility && etag) {
         // 2.1. Create updated facility master record object
         const acbsFacilityMasterInput = mappings.facility.facilityUpdate(facilitySnapshot, acbsFacility, deal);
 
         // 2.2. PUT updated facility master record object
-        const issuedFacilityMaster = yield context.df.callActivityWithRetry(
-          'activity-update-facility-master',
-          retryOptions,
-          {
-            facilityId,
-            acbsFacilityMasterInput,
-            updateType: CONSTANTS.FACILITY.OPERATION.ISSUE,
-            etag,
-          },
-        );
+        const issuedFacilityMaster = yield context.df.callActivityWithRetry('activity-update-facility-master', retryOptions, {
+          facilityId,
+          acbsFacilityMasterInput,
+          updateType: CONSTANTS.FACILITY.OPERATION.ISSUE,
+          etag,
+        });
 
         // Records only created for `Issued` and `Activated` facilities only
         // Loan record consumes ACBS exporter ID, extracted from master facility record

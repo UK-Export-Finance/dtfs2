@@ -11,10 +11,7 @@ const {
   addSubmissionDateToIssuedFacilities,
 } = require('../../../src/v1/gef/controllers/application-submit');
 
-const {
-  update: updateFacility,
-  getAllFacilitiesByDealId,
-} = require('../../../src/v1/gef/controllers/facilities.controller');
+const { update: updateFacility, getAllFacilitiesByDealId } = require('../../../src/v1/gef/controllers/facilities.controller');
 
 const convertToTimestamp = require('../../../src/v1/helpers/convertToTimestamp');
 
@@ -37,10 +34,7 @@ const MOCK_APPLICATION = mockApplications[0];
 const MOCK_APPLICATION_FACILITIES = mockApplications[15];
 const CONSTANTS = require('../../../src/constants');
 
-const {
-  PORTAL_ACTIVITY_LABEL,
-  PORTAL_ACTIVITY_TYPE,
-} = require('../../../src/v1/portalActivity-object-generator/activityConstants');
+const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../src/v1/portalActivity-object-generator/activityConstants');
 
 const mockFacilities = require('../../fixtures/gef/facilities');
 const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
@@ -259,9 +253,7 @@ describe('checkCoverDateConfirmed()', () => {
     const aMaker = testUsers().withRole(MAKER).one();
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker)
-      .put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN })
-      .to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
     await databaseHelper.wipe([facilitiesCollectionName]);
     await databaseHelper.wipe([dealsCollectionName]);
@@ -283,9 +275,7 @@ describe('checkCoverDateConfirmed()', () => {
     const aMaker = testUsers().withRole(MAKER).one();
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker)
-      .put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN })
-      .to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
     await databaseHelper.wipe([facilitiesCollectionName]);
     await databaseHelper.wipe([dealsCollectionName]);
@@ -307,9 +297,7 @@ describe('checkCoverDateConfirmed()', () => {
     const aMaker = testUsers().withRole(MAKER).one();
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker)
-      .put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA })
-      .to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
     await databaseHelper.wipe([facilitiesCollectionName]);
     await databaseHelper.wipe([dealsCollectionName]);
@@ -331,9 +319,7 @@ describe('checkCoverDateConfirmed()', () => {
     const aMaker = testUsers().withRole(MAKER).one();
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker)
-      .put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA })
-      .to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
     await databaseHelper.wipe([facilitiesCollectionName]);
     await databaseHelper.wipe([dealsCollectionName]);
@@ -355,9 +341,7 @@ describe('checkCoverDateConfirmed()', () => {
     const aMaker = testUsers().withRole(MAKER).one();
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker)
-      .put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA })
-      .to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
     await databaseHelper.wipe([facilitiesCollectionName]);
     await databaseHelper.wipe([dealsCollectionName]);
@@ -379,9 +363,7 @@ describe('checkCoverDateConfirmed()', () => {
     const aMaker = testUsers().withRole(MAKER).one();
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker)
-      .put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA })
-      .to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
     await databaseHelper.wipe([facilitiesCollectionName]);
     await databaseHelper.wipe([dealsCollectionName]);
@@ -417,9 +399,7 @@ describe('addSubmissionDateToIssuedFacilities()', () => {
 
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker)
-      .put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA })
-      .to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
     await as(aMaker)
       .post({
@@ -463,9 +443,7 @@ describe('addSubmissionDateToIssuedFacilities()', () => {
 
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker)
-      .put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA })
-      .to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
     await as(aMaker)
       .post({

@@ -10,13 +10,10 @@ const tasksPage = {
       return {
         link: () => cy.get('@row').get(`[data-cy="task-table-row-group-${groupId}-task-${taskId}-link"]`),
         title: () => cy.get('@row').get(`[data-cy="task-table-row-group-${groupId}-task-${taskId}-title"]`),
-        assignedTo: () =>
-          cy.get('@row').get(`[data-cy="task-table-row-group-${groupId}-task-${taskId}-user-full-name"]`),
+        assignedTo: () => cy.get('@row').get(`[data-cy="task-table-row-group-${groupId}-task-${taskId}-user-full-name"]`),
         team: () => cy.get('@row').get(`[data-cy="task-table-row-group-${groupId}-task-${taskId}-team-name"]`),
-        dateStarted: () =>
-          cy.get('@row').get(`[data-cy="task-table-row-group-${groupId}-task-${taskId}-date-started"]`),
-        dateCompleted: () =>
-          cy.get('@row').get(`[data-cy="task-table-row-group-${groupId}-task-${taskId}-date-completed"]`),
+        dateStarted: () => cy.get('@row').get(`[data-cy="task-table-row-group-${groupId}-task-${taskId}-date-started"]`),
+        dateCompleted: () => cy.get('@row').get(`[data-cy="task-table-row-group-${groupId}-task-${taskId}-date-completed"]`),
         status: () => cy.get('@row').get(`[data-cy="task-table-row-group-${groupId}-task-${taskId}-status"]`),
       };
     },

@@ -84,9 +84,7 @@ describe('/v1/deals/:id/bond', () => {
           const { body } = await postFeedback(feedback);
 
           expect(body.validationErrors.errorList.reasonForVisiting).toBeDefined();
-          expect(body.validationErrors.errorList.reasonForVisiting.text).toEqual(
-            'Select your reason for visiting the service today',
-          );
+          expect(body.validationErrors.errorList.reasonForVisiting.text).toEqual('Select your reason for visiting the service today');
         });
       });
 
@@ -101,9 +99,7 @@ describe('/v1/deals/:id/bond', () => {
           const { body } = await postFeedback(feedback);
 
           expect(body.validationErrors.errorList.reasonForVisitingOther).toBeDefined();
-          expect(body.validationErrors.errorList.reasonForVisitingOther.text).toEqual(
-            'Enter your reason for visiting the service today',
-          );
+          expect(body.validationErrors.errorList.reasonForVisitingOther.text).toEqual('Enter your reason for visiting the service today');
         });
       });
     });
@@ -119,9 +115,7 @@ describe('/v1/deals/:id/bond', () => {
           const { body } = await postFeedback(feedback);
 
           expect(body.validationErrors.errorList.easyToUse).toBeDefined();
-          expect(body.validationErrors.errorList.easyToUse.text).toEqual(
-            'Select a rating for how easy the service is to use',
-          );
+          expect(body.validationErrors.errorList.easyToUse.text).toEqual('Select a rating for how easy the service is to use');
         });
       });
     });
@@ -155,9 +149,7 @@ describe('/v1/deals/:id/bond', () => {
           const { body } = await postFeedback(feedback);
 
           expect(body.validationErrors.errorList.satisfied).toBeDefined();
-          expect(body.validationErrors.errorList.satisfied.text).toEqual(
-            'Select a rating for how satisfied you are with the service',
-          );
+          expect(body.validationErrors.errorList.satisfied.text).toEqual('Select a rating for how satisfied you are with the service');
         });
       });
     });

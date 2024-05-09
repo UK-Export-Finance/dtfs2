@@ -140,9 +140,7 @@ const migrateUsers = async () => {
   );
 
   if (existingUserErrors.length || apiUserErrors.length || userNoBanksError.length) {
-    consoleLogColor(
-      `error migrating ${existingUserErrors.length + apiUserErrors.length + userNoBanksError.length} users`,
-    );
+    consoleLogColor(`error migrating ${existingUserErrors.length + apiUserErrors.length + userNoBanksError.length} users`);
 
     if (existingUserErrors.length) {
       consoleLogColor('\nexisting users');

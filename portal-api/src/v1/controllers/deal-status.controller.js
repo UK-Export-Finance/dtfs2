@@ -38,9 +38,7 @@ exports.findOne = async (req, res) => {
     return res.status(HttpStatusCode.Ok).send(deal.status);
   } catch (error) {
     console.error('❌ Unable to find deal %s %o', req.params.id, error);
-    return res
-      .status(HttpStatusCode.InternalServerError)
-      .send({ status: HttpStatusCode.InternalServerError, message: 'Unable to find deal' });
+    return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: 'Unable to find deal' });
   }
 };
 
@@ -70,10 +68,7 @@ exports.update = async (req, res) => {
 
     console.info('Updating portal deal %s status from %s to %s', dealId, currentStatus, newStatus);
 
-    if (
-      newStatus !== CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL &&
-      newStatus !== CONSTANTS.DEAL.DEAL_STATUS.ABANDONED
-    ) {
+    if (newStatus !== CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL && newStatus !== CONSTANTS.DEAL.DEAL_STATUS.ABANDONED) {
       if (!userCanSubmitDeal(deal, user)) {
         return res.status(HttpStatusCode.Unauthorized).send();
       }
@@ -91,10 +86,7 @@ exports.update = async (req, res) => {
     let updatedDeal = await updateStatus(dealId, currentStatus, newStatus, user);
 
     // First submission of the deal to the checker
-    if (
-      currentStatus === CONSTANTS.DEAL.DEAL_STATUS.DRAFT &&
-      newStatus === CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL
-    ) {
+    if (currentStatus === CONSTANTS.DEAL.DEAL_STATUS.DRAFT && newStatus === CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL) {
       await updateFacilityCoverStartDates(user, updatedDeal);
     }
 
@@ -104,10 +96,7 @@ exports.update = async (req, res) => {
     }
 
     // Update the deal
-    if (
-      newStatus !== CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED &&
-      newStatus !== CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF
-    ) {
+    if (newStatus !== CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED && newStatus !== CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF) {
       updatedDeal = await updateDeal(dealId, updatedDeal, user);
     }
 
@@ -116,13 +105,7 @@ exports.update = async (req, res) => {
       const canUpdateIssuedFacilitiesCoverStartDates = true;
       const newIssuedFacilityStatus = 'Ready for check';
 
-      updatedDeal = await updateIssuedFacilities(
-        user,
-        currentStatus,
-        updatedDeal,
-        canUpdateIssuedFacilitiesCoverStartDates,
-        newIssuedFacilityStatus,
-      );
+      updatedDeal = await updateIssuedFacilities(user, currentStatus, updatedDeal, canUpdateIssuedFacilitiesCoverStartDates, newIssuedFacilityStatus);
     }
 
     // Send back the deal to the maker
@@ -144,10 +127,7 @@ exports.update = async (req, res) => {
         updatedDeal = await createSubmissionDate(dealId, user);
       }
 
-      if (
-        updatedDeal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA &&
-        !updatedDeal.details.manualInclusionApplicationSubmissionDate
-      ) {
+      if (updatedDeal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA && !updatedDeal.details.manualInclusionApplicationSubmissionDate) {
         updatedDeal = await createMiaSubmissionDate(dealId, user);
       }
 
@@ -159,10 +139,7 @@ exports.update = async (req, res) => {
     }
 
     // UKEF Approval
-    if (
-      newStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS ||
-      newStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS
-    ) {
+    if (newStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS || newStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS) {
       updatedDeal = await createApprovalDate(dealId);
     }
 
@@ -176,8 +153,6 @@ exports.update = async (req, res) => {
     return res.status(HttpStatusCode.Ok).send(dealLatest);
   } catch (error) {
     console.error('❌ Unable to update the deal %o', error);
-    return res
-      .status(HttpStatusCode.InternalServerError)
-      .send({ status: HttpStatusCode.InternalServerError, message: 'Unable to update the deal' });
+    return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: 'Unable to update the deal' });
   }
 };

@@ -17,10 +17,7 @@ const getAllDealsData = async (userToken, user, sessionFilters, currentPage, sor
 
   const sortQuery = dashboardSortQuery(sortBy);
 
-  const { count, deals } = await getApiData(
-    api.allDeals(currentPage * PAGE_SIZE, PAGE_SIZE, filtersQuery, userToken, sortQuery),
-    res,
-  );
+  const { count, deals } = await getApiData(api.allDeals(currentPage * PAGE_SIZE, PAGE_SIZE, filtersQuery, userToken, sortQuery), res);
 
   return {
     deals,
@@ -55,14 +52,7 @@ const getTemplateVariables = (user, sessionFilters, deals, count, currentPage, f
 exports.getTemplateVariables = getTemplateVariables;
 
 const getDataAndTemplateVariables = async (userToken, user, sessionFilters, currentPage, sortBy, res) => {
-  const { deals, count, filtersArray } = await getAllDealsData(
-    userToken,
-    user,
-    sessionFilters,
-    currentPage,
-    sortBy,
-    res,
-  );
+  const { deals, count, filtersArray } = await getAllDealsData(userToken, user, sessionFilters, currentPage, sortBy, res);
 
   const templateVariables = getTemplateVariables(user, sessionFilters, deals, count, currentPage, filtersArray);
 
@@ -93,14 +83,7 @@ exports.allDeals = async (req, res) => {
     }
   }
 
-  const templateVariables = await getDataAndTemplateVariables(
-    userToken,
-    user,
-    req.session.dashboardFilters,
-    currentPage,
-    activeSortByOrder,
-    res,
-  );
+  const templateVariables = await getDataAndTemplateVariables(userToken, user, req.session.dashboardFilters, currentPage, activeSortByOrder, res);
 
   return res.render('dashboard/deals.njk', {
     ...templateVariables,

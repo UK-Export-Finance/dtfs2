@@ -9,9 +9,7 @@ var DTFS_GEF;
         return Object.prototype.hasOwnProperty.call(t, e);
       },
       r: function (t) {
-        'undefined' != typeof Symbol &&
-          Symbol.toStringTag &&
-          Object.defineProperty(t, Symbol.toStringTag, { value: 'Module' }),
+        'undefined' != typeof Symbol && Symbol.toStringTag && Object.defineProperty(t, Symbol.toStringTag, { value: 'Module' }),
           Object.defineProperty(t, '__esModule', { value: !0 });
       },
     },
@@ -46,8 +44,7 @@ var DTFS_GEF;
   }
   function o(t, e) {
     if (!t || 'object' != typeof t) throw new Error('Provide a `configObject` of type "object".');
-    if (!e || 'string' != typeof e)
-      throw new Error('Provide a `namespace` of type "string" to filter the `configObject` by.');
+    if (!e || 'string' != typeof e) throw new Error('Provide a `namespace` of type "string" to filter the `configObject` by.');
     var n = {};
     for (var i in t) {
       var o = i.split('.');
@@ -89,10 +86,8 @@ var DTFS_GEF;
         (i = 'Getters & setters cannot be defined on this javascript engine'),
         (o = 'A property cannot both have accessors and be writable or have a value'),
         (Object.defineProperty = function (t, s, r) {
-          if (e && (t === window || t === document || t === Element.prototype || t instanceof Element))
-            return e(t, s, r);
-          if (null === t || !(t instanceof Object || 'object' == typeof t))
-            throw new TypeError('Object.defineProperty called on non-object');
+          if (e && (t === window || t === document || t === Element.prototype || t instanceof Element)) return e(t, s, r);
+          if (null === t || !(t instanceof Object || 'object' == typeof t)) throw new TypeError('Object.defineProperty called on non-object');
           if (!(r instanceof Object)) throw new TypeError('Property description must be an object');
           var a = String(s),
             l = 'value' in r || 'writable' in r,
@@ -112,29 +107,16 @@ var DTFS_GEF;
           }
           return 'value' in r && (t[a] = r.value), t;
         }));
-    }.call(
-      ('object' == typeof window && window) ||
-        ('object' == typeof self && self) ||
-        ('object' == typeof global && global) ||
-        {},
-    ),
+    }.call(('object' == typeof window && window) || ('object' == typeof self && self) || ('object' == typeof global && global) || {}),
     function (t) {
       'Document' in this ||
         ('undefined' == typeof WorkerGlobalScope &&
           'function' != typeof importScripts &&
           (this.HTMLDocument
             ? (this.Document = this.HTMLDocument)
-            : ((this.Document =
-                this.HTMLDocument =
-                document.constructor =
-                  new Function('return function Document() {}')()),
+            : ((this.Document = this.HTMLDocument = document.constructor = new Function('return function Document() {}')()),
               (this.Document.prototype = document))));
-    }.call(
-      ('object' == typeof window && window) ||
-        ('object' == typeof self && self) ||
-        ('object' == typeof global && global) ||
-        {},
-    ),
+    }.call(('object' == typeof window && window) || ('object' == typeof self && self) || ('object' == typeof global && global) || {}),
     function (t) {
       ('Element' in this && 'HTMLElement' in this) ||
         (function () {
@@ -151,8 +133,7 @@ var DTFS_GEF;
                   r,
                   a = t.childNodes || [],
                   l = -1;
-                if (1 === t.nodeType && t.constructor !== Element)
-                  for (n in ((t.constructor = Element), o)) (i = o[n]), (t[n] = i);
+                if (1 === t.nodeType && t.constructor !== Element) for (n in ((t.constructor = Element), o)) (i = o[n]), (t[n] = i);
                 for (; (r = e && a[++l]); ) s(r, e);
                 return t;
               },
@@ -184,12 +165,7 @@ var DTFS_GEF;
             );
           }
         })();
-    }.call(
-      ('object' == typeof window && window) ||
-        ('object' == typeof self && self) ||
-        ('object' == typeof global && global) ||
-        {},
-    ),
+    }.call(('object' == typeof window && window) || ('object' == typeof self && self) || ('object' == typeof global && global) || {}),
     function (t) {
       (function () {
         if (!document.documentElement.dataset) return !1;
@@ -222,23 +198,13 @@ var DTFS_GEF;
             return e;
           },
         });
-    }.call(
-      ('object' == typeof window && window) ||
-        ('object' == typeof self && self) ||
-        ('object' == typeof global && global) ||
-        {},
-    ),
+    }.call(('object' == typeof window && window) || ('object' == typeof self && self) || ('object' == typeof global && global) || {}),
     function (t) {
       'trim' in String.prototype ||
         (String.prototype.trim = function () {
           return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
         });
-    }.call(
-      ('object' == typeof window && window) ||
-        ('object' == typeof self && self) ||
-        ('object' == typeof global && global) ||
-        {},
-    ),
+    }.call(('object' == typeof window && window) || ('object' == typeof self && self) || ('object' == typeof global && global) || {}),
     (a.prototype.t = function (t, e) {
       if (!t) throw new Error('i18n: lookup key missing');
       e && 'number' == typeof e.count && (t = t + '.' + this.getPluralSuffix(t, e.count));
@@ -259,47 +225,29 @@ var DTFS_GEF;
         t.replace(/%{(.\S+)}/g, function (t, i) {
           if (Object.prototype.hasOwnProperty.call(e, i)) {
             var o = e[i];
-            return !1 === o || ('number' != typeof o && 'string' != typeof o)
-              ? ''
-              : 'number' == typeof o
-              ? n
-                ? n.format(o)
-                : o.toString()
-              : o;
+            return !1 === o || ('number' != typeof o && 'string' != typeof o) ? '' : 'number' == typeof o ? (n ? n.format(o) : o.toString()) : o;
           }
           throw new Error('i18n: no data found to replace ' + t + ' placeholder in string');
         })
       );
     }),
     (a.prototype.hasIntlPluralRulesSupport = function () {
-      return Boolean(
-        window.Intl && 'PluralRules' in window.Intl && Intl.PluralRules.supportedLocalesOf(this.locale).length,
-      );
+      return Boolean(window.Intl && 'PluralRules' in window.Intl && Intl.PluralRules.supportedLocalesOf(this.locale).length);
     }),
     (a.prototype.hasIntlNumberFormatSupport = function () {
-      return Boolean(
-        window.Intl && 'NumberFormat' in window.Intl && Intl.NumberFormat.supportedLocalesOf(this.locale).length,
-      );
+      return Boolean(window.Intl && 'NumberFormat' in window.Intl && Intl.NumberFormat.supportedLocalesOf(this.locale).length);
     }),
     (a.prototype.getPluralSuffix = function (t, e) {
       if (((e = Number(e)), !isFinite(e))) return 'other';
       var n;
       if (
-        t +
-          '.' +
-          (n = this.hasIntlPluralRulesSupport()
-            ? new Intl.PluralRules(this.locale).select(e)
-            : this.selectPluralFormUsingFallbackRules(e)) in
+        t + '.' + (n = this.hasIntlPluralRulesSupport() ? new Intl.PluralRules(this.locale).select(e) : this.selectPluralFormUsingFallbackRules(e)) in
         this.translations
       )
         return n;
       if (t + '.other' in this.translations)
         return (
-          console &&
-            'warn' in console &&
-            console.warn(
-              'i18n: Missing plural form ".' + n + '" for "' + this.locale + '" locale. Falling back to ".other".',
-            ),
+          console && 'warn' in console && console.warn('i18n: Missing plural form ".' + n + '" for "' + this.locale + '" locale. Falling back to ".other".'),
           'other'
         );
       throw new Error('i18n: Plural form ".other" is required for "' + this.locale + '" locale');
@@ -320,32 +268,7 @@ var DTFS_GEF;
       arabic: ['ar'],
       chinese: ['my', 'zh', 'id', 'ja', 'jv', 'ko', 'ms', 'th', 'vi'],
       french: ['hy', 'bn', 'fr', 'gu', 'hi', 'fa', 'pa', 'zu'],
-      german: [
-        'af',
-        'sq',
-        'az',
-        'eu',
-        'bg',
-        'ca',
-        'da',
-        'nl',
-        'en',
-        'et',
-        'fi',
-        'ka',
-        'de',
-        'el',
-        'hu',
-        'lb',
-        'no',
-        'so',
-        'sw',
-        'sv',
-        'ta',
-        'te',
-        'tr',
-        'ur',
-      ],
+      german: ['af', 'sq', 'az', 'eu', 'bg', 'ca', 'da', 'nl', 'en', 'et', 'fi', 'ka', 'de', 'el', 'hu', 'lb', 'no', 'so', 'sw', 'sv', 'ta', 'te', 'tr', 'ur'],
       irish: ['ga'],
       russian: ['ru', 'uk'],
       scottish: ['gd'],
@@ -354,17 +277,7 @@ var DTFS_GEF;
     }),
     (a.pluralRules = {
       arabic: function (t) {
-        return 0 === t
-          ? 'zero'
-          : 1 === t
-          ? 'one'
-          : 2 === t
-          ? 'two'
-          : t % 100 >= 3 && t % 100 <= 10
-          ? 'few'
-          : t % 100 >= 11 && t % 100 <= 99
-          ? 'many'
-          : 'other';
+        return 0 === t ? 'zero' : 1 === t ? 'one' : 2 === t ? 'two' : t % 100 >= 3 && t % 100 <= 10 ? 'few' : t % 100 >= 11 && t % 100 <= 99 ? 'many' : 'other';
       },
       chinese: function () {
         return 'other';
@@ -390,13 +303,7 @@ var DTFS_GEF;
           : 'other';
       },
       scottish: function (t) {
-        return 1 === t || 11 === t
-          ? 'one'
-          : 2 === t || 12 === t
-          ? 'two'
-          : (t >= 3 && t <= 10) || (t >= 13 && t <= 19)
-          ? 'few'
-          : 'other';
+        return 1 === t || 11 === t ? 'one' : 2 === t || 12 === t ? 'two' : (t >= 3 && t <= 10) || (t >= 13 && t <= 19) ? 'few' : 'other';
       },
       spanish: function (t) {
         return 1 === t ? 'one' : t % 1e6 == 0 && 0 !== t ? 'many' : 'other';
@@ -407,8 +314,7 @@ var DTFS_GEF;
     }),
     function (t) {
       var e;
-      ('DOMTokenList' in this &&
-        (!('classList' in (e = document.createElement('x'))) || (!e.classList.toggle('x', !1) && !e.className))) ||
+      ('DOMTokenList' in this && (!('classList' in (e = document.createElement('x'))) || (!e.classList.toggle('x', !1) && !e.className))) ||
         (function (e) {
           var n;
           ('DOMTokenList' in e &&
@@ -419,9 +325,7 @@ var DTFS_GEF;
             (e.DOMTokenList = (function () {
               var e = !0,
                 n = function (t, n, i, o) {
-                  Object.defineProperty
-                    ? Object.defineProperty(t, n, { configurable: !1 === e || !!o, get: i })
-                    : t.__defineGetter__(n, i);
+                  Object.defineProperty ? Object.defineProperty(t, n, { configurable: !1 === e || !!o, get: i }) : t.__defineGetter__(n, i);
                 };
               try {
                 n({}, 'support');
@@ -456,9 +360,7 @@ var DTFS_GEF;
                       for (n = 0; n < o.length; ++n)
                         if (l.test(o[n]))
                           throw (
-                            (((t = new SyntaxError('String "' + o[n] + '" contains an invalid character')).code = 5),
-                            (t.name = 'InvalidCharacterError'),
-                            t)
+                            (((t = new SyntaxError('String "' + o[n] + '" contains an invalid character')).code = 5), (t.name = 'InvalidCharacterError'), t)
                           );
                     for (
                       '' ===
@@ -492,25 +394,16 @@ var DTFS_GEF;
                   (o.add = function () {
                     d.apply(o, (t = arguments));
                     for (var t, n, l = 0, c = t.length; l < c; ++l) r[(n = t[l])] || (s.push(n), (r[n] = !0));
-                    a !== s.length &&
-                      ((a = s.length >>> 0),
-                      'object' == typeof e[i] ? (e[i].baseVal = s.join(' ')) : (e[i] = s.join(' ')),
-                      u());
+                    a !== s.length && ((a = s.length >>> 0), 'object' == typeof e[i] ? (e[i].baseVal = s.join(' ')) : (e[i] = s.join(' ')), u());
                   }),
                   (o.remove = function () {
                     d.apply(o, (t = arguments));
                     for (var t, n = {}, l = 0, c = []; l < t.length; ++l) (n[t[l]] = !0), delete r[t[l]];
                     for (l = 0; l < s.length; ++l) n[s[l]] || c.push(s[l]);
-                    (s = c),
-                      (a = c.length >>> 0),
-                      'object' == typeof e[i] ? (e[i].baseVal = s.join(' ')) : (e[i] = s.join(' ')),
-                      u();
+                    (s = c), (a = c.length >>> 0), 'object' == typeof e[i] ? (e[i].baseVal = s.join(' ')) : (e[i] = s.join(' ')), u();
                   }),
                   (o.toggle = function (e, n) {
-                    return (
-                      d.apply(o, [e]),
-                      t !== n ? (n ? (o.add(e), !0) : (o.remove(e), !1)) : r[e] ? (o.remove(e), !1) : (o.add(e), !0)
-                    );
+                    return d.apply(o, [e]), t !== n ? (n ? (o.add(e), !0) : (o.remove(e), !1)) : r[e] ? (o.remove(e), !1) : (o.add(e), !0);
                   }),
                   o
                 );
@@ -538,10 +431,7 @@ var DTFS_GEF;
             })(),
             (function () {
               var t = document.createElement('span');
-              if (
-                'classList' in t &&
-                (t.classList.add('a'), t.classList.add('b'), t.classList.remove('a', 'b'), t.classList.contains('b'))
-              ) {
+              if ('classList' in t && (t.classList.add('a'), t.classList.add('b'), t.classList.remove('a', 'b'), t.classList.contains('b'))) {
                 var e = t.classList.constructor.prototype.remove;
                 t.classList.constructor.prototype.remove = function () {
                   for (var t = arguments, n = arguments.length, i = 0; i < n; i++) e.call(this, t[i]);
@@ -549,12 +439,7 @@ var DTFS_GEF;
               }
             })();
         })(this);
-    }.call(
-      ('object' == typeof window && window) ||
-        ('object' == typeof self && self) ||
-        ('object' == typeof global && global) ||
-        {},
-    ),
+    }.call(('object' == typeof window && window) || ('object' == typeof self && self) || ('object' == typeof global && global) || {}),
     function (t) {
       var e;
       ('document' in this &&
@@ -565,9 +450,7 @@ var DTFS_GEF;
         (function (t) {
           var e = !0,
             n = function (t, n, i, o) {
-              Object.defineProperty
-                ? Object.defineProperty(t, n, { configurable: !1 === e || !!o, get: i })
-                : t.__defineGetter__(n, i);
+              Object.defineProperty ? Object.defineProperty(t, n, { configurable: !1 === e || !!o, get: i }) : t.__defineGetter__(n, i);
             };
           try {
             n({}, 'support');
@@ -584,11 +467,7 @@ var DTFS_GEF;
                   a = '__defineGetter__DEFINE_PROPERTY' + o;
                 if (r[a]) return t;
                 if (((r[a] = !0), !1 === e)) {
-                  for (
-                    var l, c = i.mirror || document.createElement('div'), u = c.childNodes, d = u.length, h = 0;
-                    h < d;
-                    ++h
-                  )
+                  for (var l, c = i.mirror || document.createElement('div'), u = c.childNodes, d = u.length, h = 0; h < d; ++h)
                     if (u[h]._R === r) {
                       l = u[h];
                       break;
@@ -612,12 +491,7 @@ var DTFS_GEF;
             i(t.HTMLAnchorElement, 'relList', 'rel'),
             i(t.HTMLAreaElement, 'relList', 'rel');
         })(this);
-    }.call(
-      ('object' == typeof window && window) ||
-        ('object' == typeof self && self) ||
-        ('object' == typeof global && global) ||
-        {},
-    ),
+    }.call(('object' == typeof window && window) || ('object' == typeof self && self) || ('object' == typeof global && global) || {}),
     function (t) {
       ('document' in this && 'matches' in document.documentElement) ||
         (Element.prototype.matches =
@@ -626,16 +500,10 @@ var DTFS_GEF;
           Element.prototype.msMatchesSelector ||
           Element.prototype.mozMatchesSelector ||
           function (t) {
-            for (var e = this, n = (e.document || e.ownerDocument).querySelectorAll(t), i = 0; n[i] && n[i] !== e; )
-              ++i;
+            for (var e = this, n = (e.document || e.ownerDocument).querySelectorAll(t), i = 0; n[i] && n[i] !== e; ) ++i;
             return !!n[i];
           });
-    }.call(
-      ('object' == typeof window && window) ||
-        ('object' == typeof self && self) ||
-        ('object' == typeof global && global) ||
-        {},
-    ),
+    }.call(('object' == typeof window && window) || ('object' == typeof self && self) || ('object' == typeof global && global) || {}),
     function (t) {
       ('document' in this && 'closest' in document.documentElement) ||
         (Element.prototype.closest = function (t) {
@@ -645,27 +513,15 @@ var DTFS_GEF;
           }
           return null;
         });
-    }.call(
-      ('object' == typeof window && window) ||
-        ('object' == typeof self && self) ||
-        ('object' == typeof global && global) ||
-        {},
-    ),
+    }.call(('object' == typeof window && window) || ('object' == typeof self && self) || ('object' == typeof global && global) || {}),
     function (t) {
       'Window' in this ||
         ('undefined' == typeof WorkerGlobalScope &&
           'function' != typeof importScripts &&
           (function (t) {
-            t.constructor
-              ? (t.Window = t.constructor)
-              : ((t.Window = t.constructor = new Function('return function Window() {}')()).prototype = this);
+            t.constructor ? (t.Window = t.constructor) : ((t.Window = t.constructor = new Function('return function Window() {}')()).prototype = this);
           })(this));
-    }.call(
-      ('object' == typeof window && window) ||
-        ('object' == typeof self && self) ||
-        ('object' == typeof global && global) ||
-        {},
-    ),
+    }.call(('object' == typeof window && window) || ('object' == typeof self && self) || ('object' == typeof global && global) || {}),
     function (t) {
       (function (t) {
         if (!('Event' in t)) return !1;
@@ -758,8 +614,7 @@ var DTFS_GEF;
                                 e.target = e.target || e.srcElement || t,
                                 e.timeStamp = new Date().getTime(),
                                 e.clientX &&
-                                  ((e.pageX = e.clientX + document.documentElement.scrollLeft),
-                                  (e.pageY = e.clientY + document.documentElement.scrollTop));
+                                  ((e.pageX = e.clientX + document.documentElement.scrollLeft), (e.pageY = e.clientY + document.documentElement.scrollTop));
                               ++r < a && !e.cancelImmediate;
 
                             )
@@ -783,8 +638,7 @@ var DTFS_GEF;
                         e._events[n].list &&
                         -1 !== (t = i(e._events[n].list, o)) &&
                         (e._events[n].list.splice(t, 1),
-                        e._events[n].list.length ||
-                          (e.detachEvent && e.detachEvent('on' + n, e._events[n]), delete e._events[n]));
+                        e._events[n].list.length || (e.detachEvent && e.detachEvent('on' + n, e._events[n]), delete e._events[n]));
                     }),
                 (window.dispatchEvent =
                   Window.prototype.dispatchEvent =
@@ -816,8 +670,7 @@ var DTFS_GEF;
                       return !0;
                     }),
                 document.attachEvent('onreadystatechange', function () {
-                  'complete' === document.readyState &&
-                    document.dispatchEvent(new Event('DOMContentLoaded', { bubbles: !0 }));
+                  'complete' === document.readyState && document.dispatchEvent(new Event('DOMContentLoaded', { bubbles: !0 }));
                 }));
           }
           function i(t, e) {
@@ -825,12 +678,7 @@ var DTFS_GEF;
             return -1;
           }
         })();
-    }.call(
-      ('object' == typeof window && window) ||
-        ('object' == typeof self && self) ||
-        ('object' == typeof global && global) ||
-        {},
-    ),
+    }.call(('object' == typeof window && window) || ('object' == typeof self && self) || ('object' == typeof global && global) || {}),
     function (t) {
       'bind' in Function.prototype ||
         Object.defineProperty(Function.prototype, 'bind', {
@@ -863,8 +711,7 @@ var DTFS_GEF;
               p = Math.max,
               f = this;
             if (!e(f)) throw new TypeError('Function.prototype.bind called on incompatible ' + f);
-            for (var m, v = u.call(arguments, 1), b = p(0, f.length - v.length), g = [], y = 0; y < b; y++)
-              h.call(g, '$' + y);
+            for (var m, v = u.call(arguments, 1), b = p(0, f.length - v.length), g = [], y = 0; y < b; y++) h.call(g, '$' + y);
             return (
               (m = Function(
                 'binder',
@@ -881,12 +728,7 @@ var DTFS_GEF;
             );
           },
         });
-    }.call(
-      ('object' == typeof window && window) ||
-        ('object' == typeof self && self) ||
-        ('object' == typeof global && global) ||
-        {},
-    );
+    }.call(('object' == typeof window && window) || ('object' == typeof self && self) || ('object' == typeof global && global) || {});
   var l = {
     hideAllSections: 'Hide all sections',
     hideSection: 'Hide',
@@ -958,10 +800,7 @@ var DTFS_GEF;
       n(this.$sections, function (e, n) {
         var i = e.querySelector('.' + t.sectionHeaderClass);
         i &&
-          (t.constructHeaderMarkup(i, n),
-          t.setExpanded(t.isExpanded(e), e),
-          i.addEventListener('click', t.onSectionToggle.bind(t, e)),
-          t.setInitialState(e));
+          (t.constructHeaderMarkup(i, n), t.setExpanded(t.isExpanded(e), e), i.addEventListener('click', t.onSectionToggle.bind(t, e)), t.setInitialState(e));
       });
     }),
     (c.prototype.constructHeaderMarkup = function (t, e) {
@@ -970,8 +809,7 @@ var DTFS_GEF;
         o = t.querySelector('.' + this.sectionSummaryClass);
       if (n && i) {
         var s = document.createElement('button');
-        s.setAttribute('type', 'button'),
-          s.setAttribute('aria-controls', this.$module.id + '-content-' + (e + 1).toString());
+        s.setAttribute('type', 'button'), s.setAttribute('aria-controls', this.$module.id + '-content-' + (e + 1).toString());
         for (var r = 0; r < n.attributes.length; r++) {
           var a = n.attributes.item(r);
           'id' !== a.nodeName && s.setAttribute(a.nodeName, a.nodeValue);
@@ -1003,10 +841,7 @@ var DTFS_GEF;
               y = o.attributes.item(v).nodeValue;
             f.setAttribute(g, y);
           }
-          (m.innerHTML = o.innerHTML),
-            o.parentNode.replaceChild(f, o),
-            s.appendChild(f),
-            s.appendChild(this.getButtonPunctuationEl());
+          (m.innerHTML = o.innerHTML), o.parentNode.replaceChild(f, o), s.appendChild(f), s.appendChild(this.getButtonPunctuationEl());
         }
         s.appendChild(u), i.removeChild(n), i.appendChild(s);
       }
@@ -1048,12 +883,8 @@ var DTFS_GEF;
         a.push(u),
           o.setAttribute('aria-label', a.join(' , ')),
           t
-            ? (s.removeAttribute('hidden'),
-              e.classList.add(this.sectionExpandedClass),
-              n.classList.remove(this.downChevronIconClass))
-            : (s.setAttribute('hidden', 'until-found'),
-              e.classList.remove(this.sectionExpandedClass),
-              n.classList.add(this.downChevronIconClass));
+            ? (s.removeAttribute('hidden'), e.classList.add(this.sectionExpandedClass), n.classList.remove(this.downChevronIconClass))
+            : (s.setAttribute('hidden', 'until-found'), e.classList.remove(this.sectionExpandedClass), n.classList.add(this.downChevronIconClass));
         var d = this.checkIfAllSectionsOpen();
         this.updateShowAllButton(d);
       }
@@ -1068,21 +899,14 @@ var DTFS_GEF;
       var e = t ? this.i18n.t('hideAllSections') : this.i18n.t('showAllSections');
       this.$showAllButton.setAttribute('aria-expanded', t.toString()),
         (this.$showAllText.innerText = e),
-        t
-          ? this.$showAllIcon.classList.remove(this.downChevronIconClass)
-          : this.$showAllIcon.classList.add(this.downChevronIconClass);
+        t ? this.$showAllIcon.classList.remove(this.downChevronIconClass) : this.$showAllIcon.classList.add(this.downChevronIconClass);
     });
   var u = {
     checkForSessionStorage: function () {
       var t,
         e = 'this is the test string';
       try {
-        return (
-          window.sessionStorage.setItem(e, e),
-          (t = window.sessionStorage.getItem(e) === e.toString()),
-          window.sessionStorage.removeItem(e),
-          t
-        );
+        return window.sessionStorage.setItem(e, e), (t = window.sessionStorage.getItem(e) === e.toString()), window.sessionStorage.removeItem(e), t;
       } catch (t) {
         return !1;
       }
@@ -1119,16 +943,11 @@ var DTFS_GEF;
     this.config = i({ preventDoubleClick: !1 }, e || {}, r(t.dataset));
   }
   (h.prototype.init = function () {
-    this.$module &&
-      (this.$module.addEventListener('keydown', this.handleKeyDown),
-      this.$module.addEventListener('click', this.debounce.bind(this)));
+    this.$module && (this.$module.addEventListener('keydown', this.handleKeyDown), this.$module.addEventListener('click', this.debounce.bind(this)));
   }),
     (h.prototype.handleKeyDown = function (t) {
       var e = t.target;
-      32 === t.keyCode &&
-        e instanceof HTMLElement &&
-        'button' === e.getAttribute('role') &&
-        (t.preventDefault(), e.click());
+      32 === t.keyCode && e instanceof HTMLElement && 'button' === e.getAttribute('role') && (t.preventDefault(), e.click());
     }),
     (h.prototype.debounce = function (t) {
       if (this.config.preventDoubleClick)
@@ -1147,12 +966,7 @@ var DTFS_GEF;
       (Date.now = function () {
         return new Date().getTime();
       });
-  }).call(
-    ('object' == typeof window && window) ||
-      ('object' == typeof self && self) ||
-      ('object' == typeof global && global) ||
-      {},
-  );
+  }).call(('object' == typeof window && window) || ('object' == typeof self && self) || ('object' == typeof global && global) || {});
   var f = {
     charactersUnderLimit: {
       one: 'You have %{count} character remaining',
@@ -1205,8 +1019,7 @@ var DTFS_GEF;
       var t = this.$textarea,
         e = document.getElementById(t.id + '-info');
       if (e) {
-        e.innerText.match(/^\s*$/) && (e.innerText = this.i18n.t('textareaDescription', { count: this.maxLength })),
-          t.insertAdjacentElement('afterend', e);
+        e.innerText.match(/^\s*$/) && (e.innerText = this.i18n.t('textareaDescription', { count: this.maxLength })), t.insertAdjacentElement('afterend', e);
         var n = document.createElement('div');
         (n.className = 'govuk-character-count__sr-status govuk-visually-hidden'),
           n.setAttribute('aria-live', 'polite'),
@@ -1221,10 +1034,7 @@ var DTFS_GEF;
           e.classList.add('govuk-visually-hidden'),
           t.removeAttribute('maxlength'),
           this.bindChangeEvents(),
-          window.addEventListener(
-            'onpageshow' in window ? 'pageshow' : 'DOMContentLoaded',
-            this.updateCountMessage.bind(this),
-          ),
+          window.addEventListener('onpageshow' in window ? 'pageshow' : 'DOMContentLoaded', this.updateCountMessage.bind(this)),
           this.updateCountMessage();
       }
     }
@@ -1250,8 +1060,7 @@ var DTFS_GEF;
       clearInterval(this.valueChecker);
     }),
     (m.prototype.updateIfValueChanged = function () {
-      this.$textarea.value !== this.lastInputValue &&
-        ((this.lastInputValue = this.$textarea.value), this.updateCountMessage());
+      this.$textarea.value !== this.lastInputValue && ((this.lastInputValue = this.$textarea.value), this.updateCountMessage());
     }),
     (m.prototype.updateCountMessage = function () {
       this.updateVisibleCountMessage(), this.updateScreenReaderCountMessage();
@@ -1260,22 +1069,15 @@ var DTFS_GEF;
       var t = this.$textarea,
         e = this.$visibleCountMessage,
         n = this.maxLength - this.count(t.value);
-      this.isOverThreshold()
-        ? e.classList.remove('govuk-character-count__message--disabled')
-        : e.classList.add('govuk-character-count__message--disabled'),
+      this.isOverThreshold() ? e.classList.remove('govuk-character-count__message--disabled') : e.classList.add('govuk-character-count__message--disabled'),
         n < 0
-          ? (t.classList.add('govuk-textarea--error'),
-            e.classList.remove('govuk-hint'),
-            e.classList.add('govuk-error-message'))
-          : (t.classList.remove('govuk-textarea--error'),
-            e.classList.remove('govuk-error-message'),
-            e.classList.add('govuk-hint')),
+          ? (t.classList.add('govuk-textarea--error'), e.classList.remove('govuk-hint'), e.classList.add('govuk-error-message'))
+          : (t.classList.remove('govuk-textarea--error'), e.classList.remove('govuk-error-message'), e.classList.add('govuk-hint')),
         (e.innerText = this.getCountMessage());
     }),
     (m.prototype.updateScreenReaderCountMessage = function () {
       var t = this.$screenReaderCountMessage;
-      this.isOverThreshold() ? t.removeAttribute('aria-hidden') : t.setAttribute('aria-hidden', 'true'),
-        (t.innerText = this.getCountMessage());
+      this.isOverThreshold() ? t.removeAttribute('aria-hidden') : t.setAttribute('aria-hidden', 'true'), (t.innerText = this.getCountMessage());
     }),
     (m.prototype.count = function (t) {
       return 'maxwords' in this.config && this.config.maxwords ? (t.match(/\S+/g) || []).length : t.length;
@@ -1308,14 +1110,9 @@ var DTFS_GEF;
       var t = this.$module;
       n(this.$inputs, function (t) {
         var e = t.getAttribute('data-aria-controls');
-        e &&
-          document.getElementById(e) &&
-          (t.setAttribute('aria-controls', e), t.removeAttribute('data-aria-controls'));
+        e && document.getElementById(e) && (t.setAttribute('aria-controls', e), t.removeAttribute('data-aria-controls'));
       }),
-        window.addEventListener(
-          'onpageshow' in window ? 'pageshow' : 'DOMContentLoaded',
-          this.syncAllConditionalReveals.bind(this),
-        ),
+        window.addEventListener('onpageshow' in window ? 'pageshow' : 'DOMContentLoaded', this.syncAllConditionalReveals.bind(this)),
         this.syncAllConditionalReveals(),
         t.addEventListener('click', this.handleClick.bind(this));
     }
@@ -1329,8 +1126,7 @@ var DTFS_GEF;
         var n = document.getElementById(e);
         if (n && n.classList.contains('govuk-checkboxes__conditional')) {
           var i = t.checked;
-          t.setAttribute('aria-expanded', i.toString()),
-            n.classList.toggle('govuk-checkboxes__conditional--hidden', !i);
+          t.setAttribute('aria-expanded', i.toString()), n.classList.toggle('govuk-checkboxes__conditional--hidden', !i);
         }
       }
     }),
@@ -1342,22 +1138,16 @@ var DTFS_GEF;
     }),
     (b.prototype.unCheckExclusiveInputs = function (t) {
       var e = this;
-      n(
-        document.querySelectorAll('input[data-behaviour="exclusive"][type="checkbox"][name="' + t.name + '"]'),
-        function (n) {
-          t.form === n.form && ((n.checked = !1), e.syncConditionalRevealWithInputState(n));
-        },
-      );
+      n(document.querySelectorAll('input[data-behaviour="exclusive"][type="checkbox"][name="' + t.name + '"]'), function (n) {
+        t.form === n.form && ((n.checked = !1), e.syncConditionalRevealWithInputState(n));
+      });
     }),
     (b.prototype.handleClick = function (t) {
       var e = t.target;
       e instanceof HTMLInputElement &&
         'checkbox' === e.type &&
         (e.getAttribute('aria-controls') && this.syncConditionalRevealWithInputState(e),
-        e.checked &&
-          ('exclusive' === e.getAttribute('data-behaviour')
-            ? this.unCheckAllInputsExcept(e)
-            : this.unCheckExclusiveInputs(e)));
+        e.checked && ('exclusive' === e.getAttribute('data-behaviour') ? this.unCheckAllInputsExcept(e) : this.unCheckExclusiveInputs(e)));
     });
   var g = b;
   function y(t) {
@@ -1365,8 +1155,7 @@ var DTFS_GEF;
     (this.$module = t), (this.$summary = null), (this.$content = null);
   }
   (y.prototype.init = function () {
-    this.$module &&
-      (('HTMLDetailsElement' in window && this.$module instanceof HTMLDetailsElement) || this.polyfillDetails());
+    this.$module && (('HTMLDetailsElement' in window && this.$module instanceof HTMLDetailsElement) || this.polyfillDetails());
   }),
     (y.prototype.polyfillDetails = function () {
       var t,
@@ -1379,9 +1168,7 @@ var DTFS_GEF;
           (i.id =
             'details-content-' +
             ((t = new Date().getTime()),
-            void 0 !== window.performance &&
-              'function' == typeof window.performance.now &&
-              (t += window.performance.now()),
+            void 0 !== window.performance && 'function' == typeof window.performance.now && (t += window.performance.now()),
             'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (e) {
               var n = (t + 16 * Math.random()) % 16 | 0;
               return (t = Math.floor(t / 16)), ('x' === e ? n : (3 & n) | 8).toString(16);
@@ -1390,20 +1177,14 @@ var DTFS_GEF;
         n.setAttribute('role', 'button'),
         n.setAttribute('aria-controls', i.id),
         (n.tabIndex = 0),
-        this.$module.hasAttribute('open')
-          ? n.setAttribute('aria-expanded', 'true')
-          : (n.setAttribute('aria-expanded', 'false'), (i.style.display = 'none')),
+        this.$module.hasAttribute('open') ? n.setAttribute('aria-expanded', 'true') : (n.setAttribute('aria-expanded', 'false'), (i.style.display = 'none')),
         this.polyfillHandleInputs(this.polyfillSetAttributes.bind(this)));
     }),
     (y.prototype.polyfillSetAttributes = function () {
       return (
         this.$module.hasAttribute('open')
-          ? (this.$module.removeAttribute('open'),
-            this.$summary.setAttribute('aria-expanded', 'false'),
-            (this.$content.style.display = 'none'))
-          : (this.$module.setAttribute('open', 'open'),
-            this.$summary.setAttribute('aria-expanded', 'true'),
-            (this.$content.style.display = '')),
+          ? (this.$module.removeAttribute('open'), this.$summary.setAttribute('aria-expanded', 'false'), (this.$content.style.display = 'none'))
+          : (this.$module.setAttribute('open', 'open'), this.$summary.setAttribute('aria-expanded', 'true'), (this.$content.style.display = '')),
         !0
       );
     }),
@@ -1411,9 +1192,7 @@ var DTFS_GEF;
       this.$summary.addEventListener('keypress', function (e) {
         var n = e.target;
         (13 !== e.keyCode && 32 !== e.keyCode) ||
-          (n instanceof HTMLElement &&
-            'summary' === n.nodeName.toLowerCase() &&
-            (e.preventDefault(), n.click ? n.click() : t(e)));
+          (n instanceof HTMLElement && 'summary' === n.nodeName.toLowerCase() && (e.preventDefault(), n.click ? n.click() : t(e)));
       }),
         this.$summary.addEventListener('keyup', function (t) {
           var e = t.target;
@@ -1550,8 +1329,7 @@ var DTFS_GEF;
           null !== this.timeoutMessageId && (clearTimeout(this.timeoutMessageId), (this.timeoutMessageId = null)),
           this.keypressCounter >= 3
             ? ((this.keypressCounter = 0),
-              null !== this.keypressTimeoutId &&
-                (clearTimeout(this.keypressTimeoutId), (this.keypressTimeoutId = null)),
+              null !== this.keypressTimeoutId && (clearTimeout(this.keypressTimeoutId), (this.keypressTimeoutId = null)),
               this.exitPage())
             : 1 === this.keypressCounter
             ? (this.$updateSpan.innerText = this.i18n.t('pressTwoMoreTimes'))
@@ -1560,8 +1338,7 @@ var DTFS_GEF;
         (this.lastKeyWasModified = t.shiftKey);
     }),
     (T.prototype.setKeypressTimer = function () {
-      clearTimeout(this.keypressTimeoutId),
-        (this.keypressTimeoutId = setTimeout(this.resetKeypressTimer.bind(this), this.timeoutTime));
+      clearTimeout(this.keypressTimeoutId), (this.keypressTimeoutId = setTimeout(this.resetKeypressTimer.bind(this), this.timeoutTime));
     }),
     (T.prototype.resetKeypressTimer = function () {
       clearTimeout(this.keypressTimeoutId),
@@ -1590,8 +1367,7 @@ var DTFS_GEF;
         this.initUpdateSpan(),
         this.initButtonClickHandler(),
         'govukFrontendExitThisPageKeypress' in document.body.dataset ||
-          (document.addEventListener('keyup', this.handleKeypress.bind(this), !0),
-          (document.body.dataset.govukFrontendExitThisPageKeypress = 'true')),
+          (document.addEventListener('keyup', this.handleKeypress.bind(this), !0), (document.body.dataset.govukFrontendExitThisPageKeypress = 'true')),
         window.addEventListener('onpageshow' in window ? 'pageshow' : 'DOMContentLoaded', this.resetPage.bind(this));
     });
   var L = T;
@@ -1609,9 +1385,7 @@ var DTFS_GEF;
       this.$menu &&
       ('matchMedia' in window
         ? ((this.mql = window.matchMedia('(min-width: 48.0625em)')),
-          'addEventListener' in this.mql
-            ? this.mql.addEventListener('change', this.syncState.bind(this))
-            : this.mql.addListener(this.syncState.bind(this)),
+          'addEventListener' in this.mql ? this.mql.addEventListener('change', this.syncState.bind(this)) : this.mql.addListener(this.syncState.bind(this)),
           this.syncState(),
           this.$menuButton.addEventListener('click', this.handleMenuButtonClick.bind(this)))
         : this.$menuButton.setAttribute('hidden', ''));
@@ -1658,14 +1432,9 @@ var DTFS_GEF;
       var t = this.$module;
       n(this.$inputs, function (t) {
         var e = t.getAttribute('data-aria-controls');
-        e &&
-          document.getElementById(e) &&
-          (t.setAttribute('aria-controls', e), t.removeAttribute('data-aria-controls'));
+        e && document.getElementById(e) && (t.setAttribute('aria-controls', e), t.removeAttribute('data-aria-controls'));
       }),
-        window.addEventListener(
-          'onpageshow' in window ? 'pageshow' : 'DOMContentLoaded',
-          this.syncAllConditionalReveals.bind(this),
-        ),
+        window.addEventListener('onpageshow' in window ? 'pageshow' : 'DOMContentLoaded', this.syncAllConditionalReveals.bind(this)),
         this.syncAllConditionalReveals(),
         t.addEventListener('click', this.handleClick.bind(this));
     }
@@ -1716,14 +1485,11 @@ var DTFS_GEF;
       t.getAttribute('tabindex') ||
         (t.setAttribute('tabindex', '-1'),
         t.classList.add('govuk-skip-link-focused-element'),
-        this.linkedElementListener ||
-          (this.$linkedElement.addEventListener('blur', this.removeFocusProperties.bind(this)),
-          (this.linkedElementListener = !0))),
+        this.linkedElementListener || (this.$linkedElement.addEventListener('blur', this.removeFocusProperties.bind(this)), (this.linkedElementListener = !0))),
         t.focus();
     }),
     (j.prototype.removeFocusProperties = function () {
-      this.$linkedElement.removeAttribute('tabindex'),
-        this.$linkedElement.classList.remove('govuk-skip-link-focused-element');
+      this.$linkedElement.removeAttribute('tabindex'), this.$linkedElement.classList.remove('govuk-skip-link-focused-element');
     }),
     (j.prototype.getFragmentFromUrl = function () {
       if (this.$module.hash) return this.$module.hash.split('#').pop();
@@ -1750,12 +1516,7 @@ var DTFS_GEF;
           return t;
         },
       });
-  }).call(
-    ('object' == typeof window && window) ||
-      ('object' == typeof self && self) ||
-      ('object' == typeof global && global) ||
-      {},
-  ),
+  }).call(('object' == typeof window && window) || ('object' == typeof self && self) || ('object' == typeof global && global) || {}),
     function (t) {
       ('document' in this && 'previousElementSibling' in document.documentElement) ||
         Object.defineProperty(Element.prototype, 'previousElementSibling', {
@@ -1764,21 +1525,12 @@ var DTFS_GEF;
             return t;
           },
         });
-    }.call(
-      ('object' == typeof window && window) ||
-        ('object' == typeof self && self) ||
-        ('object' == typeof global && global) ||
-        {},
-    ),
+    }.call(('object' == typeof window && window) || ('object' == typeof self && self) || ('object' == typeof global && global) || {}),
     (H.prototype.init = function () {
-      this.$module &&
-        this.$tabs &&
-        ('function' == typeof window.matchMedia ? this.setupResponsiveChecks() : this.setup());
+      this.$module && this.$tabs && ('function' == typeof window.matchMedia ? this.setupResponsiveChecks() : this.setup());
     }),
     (H.prototype.setupResponsiveChecks = function () {
-      (this.mql = window.matchMedia('(min-width: 40.0625em)')),
-        this.mql.addListener(this.checkMode.bind(this)),
-        this.checkMode();
+      (this.mql = window.matchMedia('(min-width: 40.0625em)')), this.mql.addListener(this.checkMode.bind(this)), this.checkMode();
     }),
     (H.prototype.checkMode = function () {
       this.mql.matches ? this.setup() : this.teardown();
@@ -1795,10 +1547,7 @@ var DTFS_GEF;
             t.setAttribute('role', 'presentation');
           }),
           n(i, function (e) {
-            t.setAttributes(e),
-              e.addEventListener('click', t.boundTabClick, !0),
-              e.addEventListener('keydown', t.boundTabKeydown, !0),
-              t.hideTab(e);
+            t.setAttributes(e), e.addEventListener('click', t.boundTabClick, !0), e.addEventListener('keydown', t.boundTabKeydown, !0), t.hideTab(e);
           });
         var r = this.getTab(window.location.hash) || this.$tabs[0];
         r && (this.showTab(r), window.addEventListener('hashchange', this.boundOnHashChange, !0));
@@ -1818,9 +1567,7 @@ var DTFS_GEF;
           t.removeAttribute('role');
         }),
         n(i, function (e) {
-          e.removeEventListener('click', t.boundTabClick, !0),
-            e.removeEventListener('keydown', t.boundTabKeydown, !0),
-            t.unsetAttributes(e);
+          e.removeEventListener('click', t.boundTabClick, !0), e.removeEventListener('keydown', t.boundTabKeydown, !0), t.unsetAttributes(e);
         }),
         window.removeEventListener('hashchange', this.boundOnHashChange, !0));
     }),
@@ -1851,26 +1598,17 @@ var DTFS_GEF;
         t.setAttribute('aria-selected', 'false'),
         t.setAttribute('tabindex', '-1');
       var n = this.getPanel(t);
-      n &&
-        (n.setAttribute('role', 'tabpanel'),
-        n.setAttribute('aria-labelledby', t.id),
-        n.classList.add(this.jsHiddenClass));
+      n && (n.setAttribute('role', 'tabpanel'), n.setAttribute('aria-labelledby', t.id), n.classList.add(this.jsHiddenClass));
     }),
     (H.prototype.unsetAttributes = function (t) {
-      t.removeAttribute('id'),
-        t.removeAttribute('role'),
-        t.removeAttribute('aria-controls'),
-        t.removeAttribute('aria-selected'),
-        t.removeAttribute('tabindex');
+      t.removeAttribute('id'), t.removeAttribute('role'), t.removeAttribute('aria-controls'), t.removeAttribute('aria-selected'), t.removeAttribute('tabindex');
       var e = this.getPanel(t);
       e && (e.removeAttribute('role'), e.removeAttribute('aria-labelledby'), e.classList.remove(this.jsHiddenClass));
     }),
     (H.prototype.onTabClick = function (t) {
       var e = this.getCurrentTab(),
         n = t.currentTarget;
-      e &&
-        n instanceof HTMLAnchorElement &&
-        (t.preventDefault(), this.hideTab(e), this.showTab(n), this.createHistoryEntry(n));
+      e && n instanceof HTMLAnchorElement && (t.preventDefault(), this.hideTab(e), this.showTab(n), this.createHistoryEntry(n));
     }),
     (H.prototype.createHistoryEntry = function (t) {
       var e = this.getPanel(t);
@@ -1923,15 +1661,11 @@ var DTFS_GEF;
     }),
     (H.prototype.unhighlightTab = function (t) {
       t.parentElement &&
-        (t.setAttribute('aria-selected', 'false'),
-        t.parentElement.classList.remove('govuk-tabs__list-item--selected'),
-        t.setAttribute('tabindex', '-1'));
+        (t.setAttribute('aria-selected', 'false'), t.parentElement.classList.remove('govuk-tabs__list-item--selected'), t.setAttribute('tabindex', '-1'));
     }),
     (H.prototype.highlightTab = function (t) {
       t.parentElement &&
-        (t.setAttribute('aria-selected', 'true'),
-        t.parentElement.classList.add('govuk-tabs__list-item--selected'),
-        t.setAttribute('tabindex', '0'));
+        (t.setAttribute('aria-selected', 'true'), t.parentElement.classList.add('govuk-tabs__list-item--selected'), t.setAttribute('tabindex', '0'));
     }),
     (H.prototype.getCurrentTab = function () {
       return this.$module.querySelector('.govuk-tabs__list-item--selected a.govuk-tabs__tab');

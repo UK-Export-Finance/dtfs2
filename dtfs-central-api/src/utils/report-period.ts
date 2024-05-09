@@ -90,8 +90,7 @@ export const validateReportPeriod = (reportPeriod: unknown): string[] => {
  * @param reportPeriod - details of the report period
  * @returns whether or not the report period is a valid report period
  */
-export const isValidReportPeriod = (reportPeriod: unknown): reportPeriod is ReportPeriod =>
-  validateReportPeriod(reportPeriod).length === 0;
+export const isValidReportPeriod = (reportPeriod: unknown): reportPeriod is ReportPeriod => validateReportPeriod(reportPeriod).length === 0;
 
 /**
  * Parses the report period

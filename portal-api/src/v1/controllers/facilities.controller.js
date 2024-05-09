@@ -68,8 +68,7 @@ exports.createMultiple = async (req, res) => {
 /**
  * Create multiple facilities (BSS, EWCS only)
  */
-exports.createMultipleFacilities = async (facilities, dealId, user) =>
-  api.createMultipleFacilities(facilities, dealId, user);
+exports.createMultipleFacilities = async (facilities, dealId, user) => api.createMultipleFacilities(facilities, dealId, user);
 
 /**
  * Queries all facilities in the facilities collection (BSS, EWCS, GEF)

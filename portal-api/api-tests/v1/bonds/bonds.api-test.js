@@ -145,9 +145,7 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker).get(
-        '/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b',
-      );
+      const { status } = await as(aBarclaysMaker).get('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
@@ -289,9 +287,7 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker)
-        .put({})
-        .to('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
+      const { status } = await as(aBarclaysMaker).put({}).to('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
@@ -336,9 +332,7 @@ describe('/v1/deals/:id/bond', () => {
 
         expect(status).toEqual(200);
 
-        const { status: updatedDealStatus, body: updatedDealBody } = await as(aBarclaysMaker).get(
-          `/v1/deals/${dealId}`,
-        );
+        const { status: updatedDealStatus, body: updatedDealBody } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
 
         const updatedDeal = updatedDealBody.deal;
 
@@ -408,9 +402,7 @@ describe('/v1/deals/:id/bond', () => {
           .to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(secondUpdateStatus).toEqual(200);
         expect(secondUpdateBody.hasBeenIssued).toEqual(true);
-        const { status: updatedDealStatus, body: updatedDealBody } = await as(aBarclaysMaker).get(
-          `/v1/deals/${dealId}`,
-        );
+        const { status: updatedDealStatus, body: updatedDealBody } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
         expect(updatedDealStatus).toEqual(200);
 
         const updatedDeal = updatedDealBody.deal;
@@ -485,9 +477,7 @@ describe('/v1/deals/:id/bond', () => {
         expect(secondUpdateStatus).toEqual(200);
         expect(secondUpdateBody.hasBeenIssued).toEqual(false);
 
-        const { status: updatedDealStatus, body: updatedDealBody } = await as(aBarclaysMaker).get(
-          `/v1/deals/${dealId}`,
-        );
+        const { status: updatedDealStatus, body: updatedDealBody } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
         expect(updatedDealStatus).toEqual(200);
 
         const updatedDeal = updatedDealBody.deal;
@@ -610,9 +600,7 @@ describe('/v1/deals/:id/bond', () => {
           currencySameAsSupplyContractCurrency: 'true',
         };
 
-        const { status: secondUpdateStatus } = await as(aBarclaysMaker)
-          .put(bondWithSameCurrencyAsContract)
-          .to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status: secondUpdateStatus } = await as(aBarclaysMaker).put(bondWithSameCurrencyAsContract).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(secondUpdateStatus).toEqual(200);
 
         const { body: updatedDealBody } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
@@ -624,9 +612,7 @@ describe('/v1/deals/:id/bond', () => {
 
         expect(updatedBond._id).toEqual(bondId);
         expect(updatedBond.value).toEqual(bondWithSameCurrencyAsContract.value);
-        expect(updatedBond.currencySameAsSupplyContractCurrency).toEqual(
-          bondWithSameCurrencyAsContract.currencySameAsSupplyContractCurrency,
-        );
+        expect(updatedBond.currencySameAsSupplyContractCurrency).toEqual(bondWithSameCurrencyAsContract.currencySameAsSupplyContractCurrency);
         expect(updatedBond.conversionRate).toEqual(null);
         expect(updatedBond['conversionRateDate-day']).toEqual(null);
         expect(updatedBond['conversionRateDate-month']).toEqual(null);
@@ -760,9 +746,7 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker).remove(
-        '/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b',
-      );
+      const { status } = await as(aBarclaysMaker).remove('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });

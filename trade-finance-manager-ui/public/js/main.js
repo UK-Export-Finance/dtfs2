@@ -11,9 +11,7 @@ var DTFS_TFM;
     }
   })()),
     (t.r = function (t) {
-      'undefined' != typeof Symbol &&
-        Symbol.toStringTag &&
-        Object.defineProperty(t, Symbol.toStringTag, { value: 'Module' }),
+      'undefined' != typeof Symbol && Symbol.toStringTag && Object.defineProperty(t, Symbol.toStringTag, { value: 'Module' }),
         Object.defineProperty(t, '__esModule', { value: !0 });
     }),
     (function () {

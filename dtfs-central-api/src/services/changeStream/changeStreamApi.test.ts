@@ -48,11 +48,7 @@ describe('changeStreamApi', () => {
       });
     });
 
-    const envVarTestCases = [
-      { envVarName: 'AUDIT_API_URL' },
-      { envVarName: 'AUDIT_API_USERNAME' },
-      { envVarName: 'AUDIT_API_PASSWORD' },
-    ];
+    const envVarTestCases = [{ envVarName: 'AUDIT_API_URL' }, { envVarName: 'AUDIT_API_USERNAME' }, { envVarName: 'AUDIT_API_PASSWORD' }];
     it.each(envVarTestCases)('should throw an error if the %envVarName env var is missing', async ({ envVarName }) => {
       delete process.env[envVarName];
 

@@ -31,37 +31,27 @@ describe('validateAuditDetailsAndUserType', () => {
     withValidateAuditDetailsTests((auditDetails) => validateAuditDetailsAndUserType(auditDetails, 'portal'));
 
     it('throws if the userType is tfm and id is a valid 24 digit hex string', () => {
-      expect(() =>
-        validateAuditDetailsAndUserType({ userType: 'tfm', id: '1234567890abcdef12345678' }, 'portal'),
-      ).toThrow(`userType must be 'portal'`);
+      expect(() => validateAuditDetailsAndUserType({ userType: 'tfm', id: '1234567890abcdef12345678' }, 'portal')).toThrow(`userType must be 'portal'`);
     });
 
     it('throws if the userType is tfm and id is a valid ObjectId', () => {
-      expect(() =>
-        validateAuditDetailsAndUserType({ userType: 'tfm', id: new ObjectId('1234567890abcdef12345678') }, 'portal'),
-      ).toThrow(`userType must be 'portal'`);
-    });
-
-    it('throws if the userType is system', () => {
-      expect(() => validateAuditDetailsAndUserType({ userType: 'system' }, 'portal')).toThrow(
+      expect(() => validateAuditDetailsAndUserType({ userType: 'tfm', id: new ObjectId('1234567890abcdef12345678') }, 'portal')).toThrow(
         `userType must be 'portal'`,
       );
     });
 
+    it('throws if the userType is system', () => {
+      expect(() => validateAuditDetailsAndUserType({ userType: 'system' }, 'portal')).toThrow(`userType must be 'portal'`);
+    });
+
     it('does not throw if the userType is portal and id is a valid 24 digit hex string', () => {
-      const returnedValue = validateAuditDetailsAndUserType(
-        { userType: 'portal', id: '1234567890abcdef12345678' },
-        'portal',
-      );
+      const returnedValue = validateAuditDetailsAndUserType({ userType: 'portal', id: '1234567890abcdef12345678' }, 'portal');
 
       expect(returnedValue).toBe(undefined);
     });
 
     it('does not throw if the userType is portal and id is a valid ObjectId', () => {
-      const returnedValue = validateAuditDetailsAndUserType(
-        { userType: 'portal', id: new ObjectId('1234567890abcdef12345678') },
-        'portal',
-      );
+      const returnedValue = validateAuditDetailsAndUserType({ userType: 'portal', id: new ObjectId('1234567890abcdef12345678') }, 'portal');
 
       expect(returnedValue).toBe(undefined);
     });
@@ -71,15 +61,13 @@ describe('validateAuditDetailsAndUserType', () => {
     withValidateAuditDetailsTests((auditDetails) => validateAuditDetailsAndUserType(auditDetails, 'tfm'));
 
     it('throws if the userType is portal and id is a valid 24 digit hex string', () => {
-      expect(() =>
-        validateAuditDetailsAndUserType({ userType: 'portal', id: '1234567890abcdef12345678' }, 'tfm'),
-      ).toThrow(`userType must be 'tfm'`);
+      expect(() => validateAuditDetailsAndUserType({ userType: 'portal', id: '1234567890abcdef12345678' }, 'tfm')).toThrow(`userType must be 'tfm'`);
     });
 
     it('throws if the userType is portal and id is a valid ObjectId', () => {
-      expect(() =>
-        validateAuditDetailsAndUserType({ userType: 'portal', id: new ObjectId('1234567890abcdef12345678') }, 'tfm'),
-      ).toThrow(`userType must be 'tfm'`);
+      expect(() => validateAuditDetailsAndUserType({ userType: 'portal', id: new ObjectId('1234567890abcdef12345678') }, 'tfm')).toThrow(
+        `userType must be 'tfm'`,
+      );
     });
 
     it('throws if the userType is system', () => {
@@ -93,10 +81,7 @@ describe('validateAuditDetailsAndUserType', () => {
     });
 
     it('does not throw if the userType is tfm and id is a valid ObjectId', () => {
-      const returnedValue = validateAuditDetailsAndUserType(
-        { userType: 'tfm', id: new ObjectId('1234567890abcdef12345678') },
-        'tfm',
-      );
+      const returnedValue = validateAuditDetailsAndUserType({ userType: 'tfm', id: new ObjectId('1234567890abcdef12345678') }, 'tfm');
 
       expect(returnedValue).toBe(undefined);
     });
@@ -106,27 +91,23 @@ describe('validateAuditDetailsAndUserType', () => {
     withValidateAuditDetailsTests((auditDetails) => validateAuditDetailsAndUserType(auditDetails, 'system'));
 
     it('throws if the userType is tfm and id is a valid 24 digit hex string', () => {
-      expect(() =>
-        validateAuditDetailsAndUserType({ userType: 'tfm', id: '1234567890abcdef12345678' }, 'system'),
-      ).toThrow(`userType must be 'system'`);
+      expect(() => validateAuditDetailsAndUserType({ userType: 'tfm', id: '1234567890abcdef12345678' }, 'system')).toThrow(`userType must be 'system'`);
     });
 
     it('throws if the userType is tfm and id is a valid ObjectId', () => {
-      expect(() =>
-        validateAuditDetailsAndUserType({ userType: 'tfm', id: new ObjectId('1234567890abcdef12345678') }, 'system'),
-      ).toThrow(`userType must be 'system'`);
+      expect(() => validateAuditDetailsAndUserType({ userType: 'tfm', id: new ObjectId('1234567890abcdef12345678') }, 'system')).toThrow(
+        `userType must be 'system'`,
+      );
     });
 
     it('throws if the userType is portal and id is a valid 24 digit hex string', () => {
-      expect(() =>
-        validateAuditDetailsAndUserType({ userType: 'portal', id: '1234567890abcdef12345678' }, 'system'),
-      ).toThrow(`userType must be 'system'`);
+      expect(() => validateAuditDetailsAndUserType({ userType: 'portal', id: '1234567890abcdef12345678' }, 'system')).toThrow(`userType must be 'system'`);
     });
 
     it('throws if the userType is portal and id is a valid ObjectId', () => {
-      expect(() =>
-        validateAuditDetailsAndUserType({ userType: 'portal', id: new ObjectId('1234567890abcdef12345678') }, 'system'),
-      ).toThrow(`userType must be 'system'`);
+      expect(() => validateAuditDetailsAndUserType({ userType: 'portal', id: new ObjectId('1234567890abcdef12345678') }, 'system')).toThrow(
+        `userType must be 'system'`,
+      );
     });
 
     it('does not throw if the userType is system', () => {

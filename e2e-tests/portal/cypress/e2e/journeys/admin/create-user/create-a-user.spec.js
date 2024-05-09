@@ -163,9 +163,7 @@ context('Admin user creates a new user', () => {
     // checks html form validation pop up contains correct error message
     cy.get('input:invalid').should('have.length', 1);
     createUser.username().then(($input) => {
-      expect($input[0].validationMessage).to.eq(
-        "Please include an '@' in the email address. '{\"$gt\":\"\"}' is missing an '@'.",
-      );
+      expect($input[0].validationMessage).to.eq("Please include an '@' in the email address. '{\"$gt\":\"\"}' is missing an '@'.");
     });
 
     /**

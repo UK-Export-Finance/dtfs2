@@ -161,8 +161,7 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
     const EXPECTED_DEALS = ALL_DEALS.filter(
       ({ submissionType, status }) =>
         (status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL) &&
-        (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA ||
-          submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN),
+        (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN),
     );
 
     dashboardDeals.rows().should('have.length', EXPECTED_DEALS.length);
@@ -200,8 +199,7 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     const EXPECTED_DEALS = ALL_DEALS.filter(
-      ({ status }) =>
-        status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
+      ({ status }) => status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
     );
 
     dashboardDeals.rows().should('have.length', EXPECTED_DEALS.length);
@@ -219,9 +217,7 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     const EXPECTED_DEALS = ALL_DEALS.filter(
-      ({ submissionType }) =>
-        submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA ||
-        submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
+      ({ submissionType }) => submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
     );
 
     dashboardDeals.rows().should('have.length', EXPECTED_DEALS.length);

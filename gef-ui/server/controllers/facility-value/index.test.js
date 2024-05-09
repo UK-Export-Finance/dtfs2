@@ -98,9 +98,7 @@ describe('controllers/facility-value', () => {
     it('redirects to currency page when no currency is set for this facility', async () => {
       await facilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.redirect).toHaveBeenCalledWith(
-        '/gef/application-details/123/facilities/xyz/facility-currency',
-      );
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/facility-currency');
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {

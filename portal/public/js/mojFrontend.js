@@ -16,14 +16,11 @@ var DTFS_PORTAL;
                       (t.getAttribute(e) == n
                         ? t.removeAttribute(e)
                         : ((o = new RegExp('(^|\\s)' + n + '(\\s|$)')),
-                          (r = t.getAttribute(e).match(o)) &&
-                            3 == r.length &&
-                            t.setAttribute(e, t.getAttribute(e).replace(o, r[1] && r[2] ? ' ' : ''))));
+                          (r = t.getAttribute(e).match(o)) && 3 == r.length && t.setAttribute(e, t.getAttribute(e).replace(o, r[1] && r[2] ? ' ' : ''))));
                   },
                   addAttributeValue: function (t, e, n) {
                     t.getAttribute(e)
-                      ? new RegExp('(^|\\s)' + n + '(\\s|$)').test(t.getAttribute(e)) ||
-                        t.setAttribute(e, t.getAttribute(e) + ' ' + n)
+                      ? new RegExp('(^|\\s)' + n + '(\\s|$)').test(t.getAttribute(e)) || t.setAttribute(e, t.getAttribute(e) + ' ' + n)
                       : t.setAttribute(e, n);
                   },
                   dragAndDropSupported: function () {
@@ -90,15 +87,9 @@ var DTFS_PORTAL;
                     (this.container = $(t)),
                       this.container.data('moj-add-another-initialised') ||
                         (this.container.data('moj-add-another-initialised', !0),
-                        this.container.on(
-                          'click',
-                          '.moj-add-another__remove-button',
-                          $.proxy(this, 'onRemoveButtonClick'),
-                        ),
+                        this.container.on('click', '.moj-add-another__remove-button', $.proxy(this, 'onRemoveButtonClick')),
                         this.container.on('click', '.moj-add-another__add-button', $.proxy(this, 'onAddButtonClick')),
-                        this.container
-                          .find('.moj-add-another__add-button, moj-add-another__remove-button')
-                          .prop('type', 'button'));
+                        this.container.find('.moj-add-another__add-button, moj-add-another__remove-button').prop('type', 'button'));
                   },
                 };
                 return (
@@ -106,9 +97,7 @@ var DTFS_PORTAL;
                     var e = this.getNewItem();
                     this.updateAttributes(this.getItems().length, e), this.resetItem(e);
                     var n = this.getItems().first();
-                    this.hasRemoveButton(n) || this.createRemoveButton(n),
-                      this.getItems().last().after(e),
-                      e.find('input, textarea, select').first().focus();
+                    this.hasRemoveButton(n) || this.createRemoveButton(n), this.getItems().last().after(e), e.find('input, textarea, select').first().focus();
                   }),
                   (t.AddAnother.prototype.hasRemoveButton = function (t) {
                     return t.find('.moj-add-another__remove-button').length;
@@ -129,17 +118,11 @@ var DTFS_PORTAL;
                         (o.id = $(o)
                           .attr('data-id')
                           .replace(/%index%/, t)),
-                        ((
-                          $(o).siblings('label')[0] ||
-                          $(o).parents('label')[0] ||
-                          e.find('[for="' + r + '"]')[0]
-                        ).htmlFor = o.id);
+                        (($(o).siblings('label')[0] || $(o).parents('label')[0] || e.find('[for="' + r + '"]')[0]).htmlFor = o.id);
                     });
                   }),
                   (t.AddAnother.prototype.createRemoveButton = function (t) {
-                    t.append(
-                      '<button type="button" class="govuk-button govuk-button--secondary moj-add-another__remove-button">Remove</button>',
-                    );
+                    t.append('<button type="button" class="govuk-button govuk-button--secondary moj-add-another__remove-button">Remove</button>');
                   }),
                   (t.AddAnother.prototype.resetItem = function (t) {
                     t.find('[data-name], [data-id]').each(function (t, e) {
@@ -189,9 +172,7 @@ var DTFS_PORTAL;
                       this.menuButton.on('keydown', $.proxy(this, 'onMenuKeyDown'));
                   }),
                   (t.ButtonMenu.prototype.setupResponsiveChecks = function () {
-                    (this.mql = window.matchMedia(this.mq)),
-                      this.mql.addListener($.proxy(this, 'checkMode')),
-                      this.checkMode(this.mql);
+                    (this.mql = window.matchMedia(this.mq)), this.mql.addListener($.proxy(this, 'checkMode')), this.checkMode(this.mql);
                   }),
                   (t.ButtonMenu.prototype.checkMode = function (t) {
                     t.matches ? this.enableBigMode() : this.enableSmallMode();
@@ -212,10 +193,8 @@ var DTFS_PORTAL;
                   }),
                   (t.ButtonMenu.prototype.removeButtonClasses = function () {
                     this.menu.find('.moj-button-menu__item').each(function (t, e) {
-                      $(e).hasClass('govuk-button--secondary') &&
-                        ($(e).attr('data-secondary', 'true'), $(e).removeClass('govuk-button--secondary')),
-                        $(e).hasClass('govuk-button--warning') &&
-                          ($(e).attr('data-warning', 'true'), $(e).removeClass('govuk-button--warning')),
+                      $(e).hasClass('govuk-button--secondary') && ($(e).attr('data-secondary', 'true'), $(e).removeClass('govuk-button--secondary')),
+                        $(e).hasClass('govuk-button--warning') && ($(e).attr('data-warning', 'true'), $(e).removeClass('govuk-button--warning')),
                         $(e).removeClass('govuk-button');
                     });
                   }),
@@ -275,9 +254,7 @@ var DTFS_PORTAL;
                       this.options.startHidden && this.hideMenu();
                   }),
                   (t.FilterToggleButton.prototype.setupResponsiveChecks = function () {
-                    (this.mq = window.matchMedia(this.options.bigModeMediaQuery)),
-                      this.mq.addListener($.proxy(this, 'checkMode')),
-                      this.checkMode(this.mq);
+                    (this.mq = window.matchMedia(this.options.bigModeMediaQuery)), this.mq.addListener($.proxy(this, 'checkMode')), this.checkMode(this.mq);
                   }),
                   (t.FilterToggleButton.prototype.createToggleButton = function () {
                     (this.menuButton = $(
@@ -301,11 +278,7 @@ var DTFS_PORTAL;
                   }),
                   (t.FilterToggleButton.prototype.addCloseButton = function () {
                     this.options.closeButton &&
-                      ((this.closeButton = $(
-                        '<button class="moj-filter__close" type="button">' +
-                          this.options.closeButton.text +
-                          '</button>',
-                      )),
+                      ((this.closeButton = $('<button class="moj-filter__close" type="button">' + this.options.closeButton.text + '</button>')),
                       this.closeButton.on('click', $.proxy(this, 'onCloseClick')),
                       this.options.closeButton.container.append(this.closeButton));
                   }),
@@ -329,9 +302,7 @@ var DTFS_PORTAL;
                     this.toggle();
                   }),
                   (t.FilterToggleButton.prototype.toggle = function () {
-                    'false' == this.menuButton.attr('aria-expanded')
-                      ? (this.showMenu(), this.options.filter.container.focus())
-                      : this.hideMenu();
+                    'false' == this.menuButton.attr('aria-expanded') ? (this.showMenu(), this.options.filter.container.focus()) : this.hideMenu();
                   }),
                   (t.FormValidator = function (t, e) {
                     (this.form = t),
@@ -370,8 +341,7 @@ var DTFS_PORTAL;
                   }),
                   (t.FormValidator.prototype.getSummaryHtml = function () {
                     var t = '<h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>';
-                    (t += '<div class="govuk-error-summary__body">'),
-                      (t += '<ul class="govuk-list govuk-error-summary__list">');
+                    (t += '<div class="govuk-error-summary__body">'), (t += '<ul class="govuk-list govuk-error-summary__list">');
                     for (var e = 0, n = this.errors.length; e < n; e++) {
                       var o = this.errors[e];
                       (t += '<li>'),
@@ -389,8 +359,7 @@ var DTFS_PORTAL;
                     this.removeInlineErrors(),
                       this.hideSummary(),
                       this.resetTitle(),
-                      this.validate() ||
-                        (t.preventDefault(), this.updateTitle(), this.showSummary(), this.showInlineErrors());
+                      this.validate() || (t.preventDefault(), this.updateTitle(), this.showSummary(), this.showInlineErrors());
                   }),
                   (t.FormValidator.prototype.showInlineErrors = function () {
                     for (var t = 0, e = this.errors.length; t < e; t++) this.showInlineError(this.errors[t]);
@@ -406,18 +375,14 @@ var DTFS_PORTAL;
                     i.addClass('govuk-form-group--error'),
                       s.length
                         ? (s.after(o), i.attr('aria-invalid', 'true'), t.addAttributeValue(u[0], 'aria-describedby', n))
-                        : (a.after(o),
-                          r.attr('aria-invalid', 'true'),
-                          t.addAttributeValue(r[0], 'aria-describedby', n));
+                        : (a.after(o), r.attr('aria-invalid', 'true'), t.addAttributeValue(r[0], 'aria-describedby', n));
                   }),
                   (t.FormValidator.prototype.removeInlineErrors = function () {
                     for (var t = 0; t < this.errors.length; t++) this.removeInlineError(this.errors[t]);
                   }),
                   (t.FormValidator.prototype.removeInlineError = function (e) {
                     var n = $('#' + e.fieldName).parents('.govuk-form-group');
-                    n.find('.govuk-error-message').remove(),
-                      n.removeClass('govuk-form-group--error'),
-                      n.find('[aria-invalid]').attr('aria-invalid', 'false');
+                    n.find('.govuk-error-message').remove(), n.removeClass('govuk-form-group--error'), n.find('[aria-invalid]').attr('aria-invalid', 'false');
                     var o = e.fieldName + '-error';
                     t.removeAttributeValue(n.find('[aria-describedby]')[0], 'aria-describedby', o);
                   }),
@@ -463,11 +428,7 @@ var DTFS_PORTAL;
                         this.setupDropzone(),
                         this.setupLabel(),
                         this.setupStatusBox(),
-                        this.params.container.on(
-                          'click',
-                          '.moj-multi-file-upload__delete',
-                          $.proxy(this, 'onFileDeleteClick'),
-                        );
+                        this.params.container.on('click', '.moj-multi-file-upload__delete', $.proxy(this, 'onFileDeleteClick'));
                     }),
                     (t.MultiFileUpload.prototype.setupDropzone = function () {
                       this.fileInput.wrap('<div class="moj-multi-file-upload__dropzone" />'),
@@ -478,11 +439,7 @@ var DTFS_PORTAL;
                     }),
                     (t.MultiFileUpload.prototype.setupLabel = function () {
                       (this.label = $(
-                        '<label for="' +
-                          this.fileInput[0].id +
-                          '" class="govuk-button govuk-button--secondary">' +
-                          this.params.dropzoneButtonText +
-                          '</label>',
+                        '<label for="' + this.fileInput[0].id + '" class="govuk-button govuk-button--secondary">' + this.params.dropzoneButtonText + '</label>',
                       )),
                         this.dropzone.append('<p class="govuk-body">' + this.params.dropzoneHintText + '</p>'),
                         this.dropzone.append(this.label);
@@ -494,8 +451,7 @@ var DTFS_PORTAL;
                         this.fileInput.on('blur', $.proxy(this, 'onFileBlur'));
                     }),
                     (t.MultiFileUpload.prototype.setupStatusBox = function () {
-                      (this.status = $('<div aria-live="polite" role="status" class="govuk-visually-hidden" />')),
-                        this.dropzone.append(this.status);
+                      (this.status = $('<div aria-live="polite" role="status" class="govuk-visually-hidden" />')), this.dropzone.append(this.status);
                     }),
                     (t.MultiFileUpload.prototype.onDragOver = function (t) {
                       t.preventDefault(), this.dropzone.addClass('moj-multi-file-upload--dragover');
@@ -558,10 +514,7 @@ var DTFS_PORTAL;
                         '<button class="moj-multi-file-upload__delete govuk-button govuk-button--secondary govuk-!-margin-bottom-0" type="button" name="delete" value="' +
                         t.filename +
                         '">';
-                      return (
-                        (e += 'Delete <span class="govuk-visually-hidden">' + t.originalname + '</span>'),
-                        (e += '</button>')
-                      );
+                      return (e += 'Delete <span class="govuk-visually-hidden">' + t.originalname + '</span>'), (e += '</button>');
                     }),
                     (t.MultiFileUpload.prototype.uploadFile = function (t) {
                       this.params.uploadFileEntryHook(this, t);
@@ -577,10 +530,8 @@ var DTFS_PORTAL;
                           contentType: !1,
                           success: $.proxy(function (e) {
                             e.error
-                              ? (n.find('.moj-multi-file-upload__message').html(this.getErrorHtml(e.error)),
-                                this.status.html(e.error.message))
-                              : (n.find('.moj-multi-file-upload__message').html(this.getSuccessHtml(e.success)),
-                                this.status.html(e.success.messageText)),
+                              ? (n.find('.moj-multi-file-upload__message').html(this.getErrorHtml(e.error)), this.status.html(e.error.message))
+                              : (n.find('.moj-multi-file-upload__message').html(this.getSuccessHtml(e.success)), this.status.html(e.success.messageText)),
                               n.find('.moj-multi-file-upload__actions').append(this.getDeleteButtonHtml(e.file)),
                               this.params.uploadFileExitHook(this, t, e);
                           }, this),
@@ -595,8 +546,7 @@ var DTFS_PORTAL;
                                 function (t) {
                                   if (t.lengthComputable) {
                                     var e = t.loaded / t.total;
-                                    (e = parseInt(100 * e, 10)),
-                                      n.find('.moj-multi-file-upload__progress').text(' ' + e + '%');
+                                    (e = parseInt(100 * e, 10)), n.find('.moj-multi-file-upload__progress').text(' ' + e + '%');
                                   }
                                 },
                                 !1,
@@ -619,8 +569,7 @@ var DTFS_PORTAL;
                           success: $.proxy(function (t) {
                             t.error ||
                               (e.parents('.moj-multi-file-upload__row').remove(),
-                              0 === this.feedbackContainer.find('.moj-multi-file-upload__row').length &&
-                                this.feedbackContainer.addClass('moj-hidden')),
+                              0 === this.feedbackContainer.find('.moj-multi-file-upload__row').length && this.feedbackContainer.addClass('moj-hidden')),
                               this.params.fileDeleteHook(this, t);
                           }, this),
                         });
@@ -642,17 +591,14 @@ var DTFS_PORTAL;
                     return (
                       (t += '<div class="govuk-checkboxes__item govuk-checkboxes--small moj-multi-select__checkbox">'),
                       (t += '  <input type="checkbox" class="govuk-checkboxes__input" id="checkboxes-all">'),
-                      (t +=
-                        '  <label class="govuk-label govuk-checkboxes__label moj-multi-select__toggle-label" for="checkboxes-all">'),
+                      (t += '  <label class="govuk-label govuk-checkboxes__label moj-multi-select__toggle-label" for="checkboxes-all">'),
                       (t += '    <span class="govuk-visually-hidden">Select all</span>'),
                       (t += '  </label>'),
                       (t += '</div>')
                     );
                   }),
                   (t.MultiSelect.prototype.onButtonClick = function (t) {
-                    this.checked
-                      ? (this.uncheckAll(), (this.toggleButton[0].checked = !1))
-                      : (this.checkAll(), (this.toggleButton[0].checked = !0));
+                    this.checked ? (this.uncheckAll(), (this.toggleButton[0].checked = !1)) : (this.checkAll(), (this.toggleButton[0].checked = !0));
                   }),
                   (t.MultiSelect.prototype.checkAll = function () {
                     this.checkboxes.each(
@@ -672,8 +618,7 @@ var DTFS_PORTAL;
                   }),
                   (t.MultiSelect.prototype.onCheckboxClick = function (t) {
                     t.target.checked
-                      ? this.checkboxes.filter(':checked').length === this.checkboxes.length &&
-                        ((this.toggleButton[0].checked = !0), (this.checked = !0))
+                      ? this.checkboxes.filter(':checked').length === this.checkboxes.length && ((this.toggleButton[0].checked = !0), (this.checked = !0))
                       : ((this.toggleButton[0].checked = !1), (this.checked = !1));
                   }),
                   (t.PasswordReveal = function (t) {
@@ -695,10 +640,8 @@ var DTFS_PORTAL;
                   }),
                   (t.PasswordReveal.prototype.onButtonClick = function () {
                     'password' === this.el.type
-                      ? ((this.el.type = 'text'),
-                        this.button.html('Hide <span class="govuk-visually-hidden">password</span>'))
-                      : ((this.el.type = 'password'),
-                        this.button.html('Show <span class="govuk-visually-hidden">password</span>'));
+                      ? ((this.el.type = 'text'), this.button.html('Hide <span class="govuk-visually-hidden">password</span>'))
+                      : ((this.el.type = 'password'), this.button.html('Show <span class="govuk-visually-hidden">password</span>'));
                   }),
                   'contentEditable' in document.documentElement &&
                     ((t.RichTextEditor = function (t) {
@@ -718,14 +661,8 @@ var DTFS_PORTAL;
                           this.hideDefault(),
                           this.configureToolbar(),
                           (this.keys = { left: 37, right: 39, up: 38, down: 40 }),
-                          this.container.on(
-                            'click',
-                            '.moj-rich-text-editor__toolbar-button',
-                            $.proxy(this, 'onButtonClick'),
-                          ),
-                          this.container
-                            .find('.moj-rich-text-editor__content')
-                            .on('input', $.proxy(this, 'onEditorInput')),
+                          this.container.on('click', '.moj-rich-text-editor__toolbar-button', $.proxy(this, 'onButtonClick')),
+                          this.container.find('.moj-rich-text-editor__content').on('input', $.proxy(this, 'onEditorInput')),
                           this.container.find('label').on('click', $.proxy(this, 'onLabelClick')),
                           this.toolbar.on('keydown', $.proxy(this, 'onToolbarKeydown')));
                     }),
@@ -767,8 +704,7 @@ var DTFS_PORTAL;
                     }),
                     (t.RichTextEditor.prototype.getEnhancedHtml = function (t) {
                       return (
-                        this.getToolbarHtml() +
-                        '<div class="govuk-textarea moj-rich-text-editor__content" contenteditable="true" spellcheck="false"></div>'
+                        this.getToolbarHtml() + '<div class="govuk-textarea moj-rich-text-editor__content" contenteditable="true" spellcheck="false"></div>'
                       );
                     }),
                     (t.RichTextEditor.prototype.hideDefault = function () {
@@ -806,8 +742,7 @@ var DTFS_PORTAL;
                       t.preventDefault(), this.container.find('.moj-rich-text-editor__content').focus();
                     })),
                   (t.SearchToggle = function (t) {
-                    if (((this.options = t), this.options.search.container.data('moj-search-toggle-initialised')))
-                      return;
+                    if (((this.options = t), this.options.search.container.data('moj-search-toggle-initialised'))) return;
                     this.options.search.container.data('moj-search-toggle-initialised', !0);
                     const e =
                       '<svg viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="moj-search-toggle__button__icon"><path d="M7.433,12.5790048 C6.06762625,12.5808611 4.75763941,12.0392925 3.79217348,11.0738265 C2.82670755,10.1083606 2.28513891,8.79837375 2.28699522,7.433 C2.28513891,6.06762625 2.82670755,4.75763941 3.79217348,3.79217348 C4.75763941,2.82670755 6.06762625,2.28513891 7.433,2.28699522 C8.79837375,2.28513891 10.1083606,2.82670755 11.0738265,3.79217348 C12.0392925,4.75763941 12.5808611,6.06762625 12.5790048,7.433 C12.5808611,8.79837375 12.0392925,10.1083606 11.0738265,11.0738265 C10.1083606,12.0392925 8.79837375,12.5808611 7.433,12.5790048 L7.433,12.5790048 Z M14.293,12.579 L13.391,12.579 L13.071,12.269 C14.2300759,10.9245158 14.8671539,9.20813198 14.866,7.433 C14.866,3.32786745 11.5381325,-1.65045755e-15 7.433,-1.65045755e-15 C3.32786745,-1.65045755e-15 -1.65045755e-15,3.32786745 -1.65045755e-15,7.433 C-1.65045755e-15,11.5381325 3.32786745,14.866 7.433,14.866 C9.208604,14.8671159 10.9253982,14.2296624 12.27,13.07 L12.579,13.39 L12.579,14.294 L18.296,20 L20,18.296 L14.294,12.579 L14.293,12.579 Z"></path></svg>';
@@ -825,8 +760,7 @@ var DTFS_PORTAL;
                       ? (this.toggleButton.attr('aria-expanded', 'true'),
                         this.options.search.container.removeClass('moj-js-hidden'),
                         this.options.search.container.find('input').first().focus())
-                      : (this.options.search.container.addClass('moj-js-hidden'),
-                        this.toggleButton.attr('aria-expanded', 'false'));
+                      : (this.options.search.container.addClass('moj-js-hidden'), this.toggleButton.attr('aria-expanded', 'false'));
                   }),
                   (t.SortableTable = function (t) {
                     (this.table = $(t.table)),
@@ -846,8 +780,7 @@ var DTFS_PORTAL;
                       (this.descendingText = t.descendingText || 'descending');
                   }),
                   (t.SortableTable.prototype.createHeadingButtons = function () {
-                    for (var t, e = this.table.find('thead th'), n = 0; n < e.length; n++)
-                      (t = $(e[n])).attr('aria-sort') && this.createHeadingButton(t, n);
+                    for (var t, e = this.table.find('thead th'), n = 0; n < e.length; n++) (t = $(e[n])).attr('aria-sort') && this.createHeadingButton(t, n);
                   }),
                   (t.SortableTable.prototype.createHeadingButton = function (t, e) {
                     var n = t.text(),
@@ -855,9 +788,7 @@ var DTFS_PORTAL;
                     t.text(''), t.append(o);
                   }),
                   (t.SortableTable.prototype.createStatusBox = function () {
-                    (this.status = $(
-                      '<div aria-live="polite" role="status" aria-atomic="true" class="govuk-visually-hidden" />',
-                    )),
+                    (this.status = $('<div aria-live="polite" role="status" aria-atomic="true" class="govuk-visually-hidden" />')),
                       this.table.parent().append(this.status);
                   }),
                   (t.SortableTable.prototype.initialiseSortedColumn = function () {
@@ -885,8 +816,7 @@ var DTFS_PORTAL;
                   (t.SortableTable.prototype.updateButtonState = function (t, e) {
                     t.parent().attr('aria-sort', e);
                     var n = this.statusMessage;
-                    (n = (n = n.replace(/%heading%/, t.text())).replace(/%direction%/, this[e + 'Text'])),
-                      this.status.text(n);
+                    (n = (n = n.replace(/%heading%/, t.text())).replace(/%direction%/, this[e + 'Text'])), this.status.text(n);
                   }),
                   (t.SortableTable.prototype.removeButtonStates = function () {
                     this.table.find('thead th').attr('aria-sort', 'none');
@@ -963,16 +893,11 @@ var DTFS_PORTAL;
             var o,
               r,
               i = (n = n || b).createElement('script');
-            if (((i.text = t), e))
-              for (o in x) (r = e[o] || (e.getAttribute && e.getAttribute(o))) && i.setAttribute(o, r);
+            if (((i.text = t), e)) for (o in x) (r = e[o] || (e.getAttribute && e.getAttribute(o))) && i.setAttribute(o, r);
             n.head.appendChild(i).parentNode.removeChild(i);
           }
           function k(t) {
-            return null == t
-              ? t + ''
-              : 'object' == typeof t || 'function' == typeof t
-              ? d[p.call(t)] || 'object'
-              : typeof t;
+            return null == t ? t + '' : 'object' == typeof t || 'function' == typeof t ? d[p.call(t)] || 'object' : typeof t;
           }
           var T = '3.7.1',
             C = /HTML$/i,
@@ -1060,9 +985,7 @@ var DTFS_PORTAL;
                   u = arguments.length,
                   l = !1;
                 for (
-                  'boolean' == typeof a && ((l = a), (a = arguments[s] || {}), s++),
-                    'object' == typeof a || v(a) || (a = {}),
-                    s === u && ((a = this), s--);
+                  'boolean' == typeof a && ((l = a), (a = arguments[s] || {}), s++), 'object' == typeof a || v(a) || (a = {}), s === u && ((a = this), s--);
                   s < u;
                   s++
                 )
@@ -1072,10 +995,7 @@ var DTFS_PORTAL;
                         '__proto__' !== e &&
                           a !== o &&
                           (l && o && (j.isPlainObject(o) || (r = Array.isArray(o)))
-                            ? ((n = a[e]),
-                              (i = r && !Array.isArray(n) ? [] : r || j.isPlainObject(n) ? n : {}),
-                              (r = !1),
-                              (a[e] = j.extend(l, i, o)))
+                            ? ((n = a[e]), (i = r && !Array.isArray(n) ? [] : r || j.isPlainObject(n) ? n : {}), (r = !1), (a[e] = j.extend(l, i, o)))
                             : void 0 !== o && (a[e] = o));
                 return a;
               }),
@@ -1090,8 +1010,7 @@ var DTFS_PORTAL;
                 var e, n;
                 return (
                   !(!t || '[object Object]' !== p.call(t)) &&
-                  (!(e = a(t)) ||
-                    ('function' == typeof (n = f.call(e, 'constructor') && e.constructor) && h.call(n) === m))
+                  (!(e = a(t)) || ('function' == typeof (n = f.call(e, 'constructor') && e.constructor) && h.call(n) === m))
                 );
               },
               isEmptyObject: function (t) {
@@ -1115,13 +1034,7 @@ var DTFS_PORTAL;
                   o = 0,
                   r = t.nodeType;
                 if (!r) for (; (e = t[o++]); ) n += j.text(e);
-                return 1 === r || 11 === r
-                  ? t.textContent
-                  : 9 === r
-                  ? t.documentElement.textContent
-                  : 3 === r || 4 === r
-                  ? t.nodeValue
-                  : n;
+                return 1 === r || 11 === r ? t.textContent : 9 === r ? t.documentElement.textContent : 3 === r || 4 === r ? t.nodeValue : n;
               },
               makeArray: function (t, e) {
                 var n = e || [];
@@ -1166,22 +1079,11 @@ var DTFS_PORTAL;
             M = new RegExp('^' + D + '+|((?:^|[^\\\\])(?:\\\\.)*)' + D + '+$', 'g');
           j.contains = function (t, e) {
             var n = e && e.parentNode;
-            return (
-              t === n ||
-              !(
-                !n ||
-                1 !== n.nodeType ||
-                !(t.contains ? t.contains(n) : t.compareDocumentPosition && 16 & t.compareDocumentPosition(n))
-              )
-            );
+            return t === n || !(!n || 1 !== n.nodeType || !(t.contains ? t.contains(n) : t.compareDocumentPosition && 16 & t.compareDocumentPosition(n)));
           };
           var $ = /([\0-\x1f\x7f]|^-?\d)|^-$|[^\x80-\uFFFF\w-]/g;
           function F(t, e) {
-            return e
-              ? '\0' === t
-                ? '�'
-                : t.slice(0, -1) + '\\' + t.charCodeAt(t.length - 1).toString(16) + ' '
-              : '\\' + t;
+            return e ? ('\0' === t ? '�' : t.slice(0, -1) + '\\' + t.charCodeAt(t.length - 1).toString(16) + ' ') : '\\' + t;
           }
           j.escapeSelector = function (t) {
             return (t + '').replace($, F);
@@ -1210,29 +1112,11 @@ var DTFS_PORTAL;
               C = function (t, e) {
                 return t === e && (a = !0), 0;
               },
-              S =
-                'checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped',
+              S = 'checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped',
               $ = '(?:\\\\[\\da-fA-F]{1,6}' + D + '?|\\\\[^\\r\\n\\f]|[\\w-]|[^\0-\\x7f])+',
               F =
-                '\\[' +
-                D +
-                '*(' +
-                $ +
-                ')(?:' +
-                D +
-                '*([*^$|!~]?=)' +
-                D +
-                '*(?:\'((?:\\\\.|[^\\\\\'])*)\'|"((?:\\\\.|[^\\\\"])*)"|(' +
-                $ +
-                '))|)' +
-                D +
-                '*\\]',
-              H =
-                ':(' +
-                $ +
-                ')(?:\\(((\'((?:\\\\.|[^\\\\\'])*)\'|"((?:\\\\.|[^\\\\"])*)")|((?:\\\\.|[^\\\\()[\\]]|' +
-                F +
-                ')*)|.*)\\)|)',
+                '\\[' + D + '*(' + $ + ')(?:' + D + '*([*^$|!~]?=)' + D + '*(?:\'((?:\\\\.|[^\\\\\'])*)\'|"((?:\\\\.|[^\\\\"])*)"|(' + $ + '))|)' + D + '*\\]',
+              H = ':(' + $ + ')(?:\\(((\'((?:\\\\.|[^\\\\\'])*)\'|"((?:\\\\.|[^\\\\"])*)")|((?:\\\\.|[^\\\\()[\\]]|' + F + ')*)|.*)\\)|)',
               q = new RegExp(D + '+', 'g'),
               R = new RegExp('^' + D + '*,' + D + '*'),
               O = new RegExp('^' + D + '*([>+~]|' + D + ')' + D + '*'),
@@ -1258,16 +1142,7 @@ var DTFS_PORTAL;
                   'i',
                 ),
                 bool: new RegExp('^(?:' + S + ')$', 'i'),
-                needsContext: new RegExp(
-                  '^' +
-                    D +
-                    '*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\(' +
-                    D +
-                    '*((?:-\\d)?\\d*)' +
-                    D +
-                    '*\\)|)(?=[^-]|$)',
-                  'i',
-                ),
+                needsContext: new RegExp('^' + D + '*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\(' + D + '*((?:-\\d)?\\d*)' + D + '*\\)|)(?=[^-]|$)', 'i'),
               },
               z = /^(?:input|select|textarea|button)$/i,
               V = /^h\d$/i,
@@ -1276,10 +1151,7 @@ var DTFS_PORTAL;
               K = new RegExp('\\\\[\\da-fA-F]{1,6}' + D + '?|\\\\([^\\r\\n\\f])', 'g'),
               Y = function (t, e) {
                 var n = '0x' + t.slice(1) - 65536;
-                return (
-                  e ||
-                  (n < 0 ? String.fromCharCode(n + 65536) : String.fromCharCode((n >> 10) | 55296, (1023 & n) | 56320))
-                );
+                return e || (n < 0 ? String.fromCharCode(n + 65536) : String.fromCharCode((n >> 10) | 55296, (1023 & n) | 56320));
               },
               Q = function () {
                 ut();
@@ -1409,15 +1281,9 @@ var DTFS_PORTAL;
                 ? ((l = (u = o).documentElement),
                   (d = !j.isXMLDoc(u)),
                   (h = l.matches || l.webkitMatchesSelector || l.msMatchesSelector),
-                  l.msMatchesSelector &&
-                    L != u &&
-                    (n = u.defaultView) &&
-                    n.top !== n &&
-                    n.addEventListener('unload', Q),
+                  l.msMatchesSelector && L != u && (n = u.defaultView) && n.top !== n && n.addEventListener('unload', Q),
                   (g.getById = nt(function (t) {
-                    return (
-                      (l.appendChild(t).id = j.expando), !u.getElementsByName || !u.getElementsByName(j.expando).length
-                    );
+                    return (l.appendChild(t).id = j.expando), !u.getElementsByName || !u.getElementsByName(j.expando).length;
                   })),
                   (g.disconnectedMatch = nt(function (t) {
                     return h.call(t, '*');
@@ -1460,8 +1326,7 @@ var DTFS_PORTAL;
                             i = e.getElementById(t);
                           if (i) {
                             if ((n = i.getAttributeNode('id')) && n.value === t) return [i];
-                            for (r = e.getElementsByName(t), o = 0; (i = r[o++]); )
-                              if ((n = i.getAttributeNode('id')) && n.value === t) return [i];
+                            for (r = e.getElementsByName(t), o = 0; (i = r[o++]); ) if ((n = i.getAttributeNode('id')) && n.value === t) return [i];
                           }
                           return [];
                         }
@@ -1491,8 +1356,7 @@ var DTFS_PORTAL;
                       2 !== t.querySelectorAll(':disabled').length && p.push(':enabled', ':disabled'),
                       (e = u.createElement('input')).setAttribute('name', ''),
                       t.appendChild(e),
-                      t.querySelectorAll("[name='']").length ||
-                        p.push('\\[' + D + '*name' + D + '*=' + D + '*(?:\'\'|"")');
+                      t.querySelectorAll("[name='']").length || p.push('\\[' + D + '*name' + D + '*=' + D + '*(?:\'\'|"")');
                   }),
                   g.cssHas || p.push(':has'),
                   (p = p.length && new RegExp(p.join('|'))),
@@ -1622,11 +1486,7 @@ var DTFS_PORTAL;
                       e ||
                       ((e = new RegExp('(^|' + D + ')' + t + '(' + D + '|$)')) &&
                         x(t, function (t) {
-                          return e.test(
-                            ('string' == typeof t.className && t.className) ||
-                              (void 0 !== t.getAttribute && t.getAttribute('class')) ||
-                              '',
-                          );
+                          return e.test(('string' == typeof t.className && t.className) || (void 0 !== t.getAttribute && t.getAttribute('class')) || '');
                         }))
                     );
                   },
@@ -1681,8 +1541,7 @@ var DTFS_PORTAL;
                             }
                             if (((f = [a ? m.firstChild : m.lastChild]), a && b)) {
                               for (
-                                x = (p = (l = (c = m[v] || (m[v] = {}))[t] || [])[0] === y && l[1]) && l[2],
-                                  d = p && m.childNodes[p];
+                                x = (p = (l = (c = m[v] || (m[v] = {}))[t] || [])[0] === y && l[1]) && l[2], d = p && m.childNodes[p];
                                 (d = (++p && d && d[h]) || (x = p = 0) || f.pop());
 
                               )
@@ -1690,15 +1549,11 @@ var DTFS_PORTAL;
                                   c[t] = [y, p, x];
                                   break;
                                 }
-                            } else if (
-                              (b && (x = p = (l = (c = e[v] || (e[v] = {}))[t] || [])[0] === y && l[1]), !1 === x)
-                            )
+                            } else if ((b && (x = p = (l = (c = e[v] || (e[v] = {}))[t] || [])[0] === y && l[1]), !1 === x))
                               for (
                                 ;
                                 (d = (++p && d && d[h]) || (x = p = 0) || f.pop()) &&
-                                (!(s ? A(d, g) : 1 === d.nodeType) ||
-                                  !++x ||
-                                  (b && ((c = d[v] || (d[v] = {}))[t] = [y, x]), d !== e));
+                                (!(s ? A(d, g) : 1 === d.nodeType) || !++x || (b && ((c = d[v] || (d[v] = {}))[t] = [y, x]), d !== e));
 
                               );
                             return (x -= r) === o || (x % o == 0 && x / o >= 0);
@@ -1807,11 +1662,7 @@ var DTFS_PORTAL;
                   },
                   text: function (t) {
                     var e;
-                    return (
-                      A(t, 'input') &&
-                      'text' === t.type &&
-                      (null == (e = t.getAttribute('type')) || 'text' === e.toLowerCase())
-                    );
+                    return A(t, 'input') && 'text' === t.type && (null == (e = t.getAttribute('type')) || 'text' === e.toLowerCase());
                   },
                   first: at(function () {
                     return [0];
@@ -1859,12 +1710,9 @@ var DTFS_PORTAL;
               for (s = t, u = [], l = e.preFilter; s; ) {
                 for (a in ((o && !(r = R.exec(s))) || (r && (s = s.slice(r[0].length) || s), u.push((i = []))),
                 (o = !1),
-                (r = O.exec(s)) &&
-                  ((o = r.shift()), i.push({ value: o, type: r[0].replace(M, ' ') }), (s = s.slice(o.length))),
+                (r = O.exec(s)) && ((o = r.shift()), i.push({ value: o, type: r[0].replace(M, ' ') }), (s = s.slice(o.length))),
                 e.filter))
-                  !(r = U[a].exec(s)) ||
-                    (l[a] && !(r = l[a](r))) ||
-                    ((o = r.shift()), i.push({ value: o, type: a, matches: r }), (s = s.slice(o.length)));
+                  !(r = U[a].exec(s)) || (l[a] && !(r = l[a](r))) || ((o = r.shift()), i.push({ value: o, type: a, matches: r }), (s = s.slice(o.length)));
                 if (!o) break;
               }
               return n ? s.length : s ? Z.error(t) : w(t, u).slice(0);
@@ -1910,8 +1758,7 @@ var DTFS_PORTAL;
                 : t[0];
             }
             function ht(t, e, n, o, r) {
-              for (var i, a = [], s = 0, u = t.length, l = null != e; s < u; s++)
-                (i = t[s]) && ((n && !n(i, o, r)) || (a.push(i), l && e.push(s)));
+              for (var i, a = [], s = 0, u = t.length, l = null != e; s < u; s++) (i = t[s]) && ((n && !n(i, o, r)) || (a.push(i), l && e.push(s)));
               return a;
             }
             function mt(t, e, n, o, r, i) {
@@ -1941,8 +1788,7 @@ var DTFS_PORTAL;
                         for (l = [], d = f.length; d--; ) (p = f[d]) && l.push((b[d] = p));
                         r(null, (f = []), l, u);
                       }
-                      for (d = f.length; d--; )
-                        (p = f[d]) && (l = r ? c.call(i, p) : h[d]) > -1 && (i[l] = !(a[l] = p));
+                      for (d = f.length; d--; ) (p = f[d]) && (l = r ? c.call(i, p) : h[d]) > -1 && (i[l] = !(a[l] = p));
                     }
                   } else (f = ht(f === a ? f.splice(v, f.length) : f)), r ? r(null, a, f, u) : m.apply(a, f);
                 })
@@ -1986,8 +1832,7 @@ var DTFS_PORTAL;
                     for (i = ++l; i < a && !e.relative[t[i].type]; i++);
                     return mt(
                       l > 1 && ft(f),
-                      l > 1 &&
-                        dt(t.slice(0, l - 1).concat({ value: ' ' === t[l - 2].type ? '*' : '' })).replace(M, '$1'),
+                      l > 1 && dt(t.slice(0, l - 1).concat({ value: ' ' === t[l - 2].type ? '*' : '' })).replace(M, '$1'),
                       r,
                       l < i && gt(t.slice(l, i)),
                       i < a && gt((t = t.slice(i))),
@@ -2059,21 +1904,12 @@ var DTFS_PORTAL;
                 c = 'function' == typeof t && t,
                 p = !r && ct((t = c.selector || t));
               if (((o = o || []), 1 === p.length)) {
-                if (
-                  (a = p[0] = p[0].slice(0)).length > 2 &&
-                  'ID' === (s = a[0]).type &&
-                  9 === n.nodeType &&
-                  d &&
-                  e.relative[a[1].type]
-                ) {
+                if ((a = p[0] = p[0].slice(0)).length > 2 && 'ID' === (s = a[0]).type && 9 === n.nodeType && d && e.relative[a[1].type]) {
                   if (!(n = (e.find.ID(s.matches[0].replace(K, Y), n) || [])[0])) return o;
                   c && (n = n.parentNode), (t = t.slice(a.shift().value.length));
                 }
                 for (i = U.needsContext.test(t) ? 0 : a.length; i-- && ((s = a[i]), !e.relative[(u = s.type)]); )
-                  if (
-                    (l = e.find[u]) &&
-                    (r = l(s.matches[0].replace(K, Y), (G.test(a[0].type) && st(n.parentNode)) || n))
-                  ) {
+                  if ((l = e.find[u]) && (r = l(s.matches[0].replace(K, Y), (G.test(a[0].type) && st(n.parentNode)) || n))) {
                     if ((a.splice(i, 1), !(t = r.length && dt(a)))) return m.apply(o, r), o;
                     break;
                   }
@@ -2177,10 +2013,7 @@ var DTFS_PORTAL;
             var o, r;
             if (!t) return this;
             if (((n = n || I), 'string' == typeof t)) {
-              if (
-                !(o = '<' === t[0] && '>' === t[t.length - 1] && t.length >= 3 ? [null, t, null] : W.exec(t)) ||
-                (!o[1] && e)
-              )
+              if (!(o = '<' === t[0] && '>' === t[t.length - 1] && t.length >= 3 ? [null, t, null] : W.exec(t)) || (!o[1] && e))
                 return !e || e.jquery ? (e || n).find(t) : this.constructor(e).find(t);
               if (o[1]) {
                 if (
@@ -2193,13 +2026,7 @@ var DTFS_PORTAL;
               }
               return (r = b.getElementById(o[2])) && ((this[0] = r), (this.length = 1)), this;
             }
-            return t.nodeType
-              ? ((this[0] = t), (this.length = 1), this)
-              : v(t)
-              ? void 0 !== n.ready
-                ? n.ready(t)
-                : t(j)
-              : j.makeArray(t, this);
+            return t.nodeType ? ((this[0] = t), (this.length = 1), this) : v(t) ? (void 0 !== n.ready ? n.ready(t) : t(j)) : j.makeArray(t, this);
           }).prototype = j.fn),
             (I = j(b));
           var U = /^(?:parents|prev(?:Until|All))/,
@@ -2311,11 +2138,7 @@ var DTFS_PORTAL;
           function Y(t, e, n, o) {
             var r;
             try {
-              t && v((r = t.promise))
-                ? r.call(t).done(e).fail(n)
-                : t && v((r = t.then))
-                ? r.call(t, e, n)
-                : e.apply(void 0, [t].slice(o));
+              t && v((r = t.promise)) ? r.call(t).done(e).fail(n) : t && v((r = t.then)) ? r.call(t, e, n) : e.apply(void 0, [t].slice(o));
             } catch (t) {
               n.apply(void 0, [t]);
             }
@@ -2342,8 +2165,7 @@ var DTFS_PORTAL;
               s = -1,
               u = function () {
                 for (r = r || t.once, o = e = !0; a.length; s = -1)
-                  for (n = a.shift(); ++s < i.length; )
-                    !1 === i[s].apply(n[0], n[1]) && t.stopOnFalse && ((s = i.length), (n = !1));
+                  for (n = a.shift(); ++s < i.length; ) !1 === i[s].apply(n[0], n[1]) && t.stopOnFalse && ((s = i.length), (n = !1));
                 t.memory || (n = !1), (e = !1), r && (i = n ? [] : '');
               },
               l = {
@@ -2424,9 +2246,7 @@ var DTFS_PORTAL;
                             var r = v(t[o[4]]) && t[o[4]];
                             i[o[1]](function () {
                               var t = r && r.apply(this, arguments);
-                              t && v(t.promise)
-                                ? t.promise().progress(n.notify).done(n.resolve).fail(n.reject)
-                                : n[o[0] + 'With'](this, r ? [t] : arguments);
+                              t && v(t.promise) ? t.promise().progress(n.notify).done(n.resolve).fail(n.reject) : n[o[0] + 'With'](this, r ? [t] : arguments);
                             });
                           }),
                             (t = null);
@@ -2442,8 +2262,7 @@ var DTFS_PORTAL;
                             l = function () {
                               var o, l;
                               if (!(t < i)) {
-                                if ((o = n.apply(s, u)) === e.promise())
-                                  throw new TypeError('Thenable self-resolution');
+                                if ((o = n.apply(s, u)) === e.promise()) throw new TypeError('Thenable self-resolution');
                                 (l = o && ('object' == typeof o || 'function' == typeof o) && o.then),
                                   v(l)
                                     ? r
@@ -2472,9 +2291,7 @@ var DTFS_PORTAL;
                       }
                       return j
                         .Deferred(function (o) {
-                          e[0][3].add(a(0, o, v(r) ? r : G, o.notifyWith)),
-                            e[1][3].add(a(0, o, v(t) ? t : G)),
-                            e[2][3].add(a(0, o, v(n) ? n : K));
+                          e[0][3].add(a(0, o, v(r) ? r : G, o.notifyWith)), e[1][3].add(a(0, o, v(t) ? t : G)), e[2][3].add(a(0, o, v(n) ? n : K));
                         })
                         .promise();
                     },
@@ -2520,22 +2337,14 @@ var DTFS_PORTAL;
                       (o[t] = this), (r[t] = arguments.length > 1 ? s.call(arguments) : n), --e || i.resolveWith(o, r);
                     };
                   };
-                if (
-                  e <= 1 &&
-                  (Y(t, i.done(a(n)).resolve, i.reject, !e), 'pending' === i.state() || v(r[n] && r[n].then))
-                )
-                  return i.then();
+                if (e <= 1 && (Y(t, i.done(a(n)).resolve, i.reject, !e), 'pending' === i.state() || v(r[n] && r[n].then))) return i.then();
                 for (; n--; ) Y(r[n], a(n), i.reject);
                 return i.promise();
               },
             });
           var Q = /^(Eval|Internal|Range|Reference|Syntax|Type|URI)Error$/;
           (j.Deferred.exceptionHook = function (t, e) {
-            o.console &&
-              o.console.warn &&
-              t &&
-              Q.test(t.name) &&
-              o.console.warn('jQuery.Deferred exception: ' + t.message, t.stack, e);
+            o.console && o.console.warn && t && Q.test(t.name) && o.console.warn('jQuery.Deferred exception: ' + t.message, t.stack, e);
           }),
             (j.readyException = function (t) {
               o.setTimeout(function () {
@@ -2558,8 +2367,7 @@ var DTFS_PORTAL;
               isReady: !1,
               readyWait: 1,
               ready: function (t) {
-                (!0 === t ? --j.readyWait : j.isReady) ||
-                  ((j.isReady = !0), (!0 !== t && --j.readyWait > 0) || J.resolveWith(b, [j]));
+                (!0 === t ? --j.readyWait : j.isReady) || ((j.isReady = !0), (!0 !== t && --j.readyWait > 0) || J.resolveWith(b, [j]));
               },
             }),
             (j.ready.then = J.then),
@@ -2606,13 +2414,7 @@ var DTFS_PORTAL;
               cache: function (t) {
                 var e = t[this.expando];
                 return (
-                  e ||
-                    ((e = {}),
-                    it(t) &&
-                      (t.nodeType
-                        ? (t[this.expando] = e)
-                        : Object.defineProperty(t, this.expando, { value: e, configurable: !0 }))),
-                  e
+                  e || ((e = {}), it(t) && (t.nodeType ? (t[this.expando] = e) : Object.defineProperty(t, this.expando, { value: e, configurable: !0 }))), e
                 );
               },
               set: function (t, e, n) {
@@ -2626,9 +2428,7 @@ var DTFS_PORTAL;
                 return void 0 === e ? this.cache(t) : t[this.expando] && t[this.expando][rt(e)];
               },
               access: function (t, e, n) {
-                return void 0 === e || (e && 'string' == typeof e && void 0 === n)
-                  ? this.get(t, e)
-                  : (this.set(t, e, n), void 0 !== n ? n : e);
+                return void 0 === e || (e && 'string' == typeof e && void 0 === n) ? this.get(t, e) : (this.set(t, e, n), void 0 !== n ? n : e);
               },
               remove: function (t, e) {
                 var n,
@@ -2638,8 +2438,7 @@ var DTFS_PORTAL;
                     n = (e = Array.isArray(e) ? e.map(rt) : (e = rt(e)) in o ? [e] : e.match(X) || []).length;
                     for (; n--; ) delete o[e[n]];
                   }
-                  (void 0 === e || j.isEmptyObject(o)) &&
-                    (t.nodeType ? (t[this.expando] = void 0) : delete t[this.expando]);
+                  (void 0 === e || j.isEmptyObject(o)) && (t.nodeType ? (t[this.expando] = void 0) : delete t[this.expando]);
                 }
               },
               hasData: function (t) {
@@ -2657,10 +2456,7 @@ var DTFS_PORTAL;
               if (((o = 'data-' + e.replace(ct, '-$&').toLowerCase()), 'string' == typeof (n = t.getAttribute(o)))) {
                 try {
                   n = (function (t) {
-                    return (
-                      'true' === t ||
-                      ('false' !== t && ('null' === t ? null : t === +t + '' ? +t : lt.test(t) ? JSON.parse(t) : t))
-                    );
+                    return 'true' === t || ('false' !== t && ('null' === t ? null : t === +t + '' ? +t : lt.test(t) ? JSON.parse(t) : t));
                   })(n);
                 } catch (t) {}
                 ut.set(t, e, n);
@@ -2693,8 +2489,7 @@ var DTFS_PORTAL;
                   a = i && i.attributes;
                 if (void 0 === t) {
                   if (this.length && ((r = ut.get(i)), 1 === i.nodeType && !st.get(i, 'hasDataAttrs'))) {
-                    for (n = a.length; n--; )
-                      a[n] && 0 === (o = a[n].name).indexOf('data-') && ((o = rt(o.slice(5))), dt(i, o, r[o]));
+                    for (n = a.length; n--; ) a[n] && 0 === (o = a[n].name).indexOf('data-') && ((o = rt(o.slice(5))), dt(i, o, r[o]));
                     st.set(i, 'hasDataAttrs', !0);
                   }
                   return r;
@@ -2707,8 +2502,7 @@ var DTFS_PORTAL;
                       this,
                       function (e) {
                         var n;
-                        if (i && void 0 === e)
-                          return void 0 !== (n = ut.get(i, t)) || void 0 !== (n = dt(i, t)) ? n : void 0;
+                        if (i && void 0 === e) return void 0 !== (n = ut.get(i, t)) || void 0 !== (n = dt(i, t)) ? n : void 0;
                         this.each(function () {
                           ut.set(this, t, e);
                         });
@@ -2731,10 +2525,7 @@ var DTFS_PORTAL;
                 var o;
                 if (t)
                   return (
-                    (e = (e || 'fx') + 'queue'),
-                    (o = st.get(t, e)),
-                    n && (!o || Array.isArray(n) ? (o = st.access(t, e, j.makeArray(n))) : o.push(n)),
-                    o || []
+                    (e = (e || 'fx') + 'queue'), (o = st.get(t, e)), n && (!o || Array.isArray(n) ? (o = st.access(t, e, j.makeArray(n))) : o.push(n)), o || []
                   );
               },
               dequeue: function (t, e) {
@@ -2818,10 +2609,7 @@ var DTFS_PORTAL;
               return j.contains(t.ownerDocument, t) || t.getRootNode(vt) === t.ownerDocument;
             });
           var yt = function (t, e) {
-            return (
-              'none' === (t = e || t).style.display ||
-              ('' === t.style.display && gt(t) && 'none' === j.css(t, 'display'))
-            );
+            return 'none' === (t = e || t).style.display || ('' === t.style.display && gt(t) && 'none' === j.css(t, 'display'));
           };
           function bt(t, e, n, o) {
             var r,
@@ -2838,17 +2626,10 @@ var DTFS_PORTAL;
               l = (n && n[3]) || (j.cssNumber[e] ? '' : 'px'),
               c = t.nodeType && (j.cssNumber[e] || ('px' !== l && +u)) && ft.exec(j.css(t, e));
             if (c && c[3] !== l) {
-              for (u /= 2, l = l || c[3], c = +u || 1; a--; )
-                j.style(t, e, c + l), (1 - i) * (1 - (i = s() / u || 0.5)) <= 0 && (a = 0), (c /= i);
+              for (u /= 2, l = l || c[3], c = +u || 1; a--; ) j.style(t, e, c + l), (1 - i) * (1 - (i = s() / u || 0.5)) <= 0 && (a = 0), (c /= i);
               (c *= 2), j.style(t, e, c + l), (n = n || []);
             }
-            return (
-              n &&
-                ((c = +c || +u || 0),
-                (r = n[1] ? c + (n[1] + 1) * n[2] : +n[2]),
-                o && ((o.unit = l), (o.start = c), (o.end = r))),
-              r
-            );
+            return n && ((c = +c || +u || 0), (r = n[1] ? c + (n[1] + 1) * n[2] : +n[2]), o && ((o.unit = l), (o.start = c), (o.end = r))), r;
           }
           var xt = {};
           function wt(t) {
@@ -2871,8 +2652,7 @@ var DTFS_PORTAL;
               (o = t[i]).style &&
                 ((n = o.style.display),
                 e
-                  ? ('none' === n && ((r[i] = st.get(o, 'display') || null), r[i] || (o.style.display = '')),
-                    '' === o.style.display && yt(o) && (r[i] = wt(o)))
+                  ? ('none' === n && ((r[i] = st.get(o, 'display') || null), r[i] || (o.style.display = '')), '' === o.style.display && yt(o) && (r[i] = wt(o)))
                   : 'none' !== n && ((r[i] = 'none'), st.set(o, 'display', n)));
             for (i = 0; i < a; i++) null != r[i] && (t[i].style.display = r[i]);
             return t;
@@ -2919,12 +2699,7 @@ var DTFS_PORTAL;
           function _t(t, e) {
             var n;
             return (
-              (n =
-                void 0 !== t.getElementsByTagName
-                  ? t.getElementsByTagName(e || '*')
-                  : void 0 !== t.querySelectorAll
-                  ? t.querySelectorAll(e || '*')
-                  : []),
+              (n = void 0 !== t.getElementsByTagName ? t.getElementsByTagName(e || '*') : void 0 !== t.querySelectorAll ? t.querySelectorAll(e || '*') : []),
               void 0 === e || (e && A(t, e)) ? j.merge([t], n) : n
             );
           }
@@ -2954,8 +2729,7 @@ var DTFS_PORTAL;
                 } else p.push(e.createTextNode(i));
             for (d.textContent = '', f = 0; (i = p[f++]); )
               if (o && j.inArray(i, o) > -1) r && r.push(i);
-              else if (((l = gt(i)), (a = _t(d.appendChild(i), 'script')), l && Bt(a), n))
-                for (c = 0; (i = a[c++]); ) At.test(i.type || '') && n.push(i);
+              else if (((l = gt(i)), (a = _t(d.appendChild(i), 'script')), l && Bt(a), n)) for (c = 0; (i = a[c++]); ) At.test(i.type || '') && n.push(i);
             return d;
           }
           var $t = /^([^.]*)(?:\.(.+)|)/;
@@ -3001,20 +2775,9 @@ var DTFS_PORTAL;
                       o = st.get(this, e);
                     if (1 & t.isTrigger && this[e]) {
                       if (o) (j.event.special[e] || {}).delegateType && t.stopPropagation();
-                      else if (
-                        ((o = s.call(arguments)),
-                        st.set(this, e, o),
-                        this[e](),
-                        (n = st.get(this, e)),
-                        st.set(this, e, !1),
-                        o !== n)
-                      )
+                      else if (((o = s.call(arguments)), st.set(this, e, o), this[e](), (n = st.get(this, e)), st.set(this, e, !1), o !== n))
                         return t.stopImmediatePropagation(), t.preventDefault(), n;
-                    } else
-                      o &&
-                        (st.set(this, e, j.event.trigger(o[0], o.slice(1), this)),
-                        t.stopPropagation(),
-                        (t.isImmediatePropagationStopped = Ft));
+                    } else o && (st.set(this, e, j.event.trigger(o[0], o.slice(1), this)), t.stopPropagation(), (t.isImmediatePropagationStopped = Ft));
                   },
                 }))
               : void 0 === st.get(t, e) && j.event.add(t, e, Ft);
@@ -3043,9 +2806,7 @@ var DTFS_PORTAL;
                     (a = g.handle) ||
                       (a = g.handle =
                         function (e) {
-                          return void 0 !== j && j.event.triggered !== e.type
-                            ? j.event.dispatch.apply(t, arguments)
-                            : void 0;
+                          return void 0 !== j && j.event.triggered !== e.type ? j.event.dispatch.apply(t, arguments) : void 0;
                         }),
                     l = (e = (e || '').match(X) || ['']).length;
                   l--;
@@ -3071,9 +2832,7 @@ var DTFS_PORTAL;
                         i,
                       )),
                       (p = u[f]) ||
-                        (((p = u[f] = []).delegateCount = 0),
-                        (d.setup && !1 !== d.setup.call(t, o, h, a)) ||
-                          (t.addEventListener && t.addEventListener(f, a))),
+                        (((p = u[f] = []).delegateCount = 0), (d.setup && !1 !== d.setup.call(t, o, h, a)) || (t.addEventListener && t.addEventListener(f, a))),
                       d.add && (d.add.call(t, c), c.handler.guid || (c.handler.guid = n.guid)),
                       r ? p.splice(p.delegateCount++, 0, c) : p.push(c),
                       (j.event.global[f] = !0));
@@ -3108,10 +2867,7 @@ var DTFS_PORTAL;
                           (s && !s.test(c.namespace)) ||
                           (o && o !== c.selector && ('**' !== o || !c.selector)) ||
                           (p.splice(i, 1), c.selector && p.delegateCount--, d.remove && d.remove.call(t, c));
-                    a &&
-                      !p.length &&
-                      ((d.teardown && !1 !== d.teardown.call(t, h, g.handle)) || j.removeEvent(t, f, g.handle),
-                      delete u[f]);
+                    a && !p.length && ((d.teardown && !1 !== d.teardown.call(t, h, g.handle)) || j.removeEvent(t, f, g.handle), delete u[f]);
                   } else for (f in u) j.event.remove(t, f + e[l], n, o, !0);
                 j.isEmptyObject(u) && st.remove(t, 'handle events');
               }
@@ -3153,8 +2909,7 @@ var DTFS_PORTAL;
                 for (; l !== this; l = l.parentNode || this)
                   if (1 === l.nodeType && ('click' !== t.type || !0 !== l.disabled)) {
                     for (i = [], a = {}, n = 0; n < u; n++)
-                      void 0 === a[(r = (o = e[n]).selector + ' ')] &&
-                        (a[r] = o.needsContext ? j(r, this).index(l) > -1 : j.find(r, this, null, [l]).length),
+                      void 0 === a[(r = (o = e[n]).selector + ' ')] && (a[r] = o.needsContext ? j(r, this).index(l) > -1 : j.find(r, this, null, [l]).length),
                         a[r] && i.push(o);
                     i.length && s.push({ elem: l, handlers: i });
                   }
@@ -3210,8 +2965,7 @@ var DTFS_PORTAL;
               t && t.type
                 ? ((this.originalEvent = t),
                   (this.type = t.type),
-                  (this.isDefaultPrevented =
-                    t.defaultPrevented || (void 0 === t.defaultPrevented && !1 === t.returnValue) ? Ft : Lt),
+                  (this.isDefaultPrevented = t.defaultPrevented || (void 0 === t.defaultPrevented && !1 === t.returnValue) ? Ft : Lt),
                   (this.target = t.target && 3 === t.target.nodeType ? t.target.parentNode : t.target),
                   (this.currentTarget = t.currentTarget),
                   (this.relatedTarget = t.relatedTarget))
@@ -3236,9 +2990,7 @@ var DTFS_PORTAL;
               },
               stopImmediatePropagation: function () {
                 var t = this.originalEvent;
-                (this.isImmediatePropagationStopped = Ft),
-                  t && !this.isSimulated && t.stopImmediatePropagation(),
-                  this.stopPropagation();
+                (this.isImmediatePropagationStopped = Ft), t && !this.isSimulated && t.stopImmediatePropagation(), this.stopPropagation();
               },
             }),
             j.each(
@@ -3282,10 +3034,7 @@ var DTFS_PORTAL;
                 if (b.documentMode) {
                   var n = st.get(this, 'handle'),
                     o = j.event.fix(t);
-                  (o.type = 'focusin' === t.type ? 'focus' : 'blur'),
-                    (o.isSimulated = !0),
-                    n(t),
-                    o.target === o.currentTarget && n(o);
+                  (o.type = 'focusin' === t.type ? 'focus' : 'blur'), (o.isSimulated = !0), n(t), o.target === o.currentTarget && n(o);
                 } else j.event.simulate(e, t.target, j.event.fix(t));
               }
               (j.event.special[t] = {
@@ -3312,17 +3061,13 @@ var DTFS_PORTAL;
                     var o = this.ownerDocument || this.document || this,
                       r = b.documentMode ? this : o,
                       i = st.get(r, e);
-                    i || (b.documentMode ? this.addEventListener(e, n) : o.addEventListener(t, n, !0)),
-                      st.set(r, e, (i || 0) + 1);
+                    i || (b.documentMode ? this.addEventListener(e, n) : o.addEventListener(t, n, !0)), st.set(r, e, (i || 0) + 1);
                   },
                   teardown: function () {
                     var o = this.ownerDocument || this.document || this,
                       r = b.documentMode ? this : o,
                       i = st.get(r, e) - 1;
-                    i
-                      ? st.set(r, e, i)
-                      : (b.documentMode ? this.removeEventListener(e, n) : o.removeEventListener(t, n, !0),
-                        st.remove(r, e));
+                    i ? st.set(r, e, i) : (b.documentMode ? this.removeEventListener(e, n) : o.removeEventListener(t, n, !0), st.remove(r, e));
                   },
                 });
             }),
@@ -3341,11 +3086,7 @@ var DTFS_PORTAL;
                     var n,
                       o = t.relatedTarget,
                       r = t.handleObj;
-                    return (
-                      (o && (o === this || j.contains(this, o))) ||
-                        ((t.type = r.origType), (n = r.handler.apply(this, arguments)), (t.type = e)),
-                      n
-                    );
+                    return (o && (o === this || j.contains(this, o))) || ((t.type = r.origType), (n = r.handler.apply(this, arguments)), (t.type = e)), n;
                   },
                 };
               },
@@ -3360,15 +3101,7 @@ var DTFS_PORTAL;
               off: function (t, e, n) {
                 var o, r;
                 if (t && t.preventDefault && t.handleObj)
-                  return (
-                    (o = t.handleObj),
-                    j(t.delegateTarget).off(
-                      o.namespace ? o.origType + '.' + o.namespace : o.origType,
-                      o.selector,
-                      o.handler,
-                    ),
-                    this
-                  );
+                  return (o = t.handleObj), j(t.delegateTarget).off(o.namespace ? o.origType + '.' + o.namespace : o.origType, o.selector, o.handler), this;
                 if ('object' == typeof t) {
                   for (r in t) this.off(r, e, t[r]);
                   return this;
@@ -3398,16 +3131,13 @@ var DTFS_PORTAL;
             var n, o, r, i, a, s;
             if (1 === e.nodeType) {
               if (st.hasData(t) && (s = st.get(t).events))
-                for (r in (st.remove(e, 'handle events'), s))
-                  for (n = 0, o = s[r].length; n < o; n++) j.event.add(e, r, s[r][n]);
+                for (r in (st.remove(e, 'handle events'), s)) for (n = 0, o = s[r].length; n < o; n++) j.event.add(e, r, s[r][n]);
               ut.hasData(t) && ((i = ut.access(t)), (a = j.extend({}, i)), ut.set(e, a));
             }
           }
           function zt(t, e) {
             var n = e.nodeName.toLowerCase();
-            'input' === n && jt.test(t.type)
-              ? (e.checked = t.checked)
-              : ('input' !== n && 'textarea' !== n) || (e.defaultValue = t.defaultValue);
+            'input' === n && jt.test(t.type) ? (e.checked = t.checked) : ('input' !== n && 'textarea' !== n) || (e.defaultValue = t.defaultValue);
           }
           function Vt(t, e, n, o) {
             e = u(e);
@@ -3427,10 +3157,7 @@ var DTFS_PORTAL;
                 var i = t.eq(r);
                 m && (e[0] = h.call(this, r, i.html())), Vt(i, e, n, o);
               });
-            if (
-              p &&
-              ((i = (r = Mt(e, t[0].ownerDocument, !1, t, o)).firstChild), 1 === r.childNodes.length && (r = i), i || o)
-            ) {
+            if (p && ((i = (r = Mt(e, t[0].ownerDocument, !1, t, o)).firstChild), 1 === r.childNodes.length && (r = i), i || o)) {
               for (s = (a = j.map(_t(r, 'script'), It)).length; d < p; d++)
                 (l = r), d !== f && ((l = j.clone(l, !0, !0)), s && j.merge(a, _t(l, 'script'))), n.call(t[d], l, d);
               if (s)
@@ -3440,17 +3167,14 @@ var DTFS_PORTAL;
                       !st.access(l, 'globalEval') &&
                       j.contains(c, l) &&
                       (l.src && 'module' !== (l.type || '').toLowerCase()
-                        ? j._evalUrl &&
-                          !l.noModule &&
-                          j._evalUrl(l.src, { nonce: l.nonce || l.getAttribute('nonce') }, c)
+                        ? j._evalUrl && !l.noModule && j._evalUrl(l.src, { nonce: l.nonce || l.getAttribute('nonce') }, c)
                         : w(l.textContent.replace(Ot, ''), l, c));
             }
             return t;
           }
           function Xt(t, e, n) {
             for (var o, r = e ? j.filter(e, t) : t, i = 0; null != (o = r[i]); i++)
-              n || 1 !== o.nodeType || j.cleanData(_t(o)),
-                o.parentNode && (n && gt(o) && Bt(_t(o, 'script')), o.parentNode.removeChild(o));
+              n || 1 !== o.nodeType || j.cleanData(_t(o)), o.parentNode && (n && gt(o) && Bt(_t(o, 'script')), o.parentNode.removeChild(o));
             return t;
           }
           j.extend({
@@ -3496,8 +3220,7 @@ var DTFS_PORTAL;
                     return void 0 === t
                       ? j.text(this)
                       : this.empty().each(function () {
-                          (1 !== this.nodeType && 11 !== this.nodeType && 9 !== this.nodeType) ||
-                            (this.textContent = t);
+                          (1 !== this.nodeType && 11 !== this.nodeType && 9 !== this.nodeType) || (this.textContent = t);
                         });
                   },
                   null,
@@ -3529,8 +3252,7 @@ var DTFS_PORTAL;
                 });
               },
               empty: function () {
-                for (var t, e = 0; null != (t = this[e]); e++)
-                  1 === t.nodeType && (j.cleanData(_t(t, !1)), (t.textContent = ''));
+                for (var t, e = 0; null != (t = this[e]); e++) 1 === t.nodeType && (j.cleanData(_t(t, !1)), (t.textContent = ''));
                 return this;
               },
               clone: function (t, e) {
@@ -3553,8 +3275,7 @@ var DTFS_PORTAL;
                     if ('string' == typeof t && !qt.test(t) && !Et[(St.exec(t) || ['', ''])[1].toLowerCase()]) {
                       t = j.htmlPrefilter(t);
                       try {
-                        for (; n < o; n++)
-                          1 === (e = this[n] || {}).nodeType && (j.cleanData(_t(e, !1)), (e.innerHTML = t));
+                        for (; n < o; n++) 1 === (e = this[n] || {}).nodeType && (j.cleanData(_t(e, !1)), (e.innerHTML = t));
                         e = 0;
                       } catch (t) {}
                     }
@@ -3588,8 +3309,7 @@ var DTFS_PORTAL;
               },
               function (t, e) {
                 j.fn[t] = function (t) {
-                  for (var n, o = [], r = j(t), i = r.length - 1, a = 0; a <= i; a++)
-                    (n = a === i ? this : this.clone(!0)), j(r[a])[e](n), l.apply(o, n.get());
+                  for (var n, o = [], r = j(t), i = r.length - 1, a = 0; a <= i; a++) (n = a === i ? this : this.clone(!0)), j(r[a])[e](n), l.apply(o, n.get());
                   return this.pushStack(o);
                 };
               },
@@ -3707,9 +3427,7 @@ var DTFS_PORTAL;
                       (n.style.display = 'block'),
                       mt.appendChild(t).appendChild(e).appendChild(n),
                       (r = o.getComputedStyle(e)),
-                      (s =
-                        parseInt(r.height, 10) + parseInt(r.borderTopWidth, 10) + parseInt(r.borderBottomWidth, 10) ===
-                        e.offsetHeight),
+                      (s = parseInt(r.height, 10) + parseInt(r.borderTopWidth, 10) + parseInt(r.borderBottomWidth, 10) === e.offsetHeight),
                       mt.removeChild(t)),
                     s
                   );
@@ -3727,8 +3445,7 @@ var DTFS_PORTAL;
                 ? t
                 : (oe[t] =
                     (function (t) {
-                      for (var e = t[0].toUpperCase() + t.slice(1), n = ee.length; n--; )
-                        if ((t = ee[n] + e) in ne) return t;
+                      for (var e = t[0].toUpperCase() + t.slice(1), n = ee.length; n--; ) if ((t = ee[n] + e) in ne) return t;
                     })(t) || t))
             );
           }
@@ -3748,18 +3465,10 @@ var DTFS_PORTAL;
             for (; a < 4; a += 2)
               'margin' === n && (l += j.css(t, n + ht[a], !0, r)),
                 o
-                  ? ('content' === n && (u -= j.css(t, 'padding' + ht[a], !0, r)),
-                    'margin' !== n && (u -= j.css(t, 'border' + ht[a] + 'Width', !0, r)))
+                  ? ('content' === n && (u -= j.css(t, 'padding' + ht[a], !0, r)), 'margin' !== n && (u -= j.css(t, 'border' + ht[a] + 'Width', !0, r)))
                   : ((u += j.css(t, 'padding' + ht[a], !0, r)),
-                    'padding' !== n
-                      ? (u += j.css(t, 'border' + ht[a] + 'Width', !0, r))
-                      : (s += j.css(t, 'border' + ht[a] + 'Width', !0, r)));
-            return (
-              !o &&
-                i >= 0 &&
-                (u += Math.max(0, Math.ceil(t['offset' + e[0].toUpperCase() + e.slice(1)] - i - u - s - 0.5)) || 0),
-              u + l
-            );
+                    'padding' !== n ? (u += j.css(t, 'border' + ht[a] + 'Width', !0, r)) : (s += j.css(t, 'border' + ht[a] + 'Width', !0, r)));
+            return !o && i >= 0 && (u += Math.max(0, Math.ceil(t['offset' + e[0].toUpperCase() + e.slice(1)] - i - u - s - 0.5)) || 0), u + l;
           }
           function ce(t, e, n) {
             var o = Yt(t),
@@ -3861,8 +3570,7 @@ var DTFS_PORTAL;
               j.cssHooks[e] = {
                 get: function (t, n, o) {
                   if (n)
-                    return !ie.test(j.css(t, 'display')) ||
-                      (t.getClientRects().length && t.getBoundingClientRect().width)
+                    return !ie.test(j.css(t, 'display')) || (t.getClientRects().length && t.getBoundingClientRect().width)
                       ? ce(t, e, o)
                       : Qt(t, ae, function () {
                           return ce(t, e, o);
@@ -3875,14 +3583,7 @@ var DTFS_PORTAL;
                     s = (a || o) && 'border-box' === j.css(t, 'boxSizing', !1, i),
                     u = o ? le(t, e, o, s, i) : 0;
                   return (
-                    s &&
-                      a &&
-                      (u -= Math.ceil(
-                        t['offset' + e[0].toUpperCase() + e.slice(1)] -
-                          parseFloat(i[e]) -
-                          le(t, e, 'border', !1, i) -
-                          0.5,
-                      )),
+                    s && a && (u -= Math.ceil(t['offset' + e[0].toUpperCase() + e.slice(1)] - parseFloat(i[e]) - le(t, e, 'border', !1, i) - 0.5)),
                     u && (r = ft.exec(n)) && 'px' !== (r[3] || 'px') && ((t.style[e] = n), (n = j.css(t, e))),
                     ue(0, n, u)
                   );
@@ -3902,8 +3603,7 @@ var DTFS_PORTAL;
             j.each({ margin: '', padding: '', border: 'Width' }, function (t, e) {
               (j.cssHooks[t + e] = {
                 expand: function (n) {
-                  for (var o = 0, r = {}, i = 'string' == typeof n ? n.split(' ') : [n]; o < 4; o++)
-                    r[t + ht[o] + e] = i[o] || i[o - 2] || i[0];
+                  for (var o = 0, r = {}, i = 'string' == typeof n ? n.split(' ') : [n]; o < 4; o++) r[t + ht[o] + e] = i[o] || i[o - 2] || i[0];
                   return r;
                 },
               }),
@@ -4002,11 +3702,7 @@ var DTFS_PORTAL;
             he = /^(?:toggle|show|hide)$/,
             me = /queueHooks$/;
           function ge() {
-            fe &&
-              (!1 === b.hidden && o.requestAnimationFrame
-                ? o.requestAnimationFrame(ge)
-                : o.setTimeout(ge, j.fx.interval),
-              j.fx.tick());
+            fe && (!1 === b.hidden && o.requestAnimationFrame ? o.requestAnimationFrame(ge) : o.setTimeout(ge, j.fx.interval), j.fx.tick());
           }
           function ve() {
             return (
@@ -4024,8 +3720,7 @@ var DTFS_PORTAL;
             return e && (r.opacity = r.width = t), r;
           }
           function be(t, e, n) {
-            for (var o, r = (xe.tweeners[e] || []).concat(xe.tweeners['*']), i = 0, a = r.length; i < a; i++)
-              if ((o = r[i].call(n, e, t))) return o;
+            for (var o, r = (xe.tweeners[e] || []).concat(xe.tweeners['*']), i = 0, a = r.length; i < a; i++) if ((o = r[i].call(n, e, t))) return o;
           }
           function xe(t, e, n) {
             var o,
@@ -4037,20 +3732,9 @@ var DTFS_PORTAL;
               }),
               u = function () {
                 if (r) return !1;
-                for (
-                  var e = pe || ve(),
-                    n = Math.max(0, l.startTime + l.duration - e),
-                    o = 1 - (n / l.duration || 0),
-                    i = 0,
-                    a = l.tweens.length;
-                  i < a;
-                  i++
-                )
+                for (var e = pe || ve(), n = Math.max(0, l.startTime + l.duration - e), o = 1 - (n / l.duration || 0), i = 0, a = l.tweens.length; i < a; i++)
                   l.tweens[i].run(o);
-                return (
-                  s.notifyWith(t, [l, o, n]),
-                  o < 1 && a ? n : (a || s.notifyWith(t, [l, 1, 0]), s.resolveWith(t, [l]), !1)
-                );
+                return s.notifyWith(t, [l, o, n]), o < 1 && a ? n : (a || s.notifyWith(t, [l, 1, 0]), s.resolveWith(t, [l]), !1);
               },
               l = s.promise({
                 elem: t,
@@ -4091,8 +3775,7 @@ var DTFS_PORTAL;
               i < a;
               i++
             )
-              if ((o = xe.prefilters[i].call(l, t, c, l.opts)))
-                return v(o.stop) && (j._queueHooks(l.elem, l.opts.queue).stop = o.stop.bind(o)), o;
+              if ((o = xe.prefilters[i].call(l, t, c, l.opts))) return v(o.stop) && (j._queueHooks(l.elem, l.opts.queue).stop = o.stop.bind(o)), o;
             return (
               j.map(c, be, l),
               v(l.opts.start) && l.opts.start.call(t, l),
@@ -4112,8 +3795,7 @@ var DTFS_PORTAL;
             },
             tweener: function (t, e) {
               v(t) ? ((e = t), (t = ['*'])) : (t = t.match(X));
-              for (var n, o = 0, r = t.length; o < r; o++)
-                (n = t[o]), (xe.tweeners[n] = xe.tweeners[n] || []), xe.tweeners[n].unshift(e);
+              for (var n, o = 0, r = t.length; o < r; o++) (n = t[o]), (xe.tweeners[n] = xe.tweeners[n] || []), xe.tweeners[n].unshift(e);
             },
             prefilters: [
               function (t, e, n) {
@@ -4157,8 +3839,7 @@ var DTFS_PORTAL;
                     1 === t.nodeType &&
                     ((n.overflow = [h.overflow, h.overflowX, h.overflowY]),
                     null == (l = g && g.display) && (l = st.get(t, 'display')),
-                    'none' === (c = j.css(t, 'display')) &&
-                      (l ? (c = l) : (kt([t], !0), (l = t.style.display || l), (c = j.css(t, 'display')), kt([t]))),
+                    'none' === (c = j.css(t, 'display')) && (l ? (c = l) : (kt([t], !0), (l = t.style.display || l), (c = j.css(t, 'display')), kt([t]))),
                     ('inline' === c || ('inline-block' === c && null != l)) &&
                       'none' === j.css(t, 'float') &&
                       (u ||
@@ -4191,16 +3872,11 @@ var DTFS_PORTAL;
           })),
             (j.speed = function (t, e, n) {
               var o =
-                t && 'object' == typeof t
-                  ? j.extend({}, t)
-                  : { complete: n || (!n && e) || (v(t) && t), duration: t, easing: (n && e) || (e && !v(e) && e) };
+                t && 'object' == typeof t ? j.extend({}, t) : { complete: n || (!n && e) || (v(t) && t), duration: t, easing: (n && e) || (e && !v(e) && e) };
               return (
                 j.fx.off
                   ? (o.duration = 0)
-                  : 'number' != typeof o.duration &&
-                    (o.duration in j.fx.speeds
-                      ? (o.duration = j.fx.speeds[o.duration])
-                      : (o.duration = j.fx.speeds._default)),
+                  : 'number' != typeof o.duration && (o.duration in j.fx.speeds ? (o.duration = j.fx.speeds[o.duration]) : (o.duration = j.fx.speeds._default)),
                 (null != o.queue && !0 !== o.queue) || (o.queue = 'fx'),
                 (o.old = o.complete),
                 (o.complete = function () {
@@ -4237,10 +3913,7 @@ var DTFS_PORTAL;
                       a = st.get(this);
                     if (r) a[r] && a[r].stop && o(a[r]);
                     else for (r in a) a[r] && a[r].stop && me.test(r) && o(a[r]);
-                    for (r = i.length; r--; )
-                      i[r].elem !== this ||
-                        (null != t && i[r].queue !== t) ||
-                        (i[r].anim.stop(n), (e = !1), i.splice(r, 1));
+                    for (r = i.length; r--; ) i[r].elem !== this || (null != t && i[r].queue !== t) || (i[r].anim.stop(n), (e = !1), i.splice(r, 1));
                     (!e && n) || j.dequeue(this, t);
                   })
                 );
@@ -4345,8 +4018,7 @@ var DTFS_PORTAL;
                 if (3 !== i && 8 !== i && 2 !== i)
                   return void 0 === t.getAttribute
                     ? j.prop(t, e, n)
-                    : ((1 === i && j.isXMLDoc(t)) ||
-                        (r = j.attrHooks[e.toLowerCase()] || (j.expr.match.bool.test(e) ? we : void 0)),
+                    : ((1 === i && j.isXMLDoc(t)) || (r = j.attrHooks[e.toLowerCase()] || (j.expr.match.bool.test(e) ? we : void 0)),
                       void 0 !== n
                         ? null === n
                           ? void j.removeAttr(t, e)
@@ -4450,18 +4122,7 @@ var DTFS_PORTAL;
                 },
               }),
             j.each(
-              [
-                'tabIndex',
-                'readOnly',
-                'maxLength',
-                'cellSpacing',
-                'cellPadding',
-                'rowSpan',
-                'colSpan',
-                'useMap',
-                'frameBorder',
-                'contentEditable',
-              ],
+              ['tabIndex', 'readOnly', 'maxLength', 'cellSpacing', 'cellPadding', 'rowSpan', 'colSpan', 'useMap', 'frameBorder', 'contentEditable'],
               function () {
                 j.propFix[this.toLowerCase()] = this;
               },
@@ -4492,8 +4153,7 @@ var DTFS_PORTAL;
                   ? (e = Ae(t)).length
                     ? this.each(function () {
                         if (((o = Se(this)), (n = 1 === this.nodeType && ' ' + je(o) + ' '))) {
-                          for (i = 0; i < e.length; i++)
-                            for (r = e[i]; n.indexOf(' ' + r + ' ') > -1; ) n = n.replace(' ' + r + ' ', ' ');
+                          for (i = 0; i < e.length; i++) for (r = e[i]; n.indexOf(' ' + r + ' ') > -1; ) n = n.replace(' ' + r + ' ', ' ');
                           (a = je(n)), o !== a && this.setAttribute('class', a);
                         }
                       })
@@ -4517,22 +4177,18 @@ var DTFS_PORTAL;
                     : this.removeClass(t)
                   : ((n = Ae(t)),
                     this.each(function () {
-                      if (s)
-                        for (i = j(this), r = 0; r < n.length; r++)
-                          (o = n[r]), i.hasClass(o) ? i.removeClass(o) : i.addClass(o);
+                      if (s) for (i = j(this), r = 0; r < n.length; r++) (o = n[r]), i.hasClass(o) ? i.removeClass(o) : i.addClass(o);
                       else
                         (void 0 !== t && 'boolean' !== a) ||
                           ((o = Se(this)) && st.set(this, '__className__', o),
-                          this.setAttribute &&
-                            this.setAttribute('class', o || !1 === t ? '' : st.get(this, '__className__') || ''));
+                          this.setAttribute && this.setAttribute('class', o || !1 === t ? '' : st.get(this, '__className__') || ''));
                     }));
               },
               hasClass: function (t) {
                 var e,
                   n,
                   o = 0;
-                for (e = ' ' + t + ' '; (n = this[o++]); )
-                  if (1 === n.nodeType && (' ' + je(Se(n)) + ' ').indexOf(e) > -1) return !0;
+                for (e = ' ' + t + ' '; (n = this[o++]); ) if (1 === n.nodeType && (' ' + je(Se(n)) + ' ').indexOf(e) > -1) return !0;
                 return !1;
               },
             });
@@ -4556,15 +4212,11 @@ var DTFS_PORTAL;
                           (r = j.map(r, function (t) {
                             return null == t ? '' : t + '';
                           })),
-                      ((e = j.valHooks[this.type] || j.valHooks[this.nodeName.toLowerCase()]) &&
-                        'set' in e &&
-                        void 0 !== e.set(this, r, 'value')) ||
+                      ((e = j.valHooks[this.type] || j.valHooks[this.nodeName.toLowerCase()]) && 'set' in e && void 0 !== e.set(this, r, 'value')) ||
                         (this.value = r));
                   }))
                 : r
-                ? (e = j.valHooks[r.type] || j.valHooks[r.nodeName.toLowerCase()]) &&
-                  'get' in e &&
-                  void 0 !== (n = e.get(r, 'value'))
+                ? (e = j.valHooks[r.type] || j.valHooks[r.nodeName.toLowerCase()]) && 'get' in e && void 0 !== (n = e.get(r, 'value'))
                   ? n
                   : 'string' == typeof (n = r.value)
                   ? n.replace(Ee, '')
@@ -4593,11 +4245,7 @@ var DTFS_PORTAL;
                       s = a ? null : [],
                       u = a ? i + 1 : r.length;
                     for (o = i < 0 ? u : a ? i : 0; o < u; o++)
-                      if (
-                        ((n = r[o]).selected || o === i) &&
-                        !n.disabled &&
-                        (!n.parentNode.disabled || !A(n.parentNode, 'optgroup'))
-                      ) {
+                      if (((n = r[o]).selected || o === i) && !n.disabled && (!n.parentNode.disabled || !A(n.parentNode, 'optgroup'))) {
                         if (((e = j(n).val()), a)) return e;
                         s.push(e);
                       }
@@ -4681,18 +4329,14 @@ var DTFS_PORTAL;
                   r || !d.trigger || !1 !== d.trigger.apply(n, e)))
               ) {
                 if (!r && !d.noBubble && !y(n)) {
-                  for (u = d.delegateType || m, Me.test(u + m) || (a = a.parentNode); a; a = a.parentNode)
-                    h.push(a), (s = a);
+                  for (u = d.delegateType || m, Me.test(u + m) || (a = a.parentNode); a; a = a.parentNode) h.push(a), (s = a);
                   s === (n.ownerDocument || b) && h.push(s.defaultView || s.parentWindow || o);
                 }
                 for (i = 0; (a = h[i++]) && !t.isPropagationStopped(); )
                   (p = a),
                     (t.type = i > 1 ? u : d.bindType || m),
                     (c = (st.get(a, 'events') || Object.create(null))[t.type] && st.get(a, 'handle')) && c.apply(a, e),
-                    (c = l && a[l]) &&
-                      c.apply &&
-                      it(a) &&
-                      ((t.result = c.apply(a, e)), !1 === t.result && t.preventDefault());
+                    (c = l && a[l]) && c.apply && it(a) && ((t.result = c.apply(a, e)), !1 === t.result && t.preventDefault());
                 return (
                   (t.type = m),
                   r ||
@@ -4768,13 +4412,7 @@ var DTFS_PORTAL;
                 })
                   .filter(function () {
                     var t = this.type;
-                    return (
-                      this.name &&
-                      !j(this).is(':disabled') &&
-                      He.test(this.nodeName) &&
-                      !Ne.test(t) &&
-                      (this.checked || !jt.test(t))
-                    );
+                    return this.name && !j(this).is(':disabled') && He.test(this.nodeName) && !Ne.test(t) && (this.checked || !jt.test(t));
                   })
                   .map(function (t, e) {
                     var n = j(this).val();
@@ -4805,11 +4443,7 @@ var DTFS_PORTAL;
               var o,
                 r = 0,
                 i = e.toLowerCase().match(X) || [];
-              if (v(n))
-                for (; (o = i[r++]); )
-                  '+' === o[0]
-                    ? ((o = o.slice(1) || '*'), (t[o] = t[o] || []).unshift(n))
-                    : (t[o] = t[o] || []).push(n);
+              if (v(n)) for (; (o = i[r++]); ) '+' === o[0] ? ((o = o.slice(1) || '*'), (t[o] = t[o] || []).unshift(n)) : (t[o] = t[o] || []).push(n);
             };
           }
           function Ye(t, e, n, o) {
@@ -4821,11 +4455,7 @@ var DTFS_PORTAL;
                 (r[s] = !0),
                 j.each(t[s] || [], function (t, s) {
                   var l = s(e, n, o);
-                  return 'string' != typeof l || i || r[l]
-                    ? i
-                      ? !(u = l)
-                      : void 0
-                    : (e.dataTypes.unshift(l), a(l), !1);
+                  return 'string' != typeof l || i || r[l] ? (i ? !(u = l) : void 0) : (e.dataTypes.unshift(l), a(l), !1);
                 }),
                 u
               );
@@ -4895,9 +4525,7 @@ var DTFS_PORTAL;
                     getResponseHeader: function (t) {
                       var e;
                       if (l) {
-                        if (!a)
-                          for (a = {}; (e = Ie.exec(i)); )
-                            a[e[1].toLowerCase() + ' '] = (a[e[1].toLowerCase() + ' '] || []).concat(e[2]);
+                        if (!a) for (a = {}; (e = Ie.exec(i)); ) a[e[1].toLowerCase() + ' '] = (a[e[1].toLowerCase() + ' '] || []).concat(e[2]);
                         e = a[t.toLowerCase() + ' '];
                       }
                       return null == e ? null : e.join(', ');
@@ -4932,40 +4560,26 @@ var DTFS_PORTAL;
                 ) {
                   u = b.createElement('a');
                   try {
-                    (u.href = f.url),
-                      (u.href = u.href),
-                      (f.crossDomain = Ge.protocol + '//' + Ge.host != u.protocol + '//' + u.host);
+                    (u.href = f.url), (u.href = u.href), (f.crossDomain = Ge.protocol + '//' + Ge.host != u.protocol + '//' + u.host);
                   } catch (t) {
                     f.crossDomain = !0;
                   }
                 }
-                if (
-                  (f.data && f.processData && 'string' != typeof f.data && (f.data = j.param(f.data, f.traditional)),
-                  Ye(ze, f, e, T),
-                  l)
-                )
-                  return T;
+                if ((f.data && f.processData && 'string' != typeof f.data && (f.data = j.param(f.data, f.traditional)), Ye(ze, f, e, T), l)) return T;
                 for (d in ((c = j.event && f.global) && 0 == j.active++ && j.event.trigger('ajaxStart'),
                 (f.type = f.type.toUpperCase()),
                 (f.hasContent = !We.test(f.type)),
                 (r = f.url.replace(Oe, '')),
                 f.hasContent
-                  ? f.data &&
-                    f.processData &&
-                    0 === (f.contentType || '').indexOf('application/x-www-form-urlencoded') &&
-                    (f.data = f.data.replace(Re, '+'))
+                  ? f.data && f.processData && 0 === (f.contentType || '').indexOf('application/x-www-form-urlencoded') && (f.data = f.data.replace(Re, '+'))
                   : ((p = f.url.slice(r.length)),
-                    f.data &&
-                      (f.processData || 'string' == typeof f.data) &&
-                      ((r += (De.test(r) ? '&' : '?') + f.data), delete f.data),
-                    !1 === f.cache &&
-                      ((r = r.replace(Pe, '$1')), (p = (De.test(r) ? '&' : '?') + '_=' + Be.guid++ + p)),
+                    f.data && (f.processData || 'string' == typeof f.data) && ((r += (De.test(r) ? '&' : '?') + f.data), delete f.data),
+                    !1 === f.cache && ((r = r.replace(Pe, '$1')), (p = (De.test(r) ? '&' : '?') + '_=' + Be.guid++ + p)),
                     (f.url = r + p)),
                 f.ifModified &&
                   (j.lastModified[r] && T.setRequestHeader('If-Modified-Since', j.lastModified[r]),
                   j.etag[r] && T.setRequestHeader('If-None-Match', j.etag[r])),
-                ((f.data && f.hasContent && !1 !== f.contentType) || e.contentType) &&
-                  T.setRequestHeader('Content-Type', f.contentType),
+                ((f.data && f.hasContent && !1 !== f.contentType) || e.contentType) && T.setRequestHeader('Content-Type', f.contentType),
                 T.setRequestHeader(
                   'Accept',
                   f.dataTypes[0] && f.accepts[f.dataTypes[0]]
@@ -5026,10 +4640,7 @@ var DTFS_PORTAL;
                         }
                         if (i) return i !== u[0] && u.unshift(i), n[i];
                       })(f, T, a)),
-                    !d &&
-                      j.inArray('script', f.dataTypes) > -1 &&
-                      j.inArray('json', f.dataTypes) < 0 &&
-                      (f.converters['text script'] = function () {}),
+                    !d && j.inArray('script', f.dataTypes) > -1 && j.inArray('json', f.dataTypes) < 0 && (f.converters['text script'] = function () {}),
                     (x = (function (t, e, n, o) {
                       var r,
                         i,
@@ -5070,8 +4681,7 @@ var DTFS_PORTAL;
                     })(f, x, T, d)),
                     d
                       ? (f.ifModified &&
-                          ((w = T.getResponseHeader('Last-Modified')) && (j.lastModified[r] = w),
-                          (w = T.getResponseHeader('etag')) && (j.etag[r] = w)),
+                          ((w = T.getResponseHeader('Last-Modified')) && (j.lastModified[r] = w), (w = T.getResponseHeader('etag')) && (j.etag[r] = w)),
                         204 === t || 'HEAD' === f.type
                           ? (k = 'nocontent')
                           : 304 === t
@@ -5189,8 +4799,7 @@ var DTFS_PORTAL;
                   send: function (r, i) {
                     var a,
                       s = t.xhr();
-                    if ((s.open(t.type, t.url, t.async, t.username, t.password), t.xhrFields))
-                      for (a in t.xhrFields) s[a] = t.xhrFields[a];
+                    if ((s.open(t.type, t.url, t.async, t.username, t.password), t.xhrFields)) for (a in t.xhrFields) s[a] = t.xhrFields[a];
                     for (a in (t.mimeType && s.overrideMimeType && s.overrideMimeType(t.mimeType),
                     t.crossDomain || r['X-Requested-With'] || (r['X-Requested-With'] = 'XMLHttpRequest'),
                     r))
@@ -5208,9 +4817,7 @@ var DTFS_PORTAL;
                             : i(
                                 Je[s.status] || s.status,
                                 s.statusText,
-                                'text' !== (s.responseType || 'text') || 'string' != typeof s.responseText
-                                  ? { binary: s.response }
-                                  : { text: s.responseText },
+                                'text' !== (s.responseType || 'text') || 'string' != typeof s.responseText ? { binary: s.response } : { text: s.responseText },
                                 s.getAllResponseHeaders(),
                               ));
                       };
@@ -5293,16 +4900,11 @@ var DTFS_PORTAL;
                   !1 !== t.jsonp &&
                   (nn.test(t.url)
                     ? 'url'
-                    : 'string' == typeof t.data &&
-                      0 === (t.contentType || '').indexOf('application/x-www-form-urlencoded') &&
-                      nn.test(t.data) &&
-                      'data');
+                    : 'string' == typeof t.data && 0 === (t.contentType || '').indexOf('application/x-www-form-urlencoded') && nn.test(t.data) && 'data');
               if (s || 'jsonp' === t.dataTypes[0])
                 return (
                   (r = t.jsonpCallback = v(t.jsonpCallback) ? t.jsonpCallback() : t.jsonpCallback),
-                  s
-                    ? (t[s] = t[s].replace(nn, '$1' + r))
-                    : !1 !== t.jsonp && (t.url += (De.test(t.url) ? '&' : '?') + t.jsonp + '=' + r),
+                  s ? (t[s] = t[s].replace(nn, '$1' + r)) : !1 !== t.jsonp && (t.url += (De.test(t.url) ? '&' : '?') + t.jsonp + '=' + r),
                   (t.converters['script json'] = function () {
                     return a || j.error(r + ' was not called'), a[0];
                   }),
@@ -5321,22 +4923,17 @@ var DTFS_PORTAL;
                 );
             }),
             (g.createHTMLDocument =
-              (((tn = b.implementation.createHTMLDocument('').body).innerHTML = '<form></form><form></form>'),
-              2 === tn.childNodes.length)),
+              (((tn = b.implementation.createHTMLDocument('').body).innerHTML = '<form></form><form></form>'), 2 === tn.childNodes.length)),
             (j.parseHTML = function (t, e, n) {
               return 'string' != typeof t
                 ? []
                 : ('boolean' == typeof e && ((n = e), (e = !1)),
                   e ||
                     (g.createHTMLDocument
-                      ? (((o = (e = b.implementation.createHTMLDocument('')).createElement('base')).href =
-                          b.location.href),
-                        e.head.appendChild(o))
+                      ? (((o = (e = b.implementation.createHTMLDocument('')).createElement('base')).href = b.location.href), e.head.appendChild(o))
                       : (e = b)),
                   (i = !n && []),
-                  (r = O.exec(t))
-                    ? [e.createElement(r[1])]
-                    : ((r = Mt([t], e, i)), i && i.length && j(i).remove(), j.merge([], r.childNodes)));
+                  (r = O.exec(t)) ? [e.createElement(r[1])] : ((r = Mt([t], e, i)), i && i.length && j(i).remove(), j.merge([], r.childNodes)));
               var o, r, i;
             }),
             (j.fn.load = function (t, e, n) {
@@ -5407,9 +5004,7 @@ var DTFS_PORTAL;
                   o = this[0];
                 return o
                   ? o.getClientRects().length
-                    ? ((e = o.getBoundingClientRect()),
-                      (n = o.ownerDocument.defaultView),
-                      { top: e.top + n.pageYOffset, left: e.left + n.pageXOffset })
+                    ? ((e = o.getBoundingClientRect()), (n = o.ownerDocument.defaultView), { top: e.top + n.pageYOffset, left: e.left + n.pageXOffset })
                     : { top: 0, left: 0 }
                   : void 0;
               },
@@ -5431,8 +5026,7 @@ var DTFS_PORTAL;
                     t &&
                       t !== o &&
                       1 === t.nodeType &&
-                      (((r = j(t).offset()).top += j.css(t, 'borderTopWidth', !0)),
-                      (r.left += j.css(t, 'borderLeftWidth', !0)));
+                      (((r = j(t).offset()).top += j.css(t, 'borderTopWidth', !0)), (r.left += j.css(t, 'borderLeftWidth', !0)));
                   }
                   return {
                     top: e.top - r.top - j.css(o, 'marginTop', !0),
@@ -5454,8 +5048,7 @@ var DTFS_PORTAL;
                   this,
                   function (t, o, r) {
                     var i;
-                    if ((y(t) ? (i = t) : 9 === t.nodeType && (i = t.defaultView), void 0 === r))
-                      return i ? i[e] : t[o];
+                    if ((y(t) ? (i = t) : 9 === t.nodeType && (i = t.defaultView), void 0 === r)) return i ? i[e] : t[o];
                     i ? i.scrollTo(n ? i.pageXOffset : r, n ? r : i.pageYOffset) : (t[o] = r);
                   },
                   t,
@@ -5483,14 +5076,7 @@ var DTFS_PORTAL;
                           ? e['inner' + t]
                           : e.document.documentElement['client' + t]
                         : 9 === e.nodeType
-                        ? ((i = e.documentElement),
-                          Math.max(
-                            e.body['scroll' + t],
-                            i['scroll' + t],
-                            e.body['offset' + t],
-                            i['offset' + t],
-                            i['client' + t],
-                          ))
+                        ? ((i = e.documentElement), Math.max(e.body['scroll' + t], i['scroll' + t], e.body['offset' + t], i['offset' + t], i['client' + t]))
                         : void 0 === r
                         ? j.css(e, n, s)
                         : j.style(e, n, r, s);
@@ -5606,9 +5192,7 @@ var DTFS_PORTAL;
       return Object.prototype.hasOwnProperty.call(t, e);
     }),
     (n.r = function (t) {
-      'undefined' != typeof Symbol &&
-        Symbol.toStringTag &&
-        Object.defineProperty(t, Symbol.toStringTag, { value: 'Module' }),
+      'undefined' != typeof Symbol && Symbol.toStringTag && Object.defineProperty(t, Symbol.toStringTag, { value: 'Module' }),
         Object.defineProperty(t, '__esModule', { value: !0 });
     });
   var o = {};

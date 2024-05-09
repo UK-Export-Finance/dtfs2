@@ -6,7 +6,5 @@ module.exports = (dealId, dealType) => {
   console.info('submitDeal::');
   const { username, password } = T1_USER_1;
 
-  return login(username, password).then((token) =>
-    submitDealAfterUkefIds(dealId, dealType, BANK1_CHECKER1_WITH_MOCK_ID, token),
-  );
+  return login(username, password).then((token) => submitDealAfterUkefIds(dealId, dealType, BANK1_CHECKER1_WITH_MOCK_ID, token));
 };

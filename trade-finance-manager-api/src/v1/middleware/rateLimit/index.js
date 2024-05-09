@@ -21,10 +21,7 @@ const getRateLimitThresholdFromEnvironmentVariables = () => {
 const createRateLimit = () => {
   const rateLimitThresholdPerMinuteAsNumber = getRateLimitThresholdFromEnvironmentVariables();
 
-  console.info(
-    'Rate-limiting requests to a maximum of %d requests per 1 minute window.',
-    rateLimitThresholdPerMinuteAsNumber,
-  );
+  console.info('Rate-limiting requests to a maximum of %d requests per 1 minute window.', rateLimitThresholdPerMinuteAsNumber);
 
   return limiter({
     // The duration of the window to count requests over.
@@ -41,10 +38,7 @@ const createRateLimit = () => {
     message: 'Request threshold reached, please try again later.',
     // Log an error message and return an error response when the threshold is exceeded.
     handler: (req, res, _next, options) => {
-      console.error(
-        'Rate limit threshold exceeded. Returning rate limit error message for request to %s.',
-        req.originalUrl,
-      );
+      console.error('Rate limit threshold exceeded. Returning rate limit error message for request to %s.', req.originalUrl);
       return res.status(options.statusCode).send(options.message);
     },
   });

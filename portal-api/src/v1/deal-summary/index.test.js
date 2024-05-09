@@ -300,9 +300,7 @@ describe('deal-summary', () => {
                 loanTransactions: { items: [] },
               });
 
-              calculation =
-                calculateTotalAllBonds(mockBondTransactions) /
-                mockDeal.submissionDetails.supplyContractConversionRateToGBP;
+              calculation = calculateTotalAllBonds(mockBondTransactions) / mockDeal.submissionDetails.supplyContractConversionRateToGBP;
               expected = formattedNumber(roundNumber(calculation), 2);
             });
 
@@ -327,9 +325,7 @@ describe('deal-summary', () => {
                 bondTransactions: { items: [] },
                 loanTransactions: mockLoanTransactions,
               });
-              calculation =
-                calculateTotalAllLoans(mockLoanTransactions) /
-                mockDeal.submissionDetails.supplyContractConversionRateToGBP;
+              calculation = calculateTotalAllLoans(mockLoanTransactions) / mockDeal.submissionDetails.supplyContractConversionRateToGBP;
               expected = formattedNumber(roundNumber(calculation), 2);
             });
 
@@ -353,8 +349,7 @@ describe('deal-summary', () => {
                 loanTransactions: mockLoanTransactions,
               });
 
-              const totalBondsAndLoans =
-                calculateTotalAllBonds(mockBondTransactions) + calculateTotalAllLoans(mockLoanTransactions);
+              const totalBondsAndLoans = calculateTotalAllBonds(mockBondTransactions) + calculateTotalAllLoans(mockLoanTransactions);
               const calculation = totalBondsAndLoans / mockDeal.submissionDetails.supplyContractConversionRateToGBP;
               const expected = formattedNumber(roundNumber(calculation), 2);
 

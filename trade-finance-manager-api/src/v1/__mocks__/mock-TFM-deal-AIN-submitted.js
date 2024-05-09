@@ -245,8 +245,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
           facilityCovenant: {
             submittedToACBS: '2022-02-01T14:59:45+00:00',
             receivedFromACBS: '2022-02-01T14:59:47+00:00',
-            covenantIdentifier:
-              '0000006402?accountOwnerIdentifier=00000000&lenderTypeCode=100&sectionIdentifier=00&limitTypeCode=00&limitKeyValue=00283643',
+            covenantIdentifier: '0000006402?accountOwnerIdentifier=00000000&lenderTypeCode=100&sectionIdentifier=00&limitTypeCode=00&limitKeyValue=00283643',
           },
           facilityProviderGuarantee: {
             submittedToACBS: '2022-02-01T15:00:05+00:00',

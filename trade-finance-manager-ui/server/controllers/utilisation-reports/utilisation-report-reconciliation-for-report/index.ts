@@ -9,14 +9,9 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
   const { reportId } = req.params;
 
   try {
-    const utilisationReportReconciliationDetails = await api.getUtilisationReportReconciliationDetailsById(
-      reportId,
-      userToken,
-    );
+    const utilisationReportReconciliationDetails = await api.getUtilisationReportReconciliationDetailsById(reportId, userToken);
 
-    const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(
-      utilisationReportReconciliationDetails.reportPeriod,
-    );
+    const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(utilisationReportReconciliationDetails.reportPeriod);
 
     return res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', {
       user,

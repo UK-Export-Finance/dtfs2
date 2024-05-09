@@ -4,24 +4,10 @@ import CONSTANTS from '../../fixtures/constants';
 
 import dateConstants from '../../../../e2e-fixtures/dateConstants';
 
-import {
-  MOCK_APPLICATION_MIA,
-  MOCK_APPLICATION_MIA_DRAFT,
-  UKEF_DECISION,
-  underwriterManagersDecision,
-} from '../../fixtures/mocks/mock-deals';
+import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../fixtures/mocks/mock-deals';
 
-import {
-  BANK1_MAKER1,
-  BANK1_CHECKER1,
-  BANK1_CHECKER1_WITH_MOCK_ID,
-} from '../../../../e2e-fixtures/portal-users.fixture';
-import {
-  MOCK_FACILITY_ONE,
-  MOCK_FACILITY_TWO_NULL_MIA,
-  MOCK_FACILITY_THREE,
-  MOCK_FACILITY_FOUR,
-} from '../../fixtures/mocks/mock-facilities';
+import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO_NULL_MIA, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../fixtures/mocks/mock-facilities';
 
 import { toTitleCase } from '../../fixtures/helpers';
 
@@ -146,21 +132,15 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
       applicationPreview.ukefReviewLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/review-decision`));
       applicationPreview.ukefReviewHeading().contains('Review UKEF decision');
-      applicationPreview
-        .reviewDecision()
-        .contains('Do you want to accept these conditions and proceed with UKEF cover?');
+      applicationPreview.reviewDecision().contains('Do you want to accept these conditions and proceed with UKEF cover?');
     });
 
     it('clicking yes, accept and proceed takes you to cover-start-date page', () => {
       applicationPreview.ukefReviewLink().click();
       // shows error message do not click yes radio button
       applicationPreview.reviewDecisionContinue().click();
-      applicationPreview
-        .errorSummary()
-        .contains('Select yes if you want to accept the conditions and proceed with UKEF cover.');
-      applicationPreview.reviewDecisionError(
-        'Select yes if you want to accept the conditions and proceed with UKEF cover.',
-      );
+      applicationPreview.errorSummary().contains('Select yes if you want to accept the conditions and proceed with UKEF cover.');
+      applicationPreview.reviewDecisionError('Select yes if you want to accept the conditions and proceed with UKEF cover.');
 
       applicationPreview.reviewDecisionTrue().click();
       applicationPreview.reviewDecisionContinue().click();
@@ -170,17 +150,13 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
       coverStartDate.updateIndividualCoverStartDateButton(0).click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
-      coverStartDate
-        .coverStartDateScreen()
-        .contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
+      coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
     });
 
     it('entering cover date the same date as the coverEndDate should show an error', () => {
       cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
 
-      coverStartDate
-        .coverStartDateScreen()
-        .contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
+      coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
 
       coverStartDate.coverStartDateNo().click();
 
@@ -200,9 +176,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
     it('entering cover date in past on confirm cover start date shows an error', () => {
       cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
-      coverStartDate
-        .coverStartDateScreen()
-        .contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
+      coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
 
       coverStartDate.coverStartDateNo().click();
 
@@ -222,9 +196,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
     it('entering cover date over three months away on confirm cover start date shows an error', () => {
       cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
-      coverStartDate
-        .coverStartDateScreen()
-        .contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
+      coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
 
       coverStartDate.coverStartDateNo().click();
 
@@ -245,9 +217,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
     it('entering cover date correctly shows success message and redirects to unissued facilities table and update facilities later', () => {
       cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
 
-      coverStartDate
-        .coverStartDateScreen()
-        .contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
+      coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
 
       coverStartDate.coverStartDateNo().click();
 
@@ -273,24 +243,16 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
     it('pressing submit button takes you to submit page and with correct panel once submitted to checker', () => {
       // check correct accepting conditions message is shown
-      applicationPreview
-        .acceptMIADecision()
-        .contains('You are proceeding with UKEF cover and accepting the following conditions:');
+      applicationPreview.acceptMIADecision().contains('You are proceeding with UKEF cover and accepting the following conditions:');
 
       applicationPreview.submitButtonPostApproval().click();
       applicationSubmission
         .submissionText()
-        .contains(
-          `Someone at your bank must check your ${toTitleCase(
-            CONSTANTS.DEAL_SUBMISSION_TYPE.MIA,
-          )} before they can submit it to UKEF.`,
-        );
+        .contains(`Someone at your bank must check your ${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} before they can submit it to UKEF.`);
       applicationSubmission.submitButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
-      applicationSubmission
-        .confirmationPanelTitle()
-        .contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
+      applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
     });
   });
 });
@@ -384,9 +346,7 @@ context('Return to maker', () => {
 
     it('Statuses and banners should correct text', () => {
       statusBanner.bannerStatus().contains(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED);
-      applicationPreview
-        .acceptMIADecision()
-        .contains('You are proceeding with UKEF cover and accepting the following conditions:');
+      applicationPreview.acceptMIADecision().contains('You are proceeding with UKEF cover and accepting the following conditions:');
       applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
       applicationPreview.unissuedFacilitiesReviewLink().contains('View unissued facilities');
     });
@@ -470,9 +430,7 @@ context('Return to maker', () => {
     it('should be able to submit to checker after making changes', () => {
       applicationDetails.submitButton().click();
       applicationSubmission.submitButton().click();
-      applicationSubmission
-        .confirmationPanelTitle()
-        .contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
+      applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
     });
   });
 });
@@ -504,13 +462,9 @@ context('Submit to UKEF', () => {
       applicationPreview.submitButton().click();
       applicationSubmission.confirmSubmissionCheckbox().click();
       applicationSubmission.submitButton().click();
-      applicationSubmission
-        .confirmationPanelTitle()
-        .contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIN)} submitted to UKEF`);
+      applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIN)} submitted to UKEF`);
       // check that correct text is displayed under confirmation panel
-      applicationSubmission
-        .confirmationText()
-        .contains("We'll send you a confirmation email shortly, once we've acknowledged your inclusion notice.");
+      applicationSubmission.confirmationText().contains("We'll send you a confirmation email shortly, once we've acknowledged your inclusion notice.");
     });
   });
 });
@@ -535,9 +489,7 @@ context('Check activity feed', () => {
       // contains submission message
       applicationActivities
         .activityTimeline()
-        .contains(
-          `${CONSTANTS.PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`,
-        );
+        .contains(`${CONSTANTS.PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
 
       applicationActivities.subNavigationBarActivities().click();
     });

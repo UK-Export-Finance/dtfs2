@@ -297,12 +297,8 @@ describe('/v1/deals', () => {
       const dealAfterSecondUpdate = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
       expect(dealAfterSecondUpdate.status).toEqual(200);
       expect(dealAfterSecondUpdate.body.deal.editedBy.length).toEqual(2);
-      expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(
-        expectAddedFieldsWithEditedBy(secondUpdate, anHSBCMaker, 1).editedBy[0],
-      );
-      expect(dealAfterSecondUpdate.body.deal.editedBy[1]).toEqual(
-        expectAddedFieldsWithEditedBy(secondUpdate, anHSBCMaker, 2).editedBy[1],
-      );
+      expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, anHSBCMaker, 1).editedBy[0]);
+      expect(dealAfterSecondUpdate.body.deal.editedBy[1]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, anHSBCMaker, 2).editedBy[1]);
     });
   });
 

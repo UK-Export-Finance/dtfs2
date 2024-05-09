@@ -5,10 +5,7 @@ const bondValidationErrors = require('../validation/bond');
 const { bondStatus } = require('../section-status/bonds');
 const { calculateGuaranteeFee, calculateUkefExposure } = require('../section-calculations');
 const { handleTransactionCurrencyFields } = require('../section-currency');
-const {
-  hasAllRequestedCoverStartDateValues,
-  updateRequestedCoverStartDate,
-} = require('../facility-dates/requested-cover-start-date');
+const { hasAllRequestedCoverStartDateValues, updateRequestedCoverStartDate } = require('../facility-dates/requested-cover-start-date');
 const { hasAllCoverEndDateValues, updateCoverEndDate } = require('../facility-dates/cover-end-date');
 const { sanitizeCurrency } = require('../../utils/number');
 const facilitiesController = require('./facilities.controller');

@@ -102,12 +102,8 @@ context('Dashboard: Review UKEF Decision report', () => {
       cy.get('@row2').find('[data-cy="deal__row--product"]').should('contain', 'GEF');
       cy.get('@row2').find('[data-cy="deal__row--exporter"]').should('contain', 'Delta');
       cy.get('@row2').find('[data-cy="deal__row--date-created"]').should('contain', dateConstants.todayFormattedShort);
-      cy.get('@row2')
-        .find('[data-cy="deal__row--submission-date"]')
-        .should('contain', dateConstants.todayFormattedShort);
-      cy.get('@row2')
-        .find('[data-cy="deal__row--date-of-approval"]')
-        .should('contain', dateConstants.todayFormattedShort);
+      cy.get('@row2').find('[data-cy="deal__row--submission-date"]').should('contain', dateConstants.todayFormattedShort);
+      cy.get('@row2').find('[data-cy="deal__row--date-of-approval"]').should('contain', dateConstants.todayFormattedShort);
       cy.get('@row2').find('[data-cy="deal__row--days-to-review"]').should('contain', '10 days');
 
       reports.reportsUkefDecisionTable().find('.govuk-table__row').eq(1).as('row1');
@@ -115,12 +111,8 @@ context('Dashboard: Review UKEF Decision report', () => {
       cy.get('@row1').find('[data-cy="deal__row--product"]').should('contain', 'GEF');
       cy.get('@row1').find('[data-cy="deal__row--exporter"]').should('contain', 'Delta');
       cy.get('@row1').find('[data-cy="deal__row--date-created"]').should('contain', dateConstants.todayFormattedShort);
-      cy.get('@row1')
-        .find('[data-cy="deal__row--submission-date"]')
-        .should('contain', dateConstants.twentyFiveDaysAgoFormatted);
-      cy.get('@row1')
-        .find('[data-cy="deal__row--date-of-approval"]')
-        .should('contain', dateConstants.twentyFiveDaysAgoFormatted);
+      cy.get('@row1').find('[data-cy="deal__row--submission-date"]').should('contain', dateConstants.twentyFiveDaysAgoFormatted);
+      cy.get('@row1').find('[data-cy="deal__row--date-of-approval"]').should('contain', dateConstants.twentyFiveDaysAgoFormatted);
       cy.get('@row1').find('[data-cy="deal__row--days-to-review"]').should('contain', 'days overdue');
     });
 
@@ -136,12 +128,8 @@ context('Dashboard: Review UKEF Decision report', () => {
       cy.get('@row2').find('[data-cy="deal__row--product"]').should('contain', 'GEF');
       cy.get('@row2').find('[data-cy="deal__row--exporter"]').should('contain', 'Delta');
       cy.get('@row2').find('[data-cy="deal__row--date-created"]').should('contain', dateConstants.todayFormattedShort);
-      cy.get('@row2')
-        .find('[data-cy="deal__row--submission-date"]')
-        .should('contain', dateConstants.todayFormattedShort);
-      cy.get('@row2')
-        .find('[data-cy="deal__row--date-of-approval"]')
-        .should('contain', dateConstants.todayFormattedShort);
+      cy.get('@row2').find('[data-cy="deal__row--submission-date"]').should('contain', dateConstants.todayFormattedShort);
+      cy.get('@row2').find('[data-cy="deal__row--date-of-approval"]').should('contain', dateConstants.todayFormattedShort);
       cy.get('@row2').find('[data-cy="deal__row--days-to-review"]').should('contain', '20 days');
 
       reports.reportsUkefDecisionTable().find('.govuk-table__row').eq(1).as('row1');
@@ -149,12 +137,8 @@ context('Dashboard: Review UKEF Decision report', () => {
       cy.get('@row1').find('[data-cy="deal__row--product"]').should('contain', 'GEF');
       cy.get('@row1').find('[data-cy="deal__row--exporter"]').should('contain', 'Delta');
       cy.get('@row1').find('[data-cy="deal__row--date-created"]').should('contain', dateConstants.todayFormattedShort);
-      cy.get('@row1')
-        .find('[data-cy="deal__row--submission-date"]')
-        .should('contain', dateConstants.thirtyFiveDaysAgoFormatted);
-      cy.get('@row1')
-        .find('[data-cy="deal__row--date-of-approval"]')
-        .should('contain', dateConstants.thirtyFiveDaysAgoFormatted);
+      cy.get('@row1').find('[data-cy="deal__row--submission-date"]').should('contain', dateConstants.thirtyFiveDaysAgoFormatted);
+      cy.get('@row1').find('[data-cy="deal__row--date-of-approval"]').should('contain', dateConstants.thirtyFiveDaysAgoFormatted);
       cy.get('@row1').find('[data-cy="deal__row--days-to-review"]').should('contain', 'days overdue');
     });
   });
@@ -177,12 +161,8 @@ context('Dashboard: Review UKEF Decision report', () => {
       cy.get('@row2').find('[data-cy="deal__row--product"]').should('contain', 'GEF');
       cy.get('@row2').find('[data-cy="deal__row--exporter"]').should('contain', 'Delta');
       cy.get('@row2').find('[data-cy="deal__row--date-created"]').should('contain', dateConstants.todayFormattedShort);
-      cy.get('@row2')
-        .find('[data-cy="deal__row--submission-date"]')
-        .should('contain', dateConstants.todayFormattedShort);
-      cy.get('@row2')
-        .find('[data-cy="deal__row--date-of-approval"]')
-        .should('contain', dateConstants.todayFormattedShort);
+      cy.get('@row2').find('[data-cy="deal__row--submission-date"]').should('contain', dateConstants.todayFormattedShort);
+      cy.get('@row2').find('[data-cy="deal__row--date-of-approval"]').should('contain', dateConstants.todayFormattedShort);
       cy.get('@row2').find('[data-cy="deal__row--days-to-review"]').should('contain', '10 days');
 
       reports.reportsUkefDecisionTable().find('.govuk-table__row').eq(1).as('row1');
@@ -190,12 +170,8 @@ context('Dashboard: Review UKEF Decision report', () => {
       cy.get('@row1').find('[data-cy="deal__row--product"]').should('contain', 'GEF');
       cy.get('@row1').find('[data-cy="deal__row--exporter"]').should('contain', 'Delta');
       cy.get('@row1').find('[data-cy="deal__row--date-created"]').should('contain', dateConstants.todayFormattedShort);
-      cy.get('@row1')
-        .find('[data-cy="deal__row--submission-date"]')
-        .should('contain', dateConstants.twentyFiveDaysAgoFormatted);
-      cy.get('@row1')
-        .find('[data-cy="deal__row--date-of-approval"]')
-        .should('contain', dateConstants.twentyFiveDaysAgoFormatted);
+      cy.get('@row1').find('[data-cy="deal__row--submission-date"]').should('contain', dateConstants.twentyFiveDaysAgoFormatted);
+      cy.get('@row1').find('[data-cy="deal__row--date-of-approval"]').should('contain', dateConstants.twentyFiveDaysAgoFormatted);
       cy.get('@row1').find('[data-cy="deal__row--days-to-review"]').should('contain', 'days overdue');
     });
 
@@ -211,12 +187,8 @@ context('Dashboard: Review UKEF Decision report', () => {
       cy.get('@row2').find('[data-cy="deal__row--product"]').should('contain', 'GEF');
       cy.get('@row2').find('[data-cy="deal__row--exporter"]').should('contain', 'Delta');
       cy.get('@row2').find('[data-cy="deal__row--date-created"]').should('contain', dateConstants.todayFormattedShort);
-      cy.get('@row2')
-        .find('[data-cy="deal__row--submission-date"]')
-        .should('contain', dateConstants.todayFormattedShort);
-      cy.get('@row2')
-        .find('[data-cy="deal__row--date-of-approval"]')
-        .should('contain', dateConstants.todayFormattedShort);
+      cy.get('@row2').find('[data-cy="deal__row--submission-date"]').should('contain', dateConstants.todayFormattedShort);
+      cy.get('@row2').find('[data-cy="deal__row--date-of-approval"]').should('contain', dateConstants.todayFormattedShort);
       cy.get('@row2').find('[data-cy="deal__row--days-to-review"]').should('contain', '20 days');
 
       reports.reportsUkefDecisionTable().find('.govuk-table__row').eq(1).as('row1');
@@ -224,12 +196,8 @@ context('Dashboard: Review UKEF Decision report', () => {
       cy.get('@row1').find('[data-cy="deal__row--product"]').should('contain', 'GEF');
       cy.get('@row1').find('[data-cy="deal__row--exporter"]').should('contain', 'Delta');
       cy.get('@row1').find('[data-cy="deal__row--date-created"]').should('contain', dateConstants.todayFormattedShort);
-      cy.get('@row1')
-        .find('[data-cy="deal__row--submission-date"]')
-        .should('contain', dateConstants.thirtyFiveDaysAgoFormatted);
-      cy.get('@row1')
-        .find('[data-cy="deal__row--date-of-approval"]')
-        .should('contain', dateConstants.thirtyFiveDaysAgoFormatted);
+      cy.get('@row1').find('[data-cy="deal__row--submission-date"]').should('contain', dateConstants.thirtyFiveDaysAgoFormatted);
+      cy.get('@row1').find('[data-cy="deal__row--date-of-approval"]').should('contain', dateConstants.thirtyFiveDaysAgoFormatted);
       cy.get('@row1').find('[data-cy="deal__row--days-to-review"]').should('contain', 'days overdue');
     });
   });

@@ -187,9 +187,7 @@ context('Case Underwriting - Pricing and risk', () => {
 
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().should('be.checked');
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('exist');
-      pages.underwritingPricingAndRiskEditPage
-        .creditRatingTextInputOther()
-        .should('have.value', MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
+      pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
     });
   });
 

@@ -84,10 +84,7 @@ const mapEligibility = async (token, v1Eligibility) => {
 };
 
 const mapSubmissionCount = (submissionType) => {
-  if (
-    submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.AIN ||
-    submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
-  ) {
+  if (submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.AIN || submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
     return 1;
   }
 
@@ -184,10 +181,7 @@ const mapSupportingInformation = (v1Eligibility) => {
   }
 
   if (v1Eligibility.file_2) {
-    mapped.auditedFinancialStatements = mapDocuments(
-      v1Eligibility.file_2,
-      MIGRATION_MAP.DEAL.SUPPORTING_INFORMATION.file_2,
-    );
+    mapped.auditedFinancialStatements = mapDocuments(v1Eligibility.file_2, MIGRATION_MAP.DEAL.SUPPORTING_INFORMATION.file_2);
   }
 
   if (v1Eligibility.file_3) {
@@ -199,10 +193,7 @@ const mapSupportingInformation = (v1Eligibility) => {
   }
 
   if (v1Eligibility.file_5) {
-    mapped.financialInformationCommentary = mapDocuments(
-      v1Eligibility.file_5,
-      MIGRATION_MAP.DEAL.SUPPORTING_INFORMATION.file_5,
-    );
+    mapped.financialInformationCommentary = mapDocuments(v1Eligibility.file_5, MIGRATION_MAP.DEAL.SUPPORTING_INFORMATION.file_5);
   }
 
   if (v1Eligibility.file_6) {
@@ -219,9 +210,7 @@ const mapSupportingInformation = (v1Eligibility) => {
 const mapV1Deal = async (token, v1Deal, v2Banks, v2Users) => {
   const submissionType = MIGRATION_MAP.DEAL.SUBMISSION_TYPE[v1Deal.field_submission_type];
   const status = MIGRATION_MAP.DEAL.DEAL_STATUS[v1Deal.field_deal_status];
-  const isManualSubmission =
-    submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIA ||
-    submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
+  const isManualSubmission = submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIA || submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
   const mapped = {
     dataMigration: {
       drupalDealId: String(v1Deal.drupal_id),

@@ -1,9 +1,4 @@
-import {
-  isEligibilityComplete,
-  isSubmissionDetailComplete,
-  isEveryDealFormComplete,
-  isEveryFacilityInDealComplete,
-} from './dealFormsCompleted';
+import { isEligibilityComplete, isSubmissionDetailComplete, isEveryDealFormComplete, isEveryFacilityInDealComplete } from './dealFormsCompleted';
 import CONSTANTS from '../constants';
 
 const completeFacilities = {

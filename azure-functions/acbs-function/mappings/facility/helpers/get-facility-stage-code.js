@@ -6,9 +6,7 @@ const getFacilityStageCode = (facility, dealType) => {
     return facility.hasBeenIssued ? CONSTANTS.FACILITY.STAGE_CODE.ISSUED : CONSTANTS.FACILITY.STAGE_CODE.UNISSUED;
   }
 
-  return isIssued(facility.facilityStage)
-    ? CONSTANTS.FACILITY.STAGE_CODE.ISSUED
-    : CONSTANTS.FACILITY.STAGE_CODE.UNISSUED;
+  return isIssued(facility.facilityStage) ? CONSTANTS.FACILITY.STAGE_CODE.ISSUED : CONSTANTS.FACILITY.STAGE_CODE.UNISSUED;
 };
 
 module.exports = getFacilityStageCode;

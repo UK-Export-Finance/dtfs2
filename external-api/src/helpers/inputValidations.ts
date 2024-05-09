@@ -16,8 +16,7 @@ export const isValidInput = (regex: RegExp, input: string): boolean => regex.tes
  * @param currencyCode - the value to validate
  * @returns Boolean - true if valid, false if not
  */
-export const isValidCurrency = (currencyCode: string): boolean =>
-  currencyCode ? validator.isISO4217(currencyCode) : false;
+export const isValidCurrency = (currencyCode: string): boolean => (currencyCode ? validator.isISO4217(currencyCode) : false);
 
 /**
   Validates if a value is a valid postcode using a predefined regex

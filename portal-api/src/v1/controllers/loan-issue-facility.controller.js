@@ -1,9 +1,6 @@
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
-const {
-  hasAllRequestedCoverStartDateValues,
-  updateRequestedCoverStartDate,
-} = require('../facility-dates/requested-cover-start-date');
+const { hasAllRequestedCoverStartDateValues, updateRequestedCoverStartDate } = require('../facility-dates/requested-cover-start-date');
 const { hasAllIssuedDateValues } = require('../facility-dates/issued-date');
 const { getStartOfDateFromDayMonthYearStrings } = require('../helpers/date');
 const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
@@ -56,11 +53,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
       }
 
       if (hasAllIssuedDateValues(modifiedLoan)) {
-        modifiedLoan.issuedDate = getStartOfDateFromDayMonthYearStrings(
-          req.body['issuedDate-day'],
-          req.body['issuedDate-month'],
-          req.body['issuedDate-year'],
-        )
+        modifiedLoan.issuedDate = getStartOfDateFromDayMonthYearStrings(req.body['issuedDate-day'], req.body['issuedDate-month'], req.body['issuedDate-year'])
           .valueOf()
           .toString();
       } else {

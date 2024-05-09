@@ -85,15 +85,12 @@ exports.create = async (req, res) => {
           filename: formatFilenameForSharepoint(file.originalname),
         });
 
-        if (fileResult.error)
-          return errorFormat(fileResult, parentId, `${file.originalname} ${fileResult.error.message}`);
+        if (fileResult.error) return errorFormat(fileResult, parentId, `${file.originalname} ${fileResult.error.message}`);
 
         const fileObject = { ...file, documentPath };
 
         const collection = await db.getCollection(filesCollection);
-        const insertedFile = await collection.insertOne(
-          new File(fileObject, parentId, generatePortalUserAuditDatabaseRecord(req.user._id)),
-        );
+        const insertedFile = await collection.insertOne(new File(fileObject, parentId, generatePortalUserAuditDatabaseRecord(req.user._id)));
         const insertedId = String(insertedFile.insertedId);
 
         if (!ObjectId.isValid(insertedId)) {

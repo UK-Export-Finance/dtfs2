@@ -1,7 +1,5 @@
 const app = require('../../../src/createApp');
-const {
-  createPartiallyLoggedInUserSession,
-} = require('../../../test-helpers/api-test-helpers/database/user-repository');
+const { createPartiallyLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
 const testUserCache = require('../../api-test-users');
 const { withPartial2FaOnlyAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 

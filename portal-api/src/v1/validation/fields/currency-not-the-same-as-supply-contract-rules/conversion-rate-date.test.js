@@ -91,10 +91,7 @@ describe('validation - conversion rate date', () => {
     const errorsLess = checkConversionRate(facilityLess, errorList, deal);
 
     expect(errorsLess.conversionRateDate.text).toEqual(
-      `Conversion rate date must be between ${format(MAX_DAYS_FROM_NOW, 'do MMMM yyyy')} and ${format(
-        nowDate,
-        'do MMMM yyyy',
-      )}`,
+      `Conversion rate date must be between ${format(MAX_DAYS_FROM_NOW, 'do MMMM yyyy')} and ${format(nowDate, 'do MMMM yyyy')}`,
     );
   });
 

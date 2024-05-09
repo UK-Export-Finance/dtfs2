@@ -56,52 +56,28 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith('/:_id/underwriting', underwritingController.getUnderwriterPage);
 
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/underwriting/pricing-and-risk/edit',
-      underwritingController.getUnderWritingPricingAndRiskEdit,
-    );
+    expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/edit', underwritingController.getUnderWritingPricingAndRiskEdit);
 
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/underwriting/pricing-and-risk/loss-given-default',
-      underwritingController.getUnderWritingLossGivenDefault,
-    );
+    expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/loss-given-default', underwritingController.getUnderWritingLossGivenDefault);
 
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/underwriting/pricing-and-risk/probability-of-default',
-      underwritingController.getUnderWritingProbabilityOfDefault,
-    );
+    expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/probability-of-default', underwritingController.getUnderWritingProbabilityOfDefault);
 
     expect(get).toHaveBeenCalledWith(
       '/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile',
       underwritingController.getUnderWritingFacilityRiskProfileEdit,
     );
 
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/underwriting/lead-underwriter/assign',
-      underwritingController.getAssignLeadUnderwriter,
-    );
+    expect(get).toHaveBeenCalledWith('/:_id/underwriting/lead-underwriter/assign', underwritingController.getAssignLeadUnderwriter);
 
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/underwriting/managers-decision/edit',
-      underwritingController.getUnderwriterManagersDecisionEdit,
-    );
+    expect(get).toHaveBeenCalledWith('/:_id/underwriting/managers-decision/edit', underwritingController.getUnderwriterManagersDecisionEdit);
 
     expect(get).toHaveBeenCalledWith('/:_id/activity', activityController.getActivity);
 
     expect(get).toHaveBeenCalledWith('/:_id/activity/post-comment', activityController.getCommentBox);
 
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/request-date',
-      amendmentsController.getAmendmentRequestDate,
-    );
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/request-approval',
-      amendmentsController.getAmendmentRequestApproval,
-    );
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/amendment-options',
-      amendmentsController.getAmendmentOptions,
-    );
+    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-date', amendmentsController.getAmendmentRequestDate);
+    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-approval', amendmentsController.getAmendmentRequestApproval);
+    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-options', amendmentsController.getAmendmentOptions);
     expect(get).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date',
       amendmentsController.getAmendmentEffectiveDate,
@@ -118,10 +94,7 @@ describe('routes - case', () => {
       '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision',
       amendmentsController.getAmendmentAddUnderwriterManagersFacilityValue,
     );
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision',
-      amendmentsController.getAmendmentBankDecisionChoice,
-    );
+    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', amendmentsController.getAmendmentBankDecisionChoice);
     expect(get).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/received-date',
       amendmentsController.getAmendmentBankDecisionReceivedDate,
@@ -134,10 +107,7 @@ describe('routes - case', () => {
       '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers',
       amendmentsController.getAmendmentBankDecisionAnswers,
     );
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/task/:taskId/group/:groupId',
-      amendmentsController.getAmendmentTask,
-    );
+    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/task/:taskId/group/:groupId', amendmentsController.getAmendmentTask);
 
     // POST routes
     expect(post).toHaveBeenCalledTimes(40);
@@ -170,15 +140,9 @@ describe('routes - case', () => {
 
     expect(post).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary/summary', caseController.postTfmFacility);
 
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/underwriting/pricing-and-risk/edit',
-      underwritingController.postUnderWritingPricingAndRisk,
-    );
+    expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/edit', underwritingController.postUnderWritingPricingAndRisk);
 
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/underwriting/pricing-and-risk/loss-given-default',
-      underwritingController.postUnderWritingLossGivenDefault,
-    );
+    expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/loss-given-default', underwritingController.postUnderWritingLossGivenDefault);
 
     expect(post).toHaveBeenCalledWith(
       '/:_id/underwriting/pricing-and-risk/probability-of-default',
@@ -190,32 +154,17 @@ describe('routes - case', () => {
       underwritingController.postUnderWritingFacilityRiskProfileEdit,
     );
 
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/underwriting/lead-underwriter/assign',
-      underwritingController.postAssignLeadUnderwriter,
-    );
+    expect(post).toHaveBeenCalledWith('/:_id/underwriting/lead-underwriter/assign', underwritingController.postAssignLeadUnderwriter);
 
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/underwriting/managers-decision/edit',
-      underwritingController.postUnderwriterManagersDecision,
-    );
+    expect(post).toHaveBeenCalledWith('/:_id/underwriting/managers-decision/edit', underwritingController.postUnderwriterManagersDecision);
 
     expect(post).toHaveBeenCalledWith('/:_id/activity', activityController.filterActivities);
 
     expect(post).toHaveBeenCalledWith('/:_id/activity/post-comment', activityController.postComment);
 
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/request-date',
-      amendmentsController.postAmendmentRequestDate,
-    );
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/request-approval',
-      amendmentsController.postAmendmentRequestApproval,
-    );
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/amendment-options',
-      amendmentsController.postAmendmentOptions,
-    );
+    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-date', amendmentsController.postAmendmentRequestDate);
+    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-approval', amendmentsController.postAmendmentRequestApproval);
+    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-options', amendmentsController.postAmendmentOptions);
     expect(post).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date',
       amendmentsController.postAmendmentEffectiveDate,
@@ -232,10 +181,7 @@ describe('routes - case', () => {
       '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision',
       amendmentsController.postAmendmentAddUnderwriterManagersFacilityValue,
     );
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision',
-      amendmentsController.postAmendmentBankDecisionChoice,
-    );
+    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', amendmentsController.postAmendmentBankDecisionChoice);
     expect(post).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/received-date',
       amendmentsController.postAmendmentBankDecisionReceivedDate,
@@ -248,9 +194,6 @@ describe('routes - case', () => {
       '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers',
       amendmentsController.postAmendmentBankDecisionAnswers,
     );
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/task/:taskId/group/:groupId',
-      amendmentsController.postAmendmentTask,
-    );
+    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/task/:taskId/group/:groupId', amendmentsController.postAmendmentTask);
   });
 });

@@ -75,9 +75,7 @@ const validateAboutExporter = async (req, res) => {
       });
     } else if (
       body.probabilityOfDefault &&
-      (Number.isNaN(probabilityOfDefault) ||
-        probabilityOfDefault >= maxPercentage ||
-        probabilityOfDefault <= minPercentage)
+      (Number.isNaN(probabilityOfDefault) || probabilityOfDefault >= maxPercentage || probabilityOfDefault <= minPercentage)
     ) {
       aboutExporterErrors.push({
         errRef: 'probabilityOfDefault',

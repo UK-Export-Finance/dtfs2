@@ -20,9 +20,7 @@ const readOnlyRoleCannotBeAssignedWithOtherRoles = require('./rules/read-only-ro
 const usernameAndEmailMustMatch = require('./rules/username-and-email-must-match');
 const emailMustBeValidEmailAddress = require('./rules/email-must-be-valid-email-address');
 const emailMustBeUnique = require('./rules/email-must-be-unique');
-const {
-  createTestCasesFromRules,
-} = require('../../../../test-helpers/unit-test-helpers/users/validation/user-validation.test-helpers');
+const { createTestCasesFromRules } = require('../../../../test-helpers/unit-test-helpers/users/validation/user-validation.test-helpers');
 
 jest.mock('./rules/passwordAtLeast8Characters');
 jest.mock('./rules/passwordAtLeastOneNumber');
@@ -58,8 +56,7 @@ describe('user validation', () => {
     const testCases = [
       {
         description: 'current password is not provided',
-        makeApplyRulesCall: async () =>
-          await applyUpdateRules(baseExistingUser, baseUpdateUserRequestWithoutCurrentPassword),
+        makeApplyRulesCall: async () => await applyUpdateRules(baseExistingUser, baseUpdateUserRequestWithoutCurrentPassword),
         allRules: {
           expectedRules: {
             passwordAtLeast8Characters,
@@ -104,25 +101,22 @@ describe('user validation', () => {
       },
     ];
 
-    describe.each(testCases)(
-      'when $description',
-      ({ makeApplyRulesCall, allRules, expectedArgumentsToCallRuleWith }) => {
-        const allRulesTestCases = createTestCasesFromRules({ allRules });
+    describe.each(testCases)('when $description', ({ makeApplyRulesCall, allRules, expectedArgumentsToCallRuleWith }) => {
+      const allRulesTestCases = createTestCasesFromRules({ allRules });
 
-        whenApplyingRulesItAppliesOnlyTheExpectedRules({
-          makeApplyRulesCall,
-          allRulesTestCases,
-          expectedArgumentsToCallRuleWith,
-        });
+      whenApplyingRulesItAppliesOnlyTheExpectedRules({
+        makeApplyRulesCall,
+        allRulesTestCases,
+        expectedArgumentsToCallRuleWith,
+      });
 
-        whenNoRulesReturnAnErrorItReturnsAnEmptyArray({ makeApplyRulesCall, allRulesTestCases });
+      whenNoRulesReturnAnErrorItReturnsAnEmptyArray({ makeApplyRulesCall, allRulesTestCases });
 
-        whenASingleRuleReturnsAnErrorItReturnsTheError({ makeApplyRulesCall, allRulesTestCases });
+      whenASingleRuleReturnsAnErrorItReturnsTheError({ makeApplyRulesCall, allRulesTestCases });
 
-        whenASingleRuleThrowsAnUnhandledErrorItThrowsTheError({ makeApplyRulesCall, allRulesTestCases });
+      whenASingleRuleThrowsAnUnhandledErrorItThrowsTheError({ makeApplyRulesCall, allRulesTestCases });
 
-        whenMultipleRulesReturnErrorsItReturnsAllErrors({ makeApplyRulesCall, allRulesTestCases });
-      },
-    );
+      whenMultipleRulesReturnErrorsItReturnsAllErrors({ makeApplyRulesCall, allRulesTestCases });
+    });
   });
 });

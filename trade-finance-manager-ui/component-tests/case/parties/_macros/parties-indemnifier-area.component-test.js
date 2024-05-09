@@ -84,49 +84,37 @@ describe(page, () => {
   it('should render indemnifier address country', () => {
     wrapper = render(params);
 
-    wrapper
-      .expectText('[data-cy="indemnifier-address-country"]')
-      .toRead(params.deal.submissionDetails.indemnifierAddressCountry);
+    wrapper.expectText('[data-cy="indemnifier-address-country"]').toRead(params.deal.submissionDetails.indemnifierAddressCountry);
   });
 
   it('should render indemnifier indemnifierAddressLine1 in address', () => {
     wrapper = render(params);
 
-    wrapper
-      .expectText('[data-cy="indemnifier-address"]')
-      .toContain(params.deal.submissionDetails.indemnifierAddressLine1);
+    wrapper.expectText('[data-cy="indemnifier-address"]').toContain(params.deal.submissionDetails.indemnifierAddressLine1);
   });
 
   it('should render indemnifier indemnifierAddressLine2 in address', () => {
     wrapper = render(params);
 
-    wrapper
-      .expectText('[data-cy="indemnifier-address"]')
-      .toContain(params.deal.submissionDetails.indemnifierAddressLine2);
+    wrapper.expectText('[data-cy="indemnifier-address"]').toContain(params.deal.submissionDetails.indemnifierAddressLine2);
   });
 
   it('should render indemnifier indemnifierAddressLine3 in address', () => {
     wrapper = render(params);
 
-    wrapper
-      .expectText('[data-cy="indemnifier-address"]')
-      .toContain(params.deal.submissionDetails.indemnifierAddressLine3);
+    wrapper.expectText('[data-cy="indemnifier-address"]').toContain(params.deal.submissionDetails.indemnifierAddressLine3);
   });
 
   it('should render indemnifier indemnifierAddressTown in address', () => {
     wrapper = render(params);
 
-    wrapper
-      .expectText('[data-cy="indemnifier-address"]')
-      .toContain(params.deal.submissionDetails.indemnifierAddressTown);
+    wrapper.expectText('[data-cy="indemnifier-address"]').toContain(params.deal.submissionDetails.indemnifierAddressTown);
   });
 
   it('should render indemnifier indemnifierAddressPostcode in address', () => {
     wrapper = render(params);
 
-    wrapper
-      .expectText('[data-cy="indemnifier-address"]')
-      .toContain(params.deal.submissionDetails.indemnifierAddressPostcode);
+    wrapper.expectText('[data-cy="indemnifier-address"]').toContain(params.deal.submissionDetails.indemnifierAddressPostcode);
   });
 
   it('should render indemnifier name', () => {
@@ -146,25 +134,19 @@ describe(page, () => {
   it('should render indemnifier legally distinct', () => {
     wrapper = render(params);
 
-    wrapper
-      .expectText('[data-cy="indemnifier-legally-distinct"]')
-      .toRead(params.deal.submissionDetails.legallyDistinct);
+    wrapper.expectText('[data-cy="indemnifier-legally-distinct"]').toRead(params.deal.submissionDetails.legallyDistinct);
   });
 
   it('should render approval level required', () => {
     wrapper = render(params);
 
-    wrapper
-      .expectText('[data-cy="indemnifier-approval-level"]')
-      .toRead(params.deal.submissionDetails.indemnifierApprovalLevelRequired);
+    wrapper.expectText('[data-cy="indemnifier-approval-level"]').toRead(params.deal.submissionDetails.indemnifierApprovalLevelRequired);
   });
 
   it('should render correspondence country', () => {
     wrapper = render(params);
 
-    wrapper
-      .expectText('[data-cy="indemnifier-correspondence-country"]')
-      .toRead(params.deal.submissionDetails.indemnifierCorrespondenceAddressCountry);
+    wrapper.expectText('[data-cy="indemnifier-correspondence-country"]').toRead(params.deal.submissionDetails.indemnifierCorrespondenceAddressCountry);
   });
 
   describe('when dealType is GEF', () => {

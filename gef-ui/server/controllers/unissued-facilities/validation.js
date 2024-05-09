@@ -38,14 +38,11 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
   const issueDateIsPartiallyComplete = !issueDateIsFullyComplete && (issueDateDay || issueDateMonth || issueDateYear);
   const issueDateIsBlank = !issueDateDay && !issueDateMonth && !issueDateYear;
   const coverStartDateIsFullyComplete =
-    (coverStartDateDay && coverStartDateMonth && coverStartDateYear && shouldCoverStartOnSubmission === 'false') ||
-    shouldCoverStartOnSubmission === 'true';
-  const coverStartDateIsPartiallyComplete =
-    !coverStartDateIsFullyComplete && (coverStartDateDay || coverStartDateMonth || coverStartDateYear);
+    (coverStartDateDay && coverStartDateMonth && coverStartDateYear && shouldCoverStartOnSubmission === 'false') || shouldCoverStartOnSubmission === 'true';
+  const coverStartDateIsPartiallyComplete = !coverStartDateIsFullyComplete && (coverStartDateDay || coverStartDateMonth || coverStartDateYear);
   const coverStartDateIsBlank = !coverStartDateDay && !coverStartDateMonth && !coverStartDateYear;
   const coverEndDateIsFullyComplete = coverEndDateDay && coverEndDateMonth && coverEndDateYear;
-  const coverEndDateIsPartiallyComplete =
-    !coverEndDateIsFullyComplete && (coverEndDateDay || coverEndDateMonth || coverEndDateYear);
+  const coverEndDateIsPartiallyComplete = !coverEndDateIsFullyComplete && (coverEndDateDay || coverEndDateMonth || coverEndDateYear);
   const coverEndDateIsBlank = !coverEndDateDay && !coverEndDateMonth && !coverEndDateYear;
 
   let issueDate = null;
@@ -106,11 +103,7 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
       subFieldErrorRefs: dateFieldsInError,
     });
   } else if (issueDateIsFullyComplete) {
-    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(
-      issueDateDay,
-      issueDateMonth,
-      issueDateYear,
-    );
+    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(issueDateDay, issueDateMonth, issueDateYear);
 
     const issueDateSet = set(new Date(), {
       year: issueDateYear,
@@ -297,8 +290,7 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
   if (/[^A-Za-z0-9 .,:;'-]/.test(body.facilityName)) {
     aboutFacilityErrors.push({
       errRef: 'facilityName',
-      errMsg:
-        'Facility name must only include letters a to z, full stops, commas, colons, semi-colons, hyphens, spaces and apostrophes',
+      errMsg: 'Facility name must only include letters a to z, full stops, commas, colons, semi-colons, hyphens, spaces and apostrophes',
     });
   }
 
@@ -327,11 +319,7 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
   if (coverEndDateIsFullyComplete) {
     coverEndDate = set(new Date(), { year: coverEndDateYear, month: coverEndDateMonth - 1, date: coverEndDateDay });
 
-    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(
-      coverEndDateDay,
-      coverEndDateMonth,
-      coverEndDateYear,
-    );
+    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(coverEndDateDay, coverEndDateMonth, coverEndDateYear);
 
     if (coverDayValidation.error && coverEndDateDay) {
       aboutFacilityErrors.push({

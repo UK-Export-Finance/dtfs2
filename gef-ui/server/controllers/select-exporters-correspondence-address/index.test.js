@@ -106,9 +106,7 @@ describe('controllers/select-exporters-correspondence-address', () => {
 
       await validateSelectExportersCorrespondenceAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.redirect).toHaveBeenCalledWith(
-        '/gef/application-details/123/enter-exporters-correspondence-address',
-      );
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/enter-exporters-correspondence-address');
     });
   });
 });

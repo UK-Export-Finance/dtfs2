@@ -26,15 +26,11 @@ describe(component, () => {
   it('should render heading with user text and correct classes', () => {
     const expectedHeading = `${params.submissionType} submitted by ${params.submittedBy}`;
     wrapper.expectText('[data-cy="activity-feed-list-item-heading"]').toRead(expectedHeading);
-    wrapper
-      .expectElement('[data-cy="activity-feed-list-item-heading"]')
-      .hasClass('ukef-activity-feed__list-item-heading');
+    wrapper.expectElement('[data-cy="activity-feed-list-item-heading"]').hasClass('ukef-activity-feed__list-item-heading');
 
     const expectedUserText = `by ${params.submittedBy}`;
     wrapper.expectText('[data-cy="activity-feed-list-item-heading-user"]').toRead(expectedUserText);
-    wrapper
-      .expectElement('[data-cy="activity-feed-list-item-heading-user"]')
-      .hasClass('ukef-activity-feed__list-item-heading-user');
+    wrapper.expectElement('[data-cy="activity-feed-list-item-heading-user"]').hasClass('ukef-activity-feed__list-item-heading-user');
   });
 
   it('should render submissionDate', () => {

@@ -10,11 +10,9 @@ const updateSubmittedIssuedFacilities = async (user, deal) => {
     const { facilityStage } = facility;
 
     const isUnconditionalUnsubmittedLoan =
-      facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL &&
-      !facility.issueFacilityDetailsSubmitted;
+      facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL && !facility.issueFacilityDetailsSubmitted;
 
-    const isIssuedUnsubmittedBond =
-      facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED && !facility.issueFacilityDetailsSubmitted;
+    const isIssuedUnsubmittedBond = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED && !facility.issueFacilityDetailsSubmitted;
 
     const shouldUpdate = isUnconditionalUnsubmittedLoan || isIssuedUnsubmittedBond;
 
@@ -44,8 +42,7 @@ const updateSubmittedIssuedFacilities = async (user, deal) => {
 
     const facilityIsReadyForApproval = facility.status === CONSTANTS.FACILITIES.DEAL_STATUS.READY_FOR_APPROVAL;
 
-    const facilityIssuedFromIssueFacilityForm =
-      shouldUpdate && facility.issueFacilityDetailsProvided && facilityIsReadyForApproval;
+    const facilityIssuedFromIssueFacilityForm = shouldUpdate && facility.issueFacilityDetailsProvided && facilityIsReadyForApproval;
 
     if (facilityIssuedFromIssueFacilityForm) {
       facility.status = CONSTANTS.FACILITIES.DEAL_STATUS.SUBMITTED_TO_UKEF;

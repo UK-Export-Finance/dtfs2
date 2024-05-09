@@ -66,11 +66,7 @@ const selectedFilters = (submittedFilters) => {
 
   if (submittedFilters[CONSTANTS.FIELD_NAMES.FACILITY.TYPE]) {
     selected.push(
-      generateSelectedFiltersObject(
-        CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.PRODUCT,
-        CONSTANTS.FIELD_NAMES.FACILITY.TYPE,
-        submittedFilters.type,
-      ),
+      generateSelectedFiltersObject(CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.PRODUCT, CONSTANTS.FIELD_NAMES.FACILITY.TYPE, submittedFilters.type),
     );
   }
 

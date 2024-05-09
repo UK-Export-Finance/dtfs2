@@ -102,17 +102,9 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
     it('should return a formatted string for multiple facility fields & values', () => {
       const result = generateFacilityFieldsListString(mockSimpleFacility);
 
-      const formattedBankRef = generateFacilityFieldListItemString(
-        mockType.value,
-        mockBankReference.name,
-        mockBankReference.value,
-      );
+      const formattedBankRef = generateFacilityFieldListItemString(mockType.value, mockBankReference.name, mockBankReference.value);
 
-      const formattedDayCountBasis = generateFacilityFieldListItemString(
-        mockType.value,
-        mockDayCountBasis.name,
-        mockDayCountBasis.value,
-      );
+      const formattedDayCountBasis = generateFacilityFieldListItemString(mockType.value, mockDayCountBasis.name, mockDayCountBasis.value);
 
       const expected = `${formattedBankRef}${formattedDayCountBasis}`;
 
@@ -160,10 +152,7 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
 
       const expectedCashString = generateFacilitiesListString(CONTENT_STRINGS.HEADINGS.CASH, mockCashFacilities);
 
-      const expectedContingentString = generateFacilitiesListString(
-        CONTENT_STRINGS.HEADINGS.CONTINGENT,
-        mockContingentFacilities,
-      );
+      const expectedContingentString = generateFacilitiesListString(CONTENT_STRINGS.HEADINGS.CONTINGENT, mockContingentFacilities);
 
       expect(result.cashes).toEqual(expectedCashString);
       expect(result.contingents).toEqual(expectedContingentString);

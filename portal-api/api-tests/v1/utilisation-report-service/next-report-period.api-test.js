@@ -22,8 +22,7 @@ describe('GET /v1/banks/:bankId/next-report-period', () => {
 
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => get(nextReportPeriodUrl(matchingBankId)),
-    makeRequestWithAuthHeader: (authHeader) =>
-      get(nextReportPeriodUrl(matchingBankId), { headers: { Authorization: authHeader } }),
+    makeRequestWithAuthHeader: (authHeader) => get(nextReportPeriodUrl(matchingBankId), { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({

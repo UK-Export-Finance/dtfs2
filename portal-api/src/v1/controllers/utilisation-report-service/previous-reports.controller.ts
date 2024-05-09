@@ -29,9 +29,7 @@ type GroupedReport = {
 export const groupReportsByYear = (years: number[], reports: UtilisationReportResponseBody[]): GroupedReport[] =>
   years.map((year) => ({
     year,
-    reports: reports.filter(
-      (report) => report.reportPeriod.end.year === year || report.reportPeriod.start.year === year,
-    ),
+    reports: reports.filter((report) => report.reportPeriod.end.year === year || report.reportPeriod.start.year === year),
   }));
 
 /**

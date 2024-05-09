@@ -16,12 +16,8 @@ exports.getPortalReports = async (req, res) => {
       ukefDecision: CONSTANTS.STATUS.DEAL.UKEF_APPROVED_WITHOUT_CONDITIONS,
     })) || [];
 
-  const pastDeadlineUnissuedFacilitiesCount = facilities.length
-    ? facilities.filter(({ daysLeftToIssue }) => daysLeftToIssue < 0)
-    : [];
-  const facilitiesThatNeedIssuingCount = facilities.length
-    ? facilities.filter(({ daysLeftToIssue }) => daysLeftToIssue < 15 && daysLeftToIssue >= 0)
-    : [];
+  const pastDeadlineUnissuedFacilitiesCount = facilities.length ? facilities.filter(({ daysLeftToIssue }) => daysLeftToIssue < 0) : [];
+  const facilitiesThatNeedIssuingCount = facilities.length ? facilities.filter(({ daysLeftToIssue }) => daysLeftToIssue < 15 && daysLeftToIssue >= 0) : [];
   const totalUkefDecisions = dealWithConditions.length + dealWithoutConditions.length;
   return res.render('reports/reports-dashboard.njk', {
     allUnissuedFacilitiesCount: facilities.length,

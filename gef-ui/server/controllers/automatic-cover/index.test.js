@@ -215,15 +215,11 @@ describe('controllers/automatic-cover', () => {
       });
 
       it('redirects user to `ineligible-automatic-cover` page', async () => {
-        expect(mockResponse.redirect).toHaveBeenCalledWith(
-          `/gef/application-details/${mockDealId}/ineligible-automatic-cover`,
-        );
+        expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${mockDealId}/ineligible-automatic-cover`);
 
         mockRequest.body = { 12: 'false', 13: 'true' };
         await validateAutomaticCover(mockRequest, mockResponse);
-        expect(mockResponse.redirect).toHaveBeenCalledWith(
-          `/gef/application-details/${mockDealId}/ineligible-automatic-cover`,
-        );
+        expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${mockDealId}/ineligible-automatic-cover`);
       });
 
       it('calls api.updateApplication with MIA submissionType', () => {
@@ -256,9 +252,7 @@ describe('controllers/automatic-cover', () => {
       });
 
       it('redirects user to `application details` page', async () => {
-        expect(mockResponse.redirect).toHaveBeenCalledWith(
-          `/gef/application-details/${mockDealId}/eligible-automatic-cover`,
-        );
+        expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${mockDealId}/eligible-automatic-cover`);
       });
 
       it('calls api.updateApplication with AIN submissionType', () => {

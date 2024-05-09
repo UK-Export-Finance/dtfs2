@@ -165,14 +165,13 @@ const postChangeUnissuedFacility = async (req, res) => {
   try {
     const { details } = await api.getFacility({ facilityId, userToken });
 
-    const { issueDate, coverStartDate, coverEndDate, aboutFacilityErrors, dealId, errorsObject } =
-      await facilityValidation({
-        body,
-        query,
-        params,
-        facility: details,
-        userToken,
-      });
+    const { issueDate, coverStartDate, coverEndDate, aboutFacilityErrors, dealId, errorsObject } = await facilityValidation({
+      body,
+      query,
+      params,
+      facility: details,
+      userToken,
+    });
 
     if (aboutFacilityErrors.length > 0) {
       return res.render('partials/unissued-change-about-facility.njk', {
@@ -261,14 +260,13 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
   try {
     const { details } = await api.getFacility({ facilityId, userToken });
 
-    const { issueDate, coverStartDate, coverEndDate, aboutFacilityErrors, dealId, errorsObject } =
-      await facilityValidation({
-        body,
-        query,
-        params,
-        facility: details,
-        userToken,
-      });
+    const { issueDate, coverStartDate, coverEndDate, aboutFacilityErrors, dealId, errorsObject } = await facilityValidation({
+      body,
+      query,
+      params,
+      facility: details,
+      userToken,
+    });
 
     if (aboutFacilityErrors.length > 0) {
       return res.render('partials/unissued-change-about-facility.njk', {

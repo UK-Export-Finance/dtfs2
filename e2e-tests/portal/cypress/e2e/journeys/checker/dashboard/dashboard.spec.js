@@ -75,13 +75,11 @@ context('View dashboard deals as a checker', () => {
     dashboardDeals.visit();
 
     const gefDeal = BANK1_DEALS.find(
-      ({ dealType, status }) =>
-        dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF && status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
+      ({ dealType, status }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF && status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
     );
 
     const bssDeal = BANK1_DEALS.find(
-      ({ dealType, status }) =>
-        dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS && status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
+      ({ dealType, status }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS && status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
     );
 
     const { exporter, bankRef, product, status, type, updated, link } = dashboardDeals.row;

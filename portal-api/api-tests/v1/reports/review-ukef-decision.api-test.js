@@ -62,9 +62,7 @@ describe('GET /v1/reports/review-ukef-decision', () => {
     expect(status).toEqual(200);
 
     // update the `status` to 'UKEF_APPROVED_WITHOUT_CONDITIONS'
-    await as(aMaker)
-      .put({ status: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS })
-      .to(`${gefDealUrl}/status/${body._id}`);
+    await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS }).to(`${gefDealUrl}/status/${body._id}`);
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS };
     // perform a GET request to retrieve the reports for UKEF decision as a MAKER
@@ -130,9 +128,7 @@ describe('GET /v1/reports/review-ukef-decision', () => {
     expect(status).toEqual(200);
 
     // update the `status` to 'UKEF_APPROVED_WITH_CONDITIONS'
-    await as(aMaker)
-      .put({ status: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS })
-      .to(`${gefDealUrl}/status/${body._id}`);
+    await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS }).to(`${gefDealUrl}/status/${body._id}`);
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS };
     // perform a GET request to retrieve the reports for UKEF decision as a MAKER

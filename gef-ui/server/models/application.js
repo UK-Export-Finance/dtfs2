@@ -75,9 +75,7 @@ const deriveSupportingInfoStatus = (application) => {
 
 // checks if application is a notice and has a submission count above 0
 const isNoticeAndCanResubmit = (application) =>
-  (application.submissionType === DEAL_SUBMISSION_TYPE.AIN ||
-    application.submissionType === DEAL_SUBMISSION_TYPE.MIN) &&
-  application.submissionCount > 0;
+  (application.submissionType === DEAL_SUBMISSION_TYPE.AIN || application.submissionType === DEAL_SUBMISSION_TYPE.MIN) && application.submissionCount > 0;
 
 /**
  * hides submit button if notice and returning to maker if no changes on application and is second/third etc submission
@@ -86,8 +84,7 @@ const isNoticeAndCanResubmit = (application) =>
  * checks status is changes required and if any facilities have been issued
  */
 const applicationCanResubmitAsNotice = (application) =>
-  (application.submissionType === DEAL_SUBMISSION_TYPE.AIN ||
-    application.submissionType === DEAL_SUBMISSION_TYPE.MIN) &&
+  (application.submissionType === DEAL_SUBMISSION_TYPE.AIN || application.submissionType === DEAL_SUBMISSION_TYPE.MIN) &&
   application.submissionCount > 0 &&
   [DEAL_STATUS.CHANGES_REQUIRED].includes(application.status) &&
   facilitiesChangedToIssuedAsArray(application).length > 0;
@@ -98,8 +95,7 @@ const canSubmitApplication = (application, user) =>
   application.exporterStatus.code === DEAL_STATUS.COMPLETED &&
   application.eligibilityCriteriaStatus.code === DEAL_STATUS.COMPLETED &&
   application.facilitiesStatus.code === DEAL_STATUS.COMPLETED &&
-  (application.submissionType === DEAL_SUBMISSION_TYPE.AIN ||
-    application.supportingInfoStatus.code === DEAL_STATUS.COMPLETED) &&
+  (application.submissionType === DEAL_SUBMISSION_TYPE.AIN || application.supportingInfoStatus.code === DEAL_STATUS.COMPLETED) &&
   [DEAL_STATUS.DRAFT, DEAL_STATUS.CHANGES_REQUIRED].includes(application.status) &&
   user.roles.includes(MAKER);
 
@@ -114,10 +110,7 @@ class Application {
        * 1. Application bank ID does not match with the logged-in user bank ID.
        * 2. Logged-in user role is neither `admin` nor `read-only`.
        */
-      if (
-        application.bank.id !== user.bank.id &&
-        !validRolesForAccessingAllBanks.some((validRole) => user.roles.includes(validRole))
-      ) {
+      if (application.bank.id !== user.bank.id && !validRolesForAccessingAllBanks.some((validRole) => user.roles.includes(validRole))) {
         return null;
       }
 
@@ -143,9 +136,7 @@ class Application {
       }
 
       application.checkerCanSubmit =
-        [DEAL_STATUS.READY_FOR_APPROVAL].includes(application.status) &&
-        !application.editedBy.includes(user._id) &&
-        user.roles.includes(CHECKER);
+        [DEAL_STATUS.READY_FOR_APPROVAL].includes(application.status) && !application.editedBy.includes(user._id) && user.roles.includes(CHECKER);
 
       if (application.checkerId) {
         application.checker = await getUserDetails({ userId: application.checkerId, userToken });

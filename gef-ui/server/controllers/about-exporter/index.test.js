@@ -97,10 +97,7 @@ describe('controllers/about-exporter', () => {
           probabilityOfDefault: Number(mockApplication.exporter.probabilityOfDefault),
           isFinanceIncreasing: JSON.stringify(mockApplication.exporter.isFinanceIncreasing),
           selectedIndustry: mockApplication.exporter.selectedIndustry,
-          industries: mappedIndustries(
-            mockApplication.exporter.industries,
-            JSON.stringify(mockApplication.exporter.selectedIndustry),
-          ),
+          industries: mappedIndustries(mockApplication.exporter.industries, JSON.stringify(mockApplication.exporter.selectedIndustry)),
           status: mockRequest.query.status,
         }),
       );

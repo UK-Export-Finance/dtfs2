@@ -23,14 +23,12 @@ const page = {
 
   legallyDistinct: () => cy.get('[data-cy="legallyDistinct-true"]'),
   notLegallyDistinct: () => cy.get('[data-cy="legallyDistinct-false"]'),
-  indemnifierCompaniesHouseRegistrationNumber: () =>
-    cy.get('[data-cy="indemnifier-companies-house-registration-number"]'),
+  indemnifierCompaniesHouseRegistrationNumber: () => cy.get('[data-cy="indemnifier-companies-house-registration-number"]'),
   indemnifierSearchCompaniesHouse: () => cy.get('[data-cy="DoSearch-indemnifier-companies-house-registration-number"]'),
   indemnifierName: () => cy.get('[data-cy="indemnifier-name"]'),
   indemnifierAddress: () => address('indemnifier-address'),
   indemnifierCorrespondenceAddressDifferent: () => cy.get('[data-cy="indemnifierCorrespondenceAddressDifferent-true"]'),
-  indemnifierCorrespondenceAddressNotDifferent: () =>
-    cy.get('[data-cy="indemnifierCorrespondenceAddressDifferent-false"]'),
+  indemnifierCorrespondenceAddressNotDifferent: () => cy.get('[data-cy="indemnifierCorrespondenceAddressDifferent-false"]'),
   indemnifierCorrespondenceAddress: () => address('indemnifier-correspondence-address'),
   nextPage: () => cy.get('[data-cy="NextPage"]'),
   saveAndGoBack: () => cy.get('[data-cy="SaveAndGoBack"]'),

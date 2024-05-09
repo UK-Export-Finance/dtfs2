@@ -1,9 +1,4 @@
-import {
-  bondDetailsValidationErrors,
-  bondFinancialDetailsValidationErrors,
-  bondFeeDetailsValidationErrors,
-  bondPreviewValidationErrors,
-} from '.';
+import { bondDetailsValidationErrors, bondFinancialDetailsValidationErrors, bondFeeDetailsValidationErrors, bondPreviewValidationErrors } from '.';
 import FIELDS from '../pageFields';
 import { pageSpecificValidationErrors } from '../../../../helpers/pageSpecificValidationErrors';
 

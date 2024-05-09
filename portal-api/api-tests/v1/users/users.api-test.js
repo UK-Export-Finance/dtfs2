@@ -7,10 +7,7 @@ const { as } = require('../../api')(app);
 const users = require('./test-data');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { LOGIN_STATUSES } = require('../../../src/constants');
-const {
-  createPartiallyLoggedInUserSession,
-  createLoggedInUserSession,
-} = require('../../../test-helpers/api-test-helpers/database/user-repository');
+const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
 const { ADMIN } = require('../../../src/v1/roles/roles');
 const { STATUS } = require('../../../src/constants/user');
 

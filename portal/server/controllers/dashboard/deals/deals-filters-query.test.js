@@ -51,10 +51,7 @@ describe('controllers/dashboard/deals - filters query', () => {
         AND: [
           { 'bank.id': mockUser.bank.id },
           {
-            OR: [
-              { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[0] },
-              { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[1] },
-            ],
+            OR: [{ [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[0] }, { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[1] }],
           },
           {
             OR: [{ [FIELD_NAMES.DEAL.SUBMISSION_TYPE]: mockFilters[1].submissionType[0] }],
@@ -113,10 +110,7 @@ describe('controllers/dashboard/deals - filters query', () => {
     const expected = {
       AND: [
         {
-          OR: [
-            { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[0] },
-            { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[1] },
-          ],
+          OR: [{ [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[0] }, { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[1] }],
         },
         {
           OR: [{ [FIELD_NAMES.DEAL.SUBMISSION_TYPE]: mockFilters[1].submissionType[0] }],

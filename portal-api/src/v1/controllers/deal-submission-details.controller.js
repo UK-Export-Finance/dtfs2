@@ -87,11 +87,7 @@ const checkAllCountryCodes = async (deal, fields) => {
   const modifiedFields = fields;
 
   if ('destinationOfGoodsAndServices' in modifiedFields) {
-    modifiedFields.destinationOfGoodsAndServices = await checkCountryCode(
-      deal,
-      fields,
-      'destinationOfGoodsAndServices',
-    );
+    modifiedFields.destinationOfGoodsAndServices = await checkCountryCode(deal, fields, 'destinationOfGoodsAndServices');
   }
 
   if ('buyer-address-country' in modifiedFields) {
@@ -99,11 +95,7 @@ const checkAllCountryCodes = async (deal, fields) => {
   }
 
   if ('indemnifier-correspondence-address-country' in modifiedFields) {
-    modifiedFields['indemnifier-correspondence-address-country'] = await checkCountryCode(
-      deal,
-      fields,
-      'indemnifier-correspondence-address-country',
-    );
+    modifiedFields['indemnifier-correspondence-address-country'] = await checkCountryCode(deal, fields, 'indemnifier-correspondence-address-country');
   }
 
   if ('indemnifier-address-country' in modifiedFields) {
@@ -115,11 +107,7 @@ const checkAllCountryCodes = async (deal, fields) => {
   }
 
   if ('supplier-correspondence-address-country' in modifiedFields) {
-    modifiedFields['supplier-correspondence-address-country'] = await checkCountryCode(
-      deal,
-      fields,
-      'supplier-correspondence-address-country',
-    );
+    modifiedFields['supplier-correspondence-address-country'] = await checkCountryCode(deal, fields, 'supplier-correspondence-address-country');
   }
 
   return modifiedFields;
@@ -177,10 +165,7 @@ exports.update = async (req, res) => {
     submissionDetails = await checkAllCountryCodes(deal, submissionDetails);
 
     if (submissionDetails.supplyContractCurrency) {
-      submissionDetails.supplyContractCurrency = await checkCurrency(
-        deal.supplyContractCurrency,
-        submissionDetails.supplyContractCurrency,
-      );
+      submissionDetails.supplyContractCurrency = await checkCurrency(deal.supplyContractCurrency, submissionDetails.supplyContractCurrency);
     }
 
     const dealAfterAllUpdates = await updateSubmissionDetails(req.params.id, submissionDetails, user);

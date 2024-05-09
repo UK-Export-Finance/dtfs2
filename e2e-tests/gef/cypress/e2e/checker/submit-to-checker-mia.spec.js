@@ -42,10 +42,7 @@ context('Submit to UKEF as MIA', () => {
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 
-      cy.uploadFile(
-        'test.pdf',
-        `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`,
-      );
+      cy.uploadFile('test.pdf', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('test.pdf');
       manualInclusion.continueButton().click();
       cy.visit(relative(`/gef/application-details/${dealId}`));
@@ -68,9 +65,7 @@ context('Submit to UKEF as MIA', () => {
       cy.visit(relative(`/gef/application-details/${dealId}/submit`));
 
       applicationSubmission.submitButton().click();
-      applicationSubmission
-        .confirmationPanelTitle()
-        .contains('Manual inclusion application submitted for checking at your bank');
+      applicationSubmission.confirmationPanelTitle().contains('Manual inclusion application submitted for checking at your bank');
       applicationSubmission
         .confirmation()
         .invoke('attr', 'aria-label')

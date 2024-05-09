@@ -34,24 +34,14 @@ const validateSubmittedValues = (submittedValues) => {
   if (!hasValue(decision)) {
     errorsCount = increment(errorsCount);
 
-    validationErrors = generateValidationErrors(
-      'decision',
-      'Select if you approve or decline',
-      errorsCount,
-      validationErrors,
-    );
+    validationErrors = generateValidationErrors('decision', 'Select if you approve or decline', errorsCount, validationErrors);
   }
 
   if (decision === CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS) {
     if (!hasValue(approveWithConditionsComments)) {
       errorsCount = increment(errorsCount);
 
-      validationErrors = generateValidationErrors(
-        'approveWithConditionsComments',
-        'Enter conditions',
-        errorsCount,
-        validationErrors,
-      );
+      validationErrors = generateValidationErrors('approveWithConditionsComments', 'Enter conditions', errorsCount, validationErrors);
     }
 
     if (hasValue(approveWithConditionsComments)) {
@@ -76,13 +66,7 @@ const validateSubmittedValues = (submittedValues) => {
     }
 
     if (hasValue(declineComments)) {
-      const validatedDeclineComments = validateCommentField(
-        validationErrors,
-        errorsCount,
-        'Reasons',
-        'declineComments',
-        declineComments,
-      );
+      const validatedDeclineComments = validateCommentField(validationErrors, errorsCount, 'Reasons', 'declineComments', declineComments);
 
       validationErrors = validatedDeclineComments.validationErrors;
       errorsCount = validatedDeclineComments.errorsCount;
@@ -90,13 +74,7 @@ const validateSubmittedValues = (submittedValues) => {
   }
 
   if (hasValue(internalComments)) {
-    const validatedInternalComments = validateCommentField(
-      validationErrors,
-      errorsCount,
-      'Comments',
-      'internalComments',
-      internalComments,
-    );
+    const validatedInternalComments = validateCommentField(validationErrors, errorsCount, 'Comments', 'internalComments', internalComments);
 
     validationErrors = validatedInternalComments.validationErrors;
     errorsCount = validatedInternalComments.errorsCount;

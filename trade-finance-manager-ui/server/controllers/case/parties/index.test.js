@@ -763,9 +763,7 @@ describe('PartyURN: controllers - case - parties', () => {
           req.body.partyUrn = '1234';
 
           await partiesController.confirmPartyUrn(req, res);
-          expect(res.redirect).toHaveBeenCalledWith(
-            `/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`,
-          );
+          expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`);
         });
       });
 
@@ -945,9 +943,7 @@ describe('PartyURN: controllers - case - parties', () => {
           req.body.partyUrn = '1234';
 
           await partiesController.confirmPartyUrn(req, res);
-          expect(res.redirect).toHaveBeenCalledWith(
-            `/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`,
-          );
+          expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`);
         });
       });
 
@@ -1127,9 +1123,7 @@ describe('PartyURN: controllers - case - parties', () => {
           req.body.partyUrn = '1234';
 
           await partiesController.confirmPartyUrn(req, res);
-          expect(res.redirect).toHaveBeenCalledWith(
-            `/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`,
-          );
+          expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`);
         });
 
         it('should render party edit template with data including agent commission rate', async () => {
@@ -1138,9 +1132,7 @@ describe('PartyURN: controllers - case - parties', () => {
 
           await partiesController.confirmPartyUrn(req, res);
           expect(req.session.commissionRate).toEqual('1.234');
-          expect(res.redirect).toHaveBeenCalledWith(
-            `/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`,
-          );
+          expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`);
         });
       });
 
@@ -1320,9 +1312,7 @@ describe('PartyURN: controllers - case - parties', () => {
           req.body.partyUrn = '1234';
 
           await partiesController.confirmPartyUrn(req, res);
-          expect(res.redirect).toHaveBeenCalledWith(
-            `/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`,
-          );
+          expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`);
         });
       });
 

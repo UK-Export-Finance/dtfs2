@@ -1,11 +1,4 @@
-const {
-  mapAndFilter,
-  filterTeamTasksInGroup,
-  filterTeamTasks,
-  filterUserTasksInGroup,
-  filterUserTasks,
-  filterTasks,
-} = require('./filterTasks');
+const { mapAndFilter, filterTeamTasksInGroup, filterTeamTasks, filterUserTasksInGroup, filterUserTasks, filterTasks } = require('./filterTasks');
 
 describe('filterTasks', () => {
   const MOCK_USER_ID = '12345678';

@@ -36,13 +36,10 @@ describe('emailMustBeValidEmailAddress', () => {
       { invalidEmailAddress: { test: 'test' } },
     ];
 
-    it.each(invalidEmailAddresses)(
-      'should return error when the email is not an email address',
-      ({ invalidEmailAddress }) => {
-        const change = { email: invalidEmailAddress };
-        const errors = emailMustBeValidEmailAddress(user, change);
-        expect(errors).toStrictEqual(emailMustBeValidEmailAddressError);
-      },
-    );
+    it.each(invalidEmailAddresses)('should return error when the email is not an email address', ({ invalidEmailAddress }) => {
+      const change = { email: invalidEmailAddress };
+      const errors = emailMustBeValidEmailAddress(user, change);
+      expect(errors).toStrictEqual(emailMustBeValidEmailAddressError);
+    });
   });
 });

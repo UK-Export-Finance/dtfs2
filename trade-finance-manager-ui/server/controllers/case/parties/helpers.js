@@ -11,8 +11,7 @@ const userCanEdit = (user) => userIsInTeam(user, [TEAM_IDS.BUSINESS_SUPPORT]);
  * @param {String} party party type either as `bond-issuer` or `bond-beneficiary`.
  * @returns {String} bond type
  */
-const bondType = (party) =>
-  party === CONSTANTS.PARTY.BOND.BOND_ISSUER ? 'bondIssuerPartyUrn' : 'bondBeneficiaryPartyUrn';
+const bondType = (party) => (party === CONSTANTS.PARTY.BOND.BOND_ISSUER ? 'bondIssuerPartyUrn' : 'bondBeneficiaryPartyUrn');
 
 // checks if bond type and returns true or false
 const isBondPartyType = (partyType) => bondParties.includes(partyType);

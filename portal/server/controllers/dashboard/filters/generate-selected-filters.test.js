@@ -1,8 +1,4 @@
-import {
-  generateSelectedFiltersObject,
-  generateSelectedFiltersObjectWithMappedValues,
-  selectedSubmissionTypeFilters,
-} from './generate-selected-filters';
+import { generateSelectedFiltersObject, generateSelectedFiltersObjectWithMappedValues, selectedSubmissionTypeFilters } from './generate-selected-filters';
 import { formatFieldValue } from './helpers';
 import CONTENT_STRINGS from '../../../content-strings';
 import CONSTANTS from '../../../constants';
@@ -55,11 +51,7 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
         },
       ];
 
-      const result = generateSelectedFiltersObjectWithMappedValues(
-        mockHeading,
-        mockFieldName,
-        mockSubmittedFieldFilters,
-      );
+      const result = generateSelectedFiltersObjectWithMappedValues(mockHeading, mockFieldName, mockSubmittedFieldFilters);
 
       const expectedTextValue = (str) => formatFieldValue(str);
       const expectedHref = (name, value) => `filters/remove/${name}/${value}`;
@@ -90,10 +82,7 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
     it('should return result of generateSelectedFiltersObject with provided params', () => {
       const mockSubmittedFieldFilters = [CONSTANTS.SUBMISSION_TYPE.AIN, CONSTANTS.SUBMISSION_TYPE.MIN];
 
-      const result = selectedSubmissionTypeFilters(
-        CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE,
-        mockSubmittedFieldFilters,
-      );
+      const result = selectedSubmissionTypeFilters(CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE, mockSubmittedFieldFilters);
 
       const expected = generateSelectedFiltersObject(
         CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.NOTICE_TYPE,

@@ -78,10 +78,7 @@ const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP,
       return b;
     }
 
-    if (
-      b.status !== CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED &&
-      b.status !== CONSTANTS.FACILITIES.DEAL_STATUS.INCOMPLETE
-    ) {
+    if (b.status !== CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED && b.status !== CONSTANTS.FACILITIES.DEAL_STATUS.INCOMPLETE) {
       return b;
     }
     return null;
@@ -92,21 +89,16 @@ const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP,
     if (l.submittedAsIssuedDate) {
       return l;
     }
-    if (
-      l.status !== CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED &&
-      l.status !== CONSTANTS.FACILITIES.DEAL_STATUS.INCOMPLETE
-    ) {
+    if (l.status !== CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED && l.status !== CONSTANTS.FACILITIES.DEAL_STATUS.INCOMPLETE) {
       return l;
     }
     return null;
   });
 
   const hasSupplyContractCurrencyId = supplyContractCurrency?.id && hasValue(supplyContractCurrency?.id);
-  const hasSupplyContractConversionRateToGBP =
-    hasValue(supplyContractConversionRateToGBP) && isNumeric(Number(supplyContractConversionRateToGBP));
+  const hasSupplyContractConversionRateToGBP = hasValue(supplyContractConversionRateToGBP) && isNumeric(Number(supplyContractConversionRateToGBP));
   const hasRelevantSupplyContractValues =
-    (hasSupplyContractCurrencyId && supplyContractCurrency.id === CURRENCY.GBP) ||
-    (hasSupplyContractCurrencyId && hasSupplyContractConversionRateToGBP);
+    (hasSupplyContractCurrencyId && supplyContractCurrency.id === CURRENCY.GBP) || (hasSupplyContractCurrencyId && hasSupplyContractConversionRateToGBP);
 
   return !!(hasRelevantSupplyContractValues && (hasCompletedBonds || hasCompletedLoans));
 };
@@ -120,27 +112,15 @@ const calculateDealSummary = (deal) => {
   const loans = loanTransactions.items;
 
   if (canCalculate(supplyContractCurrency, supplyContractConversionRateToGBP, bonds, loans)) {
-    const {
-      totalValueInDealCurrency: bondsTotalValueInDealCurrency,
-      totalUkefExposureInDealCurrency: bondsTotalUkefExposureInDealCurrency,
-    } = calculateFacilitiesTotalInDealCurrency(bonds);
+    const { totalValueInDealCurrency: bondsTotalValueInDealCurrency, totalUkefExposureInDealCurrency: bondsTotalUkefExposureInDealCurrency } =
+      calculateFacilitiesTotalInDealCurrency(bonds);
 
-    const {
-      totalValueInDealCurrency: loansTotalValueInDealCurrency,
-      totalUkefExposureInDealCurrency: loansTotalUkefExposureInDealCurrency,
-    } = calculateFacilitiesTotalInDealCurrency(loans);
+    const { totalValueInDealCurrency: loansTotalValueInDealCurrency, totalUkefExposureInDealCurrency: loansTotalUkefExposureInDealCurrency } =
+      calculateFacilitiesTotalInDealCurrency(loans);
 
     return {
-      totalValue: calculate(
-        bondsTotalValueInDealCurrency,
-        loansTotalValueInDealCurrency,
-        Number(supplyContractConversionRateToGBP),
-      ),
-      totalUkefExposure: calculate(
-        bondsTotalUkefExposureInDealCurrency,
-        loansTotalUkefExposureInDealCurrency,
-        Number(supplyContractConversionRateToGBP),
-      ),
+      totalValue: calculate(bondsTotalValueInDealCurrency, loansTotalValueInDealCurrency, Number(supplyContractConversionRateToGBP)),
+      totalUkefExposure: calculate(bondsTotalUkefExposureInDealCurrency, loansTotalUkefExposureInDealCurrency, Number(supplyContractConversionRateToGBP)),
     };
   }
   return {};

@@ -12,8 +12,7 @@ const canIssueFacility = (userRoles, deal, facility) => {
   const { facilityStage, previousFacilityStage } = facility;
 
   const acceptedByUkefDealStatus =
-    status === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS ||
-    status === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
+    status === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS || status === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
 
   const allowedDealStatus =
     status === CONSTANTS.DEAL.DEAL_STATUS.UKEF_ACKNOWLEDGED ||
@@ -22,12 +21,10 @@ const canIssueFacility = (userRoles, deal, facility) => {
     status === CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL ||
     status === CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED;
 
-  const allowedDealSubmissionType =
-    submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
+  const allowedDealSubmissionType = submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
 
   const isMiaDealInApprovedStatus =
-    submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA &&
-    (acceptedByUkefDealStatus || status === CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED);
+    submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA && (acceptedByUkefDealStatus || status === CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED);
 
   const allowedBondFacilityStage =
     facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED ||
@@ -43,8 +40,7 @@ const canIssueFacility = (userRoles, deal, facility) => {
 
   const allowedFacilityStage = allowedLoanFacilityStage || allowedBondFacilityStage;
 
-  const isAllowedDealStatusAndSubmissionType =
-    (allowedDealStatus && allowedDealSubmissionType) || isMiaDealInApprovedStatus;
+  const isAllowedDealStatusAndSubmissionType = (allowedDealStatus && allowedDealSubmissionType) || isMiaDealInApprovedStatus;
 
   if (isMaker && dealHasBeenSubmitted && isAllowedDealStatusAndSubmissionType && allowedFacilityStage) {
     return true;

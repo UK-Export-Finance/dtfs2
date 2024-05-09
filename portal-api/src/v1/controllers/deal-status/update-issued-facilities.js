@@ -49,19 +49,13 @@ const shouldUpdateFacility = (facility) => {
   const { type, facilityStage, previousFacilityStage } = facility;
 
   if (isLoanFacility(type)) {
-    if (
-      facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL ||
-      loanHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)
-    ) {
+    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL || loanHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)) {
       return true;
     }
   }
 
   if (isBondFacility(type)) {
-    if (
-      facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED ||
-      bondHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)
-    ) {
+    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED || bondHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)) {
       return true;
     }
   }
@@ -71,8 +65,7 @@ const shouldUpdateFacility = (facility) => {
 
 const updateIssuedFacilities = async (user, fromStatus, deal, canUpdateIssuedFacilitiesCoverStartDates, newStatus) => {
   const fromStatusIsApprovedStatus =
-    fromStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS ||
-    fromStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
+    fromStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS || fromStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
 
   const isMIAdeal = deal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
   const isMINdeal = deal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
@@ -114,11 +107,7 @@ const updateIssuedFacilities = async (user, fromStatus, deal, canUpdateIssuedFac
             facility.updatedAt = Date.now();
           }
 
-          if (
-            canUpdateIssuedFacilitiesCoverStartDates &&
-            !facility.issueFacilityDetailsSubmitted &&
-            !facility.requestedCoverStartDate
-          ) {
+          if (canUpdateIssuedFacilitiesCoverStartDates && !facility.issueFacilityDetailsSubmitted && !facility.requestedCoverStartDate) {
             if (fromStatusIsApprovedStatus && isMINdeal) {
               facility.updatedAt = Date.now();
               facility.requestedCoverStartDate = deal.details.manualInclusionNoticeSubmissionDate;

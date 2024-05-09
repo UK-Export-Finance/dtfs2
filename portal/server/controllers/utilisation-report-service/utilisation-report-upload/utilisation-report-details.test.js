@@ -42,14 +42,11 @@ describe('utilisation-report-details', () => {
 
   it('should throw an error if the report is undefined', () => {
     // Act/Assert
-    expect(() => getReportAndUserDetails(undefined)).toThrow(
-      new Error("Failed to get report and user details: 'report' was undefined"),
-    );
+    expect(() => getReportAndUserDetails(undefined)).toThrow(new Error("Failed to get report and user details: 'report' was undefined"));
   });
 
   it('should return the correct full name, date format and report period for a report uploaded in the morning', () => {
-    const { uploadedByFullName, formattedDateAndTimeUploaded, lastUploadedReportPeriod } =
-      getReportAndUserDetails(morningReport);
+    const { uploadedByFullName, formattedDateAndTimeUploaded, lastUploadedReportPeriod } = getReportAndUserDetails(morningReport);
 
     expect(uploadedByFullName).toBe('John Smith');
     expect(formattedDateAndTimeUploaded).toBe('8 April 2023 at 10:35am');
@@ -57,8 +54,7 @@ describe('utilisation-report-details', () => {
   });
 
   it('should return the correct full name, date format and report period for a report uploaded in the afternoon', () => {
-    const { uploadedByFullName, formattedDateAndTimeUploaded, lastUploadedReportPeriod } =
-      getReportAndUserDetails(afternoonReport);
+    const { uploadedByFullName, formattedDateAndTimeUploaded, lastUploadedReportPeriod } = getReportAndUserDetails(afternoonReport);
 
     expect(uploadedByFullName).toBe('John Smith');
     expect(formattedDateAndTimeUploaded).toBe('8 April 2023 at 3:23pm');

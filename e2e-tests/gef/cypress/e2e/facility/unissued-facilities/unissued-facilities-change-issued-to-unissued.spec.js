@@ -147,9 +147,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
     // task comments box should show facilities names have changed to unissued
     it('preview review facility stage has correct headers and shows all 2 updated facilities and submit button should be visible', () => {
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
-      applicationPreview
-        .updatedUnissuedFacilitiesHeader()
-        .contains('The following facility stages have been updated to issued:');
+      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[1].name);
       applicationPreview.unissuedFacilitiesReviewLink().should('not.exist');
@@ -193,10 +191,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
       applicationPreview.facilitySummaryListRowValue(2, 0).contains(MOCK_FACILITY_ONE.name);
       applicationPreview.facilitySummaryListRowAction(2, 2).click();
 
-      cy.url().should(
-        'eq',
-        relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change-to-unissued`),
-      );
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change-to-unissued`));
 
       facilities.hasBeenIssuedHeading().contains('Has your bank already issued this cash facility to the exporter?');
       facilities.hasBeenIssuedRadioYesRadioButton().should('exist');
@@ -228,10 +223,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
       applicationPreview.facilitySummaryListRowValue(2, 0).contains(MOCK_FACILITY_ONE.name);
       applicationPreview.facilitySummaryListRowAction(2, 2).click();
 
-      cy.url().should(
-        'eq',
-        relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change-to-unissued`),
-      );
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change-to-unissued`));
 
       facilities.backLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
@@ -283,10 +275,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
       applicationPreview.facilitySummaryListRowValue(2, 0).contains(MOCK_FACILITY_ONE.name);
       applicationPreview.facilitySummaryListRowAction(2, 2).click();
 
-      cy.url().should(
-        'eq',
-        relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change-to-unissued`),
-      );
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change-to-unissued`));
 
       facilities.hasBeenIssuedRadioNoRadioButton().click();
       facilities.continueButton().click();
@@ -309,9 +298,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
       applicationPreview.facilitySummaryListRowKey(2, 4).should('not.contain', 'Cover start date');
       applicationPreview.facilitySummaryListRowKey(2, 5).should('not.contain', 'Cover end date');
 
-      applicationPreview
-        .updatedUnissuedFacilitiesHeader()
-        .contains('The following facility stages have been updated to issued:');
+      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().should('not.contain', unissuedFacilitiesArray[0].name);
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[1].name);
       applicationPreview.submitButtonPostApproval().should('exist');

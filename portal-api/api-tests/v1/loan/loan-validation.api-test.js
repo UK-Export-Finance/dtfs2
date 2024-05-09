@@ -112,9 +112,7 @@ describe('/v1/deals/:id/loan', () => {
 
             const { validationErrors } = await updateLoanInDeal(dealId, loan);
             expect(validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual(
-              "Enter the Length of time that the UKEF's guarantee will be in place for",
-            );
+            expect(validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual("Enter the Length of time that the UKEF's guarantee will be in place for");
           });
         });
 
@@ -210,9 +208,7 @@ describe('/v1/deals/:id/loan', () => {
 
             const { validationErrors } = await updateLoanInDeal(dealId, loan);
             expect(validationErrors.errorList.name.order).toBeDefined();
-            expect(validationErrors.errorList.name.text).toEqual(
-              'Bank reference number must be 30 characters or fewer',
-            );
+            expect(validationErrors.errorList.name.text).toEqual('Bank reference number must be 30 characters or fewer');
           });
         });
       });
@@ -262,8 +258,7 @@ describe('/v1/deals/:id/loan', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const expectedText =
-              'Requested Cover Start Date must be on the application submission date or in the future';
+            const expectedText = 'Requested Cover Start Date must be on the application submission date or in the future';
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });
@@ -447,9 +442,7 @@ describe('/v1/deals/:id/loan', () => {
 
             const body = await updateLoanInDeal(dealId, loan);
             expect(body.validationErrors.errorList.coverEndDate.order).toBeDefined();
-            expect(body.validationErrors.errorList.coverEndDate.text).toEqual(
-              'Cover End Date cannot be before Requested Cover Start Date',
-            );
+            expect(body.validationErrors.errorList.coverEndDate.text).toEqual('Cover End Date cannot be before Requested Cover Start Date');
           });
         });
 
@@ -468,9 +461,7 @@ describe('/v1/deals/:id/loan', () => {
 
             const body = await updateLoanInDeal(dealId, loan);
             expect(body.validationErrors.errorList.coverEndDate).toBeDefined();
-            expect(body.validationErrors.errorList.coverEndDate.text).toEqual(
-              'Cover End Date must be after the Requested Cover Start Date',
-            );
+            expect(body.validationErrors.errorList.coverEndDate.text).toEqual('Cover End Date must be after the Requested Cover Start Date');
           });
         });
       });
@@ -502,9 +493,7 @@ describe('/v1/deals/:id/loan', () => {
             const body = await updateLoanInDeal(dealId, loan);
 
             expect(body.validationErrors.errorList.disbursementAmount).toBeDefined();
-            expect(body.validationErrors.errorList.disbursementAmount.text).toEqual(
-              'Disbursement amount must be a currency format, like 1,345 or 1345.54',
-            );
+            expect(body.validationErrors.errorList.disbursementAmount.text).toEqual('Disbursement amount must be a currency format, like 1,345 or 1345.54');
           });
         });
 
@@ -518,9 +507,7 @@ describe('/v1/deals/:id/loan', () => {
 
             const body = await updateLoanInDeal(dealId, loan);
             expect(body.validationErrors.errorList.disbursementAmount).toBeDefined();
-            expect(body.validationErrors.errorList.disbursementAmount.text).toEqual(
-              'Disbursement amount must have less than 3 decimals, like 12 or 12.65',
-            );
+            expect(body.validationErrors.errorList.disbursementAmount.text).toEqual('Disbursement amount must have less than 3 decimals, like 12 or 12.65');
           });
         });
 
@@ -534,9 +521,7 @@ describe('/v1/deals/:id/loan', () => {
 
             const body = await updateLoanInDeal(dealId, loan);
             expect(body.validationErrors.errorList.disbursementAmount).toBeDefined();
-            expect(body.validationErrors.errorList.disbursementAmount.text).toEqual(
-              'Disbursement amount must be more than 0.01',
-            );
+            expect(body.validationErrors.errorList.disbursementAmount.text).toEqual('Disbursement amount must be more than 0.01');
           });
         });
 
@@ -580,9 +565,7 @@ describe('/v1/deals/:id/loan', () => {
 
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
           expect(validationErrors.errorList.value).toBeDefined();
-          expect(validationErrors.errorList.value.text).toEqual(
-            'Loan facility value must be a currency format, like 1,345 or 1345.54',
-          );
+          expect(validationErrors.errorList.value.text).toEqual('Loan facility value must be a currency format, like 1,345 or 1345.54');
         });
       });
 
@@ -606,9 +589,7 @@ describe('/v1/deals/:id/loan', () => {
 
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
           expect(validationErrors.errorList.value).toBeDefined();
-          expect(validationErrors.errorList.value.text).toEqual(
-            'Loan facility value must have less than 3 decimals, like 12 or 12.10',
-          );
+          expect(validationErrors.errorList.value.text).toEqual('Loan facility value must have less than 3 decimals, like 12 or 12.10');
         });
       });
 
@@ -677,9 +658,7 @@ describe('/v1/deals/:id/loan', () => {
           it('should return validationError', async () => {
             const { validationErrors } = await updateBondConversionRate('test');
             expect(validationErrors.errorList.conversionRate).toBeDefined();
-            expect(validationErrors.errorList.conversionRate.text).toEqual(
-              'Conversion rate must be a number, like 100 or 100.4',
-            );
+            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate must be a number, like 100 or 100.4');
           });
         });
 
@@ -697,9 +676,7 @@ describe('/v1/deals/:id/loan', () => {
           it('should return validationError', async () => {
             const { validationErrors } = await updateBondConversionRate('1234567');
             expect(validationErrors.errorList.conversionRate).toBeDefined();
-            expect(validationErrors.errorList.conversionRate.text).toEqual(
-              'Conversion rate can only include up to 6 decimal places',
-            );
+            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate can only include up to 6 decimal places');
           });
         });
 
@@ -707,9 +684,7 @@ describe('/v1/deals/:id/loan', () => {
           it('should return validationError', async () => {
             const { validationErrors } = await updateBondConversionRate('1.1234567');
             expect(validationErrors.errorList.conversionRate).toBeDefined();
-            expect(validationErrors.errorList.conversionRate.text).toEqual(
-              'Conversion rate can only include up to 6 decimal places',
-            );
+            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate can only include up to 6 decimal places');
           });
         });
       });
@@ -744,9 +719,7 @@ describe('/v1/deals/:id/loan', () => {
 
             const { validationErrors } = await updateBondConversionRateDate(conversionRateFields);
             expect(validationErrors.errorList.conversionRateDate).toBeDefined();
-            expect(validationErrors.errorList.conversionRateDate.text).toEqual(
-              'Conversion rate date must be today or in the past',
-            );
+            expect(validationErrors.errorList.conversionRateDate.text).toEqual('Conversion rate date must be today or in the past');
           });
         });
 
@@ -834,9 +807,7 @@ describe('/v1/deals/:id/loan', () => {
           const body = await updateLoanInDeal(dealId, loan);
 
           expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual(
-            'Interest Margin % must be a number, like 1 or 12.65',
-          );
+          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Interest Margin % must be a number, like 1 or 12.65');
         });
       });
 
@@ -849,18 +820,14 @@ describe('/v1/deals/:id/loan', () => {
           let body = await updateLoanInDeal(dealId, loan);
 
           expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual(
-            'Interest Margin % must be between 0 and 99',
-          );
+          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Interest Margin % must be between 0 and 99');
 
           loan.interestMarginFee = '-1';
 
           body = await updateLoanInDeal(dealId, loan);
 
           expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual(
-            'Interest Margin % must be between 0 and 99',
-          );
+          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Interest Margin % must be between 0 and 99');
         });
       });
 
@@ -872,9 +839,7 @@ describe('/v1/deals/:id/loan', () => {
 
           const body = await updateLoanInDeal(dealId, loan);
           expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual(
-            'Interest Margin % must have less than 5 decimals, like 12 or 12.0010',
-          );
+          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Interest Margin % must have less than 5 decimals, like 12 or 12.0010');
         });
       });
     });
@@ -902,9 +867,7 @@ describe('/v1/deals/:id/loan', () => {
           const body = await updateLoanInDeal(dealId, loan);
 
           expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
-          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual(
-            'Covered Percentage must be a number, like 1 or 80',
-          );
+          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must be a number, like 1 or 80');
         });
       });
 
@@ -917,9 +880,7 @@ describe('/v1/deals/:id/loan', () => {
           const body = await updateLoanInDeal(dealId, loan);
 
           expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
-          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual(
-            'Covered Percentage must be between 1 and 80',
-          );
+          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must be between 1 and 80');
         });
       });
 
@@ -932,9 +893,7 @@ describe('/v1/deals/:id/loan', () => {
           const body = await updateLoanInDeal(dealId, loan);
 
           expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
-          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual(
-            'Covered Percentage must be between 1 and 80',
-          );
+          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must be between 1 and 80');
         });
       });
 
@@ -947,9 +906,7 @@ describe('/v1/deals/:id/loan', () => {
           const body = await updateLoanInDeal(dealId, loan);
 
           expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
-          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual(
-            'Covered Percentage must have less than 5 decimals, like 12 or 12.3456',
-          );
+          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must have less than 5 decimals, like 12 or 12.3456');
         });
       });
     });
@@ -963,9 +920,7 @@ describe('/v1/deals/:id/loan', () => {
 
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
           expect(validationErrors.errorList.minimumQuarterlyFee).toBeDefined();
-          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual(
-            'Minimum quarterly fee must be a number, like 12 or 12.65',
-          );
+          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual('Minimum quarterly fee must be a number, like 12 or 12.65');
         });
       });
 
@@ -977,9 +932,7 @@ describe('/v1/deals/:id/loan', () => {
 
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
           expect(validationErrors.errorList.minimumQuarterlyFee).toBeDefined();
-          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual(
-            'Minimum quarterly fee must be 0 or more',
-          );
+          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual('Minimum quarterly fee must be 0 or more');
         });
       });
 
@@ -991,9 +944,7 @@ describe('/v1/deals/:id/loan', () => {
 
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
           expect(validationErrors.errorList.minimumQuarterlyFee).toBeDefined();
-          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual(
-            'Minimum quarterly fee must be 14 numbers or fewer',
-          );
+          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual('Minimum quarterly fee must be 14 numbers or fewer');
         });
       });
 
@@ -1005,9 +956,7 @@ describe('/v1/deals/:id/loan', () => {
 
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
           expect(validationErrors.errorList.minimumQuarterlyFee).toBeDefined();
-          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual(
-            'Minimum quarterly fee must be 14 numbers or fewer',
-          );
+          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual('Minimum quarterly fee must be 14 numbers or fewer');
         });
       });
 
@@ -1019,9 +968,7 @@ describe('/v1/deals/:id/loan', () => {
 
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
           expect(validationErrors.errorList.minimumQuarterlyFee).toBeDefined();
-          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual(
-            'Minimum quarterly fee must have less than 3 decimals, like 12 or 12.10',
-          );
+          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual('Minimum quarterly fee must have less than 3 decimals, like 12 or 12.10');
         });
       });
     });

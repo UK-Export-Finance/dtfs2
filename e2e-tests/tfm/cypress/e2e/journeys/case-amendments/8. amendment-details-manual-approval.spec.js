@@ -153,26 +153,14 @@ context('Amendments - Manual approval journey', () => {
       facilityPage.facilityTabAmendments().click();
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
       amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', NOT_ADDED.DASH);
-      amendmentsPage.amendmentDetails
-        .row(1)
-        .currentCoverEndDate()
-        .should('contain', dateConstants.oneMonthFormattedTable);
-      amendmentsPage.amendmentDetails
-        .row(1)
-        .bankDecision()
-        .should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
+      amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', dateConstants.oneMonthFormattedTable);
+      amendmentsPage.amendmentDetails.row(1).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
       amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
-      amendmentsPage.amendmentDetails
-        .row(1)
-        .ukefDecisionCoverEndDate()
-        .should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
+      amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
 
       amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
       amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
-      amendmentsPage.amendmentDetails
-        .row(1)
-        .ukefDecisionFacilityValue()
-        .should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
+      amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
     });
 
     it('should display facility details and values on deal and facility page as amendment not completed', () => {
@@ -322,19 +310,10 @@ context('Amendments - Manual approval journey', () => {
       facilityPage.facilityTabAmendments().click();
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
       amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', NOT_ADDED.DASH);
-      amendmentsPage.amendmentDetails
-        .row(1)
-        .currentCoverEndDate()
-        .should('contain', dateConstants.oneMonthFormattedFull);
-      amendmentsPage.amendmentDetails
-        .row(1)
-        .bankDecision()
-        .should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
+      amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', dateConstants.oneMonthFormattedFull);
+      amendmentsPage.amendmentDetails.row(1).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
       amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
-      amendmentsPage.amendmentDetails
-        .row(1)
-        .ukefDecisionCoverEndDate()
-        .should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
+      amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
 
       amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('not.exist');
       amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('not.exist');
@@ -483,10 +462,7 @@ context('Amendments - Manual approval journey', () => {
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.amendmentDetails
-        .row(1)
-        .bankDecision()
-        .should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
+      amendmentsPage.amendmentDetails.row(1).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
       amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', NOT_ADDED.DASH);
       amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('not.exist');
@@ -495,10 +471,7 @@ context('Amendments - Manual approval journey', () => {
 
       amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
       amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
-      amendmentsPage.amendmentDetails
-        .row(1)
-        .ukefDecisionFacilityValue()
-        .should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
+      amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
     });
 
     it('should display facility details and values on deal and facility page as amendment not completed', () => {

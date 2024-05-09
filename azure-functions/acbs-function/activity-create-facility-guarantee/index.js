@@ -14,14 +14,7 @@ const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
-const mandatoryFields = [
-  'guarantorParty',
-  'limitKey',
-  'guaranteeExpiryDate',
-  'effectiveDate',
-  'maximumLiability',
-  'guaranteeTypeCode',
-];
+const mandatoryFields = ['guarantorParty', 'limitKey', 'guaranteeExpiryDate', 'effectiveDate', 'maximumLiability', 'guaranteeTypeCode'];
 const createFacilityGuarantee = async (context) => {
   try {
     const { facilityIdentifier, acbsFacilityGuaranteeInput } = context.bindingData;

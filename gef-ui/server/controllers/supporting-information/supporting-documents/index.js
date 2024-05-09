@@ -67,10 +67,7 @@ const nextDocument = (application, dealId, fieldName) => {
     nextDoc = `/gef/application-details/${dealId}/supporting-information/${supportingDocument}`;
   }
   // check if there are no required fields or check if we reached the end of the required fields
-  if (
-    !application.supportingInformation?.requiredFields?.length ||
-    currentIndex + 1 === application.supportingInformation?.requiredFields?.length
-  ) {
+  if (!application.supportingInformation?.requiredFields?.length || currentIndex + 1 === application.supportingInformation?.requiredFields?.length) {
     nextDoc = `/gef/application-details/${dealId}`;
   }
 
@@ -177,9 +174,7 @@ const postSupportingDocuments = async (req, res, next) => {
         }
       });
 
-      const uploadedFiles = validFiles.length
-        ? await uploadAndSaveToDeal(validFiles, fieldName, dealId, userToken, user, FILE_UPLOAD.MAX_FILE_SIZE_MB)
-        : [];
+      const uploadedFiles = validFiles.length ? await uploadAndSaveToDeal(validFiles, fieldName, dealId, userToken, user, FILE_UPLOAD.MAX_FILE_SIZE_MB) : [];
 
       processedFiles = [...invalidFiles, ...uploadedFiles];
 
@@ -251,19 +246,9 @@ const uploadSupportingDocument = async (req, res, next) => {
       await getApplication(dealId, user, userToken);
       const documentPath = fieldName;
 
-      const [processedFile] = await uploadAndSaveToDeal(
-        [file],
-        fieldName,
-        dealId,
-        userToken,
-        user,
-        FILE_UPLOAD.MAX_FILE_SIZE_MB,
-        documentPath,
-      );
+      const [processedFile] = await uploadAndSaveToDeal([file], fieldName, dealId, userToken, user, FILE_UPLOAD.MAX_FILE_SIZE_MB, documentPath);
 
-      const response = processedFile.error
-        ? { error: { message: processedFile.error } }
-        : { success: { messageHtml: processedFile.filename } };
+      const response = processedFile.error ? { error: { message: processedFile.error } } : { success: { messageHtml: processedFile.filename } };
 
       return res.status(200).send({
         file: processedFile,

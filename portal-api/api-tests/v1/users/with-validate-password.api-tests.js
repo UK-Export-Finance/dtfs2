@@ -28,15 +28,9 @@ const withValidatePasswordWhenCreatingUserTests = ({ payload, makeRequest }) => 
  * These rule test cases correspond to the applyUpdateRules in the validation/index.js file
  * when the current password field is not provided.
  */
-const withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests = ({
-  payload,
-  makeRequest,
-  existingUserPassword,
-}) => {
+const withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests = ({ payload, makeRequest, existingUserPassword }) => {
   describe(WHEN_VALIDATING_PASSWORD_TEXT, () => {
-    itShouldReturnAnErrorIf(
-      getUpdateUserRuleWithoutCurrentPasswordTestCases({ payload, makeRequest, existingUserPassword }),
-    );
+    itShouldReturnAnErrorIf(getUpdateUserRuleWithoutCurrentPasswordTestCases({ payload, makeRequest, existingUserPassword }));
   });
 };
 
@@ -48,9 +42,7 @@ const withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests = ({
  */
 const withValidatePasswordWhenUpdateUserWithCurrentPasswordTests = ({ payload, makeRequest, existingUserPassword }) => {
   describe(WHEN_VALIDATING_PASSWORD_TEXT, () => {
-    itShouldReturnAnErrorIf(
-      getUpdateUserRuleWithCurrentPasswordTestCases({ payload, makeRequest, existingUserPassword }),
-    );
+    itShouldReturnAnErrorIf(getUpdateUserRuleWithCurrentPasswordTestCases({ payload, makeRequest, existingUserPassword }));
   });
 };
 
@@ -58,28 +50,23 @@ function getCreatePasswordRuleTestCases({ makeRequest, payload }) {
   return [
     {
       description: 'the password is less than 8 characters',
-      makeRequestWithModifiedPayload: async () =>
-        await makeRequest(replacePassword({ payload, replacementPassword: 'aA1!' })),
+      makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: 'aA1!' })),
     },
     {
       description: 'the password does not have at least one number',
-      makeRequestWithModifiedPayload: async () =>
-        await makeRequest(replacePassword({ payload, replacementPassword: 'APassword!' })),
+      makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: 'APassword!' })),
     },
     {
       description: 'the password does not have at least one upper-case character',
-      makeRequestWithModifiedPayload: async () =>
-        await makeRequest(replacePassword({ payload, replacementPassword: 'apassword!123' })),
+      makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: 'apassword!123' })),
     },
     {
       description: 'the password does not have at least one lower-case character',
-      makeRequestWithModifiedPayload: async () =>
-        await makeRequest(replacePassword({ payload, replacementPassword: 'APASSWORD!123' })),
+      makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: 'APASSWORD!123' })),
     },
     {
       description: 'the password does not have at least one special character',
-      makeRequestWithModifiedPayload: async () =>
-        await makeRequest(replacePassword({ payload, replacementPassword: 'APassword123' })),
+      makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: 'APassword123' })),
     },
   ];
 }
@@ -95,13 +82,11 @@ function getUpdateUserRuleWithoutCurrentPasswordTestCases({ makeRequest, payload
             draftRequest.passwordConfirm = ANOTHER_VALID_PASSWORD;
           }),
         ),
-      expectResponseErrorToMatchExpected: (body) =>
-        expect(body.errors.errorList.passwordConfirm.text).toEqual('Your passwords must match.'),
+      expectResponseErrorToMatchExpected: (body) => expect(body.errors.errorList.passwordConfirm.text).toEqual('Your passwords must match.'),
     },
     {
       description: 'the password matches the existing password',
-      makeRequestWithModifiedPayload: async () =>
-        await makeRequest(replacePassword({ payload, replacementPassword: existingUserPassword })),
+      makeRequestWithModifiedPayload: async () => await makeRequest(replacePassword({ payload, replacementPassword: existingUserPassword })),
     },
   ];
   return [...getCreatePasswordRuleTestCases({ makeRequest, payload }), ...updateSpecificTestCases];
@@ -119,14 +104,10 @@ function getUpdateUserRuleWithCurrentPasswordTestCases({ makeRequest, payload, e
             draftRequest.currentPassword = 'ThisIsNotTheCurrentPassword';
           }),
         ),
-      expectResponseErrorToMatchExpected: (body) =>
-        expect(body.errors.errorList.currentPassword.text).toEqual('Current password is not correct.'),
+      expectResponseErrorToMatchExpected: (body) => expect(body.errors.errorList.currentPassword.text).toEqual('Current password is not correct.'),
     },
   ];
-  return [
-    getUpdateUserRuleWithoutCurrentPasswordTestCases({ makeRequest, payload, existingUserPassword }),
-    ...updateWithCurrentPasswordSpecificTestCases,
-  ];
+  return [getUpdateUserRuleWithoutCurrentPasswordTestCases({ makeRequest, payload, existingUserPassword }), ...updateWithCurrentPasswordSpecificTestCases];
 }
 function itShouldReturnAnErrorIf(testCases) {
   it.each(testCases)(

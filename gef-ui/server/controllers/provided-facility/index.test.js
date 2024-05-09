@@ -58,10 +58,7 @@ describe('controllers/provided-facility', () => {
   describe('GET Provided Facility', () => {
     it('renders the `Provided Facility` template', async () => {
       mockRequest.query.status = 'change';
-      mockProvidedFacilityResponse.details.details = [
-        CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM,
-        CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING,
-      ];
+      mockProvidedFacilityResponse.details.details = [CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM, CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING];
 
       mockProvidedFacilityResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
 
@@ -116,9 +113,7 @@ describe('controllers/provided-facility', () => {
 
       await validateProvidedFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.redirect).toHaveBeenCalledWith(
-        '/gef/application-details/123/facilities/xyz/facility-currency',
-      );
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/facility-currency');
     });
 
     it('shows error message if Other textarea is left empty', async () => {

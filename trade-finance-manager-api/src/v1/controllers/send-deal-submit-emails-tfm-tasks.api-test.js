@@ -105,11 +105,7 @@ describe('send-deal-submit-emails - TFM tasks', () => {
 
       const firstSendEmailCall = sendEmailApiMock.mock.calls[0];
 
-      expect(firstSendEmailCall).toEqual([
-        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
-        expectedTeamEmailAddress,
-        { ...expectedEmailVariables },
-      ]);
+      expect(firstSendEmailCall).toEqual([CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START, expectedTeamEmailAddress, { ...expectedEmailVariables }]);
     });
 
     it('should return null when first task email should NOT be sent', async () => {

@@ -77,9 +77,7 @@ context('Dashboard Deals filters - filter by submissionType/noticeType', () => {
     });
 
     it('renders only MIA deals', () => {
-      const ALL_MIA_DEALS = ALL_DEALS.filter(
-        ({ submissionType }) => submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
-      );
+      const ALL_MIA_DEALS = ALL_DEALS.filter(({ submissionType }) => submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
       dashboardDeals.rows().should('have.length', ALL_MIA_DEALS.length);
 
       const firstMiaDeal = ALL_MIA_DEALS[0];

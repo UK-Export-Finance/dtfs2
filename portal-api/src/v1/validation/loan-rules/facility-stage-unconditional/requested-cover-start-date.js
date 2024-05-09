@@ -46,9 +46,7 @@ module.exports = (submittedValues, deal, errorList) => {
 
         if (dateIsBeforeNow || dateIsAfterMaximum) {
           newErrorList.requestedCoverStartDate = {
-            text: `Requested Cover Start Date must be between ${getLongFormattedDate(
-              startOfToday,
-            )} and ${getLongFormattedDate(maxDate)}`,
+            text: `Requested Cover Start Date must be between ${getLongFormattedDate(startOfToday)} and ${getLongFormattedDate(maxDate)}`,
             order: orderNumber(newErrorList),
           };
         }
@@ -56,18 +54,11 @@ module.exports = (submittedValues, deal, errorList) => {
     }
 
     const requestedCoverStartDateHasSomeValues =
-      hasValue(requestedCoverStartDateDay) ||
-      hasValue(requestedCoverStartDateMonth) ||
-      hasValue(requestedCoverStartDateYear);
+      hasValue(requestedCoverStartDateDay) || hasValue(requestedCoverStartDateMonth) || hasValue(requestedCoverStartDateYear);
 
     if (!submittedValues.requestedCoverStartDate && requestedCoverStartDateHasSomeValues) {
       newErrorList.requestedCoverStartDate = {
-        text: dateValidationText(
-          'Requested Cover Start Date',
-          requestedCoverStartDateDay,
-          requestedCoverStartDateMonth,
-          requestedCoverStartDateYear,
-        ),
+        text: dateValidationText('Requested Cover Start Date', requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear),
         order: orderNumber(newErrorList),
       };
     }

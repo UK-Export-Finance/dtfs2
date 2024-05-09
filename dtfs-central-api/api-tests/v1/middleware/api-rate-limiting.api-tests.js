@@ -19,8 +19,7 @@ describe('api rate limiting', () => {
     process.env.RATE_LIMIT_THRESHOLD = originalRateLimitThreshold;
   });
 
-  const sendRequestTimes = (numberOfRequestsToSend) =>
-    Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => get('/v1/user')));
+  const sendRequestTimes = (numberOfRequestsToSend) => Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => get('/v1/user')));
 
   it('returns a 429 response if more than RATE_LIMIT_THRESHOLD requests are made from the same IP to the same endpoint in 1 minute', async () => {
     await sendRequestTimes(rateLimit);

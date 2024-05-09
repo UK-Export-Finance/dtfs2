@@ -32,11 +32,7 @@ const withClientAuthenticationTests = ({ makeRequestWithoutAuthHeader, makeReque
   });
 };
 
-const withPartial2FaOnlyAuthenticationTests = ({
-  makeRequestWithoutAuthHeader,
-  makeRequestWithAuthHeader,
-  get2faCompletedUserToken,
-}) => {
+const withPartial2FaOnlyAuthenticationTests = ({ makeRequestWithoutAuthHeader, makeRequestWithAuthHeader, get2faCompletedUserToken }) => {
   withClientAuthenticationTests({ makeRequestWithoutAuthHeader, makeRequestWithAuthHeader });
 
   it('returns a 401 response if the request has an Authorization header with a 2fa-completed token', async () => {

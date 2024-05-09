@@ -22,15 +22,7 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith(
-      '/mandatory-criteria',
-      [validateToken, expect.any(Function)],
-      expect.any(Function),
-    );
-    expect(postSpy).toHaveBeenCalledWith(
-      '/mandatory-criteria',
-      [validateToken, expect.any(Function)],
-      expect.any(Function),
-    );
+    expect(getSpy).toHaveBeenCalledWith('/mandatory-criteria', [validateToken, expect.any(Function)], expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/mandatory-criteria', [validateToken, expect.any(Function)], expect.any(Function));
   });
 });

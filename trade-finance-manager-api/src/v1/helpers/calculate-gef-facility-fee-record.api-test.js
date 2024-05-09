@@ -1,10 +1,5 @@
 const { differenceInDays } = require('date-fns');
-const {
-  calculateDrawnAmount,
-  calculateDaysOfCover,
-  calculateFeeAmount,
-  calculateGefFacilityFeeRecord,
-} = require('./calculate-gef-facility-fee-record');
+const { calculateDrawnAmount, calculateDaysOfCover, calculateFeeAmount, calculateGefFacilityFeeRecord } = require('./calculate-gef-facility-fee-record');
 
 describe('calculate-gef-facility-fee-record', () => {
   // for drawn amount
@@ -33,10 +28,7 @@ describe('calculate-gef-facility-fee-record', () => {
     it('should return the amount of days between start and end cover dates', () => {
       const result = calculateDaysOfCover(mockCoverStartDate, mockCoverEndDateTimestamp);
 
-      const expected = differenceInDays(
-        new Date(Number(mockCoverEndDateTimestamp)),
-        new Date(Number(mockCoverStartDate)),
-      );
+      const expected = differenceInDays(new Date(Number(mockCoverEndDateTimestamp)), new Date(Number(mockCoverStartDate)));
 
       expect(result).toEqual(expected);
       expect(typeof result).toEqual('number');

@@ -11,9 +11,7 @@ describe(page, () => {
   });
 
   it('should render accessibility statement heading', () => {
-    wrapper
-      .expectText('[data-cy="accessibility-statement-heading"]')
-      .toRead('Accessibility Statement for the Trade Finance Manager Service');
+    wrapper.expectText('[data-cy="accessibility-statement-heading"]').toRead('Accessibility Statement for the Trade Finance Manager Service');
   });
 
   it('should render tfm link below accessibility statement heading', () => {
@@ -33,15 +31,11 @@ describe(page, () => {
   });
 
   it('should render feedback and contact information heading', () => {
-    wrapper
-      .expectText('[data-cy="feedback-and-contact-information-heading"]')
-      .toRead('Feedback and contact information');
+    wrapper.expectText('[data-cy="feedback-and-contact-information-heading"]').toRead('Feedback and contact information');
   });
 
   it('should render reporting accessibility problems with this website heading', () => {
-    wrapper
-      .expectText('[data-cy="reporting-accessibility-problems-heading"]')
-      .toRead('Reporting accessibility problems with this website');
+    wrapper.expectText('[data-cy="reporting-accessibility-problems-heading"]').toRead('Reporting accessibility problems with this website');
     wrapper.expectElement('[data-cy="contact-dtfs"]').toExist();
   });
 
@@ -51,9 +45,7 @@ describe(page, () => {
   });
 
   it('should render technical information about this website accessibility heading', () => {
-    wrapper
-      .expectText('[data-cy="technical-information-heading"]')
-      .toRead("Technical information about this website's accessibility");
+    wrapper.expectText('[data-cy="technical-information-heading"]').toRead("Technical information about this website's accessibility");
   });
 
   it('should render compliance status heading', () => {
@@ -62,9 +54,7 @@ describe(page, () => {
   });
 
   it('should render non-compliance with the accessibility regulations heading', () => {
-    wrapper
-      .expectText('[data-cy="non-compliance-heading"]')
-      .toRead('Non-compliance with the accessibility regulations');
+    wrapper.expectText('[data-cy="non-compliance-heading"]').toRead('Non-compliance with the accessibility regulations');
   });
 
   it('should render what we are doing to improve accessibility heading', () => {
@@ -72,8 +62,6 @@ describe(page, () => {
   });
 
   it('should render preparation of this accessibility statement heading', () => {
-    wrapper
-      .expectText('[data-cy="preparation-of-this-accessibility-statement-heading"]')
-      .toRead('Preparation of this accessibility statement');
+    wrapper.expectText('[data-cy="preparation-of-this-accessibility-statement-heading"]').toRead('Preparation of this accessibility statement');
   });
 });

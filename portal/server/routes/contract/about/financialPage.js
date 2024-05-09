@@ -4,14 +4,7 @@ const {
   ROLES: { MAKER },
 } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
-const {
-  requestParams,
-  mapCurrencies,
-  errorHref,
-  generateErrorSummary,
-  sanitizeCurrency,
-  constructPayload,
-} = require('../../../helpers');
+const { requestParams, mapCurrencies, errorHref, generateErrorSummary, sanitizeCurrency, constructPayload } = require('../../../helpers');
 
 const { provide, DEAL, CURRENCIES } = require('../../api-data-provider');
 
@@ -24,28 +17,24 @@ const { validateRole } = require('../../middleware');
 
 const router = express.Router();
 
-router.get(
-  '/contract/:_id/about/financial',
-  [validateRole({ role: [MAKER] }), provide([CURRENCIES])],
-  async (req, res) => {
-    const { _id, userToken } = requestParams(req);
+router.get('/contract/:_id/about/financial', [validateRole({ role: [MAKER] }), provide([CURRENCIES])], async (req, res) => {
+  const { _id, userToken } = requestParams(req);
 
-    const { deal, currencies } = req.apiData;
+  const { deal, currencies } = req.apiData;
 
-    const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
-    const errorSummary = generateErrorSummary(validationErrors, errorHref);
+  const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
+  const errorSummary = generateErrorSummary(validationErrors, errorHref);
 
-    const completedForms = calculateStatusOfEachPage(Object.keys(errorSummary.errorList));
+  const completedForms = calculateStatusOfEachPage(Object.keys(errorSummary.errorList));
 
-    return res.render('contract/about/about-supply-financial.njk', {
-      deal,
-      validationErrors: financialPageValidationErrors(validationErrors, deal.submissionDetails),
-      currencies: mapCurrencies(currencies, deal.submissionDetails.supplyContractCurrency),
-      user: req.session.user,
-      taskListItems: aboutTaskList(completedForms),
-    });
-  },
-);
+  return res.render('contract/about/about-supply-financial.njk', {
+    deal,
+    validationErrors: financialPageValidationErrors(validationErrors, deal.submissionDetails),
+    currencies: mapCurrencies(currencies, deal.submissionDetails.supplyContractCurrency),
+    user: req.session.user,
+    taskListItems: aboutTaskList(completedForms),
+  });
+});
 
 const financialSubmissionDetailsProperties = [
   'supplyContractValue',

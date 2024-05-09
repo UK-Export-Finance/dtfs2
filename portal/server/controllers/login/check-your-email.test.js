@@ -25,10 +25,7 @@ describe('renderCheckYourEmailPage', () => {
     },
     {
       session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 0 },
-      expectedRenderArguments: [
-        'login/we-have-sent-you-another-link.njk',
-        { obscuredSignInLinkTargetEmailAddress: redactedEmail },
-      ],
+      expectedRenderArguments: ['login/we-have-sent-you-another-link.njk', { obscuredSignInLinkTargetEmailAddress: redactedEmail }],
     },
     {
       session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: -1 },
@@ -150,9 +147,7 @@ describe('sendNewSignInLink', () => {
   });
 
   function mockSuccessfulSendSignInLinkResponse() {
-    when(api.sendSignInLink)
-      .calledWith(userToken)
-      .mockResolvedValue({ data: { numberOfSendSignInLinkAttemptsRemaining } });
+    when(api.sendSignInLink).calledWith(userToken).mockResolvedValue({ data: { numberOfSendSignInLinkAttemptsRemaining } });
   }
 
   function mockUnsuccessfulSendSignInLinkResponseWithStatusCode(statusCode) {

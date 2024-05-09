@@ -103,9 +103,7 @@ context('View dashboard facilities as a maker', () => {
   after(() => {
     cy.deleteGefFacilities(gefDeal._id, ADMIN);
 
-    const bssFacilities = ALL_FACILITIES.filter((facility) =>
-      facility.name.includes(CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS),
-    );
+    const bssFacilities = ALL_FACILITIES.filter((facility) => facility.name.includes(CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS));
     bssFacilities.forEach((facility) => {
       cy.deleteFacility(facility._id, ADMIN);
     });

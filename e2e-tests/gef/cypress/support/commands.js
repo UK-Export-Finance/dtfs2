@@ -8,10 +8,7 @@ Cypress.Commands.add(
   require('./commands/portal/overridePortalUserSignInTokenWithValidTokenByUsername'),
 );
 Cypress.Commands.add('getUserByUsername', require('./commands/portal/getUserByUsername'));
-Cypress.Commands.add(
-  'resetPortalUserStatusAndNumberOfSignInLinks',
-  require('./commands/portal/resetPortalUserStatusAndNumberOfSignInLinks'),
-);
+Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./commands/portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./commands/portal/enterUsernameAndPassword'));
 
 Cypress.Commands.add('uploadFile', require('./commands/uploadFile'));

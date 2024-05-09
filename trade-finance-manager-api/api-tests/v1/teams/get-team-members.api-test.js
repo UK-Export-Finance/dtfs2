@@ -21,8 +21,7 @@ describe('GET /teams/:teamId/members', () => {
 
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => get(validUrlToGetTeamMembers),
-    makeRequestWithAuthHeader: (authHeader) =>
-      get(validUrlToGetTeamMembers, { headers: { Authorization: authHeader } }),
+    makeRequestWithAuthHeader: (authHeader) => get(validUrlToGetTeamMembers, { headers: { Authorization: authHeader } }),
   });
 
   it('returns a 400 response if the teamId is not one of the allowed values', async () => {

@@ -10,17 +10,13 @@ const mapAzureFileInfoEntityToAzureFileInfo = (fileInfoEntity: AzureFileInfoEnti
   mimetype: fileInfoEntity.mimetype,
 });
 
-function assertAllUploadFieldsArePopulated(
-  uploadedReportEntity: UtilisationReportEntity,
-): asserts uploadedReportEntity is UtilisationReportEntity & {
+function assertAllUploadFieldsArePopulated(uploadedReportEntity: UtilisationReportEntity): asserts uploadedReportEntity is UtilisationReportEntity & {
   dateUploaded: Date;
   azureFileInfo: AzureFileInfoEntity;
   uploadedByUserId: string;
 } {
   const allUploadFieldsArePopulated: boolean =
-    uploadedReportEntity.dateUploaded !== null &&
-    uploadedReportEntity.azureFileInfo !== undefined &&
-    uploadedReportEntity.uploadedByUserId !== null;
+    uploadedReportEntity.dateUploaded !== null && uploadedReportEntity.azureFileInfo !== undefined && uploadedReportEntity.uploadedByUserId !== null;
   if (!allUploadFieldsArePopulated) {
     throw new Error('Failed to map data - report seems to have been uploaded but is missing some required fields');
   }

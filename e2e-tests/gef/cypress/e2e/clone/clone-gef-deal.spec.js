@@ -116,12 +116,7 @@ context('Clone GEF (AIN) deal', () => {
         applicationDetails.facilityStatus().contains('Completed');
         applicationDetails.exporterStatus().contains('Completed');
         applicationDetails.submitButton().should('not.exist');
-        cy.get('[data-cy="facility-summary-list"]')
-          .eq(1)
-          .find('.govuk-summary-list__row')
-          .eq(1)
-          .find('.govuk-summary-list__key')
-          .contains('Stage');
+        cy.get('[data-cy="facility-summary-list"]').eq(1).find('.govuk-summary-list__row').eq(1).find('.govuk-summary-list__key').contains('Stage');
       });
     });
 
@@ -208,112 +203,61 @@ context('Clone GEF (MIA) deal', () => {
       manualInclusion.continueButton().click();
 
       // upload manual inclusion document
-      cy.uploadFile(
-        'file1.png',
-        `/gef/application-details/${MIAdealId}/supporting-information/document/manual-inclusion-questionnaire/upload`,
-      );
+      cy.uploadFile('file1.png', `/gef/application-details/${MIAdealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('file1.png');
     });
 
     it('should upload files to the `Management Accounts` section', () => {
       uploadFiles.supportingInfoManagementAccountsButton().click();
-      cy.url().should(
-        'eq',
-        relative(`/gef/application-details/${MIAdealId}/supporting-information/document/management-accounts`),
-      );
-      cy.uploadFile(
-        'file1.png',
-        `/gef/application-details/${MIAdealId}/supporting-information/document/management-accounts/upload`,
-      );
+      cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/supporting-information/document/management-accounts`));
+      cy.uploadFile('file1.png', `/gef/application-details/${MIAdealId}/supporting-information/document/management-accounts/upload`);
       uploadFiles.uploadSuccess('file1.png');
     });
 
     it('should upload files to the `Financial Statements` section', () => {
       uploadFiles.supportingInfoFinancialStatementsButton().click();
-      cy.url().should(
-        'eq',
-        relative(`/gef/application-details/${MIAdealId}/supporting-information/document/financial-statements`),
-      );
-      cy.uploadFile(
-        'file1.png',
-        `/gef/application-details/${MIAdealId}/supporting-information/document/financial-statements/upload`,
-      );
+      cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/supporting-information/document/financial-statements`));
+      cy.uploadFile('file1.png', `/gef/application-details/${MIAdealId}/supporting-information/document/financial-statements/upload`);
       uploadFiles.uploadSuccess('file1.png');
     });
 
     it('should upload files to the `Financial Forecasts` section', () => {
       uploadFiles.supportingInfoFinancialForecastsButton().click();
-      cy.url().should(
-        'eq',
-        relative(`/gef/application-details/${MIAdealId}/supporting-information/document/financial-forecasts`),
-      );
-      cy.uploadFile(
-        'file1.png',
-        `/gef/application-details/${MIAdealId}/supporting-information/document/financial-forecasts/upload`,
-      );
+      cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/supporting-information/document/financial-forecasts`));
+      cy.uploadFile('file1.png', `/gef/application-details/${MIAdealId}/supporting-information/document/financial-forecasts/upload`);
       uploadFiles.uploadSuccess('file1.png');
 
-      cy.uploadFile(
-        'file2.png',
-        `/gef/application-details/${MIAdealId}/supporting-information/document/financial-forecasts/upload`,
-      );
+      cy.uploadFile('file2.png', `/gef/application-details/${MIAdealId}/supporting-information/document/financial-forecasts/upload`);
       uploadFiles.uploadSuccess('file2.png');
     });
 
     it('should upload files to the `Financial Commentary` section', () => {
       uploadFiles.supportingInfoFinancialCommentaryButton().click();
-      cy.url().should(
-        'eq',
-        relative(`/gef/application-details/${MIAdealId}/supporting-information/document/financial-commentary`),
-      );
-      cy.uploadFile(
-        'file2.png',
-        `/gef/application-details/${MIAdealId}/supporting-information/document/financial-commentary/upload`,
-      );
+      cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/supporting-information/document/financial-commentary`));
+      cy.uploadFile('file2.png', `/gef/application-details/${MIAdealId}/supporting-information/document/financial-commentary/upload`);
       uploadFiles.uploadSuccess('file2.png');
 
-      cy.uploadFile(
-        'file3.png',
-        `/gef/application-details/${MIAdealId}/supporting-information/document/financial-commentary/upload`,
-      );
+      cy.uploadFile('file3.png', `/gef/application-details/${MIAdealId}/supporting-information/document/financial-commentary/upload`);
       uploadFiles.uploadSuccess('file3.png');
     });
 
     it('should upload files to the `Corporate Structure` section', () => {
       uploadFiles.supportingInfoCorporateStructureButton().click();
-      cy.url().should(
-        'eq',
-        relative(`/gef/application-details/${MIAdealId}/supporting-information/document/corporate-structure`),
-      );
-      cy.uploadFile(
-        'file4.png',
-        `/gef/application-details/${MIAdealId}/supporting-information/document/corporate-structure/upload`,
-      );
+      cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/supporting-information/document/corporate-structure`));
+      cy.uploadFile('file4.png', `/gef/application-details/${MIAdealId}/supporting-information/document/corporate-structure/upload`);
       uploadFiles.uploadSuccess('file4.png');
 
-      cy.uploadFile(
-        'file5.png',
-        `/gef/application-details/${MIAdealId}/supporting-information/document/corporate-structure/upload`,
-      );
+      cy.uploadFile('file5.png', `/gef/application-details/${MIAdealId}/supporting-information/document/corporate-structure/upload`);
       uploadFiles.uploadSuccess('file5.png');
     });
 
     it('should upload files to the `Debtor Creditor` section', () => {
       uploadFiles.supportingInfoDebtorCreditorButton().click();
-      cy.url().should(
-        'eq',
-        relative(`/gef/application-details/${MIAdealId}/supporting-information/document/debtor-creditor-reports`),
-      );
-      cy.uploadFile(
-        'file4.png',
-        `/gef/application-details/${MIAdealId}/supporting-information/document/debtor-creditor-reports/upload`,
-      );
+      cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/supporting-information/document/debtor-creditor-reports`));
+      cy.uploadFile('file4.png', `/gef/application-details/${MIAdealId}/supporting-information/document/debtor-creditor-reports/upload`);
       uploadFiles.uploadSuccess('file4.png');
 
-      cy.uploadFile(
-        'file5.png',
-        `/gef/application-details/${MIAdealId}/supporting-information/document/debtor-creditor-reports/upload`,
-      );
+      cy.uploadFile('file5.png', `/gef/application-details/${MIAdealId}/supporting-information/document/debtor-creditor-reports/upload`);
       uploadFiles.uploadSuccess('file5.png');
     });
 
@@ -365,12 +309,7 @@ context('Clone GEF (MIA) deal', () => {
         applicationDetails.facilityStatus().contains('Completed');
         applicationDetails.exporterStatus().contains('Completed');
         applicationDetails.submitButton().should('not.exist');
-        cy.get('[data-cy="facility-summary-list"]')
-          .eq(1)
-          .find('.govuk-summary-list__row')
-          .eq(1)
-          .find('.govuk-summary-list__key')
-          .contains('Stage');
+        cy.get('[data-cy="facility-summary-list"]').eq(1).find('.govuk-summary-list__row').eq(1).find('.govuk-summary-list__key').contains('Stage');
       });
     });
   });

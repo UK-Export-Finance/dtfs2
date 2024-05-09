@@ -1,10 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const { multerFilter, formatBytes } = require('../utils/multer-filter.utils');
-const {
-  uploadSupportingDocument,
-  deleteSupportingDocument,
-} = require('../controllers/supporting-information/supporting-documents');
+const { uploadSupportingDocument, deleteSupportingDocument } = require('../controllers/supporting-information/supporting-documents');
 const { validateRole, validateToken, validateBank } = require('../middleware');
 const { FILE_UPLOAD } = require('../constants/file-upload');
 const { isCsrfTokenValid } = require('../utils/csrf-token-checker');
@@ -34,9 +31,7 @@ const validateUploadCsrfToken = (req, res, next) => {
   });
 };
 
-const uploadSingle = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE }, fileFilter: multerFilter }).single(
-  'documents',
-);
+const uploadSingle = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE }, fileFilter: multerFilter }).single('documents');
 
 router.post(
   '/application-details/:dealId/supporting-information/document/:documentType/upload',

@@ -23,11 +23,7 @@ const facilitiesChangedToIssuedAsArray = (application) => {
 const summaryIssuedChangedToIssued = (params) => {
   const { acceptableStatus, acceptableRole, app, data, user } = params;
 
-  return (
-    acceptableStatus.includes(app.status) &&
-    user.roles.some((role) => acceptableRole.includes(role)) &&
-    Boolean(data.details.canResubmitIssuedFacilities)
-  );
+  return acceptableStatus.includes(app.status) && user.roles.some((role) => acceptableRole.includes(role)) && Boolean(data.details.canResubmitIssuedFacilities);
 };
 
 const summaryIssuedUnchanged = (params) => {
@@ -53,11 +49,7 @@ const areUnissuedFacilitiesPresent = (application) => {
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
     CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
   ];
-  const acceptableApplicationType = [
-    CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
-    CONSTANTS.DEAL_SUBMISSION_TYPE.MIN,
-    CONSTANTS.DEAL_SUBMISSION_TYPE.MIA,
-  ];
+  const acceptableApplicationType = [CONSTANTS.DEAL_SUBMISSION_TYPE.AIN, CONSTANTS.DEAL_SUBMISSION_TYPE.MIN, CONSTANTS.DEAL_SUBMISSION_TYPE.MIA];
 
   if (!acceptableApplicationType.includes(application.submissionType)) {
     return false;
@@ -108,10 +100,7 @@ const facilityIssueDeadline = (application) => {
   }
 
   // if MIN, then deadline should be 3 months from MIN submission date
-  if (
-    application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN &&
-    application.manualInclusionNoticeSubmissionDate
-  ) {
+  if (application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN && application.manualInclusionNoticeSubmissionDate) {
     // converts to timestamp from epoch
     const date = new Date(parseInt(application.manualInclusionNoticeSubmissionDate, 10));
     return formatIssueDeadlineDate(date);
@@ -180,8 +169,7 @@ const getFacilityCoverStartDate = (facility) => {
 const coverDatesConfirmed = (facilities) => {
   if (facilities.items.filter(({ details }) => details.hasBeenIssued).length > 0) {
     return (
-      facilities.items.filter(({ details }) => details.hasBeenIssued).length ===
-      facilities.items.filter(({ details }) => details.coverDateConfirmed).length
+      facilities.items.filter(({ details }) => details.hasBeenIssued).length === facilities.items.filter(({ details }) => details.coverDateConfirmed).length
     );
   }
   return false;
@@ -208,10 +196,7 @@ const issuedFacilityConfirmation = (application) => {
   const hasUnissuedToIssued = hasChangedToIssued(application);
   const { submissionType } = application;
 
-  return (
-    hasUnissuedToIssued &&
-    (submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN || submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)
-  );
+  return hasUnissuedToIssued && (submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN || submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
 };
 
 const facilityTypeStringGenerator = (facilityType) => {

@@ -64,10 +64,7 @@ const getUkefDecision = async (decision, bankId) => {
         $match: {
           // show only deals that have the `UKEF_APPROVED_WITHOUT_CONDITIONS` and `UKEF_APPROVED_WITH_CONDITIONS` status
           status: {
-            $in: [
-              CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
-              CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
-            ],
+            $in: [CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS, CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS],
           },
         },
       },

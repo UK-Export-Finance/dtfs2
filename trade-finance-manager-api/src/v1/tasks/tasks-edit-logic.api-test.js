@@ -143,9 +143,7 @@ describe('tasks edit logic', () => {
   describe('isTaskInUnderwritingGroup', () => {
     describe('when task is in underwriting group', () => {
       it('should return true', () => {
-        const underwritingGroup = MOCK_MIA_TASKS.find(
-          (group) => group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING,
-        );
+        const underwritingGroup = MOCK_MIA_TASKS.find((group) => group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING);
 
         const taskTitle = underwritingGroup.groupTasks[0].title;
 
@@ -157,9 +155,7 @@ describe('tasks edit logic', () => {
 
     describe('when task is NOT in underwriting group', () => {
       it('should return false', () => {
-        const underwritingGroup = MOCK_MIA_TASKS.find(
-          (group) => group.groupTitle !== CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING,
-        );
+        const underwritingGroup = MOCK_MIA_TASKS.find((group) => group.groupTitle !== CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING);
 
         const taskTitle = 'Task title not in underwriting group';
 

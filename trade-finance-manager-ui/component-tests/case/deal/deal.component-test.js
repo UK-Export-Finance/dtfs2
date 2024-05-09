@@ -55,9 +55,7 @@ describe(`${page} when deal is BSS`, () => {
   });
 
   it('should render contact name', () => {
-    wrapper
-      .expectText('[data-cy="contact-name"]')
-      .toRead(`${params.deal.maker.firstname} ${params.deal.maker.surname}`);
+    wrapper.expectText('[data-cy="contact-name"]').toRead(`${params.deal.maker.firstname} ${params.deal.maker.surname}`);
   });
 
   it('should render email', () => {
@@ -104,9 +102,7 @@ describe(`${page} when deal is GEF`, () => {
   });
 
   it('should render contact name', () => {
-    wrapper
-      .expectText('[data-cy="contact-name"]')
-      .toRead(`${params.deal.maker.firstname} ${params.deal.maker.surname}`);
+    wrapper.expectText('[data-cy="contact-name"]').toRead(`${params.deal.maker.firstname} ${params.deal.maker.surname}`);
   });
 
   it('should render email', () => {
@@ -157,9 +153,7 @@ describe(`${page} when deal is NDB`, () => {
   });
 
   it('should render contact name', () => {
-    wrapper
-      .expectText('[data-cy="contact-name"]')
-      .toRead(`${params.deal.maker.firstname} ${params.deal.maker.surname}`);
+    wrapper.expectText('[data-cy="contact-name"]').toRead(`${params.deal.maker.firstname} ${params.deal.maker.surname}`);
   });
 
   it('should render email', () => {

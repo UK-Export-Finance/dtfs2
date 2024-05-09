@@ -55,12 +55,7 @@ describe('mapGefFacilityDates', () => {
 
     const mockCoverEndDate = new Date(mockFacility.facilitySnapshot.coverEndDate);
 
-    const expected = mapCoverEndDate(
-      format(mockCoverEndDate, 'dd'),
-      format(mockCoverEndDate, 'MM'),
-      format(mockCoverEndDate, 'yyyy'),
-      mockFacility,
-    );
+    const expected = mapCoverEndDate(format(mockCoverEndDate, 'dd'), format(mockCoverEndDate, 'MM'), format(mockCoverEndDate, 'yyyy'), mockFacility);
 
     expect(result.coverEndDate).toEqual(expected);
   });

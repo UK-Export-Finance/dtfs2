@@ -15,12 +15,7 @@ describe('POST underwriting - managers decision - validate submitted values', ()
 
       const expected = {
         errorsCount: 1,
-        validationErrors: generateValidationErrors(
-          fieldId,
-          `${fieldLabel} must be 8000 characters or fewer`,
-          count + 1,
-          errors,
-        ),
+        validationErrors: generateValidationErrors(fieldId, `${fieldLabel} must be 8000 characters or fewer`, count + 1, errors),
       };
 
       expect(result).toEqual(expected);
@@ -32,13 +27,7 @@ describe('POST underwriting - managers decision - validate submitted values', ()
       const fieldLabel = 'the field label';
       const fieldId = 'fieldId';
 
-      const result = validateCommentField(
-        errors,
-        count,
-        fieldLabel,
-        fieldId,
-        'A sample comment, featuring various "punctuation!" £$%^@~#;[]{}',
-      );
+      const result = validateCommentField(errors, count, fieldLabel, fieldId, 'A sample comment, featuring various "punctuation!" £$%^@~#;[]{}');
 
       const expected = {
         errorsCount: 0,
@@ -114,16 +103,11 @@ describe('POST underwriting - managers decision - validate submitted values', ()
 
       expect(result.count).toEqual(2);
 
-      const decisionError = generateValidationErrors('decision', 'Select if you approve or decline', 1).errorList
-        .decision;
+      const decisionError = generateValidationErrors('decision', 'Select if you approve or decline', 1).errorList.decision;
 
       expect(result.errorList.decision).toEqual(decisionError);
 
-      const internalCommentsError = generateValidationErrors(
-        'internalComments',
-        'Comments must be 8000 characters or fewer',
-        2,
-      ).errorList.internalComments;
+      const internalCommentsError = generateValidationErrors('internalComments', 'Comments must be 8000 characters or fewer', 2).errorList.internalComments;
 
       expect(result.errorList.internalComments).toEqual(internalCommentsError);
     });

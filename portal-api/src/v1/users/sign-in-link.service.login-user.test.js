@@ -58,9 +58,7 @@ describe('SignInLinkService', () => {
         });
         when(userRepository.findById).calledWith(blockedUser._id).mockResolvedValueOnce(blockedUser);
         when(utils.issueValid2faJWT).calledWith(blockedUser).mockReturnValueOnce(tokenObject);
-        when(userRepository.updateLastLoginAndResetSignInData)
-          .calledWith({ userId: blockedUser._id, sessionIdentifier })
-          .mockResolvedValueOnce(undefined);
+        when(userRepository.updateLastLoginAndResetSignInData).calledWith({ userId: blockedUser._id, sessionIdentifier }).mockResolvedValueOnce(undefined);
       });
 
       it('throws a UserBlockedError if the user is blocked', async () => {
@@ -77,9 +75,7 @@ describe('SignInLinkService', () => {
         });
         when(userRepository.findById).calledWith(disabledUser._id).mockResolvedValueOnce(disabledUser);
         when(utils.issueValid2faJWT).calledWith(disabledUser).mockReturnValueOnce(tokenObject);
-        when(userRepository.updateLastLoginAndResetSignInData)
-          .calledWith({ userId: disabledUser._id, sessionIdentifier })
-          .mockResolvedValueOnce(undefined);
+        when(userRepository.updateLastLoginAndResetSignInData).calledWith({ userId: disabledUser._id, sessionIdentifier }).mockResolvedValueOnce(undefined);
       });
 
       it('throws a UserDisabledError if the user is disabled', async () => {
@@ -111,9 +107,7 @@ describe('SignInLinkService', () => {
     function mockUserTestConfig(user) {
       when(userRepository.findById).calledWith(user._id).mockResolvedValueOnce(user);
       when(utils.issueValid2faJWT).calledWith(user).mockReturnValueOnce(tokenObject);
-      when(userRepository.updateLastLoginAndResetSignInData)
-        .calledWith({ userId: user._id, sessionIdentifier })
-        .mockResolvedValueOnce(undefined);
+      when(userRepository.updateLastLoginAndResetSignInData).calledWith({ userId: user._id, sessionIdentifier }).mockResolvedValueOnce(undefined);
     }
   });
 });

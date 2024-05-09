@@ -58,8 +58,7 @@ describe('about routes', () => {
 
   describe('POST /contract/:_id/about/supplier/companies-house-search/:prefix', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) =>
-        post({}, headers).to(`/contract/${_id}/about/supplier/companies-house-search/${prefix}`),
+      makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/about/supplier/companies-house-search/${prefix}`),
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}/about/supplier#${prefix}-companies-house-registration-number` },

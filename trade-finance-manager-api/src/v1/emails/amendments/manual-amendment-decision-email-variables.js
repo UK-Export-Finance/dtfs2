@@ -29,10 +29,8 @@ const approvedWithConditionsDeclinedDecision = (amendmentVariables) => {
 
   const ukefDealId = dealSnapshot.ukefDealId ?? dealSnapshot.details.ukefDealId;
 
-  const amendmentTypeApproved =
-    value === AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS ? AMENDMENT_TYPE.VALUE : AMENDMENT_TYPE.COVER_END_DATE;
-  const amendmentTypeDeclined =
-    value === AMENDMENT_UW_DECISION.DECLINED ? AMENDMENT_TYPE.VALUE : AMENDMENT_TYPE.COVER_END_DATE;
+  const amendmentTypeApproved = value === AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS ? AMENDMENT_TYPE.VALUE : AMENDMENT_TYPE.COVER_END_DATE;
+  const amendmentTypeDeclined = value === AMENDMENT_UW_DECISION.DECLINED ? AMENDMENT_TYPE.VALUE : AMENDMENT_TYPE.COVER_END_DATE;
 
   return {
     recipientName: `${firstname} ${surname}`,
@@ -57,10 +55,8 @@ const approvedWithoutConditionsDeclinedDecision = (amendmentVariables) => {
 
   const ukefDealId = dealSnapshot.ukefDealId ?? dealSnapshot.details.ukefDealId;
 
-  const amendmentTypeApproved =
-    value === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS ? AMENDMENT_TYPE.VALUE : AMENDMENT_TYPE.COVER_END_DATE;
-  const amendmentTypeDeclined =
-    value === AMENDMENT_UW_DECISION.DECLINED ? AMENDMENT_TYPE.VALUE : AMENDMENT_TYPE.COVER_END_DATE;
+  const amendmentTypeApproved = value === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS ? AMENDMENT_TYPE.VALUE : AMENDMENT_TYPE.COVER_END_DATE;
+  const amendmentTypeDeclined = value === AMENDMENT_UW_DECISION.DECLINED ? AMENDMENT_TYPE.VALUE : AMENDMENT_TYPE.COVER_END_DATE;
 
   return {
     recipientName: `${firstname} ${surname}`,

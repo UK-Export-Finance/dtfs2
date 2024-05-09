@@ -7,11 +7,7 @@ const { validateToken, validateRole } = require('./middleware');
 
 const reportsRouter = express.Router();
 
-reportsRouter.get(
-  '/reports',
-  [validateToken, validateRole({ role: [MAKER, CHECKER] })],
-  reportsController.getPortalReports,
-);
+reportsRouter.get('/reports', [validateToken, validateRole({ role: [MAKER, CHECKER] })], reportsController.getPortalReports);
 reportsRouter.get(
   '/reports/review-unissued-facilities',
   [validateToken, validateRole({ role: [MAKER, CHECKER] })],

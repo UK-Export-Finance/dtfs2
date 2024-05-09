@@ -89,10 +89,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
     const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn, auditDetails);
 
     // Facilities
-    const updatedDealWithUpdatedFacilities = await updateFacilities(
-      updatedDealWithDealCurrencyConversions,
-      auditDetails,
-    );
+    const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions, auditDetails);
 
     // Estore
     let dealUpdate = await createEstoreSite(updatedDealWithUpdatedFacilities);

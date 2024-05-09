@@ -25,10 +25,7 @@ df.app.orchestration('acbs-facility', function* createACBSfacility(context) {
     const acbsFacilityMasterInput = mappings.facility.facilityMaster(deal, facility, dealAcbsData, acbsReference);
     const { facilityIdentifier } = acbsFacilityMasterInput;
 
-    if (
-      facilityIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.PENDING) ||
-      facilityIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.TEST)
-    ) {
+    if (facilityIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.PENDING) || facilityIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.TEST)) {
       throw new Error(`Invalid facility ID ${facilityIdentifier}`);
     }
 
@@ -45,11 +42,7 @@ df.app.orchestration('acbs-facility', function* createACBSfacility(context) {
     });
 
     // 3. Facility Covenant
-    const acbsFacilityCovenantInput = mappings.facility.facilityCovenant(
-      deal,
-      facility,
-      CONSTANTS.FACILITY.COVENANT_TYPE.UK_CONTRACT_VALUE,
-    );
+    const acbsFacilityCovenantInput = mappings.facility.facilityCovenant(deal, facility, CONSTANTS.FACILITY.COVENANT_TYPE.UK_CONTRACT_VALUE);
 
     const facilityCovenant = yield context.df.callActivityWithRetry('activity-create-facility-covenant', retryOptions, {
       facilityIdentifier,

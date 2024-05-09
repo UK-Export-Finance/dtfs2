@@ -16,38 +16,33 @@ const { validateRole } = require('../../middleware');
 
 const router = express.Router();
 
-router.get(
-  '/contract/:_id/about/buyer',
-  [validateRole({ role: [MAKER] }), provide([DEAL, COUNTRIES])],
-  async (req, res) => {
-    const { _id, userToken } = requestParams(req);
+router.get('/contract/:_id/about/buyer', [validateRole({ role: [MAKER] }), provide([DEAL, COUNTRIES])], async (req, res) => {
+  const { _id, userToken } = requestParams(req);
 
-    const { deal, countries } = req.apiData;
+  const { deal, countries } = req.apiData;
 
-    const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
-    const errorSummary = generateErrorSummary(validationErrors, errorHref);
+  const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
+  const errorSummary = generateErrorSummary(validationErrors, errorHref);
 
-    const completedForms = calculateStatusOfEachPage(Object.keys(errorSummary.errorList));
+  const completedForms = calculateStatusOfEachPage(Object.keys(errorSummary.errorList));
 
-    const buyerAddressCountryCode =
-      deal.submissionDetails['buyer-address-country'] && deal.submissionDetails['buyer-address-country'].code;
-    const destinationOfGoodsAndServicesCountryCode =
-      deal.submissionDetails.destinationOfGoodsAndServices && deal.submissionDetails.destinationOfGoodsAndServices.code;
+  const buyerAddressCountryCode = deal.submissionDetails['buyer-address-country'] && deal.submissionDetails['buyer-address-country'].code;
+  const destinationOfGoodsAndServicesCountryCode =
+    deal.submissionDetails.destinationOfGoodsAndServices && deal.submissionDetails.destinationOfGoodsAndServices.code;
 
-    const mappedCountries = {
-      'buyer-address-country': mapCountries(countries, buyerAddressCountryCode),
-      destinationOfGoodsAndServices: mapCountries(countries, destinationOfGoodsAndServicesCountryCode),
-    };
+  const mappedCountries = {
+    'buyer-address-country': mapCountries(countries, buyerAddressCountryCode),
+    destinationOfGoodsAndServices: mapCountries(countries, destinationOfGoodsAndServicesCountryCode),
+  };
 
-    return res.render('contract/about/about-supply-buyer.njk', {
-      deal,
-      validationErrors: buyerValidationErrors(validationErrors, deal.submissionDetails),
-      mappedCountries,
-      user: req.session.user,
-      taskListItems: aboutTaskList(completedForms),
-    });
-  },
-);
+  return res.render('contract/about/about-supply-buyer.njk', {
+    deal,
+    validationErrors: buyerValidationErrors(validationErrors, deal.submissionDetails),
+    mappedCountries,
+    user: req.session.user,
+    taskListItems: aboutTaskList(completedForms),
+  });
+});
 const buyerSubmissionDetailsProperties = [
   'buyer-name',
   'buyer-address-country',
@@ -78,8 +73,7 @@ router.post('/contract/:_id/about/buyer/save-go-back', provide([DEAL]), async (r
 
   // UI form submit only has the country code. API has a country object.
   // to check if something has changed, only use the country code.
-  const destinationOfGoodsAndServicesCode =
-    destinationOfGoodsAndServices && destinationOfGoodsAndServices.code ? destinationOfGoodsAndServices.code : '';
+  const destinationOfGoodsAndServicesCode = destinationOfGoodsAndServices && destinationOfGoodsAndServices.code ? destinationOfGoodsAndServices.code : '';
 
   const mappedOriginalData = {
     ...deal.submissionDetails,

@@ -71,9 +71,7 @@ describe('getDeals()', () => {
     const errorResponse = api.getDeals(queryParams, token);
 
     expect(mockAxios.history.get.length).toBe(1);
-    await expect(errorResponse).rejects.toThrow(
-      new PageOutOfBoundsError('Requested page number exceeds the maximum page number'),
-    );
+    await expect(errorResponse).rejects.toThrow(new PageOutOfBoundsError('Requested page number exceeds the maximum page number'));
   });
 });
 
@@ -132,9 +130,7 @@ describe('getFacilities()', () => {
     const errorResponse = api.getFacilities(queryParams, token);
 
     expect(mockAxios.history.get.length).toBe(1);
-    await expect(errorResponse).rejects.toThrow(
-      new PageOutOfBoundsError('Requested page number exceeds the maximum page number'),
-    );
+    await expect(errorResponse).rejects.toThrow(new PageOutOfBoundsError('Requested page number exceeds the maximum page number'));
   });
 });
 

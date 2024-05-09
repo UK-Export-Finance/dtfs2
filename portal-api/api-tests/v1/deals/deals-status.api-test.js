@@ -115,8 +115,7 @@ describe('/v1/deals/:id/status', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => put(urlForDealStatus, completedDeal),
-      makeRequestWithAuthHeader: (authHeader) =>
-        put(urlForDealStatus, completedDeal, { headers: { Authorization: authHeader } }),
+      makeRequestWithAuthHeader: (authHeader) => put(urlForDealStatus, completedDeal, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({

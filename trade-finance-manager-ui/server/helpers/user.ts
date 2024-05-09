@@ -10,8 +10,7 @@ export const userFullName = (user: TfmSessionUser) => {
  * Function to return whether or not a user is in
  * any of the teams provided
  */
-export const userIsInTeam = (user: TfmSessionUser, teamIdList: TeamId[]) =>
-  user.teams?.some((teamId) => teamIdList.includes(teamId));
+export const userIsInTeam = (user: TfmSessionUser, teamIdList: TeamId[]) => user.teams?.some((teamId) => teamIdList.includes(teamId));
 
 /**
  * Function to return whether or not a user is in

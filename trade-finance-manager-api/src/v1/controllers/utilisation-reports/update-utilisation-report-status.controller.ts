@@ -9,10 +9,7 @@ export type UpdateUtilisationReportStatusRequestBody = {
   reportsWithStatus: ReportWithStatus[];
 };
 
-export const updateUtilisationReportStatus = async (
-  req: Request<object, object, UpdateUtilisationReportStatusRequestBody>,
-  res: Response,
-) => {
+export const updateUtilisationReportStatus = async (req: Request<object, object, UpdateUtilisationReportStatusRequestBody>, res: Response) => {
   try {
     const { reportsWithStatus, user } = req.body;
 

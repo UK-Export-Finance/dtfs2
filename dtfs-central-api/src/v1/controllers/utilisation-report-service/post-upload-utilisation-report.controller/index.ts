@@ -30,11 +30,7 @@ type PreValidationPostUploadUtilisationReportRequest = CustomExpressRequest<{
  * @param res - The response object
  * @param next - The next function
  */
-export const postUploadUtilisationReportPayloadValidator = (
-  req: PreValidationPostUploadUtilisationReportRequest,
-  res: Response,
-  next: NextFunction,
-) => {
+export const postUploadUtilisationReportPayloadValidator = (req: PreValidationPostUploadUtilisationReportRequest, res: Response, next: NextFunction) => {
   const { reportId, fileInfo, reportData, user } = req.body;
 
   const validationErrors = [

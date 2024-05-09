@@ -18,11 +18,7 @@ const getDealSubmissionDate = require('../deal/helpers/get-deal-submission-date'
 const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
   try {
     const effectiveDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
-    const { expirationDate, nextDueDate, nextAccrueToDate } = helpers.getFeeDates(
-      facility,
-      deal.dealSnapshot.dealType,
-      premiumScheduleIndex,
-    );
+    const { expirationDate, nextDueDate, nextAccrueToDate } = helpers.getFeeDates(facility, deal.dealSnapshot.dealType, premiumScheduleIndex);
     const currency = facility.facilitySnapshot.currency.id || CONSTANTS.DEAL.CURRENCY.DEFAULT;
 
     return {

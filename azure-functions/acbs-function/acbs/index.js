@@ -27,23 +27,15 @@ df.app.orchestration('acbs', function* HDeal(context) {
       let country;
 
       if (product !== CONSTANTS.PRODUCT.TYPE.GEF) {
-        industry =
-          deal.dealSnapshot.submissionDetails['industry-class'] &&
-          deal.dealSnapshot.submissionDetails['industry-class'].code;
-        country =
-          deal.dealSnapshot.submissionDetails['supplier-address-country'] &&
-          deal.dealSnapshot.submissionDetails['supplier-address-country'].code;
+        industry = deal.dealSnapshot.submissionDetails['industry-class'] && deal.dealSnapshot.submissionDetails['industry-class'].code;
+        country = deal.dealSnapshot.submissionDetails['supplier-address-country'] && deal.dealSnapshot.submissionDetails['supplier-address-country'].code;
       } else {
         industry = deal.dealSnapshot.exporter.industries[0].class.code;
         country = deal.dealSnapshot.exporter.registeredAddress.country;
       }
 
       const acbsReference = {
-        supplierAcbsIndustryCode: yield context.df.callActivityWithRetry(
-          'activity-get-acbs-industry-sector',
-          retryOptions,
-          { industry },
-        ),
+        supplierAcbsIndustryCode: yield context.df.callActivityWithRetry('activity-get-acbs-industry-sector', retryOptions, { industry }),
       };
 
       /**
@@ -59,11 +51,7 @@ df.app.orchestration('acbs', function* HDeal(context) {
 
       if (product === CONSTANTS.PRODUCT.TYPE.GEF && country !== CONSTANTS.DEAL.COUNTRY.DEFAULT) {
         acbsReference.country = {
-          supplierAcbsCountryCode: yield context.df.callActivityWithRetry(
-            'activity-get-acbs-country-code',
-            retryOptions,
-            { country },
-          ),
+          supplierAcbsCountryCode: yield context.df.callActivityWithRetry('activity-get-acbs-country-code', retryOptions, { country }),
         };
       } else {
         acbsReference.country = country;
@@ -106,9 +94,7 @@ df.app.orchestration('acbs', function* HDeal(context) {
       }
 
       // 1.1. Party tasks are run in parallel so wait for them all to be finished.
-      yield context.df.Task.all(
-        product === CONSTANTS.PRODUCT.TYPE.GEF ? [exporterTask, bankTask] : [exporterTask, bankTask, buyerTask],
-      );
+      yield context.df.Task.all(product === CONSTANTS.PRODUCT.TYPE.GEF ? [exporterTask, bankTask] : [exporterTask, bankTask, buyerTask]);
 
       let parties;
 
@@ -129,10 +115,7 @@ df.app.orchestration('acbs', function* HDeal(context) {
       const acbsDealInput = mappings.deal.deal(deal, parties.exporter.partyIdentifier, acbsReference);
       const { dealIdentifier } = acbsDealInput;
 
-      if (
-        dealIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.PENDING) ||
-        dealIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.TEST)
-      ) {
+      if (dealIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.PENDING) || dealIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.TEST)) {
         throw new Error(`Invalid deal ID ${dealIdentifier}`);
       }
 
@@ -152,14 +135,10 @@ df.app.orchestration('acbs', function* HDeal(context) {
         deal,
         parties.indemnifier ? parties.indemnifier.partyIdentifier : parties.exporter.partyIdentifier,
       );
-      const dealGuaranteeRecord = yield context.df.callActivityWithRetry(
-        'activity-create-deal-guarantee',
-        retryOptions,
-        {
-          dealIdentifier,
-          guarantee: acbsDealGuaranteeInput,
-        },
-      );
+      const dealGuaranteeRecord = yield context.df.callActivityWithRetry('activity-create-deal-guarantee', retryOptions, {
+        dealIdentifier,
+        guarantee: acbsDealGuaranteeInput,
+      });
 
       const dealAcbsData = {
         parties,
@@ -183,8 +162,7 @@ df.app.orchestration('acbs', function* HDeal(context) {
 
       return {
         portalDealId: deal._id,
-        ukefDealId:
-          product === CONSTANTS.PRODUCT.TYPE.GEF ? deal.dealSnapshot.ukefDealId : deal.dealSnapshot.details.ukefDealId,
+        ukefDealId: product === CONSTANTS.PRODUCT.TYPE.GEF ? deal.dealSnapshot.ukefDealId : deal.dealSnapshot.details.ukefDealId,
         deal: dealAcbsData,
         facilities: facilityTasks.map(({ result }) => result),
       };

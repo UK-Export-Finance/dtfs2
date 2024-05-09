@@ -80,9 +80,7 @@ context('Eligibility Criteria', () => {
     eligibilityCriteria.agentsName.count().should('have.text', `You have ${characterCount} characters remaining`);
 
     eligibilityCriteria.agentsName.input().type(agentsName);
-    eligibilityCriteria.agentsName
-      .count()
-      .should('have.text', `You have ${characterCount - agentsName.length} characters remaining`);
+    eligibilityCriteria.agentsName.count().should('have.text', `You have ${characterCount - agentsName.length} characters remaining`);
   });
 
   it('should limit agents name to 150 characters', () => {

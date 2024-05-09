@@ -82,9 +82,7 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
       pages.bondIssueFacility.submit().click();
       pages.bondIssueFacility
         .requestedCoverStartDateError()
-        .contains(
-          `Requested Cover Start Date must be between ${submissionDateFormatted} and ${submissionDatePlus3Months}`,
-        );
+        .contains(`Requested Cover Start Date must be between ${submissionDateFormatted} and ${submissionDatePlus3Months}`);
 
       // cover starts beyond 3 months from submission
 
@@ -98,12 +96,8 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
       pages.bondIssueFacility.submit().click();
       pages.bondIssueFacility
         .requestedCoverStartDateError()
-        .contains(
-          `Requested Cover Start Date must be between ${submissionDateFormatted} and ${submissionDatePlus3Months}`,
-        );
-      pages.bondIssueFacility
-        .coverEndDateError()
-        .contains('Cover End Date must be after the Requested Cover Start Date');
+        .contains(`Requested Cover Start Date must be between ${submissionDateFormatted} and ${submissionDatePlus3Months}`);
+      pages.bondIssueFacility.coverEndDateError().contains('Cover End Date must be after the Requested Cover Start Date');
     });
   });
 
@@ -135,9 +129,7 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
       pages.loanIssueFacility.submit().click();
       pages.loanIssueFacility
         .requestedCoverStartDateError()
-        .contains(
-          `Requested Cover Start Date must be between ${submissionDateFormatted} and ${submissionDatePlus3Months}`,
-        );
+        .contains(`Requested Cover Start Date must be between ${submissionDateFormatted} and ${submissionDatePlus3Months}`);
 
       // cover starts beyond 3 months from submission
 
@@ -148,9 +140,7 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
       pages.loanIssueFacility.submit().click();
       pages.loanIssueFacility
         .requestedCoverStartDateError()
-        .contains(
-          `Requested Cover Start Date must be between ${submissionDateFormatted} and ${submissionDatePlus3Months}`,
-        );
+        .contains(`Requested Cover Start Date must be between ${submissionDateFormatted} and ${submissionDatePlus3Months}`);
     });
   });
 });

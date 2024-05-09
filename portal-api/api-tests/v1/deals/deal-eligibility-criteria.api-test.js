@@ -47,9 +47,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles)
-        .put(updatedECPartial)
-        .to('/v1/deals/620a1aa095a618b12da38c7b/eligibility-criteria');
+      const { status } = await as(noRoles).put(updatedECPartial).to('/v1/deals/620a1aa095a618b12da38c7b/eligibility-criteria');
 
       expect(status).toEqual(401);
     });
@@ -64,9 +62,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
     });
 
     it('404s requests for unknown resources', async () => {
-      const { status } = await as(aBarclaysMaker)
-        .put(updatedECPartial)
-        .to('/v1/deals/620a1aa095a618b12da38c7b/eligibility-criteria');
+      const { status } = await as(aBarclaysMaker).put(updatedECPartial).to('/v1/deals/620a1aa095a618b12da38c7b/eligibility-criteria');
 
       expect(status).toEqual(404);
     });
@@ -108,9 +104,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status, body } = await as(aBarclaysMaker)
-        .put(updatedECCompleted)
-        .to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await as(aBarclaysMaker).put(updatedECCompleted).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
       expect(body.eligibility.validationErrors.count).toEqual(0);
@@ -120,9 +114,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status, body } = await as(aBarclaysMaker)
-        .put(updatedECPartial)
-        .to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await as(aBarclaysMaker).put(updatedECPartial).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
       expect(body.eligibility.validationErrors.count).toEqual(5);
@@ -145,9 +137,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
         agentAddressCountry: 'GBR',
       };
 
-      const { status, body } = await as(aBarclaysMaker)
-        .put(updatedECPostcode)
-        .to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await as(aBarclaysMaker).put(updatedECPostcode).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
       expect(body.eligibility.validationErrors.count).toEqual(8);
@@ -159,16 +149,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
         }
       });
 
-      expect(errorIdList).toEqual([
-        '13',
-        '15',
-        '16',
-        '17',
-        '18',
-        'agentAddressLine1',
-        'agentAddressPostcode',
-        'agentName',
-      ]);
+      expect(errorIdList).toEqual(['13', '15', '16', '17', '18', 'agentAddressLine1', 'agentAddressPostcode', 'agentName']);
     });
 
     it('generated postcode validation error if criteria11 is false and country = GBR but postcode not entered', async () => {
@@ -180,9 +161,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
         agentAddressCountry: 'GBR',
       };
 
-      const { status, body } = await as(aBarclaysMaker)
-        .put(updatedECCountry)
-        .to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await as(aBarclaysMaker).put(updatedECCountry).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
       expect(body.eligibility.validationErrors.count).toEqual(8);
@@ -194,16 +173,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
         }
       });
 
-      expect(errorIdList).toEqual([
-        '13',
-        '15',
-        '16',
-        '17',
-        '18',
-        'agentAddressLine1',
-        'agentAddressPostcode',
-        'agentName',
-      ]);
+      expect(errorIdList).toEqual(['13', '15', '16', '17', '18', 'agentAddressLine1', 'agentAddressPostcode', 'agentName']);
     });
 
     it('should generate address country validation error if the the country is `undefined`', async () => {
@@ -216,9 +186,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status, body } = await as(aBarclaysMaker)
-        .put(ec11UndefinedCountry)
-        .to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await as(aBarclaysMaker).put(ec11UndefinedCountry).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
       expect(body.eligibility.validationErrors.count).toEqual(8);
@@ -230,25 +198,14 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
         }
       });
 
-      expect(errorIdList).toEqual([
-        '13',
-        '15',
-        '16',
-        '17',
-        '18',
-        'agentAddressCountry',
-        'agentAddressLine1',
-        'agentName',
-      ]);
+      expect(errorIdList).toEqual(['13', '15', '16', '17', '18', 'agentAddressCountry', 'agentAddressLine1', 'agentName']);
     });
 
     it('updates criteria 11 extra info in criteria11 is false', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status, body } = await as(aBarclaysMaker)
-        .put(updatedECCriteria11WithExtraInfo)
-        .to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await as(aBarclaysMaker).put(updatedECCriteria11WithExtraInfo).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
       expect(body.eligibility).toMatchObject(criteria11ExtraInfo);
@@ -264,14 +221,10 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
         agentName: 'a'.repeat(characterCount + 1),
       };
 
-      const { status, body } = await as(aBarclaysMaker)
-        .put(updatedECCriteria11WithExtraInfoLongAgent)
-        .to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await as(aBarclaysMaker).put(updatedECCriteria11WithExtraInfoLongAgent).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
-      expect(body.eligibility.agentName).toEqual(
-        updatedECCriteria11WithExtraInfoLongAgent.agentName.substring(0, characterCount),
-      );
+      expect(body.eligibility.agentName).toEqual(updatedECCriteria11WithExtraInfoLongAgent.agentName.substring(0, characterCount));
     });
 
     it('does not generate town mandatory error if criteria11 is false and country = GBR and town not entered', async () => {
@@ -284,9 +237,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
         agentAddressCountry: 'GBR',
       };
 
-      const { status, body } = await as(aBarclaysMaker)
-        .put(updatedECCriteria11WithExtraInfoNotGBR)
-        .to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await as(aBarclaysMaker).put(updatedECCriteria11WithExtraInfoNotGBR).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
       expect(body.eligibility.validationErrors.errorList.agentAddressTown.text).toBeUndefined();
@@ -302,23 +253,17 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
         agentAddressCountry: 'AUS',
       };
 
-      const { status, body } = await as(aBarclaysMaker)
-        .put(updatedECCriteria11WithExtraInfoNotGBR)
-        .to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await as(aBarclaysMaker).put(updatedECCriteria11WithExtraInfoNotGBR).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
-      expect(body.eligibility.validationErrors.errorList.agentAddressTown.text).toEqual(
-        "Agent's city/town is required",
-      );
+      expect(body.eligibility.validationErrors.errorList.agentAddressTown.text).toEqual("Agent's city/town is required");
     });
 
     it('removes criteria 11 extra info when criteria11 is changed from false to true', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { body } = await as(aBarclaysMaker)
-        .put(updatedECCriteria11WithExtraInfo)
-        .to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { body } = await as(aBarclaysMaker).put(updatedECCriteria11WithExtraInfo).to(`/v1/deals/${newId}/eligibility-criteria`);
       expect(body.eligibility).toMatchObject(criteria11ExtraInfo);
 
       const updateCriteria11Eligibility = {
@@ -326,9 +271,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
         'criterion-11': 'true',
       };
 
-      const { status, body: body2 } = await as(aBarclaysMaker)
-        .put(updateCriteria11Eligibility)
-        .to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body: body2 } = await as(aBarclaysMaker).put(updateCriteria11Eligibility).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
       expect(body2.eligibility).toMatchObject(criteria11ExtraInfoEmpty);
@@ -338,9 +281,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status, body } = await as(aBarclaysMaker)
-        .put(updatedECPartial)
-        .to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await as(aBarclaysMaker).put(updatedECPartial).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
       expect(body.submissionType).toEqual('');
@@ -350,9 +291,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status, body } = await as(aBarclaysMaker)
-        .put(updatedECCompletedAllTrue)
-        .to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await as(aBarclaysMaker).put(updatedECCompletedAllTrue).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
       expect(body.submissionType).toEqual('Automatic Inclusion Notice');
@@ -362,9 +301,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status, body } = await as(aBarclaysMaker)
-        .put(updatedECCompleted)
-        .to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await as(aBarclaysMaker).put(updatedECCompleted).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
       expect(body.submissionType).toEqual('Manual Inclusion Application');
@@ -374,15 +311,11 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id;
 
-      const { body: firstUpdate } = await as(aBarclaysMaker)
-        .put(updatedECCompleted)
-        .to(`/v1/deals/${dealId}/eligibility-criteria`);
+      const { body: firstUpdate } = await as(aBarclaysMaker).put(updatedECCompleted).to(`/v1/deals/${dealId}/eligibility-criteria`);
 
       const firstUpdateTimeStamp = firstUpdate.eligibility.lastUpdated;
 
-      const { body: secondUpdate } = await as(aBarclaysMaker)
-        .put(updatedECCompleted)
-        .to(`/v1/deals/${dealId}/eligibility-criteria`);
+      const { body: secondUpdate } = await as(aBarclaysMaker).put(updatedECCompleted).to(`/v1/deals/${dealId}/eligibility-criteria`);
 
       expect(typeof secondUpdate.eligibility.lastUpdated).toEqual('number');
       expect(typeof secondUpdate.eligibility.lastUpdated).not.toEqual(firstUpdateTimeStamp);

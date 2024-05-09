@@ -28,13 +28,8 @@ context('A checker selects to submit a contract from the view-contract page', ()
       ],
       BANK1_MAKER1,
     ).then((insertedDeals) => {
-      [
-        goodDeal,
-        badDealInvalidLoanCoverStartDate,
-        badDealInvalidBondCoverStartDate,
-        dealBondCoverStartDateInThePast,
-        dealLoanCoverStartDateInThePast,
-      ] = insertedDeals;
+      [goodDeal, badDealInvalidLoanCoverStartDate, badDealInvalidBondCoverStartDate, dealBondCoverStartDateInThePast, dealLoanCoverStartDateInThePast] =
+        insertedDeals;
 
       const goodDealFacilities = [...goodDeal.bondTransactions.items, ...goodDeal.loanTransactions.items];
 
@@ -104,9 +99,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
     // expect to stay on the submission page, and see an error
     cy.url().should('eq', relative(`/contract/${badDealInvalidLoanCoverStartDate._id}/confirm-submission`));
-    contractConfirmSubmission.expectError(
-      'Requested Cover Start Date must be on the application submission date or in the future',
-    );
+    contractConfirmSubmission.expectError('Requested Cover Start Date must be on the application submission date or in the future');
 
     // expect the deal status to be unchanged
     contract.visit(badDealInvalidLoanCoverStartDate);
@@ -130,9 +123,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
     // expect to stay on the submission page, and see an error
     cy.url().should('eq', relative(`/contract/${badDealInvalidBondCoverStartDate._id}/confirm-submission`));
-    contractConfirmSubmission.expectError(
-      'Requested Cover Start Date must be on the application submission date or in the future',
-    );
+    contractConfirmSubmission.expectError('Requested Cover Start Date must be on the application submission date or in the future');
 
     // expect the deal status to be unchanged
     contract.visit(badDealInvalidBondCoverStartDate);

@@ -1,10 +1,4 @@
-const {
-  contract,
-  contractAboutSupplier,
-  contractAboutBuyer,
-  contractAboutFinancial,
-  contractAboutPreview,
-} = require('../../pages');
+const { contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');

@@ -346,9 +346,7 @@ describe('/v1/deals/:id/clone', () => {
           cloneTransactions: 'true',
         };
 
-        const { body: responseBody } = await as(anHSBCMaker)
-          .post(clonePostBody)
-          .to(`/v1/deals/${originalDeal._id}/clone`);
+        const { body: responseBody } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
         const { body: cloned } = await as(anHSBCMaker).get(`/v1/deals/${responseBody._id}`);
 
@@ -368,9 +366,7 @@ describe('/v1/deals/:id/clone', () => {
             additionalRefName: 'new-bank-deal-name',
             cloneTransactions: 'false',
           };
-          const { body: responseBody } = await as(anHSBCMaker)
-            .post(clonePostBody)
-            .to(`/v1/deals/${originalDeal._id}/clone`);
+          const { body: responseBody } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
           const { body: cloned } = await as(anHSBCMaker).get(`/v1/deals/${responseBody._id}`);
 

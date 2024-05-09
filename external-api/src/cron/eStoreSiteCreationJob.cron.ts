@@ -26,12 +26,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
 
   // Step 2: Site already exists in eStore
   if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
-    console.info(
-      '⚡ CRON: eStore site %s has been created successfully for deal %s %s',
-      siteExistsResponse.data.siteId,
-      eStoreData.dealIdentifier,
-      now,
-    );
+    console.info('⚡ CRON: eStore site %s has been created successfully for deal %s %s', siteExistsResponse.data.siteId, eStoreData.dealIdentifier, now);
 
     data.siteId = String(siteExistsResponse.data.siteId);
 
@@ -58,12 +53,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
     // Add facility IDs to term store and create the buyer folder
     eStoreTermStoreAndBuyerFolder(data);
   } else if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING) {
-    console.info(
-      '⚡ CRON: eStore site creation %s is still in progress for deal %s %s',
-      siteExistsResponse.data.siteId,
-      eStoreData.dealIdentifier,
-      now,
-    );
+    console.info('⚡ CRON: eStore site creation %s is still in progress for deal %s %s', siteExistsResponse.data.siteId, eStoreData.dealIdentifier, now);
 
     // Update status
     await cronJobLogs.updateOne(

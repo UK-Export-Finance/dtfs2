@@ -28,11 +28,7 @@ describe('page specific validation errors', () => {
       };
 
       const result = allFieldsArray(mockFields);
-      const expected = [
-        ...mockFields.REQUIRED_FIELDS,
-        ...mockFields.CONDITIONALLY_REQUIRED_FIELDS,
-        ...mockFields.OPTIONAL_FIELDS,
-      ];
+      const expected = [...mockFields.REQUIRED_FIELDS, ...mockFields.CONDITIONALLY_REQUIRED_FIELDS, ...mockFields.OPTIONAL_FIELDS];
       expect(result).toEqual(expected);
     });
   });
@@ -91,10 +87,7 @@ describe('page specific validation errors', () => {
         count: mockErrorList.length,
       };
 
-      const expectedRequiredErrorList = filterErrorList(
-        mockValidationErrors.errorList,
-        requiredFieldsArray(FIELDS.FEE_DETAILS),
-      );
+      const expectedRequiredErrorList = filterErrorList(mockValidationErrors.errorList, requiredFieldsArray(FIELDS.FEE_DETAILS));
 
       const result = mapRequiredValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
 
@@ -171,10 +164,7 @@ describe('page specific validation errors', () => {
         count: mockErrorList.length,
       };
 
-      const expectedErrorList = filterErrorList(
-        mockValidationErrors.errorList,
-        ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS,
-      );
+      const expectedErrorList = filterErrorList(mockValidationErrors.errorList, ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS);
 
       const result = mapAlwaysShowErrorFields(mockValidationErrors, ABOUT_CONTRACT_FIELDS.SUPPLIER);
 
@@ -199,10 +189,7 @@ describe('page specific validation errors', () => {
         count: mockErrorList.length,
       };
 
-      const fieldsThatShouldBeReturned = [
-        ...ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS,
-        ...ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS,
-      ];
+      const fieldsThatShouldBeReturned = [...ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS, ...ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS];
 
       const expectedErrorList = filterErrorList(mockValidationErrors.errorList, fieldsThatShouldBeReturned);
 
@@ -268,11 +255,7 @@ describe('page specific validation errors', () => {
         [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['sme-type']]: 'Small',
       };
 
-      const result = pageSpecificValidationErrors(
-        mockValidationErrors,
-        ABOUT_CONTRACT_FIELDS.SUPPLIER,
-        mockSubmittedValues,
-      );
+      const result = pageSpecificValidationErrors(mockValidationErrors, ABOUT_CONTRACT_FIELDS.SUPPLIER, mockSubmittedValues);
 
       const expected = {
         count: 1,
@@ -311,11 +294,7 @@ describe('page specific validation errors', () => {
           [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS[1]]: 'test',
         };
 
-        const result = pageSpecificValidationErrors(
-          mockValidationErrors,
-          ABOUT_CONTRACT_FIELDS.SUPPLIER,
-          mockSubmittedValues,
-        );
+        const result = pageSpecificValidationErrors(mockValidationErrors, ABOUT_CONTRACT_FIELDS.SUPPLIER, mockSubmittedValues);
 
         const expected = mapRequiredAndAlwaysShowErrorFields(mockValidationErrors, ABOUT_CONTRACT_FIELDS.SUPPLIER);
         expect(result).toEqual(expected);
@@ -339,11 +318,7 @@ describe('page specific validation errors', () => {
           [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS[1]]: 'test',
         };
 
-        const result = pageSpecificValidationErrors(
-          mockValidationErrors,
-          ABOUT_CONTRACT_FIELDS.SUPPLIER,
-          mockSubmittedValues,
-        );
+        const result = pageSpecificValidationErrors(mockValidationErrors, ABOUT_CONTRACT_FIELDS.SUPPLIER, mockSubmittedValues);
 
         const expected = mapAlwaysShowErrorFields(mockValidationErrors, ABOUT_CONTRACT_FIELDS.SUPPLIER);
         expect(result).toEqual(expected);

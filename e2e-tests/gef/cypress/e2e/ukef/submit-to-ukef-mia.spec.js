@@ -47,10 +47,7 @@ context('Submit MIA to UKEF', () => {
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 
-      cy.uploadFile(
-        'upload-file-valid.doc',
-        `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`,
-      );
+      cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('upload_file_valid.doc');
       manualInclusion.continueButton().click();
       securityDetails.visit(dealId);
@@ -108,9 +105,7 @@ context('Submit MIA to UKEF', () => {
     it('Submits and displays the confirmation page', () => {
       submitToUkef.confirmSubmissionCheckbox().click();
       submitToUkef.submitButton().click();
-      submitToUkefConfirmation
-        .confirmationPanelTitle()
-        .contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted to UKEF`);
+      submitToUkefConfirmation.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted to UKEF`);
       submitToUkefConfirmation.confirmationText().contains("We've sent you a confirmation email.");
       submitToUkefConfirmation.dashboardLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit-to-ukef`));

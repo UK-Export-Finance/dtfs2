@@ -36,10 +36,7 @@ const isValid = (disbursementAmount, value) => {
     return false;
   }
 
-  if (
-    hasValue(value) &&
-    !isLessThanFacilityValue(Number(sanitizedValue), Number(sanitizedFacilityValue.sanitizedValue))
-  ) {
+  if (hasValue(value) && !isLessThanFacilityValue(Number(sanitizedValue), Number(sanitizedFacilityValue.sanitizedValue))) {
     return false;
   }
 

@@ -2,14 +2,7 @@ import relative from '../../relativeURL';
 import partials from '../../partials';
 import pages from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
-import {
-  UNDERWRITER_MANAGER_1,
-  UNDERWRITER_MANAGER_2,
-  UNDERWRITER_1,
-  T1_USER_1,
-  BANK1_MAKER1,
-  ADMIN,
-} from '../../../../../e2e-fixtures';
+import { UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_2, UNDERWRITER_1, T1_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 
 context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
   let dealId;

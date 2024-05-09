@@ -17,8 +17,6 @@ describe(page, () => {
   });
 
   it('should render the email address the sign in link has been sent to', () => {
-    wrapper
-      .expectText('[data-cy="obscured-sign-in-link-target-email-address"]')
-      .toMatch(regexForTextContainingTargetEmailAddress);
+    wrapper.expectText('[data-cy="obscured-sign-in-link-target-email-address"]').toMatch(regexForTextContainingTargetEmailAddress);
   });
 });

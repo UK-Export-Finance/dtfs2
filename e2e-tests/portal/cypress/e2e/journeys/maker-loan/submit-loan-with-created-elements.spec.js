@@ -40,15 +40,9 @@ context('Loan form - Submit loan with created element on page', () => {
     pages.loanGuaranteeDetails.unconditionalNameInput().clear();
     pages.loanGuaranteeDetails.unconditionalNameInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
 
-    pages.loanGuaranteeDetails
-      .requestedCoverStartDateDayInput()
-      .type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay);
-    pages.loanGuaranteeDetails
-      .requestedCoverStartDateMonthInput()
-      .type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth);
-    pages.loanGuaranteeDetails
-      .requestedCoverStartDateYearInput()
-      .type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear);
+    pages.loanGuaranteeDetails.requestedCoverStartDateDayInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay);
+    pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth);
+    pages.loanGuaranteeDetails.requestedCoverStartDateYearInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear);
 
     pages.loanGuaranteeDetails.coverEndDateDayInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay);
     pages.loanGuaranteeDetails.coverEndDateMonthInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth);

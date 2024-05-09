@@ -95,14 +95,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
   try {
     const { exporter } = await api.getApplication({ dealId, userToken });
 
-    const correspondenceAddressFields = [
-      'addressLine1',
-      'addressLine2',
-      'addressLine3',
-      'locality',
-      'postalCode',
-      'country',
-    ];
+    const correspondenceAddressFields = ['addressLine1', 'addressLine2', 'addressLine3', 'locality', 'postalCode', 'country'];
     const sanitizedBody = constructPayload(body, correspondenceAddressFields);
 
     const applicationExporterUpdate = {

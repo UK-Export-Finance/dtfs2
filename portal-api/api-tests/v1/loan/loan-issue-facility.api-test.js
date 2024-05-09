@@ -77,9 +77,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
   };
 
   const putIssueFacility = async (issueFacilityDealId, issueFacilityLoanId, body) => {
-    const response = await as(aBarclaysMaker)
-      .put(body)
-      .to(`/v1/deals/${issueFacilityDealId}/loan/${issueFacilityLoanId}/issue-facility`);
+    const response = await as(aBarclaysMaker).put(body).to(`/v1/deals/${issueFacilityDealId}/loan/${issueFacilityLoanId}/issue-facility`);
     return response;
   };
 

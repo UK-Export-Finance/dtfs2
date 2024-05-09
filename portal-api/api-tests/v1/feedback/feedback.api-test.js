@@ -90,9 +90,7 @@ describe('/v1/feedback', () => {
     describe('when all required fields provided', () => {
       describe('when a user is logged in', () => {
         it('creates a new feedback, adding `created` field and auditRecord', async () => {
-          const { status, body: createdFeedback } = await as(aBarclaysMaker)
-            .post(getFeedbackToSubmit(aBarclaysMaker))
-            .to('/v1/feedback');
+          const { status, body: createdFeedback } = await as(aBarclaysMaker).post(getFeedbackToSubmit(aBarclaysMaker)).to('/v1/feedback');
 
           expect(status).toEqual(200);
           expect(createdFeedback._id).toBeDefined();

@@ -282,9 +282,7 @@ describe('controllers/about-facility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.not.arrayContaining([
-              { href: '#shouldCoverStartOnSubmission', text: expect.any(String) },
-            ]),
+            errorSummary: expect.not.arrayContaining([{ href: '#shouldCoverStartOnSubmission', text: expect.any(String) }]),
           }),
         }),
       );
@@ -424,9 +422,7 @@ describe('controllers/about-facility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#coverStartDate', text: 'The day for the cover start date must include 1 or 2 numbers' },
-            ]),
+            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The day for the cover start date must include 1 or 2 numbers' }]),
           }),
         }),
       );
@@ -444,9 +440,7 @@ describe('controllers/about-facility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#coverStartDate', text: 'The day for the cover start date must include 1 or 2 numbers' },
-            ]),
+            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The day for the cover start date must include 1 or 2 numbers' }]),
           }),
         }),
       );
@@ -466,9 +460,7 @@ describe('controllers/about-facility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#coverStartDate', text: 'The month for the cover start date must include 1 or 2 numbers' },
-            ]),
+            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The month for the cover start date must include 1 or 2 numbers' }]),
           }),
         }),
       );
@@ -486,9 +478,7 @@ describe('controllers/about-facility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#coverStartDate', text: 'The month for the cover start date must include 1 or 2 numbers' },
-            ]),
+            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The month for the cover start date must include 1 or 2 numbers' }]),
           }),
         }),
       );
@@ -508,9 +498,7 @@ describe('controllers/about-facility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#coverStartDate', text: 'The year for the cover start date must include 4 numbers' },
-            ]),
+            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The year for the cover start date must include 4 numbers' }]),
           }),
         }),
       );
@@ -528,9 +516,7 @@ describe('controllers/about-facility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#coverStartDate', text: 'The year for the cover start date must include 4 numbers' },
-            ]),
+            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The year for the cover start date must include 4 numbers' }]),
           }),
         }),
       );
@@ -550,9 +536,7 @@ describe('controllers/about-facility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#coverEndDate', text: 'The day for the cover end date must include 1 or 2 numbers' },
-            ]),
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The day for the cover end date must include 1 or 2 numbers' }]),
           }),
         }),
       );
@@ -570,9 +554,7 @@ describe('controllers/about-facility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#coverEndDate', text: 'The day for the cover end date must include 1 or 2 numbers' },
-            ]),
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The day for the cover end date must include 1 or 2 numbers' }]),
           }),
         }),
       );
@@ -592,9 +574,7 @@ describe('controllers/about-facility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#coverEndDate', text: 'The month for the cover end date must include 1 or 2 numbers' },
-            ]),
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The month for the cover end date must include 1 or 2 numbers' }]),
           }),
         }),
       );
@@ -612,9 +592,7 @@ describe('controllers/about-facility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#coverEndDate', text: 'The month for the cover end date must include 1 or 2 numbers' },
-            ]),
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The month for the cover end date must include 1 or 2 numbers' }]),
           }),
         }),
       );
@@ -634,9 +612,7 @@ describe('controllers/about-facility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#coverEndDate', text: 'The year for the cover end date must include 4 numbers' },
-            ]),
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The year for the cover end date must include 4 numbers' }]),
           }),
         }),
       );
@@ -654,9 +630,7 @@ describe('controllers/about-facility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#coverEndDate', text: 'The year for the cover end date must include 4 numbers' },
-            ]),
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The year for the cover end date must include 4 numbers' }]),
           }),
         }),
       );
@@ -722,9 +696,7 @@ describe('controllers/about-facility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#coverEndDate', text: 'The cover end date must be after the cover start date' },
-            ]),
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The cover end date must be after the cover start date' }]),
           }),
         }),
       );
@@ -744,9 +716,7 @@ describe('controllers/about-facility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([
-              { href: '#coverEndDate', text: 'Cover end date cannot be before cover start date' },
-            ]),
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'Cover end date cannot be before cover start date' }]),
           }),
         }),
       );
@@ -816,9 +786,7 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.redirect).toHaveBeenCalledWith(
-        '/gef/application-details/123/facilities/xyz/provided-facility',
-      );
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/provided-facility');
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {

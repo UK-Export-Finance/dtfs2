@@ -18,10 +18,7 @@ const getAllFacilitiesData = async (userToken, user, sessionFilters, currentPage
   const filtersQuery = dashboardFacilitiesFiltersQuery(filtersArray, user);
 
   const sortQuery = dashboardSortQuery(sortBy);
-  const { count, facilities } = await getApiData(
-    api.allFacilities(currentPage * PAGE_SIZE, PAGE_SIZE, filtersQuery, userToken, sortQuery),
-    res,
-  );
+  const { count, facilities } = await getApiData(api.allFacilities(currentPage * PAGE_SIZE, PAGE_SIZE, filtersQuery, userToken, sortQuery), res);
 
   return {
     facilities,
@@ -57,14 +54,7 @@ const getTemplateVariables = (user, sessionFilters, facilities, count, currentPa
 exports.getTemplateVariables = getTemplateVariables;
 
 const getDataAndTemplateVariables = async (userToken, user, sessionFilters, currentPage, sortBy, res) => {
-  const { facilities, count, filtersArray } = await getAllFacilitiesData(
-    userToken,
-    user,
-    sessionFilters,
-    currentPage,
-    sortBy,
-    res,
-  );
+  const { facilities, count, filtersArray } = await getAllFacilitiesData(userToken, user, sessionFilters, currentPage, sortBy, res);
 
   const templateVariables = getTemplateVariables(user, sessionFilters, facilities, count, currentPage, filtersArray);
 
@@ -96,14 +86,7 @@ exports.allFacilities = async (req, res) => {
     }
   }
 
-  const templateVariables = await getDataAndTemplateVariables(
-    userToken,
-    user,
-    req.session.dashboardFilters,
-    currentPage,
-    activeSortByOrder,
-    res,
-  );
+  const templateVariables = await getDataAndTemplateVariables(userToken, user, req.session.dashboardFilters, currentPage, activeSortByOrder, res);
 
   return res.render('dashboard/facilities.njk', {
     ...templateVariables,

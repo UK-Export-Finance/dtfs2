@@ -18,9 +18,7 @@ const buyer = ({ deal }) => {
   const { submissionDetails } = deal.dealSnapshot;
   const countryCode = submissionDetails['buyer-address-country'] && submissionDetails['buyer-address-country'].code;
   const citizenshipClass =
-    countryCode === CONSTANTS.DEAL.COUNTRY.DEFAULT
-      ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM
-      : CONSTANTS.PARTY.CITIZENSHIP_CLASS.ROW;
+    countryCode === CONSTANTS.DEAL.COUNTRY.DEFAULT ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM : CONSTANTS.PARTY.CITIZENSHIP_CLASS.ROW;
   const partyNames = getPartyNames(submissionDetails['buyer-name']);
 
   return {

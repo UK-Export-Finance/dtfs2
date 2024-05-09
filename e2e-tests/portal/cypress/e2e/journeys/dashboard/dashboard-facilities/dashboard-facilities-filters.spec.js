@@ -115,9 +115,7 @@ context('Dashboard Deals filters', () => {
       dashboardFacilities.filters.panel.form.type.cash.checkbox().should('not.be.checked');
 
       // Contingent
-      dashboardFacilities.filters.panel.form.type.contingent
-        .label()
-        .contains(CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT);
+      dashboardFacilities.filters.panel.form.type.contingent.label().contains(CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT);
       dashboardFacilities.filters.panel.form.type.contingent.checkbox().should('exist');
       dashboardFacilities.filters.panel.form.type.contingent.checkbox().should('not.be.checked');
 
@@ -151,16 +149,12 @@ context('Dashboard Deals filters', () => {
 
     it('bank facility stage/hasBeenIssued', () => {
       // Issued
-      dashboardFacilities.filters.panel.form.hasBeenIssued.issued
-        .label()
-        .contains(CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED);
+      dashboardFacilities.filters.panel.form.hasBeenIssued.issued.label().contains(CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED);
       dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('exist');
       dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('not.be.checked');
 
       // Unissued
-      dashboardFacilities.filters.panel.form.hasBeenIssued.unissued
-        .label()
-        .contains(CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED);
+      dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.label().contains(CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED);
       dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().should('exist');
       dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().should('not.be.checked');
     });

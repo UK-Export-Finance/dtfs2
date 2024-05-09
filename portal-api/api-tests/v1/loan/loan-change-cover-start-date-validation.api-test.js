@@ -43,9 +43,7 @@ describe('/v1/deals/:id/loan/:loanId', () => {
   };
 
   const updateLoanCoverStartDate = async (bssDealId, bssLoanId, loan) => {
-    const response = await as(aBarclaysMaker)
-      .put(loan)
-      .to(`/v1/deals/${bssDealId}/loan/${bssLoanId}/change-cover-start-date`);
+    const response = await as(aBarclaysMaker).put(loan).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}/change-cover-start-date`);
     return response.body;
   };
 

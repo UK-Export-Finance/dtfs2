@@ -39,13 +39,9 @@ describe('fee-record.helper', () => {
           exporter: MOCK_UTILISATION_REPORT_RAW_CSV_DATA.exporter,
           baseCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['base currency'],
           facilityUtilisation: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['facility utilisation']),
-          totalFeesAccruedForThePeriod: Number(
-            MOCK_UTILISATION_REPORT_RAW_CSV_DATA['total fees accrued for the period'],
-          ),
+          totalFeesAccruedForThePeriod: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['total fees accrued for the period']),
           totalFeesAccruedForThePeriodCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['accrual currency'],
-          totalFeesAccruedForThePeriodExchangeRate: Number(
-            MOCK_UTILISATION_REPORT_RAW_CSV_DATA['accrual exchange rate'],
-          ),
+          totalFeesAccruedForThePeriodExchangeRate: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['accrual exchange rate']),
           feesPaidToUkefForThePeriod: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['fees paid to ukef for the period']),
           feesPaidToUkefForThePeriodCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['fees paid to ukef currency'],
           paymentCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['payment currency'],

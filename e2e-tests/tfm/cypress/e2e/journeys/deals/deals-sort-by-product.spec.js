@@ -28,11 +28,7 @@ context('User can view and sort deals by product', () => {
     mockFacilities: MOCK_DEAL_AIN.mockFacilities,
   });
 
-  const MOCK_DEALS = [
-    DEAL_WITH_ONLY_1_FACILITY_BOND,
-    DEAL_WITH_ONLY_1_FACILITY_LOAN,
-    DEAL_WITH_1_LOAN_AND_BOND_FACILITIES,
-  ];
+  const MOCK_DEALS = [DEAL_WITH_ONLY_1_FACILITY_BOND, DEAL_WITH_ONLY_1_FACILITY_LOAN, DEAL_WITH_1_LOAN_AND_BOND_FACILITIES];
 
   before(() => {
     cy.deleteTfmDeals();
@@ -50,17 +46,11 @@ context('User can view and sort deals by product', () => {
       cy.get(aliasSelector(ALIAS_KEY.SUBMIT_MANY_DEALS)).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
 
-        dealWith1FacilityBond = ALL_SUBMITTED_DEALS.find(
-          (deal) => deal.dealSnapshot.testId === DEAL_WITH_ONLY_1_FACILITY_BOND.testId,
-        );
+        dealWith1FacilityBond = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.testId === DEAL_WITH_ONLY_1_FACILITY_BOND.testId);
 
-        dealWith1FacilityLoan = ALL_SUBMITTED_DEALS.find(
-          (deal) => deal.dealSnapshot.testId === DEAL_WITH_ONLY_1_FACILITY_LOAN.testId,
-        );
+        dealWith1FacilityLoan = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.testId === DEAL_WITH_ONLY_1_FACILITY_LOAN.testId);
 
-        dealWith1LoanAndBondFacilities = ALL_SUBMITTED_DEALS.find(
-          (deal) => deal.dealSnapshot.testId === DEAL_WITH_1_LOAN_AND_BOND_FACILITIES.testId,
-        );
+        dealWith1LoanAndBondFacilities = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.testId === DEAL_WITH_1_LOAN_AND_BOND_FACILITIES.testId);
       });
     });
   });

@@ -64,9 +64,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       };
       const formattedReportPeriod = 'January 2024';
 
-      jest
-        .mocked(api.getUtilisationReportReconciliationDetailsById)
-        .mockResolvedValue(utilisationReportReconciliationDetails);
+      jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
 
       // Act
       await getUtilisationReportReconciliationByReportId(req, res);

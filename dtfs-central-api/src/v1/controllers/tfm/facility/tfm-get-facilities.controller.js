@@ -101,13 +101,7 @@ exports.getAllFacilities = async (req, res) => {
                   {
                     case: { $eq: ['$tfmDeals.dealSnapshot.dealType', 'BSS/EWCS'] },
                     then: {
-                      $concat: [
-                        '$facilitySnapshot.coverEndDate-year',
-                        '-',
-                        '$facilitySnapshot.coverEndDate-month',
-                        '-',
-                        '$facilitySnapshot.coverEndDate-day',
-                      ],
+                      $concat: ['$facilitySnapshot.coverEndDate-year', '-', '$facilitySnapshot.coverEndDate-month', '-', '$facilitySnapshot.coverEndDate-day'],
                     }, // YYYY-MM-DD
                   },
                 ],
@@ -161,10 +155,7 @@ exports.getAllFacilities = async (req, res) => {
       {
         $facet: {
           count: [{ $count: 'total' }],
-          facilities: [
-            { $skip: pageNumber * (pagesize ?? 0) },
-            ...(pagesize ? [{ $limit: parseInt(pagesize, 10) }] : []),
-          ],
+          facilities: [{ $skip: pageNumber * (pagesize ?? 0) }, ...(pagesize ? [{ $limit: parseInt(pagesize, 10) }] : [])],
         },
       },
       { $unwind: '$count' },

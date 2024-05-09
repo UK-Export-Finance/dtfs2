@@ -11,10 +11,7 @@ const {
   facilityChangePortalActivity,
 } = require('../../../src/v1/gef/controllers/portal-activities.controller');
 
-const {
-  PORTAL_ACTIVITY_LABEL,
-  PORTAL_ACTIVITY_TYPE,
-} = require('../../../src/v1/portalActivity-object-generator/activityConstants');
+const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../src/v1/portalActivity-object-generator/activityConstants');
 
 const mockApplications = require('../../fixtures/gef/application');
 

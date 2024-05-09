@@ -120,11 +120,7 @@ const uploadReportAndSendNotification = async (req, res) => {
     });
 
     if (existingReports.length !== 1) {
-      return res
-        .status(500)
-        .send(
-          `Expected 1 report but found ${existingReports.length} with bank ID ${bankId} and report period '${parsedReportPeriod}'`,
-        );
+      return res.status(500).send(`Expected 1 report but found ${existingReports.length} with bank ID ${bankId} and report period '${parsedReportPeriod}'`);
     }
 
     const existingReport = existingReports[0];
@@ -144,12 +140,7 @@ const uploadReportAndSendNotification = async (req, res) => {
       mimetype: file.mimetype,
     };
 
-    const saveDataResponse = await api.saveUtilisationReport(
-      existingReport.id,
-      parsedReportData,
-      parsedUser,
-      azureFileInfo,
-    );
+    const saveDataResponse = await api.saveUtilisationReport(existingReport.id, parsedReportData, parsedUser, azureFileInfo);
 
     await sendEmailToPdcInputtersEmail(parsedUser?.bank?.name, formattedReportPeriod);
     const { paymentOfficerEmails } = await sendEmailToBankPaymentOfficerTeam(

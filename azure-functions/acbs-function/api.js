@@ -201,26 +201,19 @@ const createDeal = (payload) => post('deals', payload);
 const createDealInvestor = (dealIdentifier, payload) => post(`deals/${dealIdentifier}/investors`, payload);
 const createDealGuarantee = (dealIdentifier, payload) => post(`deals/${dealIdentifier}/guarantees`, payload);
 const createFacility = (payload) => post('facilities', payload);
-const createFacilityInvestor = (facilityIdentifier, payload) =>
-  post(`facilities/${facilityIdentifier}/investors`, payload);
-const createFacilityCovenant = (facilityIdentifier, payload) =>
-  post(`facilities/${facilityIdentifier}/covenants`, payload);
-const createFacilityGuarantee = (facilityIdentifier, payload) =>
-  post(`facilities/${facilityIdentifier}/guarantees`, payload);
-const createCodeValueTransaction = (facilityIdentifier, payload) =>
-  post(`facilities/${facilityIdentifier}/activation-transactions`, payload);
+const createFacilityInvestor = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/investors`, payload);
+const createFacilityCovenant = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/covenants`, payload);
+const createFacilityGuarantee = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/guarantees`, payload);
+const createCodeValueTransaction = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/activation-transactions`, payload);
 const createFacilityLoan = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/loans`, payload);
 const createFacilityFee = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/fixed-fees`, payload);
-const updateFacilityLoanAmount = (facilityIdentifier, loanId, payload) =>
-  post(`facilities/${facilityIdentifier}/loans/${loanId}/amendments/amount`, payload);
+const updateFacilityLoanAmount = (facilityIdentifier, loanId, payload) => post(`facilities/${facilityIdentifier}/loans/${loanId}/amendments/amount`, payload);
 
 // PUT
-const updateFacility = (facilityIdentifier, updateType, payload, etag) =>
-  put(`facilities/${facilityIdentifier}?op=${updateType}`, payload, etag);
+const updateFacility = (facilityIdentifier, updateType, payload, etag) => put(`facilities/${facilityIdentifier}?op=${updateType}`, payload, etag);
 
 // PATCH
-const updateFacilityLoan = (facilityIdentifier, loanId, payload) =>
-  patch(`facilities/${facilityIdentifier}/loans/${loanId}`, payload);
+const updateFacilityLoan = (facilityIdentifier, loanId, payload) => patch(`facilities/${facilityIdentifier}/loans/${loanId}`, payload);
 
 module.exports = {
   getFacility,

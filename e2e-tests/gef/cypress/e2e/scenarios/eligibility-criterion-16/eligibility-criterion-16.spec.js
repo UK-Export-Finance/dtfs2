@@ -74,22 +74,14 @@ context('Eligibility Criterion 16', () => {
       ineligibleAutomaticCover.content().contains("You'll now need to complete a manual inclusion application.");
       ineligibleAutomaticCover.continueButton().click();
 
-      cy.url().should(
-        'eq',
-        relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`),
-      );
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
 
-      cy.uploadFile(
-        'upload-file-valid.doc',
-        `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`,
-      );
+      cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('upload_file_valid.doc');
     });
 
     it('successfully uploading file takes you to security details page', () => {
-      cy.visit(
-        relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`),
-      );
+      cy.visit(relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
       manualInclusion.continueButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/security-details`));

@@ -6,9 +6,7 @@ const mapSubmissionType = (v1Deal) => {
   let submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
 
   if (applicationRoute === 'ATP') {
-    const statusToCompare = ['ready_for_approval', 'further_input_required'].includes(
-      v1Deal.Deal_information.Extra_fields.Deal_status,
-    )
+    const statusToCompare = ['ready_for_approval', 'further_input_required'].includes(v1Deal.Deal_information.Extra_fields.Deal_status)
       ? v1Deal.Deal_information.Extra_fields.Deal_previous_status
       : v1Deal.Deal_information.Extra_fields.Deal_status;
 

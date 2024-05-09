@@ -7,10 +7,7 @@
  * @returns {Float} Facility value
  */
 const getFacilityValue = (facility, baseCurrency) => {
-  const amount =
-    baseCurrency || !facility.tfm.facilityValueInGBP
-      ? facility.facilitySnapshot.value
-      : facility.tfm.facilityValueInGBP;
+  const amount = baseCurrency || !facility.tfm.facilityValueInGBP ? facility.facilitySnapshot.value : facility.tfm.facilityValueInGBP;
 
   return Number(Number(amount).toFixed(2));
 };

@@ -18,9 +18,7 @@ var DTFS_PORTAL;
       return Object.prototype.hasOwnProperty.call(e, t);
     }),
     (e.r = function (e) {
-      'undefined' != typeof Symbol &&
-        Symbol.toStringTag &&
-        Object.defineProperty(e, Symbol.toStringTag, { value: 'Module' }),
+      'undefined' != typeof Symbol && Symbol.toStringTag && Object.defineProperty(e, Symbol.toStringTag, { value: 'Module' }),
         Object.defineProperty(e, '__esModule', { value: !0 });
     }),
     (function () {

@@ -24,11 +24,10 @@ const updateFacilityStatus = async (facilityId, status, existingFacility) => {
       status,
     };
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(facilityId) } },
-      $.flatten(withoutId(update)),
-      { returnNewDocument: true, returnDocument: 'after' },
-    );
+    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, $.flatten(withoutId(update)), {
+      returnNewDocument: true,
+      returnDocument: 'after',
+    });
 
     console.info('Updated Portal facility status from %s to %s', previousStatus, status);
 

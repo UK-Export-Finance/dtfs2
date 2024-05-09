@@ -26,12 +26,7 @@ export class InvalidStateMachineTransitionError extends ApiError {
     return new InvalidStateMachineTransitionError(message);
   }
 
-  public static forEntity({
-    eventType,
-    entityName,
-    state,
-    entityId,
-  }: EntityParams): InvalidStateMachineTransitionError {
+  public static forEntity({ eventType, entityName, state, entityId }: EntityParams): InvalidStateMachineTransitionError {
     const message = `Event type '${eventType}' is invalid for '${entityName}' (ID: '${entityId}') in state '${state}'`;
     return new InvalidStateMachineTransitionError(message);
   }

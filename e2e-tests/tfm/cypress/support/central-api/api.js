@@ -1,9 +1,7 @@
 const { UNDERWRITER_1_WITH_MOCK_ID } = require('../../../../e2e-fixtures/tfm-users.fixture');
 
 const api = () => {
-  const url = `${Cypress.config('centralApiProtocol')}${Cypress.config('centralApiHost')}:${Cypress.config(
-    'centralApiPort',
-  )}`;
+  const url = `${Cypress.config('centralApiProtocol')}${Cypress.config('centralApiHost')}:${Cypress.config('centralApiPort')}`;
   return url;
 };
 

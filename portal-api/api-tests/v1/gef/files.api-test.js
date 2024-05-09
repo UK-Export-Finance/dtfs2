@@ -117,9 +117,7 @@ describe(baseUrl, () => {
     });
 
     it('rejects requests that do not have access to deal', async () => {
-      const { status } = await as(invalidMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
-        .to(baseUrl);
+      const { status } = await as(invalidMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
       expect(status).toEqual(401);
     });
@@ -136,30 +134,20 @@ describe(baseUrl, () => {
         },
       ];
 
-      const { body, status } = await as(aMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, invalidFiles)
-        .to(baseUrl);
+      const { body, status } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, invalidFiles).to(baseUrl);
 
       expect(status).toEqual(400);
       expect(body).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ message: expect.any(String) }),
-          expect.objectContaining({ message: expect.any(String) }),
-        ]),
+        expect.arrayContaining([expect.objectContaining({ message: expect.any(String) }), expect.objectContaining({ message: expect.any(String) })]),
       );
     });
 
     it('successfully posts a single file', async () => {
-      const { status, body } = await as(aMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
-        .to(baseUrl);
+      const { status, body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
       expect(status).toEqual(201);
       expect(body).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ _id: expect.any(String) }),
-          expect.objectContaining({ _id: expect.any(String) }),
-        ]),
+        expect.arrayContaining([expect.objectContaining({ _id: expect.any(String) }), expect.objectContaining({ _id: expect.any(String) })]),
       );
     });
 

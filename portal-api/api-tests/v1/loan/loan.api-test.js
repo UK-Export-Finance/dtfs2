@@ -125,9 +125,7 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker).get(
-        '/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b',
-      );
+      const { status } = await as(aBarclaysMaker).get('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
@@ -212,9 +210,7 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker)
-        .put({})
-        .to('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
+      const { status } = await as(aBarclaysMaker).put({}).to('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
@@ -625,9 +621,7 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker).remove(
-        '/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b',
-      );
+      const { status } = await as(aBarclaysMaker).remove('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });

@@ -133,9 +133,7 @@ describe('/v1/deals/:id/bond', () => {
           const body = await updateBondInDeal(dealId, bond);
 
           expect(body.validationErrors.errorList.value).toBeDefined();
-          expect(body.validationErrors.errorList.value.text).toEqual(
-            'Bond value must be a currency format, like 1,345 or 1345.54',
-          );
+          expect(body.validationErrors.errorList.value.text).toEqual('Bond value must be a currency format, like 1,345 or 1345.54');
         });
       });
 
@@ -159,9 +157,7 @@ describe('/v1/deals/:id/bond', () => {
 
           const { validationErrors } = await updateBondInDeal(dealId, bond);
           expect(validationErrors.errorList.value).toBeDefined();
-          expect(validationErrors.errorList.value.text).toEqual(
-            'Bond value must have less than 3 decimals, like 12 or 12.10',
-          );
+          expect(validationErrors.errorList.value.text).toEqual('Bond value must have less than 3 decimals, like 12 or 12.10');
         });
       });
 
@@ -470,21 +466,18 @@ describe('/v1/deals/:id/bond', () => {
             },
           ];
 
-          it.each(testValuesWithMissingFields)(
-            'with $description it should return a validationError',
-            async ({ requestedCoverStartDateFields }) => {
-              const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
-              expect(validationErrors.errorList.requestedCoverStartDate).toBeDefined();
+          it.each(testValuesWithMissingFields)('with $description it should return a validationError', async ({ requestedCoverStartDateFields }) => {
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+            expect(validationErrors.errorList.requestedCoverStartDate).toBeDefined();
 
-              const expectedText = dateValidationText(
-                'Requested Cover Start Date',
-                requestedCoverStartDateFields['requestedCoverStartDate-day'],
-                requestedCoverStartDateFields['requestedCoverStartDate-month'],
-                requestedCoverStartDateFields['requestedCoverStartDate-year'],
-              );
-              expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
-            },
-          );
+            const expectedText = dateValidationText(
+              'Requested Cover Start Date',
+              requestedCoverStartDateFields['requestedCoverStartDate-day'],
+              requestedCoverStartDateFields['requestedCoverStartDate-month'],
+              requestedCoverStartDateFields['requestedCoverStartDate-year'],
+            );
+            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
+          });
         });
       });
 
@@ -567,20 +560,17 @@ describe('/v1/deals/:id/bond', () => {
             },
           ];
 
-          it.each(testValuesWithMissingFields)(
-            'with $description it should return a validationError',
-            async ({ coverEndDateFields }) => {
-              const { validationErrors } = await updateCoverEndDate(coverEndDateFields);
-              expect(validationErrors.errorList.coverEndDate).toBeDefined();
-              const expectedText = dateValidationText(
-                'Cover End Date',
-                coverEndDateFields['coverEndDate-day'],
-                coverEndDateFields['coverEndDate-month'],
-                coverEndDateFields['coverEndDate-year'],
-              );
-              expect(validationErrors.errorList.coverEndDate.text).toEqual(expectedText);
-            },
-          );
+          it.each(testValuesWithMissingFields)('with $description it should return a validationError', async ({ coverEndDateFields }) => {
+            const { validationErrors } = await updateCoverEndDate(coverEndDateFields);
+            expect(validationErrors.errorList.coverEndDate).toBeDefined();
+            const expectedText = dateValidationText(
+              'Cover End Date',
+              coverEndDateFields['coverEndDate-day'],
+              coverEndDateFields['coverEndDate-month'],
+              coverEndDateFields['coverEndDate-year'],
+            );
+            expect(validationErrors.errorList.coverEndDate.text).toEqual(expectedText);
+          });
         });
 
         describe('when is before today', () => {
@@ -593,9 +583,7 @@ describe('/v1/deals/:id/bond', () => {
 
             const { validationErrors } = await updateCoverEndDate(coverEndDateFields);
             expect(validationErrors.errorList.coverEndDate).toBeDefined();
-            expect(validationErrors.errorList.coverEndDate.text).toEqual(
-              'Cover End Date must be today or in the future',
-            );
+            expect(validationErrors.errorList.coverEndDate.text).toEqual('Cover End Date must be today or in the future');
           });
         });
 
@@ -619,9 +607,7 @@ describe('/v1/deals/:id/bond', () => {
             const body = await updateBondInDeal(dealId, bond);
             expect(body.validationErrors.errorList.coverEndDate).toBeDefined();
             // These aren't the same error message but could be
-            expect(body.validationErrors.errorList.coverEndDate.text).toEqual(
-              'Cover End Date cannot be before Requested Cover Start Date',
-            );
+            expect(body.validationErrors.errorList.coverEndDate.text).toEqual('Cover End Date cannot be before Requested Cover Start Date');
           });
         });
 
@@ -642,9 +628,7 @@ describe('/v1/deals/:id/bond', () => {
             const body = await updateBondInDeal(dealId, bond);
             expect(body.validationErrors.errorList.coverEndDate).toBeDefined();
             // These aren't the same error message but could be
-            expect(body.validationErrors.errorList.coverEndDate.text).toEqual(
-              'Cover End Date must be after the Requested Cover Start Date',
-            );
+            expect(body.validationErrors.errorList.coverEndDate.text).toEqual('Cover End Date must be after the Requested Cover Start Date');
           });
         });
       });
@@ -676,9 +660,7 @@ describe('/v1/deals/:id/bond', () => {
 
             const { validationErrors } = await updateBondInDeal(dealId, bond);
             expect(validationErrors.errorList.name).toBeDefined();
-            expect(validationErrors.errorList.name.text).toEqual(
-              "Bond's unique identification number must be 30 characters or fewer",
-            );
+            expect(validationErrors.errorList.name.text).toEqual("Bond's unique identification number must be 30 characters or fewer");
           });
         });
       });
@@ -726,9 +708,7 @@ describe('/v1/deals/:id/bond', () => {
           it('should return validationError', async () => {
             const { validationErrors } = await updateBondConversionRate('test');
             expect(validationErrors.errorList.conversionRate).toBeDefined();
-            expect(validationErrors.errorList.conversionRate.text).toEqual(
-              'Conversion rate must be a number, like 100 or 100.4',
-            );
+            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate must be a number, like 100 or 100.4');
           });
         });
 
@@ -746,9 +726,7 @@ describe('/v1/deals/:id/bond', () => {
           it('should return validationError', async () => {
             const { validationErrors } = await updateBondConversionRate('1234567');
             expect(validationErrors.errorList.conversionRate).toBeDefined();
-            expect(validationErrors.errorList.conversionRate.text).toEqual(
-              'Conversion rate can only include up to 6 decimal places',
-            );
+            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate can only include up to 6 decimal places');
           });
         });
 
@@ -756,9 +734,7 @@ describe('/v1/deals/:id/bond', () => {
           it('should return validationError', async () => {
             const { validationErrors } = await updateBondConversionRate('1.1234567');
             expect(validationErrors.errorList.conversionRate).toBeDefined();
-            expect(validationErrors.errorList.conversionRate.text).toEqual(
-              'Conversion rate can only include up to 6 decimal places',
-            );
+            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate can only include up to 6 decimal places');
           });
         });
       });
@@ -794,9 +770,7 @@ describe('/v1/deals/:id/bond', () => {
 
             const { validationErrors } = await updateBondConversionRateDate(conversionRateFields);
             expect(validationErrors.errorList.conversionRateDate).toBeDefined();
-            expect(validationErrors.errorList.conversionRateDate.text).toEqual(
-              'Conversion rate date must be today or in the past',
-            );
+            expect(validationErrors.errorList.conversionRateDate.text).toEqual('Conversion rate date must be today or in the past');
           });
         });
 
@@ -871,22 +845,19 @@ describe('/v1/deals/:id/bond', () => {
             },
           ];
 
-          it.each(testValuesWithSomeFieldsEmptyStrings)(
-            'with $description it should return a validationError',
-            async ({ conversionRateDateFields }) => {
-              const { validationErrors } = await updateBondConversionRateDate(conversionRateDateFields);
-              expect(validationErrors.errorList.conversionRateDate).toBeDefined();
+          it.each(testValuesWithSomeFieldsEmptyStrings)('with $description it should return a validationError', async ({ conversionRateDateFields }) => {
+            const { validationErrors } = await updateBondConversionRateDate(conversionRateDateFields);
+            expect(validationErrors.errorList.conversionRateDate).toBeDefined();
 
-              const expectedText = dateValidationText(
-                'Conversion rate date',
-                conversionRateDateFields['conversionRateDate-day'],
-                conversionRateDateFields['conversionRateDate-month'],
-                conversionRateDateFields['conversionRateDate-year'],
-              );
+            const expectedText = dateValidationText(
+              'Conversion rate date',
+              conversionRateDateFields['conversionRateDate-day'],
+              conversionRateDateFields['conversionRateDate-month'],
+              conversionRateDateFields['conversionRateDate-year'],
+            );
 
-              expect(validationErrors.errorList.conversionRateDate.text).toEqual(expectedText);
-            },
-          );
+            expect(validationErrors.errorList.conversionRateDate.text).toEqual(expectedText);
+          });
         });
       });
 
@@ -934,9 +905,7 @@ describe('/v1/deals/:id/bond', () => {
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.riskMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.riskMarginFee.text).toEqual(
-            'Risk Margin Fee % must be a number, like 1 or 12.65',
-          );
+          expect(body.validationErrors.errorList.riskMarginFee.text).toEqual('Risk Margin Fee % must be a number, like 1 or 12.65');
         });
       });
 
@@ -951,9 +920,7 @@ describe('/v1/deals/:id/bond', () => {
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.riskMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.riskMarginFee.text).toEqual(
-            'Risk Margin Fee % must be between 0 and 99',
-          );
+          expect(body.validationErrors.errorList.riskMarginFee.text).toEqual('Risk Margin Fee % must be between 0 and 99');
 
           bond.riskMarginFee = '-1';
 
@@ -961,9 +928,7 @@ describe('/v1/deals/:id/bond', () => {
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.riskMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.riskMarginFee.text).toEqual(
-            'Risk Margin Fee % must be between 0 and 99',
-          );
+          expect(body.validationErrors.errorList.riskMarginFee.text).toEqual('Risk Margin Fee % must be between 0 and 99');
         });
       });
 
@@ -977,9 +942,7 @@ describe('/v1/deals/:id/bond', () => {
           const body = await updateBondInDeal(dealId, bond);
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.riskMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.riskMarginFee.text).toEqual(
-            'Risk Margin Fee % must have less than 5 decimals, like 12 or 12.0010',
-          );
+          expect(body.validationErrors.errorList.riskMarginFee.text).toEqual('Risk Margin Fee % must have less than 5 decimals, like 12 or 12.0010');
         });
       });
     });
@@ -1011,9 +974,7 @@ describe('/v1/deals/:id/bond', () => {
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
-          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual(
-            'Covered Percentage must be a number, like 1 or 80',
-          );
+          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must be a number, like 1 or 80');
         });
       });
 
@@ -1028,9 +989,7 @@ describe('/v1/deals/:id/bond', () => {
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
-          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual(
-            'Covered Percentage must be between 1 and 80',
-          );
+          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must be between 1 and 80');
         });
       });
 
@@ -1045,9 +1004,7 @@ describe('/v1/deals/:id/bond', () => {
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
-          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual(
-            'Covered Percentage must be between 1 and 80',
-          );
+          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must be between 1 and 80');
         });
       });
 
@@ -1062,9 +1019,7 @@ describe('/v1/deals/:id/bond', () => {
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
-          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual(
-            'Covered Percentage must have less than 5 decimals, like 12 or 12.3456',
-          );
+          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must have less than 5 decimals, like 12 or 12.3456');
         });
       });
     });
@@ -1081,9 +1036,7 @@ describe('/v1/deals/:id/bond', () => {
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.minimumRiskMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual(
-            'Minimum risk margin fee must be a number, like 1 or 12.65',
-          );
+          expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must be a number, like 1 or 12.65');
         });
       });
 
@@ -1098,9 +1051,7 @@ describe('/v1/deals/:id/bond', () => {
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.minimumRiskMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual(
-            'Minimum risk margin fee must be 0 or more',
-          );
+          expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must be 0 or more');
         });
       });
 
@@ -1115,9 +1066,7 @@ describe('/v1/deals/:id/bond', () => {
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.minimumRiskMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual(
-            'Minimum risk margin fee must be 14 numbers or fewer',
-          );
+          expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must be 14 numbers or fewer');
         });
       });
 
@@ -1132,9 +1081,7 @@ describe('/v1/deals/:id/bond', () => {
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.minimumRiskMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual(
-            'Minimum risk margin fee must have less than 3 decimals, like 1 or 12.10',
-          );
+          expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must have less than 3 decimals, like 1 or 12.10');
         });
       });
     });

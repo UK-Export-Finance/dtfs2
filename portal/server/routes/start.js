@@ -44,38 +44,34 @@ router.get('/before-you-start/bank-deal', validateRole({ role: [MAKER] }), async
   });
 });
 
-router.post(
-  '/before-you-start/bank-deal',
-  [validateRole({ role: [MAKER] }), provide([MANDATORY_CRITERIA])],
-  async (req, res) => {
-    const { userToken } = requestParams(req);
+router.post('/before-you-start/bank-deal', [validateRole({ role: [MAKER] }), provide([MANDATORY_CRITERIA])], async (req, res) => {
+  const { userToken } = requestParams(req);
 
-    const allowedFields = ['bankInternalRefName', 'additionalRefName'];
-    const sanitizedBody = constructPayload(req.body, allowedFields);
+  const allowedFields = ['bankInternalRefName', 'additionalRefName'];
+  const sanitizedBody = constructPayload(req.body, allowedFields);
 
-    const newDeal = {
-      ...sanitizedBody,
-      mandatoryCriteria: req.apiData[MANDATORY_CRITERIA],
-    };
+  const newDeal = {
+    ...sanitizedBody,
+    mandatoryCriteria: req.apiData[MANDATORY_CRITERIA],
+  };
 
-    const apiResponse = await postToApi(api.createDeal(newDeal, userToken), errorHref);
+  const apiResponse = await postToApi(api.createDeal(newDeal, userToken), errorHref);
 
-    const { validationErrors } = apiResponse;
+  const { validationErrors } = apiResponse;
 
-    if (validationErrors) {
-      const { bankInternalRefName, additionalRefName } = req.body;
+  if (validationErrors) {
+    const { bankInternalRefName, additionalRefName } = req.body;
 
-      return res.status(400).render('before-you-start/before-you-start-bank-deal.njk', {
-        bankInternalRefName,
-        additionalRefName,
-        validationErrors,
-        user: req.session.user,
-      });
-    }
+    return res.status(400).render('before-you-start/before-you-start-bank-deal.njk', {
+      bankInternalRefName,
+      additionalRefName,
+      validationErrors,
+      user: req.session.user,
+    });
+  }
 
-    return res.redirect(`/contract/${apiResponse._id}`);
-  },
-);
+  return res.redirect(`/contract/${apiResponse._id}`);
+});
 
 router.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk', { user: req.session.user }));
 

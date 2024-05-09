@@ -1,10 +1,4 @@
-import {
-  getSupportingDocuments,
-  postSupportingDocuments,
-  uploadSupportingDocument,
-  deleteSupportingDocument,
-  nextDocument,
-} from '.';
+import { getSupportingDocuments, postSupportingDocuments, uploadSupportingDocument, deleteSupportingDocument, nextDocument } from '.';
 import Application from '../../../models/application';
 import validateFile from '../../../utils/validateFile';
 import { uploadAndSaveToDeal, removeFileFromDeal } from '../../../utils/fileUtils';
@@ -518,11 +512,7 @@ describe('controllers/supporting-documents', () => {
     });
 
     it('skips the management accounts page and moves to the financial forecasts page', () => {
-      application.supportingInformation.requiredFields = [
-        'manualInclusion',
-        'auditedFinancialStatements',
-        'financialForecasts',
-      ];
+      application.supportingInformation.requiredFields = ['manualInclusion', 'auditedFinancialStatements', 'financialForecasts'];
       expect(nextDocument(application, dealId, 'auditedFinancialStatements')).toContain('/financial-forecasts');
     });
     it('returns to the main applications page', () => {

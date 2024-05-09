@@ -8,12 +8,7 @@ import { MOCK_APPLICATION_AIN } from '../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 
-import {
-  MOCK_FACILITY_ONE,
-  MOCK_FACILITY_TWO,
-  MOCK_FACILITY_THREE,
-  MOCK_FACILITY_FOUR,
-} from '../../../fixtures/mocks/mock-facilities';
+import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../fixtures/mocks/mock-facilities';
 import applicationPreview from '../../pages/application-preview';
 import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
@@ -127,9 +122,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
     it('preview review facility stage has correct headers and shows 1 updated facilities', () => {
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
 
-      applicationPreview
-        .updatedUnissuedFacilitiesHeader()
-        .contains('The following facility stages have been updated to issued:');
+      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
       // should not be able to go back to unissued-facilities table once updated at least one facility
       applicationPreview.unissuedFacilitiesReviewLink().should('not.exist');
@@ -211,9 +204,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
-      applicationPreview
-        .updatedUnissuedFacilitiesHeader()
-        .contains('The following facility stages have been updated to issued:');
+      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
       // should show new facility four name
       applicationPreview.updatedUnissuedFacilitiesList().contains(`${unissuedFacilitiesArray[2].name}name`);
@@ -245,15 +236,11 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
     it('pressing submit button takes you to submit page and with correct panel once submitted to checker', () => {
       // ensures that can submit even with 1 unissued left still
       applicationPreview.submitButtonPostApproval().click();
-      applicationSubmission
-        .submissionText()
-        .contains('Someone at your bank must check your update before they can submit it to UKEF');
+      applicationSubmission.submissionText().contains('Someone at your bank must check your update before they can submit it to UKEF');
       applicationSubmission.submitButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
-      applicationSubmission
-        .confirmationPanelTitleFacilities()
-        .contains('Issued facilities submitted for checking at your bank');
+      applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted for checking at your bank');
     });
   });
 });

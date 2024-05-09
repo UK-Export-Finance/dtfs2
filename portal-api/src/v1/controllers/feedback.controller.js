@@ -2,10 +2,7 @@ const assert = require('assert');
 const { ObjectId } = require('mongodb');
 const sanitizeHtml = require('sanitize-html');
 const { format, getUnixTime, fromUnixTime } = require('date-fns');
-const {
-  generateAuditDatabaseRecordFromAuditDetails,
-  validateAuditDetails,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
 const sendEmail = require('../email');

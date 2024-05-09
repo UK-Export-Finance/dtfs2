@@ -46,17 +46,13 @@ describe('/v1/deals/:id/additionalRefName', () => {
 
   describe('PUT /v1/deals/:id/additionalRefName', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as()
-        .put({ additionalRefName: 'a new name' })
-        .to('/v1/deals/123456789012/additionalRefName');
+      const { status } = await as().put({ additionalRefName: 'a new name' }).to('/v1/deals/123456789012/additionalRefName');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles)
-        .put({ additionalRefName: 'a new name' })
-        .to('/v1/deals/123456789012/additionalRefName');
+      const { status } = await as(noRoles).put({ additionalRefName: 'a new name' }).to('/v1/deals/123456789012/additionalRefName');
 
       expect(status).toEqual(401);
     });
@@ -64,9 +60,7 @@ describe('/v1/deals/:id/additionalRefName', () => {
     it('401s requests if <user> != <resource>/maker', async () => {
       const { body } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
 
-      const { status } = await as(anotherBarclaysMaker)
-        .put({ additionalRefName: 'a new name' })
-        .to(`/v1/deals/${body._id}/additionalRefName`);
+      const { status } = await as(anotherBarclaysMaker).put({ additionalRefName: 'a new name' }).to(`/v1/deals/${body._id}/additionalRefName`);
 
       expect(status).toEqual(401);
     });
@@ -75,9 +69,7 @@ describe('/v1/deals/:id/additionalRefName', () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
-      const { status, text } = await as(aBarclaysMaker)
-        .put({ additionalRefName: 'a new name' })
-        .to(`/v1/deals/${createdDeal._id}/additionalRefName`);
+      const { status, text } = await as(aBarclaysMaker).put({ additionalRefName: 'a new name' }).to(`/v1/deals/${createdDeal._id}/additionalRefName`);
 
       expect(status).toEqual(200);
       expect(text).toEqual('a new name');
@@ -87,9 +79,7 @@ describe('/v1/deals/:id/additionalRefName', () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
-      await as(aBarclaysMaker)
-        .put({ additionalRefName: 'a new name' })
-        .to(`/v1/deals/${createdDeal._id}/additionalRefName`);
+      await as(aBarclaysMaker).put({ additionalRefName: 'a new name' }).to(`/v1/deals/${createdDeal._id}/additionalRefName`);
 
       const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${createdDeal._id}`);
 
@@ -101,9 +91,7 @@ describe('/v1/deals/:id/additionalRefName', () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
-      await as(aBarclaysMaker)
-        .put({ additionalRefName: 'a new name' })
-        .to(`/v1/deals/${createdDeal._id}/additionalRefName`);
+      await as(aBarclaysMaker).put({ additionalRefName: 'a new name' }).to(`/v1/deals/${createdDeal._id}/additionalRefName`);
 
       const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${createdDeal._id}`);
 

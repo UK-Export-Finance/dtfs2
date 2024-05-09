@@ -1,16 +1,8 @@
 const { ObjectId } = require('mongodb');
-const {
-  generateAuditDatabaseRecordFromAuditDetails,
-  generatePortalAuditDetails,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
-const {
-  facilitiesValidation,
-  facilitiesStatus,
-  facilitiesOverallStatus,
-  facilitiesCheckEnums,
-} = require('./validation/facilities');
+const { facilitiesValidation, facilitiesStatus, facilitiesOverallStatus, facilitiesCheckEnums } = require('./validation/facilities');
 const { Facility } = require('../models/facilities');
 const { Application } = require('../models/application');
 const { calculateUkefExposure, calculateGuaranteeFee } = require('../calculations/facility-calculations');
@@ -22,11 +14,7 @@ const dealsCollectionName = 'deals';
 exports.create = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
   if (!req.body.type || !req.body.dealId) {
-    return res
-      .status(422)
-      .send([
-        { status: 422, errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' },
-      ]);
+    return res.status(422).send([{ status: 422, errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' }]);
   }
 
   if (enumValidationErr) {

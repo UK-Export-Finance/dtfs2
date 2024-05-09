@@ -43,9 +43,7 @@ describe('PUT /deals/:dealId/underwriting/lead-underwriter', () => {
     mockFindOneDeal(MOCK_DEAL);
     mockFindUserById();
 
-    const { status, body } = await as(tokenUser)
-      .put(VALID_LEAD_UNDERWRITER_UPDATE)
-      .to(VALID_URL_TO_UPDATE_LEAD_UNDERWRITER);
+    const { status, body } = await as(tokenUser).put(VALID_LEAD_UNDERWRITER_UPDATE).to(VALID_URL_TO_UPDATE_LEAD_UNDERWRITER);
 
     expect(status).toBe(200);
     expect(body).toEqual({
@@ -58,9 +56,7 @@ describe('PUT /deals/:dealId/underwriting/lead-underwriter', () => {
     mockFindOneDeal(MOCK_DEAL);
     mockFindUserById();
 
-    const { status, body } = await as(tokenUser)
-      .put(VALID_LEAD_UNDERWRITER_UPDATE)
-      .to(`/v1/deals/${INVALID_DEAL_ID}/underwriting/lead-underwriter`);
+    const { status, body } = await as(tokenUser).put(VALID_LEAD_UNDERWRITER_UPDATE).to(`/v1/deals/${INVALID_DEAL_ID}/underwriting/lead-underwriter`);
 
     expect(status).toBe(400);
     expect(body).toEqual({
@@ -80,17 +76,11 @@ describe('PUT /deals/:dealId/underwriting/lead-underwriter', () => {
   it('should return a 500 if unable to update lead underwriter', async () => {
     when(api.updateDeal)
       .calledWith(expect.anything())
-      .mockRejectedValueOnce(
-        new Error(
-          `Updating the deal with dealId ${VALID_DEAL_ID} failed with status 500 and message: test error message`,
-        ),
-      );
+      .mockRejectedValueOnce(new Error(`Updating the deal with dealId ${VALID_DEAL_ID} failed with status 500 and message: test error message`));
     mockFindOneDeal();
     mockFindUserById();
 
-    const { status, body } = await as(tokenUser)
-      .put(VALID_LEAD_UNDERWRITER_UPDATE)
-      .to(VALID_URL_TO_UPDATE_LEAD_UNDERWRITER);
+    const { status, body } = await as(tokenUser).put(VALID_LEAD_UNDERWRITER_UPDATE).to(VALID_URL_TO_UPDATE_LEAD_UNDERWRITER);
 
     expect(status).toBe(500);
     expect(body).toEqual({ data: 'Unable to update lead underwriter' });

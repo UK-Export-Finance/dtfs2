@@ -165,9 +165,7 @@ describe('Update Facility Currency', () => {
     api.updateFacility = () => Promise.resolve(mockFacilityCurrencyResponse);
     await updateFacilityCurrency(mockRequest, mockResponse);
 
-    expect(mockResponse.redirect).toHaveBeenCalledWith(
-      '/gef/application-details/123/facilities/xyz/facility-value?status=change',
-    );
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/facility-value?status=change');
   });
 
   it('redirects user to facility value page if everything is successful', async () => {

@@ -55,16 +55,13 @@ describe('GET underwriting - facility risk profile', () => {
       };
 
       await facilityRiskProfileController.getUnderWritingFacilityRiskProfileEdit(req, res);
-      expect(res.render).toHaveBeenCalledWith(
-        'case/underwriting/pricing-and-risk/edit-facility-risk-profile/edit-facility-risk-profile.njk',
-        {
-          deal: mockDeal.dealSnapshot,
-          facility: mockFacility,
-          tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id,
-          user: session.user,
-        },
-      );
+      expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-facility-risk-profile/edit-facility-risk-profile.njk', {
+        deal: mockDeal.dealSnapshot,
+        facility: mockFacility,
+        tfm: mockDeal.tfm,
+        dealId: mockDeal.dealSnapshot._id,
+        user: session.user,
+      });
     });
   });
 
@@ -195,17 +192,14 @@ describe('POST underwriting - facility risk profile', () => {
 
       await facilityRiskProfileController.postUnderWritingFacilityRiskProfileEdit(req, res);
 
-      expect(res.render).toHaveBeenCalledWith(
-        'case/underwriting/pricing-and-risk/edit-facility-risk-profile/edit-facility-risk-profile.njk',
-        {
-          deal: mockDeal.dealSnapshot,
-          facility: mockFacility,
-          tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id,
-          user: session.user,
-          validationErrors: validateSubmittedValues(req.body),
-        },
-      );
+      expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-facility-risk-profile/edit-facility-risk-profile.njk', {
+        deal: mockDeal.dealSnapshot,
+        facility: mockFacility,
+        tfm: mockDeal.tfm,
+        dealId: mockDeal.dealSnapshot._id,
+        user: session.user,
+        validationErrors: validateSubmittedValues(req.body),
+      });
     });
   });
 

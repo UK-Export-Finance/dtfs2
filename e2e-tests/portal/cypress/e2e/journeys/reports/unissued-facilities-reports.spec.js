@@ -106,9 +106,7 @@ context('Dashboard: Unissued facilities report', () => {
 
     it('returns the reports page with unissued facilities', () => {
       reports.allUnissuedFacilities().should('contain', 'You need to issue 3 facilities');
-      reports
-        .pastDeadlineUnissuedFacilities()
-        .should('contain', 'You have 1 facility that has past the deadline for issuing');
+      reports.pastDeadlineUnissuedFacilities().should('contain', 'You have 1 facility that has past the deadline for issuing');
       reports.facilitiesThatNeedIssuing().should('contain', 'You have 1 facility that needs issuing');
       reports.reviewAllUnissuedFacilities().should('exist');
     });

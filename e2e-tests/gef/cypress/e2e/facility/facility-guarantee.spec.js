@@ -32,11 +32,7 @@ context('Facility Guarantee Page', () => {
 
   describe('Visiting facility guarantee page', () => {
     it('displays the correct elements', () => {
-      cy.visit(
-        relative(
-          `/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`,
-        ),
-      );
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
       facilityGuarantee.feeTypeInAdvanceInput();
       facilityGuarantee.feeTypeInArrearsInput();
       facilityGuarantee.feeTypeAtMaturityInput();
@@ -46,35 +42,20 @@ context('Facility Guarantee Page', () => {
     });
 
     it('redirects user to `facility value` page when clicking on `Back` Link', () => {
-      cy.visit(
-        relative(
-          `/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`,
-        ),
-      );
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
       facilityGuarantee.backLink().click();
-      cy.url().should(
-        'eq',
-        relative(
-          `/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`,
-        ),
-      );
+      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
     });
 
     it('hides back button when visiting page with `change` query', () => {
       cy.visit(
-        relative(
-          `/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee?status=change`,
-        ),
+        relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee?status=change`),
       );
       facilityGuarantee.backLink().should('not.exist');
     });
 
     it('displays errors when the fee type and day count are not selected', () => {
-      cy.visit(
-        relative(
-          `/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee`,
-        ),
-      );
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee`));
       facilityGuarantee.doneButton().click();
       facilityGuarantee.errorSummary();
       facilityGuarantee.feeTypeInputErrorMessage();
@@ -82,11 +63,7 @@ context('Facility Guarantee Page', () => {
     });
 
     it('displays frequency options when in advance is selected', () => {
-      cy.visit(
-        relative(
-          `/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`,
-        ),
-      );
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
       facilityGuarantee.feeTypeInAdvanceInput().click();
       facilityGuarantee.feeFrequencyAnnuallyInput();
       facilityGuarantee.feeFrequencyMonthlyInput();
@@ -95,11 +72,7 @@ context('Facility Guarantee Page', () => {
     });
 
     it('displays an error when the frequency options is not chosen when in advance is selected', () => {
-      cy.visit(
-        relative(
-          `/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee`,
-        ),
-      );
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee`));
       facilityGuarantee.feeTypeInAdvanceInput().click();
       facilityGuarantee.feeFrequencyAnnuallyInput();
       facilityGuarantee.feeFrequencyMonthlyInput();
@@ -112,11 +85,7 @@ context('Facility Guarantee Page', () => {
     });
 
     it('displays the application page when required entries are completed', () => {
-      cy.visit(
-        relative(
-          `/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`,
-        ),
-      );
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
       facilityGuarantee.feeTypeInAdvanceInput().click();
       facilityGuarantee.feeFrequencyAnnuallyInput().first().click();
       facilityGuarantee.dayCountBasis365Input().click();
@@ -125,11 +94,7 @@ context('Facility Guarantee Page', () => {
     });
 
     it('displays the application page when in advance annually 365', () => {
-      cy.visit(
-        relative(
-          `/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`,
-        ),
-      );
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
       facilityGuarantee.feeTypeInAdvanceInput().click();
       facilityGuarantee.feeFrequencyAnnuallyInput().first().click();
       facilityGuarantee.dayCountBasis365Input().click();
@@ -138,11 +103,7 @@ context('Facility Guarantee Page', () => {
     });
 
     it('displays the application page when in arrears annually 360', () => {
-      cy.visit(
-        relative(
-          `/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`,
-        ),
-      );
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
       facilityGuarantee.feeTypeInArrearsInput().click();
       facilityGuarantee.feeFrequencyAnnuallyInput().last().click();
       facilityGuarantee.dayCountBasis360Input().click();
@@ -151,11 +112,7 @@ context('Facility Guarantee Page', () => {
     });
 
     it('displays the application page when fee type is at maturity', () => {
-      cy.visit(
-        relative(
-          `/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`,
-        ),
-      );
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
       facilityGuarantee.feeTypeAtMaturityInput().click();
       facilityGuarantee.dayCountBasis365Input().click();
       facilityGuarantee.doneButton().click();

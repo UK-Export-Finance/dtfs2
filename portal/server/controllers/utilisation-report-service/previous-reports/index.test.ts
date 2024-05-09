@@ -47,9 +47,7 @@ describe('previous-reports controller', () => {
         year: undefined,
       };
       apiGetPreviousReportsSpy.mockResolvedValue(responseBody);
-      const mapToPreviousReportsViewModelSpy = jest
-        .spyOn(mapper, 'mapToPreviousReportsViewModel')
-        .mockReturnValue(viewModel);
+      const mapToPreviousReportsViewModelSpy = jest.spyOn(mapper, 'mapToPreviousReportsViewModel').mockReturnValue(viewModel);
 
       // Act
       await getPreviousReports(req, res);

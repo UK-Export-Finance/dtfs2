@@ -108,9 +108,7 @@ describe('mapFacility', () => {
       },
     };
 
-    const expectedFirstDrawdownAmountInExportCurrency = mapFirstDrawdownAmountInExportCurrency(
-      facilityLatest.facilitySnapshot,
-    );
+    const expectedFirstDrawdownAmountInExportCurrency = mapFirstDrawdownAmountInExportCurrency(facilityLatest.facilitySnapshot);
 
     const expectedDates = mapDates(facilityLatest, facilityLatest.facilitySnapshot, mockTfmFacility, mockDealDetails);
 

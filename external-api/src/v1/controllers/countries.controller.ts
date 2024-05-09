@@ -17,8 +17,7 @@ import { COUNTRIES } from '../../external-api';
 
 const allCountries: Country[] = COUNTRIES;
 
-const getCountryFromArray = (arr: any, code: any) =>
-  arr.filter((country: any) => country.code.toLowerCase() === code.toLowerCase())[0];
+const getCountryFromArray = (arr: any, code: any) => arr.filter((country: any) => country.code.toLowerCase() === code.toLowerCase())[0];
 
 const sortCountries = () => {
   const countriesWithoutUK = allCountries.filter((country: any) => country.code !== 'GBR');
@@ -26,8 +25,7 @@ const sortCountries = () => {
   return sortedArray;
 };
 
-export const findOneCountry = (findCode: any) =>
-  allCountries.find(({ code }: any) => code.toLowerCase() === findCode.toLowerCase());
+export const findOneCountry = (findCode: any) => allCountries.find(({ code }: any) => code.toLowerCase() === findCode.toLowerCase());
 
 export const findAll = (req: Request, res: Response) => {
   const sortedCountries = sortCountries();

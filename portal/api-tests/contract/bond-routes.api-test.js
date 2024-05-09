@@ -87,8 +87,7 @@ describe('bond routes', () => {
 
   describe('POST /contract/:_id/bond/:bondId/financial-details/save-go-back', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) =>
-        post({}, headers).to(`/contract/${_id}/bond/${bondId}/financial-details/save-go-back`),
+      makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/bond/${bondId}/financial-details/save-go-back`),
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
@@ -117,8 +116,7 @@ describe('bond routes', () => {
 
   describe('POST /contract/:_id/bond/:bondId/fee-details/save-go-back', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) =>
-        post({}, headers).to(`/contract/${_id}/bond/${bondId}/fee-details/save-go-back`),
+      makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/bond/${bondId}/fee-details/save-go-back`),
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
@@ -156,8 +154,7 @@ describe('bond routes', () => {
 
   describe('GET /contract/:_id/bond/:bondId/confirm-requested-cover-start-date', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) =>
-        get(`/contract/${_id}/bond/${bondId}/confirm-requested-cover-start-date`, {}, headers),
+      makeRequestWithHeaders: (headers) => get(`/contract/${_id}/bond/${bondId}/confirm-requested-cover-start-date`, {}, headers),
       whitelistedRoles: allRoles,
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -166,8 +163,7 @@ describe('bond routes', () => {
 
   describe('POST /contract/:_id/bond/:bondId/confirm-requested-cover-start-date', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) =>
-        post({}, headers).to(`/contract/${_id}/bond/${bondId}/confirm-requested-cover-start-date`),
+      makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/bond/${bondId}/confirm-requested-cover-start-date`),
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },

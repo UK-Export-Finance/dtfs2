@@ -343,11 +343,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL &&
           facility.previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL;
 
-        if (
-          (issuedBond || issuedLoan) &&
-          facility.issueFacilityDetailsProvided &&
-          !facility.issueFacilityDetailsSubmitted
-        ) {
+        if ((issuedBond || issuedLoan) && facility.issueFacilityDetailsProvided && !facility.issueFacilityDetailsSubmitted) {
           return facility;
         }
         return null;
@@ -360,9 +356,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-          const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter(
-            (f) => f.type === 'Bond' && isIssuedFacilityWithFacilityStageChange(f),
-          );
+          const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) => f.type === 'Bond' && isIssuedFacilityWithFacilityStageChange(f));
 
           // make sure we have some bonds to test against
           expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
@@ -382,9 +376,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-          const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter(
-            (f) => f.type === 'Loan' && isIssuedFacilityWithFacilityStageChange(f),
-          );
+          const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) => f.type === 'Loan' && isIssuedFacilityWithFacilityStageChange(f));
 
           // make sure we have some loans to test against
           expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
@@ -520,12 +512,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         currency: { id: 'EUR', text: 'Euros' },
       });
 
-      const newLoans = [
-        conditionalLoan(),
-        unconditionalLoan(),
-        unconditionalLoan(),
-        unconditionalLoanWithCoverDateConfirmed(),
-      ];
+      const newLoans = [conditionalLoan(), unconditionalLoan(), unconditionalLoan(), unconditionalLoanWithCoverDateConfirmed()];
 
       const newFacilities = [...newBonds, ...newLoans];
 
@@ -695,11 +682,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         const issuedBond = facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
         const unconditionalLoan = facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
 
-        if (
-          (issuedBond || unconditionalLoan) &&
-          facility.issueFacilityDetailsProvided &&
-          facility.status === 'Ready for check'
-        ) {
+        if ((issuedBond || unconditionalLoan) && facility.issueFacilityDetailsProvided && facility.status === 'Ready for check') {
           return facility;
         }
         return null;

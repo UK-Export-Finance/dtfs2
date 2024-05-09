@@ -34,9 +34,7 @@ exports.cloneAzureFiles = async (currentDealId, newDealId) => {
         newDirectory = shareClient.getDirectoryClient(`${rootFolder}/${newDealId}/${item.name}`);
         await newDirectory.createIfNotExists();
 
-        const subFolders = serviceClient
-          .getShareClient(shareName)
-          .getDirectoryClient(`${rootFolder}/${currentDealId}/${item.name}`);
+        const subFolders = serviceClient.getShareClient(shareName).getDirectoryClient(`${rootFolder}/${currentDealId}/${item.name}`);
         const listSubfolderItems = subFolders.listFilesAndDirectories();
 
         // eslint-disable-next-line no-restricted-syntax

@@ -57,22 +57,19 @@ describe('userHasAtLeastOneAllowedRole', () => {
       expect(allowed).toBe(true);
     });
 
-    it.each(nonMatchingRoles)(
-      `returns true if the user has the ${allowedRole} role and the %s role in either order`,
-      (userRole) => {
-        const allowedWithAllowedRoleFirst = userHasAtLeastOneAllowedRole({
-          allowedRoles,
-          user: { roles: [allowedRole, userRole] },
-        });
-        const allowedWithAllowedRoleSecond = userHasAtLeastOneAllowedRole({
-          allowedRoles,
-          user: { roles: [userRole, allowedRole] },
-        });
+    it.each(nonMatchingRoles)(`returns true if the user has the ${allowedRole} role and the %s role in either order`, (userRole) => {
+      const allowedWithAllowedRoleFirst = userHasAtLeastOneAllowedRole({
+        allowedRoles,
+        user: { roles: [allowedRole, userRole] },
+      });
+      const allowedWithAllowedRoleSecond = userHasAtLeastOneAllowedRole({
+        allowedRoles,
+        user: { roles: [userRole, allowedRole] },
+      });
 
-        expect(allowedWithAllowedRoleFirst).toBe(true);
-        expect(allowedWithAllowedRoleSecond).toBe(true);
-      },
-    );
+      expect(allowedWithAllowedRoleFirst).toBe(true);
+      expect(allowedWithAllowedRoleSecond).toBe(true);
+    });
   });
 
   describe('when there are multiple allowed roles', () => {

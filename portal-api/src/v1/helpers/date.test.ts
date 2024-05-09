@@ -126,12 +126,7 @@ describe('getStartOfDateFromDayMonthYearStrings', () => {
   });
 });
 
-const getStartOfDateFromDayMonthYearStringsReplicatingMomentTest = (
-  day: string,
-  month: string,
-  year: string,
-  expectedEpoch: number,
-) => {
+const getStartOfDateFromDayMonthYearStringsReplicatingMomentTest = (day: string, month: string, year: string, expectedEpoch: number) => {
   const result = getStartOfDateFromDayMonthYearStringsReplicatingMoment(day, month, year);
 
   expect(result.valueOf()).toEqual(expectedEpoch);
@@ -159,8 +154,7 @@ describe('getStartOfDateFromDayMonthYearStringsReplicatingMoment', () => {
         1668211200000, // Sat Nov 12 2022 00:00:00 GMT+0000
       ));
 
-    it('returns NaN when given an invalid month', () =>
-      getStartOfDateFromDayMonthYearStringsReplicatingMomentTest(mockDay, '##', mockYear, NaN));
+    it('returns NaN when given an invalid month', () => getStartOfDateFromDayMonthYearStringsReplicatingMomentTest(mockDay, '##', mockYear, NaN));
 
     describe('should maintain moment js behaviour for date construction', () => {
       it('should use todays date if invalid date', () =>
@@ -198,8 +192,7 @@ describe('getStartOfDateFromDayMonthYearStringsReplicatingMoment', () => {
       jest.useRealTimers();
     });
 
-    it('returns NaN when given an invalid month', () =>
-      getStartOfDateFromDayMonthYearStringsReplicatingMomentTest(mockDay, '##', mockYear, NaN));
+    it('returns NaN when given an invalid month', () => getStartOfDateFromDayMonthYearStringsReplicatingMomentTest(mockDay, '##', mockYear, NaN));
 
     describe('should maintain moment js behaviour for date construction', () => {
       it('should use todays date if invalid date', () =>
@@ -237,8 +230,7 @@ describe('getStartOfDateFromDayMonthYearStringsReplicatingMoment', () => {
       jest.useRealTimers();
     });
 
-    it('returns NaN when given an invalid month', () =>
-      getStartOfDateFromDayMonthYearStringsReplicatingMomentTest(mockDay, '##', mockYear, NaN));
+    it('returns NaN when given an invalid month', () => getStartOfDateFromDayMonthYearStringsReplicatingMomentTest(mockDay, '##', mockYear, NaN));
 
     describe('should maintain moment js behaviour for date construction', () => {
       it('should use the 28th if invalid date', () =>
@@ -268,8 +260,7 @@ describe('getStartOfDateFromDayMonthYearStringsReplicatingMoment', () => {
       jest.useRealTimers();
     });
 
-    it('returns NaN when given an invalid month', () =>
-      getStartOfDateFromDayMonthYearStringsReplicatingMomentTest(mockDay, '##', mockYear, NaN));
+    it('returns NaN when given an invalid month', () => getStartOfDateFromDayMonthYearStringsReplicatingMomentTest(mockDay, '##', mockYear, NaN));
 
     describe('should maintain moment js behaviour for date construction', () => {
       it('should use the 28th if invalid date', () =>

@@ -7,10 +7,7 @@ const calculateStatusOfEachPage = (errors) => {
       return false;
     }
 
-    const anyErrorsStartWithIndemnifier = errors.reduce(
-      (result, error) => result || error.startsWith('indemnifier'),
-      false,
-    );
+    const anyErrorsStartWithIndemnifier = errors.reduce((result, error) => result || error.startsWith('indemnifier'), false);
     if (anyErrorsStartWithIndemnifier) {
       return false;
     }
@@ -55,10 +52,7 @@ const calculateStatusOfEachPage = (errors) => {
       return false;
     }
 
-    const anyErrorsToDoWithConversionDate = errors.reduce(
-      (result, error) => result || error.startsWith('supplyContractConversionDate'),
-      false,
-    );
+    const anyErrorsToDoWithConversionDate = errors.reduce((result, error) => result || error.startsWith('supplyContractConversionDate'), false);
     if (anyErrorsToDoWithConversionDate) {
       return false;
     }

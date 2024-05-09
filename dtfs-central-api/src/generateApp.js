@@ -4,25 +4,11 @@ const mongoSanitise = require('express-mongo-sanitize');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 const { seo, security, checkApiKey, createRateLimit } = require('./v1/routes/middleware');
 
-const {
-  BANK_ROUTE,
-  PORTAL_ROUTE,
-  TFM_ROUTE,
-  USER_ROUTE,
-  UTILISATION_REPORTS_ROUTE,
-  SWAGGER_ROUTE,
-} = require('./constants/routes');
+const { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, UTILISATION_REPORTS_ROUTE, SWAGGER_ROUTE } = require('./constants/routes');
 
 const healthcheck = require('./healthcheck');
 
-const {
-  bankRoutes,
-  portalRoutes,
-  tfmRoutes,
-  userRoutes,
-  utilisationReportsRoutes,
-  swaggerRoutes,
-} = require('./v1/routes');
+const { bankRoutes, portalRoutes, tfmRoutes, userRoutes, utilisationReportsRoutes, swaggerRoutes } = require('./v1/routes');
 const removeCsrfToken = require('./v1/routes/middleware/remove-csrf-token');
 
 SqlDbDataSource.initialize()

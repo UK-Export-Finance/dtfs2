@@ -8,12 +8,7 @@ import { MOCK_APPLICATION_AIN } from '../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 
-import {
-  MOCK_FACILITY_ONE,
-  MOCK_FACILITY_TWO,
-  MOCK_FACILITY_THREE,
-  MOCK_FACILITY_FOUR,
-} from '../../../fixtures/mocks/mock-facilities';
+import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../fixtures/mocks/mock-facilities';
 import applicationPreview from '../../pages/application-preview';
 import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
@@ -117,15 +112,11 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
     // checks that can submit application to checker with changed facilities
     it('pressing submit button takes you to submit page and with correct panel once submitted to checker', () => {
       applicationPreview.submitButtonPostApproval().click();
-      applicationSubmission
-        .submissionText()
-        .contains('Someone at your bank must check your update before they can submit it to UKEF');
+      applicationSubmission.submissionText().contains('Someone at your bank must check your update before they can submit it to UKEF');
       applicationSubmission.submitButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
-      applicationSubmission
-        .confirmationPanelTitleFacilities()
-        .contains('Issued facilities submitted for checking at your bank');
+      applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted for checking at your bank');
     });
   });
 });
@@ -145,9 +136,7 @@ context('Return to maker for unissued to issued facilities', () => {
 
     it('should show changed facilities in task comments box with correct heading', () => {
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
-      applicationPreview
-        .updatedUnissuedFacilitiesHeader()
-        .contains('The following facility stages have been updated to issued:');
+      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[1].name);
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[2].name);
     });
@@ -236,9 +225,7 @@ context('Return to maker for unissued to issued facilities', () => {
     it('Statuses and banners should correct text', () => {
       statusBanner.bannerStatus().contains("Further Maker's input required");
       applicationPreview.reviewFacilityStage().contains('Change facility details');
-      applicationPreview
-        .updatedUnissuedFacilitiesHeader()
-        .contains('The following facility stages have been updated to issued:');
+      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[1].name);
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[2].name);
     });
@@ -361,9 +348,7 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.facilitySummaryListRowAction(0, 10).should('have.value', '');
 
       // check that header updated to include this facility
-      applicationPreview
-        .updatedUnissuedFacilitiesHeader()
-        .contains('The following facility stages have been updated to issued:');
+      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[1].name);
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[2].name);
@@ -372,9 +357,7 @@ context('Return to maker for unissued to issued facilities', () => {
     it('should be able to submit to checker after making changes', () => {
       applicationDetails.submitButton().click();
       applicationSubmission.submitButton().click();
-      applicationSubmission
-        .confirmationPanelTitleFacilities()
-        .contains('Issued facilities submitted for checking at your bank');
+      applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted for checking at your bank');
     });
   });
 });
@@ -395,9 +378,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
 
     it('should show changed facilities in task comments box with correct heading including newly issued', () => {
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
-      applicationPreview
-        .updatedUnissuedFacilitiesHeader()
-        .contains('The following facility stages have been updated to issued:');
+      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[1].name);
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[2].name);
@@ -471,9 +452,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationSubmission.submitButton().click();
       applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted to UKEF');
       // check that correct text is displayed under confirmation panel
-      applicationSubmission
-        .confirmationText()
-        .contains("We'll send you a confirmation email shortly, once we've acknowledged your issued facilities.");
+      applicationSubmission.confirmationText().contains("We'll send you a confirmation email shortly, once we've acknowledged your issued facilities.");
     });
   });
   /**

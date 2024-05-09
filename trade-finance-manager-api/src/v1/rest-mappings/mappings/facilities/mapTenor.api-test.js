@@ -61,11 +61,7 @@ describe('mapTenor()', () => {
       },
     };
 
-    const result = mapTenor(
-      mockBssEwcsFacilityIssued.facilitySnapshot,
-      mockBssEwcsFacilityIssued.tfm,
-      mockBssEwcsFacilityIssued,
-    );
+    const result = mapTenor(mockBssEwcsFacilityIssued.facilitySnapshot, mockBssEwcsFacilityIssued.tfm, mockBssEwcsFacilityIssued);
 
     const expected = `${mockBssEwcsFacilityIssued.tfm.exposurePeriodInMonths} months`;
 

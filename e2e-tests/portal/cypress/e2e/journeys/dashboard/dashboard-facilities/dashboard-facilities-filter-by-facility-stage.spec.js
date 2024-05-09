@@ -65,10 +65,7 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
 
       filters.showHideButton().click();
 
-      shouldRenderAppliedFilterInPanelSelectedFilters(
-        "Bank's facility stage",
-        CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED,
-      );
+      shouldRenderAppliedFilterInPanelSelectedFilters("Bank's facility stage", CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED);
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
@@ -117,10 +114,7 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
 
       filters.showHideButton().click();
 
-      shouldRenderAppliedFilterInPanelSelectedFilters(
-        "Bank's facility stage",
-        CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED,
-      );
+      shouldRenderAppliedFilterInPanelSelectedFilters("Bank's facility stage", CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED);
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {

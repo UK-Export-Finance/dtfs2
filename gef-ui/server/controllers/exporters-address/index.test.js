@@ -156,9 +156,7 @@ describe('controllers/excorters-address', () => {
 
       await validateExportersAddress(mockRequest, mockResponse);
 
-      expect(mockRequest.session.addresses).toEqual(
-        JSON.stringify([{ addressLine1: 'line 1', addressLine2: 'line 2' }]),
-      );
+      expect(mockRequest.session.addresses).toEqual(JSON.stringify([{ addressLine1: 'line 1', addressLine2: 'line 2' }]));
     });
 
     it('saves postcode to session storage in uppercase format', async () => {

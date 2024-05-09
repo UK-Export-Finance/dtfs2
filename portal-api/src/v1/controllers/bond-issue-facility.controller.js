@@ -1,10 +1,7 @@
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { hasAllIssuedDateValues } = require('../facility-dates/issued-date');
-const {
-  hasAllRequestedCoverStartDateValues,
-  updateRequestedCoverStartDate,
-} = require('../facility-dates/requested-cover-start-date');
+const { hasAllRequestedCoverStartDateValues, updateRequestedCoverStartDate } = require('../facility-dates/requested-cover-start-date');
 const { getStartOfDateFromDayMonthYearStrings } = require('../helpers/date');
 const bondIssueFacilityValidationErrors = require('../validation/bond-issue-facility');
 const { hasValue } = require('../../utils/string');
@@ -56,11 +53,7 @@ exports.updateBondIssueFacility = async (req, res) => {
       }
 
       if (hasAllIssuedDateValues(modifiedBond)) {
-        modifiedBond.issuedDate = getStartOfDateFromDayMonthYearStrings(
-          req.body['issuedDate-day'],
-          req.body['issuedDate-month'],
-          req.body['issuedDate-year'],
-        )
+        modifiedBond.issuedDate = getStartOfDateFromDayMonthYearStrings(req.body['issuedDate-day'], req.body['issuedDate-month'], req.body['issuedDate-year'])
           .valueOf()
           .toString();
       } else {

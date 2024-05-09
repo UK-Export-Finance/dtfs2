@@ -59,10 +59,7 @@ context('Facility page', () => {
     cy.url().should('eq', relative('/facilities/0'));
 
     pages.facilitiesPage.facilitiesTable.headings.ukefFacilityId().contains('Facility ID');
-    pages.facilitiesPage.facilitiesTable.headings
-      .ukefFacilityId()
-      .invoke('attr', 'aria-sort')
-      .should('eq', 'ascending');
+    pages.facilitiesPage.facilitiesTable.headings.ukefFacilityId().invoke('attr', 'aria-sort').should('eq', 'ascending');
     pages.facilitiesPage.facilitiesTable.headings.dealType().contains('Product');
     pages.facilitiesPage.facilitiesTable.headings.type().contains('Type');
     pages.facilitiesPage.facilitiesTable.headings.companyName().contains('Exporter');

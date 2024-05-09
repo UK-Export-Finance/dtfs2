@@ -7,10 +7,7 @@ type FeeRecordKeyedEventPayload = {
   feeRecordId: number;
 };
 
-export type UtilisationReportFeeRecordKeyedEvent = BaseUtilisationReportEvent<
-  'FEE_RECORD_KEYED',
-  FeeRecordKeyedEventPayload
->;
+export type UtilisationReportFeeRecordKeyedEvent = BaseUtilisationReportEvent<'FEE_RECORD_KEYED', FeeRecordKeyedEventPayload>;
 
 export const handleUtilisationReportFeeRecordKeyedEvent = (
   report: UtilisationReportEntity,

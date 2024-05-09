@@ -41,9 +41,7 @@ describe(component, () => {
 
         for (const deal of deals) {
           const wrapper = render({ user, deal, userCanSubmit });
-          wrapper
-            .expectPrimaryButton('[data-cy="ProceedToSubmit"]')
-            .toLinkTo(`/contract/${deal._id}/confirm-submission`, 'Proceed to submit');
+          wrapper.expectPrimaryButton('[data-cy="ProceedToSubmit"]').toLinkTo(`/contract/${deal._id}/confirm-submission`, 'Proceed to submit');
         }
       });
 
@@ -122,9 +120,7 @@ describe(component, () => {
 
       for (const deal of deals) {
         const wrapper = render({ user, deal, userCanSubmit });
-        wrapper
-          .expectPrimaryButton('[data-cy="ProceedToSubmit"]')
-          .toLinkTo(`/contract/${deal._id}/confirm-submission`, 'Proceed to submit');
+        wrapper.expectPrimaryButton('[data-cy="ProceedToSubmit"]').toLinkTo(`/contract/${deal._id}/confirm-submission`, 'Proceed to submit');
       }
     });
 

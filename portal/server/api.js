@@ -1,13 +1,7 @@
 const { HttpStatusCode } = require('axios');
 const axios = require('axios');
 const FormData = require('form-data');
-const {
-  isValidMongoId,
-  isValidResetPasswordToken,
-  isValidDocumentType,
-  isValidFileName,
-  isValidBankId,
-} = require('./validation/validate-ids');
+const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName, isValidBankId } = require('./validation/validate-ids');
 const { FILE_UPLOAD } = require('./constants');
 
 require('dotenv').config();
@@ -859,14 +853,7 @@ const getUkefDecisionReport = async (token, payload) => {
   }
 };
 
-const uploadUtilisationReportData = async (
-  uploadingUser,
-  reportPeriod,
-  csvData,
-  csvFileBuffer,
-  formattedReportPeriod,
-  token,
-) => {
+const uploadUtilisationReportData = async (uploadingUser, reportPeriod, csvData, csvFileBuffer, formattedReportPeriod, token) => {
   try {
     const formData = new FormData();
     formData.append('reportData', JSON.stringify(csvData));
@@ -876,10 +863,7 @@ const uploadUtilisationReportData = async (
     formData.append('formattedReportPeriod', formattedReportPeriod);
 
     const buffer = Buffer.from(csvFileBuffer);
-    const month =
-      reportPeriod.start.month === reportPeriod.end.month
-        ? `${reportPeriod.start.month}`
-        : `${reportPeriod.start.month}_${reportPeriod.end.month}`;
+    const month = reportPeriod.start.month === reportPeriod.end.month ? `${reportPeriod.start.month}` : `${reportPeriod.start.month}_${reportPeriod.end.month}`;
     const filename = `${reportPeriod.start.year}_${month}_${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}_${uploadingUser.bank.name}_utilisation_report.csv`;
     formData.append('csvFile', buffer, { filename });
 

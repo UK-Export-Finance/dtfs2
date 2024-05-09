@@ -173,9 +173,7 @@ describe('controllers - facilities', () => {
 
         describe('when there is an in-progress amendment corresponding to one of the facilities', () => {
           beforeEach(() => {
-            api.getAllAmendmentsInProgress = jest
-              .fn()
-              .mockImplementation(() => Promise.resolve(mockApiGetAllAmendmentsInProgressResponse));
+            api.getAllAmendmentsInProgress = jest.fn().mockImplementation(() => Promise.resolve(mockApiGetAllAmendmentsInProgressResponse));
           });
 
           const mockReq = structuredClone(mockReqTemplate);
@@ -322,9 +320,7 @@ describe('controllers - facilities', () => {
           it('should redirect to GET facilities with the correct query parameters', async () => {
             await queryDealsOrFacilities('facilities', mockReq, mockRes);
 
-            expect(mockRes.redirect).toHaveBeenCalledWith(
-              `/facilities/0?sortfield=tfmFacilities.dealType&sortorder=${order}`,
-            );
+            expect(mockRes.redirect).toHaveBeenCalledWith(`/facilities/0?sortfield=tfmFacilities.dealType&sortorder=${order}`);
           });
         });
 
@@ -337,9 +333,7 @@ describe('controllers - facilities', () => {
           it('should redirect to GET facilities with the correct query parameters', async () => {
             await queryDealsOrFacilities('facilities', mockReq, mockRes);
 
-            expect(mockRes.redirect).toHaveBeenCalledWith(
-              `/facilities/0?sortfield=tfmFacilities.dealType&sortorder=${order}`,
-            );
+            expect(mockRes.redirect).toHaveBeenCalledWith(`/facilities/0?sortfield=tfmFacilities.dealType&sortorder=${order}`);
           });
         });
       });
@@ -354,9 +348,7 @@ describe('controllers - facilities', () => {
         it('should redirect to GET facilities with query parameters based on the sort specified in the request body', async () => {
           await queryDealsOrFacilities('facilities', mockReq, mockRes);
 
-          expect(mockRes.redirect).toHaveBeenCalledWith(
-            '/facilities/0?sortfield=tfmFacilities.type&sortorder=descending',
-          );
+          expect(mockRes.redirect).toHaveBeenCalledWith('/facilities/0?sortfield=tfmFacilities.type&sortorder=descending');
         });
       });
 

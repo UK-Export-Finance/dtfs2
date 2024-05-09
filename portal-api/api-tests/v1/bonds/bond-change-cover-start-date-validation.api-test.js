@@ -48,9 +48,7 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
   };
 
   const updateBondCoverStartDate = async (theDealId, bssBondId, bond) => {
-    const response = await as(aBarclaysMaker)
-      .put(bond)
-      .to(`/v1/deals/${theDealId}/bond/${bssBondId}/change-cover-start-date`);
+    const response = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${theDealId}/bond/${bssBondId}/change-cover-start-date`);
     return response.body;
   };
 
@@ -331,13 +329,8 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const manualInclusionApplicationSubmissionDate = getStartOfDateFromEpochMillisecondString(
-              updatedDeal.details.manualInclusionNoticeSubmissionDate,
-            );
-            const formattedManualInclusionNoticeSubmissionDate = format(
-              manualInclusionApplicationSubmissionDate,
-              DATE_FORMATS.LONG_FORM_DATE,
-            );
+            const manualInclusionApplicationSubmissionDate = getStartOfDateFromEpochMillisecondString(updatedDeal.details.manualInclusionNoticeSubmissionDate);
+            const formattedManualInclusionNoticeSubmissionDate = format(manualInclusionApplicationSubmissionDate, DATE_FORMATS.LONG_FORM_DATE);
             const expectedText = `Requested Cover Start Date must be after ${formattedManualInclusionNoticeSubmissionDate}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
@@ -361,14 +354,9 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
 
         describe('when is after 3 months from today', () => {
           it('should return validationError', async () => {
-            const manualInclusionApplicationSubmissionDate = getStartOfDateFromEpochMillisecondString(
-              updatedDeal.details.manualInclusionNoticeSubmissionDate,
-            );
+            const manualInclusionApplicationSubmissionDate = getStartOfDateFromEpochMillisecondString(updatedDeal.details.manualInclusionNoticeSubmissionDate);
             const minPlus3Months = add(manualInclusionApplicationSubmissionDate, { months: 3 });
-            const formattedManualInclusionNoticeSubmissionDate = format(
-              manualInclusionApplicationSubmissionDate,
-              DATE_FORMATS.LONG_FORM_DATE,
-            );
+            const formattedManualInclusionNoticeSubmissionDate = format(manualInclusionApplicationSubmissionDate, DATE_FORMATS.LONG_FORM_DATE);
             const minPlus3MonthsFormatted = format(minPlus3Months, DATE_FORMATS.LONG_FORM_DATE);
 
             const requestedCoverStartDateFields = {

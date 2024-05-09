@@ -23,11 +23,10 @@ const updateDealStatus = async (dealId, status, existingDeal) => {
       previousStatus,
     };
 
-    const findAndUpdateResponse = await dealsCollection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(dealId) } },
-      $.flatten(withoutId(modifiedDeal)),
-      { returnNewDocument: true, returnDocument: 'after' },
-    );
+    const findAndUpdateResponse = await dealsCollection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(withoutId(modifiedDeal)), {
+      returnNewDocument: true,
+      returnDocument: 'after',
+    });
 
     console.info('Updated Portal BSS deal status from %s to %s', previousStatus, status);
 

@@ -61,9 +61,7 @@ const postAmendmentBankDecisionChoice = async (req, res) => {
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
-      return res.redirect(
-        `/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/banks-decision/received-date`,
-      );
+      return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/banks-decision/received-date`);
     }
 
     console.error("Unable to add the bank's decision");
@@ -88,15 +86,9 @@ const getAmendmentBankDecisionReceivedDate = async (req, res) => {
   const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
   // gets date from stored epoch format if user has previously entered it
-  const receivedDateDay = amendment?.bankDecision?.receivedDate
-    ? format(fromUnixTime(amendment.bankDecision.receivedDate), 'dd')
-    : '';
-  const receivedDateMonth = amendment?.bankDecision?.receivedDate
-    ? format(fromUnixTime(amendment.bankDecision.receivedDate), 'MM')
-    : '';
-  const receivedDateYear = amendment?.bankDecision?.receivedDate
-    ? format(fromUnixTime(amendment.bankDecision.receivedDate), 'yyyy')
-    : '';
+  const receivedDateDay = amendment?.bankDecision?.receivedDate ? format(fromUnixTime(amendment.bankDecision.receivedDate), 'dd') : '';
+  const receivedDateMonth = amendment?.bankDecision?.receivedDate ? format(fromUnixTime(amendment.bankDecision.receivedDate), 'MM') : '';
+  const receivedDateYear = amendment?.bankDecision?.receivedDate ? format(fromUnixTime(amendment.bankDecision.receivedDate), 'yyyy') : '';
 
   return res.render('case/amendments/amendment-add-banks-decision-receive-date.njk', {
     amendment,
@@ -126,8 +118,7 @@ const postAmendmentBankDecisionReceivedDate = async (req, res) => {
   const type = 'bankDecisionDate';
   const message = "Enter the date UKEF received the bank's decision";
 
-  const { errorsObject, amendmentBankDecisionDateErrors, amendmentBankRequestDate } =
-    await amendmentBankDecisionDateValidation(body, type, message);
+  const { errorsObject, amendmentBankDecisionDateErrors, amendmentBankRequestDate } = await amendmentBankDecisionDateValidation(body, type, message);
 
   if (amendmentBankDecisionDateErrors.length) {
     return res.render('case/amendments/amendment-add-banks-decision-receive-date.njk', {
@@ -146,10 +137,7 @@ const postAmendmentBankDecisionReceivedDate = async (req, res) => {
     const payload = { bankDecision: { receivedDate: amendmentBankRequestDate } };
 
     // if amendment changed to withdrawn and effective date set, then change to null
-    if (
-      amendment.bankDecision.decision === AMENDMENT_BANK_DECISION.WITHDRAW &&
-      amendment?.bankDecision?.effectiveDate
-    ) {
+    if (amendment.bankDecision.decision === AMENDMENT_BANK_DECISION.WITHDRAW && amendment?.bankDecision?.effectiveDate) {
       payload.bankDecision.effectiveDate = null;
     }
 
@@ -157,13 +145,9 @@ const postAmendmentBankDecisionReceivedDate = async (req, res) => {
 
     if (status === 200) {
       if (amendment.bankDecision.decision === AMENDMENT_BANK_DECISION.PROCEED) {
-        return res.redirect(
-          `/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/banks-decision/effective-date`,
-        );
+        return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/banks-decision/effective-date`);
       }
-      return res.redirect(
-        `/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/banks-decision/check-answers`,
-      );
+      return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/banks-decision/check-answers`);
     }
 
     console.error("Unable to add the bank's decision received date");
@@ -188,15 +172,9 @@ const getAmendmentBankDecisionEffectiveDate = async (req, res) => {
   const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
   // converts date from epoch format to day month year if in database
-  const effectiveDateDay = amendment?.bankDecision?.effectiveDate
-    ? format(fromUnixTime(amendment.bankDecision.effectiveDate), 'dd')
-    : '';
-  const effectiveDateMonth = amendment?.bankDecision?.effectiveDate
-    ? format(fromUnixTime(amendment.bankDecision.effectiveDate), 'MM')
-    : '';
-  const effectiveDateYear = amendment?.bankDecision?.effectiveDate
-    ? format(fromUnixTime(amendment.bankDecision.effectiveDate), 'yyyy')
-    : '';
+  const effectiveDateDay = amendment?.bankDecision?.effectiveDate ? format(fromUnixTime(amendment.bankDecision.effectiveDate), 'dd') : '';
+  const effectiveDateMonth = amendment?.bankDecision?.effectiveDate ? format(fromUnixTime(amendment.bankDecision.effectiveDate), 'MM') : '';
+  const effectiveDateYear = amendment?.bankDecision?.effectiveDate ? format(fromUnixTime(amendment.bankDecision.effectiveDate), 'yyyy') : '';
 
   return res.render('case/amendments/amendment-add-banks-decision-effective-date.njk', {
     amendment,
@@ -249,9 +227,7 @@ const postAmendmentBankDecisionEffectiveDate = async (req, res) => {
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
-      return res.redirect(
-        `/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/banks-decision/check-answers`,
-      );
+      return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/banks-decision/check-answers`);
     }
 
     console.error("Unable to add the bank's decision effective date");
@@ -276,12 +252,8 @@ const getAmendmentBankDecisionAnswers = async (req, res) => {
   const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
   // formats received and effective date from epoch
-  const receivedDateFormatted = amendment.bankDecision?.receivedDate
-    ? format(fromUnixTime(amendment.bankDecision.receivedDate), 'dd MMM yyyy')
-    : '';
-  const effectiveDateFormatted = amendment.bankDecision?.effectiveDate
-    ? format(fromUnixTime(amendment.bankDecision.effectiveDate), 'dd MMM yyyy')
-    : '';
+  const receivedDateFormatted = amendment.bankDecision?.receivedDate ? format(fromUnixTime(amendment.bankDecision.receivedDate), 'dd MMM yyyy') : '';
+  const effectiveDateFormatted = amendment.bankDecision?.effectiveDate ? format(fromUnixTime(amendment.bankDecision.effectiveDate), 'dd MMM yyyy') : '';
 
   return res.render('case/amendments/amendment-add-banks-decision-check-answers.njk', {
     amendment,

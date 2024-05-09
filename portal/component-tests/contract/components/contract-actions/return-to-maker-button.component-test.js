@@ -18,9 +18,7 @@ describe(component, () => {
 
         for (const deal of deals) {
           const wrapper = render({ user, deal, userCanSubmit });
-          wrapper
-            .expectSecondaryButton('[data-cy="ReturnToMaker"]')
-            .toLinkTo(`/contract/${deal._id}/return-to-maker`, 'Return to Maker');
+          wrapper.expectSecondaryButton('[data-cy="ReturnToMaker"]').toLinkTo(`/contract/${deal._id}/return-to-maker`, 'Return to Maker');
         }
       });
 
@@ -112,9 +110,7 @@ describe(component, () => {
 
       for (const deal of deals) {
         const wrapper = render({ user, deal, userCanSubmit });
-        wrapper
-          .expectSecondaryButton('[data-cy="ReturnToMaker"]')
-          .toLinkTo(`/contract/${deal._id}/return-to-maker`, 'Return to Maker');
+        wrapper.expectSecondaryButton('[data-cy="ReturnToMaker"]').toLinkTo(`/contract/${deal._id}/return-to-maker`, 'Return to Maker');
       }
     });
 

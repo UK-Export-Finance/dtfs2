@@ -72,15 +72,7 @@ const mapV2 = async (portalDealId, v1Deal) => {
   const mandatoryCriteria = mapMandatoryCriteria(v1Deal);
   const exporter = mapExporter(v1Deal);
 
-  if (
-    dealRootError ||
-    detailsError ||
-    eligibilityError ||
-    submissionDetailsError ||
-    dealFilesError ||
-    bondTransactionsError ||
-    loanTransactionsError
-  ) {
+  if (dealRootError || detailsError || eligibilityError || submissionDetailsError || dealFilesError || bondTransactionsError || loanTransactionsError) {
     console.error(portalDealId, `Error mapping v1 ${portalDealId} to v2.`);
     log.addError(portalDealId, `Error mapping v1 ${portalDealId} to v2.`);
     return false;
@@ -174,10 +166,7 @@ const migrateDeals = async () => {
   for (let i = 0; i < dealFolders.length; i += 1) {
     console.info(`processing deal ${i + 1}: DealId ${dealFolders[i].name}`);
     const success = await importSingleDeal(dealFolders[i].name);
-    consoleLogColor(
-      `Processed ${i + 1} of ${dealFolders.length}: DealId ${dealFolders[i].name}`,
-      success ? 'green' : 'red',
-    );
+    consoleLogColor(`Processed ${i + 1} of ${dealFolders.length}: DealId ${dealFolders[i].name}`, success ? 'green' : 'red');
   }
 };
 

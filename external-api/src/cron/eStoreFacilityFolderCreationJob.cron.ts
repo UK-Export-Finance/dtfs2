@@ -67,13 +67,9 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
             ),
           );
           // eslint-disable-next-line prettier/prettier
-          uploadDocuments.then((res) =>
-            console.info('Task completed: Supporting documents uploaded successfully %o', res[0].data),
-          );
+          uploadDocuments.then((res) => console.info('Task completed: Supporting documents uploaded successfully %o', res[0].data));
           // eslint-disable-next-line prettier/prettier
-          uploadDocuments.catch((error) =>
-            console.error('Task failed: There was a problem uploading the documents %o', error),
-          );
+          uploadDocuments.catch((error) => console.error('Task failed: There was a problem uploading the documents %o', error));
         }
       }
     } else {

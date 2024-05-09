@@ -78,19 +78,16 @@ describe('loginWithSignInLink', () => {
     ${ROLES.MAKER}                  | ${CONSTANTS.LANDING_PAGES.DEFAULT}
     ${ROLES.PAYMENT_REPORT_OFFICER} | ${CONSTANTS.LANDING_PAGES.UTILISATION_REPORT_UPLOAD}
     ${ROLES.READ_ONLY}              | ${CONSTANTS.LANDING_PAGES.DEFAULT}
-  `(
-    "renders the post-login-redirect template with the '$redirectUrl' url when the user has the '$role' role",
-    async ({ role, redirectUrl }) => {
-      mockSuccessfulLoginApiCall({ userRoles: role });
+  `("renders the post-login-redirect template with the '$redirectUrl' url when the user has the '$role' role", async ({ role, redirectUrl }) => {
+    mockSuccessfulLoginApiCall({ userRoles: role });
 
-      await loginWithSignInLink(req, res);
+    await loginWithSignInLink(req, res);
 
-      expect(res.render).toHaveBeenCalledWith('login/post-login-redirect.njk', {
-        redirectUrl,
-      });
-      expect(res.status).not.toHaveBeenCalled();
-    },
-  );
+    expect(res.render).toHaveBeenCalledWith('login/post-login-redirect.njk', {
+      redirectUrl,
+    });
+    expect(res.status).not.toHaveBeenCalled();
+  });
 
   it('returns a redirect to the sign in link expired page if the login attempt returns a token expired 403 error', async () => {
     mockLoginApiCallToRejectWith({

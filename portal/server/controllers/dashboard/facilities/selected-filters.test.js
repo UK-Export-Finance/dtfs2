@@ -41,11 +41,7 @@ describe('controllers/dashboard/facilities - selected-filters', () => {
         mappedValue: mapIssuedValueToText(value),
       }));
 
-      const expected = generateSelectedFiltersObjectWithMappedValues(
-        mockHeading,
-        mockFieldName,
-        mappedSubmittedFieldFilters,
-      );
+      const expected = generateSelectedFiltersObjectWithMappedValues(mockHeading, mockFieldName, mappedSubmittedFieldFilters);
 
       expect(result).toEqual(expected);
     });

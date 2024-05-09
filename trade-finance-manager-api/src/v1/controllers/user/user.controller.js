@@ -1,8 +1,5 @@
 const { ObjectId } = require('mongodb');
-const {
-  generateTfmUserAuditDatabaseRecord,
-  generateNoUserLoggedInAuditDatabaseRecord,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generateTfmUserAuditDatabaseRecord, generateNoUserLoggedInAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../drivers/db-client');
 const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
@@ -43,9 +40,7 @@ exports.create = async (user, sessionUser, callback) => {
   const tfmUser = {
     ...user,
     status: USER.STATUS.ACTIVE,
-    auditRecord: sessionUser?._id
-      ? generateTfmUserAuditDatabaseRecord(sessionUser._id)
-      : generateNoUserLoggedInAuditDatabaseRecord(),
+    auditRecord: sessionUser?._id ? generateTfmUserAuditDatabaseRecord(sessionUser._id) : generateNoUserLoggedInAuditDatabaseRecord(),
   };
 
   delete tfmUser.token;

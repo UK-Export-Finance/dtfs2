@@ -123,9 +123,7 @@ describe(page, () => {
 
     describe('`how often` feeFrequency/premiumFrequency', () => {
       it('should render', () => {
-        wrapper
-          .expectText('[data-cy="facility-premium-frequency"]')
-          .toRead(mockBssFacilityParams.facility.feeFrequency);
+        wrapper.expectText('[data-cy="facility-premium-frequency"]').toRead(mockBssFacilityParams.facility.feeFrequency);
       });
 
       describe('when there is no feeFrequency, but premiumFrequency', () => {
@@ -140,9 +138,7 @@ describe(page, () => {
           };
 
           wrapper = render(premiumFrequencyParams);
-          wrapper
-            .expectText('[data-cy="facility-premium-frequency"]')
-            .toRead(premiumFrequencyParams.facility.premiumFrequency);
+          wrapper.expectText('[data-cy="facility-premium-frequency"]').toRead(premiumFrequencyParams.facility.premiumFrequency);
         });
       });
 
@@ -156,9 +152,7 @@ describe(page, () => {
 
     describe('day count basis', () => {
       it('should render', () => {
-        wrapper
-          .expectText('[data-cy="facility-premium-day-count-basis"]')
-          .toRead(mockBssFacilityParams.facility.dayCountBasis);
+        wrapper.expectText('[data-cy="facility-premium-day-count-basis"]').toRead(mockBssFacilityParams.facility.dayCountBasis);
       });
 
       describe('when there is no dayCountBasis', () => {
@@ -191,9 +185,7 @@ describe(page, () => {
         });
 
         it('should render correct number of premium schedule rows', () => {
-          wrapper
-            .expectElement('[data-cy="schedule_item"]')
-            .toHaveCount(mockBssFacilityParams.facilityTfm.premiumSchedule.length);
+          wrapper.expectElement('[data-cy="schedule_item"]').toHaveCount(mockBssFacilityParams.facilityTfm.premiumSchedule.length);
         });
 
         it('should format the premium schedule date correctly', () => {

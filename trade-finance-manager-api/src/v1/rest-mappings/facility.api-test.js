@@ -26,12 +26,7 @@ describe('reducer - facility', () => {
 
     const expected = {
       _id: mockFacility._id,
-      facilitySnapshot: mapFacility(
-        mockFacility.facilitySnapshot,
-        mockFacility.tfm,
-        mockDeal.dealSnapshot.details,
-        mockFacility,
-      ),
+      facilitySnapshot: mapFacility(mockFacility.facilitySnapshot, mockFacility.tfm, mockDeal.dealSnapshot.details, mockFacility),
       tfm: mapFacilityTfm(mockFacility.tfm, {}, mockFacility),
     };
 

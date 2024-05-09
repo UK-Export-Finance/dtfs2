@@ -58,9 +58,7 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
 
     pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
     pages.managersDecisionPage.decisionRadioInputValidationError().should('be.visible');
-    pages.managersDecisionPage
-      .decisionRadioInputValidationError()
-      .should('contain.text', 'Select if you approve or decline');
+    pages.managersDecisionPage.decisionRadioInputValidationError().should('contain.text', 'Select if you approve or decline');
   });
 
   describe('selecting `Approve without conditions`', () => {
@@ -76,9 +74,7 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
 
       pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
       pages.managersDecisionPage.commentsInputInternalValidationError().should('be.visible');
-      pages.managersDecisionPage
-        .commentsInputInternalValidationError()
-        .should('contain.text', 'Comments must be 8000 characters or fewer');
+      pages.managersDecisionPage.commentsInputInternalValidationError().should('contain.text', 'Comments must be 8000 characters or fewer');
     });
   });
 
@@ -103,9 +99,7 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
       // assert errors are displayed
       pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
       pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('be.visible');
-      pages.managersDecisionPage
-        .commentsInputApproveWithConditionsValidationError()
-        .should('contain.text', 'Enter conditions');
+      pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('contain.text', 'Enter conditions');
     });
 
     it('should throw validation error if approval comment is too long', () => {
@@ -115,9 +109,7 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
 
       pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
       pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('be.visible');
-      pages.managersDecisionPage
-        .commentsInputApproveWithConditionsValidationError()
-        .should('contain.text', 'Conditions must be 8000 characters or fewer');
+      pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('contain.text', 'Conditions must be 8000 characters or fewer');
     });
 
     it('should throw validation error if approval comment is whitespace', () => {
@@ -127,9 +119,7 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
 
       pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
       pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('be.visible');
-      pages.managersDecisionPage
-        .commentsInputApproveWithConditionsValidationError()
-        .should('contain.text', 'Enter conditions');
+      pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('contain.text', 'Enter conditions');
     });
   });
 
@@ -165,9 +155,7 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
 
       pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
       pages.managersDecisionPage.commentsInputDeclineValidationError().should('be.visible');
-      pages.managersDecisionPage
-        .commentsInputDeclineValidationError()
-        .should('contain.text', 'Reasons must be 8000 characters or fewer');
+      pages.managersDecisionPage.commentsInputDeclineValidationError().should('contain.text', 'Reasons must be 8000 characters or fewer');
     });
 
     it('should throw validation error if decline comment is whitespace', () => {
@@ -218,10 +206,8 @@ context("Case Underwriting - Underwriter Manager's decision - Submit Form", () =
   it('after valid form submit, cleans and displays submitted values and updates deal stage', () => {
     pages.underwritingPage.addUnderwriterManagerDecisionButton().click({ force: true });
 
-    const MOCK_COMMENTS =
-      "Approval comment. <div>Div contents</div><script>Script contents</script> &lt;img src = 'data:abc' /&gt;";
-    const MOCK_INTERNAL_COMMENTS =
-      "Internal comment. <div>Div contents</div><script>Script contents</script> &lt;img src = 'data:abc' /&gt;";
+    const MOCK_COMMENTS = "Approval comment. <div>Div contents</div><script>Script contents</script> &lt;img src = 'data:abc' /&gt;";
+    const MOCK_INTERNAL_COMMENTS = "Internal comment. <div>Div contents</div><script>Script contents</script> &lt;img src = 'data:abc' /&gt;";
 
     pages.managersDecisionPage.decisionRadioInputApproveWithConditions().click();
 

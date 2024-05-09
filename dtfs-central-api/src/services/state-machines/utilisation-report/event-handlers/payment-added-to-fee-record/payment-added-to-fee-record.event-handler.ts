@@ -8,10 +8,7 @@ type PaymentAddedToFeeRecordEventPayload = {
   paymentId: number;
 };
 
-export type UtilisationReportPaymentAddedToFeeRecordEvent = BaseUtilisationReportEvent<
-  'PAYMENT_ADDED_TO_FEE_RECORD',
-  PaymentAddedToFeeRecordEventPayload
->;
+export type UtilisationReportPaymentAddedToFeeRecordEvent = BaseUtilisationReportEvent<'PAYMENT_ADDED_TO_FEE_RECORD', PaymentAddedToFeeRecordEventPayload>;
 
 export const handleUtilisationReportPaymentAddedToFeeRecordEvent = (
   report: UtilisationReportEntity,

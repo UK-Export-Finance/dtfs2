@@ -34,9 +34,7 @@ describe('/v1/utilisation-reports/reconciliation-summary/:submissionMonth', () =
       const submissionMonth = '2023-11';
 
       // Act
-      const response: CustomResponse = await api.get(
-        `/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`,
-      );
+      const response: CustomResponse = await api.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
 
       // Assert
       expect(response.status).toEqual(200);
@@ -50,9 +48,7 @@ describe('/v1/utilisation-reports/reconciliation-summary/:submissionMonth', () =
       const submissionMonth = 'invalid';
 
       // Act
-      const response: CustomResponse = await api.get(
-        `/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`,
-      );
+      const response: CustomResponse = await api.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
 
       // Assert
       expect(response.status).toEqual(400);
@@ -78,9 +74,7 @@ describe('/v1/utilisation-reports/reconciliation-summary/:submissionMonth', () =
       await SqlDbHelper.saveNewEntries('FeeRecord', feeRecords);
 
       // Act
-      const response: CustomResponse = await api.get(
-        `/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`,
-      );
+      const response: CustomResponse = await api.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
 
       // Assert
       expect(response.status).toBe(200);

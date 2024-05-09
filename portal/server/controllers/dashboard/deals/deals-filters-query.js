@@ -47,8 +47,7 @@ const dashboardDealsFiltersQuery = (filters, user) => {
 
     const hasOnlyStatusFilter = statusFilterValues?.length === 1 && statusFilterValues;
     const hasOnlyAllStatusesFilterValue =
-      hasOnlyStatusFilter &&
-      statusFilterValues[0] === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES;
+      hasOnlyStatusFilter && statusFilterValues[0] === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES;
 
     if (!hasOnlyAllStatusesFilterValue && !query.AND) {
       // empty and query if not created yet
@@ -61,9 +60,7 @@ const dashboardDealsFiltersQuery = (filters, user) => {
 
       const isKeywordField = fieldName === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD;
 
-      const hasAllStatusesFilterValue = filterValue.includes(
-        CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES,
-      );
+      const hasAllStatusesFilterValue = filterValue.includes(CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES);
 
       /**
        * overall filtering logic is AND

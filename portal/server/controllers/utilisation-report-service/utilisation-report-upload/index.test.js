@@ -46,9 +46,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       await postUtilisationReportUpload(req, res);
 
       // Assert
-      expect(res._getRenderView()).toEqual(
-        'utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk',
-      );
+      expect(res._getRenderView()).toEqual('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk');
       expect(res._getRenderData()).toEqual({
         validationError,
         errorSummary,
@@ -86,9 +84,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       await postUtilisationReportUpload(req, res);
 
       // Assert
-      expect(res._getRenderView()).toEqual(
-        'utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk',
-      );
+      expect(res._getRenderView()).toEqual('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk');
       expect(res._getRenderData()).toEqual({
         validationError: expectedExtractDataError,
         errorSummary: expectedExtractDataErrorSummary,

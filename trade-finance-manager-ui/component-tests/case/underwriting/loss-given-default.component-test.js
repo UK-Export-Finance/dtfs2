@@ -24,9 +24,7 @@ describe(page, () => {
 
   describe('loss given default', () => {
     it('should render page label heading', () => {
-      wrapper
-        .expectText('[data-cy="label-heading"]')
-        .toRead(`What’s the loss given default (LGD) for ${params.deal.submissionDetails.supplierName} in %?`);
+      wrapper.expectText('[data-cy="label-heading"]').toRead(`What’s the loss given default (LGD) for ${params.deal.submissionDetails.supplierName} in %?`);
     });
 
     it('should render loss given default input', () => {

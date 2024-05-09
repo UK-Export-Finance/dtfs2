@@ -49,10 +49,7 @@ const addAccurateStatusesToLoans = (deal) => {
       const validationErrors = isValidationRequired(deal) && loanValidationErrors(loan, deal);
       let issueFacilityValidationErrors;
 
-      if (
-        loan.issueFacilityDetailsStarted &&
-        loanHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, loan)
-      ) {
+      if (loan.issueFacilityDetailsStarted && loanHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, loan)) {
         issueFacilityValidationErrors = loanIssueFacilityValidationErrors(loan, deal);
       }
 

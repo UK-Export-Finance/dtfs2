@@ -51,9 +51,7 @@ export const createFeeRecord = ({
 
   feeRecord.totalFeesAccruedForThePeriod = totalFeesAccruedForThePeriod;
   feeRecord.totalFeesAccruedForThePeriodCurrency = totalFeesAccruedForThePeriodCurrency ?? baseCurrency;
-  feeRecord.totalFeesAccruedForThePeriodExchangeRate = totalFeesAccruedForThePeriodCurrency
-    ? totalFeesAccruedForThePeriodExchangeRate
-    : 1;
+  feeRecord.totalFeesAccruedForThePeriodExchangeRate = totalFeesAccruedForThePeriodCurrency ? totalFeesAccruedForThePeriodExchangeRate : 1;
 
   feeRecord.feesPaidToUkefForThePeriod = feesPaidToUkefForThePeriod;
   feeRecord.feesPaidToUkefForThePeriodCurrency = feesPaidToUkefForThePeriodCurrency ?? baseCurrency;

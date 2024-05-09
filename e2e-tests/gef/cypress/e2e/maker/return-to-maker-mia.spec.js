@@ -47,14 +47,8 @@ context('Return to Maker as MIA', () => {
       automaticCover.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
       automaticCover.continueButton().click();
-      cy.url().should(
-        'eq',
-        relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`),
-      );
-      cy.uploadFile(
-        'upload-file-valid.doc',
-        `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`,
-      );
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
+      cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('upload_file_valid.doc');
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
@@ -150,9 +144,7 @@ context('Return to Maker as MIA', () => {
         .find('.govuk-link')
         .invoke('attr', 'href')
         .then((href) => {
-          expect(href).to.equal(
-            `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`,
-          );
+          expect(href).to.equal(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`);
         });
       applicationDetails.supportingInfoListRowAction(0, 1).contains('Change');
       applicationDetails
@@ -174,9 +166,7 @@ context('Return to Maker as MIA', () => {
     it('can submit back to checker', () => {
       applicationDetails.submitButton().click();
       applicationSubmission.submitButton().click();
-      applicationSubmission
-        .confirmationPanelTitle()
-        .contains('Manual inclusion application submitted for checking at your bank');
+      applicationSubmission.confirmationPanelTitle().contains('Manual inclusion application submitted for checking at your bank');
       cy.visit(relative(`/gef/application-details/${dealId}`));
       statusBanner.bannerStatus().contains("Ready for Checker's approval");
     });

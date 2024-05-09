@@ -1,11 +1,5 @@
 const { ObjectId } = require('mongodb');
-const {
-  validateMonth,
-  validateYear,
-  validateFileInfo,
-  validateUtilisationReportData,
-  validateReportUser,
-} = require('./utilisation-report-validator');
+const { validateMonth, validateYear, validateFileInfo, validateUtilisationReportData, validateReportUser } = require('./utilisation-report-validator');
 
 describe('utilisation-report-validator', () => {
   describe('validateMonth', () => {

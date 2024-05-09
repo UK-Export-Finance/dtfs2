@@ -117,14 +117,10 @@ describe('/v1/portal/deals', () => {
         expect(body.validationErrors.count).toEqual(3);
 
         expect(body.validationErrors.errorList.bankInternalRefName).toBeDefined();
-        expect(body.validationErrors.errorList.bankInternalRefName.text).toEqual(
-          'Bank deal ID must be 30 characters or fewer',
-        );
+        expect(body.validationErrors.errorList.bankInternalRefName.text).toEqual('Bank deal ID must be 30 characters or fewer');
 
         expect(body.validationErrors.errorList.additionalRefName).toBeDefined();
-        expect(body.validationErrors.errorList.additionalRefName.text).toEqual(
-          'Bank deal name must be 100 characters or fewer',
-        );
+        expect(body.validationErrors.errorList.additionalRefName.text).toEqual('Bank deal name must be 100 characters or fewer');
 
         expect(body.validationErrors.errorList.makerObject).toBeDefined();
         expect(body.validationErrors.errorList.makerObject.text).toEqual('deal.maker object with bank is required');
@@ -165,18 +161,10 @@ describe('/v1/portal/deals', () => {
           ...mockFacility,
         };
 
-        const { body: createdBond1 } = await api
-          .post({ facility: mockBond, user: MOCK_PORTAL_USER })
-          .to('/v1/portal/facilities');
-        const { body: createdBond2 } = await api
-          .post({ facility: mockBond, user: MOCK_PORTAL_USER })
-          .to('/v1/portal/facilities');
-        const { body: createdLoan1 } = await api
-          .post({ facility: mockLoan, user: MOCK_PORTAL_USER })
-          .to('/v1/portal/facilities');
-        const { body: createdLoan2 } = await api
-          .post({ facility: mockLoan, user: MOCK_PORTAL_USER })
-          .to('/v1/portal/facilities');
+        const { body: createdBond1 } = await api.post({ facility: mockBond, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const { body: createdBond2 } = await api.post({ facility: mockBond, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const { body: createdLoan1 } = await api.post({ facility: mockLoan, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const { body: createdLoan2 } = await api.post({ facility: mockLoan, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
 
         const { body: bond1 } = await api.get(`/v1/portal/facilities/${createdBond1._id}`);
         const { body: bond2 } = await api.get(`/v1/portal/facilities/${createdBond2._id}`);
@@ -207,9 +195,7 @@ describe('/v1/portal/deals', () => {
         },
       };
 
-      const { status, body } = await api
-        .put({ dealUpdate: updatedDeal, user: MOCK_PORTAL_USER })
-        .to(`/v1/portal/deals/${createdDeal._id}`);
+      const { status, body } = await api.put({ dealUpdate: updatedDeal, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
 
@@ -237,9 +223,7 @@ describe('/v1/portal/deals', () => {
         },
       };
 
-      const { status: putStatus } = await api
-        .put({ dealUpdate: partialUpdate, user: MOCK_PORTAL_USER })
-        .to(`/v1/portal/deals/${createdDeal._id}`);
+      const { status: putStatus } = await api.put({ dealUpdate: partialUpdate, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
       expect(putStatus).toEqual(200);
 
       const { status, body } = await api.get(`/v1/portal/deals/${createdDeal._id}`);
@@ -290,12 +274,8 @@ describe('/v1/portal/deals', () => {
       expect(dealAfterSecondUpdate.status).toEqual(200);
 
       expect(dealAfterSecondUpdate.body.deal.editedBy.length).toEqual(2);
-      expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(
-        expectAddedFieldsWithEditedBy(secondUpdate, MOCK_PORTAL_USER, 1).editedBy[0],
-      );
-      expect(dealAfterSecondUpdate.body.deal.editedBy[1]).toEqual(
-        expectAddedFieldsWithEditedBy(secondUpdate, MOCK_PORTAL_USER, 2).editedBy[1],
-      );
+      expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, MOCK_PORTAL_USER, 1).editedBy[0]);
+      expect(dealAfterSecondUpdate.body.deal.editedBy[1]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, MOCK_PORTAL_USER, 2).editedBy[1]);
     });
   });
 
@@ -307,9 +287,7 @@ describe('/v1/portal/deals', () => {
         status: 'Submitted',
         previousStatus: "Checker's approval",
       };
-      const postResult = await api
-        .post({ deal: dealWithSubmittedStatus, user: MOCK_PORTAL_USER })
-        .to('/v1/portal/deals');
+      const postResult = await api.post({ deal: dealWithSubmittedStatus, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
       const createdDeal = postResult.body;
 
       // First status update - 200
@@ -319,9 +297,7 @@ describe('/v1/portal/deals', () => {
 
       // Second status update - 400
       statusUpdate = 'Acknowledged';
-      const { status: secondStatus } = await api
-        .put({ status: statusUpdate })
-        .to(`/v1/portal/deals/${createdDeal._id}/status`);
+      const { status: secondStatus } = await api.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
       expect(secondStatus).toEqual(400);
     });
 
@@ -332,9 +308,7 @@ describe('/v1/portal/deals', () => {
         previousStatus: "Checker's approval",
       };
 
-      const postResult = await api
-        .post({ deal: dealWithSubmittedStatus, user: MOCK_PORTAL_USER })
-        .to('/v1/portal/deals');
+      const postResult = await api.post({ deal: dealWithSubmittedStatus, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
       const createdDeal = postResult.body;
       const statusUpdate = 'Acknowledged';
 

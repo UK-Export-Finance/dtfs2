@@ -85,48 +85,28 @@ context('Case Underwriting - Pricing and risk - Probability of default', () => {
     it('should display validation error if value is not a number, below 0.01, above 14.09 or more than 2 decimal places', () => {
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('15');
       pages.underwritingProbabilityOfDefaultPage.submitButton().click();
-      pages.underwritingProbabilityOfDefaultPage
-        .errorSummary()
-        .contains('You must enter a percentage between 0.01% to 14.09%');
-      pages.underwritingProbabilityOfDefaultPage
-        .errorList()
-        .contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage.errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage.errorList().contains('You must enter a percentage between 0.01% to 14.09%');
 
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('14.1');
       pages.underwritingProbabilityOfDefaultPage.submitButton().click();
-      pages.underwritingProbabilityOfDefaultPage
-        .errorSummary()
-        .contains('You must enter a percentage between 0.01% to 14.09%');
-      pages.underwritingProbabilityOfDefaultPage
-        .errorList()
-        .contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage.errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage.errorList().contains('You must enter a percentage between 0.01% to 14.09%');
 
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('12.123');
       pages.underwritingProbabilityOfDefaultPage.submitButton().click();
-      pages.underwritingProbabilityOfDefaultPage
-        .errorSummary()
-        .contains('You must enter a percentage between 0.01% to 14.09%');
-      pages.underwritingProbabilityOfDefaultPage
-        .errorList()
-        .contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage.errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage.errorList().contains('You must enter a percentage between 0.01% to 14.09%');
 
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('0');
       pages.underwritingProbabilityOfDefaultPage.submitButton().click();
-      pages.underwritingProbabilityOfDefaultPage
-        .errorSummary()
-        .contains('You must enter a percentage between 0.01% to 14.09%');
-      pages.underwritingProbabilityOfDefaultPage
-        .errorList()
-        .contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage.errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage.errorList().contains('You must enter a percentage between 0.01% to 14.09%');
 
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('abc');
       pages.underwritingProbabilityOfDefaultPage.submitButton().click();
-      pages.underwritingProbabilityOfDefaultPage
-        .errorSummary()
-        .contains('You must enter a percentage between 0.01% to 14.09%');
-      pages.underwritingProbabilityOfDefaultPage
-        .errorList()
-        .contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage.errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage.errorList().contains('You must enter a percentage between 0.01% to 14.09%');
     });
 
     it('should update Probability of default if between 0.01 and 14.09', () => {

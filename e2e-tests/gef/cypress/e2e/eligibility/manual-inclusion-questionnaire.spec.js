@@ -87,10 +87,7 @@ context('manual inclusion Page', () => {
     });
 
     it('does not allow a file of an incorrect type', () => {
-      cy.uploadFile(
-        'upload-file-wrong-type.csv',
-        `/gef/application-details/${id}/supporting-information/document/manual-inclusion-questionnaire/upload`,
-      );
+      cy.uploadFile('upload-file-wrong-type.csv', `/gef/application-details/${id}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadFailure('upload-file-wrong-type.csv');
     });
 

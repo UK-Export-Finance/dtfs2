@@ -9,9 +9,7 @@ const mapDealRoot = (portalDealId, v1Deal, banks) => {
   let hasError = false;
 
   const previousStatus =
-    v1Deal.Deal_information.Extra_fields.Deal_previous_status === 'confirmed_by_bank'
-      ? 'submitted'
-      : v1Deal.Deal_information.Extra_fields.Deal_previous_status;
+    v1Deal.Deal_information.Extra_fields.Deal_previous_status === 'confirmed_by_bank' ? 'submitted' : v1Deal.Deal_information.Extra_fields.Deal_previous_status;
 
   const dealRoot = {
     dataMigration: {

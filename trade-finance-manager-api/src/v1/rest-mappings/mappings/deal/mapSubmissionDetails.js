@@ -11,8 +11,7 @@ const mapSubmissionDetails = (submissionDetails) => {
     buyerAddressPostcode: submissionDetails['buyer-address-postcode'],
     buyerAddressTown: submissionDetails['buyer-address-town'],
     supplyContractDescription: submissionDetails['supply-contract-description'],
-    destinationCountry:
-      submissionDetails.destinationOfGoodsAndServices && (submissionDetails.destinationOfGoodsAndServices || {}).name,
+    destinationCountry: submissionDetails.destinationOfGoodsAndServices && (submissionDetails.destinationOfGoodsAndServices || {}).name,
     legallyDistinct: submissionDetails.legallyDistinct === 'true' ? 'Yes' : 'No',
     indemnifierCompaniesHouseRegistrationNumber: submissionDetails['indemnifier-companies-house-registration-number'],
     indemnifierAddressCountry: (submissionDetails['indemnifier-address-country'] || {}).name,
@@ -21,8 +20,7 @@ const mapSubmissionDetails = (submissionDetails) => {
     indemnifierAddressLine3: submissionDetails['indemnifier-address-line-3'],
     indemnifierAddressPostcode: submissionDetails['indemnifier-address-postcode'],
     indemnifierAddressTown: submissionDetails['indemnifier-address-town'],
-    indemnifierCorrespondenceAddressCountry: (submissionDetails['indemnifier-correspondence-address-country'] || {})
-      .name,
+    indemnifierCorrespondenceAddressCountry: (submissionDetails['indemnifier-correspondence-address-country'] || {}).name,
     indemnifierCorrespondenceAddressLine1: submissionDetails['indemnifier-correspondence-address-line-1'],
     indemnifierCorrespondenceAddressLine2: submissionDetails['indemnifier-correspondence-address-line-2'],
     indemnifierCorrespondenceAddressLine3: submissionDetails['indemnifier-correspondence-address-line-3'],

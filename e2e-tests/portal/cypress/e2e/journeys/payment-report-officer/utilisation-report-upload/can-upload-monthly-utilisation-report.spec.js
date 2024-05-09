@@ -20,9 +20,7 @@ context('Monthly utilisation report upload', () => {
 
   describe('Submitting a file to the utilisation report upload', () => {
     it('Should route to the Confirm and Send page when a file is successfully validated', () => {
-      utilisationReportUpload
-        .utilisationReportFileInput()
-        .attachFile('valid-utilisation-report-February_2023_monthly.xlsx');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-February_2023_monthly.xlsx');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('not.exist');
@@ -30,9 +28,7 @@ context('Monthly utilisation report upload', () => {
     });
 
     it('should display an error if the file selected does not contain the current report period', () => {
-      utilisationReportUpload
-        .utilisationReportFileInput()
-        .attachFile('valid-utilisation-report-September_2023_monthly.xlsx');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-September_2023_monthly.xlsx');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
@@ -46,9 +42,7 @@ context('Monthly utilisation report upload', () => {
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
-      utilisationReportUpload
-        .utilisationReportFileInputErrorMessage()
-        .contains("The selected file must contain the word 'monthly'");
+      utilisationReportUpload.utilisationReportFileInputErrorMessage().contains("The selected file must contain the word 'monthly'");
     });
 
     it('should display an error when trying to upload the wrong type of file', () => {
@@ -72,9 +66,7 @@ context('Monthly utilisation report upload', () => {
     });
 
     it('should display an error if the file selected is password protected', () => {
-      utilisationReportUpload
-        .utilisationReportFileInput()
-        .attachFile('password-protected-report-February_2023_monthly.xlsx');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('password-protected-report-February_2023_monthly.xlsx');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
@@ -83,14 +75,10 @@ context('Monthly utilisation report upload', () => {
     });
 
     it('should display the check the report page with an error if uploading a file with an error on the check the report page', () => {
-      utilisationReportUpload
-        .utilisationReportFileInput()
-        .attachFile('invalid-utilisation-report-February_2023_monthly.xlsx');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023_monthly.xlsx');
       utilisationReportUpload.continueButton().click();
 
-      utilisationReportUpload
-        .utilisationReportFileInput()
-        .attachFile('password-protected-report-February_2023_monthly.xlsx');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('password-protected-report-February_2023_monthly.xlsx');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.errorSummary().should('exist');
@@ -100,9 +88,7 @@ context('Monthly utilisation report upload', () => {
 
   describe('Failing data validation on file upload', () => {
     it('should display a summary of errors for an invalid .xlsx file', () => {
-      utilisationReportUpload
-        .utilisationReportFileInput()
-        .attachFile('invalid-utilisation-report-February_2023_monthly.xlsx');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023_monthly.xlsx');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.checkReportTitle().should('exist');
@@ -111,9 +97,7 @@ context('Monthly utilisation report upload', () => {
     });
 
     it('should display a summary of errors for an invalid .csv file', () => {
-      utilisationReportUpload
-        .utilisationReportFileInput()
-        .attachFile('invalid-utilisation-report-February_2023_monthly.csv');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023_monthly.csv');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.checkReportTitle().should('exist');
@@ -123,16 +107,12 @@ context('Monthly utilisation report upload', () => {
     });
 
     it('should allow a file to be re-uploaded after failing the data validation', () => {
-      utilisationReportUpload
-        .utilisationReportFileInput()
-        .attachFile('invalid-utilisation-report-February_2023_monthly.csv');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023_monthly.csv');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.checkReportTitle().should('exist');
 
-      utilisationReportUpload
-        .utilisationReportFileInput()
-        .attachFile('valid-utilisation-report-February_2023_monthly.xlsx');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-February_2023_monthly.xlsx');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('not.exist');

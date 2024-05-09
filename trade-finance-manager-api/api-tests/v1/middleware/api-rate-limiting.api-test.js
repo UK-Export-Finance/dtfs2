@@ -15,9 +15,7 @@ describe('api rate limiting', () => {
     const app = generateApp();
     ({ as } = createApi(app));
     sendRequestTimes = (numberOfRequestsToSend) =>
-      Promise.allSettled(
-        Array.from({ length: numberOfRequestsToSend }, () => as(null).put(null).to('/v1/deals/submit')),
-      );
+      Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => as(null).put(null).to('/v1/deals/submit')));
   });
 
   afterEach(() => {

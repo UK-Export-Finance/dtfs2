@@ -21,8 +21,7 @@ describe(component, () => {
 
       for (const deal of deals) {
         const wrapper = render({ user, deal, canFullyCalculateDealSummary });
-        const expected =
-          'Warning: Only the completed facilities will be processed in the financial summary data below.';
+        const expected = 'Warning: Only the completed facilities will be processed in the financial summary data below.';
         wrapper.expectText('[data-cy="forms-incomplete"]').toRead(expected);
       }
     });

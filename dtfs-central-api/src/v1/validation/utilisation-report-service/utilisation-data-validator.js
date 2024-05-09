@@ -89,8 +89,7 @@ const validateExchangeRate = (exchangeRate, index, fieldName) => {
  * @param {number} index - index of the facility in the array.
  * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
-const validateFacilityUtilisation = (facilityUtilisation, index) =>
-  validateMonetaryValue(facilityUtilisation, index, 'Facility utilisation');
+const validateFacilityUtilisation = (facilityUtilisation, index) => validateMonetaryValue(facilityUtilisation, index, 'Facility utilisation');
 
 /**
  * Validates the total fees accrued to be a monetary value or be falsey, returns an error message or null if valid.
@@ -98,8 +97,7 @@ const validateFacilityUtilisation = (facilityUtilisation, index) =>
  * @param {number} index - index of the facility in the array.
  * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
-const validateTotalFeesAccrued = (totalFeesAccrued, index) =>
-  validateMonetaryValue(totalFeesAccrued, index, 'Total fees accrued');
+const validateTotalFeesAccrued = (totalFeesAccrued, index) => validateMonetaryValue(totalFeesAccrued, index, 'Total fees accrued');
 
 /**
  * Validates the total fees accrued currency to be an ISO 4217 currency code or be falsey, returns an error message or null if valid.
@@ -125,8 +123,7 @@ const validateTotalFeesAccruedExchangeRate = (totalFeesAccruedExchangeRate, inde
  * @param {number} index - index of the facility in the array.
  * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
-const validateMonthlyFeesPaid = (monthlyFeesPaid, index) =>
-  validateMonetaryValue(monthlyFeesPaid, index, 'Monthly fees paid');
+const validateMonthlyFeesPaid = (monthlyFeesPaid, index) => validateMonetaryValue(monthlyFeesPaid, index, 'Monthly fees paid');
 
 /**
  * Validates the monthly fees paid currency to be an ISO 4217 currency code or be falsey, returns an error message or null if valid.
@@ -134,8 +131,7 @@ const validateMonthlyFeesPaid = (monthlyFeesPaid, index) =>
  * @param {number} index - index of the facility in the array.
  * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
-const validateMonthlyFeesPaidCurrency = (monthlyFeesPaidCurrency, index) =>
-  validateCurrencyValue(monthlyFeesPaidCurrency, index, 'Monthly fees paid currency');
+const validateMonthlyFeesPaidCurrency = (monthlyFeesPaidCurrency, index) => validateCurrencyValue(monthlyFeesPaidCurrency, index, 'Monthly fees paid currency');
 
 /**
  * Validates the payment currency to be an ISO 4217 currency code or be falsey, returns an error message or null if valid.
@@ -143,8 +139,7 @@ const validateMonthlyFeesPaidCurrency = (monthlyFeesPaidCurrency, index) =>
  * @param {number} index - index of the facility in the array.
  * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
-const validatePaymentCurrency = (paymentCurrency, index) =>
-  validateCurrencyValue(paymentCurrency, index, 'Payment currency');
+const validatePaymentCurrency = (paymentCurrency, index) => validateCurrencyValue(paymentCurrency, index, 'Payment currency');
 
 /**
  * Validates the base currency to be an ISO 4217 currency code or be falsey, returns an error message or null if valid.
@@ -160,8 +155,7 @@ const validateBaseCurrency = (baseCurrency, index) => validateCurrencyValue(base
  * @param {number} index - index of the facility in the array.
  * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */
-const validatePaymentExchangeRate = (paymentCurrencyExchangeRate, index) =>
-  validateExchangeRate(paymentCurrencyExchangeRate, index, 'Payment exchange rate');
+const validatePaymentExchangeRate = (paymentCurrencyExchangeRate, index) => validateExchangeRate(paymentCurrencyExchangeRate, index, 'Payment exchange rate');
 
 module.exports = {
   validateUkefId,

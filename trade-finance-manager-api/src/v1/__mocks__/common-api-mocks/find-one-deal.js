@@ -46,10 +46,7 @@ module.exports = {
         };
 
         if (deal.dealSnapshot?._id === 'MOCK_MIA_SECOND_SUBMIT') {
-          if (
-            deal.dealSnapshot.submissionType === 'Manual Inclusion Application' &&
-            deal.dealSnapshot.details?.submissionCount === 2
-          ) {
+          if (deal.dealSnapshot.submissionType === 'Manual Inclusion Application' && deal.dealSnapshot.details?.submissionCount === 2) {
             deal.tfm.underwriterManagersDecision = {
               decision: 'Approved (without conditions)',
             };
@@ -59,10 +56,7 @@ module.exports = {
         }
 
         if (deal.dealSnapshot?._id === 'MOCK_GEF_DEAL_SECOND_SUBMIT_MIA') {
-          if (
-            deal.dealSnapshot.submissionType === 'Manual Inclusion Application' &&
-            deal.dealSnapshot.submissionCount === 2
-          ) {
+          if (deal.dealSnapshot.submissionType === 'Manual Inclusion Application' && deal.dealSnapshot.submissionCount === 2) {
             deal.tfm.underwriterManagersDecision = {
               decision: 'Approved (without conditions)',
             };

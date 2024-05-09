@@ -77,9 +77,7 @@ describe(component, () => {
     it('should render `deal id` table heading', () => {
       wrapper.expectText('[data-cy="deals-table-heading-ukefDealId"]').toRead('Deal ID');
       wrapper.expectAriaSort('[data-cy="deals-table-heading-ukefDealId"]').toEqual('ascending');
-      wrapper
-        .expectElement('[data-cy="deals-table-heading-ukefDealId-button"]')
-        .toHaveAttribute('autofocus', 'autofocus');
+      wrapper.expectElement('[data-cy="deals-table-heading-ukefDealId-button"]').toHaveAttribute('autofocus', 'autofocus');
     });
 
     it('should render `product` table heading', () => {
@@ -121,9 +119,7 @@ describe(component, () => {
     it('should render `date received` table heading', () => {
       wrapper.expectText('[data-cy="deals-table-heading-dateReceived"]').toRead('Date received');
       wrapper.expectAriaSort('[data-cy="deals-table-heading-dateReceived"]').toEqual('none');
-      wrapper
-        .expectElement('[data-cy="deals-table-heading-dateReceived-button"]')
-        .toHaveAttribute('autofocus', undefined);
+      wrapper.expectElement('[data-cy="deals-table-heading-dateReceived-button"]').toHaveAttribute('autofocus', undefined);
     });
   });
 
@@ -132,9 +128,7 @@ describe(component, () => {
       params.deals.forEach((deal) => {
         const selector = `[data-cy="deal-${deal._id}-ukef-deal-id-link"]`;
 
-        wrapper
-          .expectLink(selector)
-          .toLinkTo(`/case/${deal._id}/deal`, `View deal ${deal.dealSnapshot.details.ukefDealId} details`);
+        wrapper.expectLink(selector).toLinkTo(`/case/${deal._id}/deal`, `View deal ${deal.dealSnapshot.details.ukefDealId} details`);
       });
     });
 

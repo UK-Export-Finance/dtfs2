@@ -606,10 +606,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const formattedManualInclusionNoticeSubmissionDate = format(
-              submissionDateFourMonthsAgo,
-              DATE_FORMATS.LONG_FORM_DATE,
-            );
+            const formattedManualInclusionNoticeSubmissionDate = format(submissionDateFourMonthsAgo, DATE_FORMATS.LONG_FORM_DATE);
             const submissionPlus3MonthsFormatted = format(submissionPlus3Months, DATE_FORMATS.LONG_FORM_DATE);
 
             const expectedText = `Requested Cover Start Date must be between ${formattedManualInclusionNoticeSubmissionDate} and ${submissionPlus3MonthsFormatted}`;

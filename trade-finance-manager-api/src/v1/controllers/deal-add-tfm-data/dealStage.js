@@ -16,11 +16,7 @@ const dealStage = (status, submissionType) => {
     return DEAL_STAGE_TFM.CONFIRMED;
   }
 
-  console.info(
-    'Invalid deal stage with status %s and submission type %s, setting status to Application',
-    status,
-    submissionType,
-  );
+  console.info('Invalid deal stage with status %s and submission type %s, setting status to Application', status, submissionType);
   return DEAL_STAGE_TFM.APPLICATION;
 };
 

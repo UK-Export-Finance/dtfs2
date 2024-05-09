@@ -25,9 +25,7 @@ const userToken = (req) => {
 const isObject = (el) => typeof el === 'object' && el !== null && !(el instanceof Array);
 
 const isMIAWithoutChangedToIssuedFacilities = (app) =>
-  app.status === CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED &&
-  app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIA &&
-  app.submissionCount > 0;
+  app.status === CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED && app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIA && app.submissionCount > 0;
 
 // Converts Api errors into more manageable objects
 const apiErrorHandler = ({ code, response }) => {
@@ -105,15 +103,13 @@ const validationErrorHandler = (errs, href = '') => {
 const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
 
 // for which rows in the facility tables should show change when facilities changed to issued post submission
-const changedToIssuedKeys = (id) =>
-  id === 'name' || id === 'coverStartDate' || id === 'coverEndDate' || id === 'issueDate' || id === 'hasBeenIssued';
+const changedToIssuedKeys = (id) => id === 'name' || id === 'coverStartDate' || id === 'coverEndDate' || id === 'issueDate' || id === 'hasBeenIssued';
 
 const returnToMakerNoFacilitiesChanged = (app, hasChangedFacilities) => {
   const acceptableStatus = [CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED];
 
   return (
-    (app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN ||
-      app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN) &&
+    (app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN || app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN) &&
     acceptableStatus.includes(app.status) &&
     !hasChangedFacilities &&
     app.submissionCount > 0
@@ -161,19 +157,13 @@ const previewItemConditions = (previewParams) => {
   const { issuedHref, unissuedHref, issuedToUnissuedHref, changedToIssueShow, unissuedShow, item, app } = previewParams;
   let summaryItems = [];
   const statusMIA = [CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF];
-  const statusAIN = [
-    ...statusMIA,
-    CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
-    CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF,
-    CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
-  ];
+  const statusAIN = [...statusMIA, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF, CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED];
 
   const validStatus =
     app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN
       ? !statusAIN.includes(app.status)
       : !statusMIA.includes(app.status) && app.submissionType !== CONSTANTS.DEAL_SUBMISSION_TYPE.MIN;
-  const ukefDecisionAccepted =
-    app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN || Boolean(app.ukefDecisionAccepted);
+  const ukefDecisionAccepted = app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN || Boolean(app.ukefDecisionAccepted);
 
   if (summaryIssuedChangedToIssued(previewParams)) {
     /**
@@ -249,10 +239,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
   ];
   const acceptableRole = [MAKER];
   const { id, href, shouldCoverStartOnSubmission } = item;
-  const value =
-    typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean'
-      ? details[item.id].toString()
-      : details[item.id];
+  const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
   const isCoverStartOnSubmission = id === 'coverStartDate' && shouldCoverStartOnSubmission;
   // column keys to display change if facility has been changed to issued
   const changedToIssueShow = changedToIssuedKeys(id);
@@ -358,24 +345,10 @@ const mapSummaryList = (data, itemsToShow, mapSummaryParams, preview = false) =>
   };
 
   return itemsToShow.map((item) => {
-    const {
-      label,
-      prefix,
-      suffix,
-      method,
-      isCurrency,
-      isIndustry,
-      isDetails,
-      isHidden,
-      shouldCoverStartOnSubmission,
-      issueDate,
-    } = item;
+    const { label, prefix, suffix, method, isCurrency, isIndustry, isDetails, isHidden, shouldCoverStartOnSubmission, issueDate } = item;
 
     // If value is a number, convert to String as 0 can also become falsey
-    const value =
-      typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean'
-        ? details[item.id].toString()
-        : details[item.id];
+    const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
     const { currency, detailsOther } = details;
     const isRequired = validation?.required?.includes(item.id);
 

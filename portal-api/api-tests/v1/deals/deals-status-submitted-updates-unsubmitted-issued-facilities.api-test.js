@@ -143,10 +143,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
 
         // NOTE: aka - unconditional loans created from Deal Draft, did not need to complete Issue Facility Form
         const unsubmittedUnconditionalLoansNotProvidedIssueFacilityDetails = completedDeal.mockFacilities.filter(
-          (facility) =>
-            facility.type === 'Loan' &&
-            !facility.issueFacilityDetailsSubmitted &&
-            !facility.issueFacilityDetailsProvided,
+          (facility) => facility.type === 'Loan' && !facility.issueFacilityDetailsSubmitted && !facility.issueFacilityDetailsProvided,
         );
 
         const loansThatShouldBeUpdated = unsubmittedUnconditionalLoansNotProvidedIssueFacilityDetails;
@@ -178,10 +175,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
 
         // NOTE: aka - issued bonds created from Deal Draft, did not need to complete Issue Facility Form
         const unsubmittedIssuedBondsNotProvidedIssueFacilityDetails = completedDeal.mockFacilities.filter(
-          (facility) =>
-            facility.type === 'Bond' &&
-            !facility.issueFacilityDetailsSubmitted &&
-            !facility.issueFacilityDetailsProvided,
+          (facility) => facility.type === 'Bond' && !facility.issueFacilityDetailsSubmitted && !facility.issueFacilityDetailsProvided,
         );
 
         const bondsThatShouldBeUpdated = unsubmittedIssuedBondsNotProvidedIssueFacilityDetails;

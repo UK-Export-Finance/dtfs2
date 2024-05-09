@@ -1,9 +1,4 @@
-const {
-  contractAboutSupplier,
-  contractAboutBuyer,
-  contractAboutFinancial,
-  contractAboutPreview,
-} = require('../../pages');
+const { contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
@@ -19,9 +14,7 @@ context('about-supply-contract', () => {
     cy.deleteDeals(ADMIN);
 
     const aDealWithAboutSupplyContractInStatus = (status) => {
-      const candidates = twentyOneDeals.filter(
-        (aDeal) => aDeal.submissionDetails && status === aDeal.submissionDetails.status && aDeal.status === 'Draft',
-      );
+      const candidates = twentyOneDeals.filter((aDeal) => aDeal.submissionDetails && status === aDeal.submissionDetails.status && aDeal.status === 'Draft');
 
       const aDeal = candidates[0];
       if (!aDeal) {
@@ -99,9 +92,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
-    contractAboutPreview
-      .errors()
-      .should('not.contain', 'Supplier correspondence postcode is required for UK addresses');
+    contractAboutPreview.errors().should('not.contain', 'Supplier correspondence postcode is required for UK addresses');
     contractAboutPreview.errors().should('contain', 'Supplier correspondence town is required for non-UK addresses');
 
     contractAboutSupplier.visit(deal);
@@ -148,9 +139,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
-    contractAboutPreview
-      .errors()
-      .should('not.contain', 'Indemnifier correspondence postcode is required for UK addresses');
+    contractAboutPreview.errors().should('not.contain', 'Indemnifier correspondence postcode is required for UK addresses');
     contractAboutPreview.errors().should('contain', 'Indemnifier correspondence town is required for non-UK addresses');
   });
 

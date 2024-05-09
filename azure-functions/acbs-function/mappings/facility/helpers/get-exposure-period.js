@@ -1,12 +1,6 @@
 /* calculating exposure period based on Portal V2 algorithm */
 const CONSTANTS = require('../../../constants');
-const {
-  isDate,
-  formatYear,
-  formatDate,
-  getDateStringFromYearMonthDay,
-  getInclusiveMonthDifference,
-} = require('../../../helpers/date');
+const { isDate, formatYear, formatDate, getDateStringFromYearMonthDay, getInclusiveMonthDifference } = require('../../../helpers/date');
 
 const { PRODUCT } = CONSTANTS;
 

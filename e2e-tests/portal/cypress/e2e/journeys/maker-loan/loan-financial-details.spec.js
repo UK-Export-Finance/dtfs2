@@ -2,10 +2,7 @@ const pages = require('../../pages');
 const partials = require('../../partials');
 const fillLoanForm = require('./fill-loan-forms');
 const assertLoanFormValues = require('./assert-loan-form-values');
-const {
-  calculateExpectedGuaranteeFee,
-  calculateExpectedUkefExposure,
-} = require('../../../support/portal/sectionCalculations');
+const { calculateExpectedGuaranteeFee, calculateExpectedUkefExposure } = require('../../../support/portal/sectionCalculations');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
@@ -155,16 +152,12 @@ context('Loan Financial Details', () => {
       let interestMarginFee = '20';
       pages.loanFinancialDetails.guaranteeFeePayableByBankInput().invoke('attr', 'placeholder').should('eq', '0');
       pages.loanFinancialDetails.interestMarginFeeInput().type(interestMarginFee).blur();
-      pages.loanFinancialDetails
-        .guaranteeFeePayableByBankInput()
-        .should('have.value', calculateExpectedGuaranteeFee(interestMarginFee));
+      pages.loanFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFee(interestMarginFee));
 
       pages.loanFinancialDetails.interestMarginFeeInput().clear();
       interestMarginFee = '9.09';
       pages.loanFinancialDetails.interestMarginFeeInput().type(interestMarginFee).blur();
-      pages.loanFinancialDetails
-        .guaranteeFeePayableByBankInput()
-        .should('have.value', calculateExpectedGuaranteeFee(interestMarginFee));
+      pages.loanFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFee(interestMarginFee));
     });
   });
 
@@ -180,17 +173,13 @@ context('Loan Financial Details', () => {
       pages.loanFinancialDetails.facilityValueInput().type(value);
       pages.loanFinancialDetails.coveredPercentageInput().type(coveredPercentage).blur();
 
-      pages.loanFinancialDetails
-        .ukefExposureInput()
-        .should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
+      pages.loanFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
 
       pages.loanFinancialDetails.facilityValueInput().clear();
 
       value = '250';
       pages.loanFinancialDetails.facilityValueInput().type(value).blur();
-      pages.loanFinancialDetails
-        .ukefExposureInput()
-        .should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
+      pages.loanFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
     });
   });
 

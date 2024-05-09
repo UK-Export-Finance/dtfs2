@@ -36,10 +36,6 @@ context('Portal homepage', () => {
   });
 
   it('Ensure comply text is visible on the portal login page', () => {
-    login
-      .comply()
-      .contains(
-        "Your bank must comply with the terms of the MGA you're applying for. The MGA is signed between your bank and UK Export Finance.",
-      );
+    login.comply().contains("Your bank must comply with the terms of the MGA you're applying for. The MGA is signed between your bank and UK Export Finance.");
   });
 });

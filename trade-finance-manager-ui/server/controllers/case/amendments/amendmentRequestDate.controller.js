@@ -50,10 +50,7 @@ const postAmendmentRequestDate = async (req, res) => {
   const facility = await api.getFacility(facilityId, userToken);
 
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
-  const { amendmentRequestDate, errorsObject, amendmentRequestDateErrors } = amendmentRequestDateValidation(
-    req.body,
-    facility,
-  );
+  const { amendmentRequestDate, errorsObject, amendmentRequestDateErrors } = amendmentRequestDateValidation(req.body, facility);
   const { dealId } = amendment;
 
   if (amendmentRequestDateErrors.length) {

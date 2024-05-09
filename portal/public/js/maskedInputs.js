@@ -9,9 +9,7 @@ var DTFS_PORTAL;
         return Object.prototype.hasOwnProperty.call(t, e);
       },
       r: function (t) {
-        'undefined' != typeof Symbol &&
-          Symbol.toStringTag &&
-          Object.defineProperty(t, Symbol.toStringTag, { value: 'Module' }),
+        'undefined' != typeof Symbol && Symbol.toStringTag && Object.defineProperty(t, Symbol.toStringTag, { value: 'Module' }),
           Object.defineProperty(t, '__esModule', { value: !0 });
       },
     },
@@ -40,13 +38,7 @@ var DTFS_PORTAL;
       Object.assign(this, { inserted: '', rawInserted: '', skip: !1, tailShift: 0 }, t);
     }
     aggregate(t) {
-      return (
-        (this.rawInserted += t.rawInserted),
-        (this.skip = this.skip || t.skip),
-        (this.inserted += t.inserted),
-        (this.tailShift += t.tailShift),
-        this
-      );
+      return (this.rawInserted += t.rawInserted), (this.skip = this.skip || t.skip), (this.inserted += t.inserted), (this.tailShift += t.tailShift), this;
     }
     get offset() {
       return this.tailShift + this.inserted.length;
@@ -127,8 +119,7 @@ var DTFS_PORTAL;
     get removeDirection() {
       return !this.removedCount || this.insertedCount
         ? n
-        : (this.oldSelection.end !== this.cursorPos && this.oldSelection.start !== this.cursorPos) ||
-          this.oldSelection.end !== this.oldSelection.start
+        : (this.oldSelection.end !== this.cursorPos && this.oldSelection.start !== this.cursorPos) || this.oldSelection.end !== this.oldSelection.start
         ? r
         : l;
     }
@@ -261,11 +252,7 @@ var DTFS_PORTAL;
           (n = i.rawInserted === s.toString()),
             (n && i.inserted) ||
               'shift' !== this.overwrite ||
-              ((this.state = e),
-              (t = s.state),
-              s.shift(),
-              (i = this.appendTail(s)),
-              (n = i.rawInserted === s.toString())),
+              ((this.state = e), (t = s.state), s.shift(), (i = this.appendTail(s)), (n = i.rawInserted === s.toString())),
             n && i.inserted && (this.state = e);
         }
         n || ((u = new a()), (this.state = i), s && t && (s.state = t));
@@ -307,10 +294,7 @@ var DTFS_PORTAL;
         i = t();
       return (
         (this.rawInputValue = e),
-        this.value &&
-          this.value !== s &&
-          0 === s.indexOf(this.value) &&
-          this.append(s.slice(this.value.length), {}, ''),
+        this.value && this.value !== s && 0 === s.indexOf(this.value) && this.append(s.slice(this.value.length), {}, ''),
         delete this._refreshing,
         i
       );
@@ -368,8 +352,7 @@ var DTFS_PORTAL;
       )
         if (i === h) {
           let t;
-          for (; g === this.rawInputValue && (t = this.value.length); )
-            f.aggregate(new a({ tailShift: -1 })).aggregate(this.remove(t - 1));
+          for (; g === this.rawInputValue && (t = this.value.length); ) f.aggregate(new a({ tailShift: -1 })).aggregate(this.remove(t - 1));
         } else i === o && p.unshift();
       return f.aggregate(this.append(s, u, p));
     }
@@ -378,11 +361,7 @@ var DTFS_PORTAL;
     }
     typedValueEquals(t) {
       const e = this.typedValue;
-      return (
-        t === e ||
-        (f.EMPTY_VALUES.includes(t) && f.EMPTY_VALUES.includes(e)) ||
-        this.doFormat(t) === this.doFormat(this.typedValue)
-      );
+      return t === e || (f.EMPTY_VALUES.includes(t) && f.EMPTY_VALUES.includes(e)) || this.doFormat(t) === this.doFormat(this.typedValue);
     }
   }
   function m(t) {
@@ -410,16 +389,10 @@ var DTFS_PORTAL;
     const e = (t = Object.assign({}, t)).mask;
     if (i.Masked && e instanceof i.Masked) return e;
     const s = m(e);
-    if (!s)
-      throw new Error(
-        'Masked class is not found for provided mask, appropriate module needs to be import manually before creating mask.',
-      );
+    if (!s) throw new Error('Masked class is not found for provided mask, appropriate module needs to be import manually before creating mask.');
     return new s(t);
   }
-  (f.DEFAULTS = { format: String, parse: (t) => t, skipInvalid: !0 }),
-    (f.EMPTY_VALUES = [void 0, null, '']),
-    (i.Masked = f),
-    (i.createMask = v);
+  (f.DEFAULTS = { format: String, parse: (t) => t, skipInvalid: !0 }), (f.EMPTY_VALUES = [void 0, null, '']), (i.Masked = f), (i.createMask = v);
   const _ = ['parent', 'isOptional', 'placeholderChar', 'displayChar', 'lazy', 'eager'],
     A = {
       0: /\d/,
@@ -430,8 +403,7 @@ var DTFS_PORTAL;
     constructor(t) {
       const { parent: e, isOptional: i, placeholderChar: a, displayChar: u, lazy: n, eager: r } = t,
         h = s(t, _);
-      (this.masked = v(h)),
-        Object.assign(this, { parent: e, isOptional: i, placeholderChar: a, displayChar: u, lazy: n, eager: r });
+      (this.masked = v(h)), Object.assign(this, { parent: e, isOptional: i, placeholderChar: a, displayChar: u, lazy: n, eager: r });
     }
     reset() {
       (this.isFilled = !1), this.masked.reset();
@@ -540,9 +512,7 @@ var DTFS_PORTAL;
     remove() {
       let t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0,
         e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this._value.length;
-      return (
-        (this._value = this._value.slice(0, t) + this._value.slice(e)), this._value || (this._isRawInput = !1), new a()
-      );
+      return (this._value = this._value.slice(0, t) + this._value.slice(e)), this._value || (this._isRawInput = !1), new a();
     }
     nearestInputPos(t) {
       let e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : n;
@@ -563,12 +533,7 @@ var DTFS_PORTAL;
     extractInput() {
       let t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0,
         e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this._value.length;
-      return (
-        ((arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {}).raw &&
-          this._isRawInput &&
-          this._value.slice(t, e)) ||
-        ''
-      );
+      return ((arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {}).raw && this._isRawInput && this._value.slice(t, e)) || '';
     }
     get isComplete() {
       return !0;
@@ -582,12 +547,7 @@ var DTFS_PORTAL;
       if (this.isFilled) return s;
       const i = !0 === this.eager || 'append' === this.eager,
         u = this.char === t && (this.isUnmasking || e.input || e.raw) && (!e.raw || !i) && !e.tail;
-      return (
-        u && (s.rawInserted = this.char),
-        (this._value = s.inserted = this.char),
-        (this._isRawInput = u && (e.raw || e.input)),
-        s
-      );
+      return u && (s.rawInserted = this.char), (this._value = s.inserted = this.char), (this._isRawInput = u && (e.raw || e.input)), s;
     }
     _appendEager() {
       return this._appendChar(this.char, { tail: !0 });
@@ -633,8 +593,7 @@ var DTFS_PORTAL;
       else if (t instanceof b) {
         if (null == t.stop) {
           let e;
-          for (; t.chunks.length && null == t.chunks[0].stop; )
-            (e = t.chunks.shift()), (e.from += t.from), this.extend(e);
+          for (; t.chunks.length && null == t.chunks[0].stop; ) (e = t.chunks.shift()), (e.from += t.from), this.extend(e);
         }
         t.toString() && ((t.stop = t.blockIndex), this.chunks.push(t));
       }
@@ -710,8 +669,7 @@ var DTFS_PORTAL;
   class S {
     constructor(t, e) {
       (this.masked = t), (this._log = []);
-      const { offset: s, index: i } =
-        t._mapPosToBlock(e) || (e < 0 ? { index: 0, offset: 0 } : { index: this.masked._blocks.length, offset: 0 });
+      const { offset: s, index: i } = t._mapPosToBlock(e) || (e < 0 ? { index: 0, offset: 0 } : { index: this.masked._blocks.length, offset: 0 });
       (this.offset = s), (this.index = i), (this.ok = !1);
     }
     get block() {
@@ -736,8 +694,7 @@ var DTFS_PORTAL;
     bindBlock() {
       this.block ||
         (this.index < 0 && ((this.index = 0), (this.offset = 0)),
-        this.index >= this.masked._blocks.length &&
-          ((this.index = this.masked._blocks.length - 1), (this.offset = this.block.value.length)));
+        this.index >= this.masked._blocks.length && ((this.index = this.masked._blocks.length - 1), (this.offset = this.block.value.length)));
     }
     _pushLeft(t) {
       for (
@@ -751,14 +708,12 @@ var DTFS_PORTAL;
       return (this.ok = !1);
     }
     _pushRight(t) {
-      for (this.pushState(), this.bindBlock(); this.index < this.masked._blocks.length; ++this.index, this.offset = 0)
-        if (t()) return (this.ok = !0);
+      for (this.pushState(), this.bindBlock(); this.index < this.masked._blocks.length; ++this.index, this.offset = 0) if (t()) return (this.ok = !0);
       return (this.ok = !1);
     }
     pushLeftBeforeFilled() {
       return this._pushLeft(() => {
-        if (!this.block.isFixed && this.block.value)
-          return (this.offset = this.block.nearestInputPos(this.offset, h)), 0 !== this.offset || void 0;
+        if (!this.block.isFixed && this.block.value) return (this.offset = this.block.nearestInputPos(this.offset, h)), 0 !== this.offset || void 0;
       });
     }
     pushLeftBeforeInput() {
@@ -768,17 +723,13 @@ var DTFS_PORTAL;
     }
     pushLeftBeforeRequired() {
       return this._pushLeft(() => {
-        if (!(this.block.isFixed || (this.block.isOptional && !this.block.value)))
-          return (this.offset = this.block.nearestInputPos(this.offset, r)), !0;
+        if (!(this.block.isFixed || (this.block.isOptional && !this.block.value))) return (this.offset = this.block.nearestInputPos(this.offset, r)), !0;
       });
     }
     pushRightBeforeFilled() {
       return this._pushRight(() => {
         if (!this.block.isFixed && this.block.value)
-          return (
-            (this.offset = this.block.nearestInputPos(this.offset, o)),
-            this.offset !== this.block.value.length || void 0
-          );
+          return (this.offset = this.block.nearestInputPos(this.offset, o)), this.offset !== this.block.value.length || void 0;
       });
     }
     pushRightBeforeInput() {
@@ -788,8 +739,7 @@ var DTFS_PORTAL;
     }
     pushRightBeforeRequired() {
       return this._pushRight(() => {
-        if (!(this.block.isFixed || (this.block.isOptional && !this.block.value)))
-          return (this.offset = this.block.nearestInputPos(this.offset, n)), !0;
+        if (!(this.block.isFixed || (this.block.isOptional && !this.block.value))) return (this.offset = this.block.nearestInputPos(this.offset, n)), !0;
       });
     }
   }
@@ -836,10 +786,7 @@ var DTFS_PORTAL;
                 this.blocks[i],
               ),
             );
-            t &&
-              (this._blocks.push(t),
-              this._maskedBlocks[i] || (this._maskedBlocks[i] = []),
-              this._maskedBlocks[i].push(this._blocks.length - 1)),
+            t && (this._blocks.push(t), this._maskedBlocks[i] || (this._maskedBlocks[i] = []), this._maskedBlocks[i].push(this._blocks.length - 1)),
               (r += i.length - 1);
             continue;
           }
@@ -863,10 +810,7 @@ var DTFS_PORTAL;
           l = !1;
         }
         const o =
-            null === (u = t[h]) ||
-            void 0 === u ||
-            !u.mask ||
-            (null === (n = t[h]) || void 0 === n ? void 0 : n.mask.prototype) instanceof i.Masked
+            null === (u = t[h]) || void 0 === u || !u.mask || (null === (n = t[h]) || void 0 === n ? void 0 : n.mask.prototype) instanceof i.Masked
               ? { mask: t[h] }
               : t[h],
           d = l
@@ -956,10 +900,7 @@ var DTFS_PORTAL;
         const r = s._appendChar(
             t,
             Object.assign({}, e, {
-              _beforeTailState:
-                null === (u = e._beforeTailState) || void 0 === u || null === (n = u._blocks) || void 0 === n
-                  ? void 0
-                  : n[a],
+              _beforeTailState: null === (u = e._beforeTailState) || void 0 === u || null === (n = u._blocks) || void 0 === n ? void 0 : n[a],
             }),
           ),
           h = r.skip;
@@ -975,10 +916,7 @@ var DTFS_PORTAL;
         t === e ||
           this._forEachBlocksInRange(t, e, (t, e, i, a) => {
             const u = t.extractTail(i, a);
-            (u.stop = this._findStopBefore(e)),
-              (u.from = this._blockStartPos(e)),
-              u instanceof b && (u.blockIndex = e),
-              s.extend(u);
+            (u.stop = this._findStopBefore(e)), (u.from = this._blockStartPos(e)), u instanceof b && (u.blockIndex = e), s.extend(u);
           }),
         s
       );
@@ -1064,8 +1002,7 @@ var DTFS_PORTAL;
       let e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : n;
       if (!this._blocks.length) return 0;
       const s = new S(this, t);
-      if (e === n)
-        return s.pushRightBeforeInput() ? s.pos : (s.popState(), s.pushLeftBeforeInput() ? s.pos : this.value.length);
+      if (e === n) return s.pushRightBeforeInput() ? s.pos : (s.popState(), s.pushLeftBeforeInput() ? s.pos : this.value.length);
       if (e === r || e === h) {
         if (e === r) {
           if ((s.pushRightBeforeFilled(), s.ok && s.pos === t)) return t;
@@ -1135,10 +1072,7 @@ var DTFS_PORTAL;
         s = '';
       const [, i, a] = t.match(/^(\D*)(\d*)(\D*)/) || [];
       return (
-        a && ((e = '0'.repeat(i.length) + a), (s = '9'.repeat(i.length) + a)),
-        (e = e.padEnd(this.maxLength, '0')),
-        (s = s.padEnd(this.maxLength, '9')),
-        [e, s]
+        a && ((e = '0'.repeat(i.length) + a), (s = '9'.repeat(i.length) + a)), (e = e.padEnd(this.maxLength, '0')), (s = s.padEnd(this.maxLength, '9')), [e, s]
       );
     }
     doPrepare(t) {
@@ -1181,8 +1115,7 @@ var DTFS_PORTAL;
           t.blocks.Y.from === t.blocks.Y.to &&
           ((t.blocks.m.from = t.min.getMonth() + 1),
           (t.blocks.m.to = t.max.getMonth() + 1),
-          t.blocks.m.from === t.blocks.m.to &&
-            ((t.blocks.d.from = t.min.getDate()), (t.blocks.d.to = t.max.getDate()))),
+          t.blocks.m.from === t.blocks.m.to && ((t.blocks.d.from = t.min.getDate()), (t.blocks.d.to = t.max.getDate()))),
         Object.assign(t.blocks, this.blocks, e),
         Object.keys(t.blocks).forEach((e) => {
           const s = t.blocks[e];
@@ -1194,11 +1127,7 @@ var DTFS_PORTAL;
       const t = this.date;
       return (
         super.doValidate(...arguments) &&
-        (!this.isComplete ||
-          (this.isDateExist(this.value) &&
-            null != t &&
-            (null == this.min || this.min <= t) &&
-            (null == this.max || t <= this.max)))
+        (!this.isComplete || (this.isDateExist(this.value) && null != t && (null == this.min || this.min <= t) && (null == this.max || t <= this.max)))
       );
     }
     isDateExist(t) {
@@ -1224,9 +1153,7 @@ var DTFS_PORTAL;
     pattern: 'd{.}`m{.}`Y',
     format: (t) => {
       if (!t) return '';
-      return [String(t.getDate()).padStart(2, '0'), String(t.getMonth() + 1).padStart(2, '0'), t.getFullYear()].join(
-        '.',
-      );
+      return [String(t.getDate()).padStart(2, '0'), String(t.getMonth() + 1).padStart(2, '0'), t.getFullYear()].join('.');
     },
     parse: (t) => {
       const [e, s, i] = t.split('.');
@@ -1274,10 +1201,7 @@ var DTFS_PORTAL;
     }
     get rootElement() {
       var t, e, s;
-      return null !== (t = null === (e = (s = this.input).getRootNode) || void 0 === e ? void 0 : e.call(s)) &&
-        void 0 !== t
-        ? t
-        : document;
+      return null !== (t = null === (e = (s = this.input).getRootNode) || void 0 === e ? void 0 : e.call(s)) && void 0 !== t ? t : document;
     }
     get isActive() {
       return this.input === this.rootElement.activeElement;
@@ -1351,12 +1275,7 @@ var DTFS_PORTAL;
   const V = ['mask'];
   i.InputMask = class {
     constructor(t, e) {
-      (this.el =
-        t instanceof w
-          ? t
-          : t.isContentEditable && 'INPUT' !== t.tagName && 'TEXTAREA' !== t.tagName
-          ? new I(t)
-          : new y(t)),
+      (this.el = t instanceof w ? t : t.isContentEditable && 'INPUT' !== t.tagName && 'TEXTAREA' !== t.tagName ? new I(t) : new y(t)),
         (this.masked = v(e)),
         (this._listeners = {}),
         (this._value = ''),
@@ -1382,8 +1301,7 @@ var DTFS_PORTAL;
     }
     set mask(t) {
       if (this.maskEquals(t)) return;
-      if (!(t instanceof i.Masked) && this.masked.constructor === m(t))
-        return void this.masked.updateOptions({ mask: t });
+      if (!(t instanceof i.Masked) && this.masked.constructor === m(t)) return void this.masked.updateOptions({ mask: t });
       const e = v({ mask: t });
       (e.unmaskedValue = this.masked.unmaskedValue), (this.masked = e);
     }
@@ -1437,9 +1355,7 @@ var DTFS_PORTAL;
     }
     _saveSelection() {
       this.displayValue !== this.el.value &&
-        console.warn(
-          'Element value was changed outside of mask. Syncronize mask using `mask.updateValue()` to work properly.',
-        ),
+        console.warn('Element value was changed outside of mask. Syncronize mask using `mask.updateValue()` to work properly.'),
         (this._selection = { start: this.selectionStart, end: this.cursorPos });
     }
     updateValue() {
@@ -1450,10 +1366,7 @@ var DTFS_PORTAL;
         e = this.masked.value,
         s = this.displayValue,
         i = this.unmaskedValue !== t || this.value !== e;
-      (this._unmaskedValue = t),
-        (this._value = e),
-        this.el.value !== s && (this.el.value = s),
-        i && this._fireChangeEvents();
+      (this._unmaskedValue = t), (this._value = e), this.el.value !== s && (this.el.value = s), i && this._fireChangeEvents();
     }
     updateOptions(t) {
       const { mask: e } = t,
@@ -1473,8 +1386,7 @@ var DTFS_PORTAL;
         }, 10));
     }
     _fireChangeEvents() {
-      this._fireEvent('accept', this._inputEvent),
-        this.masked.isComplete && this._fireEvent('complete', this._inputEvent);
+      this._fireEvent('accept', this._inputEvent), this.masked.isComplete && this._fireEvent('complete', this._inputEvent);
     }
     _abortUpdateCursor() {
       this._cursorChanging && (clearTimeout(this._cursorChanging), delete this._cursorChanging);
@@ -1504,16 +1416,10 @@ var DTFS_PORTAL;
         }).offset,
         a = s === this.masked.rawInputValue ? e.removeDirection : n;
       let u = this.masked.nearestInputPos(e.startChangePos + i, a);
-      a !== n && (u = this.masked.nearestInputPos(u, n)),
-        this.updateControl(),
-        this.updateCursor(u),
-        delete this._inputEvent;
+      a !== n && (u = this.masked.nearestInputPos(u, n)), this.updateControl(), this.updateCursor(u), delete this._inputEvent;
     }
     _onChange() {
-      this.displayValue !== this.el.value && this.updateValue(),
-        this.masked.doCommit(),
-        this.updateControl(),
-        this._saveSelection();
+      this.displayValue !== this.el.value && this.updateValue(), this.masked.doCommit(), this.updateControl(), this._saveSelection();
     }
     _onDrop(t) {
       t.preventDefault(), t.stopPropagation();
@@ -1560,9 +1466,7 @@ var DTFS_PORTAL;
     doPrepare(t) {
       let e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
       t = this._removeThousandsSeparators(
-        this.scale && this.mapToRadix.length && ((e.input && e.raw) || (!e.input && !e.raw))
-          ? t.replace(this._mapToRadixRegExp, this.radix)
-          : t,
+        this.scale && this.mapToRadix.length && ((e.input && e.raw) || (!e.input && !e.raw)) ? t.replace(this._mapToRadixRegExp, this.radix) : t,
       );
       const [s, i] = p(super.doPrepare(t, e));
       return t && !s && (i.skip = !0), [s, i];
@@ -1570,8 +1474,7 @@ var DTFS_PORTAL;
     _separatorsCount(t) {
       let e = arguments.length > 1 && void 0 !== arguments[1] && arguments[1],
         s = 0;
-      for (let i = 0; i < t; ++i)
-        this._value.indexOf(this.thousandsSeparator, i) === i && (++s, e && (t += this.thousandsSeparator.length));
+      for (let i = 0; i < t; ++i) this._value.indexOf(this.thousandsSeparator, i) === i && (++s, e && (t += this.thousandsSeparator.length));
       return s;
     }
     _separatorsCountFromSlice() {
@@ -1582,9 +1485,7 @@ var DTFS_PORTAL;
       let t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0,
         e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this.value.length,
         s = arguments.length > 2 ? arguments[2] : void 0;
-      return (
-        ([t, e] = this._adjustRangeWithSeparators(t, e)), this._removeThousandsSeparators(super.extractInput(t, e, s))
-      );
+      return ([t, e] = this._adjustRangeWithSeparators(t, e)), this._removeThousandsSeparators(super.extractInput(t, e, s));
     }
     _appendCharRaw(t) {
       let e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
@@ -1596,11 +1497,7 @@ var DTFS_PORTAL;
       this._value = this._insertThousandsSeparators(this._value);
       const u = e.tail && e._beforeTailState ? e._beforeTailState._value : this._value,
         n = this._separatorsCountFromSlice(u);
-      return (
-        (a.tailShift += (n - i) * this.thousandsSeparator.length),
-        (a.skip = !a.rawInserted && t === this.thousandsSeparator),
-        a
-      );
+      return (a.tailShift += (n - i) * this.thousandsSeparator.length), (a.skip = !a.rawInserted && t === this.thousandsSeparator), a;
     }
     _findSeparatorAround(t) {
       if (this.thousandsSeparator) {
@@ -1652,11 +1549,7 @@ var DTFS_PORTAL;
       let e = Boolean(this._removeThousandsSeparators(this.value).match(this._numberRegExp));
       if (e) {
         const t = this.number;
-        e =
-          e &&
-          !isNaN(t) &&
-          (null == this.min || this.min >= 0 || this.min <= this.number) &&
-          (null == this.max || this.max <= 0 || this.number <= this.max);
+        e = e && !isNaN(t) && (null == this.min || this.min >= 0 || this.min <= this.number) && (null == this.max || this.max <= 0 || this.number <= this.max);
       }
       return e && super.doValidate(t);
     }
@@ -1664,13 +1557,9 @@ var DTFS_PORTAL;
       if (this.value) {
         const t = this.number;
         let e = t;
-        null != this.min && (e = Math.max(e, this.min)),
-          null != this.max && (e = Math.min(e, this.max)),
-          e !== t && (this.unmaskedValue = this.doFormat(e));
+        null != this.min && (e = Math.max(e, this.min)), null != this.max && (e = Math.min(e, this.max)), e !== t && (this.unmaskedValue = this.doFormat(e));
         let s = this.value;
-        this.normalizeZeros && (s = this._normalizeZeros(s)),
-          this.padFractionalZeros && this.scale > 0 && (s = this._padFractionalZeros(s)),
-          (this._value = s);
+        this.normalizeZeros && (s = this._normalizeZeros(s)), this.padFractionalZeros && this.scale > 0 && (s = this._padFractionalZeros(s)), (this._value = s);
       }
       super.doCommit();
     }
@@ -1691,10 +1580,7 @@ var DTFS_PORTAL;
     doSkipInvalid(t) {
       let e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {},
         s = arguments.length > 2 ? arguments[2] : void 0;
-      const i =
-        0 === this.scale &&
-        t !== this.thousandsSeparator &&
-        (t === this.radix || t === T.UNMASKED_RADIX || this.mapToRadix.includes(t));
+      const i = 0 === this.scale && t !== this.thousandsSeparator && (t === this.radix || t === T.UNMASKED_RADIX || this.mapToRadix.includes(t));
       return super.doSkipInvalid(t, e, s) && !i;
     }
     get unmaskedValue() {
@@ -1719,10 +1605,7 @@ var DTFS_PORTAL;
       return this.signed || (null != this.min && this.min < 0) || (null != this.max && this.max < 0);
     }
     typedValueEquals(t) {
-      return (
-        (super.typedValueEquals(t) || (T.EMPTY_VALUES.includes(t) && T.EMPTY_VALUES.includes(this.typedValue))) &&
-        !(0 === t && '' === this.value)
-      );
+      return (super.typedValueEquals(t) || (T.EMPTY_VALUES.includes(t) && T.EMPTY_VALUES.includes(this.typedValue))) && !(0 === t && '' === this.value);
     }
   }
   (T.UNMASKED_RADIX = '.'),
@@ -1789,10 +1672,7 @@ var DTFS_PORTAL;
     }
     appendTail(t) {
       const e = new a();
-      return (
-        t && e.aggregate(this._applyDispatch('', {}, t)),
-        e.aggregate(this.currentMask ? this.currentMask.appendTail(t) : super.appendTail(t))
-      );
+      return t && e.aggregate(this._applyDispatch('', {}, t)), e.aggregate(this.currentMask ? this.currentMask.appendTail(t) : super.appendTail(t));
     }
     currentMaskFlags(t) {
       var e, s;
@@ -1841,8 +1721,7 @@ var DTFS_PORTAL;
     }
     set typedValue(t) {
       let e = String(t);
-      this.currentMask && ((this.currentMask.typedValue = t), (e = this.currentMask.unmaskedValue)),
-        (this.unmaskedValue = e);
+      this.currentMask && ((this.currentMask.typedValue = t), (e = this.currentMask.unmaskedValue)), (this.unmaskedValue = e);
     }
     get displayValue() {
       return this.currentMask ? this.currentMask.displayValue : '';
@@ -1871,9 +1750,7 @@ var DTFS_PORTAL;
     set state(t) {
       const { compiledMasks: e, currentMaskRef: i, currentMask: a } = t,
         u = s(t, P);
-      this.compiledMasks.forEach((t, s) => (t.state = e[s])),
-        null != i && ((this.currentMask = i), (this.currentMask.state = a)),
-        (super.state = u);
+      this.compiledMasks.forEach((t, s) => (t.state = e[s])), null != i && ((this.currentMask = i), (this.currentMask.state = a)), (super.state = u);
     }
     extractInput() {
       return this.currentMask ? this.currentMask.extractInput(...arguments) : '';
@@ -1940,10 +1817,7 @@ var DTFS_PORTAL;
             }
           );
         });
-      return (
-        u.sort((t, e) => e.weight - t.weight || e.totalInputPositions - t.totalInputPositions),
-        e.compiledMasks[u[0].index]
-      );
+      return u.sort((t, e) => e.weight - t.weight || e.totalInputPositions - t.totalInputPositions), e.compiledMasks[u[0].index];
     },
   }),
     (i.MaskedDynamic = O);

@@ -41,48 +41,18 @@ const applicationPreview = {
   facilityGuidance: () => cy.get('[data-cy="facility-guidance"]'),
   facilitySummaryList: () => cy.get('[data-cy="facility-summary-list"]'),
   facilitySummaryListRowKey: (tableNum, rowNum) =>
-    cy
-      .get('[data-cy="facility-summary-list"]')
-      .eq(tableNum)
-      .find('.govuk-summary-list__row')
-      .eq(rowNum)
-      .find('.govuk-summary-list__key'),
+    cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__key'),
   facilitySummaryListRowValue: (tableNum, rowNum) =>
-    cy
-      .get('[data-cy="facility-summary-list"]')
-      .eq(tableNum)
-      .find('.govuk-summary-list__row')
-      .eq(rowNum)
-      .find('.govuk-summary-list__value'),
+    cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__value'),
   facilitySummaryListRowAction: (tableNum, rowNum) =>
-    cy
-      .get('[data-cy="facility-summary-list"]')
-      .eq(tableNum)
-      .find('.govuk-summary-list__row')
-      .eq(rowNum)
-      .find('.govuk-summary-list__actions'),
+    cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__actions'),
 
   supportingInfoListRowKey: (tableNum, rowNum) =>
-    cy
-      .get('[data-cy="supportingInfo-summary-list"]')
-      .eq(tableNum)
-      .find('.govuk-summary-list__row')
-      .eq(rowNum)
-      .find('.govuk-summary-list__key'),
+    cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__key'),
   supportingInfoListRowValue: (tableNum, rowNum) =>
-    cy
-      .get('[data-cy="supportingInfo-summary-list"]')
-      .eq(tableNum)
-      .find('.govuk-summary-list__row')
-      .eq(rowNum)
-      .find('.govuk-summary-list__value'),
+    cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__value'),
   supportingInfoListRowAction: (tableNum, rowNum) =>
-    cy
-      .get('[data-cy="supportingInfo-summary-list"]')
-      .eq(tableNum)
-      .find('.govuk-summary-list__row')
-      .eq(rowNum)
-      .find('.govuk-summary-list__actions'),
+    cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__actions'),
 
   submitHeading: () => cy.get('[data-cy="submit-heading"]'),
   submitButton: () => cy.get('[data-cy="submit-button"]'),

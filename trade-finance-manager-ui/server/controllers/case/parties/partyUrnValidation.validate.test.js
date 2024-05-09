@@ -20,9 +20,7 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.errorSummary).toEqual([
-      { text: 'Enter a unique reference number', href: '#partyUrn' },
-    ]);
+    expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a unique reference number', href: '#partyUrn' }]);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ partyUrn: { text: 'Enter a unique reference number' } });
     expect(response.urn).toEqual('');
   });
@@ -33,9 +31,7 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.errorSummary).toEqual([
-      { text: 'Enter a unique reference number', href: '#partyUrn' },
-    ]);
+    expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a unique reference number', href: '#partyUrn' }]);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ partyUrn: { text: 'Enter a unique reference number' } });
     expect(response.urn).toEqual(null);
   });
@@ -46,9 +42,7 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.errorSummary).toEqual([
-      { text: 'Enter a unique reference number', href: '#partyUrn' },
-    ]);
+    expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a unique reference number', href: '#partyUrn' }]);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ partyUrn: { text: 'Enter a unique reference number' } });
     expect(response.urn).toEqual(undefined);
   });
@@ -67,9 +61,7 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.errorSummary).toEqual([
-      { text: 'Enter a minimum of 3 numbers', href: '#partyUrn' },
-    ]);
+    expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }]);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ partyUrn: { text: 'Enter a minimum of 3 numbers' } });
     expect(response.urn).toEqual('1');
   });
@@ -79,9 +71,7 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.errorSummary).toEqual([
-      { text: 'Enter a minimum of 3 numbers', href: '#partyUrn' },
-    ]);
+    expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }]);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ partyUrn: { text: 'Enter a minimum of 3 numbers' } });
     expect(response.urn).toEqual('AA');
   });
@@ -91,9 +81,7 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.errorSummary).toEqual([
-      { text: 'Enter a minimum of 3 numbers', href: '#partyUrn' },
-    ]);
+    expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }]);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ partyUrn: { text: 'Enter a minimum of 3 numbers' } });
     expect(response.urn).toEqual('11');
   });
@@ -103,9 +91,7 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.errorSummary).toEqual([
-      { text: 'Enter a minimum of 3 numbers', href: '#partyUrn' },
-    ]);
+    expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }]);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ partyUrn: { text: 'Enter a minimum of 3 numbers' } });
     expect(response.urn).toEqual('ABC123');
   });
@@ -115,9 +101,7 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.errorSummary).toEqual([
-      { text: 'Enter a minimum of 3 numbers', href: '#partyUrn' },
-    ]);
+    expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }]);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ partyUrn: { text: 'Enter a minimum of 3 numbers' } });
     expect(response.urn).toEqual('A"1');
   });
@@ -127,9 +111,7 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.errorSummary).toEqual([
-      { text: 'Enter a minimum of 3 numbers', href: '#partyUrn' },
-    ]);
+    expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }]);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ partyUrn: { text: 'Enter a minimum of 3 numbers' } });
     expect(response.urn).toEqual('"!£!"£!"£!"£');
   });
@@ -139,9 +121,7 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.errorSummary).toEqual([
-      { text: 'Enter a minimum of 3 numbers', href: '#partyUrn' },
-    ]);
+    expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }]);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ partyUrn: { text: 'Enter a minimum of 3 numbers' } });
     expect(response.urn).toEqual('12C');
   });
@@ -151,9 +131,7 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.errorSummary).toEqual([
-      { text: 'Enter a minimum of 3 numbers', href: '#partyUrn' },
-    ]);
+    expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }]);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ partyUrn: { text: 'Enter a minimum of 3 numbers' } });
     expect(response.urn).toEqual('12345!');
   });
@@ -163,9 +141,7 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.errorSummary).toEqual([
-      { text: 'Enter a minimum of 3 numbers', href: '#partyUrn' },
-    ]);
+    expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }]);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ partyUrn: { text: 'Enter a minimum of 3 numbers' } });
     expect(response.urn).toEqual(' ');
   });
@@ -252,9 +228,7 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.errorSummary).toEqual([
-      { text: 'Enter a minimum of 3 numbers', href: '#partyUrn-2' },
-    ]);
+    expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn-2' }]);
     expect(response.errorsObject.errors.fieldErrors).toEqual({
       'partyUrn-2': { text: 'Enter a minimum of 3 numbers' },
     });
@@ -269,9 +243,7 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.errorSummary).toEqual([
-      { text: 'Enter a minimum of 3 numbers', href: '#partyUrn-1' },
-    ]);
+    expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn-1' }]);
     expect(response.errorsObject.errors.fieldErrors).toEqual({
       'partyUrn-1': { text: 'Enter a minimum of 3 numbers' },
     });

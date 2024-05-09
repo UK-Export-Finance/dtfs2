@@ -15,12 +15,9 @@ describe('report-period utils', () => {
     it.each([
       { submissionMonth: '2024-02', reportPeriodEnd: { month: 1, year: 2024 } },
       { submissionMonth: '2024-01', reportPeriodEnd: { month: 12, year: 2023 } },
-    ])(
-      'returns $reportPeriodStart when submissionMonth is $submissionMonth',
-      ({ submissionMonth, reportPeriodEnd }) => {
-        expect(getReportPeriodEndForSubmissionMonth(submissionMonth)).toEqual(reportPeriodEnd);
-      },
-    );
+    ])('returns $reportPeriodStart when submissionMonth is $submissionMonth', ({ submissionMonth, reportPeriodEnd }) => {
+      expect(getReportPeriodEndForSubmissionMonth(submissionMonth)).toEqual(reportPeriodEnd);
+    });
   });
 
   describe('getSubmissionMonthForReportPeriod', () => {
@@ -35,12 +32,9 @@ describe('report-period utils', () => {
         submissionMonth: '2024-01',
         description: 'monthly',
       },
-    ])(
-      'returns month after report period end when reportPeriod is a $description period',
-      ({ reportPeriod, submissionMonth }) => {
-        expect(getSubmissionMonthForReportPeriod(reportPeriod)).toEqual(submissionMonth);
-      },
-    );
+    ])('returns month after report period end when reportPeriod is a $description period', ({ reportPeriod, submissionMonth }) => {
+      expect(getSubmissionMonthForReportPeriod(reportPeriod)).toEqual(submissionMonth);
+    });
   });
 
   describe('getPreviousReportPeriodForBankScheduleByMonth', () => {
@@ -366,15 +360,7 @@ describe('report-period utils', () => {
       ${'"MMM YYYY to MMM YYYY (quarterly)" when report period spans multiple months over 2 years'} | ${{ start: { month: 12, year: 2022 }, end: { month: 2, year: 2023 } }} | ${true}            | ${'Dec 2022 to Feb 2023 (quarterly)'}
     `(
       'returns period formatted $description and includePeriodicity is $includePeriodicity',
-      ({
-        reportPeriod,
-        includePeriodicity,
-        expectedResponse,
-      }: {
-        reportPeriod: ReportPeriod;
-        includePeriodicity: boolean;
-        expectedResponse: string;
-      }) => {
+      ({ reportPeriod, includePeriodicity, expectedResponse }: { reportPeriod: ReportPeriod; includePeriodicity: boolean; expectedResponse: string }) => {
         // Act
         const response = getFormattedReportPeriodWithShortMonth(reportPeriod, includePeriodicity);
 

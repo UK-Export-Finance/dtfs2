@@ -29,10 +29,7 @@ type Entity<TableName extends SqlTableName> = TableName extends 'UtilisationRepo
   ? AzureFileInfoEntity
   : never;
 
-const saveNewEntry = async <TableName extends SqlTableName>(
-  tableName: TableName,
-  entityToInsert: Entity<TableName>,
-): Promise<Entity<TableName>> => {
+const saveNewEntry = async <TableName extends SqlTableName>(tableName: TableName, entityToInsert: Entity<TableName>): Promise<Entity<TableName>> => {
   switch (tableName) {
     case 'UtilisationReport':
       return await SqlDbDataSource.manager.save(UtilisationReportEntity, entityToInsert);
@@ -45,10 +42,7 @@ const saveNewEntry = async <TableName extends SqlTableName>(
   }
 };
 
-const saveNewEntries = async <TableName extends SqlTableName>(
-  tableName: TableName,
-  entityToInsert: Entity<TableName>[],
-): Promise<Entity<TableName>[]> => {
+const saveNewEntries = async <TableName extends SqlTableName>(tableName: TableName, entityToInsert: Entity<TableName>[]): Promise<Entity<TableName>[]> => {
   switch (tableName) {
     case 'UtilisationReport':
       return await SqlDbDataSource.manager.save(UtilisationReportEntity, entityToInsert);

@@ -71,8 +71,7 @@ describe('eligibility routes', () => {
 
   describe('POST /contract/:_id/eligibility/supporting-documentation', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) =>
-        post({}, headers).to(`/contract/${_id}/eligibility/supporting-documentation`),
+      makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/eligibility/supporting-documentation`),
       whitelistedRoles: allRoles,
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -81,8 +80,7 @@ describe('eligibility routes', () => {
 
   describe('POST /contract/:_id/eligibility/supporting-documentation/save-go-back', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) =>
-        post({}, headers).to(`/contract/${_id}/eligibility/supporting-documentation/save-go-back`),
+      makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/eligibility/supporting-documentation/save-go-back`),
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
@@ -94,8 +92,7 @@ describe('eligibility routes', () => {
     'GET /contract/:_id/eligibility-documentation/$fieldname/$filename',
     ({ fieldname, filename }) => {
       withRoleValidationApiTests({
-        makeRequestWithHeaders: (headers) =>
-          get(`/contract/:_id/eligibility-documentation/${fieldname}/${filename}`, {}, headers),
+        makeRequestWithHeaders: (headers) => get(`/contract/:_id/eligibility-documentation/${fieldname}/${filename}`, {}, headers),
         whitelistedRoles: allRoles,
         successCode: 200,
         disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.

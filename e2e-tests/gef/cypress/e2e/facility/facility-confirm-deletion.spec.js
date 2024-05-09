@@ -45,11 +45,7 @@ context('Facility Confirm Deletion Page', () => {
     });
 
     it('displays the correct elements', () => {
-      cy.visit(
-        relative(
-          `/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/confirm-deletion`,
-        ),
-      );
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/confirm-deletion`));
       facilityConfirmDeletion.mainHeading().should('contain', 'Cash');
       facilityConfirmDeletion.content();
       facilityConfirmDeletion.deleteButton();
@@ -57,21 +53,13 @@ context('Facility Confirm Deletion Page', () => {
     });
 
     it('redirects user back to application page when clicking on `No, Keep` button', () => {
-      cy.visit(
-        relative(
-          `/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/confirm-deletion`,
-        ),
-      );
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/confirm-deletion`));
       facilityConfirmDeletion.keepButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}`));
     });
 
     it('redirects user back to application page when clicking on `Yes, delete` button', () => {
-      cy.visit(
-        relative(
-          `/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/confirm-deletion`,
-        ),
-      );
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/confirm-deletion`));
       facilityConfirmDeletion.deleteButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}`));
     });
@@ -79,11 +67,7 @@ context('Facility Confirm Deletion Page', () => {
 
   describe('Visiting page as contingent facility', () => {
     it('displays the correct elements', () => {
-      cy.visit(
-        relative(
-          `/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[3].details._id}/confirm-deletion`,
-        ),
-      );
+      cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[3].details._id}/confirm-deletion`));
       facilityConfirmDeletion.mainHeading().should('contain', 'Contingent');
       facilityConfirmDeletion.content();
       facilityConfirmDeletion.deleteButton();

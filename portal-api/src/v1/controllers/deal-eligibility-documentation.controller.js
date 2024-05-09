@@ -30,9 +30,7 @@ const removeDeletedFiles = (supportingInformation, deletedFilesList) => {
 
   Object.keys(supportingInformation).forEach((fieldname) => {
     if (Array.isArray(supportingInformation[fieldname])) {
-      updatedDealFiles[fieldname] = supportingInformation[fieldname].filter(
-        ({ filename }) => deletedFilesList.indexOf(filename) === -1,
-      );
+      updatedDealFiles[fieldname] = supportingInformation[fieldname].filter(({ filename }) => deletedFilesList.indexOf(filename) === -1);
     }
   });
   return updatedDealFiles;
@@ -47,11 +45,7 @@ exports.update = async (req, res) => {
       return;
     }
 
-    const deletePromises = fileshare.deleteMultipleFiles(
-      FILESHARES.PORTAL,
-      `${EXPORT_FOLDER}/${req.params.id}`,
-      req.body.deleteFile,
-    );
+    const deletePromises = fileshare.deleteMultipleFiles(FILESHARES.PORTAL, `${EXPORT_FOLDER}/${req.params.id}`, req.body.deleteFile);
 
     const uploadPromises = req.files.map(async (file) => {
       const { fieldname, originalname, buffer, size, mimetype } = file;
@@ -111,11 +105,7 @@ exports.update = async (req, res) => {
       }
     });
 
-    const { validationErrors, validationUploadErrors } = getDocumentationErrors(
-      deal.submissionType,
-      supportingInformation,
-      uploadErrors,
-    );
+    const { validationErrors, validationUploadErrors } = getDocumentationErrors(deal.submissionType, supportingInformation, uploadErrors);
 
     const status = getEligibilityStatus({
       criteriaComplete: Boolean(deal.submissionType),

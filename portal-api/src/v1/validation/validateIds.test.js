@@ -1,22 +1,7 @@
-const {
-  isValidMongoId,
-  isValidRegex,
-  isValidCurrencyCode,
-  isValidCompaniesHouseNumber,
-  isValidMonth,
-  isValidYear,
-} = require('./validateIds');
+const { isValidMongoId, isValidRegex, isValidCurrencyCode, isValidCompaniesHouseNumber, isValidMonth, isValidYear } = require('./validateIds');
 const { COMPANIES_HOUSE_NUMBER } = require('../../../api-tests/fixtures/companies-house-number');
 
-const {
-  VALID,
-  VALID_LAST_LETTER,
-  VALID_LETTERS,
-  VALID_LETTERS_NI,
-  INVALID_SHORT,
-  INVALID_SPECIAL_CHARACTER,
-  INVALID_SPACE,
-} = COMPANIES_HOUSE_NUMBER;
+const { VALID, VALID_LAST_LETTER, VALID_LETTERS, VALID_LETTERS_NI, INVALID_SHORT, INVALID_SPECIAL_CHARACTER, INVALID_SPACE } = COMPANIES_HOUSE_NUMBER;
 
 describe('validateIds', () => {
   describe('isValidMongoId', () => {

@@ -15,12 +15,7 @@ describe('generate-address-string', () => {
     it('should remove any null or empty values', () => {
       const result = generateCleanAddressArray(mockAddressObj);
 
-      const expected = [
-        mockAddressObj.addressLine1,
-        mockAddressObj.addressLine2,
-        mockAddressObj.locality,
-        mockAddressObj.postalCode,
-      ];
+      const expected = [mockAddressObj.addressLine1, mockAddressObj.addressLine2, mockAddressObj.locality, mockAddressObj.postalCode];
 
       expect(result).toEqual(expected);
     });

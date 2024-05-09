@@ -1,10 +1,7 @@
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const facilityChangeCoverStartDateValidationErrors = require('../validation/facility-change-cover-start-date');
-const {
-  hasAllRequestedCoverStartDateValues,
-  updateRequestedCoverStartDate,
-} = require('../facility-dates/requested-cover-start-date');
+const { hasAllRequestedCoverStartDateValues, updateRequestedCoverStartDate } = require('../facility-dates/requested-cover-start-date');
 const CONSTANTS = require('../../constants');
 const facilitiesController = require('./facilities.controller');
 

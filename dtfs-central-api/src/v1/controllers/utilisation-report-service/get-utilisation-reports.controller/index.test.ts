@@ -208,9 +208,7 @@ describe('getUtilisationReports', () => {
 
     jest.mocked(getUserById).mockResolvedValue(mockGetUserByIdResponse);
 
-    const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(
-      UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
-    )
+    const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
       .withAzureFileInfo(azureFileInfo)
       .withDateUploaded(mockDate)
       .withUploadedByUserId(mockUploadedByUser.id)

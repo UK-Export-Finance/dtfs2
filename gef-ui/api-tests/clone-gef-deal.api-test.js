@@ -35,8 +35,7 @@ describe('clone gef deal routes', () => {
 
   describe('POST /application-details/:dealId/clone/name-application', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) =>
-        post({}, headers).to(`/application-details/${dealId}/clone/name-application`),
+      makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/clone/name-application`),
       whitelistedRoles: [MAKER],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.

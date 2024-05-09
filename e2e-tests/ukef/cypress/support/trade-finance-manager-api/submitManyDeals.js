@@ -11,15 +11,13 @@ module.exports = (deals) => {
     login(username, password).then((token) =>
       submitDeal(dealToInsert._id, dealToInsert.dealType, token).then(() => {
         // eslint-disable-next-line consistent-return
-        submitDealAfterUkefIds(dealToInsert._id, dealToInsert.dealType, BANK1_CHECKER1_WITH_MOCK_ID, token).then(
-          (deal) => {
-            persistedDeals.push(deal);
-            if (persistedDeals.length === deals.length) {
-              return persistedDeals;
-            }
-            return null;
-          },
-        );
+        submitDealAfterUkefIds(dealToInsert._id, dealToInsert.dealType, BANK1_CHECKER1_WITH_MOCK_ID, token).then((deal) => {
+          persistedDeals.push(deal);
+          if (persistedDeals.length === deals.length) {
+            return persistedDeals;
+          }
+          return null;
+        });
       }),
     );
   });

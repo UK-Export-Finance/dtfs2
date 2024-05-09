@@ -14,10 +14,7 @@ export type GetUtilisationReportReconciliationDetailsByIdRequest = CustomExpress
 
 type ResponseBody = UtilisationReportReconciliationDetails | string;
 
-export const getUtilisationReportReconciliationDetailsById = async (
-  req: GetUtilisationReportReconciliationDetailsByIdRequest,
-  res: Response<ResponseBody>,
-) => {
+export const getUtilisationReportReconciliationDetailsById = async (req: GetUtilisationReportReconciliationDetailsByIdRequest, res: Response<ResponseBody>) => {
   const { reportId } = req.params;
 
   try {
@@ -31,8 +28,7 @@ export const getUtilisationReportReconciliationDetailsById = async (
       throw new NotFoundError(`Failed to find a report with id '${reportId}'`);
     }
 
-    const utilisationReportReconciliationDetails =
-      await mapUtilisationReportEntityToReconciliationDetails(utilisationReport);
+    const utilisationReportReconciliationDetails = await mapUtilisationReportEntityToReconciliationDetails(utilisationReport);
 
     return res.status(HttpStatusCode.Ok).send(utilisationReportReconciliationDetails);
   } catch (error) {

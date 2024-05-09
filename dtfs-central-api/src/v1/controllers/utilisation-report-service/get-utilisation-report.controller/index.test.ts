@@ -34,9 +34,7 @@ describe('getUtilisationReport', () => {
       params: { id: reportId.toString() },
     });
 
-  const uploadedStatuses = Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).filter(
-    (status) => status !== 'REPORT_NOT_RECEIVED',
-  );
+  const uploadedStatuses = Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).filter((status) => status !== 'REPORT_NOT_RECEIVED');
   describe.each(uploadedStatuses)("when a report has been uploaded and is in the '%s' state", (status) => {
     const uploadedByUser: UploadedByUserDetails = {
       id: '5ce819935e539c343f141ece',
@@ -65,28 +63,23 @@ describe('getUtilisationReport', () => {
       { missingFields: ['dateUploaded', 'uploadedByUserId'] },
     ];
 
-    it.each(missingFieldCombinations)(
-      "sends a 500 when the '$missingFields' report fields are missing",
-      async ({ missingFields }) => {
-        // Arrange
-        const mockUtilisationReport = createMockIncompleteUploadedReport(...missingFields);
-        const findOneBySpy = jest.spyOn(UtilisationReportRepo, 'findOneBy').mockResolvedValue(mockUtilisationReport);
+    it.each(missingFieldCombinations)("sends a 500 when the '$missingFields' report fields are missing", async ({ missingFields }) => {
+      // Arrange
+      const mockUtilisationReport = createMockIncompleteUploadedReport(...missingFields);
+      const findOneBySpy = jest.spyOn(UtilisationReportRepo, 'findOneBy').mockResolvedValue(mockUtilisationReport);
 
-        const errorSpy = jest.spyOn(global, 'Error');
+      const errorSpy = jest.spyOn(global, 'Error');
 
-        const { req, res } = getHttpMocks();
+      const { req, res } = getHttpMocks();
 
-        // Act
-        await getUtilisationReportById(req, res);
+      // Act
+      await getUtilisationReportById(req, res);
 
-        // Assert
-        expect(findOneBySpy).toHaveBeenCalledWith({ id: reportId });
-        expect(res._getStatusCode()).toBe(500);
-        expect(errorSpy).toHaveBeenCalledWith(
-          'Failed to map data - report seems to have been uploaded but is missing some required fields',
-        );
-      },
-    );
+      // Assert
+      expect(findOneBySpy).toHaveBeenCalledWith({ id: reportId });
+      expect(res._getStatusCode()).toBe(500);
+      expect(errorSpy).toHaveBeenCalledWith('Failed to map data - report seems to have been uploaded but is missing some required fields');
+    });
 
     it('sends a 200 and maps the entity', async () => {
       // Arrange

@@ -44,8 +44,7 @@ describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(getUrl({ bankId: barclaysBank.id, reportId: '10' })),
-      makeRequestWithAuthHeader: (authHeader) =>
-        get(getUrl({ bankId: barclaysBank.id, reportId: '10' }), { headers: { Authorization: authHeader } }),
+      makeRequestWithAuthHeader: (authHeader) => get(getUrl({ bankId: barclaysBank.id, reportId: '10' }), { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({

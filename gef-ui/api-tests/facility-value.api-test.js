@@ -9,8 +9,7 @@ const facilityId = '111';
 describe('facility value routes', () => {
   describe('GET /application-details/:dealId/facilities/:facilityId/facility-value', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) =>
-        get(`/application-details/${dealId}/facilities/${facilityId}/facility-value`, {}, headers),
+      makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/facilities/${facilityId}/facility-value`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
@@ -19,8 +18,7 @@ describe('facility value routes', () => {
 
   describe('POST /application-details/:dealId/facilities/:facilityId/facility-value', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) =>
-        post({}, headers).to(`/application-details/${dealId}/facilities/${facilityId}/facility-value`),
+      makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/facilities/${facilityId}/facility-value`),
       whitelistedRoles: [MAKER],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.

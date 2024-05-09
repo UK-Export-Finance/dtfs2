@@ -7,15 +7,12 @@ const isDecember = (month: OneIndexedMonth) => month === 12;
 
 const isStartMonthJanuary = (period: BankReportPeriodSchedulePeriod): boolean => isJanuary(period.startMonth);
 
-const isPeriodSpanningTwoYears = (period: BankReportPeriodSchedulePeriod): boolean =>
-  period.startMonth > period.endMonth;
+const isPeriodSpanningTwoYears = (period: BankReportPeriodSchedulePeriod): boolean => period.startMonth > period.endMonth;
 
 const areConsecutiveMonths = (firstMonth: OneIndexedMonth, followingMonth: OneIndexedMonth): boolean =>
   firstMonth === followingMonth - 1 || (isDecember(firstMonth) && isJanuary(followingMonth));
 
-const isOfTypeBankReportPeriodSchedule = (
-  reportPeriodSchedule: unknown[],
-): reportPeriodSchedule is BankReportPeriodSchedule =>
+const isOfTypeBankReportPeriodSchedule = (reportPeriodSchedule: unknown[]): reportPeriodSchedule is BankReportPeriodSchedule =>
   reportPeriodSchedule.every((scheduledPeriod) => {
     if (typeof scheduledPeriod !== 'object' || scheduledPeriod == null) {
       return false;
@@ -47,21 +44,15 @@ const getMonthsCoveredByPeriod = (period: BankReportPeriodSchedulePeriod): OneIn
 
 const validateFirstPeriodCoversStartOfYear = (reportPeriodSchedule: BankReportPeriodSchedule): void => {
   if (reportPeriodSchedule.length < 0) {
-    throw new InvalidReportPeriodScheduleError(
-      'Utilisation report period schedule does not contain any report periods',
-    );
+    throw new InvalidReportPeriodScheduleError('Utilisation report period schedule does not contain any report periods');
   }
 
   if (!isStartMonthJanuary(reportPeriodSchedule[0]) && !isPeriodSpanningTwoYears(reportPeriodSchedule[0])) {
-    throw new InvalidReportPeriodScheduleError(
-      'Utilisation report period schedule does not start from January or period which spans 2 years',
-    );
+    throw new InvalidReportPeriodScheduleError('Utilisation report period schedule does not start from January or period which spans 2 years');
   }
 };
 
-const validateReportPeriodScheduleCoversTheYearChronologically = (
-  reportPeriodSchedule: BankReportPeriodSchedule,
-): void => {
+const validateReportPeriodScheduleCoversTheYearChronologically = (reportPeriodSchedule: BankReportPeriodSchedule): void => {
   const monthsInSchedule = reportPeriodSchedule.flatMap((period) => getMonthsCoveredByPeriod(period));
   if (monthsInSchedule.length !== 12) {
     throw new InvalidReportPeriodScheduleError('Utilisation report period schedule does not contain 12 months');

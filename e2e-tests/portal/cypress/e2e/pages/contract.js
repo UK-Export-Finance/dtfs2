@@ -50,8 +50,7 @@ const page = {
         coverEndDate: () => cy.get('@row').get(`[data-cy="bond-cover-end-date-${bondId}"]`),
         issueFacilityLink: () => cy.get('@row').get(`[data-cy="bond-issue-facility-${bondId}"]`),
         deleteLink: () => cy.get('@row').get(`[data-cy="bond-delete-${bondId}"]`),
-        changeOrConfirmCoverStartDateLink: () =>
-          cy.get('@row').get(`[data-cy="bond-change-or-confirm-cover-start-date-${bondId}"]`),
+        changeOrConfirmCoverStartDateLink: () => cy.get('@row').get(`[data-cy="bond-change-or-confirm-cover-start-date-${bondId}"]`),
       };
     },
   },
@@ -70,8 +69,7 @@ const page = {
         coverEndDate: () => cy.get('@row').get(`[data-cy="loan-cover-end-date-${loanId}"]`),
         issueFacilityLink: () => cy.get('@row').get(`[data-cy="loan-issue-facility-${loanId}"]`),
         deleteLink: () => cy.get('@row').get(`[data-cy="loan-delete-${loanId}"]`),
-        changeOrConfirmCoverStartDateLink: () =>
-          cy.get('@row').get(`[data-cy="loan-change-or-confirm-cover-start-date-${loanId}"]`),
+        changeOrConfirmCoverStartDateLink: () => cy.get('@row').get(`[data-cy="loan-change-or-confirm-cover-start-date-${loanId}"]`),
       };
     },
   },

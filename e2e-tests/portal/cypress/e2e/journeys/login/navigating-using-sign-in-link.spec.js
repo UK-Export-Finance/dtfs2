@@ -83,20 +83,14 @@ context('navigating using sign in link', () => {
 
     it('Opening a sign in link with invalid token takes the user to the page not found page and does not give the user access to protected routes', () => {
       cy.overridePortalUserSignInTokensByUsername({ username, newSignInTokens: [INVALID_SIGN_IN_TOKEN] });
-      signInLink.visit(
-        { token: INVALID_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id },
-        { failOnStatusCode: false },
-      );
+      signInLink.visit({ token: INVALID_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id }, { failOnStatusCode: false });
       signInLink.shouldDisplayProblemWithServiceError();
 
       checkUserDoesNotHaveAccessToProtectedRoutes();
     });
     it('Opening a sign in link with invalid username takes the user to the page not found page and does not give the user access to protected routes', () => {
       cy.overridePortalUserSignInTokensByUsername({ username, newSignInTokens: [NOT_EXPIRED_SIGN_IN_TOKEN] });
-      signInLink.visit(
-        { token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: 'notValidToken' },
-        { failOnStatusCode: false },
-      );
+      signInLink.visit({ token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: 'notValidToken' }, { failOnStatusCode: false });
       signInLink.shouldDisplayProblemWithServiceError();
 
       checkUserDoesNotHaveAccessToProtectedRoutes();
@@ -104,10 +98,7 @@ context('navigating using sign in link', () => {
 
     it('Opening a sign in link with non-matching user id takes the user to the page not found page and does not give the user access to protected routes', () => {
       cy.overridePortalUserSignInTokensByUsername({ username, newSignInTokens: [NOT_EXPIRED_SIGN_IN_TOKEN] });
-      signInLink.visit(
-        { token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker2Id },
-        { failOnStatusCode: false },
-      );
+      signInLink.visit({ token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker2Id }, { failOnStatusCode: false });
       signInLink.shouldDisplayProblemWithServiceError();
 
       checkUserDoesNotHaveAccessToProtectedRoutes();
@@ -144,10 +135,7 @@ context('navigating using sign in link', () => {
         newSignInTokens: [ANOTHER_EXPIRED_SIGN_IN_TOKEN, EXPIRED_SIGN_IN_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN],
       });
 
-      signInLink.visit(
-        { token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id },
-        { failOnStatusCode: false },
-      );
+      signInLink.visit({ token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id }, { failOnStatusCode: false });
       signInLink.shouldDisplayAccountSuspended();
     });
 
@@ -159,10 +147,7 @@ context('navigating using sign in link', () => {
         newSignInTokens: [NOT_EXPIRED_SIGN_IN_TOKEN],
       });
 
-      signInLink.visit(
-        { token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id },
-        { failOnStatusCode: false },
-      );
+      signInLink.visit({ token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id }, { failOnStatusCode: false });
       signInLink.shouldDisplayAccountSuspended();
     });
 
@@ -172,10 +157,7 @@ context('navigating using sign in link', () => {
         newSignInTokens: [NOT_EXPIRED_SIGN_IN_TOKEN],
       });
 
-      signInLink.visit(
-        { token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id },
-        { failOnStatusCode: false },
-      );
+      signInLink.visit({ token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id }, { failOnStatusCode: false });
 
       cy.disablePortalUserByUsername(username);
 

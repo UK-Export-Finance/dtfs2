@@ -28,9 +28,7 @@ describe(component, () => {
     it('should be enabled', () => {
       for (const deal of deals) {
         const wrapper = render({ user: mockUser, deal });
-        wrapper
-          .expectLink('[data-cy="clone-deal-link"]')
-          .toLinkTo(`/contract/${deal._id}/clone/before-you-start`, 'Clone');
+        wrapper.expectLink('[data-cy="clone-deal-link"]').toLinkTo(`/contract/${deal._id}/clone/before-you-start`, 'Clone');
       }
     });
   });

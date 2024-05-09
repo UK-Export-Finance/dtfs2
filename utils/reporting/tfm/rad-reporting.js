@@ -18,10 +18,7 @@ const { stripCommas, getMaximumLiability, filterTask } = require('../../data-mig
  */
 const getTfmDeals = () =>
   getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, {
-    $or: [
-      { 'dealSnapshot.submissionType': { $eq: 'Manual Inclusion Application' } },
-      { 'dealSnapshot.submissionType': { $eq: 'Manual Inclusion Notice' } },
-    ],
+    $or: [{ 'dealSnapshot.submissionType': { $eq: 'Manual Inclusion Application' } }, { 'dealSnapshot.submissionType': { $eq: 'Manual Inclusion Notice' } }],
   });
 
 // ******************** REPORTING *************************
@@ -40,11 +37,8 @@ const constructRows = (deals) => {
       const { dealSnapshot, tfm } = deal;
       const ukefDealId = dealSnapshot.ukefDealId ?? dealSnapshot.details.ukefDealId;
       const submissionDate = dealSnapshot.submissionDate ?? dealSnapshot.details.submissionDate;
-      const destinationCountry = dealSnapshot.submissionDetails
-        ? stripCommas(dealSnapshot.submissionDetails.destinationOfGoodsAndServices.name)
-        : '';
-      const exporterName =
-        stripCommas(dealSnapshot.exporter.companyName) ?? stripCommas(dealSnapshot.submissionDetails['supplier-name']);
+      const destinationCountry = dealSnapshot.submissionDetails ? stripCommas(dealSnapshot.submissionDetails.destinationOfGoodsAndServices.name) : '';
+      const exporterName = stripCommas(dealSnapshot.exporter.companyName) ?? stripCommas(dealSnapshot.submissionDetails['supplier-name']);
       const exporterUrn = tfm.parties.exporter.partyUrn;
       const { exporterCreditRating } = tfm;
       // Amalgamation of all facilities `facility.ukefExposure`

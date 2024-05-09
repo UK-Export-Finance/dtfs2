@@ -156,8 +156,7 @@ context('Dashboard Deals filters - Created by you', () => {
 
     const EXPECTED_DEALS = ALL_DEALS.filter(
       ({ maker, status, submissionType }) =>
-        (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN ||
-          submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) &&
+        (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) &&
         (status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL) &&
         maker.username === BANK1_MAKER1.username,
     );
@@ -181,8 +180,7 @@ context('Dashboard Deals filters - Created by you', () => {
 
     const EXPECTED_DEALS = ALL_DEALS.filter(
       ({ status, submissionType }) =>
-        (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN ||
-          submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) &&
+        (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) &&
         (status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL),
     );
 
