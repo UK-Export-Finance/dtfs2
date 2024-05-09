@@ -22,7 +22,7 @@ To run the end-to-end tests locally, follow these steps:
 1. Ensure that all services are up and running from the main root by running:
 
 ```shell
-docker-compose up
+npm run start
 ```
 
 2. In a second terminal, navigate to the respective folder for the service you want to test (e.g. `./gef`, `./portal`, `./tfm`, `./ukef`).

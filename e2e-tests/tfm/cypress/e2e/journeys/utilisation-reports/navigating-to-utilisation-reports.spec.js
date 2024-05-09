@@ -2,11 +2,11 @@ import {
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
   getPreviousReportPeriodForBankScheduleByMonth,
+  toIsoMonthStamp,
 } from '@ukef/dtfs2-common';
 import { subMonths } from 'date-fns';
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
-import { toIsoMonthStamp } from '../../../support/utils/dateHelpers';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import { aliasSelector } from '../../../../../support/alias-selector';
 
@@ -93,13 +93,13 @@ context('PDC_READ users can route to the payments page for a bank', () => {
       case 7:
       case 10:
         return toIsoMonthStamp(subMonths(now, 1));
-        case 2:
+      case 2:
       case 5:
       case 8:
       case 11:
         return toIsoMonthStamp(subMonths(now, 2));
       default:
-      return toIsoMonthStamp(now);
+        return toIsoMonthStamp(now);
     }
   }
 });

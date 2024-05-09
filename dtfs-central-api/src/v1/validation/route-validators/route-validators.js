@@ -1,5 +1,5 @@
 const { param } = require('express-validator');
-const { isValidIsoMonth } = require('../../../utils/date');
+const { isValidIsoMonth } = require('@ukef/dtfs2-common');
 
 const bankIdValidation = param('bankId').isString().matches(/^\d+$/).withMessage('The bank id provided should be a string of numbers');
 

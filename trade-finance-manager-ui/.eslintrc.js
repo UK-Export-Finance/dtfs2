@@ -6,14 +6,14 @@ const baseRules = {
   'no-console': ['error', { allow: ['info', 'error'] }],
   'no-underscore-dangle': [
     'error',
-    { allow: ['_id', '_csrf', '_getBuffer', '_getData', '_getHeaders', '_getStatusCode', '_getRedirectUrl', '_getRenderData', '_getRenderView'] },
+    { allow: ['_id', '_csrf', '_getBuffer', '_getData', '_getHeaders', '_getStatusCode', '_getRedirectUrl', '_getRenderData', '_getRenderView', '_isEndCalled'] },
   ],
   'import/extensions': 'off',
   'import/no-named-as-default': 'off',
   'implicit-arrow-linebreak': 'off',
   'import/no-extraneous-dependencies': [
     'error',
-    { devDependencies: ['**/*.test.{js,ts}', '**/*.spec.{js,ts}', '**/webpack.*.{js,ts}', '**/api-tests/**', '**/component-tests/**', '**/__mocks__/**'] },
+    { devDependencies: ['**/*.test.{js,ts}', '**/*.api-test.{js,ts}', '**/*.spec.{js,ts}', '**/webpack.*.{js,ts}', '**/api-test*/**', '**/__mocks__/**'] },
   ],
   'import/prefer-default-export': 'off',
   'object-curly-newline': [
@@ -59,7 +59,20 @@ module.exports = {
         project: './tsconfig.eslint.json',
         tsconfigRootDir: __dirname,
       },
-      rules: baseRules,
+      rules: {
+        ...baseRules,
+      },
+    },
+    {
+      files: ['server/routes/**/*.ts'],
+      rules: {
+        ...baseRules,
+        '@typescript-eslint/no-misused-promises': ['error', {
+          checksVoidReturn: {
+            arguments: false,
+          },
+        }],
+      },
     },
   ],
 };

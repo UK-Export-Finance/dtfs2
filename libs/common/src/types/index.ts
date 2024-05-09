@@ -8,3 +8,5 @@ export * from './mongo-db-models';
 export * from './tfm';
 export * from './portal';
 export * from './session-bank';
+export * from './audit-database-record';
+export * from './audit-details';

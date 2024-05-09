@@ -1,8 +1,6 @@
 import { Response } from 'express';
-import { UtilisationReportReconciliationStatus, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import { UtilisationReportReconciliationStatus, UTILISATION_REPORT_RECONCILIATION_STATUS, ReportWithStatus, asString } from '@ukef/dtfs2-common';
 import api from '../../../api';
-import { asString } from '../../../helpers/validation';
-import { ReportWithStatus } from '../../../types/utilisation-reports';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { getUtilisationReports } from '..';
 import { asUserSession } from '../../../helpers/express-session';
@@ -30,7 +28,7 @@ export type UpdateUtilisationReportStatusRequestBody = {
 
 const getReportIdsAndStatusesFromBody = (
   body: undefined | UpdateUtilisationReportStatusRequestBody,
-): { id: string; status: UtilisationReportReconciliationStatus }[] => {
+): { id: number; status: UtilisationReportReconciliationStatus }[] => {
   if (!body || typeof body !== 'object') {
     throw new Error('Expected request body to be an object');
   }
@@ -44,11 +42,11 @@ const getReportIdsAndStatusesFromBody = (
       }
 
       const { id, currentStatus } = match.groups;
-      return { id, status: currentStatus as UtilisationReportReconciliationStatus };
+      return { id: Number(id), status: currentStatus as UtilisationReportReconciliationStatus };
     });
 };
 
-const getReportWithStatus = (reportId: string, formButton: string): ReportWithStatus => {
+const getReportWithStatus = (reportId: number, formButton: string): ReportWithStatus => {
   switch (formButton) {
     case FORM_BUTTON_VALUES.COMPLETED:
       return {

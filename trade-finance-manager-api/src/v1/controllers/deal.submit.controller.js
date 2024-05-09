@@ -1,3 +1,5 @@
+const { ObjectId } = require('mongodb');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { findOneTfmDeal, findOnePortalDeal, findOneGefDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
@@ -11,14 +13,14 @@ const { updatedIssuedFacilities } = require('./update-issued-facilities');
 const { updatePortalDealStatus } = require('./update-portal-deal-status');
 const CONSTANTS = require('../../constants');
 const api = require('../api');
-const { createEstoreFolders } = require('./estore.controller');
-const acbsController = require('./acbs.controller');
-const dealController = require('./deal.controller');
+const { createEstoreSite } = require('./estore.controller');
+const { issueAcbsFacilities, createACBS } = require('./acbs.controller');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
 const { sendDealSubmitEmails, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
-const { dealHasAllUkefIds, dealHasAllValidUkefIds } = require('../helpers/dealHasAllUkefIds');
+const { dealHasAllUkefIds } = require('../helpers/dealHasAllUkefIds');
+const canSubmitToACBS = require('../helpers/can-submit-to-acbs');
 
 /**
  * Retrieves a deal from the portal based on the provided deal ID and deal type.
@@ -45,16 +47,15 @@ const getPortalDeal = async (dealId, dealType) => {
  * the number has been granted by the number generator
  * Azure function
  */
-const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
+const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) => {
   const deal = await getPortalDeal(dealId, dealType);
-  console.info('Setting essential deal properties in TFM for deal %s', dealId);
 
   if (!deal) {
     console.error('Unable to find deal %s upon submission to TFM', dealId);
     return false;
   }
 
-  const submittedDeal = await api.submitDeal(dealType, dealId);
+  const submittedDeal = await api.submitDeal(dealType, dealId, auditDetails);
   const mappedDeal = mapSubmittedDeal(submittedDeal);
 
   const { submissionCount } = mappedDeal;
@@ -62,6 +63,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   const dealHasBeenResubmit = submissionCount > 1;
 
   if (firstDealSubmission) {
+    const acceptableTaskSubmissionTypes = [CONSTANTS.DEALS.SUBMISSION_TYPE.AIN, CONSTANTS.DEALS.SUBMISSION_TYPE.MIA];
     // Updates portal deal status
     await updatePortalDealStatus(mappedDeal);
 
@@ -81,65 +83,77 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       status,
     };
 
-    const dealWithTfmData = await addTfmDealData(updatedMappedDeal);
-    const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData);
-    const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn);
-    const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions);
-    const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
+    // TFM properties (deal.tfm)
+    const dealWithTfmData = await addTfmDealData(updatedMappedDeal, auditDetails);
+    const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData, auditDetails);
+    const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn, auditDetails);
 
-    if (updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || updatedMappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-      const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
+    // Facilities
+    const updatedDealWithUpdatedFacilities = await updateFacilities(
+      updatedDealWithDealCurrencyConversions,
+      auditDetails,
+    );
 
-      /**
-       * Current requirement only allows AIN & MIN deals to be sent to ACBS
-       * This calls CREATES Deal & Facility ACBS records
-       */
-      if (dealController.canDealBeSubmittedToACBS(updatedMappedDeal.submissionType) && dealHasAllValidUkefIds(dealId)) {
-        await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
-      }
+    // Estore
+    let dealUpdate = await createEstoreSite(updatedDealWithUpdatedFacilities);
 
-      const { firstTaskEmail } = await sendDealSubmitEmails(dealWithTasks);
+    // TFM tasks
+    if (acceptableTaskSubmissionTypes.includes(updatedMappedDeal.submissionType)) {
+      dealUpdate = await createDealTasks(dealUpdate, auditDetails);
+      const { firstTaskEmail } = await sendDealSubmitEmails(dealUpdate);
 
       /**
        * Add an emailSent flag to the first task.
        * This prevents multiple emails from being sent.
        */
-      const updatedDealWithTasks = dealWithTasks;
-      updatedDealWithTasks.tfm.tasks = addFirstTaskEmailSentFlag(firstTaskEmail, dealWithTasks.tfm.tasks);
-
-      /**
-       * Update the deal with all the above modifications
-       * Note: at the time of writing, some functions above update the deal, others do not.
-       */
-      return api.updateDeal(dealId, updatedDealWithTasks);
+      dealUpdate.tfm.tasks = addFirstTaskEmailSentFlag(firstTaskEmail, dealUpdate.tfm.tasks);
     }
 
-    return api.updateDeal(dealId, updatedDealWithCreateEstore);
+    // Update the deal with all the above modifications
+    const tfmDeal = api.updateDeal({ dealId, dealUpdate, auditDetails });
+
+    // Submit to ACBS
+    const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
+
+    if (canSubmitDealToACBS) {
+      await createACBS(tfmDeal);
+    }
+
+    return tfmDeal;
   }
 
   if (dealHasBeenResubmit) {
-    const { tfm: tfmDeal } = await findOneTfmDeal(dealId);
-
+    let tfmDeal = await findOneTfmDeal(dealId);
     /**
      * checks if can update to MIN
      * if it can, changes mappedDeal to show MIN to allow gef fee record to be calculated
      * isUpdatingToMIN then also used to update deal to MIN
      */
-    const isUpdatingToMIN = shouldUpdateDealFromMIAtoMIN(mappedDeal, tfmDeal);
+    const isUpdatingToMIN = shouldUpdateDealFromMIAtoMIN(mappedDeal, tfmDeal.tfm);
 
     if (isUpdatingToMIN) {
       mappedDeal.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
       console.info('TFM deal %s submission type has been updated to %s', dealId, mappedDeal.submissionType);
     }
-    const updatedDeal = await updatedIssuedFacilities(mappedDeal);
+
+    // Update portal deal status
+    await updatePortalDealStatus(mappedDeal);
+
     /**
-     * Current requirement only allows AIN & MIN deals to be send to ACBS
-     * This call UPDATES facility record by updating their stage from
-     * Unissued (06) to Issued (07)
+     * Below action is performed to retrieve the latest portal application status.
+     * Which should be changed to `Acknowledged` from `In Progress by UKEF` since
+     * the application has been converted to MIN from MIA.
+     *
+     * Not fetching the latest portal deal status would cause TFM deal status to be
+     * an `Application` rather than `Confirmed`.
      */
-    if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType) && dealHasAllValidUkefIds(dealId)) {
-      await acbsController.issueAcbsFacilities(updatedDeal);
-    }
+
+    const updatedPortalDeal = await getPortalDeal(dealId, dealType);
+    const { status } = updatedPortalDeal;
+    mappedDeal.status = status;
+
+    // Update issued facilities
+    const dealUpdate = await updatedIssuedFacilities(mappedDeal, auditDetails);
 
     if (isUpdatingToMIN) {
       const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, dealType, checker);
@@ -148,35 +162,45 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
        * This is the one and only time that TFM updates a snapshot.
        * Without this, it would involve additional API calls going around in circles.
        */
-      const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate);
+      const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate, auditDetails);
 
-      updatedDeal.submissionType = dealSnapshot.submissionType;
+      dealUpdate.submissionType = dealSnapshot.submissionType;
 
       if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-        updatedDeal.manualInclusionNoticeSubmissionDate = dealSnapshot.manualInclusionNoticeSubmissionDate;
-        updatedDeal.checkerMIN = dealSnapshot.checkerMIN;
+        dealUpdate.manualInclusionNoticeSubmissionDate = dealSnapshot.manualInclusionNoticeSubmissionDate;
+        dealUpdate.checkerMIN = dealSnapshot.checkerMIN;
       } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-        updatedDeal.manualInclusionNoticeSubmissionDate = dealSnapshot.details.manualInclusionNoticeSubmissionDate;
-        updatedDeal.checkerMIN = dealSnapshot.details.checkerMIN;
+        dealUpdate.manualInclusionNoticeSubmissionDate = dealSnapshot.details.manualInclusionNoticeSubmissionDate;
+        dealUpdate.checkerMIN = dealSnapshot.details.checkerMIN;
       }
 
-      if (dealController.canDealBeSubmittedToACBS(portalMINUpdate.submissionType) && dealHasAllValidUkefIds(dealId)) {
-        await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
-      }
-
-      await sendAinMinAcknowledgement(updatedDeal);
+      await sendAinMinAcknowledgement(dealUpdate);
 
       // TFM deal stage should be updated to `Confirmed`
       const updatedDealStage = dealStage(mappedDeal.status, mappedDeal.submissionType);
-      updatedDeal.tfm.stage = updatedDealStage;
+      dealUpdate.tfm.stage = updatedDealStage;
 
       console.info('TFM deal %s stage has been updated to %s', dealId, updatedDealStage);
     }
-    await updatePortalDealStatus(updatedDeal);
 
-    return api.updateDeal(dealId, updatedDeal);
+    tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
+
+    const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
+
+    if (canSubmitDealToACBS) {
+      await createACBS(tfmDeal);
+    }
+
+    const canIssueFacilityInACBS = await canSubmitToACBS(tfmDeal, false);
+
+    if (canIssueFacilityInACBS) {
+      await issueAcbsFacilities(dealUpdate);
+    }
+
+    return tfmDeal;
   }
-  return api.updateDeal(dealId, submittedDeal);
+
+  return api.updateDeal({ dealId, dealUpdate: submittedDeal, auditDetails });
 };
 
 exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
@@ -185,11 +209,12 @@ exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
  * Submits a deal to TFM before the UKEF IDs are generated.
  * @param {string} dealId - The ID of the deal to be submitted.
  * @param {string} dealType - The type of the deal.
- * @param {string} checker - The name of the checker.
+ * @param {object} checker - checker submitting the deal
+ * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} auditDetails - checker information
  * @returns {Promise<Object> | Boolean} - A promise that resolves to an object, other false.
  * @throws {Error} - If there is an error during the submission process.
  */
-const submitDealBeforeUkefIds = async (dealId, dealType, checker) => {
+const submitDealBeforeUkefIds = async (dealId, dealType, checker, auditDetails) => {
   try {
     console.info('Submitting new deal %s to TFM', dealId);
     const deal = await getPortalDeal(dealId, dealType);
@@ -199,13 +224,13 @@ const submitDealBeforeUkefIds = async (dealId, dealType, checker) => {
       return false;
     }
 
-    const response = await api.submitDeal(dealType, dealId);
+    const response = await api.submitDeal(dealType, dealId, auditDetails);
 
     if (!response) {
-      throw new Error('Unable to submit deal %s to TFM', dealId);
+      throw new Error(`Unable to submit deal ${dealId} to TFM`);
     }
 
-    return submitDealAfterUkefIds(dealId, dealType, checker);
+    return submitDealAfterUkefIds(dealId, dealType, checker, auditDetails);
   } catch (error) {
     console.error('❌ Unable to submit new deal %s to TFM %o', dealId, error);
     throw new Error('Unable to submit new deal to TFM');
@@ -220,11 +245,16 @@ exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
  * @param {Object} res - The response object representing the response object with `status` and `send` methods.
  * @returns {Promise<Response>} A promise that resolves with the updated deal or rejects with an error.
  */
+// TODO: DTFS2-7112 this endpoint is obsolete and should be removed
 const submitDealAfterUkefIdsPUT = async (req, res) => {
   try {
     const { dealId, dealType, checker } = req.body;
 
-    const deal = await submitDealAfterUkefIds(dealId, dealType, checker);
+    if (!ObjectId.isValid(checker?._id)) {
+      return res.status(400).send({ status: 400, message: 'Invalid checker _id' });
+    }
+
+    const deal = await submitDealAfterUkefIds(dealId, dealType, checker, generatePortalAuditDetails(checker._id));
 
     if (!deal) {
       console.error('Deal does not exist in TFM %s', dealId);
@@ -255,13 +285,20 @@ const submitDealPUT = async (req, res) => {
       return res.status(400).send();
     }
 
+    if (!ObjectId.isValid(checker?._id)) {
+      console.error('Invalid checker id provided %s', checker?._id);
+      return res.status(400).send();
+    }
+
+    const auditDetails = generatePortalAuditDetails(checker._id);
+
     const { status } = await dealHasAllUkefIds(dealId);
     let deal;
 
     if (status) {
-      deal = await submitDealAfterUkefIds(dealId, dealType, checker);
+      deal = await submitDealAfterUkefIds(dealId, dealType, checker, auditDetails);
     } else {
-      deal = await submitDealBeforeUkefIds(dealId, dealType, checker);
+      deal = await submitDealBeforeUkefIds(dealId, dealType, checker, auditDetails);
     }
 
     if (!deal) {

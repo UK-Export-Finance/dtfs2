@@ -55,7 +55,7 @@ const financialSubmissionDetailsProperties = [
 ];
 
 const filterFinancialSubmissionDetailsPayload = (body) => {
-  const payload = constructPayload(body, financialSubmissionDetailsProperties);
+const payload = constructPayload(body, financialSubmissionDetailsProperties,true);
 
   if (payload.supplyContractCurrency === CURRENCY.GBP) {
     delete payload.supplyContractConversionRateToGBP;

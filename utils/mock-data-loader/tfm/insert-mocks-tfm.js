@@ -5,7 +5,7 @@ const MOCKS = require('./mocks');
 const insertMocks = async (token) => {
   logger.info('inserting TFM mocks');
   logger.info('inserting TFM teams', { depth: 1 });
-  const createTeams = Object.values(MOCKS.TEAMS).map((team) => api.createTeam(team, token));
+  const createTeams = Object.values(MOCKS.TEAMS).map((team) => api.createTeam(team));
   await Promise.all(createTeams);
 
   logger.info('inserting TFM users', { depth: 1 });

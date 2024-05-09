@@ -22,6 +22,7 @@ const userCanSubmitDeal = require('./userCanSubmitDeal');
 const dealHasIssuedFacilitiesToSubmit = require('./dealHasIssuedFacilitiesToSubmit');
 const dealWithCanIssueOrEditIssueFacilityFlags = require('./dealWithCanIssueOrEditIssueFacilityFlags');
 const { validateToken, validateBank, validateRole } = require('../middleware');
+const { PRODUCT } = require('../../constants');
 
 const router = express.Router();
 
@@ -30,8 +31,15 @@ router.use('/contract/*', validateToken);
 router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) => {
   const { deal } = req.apiData;
   const { user } = req.session;
+  const { _id } = req.params;
 
-  const { _id: dealId } = deal;
+  const { _id: dealId, dealType } = deal;
+
+  // Ensure application is `BSS/EWCS`
+  if (dealType !== PRODUCT.BSS_EWCS) {
+    console.error('Deal ID %s specified is not a BSS/EWCS deal', _id);
+    return res.render('_partials/problem-with-service.njk');
+  }
 
   const canCalculateSupplyContractValues = (submissionDetails) => {
     const { supplyContractCurrency, supplyContractConversionRateToGBP } = submissionDetails;
@@ -139,6 +147,7 @@ router.post('/contract/:_id/delete', [validateRole({ role: [MAKER] }), validateB
   return res.redirect('/dashboard');
 });
 
+// Submit to the checker
 router.get('/contract/:_id/ready-for-review', [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank], async (req, res) => {
   const { deal } = req.apiData;
 
@@ -148,6 +157,7 @@ router.get('/contract/:_id/ready-for-review', [validateRole({ role: [MAKER] }), 
   });
 });
 
+// Submit to the checker
 router.post('/contract/:_id/ready-for-review', [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { comments } = req.body;
@@ -271,6 +281,7 @@ router.post('/contract/:_id/return-to-maker', [validateRole({ role: [CHECKER] })
   return res.redirect('/dashboard');
 });
 
+// Submit to TFM
 router.get('/contract/:_id/confirm-submission', [validateRole({ role: [CHECKER] }), validateBank], async (req, res) => {
   const { _id } = req.params;
 
@@ -280,6 +291,7 @@ router.get('/contract/:_id/confirm-submission', [validateRole({ role: [CHECKER] 
   });
 });
 
+// Submit to TFM
 router.post('/contract/:_id/confirm-submission', [validateRole({ role: [CHECKER] }), provide([DEAL]), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { confirmSubmit } = req.body;

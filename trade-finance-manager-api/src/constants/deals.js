@@ -80,6 +80,13 @@ const AMENDMENT_STATUS = {
   NOT_STARTED: 'Not started',
 };
 
+const DEFAULT_COUNTRY = 'United Kingdom';
+
+const UKEF_ID = {
+  PENDING: 'PENDING',
+  TEST: '100000',
+};
+
 module.exports = {
   DEAL_TYPE,
   DEAL_PRODUCT_CODE,
@@ -95,4 +102,6 @@ module.exports = {
   AMENDMENT_TYPE,
   AMENDMENT_BANK_DECISION,
   AMENDMENT_STATUS,
+  DEFAULT_COUNTRY,
+  UKEF_ID,
 };

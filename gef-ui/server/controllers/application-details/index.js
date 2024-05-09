@@ -1,8 +1,6 @@
 const startCase = require('lodash/startCase');
 const api = require('../../services/api');
-const {
-  canUpdateUnissuedFacilitiesCheck,
-} = require('./canUpdateUnissuedFacilitiesCheck');
+const { canUpdateUnissuedFacilitiesCheck } = require('./canUpdateUnissuedFacilitiesCheck');
 const {
   mapSummaryList,
   displayTaskComments,
@@ -22,9 +20,7 @@ const {
 const { isUkefReviewAvailable, isUkefReviewPositive, makerCanReSubmit } = require('../../utils/deal-helpers');
 const { exporterItems, facilityItems } = require('../../utils/display-items');
 const getUserAuthorisationLevelsToApplication = require('../../utils/user-authorisation-level');
-const {
-  FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_STATUS, DEAL_SUBMISSION_TYPE,
-} = require('../../constants');
+const { FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE } = require('../../constants');
 const Application = require('../../models/application');
 const { MAKER } = require('../../constants/roles');
 
@@ -131,13 +127,7 @@ function buildBody(app, previewMode, user) {
     userRoles: app.userRoles,
     displayComments: displayTaskComments(app),
     displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
-    canUpdateUnissuedFacilities:
-      canUpdateUnissuedFacilitiesCheck(
-        app,
-        unissuedFacilitiesPresent,
-        facilitiesChangedToIssued,
-        hasUkefDecisionAccepted,
-      ),
+    canUpdateUnissuedFacilities: canUpdateUnissuedFacilitiesCheck(app, unissuedFacilitiesPresent, facilitiesChangedToIssued, hasUkefDecisionAccepted),
     MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
     returnToMakerNoFacilitiesChanged: returnToMakerNoFacilitiesChanged(app, hasChangedFacilities),
   };
@@ -201,10 +191,16 @@ const applicationDetails = async (req, res, next) => {
   try {
     const application = await Application.findById(dealId, user, userToken);
 
+    // 404 not found or unauthorised
     if (!application) {
-      // 404 not found or unauthorised
       console.error('Invalid application or access %s', dealId);
       return res.redirect('/dashboard');
+    }
+
+    // Ensure application is `GEF` type
+    if (application.dealType !== DEAL_TYPE.GEF) {
+      console.error('Deal ID %s specified is not a GEF deal', dealId);
+      return res.render('partials/problem-with-service.njk');
     }
 
     const userAuthorisationLevels = getUserAuthorisationLevelsToApplication(user, application);
@@ -265,7 +261,7 @@ const applicationDetails = async (req, res, next) => {
 
     return res.render(`partials/${partial}.njk`, params);
   } catch (error) {
-    console.error('Unable to build application view %s', error);
+    console.error('Unable to build application view %o', error);
     return next(error);
   }
 };

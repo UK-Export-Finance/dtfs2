@@ -1,5 +1,6 @@
 const MOCK_PORTAL_USERS = [
   {
+    _id: 'abcdef123456789012345678',
     'user-status': 'active',
     timezone: 'Europe/London',
     username: 'maker1@ukexportfinance.gov.uk',

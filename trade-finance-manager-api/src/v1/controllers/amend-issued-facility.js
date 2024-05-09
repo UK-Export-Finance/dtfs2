@@ -13,9 +13,10 @@ const { mapBssEwcsFacility } = require('../mappings/map-submitted-deal/map-bss-e
  * @param {Object} amendment Amendment object
  * @param {Object} facility Facility object
  * @param {Object} deal TFM deal object
+ * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} auditDetails - details of the user making the request
  * @returns {Boolean} Boolean upon execution
  */
-const amendIssuedFacility = async (amendment, facility, deal) => {
+const amendIssuedFacility = async (amendment, facility, deal, auditDetails) => {
   try {
     if (amendment && facility && deal) {
       const {
@@ -130,7 +131,7 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
         };
 
         // Updated `facility.tfm` property
-        await api.updateFacility(facility._id, facilityTfmUpdate);
+        await api.updateFacility({ facilityId: facility._id, tfmUpdate: facilityTfmUpdate, auditDetails });
       }
 
       return true;
@@ -138,7 +139,7 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
 
     throw new Error('Amend issued facility - Invalid argument sets provided');
   } catch (error) {
-    console.error('Error amending issued facility TFM properties: %s', error);
+    console.error('Error amending issued facility TFM properties %o', error);
     return false;
   }
 };

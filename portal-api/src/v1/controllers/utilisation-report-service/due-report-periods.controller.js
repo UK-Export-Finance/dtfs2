@@ -1,5 +1,5 @@
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../api');
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
 
 /**
  * Calls the DTFS Central API to get a banks utilisation reports and
@@ -16,7 +16,7 @@ const getDueReportPeriodsByBankId = async (req, res) => {
 
     return res.status(200).send(dueReportPeriods);
   } catch (error) {
-    console.error('Cannot get due reports %s', error);
+    console.error('Cannot get due reports %o', error);
     return res.status(error.response?.status ?? 500).send({ message: 'Failed to get due reports' });
   }
 };

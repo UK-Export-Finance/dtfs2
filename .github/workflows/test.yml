@@ -42,7 +42,7 @@ on:
   pull_request:
     branches:
       - main
-      - feat/e2etf-sql
+      - "release-*"
 
     paths:
       - "package*.json"
@@ -57,7 +57,7 @@ on:
       - "dtfs-central-api/**"
       - "azure-functions/**"
       - "e2e-tests/**"
-      - "utils/mock-data-loader/**"
+      - "utils/**"
       - "libs/**"
 
   push:
@@ -66,6 +66,7 @@ on:
       - feature
       - staging
       - prod
+      - release-1.5
 
     paths:
       - ".github/workflows/deployment.yml"
@@ -85,7 +86,7 @@ env:
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
   MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
-  MONGODB_URI_FOR_TESTS: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
+  MONGODB_URI_QA: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
   AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
   AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
   AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
@@ -112,6 +113,7 @@ env:
   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
   UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
+  ESTORE_CRON_MANAGER_SCHEDULE: ${{ vars.ESTORE_CRON_MANAGER_SCHEDULE }}
   TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
   PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
   DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
@@ -134,12 +136,14 @@ env:
   UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: ${{ vars.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}
   ACCEPT_EULA: ${{ vars.ACCEPT_EULA }}
   MSSQL_SA_PASSWORD: ${{ secrets.MSSQL_SA_PASSWORD }}
-  SQL_DB_HOST: ${{ vars.SQL_DB_HOST_TEST }}
-  SQL_DB_PORT: ${{ secrets.SQL_DB_PORT_TEST }}
-  SQL_DB_USERNAME: ${{ secrets.SQL_DB_USERNAME_TEST }}
-  SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD_TEST }}
-  SQL_DB_NAME: ${{ secrets.SQL_DB_NAME_TEST }}
+  SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_QA }}
+  SQL_DB_PORT: ${{ secrets.SQL_DB_PORT_QA }}
+  SQL_DB_USERNAME: ${{ secrets.SQL_DB_USERNAME_QA }}
+  SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD_QA }}
+  SQL_DB_NAME: ${{ secrets.SQL_DB_NAME_QA }}
   SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
+  ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE: ${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }}
+  FF_TFM_PAYMENT_RECONCILIATION_ENABLED: "false"
 
 jobs:
   # 1. Setup test infrastructure
@@ -204,32 +208,26 @@ jobs:
 
       - name: Start
         working-directory: ./
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
         run: |
           sleep 60s
           npm run load
-      
+
       - name: Migrations
         working-directory: ./libs/common
         env:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
-      
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
 
       - name: Execute
-        run: docker-compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
+        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
 
       - name: Stop
         working-directory: ./
-        run: docker-compose -f docker-compose.gha.yml down
+        run: docker compose down
 
       - name: Coverage
         uses: codecov/codecov-action@v3
@@ -309,7 +307,7 @@ jobs:
             "./external-api",
             "./trade-finance-manager-api",
             "./libs/common",
-            "./azure-functions/acbs-function"
+            "./azure-functions/acbs-function",
           ]
 
     concurrency:
@@ -361,6 +359,7 @@ jobs:
         spec:
           [
             "*.spec.js",
+            "homepage/**/*.spec.js",
             "admin/**/*.spec.js",
             "checker/**/*.spec.js",
             "dashboard/**/*.spec.js",
@@ -384,7 +383,7 @@ jobs:
     steps:
       - name: Repository
         uses: actions/checkout@v4
-      
+
       - name: Node
         uses: actions/setup-node@v3
         with:
@@ -400,25 +399,19 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
         run: |
           sleep 60s
           npm run load
-      
+
       - name: Migrations
         working-directory: ./libs/common
         env:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
-      
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -443,8 +436,18 @@ jobs:
         spec:
           [
             "*.spec.js",
+            "application/**/*.spec.js",
+            "checker/**/*.spec.js",
+            "clone/**/*.spec.js",
+            "eligibility/**/*.spec.js",
+            "exporter/**/*.spec.js",
+            "external/**/*.spec.js",
+            "facility/**/*.spec.js",
+            "maker/**/*.spec.js",
             "scenarios/**/*.spec.js",
-            "unissued-facilities/**/*.spec.js",
+            "security/**/*.spec.js",
+            "ukef/**/*.spec.js",
+            "upload/**/*.spec.js",
           ]
 
     concurrency:
@@ -454,7 +457,7 @@ jobs:
     steps:
       - name: Repository
         uses: actions/checkout@v4
-      
+
       - name: Node
         uses: actions/setup-node@v3
         with:
@@ -470,25 +473,19 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
         run: |
           sleep 60s
           npm run load
-      
+
       - name: Migrations
         working-directory: ./libs/common
         env:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
-      
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -532,7 +529,7 @@ jobs:
     steps:
       - name: Repository
         uses: actions/checkout@v4
-      
+
       - name: Node
         uses: actions/setup-node@v3
         with:
@@ -548,25 +545,19 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
         run: |
           sleep 60s
           npm run load
-      
+
       - name: Migrations
         working-directory: ./libs/common
         env:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
-      
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -619,7 +610,7 @@ jobs:
     steps:
       - name: Repository
         uses: actions/checkout@v4
-      
+
       - name: Node
         uses: actions/setup-node@v3
         with:
@@ -635,25 +626,19 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
         run: |
           sleep 60s
           npm run load
-      
+
       - name: Migrations
         working-directory: ./libs/common
         env:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
-      
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests

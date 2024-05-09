@@ -77,9 +77,10 @@ const listAdditionalTasks = (deal) => {
 /**
  * Get additional/conditional tasks that should be added to tasks, depending on deal data.
  * @param {Object} deal
- * @returns {Object} deal with tasks
+ * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} auditDetails - user making the request
+ * @returns {Promise<Object>} deal with tasks
  */
-const createDealTasks = async (deal) => {
+const createDealTasks = async (deal, auditDetails) => {
   if (!deal) {
     return false;
   }
@@ -97,7 +98,7 @@ const createDealTasks = async (deal) => {
     },
   };
 
-  const updatedDeal = await api.updateDeal(dealId, dealUpdate);
+  const updatedDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
   return {
     ...deal,

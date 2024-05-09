@@ -1,4 +1,6 @@
 import { SIGN_IN_TOKENS } from '../../fixtures/constants';
+import { BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../e2e-fixtures/portal-users.fixture';
+import { UNDERWRITER_1_WITH_MOCK_ID } from '../../../../e2e-fixtures/tfm-users.fixture';
 
 const portalApi = 'http://localhost:5001/v1';
 const centralApiUrl = () => {
@@ -58,11 +60,27 @@ const login = ({ username, password }) => {
     });
 };
 
-const fetchAllApplications = (token) =>
+// Only extracts GEF deals
+const fetchAllGefApplications = (token) =>
   cy
     .request({
       url: `${portalApi}/gef/application`,
       method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+    })
+    .then((res) => res);
+
+// Extracts all deal types
+const fetchAllApplications = (token) =>
+  cy
+    .request({
+      url: `${portalApi}/deals`,
+      method: 'GET',
+      body: {
+      },
       headers: {
         'Content-Type': 'application/json',
         Authorization: token,
@@ -172,6 +190,7 @@ const addCommentObjToDeal = (dealId, commentType, comment) =>
     })
     .then((res) => res);
 
+// TODO: DTFS2-7112 this endpoint is obsolete and should be removed
 const submitDealAfterUkefIds = (dealId, dealType, checker, token) =>
   cy
     .request({
@@ -207,7 +226,7 @@ const submitDealToTfm = (dealId, dealType) =>
     .request({
       url: `${centralApiUrl()}/v1/tfm/deals/submit`,
       method: 'PUT',
-      body: { dealId, dealType },
+      body: { dealId, dealType, checker: BANK1_CHECKER1_WITH_MOCK_ID },
       headers,
     })
     .then((resp) => {
@@ -220,7 +239,7 @@ const addUnderwriterCommentToTfm = (dealId, underwriterComment) =>
     .request({
       url: `${centralApiUrl()}/v1/tfm/deals/${dealId}`,
       method: 'put',
-      body: { dealUpdate: underwriterComment },
+      body: { dealUpdate: underwriterComment, auditDetails: { userType: 'tfm', id: UNDERWRITER_1_WITH_MOCK_ID._id } },
       headers,
     })
     .then((resp) => {
@@ -231,6 +250,7 @@ const addUnderwriterCommentToTfm = (dealId, underwriterComment) =>
 export {
   login,
   fetchAllApplications,
+  fetchAllGefApplications,
   fetchApplicationById,
   fetchAllFacilities,
   updateApplication,

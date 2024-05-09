@@ -8,8 +8,8 @@ import {
   isEqualMonthAndYear,
   Bank,
   UtilisationReportEntity,
+  IsoMonthStamp,
 } from '@ukef/dtfs2-common';
-import { IsoMonthStamp } from '../../../../types/date';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { getAllBanks } from '../../../../repositories/banks-repo';

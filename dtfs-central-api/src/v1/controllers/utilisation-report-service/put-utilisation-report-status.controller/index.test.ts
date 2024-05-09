@@ -7,10 +7,10 @@ import {
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
+  ReportWithStatus,
 } from '@ukef/dtfs2-common';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { PutUtilisationReportStatusRequest, putUtilisationReportStatus } from '.';
-import { ReportWithStatus } from '../../../../types/utilisation-reports';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 
 console.error = jest.fn();

@@ -33,7 +33,7 @@ describe('/v1/utilisation-reports/:id/download', () => {
       expect(response.status).toEqual(400);
     });
 
-    it('gets report download for authenticated user', async () => {
+    it('gets report download for an authenticated user', async () => {
       // Arrange
       const tokenUser = await testUserCache.initialise(app);
       const url = getUtilisationReportDownloadUrl({ id: integerId });

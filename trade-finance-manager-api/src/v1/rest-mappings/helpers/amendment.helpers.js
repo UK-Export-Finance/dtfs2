@@ -1,6 +1,6 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { formattedNumber } = require('../../../utils/number');
 const { decimalsCount, roundNumber } = require('../../helpers/number');
-const { CURRENCY } = require('../../../constants/currency.constant');
 const isValidFacility = require('./isValidFacility.helper');
 
 // returns the formatted amendment value and currency (without conversion)

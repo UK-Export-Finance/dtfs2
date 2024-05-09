@@ -5,51 +5,69 @@ const render = pageRenderer(page);
 
 describe(page, () => {
   let wrapper;
-  const navItems = [{
-    text: 2023,
-    href: '?targetYear=2023',
-    attributes: { 'data-cy': 'side-navigation-2023' },
-    active: true,
-  }, {
-    text: 2022,
-    href: '?targetYear=2022',
-    attributes: { 'data-cy': 'side-navigation-2022' },
-    active: false,
-  }, {
-    text: 2021,
-    href: '?targetYear=2021',
-    attributes: { 'data-cy': 'side-navigation-2021' },
-    active: false,
-  }, {
-    text: 2020,
-    href: '?targetYear=2020',
-    attributes: { 'data-cy': 'side-navigation-2020' },
-    active: false,
-  }];
+  const navItems = [
+    {
+      text: 2023,
+      href: '?targetYear=2023',
+      attributes: { 'data-cy': 'side-navigation-2023' },
+      active: true,
+    },
+    {
+      text: 2022,
+      href: '?targetYear=2022',
+      attributes: { 'data-cy': 'side-navigation-2022' },
+      active: false,
+    },
+    {
+      text: 2021,
+      href: '?targetYear=2021',
+      attributes: { 'data-cy': 'side-navigation-2021' },
+      active: false,
+    },
+    {
+      text: 2020,
+      href: '?targetYear=2020',
+      attributes: { 'data-cy': 'side-navigation-2020' },
+      active: false,
+    },
+  ];
 
-  const reportLinks = [{
-    text: 'January 2023',
-    month: 'January',
-    path: 'www.abc.com',
-  }, {
-    text: 'February 2023',
-    month: 'February',
-    path: 'www.abc.com',
-  }, {
-    text: 'March 2023',
-    month: 'March',
-    path: 'www.abc.com',
-  }, {
-    text: 'May 2023',
-    month: 'May',
-    path: 'www.abc.com',
-  }];
+  const reports = [
+    {
+      linkText: 'January 2023',
+      month: 'January',
+      downloadPath: 'www.abc.com',
+      status: 'PENDING_RECONCILIATION',
+      displayStatus: 'Pending reconciliation',
+    },
+    {
+      linkText: 'February 2023',
+      month: 'February',
+      downloadPath: 'www.abc.com',
+      status: 'PENDING_RECONCILIATION',
+      displayStatus: 'Pending reconciliation',
+    },
+    {
+      linkText: 'March 2023',
+      month: 'March',
+      downloadPath: 'www.abc.com',
+      status: 'RECONCILIATION_IN_PROGRESS',
+      displayStatus: 'Reconciliation in progress',
+    },
+    {
+      linkText: 'May 2023',
+      month: 'May',
+      downloadPath: 'www.abc.com',
+      status: 'RECONCILIATION_COMPLETED',
+      displayStatus: 'Report completed',
+    },
+  ];
 
   const year = 2023;
 
   describe('with submitted reports', () => {
     beforeEach(() => {
-      wrapper = render({ navItems, reportLinks, year });
+      wrapper = render({ navItems, reports, year });
     });
 
     it('should render side navigation bar', () => {
@@ -81,11 +99,18 @@ describe(page, () => {
       wrapper.expectElement('[data-cy="list-item-link-May"]').toExist();
       wrapper.expectText('[data-cy="list-item-link-May"]').toRead('May 2023 GEF report');
     });
+
+    it('should render report statuses', () => {
+      wrapper.expectElement('[data-cy="utilisation-report-reconciliation-status"]').toHaveCount(4);
+      wrapper.expectText('main').toContain('Report completed');
+      wrapper.expectText('main').toContain('Reconciliation in progress');
+      wrapper.expectText('main').toContain('Pending reconciliation');
+    });
   });
 
   describe('with no submitted reports for target year', () => {
     beforeEach(() => {
-      wrapper = render({ navItems, reportLinks: [], year });
+      wrapper = render({ navItems, reports: [], year });
     });
 
     it('should render side navigation bar', () => {
@@ -110,7 +135,7 @@ describe(page, () => {
 
   describe('with no submitted reports for any year', () => {
     beforeEach(() => {
-      wrapper = render({ navItems: [], reportLinks: [], year });
+      wrapper = render({ navItems: [], reports: [], year });
     });
 
     it('should render page heading', () => {

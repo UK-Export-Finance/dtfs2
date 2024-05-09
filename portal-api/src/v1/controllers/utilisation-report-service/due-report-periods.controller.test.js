@@ -1,9 +1,9 @@
 const httpMocks = require('node-mocks-http');
 const { AxiosError } = require('axios');
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const { getDueReportPeriodsByBankId } = require('./due-report-periods.controller');
 const { aUtilisationReportResponse } = require('../../../../test-helpers/test-data/utilisation-report');
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
 
 console.error = jest.fn();
 

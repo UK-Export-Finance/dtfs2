@@ -1,7 +1,7 @@
 const { DEAL_TYPE, DEAL_STATUS } = require('../enums');
 
 class Application {
-  constructor(req, eligibility) {
+  constructor(req, eligibility = null) {
     const editedBy = [];
 
     if (eligibility) {
@@ -90,6 +90,7 @@ class Application {
         }
       });
     }
+    this.auditRecord = req.auditRecord
   }
 }
 

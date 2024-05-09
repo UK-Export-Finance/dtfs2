@@ -1,7 +1,9 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const { addPartyUrns } = require('../../../src/v1/controllers/deal.party-db');
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const api = require('../../../src/v1/api');
+const { MOCK_PORTAL_USERS } = require('../../../src/v1/__mocks__/mock-portal-users');
 
 describe('add partyUrn to deal', () => {
   beforeEach(() => {
@@ -26,7 +28,7 @@ describe('add partyUrn to deal', () => {
       },
     };
 
-    const noCompaniesHouse = await addPartyUrns(deal);
+    const noCompaniesHouse = await addPartyUrns(deal, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
     expect(noCompaniesHouse.tfm.parties.exporter.partyUrn).toEqual('');
   });
 
@@ -40,7 +42,7 @@ describe('add partyUrn to deal', () => {
       },
     };
 
-    const noMatch = await addPartyUrns(deal);
+    const noMatch = await addPartyUrns(deal, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
     expect(noMatch.tfm.parties.exporter.partyUrn).toEqual('');
   });
 
@@ -54,7 +56,7 @@ describe('add partyUrn to deal', () => {
       },
     };
 
-    const match = await addPartyUrns(deal);
+    const match = await addPartyUrns(deal, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
     expect(match.tfm.parties.exporter.partyUrn).toEqual('testPartyUrn');
   });
 
@@ -71,7 +73,7 @@ describe('add partyUrn to deal', () => {
       },
     };
 
-    const match = await addPartyUrns(deal);
+    const match = await addPartyUrns(deal, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
     expect(match.tfm).toMatchObject(deal.tfm);
   });
 });

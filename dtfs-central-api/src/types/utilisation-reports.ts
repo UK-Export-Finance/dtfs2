@@ -8,9 +8,9 @@ import {
   ReportPeriod,
   AzureFileInfo,
   UploadedByUserDetails,
+  UTILISATION_REPORT_HEADERS,
+  IsoMonthStamp,
 } from '@ukef/dtfs2-common';
-import { IsoMonthStamp } from './date';
-import { UTILISATION_REPORT_HEADERS } from '../constants';
 
 export type GetUtilisationReportResponse = {
   id: number;
@@ -48,11 +48,6 @@ export type UtilisationReportReconciliationSummary = {
   items: UtilisationReportReconciliationSummaryItem[];
 };
 
-export type ReportWithStatus = {
-  status: UtilisationReportReconciliationStatus;
-  reportId: number;
-};
-
 type UtilisationReportHeader = ValuesOf<typeof UTILISATION_REPORT_HEADERS>;
 
 export type UtilisationReportRawCsvData = {
@@ -66,3 +61,19 @@ export type UtilisationReportUploadDetails = Prettify<
     }
   >
 >;
+
+export type FeeRecordItem = {
+  facilityId: string;
+};
+
+export type UtilisationReportReconciliationDetails = {
+  reportId: number;
+  bank: {
+    id: string;
+    name: string;
+  };
+  status: UtilisationReportReconciliationStatus;
+  reportPeriod: ReportPeriod;
+  dateUploaded: Date;
+  feeRecords: FeeRecordItem[];
+};

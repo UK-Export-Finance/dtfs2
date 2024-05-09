@@ -137,4 +137,8 @@ authRouter
   .route('/utilisation-reports/set-status')
   .put(validation.updateReportStatusPayloadValidation, handleExpressValidatorResult, utilisationReportsController.updateUtilisationReportStatus);
 
+authRouter
+  .route('/utilisation-reports/reconciliation-details/:reportId')
+  .get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.getUtilisationReportReconciliationDetailsById);
+
 module.exports = { authRouter, openRouter };

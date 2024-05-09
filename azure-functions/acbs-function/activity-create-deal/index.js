@@ -8,6 +8,7 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
@@ -30,7 +31,7 @@ const createDeal = async (context) => {
     const missingMandatory = findMissingMandatory(deal, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();
@@ -63,9 +64,11 @@ const createDeal = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create deal master record. %s', error);
-    throw new Error('Unable to create deal master record %s', error);
+    console.error('Unable to create deal master record. %o', error);
+    throw new Error(`Unable to create deal master record ${error}`);
   }
 };
 
-module.exports = createDeal;
+df.app.activity('create-deal', {
+  handler: createDeal,
+});

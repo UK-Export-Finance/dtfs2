@@ -6,11 +6,16 @@
   "author": "",
   "main": "index.js",
   "scripts": {
-    "load": "node re-insert-mocks.js"
+    "lint": "eslint --color **/*.{ts,js}",
+    "lint:fix": "eslint --fix --color **/*.{ts,js}",
+    "load": "ts-node re-insert-mocks.js",
+    "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js}",
+    "prettier:fix": "prettier --write **/*.{ts,js}",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@ukef/dtfs2-common": "1.0.0",
-    "axios": "^1.6.7",
+    "@ukef/dtfs2-common": "^1.0.0",
+    "axios": "^1.6.8",
     "chance": "^1.1.11",
     "date-fns": "^2.30.0",
     "dotenv": "^16.4.5",

@@ -8,6 +8,7 @@ module.exports = {
     govukFrontend: './scripts/govuk-frontend.js',
     jsEnabled: './scripts/js-enabled.js',
     correspondenceAddress: './scripts/correspondence-address.js',
+    disableFormSubmitOnSubmission: '../libs/common/src/ui-scripts/disable-form-submit-on-submission.js',
   },
   output: {
     path: path.join(__dirname, 'public/js'),
@@ -18,15 +19,12 @@ module.exports = {
   target: ['web', 'es5'],
   optimization: {
     minimize: true,
-    minimizer: [
-      new TerserPlugin(),
-      new CssMinimizerPlugin({}),
-    ],
+    minimizer: [new TerserPlugin(), new CssMinimizerPlugin({})],
   },
   resolve: {
     // resolves paths in library files that we don't control, pointing them to the root hoisted dependencies
     alias: {
-      'node_modules/govuk-frontend': path.resolve(__dirname, '../node_modules/govuk-frontend/dist'),
+      'node_modules/govuk-frontend': path.resolve(__dirname, '../node_modules/govuk-frontend'),
       'node_modules/@ministryofjustice': path.resolve(__dirname, '../node_modules/@ministryofjustice'),
     },
   },

@@ -1,5 +1,5 @@
 import { body, checkSchema } from 'express-validator';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../../constants';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 
 const VALID_UPDATE_PAYLOAD_STATUSES = [
   UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
@@ -17,5 +17,5 @@ export const updateReportStatusPayloadValidation = [
       },
     },
   }),
-  body('reportsWithStatus.*.reportId', 'Report id must be an integer string').exists().isInt({ gt: 0 }),
+  body('reportsWithStatus.*.reportId', 'Report id must be an integer').exists().isInt({ gt: 0 }),
 ];

@@ -17,8 +17,3 @@ export type UtilisationReportReconciliationSummary = {
   submissionMonth: IsoMonthStamp;
   items: UtilisationReportReconciliationSummaryItem[];
 };
-
-export type ReportWithStatus = {
-  status: UtilisationReportReconciliationStatus;
-  reportId: string;
-};
