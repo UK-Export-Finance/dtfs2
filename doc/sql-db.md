@@ -36,6 +36,8 @@ In order to generate data which is in line with the data in MongoDB, the SQL see
 
 The database is shared across the entire project, so commands are defined in the [common package](../libs/common) where the shared DB configuration lives.
 
+[Configure SQL Server settings with environment variables on Linux](https://learn.microsoft.com/en-gb/sql/linux/sql-server-linux-configure-environment-variables?view=sql-server-ver16).
+
 When running commands you can either navigate to the common package, e.g.
 
 ```shell
