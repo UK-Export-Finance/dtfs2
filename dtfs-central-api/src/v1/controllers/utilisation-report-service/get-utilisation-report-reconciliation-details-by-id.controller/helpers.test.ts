@@ -20,23 +20,17 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
   describe('mapFeeRecordEntityToReconciliationDetailsFeeRecordItem', () => {
     const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
-    it('maps the fee record entity to the reconciliation details fee record item', () => {
+    it('maps the fee record entity id, exporter, facilityId and status to the reconciliation details fee record item', () => {
       // Arrange
       const id = 1;
       const facilityId = '12345678';
       const exporter = 'Test exporter';
-      const feesPaidToUkefForThePeriodCurrency: Currency = 'GBP';
-      const feesPaidToUkefForThePeriod = 100.0;
-      const paymentCurrency: Currency = 'GBP';
       const status: FeeRecordStatus = 'TO_DO';
 
       const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(uploadedReport)
         .withId(id)
         .withFacilityId(facilityId)
         .withExporter(exporter)
-        .withFeesPaidToUkefForThePeriodCurrency(feesPaidToUkefForThePeriodCurrency)
-        .withFeesPaidToUkefForThePeriod(feesPaidToUkefForThePeriod)
-        .withPaymentCurrency(paymentCurrency)
         .withStatus(status)
         .build();
 
@@ -44,26 +38,14 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       const feeRecordItem = mapFeeRecordEntityToReconciliationDetailsFeeRecordItem(feeRecordEntity);
 
       // Assert
-      expect(feeRecordItem).toEqual<FeeRecordItem>({
-        id,
-        facilityId,
-        exporter,
-        reportedFees: {
-          currency: feesPaidToUkefForThePeriodCurrency,
-          amount: feesPaidToUkefForThePeriod,
-        },
-        reportedPayments: {
-          currency: paymentCurrency,
-          amount: feesPaidToUkefForThePeriod,
-        },
-        totalReportedPayments: {
-          currency: paymentCurrency,
-          amount: feesPaidToUkefForThePeriod,
-        },
-        paymentsReceived: null,
-        totalPaymentsReceived: null,
-        status,
-      });
+      expect(feeRecordItem).toEqual(
+        expect.objectContaining<Partial<FeeRecordItem>>({
+          id,
+          facilityId,
+          exporter,
+          status,
+        }),
+      );
     });
 
     describe("when the fee record 'feesPaidToUkefForThePeriodCurrency' matches the fee record 'paymentCurrency'", () => {
