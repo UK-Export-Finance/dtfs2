@@ -30,7 +30,7 @@ const sanitize = (user) => ({
 });
 
 const sessionIdentifierValidation = (user, jwtPayload) =>
-  user && user.sessionIdentifier === jwtPayload.sessionIdentifier
+  user?.sessionIdentifier === jwtPayload?.sessionIdentifier
     ? PASSPORT_VALIDATION_RESULTS.PASSED
     : PASSPORT_VALIDATION_RESULTS.FAILED;
 
