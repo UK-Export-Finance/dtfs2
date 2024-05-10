@@ -20,14 +20,19 @@ const folders = [
 const basePath = path.join(__dirname, '..', '..');
 const baseEnvFilePath = path.join(basePath, '.env');
 
-const updateMongoDbUri = (fileData) => {
-  return fileData
+const updateMongoDbUri = (fileData) =>
+  fileData
     .split('\n')
-    .map((currentLine) =>
-      currentLine.includes('MONGODB_URI=') ? currentLine.replace('dtfs-submissions-data', 'localhost') : currentLine,
-    )
+    .map((currentLine) => {
+      if (currentLine.includes('MONGODB_URI=') || currentLine.includes('MONGODB_URI_QA=')) {
+        return currentLine.replace('dtfs-submissions-data', 'localhost');
+      }
+      if (currentLine.includes('SQL_DB_HOST=')) {
+        return currentLine.replace('dtfs-sql', 'localhost');
+      }
+      return currentLine;
+    })
     .join('\n');
-};
 
 const copyEnvFileToFolder = (folderPathToCopyTo) => {
   try {
@@ -36,7 +41,7 @@ const copyEnvFileToFolder = (folderPathToCopyTo) => {
 
     const envVarPathToCopyTo = path.join(basePath, folderPathToCopyTo, '.env');
     fs.writeFileSync(envVarPathToCopyTo, newEnvFileData);
-    console.log(`.env file copied to ${folderPathToCopyTo}`);
+    console.info(`.env file copied to ${folderPathToCopyTo}`);
   } catch (error) {
     console.error(`Error copying .env file to ${folderPathToCopyTo}: ${error.message}`);
   }
@@ -44,4 +49,4 @@ const copyEnvFileToFolder = (folderPathToCopyTo) => {
 
 folders.forEach(copyEnvFileToFolder);
 
-console.log('Done!');
+console.info('Done!');
