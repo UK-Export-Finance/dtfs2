@@ -25,6 +25,9 @@
     "prettier:fix": "prettier --write **/*.{ts,js}",
     "type-check": "tsc --noEmit"
   },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
   "devDependencies": {
     "@ukef/dtfs2-common": "1.0.0",
     "bson": "^6.7.0",
