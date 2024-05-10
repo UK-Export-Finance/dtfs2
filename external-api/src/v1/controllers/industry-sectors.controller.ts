@@ -19,10 +19,10 @@ const headers = {
 
 /**
  * Maps industry ID to ACBS compliant sector ID
- * @param {String} industryId UKEF Industry ID
+ * @param {Number} industryId UKEF Industry ID
  * @returns ACBS compliant industry ID
  */
-export const findACBSIndustrySector = async (industryId: string) => {
+export const findACBSIndustrySector = async (industryId: number) => {
   if (!isValidIndustryId(industryId.toString())) {
     console.error('Invalid industry id provided %s', industryId);
     return { data: 'Invalid industry ID', status: 400 };
@@ -62,7 +62,7 @@ export const findOne = (req: Request, res: Response) => {
 export const getACBSIndustrySector = async (req: Request, res: Response) => {
   const { code } = req.params;
 
-  const { status, data } = await findACBSIndustrySector(code);
+  const { status, data } = await findACBSIndustrySector(Number(code));
 
   return res.status(status).send(data[0]);
 };
