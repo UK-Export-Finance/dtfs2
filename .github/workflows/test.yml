@@ -217,10 +217,8 @@ jobs:
           sleep 60s
           npm run load
 
-      - name: Migrations
+      - name: SQL
         working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: localhost
         run: npm run db:migrate
 
       - name: Execute
@@ -408,18 +406,13 @@ jobs:
           sleep 60s
           npm run load
 
-      - name: Migrations
+      - name: SQL
         working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: localhost
         run: npm run db:migrate
 
       - name: Execute
         working-directory: ./e2e-tests
-        env:
-          SQL_DB_HOST: localhost
-          SQL_DB_LOGGING_ENABLED: false
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec "./portal/cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec "./portal/cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }} SQL_DB_HOST=${{ secrets.SQL_DB_HOST_QA }}
 
   # 5. E2E - GEF
   e2e-tests-gef:
@@ -482,18 +475,13 @@ jobs:
           sleep 60s
           npm run load
 
-      - name: Migrations
+      - name: SQL
         working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: localhost
         run: npm run db:migrate
 
       - name: Execute
         working-directory: ./e2e-tests
-        env:
-          SQL_DB_HOST: localhost
-          SQL_DB_LOGGING_ENABLED: false
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec "./gef/cypress/e2e/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec "./gef/cypress/e2e/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }} SQL_DB_HOST=${{ secrets.SQL_DB_HOST_QA }}
 
   #6. E2E - TFM
   e2e-tests-tfm:
@@ -554,18 +542,13 @@ jobs:
           sleep 60s
           npm run load
 
-      - name: Migrations
+      - name: SQL
         working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: localhost
         run: npm run db:migrate
 
       - name: Execute
         working-directory: ./e2e-tests
-        env:
-          SQL_DB_HOST: localhost
-          SQL_DB_LOGGING_ENABLED: false
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./tfm --record false --spec "./tfm/cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./tfm --record false --spec "./tfm/cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }} SQL_DB_HOST=${{ secrets.SQL_DB_HOST_QA }}
 
   #7. E2E - UKEF
   e2e-tests-ukef:
@@ -635,15 +618,10 @@ jobs:
           sleep 60s
           npm run load
 
-      - name: Migrations
+      - name: SQL
         working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: localhost
         run: npm run db:migrate
 
       - name: Execute
         working-directory: ./e2e-tests
-        env:
-          SQL_DB_HOST: localhost
-          SQL_DB_LOGGING_ENABLED: false
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec "./ukef/cypress/e2e/journeys/portal/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec "./ukef/cypress/e2e/journeys/portal/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }} SQL_DB_HOST=${{ secrets.SQL_DB_HOST_QA }}
