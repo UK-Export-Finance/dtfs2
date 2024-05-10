@@ -80,6 +80,7 @@ const loginCompleteAuth = (passport, userService) => {
       console.error("User with username %s is blocked or disabled for '%s' strategy", jwtPayload.username, name);
       return PASSPORT_VALIDATION_RESULTS.FAILED;
     }
+    
     return PASSPORT_VALIDATION_RESULTS.PASSED;
   };
   baseAuthenticationConfiguration({ name, passport, additionalPayloadValidation, additionalUserValidation });
