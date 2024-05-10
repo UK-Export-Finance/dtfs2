@@ -7,14 +7,11 @@ const folders = [
   'gef-ui',
   'portal',
   'portal-api',
-  'secrets',
   'trade-finance-manager-api',
   'trade-finance-manager-ui',
-  path.join('utils', 'mock-data-loader'),
-  path.join('e2e-tests', 'tfm'),
-  path.join('e2e-tests', 'gef'),
-  path.join('e2e-tests', 'portal'),
-  path.join('e2e-tests', 'ukef'),
+  'utils',
+  path.join('azure-functions', 'acbs-function'),
+  path.join('libs', 'common'),
 ];
 
 const basePath = path.join(__dirname, '..', '..');
