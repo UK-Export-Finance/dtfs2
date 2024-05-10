@@ -2004,7 +2004,9 @@ jobs:
                 UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
                 ESTORE_URL="${{ secrets.ESTORE_URL }}" \
                 HTTPS=1 \
-                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
+                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
+                CONTACT_US_SELF_SERVICE_PORTAL_URL=${{ vars.secrets.CONTACT_US_SELF_SERVICE_PORTAL_URL }} \
+                CONTACT_US_EMAIL_ADDRESS=${{ vars.CONTACT_US_EMAIL_ADDRESS }}
 
       - name: Secrets
         uses: azure/cli@v1.0.9
