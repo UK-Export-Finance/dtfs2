@@ -150,3 +150,5 @@ export const getPremiumSchedule = async (req: Request, res: Response) => {
 
   return new Error(`Error calling Premium schedule. Facility:${premiumScheduleParameters.facilityURN}`);
 };
+
+export default premiumScheduleCalls;
