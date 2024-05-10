@@ -19,14 +19,17 @@ import { createFeeRecord } from '../fee-record/fee-record.helper';
  * @param reportPeriod - The report period
  * @returns The utilisation report entity to insert
  */
-export const createNotReceivedReport = (bankId: string, reportPeriod: ReportPeriod): UtilisationReportEntity =>
-  UtilisationReportEntity.createNotReceived({
+export const createNotReceivedReport = (bankId: string, reportPeriod: ReportPeriod): UtilisationReportEntity => {
+  const notReceivedReport = UtilisationReportEntity.createNotReceived({
     bankId,
     reportPeriod,
     requestSource: {
       platform: 'SYSTEM',
     },
   });
+  notReceivedReport.id = Number(bankId);
+  return notReceivedReport;
+};
 
 /**
  * Generates a utilisation report which has been marked as completed
