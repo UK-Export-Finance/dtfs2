@@ -219,6 +219,8 @@ jobs:
 
       - name: SQL
         working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_QA }}
         run: npm run db:migrate
 
       - name: Execute
@@ -408,6 +410,8 @@ jobs:
 
       - name: SQL
         working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_QA }}
         run: npm run db:migrate
 
       - name: Execute
@@ -477,6 +481,8 @@ jobs:
 
       - name: SQL
         working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_QA }}
         run: npm run db:migrate
 
       - name: Execute
@@ -544,6 +550,8 @@ jobs:
 
       - name: SQL
         working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_QA }}
         run: npm run db:migrate
 
       - name: Execute
@@ -620,6 +628,8 @@ jobs:
 
       - name: SQL
         working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_QA }}
         run: npm run db:migrate
 
       - name: Execute
