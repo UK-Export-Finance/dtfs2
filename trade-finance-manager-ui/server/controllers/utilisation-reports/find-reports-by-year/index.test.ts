@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import api from '../../../api';
-import { getReportsByYear } from '.';
+import { getFindReportsByYear } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { aBank } from '../../../../test-helpers/test-data/bank';
@@ -52,17 +52,17 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
     {
       value: BANK_ID_ONE,
       text: BANK_NAME_ONE,
-      attributes: { 'data-cy': `${BANK_NAME_ONE}-radio` },
+      attributes: { 'data-cy': `${BANK_ID_ONE}-radio` },
     },
     {
       value: BANK_ID_TWO,
       text: BANK_NAME_TWO,
-      attributes: { 'data-cy': `${BANK_NAME_TWO}-radio` },
+      attributes: { 'data-cy': `${BANK_ID_TWO}-radio` },
     },
     {
       value: BANK_ID_THREE,
       text: BANK_NAME_THREE,
-      attributes: { 'data-cy': `${BANK_NAME_THREE}-radio` },
+      attributes: { 'data-cy': `${BANK_ID_THREE}-radio` },
     },
   ];
 
@@ -82,7 +82,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       });
 
       // Act
-      await getReportsByYear(req, res);
+      await getFindReportsByYear(req, res);
 
       // Assert
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
@@ -99,7 +99,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
 
       // Act
-      await getReportsByYear(req, res);
+      await getFindReportsByYear(req, res);
 
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
@@ -132,7 +132,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       ];
 
       // Act
-      await getReportsByYear(req, res);
+      await getFindReportsByYear(req, res);
 
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
@@ -160,7 +160,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       jest.mocked(api.getAllBanks).mockResolvedValue([...BANKS, bankNotVisibleInTfmUtilisationReports]);
 
       // Act
-      await getReportsByYear(req, res);
+      await getFindReportsByYear(req, res);
 
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
@@ -182,7 +182,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
 
       // Act
-      await getReportsByYear(req, res);
+      await getFindReportsByYear(req, res);
 
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
@@ -201,7 +201,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
 
       // Act
-      await getReportsByYear(req, res);
+      await getFindReportsByYear(req, res);
 
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
@@ -220,7 +220,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
 
       // Act
-      await getReportsByYear(req, res);
+      await getFindReportsByYear(req, res);
 
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
@@ -241,7 +241,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
 
       // Act
-      await getReportsByYear(req, res);
+      await getFindReportsByYear(req, res);
 
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/bank-previous-years-reports.njk');

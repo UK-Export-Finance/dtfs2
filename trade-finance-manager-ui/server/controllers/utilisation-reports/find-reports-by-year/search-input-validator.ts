@@ -1,13 +1,13 @@
 import { isNonEmptyString } from '@ukef/dtfs2-common';
 import { REGEX } from '../../../constants';
 
-type Error = {
+type ErrorSummaryItem = {
   text: string;
   href: string;
 };
 
 export type FindUtilisationReportByYearValidationErrors = {
-  errorSummary: Error[];
+  errorSummary: ErrorSummaryItem[];
   bankError: string | undefined;
   yearError: string | undefined;
 };
@@ -16,42 +16,42 @@ const isBefore2024 = (year: number): boolean => year < 2024;
 
 const isInTheFuture = (year: number): boolean => year > new Date().getFullYear();
 
-const validateYearInputAndReturnErrorMessageIfInvalid = (year: unknown): string | undefined => {
-  const validYearRegex = new RegExp(REGEX.YEAR);
-  if (!year || !isNonEmptyString(year) || !validYearRegex.test(year)) {
+const getYearInputValidationError = (yearQuery: string): string | undefined => {
+  if (!isNonEmptyString(yearQuery) || !REGEX.YEAR.test(yearQuery)) {
     return 'Enter a valid year';
   }
-  const yearParsed = Number(year);
-  if (isBefore2024(yearParsed) || isInTheFuture(yearParsed)) {
+  const parsedYear = Number(yearQuery);
+  if (isBefore2024(parsedYear) || isInTheFuture(parsedYear)) {
     return 'Enter a year that is between 2024 and the current year';
   }
   return undefined;
 };
 
-const validateBankInputAndReturnErrorMessageIfInvalid = (bankId: unknown, allBankIds: string[]): string | undefined => {
-  if (!bankId || !isNonEmptyString(bankId) || !allBankIds.includes(bankId)) {
+const getBankInputValidationError = (bankIdQuery: string, validBankIds: string[]): string | undefined => {
+  if (!isNonEmptyString(bankIdQuery) || !validBankIds.includes(bankIdQuery)) {
     return 'Select a bank';
   }
   return undefined;
 };
 
-export const validateSearchInput = (
-  bankId: unknown,
-  year: unknown,
-  allBankIds: string[],
-): FindUtilisationReportByYearValidationErrors => {
-  if (!bankId && !year) {
-    return { errorSummary: [], bankError: undefined, yearError: undefined };
-  }
+type ValidateSearchInputParams = {
+  bankIdQuery: string | undefined;
+  yearQuery: string | undefined;
+  validBankIds: string[];
+};
 
-  const errorSummary: Error[] = [];
-  const bankError = validateBankInputAndReturnErrorMessageIfInvalid(bankId, allBankIds);
-  const yearError = validateYearInputAndReturnErrorMessageIfInvalid(year);
+export const validateSearchInput = ({
+  bankIdQuery,
+  yearQuery,
+  validBankIds,
+}: ValidateSearchInputParams): FindUtilisationReportByYearValidationErrors => {
+  const bankError = bankIdQuery ? getBankInputValidationError(bankIdQuery, validBankIds) : 'Select a bank';
+  const yearError = yearQuery ? getYearInputValidationError(yearQuery) : 'Enter a valid year';
 
+  const errorSummary: ErrorSummaryItem[] = [];
   if (bankError) {
     errorSummary.push({ text: bankError, href: '#bank' });
   }
-
   if (yearError) {
     errorSummary.push({ text: yearError, href: '#year' });
   }
