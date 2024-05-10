@@ -12,7 +12,7 @@ const { bankRoutes, portalRoutes, tfmRoutes, userRoutes, utilisationReportsRoute
 const removeCsrfToken = require('./v1/routes/middleware/remove-csrf-token');
 
 SqlDbDataSource.initialize()
-  .then(() => console.info('🗄️ Successfully initialised connection to SQL database'))
+  .then(() => console.info('✅ Successfully initialised connection to SQL database'))
   .catch((error) => console.error('❌ Failed to initialise connection to SQL database:', error));
 
 const generateApp = () => {

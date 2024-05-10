@@ -126,7 +126,7 @@ Though the DB configuration is contained within the [common package](../libs/com
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 
 SqlDbDataSource.initialize()
-  .then(() => console.info('🗄️ Successfully initialised connection to SQL database'))
+  .then(() => console.info('✅ Successfully initialised connection to SQL database'))
   .catch((error) => console.error('❌ Failed to initialise connection to SQL database:', error));
 ```
 

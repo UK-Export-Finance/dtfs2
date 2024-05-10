@@ -7,7 +7,7 @@ const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
 
 SqlDbDataSource.initialize()
-  .then(() => console.info('🗄️ Successfully initialised connection to SQL database'))
+  .then(() => console.info('✅ Successfully initialised connection to SQL database'))
   .catch((error) => console.error('❌ Failed to initialise connection to SQL database:', error));
 
 module.exports = {

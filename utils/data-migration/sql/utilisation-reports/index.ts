@@ -37,7 +37,7 @@ const getSqlReports = (): {
 
 SqlDbDataSource.initialize()
   .then(async () => {
-    console.info('🗄️ Successfully initialised connection to SQL database');
+    console.info('✅ Successfully initialised connection to SQL database');
 
     const { sqlReports, sqlFeeRecords } = getSqlReports();
 
