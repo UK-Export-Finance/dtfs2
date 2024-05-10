@@ -87,5 +87,6 @@ exports.findOneDealGet = async (req, res) => {
 
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
+
   return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
 };

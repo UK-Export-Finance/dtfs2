@@ -43,7 +43,7 @@ exports.updateFacilityStatusPut = async (req, res) => {
 
     const { status } = req.body;
 
-    await findOneFacility(facilityId, async (existingFacility) => {
+    return await findOneFacility(facilityId, async (existingFacility) => {
       if (existingFacility) {
         const updatedFacility = await updateFacilityStatus(facilityId, status, existingFacility);
         return res.status(200).json(updatedFacility);
@@ -51,9 +51,7 @@ exports.updateFacilityStatusPut = async (req, res) => {
 
       return res.status(404).send();
     });
-  } else {
-    return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
   }
 
-  return res.status(400).send({ status: 400, message: 'Invalid update facility status request' });
+  return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
 };

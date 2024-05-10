@@ -57,5 +57,6 @@ exports.updateFacilityPut = async (req, res) => {
 
     return res.status(404).send({ status: 404, message: "The facility ID doesn't exist" });
   }
+
   return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
 };
