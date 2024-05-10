@@ -17,7 +17,16 @@ const folders = [
 const basePath = path.join(__dirname, '..', '..');
 const baseEnvFilePath = path.join(basePath, '.env');
 
-const updateMongoDbUri = (fileData) =>
+/**
+ * Due to our current setup, the .env on the root on the project
+ * requires a slightly different setup than the .env that are copied to
+ * the .env that are used in the docker files
+ *
+ * This function updates the .env file to apply these rules
+ * @param {string} fileData
+ * @returns {string}
+ */
+const updateEnvVars = (fileData) =>
   fileData
     .split('\n')
     .map((currentLine) => {
@@ -34,7 +43,7 @@ const updateMongoDbUri = (fileData) =>
 const copyEnvFileToFolder = (folderPathToCopyTo) => {
   try {
     const envFileData = fs.readFileSync(baseEnvFilePath, 'utf8');
-    const newEnvFileData = updateMongoDbUri(envFileData);
+    const newEnvFileData = updateEnvVars(envFileData);
 
     const envVarPathToCopyTo = path.join(basePath, folderPathToCopyTo, '.env');
     fs.writeFileSync(envVarPathToCopyTo, newEnvFileData);
