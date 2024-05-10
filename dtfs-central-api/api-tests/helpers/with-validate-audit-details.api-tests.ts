@@ -8,7 +8,7 @@ import {
 import { MOCK_TFM_USER } from '../mocks/test-users/mock-tfm-user';
 import { MOCK_PORTAL_USER } from '../mocks/test-users/mock-portal-user';
 
-type MakeRequest = () => Promise<{ status: number; body: object }>;
+type MakeRequest = (auditDetails?: AuditDetails) => Promise<{ status: number; body: object }>;
 
 type Params = {
   makeRequest: MakeRequest;
@@ -35,20 +35,20 @@ export const withValidateAuditDetailsTests = ({ makeRequest, validUserTypes }: P
 };
 
 function withValidAuditDetailsTests(validAuditDetails: AuditDetails[], makeRequest: MakeRequest) {
-  it.each(validAuditDetails)('it should return status 200 if the userType is $userType', async () => {
-    const { status } = await makeRequest();
+  it.each(validAuditDetails)('it should return status 200 if the userType is $userType', async (auditDetails) => {
+    const { status } = await makeRequest(auditDetails);
 
     expect(status).toBe(200);
   });
 }
 
 function withInvalidAuditDetailsTests(invalidAuditDetails: AuditDetails[], makeRequest: MakeRequest) {
-  it.each(invalidAuditDetails)('it should return status 400 if the userType is $userType', async () => {
-    const { status, body } = await makeRequest();
+  it.each(invalidAuditDetails)('it should return status 400 if the userType is $userType', async (auditDetails) => {
+    const { status, body } = await makeRequest(auditDetails);
 
     expect(status).toBe(400);
     expect(body).toEqual({
-      message: String(expect.stringContaining('Invalid auditDetails, userType must be')),
+      message: expect.stringContaining('Invalid auditDetails, userType must be') as string,
       status: 400,
     });
   });
