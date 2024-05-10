@@ -96,7 +96,8 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         .build();
       reportTwo.feeRecords = [getMockFeeRecordForReport(reportTwo)];
 
-      const findOneByBankIdAndReportPeriodSpy = jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod').mockImplementation((bankId) => {
+      // eslint-disable-next-line @typescript-eslint/require-await
+      const findOneByBankIdAndReportPeriodSpy = jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod').mockImplementation(async (bankId) => {
         switch (bankId) {
           case bankIdOne:
             return reportOne;
@@ -492,7 +493,8 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
           }
         });
 
-      const findOneByBankIdAndReportPeriodSpy = jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod').mockImplementation((bankId) => {
+      // eslint-disable-next-line @typescript-eslint/require-await
+      const findOneByBankIdAndReportPeriodSpy = jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod').mockImplementation(async (bankId) => {
         switch (bankId) {
           case bankA.id:
             return getOpenMonthlyReport({ bank: bankA, month: 11 });
