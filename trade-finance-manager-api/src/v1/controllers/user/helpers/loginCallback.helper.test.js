@@ -10,7 +10,7 @@ jest.mock('../../../../utils/crypto.util', () => ({
 }));
 
 const { when } = require('jest-when');
-const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateNoUserLoggedInAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { loginCallback: login } = require('./loginCallback.helper');
 const {
   usernameOrPasswordIncorrect,
@@ -170,7 +170,7 @@ describe('loginCallback', () => {
 
   function mockupdateLastLoginAndResetSignInDataSuccess(user) {
     when(controller.updateLastLoginAndResetSignInData)
-      .calledWith(user, SESSION_IDENTIFIER, generateNoUserLoggedInAuditDetails(), expect.anything())
+      .calledWith(user, SESSION_IDENTIFIER, generateTfmAuditDetails(user._id), expect.anything())
       .mockImplementation((aUser, sessionIdentifier, auditDetails, callback) => {
         callback();
       });
