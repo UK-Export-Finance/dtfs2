@@ -82,7 +82,7 @@ describe('changeStreamApi', () => {
           lastUpdatedByTfmUserId: null,
           noUserLoggedIn: true,
         },
-        logCreatedAt: now,
+        expireAt: now,
       },
       operationType: 'insert',
       ns: {
