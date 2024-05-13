@@ -13,7 +13,7 @@ export type PortalSessionUser = Prettify<
     | 'lastLogin'
     | 'user-status'
     | 'disabled'
-    | 'signInLinkSendDate'
+    | 'signInLinkSendDate' // todo dtfs2-7075 check whether this is needed
     | 'signInLinkSendCount'
     | '_id'
   > & {
