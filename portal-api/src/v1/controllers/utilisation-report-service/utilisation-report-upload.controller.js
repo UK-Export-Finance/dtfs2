@@ -13,7 +13,7 @@ const { InvalidReportStatusError } = require('../../errors');
 /**
  * Fetches report for bank for given report period
  * @param {string} bankId
- * @param {ReportPeriod} reportPeriod
+ * @param {import('@ukef/dtfs2-common').ReportPeriod} reportPeriod
  */
 const getReportForPeriod = async (bankId, reportPeriod) => {
   const reportsForPeriod = await api.getUtilisationReports(bankId, {
@@ -68,7 +68,7 @@ const uploadReportAndSendNotification = async (req, res) => {
     return res.status(201).send({ paymentOfficerEmails });
   } catch (error) {
     if (error instanceof InvalidReportStatusError) {
-      return res.status(500).send(error.message);
+      return res.status(error.status).send(error.message);
     }
     console.error('Failed to save utilisation report: %o', error);
     return res.status(error.response?.status ?? 500).send('Failed to save utilisation report');

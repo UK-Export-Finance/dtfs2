@@ -355,17 +355,17 @@ const getUtilisationReportById = async (id) => {
  * @returns {Promise<import('./api-response-types').BankResponse>} response of API call
  */
 const getBankById = async (bankId) => {
-    if (!isValidBankId(bankId)) {
-      throw new Error(`Invalid bank id: ${bankId}`);
-    }
+  if (!isValidBankId(bankId)) {
+    throw new Error(`Invalid bank id: ${bankId}`);
+  }
 
-    const response = await axios({
-      method: 'get',
-      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}`,
-      headers: headers.central,
-    });
+  const response = await axios({
+    method: 'get',
+    url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}`,
+    headers: headers.central,
+  });
 
-    return response.data;
+  return response.data;
 };
 
 /**

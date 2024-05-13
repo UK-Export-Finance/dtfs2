@@ -25,21 +25,30 @@ describe('emailService', () => {
   describe('sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam', () => {
     it('should send utilisation report notification email to all emails belonging to UKEF GEF reporting team', async () => {
       // Arrange
-      process.env.UKEF_GEF_REPORTING_EMAIL_RECIPIENT = '["email1@ukexportfinance.gov.uk", "email2@ukexportfinance.gov.uk"]';
+      process.env.UKEF_GEF_REPORTING_EMAIL_RECIPIENT =
+        '["email1@ukexportfinance.gov.uk", "email2@ukexportfinance.gov.uk"]';
 
       // Act
       await sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam('My Bank', 'June 2026');
 
       // Assert
       expect(sendEmail).toHaveBeenCalledTimes(2);
-      expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_NOTIFICATION, 'email1@ukexportfinance.gov.uk', {
-        bankName: 'My Bank',
-        reportPeriod: 'June 2026',
-      });
-      expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_NOTIFICATION, 'email2@ukexportfinance.gov.uk', {
-        bankName: 'My Bank',
-        reportPeriod: 'June 2026',
-      });
+      expect(sendEmail).toHaveBeenCalledWith(
+        EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_NOTIFICATION,
+        'email1@ukexportfinance.gov.uk',
+        {
+          bankName: 'My Bank',
+          reportPeriod: 'June 2026',
+        },
+      );
+      expect(sendEmail).toHaveBeenCalledWith(
+        EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_NOTIFICATION,
+        'email2@ukexportfinance.gov.uk',
+        {
+          bankName: 'My Bank',
+          reportPeriod: 'June 2026',
+        },
+      );
     });
 
     it('should throw an error if email recipients not provided in correct format', async () => {
@@ -49,7 +58,7 @@ describe('emailService', () => {
       // Act + Assert
       await expect(
         sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam('My Bank', 'June 2026'),
-      ).rejects.toThrow(Error);
+      ).rejects.toThrow();
       expect(sendEmail).toHaveBeenCalledTimes(0);
     });
 
@@ -60,7 +69,7 @@ describe('emailService', () => {
       // Act + Assert
       await expect(
         sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam('My Bank', 'June 2026'),
-      ).rejects.toThrow(Error);
+      ).rejects.toThrow();
       expect(sendEmail).toHaveBeenCalledTimes(0);
     });
   });

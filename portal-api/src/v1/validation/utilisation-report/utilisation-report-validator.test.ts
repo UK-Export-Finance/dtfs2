@@ -18,7 +18,7 @@ describe('utilisation report validator', () => {
       expect(() => validateReportIsInReportNotReceivedState(report)).toThrow(InvalidReportStatusError);
     });
 
-    it('returns report id if report has REPORT_NOT_RECEIVED status', () => {
+    it('does not throw if report has REPORT_NOT_RECEIVED status', () => {
       // Arrange
       const report = aNotReceivedUtilisationReportResponse();
 
