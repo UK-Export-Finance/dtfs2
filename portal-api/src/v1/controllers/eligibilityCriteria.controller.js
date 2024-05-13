@@ -1,8 +1,8 @@
-const { isVerifiedPayload } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload, SCHEMA } = require('@ukef/dtfs2-common');
 const assert = require('assert');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
-const { SCHEMA, DEAL } = require('../../constants');
+const { DEAL } = require('../../constants');
 
 const sortEligibilityCriteria = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.id) - Number(b.id));

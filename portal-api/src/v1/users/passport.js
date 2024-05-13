@@ -27,11 +27,13 @@ const sanitize = (user) => ({
   'user-status': user['user-status'],
   disabled: user.disabled,
   _id: user._id,
+  isTrusted: user.isTrusted,
 });
 
-const sessionIdentifierValidation = (user, jwtPayload) => (user && user.sessionIdentifier === jwtPayload.sessionIdentifier
-  ? PASSPORT_VALIDATION_RESULTS.PASSED
-  : PASSPORT_VALIDATION_RESULTS.FAILED);
+const sessionIdentifierValidation = (user, jwtPayload) =>
+  user && user.sessionIdentifier === jwtPayload.sessionIdentifier
+    ? PASSPORT_VALIDATION_RESULTS.PASSED
+    : PASSPORT_VALIDATION_RESULTS.FAILED;
 
 const baseAuthenticationConfiguration = ({
   name,
@@ -45,7 +47,11 @@ const baseAuthenticationConfiguration = ({
     new JwtStrategy(options, async (jwtPayload, done) => {
       findByUsername(jwtPayload.username, (error, user) => {
         if (error) {
-          console.error("Failed when finding username %s in database during '%s' JWT strategy", jwtPayload.username, name);
+          console.error(
+            "Failed when finding username %s in database during '%s' JWT strategy",
+            jwtPayload.username,
+            name,
+          );
           return done(error, false);
         }
 
@@ -54,12 +60,18 @@ const baseAuthenticationConfiguration = ({
           return done(null, false);
         }
 
-        if (additionalUserValidation && additionalUserValidation(user, jwtPayload) === PASSPORT_VALIDATION_RESULTS.FAILED) {
+        if (
+          additionalUserValidation &&
+          additionalUserValidation(user, jwtPayload) === PASSPORT_VALIDATION_RESULTS.FAILED
+        ) {
           console.error("Failed user validation for '%s' strategy", name);
           return done(null, false);
         }
 
-        if (additionalPayloadValidation && additionalPayloadValidation(jwtPayload) === PASSPORT_VALIDATION_RESULTS.FAILED) {
+        if (
+          additionalPayloadValidation &&
+          additionalPayloadValidation(jwtPayload) === PASSPORT_VALIDATION_RESULTS.FAILED
+        ) {
           console.error("Failed additional payload validation for '%s' strategy", name);
           return done(null, false);
         }
@@ -74,7 +86,9 @@ const baseAuthenticationConfiguration = ({
 const loginCompleteAuth = (passport, userService) => {
   const name = 'login-complete';
   const additionalPayloadValidation = (jwtPayload) =>
-    (jwtPayload.loginStatus === LOGIN_STATUSES.VALID_2FA ? PASSPORT_VALIDATION_RESULTS.PASSED : PASSPORT_VALIDATION_RESULTS.FAILED);
+    jwtPayload.loginStatus === LOGIN_STATUSES.VALID_2FA
+      ? PASSPORT_VALIDATION_RESULTS.PASSED
+      : PASSPORT_VALIDATION_RESULTS.FAILED;
   const additionalUserValidation = (user, jwtPayload) => {
     if (userService.isUserBlockedOrDisabled(user)) {
       console.error("User with username %s is blocked or disabled for '%s' strategy", jwtPayload.username, name);
@@ -87,7 +101,9 @@ const loginCompleteAuth = (passport, userService) => {
 
 const loginInProgressAuth = (passport) => {
   const additionalPayloadValidation = (jwtPayload) =>
-    (jwtPayload.loginStatus === LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD ? PASSPORT_VALIDATION_RESULTS.PASSED : PASSPORT_VALIDATION_RESULTS.FAILED);
+    jwtPayload.loginStatus === LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD
+      ? PASSPORT_VALIDATION_RESULTS.PASSED
+      : PASSPORT_VALIDATION_RESULTS.FAILED;
   const getAdditionalReturnedFields = (user) => ({
     sessionIdentifier: user.sessionIdentifier,
     signInLinkSendDate: user.signInLinkSendDate,
