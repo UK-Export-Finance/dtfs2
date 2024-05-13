@@ -14,7 +14,10 @@ const shouldUpdateDealFromMIAtoMIN = (deal, tfmDeal) => {
     return false;
   }
 
-  const ukefApprovedDecisions = [CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS, CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS];
+  const ukefApprovedDecisions = [
+    CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS,
+    CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS,
+  ];
   const isMIA = deal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA;
   const hasApprovedDecision = ukefApprovedDecisions.includes(tfmDeal?.underwriterManagersDecision?.decision);
 

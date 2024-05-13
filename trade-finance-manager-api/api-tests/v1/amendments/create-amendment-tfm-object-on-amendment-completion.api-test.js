@@ -56,7 +56,10 @@ describe('update amendment-tfm on amendment completion', () => {
   it('createAmendmentTFMObject() - should not create tfm object when no getLatestCompletedAmendmentValue or getLatestCompletedAmendmentDate', async () => {
     externalApis.getLatestCompletedAmendmentValue = jest.fn(() => Promise.resolve({}));
     externalApis.getLatestCompletedAmendmentDate = jest.fn(() => Promise.resolve({}));
-    const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
+    const result = await amendmentController.createAmendmentTFMObject(
+      mockAmendment.amendmentId,
+      mockAmendment.facilityId,
+    );
 
     expect(result).toEqual({});
   });
@@ -64,7 +67,10 @@ describe('update amendment-tfm on amendment completion', () => {
   it('createAmendmentTFMObject() - should create tfm object when getLatestCompletedAmendmentValue and getLatestCompletedAmendmentDate', async () => {
     externalApis.getFacilityExposurePeriod = jest.fn(() => Promise.resolve({ exposurePeriodInMonths: 5 }));
 
-    const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
+    const result = await amendmentController.createAmendmentTFMObject(
+      mockAmendment.amendmentId,
+      mockAmendment.facilityId,
+    );
 
     const expected = {
       amendmentExposurePeriodInMonths: 5,
@@ -86,7 +92,10 @@ describe('update amendment-tfm on amendment completion', () => {
   it('createAmendmentTFMObject() - should create tfm object when getLatestCompletedAmendmentValue and getLatestCompletedAmendmentDate', async () => {
     externalApis.getFacilityExposurePeriod = jest.fn(() => Promise.resolve({ exposurePeriodInMonths: 5 }));
 
-    const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
+    const result = await amendmentController.createAmendmentTFMObject(
+      mockAmendment.amendmentId,
+      mockAmendment.facilityId,
+    );
 
     const expected = {
       amendmentExposurePeriodInMonths: 5,
@@ -108,7 +117,10 @@ describe('update amendment-tfm on amendment completion', () => {
   it('createAmendmentTFMObject() - should create tfm object when getLatestCompletedAmendmentValue only', async () => {
     externalApis.getLatestCompletedAmendmentDate = jest.fn(() => Promise.resolve({}));
 
-    const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
+    const result = await amendmentController.createAmendmentTFMObject(
+      mockAmendment.amendmentId,
+      mockAmendment.facilityId,
+    );
 
     const expected = {
       exposure: {
@@ -129,7 +141,10 @@ describe('update amendment-tfm on amendment completion', () => {
     externalApis.getFacilityExposurePeriod = jest.fn(() => Promise.resolve({ exposurePeriodInMonths: 5 }));
     externalApis.getLatestCompletedAmendmentValue = jest.fn(() => Promise.resolve({}));
 
-    const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
+    const result = await amendmentController.createAmendmentTFMObject(
+      mockAmendment.amendmentId,
+      mockAmendment.facilityId,
+    );
 
     const expected = {
       amendmentExposurePeriodInMonths: 5,

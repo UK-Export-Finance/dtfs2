@@ -40,6 +40,7 @@
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },
   "dependencies": {
+    "big.js": "^6.2.1",
     "date-fns": "^3.3.1",
     "date-fns-tz": "^2.0.1",
     "dotenv": "^16.4.5",
@@ -51,6 +52,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/big.js": "^6.2.2",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.11",
     "@types/node-cron": "^3.0.11",
