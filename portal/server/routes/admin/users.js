@@ -1,12 +1,6 @@
 const express = require('express');
 const api = require('../../api');
-const {
-  getApiData,
-  requestParams,
-  errorHref,
-  generateErrorSummary,
-  constructPayload,
-} = require('../../helpers');
+const { getApiData, requestParams, errorHref, generateErrorSummary, constructPayload } = require('../../helpers');
 const { ALL_BANKS_ID, PRIMARY_NAV_KEY } = require('../../constants');
 
 const router = express.Router();
@@ -59,19 +53,11 @@ router.get('/users/create', async (req, res) => {
 
 // roles are fed in = require(checkboxes, so we either get a string or an array.).
 // -so if we don't get an array, put it into an array..
-const handleRoles = (roles) => (Array.isArray(roles)
-  ? [...roles]
-  : [roles]);
+const handleRoles = (roles) => (Array.isArray(roles) ? [...roles] : [roles]);
 
 // Admin - user create
 router.post('/users/create', async (req, res) => {
-  const {
-    firstname,
-    surname,
-    roles,
-    email,
-    bank,
-  } = req.body;
+  const { firstname, surname, roles, email, bank } = req.body;
 
   if (firstname && surname && roles && bank) {
     const { userToken } = requestParams(req);
@@ -125,12 +111,7 @@ router.get('/users/edit/:_id', async (req, res) => {
 
 // Admin - user edit
 router.post('/users/edit/:_id', async (req, res) => {
-  const payloadProperties = [
-    'firstname',
-    'surname',
-    'user-status',
-    'roles',
-  ];
+  const payloadProperties = ['firstname', 'surname', 'user-status', 'roles', 'isTrusted'];
   const payload = constructPayload(req.body, payloadProperties);
   const { _id, userToken } = requestParams(req);
 
@@ -199,10 +180,7 @@ router.get('/users/change-password/:_id', async (req, res) => {
 
 // Admin - Change user password
 router.post('/users/change-password/:_id', async (req, res) => {
-  const payloadProperties = [
-    'password',
-    'passwordConfirm',
-  ];
+  const payloadProperties = ['password', 'passwordConfirm'];
   const payload = constructPayload(req.body, payloadProperties);
   const { _id, userToken } = requestParams(req);
 
