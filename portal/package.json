@@ -22,7 +22,7 @@
     "api-test": "jest --coverage --verbose --forceExit --config=api-test.jest.config.js",
     "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
     "dev": "webpack --config webpack.dev.config.js --watch",
-    "lint": "eslint --color **/*.{ts,js} --ignore-path '../.eslintignore'",
+    "lint": "eslint --color **/*.{ts,js} --ignore-path ../.eslintignore",
     "lint:fix": "eslint --fix --color **/*.{ts,js}",
     "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js}",
     "prettier:fix": "prettier --write **/*.{ts,js}",

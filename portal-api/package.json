@@ -20,7 +20,7 @@
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --forceExit --clearMocks --config=api-test.jest.config.js",
     "api-test-dev": "jest --verbose --runInBand --forceExit --clearMocks --config=api-test.jest.config.js",
-    "lint": "eslint --color **/*.{ts,js} --ignore-path '../.eslintignore'",
+    "lint": "eslint --color **/*.{ts,js} --ignore-path ../.eslintignore",
     "lint:fix": "eslint --fix --color **/*.{ts,js}",
     "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js}",
     "prettier:fix": "prettier --write **/*.{ts,js}",
