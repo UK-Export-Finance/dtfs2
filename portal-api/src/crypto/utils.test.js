@@ -2,8 +2,8 @@ const jsonwebtoken = require('jsonwebtoken');
 const crypto = require('crypto');
 const { when } = require('jest-when');
 const { issueValidUsernameAndPasswordJWT, issueValid2faJWT, validPassword } = require('./utils');
-const { MAKER } = require('../v1/roles/roles');
 const { LOGIN_STATUSES } = require('../constants');
+const { TEST_USER } = require('../../test-helpers/unit-test-mocks/mock-user');
 
 jest.mock('crypto', () => ({
   ...jest.requireActual('crypto'),
@@ -26,7 +26,9 @@ describe('crypto utils', () => {
 
     beforeEach(() => {
       crypto.pbkdf2Sync = jest.fn();
-      when(crypto.pbkdf2Sync).calledWith(A_PASSWORD, A_SALT, ITERATIONS, KEYLEN, DIGEST).mockReturnValueOnce(A_HASH_AS_BUFFER);
+      when(crypto.pbkdf2Sync)
+        .calledWith(A_PASSWORD, A_SALT, ITERATIONS, KEYLEN, DIGEST)
+        .mockReturnValueOnce(A_HASH_AS_BUFFER);
     });
 
     describe('when password hash matches the hash', () => {
@@ -79,20 +81,7 @@ describe('crypto utils', () => {
       jest.useRealTimers();
     });
 
-    const USER = {
-      username: 'HSBC-maker-1',
-      password: 'P@ssword1234',
-      firstname: 'Mister',
-      surname: 'One',
-      email: 'one@email.com',
-      timezone: 'Europe/London',
-      roles: [MAKER],
-      bank: {
-        id: '961',
-        name: 'HSBC',
-        emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
-      },
-    };
+    const USER = TEST_USER;
 
     const EXISTING_SESSION_IDENTIFIER = crypto.randomBytes(32).toString('hex');
 
