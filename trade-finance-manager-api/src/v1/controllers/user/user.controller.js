@@ -162,7 +162,7 @@ exports.removeTfmUserById = async (_id, auditDetails, callback) => {
   }
 
   const collection = await db.getCollection('tfm-users');
-  const status = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
+  const deleteResult = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
 
-  return callback(null, status);
+  return callback(null, deleteResult);
 };

@@ -18,7 +18,7 @@ export const setupDeletionAuditLogsCollection = async () => {
   logger.info('Setting up deletion audit logs collection');
   const dbConnection = await getConnection();
 
-  await dbConnection.createCollection(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS, {
+  const collection = await dbConnection.createCollection(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS, {
     validator: {
       $jsonSchema: {
         bsonType: 'object',
@@ -67,7 +67,6 @@ export const setupDeletionAuditLogsCollection = async () => {
       },
     },
   });
-  const collection = await getCollection(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS);
 
   await collection.createIndex(
     {

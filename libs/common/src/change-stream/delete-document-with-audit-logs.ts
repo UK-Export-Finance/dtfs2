@@ -48,8 +48,8 @@ export const deleteDocumentWithAuditLogs = async ({
         throw new Error('Failed to create deletion audit log');
       }
 
-      const usersCollection = await db.getCollection(collectionName);
-      const deleteResult = await usersCollection.deleteOne({ _id: { $eq: documentId } }, { session });
+      const collection = await db.getCollection(collectionName);
+      const deleteResult = await collection.deleteOne({ _id: { $eq: documentId } }, { session });
       if (!(deleteResult.acknowledged && deleteResult.deletedCount === 1)) {
         throw new Error('Failed to delete document');
       }

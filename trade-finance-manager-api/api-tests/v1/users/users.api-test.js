@@ -1,3 +1,5 @@
+const { ObjectId } = require('mongodb');
+const { withDeletionAuditLogsTests } = require('@ukef/dtfs2-common/change-stream');
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
@@ -51,12 +53,31 @@ describe('user controller', () => {
   });
 
   describe('DELETE /v1/users', () => {
-    it('removes the TFM user by _id', async () => {
-      const { body: postBody } = await as(tokenUser).post(MOCK_USERS[1]).to('/v1/users');
-      const createdId = postBody.user._id;
+    let documentToDeleteId;
 
-      const { status } = await as(tokenUser).remove().to(`/v1/users/${createdId}`);
-      expect(status).toEqual(200);
-    });
+    if (process.env.CHANGE_STREAM_ENABLED === 'true') {
+      beforeEach(async () => {
+        const { body } = await as(tokenUser).post(MOCK_USERS[1]).to('/v1/users');
+        documentToDeleteId = body.user._id;
+      });
+
+      withDeletionAuditLogsTests({
+        makeRequest: () => as(tokenUser).remove().to(`/v1/users/${documentToDeleteId}`),
+        collectionName: 'tfm-users',
+        auditRecord: {
+          lastUpdatedAt: expect.any(String),
+          lastUpdatedByPortalUserId: null,
+          lastUpdatedByTfmUserId: expect.any(ObjectId),
+          lastUpdatedByIsSystem: null,
+          noUserLoggedIn: null,
+        },
+        getDeletedDocumentId: () => documentToDeleteId,
+      });
+    } else {
+      it('removes the TFM user by _id', async () => {
+        const { status } = await as(tokenUser).remove().to(`/v1/users/${userId}`);
+        expect(status).toEqual(200);
+      });
+    }
   });
 });
