@@ -56,7 +56,7 @@ export const CRITERIA = {
     product: z.string(),
     isInDraft: z.boolean(),
     createdAt: z.number(),
-    updatedAt: z.number().nullable(),
+    updatedAt: z.number().optional(),
     criteria: z.array(z.object({})),
   }),
   MANDATORY: {
