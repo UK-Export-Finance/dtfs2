@@ -1,11 +1,27 @@
 /**
  * @openapi
  * definitions:
- *   UtilisationReportReconciliationDetailsFeeRecord:
+ *   UtilisationReportReconciliationDetailsFeeRecordItem:
  *     type: object
  *     properties:
+ *       id:
+ *         type: number
  *       facilityId:
  *         type: string
+ *       exporter:
+ *         type: string
+ *       reportedFees:
+ *         $ref: '#/definitions/CurrencyAndAmount'
+ *       reportedPayments:
+ *         $ref: '#/definitions/CurrencyAndAmount'
+ *       totalReportedPayments:
+ *         $ref: '#/definitions/CurrencyAndAmount'
+ *       paymentsReceived:
+ *         nullable: true
+ *         $ref: '#/definitions/CurrencyAndAmount'
+ *       totalPaymentsReceived:
+ *         nullable: true
+ *         $ref: '#/definitions/CurrencyAndAmount'
  *   UtilisationReportReconciliationDetails:
  *     type: object
  *     properties:
@@ -27,5 +43,5 @@
  *       feeRecords:
  *         type: array
  *         items:
- *           $ref: '#/definitions/UtilisationReportReconciliationFeeRecord'
+ *           $ref: '#/definitions/UtilisationReportReconciliationFeeRecordItem'
  */

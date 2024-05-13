@@ -1,5 +1,5 @@
 import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '../../sql-db-entities';
-import { Currency } from '../../types';
+import { Currency, FeeRecordStatus } from '../../types';
 
 export class FeeRecordEntityMockBuilder {
   private readonly feeRecord: FeeRecordEntity;
@@ -29,6 +29,7 @@ export class FeeRecordEntityMockBuilder {
     data.feesPaidToUkefForThePeriodCurrency = 'GBP';
     data.paymentCurrency = 'GBP';
     data.paymentExchangeRate = 1;
+    data.status = 'TO_DO';
     data.updateLastUpdatedBy(requestSource);
     return new FeeRecordEntityMockBuilder(data);
   }
@@ -90,6 +91,11 @@ export class FeeRecordEntityMockBuilder {
 
   public withPaymentExchangeRate(exchangeRate: number): FeeRecordEntityMockBuilder {
     this.feeRecord.paymentExchangeRate = exchangeRate;
+    return this;
+  }
+
+  public withStatus(status: FeeRecordStatus): FeeRecordEntityMockBuilder {
+    this.feeRecord.status = status;
     return this;
   }
 
