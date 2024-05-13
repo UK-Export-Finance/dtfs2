@@ -1,7 +1,7 @@
 const pageRenderer = require('../pageRenderer');
 const { MOCK_TFM_SESSION_USER } = require('../../server/test-mocks/mock-tfm-session-user');
 
-const page = '../templates/utilisation-reports/bank-previous-years-reports.njk';
+const page = '../templates/utilisation-reports/previous-bank-reports-by-year.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
@@ -13,6 +13,6 @@ describe(page, () => {
   };
 
   it('should render the main heading', () => {
-    getWrapper().expectText('[data-cy="bank-previous-years-reports-heading"]').toRead("Previous years' reports");
+    getWrapper().expectText('[data-cy="previous-bank-reports-by-year-heading"]').toRead("Previous years' reports");
   });
 });

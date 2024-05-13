@@ -71,10 +71,44 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
   });
 
   describe('findUtilisationReportsForm', () => {
+    const userToken = 'user-token';
+    const requestSession = {
+      userToken,
+      user: MOCK_TFM_SESSION_USER,
+    };
+
+    it("renders the 'problem-with-service' page when the bank query is provided but is not a string", async () => {
+      // Arrange
+      const { req, res } = httpMocks.createMocks({
+        session: requestSession,
+        query: { bank: ['123'] },
+      });
+
+      // Act
+      await getFindReportsByYear(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
+    });
+
+    it("renders the 'problem-with-service' page when the year query is provided but is not a string", async () => {
+      // Arrange
+      const { req, res } = httpMocks.createMocks({
+        session: requestSession,
+        query: { year: ['2023'] },
+      });
+
+      // Act
+      await getFindReportsByYear(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
+    });
+
     it("renders the 'problem-with-service' page on error", async () => {
       // Arrange
       const { res, req } = httpMocks.createMocks({
-        session: { userToken: 'user-token', user: MOCK_TFM_SESSION_USER },
+        session: requestSession,
       });
 
       jest.mocked(api.getAllBanks).mockRejectedValue({
@@ -90,10 +124,8 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
 
     it("renders the 'find-utilisation-reports-by-year.njk' view with required data when there are no query params or errors", async () => {
       // Arrange
-      const userToken = 'user-token';
-
       const { res, req } = httpMocks.createMocks({
-        session: { userToken, user: MOCK_TFM_SESSION_USER },
+        session: requestSession,
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
@@ -114,11 +146,10 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
 
     it("renders the 'find-utilisation-reports-by-year.njk' view with required data when there are query params with errors", async () => {
       // Arrange
-      const userToken = 'user-token';
       const yearQuery = '20';
 
       const { res, req } = httpMocks.createMocks({
-        session: { userToken, user: MOCK_TFM_SESSION_USER },
+        session: requestSession,
         query: { year: yearQuery },
       });
 
@@ -147,9 +178,8 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
 
     it("renders the 'find-utilisation-reports-by-year.njk' view with banks not visible in tfm utilisation reports filtered out", async () => {
       // Arrange
-      const userToken = 'user-token';
       const { res, req } = httpMocks.createMocks({
-        session: { userToken, user: MOCK_TFM_SESSION_USER },
+        session: requestSession,
       });
       const bankNotVisibleInTfmUtilisationReports: Bank = {
         ...aBank(),
@@ -172,10 +202,8 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
 
     it("renders the 'find-utilisation-reports-by-year.njk' view with bank pre-selected if bank param was provided and there is an error with the year", async () => {
       // Arrange
-      const userToken = 'user-token';
-
       const { res, req } = httpMocks.createMocks({
-        session: { userToken, user: MOCK_TFM_SESSION_USER },
+        session: requestSession,
         query: { bank: BANK_ID_TWO, year: 'invalidYear' },
       });
 
@@ -191,10 +219,8 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
 
     it("renders the 'find-utilisation-reports-by-year.njk' view with year pre-filled with year query param if there is an error with the bank", async () => {
       // Arrange
-      const userToken = 'user-token';
-
       const { res, req } = httpMocks.createMocks({
-        session: { userToken, user: MOCK_TFM_SESSION_USER },
+        session: requestSession,
         query: { bank: 'invalidBank', year: '2024' },
       });
 
@@ -210,10 +236,8 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
 
     it("renders the 'find-utilisation-reports-by-year.njk' view with year pre-filled with year query param if there is an error with the year", async () => {
       // Arrange
-      const userToken = 'user-token';
-
       const { res, req } = httpMocks.createMocks({
-        session: { userToken, user: MOCK_TFM_SESSION_USER },
+        session: requestSession,
         query: { bank: BANK_ID_TWO, year: 'Nonsense' },
       });
 
@@ -227,14 +251,13 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.selectedYear).toBe('Nonsense');
     });
 
-    it("renders the 'bank-previous-years-reports.njk' view with required data when there are valid query params", async () => {
+    it("renders the 'previous-bank-reports-by-year.njk' view with required data when there are valid query params", async () => {
       // Arrange
-      const userToken = 'user-token';
       const bankQuery = BANK_ID_ONE;
       const yearQuery = new Date().getFullYear().toString();
 
       const { res, req } = httpMocks.createMocks({
-        session: { userToken, user: MOCK_TFM_SESSION_USER },
+        session: requestSession,
         query: { bank: bankQuery, year: yearQuery },
       });
 
@@ -244,7 +267,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       await getFindReportsByYear(req, res);
 
       // Assert
-      expect(res._getRenderView()).toEqual('utilisation-reports/bank-previous-years-reports.njk');
+      expect(res._getRenderView()).toEqual('utilisation-reports/previous-bank-reports-by-year.njk');
     });
   });
 });
