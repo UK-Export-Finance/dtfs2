@@ -38,6 +38,7 @@ const sanitizeUser = (user) => ({
   lastLogin: user.lastLogin,
   'user-status': user['user-status'],
   disabled: user.disabled,
+  isTrusted: user.isTrusted,
   _id: user._id,
 });
 
