@@ -1,4 +1,5 @@
 const { when, resetAllWhenMocks } = require('jest-when');
+const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { SignInLinkController } = require('./sign-in-link.controller');
 const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const UserBlockedError = require('../errors/user-blocked.error');
@@ -43,7 +44,10 @@ describe('SignInLinkController', () => {
 
       await signInLinkController.createAndEmailSignInLink(req, res);
 
-      expect(signInLinkService.createAndEmailSignInLink).toHaveBeenCalledWith(TEST_USER);
+      expect(signInLinkService.createAndEmailSignInLink).toHaveBeenCalledWith(
+        TEST_USER,
+        generateNoUserLoggedInAuditDetails(),
+      );
     });
 
     it('should respond with a 201 if the sign in link is emailed', async () => {
@@ -63,7 +67,9 @@ describe('SignInLinkController', () => {
     });
 
     it('should respond with a 500 if creating or emailing the sign in link fails', async () => {
-      when(signInLinkService.createAndEmailSignInLink).calledWith(TEST_USER).mockRejectedValueOnce(new Error());
+      when(signInLinkService.createAndEmailSignInLink)
+        .calledWith(TEST_USER, generateNoUserLoggedInAuditDetails())
+        .mockRejectedValueOnce(new Error());
 
       await signInLinkController.createAndEmailSignInLink(req, res);
 
@@ -72,7 +78,9 @@ describe('SignInLinkController', () => {
 
     it('should return a 403 with the error message as a response body if the user is blocked', async () => {
       const errorMessage = 'a test userIsBlockedError';
-      when(signInLinkService.createAndEmailSignInLink).calledWith(TEST_USER).mockRejectedValueOnce(new UserBlockedError(errorMessage));
+      when(signInLinkService.createAndEmailSignInLink)
+        .calledWith(TEST_USER, generateNoUserLoggedInAuditDetails())
+        .mockRejectedValueOnce(new UserBlockedError(errorMessage));
 
       await signInLinkController.createAndEmailSignInLink(req, res);
 
@@ -82,7 +90,9 @@ describe('SignInLinkController', () => {
 
     it('should return a 500 with the error message as a response body if creating or emailing the sign in link fails', async () => {
       const errorMessage = 'a test error';
-      when(signInLinkService.createAndEmailSignInLink).calledWith(TEST_USER).mockRejectedValueOnce(new Error(errorMessage));
+      when(signInLinkService.createAndEmailSignInLink)
+        .calledWith(TEST_USER, generateNoUserLoggedInAuditDetails())
+        .mockRejectedValueOnce(new Error(errorMessage));
 
       await signInLinkController.createAndEmailSignInLink(req, res);
 
@@ -94,7 +104,9 @@ describe('SignInLinkController', () => {
     });
 
     function mockSuccessfulCreateAndEmailSignInLink() {
-      when(signInLinkService.createAndEmailSignInLink).calledWith(TEST_USER).mockResolvedValueOnce(numberOfSendSignInLinkAttemptsRemaining);
+      when(signInLinkService.createAndEmailSignInLink)
+        .calledWith(TEST_USER, generateNoUserLoggedInAuditDetails())
+        .mockResolvedValueOnce(numberOfSendSignInLinkAttemptsRemaining);
     }
   });
 });

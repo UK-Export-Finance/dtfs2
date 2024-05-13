@@ -210,7 +210,7 @@ exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
  * @param {string} dealId - The ID of the deal to be submitted.
  * @param {string} dealType - The type of the deal.
  * @param {object} checker - checker submitting the deal
- * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} auditDetails - checker information
+ * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - checker information
  * @returns {Promise<Object> | Boolean} - A promise that resolves to an object, other false.
  * @throws {Error} - If there is an error during the submission process.
  */
