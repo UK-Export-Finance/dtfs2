@@ -149,7 +149,6 @@ exports.removeTfmUserById = async (_id, auditDetails, callback) => {
     return callback('Invalid TFM user id', 400);
   }
 
-  // Transactions will only work on a replica set
   if (process.env.CHANGE_STREAM_ENABLED === 'true') {
     try {
       deleteDocumentWithAuditLogs({
@@ -163,7 +162,7 @@ exports.removeTfmUserById = async (_id, auditDetails, callback) => {
     }
     return callback(null, 200);
   }
-  // If the change stream isn't enabled, retain the existing functionality
+
   const collection = await db.getCollection('tfm-users');
   const status = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
 

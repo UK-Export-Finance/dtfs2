@@ -52,7 +52,10 @@ describe('user controller', () => {
 
   describe('DELETE /v1/users', () => {
     it('removes the TFM user by _id', async () => {
-      const { status } = await as(tokenUser).remove().to(`/v1/users/${userId}`);
+      const { body: postBody } = await as(tokenUser).post(MOCK_USERS[1]).to('/v1/users');
+      const createdId = postBody.user._id;
+
+      const { status } = await as(tokenUser).remove().to(`/v1/users/${createdId}`);
       expect(status).toEqual(200);
     });
   });

@@ -33,7 +33,6 @@ export const deleteDocumentWithAuditLogs = async ({
       readConcern: { level: 'snapshot' },
       writeConcern: { w: 'majority' },
     };
-    // TODO: check the transaction works
     await session.withTransaction(async () => {
       const deletionCollection = await db.getCollection('deletion-audit-logs');
       const insertResult = await deletionCollection.insertOne(
