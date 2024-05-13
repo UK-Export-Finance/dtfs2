@@ -3,10 +3,10 @@ const {
   generateTfmUserAuditDatabaseRecord,
   generateNoUserLoggedInAuditDatabaseRecord,
 } = require('@ukef/dtfs2-common/change-stream');
-const { isVerifiedPayload } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload, SCHEMA } = require('@ukef/dtfs2-common');
 const db = require('../../../drivers/db-client');
 const { mapUserData } = require('./helpers/mapUserData.helper');
-const { USER, SCHEMA } = require('../../../constants');
+const { USER } = require('../../../constants');
 const utils = require('../../../utils/crypto.util');
 
 const businessRules = { loginFailureCount: 5 };

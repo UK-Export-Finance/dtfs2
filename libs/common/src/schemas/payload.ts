@@ -34,11 +34,14 @@ export const TFM = {
   USER: z.object({
     username: z.string(),
     email: z.string(),
-    password: z.string(),
+    salt: z.string(),
+    hash: z.string(),
     teams: z.array(z.string()),
     timezone: z.string(),
     firstName: z.string(),
     lastName: z.string(),
+    status: z.string(),
+    auditRecord: z.object({}),
   }),
   TEAM: z.object({
     id: z.string(),
@@ -53,7 +56,8 @@ export const CRITERIA = {
     product: z.string(),
     isInDraft: z.boolean(),
     createdAt: z.number(),
-    criteria: z.object({}),
+    updatedAt: z.number().nullable(),
+    criteria: z.array(z.object({})),
   }),
   MANDATORY: {
     DEFAULT: z.object({
@@ -67,7 +71,7 @@ export const CRITERIA = {
       introText: z.string(),
       criteria: z.array(z.object({})),
       createdAt: z.string(),
-      updatedAt: z.number({}),
+      updatedAt: z.number({}).nullable(),
     }),
   },
 };
