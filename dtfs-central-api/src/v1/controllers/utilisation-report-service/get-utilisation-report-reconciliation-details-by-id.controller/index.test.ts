@@ -48,7 +48,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).withDateUploaded(null).build();
+      const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+        .withId(reportId)
+        .withDateUploaded(null)
+        .build();
       findOneSpy.mockResolvedValue(notReceivedReport);
 
       // Act
@@ -70,7 +73,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       const { req, res } = getHttpMocks();
 
       const bankId = '123';
-      const pendingReconciliationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withBankId(bankId).build();
+      const pendingReconciliationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+        .withId(reportId)
+        .withBankId(bankId)
+        .build();
       findOneSpy.mockResolvedValue(pendingReconciliationReport);
 
       getBankNameByIdSpy.mockResolvedValue(undefined);
@@ -108,16 +114,73 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
         .withDateUploaded(dateUploaded)
         .build();
 
-      const facilityIds = ['12345678', '87654321'];
-
-      const feeRecords = facilityIds.map((facilityId) =>
-        FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport).withFacilityId(facilityId).build(),
-      );
+      const feeRecords = [
+        FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport)
+          .withId(1)
+          .withFacilityId('12345678')
+          .withExporter('Test exporter 1')
+          .withFeesPaidToUkefForThePeriodCurrency('GBP')
+          .withFeesPaidToUkefForThePeriod(314.59)
+          .withPaymentCurrency('GBP')
+          .withStatus('TO_DO')
+          .build(),
+        FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport)
+          .withId(2)
+          .withFacilityId('87654321')
+          .withExporter('Test exporter 2')
+          .withFeesPaidToUkefForThePeriodCurrency('EUR')
+          .withFeesPaidToUkefForThePeriod(100.0)
+          .withPaymentCurrency('GBP')
+          .withPaymentExchangeRate(1.1)
+          .withStatus('TO_DO')
+          .build(),
+      ];
       reconciliationInProgressReport.feeRecords = feeRecords;
 
-      const feeRecordItems: FeeRecordItem[] = facilityIds.map((facilityId) => ({ facilityId }));
-
       findOneSpy.mockResolvedValue(reconciliationInProgressReport);
+
+      const feeRecordItems: FeeRecordItem[] = [
+        {
+          id: 1,
+          facilityId: '12345678',
+          exporter: 'Test exporter 1',
+          reportedFees: {
+            currency: 'GBP',
+            amount: 314.59,
+          },
+          reportedPayments: {
+            currency: 'GBP',
+            amount: 314.59,
+          },
+          totalReportedPayments: {
+            currency: 'GBP',
+            amount: 314.59,
+          },
+          paymentsReceived: null,
+          totalPaymentsReceived: null,
+          status: 'TO_DO',
+        },
+        {
+          id: 2,
+          facilityId: '87654321',
+          exporter: 'Test exporter 2',
+          reportedFees: {
+            currency: 'EUR',
+            amount: 100.0,
+          },
+          reportedPayments: {
+            currency: 'GBP',
+            amount: 90.91,
+          },
+          totalReportedPayments: {
+            currency: 'GBP',
+            amount: 90.91,
+          },
+          paymentsReceived: null,
+          totalPaymentsReceived: null,
+          status: 'TO_DO',
+        },
+      ];
 
       const bankName = 'Test bank';
       getBankNameByIdSpy.mockResolvedValue(bankName);

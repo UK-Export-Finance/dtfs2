@@ -61,6 +61,8 @@ export const createFeeRecord = ({
   feeRecord.paymentCurrency = paymentCurrency ?? feeRecord.feesPaidToUkefForThePeriodCurrency;
   feeRecord.paymentExchangeRate = paymentCurrency ? paymentExchangeRate : 1;
 
+  feeRecord.status = 'TO_DO';
+
   feeRecord.updateLastUpdatedBy({ platform: 'SYSTEM' });
 
   return feeRecord;
