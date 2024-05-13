@@ -1,0 +1,70 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% import "./fee-record-status.njk" as feeRecordStatus %}
+{% import "../../_macros/table-cell-checkbox.njk" as tableCellCheckbox %}
+
+{% macro render(params) %}
+  {% set feeRecords = params.feeRecords %}
+
+  <table class="govuk-table" data-module="moj-sortable-table" data-cy="premium-payments-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header"></th>
+        <th scope="col" class="govuk-table__header" aria-sort="ascending">Facility ID</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Exporter</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Reported fees</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Reported payments</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Total reported payments</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Payments received</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Total payments received</th>
+      <th scope="col" class="govuk-table__header">Status</th>
+      </tr>
+    </thead>
+
+    <tbody class="govuk-table__body">
+    {% for feeRecord in feeRecords %}
+      {% set checkboxId = ['feeRecordId-', feeRecord.id] | join %}
+      <tr
+        class="govuk-table__row"
+        data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }}"
+      >
+        <td class="govuk-table__cell">
+          {{ tableCellCheckbox.render({
+            checkboxId: checkboxId
+          }) }}
+        </td>
+        <th
+          scope="row"
+          class="govuk-table__header govuk-!-font-weight-regular"
+          data-sort-value="{{ feeRecord.facilityId }}"
+        >
+          {{ feeRecord.facilityId }}
+        </th>
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.exported }}">
+          {{ feeRecord.exporter }}
+        </td>
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.reportedFees }}">
+          {{ feeRecord.reportedFees }}
+        </td>
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.reportedPayments }}">
+          {{ feeRecord.reportedPayments }}
+        </td>
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.totalReportedPayments }}">
+          {{ feeRecord.totalReportedPayments }}
+        </td>
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.paymentsReceived }}">
+          {{ feeRecord.paymentsReceived }}
+        </td>
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.totalPaymentsReceived }}">
+          {{ feeRecord.totalPaymentsReceived }}
+        </td>
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.displayStatus }}">
+          {{ feeRecordStatus.render({
+            status: feeRecord.status,
+            displayStatus: feeRecord.displayStatus
+          }) }}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endmacro %}
