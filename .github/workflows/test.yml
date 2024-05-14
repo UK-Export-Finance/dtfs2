@@ -42,7 +42,6 @@ on:
   pull_request:
     branches:
       - main
-      - feat/e2etf-sql
       - "release-*"
 
     paths:
@@ -67,7 +66,7 @@ on:
       - feature
       - staging
       - prod
-      - release-1.5
+      - release-2.0
 
     paths:
       - ".github/workflows/deployment.yml"
