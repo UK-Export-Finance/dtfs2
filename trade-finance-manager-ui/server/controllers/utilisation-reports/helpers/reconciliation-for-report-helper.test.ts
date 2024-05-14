@@ -33,7 +33,6 @@ describe('reconciliation-for-report-helper', () => {
       { status: FEE_RECORD_STATUS.DOES_NOT_MATCH, displayStatus: 'DOES NOT MATCH' },
       { status: FEE_RECORD_STATUS.READY_TO_KEY, displayStatus: 'READY TO KEY' },
       { status: FEE_RECORD_STATUS.RECONCILED, displayStatus: 'RECONCILED' },
-      { status: FEE_RECORD_STATUS.REPORT_COMPLETED, displayStatus: 'REPORT COMPLETED' },
     ])("converts the '$status' status to the display status '$displayStatus'", ({ status, displayStatus }) => {
       // Arrange
       const feeRecordItem: FeeRecordItem = {

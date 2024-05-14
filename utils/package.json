@@ -16,6 +16,7 @@
         "type-check": "tsc --noEmit"
     },
     "dependencies": {
+        "@faker-js/faker": "^8.4.1",
         "@ukef/dtfs2-common": "^1.0.0",
         "axios": "^1.6.8",
         "bson": "^6.7.0",
