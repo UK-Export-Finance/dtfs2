@@ -42,16 +42,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Repository
-        uses: actions/checkout@v4
-
       - name: Dependencies
         working-directory: ./
         run: npm ci
 
-      - name: PR
+      - name: Create
         working-directory: ./
         run: release-please release-pr \
-          --token=${{ secrets.RELEASE_TOKEN }} \
-          --repo-url=https://github.com/${{ github.repository }} \
-          --release-type=node
+         --token=${{ secrets.RELEASE_TOKEN }} \
+         --repo-url=https://github.com/${{ github.repository }} \
+         --release-type=node
