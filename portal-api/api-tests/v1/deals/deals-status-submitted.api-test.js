@@ -222,6 +222,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
         timezone: aBarclaysChecker.timezone,
         lastLogin: expect.any(String),
         'user-status': STATUS.ACTIVE,
+        isTrusted: aBarclaysChecker.isTrusted,
       };
 
       expect(tfmDealSubmitSpy.mock.calls[0][0]).toEqual(dealId);

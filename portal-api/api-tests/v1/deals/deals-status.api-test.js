@@ -241,6 +241,7 @@ describe('/v1/deals/:id/status', () => {
           surname: aBarclaysMaker.surname,
           timezone: 'Europe/London',
           'user-status': STATUS.ACTIVE,
+          isTrusted: aBarclaysMaker.isTrusted,
         },
       });
     });
