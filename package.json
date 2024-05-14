@@ -35,7 +35,7 @@
     "install:all": "npm install --if-present",
     "lint:all": "npm run lint --workspaces --if-present",
     "lint:fix:all": "npm run lint --workspaces --if-present -- --fix",
-    "load": "ts-node utils/mock-data-loader/re-insert-mocks.js",
+    "load": "cd utils && npm run load",
     "prettier:all": "npm run prettier --workspaces --if-present",
     "prettier:fix:all": "npm run prettier:fix --workspaces --if-present",
     "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color '**/*'",
