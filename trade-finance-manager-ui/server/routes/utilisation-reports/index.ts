@@ -6,6 +6,7 @@ import { updateUtilisationReportStatus } from '../../controllers/utilisation-rep
 import { validateSqlId, validateUserTeam, validateTfmPaymentReconciliationFeatureFlagIsEnabled } from '../../middleware';
 import { getReportDownload } from '../../controllers/utilisation-reports/report-download';
 import { getUtilisationReportReconciliationByReportId } from '../../controllers/utilisation-reports/utilisation-report-reconciliation-for-report';
+import { getFindReportsByYear } from '../../controllers/utilisation-reports/find-reports-by-year';
 
 export const utilisationReportsRoutes = express.Router();
 
@@ -14,6 +15,8 @@ utilisationReportsRoutes.get('/', validateUserTeam(Object.values(PDC_TEAM_IDS)),
 utilisationReportsRoutes.post('/', validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]), updateUtilisationReportStatus);
 
 utilisationReportsRoutes.get('/:id/download', validateUserTeam(Object.values(PDC_TEAM_IDS)), validateSqlId('id'), getReportDownload);
+
+utilisationReportsRoutes.get('/find-reports-by-year', validateUserTeam(Object.values(PDC_TEAM_IDS)), getFindReportsByYear);
 
 utilisationReportsRoutes.get(
   '/:reportId',
