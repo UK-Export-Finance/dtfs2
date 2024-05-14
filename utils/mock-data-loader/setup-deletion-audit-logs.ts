@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb';
 import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { getCollection, getConnection } from './database/database-client';
 import { logger } from './helpers/logger.helper';
@@ -23,7 +22,7 @@ export const setupDeletionAuditLogsCollection = async () => {
       $jsonSchema: {
         bsonType: 'object',
         title: 'deletion audit logs validation',
-        required: ['collectionName', 'deletedDocumentId', 'auditRecord'],
+        required: ['collectionName', 'deletedDocumentId', 'auditRecord', 'expireAt'],
         properties: {
           collectionName: {
             bsonType: 'string',
@@ -76,18 +75,4 @@ export const setupDeletionAuditLogsCollection = async () => {
       expireAfterSeconds: 0,
     },
   );
-
-  // TODO: delete this test data
-  await collection.insertOne({
-    collectionName: 'users',
-    deletedDocumentId: new ObjectId('6630cd95933028a128c5c081'),
-    auditRecord: {
-      lastUpdatedAt: new Date().toISOString(),
-      lastUpdatedByPortalUserId: null,
-      lastUpdatedByTfmUserId: null,
-      lastUpdatedByIsSystem: null,
-      noUserLoggedIn: true,
-    },
-    expireAt: new Date(),
-  });
 };
