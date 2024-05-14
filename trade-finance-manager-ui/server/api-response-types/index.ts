@@ -1,1 +1,4 @@
-export { UtilisationReportReconciliationDetailsResponseBody } from './utilisation-report-reconciliation-details-response-body';
+export {
+  FeeRecordItem,
+  UtilisationReportReconciliationDetailsResponseBody,
+} from './utilisation-report-reconciliation-details-response-body';
