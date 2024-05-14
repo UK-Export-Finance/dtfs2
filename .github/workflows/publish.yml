@@ -51,7 +51,4 @@ jobs:
 
       - name: Create
         working-directory: ./
-        run: release-please release-pr \
-         --token=${{ secrets.RELEASE_TOKEN }} \
-         --repo-url=https://github.com/${{ github.repository }} \
-         --release-type=node
+        run: npx release-please release-pr --token=${{ secrets.RELEASE_TOKEN }} --repo-url=https://github.com/${{ github.repository }} --release-type=node
