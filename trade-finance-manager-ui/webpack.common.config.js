@@ -10,6 +10,8 @@ module.exports = {
     mojFrontend: './scripts/moj-frontend.js',
     jsEnabled: './scripts/js-enabled.js',
     disableFormSubmitOnSubmission: '../libs/common/src/ui-scripts/disable-form-submit-on-submission.js',
+    enableSelectAllTableCheckbox: './scripts/enable-select-all-table-checkbox.js',
+    removeHideIfJsNotEnabledClass: './scripts/remove-hide-if-js-not-enabled-class.js',
   },
   output: {
     path: path.join(__dirname, 'public/js'),

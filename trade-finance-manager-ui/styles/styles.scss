@@ -32,6 +32,8 @@ $govuk-new-link-styles: true;
 @import "./accessibility.scss";
 @import "./footer.scss";
 
+@import "./hide-if-js-not-enabled.scss";
+
 .js-enabled .js-hidden {
   display: none;
 }
