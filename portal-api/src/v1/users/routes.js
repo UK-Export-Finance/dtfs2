@@ -186,8 +186,9 @@ module.exports.remove = (req, res, next) => {
 
 module.exports.login = async (req, res, next) => {
   const { username, password } = req.body;
+  const auditDetails = generateNoUserLoggedInAuditDetails();
 
-  const loginResult = await login(username, password, userService, generateNoUserLoggedInAuditDetails());
+  const loginResult = await login(username, password, userService, auditDetails);
 
   if (loginResult.error) {
     // pick out the specific cases we understand and could treat differently
@@ -223,7 +224,8 @@ module.exports.loginWithSignInLink = (req, res) => signInLinkController.loginWit
 
 module.exports.resetPassword = async (req, res) => {
   const { email } = req.body;
-  await resetPassword(email, userService, generateNoUserLoggedInAuditDetails());
+  const auditDetails = generateNoUserLoggedInAuditDetails();
+  await resetPassword(email, userService, auditDetails);
 
   return res.status(200).send();
 };

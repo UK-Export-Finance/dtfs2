@@ -1,12 +1,12 @@
 const { ObjectId } = require('mongodb');
-const { generatePortalUserAuditDatabaseRecord, generateNoUserLoggedInAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
 const { transformDatabaseUser } = require('./transform-database-user');
 const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError, InvalidSessionIdentifierError } = require('../errors');
 const { USER, SIGN_IN_LINK } = require('../../constants');
 
 class UserRepository {
-  async saveSignInTokenForUser({ userId, signInTokenSalt, signInTokenHash, expiry }) {
+  async saveSignInTokenForUser({ userId, signInTokenSalt, signInTokenHash, expiry, auditDetails }) {
     this.#validateUserId(userId);
 
     const saltHex = signInTokenSalt.toString('hex');
@@ -16,13 +16,13 @@ class UserRepository {
 
     const update = {
       $push: { signInTokens: { $each: [{ hashHex, saltHex, expiry }], $slice: -SIGN_IN_LINK.MAX_SEND_COUNT } },
-      $set: { auditRecord: generateNoUserLoggedInAuditDatabaseRecord() },
+      $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
     };
 
     return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, update);
   }
 
-  async incrementSignInLinkSendCount({ userId }) {
+  async incrementSignInLinkSendCount({ userId, auditDetails }) {
     this.#validateUserId(userId);
 
     const userCollection = await db.getCollection('users');
@@ -30,7 +30,7 @@ class UserRepository {
     const filter = { _id: { $eq: ObjectId(userId) } };
     const update = {
       $inc: { signInLinkSendCount: 1 },
-      $set: { auditRecord: generateNoUserLoggedInAuditDatabaseRecord() },
+      $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
     };
     const options = { returnDocument: 'after' };
 
@@ -38,16 +38,19 @@ class UserRepository {
     return userUpdate.value.signInLinkSendCount;
   }
 
-  async setSignInLinkSendDate({ userId }) {
+  async setSignInLinkSendDate({ userId, auditDetails }) {
     this.#validateUserId(userId);
 
     const userCollection = await db.getCollection('users');
 
-    const setUpdate = { signInLinkSendDate: Date.now(), auditRecord: generateNoUserLoggedInAuditDatabaseRecord() };
+    const setUpdate = {
+      signInLinkSendDate: Date.now(),
+      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+    };
     return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: setUpdate });
   }
 
-  async resetSignInData({ userId }) {
+  async resetSignInData({ userId, auditDetails }) {
     this.#validateUserId(userId);
 
     const userCollection = await db.getCollection('users');
@@ -57,12 +60,12 @@ class UserRepository {
       signInLinkSendDate: '',
       signInTokens: '',
     };
-    const setUpdate = { auditRecord: generatePortalUserAuditDatabaseRecord(userId) };
+    const setUpdate = { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
 
     return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $unset: unsetUpdate, $set: setUpdate });
   }
 
-  async updateLastLoginAndResetSignInData({ userId, sessionIdentifier }) {
+  async updateLastLoginAndResetSignInData({ userId, sessionIdentifier, auditDetails }) {
     this.#validateUserId(userId);
 
     if (!sessionIdentifier) {
@@ -73,7 +76,7 @@ class UserRepository {
       lastLogin: Date.now(),
       loginFailureCount: 0,
       sessionIdentifier,
-      auditRecord: generatePortalUserAuditDatabaseRecord(userId),
+      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
     };
     const unsetUpdate = {
       signInLinkSendCount: '',
@@ -83,16 +86,14 @@ class UserRepository {
     await userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: setUpdate, $unset: unsetUpdate });
   }
 
-  async blockUser({ userId, reason }) {
+  async blockUser({ userId, reason, auditDetails }) {
     this.#validateUserId(userId);
 
     const userCollection = await db.getCollection('users');
     const setUpdate = {
       'user-status': USER.STATUS.BLOCKED,
       blockedStatusReason: reason,
-      // This is currently only called during the log in flow therefore no user will be logged in.
-      // If the admin blocking/unblocking a user were to call this method then this would need to be updated
-      auditRecord: generateNoUserLoggedInAuditDatabaseRecord(),
+      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
     };
     await userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: setUpdate });
   }

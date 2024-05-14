@@ -127,7 +127,7 @@ const updateChangedToIssued = async (dealId, auditDetails) => {
  * Adds UKEF facility ID to facilities.
  *
  * @param {string} dealId - The ID of the deal.
- * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} auditDetails - user making the request
+ * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
  * @returns {Promise<Array>} - A promise that resolves to an array of facilities.
  * @throws {Error} - If unable to generate facility ID.
  */
@@ -184,7 +184,7 @@ const submissionPortalActivity = async (application) => {
 /**
  * Check the `coverDateConfirmed` property of the facility has the correct boolean flag.
  * @param {object} app Application object
- * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} auditDetails - user making the request
+ * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
  * @returns {Promise<boolean>} Facility(ies) was(were) updated or not
  */
 const checkCoverDateConfirmed = async (app, auditDetails) => {
@@ -226,7 +226,7 @@ const checkCoverDateConfirmed = async (app, auditDetails) => {
  * Adds submission data to an existing application.
  * @param {string} dealId - The ID of the deal.
  * @param {object} existingApplication - An object representing the existing application.
- * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} auditDetails - user making the request
+ * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
  * @returns {Promise<object>} - An object containing the submission count, submission date, portal activities, and UKEF deal ID.
  */
 const addSubmissionData = async (dealId, existingApplication, auditDetails) => {

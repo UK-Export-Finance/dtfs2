@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
-const { generateSystemAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
+const { generateSystemAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../api');
 const db = require('../../drivers/db-client');
 const tfmController = require('./tfm.controller');
@@ -24,6 +24,8 @@ const addToACBSLog = async (payload) => {
     return false;
   }
 
+  const auditDetails = generateSystemAuditDetails();
+
   const { deal, facility, bank, acbsTaskLinks } = payload;
   const canAddToLog = ObjectId.isValid(deal?._id) && Boolean(deal?._id) && Boolean(acbsTaskLinks?.id);
 
@@ -38,7 +40,7 @@ const addToACBSLog = async (payload) => {
       instanceId: acbsTaskLinks.id,
       acbsTaskLinks,
       submittedDate: getIsoStringWithOffset(new Date()),
-      auditRecord: generateSystemAuditDatabaseRecord(),
+      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
     };
 
     const collection = await db.getCollection('durable-functions-log');
@@ -138,6 +140,8 @@ const checkAzureAcbsFunction = async () => {
     const tasks = await runningTasks.map(({ acbsTaskLinks = {} }) => api.getFunctionsAPI(acbsTaskLinks.statusQueryGetUri));
     const taskList = await Promise.all(tasks);
 
+    const auditDetails = generateSystemAuditDetails();
+
     taskList.forEach(async (task) => {
       if (task.runtimeStatus) {
         // Update
@@ -147,7 +151,7 @@ const checkAzureAcbsFunction = async () => {
             $.flatten({
               status: task.runtimeStatus,
               acbsTaskResult: task,
-              auditRecord: generateSystemAuditDatabaseRecord(),
+              auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
             }),
           );
         }

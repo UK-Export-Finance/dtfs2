@@ -1,7 +1,7 @@
 const { when, resetAllWhenMocks } = require('jest-when');
 const { ObjectId } = require('mongodb');
 const { cloneDeep } = require('lodash');
-const { generateMockNoUserLoggedInAuditDatabaseRecord, generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
+const { generateMockNoUserLoggedInAuditDatabaseRecord, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
 const { UserRepository } = require('./repository');
 const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError } = require('../errors');
@@ -42,7 +42,13 @@ describe('UserRepository', () => {
     const expiry = new Date().getTime() + SIGN_IN_LINK.DURATION_MILLISECONDS;
 
     withValidateUserIdTests({
-      methodCall: (invalidUserId) => repository.saveSignInTokenForUser({ userId: invalidUserId, signInTokenSalt: salt, signInTokenHash: hash }),
+      methodCall: (invalidUserId) =>
+        repository.saveSignInTokenForUser({
+          userId: invalidUserId,
+          signInTokenSalt: salt,
+          signInTokenHash: hash,
+          auditDetails: generateNoUserLoggedInAuditDetails(),
+        }),
     });
 
     it('saves the sign in code expiry time and the hex strings for its hash and salt on the user document', async () => {
@@ -51,6 +57,7 @@ describe('UserRepository', () => {
         signInTokenSalt: salt,
         signInTokenHash: hash,
         expiry,
+        auditDetails: generateNoUserLoggedInAuditDetails(),
       });
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
@@ -86,11 +93,18 @@ describe('UserRepository', () => {
     });
 
     withValidateUserIdTests({
-      methodCall: (invalidUserId) => repository.incrementSignInLinkSendCount({ userId: invalidUserId }),
+      methodCall: (invalidUserId) =>
+        repository.incrementSignInLinkSendCount({
+          userId: invalidUserId,
+          auditDetails: generateNoUserLoggedInAuditDetails(),
+        }),
     });
 
     it("increments the user's signInLinkSendCount by 1", async () => {
-      await repository.incrementSignInLinkSendCount({ userId: validUserId });
+      await repository.incrementSignInLinkSendCount({
+        userId: validUserId,
+        auditDetails: generateNoUserLoggedInAuditDetails(),
+      });
 
       expect(usersCollection.findOneAndUpdate).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(validUserId) } },
@@ -100,7 +114,10 @@ describe('UserRepository', () => {
     });
 
     it("returns the user's updated signInLinkSendCount", async () => {
-      const response = await repository.incrementSignInLinkSendCount({ userId: validUserId });
+      const response = await repository.incrementSignInLinkSendCount({
+        userId: validUserId,
+        auditDetails: generateNoUserLoggedInAuditDetails(),
+      });
 
       expect(response).toEqual(expectedSignInLinkSendCount);
     });
@@ -118,11 +135,14 @@ describe('UserRepository', () => {
     });
 
     withValidateUserIdTests({
-      methodCall: (invalidUserId) => repository.setSignInLinkSendDate({ userId: invalidUserId }),
+      methodCall: (invalidUserId) => repository.setSignInLinkSendDate({ userId: invalidUserId, auditDetails: generateNoUserLoggedInAuditDetails() }),
     });
 
     it('updates the users signInLinkSendDate to the current date', async () => {
-      await repository.setSignInLinkSendDate({ userId: validUserId });
+      await repository.setSignInLinkSendDate({
+        userId: validUserId,
+        auditDetails: generateNoUserLoggedInAuditDetails(),
+      });
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(validUserId) } },
@@ -132,15 +152,17 @@ describe('UserRepository', () => {
   });
 
   describe('resetSignInData', () => {
-    withValidateUserIdTests({ methodCall: (invalidUserId) => repository.resetSignInData({ userId: invalidUserId }) });
+    withValidateUserIdTests({
+      methodCall: (invalidUserId) => repository.resetSignInData({ userId: invalidUserId, auditDetails: generateNoUserLoggedInAuditDetails() }),
+    });
 
     it('updates the users signInLinkSendCount and signInLinkSendDate', async () => {
-      await repository.resetSignInData({ userId: validUserId });
+      await repository.resetSignInData({ userId: validUserId, auditDetails: generateNoUserLoggedInAuditDetails() });
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(validUserId) } },
         {
-          $set: { auditRecord: generateMockPortalUserAuditDatabaseRecord(validUserId) },
+          $set: { auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord() },
           $unset: { signInLinkSendCount: '', signInLinkSendDate: '', signInTokens: '' },
         },
       );
@@ -160,7 +182,12 @@ describe('UserRepository', () => {
     });
 
     withValidateUserIdTests({
-      methodCall: (invalidUserId) => repository.updateLastLoginAndResetSignInData({ userId: invalidUserId, sessionIdentifier: aSessionIdentifier }),
+      methodCall: (invalidUserId) =>
+        repository.updateLastLoginAndResetSignInData({
+          userId: invalidUserId,
+          sessionIdentifier: aSessionIdentifier,
+          auditDetails: generateNoUserLoggedInAuditDetails(),
+        }),
     });
 
     withValidateSessionIdentifierTests({
@@ -168,6 +195,7 @@ describe('UserRepository', () => {
         repository.updateLastLoginAndResetSignInData({
           userId: validUserId,
           sessionIdentifier: invalidSessionIdentifier,
+          auditDetails: generateNoUserLoggedInAuditDetails(),
         }),
     });
 
@@ -175,13 +203,14 @@ describe('UserRepository', () => {
       await repository.updateLastLoginAndResetSignInData({
         userId: validUserId,
         sessionIdentifier: aSessionIdentifier,
+        auditDetails: generateNoUserLoggedInAuditDetails(),
       });
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(validUserId) } },
         {
           $set: {
-            auditRecord: generateMockPortalUserAuditDatabaseRecord(validUserId),
+            auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord(),
             lastLogin: dateNow,
             loginFailureCount: 0,
             sessionIdentifier: aSessionIdentifier,
@@ -193,11 +222,17 @@ describe('UserRepository', () => {
   });
 
   describe('blockUser', () => {
-    withValidateUserIdTests({ methodCall: (invalidUserId) => repository.blockUser({ userId: invalidUserId }) });
+    withValidateUserIdTests({
+      methodCall: (invalidUserId) => repository.blockUser({ userId: invalidUserId, auditDetails: generateNoUserLoggedInAuditDetails() }),
+    });
 
     it('updates user-status and blockedStatusReason', async () => {
       const aReason = USER.STATUS_BLOCKED_REASON.INVALID_PASSWORD;
-      await repository.blockUser({ userId: validUserId, reason: aReason });
+      await repository.blockUser({
+        userId: validUserId,
+        reason: aReason,
+        auditDetails: generateNoUserLoggedInAuditDetails(),
+      });
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(validUserId) } },
