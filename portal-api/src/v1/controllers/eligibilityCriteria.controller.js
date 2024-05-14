@@ -1,6 +1,9 @@
-const { isVerifiedPayload, SCHEMA } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload, CRITERIA } = require('@ukef/dtfs2-common');
 const assert = require('assert');
-const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const {
+  generateAuditDatabaseRecordFromAuditDetails,
+  generatePortalAuditDetails,
+} = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
 const { DEAL } = require('../../constants');
 
@@ -37,14 +40,14 @@ const findOneEligibilityCriteria = async (version, callback) => {
 };
 
 exports.create = async (req, res) => {
-  if (!isVerifiedPayload({ payload: req?.body, template: SCHEMA.PAYLOAD.CRITERIA.ELIGIBILITY })) {
+  if (!isVerifiedPayload({ payload: req?.body, template: CRITERIA.ELIGIBILITY })) {
     return res.status(400).send({ status: 400, message: 'Invalid eligibility criteria payload' });
   }
 
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
   const collection = await db.getCollection('eligibilityCriteria');
-  const criteria = { ...req?.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails)};
+  const criteria = { ...req?.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
   const eligibilityCriteria = await collection.insertOne(criteria);
   return res.status(200).send(eligibilityCriteria);
 };

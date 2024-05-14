@@ -6,3 +6,4 @@ export * from './tfm';
 export * from './portal';
 export * from './durable-functions-log.constant';
 export * from './fee-record-status';
+export * from './payload-verification';

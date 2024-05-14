@@ -1,7 +1,10 @@
-const { isVerifiedPayload, SCHEMA } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload, BANK } = require('@ukef/dtfs2-common');
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
-const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const {
+  generateAuditDatabaseRecordFromAuditDetails,
+  generatePortalAuditDetails,
+} = require('@ukef/dtfs2-common/change-stream');
 const { hasValidObjectId } = require('../validation/validateObjectId');
 
 const db = require('../../drivers/db-client');
@@ -36,7 +39,7 @@ exports.findOneBank = findOneBank;
 exports.create = async (req, res) => {
   const bank = req?.body;
 
-  if (!isVerifiedPayload({ payload: bank, template: SCHEMA.PAYLOAD.BANK })) {
+  if (!isVerifiedPayload({ payload: bank, template: BANK })) {
     return res.status(400).send({ status: 400, message: 'Invalid bank payload' });
   }
 
@@ -71,7 +74,7 @@ exports.update = async (req, res) => {
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
   const collection = await db.getCollection('banks');
-  const update = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) }
+  const update = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
   const updatedBank = await collection.updateOne({ id: { $eq: id } }, { $set: update }, {});
 
   return res.status(200).json(updatedBank);

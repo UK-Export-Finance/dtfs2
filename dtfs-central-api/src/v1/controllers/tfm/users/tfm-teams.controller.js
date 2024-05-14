@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, isVerifiedPayload, SCHEMA } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, isVerifiedPayload, TFM } = require('@ukef/dtfs2-common');
 const {
   validateAuditDetails,
   generateAuditDatabaseRecordFromAuditDetails,
@@ -14,7 +14,7 @@ exports.createTeam = createTeam;
 exports.createTfmTeam = async (req, res) => {
   const { team: teamToCreate, auditDetails } = req.body;
 
-  if (!isVerifiedPayload({ payload: teamToCreate, template: SCHEMA.PAYLOAD.TFM.TEAM })) {
+  if (!isVerifiedPayload({ payload: teamToCreate, template: TFM.TEAM })) {
     return res.status(400).send({ status: 400, message: 'Invalid TFM team payload' });
   }
 

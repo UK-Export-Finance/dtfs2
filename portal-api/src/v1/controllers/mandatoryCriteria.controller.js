@@ -1,4 +1,4 @@
-const { isVerifiedPayload, SCHEMA } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload, CRITERIA } = require('@ukef/dtfs2-common');
 const assert = require('assert');
 const {
   generatePortalAuditDetails,
@@ -35,7 +35,7 @@ const findOneMandatoryCriteria = async (version, callback) => {
 };
 
 exports.create = async (req, res) => {
-  if (!isVerifiedPayload({ payload: req.body, template: SCHEMA.PAYLOAD.CRITERIA.MANDATORY.DEFAULT })) {
+  if (!isVerifiedPayload({ payload: req.body, template: CRITERIA.MANDATORY })) {
     return res.status(400).send({ status: 400, message: 'Invalid mandatory criteria payload' });
   }
 
@@ -45,12 +45,12 @@ exports.create = async (req, res) => {
 
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
-    // MC insertion on non-production environments
-    const collection = await db.getCollection('mandatoryCriteria');
-    const criteria = { ...req?.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
-    const result = await collection.insertOne(criteria);
+  // MC insertion on non-production environments
+  const collection = await db.getCollection('mandatoryCriteria');
+  const criteria = { ...req?.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
+  const result = await collection.insertOne(criteria);
 
-    return res.status(200).send(result);
+  return res.status(200).send(result);
 };
 
 exports.findAll = (req, res) =>

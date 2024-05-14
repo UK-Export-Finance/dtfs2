@@ -1,4 +1,4 @@
-const { isVerifiedPayload, SCHEMA } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload, CRITERIA } = require('@ukef/dtfs2-common');
 const {
   generateAuditDatabaseRecordFromAuditDetails,
   generatePortalAuditDetails,
@@ -67,7 +67,7 @@ exports.getLatest = async (req, res) => {
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection('eligibilityCriteria');
-  if (!isVerifiedPayload({ payload: req.body, template: SCHEMA.PAYLOAD.CRITERIA.ELIGIBILITY })) {
+  if (!isVerifiedPayload({ payload: req.body, template: CRITERIA.ELIGIBILITY })) {
     return res.status(400).send({ status: 400, message: 'Invalid GEF eligibility criteria payload' });
   }
 
