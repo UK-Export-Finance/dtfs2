@@ -53,7 +53,7 @@ on:
       - feature
       - staging
       - prod
-      - release-1.5
+      - release-2.0
 
 env:
   PRODUCT: dtfs
