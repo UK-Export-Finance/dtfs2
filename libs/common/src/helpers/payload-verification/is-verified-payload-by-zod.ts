@@ -1,9 +1,10 @@
-import { IsVerifiedPayloadbyZodParams } from '../../types/payload-verification';
+import { IsVerifiedPayloadByZodParams } from '../../types/payload-verification';
 
 export const isVerifiedPayloadByZod = ({
   payload,
   template,
   areAllPropertiesRequired = true,
-}: IsVerifiedPayloadbyZodParams): boolean => {
-  return areAllPropertiesRequired ? template.safeParse(payload).success : template.partial().safeParse(payload).success;
-};
+}: IsVerifiedPayloadByZodParams): boolean =>
+  areAllPropertiesRequired
+    ? template.strict().safeParse(payload).success
+    : template.strict().partial().safeParse(payload).success;
