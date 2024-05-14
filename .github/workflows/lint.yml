@@ -37,7 +37,6 @@ on:
   pull_request:
     branches:
       - main
-      - feat/e2etf-sql
       - "release-*"
 
     paths:
