@@ -10,7 +10,7 @@ exports.deleteDeal = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
-  findOneDeal(id, async (deal) => {
+  return findOneDeal(id, async (deal) => {
     if (!deal) {
       return res.status(404).send({ status: 404, message: 'Deal not found' });
     }
@@ -25,6 +25,4 @@ exports.deleteDeal = async (req, res) => {
     await facilitiesCollection.deleteMany({ 'facilitySnapshot.dealId': { $eq: deal._id } });
     return res.status(200).send(status);
   });
-
-  return res.status(400).send({ status: 400, message: 'Invalid delete deal request' });
 };
