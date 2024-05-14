@@ -94,7 +94,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   /**
    * Status code representing the reconciliation state of the fee record
    */
-  @Column({ type: 'nvarchar' })
+  @Column({ type: 'nvarchar', default: 'TO_DO' })
   status!: FeeRecordStatus;
 
   // TODO FN-1726 - when we have a status on this entity we should make this method name specific to the initial status

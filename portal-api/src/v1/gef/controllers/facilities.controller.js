@@ -128,7 +128,7 @@ exports.getById = async (req, res) => {
 /**
  * @param {ObjectId | string} id - facility id to update
  * @param {object} updateBody - update to make
- * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} auditDetails - user making the request
+ * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
  * @returns
  */
 const update = async (id, updateBody, auditDetails) => {

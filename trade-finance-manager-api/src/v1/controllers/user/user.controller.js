@@ -1,8 +1,5 @@
 const { ObjectId } = require('mongodb');
-const {
-  generateTfmUserAuditDatabaseRecord,
-  generateNoUserLoggedInAuditDatabaseRecord,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { isVerifiedPayload, TFM } = require('@ukef/dtfs2-common');
 const db = require('../../../drivers/db-client');
 const { mapUserData } = require('./helpers/mapUserData.helper');
@@ -32,20 +29,16 @@ exports.findByUsername = async (username, callback) => {
 
 /**
  * @param {object} user to create
- * @param {import('../../../types/tfm-session-user').TfmSessionUser | undefined} sessionUser logged in user
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - logged in user
  * @param {(error: string | null, createdUser: object) => void} callback
  * @returns
  */
-exports.create = async (user, sessionUser, callback) => {
+exports.create = async (user, auditDetails, callback) => {
   const collection = await db.getCollection('tfm-users');
-  // This endpoint is called by mock data loader in development without a logged in user.
-  // This behaviour should never occur in production
   const tfmUser = {
     ...user,
     status: USER.STATUS.ACTIVE,
-    auditRecord: sessionUser?._id
-      ? generateTfmUserAuditDatabaseRecord(sessionUser._id)
-      : generateNoUserLoggedInAuditDatabaseRecord(),
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   delete tfmUser.token;
@@ -72,17 +65,17 @@ exports.create = async (user, sessionUser, callback) => {
 /**
  * @param {string} _id of the user to update
  * @param {object} update to make to the user
- * @param {import('../../../types/tfm-session-user').TfmSessionUser | undefined} sessionUser logged in user
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - logged in user
  * @param {(error: string | null, updatedUser: object) => void} callback
  */
-exports.update = async (_id, update, sessionUser, callback) => {
+exports.update = async (_id, update, auditDetails, callback) => {
   if (!ObjectId.isValid(_id)) {
     throw new Error('Invalid User Id');
   }
 
   const userUpdate = {
     ...update,
-    auditRecord: generateTfmUserAuditDatabaseRecord(sessionUser._id),
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
   const collection = await db.getCollection('tfm-users');
 
@@ -112,7 +105,7 @@ exports.update = async (_id, update, sessionUser, callback) => {
   });
 };
 
-exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, callback) => {
+exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, auditDetails, callback) => {
   if (!ObjectId.isValid(user._id)) {
     throw new Error('Invalid User Id');
   }
@@ -122,14 +115,14 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
     lastLogin: Date.now(),
     loginFailureCount: 0,
     sessionIdentifier,
-    auditRecord: generateTfmUserAuditDatabaseRecord(user._id),
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 
   callback();
 };
 
-exports.incrementFailedLoginCount = async (user) => {
+exports.incrementFailedLoginCount = async (user, auditDetails) => {
   if (!ObjectId.isValid(user._id)) {
     throw new Error('Invalid User Id');
   }
@@ -142,7 +135,7 @@ exports.incrementFailedLoginCount = async (user) => {
     loginFailureCount: failureCount,
     lastLoginFailure: Date.now(),
     status: thresholdReached ? USER.STATUS.BLOCKED : user.status,
-    auditRecord: generateNoUserLoggedInAuditDatabaseRecord(),
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
