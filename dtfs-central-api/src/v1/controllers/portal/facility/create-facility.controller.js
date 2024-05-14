@@ -20,12 +20,7 @@ const createFacility = async (facility, user, routePath) => {
   const response = await collection.insertOne(newFacility);
   const { insertedId } = response;
 
-  await addFacilityIdToDeal(
-    dealId,
-    insertedId,
-    user,
-    routePath,
-  );
+  await addFacilityIdToDeal(dealId, insertedId, user, routePath);
 
   return { _id: insertedId };
 };

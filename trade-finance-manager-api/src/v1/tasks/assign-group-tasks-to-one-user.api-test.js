@@ -7,12 +7,7 @@ const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
 const MOCK_MIA_SECOND_SUBMIT = require('../__mocks__/mock-deal-MIA-second-submit');
 
 const CONSTANTS = require('../../constants');
-const {
-  mockFindOneDeal,
-  mockFindUserById,
-  mockUpdateDeal,
-  mockFindOneDealFailure,
-} = require('../__mocks__/common-api-mocks');
+const { mockFindOneDeal, mockFindUserById, mockUpdateDeal, mockFindOneDealFailure } = require('../__mocks__/common-api-mocks');
 const api = require('../api');
 
 describe('assignGroupTasksToOneUser', () => {
@@ -45,12 +40,7 @@ describe('assignGroupTasksToOneUser', () => {
       });
     });
 
-    const result = await assignGroupTasksToOneUser(
-      dealId,
-      groupTitlesToAssign,
-      userId,
-      generateTfmAuditDetails(MOCK_USERS[0]._id),
-    );
+    const result = await assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, generateTfmAuditDetails(MOCK_USERS[0]._id));
 
     let filteredTasksResult = [];
 
@@ -87,9 +77,7 @@ describe('assignGroupTasksToOneUser', () => {
     const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
     const userId = mockUser._id;
 
-    await expect(
-      assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, generateTfmAuditDetails(MOCK_USERS[0]._id)),
-    ).rejects.toThrow(Error);
+    await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, generateTfmAuditDetails(MOCK_USERS[0]._id))).rejects.toThrow(Error);
   });
 
   it('should throw an error if find deal fails', async () => {
@@ -103,8 +91,6 @@ describe('assignGroupTasksToOneUser', () => {
     const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
     const userId = mockUser._id;
 
-    await expect(
-      assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, generateTfmAuditDetails(MOCK_USERS[0]._id)),
-    ).rejects.toThrow(Error);
+    await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, generateTfmAuditDetails(MOCK_USERS[0]._id))).rejects.toThrow(Error);
   });
 });

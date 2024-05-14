@@ -49,10 +49,7 @@ const mapDetails = (portalDealId, v1Deal, v2SubmissionType) => {
     details.manualInclusionNoticeSubmissionDate = convertV1Date(v1Deal.Deal_information.Extra_fields.Submission_date_MIN);
   }
 
-  return [
-    details,
-    hasError,
-  ];
+  return [details, hasError];
 };
 
 module.exports = mapDetails;

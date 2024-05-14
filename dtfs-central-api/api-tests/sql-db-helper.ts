@@ -34,51 +34,27 @@ type Entity<TableName extends SqlTableName> = TableName extends 'UtilisationRepo
   ? AzureFileInfoEntity
   : never;
 
-const saveNewEntry = async <TableName extends SqlTableName>(
-  tableName: TableName,
-  entityToInsert: Entity<TableName>,
-): Promise<Entity<TableName>> => {
+const saveNewEntry = async <TableName extends SqlTableName>(tableName: TableName, entityToInsert: Entity<TableName>): Promise<Entity<TableName>> => {
   switch (tableName) {
     case 'UtilisationReport':
-      return (await SqlDbDataSource.manager.save(
-        UtilisationReportEntity,
-        entityToInsert as UtilisationReportEntity,
-      )) as Entity<TableName>;
+      return (await SqlDbDataSource.manager.save(UtilisationReportEntity, entityToInsert as UtilisationReportEntity)) as Entity<TableName>;
     case 'FeeRecord':
-      return (await SqlDbDataSource.manager.save(
-        FeeRecordEntity,
-        entityToInsert as FeeRecordEntity,
-      )) as Entity<TableName>;
+      return (await SqlDbDataSource.manager.save(FeeRecordEntity, entityToInsert as FeeRecordEntity)) as Entity<TableName>;
     case 'AzureFileInfo':
-      return (await SqlDbDataSource.manager.save(
-        AzureFileInfoEntity,
-        entityToInsert as AzureFileInfoEntity,
-      )) as Entity<TableName>;
+      return (await SqlDbDataSource.manager.save(AzureFileInfoEntity, entityToInsert as AzureFileInfoEntity)) as Entity<TableName>;
     default:
       throw new Error(`Cannot save new entry to table: no entity found for table name '${tableName}'`);
   }
 };
 
-const saveNewEntries = async <TableName extends SqlTableName>(
-  tableName: TableName,
-  entityToInsert: Entity<TableName>[],
-): Promise<Entity<TableName>[]> => {
+const saveNewEntries = async <TableName extends SqlTableName>(tableName: TableName, entityToInsert: Entity<TableName>[]): Promise<Entity<TableName>[]> => {
   switch (tableName) {
     case 'UtilisationReport':
-      return (await SqlDbDataSource.manager.save(
-        UtilisationReportEntity,
-        entityToInsert as UtilisationReportEntity[],
-      )) as Entity<TableName>[];
+      return (await SqlDbDataSource.manager.save(UtilisationReportEntity, entityToInsert as UtilisationReportEntity[])) as Entity<TableName>[];
     case 'FeeRecord':
-      return (await SqlDbDataSource.manager.save(
-        FeeRecordEntity,
-        entityToInsert as FeeRecordEntity[],
-      )) as Entity<TableName>[];
+      return (await SqlDbDataSource.manager.save(FeeRecordEntity, entityToInsert as FeeRecordEntity[])) as Entity<TableName>[];
     case 'AzureFileInfo':
-      return (await SqlDbDataSource.manager.save(
-        AzureFileInfoEntity,
-        entityToInsert as AzureFileInfoEntity[],
-      )) as Entity<TableName>[];
+      return (await SqlDbDataSource.manager.save(AzureFileInfoEntity, entityToInsert as AzureFileInfoEntity[])) as Entity<TableName>[];
     default:
       throw new Error(`Cannot save entries to table: no entity found for table name '${tableName}'`);
   }

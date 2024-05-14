@@ -108,9 +108,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         },
       ];
 
-      jest
-        .mocked(api.getUtilisationReportReconciliationDetailsById)
-        .mockResolvedValue(utilisationReportReconciliationDetails);
+      jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
 
       // Act
       await getUtilisationReportReconciliationByReportId(req, res);

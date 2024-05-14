@@ -1,7 +1,4 @@
-import {
-  sanitiseFieldValue,
-  removeSessionFilter,
-} from './remove-filter-from-session';
+import { sanitiseFieldValue, removeSessionFilter } from './remove-filter-from-session';
 
 describe('controllers/dashboard/filters - remove-filter-from-session', () => {
   describe('sanitiseFieldValue', () => {

@@ -26,9 +26,7 @@ export const mapFeeRecordItemToFeeRecordViewModelItem = (feeRecord: FeeRecordIte
   reportedPayments: getFormattedCurrencyAndAmount(feeRecord.reportedPayments),
   totalReportedPayments: getFormattedCurrencyAndAmount(feeRecord.totalReportedPayments),
   paymentsReceived: feeRecord.paymentsReceived ? getFormattedCurrencyAndAmount(feeRecord.paymentsReceived) : undefined,
-  totalPaymentsReceived: feeRecord.totalPaymentsReceived
-    ? getFormattedCurrencyAndAmount(feeRecord.totalPaymentsReceived)
-    : undefined,
+  totalPaymentsReceived: feeRecord.totalPaymentsReceived ? getFormattedCurrencyAndAmount(feeRecord.totalPaymentsReceived) : undefined,
   status: feeRecord.status,
   displayStatus: feeRecordStatusToDisplayStatus[feeRecord.status],
 });

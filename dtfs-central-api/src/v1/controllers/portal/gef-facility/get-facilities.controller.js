@@ -19,6 +19,7 @@ exports.findAllGet = async (req, res) => {
     const facilities = await findAllGefFacilitiesByDealId(req.params.id);
     return res.status(200).send(facilities);
   }
+
   return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
 };
 

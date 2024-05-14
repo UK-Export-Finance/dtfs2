@@ -1,12 +1,13 @@
 # GHA - CI/CD Pipeline 🚀
+
 This information provides an overview of the CI/CD pipeline structure, naming conventions, workflow triggers, and secrets management practices in place for the deployment of services in different environments. 🛠️🔒🌐
+
 ## Subscriptions 📑
 
 There are two subscriptions, to manage costs:
 
 - Dev/Test 🧪
 - Prod 🌐
-
 
 There are three environments, in order of pipeline deployment and testing:
 
@@ -34,6 +35,7 @@ At a high-level, the pipeline works by building Docker container images (reposit
 3. Merging to the `infrastructure` branch triggers a refresh of supporting infrastructure (Service Plan, ACR) when a file change is detected in the `infrastructure.yml` file.
 
 ## Deployment 🚚
+
 Deployments are initiated by a `push` to the respective branch i.e. `dev`, `staging` and `prod`.
 When `main` is merged to either of the above deployment branch this will trigger the respective GitHub Action (GHA) YML pipeline.
 

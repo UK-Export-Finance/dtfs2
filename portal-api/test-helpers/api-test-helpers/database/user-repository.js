@@ -37,7 +37,12 @@ function issueValid2faJWT(user, sessionIdentifier) {
     user,
     sessionIdentifier,
     expiresIn: '12h',
-    additionalPayload: { username: user.username, roles: user.roles, bank: user.bank, loginStatus: LOGIN_STATUSES.VALID_2FA },
+    additionalPayload: {
+      username: user.username,
+      roles: user.roles,
+      bank: user.bank,
+      loginStatus: LOGIN_STATUSES.VALID_2FA,
+    },
   });
 }
 
@@ -63,7 +68,10 @@ const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
       await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier } });
 
       const signInToken = crypto.randomBytes(32).toString('hex');
-      await overridePortalUserSignInTokenWithValidTokenByUsername({ username: user.username, newSignInToken: signInToken });
+      await overridePortalUserSignInTokenWithValidTokenByUsername({
+        username: user.username,
+        newSignInToken: signInToken,
+      });
 
       return { userId: userFromDatabase._id.toString(), token, signInToken };
     }

@@ -51,13 +51,16 @@ describe('GET Facility Currency', () => {
 
     await facilityCurrency(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-currency.njk', expect.objectContaining({
-      currencyId: 'EUR',
-      facilityTypeString: 'cash',
-      dealId: '123',
-      facilityId: 'xyz',
-      status: 'change',
-    }));
+    expect(mockResponse.render).toHaveBeenCalledWith(
+      'partials/facility-currency.njk',
+      expect.objectContaining({
+        currencyId: 'EUR',
+        facilityTypeString: 'cash',
+        dealId: '123',
+        facilityId: 'xyz',
+        status: 'change',
+      }),
+    );
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
@@ -104,11 +107,14 @@ describe('Update Facility Currency', () => {
     api.updateFacility = () => Promise.resolve(mockFacilityCurrencyResponse);
     await updateFacilityCurrency(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-currency.njk', expect.objectContaining({
-      errors: expect.objectContaining({
-        errorSummary: expect.arrayContaining([{ href: '#currencyId', text: expect.any(String) }]),
+    expect(mockResponse.render).toHaveBeenCalledWith(
+      'partials/facility-currency.njk',
+      expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#currencyId', text: expect.any(String) }]),
+        }),
       }),
-    }));
+    );
   });
 
   it('calls the update api with the correct data', async () => {
@@ -142,7 +148,11 @@ describe('Update Facility Currency', () => {
       editorId: '12345',
     };
 
-    expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
+    expect(updateApplicationSpy).toHaveBeenCalledWith({
+      dealId: mockRequest.params.dealId,
+      application: expectedUpdateObj,
+      userToken,
+    });
   });
 
   it('redirects user to facility value page with correct query if query status is equal to `change`', async () => {

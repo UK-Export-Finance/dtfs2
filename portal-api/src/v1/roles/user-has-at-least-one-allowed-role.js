@@ -1,7 +1,4 @@
-const userHasRole = ({
-  user,
-  targetRole,
-}) => {
+const userHasRole = ({ user, targetRole }) => {
   const { roles: userRoles } = user;
   return userRoles.includes(targetRole);
 };
@@ -12,10 +9,7 @@ const userHasRole = ({
  * @param {{ user: { roles: string[] }, allowedRoles: string[] }}
  * @returns {boolean}
  */
-const userHasAtLeastOneAllowedRole = ({
-  user,
-  allowedRoles,
-}) => allowedRoles.some((allowedRole) => userHasRole({ user, targetRole: allowedRole }));
+const userHasAtLeastOneAllowedRole = ({ user, allowedRoles }) => allowedRoles.some((allowedRole) => userHasRole({ user, targetRole: allowedRole }));
 
 module.exports = {
   userHasAtLeastOneAllowedRole,

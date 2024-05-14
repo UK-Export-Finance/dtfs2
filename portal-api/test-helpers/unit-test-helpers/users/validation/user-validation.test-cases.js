@@ -79,8 +79,14 @@ const whenNoRulesReturnAnErrorItReturnsAnEmptyArray = ({ makeApplyRulesCall, all
 
   describe('when no rules return an error', () => {
     describe.each([
-      { description: 'synchronous', mockAllRulesToNotReturnAnError: () => mockRulesToNotReturnAnErrorSynchronously({ rules: allRules }) },
-      { description: 'asynchronous', mockAllRulesToNotReturnAnError: () => mockRulesToNotReturnAnErrorAsynchronously({ rules: allRules }) },
+      {
+        description: 'synchronous',
+        mockAllRulesToNotReturnAnError: () => mockRulesToNotReturnAnErrorSynchronously({ rules: allRules }),
+      },
+      {
+        description: 'asynchronous',
+        mockAllRulesToNotReturnAnError: () => mockRulesToNotReturnAnErrorAsynchronously({ rules: allRules }),
+      },
     ])('when the failing rule is $description', ({ mockAllRulesToNotReturnAnError }) => {
       beforeEach(() => {
         mockAllRulesToNotReturnAnError();

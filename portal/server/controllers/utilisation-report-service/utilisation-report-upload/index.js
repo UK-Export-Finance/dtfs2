@@ -125,7 +125,9 @@ const postUtilisationReportUpload = async (req, res) => {
           href: '#utilisation-report-file-upload',
         },
       ];
-      const extractDataError = { text: 'The selected file could not be uploaded, try again and make sure it is not password protected' };
+      const extractDataError = {
+        text: 'The selected file could not be uploaded, try again and make sure it is not password protected',
+      };
       const dueReportPeriods = await getDueReportPeriodsByBankId(userToken, bankId);
       return renderPageWithError(req, res, extractDataErrorSummary, extractDataError, dueReportPeriods);
     }

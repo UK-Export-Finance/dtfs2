@@ -20,9 +20,7 @@ const getAllReportIdsInsertedBySeeder = async (): Promise<number[]> => {
 type SelectCountQueryResponse = [{ '': number }];
 
 const isSeedsTablePopulated = async (dataSource: DataSource): Promise<boolean> => {
-  const numberOfSeedTableRows = await dataSource.query<SelectCountQueryResponse>(
-    `SELECT COUNT(*) FROM ${SEED_TABLE_NAME}`,
-  );
+  const numberOfSeedTableRows = await dataSource.query<SelectCountQueryResponse>(`SELECT COUNT(*) FROM ${SEED_TABLE_NAME}`);
   return numberOfSeedTableRows[0][''] !== 0;
 };
 

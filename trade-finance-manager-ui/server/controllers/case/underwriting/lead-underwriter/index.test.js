@@ -58,11 +58,7 @@ describe('GET underwriting - lead underwriter', () => {
     });
 
     it('should return an object with the correct parameters', async () => {
-      const result = await underwriterLeadUnderwriterController.getLeadUnderwriter(
-        MOCK_DEAL,
-        MOCK_USER_UNDERWRITER_MANAGER,
-        mockToken,
-      );
+      const result = await underwriterLeadUnderwriterController.getLeadUnderwriter(MOCK_DEAL, MOCK_USER_UNDERWRITER_MANAGER, mockToken);
 
       expect(result).toEqual({
         userCanEdit,
@@ -77,11 +73,7 @@ describe('GET underwriting - lead underwriter', () => {
     });
 
     it('should call getUser API to get current lead underwriter user data', async () => {
-      await underwriterLeadUnderwriterController.getLeadUnderwriter(
-        MOCK_DEAL,
-        MOCK_USER_UNDERWRITER_MANAGER,
-        mockToken,
-      );
+      await underwriterLeadUnderwriterController.getLeadUnderwriter(MOCK_DEAL, MOCK_USER_UNDERWRITER_MANAGER, mockToken);
 
       expect(apiGetUserSpy).toHaveBeenCalledWith(MOCK_DEAL.tfm.leadUnderwriter, mockToken);
     });
@@ -158,11 +150,7 @@ describe('GET underwriting - assign lead underwriter', () => {
       // NOTE: api.getTeamMembers stub only returns one team.
       const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(MOCK_TEAM_UNDERWRITER_MANAGERS, 'firstName');
 
-      const expectedAssignToSelectOptions = mapAssignToSelectOptions(
-        MOCK_DEAL.tfm.leadUnderwriter,
-        SESSION.user,
-        alphabeticalTeamMembers,
-      );
+      const expectedAssignToSelectOptions = mapAssignToSelectOptions(MOCK_DEAL.tfm.leadUnderwriter, SESSION.user, alphabeticalTeamMembers);
 
       expect(res.render).toHaveBeenCalledWith('case/underwriting/lead-underwriter/assign-lead-underwriter.njk', {
         activeSubNavigation: 'underwriting',

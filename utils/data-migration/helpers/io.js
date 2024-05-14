@@ -19,7 +19,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
  */
 const write = async (path, data) => {
   if (path && data) {
-    fs.writeFileSync(path, data, 'utf8', (e) => (!e));
+    fs.writeFileSync(path, data, 'utf8', (e) => !e);
     return true;
   }
   return false;

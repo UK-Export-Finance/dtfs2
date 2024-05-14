@@ -1,8 +1,5 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const {
-  validateAuditDetails,
-  generateAuditDatabaseRecordFromAuditDetails,
-} = require('@ukef/dtfs2-common/change-stream');
+const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./tfm-get-facility.controller');
@@ -24,15 +21,11 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(facilityId) } },
-    $.flatten(withoutId(update)),
-    {
-      returnNewDocument: true,
-      returnDocument: 'after',
-      upsert: true,
-    },
-  );
+  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, $.flatten(withoutId(update)), {
+    returnNewDocument: true,
+    returnDocument: 'after',
+    upsert: true,
+  });
 
   const { value: updatedFacility } = findAndUpdateResponse;
 

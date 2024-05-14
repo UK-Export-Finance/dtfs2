@@ -1,11 +1,7 @@
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 
 const utils = require('../../../../utils/crypto.util');
-const {
-  userIsBlocked,
-  userIsDisabled,
-  usernameOrPasswordIncorrect,
-} = require('../../../../constants/login-results.constant');
+const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../../../constants/login-results.constant');
 const { findByUsername, updateLastLoginAndResetSignInData, incrementFailedLoginCount } = require('../user.controller');
 
 const loginCallback = (username, password, auditDetails) =>
@@ -36,9 +32,7 @@ const loginCallback = (username, password, auditDetails) =>
 
       const { sessionIdentifier, ...tokenObject } = utils.issueJWT(user);
 
-      return updateLastLoginAndResetSignInData(user, sessionIdentifier, generateTfmAuditDetails(user._id), () =>
-        resolve({ user, tokenObject }),
-      );
+      return updateLastLoginAndResetSignInData(user, sessionIdentifier, generateTfmAuditDetails(user._id), () => resolve({ user, tokenObject }));
     });
   });
 

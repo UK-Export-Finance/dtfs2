@@ -1,17 +1,9 @@
 const axios = require('axios');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
-const {
-  isValidMongoId,
-  isValidPartyUrn,
-  isValidNumericId,
-  isValidCurrencyCode,
-  sanitizeUsername,
-  isValidTeamId,
-} = require('./validation/validateIds');
+const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
 require('dotenv').config();
 
-const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL } =
-  process.env;
+const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL } = process.env;
 
 const headers = {
   central: {
@@ -200,12 +192,7 @@ const findOneDeal = async (dealId) => {
  * @param {(Error: ErrorParam) => any} params.onError
  * @returns updated deal on success, or `onError({ status, message })` on failure
  */
-const updateDeal = async ({
-  dealId,
-  dealUpdate,
-  auditDetails,
-  onError = ({ status, message }) => ({ status, data: message }),
-}) => {
+const updateDeal = async ({ dealId, dealUpdate, auditDetails, onError = ({ status, message }) => ({ status, data: message }) }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -1271,12 +1258,9 @@ const updateUtilisationReportStatus = async (reportsWithStatus, user) => {
  * @returns {Promise<import('./api-response-types').UtilisationReportReconciliationDetailsResponseBody>}
  */
 const getUtilisationReportReconciliationDetailsById = async (reportId) => {
-  const response = await axios.get(
-    `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`,
-    {
-      headers: headers.central,
-    },
-  );
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`, {
+    headers: headers.central,
+  });
 
   return response.data;
 };

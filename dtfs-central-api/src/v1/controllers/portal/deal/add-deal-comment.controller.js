@@ -12,15 +12,17 @@ const addDealComment = async (_id, commentType, comment) => {
       {
         $push: {
           [commentType]: {
-            $each: [{
-              ...comment,
-              timestamp: Date.now(),
-            }],
+            $each: [
+              {
+                ...comment,
+                timestamp: Date.now(),
+              },
+            ],
             $position: 0,
           },
         },
       },
-      { returnNewDocument: true, returnDocument: 'after' }
+      { returnNewDocument: true, returnDocument: 'after' },
     );
 
     const { value } = findAndUpdateResponse;

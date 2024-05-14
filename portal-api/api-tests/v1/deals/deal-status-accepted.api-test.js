@@ -32,7 +32,9 @@ describe('PUT /v1/deals/:id/status - to `Accepted by UKEF`', () => {
       minDeal.details.manualInclusionNoticeSubmissionDate = new Date().valueOf();
       minDeal.status = 'Acknowledged';
 
-      const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(minDeal))).to('/v1/deals');
+      const postResult = await as(aBarclaysMaker)
+        .post(JSON.parse(JSON.stringify(minDeal)))
+        .to('/v1/deals');
 
       submittedMinDeal = postResult.body;
 
@@ -62,7 +64,9 @@ describe('PUT /v1/deals/:id/status - to `Accepted by UKEF`', () => {
       minDeal.details.manualInclusionNoticeSubmissionDate = new Date().valueOf();
       minDeal.status = 'Acknowledged';
 
-      const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(minDeal))).to('/v1/deals');
+      const postResult = await as(aBarclaysMaker)
+        .post(JSON.parse(JSON.stringify(minDeal)))
+        .to('/v1/deals');
 
       submittedMinDeal = postResult.body;
 

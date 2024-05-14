@@ -3,7 +3,10 @@ const { FACILITY_TYPE } = require('../../constants');
 const api = require('../../services/api');
 
 const facilityConfirmDeletion = async (req, res) => {
-  const { params, session: { userToken } } = req;
+  const {
+    params,
+    session: { userToken },
+  } = req;
   const { dealId, facilityId } = params;
 
   try {

@@ -1,8 +1,6 @@
 const mockSignInLinkControllerLoginWithSignInLink = jest.fn();
 jest.mock('./sign-in-link.controller', () => ({
-  SignInLinkController: jest
-    .fn()
-    .mockImplementation(() => ({ loginWithSignInLink: mockSignInLinkControllerLoginWithSignInLink })),
+  SignInLinkController: jest.fn().mockImplementation(() => ({ loginWithSignInLink: mockSignInLinkControllerLoginWithSignInLink })),
 }));
 const mockUserControllerUpdateUser = jest.fn((_id, user, auditDetails, callback) => {
   const mockUser = { ...user, _id };
@@ -158,12 +156,7 @@ describe('users routes', () => {
       await updateById(req, res);
 
       expect(mockUserControllerFindOne).toHaveBeenCalledWith(req.params._id, expect.any(Function));
-      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(
-        req.params._id,
-        req.body,
-        generatePortalAuditDetails(req.user._id),
-        expect.any(Function),
-      );
+      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(req.params._id, req.body, generatePortalAuditDetails(req.user._id), expect.any(Function));
       expect(res.status).toHaveBeenCalledWith(200);
     });
 
@@ -205,12 +198,7 @@ describe('users routes', () => {
       await updateById(req, res);
 
       expect(mockUserControllerFindOne).toHaveBeenCalledWith(req.params._id, expect.any(Function));
-      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(
-        req.params._id,
-        req.body,
-        generatePortalAuditDetails(req.user._id),
-        expect.any(Function),
-      );
+      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(req.params._id, req.body, generatePortalAuditDetails(req.user._id), expect.any(Function));
       expect(res.status).toHaveBeenCalledWith(200);
     });
 

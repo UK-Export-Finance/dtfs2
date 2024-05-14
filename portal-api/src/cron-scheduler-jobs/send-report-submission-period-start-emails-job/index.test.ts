@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { produce } from 'immer';
 import { sendReportSubmissionPeriodStartEmailsJob } from './index';
 import api from '../../v1/api';
@@ -12,7 +13,6 @@ jest.mock('../../external-api/bank-holidays');
 jest.mock('../../external-api/send-email', () => jest.fn());
 
 console.error = jest.fn();
-console.warn = jest.fn();
 console.info = jest.fn();
 
 const originalProcessEnv = process.env;

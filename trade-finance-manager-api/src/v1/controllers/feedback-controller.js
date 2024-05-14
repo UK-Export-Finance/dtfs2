@@ -1,9 +1,6 @@
 const { format, getUnixTime, fromUnixTime } = require('date-fns');
 const sanitizeHtml = require('sanitize-html');
-const {
-  generateAuditDatabaseRecordFromAuditDetails,
-  validateAuditDetails,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
 const sendTfmEmail = require('./send-tfm-email');

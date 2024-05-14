@@ -1,5 +1,7 @@
 const express = require('express');
-const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 const api = require('../api');
 const { requestParams, generateErrorSummary, errorHref, postToApi, constructPayload } = require('../helpers');
 const { validateToken, validateRole } = require('./middleware');
@@ -45,10 +47,7 @@ router.get('/before-you-start/bank-deal', validateRole({ role: [MAKER] }), async
 router.post('/before-you-start/bank-deal', [validateRole({ role: [MAKER] }), provide([MANDATORY_CRITERIA])], async (req, res) => {
   const { userToken } = requestParams(req);
 
-  const allowedFields = [
-    'bankInternalRefName',
-    'additionalRefName',
-  ];
+  const allowedFields = ['bankInternalRefName', 'additionalRefName'];
   const sanitizedBody = constructPayload(req.body, allowedFields);
 
   const newDeal = {

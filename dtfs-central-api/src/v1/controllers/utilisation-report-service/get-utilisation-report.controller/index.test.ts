@@ -42,7 +42,10 @@ describe('getUtilisationReport', () => {
       surname: 'User',
     };
 
-    const azureFileInfo = AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource: { platform: 'PORTAL', userId: uploadedByUser.id } });
+    const azureFileInfo = AzureFileInfoEntity.create({
+      ...MOCK_AZURE_FILE_INFO,
+      requestSource: { platform: 'PORTAL', userId: uploadedByUser.id },
+    });
 
     const mockDate = new Date('2024-01');
 

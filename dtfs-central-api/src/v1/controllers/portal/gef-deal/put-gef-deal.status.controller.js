@@ -23,18 +23,18 @@ const updateDealStatus = async (dealId, previousStatus, newStatus) => {
 
     return findAndUpdateResponse.value;
   }
+
   return { status: 400, message: 'Invalid Deal Id' };
 };
 exports.updateDealStatus = updateDealStatus;
 
-// eslint-disable-next-line consistent-return
 exports.updateDealStatusPut = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const dealId = req.params.id;
 
     const { status: newStatus } = req.body;
 
-    await findOneDeal(dealId, async (existingDeal) => {
+    return await findOneDeal(dealId, async (existingDeal) => {
       if (existingDeal) {
         if (existingDeal.status === newStatus) {
           return res.status(400).send();
@@ -46,7 +46,7 @@ exports.updateDealStatusPut = async (req, res) => {
 
       return res.status(404).send({ status: 404, message: 'Deal not found' });
     });
-  } else {
-    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
+
+  return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
 };

@@ -47,7 +47,7 @@ describe('utils - date', () => {
 
       const result = getIsoStringWithOffset(date);
 
-      expect(result).toBe('2024-03-02T00:00:00+00:00')
+      expect(result).toBe('2024-03-02T00:00:00+00:00');
     });
 
     it('returns an ISO-8601 string with offset when timezone is BST', () => {
@@ -55,7 +55,7 @@ describe('utils - date', () => {
 
       const result = getIsoStringWithOffset(date);
 
-      expect(result).toBe('2024-07-02T01:00:00+01:00')
+      expect(result).toBe('2024-07-02T01:00:00+01:00');
     });
-  })
+  });
 });

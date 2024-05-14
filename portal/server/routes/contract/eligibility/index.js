@@ -1,7 +1,9 @@
 const stream = require('stream');
 const express = require('express');
 const multer = require('multer');
-const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { getApiData, requestParams, generateErrorSummary, formatCountriesForGDSComponent, errorHref } = require('../../../helpers');
 const { provide, DEAL, COUNTRIES } = require('../../api-data-provider');

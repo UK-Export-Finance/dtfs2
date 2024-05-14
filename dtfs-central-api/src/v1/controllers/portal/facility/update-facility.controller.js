@@ -18,11 +18,10 @@ const updateFacility = async (facilityId, facilityBody, dealId, user, routePath)
 
     const update = { ...facilityBody, dealId: ObjectId(dealId), updatedAt: Date.now() };
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(facilityId) } },
-      $.flatten(withoutId(update)),
-      { returnNewDocument: true, returnDocument: 'after' }
-    );
+    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, $.flatten(withoutId(update)), {
+      returnNewDocument: true,
+      returnDocument: 'after',
+    });
 
     const { value: updatedFacility } = findAndUpdateResponse;
 
@@ -67,5 +66,6 @@ exports.updateFacilityPut = async (req, res) => {
 
     return res.status(404).send();
   }
+
   return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
 };

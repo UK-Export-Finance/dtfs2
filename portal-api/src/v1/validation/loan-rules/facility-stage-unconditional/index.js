@@ -7,12 +7,9 @@ const disbursementAmount = require('../disbursement-amount');
 
 module.exports = (loan, errorList, deal) => {
   let newErrorList = { ...errorList };
-  const {
-    facilityStage,
-  } = loan;
+  const { facilityStage } = loan;
 
-  if (hasValue(facilityStage)
-    && facilityStage === 'Unconditional') {
+  if (hasValue(facilityStage) && facilityStage === 'Unconditional') {
     newErrorList = name(loan, newErrorList);
     newErrorList = requestedCoverStartDateRules(loan, deal, newErrorList);
     newErrorList = coverEndDate(loan, deal, newErrorList);

@@ -15,13 +15,12 @@ context('Facility Value Page', () => {
       .then(() => cy.apiFetchAllGefApplications(token))
       .then(({ body }) => {
         body.items.forEach((item) => {
-          cy.apiFetchAllFacilities(item._id, token)
-            .then((res) => {
-              applications.push({
-                id: item._id,
-                facilities: res.body.items.filter((it) => it.details.dealId === item._id),
-              });
+          cy.apiFetchAllFacilities(item._id, token).then((res) => {
+            applications.push({
+              id: item._id,
+              facilities: res.body.items.filter((it) => it.details.dealId === item._id),
             });
+          });
         });
       });
     cy.login(BANK1_MAKER1);
@@ -46,7 +45,10 @@ context('Facility Value Page', () => {
     it('redirects user to `facility currency` page when clicking on `Back` Link', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValuePage.backLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-currency`));
+      cy.url().should(
+        'eq',
+        relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-currency`),
+      );
     });
   });
 
@@ -102,7 +104,10 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().clear();
       facilityValuePage.percentageCover().type('80');
       facilityValuePage.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
+      cy.url().should(
+        'eq',
+        relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`),
+      );
 
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValuePage.interestPercentage().clear();
@@ -110,7 +115,10 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().clear();
       facilityValuePage.percentageCover().type('1');
       facilityValuePage.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
+      cy.url().should(
+        'eq',
+        relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`),
+      );
 
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValuePage.interestPercentage().clear();
@@ -118,7 +126,10 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().clear();
       facilityValuePage.percentageCover().type('79');
       facilityValuePage.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
+      cy.url().should(
+        'eq',
+        relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`),
+      );
     });
   });
 
@@ -154,7 +165,10 @@ context('Facility Value Page', () => {
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('1');
       facilityValuePage.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
+      cy.url().should(
+        'eq',
+        relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`),
+      );
 
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValuePage.percentageCover().clear();
@@ -207,7 +221,10 @@ context('Facility Value Page', () => {
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('99.0000');
       facilityValuePage.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
+      cy.url().should(
+        'eq',
+        relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`),
+      );
 
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValuePage.percentageCover().clear();
@@ -215,7 +232,10 @@ context('Facility Value Page', () => {
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('79');
       facilityValuePage.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
+      cy.url().should(
+        'eq',
+        relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`),
+      );
 
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValuePage.percentageCover().clear();
@@ -223,7 +243,10 @@ context('Facility Value Page', () => {
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('10.1');
       facilityValuePage.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
+      cy.url().should(
+        'eq',
+        relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`),
+      );
     });
   });
 
@@ -286,7 +309,10 @@ context('Facility Value Page', () => {
 
     it('redirects to the currency page when currency is not set for the facility', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-currency`));
+      cy.url().should(
+        'eq',
+        relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-currency`),
+      );
     });
   });
 });

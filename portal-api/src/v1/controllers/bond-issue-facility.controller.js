@@ -1,11 +1,8 @@
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { hasAllIssuedDateValues } = require('../facility-dates/issued-date');
-const {
-  hasAllRequestedCoverStartDateValues,
-  updateRequestedCoverStartDate,
-} = require('../facility-dates/requested-cover-start-date');
-const { getStartOfDateFromDayMonthYearStrings } = require("../helpers/date")
+const { hasAllRequestedCoverStartDateValues, updateRequestedCoverStartDate } = require('../facility-dates/requested-cover-start-date');
+const { getStartOfDateFromDayMonthYearStrings } = require('../helpers/date');
 const bondIssueFacilityValidationErrors = require('../validation/bond-issue-facility');
 const { hasValue } = require('../../utils/string');
 const canIssueFacility = require('../facility-issuance');
@@ -13,10 +10,7 @@ const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
 
 exports.updateBondIssueFacility = async (req, res) => {
-  const {
-    id: dealId,
-    bondId,
-  } = req.params;
+  const { id: dealId, bondId } = req.params;
 
   await findOneDeal(dealId, async (deal) => {
     if (deal) {
@@ -42,8 +36,7 @@ exports.updateBondIssueFacility = async (req, res) => {
       // remove status added via type B XML. (we dynamically generate statuses)
       modifiedBond.status = null;
 
-      if (!modifiedBond.issueFacilityDetailsStarted
-          && !modifiedBond.issueFacilityDetailsSubmitted) {
+      if (!modifiedBond.issueFacilityDetailsStarted && !modifiedBond.issueFacilityDetailsSubmitted) {
         // add a flag for UI/design/status/business handling...
         modifiedBond.issueFacilityDetailsStarted = true;
       }
@@ -60,19 +53,14 @@ exports.updateBondIssueFacility = async (req, res) => {
       }
 
       if (hasAllIssuedDateValues(modifiedBond)) {
-        modifiedBond.issuedDate = getStartOfDateFromDayMonthYearStrings(
-          req.body['issuedDate-day'],
-          req.body['issuedDate-month'],
-          req.body['issuedDate-year']
-        ).valueOf().toString();
+        modifiedBond.issuedDate = getStartOfDateFromDayMonthYearStrings(req.body['issuedDate-day'], req.body['issuedDate-month'], req.body['issuedDate-year'])
+          .valueOf()
+          .toString();
       } else {
         modifiedBond.issuedDate = null;
       }
 
-      const validationErrors = bondIssueFacilityValidationErrors(
-        modifiedBond,
-        deal,
-      );
+      const validationErrors = bondIssueFacilityValidationErrors(modifiedBond, deal);
 
       modifiedBond.hasBeenIssued = false;
       modifiedBond.issueFacilityDetailsProvided = false;
@@ -84,12 +72,7 @@ exports.updateBondIssueFacility = async (req, res) => {
         modifiedBond.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
       }
 
-      const { status, data } = await facilitiesController.update(
-        dealId,
-        bondId,
-        modifiedBond,
-        req.user,
-      );
+      const { status, data } = await facilitiesController.update(dealId, bondId, modifiedBond, req.user);
 
       if (validationErrors.count !== 0) {
         return res.status(400).send({

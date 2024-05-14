@@ -2,10 +2,7 @@ const { dashboardDeals } = require('../../../../pages');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const { MOCK_DEALS } = require('../fixtures');
 
-const {
-  BANK1_MAKER1,
-  ADMIN,
-} = MOCK_USERS;
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const { BSS_DEAL } = MOCK_DEALS;
 
@@ -28,9 +25,12 @@ context('Dashboard deals pagination', () => {
     dashboardDeals.rows().should('have.length', 20);
 
     // test pagination
-    dashboardDeals.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(21 items)');
-    });
+    dashboardDeals
+      .totalItems()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('(21 items)');
+      });
 
     dashboardDeals.first().should('not.exist');
     dashboardDeals.previous().should('not.exist');
@@ -44,9 +44,12 @@ context('Dashboard deals pagination', () => {
     dashboardDeals.rows().should('have.length', 1);
 
     // test pagination
-    dashboardDeals.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(21 items)');
-    });
+    dashboardDeals
+      .totalItems()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('(21 items)');
+      });
 
     dashboardDeals.first().should('exist');
     dashboardDeals.previous().should('exist');

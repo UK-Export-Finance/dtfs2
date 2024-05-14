@@ -40,9 +40,7 @@ const generateFacilitiesListString = (facilities) => {
     }
 
     if (bankRef) {
-      const bankRefString = bankRef
-        ? `*Your bank ref: ${bankRef}\n`
-        : '';
+      const bankRefString = bankRef ? `*Your bank ref: ${bankRef}\n` : '';
 
       string += bankRefString;
     }
@@ -63,9 +61,7 @@ const generateFacilitiesListString = (facilities) => {
 };
 
 const generateBssFacilityLists = (facilities) => {
-  const {
-    issuedBonds, unissuedBonds, issuedLoans, unissuedLoans,
-  } = issuedFacilities(facilities);
+  const { issuedBonds, unissuedBonds, issuedLoans, unissuedLoans } = issuedFacilities(facilities);
 
   const issuedBondsList = generateFacilitiesListString(issuedBonds);
   const issuedLoansList = generateFacilitiesListString(issuedLoans);
@@ -90,9 +86,7 @@ const generateBssFacilityLists = (facilities) => {
 };
 
 const generateGefFacilityLists = (facilities) => {
-  const {
-    issuedCash, unissuedCash, issuedContingent, unissuedContingent,
-  } = issuedFacilities(facilities);
+  const { issuedCash, unissuedCash, issuedContingent, unissuedContingent } = issuedFacilities(facilities);
 
   const issuedCashList = generateFacilitiesListString(issuedCash);
   const issuedContingentList = generateFacilitiesListString(issuedContingent);

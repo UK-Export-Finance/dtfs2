@@ -92,9 +92,7 @@ exports.create = async (req, res) => {
         const auditDetails = generatePortalAuditDetails(req.user._id);
 
         const collection = await db.getCollection(filesCollection);
-        const insertedFile = await collection.insertOne(
-          new File(fileObject, parentId, generateAuditDatabaseRecordFromAuditDetails(auditDetails)),
-        );
+        const insertedFile = await collection.insertOne(new File(fileObject, parentId, generateAuditDatabaseRecordFromAuditDetails(auditDetails)));
         const insertedId = String(insertedFile.insertedId);
 
         if (!ObjectId.isValid(insertedId)) {

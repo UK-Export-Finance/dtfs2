@@ -21,7 +21,7 @@ context('Confirmation', () => {
       utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-February_2023_monthly.xlsx');
       utilisationReportUpload.continueButton().click();
       confirmAndSend.confirmAndSendButton().click();
-      
+
       problemWithService.heading().should('not.exist');
     });
 

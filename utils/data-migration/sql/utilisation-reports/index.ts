@@ -13,10 +13,10 @@ const getSqlReports = (): {
   sqlReports: UtilisationReportEntity[];
   sqlFeeRecords: FeeRecordEntity[];
 } => {
-  const mongoReports = deserialiseEJson<MongoUtilisationReport[]>(reportsEJson);
+  const mongoReports = deserialiseEJson<MongoUtilisationReport[]>(reportsEJson as object);
   console.info('deserialised mongo reports', mongoReports);
 
-  const mongoReportsData = deserialiseEJson<MongoUtilisationData[]>(reportsDataEJson);
+  const mongoReportsData = deserialiseEJson<MongoUtilisationData[]>(reportsDataEJson as object);
   console.info('deserialised mongo reports data', mongoReportsData);
 
   const sqlUtilisationReportAndFeeRecords = mongoReports.map((mongoReport) =>
@@ -26,16 +26,10 @@ const getSqlReports = (): {
     }),
   );
 
-  const sqlReports = sqlUtilisationReportAndFeeRecords.reduce<UtilisationReportEntity[]>(
-    (acc, { sqlReport }) => [...acc, sqlReport],
-    [],
-  );
+  const sqlReports = sqlUtilisationReportAndFeeRecords.reduce<UtilisationReportEntity[]>((acc, { sqlReport }) => [...acc, sqlReport], []);
   console.info('sql reports', sqlReports);
 
-  const allSqlFeeRecords = sqlUtilisationReportAndFeeRecords.reduce<FeeRecordEntity[]>(
-    (acc, { sqlFeeRecords }) => [...acc, ...sqlFeeRecords],
-    [],
-  );
+  const allSqlFeeRecords = sqlUtilisationReportAndFeeRecords.reduce<FeeRecordEntity[]>((acc, { sqlFeeRecords }) => [...acc, ...sqlFeeRecords], []);
   console.info('sql fee records', allSqlFeeRecords);
 
   return { sqlReports, sqlFeeRecords: allSqlFeeRecords };
@@ -43,7 +37,7 @@ const getSqlReports = (): {
 
 SqlDbDataSource.initialize()
   .then(async () => {
-    console.info('🗄️ Successfully initialised connection to SQL database');
+    console.info('✅ Successfully initialised connection to SQL database');
 
     const { sqlReports, sqlFeeRecords } = getSqlReports();
 

@@ -40,11 +40,7 @@ type ValidateSearchInputParams = {
   validBankIds: string[];
 };
 
-export const validateSearchInput = ({
-  bankIdQuery,
-  yearQuery,
-  validBankIds,
-}: ValidateSearchInputParams): FindUtilisationReportByYearValidationErrors => {
+export const validateSearchInput = ({ bankIdQuery, yearQuery, validBankIds }: ValidateSearchInputParams): FindUtilisationReportByYearValidationErrors => {
   const bankError = bankIdQuery ? getBankInputValidationError(bankIdQuery, validBankIds) : 'Select a bank';
   const yearError = yearQuery ? getYearInputValidationError(yearQuery) : 'Enter a valid year';
 

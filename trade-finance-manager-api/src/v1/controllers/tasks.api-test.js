@@ -130,13 +130,7 @@ describe('tasks controller', () => {
     it('should map over all tasks and return handleTaskEditFlagAndStatus for each task', async () => {
       const tfmTaskUpdate = createTaskUpdateObj(1, 1);
 
-      const result = await createAllUpdatedTasks(
-        MOCK_MIA_TASKS,
-        tfmTaskUpdate.groupId,
-        tfmTaskUpdate,
-        CONSTANTS.TASKS.STATUS.TO_DO,
-        MOCK_DEAL_MIA_SUBMITTED,
-      );
+      const result = await createAllUpdatedTasks(MOCK_MIA_TASKS, tfmTaskUpdate.groupId, tfmTaskUpdate, CONSTANTS.TASKS.STATUS.TO_DO, MOCK_DEAL_MIA_SUBMITTED);
 
       const expected = MOCK_MIA_TASKS.map((group) => ({
         ...group,
@@ -192,9 +186,7 @@ describe('tasks controller', () => {
           mockUrlOrigin,
         );
 
-        const underwritingGroup = result.find(
-          (group) => group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING,
-        );
+        const underwritingGroup = result.find((group) => group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING);
 
         expect(underwritingGroup.groupTasks[0].status).toEqual(CONSTANTS.TASKS.STATUS.TO_DO);
         expect(underwritingGroup.groupTasks[0].canEdit).toEqual(true);
@@ -220,12 +212,7 @@ describe('tasks controller', () => {
         const generatedExpectedCall = (task) => [
           CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
           underwritingTeamEmail,
-          generateTaskEmailVariables(
-            mockUrlOrigin,
-            task,
-            MOCK_DEAL_MIA_SUBMITTED._id,
-            MOCK_DEAL_MIA_SUBMITTED.exporter.companyName,
-          ),
+          generateTaskEmailVariables(mockUrlOrigin, task, MOCK_DEAL_MIA_SUBMITTED._id, MOCK_DEAL_MIA_SUBMITTED.exporter.companyName),
         ];
 
         const expectedFirstCall = generatedExpectedCall(firstUnderwritingTask);
@@ -301,13 +288,7 @@ describe('tasks controller', () => {
           })),
         };
 
-        await createAllUpdatedTasks(
-          tasksWithUnderwritingTasksUnlocked,
-          tfmTaskUpdate.groupId,
-          tfmTaskUpdate,
-          MOCK_DEAL_MIA_SUBMITTED,
-          mockUrlOrigin,
-        );
+        await createAllUpdatedTasks(tasksWithUnderwritingTasksUnlocked, tfmTaskUpdate.groupId, tfmTaskUpdate, MOCK_DEAL_MIA_SUBMITTED, mockUrlOrigin);
 
         expect(api.sendEmail).not.toHaveBeenCalled();
       });
