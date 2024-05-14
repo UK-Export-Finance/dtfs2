@@ -5,17 +5,7 @@ name: Feature environment deployment
 on:
   push:
     branches:
-      - feat/e2etf-sql
-    paths:
-      - "portal/**"
-      - "portal-api/**"
-      - "gef-ui/**"
-      - "trade-finance-manager-ui/**"
-      - "trade-finance-manager-api/**"
-      - "dtfs-central-api/**"
-      - "external-api/**"
-      - "azure-functions/acbs-function/**"
-      - "libs/common/**"
+      - main
 
 env:
   environment: feature
@@ -45,7 +35,7 @@ jobs:
     runs-on: [self-hosted, linux, deployment]
     environment: dev
     env:
-      SQL_DB_HOST: ${{ vars.SQL_DB_HOST }}
+      SQL_DB_HOST: ${{ secrets.SQL_DB_HOST }}
       SQL_DB_PORT: ${{ secrets.SQL_DB_PORT }}
       SQL_DB_USERNAME: ${{ secrets.SQL_DB_USERNAME }}
       SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD }}

@@ -1,3 +1,4 @@
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
 const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
@@ -61,7 +62,10 @@ describe('/v1/eligibility-criteria', () => {
       const { body } = await as(noRoles).get(eligibilityCriteriaUrl);
       expect(body).toEqual({
         count: allEligibilityCriteria.length,
-        eligibilityCriteria: expectMongoIds(allEligibilityCriteria),
+        eligibilityCriteria: expectMongoIds(allEligibilityCriteria.map((criteria) => ({
+          ...criteria,
+          auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id)
+        }))),
       });
     });
   });
@@ -87,7 +91,10 @@ describe('/v1/eligibility-criteria', () => {
       const { status, body } = await as(anAdmin).get(latestEligibilityCriteriaUrl);
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectMongoId(newEligibilityCriteria));
+      expect(body).toEqual(expectMongoId({
+        ...newEligibilityCriteria,
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id),
+      }));
     });
   });
 
@@ -112,7 +119,10 @@ describe('/v1/eligibility-criteria', () => {
       const { status, body } = await as(anAdmin).get(`/v1/eligibility-criteria/${newEligibilityCriteria.version}`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectMongoId(newEligibilityCriteria));
+      expect(body).toEqual(expectMongoId({
+        ...newEligibilityCriteria,
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id),
+      }));
     });
   });
 
@@ -165,6 +175,7 @@ describe('/v1/eligibility-criteria', () => {
         expectMongoId({
           ...eligibilityCriteria,
           criteria: update.criteria,
+          auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id),
         }),
       );
     });

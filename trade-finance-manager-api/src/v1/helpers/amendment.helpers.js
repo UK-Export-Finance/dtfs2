@@ -1,14 +1,10 @@
 const { format, fromUnixTime } = require('date-fns');
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const sendTfmEmail = require('../controllers/send-tfm-email');
 const { UNDERWRITER_MANAGER_DECISIONS } = require('../../constants/amendments');
 const { TEAMS } = require('../../constants');
-const {
-  AMENDMENT_UW_DECISION,
-  AMENDMENT_BANK_DECISION,
-  AMENDMENT_STATUS,
-} = require('../../constants/deals');
-const { CURRENCY } = require('../../constants/currency.constant');
+const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION, AMENDMENT_STATUS } = require('../../constants/deals');
 const EMAIL_TEMPLATE_IDS = require('../../constants/email-template-ids');
 const { automaticAmendmentEmailVariables } = require('../emails/amendments/automatic-approval-email-variables');
 const { generateTaskEmailVariables } = require('./generate-task-email-variables');
@@ -26,20 +22,29 @@ const { decimalsCount, roundNumber } = require('./number');
 
 // checks if amendment exists and if eligible to send email
 const amendmentEmailEligible = (amendment) =>
-  amendment && (amendment?.automaticApprovalEmail || amendment?.ukefDecision?.managersDecisionEmail || amendment?.bankDecision?.banksDecisionEmail
-    || amendment?.sendFirstTaskEmail);
+  amendment &&
+  (amendment?.automaticApprovalEmail ||
+    amendment?.ukefDecision?.managersDecisionEmail ||
+    amendment?.bankDecision?.banksDecisionEmail ||
+    amendment?.sendFirstTaskEmail);
 
 const isApprovedWithConditions = (ukefDecision) => {
   const { value, coverEndDate } = ukefDecision;
 
-  return value === AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS || coverEndDate === AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS;
+  return (
+    value === AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS ||
+    coverEndDate === AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS
+  );
 };
 
 // checks if value or coverEndDate are approved without conditions
 const isApprovedWithoutConditions = (ukefDecision) => {
   const { value, coverEndDate } = ukefDecision;
 
-  return value === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS || coverEndDate === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS;
+  return (
+    value === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS ||
+    coverEndDate === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS
+  );
 };
 
 /**
@@ -203,19 +208,35 @@ const sendManualDecisionAmendmentEmail = async (amendmentVariables, auditDetails
       await emailApprovedWithWithoutConditions(amendmentVariables, auditDetails);
 
       // if only approved without conditions (and not declined or with conditions)
-    } else if (isApprovedWithoutConditions(ukefDecision) && !amendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision)) {
+    } else if (
+      isApprovedWithoutConditions(ukefDecision) &&
+      !amendmentDeclined(amendment) &&
+      !isApprovedWithConditions(ukefDecision)
+    ) {
       await emailApprovedWithoutConditions(amendmentVariables, auditDetails);
 
       // if approved with conditions and declined only
-    } else if (isApprovedWithConditions(ukefDecision) && amendmentDeclined(amendment) && !isApprovedWithoutConditions(ukefDecision)) {
+    } else if (
+      isApprovedWithConditions(ukefDecision) &&
+      amendmentDeclined(amendment) &&
+      !isApprovedWithoutConditions(ukefDecision)
+    ) {
       await emailApprovedWithConditionsDeclined(amendmentVariables, auditDetails);
 
       // if approved without conditions and declined only
-    } else if (isApprovedWithoutConditions(ukefDecision) && amendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision)) {
+    } else if (
+      isApprovedWithoutConditions(ukefDecision) &&
+      amendmentDeclined(amendment) &&
+      !isApprovedWithConditions(ukefDecision)
+    ) {
       await emailApprovedWithoutConditionsDeclined(amendmentVariables, auditDetails);
 
       // if declined only
-    } else if (amendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision) && !isApprovedWithoutConditions(ukefDecision)) {
+    } else if (
+      amendmentDeclined(amendment) &&
+      !isApprovedWithConditions(ukefDecision) &&
+      !isApprovedWithoutConditions(ukefDecision)
+    ) {
       await emailDeclined(amendmentVariables, auditDetails);
     } else {
       console.error('Incorrect ukefDecision passed for manual amendment email');
@@ -471,8 +492,10 @@ const calculateAmendmentDateTenor = async (coverEndDate, existingFacility) => {
   try {
     const { facilitySnapshot } = existingFacility;
 
-    const validConditions = (facilitySnapshot?.ukefFacilityType || facilitySnapshot?.type)
-      && (facilitySnapshot?.coverStartDate || facilitySnapshot?.requestedCoverStartDate) && coverEndDate;
+    const validConditions =
+      (facilitySnapshot?.ukefFacilityType || facilitySnapshot?.type) &&
+      (facilitySnapshot?.coverStartDate || facilitySnapshot?.requestedCoverStartDate) &&
+      coverEndDate;
 
     if (validConditions) {
       const { ukefFacilityType, type } = facilitySnapshot;
@@ -483,7 +506,11 @@ const calculateAmendmentDateTenor = async (coverEndDate, existingFacility) => {
       const coverStartDateFormatted = format(new Date(coverStartDate), 'yyyy-MM-dd');
       const coverEndDateFormatted = format(fromUnixTime(coverEndDate), 'yyyy-MM-dd');
 
-      const updatedTenor = await api.getFacilityExposurePeriod(coverStartDateFormatted, coverEndDateFormatted, facilityType);
+      const updatedTenor = await api.getFacilityExposurePeriod(
+        coverStartDateFormatted,
+        coverEndDateFormatted,
+        facilityType,
+      );
       // returns exposure period in months to add to tfmObject
       if (updatedTenor?.exposurePeriodInMonths) {
         return updatedTenor.exposurePeriodInMonths;
@@ -544,9 +571,7 @@ const calculateAcbsUkefExposure = (payload) => {
 const formatCoverEndDate = (payload) => {
   if (payload?.coverEndDate) {
     // TODO: DTFS2-7047 convert EPOCH to millisecond compatible epoch.
-    const epoch = payload.coverEndDate.toString().length > 10
-      ? payload.coverEndDate
-      : payload.coverEndDate * 1000;
+    const epoch = payload.coverEndDate.toString().length > 10 ? payload.coverEndDate : payload.coverEndDate * 1000;
 
     return {
       ...payload,

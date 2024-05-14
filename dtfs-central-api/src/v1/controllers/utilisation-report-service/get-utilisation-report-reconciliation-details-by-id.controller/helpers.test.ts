@@ -1,5 +1,15 @@
-import { FeeRecordEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { mapFeeRecordEntityToReconciliationDetailsFeeRecordItem, mapUtilisationReportEntityToReconciliationDetails } from './helpers';
+import {
+  Currency,
+  CurrencyAndAmount,
+  FeeRecordEntityMockBuilder,
+  FeeRecordStatus,
+  ReportPeriod,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
+import {
+  mapFeeRecordEntityToReconciliationDetailsFeeRecordItem,
+  mapUtilisationReportEntityToReconciliationDetails,
+} from './helpers';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 import { FeeRecordItem, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
@@ -10,18 +20,118 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
   describe('mapFeeRecordEntityToReconciliationDetailsFeeRecordItem', () => {
     const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
-    it('maps the fee record entity to the reconciliation details fee record item', () => {
+    it('maps the fee record entity id, exporter, facilityId and status to the reconciliation details fee record item', () => {
       // Arrange
+      const id = 1;
       const facilityId = '12345678';
-      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(uploadedReport).withFacilityId(facilityId).build();
+      const exporter = 'Test exporter';
+      const status: FeeRecordStatus = 'TO_DO';
+
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(uploadedReport)
+        .withId(id)
+        .withFacilityId(facilityId)
+        .withExporter(exporter)
+        .withStatus(status)
+        .build();
 
       // Act
       const feeRecordItem = mapFeeRecordEntityToReconciliationDetailsFeeRecordItem(feeRecordEntity);
 
       // Assert
-      expect(feeRecordItem).toEqual<FeeRecordItem>({
-        facilityId,
+      expect(feeRecordItem).toEqual(
+        expect.objectContaining<Partial<FeeRecordItem>>({
+          id,
+          facilityId,
+          exporter,
+          status,
+        }),
+      );
+    });
+
+    describe("when the fee record 'feesPaidToUkefForThePeriodCurrency' matches the fee record 'paymentCurrency'", () => {
+      const feesPaidToUkefForThePeriodCurrency: Currency = 'GBP';
+      const paymentCurrency: Currency = 'GBP';
+
+      const feesPaidToUkefForThePeriod = 100.0;
+
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(uploadedReport)
+        .withFeesPaidToUkefForThePeriodCurrency(feesPaidToUkefForThePeriodCurrency)
+        .withFeesPaidToUkefForThePeriod(feesPaidToUkefForThePeriod)
+        .withPaymentCurrency(paymentCurrency)
+        .build();
+
+      it("maps the fee record 'feesPaidToUkefForThePeriod' to the 'reportedPayments'", () => {
+        // Act
+        const feeRecordItem = mapFeeRecordEntityToReconciliationDetailsFeeRecordItem(feeRecordEntity);
+
+        // Assert
+        expect(feeRecordItem.reportedPayments).toEqual<CurrencyAndAmount>({
+          currency: paymentCurrency,
+          amount: feesPaidToUkefForThePeriod,
+        });
       });
+
+      it("maps the fee record 'feesPaidToUkefForThePeriod' to the 'totalReportedPayments'", () => {
+        // Act
+        const feeRecordItem = mapFeeRecordEntityToReconciliationDetailsFeeRecordItem(feeRecordEntity);
+
+        // Assert
+        expect(feeRecordItem.totalReportedPayments).toEqual<CurrencyAndAmount>({
+          currency: paymentCurrency,
+          amount: feesPaidToUkefForThePeriod,
+        });
+      });
+    });
+
+    describe("when the fee record 'feesPaidToUkefForThePeriodCurrency' does not match the fee record 'paymentCurrency'", () => {
+      const feesPaidToUkefForThePeriodCurrency: Currency = 'EUR';
+      const paymentCurrency: Currency = 'GBP';
+      const paymentExchangeRate = 1.1;
+
+      const feesPaidToUkefForThePeriod = 100.0;
+
+      const feesPaidToUkefForThePeriodInThePaymentCurrency = 90.91;
+
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(uploadedReport)
+        .withFeesPaidToUkefForThePeriodCurrency(feesPaidToUkefForThePeriodCurrency)
+        .withFeesPaidToUkefForThePeriod(feesPaidToUkefForThePeriod)
+        .withPaymentCurrency(paymentCurrency)
+        .withPaymentExchangeRate(paymentExchangeRate)
+        .build();
+
+      it("converts and maps the fee record 'feesPaidToUkefForThePeriod' to the 'reportedPayments'", () => {
+        // Act
+        const feeRecordItem = mapFeeRecordEntityToReconciliationDetailsFeeRecordItem(feeRecordEntity);
+
+        // Assert
+        expect(feeRecordItem.reportedPayments).toEqual<CurrencyAndAmount>({
+          currency: paymentCurrency,
+          amount: feesPaidToUkefForThePeriodInThePaymentCurrency,
+        });
+      });
+
+      it("converts and maps the fee record 'feesPaidToUkefForThePeriod' to the 'totalReportedPayments'", () => {
+        // Act
+        const feeRecordItem = mapFeeRecordEntityToReconciliationDetailsFeeRecordItem(feeRecordEntity);
+
+        // Assert
+        expect(feeRecordItem.totalReportedPayments).toEqual<CurrencyAndAmount>({
+          currency: paymentCurrency,
+          amount: feesPaidToUkefForThePeriodInThePaymentCurrency,
+        });
+      });
+    });
+
+    it("sets 'paymentsReceived' and 'totalPaymentsReceived' to null when the fee record has no payments", () => {
+      // Arrange
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(uploadedReport).build();
+
+      // Act
+      const feeRecordItem = mapFeeRecordEntityToReconciliationDetailsFeeRecordItem(feeRecordEntity);
+
+      // Assert
+      expect(feeRecordItem.paymentsReceived).toBeNull();
+      expect(feeRecordItem.totalPaymentsReceived).toBeNull();
     });
   });
 
@@ -36,7 +146,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
     it("throws an error if the 'dateUploaded' property does not exist", async () => {
       // Arrange
-      const notUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).withDateUploaded(null).build();
+      const notUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+        .withId(reportId)
+        .withDateUploaded(null)
+        .build();
 
       // Act / Assert
       await expect(mapUtilisationReportEntityToReconciliationDetails(notUploadedReport)).rejects.toThrow(
@@ -47,7 +160,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
     it('throws an error if a bank with the same id as the report bankId does not exist', async () => {
       // Arrange
-      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withBankId(bankId).build();
+      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+        .withId(reportId)
+        .withBankId(bankId)
+        .build();
 
       jest.mocked(getBankNameById).mockResolvedValue(undefined);
 

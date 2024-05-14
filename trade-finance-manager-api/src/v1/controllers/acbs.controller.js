@@ -1,53 +1,81 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
-const { generateSystemAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
+const {
+  generateSystemAuditDetails,
+  generateAuditDatabaseRecordFromAuditDetails,
+} = require('@ukef/dtfs2-common/change-stream');
 const api = require('../api');
 const db = require('../../drivers/db-client');
 const tfmController = require('./tfm.controller');
 const CONSTANTS = require('../../constants');
 const { formatCoverEndDate } = require('../helpers/amendment.helpers');
 const { getIsoStringWithOffset } = require('../../utils/date');
+const isUnissuedInACBS = require('../helpers/is-facility-unissued-acbs');
 
-const addToACBSLog = async ({ deal = {}, facility = {}, bank = {}, acbsTaskLinks }) => {
-  const collection = await db.getCollection('durable-functions-log');
+/**
+ * Adds a log entry to the ACBS log collection in the database.
+ * @param {Object} payload - The payload object.
+ * @param {Object} payload.deal - The deal object.
+ * @param {Object} payload.facility - The facility object.
+ * @param {Object} payload.bank - The bank object.
+ * @param {Object} payload.acbsTaskLinks - The ACBS task links object.
+ * @returns {Promise<Object|boolean>} - A promise that resolves to the inserted log entry if successful, or false otherwise.
+ */
+const addToACBSLog = async (payload) => {
+  if (!payload?.deal || !payload?.acbsTaskLinks) {
+    return false;
+  }
 
-  if (ObjectId.isValid(deal._id)) {
-    return collection.insertOne({
+  const auditDetails = generateSystemAuditDetails();
+
+  const { deal, facility, bank, acbsTaskLinks } = payload;
+  const canAddToLog = ObjectId.isValid(deal?._id) && Boolean(deal?._id) && Boolean(acbsTaskLinks?.id);
+
+  if (canAddToLog) {
+    const logEntry = {
       type: DURABLE_FUNCTIONS_LOG.TYPE.ACBS,
-      dealId: deal._id,
+      dealId: deal?._id,
       deal,
-      facility,
-      bank,
-      status: 'Running',
+      facility: facility || {},
+      bank: bank || {},
+      status: DURABLE_FUNCTIONS_LOG.STATUS.RUNNING,
       instanceId: acbsTaskLinks.id,
       acbsTaskLinks,
       submittedDate: getIsoStringWithOffset(new Date()),
-      auditRecord: generateSystemAuditDatabaseRecord(),
-    });
+      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+    };
+
+    const collection = await db.getCollection('durable-functions-log');
+    return collection.insertOne(logEntry);
   }
 
   return false;
 };
 
+/**
+ * Creates an ACBS task and adds it to the ACBS log.
+ * @param {object} deal - The deal object containing the dealSnapshot property with the bank details.
+ * @returns {Promise<Boolean>} - True if the ACBS task is successfully created and added to the log, false otherwise.
+ */
 const createACBS = async (deal) => {
-  // Reference partyUrn in function
-  const { dealSnapshot } = deal;
-  const { bank } = dealSnapshot;
-
-  if (!bank) {
+  // Check if the dealSnapshot has a bank property
+  if (!deal?.dealSnapshot?.bank) {
     return false;
   }
 
+  const { bank } = deal.dealSnapshot;
   const { id, name, partyUrn } = bank;
 
   const acbsTaskLinks = await api.createACBS(deal, { id, name, partyUrn });
 
+  // Check if the ACBS task is successfully created
   if (acbsTaskLinks) {
-    return addToACBSLog({ deal, bank, acbsTaskLinks });
+    // Add the ACBS task to the log using the addToACBSLog function
+    return await addToACBSLog({ deal, bank, acbsTaskLinks });
   }
 
-  return null;
+  return false;
 };
 
 const updateDealAcbs = async (taskOutput) => {
@@ -117,6 +145,8 @@ const checkAzureAcbsFunction = async () => {
     );
     const taskList = await Promise.all(tasks);
 
+    const auditDetails = generateSystemAuditDetails();
+
     taskList.forEach(async (task) => {
       if (task.runtimeStatus) {
         // Update
@@ -126,7 +156,7 @@ const checkAzureAcbsFunction = async () => {
             $.flatten({
               status: task.runtimeStatus,
               acbsTaskResult: task,
-              auditRecord: generateSystemAuditDatabaseRecord(),
+              auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
             }),
           );
         }
@@ -152,41 +182,58 @@ const checkAzureAcbsFunction = async () => {
   }
 };
 
+/**
+ * Issues facilities in the ACBS, if prerequisites are satisfied.
+ * 1. Ensure facility has been issued in Portal.
+ * 2. Facility has been created in ACBS.
+ * 3. Facility in ACBS is `06` stage.
+ * @param {object} deal - The deal object containing information about the deal, including facilities and ACBS details.
+ * @returns {Promise<Object>} - A promise that resolves with the results of adding the facilities to ACBS log.
+ */
 const issueAcbsFacilities = async (deal) => {
-  if (!deal.tfm || !deal.tfm.acbs) {
+  if (!deal?.tfm?.acbs) {
     /**
      * A facility can only be issued (if unissued),
      * the deal has been submitted to ACBS and acknowledged by the TFM.
      * If the above is false, please do not proceed.
      */
+    console.error('Unable to issue deal %s facility to ACBS.', deal?._id);
     return false;
   }
   /**
-   * ACBS verification has been removed due to an ongoing bug of not receiving
-   * the `acbs` object imperative data thus preventing maker from issuing the facility.
-   * TO-DO:
-   * !isIssued(facilityStageInAcbs) && !facility.tfm.acbs.issuedFacilityMaster
-   * const facilityStageInAcbs = facility.tfm.acbs && facility.tfm.acbs.facilityStage;
+   * Ensures following pre-conditions below invoking ACBS
+   * 1. Facility has been issued on Portal
+   * 2. Facility is not already issued in ACBS
    */
+  console.info('✅ Submitting deal %s facility to ACBS.', deal._id);
 
-  const acbsIssuedFacilitiesPromises = deal.facilities
-    .filter((facility) => facility.hasBeenIssued)
-    .map((facility) =>
-      api.updateACBSfacility(facility, {
-        dealSnapshot: {
-          dealType: deal.dealType,
-          submissionType: deal.submissionType,
-          submissionDate: deal.submissionDate,
-        },
-        exporter: {
-          ...deal.exporter,
-        },
-      }),
+  const acbsIssuedFacilitiesPromises = await deal.facilities
+    .filter((facility) => facility?.hasBeenIssued && isUnissuedInACBS(facility?.tfm?.acbs.facilityStage))
+    .map(
+      async (facility) =>
+        await api.updateACBSfacility(facility, {
+          dealSnapshot: {
+            dealType: deal.dealType,
+            submissionType: deal.submissionType,
+            submissionDate: deal.submissionDate,
+          },
+          exporter: {
+            ...deal.exporter,
+          },
+        }),
     );
-  const acbsIssuedFacilities = await Promise.all(acbsIssuedFacilitiesPromises);
 
-  return Promise.all(acbsIssuedFacilities.map((acbsTaskLinks) => addToACBSLog({ acbsTaskLinks })));
+  const acbsIssuedFacilities = await Promise.all(acbsIssuedFacilitiesPromises);
+  const promises = await Promise.all(
+    acbsIssuedFacilities
+      .filter((acbsTaskLinks) => acbsTaskLinks?.id)
+      .map(async (acbsTaskLinks) => await addToACBSLog({ deal, acbsTaskLinks })),
+  );
+
+  // Return `false` if promises is an empty array
+  return promises.length ? promises : false;
 };
+
 /**
  * Amend facility controller function responsible for invoking
  * respective API and writes ACBS task links to DB.

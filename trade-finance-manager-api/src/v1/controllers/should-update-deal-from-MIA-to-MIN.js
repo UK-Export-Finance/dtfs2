@@ -1,11 +1,11 @@
 const CONSTANTS = require('../../constants');
 
 /**
- * Determines whether a deal submission type 
+ * Determines whether a deal submission type
  * can be updated from MIA to MIN.
  *
  * @param {Object} deal - The portal deal object.
- * @param {Object} tfmDeal - The TFM deal object.
+ * @param {Object} tfmDeal - The TFM deal object (deal.tfm).
  * @returns {boolean} - True if the deal should be updated, false otherwise.
  */
 const shouldUpdateDealFromMIAtoMIN = (deal, tfmDeal) => {
@@ -14,7 +14,10 @@ const shouldUpdateDealFromMIAtoMIN = (deal, tfmDeal) => {
     return false;
   }
 
-  const ukefApprovedDecisions = [CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS, CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS];
+  const ukefApprovedDecisions = [
+    CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS,
+    CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS,
+  ];
   const isMIA = deal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA;
   const hasApprovedDecision = ukefApprovedDecisions.includes(tfmDeal?.underwriterManagersDecision?.decision);
 

@@ -1,14 +1,11 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { formattedNumber } = require('../../../../utils/number');
-const { CURRENCY } = require('../../../../constants/currency.constant');
 const { findLatestCompletedAmendment } = require('../../helpers/amendment.helpers');
 
 // maps ukef exposure on original value or latest amended value
 const mapUkefExposure = (facilityTfm, facility) => {
   if (facilityTfm) {
-    const {
-      ukefExposure,
-      ukefExposureCalculationTimestamp,
-    } = facilityTfm;
+    const { ukefExposure, ukefExposureCalculationTimestamp } = facilityTfm;
 
     // sets facility exposure values and timestamp
     let formattedUkefExposure = formattedNumber(ukefExposure);

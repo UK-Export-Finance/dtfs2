@@ -36,6 +36,8 @@ In order to generate data which is in line with the data in MongoDB, the SQL see
 
 The database is shared across the entire project, so commands are defined in the [common package](../libs/common) where the shared DB configuration lives.
 
+[Configure SQL Server settings with environment variables on Linux](https://learn.microsoft.com/en-gb/sql/linux/sql-server-linux-configure-environment-variables?view=sql-server-ver16).
+
 When running commands you can either navigate to the common package, e.g.
 
 ```shell
@@ -106,13 +108,15 @@ Use as a quick way to start from scratch instead of deleting and re-building the
 
 #### - Seeding data
 
-The seeder can be run from `utils/sql-db-seeder` via the
+The seeder can be run from either the project root or the `utils` directory via the
 
 ```shell
 npm run db:seed
 ```
 
-command. This command runs the seeder to insert mock data into the SQL database. Seeds and factories are defined as files in the `utils/sql-db-seeder/src/<name-of-entity>` directory with `<name-of-entity>.seed.ts` and `<name-of-entity>.factory.ts` file extensions respectively (see the [utilisation reports seeder](../libs/common/src/sql-db-seeder/utilisation-report/) for an example). Seed tracking is set to `true` by default such that, once a seed successfully runs, it will not run again through the `npm run db:seed` command. If you want to run the seeder again, you will first need to run the `npm run db:reset` command from `libs/common`.
+command. This command first runs the `predb:seed` script (see details below) and then runs the seeder to insert mock data into the SQL database. Seeds and factories are defined as files in the `utils/sql-db-seeder/src/<name-of-entity>` directory with `<name-of-entity>.seed.ts` and `<name-of-entity>.factory.ts` file extensions respectively (see the [utilisation reports seeder](../libs/common/src/sql-db-seeder/utilisation-report/) for an example). Seed tracking is set to `true` by default such that, once a seed successfully runs, it will not run again through the `npm run db:seed` command. If you want to run the seeder again, you will first need to run the `npm run db:reset` command from `libs/common`.
+
+As a result of not building the project, the `typeorm-extension` executable needs to be run directly from the `node_modules` via `ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run`. The `node_modules` directory where `typeorm-extension` is located needs to be at the same level as the root of the seeder which, in this case, is `utils/sql-db-seeder`. Due to conflicting versions of `mongodb`, the `typeorm-extension` package actually gets placed within the root level `node_modules` after running `npm i`. To overcome this issue, the `predb:seed` script copies the required node modules to `utils/sql-db-seeder` before executing the `db:seed` script.
 
 ## Adding DB access to a package
 
