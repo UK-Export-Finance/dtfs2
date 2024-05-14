@@ -12,7 +12,7 @@ run-name: Executing release on ${{ github.repository }} 🚀
 
 on:
   push:
-    branches: [fix/google-release-please]
+    branches: [main]
 
 permissions:
   contents: write
