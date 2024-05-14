@@ -9,6 +9,7 @@ const api = require('../../../api')(app);
 const { DEALS } = require('../../../../src/constants');
 const aDeal = require('../../deal-builder');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
+const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 
 const newDeal = aDeal({
   dealType: DEALS.DEAL_TYPE.BSS_EWCS,
@@ -23,6 +24,16 @@ const newDeal = aDeal({
 
 describe('DELETE /v1/portal/deals', () => {
   let documentToDeleteId;
+
+  withValidateAuditDetailsTests({
+    makeRequest: async (auditDetails) =>
+      await api
+        .remove({
+          auditDetails,
+        })
+        .to(`/v1/portal/deals/${documentToDeleteId}`),
+    validUserTypes: ['portal'],
+  });
 
   if (process.env.CHANGE_STREAM_ENABLED === 'true') {
     beforeEach(async () => {
