@@ -487,7 +487,9 @@ jobs:
 
       - name: Execute
         working-directory: ./e2e-tests
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec "./gef/cypress/e2e/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }} SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+        env:
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec "./gef/cypress/e2e/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
 
   #6. E2E - TFM
   e2e-tests-tfm:
