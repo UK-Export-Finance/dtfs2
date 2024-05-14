@@ -13,19 +13,13 @@ const { mapBssEwcsFacility } = require('../mappings/map-submitted-deal/map-bss-e
  * @param {Object} amendment Amendment object
  * @param {Object} facility Facility object
  * @param {Object} deal TFM deal object
- * @param {import("@ukef/dtfs2-common/src/types/audit-details").AuditDetails} auditDetails - details of the user making the request
+ * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - details of the user making the request
  * @returns {Boolean} Boolean upon execution
  */
 const amendIssuedFacility = async (amendment, facility, deal, auditDetails) => {
   try {
     if (amendment && facility && deal) {
-      const {
-        changeCoverEndDate,
-        changeFacilityValue,
-        coverEndDate,
-        value,
-        tfm: amendmentTfm,
-      } = amendment;
+      const { changeCoverEndDate, changeFacilityValue, coverEndDate, value, tfm: amendmentTfm } = amendment;
       const { dealType } = deal.dealSnapshot;
       let submissionDate;
       const { facilitySnapshot, tfm } = facility;
@@ -112,7 +106,7 @@ const amendIssuedFacility = async (amendment, facility, deal, auditDetails) => {
         }
 
         if (changeCoverEndDate) {
-        // facility.tfm.facilityGuaranteeDates
+          // facility.tfm.facilityGuaranteeDates
           facilityGuaranteeDates = getGuaranteeDates(amendedFacility, submissionDate);
           facilityTfmUpdate = {
             ...facilityTfmUpdate,
