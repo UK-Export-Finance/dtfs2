@@ -23,7 +23,6 @@ const baseEnvFilePath = path.join(basePath, '.env');
  * the .env that are used in the docker files
  *
  * This function updates the .env file to apply these rules
- * @param fileData
  */
 const updateEnvVars = (fileData: string): string => {
   const MONGODB_URI_REGEX = /(MONGODB_URI=.*)(dtfs-submissions-data)/g;
@@ -34,12 +33,13 @@ const updateEnvVars = (fileData: string): string => {
 
   const regexPatternsToApply = [MONGODB_URI_REGEX, MONGODB_URI_QA_REGEX, SQL_DB_HOST_REGEX];
 
-  return regexPatternsToApply.reduce(
-    (updatedFileData, regexPattern) => updatedFileData.replace(regexPattern, replacePattern),
-    fileData,
-  );
+  return regexPatternsToApply.reduce((updatedFileData, regexPattern) => updatedFileData.replace(regexPattern, replacePattern), fileData);
 };
 
+/**
+ * Copies the .env file from root to all required folders.
+ * When needed, it changes certain env vars as needed for docker
+ */
 const copyEnvFileToFolders = () => {
   try {
     const envFileData = fs.readFileSync(baseEnvFilePath, 'utf8');
@@ -62,4 +62,4 @@ const copyEnvFileToFolders = () => {
 
 copyEnvFileToFolders();
 
-console.info('Done!');
+console.info('✅ Done!');
