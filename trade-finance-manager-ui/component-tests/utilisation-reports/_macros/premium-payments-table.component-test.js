@@ -55,6 +55,11 @@ describe(component, () => {
     wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toExist();
   });
 
+  it('should render the select all checkbox in the table headings row', () => {
+    const wrapper = getWrapper();
+    wrapper.expectElement(`${tableSelector} thead th input[type="checkbox"]#select-all-checkbox`).toExist();
+  });
+
   it('should render the table data', () => {
     const wrapper = getWrapper();
 
