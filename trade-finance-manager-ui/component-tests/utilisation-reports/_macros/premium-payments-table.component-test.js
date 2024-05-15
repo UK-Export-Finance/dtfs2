@@ -1,3 +1,4 @@
+const difference = require('lodash/difference');
 const { FEE_RECORD_STATUS } = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
 const { aFeeRecordItem } = require('../../../test-helpers');
@@ -90,14 +91,9 @@ describe(component, () => {
     });
   });
 
-  it.each`
-    condition       | feeRecordStatus                     | checkboxShouldExist
-    ${'should'}     | ${FEE_RECORD_STATUS.TO_DO}          | ${true}
-    ${'should'}     | ${FEE_RECORD_STATUS.DOES_NOT_MATCH} | ${true}
-    ${'should not'} | ${FEE_RECORD_STATUS.MATCH}          | ${false}
-    ${'should not'} | ${FEE_RECORD_STATUS.READY_TO_KEY}   | ${false}
-    ${'should not'} | ${FEE_RECORD_STATUS.RECONCILED}     | ${false}
-  `('$condition render the checkbox when the fee record status is $feeRecordStatus', ({ feeRecordStatus, checkboxShouldExist }) => {
+  const FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST = [FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH];
+
+  it.each(FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST)('should render the checkbox when the fee record status is %s', (feeRecordStatus) => {
     const feeRecordItem = {
       ...aFeeRecordItem(),
       status: feeRecordStatus,
@@ -105,10 +101,20 @@ describe(component, () => {
     const wrapper = render({ feeRecords: [feeRecordItem] });
 
     const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordItem.id}"]`;
-    if (checkboxShouldExist) {
-      wrapper.expectElement(`${rowSelector} input#feeRecordId-${feeRecordItem.id}`).toExist();
-    } else {
-      wrapper.expectElement(`${rowSelector} input#feeRecordId-${feeRecordItem.id}`).notToExist();
-    }
+    wrapper.expectElement(`${rowSelector} input#feeRecordId-${feeRecordItem.id}`).toExist();
   });
+
+  it.each(difference(Object.values(FEE_RECORD_STATUS), FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST))(
+    'should not render the checkbox when the fee record status is %s',
+    (feeRecordStatus) => {
+      const feeRecordItem = {
+        ...aFeeRecordItem(),
+        status: feeRecordStatus,
+      };
+      const wrapper = render({ feeRecords: [feeRecordItem] });
+
+      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordItem.id}"]`;
+      wrapper.expectElement(`${rowSelector} input#feeRecordId-${feeRecordItem.id}`).notToExist();
+    },
+  );
 });
