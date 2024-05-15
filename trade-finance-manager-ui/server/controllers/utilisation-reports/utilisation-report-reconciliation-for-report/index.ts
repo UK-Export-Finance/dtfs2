@@ -3,7 +3,7 @@ import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { mapFeeRecordItemToFeeRecordViewModelItem } from '../helpers';
+import { mapFeeRecordItemsToFeeRecordViewModelItems } from '../helpers';
 
 export const getUtilisationReportReconciliationByReportId = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
@@ -14,7 +14,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
 
     const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(utilisationReportReconciliationDetails.reportPeriod);
 
-    const feeRecordViewModel = utilisationReportReconciliationDetails.feeRecords.map(mapFeeRecordItemToFeeRecordViewModelItem);
+    const feeRecordViewModel = mapFeeRecordItemsToFeeRecordViewModelItems(utilisationReportReconciliationDetails.feeRecords);
 
     return res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', {
       user,
