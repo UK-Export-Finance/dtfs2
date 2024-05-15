@@ -50,7 +50,7 @@ module.exports = {
     browser: true,
   },
   root: true,
-  ignorePatterns: ['**/node_modules/**'],
+  ignorePatterns: ['**/node_modules/**', 'public'],
   rules: baseRules,
   settings: {
     'import/resolver': {

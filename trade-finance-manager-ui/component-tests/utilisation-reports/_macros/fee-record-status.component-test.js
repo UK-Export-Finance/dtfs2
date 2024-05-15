@@ -21,20 +21,24 @@ describe(component, () => {
     wrapper.expectText(statusTagSelector).toRead(displayStatus);
   });
 
-  it.each([{ status: FEE_RECORD_STATUS.TO_DO, expectedColourClass: undefined }])(
-    "adds colour class '$expectedColourClass' when the status code is '$status'",
-    ({ status, expectedColourClass }) => {
-      // Arrange
-      const expectedClass = `govuk-tag fee-record-status-tag${expectedColourClass ? ` ${expectedColourClass}` : ''}`;
+  it.each([
+    { status: FEE_RECORD_STATUS.TO_DO, expectedColourClass: undefined },
+    { status: FEE_RECORD_STATUS.MATCH, expectedColourClass: 'govuk-tag--green' },
+    { status: FEE_RECORD_STATUS.DOES_NOT_MATCH, expectedColourClass: 'govuk-tag--red' },
+    { status: FEE_RECORD_STATUS.READY_TO_KEY, expectedColourClass: 'govuk-tag--yellow' },
+    { status: FEE_RECORD_STATUS.RECONCILED, expectedColourClass: 'govuk-tag--grey' },
+    { status: FEE_RECORD_STATUS.REPORT_COMPLETED, expectedColourClass: 'govuk-tag--green' },
+  ])("adds colour class '$expectedColourClass' when the status code is '$status'", ({ status, expectedColourClass }) => {
+    // Arrange
+    const expectedClass = `govuk-tag fee-record-status-tag${expectedColourClass ? ` ${expectedColourClass}` : ''}`;
 
-      // Act
-      const wrapper = render({
-        status,
-        displayStatus: 'some text',
-      });
+    // Act
+    const wrapper = render({
+      status,
+      displayStatus: 'some text',
+    });
 
-      // Assert
-      wrapper.expectElement(statusTagSelector).toHaveAttribute('class', expectedClass);
-    },
-  );
+    // Assert
+    wrapper.expectElement(statusTagSelector).toHaveAttribute('class', expectedClass);
+  });
 });
