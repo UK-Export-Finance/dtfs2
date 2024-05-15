@@ -44,9 +44,7 @@ describe('deleteDocumentWithAuditLogs', () => {
     jest.clearAllMocks();
 
     when(mockGetCollection).calledWith('users').mockReturnValueOnce(mockUsersCollection);
-    when(mockGetCollection)
-      .calledWith(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS)
-      .mockReturnValueOnce(mockDeletionsCollection);
+    when(mockGetCollection).calledWith(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS).mockReturnValueOnce(mockDeletionsCollection);
   });
 
   afterAll(() => {
@@ -86,10 +84,7 @@ describe('deleteDocumentWithAuditLogs', () => {
         auditDetails: generateNoUserLoggedInAuditDetails(),
       });
 
-      expect(mockUsersCollection.deleteOne).toHaveBeenCalledWith(
-        { _id: { $eq: documentId } },
-        { session: mockSession },
-      );
+      expect(mockUsersCollection.deleteOne).toHaveBeenCalledWith({ _id: { $eq: documentId } }, { session: mockSession });
     });
 
     it('ends the session', async () => {
