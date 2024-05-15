@@ -12,7 +12,8 @@ jest.mock('../../../src/drivers/db-client', () => ({
 }));
 
 const { ObjectId } = require('mongodb');
-const { withDeletionAuditLogsTests, generateMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
+const { withDeletionAuditLogsTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { generateMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');

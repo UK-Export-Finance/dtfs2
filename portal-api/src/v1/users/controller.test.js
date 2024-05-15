@@ -5,11 +5,8 @@ jest.mock('@ukef/dtfs2-common/payload-verification');
 jest.mock('../../crypto/utils');
 const { ObjectId } = require('mongodb');
 const { when, resetAllWhenMocks } = require('jest-when');
-const {
-  generateMockNoUserLoggedInAuditDatabaseRecord,
-  generateNoUserLoggedInAuditDetails,
-  generatePortalAuditDetails,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generateNoUserLoggedInAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateMockNoUserLoggedInAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const db = require('../../drivers/db-client');
 const { updateSessionIdentifier, createPasswordToken, create, update } = require('./controller');
