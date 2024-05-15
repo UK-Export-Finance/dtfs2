@@ -6,10 +6,7 @@ import { findOneDeal } from './get-deal.controller';
 import db from '../../../../drivers/db-client';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 
-export const deleteDeal = async (
-  req: CustomExpressRequest<{ params: { id: string }; reqBody: { auditDetails: AuditDetails } }>,
-  res: Response,
-) => {
+export const deleteDeal = async (req: CustomExpressRequest<{ params: { id: string }; reqBody: { auditDetails: AuditDetails } }>, res: Response) => {
   const { id } = req.params;
   const { auditDetails } = req.body;
 
@@ -36,14 +33,18 @@ export const deleteDeal = async (
   }
 
   if (process.env.CHANGE_STREAM_ENABLED === 'true') {
-    await deleteDocumentWithAuditLogs({
-      documentId: new ObjectId(id),
-      collectionName: MONGO_DB_COLLECTIONS.DEALS,
-      db,
-      auditDetails,
-    });
+    try {
+      await deleteDocumentWithAuditLogs({
+        documentId: new ObjectId(id),
+        collectionName: MONGO_DB_COLLECTIONS.DEALS,
+        db,
+        auditDetails,
+      });
 
-    return res.status(200).send();
+      return res.status(200).send();
+    } catch (error) {
+      return res.status(500).send({ status: 500, error });
+    }
   }
 
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);

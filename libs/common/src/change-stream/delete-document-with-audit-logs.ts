@@ -12,12 +12,7 @@ type DeleteDocumentWithAuditLogsParams = {
   auditDetails: AuditDetails;
 };
 
-export const deleteDocumentWithAuditLogs = async ({
-  documentId,
-  collectionName,
-  db,
-  auditDetails,
-}: DeleteDocumentWithAuditLogsParams) => {
+export const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, db, auditDetails }: DeleteDocumentWithAuditLogsParams) => {
   const { DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS } = process.env;
 
   if (!DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS) {
@@ -55,9 +50,7 @@ export const deleteDocumentWithAuditLogs = async ({
       }
     }, transactionOptions);
   } catch (error) {
-    console.error(
-      `Failed to delete document ${documentId.toString()} from collection ${collectionName}, rolling back changes.`,
-    );
+    console.error(`Failed to delete document ${documentId.toString()} from collection ${collectionName}, rolling back changes.`);
     throw error;
   } finally {
     await session.endSession();

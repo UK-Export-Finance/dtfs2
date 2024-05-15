@@ -1,8 +1,18 @@
+const actualDb = jest.requireActual('../../../src/drivers/db-client');
+const mockGetCollection = jest.fn(actualDb.getCollection.bind(actualDb));
+const mockGetClient = actualDb.getClient.bind(actualDb);
+const mockGetConnection = actualDb.get.bind(actualDb);
+const mockCloseConnection = actualDb.close.bind(actualDb);
+
+jest.mock('../../../src/drivers/db-client', () => ({
+  getCollection: mockGetCollection,
+  getClient: mockGetClient,
+  get: mockGetConnection,
+  close: mockCloseConnection,
+}));
+
 const { ObjectId } = require('mongodb');
-const {
-  withDeletionAuditLogsTests,
-  generateMockTfmUserAuditDatabaseRecord,
-} = require('@ukef/dtfs2-common/change-stream');
+const { withDeletionAuditLogsTests, generateMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
@@ -14,6 +24,10 @@ describe('user controller', () => {
 
   beforeEach(async () => {
     tokenUser = await testUserCache.initialise(app);
+  });
+
+  afterAll(() => {
+    jest.resetAllMocks();
   });
 
   describe('POST /v1/users', () => {
@@ -72,6 +86,7 @@ describe('user controller', () => {
           lastUpdatedByTfmUserId: expect.any(ObjectId),
         },
         getDeletedDocumentId: () => documentToDeleteId,
+        mockGetCollection,
       });
     } else {
       it('removes the TFM user by _id', async () => {

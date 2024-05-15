@@ -1,8 +1,5 @@
 const { ObjectId } = require('mongodb');
-const {
-  generateAuditDatabaseRecordFromAuditDetails,
-  deleteDocumentWithAuditLogs,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, deleteDocumentWithAuditLogs } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../drivers/db-client');
 const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
