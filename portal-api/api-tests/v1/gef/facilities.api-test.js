@@ -1,4 +1,4 @@
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { CURRENCY } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const CONSTANTS = require('../../../src/constants');

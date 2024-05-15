@@ -1,5 +1,6 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { generatePortalAuditDetails, generateTfmAuditDetails, generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
+const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
