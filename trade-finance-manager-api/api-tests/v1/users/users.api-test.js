@@ -1,5 +1,8 @@
 const { ObjectId } = require('mongodb');
-const { withDeletionAuditLogsTests } = require('@ukef/dtfs2-common/change-stream');
+const {
+  withDeletionAuditLogsTests,
+  generateMockTfmUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/change-stream');
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
@@ -65,11 +68,8 @@ describe('user controller', () => {
         makeRequest: () => as(tokenUser).remove().to(`/v1/users/${documentToDeleteId}`),
         collectionName: 'tfm-users',
         auditRecord: {
-          lastUpdatedAt: expect.any(String),
-          lastUpdatedByPortalUserId: null,
+          ...generateMockTfmUserAuditDatabaseRecord('abcdef123456abcdef123456'),
           lastUpdatedByTfmUserId: expect.any(ObjectId),
-          lastUpdatedByIsSystem: null,
-          noUserLoggedIn: null,
         },
         getDeletedDocumentId: () => documentToDeleteId,
       });

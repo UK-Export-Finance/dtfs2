@@ -24,6 +24,10 @@ const newDeal = aDeal({
 
 describe('DELETE /v1/portal/deals', () => {
   let documentToDeleteId;
+  beforeEach(async () => {
+    const postResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+    documentToDeleteId = new ObjectId(postResult.body._id);
+  });
 
   withValidateAuditDetailsTests({
     makeRequest: async (auditDetails) =>
@@ -36,11 +40,6 @@ describe('DELETE /v1/portal/deals', () => {
   });
 
   if (process.env.CHANGE_STREAM_ENABLED === 'true') {
-    beforeEach(async () => {
-      const postResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
-      documentToDeleteId = new ObjectId(postResult.body._id);
-    });
-
     withDeletionAuditLogsTests({
       makeRequest: async () => {
         await api

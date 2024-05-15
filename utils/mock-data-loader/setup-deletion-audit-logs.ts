@@ -8,8 +8,9 @@ export const deleteDeletionAuditLogsCollection = async () => {
 
   try {
     await collection.drop();
-  } catch {
-    // This will throw an error if the collection doesn't exist
+  } catch (error) {
+    logger.info('Failed to drop collection, continuing to insert mocks', { depth: 1 });
+    logger.warn(error);
   }
 };
 
