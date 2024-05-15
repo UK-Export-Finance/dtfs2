@@ -1,5 +1,6 @@
 const { FEE_RECORD_STATUS } = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
+const { aFeeRecordItem } = require('../../../test-helpers');
 
 jest.mock('../../../server/api');
 
@@ -87,5 +88,27 @@ describe(component, () => {
 
       wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.displayStatus}")`).toExist();
     });
+  });
+
+  it.each`
+    condition       | feeRecordStatus                     | checkboxShouldExist
+    ${'should'}     | ${FEE_RECORD_STATUS.TO_DO}          | ${true}
+    ${'should'}     | ${FEE_RECORD_STATUS.DOES_NOT_MATCH} | ${true}
+    ${'should not'} | ${FEE_RECORD_STATUS.MATCH}          | ${false}
+    ${'should not'} | ${FEE_RECORD_STATUS.READY_TO_KEY}   | ${false}
+    ${'should not'} | ${FEE_RECORD_STATUS.RECONCILED}     | ${false}
+  `('$condition render the checkbox when the fee record status is $feeRecordStatus', ({ feeRecordStatus, checkboxShouldExist }) => {
+    const feeRecordItem = {
+      ...aFeeRecordItem(),
+      status: feeRecordStatus,
+    };
+    const wrapper = render({ feeRecords: [feeRecordItem] });
+
+    const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordItem.id}"]`;
+    if (checkboxShouldExist) {
+      wrapper.expectElement(`${rowSelector} input#feeRecordId-${feeRecordItem.id}`).toExist();
+    } else {
+      wrapper.expectElement(`${rowSelector} input#feeRecordId-${feeRecordItem.id}`).notToExist();
+    }
   });
 });
