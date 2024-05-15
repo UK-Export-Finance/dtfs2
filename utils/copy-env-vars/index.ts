@@ -49,9 +49,9 @@ const copyEnvFileToFolders = () => {
       try {
         const envVarPathToCopyTo = path.join(basePath, folderPathToCopyTo, '.env');
         fs.writeFileSync(envVarPathToCopyTo, newEnvFileData);
-        console.info(`.env file copied to ${folderPathToCopyTo}`);
+        console.info('.env file copied to %s', folderPathToCopyTo);
       } catch (error) {
-        console.error(`Error copying .env file to ${folderPathToCopyTo}:`, error);
+        console.error('Error while copying .env file to %s %o', folderPathToCopyTo, error);
         throw error;
       }
     });
