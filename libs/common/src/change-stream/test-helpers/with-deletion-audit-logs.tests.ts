@@ -18,6 +18,7 @@ export const withDeletionAuditLogsTests = ({
   describe(`when deleting a document from ${collectionName}`, () => {
     let mongoDbClient: MongoDbClient;
     let deletionAuditLogsCollection: Collection<WithoutId<DeletionAuditLog>>;
+
     beforeAll(async () => {
       mongoDbClient = new MongoDbClient({
         dbName: process.env.MONGO_INITDB_DATABASE as string,
@@ -41,7 +42,7 @@ export const withDeletionAuditLogsTests = ({
 
         expect(deletionAuditLogs).toEqual([
           {
-            _id: expect.anything() as ObjectId,
+            _id: expect.any(ObjectId) as ObjectId,
             collectionName,
             deletedDocumentId: new ObjectId(getDeletedDocumentId()),
             auditRecord,
@@ -50,7 +51,7 @@ export const withDeletionAuditLogsTests = ({
         ]);
       });
 
-      it('should delete document', async () => {
+      it('should delete the document', async () => {
         await makeRequest();
 
         const collection = await mongoDbClient.getCollection(collectionName);
