@@ -1,5 +1,7 @@
+const difference = require('lodash/difference');
 const { FEE_RECORD_STATUS } = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
+const { aFeeRecordItem } = require('../../../test-helpers');
 
 jest.mock('../../../server/api');
 
@@ -55,6 +57,11 @@ describe(component, () => {
     wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toExist();
   });
 
+  it('should render the select all checkbox in the table headings row', () => {
+    const wrapper = getWrapper();
+    wrapper.expectElement(`${tableSelector} thead th input[type="checkbox"]#select-all-checkbox`).toExist();
+  });
+
   it('should render the table data', () => {
     const wrapper = getWrapper();
 
@@ -83,4 +90,31 @@ describe(component, () => {
       wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.displayStatus}")`).toExist();
     });
   });
+
+  const FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST = [FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH];
+
+  it.each(FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST)('should render the checkbox when the fee record status is %s', (feeRecordStatus) => {
+    const feeRecordItem = {
+      ...aFeeRecordItem(),
+      status: feeRecordStatus,
+    };
+    const wrapper = render({ feeRecords: [feeRecordItem] });
+
+    const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordItem.id}"]`;
+    wrapper.expectElement(`${rowSelector} input#feeRecordId-${feeRecordItem.id}`).toExist();
+  });
+
+  it.each(difference(Object.values(FEE_RECORD_STATUS), FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST))(
+    'should not render the checkbox when the fee record status is %s',
+    (feeRecordStatus) => {
+      const feeRecordItem = {
+        ...aFeeRecordItem(),
+        status: feeRecordStatus,
+      };
+      const wrapper = render({ feeRecords: [feeRecordItem] });
+
+      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordItem.id}"]`;
+      wrapper.expectElement(`${rowSelector} input#feeRecordId-${feeRecordItem.id}`).notToExist();
+    },
+  );
 });
