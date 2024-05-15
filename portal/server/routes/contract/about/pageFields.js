@@ -30,33 +30,16 @@ const FIELDS = {
       'indemnifier-correspondence-address-town',
     ],
     OPTIONAL_FIELDS: [],
-    ALWAYS_SHOW_ERROR_FIELDS: [
-      'supplier-companies-house-registration-number',
-      'indemnifier-companies-house-registration-number',
-    ],
+    ALWAYS_SHOW_ERROR_FIELDS: ['supplier-companies-house-registration-number', 'indemnifier-companies-house-registration-number'],
   },
   BUYER: {
-    REQUIRED_FIELDS: [
-      'buyer-name',
-      'buyer-address-country',
-      'buyer-address-line-1',
-      'destinationOfGoodsAndServices',
-    ],
-    CONDITIONALLY_REQUIRED_FIELDS: [
-      'buyer-address-town',
-      'buyer-address-postcode',
-    ],
+    REQUIRED_FIELDS: ['buyer-name', 'buyer-address-country', 'buyer-address-line-1', 'destinationOfGoodsAndServices'],
+    CONDITIONALLY_REQUIRED_FIELDS: ['buyer-address-town', 'buyer-address-postcode'],
     OPTIONAL_FIELDS: [],
   },
   FINANCIAL: {
-    REQUIRED_FIELDS: [
-      'supplyContractValue',
-      'supplyContractCurrency',
-    ],
-    CONDITIONALLY_REQUIRED_FIELDS: [
-      'supplyContractConversionRateToGBP',
-      'supplyContractConversionDate',
-    ],
+    REQUIRED_FIELDS: ['supplyContractValue', 'supplyContractCurrency'],
+    CONDITIONALLY_REQUIRED_FIELDS: ['supplyContractConversionRateToGBP', 'supplyContractConversionDate'],
     OPTIONAL_FIELDS: [],
   },
 };

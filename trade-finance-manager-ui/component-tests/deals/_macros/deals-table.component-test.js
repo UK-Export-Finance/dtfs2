@@ -128,10 +128,7 @@ describe(component, () => {
       params.deals.forEach((deal) => {
         const selector = `[data-cy="deal-${deal._id}-ukef-deal-id-link"]`;
 
-        wrapper.expectLink(selector).toLinkTo(
-          `/case/${deal._id}/deal`,
-          `View deal ${deal.dealSnapshot.details.ukefDealId} details`,
-        );
+        wrapper.expectLink(selector).toLinkTo(`/case/${deal._id}/deal`, `View deal ${deal.dealSnapshot.details.ukefDealId} details`);
       });
     });
 

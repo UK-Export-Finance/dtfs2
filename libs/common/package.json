@@ -30,7 +30,7 @@
     "db:migrate": "npm run typeorm -- migration:run -d src/sql-db-connection/data-source.ts",
     "db:migrate:down": "npm run typeorm -- migration:revert -d src/sql-db-connection/data-source.ts",
     "db:reset": "npm run db:drop-all && npm run db:migrate",
-    "lint": "eslint --color **/*.{ts,js}",
+    "lint": "eslint --color **/*.{ts,js} --ignore-path ../../.eslintignore",
     "lint:fix": "eslint --fix --color **/*.{ts,js}",
     "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js}",
     "prettier:fix": "prettier --write **/*.{ts,js}",
@@ -40,6 +40,7 @@
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },
   "dependencies": {
+    "big.js": "^6.2.1",
     "date-fns": "^3.3.1",
     "date-fns-tz": "^2.0.1",
     "dotenv": "^16.4.5",
@@ -48,11 +49,12 @@
     "node-cron": "^3.0.3",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.20",
-    "zod": "^3.23.5"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/big.js": "^6.2.2",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.12.8",
+    "@types/node": "^20.12.12",
     "@types/node-cron": "^3.0.11",
     "cross-var": "^1.1.0",
     "eslint": "^8.57.0",

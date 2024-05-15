@@ -14,7 +14,9 @@ jest.mock('../server/api', () => ({
 }));
 jest.mock('../server/helpers/getApiData', () => () => []);
 
-const { ROLES: { ADMIN } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { ADMIN },
+} = require('@ukef/dtfs2-common');
 const app = require('../server/createApp');
 const mockLogin = require('./helpers/login');
 const extractSessionCookie = require('./helpers/extractSessionCookie');

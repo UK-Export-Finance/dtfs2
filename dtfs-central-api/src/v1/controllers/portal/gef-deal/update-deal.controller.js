@@ -20,7 +20,7 @@ const updateDeal = async (dealId, update) => {
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: { $eq: ObjectId(String(dealId)) } },
       { $set: dealUpdate },
-      { returnNewDocument: true, returnDocument: 'after' }
+      { returnNewDocument: true, returnDocument: 'after' },
     );
 
     return findAndUpdateResponse.value;

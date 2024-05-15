@@ -155,7 +155,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
     it('generated postcode validation error if criteria11 is false and country = GBR but postcode not entered', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
-      
+
       const updatedECCountry = {
         ...updatedECCriteria11NoExtraInfo,
         agentAddressCountry: 'GBR',

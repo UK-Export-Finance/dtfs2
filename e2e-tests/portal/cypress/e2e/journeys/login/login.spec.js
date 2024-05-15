@@ -1,12 +1,8 @@
-const {
-  login, landingPage, header, beforeYouStart, bankDetails, dashboardDeals,
-} = require('../../pages');
+const { login, landingPage, header, beforeYouStart, bankDetails, dashboardDeals } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
-const {
-  BANK1_MAKER1, BANK1_CHECKER1, ADMINNOMAKER, BANK1_READ_ONLY1, BANK1_PAYMENT_REPORT_OFFICER1,
-} = MOCK_USERS;
+const { BANK1_MAKER1, BANK1_CHECKER1, ADMINNOMAKER, BANK1_READ_ONLY1, BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
 
 const BAD_LOGIN = { username: 'invalid', password: 'valid' };
 

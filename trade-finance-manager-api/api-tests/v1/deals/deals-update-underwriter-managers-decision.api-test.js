@@ -4,13 +4,7 @@ const { as } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
 const api = require('../../../src/v1/api');
 const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
-const {
-  DEAL_TYPE,
-  SUBMISSION_TYPE,
-  DEAL_STAGE_TFM,
-  PORTAL_DEAL_STATUS,
-  DEAL_COMMENT_TYPE_PORTAL,
-} = require('../../../src/constants/deals');
+const { DEAL_TYPE, SUBMISSION_TYPE, DEAL_STAGE_TFM, PORTAL_DEAL_STATUS, DEAL_COMMENT_TYPE_PORTAL } = require('../../../src/constants/deals');
 const { TEAMS } = require('../../../src/constants');
 const MOCK_DEAL_AIN_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted');
 const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-MIN-second-submit-facilities-unissued-to-issued');
@@ -65,12 +59,8 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
     },
   ])('for a deal of type $dealType', ({ miaDeal, updateDealStatus, addPortalDealComment }) => {
     beforeEach(() => {
-      when(api.updatePortalBssDealStatus)
-        .calledWith(VALID_DEAL_ID, expect.any(Object))
-        .mockResolvedValueOnce(undefined);
-      when(api.updatePortalGefDealStatus)
-        .calledWith(VALID_DEAL_ID, expect.any(Object))
-        .mockResolvedValueOnce(undefined);
+      when(api.updatePortalBssDealStatus).calledWith(VALID_DEAL_ID, expect.any(Object)).mockResolvedValueOnce(undefined);
+      when(api.updatePortalGefDealStatus).calledWith(VALID_DEAL_ID, expect.any(Object)).mockResolvedValueOnce(undefined);
       when(api.findOneTeam).calledWith(TEAMS.PIM.id).mockResolvedValueOnce({ email: PIM_EMAIL });
     });
 
@@ -80,9 +70,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
         .calledWith(miaDeal.maker.bank.id)
         .mockResolvedValueOnce({ emails: [BANK_EMAIL] });
 
-      await as(tokenUser)
-        .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-        .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+      await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
       expect(api.updateDeal).toHaveBeenCalledWith({
         dealId: VALID_DEAL_ID,
@@ -110,9 +98,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
         .calledWith(miaDeal.maker.bank.id)
         .mockResolvedValueOnce({ emails: [BANK_EMAIL] });
 
-      await as(tokenUser)
-        .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-        .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+      await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
       expect(updateDealStatus).toHaveBeenCalledWith(VALID_DEAL_ID, EXPECTED_NEW_PORTAL_STATUS);
     });
@@ -123,9 +109,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
         .calledWith(miaDeal.maker.bank.id)
         .mockResolvedValueOnce({ emails: [BANK_EMAIL] });
 
-      await as(tokenUser)
-        .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-        .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+      await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
       expect(addPortalDealComment).toHaveBeenCalledWith(VALID_DEAL_ID, DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION, {
         text: undefined,
@@ -138,13 +122,9 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
       when(api.findBankById)
         .calledWith(miaDeal.maker.bank.id)
         .mockResolvedValueOnce({ emails: [BANK_EMAIL] });
-      when(addPortalDealComment)
-        .calledWith(VALID_DEAL_ID, expect.any(String), expect.any(Object))
-        .mockRejectedValueOnce(new Error('Test failure'));
+      when(addPortalDealComment).calledWith(VALID_DEAL_ID, expect.any(String), expect.any(Object)).mockRejectedValueOnce(new Error('Test failure'));
 
-      const { status, body } = await as(tokenUser)
-        .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-        .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+      const { status, body } = await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
       expect(status).toBe(500);
       expect(body).toEqual({
@@ -161,25 +141,19 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
       });
 
       it('sends an email to the maker about the decision', async () => {
-        await as(tokenUser)
-          .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-          .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+        await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
         expect(api.sendEmail).toHaveBeenCalledWith(expect.any(String), miaDeal.maker.email, expect.any(Object));
       });
 
       it('sends an email to the bank about the decision', async () => {
-        await as(tokenUser)
-          .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-          .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+        await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
         expect(api.sendEmail).toHaveBeenCalledWith(expect.any(String), BANK_EMAIL, expect.any(Object));
       });
 
       it('sends an email to PIM about the decision', async () => {
-        await as(tokenUser)
-          .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-          .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+        await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
         expect(api.sendEmail).toHaveBeenCalledWith(expect.any(String), PIM_EMAIL, expect.any(Object));
       });
@@ -201,9 +175,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
           .calledWith(deal.maker.bank.id)
           .mockResolvedValueOnce({ emails: [BANK_EMAIL] });
 
-        await as(tokenUser)
-          .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-          .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+        await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
         expect(api.sendEmail).not.toHaveBeenCalled();
       });
@@ -211,9 +183,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
   });
 
   it('should return a 400 if deal id is invalid', async () => {
-    const { status, body } = await as(tokenUser)
-      .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-      .to(`/v1/deals/${INVALID_DEAL_ID}/underwriting/managers-decision`);
+    const { status, body } = await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${INVALID_DEAL_ID}/underwriting/managers-decision`);
 
     expect(status).toBe(400);
     expect(body).toEqual({
@@ -237,15 +207,9 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
         dealUpdate: expect.any(Object),
         auditDetails: { userType: 'tfm', id: tokenUser._id },
       })
-      .mockRejectedValueOnce(
-        new Error(
-          `Updating the deal with dealId ${VALID_DEAL_ID} failed with status 500 and message: test error message`,
-        ),
-      );
+      .mockRejectedValueOnce(new Error(`Updating the deal with dealId ${VALID_DEAL_ID} failed with status 500 and message: test error message`));
 
-    const { status, body } = await as(tokenUser)
-      .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-      .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+    const { status, body } = await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
     expect(status).toBe(500);
     expect(body).toEqual({

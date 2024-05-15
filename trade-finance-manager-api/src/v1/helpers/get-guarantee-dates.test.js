@@ -20,11 +20,7 @@ const unissuedFacility = {
 describe('Get guarantee dates in TFM', () => {
   describe('When a facility is un-issued / commitment / 06', () => {
     it('Should return the correct dates', () => {
-      const {
-        guaranteeCommencementDate,
-        guaranteeExpiryDate,
-        effectiveDate,
-      } = getGuaranteeDates(unissuedFacility, dealSubmissionDate);
+      const { guaranteeCommencementDate, guaranteeExpiryDate, effectiveDate } = getGuaranteeDates(unissuedFacility, dealSubmissionDate);
 
       // Deal submission date
       expect(guaranteeCommencementDate).toEqual(submissionDate);
@@ -37,11 +33,7 @@ describe('Get guarantee dates in TFM', () => {
 
   describe('when a facility is Issued / 07', () => {
     it('Should return the correct dates', () => {
-      const {
-        guaranteeCommencementDate,
-        guaranteeExpiryDate,
-        effectiveDate,
-      } = getGuaranteeDates(issuedFacility, dealSubmissionDate);
+      const { guaranteeCommencementDate, guaranteeExpiryDate, effectiveDate } = getGuaranteeDates(issuedFacility, dealSubmissionDate);
 
       // Cover start date
       expect(guaranteeCommencementDate).toEqual('2023-01-01');

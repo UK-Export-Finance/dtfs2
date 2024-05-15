@@ -1,7 +1,19 @@
-import { app } from '../../src/createApp';
-import { api } from '../api';
+/* eslint-disable @typescript-eslint/unbound-method */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable no-param-reassign */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable import/no-extraneous-dependencies */
+
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
+import { app } from '../../src/createApp';
+import { api } from '../api';
 
 const { ORDNANCE_SURVEY_API_URL, ORDNANCE_SURVEY_API_KEY } = process.env;
 const { get } = api(app);

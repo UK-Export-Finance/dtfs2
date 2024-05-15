@@ -1,8 +1,20 @@
+/* eslint-disable @typescript-eslint/unbound-method */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable no-param-reassign */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable import/no-extraneous-dependencies */
+
+import { generateSystemAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream';
 import { getCollection } from '../database';
 import { Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { createFacilityFolder, uploadSupportingDocuments } from '../v1/controllers/estore/eStoreApi';
-import { generateSystemAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream';
 
 const FACILITY_FOLDER_MAX_RETRIES = 3;
 
@@ -55,13 +67,9 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
             ),
           );
           // eslint-disable-next-line prettier/prettier
-          uploadDocuments.then((res) =>
-            console.info('Task completed: Supporting documents uploaded successfully %o', res[0].data),
-          );
+          uploadDocuments.then((res) => console.info('Task completed: Supporting documents uploaded successfully %o', res[0].data));
           // eslint-disable-next-line prettier/prettier
-          uploadDocuments.catch((error) =>
-            console.error('Task failed: There was a problem uploading the documents %o', error),
-          );
+          uploadDocuments.catch((error) => console.error('Task failed: There was a problem uploading the documents %o', error));
         }
       }
     } else {

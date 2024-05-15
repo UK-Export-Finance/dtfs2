@@ -4,7 +4,7 @@ const { formatYear } = require('../../../../utils/date');
 const { findLatestCompletedAmendment } = require('../../helpers/amendment.helpers');
 
 const mapCoverEndDate = (day, month, year, facility) => {
-  const hasCoverEndDate = (hasValue(day) && hasValue(month) && hasValue(year));
+  const hasCoverEndDate = hasValue(day) && hasValue(month) && hasValue(year);
   if (hasCoverEndDate) {
     let dayToUse = day;
     let monthToUse = month;

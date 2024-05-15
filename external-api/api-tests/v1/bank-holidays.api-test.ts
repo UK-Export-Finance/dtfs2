@@ -1,9 +1,13 @@
-import { app } from '../../src/createApp';
-import { api } from '../api';
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import { mockResponseBankHolidays } from '../test-mocks/bank-holidays';
 import { getYear, addYears } from 'date-fns';
+import { app } from '../../src/createApp';
+import { api } from '../api';
+import { mockResponseBankHolidays } from '../test-mocks/bank-holidays';
 import { BankHolidaysEvent } from '../../src/interfaces';
 
 const { get } = api(app);

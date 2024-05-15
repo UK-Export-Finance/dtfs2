@@ -41,7 +41,7 @@
  *         example: Test extra information
  *       currency:
  *         type: object
-*         example: { id: 'JPY' }
+ *         example: { id: 'JPY' }
  *       value:
  *         type: integer
  *         example: 300000

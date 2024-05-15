@@ -1,11 +1,8 @@
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
-const {
-  hasAllRequestedCoverStartDateValues,
-  updateRequestedCoverStartDate,
-} = require('../facility-dates/requested-cover-start-date');
+const { hasAllRequestedCoverStartDateValues, updateRequestedCoverStartDate } = require('../facility-dates/requested-cover-start-date');
 const { hasAllIssuedDateValues } = require('../facility-dates/issued-date');
-const { getStartOfDateFromDayMonthYearStrings } = require("../helpers/date")
+const { getStartOfDateFromDayMonthYearStrings } = require('../helpers/date');
 const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
 const { hasValue } = require('../../utils/string');
 const canIssueFacility = require('../facility-issuance');
@@ -13,10 +10,7 @@ const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
 
 exports.updateLoanIssueFacility = async (req, res) => {
-  const {
-    id: dealId,
-    loanId,
-  } = req.params;
+  const { id: dealId, loanId } = req.params;
 
   await findOneDeal(dealId, async (deal) => {
     if (deal) {
@@ -42,8 +36,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
       // remove status added via type B XML. (we dynamically generate statuses)
       modifiedLoan.status = null;
 
-      if (!modifiedLoan.issueFacilityDetailsStarted
-        && !modifiedLoan.issueFacilityDetailsSubmitted) {
+      if (!modifiedLoan.issueFacilityDetailsStarted && !modifiedLoan.issueFacilityDetailsSubmitted) {
         // add a flag for UI/design/status/business handling...
         modifiedLoan.issueFacilityDetailsStarted = true;
       }
@@ -60,19 +53,14 @@ exports.updateLoanIssueFacility = async (req, res) => {
       }
 
       if (hasAllIssuedDateValues(modifiedLoan)) {
-        modifiedLoan.issuedDate = getStartOfDateFromDayMonthYearStrings(
-          req.body['issuedDate-day'],
-          req.body['issuedDate-month'],
-          req.body['issuedDate-year']
-        ).valueOf().toString()
+        modifiedLoan.issuedDate = getStartOfDateFromDayMonthYearStrings(req.body['issuedDate-day'], req.body['issuedDate-month'], req.body['issuedDate-year'])
+          .valueOf()
+          .toString();
       } else {
         modifiedLoan.issuedDate = null;
       }
 
-      const validationErrors = loanIssueFacilityValidationErrors(
-        modifiedLoan,
-        deal,
-      );
+      const validationErrors = loanIssueFacilityValidationErrors(modifiedLoan, deal);
 
       modifiedLoan.hasBeenIssued = false;
       modifiedLoan.issueFacilityDetailsProvided = false;
@@ -84,12 +72,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
         modifiedLoan.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
       }
 
-      const { status, data } = await facilitiesController.update(
-        dealId,
-        loanId,
-        modifiedLoan,
-        req.user,
-      );
+      const { status, data } = await facilitiesController.update(dealId, loanId, modifiedLoan, req.user);
 
       if (validationErrors.count !== 0) {
         return res.status(400).send({

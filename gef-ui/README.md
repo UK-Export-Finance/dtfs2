@@ -26,6 +26,7 @@ For testing purposes, you can find mock user credentials in the `utils/mock-data
 ### **Run a UI test suite**
 
 Verbose with coverage:
+
 ```shell
 npm run unit-test
 ```

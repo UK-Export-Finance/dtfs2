@@ -92,5 +92,5 @@ module.exports = {
   isValidDocumentType,
   isValidFileName,
   isValidBankId,
-  isValidSqlId
+  isValidSqlId,
 };

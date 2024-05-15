@@ -11,10 +11,9 @@ type PaymentAddedToFeeRecordEventPayload = {
 export type UtilisationReportPaymentAddedToFeeRecordEvent = BaseUtilisationReportEvent<'PAYMENT_ADDED_TO_FEE_RECORD', PaymentAddedToFeeRecordEventPayload>;
 
 export const handleUtilisationReportPaymentAddedToFeeRecordEvent = (
-  /* eslint-disable @typescript-eslint/no-unused-vars */
   report: UtilisationReportEntity,
   payload: PaymentAddedToFeeRecordEventPayload,
-  /* eslint-enable @typescript-eslint/no-unused-vars */
 ): Promise<UtilisationReportEntity> => {
+  console.error('Payment added fee record error %o %o', report, payload);
   throw new NotImplementedError('TODO FN-1697');
 };

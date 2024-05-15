@@ -39,7 +39,7 @@ const TFM = {
     id: String,
     name: String,
     email: String,
-  }
+  },
 };
 
 module.exports = {

@@ -1,14 +1,26 @@
+/* eslint-disable @typescript-eslint/unbound-method */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable no-param-reassign */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable import/no-extraneous-dependencies */
+
 import dotenv from 'dotenv';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { Request, Response } from 'express';
+import { CronJob } from 'cron';
 import { getCollection } from '../../../database';
 import { Estore, SiteExistsResponse, EstoreErrorResponse } from '../../../interfaces';
 import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../../../constants';
 import { areValidUkefIds, objectIsEmpty } from '../../../helpers';
 import { eStoreTermStoreAndBuyerFolder, eStoreSiteCreationCron } from '../../../cron';
 import { createExporterSite, siteExists } from './eStoreApi';
-import { CronJob } from 'cron';
 import { getNowAsEpoch } from '../../../helpers/date';
 
 dotenv.config();
@@ -67,11 +79,31 @@ export const create = async (req: Request, res: Response) => {
         {
           $set: {
             cron: {
-              site: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: getNowAsEpoch },
-              term: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: getNowAsEpoch },
-              buyer: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: getNowAsEpoch },
-              deal: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: getNowAsEpoch },
-              facility: { status: ESTORE_CRON_STATUS.FAILED, response: ' Invalid eStore payload', timestamp: getNowAsEpoch },
+              site: {
+                status: ESTORE_CRON_STATUS.FAILED,
+                response: ' Invalid eStore payload',
+                timestamp: getNowAsEpoch,
+              },
+              term: {
+                status: ESTORE_CRON_STATUS.FAILED,
+                response: ' Invalid eStore payload',
+                timestamp: getNowAsEpoch,
+              },
+              buyer: {
+                status: ESTORE_CRON_STATUS.FAILED,
+                response: ' Invalid eStore payload',
+                timestamp: getNowAsEpoch,
+              },
+              deal: {
+                status: ESTORE_CRON_STATUS.FAILED,
+                response: ' Invalid eStore payload',
+                timestamp: getNowAsEpoch,
+              },
+              facility: {
+                status: ESTORE_CRON_STATUS.FAILED,
+                response: ' Invalid eStore payload',
+                timestamp: getNowAsEpoch,
+              },
             },
           },
         },
@@ -170,6 +202,7 @@ export const create = async (req: Request, res: Response) => {
           /**
            * Add a new site specific CRON job, which is initialised upon creation
            */
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           const siteCreateCronId = `estore_cron_site_${eStoreData.dealId}`;
           const siteCreateCronJob = new CronJob(
             String(ESTORE_CRON_MANAGER_SCHEDULE), // Cron schedule
@@ -231,7 +264,7 @@ export const create = async (req: Request, res: Response) => {
     }
 
     return res.status(HttpStatusCode.Created).send();
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ Unable to create eStore directories %o', error);
     return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: 'Unable to create eStore directories' });
   }

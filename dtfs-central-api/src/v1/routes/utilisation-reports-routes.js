@@ -10,7 +10,9 @@ const {
   getUtilisationReportsReconciliationSummary,
 } = require('../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller');
 const putUtilisationReportStatusController = require('../controllers/utilisation-report-service/put-utilisation-report-status.controller');
-const { getUtilisationReportReconciliationDetailsById } = require('../controllers/utilisation-report-service/get-utilisation-report-reconciliation-details-by-id.controller');
+const {
+  getUtilisationReportReconciliationDetailsById,
+} = require('../controllers/utilisation-report-service/get-utilisation-report-reconciliation-details-by-id.controller');
 
 const utilisationReportsRouter = express.Router();
 

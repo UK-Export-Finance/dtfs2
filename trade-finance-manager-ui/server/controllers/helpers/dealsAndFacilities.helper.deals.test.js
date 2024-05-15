@@ -189,14 +189,15 @@ describe('controllers - deals', () => {
 
       describe('when there are no deals', () => {
         beforeEach(() => {
-          api.getDeals = () => Promise.resolve({
-            deals: [],
-            pagination: {
-              totalItems: 0,
-              currentPage: 0,
-              totalPages: 1,
-            },
-          });
+          api.getDeals = () =>
+            Promise.resolve({
+              deals: [],
+              pagination: {
+                totalItems: 0,
+                currentPage: 0,
+                totalPages: 1,
+              },
+            });
         });
 
         const mockReq = structuredClone(mockReqTemplate);
@@ -313,10 +314,7 @@ describe('controllers - deals', () => {
           });
         });
 
-        describe.each([
-          'ascending',
-          'descending',
-        ])('', (order) => {
+        describe.each(['ascending', 'descending'])('', (order) => {
           describe(`when a ${order} sort field is specified in the request body`, () => {
             const mockReq = structuredClone(mockReqTemplate);
 

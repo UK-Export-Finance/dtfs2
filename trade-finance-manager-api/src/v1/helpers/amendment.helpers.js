@@ -4,11 +4,7 @@ const api = require('../api');
 const sendTfmEmail = require('../controllers/send-tfm-email');
 const { UNDERWRITER_MANAGER_DECISIONS } = require('../../constants/amendments');
 const { TEAMS } = require('../../constants');
-const {
-  AMENDMENT_UW_DECISION,
-  AMENDMENT_BANK_DECISION,
-  AMENDMENT_STATUS,
-} = require('../../constants/deals');
+const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION, AMENDMENT_STATUS } = require('../../constants/deals');
 const EMAIL_TEMPLATE_IDS = require('../../constants/email-template-ids');
 const { automaticAmendmentEmailVariables } = require('../emails/amendments/automatic-approval-email-variables');
 const { generateTaskEmailVariables } = require('./generate-task-email-variables');
@@ -26,8 +22,11 @@ const { decimalsCount, roundNumber } = require('./number');
 
 // checks if amendment exists and if eligible to send email
 const amendmentEmailEligible = (amendment) =>
-  amendment && (amendment?.automaticApprovalEmail || amendment?.ukefDecision?.managersDecisionEmail || amendment?.bankDecision?.banksDecisionEmail
-    || amendment?.sendFirstTaskEmail);
+  amendment &&
+  (amendment?.automaticApprovalEmail ||
+    amendment?.ukefDecision?.managersDecisionEmail ||
+    amendment?.bankDecision?.banksDecisionEmail ||
+    amendment?.sendFirstTaskEmail);
 
 const isApprovedWithConditions = (ukefDecision) => {
   const { value, coverEndDate } = ukefDecision;
@@ -471,8 +470,10 @@ const calculateAmendmentDateTenor = async (coverEndDate, existingFacility) => {
   try {
     const { facilitySnapshot } = existingFacility;
 
-    const validConditions = (facilitySnapshot?.ukefFacilityType || facilitySnapshot?.type)
-      && (facilitySnapshot?.coverStartDate || facilitySnapshot?.requestedCoverStartDate) && coverEndDate;
+    const validConditions =
+      (facilitySnapshot?.ukefFacilityType || facilitySnapshot?.type) &&
+      (facilitySnapshot?.coverStartDate || facilitySnapshot?.requestedCoverStartDate) &&
+      coverEndDate;
 
     if (validConditions) {
       const { ukefFacilityType, type } = facilitySnapshot;
@@ -544,9 +545,7 @@ const calculateAcbsUkefExposure = (payload) => {
 const formatCoverEndDate = (payload) => {
   if (payload?.coverEndDate) {
     // TODO: DTFS2-7047 convert EPOCH to millisecond compatible epoch.
-    const epoch = payload.coverEndDate.toString().length > 10
-      ? payload.coverEndDate
-      : payload.coverEndDate * 1000;
+    const epoch = payload.coverEndDate.toString().length > 10 ? payload.coverEndDate : payload.coverEndDate * 1000;
 
     return {
       ...payload,

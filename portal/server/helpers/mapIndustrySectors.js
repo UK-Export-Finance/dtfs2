@@ -3,8 +3,7 @@
 // also add empty first option for design.
 
 const mapIndustrySectors = (industrySectors, selectedIndustrySector) => {
-  const selectedIndustrySectorCode = (selectedIndustrySector
-    && selectedIndustrySector.code) ? selectedIndustrySector.code : '';
+  const selectedIndustrySectorCode = selectedIndustrySector && selectedIndustrySector.code ? selectedIndustrySector.code : '';
 
   const mappedSectors = [
     { text: 'Select value' },

@@ -8,7 +8,7 @@ const overrideFacilitiesIfAmendmentsInProgress = (facilities, amendments) => {
       // eslint-disable-next-line no-restricted-syntax
       for (const amendment of amendments) {
         const amendmentIsInProgress = amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
-        if (amendmentIsInProgress && (amendment.facilityId === facility.facilityId)) {
+        if (amendmentIsInProgress && amendment.facilityId === facility.facilityId) {
           modifiedFacility.hasAmendmentInProgress = true;
           break;
         }

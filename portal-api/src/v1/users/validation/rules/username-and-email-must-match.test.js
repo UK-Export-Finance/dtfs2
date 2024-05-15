@@ -16,7 +16,10 @@ describe('usernameAndEmailMustMatch', () => {
 
   const testCases = [
     { description: 'when no existing user is provided', user: undefined },
-    { description: 'when an existing user is provided', user: { username: 'aValidEmail@ukexportfinance.gov.uk', email: 'aValidEmail@ukexportfinance.gov.uk' } },
+    {
+      description: 'when an existing user is provided',
+      user: { username: 'aValidEmail@ukexportfinance.gov.uk', email: 'aValidEmail@ukexportfinance.gov.uk' },
+    },
   ];
 
   describe.each(testCases)('$description', ({ user }) => {

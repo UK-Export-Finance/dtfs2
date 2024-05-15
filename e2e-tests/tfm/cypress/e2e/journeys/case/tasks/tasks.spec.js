@@ -9,23 +9,24 @@ const TOTAL_DEFAULT_AIN_TASKS = 2;
 
 const { T1_USER_1 } = MOCK_USERS;
 
-const assignTaskToSomeoneElseInMyTeam = (dealId, differentUserInSameTeam) => new Cypress.Promise((resolve) => {
-  cy.getUser(differentUserInSameTeam.username, T1_USER_1).then((userObj) => {
-    const differentUserInSameTeamObj = userObj;
+const assignTaskToSomeoneElseInMyTeam = (dealId, differentUserInSameTeam) =>
+  new Cypress.Promise((resolve) => {
+    cy.getUser(differentUserInSameTeam.username, T1_USER_1).then((userObj) => {
+      const differentUserInSameTeamObj = userObj;
 
-    // choose a user in `assigned to` select input, that is not the currently logged in
-    pages.taskPage.assignedToSelectInput().select(differentUserInSameTeamObj._id);
-    pages.taskPage.taskStatusRadioInputInProgress().click();
+      // choose a user in `assigned to` select input, that is not the currently logged in
+      pages.taskPage.assignedToSelectInput().select(differentUserInSameTeamObj._id);
+      pages.taskPage.taskStatusRadioInputInProgress().click();
 
-    // submit form
-    pages.taskPage.submitButton().click();
+      // submit form
+      pages.taskPage.submitButton().click();
 
-    // should now be back on the tasks page
-    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+      // should now be back on the tasks page
+      cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
-    return resolve(differentUserInSameTeamObj);
+      return resolve(differentUserInSameTeamObj);
+    });
   });
-});
 
 context('Case tasks - AIN deal', () => {
   let dealId;
@@ -83,9 +84,12 @@ context('Case tasks - AIN deal', () => {
     // first task should have status `To do` and link
     //---------------------------------------------------------------
     const firstTask = pages.tasksPage.tasks.row(1, 1);
-    firstTask.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('To do');
-    });
+    firstTask
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('To do');
+      });
 
     firstTask.link().should('exist');
     firstTask.title().should('not.exist');
@@ -94,9 +98,12 @@ context('Case tasks - AIN deal', () => {
     // second task should have status `To do` and no link
     //---------------------------------------------------------------
     const secondTask = pages.tasksPage.tasks.row(1, 2);
-    firstTask.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('To do');
-    });
+    firstTask
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('To do');
+      });
 
     secondTask.link().should('not.exist');
     secondTask.title().should('exist');
@@ -123,17 +130,23 @@ context('Case tasks - AIN deal', () => {
     // first task should have status `In progress`
     //---------------------------------------------------------------
     firstTask = pages.tasksPage.tasks.row(1, 1);
-    firstTask.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('In progress');
-    });
+    firstTask
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('In progress');
+      });
 
     //---------------------------------------------------------------
     // second task should have status `Cannot start` and no link
     //---------------------------------------------------------------
     const secondTask = pages.tasksPage.tasks.row(1, 2);
-    secondTask.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Cannot start yet');
-    });
+    secondTask
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Cannot start yet');
+      });
 
     secondTask.link().should('not.exist');
     secondTask.title().should('exist');
@@ -166,17 +179,23 @@ context('Case tasks - AIN deal', () => {
     // first task should have status `Done`
     //---------------------------------------------------------------
     firstTask = pages.tasksPage.tasks.row(1, 1);
-    firstTask.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Done');
-    });
+    firstTask
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Done');
+      });
 
     //---------------------------------------------------------------
     // second task should have status `To do` and link
     //---------------------------------------------------------------
     let secondTask = pages.tasksPage.tasks.row(1, 2);
-    secondTask.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('To do');
-    });
+    secondTask
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('To do');
+      });
 
     secondTask.link().should('exist');
     secondTask.title().should('not.exist');
@@ -195,9 +214,12 @@ context('Case tasks - AIN deal', () => {
     // second task should have status 'In progress' and link
     //---------------------------------------------------------------
     secondTask = pages.tasksPage.tasks.row(1, 2);
-    secondTask.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('In progress');
-    });
+    secondTask
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('In progress');
+      });
 
     secondTask.link().should('exist');
     secondTask.title().should('not.exist');
@@ -239,13 +261,19 @@ context('Case tasks - AIN deal', () => {
       pages.tasksPage.filterRadioYourTeam().click();
       pages.tasksPage.filterSubmitButton().click();
 
-      firstTask.assignedTo().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(differentUserInSameTeamFullName);
-      });
+      firstTask
+        .assignedTo()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(differentUserInSameTeamFullName);
+        });
 
-      firstTask.status().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('In progress');
-      });
+      firstTask
+        .status()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('In progress');
+        });
     });
   });
 
@@ -375,13 +403,19 @@ context('Case tasks - AIN deal', () => {
     // task should have empty `date started` and `date completed` values
     //---------------------------------------------------------------
 
-    firstTask.dateStarted().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('-');
-    });
+    firstTask
+      .dateStarted()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('-');
+      });
 
-    firstTask.dateCompleted().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('-');
-    });
+    firstTask
+      .dateCompleted()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('-');
+      });
 
     //---------------------------------------------------------------
     // user completes a task
@@ -408,12 +442,18 @@ context('Case tasks - AIN deal', () => {
     ];
     expectedDate = expectedDate.join(' ');
 
-    firstTask.dateStarted().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(expectedDate);
-    });
+    firstTask
+      .dateStarted()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(expectedDate);
+      });
 
-    firstTask.dateCompleted().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(expectedDate);
-    });
+    firstTask
+      .dateCompleted()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(expectedDate);
+      });
   });
 });

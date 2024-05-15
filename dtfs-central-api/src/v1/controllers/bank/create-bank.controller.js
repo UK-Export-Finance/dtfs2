@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common')
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const db = require('../../../drivers/db-client').default;
 const { PAYLOAD } = require('../../../constants');
 const { payloadVerification } = require('../../../helpers');

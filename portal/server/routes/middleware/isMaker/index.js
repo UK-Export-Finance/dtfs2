@@ -1,4 +1,6 @@
-const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 
 const isMaker = async (req, res, next) => {
   const { user } = req.session;

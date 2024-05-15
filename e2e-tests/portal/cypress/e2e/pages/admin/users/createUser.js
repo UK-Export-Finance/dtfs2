@@ -8,7 +8,6 @@ const page = {
   bank: () => cy.get('[data-cy="bank"]'),
   createUser: () => cy.get('[data-cy="create-user-add"]'),
   cancel: () => cy.get('[data-cy="create-user-cancel"]'),
-
 };
 
 module.exports = page;

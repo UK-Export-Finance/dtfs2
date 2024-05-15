@@ -76,7 +76,9 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
           href: '#utilisation-report-file-upload',
         },
       ];
-      const expectedExtractDataError = { text: 'The selected file could not be uploaded, try again and make sure it is not password protected' };
+      const expectedExtractDataError = {
+        text: 'The selected file could not be uploaded, try again and make sure it is not password protected',
+      };
 
       // Act
       await postUtilisationReportUpload(req, res);
@@ -114,9 +116,11 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
         },
       ];
 
-      const csvValidationErrors = [{
-        errorMessage: 'Error',
-      }];
+      const csvValidationErrors = [
+        {
+          errorMessage: 'Error',
+        },
+      ];
       jest.mocked(validateCsvData).mockReturnValueOnce(csvValidationErrors);
 
       // Act

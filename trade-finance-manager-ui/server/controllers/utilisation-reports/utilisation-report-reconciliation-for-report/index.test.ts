@@ -5,6 +5,7 @@ import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { aUtilisationReportReconciliationDetailsResponse } from '../../../../test-helpers';
 import { UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
+import { FeeRecordViewModelItem } from '../helpers';
 
 jest.mock('../../../api');
 jest.mock('../../../helpers/date');
@@ -61,8 +62,51 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
           start: { month: 1, year: 2024 },
           end: { month: 1, year: 2024 },
         },
+        feeRecords: [
+          {
+            id: 1,
+            facilityId: '12345678',
+            exporter: 'Test exporter',
+            reportedFees: {
+              currency: 'GBP',
+              amount: 100.0,
+            },
+            reportedPayments: {
+              currency: 'GBP',
+              amount: 100.0,
+            },
+            totalReportedPayments: {
+              currency: 'GBP',
+              amount: 100.0,
+            },
+            paymentsReceived: {
+              currency: 'GBP',
+              amount: 100.0,
+            },
+            totalPaymentsReceived: {
+              currency: 'GBP',
+              amount: 100.0,
+            },
+            status: 'TO_DO',
+          },
+        ],
       };
       const formattedReportPeriod = 'January 2024';
+
+      const feeRecordViewModel: FeeRecordViewModelItem[] = [
+        {
+          id: 1,
+          facilityId: '12345678',
+          exporter: 'Test exporter',
+          reportedFees: 'GBP 100.00',
+          reportedPayments: 'GBP 100.00',
+          totalReportedPayments: 'GBP 100.00',
+          paymentsReceived: 'GBP 100.00',
+          totalPaymentsReceived: 'GBP 100.00',
+          status: 'TO_DO',
+          displayStatus: 'TO DO',
+        },
+      ];
 
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
 
@@ -77,6 +121,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         bank,
         formattedReportPeriod,
+        feeRecords: feeRecordViewModel,
       });
     });
   });
