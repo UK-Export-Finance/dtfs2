@@ -15,7 +15,7 @@ const { InvalidReportStatusError } = require('../../errors');
  * @param {string} bankId
  * @param {import('@ukef/dtfs2-common').ReportPeriod} reportPeriod
  */
-const getReportForPeriod = async (bankId, reportPeriod) => {
+const getReportByBankIdAndReportPeriod = async (bankId, reportPeriod) => {
   const reportsForPeriod = await api.getUtilisationReports(bankId, {
     reportPeriod,
   });
@@ -29,7 +29,7 @@ const getReportForPeriod = async (bankId, reportPeriod) => {
   }
 
   return reportsForPeriod[0];
-}
+};
 
 const uploadReportAndSendNotification = async (req, res) => {
   try {
@@ -45,10 +45,15 @@ const uploadReportAndSendNotification = async (req, res) => {
     const parsedReportPeriod = JSON.parse(reportPeriod);
     const bankId = parsedUser?.bank?.id;
 
-    const report = await getReportForPeriod(bankId, parsedReportPeriod);
+    const report = await getReportByBankIdAndReportPeriod(bankId, parsedReportPeriod);
     validateReportIsInReportNotReceivedState(report);
     const azureFileInfo = await saveUtilisationReportFileToAzure(file, bankId);
-    const { dateUploaded } = await api.saveUtilisationReport(report.reportId, parsedReportData, parsedUser, azureFileInfo);
+    const { dateUploaded } = await api.saveUtilisationReport(
+      report.reportId,
+      parsedReportData,
+      parsedUser,
+      azureFileInfo,
+    );
 
     try {
       await sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam(

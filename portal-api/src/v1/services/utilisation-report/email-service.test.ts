@@ -1,4 +1,4 @@
-import { BankResponse } from 'src/v1/api-response-types';
+import { BankResponse } from '../../api-response-types';
 import {
   sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam,
   sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam,
