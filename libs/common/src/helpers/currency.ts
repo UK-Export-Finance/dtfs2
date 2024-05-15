@@ -9,7 +9,10 @@ import { CurrencyAndAmount, CurrencyAndAmountString } from '../types';
  * const amount = getFormattedCurrencyAndAmount({ currency: 'GBP', amount: 3.14159 }); // 'GBP 3.14'
  */
 export const getFormattedCurrencyAndAmount = (currencyAndAmount: CurrencyAndAmount): CurrencyAndAmountString => {
-  const formatter = new Intl.NumberFormat('en-GB', { maximumFractionDigits: 2 });
+  const formatter = new Intl.NumberFormat('en-GB', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
   const formattedAmount = formatter.format(currencyAndAmount.amount);
   return `${currencyAndAmount.currency} ${formattedAmount}`;
 };
