@@ -1,4 +1,4 @@
-import orderBy from 'lodash/orderBy';
+import orderBy from 'lodash.orderby';
 import { FeeRecordStatus, getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
 import { FeeRecordItem } from '../../../api-response-types';
 import { FeeRecordDisplayStatus, FeeRecordViewModelItem } from '../../../types/view-models';
