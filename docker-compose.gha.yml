@@ -21,14 +21,22 @@ services:
       - ./dtfs-sql-volume-dtfs-submissions:/data/db
 
   dtfs-submissions-data:
-    image: mongo:5.0.5
-    restart: always
+    build:
+      context: ./mongodb
+      dockerfile: Dockerfile
     environment:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
     ports:
       - '27017-27019:27017-27019'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --quiet) -eq 1
+      interval: 10s
+      start_period: 30s
+    command: "--bind_ip_all --keyFile /mongo-keyfile --replSet rs0"
     volumes:
       - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
 
@@ -64,7 +72,7 @@ services:
       - AUDIT_API_URL
       - AUDIT_API_USERNAME
       - AUDIT_API_PASSWORD
-      - CHANGE_STREAM_ENABLED
+      - CHANGE_STREAM_ENABLED='true'
       - UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
       - SQL_DB_HOST
       - SQL_DB_PORT
@@ -73,6 +81,7 @@ services:
       - SQL_DB_NAME
       - SQL_DB_LOGGING_ENABLED
       - ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE
+      - DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS=600
     entrypoint: npx ts-node dtfs-central-api/src/index.ts
 
   trade-finance-manager-ui:
