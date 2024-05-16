@@ -1,14 +1,9 @@
 const actualDb = jest.requireActual('../../../src/drivers/db-client');
 const mockGetCollection = jest.fn(actualDb.getCollection.bind(actualDb));
-const mockGetClient = actualDb.getClient.bind(actualDb);
-const mockGetConnection = actualDb.get.bind(actualDb);
-const mockCloseConnection = actualDb.close.bind(actualDb);
 
 jest.mock('../../../src/drivers/db-client', () => ({
+  ...jest.requireActual('../../../src/drivers/db-client'),
   getCollection: mockGetCollection,
-  getClient: mockGetClient,
-  get: mockGetConnection,
-  close: mockCloseConnection,
 }));
 
 const { ObjectId } = require('mongodb');

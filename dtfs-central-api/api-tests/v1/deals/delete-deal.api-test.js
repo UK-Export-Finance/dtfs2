@@ -26,11 +26,6 @@ const newDeal = aDeal({
   dealType: DEALS.DEAL_TYPE.BSS_EWCS,
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
-  editedBy: [],
-  eligibility: {
-    status: 'Not started',
-    criteria: [{}],
-  },
 });
 
 describe('DELETE /v1/portal/deals', () => {

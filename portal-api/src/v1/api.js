@@ -89,7 +89,7 @@ const deleteDeal = async (dealId, auditDetails) => {
       headers: headers.central,
       data: {
         auditDetails,
-      }
+      },
     });
   } catch (error) {
     console.error('Unable to delete deal %o', error);

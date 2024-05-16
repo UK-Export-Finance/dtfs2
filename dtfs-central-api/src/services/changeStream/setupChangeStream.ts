@@ -27,12 +27,9 @@ const setupChangeStreamForDeletionCollection = async () => {
   const databaseConnection = await mongoDbClient.getConnection();
   const changeStream = databaseConnection
     .collection(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS)
-    .watch(
-      [{ $match: { operationType: 'insert' } }, { $project: { _id: 1, fullDocument: 1, ns: 1, documentKey: 1 } }],
-      {
-        fullDocument: 'updateLookup',
-      },
-    );
+    .watch([{ $match: { operationType: 'insert' } }, { $project: { _id: 1, fullDocument: 1, ns: 1, documentKey: 1 } }], {
+      fullDocument: 'updateLookup',
+    });
   changeStream.on('change', (changeStreamDocument: ChangeStreamInsertDocument<DeletionAuditLog>) => {
     postDeletionAuditDetails(changeStreamDocument).catch((error) => {
       console.error('Error sending change stream update to API', error);
