@@ -20,8 +20,8 @@ type SortableFeeRecordItemProperties = 'reportedFees' | 'reportedPayments' | 'to
  * fee record item index by a specific property. The data sort value
  * is then passed to the premium payments table and is used to
  * manage the sorting. Without this, the table would use alphabetical
- * sorting on formatted currency and amount strings which would
- * produce unexpected results
+ * sorting on formatted currency and amount strings which would not
+ * produce the sorting behaviour desired
  * @param feeRecordItems - The fee record items
  * @param property - The fee record item property to sort by
  * @returns The fee record index to data sort value map
