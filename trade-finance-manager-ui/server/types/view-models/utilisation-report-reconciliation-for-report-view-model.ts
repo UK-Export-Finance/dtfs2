@@ -2,7 +2,7 @@ import { CurrencyAndAmountString, FeeRecordStatus, SessionBank } from '@ukef/dtf
 import { PrimaryNavigationKey } from '../primary-navigation-key';
 import { TfmSessionUser } from '../tfm-session-user';
 
-type SortedAndFormattedCurrencyAndAmount = {
+export type SortedAndFormattedCurrencyAndAmount = {
   formattedCurrencyAndAmount: CurrencyAndAmountString | undefined;
   dataSortValue: number;
 };

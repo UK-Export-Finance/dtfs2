@@ -5,7 +5,7 @@ import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { aUtilisationReportReconciliationDetailsResponse } from '../../../../test-helpers';
 import { UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
-import { FeeRecordViewModelItem } from '../helpers';
+import { FeeRecordViewModelItem } from '../../../types/view-models';
 
 jest.mock('../../../api');
 jest.mock('../../../helpers/date');
@@ -98,11 +98,11 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
           id: 1,
           facilityId: '12345678',
           exporter: 'Test exporter',
-          reportedFees: 'GBP 100.00',
-          reportedPayments: 'GBP 100.00',
-          totalReportedPayments: 'GBP 100.00',
-          paymentsReceived: 'GBP 100.00',
-          totalPaymentsReceived: 'GBP 100.00',
+          reportedFees: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
+          reportedPayments: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
+          totalReportedPayments: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
+          paymentsReceived: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
+          totalPaymentsReceived: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
           status: 'TO_DO',
           displayStatus: 'TO DO',
         },
