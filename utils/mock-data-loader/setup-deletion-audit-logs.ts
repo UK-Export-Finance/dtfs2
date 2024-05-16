@@ -10,7 +10,7 @@ export const deleteDeletionAuditLogsCollection = async () => {
     await collection.drop();
   } catch (error) {
     logger.info('Failed to drop collection, continuing to insert mocks', { depth: 1 });
-    logger.warn(error);
+    logger.error(error, { depth: 1 });
   }
 };
 

@@ -42,9 +42,7 @@ const mapDeletionAuditRecord = (auditRecord: AuditDatabaseRecord) => ({
   deletedByNoUserLoggedIn: auditRecord.noUserLoggedIn,
 });
 
-export const postDeletionAuditDetails = async (
-  changeStreamDocument: ChangeStreamInsertDocument<DeletionAuditLog>,
-): Promise<void> => {
+export const postDeletionAuditDetails = async (changeStreamDocument: ChangeStreamInsertDocument<DeletionAuditLog>): Promise<void> => {
   const { AUDIT_API_URL, AUDIT_API_USERNAME, AUDIT_API_PASSWORD } = process.env;
   if (!AUDIT_API_URL || !AUDIT_API_USERNAME || !AUDIT_API_PASSWORD) {
     throw new InvalidEnvironmentVariableError('AUDIT_API_URL, AUDIT_API_USERNAME or AUDIT_API_PASSWORD not set');
