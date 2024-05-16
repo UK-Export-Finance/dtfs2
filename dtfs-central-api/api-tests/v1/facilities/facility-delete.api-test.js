@@ -1,81 +1,97 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const axios = require('axios');
-const dotenv = require('dotenv');
-const wipeDB = require('../../wipeDB');
+const actualDb = jest.requireActual('../../../src/drivers/db-client').default;
+const mockGetCollection = jest.fn(actualDb.getCollection.bind(actualDb));
+
+jest.mock('../../../src/drivers/db-client', () => ({
+  __esModule: true,
+  default: {
+    getCollection: mockGetCollection,
+    getClient: actualDb.getClient.bind(actualDb),
+    getConnection: actualDb.getConnection.bind(actualDb),
+  },
+}));
+
+const { ObjectId } = require('mongodb');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { withDeletionTests, generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
+const app = require('../../../src/createApp');
+const api = require('../../api')(app);
+const { DEALS } = require('../../../src/constants');
 const aDeal = require('../deal-builder');
-const { MOCK_DEAL } = require('../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 
-dotenv.config();
-
-const { DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY } = process.env;
-
-const headers = {
-  'Content-Type': 'application/json',
-  'x-api-key': DTFS_CENTRAL_API_KEY,
-};
-
-const newBondFacility = {
-  dealId: MOCK_DEAL.DEAL_ID,
-  type: 'Bond',
-};
-
-let bondFacilityId;
-
 const newDeal = aDeal({
-  dealType: 'GEF',
+  dealType: DEALS.DEAL_TYPE.BSS_EWCS,
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
-  editedBy: [],
-  eligibility: {
-    status: 'Not started',
-    criteria: [{}],
-  },
 });
 
-describe('/v1/portal/facilities', () => {
+describe('DELETE /v1/portal/deals', () => {
   let dealId;
-
-  beforeAll(async () => {
-    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
-  });
+  let documentToDeleteId;
 
   beforeEach(async () => {
-    const { data: deal } = await axios({
-      method: 'post',
-      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals`,
-      data: { deal: newDeal, user: MOCK_PORTAL_USER },
-      headers,
-    });
+    const createDealResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+    dealId = createDealResult.body._id;
 
-    dealId = deal._id;
-    newBondFacility.dealId = dealId;
+    const createFacilityResult = await api
+      .post({
+        facility: {
+          dealId,
+          type: 'Bond',
+        },
+        user: MOCK_PORTAL_USER,
+      })
+      .to('/v1/portal/facilities');
 
-    const { data: facility } = await axios({
-      method: 'post',
-      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities`,
-      data: { facility: newBondFacility, user: MOCK_PORTAL_USER },
-      headers,
-    });
+    documentToDeleteId = new ObjectId(createFacilityResult.body._id);
 
-    bondFacilityId = facility._id;
+    jest.clearAllMocks();
   });
 
-  describe('DELETE /v1/portal/facilities/:id', () => {
-    it('deletes the facility', async () => {
-      const removeBody = {
-        dealId: newBondFacility.dealId,
+  afterAll(() => {
+    jest.resetAllMocks();
+  });
+
+  withValidateAuditDetailsTests({
+    makeRequest: async (auditDetails) =>
+      await api
+        .remove({
+          dealId,
+          user: MOCK_PORTAL_USER,
+          auditDetails,
+        })
+        .to(`/v1/portal/facilities/${documentToDeleteId}`),
+    validUserTypes: ['portal'],
+  });
+
+  withDeletionTests({
+    makeRequest: async () =>
+      await api
+        .remove({
+          dealId,
+          user: MOCK_PORTAL_USER,
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+        })
+        .to(`/v1/portal/facilities/${documentToDeleteId}`),
+    collectionName: 'facilities',
+    auditRecord: generateMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
+    getDeletedDocumentId: () => documentToDeleteId,
+    mockGetCollection,
+  });
+
+  it('removes the facility from the deal', async () => {
+    await api
+      .remove({
+        dealId,
         user: MOCK_PORTAL_USER,
-      };
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+      })
+      .to(`/v1/portal/facilities/${documentToDeleteId}`);
 
-      const { status } = await axios({
-        method: 'delete',
-        url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${bondFacilityId}`,
-        data: removeBody,
-        headers,
-      });
+    const getDealResponse = await api.get(`/v1/portal/deals/${dealId}`);
 
-      expect(status).toEqual(200);
-    });
+    const facilityOnDeal = getDealResponse.body.deal.facilities.find((facility) => facility._id === documentToDeleteId);
+    expect(facilityOnDeal).toBeFalsy();
   });
 });

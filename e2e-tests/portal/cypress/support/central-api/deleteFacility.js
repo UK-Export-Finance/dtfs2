@@ -5,7 +5,10 @@ module.exports = (facilityId, user) => {
 
   // eslint-disable-next-line no-new
   new Cypress.Promise((resolve) => {
-    deleteFacility(facilityId, user);
+    deleteFacility(facilityId, user, {
+      userType: 'portal',
+      id: user?._id ?? 'abcdef123456abcdef123456',
+    });
     resolve();
   });
 };
