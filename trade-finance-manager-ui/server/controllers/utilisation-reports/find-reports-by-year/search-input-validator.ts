@@ -1,13 +1,9 @@
 import { isNonEmptyString } from '@ukef/dtfs2-common';
 import { REGEX } from '../../../constants';
-
-type ErrorSummaryItem = {
-  text: string;
-  href: string;
-};
+import { ErrorSummaryViewModel } from '../../../types/view-models';
 
 export type FindUtilisationReportByYearValidationErrors = {
-  errorSummary: ErrorSummaryItem[];
+  errorSummary: ErrorSummaryViewModel[];
   bankError: string | undefined;
   yearError: string | undefined;
 };
@@ -44,7 +40,7 @@ export const validateSearchInput = ({ bankIdQuery, yearQuery, validBankIds }: Va
   const bankError = bankIdQuery ? getBankInputValidationError(bankIdQuery, validBankIds) : 'Select a bank';
   const yearError = yearQuery ? getYearInputValidationError(yearQuery) : 'Enter a valid year';
 
-  const errorSummary: ErrorSummaryItem[] = [];
+  const errorSummary: ErrorSummaryViewModel[] = [];
   if (bankError) {
     errorSummary.push({ text: bankError, href: '#bank' });
   }

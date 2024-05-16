@@ -68,8 +68,7 @@ describe(component, () => {
     feeRecords.forEach((feeRecord) => {
       const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecord.id}"]`;
 
-      const checkboxSelector = `${rowSelector} > td > div > div > input#feeRecordId-${feeRecord.id}`;
-      wrapper.expectElement(checkboxSelector).toExist();
+      wrapper.expectElement(`${rowSelector} input[type="checkbox"]`).toExist();
 
       wrapper.expectElement(`${rowSelector} th`).toHaveCount(1);
       wrapper.expectElement(`${rowSelector} th:contains("${feeRecord.facilityId}")`).toExist();
@@ -120,7 +119,7 @@ describe(component, () => {
     const wrapper = render({ feeRecords: [feeRecordViewModelItem] });
 
     const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordViewModelItem.id}"]`;
-    wrapper.expectElement(`${rowSelector} input#feeRecordId-${feeRecordViewModelItem.id}`).toExist();
+    wrapper.expectElement(`${rowSelector} input[type="checkbox"]`).toExist();
   });
 
   it.each(difference(Object.values(FEE_RECORD_STATUS), FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST))(
@@ -133,7 +132,29 @@ describe(component, () => {
       const wrapper = render({ feeRecords: [feeRecordViewModelItem] });
 
       const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordViewModelItem.id}"]`;
-      wrapper.expectElement(`${rowSelector} input#feeRecordId-${feeRecordViewModelItem.id}`).notToExist();
+      wrapper.expectElement(`${rowSelector} input[type="checkbox"]`).notToExist();
     },
   );
+
+  it("should render a checked checkbox id when the 'isChecked' property is set to true", () => {
+    const feeRecordViewModelItem = {
+      ...aFeeRecordViewModelItem(),
+      isChecked: true,
+    };
+    const wrapper = render({ feeRecords: [feeRecordViewModelItem] });
+
+    const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordViewModelItem.id}"]`;
+    wrapper.expectElement(`${rowSelector} input[type="checkbox"]`).toHaveAttribute('checked', 'checked');
+  });
+
+  it("should render an unchecked checkbox id when the 'isChecked' property is set to false", () => {
+    const feeRecordViewModelItem = {
+      ...aFeeRecordViewModelItem(),
+      isChecked: false,
+    };
+    const wrapper = render({ feeRecords: [feeRecordViewModelItem] });
+
+    const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordViewModelItem.id}"]`;
+    wrapper.expectElement(`${rowSelector} input[type="checkbox"]`).toHaveAttribute('checked', undefined);
+  });
 });

@@ -5,7 +5,7 @@ import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { aUtilisationReportReconciliationDetailsResponse } from '../../../../test-helpers';
 import { UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
-import { FeeRecordViewModelItem } from '../../../types/view-models';
+import { FeeRecordViewModelItem, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 
 jest.mock('../../../api');
 jest.mock('../../../helpers/date');
@@ -105,6 +105,8 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
           totalPaymentsReceived: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
           status: 'TO_DO',
           displayStatus: 'TO DO',
+          checkboxId: 'feeRecordId-1-reportedPaymentsCurrency-GBP-status-TO_DO',
+          isChecked: false,
         },
       ];
 
@@ -116,12 +118,14 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, userToken);
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
-      expect(res._getRenderData()).toEqual({
+      expect(res._getRenderData()).toEqual<UtilisationReportReconciliationForReportViewModel>({
         user: MOCK_TFM_SESSION_USER,
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         bank,
         formattedReportPeriod,
+        reportId: 1,
         feeRecords: feeRecordViewModel,
+        errorSummary: undefined,
       });
     });
   });
