@@ -1,31 +1,14 @@
 import orderBy from 'lodash/orderBy';
-import { FeeRecordStatus, CurrencyAndAmountString, getFormattedCurrencyAndAmount, ValuesOf } from '@ukef/dtfs2-common';
+import { FeeRecordStatus, getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
 import { FeeRecordItem } from '../../../api-response-types';
+import { FeeRecordDisplayStatus, FeeRecordViewModelItem } from '../../../types/view-models';
 
-const feeRecordStatusToDisplayStatus = {
+const feeRecordStatusToDisplayStatus: Record<FeeRecordStatus, FeeRecordDisplayStatus> = {
   TO_DO: 'TO DO',
   MATCH: 'MATCH',
   DOES_NOT_MATCH: 'DOES NOT MATCH',
   READY_TO_KEY: 'READY TO KEY',
   RECONCILED: 'RECONCILED',
-} as const;
-
-type SortedAndFormattedCurrencyAndAmount = {
-  formattedCurrencyAndAmount: CurrencyAndAmountString | undefined;
-  dataSortValue: number;
-};
-
-export type FeeRecordViewModelItem = {
-  id: number;
-  facilityId: string;
-  exporter: string;
-  reportedFees: SortedAndFormattedCurrencyAndAmount;
-  reportedPayments: SortedAndFormattedCurrencyAndAmount;
-  totalReportedPayments: SortedAndFormattedCurrencyAndAmount;
-  paymentsReceived: SortedAndFormattedCurrencyAndAmount;
-  totalPaymentsReceived: SortedAndFormattedCurrencyAndAmount;
-  status: FeeRecordStatus;
-  displayStatus: ValuesOf<typeof feeRecordStatusToDisplayStatus>;
 };
 
 type SortableFeeRecordItemProperties = 'reportedFees' | 'reportedPayments' | 'totalReportedPayments' | 'paymentsReceived' | 'totalPaymentsReceived';
