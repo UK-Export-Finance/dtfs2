@@ -7,7 +7,6 @@ const feeRecordStatusToDisplayStatus = {
   DOES_NOT_MATCH: 'DOES NOT MATCH',
   READY_TO_KEY: 'READY TO KEY',
   RECONCILED: 'RECONCILED',
-  REPORT_COMPLETED: 'REPORT COMPLETED',
 } as const;
 
 export type FeeRecordViewModelItem = {

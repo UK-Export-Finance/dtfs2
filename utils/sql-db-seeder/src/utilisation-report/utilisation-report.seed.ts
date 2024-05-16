@@ -1,8 +1,9 @@
 import { Seeder } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
-import { UtilisationReportEntity, getCurrentReportPeriodForBankSchedule } from '@ukef/dtfs2-common';
-import { createNotReceivedReport, createMarkedAsCompletedReport, createUploadedReport, createFeeRecordsForReport } from './utilisation-report.helper';
+import { FeeRecordEntity, UtilisationReportEntity, getCurrentReportPeriodForBankSchedule } from '@ukef/dtfs2-common';
+import { createNotReceivedReport, createMarkedAsCompletedReport, createUploadedReport } from './utilisation-report.helper';
 import { getAllBanksFromMongoDb, getUsersFromMongoDbOrFail } from '../helpers';
+import { createRandomFeeRecordsForReport } from '../fee-record/fee-record.helper';
 
 export default class UtilisationReportSeeder implements Seeder {
   /**
@@ -27,10 +28,6 @@ export default class UtilisationReportSeeder implements Seeder {
     const uploadedReportReportPeriod = getCurrentReportPeriodForBankSchedule(paymentReportOfficerBank.utilisationReportPeriodSchedule);
     const uploadedReport = createUploadedReport(paymentReportOfficer, uploadedReportReportPeriod, 'PENDING_RECONCILIATION');
 
-    // The reports need to be seeded either before or with the fee records
-    const { feeRecordWithMatchingPaymentCurrencies, feeRecordWithDifferingPaymentCurrencies } = createFeeRecordsForReport();
-    uploadedReport.feeRecords = [feeRecordWithMatchingPaymentCurrencies, feeRecordWithDifferingPaymentCurrencies];
-
     const [bankToCreateMarkedAsCompletedReportFor, ...banksToCreateNotReceivedReportsFor] = banksVisibleInTfm.filter(
       (bank) => bank.id !== paymentReportOfficer.bank.id,
     );
@@ -53,9 +50,13 @@ export default class UtilisationReportSeeder implements Seeder {
 
     const reportsToInsert: UtilisationReportEntity[] = [uploadedReport, markedAsCompletedReport, ...notReceivedReports];
 
-    const utilisationReportRepository = dataSource.getRepository(UtilisationReportEntity);
-    for (const reportToInsert of reportsToInsert) {
-      await utilisationReportRepository.save(reportToInsert);
-    }
+    const randomFeeRecordsToInsert = createRandomFeeRecordsForReport(200, uploadedReport);
+
+    await dataSource.transaction(async (entityManager) => {
+      for (const reportToInsert of reportsToInsert) {
+        await entityManager.getRepository(UtilisationReportEntity).save(reportToInsert);
+      }
+      await entityManager.getRepository(FeeRecordEntity).save(randomFeeRecordsToInsert, { chunk: 100 });
+    });
   }
 }
