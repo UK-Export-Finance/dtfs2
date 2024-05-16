@@ -5,7 +5,7 @@ name: Feature environment deployment
 on:
   push:
     branches:
-      - release-2.2a
+      - main
     paths:
       - "portal/**"
       - "portal-api/**"
