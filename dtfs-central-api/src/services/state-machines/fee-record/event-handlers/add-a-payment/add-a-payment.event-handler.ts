@@ -9,6 +9,7 @@ type AddAPaymentEventPayload = {
 export type FeeRecordAddAPaymentEvent = BaseFeeRecordEvent<'ADD_A_PAYMENT', AddAPaymentEventPayload>;
 
 export const handleFeeRecordAddAPaymentEvent = (
+  // TODO FN-1739 Remove these eslint-disable comments when event handler is implemented
   /* eslint-disable @typescript-eslint/no-unused-vars */
   feeRecord: FeeRecordEntity,
   payload: AddAPaymentEventPayload,
