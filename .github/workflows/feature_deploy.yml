@@ -5,7 +5,17 @@ name: Feature environment deployment
 on:
   push:
     branches:
-      - main
+      - release-2.1
+    paths:
+      - "portal/**"
+      - "portal-api/**"
+      - "gef-ui/**"
+      - "trade-finance-manager-ui/**"
+      - "trade-finance-manager-api/**"
+      - "dtfs-central-api/**"
+      - "external-api/**"
+      - "azure-functions/acbs-function/**"
+      - "libs/common/**"
 
 env:
   environment: feature

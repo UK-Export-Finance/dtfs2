@@ -2,10 +2,10 @@
 
 **Cypress** end-to-end test suites for all UI services and flows:
 
-1) **BSS** (Portal - Bond Support Scheme)
-2) **GEF** (General Export Facility)
-3) **TFM** (Trade Finance Manager)
-4) Submission to **TFM**
+1. **BSS** (Portal - Bond Support Scheme)
+2. **GEF** (General Export Facility)
+3. **TFM** (Trade Finance Manager)
+4. Submission to **TFM**
 
 ## Coverage
 
@@ -61,14 +61,14 @@ Additionally, it includes values for handling timeouts and retries: `pageLoadTim
 
 Each test suite shares a similar directory structure:
 
-| Directory | Description | How it's used |
-| --------- | ----------- | ------------- |
-| /fixtures | Mock deals | These mock deals are submitted to the API and then used for navigation and data assertion in the UI. |
-| /integration | Spec files and page/element selectors | Spec files define the actual tests, and page/element selectors are used to locate UI elements. |
-| /plugins | Unused. Cypress boilerplate | Not used in this context. |
-| /support | Cypress commands | Cypress commands are run in each test to call APIs, add deals to the database, and perform other necessary actions. |
-| /videos | Cypress video captures | These videos record the tests. You can disable video recording to save time. |
-| /screenshots | Cypress screenshots | Screenshots are captured in case of test failures for further analysis. |
+| Directory    | Description                           | How it's used                                                                                                       |
+| ------------ | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| /fixtures    | Mock deals                            | These mock deals are submitted to the API and then used for navigation and data assertion in the UI.                |
+| /integration | Spec files and page/element selectors | Spec files define the actual tests, and page/element selectors are used to locate UI elements.                      |
+| /plugins     | Unused. Cypress boilerplate           | Not used in this context.                                                                                           |
+| /support     | Cypress commands                      | Cypress commands are run in each test to call APIs, add deals to the database, and perform other necessary actions. |
+| /videos      | Cypress video captures                | These videos record the tests. You can disable video recording to save time.                                        |
+| /screenshots | Cypress screenshots                   | Screenshots are captured in case of test failures for further analysis.                                             |
 
 ---
 
@@ -77,20 +77,19 @@ Each test suite shares a similar directory structure:
 When creating custom cypress commands, the `cypress/unsafe-to-chain-command` lint warning can sometimes appear. The reason for this warning is usually not immediately obvious, but there are some examples in the cypress documentation which explain the concept of "unsafe chaining" quite well. Consider the `.each` command which iterates through array-like objects. The below code will extract and iterate over all the list items inside an unordered list in the DOM and yield the individual list items to the `$li` variable:
 
 ```javascript
-cy.get('ul > li').each(($li) => {
-
-});
+cy.get('ul > li').each(($li) => {});
 ```
 
 Now, imagine you want to yield each `<p>` element inside of `$li` to the next part of the command chain in the following way:
 
 ```javascript
-cy.get('ul > li').each(($li) => {
-  return cy.wrap($li).find('p');
-}).then(($p) => {
-
-});
+cy.get('ul > li')
+  .each(($li) => {
+    return cy.wrap($li).find('p');
+  })
+  .then(($p) => {});
 ```
+
 Unfortunately, `$p` will not be the `<p>` DOM element inside of the current `$li`, but will instead be the original list item yielded in the previous `.each` command. For this reason, chaining further commands which rely on the subject after `.each` is considered "unsafe" (you can read [here](https://docs.cypress.io/api/commands/each) for more details about `.each` specifically).
 
 Moving back to custom commands, these can sometimes show this lint warning despite appearing to yield the correct values and working in the test environment (see an example of this [here](https://github.com/cypress-io/cypress-example-kitchensink/issues/661)). The method for getting around this issue in this project has been to introduce an `ALIAS_KEY` constant which can be used to access values yielded from custom commands in the following way.
@@ -98,19 +97,17 @@ Moving back to custom commands, these can sometimes show this lint warning despi
 ```javascript
 // Custom cypress command which does something with the input and then yields a value
 Cypress.Commands.add('insertAndYieldLength', (itemToInsert) => {
-  cy.wrap(itemToInsert)
-    .then((item) => {
-      insertItem(item); // generic (external) function
-    });
+  cy.wrap(itemToInsert).then((item) => {
+    insertItem(item); // generic (external) function
+  });
   cy.wrap(itemToInsert.length).as(ALIAS_KEY.INSERT_AND_YIELD_LENGTH);
 });
 
 // Accessing the result of that command (in a test)
 cy.insertAndYieldLength(itemToInsert);
-cy.get(`@${ALIAS_KEY.INSERT_AND_YIELD_LENGTH}`)
-  .then((length) => {
-    // do something with length
-  });
+cy.get(`@${ALIAS_KEY.INSERT_AND_YIELD_LENGTH}`).then((length) => {
+  // do something with length
+});
 ```
 
 There is also a helper function called [`aliasSelector`](./support/alias-selector.js) which abstracts the logic of putting the `@` before the alias key.
