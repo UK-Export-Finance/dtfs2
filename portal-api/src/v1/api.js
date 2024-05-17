@@ -311,7 +311,10 @@ const getUtilisationReports = async (bankId, options) => {
     }
 
     if (excludeNotReceived && typeof excludeNotReceived !== 'boolean') {
-      console.error('Get utilisation reports failed with the following excludeNotReceived query: %s', excludeNotReceived);
+      console.error(
+        'Get utilisation reports failed with the following excludeNotReceived query: %s',
+        excludeNotReceived,
+      );
       throw new Error(`Invalid excludeNotReceived provided: ${excludeNotReceived} (expected a boolean)`);
     }
 
@@ -346,24 +349,23 @@ const getUtilisationReportById = async (id) => {
   }
 };
 
+/**
+ * Call the central API to get a bank
+ * @param {string} bankId
+ * @returns {Promise<import('./api-response-types').BankResponse>} response of API call
+ */
 const getBankById = async (bankId) => {
-  try {
-    if (!isValidBankId(bankId)) {
-      console.error('Get bank failed with the following bank ID %s', bankId);
-      return false;
-    }
-
-    const response = await axios({
-      method: 'get',
-      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}`,
-      headers: headers.central,
-    });
-
-    return { status: 200, data: response.data };
-  } catch (error) {
-    console.error('Unable to get bank by ID %o', error);
-    return { status: error?.response?.status || 500, data: 'Failed to get bank by ID' };
+  if (!isValidBankId(bankId)) {
+    throw new Error(`Invalid bank id: ${bankId}`);
   }
+
+  const response = await axios({
+    method: 'get',
+    url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}`,
+    headers: headers.central,
+  });
+
+  return response.data;
 };
 
 /**
