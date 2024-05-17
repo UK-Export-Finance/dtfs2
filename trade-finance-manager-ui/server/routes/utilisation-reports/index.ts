@@ -7,6 +7,7 @@ import { validateSqlId, validateUserTeam, validateTfmPaymentReconciliationFeatur
 import { getReportDownload } from '../../controllers/utilisation-reports/report-download';
 import { getUtilisationReportReconciliationByReportId } from '../../controllers/utilisation-reports/utilisation-report-reconciliation-for-report';
 import { getFindReportsByYear } from '../../controllers/utilisation-reports/find-reports-by-year';
+import { addPayment } from '../../controllers/utilisation-reports/add-payment';
 
 export const utilisationReportsRoutes = express.Router();
 
@@ -32,7 +33,5 @@ utilisationReportsRoutes.post(
   validateUserTeam(Object.values(PDC_TEAM_IDS)),
   validateSqlId('reportId'),
   validatePostAddPaymentRequestBody,
-  (req, res) => {
-    res.sendStatus(200);
-  },
+  addPayment,
 );

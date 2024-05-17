@@ -1,0 +1,36 @@
+{% macro render(params) %}
+  {% set feeRecords = params.reportedFeeDetails.feeRecords %}
+  {% set totalReportedPayments = params.reportedFeeDetails.totalReportedPayments %}
+  <table class="govuk-table"
+         data-module="moj-sortable-table"
+         data-cy="selected-reported-fees-details-table">
+    <caption class="govuk-table__caption govuk-table__caption--m">Selected reported fees details</caption>
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Facility ID</th>
+        <th scope="col" class="govuk-table__header">Exporter</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Reported fee</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Reported payments</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      {% for feeRecord in feeRecords %}
+        <tr class="govuk-table__row"
+            data-cy="selected-reported-fees-details-table-row--feeRecordId-{{ feeRecord.feeRecordId }}">
+          <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">{{ feeRecord.facilityId }}</th>
+          <td class="govuk-table__cell">{{ feeRecord.exporter }}</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric">{{ feeRecord.reportedFee }}</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric">{{ feeRecord.reportedPayment }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr class="govuk-table__row">
+        <td colspan="4"
+            class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold">
+          Total reported payments <span class="govuk-!-margin-left-2">{{ totalReportedPayments }}</span>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+{% endmacro %}

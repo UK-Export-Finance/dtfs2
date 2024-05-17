@@ -1,0 +1,17 @@
+{% import "./_macros/selected-reported-fees-details-table.njk" as selectedReportedFeesDetailsTable %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}Add a payment{% endblock%}
+{% block content %}
+  <div class="govuk-grid-row govuk-!-padding-top-7">
+    <div class="govuk-grid-column-one-half">
+      <span class="govuk-caption-l" data-cy="add-a-payment-heading-caption">{{ bank.name }}, {{ reportPeriod }}</span>
+      <h1 class="govuk-heading-l">Add a payment</h1>
+    </div>
+  </div>
+  {{ selectedReportedFeesDetailsTable.render({
+    reportedFeeDetails: reportedFeeDetails
+    }) }}
+{% endblock %}
+{% block sub_content %}{% endblock %}

@@ -1,15 +1,12 @@
-import { CURRENCY, Currency, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { Currency, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { NextFunction, Request, Response } from 'express';
 import { asUserSession } from '../../helpers/express-session';
 import { AddPaymentErrorKey } from '../../controllers/utilisation-reports/helpers';
-
-const CURRENCY_REGEX_GROUP = `(?<currency>${Object.values(CURRENCY).join('|')})`;
-const CURRENCY_REGEX = new RegExp(CURRENCY_REGEX_GROUP);
-
-const FEE_RECORD_STATUS_REGEX_GROUP = `(?<status>${Object.values(FEE_RECORD_STATUS).join('|')})`;
-const FEE_RECORD_STATUS_REGEX = new RegExp(FEE_RECORD_STATUS_REGEX_GROUP);
-
-const FEE_RECORD_CHECKBOX_KEY_REGEX = new RegExp(`feeRecordId-\\d+-reportedPaymentsCurrency-${CURRENCY_REGEX_GROUP}-status-${FEE_RECORD_STATUS_REGEX_GROUP}`);
+import {
+  getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId,
+  getFeeRecordStatusFromPremiumPaymentsCheckboxId,
+  getPremiumPaymentsCheckboxIdsFromObjectKeys,
+} from '../../helpers/premium-payments-table-checkbox-id-helper';
 
 const isRequestBodyAnObject = (body: unknown): body is object => !body || typeof body === 'object';
 
@@ -32,17 +29,14 @@ const mapCheckedCheckboxesToRecord = (checkedCheckboxIds: string[]): Record<stri
 const allSelectedFeeRecordsHaveSameCurrency = (checkedCheckboxIds: string[]) => {
   const selectedPaymentCurrencies = new Set<Currency>();
   return checkedCheckboxIds.every((checkboxId) => {
-    const { currency } = checkboxId.match(CURRENCY_REGEX)!.groups!;
-    selectedPaymentCurrencies.add(currency as Currency);
+    const currency = getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId(checkboxId);
+    selectedPaymentCurrencies.add(currency);
     return selectedPaymentCurrencies.size === 1;
   });
 };
 
 const getSetOfSelectedFeeRecordStatuses = (checkedCheckboxIds: string[]): Set<FeeRecordStatus> => {
-  const arrayOfStatuses = checkedCheckboxIds.map((checkboxId) => {
-    const { status } = checkboxId.match(FEE_RECORD_STATUS_REGEX)!.groups!;
-    return status as FeeRecordStatus;
-  });
+  const arrayOfStatuses = checkedCheckboxIds.map((checkboxId) => getFeeRecordStatusFromPremiumPaymentsCheckboxId(checkboxId));
   return new Set(arrayOfStatuses);
 };
 
@@ -60,7 +54,7 @@ export const validatePostAddPaymentRequestBody = (req: Request, res: Response, n
     return res.render('_partials/problem-with-service.njk', { user });
   }
 
-  const checkedCheckboxIds = Object.keys(body).filter((key) => FEE_RECORD_CHECKBOX_KEY_REGEX.test(key));
+  const checkedCheckboxIds = getPremiumPaymentsCheckboxIdsFromObjectKeys(body);
 
   if (checkedCheckboxIds.length === 0) {
     return redirectWithError(req, res, reportId, 'no-fee-records-selected');
