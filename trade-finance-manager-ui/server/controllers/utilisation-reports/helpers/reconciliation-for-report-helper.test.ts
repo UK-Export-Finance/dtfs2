@@ -140,19 +140,23 @@ describe('reconciliation-for-report-helper', () => {
           [property]: currencyAndAmount,
         }));
 
-        // Act
-        const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems);
+        it("sets the 'dataSortValue' such that the items are ordered alphabetically by currency and numerically by amount in ascending order", () => {
+          // Act
+          const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems);
 
-        it(`returns ${UNSORTED_CURRENCY_AND_AMOUNTS.length} fee record view model items`, () => {
           // Assert
-          expect(feeRecordViewModelItems).toHaveLength(UNSORTED_CURRENCY_AND_AMOUNTS.length);
+          SORTED_AND_FORMATTED_CURRENCY_AND_AMOUNTS.forEach(({ dataSortValue }, index) => {
+            expect(feeRecordViewModelItems[index][property].dataSortValue).toBe(dataSortValue);
+          });
         });
 
-        SORTED_AND_FORMATTED_CURRENCY_AND_AMOUNTS.forEach((expectedValue, index) => {
-          it(`sets the 'dataSortValue' to '${expectedValue.dataSortValue}' and 'formattedCurrencyAndAmount' to '${expectedValue.formattedCurrencyAndAmount}' for view model item ${index}`, () => {
-            // Arrange
-            expect(feeRecordViewModelItems[index][property].formattedCurrencyAndAmount).toBe(expectedValue.formattedCurrencyAndAmount);
-            expect(feeRecordViewModelItems[index][property].dataSortValue).toBe(expectedValue.dataSortValue);
+        it("sets the 'formattedCurrencyAndAmount' to be the currency followed by the amount using two decimal places and comma-separated thousands", () => {
+          // Act
+          const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems);
+
+          // Assert
+          SORTED_AND_FORMATTED_CURRENCY_AND_AMOUNTS.forEach(({ formattedCurrencyAndAmount }, index) => {
+            expect(feeRecordViewModelItems[index][property].formattedCurrencyAndAmount).toBe(formattedCurrencyAndAmount);
           });
         });
       });

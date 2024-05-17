@@ -1,7 +1,7 @@
 import { FeeRecordStatus, getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
 import { FeeRecordItem } from '../../../api-response-types';
 import { FeeRecordDisplayStatus, FeeRecordViewModelItem } from '../../../types/view-models';
-import { getFeeRecordItemIndexToDataSortValueMap } from './get-fee-record-item-index-to-data-sort-value-map-helper';
+import { GetKeyToSortValueMapItem, getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
 
 const feeRecordStatusToDisplayStatus: Record<FeeRecordStatus, FeeRecordDisplayStatus> = {
   TO_DO: 'TO DO',
@@ -15,13 +15,14 @@ type SortableFeeRecordItemProperties = 'reportedFees' | 'reportedPayments' | 'to
 
 /**
  * Maps the fee record items to only the supplied property
- * with the fee record index
+ * with the {@link GetKeyToSortValueMapItem} shape, using
+ * the fee record index as the key
  * @param feeRecordItems - The fee record items
  * @param property - The property to extract
- * @returns The property with the fee record index
+ * @returns The property with the fee record index as the key
  */
-const getPropertyWithFeeRecordIndex = (feeRecordItems: FeeRecordItem[], property: SortableFeeRecordItemProperties) =>
-  feeRecordItems.map((feeRecordItem, feeRecordIndex) => ({ ...feeRecordItem[property], feeRecordIndex }));
+const getPropertyWithFeeRecordIndexAsKey = (feeRecordItems: FeeRecordItem[], property: SortableFeeRecordItemProperties): GetKeyToSortValueMapItem[] =>
+  feeRecordItems.map((feeRecordItem, feeRecordIndex) => ({ ...feeRecordItem[property], key: feeRecordIndex }));
 
 /**
  * Maps the fee record items to the fee record view model items
@@ -29,11 +30,15 @@ const getPropertyWithFeeRecordIndex = (feeRecordItems: FeeRecordItem[], property
  * @returns The fee record view model items
  */
 export const mapFeeRecordItemsToFeeRecordViewModelItems = (feeRecordItems: FeeRecordItem[]): FeeRecordViewModelItem[] => {
-  const reportedFeesDataSortValueMap = getFeeRecordItemIndexToDataSortValueMap(getPropertyWithFeeRecordIndex(feeRecordItems, 'reportedFees'));
-  const reportedPaymentsDataSortValueMap = getFeeRecordItemIndexToDataSortValueMap(getPropertyWithFeeRecordIndex(feeRecordItems, 'reportedPayments'));
-  const totalReportedPaymentsDataSortValueMap = getFeeRecordItemIndexToDataSortValueMap(getPropertyWithFeeRecordIndex(feeRecordItems, 'totalReportedPayments'));
-  const paymentsReceivedDataSortValueMap = getFeeRecordItemIndexToDataSortValueMap(getPropertyWithFeeRecordIndex(feeRecordItems, 'paymentsReceived'));
-  const totalPaymentsReceivedDataSortValueMap = getFeeRecordItemIndexToDataSortValueMap(getPropertyWithFeeRecordIndex(feeRecordItems, 'totalPaymentsReceived'));
+  const reportedFeesDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(getPropertyWithFeeRecordIndexAsKey(feeRecordItems, 'reportedFees'));
+  const reportedPaymentsDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(getPropertyWithFeeRecordIndexAsKey(feeRecordItems, 'reportedPayments'));
+  const totalReportedPaymentsDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
+    getPropertyWithFeeRecordIndexAsKey(feeRecordItems, 'totalReportedPayments'),
+  );
+  const paymentsReceivedDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(getPropertyWithFeeRecordIndexAsKey(feeRecordItems, 'paymentsReceived'));
+  const totalPaymentsReceivedDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
+    getPropertyWithFeeRecordIndexAsKey(feeRecordItems, 'totalPaymentsReceived'),
+  );
 
   return feeRecordItems.map((feeRecordItem, feeRecordIndex) => ({
     id: feeRecordItem.id,
