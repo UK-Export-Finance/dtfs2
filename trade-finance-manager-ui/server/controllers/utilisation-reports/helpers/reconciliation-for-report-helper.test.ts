@@ -110,7 +110,7 @@ describe('reconciliation-for-report-helper', () => {
       },
     );
 
-    describe('when sorting the amounts columns for multiple fee records', () => {
+    describe('when there are multiple fee record items', () => {
       const UNSORTED_CURRENCY_AND_AMOUNTS: CurrencyAndAmount[] = [
         { currency: 'GBP', amount: 1000.0 },
         { currency: 'EUR', amount: 1000.0 },
@@ -127,31 +127,35 @@ describe('reconciliation-for-report-helper', () => {
         { formattedCurrencyAndAmount: 'EUR 300.00', dataSortValue: 1 },
       ];
 
-      it.each([
+      describe.each([
         { property: 'reportedFees' },
         { property: 'reportedPayments' },
         { property: 'totalReportedPayments' },
         { property: 'paymentsReceived' },
         { property: 'totalPaymentsReceived' },
-      ] as const)(
-        "correctly sorts and assigns the 'dataSortValue' and 'formattedCurrencyAndAmount' properties when converting the '$property' column",
-        ({ property }) => {
-          // Arrange
-          const feeRecordItems: FeeRecordItem[] = UNSORTED_CURRENCY_AND_AMOUNTS.map((currencyAndAmount) => ({
-            ...aFeeRecordItem(),
-            [property]: currencyAndAmount,
-          }));
+      ] as const)("when sorting and formatting the '$property' column", ({ property }) => {
+        // Arrange
+        const feeRecordItems: FeeRecordItem[] = UNSORTED_CURRENCY_AND_AMOUNTS.map((currencyAndAmount) => ({
+          ...aFeeRecordItem(),
+          [property]: currencyAndAmount,
+        }));
 
-          // Act
-          const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems);
+        // Act
+        const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems);
 
+        it(`returns ${UNSORTED_CURRENCY_AND_AMOUNTS.length} fee record view model items`, () => {
           // Assert
-          expect(feeRecordViewModelItems).toHaveLength(feeRecordItems.length);
-          SORTED_AND_FORMATTED_CURRENCY_AND_AMOUNTS.forEach((expectedValue, index) => {
-            expect(feeRecordViewModelItems[index][property]).toEqual(expectedValue);
+          expect(feeRecordViewModelItems).toHaveLength(UNSORTED_CURRENCY_AND_AMOUNTS.length);
+        });
+
+        SORTED_AND_FORMATTED_CURRENCY_AND_AMOUNTS.forEach((expectedValue, index) => {
+          it(`sets the 'dataSortValue' to '${expectedValue.dataSortValue}' and 'formattedCurrencyAndAmount' to '${expectedValue.formattedCurrencyAndAmount}' for view model item ${index}`, () => {
+            // Arrange
+            expect(feeRecordViewModelItems[index][property].formattedCurrencyAndAmount).toBe(expectedValue.formattedCurrencyAndAmount);
+            expect(feeRecordViewModelItems[index][property].dataSortValue).toBe(expectedValue.dataSortValue);
           });
-        },
-      );
+        });
+      });
     });
 
     describe('when sorting the payments received and total payments received columns for fee records with some null values', () => {
