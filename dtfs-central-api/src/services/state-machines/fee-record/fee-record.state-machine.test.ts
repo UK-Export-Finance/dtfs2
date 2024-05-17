@@ -27,7 +27,7 @@ describe('FeeRecordStateMachine', () => {
     const INVALID_TO_DO_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_TO_DO_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_TO_DO_FEE_RECORD_EVENT_TYPES.length !== 0) {
-      it.each(difference(FEE_RECORD_EVENT_TYPES, VALID_TO_DO_FEE_RECORD_EVENT_TYPES))(
+      it.each(INVALID_TO_DO_FEE_RECORD_EVENT_TYPES)(
         "throws an 'InvalidStateMachineTransitionError' for event type %p",
         async (eventType: FeeRecordEventType) => {
           // Arrange

@@ -12,7 +12,7 @@ type EntityParams = RequiredParams & {
 };
 
 export class InvalidStateMachineTransitionError extends ApiError {
-  public constructor(message: string) {
+  private constructor(message: string) {
     super({
       status: HttpStatusCode.BadRequest,
       message,
