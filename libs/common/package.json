@@ -32,7 +32,7 @@
     "db:reset": "npm run db:drop-all && npm run db:migrate",
     "lint": "eslint --color **/*.{ts,js} --ignore-path ../../.eslintignore",
     "lint:fix": "eslint --fix --color **/*.{ts,js}",
-    "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js}",
+    "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js} --ignore-path ../../.prettierignore",
     "prettier:fix": "prettier --write **/*.{ts,js}",
     "type-check": "tsc --noEmit",
     "typeorm": "typeorm-ts-node-commonjs",
