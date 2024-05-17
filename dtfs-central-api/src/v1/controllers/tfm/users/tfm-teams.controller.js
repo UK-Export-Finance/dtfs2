@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../../drivers/db-client').default;
@@ -18,8 +18,14 @@ exports.createTfmTeam = async (req, res) => {
 
   try {
     validateAuditDetails(auditDetails);
-  } catch ({ message }) {
-    return res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(400).send({
+        status: 400,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
   }
 
   if (auditDetails.userType !== 'tfm') {
