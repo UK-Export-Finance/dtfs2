@@ -46,6 +46,7 @@ node bss-ewcs/migrate-deals.js
 
 This script will map the V1 deals to the V2 structure and add them to the deals collection. Facilities associated with these deals will also be added to the facilities collection.
 mar
+
 ## GEF Scripts :rocket:
 
 ### Migrate All GEF Deals :money_with_wings:
