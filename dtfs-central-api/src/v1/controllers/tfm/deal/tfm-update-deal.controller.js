@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
@@ -90,8 +90,14 @@ exports.updateDealPut = async (req, res) => {
 
   try {
     validateAuditDetails(auditDetails);
-  } catch ({ message }) {
-    res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(400).send({
+        status: 400,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
   }
 
   const existingDeal = await findOneDeal(dealId);
@@ -143,8 +149,14 @@ exports.updateDealSnapshotPut = async (req, res) => {
 
   try {
     validateAuditDetailsAndUserType(auditDetails, 'portal');
-  } catch ({ message }) {
-    return res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(400).send({
+        status: 400,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
   }
 
   const deal = await findOneDeal(dealId);
