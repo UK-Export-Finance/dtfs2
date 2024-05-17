@@ -49,7 +49,7 @@ const uploadReportAndSendNotification = async (req, res) => {
     validateReportIsInReportNotReceivedState(report);
     const azureFileInfo = await saveUtilisationReportFileToAzure(file, bankId);
     const { dateUploaded } = await api.saveUtilisationReport(
-      report.reportId,
+      report.id,
       parsedReportData,
       parsedUser,
       azureFileInfo,

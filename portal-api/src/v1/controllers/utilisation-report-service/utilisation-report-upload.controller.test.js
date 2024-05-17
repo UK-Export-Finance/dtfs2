@@ -26,6 +26,9 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
     buffer: Buffer.from('test'),
   };
 
+  const PARSED_REPORT_DATA = [];
+  const PARSED_USER = { firstname: 'first', surname: 'last', bank: { id: '123' } };
+
   const getHttpMocks = () =>
     httpMocks.createMocks(
       {
@@ -105,10 +108,12 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
   it('uploads report and sends notification emails', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
-    jest.mocked(getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
+    const report = aNotReceivedUtilisationReportResponse();
+    const fileInfo = { folder: 'folder', filename: 'info', fullPath: 'folder/path', url: 'url', mimetype: 'text/csv' }
+    jest.mocked(getUtilisationReports).mockResolvedValue([report]);
     jest
       .mocked(saveUtilisationReportFileToAzure)
-      .mockResolvedValue({ folder: 'folder', filename: 'info', fullPath: 'folder/path', url: 'url' });
+      .mockResolvedValue(fileInfo);
     jest.mocked(saveUtilisationReport).mockResolvedValue({ dateUploaded: '2024-12-21' });
 
     // Act
@@ -117,6 +122,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
     // Assert
     expect(saveUtilisationReportFileToAzure).toHaveBeenCalledTimes(1);
     expect(saveUtilisationReport).toHaveBeenCalledTimes(1);
+    expect(saveUtilisationReport).toHaveBeenCalledWith(report.id, PARSED_REPORT_DATA, PARSED_USER, fileInfo);
     expect(sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam).toHaveBeenCalledTimes(1);
     expect(sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam).toHaveBeenCalledTimes(1);
   });
