@@ -1,5 +1,5 @@
 import { createRequest } from 'node-mocks-http';
-import { getAndClearRedirectSessionData } from './get-and-clear-redirect-session-data';
+import { getAndClearAddPaymentFieldsFromRedirectSessionData } from './get-and-clear-add-payment-fields-from-redirect-session-data';
 import { AddPaymentErrorKey } from '../helpers';
 
 type RedirectSessionData = {
@@ -33,7 +33,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       });
 
       // Act
-      const { addPaymentErrorSummary, isCheckboxChecked } = getAndClearRedirectSessionData(req);
+      const { addPaymentErrorSummary, isCheckboxChecked } = getAndClearAddPaymentFieldsFromRedirectSessionData(req);
 
       // Assert
       assertSessionHasBeenCleared(req);
@@ -50,7 +50,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       });
 
       // Act / Assert
-      expect(() => getAndClearRedirectSessionData(req)).toThrow(Error);
+      expect(() => getAndClearAddPaymentFieldsFromRedirectSessionData(req)).toThrow(Error);
       assertSessionHasBeenCleared(req);
     });
 
@@ -67,7 +67,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       });
 
       // Act
-      const { addPaymentErrorSummary } = getAndClearRedirectSessionData(req);
+      const { addPaymentErrorSummary } = getAndClearAddPaymentFieldsFromRedirectSessionData(req);
 
       // Assert
       assertSessionHasBeenCleared(req);
@@ -89,7 +89,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       });
 
       // Act
-      const { isCheckboxChecked } = getAndClearRedirectSessionData(req);
+      const { isCheckboxChecked } = getAndClearAddPaymentFieldsFromRedirectSessionData(req);
 
       // Assert
       assertSessionHasBeenCleared(req);

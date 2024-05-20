@@ -25,6 +25,31 @@ const redirectWithError = (
   return res.redirect(`/utilisation-reports/${reportId}`);
 };
 
+const mapCheckedCheckboxesToRecord = (checkedCheckboxIds: string[]): Record<string, true | undefined> => {
+  return checkedCheckboxIds.reduce((obj, checkboxId) => ({ ...obj, [checkboxId]: true }), {});
+};
+
+const allSelectedFeeRecordsHaveSameCurrency = (checkedCheckboxIds: string[]) => {
+  const selectedPaymentCurrencies = new Set<Currency>();
+  return checkedCheckboxIds.every((checkboxId) => {
+    const { currency } = checkboxId.match(CURRENCY_REGEX)!.groups!;
+    selectedPaymentCurrencies.add(currency as Currency);
+    return selectedPaymentCurrencies.size === 1;
+  });
+};
+
+const getSetOfSelectedFeeRecordStatuses = (checkedCheckboxIds: string[]): Set<FeeRecordStatus> => {
+  const arrayOfStatuses = checkedCheckboxIds.map((checkboxId) => {
+    const { status } = checkboxId.match(FEE_RECORD_STATUS_REGEX)!.groups!;
+    return status as FeeRecordStatus;
+  });
+  return new Set(arrayOfStatuses);
+};
+
+const allStatusesMatch = (statuses: Set<FeeRecordStatus>) => {
+  return statuses.size === 1;
+};
+
 export const validatePostAddPaymentRequestBody = (req: Request, res: Response, next: NextFunction) => {
   const { user } = asUserSession(req.session);
   const { reportId } = req.params;
@@ -35,38 +60,23 @@ export const validatePostAddPaymentRequestBody = (req: Request, res: Response, n
     return res.render('_partials/problem-with-service.njk', { user });
   }
 
-  const feeRecordCheckboxIds = Object.keys(body).filter((key) => FEE_RECORD_CHECKBOX_KEY_REGEX.test(key));
+  const checkedCheckboxIds = Object.keys(body).filter((key) => FEE_RECORD_CHECKBOX_KEY_REGEX.test(key));
 
-  if (feeRecordCheckboxIds.length === 0) {
+  if (checkedCheckboxIds.length === 0) {
     return redirectWithError(req, res, reportId, 'no-fee-records-selected');
   }
 
-  const checkedCheckboxIds = feeRecordCheckboxIds.reduce((obj, checkboxId) => ({ ...obj, [checkboxId]: true }), {});
-
-  const selectedPaymentCurrencies = new Set<Currency>();
-  const selectedFeeRecordsHaveSamePaymentCurrency = feeRecordCheckboxIds.every((checkboxId) => {
-    const { currency } = checkboxId.match(CURRENCY_REGEX)!.groups!;
-    selectedPaymentCurrencies.add(currency as Currency);
-    return selectedPaymentCurrencies.size === 1;
-  });
-
-  if (!selectedFeeRecordsHaveSamePaymentCurrency) {
-    return redirectWithError(req, res, reportId, 'different-fee-record-payment-currencies', checkedCheckboxIds);
+  if (!allSelectedFeeRecordsHaveSameCurrency(checkedCheckboxIds)) {
+    return redirectWithError(req, res, reportId, 'different-fee-record-payment-currencies', mapCheckedCheckboxesToRecord(checkedCheckboxIds));
   }
 
-  const selectedFeeRecordStatuses = new Set<FeeRecordStatus>();
-  const selectedFeeRecordsHaveSameStatus = feeRecordCheckboxIds.every((checkboxId) => {
-    const { status } = checkboxId.match(FEE_RECORD_STATUS_REGEX)!.groups!;
-    selectedFeeRecordStatuses.add(status as FeeRecordStatus);
-    return selectedFeeRecordStatuses.size === 1;
-  });
-
-  if (!selectedFeeRecordsHaveSameStatus) {
-    return redirectWithError(req, res, reportId, 'different-fee-record-statuses', checkedCheckboxIds);
+  const selectedFeeRecordStatuses = getSetOfSelectedFeeRecordStatuses(checkedCheckboxIds);
+  if (!allStatusesMatch(selectedFeeRecordStatuses)) {
+    return redirectWithError(req, res, reportId, 'different-fee-record-statuses', mapCheckedCheckboxesToRecord(checkedCheckboxIds));
   }
 
-  if (selectedFeeRecordStatuses.has('DOES_NOT_MATCH') && feeRecordCheckboxIds.length > 1) {
-    return redirectWithError(req, res, reportId, 'multiple-does-not-match-selected', checkedCheckboxIds);
+  if (selectedFeeRecordStatuses.has('DOES_NOT_MATCH') && checkedCheckboxIds.length > 1) {
+    return redirectWithError(req, res, reportId, 'multiple-does-not-match-selected', mapCheckedCheckboxesToRecord(checkedCheckboxIds));
   }
 
   return next();

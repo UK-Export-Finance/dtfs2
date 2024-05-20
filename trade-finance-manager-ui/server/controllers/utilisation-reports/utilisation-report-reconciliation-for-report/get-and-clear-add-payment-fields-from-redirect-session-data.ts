@@ -7,7 +7,7 @@ const clearRedirectSessionData = (req: Request): void => {
   delete req.session.checkedCheckboxIds;
 };
 
-export const getAndClearRedirectSessionData = (
+export const getAndClearAddPaymentFieldsFromRedirectSessionData = (
   req: Request,
 ): {
   addPaymentErrorSummary: [ErrorSummaryViewModel] | undefined;
