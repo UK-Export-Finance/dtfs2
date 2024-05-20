@@ -18,8 +18,6 @@ const { setupDeletionAuditLogsCollection, deleteDeletionAuditLogsCollection } = 
 const init = async () => {
   logger.info('REINSERTING MOCKS', { colour: LOGGER_COLOURS.bright });
   try {
-    console.info({ CSE: process.env.CHANGE_STREAM_ENABLED });
-
     const portalToken = await createAndLogInAsInitialUser();
 
     if (process.env.CHANGE_STREAM_ENABLED === 'true') {
