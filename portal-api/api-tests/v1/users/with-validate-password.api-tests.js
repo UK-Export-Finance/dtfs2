@@ -119,9 +119,8 @@ function itShouldReturnAnErrorIf(testCases) {
     async ({
       makeRequestWithModifiedPayload,
       expectResponseErrorToMatchExpected = (body) => expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR),
-      middleware,
     }) => {
-      const { status, body } = await makeRequestWithModifiedPayload(middleware);
+      const { status, body } = await makeRequestWithModifiedPayload();
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);

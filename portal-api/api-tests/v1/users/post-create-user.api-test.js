@@ -86,26 +86,40 @@ describe('a user', () => {
     });
 
     describe('it creates the user', () => {
-      it('it creates the user if all provided data is valid', async () => {
-        // await createUser(MOCK_USER);
-        // const { status, body } = await as(ADMIN).get(BASE_URL);
-        const { status, body } = await createUser(MOCK_USER);
+      it('it creates the user with Admin role if all provided data is valid', async () => {
+        const userWithRoles = {
+          ...MOCK_USER,
+          roles: ['Admin'],
+        };
+        const { status, body } = await createUser(userWithRoles);
 
         expect(status).toEqual(200);
         expect(body).toStrictEqual({
           success: true,
           user: {
-            username: MOCK_USER.username,
-            email: MOCK_USER.email,
-            roles: MOCK_USER.roles,
-            bank: MOCK_USER.bank,
+            username: userWithRoles.username,
+            email: userWithRoles.email,
+            roles: userWithRoles.roles,
+            bank: userWithRoles.bank,
             _id: expect.any(String),
-            firstname: MOCK_USER.firstname,
-            surname: MOCK_USER.surname,
+            firstname: userWithRoles.firstname,
+            surname: userWithRoles.surname,
             timezone: 'Europe/London',
             'user-status': STATUS.ACTIVE,
           }
         });
+      });
+
+      it('does not create a user with Maker and Checker roles', async () => {
+        const userWithBothRoles = {
+          ...MOCK_USER,
+          roles: ['Maker', 'Checker'],
+        };
+
+        const { status, body } = await createUser(userWithBothRoles);
+
+        expect(status).toEqual(400);
+        expect(body).toHaveProperty('error', 'Invalid combination of roles');
       });
 
       it('it creates the user if the user creation request has the read-only role repeated', async () => {

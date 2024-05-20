@@ -1,17 +1,15 @@
-// const { userHasAtLeastOneAllowedRole } = require('./user-has-at-least-one-allowed-role');
-
 /**
  * Creates a middleware that returns a 401 error if the current user logs with
  * old password have at least one of the allowedRoles, and calls the next handler otherwise.
  * @param {{ allowedRoles: string[] }}
  * @returns {(req, res, next) => void}
  */
-const validateUserIsActingOnSelfToChangePasswordOrIsAdmin = (req, res, next) => {
+const validateSelfOrAdmin = (req, res, next) => {
   if (!req.user) {
     return res.status(401).send('Unauthorized');
   }
 
-  if (req.user._id !== req.params._id && !req.user.roles.includes('admin')) {
+  if (req?.user?._id !== req?.params?._id && !req?.user?.roles?.includes('admin')) {
     return res.status(403).send('Forbidden');
   }
 
@@ -19,5 +17,5 @@ const validateUserIsActingOnSelfToChangePasswordOrIsAdmin = (req, res, next) => 
 };
 
 module.exports = {
-  validateUserIsActingOnSelfToChangePasswordOrIsAdmin,
+  validateSelfOrAdmin,
 }

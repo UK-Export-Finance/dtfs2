@@ -31,26 +31,6 @@ const userService = new UserService();
 const signInLinkService = new SignInLinkService(randomGenerator, hasher, userRepository, userService);
 const signInLinkController = new SignInLinkController(signInLinkService);
 
-// const isAdmin = (req, res, next) => {
-//   if (req.user && req.user.roles.includes('admin')) {
-//     // User is an admin, allow access to the route
-//     next();
-//   } else {
-//     // User is not an admin, send a 403 Forbidden response
-//     res.status(403).json({ error: 'Unauthorized' });
-//   }
-// };
-
-// const isUserOrAdmin = (req, res, next) => {
-//   if (req.user._id.toString() === req.params._id || req.user.roles.includes('admin')) {
-//       next();
-//     } else {
-//       res.status(403).send('Unauthorized');
-//     }
-
-
-// };
-
 module.exports.list = (req, res, next) => {
   list((error, users) => {
     if (error) {

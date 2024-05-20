@@ -17,6 +17,8 @@ const MOCK_USER = { ...users.barclaysBankMaker1, username: temporaryUsernameAndE
 describe('a user', () => {
   let aNonAdmin;
   let anAdmin;
+  let aMaker;
+  let aChecker;
 
   beforeAll(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
@@ -248,6 +250,24 @@ describe('a user', () => {
       const { status } = await as({ token }).get('/v1/validate');
 
       expect(status).toEqual(401);
+    });
+
+    it('does not allow a Maker to create a user', async () => {
+      const userToCreate = { ...MOCK_USER, roles: ['Maker'] };
+
+      const { status, body } = await as(aMaker).post(userToCreate).to('/v1/users');
+
+      expect(status).toEqual(403);
+      expect(body).toHaveProperty('error', 'Forbidden');
+    });
+
+    it('does not allow a Checker to create a user', async () => {
+      const userToCreate = { ...MOCK_USER, roles: ['Checker'] };
+
+      const { status, body } = await as(aChecker).post(userToCreate).to('/v1/users');
+
+      expect(status).toEqual(403);
+      expect(body).toHaveProperty('error', 'Forbidden');
     });
   });
 

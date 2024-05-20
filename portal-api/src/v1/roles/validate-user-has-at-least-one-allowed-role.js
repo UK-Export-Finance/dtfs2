@@ -13,6 +13,7 @@ const validateUserHasAtLeastOneAllowedRole = ({
   const { user } = req;
 
   if (!user) {
+    console.error(`Failed to create user session with status ${allowedRoles}: user is null`);
     throw new Error(`Failed to create user session with status ${allowedRoles}: user is null`);
   }
 
