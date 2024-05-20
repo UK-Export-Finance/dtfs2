@@ -6,14 +6,19 @@ import { postAuditDetails, postDeletionAuditDetails } from './changeStreamApi';
 jest.mock('axios', () => jest.fn(() => Promise.resolve('mockResponse')));
 
 describe('changeStreamApi', () => {
+  const originalEnv = process.env;
   beforeEach(() => {
     jest.clearAllMocks();
     process.env = {
-      ...process.env,
+      ...originalEnv,
       AUDIT_API_URL: 'audit API url',
       AUDIT_API_USERNAME: 'audit API username',
       AUDIT_API_PASSWORD: 'audit API password',
     };
+  });
+
+  afterAll(() => {
+    process.env = originalEnv;
   });
 
   describe('postAuditDetails', () => {
@@ -66,6 +71,7 @@ describe('changeStreamApi', () => {
       await expect(postAuditDetails(mockChangeStreamDocument)).rejects.toThrow();
     });
   });
+
   describe('postDeletionAuditDetails', () => {
     const now = new Date();
     const mockDeletionChangeStreamDocument: ChangeStreamInsertDocument<DeletionAuditLog> = {
@@ -94,7 +100,7 @@ describe('changeStreamApi', () => {
       },
     };
 
-    it('should call api when called with a valid change stream document', async () => {
+    it('should call the change stream api when called with a valid change stream document', async () => {
       await postDeletionAuditDetails(mockDeletionChangeStreamDocument);
 
       expect(axios).toHaveBeenCalledWith({

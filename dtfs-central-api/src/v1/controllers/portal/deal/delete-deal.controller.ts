@@ -1,5 +1,5 @@
 import { deleteDocumentWithAuditLogs, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
-import { AuditDetails, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { AuditDetails, InvalidAuditDetailsError, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { Response } from 'express';
 import { findOneDeal } from './get-deal.controller';
@@ -17,10 +17,10 @@ export const deleteDeal = async (req: CustomExpressRequest<{ params: { id: strin
   try {
     validateAuditDetailsAndUserType(auditDetails, 'portal');
   } catch (error) {
-    if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
+    if (error instanceof InvalidAuditDetailsError) {
       return res.status(400).send({
         status: 400,
-        message: `Invalid auditDetails, ${error.message.toString()}`,
+        message: `Invalid auditDetails, ${error.message}`,
       });
     }
     return res.status(500).send({ status: 500, error });
