@@ -3,9 +3,7 @@ import { add } from 'date-fns';
 import { AuditDetails, MongoDbCollectionName } from '../types';
 import { MongoDbClient } from '../mongo-db-client';
 import { generateAuditDatabaseRecordFromAuditDetails } from './generate-audit-database-record';
-import { changeStreamConfig } from './config';
-
-const { DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS } = changeStreamConfig;
+import { InvalidEnvironmentVariableError } from '../errors';
 
 type DeleteDocumentWithAuditLogsParams = {
   documentId: ObjectId;
@@ -15,6 +13,12 @@ type DeleteDocumentWithAuditLogsParams = {
 };
 
 export const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, db, auditDetails }: DeleteDocumentWithAuditLogsParams) => {
+  const { DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS } = process.env;
+
+  if (!DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS) {
+    throw new InvalidEnvironmentVariableError('DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS not set');
+  }
+
   const client = await db.getClient();
   const session = client.startSession();
 
