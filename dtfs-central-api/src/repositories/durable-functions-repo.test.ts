@@ -1,6 +1,13 @@
-import { DURABLE_FUNCTIONS_LOG, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { AuditDetails, DURABLE_FUNCTIONS_LOG, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { deleteManyWithAuditLogs } from '@ukef/dtfs2-common/change-stream';
 import db from '../drivers/db-client';
 import { deleteAllCompleteAcbsDurableFunctionLogs, deleteAllDurableFunctionLogs } from './durable-functions-repo';
+
+// const mockDeleteManyWithAuditLogs = jest.fn();
+
+jest.mock('@ukef/dtfs2-common/change-stream');
+
+const { generateSystemAuditDetails } = jest.requireActual<{ generateSystemAuditDetails: () => AuditDetails }>('@ukef/dtfs2-common/change-stream');
 
 describe('durable-functions-repo', () => {
   afterEach(() => {
@@ -23,52 +30,65 @@ describe('durable-functions-repo', () => {
   ];
 
   describe.each(deleteTestCases)('$testCase', ({ expectedDeleteManyCalledWith, makeRequest }) => {
-    const successfulDeleteManyResponse = { acknowledged: true, deletedCount: 1 };
+    const successfulDeleteManyResponse = { acknowledged: true };
     const successfulDeleteManyMock = async () => Promise.resolve(successfulDeleteManyResponse);
 
-    it('calls the DB with the correct collection name', async () => {
-      // Arrange
-      const deleteManyMock = jest.fn(() => successfulDeleteManyMock());
-      const getCollectionMock = jest.fn().mockResolvedValue({
-        deleteMany: deleteManyMock,
+    if (process.env.CHANGE_STREAM_ENABLED === 'true') {
+      it('calls deleteManyWithAuditLogs with the correct paramet', async () => {
+        await makeRequest(generateSystemAuditDetails());
+
+        expect(deleteManyWithAuditLogs).toHaveBeenCalledWith({
+          filter: expectedDeleteManyCalledWith,
+          collectionName: MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG,
+          db,
+          auditDetails: generateSystemAuditDetails(),
+        });
       });
-      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
+    } else {
+      it('calls the DB with the correct collection name', async () => {
+        // Arrange
+        const deleteManyMock = jest.fn(() => successfulDeleteManyMock());
+        const getCollectionMock = jest.fn().mockResolvedValue({
+          deleteMany: deleteManyMock,
+        });
+        jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
-      // Act
-      await makeRequest();
+        // Act
+        await makeRequest(generateSystemAuditDetails());
 
-      // Assert
-      expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG);
-    });
-
-    it('calls the correct DB method with the expected parameters', async () => {
-      // Arrange
-      const deleteManyMock = jest.fn(() => successfulDeleteManyMock());
-      const getCollectionMock = jest.fn().mockResolvedValue({
-        deleteMany: deleteManyMock,
+        // Assert
+        expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG);
       });
-      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
-      // Act
-      await makeRequest();
+      it('calls the correct DB method with the expected parameters', async () => {
+        // Arrange
+        const deleteManyMock = jest.fn(() => successfulDeleteManyMock());
+        const getCollectionMock = jest.fn().mockResolvedValue({
+          deleteMany: deleteManyMock,
+        });
+        jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
-      // Assert
-      expect(deleteManyMock).toHaveBeenCalledWith(expectedDeleteManyCalledWith);
-    });
+        // Act
+        await makeRequest(generateSystemAuditDetails());
 
-    it('returns the result', async () => {
-      // Arrange
-      const deleteManyMock = jest.fn(() => successfulDeleteManyMock());
-      const getCollectionMock = jest.fn().mockResolvedValue({
-        deleteMany: deleteManyMock,
+        // Assert
+        expect(deleteManyMock).toHaveBeenCalledWith(expectedDeleteManyCalledWith);
       });
-      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
-      // Act
-      const result = await makeRequest();
+      it('returns the result', async () => {
+        // Arrange
+        const deleteManyMock = jest.fn(() => successfulDeleteManyMock());
+        const getCollectionMock = jest.fn().mockResolvedValue({
+          deleteMany: deleteManyMock,
+        });
+        jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
-      // Assert
-      expect(result).toEqual(successfulDeleteManyResponse);
-    });
+        // Act
+        const result = await makeRequest(generateSystemAuditDetails());
+
+        // Assert
+        expect(result).toEqual(successfulDeleteManyResponse);
+      });
+    }
   });
 });

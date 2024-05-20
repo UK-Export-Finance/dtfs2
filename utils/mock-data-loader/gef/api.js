@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { generateSystemAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const ApiError = require('../errors/api.error');
 require('dotenv').config();
 
@@ -255,6 +256,9 @@ const deleteDurableFunctions = async (token) => {
       Authorization: token,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/durable-functions`,
+    data: {
+      auditDetails: generateSystemAuditDetails(),
+    },
   }).catch((error) => {
     throw new ApiError({ cause: error });
   });
