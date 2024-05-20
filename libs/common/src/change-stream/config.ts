@@ -9,7 +9,7 @@ const changeStreamConfigSchema = z.union([
     CHANGE_STREAM_ENABLED: z.union([z.literal('true'), z.literal(true)]),
   }),
   z.object({
-    CHANGE_STREAM_ENABLED: z.union([z.literal('false'), z.literal(false)]).optional(),
+    CHANGE_STREAM_ENABLED: z.union([z.literal('false'), z.literal(false), z.literal('')]).optional(),
     // If change stream is not enabled, this variable should never be used
     DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS: z.coerce.number().optional().default(0),
   }),
