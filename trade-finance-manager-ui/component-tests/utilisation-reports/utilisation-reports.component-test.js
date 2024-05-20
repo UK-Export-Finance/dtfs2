@@ -38,6 +38,10 @@ describe(page, () => {
     (await getWrapper()).expectElement('[data-cy="utilisation-report-heading"]').toExist();
   });
 
+  it('should render the search link', async () => {
+    (await getWrapper()).expectLink('a[data-cy="find-reports-by-year-link"]').toLinkTo('/utilisation-reports/find-reports-by-year', 'Find reports by year');
+  });
+
   it('should render the report period heading', async () => {
     (await getWrapper()).expectText('[data-cy="2023-12-submission-month-report-period-heading"]').toRead(`Open reports: Nov 2023 (monthly)`);
   });

@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import axios from 'axios';
 import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
 import { FACILITY_TYPE, PRODUCT_GROUP } from '../../constants';
 import { isValidDate } from '../../helpers';
+
 dotenv.config();
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
@@ -11,7 +13,7 @@ const headers = {
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
 
-const mapProductGroup = (facilityType: any) => {
+const mapProductGroup = (facilityType: string) => {
   if (facilityType === FACILITY_TYPE.BOND) {
     return PRODUCT_GROUP.BOND;
   }

@@ -3,14 +3,7 @@ import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import {
-  PIM_USER_1,
-  T1_USER_1,
-  UNDERWRITER_MANAGER_1,
-  UNDERWRITER_1,
-  BANK1_MAKER1,
-  ADMIN,
-} from '../../../../../e2e-fixtures';
+import { PIM_USER_1, T1_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import pages from '../../pages';
 import { commonTestUnderwriterTasksAssignedToUser } from '../../common-tests/assessmentTasksAssignedTo';
 import { TASKS } from '../../../fixtures/constants';
@@ -143,9 +136,7 @@ context('Amendments underwriting - add lead underwriter', () => {
       pages.underwritingPage.amendmentAddLeadUnderwriterLink().should('not.exist');
 
       // Assert active lead underwritter by fullname
-      pages.underwritingPage
-        .amendmentLeadUnderwriterFullName()
-        .contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
+      pages.underwritingPage.amendmentLeadUnderwriterFullName().contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
       // Assert active lead underwritter by email, even if all emails are identical.
       pages.underwritingPage.amendmentLeadUnderwriterEmail().contains(`${UNDERWRITER_MANAGER_1.email}`);
 
@@ -156,17 +147,13 @@ context('Amendments underwriting - add lead underwriter', () => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
-      pages.underwritingPage
-        .amendmentLeadUnderwriterFullName()
-        .contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
+      pages.underwritingPage.amendmentLeadUnderwriterFullName().contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
       pages.underwritingPage.amendmentChangeLeadUnderwriterLink().should('not.exist');
 
       cy.login(T1_USER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
-      pages.underwritingPage
-        .amendmentLeadUnderwriterFullName()
-        .contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
+      pages.underwritingPage.amendmentLeadUnderwriterFullName().contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
       pages.underwritingPage.amendmentChangeLeadUnderwriterLink().should('not.exist');
     });
 
@@ -177,16 +164,12 @@ context('Amendments underwriting - add lead underwriter', () => {
       pages.underwritingPage.amendmentChangeLeadUnderwriterLink().contains('Change');
       pages.underwritingPage.amendmentChangeLeadUnderwriterLink().click({ force: true });
 
-      pages.underwritingPage
-        .amendmentLeadUnderwriterSelectInput()
-        .select(`${UNDERWRITER_1.firstName} ${UNDERWRITER_1.lastName}`);
+      pages.underwritingPage.amendmentLeadUnderwriterSelectInput().select(`${UNDERWRITER_1.firstName} ${UNDERWRITER_1.lastName}`);
 
       pages.amendmentsPage.assignLeadUnderwriterSaveButton(0).click();
 
       // Assert active lead underwritter, better to use name because all emails are same.
-      pages.underwritingPage
-        .amendmentLeadUnderwriterFullName()
-        .contains(`${UNDERWRITER_1.firstName} ${UNDERWRITER_1.lastName}`);
+      pages.underwritingPage.amendmentLeadUnderwriterFullName().contains(`${UNDERWRITER_1.firstName} ${UNDERWRITER_1.lastName}`);
 
       commonTestUnderwriterTasksAssignedToUser(dealId, UNDERWRITER_1);
     });

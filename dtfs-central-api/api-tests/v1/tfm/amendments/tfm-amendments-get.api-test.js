@@ -109,9 +109,7 @@ describe('GET TFM amendments', () => {
 
       const {
         body: { amendmentId },
-      } = await api
-        .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
-        .to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
       const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`);
 
       expect(status).toEqual(200);
@@ -259,9 +257,7 @@ describe('GET TFM amendments', () => {
 
       const {
         body: { amendmentId },
-      } = await api
-        .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
-        .to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
       await api
         .put({
           payload: { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED },
@@ -271,9 +267,7 @@ describe('GET TFM amendments', () => {
 
       const {
         body: { amendmentId: amendmentId2 },
-      } = await api
-        .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
-        .to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
       await api
         .put({
           payload: { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED },
@@ -281,9 +275,7 @@ describe('GET TFM amendments', () => {
         })
         .to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId2}`);
 
-      await api
-        .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
-        .to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
 
       const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments/completed`);
 
@@ -360,9 +352,7 @@ describe('GET TFM amendments', () => {
 
       const {
         body: { amendmentId },
-      } = await api
-        .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
-        .to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
       await api
         .put({
           payload: {

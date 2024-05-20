@@ -37,8 +37,7 @@ const toSqlFeeRecord =
     feeRecord.facilityUtilisation = mongoReportData.facilityUtilisation;
 
     feeRecord.totalFeesAccruedForThePeriod = mongoReportData.totalFeesAccruedForTheMonth;
-    feeRecord.totalFeesAccruedForThePeriodCurrency =
-      mongoReportData.totalFeesAccruedForTheMonthCurrency ?? mongoReportData.baseCurrency;
+    feeRecord.totalFeesAccruedForThePeriodCurrency = mongoReportData.totalFeesAccruedForTheMonthCurrency ?? mongoReportData.baseCurrency;
     feeRecord.totalFeesAccruedForThePeriodExchangeRate = mongoReportData.totalFeesAccruedForTheMonthExchangeRate ?? 1;
 
     feeRecord.feesPaidToUkefForThePeriod = mongoReportData.monthlyFeesPaidToUkef;

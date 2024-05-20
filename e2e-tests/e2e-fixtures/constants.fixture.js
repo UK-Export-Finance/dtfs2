@@ -33,8 +33,8 @@ export const DEAL_STATUS = {
   IN_PROGRESS: 'In progress',
   COMPLETED: 'Completed',
   // statuses specific to the entire deal
-  READY_FOR_APPROVAL: 'Ready for Checker\'s approval',
-  CHANGES_REQUIRED: 'Further Maker\'s input required',
+  READY_FOR_APPROVAL: "Ready for Checker's approval",
+  CHANGES_REQUIRED: "Further Maker's input required",
   ABANDONED: 'Abandoned',
   SUBMITTED_TO_UKEF: 'Submitted',
   UKEF_ACKNOWLEDGED: 'Acknowledged',

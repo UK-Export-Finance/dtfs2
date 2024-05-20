@@ -1,15 +1,10 @@
 const { parseISO } = require('date-fns');
 const api = require('../api');
-const { formatDate, formatTimestamp } = require("../../utils/date");
+const { formatDate, formatTimestamp } = require('../../utils/date');
 
 const getFacilityExposurePeriod = async (facility) => {
   try {
-    const {
-      type,
-      hasBeenIssued,
-      coverStartDate,
-      coverEndDate,
-    } = facility;
+    const { type, hasBeenIssued, coverStartDate, coverEndDate } = facility;
 
     let facilityUpdate;
 
@@ -20,11 +15,7 @@ const getFacilityExposurePeriod = async (facility) => {
       // coverEndDate is stored as an ISO-8601 timestamp (e.g 2023-01-11T14:30:01.459Z)
       const formattedEndDate = formatDate(parseISO(coverEndDate));
 
-      const exposurePeriodResponse = await api.getFacilityExposurePeriod(
-        formattedStartDate,
-        formattedEndDate,
-        type,
-      );
+      const exposurePeriodResponse = await api.getFacilityExposurePeriod(formattedStartDate, formattedEndDate, type);
 
       const { exposurePeriodInMonths } = exposurePeriodResponse;
 

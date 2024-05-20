@@ -3,12 +3,7 @@ const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../pages');
 const { dashboardFilters, dashboardSubNavigation } = require('../../../partials');
-const {
-  BSS_DEAL_AIN,
-  BSS_DEAL_MIA,
-  BSS_FACILITY_BOND_ISSUED,
-  BSS_FACILITY_BOND_UNISSUED,
-} = require('../fixtures');
+const { BSS_DEAL_AIN, BSS_DEAL_MIA, BSS_FACILITY_BOND_ISSUED, BSS_FACILITY_BOND_UNISSUED } = require('../fixtures');
 
 const { BANK1_MAKER1, BANK1_MAKER2, ADMIN } = MOCK_USERS;
 
@@ -31,10 +26,7 @@ context('Dashboard Facilities filters - Created by you', () => {
     cy.insertOneDeal(BSS_DEAL_AIN, BANK1_MAKER1).then((deal) => {
       const dealId = deal._id;
 
-      const facilities = [
-        BSS_FACILITY_BOND_ISSUED,
-        BSS_FACILITY_BOND_UNISSUED,
-      ];
+      const facilities = [BSS_FACILITY_BOND_ISSUED, BSS_FACILITY_BOND_UNISSUED];
 
       cy.createFacilities(dealId, facilities, BANK1_MAKER1).then((insertedFacilities) => {
         insertedFacilities.forEach((facility) => {
@@ -118,9 +110,12 @@ context('Dashboard Facilities filters - Created by you', () => {
 
     dashboardFacilities.filters.panel.form.createdByYou.checkbox().should('be.checked');
 
-    dashboardSubNavigation.facilities().invoke('attr', 'aria-label').then((label) => {
-      expect(label).to.equal('facilities: ,Filters selected: , : , Created by you');
-    });
+    dashboardSubNavigation
+      .facilities()
+      .invoke('attr', 'aria-label')
+      .then((label) => {
+        expect(label).to.equal('facilities: ,Filters selected: , : , Created by you');
+      });
   });
 
   it('should be able to remove filter from filter container and see all facilities again', () => {
@@ -159,18 +154,18 @@ context('Dashboard Facilities filters - Created by you', () => {
     dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().click();
     filters.panel.form.applyFiltersButton().click();
 
-    const EXPECTED_FACILITIES = ALL_FACILITIES.filter(({
-      type, submissionType, hasBeenIssued, makerUser,
-    }) =>
-      (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-        || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA
-        || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN)
-      && (hasBeenIssued || hasBeenIssued === false)
-      && (type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND
-        || type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN
-        || type === CONSTANTS.FACILITY.FACILITY_TYPE.CASH
-        || type === CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT)
-        && (makerUser === BANK1_MAKER1.username));
+    const EXPECTED_FACILITIES = ALL_FACILITIES.filter(
+      ({ type, submissionType, hasBeenIssued, makerUser }) =>
+        (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN ||
+          submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA ||
+          submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) &&
+        (hasBeenIssued || hasBeenIssued === false) &&
+        (type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND ||
+          type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN ||
+          type === CONSTANTS.FACILITY.FACILITY_TYPE.CASH ||
+          type === CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT) &&
+        makerUser === BANK1_MAKER1.username,
+    );
 
     dashboardFacilities.rows().should('have.length', EXPECTED_FACILITIES.length);
 

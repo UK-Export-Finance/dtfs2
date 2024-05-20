@@ -245,10 +245,7 @@ describe('/v1/deals', () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_DEAL));
 
-          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(
-            MOCK_DEAL._id,
-            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
-          );
+          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(MOCK_DEAL._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED);
         });
       });
 
@@ -256,10 +253,7 @@ describe('/v1/deals', () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_DEAL_MIN));
 
-          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(
-            MOCK_DEAL_MIN._id,
-            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
-          );
+          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(MOCK_DEAL_MIN._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED);
         });
       });
 
@@ -267,10 +261,7 @@ describe('/v1/deals', () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_DEAL_MIA));
 
-          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(
-            MOCK_DEAL_MIA._id,
-            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF,
-          );
+          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(MOCK_DEAL_MIA._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF);
         });
       });
 
@@ -278,10 +269,7 @@ describe('/v1/deals', () => {
         it('should call externalApis.updateGefDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));
 
-          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(
-            MOCK_GEF_DEAL_AIN._id,
-            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
-          );
+          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(MOCK_GEF_DEAL_AIN._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED);
         });
       });
 
@@ -289,10 +277,7 @@ describe('/v1/deals', () => {
         it('should call externalApis.updateGefDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIN));
 
-          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(
-            MOCK_GEF_DEAL_MIN._id,
-            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
-          );
+          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(MOCK_GEF_DEAL_MIN._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED);
         });
       });
 
@@ -300,10 +285,7 @@ describe('/v1/deals', () => {
         it('should call externalApis.updateGefDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
 
-          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(
-            MOCK_GEF_DEAL_MIA._id,
-            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF,
-          );
+          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(MOCK_GEF_DEAL_MIA._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF);
         });
       });
     });

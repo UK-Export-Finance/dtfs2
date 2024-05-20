@@ -4,13 +4,9 @@ const { createPasswordToken } = require('./controller');
 const { EMAIL_TEMPLATE_IDS } = require('../../constants');
 
 const sendResetEmail = async (emailAddress, resetToken) => {
-  await sendEmail(
-    EMAIL_TEMPLATE_IDS.PASSWORD_RESET,
-    emailAddress,
-    {
-      resetToken,
-    },
-  );
+  await sendEmail(EMAIL_TEMPLATE_IDS.PASSWORD_RESET, emailAddress, {
+    resetToken,
+  });
 };
 
 exports.resetPassword = async (email, userService, auditDetails) => {

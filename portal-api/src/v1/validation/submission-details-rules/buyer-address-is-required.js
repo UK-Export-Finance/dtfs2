@@ -1,12 +1,11 @@
 const { orderNumber } = require('../../../utils/error-list-order-number');
 const { hasValue } = require('../../../utils/string');
-const { isCountryDisabled  } = require('../fields/country');
+const { isCountryDisabled } = require('../fields/country');
 
 module.exports = async (submissionDetails, errorList) => {
   const newErrorList = { ...errorList };
 
-  if (!submissionDetails['buyer-address-country']
-    || !submissionDetails['buyer-address-country'].code) {
+  if (!submissionDetails['buyer-address-country'] || !submissionDetails['buyer-address-country'].code) {
     newErrorList['buyer-address-country'] = {
       order: orderNumber(newErrorList),
       text: 'Buyer country is required',
@@ -35,7 +34,7 @@ module.exports = async (submissionDetails, errorList) => {
   }
 
   if (submissionDetails['buyer-address-country']) {
-    const isDisabled = await isCountryDisabled (submissionDetails['buyer-address-country'].code);
+    const isDisabled = await isCountryDisabled(submissionDetails['buyer-address-country'].code);
     if (isDisabled) {
       newErrorList['buyer-address-country'] = {
         order: orderNumber(newErrorList),

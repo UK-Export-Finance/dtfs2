@@ -1,8 +1,4 @@
-import {
-  mappedIndustries,
-  aboutExporter,
-  validateAboutExporter,
-} from './index';
+import { mappedIndustries, aboutExporter, validateAboutExporter } from './index';
 import api from '../../services/api';
 
 jest.mock('../../services/api');
@@ -93,18 +89,18 @@ describe('controllers/about-exporter', () => {
   describe('GET About Exporter', () => {
     it('renders the `About Exporter` template', async () => {
       await aboutExporter(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
-        dealId: '123',
-        smeType: mockApplication.exporter.smeType,
-        probabilityOfDefault: Number(mockApplication.exporter.probabilityOfDefault),
-        isFinanceIncreasing: JSON.stringify(mockApplication.exporter.isFinanceIncreasing),
-        selectedIndustry: mockApplication.exporter.selectedIndustry,
-        industries: mappedIndustries(
-          mockApplication.exporter.industries,
-          JSON.stringify(mockApplication.exporter.selectedIndustry),
-        ),
-        status: mockRequest.query.status,
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-exporter.njk',
+        expect.objectContaining({
+          dealId: '123',
+          smeType: mockApplication.exporter.smeType,
+          probabilityOfDefault: Number(mockApplication.exporter.probabilityOfDefault),
+          isFinanceIncreasing: JSON.stringify(mockApplication.exporter.isFinanceIncreasing),
+          selectedIndustry: mockApplication.exporter.selectedIndustry,
+          industries: mappedIndustries(mockApplication.exporter.industries, JSON.stringify(mockApplication.exporter.selectedIndustry)),
+          status: mockRequest.query.status,
+        }),
+      );
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
@@ -174,16 +170,19 @@ describe('controllers/about-exporter', () => {
     it('returns validation error object if no `save and return` query is set and all fields are blank', async () => {
       await validateAboutExporter(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
-        errors: expect.any(Object),
-        dealId: '123',
-        smeType: mockApplication.exporter.smeType,
-        probabilityOfDefault: Number(mockApplication.exporter.probabilityOfDefault),
-        isFinanceIncreasing: JSON.stringify(mockApplication.exporter.isFinanceIncreasing),
-        selectedIndustry: mockApplication.exporter.selectedIndustry,
-        industries: expect.any(Array),
-        status: mockRequest.query.status,
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-exporter.njk',
+        expect.objectContaining({
+          errors: expect.any(Object),
+          dealId: '123',
+          smeType: mockApplication.exporter.smeType,
+          probabilityOfDefault: Number(mockApplication.exporter.probabilityOfDefault),
+          isFinanceIncreasing: JSON.stringify(mockApplication.exporter.isFinanceIncreasing),
+          selectedIndustry: mockApplication.exporter.selectedIndustry,
+          industries: expect.any(Array),
+          status: mockRequest.query.status,
+        }),
+      );
     });
 
     it('returns Selected Industry validation error only if there are more than 1 industries', async () => {
@@ -191,18 +190,20 @@ describe('controllers/about-exporter', () => {
       mockRequest.body.smeType = 'MICRO';
       mockRequest.body.probabilityOfDefault = '5';
       mockRequest.body.isFinanceIncreasing = 'true';
-      mockApplication.exporter.industries = [{
-        name: 'name',
-        class: {
-          name: 'class name',
+      mockApplication.exporter.industries = [
+        {
+          name: 'name',
+          class: {
+            name: 'class name',
+          },
         },
-      },
-      {
-        name: 'name',
-        class: {
-          name: 'class name',
+        {
+          name: 'name',
+          class: {
+            name: 'class name',
+          },
         },
-      }];
+      ];
 
       api.getApplication.mockResolvedValueOnce(mockApplication);
       await validateAboutExporter(mockRequest, mockResponse);
@@ -222,10 +223,7 @@ describe('controllers/about-exporter', () => {
           },
         },
         selectedIndustry: mockApplication.exporter.selectedIndustry,
-        industries: mappedIndustries(
-          mockApplication.exporter.industries,
-          mockApplication.exporter.selectedIndustry,
-        ),
+        industries: mappedIndustries(mockApplication.exporter.industries, mockApplication.exporter.selectedIndustry),
         smeType: mockRequest.body.smeType,
         probabilityOfDefault: Number(mockRequest.body.probabilityOfDefault),
         isFinanceIncreasing: mockRequest.body.isFinanceIncreasing,
@@ -233,12 +231,14 @@ describe('controllers/about-exporter', () => {
         status: mockRequest.query.status,
       });
 
-      mockApplication.exporter.industries = [{
-        name: 'name',
-        class: {
-          name: 'class name',
+      mockApplication.exporter.industries = [
+        {
+          name: 'name',
+          class: {
+            name: 'class name',
+          },
         },
-      }];
+      ];
     });
 
     // TODO: fix.
@@ -334,7 +334,11 @@ describe('controllers/about-exporter', () => {
         editorId: '12345',
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockApplication._id, application: expectedUpdateObj, userToken });
+      expect(updateApplicationSpy).toHaveBeenCalledWith({
+        dealId: mockApplication._id,
+        application: expectedUpdateObj,
+        userToken,
+      });
     });
 
     it('redirects user to `application` page if response from api is successful', async () => {

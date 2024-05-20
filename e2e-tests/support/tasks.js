@@ -7,7 +7,7 @@ const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
 
 SqlDbDataSource.initialize()
-  .then(() => console.info('🗄️ Successfully initialised connection to SQL database'))
+  .then(() => console.info('✅ Successfully initialised connection to SQL database'))
   .catch((error) => console.error('❌ Failed to initialise connection to SQL database:', error));
 
 module.exports = {
@@ -45,10 +45,7 @@ module.exports = {
       const hashHex = hash.toString('hex');
       const expiry = Date.now() + thirtyMinutesInMilliseconds;
       const userCollection = await getUsersCollection();
-      return userCollection.updateOne(
-        { username: { $eq: username } },
-        { $set: { signInTokens: [{ hashHex, saltHex, expiry }] } },
-      );
+      return userCollection.updateOne({ username: { $eq: username } }, { $set: { signInTokens: [{ hashHex, saltHex, expiry }] } });
     };
 
     const overridePortalUserSignInTokensByUsername = async ({ username, newSignInTokens }) => {
@@ -91,17 +88,14 @@ module.exports = {
      */
     const insertUtilisationReportsIntoDb = async (utilisationReports) => {
       const utilisationReportRepo = SqlDbDataSource.getRepository(UtilisationReportEntity);
-      const saveOperations = utilisationReports.map((utilisationReport) =>
-        utilisationReportRepo.save(utilisationReport),
-      );
+      const saveOperations = utilisationReports.map((utilisationReport) => utilisationReportRepo.save(utilisationReport));
       return await Promise.all(saveOperations);
     };
 
     /**
      * Deletes all the rows from the utilisation report and azure file info tables
      */
-    const removeAllUtilisationReportsFromDb = async () =>
-      await SqlDbDataSource.manager.getRepository(UtilisationReportEntity).delete({});
+    const removeAllUtilisationReportsFromDb = async () => await SqlDbDataSource.manager.getRepository(UtilisationReportEntity).delete({});
 
     const getAllBanks = async () => {
       const banks = await db.getCollection(DB_COLLECTIONS.BANKS);

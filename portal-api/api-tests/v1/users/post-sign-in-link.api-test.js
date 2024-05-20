@@ -40,7 +40,11 @@ describe('POST /users/me/sign-in-link', () => {
   const saltBytes = Buffer.from(saltHexOne, 'hex');
   const signInToken = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
   const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
-  const userToCreateAsPartiallyLoggedIn = { ...aMaker, username: temporaryUsernameAndEmail, email: temporaryUsernameAndEmail };
+  const userToCreateAsPartiallyLoggedIn = {
+    ...aMaker,
+    username: temporaryUsernameAndEmail,
+    email: temporaryUsernameAndEmail,
+  };
   const userToCreateFullyLoggedIn = { ...anotherMaker };
 
   let userToCreateOtherUsers;
@@ -86,7 +90,10 @@ describe('POST /users/me/sign-in-link', () => {
       username: temporaryUsernameAndEmail,
       properties: ['signInLinkSendCount', 'signInLinkSendDate', 'signInTokens', 'disabled'],
     });
-    await databaseHelper.setUserProperties({ username: temporaryUsernameAndEmail, update: { 'user-status': USER.STATUS.ACTIVE } });
+    await databaseHelper.setUserProperties({
+      username: temporaryUsernameAndEmail,
+      update: { 'user-status': USER.STATUS.ACTIVE },
+    });
 
     jest.resetAllMocks();
     resetAllWhenMocks();
@@ -109,7 +116,11 @@ describe('POST /users/me/sign-in-link', () => {
     beforeEach(async () => {
       databaseHelper.setUserProperties({
         username: temporaryUsernameAndEmail,
-        update: { 'user-status': USER.STATUS.BLOCKED, signInLinkSendCount: initialSignInLinkSendCount, signInLinkSendDate: dateNow },
+        update: {
+          'user-status': USER.STATUS.BLOCKED,
+          signInLinkSendCount: initialSignInLinkSendCount,
+          signInLinkSendDate: dateNow,
+        },
       });
     });
 
@@ -283,7 +294,11 @@ describe('POST /users/me/sign-in-link', () => {
           let newSignInToken;
 
           beforeEach(() => {
-            newSignInToken = { saltHex: saltHexOne, hashHex: hashHexOne, expiry: dateNow + SIGN_IN_LINK.DURATION_MILLISECONDS };
+            newSignInToken = {
+              saltHex: saltHexOne,
+              hashHex: hashHexOne,
+              expiry: dateNow + SIGN_IN_LINK.DURATION_MILLISECONDS,
+            };
             when(pbkdf2Sync).calledWith(signInToken, saltBytes, 210000, 64, 'sha512').mockReturnValueOnce(Buffer.from(hashHexOne, 'hex'));
           });
 

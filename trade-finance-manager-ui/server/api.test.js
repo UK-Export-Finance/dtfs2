@@ -27,24 +27,32 @@ describe('getDeals()', () => {
   };
 
   const mockResponse = {
-    deals: [{ _id: 1, name: 'Deal 1' }, { _id: 2, name: 'Deal 2' }],
-    pagination: { totalItems: 2, currentPage: 0, totalPages: 1 }
+    deals: [
+      { _id: 1, name: 'Deal 1' },
+      { _id: 2, name: 'Deal 2' },
+    ],
+    pagination: { totalItems: 2, currentPage: 0, totalPages: 1 },
   };
 
   it('should return deals data and pagination metadata when TFM API returns this data', async () => {
     const queryParams = { page: 0 };
 
-    mockAxios.onGet(
-      dealsUrl,
-      { params: queryParams },
-      expect.objectContaining(headers) // Axios adds its own headers (e.g., 'Accept'), hence the use of `objectContaining()`
-    ).reply(200, mockResponse);
+    mockAxios
+      .onGet(
+        dealsUrl,
+        { params: queryParams },
+        expect.objectContaining(headers), // Axios adds its own headers (e.g., 'Accept'), hence the use of `objectContaining()`
+      )
+      .reply(200, mockResponse);
 
     const response = await api.getDeals(queryParams, token);
 
     expect(mockAxios.history.get.length).toBe(1);
     expect(response).toEqual({
-      deals: [{ _id: 1, name: 'Deal 1' }, { _id: 2, name: 'Deal 2' }],
+      deals: [
+        { _id: 1, name: 'Deal 1' },
+        { _id: 2, name: 'Deal 2' },
+      ],
       pagination: { totalItems: 2, currentPage: 0, totalPages: 1 },
     });
   });
@@ -52,18 +60,18 @@ describe('getDeals()', () => {
   it('should throw a PageOutOfBoundsError when the requested page number exceeds the maximum page number', async () => {
     const queryParams = { page: 1 };
 
-    mockAxios.onGet(
-      dealsUrl,
-      { params: queryParams },
-      expect.objectContaining(headers) // Axios adds its own headers (e.g., 'Accept'), hence the use of `objectContaining()`
-    ).reply(200, mockResponse);
+    mockAxios
+      .onGet(
+        dealsUrl,
+        { params: queryParams },
+        expect.objectContaining(headers), // Axios adds its own headers (e.g., 'Accept'), hence the use of `objectContaining()`
+      )
+      .reply(200, mockResponse);
 
     const errorResponse = api.getDeals(queryParams, token);
 
     expect(mockAxios.history.get.length).toBe(1);
-    await expect(errorResponse)
-      .rejects
-      .toThrow(new PageOutOfBoundsError('Requested page number exceeds the maximum page number'));
+    await expect(errorResponse).rejects.toThrow(new PageOutOfBoundsError('Requested page number exceeds the maximum page number'));
   });
 });
 
@@ -78,24 +86,32 @@ describe('getFacilities()', () => {
   };
 
   const mockResponse = {
-      facilities: [{ facilityId: 1, name: 'Facility 1' }, { facilityId: 2, name: 'Facility 2' }],
-      pagination: { totalItems: 2, currentPage: 0, totalPages: 1 }
+    facilities: [
+      { facilityId: 1, name: 'Facility 1' },
+      { facilityId: 2, name: 'Facility 2' },
+    ],
+    pagination: { totalItems: 2, currentPage: 0, totalPages: 1 },
   };
 
   it('should return facilities data and pagination metadata when TFM API returns this data', async () => {
     const queryParams = { page: 0 };
 
-    mockAxios.onGet(
-      facilitiesUrl,
-      { params: queryParams },
-      expect.objectContaining(headers) // Axios adds its own headers (e.g., 'Accept'), hence the use of `objectContaining()`
-    ).reply(200, mockResponse);
+    mockAxios
+      .onGet(
+        facilitiesUrl,
+        { params: queryParams },
+        expect.objectContaining(headers), // Axios adds its own headers (e.g., 'Accept'), hence the use of `objectContaining()`
+      )
+      .reply(200, mockResponse);
 
     const response = await api.getFacilities(queryParams, token);
 
     expect(mockAxios.history.get.length).toBe(1);
     expect(response).toEqual({
-      facilities: [{ facilityId: 1, name: 'Facility 1' }, { facilityId: 2, name: 'Facility 2' }],
+      facilities: [
+        { facilityId: 1, name: 'Facility 1' },
+        { facilityId: 2, name: 'Facility 2' },
+      ],
       pagination: { totalItems: 2, currentPage: 0, totalPages: 1 },
     });
   });
@@ -103,18 +119,18 @@ describe('getFacilities()', () => {
   it('should throw a PageOutOfBoundsError when the requested page number exceeds the maximum page number', async () => {
     const queryParams = { page: 1 };
 
-    mockAxios.onGet(
-      facilitiesUrl,
-      { params: queryParams },
-      expect.objectContaining(headers) // Axios adds its own headers (e.g., 'Accept'), hence the use of `objectContaining()`
-    ).reply(200, mockResponse);
+    mockAxios
+      .onGet(
+        facilitiesUrl,
+        { params: queryParams },
+        expect.objectContaining(headers), // Axios adds its own headers (e.g., 'Accept'), hence the use of `objectContaining()`
+      )
+      .reply(200, mockResponse);
 
     const errorResponse = api.getFacilities(queryParams, token);
 
     expect(mockAxios.history.get.length).toBe(1);
-    await expect(errorResponse)
-      .rejects
-      .toThrow(new PageOutOfBoundsError('Requested page number exceeds the maximum page number'));
+    await expect(errorResponse).rejects.toThrow(new PageOutOfBoundsError('Requested page number exceeds the maximum page number'));
   });
 });
 

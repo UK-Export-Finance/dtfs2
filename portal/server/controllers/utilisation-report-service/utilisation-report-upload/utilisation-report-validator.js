@@ -17,11 +17,26 @@ const { MONTH_NAMES, FILE_UPLOAD } = require('../../../constants');
 const validateCsvHeaders = (csvDataRow) => {
   const headers = Object.keys(csvDataRow);
   const requiredHeaders = [
-    { header: UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID, missingErrorMessage: 'UKEF facility ID header is missing or spelt incorrectly' },
-    { header: UTILISATION_REPORT_HEADERS.BASE_CURRENCY, missingErrorMessage: 'Base currency header is missing or spelt incorrectly' },
-    { header: UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION, missingErrorMessage: 'Facility utilisation header is missing or spelt incorrectly' },
-    { header: UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED, missingErrorMessage: 'Total fees accrued for the period header is missing or spelt incorrectly' },
-    { header: UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD, missingErrorMessage: 'Fees paid to UKEF for the period header is missing or spelt incorrectly' },
+    {
+      header: UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID,
+      missingErrorMessage: 'UKEF facility ID header is missing or spelt incorrectly',
+    },
+    {
+      header: UTILISATION_REPORT_HEADERS.BASE_CURRENCY,
+      missingErrorMessage: 'Base currency header is missing or spelt incorrectly',
+    },
+    {
+      header: UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION,
+      missingErrorMessage: 'Facility utilisation header is missing or spelt incorrectly',
+    },
+    {
+      header: UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED,
+      missingErrorMessage: 'Total fees accrued for the period header is missing or spelt incorrectly',
+    },
+    {
+      header: UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD,
+      missingErrorMessage: 'Fees paid to UKEF for the period header is missing or spelt incorrectly',
+    },
     {
       header: UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY,
       missingErrorMessage: 'Fees paid to UKEF currency header is missing or spelt incorrectly',
@@ -54,7 +69,10 @@ const validateCsvCellData = (csvData, availableHeaders) => {
     { header: UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION, errorGenerator: generateFacilityUtilisationError },
     { header: UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED, errorGenerator: generateTotalFeesAccruedError },
     { header: UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD, errorGenerator: generateMonthlyFeesPaidError },
-    { header: UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY, errorGenerator: generateMonthlyFeesPaidCurrencyError },
+    {
+      header: UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY,
+      errorGenerator: generateMonthlyFeesPaidCurrencyError,
+    },
   ];
 
   const optionalValueCellValidations = [

@@ -23,7 +23,6 @@ describe('UtilisationReportStateMachine', () => {
   });
 
   const expectInvalidStateMachineTransitionError = async (stateMachine: UtilisationReportStateMachine, eventType: UtilisationReportEventType) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error - expect payload to be invalid when type is variable.
     await expect(stateMachine.handleEvent({ type: eventType, payload: null })).rejects.toThrow(InvalidStateMachineTransitionError);
   };

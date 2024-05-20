@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { MongoDbClient } from '@ukef/dtfs2-common/mongo-db-client';
 import { MongoDbCollectionName } from '@ukef/dtfs2-common';
 import { dbName, url } from '../config';

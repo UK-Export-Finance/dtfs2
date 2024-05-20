@@ -59,7 +59,8 @@ const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submitted
           reportPeriod,
           reportSubmittedBy,
           reportSubmittedDate: formattedSubmittedDate,
-        })),
+        }),
+      ),
     );
     return { paymentOfficerEmails: emails };
   } catch (error) {

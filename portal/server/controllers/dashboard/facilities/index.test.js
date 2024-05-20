@@ -62,14 +62,7 @@ describe('controllers/dashboard/facilities', () => {
 
   describe('getAllFacilitiesData', () => {
     it('should calls api.allFacilities with filters query', async () => {
-      await getAllFacilitiesData(
-        'mock-token',
-        mockReq.session.user,
-        mockReq.session.dashboardFilters,
-        mockReq.params.page,
-        CONSTANTS.SORT_BY.DEFAULT,
-        mockRes,
-      );
+      await getAllFacilitiesData('mock-token', mockReq.session.user, mockReq.session.dashboardFilters, mockReq.params.page, CONSTANTS.SORT_BY.DEFAULT, mockRes);
 
       expect(api.allFacilities).toHaveBeenCalledTimes(1);
 
@@ -79,23 +72,11 @@ describe('controllers/dashboard/facilities', () => {
 
       const sortQuery = {};
 
-      expect(api.allFacilities).toHaveBeenCalledWith(
-        CONSTANTS.DASHBOARD.PAGE_SIZE,
-        CONSTANTS.DASHBOARD.PAGE_SIZE,
-        expectedFilters,
-        'mock-token',
-        sortQuery,
-      );
+      expect(api.allFacilities).toHaveBeenCalledWith(CONSTANTS.DASHBOARD.PAGE_SIZE, CONSTANTS.DASHBOARD.PAGE_SIZE, expectedFilters, 'mock-token', sortQuery);
     });
 
     it('should return an object', async () => {
-      const result = await getAllFacilitiesData(
-        'mock-token',
-        mockReq.session.user,
-        mockReq.session.dashboardFilters,
-        mockReq.params.page,
-        mockRes,
-      );
+      const result = await getAllFacilitiesData('mock-token', mockReq.session.user, mockReq.session.dashboardFilters, mockReq.params.page, mockRes);
 
       const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 

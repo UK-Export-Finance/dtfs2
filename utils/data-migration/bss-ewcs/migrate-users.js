@@ -5,7 +5,9 @@ const generator = require('generate-password');
 const api = require('../api');
 const { getToken, removeMigrationUser } = require('../temporary-token-handler');
 const consoleLogColor = require('./helpers/console-log-colour');
-const { ROLES: { MAKER, CHECKER } } = require('../constant');
+const {
+  ROLES: { MAKER, CHECKER },
+} = require('../constant');
 
 const { file, bankId } = args;
 
@@ -106,22 +108,24 @@ const migrateUsers = async () => {
   const existingUserErrors = [];
   const createUserPromises = [];
 
-  usersV2.filter(({ username }) => username).forEach(async (user) => {
-    if (existingUsersList.includes(user.username)) {
-      consoleLogColor(`duplicate user: ${user.username}`);
-      existingUserErrors.push(user.username);
-      return;
-    }
-    const userCreate = api.createUser(user, token).then((createResult) => {
-      if (createResult.success) {
-        consoleLogColor(`created user: ${createResult.user.username}`, 'green');
-      } else {
-        consoleLogColor(`error creating user: ${createResult.username}`);
+  usersV2
+    .filter(({ username }) => username)
+    .forEach(async (user) => {
+      if (existingUsersList.includes(user.username)) {
+        consoleLogColor(`duplicate user: ${user.username}`);
+        existingUserErrors.push(user.username);
+        return;
       }
-      return createResult;
+      const userCreate = api.createUser(user, token).then((createResult) => {
+        if (createResult.success) {
+          consoleLogColor(`created user: ${createResult.user.username}`, 'green');
+        } else {
+          consoleLogColor(`error creating user: ${createResult.username}`);
+        }
+        return createResult;
+      });
+      createUserPromises.push(userCreate);
     });
-    createUserPromises.push(userCreate);
-  });
 
   const userCreate = await Promise.all(createUserPromises);
 
@@ -130,7 +134,10 @@ const migrateUsers = async () => {
   console.info('\n--------------');
   console.info('USER MIGRATION SUMMARY\n');
 
-  consoleLogColor(`Created ${successUsers.length}/${usersV1Bank.length} '${importBank.name}' users from a total list of ${usersV1.length}`, successUsers.length === usersV1Bank.length ? 'green' : 'red');
+  consoleLogColor(
+    `Created ${successUsers.length}/${usersV1Bank.length} '${importBank.name}' users from a total list of ${usersV1.length}`,
+    successUsers.length === usersV1Bank.length ? 'green' : 'red',
+  );
 
   if (existingUserErrors.length || apiUserErrors.length || userNoBanksError.length) {
     consoleLogColor(`error migrating ${existingUserErrors.length + apiUserErrors.length + userNoBanksError.length} users`);

@@ -119,8 +119,8 @@ Currently, BSS (portal-api) uses the Central API for deal and facility CRUD oper
 
 Two potential approaches can align both products:
 
-* Update GEF API to use the Central API for deal and facility CRUD operations.
-* Remove all deal and facility CRUD operations from the Central API and handle them inside BSS (portal-api).
+- Update GEF API to use the Central API for deal and facility CRUD operations.
+- Remove all deal and facility CRUD operations from the Central API and handle them inside BSS (portal-api).
 
 It's essential to note that BSS and GEF are currently misaligned. Eventually, GEF and BSS will be aligned to use the same design and approach (refer to portal and gef-ui READMEs). When this alignment occurs, the deal and facility CRUD operations in the Central API, which are currently consumed only by BSS (Portal), may become redundant and can be deleted.
 

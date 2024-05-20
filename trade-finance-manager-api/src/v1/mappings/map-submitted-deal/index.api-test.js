@@ -20,7 +20,6 @@ describe('mappings - map submitted deal - mapSubmittedDeal', () => {
           ...mockDeal.dealSnapshot.bondTransactions.items.map((facility) => ({
             ...mapBssEwcsFacility(facility),
             coverEndDate: expect.any(Object), // date object
-
           })),
           ...mockDeal.dealSnapshot.loanTransactions.items.map((facility) => ({
             ...mapBssEwcsFacility(facility),

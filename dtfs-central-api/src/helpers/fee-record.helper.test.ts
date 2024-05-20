@@ -25,7 +25,11 @@ describe('fee-record.helper', () => {
 
     it('returns an SQL entity with the correct data', () => {
       // Act
-      const feeRecordEntity = feeRecordCsvRowToSqlEntity({ dataEntry: MOCK_UTILISATION_REPORT_RAW_CSV_DATA, requestSource, report });
+      const feeRecordEntity = feeRecordCsvRowToSqlEntity({
+        dataEntry: MOCK_UTILISATION_REPORT_RAW_CSV_DATA,
+        requestSource,
+        report,
+      });
 
       // Assert
       expect(feeRecordEntity instanceof FeeRecordEntity).toBe(true);

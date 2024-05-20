@@ -73,10 +73,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
       .withUploadedByUserId(portalUserId)
       .build();
 
-    const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
-      .withId(2)
-      .withBankId(bankId)
-      .build();
+    const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(2).withBankId(bankId).build();
 
     await saveReportsToDatabase(uploadedReport, nonUploadedReport);
 
@@ -177,7 +174,10 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     await saveReportsToDatabase(notReceivedReportForReportPeriod, uploadedReportForDifferentReportPeriod);
 
     // Act
-    const urlWithQueryParams = axios.getUri({ url: getUrl(bankId), params: { reportPeriod, excludeNotReceived: true } });
+    const urlWithQueryParams = axios.getUri({
+      url: getUrl(bankId),
+      params: { reportPeriod, excludeNotReceived: true },
+    });
     const response: CustomSuccessResponse = await api.get(urlWithQueryParams);
 
     // Assert

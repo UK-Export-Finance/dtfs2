@@ -1,7 +1,7 @@
 const CONSTANTS = require('../../constants');
 
 /**
- * Determines whether a deal submission type 
+ * Determines whether a deal submission type
  * can be updated from MIA to MIN.
  *
  * @param {Object} deal - The portal deal object.

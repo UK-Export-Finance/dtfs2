@@ -34,9 +34,11 @@ const generateApp = () => {
   app.use('/v1', authRouter);
 
   // MongoDB sanitisation
-  app.use(mongoSanitise({
-    allowDots: true,
-  }));
+  app.use(
+    mongoSanitise({
+      allowDots: true,
+    }),
+  );
 
   // Return 200 on get to / to confirm to Azure that
   // the container has started successfully:

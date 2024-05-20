@@ -23,5 +23,5 @@ const generateMonthlyFeesPaidCurrencyError = (monthlyFeesPaidToUkefCurrencyObjec
 };
 
 module.exports = {
-    generateMonthlyFeesPaidCurrencyError,
+  generateMonthlyFeesPaidCurrencyError,
 };

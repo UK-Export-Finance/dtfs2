@@ -15,7 +15,7 @@ describe('objectIsEmpty', () => {
     ${'ABC'}            | ${true}
     ${'!"£'}            | ${true}
     ${123}              | ${true}
-  `('Returns $expected when the input specified is $value', ({ value, expected }: { value: any; expected: boolean }) => {
+  `('Returns $expected when the input specified is $value', ({ value, expected }: { value: object; expected: boolean }) => {
     expect(objectIsEmpty(value)).toEqual(expected);
   });
 });

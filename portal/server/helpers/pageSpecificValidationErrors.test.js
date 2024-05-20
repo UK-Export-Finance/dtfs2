@@ -229,7 +229,10 @@ describe('page specific validation errors', () => {
       const mockErrorList = {
         ...mockErrors,
         [ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS[0]]: { order: '1', text: 'Field error' },
-        [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supply-contract-description']]: { order: '2', text: 'Field is required' },
+        [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS['supply-contract-description']]: {
+          order: '2',
+          text: 'Field is required',
+        },
       };
 
       const mockValidationErrors = {

@@ -9,9 +9,12 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 const goToCloneDealPage = (deal) => {
   cy.loginGoToDealPage(BANK1_MAKER1, deal);
   pages.contract.cloneDealLink().contains('Clone');
-  pages.contract.cloneDealLink().invoke('attr', 'aria-label').then((label) => {
-    expect(label).to.equal(`Clone Deal ${deal.bankInternalRefName}`);
-  });
+  pages.contract
+    .cloneDealLink()
+    .invoke('attr', 'aria-label')
+    .then((label) => {
+      expect(label).to.equal(`Clone Deal ${deal.bankInternalRefName}`);
+    });
   pages.contract.cloneDealLink().click();
   cy.url().should('include', '/clone/before-you-start');
 
@@ -34,21 +37,20 @@ context('Clone a deal', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(fullyCompletedDeal, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id;
+    cy.insertOneDeal(fullyCompletedDeal, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
 
-        const { mockFacilities } = fullyCompletedDeal;
+      const { mockFacilities } = fullyCompletedDeal;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-          const loans = createdFacilities.filter((f) => f.type === 'Loan');
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-          dealFacilities.bonds = bonds;
-          dealFacilities.loans = loans;
-        });
+        dealFacilities.bonds = bonds;
+        dealFacilities.loans = loans;
       });
+    });
   });
 
   after(() => {
@@ -109,33 +111,51 @@ context('Clone a deal', () => {
       cy.url().should('include', '/contract/');
 
       // confirm new supply contract ID
-      pages.contract.bankInternalRefName().invoke('text').then((text) => {
-        expect(text.trim()).equal(`${deal.bankInternalRefName}-cloned`);
-      });
+      pages.contract
+        .bankInternalRefName()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).equal(`${deal.bankInternalRefName}-cloned`);
+        });
 
       // confirm new supply contract name
-      pages.contract.additionalRefName().invoke('text').then((text) => {
-        expect(text.trim()).equal(`Copy of ${deal.additionalRefName}-cloned`);
-      });
+      pages.contract
+        .additionalRefName()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).equal(`Copy of ${deal.additionalRefName}-cloned`);
+        });
 
       // confirm deal status and previous status are wiped
-      pages.contract.status().invoke('text').then((text) => {
-        expect(text.trim()).equal('Draft');
-      });
+      pages.contract
+        .status()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).equal('Draft');
+        });
 
-      pages.contract.previousStatus().invoke('text').then((text) => {
-        expect(text.trim()).equal('-');
-      });
+      pages.contract
+        .previousStatus()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).equal('-');
+        });
 
       // confirm About the Supply Contract is retained
-      pages.contract.aboutSupplierDetailsStatus().invoke('text').then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
+      pages.contract
+        .aboutSupplierDetailsStatus()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).equal('Completed');
+        });
 
       // confirm Eligibility is now marked as 'Not started'
-      pages.contract.eligibilityStatus().invoke('text').then((text) => {
-        expect(text.trim()).equal('Not started');
-      });
+      pages.contract
+        .eligibilityStatus()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).equal('Not started');
+        });
 
       // confirm bond statuses are 'Incomplete'
       pages.contract.bondTransactionsTableRows().each((bondTableRow) => {

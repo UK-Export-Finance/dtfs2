@@ -9,7 +9,7 @@ module.exports = (bond, errorList) => {
   if (!hasValue(bond.name)) {
     newErrorList.name = {
       order: orderNumber(newErrorList),
-      text: 'Enter the Bond\'s unique identification number',
+      text: "Enter the Bond's unique identification number",
     };
   }
 

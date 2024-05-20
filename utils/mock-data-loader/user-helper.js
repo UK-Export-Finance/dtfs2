@@ -53,7 +53,10 @@ const createAndLogInAsInitialTfmUser = async () => {
     const token = await api.loginTfmUser(mockDataLoaderTFMUser);
 
     if (!token) {
-      throw new FailedToCreateLoggedInUserSessionError({ username: mockDataLoaderTFMUser.username, cause: 'No token was present on response' });
+      throw new FailedToCreateLoggedInUserSessionError({
+        username: mockDataLoaderTFMUser.username,
+        cause: 'No token was present on response',
+      });
     }
 
     return token;

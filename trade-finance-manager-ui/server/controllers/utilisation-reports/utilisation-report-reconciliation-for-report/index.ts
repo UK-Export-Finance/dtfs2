@@ -3,6 +3,11 @@ import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
+import { mapFeeRecordItemsToFeeRecordViewModelItems } from '../helpers';
+import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
+
+const renderUtilisationReportReconciliationForReport = (res: Response, viewModel: UtilisationReportReconciliationForReportViewModel) =>
+  res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', viewModel);
 
 export const getUtilisationReportReconciliationByReportId = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
@@ -13,11 +18,14 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
 
     const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(utilisationReportReconciliationDetails.reportPeriod);
 
-    return res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', {
+    const feeRecordViewModel = mapFeeRecordItemsToFeeRecordViewModelItems(utilisationReportReconciliationDetails.feeRecords);
+
+    return renderUtilisationReportReconciliationForReport(res, {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       bank: utilisationReportReconciliationDetails.bank,
       formattedReportPeriod,
+      feeRecords: feeRecordViewModel,
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);

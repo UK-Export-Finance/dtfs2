@@ -11,5 +11,5 @@ const isCountryDisabled = async (code) => {
 };
 
 module.exports = {
-  isCountryDisabled ,
+  isCountryDisabled,
 };

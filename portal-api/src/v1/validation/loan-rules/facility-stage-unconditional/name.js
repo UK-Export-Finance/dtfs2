@@ -39,10 +39,7 @@ module.exports = (loan, errorList) => {
 
   if (hasValue(loan.name) && !isValid(loan.name)) {
     newErrorList.name = {
-      text: validationText(
-        loan.name,
-        'Bank reference number',
-      ),
+      text: validationText(loan.name, 'Bank reference number'),
       order: orderNumber(newErrorList),
     };
   }

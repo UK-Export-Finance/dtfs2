@@ -21,11 +21,7 @@ const mockExtraBody = {
   passwordConfirm: 'AbC!23456',
 };
 
-const payloadProperties = [
-  'currentPassword',
-  'password',
-  'passwordConfirm',
-];
+const payloadProperties = ['currentPassword', 'password', 'passwordConfirm'];
 
 const mockBodyWithEmptyValues = {
   _csrf: '3YyRfYmT',

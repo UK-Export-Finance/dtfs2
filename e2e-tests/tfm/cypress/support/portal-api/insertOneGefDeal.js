@@ -1,4 +1,3 @@
 module.exports = (deal, opts) => {
-  cy.insertManyGefDeals([deal], opts)
-    .then((insertedDeals) => insertedDeals[0]);
+  cy.insertManyGefDeals([deal], opts).then((insertedDeals) => insertedDeals[0]);
 };
