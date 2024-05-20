@@ -55,7 +55,7 @@ export const swaggerDefinition = {
     },
     {
       name: 'Estore',
-      description: 'Mulesoft API endpoints',
+      description: 'APIM API endpoints',
     },
     {
       name: 'Companies House',
@@ -63,7 +63,7 @@ export const swaggerDefinition = {
     },
     {
       name: 'Ordnance Survey',
-      description: 'Public API',
+      description: 'APIM API endpoints',
     },
     {
       name: 'Notify',

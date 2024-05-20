@@ -25,7 +25,6 @@ export const lookup = async (req: Request, res: Response) => {
     method: 'get',
     url: `${APIM_MDM_URL}geospatial/addresses/postcode?postcode=${OSPostcode}`,
     headers,
-    timeout: 5000,
   }).catch((error: any) => {
     console.error('Error calling MDM Ordnance Survey API %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to call Ordnance Survey API' };

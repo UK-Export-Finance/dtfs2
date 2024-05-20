@@ -182,7 +182,7 @@ apiRoutes.get('/industry-sectors/:code/acbs-sector', industrySectors.getACBSIndu
  * /number-generator:
  *   post:
  *     summary: Calls Number Generator APIM MDM API
- *     tags: [Number Generator]
+ *     tags: [Number Generator, APIM]
  *     description: Endpoint is responsible for getting a number from the number-generator via APIM MDM
  *     requestBody:
  *       required: true
@@ -522,11 +522,10 @@ apiRoutes.get('/companies-house/:companyRegistrationNumber', companiesHouse.look
  * @openapi
  * /ordnance-survey/:OSPostcode:
  *   get:
- *     summary: Get a list of addresses from Ordnance Survey API
- *     tags: [Ordnance Survey]
+ *     summary: Get a list of addresses from MDM API APIM
+ *     tags: [Ordnance Survey, APIM]
  *     description: >-
- *       Get a list of addresses from Ordnance Survey API.
- *       Note - Not all fields are in the response body example. See Ordnance Survey API documentation.
+ *       Get a list of addresses from MDM API APIM.
  *     parameters:
  *       - in: path
  *         name: OSPostcode
@@ -540,7 +539,7 @@ apiRoutes.get('/companies-house/:companyRegistrationNumber', companiesHouse.look
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/definitions/OrdnanceSurveyResponseBody'
+ *               $ref: '#/definitions/MdmAddressesResponseBody'
  */
 apiRoutes.get('/ordnance-survey/:OSPostcode', ordnanceSurvey.lookup);
 
