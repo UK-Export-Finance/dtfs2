@@ -23,7 +23,6 @@ export const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, 
   const session = client.startSession();
 
   try {
-    // TODO: verify that these are the options we want
     const transactionOptions: TransactionOptions = {
       readConcern: { level: 'snapshot' },
       writeConcern: { w: 'majority' },

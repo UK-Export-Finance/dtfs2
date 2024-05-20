@@ -42,6 +42,11 @@ const mapDeletionAuditRecord = (auditRecord: AuditDatabaseRecord) => ({
   deletedByNoUserLoggedIn: auditRecord.noUserLoggedIn,
 });
 
+/**
+ * When deleting a document from the database, we can't just add the `AuditDetails` to the document itself. To solve this, when a document
+ * is deleted, a log is inserted to `deletion-audit-logs` containing the metadata we want to send. The deletion logs collection has its
+ * own separate change stream, calling this function to map the log & post it to the api.
+ */
 export const postDeletionAuditDetails = async (changeStreamDocument: ChangeStreamInsertDocument<DeletionAuditLog>): Promise<void> => {
   const { AUDIT_API_URL, AUDIT_API_USERNAME, AUDIT_API_PASSWORD } = process.env;
   if (!AUDIT_API_URL || !AUDIT_API_USERNAME || !AUDIT_API_PASSWORD) {
