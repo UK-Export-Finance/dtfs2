@@ -340,9 +340,7 @@ describe('SignInLinkController', () => {
     }
 
     function mockGetSignInTokenStatusWithResolvedValue(response) {
-      when(signInLinkService.getSignInTokenStatus)
-        .calledWith({ userId: TEST_USER_PARTIAL_2FA._id, signInToken })
-        .mockResolvedValue(response);
+      when(signInLinkService.getSignInTokenStatus).calledWith({ userId: TEST_USER_PARTIAL_2FA._id, signInToken }).mockResolvedValue(response);
     }
 
     function mockGetSignInTokenStatusNotFound() {
@@ -358,9 +356,7 @@ describe('SignInLinkController', () => {
     }
 
     function mockGetSignInTokenStatusToRejectWithError(error) {
-      when(signInLinkService.getSignInTokenStatus)
-        .calledWith({ userId: TEST_USER_PARTIAL_2FA._id, signInToken })
-        .mockRejectedValue(error);
+      when(signInLinkService.getSignInTokenStatus).calledWith({ userId: TEST_USER_PARTIAL_2FA._id, signInToken }).mockRejectedValue(error);
     }
     function mockGetSignInTokenStatusErrorWithInvalidSignInTokenError() {
       mockGetSignInTokenStatusToRejectWithError(new InvalidSignInTokenError(signInToken));

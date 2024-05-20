@@ -13,9 +13,7 @@ const getFeeRecordPeriod = (facility, dealType, premiumScheduleIndex) => {
     return '01';
   }
   // EWCS/BSS
-  return facility.tfm.premiumSchedule[premiumScheduleIndex]
-    ? facility.tfm.premiumSchedule[premiumScheduleIndex].period.toString().padStart(2, 0)
-    : '01';
+  return facility.tfm.premiumSchedule[premiumScheduleIndex] ? facility.tfm.premiumSchedule[premiumScheduleIndex].period.toString().padStart(2, 0) : '01';
 };
 
 module.exports = getFeeRecordPeriod;

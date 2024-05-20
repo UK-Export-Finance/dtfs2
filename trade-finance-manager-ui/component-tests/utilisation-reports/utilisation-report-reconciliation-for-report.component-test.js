@@ -50,14 +50,10 @@ describe(page, () => {
 
     wrapper.expectElement(premiumPaymentsTabSelector).toExist();
 
-    wrapper
-      .expectText(`${premiumPaymentsTabSelector} h2[data-cy="premium-payments-heading"]`)
-      .toRead('Premium payments');
+    wrapper.expectText(`${premiumPaymentsTabSelector} h2[data-cy="premium-payments-heading"]`).toRead('Premium payments');
     wrapper
       .expectText(`${premiumPaymentsTabSelector} p`)
-      .toMatch(
-        /Enter received payments against reported fees by selecting them and then selecting the 'Add a payment' button./,
-      );
+      .toMatch(/Enter received payments against reported fees by selecting them and then selecting the 'Add a payment' button./);
     wrapper
       .expectText(`${premiumPaymentsTabSelector} p`)
       .toMatch(
@@ -69,14 +65,10 @@ describe(page, () => {
     wrapper.expectElement(`${premiumPaymentsTabSelector} div.govuk-button-group`).toExist();
 
     wrapper.expectElement(`${premiumPaymentsTabSelector} button[data-cy="add-a-payment-button"]`).toExist();
-    wrapper
-      .expectPrimaryButton(`${premiumPaymentsTabSelector} button[data-cy="add-a-payment-button"]`)
-      .toLinkTo(undefined, 'Add a payment');
+    wrapper.expectPrimaryButton(`${premiumPaymentsTabSelector} button[data-cy="add-a-payment-button"]`).toLinkTo(undefined, 'Add a payment');
 
     wrapper.expectElement(`${premiumPaymentsTabSelector} button[data-cy="generate-keying-data-button"]`).toExist();
-    wrapper
-      .expectSecondaryButton(`${premiumPaymentsTabSelector} button[data-cy="generate-keying-data-button"]`)
-      .toLinkTo(undefined, 'Generate keying data');
+    wrapper.expectSecondaryButton(`${premiumPaymentsTabSelector} button[data-cy="generate-keying-data-button"]`).toLinkTo(undefined, 'Generate keying data');
 
     wrapper.expectElement(`${premiumPaymentsTabSelector} table[data-cy="premium-payments-table"]`).toExist();
   });

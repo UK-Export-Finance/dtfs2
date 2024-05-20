@@ -5,7 +5,7 @@ const db = require('../../../../drivers/db-client').default;
 
 const addComment = async (_id, commentType, comment) => {
   if (ObjectId.isValid(_id)) {
-  // get the deals collection
+    // get the deals collection
     const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
     // add the comment to the matching deal (based on _id)
@@ -14,10 +14,12 @@ const addComment = async (_id, commentType, comment) => {
       {
         $push: {
           [commentType]: {
-            $each: [{
-              ...comment,
-              timestamp: Date.now(),
-            }],
+            $each: [
+              {
+                ...comment,
+                timestamp: Date.now(),
+              },
+            ],
             $position: 0,
           },
         },

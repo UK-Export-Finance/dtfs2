@@ -5,9 +5,7 @@ import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { NOT_ADDED } from '../../../fixtures/constants';
-import {
-  PIM_USER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN,
-} from '../../../../../e2e-fixtures';
+import { PIM_USER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import { CURRENCY } from '../../../../../e2e-fixtures/constants.fixture';
 import caseDealPage from '../../pages/caseDealPage';
 
@@ -20,7 +18,7 @@ context('Amendments - Manual approval journey', () => {
   // Therefore if today is EOM and a month from now is not EOM we need to NOT add one to the tenor
   const todayIsEndOfMonth = add(new Date(), { days: 1 }).getDate() === 1;
   const aMonthFromNowIsEndOfMonth = add(new Date(), { months: 1, days: 1 }).getDate() === 1;
-  const facilityTenor = (todayIsEndOfMonth && !aMonthFromNowIsEndOfMonth) ? '25 months' : '26 months';
+  const facilityTenor = todayIsEndOfMonth && !aMonthFromNowIsEndOfMonth ? '25 months' : '26 months';
 
   describe('Amendment details - Change the Cover end date AND Facility value', () => {
     let dealId;

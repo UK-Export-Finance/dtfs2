@@ -8,7 +8,7 @@ const overrideDealsIfAmendmentsInProgress = (deals, amendments) => {
       // eslint-disable-next-line no-restricted-syntax
       for (const amendment of amendments) {
         const amendmentIsInProgress = amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
-        if (amendmentIsInProgress && (amendment.dealId === deal._id)) {
+        if (amendmentIsInProgress && amendment.dealId === deal._id) {
           modifiedDeal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
           break;
         }

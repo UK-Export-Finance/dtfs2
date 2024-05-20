@@ -60,10 +60,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const taskCreation = await createDealTasks(
-            submittedDeal,
-            generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id),
-          );
+          const taskCreation = await createDealTasks(submittedDeal, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
 
           const expected = taskCreation.tfm.tasks;
           expected[0].groupTasks[0].emailSent = true;
@@ -106,10 +103,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const taskCreation = await createDealTasks(
-            submittedDeal,
-            generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id),
-          );
+          const taskCreation = await createDealTasks(submittedDeal, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
 
           const expected = taskCreation.tfm.tasks;
           expected[0].groupTasks[0].emailSent = true;
@@ -139,11 +133,7 @@ describe('/v1/deals', () => {
             ),
           };
 
-          expect(sendEmailApiSpy.mock.calls[0][0]).toEqual(
-            expected.templateId,
-            expected.sendToEmailAddress,
-            expected.emailVariables,
-          );
+          expect(sendEmailApiSpy.mock.calls[0][0]).toEqual(expected.templateId, expected.sendToEmailAddress, expected.emailVariables);
         });
       });
 

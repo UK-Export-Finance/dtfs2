@@ -15,4 +15,4 @@ export type PortalSessionUser = {
   bank: Bank;
   timezone: string;
   'user-status': string;
-}
+};

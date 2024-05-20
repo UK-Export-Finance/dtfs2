@@ -1,10 +1,10 @@
-import { getYear, parse, set, startOfDay } from "date-fns";
+import { getYear, parse, set, startOfDay } from 'date-fns';
 
 /**
- * 
+ *
  * @param searchString a string with which to query the database
  * @returns a date, parsed as any of this is one of the accepted formats, or invalid date if not
- * 
+ *
  * Accepted formats:
  *  - dd-MM-yyyy
  *  - dd/MM/yyyy
@@ -14,7 +14,7 @@ import { getYear, parse, set, startOfDay } from "date-fns";
  *  - dd MM yy
  *  - ddMMyy
  *  - ddMMyyyy
- *  
+ *
  * Using the current year if not specified:
  *  - dd-MM
  *  - dd/MM
@@ -35,7 +35,7 @@ export const getDateFromSearchString = (searchString: string) => {
   }
 
   let year;
-  
+
   if (!parsedYear) {
     year = getYear(new Date());
   } else if (parsedYear.length < 4) {

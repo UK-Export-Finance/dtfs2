@@ -1,5 +1,5 @@
 const uploadFile = (fileName, uploadEndpoint, selector = '.moj-multi-file-upload__dropzone') => {
-// start watching the POST requests
+  // start watching the POST requests
   cy.intercept({
     method: 'POST',
     pathname: uploadEndpoint,

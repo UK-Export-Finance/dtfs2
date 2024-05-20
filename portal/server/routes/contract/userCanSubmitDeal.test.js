@@ -68,12 +68,7 @@ describe('userCanSubmitDeal', () => {
         maker: {
           _id: '12345678',
         },
-        editedBy: [
-          { userId: '1' },
-          { userId: '1234' },
-          { userId: '3' },
-          { userId: '4' },
-        ],
+        editedBy: [{ userId: '1' }, { userId: '1234' }, { userId: '3' }, { userId: '4' }],
       };
 
       const user = {
@@ -92,12 +87,7 @@ describe('userCanSubmitDeal', () => {
         maker: {
           _id: '12345678',
         },
-        editedBy: [
-          { userId: '1' },
-          { userId: '1234' },
-          { userId: '3' },
-          { userId: '4' },
-        ],
+        editedBy: [{ userId: '1' }, { userId: '1234' }, { userId: '3' }, { userId: '4' }],
       };
 
       const user = {
@@ -116,12 +106,7 @@ describe('userCanSubmitDeal', () => {
         maker: {
           _id: '12345678',
         },
-        editedBy: [
-          { userId: '1' },
-          { userId: '2' },
-          { userId: '3' },
-          { userId: '4' },
-        ],
+        editedBy: [{ userId: '1' }, { userId: '2' }, { userId: '3' }, { userId: '4' }],
       };
 
       const user = {

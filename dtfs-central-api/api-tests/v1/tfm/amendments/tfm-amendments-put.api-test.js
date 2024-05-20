@@ -1,9 +1,5 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const {
-  generatePortalAuditDetails,
-  generateTfmAuditDetails,
-  generateParsedMockTfmUserAuditDatabaseRecord,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generatePortalAuditDetails, generateTfmAuditDetails, generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
@@ -38,11 +34,7 @@ describe('PUT TFM amendments', () => {
   };
 
   beforeAll(async () => {
-    await wipeDB.wipe([
-      MONGO_DB_COLLECTIONS.TFM_FACILITIES,
-      MONGO_DB_COLLECTIONS.TFM_DEALS,
-      MONGO_DB_COLLECTIONS.USERS,
-    ]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_FACILITIES, MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.USERS]);
   });
 
   beforeEach(async () => {
@@ -58,9 +50,7 @@ describe('PUT TFM amendments', () => {
       let amendmentId;
 
       beforeEach(async () => {
-        const postResult = await api
-          .post({ facility: newFacility, user: MOCK_PORTAL_USER })
-          .to('/v1/portal/facilities');
+        const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
         facilityId = postResult.body._id;
 
         await api
@@ -71,9 +61,7 @@ describe('PUT TFM amendments', () => {
           })
           .to('/v1/tfm/deals/submit');
 
-        const { body } = await api
-          .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
-          .to(`/v1/tfm/facilities/${facilityId}/amendments/`);
+        const { body } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments/`);
         amendmentId = body.amendmentId;
       });
 
@@ -129,9 +117,7 @@ describe('PUT TFM amendments', () => {
         .to('/v1/tfm/deals/submit');
 
       const updatePayload = { createdBy: MOCK_PORTAL_USER };
-      const { status } = await api
-        .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
-        .to(`/v1/tfm/facilities/${newId}/amendments/`);
+      const { status } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${newId}/amendments/`);
       const { body: bodyPutResponse } = await api
         .put({ payload: updatePayload, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
         .to(`/v1/tfm/facilities/${newId}/amendments/626aa00e2446022434c52148`);

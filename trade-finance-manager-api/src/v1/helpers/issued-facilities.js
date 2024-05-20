@@ -13,10 +13,8 @@ const issuedFacilities = (facilities) => {
     // GEF (Cash & Contingent) facilities
     issuedCash: issuedFacilitiesList.filter((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.CASH),
     unissuedCash: unissuedFacilitiesList.filter((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.CASH),
-    issuedContingent: issuedFacilitiesList.filter((f) =>
-      f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT),
-    unissuedContingent: unissuedFacilitiesList.filter((f) =>
-      f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT),
+    issuedContingent: issuedFacilitiesList.filter((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT),
+    unissuedContingent: unissuedFacilitiesList.filter((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT),
   };
 };
 

@@ -7,7 +7,6 @@ const CONSTANTS = require('../../../src/constants');
 const { MOCK_DEAL } = require('../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 
-
 const newFacility = {
   type: 'Bond',
   dealId: MOCK_DEAL.DEAL_ID,

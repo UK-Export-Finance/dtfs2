@@ -1,8 +1,5 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const {
-  validateAuditDetails,
-  generateAuditDatabaseRecordFromAuditDetails,
-} = require('@ukef/dtfs2-common/change-stream');
+const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../../drivers/db-client').default;
 const { payloadVerification } = require('../../../../helpers');
 const { PAYLOAD } = require('../../../../constants');

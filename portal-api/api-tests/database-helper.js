@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const { ObjectId } = require('mongodb');
 const { produce } = require('immer');
 const db = require('../src/drivers/db-client');

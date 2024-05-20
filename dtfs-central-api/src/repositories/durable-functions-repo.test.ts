@@ -16,7 +16,9 @@ describe('durable-functions-repo', () => {
     {
       testCase: 'deleteAllCompleteAcbsDurableFunctionLogs',
       makeRequest: deleteAllCompleteAcbsDurableFunctionLogs,
-      expectedDeleteManyCalledWith: { $and: [{ type: { $eq: DURABLE_FUNCTIONS_LOG.TYPE.ACBS } }, { status: { $eq: DURABLE_FUNCTIONS_LOG.STATUS.COMPLETED } }] },
+      expectedDeleteManyCalledWith: {
+        $and: [{ type: { $eq: DURABLE_FUNCTIONS_LOG.TYPE.ACBS } }, { status: { $eq: DURABLE_FUNCTIONS_LOG.STATUS.COMPLETED } }],
+      },
     },
   ];
 

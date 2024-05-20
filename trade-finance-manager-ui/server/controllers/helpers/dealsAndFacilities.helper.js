@@ -83,8 +83,8 @@ const generateSortByQuery = ({ collectionName, reqQuery }) => {
 };
 
 const getDealsOrFacilitiesItems = async (collectionName, queryParams, userToken, amendments) => {
-  let items; let
-    pagination;
+  let items;
+  let pagination;
   if (collectionName === 'deals') {
     ({ deals: items, pagination } = await api.getDeals(queryParams, userToken));
     items = overrideDealsIfAmendmentsInProgress(items, amendments);
@@ -130,7 +130,7 @@ const renderDealsOrFacilitiesPage = async (collectionName, req, res) => {
 
     const activeSortByField = sortByQuery.field;
     const activeSortByOrder = sortByQuery.order;
-    const sortButtonWasClicked = sortfield ? true : false;
+    const sortButtonWasClicked = !!sortfield;
 
     return res.render(`${collectionName}/${collectionName}.njk`, {
       heading: generateHeadingText(pagination?.totalItems, search, collectionName),

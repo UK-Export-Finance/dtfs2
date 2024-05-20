@@ -1,12 +1,5 @@
 import { ROLES } from '@ukef/dtfs2-common';
-import {
-  getAllDealsData,
-  getTemplateVariables,
-  getDataAndTemplateVariables,
-  allDeals,
-  removeSingleAllDealsFilter,
-  removeAllDealsFilters,
-} from '.';
+import { getAllDealsData, getTemplateVariables, getDataAndTemplateVariables, allDeals, removeSingleAllDealsFilter, removeAllDealsFilters } from '.';
 import mockResponse from '../../../helpers/responseMock';
 import { getFlashSuccessMessage } from '../../../helpers';
 import api from '../../../api';
@@ -77,14 +70,7 @@ describe('controllers/dashboard/deals', () => {
 
   describe('getAllDealsData', () => {
     it('should calls api.allDeals with filters query', async () => {
-      await getAllDealsData(
-        'mock-token',
-        mockReq.session.user,
-        mockReq.session.dashboardFilters,
-        mockReq.params.page,
-        CONSTANTS.SORT_BY.DEFAULT,
-        mockRes,
-      );
+      await getAllDealsData('mock-token', mockReq.session.user, mockReq.session.dashboardFilters, mockReq.params.page, CONSTANTS.SORT_BY.DEFAULT, mockRes);
 
       expect(api.allDeals).toHaveBeenCalledTimes(1);
 
@@ -95,23 +81,11 @@ describe('controllers/dashboard/deals', () => {
       // empty object as default sort
       const sortQuery = {};
 
-      expect(api.allDeals).toHaveBeenCalledWith(
-        CONSTANTS.DASHBOARD.PAGE_SIZE,
-        CONSTANTS.DASHBOARD.PAGE_SIZE,
-        expectedFilters,
-        'mock-token',
-        sortQuery,
-      );
+      expect(api.allDeals).toHaveBeenCalledWith(CONSTANTS.DASHBOARD.PAGE_SIZE, CONSTANTS.DASHBOARD.PAGE_SIZE, expectedFilters, 'mock-token', sortQuery);
     });
 
     it('should return an object', async () => {
-      const result = await getAllDealsData(
-        'mock-token',
-        mockReq.session.user,
-        mockReq.session.dashboardFilters,
-        mockReq.params.page,
-        mockRes,
-      );
+      const result = await getAllDealsData('mock-token', mockReq.session.user, mockReq.session.dashboardFilters, mockReq.params.page, mockRes);
 
       const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 
@@ -129,14 +103,7 @@ describe('controllers/dashboard/deals', () => {
     it('should calls api.allDeals with default sort query if session.sortBy is blank', async () => {
       delete mockReq.session.sortBy;
 
-      await getAllDealsData(
-        'mock-token',
-        mockReq.session.user,
-        mockReq.session.dashboardFilters,
-        mockReq.params.page,
-        mockReq.session.sortBy,
-        mockRes,
-      );
+      await getAllDealsData('mock-token', mockReq.session.user, mockReq.session.dashboardFilters, mockReq.params.page, mockReq.session.sortBy, mockRes);
 
       const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 
@@ -145,13 +112,7 @@ describe('controllers/dashboard/deals', () => {
       // empty object as default sort
       const sortQuery = {};
 
-      expect(api.allDeals).toHaveBeenCalledWith(
-        CONSTANTS.DASHBOARD.PAGE_SIZE,
-        CONSTANTS.DASHBOARD.PAGE_SIZE,
-        expectedFilters,
-        'mock-token',
-        sortQuery,
-      );
+      expect(api.allDeals).toHaveBeenCalledWith(CONSTANTS.DASHBOARD.PAGE_SIZE, CONSTANTS.DASHBOARD.PAGE_SIZE, expectedFilters, 'mock-token', sortQuery);
     });
   });
 
@@ -193,13 +154,7 @@ describe('controllers/dashboard/deals', () => {
 
   describe('getDataAndTemplateVariables', () => {
     it('should return variables from getData and templateVariables functions', async () => {
-      const result = await getDataAndTemplateVariables(
-        'mock-token',
-        mockReq.session.user,
-        mockReq.session.dashboardFilters,
-        mockReq.params.page,
-        mockRes,
-      );
+      const result = await getDataAndTemplateVariables('mock-token', mockReq.session.user, mockReq.session.dashboardFilters, mockReq.params.page, mockRes);
 
       const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 

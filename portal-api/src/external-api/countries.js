@@ -74,7 +74,7 @@ const getCountry = async (code) => {
 
   return {
     status: 404,
-    error: 'Invalid response received'
+    error: 'Invalid response received',
   };
 };
 

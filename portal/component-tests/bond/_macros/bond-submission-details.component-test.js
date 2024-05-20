@@ -1,7 +1,11 @@
-const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
 const deal = require('../../fixtures/deal-fully-completed');
-const { DATE: { LONDON_TIMEZONE } } = require('../../../server/constants');
+const {
+  DATE: { LONDON_TIMEZONE },
+} = require('../../../server/constants');
 
 const component = 'bond/_macros/bond-submission-details.njk';
 const render = componentRenderer(component);

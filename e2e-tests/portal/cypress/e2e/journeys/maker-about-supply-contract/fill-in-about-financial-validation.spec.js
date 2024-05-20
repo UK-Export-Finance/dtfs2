@@ -1,6 +1,4 @@
-const {
-  contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
-} = require('../../pages');
+const { contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
@@ -12,8 +10,9 @@ context('about-buyer', () => {
   let deal;
 
   before(() => {
-    cy.insertOneDeal(aDealWithAboutBuyerComplete, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(aDealWithAboutBuyerComplete, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   it('A maker picks up a deal with the first 2 pages of about-supply-contract complete, and triggers all validation errors on the financial page.', () => {
@@ -91,7 +90,10 @@ context('about-buyer', () => {
     const dateTooFarInThePast = DATE_CONSTANTS.thirtyFiveDaysAgo;
     contractAboutFinancial.visit(deal);
     contractAboutFinancial.supplyContractConversionDate().day().type(`{selectall}{backspace}${dateTooFarInThePast.getDate()}`);
-    contractAboutFinancial.supplyContractConversionDate().month().type(`{selectall}{backspace}${dateTooFarInThePast.getMonth() + 1}`);
+    contractAboutFinancial
+      .supplyContractConversionDate()
+      .month()
+      .type(`{selectall}{backspace}${dateTooFarInThePast.getMonth() + 1}`);
     contractAboutFinancial.supplyContractConversionDate().year().type(`{selectall}{backspace}${dateTooFarInThePast.getFullYear()}`);
     contractAboutFinancial.preview().click();
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be more than 30 days in the past');

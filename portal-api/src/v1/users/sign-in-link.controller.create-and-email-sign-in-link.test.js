@@ -44,10 +44,7 @@ describe('SignInLinkController', () => {
 
       await signInLinkController.createAndEmailSignInLink(req, res);
 
-      expect(signInLinkService.createAndEmailSignInLink).toHaveBeenCalledWith(
-        TEST_USER,
-        generateNoUserLoggedInAuditDetails(),
-      );
+      expect(signInLinkService.createAndEmailSignInLink).toHaveBeenCalledWith(TEST_USER, generateNoUserLoggedInAuditDetails());
     });
 
     it('should respond with a 201 if the sign in link is emailed', async () => {
@@ -67,9 +64,7 @@ describe('SignInLinkController', () => {
     });
 
     it('should respond with a 500 if creating or emailing the sign in link fails', async () => {
-      when(signInLinkService.createAndEmailSignInLink)
-        .calledWith(TEST_USER, generateNoUserLoggedInAuditDetails())
-        .mockRejectedValueOnce(new Error());
+      when(signInLinkService.createAndEmailSignInLink).calledWith(TEST_USER, generateNoUserLoggedInAuditDetails()).mockRejectedValueOnce(new Error());
 
       await signInLinkController.createAndEmailSignInLink(req, res);
 

@@ -6,7 +6,15 @@ export class AddFeeRecordStatusColumn1715613302494 implements MigrationInterface
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
             ALTER TABLE "FeeRecord"
-            ADD "status" nvarchar(255) NOT NULL CONSTRAINT "DF_1eb3a649cce84deaa2a20390401" DEFAULT 'TO_DO'
+            ADD "status" nvarchar(255) NULL CONSTRAINT "DF_1eb3a649cce84deaa2a20390401" DEFAULT 'TO_DO'
+        `);
+    await queryRunner.query(`
+            UPDATE "FeeRecord"
+            SET "status" = 'TO_DO'
+        `);
+    await queryRunner.query(`
+            ALTER TABLE "FeeRecord"
+            ALTER COLUMN "status" nvarchar(255) NOT NULL
         `);
   }
 

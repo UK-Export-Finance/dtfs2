@@ -26,7 +26,7 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
 
     expect(exchangeRateError).toEqual(null);
   });
-  
+
   it('returns an error if accrual currency is null and accrual exchange rate is not a number', async () => {
     const csvDataRow = {
       exporter: {
@@ -58,7 +58,7 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
 
     expect(exchangeRateError).toEqual(expectedError);
   });
-  
+
   it('returns an error if accrual currency is null and accrual exchange rate is too long', async () => {
     const csvDataRow = {
       exporter: {

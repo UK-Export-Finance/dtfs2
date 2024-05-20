@@ -25,7 +25,7 @@ describe('setObjectPropertyValueFromStringPath', () => {
 
   it('should set a property if it does not exist in an object from the given string path', () => {
     const before = {
-      propertyD: 'before'
+      propertyD: 'before',
     };
 
     const after = {
@@ -34,7 +34,7 @@ describe('setObjectPropertyValueFromStringPath', () => {
           propertyC: 'after',
         },
       },
-      propertyD: 'before'
+      propertyD: 'before',
     };
 
     setObjectPropertyValueFromStringPath(before, 'propertyA.propertyB.propertyC', 'after');

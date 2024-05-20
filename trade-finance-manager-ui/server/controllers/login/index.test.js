@@ -87,7 +87,9 @@ describe('controllers - login', () => {
       const logoutReq = {
         ...req,
         session: {
-          destroy: (callback) => { callback(); },
+          destroy: (callback) => {
+            callback();
+          },
         },
       };
 

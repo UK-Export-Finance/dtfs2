@@ -2,12 +2,7 @@ const mapDeal = require('../../../src/v1/mappings/map-deal');
 const mapEligibilityCriteriaContentStrings = require('../../../src/v1/mappings/map-eligibility-criteria-content-strings');
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 
-const {
-  eligibility,
-  facilities,
-  bondTransactions,
-  loanTransactions,
-} = MOCK_DEAL;
+const { eligibility, facilities, bondTransactions, loanTransactions } = MOCK_DEAL;
 
 describe('mappings - map-deal', () => {
   const mockBonds = bondTransactions.items.map(({ _id }) => ({ _id }));
@@ -39,10 +34,7 @@ describe('mappings - map-deal', () => {
       ...mockDeal,
       eligibility: {
         ...mockDeal.eligibility,
-        criteria: mapEligibilityCriteriaContentStrings(
-          mockDeal.eligibility,
-          mockDeal.dealType,
-        ),
+        criteria: mapEligibilityCriteriaContentStrings(mockDeal.eligibility, mockDeal.dealType),
       },
       bondTransactions: {},
       loanTransactions: {},

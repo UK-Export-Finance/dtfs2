@@ -22,13 +22,7 @@ const mapFacility = (f, facilityTfm, dealDetails, facilityFull) => {
   // Deep clone
   const facility = JSON.parse(JSON.stringify(f, null, 4));
 
-  const {
-    type,
-    value,
-    facilityStage,
-    guaranteeFeePayableByBank,
-    currency,
-  } = facility;
+  const { type, value, facilityStage, guaranteeFeePayableByBank, currency } = facility;
 
   facility.ukefFacilityType = type;
 

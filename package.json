@@ -1,6 +1,6 @@
 {
   "name": "dtfs",
-  "version": "2.0.0",
+  "version": "1.2.1",
   "description": "DTFS",
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "bugs": {
@@ -30,12 +30,14 @@
     "audit:fix:all": "npm audit --fix --if-present",
     "ci:all": "npm ci --if-present",
     "db:seed": "(cd utils && npm run db:seed)",
+    "db:seed:reset": "(cd utils && npm run db:seed:reset)",
+    "env:copy": "(cd utils && npm run env:copy)",
     "housekeeping": "npm run update:all && npm run install:all && npm run prettier:fix:all && npm run lint:fix:all && npm run audit:fix:all && npm run spellcheck",
     "postinstall": "husky install",
     "install:all": "npm install --if-present",
     "lint:all": "npm run lint --workspaces --if-present",
     "lint:fix:all": "npm run lint --workspaces --if-present -- --fix",
-    "load": "ts-node utils/mock-data-loader/re-insert-mocks.js",
+    "load": "(cd utils && npm run load)",
     "prettier:all": "npm run prettier --workspaces --if-present",
     "prettier:fix:all": "npm run prettier:fix --workspaces --if-present",
     "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color '**/*'",
@@ -56,7 +58,8 @@
     ]
   },
   "dependencies": {
-    "axios": "^1.6.8"
+    "axios": "^1.6.8",
+    "release-please": "^16.10.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.8.1",

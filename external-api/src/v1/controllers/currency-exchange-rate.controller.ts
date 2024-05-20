@@ -1,3 +1,15 @@
+/* eslint-disable @typescript-eslint/unbound-method */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable no-param-reassign */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable import/no-extraneous-dependencies */
+
 /**
 Objective:
   The objective of the `getExchangeRate` function is to retrieve the exchange rate between two currencies, with an optional date parameter,
@@ -29,6 +41,7 @@ import { Request, Response } from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { isValidCurrency, isValidDate } from '../../helpers';
+
 dotenv.config();
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;

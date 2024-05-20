@@ -214,7 +214,8 @@ module.exports = {
       output: {
         facilities: [{ facilityId: '1234' }],
       },
-    }),),
+    }),
+  ),
   createEstoreSite: (deal) => deal,
   getPremiumSchedule: jest.fn(() => MOCK_PREMIUM_SCHEDULE_RESPONSE),
   sendEmail: jest.fn((templateId, sendToEmailAddress, emailVariables) => {
@@ -231,6 +232,7 @@ module.exports = {
     return Promise.resolve(mockResponse);
   }),
   getBankHolidays: jest.fn(() => Promise.resolve(MOCK_BANK_HOLIDAYS)),
+  getAllBanks: jest.fn(() => Promise.resolve([])),
   getUtilisationReportsReconciliationSummary: jest.fn(),
   getUtilisationReportById: jest.fn(() => Promise.resolve(MOCK_UTILISATION_REPORT)),
   updateUtilisationReportStatus: jest.fn(),

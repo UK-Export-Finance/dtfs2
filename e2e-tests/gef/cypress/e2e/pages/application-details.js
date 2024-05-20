@@ -12,12 +12,12 @@ const applicationDetails = {
   exporterDetailsLink: () => cy.get('[data-cy="exporter-details-link"]'),
   exporterSummaryList: () => cy.get('[data-cy="exporter-summary-list"]'),
 
-  exporterSummaryListRowKey: (tableNum, rowNum) => cy.get('[data-cy="exporter-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
-    .find('.govuk-summary-list__key'),
-  exporterSummaryListRowValue: (tableNum, rowNum) => cy.get('[data-cy="exporter-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
-    .find('.govuk-summary-list__value'),
-  exporterSummaryListRowAction: (tableNum, rowNum) => cy.get('[data-cy="exporter-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
-    .find('.govuk-summary-list__actions'),
+  exporterSummaryListRowKey: (tableNum, rowNum) =>
+    cy.get('[data-cy="exporter-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__key'),
+  exporterSummaryListRowValue: (tableNum, rowNum) =>
+    cy.get('[data-cy="exporter-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__value'),
+  exporterSummaryListRowAction: (tableNum, rowNum) =>
+    cy.get('[data-cy="exporter-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__actions'),
 
   automaticCoverHeading: () => cy.get('[data-cy="automatic-cover-heading"]'),
   automaticCoverStatus: () => cy.get('[data-cy="automatic-cover-status"]'),
@@ -33,12 +33,12 @@ const applicationDetails = {
   eligibilityCriterionEighteen: () => cy.get('[data-cy="criterion-18-text'),
   eligibilityCriterionNineteen: () => cy.get('[data-cy="criterion-19-text'),
 
-  automaticCoverSummaryListRowKey: (tableNum, rowNum) => cy.get('[data-cy="automatic-cover-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
-    .find('.govuk-summary-list__key'),
-  automaticCoverSummaryListRowValue: (tableNum, rowNum) => cy.get('[data-cy="automatic-cover-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
-    .find('.govuk-summary-list__value'),
-  automaticCoverSummaryListRowAction: (tableNum, rowNum) => cy.get('[data-cy="automatic-cover-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
-    .find('.govuk-summary-list__actions'),
+  automaticCoverSummaryListRowKey: (tableNum, rowNum) =>
+    cy.get('[data-cy="automatic-cover-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__key'),
+  automaticCoverSummaryListRowValue: (tableNum, rowNum) =>
+    cy.get('[data-cy="automatic-cover-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__value'),
+  automaticCoverSummaryListRowAction: (tableNum, rowNum) =>
+    cy.get('[data-cy="automatic-cover-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__actions'),
 
   facilityHeading: () => cy.get('[data-cy="facility-heading"]'),
   facilityStatus: () => cy.get('[data-cy="facility-status"]'),
@@ -48,24 +48,24 @@ const applicationDetails = {
   facilitySummaryList: () => cy.get('[data-cy="facility-summary-list"]'),
   deleteFacilityLink: () => cy.get('[data-cy="delete-facility"]'),
 
-  facilitySummaryListRowKey: (tableNum, rowNum) => cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
-    .find('.govuk-summary-list__key'),
-  facilitySummaryListRowValue: (tableNum, rowNum) => cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
-    .find('.govuk-summary-list__value'),
-  facilitySummaryListRowAction: (tableNum, rowNum) => cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
-    .find('.govuk-summary-list__actions'),
+  facilitySummaryListRowKey: (tableNum, rowNum) =>
+    cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__key'),
+  facilitySummaryListRowValue: (tableNum, rowNum) =>
+    cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__value'),
+  facilitySummaryListRowAction: (tableNum, rowNum) =>
+    cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__actions'),
 
   supportingInfoHeading: () => cy.get('[data-cy="supportingInfo-heading"]'),
   supportingInfoStatus: () => cy.get('[data-cy="supportingInfo-status"]'),
   supportingInfoStartLink: () => cy.get('[data-cy="supportingInfo-start-link'),
   supportingInfoSummaryList: () => cy.get('[data-cy="supportingInfo-summary-list"]'),
 
-  supportingInfoListRowKey: (tableNum, rowNum) => cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
-    .find('.govuk-summary-list__key'),
-  supportingInfoListRowValue: (tableNum, rowNum) => cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
-    .find('.govuk-summary-list__value'),
-  supportingInfoListRowAction: (tableNum, rowNum) => cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
-    .find('.govuk-summary-list__actions'),
+  supportingInfoListRowKey: (tableNum, rowNum) =>
+    cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__key'),
+  supportingInfoListRowValue: (tableNum, rowNum) =>
+    cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__value'),
+  supportingInfoListRowAction: (tableNum, rowNum) =>
+    cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__actions'),
 
   submitHeading: () => cy.get('[data-cy="submit-heading"]'),
   submitButton: () => cy.get('[data-cy="submit-button"]'),

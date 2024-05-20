@@ -24,16 +24,22 @@ export const getNumber = async (entityType: string, dealId: string): Promise<obj
       throw new Error(`Invalid argument provided for ${dealId}`);
     }
 
-    const response: AxiosResponse = await axios.post(`${EXTERNAL_API_URL}/number-generator`, {
-      entityType,
-      dealId,
-    }, {
-      headers,
-    });
+    const response: AxiosResponse = await axios.post(
+      `${EXTERNAL_API_URL}/number-generator`,
+      {
+        entityType,
+        dealId,
+      },
+      {
+        headers,
+      },
+    );
 
     if (!response.data) {
       console.error('❌ Invalid number generator response received from external-api for deal %s %o', dealId, response);
-      throw new Error(`Invalid number generator response received from external-api for deal ${dealId}`, { cause: 'Invalid response from external-api' });
+      throw new Error(`Invalid number generator response received from external-api for deal ${dealId}`, {
+        cause: 'Invalid response from external-api',
+      });
     }
 
     return response;

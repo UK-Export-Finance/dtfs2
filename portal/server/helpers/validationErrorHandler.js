@@ -4,7 +4,9 @@ const validationErrorHandler = (errs, href = '') => {
   const errorSummary = [];
   const fieldErrors = {};
 
-  if (!errs) { return false; }
+  if (!errs) {
+    return false;
+  }
 
   const errors = isObject(errs) ? [errs] : errs;
 

@@ -26,7 +26,9 @@ context('Enter Exporters Correspondence Address Page', () => {
 
   beforeEach(() => {
     cy.saveSession();
-    cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`), { headers: { Referer: relative(`/gef/application-details/${dealIds[0].id}`) } });
+    cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`), {
+      headers: { Referer: relative(`/gef/application-details/${dealIds[0].id}`) },
+    });
   });
 
   describe('Visiting page', () => {

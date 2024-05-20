@@ -140,7 +140,9 @@ describe('post-upload-utilisation-report controller', () => {
       await postUploadUtilisationReport(req, res);
 
       // Assert
-      expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({ id: validPostUploadUtilisationReportRequestBody.reportId });
+      expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({
+        id: validPostUploadUtilisationReportRequestBody.reportId,
+      });
       expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
       expect(mockTransactionManager.save).not.toHaveBeenCalled();
       expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -160,7 +162,9 @@ describe('post-upload-utilisation-report controller', () => {
         await postUploadUtilisationReport(req, res);
 
         // Assert
-        expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({ id: validPostUploadUtilisationReportRequestBody.reportId });
+        expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({
+          id: validPostUploadUtilisationReportRequestBody.reportId,
+        });
         expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
         expect(mockConnect).toHaveBeenCalledTimes(1);
         expect(mockStartTransaction).toHaveBeenCalledTimes(1);
@@ -187,7 +191,9 @@ describe('post-upload-utilisation-report controller', () => {
 
         // Assert
         expect(res._getData()).toEqual(expect.stringContaining('Failed to save utilisation report'));
-        expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({ id: validPostUploadUtilisationReportRequestBody.reportId });
+        expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({
+          id: validPostUploadUtilisationReportRequestBody.reportId,
+        });
         expect(mockTransactionManager.save).toHaveBeenCalledTimes(1);
         expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
       });

@@ -42,11 +42,7 @@ Additional aspects:
  */
 const isValidEmail = (email) => {
   if (email) {
-    const validation = joi
-      .string()
-      .email()
-      .required()
-      .validate(email);
+    const validation = joi.string().email().required().validate(email);
 
     return !validation.error;
   }

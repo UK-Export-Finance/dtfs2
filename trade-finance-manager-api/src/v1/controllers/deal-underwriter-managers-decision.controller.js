@@ -6,14 +6,7 @@ const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to
 const sendDealDecisionEmail = require('./send-deal-decision-email');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 
-const addUnderwriterManagersDecisionToDeal = ({
-  dealId,
-  decision,
-  comments,
-  internalComments,
-  userFullName,
-  auditDetails,
-}) => {
+const addUnderwriterManagersDecisionToDeal = ({ dealId, decision, comments, internalComments, userFullName, auditDetails }) => {
   const managerDecisionUpdate = {
     tfm: {
       underwriterManagersDecision: {
@@ -59,8 +52,7 @@ const addUnderwriterManagersCommentToPortalDeal = ({ dealId, dealType, decision,
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     const portalCommentType =
-      decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS ||
-      decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS
+      decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS || decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS
         ? CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION
         : CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_COMMENT;
     return api.addPortalDealComment(dealId, portalCommentType, portalCommentObj);

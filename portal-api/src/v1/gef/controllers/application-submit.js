@@ -203,11 +203,7 @@ const checkCoverDateConfirmed = async (app, auditDetails) => {
           .filter((f) => f.hasBeenIssued && !f.coverDateConfirmed)
           .map(async (f) => {
             hasUpdated = true;
-            await updateFacility(
-              f._id,
-              { coverDateConfirmed: Boolean(isAIN) },
-              auditDetails,
-            );
+            await updateFacility(f._id, { coverDateConfirmed: Boolean(isAIN) }, auditDetails);
           });
 
         // Iterate through unissued facilities
@@ -215,11 +211,7 @@ const checkCoverDateConfirmed = async (app, auditDetails) => {
           .filter((f) => !f.hasBeenIssued && f.coverDateConfirmed)
           .map(async (f) => {
             hasUpdated = true;
-            await updateFacility(
-              f._id,
-              { coverDateConfirmed: false },
-              auditDetails,
-            );
+            await updateFacility(f._id, { coverDateConfirmed: false }, auditDetails);
           });
         return hasUpdated;
       }

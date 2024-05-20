@@ -5,8 +5,7 @@ const { stripCommas } = require('../../../../utils/string');
 const mapFirstDrawdownAmountInExportCurrency = (facility) => {
   const { facilityProduct } = facility;
 
-  if ((facilityProduct.code === CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN)
-    && facility.disbursementAmount) {
+  if (facilityProduct.code === CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN && facility.disbursementAmount) {
     const strippedDisbursementAmount = stripCommas(facility.disbursementAmount);
 
     const formattedDisbursementAmount = formattedNumber(strippedDisbursementAmount, 2, 2);

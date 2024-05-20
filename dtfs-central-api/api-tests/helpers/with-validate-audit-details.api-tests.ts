@@ -48,8 +48,7 @@ function withInvalidAuditDetailsTests(invalidAuditDetails: AuditDetails[], makeR
 
     expect(status).toBe(400);
     expect(body).toEqual({
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      message: expect.stringContaining('Invalid auditDetails, userType must be'),
+      message: expect.stringContaining('Invalid auditDetails, userType must be') as string,
       status: 400,
     });
   });

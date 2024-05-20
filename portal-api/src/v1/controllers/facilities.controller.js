@@ -122,10 +122,7 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
       {
         $facet: {
           count: [{ $count: 'total' }],
-          facilities: [
-            { $skip: startPage },
-            ...(pagesize ? [{ $limit: pagesize }] : []),
-          ],
+          facilities: [{ $skip: startPage }, ...(pagesize ? [{ $limit: pagesize }] : [])],
         },
       },
       { $unwind: '$count' },

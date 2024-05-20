@@ -30,7 +30,9 @@ exports.getByVersion = async (req, res) => {
   }
 
   const collection = await db.getCollection('eligibilityCriteria');
-  const item = await collection.findOne({ $and: [{ version: { $eq: Number(version) } }, { product: { $eq: DEAL.DEAL_TYPE.GEF } }] });
+  const item = await collection.findOne({
+    $and: [{ version: { $eq: Number(version) } }, { product: { $eq: DEAL.DEAL_TYPE.GEF } }],
+  });
 
   return item ? res.status(200).send(item) : res.status(404).send();
 };

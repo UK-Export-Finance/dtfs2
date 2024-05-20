@@ -19,13 +19,12 @@ context('About Facility Page', () => {
       .then(() => cy.apiFetchAllGefApplications(token))
       .then(({ body }) => {
         body.items.forEach((item) => {
-          cy.apiFetchAllFacilities(item._id, token)
-            .then((res) => {
-              applications.push({
-                id: item._id,
-                facilities: res.body.items.filter((it) => it.details.dealId === item._id),
-              });
+          cy.apiFetchAllFacilities(item._id, token).then((res) => {
+            applications.push({
+              id: item._id,
+              facilities: res.body.items.filter((it) => it.details.dealId === item._id),
             });
+          });
         });
       });
     cy.login(BANK1_MAKER1);
@@ -125,10 +124,16 @@ context('About Facility Page', () => {
       aboutFacility.facilityName().type('Name');
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
       aboutFacility.coverStartDateDay().clear().type(now.getDate());
-      aboutFacility.coverStartDateMonth().clear().type(now.getMonth() + 1);
+      aboutFacility
+        .coverStartDateMonth()
+        .clear()
+        .type(now.getMonth() + 1);
       aboutFacility.coverStartDateYear().clear().type(now.getFullYear());
       aboutFacility.coverEndDateDay().clear().type(now.getDate());
-      aboutFacility.coverEndDateMonth().clear().type(now.getMonth() + 1);
+      aboutFacility
+        .coverEndDateMonth()
+        .clear()
+        .type(now.getMonth() + 1);
       aboutFacility.coverEndDateYear().clear().type(now.getFullYear());
       aboutFacility.continueButton().click();
       aboutFacility.coverEndDateError().contains('The cover end date must be after the cover start date');
@@ -139,7 +144,10 @@ context('About Facility Page', () => {
       aboutFacility.facilityName().type('Name');
       aboutFacility.shouldCoverStartOnSubmissionYes().click();
       aboutFacility.coverEndDateDay().clear().type(now.getDate());
-      aboutFacility.coverEndDateMonth().clear().type(now.getMonth() + 1);
+      aboutFacility
+        .coverEndDateMonth()
+        .clear()
+        .type(now.getMonth() + 1);
       aboutFacility.coverEndDateYear().clear().type(now.getFullYear());
       aboutFacility.continueButton().click();
       aboutFacility.coverEndDateError().contains('The cover end date must be after the cover start date');
@@ -150,7 +158,10 @@ context('About Facility Page', () => {
       aboutFacility.facilityName().type('Name');
       aboutFacility.shouldCoverStartOnSubmissionYes().click();
       aboutFacility.coverEndDateDay().clear().type(yesterday.getDate());
-      aboutFacility.coverEndDateMonth().clear().type(yesterday.getMonth() + 1);
+      aboutFacility
+        .coverEndDateMonth()
+        .clear()
+        .type(yesterday.getMonth() + 1);
       aboutFacility.coverEndDateYear().clear().type(yesterday.getFullYear());
       aboutFacility.continueButton().click();
       aboutFacility.coverEndDateError().contains('Cover end date cannot be before cover start date');
@@ -167,7 +178,10 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateMonth().type(now.getMonth());
       aboutFacility.coverEndDateYear().type(now.getFullYear() + 1);
       aboutFacility.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/provided-facility`));
+      cy.url().should(
+        'eq',
+        relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/provided-facility`),
+      );
     });
   });
 

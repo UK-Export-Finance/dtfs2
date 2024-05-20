@@ -1,3 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Request, Response } from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
@@ -13,10 +19,10 @@ const headers = {
 
 /**
  * Maps industry ID to ACBS compliant sector ID
- * @param {String} industryId UKEF Industry ID
+ * @param {Number} industryId UKEF Industry ID
  * @returns ACBS compliant industry ID
  */
-export const findACBSIndustrySector = async (industryId: any) => {
+export const findACBSIndustrySector = async (industryId: number) => {
   if (!isValidIndustryId(industryId.toString())) {
     console.error('Invalid industry id provided %s', industryId);
     return { data: 'Invalid industry ID', status: 400 };
@@ -33,7 +39,7 @@ export const findACBSIndustrySector = async (industryId: any) => {
   return response;
 };
 
-const sortIndustrySectors = (industrySectors: any) =>
+const sortIndustrySectors = (industrySectors: object) =>
   sortArrayAlphabetically(industrySectors, 'name').map((sector: any) => ({
     ...sector,
     classes: sortArrayAlphabetically(sector.classes, 'name'),
@@ -56,7 +62,7 @@ export const findOne = (req: Request, res: Response) => {
 export const getACBSIndustrySector = async (req: Request, res: Response) => {
   const { code } = req.params;
 
-  const { status, data } = await findACBSIndustrySector(code);
+  const { status, data } = await findACBSIndustrySector(Number(code));
 
   return res.status(status).send(data[0]);
 };

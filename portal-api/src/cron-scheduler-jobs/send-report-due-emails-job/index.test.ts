@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { subDays } from 'date-fns';
 import { produce } from 'immer';
 import { sendReportDueEmailsJob } from '.';
@@ -13,7 +14,6 @@ jest.mock('../../external-api/bank-holidays');
 jest.mock('../../external-api/send-email', () => jest.fn());
 
 console.error = jest.fn();
-console.warn = jest.fn();
 console.info = jest.fn();
 
 const originalProcessEnv = process.env;

@@ -1,5 +1,7 @@
+const difference = require('lodash/difference');
 const { FEE_RECORD_STATUS } = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
+const { aFeeRecordViewModelItem } = require('../../../test-helpers');
 
 jest.mock('../../../server/api');
 
@@ -10,32 +12,32 @@ const render = componentRenderer(component);
 
 describe(component, () => {
   /**
-   * @type {import('../../../server/controllers/utilisation-reports/helpers/reconciliation-for-report-helper').FeeRecordViewModelItem[]}
+   * @type {import('../../../server/types/view-models').FeeRecordViewModelItem[]}
    */
   const feeRecords = [
     {
+      ...aFeeRecordViewModelItem(),
       id: 1,
       facilityId: '12345678',
       exporter: 'Test exporter',
-      reportedFees: 'GBP 100.00',
-      reportedPayments: 'GBP 100.00',
-      totalReportedPayments: 'GBP 100.00',
-      paymentsReceived: undefined,
-      totalPaymentsReceived: undefined,
+      paymentsReceived: {
+        formattedCurrencyAndAmount: undefined,
+        dataSortValue: 0,
+      },
+      totalPaymentsReceived: {
+        formattedCurrencyAndAmount: undefined,
+        dataSortValue: 0,
+      },
       status: FEE_RECORD_STATUS.TO_DO,
       displayStatus: 'TO DO',
     },
     {
+      ...aFeeRecordViewModelItem(),
       id: 2,
       facilityId: '87654321',
       exporter: 'Test exporter 2',
-      reportedFees: 'EUR 150.00',
-      reportedPayments: 'GBP 100.00',
-      totalReportedPayments: 'GBP 100.00',
-      paymentsReceived: 'GBP 100.00',
-      totalPaymentsReceived: 'GBP 100.00',
-      status: FEE_RECORD_STATUS.TO_DO,
-      displayStatus: 'TO DO',
+      status: FEE_RECORD_STATUS.DOES_NOT_MATCH,
+      displayStatus: 'DOES NOT MATCH',
     },
   ];
 
@@ -55,6 +57,11 @@ describe(component, () => {
     wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toExist();
   });
 
+  it('should render the select all checkbox in the table headings row', () => {
+    const wrapper = getWrapper();
+    wrapper.expectElement(`${tableSelector} thead th input[type="checkbox"]#select-all-checkbox`).toExist();
+  });
+
   it('should render the table data', () => {
     const wrapper = getWrapper();
 
@@ -69,18 +76,64 @@ describe(component, () => {
 
       wrapper.expectElement(`${rowSelector} td`).toHaveCount(8);
       wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.exporter}")`).toExist();
-      wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.reportedFees}")`).toExist();
-      wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.reportedPayments}")`).toExist();
-      wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.totalReportedPayments}")`).toExist();
 
-      if (feeRecord.paymentsReceived) {
-        wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.paymentsReceived}")`).toExist();
+      wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.reportedFees.formattedCurrencyAndAmount}")`).toExist();
+      wrapper
+        .expectElement(`${rowSelector} td:contains("${feeRecord.reportedFees.formattedCurrencyAndAmount}")`)
+        .toHaveAttribute('data-sort-value', feeRecord.reportedFees.dataSortValue.toString());
+
+      wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.reportedPayments.formattedCurrencyAndAmount}")`).toExist();
+      wrapper
+        .expectElement(`${rowSelector} td:contains("${feeRecord.reportedPayments.formattedCurrencyAndAmount}")`)
+        .toHaveAttribute('data-sort-value', feeRecord.reportedPayments.dataSortValue.toString());
+
+      wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.totalReportedPayments.formattedCurrencyAndAmount}")`).toExist();
+      wrapper
+        .expectElement(`${rowSelector} td:contains("${feeRecord.totalReportedPayments.formattedCurrencyAndAmount}")`)
+        .toHaveAttribute('data-sort-value', feeRecord.totalReportedPayments.dataSortValue.toString());
+
+      if (feeRecord.paymentsReceived.formattedCurrencyAndAmount) {
+        wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.paymentsReceived.formattedCurrencyAndAmount}")`).toExist();
+        wrapper
+          .expectElement(`${rowSelector} td:contains("${feeRecord.paymentsReceived.formattedCurrencyAndAmount}")`)
+          .toHaveAttribute('data-sort-value', feeRecord.paymentsReceived.dataSortValue.toString());
       }
-      if (feeRecord.totalPaymentsReceived) {
-        wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.totalPaymentsReceived}")`).toExist();
+
+      if (feeRecord.totalPaymentsReceived.formattedCurrencyAndAmount) {
+        wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.totalPaymentsReceived.formattedCurrencyAndAmount}")`).toExist();
+        wrapper
+          .expectElement(`${rowSelector} td:contains("${feeRecord.paymentsReceived.formattedCurrencyAndAmount}")`)
+          .toHaveAttribute('data-sort-value', feeRecord.totalPaymentsReceived.dataSortValue.toString());
       }
 
       wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.displayStatus}")`).toExist();
     });
   });
+
+  const FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST = [FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH];
+
+  it.each(FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST)('should render the checkbox when the fee record status is %s', (feeRecordStatus) => {
+    const feeRecordViewModelItem = {
+      ...aFeeRecordViewModelItem(),
+      status: feeRecordStatus,
+    };
+    const wrapper = render({ feeRecords: [feeRecordViewModelItem] });
+
+    const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordViewModelItem.id}"]`;
+    wrapper.expectElement(`${rowSelector} input#feeRecordId-${feeRecordViewModelItem.id}`).toExist();
+  });
+
+  it.each(difference(Object.values(FEE_RECORD_STATUS), FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST))(
+    'should not render the checkbox when the fee record status is %s',
+    (feeRecordStatus) => {
+      const feeRecordViewModelItem = {
+        ...aFeeRecordViewModelItem(),
+        status: feeRecordStatus,
+      };
+      const wrapper = render({ feeRecords: [feeRecordViewModelItem] });
+
+      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordViewModelItem.id}"]`;
+      wrapper.expectElement(`${rowSelector} input#feeRecordId-${feeRecordViewModelItem.id}`).notToExist();
+    },
+  );
 });

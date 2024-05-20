@@ -29,7 +29,10 @@ describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
     barclaysBank = aBarclaysPaymentReportOfficer.bank;
     hsbcBank = aHsbcPaymentReportOfficer.bank;
     const getUtilisationSpy = jest.spyOn(api, 'getUtilisationReportById');
-    getUtilisationSpy.mockImplementation(() => ({ azureFileInfo: { filename: 'test-file.csv', mimetype: 'text/csv' }, bankId: barclaysBank.id }));
+    getUtilisationSpy.mockImplementation(() => ({
+      azureFileInfo: { filename: 'test-file.csv', mimetype: 'text/csv' },
+      bankId: barclaysBank.id,
+    }));
   });
 
   beforeEach(async () => {
@@ -41,8 +44,7 @@ describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(getUrl({ bankId: barclaysBank.id, reportId: '10' })),
-      makeRequestWithAuthHeader: (authHeader) =>
-        get(getUrl({ bankId: barclaysBank.id, reportId: '10' }), { headers: { Authorization: authHeader } }),
+      makeRequestWithAuthHeader: (authHeader) => get(getUrl({ bankId: barclaysBank.id, reportId: '10' }), { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({

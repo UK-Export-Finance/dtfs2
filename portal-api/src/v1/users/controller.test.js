@@ -22,20 +22,13 @@ describe('user controller', () => {
 
     it('should throw an error if the user id is invalid', async () => {
       const TEST_USER_INVALID_ID = { ...TEST_USER, _id: 'invalid' };
-      await expect(
-        updateSessionIdentifier(
-          TEST_USER_INVALID_ID,
-          SESSION_IDENTIFIER,
-          generateNoUserLoggedInAuditDetails(),
-          () => {},
-        ),
-      ).rejects.toThrow(InvalidUserIdError);
+      await expect(updateSessionIdentifier(TEST_USER_INVALID_ID, SESSION_IDENTIFIER, generateNoUserLoggedInAuditDetails(), () => {})).rejects.toThrow(
+        InvalidUserIdError,
+      );
     });
 
     it('should throw an error if the session identifier is not provided', async () => {
-      await expect(
-        updateSessionIdentifier(TEST_USER, null, generateNoUserLoggedInAuditDetails(), () => {}),
-      ).rejects.toThrow(InvalidSessionIdentifierError);
+      await expect(updateSessionIdentifier(TEST_USER, null, generateNoUserLoggedInAuditDetails(), () => {})).rejects.toThrow(InvalidSessionIdentifierError);
     });
 
     it('should update the session identifier', async () => {

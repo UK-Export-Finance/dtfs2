@@ -1,26 +1,26 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 <!DOCTYPE html>
 <html lang="en" class="govuk-template ">
   <head>
-    <meta charset="utf-8" />
-    <title>{% block pageTitle %}{% endblock %}, Trade Finance Manager, gov.uk</title>
+    <meta charset="utf-8"/>
+    <title>
+      {% block pageTitle %}{% endblock %}, Trade Finance Manager, gov.uk</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#0b0c0c" />
-
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
-    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="/assets/images/favicon.ico?v=2" type="image/x-icon" />
+    <meta name="theme-color" content="#0b0c0c"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="/assets/images/favicon.ico?v=2" type="image/x-icon"/>
     <link rel="mask-icon" href="/assets/images/govuk-mask-icon.svg" color="#0b0c0c">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/govuk-apple-touch-icon-180x180.png">
     <link rel="apple-touch-icon" sizes="167x167" href="/assets/images/govuk-apple-touch-icon-167x167.png">
     <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/govuk-apple-touch-icon-152x152.png">
     <link rel="apple-touch-icon" href="/assets/images/govuk-apple-touch-icon.png">
-    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link rel="stylesheet" href="/assets/css/styles.css"/>
     <meta property="og:image" content="/assets/images/govuk-opengraph-image.png">
   </head>
 
   <body class="govuk-template__body ">
 
-    <script src="/assets/js/jsEnabled.js" type="text/javascript" integrity="sha512-G3pP3ak2WgWPJjJvKjAkSXa+s0+MHVrKTxZ8YklCPvT/SG9Gt91yti+2KeK9KTCEkdWUUz5dnIGDz1w3Zu7JrA==" crossorigin="anonymous"></script>
+    <script src="/assets/js/jsEnabled.js" type="text/javascript" integrity="sha512-NRBJqHnn3mlDT0PecNJulGcQQSYFkjpnLWYsDsSr399wyTooqXvIaLFlgPAQAYLtHDeYlR3iCTqqRSU42o379g==" crossorigin="anonymous"></script>
     {% include "_partials/skip-link.njk" %}
 
     {% include "_partials/header.njk" %}
@@ -28,20 +28,33 @@
     {% include "_partials/primary-navigation.njk" %}
 
     <div class="govuk-body">
+      <main
+        class="govuk-main-wrapper govuk-main-wrapper--auto-spacing tfm-width govuk-!-padding-top-0"
+        id="main-content"
+        role="main">
 
-      <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing tfm-width govuk-!-padding-top-0" id="main-content" role="main">
+        {% if backLink and backLink.href %}
+          {{ govukBackLink({
+          text: "Back",
+          href: backLink.href,
+          attributes: {
+            "data-cy": "back-link"
+          }
+        }) }}
+        {% endif %}
+
         {% block content %}{% endblock %}
-        {% block secondary_nav%}{% endblock %}
+        {% block secondary_nav %}{% endblock %}
         {% block sub_content %}{% endblock %}
       </main>
-
     </div>
 
     {% include "_partials/footer.njk" %}
 
-    <script src="/assets/js/main.js" type="text/javascript" integrity="sha512-dAKNB/hxAScYffs+bGUzzx7n48zYFvQRScBqQv/hFOtxplbN0BwnOaS+QuyE24WJXUbr9BQpR1xsJNxwldJBuw==" crossorigin="anonymous"></script>
-    <script src="/assets/js/govukFrontend.js" type="text/javascript" integrity="sha512-BlSKFkwy/7rAHvMRdTX1Kdk/6KgF2exLAH18xCPxd2ukztWA9adhCM/PczucxxNq29j8gvfAaEcGmgg3BbJufA==" crossorigin="anonymous"></script>
-    <script src="/assets/js/mojFrontend.js" type="text/javascript" integrity="sha512-VJYfsojYZY4stpSFP22EQ/CXqqrW9BWYWKaiEnYGmyw22rggV4DCe+Lzn8L7Gt+bRq3AyWuNYFadfrCmao0o+A==" crossorigin="anonymous"></script>
-    <script src="/assets/js/disableFormSubmitOnSubmission.js" type="text/javascript" integrity="sha512-Q7/c6YgxNF6oZOAUjrs+ENFuJz4A/Xef5EF7KuV1bMOJ8wJ8hjiGMLLg/5CusdJj0HNstqo//3HdZA0KFsvPBA==" crossorigin="anonymous"></script>
+    <script src="/assets/js/main.js" type="text/javascript" integrity="sha512-+YfYNDSBttbGuHB/d8LyJtVtRE4s+JiNCTAStnjDDlEBhAHoGQltsJTRLybDw3mC+eRQ6mVE1IiOjwLu+RoE1A==" crossorigin="anonymous"></script>
+    <script src="/assets/js/govukFrontend.js" type="text/javascript" integrity="sha512-D95kMHZq6pA+Sc69WmCyClj8UHuNJIgU14NKJO7QXxn69OPEnXmFs3S5rF60GvcnXRVO1RUlKAilDJLN6xXsxQ==" crossorigin="anonymous"></script>
+    <script src="/assets/js/mojFrontend.js" type="text/javascript" integrity="sha512-UGj0+XtG1HdmxDshQIiwlQRObl6Tr2YRNqT7ubFY+mnkrChAXbZFZ2JET/2vLz3jxZrvLSxMAOveqvNBbT4gXw==" crossorigin="anonymous"></script>
+    <script src="/assets/js/disableFormSubmitOnSubmission.js" type="text/javascript" integrity="sha512-as87QZ+VNuwlQmm7P6u+ZtPokquJFKGHE9DbVu9kVI7jxEX20P51cahtY+RvM7e4nWis5DGE3hAch21lxEF8EQ==" crossorigin="anonymous"></script>
+    <script src="/assets/js/enableSelectAllTableCheckbox.js" type="text/javascript" integrity="sha512-J09nc9tKbibpWJewJsrYxOzPw7qQDpIJVvmaaDbBR62teOf+pID7MKLyRar4Bb2BZTUO9QsUPB/Jd3vzvddBnA==" crossorigin="anonymous"></script>
   </body>
 </html>

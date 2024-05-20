@@ -14,8 +14,9 @@ context('Edit deal name', () => {
 
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(dummyDeal, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(dummyDeal, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   it('rejects an empty field', () => {
@@ -43,8 +44,11 @@ context('Edit deal name', () => {
     editDealName.additionalRefName().type('{selectall}{backspace}mock');
     editDealName.submit().click();
 
-    contract.additionalRefName().invoke('text').then((text) => {
-      expect(text.trim()).equal('mock');
-    });
+    contract
+      .additionalRefName()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('mock');
+      });
   });
 });
