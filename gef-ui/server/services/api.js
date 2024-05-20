@@ -79,16 +79,18 @@ const updateApplication = async ({ dealId, application, userToken }) => {
   }
 };
 
-const updateSupportingInformation = async ({
-  dealId, application, field, user, userToken,
-}) => {
+const updateSupportingInformation = async ({ dealId, application, field, user, userToken }) => {
   if (!isValidMongoId(dealId)) {
     console.error('updateSupportingInformation: API call failed for dealId %s', dealId);
     return false;
   }
 
   try {
-    const { data } = await Axios.put(`/gef/application/supporting-information/${dealId}`, { application, field, user }, config(userToken));
+    const { data } = await Axios.put(
+      `/gef/application/supporting-information/${dealId}`,
+      { application, field, user },
+      config(userToken),
+    );
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -121,10 +123,7 @@ const getFacilities = async ({ dealId, userToken }) => {
   }
 
   try {
-    const { data } = await Axios.get(
-      '/gef/facilities',
-      { ...config(userToken), params: { dealId } },
-    );
+    const { data } = await Axios.get('/gef/facilities', { ...config(userToken), params: { dealId } });
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -199,7 +198,7 @@ const getCompaniesHouseDetails = async ({ companyRegNumber, userToken }) => {
 
 const getAddressesByPostcode = async ({ postcode, userToken }) => {
   if (!isValidUkPostcode(postcode)) {
-    console.error('getAddressesByPostcode: API call failed for postcode %s', postcode);
+    console.error('getAddressesByPostcode: API call failed for postcode %s, validation failed before call', postcode);
     throw new Error('Invalid postcode');
   }
 
@@ -229,11 +228,14 @@ const getUserDetails = async ({ userId, userToken }) => {
   }
 };
 
-const uploadFile = async ({
-  files, id, userToken, maxSize: maxFileSize, documentPath,
-}) => {
+const uploadFile = async ({ files, id, userToken, maxSize: maxFileSize, documentPath }) => {
   if (!files?.length || !id || !userToken) {
-    console.error('uploadFile: API call failed for id %s, number of files %s, user token %s', id, files?.length, userToken);
+    console.error(
+      'uploadFile: API call failed for id %s, number of files %s, user token %s',
+      id,
+      files?.length,
+      userToken,
+    );
     return false;
   }
 

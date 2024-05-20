@@ -109,9 +109,7 @@ exports.getAddressesByPostcode = async (req, res) => {
 
     const response = await externalApi.ordnanceSurvey.getAddressesByPostcode(postcode);
 
-    const addresses = [];
-
-    if (!response?.data?.results) {
+    if (response.status !== 200) {
       return res.status(422).send([
         {
           status: 422,
@@ -121,23 +119,8 @@ exports.getAddressesByPostcode = async (req, res) => {
         },
       ]);
     }
-    response.data.results.forEach((item) => {
-      if (item.DPA.LANGUAGE === (req.query.language ? req.query.language : 'EN')) {
-        // Ordnance survey sends duplicated results with the welsh version too via 'CY'
 
-        addresses.push({
-          organisationName: item.DPA.ORGANISATION_NAME || null,
-          addressLine1: `${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${item.DPA.THOROUGHFARE_NAME || ''}`.trim(),
-          addressLine2: item.DPA.DEPENDENT_LOCALITY || null,
-          addressLine3: null, // keys to match registered Address as requested, but not available in OS Places
-          locality: item.DPA.POST_TOWN || null,
-          postalCode: item.DPA.POSTCODE || null,
-          country: null, // keys to match registered Address as requested, but not available in OS Places
-        });
-      }
-    });
-
-    return res.status(200).send(addresses);
+    return res.status(200).send(response.data);
   } catch (error) {
     let { status } = error.response;
     if (status >= 400 && status < 500) {
