@@ -158,8 +158,8 @@ services:
       - UKEF_INTERNAL_NOTIFICATION=test
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
-      - CHANGE_STREAM_ENABLED
-      - DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS
+      - CHANGE_STREAM_ENABLED='true'
+      - DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS=600
     entrypoint: npx ts-node trade-finance-manager-api/src/index.ts
 
   portal:
