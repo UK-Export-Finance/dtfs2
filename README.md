@@ -44,17 +44,18 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
 ### Setup :gear:
 
 1. Clone this repository.
-2. Run `nvm install` to ensure you're using the correct Node.js version.
-3. Create `.env` files for each service (including `utils/mock-data-loader`), using `.env.sample` as a base. Some sensitive variables may need to be shared within the team.
+2. Run `nvm install VERSION_NUMBER` with the node version number above to ensure you've got the correct Node.js version (then `nvm use VERSION_NUMBER` to use it).
+3. Create a single `.env` file in the project root, using `.env.sample` as a base. Some sensitive variables may need to be shared within the team.
 4. Generate JWT key pairs with `secrets/set_jwt_keypair.sh` (use `bash secrets/set_jwt_keypair.sh` for Windows).
 5. Base64 encode the generated public and private keys and add them to your portal-api `.env` file as follows:
-   - `JWT_SIGNING_KEY=1234`
-   - `JWT_VALIDATING_KEY=5678`
+   - `JWT_SIGNING_KEY=your_private_key`
+   - `JWT_VALIDATING_KEY=your_public_key`
 6. Set UKEF TFM environment variables in your terminal: `UKEF_TFM_API_SYSTEM_KEY` and `UKEF_TFM_API_REPORTS_KEY`.
-7. run `npm install` in the root folder of the repository. (note: this will install dependencies for the entire project, including those specified in sub-packages. More details on this in the [npm workspaces](./doc/npm-workspaces.md) docs)
-8. Start your local environment with `npm run dev`.
-9. Create mock data in the MongoDB database by running `npm run load` from the root folder of the repository. This should generate mocks in your database.
-10. Run migrations on the SQL Server database (see [SQL DB docs](./doc/sql-db.md#--run-migrations) for details)
+7. Run `npm run env:copy` to copy your root .env file into all the individual projects that need it.
+8. Run `npm install` in the root folder of the repository. (note: this will install dependencies for the entire project, including those specified in sub-packages. More details on this in the [npm workspaces](./doc/npm-workspaces.md) docs)
+9. Start your local environment with `npm run start`.
+10. Create mock data in the MongoDB database by running `npm run load` from the root folder of the repository. This should generate mocks in your database.
+11. Run migrations on the SQL Server database (see [SQL DB docs](./doc/sql-db.md#--run-migrations) for details)
 
 Recommended: Install a MongoDB client such as Compass or Robo 3T.
 
@@ -100,8 +101,8 @@ There are 3 different docker compose files right now.
 
 ## Login Credentials :key:
 
-- For Portal (BSS & GEF) mock users: [utils/mock-data-loader/portal/users.js](utils/mock-data-loader/portal/users.js)
-- For Trade Finance Manager (TFM) mock users: [utils/mock-data-loader/tfm/users.js](utils/mock-data-loader/tfm/users.js)
+- For Portal (BSS & GEF) mock users: [utils/mock-data-loader/portal-users/index.js](utils/mock-data-loader/portal-users/index.js)
+- For Trade Finance Manager (TFM) mock users: [utils/mock-data-loader/tfm/mocks/users.js](utils/mock-data-loader/tfm/mocks/users.js)
 
 ## Environment Variables :keycap_ten:
 
