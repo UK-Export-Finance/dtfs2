@@ -86,11 +86,7 @@ const updateSupportingInformation = async ({ dealId, application, field, user, u
   }
 
   try {
-    const { data } = await Axios.put(
-      `/gef/application/supporting-information/${dealId}`,
-      { application, field, user },
-      config(userToken),
-    );
+    const { data } = await Axios.put(`/gef/application/supporting-information/${dealId}`, { application, field, user }, config(userToken));
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -230,12 +226,7 @@ const getUserDetails = async ({ userId, userToken }) => {
 
 const uploadFile = async ({ files, id, userToken, maxSize: maxFileSize, documentPath }) => {
   if (!files?.length || !id || !userToken) {
-    console.error(
-      'uploadFile: API call failed for id %s, number of files %s, user token %s',
-      id,
-      files?.length,
-      userToken,
-    );
+    console.error('uploadFile: API call failed for id %s, number of files %s, user token %s', id, files?.length, userToken);
     return false;
   }
 

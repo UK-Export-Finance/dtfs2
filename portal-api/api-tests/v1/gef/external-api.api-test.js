@@ -61,7 +61,7 @@ describe(baseUrl, () => {
     });
   });
 
-  describe(`GET ${baseUrl}/address (Ordnance Survey)`, () => {
+  describe(`GET ${baseUrl}/address (Geospatial Addresses)`, () => {
     it('Returns a list of addresses', async () => {
       const { status, body } = await as(aMaker).get(`${baseUrl}/address/SW1A2HQ`);
       expect(status).toEqual(200);

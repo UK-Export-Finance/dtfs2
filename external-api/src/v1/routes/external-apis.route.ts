@@ -12,7 +12,7 @@ import * as acbs from '../controllers/acbs.controller';
 import * as currencyExchangeRate from '../controllers/currency-exchange-rate.controller';
 import * as exposurePeriod from '../controllers/exposure-period.controller';
 import * as companiesHouse from '../controllers/companies-house.controller';
-import * as ordnanceSurvey from '../controllers/ordnance-survey.controller';
+import * as geospatialAddresses from '../controllers/geospatial-addresses.controller';
 import * as eStore from '../controllers/estore/eStore.controller';
 import * as premiumSchedule from '../controllers/premium-schedule.controller';
 import * as email from '../controllers/email.controller';
@@ -522,12 +522,12 @@ apiRoutes.get('/companies-house/:companyRegistrationNumber', companiesHouse.look
 
 /**
  * @openapi
- * /ordnance-survey/:OSPostcode:
+ * /geospatial/addresses/postcode/:postcode:
  *   get:
- *     summary: Get a list of addresses from MDM API APIM
- *     tags: [Ordnance Survey, APIM]
+ *     summary: Get a list of addresses from MDM API
+ *     tags: [Addresses, APIM]
  *     description: >-
- *       Get a list of addresses from MDM API APIM.
+ *       Get a list of addresses from MDM API.
  *     parameters:
  *       - in: path
  *         name: OSPostcode
@@ -541,9 +541,9 @@ apiRoutes.get('/companies-house/:companyRegistrationNumber', companiesHouse.look
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/definitions/MdmAddressesResponseBody'
+ *               $ref: '#/definitions/MdmGeospatialAddressesResponseBody'
  */
-apiRoutes.get('/ordnance-survey/:OSPostcode', ordnanceSurvey.lookup);
+apiRoutes.get('/geospatial/addresses/postcode/:postcode', geospatialAddresses.lookup);
 
 /**
  * @openapi

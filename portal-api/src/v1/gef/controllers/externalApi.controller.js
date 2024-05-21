@@ -107,7 +107,7 @@ exports.getAddressesByPostcode = async (req, res) => {
       ]);
     }
 
-    const response = await externalApi.ordnanceSurvey.getAddressesByPostcode(postcode);
+    const response = await externalApi.geospatialAddresses.getAddressesByPostcode(postcode);
 
     if (response.status !== 200) {
       return res.status(422).send([

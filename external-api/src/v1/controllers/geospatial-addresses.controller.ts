@@ -15,23 +15,23 @@ const headers = {
 };
 
 export const lookup = async (req: Request, res: Response) => {
-  const { OSPostcode } = req.params;
-  const noWhitespacePostcode = OSPostcode.replace(' ', '');
+  const { postcode } = req.params;
+  const noWhitespacePostcode = postcode.replace(' ', '');
 
   if (!isValidPostcode(noWhitespacePostcode)) {
-    console.error('Invalid postcode %s', OSPostcode);
+    console.error('Invalid postcode %s', postcode);
     return res.status(400).send({ status: 400, data: 'Invalid postcode' });
   }
 
-  console.info('Calling MDM Ordnance Survey API %s', OSPostcode);
+  console.info('Calling MDM Geospatial Addresses API %s', postcode);
 
   const response = await axios({
     method: 'get',
-    url: `${APIM_MDM_URL}geospatial/addresses/postcode?postcode=${OSPostcode}`,
+    url: `${APIM_MDM_URL}geospatial/addresses/postcode?postcode=${postcode}`,
     headers,
   }).catch((error: any) => {
-    console.error('Error calling MDM Ordnance Survey API %o', error);
-    return { status: error?.response?.status || 500, data: 'Failed to call Ordnance Survey API' };
+    console.error('Error calling MDM Geospatial Addresses API %o', error);
+    return { status: error?.response?.status || 500, data: 'Failed to call Geospatial Addresses API' };
   });
 
   if (!response) {

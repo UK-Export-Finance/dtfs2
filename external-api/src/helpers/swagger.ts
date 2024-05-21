@@ -62,7 +62,7 @@ export const swaggerDefinition = {
       description: 'Public API',
     },
     {
-      name: 'Ordnance Survey',
+      name: 'Geospatial Addresses',
       description: 'APIM API endpoints',
     },
     {

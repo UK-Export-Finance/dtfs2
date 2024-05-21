@@ -101,14 +101,12 @@ const mockResponse = {
 // Mock Axios
 const axiosMock = new MockAdapter(axios);
 
-axiosMock
-  .onGet(`${APIM_MDM_URL}geospatial/addresses/postcode?postcode=WR90DJ`)
-  .reply(HttpStatusCode.Ok, mockResponse.data);
+axiosMock.onGet(`${APIM_MDM_URL}geospatial/addresses/postcode?postcode=WR90DJ`).reply(HttpStatusCode.Ok, mockResponse.data);
 
-describe('/ordnance-survey', () => {
-  describe('GET /ordnance-survey', () => {
+describe('/geospatial/addresses/postcode', () => {
+  describe('GET /geospatial/addresses/postcode', () => {
     it('returns a list of addresses', async () => {
-      const { status, body } = await get('/ordnance-survey/WR90DJ');
+      const { status, body } = await get('/geospatial/addresses/postcode/WR90DJ');
 
       expect(status).toEqual(200);
       expect(body.results).toBeDefined();
@@ -119,7 +117,7 @@ describe('/ordnance-survey', () => {
 
   describe('when postcode is invalid', () => {
     test.each(invalidPostcodeTestCases)('returns a 400 if you provide an invalid postcode %s', async (postcode) => {
-      const { status, body } = await get(`/ordnance-survey/${postcode}`);
+      const { status, body } = await get(`/geospatial/addresses/postcode/${postcode}`);
 
       expect(status).toEqual(400);
       expect(body).toMatchObject({ data: 'Invalid postcode', status: 400 });

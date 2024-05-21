@@ -10,14 +10,14 @@ const headers = {
 };
 
 /**
- * Resolves to the response of `GET /ordnance-survey/{postcode}` from external-api.
+ * Resolves to the response of `GET /geospatial/addresses/postcode/{postcode}` from external-api.
  * @param {string} postcode
  * @returns {Promise<import('axios').AxiosResponse>}
  */
 const getAddressesByPostcode = (postcode) =>
   axios({
     method: 'get',
-    url: `${EXTERNAL_API_URL}/ordnance-survey/${postcode}`,
+    url: `${EXTERNAL_API_URL}/geospatial/addresses/postcode${postcode}`,
     headers,
   });
 

@@ -5,7 +5,7 @@ const MOCK_CURRENCIES = require('./currencies');
 const MOCK_INDUSTRY_SECTORS = require('./industry-sectors');
 const MOCK_NUMBER_GENERATOR = require('./number-generator');
 const MOCK_EMAIL_RESPONSE = require('./send-email');
-const ordnanceSurvey = require('./ordnance-survey');
+const geospatialAddresses = require('./geospatial-addresses');
 
 const getCountries = () => MOCK_COUNTRIES;
 const getCountry = (findCode) => ({ status: 200, data: MOCK_COUNTRIES.find(({ code }) => code === findCode) });
@@ -34,6 +34,6 @@ module.exports = {
     getIndustrySector,
   },
   number: MOCK_NUMBER_GENERATOR,
-  ordnanceSurvey,
+  geospatialAddresses,
   sendEmail,
 };

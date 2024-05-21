@@ -108,7 +108,7 @@ router
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, ADMIN] }), externalApi.getByRegistrationNumber);
 
 router
-  .route('/address/:postcode') // Ordnance Survey
+  .route('/address/:postcode') // Geospatial Addresses
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, ADMIN] }), externalApi.getAddressesByPostcode);
 
 module.exports = router;

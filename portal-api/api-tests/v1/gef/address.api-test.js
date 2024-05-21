@@ -4,7 +4,7 @@ const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { POSTCODE } = require('../../fixtures/postcode');
-const { ordnanceSurvey } = require('../../../src/external-api/api');
+const { geospatialAddresses } = require('../../../src/external-api/api');
 
 const { as, get } = require('../../api')(app);
 
@@ -17,8 +17,8 @@ describe('GET /v1/gef/address/:postcode', () => {
   });
 
   beforeEach(() => {
-    ordnanceSurvey.getAddressesByPostcode = jest.fn();
-    ordnanceSurvey.getAddressesByPostcode.mockResolvedValueOnce({ data: { results: [] } });
+    geospatialAddresses.getAddressesByPostcode = jest.fn();
+    geospatialAddresses.getAddressesByPostcode.mockResolvedValueOnce({ data: { results: [] } });
   });
 
   withClientAuthenticationTests({

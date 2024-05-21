@@ -1,7 +1,7 @@
 /**
  * @openapi
  * definitions:
- *   MdmAddressesResponseBody:
+ *   MdmGeospatialAddressesResponseBody:
  *     type: array
  *     items:
  *       type: object
