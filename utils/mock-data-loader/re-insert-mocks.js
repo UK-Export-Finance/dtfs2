@@ -23,10 +23,10 @@ const init = async () => {
 
     const portalToken = await createAndLogInAsInitialUser();
 
-    if (process.env.CHANGE_STREAM_ENABLED === 'true') {
-      await deleteDeletionAuditLogsCollection();
-      await setupDeletionAuditLogsCollection();
-    }
+    // if (process.env.CHANGE_STREAM_ENABLED === 'true') {
+    await deleteDeletionAuditLogsCollection();
+    await setupDeletionAuditLogsCollection();
+    // }
     await cleanAllTablesPortal(portalToken);
     await cleanAllTablesGef(portalToken);
     await cleanAllTablesTfm();
