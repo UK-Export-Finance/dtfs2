@@ -11,4 +11,5 @@ export const aPortalSessionUser = (): PortalSessionUser => ({
   bank: aBank(),
   timezone: 'Europe/London',
   'user-status': 'active',
+  isTrusted: false,
 });

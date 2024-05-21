@@ -1,8 +1,9 @@
+const { PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const assert = require('assert');
 const { generatePortalAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+
 const db = require('../../drivers/db-client');
-const { PAYLOAD } = require('../../constants');
-const payloadVerification = require('../helpers/payload');
 
 const sortMandatoryCriteria = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.id) - Number(b.id));
@@ -33,7 +34,7 @@ const findOneMandatoryCriteria = async (version, callback) => {
 };
 
 exports.create = async (req, res) => {
-  if (!payloadVerification(req.body, PAYLOAD.CRITERIA.MANDATORY.DEFAULT)) {
+  if (!isVerifiedPayload({ payload: req.body, template: PAYLOAD_VERIFICATION.CRITERIA.MANDATORY.DEFAULT })) {
     return res.status(400).send({ status: 400, message: 'Invalid mandatory criteria payload' });
   }
 

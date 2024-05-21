@@ -12,6 +12,9 @@ const page = {
   Deactivate: () => cy.get('[data-cy="user-status-blocked"]'),
   Activate: () => cy.get('[data-cy="user-status-active"]'),
 
+  isTrustedTrue: () => cy.get('[data-cy="is-trusted-true"]'),
+  isTrustedFalse: () => cy.get('[data-cy="is-trusted-false"]'),
+
   save: () => cy.get('[data-cy="Save"]'),
   changePassword: () => cy.get('[data-cy="change-password-button"]'),
 };

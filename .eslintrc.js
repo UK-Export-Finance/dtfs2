@@ -9,18 +9,7 @@ const baseRules = {
   'no-underscore-dangle': [
     'error',
     {
-      allow: [
-        '_id',
-        '_csrf',
-        '_getBuffer',
-        '_getData',
-        '_getHeaders',
-        '_getStatusCode',
-        '_getRedirectUrl',
-        '_getRenderData',
-        '_getRenderView',
-        '_isEndCalled',
-      ],
+      allow: ['_id', '_csrf', '_getBuffer', '_getData', '_getHeaders', '_getStatusCode', '_getRedirectUrl', '_getRenderData', '_getRenderView', '_isEndCalled'],
     },
   ],
   'import/extensions': 'off',
@@ -29,14 +18,7 @@ const baseRules = {
   'import/no-extraneous-dependencies': [
     'error',
     {
-      devDependencies: [
-        '**/*.test.{js,ts}',
-        '**/*.api-test.{js,ts}',
-        '**/*.spec.{js,ts}',
-        '**/webpack.*.{js,ts}',
-        '**/api-test*/**',
-        '**/__mocks__/**',
-      ],
+      devDependencies: ['**/*.test.{js,ts}', '**/*.api-test.{js,ts}', '**/*.spec.{js,ts}', '**/webpack.*.{js,ts}', '**/api-test*/**', '**/__mocks__/**'],
     },
   ],
   'import/prefer-default-export': 'off',

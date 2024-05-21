@@ -21,7 +21,9 @@
     ".": "./src/index.ts",
     "./sql-db-connection": "./src/sql-db-connection/index.ts",
     "./mongo-db-client": "./src/mongo-db-client/index.ts",
-    "./change-stream": "./src/change-stream/index.ts"
+    "./change-stream": "./src/change-stream/index.ts",
+    "./payload-verification": "./src/helpers/payload-verification/index.ts",
+    "./schemas": "./src/schemas/index.ts"
   },
   "main": "src/index.ts",
   "scripts": {
