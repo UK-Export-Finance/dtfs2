@@ -13,10 +13,10 @@ type DeleteDocumentWithAuditLogsParams = {
 };
 
 export const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, db, auditDetails }: DeleteDocumentWithAuditLogsParams) => {
-  const { DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS } = process.env;
+  const { DELETION_AUDIT_LOGS_TTL_SECONDS } = process.env;
 
-  if (!DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS) {
-    throw new InvalidEnvironmentVariableError('DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS not set');
+  if (!DELETION_AUDIT_LOGS_TTL_SECONDS) {
+    throw new InvalidEnvironmentVariableError('DELETION_AUDIT_LOGS_TTL_SECONDS not set');
   }
 
   const client = await db.getClient();
@@ -34,7 +34,7 @@ export const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, 
           collectionName,
           deletedDocumentId: documentId,
           auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-          expireAt: add(new Date(), { seconds: Number(DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS) }),
+          expireAt: add(new Date(), { seconds: Number(DELETION_AUDIT_LOGS_TTL_SECONDS) }),
         },
         { session },
       );

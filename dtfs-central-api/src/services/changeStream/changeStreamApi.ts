@@ -1,7 +1,15 @@
 import axios from 'axios';
-import { ChangeStreamUpdateDocument, ChangeStreamInsertDocument, ChangeStreamReplaceDocument } from 'mongodb';
+import { ChangeStreamUpdateDocument, ChangeStreamInsertDocument, ChangeStreamReplaceDocument, ObjectId } from 'mongodb';
 import { DeletionAuditLog, AuditDatabaseRecord } from '@ukef/dtfs2-common';
 import { InvalidEnvironmentVariableError } from '../../errors/invalid-environment-variable.error';
+
+type DeletionAuditRecord = {
+  deletedAt: string;
+  deletedByIsSystem: boolean | null;
+  deletedByPortalUserId: ObjectId | null;
+  deletedByTfmUserId: ObjectId | null;
+  deletedByNoUserLoggedIn: boolean | null;
+};
 
 /**
  * Checks whether the document is a document that needs to be sent to the audit API
@@ -34,7 +42,7 @@ export const postAuditDetails = async (
   });
 };
 
-const mapDeletionAuditRecord = (auditRecord: AuditDatabaseRecord) => ({
+const mapDeletionAuditRecord = (auditRecord: AuditDatabaseRecord): DeletionAuditRecord => ({
   deletedAt: auditRecord.lastUpdatedAt,
   deletedByIsSystem: auditRecord.lastUpdatedByIsSystem,
   deletedByPortalUserId: auditRecord.lastUpdatedByPortalUserId,
