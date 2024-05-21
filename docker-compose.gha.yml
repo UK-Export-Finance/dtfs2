@@ -72,7 +72,7 @@ services:
       - AUDIT_API_URL
       - AUDIT_API_USERNAME
       - AUDIT_API_PASSWORD
-      - CHANGE_STREAM_ENABLED='true'
+      - CHANGE_STREAM_ENABLED=true
       - UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
       - SQL_DB_HOST
       - SQL_DB_PORT
@@ -158,7 +158,7 @@ services:
       - UKEF_INTERNAL_NOTIFICATION=test
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
-      - CHANGE_STREAM_ENABLED='true'
+      - CHANGE_STREAM_ENABLED=true
       - DELETION_AUDIT_LOGS_TTL_SECONDS=600
     entrypoint: npx ts-node trade-finance-manager-api/src/index.ts
 
