@@ -17,7 +17,7 @@ const headers = {
 const getAddressesByPostcode = (postcode) =>
   axios({
     method: 'get',
-    url: `${EXTERNAL_API_URL}/geospatial/addresses/postcode${postcode}`,
+    url: `${EXTERNAL_API_URL}/geospatial/addresses/postcode/${postcode}`,
     headers,
   });
 
