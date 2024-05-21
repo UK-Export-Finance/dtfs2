@@ -36,10 +36,10 @@ const mockDb = {
 
 describe('deleteDocumentWithAuditLogs', () => {
   const documentId = new ObjectId();
-  const originalDeletionAuditLogsDeleteAfterSeconds = process.env.DELETION_AUDIT_LOGS_TTL_SECONDS;
+  const originalDeletionAuditLogsDeleteAfterSeconds = process.env.DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS;
 
   beforeEach(() => {
-    process.env.DELETION_AUDIT_LOGS_TTL_SECONDS = '60';
+    process.env.DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS = '60';
 
     jest.clearAllMocks();
 
@@ -48,7 +48,7 @@ describe('deleteDocumentWithAuditLogs', () => {
   });
 
   afterAll(() => {
-    process.env.DELETION_AUDIT_LOGS_TTL_SECONDS = originalDeletionAuditLogsDeleteAfterSeconds;
+    process.env.DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS = originalDeletionAuditLogsDeleteAfterSeconds;
   });
 
   describe('when the insertion and deletion are successful', () => {
