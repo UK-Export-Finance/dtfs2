@@ -19,6 +19,7 @@ const init = async () => {
   logger.info('REINSERTING MOCKS', { colour: LOGGER_COLOURS.bright });
   try {
     console.info({ CSE: process.env.CHANGE_STREAM_ENABLED });
+    console.info({ CSE: process.env.DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS });
 
     const portalToken = await createAndLogInAsInitialUser();
 
