@@ -3,9 +3,9 @@ const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date().valueOf();
 const nowPlusOneMonth = `${dateConstants.oneMonthUnix}000`;
-const nowPlusTwoMonthsDay = (dateConstants.twoMonthsDay).toString();
-const nowPlusTwoMonthsMonth = (dateConstants.twoMonthsMonth).toString();
-const nowPlusTwoMonthsYear = (dateConstants.twoMonthsYear).toString();
+const nowPlusTwoMonthsDay = dateConstants.twoMonthsDay.toString();
+const nowPlusTwoMonthsMonth = dateConstants.twoMonthsMonth.toString();
+const nowPlusTwoMonthsYear = dateConstants.twoMonthsYear.toString();
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
@@ -88,7 +88,7 @@ const deal = {
       {
         id: 18,
         description:
-          'Any applicable fees, interest rate and/or Risk Margin Fee apply to the whole Cover Period of the Covered Transaction, and have been set in accordance with the Bank\'s normal pricing policies and include, if any, overall pricing requirements notified by UKEF.',
+          "Any applicable fees, interest rate and/or Risk Margin Fee apply to the whole Cover Period of the Covered Transaction, and have been set in accordance with the Bank's normal pricing policies and include, if any, overall pricing requirements notified by UKEF.",
         answer: true,
       },
     ],

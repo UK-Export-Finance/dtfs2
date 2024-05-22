@@ -1,11 +1,6 @@
 const fs = require('fs');
 const args = require('minimist')(process.argv.slice(2));
-const {
-  init,
-  mapToV2,
-  addToDatabase,
-  teardown,
-} = require('./migrate');
+const { init, mapToV2, addToDatabase, teardown } = require('./migrate');
 const log = require('../helpers/logs');
 const shouldMigrateDeal = require('./should-migrate-deal');
 
@@ -18,27 +13,22 @@ const doMigration = async () => {
 
   const totalV1Deals = v1Deals.length;
 
-  const migratedDeals = await Promise.all(v1Deals.map(async (fileName) => {
-    const jsonBuffer = fs.readFileSync(`${path}/${fileName}`);
-    const v1DealJson = JSON.parse(jsonBuffer);
+  const migratedDeals = await Promise.all(
+    v1Deals.map(async (fileName) => {
+      const jsonBuffer = fs.readFileSync(`${path}/${fileName}`);
+      const v1DealJson = JSON.parse(jsonBuffer);
 
-    if (shouldMigrateDeal(v1DealJson)) {
-      const {
-        mappingErrors,
-        v2Deal,
-        v2Facilities,
-      } = await mapToV2(v1DealJson, v2Banks, v2Users);
+      if (shouldMigrateDeal(v1DealJson)) {
+        const { mappingErrors, v2Deal, v2Facilities } = await mapToV2(v1DealJson, v2Banks, v2Users);
 
-      if (!mappingErrors) {
-        await addToDatabase(
-          v2Deal,
-          v2Facilities,
-        );
+        if (!mappingErrors) {
+          await addToDatabase(v2Deal, v2Facilities);
+        }
       }
-    }
 
-    return fileName;
-  }));
+      return fileName;
+    }),
+  );
 
   return {
     totalV1Deals,

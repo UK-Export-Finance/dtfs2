@@ -1,10 +1,5 @@
 import { EntityManager } from 'typeorm';
-import {
-  DbRequestSource,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
-  UtilisationReportEntity,
-  UtilisationReportEntityMockBuilder,
-} from '@ukef/dtfs2-common';
+import { DbRequestSource, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { handleUtilisationReportManuallySetCompletedEvent } from './manually-set-completed.event-handler';
 
 describe('handleUtilisationReportManuallySetCompletedEvent', () => {

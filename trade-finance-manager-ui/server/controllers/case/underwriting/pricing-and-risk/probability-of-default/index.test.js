@@ -43,17 +43,14 @@ describe('GET underwriting - probability of default', () => {
       };
 
       await probabilityOfDefaultController.getUnderWritingProbabilityOfDefault(req, res);
-      expect(res.render).toHaveBeenCalledWith(
-        'case/underwriting/pricing-and-risk/probability-of-default.njk',
-        {
-          activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'underwriting',
-          deal: mockDeal.dealSnapshot,
-          tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id,
-          user: session.user,
-        },
-      );
+      expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/probability-of-default.njk', {
+        activePrimaryNavigation: 'manage work',
+        activeSubNavigation: 'underwriting',
+        deal: mockDeal.dealSnapshot,
+        tfm: mockDeal.tfm,
+        dealId: mockDeal.dealSnapshot._id,
+        user: session.user,
+      });
     });
   });
 
@@ -92,11 +89,13 @@ describe('POST underwriting - probability of default', () => {
       mock: true,
     };
 
-    const apiUpdateSpy = jest.fn(() => Promise.resolve({
-      updateProbabilityOfDefault: {
-        probabilityOfDefault: 12,
-      },
-    }));
+    const apiUpdateSpy = jest.fn(() =>
+      Promise.resolve({
+        updateProbabilityOfDefault: {
+          probabilityOfDefault: 12,
+        },
+      }),
+    );
 
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
@@ -122,11 +121,7 @@ describe('POST underwriting - probability of default', () => {
         probabilityOfDefault: Number(submittedProbabilityOfDefault),
       };
 
-      expect(apiUpdateSpy).toHaveBeenCalledWith(
-        mockDeal._id,
-        expectedUpdateObj,
-        undefined,
-      );
+      expect(apiUpdateSpy).toHaveBeenCalledWith(mockDeal._id, expectedUpdateObj, undefined);
     });
 
     it('should redirect to /underwriting', async () => {
@@ -164,11 +159,7 @@ describe('POST underwriting - probability of default', () => {
         probabilityOfDefault: Number(submittedProbabilityOfDefault),
       };
 
-      expect(apiUpdateSpy).toHaveBeenCalledWith(
-        mockDeal._id,
-        expectedUpdateObj,
-        undefined,
-      );
+      expect(apiUpdateSpy).toHaveBeenCalledWith(mockDeal._id, expectedUpdateObj, undefined);
     });
 
     it('should redirect to /underwriting', async () => {
@@ -206,11 +197,7 @@ describe('POST underwriting - probability of default', () => {
         probabilityOfDefault: Number(submittedProbabilityOfDefault),
       };
 
-      expect(apiUpdateSpy).toHaveBeenCalledWith(
-        mockDeal._id,
-        expectedUpdateObj,
-        undefined,
-      );
+      expect(apiUpdateSpy).toHaveBeenCalledWith(mockDeal._id, expectedUpdateObj, undefined);
     });
 
     it('should redirect to /underwriting', async () => {
@@ -251,27 +238,26 @@ describe('POST underwriting - probability of default', () => {
               order: '1',
             },
           },
-          summary: [{
-            text: 'Enter a probability of default',
-            href: '#probabilityOfDefault',
-          }],
+          summary: [
+            {
+              text: 'Enter a probability of default',
+              href: '#probabilityOfDefault',
+            },
+          ],
         };
 
-        expect(res.render).toHaveBeenCalledWith(
-          'case/underwriting/pricing-and-risk/probability-of-default.njk',
-          {
-            activePrimaryNavigation: 'manage work',
-            activeSubNavigation: 'underwriting',
-            deal: mockDeal.dealSnapshot,
-            tfm: {
-              ...mockDeal.tfm,
-              ...req.body,
-            },
-            dealId: mockDeal.dealSnapshot._id,
-            user: session.user,
-            validationErrors: expectedValidationErrors,
+        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/probability-of-default.njk', {
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'underwriting',
+          deal: mockDeal.dealSnapshot,
+          tfm: {
+            ...mockDeal.tfm,
+            ...req.body,
           },
-        );
+          dealId: mockDeal.dealSnapshot._id,
+          user: session.user,
+          validationErrors: expectedValidationErrors,
+        });
       });
     });
 
@@ -297,27 +283,26 @@ describe('POST underwriting - probability of default', () => {
               order: '1',
             },
           },
-          summary: [{
-            text: 'You must enter a percentage between 0.01% to 14.09%',
-            href: '#probabilityOfDefault',
-          }],
+          summary: [
+            {
+              text: 'You must enter a percentage between 0.01% to 14.09%',
+              href: '#probabilityOfDefault',
+            },
+          ],
         };
 
-        expect(res.render).toHaveBeenCalledWith(
-          'case/underwriting/pricing-and-risk/probability-of-default.njk',
-          {
-            activePrimaryNavigation: 'manage work',
-            activeSubNavigation: 'underwriting',
-            deal: mockDeal.dealSnapshot,
-            tfm: {
-              ...mockDeal.tfm,
-              probabilityOfDefault: req.body.probabilityOfDefault,
-            },
-            dealId: mockDeal.dealSnapshot._id,
-            user: session.user,
-            validationErrors: expectedValidationErrors,
+        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/probability-of-default.njk', {
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'underwriting',
+          deal: mockDeal.dealSnapshot,
+          tfm: {
+            ...mockDeal.tfm,
+            probabilityOfDefault: req.body.probabilityOfDefault,
           },
-        );
+          dealId: mockDeal.dealSnapshot._id,
+          user: session.user,
+          validationErrors: expectedValidationErrors,
+        });
       });
     });
 
@@ -343,27 +328,26 @@ describe('POST underwriting - probability of default', () => {
               order: '1',
             },
           },
-          summary: [{
-            text: 'You must enter a percentage between 0.01% to 14.09%',
-            href: '#probabilityOfDefault',
-          }],
+          summary: [
+            {
+              text: 'You must enter a percentage between 0.01% to 14.09%',
+              href: '#probabilityOfDefault',
+            },
+          ],
         };
 
-        expect(res.render).toHaveBeenCalledWith(
-          'case/underwriting/pricing-and-risk/probability-of-default.njk',
-          {
-            activePrimaryNavigation: 'manage work',
-            activeSubNavigation: 'underwriting',
-            deal: mockDeal.dealSnapshot,
-            tfm: {
-              ...mockDeal.tfm,
-              probabilityOfDefault: req.body.probabilityOfDefault,
-            },
-            dealId: mockDeal.dealSnapshot._id,
-            user: session.user,
-            validationErrors: expectedValidationErrors,
+        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/probability-of-default.njk', {
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'underwriting',
+          deal: mockDeal.dealSnapshot,
+          tfm: {
+            ...mockDeal.tfm,
+            probabilityOfDefault: req.body.probabilityOfDefault,
           },
-        );
+          dealId: mockDeal.dealSnapshot._id,
+          user: session.user,
+          validationErrors: expectedValidationErrors,
+        });
       });
     });
 
@@ -389,27 +373,26 @@ describe('POST underwriting - probability of default', () => {
               order: '1',
             },
           },
-          summary: [{
-            text: 'You must enter a percentage between 0.01% to 14.09%',
-            href: '#probabilityOfDefault',
-          }],
+          summary: [
+            {
+              text: 'You must enter a percentage between 0.01% to 14.09%',
+              href: '#probabilityOfDefault',
+            },
+          ],
         };
 
-        expect(res.render).toHaveBeenCalledWith(
-          'case/underwriting/pricing-and-risk/probability-of-default.njk',
-          {
-            activePrimaryNavigation: 'manage work',
-            activeSubNavigation: 'underwriting',
-            deal: mockDeal.dealSnapshot,
-            tfm: {
-              ...mockDeal.tfm,
-              probabilityOfDefault: req.body.probabilityOfDefault,
-            },
-            dealId: mockDeal.dealSnapshot._id,
-            user: session.user,
-            validationErrors: expectedValidationErrors,
+        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/probability-of-default.njk', {
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'underwriting',
+          deal: mockDeal.dealSnapshot,
+          tfm: {
+            ...mockDeal.tfm,
+            probabilityOfDefault: req.body.probabilityOfDefault,
           },
-        );
+          dealId: mockDeal.dealSnapshot._id,
+          user: session.user,
+          validationErrors: expectedValidationErrors,
+        });
       });
     });
 
@@ -435,27 +418,26 @@ describe('POST underwriting - probability of default', () => {
               order: '1',
             },
           },
-          summary: [{
-            text: 'You must enter a percentage between 0.01% to 14.09%',
-            href: '#probabilityOfDefault',
-          }],
+          summary: [
+            {
+              text: 'You must enter a percentage between 0.01% to 14.09%',
+              href: '#probabilityOfDefault',
+            },
+          ],
         };
 
-        expect(res.render).toHaveBeenCalledWith(
-          'case/underwriting/pricing-and-risk/probability-of-default.njk',
-          {
-            activePrimaryNavigation: 'manage work',
-            activeSubNavigation: 'underwriting',
-            deal: mockDeal.dealSnapshot,
-            tfm: {
-              ...mockDeal.tfm,
-              probabilityOfDefault: req.body.probabilityOfDefault,
-            },
-            dealId: mockDeal.dealSnapshot._id,
-            user: session.user,
-            validationErrors: expectedValidationErrors,
+        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/probability-of-default.njk', {
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'underwriting',
+          deal: mockDeal.dealSnapshot,
+          tfm: {
+            ...mockDeal.tfm,
+            probabilityOfDefault: req.body.probabilityOfDefault,
           },
-        );
+          dealId: mockDeal.dealSnapshot._id,
+          user: session.user,
+          validationErrors: expectedValidationErrors,
+        });
       });
     });
   });

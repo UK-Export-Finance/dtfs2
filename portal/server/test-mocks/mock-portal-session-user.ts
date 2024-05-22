@@ -18,7 +18,7 @@ export const MOCK_PORTAL_SESSION_USER: PortalSessionUser = {
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
       teamName: 'team',
-      emails: ['payment@testing.com']
+      emails: ['payment@testing.com'],
     },
     utilisationReportPeriodSchedule: [],
     isVisibleInTfmUtilisationReports: true,

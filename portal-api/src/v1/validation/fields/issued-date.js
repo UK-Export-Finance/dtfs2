@@ -1,26 +1,16 @@
 const { isBefore, startOfDay, isAfter } = require('date-fns');
 const CONSTANTS = require('../../../constants');
 const { orderNumber } = require('../../../utils/error-list-order-number');
-const {
-  dateHasAllValues,
-  dateValidationText,
-} = require('./date');
+const { dateHasAllValues, dateValidationText } = require('./date');
 const { getStartOfDateFromEpochMillisecondString, getLongFormattedDate } = require('../../helpers/date');
 
 module.exports = (facility, errorList, deal) => {
   const newErrorList = errorList;
 
-  const {
-    'issuedDate-day': issuedDateDay,
-    'issuedDate-month': issuedDateMonth,
-    'issuedDate-year': issuedDateYear,
-  } = facility;
+  const { 'issuedDate-day': issuedDateDay, 'issuedDate-month': issuedDateMonth, 'issuedDate-year': issuedDateYear } = facility;
 
   const { submissionType } = deal;
-  const {
-    submissionDate: dealSubmissionDateTimestamp,
-    manualInclusionNoticeSubmissionDate: minSubmissionDateTimestamp,
-  } = deal.details;
+  const { submissionDate: dealSubmissionDateTimestamp, manualInclusionNoticeSubmissionDate: minSubmissionDateTimestamp } = deal.details;
 
   const issuedDate = getStartOfDateFromEpochMillisecondString(facility.issuedDate);
   const today = startOfDay(new Date());

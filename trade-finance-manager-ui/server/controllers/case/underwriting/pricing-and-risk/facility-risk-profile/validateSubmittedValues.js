@@ -1,6 +1,4 @@
-const {
-  hasValue,
-} = require('../../../../../helpers/string');
+const { hasValue } = require('../../../../../helpers/string');
 const { increment } = require('../../../../../helpers/number');
 const { generateValidationErrors } = require('../../../../../helpers/validation');
 
@@ -8,19 +6,12 @@ const validateSubmittedValues = (submittedValues) => {
   let validationErrors = {};
   let errorsCount = 0;
 
-  const {
-    riskProfile,
-  } = submittedValues;
+  const { riskProfile } = submittedValues;
 
   if (!hasValue(riskProfile)) {
     errorsCount = increment(errorsCount);
 
-    validationErrors = generateValidationErrors(
-      'riskProfile',
-      'Select a risk profile',
-      errorsCount,
-      validationErrors,
-    );
+    validationErrors = generateValidationErrors('riskProfile', 'Select a risk profile', errorsCount, validationErrors);
   }
 
   if (Object.keys(validationErrors).length > 0) {

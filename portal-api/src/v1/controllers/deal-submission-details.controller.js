@@ -180,6 +180,6 @@ exports.update = async (req, res) => {
     return res.status(200).json(response);
   } catch (error) {
     console.error('Unable to update the deal with submission details %o', error);
-    return res.status(500).send({ status: 500, message: 'Unable to update the deal with submission details'});
+    return res.status(500).send({ status: 500, message: 'Unable to update the deal with submission details' });
   }
 };

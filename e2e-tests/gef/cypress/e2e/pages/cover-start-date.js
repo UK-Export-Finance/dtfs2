@@ -1,7 +1,6 @@
 const coverStartDate = {
-
   rows: () => cy.get('.govuk-table__body .govuk-table__row'),
-  updateIndividualCoverStartDateButton: (id) => cy.get((`[data-cy="update-coverStartDate-button-${id}"]`)),
+  updateIndividualCoverStartDateButton: (id) => cy.get(`[data-cy="update-coverStartDate-button-${id}"]`),
   coverStartDateScreen: () => cy.get('[data-cy="ukefCoverStartDate-confirm"]'),
   coverStartDateYes: () => cy.get('[data-cy="ukef-cover-start-date-true"]'),
   coverStartDateNo: () => cy.get('[data-cy="ukef-cover-start-date-false"]'),
@@ -16,7 +15,6 @@ const coverStartDate = {
   coverStartDateSuccess: () => cy.get('[data-cy="confirm-cover-start-success"]'),
 
   continueButton: () => cy.get('[data-cy="continue-button"]'),
-
 };
 
 export default coverStartDate;

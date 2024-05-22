@@ -1,5 +1,5 @@
 import { DbRequestSourceParam } from '../helpers';
-import { Currency } from '../../types';
+import { Currency, FeeRecordStatus } from '../../types';
 import { UtilisationReportEntity } from '../utilisation-report';
 
 export type CreateFeeRecordParams = DbRequestSourceParam & {
@@ -14,5 +14,6 @@ export type CreateFeeRecordParams = DbRequestSourceParam & {
   feesPaidToUkefForThePeriodCurrency: Currency;
   paymentCurrency: Currency;
   paymentExchangeRate: number;
+  status: FeeRecordStatus;
   report: UtilisationReportEntity;
 };

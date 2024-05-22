@@ -22,7 +22,12 @@ describe('changeStreamApi', () => {
 
     beforeEach(() => {
       jest.clearAllMocks();
-      process.env = { ...process.env, AUDIT_API_URL: 'audit API url', AUDIT_API_USERNAME: 'audit API username', AUDIT_API_PASSWORD: 'audit API password' };
+      process.env = {
+        ...process.env,
+        AUDIT_API_URL: 'audit API url',
+        AUDIT_API_USERNAME: 'audit API username',
+        AUDIT_API_PASSWORD: 'audit API password',
+      };
     });
 
     it('should call api when called with a valid change stream document', async () => {

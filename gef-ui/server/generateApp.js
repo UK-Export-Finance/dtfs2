@@ -104,10 +104,7 @@ const generateApp = () => {
     }),
   );
 
-  app.use(
-    '/assets',
-    express.static(path.join(__dirname, '..', 'public')),
-  );
+  app.use('/assets', express.static(path.join(__dirname, '..', 'public')));
 
   app.use(createRateLimit());
 

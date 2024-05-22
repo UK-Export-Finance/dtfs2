@@ -203,10 +203,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
       {
         $facet: {
           count: [{ $count: 'total' }],
-          deals: [
-            { $skip: startPage },
-            ...(pagesize ? [{ $limit: pagesize }] : []),
-          ],
+          deals: [{ $skip: startPage }, ...(pagesize ? [{ $limit: pagesize }] : [])],
         },
       },
       { $unwind: '$count' },

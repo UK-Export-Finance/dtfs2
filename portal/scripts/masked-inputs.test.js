@@ -5,9 +5,7 @@ describe('maskedInputs', () => {
     let input;
 
     beforeEach(() => {
-      document.body.innerHTML = '<div>'
-        + '  <input id="maskInput" type="text" data-mask="currency" />'
-        + '</div>';
+      document.body.innerHTML = '<div><input id="maskInput" type="text" data-mask="currency" /></div>';
 
       maskedInputs();
 

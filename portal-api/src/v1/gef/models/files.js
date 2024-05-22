@@ -9,7 +9,7 @@ class File {
     this.encoding = file.encoding;
     this.size = filesize(file.size, { round: 0 });
     this.documentPath = file.documentPath;
-    this.auditRecord = auditRecord
+    this.auditRecord = auditRecord;
   }
 }
 

@@ -1,3 +1,4 @@
+const dotenv = require('dotenv');
 const path = require('path');
 const nunjucks = require('nunjucks');
 let mojFilters = require('@ministryofjustice/frontend/moj/filters/all')();
@@ -14,7 +15,11 @@ const formatAsDecimal = require('./filter-formatAsDecimal');
 const sentenceCase = require('./filter-sentenceCase');
 const { userIsInTeam, userIsOnlyInTeams } = require('../helpers/user');
 
+dotenv.config();
+
 const configureNunjucks = (opts) => {
+  const { CONTACT_US_SELF_SERVICE_PORTAL_URL, CONTACT_US_EMAIL_ADDRESS } = process.env;
+
   const appViews = [
     path.resolve(__dirname, '../../../node_modules/govuk-frontend'),
     path.resolve(__dirname, '../../../node_modules/@ministryofjustice/frontend'),
@@ -23,6 +28,9 @@ const configureNunjucks = (opts) => {
   ];
 
   const nunjucksEnvironment = nunjucks.configure(appViews, opts);
+
+  nunjucksEnvironment.addGlobal('CONTACT_US_SELF_SERVICE_PORTAL_URL', CONTACT_US_SELF_SERVICE_PORTAL_URL);
+  nunjucksEnvironment.addGlobal('CONTACT_US_EMAIL_ADDRESS', CONTACT_US_EMAIL_ADDRESS);
 
   nunjucksEnvironment.addFilter('localiseTimestamp', localiseTimestamp);
   nunjucksEnvironment.addFilter('formatDateString', formatDateString);

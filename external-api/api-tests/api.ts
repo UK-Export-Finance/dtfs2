@@ -10,12 +10,12 @@ const headers = {
   'x-api-key': asString(EXTERNAL_API_KEY, 'EXTERNAL_API_KEY'),
 };
 
-export const api = (app: any) => ({
+export const api = (app: object) => ({
   get: async (url: string) => agent(app).get(url).set(headers),
-  getWithRequestBody: (data?: any) => ({
+  getWithRequestBody: (data?: object) => ({
     to: async (url: string) => agent(app).get(url).send(data).set(headers),
   }),
-  post: (data?: any) => ({
+  post: (data?: object) => ({
     to: async (url: string) => agent(app).post(url).send(data).set(headers),
   }),
 });

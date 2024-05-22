@@ -1,11 +1,4 @@
-const PARTIES = [
-  'exporter',
-  'buyer',
-  'agent',
-  'indemnifier',
-  'bond-issuer',
-  'bond-beneficiary',
-];
+const PARTIES = ['exporter', 'buyer', 'agent', 'indemnifier', 'bond-issuer', 'bond-beneficiary'];
 
 const BOND = {
   BOND_ISSUER: 'bond-issuer',

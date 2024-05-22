@@ -40,5 +40,4 @@ export type DbModel<TCollectionName extends MongoDbCollectionName> = TCollection
   ? UtilisationReport
   : TCollectionName extends 'utilisationData'
   ? UtilisationData
-  : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    WithId<any>;
+  : WithId<any>;

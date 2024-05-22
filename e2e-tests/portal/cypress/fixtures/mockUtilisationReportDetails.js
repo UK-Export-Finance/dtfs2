@@ -1,6 +1,6 @@
 const { eachMonthOfInterval, getYear, getMonth, subMonths } = require('date-fns');
-const { BANK1_PAYMENT_REPORT_OFFICER1, BANK2_PAYMENT_REPORT_OFFICER1 } = require('../../../e2e-fixtures');
 const { UtilisationReportEntityMockBuilder, AzureFileInfoEntity, MOCK_AZURE_FILE_INFO } = require('@ukef/dtfs2-common');
+const { BANK1_PAYMENT_REPORT_OFFICER1, BANK2_PAYMENT_REPORT_OFFICER1 } = require('../../../e2e-fixtures');
 
 const bankId = BANK1_PAYMENT_REPORT_OFFICER1.bank.id;
 
@@ -54,13 +54,13 @@ const february2023ReportDetails = [
 
 const december2023ToFebruary2024ReportDetails = [
   UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
-  .withId(reportIdGenerator.next().value)
-  .withBankId(BANK2_PAYMENT_REPORT_OFFICER1.bank.id)
-  .withReportPeriod({
-    start: { month: 12, year: 2023 },
-    end: { month: 2, year: 2024 },
-  })
-  .build(),
+    .withId(reportIdGenerator.next().value)
+    .withBankId(BANK2_PAYMENT_REPORT_OFFICER1.bank.id)
+    .withReportPeriod({
+      start: { month: 12, year: 2023 },
+      end: { month: 2, year: 2024 },
+    })
+    .build(),
 ];
 
 const generateUpToDateReportDetails = () => {

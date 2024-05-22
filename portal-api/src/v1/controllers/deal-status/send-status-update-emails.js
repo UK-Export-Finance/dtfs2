@@ -2,11 +2,7 @@ const sendEmail = require('../../email');
 
 const sendEmailsToOwningBanks = async (templateId, emailVariables, owningBankEmails) => {
   owningBankEmails.forEach(async (email) => {
-    await sendEmail(
-      templateId,
-      email,
-      emailVariables,
-    );
+    await sendEmail(templateId, email, emailVariables);
   });
 };
 
@@ -39,22 +35,11 @@ const statusUpdateEmails = async (baseEmailVariables, deal, emailAddresses) => {
 };
 
 const send = async (deal, fromStatus, user) => {
-  const {
-    submissionType,
-    bankInternalRefName,
-    maker,
-    status: currentStatus,
-  } = deal;
+  const { submissionType, bankInternalRefName, maker, status: currentStatus } = deal;
 
-  const {
-    'supplier-name': supplierName,
-  } = deal.submissionDetails;
+  const { 'supplier-name': supplierName } = deal.submissionDetails;
 
-  const {
-    firstname,
-    surname,
-    username,
-  } = user;
+  const { firstname, surname, username } = user;
 
   const updatedByName = `${firstname} ${surname}`;
   const updatedByEmail = username;

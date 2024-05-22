@@ -41,7 +41,7 @@ exports.create = async (req, res) => {
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
   const collection = await db.getCollection('eligibilityCriteria');
-  const criteria = { ...req?.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails)};
+  const criteria = { ...req?.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
   const eligibilityCriteria = await collection.insertOne(criteria);
   return res.status(200).send(eligibilityCriteria);
 };

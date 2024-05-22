@@ -1,3 +1,13 @@
+/* eslint-disable @typescript-eslint/unbound-method */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable no-param-reassign */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
@@ -137,7 +147,7 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
       const { status, data } = response;
       return res.status(status).send(data);
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('ACBS create POST failed %o', error);
     return res.status(400).send();
   }

@@ -4,9 +4,9 @@ const { EXCHANGE_RATE_REGEX } = require('../../../../constants/regex');
 
 const generatePaymentExchangeRateError = (csvDataRow) => {
   if (
-    !csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value
-    && (!csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value
-      || csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY]?.value)
+    !csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value &&
+    (!csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value ||
+      csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY]?.value)
   ) {
     return null;
   }
@@ -19,8 +19,10 @@ const generatePaymentExchangeRateError = (csvDataRow) => {
       exporter: csvDataRow[UTILISATION_REPORT_HEADERS.EXPORTER]?.value,
     };
   }
-  if (csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY]?.value
-    && parseFloat(csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value) !== 1) {
+  if (
+    csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY]?.value &&
+    parseFloat(csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value) !== 1
+  ) {
     return {
       errorMessage: 'Payment exchange rate must be 1 or blank when payment currency and fees paid to UKEF currency are the same',
       column: csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.column,

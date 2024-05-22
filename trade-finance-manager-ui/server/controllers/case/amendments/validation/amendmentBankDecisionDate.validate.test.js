@@ -3,9 +3,9 @@ import { amendmentBankDecisionDateValidation } from './amendmentBankDecisionDate
 const { set, getUnixTime } = require('date-fns');
 
 describe('amendmentBankDecisionDateValidation()', () => {
-  describe('date UKEF received the bank\'s decision', () => {
+  describe("date UKEF received the bank's decision", () => {
     const type = 'bankDecisionDate';
-    const message = 'Enter the date UKEF received the bank\'s decision';
+    const message = "Enter the date UKEF received the bank's decision";
 
     it('should return an error if no date is entered at all', async () => {
       const body = {
@@ -22,12 +22,12 @@ describe('amendmentBankDecisionDateValidation()', () => {
           errors: {
             errorSummary: [
               {
-                text: 'Enter the date UKEF received the bank\'s decision',
+                text: "Enter the date UKEF received the bank's decision",
                 href: '#bankDecisionDate',
               },
             ],
             fieldErrors: {
-              bankDecisionDate: { text: 'Enter the date UKEF received the bank\'s decision' },
+              bankDecisionDate: { text: "Enter the date UKEF received the bank's decision" },
             },
           },
           amendmentBankDecisionDateDay: '',
@@ -60,12 +60,12 @@ describe('amendmentBankDecisionDateValidation()', () => {
           errors: {
             errorSummary: [
               {
-                text: 'Enter the date UKEF received the bank\'s decision',
+                text: "Enter the date UKEF received the bank's decision",
                 href: '#bankDecisionDate',
               },
             ],
             fieldErrors: {
-              bankDecisionDate: { text: 'Enter the date UKEF received the bank\'s decision' },
+              bankDecisionDate: { text: "Enter the date UKEF received the bank's decision" },
             },
           },
           amendmentBankDecisionDateDay: '5',

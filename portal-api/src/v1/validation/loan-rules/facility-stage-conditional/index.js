@@ -3,9 +3,7 @@ const ukefGuaranteeInMonths = require('../../fields/ukef-guarantee-in-months');
 
 module.exports = (loan, errorList) => {
   let newErrorList = { ...errorList };
-  const {
-    facilityStage,
-  } = loan;
+  const { facilityStage } = loan;
 
   if (hasValue(facilityStage) && facilityStage === 'Conditional') {
     newErrorList = ukefGuaranteeInMonths(loan, newErrorList);

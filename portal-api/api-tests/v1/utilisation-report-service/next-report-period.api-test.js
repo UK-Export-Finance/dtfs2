@@ -55,7 +55,7 @@ describe('GET /v1/banks/:bankId/next-report-period', () => {
         month: 2,
         year: 2024,
       },
-    }
+    };
     jest.mocked(getNextReportPeriodByBankId).mockResolvedValueOnce(expectedResponse);
 
     const response = await as(aPaymentReportOfficer).get(nextReportPeriodUrl(matchingBankId));

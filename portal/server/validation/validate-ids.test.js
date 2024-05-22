@@ -1,10 +1,4 @@
-const {
-  isValidMongoId,
-  isValidCompaniesHouseNumber,
-  isValidResetPasswordToken,
-  isValidDocumentType,
-  isValidFileName,
-} = require('./validate-ids');
+const { isValidMongoId, isValidCompaniesHouseNumber, isValidResetPasswordToken, isValidDocumentType, isValidFileName } = require('./validate-ids');
 const { COMPANIES_HOUSE_NUMBER } = require('../test-mocks/companies-house-number');
 
 const { VALID, VALID_LAST_LETTER, VALID_LETTERS, VALID_LETTERS_NI, INVALID_SHORT, INVALID_SPECIAL_CHARACTER, INVALID_SPACE } = COMPANIES_HOUSE_NUMBER;

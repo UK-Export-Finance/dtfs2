@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Checks if the `dealIdentifier` and `facilityIdentifiers` are present in the `eStoreData` object
  * and if they do not contain certain temporary IDs and conforms to the pre-defined ID format.

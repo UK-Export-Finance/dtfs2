@@ -1,6 +1,5 @@
-const {
-  StorageSharedKeyCredential, ShareServiceClient, ShareClient, ShareDirectoryClient, ShareFileClient,
-} = jest.genMockFromModule('@azure/storage-file-share');
+const { StorageSharedKeyCredential, ShareServiceClient, ShareClient, ShareDirectoryClient, ShareFileClient } =
+  jest.genMockFromModule('@azure/storage-file-share');
 
 function createDirectoryClient(folder) {
   const directory = new ShareDirectoryClient();

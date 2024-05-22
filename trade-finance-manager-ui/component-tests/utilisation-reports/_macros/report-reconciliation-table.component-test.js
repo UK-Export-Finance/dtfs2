@@ -1,12 +1,8 @@
 const { TEAM_IDS, UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
 const { getUkBankHolidays } = require('../../../server/api');
-const {
-  getReportReconciliationSummariesViewModel,
-} = require('../../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper');
-const {
-  MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY,
-} = require('../../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
+const { getReportReconciliationSummariesViewModel } = require('../../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper');
+const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } = require('../../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
 const { MOCK_TFM_SESSION_USER } = require('../../../server/test-mocks/mock-tfm-session-user');
 const { MOCK_BANK_HOLIDAYS } = require('../../../server/test-mocks/mock-bank-holidays');
 
@@ -30,10 +26,7 @@ describe(component, () => {
   });
 
   const getWrapper = async ({ userTeams, isTfmPaymentReconciliationFeatureFlagEnabled } = {}) => {
-    const reportPeriodSummaries = await getReportReconciliationSummariesViewModel(
-      MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY,
-      'user-token',
-    );
+    const reportPeriodSummaries = await getReportReconciliationSummariesViewModel(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY, 'user-token');
     const params = {
       user: { ...MOCK_TFM_SESSION_USER, teams: userTeams ?? [TEAM_IDS.PDC_RECONCILE] },
       summaryItems: reportPeriodSummaries[0].items,
@@ -103,9 +96,7 @@ describe(component, () => {
       if (summaryItem.status === UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) {
         wrapper.expectText(`${rowSelector} th > p`).toRead(summaryItem.bank.name);
       } else {
-        wrapper
-          .expectLink(`${rowSelector} th > p > a`)
-          .toLinkTo(`/utilisation-reports/${summaryItem.reportId}`, summaryItem.bank.name);
+        wrapper.expectLink(`${rowSelector} th > p > a`).toLinkTo(`/utilisation-reports/${summaryItem.reportId}`, summaryItem.bank.name);
       }
 
       wrapper.expectElement(`${rowSelector} td`).toHaveCount(6);

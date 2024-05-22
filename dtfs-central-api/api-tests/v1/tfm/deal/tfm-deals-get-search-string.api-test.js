@@ -9,12 +9,7 @@ const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
-    await wipeDB.wipe([
-      MONGO_DB_COLLECTIONS.DEALS,
-      MONGO_DB_COLLECTIONS.FACILITIES,
-      MONGO_DB_COLLECTIONS.TFM_DEALS,
-      MONGO_DB_COLLECTIONS.TFM_FACILITIES,
-    ]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
   describe('GET /v1/tfm/deals', () => {
@@ -38,9 +33,7 @@ describe('/v1/tfm/deals', () => {
 
         expect(status).toEqual(200);
 
-        const expectedDeals = submittedDeals.filter(
-          (deal) => deal.dealSnapshot.details.ukefDealId === miaDeal.details.ukefDealId,
-        );
+        const expectedDeals = submittedDeals.filter((deal) => deal.dealSnapshot.details.ukefDealId === miaDeal.details.ukefDealId);
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -112,9 +105,7 @@ describe('/v1/tfm/deals', () => {
 
         const submittedDeals = await createAndSubmitDeals([miaDeal, minDeal]);
 
-        const { status, body } = await api.get(
-          `/v1/tfm/deals?searchString=${miaDeal.submissionDetails['supplier-name']}`,
-        );
+        const { status, body } = await api.get(`/v1/tfm/deals?searchString=${miaDeal.submissionDetails['supplier-name']}`);
 
         expect(status).toEqual(200);
 
@@ -146,9 +137,7 @@ describe('/v1/tfm/deals', () => {
 
         expect(status).toEqual(200);
 
-        const expectedDeals = submittedDeals.filter(
-          (deal) => deal.dealSnapshot.submissionType === ainDeal.submissionType,
-        );
+        const expectedDeals = submittedDeals.filter((deal) => deal.dealSnapshot.submissionType === ainDeal.submissionType);
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -174,9 +163,7 @@ describe('/v1/tfm/deals', () => {
 
         expect(status).toEqual(200);
 
-        const expectedDeals = submittedDeals.filter(
-          (deal) => deal.dealSnapshot.submissionDetails['buyer-name'] === ainDeal.submissionDetails['buyer-name'],
-        );
+        const expectedDeals = submittedDeals.filter((deal) => deal.dealSnapshot.submissionDetails['buyer-name'] === ainDeal.submissionDetails['buyer-name']);
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -207,9 +194,7 @@ describe('/v1/tfm/deals', () => {
 
         expect(status).toEqual(200);
 
-        const expectedDeals = submittedDeals.filter(
-          (deal) => deal.dealSnapshot.details.ukefDealId === ainDealWithConfirmedStage.details.ukefDealId,
-        );
+        const expectedDeals = submittedDeals.filter((deal) => deal.dealSnapshot.details.ukefDealId === ainDealWithConfirmedStage.details.ukefDealId);
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -284,9 +269,7 @@ describe('/v1/tfm/deals', () => {
 
           expect(status).toEqual(200);
 
-          const expectedDeals = submittedDeals.filter(
-            (deal) => deal.dealSnapshot.ukefDealId === 'DEAL-WITH-BONDS-AND-LOANS',
-          );
+          const expectedDeals = submittedDeals.filter((deal) => deal.dealSnapshot.ukefDealId === 'DEAL-WITH-BONDS-AND-LOANS');
 
           expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -321,9 +304,7 @@ describe('/v1/tfm/deals', () => {
           (deal) => deal.dealSnapshot.details.ukefDealId === dealSubmittedYesterday.details.ukefDealId,
         );
 
-        const dealSubmittedTodayResponseBody = submittedDeals.find(
-          (deal) => deal.dealSnapshot.details.ukefDealId === dealSubmittedToday.details.ukefDealId,
-        );
+        const dealSubmittedTodayResponseBody = submittedDeals.find((deal) => deal.dealSnapshot.details.ukefDealId === dealSubmittedToday.details.ukefDealId);
 
         const yesterdayFormatted = format(yesterday, 'dd-MM-yyyy');
         const todayFormatted = format(today, 'dd-MM-yyyy');
@@ -390,9 +371,7 @@ describe('/v1/tfm/deals', () => {
           (deal) => deal.dealSnapshot.details.ukefDealId === dealSubmittedYesterday.details.ukefDealId,
         );
 
-        const dealSubmittedTodayResponseBody = submittedDeals.find(
-          (deal) => deal.dealSnapshot.details.ukefDealId === dealSubmittedToday.details.ukefDealId,
-        );
+        const dealSubmittedTodayResponseBody = submittedDeals.find((deal) => deal.dealSnapshot.details.ukefDealId === dealSubmittedToday.details.ukefDealId);
 
         const yesterdayFormatted = format(yesterday, 'dd-MM-yyyy');
         const todayFormatted = format(today, 'dd-MM-yyyy');

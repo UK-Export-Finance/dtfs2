@@ -3,10 +3,7 @@ const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../pages');
 const { dashboardFilters } = require('../../../partials');
-const {
-  BSS_DEAL_AIN,
-  BSS_FACILITY_BOND,
-} = require('../fixtures');
+const { BSS_DEAL_AIN, BSS_FACILITY_BOND } = require('../fixtures');
 const {
   submitRedirectsToDashboard,
   shouldRenderCheckedCheckbox,
@@ -81,10 +78,7 @@ context('Dashboard Facilities filters - filter by deal notice type', () => {
 
       filters.showHideButton().click();
 
-      shouldRenderAppliedFilterInMainContainerSelectedFilters(
-        filters.mainContainer.selectedFilters.noticeAIN(),
-        CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
-      );
+      shouldRenderAppliedFilterInMainContainerSelectedFilters(filters.mainContainer.selectedFilters.noticeAIN(), CONSTANTS.DEALS.SUBMISSION_TYPE.AIN);
     });
 
     it('renders only facilities that belong to an AIN deal', () => {

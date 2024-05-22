@@ -118,6 +118,14 @@ command. This command first runs the `predb:seed` script (see details below) and
 
 As a result of not building the project, the `typeorm-extension` executable needs to be run directly from the `node_modules` via `ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run`. The `node_modules` directory where `typeorm-extension` is located needs to be at the same level as the root of the seeder which, in this case, is `utils/sql-db-seeder`. Due to conflicting versions of `mongodb`, the `typeorm-extension` package actually gets placed within the root level `node_modules` after running `npm i`. To overcome this issue, the `predb:seed` script copies the required node modules to `utils/sql-db-seeder` before executing the `db:seed` script.
 
+After running the seeder, a table called `"seeds"` is created. This table will prevent you from running the same seeder twice, stopping unexpected errors with respect to inserting data with duplicate `id`s, for example. To remove all the rows inserted by the seeder, the
+
+```shell
+npm run db:seed:reset
+```
+
+command can be used. This will delete all rows from the `"seeds"` table as well as all the rows in the `"UtilisationReport"`, `"AzureFileInfo"` and `"FeeRecord"` tables which were inserted by the seeder.
+
 ## Adding DB access to a package
 
 Though the DB configuration is contained within the [common package](../libs/common), it is up to each package that needs access to initialise a connection to the DB. This is done by adding the following to a file where the app is first initialised:
@@ -126,7 +134,7 @@ Though the DB configuration is contained within the [common package](../libs/com
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 
 SqlDbDataSource.initialize()
-  .then(() => console.info('🗄️ Successfully initialised connection to SQL database'))
+  .then(() => console.info('✅ Successfully initialised connection to SQL database'))
   .catch((error) => console.error('❌ Failed to initialise connection to SQL database:', error));
 ```
 

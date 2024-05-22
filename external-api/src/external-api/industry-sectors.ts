@@ -1,4 +1,5 @@
 import { IndustrySector } from '../interfaces';
+
 export const INDUSTRY_SECTORS: IndustrySector[] = [
   {
     code: '1008',

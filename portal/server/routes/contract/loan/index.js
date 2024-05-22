@@ -94,7 +94,7 @@ const loanGuaranteeDetailsPayloadProperties = [
 ];
 
 const filterLoanGuaranteeDetailsPayload = (body) => {
-const payload = constructPayload(body, loanGuaranteeDetailsPayloadProperties,true);
+  const payload = constructPayload(body, loanGuaranteeDetailsPayloadProperties, true);
   if (payload.facilityStage === FACILITY_STAGE.CONDITIONAL) {
     delete payload['requestedCoverStartDate-day'];
     delete payload['requestedCoverStartDate-month'];
@@ -121,7 +121,7 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) =>
 });
 
 router.post('/contract/:_id/loan/:loanId/guarantee-details/save-go-back', provide([LOAN]), async (req, res) => {
-  const loanBody = constructPayload(req.body, loanGuaranteeDetailsPayloadProperties,true);
+  const loanBody = constructPayload(req.body, loanGuaranteeDetailsPayloadProperties, true);
   const modifiedBody = handleNameField(loanBody);
 
   return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
@@ -162,7 +162,7 @@ const loanFinancialDetailsPayloadProperties = [
 ];
 
 const filterLoanFinancialDetailsPayload = (body) => {
-const sanitizedPayload = constructPayload(body, loanFinancialDetailsPayloadProperties,true);
+  const sanitizedPayload = constructPayload(body, loanFinancialDetailsPayloadProperties, true);
 
   if (sanitizedPayload.currencySameAsSupplyContractCurrency === 'true') {
     delete sanitizedPayload.conversionRate;
@@ -185,7 +185,7 @@ router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) =>
 });
 
 router.post('/contract/:_id/loan/:loanId/financial-details/save-go-back', provide([LOAN]), async (req, res) => {
-  const sanitizedPayload = constructPayload(req.body, loanFinancialDetailsPayloadProperties,true);
+  const sanitizedPayload = constructPayload(req.body, loanFinancialDetailsPayloadProperties, true);
   return saveFacilityAndGoBackToDeal(req, res, sanitizedPayload);
 });
 
@@ -212,7 +212,7 @@ const loanRepaymentDatesPayloadProperties = ['premiumFrequency', 'premiumType', 
 router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  const loanBody = constructPayload(req.body, loanRepaymentDatesPayloadProperties,true);
+  const loanBody = constructPayload(req.body, loanRepaymentDatesPayloadProperties, true);
   const modifiedBody = premiumFrequencyField(loanBody);
 
   await postToApi(api.updateLoan(dealId, loanId, modifiedBody, userToken), errorHref);
@@ -222,7 +222,7 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => 
 });
 
 router.post('/contract/:_id/loan/:loanId/dates-repayments/save-go-back', provide([LOAN]), async (req, res) => {
-  const loanBody = constructPayload(req.body, loanRepaymentDatesPayloadProperties,true);
+  const loanBody = constructPayload(req.body, loanRepaymentDatesPayloadProperties, true);
   const modifiedBody = premiumFrequencyField(loanBody);
 
   return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
@@ -308,7 +308,7 @@ router.post('/contract/:_id/loan/:loanId/issue-facility', async (req, res) => {
     coverDateConfirmed: true,
   };
 
-  const payload = constructPayload(payloadValues, payloadProperties,true);
+  const payload = constructPayload(payloadValues, payloadProperties, true);
 
   const { validationErrors, loan } = await postToApi(api.updateLoanIssueFacility(dealId, loanId, payload, userToken), errorHref);
 
@@ -394,7 +394,7 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
         'requestedCoverStartDate-year',
         'needToChangeRequestedCoverStartDate',
       ];
-      const newRequestedCoverStartDate = constructPayload(req.body, payloadProperties,true);
+      const newRequestedCoverStartDate = constructPayload(req.body, payloadProperties, true);
 
       const newLoanDetails = {
         ...newRequestedCoverStartDate,

@@ -31,11 +31,13 @@ describe('mapFacilityValueExportCurrency()', () => {
   });
 
   it('should return the new amendment value when latest amendment is complete', () => {
-    mockFacility.amendments = [{
-      tfm: {
-        value: { ...mockAmendmentValueResponse },
+    mockFacility.amendments = [
+      {
+        tfm: {
+          value: { ...mockAmendmentValueResponse },
+        },
       },
-    }];
+    ];
 
     const result = mapFacilityValueExportCurrency(mockFacility);
     const expected = `${CURRENCY.GBP} 4,000.00`;

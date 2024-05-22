@@ -1,5 +1,5 @@
 module.exports = (getWrapper) => {
-  it('should render an ellipsis after the \'First\' and \'Previous\' links', () => {
+  it("should render an ellipsis after the 'First' and 'Previous' links", () => {
     const wrapper = getWrapper();
 
     wrapper.expectElement('[data-cy="firstPreviousEllipsis"]').hasClass('govuk-body');

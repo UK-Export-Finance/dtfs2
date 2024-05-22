@@ -36,14 +36,26 @@ router.post('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter'
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.getAmendFacilityValue);
 router.post('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.postAmendFacilityValue);
 
-router.get('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision', amendmentsController.getAmendmentAddUnderwriterManagersFacilityValue);
-router.post('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision', amendmentsController.postAmendmentAddUnderwriterManagersFacilityValue);
+router.get(
+  '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision',
+  amendmentsController.getAmendmentAddUnderwriterManagersFacilityValue,
+);
+router.post(
+  '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision',
+  amendmentsController.postAmendmentAddUnderwriterManagersFacilityValue,
+);
 
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date', amendmentsController.getAmendCoverEndDate);
 router.post('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date', amendmentsController.postAmendCoverEndDate);
 
-router.get('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date/managers-decision', amendmentsController.getAmendmentAddUnderwriterManagersDecisionCoverEndDate);
-router.post('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date/managers-decision', amendmentsController.postAmendmentAddUnderwriterManagersDecisionCoverEndDate);
+router.get(
+  '/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date/managers-decision',
+  amendmentsController.getAmendmentAddUnderwriterManagersDecisionCoverEndDate,
+);
+router.post(
+  '/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date/managers-decision',
+  amendmentsController.postAmendmentAddUnderwriterManagersDecisionCoverEndDate,
+);
 
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/check-answers', amendmentsController.getAmendmentAnswers);
 router.post('/:_id/facility/:facilityId/amendment/:amendmentId/check-answers', amendmentsController.postAmendmentAnswers);

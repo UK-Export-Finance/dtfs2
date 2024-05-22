@@ -1,7 +1,4 @@
-const {
-  ShareServiceClient,
-  StorageSharedKeyCredential
-} = require('@azure/storage-file-share');
+const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -46,18 +43,26 @@ exports.cloneAzureFiles = async (currentDealId, newDealId) => {
             newFileName = file.name;
 
             const newServiceClient = ShareServiceClient.fromConnectionString(connectionString);
-            const fileClient = newServiceClient.getShareClient(shareName).getDirectoryClient(`${rootFolder}/${newDealId}/${item.name}`).getFileClient(newFileName);
+            const fileClient = newServiceClient
+              .getShareClient(shareName)
+              .getDirectoryClient(`${rootFolder}/${newDealId}/${item.name}`)
+              .getFileClient(newFileName);
 
             copyFromURL = `https://${accountName}.file.core.windows.net/${shareName}/${rootFolder}/${currentDealId}/${item.name}/${newFileName}`;
 
-            fileClient.startCopyFromURL(copyFromURL)
+            fileClient
+              .startCopyFromURL(copyFromURL)
               .then(() => ({ status: 'Success', message: 'File uploaded successfully', newFileName }))
-              .catch((error) => ({ status: 'Fail', message: `Unable to upload the selected file ${error}`, newFileName }));
+              .catch((error) => ({
+                status: 'Fail',
+                message: `Unable to upload the selected file ${error}`,
+                newFileName,
+              }));
           }
         }
       }
     }
   } catch (error) {
-    console.error('The current deal doesn\'t have any supporting information uploaded');
+    console.error("The current deal doesn't have any supporting information uploaded");
   }
 };

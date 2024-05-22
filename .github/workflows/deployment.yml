@@ -53,10 +53,11 @@ on:
       - feature
       - staging
       - prod
+      - release-*
 
 env:
   PRODUCT: dtfs
-  ENVIRONMENT: ${{  github.event.workflow_run.head_branch == 'release-2.0' && 'dev' || github.event.workflow_run.head_branch }}
+  ENVIRONMENT: ${{  github.event.workflow_run.head_branch == 'release-*' && 'dev' || github.event.workflow_run.head_branch }}
   TIMEZONE: "Europe/London"
   # Base artifact
   FROM: latest
@@ -96,7 +97,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
 

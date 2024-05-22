@@ -4,9 +4,7 @@ const {
   sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam,
   sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam,
 } = require('../../services/utilisation-report/email-service');
-const {
-  validateReportIsInReportNotReceivedState,
-} = require('../../validation/utilisation-report/utilisation-report-validator');
+const { validateReportIsInReportNotReceivedState } = require('../../validation/utilisation-report/utilisation-report-validator');
 const api = require('../../api');
 const { InvalidReportStatusError } = require('../../errors');
 
@@ -22,9 +20,9 @@ const getReportByBankIdAndReportPeriod = async (bankId, reportPeriod) => {
 
   if (reportsForPeriod.length !== 1) {
     throw new Error(
-      `Expected 1 report but found ${
-        reportsForPeriod.length
-      } with bank ID ${bankId} and report period '${getFormattedReportPeriodWithLongMonth(reportPeriod)}'`,
+      `Expected 1 report but found ${reportsForPeriod.length} with bank ID ${bankId} and report period '${getFormattedReportPeriodWithLongMonth(
+        reportPeriod,
+      )}'`,
     );
   }
 
@@ -48,18 +46,10 @@ const uploadReportAndSendNotification = async (req, res) => {
     const report = await getReportByBankIdAndReportPeriod(bankId, parsedReportPeriod);
     validateReportIsInReportNotReceivedState(report);
     const azureFileInfo = await saveUtilisationReportFileToAzure(file, bankId);
-    const { dateUploaded } = await api.saveUtilisationReport(
-      report.id,
-      parsedReportData,
-      parsedUser,
-      azureFileInfo,
-    );
+    const { dateUploaded } = await api.saveUtilisationReport(report.id, parsedReportData, parsedUser, azureFileInfo);
 
     try {
-      await sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam(
-        parsedUser?.bank?.name,
-        formattedReportPeriod,
-      );
+      await sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam(parsedUser?.bank?.name, formattedReportPeriod);
     } catch (error) {
       console.error('Failed to send report upload notification to ukef gef reporting team %o', error);
     }

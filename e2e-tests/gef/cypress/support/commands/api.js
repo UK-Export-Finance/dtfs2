@@ -36,7 +36,8 @@ const completeLoginWithSignInLink = ({ token2fa, username }) => {
       .then((signInLinkResponse) => {
         expect(signInLinkResponse.status).to.equal(200);
         return signInLinkResponse.body.token;
-      }));
+      }),
+  );
 };
 
 const login = ({ username, password }) => {
@@ -79,8 +80,7 @@ const fetchAllApplications = (token) =>
     .request({
       url: `${portalApi}/deals`,
       method: 'GET',
-      body: {
-      },
+      body: {},
       headers: {
         'Content-Type': 'application/json',
         Authorization: token,

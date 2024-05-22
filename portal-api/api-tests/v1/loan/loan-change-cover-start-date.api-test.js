@@ -32,7 +32,7 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
   let dealId;
   let loanId;
 
-  const mockCoverStartDate = sub(nowDate, { months: 1});
+  const mockCoverStartDate = sub(nowDate, { months: 1 });
 
   const mockLoan = {
     facilityStage: 'Unconditional',
