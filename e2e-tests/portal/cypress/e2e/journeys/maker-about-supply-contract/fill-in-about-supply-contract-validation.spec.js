@@ -291,7 +291,7 @@ context('about-supply-contract', () => {
     // indemnifier companies house submit - providing a value which has a space
     //--------------------------------------------------------------------------
 
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type('8989898 ');
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type('89898989 ');
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -305,7 +305,7 @@ context('about-supply-contract', () => {
       .indemnifierCompaniesHouseRegistrationNumber()
       .invoke('val')
       .then((value) => {
-        expect(value).equal('8989898 ');
+        expect(value).equal('89898989 ');
       });
 
     //---------------------------------------------------------------
