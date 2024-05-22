@@ -38,6 +38,7 @@ describe('user controller', () => {
 
       const { body } = await as(tokenUser).post(user).to('/v1/users');
       userId = body.user._id;
+      expect(userId).toBeTruthy();
     });
   });
 
@@ -67,28 +68,26 @@ describe('user controller', () => {
 
   describe('DELETE /v1/users', () => {
     let documentToDeleteId;
-
+    beforeEach(async () => {
+      const response = await as(tokenUser).post(MOCK_USERS[0]).to('/v1/users');
+      documentToDeleteId = response.body.user._id;
+    });
     if (process.env.CHANGE_STREAM_ENABLED === 'true') {
-      beforeEach(async () => {
-        const { body } = await as(tokenUser).post(MOCK_USERS[1]).to('/v1/users');
-        documentToDeleteId = body.user._id;
-      });
-
       withDeletionAuditLogsTests({
         makeRequest: () => as(tokenUser).remove().to(`/v1/users/${documentToDeleteId}`),
         collectionName: 'tfm-users',
         auditRecord: {
           ...generateMockTfmUserAuditDatabaseRecord('abcdef123456abcdef123456'),
-          lastUpdatedByTfmUserId: expect.any(ObjectId),
+          lastUpdatedByTfmUserId: expect.anything(),
         },
-        getDeletedDocumentId: () => documentToDeleteId,
+        getDeletedDocumentId: () => new ObjectId(documentToDeleteId),
         mockGetCollection,
       });
-    } else {
-      it('removes the TFM user by _id', async () => {
-        const { status } = await as(tokenUser).remove().to(`/v1/users/${userId}`);
-        expect(status).toEqual(200);
-      });
     }
+
+    it('returns 200', async () => {
+      const { status } = await as(tokenUser).remove().to(`/v1/users/${documentToDeleteId}`);
+      expect(status).toEqual(200);
+    });
   });
 });

@@ -3,7 +3,7 @@ import { when, WhenMock } from 'jest-when';
 import { MongoDbClient } from '../../mongo-db-client';
 import { AuditDatabaseRecord, DeletionAuditLog, MongoDbCollectionName } from '../../types';
 
-const collectionMethodsToNotMock = ['findOne', 'insertOne'] as const;
+const collectionMethodsToNotMock = ['findOne', 'insertOne', 'updateOne'] as const;
 
 type Params = {
   makeRequest: () => Promise<void>;

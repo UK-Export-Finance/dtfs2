@@ -149,7 +149,7 @@ exports.removeTfmUserById = async (_id, auditDetails, callback) => {
 
   if (process.env.CHANGE_STREAM_ENABLED === 'true') {
     try {
-      deleteDocumentWithAuditLogs({
+      await deleteDocumentWithAuditLogs({
         documentId: new ObjectId(_id),
         collectionName: 'tfm-users',
         db,
@@ -160,7 +160,6 @@ exports.removeTfmUserById = async (_id, auditDetails, callback) => {
     }
     return callback(null, 200);
   }
-
   const collection = await db.getCollection('tfm-users');
   const deleteResult = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
 
