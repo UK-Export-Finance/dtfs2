@@ -5,7 +5,7 @@ import { MongoDbClient } from '../mongo-db-client';
 import { generateAuditDatabaseRecordFromAuditDetails } from './generate-audit-database-record';
 import { changeStreamConfig } from './config';
 
-const { DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS } = changeStreamConfig;
+const { DELETION_AUDIT_LOGS_TTL_SECONDS } = changeStreamConfig;
 
 type DeleteDocumentWithAuditLogsParams = {
   documentId: ObjectId;
@@ -30,7 +30,7 @@ export const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, 
           collectionName,
           deletedDocumentId: documentId,
           auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-          expireAt: add(new Date(), { seconds: Number(DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS) }),
+          expireAt: add(new Date(), { seconds: Number(DELETION_AUDIT_LOGS_TTL_SECONDS) }),
         },
         { session },
       );
