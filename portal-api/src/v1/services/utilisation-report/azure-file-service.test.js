@@ -31,9 +31,7 @@ describe('saveUtilisationReportFileToAzure', () => {
     jest.mocked(uploadFile).mockResolvedValueOnce(false);
 
     // Act / Assert
-    await expect(saveUtilisationReportFileToAzure(file, bankId)).rejects.toThrow(
-      'Failed to save utilisation report to Azure - cause unknown',
-    );
+    await expect(saveUtilisationReportFileToAzure(file, bankId)).rejects.toThrow('Failed to save utilisation report to Azure - cause unknown');
   });
 
   it('should throw an error when the uploadFile response is an error object', async () => {
@@ -45,9 +43,7 @@ describe('saveUtilisationReportFileToAzure', () => {
     jest.mocked(uploadFile).mockResolvedValueOnce(errorObject);
 
     // Act / Assert
-    await expect(saveUtilisationReportFileToAzure(file, bankId)).rejects.toThrow(
-      `Failed to save utilisation report to Azure - ${errorObject.error.message}`,
-    );
+    await expect(saveUtilisationReportFileToAzure(file, bankId)).rejects.toThrow(`Failed to save utilisation report to Azure - ${errorObject.error.message}`);
   });
 
   it('should rethrow the error when uploadFile throws', async () => {

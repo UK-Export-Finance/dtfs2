@@ -10,9 +10,7 @@ const getUkefGefReportingEmailRecipients = () => {
   const EmailsSchema = z.array(z.string().email());
 
   try {
-    const emails = EmailsSchema.parse(
-      JSON.parse(asString(process.env.UKEF_GEF_REPORTING_EMAIL_RECIPIENT, 'UKEF_GEF_REPORTING_EMAIL_RECIPIENT')),
-    );
+    const emails = EmailsSchema.parse(JSON.parse(asString(process.env.UKEF_GEF_REPORTING_EMAIL_RECIPIENT, 'UKEF_GEF_REPORTING_EMAIL_RECIPIENT')));
     return emails;
   } catch (error) {
     console.error('Failed to parse UKEF_GEF_REPORTING_EMAIL_RECIPIENTS ', error);
@@ -25,10 +23,7 @@ const getUkefGefReportingEmailRecipients = () => {
  * @param bankName - name of the bank
  * @param reportPeriod - period for which the report covers as a string, eg. June 2023
  */
-export const sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam = async (
-  bankName: string,
-  reportPeriod: string,
-) => {
+export const sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam = async (bankName: string, reportPeriod: string) => {
   await Promise.all(
     getUkefGefReportingEmailRecipients().map((email) =>
       sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_NOTIFICATION, email, {

@@ -311,10 +311,7 @@ const getUtilisationReports = async (bankId, options) => {
     }
 
     if (excludeNotReceived && typeof excludeNotReceived !== 'boolean') {
-      console.error(
-        'Get utilisation reports failed with the following excludeNotReceived query: %s',
-        excludeNotReceived,
-      );
+      console.error('Get utilisation reports failed with the following excludeNotReceived query: %s', excludeNotReceived);
       throw new Error(`Invalid excludeNotReceived provided: ${excludeNotReceived} (expected a boolean)`);
     }
 

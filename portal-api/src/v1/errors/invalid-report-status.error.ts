@@ -1,4 +1,4 @@
-import { HttpStatusCode } from "axios";
+import { HttpStatusCode } from 'axios';
 
 export class InvalidReportStatusError extends Error {
   public status: number;
