@@ -67,26 +67,26 @@ describe('user controller', () => {
   });
 
   describe('DELETE /v1/users', () => {
-    let documentToDeleteId;
+    let userToDeleteId;
     beforeEach(async () => {
       const response = await as(tokenUser).post(MOCK_USERS[0]).to('/v1/users');
-      documentToDeleteId = response.body.user._id;
+      userToDeleteId = response.body.user._id;
     });
     if (process.env.CHANGE_STREAM_ENABLED === 'true') {
       withDeleteOneTests({
-        makeRequest: () => as(tokenUser).remove().to(`/v1/users/${documentToDeleteId}`),
+        makeRequest: () => as(tokenUser).remove().to(`/v1/users/${userToDeleteId}`),
         collectionName: 'tfm-users',
         auditRecord: {
           ...generateMockTfmUserAuditDatabaseRecord('abcdef123456abcdef123456'),
           lastUpdatedByTfmUserId: expect.anything(),
         },
-        getDeletedDocumentId: () => new ObjectId(documentToDeleteId),
+        getDeletedDocumentId: () => new ObjectId(userToDeleteId),
         mockGetCollection,
       });
     }
 
     it('returns 200', async () => {
-      const { status } = await as(tokenUser).remove().to(`/v1/users/${documentToDeleteId}`);
+      const { status } = await as(tokenUser).remove().to(`/v1/users/${userToDeleteId}`);
       expect(status).toEqual(200);
     });
   });

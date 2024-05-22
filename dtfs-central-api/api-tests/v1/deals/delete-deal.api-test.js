@@ -29,11 +29,11 @@ const newDeal = aDeal({
 });
 
 describe('DELETE /v1/portal/deals', () => {
-  let documentToDeleteId;
+  let dealToDeleteId;
 
   beforeEach(async () => {
     const postResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
-    documentToDeleteId = new ObjectId(postResult.body._id);
+    dealToDeleteId = new ObjectId(postResult.body._id);
   });
 
   afterAll(() => {
@@ -46,7 +46,7 @@ describe('DELETE /v1/portal/deals', () => {
         .remove({
           auditDetails,
         })
-        .to(`/v1/portal/deals/${documentToDeleteId}`),
+        .to(`/v1/portal/deals/${dealToDeleteId}`),
     validUserTypes: ['portal'],
   });
 
@@ -56,11 +56,11 @@ describe('DELETE /v1/portal/deals', () => {
         .remove({
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
-        .to(`/v1/portal/deals/${documentToDeleteId}`);
+        .to(`/v1/portal/deals/${dealToDeleteId}`);
     },
     collectionName: 'deals',
     auditRecord: generateMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
-    getDeletedDocumentId: () => documentToDeleteId,
+    getDeletedDocumentId: () => dealToDeleteId,
     mockGetCollection,
   });
 });

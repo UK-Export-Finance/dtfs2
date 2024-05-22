@@ -50,7 +50,7 @@ exports.updateFacilityPut = async (req, res) => {
     validateAuditDetails(auditDetails);
   } catch (error) {
     if (error instanceof InvalidAuditDetailsError) {
-      return res.status(400).send({
+      return res.status(error.status).send({
         status: 400,
         message: `Invalid auditDetails, ${error.message}`,
       });
