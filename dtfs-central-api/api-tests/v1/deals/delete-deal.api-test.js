@@ -37,7 +37,7 @@ describe('DELETE /v1/portal/deals', () => {
   });
 
   afterAll(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   withValidateAuditDetailsTests({
