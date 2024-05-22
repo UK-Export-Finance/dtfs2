@@ -49,7 +49,7 @@ describe('validate-ids', () => {
   });
 
   describe('isValidCompaniesHouseNumber', () => {
-    it('should return true for company number 8989898', () => {
+    it('should return true for company number 89898989', () => {
       const result = isValidCompaniesHouseNumber(VALID);
 
       expect(result).toEqual(true);

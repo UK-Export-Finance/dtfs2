@@ -35,7 +35,7 @@ context('Incomplete exporter section - application details page', () => {
     it('completes the exporter section', () => {
       cy.visit(url);
       applicationDetails.exporterDetailsLink().click();
-      companiesHouse.regNumberField().type('8989898');
+      companiesHouse.regNumberField().type('89898989');
       companiesHouse.continueButton().click();
       exportersAddress.noRadioButton().click();
       exportersAddress.continueButton().click();
