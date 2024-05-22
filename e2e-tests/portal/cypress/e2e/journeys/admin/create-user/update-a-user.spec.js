@@ -64,7 +64,7 @@ context('Admin user updates an existing user', () => {
     });
 
     it('changing their trusted status should display the new status on the user dashboard', () => {
-      // DTFS2-7116 check that the user is created without isTrusted role is displayed in table
+      users.row(userToUpdate).trusted().should('not.exist');
       cy.getUserByUsername(userToUpdate.username).then(({ isTrusted }) => {
         expect(isTrusted).to.equal(false);
       });
@@ -73,7 +73,7 @@ context('Admin user updates an existing user', () => {
       editUser.isTrustedTrue().click();
       editUser.save().click();
 
-      // DTFS2-7116 check that the user is created with the isTrusted role is displayed in table
+      users.row(userToUpdate).trusted().should('exist');
       cy.getUserByUsername(userToUpdate.username).then(({ isTrusted }) => {
         expect(isTrusted).to.equal(true);
       });
@@ -82,7 +82,7 @@ context('Admin user updates an existing user', () => {
       editUser.isTrustedFalse().click();
       editUser.save().click();
 
-      // DTFS2-7116 check that the user is created with the isTrusted role is displayed in table
+      users.row(userToUpdate).trusted().should('not.exist');
       cy.getUserByUsername(userToUpdate.username).then(({ isTrusted }) => {
         expect(isTrusted).to.equal(false);
       });

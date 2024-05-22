@@ -11,7 +11,7 @@ import { AUDIT_DATABASE_RECORD } from './audit-database-record';
 describe('AUDIT_DATABASE_RECORD', () => {
   const A_VALID_AUDIT_RECORD = generateTfmUserAuditDatabaseRecord(new ObjectId());
   const { lastUpdatedAt: _lastUpdatedAt, ...AN_AUDIT_RECORD_WITH_MISSING_PARAMETER } = { ...A_VALID_AUDIT_RECORD };
-  const A_AUDIT_RECORD_WITH_INCORRECT_PARAMETER_TYPE = { ...A_VALID_AUDIT_RECORD, lastUpdatedAt: 1 };
+  const AN_AUDIT_RECORD_WITH_INCORRECT_PARAMETER_TYPE = { ...A_VALID_AUDIT_RECORD, lastUpdatedAt: 1 };
 
   const successTestCases = [
     {
@@ -33,7 +33,7 @@ describe('AUDIT_DATABASE_RECORD', () => {
     { description: 'a string', testCase: 'string' },
     { description: 'an object', testCase: { An: 'object' } },
     { description: 'an array', testCase: ['array'] },
-    { description: 'a matching object with an incorrect parameter type', testCase: A_AUDIT_RECORD_WITH_INCORRECT_PARAMETER_TYPE },
+    { description: 'a matching object with an incorrect parameter type', testCase: AN_AUDIT_RECORD_WITH_INCORRECT_PARAMETER_TYPE },
     { description: 'a matching object with a missing parameter', testCase: AN_AUDIT_RECORD_WITH_MISSING_PARAMETER },
     { description: 'a matching object with an additional parameter', testCase: { ...A_VALID_AUDIT_RECORD, invalidField: true } },
   ];

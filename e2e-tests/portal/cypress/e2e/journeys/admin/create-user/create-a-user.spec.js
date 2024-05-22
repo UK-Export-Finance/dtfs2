@@ -161,11 +161,10 @@ context('Admin user creates a new user', () => {
 
     cy.url().should('eq', relative('/admin/users/'));
 
+    users.row(validUser).trusted().should('exist');
     cy.getUserByUsername(validUser.username).then(({ isTrusted }) => {
       expect(isTrusted).to.equal(true);
     });
-
-    // DTFS2-7116 check that the user is created with the isTrusted role is displayed in table
   });
 
   it('Admin user adds a new user using "{ "$gt": "" }" as the email, triggering validation error', () => {

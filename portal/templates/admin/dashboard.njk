@@ -1,111 +1,59 @@
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-
 {% extends "index.njk" %}
+{% block pageTitle -%} User admin{%- endblock %}{% block content %}
+<h1 class="govuk-heading-l">User admin</h1>
 
-{% block pageTitle -%}
-  User admin
-{%- endblock %}
+<table class="govuk-table govuk-!-margin-bottom-0 govuk-!-margin-top-4 govuk-!-margin-bottom-4">
 
-{% block content %}
-  <h1 class="govuk-heading-l">User admin</h1>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header govuk-!-font-size-14">Username</th>
+      <th scope="col" class="govuk-table__header govuk-!-font-size-14">Organisation - Bank</th>
+      <th scope="col" class="govuk-table__header govuk-!-font-size-14">Roles</th>
+      <th scope="col" class="govuk-table__header govuk-!-font-size-14">Last access</th>
+    </tr>
+  </thead>
 
-  <table class="govuk-table govuk-!-margin-bottom-0 govuk-!-margin-top-4 govuk-!-margin-bottom-4">
-    <thead class="govuk-table__head">
-      <tr class="govuk-table__row">
-      {# <th scope="col" class="govuk-table__header govuk-!-font-size-14">
-       <div class="govuk-form-group user-admin-form-group--checkboxes">
-        <fieldset class="govuk-fieldset">
-          <div class="govuk-checkboxes govuk-checkboxes--small">
-            <div class="govuk-checkboxes__item">
-              <input class="govuk-checkboxes__input" type="checkbox" value="">
-              <label class="govuk-label govuk-checkboxes__label" for="">
-              </label>
-            </div>
-          </div>
-        </fieldset>
-      </div>
-      </th> #}
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Username</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Organisation - Bank</th>
-        {# <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th> #}
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Roles</th>
-        {# <th scope="col" class="govuk-table__header govuk-!-font-size-14">Member for</th> #}
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Last access</th>
-        {# <th scope="col" class="govuk-table__header govuk-!-font-size-14">Operations</th> #}
-      </tr>
-    </thead>
+  <tbody class="govuk-table__body">
+    {% for displayUser in users %}
+      <tr class="govuk-table__row" data-cy="user-{{ displayUser.username }}">
 
-        <tbody class="govuk-table__body">
-          <!-- cycler only used for mocks to demo enable/disable links. Remove for real data-->
-          {% set cls = cycler("odd", "even") %}
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          <a
+            href="/admin/users/edit/{{ displayUser._id | urlencode }}"
+            class="govuk-link"
+            data-cy="username-{{ displayUser.username }}">{{ displayUser.username }}</a>
+          <br>
+            {% if displayUser.isTrusted %}
+              {{ govukTag({
+              text: "Trusted",
+              classes: "govuk-tag--yellow govuk-!-margin-top-1",
+              attributes: { "data-cy": "trusted-" + displayUser.username }
+            } ) }}
+            {% endif %}
+          </td>
 
-          {% for displayUser in users %}
-            <tr class="govuk-table__row" data-cy="user-{{displayUser.username}}">
-              {# <td class="govuk-table__cell govuk-!-font-size-14">
-                <div class="govuk-form-group user-admin-form-group--checkboxes">
-                  <fieldset class="govuk-fieldset">
-                    <div class="govuk-checkboxes govuk-checkboxes--small">
-                      <div class="govuk-checkboxes__item">
-                        <input class="govuk-checkboxes__input" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="">
-                        </label>
-                      </div>
-                    </div>
-                  </fieldset>
-                </div>
-              </td> #}
+          <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bank">
+            {{ displayUser.bank.name }}
+          </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
-                <a href="/admin/users/edit/{{ displayUser._id | urlencode }}" class="govuk-link" data-cy="username-{{displayUser.username}}">{{ displayUser.username }}</a>
-              </td>
+          <td data-cy="roles-{{ displayUser.username }}" class="govuk-table__cell govuk-!-font-size-14">
+            <ul class="govuk-!-margin-0 govuk-!-margin-left-4 govuk-!-padding-left-0">
+              {% for role in displayUser.roles %}
+                <li>{{ role }}</li>
+              {% endfor %}
+            </ul>
+          </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bank">
-                {{ displayUser.bank.name }}
-              </td>
-
-              {# <td class="govuk-table__cell govuk-!-font-size-14">
-               {% if cls.current == "odd" %}
-                  Active
-                {% else %}
-                  Disabled
-                {% endif %}
-              </td> #}
-
-              <td data-cy="roles-{{displayUser.username}}" class="govuk-table__cell govuk-!-font-size-14">
-                <ul class="govuk-!-margin-0 govuk-!-margin-left-4 govuk-!-padding-left-0">
-                  {% for role in displayUser.roles %}
-                    <li>{{ role }}</li>
-                  {% endfor %}
-                </ul>
-              </td>
-
-              {# <td class="govuk-table__cell govuk-!-font-size-14">
-              2 years 7 months
-              </td> #}
-
-              <td class="govuk-table__cell govuk-!-font-size-14" data-cy="lastLogin-{{displayUser.username}}">
-                {{ displayUser.lastLogin | localiseTimestamp("dd/MM/yyyy HH:mm", user.timezone) }}
-              </td>
-
-              {# <td class="govuk-table__cell govuk-!-font-size-14">
-                <ul class="govuk-!-margin-0 govuk-!-margin-left-4 govuk-!-padding-left-0">
-                <li><a href="/admin/users/edit/{{ user.username | urlencode }}" class="govuk-link" >Edit <span class="govuk-visually-hidden">{{ user.username }}</span></a></li>
-                <li>
-
-                {% if cls.next() == "odd" %}
-                  <a href="/admin/users/enable/{{ user.username | urlencode }}" class="govuk-link" >Enable<span class="govuk-visually-hidden">{{ user.username }}</span></a>
-                {% else %}
-                  <a href="/admin/users/disable/{{ user.username | urlencode }}" class="govuk-link" >Disable<span class="govuk-visually-hidden">{{ user.username }}</span></a>
-                {% endif %}
-                </li>
-                </ul>
-              </td> #}
-
-            </tr>
-          {% endfor %}
-
-        </tbody>
+          <td class="govuk-table__cell govuk-!-font-size-14" data-cy="lastLogin-{{ displayUser.username }}">
+            {{ displayUser.lastLogin | localiseTimestamp("dd/MM/yyyy HH:mm", user.timezone) }}
+          </td>
+          
+        </tr>
+      {% endfor %}
+    </tbody>
   </table>
 
   {{ govukButton({
@@ -124,7 +72,6 @@
         attributes: {
           'data-cy': 'admin-cancel'
         }
-      })
-  }}
+      }) }}
 
 {% endblock %}
