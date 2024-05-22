@@ -1,4 +1,5 @@
 const pageRenderer = require('../pageRenderer');
+const { withContactUsEmailAddressTests } = require('../test-helpers/with-contact-us-email-address.component-tests');
 
 const page = 'login/we-have-sent-you-another-link.njk';
 const render = pageRenderer(page);
@@ -12,11 +13,11 @@ describe(page, () => {
     wrapper = render({ obscuredSignInLinkTargetEmailAddress });
   });
 
-  it('should render email link to contact DTFS team', () => {
-    wrapper.expectText('[data-cy="dtfs-email-link"]').toRead('DigitalService.TradeFinance@ukexportfinance.gov.uk');
-  });
+  withContactUsEmailAddressTests({ page });
 
   it('should render the email address the sign in link has been sent to', () => {
-    wrapper.expectText('[data-cy="obscured-sign-in-link-target-email-address"]').toMatch(regexForTextContainingTargetEmailAddress);
+    wrapper
+      .expectText('[data-cy="obscured-sign-in-link-target-email-address"]')
+      .toMatch(regexForTextContainingTargetEmailAddress);
   });
 });
