@@ -70,7 +70,7 @@ describe(baseUrl, () => {
         addressLine1: expect.any(String),
         addressLine2: null,
         addressLine3: null,
-        country: null,
+        country: expect.any(String),
         locality: expect.any(String),
         postalCode: expect.any(String),
       });
@@ -82,15 +82,24 @@ describe(baseUrl, () => {
       expect(body).toEqual([
         {
           status: 422,
+          errMsg: {},
           errCode: 'ERROR',
           errRef: 'postcode',
         },
       ]);
     });
 
-    it('Returns a not found address if the postcode was invalid', async () => {
-      const { status } = await as(aMaker).get(`${baseUrl}/address/A1`);
+    it('Returns a invalid postcode if the postcode was invalid', async () => {
+      const { status, body } = await as(aMaker).get(`${baseUrl}/address/A1`);
       expect(status).toEqual(400);
+      expect(body).toEqual([
+        {
+          status: 400,
+          errMsg: 'Invalid postcode',
+          errCode: 'ERROR',
+          errRef: 'postcode',
+        },
+      ]);
     });
   });
 });
