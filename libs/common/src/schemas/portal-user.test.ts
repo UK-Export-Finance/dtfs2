@@ -23,8 +23,7 @@ describe('PORTAL_USER', () => {
     auditRecord: generatePortalUserAuditDatabaseRecord(new ObjectId()),
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { username, ...A_PARTIAL_USER } = A_VALID_USER;
+  const { username: _username, ...A_PARTIAL_USER } = A_VALID_USER;
 
   describe('CREATE', () => {
     const successTestCases = [{ description: 'a valid user', testCase: A_VALID_USER }];
