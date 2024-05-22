@@ -7,7 +7,8 @@ const newUser = {
   username: 'maker1@ukexportfinance.gov.uk',
   firstname: 'First',
   surname: 'Last',
-  password: '',
+  salt: '00',
+  hash: '01',
   email: 'maker1@ukexportfinance.gov.uk',
   timezone: 'Europe/London',
   roles: ['maker'],
@@ -19,6 +20,15 @@ const newUser = {
     companiesHouseNo: 'UKEF0001',
     partyUrn: '00318345',
   },
+  isTrusted: true,
+  auditRecord: {
+    lastUpdatedAt: '2024-05-20T14:59:30.883 +00:00',
+    lastUpdatedByPortalUserId: '664b6552a0eb617722732624',
+    lastUpdatedByTfmUserId: null,
+    lastUpdatedByIsSystem: null,
+    noUserLoggedIn: null,
+  },
+  'user-status': 'active',
 };
 
 describe('/v1/user/:id', () => {

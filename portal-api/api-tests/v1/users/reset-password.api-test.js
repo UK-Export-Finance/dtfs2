@@ -90,7 +90,7 @@ describe('password reset', () => {
     await resetPassword(MOCK_USER.email, userService, generateNoUserLoggedInAuditDetails());
     const user = await getUserByPasswordToken(passwordResetToken);
 
-    const { password, ...makerWithoutPassword } = MOCK_USER;
+    const { password: _password, ...makerWithoutPassword } = MOCK_USER;
     expect(user).toMatchObject(makerWithoutPassword);
   });
 

@@ -153,8 +153,6 @@ describe(baseUrl, () => {
       } = await as(aMaker).get(`${baseUrl}/${dealId}`);
 
       expect(auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(aMaker._id));
-
-      // console.log(getResponse)
     });
 
     it('returns a `404` status if the maker belongs to a different bank', async () => {

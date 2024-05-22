@@ -34,7 +34,12 @@ const baseRules = {
     },
   ],
   'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
-  'no-unused-vars': ['error'],
+  'no-unused-vars': [
+    'error',
+    {
+      varsIgnorePattern: '^_',
+    },
+  ],
   'object-curly-newline': [
     'error',
     {
@@ -80,7 +85,12 @@ module.exports = {
       rules: {
         ...baseRules,
         'no-unused-vars': 'off',
-        '@typescript-eslint/no-unused-vars': ['error'],
+        '@typescript-eslint/no-unused-vars': [
+          'error',
+          {
+            varsIgnorePattern: '^_',
+          },
+        ],
         '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
         '@typescript-eslint/restrict-template-expressions': ['error', { allowNever: true }],
         '@typescript-eslint/ban-ts-comment': 'off',

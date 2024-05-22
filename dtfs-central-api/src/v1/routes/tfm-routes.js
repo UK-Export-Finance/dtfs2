@@ -620,6 +620,7 @@ tfmRouter.route('/users').get(tfmUsersController.listTfmUser);
  * @openapi
  * /tfm/users:
  *   post:
+ *     deprecated: true
  *     summary: Create a user in tfm-users collection
  *     tags: [TFM]
  *     description: Create a users in tfm-users collection
