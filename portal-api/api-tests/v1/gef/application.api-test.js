@@ -692,6 +692,7 @@ describe(baseUrl, () => {
           timezone: aChecker.timezone,
           lastLogin: expect.any(String),
           'user-status': STATUS.ACTIVE,
+          isTrusted: aChecker.isTrusted,
         };
 
         expect(tfmDealSubmitSpy.mock.calls[0][0]).toEqual(dealId);

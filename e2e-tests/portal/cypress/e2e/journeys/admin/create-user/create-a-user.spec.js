@@ -137,6 +137,37 @@ context('Admin user creates a new user', () => {
       });
   });
 
+  it('creates a new user with the trusted status', () => {
+    // Login and go to the dashboard
+    cy.login(AN_ADMIN);
+
+    header.users().click();
+    users.user(validUser).should('not.exist');
+
+    users.addUser().click();
+
+    validUser.roles.forEach((role) => {
+      createUser.role(role).click();
+    });
+    createUser.username().type(validUser.username);
+    createUser.firstname().type(validUser.firstname);
+    createUser.surname().type(validUser.surname);
+
+    createUser.bank().select(validUser.bank);
+
+    createUser.isTrustedTrue().click();
+
+    createUser.createUser().click();
+
+    cy.url().should('eq', relative('/admin/users/'));
+
+    cy.getUserByUsername(validUser.username).then(({ isTrusted }) => {
+      expect(isTrusted).to.equal(true);
+    });
+
+    // DTFS2-7116 check that the user is created with the isTrusted role is displayed in table
+  });
+
   it('Admin user adds a new user using "{ "$gt": "" }" as the email, triggering validation error', () => {
     // Login and go to the dashboard
     cy.login(AN_ADMIN);

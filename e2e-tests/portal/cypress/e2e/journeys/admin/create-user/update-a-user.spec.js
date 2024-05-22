@@ -63,6 +63,31 @@ context('Admin user updates an existing user', () => {
         });
     });
 
+    it('changing their trusted status should display the new status on the user dashboard', () => {
+      // DTFS2-7116 check that the user is created without isTrusted role is displayed in table
+      cy.getUserByUsername(userToUpdate.username).then(({ isTrusted }) => {
+        expect(isTrusted).to.equal(false);
+      });
+
+      openPageToEdit(userToUpdate);
+      editUser.isTrustedTrue().click();
+      editUser.save().click();
+
+      // DTFS2-7116 check that the user is created with the isTrusted role is displayed in table
+      cy.getUserByUsername(userToUpdate.username).then(({ isTrusted }) => {
+        expect(isTrusted).to.equal(true);
+      });
+
+      openPageToEdit(userToUpdate);
+      editUser.isTrustedFalse().click();
+      editUser.save().click();
+
+      // DTFS2-7116 check that the user is created with the isTrusted role is displayed in table
+      cy.getUserByUsername(userToUpdate.username).then(({ isTrusted }) => {
+        expect(isTrusted).to.equal(false);
+      });
+    });
+
     it('changing their details should display the new details when the edit page is reloaded', () => {
       const newFirstName = 'new first name';
       const newSurname = 'new surname';

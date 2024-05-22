@@ -453,7 +453,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
               userToken: partiallyLoggedInUserToken,
             });
             // lastLogin is removed as this will be the login prior to this login (in tests, this is undefined)
-            const { lastLogin, ...expectedSanitisedUser } = sanitizeUser(await databaseHelper.getUserById(partiallyLoggedInUserId));
+            const { lastLogin: _lastLogin, ...expectedSanitisedUser } = sanitizeUser(await databaseHelper.getUserById(partiallyLoggedInUserId));
 
             expect(status).toEqual(200);
             expect(body).toStrictEqual({
