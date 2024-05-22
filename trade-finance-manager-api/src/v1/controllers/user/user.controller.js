@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { generateAuditDatabaseRecordFromAuditDetails, deleteDocumentWithAuditLogs } = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
 const { PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const db = require('../../../drivers/db-client');
@@ -147,21 +147,15 @@ exports.removeTfmUserById = async (_id, auditDetails, callback) => {
     return callback('Invalid TFM user id', 400);
   }
 
-  if (process.env.CHANGE_STREAM_ENABLED === 'true') {
-    try {
-      await deleteDocumentWithAuditLogs({
-        documentId: new ObjectId(_id),
-        collectionName: 'tfm-users',
-        db,
-        auditDetails,
-      });
-    } catch (error) {
-      return callback(error, 500);
-    }
+  try {
+    await deleteOne({
+      documentId: new ObjectId(_id),
+      collectionName: 'tfm-users',
+      db,
+      auditDetails,
+    });
     return callback(null, 200);
+  } catch (error) {
+    return callback(error, 500);
   }
-  const collection = await db.getCollection('tfm-users');
-  const deleteResult = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
-
-  return callback(null, deleteResult);
 };

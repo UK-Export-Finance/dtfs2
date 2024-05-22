@@ -1,4 +1,4 @@
-import { deleteDocumentWithAuditLogs, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
+import { deleteOne, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { AuditDetails, InvalidAuditDetailsError, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { Response } from 'express';
@@ -32,22 +32,16 @@ export const deleteDeal = async (req: CustomExpressRequest<{ params: { id: strin
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
 
-  if (process.env.CHANGE_STREAM_ENABLED === 'true') {
-    try {
-      await deleteDocumentWithAuditLogs({
-        documentId: new ObjectId(id),
-        collectionName: MONGO_DB_COLLECTIONS.DEALS,
-        db,
-        auditDetails,
-      });
+  try {
+    await deleteOne({
+      documentId: new ObjectId(id),
+      collectionName: MONGO_DB_COLLECTIONS.DEALS,
+      db,
+      auditDetails,
+    });
 
-      return res.status(200).send();
-    } catch (error) {
-      return res.status(500).send({ status: 500, error });
-    }
+    return res.status(200).send();
+  } catch (error) {
+    return res.status(500).send({ status: 500, error });
   }
-
-  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
-  const status = await collection.deleteOne({ _id: { $eq: new ObjectId(id) } });
-  return res.status(200).send(status);
 };

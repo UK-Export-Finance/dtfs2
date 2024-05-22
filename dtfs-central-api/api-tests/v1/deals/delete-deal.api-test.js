@@ -12,7 +12,7 @@ jest.mock('../../../src/drivers/db-client', () => ({
 
 const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { withDeletionAuditLogsTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { withDeleteOneTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 
 const app = require('../../../src/createApp');
@@ -50,32 +50,17 @@ describe('DELETE /v1/portal/deals', () => {
     validUserTypes: ['portal'],
   });
 
-  if (process.env.CHANGE_STREAM_ENABLED === 'true') {
-    withDeletionAuditLogsTests({
-      makeRequest: async () => {
-        await api
-          .remove({
-            auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-          })
-          .to(`/v1/portal/deals/${documentToDeleteId}`);
-      },
-      collectionName: 'deals',
-      auditRecord: generateMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
-      getDeletedDocumentId: () => documentToDeleteId,
-      mockGetCollection,
-    });
-  } else {
-    it('deletes the deal', async () => {
-      const deleteResponse = await api
+  withDeleteOneTests({
+    makeRequest: async () => {
+      await api
         .remove({
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to(`/v1/portal/deals/${documentToDeleteId}`);
-      expect(deleteResponse.status).toBe(200);
-
-      const { status } = await api.get(`/v1/portal/deals/${documentToDeleteId}`);
-
-      expect(status).toEqual(404);
-    });
-  }
+    },
+    collectionName: 'deals',
+    auditRecord: generateMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
+    getDeletedDocumentId: () => documentToDeleteId,
+    mockGetCollection,
+  });
 });

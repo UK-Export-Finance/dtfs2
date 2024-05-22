@@ -7,7 +7,7 @@ jest.mock('../../../src/drivers/db-client', () => ({
 }));
 
 const { ObjectId } = require('mongodb');
-const { withDeletionAuditLogsTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { withDeleteOneTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { generateMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
@@ -73,7 +73,7 @@ describe('user controller', () => {
       documentToDeleteId = response.body.user._id;
     });
     if (process.env.CHANGE_STREAM_ENABLED === 'true') {
-      withDeletionAuditLogsTests({
+      withDeleteOneTests({
         makeRequest: () => as(tokenUser).remove().to(`/v1/users/${documentToDeleteId}`),
         collectionName: 'tfm-users',
         auditRecord: {

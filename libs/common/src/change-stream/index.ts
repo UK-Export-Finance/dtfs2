@@ -1,4 +1,4 @@
-export * from './delete-document-with-audit-logs';
+export * from './delete-one';
 export * from './generate-audit-database-record';
 export * from './generate-audit-details';
 export * from './validate-audit-details';
