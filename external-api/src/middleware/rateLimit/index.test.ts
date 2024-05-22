@@ -5,8 +5,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { InvalidEnvironmentVariableError } from '@ukef/dtfs2-common';
 import { createRateLimit } from '.';
-import { InvalidEnvironmentVariableError } from '../../errors/invalid-environment-variable.error';
 
 describe('createRateLimit', () => {
   let originalProcessEnv: any;
