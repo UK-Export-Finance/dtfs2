@@ -27,7 +27,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
     const getHttpMocksWithSessionData = (sessionData: Partial<SessionData>) =>
       httpMocks.createMocks({
-        session: { session, ...sessionData },
+        session: { ...session, ...sessionData },
         params: {
           reportId,
         },
@@ -137,7 +137,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const sessionData: Partial<SessionData> = {
         addPaymentErrorKey: 'different-fee-record-statuses',
         checkedCheckboxIds: {
-          'feeRecordId-1-reportedPaymentsCurrency-GBP-status-MATCH': true,
+          'feeRecordId-1-reportedPaymentsCurrency-GBP-status-TO_DO': true,
         },
       };
       const { req, res } = getHttpMocksWithSessionData(sessionData);
