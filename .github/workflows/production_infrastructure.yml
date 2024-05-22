@@ -1829,6 +1829,7 @@ jobs:
                 HTTPS=1 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
                 UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }}
+                CONTACT_US_EMAIL_ADDRESS=${{ vars.CONTACT_US_EMAIL_ADDRESS }}
 
       - name: Secrets
         uses: azure/cli@v1.0.9
