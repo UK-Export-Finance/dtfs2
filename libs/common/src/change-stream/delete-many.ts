@@ -8,14 +8,14 @@ import { generateAuditDatabaseRecordFromAuditDetails } from './generate-audit-da
 // TODO: UPDATE THIS ON REBASE
 const { DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS } = process.env;
 
-type DeleteManyWithAuditLogsParams = {
+type DeleteManyParams = {
   filter: Filter<any>;
   collectionName: MongoDbCollectionName;
   db: MongoDbClient;
   auditDetails: AuditDetails;
 };
 
-export const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetails }: DeleteManyWithAuditLogsParams) => {
+const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetails }: DeleteManyParams) => {
   const client = await db.getClient();
   const session = client.startSession();
 
@@ -35,15 +35,17 @@ export const deleteManyWithAuditLogs = async ({ filter, collectionName, db, audi
         expireAt: add(new Date(), { seconds: Number(DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS) }),
       }));
 
-      const deletionCollection = await db.getCollection('deletion-audit-logs');
-      const insertResult = await deletionCollection.insertMany(logsToInsert, { session });
-      if (!insertResult.acknowledged) {
-        throw new Error('Failed to create deletion audit logs');
-      }
+      if (documentsToDelete.length) {
+        const deletionCollection = await db.getCollection('deletion-audit-logs');
+        const insertResult = await deletionCollection.insertMany(logsToInsert, { session });
+        if (!insertResult.acknowledged) {
+          throw new Error('Failed to create deletion audit logs');
+        }
 
-      const deleteResult = await collection.deleteMany({ $or: documentsToDelete }, { session });
-      if (!(deleteResult.acknowledged && deleteResult.deletedCount === documentsToDelete.length)) {
-        throw new Error('Failed to delete documents');
+        const deleteResult = await collection.deleteMany({ $or: documentsToDelete }, { session });
+        if (!(deleteResult.acknowledged && deleteResult.deletedCount === documentsToDelete.length)) {
+          throw new Error('Failed to delete documents');
+        }
       }
     }, transactionOptions);
   } catch (error) {
@@ -52,4 +54,19 @@ export const deleteManyWithAuditLogs = async ({ filter, collectionName, db, audi
   } finally {
     await session.endSession();
   }
+};
+
+export const deleteMany = async ({ filter, collectionName, db, auditDetails }: DeleteManyParams): Promise<{ acknowledged: boolean }> => {
+  if (process.env.CHANGE_STREAM_ENABLED === 'true') {
+    await deleteManyWithAuditLogs({
+      filter,
+      collectionName,
+      db,
+      auditDetails,
+    });
+
+    return { acknowledged: true };
+  }
+  const durableFunctionLogsCollection = await db.getCollection(collectionName);
+  return durableFunctionLogsCollection.deleteMany(filter);
 };
