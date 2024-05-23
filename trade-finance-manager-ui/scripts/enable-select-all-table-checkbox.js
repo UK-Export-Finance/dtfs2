@@ -45,6 +45,10 @@ const enableSelectAllTableCheckboxIfPresent = () => {
     }
   });
 
+  if (areAllOtherTableCellCheckboxesChecked()) {
+    selectAllTableCellCheckbox.checked = true;
+  }
+
   allOtherTableCellCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener('change', () => {
       updateSelectAllTableCellCheckboxOnTableChange();
