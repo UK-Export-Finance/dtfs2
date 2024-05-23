@@ -20,7 +20,7 @@ export const deleteDeal = async (req: CustomExpressRequest<{ params: { id: strin
   } catch (error) {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
-        status: 400,
+        status: error.status,
         message: `Invalid auditDetails, ${error.message}`,
       });
     }

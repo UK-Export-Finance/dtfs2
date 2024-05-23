@@ -20,7 +20,7 @@ exports.updateTfmAmendment = async (req, res) => {
   } catch (error) {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
-        status: 400,
+        status: error.status,
         message: `Invalid auditDetails, ${error.message}`,
       });
     }
