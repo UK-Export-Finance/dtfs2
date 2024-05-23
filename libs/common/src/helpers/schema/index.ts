@@ -1,1 +1,1 @@
-export { zBooleanCoerce } from './z-boolean-coerce';
+export { zBooleanStrictCoerce } from './z-boolean-strict-coerce';

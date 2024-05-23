@@ -1,10 +1,10 @@
 import dotenv from 'dotenv';
 import { z } from 'zod';
-import { zBooleanCoerce } from './schema';
+import { zBooleanStrictCoerce } from './schema';
 
 dotenv.config();
 
-const featureFlagOptions = zBooleanCoerce.optional().default(false);
+const featureFlagOptions = zBooleanStrictCoerce.optional().default(false);
 
 const featureFlagsSchema = z.object({
   /**

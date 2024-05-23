@@ -1,30 +1,30 @@
-import { zBooleanCoerce } from './z-boolean-coerce';
+import { zBooleanStrictCoerce } from './z-boolean-strict-coerce';
 
-describe('zBooleanCoerce', () => {
-  describe('when parsing a value with zBooleanCoerce', () => {
+describe('zBooleanStrictCoerce', () => {
+  describe('when parsing a value with zBooleanStrictCoerce', () => {
     describe('when the provided value can be coerced to a boolean', () => {
       it.each(getSuccessTestCases())('should return $result when the provided value is $description', ({ value, result }) => {
-        expect(zBooleanCoerce.parse(value)).toBe(result);
+        expect(zBooleanStrictCoerce.parse(value)).toBe(result);
       });
     });
 
     describe('when the provided value cannot be coerced to a boolean', () => {
       it.each(getFailureTestCases())('should throw an error when the provided value is $description', ({ value }) => {
-        expect(() => zBooleanCoerce.parse(value)).toThrow();
+        expect(() => zBooleanStrictCoerce.parse(value)).toThrow();
       });
     });
   });
 
-  describe('when parsing a value with zBooleanCoerce and additional chaining', () => {
+  describe('when parsing a value with zBooleanStrictCoerce and additional chaining', () => {
     describe('when chaining with .optional()', () => {
       it('should return undefined when the provided value is undefined', () => {
-        expect(zBooleanCoerce.optional().parse(undefined)).toBe(undefined);
+        expect(zBooleanStrictCoerce.optional().parse(undefined)).toBe(undefined);
       });
     });
 
     describe('when chaining with .nullable()', () => {
       it('should return null when the provided value is null', () => {
-        expect(zBooleanCoerce.nullable().parse(null)).toBe(null);
+        expect(zBooleanStrictCoerce.nullable().parse(null)).toBe(null);
       });
     });
   });
