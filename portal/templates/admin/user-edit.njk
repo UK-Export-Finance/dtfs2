@@ -39,7 +39,11 @@
     classes: "govuk-!-width-one-third",
     id: "firstname",
     name: "firstname",
-    value: displayedUser.firstname
+    value: displayedUser.firstname,
+    errorMessage: validationErrors.errorList.firstname and {
+      text: validationErrors.errorList.firstname.text,
+      attributes: { "data-cy": "firstname-error-message" }
+    }
   }) }}
 
   {{ govukInput({
@@ -51,7 +55,11 @@
     classes: "govuk-!-width-one-third",
     id: "surname",
     name: "surname",
-    value: displayedUser.surname
+    value: displayedUser.surname,
+    errorMessage: validationErrors.errorList.surname and {
+      text: validationErrors.errorList.surname.text,
+      attributes: { "data-cy": "surname-error-message" }
+    }
   }) }}
 
     {{ govukCheckboxes({
@@ -66,7 +74,7 @@
       hint: {
         text: "Select the role or multiple roles of the person you’re adding as a user"
       },
-      errorMessage: validationErrors and validationErrors.errorList and validationErrors.errorList.roles and {
+      errorMessage:  validationErrors.errorList.roles and {
         text: validationErrors.errorList.roles.text,
         attributes: { "data-cy": "roles-error-message" }
       },
@@ -75,28 +83,28 @@
           value: "maker",
           text: "Maker",
           hint: { text: "Creates the UKEF application on behalf of the bank" },
-          checked: displayedUser.roles.includes("maker"),
+          checked: displayedUser.roles and displayedUser.roles.includes("maker"),
           attributes: {"data-cy": "role-maker"}
         },
         {
           value: "checker",
           text: "Checker",
           hint: { text: "Independently reviews applications" },
-          checked: displayedUser.roles.includes("checker"),
+          checked: displayedUser.roles and displayedUser.roles.includes("checker"),
           attributes: {"data-cy": "role-checker"}
         },
         {
           value: "payment-report-officer",
           text: "Payment Report Officer",
           hint: { text: "Report on GEF utilisation and fees" },
-          checked: displayedUser.roles.includes("payment-report-officer"),
+          checked: displayedUser.roles and displayedUser.roles.includes("payment-report-officer"),
           attributes: {"data-cy": "role-payment-report-officer"}
         },
         {
           value: "admin",
           text: "Admin",
           hint: { text: "Creates, updates, and removes user accounts" },
-          checked: displayedUser.roles.includes("admin"),
+          checked: displayedUser.roles and displayedUser.roles.includes("admin"),
           attributes: {"data-cy": "role-admin"}
         },
         {
@@ -107,7 +115,7 @@
           text: "Read-only",
           hint: { text: "Views applications but cannot make edits" },
           behaviour: "exclusive",
-          checked: displayedUser.roles.includes("read-only"),
+          checked: displayedUser.roles and displayedUser.roles.includes("read-only"),
           attributes: {"data-cy": "role-read-only"}
         }
       ]
@@ -176,8 +184,14 @@
 
     {% set banksList = [
       {
+            value: "",
+            text: "Please select a bank",
+            selected: displayedUser.bank === ""
+      },
+      {
             value: "all",
-            text: "All"
+            text: "All",
+            selected: displayedUser.bank === "all"
       }
     ] %}
     {% for bank in banks %}
@@ -203,6 +217,10 @@
       },
       hint: {
         text: "Applicable for Bank Staff users only"
+      },
+      errorMessage: validationErrors.errorList.bank and {
+        text: validationErrors.errorList.bank.text,
+        attributes: { "data-cy": "bank-error-message" }
       },
       attributes: {
         "data-cy": "bank"

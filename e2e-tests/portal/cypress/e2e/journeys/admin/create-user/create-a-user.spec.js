@@ -1,11 +1,7 @@
-const {
-  header, users, createUser, changePassword,
-} = require('../../../pages');
+const { header, users, createUser, changePassword } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const {
-  USER_ROLES: {
-    MAKER, READ_ONLY, CHECKER, PAYMENT_REPORT_OFFICER,
-  },
+  USER_ROLES: { MAKER, READ_ONLY, CHECKER, PAYMENT_REPORT_OFFICER },
 } = require('../../../../fixtures/constants');
 const { ADMIN: AN_ADMIN, USER_WITH_INJECTION } = require('../../../../../../e2e-fixtures/portal-users.fixture');
 
@@ -48,6 +44,26 @@ context('Admin user creates a new user', () => {
     // Back to the users page
     createUser.cancel().click();
     cy.url().should('include', '/admin/users');
+  });
+
+  it('should display validation text if fields are left empty', () => {
+    // Login and go to the dashboard
+    cy.login(AN_ADMIN);
+    cy.url().should('include', '/dashboard/deals');
+    header.users().click();
+
+    // Go to add user's page
+    users.addUser().click();
+    cy.url().should('include', '/admin/users/create');
+
+    // Click the create user button without filling in the fields
+    createUser.createUser().click();
+
+    // Check if the validation text is displayed for the first name, surname, roles, and bank fields
+    createUser.firstnameerror().should('contain', 'First name is required');
+    createUser.surnameerror().should('contain', 'Surname is required');
+    createUser.roleserror().should('contain', 'At least one role is required');
+    createUser.bankerror().should('contain', 'Bank is required');
   });
 
   it('Admin create user with empty fields', () => {
@@ -167,7 +183,9 @@ context('Admin user creates a new user', () => {
     // checks html form validation pop up contains correct error message
     cy.get('input:invalid').should('have.length', 1);
     createUser.username().then(($input) => {
-      expect($input[0].validationMessage).to.eq("Please include an '@' in the email address. '{\"$gt\":\"\"}' is missing an '@'.");
+      expect($input[0].validationMessage).to.eq(
+        "Please include an '@' in the email address. '{\"$gt\":\"\"}' is missing an '@'.",
+      );
     });
 
     /**
