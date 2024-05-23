@@ -1,6 +1,6 @@
 const axios = require('axios');
-const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId } = require('./helpers/validateIds');
-const { assertValidIsoMonth } = require('./helpers/date');
+const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId, isValidBankId } = require('./helpers/validateIds');
+const { assertValidIsoMonth, assertValidIsoYear } = require('./helpers/date');
 const PageOutOfBoundsError = require('./errors/page-out-of-bounds.error');
 
 require('dotenv').config();
@@ -905,8 +905,8 @@ const getAllBanks = async (userToken) => {
  */
 const getReportsByBankAndYear = async (userToken, bankId, year) => {
   try {
-    // validate bankId and year
-    // assertValidIsoMonth(submissionMonth)
+    isValidBankId(bankId);
+    assertValidIsoYear(year);
 
     const { data } = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${bankId}/${year}`, {
       headers: generateHeaders(userToken),
