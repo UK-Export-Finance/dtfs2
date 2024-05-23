@@ -1,6 +1,7 @@
-import { CurrencyAndAmountString, FeeRecordStatus, SessionBank } from '@ukef/dtfs2-common';
+import { Currency, CurrencyAndAmountString, FeeRecordStatus, SessionBank } from '@ukef/dtfs2-common';
 import { PrimaryNavigationKey } from '../primary-navigation-key';
 import { TfmSessionUser } from '../tfm-session-user';
+import { ErrorSummaryViewModel } from './error-summary-view-model';
 
 export type SortedAndFormattedCurrencyAndAmount = {
   formattedCurrencyAndAmount: CurrencyAndAmountString | undefined;
@@ -8,6 +9,8 @@ export type SortedAndFormattedCurrencyAndAmount = {
 };
 
 export type FeeRecordDisplayStatus = 'TO DO' | 'MATCH' | 'DOES NOT MATCH' | 'READY TO KEY' | 'RECONCILED';
+
+export type FeeRecordViewModelCheckboxId = `feeRecordId-${number}-reportedPaymentsCurrency-${Currency}-status-${FeeRecordStatus}`;
 
 export type FeeRecordViewModelItem = {
   id: number;
@@ -20,6 +23,8 @@ export type FeeRecordViewModelItem = {
   totalPaymentsReceived: SortedAndFormattedCurrencyAndAmount;
   status: FeeRecordStatus;
   displayStatus: FeeRecordDisplayStatus;
+  checkboxId: FeeRecordViewModelCheckboxId;
+  isChecked: boolean;
 };
 
 export type UtilisationReportReconciliationForReportViewModel = {
@@ -27,5 +32,7 @@ export type UtilisationReportReconciliationForReportViewModel = {
   activePrimaryNavigation: PrimaryNavigationKey;
   bank: SessionBank;
   formattedReportPeriod: string;
+  reportId: number;
   feeRecords: FeeRecordViewModelItem[];
+  errorSummary: [ErrorSummaryViewModel] | undefined;
 };

@@ -25,7 +25,6 @@
 
     <tbody class="govuk-table__body">
     {% for feeRecord in feeRecords %}
-      {% set checkboxId = ['feeRecordId-', feeRecord.id] | join %}
       <tr
         class="govuk-table__row"
         data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }}"
@@ -33,7 +32,8 @@
         <td class="govuk-table__cell">
           {% if feeRecord.status === 'TO_DO' or feeRecord.status === 'DOES_NOT_MATCH' %}
             {{ tableCellCheckbox.render({
-              checkboxId: checkboxId
+              checkboxId: feeRecord.checkboxId,
+              checked: feeRecord.isChecked
             }) }}
           {% endif %}
         </td>

@@ -26,4 +26,6 @@ export const aFeeRecordViewModelItem = (): FeeRecordViewModelItem => ({
   },
   status: 'TO_DO',
   displayStatus: 'TO DO',
+  checkboxId: 'feeRecordId-1-reportedPaymentsCurrency-GBP-status-TO_DO',
+  isChecked: false,
 });
