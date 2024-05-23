@@ -1,12 +1,10 @@
 import dotenv from 'dotenv';
 import { z } from 'zod';
+import { zBooleanCoerce } from './schema';
 
 dotenv.config();
 
-const featureFlagOptions = z
-  .union([z.literal('true'), z.literal('false')])
-  .default('false')
-  .transform((featureFlag) => featureFlag === 'true');
+const featureFlagOptions = zBooleanCoerce.optional().default(false);
 
 const featureFlagsSchema = z.object({
   /**
