@@ -2,6 +2,7 @@ import { Collection, ObjectId, WithoutId } from 'mongodb';
 import { when, WhenMock } from 'jest-when';
 import { MongoDbClient } from '../../mongo-db-client';
 import { AuditDatabaseRecord, DeletionAuditLog, MongoDbCollectionName } from '../../types';
+import { changeStreamConfig } from '../config';
 
 const collectionMethodsToNotMock = ['findOne', 'insertOne', 'updateOne'] as const;
 
@@ -18,16 +19,16 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
     let mongoDbClient: MongoDbClient;
     let deletionAuditLogsCollection: Collection<WithoutId<DeletionAuditLog>>;
 
-    if (process.env.CHANGE_STREAM_ENABLED) {
-      beforeAll(async () => {
-        mongoDbClient = new MongoDbClient({
-          dbName: process.env.MONGO_INITDB_DATABASE as string,
-          dbConnectionString: process.env.MONGODB_URI as string,
-        });
-
-        deletionAuditLogsCollection = await mongoDbClient.getCollection('deletion-audit-logs');
+    beforeAll(async () => {
+      mongoDbClient = new MongoDbClient({
+        dbName: process.env.MONGO_INITDB_DATABASE as string,
+        dbConnectionString: process.env.MONGODB_URI as string,
       });
 
+      deletionAuditLogsCollection = await mongoDbClient.getCollection('deletion-audit-logs');
+    });
+
+    if (changeStreamConfig.CHANGE_STREAM_ENABLED === 'true') {
       beforeEach(() => {
         jest.clearAllMocks();
       });
