@@ -1,4 +1,5 @@
-const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common/errors');
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');

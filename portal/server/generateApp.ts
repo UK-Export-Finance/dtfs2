@@ -8,7 +8,7 @@ import csrf from 'csurf';
 import flash from 'connect-flash';
 import connectRedis from 'connect-redis';
 import { isHttpError } from 'http-errors';
-import { InvalidEnvironmentVariableError } from '@ukef/dtfs2-common';
+import { InvalidEnvironmentVariableError } from '@ukef/dtfs2-common/errors';
 import routes from './routes';
 import healthcheck from './healthcheck';
 import configureNunjucks from './nunjucks-configuration';
