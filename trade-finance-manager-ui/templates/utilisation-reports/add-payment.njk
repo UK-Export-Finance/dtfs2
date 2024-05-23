@@ -1,9 +1,26 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% import "./_macros/selected-reported-fees-details-table.njk" as selectedReportedFeesDetailsTable %}
 
 {% extends "index.njk" %}
 
-{% block pageTitle %}Add a payment{% endblock%}
+{% set backLink = {"href": '/utilisation-reports/' + reportId} %}
+
+{% block pageTitle %}Add a payment{% endblock %}
 {% block content %}
+  {% if errors.errorSummary | length %}
+    {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errors.errorSummary,
+        attributes: {
+        'data-cy': 'error-summary'
+        }
+        }) }}
+  {% endif %}
   <div class="govuk-grid-row govuk-!-padding-top-7">
     <div class="govuk-grid-column-one-half">
       <span class="govuk-caption-l" data-cy="add-a-payment-heading-caption">{{ bank.name }}, {{ formattedReportPeriod }}</span>
@@ -13,5 +30,140 @@
   {{ selectedReportedFeesDetailsTable.render({
     reportedFeeDetails: reportedFeeDetails
     }) }}
+  <h2 class="govuk-heading-m">
+    {% if paymentNumber %}
+      Payment {{ paymentNumber }} details
+    {% else %}
+      New payment details
+    {% endif %}
+  </h2>
+  <form method="post">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+    <input type="hidden" name="addPaymentFormSubmission" value="true" />
+    <input type="hidden" name="paymentNumber" value={{ paymentNumber }} />
+    {% for id in selectedFeeRecordCheckboxIds %}<input type="hidden" name={{ id }} value="on" />{% endfor %}
+    {{ govukRadios({
+        classes: "govuk-radios--small",
+        name: "paymentCurrency",
+        fieldset: {
+          legend: {
+            text: "Currency payment was in",
+            classes: "govuk-fieldset__legend--s"
+          }
+        },
+        errorMessage: errors.paymentCurrencyErrorMessage and {
+          text: errors.paymentCurrencyErrorMessage
+        },
+        value: formValues.paymentCurrency,
+        items: [
+          {
+            value: "GBP",
+            text: "GBP"
+          },
+          {
+            value: "EUR",
+            text: "EUR"
+          },
+          {
+            value: "USD",
+            text: "USD"
+          },
+          {
+            value: "JPY",
+            text: "JPY"
+          }
+        ]
+    }) }}
+    {{ govukInput({
+        label: {
+          text: "Amount received",
+          classes: "govuk-label--s"
+        },
+        classes: "govuk-input--width-20",
+        hint: {
+          text: "Enter the amount without the currency"
+        },
+        id: "paymentAmount",
+        name: "paymentAmount",
+        value: formValues.paymentAmount,
+        errorMessage: errors.paymentAmountErrorMessage and {
+          text: errors.paymentAmountErrorMessage
+        }
+    }) }}
+    {{ govukDateInput({
+      id: "paymentDate",
+      namePrefix: "paymentDate",
+      fieldset: {
+        legend: {
+          text: "Date payment received",
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      hint: {
+        text: "For example, 27 03 2023"
+      },
+      errorMessage: errors.paymentDateError and {
+        text: errors.paymentDateError.message
+      },
+      items: [
+        {
+          classes: (errors.paymentDateError.dayError and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
+          name: "day",
+          value: formValues.paymentDate.day
+        },
+        {
+          classes: (errors.paymentDateError.monthError and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
+          name: "month",
+          value: formValues.paymentDate.month
+        },
+        {
+          classes: (errors.paymentDateError.yearError and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
+          name: "year",
+          value: formValues.paymentDate.year
+        }
+      ]
+    }) }}
+    {{ govukInput({
+        label: {
+          text: "Payment reference (optional)",
+          classes: "govuk-label--s"
+        },
+        classes: "govuk-input--width-20 govuk-input--extra-letter-spacing",
+        errorMessage: errors.paymentReferenceErrorMessage and {
+          text: errors.paymentReferenceErrorMessage
+        },
+        id: "paymentReference",
+        name: "paymentReference",
+        value: formValues.paymentReference
+    }) }}
+    {{ govukRadios({
+        classes: "govuk-radios--small",
+        name: "addAnotherPayment",
+        fieldset: {
+          legend: {
+            text: "Add another payment for these reported fees?",
+            classes: "govuk-fieldset__legend--s"
+          }
+        },
+        errorMessage: errors.addAnotherPaymentErrorMessage and {
+          text: errors.addAnotherPaymentErrorMessage
+        },
+        value: formValues.addAnotherPayment,
+        items: [
+          {
+            value: "true",
+            text: "Yes"
+          },
+          {
+            value: "false",
+            text: "No"
+          }
+        ]
+    }) }}
+    <div class="govuk-button-group">
+      {{ govukButton({"text": "Continue"}) }}
+      <a class="govuk-link" href="/utilisation-reports/{{ reportId }}">Cancel</a>
+    </div>
+  </form>
 {% endblock %}
 {% block sub_content %}{% endblock %}
