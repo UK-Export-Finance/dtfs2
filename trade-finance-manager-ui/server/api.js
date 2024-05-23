@@ -880,6 +880,7 @@ const getUtilisationReportReconciliationDetailsById = async (reportId, userToken
 
   return response.data;
 };
+
 /**
  * Fetches all banks
  * @param {string} userToken - token to validate session
@@ -894,6 +895,29 @@ const getAllBanks = async (userToken) => {
     return data;
   } catch (error) {
     console.error('Failed to get banks', error);
+    throw error;
+  }
+};
+
+/**
+ * Fetches all submitted reports by bank ID and year
+ * @param {string} userToken - token to validate session
+ * @param {string} bankId - the bank ID
+ * @param {string} year - the year
+ * @returns {Promise<import('./types/utilisation-reports').UtilisationReportSearchSummary>}
+ */
+const getReportsByBankAndYear = async (userToken, bankId, year) => {
+  try {
+    // validate bankId and year
+    // assertValidIsoMonth(submissionMonth)
+
+    const { data } = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${bankId}/${year}`, {
+      headers: generateHeaders(userToken),
+    });
+
+    return data;
+  } catch (error) {
+    console.error('Failed to get previous utilisation reports', error);
     throw error;
   }
 };
@@ -938,4 +962,5 @@ module.exports = {
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
   getAllBanks,
+  getReportsByBankAndYear,
 };

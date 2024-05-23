@@ -1,16 +1,22 @@
 import { Request, Response } from 'express';
-import { asString, isNonEmptyString } from '@ukef/dtfs2-common';
+import { asString, isNonEmptyString, isTfmPaymentReconciliationFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { validateSearchInput } from './search-input-validator';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { FindUtilisationReportsByYearViewModel, PreviousBankReportsByYearViewModel } from '../../../types/view-models';
+import {
+  FindUtilisationReportsByYearViewModel,
+  UtilisationReportsByBankAndYearViewModel,
+} from '../../../types/view-models';
+import { getReportViewModel } from '../helpers';
 
 const renderFindUtilisationReportsByYearPage = (res: Response, viewModel: FindUtilisationReportsByYearViewModel) =>
   res.render('utilisation-reports/find-utilisation-reports-by-year.njk', viewModel);
 
-const renderPreviousBankReportsByYear = (res: Response, viewModel: PreviousBankReportsByYearViewModel) =>
-  res.render('utilisation-reports/previous-bank-reports-by-year.njk', viewModel);
+const renderUtilisationReportsByBankAndYearResults = (
+  res: Response,
+  viewModel: UtilisationReportsByBankAndYearViewModel,
+) => res.render('utilisation-reports/utilisation-reports-by-bank-and-year-results.njk', viewModel);
 
 const getBankIdQueryAndYearQueryAsString = (
   req: Request,
@@ -70,7 +76,18 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
       });
     }
 
-    return renderPreviousBankReportsByYear(res, { user });
+    const { bankName, year, reports } = await api.getReportsByBankAndYear(userToken, bankIdQuery!, yearQuery!);
+    const reportsViewModel = reports.map(getReportViewModel);
+    const isTfmPaymentReconciliationFeatureEnabled = isTfmPaymentReconciliationFeatureFlagEnabled();
+
+    return renderUtilisationReportsByBankAndYearResults(res, {
+      user,
+      activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
+      bankName,
+      year,
+      reports: reportsViewModel,
+      isTfmPaymentReconciliationFeatureFlagEnabled: isTfmPaymentReconciliationFeatureEnabled,
+    });
   } catch (error) {
     console.error('Failed to render find reports by year page:', error);
     return res.render('_partials/problem-with-service.njk', { user });

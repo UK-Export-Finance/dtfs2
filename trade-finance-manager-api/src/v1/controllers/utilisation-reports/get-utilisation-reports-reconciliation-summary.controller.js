@@ -17,4 +17,6 @@ const getUtilisationReportsReconciliationSummary = async (req, res) => {
   }
 };
 
-module.exports = { getUtilisationReportsReconciliationSummary };
+module.exports = {
+  getUtilisationReportsReconciliationSummary,
+};

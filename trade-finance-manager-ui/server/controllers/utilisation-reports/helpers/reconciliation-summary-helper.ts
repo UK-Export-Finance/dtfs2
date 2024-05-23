@@ -1,6 +1,14 @@
 import { endOfDay, format, isPast, isSameMonth, parseISO } from 'date-fns';
-import { IsoMonthStamp, ReportPeriod, UtilisationReportReconciliationStatus, getFormattedReportPeriodWithShortMonth } from '@ukef/dtfs2-common';
-import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../types/utilisation-reports';
+import {
+  IsoMonthStamp,
+  ReportPeriod,
+  UtilisationReportReconciliationStatus,
+  getFormattedReportPeriodWithShortMonth,
+} from '@ukef/dtfs2-common';
+import {
+  UtilisationReportReconciliationSummary,
+  UtilisationReportReconciliationSummaryItem,
+} from '../../../types/utilisation-reports';
 import { getReportDueDate } from '../../../services/utilisation-report-service';
 import api from '../../../api';
 
@@ -19,7 +27,7 @@ type ReportPeriodSummaryViewModel = {
 
 type SummaryViewModel = ReportPeriodSummaryViewModel[];
 
-const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportReconciliationStatus, string> = {
+export const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportReconciliationStatus, string> = {
   REPORT_NOT_RECEIVED: 'Not received',
   PENDING_RECONCILIATION: 'Pending reconciliation',
   RECONCILIATION_IN_PROGRESS: 'Reconciliation in progress',
@@ -59,7 +67,9 @@ export const getDueDateText = (reportDueDate: Date) => {
 export const getReportPeriodHeading = (submissionMonth: IsoMonthStamp, reportPeriods: ReportPeriod[]) => {
   const isCurrentSubmissionMonth = isSameMonth(new Date(submissionMonth), new Date());
 
-  const formattedReportPeriods = reportPeriods.map((reportPeriod) => getFormattedReportPeriodWithShortMonth(reportPeriod, true)).join(' and ');
+  const formattedReportPeriods = reportPeriods
+    .map((reportPeriod) => getFormattedReportPeriodWithShortMonth(reportPeriod, true))
+    .join(' and ');
 
   return `${isCurrentSubmissionMonth ? 'Current reporting period' : 'Open reports'}: ${formattedReportPeriods}`;
 };

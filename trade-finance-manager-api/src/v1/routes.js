@@ -166,4 +166,13 @@ authRouter
 
 authRouter.route('/banks').get(banksController.getAllBanks);
 
+authRouter
+  .route('/utilisation-reports/:bankId/:year')
+  .get(
+    validation.bankIdValidation,
+    validation.isoYearValidation('year'),
+    handleExpressValidatorResult,
+    utilisationReportsController.getSubmittedReportsByBankAndYear,
+  );
+
 module.exports = { authRouter, openRouter };

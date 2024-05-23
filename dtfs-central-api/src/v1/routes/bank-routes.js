@@ -64,7 +64,9 @@ bankRouter.route('/').post(createBankController.createBankPost);
  *       404:
  *         description: Not found
  */
-bankRouter.route('/:bankId').get(validation.bankIdValidation, handleExpressValidatorResult, getBankController.findOneBankGet);
+bankRouter
+  .route('/:bankId')
+  .get(validation.bankIdValidation, handleExpressValidatorResult, getBankController.findOneBankGet);
 
 /**
  * @openapi
@@ -136,40 +138,48 @@ bankRouter.route('/').get(getBanksController.getAllBanksGet);
  */
 bankRouter
   .route('/:bankId/utilisation-reports')
-  .get(validation.bankIdValidation, handleExpressValidatorResult, getUtilisationReportsController.getUtilisationReports);
+  .get(
+    validation.bankIdValidation,
+    handleExpressValidatorResult,
+    getUtilisationReportsController.getUtilisationReportsByBankIdAndOptions,
+  );
 
 /**
-* @openapi
-* /bank/:bankId/next-report-period:
-*   get:
-*     summary: Get utilisation reports by bank ID
-*     tags: [UtilisationReport]
-*     description: Get a banks utilisation reports by ID.
-*     parameters:
-*       - in: path
-*         name: bankId
-*         schema:
-*           type: string
-*         required: true
-*         description: bank ID to fetch reports for
-*     responses:
-*       200:
-*         description: OK
-*         content:
-*           application/json:
-*             schema:
-*               allOf:
-*                 - $ref: '#/definitions/ReportPeriod'
-*                 - type: object
-*       400:
-*         description: Bad request
-*       404:
-*         description: Not found
-*       500:
-*         description: Internal server error
-*/
+ * @openapi
+ * /bank/:bankId/next-report-period:
+ *   get:
+ *     summary: Get utilisation reports by bank ID
+ *     tags: [UtilisationReport]
+ *     description: Get a banks utilisation reports by ID.
+ *     parameters:
+ *       - in: path
+ *         name: bankId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: bank ID to fetch reports for
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/ReportPeriod'
+ *                 - type: object
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal server error
+ */
 bankRouter
   .route('/:bankId/next-report-period')
-  .get(validation.bankIdValidation, handleExpressValidatorResult, getNextReportPeriodController.getNextReportPeriodByBankId);
+  .get(
+    validation.bankIdValidation,
+    handleExpressValidatorResult,
+    getNextReportPeriodController.getNextReportPeriodByBankId,
+  );
 
 module.exports = bankRouter;

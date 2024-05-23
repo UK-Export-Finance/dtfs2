@@ -6,7 +6,10 @@ import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { aBank } from '../../../../test-helpers/test-data/bank';
 import { aMonthlyBankReportPeriodSchedule } from '../../../../test-helpers/test-data/bank-report-period-schedule';
 import { Bank } from '../../../types/banks';
-import { FindUtilisationReportsByYearViewModel } from '../../../types/view-models/find-utilisation-reports-by-year-view-model';
+import {
+  FindUtilisationReportsByYearViewModel,
+  UtilisationReportsByBankAndYearViewModel,
+} from '../../../types/view-models';
 
 jest.mock('../../../api');
 
@@ -262,12 +265,18 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
+      jest
+        .mocked(api.getReportsByBankAndYear)
+        .mockResolvedValue({ bankName: BANK_NAME_ONE, year: yearQuery, reports: [] });
 
       // Act
       await getFindReportsByYear(req, res);
 
       // Assert
-      expect(res._getRenderView()).toEqual('utilisation-reports/previous-bank-reports-by-year.njk');
+      expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-reports-by-bank-and-year-results.njk');
+      expect((res._getRenderData() as UtilisationReportsByBankAndYearViewModel)?.bankName).toBe(BANK_NAME_ONE);
+      expect((res._getRenderData() as UtilisationReportsByBankAndYearViewModel)?.year).toBe(yearQuery);
+      expect((res._getRenderData() as UtilisationReportsByBankAndYearViewModel)?.reports).toStrictEqual([]);
     });
   });
 });

@@ -1,4 +1,9 @@
-import { UtilisationReportReconciliationStatus, IsoDateTimeStamp, IsoMonthStamp, ReportPeriod } from '@ukef/dtfs2-common';
+import {
+  UtilisationReportReconciliationStatus,
+  IsoDateTimeStamp,
+  IsoMonthStamp,
+  ReportPeriod,
+} from '@ukef/dtfs2-common';
 
 export type UtilisationReportReconciliationSummaryItem = {
   reportId: string;
@@ -16,4 +21,10 @@ export type UtilisationReportReconciliationSummaryItem = {
 export type UtilisationReportReconciliationSummary = {
   submissionMonth: IsoMonthStamp;
   items: UtilisationReportReconciliationSummaryItem[];
+};
+
+export type UtilisationReportSearchSummary = {
+  bankName: string;
+  year: string;
+  reports: UtilisationReportReconciliationSummaryItem[];
 };

@@ -16,7 +16,11 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
    * @param reportPeriod - The report period
    * @returns The found report
    */
-  async findOneByBankIdAndReportPeriod(bankId: string, reportPeriod: ReportPeriod, includeFeeRecords = false): Promise<UtilisationReportEntity | null> {
+  async findOneByBankIdAndReportPeriod(
+    bankId: string,
+    reportPeriod: ReportPeriod,
+    includeFeeRecords = false,
+  ): Promise<UtilisationReportEntity | null> {
     return await this.findOne({
       where: { bankId, reportPeriod },
       relations: {
@@ -31,7 +35,10 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
    * @param options - The options determining which reports are retrieved for the given bank
    * @returns The found reports
    */
-  async findAllByBankId(bankId: string, options?: GetUtilisationReportDetailsOptions): Promise<UtilisationReportEntity[]> {
+  async findAllByBankId(
+    bankId: string,
+    options?: GetUtilisationReportDetailsOptions,
+  ): Promise<UtilisationReportEntity[]> {
     const findByOptionsWhere: FindOptionsWhere<UtilisationReportEntity> = { bankId };
 
     if (options?.reportPeriod) {
@@ -86,6 +93,38 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
       ],
       relations: {
         feeRecords: includeFeeRecords,
+      },
+    });
+  },
+
+  /**
+   * Finds submitted reports & fee records by bank id which have report periods which ended in
+   * the supplied year
+   * @param bankId - The bank id
+   * @param year - The search year
+   * @returns The found reports
+   */
+  async findSubmittedReportsForBankIdWithReportPeriodEndInYear(
+    bankId: string,
+    year: number,
+  ): Promise<UtilisationReportEntity[]> {
+    const bankIdAndStatusFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
+      bankId,
+      status: Not('REPORT_NOT_RECEIVED'),
+    };
+
+    const sameYearFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
+      reportPeriod: {
+        end: {
+          year: Equal(year),
+        },
+      },
+    };
+
+    return await this.find({
+      where: { ...bankIdAndStatusFindOptions, ...sameYearFindOptions },
+      relations: {
+        feeRecords: true,
       },
     });
   },

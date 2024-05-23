@@ -1,7 +1,10 @@
 const { param } = require('express-validator');
-const { isValidIsoMonth } = require('@ukef/dtfs2-common');
+const { isValidIsoMonth, isValidIsoYear } = require('@ukef/dtfs2-common');
 
-const bankIdValidation = param('bankId').isString().matches(/^\d+$/).withMessage('The bank id provided should be a string of numbers');
+const bankIdValidation = param('bankId')
+  .isString()
+  .matches(/^\d+$/)
+  .withMessage('The bank id provided should be a string of numbers');
 
 exports.bankIdValidation = [bankIdValidation];
 
@@ -14,7 +17,8 @@ exports.mongoIdValidation = [mongoIdValidation];
  * @param {string} paramName - The parameter name
  * @returns {import('express-validator').ValidationChain}
  */
-const sqlIdValidation = (paramName) => param(paramName).isInt({ min: 0 }).withMessage(`Invalid '${paramName}' path param provided`);
+const sqlIdValidation = (paramName) =>
+  param(paramName).isInt({ min: 0 }).withMessage(`Invalid '${paramName}' path param provided`);
 
 exports.sqlIdValidation = sqlIdValidation;
 
@@ -28,3 +32,13 @@ exports.isoMonthValidation = (fields) => [
     .custom(isValidIsoMonth)
     .withMessage((value, { path }) => `'${path}' parameter must be an ISO month string (format 'yyyy-MM')`),
 ];
+
+/**
+ * Validates that specified route or query parameters are strings in ISO month format 'yyyy'
+ * @param {string} paramName - The parameter name
+ * @returns {import('express-validator').ValidationChain}
+ */
+const yearValidation = (paramName) =>
+  param(paramName).custom(isValidIsoYear).withMessage(`Invalid '${paramName}' path param provided`);
+
+exports.yearValidation = yearValidation;
