@@ -3,11 +3,9 @@ import partials from '../../partials';
 import pages from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import MOCK_DEAL from '../../../fixtures/deal-AIN';
-import {
-  T1_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN,
-} from '../../../../../e2e-fixtures';
+import { T1_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 
-context('Case Underwriting - Underwriter Manager\'s decision - Form and Validation', () => {
+context("Case Underwriting - Underwriter Manager's decision - Form and Validation", () => {
   let dealId;
   const dealFacilities = [];
 
@@ -172,7 +170,7 @@ context('Case Underwriting - Underwriter Manager\'s decision - Form and Validati
   });
 });
 
-context('Case Underwriting - Underwriter Manager\'s decision - Submit Form', () => {
+context("Case Underwriting - Underwriter Manager's decision - Submit Form", () => {
   let dealId;
   const dealFacilities = [];
 
@@ -208,8 +206,8 @@ context('Case Underwriting - Underwriter Manager\'s decision - Submit Form', () 
   it('after valid form submit, cleans and displays submitted values and updates deal stage', () => {
     pages.underwritingPage.addUnderwriterManagerDecisionButton().click({ force: true });
 
-    const MOCK_COMMENTS = 'Approval comment. <div>Div contents</div><script>Script contents</script> &lt;img src = \'data:abc\' /&gt;';
-    const MOCK_INTERNAL_COMMENTS = 'Internal comment. <div>Div contents</div><script>Script contents</script> &lt;img src = \'data:abc\' /&gt;';
+    const MOCK_COMMENTS = "Approval comment. <div>Div contents</div><script>Script contents</script> &lt;img src = 'data:abc' /&gt;";
+    const MOCK_INTERNAL_COMMENTS = "Internal comment. <div>Div contents</div><script>Script contents</script> &lt;img src = 'data:abc' /&gt;";
 
     pages.managersDecisionPage.decisionRadioInputApproveWithConditions().click();
 
@@ -220,40 +218,58 @@ context('Case Underwriting - Underwriter Manager\'s decision - Submit Form', () 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
     // assert values are displayed in decision page
-    pages.managersDecisionPage.decisionStatusTag().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Approved (with conditions)');
-    });
+    pages.managersDecisionPage
+      .decisionStatusTag()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Approved (with conditions)');
+      });
 
-    pages.managersDecisionPage.decisionMadeBy().invoke('text').then((text) => {
-      const { firstName, lastName } = UNDERWRITER_MANAGER_1;
-      const userFullName = `${firstName} ${lastName}`;
+    pages.managersDecisionPage
+      .decisionMadeBy()
+      .invoke('text')
+      .then((text) => {
+        const { firstName, lastName } = UNDERWRITER_MANAGER_1;
+        const userFullName = `${firstName} ${lastName}`;
 
-      expect(text.trim()).to.equal(userFullName);
-    });
+        expect(text.trim()).to.equal(userFullName);
+      });
 
-    pages.managersDecisionPage.decisionDateTime().invoke('text').then((text) => {
-      const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' });
+    pages.managersDecisionPage
+      .decisionDateTime()
+      .invoke('text')
+      .then((text) => {
+        const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' });
 
-      expect(text.trim()).contains(todayFormatted);
-    });
+        expect(text.trim()).contains(todayFormatted);
+      });
 
-    pages.managersDecisionPage.conditions().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Approval comment. Div contents &lt;img src = \'data:abc\' /&gt;');
-    });
+    pages.managersDecisionPage
+      .conditions()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal("Approval comment. Div contents &lt;img src = 'data:abc' /&gt;");
+      });
 
-    pages.managersDecisionPage.internalComments().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Internal comment. Div contents &lt;img src = \'data:abc\' /&gt;');
-    });
+    pages.managersDecisionPage
+      .internalComments()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal("Internal comment. Div contents &lt;img src = 'data:abc' /&gt;");
+      });
 
     // deal stage
-    partials.caseSummary.ukefDealStage().invoke('text').then((text) => {
-      // text formatting is slightly different to the submitted form value
-      expect(text.trim()).to.equal('Approved (with conditions)');
-    });
+    partials.caseSummary
+      .ukefDealStage()
+      .invoke('text')
+      .then((text) => {
+        // text formatting is slightly different to the submitted form value
+        expect(text.trim()).to.equal('Approved (with conditions)');
+      });
   });
 });
 
-context('Case Underwriting - Underwriter Manager\'s decision AIN', () => {
+context("Case Underwriting - Underwriter Manager's decision AIN", () => {
   let dealId;
   const dealFacilities = [];
 
@@ -286,7 +302,7 @@ context('Case Underwriting - Underwriter Manager\'s decision AIN', () => {
     });
   });
 
-  it('should show not applicable for manager\'s decision for AIN', () => {
+  it("should show not applicable for manager's decision for AIN", () => {
     pages.underwritingPage.addUnderwriterManagerDecisionButton().should('not.exist');
     pages.underwritingPage.underwriterManagerDecisionNotApplicable().contains('Not applicable');
   });

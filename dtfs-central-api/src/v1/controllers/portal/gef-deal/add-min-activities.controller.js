@@ -32,12 +32,7 @@ const updateChangedToIssued = async (facilities) => {
 const getUserInfo = async (userId) => {
   if (ObjectId.isValid(userId)) {
     const userCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
-    const {
-      firstname,
-      surname = '',
-    } = userId
-      ? await userCollection.findOne({ _id: { $eq: new ObjectId(userId) } })
-      : {};
+    const { firstname, surname = '' } = userId ? await userCollection.findOne({ _id: { $eq: new ObjectId(userId) } }) : {};
 
     // creates user object which can be used
     const user = {
@@ -52,16 +47,7 @@ const getUserInfo = async (userId) => {
 
 // creates portal activity object to store in DB
 const portalActivityGenerator = (activityParams) => {
-  const {
-    type,
-    user,
-    activityType,
-    activityText,
-    activityHTML,
-    facility,
-    maker,
-    checker,
-  } = activityParams;
+  const { type, user, activityType, activityText, activityHTML, facility, maker, checker } = activityParams;
 
   const userToAdd = {
     firstName: user.firstname,
@@ -100,7 +86,7 @@ const facilityChangePortalActivity = async (application, facilities) => {
 
     facilities.forEach(async (facility) => {
       if (facility.canResubmitIssuedFacilities) {
-      // creates user object to add to array
+        // creates user object to add to array
         const maker = facility.unissuedToIssuedByMaker;
         const activityParams = {
           type: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,

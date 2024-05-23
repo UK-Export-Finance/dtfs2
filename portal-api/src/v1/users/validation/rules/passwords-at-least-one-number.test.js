@@ -11,12 +11,14 @@ describe('at least 1 number', () => {
       password: 'aaaaa',
     };
 
-    const expectedResult = [{
-      password: {
-        order: '3',
-        text: 'Your password must contain at least one numeric character.',
+    const expectedResult = [
+      {
+        password: {
+          order: '3',
+          text: 'Your password must contain at least one numeric character.',
+        },
       },
-    }];
+    ];
 
     const matchTest = passwordAtLeastOneNumber(user, change);
     expect(matchTest).toEqual(expectedResult);

@@ -118,11 +118,14 @@ describe('controllers/enter-exporters-correspondence-address', () => {
 
       await validateEnterExportersCorrespondenceAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', expect.objectContaining({
-        errors: expect.any(Object),
-        dealId: '123',
-        addressForm: { addressLine1: '', postalCode: '' },
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/enter-exporters-correspondence-address.njk',
+        expect.objectContaining({
+          errors: expect.any(Object),
+          dealId: '123',
+          addressForm: { addressLine1: '', postalCode: '' },
+        }),
+      );
     });
 
     it('returns error object if postcode field is empty', async () => {
@@ -131,11 +134,14 @@ describe('controllers/enter-exporters-correspondence-address', () => {
 
       await validateEnterExportersCorrespondenceAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', expect.objectContaining({
-        errors: expect.any(Object),
-        dealId: '123',
-        addressForm: { addressLine1: 'Line1', postalCode: '' },
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/enter-exporters-correspondence-address.njk',
+        expect.objectContaining({
+          errors: expect.any(Object),
+          dealId: '123',
+          addressForm: { addressLine1: 'Line1', postalCode: '' },
+        }),
+      );
     });
 
     it(`calls api with country defaulted to ${DEFAULT_COUNTRY} and editorId`, async () => {

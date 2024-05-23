@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { app } from '../../src/createApp';
 import { api } from '../api';
 
@@ -15,8 +17,7 @@ const mockResponse = {
 
 jest.mock('notifications-node-client', () => {
   class MockNotifyClient {
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    sendEmail: () => Promise<{ status: number; data: { content: { body: {} }; id: string; template: {} } }>;
+    sendEmail: () => Promise<{ status: number; data: { content: { body: object }; id: string; template: object } }>;
 
     constructor() {
       this.sendEmail = async () => Promise.resolve(mockResponse);

@@ -64,9 +64,7 @@ bankRouter.route('/').post(createBankController.createBankPost);
  *       404:
  *         description: Not found
  */
-bankRouter
-  .route('/:bankId')
-  .get(validation.bankIdValidation, handleExpressValidatorResult, getBankController.findOneBankGet);
+bankRouter.route('/:bankId').get(validation.bankIdValidation, handleExpressValidatorResult, getBankController.findOneBankGet);
 
 /**
  * @openapi
@@ -138,11 +136,7 @@ bankRouter.route('/').get(getBanksController.getAllBanksGet);
  */
 bankRouter
   .route('/:bankId/utilisation-reports')
-  .get(
-    validation.bankIdValidation,
-    handleExpressValidatorResult,
-    getUtilisationReportsController.getUtilisationReportsByBankIdAndOptions,
-  );
+  .get(validation.bankIdValidation, handleExpressValidatorResult, getUtilisationReportsController.getUtilisationReportsByBankIdAndOptions);
 
 /**
  * @openapi
@@ -176,10 +170,6 @@ bankRouter
  */
 bankRouter
   .route('/:bankId/next-report-period')
-  .get(
-    validation.bankIdValidation,
-    handleExpressValidatorResult,
-    getNextReportPeriodController.getNextReportPeriodByBankId,
-  );
+  .get(validation.bankIdValidation, handleExpressValidatorResult, getNextReportPeriodController.getNextReportPeriodByBankId);
 
 module.exports = bankRouter;

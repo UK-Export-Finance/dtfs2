@@ -6,10 +6,7 @@ import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { aBank } from '../../../../test-helpers/test-data/bank';
 import { aMonthlyBankReportPeriodSchedule } from '../../../../test-helpers/test-data/bank-report-period-schedule';
 import { Bank } from '../../../types/banks';
-import {
-  FindUtilisationReportsByYearViewModel,
-  UtilisationReportsByBankAndYearViewModel,
-} from '../../../types/view-models';
+import { FindUtilisationReportsByYearViewModel, UtilisationReportsByBankAndYearViewModel } from '../../../types/view-models';
 
 jest.mock('../../../api');
 
@@ -265,9 +262,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
-      jest
-        .mocked(api.getReportsByBankAndYear)
-        .mockResolvedValue({ bankName: BANK_NAME_ONE, year: yearQuery, reports: [] });
+      jest.mocked(api.getReportsByBankAndYear).mockResolvedValue({ bankName: BANK_NAME_ONE, year: yearQuery, reports: [] });
 
       // Act
       await getFindReportsByYear(req, res);

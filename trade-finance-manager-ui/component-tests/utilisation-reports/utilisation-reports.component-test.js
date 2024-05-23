@@ -1,10 +1,6 @@
 const pageRenderer = require('../pageRenderer');
-const {
-  MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY,
-} = require('../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
-const {
-  getReportReconciliationSummariesViewModel,
-} = require('../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper');
+const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } = require('../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
+const { getReportReconciliationSummariesViewModel } = require('../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper');
 const { getUkBankHolidays } = require('../../server/api');
 const { MOCK_BANK_HOLIDAYS } = require('../../server/test-mocks/mock-bank-holidays');
 const { MOCK_TFM_SESSION_USER } = require('../../server/test-mocks/mock-tfm-session-user');
@@ -28,10 +24,7 @@ describe(page, () => {
   });
 
   const getWrapper = async () => {
-    const reportPeriodSummaries = await getReportReconciliationSummariesViewModel(
-      MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY,
-      'user-token',
-    );
+    const reportPeriodSummaries = await getReportReconciliationSummariesViewModel(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY, 'user-token');
     const params = {
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       reportPeriodSummaries,
@@ -46,21 +39,15 @@ describe(page, () => {
   });
 
   it('should render the search link', async () => {
-    (await getWrapper())
-      .expectLink('a[data-cy="find-reports-by-year-link"]')
-      .toLinkTo('/utilisation-reports/find-reports-by-year', 'Find reports by year');
+    (await getWrapper()).expectLink('a[data-cy="find-reports-by-year-link"]').toLinkTo('/utilisation-reports/find-reports-by-year', 'Find reports by year');
   });
 
   it('should render the report period heading', async () => {
-    (await getWrapper())
-      .expectText('[data-cy="2023-12-submission-month-report-period-heading"]')
-      .toRead(`Open reports: Nov 2023 (monthly)`);
+    (await getWrapper()).expectText('[data-cy="2023-12-submission-month-report-period-heading"]').toRead(`Open reports: Nov 2023 (monthly)`);
   });
 
   it('should render the report due date for the current period', async () => {
-    (await getWrapper())
-      .expectText(`[data-cy="2023-12-submission-month-report-due-date-text"]`)
-      .toRead(`Reports were due to be received by 14 December 2023.`);
+    (await getWrapper()).expectText(`[data-cy="2023-12-submission-month-report-due-date-text"]`).toRead(`Reports were due to be received by 14 December 2023.`);
   });
 
   it('should render the report reconciliation table', async () => {

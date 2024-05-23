@@ -1,8 +1,5 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const {
-  generateAuditDatabaseRecordFromAuditDetails,
-  validateAuditDetailsAndUserType,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const db = require('../../../../drivers/db-client').default;
@@ -53,15 +50,11 @@ const createDealSnapshot = async (deal, auditDetails) => {
       dealObj.dealSnapshot.facilities = dealFacilities;
     }
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(deal._id) } },
-      $.flatten(withoutId(dealObj)),
-      {
-        returnNewDocument: true,
-        returnDocument: 'after',
-        upsert: true,
-      },
-    );
+    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(deal._id) } }, $.flatten(withoutId(dealObj)), {
+      returnNewDocument: true,
+      returnDocument: 'after',
+      upsert: true,
+    });
 
     return findAndUpdateResponse.value;
   }

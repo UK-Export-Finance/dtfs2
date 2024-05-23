@@ -7,10 +7,7 @@ const {
   generateFacilitiesListString,
   gefFacilitiesList,
 } = require('./gef-facilities-list');
-const {
-  generateHeadingString,
-  generateListItemString,
-} = require('../../helpers/notify-template-formatters');
+const { generateHeadingString, generateListItemString } = require('../../helpers/notify-template-formatters');
 const CONSTANTS = require('../../../constants');
 const CONTENT_STRINGS = require('./gef-facilities-content-strings');
 
@@ -18,9 +15,7 @@ const MOCK_CASH_CONTINGENT_FACILITIES = require('../../__mocks__/mock-cash-conti
 const { mapCashContingentFacility } = require('../../mappings/map-submitted-deal/map-cash-contingent-facility');
 
 describe('generate AIN/MIN confirmation email facilities list email variable/string  - GEF', () => {
-  const mockFacility = mapCashContingentFacility(
-    MOCK_CASH_CONTINGENT_FACILITIES[0],
-  );
+  const mockFacility = mapCashContingentFacility(MOCK_CASH_CONTINGENT_FACILITIES[0]);
 
   const mockType = {
     name: 'type',
@@ -107,17 +102,9 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
     it('should return a formatted string for multiple facility fields & values', () => {
       const result = generateFacilityFieldsListString(mockSimpleFacility);
 
-      const formattedBankRef = generateFacilityFieldListItemString(
-        mockType.value,
-        mockBankReference.name,
-        mockBankReference.value,
-      );
+      const formattedBankRef = generateFacilityFieldListItemString(mockType.value, mockBankReference.name, mockBankReference.value);
 
-      const formattedDayCountBasis = generateFacilityFieldListItemString(
-        mockType.value,
-        mockDayCountBasis.name,
-        mockDayCountBasis.value,
-      );
+      const formattedDayCountBasis = generateFacilityFieldListItemString(mockType.value, mockDayCountBasis.name, mockDayCountBasis.value);
 
       const expected = `${formattedBankRef}${formattedDayCountBasis}`;
 
@@ -127,10 +114,7 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
 
   describe('generateFacilitiesListString', () => {
     it('should return a formatted string with heading and facility fields for each facility', () => {
-      const mockFacilities = [
-        mockSimpleFacility,
-        mockSimpleFacility,
-      ];
+      const mockFacilities = [mockSimpleFacility, mockSimpleFacility];
       const mockHeading = 'Test';
 
       const result = generateFacilitiesListString(mockHeading, mockFacilities);
@@ -162,22 +146,13 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
         },
       ];
 
-      const mockFacilities = [
-        ...mockCashFacilities,
-        ...mockContingentFacilities,
-      ];
+      const mockFacilities = [...mockCashFacilities, ...mockContingentFacilities];
 
       const result = gefFacilitiesList(mockFacilities);
 
-      const expectedCashString = generateFacilitiesListString(
-        CONTENT_STRINGS.HEADINGS.CASH,
-        mockCashFacilities,
-      );
+      const expectedCashString = generateFacilitiesListString(CONTENT_STRINGS.HEADINGS.CASH, mockCashFacilities);
 
-      const expectedContingentString = generateFacilitiesListString(
-        CONTENT_STRINGS.HEADINGS.CONTINGENT,
-        mockContingentFacilities,
-      );
+      const expectedContingentString = generateFacilitiesListString(CONTENT_STRINGS.HEADINGS.CONTINGENT, mockContingentFacilities);
 
       expect(result.cashes).toEqual(expectedCashString);
       expect(result.contingents).toEqual(expectedContingentString);

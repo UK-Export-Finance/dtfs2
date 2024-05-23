@@ -8,10 +8,7 @@ const submittedDealWithBondCoverStartDateInThePast = require('./test-data/submit
 const submittedDealWithLoanCoverStartDateInThePast = require('./test-data/submittedDealWithLoanCoverStartDateInThePast');
 const dealReadyToSubmit = require('./test-data/dealReadyToSubmit');
 
-const {
-  BANK1_MAKER1,
-  BANK1_CHECKER1,
-} = MOCK_USERS;
+const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 context('A checker selects to submit a contract from the view-contract page', () => {
   let goodDeal;
@@ -21,51 +18,37 @@ context('A checker selects to submit a contract from the view-contract page', ()
   let dealLoanCoverStartDateInThePast;
 
   before(() => {
-    cy.insertManyDeals([
-      dealReadyToSubmit(),
-      dealWithInvalidLoanCoverStartDate(),
-      dealWithInvalidBondCoverStartDate(),
-      submittedDealWithBondCoverStartDateInThePast(),
-      submittedDealWithLoanCoverStartDateInThePast(),
-    ], BANK1_MAKER1)
-      .then((insertedDeals) => {
-        [
-          goodDeal,
-          badDealInvalidLoanCoverStartDate,
-          badDealInvalidBondCoverStartDate,
-          dealBondCoverStartDateInThePast,
-          dealLoanCoverStartDateInThePast,
-        ] = insertedDeals;
+    cy.insertManyDeals(
+      [
+        dealReadyToSubmit(),
+        dealWithInvalidLoanCoverStartDate(),
+        dealWithInvalidBondCoverStartDate(),
+        submittedDealWithBondCoverStartDateInThePast(),
+        submittedDealWithLoanCoverStartDateInThePast(),
+      ],
+      BANK1_MAKER1,
+    ).then((insertedDeals) => {
+      [goodDeal, badDealInvalidLoanCoverStartDate, badDealInvalidBondCoverStartDate, dealBondCoverStartDateInThePast, dealLoanCoverStartDateInThePast] =
+        insertedDeals;
 
-        const goodDealFacilities = [
-          ...goodDeal.bondTransactions.items,
-          ...goodDeal.loanTransactions.items,
-        ];
+      const goodDealFacilities = [...goodDeal.bondTransactions.items, ...goodDeal.loanTransactions.items];
 
-        cy.createFacilities(goodDeal._id, goodDealFacilities, BANK1_MAKER1);
+      cy.createFacilities(goodDeal._id, goodDealFacilities, BANK1_MAKER1);
 
-        const dealBondCoverStartDateInThePastFacilities = [
-          ...dealBondCoverStartDateInThePast.bondTransactions.items,
-          ...dealBondCoverStartDateInThePast.loanTransactions.items,
-        ];
+      const dealBondCoverStartDateInThePastFacilities = [
+        ...dealBondCoverStartDateInThePast.bondTransactions.items,
+        ...dealBondCoverStartDateInThePast.loanTransactions.items,
+      ];
 
-        cy.createFacilities(
-          dealBondCoverStartDateInThePast._id,
-          dealBondCoverStartDateInThePastFacilities,
-          BANK1_MAKER1,
-        );
+      cy.createFacilities(dealBondCoverStartDateInThePast._id, dealBondCoverStartDateInThePastFacilities, BANK1_MAKER1);
 
-        const dealLoanCoverStartDateInThePastFacilities = [
-          ...dealLoanCoverStartDateInThePast.bondTransactions.items,
-          ...dealLoanCoverStartDateInThePast.loanTransactions.items,
-        ];
+      const dealLoanCoverStartDateInThePastFacilities = [
+        ...dealLoanCoverStartDateInThePast.bondTransactions.items,
+        ...dealLoanCoverStartDateInThePast.loanTransactions.items,
+      ];
 
-        cy.createFacilities(
-          dealLoanCoverStartDateInThePast._id,
-          dealLoanCoverStartDateInThePastFacilities,
-          BANK1_MAKER1,
-        );
-      });
+      cy.createFacilities(dealLoanCoverStartDateInThePast._id, dealLoanCoverStartDateInThePastFacilities, BANK1_MAKER1);
+    });
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {
@@ -96,9 +79,12 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
     // expect the deal status to be unchanged
     contract.visit(goodDeal);
-    contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal("Ready for Checker's approval");
-    });
+    contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal("Ready for Checker's approval");
+      });
   });
 
   it('If the deal has NOT yet been submitted and the deal contains a loan with a cover start date that is now in the past, an error should be generated.', () => {
@@ -117,9 +103,12 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
     // expect the deal status to be unchanged
     contract.visit(badDealInvalidLoanCoverStartDate);
-    contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal("Ready for Checker's approval");
-    });
+    contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal("Ready for Checker's approval");
+      });
   });
 
   it('If the deal has NOT yet been submitted and the deal contains a Bond with a cover start date that is now in the past, an error should be generated.', () => {
@@ -138,9 +127,12 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
     // expect the deal status to be unchanged
     contract.visit(badDealInvalidBondCoverStartDate);
-    contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal("Ready for Checker's approval");
-    });
+    contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal("Ready for Checker's approval");
+      });
   });
 
   describe('If a deal has been previously submitted and the deal contains a Bond with a cover start date that is now in the past', () => {
@@ -156,9 +148,12 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
       // expect to land on the /dashboard page with a success message
       cy.url().should('include', '/dashboard');
-      successMessage.successMessageListItem().invoke('text').then((text) => {
-        expect(text.trim()).to.match(/Supply Contract submitted to UKEF./);
-      });
+      successMessage
+        .successMessageListItem()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.match(/Supply Contract submitted to UKEF./);
+        });
     });
   });
 
@@ -175,9 +170,12 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
       // expect to land on the /dashboard page with a success message
       cy.url().should('include', '/dashboard');
-      successMessage.successMessageListItem().invoke('text').then((text) => {
-        expect(text.trim()).to.match(/Supply Contract submitted to UKEF./);
-      });
+      successMessage
+        .successMessageListItem()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.match(/Supply Contract submitted to UKEF./);
+        });
     });
   });
 
@@ -193,17 +191,26 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
-    successMessage.successMessageListItem().invoke('text').then((text) => {
-      expect(text.trim()).to.match(/Supply Contract submitted to UKEF./);
-    });
+    successMessage
+      .successMessageListItem()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.match(/Supply Contract submitted to UKEF./);
+      });
 
     // visit the deal and confirm the updates have been made
     contract.visit(goodDeal);
-    contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acknowledged');
-    });
-    contract.previousStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submitted');
-    });
+    contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Acknowledged');
+      });
+    contract
+      .previousStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Submitted');
+      });
   });
 });

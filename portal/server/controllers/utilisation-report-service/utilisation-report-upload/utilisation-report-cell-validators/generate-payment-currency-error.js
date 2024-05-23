@@ -2,9 +2,7 @@ const validator = require('validator');
 const { UTILISATION_REPORT_HEADERS } = require('@ukef/dtfs2-common');
 
 const generatePaymentCurrencyError = (csvDataRow) => {
-  if (
-    !csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value && !csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value
-  ) {
+  if (!csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value && !csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value) {
     return null;
   }
   if (!csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value) {

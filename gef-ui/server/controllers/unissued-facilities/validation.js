@@ -1,6 +1,4 @@
-const {
-  add, isAfter, isBefore, isEqual, set,
-} = require('date-fns');
+const { add, isAfter, isBefore, isEqual, set } = require('date-fns');
 const api = require('../../services/api');
 const { DEAL_SUBMISSION_TYPE } = require('../../constants');
 const { validationErrorHandler } = require('../../utils/helpers');
@@ -14,9 +12,7 @@ const coverDatesValidation = require('../../utils/coverDatesValidation.helper');
  * @returns {res} if validation errors
  * @returns {Object} if no validation errors
  */
-const facilityValidation = async ({
-  body, query, params, facility, userToken,
-}) => {
+const facilityValidation = async ({ body, query, params, facility, userToken }) => {
   const { facilityType } = body;
   const facilityTypeString = facilityType.toLowerCase();
   const { saveAndReturn, status } = query;
@@ -41,8 +37,8 @@ const facilityValidation = async ({
   const issueDateIsFullyComplete = issueDateDay && issueDateMonth && issueDateYear;
   const issueDateIsPartiallyComplete = !issueDateIsFullyComplete && (issueDateDay || issueDateMonth || issueDateYear);
   const issueDateIsBlank = !issueDateDay && !issueDateMonth && !issueDateYear;
-  const coverStartDateIsFullyComplete = (coverStartDateDay && coverStartDateMonth && coverStartDateYear && shouldCoverStartOnSubmission === 'false')
-  || shouldCoverStartOnSubmission === 'true';
+  const coverStartDateIsFullyComplete =
+    (coverStartDateDay && coverStartDateMonth && coverStartDateYear && shouldCoverStartOnSubmission === 'false') || shouldCoverStartOnSubmission === 'true';
   const coverStartDateIsPartiallyComplete = !coverStartDateIsFullyComplete && (coverStartDateDay || coverStartDateMonth || coverStartDateYear);
   const coverStartDateIsBlank = !coverStartDateDay && !coverStartDateMonth && !coverStartDateYear;
   const coverEndDateIsFullyComplete = coverEndDateDay && coverEndDateMonth && coverEndDateYear;
@@ -55,11 +51,11 @@ const facilityValidation = async ({
   let threeMonthsFromSubmission;
 
   // set to midnight to stop mismatch if submission date in past so set to midnight of past date
-  const submissionDate = (new Date(Number(application.submissionDate))).setHours(0, 0, 0, 0);
+  const submissionDate = new Date(Number(application.submissionDate)).setHours(0, 0, 0, 0);
 
   if (application.manualInclusionNoticeSubmissionDate) {
     // If MIN, then MIN submission date plus three months
-    const minSubmissionDate = (new Date(Number(application.manualInclusionNoticeSubmissionDate))).setHours(0, 0, 0, 0);
+    const minSubmissionDate = new Date(Number(application.manualInclusionNoticeSubmissionDate)).setHours(0, 0, 0, 0);
     threeMonthsFromSubmission = add(minSubmissionDate, { months: 3 });
   } else if (application.submissionType === DEAL_SUBMISSION_TYPE.MIA) {
     // if MIA, 3 months from now
@@ -68,7 +64,7 @@ const facilityValidation = async ({
     // if AIN then 3 months from submission date
     threeMonthsFromSubmission = add(submissionDate, { months: 3 });
   }
-  const now = (new Date()).setHours(0, 0, 0, 0);
+  const now = new Date().setHours(0, 0, 0, 0);
 
   // Only validate facility name if hasBeenIssued is set to Yes
   if (!saveAndReturn && !body.facilityName) {
@@ -107,13 +103,13 @@ const facilityValidation = async ({
       subFieldErrorRefs: dateFieldsInError,
     });
   } else if (issueDateIsFullyComplete) {
-    const {
-      coverDayValidation,
-      coverMonthValidation,
-      coverYearValidation,
-    } = coverDatesValidation(issueDateDay, issueDateMonth, issueDateYear);
+    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(issueDateDay, issueDateMonth, issueDateYear);
 
-    const issueDateSet = (set(new Date(), { year: issueDateYear, month: issueDateMonth - 1, date: issueDateDay })).setHours(0, 0, 0, 0);
+    const issueDateSet = set(new Date(), {
+      year: issueDateYear,
+      month: issueDateMonth - 1,
+      date: issueDateDay,
+    }).setHours(0, 0, 0, 0);
 
     if (isBefore(issueDateSet, submissionDate)) {
       aboutFacilityErrors.push({
@@ -188,13 +184,17 @@ const facilityValidation = async ({
         subFieldErrorRefs: dateFieldsInError,
       });
     } else if (coverStartDateIsFullyComplete) {
-      const {
-        coverDayValidation,
-        coverMonthValidation,
-        coverYearValidation,
-      } = coverDatesValidation(coverStartDateDay, coverStartDateMonth, coverStartDateYear);
+      const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(
+        coverStartDateDay,
+        coverStartDateMonth,
+        coverStartDateYear,
+      );
 
-      const startDate = (set(new Date(), { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay })).setHours(0, 0, 0, 0);
+      const startDate = set(new Date(), {
+        year: coverStartDateYear,
+        month: coverStartDateMonth - 1,
+        date: coverStartDateDay,
+      }).setHours(0, 0, 0, 0);
 
       if (isBefore(startDate, submissionDate)) {
         aboutFacilityErrors.push({
@@ -212,7 +212,7 @@ const facilityValidation = async ({
         let errMsg = 'The cover start date must be within 3 months of the inclusion notice submission date';
         // if MIA, from todays date so different error message
         if (application.submissionType === DEAL_SUBMISSION_TYPE.MIA) {
-          errMsg = 'The cover start date must be within 3 months from today\'s date';
+          errMsg = "The cover start date must be within 3 months from today's date";
         }
 
         aboutFacilityErrors.push({
@@ -319,11 +319,7 @@ const facilityValidation = async ({
   if (coverEndDateIsFullyComplete) {
     coverEndDate = set(new Date(), { year: coverEndDateYear, month: coverEndDateMonth - 1, date: coverEndDateDay });
 
-    const {
-      coverDayValidation,
-      coverMonthValidation,
-      coverYearValidation,
-    } = coverDatesValidation(coverEndDateDay, coverEndDateMonth, coverEndDateYear);
+    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(coverEndDateDay, coverEndDateMonth, coverEndDateYear);
 
     if (coverDayValidation.error && coverEndDateDay) {
       aboutFacilityErrors.push({

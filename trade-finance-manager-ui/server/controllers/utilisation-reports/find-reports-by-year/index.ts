@@ -4,19 +4,14 @@ import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { validateSearchInput } from './search-input-validator';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import {
-  FindUtilisationReportsByYearViewModel,
-  UtilisationReportsByBankAndYearViewModel,
-} from '../../../types/view-models';
+import { FindUtilisationReportsByYearViewModel, UtilisationReportsByBankAndYearViewModel } from '../../../types/view-models';
 import { getReportViewModel } from '../helpers';
 
 const renderFindUtilisationReportsByYearPage = (res: Response, viewModel: FindUtilisationReportsByYearViewModel) =>
   res.render('utilisation-reports/find-utilisation-reports-by-year.njk', viewModel);
 
-const renderUtilisationReportsByBankAndYearResults = (
-  res: Response,
-  viewModel: UtilisationReportsByBankAndYearViewModel,
-) => res.render('utilisation-reports/utilisation-reports-by-bank-and-year-results.njk', viewModel);
+const renderUtilisationReportsByBankAndYearResults = (res: Response, viewModel: UtilisationReportsByBankAndYearViewModel) =>
+  res.render('utilisation-reports/utilisation-reports-by-bank-and-year-results.njk', viewModel);
 
 const getBankIdQueryAndYearQueryAsString = (
   req: Request,

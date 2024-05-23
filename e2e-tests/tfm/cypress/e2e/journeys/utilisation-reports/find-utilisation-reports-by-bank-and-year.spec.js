@@ -39,17 +39,12 @@ context('PDC_RECONCILE users can search for reports by bank and year', () => {
         .withBankId(bank.id)
         .withReportPeriod(reportPeriod)
         .build();
-      const mockNotReceivedUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(
-        UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
-      )
+      const mockNotReceivedUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
         .withId(bank.id + 1)
         .withBankId(bank.id)
         .withReportPeriod(reportPeriod)
         .build();
-      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [
-        mockPendingReconciliationUtilisationReport,
-        mockNotReceivedUtilisationReport,
-      ]);
+      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [mockPendingReconciliationUtilisationReport, mockNotReceivedUtilisationReport]);
     });
 
     pages.landingPage.visit();

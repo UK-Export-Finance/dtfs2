@@ -10,11 +10,7 @@ const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-faciliti
 
 const ALL_MOCK_DEALS = require('./mock-deals');
 
-const ALL_MOCK_FACILITIES = [
-  ...MOCK_FACILITIES,
-  ...MOCK_BSS_FACILITIES_USD_CURRENCY,
-  ...MOCK_CASH_CONTINGENT_FACILITIES,
-];
+const ALL_MOCK_FACILITIES = [...MOCK_FACILITIES, ...MOCK_BSS_FACILITIES_USD_CURRENCY, ...MOCK_CASH_CONTINGENT_FACILITIES];
 
 /*
  * Note - We should look to update functions in this file to be a jest.fn(), and add common implementation to common-api-mocks.js

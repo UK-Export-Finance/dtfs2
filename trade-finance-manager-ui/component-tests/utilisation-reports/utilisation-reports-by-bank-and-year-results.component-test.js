@@ -29,15 +29,11 @@ describe(page, () => {
   };
 
   it('should render the main heading', () => {
-    getWrapper()
-      .expectText('[data-cy="utilisation-reports-by-bank-and-year-heading"]')
-      .toRead(`${bankName} ${year} reports`);
+    getWrapper().expectText('[data-cy="utilisation-reports-by-bank-and-year-heading"]').toRead(`${bankName} ${year} reports`);
   });
 
   it("should render 'No reports found' text when reports is empty", () => {
-    getWrapper({ reports: [] })
-      .expectText('[data-cy="utilisation-reports-by-bank-and-year-text"]')
-      .toContain('No reports found.');
+    getWrapper({ reports: [] }).expectText('[data-cy="utilisation-reports-by-bank-and-year-text"]').toContain('No reports found.');
   });
 
   it('should render table when reports is not empty', () => {

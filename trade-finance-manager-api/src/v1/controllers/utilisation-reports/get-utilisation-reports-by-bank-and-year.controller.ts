@@ -5,10 +5,7 @@ import api from '../../api';
 /**
  * Fetches a list of utilisation reports reconciliation progress for specified submission year and bank.
  */
-export const getSubmittedReportsByBankAndYear = async (
-  req: Request<{ bankId: string; year: string }>,
-  res: Response,
-) => {
+export const getSubmittedReportsByBankAndYear = async (req: Request<{ bankId: string; year: string }>, res: Response) => {
   const { bankId, year } = req.params;
   try {
     const summary = await api.getUtilisationReportsByBankIdAndYear(bankId, year);

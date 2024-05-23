@@ -137,10 +137,7 @@ class SignInLinkController {
   async createAndEmailSignInLink(req, res) {
     try {
       const auditDetails = generateNoUserLoggedInAuditDetails();
-      const numberOfSendSignInLinkAttemptsRemaining = await this.#signInLinkService.createAndEmailSignInLink(
-        req.user,
-        auditDetails,
-      );
+      const numberOfSendSignInLinkAttemptsRemaining = await this.#signInLinkService.createAndEmailSignInLink(req.user, auditDetails);
       return res.status(201).json({ numberOfSendSignInLinkAttemptsRemaining });
     } catch (error) {
       console.error('Error creating email sign in link %o', error);

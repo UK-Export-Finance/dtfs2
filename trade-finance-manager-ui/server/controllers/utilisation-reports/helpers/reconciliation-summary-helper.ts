@@ -1,14 +1,6 @@
 import { endOfDay, format, isPast, isSameMonth, parseISO } from 'date-fns';
-import {
-  IsoMonthStamp,
-  ReportPeriod,
-  UtilisationReportReconciliationStatus,
-  getFormattedReportPeriodWithShortMonth,
-} from '@ukef/dtfs2-common';
-import {
-  UtilisationReportReconciliationSummary,
-  UtilisationReportReconciliationSummaryItem,
-} from '../../../types/utilisation-reports';
+import { IsoMonthStamp, ReportPeriod, UtilisationReportReconciliationStatus, getFormattedReportPeriodWithShortMonth } from '@ukef/dtfs2-common';
+import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../types/utilisation-reports';
 import { getReportDueDate } from '../../../services/utilisation-report-service';
 import api from '../../../api';
 
@@ -67,9 +59,7 @@ export const getDueDateText = (reportDueDate: Date) => {
 export const getReportPeriodHeading = (submissionMonth: IsoMonthStamp, reportPeriods: ReportPeriod[]) => {
   const isCurrentSubmissionMonth = isSameMonth(new Date(submissionMonth), new Date());
 
-  const formattedReportPeriods = reportPeriods
-    .map((reportPeriod) => getFormattedReportPeriodWithShortMonth(reportPeriod, true))
-    .join(' and ');
+  const formattedReportPeriods = reportPeriods.map((reportPeriod) => getFormattedReportPeriodWithShortMonth(reportPeriod, true)).join(' and ');
 
   return `${isCurrentSubmissionMonth ? 'Current reporting period' : 'Open reports'}: ${formattedReportPeriods}`;
 };

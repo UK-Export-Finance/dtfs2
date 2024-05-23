@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const { produce } = require('immer');
 const { STATUS } = require('../../src/constants/user');
 const { MAKER } = require('../../src/v1/roles/roles');
@@ -15,6 +16,9 @@ const BASE_TEST_USER = {
     name: 'HSBC',
     emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
   },
+  isTrusted: false,
+  signInLinkSendDate: 1700000000000,
+  signInLinkSendCount: 1,
 };
 
 const TEST_USER = produce(BASE_TEST_USER, (draft) => {
@@ -51,4 +55,10 @@ const TEST_USER_SANITISED_FOR_FRONTEND = produce(BASE_TEST_USER, (draft) => {
   draft['user-status'] = STATUS.ACTIVE;
 });
 
-module.exports = { TEST_USER, TEST_USER_PARTIAL_2FA, TEST_DATABASE_USER, TEST_USER_TRANSFORMED_FROM_DATABASE, TEST_USER_SANITISED_FOR_FRONTEND };
+module.exports = {
+  TEST_USER,
+  TEST_USER_PARTIAL_2FA,
+  TEST_DATABASE_USER,
+  TEST_USER_TRANSFORMED_FROM_DATABASE,
+  TEST_USER_SANITISED_FOR_FRONTEND,
+};

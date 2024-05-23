@@ -24,6 +24,7 @@ exports.findOneUserGet = async (req, res) => {
 
     return res.status(404).send({ status: 404, message: 'User not found' });
   }
+
   return res.status(400).send({ status: 400, message: 'Invalid User Id' });
 };
 
@@ -38,6 +39,7 @@ const sanitizeUser = (user) => ({
   lastLogin: user.lastLogin,
   'user-status': user['user-status'],
   disabled: user.disabled,
+  isTrusted: user.isTrusted,
   _id: user._id,
 });
 

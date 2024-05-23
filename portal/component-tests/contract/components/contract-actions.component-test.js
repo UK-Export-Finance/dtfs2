@@ -20,8 +20,16 @@ describe(component, () => {
     { _id: 4, status: 'Rejected by UKEF', submissionType: 'Rejected by UKEF submission' },
     { _id: 5, status: 'Abandoned', submissionType: 'Abandoned submission' },
     { _id: 6, status: 'Acknowledged', submissionType: 'Acknowledged submission' },
-    { _id: 7, status: 'Accepted by UKEF (without conditions)', submissionType: 'Accepted by UKEF (without conditions) submission' },
-    { _id: 8, status: 'Accepted by UKEF (with conditions)', submissionType: 'Accepted by UKEF (with conditions) submission' },
+    {
+      _id: 7,
+      status: 'Accepted by UKEF (without conditions)',
+      submissionType: 'Accepted by UKEF (without conditions) submission',
+    },
+    {
+      _id: 8,
+      status: 'Accepted by UKEF (with conditions)',
+      submissionType: 'Accepted by UKEF (with conditions) submission',
+    },
     { _id: 9, status: 'Submitted', submissionType: 'Submitted submission' },
     { _id: 10, status: 'In progress by UKEF', submissionType: 'In progress by UKEF submission' },
   ];

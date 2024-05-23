@@ -3,19 +3,10 @@ const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const bondValidationErrors = require('../validation/bond');
 const { bondStatus } = require('../section-status/bonds');
-const {
-  calculateGuaranteeFee,
-  calculateUkefExposure,
-} = require('../section-calculations');
+const { calculateGuaranteeFee, calculateUkefExposure } = require('../section-calculations');
 const { handleTransactionCurrencyFields } = require('../section-currency');
-const {
-  hasAllRequestedCoverStartDateValues,
-  updateRequestedCoverStartDate,
-} = require('../facility-dates/requested-cover-start-date');
-const {
-  hasAllCoverEndDateValues,
-  updateCoverEndDate,
-} = require('../facility-dates/cover-end-date');
+const { hasAllRequestedCoverStartDateValues, updateRequestedCoverStartDate } = require('../facility-dates/requested-cover-start-date');
+const { hasAllCoverEndDateValues, updateCoverEndDate } = require('../facility-dates/cover-end-date');
 const { sanitizeCurrency } = require('../../utils/number');
 const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
@@ -49,10 +40,7 @@ exports.create = async (req, res) => {
 };
 
 exports.getBond = async (req, res) => {
-  const {
-    id: dealId,
-    bondId,
-  } = req.params;
+  const { id: dealId, bondId } = req.params;
 
   if (!isValidMongoId(req?.params?.id) || !isValidMongoId(req?.params?.bondId)) {
     console.error('Get bond API failed for deal/bond id %s', req.params.id, req.params.loanId);
@@ -123,10 +111,7 @@ const feeTypeFields = (bond) => {
 };
 
 exports.updateBond = async (req, res) => {
-  const {
-    id: dealId,
-    bondId,
-  } = req.params;
+  const { id: dealId, bondId } = req.params;
 
   await findOneDeal(dealId, async (deal) => {
     if (deal) {
@@ -147,10 +132,7 @@ exports.updateBond = async (req, res) => {
 
       modifiedBond = facilityStageFields(modifiedBond);
 
-      modifiedBond = await handleTransactionCurrencyFields(
-        modifiedBond,
-        deal,
-      );
+      modifiedBond = await handleTransactionCurrencyFields(modifiedBond, deal);
 
       modifiedBond = feeTypeFields(modifiedBond);
 
@@ -176,12 +158,7 @@ exports.updateBond = async (req, res) => {
         modifiedBond.coverEndDate = null;
       }
 
-      const { status, data } = await facilitiesController.update(
-        dealId,
-        bondId,
-        modifiedBond,
-        req.user,
-      );
+      const { status, data } = await facilitiesController.update(dealId, bondId, modifiedBond, req.user);
 
       const validationErrors = bondValidationErrors(data, deal);
 
@@ -199,9 +176,7 @@ exports.updateBond = async (req, res) => {
 };
 
 exports.deleteBond = async (req, res) => {
-  const {
-    bondId,
-  } = req.params;
+  const { bondId } = req.params;
 
   await findOneDeal(req.params.id, async (deal) => {
     if (deal) {

@@ -7,5 +7,5 @@ module.exports = {
   testMatch: ['**/*.api-test.{js,ts}'],
   setupFilesAfterEnv: ['./api-test-setup.jest.config.js'],
   testTimeout: 80000,
-  workerIdleMemoryLimit: '3200MB'
+  workerIdleMemoryLimit: '3200MB',
 };

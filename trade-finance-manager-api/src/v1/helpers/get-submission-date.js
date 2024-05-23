@@ -4,10 +4,7 @@
  * @param {Object} Deal deal object decapsulating `manualInclusionNoticeSubmissionDate` and `submissionDate`
  * @returns {Integer} EPOCH
  */
-const getSubmissionDate = ({ manualInclusionNoticeSubmissionDate, submissionDate }) => (
-  manualInclusionNoticeSubmissionDate
-    ? Number(manualInclusionNoticeSubmissionDate)
-    : Number(submissionDate)
-);
+const getSubmissionDate = ({ manualInclusionNoticeSubmissionDate, submissionDate }) =>
+  manualInclusionNoticeSubmissionDate ? Number(manualInclusionNoticeSubmissionDate) : Number(submissionDate);
 
 module.exports = getSubmissionDate;

@@ -1,7 +1,4 @@
-const {
-  getFacilityValue,
-  getBaseCurrency,
-} = require('../../facility/helpers');
+const { getFacilityValue, getBaseCurrency } = require('../../facility/helpers');
 
 /**
  * Return deal's total facilities amount.

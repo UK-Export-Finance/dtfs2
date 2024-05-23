@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const { produce } = require('immer');
 const { when } = require('jest-when');
 const { cloneDeep } = require('lodash');
@@ -158,7 +159,10 @@ describe('getSignInTokenStatus', () => {
           beforeEach(() => {
             mockDatabaseTestUserWithSignInTokens([lastIssuedTokenInDatabaseNow]);
             mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
-            mockVerifyHashToSucceedWith({ databaseHash: lastIssuedTokenInDatabaseNow.hash, databaseSalt: lastIssuedTokenInDatabaseNow.salt });
+            mockVerifyHashToSucceedWith({
+              databaseHash: lastIssuedTokenInDatabaseNow.hash,
+              databaseSalt: lastIssuedTokenInDatabaseNow.salt,
+            });
           });
 
           itReturnsTokenValid();
@@ -168,7 +172,10 @@ describe('getSignInTokenStatus', () => {
           beforeEach(() => {
             mockDatabaseTestUserWithSignInTokens([lastIssuedTokenInDatabaseInFuture]);
             mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
-            mockVerifyHashToSucceedWith({ databaseHash: lastIssuedTokenInDatabaseInFuture.hash, databaseSalt: lastIssuedTokenInDatabaseInFuture.salt });
+            mockVerifyHashToSucceedWith({
+              databaseHash: lastIssuedTokenInDatabaseInFuture.hash,
+              databaseSalt: lastIssuedTokenInDatabaseInFuture.salt,
+            });
           });
 
           itReturnsTokenValid();
@@ -246,7 +253,10 @@ describe('getSignInTokenStatus', () => {
           beforeEach(() => {
             mockDatabaseTestUserWithSignInTokens([thirdLastIssuedTokenInDatabaseInPast, secondLastIssuedTokenInDatabaseInPast, lastIssuedTokenInDatabaseNow]);
             mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
-            mockVerifyHashToSucceedWith({ databaseHash: lastIssuedTokenInDatabaseNow.hash, databaseSalt: lastIssuedTokenInDatabaseNow.salt });
+            mockVerifyHashToSucceedWith({
+              databaseHash: lastIssuedTokenInDatabaseNow.hash,
+              databaseSalt: lastIssuedTokenInDatabaseNow.salt,
+            });
           });
 
           itReturnsTokenValid();
@@ -260,7 +270,10 @@ describe('getSignInTokenStatus', () => {
               lastIssuedTokenInDatabaseInFuture,
             ]);
             mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
-            mockVerifyHashToSucceedWith({ databaseHash: lastIssuedTokenInDatabaseInFuture.hash, databaseSalt: lastIssuedTokenInDatabaseInFuture.salt });
+            mockVerifyHashToSucceedWith({
+              databaseHash: lastIssuedTokenInDatabaseInFuture.hash,
+              databaseSalt: lastIssuedTokenInDatabaseInFuture.salt,
+            });
           });
 
           itReturnsTokenValid();

@@ -27,16 +27,18 @@ const sanitize = (user) => ({
 });
 
 module.exports = (passport) => {
-  passport.use(new JwtStrategy(options, ((jwtPayload, done) => {
-    findByUsername(jwtPayload.username, (error, user) => {
-      if (error) {
-        return done(error, false);
-      }
+  passport.use(
+    new JwtStrategy(options, (jwtPayload, done) => {
+      findByUsername(jwtPayload.username, (error, user) => {
+        if (error) {
+          return done(error, false);
+        }
 
-      if (user && user.sessionIdentifier === jwtPayload.sessionIdentifier) {
-        return done(null, sanitize(user));
-      }
-      return done(null, false);
-    });
-  })));
+        if (user && user.sessionIdentifier === jwtPayload.sessionIdentifier) {
+          return done(null, sanitize(user));
+        }
+        return done(null, false);
+      });
+    }),
+  );
 };

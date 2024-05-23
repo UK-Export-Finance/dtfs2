@@ -2,10 +2,7 @@ const { ADMIN, READ_ONLY } = require('../../constants/roles');
 const { ALL_BANKS_ID } = require('../../constants');
 const api = require('../../services/api');
 
-const validRolesForAccessingAllBanks = [
-  ADMIN,
-  READ_ONLY,
-];
+const validRolesForAccessingAllBanks = [ADMIN, READ_ONLY];
 
 /**
  * Returns `true` if the user has permission to access data from all banks, and `false` otherwise.

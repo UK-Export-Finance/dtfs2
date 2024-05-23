@@ -174,15 +174,9 @@ describe('/v1/portal/deals', () => {
         const { status, body } = await api.get(`/v1/portal/deals/${dealId}`);
 
         expect(status).toEqual(200);
-        expect(body.deal.bondTransactions.items).toEqual([
-          bond1,
-          bond2,
-        ]);
+        expect(body.deal.bondTransactions.items).toEqual([bond1, bond2]);
 
-        expect(body.deal.loanTransactions.items).toEqual([
-          loan1,
-          loan2,
-        ]);
+        expect(body.deal.loanTransactions.items).toEqual([loan1, loan2]);
       });
     });
   });
@@ -291,7 +285,7 @@ describe('/v1/portal/deals', () => {
       const dealWithSubmittedStatus = {
         ...newDeal,
         status: 'Submitted',
-        previousStatus: 'Checker\'s approval',
+        previousStatus: "Checker's approval",
       };
       const postResult = await api.post({ deal: dealWithSubmittedStatus, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
       const createdDeal = postResult.body;
@@ -311,7 +305,7 @@ describe('/v1/portal/deals', () => {
       const dealWithSubmittedStatus = {
         ...newDeal,
         status: 'Submitted',
-        previousStatus: 'Checker\'s approval',
+        previousStatus: "Checker's approval",
       };
 
       const postResult = await api.post({ deal: dealWithSubmittedStatus, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');

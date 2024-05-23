@@ -17,22 +17,22 @@ const showAmendmentButton = (deal, userTeams) => {
   const acceptableStatus = [CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED, CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS];
 
   return (
-    acceptableSubmissionType.includes(deal.dealSnapshot.submissionType)
-    && userTeams.some((teamId) => teamId === acceptableUserTeamId)
-    && acceptableStatus.includes(deal.tfm.stage)
+    acceptableSubmissionType.includes(deal.dealSnapshot.submissionType) &&
+    userTeams.some((teamId) => teamId === acceptableUserTeamId) &&
+    acceptableStatus.includes(deal.tfm.stage)
   );
 };
 
 const userCanEditManagersDecision = (amendment, user) => {
   const isManager = userIsInTeam(user, [TEAM_IDS.UNDERWRITER_MANAGERS]);
   const hasSubmittedDecision = amendment?.ukefDecision?.submitted;
-  return isManager && !hasSubmittedDecision ? true : false;
+  return !!(isManager && !hasSubmittedDecision);
 };
 
 const userCanEditBankDecision = (amendment, user) => {
   const isPim = userIsInTeam(user, [TEAM_IDS.PIM]);
   const hasSubmittedDecision = amendment?.ukefDecision?.submitted && !amendment?.bankDecision?.submitted;
-  return isPim && hasSubmittedDecision ? true : false;
+  return !!(isPim && hasSubmittedDecision);
 };
 
 /**

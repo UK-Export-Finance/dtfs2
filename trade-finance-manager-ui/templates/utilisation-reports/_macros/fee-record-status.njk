@@ -5,7 +5,12 @@
   {% set displayStatus = params.displayStatus %}
 
   {% set tagColourClassForStatus = {
-    'TO_DO': ''
+    'TO_DO': '',
+    'MATCH': 'govuk-tag--green',
+    'DOES_NOT_MATCH': 'govuk-tag--red',
+    'READY_TO_KEY': 'govuk-tag--yellow',
+    'RECONCILED': 'govuk-tag--grey',
+    'REPORT_COMPLETED': 'govuk-tag--green'
   } %}
 
   {% set tagColourClass = tagColourClassForStatus[status] %}

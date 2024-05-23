@@ -1,10 +1,7 @@
 const { param } = require('express-validator');
 const { isValidIsoMonth, isValidIsoYear } = require('@ukef/dtfs2-common');
 
-const bankIdValidation = param('bankId')
-  .isString()
-  .matches(/^\d+$/)
-  .withMessage('The bank id provided should be a string of numbers');
+const bankIdValidation = param('bankId').isString().matches(/^\d+$/).withMessage('The bank id provided should be a string of numbers');
 
 exports.bankIdValidation = [bankIdValidation];
 
@@ -17,8 +14,7 @@ exports.mongoIdValidation = [mongoIdValidation];
  * @param {string} paramName - The parameter name
  * @returns {import('express-validator').ValidationChain}
  */
-const sqlIdValidation = (paramName) =>
-  param(paramName).isInt({ min: 0 }).withMessage(`Invalid '${paramName}' path param provided`);
+const sqlIdValidation = (paramName) => param(paramName).isInt({ min: 0 }).withMessage(`Invalid '${paramName}' path param provided`);
 
 exports.sqlIdValidation = sqlIdValidation;
 
@@ -38,7 +34,6 @@ exports.isoMonthValidation = (fields) => [
  * @param {string} paramName - The parameter name
  * @returns {import('express-validator').ValidationChain}
  */
-const yearValidation = (paramName) =>
-  param(paramName).custom(isValidIsoYear).withMessage(`Invalid '${paramName}' path param provided`);
+const yearValidation = (paramName) => param(paramName).custom(isValidIsoYear).withMessage(`Invalid '${paramName}' path param provided`);
 
 exports.yearValidation = yearValidation;

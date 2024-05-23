@@ -22,8 +22,9 @@ context('Bond Details', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   describe('after submitting one form field and navigating back to `Bond Details` page', () => {
@@ -76,17 +77,26 @@ context('Bond Details', () => {
 
     pages.bondDetails.submit().click();
 
-    partials.taskListHeader.itemStatus('bond-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    partials.taskListHeader
+      .itemStatus('bond-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
 
-    partials.taskListHeader.itemStatus('financial-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    partials.taskListHeader
+      .itemStatus('financial-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
 
-    partials.taskListHeader.itemStatus('fee-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    partials.taskListHeader
+      .itemStatus('fee-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
 
     pages.bondDetails.bondDetails().click();
     pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
@@ -146,17 +156,26 @@ context('Bond Details', () => {
 
     pages.bondDetails.submit().click();
 
-    partials.taskListHeader.itemStatus('bond-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Completed');
-    });
+    partials.taskListHeader
+      .itemStatus('bond-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Completed');
+      });
 
-    partials.taskListHeader.itemStatus('financial-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    partials.taskListHeader
+      .itemStatus('financial-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
 
-    partials.taskListHeader.itemStatus('fee-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    partials.taskListHeader
+      .itemStatus('fee-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
   });
 
   describe('When a user selects `unissued` facility stage', () => {
@@ -220,13 +239,19 @@ context('Bond Details', () => {
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
-        row.uniqueNumberLink().invoke('text').then((text) => {
-          expect(text.trim()).equal('Bond’s reference number not entered');
-        });
+        row
+          .uniqueNumberLink()
+          .invoke('text')
+          .then((text) => {
+            expect(text.trim()).equal('Bond’s reference number not entered');
+          });
 
-        row.facilityStage().invoke('text').then((text) => {
-          expect(text.trim()).equal('Unissued');
-        });
+        row
+          .facilityStage()
+          .invoke('text')
+          .then((text) => {
+            expect(text.trim()).equal('Unissued');
+          });
 
         // assert that clicking the `unique number` link progesses to the bond page
         row.uniqueNumberLink().click();

@@ -7,11 +7,7 @@ describe(page, () => {
   let wrapper;
   const params = {
     key: 'Address',
-    values: ['AddressLine1',
-      null,
-      null,
-      'AddressTown',
-      'AddressPostcode'],
+    values: ['AddressLine1', null, null, 'AddressTown', 'AddressPostcode'],
     dataCy: 'test-value-array',
   };
 
@@ -20,18 +16,12 @@ describe(page, () => {
   });
 
   it('should render agent AddressLine1 in address', () => {
-    wrapper
-      .expectText(`[data-cy="${params.dataCy}"]`)
-      .toContain('AddressLine1');
+    wrapper.expectText(`[data-cy="${params.dataCy}"]`).toContain('AddressLine1');
   });
   it('should render agent agentAddressLine2 in address', () => {
-    wrapper
-      .expectText(`[data-cy="${params.dataCy}"]`)
-      .toContain('AddressTown');
+    wrapper.expectText(`[data-cy="${params.dataCy}"]`).toContain('AddressTown');
   });
   it('should render agent agentAddressLine1 in address', () => {
-    wrapper
-      .expectText(`[data-cy="${params.dataCy}"]`)
-      .toContain('AddressPostcode');
+    wrapper.expectText(`[data-cy="${params.dataCy}"]`).toContain('AddressPostcode');
   });
 });

@@ -13,15 +13,9 @@ describe('reducers - mappings - mapDeals', () => {
       const mockMapBssDealFunc = () => ({});
       const mockMapGefDealFunc = jest.fn(() => ({ gef: true }));
 
-      const deals = mapDeals(
-        mockDeals,
-        mockMapBssDealFunc,
-        mockMapGefDealFunc,
-      );
+      const deals = mapDeals(mockDeals, mockMapBssDealFunc, mockMapGefDealFunc);
 
-      expect(deals).toEqual([
-        mockMapGefDealFunc(),
-      ]);
+      expect(deals).toEqual([mockMapGefDealFunc()]);
     });
   });
 
@@ -36,15 +30,9 @@ describe('reducers - mappings - mapDeals', () => {
       const mockMapBssDealFunc = jest.fn(() => ({ bss: true }));
       const mockMapGefDealFunc = () => ({});
 
-      const deals = mapDeals(
-        mockDeals,
-        mockMapBssDealFunc,
-        mockMapGefDealFunc,
-      );
+      const deals = mapDeals(mockDeals, mockMapBssDealFunc, mockMapGefDealFunc);
 
-      expect(deals).toEqual([
-        mockMapBssDealFunc(),
-      ]);
+      expect(deals).toEqual([mockMapBssDealFunc()]);
     });
   });
 
@@ -56,9 +44,7 @@ describe('reducers - mappings - mapDeals', () => {
         },
       ];
 
-      const deals = mapDeals(
-        mockDeals,
-      );
+      const deals = mapDeals(mockDeals);
 
       expect(deals).toEqual(mockDeals);
     });

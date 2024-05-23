@@ -154,7 +154,9 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.fieldErrors).toEqual({ 'partyUrn-1': { text: 'Enter a minimum of 3 numbers' } });
+    expect(response.errorsObject.errors.fieldErrors).toEqual({
+      'partyUrn-1': { text: 'Enter a minimum of 3 numbers' },
+    });
   });
 
   it('should return validation error if partyUrn is blank and party is bond-issuer', () => {
@@ -165,7 +167,9 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.fieldErrors).toEqual({ 'partyUrn-1': { text: 'Enter a minimum of 3 numbers' } });
+    expect(response.errorsObject.errors.fieldErrors).toEqual({
+      'partyUrn-1': { text: 'Enter a minimum of 3 numbers' },
+    });
   });
 
   it('should return validation error if partyUrn is blank and party is bond-beneficiary', () => {
@@ -176,7 +180,9 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.fieldErrors).toEqual({ 'partyUrn-1': { text: 'Enter a minimum of 3 numbers' } });
+    expect(response.errorsObject.errors.fieldErrors).toEqual({
+      'partyUrn-1': { text: 'Enter a minimum of 3 numbers' },
+    });
   });
 
   it('should return validation error if partyUrn is blank and party is bond-issuer', () => {
@@ -187,7 +193,9 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response.errorsObject.errors.fieldErrors).toEqual({ 'partyUrn-1': { text: 'Enter a minimum of 3 numbers' } });
+    expect(response.errorsObject.errors.fieldErrors).toEqual({
+      'partyUrn-1': { text: 'Enter a minimum of 3 numbers' },
+    });
   });
 
   it('should not return validation error if partyUrn is valid and party is bond-beneficiary', () => {
@@ -221,7 +229,9 @@ describe('validatePartyURN()', () => {
 
     const response = validatePartyURN(partyUrnParams);
     expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn-2' }]);
-    expect(response.errorsObject.errors.fieldErrors).toEqual({ 'partyUrn-2': { text: 'Enter a minimum of 3 numbers' } });
+    expect(response.errorsObject.errors.fieldErrors).toEqual({
+      'partyUrn-2': { text: 'Enter a minimum of 3 numbers' },
+    });
     expect(response.urn).toEqual('1');
   });
 
@@ -234,7 +244,9 @@ describe('validatePartyURN()', () => {
 
     const response = validatePartyURN(partyUrnParams);
     expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn-1' }]);
-    expect(response.errorsObject.errors.fieldErrors).toEqual({ 'partyUrn-1': { text: 'Enter a minimum of 3 numbers' } });
+    expect(response.errorsObject.errors.fieldErrors).toEqual({
+      'partyUrn-1': { text: 'Enter a minimum of 3 numbers' },
+    });
     expect(response.urn).toEqual('1');
   });
 });

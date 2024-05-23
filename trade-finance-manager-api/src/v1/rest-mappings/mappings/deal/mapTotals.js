@@ -1,10 +1,6 @@
 const { CURRENCY } = require('@ukef/dtfs2-common');
 const { formattedNumber } = require('../../../../utils/number');
-const {
-  calculateNewFacilityValue,
-  calculateAmendmentTotalExposure,
-  findLatestCompletedAmendment,
-} = require('../../helpers/amendment.helpers');
+const { calculateNewFacilityValue, calculateAmendmentTotalExposure, findLatestCompletedAmendment } = require('../../helpers/amendment.helpers');
 const isValidFacility = require('../../helpers/isValidFacility.helper');
 
 const mapTotals = (facilities) => {
@@ -42,9 +38,7 @@ const mapTotals = (facilities) => {
         return null;
       });
 
-  const formattedFacilitiesValue = facilitiesValue.length
-    ? formattedNumber(facilitiesValue.reduce((a, b) => a + b))
-    : 0;
+  const formattedFacilitiesValue = facilitiesValue.length ? formattedNumber(facilitiesValue.reduce((a, b) => a + b)) : 0;
 
   totals.facilitiesValueInGBP = `${CURRENCY.GBP} ${formattedFacilitiesValue}`;
 
@@ -68,9 +62,7 @@ const mapTotals = (facilities) => {
   // total ukef exposure for all facilities
   const ukefExposureArray = [...mappedExposureTotal];
 
-  const formattedUkefExposure = ukefExposureArray.length
-    ? formattedNumber(ukefExposureArray.reduce((a, b) => a + b))
-    : 0;
+  const formattedUkefExposure = ukefExposureArray.length ? formattedNumber(ukefExposureArray.reduce((a, b) => a + b)) : 0;
 
   totals.facilitiesUkefExposure = `${CURRENCY.GBP} ${formattedUkefExposure}`;
 

@@ -1,4 +1,3 @@
-const replaceWhiteSpaceWithDash = (str) =>
-  str.replace(/ /g, '-');
+const replaceWhiteSpaceWithDash = (str) => str.replace(/ /g, '-');
 
 module.exports = replaceWhiteSpaceWithDash;

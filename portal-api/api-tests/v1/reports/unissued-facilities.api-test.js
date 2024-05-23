@@ -31,19 +31,23 @@ describe('GET /v1/reports/unissued-facilities', () => {
     await databaseHelper.wipe([dealsCollectionName]);
 
     // create a GEF deal
-    mockApplication = await as(aMaker).post({ ...mockApplications[0], bank: { id: aMaker.bank.id } }).to(gefDealUrl);
+    mockApplication = await as(aMaker)
+      .post({ ...mockApplications[0], bank: { id: aMaker.bank.id } })
+      .to(gefDealUrl);
 
     // add facilities to this deal
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
-      hasBeenIssued: false
-    }).to(gefFacilityUrl);
+    await as(aMaker)
+      .post({
+        dealId: mockApplication.body._id,
+        type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+        hasBeenIssued: false,
+      })
+      .to(gefFacilityUrl);
   });
 
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => get(unissuedFacilitiesReportUrl),
-    makeRequestWithAuthHeader: (authHeader) => get(unissuedFacilitiesReportUrl, { headers: { Authorization: authHeader } })
+    makeRequestWithAuthHeader: (authHeader) => get(unissuedFacilitiesReportUrl, { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({
@@ -72,25 +76,27 @@ describe('GET /v1/reports/unissued-facilities', () => {
     const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
-    expect(reportsBody).toEqual([{
-      dealId: expect.any(String),
-      dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
-      submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
-      bankInternalRefName: 'Bank 1',
-      ukefFacilityId: expect.any(String),
-      value: null,
-      submissionDate: expect.any(String),
-      deadlineForIssuing: expect.any(String),
-      daysLeftToIssue: expect.any(Number),
-      currencyAndValue: expect.any(String)
-    }]);
+    expect(reportsBody).toEqual([
+      {
+        dealId: expect.any(String),
+        dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
+        bankInternalRefName: 'Bank 1',
+        ukefFacilityId: expect.any(String),
+        value: null,
+        submissionDate: expect.any(String),
+        deadlineForIssuing: expect.any(String),
+        daysLeftToIssue: expect.any(Number),
+        currencyAndValue: expect.any(String),
+      },
+    ]);
   });
 
   it('retrieves the unissued facilities based on MIN deals', async () => {
     const updated = {
       submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
       submissionDate: '1639180800000',
-      manualInclusionNoticeSubmissionDate: '1639180800000'
+      manualInclusionNoticeSubmissionDate: '1639180800000',
     };
     // update the submissionType to MIN
     const { status: submissionTypeStatus } = await as(aMaker).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);
@@ -108,25 +114,27 @@ describe('GET /v1/reports/unissued-facilities', () => {
     const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
-    expect(reportsBody).toEqual([{
-      dealId: expect.any(String),
-      dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
-      submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
-      bankInternalRefName: 'Bank 1',
-      ukefFacilityId: expect.any(String),
-      value: null,
-      submissionDate: expect.any(String),
-      manualInclusionNoticeSubmissionDate: expect.any(String),
-      deadlineForIssuing: expect.any(String),
-      daysLeftToIssue: expect.any(Number),
-      currencyAndValue: expect.any(String)
-    }]);
+    expect(reportsBody).toEqual([
+      {
+        dealId: expect.any(String),
+        dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
+        bankInternalRefName: 'Bank 1',
+        ukefFacilityId: expect.any(String),
+        value: null,
+        submissionDate: expect.any(String),
+        manualInclusionNoticeSubmissionDate: expect.any(String),
+        deadlineForIssuing: expect.any(String),
+        daysLeftToIssue: expect.any(Number),
+        currencyAndValue: expect.any(String),
+      },
+    ]);
   });
   it('retrieves an empty array if the MIN date is empty', async () => {
     const updated = {
       submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
       submissionDate: '1639180800000',
-      manualInclusionNoticeSubmissionDate: ''
+      manualInclusionNoticeSubmissionDate: '',
     };
     // update the submissionType to MIN
     const { status: submissionTypeStatus } = await as(aMaker).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);

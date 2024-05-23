@@ -1,9 +1,7 @@
 const mapSupplyContractValueInGBP = require('./mapSupplyContractValueInGBP');
 
 const mapDealTfm = (deal) => {
-  const {
-    tfm: dealTfm,
-  } = deal;
+  const { tfm: dealTfm } = deal;
 
   if (!dealTfm) {
     return false;

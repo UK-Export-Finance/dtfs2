@@ -40,5 +40,5 @@ describe('error-helper', () => {
 
     // Assert
     expect(result).toBe(true);
-  })
+  });
 });

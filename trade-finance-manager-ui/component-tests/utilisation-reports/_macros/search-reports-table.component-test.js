@@ -1,10 +1,6 @@
 const componentRenderer = require('../../componentRenderer');
-const {
-  getReportViewModel,
-} = require('../../../server/controllers/utilisation-reports/helpers/find-reports-by-year-helper');
-const {
-  MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS,
-} = require('../../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
+const { getReportViewModel } = require('../../../server/controllers/utilisation-reports/helpers/find-reports-by-year-helper');
+const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS } = require('../../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
 const { MOCK_TFM_SESSION_USER } = require('../../../server/test-mocks/mock-tfm-session-user');
 
 const component = '../templates/utilisation-reports/_macros/search-reports-table.njk';

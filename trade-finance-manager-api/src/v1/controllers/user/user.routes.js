@@ -1,11 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const utils = require('../../../utils/crypto.util');
-const {
-  userIsDisabled,
-  usernameOrPasswordIncorrect,
-  userIsBlocked,
-} = require('../../../constants/login-results.constant');
+const { userIsDisabled, usernameOrPasswordIncorrect, userIsBlocked } = require('../../../constants/login-results.constant');
 const { create, update, removeTfmUserById, findOne, findByUsername } = require('./user.controller');
 
 const { mapUserData } = require('./helpers/mapUserData.helper');

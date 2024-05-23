@@ -6,10 +6,9 @@ const CONSTANTS = require('../../../constants');
  * @param {Object} deal Deal object
  * @returns {Float} Deal guarantee value
  */
-const getDealGuaranteeValue = (deal) => (
+const getDealGuaranteeValue = (deal) =>
   deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.BSS_EWCS
     ? Number(Number(deal.dealSnapshot.submissionDetails.supplyContractValue).toFixed(2))
-    : getDealValue(deal)
-);
+    : getDealValue(deal);
 
 module.exports = getDealGuaranteeValue;

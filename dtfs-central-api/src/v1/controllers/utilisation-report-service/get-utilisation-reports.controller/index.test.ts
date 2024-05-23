@@ -19,10 +19,7 @@ import {
   getUtilisationReportsByBankIdAndYear,
 } from './index';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
-import {
-  GetUtilisationReportResponse,
-  UtilisationReportReconciliationSummaryItem,
-} from '../../../../types/utilisation-reports';
+import { GetUtilisationReportResponse, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
 import { getUserById } from '../../../../repositories/users-repo';
 import { getBankById } from '../../../../repositories/banks-repo';
 
@@ -221,9 +218,7 @@ describe('getUtilisationReports', () => {
 
       jest.mocked(getUserById).mockResolvedValue(mockGetUserByIdResponse);
 
-      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(
-        UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
-      )
+      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
         .withAzureFileInfo(azureFileInfo)
         .withDateUploaded(mockDate)
         .withUploadedByUserId(mockUploadedByUser.id)
@@ -274,9 +269,7 @@ describe('getUtilisationReports', () => {
     it('returns a 500 response if any errors are thrown', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
-      jest
-        .spyOn(UtilisationReportRepo, 'findSubmittedReportsForBankIdWithReportPeriodEndInYear')
-        .mockImplementation(jest.fn().mockRejectedValue(new Error()));
+      jest.spyOn(UtilisationReportRepo, 'findSubmittedReportsForBankIdWithReportPeriodEndInYear').mockImplementation(jest.fn().mockRejectedValue(new Error()));
 
       // Act
       await getUtilisationReportsByBankIdAndYear(req, res);
@@ -326,9 +319,7 @@ describe('getUtilisationReports', () => {
       jest.mocked(getBankById).mockResolvedValue(mockGetBankByIdResponse);
 
       const mockUtilisationReports: UtilisationReportEntity[] = [];
-      const findSubmittedReportsForBankIdWithReportPeriodEndInYearMock = jest
-        .fn()
-        .mockResolvedValue(mockUtilisationReports);
+      const findSubmittedReportsForBankIdWithReportPeriodEndInYearMock = jest.fn().mockResolvedValue(mockUtilisationReports);
       jest
         .spyOn(UtilisationReportRepo, 'findSubmittedReportsForBankIdWithReportPeriodEndInYear')
         .mockImplementation(findSubmittedReportsForBankIdWithReportPeriodEndInYearMock);
@@ -394,9 +385,7 @@ describe('getUtilisationReports', () => {
 
       jest.mocked(getBankById).mockResolvedValue(mockGetBankByIdResponse);
 
-      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(
-        UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
-      )
+      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
         .withAzureFileInfo(azureFileInfo)
         .withDateUploaded(mockDate)
         .withUploadedByUserId(mockUploadedByUser.id)
@@ -404,9 +393,7 @@ describe('getUtilisationReports', () => {
         .build();
       const mockFeeRecord = FeeRecordEntityMockBuilder.forReport(mockUtilisationReport).build();
       mockUtilisationReport.feeRecords = [mockFeeRecord];
-      const findSubmittedReportsForBankIdWithReportPeriodEndInYearMock = jest
-        .fn()
-        .mockResolvedValue([mockUtilisationReport]);
+      const findSubmittedReportsForBankIdWithReportPeriodEndInYearMock = jest.fn().mockResolvedValue([mockUtilisationReport]);
       jest
         .spyOn(UtilisationReportRepo, 'findSubmittedReportsForBankIdWithReportPeriodEndInYear')
         .mockImplementation(findSubmittedReportsForBankIdWithReportPeriodEndInYearMock);

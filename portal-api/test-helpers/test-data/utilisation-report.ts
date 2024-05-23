@@ -46,5 +46,5 @@ export const aNotReceivedUtilisationReportResponse = (): UtilisationReportRespon
   azureFileInfo: null,
   status: 'REPORT_NOT_RECEIVED',
   dateUploaded: null,
-  uploadedByUser: null
+  uploadedByUser: null,
 });

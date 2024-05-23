@@ -13,10 +13,7 @@ const monthString = (period) => (Number(period) === 1 ? 'month' : 'months');
  * @param {Integer} exposurePeriodMonths Exposure period in months
  * @returns {String} Tenor dates with `month(s)` appended, otherwise null
  */
-const mapTenorDate = (
-  months,
-  exposurePeriodMonths,
-) => {
+const mapTenorDate = (months, exposurePeriodMonths) => {
   // If issued
   if (exposurePeriodMonths) {
     return `${exposurePeriodMonths} ${monthString(exposurePeriodMonths)}`;

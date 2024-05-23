@@ -8,10 +8,7 @@ const createMiaSubmissionDate = async (dealId) => {
     },
   };
 
-  const updatedDeal = await updateDeal(
-    dealId,
-    modifiedDeal,
-  );
+  const updatedDeal = await updateDeal(dealId, modifiedDeal);
 
   return updatedDeal;
 };

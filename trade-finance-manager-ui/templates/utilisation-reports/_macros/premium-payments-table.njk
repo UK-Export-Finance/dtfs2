@@ -1,6 +1,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% import "./fee-record-status.njk" as feeRecordStatus %}
 {% import "../../_macros/table-cell-checkbox.njk" as tableCellCheckbox %}
+{% import "../../_macros/select-all-table-cell-checkbox.njk" as selectAllTableCellCheckbox %}
 
 {% macro render(params) %}
   {% set feeRecords = params.feeRecords %}
@@ -8,7 +9,9 @@
   <table class="govuk-table" data-module="moj-sortable-table" data-cy="premium-payments-table">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header"></th>
+        <th scope="col" class="govuk-table__header">
+          {{ selectAllTableCellCheckbox.render() }}
+        </th>
         <th scope="col" class="govuk-table__header" aria-sort="ascending">Facility ID</th>
         <th scope="col" class="govuk-table__header" aria-sort="none">Exporter</th>
         <th scope="col" class="govuk-table__header" aria-sort="none">Reported fees</th>
@@ -16,7 +19,7 @@
         <th scope="col" class="govuk-table__header" aria-sort="none">Total reported payments</th>
         <th scope="col" class="govuk-table__header" aria-sort="none">Payments received</th>
         <th scope="col" class="govuk-table__header" aria-sort="none">Total payments received</th>
-      <th scope="col" class="govuk-table__header">Status</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Status</th>
       </tr>
     </thead>
 
@@ -28,9 +31,11 @@
         data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }}"
       >
         <td class="govuk-table__cell">
-          {{ tableCellCheckbox.render({
-            checkboxId: checkboxId
-          }) }}
+          {% if feeRecord.status === 'TO_DO' or feeRecord.status === 'DOES_NOT_MATCH' %}
+            {{ tableCellCheckbox.render({
+              checkboxId: checkboxId
+            }) }}
+          {% endif %}
         </td>
         <th
           scope="row"
@@ -42,20 +47,20 @@
         <td class="govuk-table__cell" data-sort-value="{{ feeRecord.exported }}">
           {{ feeRecord.exporter }}
         </td>
-        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.reportedFees }}">
-          {{ feeRecord.reportedFees }}
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.reportedFees.dataSortValue }}">
+          {{ feeRecord.reportedFees.formattedCurrencyAndAmount }}
         </td>
-        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.reportedPayments }}">
-          {{ feeRecord.reportedPayments }}
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.reportedPayments.dataSortValue }}">
+          {{ feeRecord.reportedPayments.formattedCurrencyAndAmount }}
         </td>
-        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.totalReportedPayments }}">
-          {{ feeRecord.totalReportedPayments }}
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.totalReportedPayments.dataSortValue }}">
+          {{ feeRecord.totalReportedPayments.formattedCurrencyAndAmount }}
         </td>
-        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.paymentsReceived }}">
-          {{ feeRecord.paymentsReceived }}
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.paymentsReceived.dataSortValue }}">
+          {{ feeRecord.paymentsReceived.formattedCurrencyAndAmount }}
         </td>
-        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.totalPaymentsReceived }}">
-          {{ feeRecord.totalPaymentsReceived }}
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.totalPaymentsReceived.dataSortValue }}">
+          {{ feeRecord.totalPaymentsReceived.formattedCurrencyAndAmount }}
         </td>
         <td class="govuk-table__cell" data-sort-value="{{ feeRecord.displayStatus }}">
           {{ feeRecordStatus.render({

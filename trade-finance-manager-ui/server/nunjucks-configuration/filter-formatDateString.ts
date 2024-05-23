@@ -1,4 +1,4 @@
-import { format, isValid, parse } from "date-fns";
+import { format, isValid, parse } from 'date-fns';
 
 /**
  * @param dateStr date string formatted as fromFormat

@@ -1,4 +1,5 @@
 import { Currency } from '../interfaces';
+
 export const CURRENCIES: Currency[] = [
   {
     currencyId: 1,
