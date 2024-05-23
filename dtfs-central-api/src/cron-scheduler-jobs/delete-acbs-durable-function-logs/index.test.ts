@@ -8,7 +8,9 @@ console.info = jest.fn();
 jest.mock('../../repositories/durable-functions-repo', () => ({
   deleteAllCompleteAcbsDurableFunctionLogs: jest.fn(),
 }));
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
   asString: jest.fn(),
 }));
 

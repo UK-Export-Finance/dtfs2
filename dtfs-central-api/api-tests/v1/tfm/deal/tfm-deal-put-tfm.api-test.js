@@ -1,5 +1,6 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { generatePortalAuditDetails, generateTfmAuditDetails, generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
+const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
 const aDeal = require('../../deal-builder');
 

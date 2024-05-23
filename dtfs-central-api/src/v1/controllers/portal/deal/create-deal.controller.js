@@ -43,7 +43,7 @@ const createDeal = async (deal, maker) => {
 exports.createDealPost = async (req, res) => {
   const { user } = req.body;
   if (!user) {
-    return res.status(404).send();
+    return res.status(400).send({ status: 400, message: 'Invalid user' });
   }
 
   if (typeof req?.body?.deal?.dealType !== 'string') {
