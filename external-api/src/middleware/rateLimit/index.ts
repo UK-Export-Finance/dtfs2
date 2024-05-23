@@ -1,5 +1,5 @@
 import limiter from 'express-rate-limit';
-import { InvalidEnvironmentVariableError } from '@ukef/dtfs2-common';
+import { InvalidEnvironmentVariableError } from '../../errors/invalid-environment-variable.error';
 
 const ONE_MINUTE_IN_MILLISECONDS = 60 * 1000;
 

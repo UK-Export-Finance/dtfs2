@@ -1,5 +1,5 @@
 const limiter = require('express-rate-limit');
-const { InvalidEnvironmentVariableError } = require('@ukef/dtfs2-common');
+const InvalidEnvironmentVariableError = require('../../errors/invalid-environment-variable.error');
 
 const ONE_MINUTE_IN_MILLISECONDS = 60 * 1000;
 
