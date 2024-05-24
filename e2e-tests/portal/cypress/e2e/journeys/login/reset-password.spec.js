@@ -1,4 +1,6 @@
-const { resetPassword, changePassword, header, userProfile } = require('../../pages');
+const {
+  resetPassword, changePassword, header, userProfile
+} = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const { TEST_EMAIL_NO_GOV_NOTIFY } = require('../../../../../e2e-fixtures/portal-users.fixture');
