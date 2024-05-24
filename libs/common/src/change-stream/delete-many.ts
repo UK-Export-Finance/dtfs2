@@ -4,9 +4,9 @@ import { add } from 'date-fns';
 import type { AuditDetails, MongoDbCollectionName } from '../types';
 import { MongoDbClient } from '../mongo-db-client';
 import { generateAuditDatabaseRecordFromAuditDetails } from './generate-audit-database-record';
+import { changeStreamConfig } from './config';
 
-// TODO: UPDATE THIS ON REBASE
-const { DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS } = process.env;
+const { DELETION_AUDIT_LOGS_TTL_SECONDS } = changeStreamConfig;
 
 type DeleteManyParams = {
   filter: Filter<any>;
@@ -32,7 +32,7 @@ const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetail
         collectionName,
         deletedDocumentId: _id,
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-        expireAt: add(new Date(), { seconds: Number(DELETION_AUDIT_LOGS_DELETE_AFTER_SECONDS) }),
+        expireAt: add(new Date(), { seconds: Number(DELETION_AUDIT_LOGS_TTL_SECONDS) }),
       }));
 
       if (documentsToDelete.length) {

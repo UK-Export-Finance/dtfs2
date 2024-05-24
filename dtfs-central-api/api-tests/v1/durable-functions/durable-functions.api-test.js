@@ -12,13 +12,14 @@ jest.mock('../../../src/drivers/db-client', () => ({
 
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generateSystemAuditDatabaseRecord, generateSystemAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { generateMockSystemAuditDatabaseRecord, withDeleteManyAuditLogsTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { generateMockSystemAuditDatabaseRecord, withDeleteManyTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
+const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 const { default: db } = require('../../../src/drivers/db-client');
 
-describe('DELETE /v1/portal/deals', () => {
-  let documentToDeleteIds;
+describe('DELETE /v1/portal/durable-functions', () => {
+  let logToDeleteIds;
 
   beforeEach(async () => {
     const durableFunctionsLogCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG);
@@ -26,24 +27,33 @@ describe('DELETE /v1/portal/deals', () => {
       { aField: 'aValue', auditRecord: generateSystemAuditDatabaseRecord() },
       { anotherField: 'anotherValue', auditRecord: generateSystemAuditDatabaseRecord() },
     ]);
-    documentToDeleteIds = Object.values(insertionResult.insertedIds);
+    logToDeleteIds = Object.values(insertionResult.insertedIds);
   });
 
-  if (process.env.CHANGE_STREAM_ENABLED === 'true') {
-    withDeleteManyAuditLogsTests({
-      makeRequest: async () => {
-        await api
-          .remove({
-            auditDetails: generateSystemAuditDetails(),
-          })
-          .to(`/v1/portal/durable-functions`);
-      },
-      collectionName: 'durable-functions-log',
-      auditRecord: generateMockSystemAuditDatabaseRecord(),
-      getDeletedDocumentIds: () => documentToDeleteIds,
-      mockGetCollection,
-    });
-  }
+  withValidateAuditDetailsTests({
+    makeRequest: (auditDetails) =>
+      api
+        .remove({
+          auditDetails,
+        })
+        .to(`/v1/portal/durable-functions`),
+    validUserTypes: ['none', 'portal', 'system', 'tfm'],
+  });
+
+  withDeleteManyTests({
+    makeRequest: async () => {
+      await api
+        .remove({
+          auditDetails: generateSystemAuditDetails(),
+        })
+        .to(`/v1/portal/durable-functions`);
+    },
+    collectionName: MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG,
+    auditRecord: generateMockSystemAuditDatabaseRecord(),
+    getDeletedDocumentIds: () => logToDeleteIds,
+    mockGetCollection,
+  });
+
   it('returns 200', async () => {
     const deleteResponse = await api
       .remove({
