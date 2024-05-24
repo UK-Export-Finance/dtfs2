@@ -1,3 +1,4 @@
+import { ZodError } from 'zod';
 import { zBooleanStrictCoerce } from './z-boolean-strict-coerce';
 
 describe('zBooleanStrictCoerce', () => {
@@ -10,7 +11,7 @@ describe('zBooleanStrictCoerce', () => {
 
     describe('when the provided value cannot be coerced to a boolean', () => {
       it.each(getFailureTestCases())('should throw an error when the provided value is $description', ({ value }) => {
-        expect(() => zBooleanStrictCoerce.parse(value)).toThrow();
+        expect(() => zBooleanStrictCoerce.parse(value)).toThrow(ZodError);
       });
     });
   });
