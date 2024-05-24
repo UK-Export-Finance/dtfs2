@@ -177,18 +177,45 @@ const deleteFacility = async ({ facilityId, userToken }) => {
   }
 };
 
-const getCompaniesHouseDetails = async ({ companyRegNumber, userToken }) => {
-  if (!isValidCompaniesHouseNumber(companyRegNumber)) {
-    console.error('getCompaniesHouseDetails: API call failed for companyRegNumber %s', companyRegNumber);
-    throw new Error('Invalid company house number');
-  }
-
+const getCompanyByRegistrationNumber = async ({ registrationNumber, userToken }) => {
   try {
-    const { data } = await Axios.get(`/gef/company/${companyRegNumber}`, config(userToken));
-    return data;
+    if (!registrationNumber) {
+      return {
+        errRef: 'regNumber',
+        errMsg: 'Enter a Companies House registration number.',
+      };
+    }
+
+    if (registrationNumber && !isValidCompaniesHouseNumber(registrationNumber)) {
+      return {
+        errRef: 'regNumber',
+        errMsg: 'Enter a valid Companies House registration number.',
+      };
+    }
+
+    const { data } = await Axios.get(`/gef/companies/${registrationNumber}`, config(userToken));
+
+    return { company: data };
   } catch (error) {
-    console.error('Unable to get company house details %o', error?.response?.data);
-    return apiErrorHandler(error);
+    switch (error?.response?.status) {
+      case 400:
+        return {
+          errRef: 'regNumber',
+          errMsg: 'Enter a valid Companies House registration number.',
+        };
+      case 404:
+        return {
+          errRef: 'regNumber',
+          errMsg: 'No company matching the Companies House registration number entered was found.',
+        };
+      case 422:
+        return {
+          errRef: 'regNumber',
+          errMsg: 'UKEF can only process applications from companies based in the UK.',
+        };
+      default:
+        throw error;
+    }
   }
 };
 
@@ -312,7 +339,7 @@ module.exports = {
   getFacility,
   updateFacility,
   deleteFacility,
-  getCompaniesHouseDetails,
+  getCompanyByRegistrationNumber,
   getAddressesByPostcode,
   getUserDetails,
   setApplicationStatus,

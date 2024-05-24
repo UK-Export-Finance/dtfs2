@@ -11,6 +11,7 @@ const mandatoryCriteriaVersioned = require('./controllers/mandatoryCriteriaVersi
 const eligibilityCriteria = require('./controllers/eligibilityCriteria.controller');
 const externalApi = require('./controllers/externalApi.controller');
 const files = require('./controllers/files.controller');
+const companies = require('./controllers/companies.controller');
 
 const router = express.Router();
 
@@ -104,8 +105,8 @@ router
 router.route('/files/:id/download').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), files.downloadFile);
 
 router
-  .route('/company/:number') // Companies House
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, ADMIN] }), externalApi.getByRegistrationNumber);
+  .route('/companies/:registrationNumber')
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, ADMIN] }), companies.getCompanyByRegistrationNumber);
 
 router
   .route('/address/:postcode') // Geospatial Addresses

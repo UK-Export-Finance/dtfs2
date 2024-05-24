@@ -11,7 +11,7 @@ import * as partyUrn from '../controllers/party-urn.controller';
 import * as acbs from '../controllers/acbs.controller';
 import * as currencyExchangeRate from '../controllers/currency-exchange-rate.controller';
 import * as exposurePeriod from '../controllers/exposure-period.controller';
-import * as companiesHouse from '../controllers/companies-house.controller';
+import * as companies from '../controllers/companies.controller';
 import * as geospatialAddresses from '../controllers/geospatial-addresses.controller';
 import * as eStore from '../controllers/estore/eStore.controller';
 import * as premiumSchedule from '../controllers/premium-schedule.controller';
@@ -494,31 +494,30 @@ apiRoutes.get('/premium-schedule', premiumSchedule.getPremiumSchedule);
 
 /**
  * @openapi
- * /companies-house/:companyRegistrationNumber:
+ * /companies/:registrationNumber:
  *   get:
- *     summary: Get Company profile from Companies House API
- *     tags: [Companies House]
+ *     summary: Get company details from MDM API.
+ *     tags: [APIM, Companies House]
  *     description: >-
- *       Get Company profile from Companies House API.
- *       Note - Not all fields are in the response body example. See Companies House API documentation.
+ *       Get company details from MDM API. MDM API retrieves the relevant details from the Companies House API and the MDM database.
  *     parameters:
  *       - in: path
- *         name: companyRegistrationNumber
+ *         name: registrationNumber
  *         schema:
  *           type: string
  *           example: UKEF0001
  *         required: true
- *         description: Company registration number
+ *         description: Companies House registration number
  *     responses:
  *       200:
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/definitions/CompaniesHouseResponseBody'
+ *               $ref: '#/definitions/CompaniesResponseBody'
  */
 
-apiRoutes.get('/companies-house/:companyRegistrationNumber', companiesHouse.lookup);
+apiRoutes.get('/companies/:registrationNumber', companies.getCompanyByRegistrationNumber);
 
 /**
  * @openapi

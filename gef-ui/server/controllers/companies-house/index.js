@@ -1,6 +1,5 @@
 const api = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
-const { isValidCompaniesHouseNumber } = require('../../utils/validateIds');
 
 const companiesHouse = async (req, res) => {
   const { params, query, session } = req;
@@ -24,46 +23,22 @@ const companiesHouse = async (req, res) => {
 };
 
 const validateCompaniesHouse = async (req, res) => {
-  const { params, body, query, session } = req;
-  const { regNumber } = body;
-  const { dealId } = params;
-  const { status } = query;
-  const { user, userToken } = session;
-  const { _id: editorId } = user;
-  const companiesHouseErrors = [];
-  let companiesHouseDetails;
-
-  if (!regNumber) {
-    companiesHouseErrors.push({
-      errRef: 'regNumber',
-      errMsg: 'Enter a Companies House registration number',
-    });
-  }
-
-  if (regNumber && !isValidCompaniesHouseNumber(regNumber)) {
-    companiesHouseErrors.push({
-      errRef: 'regNumber',
-      errMsg: 'Enter a valid Companies House registration number',
-    });
-  }
-
   try {
+    const { params, body, query, session } = req;
+    const { regNumber: registrationNumber } = body;
+    const { dealId } = params;
+    const { status } = query;
+    const { user, userToken } = session;
+    const { _id: editorId } = user;
+
     const { exporter } = await api.getApplication({ dealId, userToken });
 
-    if (companiesHouseErrors.length === 0) {
-      companiesHouseDetails = await api.getCompaniesHouseDetails({ companyRegNumber: regNumber, userToken });
-    }
+    const { company: companiesHouseDetails, errRef, errMsg } = await api.getCompanyByRegistrationNumber({ registrationNumber, userToken });
 
-    if (companiesHouseDetails?.status === 422 || companiesHouseDetails?.status === 400) {
-      companiesHouseDetails.data.forEach((error) => {
-        companiesHouseErrors.push(error);
-      });
-    }
-
-    if (companiesHouseErrors.length > 0) {
+    if (!companiesHouseDetails) {
       return res.render('partials/companies-house.njk', {
-        errors: validationErrorHandler(companiesHouseErrors),
-        regNumber,
+        errors: validationErrorHandler([{ errRef, errMsg }]),
+        regNumber: registrationNumber,
         dealId,
         status,
       });
@@ -74,6 +49,9 @@ const validateCompaniesHouse = async (req, res) => {
      * added smeType, probabilityOfDefault, isFinanceIncreasing as blank strings
      * enables to be added to database so shows on application-details page if not exited without saving
      */
+
+    companiesHouseDetails.selectedIndustry = companiesHouseDetails.industries?.length === 1 ? companiesHouseDetails.industries[0] : null;
+
     const applicationExporterUpdate = {
       exporter: {
         ...exporter,
