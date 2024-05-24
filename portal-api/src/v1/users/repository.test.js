@@ -1,7 +1,8 @@
 const { when, resetAllWhenMocks } = require('jest-when');
 const { ObjectId } = require('mongodb');
 const { cloneDeep } = require('lodash');
-const { generateMockNoUserLoggedInAuditDatabaseRecord, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateMockNoUserLoggedInAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const db = require('../../drivers/db-client');
 const { UserRepository } = require('./repository');
 const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError } = require('../errors');
