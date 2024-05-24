@@ -1,6 +1,6 @@
 import { FeeRecordStatus, getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
 import { FeeRecordItem } from '../../../api-response-types';
-import { FeeRecordDisplayStatus, FeeRecordViewModelItem } from '../../../types/view-models';
+import { FeeRecordDisplayStatus, FeeRecordViewModelCheckboxId, FeeRecordViewModelItem } from '../../../types/view-models';
 import { GetKeyToSortValueMapItem, getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
 
 const feeRecordStatusToDisplayStatus: Record<FeeRecordStatus, FeeRecordDisplayStatus> = {
@@ -29,7 +29,10 @@ const getPropertyWithFeeRecordIndexAsKey = (feeRecordItems: FeeRecordItem[], pro
  * @param feeRecordItems - The fee record items
  * @returns The fee record view model items
  */
-export const mapFeeRecordItemsToFeeRecordViewModelItems = (feeRecordItems: FeeRecordItem[]): FeeRecordViewModelItem[] => {
+export const mapFeeRecordItemsToFeeRecordViewModelItems = (
+  feeRecordItems: FeeRecordItem[],
+  isCheckboxChecked: (checkboxId: string) => boolean,
+): FeeRecordViewModelItem[] => {
   const reportedFeesDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(getPropertyWithFeeRecordIndexAsKey(feeRecordItems, 'reportedFees'));
   const reportedPaymentsDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(getPropertyWithFeeRecordIndexAsKey(feeRecordItems, 'reportedPayments'));
   const totalReportedPaymentsDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
@@ -40,31 +43,38 @@ export const mapFeeRecordItemsToFeeRecordViewModelItems = (feeRecordItems: FeeRe
     getPropertyWithFeeRecordIndexAsKey(feeRecordItems, 'totalPaymentsReceived'),
   );
 
-  return feeRecordItems.map((feeRecordItem, feeRecordIndex) => ({
-    id: feeRecordItem.id,
-    facilityId: feeRecordItem.facilityId,
-    exporter: feeRecordItem.exporter,
-    reportedFees: {
-      formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(feeRecordItem.reportedFees),
-      dataSortValue: reportedFeesDataSortValueMap[feeRecordIndex],
-    },
-    reportedPayments: {
-      formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(feeRecordItem.reportedPayments),
-      dataSortValue: reportedPaymentsDataSortValueMap[feeRecordIndex],
-    },
-    totalReportedPayments: {
-      formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(feeRecordItem.totalReportedPayments),
-      dataSortValue: totalReportedPaymentsDataSortValueMap[feeRecordIndex],
-    },
-    paymentsReceived: {
-      formattedCurrencyAndAmount: feeRecordItem.paymentsReceived ? getFormattedCurrencyAndAmount(feeRecordItem.paymentsReceived) : undefined,
-      dataSortValue: paymentsReceivedDataSortValueMap[feeRecordIndex],
-    },
-    totalPaymentsReceived: {
-      formattedCurrencyAndAmount: feeRecordItem.totalPaymentsReceived ? getFormattedCurrencyAndAmount(feeRecordItem.totalPaymentsReceived) : undefined,
-      dataSortValue: totalPaymentsReceivedDataSortValueMap[feeRecordIndex],
-    },
-    status: feeRecordItem.status,
-    displayStatus: feeRecordStatusToDisplayStatus[feeRecordItem.status],
-  }));
+  return feeRecordItems.map((feeRecordItem, feeRecordIndex) => {
+    const checkboxId: FeeRecordViewModelCheckboxId = `feeRecordId-${feeRecordItem.id}-reportedPaymentsCurrency-${feeRecordItem.reportedPayments.currency}-status-${feeRecordItem.status}`;
+    const isChecked = isCheckboxChecked(checkboxId);
+
+    return {
+      id: feeRecordItem.id,
+      facilityId: feeRecordItem.facilityId,
+      exporter: feeRecordItem.exporter,
+      reportedFees: {
+        formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(feeRecordItem.reportedFees),
+        dataSortValue: reportedFeesDataSortValueMap[feeRecordIndex],
+      },
+      reportedPayments: {
+        formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(feeRecordItem.reportedPayments),
+        dataSortValue: reportedPaymentsDataSortValueMap[feeRecordIndex],
+      },
+      totalReportedPayments: {
+        formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(feeRecordItem.totalReportedPayments),
+        dataSortValue: totalReportedPaymentsDataSortValueMap[feeRecordIndex],
+      },
+      paymentsReceived: {
+        formattedCurrencyAndAmount: feeRecordItem.paymentsReceived ? getFormattedCurrencyAndAmount(feeRecordItem.paymentsReceived) : undefined,
+        dataSortValue: paymentsReceivedDataSortValueMap[feeRecordIndex],
+      },
+      totalPaymentsReceived: {
+        formattedCurrencyAndAmount: feeRecordItem.totalPaymentsReceived ? getFormattedCurrencyAndAmount(feeRecordItem.totalPaymentsReceived) : undefined,
+        dataSortValue: totalPaymentsReceivedDataSortValueMap[feeRecordIndex],
+      },
+      status: feeRecordItem.status,
+      displayStatus: feeRecordStatusToDisplayStatus[feeRecordItem.status],
+      checkboxId,
+      isChecked,
+    };
+  });
 };

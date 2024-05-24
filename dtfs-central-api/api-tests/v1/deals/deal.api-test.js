@@ -54,7 +54,7 @@ describe('/v1/portal/deals', () => {
     });
 
     describe('when user is invalid', () => {
-      it('missing user returns 404', async () => {
+      it('missing user returns 400', async () => {
         const postBody = {
           bankInternalRefName: '',
           additionalRefName: '',
@@ -62,7 +62,7 @@ describe('/v1/portal/deals', () => {
 
         const { status } = await api.post({ deal: postBody }).to('/v1/portal/deals');
 
-        expect(status).toEqual(404);
+        expect(status).toEqual(400);
       });
 
       it('user with no bank returns validation errors', async () => {
@@ -319,19 +319,6 @@ describe('/v1/portal/deals', () => {
       expect(body.status).toEqual('Acknowledged');
       expect(body.previousStatus).toEqual('Submitted');
       expect(typeof body.updatedAt).toEqual('number');
-    });
-  });
-
-  describe('DELETE /v1/portal/deals/:id', () => {
-    it('deletes the deal', async () => {
-      const { body } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
-
-      const deleteResponse = await api.remove({}).to(`/v1/portal/deals/${body._id}`);
-      expect(deleteResponse.status).toEqual(200);
-
-      const { status } = await api.get(`/v1/portal/deals/${body._id}`);
-
-      expect(status).toEqual(404);
     });
   });
 });

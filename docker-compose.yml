@@ -150,6 +150,7 @@ services:
       - UKEF_INTERNAL_NOTIFICATION=test
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
+      - CHANGE_STREAM_ENABLED
 
   portal:
     build:

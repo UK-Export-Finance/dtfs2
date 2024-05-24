@@ -1,10 +1,10 @@
 import z from 'zod';
+import { InvalidEnvironmentVariableError } from '@ukef/dtfs2-common/errors';
 import { PaymentOfficerTeam, asString } from '@ukef/dtfs2-common';
 import sendEmail from '../../email';
 import { EMAIL_TEMPLATE_IDS } from '../../../constants';
 import { formatDateForEmail } from '../../helpers/formatDateForEmail';
 import api from '../../api';
-import { InvalidEnvironmentVariableError } from '../../errors';
 
 const getUkefGefReportingEmailRecipients = () => {
   const EmailsSchema = z.array(z.string().email());

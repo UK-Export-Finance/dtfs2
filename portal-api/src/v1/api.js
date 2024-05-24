@@ -76,7 +76,7 @@ const updateDeal = async (dealId, dealUpdate, user) => {
   }
 };
 
-const deleteDeal = async (dealId) => {
+const deleteDeal = async (dealId, auditDetails) => {
   try {
     if (!isValidMongoId(dealId)) {
       console.error('Delete deal API failed for deal id %s', dealId);
@@ -87,6 +87,9 @@ const deleteDeal = async (dealId) => {
       method: 'delete',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
       headers: headers.central,
+      data: {
+        auditDetails,
+      },
     });
   } catch (error) {
     console.error('Unable to delete deal %o', error);

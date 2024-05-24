@@ -1,5 +1,6 @@
 const { format, getUnixTime, fromUnixTime } = require('date-fns');
 const sanitizeHtml = require('sanitize-html');
+const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common/errors');
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
@@ -34,8 +35,14 @@ exports.create = async (req, res) => {
 
   try {
     validateAuditDetails(auditDetails);
-  } catch ({ message }) {
-    res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
   }
 
   const modifiedFeedback = {
