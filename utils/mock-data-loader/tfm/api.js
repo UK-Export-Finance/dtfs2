@@ -49,6 +49,11 @@ const deleteTeam = async (team) => {
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${team.id}`,
+    data: {
+      // This auditDetails is mock data & doesn't correspond to an existing user.
+      // Since mock data loader isn't used in production this should never occur in production data
+      auditDetails: generateTfmAuditDetails('bad123456789bad123456789'),
+    },
   }).catch((error) => {
     throw new ApiError({ cause: error });
   });

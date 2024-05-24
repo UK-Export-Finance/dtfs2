@@ -1,7 +1,7 @@
 const { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
 const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common/errors');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
-const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../../drivers/db-client').default;
 
 const createTeam = async (team, auditDetails) => {
@@ -72,18 +72,45 @@ exports.findOneTfmTeam = async (req, res) => {
   return res.status(404).send();
 };
 
-const deleteTeam = async (id) => {
-  if (typeof id === 'string') {
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_TEAMS);
-    return collection.deleteOne({ id: { $eq: id } });
+exports.deleteTfmTeam = async (req, res) => {
+  const { id } = req.params;
+  const { auditDetails } = req.body;
+
+  if (!(typeof id === 'string')) {
+    return res.status(400).send({ status: 400, message: 'Invalid team Id' });
   }
 
-  return false;
-};
-exports.deleteTeam = deleteTeam;
+  // We're deleting a team by `id` not `_id` so have to find the _id for the audit record
+  const teamsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_TEAMS);
+  const team = await teamsCollection.findOne({ id: { $eq: id } });
 
-exports.deleteTfmTeam = async (req, res) => {
-  const deleted = await deleteTeam(req.params.id);
+  if (!team) {
+    return res.status(404).send({ status: 400, message: 'Team not found' });
+  }
 
-  return deleted ? res.status(200).send(deleted) : res.status(400).send({ status: 400, message: 'Invalid team Id' });
+  try {
+    validateAuditDetails(auditDetails);
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: 400,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
+  }
+
+  try {
+    const deleteResult = await deleteOne({
+      documentId: team._id,
+      collectionName: MONGO_DB_COLLECTIONS.TFM_TEAMS,
+      db,
+      auditDetails,
+    });
+
+    return res.status(200).send(deleteResult);
+  } catch (error) {
+    console.error('Error deleting TFM team %o', error);
+    return res.status(500).send({ status: 500, error });
+  }
 };

@@ -12,7 +12,7 @@ jest.mock('../../../src/drivers/db-client', () => ({
 
 const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { withDeletionTests, generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { withDeleteOneTests, generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
@@ -65,7 +65,7 @@ describe('DELETE /v1/portal/deals', () => {
     validUserTypes: ['portal'],
   });
 
-  withDeletionTests({
+  withDeleteOneTests({
     makeRequest: async () =>
       await api
         .remove({
