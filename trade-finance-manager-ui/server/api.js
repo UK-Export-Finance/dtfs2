@@ -914,7 +914,7 @@ const getReportsByBankAndYear = async (userToken, bankId, year) => {
 
     return data;
   } catch (error) {
-    console.error('Failed to get previous utilisation reports', error);
+    console.error('Failed to get utilisation reports by bank ID and year', error);
     throw error;
   }
 };

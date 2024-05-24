@@ -3,7 +3,7 @@ import axios from 'axios';
 import api from '../../api';
 
 /**
- * Fetches a list of utilisation reports reconciliation progress for specified submission year and bank.
+ * Fetches a list of utilisation reports reconciliation progress for specified year and bank.
  */
 export const getSubmittedReportsByBankAndYear = async (req: Request<{ bankId: string; year: string }>, res: Response) => {
   const { bankId, year } = req.params;
