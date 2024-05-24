@@ -1,5 +1,5 @@
 const {
-  resetPassword, changePassword, header, userProfile
+  resetPassword, changePassword, header, userProfile,
 } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
