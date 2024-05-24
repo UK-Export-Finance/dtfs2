@@ -30,6 +30,10 @@ describe('DELETE /v1/portal/durable-functions', () => {
     logToDeleteIds = Object.values(insertionResult.insertedIds);
   });
 
+  afterAll(() => {
+    jest.resetAllMocks();
+  });
+
   withValidateAuditDetailsTests({
     makeRequest: (auditDetails) =>
       api

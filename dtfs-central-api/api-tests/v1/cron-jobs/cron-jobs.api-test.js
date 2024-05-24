@@ -30,6 +30,10 @@ describe('DELETE v1/portal/cron-jobs', () => {
     logToDeleteIds = Object.values(insertionResult.insertedIds);
   });
 
+  afterAll(() => {
+    jest.resetAllMocks();
+  });
+
   withValidateAuditDetailsTests({
     makeRequest: (auditDetails) =>
       api
