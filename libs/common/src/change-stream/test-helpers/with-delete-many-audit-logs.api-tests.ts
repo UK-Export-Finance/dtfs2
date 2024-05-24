@@ -4,7 +4,50 @@ import { MongoDbClient } from '../../mongo-db-client';
 import { AuditDatabaseRecord, DeletionAuditLog, MongoDbCollectionName } from '../../types';
 import { changeStreamConfig } from '../config';
 
-const collectionMethodsToNotMock = ['findOne', 'insertOne', 'insertMany'] as const;
+/**
+ * Methods on the mongodb Collection class @see {@link https://mongodb.github.io/node-mongodb-native/4.17/classes/Collection.html | documentation}
+ */
+const collectionMethods = [
+  'aggregate',
+  'bulkWrite',
+  'count',
+  'countDocuments',
+  'createIndex',
+  'createIndexes',
+  'deleteMany',
+  'deleteOne',
+  'distinct',
+  'drop',
+  'dropIndex',
+  'dropIndexes',
+  'estimatedDocumentCount',
+  'find',
+  'findOne',
+  'findOneAndDelete',
+  'findOneAndReplace',
+  'findOneAndUpdate',
+  'getLogger',
+  'indexExists',
+  'indexInformation',
+  'indexes',
+  'initializeOrderedBulkOp',
+  'initializeUnorderedBulkOp',
+  'insert',
+  'insertMany',
+  'insertOne',
+  'isCapped',
+  'listIndexes',
+  'mapReduce',
+  'options',
+  'remove',
+  'rename',
+  'replaceOne',
+  'stats',
+  'update',
+  'updateMany',
+  'updateOne',
+  'watch',
+] as const;
 
 type Params = {
   makeRequest: () => Promise<void>;
@@ -84,11 +127,11 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
           const collection = await originalMockCollection;
           const mockCollection: Record<string, unknown> = {};
 
-          collectionMethodsToNotMock.forEach((methodName) => {
+          collectionMethods.forEach((methodName) => {
             mockCollection[methodName] = collection[methodName].bind(collection);
           });
 
-          mockCollection.deleteOne = jest.fn(() => ({
+          mockCollection.deleteMany = jest.fn(() => ({
             acknowledged: false,
           }));
 
@@ -109,11 +152,11 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
           const collection = await originalMockCollection;
           const mockCollection: Record<string, unknown> = {};
 
-          collectionMethodsToNotMock.forEach((methodName) => {
+          collectionMethods.forEach((methodName) => {
             mockCollection[methodName] = collection[methodName].bind(collection);
           });
 
-          mockCollection.deleteOne = jest.fn(() => ({
+          mockCollection.deleteMany = jest.fn(() => ({
             acknowledged: true,
             deletedCount: 0,
           }));
@@ -135,11 +178,11 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
           const collection = await originalMockCollection;
           const mockCollection: Record<string, unknown> = {};
 
-          collectionMethodsToNotMock.forEach((methodName) => {
+          collectionMethods.forEach((methodName) => {
             mockCollection[methodName] = collection[methodName].bind(collection);
           });
 
-          mockCollection.deleteOne = jest.fn(() => {
+          mockCollection.deleteMany = jest.fn(() => {
             throw new Error();
           });
 
@@ -193,7 +236,7 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
         itDoesNotUpdateTheDatabase();
       });
     } else {
-      it('should delete the document', async () => {
+      it('should delete the documents', async () => {
         await makeRequest();
 
         const collection = await mongoDbClient.getCollection(collectionName);
