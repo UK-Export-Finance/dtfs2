@@ -45,7 +45,7 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
     if (!facilityId) {
       throw new Error('Invalid argument set');
     }
-    
+
     // 1. GET Facility master record object
     const { acbsFacility, etag } = yield context.df.callActivityWithRetry('activity-get-facility-master', retryOptions, { facilityId });
 
