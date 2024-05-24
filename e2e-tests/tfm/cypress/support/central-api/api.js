@@ -66,12 +66,15 @@ module.exports.deleteFacility = (facilityId, user, auditDetails) =>
       return resp.body;
     });
 
-module.exports.deleteTfmDeal = (dealId) =>
+module.exports.deleteTfmDeal = (dealId, auditDetails) =>
   cy
     .request({
       url: `${api()}/v1/tfm/deals/${dealId}`,
       method: 'DELETE',
       headers,
+      data: {
+        auditDetails,
+      },
     })
     .then((resp) => {
       expect(resp.status).to.equal(200);
