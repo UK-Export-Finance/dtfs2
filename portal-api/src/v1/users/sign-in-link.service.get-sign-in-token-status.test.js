@@ -6,11 +6,12 @@ const { TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/u
 const { InvalidUserIdError, UserNotFoundError } = require('../errors');
 const { SignInLinkService } = require('./sign-in-link.service');
 const { SIGN_IN_LINK } = require('../../constants');
+const { mockSignInLinkGenerator } = require('../../../test-helpers/unit-test-mocks/mock-sign-in-link-generator');
 
 describe('getSignInTokenStatus', () => {
   let service;
 
-  let randomGenerator;
+  let signInLinkGenerator;
   let hasher;
   let userRepository;
 
@@ -25,9 +26,7 @@ describe('getSignInTokenStatus', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    randomGenerator = {
-      randomHexString: jest.fn(),
-    };
+    signInLinkGenerator = mockSignInLinkGenerator;
 
     hasher = {
       hash: jest.fn(),
@@ -43,7 +42,7 @@ describe('getSignInTokenStatus', () => {
       blockUser: jest.fn(),
     };
 
-    service = new SignInLinkService(randomGenerator, hasher, userRepository);
+    service = new SignInLinkService(signInLinkGenerator, hasher, userRepository);
 
     testUserFromDatabase = cloneDeep(TEST_USER_TRANSFORMED_FROM_DATABASE);
   });

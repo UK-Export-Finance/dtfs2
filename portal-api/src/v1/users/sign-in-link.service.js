@@ -1,19 +1,18 @@
 const sendEmail = require('../email');
 const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK } = require('../../constants');
-const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
 const { STATUS_BLOCKED_REASON } = require('../../constants/user');
-const UserBlockedError = require('../errors/user-blocked.error');
+const { UserBlockedError, FailedToSaveSignInTokenError, FailedToSendSignInTokenError } = require('../errors');
 const { sendBlockedEmail } = require('./controller');
 const utils = require('../../crypto/utils');
 
 class SignInLinkService {
-  #randomGenerator;
+  #signInLinkGenerator;
   #hasher;
   #userRepository;
   #userService;
 
-  constructor(randomGenerator, hasher, userRepository, userService) {
-    this.#randomGenerator = randomGenerator;
+  constructor(signInLinkGenerator, hasher, userRepository, userService) {
+    this.#signInLinkGenerator = signInLinkGenerator;
     this.#hasher = hasher;
     this.#userRepository = userRepository;
     this.#userService = userService;
@@ -36,12 +35,12 @@ class SignInLinkService {
     if (isUserBlockedOrDisabled) {
       throw new UserBlockedError(userId);
     }
-    const signInToken = this.#createSignInToken();
+    const signInToken = this.#signInLinkGenerator.createSignInToken();
 
     await this.#saveSignInTokenHashAndSalt({ userId, signInToken, auditDetails });
 
     await this.#sendSignInLinkEmail({
-      signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}&u=${userId}`,
+      signInLink: this.#signInLinkGenerator.createSignInArtifactFromSignInToken(signInToken),
       userEmail,
       userFirstName,
       userLastName,
@@ -123,23 +122,10 @@ class SignInLinkService {
   }
 
   /**
-   * Generates a sign-in token using a random hex string.
-   * @returns {string} - The generated sign-in token.
-   * @throws {Error} - If there is an issue generating the sign-in token.
-   */
-  #createSignInToken() {
-    try {
-      return this.#randomGenerator.randomHexString(SIGN_IN_LINK.TOKEN_BYTE_LENGTH);
-    } catch (error) {
-      throw new Error('Failed to create a sign in token', { cause: error });
-    }
-  }
-
-  /**
    * Saves the hash and salt of the sign-in token along with its expiry for a user.
    * @param {Object} params - The parameters containing userId and signInToken.
    * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - user making the request
-   * @throws {Error} - If there is an issue saving the sign-in token.
+   * @throws {FailedToSaveSignInTokenError} - If there is an issue saving the sign-in token.
    */
   async #saveSignInTokenHashAndSalt({ userId, signInToken, auditDetails }) {
     try {
@@ -153,14 +139,14 @@ class SignInLinkService {
         auditDetails,
       });
     } catch (error) {
-      throw new Error('Failed to save the sign in token', { cause: error });
+      throw new FailedToSaveSignInTokenError({ cause: error });
     }
   }
 
   /**
    * Sends a sign-in link email to the user.
    * @param {Object} params - The parameters containing userEmail, userFirstName, userLastName, and signInLink.
-   * @throws {Error} - If there is an issue sending the sign-in link email.
+   * @throws {FailedToSendSignInTokenError} - If there is an issue sending the sign-in link email.
    */
   async #sendSignInLinkEmail({ userEmail, userFirstName, userLastName, signInLink }) {
     if (process.env.NODE_ENV === 'development') {
@@ -168,14 +154,14 @@ class SignInLinkService {
     }
 
     try {
-      await sendEmail(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, userEmail, {
+      await sendEmail(EMAIL_TEMPLATE_IDS.SIGN_IN_EMAIL_LINK, userEmail, {
         firstName: userFirstName,
         lastName: userLastName,
         signInLink,
         signInLinkDuration: `${SIGN_IN_LINK.DURATION_MINUTES} minute${SIGN_IN_LINK.DURATION_MINUTES === 1 ? '' : 's'}`,
       });
     } catch (error) {
-      throw new Error('Failed to email the sign in token', { cause: error });
+      throw new FailedToSendSignInTokenError({ cause: error });
     }
   }
 

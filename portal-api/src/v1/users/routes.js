@@ -19,6 +19,7 @@ const { Hasher } = require('../../crypto/hasher');
 const { UserRepository } = require('./repository');
 const { UserService } = require('./user.service');
 const { ADMIN } = require('../roles/roles');
+const { EmailSignInLinkGenerator } = require('./sign-in-link-generator/email-link-authentication');
 
 const randomGenerator = new CryptographicallyStrongGenerator();
 
@@ -28,7 +29,8 @@ const hasher = new Hasher(hashStrategy);
 const userRepository = new UserRepository();
 const userService = new UserService();
 
-const signInLinkService = new SignInLinkService(randomGenerator, hasher, userRepository, userService);
+const signInLinkGenerator = new EmailSignInLinkGenerator({ randomGenerator });
+const signInLinkService = new SignInLinkService(signInLinkGenerator, hasher, userRepository, userService);
 const signInLinkController = new SignInLinkController(signInLinkService);
 
 module.exports.list = (req, res, next) => {

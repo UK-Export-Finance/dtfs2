@@ -9,6 +9,7 @@ const utils = require('../../crypto/utils');
 const { STATUS } = require('../../constants/user');
 const UserBlockedError = require('../errors/user-blocked.error');
 const UserDisabledError = require('../errors/user-disabled.error');
+const { mockSignInLinkGenerator } = require('../../../test-helpers/unit-test-mocks/mock-sign-in-link-generator');
 
 jest.mock('../../crypto/utils');
 
@@ -26,7 +27,7 @@ describe('SignInLinkService', () => {
 
   let service;
 
-  let randomGenerator;
+  let signInLinkGenerator;
   let hasher;
   let userRepository;
   const userService = new UserService();
@@ -34,9 +35,7 @@ describe('SignInLinkService', () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
-    randomGenerator = {
-      randomHexString: jest.fn(),
-    };
+    signInLinkGenerator = mockSignInLinkGenerator;
     hasher = {
       hash: jest.fn(),
       verifyHash: jest.fn(),
@@ -45,7 +44,7 @@ describe('SignInLinkService', () => {
       findById: jest.fn(),
       updateLastLoginAndResetSignInData: jest.fn(),
     };
-    service = new SignInLinkService(randomGenerator, hasher, userRepository, userService);
+    service = new SignInLinkService(signInLinkGenerator, hasher, userRepository, userService);
     testUser = cloneDeep(TEST_USER_TRANSFORMED_FROM_DATABASE);
   });
 

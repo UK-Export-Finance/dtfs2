@@ -5,11 +5,12 @@ const sendEmail = require('../email');
 const { SignInLinkService } = require('./sign-in-link.service');
 const { UserService } = require('./user.service');
 const { SIGN_IN_LINK, EMAIL_TEMPLATE_IDS, USER } = require('../../constants');
-const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
 const UserBlockedError = require('../errors/user-blocked.error');
 const controller = require('./controller');
 const { STATUS } = require('../../constants/user');
 const { TEST_USER_PARTIAL_2FA } = require('../../../test-helpers/unit-test-mocks/mock-user');
+const { mockSignInLinkGenerator } = require('../../../test-helpers/unit-test-mocks/mock-sign-in-link-generator');
+const { FailedToCreateSignInTokenError, FailedToSaveSignInTokenError, FailedToSendSignInTokenError } = require('../errors');
 
 jest.mock('../email');
 jest.mock('./controller');
@@ -26,12 +27,12 @@ describe('SignInLinkService', () => {
   const token = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
   let service;
 
-  let randomGenerator;
+  let signInLinkGenerator;
   let hasher;
   let userRepository;
   const userService = new UserService();
   let user = cloneDeep(TEST_USER_PARTIAL_2FA);
-  const signInLink = `${PORTAL_UI_URL}/login/sign-in-link?t=${token}&u=${user._id}`;
+  const signInLink = `A sign in link with token ${token}`;
 
   beforeAll(() => {
     jest.useFakeTimers();
@@ -39,9 +40,8 @@ describe('SignInLinkService', () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
-    randomGenerator = {
-      randomHexString: jest.fn(),
-    };
+    signInLinkGenerator = mockSignInLinkGenerator;
+    when(signInLinkGenerator.createSignInArtifactFromSignInToken).calledWith(token).mockReturnValue(signInLink);
     hasher = {
       hash: jest.fn(),
       verifyHash: jest.fn(),
@@ -54,7 +54,7 @@ describe('SignInLinkService', () => {
       findById: jest.fn(),
       blockUser: jest.fn(),
     };
-    service = new SignInLinkService(randomGenerator, hasher, userRepository, userService);
+    service = new SignInLinkService(signInLinkGenerator, hasher, userRepository, userService);
     user = cloneDeep(TEST_USER_PARTIAL_2FA);
   });
 
@@ -98,28 +98,28 @@ describe('SignInLinkService', () => {
       });
 
       describe('when the user is not blocked or disabled', () => {
-        describe('when creating the sign in link token fails', () => {
-          const createSignInLinkTokenError = new Error();
+        describe('when creating the sign in token fails', () => {
+          const createSignInTokenError = new FailedToCreateSignInTokenError();
 
           beforeEach(() => {
-            randomGenerator.randomHexString.mockImplementationOnce(() => {
-              throw createSignInLinkTokenError;
+            signInLinkGenerator.createSignInToken.mockImplementationOnce(() => {
+              throw createSignInTokenError;
             });
           });
 
           testCreatingAndEmailingTheSignInLinkRejects({
-            expectedCause: createSignInLinkTokenError,
-            expectedMessage: 'Failed to create a sign in token',
+            expectedError: createSignInTokenError,
           });
         });
 
-        describe('when creating the sign in link token succeeds', () => {
+        describe('when creating the sign in token succeeds', () => {
           beforeEach(() => {
-            randomGenerator.randomHexString.mockReturnValueOnce(token);
+            signInLinkGenerator.createSignInToken.mockReturnValueOnce(token);
           });
 
           describe('when hashing the sign in link token fails', () => {
             const hashError = new Error();
+            const expectedError = new FailedToSaveSignInTokenError({ cause: hashError });
             beforeEach(() => {
               hasher.hash.mockImplementationOnce(() => {
                 throw hashError;
@@ -127,8 +127,7 @@ describe('SignInLinkService', () => {
             });
 
             testCreatingAndEmailingTheSignInLinkRejects({
-              expectedCause: hashError,
-              expectedMessage: 'Failed to save the sign in token',
+              expectedError,
             });
           });
 
@@ -138,15 +137,15 @@ describe('SignInLinkService', () => {
             });
 
             describe('when saving the sign in link token to the database fails', () => {
-              const savingTokenError = new Error();
+              const saveToRepositoryError = new Error();
+              const expectedError = new FailedToSaveSignInTokenError({ cause: saveToRepositoryError });
 
               beforeEach(() => {
-                userRepository.saveSignInTokenForUser.mockRejectedValueOnce(savingTokenError);
+                userRepository.saveSignInTokenForUser.mockRejectedValueOnce(saveToRepositoryError);
               });
 
               testCreatingAndEmailingTheSignInLinkRejects({
-                expectedCause: savingTokenError,
-                expectedMessage: 'Failed to save the sign in token',
+                expectedError,
               });
             });
 
@@ -205,6 +204,7 @@ describe('SignInLinkService', () => {
 
               describe('when sending the sign in link email fails', () => {
                 const sendEmailError = new Error();
+                const expectedError = new FailedToSendSignInTokenError({ cause: sendEmailError });
 
                 beforeEach(() => {
                   sendEmail.mockImplementationOnce(() => {
@@ -213,8 +213,7 @@ describe('SignInLinkService', () => {
                 });
 
                 testCreatingAndEmailingTheSignInLinkRejects({
-                  expectedCause: sendEmailError,
-                  expectedMessage: 'Failed to email the sign in token',
+                  expectedError,
                 });
               });
 
@@ -354,12 +353,11 @@ describe('SignInLinkService', () => {
     });
   });
 
-  async function testCreatingAndEmailingTheSignInLinkRejects({ expectedMessage, expectedCause }) {
+  async function testCreatingAndEmailingTheSignInLinkRejects({ expectedError }) {
     it('rejects', async () => {
       const createAndEmailSignInLinkPromise = service.createAndEmailSignInLink(user);
 
-      await expect(() => createAndEmailSignInLinkPromise).rejects.toThrow(expectedMessage);
-      await expect(() => createAndEmailSignInLinkPromise).rejects.toHaveProperty('cause', expectedCause);
+      await expect(() => createAndEmailSignInLinkPromise).rejects.toThrow(expectedError);
     });
   }
 });
