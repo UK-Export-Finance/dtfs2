@@ -34,7 +34,7 @@
   "dependencies": {
     "@ministryofjustice/frontend": "1.8.0",
     "@ukef/dtfs2-common": "^1.0.0",
-    "axios": "^1.6.8",
+    "axios": "^1.7.1",
     "axios-mock-adapter": "^1.22.0",
     "cheerio": "^1.0.0-rc.12",
     "clamscan": "^2.2.1",
@@ -99,7 +99,7 @@
     "jest-when": "^3.6.0",
     "node-mocks-http": "^1.14.1",
     "rimraf": "^5.0.7",
-    "sass": "^1.77.1",
+    "sass": "^1.77.2",
     "sass-loader": "13.2.2",
     "style-loader": "3.3.2",
     "terser-webpack-plugin": "^5.3.10",

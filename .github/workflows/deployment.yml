@@ -165,7 +165,7 @@ jobs:
           echo WEBAPP=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ matrix.webapp }}`)].name' -o tsv) >> $GITHUB_ENV
 
       - name: ACR 🔐
-        uses: azure/docker-login@v1
+        uses: azure/docker-login@v2
         with:
           login-server: ${{ env.ACR }}
           username: ${{ env.ACR_USER }}
@@ -273,7 +273,7 @@ jobs:
           echo FUNCTION=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) >> $GITHUB_ENV
 
       - name: ACR 🔐
-        uses: azure/docker-login@v1
+        uses: azure/docker-login@v2
         with:
           login-server: ${{ env.ACR }}
           username: ${{ env.ACR_USER }}

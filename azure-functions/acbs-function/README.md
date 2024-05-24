@@ -6,9 +6,9 @@ Azure Functions are not platform-agnostic and work exclusively within the Azure 
 
 Azure Functions can be run locally on port 7071 using the Azure Functions Core Tools. This local environment enables testing and debugging before deploying to Azure.
 
-## Orchestrating with HTTP Starter Function :electric_plug:
+## Orchestrating with HTTP trigger Function :electric_plug:
 
-Durable Functions are initiated by an HTTP starter function, often referred to as `acbs-http`. This starter function triggers the execution of durable orchestrator functions.
+Durable Functions are initiated by an HTTP trigger function, often referred to as `acbs-http`. This starter function triggers the execution of durable orchestrator functions.
 
 ## Durable Functions 🔄
 

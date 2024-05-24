@@ -1,6 +1,7 @@
 {
     "name": "dtfs-utilities",
     "version": "1.0.0",
+    "private": true,
     "description": "DTFS Utilities",
     "license": "MIT",
     "author": "UK Export Finance",
@@ -19,7 +20,7 @@
     "dependencies": {
         "@faker-js/faker": "^8.4.1",
         "@ukef/dtfs2-common": "^1.0.0",
-        "axios": "^1.6.8",
+        "axios": "^1.7.1",
         "bson": "^6.7.0",
         "chance": "^1.1.11",
         "date-fns": "^2.30.0",

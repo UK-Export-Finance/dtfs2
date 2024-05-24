@@ -1,6 +1,7 @@
 {
   "name": "external-api",
   "version": "1.0.0",
+  "private": true,
   "description": "DTFS External API",
   "keywords": [
     "export",
@@ -30,9 +31,9 @@
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },
   "dependencies": {
-    "@types/lodash": "^4.17.1",
+    "@types/lodash": "^4.17.4",
     "@ukef/dtfs2-common": "1.0.0",
-    "axios": "^1.6.8",
+    "axios": "^1.7.1",
     "axios-mock-adapter": "^1.22.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
