@@ -569,13 +569,7 @@ var DTFS_TFM;
                   i
                 );
               }),
-              n &&
-                Object.defineProperty(window.Event, 'prototype', {
-                  configurable: !1,
-                  enumerable: !1,
-                  writable: !0,
-                  value: n,
-                }),
+              n && Object.defineProperty(window.Event, 'prototype', { configurable: !1, enumerable: !1, writable: !0, value: n }),
               'createEvent' in document ||
                 ((window.addEventListener =
                   Window.prototype.addEventListener =
@@ -968,15 +962,9 @@ var DTFS_TFM;
       });
   }).call(('object' == typeof window && window) || ('object' == typeof self && self) || ('object' == typeof global && global) || {});
   var f = {
-    charactersUnderLimit: {
-      one: 'You have %{count} character remaining',
-      other: 'You have %{count} characters remaining',
-    },
+    charactersUnderLimit: { one: 'You have %{count} character remaining', other: 'You have %{count} characters remaining' },
     charactersAtLimit: 'You have 0 characters remaining',
-    charactersOverLimit: {
-      one: 'You have %{count} character too many',
-      other: 'You have %{count} characters too many',
-    },
+    charactersOverLimit: { one: 'You have %{count} character too many', other: 'You have %{count} characters too many' },
     wordsUnderLimit: { one: 'You have %{count} word remaining', other: 'You have %{count} words remaining' },
     wordsAtLimit: 'You have 0 words remaining',
     wordsOverLimit: { one: 'You have %{count} word too many', other: 'You have %{count} words too many' },
@@ -995,9 +983,7 @@ var DTFS_TFM;
     if (
       (('maxwords' in d || 'maxlength' in d) && (h = { maxlength: !1, maxwords: !1 }),
       (this.config = i(u, e || {}, h, d)),
-      (this.i18n = new a(o(this.config, 'i18n'), {
-        locale: ((s = t), (l = 'lang'), (c = s.closest('[' + l + ']')), c ? c.getAttribute(l) : null),
-      })),
+      (this.i18n = new a(o(this.config, 'i18n'), { locale: ((s = t), (l = 'lang'), (c = s.closest('[' + l + ']')), c ? c.getAttribute(l) : null) })),
       (this.maxLength = 1 / 0),
       'maxwords' in this.config && this.config.maxwords)
     )
