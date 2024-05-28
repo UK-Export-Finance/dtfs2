@@ -4,6 +4,8 @@ import { MongoDbClient } from '../../mongo-db-client';
 import { AuditDatabaseRecord, DeletionAuditLog, MongoDbCollectionName } from '../../types';
 import { changeStreamConfig } from '../config';
 
+const { CHANGE_STREAM_ENABLED } = changeStreamConfig;
+
 /**
  * Methods on the mongodb Collection class @see {@link https://mongodb.github.io/node-mongodb-native/4.17/classes/Collection.html | documentation}
  */
@@ -79,7 +81,7 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
       await mongoDbClient.close();
     });
 
-    if (changeStreamConfig.CHANGE_STREAM_ENABLED === 'true') {
+    if (CHANGE_STREAM_ENABLED) {
       describe('when the service is working normally', () => {
         it('should add a deletion audit log', async () => {
           await makeRequest();
