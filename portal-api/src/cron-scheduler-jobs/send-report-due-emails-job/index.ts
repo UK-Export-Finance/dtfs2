@@ -1,8 +1,8 @@
 import { format, isSameDay } from 'date-fns';
 import { CronSchedulerJob, asString } from '@ukef/dtfs2-common';
+import { EMAIL_TEMPLATE_IDS } from '../../constants';
 import { SendEmailCallback, getReportDueDate, sendEmailToAllBanksWhereReportNotReceived } from '../helpers/utilisation-report-helpers';
 import sendEmail from '../../external-api/send-email';
-import EMAIL_TEMPLATE_IDS from '../../constants/email-template-ids';
 
 const { UTILISATION_REPORT_DUE_EMAIL_SCHEDULE } = process.env;
 

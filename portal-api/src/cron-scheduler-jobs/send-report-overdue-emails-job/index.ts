@@ -6,8 +6,8 @@ import {
   sendEmailToAllBanksWhereReportNotReceived,
   SendEmailCallback,
 } from '../helpers/utilisation-report-helpers';
+import { EMAIL_TEMPLATE_IDS } from '../../constants';
 import sendEmail from '../../external-api/send-email';
-import EMAIL_TEMPLATE_IDS from '../../constants/email-template-ids';
 
 const { UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE } = process.env;
 
