@@ -9,8 +9,8 @@ const api = require('../../api');
 describe('loginWithSignInLink', () => {
   const userId = '65626dc0bda51f77a78b86ae';
   const signInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
-  const loginResponseUserToken = 'a token';
-  const a2faToken = 'aToken';
+  const loginResponseUserToken = 'loginResponseUserToken';
+  const a2faToken = 'a2faToken';
   const loginStatus = CONSTANTS.LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
   const userEmail = 'an-email@example.com';
   const user = {
@@ -25,7 +25,7 @@ describe('loginWithSignInLink', () => {
 
   beforeEach(() => {
     session = { userToken: a2faToken, numberOfSendSignInLinkAttemptsRemaining: 1, userEmail, _id: userId };
-    req = { session, query: { t: signInToken, u: userId } };
+    req = { session, query: { t: signInToken } };
     res = { status: jest.fn().mockReturnThis(), render: jest.fn(), redirect: jest.fn() };
     api.loginWithSignInLink = jest.fn();
   });
@@ -134,41 +134,6 @@ describe('loginWithSignInLink', () => {
     expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
   });
 
-  it('returns a 400 response with the problem with service page if the u query string is not a valid userId', async () => {
-    const reqWithInvalidUserId = {
-      ...req,
-      query: {
-        ...req.query,
-        u: '123',
-      },
-    };
-
-    await testItReturnsA400ResponseWithTheProblemWithServicePage(reqWithInvalidUserId, res);
-  });
-
-  it('returns a 400 response with the problem with service page if the u query string is empty', async () => {
-    const reqWithEmptyUserId = {
-      ...req,
-      query: {
-        ...req.query,
-        u: '',
-      },
-    };
-
-    await testItReturnsA400ResponseWithTheProblemWithServicePage(reqWithEmptyUserId, res);
-  });
-
-  it('returns a 400 response with the problem with service page if the u query string is not provided', async () => {
-    const reqWithMissingUserId = {
-      ...req,
-      query: {
-        t: req.query.t,
-      },
-    };
-
-    await testItReturnsA400ResponseWithTheProblemWithServicePage(reqWithMissingUserId, res);
-  });
-
   it('returns a 400 response with the problem with service page if the t query string is not a valid signInToken', async () => {
     const reqWithInvalidSignInToken = {
       ...req,
@@ -196,9 +161,7 @@ describe('loginWithSignInLink', () => {
   it('returns a 400 response with the problem with service page if the t query string is not provided', async () => {
     const reqWithMissingSignInToken = {
       ...req,
-      query: {
-        u: req.query.u,
-      },
+      query: {},
     };
 
     await testItReturnsA400ResponseWithTheProblemWithServicePage(reqWithMissingSignInToken, res);

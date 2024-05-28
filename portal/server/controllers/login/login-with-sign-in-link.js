@@ -32,11 +32,9 @@ const getUserRedirectUrl = (user) => {
 module.exports.loginWithSignInLink = async (req, res) => {
   try {
     const {
-      session: { existingSessionUser, userToken },
+      session: { _id: userId, userToken },
       query: { t: signInToken },
     } = req;
-
-    const { _id: userId } = existingSessionUser;
 
     if (!isValidUserId(userId)) {
       console.error('Error validating sign in link: invalid userId %s', userId);
