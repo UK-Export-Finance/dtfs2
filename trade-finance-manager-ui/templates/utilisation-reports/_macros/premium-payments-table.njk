@@ -25,7 +25,6 @@
 
     <tbody class="govuk-table__body">
     {% for feeRecord in feeRecords %}
-      {% set checkboxId = ['feeRecordId-', feeRecord.id] | join %}
       <tr
         class="govuk-table__row"
         data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }}"
@@ -33,7 +32,8 @@
         <td class="govuk-table__cell">
           {% if feeRecord.status === 'TO_DO' or feeRecord.status === 'DOES_NOT_MATCH' %}
             {{ tableCellCheckbox.render({
-              checkboxId: checkboxId
+              checkboxId: feeRecord.checkboxId,
+              checked: feeRecord.isChecked
             }) }}
           {% endif %}
         </td>
@@ -47,20 +47,20 @@
         <td class="govuk-table__cell" data-sort-value="{{ feeRecord.exported }}">
           {{ feeRecord.exporter }}
         </td>
-        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.reportedFees }}">
-          {{ feeRecord.reportedFees }}
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.reportedFees.dataSortValue }}">
+          {{ feeRecord.reportedFees.formattedCurrencyAndAmount }}
         </td>
-        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.reportedPayments }}">
-          {{ feeRecord.reportedPayments }}
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.reportedPayments.dataSortValue }}">
+          {{ feeRecord.reportedPayments.formattedCurrencyAndAmount }}
         </td>
-        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.totalReportedPayments }}">
-          {{ feeRecord.totalReportedPayments }}
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.totalReportedPayments.dataSortValue }}">
+          {{ feeRecord.totalReportedPayments.formattedCurrencyAndAmount }}
         </td>
-        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.paymentsReceived }}">
-          {{ feeRecord.paymentsReceived }}
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.paymentsReceived.dataSortValue }}">
+          {{ feeRecord.paymentsReceived.formattedCurrencyAndAmount }}
         </td>
-        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.totalPaymentsReceived }}">
-          {{ feeRecord.totalPaymentsReceived }}
+        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.totalPaymentsReceived.dataSortValue }}">
+          {{ feeRecord.totalPaymentsReceived.formattedCurrencyAndAmount }}
         </td>
         <td class="govuk-table__cell" data-sort-value="{{ feeRecord.displayStatus }}">
           {{ feeRecordStatus.render({

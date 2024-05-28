@@ -13,11 +13,17 @@ const cleanAllTablesTfm = require('./tfm/clean-all-tables-tfm');
 const insertMocksTfm = require('./tfm/insert-mocks-tfm');
 const { logger, LOGGER_COLOURS } = require('./helpers/logger.helper');
 
+const { setupDeletionAuditLogsCollection, deleteDeletionAuditLogsCollection } = require('./setup-deletion-audit-logs');
+
 const init = async () => {
   logger.info('REINSERTING MOCKS', { colour: LOGGER_COLOURS.bright });
   try {
     const portalToken = await createAndLogInAsInitialUser();
 
+    if (process.env.CHANGE_STREAM_ENABLED === 'true') {
+      await deleteDeletionAuditLogsCollection();
+      await setupDeletionAuditLogsCollection();
+    }
     await cleanAllTablesPortal(portalToken);
     await cleanAllTablesGef(portalToken);
     await cleanAllTablesTfm();
@@ -33,6 +39,9 @@ const init = async () => {
   } catch (error) {
     logger.error('An error occurred, attempting to clean all tables');
     try {
+      if (process.env.CHANGE_STREAM_ENABLED === 'true') {
+        await deleteDeletionAuditLogsCollection();
+      }
       const portalToken = await createAndLogInAsInitialUser();
       await cleanAllTablesPortal(portalToken);
       await cleanAllTablesGef(portalToken);

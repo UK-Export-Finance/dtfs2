@@ -115,7 +115,7 @@ module.exports.updateTfmUserById = (req, res, next) => {
 };
 
 module.exports.removeTfmUserById = (req, res, next) => {
-  removeTfmUserById(req.params.user, (error, status) => {
+  removeTfmUserById(req.params.user, generateTfmAuditDetails(req.user._id), (error, status) => {
     if (error) {
       next(error);
     } else {
