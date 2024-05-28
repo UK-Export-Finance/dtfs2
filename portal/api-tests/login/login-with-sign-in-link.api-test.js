@@ -16,7 +16,7 @@ const { get } = require('../create-api').createApi(app);
 const api = require('../../server/api');
 const { LOGIN_STATUS, HTTP_ERROR_CAUSES } = require('../../server/constants');
 
-describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
+describe('GET /login/sign-in-link?t={signInToken}', () => {
   const validSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const validUserId = '65626dc0bda51f77a78b86ae';
   const userToken = 'a token';

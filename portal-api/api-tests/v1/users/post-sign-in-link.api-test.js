@@ -322,7 +322,7 @@ describe('POST /users/me/sign-in-link', () => {
             expect(sendEmail).toHaveBeenCalledWith('2eab0ad2-eb92-43a4-b04c-483c28a4da18', partiallyLoggedInUser.email, {
               firstName: partiallyLoggedInUser.firstname,
               lastName: partiallyLoggedInUser.surname,
-              signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}&u=${partiallyLoggedInUser._id}`,
+              signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}`,
               signInLinkDuration: '2 minutes',
             });
           });
