@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteMany, deleteOne } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const { validateApplicationReferences, validatorStatusCheckEnums } = require('./validation/application');
@@ -293,22 +293,28 @@ exports.changeStatus = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const { id: dealId } = req.params;
+  const auditDetails = generatePortalAuditDetails(req.user._id);
 
   if (!ObjectId.isValid(dealId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
-  const applicationCollection = await db.getCollection(dealsCollection);
-  const applicationResponse = await applicationCollection.findOneAndDelete({
-    _id: { $eq: ObjectId(dealId) },
+  const applicationDeleteResult = await deleteOne({
+    documentId: dealId,
+    collectionName: dealsCollection,
+    db,
+    auditDetails,
   });
-  if (applicationResponse.value) {
-    // remove facility information related to the application
-    const query = await db.getCollection(facilitiesCollection);
-    await query.deleteMany({ dealId: { $eq: ObjectId(dealId) } });
-  }
 
-  return res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
+  // remove facility information related to the application
+  await deleteMany({
+    filter: { dealId: { $eq: ObjectId(dealId) } },
+    collectionName: facilitiesCollection,
+    db,
+    auditDetails,
+  });
+
+  return res.status(200).send(applicationDeleteResult);
 };
 
 const dealsFilters = (user, filters = []) => {

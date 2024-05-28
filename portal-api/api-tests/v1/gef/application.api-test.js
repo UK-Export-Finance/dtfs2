@@ -1,5 +1,19 @@
+const actualDb = jest.requireActual('../../../src/drivers/db-client');
+const mockGetCollection = jest.fn(actualDb.getCollection.bind(actualDb));
+
+jest.mock('../../../src/drivers/db-client', () => ({
+  ...jest.requireActual('../../../src/drivers/db-client'),
+  getCollection: mockGetCollection,
+}));
+
+const { ObjectId } = require('mongodb');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { format, fromUnixTime } = require('date-fns');
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const {
+  generateParsedMockPortalUserAuditDatabaseRecord,
+  generateMockPortalUserAuditDatabaseRecord,
+  withDeleteOneTests,
+} = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
@@ -78,6 +92,10 @@ describe(baseUrl, () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    jest.resetAllMocks();
   });
 
   describe(`GET ${baseUrl}`, () => {
@@ -742,14 +760,20 @@ describe(baseUrl, () => {
   });
 
   describe(`DELETE ${baseUrl}/:id`, () => {
+    let applicationToDeleteId;
+    beforeEach(async () => {
+      const { body } = await as(aMaker).post(mockApplications[0]).to(`${baseUrl}`);
+
+      applicationToDeleteId = new ObjectId(body._id);
+    });
+
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().remove(`${baseUrl}/1`);
+      const { status } = await as().remove(`${baseUrl}/${applicationToDeleteId}`);
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const { body } = await as(aMaker).post(mockApplications[0]).to(`${baseUrl}`);
-      const { status } = await as(aMaker).remove(`${baseUrl}/${String(body._id)}`);
+      const { status, body } = await as(aMaker).remove(`${baseUrl}/${applicationToDeleteId}`);
       expect(status).toEqual(200);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
@@ -757,6 +781,17 @@ describe(baseUrl, () => {
     it('returns a 204 - "No Content" if there are no records', async () => {
       const { status } = await as(aMaker).remove(`${baseUrl}/doesnotexist`);
       expect(status).toEqual(204);
+    });
+
+    withDeleteOneTests({
+      makeRequest: () => as(aMaker).remove(`${baseUrl}/${applicationToDeleteId}`),
+      collectionName: MONGO_DB_COLLECTIONS.DEALS,
+      auditRecord: {
+        ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
+        lastUpdatedByPortalUserId: expect.any(ObjectId),
+      },
+      getDeletedDocumentId: () => applicationToDeleteId,
+      mockGetCollection,
     });
   });
 });
