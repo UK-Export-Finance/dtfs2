@@ -16,8 +16,8 @@ const setupChangeStreamForCollection = async (collectionName: string) => {
       fullDocument: 'updateLookup',
     });
   changeStream.on('change', (changeStreamDocument: ChangeStreamInsertDocument | ChangeStreamUpdateDocument | ChangeStreamReplaceDocument) => {
-    postAuditDetails(changeStreamDocument).catch(() => {
-      console.error('Error sending change stream update to API');
+    postAuditDetails(changeStreamDocument).catch((error) => {
+      console.error('Error sending change stream update to API', error);
     });
   });
 };
@@ -31,8 +31,8 @@ const setupChangeStreamForDeletionCollection = async () => {
       fullDocument: 'updateLookup',
     });
   changeStream.on('change', (changeStreamDocument: ChangeStreamInsertDocument<DeletionAuditLog>) => {
-    postDeletionAuditDetails(changeStreamDocument).catch(() => {
-      console.error('Error sending change stream update to API');
+    postDeletionAuditDetails(changeStreamDocument).catch((error) => {
+      console.error('Error sending change stream update to API', error);
     });
   });
 };
