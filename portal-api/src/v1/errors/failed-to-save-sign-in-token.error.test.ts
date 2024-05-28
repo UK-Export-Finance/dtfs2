@@ -4,7 +4,7 @@ describe('FailedToSaveSignInTokenError', () => {
   it('exposes the default message', () => {
     const exception = new FailedToSaveSignInTokenError();
 
-    expect(exception.message).toBe('Failed to create sign in token');
+    expect(exception.message).toBe('Failed to save sign in token"');
   });
 
   it('exposes the name of the exception', () => {

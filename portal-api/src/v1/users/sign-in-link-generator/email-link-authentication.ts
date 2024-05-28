@@ -18,7 +18,7 @@ export class EmailSignInLinkGenerator implements SignInLinkGenerator {
     }
   }
 
-  createSignInArtifactFromSignInToken(signInToken: string) {
+  createUserFacingSignInTokenFromSignInToken(signInToken: string) {
     return `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}`;
   }
 

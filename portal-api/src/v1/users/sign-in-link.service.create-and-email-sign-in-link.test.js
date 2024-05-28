@@ -41,7 +41,7 @@ describe('SignInLinkService', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     signInLinkGenerator = mockSignInLinkGenerator;
-    when(signInLinkGenerator.createSignInArtifactFromSignInToken).calledWith(token).mockReturnValue(signInLink);
+    when(signInLinkGenerator.createUserFacingSignInTokenFromSignInToken).calledWith(token).mockReturnValue(signInLink);
     hasher = {
       hash: jest.fn(),
       verifyHash: jest.fn(),

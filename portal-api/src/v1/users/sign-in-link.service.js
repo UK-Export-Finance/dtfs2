@@ -1,5 +1,5 @@
 const sendEmail = require('../email');
-const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK } = require('../../constants');
+const { SIGN_IN_LINK } = require('../../constants');
 const { STATUS_BLOCKED_REASON } = require('../../constants/user');
 const { UserBlockedError, FailedToSaveSignInTokenError, FailedToSendSignInTokenError } = require('../errors');
 const { sendBlockedEmail } = require('./controller');
@@ -40,7 +40,7 @@ class SignInLinkService {
     await this.#saveSignInTokenHashAndSalt({ userId, signInToken, auditDetails });
 
     await this.#sendSignInLinkEmail({
-      signInLink: this.#signInLinkGenerator.createSignInArtifactFromSignInToken(signInToken),
+      signInLink: this.#signInLinkGenerator.createUserFacingSignInTokenFromSignInToken(signInToken),
       userEmail,
       userFirstName,
       userLastName,
@@ -154,7 +154,8 @@ class SignInLinkService {
     }
 
     try {
-      await sendEmail(EMAIL_TEMPLATE_IDS.SIGN_IN_EMAIL_LINK, userEmail, {
+      const emailTemplateId = this.#signInLinkGenerator.getSignInLinkEmailTemplateId();
+      await sendEmail(emailTemplateId, userEmail, {
         firstName: userFirstName,
         lastName: userLastName,
         signInLink,

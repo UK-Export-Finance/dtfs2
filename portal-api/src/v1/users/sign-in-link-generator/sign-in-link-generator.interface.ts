@@ -1,5 +1,5 @@
 export interface SignInLinkGenerator {
   createSignInToken(): string;
-  createSignInArtifactFromSignInToken(signInToken: string): string;
+  createUserFacingSignInTokenFromSignInToken(signInToken: string): string;
   getSignInLinkEmailTemplateId(): string;
 }
