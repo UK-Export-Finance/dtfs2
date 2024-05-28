@@ -1,6 +1,6 @@
+const { UtilisationReportEntityMockBuilder, FeeRecordEntityMockBuilder } = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
 const { getReportViewModel } = require('../../../server/controllers/utilisation-reports/helpers/find-reports-by-year-helper');
-const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS } = require('../../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
 const { MOCK_TFM_SESSION_USER } = require('../../../server/test-mocks/mock-tfm-session-user');
 
 const component = '../templates/utilisation-reports/_macros/search-reports-table.njk';
@@ -10,15 +10,67 @@ const render = componentRenderer(component);
 
 const originalProcessEnv = process.env;
 
+const mapReportToSummaryItem = (bank, report) => {
+  const totalFeesReported = report.feeRecords.length;
+
+  // TODO FN-1398 - status to be added to report fee records to allow us to calculate how
+  //  many facilities are left to reconcile
+  const reportedFeesLeftToReconcile = totalFeesReported;
+
+  return {
+    reportId: report.id,
+    reportPeriod: report.reportPeriod,
+    bank: {
+      id: bank.id,
+      name: bank.name,
+    },
+    status: report.status,
+    dateUploaded: report.dateUploaded ?? undefined,
+    totalFeesReported,
+    reportedFeesLeftToReconcile,
+  };
+};
+
+const BANK = {
+  id: '1',
+  name: 'Test Bank 1',
+};
+
 describe(component, () => {
   afterAll(() => {
     process.env = { ...originalProcessEnv };
   });
 
   const getWrapper = ({ isTfmPaymentReconciliationFeatureFlagEnabled } = {}) => {
+    const getReportPeriod = (month) => {
+      return {
+        start: {
+          month,
+          year: 2024,
+        },
+        end: {
+          month,
+          year: 2024,
+        },
+      };
+    };
+
+    const pendingMockReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+      .withDateUploaded('2023-12-01T15:04:53Z')
+      .withReportPeriod(getReportPeriod(10))
+      .build();
+    const pendingFeeRecord = FeeRecordEntityMockBuilder.forReport(pendingMockReport).build();
+    pendingMockReport.feeRecords = [pendingFeeRecord];
+    const reconciliationInProgressMockReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
+      .withDateUploaded('2023-12-01T15:04:53Z')
+      .withReportPeriod(getReportPeriod(11))
+      .build();
+    const reconciliationInProgressFeeRecord = FeeRecordEntityMockBuilder.forReport(reconciliationInProgressMockReport).build();
+    reconciliationInProgressMockReport.feeRecords = [reconciliationInProgressFeeRecord];
+
     const mockReports = [
-      getReportViewModel(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.PENDING_RECONCILIATION),
-      getReportViewModel(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.RECONCILIATION_IN_PROGRESS),
+      getReportViewModel(mapReportToSummaryItem(BANK, pendingMockReport)),
+      getReportViewModel(mapReportToSummaryItem(BANK, reconciliationInProgressMockReport)),
     ];
     const params = {
       user: MOCK_TFM_SESSION_USER,
@@ -66,7 +118,9 @@ describe(component, () => {
     reports.forEach((report) => {
       wrapper.expectElement(`td:contains("${report.formattedReportPeriod}")`).toExist();
 
-      wrapper.expectLink('td > a').toLinkTo(`/utilisation-reports/${report.reportId}`, report.formattedReportPeriod);
+      wrapper
+        .expectLink(`td > a:contains("${report.formattedReportPeriod}")`)
+        .toLinkTo(`/utilisation-reports/${report.reportId}`, report.formattedReportPeriod);
 
       wrapper.expectElement(`td:contains("${report.displayStatus}")`).toExist();
       if (report.formattedDateUploaded) {
