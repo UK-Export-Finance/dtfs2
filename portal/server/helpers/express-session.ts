@@ -56,7 +56,7 @@ export const asLoggedInUserSession = (session: Session): LoggedInUserSession => 
  * By default, all session data will be optional
  * (see use of `Partial` {@link https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/express-session/index.d.ts#L17 here})
  *
- * This helper function asserts that the `loginStatus`, `userToken`, `userEmail`
+ * This helper function asserts that the `loginStatus`, `userToken`, `userEmail`, `userId`
  * and `numberOfSignInLinkAttemptsRemaining` properties are present in the session,
  * or throws an `Error` if not.
  *

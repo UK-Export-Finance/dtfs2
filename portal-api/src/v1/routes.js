@@ -60,10 +60,9 @@ openRouter.route('/feedback').post(checkApiKey, feedback.create);
 openRouter.route('/user').post(checkApiKey, users.create);
 
 openRouter
-  .route('/users/:userId/sign-in-link/:signInToken/login')
+  .route('/users/me/sign-in-link/:signInToken/login')
   .post(
     passport.authenticate(partial2faTokenPassportStrategy, { session: false }),
-    param('userId').isMongoId().withMessage('Value must be a valid MongoId'),
     param('signInToken')
       .isHexadecimal()
       .withMessage('Value must be a hexadecimal string')

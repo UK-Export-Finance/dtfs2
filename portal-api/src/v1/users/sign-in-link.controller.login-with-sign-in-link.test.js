@@ -52,21 +52,10 @@ describe('SignInLinkController', () => {
       user: TEST_USER_SANITISED_FOR_FRONTEND,
     };
 
-    describe('given the userId does not match the userId in the request', () => {
+    describe('given there is a sign in token in the request', () => {
       beforeEach(() => {
         req = {
-          user: { _id: 'A different Id' },
-          params: { userId: TEST_USER_PARTIAL_2FA._id, signInToken },
-        };
-      });
-
-      itShouldReturnAnInvalidUserId400();
-    });
-    describe('given the userId matches the userId in the request', () => {
-      beforeEach(() => {
-        req = {
-          user: { _id: TEST_USER_PARTIAL_2FA._id },
-          params: { userId: TEST_USER_PARTIAL_2FA._id, signInToken },
+          params: { signInToken },
         };
       });
 
@@ -340,7 +329,7 @@ describe('SignInLinkController', () => {
     }
 
     function mockGetSignInTokenStatusWithResolvedValue(response) {
-      when(signInLinkService.getSignInTokenStatus).calledWith({ userId: TEST_USER_PARTIAL_2FA._id, signInToken }).mockResolvedValue(response);
+      when(signInLinkService.getSignInTokenStatus).calledWith({ signInToken }).mockResolvedValue(response);
     }
 
     function mockGetSignInTokenStatusNotFound() {
@@ -356,7 +345,7 @@ describe('SignInLinkController', () => {
     }
 
     function mockGetSignInTokenStatusToRejectWithError(error) {
-      when(signInLinkService.getSignInTokenStatus).calledWith({ userId: TEST_USER_PARTIAL_2FA._id, signInToken }).mockRejectedValue(error);
+      when(signInLinkService.getSignInTokenStatus).calledWith({ signInToken }).mockRejectedValue(error);
     }
     function mockGetSignInTokenStatusErrorWithInvalidSignInTokenError() {
       mockGetSignInTokenStatusToRejectWithError(new InvalidSignInTokenError(signInToken));

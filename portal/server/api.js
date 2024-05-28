@@ -42,13 +42,13 @@ const sendSignInLink = async (token) =>
 
 /**
  * Logs in a user using a sign in link
- * @param {Object} parameters token, userId and signInToken
- * @returns {Object} loginStatus, token and user
+ * @param {Object} parameters token and signInToken
+ * @returns {Promise<Object>} loginStatus, token and user
  */
-const loginWithSignInLink = async ({ token: requestAuthToken, userId, signInToken }) => {
+const loginWithSignInLink = async ({ token: requestAuthToken, signInToken }) => {
   const response = await axios({
     method: 'post',
-    url: `${PORTAL_API_URL}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
+    url: `${PORTAL_API_URL}/v1/users/me/sign-in-link/${signInToken}/login`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: requestAuthToken,

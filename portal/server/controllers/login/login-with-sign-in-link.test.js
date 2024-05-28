@@ -24,7 +24,7 @@ describe('loginWithSignInLink', () => {
   let res;
 
   beforeEach(() => {
-    session = { userToken: a2faToken, numberOfSendSignInLinkAttemptsRemaining: 1, userEmail, _id: userId };
+    session = { userToken: a2faToken, numberOfSendSignInLinkAttemptsRemaining: 1, userEmail };
     req = { session, query: { t: signInToken } };
     res = { status: jest.fn().mockReturnThis(), render: jest.fn(), redirect: jest.fn() };
     api.loginWithSignInLink = jest.fn();
@@ -32,7 +32,7 @@ describe('loginWithSignInLink', () => {
 
   const mockSuccessfulLoginApiCall = (opts) => {
     when(api.loginWithSignInLink)
-      .calledWith({ token: a2faToken, userId, signInToken })
+      .calledWith({ token: a2faToken, signInToken })
       .mockResolvedValueOnce({
         token: loginResponseUserToken,
         loginStatus,
@@ -41,7 +41,7 @@ describe('loginWithSignInLink', () => {
   };
 
   const mockLoginApiCallToRejectWith = (error) => {
-    when(api.loginWithSignInLink).calledWith({ token: a2faToken, userId, signInToken }).mockRejectedValueOnce(error);
+    when(api.loginWithSignInLink).calledWith({ token: a2faToken, signInToken }).mockRejectedValueOnce(error);
   };
 
   it('saves the login response to the session', async () => {

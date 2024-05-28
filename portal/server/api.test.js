@@ -47,7 +47,6 @@ describe('api.login', () => {
 });
 
 describe('api.loginWithSignInLink', () => {
-  const userId = '65626dc0bda51f77a78b86ae';
   const signInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const token2fa = 'a 2fa token';
   const tokenFromPortalApi = 'a token from portal api';
@@ -61,7 +60,7 @@ describe('api.loginWithSignInLink', () => {
     when(axios)
       .calledWith({
         method: 'post',
-        url: `${PORTAL_API_URL}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
+        url: `${PORTAL_API_URL}/v1/users/me/sign-in-link/${signInToken}/login`,
         headers: {
           'Content-Type': 'application/json',
           Authorization: token2fa,
@@ -69,7 +68,7 @@ describe('api.loginWithSignInLink', () => {
       })
       .mockResolvedValueOnce({ data: { token: tokenFromPortalApi, loginStatus, user } });
 
-    const result = await api.loginWithSignInLink({ token: token2fa, signInToken, userId });
+    const result = await api.loginWithSignInLink({ token: token2fa, signInToken });
 
     expect(result).toStrictEqual({
       token: tokenFromPortalApi,
@@ -82,7 +81,7 @@ describe('api.loginWithSignInLink', () => {
     const error = new Error();
     axios.mockRejectedValueOnce(error);
 
-    const loginPromise = api.loginWithSignInLink({ token: token2fa, signInToken, userId });
+    const loginPromise = api.loginWithSignInLink({ token: token2fa, signInToken });
 
     await expect(loginPromise).rejects.toBe(error);
   });

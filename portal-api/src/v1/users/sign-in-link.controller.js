@@ -15,12 +15,11 @@ class SignInLinkController {
 
   async loginWithSignInLink(req, res) {
     try {
-      const { userId, signInToken } = req.params;
+      const {
+        params: { signInToken },
+        user: { _id: userId },
+      } = req;
       const auditDetails = generatePortalAuditDetails(userId);
-
-      if (req.user._id.toString() !== userId) {
-        throw new InvalidUserIdError(userId);
-      }
 
       const signInTokenStatus = await this.#signInLinkService.getSignInTokenStatus({ userId, signInToken });
 

@@ -18,7 +18,6 @@ const { LOGIN_STATUS, HTTP_ERROR_CAUSES } = require('../../server/constants');
 
 describe('GET /login/sign-in-link?t={signInToken}', () => {
   const validSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
-  const validUserId = '65626dc0bda51f77a78b86ae';
   const userToken = 'a token';
   const loginStatus = LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
   const userEmail = 'an-email@example.com';
@@ -29,23 +28,21 @@ describe('GET /login/sign-in-link?t={signInToken}', () => {
   const getSignInLinkLoginPage = (query) => get('/login/sign-in-link', query);
 
   it('returns a 200 response if the login API request succeeds', async () => {
-    when(api.loginWithSignInLink)
-      .calledWith({ signInToken: validSignInToken, userId: validUserId })
-      .mockResolvedValueOnce({ loginStatus, token: userToken, user });
+    when(api.loginWithSignInLink).calledWith({ signInToken: validSignInToken }).mockResolvedValueOnce({ loginStatus, token: userToken, user });
 
-    const { status } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
+    const { status } = await getSignInLinkLoginPage({ t: validSignInToken });
 
     expect(status).toBe(200);
   });
 
   it('redirects to /login/sign-in-link-expired if the login API request fails with a token expired 403', async () => {
     when(api.loginWithSignInLink)
-      .calledWith({ signInToken: validSignInToken, userId: validUserId })
+      .calledWith({ signInToken: validSignInToken })
       .mockRejectedValueOnce({
         response: { status: 403, data: { errors: [{ cause: HTTP_ERROR_CAUSES.TOKEN_EXPIRED }] } },
       });
 
-    const { status, headers } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
+    const { status, headers } = await getSignInLinkLoginPage({ t: validSignInToken });
 
     expect(status).toBe(302);
     expect(headers.location).toBe('/login/sign-in-link-expired');
@@ -53,12 +50,12 @@ describe('GET /login/sign-in-link?t={signInToken}', () => {
 
   it('redirects to /login/sign-in-link-expired if the login API request fails with a user blocked 403', async () => {
     when(api.loginWithSignInLink)
-      .calledWith({ signInToken: validSignInToken, userId: validUserId })
+      .calledWith({ signInToken: validSignInToken })
       .mockRejectedValueOnce({
         response: { status: 403, data: { errors: [{ cause: HTTP_ERROR_CAUSES.USER_BLOCKED }] } },
       });
 
-    const { status, text } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
+    const { status, text } = await getSignInLinkLoginPage({ t: validSignInToken });
 
     expect(status).toBe(403);
     expect(text).toContain('This account has been temporarily suspended');
@@ -66,10 +63,10 @@ describe('GET /login/sign-in-link?t={signInToken}', () => {
 
   it('redirects to /login if the login API request fails with a 401', async () => {
     when(api.loginWithSignInLink)
-      .calledWith({ signInToken: validSignInToken, userId: validUserId })
+      .calledWith({ signInToken: validSignInToken })
       .mockRejectedValueOnce({ response: { status: 401 } });
 
-    const { status, headers } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
+    const { status, headers } = await getSignInLinkLoginPage({ t: validSignInToken });
 
     expect(status).toBe(302);
     expect(headers.location).toBe('/login');
@@ -77,61 +74,40 @@ describe('GET /login/sign-in-link?t={signInToken}', () => {
 
   it('redirects to /login if the login API request fails with a 404', async () => {
     when(api.loginWithSignInLink)
-      .calledWith({ signInToken: validSignInToken, userId: validUserId })
+      .calledWith({ signInToken: validSignInToken })
       .mockRejectedValueOnce({ response: { status: 404 } });
 
-    const { status, headers } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
+    const { status, headers } = await getSignInLinkLoginPage({ t: validSignInToken });
 
     expect(status).toBe(302);
     expect(headers.location).toBe('/login');
   });
 
   it('returns a 500 response if the login API request has an unexpected error', async () => {
-    when(api.loginWithSignInLink).calledWith({ signInToken: validSignInToken, userId: validUserId }).mockRejectedValueOnce(new Error());
+    when(api.loginWithSignInLink).calledWith({ signInToken: validSignInToken }).mockRejectedValueOnce(new Error());
 
-    const { status, text } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
+    const { status, text } = await getSignInLinkLoginPage({ t: validSignInToken });
 
     expect(status).toBe(500);
     expect(text).toContain('Problem with the service');
   });
 
-  it('returns a 400 response if the u query string is not a valid ObjectId', async () => {
-    const { status, text } = await getSignInLinkLoginPage({ u: '123', t: validSignInToken });
-
-    expect(status).toBe(400);
-    expect(text).toContain('Problem with the service');
-  });
-
-  it('returns a 400 response if the u query string is not provided', async () => {
-    const { status, text } = await getSignInLinkLoginPage({ t: validSignInToken });
-
-    expect(status).toBe(400);
-    expect(text).toContain('Problem with the service');
-  });
-
-  it('returns a 400 response if the u query string is empty', async () => {
-    const { status, text } = await getSignInLinkLoginPage({ t: validSignInToken, u: '' });
-
-    expect(status).toBe(400);
-    expect(text).toContain('Problem with the service');
-  });
-
   it('returns a 400 response if the t query string is not a string of hex characters', async () => {
-    const { status, text } = await getSignInLinkLoginPage({ u: validUserId, t: 'not-a-hex-string' });
+    const { status, text } = await getSignInLinkLoginPage({ t: 'not-a-hex-string' });
 
     expect(status).toBe(400);
     expect(text).toContain('Problem with the service');
   });
 
   it('returns a 400 response if the t query string is not provided', async () => {
-    const { status, text } = await getSignInLinkLoginPage({ u: validUserId });
+    const { status, text } = await getSignInLinkLoginPage({});
 
     expect(status).toBe(400);
     expect(text).toContain('Problem with the service');
   });
 
   it('returns a 400 response if the t query string is empty', async () => {
-    const { status, text } = await getSignInLinkLoginPage({ u: validUserId, t: '' });
+    const { status, text } = await getSignInLinkLoginPage({ t: '' });
 
     expect(status).toBe(400);
     expect(text).toContain('Problem with the service');

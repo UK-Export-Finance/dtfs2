@@ -1,4 +1,4 @@
-const { isValidUserId, isValidSignInToken } = require('../../validation/validate-ids');
+const { isValidSignInToken } = require('../../validation/validate-ids');
 const api = require('../../api');
 const { DASHBOARD, LANDING_PAGES, HTTP_ERROR_CAUSES } = require('../../constants');
 const { getUserRoles } = require('../../helpers');
@@ -10,6 +10,7 @@ const updateSessionAfterLogin = ({ req, newUserToken, loginStatus, user }) => {
   req.session.dashboardFilters = DASHBOARD.DEFAULT_FILTERS;
   delete req.session.numberOfSendSignInLinkAttemptsRemaining;
   delete req.session.userEmail;
+  delete req.session.userId;
 };
 
 /**
@@ -32,21 +33,16 @@ const getUserRedirectUrl = (user) => {
 module.exports.loginWithSignInLink = async (req, res) => {
   try {
     const {
-      session: { _id: userId, userToken },
+      session: { userToken },
       query: { t: signInToken },
     } = req;
-
-    if (!isValidUserId(userId)) {
-      console.error('Error validating sign in link: invalid userId %s', userId);
-      return res.status(400).render('_partials/problem-with-service.njk');
-    }
 
     if (!isValidSignInToken(signInToken)) {
       console.error('Error validating sign in token: invalid signInToken %s', signInToken);
       return res.status(400).render('_partials/problem-with-service.njk');
     }
 
-    const loginResponse = await api.loginWithSignInLink({ token: userToken, userId, signInToken });
+    const loginResponse = await api.loginWithSignInLink({ token: userToken, signInToken });
     const { token: newUserToken, loginStatus, user } = loginResponse;
 
     updateSessionAfterLogin({

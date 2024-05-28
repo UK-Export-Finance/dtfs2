@@ -8,22 +8,19 @@ const api = () => {
 const completeLoginWithSignInLink = ({ token2fa, username }) => {
   const signInToken = SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
   cy.overridePortalUserSignInTokenWithValidTokenByUsername({ username, newSignInToken: signInToken });
-  cy.getUserByUsername(username).then(({ _id: userId }) =>
-    cy
-      .request({
-        url: `${api()}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token2fa,
-        },
-      })
-      .then((signInLinkResponse) => {
-        expect(signInLinkResponse.status).to.equal(200);
-        return signInLinkResponse.body.token;
-      }),
-  );
+  cy.request({
+    url: `${api()}/v1/users/me/sign-in-link/${signInToken}/login`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token2fa,
+    },
+  }).then((signInLinkResponse) => {
+    expect(signInLinkResponse.status).to.equal(200);
+    return signInLinkResponse.body.token;
+  });
 };
+
 module.exports.logIn = (opts) => {
   const { username, password } = opts;
   cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
