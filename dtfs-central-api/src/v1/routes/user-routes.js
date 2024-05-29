@@ -9,6 +9,7 @@ const createUserController = require('../controllers/user/create-user.controller
  * @openapi
  * /user:
  *   post:
+ *     deprecated: true
  *     summary: Create a user in users collection
  *     tags: [User]
  *     description: Create a user in users collection

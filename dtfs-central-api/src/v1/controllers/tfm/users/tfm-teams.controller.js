@@ -1,8 +1,8 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
+const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common/errors');
+const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../../drivers/db-client').default;
-const { payloadVerification } = require('../../../../helpers');
-const { PAYLOAD } = require('../../../../constants');
 
 const createTeam = async (team, auditDetails) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_TEAMS);
@@ -13,14 +13,20 @@ exports.createTeam = createTeam;
 exports.createTfmTeam = async (req, res) => {
   const { team: teamToCreate, auditDetails } = req.body;
 
-  if (!payloadVerification(teamToCreate, PAYLOAD.TFM.TEAM)) {
+  if (!isVerifiedPayload({ payload: teamToCreate, template: PAYLOAD_VERIFICATION.TFM.TEAM })) {
     return res.status(400).send({ status: 400, message: 'Invalid TFM team payload' });
   }
 
   try {
     validateAuditDetails(auditDetails);
-  } catch ({ message }) {
-    return res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
   }
 
   if (auditDetails.userType !== 'tfm') {

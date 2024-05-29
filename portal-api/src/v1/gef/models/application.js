@@ -9,7 +9,7 @@ class Application {
       this.dealType = DEAL_TYPE;
 
       // ensure we don't consume any sensitive fields
-      const { token, password, lastLogin, ...sanitisedMaker } = req.maker;
+      const { token: _token, password: _password, lastLogin: _lastLogin, ...sanitisedMaker } = req.maker;
 
       this.maker = sanitisedMaker;
 

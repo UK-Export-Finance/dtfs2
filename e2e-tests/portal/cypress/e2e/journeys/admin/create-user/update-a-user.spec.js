@@ -63,6 +63,31 @@ context('Admin user updates an existing user', () => {
         });
     });
 
+    it('changing their trusted status should display the new status on the user dashboard', () => {
+      users.row(userToUpdate).trusted().should('not.exist');
+      cy.getUserByUsername(userToUpdate.username).then(({ isTrusted }) => {
+        expect(isTrusted).to.equal(false);
+      });
+
+      openPageToEdit(userToUpdate);
+      editUser.isTrustedTrue().click();
+      editUser.save().click();
+
+      users.row(userToUpdate).trusted().should('exist');
+      cy.getUserByUsername(userToUpdate.username).then(({ isTrusted }) => {
+        expect(isTrusted).to.equal(true);
+      });
+
+      openPageToEdit(userToUpdate);
+      editUser.isTrustedFalse().click();
+      editUser.save().click();
+
+      users.row(userToUpdate).trusted().should('not.exist');
+      cy.getUserByUsername(userToUpdate.username).then(({ isTrusted }) => {
+        expect(isTrusted).to.equal(false);
+      });
+    });
+
     it('changing their details should display the new details when the edit page is reloaded', () => {
       const newFirstName = 'new first name';
       const newSurname = 'new surname';

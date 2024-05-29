@@ -53,7 +53,7 @@ on:
       - feature
       - staging
       - prod
-      - release-2.0
+      - release-*
 
 env:
   PRODUCT: dtfs
@@ -97,7 +97,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
