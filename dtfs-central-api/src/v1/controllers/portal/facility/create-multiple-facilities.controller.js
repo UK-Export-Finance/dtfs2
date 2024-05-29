@@ -1,4 +1,5 @@
-const { validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common/errors');
 const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
@@ -14,6 +15,8 @@ const createFacilities = async (facilities, dealId, auditDetails) => {
 
     const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
 
+    const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
+
     const facilitiesWithId = await Promise.all(
       facilities.map(async (f) => {
         const facility = f;
@@ -22,6 +25,7 @@ const createFacilities = async (facilities, dealId, auditDetails) => {
         facility.createdDate = Date.now();
         facility.updatedAt = Date.now();
         facility.dealId = new ObjectId(dealId);
+        facility.auditRecord = auditRecord;
         return facility;
       }),
     );
@@ -77,14 +81,13 @@ exports.createMultipleFacilitiesPost = async (req, res) => {
   }
 
   return findOneDeal(dealId, async (deal) => {
-    if (deal) {
-      const response = await createFacilities(facilities, dealId, auditDetails);
-      const status = isNumber(response?.status, 3);
-      const code = status ? response.status : 200;
-
-      return res.status(code).send(response);
+    if (!deal) {
+      return res.status(404).send('Deal not found');
     }
+    const response = await createFacilities(facilities, dealId, auditDetails);
+    const status = isNumber(response?.status, 3);
+    const code = status ? response.status : 200;
 
-    return res.status(404).send('Deal not found');
+    return res.status(code).send(response);
   });
 };
