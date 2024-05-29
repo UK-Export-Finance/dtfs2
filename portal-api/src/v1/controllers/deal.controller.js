@@ -78,14 +78,15 @@ const createNewDealData = async (deal, maker) => {
 /**
  * Create a deal (BSS, EWCS only)
  */
-const createDeal = async (dealBody, user) => {
+const createDeal = async (dealBody, user, auditDetails) => {
   const deal = await createNewDealData(dealBody, user);
-  return api.createDeal(deal, user);
+  return api.createDeal(deal, user, auditDetails);
 };
 exports.createDeal = createDeal;
 
 exports.create = async (req, res) => {
-  const { status, data } = await createDeal(req.body, req.user);
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+  const { status, data } = await createDeal(req.body, req.user, auditDetails);
   return res.status(status).send(data);
 };
 
@@ -122,8 +123,8 @@ exports.findOne = (req, res) => {
   });
 };
 
-const updateDeal = async (dealId, dealUpdate, user) => {
-  const updatedDeal = await api.updateDeal(dealId, dealUpdate, user);
+const updateDeal = async (dealId, dealUpdate, user, auditDetails) => {
+  const updatedDeal = await api.updateDeal(dealId, dealUpdate, user, auditDetails);
 
   return updatedDeal;
 };
@@ -133,16 +134,21 @@ exports.updateDeal = updateDeal;
  * Update a deal (BSS, EWCS only)
  */
 exports.update = async (req, res) => {
-  const dealId = req.params.id;
+  const {
+    user,
+    params: { id: dealId },
+  } = req;
 
   await findOneDeal(dealId, async (deal) => {
     if (!deal) res.status(404).send();
 
-    if (!userHasAccessTo(req.user, deal)) {
+    if (!userHasAccessTo(user, deal)) {
       return res.status(401).send();
     }
 
-    const updatedDeal = await updateDeal(dealId, req.body, req.user, deal);
+    const auditDetails = generatePortalAuditDetails(user._id);
+
+    const updatedDeal = await updateDeal(dealId, req.body, user, deal, auditDetails);
 
     return res.status(200).json(updatedDeal);
   });

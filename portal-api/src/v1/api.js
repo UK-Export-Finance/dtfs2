@@ -36,7 +36,7 @@ const findOneDeal = async (dealId) => {
   }
 };
 
-const createDeal = async (deal, user) => {
+const createDeal = async (deal, user, auditDetails) => {
   try {
     return await axios({
       method: 'post',
@@ -45,6 +45,7 @@ const createDeal = async (deal, user) => {
       data: {
         deal,
         user,
+        auditDetails,
       },
     });
   } catch ({ response }) {
@@ -52,7 +53,7 @@ const createDeal = async (deal, user) => {
   }
 };
 
-const updateDeal = async (dealId, dealUpdate, user) => {
+const updateDeal = async (dealId, dealUpdate, user, auditDetails) => {
   try {
     if (!isValidMongoId(dealId)) {
       console.error('Update deal API failed for deal id %s', dealId);
@@ -66,6 +67,7 @@ const updateDeal = async (dealId, dealUpdate, user) => {
       data: {
         dealUpdate,
         user,
+        auditDetails,
       },
     });
 

@@ -1,12 +1,16 @@
+const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common/errors');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const db = require('../../../../drivers/db-client').default;
 const DEFAULTS = require('../../../defaults');
 const getDealErrors = require('../../../validation/create-deal');
 
-const createDeal = async (deal, maker) => {
+const createDeal = async (deal, maker, auditDetails) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
   const { details } = deal;
+
+  const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
   const newDeal = {
     ...DEFAULTS.DEAL,
@@ -20,6 +24,7 @@ const createDeal = async (deal, maker) => {
       created: Date.now(),
     },
     facilities: DEFAULTS.DEAL.facilities,
+    auditRecord,
   };
 
   const validationErrors = getDealErrors(newDeal);
@@ -41,16 +46,29 @@ const createDeal = async (deal, maker) => {
 };
 
 exports.createDealPost = async (req, res) => {
-  const { user } = req.body;
+  const { user, deal, auditDetails } = req.body;
+
   if (!user) {
     return res.status(400).send({ status: 400, message: 'Invalid user' });
   }
 
-  if (typeof req?.body?.deal?.dealType !== 'string') {
+  if (typeof deal?.dealType !== 'string') {
     return res.status(400).send({ status: 400, message: 'Invalid deal type' });
   }
 
-  const { validationErrors, _id } = await createDeal(req.body.deal, user);
+  try {
+    validateAuditDetails(auditDetails);
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
+  }
+
+  const { validationErrors, _id } = await createDeal(deal, user, auditDetails);
 
   if (validationErrors) {
     return res.status(400).send({
