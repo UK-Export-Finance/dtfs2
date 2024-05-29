@@ -5,6 +5,7 @@ import {
   getFeeRecordStatusFromPremiumPaymentsCheckboxId,
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
 } from './premium-payments-table-checkbox-id-helper';
+import { PremiumPaymentsTableCheckboxId } from '../types/premium-payments-table-checkbox-id';
 
 describe('premium payments table checkbox id helper', () => {
   describe('getFeeRecordIdsFromPremiumPaymentsCheckboxId', () => {
@@ -43,7 +44,7 @@ describe('premium payments table checkbox id helper', () => {
   describe('getFeeRecordStatusFromPremiumPaymentsCheckboxId', () => {
     it.each(Object.values(FEE_RECORD_STATUS))('extracts the fee record status from the check box id %s', (status: FeeRecordStatus) => {
       // Arrange
-      const checkboxId = `feeRecordId-123-reportedPaymentsCurrency-GBP-status-${status}`;
+      const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordId-123-reportedPaymentsCurrency-GBP-status-${status}`;
 
       // Act
       const extractedStatus = getFeeRecordStatusFromPremiumPaymentsCheckboxId(checkboxId);
@@ -56,7 +57,7 @@ describe('premium payments table checkbox id helper', () => {
   describe('getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId', () => {
     it.each(Object.values(CURRENCY))('extracts the fee record payment currency from the check box id %s', (currency: Currency) => {
       // Arrange
-      const checkboxId = `feeRecordId-123-reportedPaymentsCurrency-${currency}-status-TO_DO`;
+      const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordId-123-reportedPaymentsCurrency-${currency}-status-TO_DO`;
 
       // Act
       const extractedCurrency = getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId(checkboxId);

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { AxiosError } from 'axios';
+import axios from 'axios';
 import api from '../../api';
 
 export const getSelectedFeeRecordsDetails = async (req: Request<{ id: number }, object, { feeRecordIds: number[] }>, res: Response) => {
@@ -11,6 +11,7 @@ export const getSelectedFeeRecordsDetails = async (req: Request<{ id: number }, 
   } catch (error) {
     const errorMessage = 'Failed to get selected fee records details';
     console.error(errorMessage, error);
-    res.status((error as AxiosError).response?.status ?? 500).send(errorMessage);
+    const statusCode = (axios.isAxiosError(error) && error.response?.status) || 500;
+    res.status(statusCode).send(errorMessage);
   }
 };

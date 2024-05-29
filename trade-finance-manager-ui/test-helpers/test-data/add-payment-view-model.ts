@@ -2,9 +2,17 @@ import { AddPaymentViewModel } from '../../server/types/view-models';
 
 export const anAddPaymentViewModel = (): AddPaymentViewModel => ({
   bank: { name: 'Test bank ' },
-  reportPeriod: 'Some reporting period',
+  formattedReportPeriod: 'Some reporting period',
   reportedFeeDetails: {
     totalReportedPayments: 'GBP 200',
-    feeRecords: [],
+    feeRecords: [
+      {
+        feeRecordId: 123,
+        facilityId: '12345',
+        exporter: 'export',
+        reportedFee: 'GBP 200',
+        reportedPayment: 'GBP 200',
+      },
+    ],
   },
 });

@@ -8,9 +8,10 @@ import {
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
 } from '../../../helpers/premium-payments-table-checkbox-id-helper';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
+import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 
 export type AddPaymentRequest = CustomExpressRequest<{
-  reqBody: object;
+  reqBody: Record<PremiumPaymentsTableCheckboxId, 'on'>;
 }>;
 
 const renderAddPaymentPage = (res: Response, context: AddPaymentViewModel) => res.render('utilisation-reports/add-payment.njk', context);
@@ -25,7 +26,7 @@ const mapToSelectedReportedFeeViewModel = (feeRecord: SelectedFeeRecordDetails):
 
 const mapToAddPaymentViewModel = (data: SelectedFeeRecordsDetails): AddPaymentViewModel => ({
   bank: data.bank,
-  reportPeriod: getFormattedReportPeriodWithLongMonth(data.reportPeriod),
+  formattedReportPeriod: getFormattedReportPeriodWithLongMonth(data.reportPeriod),
   reportedFeeDetails: {
     totalReportedPayments: getFormattedCurrencyAndAmount(data.totalReportedPayments),
     feeRecords: data.feeRecords.map((record) => mapToSelectedReportedFeeViewModel(record)),

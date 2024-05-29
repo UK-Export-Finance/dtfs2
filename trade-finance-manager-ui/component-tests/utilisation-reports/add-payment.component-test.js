@@ -9,7 +9,7 @@ describe(page, () => {
     // Arrange
     const addPaymentViewModel = anAddPaymentViewModel();
     addPaymentViewModel.bank.name = 'My bank';
-    addPaymentViewModel.reportPeriod = 'December 1998';
+    addPaymentViewModel.formattedReportPeriod = 'December 1998';
     const wrapper = render(addPaymentViewModel);
 
     // Assert

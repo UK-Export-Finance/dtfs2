@@ -15,7 +15,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
     user: MOCK_TFM_SESSION_USER,
   };
   describe('when initial post request with valid body is received from premium payments page', () => {
-    const requestBodyForPostFromPremiumPaymentsPage: object = {
+    const requestBodyForPostFromPremiumPaymentsPage = {
       'feeRecordId-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
     };
 
@@ -48,7 +48,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
       expect(res._getRenderView()).toEqual('utilisation-reports/add-payment.njk');
       expect(res._getRenderData()).toEqual<AddPaymentViewModel>({
         bank: { name: 'Test' },
-        reportPeriod: 'February to April 2024',
+        formattedReportPeriod: 'February to April 2024',
         reportedFeeDetails: {
           totalReportedPayments: 'JPY 1,000.00',
           feeRecords: [

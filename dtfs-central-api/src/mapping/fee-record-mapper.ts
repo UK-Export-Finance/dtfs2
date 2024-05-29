@@ -25,7 +25,7 @@ export const mapFeeRecordEntityToReportedPayments = (feeRecord: FeeRecordEntity)
     };
   }
 
-  const feesPaidToUkefForThePeriodInPaymentCurrency: number = feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency();
+  const feesPaidToUkefForThePeriodInPaymentCurrency = feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency();
 
   return {
     amount: feesPaidToUkefForThePeriodInPaymentCurrency,

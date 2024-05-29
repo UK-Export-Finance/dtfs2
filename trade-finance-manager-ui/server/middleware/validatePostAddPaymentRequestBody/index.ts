@@ -7,6 +7,7 @@ import {
   getFeeRecordStatusFromPremiumPaymentsCheckboxId,
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
 } from '../../helpers/premium-payments-table-checkbox-id-helper';
+import { PremiumPaymentsTableCheckboxId } from '../../types/premium-payments-table-checkbox-id';
 
 const isRequestBodyAnObject = (body: unknown): body is object => !body || typeof body === 'object';
 
@@ -26,7 +27,7 @@ const mapCheckedCheckboxesToRecord = (checkedCheckboxIds: string[]): Record<stri
   return checkedCheckboxIds.reduce((obj, checkboxId) => ({ ...obj, [checkboxId]: true }), {});
 };
 
-const allSelectedFeeRecordsHaveSameCurrency = (checkedCheckboxIds: string[]) => {
+const allSelectedFeeRecordsHaveSameCurrency = (checkedCheckboxIds: PremiumPaymentsTableCheckboxId[]) => {
   const selectedPaymentCurrencies = new Set<Currency>();
   return checkedCheckboxIds.every((checkboxId) => {
     const currency = getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId(checkboxId);
@@ -35,7 +36,7 @@ const allSelectedFeeRecordsHaveSameCurrency = (checkedCheckboxIds: string[]) => 
   });
 };
 
-const getSetOfSelectedFeeRecordStatuses = (checkedCheckboxIds: string[]): Set<FeeRecordStatus> => {
+const getSetOfSelectedFeeRecordStatuses = (checkedCheckboxIds: PremiumPaymentsTableCheckboxId[]): Set<FeeRecordStatus> => {
   const arrayOfStatuses = checkedCheckboxIds.map((checkboxId) => getFeeRecordStatusFromPremiumPaymentsCheckboxId(checkboxId));
   return new Set(arrayOfStatuses);
 };

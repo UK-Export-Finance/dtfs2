@@ -15,6 +15,6 @@ export type SelectedReportedFeesDetailsViewModel = {
 
 export type AddPaymentViewModel = {
   bank: { name: string };
-  reportPeriod: string;
+  formattedReportPeriod: string;
   reportedFeeDetails: SelectedReportedFeesDetailsViewModel;
 };
