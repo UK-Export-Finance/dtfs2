@@ -1,3 +1,4 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { HttpStatusCode } = require('axios');
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { addComment } = require('./deal-comments.controller');
@@ -53,7 +54,7 @@ exports.update = async (req, res) => {
     const { user } = req;
     const dealId = req.params.id;
     const newStatus = req.body.status;
-
+    const auditDetails = generatePortalAuditDetails(user._id);
     const deal = await findOneDeal(dealId);
 
     if (!deal) {
@@ -92,7 +93,7 @@ exports.update = async (req, res) => {
 
     // Add a comment to the deal
     if (req.body.comments) {
-      updatedDeal = await addComment(dealId, req.body.comments, user);
+      updatedDeal = await addComment(dealId, req.body.comments, user, auditDetails);
     }
 
     // Update the deal
