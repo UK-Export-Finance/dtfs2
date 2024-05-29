@@ -15,16 +15,16 @@ export const getPremiumPaymentsCheckboxIdsFromObjectKeys = (object: object): Pre
   Object.keys(object).filter((key) => PREMIUM_PAYMENTS_TABLE_CHECKBOX_ID_REGEX.test(key)) as PremiumPaymentsTableCheckboxId[];
 
 export const getFeeRecordStatusFromPremiumPaymentsCheckboxId = (checkboxId: PremiumPaymentsTableCheckboxId): FeeRecordStatus => {
-  const { status } = checkboxId.match(FEE_RECORD_STATUS_REGEX)!.groups!;
+  const { status } = FEE_RECORD_STATUS_REGEX.exec(checkboxId)!.groups!;
   return status as FeeRecordStatus;
 };
 
 export const getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId = (checkboxId: PremiumPaymentsTableCheckboxId): Currency => {
-  const { currency } = checkboxId.match(CURRENCY_REGEX)!.groups!;
+  const { currency } = CURRENCY_REGEX.exec(checkboxId)!.groups!;
   return currency as Currency;
 };
 
 export const getFeeRecordIdFromPremiumPaymentsCheckboxId = (checkboxId: PremiumPaymentsTableCheckboxId): number => {
-  const { id } = checkboxId.match(`feeRecordId-(?<id>\\d+)`)!.groups!;
+  const { id } = /feeRecordId-(?<id>\d+)/.exec(checkboxId)!.groups!;
   return Number(id);
 };
