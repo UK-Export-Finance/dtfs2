@@ -1,6 +1,6 @@
 import { HttpStatusCode } from 'axios';
 import httpMocks from 'node-mocks-http';
-import { QueryRunner, FindOptionsWhere } from 'typeorm';
+import { FindOptionsWhere } from 'typeorm';
 import {
   AzureFileInfoEntity,
   MOCK_AZURE_FILE_INFO,
@@ -12,6 +12,7 @@ import {
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { PutUtilisationReportStatusRequest, putUtilisationReportStatus } from '.';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
+import { getMockQueryRunner } from '../../../../../test-helpers/mock-query-runner';
 
 console.error = jest.fn();
 
@@ -30,35 +31,15 @@ describe('put-utilisation-report-status.controller', () => {
       body: { ...validRequestBody },
     });
 
-  const mockConnect = jest.fn();
-  const mockStartTransaction = jest.fn();
-  const mockCommitTransaction = jest.fn();
-  const mockRollbackTransaction = jest.fn();
-  const mockRelease = jest.fn();
-
-  const mockTransactionManager = {
-    save: jest.fn(),
-  };
-
-  const mockQueryRunner = {
-    connect: mockConnect,
-    startTransaction: mockStartTransaction,
-    commitTransaction: mockCommitTransaction,
-    rollbackTransaction: mockRollbackTransaction,
-    release: mockRelease,
-    manager: mockTransactionManager,
-  } as unknown as QueryRunner;
+  const mockQueryRunner = getMockQueryRunner();
 
   const createQueryRunnerSpy = jest.spyOn(SqlDbDataSource, 'createQueryRunner');
 
-  const utilisationReportRepoFindOneByOrFailSpy = jest.spyOn(UtilisationReportRepo, 'findOneByOrFail');
+  const utilisationReportRepoFindOneBySpy = jest.spyOn(UtilisationReportRepo, 'findOneBy');
 
-  const mockFindOneByOrFail = (reports: UtilisationReportEntity[]) => (where: Parameters<typeof UtilisationReportRepo.findOneByOrFail>[0]) => {
+  const mockFindOneBy = (reports: UtilisationReportEntity[]) => (where: Parameters<typeof UtilisationReportRepo.findOneBy>[0]) => {
     const reportWithMatchingId = reports.find(({ id: reportId }) => reportId === (where as FindOptionsWhere<UtilisationReportEntity>).id);
-    if (!reportWithMatchingId) {
-      throw new Error('Failed to find a report with the matching id');
-    }
-    return Promise.resolve(reportWithMatchingId);
+    return Promise.resolve(reportWithMatchingId ?? null);
   };
 
   beforeEach(() => {
@@ -126,7 +107,7 @@ describe('put-utilisation-report-status.controller', () => {
         UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).build(),
       );
 
-      utilisationReportRepoFindOneByOrFailSpy.mockImplementation(mockFindOneByOrFail(existingReports));
+      utilisationReportRepoFindOneBySpy.mockImplementation(mockFindOneBy(existingReports));
 
       // Act
       await putUtilisationReportStatus(req, res);
@@ -134,19 +115,19 @@ describe('put-utilisation-report-status.controller', () => {
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
       expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-      expect(mockConnect).toHaveBeenCalledTimes(1);
-      expect(mockStartTransaction).toHaveBeenCalledTimes(1);
-      expect(mockCommitTransaction).toHaveBeenCalledTimes(1);
-      expect(mockRollbackTransaction).not.toHaveBeenCalled();
-      expect(mockRelease).toHaveBeenCalled();
-      expect(mockTransactionManager.save).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsCompleted.length);
+      expect(mockQueryRunner.connect).toHaveBeenCalledTimes(1);
+      expect(mockQueryRunner.startTransaction).toHaveBeenCalledTimes(1);
+      expect(mockQueryRunner.commitTransaction).toHaveBeenCalledTimes(1);
+      expect(mockQueryRunner.rollbackTransaction).not.toHaveBeenCalled();
+      expect(mockQueryRunner.release).toHaveBeenCalled();
+      expect(mockQueryRunner.manager.save).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsCompleted.length);
 
       existingReports.forEach((report) => {
         expect(report.status).toBe(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
         expect(report.lastUpdatedByIsSystemUser).toBe(false);
         expect(report.lastUpdatedByPortalUserId).toBeNull();
         expect(report.lastUpdatedByTfmUserId).toBe(userId);
-        expect(mockTransactionManager.save).toHaveBeenCalledWith(UtilisationReportEntity, report);
+        expect(mockQueryRunner.manager.save).toHaveBeenCalledWith(UtilisationReportEntity, report);
       });
     });
 
@@ -164,7 +145,7 @@ describe('put-utilisation-report-status.controller', () => {
 
         const existingReport = UtilisationReportEntityMockBuilder.forStatus(reportStatus).withId(reportWithStatus.reportId).build();
 
-        utilisationReportRepoFindOneByOrFailSpy.mockResolvedValue(existingReport);
+        utilisationReportRepoFindOneBySpy.mockResolvedValue(existingReport);
 
         // Act
         await putUtilisationReportStatus(req, res);
@@ -173,12 +154,12 @@ describe('put-utilisation-report-status.controller', () => {
         expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
         expect(res._getData()).toEqual('Failed to update utilisation report statuses: Transaction failed');
         expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-        expect(mockConnect).toHaveBeenCalledTimes(1);
-        expect(mockStartTransaction).toHaveBeenCalledTimes(1);
-        expect(mockCommitTransaction).not.toHaveBeenCalled();
-        expect(mockRollbackTransaction).toHaveBeenCalledTimes(1);
-        expect(mockRelease).toHaveBeenCalled();
-        expect(mockTransactionManager.save).not.toHaveBeenCalled();
+        expect(mockQueryRunner.connect).toHaveBeenCalledTimes(1);
+        expect(mockQueryRunner.startTransaction).toHaveBeenCalledTimes(1);
+        expect(mockQueryRunner.commitTransaction).not.toHaveBeenCalled();
+        expect(mockQueryRunner.rollbackTransaction).toHaveBeenCalledTimes(1);
+        expect(mockQueryRunner.release).toHaveBeenCalled();
+        expect(mockQueryRunner.manager.save).not.toHaveBeenCalled();
       },
     );
   });
@@ -212,7 +193,7 @@ describe('put-utilisation-report-status.controller', () => {
         UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withId(reportWithStatus.reportId).withAzureFileInfo(azureFileInfo).build(),
       );
 
-      utilisationReportRepoFindOneByOrFailSpy.mockImplementation(mockFindOneByOrFail(existingReports));
+      utilisationReportRepoFindOneBySpy.mockImplementation(mockFindOneBy(existingReports));
 
       // Act
       await putUtilisationReportStatus(req, res);
@@ -220,12 +201,12 @@ describe('put-utilisation-report-status.controller', () => {
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
       expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-      expect(mockConnect).toHaveBeenCalledTimes(1);
-      expect(mockStartTransaction).toHaveBeenCalledTimes(1);
-      expect(mockCommitTransaction).toHaveBeenCalledTimes(1);
-      expect(mockRollbackTransaction).not.toHaveBeenCalled();
-      expect(mockRelease).toHaveBeenCalled();
-      expect(mockTransactionManager.save).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsNotCompleted.length);
+      expect(mockQueryRunner.connect).toHaveBeenCalledTimes(1);
+      expect(mockQueryRunner.startTransaction).toHaveBeenCalledTimes(1);
+      expect(mockQueryRunner.commitTransaction).toHaveBeenCalledTimes(1);
+      expect(mockQueryRunner.rollbackTransaction).not.toHaveBeenCalled();
+      expect(mockQueryRunner.release).toHaveBeenCalled();
+      expect(mockQueryRunner.manager.save).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsNotCompleted.length);
 
       existingReports.forEach((report, index) => {
         const expectedStatus = reportsWithStatusForMarkingAsNotCompleted[index].status;
@@ -233,7 +214,7 @@ describe('put-utilisation-report-status.controller', () => {
         expect(report.lastUpdatedByIsSystemUser).toBe(false);
         expect(report.lastUpdatedByPortalUserId).toBeNull();
         expect(report.lastUpdatedByTfmUserId).toBe(userId);
-        expect(mockTransactionManager.save).toHaveBeenCalledWith(UtilisationReportEntity, report);
+        expect(mockQueryRunner.manager.save).toHaveBeenCalledWith(UtilisationReportEntity, report);
       });
     });
 
@@ -251,7 +232,7 @@ describe('put-utilisation-report-status.controller', () => {
 
         const existingReport = UtilisationReportEntityMockBuilder.forStatus(reportStatus).withId(reportWithStatus.reportId).build();
 
-        utilisationReportRepoFindOneByOrFailSpy.mockResolvedValue(existingReport);
+        utilisationReportRepoFindOneBySpy.mockResolvedValue(existingReport);
 
         // Act
         await putUtilisationReportStatus(req, res);
@@ -260,12 +241,12 @@ describe('put-utilisation-report-status.controller', () => {
         expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
         expect(res._getData()).toEqual('Failed to update utilisation report statuses: Transaction failed');
         expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-        expect(mockConnect).toHaveBeenCalledTimes(1);
-        expect(mockStartTransaction).toHaveBeenCalledTimes(1);
-        expect(mockCommitTransaction).not.toHaveBeenCalled();
-        expect(mockRollbackTransaction).toHaveBeenCalledTimes(1);
-        expect(mockRelease).toHaveBeenCalled();
-        expect(mockTransactionManager.save).not.toHaveBeenCalled();
+        expect(mockQueryRunner.connect).toHaveBeenCalledTimes(1);
+        expect(mockQueryRunner.startTransaction).toHaveBeenCalledTimes(1);
+        expect(mockQueryRunner.commitTransaction).not.toHaveBeenCalled();
+        expect(mockQueryRunner.rollbackTransaction).toHaveBeenCalledTimes(1);
+        expect(mockQueryRunner.release).toHaveBeenCalled();
+        expect(mockQueryRunner.manager.save).not.toHaveBeenCalled();
       },
     );
   });

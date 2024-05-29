@@ -1,6 +1,7 @@
 const express = require('express');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
+const { validatePostAddPaymentPayload } = require('./middleware/payload-validation/validate-post-add-payment-payload');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
 const {
   postUploadUtilisationReport,
@@ -14,6 +15,7 @@ const {
   getUtilisationReportReconciliationDetailsById,
 } = require('../controllers/utilisation-report-service/get-utilisation-report-reconciliation-details-by-id.controller');
 const { getSelectedFeeRecordDetails } = require('../controllers/utilisation-report-service/get-selected-fee-records-details.controller');
+const { postAddPayment } = require('../controllers/utilisation-report-service/post-add-payment.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -214,5 +216,9 @@ utilisationReportsRouter
 utilisationReportsRouter
   .route('/:id/selected-fee-records-details')
   .get(validation.sqlIdValidation('id'), handleExpressValidatorResult, getSelectedFeeRecordDetails);
+
+utilisationReportsRouter
+  .route('/:reportId/add-payment')
+  .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePostAddPaymentPayload, postAddPayment);
 
 module.exports = utilisationReportsRouter;

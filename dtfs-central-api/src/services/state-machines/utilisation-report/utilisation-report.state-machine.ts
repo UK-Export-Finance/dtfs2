@@ -1,6 +1,6 @@
 import { UtilisationReportEntity, ReportPeriod } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
-import { InvalidStateMachineTransitionError } from '../../../errors';
+import { InvalidStateMachineTransitionError, NotFoundError } from '../../../errors';
 import {
   handleUtilisationReportDueReportInitialisedEvent,
   handleUtilisationReportFeeRecordKeyedEvent,
@@ -24,7 +24,10 @@ export class UtilisationReportStateMachine {
   }
 
   public static async forReportId(id: number): Promise<UtilisationReportStateMachine> {
-    const report = await UtilisationReportRepo.findOneByOrFail({ id });
+    const report = await UtilisationReportRepo.findOneBy({ id });
+    if (!report) {
+      throw new NotFoundError(`Failed to find report with id ${id}`);
+    }
     return new UtilisationReportStateMachine(report);
   }
 

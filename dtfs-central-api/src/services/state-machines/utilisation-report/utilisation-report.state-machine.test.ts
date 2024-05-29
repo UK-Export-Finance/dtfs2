@@ -117,6 +117,14 @@ describe('UtilisationReportStateMachine', () => {
       await stateMachine.handleEvent({
         type: 'PAYMENT_ADDED_TO_FEE_RECORD',
         payload: {
+          transactionEntityManager: {} as unknown as EntityManager,
+          feeRecords: [],
+          paymentDetails: {
+            currency: 'GBP',
+            amountReceived: 100,
+            dateReceived: new Date(),
+            paymentReference: 'A payment reference',
+          },
           requestSource: {
             platform: 'TFM',
             userId: 'abc123',
@@ -178,6 +186,14 @@ describe('UtilisationReportStateMachine', () => {
       await stateMachine.handleEvent({
         type: 'PAYMENT_ADDED_TO_FEE_RECORD',
         payload: {
+          transactionEntityManager: {} as unknown as EntityManager,
+          feeRecords: [],
+          paymentDetails: {
+            currency: 'GBP',
+            amountReceived: 100,
+            dateReceived: new Date(),
+            paymentReference: 'A payment reference',
+          },
           requestSource: {
             platform: 'TFM',
             userId: 'abc123',
