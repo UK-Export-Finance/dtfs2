@@ -27,7 +27,7 @@ describe(page, () => {
         facilityId: '000123',
         exporter: 'abcde',
         reportedFee: 'EUR 0.01',
-        reportedPayment: 'JPY 3',
+        reportedPayments: 'JPY 3',
       },
     ];
     const wrapper = render(addPaymentViewModel);

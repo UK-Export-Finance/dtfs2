@@ -64,7 +64,7 @@ describe('get selected fee record details controller helpers', () => {
       const result = await mapToSelectedFeeRecordDetails(bankId, aReportPeriod(), [feeRecord]);
 
       // Assert
-      expect(result.feeRecords[0].reportedPayment).toEqual<CurrencyAndAmount>({ amount: 200, currency: 'USD' });
+      expect(result.feeRecords[0].reportedPayments).toEqual<CurrencyAndAmount>({ amount: 200, currency: 'USD' });
     });
 
     it('sets the reported payment to the fees paid to ukef for the period converted into the payment currency when the payment currency does not match the fees paid to ukef for the period currency', async () => {
@@ -81,7 +81,7 @@ describe('get selected fee record details controller helpers', () => {
       const result = await mapToSelectedFeeRecordDetails(bankId, aReportPeriod(), [feeRecord]);
 
       // Assert
-      expect(result.feeRecords[0].reportedPayment).toEqual<CurrencyAndAmount>({ amount: 2000, currency: 'GBP' });
+      expect(result.feeRecords[0].reportedPayments).toEqual<CurrencyAndAmount>({ amount: 2000, currency: 'GBP' });
     });
 
     it('maps the fees paid to ukef for the period to the reported fee', async () => {

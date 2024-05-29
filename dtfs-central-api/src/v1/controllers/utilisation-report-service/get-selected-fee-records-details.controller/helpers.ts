@@ -8,12 +8,12 @@ const mapFeeRecordEntityToSelectedFeeRecordDetails = (feeRecordEntity: FeeRecord
   facilityId: feeRecordEntity.facilityId,
   exporter: feeRecordEntity.exporter,
   reportedFee: mapFeeRecordEntityToReportedFees(feeRecordEntity),
-  reportedPayment: mapFeeRecordEntityToReportedPayments(feeRecordEntity),
+  reportedPayments: mapFeeRecordEntityToReportedPayments(feeRecordEntity),
 });
 
 const getTotalReportedPayments = (feeRecords: SelectedFeeRecordDetails[]): CurrencyAndAmount => ({
-  currency: feeRecords[0]?.reportedPayment.currency,
-  amount: feeRecords.map((feeRecord) => feeRecord.reportedPayment.amount).reduce((total, currentAmount) => total + currentAmount, 0),
+  currency: feeRecords[0]?.reportedPayments.currency,
+  amount: feeRecords.map((feeRecord) => feeRecord.reportedPayments.amount).reduce((total, currentAmount) => total + currentAmount, 0),
 });
 
 export const mapToSelectedFeeRecordDetails = async (

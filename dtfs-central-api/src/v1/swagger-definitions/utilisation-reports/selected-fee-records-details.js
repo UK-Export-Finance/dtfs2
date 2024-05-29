@@ -12,7 +12,7 @@
  *         type: string
  *       reportedFee:
  *         $ref: '#/definitions/CurrencyAndAmount'
- *       reportedPayment:
+ *       reportedPayments:
  *         $ref: '#/definitions/CurrencyAndAmount'
  *   SelectedFeeRecordsDetails:
  *     type: object

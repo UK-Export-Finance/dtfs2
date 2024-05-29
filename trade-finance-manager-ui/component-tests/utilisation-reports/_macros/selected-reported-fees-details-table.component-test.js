@@ -16,14 +16,14 @@ describe(component, () => {
         facilityId: '000123',
         exporter: 'Exporter 123',
         reportedFee: 'EUR 800,000.00',
-        reportedPayment: 'GBP 700,000.00',
+        reportedPayments: 'GBP 700,000.00',
       },
       {
         feeRecordId: 456,
         facilityId: '000456',
         exporter: 'Exporter 456',
         reportedFee: 'EUR 350,000.00',
-        reportedPayment: 'GBP 300,000.00',
+        reportedPayments: 'GBP 300,000.00',
       },
     ],
   };

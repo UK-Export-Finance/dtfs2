@@ -153,7 +153,7 @@ describe('get selected fee records details controller', () => {
             currency: 'GBP',
             amount: 100,
           },
-          reportedPayment: {
+          reportedPayments: {
             currency: 'GBP',
             amount: 100,
           },
@@ -166,7 +166,7 @@ describe('get selected fee records details controller', () => {
             currency: 'GBP',
             amount: 200,
           },
-          reportedPayment: {
+          reportedPayments: {
             currency: 'GBP',
             amount: 200,
           },

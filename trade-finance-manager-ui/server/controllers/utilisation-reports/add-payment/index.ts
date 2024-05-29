@@ -21,7 +21,7 @@ const mapToSelectedReportedFeeViewModel = (feeRecord: SelectedFeeRecordDetails):
   facilityId: feeRecord.facilityId,
   exporter: feeRecord.exporter,
   reportedFee: getFormattedCurrencyAndAmount(feeRecord.reportedFee),
-  reportedPayment: getFormattedCurrencyAndAmount(feeRecord.reportedPayment),
+  reportedPayments: getFormattedCurrencyAndAmount(feeRecord.reportedPayments),
 });
 
 const mapToAddPaymentViewModel = (data: SelectedFeeRecordsDetails): AddPaymentViewModel => ({

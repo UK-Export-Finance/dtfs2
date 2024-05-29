@@ -92,7 +92,7 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
             facilityId: '000123',
             exporter: 'Test company',
             reportedFee: { currency: 'GBP', amount: 100 },
-            reportedPayment: { currency: 'GBP', amount: 100 },
+            reportedPayments: { currency: 'GBP', amount: 100 },
           },
         ],
       });

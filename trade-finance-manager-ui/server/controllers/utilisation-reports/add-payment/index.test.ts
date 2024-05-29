@@ -36,7 +36,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
             facilityId: '000123',
             exporter: 'Export Company',
             reportedFee: { amount: 2000, currency: 'EUR' },
-            reportedPayment: { amount: 3000, currency: 'USD' },
+            reportedPayments: { amount: 3000, currency: 'USD' },
           },
         ],
       });
@@ -57,7 +57,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
               facilityId: '000123',
               exporter: 'Export Company',
               reportedFee: 'EUR 2,000.00',
-              reportedPayment: 'USD 3,000.00',
+              reportedPayments: 'USD 3,000.00',
             },
           ],
         },

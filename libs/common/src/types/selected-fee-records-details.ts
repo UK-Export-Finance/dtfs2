@@ -6,7 +6,7 @@ export type SelectedFeeRecordDetails = {
   facilityId: string;
   exporter: string;
   reportedFee: CurrencyAndAmount;
-  reportedPayment: CurrencyAndAmount;
+  reportedPayments: CurrencyAndAmount;
 };
 
 export type SelectedFeeRecordsDetails = {

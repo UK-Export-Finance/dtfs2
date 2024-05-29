@@ -11,7 +11,7 @@ export const anAddPaymentViewModel = (): AddPaymentViewModel => ({
         facilityId: '12345',
         exporter: 'export',
         reportedFee: 'GBP 200',
-        reportedPayment: 'GBP 200',
+        reportedPayments: 'GBP 200',
       },
     ],
   },

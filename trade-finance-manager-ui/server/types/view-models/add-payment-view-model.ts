@@ -5,7 +5,7 @@ export type SelectedReportedFeeViewModel = {
   facilityId: string;
   exporter: string;
   reportedFee: CurrencyAndAmountString;
-  reportedPayment: CurrencyAndAmountString;
+  reportedPayments: CurrencyAndAmountString;
 };
 
 export type SelectedReportedFeesDetailsViewModel = {
