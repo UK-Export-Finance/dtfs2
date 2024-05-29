@@ -1,4 +1,5 @@
-import { Collection, ObjectId, WithoutId } from 'mongodb';
+import { ClientSession, Collection, ObjectId, WithoutId } from 'mongodb';
+import { when } from 'jest-when';
 import { MongoDbClient } from '../../mongo-db-client';
 import { AuditDatabaseRecord, DeletionAuditLog, MongoDbCollectionName } from '../../types';
 import { changeStreamConfig } from '../config';
@@ -14,6 +15,8 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
   describe(`when deleting a document from ${collectionName}`, () => {
     let mongoDbClient: MongoDbClient;
     let deletionAuditLogsCollection: Collection<WithoutId<DeletionAuditLog>>;
+    const mockDeleteOne = jest.spyOn(Collection.prototype, 'deleteOne');
+    const mockInsertOne = jest.spyOn(Collection.prototype, 'insertOne');
 
     beforeAll(async () => {
       mongoDbClient = new MongoDbClient({
@@ -24,13 +27,15 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
       deletionAuditLogsCollection = await mongoDbClient.getCollection('deletion-audit-logs');
     });
 
+    afterAll(async () => {
+      await mongoDbClient.close();
+      mockDeleteOne.mockRestore();
+      mockInsertOne.mockRestore();
+    });
+
     if (changeStreamConfig.CHANGE_STREAM_ENABLED === 'true') {
       beforeEach(() => {
         jest.clearAllMocks();
-      });
-
-      afterAll(async () => {
-        await mongoDbClient.close();
       });
 
       describe('when the service is working normally', () => {
@@ -64,9 +69,11 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
 
       describe('when deleting the document is not acknowledged', () => {
         beforeEach(() => {
-          jest.spyOn(Collection.prototype, 'deleteOne').mockImplementationOnce(() => ({
-            acknowledged: false,
-          }));
+          when(mockDeleteOne)
+            .calledWith({ _id: { $eq: getDeletedDocumentId() } }, { session: expect.any(ClientSession) as ClientSession })
+            .mockImplementationOnce(() => ({
+              acknowledged: false,
+            }));
         });
 
         itDoesNotUpdateTheDatabase();
@@ -74,10 +81,12 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
 
       describe('when no document is deleted', () => {
         beforeEach(() => {
-          jest.spyOn(Collection.prototype, 'deleteOne').mockImplementationOnce(() => ({
-            acknowledged: true,
-            deletedCount: 0,
-          }));
+          when(mockDeleteOne)
+            .calledWith({ _id: { $eq: getDeletedDocumentId() } }, { session: expect.any(ClientSession) as ClientSession })
+            .mockImplementationOnce(() => ({
+              acknowledged: true,
+              deletedCount: 0,
+            }));
         });
 
         itDoesNotUpdateTheDatabase();
@@ -85,9 +94,11 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
 
       describe('when deleting the document throws an error', () => {
         beforeEach(() => {
-          jest.spyOn(Collection.prototype, 'deleteOne').mockImplementationOnce(() => {
-            throw new Error();
-          });
+          when(mockDeleteOne)
+            .calledWith({ _id: { $eq: getDeletedDocumentId() } }, { session: expect.any(ClientSession) as ClientSession })
+            .mockImplementationOnce(() => {
+              throw new Error();
+            });
         });
 
         itDoesNotUpdateTheDatabase();
@@ -95,9 +106,20 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
 
       describe('when inserting the deletion log is not acknowledged', () => {
         beforeEach(() => {
-          jest.spyOn(Collection.prototype, 'insertOne').mockImplementationOnce(() => ({
-            acknowledged: false,
-          }));
+          when(mockInsertOne)
+            // @ts-ignore
+            .calledWith(
+              {
+                collectionName,
+                deletedDocumentId: getDeletedDocumentId(),
+                auditRecord,
+                expireAt: expect.any(Date) as Date,
+              },
+              { session: expect.any(ClientSession) as ClientSession },
+            )
+            .mockImplementationOnce(() => ({
+              acknowledged: false,
+            }));
         });
 
         itDoesNotUpdateTheDatabase();
@@ -105,9 +127,20 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
 
       describe('when inserting the deletion log throws an error', () => {
         beforeEach(() => {
-          jest.spyOn(Collection.prototype, 'insertOne').mockImplementationOnce(() => {
-            throw new Error();
-          });
+          when(mockInsertOne)
+            // @ts-ignore
+            .calledWith(
+              {
+                collectionName,
+                deletedDocumentId: getDeletedDocumentId(),
+                auditRecord,
+                expireAt: expect.any(Date) as Date,
+              },
+              { session: expect.any(ClientSession) as ClientSession },
+            )
+            .mockImplementationOnce(() => {
+              throw new Error();
+            });
         });
 
         itDoesNotUpdateTheDatabase();

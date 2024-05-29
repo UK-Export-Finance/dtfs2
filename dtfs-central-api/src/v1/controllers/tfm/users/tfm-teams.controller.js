@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
 const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common/errors');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
@@ -102,7 +103,7 @@ exports.deleteTfmTeam = async (req, res) => {
 
   try {
     const deleteResult = await deleteOne({
-      documentId: team._id,
+      documentId: new ObjectId(team._id),
       collectionName: MONGO_DB_COLLECTIONS.TFM_TEAMS,
       db,
       auditDetails,

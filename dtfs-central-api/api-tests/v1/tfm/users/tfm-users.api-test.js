@@ -149,7 +149,7 @@ describe('/v1/tfm/users', () => {
     });
   });
 
-  describe('DELETE /v1/tfm/users/:id', () => {
+  describe('DELETE /v1/tfm/users/:username', () => {
     let userToDeleteId;
 
     beforeEach(async () => {

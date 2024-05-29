@@ -135,12 +135,12 @@ exports.deleteTfmUser = async (req, res) => {
   const user = await collection.findOne({ username: { $eq: username } });
 
   if (!user) {
-    return res.status(404).send({ status: 400, message: 'User not found' });
+    return res.status(404).send({ status: 404, message: 'User not found' });
   }
 
   try {
     const deleteResult = await deleteOne({
-      documentId: user._id,
+      documentId: new ObjectId(user._id),
       collectionName: MONGO_DB_COLLECTIONS.TFM_USERS,
       db,
       auditDetails,
