@@ -1,15 +1,3 @@
-const actualDb = jest.requireActual('../../../src/drivers/db-client').default;
-const mockGetCollection = jest.fn(actualDb.getCollection.bind(actualDb));
-
-jest.mock('../../../src/drivers/db-client', () => ({
-  __esModule: true,
-  default: {
-    getCollection: mockGetCollection,
-    getClient: actualDb.getClient.bind(actualDb),
-    getConnection: actualDb.getConnection.bind(actualDb),
-  },
-}));
-
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generateSystemAuditDatabaseRecord, generateSystemAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateMockSystemAuditDatabaseRecord, withDeleteManyTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
@@ -55,7 +43,6 @@ describe('DELETE /v1/portal/durable-functions', () => {
     collectionName: MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG,
     auditRecord: generateMockSystemAuditDatabaseRecord(),
     getDeletedDocumentIds: () => logToDeleteIds,
-    mockGetCollection,
   });
 
   it('returns 200', async () => {

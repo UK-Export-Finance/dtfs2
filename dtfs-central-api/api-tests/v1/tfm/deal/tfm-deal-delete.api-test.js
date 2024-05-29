@@ -117,7 +117,6 @@ describe('/v1/tfm/deal/:id', () => {
       collectionName: MONGO_DB_COLLECTIONS.TFM_FACILITIES,
       auditRecord: generateMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id),
       getDeletedDocumentIds: () => tfmFacilityToDeleteIds,
-      mockGetCollection,
     });
   });
 });

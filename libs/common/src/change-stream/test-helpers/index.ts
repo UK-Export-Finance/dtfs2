@@ -1,3 +1,3 @@
 export * from './generate-mock-audit-database-record';
 export * from './with-delete-one.api-tests';
-export * from './with-delete-many-audit-logs.api-tests';
+export * from './with-delete-many.api-tests';
