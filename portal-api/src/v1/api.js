@@ -36,7 +36,7 @@ const findOneDeal = async (dealId) => {
   }
 };
 
-const createDeal = async (deal, user) => {
+const createDeal = async (deal, user, auditDetails) => {
   try {
     return await axios({
       method: 'post',
@@ -45,6 +45,7 @@ const createDeal = async (deal, user) => {
       data: {
         deal,
         user,
+        auditDetails,
       },
     });
   } catch ({ response }) {
