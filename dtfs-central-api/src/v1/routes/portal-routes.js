@@ -152,6 +152,8 @@ portalRouter.route('/deals/:id').get(getDealController.findOneDealGet);
  *             example:
  *               user: { _id: '123456abc' }
  *               dealUpdate: { aNewField: true }
+ *               auditDetails:
+ *                 $ref: '#/definitions/portalAuditDetails'
  *     responses:
  *       200:
  *         description: OK
