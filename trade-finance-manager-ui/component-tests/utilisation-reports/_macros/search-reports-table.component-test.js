@@ -1,6 +1,6 @@
 const { UtilisationReportEntityMockBuilder, FeeRecordEntityMockBuilder } = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
-const { getReportViewModel } = require('../../../server/controllers/utilisation-reports/helpers/find-reports-by-year-helper');
+const { getFindReportSummaryItemViewModel } = require('../../../server/controllers/utilisation-reports/helpers/find-reports-by-year-helper');
 const { MOCK_TFM_SESSION_USER } = require('../../../server/test-mocks/mock-tfm-session-user');
 
 const component = '../templates/utilisation-reports/_macros/search-reports-table.njk';
@@ -69,8 +69,8 @@ describe(component, () => {
     reconciliationInProgressMockReport.feeRecords = [reconciliationInProgressFeeRecord];
 
     const mockReports = [
-      getReportViewModel(mapReportToSummaryItem(BANK, pendingMockReport)),
-      getReportViewModel(mapReportToSummaryItem(BANK, reconciliationInProgressMockReport)),
+      getFindReportSummaryItemViewModel(mapReportToSummaryItem(BANK, pendingMockReport)),
+      getFindReportSummaryItemViewModel(mapReportToSummaryItem(BANK, reconciliationInProgressMockReport)),
     ];
     const params = {
       user: MOCK_TFM_SESSION_USER,
