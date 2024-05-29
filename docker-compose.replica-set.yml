@@ -92,6 +92,8 @@ services:
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
+      - CONTACT_US_SELF_SERVICE_PORTAL_URL
+      - CONTACT_US_EMAIL_ADDRESS
 
   trade-finance-manager-api:
     build:
