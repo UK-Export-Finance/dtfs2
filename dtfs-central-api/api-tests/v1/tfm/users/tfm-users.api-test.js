@@ -1,15 +1,3 @@
-const actualDb = jest.requireActual('../../../../src/drivers/db-client').default;
-const mockGetCollection = jest.fn(actualDb.getCollection.bind(actualDb));
-
-jest.mock('../../../../src/drivers/db-client', () => ({
-  __esModule: true,
-  default: {
-    getCollection: mockGetCollection,
-    getClient: actualDb.getClient.bind(actualDb),
-    getConnection: actualDb.getConnection.bind(actualDb),
-  },
-}));
-
 const { ObjectId } = require('mongodb');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
@@ -179,7 +167,6 @@ describe('/v1/tfm/users', () => {
       collectionName: MONGO_DB_COLLECTIONS.TFM_USERS,
       auditRecord: generateMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id),
       getDeletedDocumentId: () => userToDeleteId,
-      mockGetCollection,
     });
   });
 

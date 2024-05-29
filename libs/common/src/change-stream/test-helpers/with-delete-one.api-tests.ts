@@ -1,63 +1,16 @@
 import { Collection, ObjectId, WithoutId } from 'mongodb';
-import { when, WhenMock } from 'jest-when';
 import { MongoDbClient } from '../../mongo-db-client';
 import { AuditDatabaseRecord, DeletionAuditLog, MongoDbCollectionName } from '../../types';
 import { changeStreamConfig } from '../config';
-
-/**
- * Methods on the mongodb Collection object @see {@link https://mongodb.github.io/node-mongodb-native/4.17/classes/Collection.html | documentation}
- */
-const collectionMethods = [
-  'aggregate',
-  'bulkWrite',
-  'count',
-  'countDocuments',
-  'createIndex',
-  'createIndexes',
-  'deleteMany',
-  'deleteOne',
-  'distinct',
-  'drop',
-  'dropIndex',
-  'dropIndexes',
-  'estimatedDocumentCount',
-  'find',
-  'findOne',
-  'findOneAndDelete',
-  'findOneAndReplace',
-  'findOneAndUpdate',
-  'getLogger',
-  'indexExists',
-  'indexInformation',
-  'indexes',
-  'initializeOrderedBulkOp',
-  'initializeUnorderedBulkOp',
-  'insert',
-  'insertMany',
-  'insertOne',
-  'isCapped',
-  'listIndexes',
-  'mapReduce',
-  'options',
-  'remove',
-  'rename',
-  'replaceOne',
-  'stats',
-  'update',
-  'updateMany',
-  'updateOne',
-  'watch',
-] as const;
 
 type Params = {
   makeRequest: () => Promise<void>;
   collectionName: MongoDbCollectionName;
   auditRecord: AuditDatabaseRecord;
   getDeletedDocumentId: () => ObjectId;
-  mockGetCollection: jest.Mock;
 };
 
-export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, getDeletedDocumentId, mockGetCollection }: Params) => {
+export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, getDeletedDocumentId }: Params) => {
   describe(`when deleting a document from ${collectionName}`, () => {
     let mongoDbClient: MongoDbClient;
     let deletionAuditLogsCollection: Collection<WithoutId<DeletionAuditLog>>;
@@ -110,116 +63,51 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
       });
 
       describe('when deleting the document is not acknowledged', () => {
-        const originalMockCollection = mockGetCollection(collectionName) as Promise<Collection>;
-        let whenMock: WhenMock;
-        beforeAll(async () => {
-          const collection = await originalMockCollection;
-          const mockCollection: Record<string, unknown> = {};
-
-          collectionMethods.forEach((methodName) => {
-            mockCollection[methodName] = collection[methodName].bind(collection);
-          });
-
-          mockCollection.deleteOne = jest.fn(() => ({
+        beforeEach(() => {
+          jest.spyOn(Collection.prototype, 'deleteOne').mockImplementationOnce(() => ({
             acknowledged: false,
           }));
-
-          whenMock = when(mockGetCollection).calledWith(collectionName).mockResolvedValue(mockCollection);
-        });
-
-        afterAll(() => {
-          whenMock.resetWhenMocks();
         });
 
         itDoesNotUpdateTheDatabase();
       });
 
       describe('when no document is deleted', () => {
-        const originalMockCollection = mockGetCollection(collectionName) as Promise<Collection>;
-        let whenMock: WhenMock;
-        beforeAll(async () => {
-          const collection = await originalMockCollection;
-          const mockCollection: Record<string, unknown> = {};
-
-          collectionMethods.forEach((methodName) => {
-            mockCollection[methodName] = collection[methodName].bind(collection);
-          });
-
-          mockCollection.deleteOne = jest.fn(() => ({
+        beforeEach(() => {
+          jest.spyOn(Collection.prototype, 'deleteOne').mockImplementationOnce(() => ({
             acknowledged: true,
             deletedCount: 0,
           }));
-
-          whenMock = when(mockGetCollection).calledWith(collectionName).mockResolvedValue(mockCollection);
-        });
-
-        afterAll(() => {
-          whenMock.resetWhenMocks();
         });
 
         itDoesNotUpdateTheDatabase();
       });
 
       describe('when deleting the document throws an error', () => {
-        const originalMockCollection = mockGetCollection(collectionName) as Promise<Collection>;
-        let whenMock: WhenMock;
-        beforeAll(async () => {
-          const collection = await originalMockCollection;
-          const mockCollection: Record<string, unknown> = {};
-
-          collectionMethods.forEach((methodName) => {
-            mockCollection[methodName] = collection[methodName].bind(collection);
-          });
-
-          mockCollection.deleteOne = jest.fn(() => {
+        beforeEach(() => {
+          jest.spyOn(Collection.prototype, 'deleteOne').mockImplementationOnce(() => {
             throw new Error();
           });
-
-          whenMock = when(mockGetCollection).calledWith(collectionName).mockResolvedValue(mockCollection);
-        });
-
-        afterAll(() => {
-          whenMock.resetWhenMocks();
         });
 
         itDoesNotUpdateTheDatabase();
       });
 
       describe('when inserting the deletion log is not acknowledged', () => {
-        let whenMock: WhenMock;
-
-        beforeAll(() => {
-          const mockCollection = {
-            insertOne: jest.fn(() => ({
-              acknowledged: false,
-            })),
-          };
-
-          whenMock = when(mockGetCollection).calledWith('deletion-audit-logs').mockResolvedValue(mockCollection);
-        });
-
-        afterAll(() => {
-          whenMock.resetWhenMocks();
+        beforeEach(() => {
+          jest.spyOn(Collection.prototype, 'insertOne').mockImplementationOnce(() => ({
+            acknowledged: false,
+          }));
         });
 
         itDoesNotUpdateTheDatabase();
       });
 
       describe('when inserting the deletion log throws an error', () => {
-        let whenMock: WhenMock;
-
-        beforeAll(() => {
-          const mockCollection = {
-            insertOne: jest.fn(() => {
-              throw new Error();
-            }),
-          };
-
-          whenMock = when(mockGetCollection).calledWith('deletion-audit-logs').mockResolvedValue(mockCollection);
-        });
-
-        afterAll(() => {
-          whenMock.resetWhenMocks();
+        beforeEach(() => {
+          jest.spyOn(Collection.prototype, 'insertOne').mockImplementationOnce(() => {
+            throw new Error();
+          });
         });
 
         itDoesNotUpdateTheDatabase();
