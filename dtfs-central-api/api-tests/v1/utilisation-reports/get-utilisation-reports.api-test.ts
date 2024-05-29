@@ -1,5 +1,4 @@
 import { Response } from 'supertest';
-import { ObjectId } from 'mongodb';
 import { IsoDateTimeStamp, PortalUser, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import axios from 'axios';
 import app from '../../../src/createApp';
@@ -8,6 +7,7 @@ import { SqlDbHelper } from '../../sql-db-helper';
 import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
 import mongoDbClient from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
+import { aPortalUser } from '../../../test-helpers/test-data/portal-user';
 
 const api = createApi(app);
 
@@ -29,11 +29,7 @@ interface CustomSuccessResponse extends Response {
 describe('GET /v1/bank/:bankId/utilisation-reports', () => {
   const getUrl = (bankId: string) => `/v1/bank/${bankId}/utilisation-reports`;
 
-  const portalUser = {
-    _id: new ObjectId(),
-    firstname: 'Test',
-    surname: 'User',
-  } as PortalUser;
+  const portalUser: PortalUser = aPortalUser();
   const portalUserId = portalUser._id.toString();
 
   beforeAll(async () => {
@@ -186,14 +182,10 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
   });
 });
 
-describe('GET /v1/utilisation-reports/:bankId/year', () => {
-  const getUrl = (bankId: string, year: string) => `/v1/utilisation-reports/${bankId}/${year}`;
+describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-year/:year', () => {
+  const getUrl = (bankId: string, year: string) => `/v1/bank/${bankId}/utilisation-reports/reconciliation-summary-by-year/${year}`;
 
-  const portalUser = {
-    _id: new ObjectId(),
-    firstname: 'Test',
-    surname: 'User',
-  } as PortalUser;
+  const portalUser: PortalUser = aPortalUser();
   const portalUserId = portalUser._id.toString();
 
   beforeAll(async () => {

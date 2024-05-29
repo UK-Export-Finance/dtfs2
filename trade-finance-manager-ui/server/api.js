@@ -903,18 +903,18 @@ const getAllBanks = async (userToken) => {
  * @param {string} year - the year
  * @returns {Promise<import('./types/utilisation-reports').UtilisationReportSearchSummary>}
  */
-const getReportsByBankAndYear = async (userToken, bankId, year) => {
+const getReportSummariesByBankAndYear = async (userToken, bankId, year) => {
   try {
     isValidBankId(bankId);
     assertValidIsoYear(year);
 
-    const { data } = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${bankId}/${year}`, {
+    const { data } = await axios.get(`${TFM_API_URL}/v1/bank/${bankId}/utilisation-reports/reconciliation-summary-by-year/${year}`, {
       headers: generateHeaders(userToken),
     });
 
     return data;
   } catch (error) {
-    console.error('Failed to get utilisation reports by bank ID and year', error);
+    console.error('Failed to get utilisation report summaries by bank ID and year', error);
     throw error;
   }
 };
@@ -959,5 +959,5 @@ module.exports = {
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
   getAllBanks,
-  getReportsByBankAndYear,
+  getReportSummariesByBankAndYear,
 };

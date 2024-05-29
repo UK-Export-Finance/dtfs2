@@ -5,7 +5,7 @@ import { asUserSession } from '../../../helpers/express-session';
 import { validateSearchInput } from './search-input-validator';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { FindUtilisationReportsByYearViewModel, UtilisationReportsByBankAndYearViewModel } from '../../../types/view-models';
-import { getReportViewModel } from '../helpers';
+import { getFindReportSummaryItemViewModel } from '../helpers';
 
 const renderFindUtilisationReportsByYearPage = (res: Response, viewModel: FindUtilisationReportsByYearViewModel) =>
   res.render('utilisation-reports/find-utilisation-reports-by-year.njk', viewModel);
@@ -52,7 +52,7 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
       });
     }
 
-    const { errorSummary, bankError, yearError } = validateSearchInput({
+    const { errorSummary, bankError, yearError, bankIdAsString, yearAsString } = validateSearchInput({
       bankIdQuery,
       yearQuery,
       validBankIds,
@@ -71,8 +71,9 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
       });
     }
 
-    const { bankName, year, reports } = await api.getReportsByBankAndYear(userToken, bankIdQuery!, yearQuery!);
-    const reportsViewModel = reports.map(getReportViewModel);
+    const { bankName, year, reports } = await api.getReportSummariesByBankAndYear(userToken, bankIdAsString, yearAsString);
+
+    const reportSummaryItemsViewModel = reports.map(getFindReportSummaryItemViewModel);
     const isTfmPaymentReconciliationFeatureEnabled = isTfmPaymentReconciliationFeatureFlagEnabled();
 
     return renderUtilisationReportsByBankAndYearResults(res, {
@@ -80,7 +81,7 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       bankName,
       year,
-      reports: reportsViewModel,
+      reports: reportSummaryItemsViewModel,
       isTfmPaymentReconciliationFeatureFlagEnabled: isTfmPaymentReconciliationFeatureEnabled,
     });
   } catch (error) {

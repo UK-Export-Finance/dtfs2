@@ -1,13 +1,13 @@
 import { Request } from 'express';
 import httpMocks from 'node-mocks-http';
 import { AxiosError, AxiosResponse } from 'axios';
-import { getSubmittedReportsByBankAndYear } from '.';
+import { getUtilisationReportSummariesByBankAndYear } from '.';
 import api from '../../api';
 
 jest.mock('../../api');
 console.error = jest.fn();
 
-describe('getSubmittedReportsByBankAndYear', () => {
+describe('getUtilisationReportSummariesByBankAndYear', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
@@ -15,14 +15,14 @@ describe('getSubmittedReportsByBankAndYear', () => {
   it('returns 200 response when the request succeeds', async () => {
     // Arrange
     const mockSummary = [{ reportId: 1 }];
-    api.getUtilisationReportsByBankIdAndYear = jest.fn().mockResolvedValue(mockSummary);
+    api.getUtilisationReportSummariesByBankIdAndYear = jest.fn().mockResolvedValue(mockSummary);
 
     const { req, res } = httpMocks.createMocks<Request<{ bankId: string; year: string }>>({
       params: { bankId: '123', year: '2023' },
     });
 
     // Act
-    await getSubmittedReportsByBankAndYear(req, res);
+    await getUtilisationReportSummariesByBankAndYear(req, res);
 
     // Assert
     expect(res.statusCode).toEqual(200);
@@ -37,14 +37,14 @@ describe('getSubmittedReportsByBankAndYear', () => {
     const axiosErrorStatus = 401;
     const axiosError = new AxiosError();
     axiosError.response = { status: axiosErrorStatus } as AxiosResponse;
-    api.getUtilisationReportsByBankIdAndYear = jest.fn().mockRejectedValueOnce(axiosError);
+    api.getUtilisationReportSummariesByBankIdAndYear = jest.fn().mockRejectedValueOnce(axiosError);
 
     const { req, res } = httpMocks.createMocks<Request<{ bankId: string; year: string }>>({
       params: { bankId, year },
     });
 
     // Act
-    await getSubmittedReportsByBankAndYear(req, res);
+    await getUtilisationReportSummariesByBankAndYear(req, res);
 
     // Assert
     expect(res.statusCode).toEqual(401);
@@ -55,14 +55,14 @@ describe('getSubmittedReportsByBankAndYear', () => {
     // Arrange
     const bankId = '123';
     const year = '2023';
-    api.getUtilisationReportsByBankIdAndYear = jest.fn().mockRejectedValue(new Error('Failed to authenticate'));
+    api.getUtilisationReportSummariesByBankIdAndYear = jest.fn().mockRejectedValue(new Error('Failed to authenticate'));
 
     const { req, res } = httpMocks.createMocks<Request<{ bankId: string; year: string }>>({
       params: { bankId, year },
     });
 
     // Act
-    await getSubmittedReportsByBankAndYear(req, res);
+    await getUtilisationReportSummariesByBankAndYear(req, res);
 
     // Assert
     expect(res.statusCode).toEqual(500);

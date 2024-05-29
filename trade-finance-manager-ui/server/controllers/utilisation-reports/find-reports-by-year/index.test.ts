@@ -1,4 +1,5 @@
 import httpMocks from 'node-mocks-http';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getFindReportsByYear } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
@@ -251,10 +252,45 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.selectedYear).toBe('Nonsense');
     });
 
-    it("renders the 'previous-bank-reports-by-year.njk' view with required data when there are valid query params", async () => {
+    it("renders the 'utilisation-reports-by-bank-and-year-results.njk' view with required data when there are valid query params", async () => {
       // Arrange
       const bankQuery = BANK_ID_ONE;
       const yearQuery = new Date().getFullYear().toString();
+      const reportPeriod = {
+        start: {
+          month: 1,
+          year: Number(yearQuery),
+        },
+        end: {
+          month: 1,
+          year: Number(yearQuery),
+        },
+      };
+      const mockReportSummaryItem = {
+        reportId: '1',
+        reportPeriod,
+        bank: {
+          id: bankQuery,
+          name: BANK_NAME_ONE,
+        },
+        status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+        dateUploaded: '2024-02-15 10:38:01.4033333',
+        totalFeesReported: 3,
+        reportedFeesLeftToReconcile: 3,
+      };
+
+      const expectedReportItem = {
+        reportId: '1',
+        reportPeriod,
+        bank: { id: bankQuery, name: BANK_NAME_ONE },
+        status: 'PENDING_RECONCILIATION',
+        dateUploaded: '2024-02-15 10:38:01.4033333',
+        totalFeesReported: 3,
+        reportedFeesLeftToReconcile: 3,
+        formattedReportPeriod: 'January 2024',
+        displayStatus: 'Pending reconciliation',
+        formattedDateUploaded: '15 Feb 2024',
+      };
 
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
@@ -262,7 +298,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
-      jest.mocked(api.getReportsByBankAndYear).mockResolvedValue({ bankName: BANK_NAME_ONE, year: yearQuery, reports: [] });
+      jest.mocked(api.getReportSummariesByBankAndYear).mockResolvedValue({ bankName: BANK_NAME_ONE, year: yearQuery, reports: [mockReportSummaryItem] });
 
       // Act
       await getFindReportsByYear(req, res);
@@ -271,7 +307,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-reports-by-bank-and-year-results.njk');
       expect((res._getRenderData() as UtilisationReportsByBankAndYearViewModel)?.bankName).toBe(BANK_NAME_ONE);
       expect((res._getRenderData() as UtilisationReportsByBankAndYearViewModel)?.year).toBe(yearQuery);
-      expect((res._getRenderData() as UtilisationReportsByBankAndYearViewModel)?.reports).toStrictEqual([]);
+      expect((res._getRenderData() as UtilisationReportsByBankAndYearViewModel)?.reports).toStrictEqual([expectedReportItem]);
     });
   });
 });

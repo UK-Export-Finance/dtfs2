@@ -3,13 +3,13 @@ import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { UtilisationReportReconciliationSummaryItem } from '../../../types/utilisation-reports';
 import { reconciliationStatusCodeToDisplayStatus } from './reconciliation-summary-helper';
 
-type ReportViewModel = UtilisationReportReconciliationSummaryItem & {
+export type FindReportSummaryItemViewModel = UtilisationReportReconciliationSummaryItem & {
   formattedReportPeriod: string;
   displayStatus: string;
   formattedDateUploaded?: string;
 };
 
-export const getReportViewModel = (apiItem: UtilisationReportReconciliationSummaryItem): ReportViewModel => {
+export const getFindReportSummaryItemViewModel = (apiItem: UtilisationReportReconciliationSummaryItem): FindReportSummaryItemViewModel => {
   const { status, dateUploaded, reportPeriod } = apiItem;
 
   return {

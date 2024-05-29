@@ -57,7 +57,7 @@ export type GetUtilisationReportsByBankIdAndYearRequest = CustomExpressRequest<{
  * @param req - The request object
  * @param res - The response object
  */
-export const getUtilisationReportsByBankIdAndYear = async (req: GetUtilisationReportsByBankIdAndYearRequest, res: Response) => {
+export const getUtilisationReportSummariesByBankIdAndYear = async (req: GetUtilisationReportsByBankIdAndYearRequest, res: Response) => {
   try {
     const { bankId, year } = req.params;
 
@@ -80,7 +80,7 @@ export const getUtilisationReportsByBankIdAndYear = async (req: GetUtilisationRe
     };
     return res.status(200).send(utilisationReportsSummary);
   } catch (error) {
-    console.error('Unable to get utilisation reports:', error);
-    return res.status(500).send({ status: 500, message: 'Failed to get utilisation reports' });
+    console.error('Unable to get utilisation report summaries:', error);
+    return res.status(500).send({ status: 500, message: 'Failed to get utilisation report summaries' });
   }
 };

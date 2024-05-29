@@ -13,7 +13,7 @@ export type UtilisationReportSummaryItem = {
   reportedFeesLeftToReconcile?: number;
 };
 
-export type UtilisationReportsByBankAndYearResponseBody = {
+export type UtilisationReportSummariesByBankAndYearResponseBody = {
   bankName: string;
   year: string;
   reports: UtilisationReportSummaryItem[];

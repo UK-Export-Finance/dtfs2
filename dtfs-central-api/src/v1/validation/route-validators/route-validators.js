@@ -30,7 +30,7 @@ exports.isoMonthValidation = (fields) => [
 ];
 
 /**
- * Validates that specified route or query parameters are strings in ISO month format 'yyyy'
+ * Validates that specified route or query parameters are strings in ISO year format 'yyyy'
  * @param {string} paramName - The parameter name
  * @returns {import('express-validator').ValidationChain}
  */

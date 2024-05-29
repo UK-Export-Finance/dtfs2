@@ -16,7 +16,7 @@ import {
   GetUtilisationReportsByBankIdAndOptionsRequest,
   GetUtilisationReportsByBankIdAndYearRequest,
   getUtilisationReportsByBankIdAndOptions,
-  getUtilisationReportsByBankIdAndYear,
+  getUtilisationReportSummariesByBankIdAndYear,
 } from './index';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { GetUtilisationReportResponse, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
@@ -272,7 +272,7 @@ describe('getUtilisationReports', () => {
       jest.spyOn(UtilisationReportRepo, 'findSubmittedReportsForBankIdWithReportPeriodEndInYear').mockImplementation(jest.fn().mockRejectedValue(new Error()));
 
       // Act
-      await getUtilisationReportsByBankIdAndYear(req, res);
+      await getUtilisationReportSummariesByBankIdAndYear(req, res);
 
       // Assert
       expect(res.statusCode).toEqual(500);
@@ -284,7 +284,7 @@ describe('getUtilisationReports', () => {
       jest.mocked(getBankById).mockImplementation(jest.fn().mockRejectedValue(new Error()));
 
       // Act
-      await getUtilisationReportsByBankIdAndYear(req, res);
+      await getUtilisationReportSummariesByBankIdAndYear(req, res);
 
       // Assert
       expect(res.statusCode).toEqual(500);
@@ -325,7 +325,7 @@ describe('getUtilisationReports', () => {
         .mockImplementation(findSubmittedReportsForBankIdWithReportPeriodEndInYearMock);
 
       // Act
-      await getUtilisationReportsByBankIdAndYear(req, res);
+      await getUtilisationReportSummariesByBankIdAndYear(req, res);
 
       // Assert
       expect(findSubmittedReportsForBankIdWithReportPeriodEndInYearMock).toHaveBeenCalledWith(bankId, Number(year));
@@ -401,7 +401,7 @@ describe('getUtilisationReports', () => {
       const { req, res } = getHttpMocks();
 
       // Act
-      await getUtilisationReportsByBankIdAndYear(req, res);
+      await getUtilisationReportSummariesByBankIdAndYear(req, res);
 
       // Assert
       expect(findSubmittedReportsForBankIdWithReportPeriodEndInYearMock).toHaveBeenCalledWith(bankId, Number(year));

@@ -5,10 +5,10 @@ import api from '../../api';
 /**
  * Fetches a list of utilisation reports reconciliation progress for specified year and bank.
  */
-export const getSubmittedReportsByBankAndYear = async (req: Request<{ bankId: string; year: string }>, res: Response) => {
+export const getUtilisationReportSummariesByBankAndYear = async (req: Request<{ bankId: string; year: string }>, res: Response) => {
   const { bankId, year } = req.params;
   try {
-    const summary = await api.getUtilisationReportsByBankIdAndYear(bankId, year);
+    const summary = await api.getUtilisationReportSummariesByBankIdAndYear(bankId, year);
     res.status(200).send(summary);
   } catch (error) {
     const errorMessage = `Failed to get previous utilisation reports by bank id ${bankId} and year ${year}`;

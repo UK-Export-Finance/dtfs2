@@ -13,7 +13,6 @@ const putUtilisationReportStatusController = require('../controllers/utilisation
 const {
   getUtilisationReportReconciliationDetailsById,
 } = require('../controllers/utilisation-report-service/get-utilisation-report-reconciliation-details-by-id.controller');
-const { getUtilisationReportsByBankIdAndYear } = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -169,36 +168,5 @@ utilisationReportsRouter.route('/set-status').put(putUtilisationReportStatusCont
 utilisationReportsRouter
   .route('/reconciliation-details/:reportId')
   .get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, getUtilisationReportReconciliationDetailsById);
-
-/**
- * @openapi
- * /utilisation-reports/:bankId/:year:
- *   get:
- *     summary: |
- *       Utilisation reports for the specified submission
- *       year and bank. This includes status and details of
- *       reports that have been submitted.
- *     tags: [UtilisationReport]
- *     description: |
- *       Utilisation reports for the specified submission
- *       year and bank. This includes status and details of
- *       reports that have been submitted.
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/definitions/UtilisationReportReportReconciliationSummaryItem'
- *       400:
- *         description: Bad request
- *       500:
- *         description: Internal Server Error
- */
-utilisationReportsRouter
-  .route('/:bankId/:year')
-  .get(validation.bankIdValidation, validation.yearValidation('year'), handleExpressValidatorResult, getUtilisationReportsByBankIdAndYear);
 
 module.exports = utilisationReportsRouter;

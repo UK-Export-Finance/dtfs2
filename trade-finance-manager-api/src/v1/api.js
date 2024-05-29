@@ -1266,13 +1266,13 @@ const getUtilisationReportReconciliationDetailsById = async (reportId) => {
 };
 
 /**
- * Gets the utilisation reports by bank id and year
+ * Gets the utilisation report summaries by bank id and year
  * @param {string} bankId - The bank id
  * @param { string} year - The year which a report period ends in
- * @returns {Promise<import('./api-response-types').UtilisationReportsByBankAndYearResponseBody>}
+ * @returns {Promise<import('./api-response-types').UtilisationReportSummariesByBankAndYearResponseBody>}
  */
-const getUtilisationReportsByBankIdAndYear = async (bankId, year) => {
-  const url = `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${bankId}/${year}`;
+const getUtilisationReportSummariesByBankIdAndYear = async (bankId, year) => {
+  const url = `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports/reconciliation-summary-by-year/${year}`;
   const response = await axios.get(url, {
     headers: headers.central,
   });
@@ -1340,5 +1340,5 @@ module.exports = {
   getUtilisationReportById,
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
-  getUtilisationReportsByBankIdAndYear,
+  getUtilisationReportSummariesByBankIdAndYear,
 };

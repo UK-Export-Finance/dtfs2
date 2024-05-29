@@ -145,12 +145,12 @@ authRouter
 authRouter.route('/banks').get(banksController.getAllBanks);
 
 authRouter
-  .route('/utilisation-reports/:bankId/:year')
+  .route('/bank/:bankId/utilisation-reports/reconciliation-summary-by-year/:year')
   .get(
     validation.bankIdValidation,
     validation.isoYearValidation('year'),
     handleExpressValidatorResult,
-    utilisationReportsController.getSubmittedReportsByBankAndYear,
+    utilisationReportsController.getUtilisationReportSummariesByBankAndYear,
   );
 
 module.exports = { authRouter, openRouter };

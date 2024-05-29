@@ -8,13 +8,15 @@
   {% set reportRows = [] %}
 
   {% for report in reports %}
-    {% set reportPeriodHtml =
-      '<p class="govuk-body govuk-!-margin-0">' + report.formattedReportPeriod + '</p>' 
-      if not isTfmPaymentReconciliationFeatureFlagEnabled 
-      else '<a class="govuk-link govuk-link--no-visited-state" href="/utilisation-reports/' + report.reportId + '">' + report.formattedReportPeriod + '</a>'
-    %}
+    {% set reportPeriodHtml %}
+      {% if isTfmPaymentReconciliationFeatureFlagEnabled %}
+        <a class="govuk-link govuk-link--no-visited-state" href="/utilisation-reports/{{report.reportId}}"> {{report.formattedReportPeriod}}</a>
+      {% else %}
+        <p class="govuk-body govuk-!-margin-0"> {{report.formattedReportPeriod}} </p>
+      {% endif %}
+    {% endset %}
 
-    {{- reportRows.push([
+    {% set reportRows = (reportRows.push([
       {html: reportPeriodHtml }, 
       {text: reconciliationStatus.render({
         status: report.status,
@@ -23,7 +25,7 @@
       {text: report.formattedDateUploaded},
       {text: report.totalFeesReported},
       {text: report.reportedFeesLeftToReconcile}
-    ]) | reject() }}
+    ]), reportRows) %}
   {% endfor %}
 
   {{ govukTable({
