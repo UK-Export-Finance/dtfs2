@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { mockDataLoaderPortalAuditDetails } = require('./constants/mockDataLoaderAuditDetails');
 const ApiError = require('./errors/api.error');
 require('dotenv').config();
 
@@ -77,7 +77,7 @@ const deleteFacility = async (facilityId) => {
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
     headers,
     data: {
-      auditDetails: generatePortalAuditDetails('abcdef123456abcdef123456'),
+      auditDetails: mockDataLoaderPortalAuditDetails,
     },
   }).catch((error) => {
     throw new ApiError({ cause: error });

@@ -30,10 +30,6 @@ export const deleteFacility = async (
     return res.status(500).send({ status: 500, error });
   }
 
-  if (!('routePath' in req)) {
-    return res.status(500).send({ status: 500, message: 'Missing req.routePath' });
-  }
-
   const facility = await findOneFacility(facilityId);
 
   if (!facility) {

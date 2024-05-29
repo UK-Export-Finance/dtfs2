@@ -14,7 +14,7 @@ const newDeal = aDeal({
   bankInternalRefName: 'mock id',
 });
 
-describe('DELETE /v1/portal/deals', () => {
+describe('DELETE /v1/portal/facilities/:id', () => {
   let dealId;
   let documentToDeleteId;
 

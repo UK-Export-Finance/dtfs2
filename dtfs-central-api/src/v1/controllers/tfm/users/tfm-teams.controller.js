@@ -81,7 +81,7 @@ exports.deleteTfmTeam = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid team Id' });
   }
 
-  // We're deleting a team by `id` not `_id` so have to find the _id for the audit record
+  // Teams have both id and _id. The delete team request specifies the id of the team to delete, however deleteOne requires _id to operate
   const teamsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_TEAMS);
   const team = await teamsCollection.findOne({ id: { $eq: id } });
 

@@ -72,7 +72,7 @@ module.exports.deleteTfmDeal = (dealId, auditDetails) =>
       url: `${api()}/v1/tfm/deals/${dealId}`,
       method: 'DELETE',
       headers,
-      data: {
+      body: {
         auditDetails,
       },
     })

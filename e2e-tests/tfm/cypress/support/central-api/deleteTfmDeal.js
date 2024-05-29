@@ -1,9 +1,10 @@
+const { UNDERWRITER_1_WITH_MOCK_ID } = require('../../../../e2e-fixtures/tfm-users.fixture');
 const { deleteTfmDeal } = require('./api');
 
 module.exports = (dealId) => {
   console.info('deleteTfmDeal::');
   deleteTfmDeal(dealId, {
     userType: 'tfm',
-    id: 'bad123456789bad123456789',
+    id: UNDERWRITER_1_WITH_MOCK_ID._id,
   });
 };
