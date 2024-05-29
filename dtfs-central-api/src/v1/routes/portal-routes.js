@@ -59,6 +59,8 @@ portalRouter.use((req, res, next) => {
  *                 properties:
  *                   details:
  *                     type: object
+ *               auditDetails:
+ *                 $ref: '#/definitions/portalAuditDetails'
  *           example:
  *             bankInternalRefName: 'a1'
  *             additionalRefName: 'test'
