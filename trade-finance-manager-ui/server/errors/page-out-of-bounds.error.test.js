@@ -1,6 +1,6 @@
 const PageOutOfBoundsError = require('./page-out-of-bounds.error');
 
-describe('InvalidEnvironmentVariableError', () => {
+describe('PageOutOfBoundsError', () => {
   const message = 'an error message';
 
   it('exposes the message it was created with', () => {
