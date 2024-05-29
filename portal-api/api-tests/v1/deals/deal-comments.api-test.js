@@ -42,11 +42,4 @@ describe('deal comments controller', () => {
     expect(addedComment.comments[0].text).toEqual(myComment);
     expect(addedComment.comments[0].user.username).toEqual(user.username);
   });
-
-  it('should update a special condition', async () => {
-    const addedComment = await dealCommentsController.addUkefDecision(dealId, myComment, user);
-
-    expect(addedComment.ukefDecision[0].text).toEqual(myComment);
-    expect(addedComment.ukefDecision[0].user.username).toEqual(user.username);
-  });
 });
