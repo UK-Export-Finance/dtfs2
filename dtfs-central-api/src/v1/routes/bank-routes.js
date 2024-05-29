@@ -6,10 +6,10 @@ const getBankController = require('../controllers/bank/get-bank.controller');
 const getBanksController = require('../controllers/bank/get-banks.controller');
 const createBankController = require('../controllers/bank/create-bank.controller');
 const getNextReportPeriodController = require('../controllers/bank/get-next-report-period-by-bank.controller');
+const { getUtilisationReportsByBankIdAndOptions } = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
 const {
-  getUtilisationReportsByBankIdAndOptions,
   getUtilisationReportSummariesByBankIdAndYear,
-} = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
+} = require('../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller');
 
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
