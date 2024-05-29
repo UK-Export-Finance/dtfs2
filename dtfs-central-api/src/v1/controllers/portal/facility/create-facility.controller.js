@@ -1,4 +1,4 @@
-const { validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
@@ -10,12 +10,13 @@ const createFacility = async (facility, user, routePath, auditDetails) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
 
   const { dealId } = facility;
+  const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
   const newFacility = {
-    ...facility,
     dealId: new ObjectId(facility.dealId),
     createdDate: Date.now(),
     updatedAt: Date.now(),
+    auditRecord,
   };
 
   const response = await collection.insertOne(newFacility);
@@ -44,6 +45,7 @@ exports.createFacilityPost = async (req, res) => {
       validationErrors,
     });
   }
+  
   try {
     validateAuditDetails(auditDetails);
   } catch (error) {
