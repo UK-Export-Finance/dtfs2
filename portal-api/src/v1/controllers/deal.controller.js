@@ -124,8 +124,8 @@ exports.findOne = (req, res) => {
   });
 };
 
-const updateDeal = async (dealId, dealUpdate, user) => {
-  const updatedDeal = await api.updateDeal(dealId, dealUpdate, user);
+const updateDeal = async (dealId, dealUpdate, user, auditDetails) => {
+  const updatedDeal = await api.updateDeal(dealId, dealUpdate, user, auditDetails);
 
   return updatedDeal;
 };
@@ -135,16 +135,21 @@ exports.updateDeal = updateDeal;
  * Update a deal (BSS, EWCS only)
  */
 exports.update = async (req, res) => {
-  const dealId = req.params.id;
+  const {
+    user,
+    params: { id: dealId },
+  } = req;
 
   await findOneDeal(dealId, async (deal) => {
     if (!deal) res.status(404).send();
 
-    if (!userHasAccessTo(req.user, deal)) {
+    if (!userHasAccessTo(user, deal)) {
       return res.status(401).send();
     }
 
-    const updatedDeal = await updateDeal(dealId, req.body, req.user, deal);
+    const auditDetails = generatePortalAuditDetails(user._id);
+
+    const updatedDeal = await updateDeal(dealId, req.body, user, deal, auditDetails);
 
     return res.status(200).json(updatedDeal);
   });
