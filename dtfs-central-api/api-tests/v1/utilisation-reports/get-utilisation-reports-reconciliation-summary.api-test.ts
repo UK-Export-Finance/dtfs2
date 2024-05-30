@@ -8,7 +8,7 @@ import {
   getCurrentReportPeriodForBankSchedule,
   getSubmissionMonthForReportPeriod,
 } from '@ukef/dtfs2-common';
-import wipeDB, { wipe } from '../../wipeDB';
+import { wipe } from '../../wipeDB';
 import app from '../../../src/createApp';
 import { MOCK_BANKS } from '../../mocks/banks';
 import createApi from '../../api';
@@ -26,7 +26,7 @@ interface CustomResponse extends Response {
 
 describe('/v1/utilisation-reports/reconciliation-summary/:submissionMonth', () => {
   beforeAll(async () => {
-    await wipeDB.wipe([MONGO_DB_COLLECTIONS.BANKS]);
+    await wipe([MONGO_DB_COLLECTIONS.BANKS]);
     await api.post(withoutMongoId(MOCK_BANKS.BARCLAYS)).to('/v1/bank');
 
     await SqlDbHelper.initialize();
@@ -150,9 +150,9 @@ describe.only('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-b
     expect(response.body.errors[0]?.msg).toEqual("Invalid 'year' path param provided");
   });
 
-  it('gets utilisation reports', async () => {
+  it('gets utilisation report summaries', async () => {
     // Arrange
-    const bankId = '13';
+    const bankId = '9';
     const year = '2023';
 
     const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
@@ -175,7 +175,7 @@ describe.only('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-b
 
   it("gets only the utilisation reports which are not in the 'REPORT_NOT_RECEIVED'", async () => {
     // Arrange
-    const bankId = '13';
+    const bankId = '9';
     const year = '2023';
 
     const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
@@ -207,7 +207,7 @@ describe.only('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-b
 
   it('gets utilisation reports for specified year', async () => {
     // Arrange
-    const bankId = '13';
+    const bankId = '9';
     const year = '2021';
     const reportPeriod = {
       start: { month: 11, year: 2021 },
@@ -241,7 +241,7 @@ describe.only('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-b
 
   it('returns no reports when no reports exist for specified bank and year', async () => {
     // Arrange
-    const bankId = '13';
+    const bankId = '9';
     const year = '2021';
     const reportPeriod = {
       start: { month: 11, year: 2021 },
