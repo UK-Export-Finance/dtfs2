@@ -1,1 +1,1 @@
-export { ApiError } from '@ukef/dtfs2-common/errors';
+export { ApiError } from '@ukef/dtfs2-common';
