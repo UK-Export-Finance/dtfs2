@@ -1,5 +1,7 @@
+const { ObjectId } = require('mongodb');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { withDeleteOneTests, generateMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -51,6 +53,10 @@ const orderUsers = (users) => users.sort((u1, u2) => u1.username.localeCompare(u
 describe('/v1/tfm/users', () => {
   beforeEach(async () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_USERS]);
+  });
+
+  afterAll(() => {
+    jest.resetAllMocks();
   });
 
   describe('POST /v1/tfm/users', () => {
@@ -143,22 +149,24 @@ describe('/v1/tfm/users', () => {
     });
   });
 
-  describe('DELETE /v1/tfm/users/:id', () => {
-    it('deletes the user', async () => {
-      await Promise.all(
-        mockUsers.map(async (mockUser) => api.post({ user: mockUser, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/users')),
-      );
+  describe('DELETE /v1/tfm/users/:username', () => {
+    let userToDeleteId;
 
-      const { status, body } = await api.remove().to(`/v1/tfm/users/${mockUsers[0].username}`);
+    beforeEach(async () => {
+      const response = await api.post({ user: mockUsers[0], auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/users');
+      userToDeleteId = new ObjectId(response.body._id);
+    });
 
-      expect(status).toEqual(200);
-      expect(body.deletedCount).toEqual(1);
+    withValidateAuditDetailsTests({
+      makeRequest: (auditDetails) => api.remove({ auditDetails }).to(`/v1/tfm/users/${mockUsers[0].username}`),
+      validUserTypes: ['none', 'portal', 'system', 'tfm'],
+    });
 
-      const listUsersRes = await api.get('/v1/tfm/users');
-
-      const allNonDeletedUsers = mockUsers.filter((u) => u.username !== mockUsers[0].username).map((u) => u.username);
-      const usernameList = listUsersRes.body.users.map((u) => u.username);
-      expect(usernameList.sort()).toEqual(allNonDeletedUsers.sort());
+    withDeleteOneTests({
+      makeRequest: () => api.remove({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/users/${mockUsers[0].username}`),
+      collectionName: MONGO_DB_COLLECTIONS.TFM_USERS,
+      auditRecord: generateMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id),
+      getDeletedDocumentId: () => userToDeleteId,
     });
   });
 
