@@ -5,7 +5,14 @@
   "license": "ISC",
   "author": "",
   "main": "migrate-users.js",
+  "scripts": {
+    "lint": "eslint \"**/*.{ts,js}\" && npm run type-check",
+    "lint:fix": "eslint \"**/*.{ts,js}\"",
+    "mongo-sql-migrator:utilisation-reports": "ts-node ./sql/utilisation-reports/index.ts",
+    "type-check": "tsc --noEmit"
+  },
   "dependencies": {
+    "@ukef/dtfs2-common": "1.0.0",
     "axios": "^1.6.8",
     "bson": "^6.6.0",
     "date-fns": "^2.30.0",
@@ -16,6 +23,7 @@
     "minimist": "^1.2.8",
     "moment": "^2.30.1",
     "mongodb": "^4.17.2",
+    "ts-node": "^10.9.2",
     "xml2js": "^0.5.0"
   },
   "engines": {

@@ -3,13 +3,8 @@ const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
 require('dotenv').config();
 
-const {
-  DTFS_CENTRAL_API_URL,
-  EXTERNAL_API_URL,
-  DTFS_CENTRAL_API_KEY,
-  EXTERNAL_API_KEY,
-  AZURE_ACBS_FUNCTION_URL,
-} = process.env;
+const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL } =
+  process.env;
 
 const headers = {
   central: {
@@ -187,11 +182,7 @@ const findOneDeal = async (dealId) => {
   }
 };
 
-const updateDeal = async (
-  dealId,
-  dealUpdate,
-  onError = ({ status, message }) => ({ status, data: message }),
-) => {
+const updateDeal = async (dealId, dealUpdate, onError = ({ status, message }) => ({ status, data: message })) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -1185,15 +1176,12 @@ const getUtilisationReportsReconciliationSummary = async (submissionMonth) => {
 };
 
 /**
- * @param {string} _id
- * @returns {Promise<import('../types/utilisation-reports').UtilisationReportResponseBody>}
+ * Get utilisation report by id
+ * @param {string} id
+ * @returns {Promise<import('./api-response-types/UtilisationReportResponseBody').UtilisationReportResponseBody>}
  */
-const getUtilisationReportById = async (_id) => {
-  if (!isValidMongoId(_id)) {
-    throw new Error(`Invalid MongoDB _id provided: '${_id}'`);
-  }
-
-  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${_id}`, {
+const getUtilisationReportById = async (id) => {
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${id}`, {
     headers: headers.central,
   });
 

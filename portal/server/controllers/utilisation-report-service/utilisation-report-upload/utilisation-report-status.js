@@ -1,5 +1,6 @@
 const { subMonths, format, addMonths } = require('date-fns');
-const { getBusinessDayOfMonth, getFormattedReportPeriod } = require('../../../helpers');
+const { getFormattedReportPeriodWithLongMonth } = require('@ukef/dtfs2-common');
+const { getBusinessDayOfMonth } = require('../../../helpers');
 const api = require('../../../api');
 
 /**
@@ -35,7 +36,7 @@ const getReportDueDate = async (userToken, reportPeriodEndDate = subMonths(new D
 const getDueReportPeriodsByBankId = async (userToken, bankId) => {
   const dueReportPeriods = await api.getDueReportPeriodsByBankId(userToken, bankId);
   return dueReportPeriods.map((dueReportPeriod) => {
-    const formattedReportPeriod = getFormattedReportPeriod(dueReportPeriod);
+    const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(dueReportPeriod);
     return { ...dueReportPeriod, formattedReportPeriod };
   });
 };

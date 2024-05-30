@@ -1,4 +1,5 @@
-const { UTILISATION_REPORT_HEADERS } = require('../../../constants');
+const { isMongoId } = require('validator');
+const { UTILISATION_REPORT_HEADERS } = require('@ukef/dtfs2-common');
 const REGEXES = require('../../../constants/regex');
 const {
   validateUkefId,
@@ -15,13 +16,26 @@ const {
 } = require('./utilisation-data-validator');
 
 /**
+ * Validate the ID of a utilisation report
+ * @param {unknown} reportId - the report ID
+ * @returns {string | null} - error message or null if valid
+ */
+const validateReportId = (reportId) => {
+  if (Number.isInteger(reportId) && reportId > 0) {
+    return null;
+  }
+
+  return `Report ID must be a positive integer`;
+};
+
+/**
  * Validates the month of the utilisation report. Returns null if valid, otherwise returns an error message.
  * @param {unknown} month - Month of utilisation report.
  * @param {string} [propertyName] - Name of specific property being validated (defaults to `'Month'`).
  * @returns {string | null} - Error message or null if valid.
  */
 const validateMonth = (month, propertyName = 'Month') => {
-  if (!month) {
+  if (!month && month !== 0) {
     return `${propertyName} is required`;
   }
   if (!REGEXES.INTEGER_REGEX.test(month) || month < 1 || month > 12) {
@@ -37,7 +51,7 @@ const validateMonth = (month, propertyName = 'Month') => {
  * @returns {string | null} - Error message or null if valid.
  */
 const validateYear = (year, propertyName = 'Year') => {
-  if (!year) {
+  if (!year && year !== 0) {
     return `${propertyName} is required`;
   }
   if (!REGEXES.INTEGER_REGEX.test(year) || year < 2020 || year > 2100) {
@@ -45,48 +59,6 @@ const validateYear = (year, propertyName = 'Year') => {
   }
   return null;
 };
-
-/**
- * Validates the report period for the utilisation report
- * @param {unknown} reportPeriod - details of the report period.
- * @returns {string[]} - an array of errors or an empty array if valid.
- */
-const validateReportPeriod = (reportPeriod) => {
-  if (!reportPeriod?.start || !reportPeriod?.end) {
-    return ['Report period is required'];
-  }
-
-  const reportPeriodErrors = [];
-  const { month: startMonth, year: startYear } = reportPeriod.start;
-  const { month: endMonth, year: endYear } = reportPeriod.end;
-
-  const startMonthError = validateMonth(startMonth, 'startMonth');
-  if (startMonthError !== null) {
-    reportPeriodErrors.push(startMonthError);
-  }
-  const startYearError = validateYear(startYear, 'startYear');
-  if (startYearError !== null) {
-    reportPeriodErrors.push(startYearError);
-  }
-
-  const endMonthError = validateMonth(endMonth, 'endMonth');
-  if (endMonthError !== null) {
-    reportPeriodErrors.push(endMonthError);
-  }
-  const endYearError = validateYear(endYear, 'endYear');
-  if (endYearError !== null) {
-    reportPeriodErrors.push(endYearError);
-  }
-
-  return reportPeriodErrors;
-};
-
-/**
- * Checks whether or not the supplied report period is a valid report period object
- * @param {unknown} reportPeriod - details of the report period
- * @returns {reportPeriod is import('../../../types/utilisation-reports').ReportPeriod}
- */
-const isValidReportPeriod = (reportPeriod) => validateReportPeriod(reportPeriod).length === 0;
 
 /**
  * Validates the details of the file storage for the utilisation report in azure
@@ -129,26 +101,16 @@ const validateFileInfo = (fileInfo) => {
 };
 
 /**
- * Validates the bank id. Returns null if valid, otherwise returns an error message.
- * @param {unknown} bankId - file path of the utilisation report in azure.
- * @returns {String | null} - Error message or null if valid.
- */
-const validateBankId = (bankId) => {
-  if (!bankId) {
-    return 'Bank id is required';
-  }
-  if (!REGEXES.INTEGER_REGEX.test(bankId)) {
-    return 'Bank id is not valid';
-  }
-  return null;
-};
-
-/**
  * Validates the utilisation report data. Returns an array of error messages.
- * @param {object[]} utilisationReportData - array of json objects representing utilisation report data.
- * @returns {object[]} - Array of error objects.
+ * @param {unknown} utilisationReportData - array of json objects representing utilisation report data.
+ * @returns {import('./utilisation-data-validator.types').UtilisationDataValidatorError[]} - Array of error objects.
  */
 const validateUtilisationReportData = (utilisationReportData) => {
+  if (!Array.isArray(utilisationReportData)) {
+    const errors = ['utilisationReportData must be an array'];
+    return errors;
+  }
+
   const errors = utilisationReportData.flatMap((utilisationReportDataEntry, index) => {
     const facilityIdValidationError = validateUkefId(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID], index);
     const exporterValidationError = validateExporter(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.EXPORTER], index);
@@ -190,12 +152,39 @@ const validateUtilisationReportData = (utilisationReportData) => {
   return errors;
 };
 
+/**
+ * Validates the user associated with a utilisation report
+ * @param {unknown} user - the user
+ * @returns {string[]} - an array of errors or an empty array if valid.
+ */
+const validateReportUser = (user) => {
+  /** @type {string[]} */
+  const errors = [];
+
+  if (!user || typeof user !== 'object') {
+    errors.push('User is not an object');
+    return errors;
+  }
+
+  if (!('_id' in user)) {
+    errors.push("User object does not contain '_id' property");
+    return errors;
+  }
+
+  const { _id } = user;
+  if (typeof _id !== 'string' || !isMongoId(_id)) {
+    errors.push(`User '_id' is not a valid MongoDB ID: '${_id}'`);
+    return errors;
+  }
+
+  return errors;
+};
+
 module.exports = {
+  validateReportId,
   validateUtilisationReportData,
   validateMonth,
   validateYear,
-  validateReportPeriod,
-  isValidReportPeriod,
   validateFileInfo,
-  validateBankId,
+  validateReportUser,
 };

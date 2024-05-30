@@ -1,7 +1,8 @@
-const { isValid, format } = require('date-fns');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const escapeStringRegexp = require('escape-string-regexp');
+const { isValid, format } = require('date-fns');
 const { getDateFromSearchString } = require("../../../../helpers/getDateFromSearchString");
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const CONSTANTS = require('../../../../constants');
 const getObjectPropertyValueFromStringPath = require('../../../../utils/getObjectPropertyValueFromStringPath');
 const mapDataModel = require('../../../../mapping/mapDataModel');
@@ -51,7 +52,7 @@ const sortDeals = (deals, sortBy) =>
   });
 
 const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
-  const dealsCollection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_DEALS);
+  const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
 
   let dealsArray;
   let deals;

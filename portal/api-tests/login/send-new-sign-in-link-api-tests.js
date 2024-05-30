@@ -1,4 +1,5 @@
 const { when, resetAllWhenMocks } = require('jest-when');
+const { ROLES } = require('@ukef/dtfs2-common');
 const extractSessionCookie = require('../helpers/extractSessionCookie');
 const mockLogin = require('../helpers/login');
 const app = require('../../server/createApp');
@@ -6,7 +7,6 @@ const { post } = require('../create-api').createApi(app);
 const { withPartial2faAuthValidationApiTests } = require('../common-tests/partial-2fa-auth-validation-api-tests');
 const api = require('../../server/api');
 const { withRoleValidationApiTests } = require('../common-tests/role-validation-api-tests');
-const { ROLES } = require('../../server/constants');
 
 const allRoles = Object.values(ROLES);
 

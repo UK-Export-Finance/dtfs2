@@ -1,3 +1,4 @@
+const { TEAM_IDS } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../constants');
 
 const MOCK_DEAL = {
@@ -15,7 +16,7 @@ const MOCK_USER_UNDERWRITER_MANAGER = {
   username: 'UNDERWRITER_MANAGER_1',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: [CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS],
+  teams: [TEAM_IDS.UNDERWRITER_MANAGERS],
 };
 
 const MOCK_USER_UNDERWRITER = {
@@ -23,7 +24,7 @@ const MOCK_USER_UNDERWRITER = {
   username: 'UNDERWRITER_1',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: [CONSTANTS.TEAM_IDS.UNDERWRITERS],
+  teams: [TEAM_IDS.UNDERWRITERS],
   email: 'test@test.com',
 };
 
@@ -32,7 +33,7 @@ const MOCK_USER_PIM = {
   username: 'PIM',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: [CONSTANTS.TEAM_IDS.PIM],
+  teams: [TEAM_IDS.PIM],
   email: 'testPim@test.com',
 };
 

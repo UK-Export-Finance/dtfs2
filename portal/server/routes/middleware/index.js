@@ -1,6 +1,7 @@
 const validateBank = require('./validateBank');
 const validateBankIdForUser = require('./validateBankIdForUser');
 const validateMongoId = require('./validateMongoId');
+const { validateSqlId } = require('./validateSqlId');
 const validateToken = require('./validateToken');
 const validateRole = require('./validateRole');
 const security = require('./headers/security.middleware');
@@ -13,6 +14,7 @@ module.exports = {
   validateBank,
   validateBankIdForUser,
   validateMongoId,
+  validateSqlId,
   validateToken,
   validateRole,
   csrfToken,

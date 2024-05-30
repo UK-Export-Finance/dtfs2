@@ -1,4 +1,4 @@
-import { Role } from './role';
+import { Role } from '@ukef/dtfs2-common';
 import { Bank } from './bank';
 
 /**

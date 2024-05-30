@@ -1,23 +1,22 @@
 import groupBy from 'lodash/groupBy';
 import orderBy from 'lodash/orderBy';
-import { Bank } from '../../../../types/db-models/banks';
-import { IsoMonthStamp } from '../../../../types/date';
-import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
-import { UtilisationReport } from '../../../../types/db-models/utilisation-reports';
-import { getAllBanks } from '../../../../services/repositories/banks-repo';
-import { getAllUtilisationDataForReport } from '../../../../services/repositories/utilisation-data-repo';
-import { getOneUtilisationReportDetailsByBankId, getOpenReportsBeforeReportPeriodForBankId } from '../../../../services/repositories/utilisation-reports-repo';
 import {
   getCurrentReportPeriodForBankSchedule,
-  getReportPeriodForBankScheduleBySubmissionMonth,
-  getReportPeriodStartForSubmissionMonth,
-  getSubmissionMonthForReportPeriodStart,
-} from '../../../../utils/report-period';
-import { isEqualMonthAndYear } from '../../../../utils/date';
+  getPreviousReportPeriodForBankScheduleByMonth,
+  getReportPeriodEndForSubmissionMonth,
+  getSubmissionMonthForReportPeriod,
+  isEqualMonthAndYear,
+  Bank,
+  UtilisationReportEntity,
+  IsoMonthStamp,
+} from '@ukef/dtfs2-common';
+import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
+import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
+import { getAllBanks } from '../../../../repositories/banks-repo';
 
 type UtilisationReportForSubmissionMonth = {
   submissionMonth: IsoMonthStamp;
-  report: UtilisationReport;
+  report: UtilisationReportEntity;
 };
 
 type SummaryItemForSubmissionMonth = {
@@ -25,47 +24,49 @@ type SummaryItemForSubmissionMonth = {
   item: UtilisationReportReconciliationSummaryItem;
 };
 
-const mapToSummaryItem = async (bank: Bank, report: UtilisationReport): Promise<UtilisationReportReconciliationSummaryItem> => {
-  const reportData = await getAllUtilisationDataForReport(report);
+const mapReportToSummaryItem = (bank: Bank, report: UtilisationReportEntity): UtilisationReportReconciliationSummaryItem => {
+  const totalFeesReported = report.feeRecords.length;
 
-  // TODO FN-1398 - status to be added to report data to allow us to calculate how
+  // TODO FN-1398 - status to be added to report fee records to allow us to calculate how
   //  many facilities are left to reconcile
-  const reportedFeesLeftToReconcile = reportData.length;
+  const reportedFeesLeftToReconcile = totalFeesReported;
 
   return {
-    reportId: report._id,
+    reportId: report.id,
+    reportPeriod: report.reportPeriod,
     bank: {
       id: bank.id,
       name: bank.name,
     },
     status: report.status,
-    dateUploaded: report.dateUploaded,
-    totalFeesReported: reportData.length,
+    dateUploaded: report.dateUploaded ?? undefined,
+    totalFeesReported,
     reportedFeesLeftToReconcile,
   };
 };
 
-const mapToSummaryItemForSubmissionMonth = async (
-  bank: Bank,
-  { submissionMonth, report }: UtilisationReportForSubmissionMonth,
-): Promise<SummaryItemForSubmissionMonth> => ({
+const mapToSummaryItemForSubmissionMonth = (bank: Bank, { submissionMonth, report }: UtilisationReportForSubmissionMonth): SummaryItemForSubmissionMonth => ({
   submissionMonth,
-  item: await mapToSummaryItem(bank, report),
+  item: mapReportToSummaryItem(bank, report),
 });
 
-const mapToSubmissionMonth = (reports: UtilisationReport[]): UtilisationReportForSubmissionMonth[] => {
-  const reportsOrderedByReportPeriodStartAscending = orderBy(reports, ['reportPeriod.start.year', 'reportPeriod.start.month'], ['asc', 'asc']);
+const mapToSubmissionMonth = (reports: UtilisationReportEntity[]): UtilisationReportForSubmissionMonth[] => {
+  const reportsOrderedByReportPeriodEndAscending = orderBy(reports, ['reportPeriod.end.year', 'reportPeriod.end.month'], ['asc', 'asc']);
 
-  return reportsOrderedByReportPeriodStartAscending.map((report) => {
-    const submissionMonth = getSubmissionMonthForReportPeriodStart(report.reportPeriod.start);
+  return reportsOrderedByReportPeriodEndAscending.map((report) => {
+    const submissionMonth = getSubmissionMonthForReportPeriod(report.reportPeriod);
     return { submissionMonth, report };
   });
 };
 
 const getPreviousOpenReportsForBank = async (bank: Bank, currentSubmissionMonth: IsoMonthStamp): Promise<SummaryItemForSubmissionMonth[]> => {
-  const currentReportPeriodStart = getReportPeriodStartForSubmissionMonth(currentSubmissionMonth);
+  const currentReportPeriodEnd = getReportPeriodEndForSubmissionMonth(currentSubmissionMonth);
 
-  const openReportsBeforeCurrentReportPeriod = await getOpenReportsBeforeReportPeriodForBankId(currentReportPeriodStart, bank.id);
+  const openReportsBeforeCurrentReportPeriod = await UtilisationReportRepo.findOpenReportsForBankIdWithReportPeriodEndBefore(
+    bank.id,
+    currentReportPeriodEnd,
+    true,
+  );
 
   if (!openReportsBeforeCurrentReportPeriod.length) {
     return [];
@@ -92,12 +93,12 @@ export const getPreviousOpenReportsBySubmissionMonth = async (
 };
 
 const getCurrentReconciliationSummaryItem = async (bank: Bank, submissionMonth: IsoMonthStamp): Promise<UtilisationReportReconciliationSummaryItem> => {
-  const reportPeriod = getReportPeriodForBankScheduleBySubmissionMonth(bank.utilisationReportPeriodSchedule, submissionMonth);
-  const report = await getOneUtilisationReportDetailsByBankId(bank.id, { reportPeriod });
+  const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(bank.utilisationReportPeriodSchedule, submissionMonth);
+  const report = await UtilisationReportRepo.findOneByBankIdAndReportPeriod(bank.id, reportPeriod, true);
   if (!report) {
     throw new Error(`Failed to get report for bank with id ${bank.id} for submission month ${submissionMonth}`);
   }
-  return await mapToSummaryItem(bank, report);
+  return mapReportToSummaryItem(bank, report);
 };
 
 export const getAllReportsForSubmissionMonth = async (banks: Bank[], submissionMonth: IsoMonthStamp): Promise<UtilisationReportReconciliationSummary> => ({
@@ -109,7 +110,7 @@ const isBankDueToSubmitReport =
   (currentSubmissionMonth: IsoMonthStamp) =>
   (bank: Bank): boolean => {
     const currentReportPeriodForBank = getCurrentReportPeriodForBankSchedule(bank.utilisationReportPeriodSchedule);
-    return isEqualMonthAndYear(currentReportPeriodForBank.start, getReportPeriodStartForSubmissionMonth(currentSubmissionMonth));
+    return isEqualMonthAndYear(currentReportPeriodForBank.end, getReportPeriodEndForSubmissionMonth(currentSubmissionMonth));
   };
 
 export const generateReconciliationSummaries = async (currentSubmissionMonth: IsoMonthStamp): Promise<UtilisationReportReconciliationSummary[]> => {

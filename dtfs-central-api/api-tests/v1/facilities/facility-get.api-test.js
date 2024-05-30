@@ -1,9 +1,9 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const aDeal = require('../deal-builder');
 const { MOCK_DEAL } = require('../mocks/mock-data');
-const { DB_COLLECTIONS } = require('../../../src/constants');
 
 const mockUser = {
   _id: '123456789',
@@ -39,7 +39,7 @@ describe('/v1/portal/facilities', () => {
   let dealId;
 
   beforeAll(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.DEALS, DB_COLLECTIONS.FACILITIES]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
   });
 
   beforeEach(async () => {

@@ -1,3 +1,4 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -81,10 +82,10 @@ module.exports.updateDealsTfm = updateDealsTfm;
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
     await wipeDB.wipe([
-      CONSTANTS.DB_COLLECTIONS.DEALS,
-      CONSTANTS.DB_COLLECTIONS.FACILITIES,
-      CONSTANTS.DB_COLLECTIONS.TFM_DEALS,
-      CONSTANTS.DB_COLLECTIONS.TFM_FACILITIES,
+      MONGO_DB_COLLECTIONS.DEALS,
+      MONGO_DB_COLLECTIONS.FACILITIES,
+      MONGO_DB_COLLECTIONS.TFM_DEALS,
+      MONGO_DB_COLLECTIONS.TFM_FACILITIES,
     ]);
   });
 

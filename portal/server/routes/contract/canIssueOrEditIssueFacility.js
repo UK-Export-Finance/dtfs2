@@ -1,4 +1,4 @@
-const { ROLES: { MAKER } } = require('../../constants');
+const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
 
 const canIssueOrEditIssueFacility = (userRoles, deal, facility) => {
   const isMaker = userRoles.includes(MAKER);

@@ -1,9 +1,4 @@
-import { OneIndexedMonth } from "./date";
-
-type BankReportPeriodSchedule = {
-  startMonth: OneIndexedMonth;
-  endMonth: OneIndexedMonth;
-}[];
+import { BankReportPeriodSchedule } from '@ukef/dtfs2-common';
 
 export type Bank = {
   id: string;
@@ -15,7 +10,7 @@ export type Bank = {
   hasGefAccessOnly: boolean;
   paymentOfficerTeam: {
     teamName: string;
-    email: string;
+    emails: string[];
   };
   utilisationReportPeriodSchedule: BankReportPeriodSchedule;
   isVisibleInTfmUtilisationReports: boolean;

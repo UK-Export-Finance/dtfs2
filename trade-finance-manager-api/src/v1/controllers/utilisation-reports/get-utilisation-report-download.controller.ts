@@ -11,19 +11,19 @@ type FileMetadata = {
   mimetype: string;
 };
 
-const getUtilisationReportFileMetadata = async (_id: string): Promise<FileMetadata> => {
-  const { azureFileInfo } = await api.getUtilisationReportById(_id);
+const getUtilisationReportFileMetadata = async (id: string): Promise<FileMetadata> => {
+  const { azureFileInfo } = await api.getUtilisationReportById(id);
 
   if (!azureFileInfo?.folder) {
-    throw new Error(`Failed to get folder for utilisation report with _id '${_id}'`);
+    throw new Error(`Failed to get folder for utilisation report with id '${id}'`);
   }
 
   if (!azureFileInfo?.filename) {
-    throw new Error(`Failed to get filename for utilisation report with _id '${_id}'`);
+    throw new Error(`Failed to get filename for utilisation report with id '${id}'`);
   }
 
   if (!azureFileInfo?.mimetype) {
-    throw new Error(`Failed to get mimetype for utilisation report with _id '${_id}'`);
+    throw new Error(`Failed to get mimetype for utilisation report with id '${id}'`);
   }
 
   const { folder, filename, mimetype } = azureFileInfo;
@@ -31,10 +31,10 @@ const getUtilisationReportFileMetadata = async (_id: string): Promise<FileMetada
 };
 
 export const getUtilisationReportDownload = async (req: Request, res: Response) => {
-  const { _id } = req.params;
+  const { id } = req.params;
 
   try {
-    const { folder, filename, mimetype } = await getUtilisationReportFileMetadata(_id);
+    const { folder, filename, mimetype } = await getUtilisationReportFileMetadata(id);
 
     const bufferedFile = await fileshare.readFile({
       fileshare: FILESHARES.UTILISATION_REPORTS,
@@ -50,7 +50,7 @@ export const getUtilisationReportDownload = async (req: Request, res: Response) 
 
     return readStream.pipe(res);
   } catch (error) {
-    const errorMessage = `Failed to get utilisation report for download with _id '${_id}'`;
+    const errorMessage = `Failed to get utilisation report for download with id '${id}'`;
     console.error(errorMessage, error);
     return res.status((error as AxiosError).response?.status ?? 500).send({ message: errorMessage });
   }

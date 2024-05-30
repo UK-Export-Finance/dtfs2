@@ -1,4 +1,4 @@
-const { getYears, groupReportsByStartYear, populateOmittedYears, groupAndSortReports } = require('./previous-reports.controller');
+const { getYears, groupReportsByYear, populateOmittedYears, groupAndSortReports } = require('./previous-reports.controller');
 
 describe('controllers/utilisation-report-service/previous-reports', () => {
   const azureFileInfo = {
@@ -52,27 +52,11 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
       bankId: '9',
       reportPeriod: {
         start: {
-          month: 1,
-          year: 2023,
-        },
-        end: {
-          month: 1,
-          year: 2023,
-        },
-      },
-      dateUploaded: '2023-02-01T00:00',
-      azureFileInfo,
-      uploadedById: '1',
-    },
-    {
-      bankId: '9',
-      reportPeriod: {
-        start: {
           month: 2,
           year: 2023,
         },
         end: {
-          month: 2,
+          month: 4,
           year: 2023,
         },
       },
@@ -82,21 +66,38 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
     },
   ];
 
-  const reports = [...year2020Reports, ...year2022Reports, ...year2023Reports];
+  const reportSpanning2022and2023 = {
+    bankId: '9',
+    reportPeriod: {
+      start: {
+        month: 11,
+        year: 2022,
+      },
+      end: {
+        month: 1,
+        year: 2023,
+      },
+    },
+    dateUploaded: '2023-02-01T00:00',
+    azureFileInfo,
+    uploadedById: '1',
+  };
+
+  const reports = [...year2020Reports, ...year2022Reports, ...year2023Reports, reportSpanning2022and2023];
 
   const years = [2020, 2022, 2023];
 
   const groupedReports = [
     { year: 2020, reports: year2020Reports },
-    { year: 2022, reports: year2022Reports },
-    { year: 2023, reports: year2023Reports },
+    { year: 2022, reports: [...year2022Reports, reportSpanning2022and2023] },
+    { year: 2023, reports: [...year2023Reports, reportSpanning2022and2023] },
   ];
 
   const groupedReportsWithOmittedYears = [...groupedReports, { year: 2021, reports: [] }];
 
   const sortedReportsByDescendingYear = [
-    { year: 2023, reports: year2023Reports },
-    { year: 2022, reports: year2022Reports },
+    { year: 2023, reports: [...year2023Reports, reportSpanning2022and2023] },
+    { year: 2022, reports: [...year2022Reports, reportSpanning2022and2023] },
     { year: 2021, reports: [] },
     { year: 2020, reports: year2020Reports },
   ];
@@ -109,9 +110,9 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
     });
   });
 
-  describe('getReportsGroupedByYear', () => {
+  describe('groupReportsByYear', () => {
     it('should return list of reports grouped by year', () => {
-      const groupedListOfReports = groupReportsByStartYear(years, reports);
+      const groupedListOfReports = groupReportsByYear(years, reports);
 
       expect(groupedListOfReports).toEqual(groupedReports);
     });
@@ -119,7 +120,7 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
 
   describe('populateOmittedYears', () => {
     it('should return grouped reports with omitted years populated at the end of the array', () => {
-      const groupedListOfReports = groupReportsByStartYear(years, reports);
+      const groupedListOfReports = groupReportsByYear(years, reports);
       const reportsGroupedByYear = populateOmittedYears(groupedListOfReports, years);
 
       expect(reportsGroupedByYear).toEqual(groupedReportsWithOmittedYears);

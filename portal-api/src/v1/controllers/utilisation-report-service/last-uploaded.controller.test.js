@@ -1,9 +1,9 @@
 const httpMocks = require('node-mocks-http');
 const { AxiosError } = require('axios');
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const { getLastUploadedReportByBankId } = require('./last-uploaded.controller');
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
-const { MOCK_UTILISATION_REPORT } = require('../../../../test-helpers/mock-utilisation-report-details');
+const { aUtilisationReportResponse } = require('../../../../test-helpers/test-data/utilisation-report');
 
 console.error = jest.fn();
 
@@ -18,10 +18,10 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
     mimetype: 'text/csv',
   };
 
-  const bankId = MOCK_UTILISATION_REPORT.bank.id;
+  const bankId = '1234abcd';
 
   const lastUploadedReport = {
-    ...MOCK_UTILISATION_REPORT,
+    ...aUtilisationReportResponse(),
     reportPeriod: {
       start: {
         month: 2,
@@ -35,12 +35,13 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
     dateUploaded: '2023-02-01T00:00',
     status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
     azureFileInfo,
+    bankId,
   };
 
   const sortedReports = [
     // A previously uploaded report
     {
-      ...MOCK_UTILISATION_REPORT,
+      ...aUtilisationReportResponse(),
       reportPeriod: {
         start: {
           month: 1,
@@ -54,12 +55,13 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       dateUploaded: '2023-01-01T00:00',
       status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
       azureFileInfo,
+      bankId,
     },
     // The last uploaded report
     lastUploadedReport,
     // A report which wasn't uploaded, but was marked as completed by a TFM user
     {
-      ...MOCK_UTILISATION_REPORT,
+      ...aUtilisationReportResponse(),
       reportPeriod: {
         start: {
           month: 3,
@@ -73,10 +75,11 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       dateUploaded: '2023-03-01T00:00',
       status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
       azureFileInfo: null,
+      bankId,
     },
     // A report which is due but has not yet been uploaded
     {
-      ...MOCK_UTILISATION_REPORT,
+      ...aUtilisationReportResponse(),
       reportPeriod: {
         start: {
           month: 4,
@@ -91,6 +94,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       azureFileInfo: null,
       dateUploaded: undefined,
       uploadedBy: undefined,
+      bankId,
     },
   ];
 
@@ -102,7 +106,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
         },
       });
 
-    const excludeNotUploaded = true;
+    const excludeNotReceived = true;
 
     beforeEach(() => {
       jest.resetAllMocks();
@@ -121,7 +125,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       await getLastUploadedReportByBankId(req, res);
 
       // Assert
-      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotUploaded });
+      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotReceived });
 
       // eslint-disable-next-line no-underscore-dangle
       expect(res._getStatusCode()).toBe(errorStatusCode);
@@ -136,7 +140,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       await getLastUploadedReportByBankId(req, res);
 
       // Assert
-      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotUploaded });
+      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotReceived });
 
       // eslint-disable-next-line no-underscore-dangle
       expect(res._getStatusCode()).toBe(500);
@@ -155,7 +159,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       await getLastUploadedReportByBankId(req, res);
 
       // Assert
-      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotUploaded });
+      expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotReceived });
 
       // eslint-disable-next-line no-underscore-dangle
       expect(res._getStatusCode()).toBe(200);

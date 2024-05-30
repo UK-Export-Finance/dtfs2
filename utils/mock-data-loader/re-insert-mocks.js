@@ -33,7 +33,7 @@ const init = async () => {
   await deleteInitialTFMUser(tfmToken);
   await deleteInitialUser(portalToken);
 
-  db.close();
+  await db.close();
 
   logger.info('REINSERTING MOCKS SUCCESSFUL', { colour: LOGGER_COLOURS.bright });
 };

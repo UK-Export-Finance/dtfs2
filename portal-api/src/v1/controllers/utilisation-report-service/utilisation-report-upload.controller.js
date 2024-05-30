@@ -1,3 +1,4 @@
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const sendEmail = require('../../email');
 const { EMAIL_TEMPLATE_IDS, FILESHARES } = require('../../../constants');
@@ -16,8 +17,8 @@ const { PDC_INPUTTERS_EMAIL_RECIPIENT } = process.env;
 const getPaymentOfficerTeamDetailsFromBank = async (bankId) => {
   try {
     const { data } = await api.getBankById(bankId);
-    const { teamName, email } = data.paymentOfficerTeam;
-    return { teamName, email };
+    const { teamName, emails } = data.paymentOfficerTeam;
+    return { teamName, emails };
   } catch (error) {
     console.error('Unable to get bank payment officer team details by ID %s', error);
     return { status: error?.code || 500, data: 'Failed to get bank payment officer team details by ID' };
@@ -48,16 +49,19 @@ const sendEmailToPdcInputtersEmail = async (bankName, reportPeriod) => {
 const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submittedDate, user) => {
   try {
     const reportSubmittedBy = `${user.firstname} ${user.surname}`;
-    const { teamName, email } = await getPaymentOfficerTeamDetailsFromBank(bankId);
+    const { teamName, emails } = await getPaymentOfficerTeamDetailsFromBank(bankId);
     const formattedSubmittedDate = formatDateForEmail(submittedDate);
 
-    await sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION, email, {
-      recipient: teamName,
-      reportPeriod,
-      reportSubmittedBy,
-      reportSubmittedDate: formattedSubmittedDate,
-    });
-    return { paymentOfficerEmail: email };
+    await Promise.all(
+      emails.map((email) =>
+        sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION, email, {
+          recipient: teamName,
+          reportPeriod,
+          reportSubmittedBy,
+          reportSubmittedDate: formattedSubmittedDate,
+        })),
+    );
+    return { paymentOfficerEmails: emails };
   } catch (error) {
     console.error('Unable to get payment officer team details and send email %s', error);
     return { status: error?.code || 500, data: 'Failed to get payment officer team details and send email' };
@@ -108,37 +112,43 @@ const uploadReportAndSendNotification = async (req, res) => {
       return res.status(400).send();
     }
 
-    // If a report has already been uploaded, we should not overwrite it
-    const uploadedReportsInReportPeriod = await api.getUtilisationReports(parsedUser?.bank?.id, {
+    const bankId = parsedUser?.bank?.id;
+
+    const existingReports = await api.getUtilisationReports(bankId, {
       reportPeriod: parsedReportPeriod,
-      excludeNotUploaded: true,
     });
-    if (uploadedReportsInReportPeriod.length > 0) {
-      return res.status(409).send('Report for the supplied report period has already been uploaded');
+
+    if (existingReports.length !== 1) {
+      return res.status(500).send(`Expected 1 report but found ${existingReports.length} with bank ID ${bankId} and report period '${parsedReportPeriod}'`);
     }
 
-    const fileInfo = await saveFileToAzure(file, parsedUser.bank.id);
+    const existingReport = existingReports[0];
+
+    if (existingReport.status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) {
+      return res
+        .status(500)
+        .send(
+          `Expected report to be in '${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}' state (was actually in '${existingReport.status}' state)`,
+        );
+    }
+
+    const fileInfo = await saveFileToAzure(file, bankId);
 
     const azureFileInfo = {
       ...fileInfo,
       mimetype: file.mimetype,
     };
 
-    const saveDataResponse = await api.saveUtilisationReport(parsedReportData, parsedReportPeriod, parsedUser, azureFileInfo);
+    const saveDataResponse = await api.saveUtilisationReport(existingReport.id, parsedReportData, parsedUser, azureFileInfo);
 
-    if (saveDataResponse.status !== 201) {
-      const status = saveDataResponse.status || 500;
-      console.error('Failed to save utilisation report: %O', saveDataResponse);
-      return res.status(status).send('Failed to save utilisation report');
-    }
     await sendEmailToPdcInputtersEmail(parsedUser?.bank?.name, formattedReportPeriod);
-    const { paymentOfficerEmail } = await sendEmailToBankPaymentOfficerTeam(
+    const { paymentOfficerEmails } = await sendEmailToBankPaymentOfficerTeam(
       formattedReportPeriod,
       parsedUser?.bank?.id,
-      new Date(saveDataResponse.data.dateUploaded),
+      new Date(saveDataResponse.dateUploaded),
       parsedUser,
     );
-    return res.status(201).send({ paymentOfficerEmail });
+    return res.status(201).send({ paymentOfficerEmails });
   } catch (error) {
     console.error('Failed to save utilisation report: %O', error);
     return res.status(error.response?.status ?? 500).send('Failed to save utilisation report');

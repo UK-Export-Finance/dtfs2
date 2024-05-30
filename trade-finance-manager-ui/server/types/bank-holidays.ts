@@ -1,4 +1,4 @@
-import { ValuesOf } from './types-helper';
+import { ValuesOf } from '@ukef/dtfs2-common';
 import { BANK_HOLIDAY_REGION } from '../constants/bank-holiday-region';
 
 export type BankHolidayRegion = ValuesOf<typeof BANK_HOLIDAY_REGION>;
