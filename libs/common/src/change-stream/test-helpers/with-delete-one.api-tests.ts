@@ -27,6 +27,10 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
       deletionAuditLogsCollection = await mongoDbClient.getCollection('deletion-audit-logs');
     });
 
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
     afterAll(async () => {
       await mongoDbClient.close();
       mockDeleteOne.mockRestore();
@@ -34,10 +38,6 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
     });
 
     if (changeStreamConfig.CHANGE_STREAM_ENABLED === 'true') {
-      beforeEach(() => {
-        jest.clearAllMocks();
-      });
-
       describe('when the service is working normally', () => {
         it('should add a deletion audit log', async () => {
           await makeRequest();
