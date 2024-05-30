@@ -5,6 +5,10 @@
 
 {% extends "index.njk" %}
 
+{% block pageTitle %}
+  {{ bank.name }}, {{ formattedReportPeriod }}
+{% endblock %}
+
 {% set premiumPaymentsHtml %}
   {% if errorSummary %}
     {{ govukErrorSummary({
