@@ -29,6 +29,9 @@ const addDealComment = async (_id, commentType, comment, auditDetails) => {
           $position: 0,
         },
       },
+      $set: {
+        auditRecord,
+      },
     },
     { returnNewDocument: true, returnDocument: 'after' },
   );
@@ -37,8 +40,6 @@ const addDealComment = async (_id, commentType, comment, auditDetails) => {
 
   return value;
 };
-
-exports.addDealComment = addDealComment;
 
 exports.addDealCommentPost = async (req, res) => {
   try {
