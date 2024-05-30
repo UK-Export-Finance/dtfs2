@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { mockDataLoaderTfmAuditDetails } = require('../constants/mockDataLoaderAuditDetails');
 const ApiError = require('../errors/api.error');
 require('dotenv').config({ path: `${__dirname}/../.env` });
 
@@ -14,9 +14,7 @@ const createTeam = async (team) => {
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams`,
-    // This auditDetails is mock data & doesn't correspond to an existing user.
-    // Since mock data loader isn't used in production this should never occur in production data
-    data: { team, auditDetails: generateTfmAuditDetails('bad123456789bad123456789') },
+    data: { team, auditDetails: mockDataLoaderTfmAuditDetails },
   }).catch((error) => {
     throw new ApiError({ cause: error });
   });
@@ -49,6 +47,9 @@ const deleteTeam = async (team) => {
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${team.id}`,
+    data: {
+      auditDetails: mockDataLoaderTfmAuditDetails,
+    },
   }).catch((error) => {
     throw new ApiError({ cause: error });
   });
@@ -99,6 +100,9 @@ const deleteUser = async (user) => {
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users/${user.username}`,
+    data: {
+      auditDetails: mockDataLoaderTfmAuditDetails,
+    },
   }).catch((error) => {
     throw new ApiError({ cause: error });
   });
