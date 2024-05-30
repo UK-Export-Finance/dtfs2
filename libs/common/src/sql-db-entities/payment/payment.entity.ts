@@ -1,8 +1,10 @@
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import Big from 'big.js';
 import { Currency } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import { CreatePaymentParams } from './payment.types';
 import { FeeRecordEntity } from '../fee-record';
+import { PAYMENT_MATCHING_CURRENCY_TO_TOLERANCE_MAP } from '../../constants';
 
 @Entity('Payment')
 export class PaymentEntity extends AuditableBaseEntity {
@@ -50,5 +52,27 @@ export class PaymentEntity extends AuditableBaseEntity {
     payment.feeRecords = feeRecords;
     payment.updateLastUpdatedBy(requestSource);
     return payment;
+  }
+
+  public feeRecordsMatchPayment(): boolean {
+    if (this.feeRecords.length === 0) {
+      throw new Error('Payment has no fee records');
+    }
+
+    if (this.feeRecords.some(({ paymentCurrency }) => paymentCurrency !== this.currency)) {
+      throw new Error('Fee record payment currency does not match payment currency');
+    }
+
+    const tolerance = PAYMENT_MATCHING_CURRENCY_TO_TOLERANCE_MAP[this.currency];
+
+    const totalFeesPaidToUkefForThePeriodInPaymentCurrency = this.feeRecords
+      .map((feeRecord) => feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency())
+      .reduce((total, feesPaid) => total.add(feesPaid), new Big(0));
+
+    const difference = totalFeesPaidToUkefForThePeriodInPaymentCurrency.minus(this.amountReceived).abs();
+    if (difference.gt(tolerance)) {
+      return false;
+    }
+    return true;
   }
 }
