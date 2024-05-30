@@ -1,7 +1,8 @@
+const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const axios = require('axios');
 const MockAdapter = require('axios-mock-adapter');
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
 const { MOCK_TFM_SESSION_USER } = require('../src/v1/__mocks__/mock-tfm-session-user');
+const { MOCK_PORTAL_USERS } = require('../src/v1/__mocks__/mock-portal-users');
 
 const api = jest.requireActual('../src/v1/api');
 
@@ -264,7 +265,7 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
-      const response = await api.updateDealSnapshot(urlTraversal, 'Mock update');
+      const response = await api.updateDealSnapshot(urlTraversal, 'Mock update', generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -273,7 +274,7 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
-      const response = await api.updateDealSnapshot(localIp, 'Mock update');
+      const response = await api.updateDealSnapshot(localIp, 'Mock update', generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -281,7 +282,7 @@ describe('API is protected against SSRF attacks', () => {
     it('Makes an axios request when the deal id is valid', async () => {
       const validDealId = '5ce819935e539c343f141ece';
 
-      const response = await api.updateDealSnapshot(validDealId, 'Mock update');
+      const response = await api.updateDealSnapshot(validDealId, 'Mock update', generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
 
       expect(response).toEqual(mockResponse);
     });
@@ -369,7 +370,11 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
-      const response = await api.updateFacility({ facilityId: urlTraversal, tfmUpdate: 'mock update', auditDetails: generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id) });
+      const response = await api.updateFacility({
+        facilityId: urlTraversal,
+        tfmUpdate: 'mock update',
+        auditDetails: generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id),
+      });
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -378,7 +383,11 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
-      const response = await api.updateFacility({ facilityId: localIp, tfmUpdate: 'mock update', auditDetails: generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id) });
+      const response = await api.updateFacility({
+        facilityId: localIp,
+        tfmUpdate: 'mock update',
+        auditDetails: generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id),
+      });
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -386,7 +395,11 @@ describe('API is protected against SSRF attacks', () => {
     it('Makes an axios request when the facility id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
-      const response = await api.updateFacility({ facilityId: validFacilityId, tfmUpdate: 'mock update', auditDetails: generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id) });
+      const response = await api.updateFacility({
+        facilityId: validFacilityId,
+        tfmUpdate: 'mock update',
+        auditDetails: generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id),
+      });
 
       expect(response).toEqual(mockResponse);
     });
@@ -404,7 +417,7 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
-      const response = await api.createFacilityAmendment(urlTraversal);
+      const response = await api.createFacilityAmendment(urlTraversal, generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id));
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -413,7 +426,7 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
-      const response = await api.createFacilityAmendment(localIp);
+      const response = await api.createFacilityAmendment(localIp, generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id));
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -421,7 +434,7 @@ describe('API is protected against SSRF attacks', () => {
     it('Makes an axios request when the facility id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
-      const response = await api.createFacilityAmendment(validFacilityId);
+      const response = await api.createFacilityAmendment(validFacilityId, generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id));
 
       expect(response).toEqual(mockResponse);
     });

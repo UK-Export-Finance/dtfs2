@@ -20,7 +20,7 @@ describe('AuthProvider - handleRedirect', () => {
   };
 
   const mockMsalInstance = {
-    acquireTokenByCode: jest.fn().mockResolvedValue(mockAcquireTokenByCodeResponse)
+    acquireTokenByCode: jest.fn().mockResolvedValue(mockAcquireTokenByCodeResponse),
   };
 
   beforeAll(async () => {
@@ -64,7 +64,7 @@ describe('AuthProvider - handleRedirect', () => {
 
   describe('when msalInstance.acquireTokenByCode does not return an account with idTokenClaims', () => {
     const mockErrorMslInstance = {
-      acquireTokenByCode: jest.fn().mockReturnValue({})
+      acquireTokenByCode: jest.fn().mockReturnValue({}),
     };
 
     beforeAll(() => {

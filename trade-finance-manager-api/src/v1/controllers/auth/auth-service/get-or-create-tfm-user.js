@@ -27,8 +27,8 @@ const getOrCreate = async (entraUser) => {
         return getUserResponse.user;
       }
 
-      console.info("TFM auth service - user cannot proceed");
-      throw new Error("TFM auth service - user cannot proceed");
+      console.info('TFM auth service - user cannot proceed');
+      throw new Error('TFM auth service - user cannot proceed');
     } else {
       console.info('TFM auth service - no existing TFM user found. Creating a new TFM user');
 

@@ -80,12 +80,7 @@ class AuthProvider {
    * @param {Object} msalInstance: MSAL instance
    * @return {Promise<Object>} PKCE codes, auth code request, login URL.
    */
-  async getAuthCodeUrl({
-    csrfToken,
-    authCodeUrlRequestParams,
-    authCodeRequestParams,
-    msalInstance
-  }) {
+  async getAuthCodeUrl({ csrfToken, authCodeUrlRequestParams, authCodeRequestParams, msalInstance }) {
     try {
       console.info('TFM auth service - getAuthCodeUrl');
 

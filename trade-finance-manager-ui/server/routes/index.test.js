@@ -6,7 +6,7 @@ import dealsRoutes from './deals';
 import facilitiesRoutes from './facilities';
 import feedbackRoutes from './feedback';
 import feedbackThankYouRoutes from './feedback-thank-you';
-import utilisationReportsRoutes from './utilisation-reports';
+import { utilisationReportsRoutes } from './utilisation-reports';
 import footerRoutes from './footer';
 
 const { validateUser, validateToken } = require('../middleware');

@@ -18,11 +18,12 @@ export const MOCK_PORTAL_SESSION_USER: PortalSessionUser = {
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
       teamName: 'team',
-      email: 'payment@testing.com'
+      emails: ['payment@testing.com'],
     },
     utilisationReportPeriodSchedule: [],
     isVisibleInTfmUtilisationReports: true,
   },
   timezone: 'Europe/London',
   'user-status': 'active',
+  isTrusted: false,
 };

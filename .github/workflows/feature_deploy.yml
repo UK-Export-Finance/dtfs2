@@ -5,7 +5,7 @@ name: Feature environment deployment
 on:
   push:
     branches:
-      - feat/e2etf-sql
+      - main
     paths:
       - "portal/**"
       - "portal-api/**"
@@ -15,6 +15,7 @@ on:
       - "dtfs-central-api/**"
       - "external-api/**"
       - "azure-functions/acbs-function/**"
+      - "libs/common/**"
 
 env:
   environment: feature
@@ -38,8 +39,38 @@ jobs:
       - name: Initialise Environment
         run: echo "Setting up ${{ env.environment }} environment"
 
-  deploy-webapps:
+  run-sql-migrations:
     needs: deployment-environment
+    name: Run SQL Migrations
+    runs-on: [self-hosted, linux, deployment]
+    environment: dev
+    env:
+      SQL_DB_HOST: ${{ secrets.SQL_DB_HOST }}
+      SQL_DB_PORT: ${{ secrets.SQL_DB_PORT }}
+      SQL_DB_USERNAME: ${{ secrets.SQL_DB_USERNAME }}
+      SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD }}
+      SQL_DB_NAME: ${{ secrets.SQL_DB_NAME }}
+      SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
+
+    steps:
+      - name: 1. Latest commit hash
+        uses: actions/checkout@v4
+
+      - name: 2. Install node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: 3. Install dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: 4. Run migrations
+        working-directory: ./libs/common
+        run: npm run db:migrate
+
+  deploy-webapps:
+    needs: [deployment-environment, run-sql-migrations]
     name: Deploy Webapps
     runs-on: [self-hosted, linux, deployment]
     # TODO: FN-1077 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much.

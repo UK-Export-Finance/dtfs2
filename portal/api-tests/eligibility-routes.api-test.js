@@ -1,6 +1,6 @@
 jest.mock('csurf', () => () => (req, res, next) => next());
 jest.mock('../server/routes/middleware/csrf', () => ({
-  ...(jest.requireActual('../server/routes/middleware/csrf')),
+  ...jest.requireActual('../server/routes/middleware/csrf'),
   csrfToken: () => (req, res, next) => next(),
 }));
 jest.mock('../server/api', () => ({
@@ -10,6 +10,7 @@ jest.mock('../server/api', () => ({
   validateToken: () => true,
 }));
 
+const { ROLES } = require('@ukef/dtfs2-common');
 const mockProvide = require('./helpers/mockProvide');
 
 mockProvide();
@@ -17,7 +18,6 @@ mockProvide();
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
 const { get, post } = require('./create-api').createApi(app);
-const { ROLES } = require('../server/constants');
 
 const { MAKER } = ROLES;
 
@@ -88,14 +88,17 @@ describe('eligibility routes', () => {
     });
   });
 
-  describe.each(eligibilityDocumentationGetByFieldnameAndFileNameTestCases)('GET /contract/:_id/eligibility-documentation/$fieldname/$filename', ({ fieldname, filename }) => {
-    withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get(`/contract/:_id/eligibility-documentation/${fieldname}/${filename}`, {}, headers),
-      whitelistedRoles: allRoles,
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
-    });
-  });
+  describe.each(eligibilityDocumentationGetByFieldnameAndFileNameTestCases)(
+    'GET /contract/:_id/eligibility-documentation/$fieldname/$filename',
+    ({ fieldname, filename }) => {
+      withRoleValidationApiTests({
+        makeRequestWithHeaders: (headers) => get(`/contract/:_id/eligibility-documentation/${fieldname}/${filename}`, {}, headers),
+        whitelistedRoles: allRoles,
+        successCode: 200,
+        disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
+      });
+    },
+  );
 
   describe('GET /contract/:_id/eligibility/check-your-answers', () => {
     withRoleValidationApiTests({

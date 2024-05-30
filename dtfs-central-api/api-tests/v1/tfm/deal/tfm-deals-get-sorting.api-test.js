@@ -1,24 +1,15 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
-const {
-  newDeal,
-  createAndSubmitDeals,
-  updateDealsTfm,
-} = require('./tfm-deals-get.api-test');
-const CONSTANTS = require('../../../../src/constants');
+const { newDeal, createAndSubmitDeals, updateDealsTfm } = require('./tfm-deals-get.api-test');
 const getObjectPropertyValueFromStringPath = require('../../../../src/utils/getObjectPropertyValueFromStringPath');
 const setObjectPropertyValueFromStringPath = require('../../../helpers/set-object-property-value-from-string-path');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
-    await wipeDB.wipe([
-      CONSTANTS.DB_COLLECTIONS.DEALS,
-      CONSTANTS.DB_COLLECTIONS.FACILITIES,
-      CONSTANTS.DB_COLLECTIONS.TFM_DEALS,
-      CONSTANTS.DB_COLLECTIONS.TFM_FACILITIES,
-    ]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
   describe('GET /v1/tfm/deals', () => {
@@ -27,30 +18,24 @@ describe('/v1/tfm/deals', () => {
         {
           fieldPathForNonBssDeal: 'dealSnapshot.ukefDealId',
           fieldPathForBssDeal: 'dealSnapshot.details.ukefDealId',
-          fieldValuesInAscendingOrder: [null, '10000002', '10000003', '10000004']
+          fieldValuesInAscendingOrder: [null, '10000002', '10000003', '10000004'],
         },
         {
           fieldPathForNonBssDeal: 'dealSnapshot.exporter.companyName',
           fieldPathForBssDeal: 'dealSnapshot.submissionDetails.supplier-name',
-          fieldValuesInAscendingOrder: [null, null, 'C Company', 'D Company']
+          fieldValuesInAscendingOrder: [null, null, 'C Company', 'D Company'],
         },
         {
           fieldPathForNonBssDeal: 'dealSnapshot.buyer.companyName',
           fieldPathForBssDeal: 'dealSnapshot.submissionDetails.buyer-name',
-          fieldValuesInAscendingOrder: ['A Company', 'B Company', 'C Company', 'D Company']
+          fieldValuesInAscendingOrder: ['A Company', 'B Company', 'C Company', 'D Company'],
         },
         {
           fieldPathForNonBssDeal: 'dealSnapshot.additionalRefName',
           fieldPathForBssDeal: 'dealSnapshot.additionalRefName',
-          fieldValuesInAscendingOrder: ['A Ref Name', 'B Ref Name', 'C Ref Name', 'D Ref Name']
+          fieldValuesInAscendingOrder: ['A Ref Name', 'B Ref Name', 'C Ref Name', 'D Ref Name'],
         },
-      ])('by $fieldPathForNonBssDeal', (
-        {
-          fieldPathForNonBssDeal: nonBssPath,
-          fieldPathForBssDeal: bssPath,
-          fieldValuesInAscendingOrder: values,
-        }
-      ) => {
+      ])('by $fieldPathForNonBssDeal', ({ fieldPathForNonBssDeal: nonBssPath, fieldPathForBssDeal: bssPath, fieldValuesInAscendingOrder: values }) => {
         let nonBssPathExcludingDealSnapshot = nonBssPath;
         if (nonBssPath.slice(0, 12) === 'dealSnapshot') {
           nonBssPathExcludingDealSnapshot = nonBssPath.slice(13);
@@ -78,18 +63,10 @@ describe('/v1/tfm/deals', () => {
         const bssDeal2 = newDeal(bssDeal2Data);
 
         beforeEach(async () => {
-          await createAndSubmitDeals([
-            gefDeal1,
-            gefDeal2,
-            bssDeal1,
-            bssDeal2
-          ]);
+          await createAndSubmitDeals([gefDeal1, gefDeal2, bssDeal1, bssDeal2]);
         });
 
-        describe.each([
-          'ascending',
-          'descending'
-        ])('in %s order', (order) => {
+        describe.each(['ascending', 'descending'])('in %s order', (order) => {
           const urlWithoutPagination = `/v1/tfm/deals?sortBy[order]=${order}&sortBy[field]=${nonBssPath}`;
 
           it('without pagination', async () => {
@@ -126,28 +103,16 @@ describe('/v1/tfm/deals', () => {
             expect(page1Body.pagination.totalPages).toEqual(2);
 
             if (order === 'ascending') {
-              const firstFieldValue = getObjectPropertyValueFromStringPath(
-                page1Body.deals[0],
-                nonBssPath
-              );
+              const firstFieldValue = getObjectPropertyValueFromStringPath(page1Body.deals[0], nonBssPath);
               expect(firstFieldValue).toEqual(values[0]);
 
-              const secondFieldValue = getObjectPropertyValueFromStringPath(
-                page1Body.deals[1],
-                bssPath
-              );
+              const secondFieldValue = getObjectPropertyValueFromStringPath(page1Body.deals[1], bssPath);
               expect(secondFieldValue).toEqual(values[1]);
             } else {
-              const firstFieldValue = getObjectPropertyValueFromStringPath(
-                page1Body.deals[0],
-                bssPath
-              );
+              const firstFieldValue = getObjectPropertyValueFromStringPath(page1Body.deals[0], bssPath);
               expect(firstFieldValue).toEqual(values[3]);
 
-              const secondFieldValue = getObjectPropertyValueFromStringPath(
-                page1Body.deals[1],
-                nonBssPath
-              );
+              const secondFieldValue = getObjectPropertyValueFromStringPath(page1Body.deals[1], nonBssPath);
               expect(secondFieldValue).toEqual(values[2]);
             }
 
@@ -160,28 +125,16 @@ describe('/v1/tfm/deals', () => {
             expect(page2Body.pagination.totalPages).toEqual(2);
 
             if (order === 'ascending') {
-              const firstFieldValue = getObjectPropertyValueFromStringPath(
-                page2Body.deals[0],
-                nonBssPath
-              );
+              const firstFieldValue = getObjectPropertyValueFromStringPath(page2Body.deals[0], nonBssPath);
               expect(firstFieldValue).toEqual(values[2]);
 
-              const secondFieldValue = getObjectPropertyValueFromStringPath(
-                page2Body.deals[1],
-                bssPath
-              );
+              const secondFieldValue = getObjectPropertyValueFromStringPath(page2Body.deals[1], bssPath);
               expect(secondFieldValue).toEqual(values[3]);
             } else {
-              const firstFieldValue = getObjectPropertyValueFromStringPath(
-                page2Body.deals[0],
-                bssPath
-              );
+              const firstFieldValue = getObjectPropertyValueFromStringPath(page2Body.deals[0], bssPath);
               expect(firstFieldValue).toEqual(values[1]);
 
-              const secondFieldValue = getObjectPropertyValueFromStringPath(
-                page2Body.deals[1],
-                nonBssPath
-              );
+              const secondFieldValue = getObjectPropertyValueFromStringPath(page2Body.deals[1], nonBssPath);
               expect(secondFieldValue).toEqual(values[0]);
             }
           });
@@ -210,44 +163,36 @@ describe('/v1/tfm/deals', () => {
         const deal3TfmUpdate = { product: 'BSS & EWCS' };
 
         beforeEach(async () => {
-          submittedDeals = await createAndSubmitDeals([
-            deal1,
-            deal3,
-            deal2,
-          ]);
+          submittedDeals = await createAndSubmitDeals([deal1, deal3, deal2]);
 
           submittedDealWith1Bond = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1-BOND');
           submittedDealWith1Loan = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1-LOAN');
           submittedDealWithBondAndLoans = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1-BOND-1-LOAN');
 
-          await updateDealsTfm([
-            {
-              _id: submittedDealWith1Bond._id,
-              tfm: deal1TfmUpdate,
-            },
-            {
-              _id: submittedDealWith1Loan._id,
-              tfm: deal2TfmUpdate,
-            },
-            {
-              _id: submittedDealWithBondAndLoans._id,
-              tfm: deal3TfmUpdate,
-            },
-          ], MOCK_TFM_USER);
+          await updateDealsTfm(
+            [
+              {
+                _id: submittedDealWith1Bond._id,
+                tfm: deal1TfmUpdate,
+              },
+              {
+                _id: submittedDealWith1Loan._id,
+                tfm: deal2TfmUpdate,
+              },
+              {
+                _id: submittedDealWithBondAndLoans._id,
+                tfm: deal3TfmUpdate,
+              },
+            ],
+            MOCK_TFM_USER,
+          );
         });
 
-        describe.each([
-          'ascending',
-          'descending'
-        ])('in %s order', (order) => {
+        describe.each(['ascending', 'descending'])('in %s order', (order) => {
           const urlWithoutPagination = `/v1/tfm/deals?sortBy[field]=tfm.product&sortBy[order]=${order}`;
 
           it('without pagination', async () => {
-            const expectedDeals = [
-              { _id: submittedDealWith1Bond?._id },
-              { _id: submittedDealWithBondAndLoans?._id },
-              { _id: submittedDealWith1Loan?._id },
-            ];
+            const expectedDeals = [{ _id: submittedDealWith1Bond?._id }, { _id: submittedDealWithBondAndLoans?._id }, { _id: submittedDealWith1Loan?._id }];
 
             const { status, body } = await api.get(urlWithoutPagination);
 
@@ -274,11 +219,7 @@ describe('/v1/tfm/deals', () => {
 
             const urlWithPagination = (page) => `${urlWithoutPagination}&pagesize=${pagesize}&page=${page}`;
 
-            const expectedDeals = [
-              { _id: submittedDealWith1Bond?._id },
-              { _id: submittedDealWithBondAndLoans?._id },
-              { _id: submittedDealWith1Loan?._id },
-            ];
+            const expectedDeals = [{ _id: submittedDealWith1Bond?._id }, { _id: submittedDealWithBondAndLoans?._id }, { _id: submittedDealWith1Loan?._id }];
 
             const { status: page1Status, body: page1Body } = await api.get(urlWithPagination(0));
 

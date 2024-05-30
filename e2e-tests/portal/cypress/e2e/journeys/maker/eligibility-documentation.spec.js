@@ -63,13 +63,19 @@ context('Eligibility Documentation', () => {
   it('should only display upload button when a file has been chosen', () => {
     taskListHeader.itemLink('supporting-documentation').click();
     eligibilityDocumentation.downloadMIQuestionaireLinkDoc().contains('Download Manual Inclusion Questionnaire.docx (22KB)');
-    eligibilityDocumentation.downloadMIQuestionaireLinkDoc().invoke('attr', 'href').then((href) => {
-      expect(href).to.equal('/assets/files/BSS_EWCS Manual Inclusion Questionnaire.docx');
-    });
+    eligibilityDocumentation
+      .downloadMIQuestionaireLinkDoc()
+      .invoke('attr', 'href')
+      .then((href) => {
+        expect(href).to.equal('/assets/files/BSS_EWCS Manual Inclusion Questionnaire.docx');
+      });
     eligibilityDocumentation.downloadMIQuestionaireLinkPdf().contains('Download Manual Inclusion Questionnaire.pdf (95KB)');
-    eligibilityDocumentation.downloadMIQuestionaireLinkPdf().invoke('attr', 'href').then((href) => {
-      expect(href).to.equal('/assets/files/BSS EWCS Manual Inclusion Questionnaire.pdf');
-    });
+    eligibilityDocumentation
+      .downloadMIQuestionaireLinkPdf()
+      .invoke('attr', 'href')
+      .then((href) => {
+        expect(href).to.equal('/assets/files/BSS EWCS Manual Inclusion Questionnaire.pdf');
+      });
     eligibilityDocumentation.questionnaireFileInputUploadButton().should('not.be.visible');
     eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-upload.txt');
     eligibilityDocumentation.questionnaireFileInputUploadButton().should('be.visible');
@@ -99,7 +105,7 @@ context('Eligibility Documentation', () => {
 
   it('should show an error if trying to upload a file that is too large', () => {
     taskListHeader.itemLink('supporting-documentation').click();
-    eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-large-file-February_2023.xlsx');
+    eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-large-file-February_2023_monthly.xlsx');
     eligibilityDocumentation.questionnaireFileInputUploadButton().click();
     eligibilityDocumentation.fieldErrorMessage('exporterQuestionnaire').should('have.length', 1);
   });

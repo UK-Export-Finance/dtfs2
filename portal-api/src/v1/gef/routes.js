@@ -28,7 +28,9 @@ router
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), application.update) // checker can add a comment
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), application.delete);
 
-router.route('/application/supporting-information/:id').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), application.updateSupportingInformation);
+router
+  .route('/application/supporting-information/:id')
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), application.updateSupportingInformation);
 
 router
   .route('/application/status/:id')
@@ -54,7 +56,9 @@ router
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), eligibilityCriteria.getAll)
   .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), eligibilityCriteria.create);
 
-router.route('/eligibility-criteria/latest').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), eligibilityCriteria.getLatest);
+router
+  .route('/eligibility-criteria/latest')
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), eligibilityCriteria.getLatest);
 
 router
   .route('/eligibility-criteria/:version')
@@ -78,7 +82,6 @@ router
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteriaVersioned.delete);
 
 // File Uploads
-// TODO: this feels like it should be a service: https://ukef-dtfs.atlassian.net/browse/DTFS2-4842
 router.route('/files').post(
   validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }),
   (req, res, next) => {

@@ -1,3 +1,15 @@
+/* eslint-disable @typescript-eslint/unbound-method */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable no-param-reassign */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable import/no-extraneous-dependencies */
+
 import axios from 'axios';
 import dotenv from 'dotenv';
 import {
@@ -152,7 +164,10 @@ export const createExporterSite = async (exporterName: EstoreSite): Promise<Site
 
     return response;
   } catch (error: any) {
-    console.error('❌ eStore create exporter site has failed %o', { data: error?.response?.data, status: error?.response?.status });
+    console.error('❌ eStore create exporter site has failed %o', {
+      data: error?.response?.data,
+      status: error?.response?.status,
+    });
     return estoreInternalServerError(error);
   }
 };
@@ -173,7 +188,10 @@ export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promi
 
     return response;
   } catch (error: any) {
-    console.error('❌ eStore adding facility term has failed %o', { data: error?.response?.data, status: error?.response?.status });
+    console.error('❌ eStore adding facility term has failed %o', {
+      data: error?.response?.data,
+      status: error?.response?.status,
+    });
     return estoreInternalServerError(error);
   }
 };
@@ -195,7 +213,10 @@ export const createBuyerFolder = async (siteId: string, buyerName: EstoreBuyer):
     const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.BUYER}`;
     return postToEstore(endpoint, [buyerName], oneMinute);
   } catch (error: any) {
-    console.error('❌ eStore create buyer folder request has failed %o', { data: error?.response?.data, status: error?.response?.status });
+    console.error('❌ eStore create buyer folder request has failed %o', {
+      data: error?.response?.data,
+      status: error?.response?.status,
+    });
     return estoreInternalServerError(error);
   }
 };
@@ -217,7 +238,10 @@ export const createDealFolder = async (siteId: string, data: EstoreDealFolder): 
     const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}`;
     return postToEstore(endpoint, [data], twoMinutes);
   } catch (error: any) {
-    console.error('❌ eStore create deal folder request has failed %o', { data: error?.response?.data, status: error?.response?.status });
+    console.error('❌ eStore create deal folder request has failed %o', {
+      data: error?.response?.data,
+      status: error?.response?.status,
+    });
     return estoreInternalServerError(error);
   }
 };
@@ -244,7 +268,10 @@ export const createFacilityFolder = async (
     const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}/${dealIdentifier}/${ENDPOINT.FACILITY}`;
     return postToEstore(endpoint, [data], twoMinutes);
   } catch (error: any) {
-    console.error('❌ eStore create facility folder request has failed %o', { data: error?.response?.data, status: error?.response?.status });
+    console.error('❌ eStore create facility folder request has failed %o', {
+      data: error?.response?.data,
+      status: error?.response?.status,
+    });
     return estoreInternalServerError(error);
   }
 };
@@ -271,7 +298,10 @@ export const uploadSupportingDocuments = async (
     const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}/${dealIdentifier}/${ENDPOINT.DOCUMENT}`;
     return postToEstore(endpoint, [file], oneMinute);
   } catch (error: any) {
-    console.error('❌ eStore uploading document has failed %o', { data: error?.response?.data, status: error?.response?.status });
+    console.error('❌ eStore uploading document has failed %o', {
+      data: error?.response?.data,
+      status: error?.response?.status,
+    });
     return estoreInternalServerError(error);
   }
 };

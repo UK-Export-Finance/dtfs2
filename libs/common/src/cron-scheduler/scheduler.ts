@@ -1,4 +1,4 @@
-import cron from 'node-cron';
+import * as cron from 'node-cron';
 import { CronSchedulerJob } from './scheduler.types';
 import { asyncTaskToSyncTask, taskWithErrorLogging } from './scheduler.helpers';
 

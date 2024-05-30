@@ -1,3 +1,4 @@
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
@@ -38,7 +39,7 @@ describe(baseUrl, () => {
   describe('GET /v1/gef/mandatory-criteria-versioned', () => {
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(baseUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(baseUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(baseUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -59,7 +60,7 @@ describe(baseUrl, () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(latestMandatoryCriteriaVersionedUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(latestMandatoryCriteriaVersionedUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(latestMandatoryCriteriaVersionedUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -78,17 +79,19 @@ describe(baseUrl, () => {
 
       const { body } = await as(aMaker).get(latestMandatoryCriteriaVersionedUrl);
 
-      expect(body).toEqual(expect.objectContaining({
-        ...expectMongoId(allMandatoryCriteria[2]),
-        createdAt: expect.any(Number),
-        introText: expect.any(String),
-        criteria: expect.arrayContaining([
-          expect.objectContaining({
-            id: expect.any(String),
-            body: expect.any(String),
-          }),
-        ]),
-      }));
+      expect(body).toEqual(
+        expect.objectContaining({
+          ...expectMongoId(allMandatoryCriteria[2]),
+          createdAt: expect.any(Number),
+          introText: expect.any(String),
+          criteria: expect.arrayContaining([
+            expect.objectContaining({
+              id: expect.any(String),
+              body: expect.any(String),
+            }),
+          ]),
+        }),
+      );
     });
   });
 
@@ -96,13 +99,15 @@ describe(baseUrl, () => {
     let oneMandatoryCriteriaVersionedUrl;
 
     beforeEach(async () => {
-      const { body: { _id: newId } } = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
+      const {
+        body: { _id: newId },
+      } = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
       oneMandatoryCriteriaVersionedUrl = `${baseUrl}/${newId}`;
     });
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(oneMandatoryCriteriaVersionedUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(oneMandatoryCriteriaVersionedUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(oneMandatoryCriteriaVersionedUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -125,6 +130,7 @@ describe(baseUrl, () => {
             body: expect.any(String),
           }),
         ]),
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id),
       };
       expect(body).toEqual(expected);
     });
@@ -180,9 +186,7 @@ describe(baseUrl, () => {
         isInDraft: true,
         title: 'test 99',
         introText: 'intro 99',
-        criteria: [
-          { id: '1', body: 'Testing' },
-        ],
+        criteria: [{ id: '1', body: 'Testing' }],
       };
       delete itemUpdate._id; // immutable key
 
@@ -192,14 +196,15 @@ describe(baseUrl, () => {
 
       const { body } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
 
-      expect(body).toEqual(expectMongoId({
-        ...itemUpdate,
-        createdAt: expect.any(Number),
-        updatedAt: expect.any(Number),
-        criteria: [
-          { id: '1', body: 'Testing' },
-        ],
-      }));
+      expect(body).toEqual(
+        expectMongoId({
+          ...itemUpdate,
+          createdAt: expect.any(Number),
+          updatedAt: expect.any(Number),
+          criteria: [{ id: '1', body: 'Testing' }],
+          auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id),
+        }),
+      );
     });
   });
 

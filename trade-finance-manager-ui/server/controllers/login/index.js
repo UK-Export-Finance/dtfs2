@@ -19,13 +19,15 @@ const getLogin = async (req, res) => {
     return res.redirect('/home');
   }
 
-  const ssoRedirectNo = req.cookies[SSO.REDIRECT_COUNTER.COOKIE_NAME] ? (parseInt(req.cookies[SSO.REDIRECT_COUNTER.COOKIE_NAME], 10) + 1) : 1;
+  const ssoRedirectNo = req.cookies[SSO.REDIRECT_COUNTER.COOKIE_NAME] ? parseInt(req.cookies[SSO.REDIRECT_COUNTER.COOKIE_NAME], 10) + 1 : 1;
 
   // Stop redirect loop
   if (ssoRedirectNo > SSO.REDIRECT_COUNTER.MAX_REDIRECTS) {
     console.error('TFM-UI - stopping redirect loop in sso getLogin');
-    const errorMessage = `Detected login redirect issue - please wait for ${SSO.REDIRECT_COUNTER.TIME_PERIOD/1000} seconds or contact us using details bellow.`;
-    return res.status(500).render('_partials/problem-with-service.njk', { error: { message: errorMessage }});
+    const errorMessage = `Detected login redirect issue - please wait for ${
+      SSO.REDIRECT_COUNTER.TIME_PERIOD / 1000
+    } seconds or contact us using details bellow.`;
+    return res.status(500).render('_partials/problem-with-service.njk', { error: { message: errorMessage } });
   }
 
   // Track redirects
@@ -66,11 +68,7 @@ const handleSsoRedirect = async (req, res) => {
     }
 
     const {
-      auth: {
-        pkceCodes,
-        authCodeUrlRequest,
-        authCodeRequest,
-      },
+      auth: { pkceCodes, authCodeUrlRequest, authCodeRequest },
     } = session;
     const { code, state } = body;
 
@@ -90,12 +88,12 @@ const handleSsoRedirect = async (req, res) => {
     }
     console.error('TFM-UI - login failed in TFM-API, redirect to /');
     return res.redirect('/');
-  } catch(error) {
+  } catch (error) {
     const errorMessage = error.message || `Login process failed - try again or contact us using details bellow.`;
     console.error('TFM-UI - login failed, error %O', error);
     return res.status(500).render('_partials/problem-with-service.njk', { error: { message: errorMessage } });
   }
-}
+};
 
 /**
  * logout

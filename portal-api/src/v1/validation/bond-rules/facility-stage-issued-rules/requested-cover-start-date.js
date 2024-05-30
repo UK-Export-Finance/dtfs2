@@ -40,8 +40,7 @@ module.exports = (submittedValues, deal, errorList) => {
         const MAX_MONTHS_FROM_NOW = 3;
         const maximumDate = addMonths(startOfToday, MAX_MONTHS_FROM_NOW);
 
-        const isWithinValidDateRange =
-          !isBefore(requestedCoverStartDate, startOfToday) && isBefore(requestedCoverStartDate, maximumDate);
+        const isWithinValidDateRange = !isBefore(requestedCoverStartDate, startOfToday) && isBefore(requestedCoverStartDate, maximumDate);
 
         if (!isWithinValidDateRange) {
           newErrorList.requestedCoverStartDate = {
@@ -52,15 +51,9 @@ module.exports = (submittedValues, deal, errorList) => {
       }
     }
 
-    if (!isValid(requestedCoverStartDate)
-      && dateHasSomeValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear)) {
+    if (!isValid(requestedCoverStartDate) && dateHasSomeValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear)) {
       newErrorList.requestedCoverStartDate = {
-        text: dateValidationText(
-          'Requested Cover Start Date',
-          requestedCoverStartDateDay,
-          requestedCoverStartDateMonth,
-          requestedCoverStartDateYear,
-        ),
+        text: dateValidationText('Requested Cover Start Date', requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear),
         order: orderNumber(newErrorList),
       };
     }

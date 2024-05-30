@@ -1,6 +1,4 @@
-const {
-  resetPassword, changePassword, header, userProfile,
-} = require('../../pages');
+const { resetPassword, changePassword, header, userProfile } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const { TEST_EMAIL_NO_GOV_NOTIFY } = require('../../../../../e2e-fixtures/portal-users.fixture');
@@ -16,6 +14,9 @@ context('Password management screens', () => {
     beforeEach(() => {
       resetPassword.visitRequestEmail();
     });
+
+    const contactUsEmailAddress = Cypress.env('CONTACT_US_EMAIL_ADDRESS');
+    const expectedContactUsMessage = `We've sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. If you require further assistance please contact ${contactUsEmailAddress}.`;
 
     it('Should have email address input, submit and cancel buttons on the page', () => {
       cy.url().should('eq', relative('/reset-password'));
@@ -37,7 +38,7 @@ context('Password management screens', () => {
       resetPassword.submit().click();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
-      cy.get('[data-cy="password-reset-notification').contains('We\'ve sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. If you require further assistance please contact DigitalService.TradeFinance@ukexportfinance.gov.uk.');
+      cy.get('[data-cy="password-reset-notification').contains(expectedContactUsMessage);
     });
 
     it('should redirect to login page on successful request for reset password', () => {
@@ -45,7 +46,7 @@ context('Password management screens', () => {
       resetPassword.submit().click();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
-      cy.get('[data-cy="password-reset-notification').contains('We\'ve sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. If you require further assistance please contact DigitalService.TradeFinance@ukexportfinance.gov.uk.');
+      cy.get('[data-cy="password-reset-notification').contains(expectedContactUsMessage);
     });
 
     it('should be case insensitive when accepting email', () => {
@@ -53,7 +54,7 @@ context('Password management screens', () => {
       resetPassword.submit().click();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
-      cy.get('[data-cy="password-reset-notification').contains('We\'ve sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. If you require further assistance please contact DigitalService.TradeFinance@ukexportfinance.gov.uk.');
+      cy.get('[data-cy="password-reset-notification').contains(expectedContactUsMessage);
     });
   });
 

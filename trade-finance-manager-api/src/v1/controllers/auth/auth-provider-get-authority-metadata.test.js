@@ -4,7 +4,7 @@ const { msalConfig, AZURE_SSO_TENANT_SUBDOMAIN } = require('./auth-provider-conf
 
 describe('AuthProvider - getAuthorityMetadata', () => {
   const mockAxiosResponse = {
-    data: 'Mock response from Microsoft'
+    data: 'Mock response from Microsoft',
   };
 
   beforeAll(() => {
@@ -18,8 +18,7 @@ describe('AuthProvider - getAuthorityMetadata', () => {
 
     const expectedAuthority = msalConfig.auth.authority;
 
-    const expected =
-    `${expectedAuthority}${AZURE_SSO_TENANT_SUBDOMAIN}.onmicrosoft.com/v2.0/.well-known/openid-configuration`;
+    const expected = `${expectedAuthority}${AZURE_SSO_TENANT_SUBDOMAIN}.onmicrosoft.com/v2.0/.well-known/openid-configuration`;
 
     expect(axios.get).toHaveBeenCalledWith(expected);
   });
@@ -27,7 +26,7 @@ describe('AuthProvider - getAuthorityMetadata', () => {
   it('should return the response from axios/microsoft', async () => {
     const result = await AuthProvider.getAuthorityMetadata();
 
-    expect(axios.get).toHaveBeenCalled()
+    expect(axios.get).toHaveBeenCalled();
 
     expect(result).toEqual(mockAxiosResponse.data);
   });

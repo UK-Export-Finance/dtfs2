@@ -33,8 +33,8 @@ export const DEAL_STATUS = {
   IN_PROGRESS: 'In progress',
   COMPLETED: 'Completed',
   // statuses specific to the entire deal
-  READY_FOR_APPROVAL: 'Ready for Checker\'s approval',
-  CHANGES_REQUIRED: 'Further Maker\'s input required',
+  READY_FOR_APPROVAL: "Ready for Checker's approval",
+  CHANGES_REQUIRED: "Further Maker's input required",
   ABANDONED: 'Abandoned',
   SUBMITTED_TO_UKEF: 'Submitted',
   UKEF_ACKNOWLEDGED: 'Acknowledged',
@@ -124,6 +124,6 @@ export const PORTAL_USER_SIGN_IN_TOKENS = {
 
 export const NODE_TASKS = {
   GET_ALL_BANKS: 'getAllBanks',
-  INSERT_UTILISATION_REPORT_DETAILS_INTO_DB: 'insertUtilisationReportDetailsIntoDb',
-  REMOVE_ALL_UTILISATION_REPORT_DETAILS_FROM_DB: 'removeAllUtilisationReportDetailsFromDb',
+  INSERT_UTILISATION_REPORTS_INTO_DB: 'insertUtilisationReportsIntoDb',
+  REMOVE_ALL_UTILISATION_REPORTS_FROM_DB: 'removeAllUtilisationReportsFromDb',
 };

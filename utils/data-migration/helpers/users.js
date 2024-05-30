@@ -52,5 +52,5 @@ const getBssUserByEmail = (email) => {
 module.exports = {
   initUsers,
   getUserByEmail,
-  getBssUserByEmail
+  getBssUserByEmail,
 };

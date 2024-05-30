@@ -1,4 +1,4 @@
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { createUpdatedTask, createAllUpdatedTasks, updateTfmTask } = require('./tasks.controller');
 const { handleTaskEditFlagAndStatus } = require('../tasks/tasks-edit-logic');
 const mapTaskObject = require('../tasks/map-task-object');

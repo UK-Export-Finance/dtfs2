@@ -5,6 +5,7 @@ const bankRouter = express.Router();
 const getBankController = require('../controllers/bank/get-bank.controller');
 const getBanksController = require('../controllers/bank/get-banks.controller');
 const createBankController = require('../controllers/bank/create-bank.controller');
+const getNextReportPeriodController = require('../controllers/bank/get-next-report-period-by-bank.controller');
 const getUtilisationReportsController = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
 
 const validation = require('../validation/route-validators/route-validators');
@@ -108,7 +109,7 @@ bankRouter.route('/').get(getBanksController.getAllBanksGet);
  *         schema:
  *           - $ref: '#/definitions/ReportPeriod'
  *       - in: query
- *         name: excludeNotUploaded
+ *         name: excludeNotReceived
  *         schema:
  *           type: string
  *           enum:
@@ -126,8 +127,8 @@ bankRouter.route('/').get(getBanksController.getAllBanksGet);
  *                   - $ref: '#/definitions/UtilisationReport'
  *                   - type: object
  *                     properties:
- *                       _id:
- *                         example: 123456abc
+ *                       id:
+ *                         example: 12345
  *       400:
  *         description: Bad request
  *       404:
@@ -136,5 +137,39 @@ bankRouter.route('/').get(getBanksController.getAllBanksGet);
 bankRouter
   .route('/:bankId/utilisation-reports')
   .get(validation.bankIdValidation, handleExpressValidatorResult, getUtilisationReportsController.getUtilisationReports);
+
+/**
+ * @openapi
+ * /bank/:bankId/next-report-period:
+ *   get:
+ *     summary: Get utilisation reports by bank ID
+ *     tags: [UtilisationReport]
+ *     description: Get a banks utilisation reports by ID.
+ *     parameters:
+ *       - in: path
+ *         name: bankId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: bank ID to fetch reports for
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/ReportPeriod'
+ *                 - type: object
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal server error
+ */
+bankRouter
+  .route('/:bankId/next-report-period')
+  .get(validation.bankIdValidation, handleExpressValidatorResult, getNextReportPeriodController.getNextReportPeriodByBankId);
 
 module.exports = bankRouter;

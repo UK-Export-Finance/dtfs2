@@ -36,15 +36,7 @@ describe('helpers - get-tfm-roles-from-entra-groups', () => {
     });
 
     it('should skip not existing Entra ids', () => {
-      const notExistingEntraGroupIds = [
-        '123456',
-        null,
-        true,
-        123456,
-        [],
-        {},
-        process.env,
-      ];
+      const notExistingEntraGroupIds = ['123456', null, true, 123456, [], {}, process.env];
 
       const result = getTfmRolesFromEntraGroups(notExistingEntraGroupIds);
 
@@ -61,14 +53,11 @@ describe('helpers - get-tfm-roles-from-entra-groups', () => {
       ${'AZURE_SSO_GROUP_PIM'}                  | ${'PIM'}
       ${'AZURE_SSO_GROUP_PDC_READ'}             | ${'PDC_READ'}
       ${'AZURE_SSO_GROUP_PDC_RECONCILE'}        | ${'PDC_RECONCILE'}
-    `(
-      'For entra group $envVariable return TFM team $tfmRole',
-      ({ envVariable, tfmRole }: { envVariable: string; tfmRole: string }) => {
-        const result = getTfmRolesFromEntraGroups([process.env[envVariable]]);
+    `('For entra group $envVariable return TFM team $tfmRole', ({ envVariable, tfmRole }: { envVariable: string; tfmRole: string }) => {
+      const result = getTfmRolesFromEntraGroups([process.env[envVariable]]);
 
-        // Assert
-        expect(result).toEqual([tfmRole]);
-      },
-    );
+      // Assert
+      expect(result).toEqual([tfmRole]);
+    });
   });
 });

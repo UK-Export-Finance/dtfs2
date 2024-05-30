@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { TEAMS } = require('../../constants/teams')
+const { TEAMS } = require('../../constants/teams');
 
 /**
  * getTfmRolesGroupedByEntraId
@@ -9,14 +9,14 @@ const { TEAMS } = require('../../constants/teams')
 const getTfmRolesGroupedByEntraId = () => {
   const roles = {};
 
-  Object.values(TEAMS).forEach(group => {
+  Object.values(TEAMS).forEach((group) => {
     const azureId = process.env[group.ssoGroupEnvVar];
 
     roles[azureId] = group.id;
   }, {});
 
   return roles;
-}
+};
 
 /**
  * getTfmRolesFromEntraGroups
@@ -27,10 +27,10 @@ const getTfmRolesGroupedByEntraId = () => {
 const getTfmRolesFromEntraGroups = (groupIds) => {
   const entraIdMap = getTfmRolesGroupedByEntraId();
 
-  const tfmRoles = groupIds.map(id => entraIdMap[id]);
+  const tfmRoles = groupIds.map((id) => entraIdMap[id]);
 
   return tfmRoles;
-}
+};
 
 module.exports = {
   getTfmRolesFromEntraGroups,

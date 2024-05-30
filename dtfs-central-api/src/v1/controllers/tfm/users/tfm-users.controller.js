@@ -1,29 +1,50 @@
+const { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
+const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common/errors');
+const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
+const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client');
-const { DB_COLLECTIONS, PAYLOAD } = require('../../../../constants');
-const { payloadVerification } = require('../../../../helpers');
+const db = require('../../../../drivers/db-client').default;
 
-const createUser = async (User) => {
-  const collection = await db.getCollection(DB_COLLECTIONS.TFM_USERS);
-  return collection.insertOne(User);
+const createUser = async (user, auditDetails) => {
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
+  return collection.insertOne({ ...user, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) });
 };
 exports.createUser = createUser;
 
+/**
+ * @deprecated Do not use -- Favour TFM API (removal todo:DTFS2-7160)
+ */
 exports.createTfmUser = async (req, res) => {
-  const payload = req?.body?.user;
+  const { user: payload, auditDetails } = req.body;
 
-  if (payloadVerification(payload, PAYLOAD.TFM.USER)) {
-    const response = await createUser(payload);
-
-    const { insertedId } = response;
-    return res.status(200).json({ _id: insertedId });
+  if (!isVerifiedPayload({ payload, template: PAYLOAD_VERIFICATION.TFM.USER })) {
+    return res.status(400).send({ status: 400, message: 'Invalid TFM user payload' });
   }
 
-  return res.status(400).send({ status: 400, message: 'Invalid TFM user payload' });
+  try {
+    validateAuditDetails(auditDetails);
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
+  }
+
+  if (auditDetails.userType !== 'tfm') {
+    return res.status(400).send({ status: 400, message: `Invalid auditDetails, userType must be 'tfm'` });
+  }
+
+  const response = await createUser(payload, auditDetails);
+
+  const { insertedId } = response;
+  return res.status(200).json({ _id: insertedId });
 };
 
 const listUsers = async () => {
-  const collection = await db.getCollection(DB_COLLECTIONS.TFM_USERS);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
   return collection.find().toArray();
 };
 exports.listUsers = listUsers;
@@ -38,7 +59,7 @@ const findOneUser = async (username) => {
     return { status: 400, message: 'Invalid Username' };
   }
 
-  const collection = await db.getCollection(DB_COLLECTIONS.TFM_USERS);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
   return collection.findOne({ username: { $eq: username } });
 };
 exports.findOneUser = findOneUser;
@@ -55,7 +76,7 @@ exports.findOneTfmUser = async (req, res) => {
 
 const findOneUserById = async (userId) => {
   if (ObjectId.isValid(userId)) {
-    const collection = await db.getCollection(DB_COLLECTIONS.TFM_USERS);
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
     const user = await collection.findOne({ _id: { $eq: new ObjectId(userId) } });
     return user;
   }
@@ -82,7 +103,7 @@ exports.findTfmTeamUser = async (req, res) => {
   if (typeof teamId !== 'string') {
     return res.status(400).send('Invalid teamId');
   }
-  const collection = await db.getCollection(DB_COLLECTIONS.TFM_USERS);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
 
   const teamUsers = await collection.find({ teams: { $in: [teamId] } }).toArray();
   const reversedTeamUsers = teamUsers.reverse();
@@ -92,7 +113,7 @@ exports.findTfmTeamUser = async (req, res) => {
 
 const deleteUser = async (username) => {
   if (typeof username === 'string') {
-    const collection = await db.getCollection(DB_COLLECTIONS.TFM_USERS);
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
     return collection.deleteOne({ username: { $eq: username } });
   }
 
@@ -103,7 +124,5 @@ exports.deleteUser = deleteUser;
 exports.deleteTfmUser = async (req, res) => {
   const deleted = await deleteUser(req.params.username);
 
-  return deleted
-    ? res.status(200).send(deleted)
-    : res.status(400).send({ status: 400, message: 'Invalid username' });
+  return deleted ? res.status(200).send(deleted) : res.status(400).send({ status: 400, message: 'Invalid username' });
 };

@@ -1,8 +1,8 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
-const db = require('../../../../drivers/db-client');
-const { DB_COLLECTIONS } = require('../../../../constants');
+const db = require('../../../../drivers/db-client').default;
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -12,7 +12,7 @@ const withoutId = (obj) => {
 
 const updateFacilityStatus = async (facilityId, status, existingFacility) => {
   if (ObjectId.isValid(facilityId)) {
-    const collection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
 
     console.info('Updating Portal facility status to %s', status);
     const previousStatus = existingFacility.status;
@@ -24,11 +24,10 @@ const updateFacilityStatus = async (facilityId, status, existingFacility) => {
       status,
     };
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(facilityId) } },
-      $.flatten(withoutId(update)),
-      { returnNewDocument: true, returnDocument: 'after' }
-    );
+    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, $.flatten(withoutId(update)), {
+      returnNewDocument: true,
+      returnDocument: 'after',
+    });
 
     console.info('Updated Portal facility status from %s to %s', previousStatus, status);
 
@@ -38,26 +37,21 @@ const updateFacilityStatus = async (facilityId, status, existingFacility) => {
 };
 exports.updateFacilityStatus = updateFacilityStatus;
 
-// eslint-disable-next-line consistent-return
 exports.updateFacilityStatusPut = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const facilityId = req.params.id;
 
     const { status } = req.body;
 
-    await findOneFacility(facilityId, async (existingFacility) => {
+    return await findOneFacility(facilityId, async (existingFacility) => {
       if (existingFacility) {
-        const updatedFacility = await updateFacilityStatus(
-          facilityId,
-          status,
-          existingFacility,
-        );
+        const updatedFacility = await updateFacilityStatus(facilityId, status, existingFacility);
         return res.status(200).json(updatedFacility);
       }
 
       return res.status(404).send();
     });
-  } else {
-    return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
   }
+
+  return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
 };

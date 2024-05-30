@@ -38,5 +38,4 @@ describe(page, () => {
   it('should contain Continue button', () => {
     wrapper.expectText('[data-cy="submit-button"]').toRead('Continue');
   });
-
 });

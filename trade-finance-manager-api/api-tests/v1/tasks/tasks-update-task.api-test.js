@@ -83,7 +83,15 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
 
     expect(status).toBe(400);
     expect(body).toEqual({
-      errors: [{ location: 'params', msg: 'The Deal ID (dealId) provided should be a Mongo ID', path: 'dealId', type: 'field', value: 'invalid-deal-id' }],
+      errors: [
+        {
+          location: 'params',
+          msg: 'The Deal ID (dealId) provided should be a Mongo ID',
+          path: 'dealId',
+          type: 'field',
+          value: 'invalid-deal-id',
+        },
+      ],
       status: 400,
     });
   });
@@ -99,7 +107,15 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
 
     expect(status).toBe(400);
     expect(body).toEqual({
-      errors: [{ location: 'params', msg: 'The Group ID (groupId) provided should be an integer', path: 'groupId', type: 'field', value: 'invalid-group-id' }],
+      errors: [
+        {
+          location: 'params',
+          msg: 'The Group ID (groupId) provided should be an integer',
+          path: 'groupId',
+          type: 'field',
+          value: 'invalid-group-id',
+        },
+      ],
       status: 400,
     });
   });
@@ -115,7 +131,15 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
 
     expect(status).toBe(400);
     expect(body).toEqual({
-      errors: [{ location: 'params', msg: 'The Task ID (taskId) provided should be an integer', path: 'taskId', type: 'field', value: 'invalid-task-id' }],
+      errors: [
+        {
+          location: 'params',
+          msg: 'The Task ID (taskId) provided should be an integer',
+          path: 'taskId',
+          type: 'field',
+          value: 'invalid-task-id',
+        },
+      ],
       status: 400,
     });
   });

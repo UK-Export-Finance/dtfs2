@@ -1,10 +1,15 @@
 const crypto = require('node:crypto');
-const db = require('./db-client');
-const redis = require('./redis-client');
-
+const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
+const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
+const { UtilisationReportEntity } = require('@ukef/dtfs2-common');
+const { RedisClient } = require('./redis-client');
 const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
 const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
+
+SqlDbDataSource.initialize()
+  .then(() => console.info('✅ Successfully initialised connection to SQL database'))
+  .catch((error) => console.error('❌ Failed to initialise connection to SQL database:', error));
 
 module.exports = {
   /**
@@ -17,25 +22,19 @@ module.exports = {
    * @param {String} redisKey: Redis key
    * @returns {Object} Various tasks
    */
-  createTasks: ({
-    dbName,
-    dbConnectionString,
-    redisHost,
-    redisPort,
-    redisKey,
-  }) => {
-    const connectionOptions = { dbName, dbConnectionString };
+  createTasks: ({ dbName, dbConnectionString, redisHost, redisPort, redisKey }) => {
     const redisConnectionOptions = { redisHost, redisPort, redisKey };
+    const db = new MongoDbClient({ dbName, dbConnectionString });
 
     const usersCollectionName = 'users';
     const tfmUsersCollectionName = 'tfm-users';
     const tfmDealsCollectionName = 'tfm-deals';
     const tfmFacilitiesCollectionName = 'tfm-facilities';
 
-    const getUsersCollection = () => db.getCollection(usersCollectionName, connectionOptions);
-    const getTfmUsersCollection = () => db.getCollection(tfmUsersCollectionName, connectionOptions);
-    const getTfmDealsCollection = () => db.getCollection(tfmDealsCollectionName, connectionOptions);
-    const getTfmFacilitiesCollection = () => db.getCollection(tfmFacilitiesCollectionName, connectionOptions);
+    const getUsersCollection = () => db.getCollection(usersCollectionName);
+    const getTfmUsersCollection = () => db.getCollection(tfmUsersCollectionName);
+    const getTfmDealsCollection = () => db.getCollection(tfmDealsCollectionName);
+    const getTfmFacilitiesCollection = () => db.getCollection(tfmFacilitiesCollectionName);
 
     const log = (message) => {
       console.info('Cypress log %s', message);
@@ -138,18 +137,13 @@ module.exports = {
      * @param {Number} maxAge: Session age
      * @returns {Boolean}
      */
-    const overrideRedisUserSession = async ({
-      sessionIdentifier,
-      tfmUser,
-      userToken,
-      maxAge,
-    }) => {
+    const overrideRedisUserSession = async ({ sessionIdentifier, tfmUser, userToken, maxAge }) => {
       const maxAgeInMilliseconds = maxAge * 1000;
 
       const value = {
         cookie: {
           originalMaxAge: maxAgeInMilliseconds,
-          expires: new Date(new Date().getTime() + (maxAgeInMilliseconds)).toISOString(),
+          expires: new Date(new Date().getTime() + maxAgeInMilliseconds).toISOString(),
           secure: false,
           httpOnly: true,
           path: '/',
@@ -158,7 +152,7 @@ module.exports = {
         user: tfmUser,
         userToken: `Bearer ${userToken}`,
       };
-      await redis.set({
+      await RedisClient.set({
         key: `sess:${sessionIdentifier}`,
         value,
         maxAge,
@@ -194,6 +188,27 @@ module.exports = {
     };
 
     /**
+     * Inserts utilisation report details to the SQL database
+     * @param {Partial<import('@ukef/dtfs2-common').UtilisationReportEntity[]>} utilisationReports
+     * @returns {import('@ukef/dtfs2-common').UtilisationReportEntity[]} The inserted reports
+     */
+    const insertUtilisationReportsIntoDb = async (utilisationReports) => {
+      const utilisationReportRepo = SqlDbDataSource.getRepository(UtilisationReportEntity);
+      const saveOperations = utilisationReports.map((utilisationReport) => utilisationReportRepo.save(utilisationReport));
+      return await Promise.all(saveOperations);
+    };
+
+    /**
+     * Deletes all the rows from the utilisation report and azure file info tables
+     */
+    const removeAllUtilisationReportsFromDb = async () => await SqlDbDataSource.manager.getRepository(UtilisationReportEntity).delete({});
+
+    const getAllBanks = async () => {
+      const banks = await db.getCollection(DB_COLLECTIONS.BANKS);
+      return banks.find().toArray();
+    };
+
+    /**
      * disablePortalUserByUsername
      * Disable a portal user by username.
      * @param {String} username
@@ -218,7 +233,7 @@ module.exports = {
      * @returns {Array} Created Utilisation report details
      */
     const insertUtilisationReportDetailsIntoDb = async (utilisationReportDetails) => {
-      const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
+      const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
       return utilisationReports.insertMany(utilisationReportDetails);
     };
 
@@ -228,13 +243,8 @@ module.exports = {
      * @returns {Array} Empty array.
      */
     const removeAllUtilisationReportDetailsFromDb = async () => {
-      const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
+      const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
       return utilisationReports.deleteMany({});
-    };
-
-    const getAllBanks = async () => {
-      const banks = await db.getCollection(DB_COLLECTIONS.BANKS, connectionOptions);
-      return banks.find().toArray();
     };
 
     /**
@@ -250,7 +260,7 @@ module.exports = {
      * @param {Object} numberOfDealsToInsert The number of deals to insert
      * @param {Array} dealObjectIds An array of MongoDB deal Object IDs to use
      * @returns {Object} MongoDB document representing the result of the insertion
-    */
+     */
     const insertManyTfmDeals = async (numberOfDealsToInsert, dealObjectIds = []) => {
       const deals = await getTfmDealsCollection();
       const dealsToInsert = [];
@@ -277,7 +287,7 @@ module.exports = {
      * is to allow easy testing of searching and sorting
      * @param {Object} numberOfFacilitiesToInsert The number of facilities to insert
      * @returns {Object} MongoDB document representing the result of the insertion
-    */
+     */
     const insertManyTfmFacilitiesAndTwoLinkedDeals = async (numberOfFacilitiesToInsert) => {
       const dealObjectIds = ['65f18fd9cb063105fd4be63f', '65f18fd9cb063105fd4be645'];
 
@@ -316,6 +326,8 @@ module.exports = {
       deleteAllTfmFacilities,
       removeAllUtilisationReportDetailsFromDb,
       getAllBanks,
+      insertUtilisationReportsIntoDb,
+      removeAllUtilisationReportsFromDb,
     };
   },
 };

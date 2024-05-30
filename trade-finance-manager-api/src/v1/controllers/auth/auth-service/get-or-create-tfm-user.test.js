@@ -55,13 +55,13 @@ describe('auth-service/get-or-create-tfm-user', () => {
 
   describe('when a TFM user is found, but the user cannot proceed', () => {
     let result;
-    beforeAll( async() => {
+    beforeAll(async () => {
       setupStubs();
 
       existingTfmUser.getAndMap = jest.fn().mockResolvedValue(MOCK_TFM_USER_SCENARIOS.CANNOT_PROCEED);
       try {
         result = await getOrCreate(MOCK_ENTRA_USER);
-      } catch(error) {
+      } catch (error) {
         // continue tests
       }
     });
@@ -80,7 +80,7 @@ describe('auth-service/get-or-create-tfm-user', () => {
 
     it('should throw an error', async () => {
       try {
-        await getOrCreate(MOCK_ENTRA_USER)
+        await getOrCreate(MOCK_ENTRA_USER);
       } catch (error) {
         const expectedError = 'TFM auth service - Getting or creating a TFM user';
 

@@ -1,6 +1,7 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { getUnixTime } = require('date-fns');
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 
 const { findOneDeal } = require('./get-gef-deal.controller');
 const { updateDeal } = require('./update-deal.controller');
@@ -8,7 +9,6 @@ const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities
 const { updateFacility } = require('../gef-facility/update-facility.controller');
 const { isNumber } = require('../../../../helpers');
 const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../constants/activityConstants');
-const { DB_COLLECTIONS } = require('../../../../constants');
 
 /**
  * canResubmitIssuedFacilities - changes flags to false
@@ -31,13 +31,8 @@ const updateChangedToIssued = async (facilities) => {
 // retrieves user information from database
 const getUserInfo = async (userId) => {
   if (ObjectId.isValid(userId)) {
-    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
-    const {
-      firstname,
-      surname = '',
-    } = userId
-      ? await userCollection.findOne({ _id: { $eq: new ObjectId(userId) } })
-      : {};
+    const userCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
+    const { firstname, surname = '' } = userId ? await userCollection.findOne({ _id: { $eq: new ObjectId(userId) } }) : {};
 
     // creates user object which can be used
     const user = {
@@ -52,16 +47,7 @@ const getUserInfo = async (userId) => {
 
 // creates portal activity object to store in DB
 const portalActivityGenerator = (activityParams) => {
-  const {
-    type,
-    user,
-    activityType,
-    activityText,
-    activityHTML,
-    facility,
-    maker,
-    checker,
-  } = activityParams;
+  const { type, user, activityType, activityText, activityHTML, facility, maker, checker } = activityParams;
 
   const userToAdd = {
     firstName: user.firstname,
@@ -100,7 +86,7 @@ const facilityChangePortalActivity = async (application, facilities) => {
 
     facilities.forEach(async (facility) => {
       if (facility.canResubmitIssuedFacilities) {
-      // creates user object to add to array
+        // creates user object to add to array
         const maker = facility.unissuedToIssuedByMaker;
         const activityParams = {
           type: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,

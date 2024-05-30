@@ -1,8 +1,8 @@
 /**
  * Unit test cases for `constructPayload` method
  */
+import { ROLES } from '@ukef/dtfs2-common';
 import constructPayload from './constructPayload';
-import { ROLES } from '../constants';
 
 const { CHECKER, MAKER } = ROLES;
 
@@ -21,11 +21,7 @@ const mockExtraBody = {
   passwordConfirm: 'AbC!23456',
 };
 
-const payloadProperties = [
-  'currentPassword',
-  'password',
-  'passwordConfirm',
-];
+const payloadProperties = ['currentPassword', 'password', 'passwordConfirm'];
 
 const mockBodyWithEmptyValues = {
   _csrf: '3YyRfYmT',

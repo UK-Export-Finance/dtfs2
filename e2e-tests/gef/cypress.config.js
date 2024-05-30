@@ -1,6 +1,6 @@
 const { defineConfig } = require('cypress');
-const { createTasks } = require('../support/tasks');
 const path = require('path');
+const { createTasks } = require('../support/tasks');
 
 require('dotenv').config({ path: `${path.resolve(__dirname, '../..')}/.env` });
 

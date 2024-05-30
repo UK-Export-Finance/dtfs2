@@ -17,12 +17,12 @@ describe('controllers/utilisation-report-service/utilisation-report-download', (
 
   describe('getReportDownload', () => {
     const mockBankIdParam = '956';
-    const mockReportMongoId = '5099803df3f4948bd2f98391';
+    const mockReportId = 10;
 
     const getHttpMocks = () =>
       httpMocks.createMocks(
         {
-          params: { bankId: mockBankIdParam, _id: mockReportMongoId },
+          params: { bankId: mockBankIdParam, id: mockReportId },
         },
         { eventEmitter: events.EventEmitter },
       );
@@ -30,7 +30,7 @@ describe('controllers/utilisation-report-service/utilisation-report-download', (
     it('returns an error response when the reports details do not contain the filename', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
-      api.getUtilisationReportById.mockResolvedValue({});
+      api.getUtilisationReportById.mockResolvedValue({ bankId: mockBankIdParam });
 
       // Act
       await getReportDownload(req, res);
@@ -49,7 +49,10 @@ describe('controllers/utilisation-report-service/utilisation-report-download', (
     it('returns an error response when the reports details do not contain the mimetype', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
-      api.getUtilisationReportById.mockResolvedValue({ azureFileInfo: { filename: 'report.csv' } });
+      api.getUtilisationReportById.mockResolvedValue({
+        bankId: mockBankIdParam,
+        azureFileInfo: { filename: 'report.csv' },
+      });
 
       // Act
       await getReportDownload(req, res);
@@ -69,6 +72,7 @@ describe('controllers/utilisation-report-service/utilisation-report-download', (
       // Arrange
       const { req, res } = getHttpMocks();
       api.getUtilisationReportById.mockResolvedValue({
+        bankId: mockBankIdParam,
         azureFileInfo: { filename: 'report.csv', mimetype: 'text/csv' },
       });
 
@@ -95,6 +99,7 @@ describe('controllers/utilisation-report-service/utilisation-report-download', (
       // Arrange
       const { req, res } = getHttpMocks();
       api.getUtilisationReportById.mockResolvedValue({
+        bankId: mockBankIdParam,
         azureFileInfo: { filename: 'report.csv', mimetype: 'text/csv' },
       });
 
@@ -118,6 +123,7 @@ describe('controllers/utilisation-report-service/utilisation-report-download', (
       const mockMimetype = 'text/csv';
 
       api.getUtilisationReportById.mockResolvedValue({
+        bankId: mockBankIdParam,
         azureFileInfo: { filename: mockFilename, mimetype: mockMimetype },
       });
 

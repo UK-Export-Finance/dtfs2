@@ -1,34 +1,55 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common/errors');
+const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { getUnixTime } = require('date-fns');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const { findAmendmentById } = require('./tfm-get-amendments.controller');
-const { DB_COLLECTIONS } = require('../../../../constants');
 
 exports.updateTfmAmendment = async (req, res) => {
-  const payload = req.body;
+  const { payload, auditDetails } = req.body;
   const { amendmentId, facilityId } = req.params;
-  if (ObjectId.isValid(facilityId) && ObjectId.isValid(amendmentId)) {
-    const findAmendment = await findAmendmentById(facilityId, amendmentId);
-    if (findAmendment) {
-      const collection = await db.getCollection(DB_COLLECTIONS.TFM_FACILITIES);
-      const protectedProperties = ['_id', 'amendmentId', 'facilityId', 'dealId', 'createdAt', 'updatedAt', 'version'];
 
-      for (const property of protectedProperties) {
-        delete payload[property];
-      }
+  if (!ObjectId.isValid(facilityId) || !ObjectId.isValid(amendmentId)) {
+    return res.status(400).send({ status: 400, message: 'Invalid facility or amendment id' });
+  }
 
-      const update = { ...payload, updatedAt: getUnixTime(new Date()) };
-
-      await collection.updateOne(
-        { _id: { $eq: ObjectId(facilityId) }, 'amendments.amendmentId': { $eq: ObjectId(amendmentId) } },
-        $.flatten({ 'amendments.$': update }),
-      );
-
-      const updatedAmendment = await findAmendmentById(facilityId, amendmentId);
-      return res.status(200).json({ ...updatedAmendment });
+  try {
+    validateAuditDetails(auditDetails);
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
     }
+    return res.status(500).send({ status: 500, error });
+  }
+
+  if (auditDetails.userType !== 'tfm') {
+    return res.status(400).send({ status: 400, message: `Invalid auditDetails, userType must be 'tfm'` });
+  }
+
+  const findAmendment = await findAmendmentById(facilityId, amendmentId);
+  if (!findAmendment) {
     return res.status(404).send({ status: 404, message: 'The amendment does not exist' });
   }
-  return res.status(400).send({ status: 400, message: 'Invalid facility or amendment id' });
+
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+  const protectedProperties = ['_id', 'amendmentId', 'facilityId', 'dealId', 'createdAt', 'updatedAt', 'version'];
+
+  for (const property of protectedProperties) {
+    delete payload[property];
+  }
+
+  const update = { ...payload, updatedAt: getUnixTime(new Date()) };
+
+  await collection.updateOne(
+    { _id: { $eq: ObjectId(facilityId) }, 'amendments.amendmentId': { $eq: ObjectId(amendmentId) } },
+    $.flatten({ 'amendments.$': update, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) }),
+  );
+
+  const updatedAmendment = await findAmendmentById(facilityId, amendmentId);
+  return res.status(200).json({ ...updatedAmendment });
 };

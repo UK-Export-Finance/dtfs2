@@ -1,4 +1,4 @@
-const { ROLES } = require('../server/constants');
+const { ROLES } = require('@ukef/dtfs2-common');
 
 export const getRolesListExcluding = (rolesToExclude) => {
   const roleValues = Object.values(ROLES);

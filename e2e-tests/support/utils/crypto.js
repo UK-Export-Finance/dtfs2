@@ -8,13 +8,7 @@ const { sign } = require('jws');
  * @returns {String} JWT
  */
 const issueValidJWT = (user, sessionIdentifier, maxAge) => {
-  const {
-    _id,
-    username,
-    teams,
-    firstName,
-    lastName,
-  } = user;
+  const { _id, username, teams, firstName, lastName } = user;
 
   const payload = {
     sub: _id,

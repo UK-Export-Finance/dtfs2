@@ -1,8 +1,9 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common/errors');
+const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-database-record');
-const { validateAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/validate-audit-details');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const { findOneDeal, findOneGefDeal } = require('../../portal/deal/get-deal.controller');
 const tfmController = require('./tfm-get-deal.controller');
 
@@ -11,7 +12,6 @@ const { findAllGefFacilitiesByDealId } = require('../../portal/gef-facility/get-
 
 const DEFAULTS = require('../../../defaults');
 const CONSTANTS = require('../../../../constants');
-const { DB_COLLECTIONS } = require('../../../../constants');
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;
@@ -35,12 +35,16 @@ const getSubmissionCount = (deal) => {
 const createDealSnapshot = async (deal, auditDetails) => {
   if (ObjectId.isValid(deal._id)) {
     const { dealType, _id: dealId } = deal;
-    const collection = await db.getCollection(DB_COLLECTIONS.TFM_DEALS);
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
 
     const submissionCount = getSubmissionCount(deal);
     const tfmInit = submissionCount === 1 ? { tfm: DEFAULTS.DEAL_TFM } : null;
 
-    const dealObj = { dealSnapshot: deal, ...tfmInit, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
+    const dealObj = {
+      dealSnapshot: deal,
+      ...tfmInit,
+      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+    };
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
       const dealFacilities = await findAllFacilitiesByDealId(dealId);
@@ -71,7 +75,7 @@ const createFacilitiesSnapshot = async (deal, auditDetails) => {
       dealFacilities = await findAllGefFacilitiesByDealId(dealId);
     }
 
-    const collection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_FACILITIES);
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
 
     const submissionCount = getSubmissionCount(deal);
 
@@ -84,7 +88,11 @@ const createFacilitiesSnapshot = async (deal, auditDetails) => {
             {
               _id: { $eq: ObjectId(facility._id) },
             },
-            $.flatten({ facilitySnapshot: facility, ...tfmInit, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) }),
+            $.flatten({
+              facilitySnapshot: facility,
+              ...tfmInit,
+              auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+            }),
             {
               returnNewDocument: true,
               returnDocument: 'after',
@@ -115,14 +123,20 @@ const submitDeal = async (deal, auditDetails) => {
 exports.submitDealPut = async (req, res) => {
   const { dealId, dealType, auditDetails } = req.body;
 
-  try {
-    validateAuditDetails(auditDetails);
-  } catch ({ message }) {
-    return res.status(400).send({ status: 400, message: `Invalid user information, ${message}` });
+  if (!ObjectId.isValid(dealId)) {
+    return res.status(400).send({ status: 400, message: `Invalid dealId, ${dealId}` });
   }
 
-  if (auditDetails.userType !== 'portal') {
-    return res.status(400).send({ status: 400, message: `User information must be of type portal` });
+  try {
+    validateAuditDetailsAndUserType(auditDetails, 'portal');
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
   }
 
   if (dealType !== CONSTANTS.DEALS.DEAL_TYPE.GEF && dealType !== CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {

@@ -17,9 +17,9 @@ const create = async (entraUser) => {
 
     return createdUser;
   } catch {
-    console.error("TFM auth service - Error mapping Entra user and creating TFM user");
+    console.error('TFM auth service - Error mapping Entra user and creating TFM user');
 
-    throw new Error("TFM auth service - Error mapping Entra user and creating TFM user");
+    throw new Error('TFM auth service - Error mapping Entra user and creating TFM user');
   }
 };
 
@@ -35,18 +35,14 @@ const update = async (userId, entraUser) => {
 
     const entraUserData = mapEntraUserData(entraUser);
 
-    const updatedUser = await userController.updateUser(
-      userId,
-      entraUserData,
-    );
+    const updatedUser = await userController.updateUser(userId, entraUserData);
 
     return updatedUser;
   } catch {
-    console.error("TFM auth service - Error mapping Entra user and updating TFM user");
+    console.error('TFM auth service - Error mapping Entra user and updating TFM user');
 
-    throw new Error("TFM auth service - Error mapping Entra user and updating TFM user");
+    throw new Error('TFM auth service - Error mapping Entra user and updating TFM user');
   }
 };
-
 
 module.exports = { create, update };

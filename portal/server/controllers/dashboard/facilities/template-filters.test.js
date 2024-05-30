@@ -1,19 +1,7 @@
-import {
-  typeFilters,
-  hasBeenIssuedFilters,
-  facilitiesTemplateFilters,
-  createdByYouFilter,
-} from './template-filters';
-import {
-  FIELD_NAMES,
-  FACILITY_HAS_BEEN_ISSUED,
-  FACILITY_TYPE,
-} from '../../../constants';
+import { typeFilters, hasBeenIssuedFilters, facilitiesTemplateFilters, createdByYouFilter } from './template-filters';
+import { FIELD_NAMES, FACILITY_HAS_BEEN_ISSUED, FACILITY_TYPE } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
-import {
-  generateFiltersArray,
-  submissionTypeFilters,
-} from '../filters/generate-template-filters';
+import { generateFiltersArray, submissionTypeFilters } from '../filters/generate-template-filters';
 
 describe('controllers/dashboard/facilities - template-filters', () => {
   describe('typeFilters', () => {
@@ -31,11 +19,7 @@ describe('controllers/dashboard/facilities - template-filters', () => {
         { text: FACILITY_TYPE.LOAN, value: FACILITY_TYPE.LOAN },
       ];
 
-      const expected = generateFiltersArray(
-        expectedFieldName,
-        expectedFieldInputs,
-        mockSubmittedFilters,
-      );
+      const expected = generateFiltersArray(expectedFieldName, expectedFieldInputs, mockSubmittedFilters);
 
       expect(result).toEqual(expected);
     });
@@ -60,11 +44,7 @@ describe('controllers/dashboard/facilities - template-filters', () => {
         },
       ];
 
-      const expected = generateFiltersArray(
-        expectedFieldName,
-        expectedFieldInputs,
-        mockSubmittedFilters,
-      );
+      const expected = generateFiltersArray(expectedFieldName, expectedFieldInputs, mockSubmittedFilters);
 
       expect(result).toEqual(expected);
     });
@@ -77,10 +57,7 @@ describe('controllers/dashboard/facilities - template-filters', () => {
       const expected = {
         createdBy: createdByYouFilter({}),
         type: typeFilters({}),
-        'deal.submissionType': submissionTypeFilters(
-          `deal.${FIELD_NAMES.DEAL.SUBMISSION_TYPE}`,
-          {},
-        ),
+        'deal.submissionType': submissionTypeFilters(`deal.${FIELD_NAMES.DEAL.SUBMISSION_TYPE}`, {}),
         hasBeenIssued: hasBeenIssuedFilters({}),
       };
 

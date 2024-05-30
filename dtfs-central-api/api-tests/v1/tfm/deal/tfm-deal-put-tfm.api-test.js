@@ -1,5 +1,6 @@
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
 const aDeal = require('../../deal-builder');
 
@@ -22,12 +23,7 @@ const newDeal = aDeal({
 
 describe('/v1/tfm/deal/:id', () => {
   beforeEach(async () => {
-    await wipeDB.wipe([
-      CONSTANTS.DB_COLLECTIONS.DEALS,
-      CONSTANTS.DB_COLLECTIONS.FACILITIES,
-      CONSTANTS.DB_COLLECTIONS.TFM_DEALS,
-      CONSTANTS.DB_COLLECTIONS.TFM_FACILITIES,
-    ]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
   describe('PUT /v1/tfm/deal/:id', () => {
@@ -43,9 +39,7 @@ describe('/v1/tfm/deal/:id', () => {
     };
 
     it('404s if updating an unknown id', async () => {
-      const { status } = await api
-        .put({ dealUpdate, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
-        .to('/v1/tfm/deals/61e54e2e532cf2027303e001');
+      const { status } = await api.put({ dealUpdate, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/deals/61e54e2e532cf2027303e001');
       expect(status).toEqual(404);
     });
 
@@ -74,13 +68,7 @@ describe('/v1/tfm/deal/:id', () => {
         ...dealUpdate.tfm,
         lastUpdated: expect.any(Number),
       });
-      expect(dealAfterUpdate.auditRecord).toEqual({
-        lastUpdatedAt: expect.any(String),
-        lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
-        lastUpdatedByPortalUserId: null,
-        noUserLoggedIn: null,
-        lastUpdatedByIsSystem: null,
-      });
+      expect(dealAfterUpdate.auditRecord).toEqual(generateParsedMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id));
     });
 
     it('does NOT add anything to the root if for example deal.dealSnapshot or deal.tfm is not passed', async () => {

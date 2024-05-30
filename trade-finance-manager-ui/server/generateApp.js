@@ -45,25 +45,25 @@ const generateApp = () => {
     watch: true,
   });
 
-  app.use(session({
-    ...sessionConfiguration,
-    cookie,
-  }));
+  app.use(
+    session({
+      ...sessionConfiguration,
+      cookie,
+    }),
+  );
   app.use(compression());
 
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
 
-  app.use(morgan('dev', {
-    skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
-  }));
-
   app.use(
-    '/assets',
-    express.static('node_modules/govuk-frontend/govuk/assets'),
-    express.static(path.join(__dirname, '..', 'public')),
+    morgan('dev', {
+      skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
+    }),
   );
+
+  app.use('/assets', express.static('node_modules/govuk-frontend/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
 
   app.use(createRateLimit());
 
@@ -71,15 +71,16 @@ const generateApp = () => {
   // Traffic to /login/sso/redirect comes from AZURE_SSO_AUTHORITY, so no CSRF cookie is present.
   app.use('/login/sso/redirect', express.Router().post('/', loginController.handleSsoRedirect));
 
-  app.use(csrf({
-    cookie: {
-      ...cookie,
-      maxAge: 43200, // 12 hours
-    },
-  }));
+  app.use(
+    csrf({
+      cookie: {
+        ...cookie,
+        maxAge: 43200, // 12 hours
+      },
+    }),
+  );
   app.use(csrfToken());
   app.use(sanitizeXss());
-
 
   app.use(healthcheck);
   app.use('/', routes);

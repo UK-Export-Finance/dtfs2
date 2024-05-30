@@ -74,6 +74,14 @@ const isValidFileName = (value) => FILE_NAME_REGEX.test(value);
  */
 const isValidBankId = (bankId) => isValidRegex(/^\d+$/, bankId);
 
+/**
+ * isValidSqlId
+ * checks if id conforms to regex
+ * @param {String} id
+ * @returns {Boolean} asserts if regex is matched
+ */
+const isValidSqlId = (id) => isValidRegex(/^\d+$/, id);
+
 module.exports = {
   isValidMongoId,
   isValidUserId,
@@ -84,4 +92,5 @@ module.exports = {
   isValidDocumentType,
   isValidFileName,
   isValidBankId,
+  isValidSqlId,
 };

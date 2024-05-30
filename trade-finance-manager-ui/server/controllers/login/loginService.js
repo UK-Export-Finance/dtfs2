@@ -1,4 +1,4 @@
-const { SSO } = require("../../constants");
+const { SSO } = require('../../constants');
 
 /**
  * verifyReferrerForExternalSsoPost
@@ -23,7 +23,7 @@ const verifyReferrerForExternalSsoPost = (req) => {
 
   console.error('Login request comming from unexpected website: %s', referrer);
   throw new Error('Login request comming from unexpected website.');
-}
+};
 
 /**
  * verifyBodyForExternalSsoPost
@@ -32,13 +32,13 @@ const verifyReferrerForExternalSsoPost = (req) => {
  * @returns {Boolean|String} False or error message.
  */
 const verifyBodyForExternalSsoPost = (templateParams) => {
-  const paramsWithNotAllowedCharacters = Object.entries(templateParams).filter(([, value]) => (/^[0-9a-zA-Z-_.]*$/.test(value) === false));
+  const paramsWithNotAllowedCharacters = Object.entries(templateParams).filter(([, value]) => /^[0-9a-zA-Z-_.]*$/.test(value) === false);
 
   if (paramsWithNotAllowedCharacters.length) {
     console.error('Login request data contains unexpected characters in: %O', paramsWithNotAllowedCharacters);
     throw new Error('Login request data contains unexpected characters.');
   }
-}
+};
 
 /**
  * acceptExternalSsoPost
@@ -57,8 +57,8 @@ const acceptExternalSsoPost = (req, res) => {
     verifyReferrerForExternalSsoPost(req);
     verifyBodyForExternalSsoPost(externalTemplateParams);
 
-    return res.render('sso/accept-external-sso-post.njk', { ...externalTemplateParams, azureSsoAuthority: `${SSO.AUTHORITY}/`});
-  } catch(error) {
+    return res.render('sso/accept-external-sso-post.njk', { ...externalTemplateParams, azureSsoAuthority: `${SSO.AUTHORITY}/` });
+  } catch (error) {
     console.error('TFM-UI - acceptExternalSsoPost failed, error %O', error);
     const errorMessage = error.message || `Login process failed - try again or contact us using details bellow.`;
     return res.status(500).render('_partials/problem-with-service.njk', { error: { message: errorMessage } });

@@ -4,13 +4,11 @@ import { acceptExternalSsoPost } from './loginService';
 import { SSO } from '../../constants';
 
 describe('service - loginService', () => {
-
   beforeEach(() => {
     jest.resetAllMocks();
   });
 
   describe('acceptExternalSsoPost', () => {
-
     const requestBody = {
       code: 'test1',
       client_info: 'test2',
@@ -48,7 +46,7 @@ describe('service - loginService', () => {
       expect(res._getRenderData()).toMatchObject({
         error: {
           message: 'Login request comming from unexpected website.',
-        }
+        },
       });
       expect(res._getStatusCode()).toEqual(500);
     });
@@ -89,16 +87,12 @@ describe('service - loginService', () => {
       expect(res._getStatusCode()).toEqual(200);
     });
 
-
     describe('should render error page if not allowed characters are in form parameters', () => {
-      const forbid = ' !"#$%&\'()*+,/:;<=>?@[]^`{|}~¡¢£¤¥¦§¨©ª«¬­®¯°±²³´¶·¸¹º»¼½¾¿ÀÁÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäçèéêëìíîïðñòóôõö÷øùúûüýþąŽİĞİŞのでコン😄😎🍀µÿ'; // cspell:disable-line
-      it.each([
-        ...forbid.split(''),
-        forbid,
-        'aaaaaa.dddddd<dddddd.zzzzz',
-      ])(`should render error page if body parameter contains '%s'`, (characters) => {
+      const forbid =
+        ' !"#$%&\'()*+,/:;<=>?@[]^`{|}~¡¢£¤¥¦§¨©ª«¬­®¯°±²³´¶·¸¹º»¼½¾¿ÀÁÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäçèéêëìíîïðñòóôõö÷øùúûüýþąŽİĞİŞのでコン😄😎🍀µÿ'; // cspell:disable-line
+      it.each([...forbid.split(''), forbid, 'aaaaaa.dddddd<dddddd.zzzzz'])(`should render error page if body parameter contains '%s'`, (characters) => {
         // Arrange
-        const { req, res } = createMocks({ session: {}, body: {...requestBody, client_info: characters}, headers: { referrer: '', host: 'localhost' } });
+        const { req, res } = createMocks({ session: {}, body: { ...requestBody, client_info: characters }, headers: { referrer: '', host: 'localhost' } });
 
         // Act
         acceptExternalSsoPost(req, res);
@@ -108,7 +102,7 @@ describe('service - loginService', () => {
         expect(res._getRenderData()).toMatchObject({
           error: {
             message: 'Login request data contains unexpected characters.',
-          }
+          },
         });
         expect(res._getStatusCode()).toEqual(500);
       });
@@ -116,13 +110,9 @@ describe('service - loginService', () => {
 
     describe('should allow expected characters in form parameters', () => {
       const allow = '1234567890AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz_-.'; // cspell:disable-line
-      it.each([
-        ...allow.split(''),
-        allow,
-        '123Aab.nq1TX_7HhI-i.4Y5z',
-      ])(`should render success page if body parameter contains '%s'`, (characters) => {
+      it.each([...allow.split(''), allow, '123Aab.nq1TX_7HhI-i.4Y5z'])(`should render success page if body parameter contains '%s'`, (characters) => {
         // Arrange
-        const { req, res } = createMocks({ session: {}, body: {...requestBody, client_info: characters}, headers: { referrer: '', host: 'localhost' } });
+        const { req, res } = createMocks({ session: {}, body: { ...requestBody, client_info: characters }, headers: { referrer: '', host: 'localhost' } });
 
         // Act
         acceptExternalSsoPost(req, res);
@@ -132,6 +122,5 @@ describe('service - loginService', () => {
         expect(res._getStatusCode()).toEqual(200);
       });
     });
-
   });
 });

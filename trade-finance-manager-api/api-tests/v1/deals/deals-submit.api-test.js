@@ -2,16 +2,7 @@ jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
   issueAcbsFacilities: jest.fn(),
 }));
 
-jest.mock('../../../src/v1/controllers/deal.controller', () => ({
-  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
-  submitACBSIfAllPartiesHaveUrn: jest.fn(),
-}));
-
-jest.mock('../../../src/v1/controllers/deal.controller', () => ({
-  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
-  canDealBeSubmittedToACBS: jest.fn(),
-}));
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const { submitDeal, createSubmitBody } = require('../utils/submitDeal');
@@ -43,7 +34,6 @@ const updatePortalBssDealStatusSpy = jest.fn(() => Promise.resolve({}));
 const updatePortalGefDealStatusSpy = jest.fn(() => Promise.resolve({}));
 const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
 const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
-
 
 const updateGefFacilitySpy = jest.fn(() => Promise.resolve({}));
 
@@ -81,6 +71,12 @@ describe('/v1/deals', () => {
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
+    it('400s submission for invalid checker id', async () => {
+      const { status } = await submitDeal({ checker: { _id: '12345678910' } });
+
+      expect(status).toEqual(400);
+    });
+
     it('404s submission for unknown id', async () => {
       const { status } = await submitDeal({ dealId: '12345678910', checker: MOCK_PORTAL_USERS[0] });
 
@@ -108,7 +104,7 @@ describe('/v1/deals', () => {
     it('returns the requested resource if no companies house no given', async () => {
       const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_NO_COMPANIES_HOUSE));
       // Remove bonds & loans as they are returned mutated so will not match
-      const { bondTransactions, loanTransactions, ...mockDealWithoutFacilities } = MOCK_DEAL_NO_COMPANIES_HOUSE;
+      const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_DEAL_NO_COMPANIES_HOUSE;
 
       const tfmDeal = {
         dealSnapshot: mockDealWithoutFacilities,
@@ -129,7 +125,7 @@ describe('/v1/deals', () => {
     it('returns the requested resource without partyUrn if not matched', async () => {
       const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_NO_PARTY_DB));
       // Remove bonds & loans as they are returned mutated so will not match
-      const { bondTransactions, loanTransactions, ...mockDealWithoutFacilities } = MOCK_DEAL_NO_PARTY_DB;
+      const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_DEAL_NO_PARTY_DB;
 
       const tfmDeal = {
         dealSnapshot: mockDealWithoutFacilities,
@@ -151,7 +147,7 @@ describe('/v1/deals', () => {
       const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL));
 
       // Remove bonds & loans as they are returned mutated so will not match
-      const { bondTransactions, loanTransactions, ...mockDealWithoutFacilities } = MOCK_DEAL;
+      const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_DEAL;
 
       const tfmDeal = {
         dealSnapshot: mockDealWithoutFacilities,

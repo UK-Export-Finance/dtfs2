@@ -1,14 +1,16 @@
 import { asString } from '@ukef/dtfs2-common';
-import { deleteAllCompleteAcbsDurableFunctionLogs } from '../../services/repositories/durable-functions-repo';
+import { deleteAllCompleteAcbsDurableFunctionLogs } from '../../repositories/durable-functions-repo';
 import { deleteCompleteAcbsDurableFunctionLogsJob } from '.';
 import { WriteConcernError } from '../../errors';
 
 console.info = jest.fn();
 
-jest.mock('../../services/repositories/durable-functions-repo', () => ({
+jest.mock('../../repositories/durable-functions-repo', () => ({
   deleteAllCompleteAcbsDurableFunctionLogs: jest.fn(),
 }));
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
   asString: jest.fn(),
 }));
 

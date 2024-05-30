@@ -1,12 +1,12 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const getCreateFacilityErrors = require('../../../validation/create-facility');
 const { findOneDeal } = require('../deal/get-deal.controller');
 const { addFacilityIdToDeal } = require('../deal/update-deal.controller');
-const { DB_COLLECTIONS } = require('../../../../constants');
 
 const createFacility = async (facility, user, routePath) => {
-  const collection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
 
   const { dealId } = facility;
 
@@ -20,12 +20,7 @@ const createFacility = async (facility, user, routePath) => {
   const response = await collection.insertOne(newFacility);
   const { insertedId } = response;
 
-  await addFacilityIdToDeal(
-    dealId,
-    insertedId,
-    user,
-    routePath,
-  );
+  await addFacilityIdToDeal(dealId, insertedId, user, routePath);
 
   return { _id: insertedId };
 };

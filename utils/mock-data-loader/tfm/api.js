@@ -1,10 +1,9 @@
 const axios = require('axios');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const ApiError = require('../errors/api.error');
 require('dotenv').config({ path: `${__dirname}/../.env` });
 
-const {
-  TFM_API_URL, TFM_API_KEY, DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY
-} = process.env;
+const { TFM_API_URL, TFM_API_KEY, DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY } = process.env;
 
 const createTeam = async (team) => {
   const response = await axios({
@@ -15,7 +14,9 @@ const createTeam = async (team) => {
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams`,
-    data: { team },
+    // This auditDetails is mock data & doesn't correspond to an existing user.
+    // Since mock data loader isn't used in production this should never occur in production data
+    data: { team, auditDetails: generateTfmAuditDetails('bad123456789bad123456789') },
   }).catch((error) => {
     throw new ApiError({ cause: error });
   });

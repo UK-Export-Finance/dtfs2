@@ -1,3 +1,4 @@
+import { generateNoUserLoggedInAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import caseController from '.';
 import { mockRes } from '../../test-mocks';
 
@@ -114,6 +115,7 @@ describe('controllers - feedback', () => {
 
       expect(res.render).toHaveBeenCalledWith('feedback/feedback-form.njk', {
         feedback: {
+          auditDetails: generateNoUserLoggedInAuditDetails(),
           submittedBy: {
             email: undefined,
             username: undefined,

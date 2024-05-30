@@ -2,6 +2,7 @@ import { WithId } from 'mongodb';
 import { TeamId } from '../team-id';
 
 export type TfmUser = WithId<{
+  azureOid: string;
   username: string;
   email: string;
   teams: TeamId[];

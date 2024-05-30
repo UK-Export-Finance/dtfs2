@@ -179,13 +179,13 @@ module.exports = {
     exposurePeriodInMonths: 12,
   })),
   getPartyDbInfo: ({ companyRegNo }) =>
-    (companyRegNo === 'NO_MATCH'
+    companyRegNo === 'NO_MATCH'
       ? false
       : [
-        {
-          partyUrn: 'testPartyUrn',
-        },
-      ]),
+          {
+            partyUrn: 'testPartyUrn',
+          },
+        ],
   findUser: (username) => {
     if (username === 'invalidUser') {
       return false;
@@ -205,7 +205,8 @@ module.exports = {
       acbsTaskLinks: {
         mockLinkUrl: 'mockLinkUrl',
       },
-    }),),
+    }),
+  ),
   getFunctionsAPI: jest.fn((statusQueryGetUri) =>
     Promise.resolve({
       runtimeStatus: 'Completed',
@@ -213,7 +214,8 @@ module.exports = {
       output: {
         facilities: [{ facilityId: '1234' }],
       },
-    }),),
+    }),
+  ),
   createEstoreSite: (deal) => deal,
   getPremiumSchedule: jest.fn(() => MOCK_PREMIUM_SCHEDULE_RESPONSE),
   sendEmail: jest.fn((templateId, sendToEmailAddress, emailVariables) => {
@@ -230,7 +232,9 @@ module.exports = {
     return Promise.resolve(mockResponse);
   }),
   getBankHolidays: jest.fn(() => Promise.resolve(MOCK_BANK_HOLIDAYS)),
+  getAllBanks: jest.fn(() => Promise.resolve([])),
   getUtilisationReportsReconciliationSummary: jest.fn(),
   getUtilisationReportById: jest.fn(() => Promise.resolve(MOCK_UTILISATION_REPORT)),
   updateUtilisationReportStatus: jest.fn(),
+  getUtilisationReportReconciliationDetailsById: jest.fn(),
 };

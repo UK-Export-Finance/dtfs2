@@ -21,9 +21,9 @@ const getAndMap = async (entraUser) => {
 
     return {};
   } catch (error) {
-    console.error("TFM auth service - Error getting and mapping existing TFM user %s", error);
+    console.error('TFM auth service - Error getting and mapping existing TFM user %s', error);
 
-    throw new Error("TFM auth service - Error getting and mapping existing TFM user %s", error);
+    throw new Error('TFM auth service - Error getting and mapping existing TFM user %s', error);
   }
 };
 

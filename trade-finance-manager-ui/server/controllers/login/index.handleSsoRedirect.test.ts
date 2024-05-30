@@ -7,7 +7,6 @@ import loginService from './loginService';
 jest.mock('./loginService');
 
 describe('controllers - login', () => {
-
   loginService.acceptExternalSsoPost = jest.fn();
 
   beforeEach(() => {
@@ -47,7 +46,7 @@ describe('controllers - login', () => {
 
     it('should redirect to / if sso pkceCodes are empty in session', async () => {
       // Arrange
-      const { req, res } = createMocks({session: { auth: { pkceCodes: '' } }, body: { formId: 'any-value' } });
+      const { req, res } = createMocks({ session: { auth: { pkceCodes: '' } }, body: { formId: 'any-value' } });
 
       // Act
       await loginController.handleSsoRedirect(req, res);
@@ -73,7 +72,7 @@ describe('controllers - login', () => {
             pkceCodes: 'test1',
             authCodeUrlRequest: 'test2',
             authCodeRequest: 'test3',
-          }
+          },
         },
         body: {
           formId: 'any-value',
@@ -98,5 +97,4 @@ describe('controllers - login', () => {
       expect(res._getStatusCode()).toEqual(302);
     });
   });
-
 });

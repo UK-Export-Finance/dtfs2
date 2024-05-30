@@ -6,7 +6,6 @@ import loginController from '.';
 const { AZURE_SSO_AUTHORITY } = process.env;
 
 describe('controllers - login', () => {
-
   beforeEach(() => {
     jest.resetAllMocks();
   });

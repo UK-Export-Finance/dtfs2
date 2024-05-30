@@ -1,8 +1,10 @@
+const { PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { EligibilityCriteria } = require('../models/eligibilityCriteria');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
-const { PAYLOAD, DEAL } = require('../../../constants');
-const payloadVerification = require('../../helpers/payload');
+const { DEAL } = require('../../../constants');
 
 const sortByVersion = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.version) - Number(b.version));
@@ -29,7 +31,9 @@ exports.getByVersion = async (req, res) => {
   }
 
   const collection = await db.getCollection('eligibilityCriteria');
-  const item = await collection.findOne({ $and: [{ version: { $eq: Number(version) } }, { product: { $eq: DEAL.DEAL_TYPE.GEF } }] });
+  const item = await collection.findOne({
+    $and: [{ version: { $eq: Number(version) } }, { product: { $eq: DEAL.DEAL_TYPE.GEF } }],
+  });
 
   return item ? res.status(200).send(item) : res.status(404).send();
 };
@@ -61,14 +65,15 @@ exports.getLatest = async (req, res) => {
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection('eligibilityCriteria');
-  const criteria = req?.body;
-
-  if (payloadVerification(criteria, PAYLOAD.CRITERIA.ELIGIBILITY)) {
-    const result = await collection.insertOne(new EligibilityCriteria(criteria));
-    return res.status(201).send({ _id: result.insertedId });
+  if (!isVerifiedPayload({ payload: req.body, template: PAYLOAD_VERIFICATION.CRITERIA.ELIGIBILITY })) {
+    return res.status(400).send({ status: 400, message: 'Invalid GEF eligibility criteria payload' });
   }
 
-  return res.status(400).send({ status: 400, message: 'Invalid GEF eligibility criteria payload' });
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
+  const criteria = { ...req?.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
+  const result = await collection.insertOne(new EligibilityCriteria(criteria));
+  return res.status(201).send({ _id: result.insertedId });
 };
 
 exports.delete = async (req, res) => {

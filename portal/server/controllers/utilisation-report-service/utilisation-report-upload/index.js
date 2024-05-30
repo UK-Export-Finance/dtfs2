@@ -1,4 +1,5 @@
 const { format, startOfMonth, addMonths } = require('date-fns');
+const { getFormattedReportPeriodWithLongMonth } = require('@ukef/dtfs2-common');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
 const { getUploadErrors } = require('./utilisation-report-upload-errors');
@@ -44,14 +45,13 @@ const getLastUploadedReportDetails = async (userToken, bankId) => {
   const lastUploadedReport = await api.getLastUploadedReportByBankId(userToken, bankId);
   const reportAndUserDetails = getReportAndUserDetails(lastUploadedReport);
 
-  // TODO FN-1249 adjust for quarterly
-  const nextReportDate = new Date();
-  const nextReportPeriod = format(nextReportDate, 'MMMM yyyy');
+  const nextReportPeriod = await api.getNextReportPeriodByBankId(userToken, bankId);
+  const formattedNextReportPeriod = getFormattedReportPeriodWithLongMonth(nextReportPeriod);
 
-  const nextReportPeriodSubmissionStartDate = addMonths(nextReportDate, 1);
-  const nextReportPeriodSubmissionStart = format(startOfMonth(nextReportPeriodSubmissionStartDate), 'd MMMM yyyy');
+  const nextReportPeriodSubmissionEndDate = addMonths(new Date(nextReportPeriod.end.year, nextReportPeriod.end.month - 1), 1);
+  const nextReportPeriodSubmissionStart = format(startOfMonth(nextReportPeriodSubmissionEndDate), 'd MMMM yyyy');
 
-  return { ...reportAndUserDetails, nextReportPeriod, nextReportPeriodSubmissionStart };
+  return { ...reportAndUserDetails, formattedNextReportPeriod, nextReportPeriodSubmissionStart };
 };
 
 const getUtilisationReportUpload = async (req, res) => {
@@ -125,7 +125,9 @@ const postUtilisationReportUpload = async (req, res) => {
           href: '#utilisation-report-file-upload',
         },
       ];
-      const extractDataError = { text: 'The selected file could not be uploaded, try again and make sure it is not password protected' };
+      const extractDataError = {
+        text: 'The selected file could not be uploaded, try again and make sure it is not password protected',
+      };
       const dueReportPeriods = await getDueReportPeriodsByBankId(userToken, bankId);
       return renderPageWithError(req, res, extractDataErrorSummary, extractDataError, dueReportPeriods);
     }
@@ -189,10 +191,10 @@ const postReportConfirmAndSend = async (req, res) => {
     const response = await api.uploadUtilisationReportData(user, reportPeriod, mappedReportData, fileBuffer, formattedReportPeriod, userToken);
 
     if (response?.status === 200 || response?.status === 201) {
-      const { paymentOfficerEmail } = response.data;
+      const { paymentOfficerEmails } = response.data;
       req.session.utilisationReport = {
         ...req.session.utilisationReport,
-        paymentOfficerEmail,
+        paymentOfficerEmails,
       };
       return res.redirect('/utilisation-report-upload/confirmation');
     }
@@ -209,13 +211,13 @@ const getReportConfirmation = async (req, res) => {
     if (!req.session.utilisationReport) {
       return res.redirect('/utilisation-report-upload');
     }
-    const { formattedReportPeriod, paymentOfficerEmail } = req.session.utilisationReport;
+    const { formattedReportPeriod, paymentOfficerEmails } = req.session.utilisationReport;
     delete req.session.utilisationReport;
     return res.render('utilisation-report-service/utilisation-report-upload/confirmation.njk', {
       user: req.session.user,
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       reportPeriod: formattedReportPeriod,
-      paymentOfficerEmail,
+      paymentOfficerEmails,
     });
   } catch (error) {
     console.error(error);

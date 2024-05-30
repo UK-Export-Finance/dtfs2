@@ -31,12 +31,7 @@ const redisConnect = async (config) => {
  * @param {Number} maxAge: keep value for
  * @param {Object} config: Redis configuration
  */
-const set = async ({
-  key,
-  value,
-  maxAge,
-  config,
-}) => {
+const set = async ({ key, value, maxAge, config }) => {
   if (!connection) {
     connection = await redisConnect(config);
   }

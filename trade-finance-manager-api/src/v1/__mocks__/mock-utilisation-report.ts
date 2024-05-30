@@ -1,4 +1,5 @@
-import { AzureFileInfo, ReportPeriod, UtilisationReportResponseBody } from '../../types/utilisation-reports';
+import { AzureFileInfo, ReportPeriod } from '@ukef/dtfs2-common';
+import { UtilisationReportResponseBody } from '../api-response-types/utilisation-report-response-body';
 
 const MOCK_AZURE_FILE_INFO: AzureFileInfo = {
   folder: 'folder_name',
@@ -14,18 +15,15 @@ const MOCK_REPORT_PERIOD: ReportPeriod = {
 };
 
 export const MOCK_UTILISATION_REPORT: UtilisationReportResponseBody = {
-  _id: '65646e1d1621576fd7a6bc9a',
-  bank: {
-    id: '987',
-    name: 'Bank name',
-  },
+  id: 5,
+  bankId: '987',
   reportPeriod: MOCK_REPORT_PERIOD,
   dateUploaded: '2023-11-15T15:11:14Z',
   azureFileInfo: MOCK_AZURE_FILE_INFO,
   status: 'PENDING_RECONCILIATION',
-  uploadedBy: {
+  uploadedByUser: {
     id: '5099803df3f4948bd2f98391',
-    firstname: 'test',
-    surname: 'user',
+    firstname: 'Test',
+    surname: 'User',
   },
 };

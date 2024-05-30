@@ -1,6 +1,6 @@
+import { ROLES } from '@ukef/dtfs2-common';
 import dealWithCanIssueOrEditIssueFacilityFlags from './dealWithCanIssueOrEditIssueFacilityFlags';
 import canIssueOrEditIssueFacility from './canIssueOrEditIssueFacility';
-import { ROLES } from '../../constants';
 
 const { MAKER } = ROLES;
 
@@ -9,7 +9,7 @@ describe('dealWithCanIssueOrEditIssueFacilityFlags', () => {
 
   const mockDeal = {
     submissionType: 'Automatic Inclusion Notice',
-    status: 'Further Maker\'s input required',
+    status: "Further Maker's input required",
     details: {
       submissionDate: 12345678,
     },

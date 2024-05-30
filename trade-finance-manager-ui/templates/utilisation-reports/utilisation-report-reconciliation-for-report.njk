@@ -1,0 +1,132 @@
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import "./_macros/premium-payments-table.njk" as premiumPaymentsTable %}
+
+{% extends "index.njk" %}
+
+{% set premiumPaymentsHtml %}
+  {% if errorSummary %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {% if errorSummary %}
+    <div class="govuk-form-group--error">
+  {% endif %}
+    <form method="post" data-cy="premium-payments-form">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+      <h2 class="govuk-heading-l" data-cy="premium-payments-heading">Premium payments</h2>
+
+      <p class="govuk-body">Enter received payments against reported fees by selecting them and then selecting the 'Add a payment' button.</p>
+
+      <p class="govuk-body">
+        When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when you select the 'Generate keying data' button.
+      </p>
+
+      <div class="govuk-button-group">
+        <input
+          class="govuk-button govuk-!-margin-right-3"
+          formaction="/utilisation-reports/{{ reportId }}/add-payment"
+          value="Add a payment"
+          data-module="govuk-button"
+          type="submit"
+          data-cy="add-a-payment-button"/>
+        {{ govukButton({
+          text: "Generate keying data",
+          name: "generate-keying-data",
+          value: "generate-keying-data",
+          href: "#",
+          classes: "govuk-button--secondary",
+          attributes: {
+            "data-cy": "generate-keying-data-button"
+          }
+        }) }}
+      </div>
+
+      {{ premiumPaymentsTable.render({
+        feeRecords: feeRecords
+      }) }}
+    </form>
+  {% if errorSummary %}
+    </div>
+  {% endif %}
+{% endset %}
+
+{% set keyingSheetHtml %}
+  <div></div>
+{% endset %}
+
+{% set paymentDetailsHtml %}
+  <div></div>
+{% endset %}
+
+{% set utilisationHtml %}
+  <div></div>
+{% endset %}
+
+{% block content %}
+  <div class="govuk-grid-row govuk-!-padding-top-7">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="utilisation-report-reconciliation-for-report-heading">
+        {{ bank.name }}
+      </h1>
+      <h2 class="govuk-heading-l" data-cy="report-period-heading">{{ formattedReportPeriod }}</h2>
+
+      <div class="ukef-tabs--no-border">
+        {{ govukTabs({
+          items: [
+            {
+              label: "Premium payments",
+              id: "premium-payments",
+              panel: {
+                html: premiumPaymentsHtml | safe
+              },
+              attributes: {
+                'data-cy': 'bank-report-tab-premium-payments'
+              }
+            },
+            {
+              label: "Keying sheet",
+              id: "keying-sheet",
+              panel: {
+                html: keyingSheetHtml | safe
+              },
+              attributes: {
+                'data-cy': 'bank-report-tab-keying-sheet'
+              }
+            },
+            {
+              label: "Payment details",
+              id: "payment-details",
+              panel: {
+                html: paymentDetailsHtml | safe
+              },
+              attributes: {
+                'data-cy': 'bank-report-tab-payment-details'
+              }
+            },
+            {
+              label: "Utilisation",
+              id: "utilisation",
+              panel: {
+                html: utilisationHtml | safe
+              },
+              attributes: {
+                'data-cy': 'bank-report-tab-utilisation'
+              }
+            }
+          ]
+        }) }}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block sub_content %}{% endblock %}

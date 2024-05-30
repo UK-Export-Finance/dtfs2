@@ -1,9 +1,9 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../drivers/db-client').default;
 const { findOneDeal } = require('../deal/get-deal.controller');
 const { updateDeal } = require('../deal/update-deal.controller');
 const { isNumber } = require('../../../../helpers');
-const { DB_COLLECTIONS } = require('../../../../constants');
 
 const createFacilities = async (facilities, dealId) => {
   try {
@@ -11,17 +11,19 @@ const createFacilities = async (facilities, dealId) => {
       return { status: 400, message: 'Invalid Deal Id' };
     }
 
-    const collection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
 
-    const facilitiesWithId = await Promise.all(facilities.map(async (f) => {
-      const facility = f;
+    const facilitiesWithId = await Promise.all(
+      facilities.map(async (f) => {
+        const facility = f;
 
-      facility._id = new ObjectId(facility._id);
-      facility.createdDate = Date.now();
-      facility.updatedAt = Date.now();
-      facility.dealId = new ObjectId(dealId);
-      return facility;
-    }));
+        facility._id = new ObjectId(facility._id);
+        facility.createdDate = Date.now();
+        facility.updatedAt = Date.now();
+        facility.dealId = new ObjectId(dealId);
+        return facility;
+      }),
+    );
 
     const idsArray = [];
     facilitiesWithId.forEach((f) => {
@@ -34,10 +36,7 @@ const createFacilities = async (facilities, dealId) => {
       facilities: idsArray,
     };
 
-    const response = await updateDeal(
-      dealId,
-      dealUpdate,
-    );
+    const response = await updateDeal(dealId, dealUpdate);
 
     const status = isNumber(response?.status, 3);
 
@@ -58,11 +57,7 @@ const createFacilities = async (facilities, dealId) => {
 };
 
 exports.createMultipleFacilitiesPost = async (req, res) => {
-  const {
-    facilities,
-    dealId,
-    user,
-  } = req.body;
+  const { facilities, dealId, user } = req.body;
 
   if (!user) {
     return res.status(404).send();

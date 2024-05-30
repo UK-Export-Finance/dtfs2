@@ -19,7 +19,7 @@ describe('AuthProvider - getAuthCodeUrl', () => {
   };
 
   const mockMsalInstance = {
-    getAuthCodeUrl: jest.fn().mockResolvedValue(mockAuthCodeUrlResponse)
+    getAuthCodeUrl: jest.fn().mockResolvedValue(mockAuthCodeUrlResponse),
   };
 
   let result;

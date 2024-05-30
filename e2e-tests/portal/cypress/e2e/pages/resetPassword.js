@@ -8,7 +8,6 @@ const resetPassword = {
   emailInput: () => cy.get('[data-cy="reset-password-email"]'),
   emailInputError: () => cy.get('[data-cy="reset-password-email-error"]'),
   resetPasswordError: () => cy.get('[data-cy="reset-password-error"]'),
-
 };
 
 module.exports = resetPassword;

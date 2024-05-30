@@ -1,3 +1,4 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { format, fromUnixTime } = require('date-fns');
 
 const {
@@ -7,12 +8,11 @@ const {
   getUserInfo,
   updateChangedToIssued,
 } = require('../../../src/v1/controllers/portal/gef-deal/add-min-activities.controller');
-const { DB_COLLECTIONS } = require('../../../src/constants');
 
-const collectionName = DB_COLLECTIONS.FACILITIES;
-const applicationCollectionName = DB_COLLECTIONS.DEALS;
+const collectionName = MONGO_DB_COLLECTIONS.FACILITIES;
+const applicationCollectionName = MONGO_DB_COLLECTIONS.DEALS;
 
-const db = require('../../../src/drivers/db-client');
+const db = require('../../../src/drivers/db-client').default;
 
 const { APPLICATION } = require('../../mocks/gef/gef-applications');
 const { mockFacilities } = require('../../mocks/gef/gef-facilities');
@@ -45,7 +45,7 @@ describe('submissionPortalActivity()', () => {
    As _id's can change for checker, need to access db and find a checker
    These details then added to the MOCK_APPLICATION
    */
-    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
+    const userCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
     // finds someone with role checker only
     const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
 
@@ -91,7 +91,7 @@ describe('facilityChangePortalActivity()', () => {
     await wipeDB.wipe([collectionName]);
     await wipeDB.wipe([applicationCollectionName]);
 
-    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
+    const userCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
     const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
     const maker = await userCollection.findOne({ roles: { $eq: ['maker'] } });
@@ -170,7 +170,7 @@ describe('facilityChangePortalActivity()', () => {
     // resets array to length 0
     MOCK_APPLICATION_FACILITIES.portalActivities = [];
 
-    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
+    const userCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
     const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
     const maker = await userCollection.findOne({ roles: { $eq: ['maker'] } });
@@ -208,7 +208,7 @@ describe('getUserInfo()', () => {
 
     // ensures that user object returned is correctly formatted
 
-    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
+    const userCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
     // finds someone with role checker only
     const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
 
@@ -268,7 +268,7 @@ describe('portalActivityGenerator()', () => {
     });
 
     it('should correctly return timestamp', () => {
-    // matches date as timestamps may be seconds off
+      // matches date as timestamps may be seconds off
       const receivedDate = format(fromUnixTime(result.timestamp), 'dd-MMMM-yyyy');
       const expectedDate = format(new Date(), 'dd-MMMM-yyyy');
       expect(receivedDate).toEqual(expectedDate);
@@ -334,7 +334,7 @@ describe('portalActivityGenerator()', () => {
     });
 
     it('should correctly return timestamp', () => {
-    // matches date as timestamps may be seconds off
+      // matches date as timestamps may be seconds off
       const receivedDate = format(fromUnixTime(result.timestamp), 'dd-MMMM-yyyy');
       const expectedDate = format(new Date(), 'dd-MMMM-yyyy');
       expect(receivedDate).toEqual(expectedDate);
@@ -400,12 +400,14 @@ describe('updateChangedToIssued()', () => {
 
   beforeEach(async () => {
     // posts facility with canResubmitIssuedFacilities as true
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
-      hasBeenIssued: true,
-      canResubmitIssuedFacilities: true,
-    }).to(baseUrl);
+    await as(aMaker)
+      .post({
+        dealId: mockApplication.body._id,
+        type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+        hasBeenIssued: true,
+        canResubmitIssuedFacilities: true,
+      })
+      .to(baseUrl);
 
     const mockQuery = { dealId: mockApplication.body._id };
 

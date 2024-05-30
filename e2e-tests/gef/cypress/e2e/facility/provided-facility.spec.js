@@ -15,13 +15,12 @@ context('Provided Facility Page', () => {
       .then(() => cy.apiFetchAllGefApplications(token))
       .then(({ body }) => {
         body.items.forEach((item) => {
-          cy.apiFetchAllFacilities(item._id, token)
-            .then((res) => {
-              applications.push({
-                id: item._id,
-                facilities: res.body.items.filter((it) => it.details.dealId === item._id),
-              });
+          cy.apiFetchAllFacilities(item._id, token).then((res) => {
+            applications.push({
+              id: item._id,
+              facilities: res.body.items.filter((it) => it.details.dealId === item._id),
             });
+          });
         });
       });
     cy.login(BANK1_MAKER1);
@@ -77,7 +76,10 @@ context('Provided Facility Page', () => {
       providedFacility.otherCheckbox().click();
       providedFacility.detailsOther().type('some text here');
       providedFacility.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-currency`));
+      cy.url().should(
+        'eq',
+        relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-currency`),
+      );
     });
 
     it('redirects user to application page when clicking on `save and return` button', () => {
@@ -87,7 +89,9 @@ context('Provided Facility Page', () => {
     });
 
     it('hides back button if visiting page with `change` query', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility?status=change`));
+      cy.visit(
+        relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility?status=change`),
+      );
       providedFacility.backLink().should('not.be.exist');
     });
   });

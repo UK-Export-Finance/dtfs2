@@ -16,7 +16,7 @@ const regex = (email) => new RegExp(`^${escapeStringRegexp(email)}$`, 'i');
  * @returns {Array} Emails as regular expressions.
  */
 const generateArrayOfEmailsRegex = (emails) => {
-  const mapped = emails.map(email => regex(email));
+  const mapped = emails.map((email) => regex(email));
 
   return mapped;
 };

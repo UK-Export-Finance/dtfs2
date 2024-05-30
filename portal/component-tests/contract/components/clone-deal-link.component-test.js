@@ -1,8 +1,10 @@
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
 
 const component = 'contract/components/clone-deal-link.njk';
 const render = componentRenderer(component);
-const { ROLES: { MAKER } } = require('../../../server/constants');
 const { NON_MAKER_ROLES } = require('../../../test-helpers/common-role-lists');
 const { DEAL } = require('../../../server/constants/status');
 

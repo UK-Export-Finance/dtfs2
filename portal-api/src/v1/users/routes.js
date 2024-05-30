@@ -1,3 +1,8 @@
+const {
+  generateAuditDatabaseRecordFromAuditDetails,
+  generatePortalAuditDetails,
+  generateNoUserLoggedInAuditDetails,
+} = require('@ukef/dtfs2-common/change-stream');
 const utils = require('../../crypto/utils');
 const { login } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
@@ -91,8 +96,10 @@ module.exports.create = async (req, res, next) => {
     hash,
   };
 
-  // Defined `e` since `error` is defined on a higher scope
-  return create(newUser, userService, (e, user) => {
+  // This is called on the open and auth router ('v1/user' and 'v1/users') endpoints so req.user may be undefined
+  const auditDetails = req.user?._id ? generatePortalAuditDetails(req.user._id) : generateNoUserLoggedInAuditDetails();
+
+  return create(newUser, userService, auditDetails, (e, user) => {
     if (e) {
       return next(e);
     }
@@ -144,7 +151,7 @@ module.exports.updateById = async (req, res, next) => {
         });
       }
 
-      return update(req.params._id, req.body, (updateErr, updatedUser) => {
+      return update(req.params._id, req.body, generatePortalAuditDetails(req.user._id), (updateErr, updatedUser) => {
         if (updateErr) {
           return next(updateErr);
         }
@@ -158,7 +165,7 @@ module.exports.updateById = async (req, res, next) => {
 };
 
 module.exports.disable = (req, res, next) => {
-  disable(req.params._id, (error, status) => {
+  disable(req.params._id, generatePortalAuditDetails(req.user._id), (error, status) => {
     if (error) {
       next(error);
     } else {
@@ -179,8 +186,9 @@ module.exports.remove = (req, res, next) => {
 
 module.exports.login = async (req, res, next) => {
   const { username, password } = req.body;
+  const auditDetails = generateNoUserLoggedInAuditDetails();
 
-  const loginResult = await login(username, password, userService);
+  const loginResult = await login(username, password, userService, auditDetails);
 
   if (loginResult.error) {
     // pick out the specific cases we understand and could treat differently
@@ -216,7 +224,8 @@ module.exports.loginWithSignInLink = (req, res) => signInLinkController.loginWit
 
 module.exports.resetPassword = async (req, res) => {
   const { email } = req.body;
-  await resetPassword(email, userService);
+  const auditDetails = generateNoUserLoggedInAuditDetails();
+  await resetPassword(email, userService, auditDetails);
 
   return res.status(200).send();
 };
@@ -330,6 +339,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
       },
     });
   }
+  const auditDetails = generatePortalAuditDetails(user._id);
   const updateData = {
     password,
     passwordConfirm,
@@ -338,9 +348,10 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
     currentPassword: '',
     loginFailureCount: 0,
     passwordUpdatedAt: `${Date.now()}`,
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
-  return update(user._id, updateData, (updateErr) => {
+  return update(user._id, updateData, generatePortalAuditDetails(user._id), (updateErr) => {
     if (updateErr) {
       next(updateErr);
     } else {

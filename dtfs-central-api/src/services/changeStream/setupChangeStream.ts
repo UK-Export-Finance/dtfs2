@@ -1,6 +1,7 @@
 import { ChangeStreamUpdateDocument, ChangeStreamInsertDocument, ChangeStreamReplaceDocument } from 'mongodb';
-import { getConnection } from '../../drivers/db-client';
-import { postAuditDetails } from './changeStreamApi';
+import { DeletionAuditLog, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import mongoDbClient from '../../drivers/db-client';
+import { postAuditDetails, postDeletionAuditDetails } from './changeStreamApi';
 
 /**
  * Sets up a change stream on the mongodb database for a specific collection and sends any changes to the audit API
@@ -8,7 +9,7 @@ import { postAuditDetails } from './changeStreamApi';
  */
 const setupChangeStreamForCollection = async (collectionName: string) => {
   console.info('Setting up change stream for collection', collectionName);
-  const databaseConnection = await getConnection();
+  const databaseConnection = await mongoDbClient.getConnection();
   const changeStream = databaseConnection
     .collection(collectionName)
     .watch([{ $match: { operationType: { $in: ['insert', 'update', 'replace'] } } }, { $project: { _id: 1, fullDocument: 1, ns: 1, documentKey: 1 } }], {
@@ -21,17 +22,36 @@ const setupChangeStreamForCollection = async (collectionName: string) => {
   });
 };
 
+const setupChangeStreamForDeletionCollection = async () => {
+  console.info('Setting up deletion change stream');
+  const databaseConnection = await mongoDbClient.getConnection();
+  const changeStream = databaseConnection
+    .collection(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS)
+    .watch([{ $match: { operationType: 'insert' } }, { $project: { _id: 1, fullDocument: 1, ns: 1, documentKey: 1 } }], {
+      fullDocument: 'updateLookup',
+    });
+  changeStream.on('change', (changeStreamDocument: ChangeStreamInsertDocument<DeletionAuditLog>) => {
+    postDeletionAuditDetails(changeStreamDocument).catch((error) => {
+      console.error('Error sending change stream update to API', error);
+    });
+  });
+};
+
 /**
  * Sets up a change stream on the mongodb database and sends any changes to the audit API
  */
 export const setupChangeStream = async () => {
   try {
     console.info('Setting up mongodb change stream');
-    const databaseConnection = await getConnection();
+    const databaseConnection = await mongoDbClient.getConnection();
     const collections = await databaseConnection.listCollections().toArray();
     await Promise.all(
       collections.map(async (collection) => {
-        await setupChangeStreamForCollection(collection.name);
+        if (collection.name === MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS) {
+          await setupChangeStreamForDeletionCollection();
+        } else {
+          await setupChangeStreamForCollection(collection.name);
+        }
       }),
     );
     console.info('Mongodb change stream initialised');

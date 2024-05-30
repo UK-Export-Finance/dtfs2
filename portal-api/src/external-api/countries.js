@@ -8,7 +8,7 @@ dotenv.config();
 const { EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 const headers = {
   'Content-Type': 'application/json',
-  'x-api-key': EXTERNAL_API_KEY,
+  'x-api-key': String(EXTERNAL_API_KEY),
 };
 
 /**
@@ -74,7 +74,7 @@ const getCountry = async (code) => {
 
   return {
     status: 404,
-    error: 'Invalid response received'
+    error: 'Invalid response received',
   };
 };
 

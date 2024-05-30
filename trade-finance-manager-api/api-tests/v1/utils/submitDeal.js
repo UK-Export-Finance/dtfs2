@@ -17,4 +17,4 @@ const createSubmitBody = (mockDeal) => ({
   checker: MOCK_PORTAL_USERS[0],
 });
 
-module.exports.createSubmitBody = createSubmitBody
+module.exports.createSubmitBody = createSubmitBody;

@@ -24,5 +24,4 @@ describe('helpers - destroySessionAndRedirectToStart', () => {
     // Assert
     expect(res._getRedirectUrl()).toEqual('/');
   });
-
 });

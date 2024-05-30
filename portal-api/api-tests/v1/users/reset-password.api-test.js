@@ -1,3 +1,4 @@
+const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const databaseHelper = require('../../database-helper');
 const { setUpApiTestUser } = require('../../api-test-users');
 
@@ -9,7 +10,11 @@ const { resetPassword, getUserByPasswordToken } = require('../../../src/v1/users
 const users = require('./test-data');
 
 const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
-const MOCK_USER = { ...users.barclaysBankMaker1, username: temporaryUsernameAndEmail, email: temporaryUsernameAndEmail };
+const MOCK_USER = {
+  ...users.barclaysBankMaker1,
+  username: temporaryUsernameAndEmail,
+  email: temporaryUsernameAndEmail,
+};
 
 const utils = require('../../../src/crypto/utils');
 
@@ -55,12 +60,12 @@ describe('password reset', () => {
   });
 
   it('should not send an email for non-existant email', async () => {
-    await resetPassword(EMAIL_FOR_NO_USER, userService);
+    await resetPassword(EMAIL_FOR_NO_USER, userService, generateNoUserLoggedInAuditDetails());
     expect(sendEmail).not.toHaveBeenCalled();
   });
 
   it('should send an email for existing email', async () => {
-    await resetPassword(MOCK_USER.email, userService);
+    await resetPassword(MOCK_USER.email, userService, generateNoUserLoggedInAuditDetails());
     expect(sendEmail).toHaveBeenCalledWith(RESET_PASSWORD_EMAIL_TEMPLATE_ID, MOCK_USER.email, {
       resetToken: expect.any(String),
     });
@@ -68,7 +73,7 @@ describe('password reset', () => {
 
   it('should be case-insensitive when accepting email', async () => {
     const upperCaseEmail = MOCK_USER.email.toUpperCase();
-    await resetPassword(upperCaseEmail, userService);
+    await resetPassword(upperCaseEmail, userService, generateNoUserLoggedInAuditDetails());
     expect(sendEmail).toHaveBeenCalledWith(RESET_PASSWORD_EMAIL_TEMPLATE_ID, upperCaseEmail, {
       resetToken: expect.any(String),
     });
@@ -82,19 +87,22 @@ describe('password reset', () => {
   it('should return the correct user for a given reset token', async () => {
     const passwordResetToken = 'passwordResetToken';
     jest.spyOn(utils, 'genPasswordResetToken').mockImplementation(mockKnownTokenResponse(passwordResetToken));
-    await resetPassword(MOCK_USER.email, userService);
+    await resetPassword(MOCK_USER.email, userService, generateNoUserLoggedInAuditDetails());
     const user = await getUserByPasswordToken(passwordResetToken);
 
-    const { password, ...makerWithoutPassword } = MOCK_USER;
+    const { password: _password, ...makerWithoutPassword } = MOCK_USER;
     expect(user).toMatchObject(makerWithoutPassword);
   });
 
   it('should not return a token if the token is invalid', async () => {
     // We set this field as part of createUser -- and this test checks it is not set by resetPassword
-    await databaseHelper.unsetUserProperties({ username: MOCK_USER.username, properties: ['resetPwdToken', 'resetPwdTimestamp'] });
+    await databaseHelper.unsetUserProperties({
+      username: MOCK_USER.username,
+      properties: ['resetPwdToken', 'resetPwdTimestamp'],
+    });
     await databaseHelper.setUserProperties({ username: MOCK_USER.username, update: { disabled: true } });
 
-    await resetPassword(MOCK_USER.email, userService);
+    await resetPassword(MOCK_USER.email, userService, generateNoUserLoggedInAuditDetails());
 
     const fetchedUser = await databaseHelper.getUserById(testUser._id);
 
@@ -148,7 +156,7 @@ describe('password reset', () => {
 
         it('should reset the users password when using correct reset token', async () => {
           const newPassword = 'XyZ!2345';
-          await resetPassword(MOCK_USER.email, userService);
+          await resetPassword(MOCK_USER.email, userService, generateNoUserLoggedInAuditDetails());
 
           const { status, body } = await as()
             .post({ currentPassword: MOCK_USER.password, password: newPassword, passwordConfirm: newPassword })

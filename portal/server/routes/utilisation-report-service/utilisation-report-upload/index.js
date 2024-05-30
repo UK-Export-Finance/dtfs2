@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const { ROLES } = require('@ukef/dtfs2-common');
 const {
   getUtilisationReportUpload,
   postUtilisationReportUpload,
@@ -9,20 +10,18 @@ const {
 } = require('../../../controllers/utilisation-report-service');
 const { validateRole, validateToken, virusScanUpload } = require('../../middleware');
 const { utilisationReportMulterFilter, formatBytes } = require('../../../utils/multer-filter.utils');
-const { ROLES } = require('../../../constants');
 
 const { UTILISATION_REPORT_MAX_FILE_SIZE_BYTES } = process.env;
 
 const router = express.Router();
 
-const upload = multer({ limits: { fileSize: +UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }, fileFilter: utilisationReportMulterFilter }).single(
-  'utilisation-report-file-upload',
-);
+const upload = multer({
+  limits: { fileSize: +UTILISATION_REPORT_MAX_FILE_SIZE_BYTES },
+  fileFilter: utilisationReportMulterFilter,
+}).single('utilisation-report-file-upload');
 
-router.get(
-  '/utilisation-report-upload',
-  [validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] })],
-  (req, res) => getUtilisationReportUpload(req, res),
+router.get('/utilisation-report-upload', [validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] })], (req, res) =>
+  getUtilisationReportUpload(req, res),
 );
 
 router.post(

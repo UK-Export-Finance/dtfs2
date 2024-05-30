@@ -1,3 +1,4 @@
+import { TEAM_IDS } from '@ukef/dtfs2-common';
 import underwriterManagersDecisionController from '.';
 import userCanEditManagersDecision from './helpers';
 import { mapDecisionObject, validateSubmittedValues } from '../../../helpers';
@@ -14,7 +15,7 @@ const session = {
     username: 'testUser',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    teams: [CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS],
+    teams: [TEAM_IDS.UNDERWRITER_MANAGERS],
   },
   userToken: 'test-token',
 };
@@ -121,7 +122,8 @@ describe('POST underwriting - underwriting managers decision edit', () => {
     const apiUpdateSpy = jest.fn(() =>
       Promise.resolve({
         test: true,
-      }));
+      }),
+    );
 
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);

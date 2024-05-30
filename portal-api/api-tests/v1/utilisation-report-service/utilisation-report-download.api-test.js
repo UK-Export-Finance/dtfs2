@@ -6,10 +6,7 @@ const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
-
-jest.mock('../../../src/v1/api', () => ({
-  getUtilisationReportById: jest.fn().mockResolvedValue({ azureFileInfo: { filename: 'test-file.csv', mimetype: 'text/csv' } }),
-}));
+const api = require('../../../src/v1/api');
 
 jest.mock('../../../src/drivers/fileshare', () => ({
   getConfig: jest.fn(() => ({ EXPORT_FOLDER: 'mock-folder' })),
@@ -20,6 +17,7 @@ describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
   let noRoles;
   let testUsers;
   let barclaysBank;
+  let hsbcBank;
   let aBarclaysPaymentReportOfficer;
   let aHsbcPaymentReportOfficer;
 
@@ -29,6 +27,12 @@ describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
     aBarclaysPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Barclays Bank').one();
     aHsbcPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('HSBC').one();
     barclaysBank = aBarclaysPaymentReportOfficer.bank;
+    hsbcBank = aHsbcPaymentReportOfficer.bank;
+    const getUtilisationSpy = jest.spyOn(api, 'getUtilisationReportById');
+    getUtilisationSpy.mockImplementation(() => ({
+      azureFileInfo: { filename: 'test-file.csv', mimetype: 'text/csv' },
+      bankId: barclaysBank.id,
+    }));
   });
 
   beforeEach(async () => {
@@ -39,31 +43,30 @@ describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
     const getUrl = ({ bankId, reportId }) => `/v1/banks/${bankId}/utilisation-report-download/${reportId}`;
 
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => get(getUrl({ bankId: barclaysBank.id, reportId: '5099803df3f4948bd2f98391' })),
-      makeRequestWithAuthHeader: (authHeader) =>
-        get(getUrl({ bankId: barclaysBank.id, reportId: '5099803df3f4948bd2f98391' }), { headers: { Authorization: authHeader } }),
+      makeRequestWithoutAuthHeader: () => get(getUrl({ bankId: barclaysBank.id, reportId: '10' })),
+      makeRequestWithAuthHeader: (authHeader) => get(getUrl({ bankId: barclaysBank.id, reportId: '10' }), { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [PAYMENT_REPORT_OFFICER],
       getUserWithRole: (role) => testUsers().withRole(role).withBankName(barclaysBank.name).one(),
       getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).get(getUrl({ bankId: barclaysBank.id, reportId: '5099803df3f4948bd2f98391' })),
+      makeRequestAsUser: (user) => as(user).get(getUrl({ bankId: barclaysBank.id, reportId: '10' })),
       successStatusCode: 200,
     });
 
     it("returns 400 if the 'bankId' path param is invalid", async () => {
       // Arrange
-      const url = getUrl({ bankId: 'invalid-bank-id', reportId: '5099803df3f4948bd2f98391' });
+      const url = getUrl({ bankId: 'invalid-bank-id', reportId: '10' });
       const { status } = await as(aHsbcPaymentReportOfficer).get(url);
 
       // Assert
       expect(status).toEqual(400);
     });
 
-    it("returns 400 if the report MongoDB ID '_id' path param is invalid", async () => {
+    it("returns 400 if the report ID 'id' path param is invalid", async () => {
       // Arrange
-      const url = getUrl({ bankId: barclaysBank.id, reportId: 'invalid-mongo-id' });
+      const url = getUrl({ bankId: barclaysBank.id, reportId: 'invalid-sql-id' });
       const { status } = await as(aHsbcPaymentReportOfficer).get(url);
 
       // Assert
@@ -72,10 +75,18 @@ describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
 
     it('returns 401 if trying to download of file from a different user organisation', async () => {
       // Arrange
-      const { status } = await as(aHsbcPaymentReportOfficer).get(getUrl({ bankId: barclaysBank.id, reportId: '5099803df3f4948bd2f98391' }));
+      const { status } = await as(aHsbcPaymentReportOfficer).get(getUrl({ bankId: barclaysBank.id, reportId: '10' }));
 
       // Assert
       expect(status).toEqual(401);
+    });
+
+    it('returns 500 if trying to download of file from a different user organisation with own bank id', async () => {
+      // Arrange
+      const { status } = await as(aHsbcPaymentReportOfficer).get(getUrl({ bankId: hsbcBank.id, reportId: '10' }));
+
+      // Assert
+      expect(status).toEqual(500);
     });
   });
 });

@@ -43,7 +43,6 @@ describe('/v1/deals/:id/status - facilities', () => {
   });
 
   describe('PUT /v1/deals/:id/status', () => {
-
     describe("when the status changes from `Further Maker's input required` to `Ready for Checker's approval`", () => {
       let createdDeal;
       let updatedDeal;

@@ -8,6 +8,11 @@ const page = {
   currentUrl: () => cy.url(),
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
+  assertOnThisPage() {
+    this.currentUrl().should('contain', '/utilisation-report-upload');
+    this.utilisationReportFileInput().should('exist');
+    this.continueButton().should('exist');
+  },
 };
 
 module.exports = page;

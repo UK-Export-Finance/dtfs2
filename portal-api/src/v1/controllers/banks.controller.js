@@ -1,8 +1,9 @@
+const { PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { hasValidObjectId } = require('../validation/validateObjectId');
-const { PAYLOAD } = require('../../constants');
-const payloadVerification = require('../helpers/payload');
 
 const db = require('../../drivers/db-client');
 
@@ -36,26 +37,30 @@ exports.findOneBank = findOneBank;
 exports.create = async (req, res) => {
   const bank = req?.body;
 
-  if (payloadVerification(bank, PAYLOAD.BANK)) {
-    const collection = await db.getCollection('banks');
-    const result = await collection.insertOne(bank);
-
-    return res.status(200).json(result);
+  if (!isVerifiedPayload({ payload: bank, template: PAYLOAD_VERIFICATION.BANK })) {
+    return res.status(400).send({ status: 400, message: 'Invalid bank payload' });
   }
 
-  return res.status(400).send({ status: 400, message: 'Invalid bank payload' });
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
+  const collection = await db.getCollection('banks');
+  const result = await collection.insertOne({
+    ...bank,
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+  });
+
+  return res.status(200).json(result);
 };
 
-exports.findAll = (req, res) => (
-  findBanks((banks) => res.status(200).send({
-    count: banks.length,
-    banks,
-  }))
-);
+exports.findAll = (req, res) =>
+  findBanks((banks) =>
+    res.status(200).send({
+      count: banks.length,
+      banks,
+    }),
+  );
 
-exports.findOne = (req, res) => (
-  findOneBank(req.params.id, (deal) => res.status(200).send(deal))
-);
+exports.findOne = (req, res) => findOneBank(req.params.id, (deal) => res.status(200).send(deal));
 
 exports.update = async (req, res) => {
   const { id } = req.params;
@@ -64,8 +69,11 @@ exports.update = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Bank Id' });
   }
 
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
   const collection = await db.getCollection('banks');
-  const updatedBank = await collection.updateOne({ id: { $eq: id } }, { $set: req.body }, {});
+  const update = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
+  const updatedBank = await collection.updateOne({ id: { $eq: id } }, { $set: update }, {});
 
   return res.status(200).json(updatedBank);
 };

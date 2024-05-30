@@ -31,6 +31,6 @@ describe('auth-service/get-and-map-existing-tfm-user', () => {
 
     const expected = populateTfmUserWithEntraData(MOCK_TFM_USER, MOCK_ENTRA_USER);
 
-    expect(result).toEqual(expected);    
+    expect(result).toEqual(expected);
   });
 });

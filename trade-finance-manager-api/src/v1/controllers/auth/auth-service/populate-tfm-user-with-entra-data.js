@@ -8,7 +8,7 @@ const mapEntraUserData = require('./map-entra-user-data');
  * @returns {import('src/types/auth/get-user-response').GetUserResponse}
  */
 const populateTfmUserWithEntraData = (getUserResponse, entraUser) => {
-  const getUserResponsePopulated = { ...getUserResponse}
+  const getUserResponsePopulated = { ...getUserResponse };
   getUserResponsePopulated.user = {
     ...getUserResponse.user,
     ...mapEntraUserData(entraUser, getUserResponse.user),

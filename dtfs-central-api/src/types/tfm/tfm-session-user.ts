@@ -1,5 +1,4 @@
-import { Prettify } from '../types-helper';
-import { TfmUser } from '../db-models/tfm-users';
+import { Prettify, TfmUser } from '@ukef/dtfs2-common';
 
 export type TfmSessionUser = Prettify<
   Pick<TfmUser, 'username' | 'email' | 'teams' | 'timezone' | 'firstName' | 'lastName' | 'lastLogin'> & {

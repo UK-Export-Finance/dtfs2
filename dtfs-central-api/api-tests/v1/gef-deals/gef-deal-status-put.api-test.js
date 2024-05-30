@@ -1,3 +1,4 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
@@ -5,7 +6,7 @@ const CONSTANTS = require('../../../src/constants');
 
 describe('/v1/portal/gef/deals/:id/status', () => {
   beforeAll(async () => {
-    await wipeDB.wipe([CONSTANTS.DB_COLLECTIONS.DEALS, CONSTANTS.DB_COLLECTIONS.FACILITIES]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
   });
 
   const mockDeal = {
@@ -31,7 +32,7 @@ describe('/v1/portal/gef/deals/:id/status', () => {
       expect(typeof body.updatedAt).toEqual('number');
     });
 
-    it('returns 400 bad request status code when the new status is same as application\'s existing status', async () => {
+    it("returns 400 bad request status code when the new status is same as application's existing status", async () => {
       // Create new GEF deal
       const { body: createdDeal } = await api.post(mockDeal).to('/v1/portal/gef/deals');
       const dealId = createdDeal._id;

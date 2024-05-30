@@ -6,10 +6,8 @@ describe('AuthProvider - getMsalInstance', () => {
   it('should return an MSAL instance', () => {
     const result = AuthProvider.getMsalInstance();
 
-    const expected = JSON.stringify(
-      new msal.ConfidentialClientApplication(msalConfig)
-    );
+    const expected = JSON.stringify(new msal.ConfidentialClientApplication(msalConfig));
 
-    expect(JSON.stringify((result))).toEqual(expected);
+    expect(JSON.stringify(result)).toEqual(expected);
   });
 });

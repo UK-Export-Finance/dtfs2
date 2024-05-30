@@ -8,11 +8,7 @@ describe('auth-service/map-entra-user-data', () => {
   it('returns a user mapped with Entra/TFM roles, firstName and lastName', () => {
     const result = mapEntraUserData(MOCK_ENTRA_USER);
 
-    const {
-      oid,
-      email,
-      groups,
-    } = MOCK_ENTRA_USER.idTokenClaims;
+    const { oid, email, groups } = MOCK_ENTRA_USER.idTokenClaims;
 
     const expected = {
       azureOid: oid,

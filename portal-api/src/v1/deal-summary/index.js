@@ -1,9 +1,5 @@
-const {
-  isNumeric,
-  roundNumber,
-  formattedNumber,
-  sanitizeCurrency,
-} = require('../../utils/number');
+const { CURRENCY } = require('@ukef/dtfs2-common');
+const { isNumeric, roundNumber, formattedNumber, sanitizeCurrency } = require('../../utils/number');
 const { hasValue } = require('../../utils/string');
 
 const CONSTANTS = require('../../constants');
@@ -12,16 +8,12 @@ const formatNumber = (numb) => formattedNumber(roundNumber(numb, 2));
 
 const calculateFacilitiesInGbp = (facilityInDealCurrency, supplyContractConversionRateToGbp) => {
   if (supplyContractConversionRateToGbp && Number(supplyContractConversionRateToGbp) > 0) {
-    return (facilityInDealCurrency / supplyContractConversionRateToGbp);
+    return facilityInDealCurrency / supplyContractConversionRateToGbp;
   }
   return facilityInDealCurrency;
 };
 
-const calculateDealInGbp = (
-  bondsInDealCurrency,
-  loansInDealCurrency,
-  supplyContractConversionRateToGbp,
-) => {
+const calculateDealInGbp = (bondsInDealCurrency, loansInDealCurrency, supplyContractConversionRateToGbp) => {
   let result = 0;
 
   if (bondsInDealCurrency > 0) {
@@ -41,17 +33,13 @@ const calculateFacilitiesTotalInDealCurrency = (facilities) => {
 
   if (facilities.length > 0) {
     facilities.forEach((facility) => {
-      const {
-        value,
-        conversionRate,
-        ukefExposure,
-      } = facility;
+      const { value, conversionRate, ukefExposure } = facility;
 
       const sanitizedUkefExposure = sanitizeCurrency(ukefExposure).sanitizedValue;
 
       if (hasValue(conversionRate)) {
-        totalValueInDealCurrency += (Number(value) / Number(conversionRate));
-        totalUkefExposureInDealCurrency += (Number(sanitizedUkefExposure) / Number(conversionRate));
+        totalValueInDealCurrency += Number(value) / Number(conversionRate);
+        totalUkefExposureInDealCurrency += Number(sanitizedUkefExposure) / Number(conversionRate);
       } else {
         totalValueInDealCurrency += Number(value);
         totalUkefExposureInDealCurrency += Number(sanitizedUkefExposure);
@@ -65,18 +53,10 @@ const calculateFacilitiesTotalInDealCurrency = (facilities) => {
   };
 };
 
-const calculate = (
-  bondsInDealCurrency,
-  loansInDealCurrency,
-  supplyContractConversionRateToGbp,
-) => {
+const calculate = (bondsInDealCurrency, loansInDealCurrency, supplyContractConversionRateToGbp) => {
   const dealInDealCurrency = bondsInDealCurrency + loansInDealCurrency;
 
-  const dealInGbp = calculateDealInGbp(
-    bondsInDealCurrency,
-    loansInDealCurrency,
-    supplyContractConversionRateToGbp,
-  );
+  const dealInGbp = calculateDealInGbp(bondsInDealCurrency, loansInDealCurrency, supplyContractConversionRateToGbp);
 
   const bondsInGbp = calculateFacilitiesInGbp(bondsInDealCurrency, supplyContractConversionRateToGbp);
   const loansInGbp = calculateFacilitiesInGbp(loansInDealCurrency, supplyContractConversionRateToGbp);
@@ -98,8 +78,7 @@ const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP,
       return b;
     }
 
-    if (b.status !== CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED
-        && b.status !== CONSTANTS.FACILITIES.DEAL_STATUS.INCOMPLETE) {
+    if (b.status !== CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED && b.status !== CONSTANTS.FACILITIES.DEAL_STATUS.INCOMPLETE) {
       return b;
     }
     return null;
@@ -110,58 +89,38 @@ const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP,
     if (l.submittedAsIssuedDate) {
       return l;
     }
-    if (l.status !== CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED
-      && l.status !== CONSTANTS.FACILITIES.DEAL_STATUS.INCOMPLETE) {
+    if (l.status !== CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED && l.status !== CONSTANTS.FACILITIES.DEAL_STATUS.INCOMPLETE) {
       return l;
     }
     return null;
   });
 
-  const hasSupplyContractCurrencyId = (supplyContractCurrency?.id && hasValue(supplyContractCurrency?.id));
-  const hasSupplyContractConversionRateToGBP = (hasValue(supplyContractConversionRateToGBP) && isNumeric(Number(supplyContractConversionRateToGBP)));
-  const hasRelevantSupplyContractValues = (hasSupplyContractCurrencyId && supplyContractCurrency.id === CONSTANTS.CURRENCY.CURRENCY.GBP)
-    || (hasSupplyContractCurrencyId && hasSupplyContractConversionRateToGBP);
+  const hasSupplyContractCurrencyId = supplyContractCurrency?.id && hasValue(supplyContractCurrency?.id);
+  const hasSupplyContractConversionRateToGBP = hasValue(supplyContractConversionRateToGBP) && isNumeric(Number(supplyContractConversionRateToGBP));
+  const hasRelevantSupplyContractValues =
+    (hasSupplyContractCurrencyId && supplyContractCurrency.id === CURRENCY.GBP) || (hasSupplyContractCurrencyId && hasSupplyContractConversionRateToGBP);
 
   return !!(hasRelevantSupplyContractValues && (hasCompletedBonds || hasCompletedLoans));
 };
 
 const calculateDealSummary = (deal) => {
-  const {
-    submissionDetails,
-    bondTransactions,
-    loanTransactions,
-  } = deal;
+  const { submissionDetails, bondTransactions, loanTransactions } = deal;
 
-  const {
-    supplyContractCurrency,
-    supplyContractConversionRateToGBP,
-  } = submissionDetails;
+  const { supplyContractCurrency, supplyContractConversionRateToGBP } = submissionDetails;
 
   const bonds = bondTransactions.items;
   const loans = loanTransactions.items;
 
   if (canCalculate(supplyContractCurrency, supplyContractConversionRateToGBP, bonds, loans)) {
-    const {
-      totalValueInDealCurrency: bondsTotalValueInDealCurrency,
-      totalUkefExposureInDealCurrency: bondsTotalUkefExposureInDealCurrency,
-    } = calculateFacilitiesTotalInDealCurrency(bonds);
+    const { totalValueInDealCurrency: bondsTotalValueInDealCurrency, totalUkefExposureInDealCurrency: bondsTotalUkefExposureInDealCurrency } =
+      calculateFacilitiesTotalInDealCurrency(bonds);
 
-    const {
-      totalValueInDealCurrency: loansTotalValueInDealCurrency,
-      totalUkefExposureInDealCurrency: loansTotalUkefExposureInDealCurrency,
-    } = calculateFacilitiesTotalInDealCurrency(loans);
+    const { totalValueInDealCurrency: loansTotalValueInDealCurrency, totalUkefExposureInDealCurrency: loansTotalUkefExposureInDealCurrency } =
+      calculateFacilitiesTotalInDealCurrency(loans);
 
     return {
-      totalValue: calculate(
-        bondsTotalValueInDealCurrency,
-        loansTotalValueInDealCurrency,
-        Number(supplyContractConversionRateToGBP),
-      ),
-      totalUkefExposure: calculate(
-        bondsTotalUkefExposureInDealCurrency,
-        loansTotalUkefExposureInDealCurrency,
-        Number(supplyContractConversionRateToGBP),
-      ),
+      totalValue: calculate(bondsTotalValueInDealCurrency, loansTotalValueInDealCurrency, Number(supplyContractConversionRateToGBP)),
+      totalUkefExposure: calculate(bondsTotalUkefExposureInDealCurrency, loansTotalUkefExposureInDealCurrency, Number(supplyContractConversionRateToGBP)),
     };
   }
   return {};

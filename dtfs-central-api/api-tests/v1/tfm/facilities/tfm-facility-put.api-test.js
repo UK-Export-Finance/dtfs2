@@ -1,12 +1,14 @@
-const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
+const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const aDeal = require('../../deal-builder');
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
-
 
 const newFacility = {
   type: 'Bond',
@@ -35,7 +37,7 @@ describe('/v1/tfm/facilities', () => {
   let dealId;
 
   beforeAll(async () => {
-    await wipeDB.wipe([CONSTANTS.DB_COLLECTIONS.DEALS, CONSTANTS.DB_COLLECTIONS.FACILITIES]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
   });
 
   beforeEach(async () => {
@@ -61,35 +63,41 @@ describe('/v1/tfm/facilities', () => {
       expect(status).toEqual(404);
     });
 
-    it('returns the updated facility', async () => {
-      const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
-      const createdFacility = postResult.body;
+    describe('with a valid deal submitted to TFM', () => {
+      let createdFacility;
 
-      const updatedFacility = {
-        tfmUpdate: {
-          bondIssuerPartyUrn: 'testUrn',
-        },
-        auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
-      };
+      beforeEach(async () => {
+        const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        await api
+          .put({
+            dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+            dealId,
+            auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          })
+          .to('/v1/tfm/deals/submit');
 
-      await api
-        .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-          dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-        })
-        .to('/v1/tfm/deals/submit');
+        createdFacility = postResult.body;
+      });
 
-      const { body, status } = await api.put(updatedFacility).to(`/v1/tfm/facilities/${createdFacility._id}`);
+      withValidateAuditDetailsTests({
+        makeRequest: (auditDetails) =>
+          api.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to(`/v1/tfm/facilities/${createdFacility._id}`),
+        validUserTypes: ['system', 'portal', 'tfm', 'none'],
+      });
 
-      expect(status).toEqual(200);
-      expect(body.tfm).toEqual(updatedFacility.tfmUpdate);
-      expect(body.auditDetails).toEqual({
-        lastUpdatedAt: expect.any(String),
-        lastUpdatedByTfmUserId: MOCK_TFM_USER._id,
-        lastUpdatedByIsSystem: null,
-        lastUpdatedByPortalUserId: null,
-        noUserLoggedIn: null,
+      it('returns the updated facility', async () => {
+        const updatedFacility = {
+          tfmUpdate: {
+            bondIssuerPartyUrn: 'testUrn',
+          },
+          auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
+        };
+
+        const { body, status } = await api.put(updatedFacility).to(`/v1/tfm/facilities/${createdFacility._id}`);
+
+        expect(status).toEqual(200);
+        expect(body.tfm).toEqual(updatedFacility.tfmUpdate);
+        expect(body.auditRecord).toEqual(generateParsedMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id));
       });
     });
   });

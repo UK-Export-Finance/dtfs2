@@ -52,10 +52,7 @@ describe('auth-service/get-existing-tfm-user', () => {
 
       const { idTokenClaims } = mockEntraUserWithSecondaryEmail;
 
-      const expected = [
-        ...idTokenClaims.verified_primary_email,
-        ...idTokenClaims.verified_secondary_email,
-      ];
+      const expected = [...idTokenClaims.verified_primary_email, ...idTokenClaims.verified_secondary_email];
 
       expect(userController.findByEmails).toHaveBeenCalledWith(expected);
     });

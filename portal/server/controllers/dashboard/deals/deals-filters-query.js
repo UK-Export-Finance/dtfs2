@@ -46,8 +46,8 @@ const dashboardDealsFiltersQuery = (filters, user) => {
     const statusFilterValues = statusFilterObj && statusFilterObj[CONSTANTS.FIELD_NAMES.DEAL.STATUS];
 
     const hasOnlyStatusFilter = statusFilterValues?.length === 1 && statusFilterValues;
-    const hasOnlyAllStatusesFilterValue = (hasOnlyStatusFilter
-      && statusFilterValues[0] === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES);
+    const hasOnlyAllStatusesFilterValue =
+      hasOnlyStatusFilter && statusFilterValues[0] === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES;
 
     if (!hasOnlyAllStatusesFilterValue && !query.AND) {
       // empty and query if not created yet

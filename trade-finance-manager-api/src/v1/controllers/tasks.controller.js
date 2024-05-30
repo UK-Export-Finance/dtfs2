@@ -1,4 +1,4 @@
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const { getGroupById, getTaskInGroupById, isAdverseHistoryTaskIsComplete, shouldUpdateDealStage } = require('../helpers/tasks');
@@ -254,7 +254,13 @@ const updateTask = async (req, res) => {
   const taskUpdate = req.body;
 
   try {
-    const result = await updateTfmTask({ dealId, groupId: parseInt(groupId, 10), taskId, taskUpdate, auditDetails: generateTfmAuditDetails(req.user._id) });
+    const result = await updateTfmTask({
+      dealId,
+      groupId: parseInt(groupId, 10),
+      taskId,
+      taskUpdate,
+      auditDetails: generateTfmAuditDetails(req.user._id),
+    });
     return res.status(200).send(result);
   } catch (error) {
     console.error('Unable to update the task %s in group %s deal %s %o', taskId, groupId, dealId, error);

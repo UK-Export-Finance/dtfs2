@@ -1,33 +1,6 @@
-const {
-  isEmptyString,
-  hasValue,
-  stripCommas,
-  capitalizeFirstLetter,
-  lowercaseFirstLetter,
-  isString,
-} = require('./string');
+const { isEmptyString, hasValue, stripCommas, capitalizeFirstLetter, lowercaseFirstLetter } = require('./string');
 
 describe('utils - string', () => {
-  describe('isString', () => {
-    it.each`
-      value                                 | expected
-      ${1}                                  | ${false}
-      ${true}                               | ${false}
-      ${null}                               | ${false}
-      ${undefined}                          | ${false}
-      ${['a string in an array']}           | ${false}
-      ${{ value: 'a string in an object' }} | ${false}
-      ${''}                                 | ${true}
-      ${'a string'}                         | ${true}
-    `('returns $expected when the value is $value', ({ value, expected }) => {
-      // Act
-      const result = isString(value);
-
-      // Assert
-      expect(result).toBe(expected);
-    });
-  });
-
   describe('isEmptyString', () => {
     it('Should return true when string is empty or is pure whitespace', () => {
       expect(isEmptyString('')).toEqual(true);
@@ -87,7 +60,7 @@ describe('utils - string', () => {
     });
 
     it('Number to String typecasting, should return as a string', () => {
-      const result = capitalizeFirstLetter(123.00);
+      const result = capitalizeFirstLetter(123.0);
       expect(result).toEqual('123');
     });
 

@@ -2,12 +2,12 @@ const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date().valueOf();
 const nowFormatted = new Date();
-const nowDay = (dateConstants.todayDay).toString();
-const nowMonth = (dateConstants.todayMonth).toString();
-const nowYear = (dateConstants.todayYear).toString();
-const nowPlusMonthDay = (dateConstants.oneMonthDay).toString();
-const nowPlusMonthMonth = (dateConstants.oneMonthMonth).toString();
-const nowPlusMonthYear = (dateConstants.oneMonthYear).toString();
+const nowDay = dateConstants.todayDay.toString();
+const nowMonth = dateConstants.todayMonth.toString();
+const nowYear = dateConstants.todayYear.toString();
+const nowPlusMonthDay = dateConstants.oneMonthDay.toString();
+const nowPlusMonthMonth = dateConstants.oneMonthMonth.toString();
+const nowPlusMonthYear = dateConstants.oneMonthYear.toString();
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
@@ -31,22 +31,26 @@ const deal = {
     criteria: [
       {
         id: 11,
-        description: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
+        description:
+          'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
         answer: true,
       },
       {
         id: 12,
-        description: 'The period between the Cover Start Date and the Cover End Date does not exceed: for a Bond, the Bond Maximum Cover Period; and for a Loan, the Loan Maximum Cover Period.',
+        description:
+          'The period between the Cover Start Date and the Cover End Date does not exceed: for a Bond, the Bond Maximum Cover Period; and for a Loan, the Loan Maximum Cover Period.',
         answer: true,
       },
       {
         id: 13,
-        description: 'The Covered Bank Exposure under the Transaction (converted (as at the date this representation is made) for this purpose into the Base Currency) is not more than the lesser of: the Available Facility; and the Available Obligor Covered Exposure Limit.',
+        description:
+          'The Covered Bank Exposure under the Transaction (converted (as at the date this representation is made) for this purpose into the Base Currency) is not more than the lesser of: the Available Facility; and the Available Obligor Covered Exposure Limit.',
         answer: true,
       },
       {
         id: 14,
-        description: 'For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 3 months prior to the submission of this Inclusion Notice. For a loan Transaction, the loan has not yet been advanced.',
+        description:
+          'For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 3 months prior to the submission of this Inclusion Notice. For a loan Transaction, the loan has not yet been advanced.',
         answer: true,
       },
       {
@@ -56,17 +60,20 @@ const deal = {
       },
       {
         id: 16,
-        description: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco, gambling, coal, oil, gas or fossil fuel energy and the Bank is not aware that any of the information contained within it is inaccurate.',
+        description:
+          'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco, gambling, coal, oil, gas or fossil fuel energy and the Bank is not aware that any of the information contained within it is inaccurate.',
         answer: true,
       },
       {
         id: 17,
-        description: 'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate to any Relevant Person.',
+        description:
+          'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate to any Relevant Person.',
         answer: true,
       },
       {
         id: 18,
-        description: 'Any applicable fees, interest rate and/or Risk Margin Fee apply to the whole Cover Period of the Covered Transaction, and have been set in accordance with the Bank\'s normal pricing policies and include, if any, overall pricing requirements notified by UKEF.',
+        description:
+          "Any applicable fees, interest rate and/or Risk Margin Fee apply to the whole Cover Period of the Covered Transaction, and have been set in accordance with the Bank's normal pricing policies and include, if any, overall pricing requirements notified by UKEF.",
         answer: true,
       },
     ],

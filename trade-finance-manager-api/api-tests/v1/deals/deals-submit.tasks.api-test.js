@@ -4,11 +4,10 @@ jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
 
 jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
-  submitACBSIfAllPartiesHaveUrn: jest.fn(),
 }));
 
 const { format } = require('date-fns');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const CONSTANTS = require('../../../src/constants');
@@ -78,7 +77,7 @@ describe('/v1/deals', () => {
 
           const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((t) => t.id === firstTask.team.id);
 
-          expect(sendEmailApiSpy).toBeCalledTimes(3);
+          expect(sendEmailApiSpy).toHaveBeenCalledTimes(3);
 
           const expected = {
             templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,

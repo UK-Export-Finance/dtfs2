@@ -1,8 +1,8 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneDeal } = require('./get-deal.controller');
-const db = require('../../../../drivers/db-client');
-const { DB_COLLECTIONS } = require('../../../../constants');
+const db = require('../../../../drivers/db-client').default;
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -12,7 +12,7 @@ const withoutId = (obj) => {
 
 const updateDealStatus = async (dealId, status, existingDeal) => {
   if (ObjectId.isValid(dealId)) {
-    const dealsCollection = await db.getCollection(DB_COLLECTIONS.DEALS);
+    const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
     const previousStatus = existingDeal.status;
 
@@ -23,11 +23,10 @@ const updateDealStatus = async (dealId, status, existingDeal) => {
       previousStatus,
     };
 
-    const findAndUpdateResponse = await dealsCollection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(dealId) } },
-      $.flatten(withoutId(modifiedDeal)),
-      { returnNewDocument: true, returnDocument: 'after' }
-    );
+    const findAndUpdateResponse = await dealsCollection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(withoutId(modifiedDeal)), {
+      returnNewDocument: true,
+      returnDocument: 'after',
+    });
 
     console.info('Updated Portal BSS deal status from %s to %s', previousStatus, status);
 
@@ -37,28 +36,23 @@ const updateDealStatus = async (dealId, status, existingDeal) => {
 };
 exports.updateDealStatus = updateDealStatus;
 
-// eslint-disable-next-line consistent-return
 exports.updateDealStatusPut = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const dealId = req.params.id;
 
     const { status } = req.body;
 
-    await findOneDeal(dealId, async (existingDeal) => {
+    return await findOneDeal(dealId, async (existingDeal) => {
       if (existingDeal) {
         if (existingDeal.status === status) {
           return res.status(400).send();
         }
-        const updatedDeal = await updateDealStatus(
-          dealId,
-          status,
-          existingDeal,
-        );
+        const updatedDeal = await updateDealStatus(dealId, status, existingDeal);
         return res.status(200).json(updatedDeal);
       }
       return res.status(404).send({ status: 404, message: 'Deal not found' });
     });
-  } else {
-    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
+
+  return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
 };

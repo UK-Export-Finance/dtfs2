@@ -8,9 +8,7 @@ const ApiError = require('./errors/api.error');
 const FailedToDeleteBankError = require('./errors/failed-to-delete-bank.error');
 const FailedToGetBanksError = require('./errors/get-banks.error');
 
-const {
-  PORTAL_API_URL, PORTAL_API_KEY, TFM_API_URL, TFM_API_KEY
-} = process.env;
+const { PORTAL_API_URL, PORTAL_API_KEY, TFM_API_URL, TFM_API_KEY } = process.env;
 
 const createBank = async (bank, token) => {
   const response = await axios({

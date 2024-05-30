@@ -11,7 +11,7 @@ describe('auth controller', () => {
   };
 
   const mockError = {
-    message: 'mock error message'
+    message: 'mock error message',
   };
 
   describe('getLoginUrl()', () => {
@@ -63,7 +63,6 @@ describe('auth controller', () => {
     });
 
     it('should call authService.processSsoRedirect', () => {
-
       expect(authService.processSsoRedirect).toHaveBeenCalledTimes(1);
     });
 

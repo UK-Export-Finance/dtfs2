@@ -6,6 +6,20 @@ services:
     ports:
       - '3310:3310'
 
+  dtfs-sql:
+    build: ./libs/common/src/sql-db-connection
+    restart: always
+    environment:
+      - ACCEPT_EULA
+      - MSSQL_SA_PASSWORD
+      - SQL_DB_USERNAME
+      - SQL_DB_PASSWORD
+      - SQL_DB_NAME
+    ports:
+      - '1433:1433'
+    volumes:
+      - ./dtfs-sql-volume-dtfs-submissions:/data/db
+
   dtfs-submissions-data:
     image: mongo:5.0.5
     restart: always
@@ -25,6 +39,7 @@ services:
     image: dtfs/dtfs-central-api
     restart: always
     depends_on:
+      - dtfs-sql
       - dtfs-submissions-data
       - external-api
     ports:
@@ -51,7 +66,14 @@ services:
       - AUDIT_API_PASSWORD
       - CHANGE_STREAM_ENABLED
       - UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
+      - SQL_DB_HOST
+      - SQL_DB_PORT
+      - SQL_DB_USERNAME
+      - SQL_DB_PASSWORD
+      - SQL_DB_NAME
+      - SQL_DB_LOGGING_ENABLED
       - ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE
+      - DELETION_AUDIT_LOGS_TTL_SECONDS
     entrypoint: npx ts-node dtfs-central-api/src/index.ts
 
   trade-finance-manager-ui:
@@ -85,6 +107,9 @@ services:
       - RATE_LIMIT_THRESHOLD
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
       - AZURE_SSO_AUTHORITY
+      - CONTACT_US_SELF_SERVICE_PORTAL_URL
+      - CONTACT_US_EMAIL_ADDRESS
+      - FF_TFM_PAYMENT_RECONCILIATION_ENABLED
 
   trade-finance-manager-api:
     build:
@@ -140,7 +165,8 @@ services:
       - AZURE_SSO_GROUP_PIM
       - AZURE_SSO_GROUP_PDC_READ
       - AZURE_SSO_GROUP_PDC_RECONCILE
-
+      - CHANGE_STREAM_ENABLED
+      - DELETION_AUDIT_LOGS_TTL_SECONDS
     entrypoint: npx ts-node trade-finance-manager-api/src/index.ts
 
   portal:
@@ -177,8 +203,9 @@ services:
       - CLAMAV_PORT=3310
       - CLAMAV_HOST=clamav
       - CLAMAV_DEBUG_MODE_ENABLED=true
-      - CLAMAV_SCANNING_ENABLED=true
+      - CLAMAV_SCANNING_ENABLED
       - UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=1048576
+      - CONTACT_US_EMAIL_ADDRESS
 
   portal-api:
     build:
@@ -219,12 +246,18 @@ services:
       - TZ=Europe/London
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
-      - PDC_INPUTTERS_EMAIL_RECIPIENT
+      - UKEF_GEF_REPORTING_EMAIL_RECIPIENT
       - UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE
       - UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
       - UTILISATION_REPORT_DUE_EMAIL_SCHEDULE
       - UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE
+      - SQL_DB_HOST
+      - SQL_DB_PORT
+      - SQL_DB_USERNAME
+      - SQL_DB_PASSWORD
+      - SQL_DB_NAME
+      - SQL_DB_LOGGING_ENABLED
     entrypoint: npx ts-node portal-api/src/index.ts
 
   external-api:
@@ -300,6 +333,7 @@ services:
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - RATE_LIMIT_THRESHOLD
+      - CONTACT_US_EMAIL_ADDRESS
 
   redis:
     image: 'redis:alpine'

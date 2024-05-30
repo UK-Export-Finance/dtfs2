@@ -7,7 +7,7 @@ const MOCK_ENTRA_USER = {
     groups: [TEAMS.UNDERWRITING_SUPPORT.ssoGroupEnvVar],
     given_name: 'Sarah',
     family_name: 'Walker',
-  }
+  },
 };
 
 module.exports = MOCK_ENTRA_USER;

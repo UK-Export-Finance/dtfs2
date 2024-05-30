@@ -7,7 +7,7 @@ module.exports = {
       .calledWith(expect.anything())
       .mockImplementation(() => ({
         deals: dealsToReturn,
-        pagination: paginationToReturn
+        pagination: paginationToReturn,
       }));
-  }
+  },
 };

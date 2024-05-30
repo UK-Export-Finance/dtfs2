@@ -3,7 +3,10 @@ import * as api from './commands/api';
 Cypress.Commands.add('saveSession', require('./commands/saveSession'));
 
 Cypress.Commands.add('login', require('./commands/portal/login'));
-Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', require('./commands/portal/overridePortalUserSignInTokenWithValidTokenByUsername'));
+Cypress.Commands.add(
+  'overridePortalUserSignInTokenWithValidTokenByUsername',
+  require('./commands/portal/overridePortalUserSignInTokenWithValidTokenByUsername'),
+);
 Cypress.Commands.add('getUserByUsername', require('./commands/portal/getUserByUsername'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./commands/portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./commands/portal/enterUsernameAndPassword'));

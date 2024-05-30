@@ -1,6 +1,6 @@
 const { defineConfig } = require('cypress');
-const { createTasks } = require('../support/tasks');
 const path = require('path');
+const { createTasks } = require('../support/tasks');
 
 require('dotenv').config({ path: `${path.resolve(__dirname, '../..')}/.env` });
 
@@ -41,20 +41,17 @@ module.exports = defineConfig({
     baseUrl: 'http://localhost:5003',
     specPattern: 'cypress/e2e/**/*.spec.js',
     setupNodeEvents(on, config) {
-      const {
-        dbName,
-        dbConnectionString,
-        redisHost,
-        redisPort,
-        redisKey,
-      } = config;
-      on('task', createTasks({
-        dbName,
-        dbConnectionString,
-        redisHost,
-        redisPort,
-        redisKey,
-      }));
+      const { dbName, dbConnectionString, redisHost, redisPort, redisKey } = config;
+      on(
+        'task',
+        createTasks({
+          dbName,
+          dbConnectionString,
+          redisHost,
+          redisPort,
+          redisKey,
+        }),
+      );
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],

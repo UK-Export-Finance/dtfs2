@@ -1,4 +1,4 @@
-import { Role } from './role';
+import { Role } from '@ukef/dtfs2-common';
 import { Bank } from './bank';
 
 /**
@@ -15,4 +15,5 @@ export type PortalSessionUser = {
   bank: Bank;
   timezone: string;
   'user-status': string;
-}
+  isTrusted: boolean;
+};

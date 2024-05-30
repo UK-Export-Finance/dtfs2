@@ -43,7 +43,7 @@ describe('/v1/countries', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(urlToGetCountries),
-      makeRequestWithAuthHeader: (authHeader) => get(urlToGetCountries, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(urlToGetCountries, { headers: { Authorization: authHeader } }),
     });
 
     withNoRoleAuthorisationTests({
@@ -71,7 +71,7 @@ describe('/v1/countries', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(urlToGetGbrCountry),
-      makeRequestWithAuthHeader: (authHeader) => get(urlToGetGbrCountry, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(urlToGetGbrCountry, { headers: { Authorization: authHeader } }),
     });
 
     withNoRoleAuthorisationTests({
@@ -99,7 +99,7 @@ describe('/v1/countries', () => {
       expect(body).toEqual(dubai);
     });
 
-    it('returns 404 when country doesn\'t exist', async () => {
+    it("returns 404 when country doesn't exist", async () => {
       const { status } = await as(noRoles).get('/v1/countries/ABC');
 
       expect(status).toEqual(404);

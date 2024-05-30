@@ -6,7 +6,7 @@ const { EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 
 const headers = {
   'Content-Type': 'application/json',
-  'x-api-key': EXTERNAL_API_KEY,
+  'x-api-key': String(EXTERNAL_API_KEY),
 };
 
 /**
@@ -14,11 +14,12 @@ const headers = {
  * @param {string} companyRegistrationNumber
  * @returns {Promise<import('axios').AxiosResponse>}
  */
-const getCompanyProfileByCompanyRegistrationNumber = (companyRegistrationNumber) => axios({
-  method: 'get',
-  url: `${EXTERNAL_API_URL}/companies-house/${companyRegistrationNumber}`,
-  headers,
-});
+const getCompanyProfileByCompanyRegistrationNumber = (companyRegistrationNumber) =>
+  axios({
+    method: 'get',
+    url: `${EXTERNAL_API_URL}/companies-house/${companyRegistrationNumber}`,
+    headers,
+  });
 
 module.exports = {
   getCompanyProfileByCompanyRegistrationNumber,

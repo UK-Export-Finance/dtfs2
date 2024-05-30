@@ -11,7 +11,12 @@ const validateCommentField = (validationErrors, errorsCount, fieldLabel, fieldId
   if (value.length > CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS_MAX_COMMENT_LENGTH) {
     count = increment(count);
 
-    errors = generateValidationErrors(fieldId, `${fieldLabel} must be ${CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS_MAX_COMMENT_LENGTH} characters or fewer`, count, errors);
+    errors = generateValidationErrors(
+      fieldId,
+      `${fieldLabel} must be ${CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS_MAX_COMMENT_LENGTH} characters or fewer`,
+      count,
+      errors,
+    );
   }
 
   return {

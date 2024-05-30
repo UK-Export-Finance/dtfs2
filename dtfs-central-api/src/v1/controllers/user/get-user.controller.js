@@ -1,10 +1,10 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const db = require('../../../drivers/db-client');
-const { DB_COLLECTIONS } = require('../../../constants');
+const db = require('../../../drivers/db-client').default;
 
 const findOneUser = async (_id) => {
   if (ObjectId.isValid(_id)) {
-    const usersCollection = await db.getCollection(DB_COLLECTIONS.USERS);
+    const usersCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
     const user = await usersCollection.findOne({ _id: { $eq: ObjectId(_id) } });
 
@@ -24,6 +24,7 @@ exports.findOneUserGet = async (req, res) => {
 
     return res.status(404).send({ status: 404, message: 'User not found' });
   }
+
   return res.status(400).send({ status: 400, message: 'Invalid User Id' });
 };
 
@@ -38,13 +39,14 @@ const sanitizeUser = (user) => ({
   lastLogin: user.lastLogin,
   'user-status': user['user-status'],
   disabled: user.disabled,
+  isTrusted: user.isTrusted,
   _id: user._id,
 });
 
 const sanitizeUsers = (users) => users.map(sanitizeUser);
 
 const list = async (callback) => {
-  const collection = await db.getCollection(DB_COLLECTIONS.USERS);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   collection.find().toArray(callback);
 };

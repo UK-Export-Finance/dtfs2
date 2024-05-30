@@ -7,7 +7,7 @@ const dealsRoutes = require('./deals');
 const facilitiesRoutes = require('./facilities');
 const feedbackRoutes = require('./feedback');
 const thankYouFeedbackRoutes = require('./feedback-thank-you');
-const utilisationReportsRoutes = require('./utilisation-reports');
+const { utilisationReportsRoutes } = require('./utilisation-reports');
 const footerRoutes = require('./footer');
 
 const { validateUser } = require('../middleware');

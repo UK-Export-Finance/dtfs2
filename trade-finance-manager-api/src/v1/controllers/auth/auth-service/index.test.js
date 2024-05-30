@@ -17,14 +17,14 @@ const mockToken = 'mock-token';
 const mockRedirectUrl = 'mock-url';
 
 jest.mock('./issue-jwt-and-update-user', () => ({
-  issueJwtAndUpdateUser: jest.fn().mockResolvedValue('mock-token')
+  issueJwtAndUpdateUser: jest.fn().mockResolvedValue('mock-token'),
 }));
 
 const mockState = cryptoProvider.base64Encode(
   JSON.stringify({
     csrfToken: mockToken,
     redirectTo: '/',
-  })
+  }),
 );
 
 const baseParams = {
@@ -35,7 +35,7 @@ const baseParams = {
 };
 
 describe('auth-service/index', () => {
-  describe('processSsoRedirect',()=> {
+  describe('processSsoRedirect', () => {
     let result;
 
     beforeAll(async () => {
@@ -48,9 +48,7 @@ describe('auth-service/index', () => {
 
     it('should call authProvider.handleRedirect with the provided params', () => {
       expect(authProvider.handleRedirect).toHaveBeenCalledTimes(1);
-      expect(authProvider.handleRedirect).toHaveBeenCalledWith(
-        mockPkceCodes, mockAuthCodeRequest, mockCode
-      );
+      expect(authProvider.handleRedirect).toHaveBeenCalledWith(mockPkceCodes, mockAuthCodeRequest, mockCode);
     });
 
     it('should call tfmUser.getOrCreate with the retrieved Entra user', () => {

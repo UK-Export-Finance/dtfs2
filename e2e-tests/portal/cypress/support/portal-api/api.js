@@ -21,7 +21,8 @@ const completeLoginWithSignInLink = ({ token2fa, username }) => {
       .then((signInLinkResponse) => {
         expect(signInLinkResponse.status).to.equal(200);
         return signInLinkResponse.body.token;
-      }));
+      }),
+  );
 };
 module.exports.logIn = ({ username, password }) => {
   cy.resetPortalUserStatusAndNumberOfSignInLinks(username);

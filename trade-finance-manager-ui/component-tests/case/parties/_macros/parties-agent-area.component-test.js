@@ -85,43 +85,37 @@ describe(page, () => {
   it('should render agent address country', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="agent-address-country"]')
-      .toRead(params.deal.eligibility.agentAddressCountry.name);
+    wrapper.expectText('[data-cy="agent-address-country"]').toRead(params.deal.eligibility.agentAddressCountry.name);
   });
 
   it('should render agent agentAddressLine1 in address', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="agent-address"]')
-      .toContain(params.deal.eligibility.agentAddressLine1);
+    wrapper.expectText('[data-cy="agent-address"]').toContain(params.deal.eligibility.agentAddressLine1);
   });
 
   it('should render agent agentAddressLine2 in address', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="agent-address"]')
-      .toContain(params.deal.eligibility.agentAddressLine2);
+    wrapper.expectText('[data-cy="agent-address"]').toContain(params.deal.eligibility.agentAddressLine2);
   });
 
   it('should render agent agentAddressLine3 in address', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="agent-address"]')
-      .toContain(params.deal.eligibility.agentAddressLine3);
+    wrapper.expectText('[data-cy="agent-address"]').toContain(params.deal.eligibility.agentAddressLine3);
   });
 
   it('should render agent agentAddressTown in address', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="agent-address"]')
-      .toContain(params.deal.eligibility.agentAddressTown);
+    wrapper.expectText('[data-cy="agent-address"]').toContain(params.deal.eligibility.agentAddressTown);
   });
 
   it('should render agent agentAddressPostcode in address', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="agent-address"]')
-      .toContain(params.deal.eligibility.agentAddressPostcode);
+    wrapper.expectText('[data-cy="agent-address"]').toContain(params.deal.eligibility.agentAddressPostcode);
   });
 
   it('should render agent name', () => {

@@ -1,12 +1,5 @@
-import { TEAM_IDS } from '../../../constants';
-import {
-  userCanEdit,
-  bondType,
-  isBondPartyType,
-  constructErrRef,
-  isEmptyString,
-  partyType,
-} from './helpers';
+import { TEAM_IDS } from '@ukef/dtfs2-common';
+import { userCanEdit, bondType, isBondPartyType, constructErrRef, isEmptyString, partyType } from './helpers';
 
 describe('case - parties - helpers', () => {
   describe('userCanEdit', () => {

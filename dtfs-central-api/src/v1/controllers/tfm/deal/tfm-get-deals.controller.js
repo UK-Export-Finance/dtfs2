@@ -1,20 +1,16 @@
-const { isValid, format } = require('date-fns');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const escapeStringRegexp = require('escape-string-regexp');
-const { getDateFromSearchString } = require("../../../../helpers/getDateFromSearchString");
-const db = require('../../../../drivers/db-client');
+const { isValid, format } = require('date-fns');
+const { getDateFromSearchString } = require('../../../../helpers/getDateFromSearchString');
+const db = require('../../../../drivers/db-client').default;
 const CONSTANTS = require('../../../../constants');
-const {
-  isTimestampField,
-  dayStartAndEndTimestamps,
-} = require('./tfm-get-deals-date-helpers');
+const { isTimestampField, dayStartAndEndTimestamps } = require('./tfm-get-deals-date-helpers');
 const { getBSSProperty } = require('../../../../mapping/mapDataModel');
 
 const findDeals = async (queryParameters) => {
-  const dealsCollection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_DEALS);
+  const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
 
-  const {
-    searchString, sortBy, fieldQueries, pagesize, page = 0
-  } = queryParameters;
+  const { searchString, sortBy, fieldQueries, pagesize, page = 0 } = queryParameters;
 
   const pageNumber = Number(page);
 
@@ -120,9 +116,9 @@ const findDeals = async (queryParameters) => {
               if: { $eq: ['$dealSnapshot.dealType', CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS] },
               then: sortBy ? `$${bssField}` : undefined,
               else: sortBy ? `$${nonBssField}` : undefined,
-            }
-          }
-        }
+            },
+          },
+        },
       },
       {
         $sort: {
@@ -132,7 +128,7 @@ const findDeals = async (queryParameters) => {
         },
       },
       {
-        $unset: 'sortId'
+        $unset: 'sortId',
       },
       {
         $facet: {

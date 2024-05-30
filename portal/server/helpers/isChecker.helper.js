@@ -1,4 +1,4 @@
-const { ROLES } = require('../constants');
+const { ROLES } = require('@ukef/dtfs2-common');
 const { equalArrays } = require('./equalArrays.helper');
 
 const { CHECKER } = ROLES;

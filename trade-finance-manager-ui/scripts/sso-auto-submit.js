@@ -22,8 +22,8 @@ const safeReferrer = (hostname, referrer) => {
   }
 
   console.error('sso auto submit - referrer check failed because referrer is %s', referrer);
-  return false
-}
+  return false;
+};
 
 if (ssoForm && safeReferrer(window.location.hostname, document.referrer)) {
   ssoForm.submit();

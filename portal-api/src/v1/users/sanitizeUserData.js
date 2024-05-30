@@ -9,6 +9,7 @@ const sanitizeUser = (user) => ({
   lastLogin: user.lastLogin,
   'user-status': user['user-status'],
   disabled: user.disabled,
+  isTrusted: user.isTrusted,
   signInLinkSendDate: user.signInLinkSendDate,
   signInLinkSendCount: user.signInLinkSendCount,
   _id: user._id,

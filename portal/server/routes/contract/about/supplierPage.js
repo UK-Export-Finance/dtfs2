@@ -1,9 +1,10 @@
 const express = require('express');
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { requestParams, mapCountries, mapIndustrySectors, mapIndustryClasses, errorHref, generateErrorSummary, constructPayload } = require('../../../helpers');
-
 const { provide, DEAL, INDUSTRY_SECTORS, COUNTRIES } = require('../../api-data-provider');
-
 const updateSubmissionDetails = require('./updateSubmissionDetails');
 const calculateStatusOfEachPage = require('./navStatusCalculations');
 const aboutTaskList = require('./aboutTaskList');
@@ -11,9 +12,6 @@ const { supplierValidationErrors } = require('./pageSpecificValidationErrors');
 const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
 const industryFields = require('./industryFields');
 const { validateRole } = require('../../middleware');
-const {
-  ROLES: { MAKER },
-} = require('../../../constants');
 const { isValidCompaniesHouseNumber } = require('../../../validation/validate-ids');
 
 const router = express.Router();

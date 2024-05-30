@@ -8,23 +8,16 @@ import { asLoggedInUserSession } from '../../../helpers/express-session';
  * normally contain the `file` property, hence
  * hand-rolling the following type definition
  */
-export type GetUploadErrorsRequest = Request & ({
-  file: {
+export type GetUploadErrorsRequest = Request & {
+  file?: {
     originalname: string;
   };
-  session: {
-    utilisationReport: {
-      formattedReportPeriod: string;
-    };
-  };
-} | {
-  file: undefined;
-});
+};
 
 /**
  * The response type we pass in here is a non-standard
  * express `Response` as the response object does not
- * normally contain the `locals` property, hence 
+ * normally contain the `locals` property, hence
  * hand-rolling the following type definition
  */
 export type GetUploadErrorsResponse = Response & {
@@ -79,9 +72,9 @@ export const getUploadErrors = (req: GetUploadErrorsRequest, res: GetUploadError
     return { uploadErrorSummary, uploadValidationError };
   }
 
-  const { formattedReportPeriod } = asLoggedInUserSession(req.session).utilisationReport!;
+  const { reportPeriod } = asLoggedInUserSession(req.session).utilisationReport!;
   const filename = req.file.originalname;
-  const { filenameError } = validateFilenameFormat(filename, formattedReportPeriod);
+  const { filenameError } = validateFilenameFormat(filename, reportPeriod);
   if (filenameError) {
     const uploadErrorSummary = [{ text: filenameError, href }];
     const uploadValidationError = { text: filenameError };

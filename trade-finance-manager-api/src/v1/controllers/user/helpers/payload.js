@@ -5,10 +5,7 @@
  * @returns {Boolean} Whether payload matches template
  */
 const payloadVerification = (payload, template) => {
-  if (!payload
-    || !template
-    || !Object.keys(payload).length
-    || !Object.keys(template).length) {
+  if (!payload || !template || !Object.keys(payload).length || !Object.keys(template).length) {
     console.error('Payload verification error - no data');
     return false;
   }
@@ -17,10 +14,10 @@ const payloadVerification = (payload, template) => {
   const templateKeys = Object.keys(template);
 
   // 1. Properties key validation
-  const missingProperties = templateKeys.filter(x => !payloadKeys.includes(x));
+  const missingProperties = templateKeys.filter((x) => !payloadKeys.includes(x));
 
   // 2. Ensure no additional properties
-  const extraProperties = payloadKeys.filter(x => !templateKeys.includes(x));
+  const extraProperties = payloadKeys.filter((x) => !templateKeys.includes(x));
 
   // 3. Properties data type validation
   const propertiesDataTypeMatch = payloadKeys.every((key) => {
@@ -29,7 +26,9 @@ const payloadVerification = (payload, template) => {
     const keysHaveMatchingTypes = payloadKeyDataType.toLowerCase() === templateKeyDataType.toLowerCase();
 
     if (!keysHaveMatchingTypes) {
-      console.error(`Payload verification error - type mismatch for field "${key}": payload type "${payloadKeyDataType}", template type "${templateKeyDataType}"`);
+      console.error(
+        `Payload verification error - type mismatch for field "${key}": payload type "${payloadKeyDataType}", template type "${templateKeyDataType}"`,
+      );
     }
 
     return keysHaveMatchingTypes;

@@ -27,4 +27,4 @@ exports.processSsoRedirect = async (req, res) => {
   }
 };
 
-exports.getLogoutUrl = (req, res) => res.status(200).send({logoutUrl: authProvider.getLogoutUrl()});
+exports.getLogoutUrl = (req, res) => res.status(200).send({ logoutUrl: authProvider.getLogoutUrl() });

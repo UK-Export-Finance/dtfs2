@@ -33,7 +33,9 @@ describe('PUT /deals/:dealId/underwriting/lead-underwriter', () => {
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => put(VALID_URL_TO_UPDATE_LEAD_UNDERWRITER, VALID_LEAD_UNDERWRITER_UPDATE),
     makeRequestWithAuthHeader: (authHeader) =>
-      put(VALID_URL_TO_UPDATE_LEAD_UNDERWRITER, VALID_LEAD_UNDERWRITER_UPDATE, { headers: { Authorization: authHeader } }),
+      put(VALID_URL_TO_UPDATE_LEAD_UNDERWRITER, VALID_LEAD_UNDERWRITER_UPDATE, {
+        headers: { Authorization: authHeader },
+      }),
   });
 
   it('should return updated leadUnderwriter', async () => {
@@ -58,7 +60,15 @@ describe('PUT /deals/:dealId/underwriting/lead-underwriter', () => {
 
     expect(status).toBe(400);
     expect(body).toEqual({
-      errors: [{ location: 'params', msg: 'The Deal ID (dealId) provided should be a Mongo ID', path: 'dealId', type: 'field', value: 'InvalidDealId' }],
+      errors: [
+        {
+          location: 'params',
+          msg: 'The Deal ID (dealId) provided should be a Mongo ID',
+          path: 'dealId',
+          type: 'field',
+          value: 'InvalidDealId',
+        },
+      ],
       status: 400,
     });
   });

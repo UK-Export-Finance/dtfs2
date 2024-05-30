@@ -2,9 +2,8 @@ const { mapFirstAndLastName } = require('./map-first-and-last-name');
 const MOCK_ENTRA_USER = require('../../../__mocks__/mock-entra-user');
 const { MOCK_TFM_SESSION_USER } = require('../../../__mocks__/mock-tfm-session-user');
 
-
 describe('auth-service/map-first-and-last-name', () => {
-  const entraClaimsWithNullForNames = { ...MOCK_ENTRA_USER.idTokenClaims, ...{ given_name: null, family_name: null }};
+  const entraClaimsWithNullForNames = { ...MOCK_ENTRA_USER.idTokenClaims, ...{ given_name: null, family_name: null } };
 
   describe('mapFirstAndLastName', () => {
     it('returns a firstName and lastName from Entra claims', () => {
@@ -23,9 +22,8 @@ describe('auth-service/map-first-and-last-name', () => {
       expect(result).toEqual(expected);
     });
 
-
     it('returns default firstName and lastName', () => {
-      const result = mapFirstAndLastName(entraClaimsWithNullForNames, {...MOCK_TFM_SESSION_USER, ...{ firstName: null, lastName: null}});
+      const result = mapFirstAndLastName(entraClaimsWithNullForNames, { ...MOCK_TFM_SESSION_USER, ...{ firstName: null, lastName: null } });
 
       const expected = { firstName: 'No name', lastName: 'No surname' };
 
@@ -41,7 +39,10 @@ describe('auth-service/map-first-and-last-name', () => {
     });
 
     it('returns default firstName and lastName for empty strings', () => {
-      const result = mapFirstAndLastName({...MOCK_ENTRA_USER.idTokenClaims, ...{ given_name: '', family_name: '' }}, {...MOCK_TFM_SESSION_USER, ...{ firstName: '', lastName: ''}});
+      const result = mapFirstAndLastName(
+        { ...MOCK_ENTRA_USER.idTokenClaims, ...{ given_name: '', family_name: '' } },
+        { ...MOCK_TFM_SESSION_USER, ...{ firstName: '', lastName: '' } },
+      );
 
       const expected = { firstName: 'No name', lastName: 'No surname' };
 
@@ -49,7 +50,7 @@ describe('auth-service/map-first-and-last-name', () => {
     });
 
     it('returns a first name from session user and lastName from Entra claims', () => {
-      const result = mapFirstAndLastName({ ...MOCK_ENTRA_USER.idTokenClaims, ...{ given_name: null }}, MOCK_TFM_SESSION_USER);
+      const result = mapFirstAndLastName({ ...MOCK_ENTRA_USER.idTokenClaims, ...{ given_name: null } }, MOCK_TFM_SESSION_USER);
 
       const expected = { firstName: 'Test', lastName: 'Walker' };
 
@@ -57,7 +58,7 @@ describe('auth-service/map-first-and-last-name', () => {
     });
 
     it('returns a first name from Entra claims and lastName from session user', () => {
-      const result = mapFirstAndLastName({ ...MOCK_ENTRA_USER.idTokenClaims, ...{ family_name: null }}, MOCK_TFM_SESSION_USER);
+      const result = mapFirstAndLastName({ ...MOCK_ENTRA_USER.idTokenClaims, ...{ family_name: null } }, MOCK_TFM_SESSION_USER);
 
       const expected = { firstName: 'Sarah', lastName: 'User' };
 
@@ -65,7 +66,7 @@ describe('auth-service/map-first-and-last-name', () => {
     });
 
     it('returns default first name and lastName from Entra claims', () => {
-      const result = mapFirstAndLastName({ ...MOCK_ENTRA_USER.idTokenClaims, ...{ given_name: null }}, { ...MOCK_TFM_SESSION_USER, ...{ firstName: null }});
+      const result = mapFirstAndLastName({ ...MOCK_ENTRA_USER.idTokenClaims, ...{ given_name: null } }, { ...MOCK_TFM_SESSION_USER, ...{ firstName: null } });
 
       const expected = { firstName: 'No name', lastName: 'Walker' };
 
@@ -73,7 +74,7 @@ describe('auth-service/map-first-and-last-name', () => {
     });
 
     it('returns first name from Entra claims and default lastName', () => {
-      const result = mapFirstAndLastName({ ...MOCK_ENTRA_USER.idTokenClaims, ...{ family_name: null }}, { ...MOCK_TFM_SESSION_USER, ...{ lastName: null}});
+      const result = mapFirstAndLastName({ ...MOCK_ENTRA_USER.idTokenClaims, ...{ family_name: null } }, { ...MOCK_TFM_SESSION_USER, ...{ lastName: null } });
 
       const expected = { firstName: 'Sarah', lastName: 'No surname' };
 

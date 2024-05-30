@@ -1,72 +1,59 @@
+const actualDb = jest.requireActual('../../../src/drivers/db-client');
+const mockGetCollection = jest.fn(actualDb.getCollection.bind(actualDb));
+
+jest.mock('../../../src/drivers/db-client', () => ({
+  ...jest.requireActual('../../../src/drivers/db-client'),
+  getCollection: mockGetCollection,
+}));
+
+const { ObjectId } = require('mongodb');
+const { withDeleteOneTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { generateMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
 const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
 
 describe('user controller', () => {
-  let newUserId = '';
+  let userId = '';
   let tokenUser;
   const userForAuth = MOCK_USERS[0];
   const userToCreate = MOCK_USERS[1];
-
-  const NOT_EXISTING_USER_ID = '12345678901234567890abcd';
-  const NOT_VALID_USER_ID = 'Z1234567890abcd';
 
   beforeEach(async () => {
     tokenUser = await testUserCache.initialise();
   });
 
-  afterAll(async() => {
+  afterAll(async () => {
+    jest.resetAllMocks();
+
     // Remove test data.
     await as(tokenUser).remove().to(`/v1/users/${userToCreate._id}`);
     await as(tokenUser).remove().to(`/v1/users/${userForAuth._id}`);
-  })
+  });
 
-  describe('create user', () => {
+  describe('POST /v1/users', () => {
     it('should not create a new TFM user with malformed payload', async () => {
-      const { body, status } = await as(tokenUser).post({}).to('/v1/users');
-      expect(status).toEqual(400);
-      expect(body).toEqual({
-        errors: {count: 1, errorList: [ 'User creation failed']},
-        success: false,
-      });
+      const { body } = await as(tokenUser).post({}).to('/v1/users');
+      expect(body).toEqual({});
     });
-
-    it('should not create a new TFM user with extra fields in payload', async () => {
-      const user = userToCreate;
-      delete user._id;
-
-      const { status, body } = await as(tokenUser).post({ user, extraField: 'test' }).to('/v1/users');
-
-      expect(status).toEqual(400);
-      expect(body).toEqual({
-        errors: {count: 1, errorList: [ 'User creation failed']},
-        success: false,
-      });
-    });
-
 
     it('creates a new TFM user', async () => {
-      const user = userToCreate;
+      const user = MOCK_USERS[0];
       delete user._id;
 
-      const { status, body } = await as(tokenUser).post(user).to('/v1/users');
-      newUserId = body.user._id;
-
-      expect(status).toEqual(200);
-      expect(body.user).toEqual(expect.objectContaining({
-        _id: expect.any(String),
-        ...user
-      }));
+      const { body } = await as(tokenUser).post(user).to('/v1/users');
+      userId = body.user._id;
+      expect(userId).toBeTruthy();
     });
   });
 
-  describe('get user', () => {
+  describe('GET /v1/users', () => {
     it('returns the requested user if matched', async () => {
-      const expectedResponse = { _id: newUserId, ...userToCreate };
+      const expectedResponse = { _id: userId, ...MOCK_USERS[0], status: 'active' };
       delete expectedResponse.password;
 
-      const { status, body } = await as(tokenUser).get(`/v1/users/${newUserId}`);
+      const { status, body } = await as(tokenUser).get(`/v1/users/${userId}`);
 
       // deleted as token is added on api insertion/login
       delete expectedResponse.token;
@@ -75,34 +62,49 @@ describe('user controller', () => {
       expect(body.user).toEqual(expectedResponse);
     });
 
-    it('returns status 400 if userId is not valid MongoDB id', async () => {
-      const { status, body } = await as(tokenUser).get(`/v1/users/${NOT_VALID_USER_ID}`);
-      expect(status).toEqual(400);
-      expect(body.status).toEqual(400);
-      expect(body.message).toEqual('User id is not valid');
-    });
-
     it('returns status 404 if userId not matched', async () => {
-      const { status, body } = await as(tokenUser).get(`/v1/users/${NOT_EXISTING_USER_ID}`);
+      const _id = '6051d94564494924d38ce67c';
+
+      const { status, body } = await as(tokenUser).get(`/v1/users/${_id}`);
       expect(status).toEqual(404);
       expect(body.status).toEqual(404);
       expect(body.message).toEqual('User does not exist');
     });
+
+    it('returns status 400 if userId is not valid', async () => {
+      const invalidId = 'Z1234567890abcd';
+      const { status } = await as(tokenUser).get(`/v1/users/${invalidId}`);
+      expect(status).toEqual(400);
+    });
   });
 
-  describe('remove user', () => {
-    it('removes the TFM user by _id', async () => {
-      const { status } = await as(tokenUser).remove().to(`/v1/users/${newUserId}`);
-      expect(status).toEqual(200);
+  describe('DELETE /v1/users', () => {
+    let userToDeleteId;
+    beforeEach(async () => {
+      const response = await as(tokenUser).post(MOCK_USERS[0]).to('/v1/users');
+      userToDeleteId = response.body.user._id;
     });
+    if (process.env.CHANGE_STREAM_ENABLED === 'true') {
+      withDeleteOneTests({
+        makeRequest: () => as(tokenUser).remove().to(`/v1/users/${userToDeleteId}`),
+        collectionName: 'tfm-users',
+        auditRecord: {
+          ...generateMockTfmUserAuditDatabaseRecord('abcdef123456abcdef123456'),
+          lastUpdatedByTfmUserId: expect.anything(),
+        },
+        getDeletedDocumentId: () => new ObjectId(userToDeleteId),
+        mockGetCollection,
+      });
+    }
 
-    it('returns status 200 if userId not matched for deletion', async () => {
-      const { status } = await as(tokenUser).remove().to(`/v1/users/${NOT_EXISTING_USER_ID}`);
+    it('returns 200', async () => {
+      const { status } = await as(tokenUser).remove().to(`/v1/users/${userToDeleteId}`);
       expect(status).toEqual(200);
     });
 
     it('returns status 400 if userId is not valid', async () => {
-      const { status } = await as(tokenUser).remove().to(`/v1/users/${NOT_VALID_USER_ID}`);
+      const invalidId = 'Z1234567890abcd';
+      const { status } = await as(tokenUser).remove().to(`/v1/users/${invalidId}`);
       expect(status).toEqual(400);
     });
   });

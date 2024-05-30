@@ -11,7 +11,7 @@ describe('updatePortalDealStatus', () => {
 
   afterEach(() => {
     jest.resetAllMocks();
-  })
+  });
 
   it('should update portal deal status to IN_PROGRESS_BY_UKEF for MIA submission type and BSS_EWCS deal type', async () => {
     const deal = {

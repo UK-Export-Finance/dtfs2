@@ -7,9 +7,9 @@ export type AzureUserInfoResponseAccount = {
   username: string;
   localAccountId: string;
   name: string;
-  nativeAccountId: string|undefined,
+  nativeAccountId: string | undefined;
   authorityType: string;
-  tenantProfiles: object,
+  tenantProfiles: object;
   idTokenClaims: AzureIdTokenClaims;
   idToken: string;
 };

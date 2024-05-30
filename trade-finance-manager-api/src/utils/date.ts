@@ -1,8 +1,8 @@
-import { format, formatISO, isValid, parseISO, set, startOfDay } from 'date-fns';
-import { IsoDayStamp, IsoMonthStamp, UnixTimestampString } from '../types/date';
+import { UnixTimestampString, IsoDayStamp } from '@ukef/dtfs2-common';
+import { format, formatISO, isValid, set, startOfDay } from 'date-fns';
 
 /**
- * @param date 
+ * @param date
  * @returns Date as Unix timestamp representing the number of milliseconds between this date and 1st
  * January 1970 (UTC), stored as a string.
  */
@@ -21,14 +21,14 @@ export const getNowAsEpochMillisecondString = (): UnixTimestampString => getDate
 export const formatYear = (year: string | number) => (Number(year) < 1000 ? (2000 + parseInt(String(year), 10)).toString() : year && year.toString());
 
 /**
- * @param date 
+ * @param date
  * @returns date formatted as `yyyy-MM-dd` or 'Invalid date' if not a valid format
  */
-export const formatDate = (date: Date): IsoDayStamp => isValid(date) ? format(date, 'yyyy-MM-dd') : 'Invalid date'
+export const formatDate = (date: Date): IsoDayStamp => (isValid(date) ? format(date, 'yyyy-MM-dd') : 'Invalid date');
 
 /**
  * @param dateStr Unix timestamp representing number of milliseconds between this date and 1st January 1970 (UTC),
- * stored as a string 
+ * stored as a string
  * @returns date formatted as `yyyy-MM-dd` or 'Invalid date' if not a number
  */
 export const formatTimestamp = (dateStr: string): IsoDayStamp => {
@@ -38,19 +38,11 @@ export const formatTimestamp = (dateStr: string): IsoDayStamp => {
 };
 
 /**
- * @param dateStr an ISO-8601 (or other) date string 
+ * @param dateStr an ISO-8601 (or other) date string
  * @returns Unix timestamp representing number of milliseconds between this date and 1st January 1970 (UTC),
  * stored as a string
  */
 export const convertDateToTimestamp = (dateStr: string): UnixTimestampString => getDateAsEpochMillisecondString(new Date(dateStr));
-
-const ISO_MONTH_REGEX = /^\d{4}-\d{2}$/;
-/**
- * Checks whether the provided value is an ISO month string in format 'yyyy-MM'
- * @param value - the value to test
- * @returns
- */
-export const isValidIsoMonth = (value: unknown): value is IsoMonthStamp => typeof value === 'string' && ISO_MONTH_REGEX.test(value) && isValid(parseISO(value));
 
 /**
  * @param day the day of the month as a string
@@ -71,7 +63,7 @@ export const getDateFromDayMonthYearStrings = (day: string, month: string, year:
  * @param month month of the year as a string, starting at `1` = January
  * @param year year as a string
  * @returns start of the date
- * 
+ *
  * This function has odd behaviour inherited from moment js:
  *  - If the month is invalid return NaN
  *  - If the day/year is invalid, use the current day/year instead
@@ -91,8 +83,8 @@ export const getDateFromDayMonthYearStringsReplicatingMoment = (day: string, mon
 
 /**
  * @param date
- * @returns ISO-8601 string with a UTC offset e.g. 2024-03-01T13:52:20+00:00 
- * 
+ * @returns ISO-8601 string with a UTC offset e.g. 2024-03-01T13:52:20+00:00
+ *
  * This is needed to maintain exact consistency with old moment behaviour:
  *  - `moment().format()` returns an ISO-8601 string with an offset, e.g. '+00:00'
  *  - `formatISO()` returns an ISO-8601 string with a 'Z' if the timezone is UTC

@@ -1,4 +1,4 @@
-const { UTILISATION_REPORT_HEADERS } = require('../../../../constants');
+const { UTILISATION_REPORT_HEADERS } = require('@ukef/dtfs2-common');
 const { FILE_UPLOAD } = require('../../../../constants/file-upload');
 const { EXCHANGE_RATE_REGEX } = require('../../../../constants/regex');
 
@@ -9,14 +9,27 @@ const { EXCHANGE_RATE_REGEX } = require('../../../../constants/regex');
  */
 const generateTotalFeesAccruedExchangeRateError = (csvDataRow) => {
   if (
-    !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value ||
-    csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]?.value
+    !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value &&
+    (!csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value ||
+      csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]?.value)
   ) {
     return null;
   }
   if (!csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value) {
     return {
       errorMessage: 'Accrual exchange rate must have an entry when an accrual currency is supplied',
+      column: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.column,
+      row: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.row,
+      value: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value,
+      exporter: csvDataRow[UTILISATION_REPORT_HEADERS.EXPORTER]?.value,
+    };
+  }
+  if (
+    csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]?.value &&
+    parseFloat(csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value) !== 1
+  ) {
+    return {
+      errorMessage: 'Accrual exchange rate must be 1 or blank when accrual currency and base currency are the same',
       column: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.column,
       row: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.row,
       value: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value,

@@ -110,12 +110,7 @@ describe('mapFacility', () => {
 
     const expectedFirstDrawdownAmountInExportCurrency = mapFirstDrawdownAmountInExportCurrency(facilityLatest.facilitySnapshot);
 
-    const expectedDates = mapDates(
-      facilityLatest,
-      facilityLatest.facilitySnapshot,
-      mockTfmFacility,
-      mockDealDetails,
-    );
+    const expectedDates = mapDates(facilityLatest, facilityLatest.facilitySnapshot, mockTfmFacility, mockDealDetails);
 
     const expected = {
       _id: mockFacility._id,

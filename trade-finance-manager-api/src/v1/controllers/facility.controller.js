@@ -1,6 +1,6 @@
 const { format, getUnixTime } = require('date-fns');
 const commaNumber = require('comma-number');
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../api');
 const { findOneTfmDeal } = require('./deal.controller');
 const facilityMapper = require('../rest-mappings/facility');
@@ -20,7 +20,7 @@ const getFacility = async (req, res) => {
     const tfmFacility = facilityMapper(facility, dealSnapshot, dealTfm);
 
     return res.status(200).send({
-      facility: tfmFacility
+      facility: tfmFacility,
     });
   } catch (error) {
     console.error('Error fetching facility %o', error);
@@ -92,9 +92,13 @@ const updateFacility = async (req, res) => {
   const { facilityId } = req.params;
   const facilityUpdate = req.body;
   try {
-    const updatedFacility = await api.updateFacility({ facilityId, tfmUpdate: facilityUpdate, auditDetails: generateTfmAuditDetails(req.user._id)});
+    const updatedFacility = await api.updateFacility({
+      facilityId,
+      tfmUpdate: facilityUpdate,
+      auditDetails: generateTfmAuditDetails(req.user._id),
+    });
     return res.status(200).send({
-      updateFacility: updatedFacility.tfm
+      updateFacility: updatedFacility.tfm,
     });
   } catch (error) {
     console.error('Unable to update facility %o', error);
@@ -111,8 +115,6 @@ const getAllFacilities = async (searchString) => {
   const allFacilities = await api.getAllFacilities(searchString);
   return allFacilities;
 };
-
-
 
 module.exports = {
   getFacility,

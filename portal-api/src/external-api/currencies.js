@@ -8,7 +8,7 @@ const { EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 
 const headers = {
   'Content-Type': 'application/json',
-  'x-api-key': EXTERNAL_API_KEY,
+  'x-api-key': String(EXTERNAL_API_KEY),
 };
 
 const getCurrencies = async () => {
@@ -28,7 +28,7 @@ const getCurrency = async (id) => {
   if (!isValidCurrencyCode(id)) {
     console.error('currencies.getCurrency: invalid code provided %s', id);
     return {
-      status: 400
+      status: 400,
     };
   }
 

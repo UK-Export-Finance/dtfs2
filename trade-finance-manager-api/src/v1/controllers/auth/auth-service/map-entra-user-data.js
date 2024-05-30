@@ -1,10 +1,10 @@
 const { getTfmRolesFromEntraGroups } = require('../../../helpers/get-tfm-roles-from-entra-groups');
-const { mapFirstAndLastName } =  require('./map-first-and-last-name');
+const { mapFirstAndLastName } = require('./map-first-and-last-name');
 const { DATE } = require('../../../../constants');
 
 /**
  * Map Entra user data
- * @param {Object} entraUser: Entra user data 
+ * @param {Object} entraUser: Entra user data
  * @param {Object} tfmUser: Optional TFM user object.
  * @returns {Object} Mapped user data
  */

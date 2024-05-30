@@ -1,7 +1,6 @@
 import httpMocks from 'node-mocks-http';
+import { PDC_TEAM_IDS, NON_PDC_TEAM_IDS, TeamId } from '@ukef/dtfs2-common';
 import * as homeController from '.';
-import { PDC_TEAM_IDS, NON_PDC_TEAM_IDS } from '../../constants';
-import { TeamId } from '../../types/team-id';
 
 describe('controllers - home', () => {
   const getHttpMocksWithTeams = (...teamIds: TeamId[]) =>
@@ -30,9 +29,9 @@ describe('controllers - home', () => {
   }));
 
   const nonPdcTeams = Object.values(NON_PDC_TEAM_IDS).map((id) => ({
-      id,
-      redirectLocation: '/deals',
-    }));
+    id,
+    redirectLocation: '/deals',
+  }));
 
   it.each([...pdcTeams, ...nonPdcTeams])("should redirect to $redirectLocation if the user is in the '$id' team", (team) => {
     // Arrange

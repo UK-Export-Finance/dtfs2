@@ -46,14 +46,16 @@ describe('/v1/deals/:id/status', () => {
     let urlToGetDealStatus;
 
     beforeAll(async () => {
-      const { body: { _id: createdDealId } } = await as(aBarclaysMaker).post(completedDeal).to('/v1/deals');
+      const {
+        body: { _id: createdDealId },
+      } = await as(aBarclaysMaker).post(completedDeal).to('/v1/deals');
       dealId = createdDealId;
       urlToGetDealStatus = dealStatusUrl(dealId);
     });
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(urlToGetDealStatus),
-      makeRequestWithAuthHeader: (authHeader) => get(urlToGetDealStatus, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(urlToGetDealStatus, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -103,7 +105,9 @@ describe('/v1/deals/:id/status', () => {
 
       api.tfmDealSubmit = () => Promise.resolve();
 
-      const { body: { _id: createdDealId } } = await as(aBarclaysMaker).post(completedDeal).to('/v1/deals');
+      const {
+        body: { _id: createdDealId },
+      } = await as(aBarclaysMaker).post(completedDeal).to('/v1/deals');
       dealId = createdDealId;
       urlForDealStatus = dealStatusUrl(dealId);
       urlForDeal = `/v1/deals/${dealId}`;
@@ -241,6 +245,7 @@ describe('/v1/deals/:id/status', () => {
           surname: aBarclaysMaker.surname,
           timezone: 'Europe/London',
           'user-status': STATUS.ACTIVE,
+          isTrusted: aBarclaysMaker.isTrusted,
         },
       });
     });
@@ -282,7 +287,7 @@ describe('/v1/deals/:id/status', () => {
     it('does NOT add the user to `editedBy` array if a checker changes status to "Further Maker\'s input required"', async () => {
       const statusUpdate = {
         comments: 'Flee!',
-        status: 'Further Maker\'s input required',
+        status: "Further Maker's input required",
       };
 
       await as(aBarclaysChecker).put(statusUpdate).to(urlForDealStatus);

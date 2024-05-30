@@ -12,7 +12,7 @@ let mockCollectionFind;
 describe('user.controller', () => {
   describe('findByEmails', () => {
     const mockUsers = [MOCK_TFM_USER];
-    const mockEmails = [MOCK_TFM_USER.email]
+    const mockEmails = [MOCK_TFM_USER.email];
 
     beforeAll(async () => {
       mockCollectionFind = jest.fn().mockReturnThis(mockUsers);
@@ -37,7 +37,7 @@ describe('user.controller', () => {
 
       const emailsRegex = generateArrayOfEmailsRegex(mockEmails);
 
-      expect(mockCollectionFind).toHaveBeenCalledWith({ 'email': { $in: emailsRegex } });
+      expect(mockCollectionFind).toHaveBeenCalledWith({ email: { $in: emailsRegex } });
     });
 
     it('should return the result of handleFindByEmailsResult', async () => {

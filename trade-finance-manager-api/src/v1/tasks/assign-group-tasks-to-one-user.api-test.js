@@ -1,5 +1,5 @@
 const { when } = require('jest-when');
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details')
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const assignGroupTasksToOneUser = require('./assign-group-tasks-to-one-user');
 
 const MOCK_USERS = require('../__mocks__/mock-users');

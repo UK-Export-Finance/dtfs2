@@ -1,8 +1,4 @@
-/**
- * @param {unknown} value
- * @returns {boolean}
- */
-const isString = (value) => typeof value === 'string' || value instanceof String;
+const { isString } = require('@ukef/dtfs2-common');
 
 const isEmptyString = (s) => !s || (isString(s) && !s.trim().length);
 
@@ -15,7 +11,6 @@ const capitalizeFirstLetter = (s) => (hasValue(s) ? s.toString().charAt(0).toUpp
 const lowercaseFirstLetter = (s) => (hasValue(s) ? s.toString().charAt(0).toLowerCase() + s.toString().slice(1) : s);
 
 module.exports = {
-  isString,
   isEmptyString,
   hasValue,
   stripCommas,

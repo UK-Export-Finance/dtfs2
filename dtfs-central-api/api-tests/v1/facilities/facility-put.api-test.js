@@ -1,3 +1,4 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
@@ -5,7 +6,6 @@ const aDeal = require('../deal-builder');
 const CONSTANTS = require('../../../src/constants');
 const { MOCK_DEAL } = require('../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
-
 
 const newFacility = {
   type: 'Bond',
@@ -27,7 +27,7 @@ describe('/v1/portal/facilities', () => {
   let dealId;
 
   beforeAll(async () => {
-    await wipeDB.wipe([CONSTANTS.DB_COLLECTIONS.DEALS, CONSTANTS.DB_COLLECTIONS.FACILITIES]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
   });
 
   beforeEach(async () => {

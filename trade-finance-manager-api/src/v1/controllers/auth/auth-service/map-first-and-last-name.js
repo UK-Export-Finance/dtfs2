@@ -10,14 +10,8 @@
  * @param {String} defaultCopy: Default copy to return if no name/value is found.
  * @returns {String}
  */
-const mapProperty = ({
-  entraUserIdTokenClaims = {},
-  entraPropertyName = '',
-  tfmUser = {},
-  tfmPropertyName = '',
-  defaultCopy = '',
-}) =>
-entraUserIdTokenClaims[entraPropertyName] || tfmUser[tfmPropertyName]  || defaultCopy;
+const mapProperty = ({ entraUserIdTokenClaims = {}, entraPropertyName = '', tfmUser = {}, tfmPropertyName = '', defaultCopy = '' }) =>
+  entraUserIdTokenClaims[entraPropertyName] || tfmUser[tfmPropertyName] || defaultCopy;
 
 /**
  * mapFirstAndLastName

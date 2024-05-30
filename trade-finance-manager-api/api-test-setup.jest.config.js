@@ -1,4 +1,3 @@
-
 const dotenv = require('dotenv');
 const fs = require('fs');
 
@@ -12,9 +11,7 @@ if (!fs.existsSync('/.dockerenv')) {
 
 const db = require('./src/drivers/db-client');
 
-const mockFiles = [
-  './src/v1/api',
-];
+const mockFiles = ['./src/v1/api'];
 
 mockFiles.forEach((mockFile) => {
   jest.mock(mockFile);

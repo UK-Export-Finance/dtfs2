@@ -104,7 +104,10 @@ context('Submit AIN deal and check portalActivities', () => {
       applicationActivities.subNavigationBarActivities().click();
       applicationActivities.activityTimeline().should('exist');
       applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)}`);
-      applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)}`).should('not.exist');
+      applicationActivities
+        .activityTimeline()
+        .contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)}`)
+        .should('not.exist');
       applicationActivities.activityTimeline().contains(todayFormatted);
       applicationActivities.activityTimeline().contains(BANK1_CHECKER1.firstname);
     });

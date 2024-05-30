@@ -1,6 +1,6 @@
-import { Request } from "express";
-import { LOGIN_STATUS } from "../constants";
-import { PartiallyLoggedInSessionData, LoggedInSessionData, UserSessionData } from "../types/express-session";
+import { Request } from 'express';
+import { LOGIN_STATUS } from '../constants';
+import { PartiallyLoggedInSessionData, LoggedInSessionData, UserSessionData } from '../types/express-session';
 
 type Session = Request['session'];
 
@@ -19,24 +19,24 @@ type UnknownLogInStatusUserSession = Session & Pick<UserSessionData, 'userToken'
  * should have already been authenticated in middleware by this point), only
  * that the values are present.
  */
-export const asLoggedInUserSession = (session: Session): LoggedInUserSession  => {
+export const asLoggedInUserSession = (session: Session): LoggedInUserSession => {
   const { user, userToken, loginStatus } = session as LoggedInUserSession;
 
   if (loginStatus !== LOGIN_STATUS.VALID_2FA) {
     throw Error('Expected session.loginStatus to be `Valid 2FA`', {
       cause: {
         code: 'InvalidLoginStatus',
-        value: loginStatus
-      }
-    })
+        value: loginStatus,
+      },
+    });
   }
 
   if (!user) {
     throw Error('Expected session.user to be defined', {
       cause: {
         code: 'InvalidUser',
-        value: user
-      }
+        value: user,
+      },
     });
   }
 
@@ -44,8 +44,8 @@ export const asLoggedInUserSession = (session: Session): LoggedInUserSession  =>
     throw Error('Expected session.userToken to be defined', {
       cause: {
         code: 'InvalidUserToken',
-        value: userToken
-      }
+        value: userToken,
+      },
     });
   }
 
@@ -64,24 +64,24 @@ export const asLoggedInUserSession = (session: Session): LoggedInUserSession  =>
  * should have already been authenticated in middleware by this point), only
  * that the values are present.
  */
-export const asPartiallyLoggedInUserSession = (session: Session): PartiallyLoggedInUserSession  => {
+export const asPartiallyLoggedInUserSession = (session: Session): PartiallyLoggedInUserSession => {
   const { userToken, loginStatus, userEmail, numberOfSignInLinkAttemptsRemaining } = session as PartiallyLoggedInUserSession;
 
   if (loginStatus !== LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD) {
     throw Error('Expected session.loginStatus to be `Valid username and password`', {
       cause: {
         code: 'InvalidLoginStatus',
-        value: loginStatus
-      }
-    })
+        value: loginStatus,
+      },
+    });
   }
 
   if (!userToken) {
     throw Error('Expected session.userToken to be defined', {
       cause: {
         code: 'InvalidUserToken',
-        value: userToken
-      }
+        value: userToken,
+      },
     });
   }
 
@@ -89,8 +89,8 @@ export const asPartiallyLoggedInUserSession = (session: Session): PartiallyLogge
     throw Error('Expected session.userEmail to be defined', {
       cause: {
         code: 'InvalidUserEmail',
-        value: userEmail
-      }
+        value: userEmail,
+      },
     });
   }
 
@@ -98,8 +98,8 @@ export const asPartiallyLoggedInUserSession = (session: Session): PartiallyLogge
     throw Error('Expected session.numberOfSignInLinkAttemptsRemaining to be defined', {
       cause: {
         code: 'InvalidNumberOfSignInLinkAttemptsRemaining',
-        value: numberOfSignInLinkAttemptsRemaining
-      }
+        value: numberOfSignInLinkAttemptsRemaining,
+      },
     });
   }
 
@@ -118,25 +118,24 @@ export const asPartiallyLoggedInUserSession = (session: Session): PartiallyLogge
  * that the values are present.
  */
 
-
-export const withUnknownLoginStatusUserSession = (session: Session): UnknownLogInStatusUserSession  => {
+export const withUnknownLoginStatusUserSession = (session: Session): UnknownLogInStatusUserSession => {
   const { userToken, loginStatus } = session as UnknownLogInStatusUserSession;
 
   if (loginStatus !== LOGIN_STATUS.VALID_2FA && loginStatus !== LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD) {
     throw Error('Expected session.loginStatus to be `Valid 2FA` or `Valid username and password`', {
       cause: {
         code: 'InvalidLoginStatus',
-        value: loginStatus
-      }
-    })
+        value: loginStatus,
+      },
+    });
   }
 
   if (!userToken) {
     throw Error('Expected session.userToken to be defined', {
       cause: {
         code: 'InvalidUserToken',
-        value: userToken
-      }
+        value: userToken,
+      },
     });
   }
 

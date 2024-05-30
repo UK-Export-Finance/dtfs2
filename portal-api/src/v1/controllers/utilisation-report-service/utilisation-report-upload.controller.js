@@ -1,151 +1,75 @@
+const { getFormattedReportPeriodWithLongMonth } = require('@ukef/dtfs2-common');
+const { saveUtilisationReportFileToAzure } = require('../../services/utilisation-report/azure-file-service');
+const {
+  sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam,
+  sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam,
+} = require('../../services/utilisation-report/email-service');
+const { validateReportIsInReportNotReceivedState } = require('../../validation/utilisation-report/utilisation-report-validator');
 const api = require('../../api');
-const sendEmail = require('../../email');
-const { EMAIL_TEMPLATE_IDS, FILESHARES } = require('../../../constants');
-const { formatDateForEmail } = require('../../helpers/formatDateForEmail');
-const { uploadFile } = require('../../../drivers/fileshare');
-const { formatFilenameForSharepoint } = require('../../../utils');
-
-const { PDC_INPUTTERS_EMAIL_RECIPIENT } = process.env;
+const { InvalidReportStatusError } = require('../../errors');
 
 /**
- * Calls the DTFS Central API to get bank details by bank ID and
- * returns only the payment officer team name and email
- * @param {string} bankId - the bank ID
- * @returns {Promise} payment officer team name and email
+ * Fetches report for bank for given report period
+ * @param {string} bankId
+ * @param {import('@ukef/dtfs2-common').ReportPeriod} reportPeriod
  */
-const getPaymentOfficerTeamDetailsFromBank = async (bankId) => {
-  try {
-    const { data } = await api.getBankById(bankId);
-    const { teamName, email } = data.paymentOfficerTeam;
-    return { teamName, email };
-  } catch (error) {
-    console.error('Unable to get bank payment officer team details by ID %o', error);
-    return { status: error?.code || 500, data: 'Failed to get bank payment officer team details by ID' };
-  }
-};
-
-/**
- * Sends notification email to PDC Inputters that a utilisation report has been submitted
- * @param {string} bankName - name of the bank
- * @param {string} reportPeriod - period for which the report covers as a string, eg. June 2023
- */
-const sendEmailToPdcInputtersEmail = async (bankName, reportPeriod) => {
-  await sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_NOTIFICATION, PDC_INPUTTERS_EMAIL_RECIPIENT, {
-    bankName,
+const getReportByBankIdAndReportPeriod = async (bankId, reportPeriod) => {
+  const reportsForPeriod = await api.getUtilisationReports(bankId, {
     reportPeriod,
   });
-};
 
-/**
- * Sends notification email to bank payment officer team that a utilisation report has been
- * received and return the payment officer team email address.
- * @param {string} reportPeriod - period for which the report covers as a string, eg. June 2023
- * @param {string} bankId - the bank ID
- * @param {Date} submittedDate - the date the report was submitted
- * @param {string} submittedBy - the name of the user who submitted the report as a string
- * @returns {Promise} returns object with payment officer email or an error
- */
-const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submittedDate, user) => {
-  try {
-    const reportSubmittedBy = `${user.firstname} ${user.surname}`;
-    const { teamName, email } = await getPaymentOfficerTeamDetailsFromBank(bankId);
-    const formattedSubmittedDate = formatDateForEmail(submittedDate);
-
-    await sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION, email, {
-      recipient: teamName,
-      reportPeriod,
-      reportSubmittedBy,
-      reportSubmittedDate: formattedSubmittedDate,
-    });
-    return { paymentOfficerEmail: email };
-  } catch (error) {
-    console.error('Unable to get payment officer team details and send email %o', error);
-    return { status: error?.code || 500, data: 'Failed to get payment officer team details and send email' };
+  if (reportsForPeriod.length !== 1) {
+    throw new Error(
+      `Expected 1 report but found ${reportsForPeriod.length} with bank ID ${bankId} and report period '${getFormattedReportPeriodWithLongMonth(
+        reportPeriod,
+      )}'`,
+    );
   }
-};
 
-/**
- * Saves file to Azure in utilisation-reports ShareClient, returns the file storage info
- * @param {object} file
- * @param {string} bankId - bank id as a string
- * @returns {Promise<object>} - azure storage details with folder & file name, full path & url.
- */
-const saveFileToAzure = async (file, bankId) => {
-  try {
-    console.info(`Attempting to save utilisation report to Azure for bank: ${bankId}`);
-    const { originalname, buffer } = file;
-
-    const fileInfo = await uploadFile({
-      fileshare: FILESHARES.UTILISATION_REPORTS,
-      folder: bankId,
-      filename: formatFilenameForSharepoint(originalname),
-      buffer,
-      allowOverwrite: true,
-    });
-
-    if (!fileInfo || fileInfo.error) {
-      throw new Error(`Failed to save utilisation report to Azure - ${fileInfo?.error?.message ?? 'cause unknown'}`);
-    }
-
-    console.info(`Successfully saved utilisation report to Azure for bank: ${bankId}`);
-    return fileInfo;
-  } catch (error) {
-    console.error('Failed to save utilisation report to Azure ', error);
-    throw error;
-  }
+  return reportsForPeriod[0];
 };
 
 const uploadReportAndSendNotification = async (req, res) => {
   try {
     const { file } = req;
 
-    const { formattedReportPeriod, reportData, reportPeriod, user } = req.body;
-    const parsedReportData = JSON.parse(reportData);
-    const parsedUser = JSON.parse(user);
-    const parsedReportPeriod = JSON.parse(reportPeriod);
-
     if (!file) {
       return res.status(400).send();
     }
 
-    // If a report has already been uploaded, we should not overwrite it
-    const uploadedReportsInReportPeriod = await api.getUtilisationReports(parsedUser?.bank?.id, {
-      reportPeriod: parsedReportPeriod,
-      excludeNotUploaded: true,
-    });
-    if (uploadedReportsInReportPeriod.length > 0) {
-      return res.status(409).send('Report for the supplied report period has already been uploaded');
+    const { formattedReportPeriod, reportData, reportPeriod, user } = req.body;
+    const parsedReportData = JSON.parse(reportData);
+    const parsedUser = JSON.parse(user);
+    const parsedReportPeriod = JSON.parse(reportPeriod);
+    const bankId = parsedUser?.bank?.id;
+
+    const report = await getReportByBankIdAndReportPeriod(bankId, parsedReportPeriod);
+    validateReportIsInReportNotReceivedState(report);
+    const azureFileInfo = await saveUtilisationReportFileToAzure(file, bankId);
+    const { dateUploaded } = await api.saveUtilisationReport(report.id, parsedReportData, parsedUser, azureFileInfo);
+
+    try {
+      await sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam(parsedUser?.bank?.name, formattedReportPeriod);
+    } catch (error) {
+      console.error('Failed to send report upload notification to ukef gef reporting team %o', error);
     }
-
-    const fileInfo = await saveFileToAzure(file, parsedUser.bank.id);
-
-    const azureFileInfo = {
-      ...fileInfo,
-      mimetype: file.mimetype,
-    };
-
-    const saveDataResponse = await api.saveUtilisationReport(parsedReportData, parsedReportPeriod, parsedUser, azureFileInfo);
-
-    if (saveDataResponse.status !== 201) {
-      const status = saveDataResponse.status || 500;
-      console.error('Failed to save utilisation report %o', saveDataResponse);
-      return res.status(status).send('Failed to save utilisation report');
-    }
-    await sendEmailToPdcInputtersEmail(parsedUser?.bank?.name, formattedReportPeriod);
-    const { paymentOfficerEmail } = await sendEmailToBankPaymentOfficerTeam(
+    const { paymentOfficerEmails } = await sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam(
       formattedReportPeriod,
       parsedUser?.bank?.id,
-      new Date(saveDataResponse.data.dateUploaded),
-      parsedUser,
+      new Date(dateUploaded),
+      parsedUser.firstname,
+      parsedUser.surname,
     );
-    return res.status(201).send({ paymentOfficerEmail });
+    return res.status(201).send({ paymentOfficerEmails });
   } catch (error) {
-    console.error('Failed to save utilisation report %o', error);
+    if (error instanceof InvalidReportStatusError) {
+      return res.status(error.status).send(error.message);
+    }
+    console.error('Failed to save utilisation report: %o', error);
     return res.status(error.response?.status ?? 500).send('Failed to save utilisation report');
   }
 };
 
 module.exports = {
   uploadReportAndSendNotification,
-  saveFileToAzure,
 };

@@ -1,10 +1,5 @@
-const { generatePortalAuditDetails } = require("@ukef/dtfs2-common/src/helpers/change-stream/generate-audit-details");
-const {
-  shouldCreatePartiesTask,
-  shouldCreateAgentCheckTask,
-  listAdditionalTasks,
-  createDealTasks,
-} = require('./deal.tasks');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { shouldCreatePartiesTask, shouldCreateAgentCheckTask, listAdditionalTasks, createDealTasks } = require('./deal.tasks');
 const externalApis = require('../api');
 const CONSTANTS = require('../../constants');
 const MOCK_DEAL_MIA = require('../__mocks__/mock-deal-MIA-submitted');
@@ -32,9 +27,7 @@ describe('createDealTasks', () => {
     mockDealEligibilityCriteria11False = {
       ...mockSubmittedDeal,
       eligibility: {
-        criteria: [
-          { id: 11, answer: false },
-        ],
+        criteria: [{ id: 11, answer: false }],
       },
     };
 
@@ -157,10 +150,7 @@ describe('createDealTasks', () => {
       it('should return array of all additional tasks', () => {
         const result = listAdditionalTasks(mockDealEligibilityCriteria11False);
 
-        const expected = [
-          CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
-          CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK,
-        ];
+        const expected = [CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES, CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK];
 
         expect(result).toEqual(expected);
       });
@@ -187,10 +177,7 @@ describe('createDealTasks', () => {
     it('should call api.updateDeal and return updated deal', async () => {
       const result = await createDealTasks(mockSubmittedDeal, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
 
-      const expectedTasks = createTasks(
-        mockSubmittedDeal.submissionType,
-        listAdditionalTasks(mockSubmittedDeal),
-      );
+      const expectedTasks = createTasks(mockSubmittedDeal.submissionType, listAdditionalTasks(mockSubmittedDeal));
 
       const expectedDealTfm = {
         ...mockSubmittedDeal.tfm,

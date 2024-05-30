@@ -1,6 +1,5 @@
 const AuthProvider = require('./auth-provider');
 
-
 describe('AuthProvider - getLoginUrl', () => {
   const mockCsrfToken = 'mock-csrf';
 
@@ -14,7 +13,7 @@ describe('AuthProvider - getLoginUrl', () => {
   };
 
   const mockMsalInstance = {
-    getAuthCodeUrl: jest.fn().mockResolvedValue(mockAuthCodeUrlResponse)
+    getAuthCodeUrl: jest.fn().mockResolvedValue(mockAuthCodeUrlResponse),
   };
 
   let result;
@@ -79,7 +78,7 @@ describe('AuthProvider - getLoginUrl', () => {
     const error = new Error(errorMessage);
     AuthProvider.getAuthorityMetadata = jest.fn().mockRejectedValue(error);
 
-    const promise = AuthProvider.getLoginUrl({skipAuthorityMetadataCache: true});
+    const promise = AuthProvider.getLoginUrl({ skipAuthorityMetadataCache: true });
 
     await expect(promise).rejects.toThrow(Error);
   });
