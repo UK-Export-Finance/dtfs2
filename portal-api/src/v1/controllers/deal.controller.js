@@ -82,6 +82,7 @@ const createDeal = async (dealBody, user, auditDetails) => {
   const deal = await createNewDealData(dealBody, user);
   return api.createDeal(deal, user, auditDetails);
 };
+
 exports.createDeal = createDeal;
 
 exports.create = async (req, res) => {

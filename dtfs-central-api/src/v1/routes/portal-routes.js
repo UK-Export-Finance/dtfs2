@@ -54,6 +54,8 @@ portalRouter.use((req, res, next) => {
  *           schema:
  *             type: object
  *             properties:
+ *               user:
+ *                 type: object
  *               deal:
  *                 type: object
  *                 properties:

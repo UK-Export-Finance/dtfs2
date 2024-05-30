@@ -46,29 +46,17 @@ const createDeal = async (deal, maker, auditDetails) => {
 };
 
 exports.createDealPost = async (req, res) => {
+  const { user, deal, auditDetails } = req.body;
+
+  if (!user) {
+    return res.status(400).send({ status: 400, message: 'Invalid user' });
+  }
+
+  if (typeof deal?.dealType !== 'string') {
+    return res.status(400).send({ status: 400, message: 'Invalid deal type' });
+  }
   try {
-    const { user, deal, auditDetails } = req.body;
-
-    if (!user) {
-      return res.status(400).send({ status: 400, message: 'Invalid user' });
-    }
-
-    if (typeof deal?.dealType !== 'string') {
-      return res.status(400).send({ status: 400, message: 'Invalid deal type' });
-    }
-
     validateAuditDetailsAndUserType(auditDetails, 'portal');
-
-    const { validationErrors, _id } = await createDeal(deal, user, auditDetails);
-
-    if (validationErrors) {
-      return res.status(400).send({
-        _id,
-        validationErrors,
-      });
-    }
-
-    return res.status(200).send({ _id });
   } catch (error) {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
@@ -78,4 +66,15 @@ exports.createDealPost = async (req, res) => {
     }
     throw error;
   }
+
+  const { validationErrors, _id } = await createDeal(deal, user, auditDetails);
+
+  if (validationErrors) {
+    return res.status(400).send({
+      _id,
+      validationErrors,
+    });
+  }
+
+  return res.status(200).send({ _id });
 };
