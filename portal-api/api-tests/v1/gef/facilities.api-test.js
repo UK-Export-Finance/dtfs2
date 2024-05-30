@@ -3,6 +3,7 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const {
   generateParsedMockPortalUserAuditDatabaseRecord,
   withDeleteManyTests,
+  withDeleteOneTests,
   generateMockPortalUserAuditDatabaseRecord,
 } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { CURRENCY } = require('@ukef/dtfs2-common');
@@ -528,6 +529,16 @@ describe(baseUrl, () => {
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).remove(`${baseUrl}/${facilityToDeleteId}`),
       successStatusCode: 200,
+    });
+
+    withDeleteOneTests({
+      makeRequest: as(aMaker).remove(`${baseUrl}/${String(facilityToDeleteId)}`),
+      collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
+      auditRecord: {
+        ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
+        lastUpdatedByPortalUserId: expect.any(ObjectId),
+      },
+      getDeletedDocumentId: () => facilityToDeleteId,
     });
 
     it('returns a 204 - "No Content" if there are no records', async () => {
