@@ -106,7 +106,7 @@ interface CustomSuccessResponse extends Response {
 const saveReportsToDatabase = async (...reports: UtilisationReportEntity[]): Promise<UtilisationReportEntity[]> =>
   await SqlDbHelper.saveNewEntries('UtilisationReport', reports);
 
-describe.only('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-year/:year', () => {
+describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-year/:year', () => {
   const getUrl = (bankId: string, year: string) => `/v1/bank/${bankId}/utilisation-reports/reconciliation-summary-by-year/${year}`;
 
   const portalUser: PortalUser = aPortalUser();
