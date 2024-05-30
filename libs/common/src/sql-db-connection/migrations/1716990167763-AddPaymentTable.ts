@@ -6,15 +6,15 @@ export class AddPaymentTable1716990167763 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
             CREATE TABLE "Payment" (
-                "lastUpdatedAt" datetime2 NOT NULL CONSTRAINT "DF_3c7c91b94fc3c2cb358a90fa629" DEFAULT getdate(),
-                "lastUpdatedByPortalUserId" nvarchar(255),
-                "lastUpdatedByTfmUserId" nvarchar(255),
-                "lastUpdatedByIsSystemUser" bit NOT NULL CONSTRAINT "DF_c095a0510351d4262872da05235" DEFAULT 0,
                 "id" int NOT NULL IDENTITY(1, 1),
                 "currency" nvarchar(255) NOT NULL,
                 "amountReceived" int NOT NULL,
                 "dateReceived" datetime NOT NULL,
                 "paymentReference" nvarchar(255),
+                "lastUpdatedAt" datetime2 NOT NULL CONSTRAINT "DF_3c7c91b94fc3c2cb358a90fa629" DEFAULT getdate(),
+                "lastUpdatedByPortalUserId" nvarchar(255),
+                "lastUpdatedByTfmUserId" nvarchar(255),
+                "lastUpdatedByIsSystemUser" bit NOT NULL CONSTRAINT "DF_c095a0510351d4262872da05235" DEFAULT 0,
                 CONSTRAINT "PK_07e9fb9a8751923eb876d57a575" PRIMARY KEY ("id")
             ) WITH (
                 SYSTEM_VERSIONING = ON,
