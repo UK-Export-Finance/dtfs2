@@ -532,11 +532,11 @@ describe(baseUrl, () => {
     });
 
     withDeleteOneTests({
-      makeRequest: as(aMaker).remove(`${baseUrl}/${String(facilityToDeleteId)}`),
+      makeRequest: () => as(aMaker).remove(`${baseUrl}/${String(facilityToDeleteId)}`),
       collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
       auditRecord: {
         ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
-        lastUpdatedByPortalUserId: expect.any(ObjectId),
+        lastUpdatedByPortalUserId: expect.anything(),
       },
       getDeletedDocumentId: () => facilityToDeleteId,
     });

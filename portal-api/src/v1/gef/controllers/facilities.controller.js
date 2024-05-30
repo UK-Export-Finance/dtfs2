@@ -192,8 +192,8 @@ exports.delete = async (req, res) => {
   }
 
   try {
-    const deleteOneResponse = deleteOne({
-      documentId: req.params.id,
+    const deleteOneResponse = await deleteOne({
+      documentId: new ObjectId(req.params.id),
       collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
       db,
       auditDetails,
