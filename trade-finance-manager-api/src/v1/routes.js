@@ -142,6 +142,10 @@ authRouter
   .route('/utilisation-reports/reconciliation-details/:reportId')
   .get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.getUtilisationReportReconciliationDetailsById);
 
+authRouter
+  .route('/utilisation-reports/:id/selected-fee-records-details')
+  .get(validation.sqlIdValidation('id'), handleExpressValidatorResult, utilisationReportsController.getSelectedFeeRecordsDetails);
+
 authRouter.route('/banks').get(banksController.getAllBanks);
 
 authRouter

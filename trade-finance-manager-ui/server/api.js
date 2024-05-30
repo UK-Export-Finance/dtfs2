@@ -879,6 +879,23 @@ const getUtilisationReportReconciliationDetailsById = async (reportId, userToken
 };
 
 /**
+ * @param {number} reportId - The report id
+ * @param {number[]} feeRecordIds - The ids of the selected fee records
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('@ukef/dtfs2-common').SelectedFeeRecordsDetails>}
+ */
+const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
+    headers: generateHeaders(userToken),
+    data: {
+      feeRecordIds,
+    },
+  });
+
+  return response.data;
+};
+
+/**
  * Fetches all banks
  * @param {string} userToken - token to validate session
  * @returns {Promise<import('./types/banks').Bank[]>}
@@ -959,5 +976,6 @@ module.exports = {
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
   getAllBanks,
+  getSelectedFeeRecordsDetails,
   getReportSummariesByBankAndYear,
 };

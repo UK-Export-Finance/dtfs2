@@ -1266,6 +1266,23 @@ const getUtilisationReportReconciliationDetailsById = async (reportId) => {
 };
 
 /**
+ * Gets the utilisation report reconciliation details by report id
+ * @param {number} reportId - The report id
+ * @param {number[]} feeRecordIds - The selected fee record ids
+ * @returns {Promise<import('@ukef/dtfs2-common').SelectedFeeRecordsDetails>}
+ */
+const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds) => {
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
+    headers: headers.central,
+    data: {
+      feeRecordIds,
+    },
+  });
+
+  return response.data;
+};
+
+/**
  * Gets the utilisation report summaries by bank id and year
  * @param {string} bankId - The bank id
  * @param { string} year - The year which a report period ends in
@@ -1340,5 +1357,6 @@ module.exports = {
   getUtilisationReportById,
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
+  getSelectedFeeRecordsDetails,
   getUtilisationReportSummariesByBankIdAndYear,
 };
