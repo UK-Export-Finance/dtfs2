@@ -10,3 +10,5 @@ export const getCollection = async <CollectionName extends MongoDbCollectionName
   await mongoDbClient.getCollection<CollectionName>(collectionName);
 
 export const close = async () => await mongoDbClient.close();
+
+export default mongoDbClient;
