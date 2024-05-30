@@ -138,6 +138,7 @@ exports.update = async (req, res) => {
   const {
     user,
     params: { id: dealId },
+    body,
   } = req;
 
   await findOneDeal(dealId, async (deal) => {
@@ -149,7 +150,7 @@ exports.update = async (req, res) => {
 
     const auditDetails = generatePortalAuditDetails(user._id);
 
-    const updatedDeal = await updateDeal(dealId, req.body, user, deal, auditDetails);
+    const updatedDeal = await updateDeal(dealId, body, user, deal, auditDetails);
 
     return res.status(200).json(updatedDeal);
   });
