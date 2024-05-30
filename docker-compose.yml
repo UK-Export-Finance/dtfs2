@@ -165,12 +165,6 @@ services:
       - AZURE_SSO_GROUP_PIM
       - AZURE_SSO_GROUP_PDC_READ
       - AZURE_SSO_GROUP_PDC_RECONCILE
-    deploy:
-      resources:
-        limits:
-          cpus: '0.2'
-          memory: 600M
-    entrypoint: npx ts-node trade-finance-manager-api/src/index.ts
       - CHANGE_STREAM_ENABLED
 
   portal:

@@ -27,17 +27,6 @@ const { tasksRouter } = require('./tasks/routes');
 openRouter.use(checkApiKey);
 authRouter.use(passport.authenticate('jwt', { session: false }));
 
-// Used for creating initial user for data load.
-openRouter.route('/user').post(users.createTfmUser);
-// Used for creating mock/test users.
-authRouter.route('/users').post(users.createTfmUser);
-
-// Used for clearing test data.
-authRouter
-  .route('/users/:user')
-  .get(validation.userIdEscapingSanitization, handleExpressValidatorResult, users.findTfmUser)
-  .delete(validation.userIdValidation, handleExpressValidatorResult, users.removeTfmUserById);
-
 authRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
 
 openRouter.use('/', dealsOpenRouter);
@@ -79,6 +68,17 @@ authRouter.use('/', tasksRouter);
  *         description: validation errors
  */
 openRouter.route('/feedback').post(feedbackController.create);
+
+// Used for creating initial user for data load.
+openRouter.route('/user').post(users.createTfmUser);
+// Used for creating mock/test users.
+authRouter.route('/users').post(users.createTfmUser);
+
+// Used for clearing test data.
+authRouter
+  .route('/users/:user')
+  .get(validation.userIdEscapingSanitization, handleExpressValidatorResult, users.findTfmUser)
+  .delete(validation.userIdValidation, handleExpressValidatorResult, users.removeTfmUserById);
 
 authRouter.get('/validate-user-token', (_req, res) => res.status(200).send());
 

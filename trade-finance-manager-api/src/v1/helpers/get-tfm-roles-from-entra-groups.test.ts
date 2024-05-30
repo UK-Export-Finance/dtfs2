@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-// import { getTfmRolesGroupedByEntraId, getTfmRolesFromEntraGroups } from './get-tfm-roles-from-entra-groups';
 import { getTfmRolesFromEntraGroups } from './get-tfm-roles-from-entra-groups';
 import { TEAM_IDS } from '../../constants/teams';
 
