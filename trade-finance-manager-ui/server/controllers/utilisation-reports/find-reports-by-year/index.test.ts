@@ -76,6 +76,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       userToken,
       user: MOCK_TFM_SESSION_USER,
     };
+    const originalUrl = '/utilisation-reports/find-reports-by-year?';
 
     it("renders the 'problem-with-service' page when the bank query is provided but is not a string", async () => {
       // Arrange
@@ -149,7 +150,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
         query: { bank: '', year: '' },
-        originalUrl: '/utilisation-reports/find-reports-by-year?',
+        originalUrl,
       });
 
       const expectedBankError = 'Select a bank';
@@ -178,7 +179,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
         query: { year: yearQuery },
-        originalUrl: '/utilisation-reports/find-reports-by-year?',
+        originalUrl,
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
@@ -233,7 +234,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
         query: { bank: BANK_ID_TWO, year: 'invalidYear' },
-        originalUrl: '/utilisation-reports/find-reports-by-year?',
+        originalUrl,
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
@@ -251,7 +252,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
         query: { bank: 'invalidBank', year: '2024' },
-        originalUrl: '/utilisation-reports/find-reports-by-year?',
+        originalUrl,
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
@@ -269,7 +270,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
         query: { bank: BANK_ID_TWO, year: 'Nonsense' },
-        originalUrl: '/utilisation-reports/find-reports-by-year?',
+        originalUrl,
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
@@ -290,7 +291,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
         query: { bank: bankQuery, year: yearQuery },
-        originalUrl: '/utilisation-reports/find-reports-by-year?',
+        originalUrl,
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
