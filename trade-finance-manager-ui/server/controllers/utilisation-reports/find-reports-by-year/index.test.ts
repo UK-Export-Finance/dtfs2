@@ -76,6 +76,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       userToken,
       user: MOCK_TFM_SESSION_USER,
     };
+    const originalUrl = '/utilisation-reports/find-reports-by-year?';
 
     it("renders the 'problem-with-service' page when the bank query is provided but is not a string", async () => {
       // Arrange
@@ -144,6 +145,33 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       });
     });
 
+    it("renders the 'find-utilisation-reports-by-year.njk' view with when there is a query in the original URL with validation errors", async () => {
+      // Arrange
+      const { res, req } = httpMocks.createMocks({
+        session: requestSession,
+        query: { bank: '', year: '' },
+        originalUrl,
+      });
+
+      const expectedBankError = 'Select a bank';
+      const expectedYearError = 'Enter a valid year';
+      const expectedErrorSummary = [
+        { text: expectedBankError, href: '#bank' },
+        { text: expectedYearError, href: '#year' },
+      ];
+
+      jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
+
+      // Act
+      await getFindReportsByYear(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
+      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.errorSummary).toStrictEqual(expectedErrorSummary);
+      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.bankError).toBe(expectedBankError);
+      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.yearError).toBe(expectedYearError);
+    });
+
     it("renders the 'find-utilisation-reports-by-year.njk' view with required data when there are query params with errors", async () => {
       // Arrange
       const yearQuery = '20';
@@ -151,6 +179,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
         query: { year: yearQuery },
+        originalUrl,
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
@@ -205,6 +234,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
         query: { bank: BANK_ID_TWO, year: 'invalidYear' },
+        originalUrl,
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
@@ -222,6 +252,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
         query: { bank: 'invalidBank', year: '2024' },
+        originalUrl,
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
@@ -239,6 +270,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
         query: { bank: BANK_ID_TWO, year: 'Nonsense' },
+        originalUrl,
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
@@ -259,6 +291,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
         query: { bank: bankQuery, year: yearQuery },
+        originalUrl,
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);

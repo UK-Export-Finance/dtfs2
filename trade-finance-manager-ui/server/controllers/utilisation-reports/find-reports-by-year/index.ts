@@ -26,6 +26,7 @@ const getBankIdQueryAndYearQueryAsString = (
 
 export const getFindReportsByYear = async (req: Request, res: Response) => {
   const { user, userToken } = asUserSession(req.session);
+  const { originalUrl } = req;
 
   try {
     const { bankIdQuery, yearQuery } = getBankIdQueryAndYearQueryAsString(req);
@@ -40,7 +41,7 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
       attributes: { 'data-cy': `${bank.id}-radio` },
     }));
 
-    if (!bankIdQuery && !yearQuery) {
+    if (!originalUrl.includes('?')) {
       return renderFindUtilisationReportsByYearPage(res, {
         user,
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
