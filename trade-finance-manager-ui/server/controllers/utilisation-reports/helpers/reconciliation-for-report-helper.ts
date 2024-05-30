@@ -1,7 +1,8 @@
 import { FeeRecordStatus, getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
 import { FeeRecordItem } from '../../../api-response-types';
-import { FeeRecordDisplayStatus, FeeRecordViewModelCheckboxId, FeeRecordViewModelItem } from '../../../types/view-models';
+import { FeeRecordDisplayStatus, FeeRecordViewModelItem } from '../../../types/view-models';
 import { GetKeyToSortValueMapItem, getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
+import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 
 const feeRecordStatusToDisplayStatus: Record<FeeRecordStatus, FeeRecordDisplayStatus> = {
   TO_DO: 'TO DO',
@@ -44,7 +45,7 @@ export const mapFeeRecordItemsToFeeRecordViewModelItems = (
   );
 
   return feeRecordItems.map((feeRecordItem, feeRecordIndex) => {
-    const checkboxId: FeeRecordViewModelCheckboxId = `feeRecordId-${feeRecordItem.id}-reportedPaymentsCurrency-${feeRecordItem.reportedPayments.currency}-status-${feeRecordItem.status}`;
+    const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordId-${feeRecordItem.id}-reportedPaymentsCurrency-${feeRecordItem.reportedPayments.currency}-status-${feeRecordItem.status}`;
     const isChecked = isCheckboxChecked(checkboxId);
 
     return {

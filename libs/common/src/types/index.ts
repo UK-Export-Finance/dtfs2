@@ -10,3 +10,4 @@ export * from './portal';
 export * from './session-bank';
 export * from './audit-database-record';
 export * from './audit-details';
+export * from './selected-fee-records-details';

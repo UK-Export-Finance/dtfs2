@@ -2,7 +2,8 @@ import { Currency, CurrencyAndAmount, FEE_RECORD_STATUS, FeeRecordStatus } from 
 import { mapFeeRecordItemsToFeeRecordViewModelItems } from './reconciliation-for-report-helper';
 import { FeeRecordItem } from '../../../api-response-types';
 import { aFeeRecordItem } from '../../../../test-helpers';
-import { FeeRecordViewModelCheckboxId, SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
+import { SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
+import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 
 describe('reconciliation-for-report-helper', () => {
   describe('mapFeeRecordItemsToFeeRecordViewModelItems', () => {
@@ -205,7 +206,7 @@ describe('reconciliation-for-report-helper', () => {
       const PAYMENTS_RECEIVED_CURRENCY: Currency = 'GBP';
       const STATUS: FeeRecordStatus = 'TO_DO';
 
-      const CHECKED_FEE_RECORD_CHECKBOX_ID: FeeRecordViewModelCheckboxId = `feeRecordId-${FEE_RECORD_ID}-reportedPaymentsCurrency-${PAYMENTS_RECEIVED_CURRENCY}-status-${STATUS}`;
+      const CHECKED_FEE_RECORD_CHECKBOX_ID: PremiumPaymentsTableCheckboxId = `feeRecordId-${FEE_RECORD_ID}-reportedPaymentsCurrency-${PAYMENTS_RECEIVED_CURRENCY}-status-${STATUS}`;
       const IS_CHECKBOX_SELECTED = (checkboxId: string) => checkboxId === CHECKED_FEE_RECORD_CHECKBOX_ID;
 
       it("sets the 'isChecked' property to false when the fee record item does not match the checked checkbox id", () => {
