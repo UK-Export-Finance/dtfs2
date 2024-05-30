@@ -209,7 +209,7 @@ jobs:
 
       - name: Start
         working-directory: ./
-        run: docker compose -f docker-compose.gha.yml up --build -d
+        run: ./generate-dockerignore.gha.sh && docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./
@@ -224,8 +224,7 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
-        working-directory: ./${{ matrix.services }}
-        run: npm run api-test
+        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
 
       - name: Stop
         working-directory: ./
