@@ -109,7 +109,12 @@ function issueValid2faJWT(user) {
     user,
     sessionIdentifier: user.sessionIdentifier,
     expiresIn: '12h',
-    additionalPayload: { username: user.username, roles: user.roles, bank: user.bank, loginStatus: LOGIN_STATUSES.VALID_2FA },
+    additionalPayload: {
+      username: user.username,
+      roles: user.roles,
+      bank: user.bank,
+      loginStatus: LOGIN_STATUSES.VALID_2FA,
+    },
   });
 }
 

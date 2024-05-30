@@ -1,5 +1,5 @@
-import { estoreInternalServerError } from './estore-internal-server-error';
 import { HttpStatusCode } from 'axios';
+import { estoreInternalServerError } from './estore-internal-server-error';
 
 describe('estoreInternalServerError', () => {
   it('should return an object with status and message properties', () => {

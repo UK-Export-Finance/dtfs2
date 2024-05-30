@@ -71,7 +71,7 @@ export const getIsReportDue = async (bankId: string, reportPeriod: ReportPeriod)
  */
 export const getEmailRecipient = (paymentOfficerTeam: PaymentOfficerTeam, bankName: string): string => {
   if (!paymentOfficerTeam?.teamName) {
-    console.warn(`Bank '${bankName}' missing a payment officer team name. Using default '${DEFAULT_PAYMENT_OFFICER_TEAM_NAME}'`);
+    console.info(`Bank '${bankName}' missing a payment officer team name. Using default '${DEFAULT_PAYMENT_OFFICER_TEAM_NAME}'`);
     return DEFAULT_PAYMENT_OFFICER_TEAM_NAME;
   }
 
@@ -101,7 +101,7 @@ const sendEmailForBank = async (
     const paymentOfficerTeamEmails = paymentOfficerTeam?.emails;
 
     if (!Array.isArray(paymentOfficerTeamEmails) || !paymentOfficerTeamEmails.length) {
-      console.warn(`Not sending ${emailDescription} email to '${bankName}' - paymentOfficerTeam.emails property against bank is not an array or is empty`);
+      console.info(`Not sending ${emailDescription} email to '${bankName}' - paymentOfficerTeam.emails property against bank is not an array or is empty`);
       return;
     }
     await Promise.all(

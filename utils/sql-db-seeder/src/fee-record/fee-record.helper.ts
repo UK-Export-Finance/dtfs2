@@ -1,69 +1,56 @@
-import { Currency, FeeRecordEntity } from '@ukef/dtfs2-common';
+import { faker } from '@faker-js/faker';
+import { CURRENCY, Currency, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { getExchangeRate } from '../helpers';
 
-type CreateFeeRecordOptions = {
-  facilityId: string;
-  exporter: string;
-  baseCurrency: Currency;
-  facilityUtilisation: number;
-  totalFeesAccruedForThePeriod: number;
-  feesPaidToUkefForThePeriod: number;
-  feesPaidToUkefForThePeriodCurrency?: Currency;
-} & (
-  | {
-      totalFeesAccruedForThePeriodCurrency: Currency;
-      totalFeesAccruedForThePeriodExchangeRate: number;
-    }
-  | {
-      totalFeesAccruedForThePeriodCurrency?: undefined;
-      totalFeesAccruedForThePeriodExchangeRate?: undefined;
-    }
-) &
-  (
-    | {
-        paymentCurrency: Currency;
-        paymentExchangeRate: number;
-      }
-    | {
-        paymentCurrency?: undefined;
-        paymentExchangeRate?: undefined;
-      }
-  );
+const getRandomCurrency = (): Currency => faker.helpers.arrayElement(Object.values(CURRENCY));
 
-export const createFeeRecord = ({
-  facilityId,
-  exporter,
-  baseCurrency,
-  facilityUtilisation,
-  totalFeesAccruedForThePeriod,
-  totalFeesAccruedForThePeriodCurrency,
-  totalFeesAccruedForThePeriodExchangeRate,
-  feesPaidToUkefForThePeriod,
-  feesPaidToUkefForThePeriodCurrency,
-  paymentCurrency,
-  paymentExchangeRate,
-}: CreateFeeRecordOptions): FeeRecordEntity => {
+const getRandomStatus = (): FeeRecordStatus => faker.helpers.arrayElement(Object.values(FEE_RECORD_STATUS));
+
+const createRandomFeeRecordForReport = (report: UtilisationReportEntity): FeeRecordEntity => {
   const feeRecord = new FeeRecordEntity();
 
-  feeRecord.facilityId = facilityId;
-  feeRecord.exporter = exporter;
-  feeRecord.baseCurrency = baseCurrency;
-  feeRecord.facilityUtilisation = facilityUtilisation;
+  feeRecord.report = report;
 
-  feeRecord.totalFeesAccruedForThePeriod = totalFeesAccruedForThePeriod;
-  feeRecord.totalFeesAccruedForThePeriodCurrency = totalFeesAccruedForThePeriodCurrency ?? baseCurrency;
-  feeRecord.totalFeesAccruedForThePeriodExchangeRate = totalFeesAccruedForThePeriodCurrency
-    ? totalFeesAccruedForThePeriodExchangeRate
-    : 1;
+  feeRecord.facilityId = faker.string.numeric(8);
+  feeRecord.exporter = faker.company.name();
+  feeRecord.baseCurrency = getRandomCurrency();
+  feeRecord.facilityUtilisation = Number(faker.finance.amount({ min: 10000000, max: 20000000 }));
 
-  feeRecord.feesPaidToUkefForThePeriod = feesPaidToUkefForThePeriod;
-  feeRecord.feesPaidToUkefForThePeriodCurrency = feesPaidToUkefForThePeriodCurrency ?? baseCurrency;
+  const minimumAccrualAmount = feeRecord.facilityUtilisation * 0.005;
+  const maximumAccrualAmount = feeRecord.facilityUtilisation * 0.01;
 
-  feeRecord.paymentCurrency = paymentCurrency ?? feeRecord.feesPaidToUkefForThePeriodCurrency;
-  feeRecord.paymentExchangeRate = paymentCurrency ? paymentExchangeRate : 1;
+  feeRecord.totalFeesAccruedForThePeriod = Number(
+    faker.finance.amount({
+      min: minimumAccrualAmount,
+      max: maximumAccrualAmount,
+    }),
+  );
+  feeRecord.totalFeesAccruedForThePeriodCurrency = getRandomCurrency();
+  feeRecord.totalFeesAccruedForThePeriodExchangeRate = getExchangeRate({
+    from: feeRecord.baseCurrency,
+    to: feeRecord.totalFeesAccruedForThePeriodCurrency,
+  });
 
-  feeRecord.status = 'TO_DO';
+  feeRecord.feesPaidToUkefForThePeriod = feeRecord.totalFeesAccruedForThePeriod;
+  feeRecord.feesPaidToUkefForThePeriodCurrency = feeRecord.totalFeesAccruedForThePeriodCurrency;
+
+  feeRecord.paymentCurrency = getRandomCurrency();
+  feeRecord.paymentExchangeRate = getExchangeRate({
+    from: feeRecord.paymentCurrency,
+    to: feeRecord.feesPaidToUkefForThePeriodCurrency,
+  });
+
+  feeRecord.status = getRandomStatus();
 
   feeRecord.updateLastUpdatedBy({ platform: 'SYSTEM' });
 
   return feeRecord;
+};
+
+export const createRandomFeeRecordsForReport = (numberOfFeeRecords: number, report: UtilisationReportEntity): FeeRecordEntity[] => {
+  const feeRecords: FeeRecordEntity[] = [];
+  while (feeRecords.length !== numberOfFeeRecords) {
+    feeRecords.push(createRandomFeeRecordForReport(report));
+  }
+  return feeRecords;
 };

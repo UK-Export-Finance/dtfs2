@@ -22,18 +22,13 @@ context('Application Details Page', () => {
         cy.apiFetchAllGefApplications(token);
       })
       .then(({ body }) => {
-        dealWithEmptyExporter = body.items.find((deal) =>
-          deal.exporter.status === 'Not started');
+        dealWithEmptyExporter = body.items.find((deal) => deal.exporter.status === 'Not started');
 
-        dealWithEmptyExporterName = body.items.find((deal) =>
-          deal.exporter.status === 'Not started').bankInternalRefName;
+        dealWithEmptyExporterName = body.items.find((deal) => deal.exporter.status === 'Not started').bankInternalRefName;
 
-        dealWithInProgressExporter = body.items.find((deal) =>
-          deal.exporter.status === 'In progress');
+        dealWithInProgressExporter = body.items.find((deal) => deal.exporter.status === 'In progress');
 
-        dealWithCompletedExporterAndFacilities = body.items.find((deal) =>
-          deal.exporter.status === 'Completed'
-          && deal.facilitiesUpdated);
+        dealWithCompletedExporterAndFacilities = body.items.find((deal) => deal.exporter.status === 'Completed' && deal.facilitiesUpdated);
       });
 
     cy.login(BANK1_MAKER1);
@@ -67,16 +62,22 @@ context('Application Details Page', () => {
     it('displays the correct headings', () => {
       applicationDetails.applicationDetailsPage();
       applicationDetails.captionHeading();
-      applicationDetails.mainHeading().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Application Details');
-      });
+      applicationDetails
+        .mainHeading()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Application Details');
+        });
     });
 
     it('shows an abandon button with correct aria-label', () => {
       applicationDetails.abandonLink().contains('Abandon');
-      applicationDetails.abandonLink().invoke('attr', 'aria-label').then((label) => {
-        expect(label).to.equal(`Abandon deal ${dealWithEmptyExporterName}`);
-      });
+      applicationDetails
+        .abandonLink()
+        .invoke('attr', 'aria-label')
+        .then((label) => {
+          expect(label).to.equal(`Abandon deal ${dealWithEmptyExporterName}`);
+        });
     });
 
     it('shows a valid link to edit the reference', () => {
@@ -167,9 +168,12 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct submission type heading', () => {
-      applicationDetails.mainHeading().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Application Details');
-      });
+      applicationDetails
+        .mainHeading()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Application Details');
+        });
     });
 
     it('displays the correct exporter elements', () => {
@@ -299,7 +303,10 @@ context('Application Details Page', () => {
 
       it('takes you to first supporting info question when clicked on `Add supporting information` link', () => {
         applicationDetails.supportingInfoStartLink().click();
-        cy.url().should('eq', relative(`/gef/application-details/${dealWithInProgressExporter._id}/supporting-information/document/manual-inclusion-questionnaire`));
+        cy.url().should(
+          'eq',
+          relative(`/gef/application-details/${dealWithInProgressExporter._id}/supporting-information/document/manual-inclusion-questionnaire`),
+        );
       });
     });
   });

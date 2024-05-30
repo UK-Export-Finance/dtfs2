@@ -12,11 +12,7 @@ jest.mock('../../../../utils/crypto.util', () => ({
 const { when } = require('jest-when');
 const { generateNoUserLoggedInAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { loginCallback: login } = require('./loginCallback.helper');
-const {
-  usernameOrPasswordIncorrect,
-  userIsBlocked,
-  userIsDisabled,
-} = require('../../../../constants/login-results.constant');
+const { usernameOrPasswordIncorrect, userIsBlocked, userIsDisabled } = require('../../../../constants/login-results.constant');
 const controller = require('../user.controller');
 const utils = require('../../../../utils/crypto.util');
 

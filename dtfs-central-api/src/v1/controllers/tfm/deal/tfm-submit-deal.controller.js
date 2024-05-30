@@ -1,8 +1,6 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const {
-  generateAuditDatabaseRecordFromAuditDetails,
-  validateAuditDetailsAndUserType,
-} = require('@ukef/dtfs2-common/change-stream');
+const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common/errors');
+const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const db = require('../../../../drivers/db-client').default;
@@ -53,15 +51,11 @@ const createDealSnapshot = async (deal, auditDetails) => {
       dealObj.dealSnapshot.facilities = dealFacilities;
     }
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(deal._id) } },
-      $.flatten(withoutId(dealObj)),
-      {
-        returnNewDocument: true,
-        returnDocument: 'after',
-        upsert: true,
-      },
-    );
+    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(deal._id) } }, $.flatten(withoutId(dealObj)), {
+      returnNewDocument: true,
+      returnDocument: 'after',
+      upsert: true,
+    });
 
     return findAndUpdateResponse.value;
   }
@@ -135,8 +129,14 @@ exports.submitDealPut = async (req, res) => {
 
   try {
     validateAuditDetailsAndUserType(auditDetails, 'portal');
-  } catch ({ message }) {
-    return res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
   }
 
   if (dealType !== CONSTANTS.DEALS.DEAL_TYPE.GEF && dealType !== CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {

@@ -41,10 +41,10 @@ describe('nunjuck filters - formatDateString', () => {
       mockDate: '##/##/####',
       fromFormat: 'dd/MM/yyyy',
       expected: 'Invalid date',
-    }
+    },
   ];
 
-  it.each(testCases)('$description', ({ mockDate, fromFormat, toFormat, expected}) => {
+  it.each(testCases)('$description', ({ mockDate, fromFormat, toFormat, expected }) => {
     const result = formatDateString(mockDate, fromFormat, toFormat);
 
     expect(result).toEqual(expected);

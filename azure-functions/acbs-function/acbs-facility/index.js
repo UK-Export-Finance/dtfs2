@@ -29,7 +29,9 @@ df.app.orchestration('acbs-facility', function* createACBSfacility(context) {
       throw new Error(`Invalid facility ID ${facilityIdentifier}`);
     }
 
-    const facilityMaster = yield context.df.callActivityWithRetry('activity-create-facility-master', retryOptions, { acbsFacilityMasterInput });
+    const facilityMaster = yield context.df.callActivityWithRetry('activity-create-facility-master', retryOptions, {
+      acbsFacilityMasterInput,
+    });
 
     // 2. Facility Investor
     const acbsFacilityInvestorInput = mappings.facility.facilityInvestor(deal, facility);
@@ -88,7 +90,10 @@ df.app.orchestration('acbs-facility', function* createACBSfacility(context) {
       // 6. Facility loan record
       const acbsFacilityLoanInput = mappings.facility.facilityLoan(deal, facility, dealAcbsData);
 
-      facilityLoan = yield context.df.callActivityWithRetry('activity-create-facility-loan', retryOptions, { facilityIdentifier, acbsFacilityLoanInput });
+      facilityLoan = yield context.df.callActivityWithRetry('activity-create-facility-loan', retryOptions, {
+        facilityIdentifier,
+        acbsFacilityLoanInput,
+      });
 
       // 7. Facility fee record
       const acbsFacilityFeeInput = mappings.facility.facilityFee(deal, facility);
@@ -99,11 +104,17 @@ df.app.orchestration('acbs-facility', function* createACBSfacility(context) {
         for (let i = 0; i < acbsFacilityFeeInput.length; i++) {
           const input = acbsFacilityFeeInput[i];
           facilityFee.push(
-            yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, { facilityIdentifier, acbsFacilityFeeInput: input }),
+            yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, {
+              facilityIdentifier,
+              acbsFacilityFeeInput: input,
+            }),
           );
         }
       } else {
-        facilityFee = yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, { facilityIdentifier, acbsFacilityFeeInput });
+        facilityFee = yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, {
+          facilityIdentifier,
+          acbsFacilityFeeInput,
+        });
       }
     } else {
       console.info('Unissued facility %s', acbsFacilityMasterInput.facilityIdentifier);

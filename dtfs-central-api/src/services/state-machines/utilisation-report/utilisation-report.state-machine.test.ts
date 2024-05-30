@@ -23,7 +23,6 @@ describe('UtilisationReportStateMachine', () => {
   });
 
   const expectInvalidStateMachineTransitionError = async (stateMachine: UtilisationReportStateMachine, eventType: UtilisationReportEventType) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error - expect payload to be invalid when type is variable.
     await expect(stateMachine.handleEvent({ type: eventType, payload: null })).rejects.toThrow(InvalidStateMachineTransitionError);
   };
@@ -117,7 +116,12 @@ describe('UtilisationReportStateMachine', () => {
       // Act
       await stateMachine.handleEvent({
         type: 'PAYMENT_ADDED_TO_FEE_RECORD',
-        payload: { feeRecordId: 1, paymentId: 2 },
+        payload: {
+          requestSource: {
+            platform: 'TFM',
+            userId: 'abc123',
+          },
+        },
       });
 
       // Assert
@@ -173,7 +177,12 @@ describe('UtilisationReportStateMachine', () => {
       // Act
       await stateMachine.handleEvent({
         type: 'PAYMENT_ADDED_TO_FEE_RECORD',
-        payload: { feeRecordId: 1, paymentId: 2 },
+        payload: {
+          requestSource: {
+            platform: 'TFM',
+            userId: 'abc123',
+          },
+        },
       });
 
       // Assert

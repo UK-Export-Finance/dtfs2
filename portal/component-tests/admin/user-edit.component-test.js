@@ -1,5 +1,7 @@
 const pageRenderer = require('../pageRenderer');
-const { DATE: { LONDON_TIMEZONE } } = require('../../server/constants')
+const {
+  DATE: { LONDON_TIMEZONE },
+} = require('../../server/constants');
 
 const page = 'admin/user-edit.njk';
 const render = pageRenderer(page);
@@ -11,38 +13,48 @@ describe(page, () => {
   };
   const newUser = { roles: [] };
 
-  const banks = [{
-    id: 1,
-    name: 'Bank 1',
-  }, {
-    id: 2,
-    name: 'Bank 2',
-  }, {
-    id: 3,
-    name: 'Bank 3',
-  }];
+  const banks = [
+    {
+      id: 1,
+      name: 'Bank 1',
+    },
+    {
+      id: 2,
+      name: 'Bank 2',
+    },
+    {
+      id: 3,
+      name: 'Bank 3',
+    },
+  ];
 
-  const roles = [{
-    roleName: 'Maker',
-    roleDataAttribute: 'maker',
-    roleValue: 'maker',
-  }, {
-    roleName: 'Checker',
-    roleDataAttribute: 'checker',
-    roleValue: 'checker',
-  }, {
-    roleName: 'Admin',
-    roleDataAttribute: 'admin',
-    roleValue: 'admin',
-  }, {
-    roleName: 'Read-only',
-    roleDataAttribute: 'read-only',
-    roleValue: 'read-only',
-  }, {
-    roleName: 'Payment Report Officer',
-    roleDataAttribute: 'payment-report-officer',
-    roleValue: 'payment-report-officer',
-  }];
+  const roles = [
+    {
+      roleName: 'Maker',
+      roleDataAttribute: 'maker',
+      roleValue: 'maker',
+    },
+    {
+      roleName: 'Checker',
+      roleDataAttribute: 'checker',
+      roleValue: 'checker',
+    },
+    {
+      roleName: 'Admin',
+      roleDataAttribute: 'admin',
+      roleValue: 'admin',
+    },
+    {
+      roleName: 'Read-only',
+      roleDataAttribute: 'read-only',
+      roleValue: 'read-only',
+    },
+    {
+      roleName: 'Payment Report Officer',
+      roleDataAttribute: 'payment-report-officer',
+      roleValue: 'payment-report-officer',
+    },
+  ];
 
   let wrapper;
 

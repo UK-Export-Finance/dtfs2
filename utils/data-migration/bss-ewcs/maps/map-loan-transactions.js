@@ -32,7 +32,8 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
       value: loan.EWCS_Financial_details.EWCS_value,
       currency: getCurrencyById(loan.EWCS_Financial_details.EWCS_currency_code),
       currencySameAsSupplyContractCurrency: (
-        loan.EWCS_Financial_details.EWCS_currency_code === v1Deal.Deal_information.Financial.Deal_currency_code).toString(),
+        loan.EWCS_Financial_details.EWCS_currency_code === v1Deal.Deal_information.Financial.Deal_currency_code
+      ).toString(),
       conversionRate: loan.EWCS_Financial_details.EWCS_conversion_rate_deal,
       disbursementAmount: formatCurrency(loan.EWCS_Financial_details.EWCS_disbursement_amount),
       interestMarginFee: loan.EWCS_Financial_details.EWCS_interest_rate,
@@ -52,39 +53,27 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
     }
 
     if (loan.EWCS_Financial_details.EWCS_conversion_date_deal) {
-    // Conversion date in format dd-mm-yyyy
-      [
-        v2loan['conversionRateDate-day'],
-        v2loan['conversionRateDate-month'],
-        v2loan['conversionRateDate-year'],
-      ] = loan.EWCS_Financial_details.EWCS_conversion_date_deal.split('-');
+      // Conversion date in format dd-mm-yyyy
+      [v2loan['conversionRateDate-day'], v2loan['conversionRateDate-month'], v2loan['conversionRateDate-year']] =
+        loan.EWCS_Financial_details.EWCS_conversion_date_deal.split('-');
     }
 
     if (loan.EWCS_Dates_repayments.EWCS_issue_date) {
-      [
-        v2loan['issuedDate-day'],
-        v2loan['issuedDate-month'],
-        v2loan['issuedDate-year'],
-      ] = loan.EWCS_Dates_repayments.EWCS_issue_date.split('-');
+      [v2loan['issuedDate-day'], v2loan['issuedDate-month'], v2loan['issuedDate-year']] = loan.EWCS_Dates_repayments.EWCS_issue_date.split('-');
       v2loan.issuedDate = convertV1Date(`${v2loan['issuedDate-year']}-${v2loan['issuedDate-month']}-${v2loan['issuedDate-day']}`);
     }
 
     if (facilityStage !== CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL) {
       if (loan.EWCS_Dates_repayments.EWCS_cover_start_date) {
-        [
-          v2loan['requestedCoverStartDate-day'],
-          v2loan['requestedCoverStartDate-month'],
-          v2loan['requestedCoverStartDate-year'],
-        ] = loan.EWCS_Dates_repayments.EWCS_cover_start_date.split('-');
-        v2loan.requestedCoverStartDate = convertV1Date(`${v2loan['requestedCoverStartDate-year']}-${v2loan['requestedCoverStartDate-month']}-${v2loan['requestedCoverStartDate-day']}`);
+        [v2loan['requestedCoverStartDate-day'], v2loan['requestedCoverStartDate-month'], v2loan['requestedCoverStartDate-year']] =
+          loan.EWCS_Dates_repayments.EWCS_cover_start_date.split('-');
+        v2loan.requestedCoverStartDate = convertV1Date(
+          `${v2loan['requestedCoverStartDate-year']}-${v2loan['requestedCoverStartDate-month']}-${v2loan['requestedCoverStartDate-day']}`,
+        );
       }
 
       if (loan.EWCS_Dates_repayments.EWCS_cover_end_date) {
-        [
-          v2loan['coverEndDate-day'],
-          v2loan['coverEndDate-month'],
-          v2loan['coverEndDate-year'],
-        ] = loan.EWCS_Dates_repayments.EWCS_cover_end_date.split('-');
+        [v2loan['coverEndDate-day'], v2loan['coverEndDate-month'], v2loan['coverEndDate-year']] = loan.EWCS_Dates_repayments.EWCS_cover_end_date.split('-');
       }
     }
 
@@ -100,7 +89,9 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
     return v2loan;
   };
 
-  const { Facilities: { EWCS: loan } } = v1Deal;
+  const {
+    Facilities: { EWCS: loan },
+  } = v1Deal;
 
   let items = [];
 
@@ -112,10 +103,7 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
     }
   }
 
-  return [
-    { items },
-    hasError,
-  ];
+  return [{ items }, hasError];
 };
 
 module.exports = mapLoanTransactions;

@@ -22,9 +22,10 @@ df.app.orchestration('acbs-facility-bond', function* createACBSfacilityBond(cont
     const facilityIdentifier = facilitySnapshot.ukefFacilityId.padStart(10, 0);
 
     // BOND specific data
-    const code = facilitySnapshot.currency.id === CONSTANTS.DEAL.CURRENCY.DEFAULT
-      ? CONSTANTS.FACILITY.COVENANT_TYPE.CHARGEABLE_AMOUNT_GBP
-      : CONSTANTS.FACILITY.COVENANT_TYPE.CHARGEABLE_AMOUNT_NON_GBP;
+    const code =
+      facilitySnapshot.currency.id === CONSTANTS.DEAL.CURRENCY.DEFAULT
+        ? CONSTANTS.FACILITY.COVENANT_TYPE.CHARGEABLE_AMOUNT_GBP
+        : CONSTANTS.FACILITY.COVENANT_TYPE.CHARGEABLE_AMOUNT_NON_GBP;
 
     // Facility Covenant
     const acbsFacilityBondCovenantInput = mappings.facility.facilityCovenant(deal, facility, code);

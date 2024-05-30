@@ -1,7 +1,10 @@
-import { app } from '../../src/createApp';
-import { api } from '../api';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
+import { app } from '../../src/createApp';
+import { api } from '../api';
 
 const { APIM_MDM_URL } = process.env;
 const { get } = api(app);

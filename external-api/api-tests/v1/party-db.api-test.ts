@@ -1,8 +1,20 @@
+/* eslint-disable @typescript-eslint/unbound-method */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable no-param-reassign */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable import/no-extraneous-dependencies */
+
+import MockAdapter from 'axios-mock-adapter';
+import axios, { HttpStatusCode } from 'axios';
 import { app } from '../../src/createApp';
 import { api } from '../api';
-import MockAdapter from 'axios-mock-adapter';
 import { COMPANIES_HOUSE_NUMBER } from '../test-mocks/companies-house-number';
-import axios, { HttpStatusCode } from 'axios';
 
 const { APIM_MDM_URL } = process.env;
 const { VALID_1, VALID_2, VALID_WITH_LETTERS } = COMPANIES_HOUSE_NUMBER;

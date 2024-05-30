@@ -1,6 +1,6 @@
 const express = require('express');
 const api = require('../../api');
-const { getApiData, requestParams, errorHref, generateErrorSummary, constructPayload } = require('../../helpers');
+const { getApiData, requestParams, errorHref, generateErrorSummary, constructPayload, convertUserFormDataToRequest } = require('../../helpers');
 const { ALL_BANKS_ID, PRIMARY_NAV_KEY } = require('../../constants');
 
 const router = express.Router();
@@ -51,25 +51,16 @@ router.get('/users/create', async (req, res) => {
   });
 });
 
-// roles are fed in = require(checkboxes, so we either get a string or an array.).
-// -so if we don't get an array, put it into an array..
-const handleRoles = (roles) => (Array.isArray(roles) ? [...roles] : [roles]);
-
 // Admin - user create
 router.post('/users/create', async (req, res) => {
-  const { email, bank } = req.body;
+  const { bank } = req.body;
 
   const { userToken } = requestParams(req);
-  const user = {
-    ...req.body,
-    username: email,
-    roles: handleRoles(req.body.roles),
-  };
+  const user = convertUserFormDataToRequest(req.body);
 
   // inflate the bank object
   const banks = await getApiData(api.banks(userToken), res);
 
-  // `fi` stands for `financial institution`
   if (bank === 'all') {
     user.bank = {
       id: ALL_BANKS_ID,
@@ -77,7 +68,7 @@ router.post('/users/create', async (req, res) => {
       hasGefAccessOnly: false,
     };
   } else {
-    const selectedBank = banks.find((fi) => fi.id === user.bank);
+    const selectedBank = banks.find((financialInstitution) => financialInstitution.id === user.bank);
     user.bank = selectedBank;
   }
 
@@ -107,14 +98,11 @@ router.get('/users/edit/:_id', async (req, res) => {
 
 // Admin - user edit
 router.post('/users/edit/:_id', async (req, res) => {
-  const payloadProperties = ['firstname', 'surname', 'user-status', 'roles'];
+  const payloadProperties = ['firstname', 'surname', 'user-status', 'roles', 'isTrusted'];
   const payload = constructPayload(req.body, payloadProperties);
   const { _id, userToken } = requestParams(req);
 
-  const update = {
-    ...payload,
-    roles: handleRoles(payload.roles),
-  };
+  const update = convertUserFormDataToRequest(payload);
 
   const { status, data } = await api.updateUser(_id, update, userToken);
 

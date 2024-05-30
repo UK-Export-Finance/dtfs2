@@ -79,17 +79,20 @@ describe('controllers/facility-value', () => {
 
       await facilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        currency: 'EUR',
-        value: '2000',
-        facilityType: CONSTANTS.FACILITY_TYPE.CASH,
-        coverPercentage: '20',
-        interestPercentage: '10',
-        facilityTypeString: 'cash',
-        dealId: '123',
-        facilityId: 'xyz',
-        status: 'change',
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          currency: 'EUR',
+          value: '2000',
+          facilityType: CONSTANTS.FACILITY_TYPE.CASH,
+          coverPercentage: '20',
+          interestPercentage: '10',
+          facilityTypeString: 'cash',
+          dealId: '123',
+          facilityId: 'xyz',
+          status: 'change',
+        }),
+      );
     });
 
     it('redirects to currency page when no currency is set for this facility', async () => {
@@ -114,11 +117,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
 
       jest.resetAllMocks();
 
@@ -126,11 +132,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if cover percentage value is not between 1 and 80', async () => {
@@ -138,11 +147,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
 
       jest.resetAllMocks();
 
@@ -150,11 +162,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
 
       jest.resetAllMocks();
 
@@ -162,11 +177,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).not.toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+      expect(mockResponse.render).not.toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if interest percentage value is not a number', async () => {
@@ -174,11 +192,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if interest percentage value is not between 0 and 100', async () => {
@@ -186,11 +207,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
 
       jest.resetAllMocks();
 
@@ -198,11 +222,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
 
       jest.resetAllMocks();
 
@@ -244,7 +271,11 @@ describe('controllers/facility-value', () => {
         editorId: '12345',
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
+      expect(updateApplicationSpy).toHaveBeenCalledWith({
+        dealId: mockRequest.params.dealId,
+        application: expectedUpdateObj,
+        userToken,
+      });
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
@@ -270,11 +301,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
 
       jest.resetAllMocks();
 
@@ -282,11 +316,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if cover percentage value is not a number', async () => {
@@ -294,11 +331,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
 
       jest.resetAllMocks();
 
@@ -306,11 +346,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('does not show an error message if cover percentage value is blank', async () => {
@@ -326,11 +369,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
 
       jest.resetAllMocks();
 
@@ -338,11 +384,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).not.toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+      expect(mockResponse.render).not.toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if interest percentage value is not a number', async () => {
@@ -350,11 +399,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if interest percentage value is not between 0 and 100', async () => {
@@ -362,11 +414,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
 
       jest.resetAllMocks();
 
@@ -374,11 +429,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
 
       jest.resetAllMocks();
 
@@ -416,7 +474,11 @@ describe('controllers/facility-value', () => {
         editorId: '12345',
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
+      expect(updateApplicationSpy).toHaveBeenCalledWith({
+        dealId: mockRequest.params.dealId,
+        application: expectedUpdateObj,
+        userToken,
+      });
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {

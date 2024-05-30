@@ -61,7 +61,7 @@ exports.clone = async (req, res) => {
 
     const { bankInternalRefName, additionalRefName, cloneTransactions } = req.body;
 
-    const { _id, previousStatus, tfm, ...existingDealWithoutCertainFields } = existingDeal;
+    const { _id, previousStatus: _previousStatus, tfm: _tfm, ...existingDealWithoutCertainFields } = existingDeal;
     delete existingDealWithoutCertainFields.dataMigration;
     if (existingDealWithoutCertainFields?.submissionDetails?.v1Status) {
       delete existingDealWithoutCertainFields.submissionDetails.v1Status;

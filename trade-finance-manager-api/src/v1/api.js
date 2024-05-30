@@ -1,13 +1,6 @@
 const axios = require('axios');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
-const {
-  isValidMongoId,
-  isValidPartyUrn,
-  isValidNumericId,
-  isValidCurrencyCode,
-  sanitizeUsername,
-  isValidTeamId,
-} = require('./validation/validateIds');
+const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
 require('dotenv').config();
 
 const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL } = process.env;
@@ -199,12 +192,7 @@ const findOneDeal = async (dealId) => {
  * @param {(Error: ErrorParam) => any} params.onError
  * @returns updated deal on success, or `onError({ status, message })` on failure
  */
-const updateDeal = async ({
-  dealId,
-  dealUpdate,
-  auditDetails,
-  onError = ({ status, message }) => ({ status, data: message }),
-}) => {
+const updateDeal = async ({ dealId, dealUpdate, auditDetails, onError = ({ status, message }) => ({ status, data: message }) }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -1174,6 +1162,19 @@ const findBankById = async (bankId) => {
   }
 };
 
+/**
+ * Get all banks
+ * @returns {Promise<import('./api-response-types').BankResponseBody[]>}
+ */
+const getAllBanks = async () => {
+  const url = `${DTFS_CENTRAL_API_URL}/v1/bank`;
+  const response = await axios.get(url, {
+    headers: headers.central,
+  });
+
+  return response.data;
+};
+
 const getGefMandatoryCriteriaByVersion = async (version) => {
   try {
     const isValidVersion = isValidNumericId(version);
@@ -1264,6 +1265,23 @@ const getUtilisationReportReconciliationDetailsById = async (reportId) => {
   return response.data;
 };
 
+/**
+ * Gets the utilisation report reconciliation details by report id
+ * @param {number} reportId - The report id
+ * @param {number[]} feeRecordIds - The selected fee record ids
+ * @returns {Promise<import('@ukef/dtfs2-common').SelectedFeeRecordsDetails>}
+ */
+const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds) => {
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
+    headers: headers.central,
+    data: {
+      feeRecordIds,
+    },
+  });
+
+  return response.data;
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1317,10 +1335,12 @@ module.exports = {
   addUnderwriterCommentToGefDeal,
   updateGefMINActivity,
   findBankById,
+  getAllBanks,
   getGefMandatoryCriteriaByVersion,
   getBankHolidays,
   getUtilisationReportsReconciliationSummary,
   getUtilisationReportById,
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
+  getSelectedFeeRecordsDetails,
 };

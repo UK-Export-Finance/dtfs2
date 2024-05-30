@@ -1,10 +1,6 @@
 const CONSTANTS = require('../../../../constants');
 
-const mapDeals = (
-  deals,
-  mapBssDealFunc,
-  mapGefDealFunc,
-) => {
+const mapDeals = (deals, mapBssDealFunc, mapGefDealFunc) => {
   try {
     return deals.map((deal) => {
       console.info('Mapping deal %s', deal._id);

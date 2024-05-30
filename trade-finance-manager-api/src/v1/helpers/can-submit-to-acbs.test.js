@@ -88,25 +88,12 @@ describe('canSubmiToACBS', () => {
     expect(consoleInfoMock).toHaveBeenCalledTimes(0);
 
     expect(consoleErrorMock).toHaveBeenCalledTimes(1);
-    expect(consoleErrorMock).toHaveBeenCalledWith(
-      'Unable to submit deal to ACBS %o',
-      new Error('Invalid deal object supplied'),
-    );
+    expect(consoleErrorMock).toHaveBeenCalledWith('Unable to submit deal to ACBS %o', new Error('Invalid deal object supplied'));
 
     expect(result).toEqual(false);
   });
 
-  const invalidSubmissionTypeDeals = [
-    CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
-    '',
-    undefined,
-    null,
-    {},
-    [],
-    123,
-    '123',
-    '!£$',
-  ];
+  const invalidSubmissionTypeDeals = [CONSTANTS.DEALS.SUBMISSION_TYPE.MIA, '', undefined, null, {}, [], 123, '123', '!£$'];
 
   it.each(invalidSubmissionTypeDeals)('should return false if submission type is not valid', async (submissionType) => {
     // Arrange
@@ -152,17 +139,7 @@ describe('canSubmiToACBS', () => {
     expect(result).toEqual(false);
   });
 
-  const invalidIds = [
-    CONSTANTS.DEALS.UKEF_ID.PENDING,
-    CONSTANTS.DEALS.UKEF_ID.TEST,
-    '',
-    '0000000000',
-    '123',
-    'ABC',
-    '!"£',
-    [],
-    {},
-  ];
+  const invalidIds = [CONSTANTS.DEALS.UKEF_ID.PENDING, CONSTANTS.DEALS.UKEF_ID.TEST, '', '0000000000', '123', 'ABC', '!"£', [], {}];
 
   it.each(invalidIds)('should return false if the deal has invalid IDs', async (dealId) => {
     // Arrange
@@ -398,37 +375,34 @@ describe('canSubmiToACBS', () => {
     },
   ];
 
-  it.each(invalidFacilityPartiesUrn)(
-    'should return false if the required facility party does not have a URN',
-    async (facilitySnapshot) => {
-      // Arrange
-      const mockDeal = {
-        ...mockTfmDeal,
-        dealSnapshot: {
-          ...mockTfmDeal.dealSnapshot,
-          facilities: [
-            {
-              ...mockTfmFacility,
-              facilitySnapshot,
-            },
-          ],
-        },
-      };
+  it.each(invalidFacilityPartiesUrn)('should return false if the required facility party does not have a URN', async (facilitySnapshot) => {
+    // Arrange
+    const mockDeal = {
+      ...mockTfmDeal,
+      dealSnapshot: {
+        ...mockTfmDeal.dealSnapshot,
+        facilities: [
+          {
+            ...mockTfmFacility,
+            facilitySnapshot,
+          },
+        ],
+      },
+    };
 
-      mockDeal.dealSnapshot.facilities[0].facilitySnapshot = facilitySnapshot;
+    mockDeal.dealSnapshot.facilities[0].facilitySnapshot = facilitySnapshot;
 
-      // Act
-      const result = await canSubmitToACBS(mockDeal);
+    // Act
+    const result = await canSubmitToACBS(mockDeal);
 
-      // Assert
-      expect(consoleErrorMock).toHaveBeenCalledTimes(0);
+    // Assert
+    expect(consoleErrorMock).toHaveBeenCalledTimes(0);
 
-      expect(consoleInfoMock).toHaveBeenCalledTimes(1);
-      expect(consoleInfoMock).toHaveBeenCalledWith('⚡ Validating ACBS deal %s prerequisites.', mockDeal._id);
+    expect(consoleInfoMock).toHaveBeenCalledTimes(1);
+    expect(consoleInfoMock).toHaveBeenCalledWith('⚡ Validating ACBS deal %s prerequisites.', mockDeal._id);
 
-      expect(result).toEqual(false);
-    },
-  );
+    expect(result).toEqual(false);
+  });
 
   const invalidFacilityTfmPartiesUrn = [
     {
@@ -449,33 +423,30 @@ describe('canSubmiToACBS', () => {
     },
   ];
 
-  it.each(invalidFacilityTfmPartiesUrn)(
-    'should return false if the required facility party does not have a URN',
-    async (tfm) => {
-      // Arrange
-      const mockDeal = {
-        ...mockTfmDeal,
-        dealSnapshot: {
-          ...mockTfmDeal.dealSnapshot,
-          facilities: [
-            {
-              ...mockTfmFacility,
-              tfm,
-            },
-          ],
-        },
-      };
+  it.each(invalidFacilityTfmPartiesUrn)('should return false if the required facility party does not have a URN', async (tfm) => {
+    // Arrange
+    const mockDeal = {
+      ...mockTfmDeal,
+      dealSnapshot: {
+        ...mockTfmDeal.dealSnapshot,
+        facilities: [
+          {
+            ...mockTfmFacility,
+            tfm,
+          },
+        ],
+      },
+    };
 
-      // Act
-      const result = await canSubmitToACBS(mockDeal);
+    // Act
+    const result = await canSubmitToACBS(mockDeal);
 
-      // Assert
-      expect(consoleErrorMock).toHaveBeenCalledTimes(0);
+    // Assert
+    expect(consoleErrorMock).toHaveBeenCalledTimes(0);
 
-      expect(consoleInfoMock).toHaveBeenCalledTimes(1);
-      expect(consoleInfoMock).toHaveBeenCalledWith('⚡ Validating ACBS deal %s prerequisites.', mockDeal._id);
+    expect(consoleInfoMock).toHaveBeenCalledTimes(1);
+    expect(consoleInfoMock).toHaveBeenCalledWith('⚡ Validating ACBS deal %s prerequisites.', mockDeal._id);
 
-      expect(result).toEqual(false);
-    },
-  );
+    expect(result).toEqual(false);
+  });
 });

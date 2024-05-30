@@ -22,12 +22,7 @@ const newDeal = aDeal({
 
 describe('/v1/tfm/deal/:id', () => {
   beforeEach(async () => {
-    await wipeDB.wipe([
-      MONGO_DB_COLLECTIONS.DEALS,
-      MONGO_DB_COLLECTIONS.FACILITIES,
-      MONGO_DB_COLLECTIONS.TFM_DEALS,
-      MONGO_DB_COLLECTIONS.TFM_FACILITIES,
-    ]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
   describe('GET /v1/tfm/deal/:id', () => {
@@ -71,18 +66,10 @@ describe('/v1/tfm/deal/:id', () => {
           ...mockFacility,
         };
 
-        const { body: createdBond1 } = await api
-          .post({ facility: mockBond, user: MOCK_PORTAL_USER })
-          .to('/v1/portal/facilities');
-        const { body: createdBond2 } = await api
-          .post({ facility: mockBond, user: MOCK_PORTAL_USER })
-          .to('/v1/portal/facilities');
-        const { body: createdLoan1 } = await api
-          .post({ facility: mockLoan, user: MOCK_PORTAL_USER })
-          .to('/v1/portal/facilities');
-        const { body: createdLoan2 } = await api
-          .post({ facility: mockLoan, user: MOCK_PORTAL_USER })
-          .to('/v1/portal/facilities');
+        const { body: createdBond1 } = await api.post({ facility: mockBond, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const { body: createdBond2 } = await api.post({ facility: mockBond, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const { body: createdLoan1 } = await api.post({ facility: mockLoan, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const { body: createdLoan2 } = await api.post({ facility: mockLoan, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
 
         const { body: bond1 } = await api.get(`/v1/portal/facilities/${createdBond1._id}`);
         const { body: bond2 } = await api.get(`/v1/portal/facilities/${createdBond2._id}`);

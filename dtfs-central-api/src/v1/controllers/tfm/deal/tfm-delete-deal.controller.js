@@ -3,7 +3,6 @@ const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const db = require('../../../../drivers/db-client').default;
 
-// eslint-disable-next-line consistent-return
 exports.deleteDeal = async (req, res) => {
   const { id } = req.params;
 
@@ -11,7 +10,7 @@ exports.deleteDeal = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
-  findOneDeal(id, async (deal) => {
+  return findOneDeal(id, async (deal) => {
     if (!deal) {
       return res.status(404).send({ status: 404, message: 'Deal not found' });
     }

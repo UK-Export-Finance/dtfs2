@@ -1,5 +1,5 @@
 import { subMonths } from 'date-fns';
-import { getOneIndexedMonth } from '@ukef/dtfs2-common'
+import { getOneIndexedMonth } from '@ukef/dtfs2-common';
 
 /**
  * Gets the monthly report period from the submission month

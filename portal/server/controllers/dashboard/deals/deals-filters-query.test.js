@@ -1,11 +1,6 @@
 import { ROLES } from '@ukef/dtfs2-common';
 import { dashboardDealsFiltersQuery } from './deals-filters-query';
-import {
-  STATUS,
-  SUBMISSION_TYPE,
-  FIELD_NAMES,
-  ALL_BANKS_ID,
-} from '../../../constants';
+import { STATUS, SUBMISSION_TYPE, FIELD_NAMES, ALL_BANKS_ID } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 import keywordQuery from './deals-filters-keyword-query';
 
@@ -21,15 +16,10 @@ describe('controllers/dashboard/deals - filters query', () => {
   it('should return bank.id filter', () => {
     const mockFilters = [];
 
-    const result = dashboardDealsFiltersQuery(
-      mockFilters,
-      mockUser,
-    );
+    const result = dashboardDealsFiltersQuery(mockFilters, mockUser);
 
     const expected = {
-      AND: [
-        { 'bank.id': mockUser.bank.id },
-      ],
+      AND: [{ 'bank.id': mockUser.bank.id }],
     };
 
     expect(result).toEqual(expected);
@@ -37,20 +27,12 @@ describe('controllers/dashboard/deals - filters query', () => {
 
   describe('when createdByYou is true', () => {
     it('should return maker._id filter', () => {
-      const mockFilters = [
-        { [FIELD_NAMES.DEAL.CREATED_BY]: ['Created by you'] },
-      ];
+      const mockFilters = [{ [FIELD_NAMES.DEAL.CREATED_BY]: ['Created by you'] }];
 
-      const result = dashboardDealsFiltersQuery(
-        mockFilters,
-        mockUser,
-      );
+      const result = dashboardDealsFiltersQuery(mockFilters, mockUser);
 
       const expected = {
-        AND: [
-          { 'bank.id': mockUser.bank.id },
-          { 'maker._id': mockUser._id },
-        ],
+        AND: [{ 'bank.id': mockUser.bank.id }, { 'maker._id': mockUser._id }],
       };
 
       expect(result).toEqual(expected);
@@ -63,19 +45,13 @@ describe('controllers/dashboard/deals - filters query', () => {
         { [FIELD_NAMES.DEAL.CREATED_BY]: ['Created by you'] },
       ];
 
-      const result = dashboardDealsFiltersQuery(
-        mockFilters,
-        mockUser,
-      );
+      const result = dashboardDealsFiltersQuery(mockFilters, mockUser);
 
       const expected = {
         AND: [
           { 'bank.id': mockUser.bank.id },
           {
-            OR: [
-              { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[0] },
-              { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[1] },
-            ],
+            OR: [{ [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[0] }, { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[1] }],
           },
           {
             OR: [{ [FIELD_NAMES.DEAL.SUBMISSION_TYPE]: mockFilters[1].submissionType[0] }],
@@ -93,16 +69,10 @@ describe('controllers/dashboard/deals - filters query', () => {
       const mockFilters = [];
       mockUser.roles = [CHECKER];
 
-      const result = dashboardDealsFiltersQuery(
-        mockFilters,
-        mockUser,
-      );
+      const result = dashboardDealsFiltersQuery(mockFilters, mockUser);
 
       const expected = {
-        AND: [
-          { 'bank.id': mockUser.bank.id },
-          { status: STATUS.DEAL.READY_FOR_APPROVAL },
-        ],
+        AND: [{ 'bank.id': mockUser.bank.id }, { status: STATUS.DEAL.READY_FOR_APPROVAL }],
       };
 
       expect(result).toEqual(expected);
@@ -115,10 +85,7 @@ describe('controllers/dashboard/deals - filters query', () => {
       mockUser.bank.id = ALL_BANKS_ID;
       mockUser.roles = [];
 
-      const result = dashboardDealsFiltersQuery(
-        mockFilters,
-        mockUser,
-      );
+      const result = dashboardDealsFiltersQuery(mockFilters, mockUser);
 
       const expected = {};
 
@@ -132,26 +99,18 @@ describe('controllers/dashboard/deals - filters query', () => {
       { [FIELD_NAMES.DEAL.DEAL_TYPE]: ['BSS', 'EWCS'] },
       { [FIELD_NAMES.DEAL.SUBMISSION_TYPE]: [SUBMISSION_TYPE.AIN] },
       {
-        [CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD]: [
-          mockKeyword,
-        ],
+        [CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD]: [mockKeyword],
       },
     ];
     mockUser.bank.id = ALL_BANKS_ID;
     mockUser.roles = [];
 
-    const result = dashboardDealsFiltersQuery(
-      mockFilters,
-      mockUser,
-    );
+    const result = dashboardDealsFiltersQuery(mockFilters, mockUser);
 
     const expected = {
       AND: [
         {
-          OR: [
-            { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[0] },
-            { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[1] },
-          ],
+          OR: [{ [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[0] }, { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[1] }],
         },
         {
           OR: [{ [FIELD_NAMES.DEAL.SUBMISSION_TYPE]: mockFilters[1].submissionType[0] }],
@@ -166,16 +125,11 @@ describe('controllers/dashboard/deals - filters query', () => {
   });
 
   it(`should NOT add a filter to the query when the field value is ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES}`, () => {
-    const mockFilters = [
-      { status: [CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES] },
-    ];
+    const mockFilters = [{ status: [CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES] }];
     mockUser.bank.id = ALL_BANKS_ID;
     mockUser.roles = [];
 
-    const result = dashboardDealsFiltersQuery(
-      mockFilters,
-      mockUser,
-    );
+    const result = dashboardDealsFiltersQuery(mockFilters, mockUser);
 
     const expected = {};
 

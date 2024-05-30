@@ -2,17 +2,13 @@ const CONSTANTS = require('../../constants');
 const Application = require('../../models/application');
 const api = require('../../services/api');
 
-const applicationIsAbandonable = (application) => [CONSTANTS.DEAL_STATUS.DRAFT,
-  CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
-  CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL].includes(application.status);
+const applicationIsAbandonable = (application) =>
+  [CONSTANTS.DEAL_STATUS.DRAFT, CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL].includes(application.status);
 
 const dashboardUrl = '/dashboard';
 
 const confirmAbandonApplication = async (req, res, next) => {
-  const {
-    params,
-    session,
-  } = req;
+  const { params, session } = req;
   const { dealId } = params;
   const { user, userToken } = session;
   let application;

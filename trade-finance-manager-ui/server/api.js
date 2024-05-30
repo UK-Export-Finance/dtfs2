@@ -878,6 +878,41 @@ const getUtilisationReportReconciliationDetailsById = async (reportId, userToken
   return response.data;
 };
 
+/**
+ * @param {number} reportId - The report id
+ * @param {number[]} feeRecordIds - The ids of the selected fee records
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('@ukef/dtfs2-common').SelectedFeeRecordsDetails>}
+ */
+const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
+    headers: generateHeaders(userToken),
+    data: {
+      feeRecordIds,
+    },
+  });
+
+  return response.data;
+};
+
+/**
+ * Fetches all banks
+ * @param {string} userToken - token to validate session
+ * @returns {Promise<import('./types/banks').Bank[]>}
+ */
+const getAllBanks = async (userToken) => {
+  try {
+    const { data } = await axios.get(`${TFM_API_URL}/v1/banks`, {
+      headers: generateHeaders(userToken),
+    });
+
+    return data;
+  } catch (error) {
+    console.error('Failed to get banks', error);
+    throw error;
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -917,4 +952,6 @@ module.exports = {
   downloadUtilisationReport,
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
+  getAllBanks,
+  getSelectedFeeRecordsDetails,
 };

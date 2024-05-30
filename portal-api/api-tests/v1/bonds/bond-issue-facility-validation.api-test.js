@@ -10,8 +10,8 @@ const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { DATE_FORMATS } = require('../../../src/constants');
 
 describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
-  const nowDate  = new Date();
-  const submissionDateAWeekAgo = sub(nowDate, { weeks: 1 })
+  const nowDate = new Date();
+  const submissionDateAWeekAgo = sub(nowDate, { weeks: 1 });
 
   const newDeal = aDeal({
     submissionType: 'Manual Inclusion Notice',
@@ -320,7 +320,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
             submissionType: 'Automatic Inclusion Notice',
             details: {
               ...newDeal.details,
-              submissionDate: submissionDate4MonthsAgo.valueOf()
+              submissionDate: submissionDate4MonthsAgo.valueOf(),
             },
           };
 
@@ -331,7 +331,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
           it('should return validationError', async () => {
             const submissionPlus3Months = add(submissionDate4MonthsAgo, { months: 3 });
             const requestedCoverStartDateFields = {
-              requestedCoverStartDate: null
+              requestedCoverStartDate: null,
             };
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
@@ -428,7 +428,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const todayFormatted = format(nowDate, DATE_FORMATS.LONG_FORM_DATE)
+            const todayFormatted = format(nowDate, DATE_FORMATS.LONG_FORM_DATE);
             const todayPlus3MonthsFormatted = format(todayPlus3Months, DATE_FORMATS.LONG_FORM_DATE);
 
             const expectedText = `Requested Cover Start Date must be between ${todayFormatted} and ${todayPlus3MonthsFormatted}`;
@@ -441,9 +441,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
             const dealWithEligibilityCriteria15False = {
               ...updatedDeal,
               eligibility: {
-                criteria: [
-                  { id: 15, answer: false }
-                ],
+                criteria: [{ id: 15, answer: false }],
               },
             };
 
@@ -482,7 +480,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
           await updateDeal(dealID, updatedDeal);
         });
 
-        describe('when requestedCoverStartDate is before the deal\'s manual inclusion notice submission date', () => {
+        describe("when requestedCoverStartDate is before the deal's manual inclusion notice submission date", () => {
           it('should return validationError', async () => {
             const threeDaysAgo = sub(nowDate, { days: 3 });
             const requestedCoverStartDateFields = {
@@ -518,7 +516,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
 
         describe('when is after 3 months from today', () => {
           it('should return validationError', async () => {
-            const submissionPlus3Months = add(manualInclusionNoticeSubmissionDate, { months : 3 });
+            const submissionPlus3Months = add(manualInclusionNoticeSubmissionDate, { months: 3 });
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': format(todayPlus3Months1Day, 'dd'),
               'requestedCoverStartDate-month': format(todayPlus3Months1Day, 'MM'),
@@ -555,9 +553,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
             const dealWithEligibilityCriteria15False = {
               ...updatedDeal,
               eligibility: {
-                criteria: [
-                  { id: 15, answer: false }
-                ],
+                criteria: [{ id: 15, answer: false }],
               },
             };
 
@@ -577,7 +573,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
 
       describe('when deal is MIN with approved status and cover starts on submission', () => {
         let updatedDeal;
-        const submissionDate4MonthsAgo = sub(nowDate, { months: 4 })
+        const submissionDate4MonthsAgo = sub(nowDate, { months: 4 });
 
         beforeEach(async () => {
           await createDealAndBond();
@@ -631,9 +627,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
             const dealWithEligibilityCriteria15False = {
               ...updatedDeal,
               eligibility: {
-                criteria: [
-                  { id: 15, answer: false }
-                ],
+                criteria: [{ id: 15, answer: false }],
               },
             };
 

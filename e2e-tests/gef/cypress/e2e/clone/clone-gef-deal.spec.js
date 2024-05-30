@@ -23,14 +23,17 @@ context('Clone GEF (AIN) deal', () => {
   let AINDealName;
   before(() => {
     cy.loadData();
-    cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
-      cy.apiFetchAllGefApplications(token);
-    }).then(({ body }) => {
-      AINdealId = body.items[2]._id;
-      testDealId = body.items[1]._id;
-      AINDealName = body.items[2].bankInternalRefName;
-      cy.login(BANK1_MAKER1);
-    });
+    cy.apiLogin(BANK1_MAKER1)
+      .then((token) => token)
+      .then((token) => {
+        cy.apiFetchAllGefApplications(token);
+      })
+      .then(({ body }) => {
+        AINdealId = body.items[2]._id;
+        testDealId = body.items[1]._id;
+        AINDealName = body.items[2].bankInternalRefName;
+        cy.login(BANK1_MAKER1);
+      });
   });
 
   describe('Validate the creation of a cloned deal', () => {
@@ -67,9 +70,12 @@ context('Clone GEF (AIN) deal', () => {
 
     it('Clone button should contain the right text and aria-label', () => {
       cloneGEFDeal.cloneGefDealLink().contains('Clone');
-      cloneGEFDeal.cloneGefDealLink().invoke('attr', 'aria-label').then((label) => {
-        expect(label).to.equal(`Clone deal ${AINDealName}`);
-      });
+      cloneGEFDeal
+        .cloneGefDealLink()
+        .invoke('attr', 'aria-label')
+        .then((label) => {
+          expect(label).to.equal(`Clone deal ${AINDealName}`);
+        });
     });
 
     it('should clone an AIN deal', () => {
@@ -98,9 +104,7 @@ context('Clone GEF (AIN) deal', () => {
 
     it('should validate the information in the banner', () => {
       cloneGEFDeal.backLink().click();
-      cy.get('table.govuk-table tr').eq(1).find('td').eq(1)
-        .find('.govuk-link')
-        .click();
+      cy.get('table.govuk-table tr').eq(1).find('td').eq(1).find('.govuk-link').click();
       cy.url().then((url) => {
         cy.visit(`${url}`);
         statusBanner.bannerStatus().contains('Draft');
@@ -112,17 +116,13 @@ context('Clone GEF (AIN) deal', () => {
         applicationDetails.facilityStatus().contains('Completed');
         applicationDetails.exporterStatus().contains('Completed');
         applicationDetails.submitButton().should('not.exist');
-        cy.get('[data-cy="facility-summary-list"]').eq(1).find('.govuk-summary-list__row').eq(1)
-          .find('.govuk-summary-list__key')
-          .contains('Stage');
+        cy.get('[data-cy="facility-summary-list"]').eq(1).find('.govuk-summary-list__row').eq(1).find('.govuk-summary-list__key').contains('Stage');
       });
     });
 
     it('should modify the Exporter details', () => {
       cloneGEFDeal.backLink().click();
-      cy.get('table.govuk-table tr').eq(1).find('td').eq(1)
-        .find('.govuk-link')
-        .click();
+      cy.get('table.govuk-table tr').eq(1).find('td').eq(1).find('.govuk-link').click();
       cy.url().then((url) => {
         cy.visit(`${url}/about-exporter`);
         aboutExporter.mediumRadioButton().click();
@@ -153,17 +153,21 @@ context('Clone GEF (AIN) deal', () => {
 
       cy.get('[data-cy="success-message-link"]').click();
 
-      applicationDetails.facilitySummaryListRowAction(0, 0).find('.govuk-link').invoke('attr', 'href').then((href) => {
-        // get id from href for facility
-        const hrefSplit = href.split('/');
-        const facilityId = hrefSplit[5];
+      applicationDetails
+        .facilitySummaryListRowAction(0, 0)
+        .find('.govuk-link')
+        .invoke('attr', 'href')
+        .then((href) => {
+          // get id from href for facility
+          const hrefSplit = href.split('/');
+          const facilityId = hrefSplit[5];
 
-        cy.get('[data-cy="dashboard"]').click();
-        // goes to facilities table and makes sure it's issued and no issue date so properly cloned
-        cy.get('[data-cy="dashboard-sub-nav-link-facilities"]').click();
-        cy.get(`[data-cy="facility__bankStage--${facilityId}"]`).contains('Issued');
-        cy.get(`[data-cy="facility__issuedDate--${facilityId}"]`).contains('-');
-      });
+          cy.get('[data-cy="dashboard"]').click();
+          // goes to facilities table and makes sure it's issued and no issue date so properly cloned
+          cy.get('[data-cy="dashboard-sub-nav-link-facilities"]').click();
+          cy.get(`[data-cy="facility__bankStage--${facilityId}"]`).contains('Issued');
+          cy.get(`[data-cy="facility__issuedDate--${facilityId}"]`).contains('-');
+        });
     });
   });
 });
@@ -172,12 +176,15 @@ context('Clone GEF (MIA) deal', () => {
   let MIAdealId;
   before(() => {
     cy.loadData();
-    cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
-      cy.apiFetchAllGefApplications(token);
-    }).then(({ body }) => {
-      MIAdealId = body.items[2]._id;
-      cy.login(BANK1_MAKER1);
-    });
+    cy.apiLogin(BANK1_MAKER1)
+      .then((token) => token)
+      .then((token) => {
+        cy.apiFetchAllGefApplications(token);
+      })
+      .then(({ body }) => {
+        MIAdealId = body.items[2]._id;
+        cy.login(BANK1_MAKER1);
+      });
   });
   describe('Clone MIA deal', () => {
     beforeEach(() => {
@@ -278,9 +285,7 @@ context('Clone GEF (MIA) deal', () => {
 
     it('should modify the Exporter details', () => {
       cloneGEFDeal.backLink().click();
-      cy.get('table.govuk-table tr').eq(1).find('td').eq(1)
-        .find('.govuk-link')
-        .click();
+      cy.get('table.govuk-table tr').eq(1).find('td').eq(1).find('.govuk-link').click();
       cy.url().then((url) => {
         cy.visit(`${url}/about-exporter`);
         aboutExporter.mediumRadioButton().click();
@@ -292,9 +297,7 @@ context('Clone GEF (MIA) deal', () => {
 
     it('should validate the information in the banner', () => {
       cloneGEFDeal.backLink().click();
-      cy.get('table.govuk-table tr').eq(1).find('td').eq(1)
-        .find('.govuk-link')
-        .click();
+      cy.get('table.govuk-table tr').eq(1).find('td').eq(1).find('.govuk-link').click();
       cy.url().then((url) => {
         cy.visit(`${url}`);
         statusBanner.bannerStatus().contains('Draft');
@@ -306,9 +309,7 @@ context('Clone GEF (MIA) deal', () => {
         applicationDetails.facilityStatus().contains('Completed');
         applicationDetails.exporterStatus().contains('Completed');
         applicationDetails.submitButton().should('not.exist');
-        cy.get('[data-cy="facility-summary-list"]').eq(1).find('.govuk-summary-list__row').eq(1)
-          .find('.govuk-summary-list__key')
-          .contains('Stage');
+        cy.get('[data-cy="facility-summary-list"]').eq(1).find('.govuk-summary-list__row').eq(1).find('.govuk-summary-list__key').contains('Stage');
       });
     });
   });
@@ -319,19 +320,21 @@ context('Clone GEF (MIN) deal', () => {
   let token;
   let facilityOneId;
   before(() => {
-    cy.apiLogin(BANK1_MAKER1).then((t) => {
-      token = t;
-    }).then(() => {
-      cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
-        MINdealId = body._id;
-        cy.apiUpdateApplication(MINdealId, token, MOCK_APPLICATION_MIN).then(() => {
-          cy.apiCreateFacility(MINdealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-            facilityOneId = facility.body.details._id;
-            cy.apiUpdateFacility(facilityOneId, token, MOCK_FACILITY_ONE);
+    cy.apiLogin(BANK1_MAKER1)
+      .then((t) => {
+        token = t;
+      })
+      .then(() => {
+        cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
+          MINdealId = body._id;
+          cy.apiUpdateApplication(MINdealId, token, MOCK_APPLICATION_MIN).then(() => {
+            cy.apiCreateFacility(MINdealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+              facilityOneId = facility.body.details._id;
+              cy.apiUpdateFacility(facilityOneId, token, MOCK_FACILITY_ONE);
+            });
           });
         });
       });
-    });
   });
   describe('Clone MIN deal', () => {
     beforeEach(() => {

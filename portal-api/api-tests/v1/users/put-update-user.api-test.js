@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const { produce } = require('immer');
 
 const databaseHelper = require('../../database-helper');
@@ -18,7 +19,11 @@ const { withValidateEmailIsUniqueTests } = require('./with-validate-email-is-uni
 const { withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests } = require('./with-validate-password.api-tests');
 
 const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
-const MOCK_USER = { ...users.barclaysBankMaker1, username: temporaryUsernameAndEmail, email: temporaryUsernameAndEmail };
+const MOCK_USER = {
+  ...users.barclaysBankMaker1,
+  username: temporaryUsernameAndEmail,
+  email: temporaryUsernameAndEmail,
+};
 
 const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: "You cannot combine 'Read-only' with any of the other roles" };
 

@@ -1,6 +1,6 @@
 const InvalidCollectionNameError = require('./invalid-collection-name.error');
 
-describe('InvalidEnvironmentVariableError', () => {
+describe('InvalidCollectionNameError', () => {
   const message = 'an error message';
 
   it('exposes the message it was created with', () => {

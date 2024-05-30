@@ -20,10 +20,7 @@ const handleTransactionCurrencyFields = async (dealSection, deal) => {
     supplyContractCurrencyCodeId = deal.submissionDetails.supplyContractCurrency.id;
   }
 
-  const {
-    currencySameAsSupplyContractCurrency,
-    currency: currencyCode,
-  } = modifiedSection;
+  const { currencySameAsSupplyContractCurrency, currency: currencyCode } = modifiedSection;
 
   if (currencySameAsSupplyContractCurrency && currencySameAsSupplyContractCurrency === 'true') {
     // remove any 'currency is NOT the same' specific values

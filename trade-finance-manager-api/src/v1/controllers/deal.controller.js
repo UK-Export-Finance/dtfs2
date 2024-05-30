@@ -155,11 +155,7 @@ const updateLeadUnderwriter = async (req, res) => {
 
     const leadUnderwriterUpdate = req.body;
 
-    const updatedDealTfm = await updateTfmLeadUnderwriter(
-      dealId,
-      leadUnderwriterUpdate,
-      generateTfmAuditDetails(req.user._id),
-    );
+    const updatedDealTfm = await updateTfmLeadUnderwriter(dealId, leadUnderwriterUpdate, generateTfmAuditDetails(req.user._id));
 
     return res.status(200).send(updatedDealTfm);
   } catch (error) {

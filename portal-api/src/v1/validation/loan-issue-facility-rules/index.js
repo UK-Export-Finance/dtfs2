@@ -5,18 +5,11 @@ const disbursementAmountRules = require('../loan-rules/disbursement-amount');
 const nameRules = require('./name');
 const coverDatesRules = require('../fields/cover-dates');
 
-module.exports = (
-  submittedValues,
-  deal,
-) => {
+module.exports = (submittedValues, deal) => {
   let errorList = {};
 
   errorList = issuedDateRules(submittedValues, errorList, deal);
-  errorList = requestedCoverStartDateRules(
-    submittedValues,
-    errorList,
-    deal,
-  );
+  errorList = requestedCoverStartDateRules(submittedValues, errorList, deal);
   errorList = coverEndDateRules(submittedValues, deal, errorList);
   errorList = coverDatesRules(submittedValues, deal, errorList);
   errorList = disbursementAmountRules(submittedValues, errorList);

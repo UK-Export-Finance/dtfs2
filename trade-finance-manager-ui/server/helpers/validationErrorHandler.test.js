@@ -12,10 +12,12 @@ describe('validationErrorHandler()', () => {
     };
 
     expect(validationErrorHandler(mockedError)).toEqual({
-      errorSummary: [{
-        text: 'message',
-        href: '#abc',
-      }],
+      errorSummary: [
+        {
+          text: 'message',
+          href: '#abc',
+        },
+      ],
       fieldErrors: {
         abc: {
           text: 'message',
@@ -30,10 +32,12 @@ describe('validationErrorHandler()', () => {
       errMsg: 'message',
     };
     expect(validationErrorHandler([mockedError], 'my-link')).toEqual({
-      errorSummary: [{
-        text: 'message',
-        href: 'my-link#abc',
-      }],
+      errorSummary: [
+        {
+          text: 'message',
+          href: 'my-link#abc',
+        },
+      ],
       fieldErrors: {
         abc: {
           text: 'message',

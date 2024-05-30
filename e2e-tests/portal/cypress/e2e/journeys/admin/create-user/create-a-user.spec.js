@@ -157,6 +157,36 @@ context('Admin user creates a new user', () => {
       });
   });
 
+  it('creates a new user with the trusted status', () => {
+    // Login and go to the dashboard
+    cy.login(AN_ADMIN);
+
+    header.users().click();
+    users.user(validUser).should('not.exist');
+
+    users.addUser().click();
+
+    validUser.roles.forEach((role) => {
+      createUser.role(role).click();
+    });
+    createUser.username().type(validUser.username);
+    createUser.firstname().type(validUser.firstname);
+    createUser.surname().type(validUser.surname);
+
+    createUser.bank().select(validUser.bank);
+
+    createUser.isTrustedTrue().click();
+
+    createUser.createUser().click();
+
+    cy.url().should('eq', relative('/admin/users/'));
+
+    users.row(validUser).trusted().should('exist');
+    cy.getUserByUsername(validUser.username).then(({ isTrusted }) => {
+      expect(isTrusted).to.equal(true);
+    });
+  });
+
   it('Admin user adds a new user using "{ "$gt": "" }" as the email, triggering validation error', () => {
     // Login and go to the dashboard
     cy.login(AN_ADMIN);
@@ -183,9 +213,7 @@ context('Admin user creates a new user', () => {
     // checks html form validation pop up contains correct error message
     cy.get('input:invalid').should('have.length', 1);
     createUser.username().then(($input) => {
-      expect($input[0].validationMessage).to.eq(
-        "Please include an '@' in the email address. '{\"$gt\":\"\"}' is missing an '@'.",
-      );
+      expect($input[0].validationMessage).to.eq("Please include an '@' in the email address. '{\"$gt\":\"\"}' is missing an '@'.");
     });
 
     /**

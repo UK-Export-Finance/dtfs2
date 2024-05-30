@@ -88,19 +88,18 @@ context('Delete a Loan', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id;
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
 
-        const { mockFacilities } = MOCK_DEAL;
+      const { mockFacilities } = MOCK_DEAL;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const loans = createdFacilities.filter((f) => f.type === 'Loan');
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-          dealFacilities.loans = loans;
-        });
+        dealFacilities.loans = loans;
       });
+    });
   });
 
   after(() => {
@@ -128,9 +127,12 @@ context('Delete a Loan', () => {
 
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
-    partials.successMessage.successMessageListItem().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(`Loan #${loanToDeleteId} has been deleted`);
-    });
+    partials.successMessage
+      .successMessageListItem()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(`Loan #${loanToDeleteId} has been deleted`);
+      });
 
     pages.contract.loansTransactionsTableRows().should('have.length', 2);
   });

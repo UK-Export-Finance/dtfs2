@@ -6,6 +6,38 @@ The project uses the [Microsoft SQL Server](https://learn.microsoft.com/en-gb/sq
 
 As of January 2024 the project is in the process of migrating from a MongoDB (NoSQL) database to a SQL Server (SQL) database. MongoDB collections will gradually be replaced with SQL Server tables until MongoDB can be completely removed.
 
+## Ledger tables
+
+The SQL Server database tables all have ledger enabled which has some impacts on how we alter tables. For more details than those discussed below, refer to [the SQL Server docs](https://learn.microsoft.com/en-us/sql/relational-databases/security/ledger/ledger-limits?view=sql-server-ver16).
+
+### Adding a new, non-nullable column
+
+Nullable columns can be added to a ledger table with no issues. If you want to add a non-nullable column, you need your column to have a default value and need to manually update the migration generated via [`npm run db:generate-migration`](#--generate-new-migration). For example, as we use typeorm to generate our migrations, consider the following column
+
+```typescript
+@Column({ nullable: false, default: 0 })
+age!: number;
+```
+
+The `npm run db:generate-migration` command will then generate a query similar to
+
+```sql
+ALTER TABLE "Person" ADD "age" int CONSTRAINT "DF_abc123" DEFAULT 0
+```
+
+However, this will cause an error as the existing rows will do not satisfy the non-nullable constraint. To overcome this, you need to manually update your migration to have the following three steps:
+
+```sql
+-- Add column as nullable
+ALTER TABLE "Person" ADD "age" int NULL CONSTRAINT "DF_abc123" DEFAULT 0;
+
+-- Update all existing columns to have the default value
+UPDATE "Person" SET "age" = 0;
+
+-- Set the new column to non-nullable
+ALTER TABLE "Person" ALTER COLUMN "age" int NOT NULL;
+```
+
 ## Running locally
 
 The SQL Server database will be spun up in Docker along with all the other services (see the docker-compose step in [Setup](../README.md#setup-gear) in the main README).
@@ -118,6 +150,14 @@ command. This command first runs the `predb:seed` script (see details below) and
 
 As a result of not building the project, the `typeorm-extension` executable needs to be run directly from the `node_modules` via `ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run`. The `node_modules` directory where `typeorm-extension` is located needs to be at the same level as the root of the seeder which, in this case, is `utils/sql-db-seeder`. Due to conflicting versions of `mongodb`, the `typeorm-extension` package actually gets placed within the root level `node_modules` after running `npm i`. To overcome this issue, the `predb:seed` script copies the required node modules to `utils/sql-db-seeder` before executing the `db:seed` script.
 
+After running the seeder, a table called `"seeds"` is created. This table will prevent you from running the same seeder twice, stopping unexpected errors with respect to inserting data with duplicate `id`s, for example. To remove all the rows inserted by the seeder, the
+
+```shell
+npm run db:seed:reset
+```
+
+command can be used. This will delete all rows from the `"seeds"` table as well as all the rows in the `"UtilisationReport"`, `"AzureFileInfo"` and `"FeeRecord"` tables which were inserted by the seeder.
+
 ## Adding DB access to a package
 
 Though the DB configuration is contained within the [common package](../libs/common), it is up to each package that needs access to initialise a connection to the DB. This is done by adding the following to a file where the app is first initialised:
@@ -126,7 +166,7 @@ Though the DB configuration is contained within the [common package](../libs/com
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 
 SqlDbDataSource.initialize()
-  .then(() => console.info('🗄️ Successfully initialised connection to SQL database'))
+  .then(() => console.info('✅ Successfully initialised connection to SQL database'))
   .catch((error) => console.error('❌ Failed to initialise connection to SQL database:', error));
 ```
 

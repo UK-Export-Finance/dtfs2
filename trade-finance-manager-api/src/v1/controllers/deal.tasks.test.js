@@ -1,10 +1,5 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const {
-  shouldCreatePartiesTask,
-  shouldCreateAgentCheckTask,
-  listAdditionalTasks,
-  createDealTasks,
-} = require('./deal.tasks');
+const { shouldCreatePartiesTask, shouldCreateAgentCheckTask, listAdditionalTasks, createDealTasks } = require('./deal.tasks');
 const externalApis = require('../api');
 const CONSTANTS = require('../../constants');
 const MOCK_DEAL_MIA = require('../__mocks__/mock-deal-MIA-submitted');
@@ -155,10 +150,7 @@ describe('createDealTasks', () => {
       it('should return array of all additional tasks', () => {
         const result = listAdditionalTasks(mockDealEligibilityCriteria11False);
 
-        const expected = [
-          CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
-          CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK,
-        ];
+        const expected = [CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES, CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK];
 
         expect(result).toEqual(expected);
       });

@@ -1,8 +1,6 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const {
-  validateAuditDetails,
-  generateAuditDatabaseRecordFromAuditDetails,
-} = require('@ukef/dtfs2-common/change-stream');
+const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common/errors');
+const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./tfm-get-facility.controller');
@@ -24,15 +22,11 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(facilityId) } },
-    $.flatten(withoutId(update)),
-    {
-      returnNewDocument: true,
-      returnDocument: 'after',
-      upsert: true,
-    },
-  );
+  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, $.flatten(withoutId(update)), {
+    returnNewDocument: true,
+    returnDocument: 'after',
+    upsert: true,
+  });
 
   const { value: updatedFacility } = findAndUpdateResponse;
 
@@ -55,8 +49,14 @@ exports.updateFacilityPut = async (req, res) => {
 
   try {
     validateAuditDetails(auditDetails);
-  } catch ({ message }) {
-    return res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
   }
 
   const updatedFacility = await updateFacility({

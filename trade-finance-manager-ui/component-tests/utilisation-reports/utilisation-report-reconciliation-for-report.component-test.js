@@ -13,11 +13,15 @@ describe(page, () => {
   };
   const formattedReportPeriod = 'Nov 2023';
 
+  const reportId = 1;
+
   const params = {
     activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
     bank,
     formattedReportPeriod,
+    reportId,
     feeRecords: [],
+    errorSummary: undefined,
   };
 
   beforeEach(() => {
@@ -50,14 +54,10 @@ describe(page, () => {
 
     wrapper.expectElement(premiumPaymentsTabSelector).toExist();
 
-    wrapper
-      .expectText(`${premiumPaymentsTabSelector} h2[data-cy="premium-payments-heading"]`)
-      .toRead('Premium payments');
+    wrapper.expectText(`${premiumPaymentsTabSelector} h2[data-cy="premium-payments-heading"]`).toRead('Premium payments');
     wrapper
       .expectText(`${premiumPaymentsTabSelector} p`)
-      .toMatch(
-        /Enter received payments against reported fees by selecting them and then selecting the 'Add a payment' button./,
-      );
+      .toMatch(/Enter received payments against reported fees by selecting them and then selecting the 'Add a payment' button./);
     wrapper
       .expectText(`${premiumPaymentsTabSelector} p`)
       .toMatch(
@@ -68,15 +68,14 @@ describe(page, () => {
 
     wrapper.expectElement(`${premiumPaymentsTabSelector} div.govuk-button-group`).toExist();
 
-    wrapper.expectElement(`${premiumPaymentsTabSelector} button[data-cy="add-a-payment-button"]`).toExist();
+    wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="add-a-payment-button"]`).toExist();
+    wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="add-a-payment-button"]`).toHaveAttribute('value', 'Add a payment');
     wrapper
-      .expectPrimaryButton(`${premiumPaymentsTabSelector} button[data-cy="add-a-payment-button"]`)
-      .toLinkTo(undefined, 'Add a payment');
+      .expectElement(`${premiumPaymentsTabSelector} input[data-cy="add-a-payment-button"]`)
+      .toHaveAttribute('formaction', `/utilisation-reports/${reportId}/add-payment`);
 
-    wrapper.expectElement(`${premiumPaymentsTabSelector} button[data-cy="generate-keying-data-button"]`).toExist();
-    wrapper
-      .expectSecondaryButton(`${premiumPaymentsTabSelector} button[data-cy="generate-keying-data-button"]`)
-      .toLinkTo(undefined, 'Generate keying data');
+    wrapper.expectElement(`${premiumPaymentsTabSelector} a[data-cy="generate-keying-data-button"]`).toExist();
+    wrapper.expectSecondaryButton(`${premiumPaymentsTabSelector} a[data-cy="generate-keying-data-button"]`).toLinkTo('#', 'Generate keying data');
 
     wrapper.expectElement(`${premiumPaymentsTabSelector} table[data-cy="premium-payments-table"]`).toExist();
   });

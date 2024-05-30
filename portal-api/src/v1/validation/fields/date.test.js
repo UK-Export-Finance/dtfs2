@@ -1,8 +1,4 @@
-const {
-  dateHasAllValues,
-  dateHasSomeValues,
-  dateValidationText,
-} = require('./date');
+const { dateHasAllValues, dateHasSomeValues, dateValidationText } = require('./date');
 
 describe('validation - date-field', () => {
   describe('dateHasAllValues', () => {

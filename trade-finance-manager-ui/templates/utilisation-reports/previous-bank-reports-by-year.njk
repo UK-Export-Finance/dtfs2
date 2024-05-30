@@ -1,0 +1,16 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% set backLink = { href: "/utilisation-reports/find-reports-by-year" } %}
+{% extends "index.njk" %}
+{% block pageTitle %}
+  Trade Finance Manager
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row govuk-!-padding-top-7">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="previous-bank-reports-by-year-heading">
+        Previous years' reports
+      </h1>
+    </div>
+  </div>
+{% endblock %}
+{% block sub_content %}{% endblock %}

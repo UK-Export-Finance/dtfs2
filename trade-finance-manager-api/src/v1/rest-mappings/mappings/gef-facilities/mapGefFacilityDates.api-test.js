@@ -55,12 +55,7 @@ describe('mapGefFacilityDates', () => {
 
     const mockCoverEndDate = new Date(mockFacility.facilitySnapshot.coverEndDate);
 
-    const expected = mapCoverEndDate(
-      format(mockCoverEndDate, 'dd'),
-      format(mockCoverEndDate, 'MM'),
-      format(mockCoverEndDate, 'yyyy'),
-      mockFacility,
-    );
+    const expected = mapCoverEndDate(format(mockCoverEndDate, 'dd'), format(mockCoverEndDate, 'MM'), format(mockCoverEndDate, 'yyyy'), mockFacility);
 
     expect(result.coverEndDate).toEqual(expected);
   });
@@ -68,10 +63,7 @@ describe('mapGefFacilityDates', () => {
   it('should return mapped tenor', () => {
     const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
 
-    const expected = mapTenorDate(
-      mockFacility.monthsOfCover,
-      mockFacilityTfm.exposurePeriodInMonths,
-    );
+    const expected = mapTenorDate(mockFacility.monthsOfCover, mockFacilityTfm.exposurePeriodInMonths);
 
     expect(result.tenor).toEqual(expected);
   });

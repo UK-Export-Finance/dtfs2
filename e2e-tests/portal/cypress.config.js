@@ -1,7 +1,7 @@
 const { defineConfig } = require('cypress');
-const { createTasks } = require('../support/tasks');
 const dotenv = require('dotenv');
 const path = require('path');
+const { createTasks } = require('../support/tasks');
 
 // Read from root `./.env` directory
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });

@@ -6,6 +6,7 @@ import { TfmUser } from './tfm-users';
 import { TfmTeam } from './tfm-teams';
 import { UtilisationReport } from './utilisation-reports';
 import { UtilisationData } from './utilisation-data';
+import { DeletionAuditLog } from './deletion-audit-logs';
 
 /**
  * This type gets the type of the MongoDB model
@@ -40,5 +41,6 @@ export type DbModel<TCollectionName extends MongoDbCollectionName> = TCollection
   ? UtilisationReport
   : TCollectionName extends 'utilisationData'
   ? UtilisationData
-  : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    WithId<any>;
+  : TCollectionName extends 'deletion-audit-logs'
+  ? DeletionAuditLog
+  : WithId<any>;

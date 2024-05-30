@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable import/no-extraneous-dependencies */
+
 import { cloneDeep } from 'lodash';
 import { ObjectId } from 'mongodb';
 import { getCollection } from '../database';
@@ -12,7 +15,7 @@ import { getNowAsEpoch } from '../helpers/date';
  * @param {Estore} eStoreData - An object containing the necessary data for creating the eStore site.
  * @returns {Promise<void>} - None
  */
-export const eStoreSiteCreationCron = async (eStoreData: Estore) => {
+export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> => {
   const cronJobLogs = await getCollection('cron-job-logs');
   const tfmDeals = await getCollection('tfm-deals');
   const data = cloneDeep(eStoreData);

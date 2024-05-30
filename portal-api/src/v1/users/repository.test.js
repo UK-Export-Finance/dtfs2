@@ -1,17 +1,12 @@
 const { when, resetAllWhenMocks } = require('jest-when');
 const { ObjectId } = require('mongodb');
 const { cloneDeep } = require('lodash');
-const {
-  generateMockNoUserLoggedInAuditDatabaseRecord,
-  generateNoUserLoggedInAuditDetails,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateMockNoUserLoggedInAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const db = require('../../drivers/db-client');
 const { UserRepository } = require('./repository');
 const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError } = require('../errors');
-const {
-  TEST_DATABASE_USER,
-  TEST_USER_TRANSFORMED_FROM_DATABASE,
-} = require('../../../test-helpers/unit-test-mocks/mock-user');
+const { TEST_DATABASE_USER, TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const { USER } = require('../../constants');
 const InvalidSessionIdentifierError = require('../errors/invalid-session-identifier.error');
 
@@ -141,8 +136,7 @@ describe('UserRepository', () => {
     });
 
     withValidateUserIdTests({
-      methodCall: (invalidUserId) =>
-        repository.setSignInLinkSendDate({ userId: invalidUserId, auditDetails: generateNoUserLoggedInAuditDetails() }),
+      methodCall: (invalidUserId) => repository.setSignInLinkSendDate({ userId: invalidUserId, auditDetails: generateNoUserLoggedInAuditDetails() }),
     });
 
     it('updates the users signInLinkSendDate to the current date', async () => {
@@ -160,8 +154,7 @@ describe('UserRepository', () => {
 
   describe('resetSignInData', () => {
     withValidateUserIdTests({
-      methodCall: (invalidUserId) =>
-        repository.resetSignInData({ userId: invalidUserId, auditDetails: generateNoUserLoggedInAuditDetails() }),
+      methodCall: (invalidUserId) => repository.resetSignInData({ userId: invalidUserId, auditDetails: generateNoUserLoggedInAuditDetails() }),
     });
 
     it('updates the users signInLinkSendCount and signInLinkSendDate', async () => {
@@ -231,8 +224,7 @@ describe('UserRepository', () => {
 
   describe('blockUser', () => {
     withValidateUserIdTests({
-      methodCall: (invalidUserId) =>
-        repository.blockUser({ userId: invalidUserId, auditDetails: generateNoUserLoggedInAuditDetails() }),
+      methodCall: (invalidUserId) => repository.blockUser({ userId: invalidUserId, auditDetails: generateNoUserLoggedInAuditDetails() }),
     });
 
     it('updates user-status and blockedStatusReason', async () => {

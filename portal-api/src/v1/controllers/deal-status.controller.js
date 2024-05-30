@@ -118,7 +118,7 @@ exports.update = async (req, res) => {
     // Submit to UKEF / TFM
     if (newStatus === CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF) {
       console.info('Submit deal %s to UKEF', dealId);
-  
+
       await updateSubmittedIssuedFacilities(user, updatedDeal);
 
       updatedDeal = await updateSubmissionCount(updatedDeal, user);

@@ -24,13 +24,10 @@ describe('FeeRecordEntity', () => {
       const expectedFeesPaidToUkefForThePeriodInThePaymentCurrency = 100.0;
 
       // Act
-      const feesPaidToUkefForThePeriodInThePaymentCurrency =
-        feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency();
+      const feesPaidToUkefForThePeriodInThePaymentCurrency = feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency();
 
       // Assert
-      expect(feesPaidToUkefForThePeriodInThePaymentCurrency).toBe(
-        expectedFeesPaidToUkefForThePeriodInThePaymentCurrency,
-      );
+      expect(feesPaidToUkefForThePeriodInThePaymentCurrency).toBe(expectedFeesPaidToUkefForThePeriodInThePaymentCurrency);
     });
 
     it('returns the fees paid to ukef for the period in the payment currency using the payment exchange rate', () => {
@@ -50,13 +47,10 @@ describe('FeeRecordEntity', () => {
       const expectedFeesPaidToUkefForThePeriodInThePaymentCurrency = 90.91;
 
       // Act
-      const feesPaidToUkefForThePeriodInThePaymentCurrency =
-        feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency();
+      const feesPaidToUkefForThePeriodInThePaymentCurrency = feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency();
 
       // Assert
-      expect(feesPaidToUkefForThePeriodInThePaymentCurrency).toBe(
-        expectedFeesPaidToUkefForThePeriodInThePaymentCurrency,
-      );
+      expect(feesPaidToUkefForThePeriodInThePaymentCurrency).toBe(expectedFeesPaidToUkefForThePeriodInThePaymentCurrency);
     });
   });
 });

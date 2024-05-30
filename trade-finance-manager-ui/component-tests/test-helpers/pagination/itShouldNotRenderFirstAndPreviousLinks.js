@@ -1,5 +1,5 @@
 module.exports = (getWrapper) => {
-  it('should NOT render a \'First\' link', () => {
+  it("should NOT render a 'First' link", () => {
     const wrapper = getWrapper();
 
     wrapper.expectElement('[data-cy="First_listItem"]').notToExist();
@@ -7,7 +7,7 @@ module.exports = (getWrapper) => {
     wrapper.expectLink('[data-cy="First"]').notToExist();
   });
 
-  it('should NOT render a \'Previous\' link', () => {
+  it("should NOT render a 'Previous' link", () => {
     const wrapper = getWrapper();
 
     wrapper.expectElement('[data-cy="Previous_listItem"]').notToExist();

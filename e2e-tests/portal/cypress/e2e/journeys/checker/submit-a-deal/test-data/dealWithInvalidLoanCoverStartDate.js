@@ -8,9 +8,9 @@ module.exports = () => {
 
   dealWithBadCoverStartDate.loanTransactions.items[0].requestedCoverStartDate = invalidCoverStartDate;
 
-  dealWithBadCoverStartDate.loanTransactions.items[0]['coverEndDate-day'] = (dateConstants.oneMonthDay).toString();
-  dealWithBadCoverStartDate.loanTransactions.items[0]['coverEndDate-month'] = (dateConstants.oneMonthMonth).toString();
-  dealWithBadCoverStartDate.loanTransactions.items[0]['coverEndDate-year'] = (dateConstants.oneMonthYear).toString();
+  dealWithBadCoverStartDate.loanTransactions.items[0]['coverEndDate-day'] = dateConstants.oneMonthDay.toString();
+  dealWithBadCoverStartDate.loanTransactions.items[0]['coverEndDate-month'] = dateConstants.oneMonthMonth.toString();
+  dealWithBadCoverStartDate.loanTransactions.items[0]['coverEndDate-year'] = dateConstants.oneMonthYear.toString();
   dealWithBadCoverStartDate.loanTransactions.items[0].facilityStage = 'Unconditional';
   dealWithBadCoverStartDate.loanTransactions.items[0].hasBeenIssued = true;
 

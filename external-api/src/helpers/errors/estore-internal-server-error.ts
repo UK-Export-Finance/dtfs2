@@ -1,5 +1,6 @@
 import { HttpStatusCode } from 'axios';
 import { EstoreErrorResponse } from '../../interfaces';
+
 const status = HttpStatusCode.InternalServerError;
 
 /**

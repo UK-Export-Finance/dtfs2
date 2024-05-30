@@ -1,9 +1,6 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const {
-  generateAuditDatabaseRecordFromAuditDetails,
-  validateAuditDetails,
-  validateAuditDetailsAndUserType,
-} = require('@ukef/dtfs2-common/change-stream');
+const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common/errors');
+const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const db = require('../../../../drivers/db-client').default;
@@ -58,15 +55,13 @@ const updateDeal = async ({ dealId, dealUpdate, existingDeal, auditDetails }) =>
       const updatedActivities = [...dealTfmUpdate.tfm.activities, ...existingDealActivities];
       // ensures that duplicate entries are not added to activities by comparing timestamp and label
       dealTfmUpdate.tfm.activities = updatedActivities.filter(
-        (value, index, arr) =>
-          arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index,
+        (value, index, arr) => arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index,
       );
     } else {
       const updatedActivities = [dealTfmUpdate.tfm.activities, ...existingDealActivities];
       // ensures that duplicate entries are not added to activities by comparing timestamp and label
       dealTfmUpdate.tfm.activities = updatedActivities.filter(
-        (value, index, arr) =>
-          arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index,
+        (value, index, arr) => arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index,
       );
     }
   }
@@ -74,14 +69,10 @@ const updateDeal = async ({ dealId, dealUpdate, existingDeal, auditDetails }) =>
   dealTfmUpdate.tfm.lastUpdated = new Date().valueOf();
   dealTfmUpdate.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(dealId) } },
-    $.flatten(withoutId(dealTfmUpdate)),
-    {
-      returnNewDocument: true,
-      returnDocument: 'after',
-    },
-  );
+  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(withoutId(dealTfmUpdate)), {
+    returnNewDocument: true,
+    returnDocument: 'after',
+  });
 
   return findAndUpdateResponse.value;
 };
@@ -100,8 +91,14 @@ exports.updateDealPut = async (req, res) => {
 
   try {
     validateAuditDetails(auditDetails);
-  } catch ({ message }) {
-    res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
   }
 
   const existingDeal = await findOneDeal(dealId);
@@ -129,15 +126,11 @@ const updateDealSnapshot = async (deal, snapshotChanges, auditDetails) => {
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       };
 
-      const findAndUpdateResponse = await collection.findOneAndUpdate(
-        { _id: { $eq: ObjectId(String(dealId)) } },
-        $.flatten(withoutId(update)),
-        {
-          returnNewDocument: true,
-          returnDocument: 'after',
-          upsert: true,
-        },
-      );
+      const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(String(dealId)) } }, $.flatten(withoutId(update)), {
+        returnNewDocument: true,
+        returnDocument: 'after',
+        upsert: true,
+      });
 
       return findAndUpdateResponse.value;
     } catch (error) {
@@ -157,8 +150,14 @@ exports.updateDealSnapshotPut = async (req, res) => {
 
   try {
     validateAuditDetailsAndUserType(auditDetails, 'portal');
-  } catch ({ message }) {
-    return res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
   }
 
   const deal = await findOneDeal(dealId);

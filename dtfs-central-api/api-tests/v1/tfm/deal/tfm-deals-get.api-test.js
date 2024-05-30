@@ -85,12 +85,7 @@ module.exports.updateDealsTfm = updateDealsTfm;
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
-    await wipeDB.wipe([
-      MONGO_DB_COLLECTIONS.DEALS,
-      MONGO_DB_COLLECTIONS.FACILITIES,
-      MONGO_DB_COLLECTIONS.TFM_DEALS,
-      MONGO_DB_COLLECTIONS.TFM_FACILITIES,
-    ]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
   describe('GET /v1/tfm/deals', () => {

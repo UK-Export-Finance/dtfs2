@@ -1,4 +1,4 @@
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { CURRENCY } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const CONSTANTS = require('../../../src/constants');
@@ -18,10 +18,7 @@ const mockFacilities = require('../../fixtures/gef/facilities');
 const applicationBaseUrl = '/v1/gef/application';
 const mockApplications = require('../../fixtures/gef/application');
 
-const {
-  calculateUkefExposure,
-  calculateGuaranteeFee,
-} = require('../../../src/v1/gef/calculations/facility-calculations');
+const { calculateUkefExposure, calculateGuaranteeFee } = require('../../../src/v1/gef/calculations/facility-calculations');
 const { roundNumber } = require('../../../src/utils/number');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
@@ -73,17 +70,7 @@ describe(baseUrl, () => {
         auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aMaker._id),
       },
       validation: {
-        required: [
-          'monthsOfCover',
-          'details',
-          'currency',
-          'value',
-          'coverPercentage',
-          'interestPercentage',
-          'feeType',
-          'feeFrequency',
-          'dayCountBasis',
-        ],
+        required: ['monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
       },
     };
     completeUpdate = {
@@ -145,9 +132,7 @@ describe(baseUrl, () => {
         body: {
           details: { _id: createdFacilityId },
         },
-      } = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       oneFacilityUrl = `${baseUrl}/${createdFacilityId}`;
     });
 
@@ -182,16 +167,12 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const { status } = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      const { status } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       expect(status).toEqual(201);
     });
 
     it('returns a new facility upon creation', async () => {
-      const { body } = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       expect(body).toEqual(newFacility);
     });
   });
@@ -214,9 +195,7 @@ describe(baseUrl, () => {
         type: 'Cash',
         currency: { id: CURRENCY.GBP },
       };
-      const item = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
 
@@ -230,16 +209,7 @@ describe(baseUrl, () => {
           updatedAt: expect.any(Number),
         },
         validation: {
-          required: [
-            'monthsOfCover',
-            'details',
-            'value',
-            'coverPercentage',
-            'interestPercentage',
-            'feeType',
-            'feeFrequency',
-            'dayCountBasis',
-          ],
+          required: ['monthsOfCover', 'details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
         },
       };
 
@@ -256,9 +226,7 @@ describe(baseUrl, () => {
       const secondUpdate = {
         shouldCoverStartOnSubmission: true,
       };
-      const item = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
       // first update - insert start date
       const res1 = await as(aMaker).put(firstUpdate).to(`${baseUrl}/${item.body.details._id}`);
@@ -297,9 +265,7 @@ describe(baseUrl, () => {
         coverDateConfirmed: true,
         ukefFacilityId: 1234,
       };
-      const item = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
       const expected = {
         status: CONSTANTS.DEAL.DEAL_STATUS.COMPLETED,
@@ -345,9 +311,7 @@ describe(baseUrl, () => {
         feeFrequency: 'Monthly',
         dayCountBasis: 365,
       };
-      const item = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
       const expected = {
         status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
@@ -376,9 +340,7 @@ describe(baseUrl, () => {
       const update = {
         details: ['Other'],
       };
-      const item = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
       const expected = {
         status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
@@ -388,17 +350,7 @@ describe(baseUrl, () => {
           updatedAt: expect.any(Number),
         },
         validation: {
-          required: [
-            'monthsOfCover',
-            'detailsOther',
-            'currency',
-            'value',
-            'coverPercentage',
-            'interestPercentage',
-            'feeType',
-            'feeFrequency',
-            'dayCountBasis',
-          ],
+          required: ['monthsOfCover', 'detailsOther', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
         },
       };
 
@@ -408,9 +360,7 @@ describe(baseUrl, () => {
 
     it('completely updates a facility', async () => {
       const { details } = newFacility;
-      const item = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item.body.details._id}`);
       const expected = {
         status: CONSTANTS.DEAL.DEAL_STATUS.COMPLETED,
@@ -438,9 +388,7 @@ describe(baseUrl, () => {
       // create deal
       const { body: createdDeal } = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
 
-      const facility = await as(aMaker)
-        .post({ dealId: createdDeal._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      const facility = await as(aMaker).post({ dealId: createdDeal._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
       const update = { hasBeenIssued: true };
       await as(aMaker).put(update).to(`${baseUrl}/${facility.body.details._id}`);
@@ -465,9 +413,7 @@ describe(baseUrl, () => {
         coverStartDate: 'July 19, 2022',
         coverEndDate: 'July 19, 2050',
       };
-      const item = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
 
@@ -483,15 +429,7 @@ describe(baseUrl, () => {
           coverEndDate: '2050-07-19T00:00:00.000Z',
         },
         validation: {
-          required: [
-            'details',
-            'value',
-            'coverPercentage',
-            'interestPercentage',
-            'feeType',
-            'feeFrequency',
-            'dayCountBasis',
-          ],
+          required: ['details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
         },
       };
 
@@ -508,9 +446,7 @@ describe(baseUrl, () => {
         coverStartDate: 'February 29, 2024',
         coverEndDate: 'February 29, 2040',
       };
-      const item = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
 
@@ -526,15 +462,7 @@ describe(baseUrl, () => {
           coverEndDate: '2040-02-29T00:00:00.000Z',
         },
         validation: {
-          required: [
-            'details',
-            'value',
-            'coverPercentage',
-            'interestPercentage',
-            'feeType',
-            'feeFrequency',
-            'dayCountBasis',
-          ],
+          required: ['details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
         },
       };
 
@@ -551,9 +479,7 @@ describe(baseUrl, () => {
         coverStartDate: 'February 01, 9999',
         coverEndDate: 'February 01, 10000',
       };
-      const item = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
 
@@ -569,15 +495,7 @@ describe(baseUrl, () => {
           coverEndDate: '+010000-02-01T00:00:00.000Z',
         },
         validation: {
-          required: [
-            'details',
-            'value',
-            'coverPercentage',
-            'interestPercentage',
-            'feeType',
-            'feeFrequency',
-            'dayCountBasis',
-          ],
+          required: ['details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
         },
       };
 
@@ -593,18 +511,14 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const { body } = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status } = await as(aMaker).remove(`${baseUrl}/${String(body.details._id)}`);
       expect(status).toEqual(200);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
 
     it('removes all items by application ID', async () => {
-      const { body } = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status } = await as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
       expect(status).toEqual(200);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
@@ -618,15 +532,9 @@ describe(baseUrl, () => {
 
   describe(`Overall Status: ${baseUrl}`, () => {
     it(`overall status shows as "${CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED}" if all status is marked as "${CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED}"`, async () => {
-      await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
-      await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
-      await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
       const mockQuery = { dealId: mockApplication.body._id };
       const { body, status } = await as(aMaker).get(baseUrl, mockQuery);
@@ -637,12 +545,8 @@ describe(baseUrl, () => {
     });
 
     it(`overall status shows as "${CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS}" if some status is marked as "${CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS}"`, async () => {
-      const item1 = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
-      const item3 = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      const item1 = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item3 = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       await as(aMaker).put({ name: 'test' }).to(`${baseUrl}/${item1.body.details._id}`);
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item3.body.details._id}`);
 
@@ -655,15 +559,9 @@ describe(baseUrl, () => {
     });
 
     it(`overall status shows as "${CONSTANTS.DEAL.DEAL_STATUS.COMPLETED}" if all status is marked as "${CONSTANTS.DEAL.DEAL_STATUS.COMPLETED}"`, async () => {
-      const item1 = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
-      const item2 = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
-      const item3 = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-        .to(baseUrl);
+      const item1 = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item2 = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const item3 = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item1.body.details._id}`);
       await as(aMaker).put(completeUpdate).to(`${baseUrl}/${item2.body.details._id}`);
@@ -695,9 +593,7 @@ describe(baseUrl, () => {
     });
     describe('PUT', () => {
       it('returns an enum error when putting the wrong type', async () => {
-        const { body } = await as(aMaker)
-          .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
-          .to(baseUrl);
+        const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
         const res = await as(aMaker).put({ type: 'TEST' }).to(`${baseUrl}/${body.details._id}`);
         expect(res.status).toEqual(422);
         expect(res.body).toEqual([

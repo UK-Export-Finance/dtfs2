@@ -24,8 +24,8 @@ const DEFAULTS = {
     supportingInformation: {
       securityDetails: {
         exporter: null,
-      }
-    }
+      },
+    },
   },
 };
 

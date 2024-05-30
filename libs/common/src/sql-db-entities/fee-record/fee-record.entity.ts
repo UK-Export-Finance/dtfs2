@@ -1,10 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import Big from 'big.js';
 import { UtilisationReportEntity } from '../utilisation-report';
 import { Currency, FeeRecordStatus } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import { CreateFeeRecordParams } from './fee-record.types';
 import { MonetaryColumn, ExchangeRateColumn } from '../custom-columns';
+import { PaymentEntity } from '../payment';
 
 @Entity('FeeRecord')
 export class FeeRecordEntity extends AuditableBaseEntity {
@@ -97,6 +98,15 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   @Column({ type: 'nvarchar', default: 'TO_DO' })
   status!: FeeRecordStatus;
 
+  /**
+   * The payments associated with the fee record
+   */
+  @ManyToMany(() => PaymentEntity, (payment) => payment.feeRecords, {
+    cascade: ['insert'],
+  })
+  @JoinTable()
+  payments!: PaymentEntity[];
+
   // TODO FN-1726 - when we have a status on this entity we should make this method name specific to the initial status
   static create({
     facilityId,
@@ -129,6 +139,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     feeRecord.status = status;
     feeRecord.report = report;
     feeRecord.updateLastUpdatedBy(requestSource);
+    feeRecord.payments = [];
     return feeRecord;
   }
 

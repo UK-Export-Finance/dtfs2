@@ -8,8 +8,7 @@ const page = {
     sameAsDealCurrency: () => cy.get(`[data-cy="${type}-${facilityId}"]`).find('[data-cy="currency-same-as-supply-contract-currency"]'),
     currency: () => cy.get(`[data-cy="${type}-${facilityId}"]`).find('[data-cy="currency"]'),
     conversionRate: () => cy.get(`[data-cy="${type}-${facilityId}"]`).find('[data-cy="conversion-rate"]'),
-  }
-  ),
+  }),
   mandatoryCriteriaBox: () => cy.get('[data-cy="mandatory-criteria-box"]'),
 };
 
