@@ -8,3 +8,4 @@ export * from './durable-functions-log.constant';
 export * from './fee-record-status';
 export * as PAYLOAD_VERIFICATION from './payload-verification';
 export * from './payment-matching-currency-to-tolerance-map';
+export * from './error-code';

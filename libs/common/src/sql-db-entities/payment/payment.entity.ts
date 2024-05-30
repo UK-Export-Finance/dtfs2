@@ -5,6 +5,7 @@ import { AuditableBaseEntity } from '../base-entities';
 import { CreatePaymentParams } from './payment.types';
 import { FeeRecordEntity } from '../fee-record';
 import { PAYMENT_MATCHING_CURRENCY_TO_TOLERANCE_MAP } from '../../constants';
+import { PaymentAndFeeRecordCurrencyDoesNotMatchError, PaymentHasNoFeeRecordsError } from '../../errors';
 
 @Entity('Payment')
 export class PaymentEntity extends AuditableBaseEntity {
@@ -56,11 +57,11 @@ export class PaymentEntity extends AuditableBaseEntity {
 
   public feeRecordsMatchPayment(): boolean {
     if (this.feeRecords.length === 0) {
-      throw new Error('Payment has no fee records');
+      throw new PaymentHasNoFeeRecordsError();
     }
 
     if (this.feeRecords.some(({ paymentCurrency }) => paymentCurrency !== this.currency)) {
-      throw new Error('Fee record payment currency does not match payment currency');
+      throw new PaymentAndFeeRecordCurrencyDoesNotMatchError();
     }
 
     const tolerance = PAYMENT_MATCHING_CURRENCY_TO_TOLERANCE_MAP[this.currency];
