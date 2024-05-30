@@ -224,7 +224,8 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
-        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
+        working-directory: ./${{ matrix.services }}
+        run: npm run api-test
 
       - name: Stop
         working-directory: ./
