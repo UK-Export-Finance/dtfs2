@@ -16,6 +16,9 @@ export class AddPaymentTable1716990167763 implements MigrationInterface {
                 "dateReceived" datetime NOT NULL,
                 "paymentReference" nvarchar(255),
                 CONSTRAINT "PK_07e9fb9a8751923eb876d57a575" PRIMARY KEY ("id")
+            ) WITH (
+                SYSTEM_VERSIONING = ON,
+                LEDGER = ON
             )
         `);
     await queryRunner.query(`
