@@ -1282,6 +1282,21 @@ const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds) => {
   return response.data;
 };
 
+/**
+ * Gets the utilisation report summaries by bank id and year
+ * @param {string} bankId - The bank id
+ * @param { string} year - The year which a report period ends in
+ * @returns {Promise<import('./api-response-types').UtilisationReportSummariesByBankAndYearResponseBody>}
+ */
+const getUtilisationReportSummariesByBankIdAndYear = async (bankId, year) => {
+  const url = `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports/reconciliation-summary-by-year/${year}`;
+  const response = await axios.get(url, {
+    headers: headers.central,
+  });
+
+  return response.data;
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1343,4 +1358,5 @@ module.exports = {
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
   getSelectedFeeRecordsDetails,
+  getUtilisationReportSummariesByBankIdAndYear,
 };
