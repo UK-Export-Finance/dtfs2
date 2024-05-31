@@ -8,6 +8,7 @@ const { expectAddedFields } = require('./expectAddedFields');
 const CONSTANTS = require('../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../helpers/create-deal');
+const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 
 const mockUserNoBank = {
   _id: '6603ebb1b81328945f63a1a2',
@@ -38,6 +39,10 @@ describe('/v1/portal/deals', () => {
   });
 
   describe('POST /v1/portal/deals', () => {
+    withValidateAuditDetailsTests({
+      makeRequest: async (auditDetails) => await api.post({ auditDetails, deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals'),
+    });
+
     it('returns the created deal with correct fields', async () => {
       const { body, status } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       expect(status).toEqual(200);
