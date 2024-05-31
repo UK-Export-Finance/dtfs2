@@ -1,6 +1,6 @@
 import { format, isValid, parseISO } from 'date-fns';
 import { isString } from '../helpers';
-import { IsoMonthStamp, MonthAndYear, OneIndexedMonth } from '../types';
+import { IsoMonthStamp, IsoYearStamp, MonthAndYear, OneIndexedMonth } from '../types';
 
 /**
  * Converts date with index-0 month value to numeric index-1 month
@@ -28,3 +28,10 @@ export const isEqualMonthAndYear = (monthAndYear1: MonthAndYear, monthAndYear2: 
  * @returns The date
  */
 export const getDateFromMonthAndYear = (monthAndYear: MonthAndYear): Date => new Date(monthAndYear.year, monthAndYear.month - 1);
+
+const ISO_YEAR_REGEX = /^\d{4}$/;
+
+/**
+ * Checks whether the provided value is an ISO year string in format 'yyyy'
+ * */
+export const isValidIsoYear = (value: unknown): value is IsoYearStamp => isString(value) && ISO_YEAR_REGEX.test(value) && isValid(parseISO(value));
