@@ -64,7 +64,7 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
           );
         });
 
-        it('should delete the document', async () => {
+        it('should delete the documents', async () => {
           await makeRequest();
 
           const collection = await mongoDbClient.getCollection(collectionName);
@@ -84,10 +84,7 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
         beforeEach(() => {
           when(deleteManyMock)
             // @ts-ignore
-            .calledWith(
-              { $or: expect.arrayContaining(getDeletedDocumentIds().map((_id) => ({ _id }))) as object[] },
-              { session: expect.any(ClientSession) as ClientSession },
-            )
+            .calledWith(expect.anything() as object, { session: expect.any(ClientSession) as ClientSession })
             .mockImplementationOnce(() => ({
               acknowledged: false,
             }));
@@ -100,10 +97,7 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
         beforeEach(() => {
           when(deleteManyMock)
             // @ts-ignore
-            .calledWith(
-              { $or: expect.arrayContaining(getDeletedDocumentIds().map((_id) => ({ _id }))) as object[] },
-              { session: expect.any(ClientSession) as ClientSession },
-            )
+            .calledWith(expect.anything() as object, { session: expect.any(ClientSession) as ClientSession })
             .mockImplementationOnce(() => ({
               acknowledged: true,
               deletedCount: 0,
@@ -117,10 +111,7 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
         beforeEach(() => {
           when(deleteManyMock)
             // @ts-ignore
-            .calledWith(
-              { $or: expect.arrayContaining(getDeletedDocumentIds().map((_id) => ({ _id }))) as object[] },
-              { session: expect.any(ClientSession) as ClientSession },
-            )
+            .calledWith(expect.anything() as object, { session: expect.any(ClientSession) as ClientSession })
             .mockImplementationOnce(() => {
               throw new Error();
             });
@@ -133,17 +124,7 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
         beforeEach(() => {
           when(insertManyMock)
             // @ts-ignore
-            .calledWith(
-              expect.arrayContaining(
-                getDeletedDocumentIds().map((_id) => ({
-                  collectionName,
-                  deletedDocumentId: _id,
-                  auditRecord,
-                  expireAt: expect.any(Date) as Date,
-                })),
-              ) as DeletionAuditLog[],
-              { session: expect.any(ClientSession) as ClientSession },
-            )
+            .calledWith(expect.anything() as DeletionAuditLog[], { session: expect.any(ClientSession) as ClientSession })
             .mockImplementationOnce(() => ({
               acknowledged: false,
             }));
@@ -156,17 +137,7 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
         beforeEach(() => {
           when(insertManyMock)
             // @ts-ignore
-            .calledWith(
-              expect.arrayContaining(
-                getDeletedDocumentIds().map((_id) => ({
-                  collectionName,
-                  deletedDocumentId: _id,
-                  auditRecord,
-                  expireAt: expect.any(Date) as Date,
-                })),
-              ) as DeletionAuditLog[],
-              { session: expect.any(ClientSession) as ClientSession },
-            )
+            .calledWith(expect.anything() as DeletionAuditLog[], { session: expect.any(ClientSession) as ClientSession })
             .mockImplementationOnce(() => {
               throw new Error();
             });

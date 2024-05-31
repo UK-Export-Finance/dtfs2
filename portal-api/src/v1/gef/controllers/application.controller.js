@@ -299,7 +299,7 @@ exports.delete = async (req, res) => {
 
   try {
     const applicationDeleteResult = await deleteOne({
-      documentId: dealId,
+      documentId: new ObjectId(dealId),
       collectionName: MONGO_DB_COLLECTIONS.DEALS,
       db,
       auditDetails,
@@ -315,6 +315,7 @@ exports.delete = async (req, res) => {
 
     return res.status(200).send(applicationDeleteResult);
   } catch (error) {
+    console.error(error);
     return res.status(500).send({ status: 500, error });
   }
 };
