@@ -1,4 +1,10 @@
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { ObjectId } = require('mongodb');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const {
+  generateParsedMockPortalUserAuditDatabaseRecord,
+  withDeleteManyTests,
+  generateMockPortalUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { CURRENCY } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const CONSTANTS = require('../../../src/constants');
@@ -517,16 +523,48 @@ describe(baseUrl, () => {
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
 
-    it('removes all items by application ID', async () => {
-      const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      const { status } = await as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
+    it('returns a 204 - "No Content" if there are no records', async () => {
+      const { status } = await as(aMaker).remove(`${baseUrl}/doesnotexist`);
+      expect(status).toEqual(204);
+    });
+  });
+
+  describe(`DELETE ${baseUrl}?dealId=`, () => {
+    let facilitiesToDeleteIds;
+
+    beforeEach(async () => {
+      const { body: cashBody } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const { body: contingentBody } = await as(aMaker)
+        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CONTINGENT, hasBeenIssued: false })
+        .to(baseUrl);
+      facilitiesToDeleteIds = [new ObjectId(cashBody.details._id), new ObjectId(contingentBody.details._id)];
+    });
+
+    withDeleteManyTests({
+      makeRequest: () => as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`),
+      collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
+      auditRecord: {
+        ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
+        lastUpdatedByPortalUserId: expect.anything(),
+      },
+      getDeletedDocumentIds: () => facilitiesToDeleteIds,
+    });
+
+    it('rejects requests that do not present a valid Authorization token', async () => {
+      const { status } = await as().remove(`${baseUrl}?dealId=1`);
+      expect(status).toEqual(401);
+    });
+
+    it('accepts requests that present a valid Authorization token with "maker" role', async () => {
+      const { status, body } = await as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
       expect(status).toEqual(200);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
 
-    it('returns a 204 - "No Content" if there are no records', async () => {
-      const { status } = await as(aMaker).remove(`${baseUrl}/doesnotexist`);
-      expect(status).toEqual(204);
+    it('removes all items by application ID', async () => {
+      const { status, body } = await as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
+      expect(status).toEqual(200);
+      expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
   });
 
