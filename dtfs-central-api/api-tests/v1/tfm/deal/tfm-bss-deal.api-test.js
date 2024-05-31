@@ -8,6 +8,7 @@ const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
+const { createDeal } = require('../../../helpers/create-deal');
 
 const newDeal = aDeal({
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
@@ -27,7 +28,7 @@ describe('/v1/tfm/deal/:id', () => {
 
   describe('GET /v1/tfm/deal/:id', () => {
     it('returns the requested resource', async () => {
-      const postResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+      const postResult = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = postResult.body._id;
 
       await api
@@ -46,7 +47,7 @@ describe('/v1/tfm/deal/:id', () => {
 
     describe('when a deal has facilities', () => {
       it('returns facilities mapped to deal.bondTransactions and deal.loanTransactions', async () => {
-        const postResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+        const postResult = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
         const dealId = postResult.body._id;
 
         // create some facilities
@@ -121,7 +122,7 @@ describe('/v1/tfm/deal/:id', () => {
       };
 
       beforeEach(async () => {
-        const { body: portalDeal } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+        const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
         dealId = portalDeal._id;
 
         await api

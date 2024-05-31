@@ -6,6 +6,7 @@ const aDeal = require('../deal-builder');
 const CONSTANTS = require('../../../src/constants');
 const { MOCK_DEAL } = require('../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
+const { createDeal } = require('../../helpers/create-deal');
 
 const newFacility = {
   type: 'Bond',
@@ -31,7 +32,7 @@ describe('/v1/portal/facilities', () => {
   });
 
   beforeEach(async () => {
-    const { body: deal } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+    const { body: deal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
 
     dealId = deal._id;
     newFacility.dealId = dealId;
