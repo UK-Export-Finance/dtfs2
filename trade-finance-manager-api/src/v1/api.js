@@ -150,7 +150,7 @@ const updatePortalFacility = async (facilityId, update) => {
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
       headers: headers.central,
-      data: update,
+      data: { facilityUpdate: update },
     });
 
     return response.data;

@@ -49,7 +49,7 @@ const updateFacility = async (facilityId, facilityUpdate, user) => {
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
     headers,
     data: {
-      ...facilityUpdate,
+      facilityUpdate,
       user,
     },
   }).catch((error) => {

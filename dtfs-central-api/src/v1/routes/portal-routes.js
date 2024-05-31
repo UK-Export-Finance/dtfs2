@@ -406,9 +406,13 @@ portalRouter.route('/facilities/:id').get(getFacilityController.findOneFacilityG
  *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             type: object
- *             example: { aNewField: true }
+ *           properties:
+ *             facilityUpdate:
+ *               type: object
+ *             user:
+ *               type: object
+ *             auditDetails:
+ *               $ref: '#/definitions/portalAuditDetails'
  *     responses:
  *       200:
  *         description: OK
@@ -770,7 +774,6 @@ portalRouter.route('/gef/facilities').get(getGefFacilitiesController.findAllFaci
  *         application/json:
  *           schema:
  *             type: object
- *             example: { aNewField: true }
  *     responses:
  *       200:
  *         description: OK
