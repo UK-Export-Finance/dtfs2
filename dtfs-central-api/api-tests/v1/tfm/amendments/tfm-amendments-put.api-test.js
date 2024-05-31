@@ -10,6 +10,7 @@ const { MOCK_DEAL } = require('../../mocks/mock-data');
 const aDeal = require('../../deal-builder');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
+const { createDeal } = require('../../../helpers/create-deal');
 
 describe('PUT TFM amendments', () => {
   let dealId;
@@ -29,17 +30,13 @@ describe('PUT TFM amendments', () => {
       criteria: [{}],
     },
   });
-  const createDeal = async () => {
-    const { body } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
-    return body;
-  };
 
   beforeAll(async () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_FACILITIES, MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.USERS]);
   });
 
   beforeEach(async () => {
-    const deal = await createDeal();
+    const { body: deal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
     dealId = deal._id;
 
     newFacility.dealId = dealId;

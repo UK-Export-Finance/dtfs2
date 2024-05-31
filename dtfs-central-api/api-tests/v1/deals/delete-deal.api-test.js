@@ -9,6 +9,7 @@ const { DEALS } = require('../../../src/constants');
 const aDeal = require('../deal-builder');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
+const { createDeal } = require('../../helpers/create-deal');
 
 const newDeal = aDeal({
   dealType: DEALS.DEAL_TYPE.BSS_EWCS,
@@ -20,7 +21,7 @@ describe('DELETE /v1/portal/deals', () => {
   let dealToDeleteId;
 
   beforeEach(async () => {
-    const postResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+    const postResult = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
     dealToDeleteId = new ObjectId(postResult.body._id);
   });
 
