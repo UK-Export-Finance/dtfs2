@@ -35,7 +35,7 @@ df.app.orchestration('acbs', function* HDeal(context) {
       }
 
       const acbsReference = {
-        supplierAcbsIndustryCode: yield context.df.callActivityWithRetry('activity-get-acbs-industry-sector', retryOptions, { industry }),
+        supplierAcbsIndustryCode: yield context.df.callActivityWithRetry('activity-get-acbs-industry-sector', retryOptions, industry),
       };
 
       /**
