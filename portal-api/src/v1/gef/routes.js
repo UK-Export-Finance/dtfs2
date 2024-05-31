@@ -11,7 +11,7 @@ const mandatoryCriteriaVersioned = require('./controllers/mandatoryCriteriaVersi
 const eligibilityCriteria = require('./controllers/eligibilityCriteria.controller');
 const externalApi = require('./controllers/externalApi.controller');
 const files = require('./controllers/files.controller');
-const companies = require('./controllers/companies.controller');
+const companies = require('../controllers/companies.controller');
 
 const router = express.Router();
 

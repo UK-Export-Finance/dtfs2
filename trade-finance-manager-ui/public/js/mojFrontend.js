@@ -67,7 +67,10 @@ var DTFS_TFM;
                     var s = n.querySelectorAll('[data-module="moj-search-toggle"]');
                     t.nodeListForEach(s, function (e) {
                       new t.SearchToggle({
-                        toggleButton: { container: $(e.querySelector('.moj-search-toggle__toggle')), text: e.getAttribute('data-moj-search-toggle-text') },
+                        toggleButton: {
+                          container: $(e.querySelector('.moj-search-toggle__toggle')),
+                          text: e.getAttribute('data-moj-search-toggle-text'),
+                        },
                         search: { container: $(e.querySelector('.moj-search')) },
                       });
                     });
@@ -643,7 +646,13 @@ var DTFS_TFM;
                   'contentEditable' in document.documentElement &&
                     ((t.RichTextEditor = function (t) {
                       (this.options = t),
-                        (this.options.toolbar = this.options.toolbar || { bold: !1, italic: !1, underline: !1, bullets: !0, numbers: !0 }),
+                        (this.options.toolbar = this.options.toolbar || {
+                          bold: !1,
+                          italic: !1,
+                          underline: !1,
+                          bullets: !0,
+                          numbers: !0,
+                        }),
                         (this.textarea = this.options.textarea),
                         (this.container = $(this.textarea).parent()),
                         this.container.data('moj-rich-text-editor-initialised') ||
@@ -2901,7 +2910,10 @@ var DTFS_TFM;
                         return t.stopImmediatePropagation(), t.preventDefault(), r && r.value;
                     } else
                       i.length &&
-                        (J.set(this, e, { value: C.event.trigger(C.extend(i[0], C.Event.prototype), i.slice(1), this) }), t.stopImmediatePropagation());
+                        (J.set(this, e, {
+                          value: C.event.trigger(C.extend(i[0], C.Event.prototype), i.slice(1), this),
+                        }),
+                        t.stopImmediatePropagation());
                   },
                 }))
               : void 0 === J.get(t, e) && C.event.add(t, e, jt);
@@ -3167,18 +3179,26 @@ var DTFS_TFM;
                 delegateType: e,
               };
             }),
-            C.each({ mouseenter: 'mouseover', mouseleave: 'mouseout', pointerenter: 'pointerover', pointerleave: 'pointerout' }, function (t, e) {
-              C.event.special[t] = {
-                delegateType: e,
-                bindType: e,
-                handle: function (t) {
-                  var n,
-                    o = t.relatedTarget,
-                    r = t.handleObj;
-                  return (o && (o === this || C.contains(this, o))) || ((t.type = r.origType), (n = r.handler.apply(this, arguments)), (t.type = e)), n;
-                },
-              };
-            }),
+            C.each(
+              {
+                mouseenter: 'mouseover',
+                mouseleave: 'mouseout',
+                pointerenter: 'pointerover',
+                pointerleave: 'pointerout',
+              },
+              function (t, e) {
+                C.event.special[t] = {
+                  delegateType: e,
+                  bindType: e,
+                  handle: function (t) {
+                    var n,
+                      o = t.relatedTarget,
+                      r = t.handleObj;
+                    return (o && (o === this || C.contains(this, o))) || ((t.type = r.origType), (n = r.handler.apply(this, arguments)), (t.type = e)), n;
+                  },
+                };
+              },
+            ),
             C.fn.extend({
               on: function (t, e, n, o) {
                 return Et(this, t, e, n, o);
@@ -3387,12 +3407,21 @@ var DTFS_TFM;
                 );
               },
             }),
-            C.each({ appendTo: 'append', prependTo: 'prepend', insertBefore: 'before', insertAfter: 'after', replaceAll: 'replaceWith' }, function (t, e) {
-              C.fn[t] = function (t) {
-                for (var n, o = [], r = C(t), i = r.length - 1, a = 0; a <= i; a++) (n = a === i ? this : this.clone(!0)), C(r[a])[e](n), l.apply(o, n.get());
-                return this.pushStack(o);
-              };
-            });
+            C.each(
+              {
+                appendTo: 'append',
+                prependTo: 'prepend',
+                insertBefore: 'before',
+                insertAfter: 'after',
+                replaceAll: 'replaceWith',
+              },
+              function (t, e) {
+                C.fn[t] = function (t) {
+                  for (var n, o = [], r = C(t), i = r.length - 1, a = 0; a <= i; a++) (n = a === i ? this : this.clone(!0)), C(r[a])[e](n), l.apply(o, n.get());
+                  return this.pushStack(o);
+                };
+              },
+            );
           var It = new RegExp('^(' + ot + ')(?!px)[a-z%]+$', 'i'),
             Ot = /^--/,
             Pt = function (t) {
@@ -4572,7 +4601,13 @@ var DTFS_TFM;
                 processData: !0,
                 async: !0,
                 contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-                accepts: { '*': Oe, text: 'text/plain', html: 'text/html', xml: 'application/xml, text/xml', json: 'application/json, text/javascript' },
+                accepts: {
+                  '*': Oe,
+                  text: 'text/plain',
+                  html: 'text/html',
+                  xml: 'application/xml, text/xml',
+                  json: 'application/json, text/javascript',
+                },
                 contents: { xml: /\bxml\b/, html: /\bhtml/, json: /\bjson\b/ },
                 responseFields: { xml: 'responseXML', text: 'responseText', json: 'responseJSON' },
                 converters: { '* text': String, 'text html': !0, 'text json': JSON.parse, 'text xml': C.parseXML },
@@ -4755,7 +4790,10 @@ var DTFS_TFM;
                                 try {
                                   e = a(e);
                                 } catch (t) {
-                                  return { state: 'parsererror', error: a ? t : 'No conversion from ' + u + ' to ' + i };
+                                  return {
+                                    state: 'parsererror',
+                                    error: a ? t : 'No conversion from ' + u + ' to ' + i,
+                                  };
                                 }
                           }
                       return { state: 'success', data: e };
@@ -4929,7 +4967,9 @@ var DTFS_TFM;
               t.crossDomain && (t.contents.script = !1);
             }),
             C.ajaxSetup({
-              accepts: { script: 'text/javascript, application/javascript, application/ecmascript, application/x-ecmascript' },
+              accepts: {
+                script: 'text/javascript, application/javascript, application/ecmascript, application/x-ecmascript',
+              },
               contents: { script: /\b(?:java|ecma)script\b/ },
               converters: {
                 'text script': function (t) {
@@ -5106,7 +5146,10 @@ var DTFS_TFM;
                       1 === t.nodeType &&
                       (((r = C(t).offset()).top += C.css(t, 'borderTopWidth', !0)), (r.left += C.css(t, 'borderLeftWidth', !0)));
                   }
-                  return { top: e.top - r.top - C.css(o, 'marginTop', !0), left: e.left - r.left - C.css(o, 'marginLeft', !0) };
+                  return {
+                    top: e.top - r.top - C.css(o, 'marginTop', !0),
+                    left: e.left - r.left - C.css(o, 'marginLeft', !0),
+                  };
                 }
               },
               offsetParent: function () {

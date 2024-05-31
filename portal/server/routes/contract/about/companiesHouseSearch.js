@@ -1,7 +1,7 @@
 const express = require('express');
 const { provide, DEAL, COUNTRIES } = require('../../api-data-provider');
 const { requestParams } = require('../../../helpers');
-const api = require('../../../api');
+const companiesApi = require('../../../companies-api');
 
 // https://developer.companieshouse.gov.uk/api/docs/company/company_number/registered-office-address/registeredOfficeAddress-resource.html
 // England, Wales, Scotland, Northern Ireland, Great Britain, United Kingdom, Not specified
@@ -24,7 +24,7 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
   const registrationNumberField = `${prefix}-companies-house-registration-number`;
   const registrationNumberFieldValue = req.body[registrationNumberField];
 
-  const { company, errorMessage } = await api.getCompanyByRegistrationNumber(registrationNumberFieldValue, userToken);
+  const { company, errorMessage } = await companiesApi.getCompanyByRegistrationNumber(registrationNumberFieldValue, userToken);
 
   if (!company) {
     req.session.aboutSupplierFormData = deal;

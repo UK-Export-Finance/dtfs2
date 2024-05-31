@@ -1,14 +1,7 @@
 const { HttpStatusCode } = require('axios');
 const axios = require('axios');
 const FormData = require('form-data');
-const {
-  isValidMongoId,
-  isValidResetPasswordToken,
-  isValidDocumentType,
-  isValidFileName,
-  isValidBankId,
-  isValidCompaniesHouseNumber,
-} = require('./validation/validate-ids');
+const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName, isValidBankId } = require('./validation/validate-ids');
 const { FILE_UPLOAD } = require('./constants');
 
 require('dotenv').config();
@@ -987,50 +980,6 @@ const getUkBankHolidays = async (token) => {
   }
 };
 
-const getCompanyByRegistrationNumber = async (registrationNumber, token) => {
-  try {
-    if (!registrationNumber) {
-      return {
-        errorMessage: 'Enter a Companies House registration number.',
-      };
-    }
-
-    if (registrationNumber && !isValidCompaniesHouseNumber(registrationNumber)) {
-      return {
-        errorMessage: 'Enter a valid Companies House registration number.',
-      };
-    }
-
-    const { data } = await axios.get(`${PORTAL_API_URL}/v1/companies/${registrationNumber}`, {
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    return { company: data };
-  } catch (error) {
-    switch (error?.response?.status) {
-      case 400:
-        return {
-          errorMessage: 'Enter a valid Companies House registration number.',
-        };
-      case 404:
-        return {
-          errorMessage: 'No company matching the Companies House registration number entered was found.',
-        };
-      case 422:
-        return {
-          errorMessage: 'UKEF can only process applications from companies based in the UK.',
-        };
-      default:
-        return {
-          errorMessage: 'An unknown error occurred. Please try again or enter the company details manually.',
-        };
-    }
-  }
-};
-
 module.exports = {
   allDeals,
   allFacilities,
@@ -1083,5 +1032,4 @@ module.exports = {
   getDueReportPeriodsByBankId,
   getNextReportPeriodByBankId,
   getUkBankHolidays,
-  getCompanyByRegistrationNumber,
 };

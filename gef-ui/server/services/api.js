@@ -186,7 +186,7 @@ const getCompanyByRegistrationNumber = async ({ registrationNumber, userToken })
       };
     }
 
-    if (registrationNumber && !isValidCompaniesHouseNumber(registrationNumber)) {
+    if (!isValidCompaniesHouseNumber(registrationNumber)) {
       return {
         errRef: 'regNumber',
         errMsg: 'Enter a valid Companies House registration number.',
