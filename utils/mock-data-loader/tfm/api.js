@@ -137,7 +137,7 @@ const deleteDeal = async (deal) => {
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${deal._id}`,
     // This auditDetails is mock data & doesn't correspond to an existing user.
     // Since mock data loader isn't used in production this should never occur in production data
-    data: { auditDetails: generateTfmAuditDetails('bad123456789bad123456789') },
+    data: { auditDetails: mockDataLoaderTfmAuditDetails },
   }).catch((error) => {
     throw new ApiError({ cause: error });
   });

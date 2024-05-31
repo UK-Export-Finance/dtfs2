@@ -1,8 +1,7 @@
 import { Response } from 'express';
 import { ObjectId } from 'mongodb';
-import { AuditDetails, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { AuditDetails, MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
 import { deleteMany, deleteOne, validateAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { InvalidAuditDetailsError } from '@ukef/dtfs2-common/errors';
 import { findOneDeal } from './tfm-get-deal.controller';
 import db from '../../../../drivers/db-client';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';

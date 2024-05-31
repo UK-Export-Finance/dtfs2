@@ -1,7 +1,6 @@
 import { Response } from 'express';
-import { AuditDetails, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { AuditDetails, MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
 import { deleteMany, validateAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { InvalidAuditDetailsError } from '@ukef/dtfs2-common/errors';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import db from '../../../drivers/db-client';
 

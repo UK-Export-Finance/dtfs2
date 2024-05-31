@@ -1,6 +1,5 @@
-import { AuditDetails } from '@ukef/dtfs2-common';
+import { AuditDetails, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
 import { Response } from 'express';
-import { InvalidAuditDetailsError } from '@ukef/dtfs2-common/errors';
 import { validateAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { deleteAllDurableFunctionLogs } from '../../../repositories/durable-functions-repo';
