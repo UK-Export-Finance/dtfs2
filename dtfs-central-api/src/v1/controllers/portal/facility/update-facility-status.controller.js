@@ -1,3 +1,4 @@
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
@@ -10,18 +11,21 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateFacilityStatus = async (facilityId, status, existingFacility) => {
+const updateFacilityStatus = async (facilityId, status, existingFacility, auditDetails) => {
   if (ObjectId.isValid(facilityId)) {
     const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
 
     console.info('Updating Portal facility status to %s', status);
     const previousStatus = existingFacility.status;
 
+    const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
+
     const update = {
       ...existingFacility,
       updatedAt: Date.now(),
       previousStatus,
       status,
+      auditRecord,
     };
 
     const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, $.flatten(withoutId(update)), {
@@ -41,11 +45,11 @@ exports.updateFacilityStatusPut = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const facilityId = req.params.id;
 
-    const { status } = req.body;
+    const { status, auditDetails } = req.body;
 
     return await findOneFacility(facilityId, async (existingFacility) => {
       if (existingFacility) {
-        const updatedFacility = await updateFacilityStatus(facilityId, status, existingFacility);
+        const updatedFacility = await updateFacilityStatus(facilityId, status, existingFacility, auditDetails);
         return res.status(200).json(updatedFacility);
       }
 
