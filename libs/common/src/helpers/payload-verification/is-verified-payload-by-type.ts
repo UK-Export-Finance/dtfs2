@@ -5,27 +5,43 @@ import { IsVerifiedPayloadByTypeParams } from '../../types/payload-verification'
  */
 export const isVerifiedPayloadByType = ({ payload, template }: IsVerifiedPayloadByTypeParams) => {
   if (!payload || !template || !Object.keys(payload).length || !Object.keys(template).length) {
+    console.error('Payload verification error - no data');
     return false;
   }
 
-  // 1. Properties key validation
   const payloadKeys = Object.keys(payload);
   const templateKeys = Object.keys(template);
 
-  const isEveryTemplateFieldOnPayload = templateKeys.every((propertyKey) => payloadKeys.includes(propertyKey));
+  // 1. Properties key validation
+  const missingProperties = templateKeys.filter((x) => !payloadKeys.includes(x));
 
   // 2. Ensure no additional properties
-  const isNoAdditionalFieldsOnPayload = !payloadKeys.filter((propertyKey) => !templateKeys.includes(propertyKey)).length;
+  const extraProperties = payloadKeys.filter((x) => !templateKeys.includes(x));
 
   // 3. Properties data type validation
-  // Note: This treats null as an object, which is required for the existing validation to work
-  // We should look to migrate away from this form of validation and use zod schemas
-  const isMatchingTypesWithTemplate = payloadKeys.every((key) => {
+  const propertiesDataTypeMatch = payloadKeys.every((key) => {
     const payloadKeyDataType = typeof payload[key];
     const templateKeyDataType = template[key];
+    const keysHaveMatchingTypes = payloadKeyDataType.toLowerCase() === templateKeyDataType?.toLowerCase();
 
-    return payloadKeyDataType.toLowerCase() === templateKeyDataType?.toLowerCase();
+    if (!keysHaveMatchingTypes) {
+      console.error(
+        `Payload verification error - type mismatch for field "${key}": payload type "${payloadKeyDataType}", template type "${templateKeyDataType}"`,
+      );
+    }
+
+    return keysHaveMatchingTypes;
   });
+
+  if (missingProperties.length) {
+    console.error('Payload verification error - missing properties %s', missingProperties);
+  }
+  if (extraProperties.length) {
+    console.error('Payload verification error - extra properties %s', extraProperties);
+  }
+  if (!propertiesDataTypeMatch) {
+    console.error('Payload verification error - field type mismatch');
+  }
   // Compound comparison condition
-  return isEveryTemplateFieldOnPayload && isNoAdditionalFieldsOnPayload && isMatchingTypesWithTemplate;
+  return !missingProperties.length && !extraProperties.length && propertiesDataTypeMatch;
 };

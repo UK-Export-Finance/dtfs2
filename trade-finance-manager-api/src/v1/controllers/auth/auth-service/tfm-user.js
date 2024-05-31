@@ -1,3 +1,5 @@
+const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+
 const mapEntraUserData = require('./map-entra-user-data');
 const userController = require('../../user/user.controller');
 
@@ -12,10 +14,8 @@ const create = async (entraUser) => {
     console.info('TFM auth service - mapping Entra user and creating TFM user');
 
     const userData = mapEntraUserData(entraUser);
-
-    const createdUser = await userController.createUser(userData);
-
-    return createdUser;
+    const auditDetails = generateNoUserLoggedInAuditDetails();
+    return await userController.createUser(userData, auditDetails);
   } catch {
     console.error('TFM auth service - Error mapping Entra user and creating TFM user');
 

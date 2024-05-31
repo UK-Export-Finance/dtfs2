@@ -77,7 +77,7 @@ exports.findByUsername = async (username, callback) => {
 
 /**
  * @param {object} user to create
- * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - logged in user
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - logged in user or NoUser during first SSO login
  * @param {(error: string | null, createdUser: object) => void} callback
  * @returns
  */
@@ -87,18 +87,15 @@ exports.createUser = async (user, auditDetails) => {
     ...user,
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
-
   delete tfmUser.token;
 
   if (isVerifiedPayload({ payload: tfmUser, template: PAYLOAD_VERIFICATION.TFM.USER })) {
     const createUserResult = await collection.insertOne(tfmUser);
-
     const { insertedId: userId } = createUserResult;
 
     if (!ObjectId.isValid(userId)) {
       throw new Error('User creation failed. Invalid User Id');
     }
-
     const createdUser = await collection.findOne({ _id: { $eq: userId } });
     const mapUser = mapUserData(createdUser);
     return mapUser;

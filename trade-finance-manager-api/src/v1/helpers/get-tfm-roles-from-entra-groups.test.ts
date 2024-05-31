@@ -39,7 +39,7 @@ describe('helpers - get-tfm-roles-from-entra-groups', () => {
 
       const result = getTfmRolesFromEntraGroups(notExistingEntraGroupIds);
 
-      expect(result).toEqual([]);
+      expect(result).toStrictEqual([]);
     });
 
     it.each`

@@ -27,7 +27,7 @@ const getTfmRolesGroupedByEntraId = () => {
 const getTfmRolesFromEntraGroups = (groupIds) => {
   const entraIdMap = getTfmRolesGroupedByEntraId();
 
-  const tfmRoles = groupIds.map((id) => entraIdMap[id]);
+  const tfmRoles = groupIds.map((id) => entraIdMap[id]).filter((group) => group !== undefined);
 
   return tfmRoles;
 };
