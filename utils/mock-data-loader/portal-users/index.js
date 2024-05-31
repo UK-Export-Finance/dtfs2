@@ -189,7 +189,7 @@ const MOCK_USERS = {
     surname: 'Spang',
     email: 'test1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: [],
+    roles: [ROLES.READ_ONLY],
     bank: UKEF_TEST_BANK_1,
     isTrusted: false,
   },
