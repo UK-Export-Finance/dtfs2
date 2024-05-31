@@ -89,4 +89,40 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
       },
     });
   },
+
+  /**
+   * Finds submitted reports & fee records by bank id which have report periods which ended in
+   * the supplied year
+   * @param bankId - The bank id
+   * @param year - The search year
+   * @returns The found reports
+   */
+  async findSubmittedReportsForBankIdWithReportPeriodEndInYear(bankId: string, year: number): Promise<UtilisationReportEntity[]> {
+    const bankIdAndStatusFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
+      bankId,
+      status: Not('REPORT_NOT_RECEIVED'),
+    };
+
+    const sameYearFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
+      reportPeriod: {
+        end: {
+          year: Equal(year),
+        },
+      },
+    };
+
+    return await this.find({
+      where: { ...bankIdAndStatusFindOptions, ...sameYearFindOptions },
+      relations: {
+        feeRecords: true,
+      },
+      order: {
+        reportPeriod: {
+          end: {
+            month: 'ASC',
+          },
+        },
+      },
+    });
+  },
 });

@@ -13,6 +13,7 @@ const putUtilisationReportStatusController = require('../controllers/utilisation
 const {
   getUtilisationReportReconciliationDetailsById,
 } = require('../controllers/utilisation-report-service/get-utilisation-report-reconciliation-details-by-id.controller');
+const { getSelectedFeeRecordDetails } = require('../controllers/utilisation-report-service/get-selected-fee-records-details.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -146,7 +147,7 @@ utilisationReportsRouter.route('/set-status').put(putUtilisationReportStatusCont
 /**
  * @openapi
  * /utilisation-reports/reconciliation-details/:reportId:
- *   put:
+ *   get:
  *     summary: Get the reconciliation details for the utilisation report by the report id
  *     tags: [UtilisationReport]
  *     description: Gets the reconciliation details for the utilisation report by the report id
@@ -168,5 +169,50 @@ utilisationReportsRouter.route('/set-status').put(putUtilisationReportStatusCont
 utilisationReportsRouter
   .route('/reconciliation-details/:reportId')
   .get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, getUtilisationReportReconciliationDetailsById);
+
+/**
+ * @openapi
+ * /utilisation-reports/:id/selected-fee-records-details:
+ *   get:
+ *     summary: Get the fee record details for the selected fee record ids
+ *     tags: [UtilisationReport]
+ *     description: Get the fee record details for the selected fee record ids
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report the fees belong to
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *              properties:
+ *               feeRecordIds:
+ *                 description: The ids of the selected fee records
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/SelectedFeeRecordsDetails'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found (if the report with matching id cannot be found)
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:id/selected-fee-records-details')
+  .get(validation.sqlIdValidation('id'), handleExpressValidatorResult, getSelectedFeeRecordDetails);
 
 module.exports = utilisationReportsRouter;

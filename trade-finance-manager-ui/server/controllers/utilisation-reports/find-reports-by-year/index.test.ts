@@ -1,4 +1,5 @@
 import httpMocks from 'node-mocks-http';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getFindReportsByYear } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
@@ -6,7 +7,7 @@ import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { aBank } from '../../../../test-helpers/test-data/bank';
 import { aMonthlyBankReportPeriodSchedule } from '../../../../test-helpers/test-data/bank-report-period-schedule';
 import { Bank } from '../../../types/banks';
-import { FindUtilisationReportsByYearViewModel } from '../../../types/view-models/find-utilisation-reports-by-year-view-model';
+import { FindUtilisationReportsByYearViewModel, UtilisationReportsByBankAndYearViewModel } from '../../../types/view-models';
 
 jest.mock('../../../api');
 
@@ -76,6 +77,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       userToken,
       user: MOCK_TFM_SESSION_USER,
     };
+    const originalUrl = '/utilisation-reports/find-reports-by-year?';
 
     it("renders the 'problem-with-service' page when the bank query is provided but is not a string", async () => {
       // Arrange
@@ -144,6 +146,33 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       });
     });
 
+    it("renders the 'find-utilisation-reports-by-year.njk' view with when there is a query in the original URL with validation errors", async () => {
+      // Arrange
+      const { res, req } = httpMocks.createMocks({
+        session: requestSession,
+        query: { bank: '', year: '' },
+        originalUrl,
+      });
+
+      const expectedBankError = 'Select a bank';
+      const expectedYearError = 'Enter a valid year';
+      const expectedErrorSummary = [
+        { text: expectedBankError, href: '#bank' },
+        { text: expectedYearError, href: '#year' },
+      ];
+
+      jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
+
+      // Act
+      await getFindReportsByYear(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
+      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.errorSummary).toStrictEqual(expectedErrorSummary);
+      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.bankError).toBe(expectedBankError);
+      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.yearError).toBe(expectedYearError);
+    });
+
     it("renders the 'find-utilisation-reports-by-year.njk' view with required data when there are query params with errors", async () => {
       // Arrange
       const yearQuery = '20';
@@ -151,6 +180,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
         query: { year: yearQuery },
+        originalUrl,
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
@@ -205,6 +235,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
         query: { bank: BANK_ID_TWO, year: 'invalidYear' },
+        originalUrl,
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
@@ -222,6 +253,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
         query: { bank: 'invalidBank', year: '2024' },
+        originalUrl,
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
@@ -239,6 +271,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
         query: { bank: BANK_ID_TWO, year: 'Nonsense' },
+        originalUrl,
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
@@ -251,23 +284,63 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.selectedYear).toBe('Nonsense');
     });
 
-    it("renders the 'previous-bank-reports-by-year.njk' view with required data when there are valid query params", async () => {
+    it("renders the 'utilisation-reports-by-bank-and-year-results.njk' view with required data when there are valid query params", async () => {
       // Arrange
       const bankQuery = BANK_ID_ONE;
       const yearQuery = new Date().getFullYear().toString();
+      const reportPeriod = {
+        start: {
+          month: 1,
+          year: Number(yearQuery),
+        },
+        end: {
+          month: 1,
+          year: Number(yearQuery),
+        },
+      };
+      const mockReportSummaryItem = {
+        reportId: '1',
+        reportPeriod,
+        bank: {
+          id: bankQuery,
+          name: BANK_NAME_ONE,
+        },
+        status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+        dateUploaded: '2024-02-15 10:38:01.4033333',
+        totalFeesReported: 3,
+        reportedFeesLeftToReconcile: 3,
+      };
+
+      const expectedReportItem = {
+        reportId: '1',
+        reportPeriod,
+        bank: { id: bankQuery, name: BANK_NAME_ONE },
+        status: 'PENDING_RECONCILIATION',
+        dateUploaded: '2024-02-15 10:38:01.4033333',
+        totalFeesReported: 3,
+        reportedFeesLeftToReconcile: 3,
+        formattedReportPeriod: 'January 2024',
+        displayStatus: 'Pending reconciliation',
+        formattedDateUploaded: '15 Feb 2024',
+      };
 
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
         query: { bank: bankQuery, year: yearQuery },
+        originalUrl,
       });
 
       jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
+      jest.mocked(api.getReportSummariesByBankAndYear).mockResolvedValue({ bankName: BANK_NAME_ONE, year: yearQuery, reports: [mockReportSummaryItem] });
 
       // Act
       await getFindReportsByYear(req, res);
 
       // Assert
-      expect(res._getRenderView()).toEqual('utilisation-reports/previous-bank-reports-by-year.njk');
+      expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-reports-by-bank-and-year-results.njk');
+      expect((res._getRenderData() as UtilisationReportsByBankAndYearViewModel)?.bankName).toBe(BANK_NAME_ONE);
+      expect((res._getRenderData() as UtilisationReportsByBankAndYearViewModel)?.year).toBe(yearQuery);
+      expect((res._getRenderData() as UtilisationReportsByBankAndYearViewModel)?.reports).toStrictEqual([expectedReportItem]);
     });
   });
 });

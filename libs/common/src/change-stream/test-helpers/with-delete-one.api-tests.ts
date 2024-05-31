@@ -1,23 +1,22 @@
-import { Collection, ObjectId, WithoutId } from 'mongodb';
-import { when, WhenMock } from 'jest-when';
+import { ClientSession, Collection, ObjectId, WithoutId } from 'mongodb';
+import { when } from 'jest-when';
 import { MongoDbClient } from '../../mongo-db-client';
 import { AuditDatabaseRecord, DeletionAuditLog, MongoDbCollectionName } from '../../types';
 import { changeStreamConfig } from '../config';
-
-const collectionMethodsToNotMock = ['findOne', 'insertOne', 'updateOne'] as const;
 
 type Params = {
   makeRequest: () => Promise<void>;
   collectionName: MongoDbCollectionName;
   auditRecord: AuditDatabaseRecord;
   getDeletedDocumentId: () => ObjectId;
-  mockGetCollection: jest.Mock;
 };
 
-export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, getDeletedDocumentId, mockGetCollection }: Params) => {
+export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, getDeletedDocumentId }: Params) => {
   describe(`when deleting a document from ${collectionName}`, () => {
     let mongoDbClient: MongoDbClient;
     let deletionAuditLogsCollection: Collection<WithoutId<DeletionAuditLog>>;
+    const mockDeleteOne = jest.spyOn(Collection.prototype, 'deleteOne');
+    const mockInsertOne = jest.spyOn(Collection.prototype, 'insertOne');
 
     beforeAll(async () => {
       mongoDbClient = new MongoDbClient({
@@ -28,15 +27,17 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
       deletionAuditLogsCollection = await mongoDbClient.getCollection('deletion-audit-logs');
     });
 
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    afterAll(async () => {
+      await mongoDbClient.close();
+      mockDeleteOne.mockRestore();
+      mockInsertOne.mockRestore();
+    });
+
     if (changeStreamConfig.CHANGE_STREAM_ENABLED === 'true') {
-      beforeEach(() => {
-        jest.clearAllMocks();
-      });
-
-      afterAll(async () => {
-        await mongoDbClient.close();
-      });
-
       describe('when the service is working normally', () => {
         it('should add a deletion audit log', async () => {
           await makeRequest();
@@ -67,116 +68,79 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
       });
 
       describe('when deleting the document is not acknowledged', () => {
-        const originalMockCollection = mockGetCollection(collectionName) as Promise<Collection>;
-        let whenMock: WhenMock;
-        beforeAll(async () => {
-          const collection = await originalMockCollection;
-          const mockCollection: Record<string, unknown> = {};
-
-          collectionMethodsToNotMock.forEach((methodName) => {
-            mockCollection[methodName] = collection[methodName].bind(collection);
-          });
-
-          mockCollection.deleteOne = jest.fn(() => ({
-            acknowledged: false,
-          }));
-
-          whenMock = when(mockGetCollection).calledWith(collectionName).mockResolvedValue(mockCollection);
-        });
-
-        afterAll(() => {
-          whenMock.resetWhenMocks();
+        beforeEach(() => {
+          when(mockDeleteOne)
+            .calledWith({ _id: { $eq: getDeletedDocumentId() } }, { session: expect.any(ClientSession) as ClientSession })
+            .mockImplementationOnce(() => ({
+              acknowledged: false,
+            }));
         });
 
         itDoesNotUpdateTheDatabase();
       });
 
       describe('when no document is deleted', () => {
-        const originalMockCollection = mockGetCollection(collectionName) as Promise<Collection>;
-        let whenMock: WhenMock;
-        beforeAll(async () => {
-          const collection = await originalMockCollection;
-          const mockCollection: Record<string, unknown> = {};
-
-          collectionMethodsToNotMock.forEach((methodName) => {
-            mockCollection[methodName] = collection[methodName].bind(collection);
-          });
-
-          mockCollection.deleteOne = jest.fn(() => ({
-            acknowledged: true,
-            deletedCount: 0,
-          }));
-
-          whenMock = when(mockGetCollection).calledWith(collectionName).mockResolvedValue(mockCollection);
-        });
-
-        afterAll(() => {
-          whenMock.resetWhenMocks();
+        beforeEach(() => {
+          when(mockDeleteOne)
+            .calledWith({ _id: { $eq: getDeletedDocumentId() } }, { session: expect.any(ClientSession) as ClientSession })
+            .mockImplementationOnce(() => ({
+              acknowledged: true,
+              deletedCount: 0,
+            }));
         });
 
         itDoesNotUpdateTheDatabase();
       });
 
       describe('when deleting the document throws an error', () => {
-        const originalMockCollection = mockGetCollection(collectionName) as Promise<Collection>;
-        let whenMock: WhenMock;
-        beforeAll(async () => {
-          const collection = await originalMockCollection;
-          const mockCollection: Record<string, unknown> = {};
-
-          collectionMethodsToNotMock.forEach((methodName) => {
-            mockCollection[methodName] = collection[methodName].bind(collection);
-          });
-
-          mockCollection.deleteOne = jest.fn(() => {
-            throw new Error();
-          });
-
-          whenMock = when(mockGetCollection).calledWith(collectionName).mockResolvedValue(mockCollection);
-        });
-
-        afterAll(() => {
-          whenMock.resetWhenMocks();
+        beforeEach(() => {
+          when(mockDeleteOne)
+            .calledWith({ _id: { $eq: getDeletedDocumentId() } }, { session: expect.any(ClientSession) as ClientSession })
+            .mockImplementationOnce(() => {
+              throw new Error();
+            });
         });
 
         itDoesNotUpdateTheDatabase();
       });
 
       describe('when inserting the deletion log is not acknowledged', () => {
-        let whenMock: WhenMock;
-
-        beforeAll(() => {
-          const mockCollection = {
-            insertOne: jest.fn(() => ({
+        beforeEach(() => {
+          when(mockInsertOne)
+            // @ts-ignore
+            .calledWith(
+              {
+                collectionName,
+                deletedDocumentId: getDeletedDocumentId(),
+                auditRecord,
+                expireAt: expect.any(Date) as Date,
+              },
+              { session: expect.any(ClientSession) as ClientSession },
+            )
+            .mockImplementationOnce(() => ({
               acknowledged: false,
-            })),
-          };
-
-          whenMock = when(mockGetCollection).calledWith('deletion-audit-logs').mockResolvedValue(mockCollection);
-        });
-
-        afterAll(() => {
-          whenMock.resetWhenMocks();
+            }));
         });
 
         itDoesNotUpdateTheDatabase();
       });
 
       describe('when inserting the deletion log throws an error', () => {
-        let whenMock: WhenMock;
-
-        beforeAll(() => {
-          const mockCollection = {
-            insertOne: jest.fn(() => {
+        beforeEach(() => {
+          when(mockInsertOne)
+            // @ts-ignore
+            .calledWith(
+              {
+                collectionName,
+                deletedDocumentId: getDeletedDocumentId(),
+                auditRecord,
+                expireAt: expect.any(Date) as Date,
+              },
+              { session: expect.any(ClientSession) as ClientSession },
+            )
+            .mockImplementationOnce(() => {
               throw new Error();
-            }),
-          };
-
-          whenMock = when(mockGetCollection).calledWith('deletion-audit-logs').mockResolvedValue(mockCollection);
-        });
-
-        afterAll(() => {
-          whenMock.resetWhenMocks();
+            });
         });
 
         itDoesNotUpdateTheDatabase();

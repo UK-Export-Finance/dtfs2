@@ -1,40 +1,8 @@
-import { CurrencyAndAmount, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { FeeRecordItem, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
-
-/**
- * Maps the fee record entity to the reported fees
- * @param feeRecord - The fee record entity
- * @returns The reported fees
- */
-const mapFeeRecordEntityToReportedFees = (feeRecord: FeeRecordEntity): CurrencyAndAmount => ({
-  currency: feeRecord.feesPaidToUkefForThePeriodCurrency,
-  amount: feeRecord.feesPaidToUkefForThePeriod,
-});
-
-/**
- * Maps the fee record entity to the reported payments
- * @param feeRecord - The fee record entity
- * @returns The reported fees
- */
-const mapFeeRecordEntityToReportedPayments = (feeRecord: FeeRecordEntity): CurrencyAndAmount => {
-  const { paymentCurrency, feesPaidToUkefForThePeriodCurrency, feesPaidToUkefForThePeriod } = feeRecord;
-
-  if (paymentCurrency === feesPaidToUkefForThePeriodCurrency) {
-    return {
-      currency: paymentCurrency,
-      amount: feesPaidToUkefForThePeriod,
-    };
-  }
-
-  const feesPaidToUkefForThePeriodInPaymentCurrency = feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency();
-
-  return {
-    amount: feesPaidToUkefForThePeriodInPaymentCurrency,
-    currency: paymentCurrency,
-  };
-};
+import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from '../../../../mapping/fee-record-mapper';
 
 /**
  * Maps a fee record entity to a fee record item
