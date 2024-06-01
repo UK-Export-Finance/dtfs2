@@ -52,7 +52,7 @@
     "mongodb": "4.17.2",
     "multer": "1.4.5-lts.1",
     "node-fetch": "^2.7.0",
-    "notifications-node-client": "6.0.0",
+    "notifications-node-client": "8.1.0",
     "passport": "0.6.0",
     "passport-jwt": "^4.0.1",
     "sanitize-html": "^2.13.0",
