@@ -27,7 +27,6 @@ const mockApplications = require('../../fixtures/gef/application');
 const { calculateUkefExposure, calculateGuaranteeFee } = require('../../../src/v1/gef/calculations/facility-calculations');
 const { roundNumber } = require('../../../src/utils/number');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
-const { MOCK_PORTAL_USER } = require('../../../../dtfs-central-api/api-tests/mocks/test-users/mock-portal-user');
 
 describe(baseUrl, () => {
   let aMaker;
@@ -545,7 +544,7 @@ describe(baseUrl, () => {
       makeRequest: () => as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`),
       collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
       auditRecord: {
-        ...generateMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
+        ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
         lastUpdatedByPortalUserId: expect.anything(),
       },
       getDeletedDocumentIds: () => facilitiesToDeleteIds,
