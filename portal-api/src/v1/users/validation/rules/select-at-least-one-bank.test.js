@@ -10,10 +10,7 @@ describe('selectAtLeastOneBank', () => {
     },
   ];
 
-  const testCases = [
-    { description: 'when no bank is provided', change: { bank: '' } },
-    { description: 'when a bank is provided', change: { bank: 'Bank1' } },
-  ];
+  const testCases = [{ description: 'when no bank is provided', change: { bank: '' } }];
 
   describe.each(testCases)('$description', ({ change }) => {
     it('should return an error if no bank is selected', () => {
@@ -22,7 +19,8 @@ describe('selectAtLeastOneBank', () => {
     });
 
     it('should not return an error if a bank is selected', () => {
-      const errors = selectAtLeastOneBank(undefined, change);
+      const selectedBank = { bank: 'Bank1' };
+      const errors = selectAtLeastOneBank(undefined, selectedBank);
       expect(errors).toStrictEqual([]);
     });
   });

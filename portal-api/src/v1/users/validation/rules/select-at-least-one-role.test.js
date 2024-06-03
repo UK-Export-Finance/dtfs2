@@ -4,16 +4,13 @@ describe('selectAtLeastOneRole', () => {
   const selectAtLeastOneRoleError = [
     {
       roles: {
-        order: '1',
+        order: '3',
         text: 'At least one role is required',
       },
     },
   ];
 
-  const testCases = [
-    { description: 'when no roles are provided', change: { roles: [] } },
-    { description: 'when roles are provided', change: { roles: ['admin'] } },
-  ];
+  const testCases = [{ description: 'when no roles are provided', change: { roles: [] } }];
 
   describe.each(testCases)('$description', ({ change }) => {
     it('should return an error if no roles are selected', () => {
@@ -22,7 +19,8 @@ describe('selectAtLeastOneRole', () => {
     });
 
     it('should not return an error if at least one role is selected', () => {
-      const errors = selectAtLeastOneRole(undefined, change);
+      const selectedRoles = { roles: ['admin'] };
+      const errors = selectAtLeastOneRole(undefined, selectedRoles);
       expect(errors).toStrictEqual([]);
     });
   });

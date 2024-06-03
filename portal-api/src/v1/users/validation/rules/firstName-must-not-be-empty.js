@@ -5,7 +5,6 @@
  * @returns {Array} either an empty array or an array containing an error object
  */
 const firstnameMustNotBeEmpty = (user, change) => {
-
   if (!change.firstname) {
     return [
       {
@@ -18,7 +17,6 @@ const firstnameMustNotBeEmpty = (user, change) => {
   }
 
   return [];
-
 };
 
 module.exports = firstnameMustNotBeEmpty;
