@@ -186,3 +186,8 @@ SQL_DB_LOGGING_ENABLED
 Note: in contrast to other common functionality which is imported from `'@ukef/dtfs2-common'`, the `SqlDbDataSource` is imported from a separate `'@ukef/dtfs2-common/sql-db-connection'` sub-directory. This means that only those packages that need to connect to the DB and import from this sub-directory will need to be provided with access to the required environment variables.
 
 [//]: # 'TODO FN-1859 - add details on how to use repos with `extend` and use of Data Mapper pattern'
+
+## CDC restrictions
+CDC (Change Data Capture) is enabled on staging and prod environments which will block certain actions which cause a table to be dropped. This is not limited to just dropping tables but also queries which behind the scenes SQL will drop the old table and make a new one, e.g. re-ordering columns in a table.
+If a developer wants to make a change that will cause a table to be dropped they should make sure it is required and then add to the release plan that CDC needs to be temporarily disabled during the staging and production releases.
+Note: If you see an error on a staging deployment that a migration has not run due to CDC stopping the migration then please populate the error message here so it can be looked up.
