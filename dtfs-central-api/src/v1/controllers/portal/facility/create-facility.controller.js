@@ -45,7 +45,7 @@ exports.createFacilityPost = async (req, res) => {
       validationErrors,
     });
   }
-  
+
   try {
     validateAuditDetails(auditDetails);
   } catch (error) {
