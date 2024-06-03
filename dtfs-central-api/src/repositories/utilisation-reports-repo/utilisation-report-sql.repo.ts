@@ -101,6 +101,14 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
       relations: {
         feeRecords: includeFeeRecords,
       },
+      order: {
+        reportPeriod: {
+          end: {
+            year: 'ASC',
+            month: 'ASC',
+          },
+        },
+      },
     });
   },
 
