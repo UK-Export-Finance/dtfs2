@@ -78,7 +78,6 @@ exports.findByUsername = async (username, callback) => {
 /**
  * @param {object} user to create
  * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - logged in user or NoUser during first SSO login
- * @param {(error: string | null, createdUser: object) => void} callback
  * @returns
  */
 exports.createUser = async (user, auditDetails) => {

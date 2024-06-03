@@ -19,9 +19,10 @@ describe('auth-service/tfm-user', () => {
     it('should call userController.createUser with mapped Entra data', () => {
       expect(userController.createUser).toHaveBeenCalledTimes(1);
 
-      const expectedData = mapEntraUserData(MOCK_ENTRA_USER);
+      const expectedUserData = mapEntraUserData(MOCK_ENTRA_USER);
+      const expectedAuditDetails = { userType: 'none' };
 
-      expect(userController.createUser).toHaveBeenCalledWith(expectedData);
+      expect(userController.createUser).toHaveBeenCalledWith(expectedUserData, expectedAuditDetails);
     });
 
     it('should return the created user', () => {
