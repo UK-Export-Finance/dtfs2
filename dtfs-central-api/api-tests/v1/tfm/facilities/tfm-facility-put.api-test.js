@@ -69,7 +69,8 @@ describe('/v1/tfm/facilities', () => {
       let createdFacility;
 
       beforeEach(async () => {
-        const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER, auditDetails: portalAuditDetails }).to('/v1/portal/facilities');
+
         await api
           .put({
             dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
