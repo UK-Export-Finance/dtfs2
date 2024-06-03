@@ -6,38 +6,6 @@ The project uses the [Microsoft SQL Server](https://learn.microsoft.com/en-gb/sq
 
 As of January 2024 the project is in the process of migrating from a MongoDB (NoSQL) database to a SQL Server (SQL) database. MongoDB collections will gradually be replaced with SQL Server tables until MongoDB can be completely removed.
 
-## Ledger tables
-
-The SQL Server database tables all have ledger enabled which has some impacts on how we alter tables. For more details than those discussed below, refer to [the SQL Server docs](https://learn.microsoft.com/en-us/sql/relational-databases/security/ledger/ledger-limits?view=sql-server-ver16).
-
-### Adding a new, non-nullable column
-
-Nullable columns can be added to a ledger table with no issues. If you want to add a non-nullable column, you need your column to have a default value and need to manually update the migration generated via [`npm run db:generate-migration`](#--generate-new-migration). For example, as we use typeorm to generate our migrations, consider the following column
-
-```typescript
-@Column({ nullable: false, default: 0 })
-age!: number;
-```
-
-The `npm run db:generate-migration` command will then generate a query similar to
-
-```sql
-ALTER TABLE "Person" ADD "age" int CONSTRAINT "DF_abc123" DEFAULT 0
-```
-
-However, this will cause an error as the existing rows will do not satisfy the non-nullable constraint. To overcome this, you need to manually update your migration to have the following three steps:
-
-```sql
--- Add column as nullable
-ALTER TABLE "Person" ADD "age" int NULL CONSTRAINT "DF_abc123" DEFAULT 0;
-
--- Update all existing columns to have the default value
-UPDATE "Person" SET "age" = 0;
-
--- Set the new column to non-nullable
-ALTER TABLE "Person" ALTER COLUMN "age" int NOT NULL;
-```
-
 ## Running locally
 
 The SQL Server database will be spun up in Docker along with all the other services (see the docker-compose step in [Setup](../README.md#setup-gear) in the main README).
