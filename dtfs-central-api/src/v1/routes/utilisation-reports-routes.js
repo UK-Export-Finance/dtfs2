@@ -190,7 +190,7 @@ utilisationReportsRouter
  *         application/json:
  *           schema:
  *             type: object
- *              properties:
+ *             properties:
  *               feeRecordIds:
  *                 description: The ids of the selected fee records
  *                 type: array
