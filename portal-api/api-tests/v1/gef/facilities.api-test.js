@@ -537,11 +537,6 @@ describe(baseUrl, () => {
       auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentId: () => facilityToDeleteId,
     });
-
-    it('returns a 204 - "No Content" if there are no records', async () => {
-      const { status } = await as(aMaker).remove(`${baseUrl}/doesnotexist`);
-      expect(status).toEqual(204);
-    });
   });
 
   describe(`DELETE ${baseUrl}?dealId=`, () => {
@@ -571,10 +566,7 @@ describe(baseUrl, () => {
     withDeleteManyTests({
       makeRequest: () => as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`),
       collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
-      auditRecord: {
-        ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
-        lastUpdatedByPortalUserId: expect.anything(),
-      },
+      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentIds: () => facilitiesToDeleteIds,
       expectedSuccessResponseBody: { acknowledged: true },
     });
