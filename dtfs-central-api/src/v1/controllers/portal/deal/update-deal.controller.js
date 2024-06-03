@@ -145,14 +145,14 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath, au
 };
 exports.updateDeal = updateDeal;
 
-const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath) => {
+const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath, auditDetails) => {
   await findOneDeal(dealId, async (deal) => {
     const { facilities } = deal;
 
     const updatedFacilities = [...facilities, newFacilityId.toHexString()];
     const dealUpdate = { ...deal, facilities: updatedFacilities };
 
-    const response = await updateDeal(dealId, dealUpdate, user, null, routePath);
+    const response = await updateDeal(dealId, dealUpdate, user, null, routePath, auditDetails);
     const status = isNumber(response?.status, 3);
 
     if (status) {
@@ -168,7 +168,7 @@ const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath) => {
 
 exports.addFacilityIdToDeal = addFacilityIdToDeal;
 
-const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => {
+const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath, auditDetails) => {
   await findOneDeal(dealId, async (deal) => {
     if (deal?.facilities) {
       const { facilities } = deal;
@@ -180,7 +180,7 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => 
         facilities: updatedFacilities,
       };
 
-      const response = await updateDeal(dealId, dealUpdate, user, null, routePath);
+      const response = await updateDeal(dealId, dealUpdate, user, null, routePath, auditDetails);
       const status = isNumber(response?.status, 3);
 
       if (status) {
