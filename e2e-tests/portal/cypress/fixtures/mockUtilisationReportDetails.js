@@ -52,6 +52,17 @@ const february2023ReportDetails = [
     .build(),
 ];
 
+const march2023ReportDetails = [
+  UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+    .withId(reportIdGenerator.next().value)
+    .withBankId(bankId)
+    .withReportPeriod({
+      start: { month: 3, year: 2023 },
+      end: { month: 3, year: 2023 },
+    })
+    .build(),
+];
+
 const december2023ToFebruary2024ReportDetails = [
   UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
     .withId(reportIdGenerator.next().value)
@@ -76,6 +87,7 @@ const upToDateReportDetails = generateUpToDateReportDetails();
 module.exports = {
   previousReportDetails,
   february2023ReportDetails,
+  march2023ReportDetails,
   upToDateReportDetails,
   december2023ToFebruary2024ReportDetails,
 };
