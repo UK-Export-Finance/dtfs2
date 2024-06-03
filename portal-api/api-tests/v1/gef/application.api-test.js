@@ -76,6 +76,8 @@ describe(baseUrl, () => {
     testUsers = await testUserCache.initialise(app);
     aMaker = testUsers().withRole(MAKER).one();
     aChecker = testUsers().withRole(CHECKER).one();
+
+    await databaseHelper.wipe(DB_COLLECTIONS.DEALS);
   });
 
   beforeEach(async () => {
@@ -775,15 +777,12 @@ describe(baseUrl, () => {
       facilitiesToDelete = [new ObjectId(facility0._id), new ObjectId(facility1._id)];
     });
 
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().remove(`${baseUrl}/${applicationToDeleteId}`);
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const { status, body } = await as(aMaker).remove(`${baseUrl}/${applicationToDeleteId}`);
-      expect(status).toEqual(200);
-      expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).remove(`${baseUrl}/${applicationToDeleteId}`),
+      successStatusCode: 200,
     });
 
     withDeleteOneTests({
