@@ -20,6 +20,7 @@ const getCompanyByRegistrationNumber = async (registrationNumber) => {
 
     return response;
   } catch (error) {
+    console.error(`Error calling External API 'GET /companies/:registrationNumber': %o`, error);
     const status = error?.response?.status || 500;
     const data = error?.response?.data || 'Error getting the company from External API';
 

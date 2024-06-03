@@ -16,7 +16,7 @@ export const getCompanyByRegistrationNumber = async (req: Request, res: Response
   const url: string = `${APIM_MDM_URL}companies?registrationNumber=${encodeURIComponent(registrationNumber)}`;
 
   const response: { status: number | undefined; data: unknown } = await axios.get(url, { headers }).catch((error: AxiosError) => {
-    console.error('Error calling MDM API GET /companies?registrationNumber=, %o', error);
+    console.error(`Error calling MDM API 'GET /companies?registrationNumber=': %o`, error);
     return { status: error.response?.status, data: error.response?.data };
   });
 

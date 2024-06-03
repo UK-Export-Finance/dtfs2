@@ -197,6 +197,7 @@ const getCompanyByRegistrationNumber = async ({ registrationNumber, userToken })
 
     return { company: data };
   } catch (error) {
+    console.error(`Error calling Portal API 'GET /gef/companies/:registrationNumber': %o`, error);
     switch (error?.response?.status) {
       case 400:
         return {

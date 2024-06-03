@@ -28,6 +28,7 @@ const getCompanyByRegistrationNumber = async (registrationNumber, token) => {
 
     return { company: data };
   } catch (error) {
+    console.error(`Error calling Portal API 'GET /companies/:registrationNumber': %o`, error);
     switch (error?.response?.status) {
       case 400:
         return {
