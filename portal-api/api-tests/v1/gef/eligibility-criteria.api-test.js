@@ -1,6 +1,10 @@
 const { ObjectId } = require('mongodb');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { generateParsedMockPortalUserAuditDatabaseRecord, withDeleteOneTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const {
+  generateParsedMockPortalUserAuditDatabaseRecord,
+  withDeleteOneTests,
+  generateMockPortalUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
@@ -165,7 +169,10 @@ describe(baseUrl, () => {
     withDeleteOneTests({
       makeRequest: () => as(anAdmin).remove(eligibilityCriteria1Url),
       collectionName: MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA,
-      auditRecord: expect.anything(),
+      auditRecord: {
+        ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
+        lastUpdatedByPortalUserId: expect.anything(),
+      },
       getDeletedDocumentId: () => eligibilityCriteriaToDeleteId,
     });
   });

@@ -1,6 +1,11 @@
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { ObjectId } = require('mongodb');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const {
+  generateParsedMockPortalUserAuditDatabaseRecord,
+  withDeleteOneTests,
+  generateMockPortalUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
-
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
@@ -209,6 +214,13 @@ describe(baseUrl, () => {
   });
 
   describe('DELETE /v1/gef/mandatory-criteria-versioned/:id', () => {
+    let criteriaToDeleteId;
+
+    beforeEach(async () => {
+      const { body } = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
+      criteriaToDeleteId = new ObjectId(body._id);
+    });
+
     it('rejects requests that do not present a valid Authorization token', async () => {
       const item = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
       const { status } = await as().remove(`${baseUrl}/${item.body._id}`);
@@ -221,13 +233,14 @@ describe(baseUrl, () => {
       expect(status).toEqual(200);
     });
 
-    it('deletes the mandatory-criteria', async () => {
-      const { body: createdItem } = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
-      const { body: item } = await as(anAdmin).get(`${baseUrl}/${createdItem._id}`);
-
-      const { status, body } = await as(anAdmin).remove(`${baseUrl}/${createdItem._id}`);
-      expect(status).toEqual(200);
-      expect(body).toEqual(item);
+    withDeleteOneTests({
+      makeRequest: () => as(anAdmin).remove(`${baseUrl}/${criteriaToDeleteId}`),
+      collectionName: MONGO_DB_COLLECTIONS.GEF_MANDATORY_CRITERIA_VERSIONED,
+      auditRecord: {
+        ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
+        lastUpdatedByPortalUserId: expect.anything(),
+      },
+      getDeletedDocumentId: () => criteriaToDeleteId,
     });
   });
 });
