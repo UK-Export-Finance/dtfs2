@@ -59,6 +59,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
         .post({
           deal: newDeal,
           user: MOCK_PORTAL_USER,
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to('/v1/portal/deals');
 
