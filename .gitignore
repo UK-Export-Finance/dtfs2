@@ -63,3 +63,6 @@ reporting/tfm/report/*
 
 # Clamav
 data/clamav
+
+# Azure Functions
+**/local.settings.json
