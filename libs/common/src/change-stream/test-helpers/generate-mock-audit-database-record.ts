@@ -5,29 +5,26 @@ import {
   generateSystemAuditDatabaseRecord,
   generateNoUserLoggedInAuditDatabaseRecord,
 } from '../generate-audit-database-record';
+import { AuditDatabaseRecord } from '../../types';
 
 export const generateMockTfmUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
   ...generateTfmUserAuditDatabaseRecord(mockUserId),
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  lastUpdatedAt: expect.any(String),
+  lastUpdatedAt: expect.any(String) as string,
 });
 
 export const generateMockPortalUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
   ...generatePortalUserAuditDatabaseRecord(mockUserId),
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  lastUpdatedAt: expect.any(String),
+  lastUpdatedAt: expect.any(String) as string,
 });
 
 export const generateMockSystemAuditDatabaseRecord = () => ({
   ...generateSystemAuditDatabaseRecord(),
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  lastUpdatedAt: expect.any(String),
+  lastUpdatedAt: expect.any(String) as string,
 });
 
 export const generateMockNoUserLoggedInAuditDatabaseRecord = () => ({
   ...generateNoUserLoggedInAuditDatabaseRecord(),
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  lastUpdatedAt: expect.any(String),
+  lastUpdatedAt: expect.any(String) as string,
 });
 
 /**
@@ -35,11 +32,9 @@ export const generateMockNoUserLoggedInAuditDatabaseRecord = () => ({
  * @returns mock data that an api GET request would return.
  * In particular, the ObjectId is converted to strings
  */
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 export const generateParsedMockTfmUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
-  ...JSON.parse(JSON.stringify(generateTfmUserAuditDatabaseRecord(mockUserId))),
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  lastUpdatedAt: expect.any(String),
+  ...(JSON.parse(JSON.stringify(generateTfmUserAuditDatabaseRecord(mockUserId))) as object),
+  lastUpdatedAt: expect.any(String) as string,
 });
 
 /**
@@ -47,9 +42,15 @@ export const generateParsedMockTfmUserAuditDatabaseRecord = (mockUserId: string 
  * @returns mock data that an api GET request would return.
  * In particular, the ObjectId is converted to strings
  */
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 export const generateParsedMockPortalUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
-  ...JSON.parse(JSON.stringify(generatePortalUserAuditDatabaseRecord(mockUserId))),
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  lastUpdatedAt: expect.any(String),
+  ...(JSON.parse(JSON.stringify(generatePortalUserAuditDatabaseRecord(mockUserId))) as object),
+  lastUpdatedAt: expect.any(String) as string,
+});
+
+export const expectAnyPortalUserAuditDatabaseRecord = (): AuditDatabaseRecord => ({
+  lastUpdatedAt: expect.any(String) as string,
+  lastUpdatedByPortalUserId: expect.anything() as ObjectId,
+  lastUpdatedByTfmUserId: null,
+  lastUpdatedByIsSystem: null,
+  noUserLoggedIn: null,
 });
