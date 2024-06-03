@@ -1,7 +1,7 @@
 import 'dotenv/config.js';
-import type { Filter, TransactionOptions } from 'mongodb';
+import type { Filter, TransactionOptions, WithoutId } from 'mongodb';
 import { add } from 'date-fns';
-import type { AuditDetails, MongoDbCollectionName } from '../types';
+import type { AuditDetails, DeletionAuditLog, MongoDbCollectionName } from '../types';
 import { MongoDbClient } from '../mongo-db-client';
 import { generateAuditDatabaseRecordFromAuditDetails } from './generate-audit-database-record';
 import { changeStreamConfig } from './config';
@@ -29,11 +29,11 @@ const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetail
       const documentsToDelete = await collection.find(filter, { projection: { _id: true }, session }).toArray();
 
       if (documentsToDelete.length) {
-        const logsToInsert = documentsToDelete.map(({ _id }) => ({
+        const logsToInsert: WithoutId<DeletionAuditLog>[] = documentsToDelete.map(({ _id }) => ({
           collectionName,
           deletedDocumentId: _id,
           auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-          expireAt: add(new Date(), { seconds: Number(DELETION_AUDIT_LOGS_TTL_SECONDS) }),
+          expireAt: add(new Date(), { seconds: DELETION_AUDIT_LOGS_TTL_SECONDS }),
         }));
 
         const deletionCollection = await db.getCollection('deletion-audit-logs');

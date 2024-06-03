@@ -27,6 +27,7 @@ const mockApplications = require('../../fixtures/gef/application');
 const { calculateUkefExposure, calculateGuaranteeFee } = require('../../../src/v1/gef/calculations/facility-calculations');
 const { roundNumber } = require('../../../src/utils/number');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
+const { MOCK_PORTAL_USER } = require('../../../../dtfs-central-api/api-tests/mocks/test-users/mock-portal-user');
 
 describe(baseUrl, () => {
   let aMaker;
@@ -544,7 +545,7 @@ describe(baseUrl, () => {
       makeRequest: () => as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`),
       collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
       auditRecord: {
-        ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
+        ...generateMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
         lastUpdatedByPortalUserId: expect.anything(),
       },
       getDeletedDocumentIds: () => facilitiesToDeleteIds,
@@ -556,12 +557,6 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const { status, body } = await as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
-      expect(status).toEqual(200);
-      expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
-    });
-
-    it('removes all items by application ID', async () => {
       const { status, body } = await as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
       expect(status).toEqual(200);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });

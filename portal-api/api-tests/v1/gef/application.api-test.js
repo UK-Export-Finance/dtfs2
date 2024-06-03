@@ -30,6 +30,7 @@ const externalApi = require('../../../src/external-api/api');
 const api = require('../../../src/v1/api');
 const { STATUS } = require('../../../src/constants/user');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
+const { MOCK_PORTAL_USER } = require('../../../../dtfs-central-api/api-tests/mocks/test-users/mock-portal-user');
 
 const mockSuccessfulResponse = {
   data: {
@@ -799,7 +800,7 @@ describe(baseUrl, () => {
       makeRequest: () => as(aMaker).remove(`${baseUrl}/${applicationToDeleteId}`),
       collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
       auditRecord: {
-        ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
+        ...generateMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
         lastUpdatedByPortalUserId: expect.anything(),
       },
       getDeletedDocumentIds: () => facilitiesToDelete,

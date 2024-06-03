@@ -5,6 +5,7 @@ const app = require('../../../src/createApp');
 const db = require('../../../src/drivers/db-client').default;
 const api = require('../../api')(app);
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
+const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 
 describe('DELETE v1/portal/cron-jobs', () => {
   let logToDeleteIds;
@@ -36,19 +37,19 @@ describe('DELETE v1/portal/cron-jobs', () => {
     makeRequest: async () => {
       await api
         .remove({
-          auditDetails: generatePortalAuditDetails('abcdef123456abcdef123456'),
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to(`/v1/portal/cron-jobs`);
     },
     collectionName: MONGO_DB_COLLECTIONS.CRON_JOB_LOGS,
-    auditRecord: generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
+    auditRecord: generateMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
     getDeletedDocumentIds: () => logToDeleteIds,
   });
 
   it('returns 200', async () => {
     const deleteResponse = await api
       .remove({
-        auditDetails: generatePortalAuditDetails('abcdef123456abcdef123456'),
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       })
       .to(`/v1/portal/cron-jobs`);
     expect(deleteResponse.status).toBe(200);
