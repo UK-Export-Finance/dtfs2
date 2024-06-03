@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb');
-
+const { withDeleteOneTests, generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -12,7 +13,6 @@ const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/role
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const baseUrl = '/v1/gef/files';
-const collectionName = 'files';
 
 const applicationCollectionName = DB_COLLECTIONS.DEALS;
 const applicationBaseUrl = '/v1/gef/application';
@@ -64,7 +64,7 @@ describe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe([collectionName]);
+    await databaseHelper.wipe([MONGO_DB_COLLECTIONS.FILES]);
   });
 
   describe(`POST ${baseUrl}`, () => {
@@ -202,11 +202,12 @@ describe(baseUrl, () => {
 
   describe(`DELETE ${baseUrl}/:id`, () => {
     let oneFileUrl;
+    let fileToDeleteId;
 
     beforeEach(async () => {
       const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
-      const createdId = body[0]._id;
-      oneFileUrl = `${baseUrl}/${createdId}`;
+      fileToDeleteId = body[0]._id;
+      oneFileUrl = `${baseUrl}/${fileToDeleteId}`;
     });
 
     withClientAuthenticationTests({
@@ -222,6 +223,16 @@ describe(baseUrl, () => {
       successStatusCode: 200,
     });
 
+    withDeleteOneTests({
+      makeRequest: () => as(aMaker).remove(oneFileUrl),
+      collectionName: MONGO_DB_COLLECTIONS.FILES,
+      auditRecord: {
+        ...generateMockPortalUserAuditDatabaseRecord(),
+        lastUpdatedByPortalUserId: expect.anything(),
+      },
+      getDeletedDocumentId: () => new ObjectId(fileToDeleteId),
+    });
+
     it('returns 404 if files is not found', async () => {
       const { status } = await as(aMaker).remove(`${baseUrl}/${String(ObjectId())}`);
       expect(status).toEqual(404);
@@ -233,14 +244,6 @@ describe(baseUrl, () => {
       const { status } = await as(invalidMaker).remove(`${baseUrl}/${body[0]._id}`);
 
       expect(status).toEqual(401);
-    });
-
-    it('deletes the file', async () => {
-      const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
-
-      const { status } = await as(aMaker).remove(`${baseUrl}/${body[0]._id}`);
-
-      expect(status).toEqual(200);
     });
 
     it('returns 500 if there is an api error', async () => {
