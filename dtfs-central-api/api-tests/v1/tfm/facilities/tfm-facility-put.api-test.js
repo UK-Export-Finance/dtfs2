@@ -30,6 +30,9 @@ const newDeal = aDeal({
   },
 });
 
+const portalAuditDetails = generatePortalAuditDetails(MOCK_PORTAL_USER._id);
+const tfmAuditDetails = generateTfmAuditDetails(MOCK_TFM_USER._id);
+
 describe('/v1/tfm/facilities', () => {
   let dealId;
 
@@ -38,7 +41,7 @@ describe('/v1/tfm/facilities', () => {
   });
 
   beforeEach(async () => {
-    const deal = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+    const { body: deal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER, auditDetails: portalAuditDetails });
 
     dealId = deal._id;
     newFacility.dealId = dealId;
@@ -51,11 +54,13 @@ describe('/v1/tfm/facilities', () => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId: '61e54e2e532cf2027303e001',
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          auditDetails: tfmAuditDetails,
         })
         .to('/v1/tfm/deals/submit');
 
-      const { status } = await api.put({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/tfm/facilities/61e54e2e532cf2027303e001');
+      const { status } = await api
+        .put({ facility: newFacility, user: MOCK_PORTAL_USER, auditDetails: tfmAuditDetails })
+        .to('/v1/tfm/facilities/61e54e2e532cf2027303e001');
 
       expect(status).toEqual(404);
     });
@@ -69,7 +74,7 @@ describe('/v1/tfm/facilities', () => {
           .put({
             dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
             dealId,
-            auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+            auditDetails: tfmAuditDetails,
           })
           .to('/v1/tfm/deals/submit');
 
