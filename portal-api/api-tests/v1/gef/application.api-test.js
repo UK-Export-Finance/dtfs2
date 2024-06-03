@@ -6,6 +6,7 @@ const {
   generateMockPortalUserAuditDatabaseRecord,
   withDeleteOneTests,
   withDeleteManyTests,
+  expectAnyPortalUserAuditDatabaseRecord,
 } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 
@@ -45,11 +46,6 @@ const mockSuccessfulResponse = {
       },
     ],
   },
-};
-
-const expectedEligibilityCriteriaAuditRecord = {
-  ...generateParsedMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
-  lastUpdatedByPortalUserId: expect.any(String),
 };
 
 jest.mock('../../../src/external-api/api', () => ({
@@ -145,7 +141,7 @@ describe(baseUrl, () => {
               ...criterion,
               answer: null,
             })),
-            auditRecord: expectedEligibilityCriteriaAuditRecord,
+            auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
           },
           editedBy: expect.any(Array),
           createdAt: expect.any(Number),
@@ -211,7 +207,7 @@ describe(baseUrl, () => {
             answer: null,
           })),
           status: CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED,
-          auditRecord: expectedEligibilityCriteriaAuditRecord,
+          auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
         },
         status: CONSTANTS.DEAL.DEAL_STATUS.DRAFT,
         editedBy: expect.any(Array),
@@ -310,7 +306,7 @@ describe(baseUrl, () => {
             ...criterion,
             answer: null,
           })),
-          auditRecord: expectedEligibilityCriteriaAuditRecord,
+          auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
         },
       };
       expect(body).toEqual({

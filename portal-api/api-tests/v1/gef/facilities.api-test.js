@@ -4,7 +4,7 @@ const {
   generateParsedMockPortalUserAuditDatabaseRecord,
   withDeleteManyTests,
   withDeleteOneTests,
-  generateMockPortalUserAuditDatabaseRecord,
+  expectAnyPortalUserAuditDatabaseRecord,
 } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { CURRENCY } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
@@ -534,10 +534,7 @@ describe(baseUrl, () => {
     withDeleteOneTests({
       makeRequest: () => as(aMaker).remove(`${baseUrl}/${String(facilityToDeleteId)}`),
       collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
-      auditRecord: {
-        ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
-        lastUpdatedByPortalUserId: expect.anything(),
-      },
+      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentId: () => facilityToDeleteId,
     });
 

@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { withDeleteOneTests, generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { withDeleteOneTests, expectAnyPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
@@ -226,10 +226,7 @@ describe(baseUrl, () => {
     withDeleteOneTests({
       makeRequest: () => as(aMaker).remove(oneFileUrl),
       collectionName: MONGO_DB_COLLECTIONS.FILES,
-      auditRecord: {
-        ...generateMockPortalUserAuditDatabaseRecord(),
-        lastUpdatedByPortalUserId: expect.anything(),
-      },
+      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentId: () => new ObjectId(fileToDeleteId),
     });
 

@@ -7,7 +7,7 @@ import {
   generateSystemAuditDatabaseRecord,
   generateNoUserLoggedInAuditDatabaseRecord,
 } from '../generate-audit-database-record';
-import { AuditDetails } from '../../types';
+import { AuditDetails, AuditDatabaseRecord } from '../../types';
 
 export const generateMockTfmUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
   ...generateTfmUserAuditDatabaseRecord(mockUserId),

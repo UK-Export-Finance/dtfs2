@@ -3,7 +3,7 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const {
   generateParsedMockPortalUserAuditDatabaseRecord,
   withDeleteOneTests,
-  generateMockPortalUserAuditDatabaseRecord,
+  expectAnyPortalUserAuditDatabaseRecord,
 } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 
@@ -169,10 +169,7 @@ describe(baseUrl, () => {
     withDeleteOneTests({
       makeRequest: () => as(anAdmin).remove(eligibilityCriteria1Url),
       collectionName: MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA,
-      auditRecord: {
-        ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
-        lastUpdatedByPortalUserId: expect.anything(),
-      },
+      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentId: () => eligibilityCriteriaToDeleteId,
     });
   });
