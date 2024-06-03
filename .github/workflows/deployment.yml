@@ -53,12 +53,12 @@ on:
       - feature
       - staging
       - prod
-      - release-2.0
+      - release-*
 
 env:
   PRODUCT: dtfs
-  ENVIRONMENT: ${{  github.event.workflow_run.head_branch == 'release-2.0' && 'dev' || github.event.workflow_run.head_branch }}
-  TIMEZONE: "Europe/London"
+  ENVIRONMENT: ${{ github.event.workflow_run.head_branch }}
+  TIMEZONE: ${{ vars.TIMEZONE }}
   # Base artifact
   FROM: latest
 
@@ -72,18 +72,24 @@ jobs:
       environment: ${{ env.ENVIRONMENT }}
       timezone: ${{ env.TIMEZONE }}
     steps:
+      - name: Configure 🔨
+        if:  ${{ !contains(fromJson('["feature", "staging", "prod"]'), github.event.workflow_run.head_branch) }}
+        run: |
+          echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+          echo "ENVIRONMENT=dev" >> $GITHUB_OUTPUT
+
       - name: Environment 🧪
-        run: echo "Environment set to ${{ env.ENVIRONMENT }}"
+        run: echo "Environment has been set to ${{ env.ENVIRONMENT }}"
 
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
-  sql-migrations:
-    name: SQL Migrations 🗄️
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    needs: setup
-    runs-on: [self-hosted, DTFS, deployment]
+  database:
+    name: MSSQL 🗄️
+    if: ${{ github.event.workflow_run.conclusion == 'success' && vars.DATABASE == '1' }}
     environment: ${{ needs.setup.outputs.environment }}
+    needs: [setup]
+    runs-on: [self-hosted, DTFS, deployment]
     env:
       SQL_DB_HOST: ${{ secrets.SQL_DB_HOST }}
       SQL_DB_PORT: ${{ secrets.SQL_DB_PORT }}
@@ -93,26 +99,26 @@ jobs:
       SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
 
     steps:
-      - name: 1. Latest commit hash
+      - name: Repository
         uses: actions/checkout@v4
 
-      - name: 2. Install node
-        uses: actions/setup-node@v3
+      - name: Node
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
-      - name: 3. Install dependencies
+      - name: Dependencies
         working-directory: ./libs/common
         run: npm ci
 
-      - name: 4. Run migrations
+      - name: Migrate
         working-directory: ./libs/common
         run: npm run db:migrate
 
   webapp:
     name: WebApp 🌐
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    needs: [setup, sql-migrations]
+    needs: [setup]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
     env:
@@ -165,7 +171,7 @@ jobs:
           echo WEBAPP=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ matrix.webapp }}`)].name' -o tsv) >> $GITHUB_ENV
 
       - name: ACR 🔐
-        uses: azure/docker-login@v1
+        uses: azure/docker-login@v2
         with:
           login-server: ${{ env.ACR }}
           username: ${{ env.ACR_USER }}
@@ -273,7 +279,7 @@ jobs:
           echo FUNCTION=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) >> $GITHUB_ENV
 
       - name: ACR 🔐
-        uses: azure/docker-login@v1
+        uses: azure/docker-login@v2
         with:
           login-server: ${{ env.ACR }}
           username: ${{ env.ACR_USER }}
