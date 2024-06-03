@@ -1,6 +1,6 @@
 const axios = require('axios');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const ApiError = require('../errors/api.error');
+const { mockDataLoaderPortalAuditDetails } = require('../constants/mockDataLoaderAuditDetails');
 require('dotenv').config();
 
 const { PORTAL_API_URL, DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY } = process.env;
@@ -257,9 +257,7 @@ const deleteDurableFunctions = async (token) => {
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/durable-functions`,
     data: {
-      // This auditDetails is mock data & doesn't correspond to an existing user.
-      // Since mock data loader isn't used in production this should never occur in production data
-      auditDetails: generatePortalAuditDetails('bad123456789bad123456789'),
+      auditDetails: mockDataLoaderPortalAuditDetails,
     },
   }).catch((error) => {
     throw new ApiError({ cause: error });
@@ -277,9 +275,7 @@ const deleteCronJobs = async (token) => {
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/cron-jobs`,
 
     data: {
-      // This auditDetails is mock data & doesn't correspond to an existing user.
-      // Since mock data loader isn't used in production this should never occur in production data
-      auditDetails: generatePortalAuditDetails('bad123456789bad123456789'),
+      auditDetails: mockDataLoaderPortalAuditDetails,
     },
   }).catch((error) => {
     throw new ApiError({ cause: error });
