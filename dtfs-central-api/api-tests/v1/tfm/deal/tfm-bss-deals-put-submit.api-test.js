@@ -8,6 +8,7 @@ const { withValidateAuditDetailsTests } = require('../../../helpers/with-validat
 const CONSTANTS = require('../../../../src/constants');
 const DEFAULTS = require('../../../../src/v1/defaults');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
+const { createDeal } = require('../../../helpers/create-deal');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
@@ -55,13 +56,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
     let dealId;
 
     beforeEach(async () => {
-      const { body: createDealBody } = await api
-        .post({
-          deal: newDeal,
-          user: MOCK_PORTAL_USER,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-        })
-        .to('/v1/portal/deals');
+      const { body: createDealBody } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
 
       dealId = createDealBody._id;
     });
