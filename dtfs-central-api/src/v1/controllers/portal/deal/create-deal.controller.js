@@ -1,5 +1,5 @@
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
-const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common/errors');
+const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const db = require('../../../../drivers/db-client').default;
 const DEFAULTS = require('../../../defaults');
