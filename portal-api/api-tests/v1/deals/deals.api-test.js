@@ -122,12 +122,12 @@ describe('/v1/deals', () => {
 
     it('returns the requested resource', async () => {
       const expectedAuditRecord = generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id);
-      const exprectedResponse = { ...newDeal, auditRecord: expectedAuditRecord };
+      const expectedResponse = { ...newDeal, auditRecord: expectedAuditRecord };
 
       const { status, body } = await as(aBarclaysMaker).get(aDealUrl);
 
       expect(status).toEqual(200);
-      expect(body.deal).toEqual(expectAddedFields(exprectedResponse));
+      expect(body.deal).toEqual(expectAddedFields(expectedResponse));
     });
 
     it('calculates deal.submissionDetails.status = Incomplete if there are validation failures', async () => {
@@ -322,7 +322,7 @@ describe('/v1/deals', () => {
     it('returns the created deal', async () => {
       const expectedAuditRecord = generateParsedMockPortalUserAuditDatabaseRecord(anHSBCMaker._id);
       const expectedCreateDeal = expectAddedFields(newDeal);
-      const exprectedResponse = { ...expectedCreateDeal, auditRecord: expectedAuditRecord };
+      const expeectedResponse = { ...expectedCreateDeal, auditRecord: expectedAuditRecord };
 
       const { body: createdDeal, status } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
@@ -330,7 +330,7 @@ describe('/v1/deals', () => {
 
       const { body: dealAfterCreation } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
-      expect(dealAfterCreation.deal).toEqual(exprectedResponse);
+      expect(dealAfterCreation.deal).toEqual(expeectedResponse);
     });
 
     it('creates unique deal IDs', async () => {
