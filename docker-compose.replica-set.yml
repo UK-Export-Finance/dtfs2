@@ -113,6 +113,8 @@ services:
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
+      - CONTACT_US_SELF_SERVICE_PORTAL_URL
+      - CONTACT_US_EMAIL_ADDRESS
 
   trade-finance-manager-api:
     build:
@@ -192,6 +194,7 @@ services:
       - CLAMAV_DEBUG_MODE_ENABLED=true
       - CLAMAV_SCANNING_ENABLED
       - UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=1048576
+      - CONTACT_US_EMAIL_ADDRESS
 
   portal-api:
     build:
@@ -317,6 +320,7 @@ services:
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - RATE_LIMIT_THRESHOLD
+      - CONTACT_US_EMAIL_ADDRESS
 
   redis:
     image: 'redis:alpine'

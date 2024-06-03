@@ -22,6 +22,9 @@
     "lint:fix": "eslint \"**/*.{ts,js}\"",
     "load": "cd .. && npm run load"
   },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
   "devDependencies": {
     "@ukef/dtfs2-common": "1.0.0",
     "bson": "^6.6.0",
