@@ -13,7 +13,7 @@
  * 0. 'npm install durable-functions'
  * 1. Durable HTTP trigger function (acbs-http)
  * 2. DOF (acbs-amend-facility)
- * 3. DAF (activity-update-facility-master, activity-get-facility-master)
+ * 3. DAF (update-facility-master, get-facility-master)
  *
  * ACBS
  * ----
@@ -38,7 +38,7 @@ df.app.orchestration('acbs-amend-facility-master-record', function* Facility(con
 
       // 2.2.1 - UKEF Exposure
       if (amendment.amount) {
-        const amount = yield context.df.callActivityWithRetry('activity-update-facility-master', retryOptions, {
+        const amount = yield context.df.callActivityWithRetry('update-facility-master', retryOptions, {
           facilityId,
           acbsFacilityMasterInput: fmrMapped,
           updateType: 'amendAmount',
@@ -52,13 +52,13 @@ df.app.orchestration('acbs-amend-facility-master-record', function* Facility(con
 
       // 2.2.2 - Cover end date
       if (amendment.coverEndDate) {
-        // 2.2.3. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with new eTag
-        const updatedFmr = yield context.df.callActivityWithRetry('activity-get-facility-master', retryOptions, {
+        // 2.2.3. DAF : get-facility-master: Retrieve ACBS `Facility Master Record` with new eTag
+        const updatedFmr = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, {
           facilityId,
         });
 
         if (updatedFmr.etag) {
-          const coverEndDate = yield context.df.callActivityWithRetry('activity-update-facility-master', retryOptions, {
+          const coverEndDate = yield context.df.callActivityWithRetry('update-facility-master', retryOptions, {
             facilityId,
             acbsFacilityMasterInput: fmrMapped,
             updateType: 'amendExpiryDate',

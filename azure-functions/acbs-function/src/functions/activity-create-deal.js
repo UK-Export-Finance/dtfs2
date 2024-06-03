@@ -1,13 +1,12 @@
-/*
- * This function is not intended to be invoked directly. Instead it will be
- * triggered by an orchestrator function.
+/**
+ * This function is an Azure Durable Function activity named 'get-acbs-industry-sector'.
+ * It is designed to fetch the ACBS industry sector code for a given industry.
+ * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
+ * function.
  *
- * Before running this sample, please:
- * - create a Durable orchestration function
- * - create a Durable HTTP trigger function
- *  * - run 'npm install durable-functions' from the wwwroot folder of your
- *   function app in Kudu
+ * @module create-deal
  */
+
 const df = require('durable-functions');
 const { getNowAsIsoString } = require('../../helpers/date');
 const api = require('../../api');
@@ -24,51 +23,51 @@ const mandatoryFields = [
   'obligorIndustryClassification',
 ];
 
-const createDeal = async (context) => {
-  try {
-    const { deal } = context.bindingData;
-
-    const missingMandatory = findMissingMandatory(deal, mandatoryFields);
-
-    if (missingMandatory.length) {
-      return { missingMandatory };
-    }
-
-    const submittedToACBS = getNowAsIsoString();
-
-    const { status, data } = await api.createDeal(deal);
-
-    if (isHttpErrorStatus(status)) {
-      throw new Error(
-        JSON.stringify(
-          {
-            name: 'ACBS Deal create error',
-            status,
-            dealIdentifier: deal.dealIdentifier,
-            submittedToACBS,
-            receivedFromACBS: getNowAsIsoString(),
-            dataReceived: data,
-            dataSent: deal,
-          },
-          null,
-          4,
-        ),
-      );
-    }
-
-    return {
-      status,
-      dataSent: deal,
-      submittedToACBS,
-      receivedFromACBS: getNowAsIsoString(),
-      ...data,
-    };
-  } catch (error) {
-    console.error('Unable to create deal master record. %o', error);
-    throw new Error(`Unable to create deal master record ${error}`);
-  }
-};
-
 df.app.activity('create-deal', {
-  handler: createDeal,
+  handler: async (payload) => {
+    try {
+      if (!payload) {
+        throw new Error('Invalid deal master record payload');
+      }
+
+      const missingMandatory = findMissingMandatory(payload, mandatoryFields);
+
+      if (missingMandatory.length) {
+        return { missingMandatory };
+      }
+
+      const submittedToACBS = getNowAsIsoString();
+
+      const { status, data } = await api.createDeal(payload);
+
+      if (isHttpErrorStatus(status)) {
+        throw new Error(
+          JSON.stringify(
+            {
+              name: 'ACBS Deal create error',
+              status,
+              dealIdentifier: payload.dealIdentifier,
+              submittedToACBS,
+              receivedFromACBS: getNowAsIsoString(),
+              dataReceived: data,
+              dataSent: payload,
+            },
+            null,
+            4,
+          ),
+        );
+      }
+
+      return {
+        status,
+        dataSent: payload,
+        submittedToACBS,
+        receivedFromACBS: getNowAsIsoString(),
+        ...data,
+      };
+    } catch (error) {
+      console.error('Unable to create deal master record %o', error);
+      throw new Error(`Unable to create deal master record ${error}`);
+    }
+  },
 });

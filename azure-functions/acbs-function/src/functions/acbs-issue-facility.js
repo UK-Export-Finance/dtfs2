@@ -42,14 +42,14 @@ df.app.orchestration('acbs-issue-facility', function* updateACBSfacility(context
 
     if (facilityId) {
       // 1. GET Facility master record object
-      const { acbsFacility, etag } = yield context.df.callActivityWithRetry('activity-get-facility-master', retryOptions, { facilityId });
+      const { acbsFacility, etag } = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, { facilityId });
 
       if (acbsFacility && etag) {
         // 2.1. Create updated facility master record object
         const acbsFacilityMasterInput = mappings.facility.facilityUpdate(facilitySnapshot, acbsFacility, deal);
 
         // 2.2. PUT updated facility master record object
-        const issuedFacilityMaster = yield context.df.callActivityWithRetry('activity-update-facility-master', retryOptions, {
+        const issuedFacilityMaster = yield context.df.callActivityWithRetry('update-facility-master', retryOptions, {
           facilityId,
           acbsFacilityMasterInput,
           updateType: CONSTANTS.FACILITY.OPERATION.ISSUE,
@@ -69,7 +69,7 @@ df.app.orchestration('acbs-issue-facility', function* updateACBSfacility(context
         const acbsFacilityLoanInput = mappings.facility.facilityLoan(deal, facilitySnapshot, acbsParties);
 
         // 3.2. Create facility loan record
-        const facilityLoan = yield context.df.callActivityWithRetry('activity-create-facility-loan', retryOptions, {
+        const facilityLoan = yield context.df.callActivityWithRetry('create-facility-loan', retryOptions, {
           facilityIdentifier: facilityId,
           acbsFacilityLoanInput,
         });
@@ -84,14 +84,14 @@ df.app.orchestration('acbs-issue-facility', function* updateACBSfacility(context
           for (let i = 0; i < acbsFacilityFeeInput.length; i++) {
             const input = acbsFacilityFeeInput[i];
             facilityFee.push(
-              yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, {
+              yield context.df.callActivityWithRetry('create-facility-fee', retryOptions, {
                 facilityIdentifier: facilityId,
                 acbsFacilityFeeInput: input,
               }),
             );
           }
         } else {
-          facilityFee = yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, {
+          facilityFee = yield context.df.callActivityWithRetry('create-facility-fee', retryOptions, {
             facilityIdentifier: facilityId,
             acbsFacilityFeeInput,
           });

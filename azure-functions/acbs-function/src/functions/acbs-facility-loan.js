@@ -27,7 +27,7 @@ df.app.orchestration('acbs-facility-loan', function* createACBSfacilityBond(cont
       CONSTANTS.FACILITY.GUARANTEE_TYPE.FACILITY_PROVIDER,
     );
 
-    const facilityProviderTask = context.df.callActivityWithRetry('activity-create-facility-guarantee', retryOptions, {
+    const facilityProviderTask = context.df.callActivityWithRetry('create-facility-guarantee', retryOptions, {
       facilityIdentifier,
       acbsFacilityGuaranteeInput: acbsFacilityProviderGuaranteeInput,
     });
@@ -41,7 +41,7 @@ df.app.orchestration('acbs-facility-loan', function* createACBSfacilityBond(cont
         CONSTANTS.FACILITY.GUARANTEE_TYPE.BUYER_FOR_EXPORTER_EWCS,
       );
 
-      const facilityBuyerTask = context.df.callActivityWithRetry('activity-create-facility-guarantee', retryOptions, {
+      const facilityBuyerTask = context.df.callActivityWithRetry('create-facility-guarantee', retryOptions, {
         facilityIdentifier,
         acbsFacilityGuaranteeInput: acbsFacilityBuyerGuaranteeInput,
       });

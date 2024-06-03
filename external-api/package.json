@@ -46,7 +46,7 @@
     "joi": "^17.13.1",
     "mongodb": "4.17.2",
     "notifications-node-client": "^7.0.6",
-    "supertest": "^6.3.3",
+    "supertest": "^6.3.4",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.3",
     "ts-node": "^10.9.2",

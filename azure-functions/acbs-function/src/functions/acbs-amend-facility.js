@@ -2,9 +2,9 @@
  * Facility Amendment DOF
  * ***********************
  * This DOF invokes following activity functions to satisfy mandatory amendments ACs
- * 1. activity-get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
- * 2. activity-update-facility-master: Update ACBS `Facility Master Record`
- * 3. activity-amend-facility-loan: Update ACBS `Facility Loan Record`
+ * 1. get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
+ * 2. update-facility-master: Update ACBS `Facility Master Record`
+ * 3. amend-facility-loan: Update ACBS `Facility Loan Record`
  *
  * Durable Orchestration Function (DOF)
  * ------------------------------------
@@ -19,7 +19,7 @@
  * -------------
  * 0. 'npm install durable-functions'
  * 1. Durable HTTP trigger function (acbs-http)
- * 2. Durable activity function (activity-get-facility-master, activity-update-facility-master)
+ * 2. Durable activity function (get-facility-master, update-facility-master)
  */
 
 const df = require('durable-functions');
@@ -55,8 +55,8 @@ df.app.orchestration('acbs-amend-facility', function* amendACBSFacility(context)
           throw new Error(`Invalid facility ID ${facilityId}`);
         }
 
-        // 1. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
-        const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry('activity-get-facility-master', retryOptions, { facilityId });
+        // 1. DAF : get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
+        const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, { facilityId });
 
         /**
          * Check 1 - Facility stage `07` only

@@ -1,13 +1,12 @@
-/*
- * This function is not intended to be invoked directly. Instead it will be
- * triggered by an orchestrator function.
+/**
+ * This function is an Azure Durable Function activity named 'get-acbs-industry-sector'.
+ * It is designed to fetch the ACBS industry sector code for a given industry.
+ * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
+ * function.
  *
- * Before running this sample, please:
- * - create a Durable orchestration function
- * - create a Durable HTTP trigger function
- *  * - run 'npm install durable-functions' from the wwwroot folder of your
- *   function app in Kudu
+ * @module create-party
  */
+
 const df = require('durable-functions');
 const { getNowAsIsoString } = require('../../helpers/date');
 const api = require('../../api');
@@ -16,12 +15,20 @@ const { findMissingMandatory } = require('../../helpers/mandatoryFields');
 
 const mandatoryFields = ['alternateIdentifier', 'industryClassification', 'name1', 'smeType', 'citizenshipClass', 'officerRiskDate', 'countryCode'];
 
-const createParty = async (context) => {
-  try {
-    const { bindingData } = context;
+/**
+ * Asynchronous handler function for creating a party record.
+ *
+ * @param {Object} party - The party object to be created.
+ * @returns {Object} - Returns an object with the status of the operation and relevant data.
+ * @throws {Error} - Throws an error if there is a failure in creating the party record.
+ */
+df.app.activity('create-party', {
+  handler: async (party) => {
+    try {
+      if (!party) {
+        return {};
+      }
 
-    if (bindingData.party) {
-      const { party } = context.bindingData;
       const missingMandatory = findMissingMandatory(party, mandatoryFields);
 
       if (missingMandatory.length) {
@@ -30,6 +37,7 @@ const createParty = async (context) => {
 
       const submittedToACBS = getNowAsIsoString();
       const { status, data } = await api.createParty(party);
+
       if (isHttpErrorStatus(status)) {
         throw new Error(
           JSON.stringify(
@@ -55,15 +63,9 @@ const createParty = async (context) => {
         receivedFromACBS: getNowAsIsoString(),
         ...data,
       };
+    } catch (error) {
+      console.error('Unable to create party record %s', error);
+      throw new Error(`Unable to create party record ${error}`);
     }
-
-    return {};
-  } catch (error) {
-    console.error('Unable to create party record. %o', error);
-    throw new Error(`Unable to create party record ${error}`);
-  }
-};
-
-df.app.activity('create-party', {
-  handler: createParty,
+  },
 });

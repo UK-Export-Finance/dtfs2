@@ -13,7 +13,7 @@
  * 0. 'npm install durable-functions'
  * 1. Durable HTTP trigger function (acbs-http)
  * 2. DOF (acbs-amend-facility)
- * 3. DAF (activity-get-loan-id, activity-update-facility-loan-amount, activity-update-facility-loan)
+ * 3. DAF (get-loan-id, update-facility-loan-amount, update-facility-loan)
  *
  * ACBS
  * ----
@@ -37,7 +37,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* Facility(conte
       const flrMApped = mappings.facility.facilityLoanAmend(amendments, facility, fmr);
 
       // 1.2. Extract loan id for facility id
-      const loanId = yield context.df.callActivityWithRetry('activity-get-loan-id', retryOptions, {
+      const loanId = yield context.df.callActivityWithRetry('get-loan-id', retryOptions, {
         facilityId,
       });
 
@@ -48,7 +48,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* Facility(conte
 
         // 1.3.1 - UKEF Exposure
         if (amendment.amount) {
-          const amount = yield context.df.callActivityWithRetry('activity-update-facility-loan-amount', retryOptions, {
+          const amount = yield context.df.callActivityWithRetry('update-facility-loan-amount', retryOptions, {
             loanId,
             facilityId,
             acbsFacilityLoanInput: flrMApped,
@@ -62,7 +62,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* Facility(conte
 
         // 1.3.2 - Cover end date
         if (amendment.coverEndDate) {
-          const coverEndDate = yield context.df.callActivityWithRetry('activity-update-facility-loan', retryOptions, {
+          const coverEndDate = yield context.df.callActivityWithRetry('update-facility-loan', retryOptions, {
             loanId,
             facilityId,
             acbsFacilityLoanInput: flrMApped,

@@ -27,14 +27,14 @@ df.app.orchestration('acbs-facility', function* createACBSfacility(context) {
       throw new Error(`Invalid facility ID ${facilityIdentifier}`);
     }
 
-    const facilityMaster = yield context.df.callActivityWithRetry('activity-create-facility-master', retryOptions, {
+    const facilityMaster = yield context.df.callActivityWithRetry('create-facility-master', retryOptions, {
       acbsFacilityMasterInput,
     });
 
     // 2. Facility Investor
     const acbsFacilityInvestorInput = mappings.facility.facilityInvestor(deal, facility);
 
-    const facilityInvestor = yield context.df.callActivityWithRetry('activity-create-facility-investor', retryOptions, {
+    const facilityInvestor = yield context.df.callActivityWithRetry('create-facility-investor', retryOptions, {
       facilityIdentifier,
       acbsFacilityInvestorInput,
     });
@@ -42,7 +42,7 @@ df.app.orchestration('acbs-facility', function* createACBSfacility(context) {
     // 3. Facility Covenant
     const acbsFacilityCovenantInput = mappings.facility.facilityCovenant(deal, facility, CONSTANTS.FACILITY.COVENANT_TYPE.UK_CONTRACT_VALUE);
 
-    const facilityCovenant = yield context.df.callActivityWithRetry('activity-create-facility-covenant', retryOptions, {
+    const facilityCovenant = yield context.df.callActivityWithRetry('create-facility-covenant', retryOptions, {
       facilityIdentifier,
       acbsFacilityCovenantInput,
     });
@@ -78,7 +78,7 @@ df.app.orchestration('acbs-facility', function* createACBSfacility(context) {
     const acbsCodeValueTransactionInput = mappings.facility.codeValueTransaction();
 
     const codeValueTransaction = yield context.df.callActivity(
-      'activity-create-code-value-transaction',
+      'create-code-value-transaction',
       { facilityIdentifier, acbsCodeValueTransactionInput },
       retryOptions,
     );
@@ -88,7 +88,7 @@ df.app.orchestration('acbs-facility', function* createACBSfacility(context) {
       // 6. Facility loan record
       const acbsFacilityLoanInput = mappings.facility.facilityLoan(deal, facility, dealAcbsData);
 
-      facilityLoan = yield context.df.callActivityWithRetry('activity-create-facility-loan', retryOptions, {
+      facilityLoan = yield context.df.callActivityWithRetry('create-facility-loan', retryOptions, {
         facilityIdentifier,
         acbsFacilityLoanInput,
       });
@@ -102,14 +102,14 @@ df.app.orchestration('acbs-facility', function* createACBSfacility(context) {
         for (let i = 0; i < acbsFacilityFeeInput.length; i++) {
           const input = acbsFacilityFeeInput[i];
           facilityFee.push(
-            yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, {
+            yield context.df.callActivityWithRetry('create-facility-fee', retryOptions, {
               facilityIdentifier,
               acbsFacilityFeeInput: input,
             }),
           );
         }
       } else {
-        facilityFee = yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, {
+        facilityFee = yield context.df.callActivityWithRetry('create-facility-fee', retryOptions, {
           facilityIdentifier,
           acbsFacilityFeeInput,
         });
