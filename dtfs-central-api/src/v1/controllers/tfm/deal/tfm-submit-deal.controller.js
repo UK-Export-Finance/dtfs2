@@ -128,7 +128,7 @@ exports.submitDealPut = async (req, res) => {
   }
 
   try {
-    validateAuditDetailsAndUserType(auditDetails, 'portal');
+    validateAuditDetailsAndUserType(auditDetails, 'tfm');
   } catch (error) {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
