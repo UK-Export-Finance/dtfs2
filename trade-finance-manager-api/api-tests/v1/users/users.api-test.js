@@ -17,19 +17,13 @@ const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
 describe('user controller', () => {
   let userId = '';
   let tokenUser;
-  const userForAuth = MOCK_USERS[0];
-  const userToCreate = MOCK_USERS[1];
 
   beforeEach(async () => {
     tokenUser = await testUserCache.initialise();
   });
 
-  afterAll(async () => {
+  afterAll(() => {
     jest.resetAllMocks();
-
-    // Remove test data.
-    await as(tokenUser).remove().to(`/v1/users/${userToCreate._id}`);
-    await as(tokenUser).remove().to(`/v1/users/${userForAuth._id}`);
   });
 
   describe('POST /v1/users', () => {
