@@ -514,7 +514,7 @@ apiRoutes.get('/premium-schedule', premiumSchedule.getPremiumSchedule);
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/definitions/CompaniesResponseBody'
+ *               $ref: '#/definitions/Company'
  */
 
 apiRoutes.get('/companies/:registrationNumber', companies.getCompanyByRegistrationNumber);
