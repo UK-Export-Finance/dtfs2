@@ -24,7 +24,7 @@
   },
   "main": "src/index.ts",
   "scripts": {
-    "db:drop-all": "dotenv bash src/sql-db-connection/reset-database.sh dtfs",
+    "db:drop-all": "npm run typeorm -- schema:drop -d src/sql-db-connection/data-source.ts",
     "db:generate-migration": "cross-var npm run typeorm -- migration:generate -d src/sql-db-connection/data-source.ts -p src/sql-db-connection/migrations/$npm_config_name",
     "db:migrate": "npm run typeorm -- migration:run -d src/sql-db-connection/data-source.ts",
     "db:migrate:down": "npm run typeorm -- migration:revert -d src/sql-db-connection/data-source.ts",
@@ -53,7 +53,6 @@
     "@types/node": "^20.11.5",
     "@types/node-cron": "^3.0.11",
     "cross-var": "^1.1.0",
-    "dotenv-cli": "^7.4.2",
     "eslint": "^8.57.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
