@@ -1,3 +1,4 @@
+import { FEE_RECORD_STATUS } from '../../constants';
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
 import { Currency } from '../../types';
 
@@ -52,5 +53,30 @@ describe('FeeRecordEntity', () => {
       // Assert
       expect(feesPaidToUkefForThePeriodInThePaymentCurrency).toBe(expectedFeesPaidToUkefForThePeriodInThePaymentCurrency);
     });
+  });
+
+  describe('updateWithStatus', () => {
+    it.each(Object.values(FEE_RECORD_STATUS))("sets the report status to '%s' and updates the 'lastUpdatedBy...' fields", (status) => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(status).build();
+
+      const userId = 'abc123';
+
+      // Act
+      feeRecord.updateWithStatus({
+        status,
+        requestSource: { platform: 'TFM', userId },
+      });
+
+      // Assert
+      expect(feeRecord.status).toBe(status);
+      expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+      expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
+      expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
+    });
+
+    function aUtilisationReport() {
+      return UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    }
   });
 });
