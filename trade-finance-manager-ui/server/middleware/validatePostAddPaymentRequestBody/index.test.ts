@@ -3,7 +3,7 @@ import { Currency, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { validatePostAddPaymentRequestBody } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../test-mocks/mock-tfm-session-user';
 import { AddPaymentErrorKey } from '../../controllers/utilisation-reports/helpers';
-import { FeeRecordViewModelCheckboxId } from '../../types/view-models';
+import { PremiumPaymentsTableCheckboxId } from '../../types/premium-payments-table-checkbox-id';
 
 console.error = jest.fn();
 
@@ -23,16 +23,16 @@ describe('validatePostAddPaymentRequestBody', () => {
       },
     });
 
-  const getCheckboxId = (feeRecordId: number, reportedPaymentsCurrency: Currency, status: FeeRecordStatus): FeeRecordViewModelCheckboxId =>
+  const getCheckboxId = (feeRecordId: number, reportedPaymentsCurrency: Currency, status: FeeRecordStatus): PremiumPaymentsTableCheckboxId =>
     `feeRecordId-${feeRecordId}-reportedPaymentsCurrency-${reportedPaymentsCurrency}-status-${status}`;
 
-  const getRequestBodyFromCheckboxIds = (checkboxIds: FeeRecordViewModelCheckboxId[]) =>
+  const getRequestBodyFromCheckboxIds = (checkboxIds: PremiumPaymentsTableCheckboxId[]) =>
     checkboxIds.reduce((obj, checkboxId) => ({ ...obj, [checkboxId]: 'on' }), {});
 
   const assertRequestSessionHasBeenPopulated = (
     req: ReturnType<typeof getHttpMocks>['req'],
     addPaymentErrorKey: AddPaymentErrorKey,
-    checkedCheckboxIdList: FeeRecordViewModelCheckboxId[],
+    checkedCheckboxIdList: PremiumPaymentsTableCheckboxId[],
   ) => {
     expect(req.session.addPaymentErrorKey).toBe(addPaymentErrorKey);
 

@@ -196,7 +196,7 @@ const updateFacility = async (facilityId, facility, user) => {
   }
 };
 
-const deleteFacility = async (facilityId, user) => {
+const deleteFacility = async (facilityId, user, auditDetails) => {
   try {
     if (!isValidMongoId(facilityId)) {
       console.error('Delete facility API failed for facility id %s', facilityId);
@@ -209,6 +209,7 @@ const deleteFacility = async (facilityId, user) => {
       headers: headers.central,
       data: {
         user,
+        auditDetails,
       },
     });
   } catch (error) {

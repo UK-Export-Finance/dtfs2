@@ -1,15 +1,3 @@
-const actualDb = jest.requireActual('../../../src/drivers/db-client').default;
-const mockGetCollection = jest.fn(actualDb.getCollection.bind(actualDb));
-
-jest.mock('../../../src/drivers/db-client', () => ({
-  __esModule: true,
-  default: {
-    getCollection: mockGetCollection,
-    getClient: actualDb.getClient.bind(actualDb),
-    getConnection: actualDb.getConnection.bind(actualDb),
-  },
-}));
-
 const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { withDeleteOneTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
@@ -61,6 +49,5 @@ describe('DELETE /v1/portal/deals', () => {
     collectionName: 'deals',
     auditRecord: generateMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
     getDeletedDocumentId: () => dealToDeleteId,
-    mockGetCollection,
   });
 });

@@ -11,7 +11,7 @@ const USER_WITH_INJECTION = {
   roles: [PORTAL_USER_ROLES.MAKER],
 };
 
-// This is used with The TFM endpoint `submitDealAfterUkefIds` which needs a valid ObjectId on the checker
+// This is used when a valid ObjectId is needed (e.g. TFM endpoint `submitDealAfterUkefIds`)
 // The given _id is mocked & does not correspond to the value in the database
 const BANK1_CHECKER1_WITH_MOCK_ID = {
   ...MOCK_USERS.BANK1_CHECKER1,

@@ -57,13 +57,24 @@ describe(component, () => {
     wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toExist();
   });
 
+  it("should use the 'govuk-table__header--numeric' class for numeric columns", () => {
+    const wrapper = getWrapper();
+    const numericHeaderClass = 'govuk-table__header--numeric';
+    wrapper.expectElement(`${tableSelector} thead th:contains("Reported fees")`).hasClass(numericHeaderClass);
+    wrapper.expectElement(`${tableSelector} thead th:contains("Reported payments")`).hasClass(numericHeaderClass);
+    wrapper.expectElement(`${tableSelector} thead th:contains("Total reported payments")`).hasClass(numericHeaderClass);
+    wrapper.expectElement(`${tableSelector} thead th:contains("Payments received")`).hasClass(numericHeaderClass);
+    wrapper.expectElement(`${tableSelector} thead th:contains("Total payments received")`).hasClass(numericHeaderClass);
+  });
+
   it('should render the select all checkbox in the table headings row', () => {
     const wrapper = getWrapper();
     wrapper.expectElement(`${tableSelector} thead th input[type="checkbox"]#select-all-checkbox`).toExist();
   });
 
-  it('should render the table data', () => {
+  it("should render the table data and use the 'govuk-table__cell--numeric' class for numeric cells", () => {
     const wrapper = getWrapper();
+    const numericCellClass = 'govuk-table__cell--numeric';
 
     feeRecords.forEach((feeRecord) => {
       const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecord.id}"]`;
@@ -77,22 +88,26 @@ describe(component, () => {
       wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.exporter}")`).toExist();
 
       wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.reportedFees.formattedCurrencyAndAmount}")`).toExist();
+      wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.reportedFees.formattedCurrencyAndAmount}")`).hasClass(numericCellClass);
       wrapper
         .expectElement(`${rowSelector} td:contains("${feeRecord.reportedFees.formattedCurrencyAndAmount}")`)
         .toHaveAttribute('data-sort-value', feeRecord.reportedFees.dataSortValue.toString());
 
       wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.reportedPayments.formattedCurrencyAndAmount}")`).toExist();
+      wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.reportedPayments.formattedCurrencyAndAmount}")`).hasClass(numericCellClass);
       wrapper
         .expectElement(`${rowSelector} td:contains("${feeRecord.reportedPayments.formattedCurrencyAndAmount}")`)
         .toHaveAttribute('data-sort-value', feeRecord.reportedPayments.dataSortValue.toString());
 
       wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.totalReportedPayments.formattedCurrencyAndAmount}")`).toExist();
+      wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.totalReportedPayments.formattedCurrencyAndAmount}")`).hasClass(numericCellClass);
       wrapper
         .expectElement(`${rowSelector} td:contains("${feeRecord.totalReportedPayments.formattedCurrencyAndAmount}")`)
         .toHaveAttribute('data-sort-value', feeRecord.totalReportedPayments.dataSortValue.toString());
 
       if (feeRecord.paymentsReceived.formattedCurrencyAndAmount) {
         wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.paymentsReceived.formattedCurrencyAndAmount}")`).toExist();
+        wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.paymentsReceived.formattedCurrencyAndAmount}")`).hasClass(numericCellClass);
         wrapper
           .expectElement(`${rowSelector} td:contains("${feeRecord.paymentsReceived.formattedCurrencyAndAmount}")`)
           .toHaveAttribute('data-sort-value', feeRecord.paymentsReceived.dataSortValue.toString());
@@ -100,6 +115,7 @@ describe(component, () => {
 
       if (feeRecord.totalPaymentsReceived.formattedCurrencyAndAmount) {
         wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.totalPaymentsReceived.formattedCurrencyAndAmount}")`).toExist();
+        wrapper.expectElement(`${rowSelector} td:contains("${feeRecord.totalPaymentsReceived.formattedCurrencyAndAmount}")`).hasClass(numericCellClass);
         wrapper
           .expectElement(`${rowSelector} td:contains("${feeRecord.paymentsReceived.formattedCurrencyAndAmount}")`)
           .toHaveAttribute('data-sort-value', feeRecord.totalPaymentsReceived.dataSortValue.toString());

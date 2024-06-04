@@ -44,10 +44,18 @@ const isValidMongoId = (mongoId) => (mongoId ? validator.isMongoId(mongoId.toStr
  */
 const isValidPartyUrn = (partyUrn) => isValidRegex(REGEX.PARTY_URN, partyUrn);
 
+/**
+ * Validates if a value is a valid bank ID using a regex defined in constants/regex.js
+ * @param bankId - the value to validate
+ * @returns Boolean - true if valid, false if not
+ */
+const isValidBankId = (bankId) => isValidRegex(REGEX.BANK_ID, bankId);
+
 module.exports = {
   isValidMongoId,
   isValidGroupId,
   isValidTaskId,
   isValidPartyUrn,
   isValidSqlId,
+  isValidBankId,
 };
