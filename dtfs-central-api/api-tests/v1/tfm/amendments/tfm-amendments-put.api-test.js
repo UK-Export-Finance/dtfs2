@@ -1,5 +1,5 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const wipeDB = require('../../../wipeDB');
@@ -55,7 +55,7 @@ describe('PUT TFM amendments', () => {
           .put({
             dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
             dealId,
-            auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+            auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
           })
           .to('/v1/tfm/deals/submit');
 
@@ -110,7 +110,7 @@ describe('PUT TFM amendments', () => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
@@ -130,7 +130,7 @@ describe('PUT TFM amendments', () => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 

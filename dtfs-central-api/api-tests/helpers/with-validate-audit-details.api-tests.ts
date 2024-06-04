@@ -54,7 +54,7 @@ function withInvalidAuditDetailsTests(invalidAuditDetails: AuditDetails[], makeR
   });
 }
 
-function getValidAndInvalidAuditDetails(validUserTypes: ('tfm' | 'portal' | 'system' | 'none')[]) {
+function getValidAndInvalidAuditDetails(validUserTypes: ('tfm' | 'portal' | 'system' | 'none')[] = ['tfm', 'portal', 'system', 'none']) {
   const allAuditDetails = [
     generateSystemAuditDetails(),
     generatePortalAuditDetails(MOCK_PORTAL_USER._id),
