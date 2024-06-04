@@ -33,36 +33,20 @@ describe('getTasksAssignedToUserByGroup()', () => {
   });
 
   it('should assign tasks to UnderwriterManager', async () => {
-    const response = await getTasksAssignedToUserByGroup(
-      MOCK_TASKS,
-      TEAMS.UNDERWRITER_MANAGERS.id,
-      underwriterManager._id,
-    );
+    const response = await getTasksAssignedToUserByGroup(MOCK_TASKS, TEAMS.UNDERWRITER_MANAGERS.id, underwriterManager._id);
 
     expect(response).toEqual(TASKS_ASSIGNED_TO_UNDERWRITER_MANAGER);
   });
 
   it('should assign tasks to Underwriter and UnderwriterManager', async () => {
-    const assignedToUnderwriter = await getTasksAssignedToUserByGroup(
-      MOCK_TASKS,
-      TEAMS.UNDERWRITERS.id,
-      underwriter._id,
-    );
-    const finalResponse = await getTasksAssignedToUserByGroup(
-      assignedToUnderwriter,
-      TEAMS.UNDERWRITER_MANAGERS.id,
-      underwriterManager._id,
-    );
+    const assignedToUnderwriter = await getTasksAssignedToUserByGroup(MOCK_TASKS, TEAMS.UNDERWRITERS.id, underwriter._id);
+    const finalResponse = await getTasksAssignedToUserByGroup(assignedToUnderwriter, TEAMS.UNDERWRITER_MANAGERS.id, underwriterManager._id);
 
     expect(finalResponse).toEqual(TASKS_ASSIGNED_TO_UNDERWRITER_AND_UNDERWRITER_MANAGER);
   });
 
   it('should unassign tasks previously assigned to Underwriter', async () => {
-    const finalResponse = await getTasksAssignedToUserByGroup(
-      TASKS_ASSIGNED_TO_UNDERWRITER_AND_UNDERWRITER_MANAGER,
-      TEAMS.UNDERWRITERS.id,
-      TASKS.UNASSIGNED,
-    );
+    const finalResponse = await getTasksAssignedToUserByGroup(TASKS_ASSIGNED_TO_UNDERWRITER_AND_UNDERWRITER_MANAGER, TEAMS.UNDERWRITERS.id, TASKS.UNASSIGNED);
 
     expect(finalResponse).toEqual(TASKS_UNASSIGNED_FOR_UNDERWRITER);
   });

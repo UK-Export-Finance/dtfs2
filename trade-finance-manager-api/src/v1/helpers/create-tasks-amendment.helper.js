@@ -4,11 +4,7 @@ const CONSTANTS = require('../../constants');
 const api = require('../api');
 const { getGroupById, getTaskInGroupById, hasAmendmentAdverseHistoryTaskCompleted } = require('./tasks');
 const mapTaskObject = require('../tasks/map-task-object');
-const {
-  previousTaskIsComplete,
-  taskCanBeEditedWithoutPreviousTaskComplete,
-  handleTaskEditFlagAndStatus,
-} = require('../tasks/tasks-edit-logic');
+const { previousTaskIsComplete, taskCanBeEditedWithoutPreviousTaskComplete, handleTaskEditFlagAndStatus } = require('../tasks/tasks-edit-logic');
 const sendUpdatedTaskEmail = require('../controllers/task-emails');
 const getAssigneeFullName = require('./get-assignee-full-name');
 
@@ -193,12 +189,7 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
 
         const isTaskThatIsBeingUpdated = task.id === taskUpdate.id && task.groupId === taskUpdate.groupId;
 
-        const { updatedTask, sendEmail } = handleTaskEditFlagAndStatus(
-          allTaskGroups,
-          group,
-          task,
-          isTaskThatIsBeingUpdated,
-        );
+        const { updatedTask, sendEmail } = handleTaskEditFlagAndStatus(allTaskGroups, group, task, isTaskThatIsBeingUpdated);
 
         if (sendEmail) {
           taskEmailsToSend.push(updatedTask);
@@ -232,8 +223,7 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
           }
 
           // unlock the task
-          const shouldUnlock =
-            !isTaskThatIsBeingUpdated && !task.canEdit && task.status === CONSTANTS.TASKS_AMENDMENT.STATUS.CANNOT_START;
+          const shouldUnlock = !isTaskThatIsBeingUpdated && !task.canEdit && task.status === CONSTANTS.TASKS_AMENDMENT.STATUS.CANNOT_START;
 
           if (shouldUnlock) {
             return {
@@ -315,9 +305,7 @@ const updateAmendmentTasks = async (facilityId, amendmentId, taskUpdate) => {
 
   const updatedTask = await mapTaskObject(originalTask, taskUpdate, statusFrom);
 
-  const canUpdateTask =
-    previousTaskIsComplete(allTasks, group, updatedTask.id) ||
-    taskCanBeEditedWithoutPreviousTaskComplete(group, updatedTask);
+  const canUpdateTask = previousTaskIsComplete(allTasks, group, updatedTask.id) || taskCanBeEditedWithoutPreviousTaskComplete(group, updatedTask);
 
   if (canUpdateTask) {
     const modifiedTasks = updateTask(allTasks, updatedTask);

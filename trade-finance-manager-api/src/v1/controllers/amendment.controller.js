@@ -3,11 +3,7 @@ const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../api');
 const acbs = require('./acbs.controller');
 const { amendIssuedFacility } = require('./amend-issued-facility');
-const {
-  createAmendmentTasks,
-  updateAmendmentTasks,
-  getTasksAssignedToUserByGroup,
-} = require('../helpers/create-tasks-amendment.helper');
+const { createAmendmentTasks, updateAmendmentTasks, getTasksAssignedToUserByGroup } = require('../helpers/create-tasks-amendment.helper');
 const { isRiskAnalysisCompleted } = require('../helpers/tasks');
 const {
   amendmentEmailEligible,
@@ -212,11 +208,7 @@ const updateFacilityAmendment = async (req, res) => {
 
       if (payload.leadUnderwriter) {
         // Tasks are not present in payload when loadUnderwriter is updated, so it is safe to add `tasks`.
-        payload.tasks = await getTasksAssignedToUserByGroup(
-          amendment.tasks,
-          CONSTANTS.TEAMS.UNDERWRITERS.id,
-          payload.leadUnderwriter._id,
-        );
+        payload.tasks = await getTasksAssignedToUserByGroup(amendment.tasks, CONSTANTS.TEAMS.UNDERWRITERS.id, payload.leadUnderwriter._id);
       }
 
       if (payload?.taskUpdate?.updateTask) {

@@ -102,12 +102,7 @@ describe('controllers - amendment, function updateFacilityAmendment', () => {
 
       // Assert
       expect(api.updateFacilityAmendment).toHaveBeenCalledTimes(1);
-      expect(api.updateFacilityAmendment).toHaveBeenCalledWith(
-        facilityId,
-        amendmentId,
-        { ...requestBody, tasks: TASKS_ASSIGNED_TO_UNDERWRITER },
-        auditDetails,
-      );
+      expect(api.updateFacilityAmendment).toHaveBeenCalledWith(facilityId, amendmentId, { ...requestBody, tasks: TASKS_ASSIGNED_TO_UNDERWRITER }, auditDetails);
     });
 
     it('should call api.updateFacilityAmendment with tasks returned by getTasksAssignedToUserByGroup for Underwriter manager', async () => {
