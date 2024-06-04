@@ -1,5 +1,5 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
 const aDeal = require('../../deal-builder');
@@ -52,7 +52,7 @@ describe('/v1/tfm/deal/:id', () => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          auditDetails: generateTfmAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
@@ -80,7 +80,7 @@ describe('/v1/tfm/deal/:id', () => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          auditDetails: generateTfmAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
@@ -104,7 +104,7 @@ describe('/v1/tfm/deal/:id', () => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          auditDetails: generateTfmAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
@@ -138,7 +138,7 @@ describe('/v1/tfm/deal/:id', () => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          auditDetails: generateTfmAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
@@ -173,7 +173,7 @@ describe('/v1/tfm/deal/:id', () => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          auditDetails: generateTfmAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
@@ -240,7 +240,7 @@ describe('/v1/tfm/deal/:id', () => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          auditDetails: generateTfmAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
@@ -308,7 +308,7 @@ describe('/v1/tfm/deal/:id', () => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          auditDetails: generateTfmAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
@@ -376,7 +376,7 @@ describe('/v1/tfm/deal/:id', () => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          auditDetails: generateTfmAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
