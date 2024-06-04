@@ -90,5 +90,22 @@ module.exports = {
         '@typescript-eslint/no-explicit-any': 'off',
       },
     },
+    // Typescript test files
+    {
+      files: ['*.test.ts'],
+      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked', 'plugin:prettier/recommended'],
+      plugins: ['@typescript-eslint'],
+      parser: '@typescript-eslint/parser',
+      parserOptions: {
+        ...baseParserOptions,
+        project: './tsconfig.eslint.json',
+        tsconfigRootDir: __dirname,
+      },
+      rules: {
+        ...baseRules,
+        '@typescript-eslint/unbound-method': 'off',
+        'no-param-reassign': 'off',
+      },
+    },
   ],
 };

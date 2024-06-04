@@ -158,10 +158,7 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportManuallySetCompletedEvent).toHaveBeenCalledTimes(1);
     });
 
-    const VALID_PENDING_RECONCILIATION_EVENT_TYPES = [
-      UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT,
-      UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED,
-    ];
+    const VALID_PENDING_RECONCILIATION_EVENT_TYPES = [UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT, UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_PENDING_RECONCILIATION_EVENT_TYPES))(
       "throws an 'InvalidStateMachineTransitionError' for event type %p",

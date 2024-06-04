@@ -27,7 +27,7 @@ export const postAddPayment = async (req: PostAddPaymentRequest, res: Response) 
       paymentReference,
     };
 
-    await addPaymentToUtilisationReport(parseInt(reportId), feeRecordIds, user, newPaymentDetails);
+    await addPaymentToUtilisationReport(parseInt(reportId, 10), feeRecordIds, user, newPaymentDetails);
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
     const errorMessage = 'Failed to add a new payment';

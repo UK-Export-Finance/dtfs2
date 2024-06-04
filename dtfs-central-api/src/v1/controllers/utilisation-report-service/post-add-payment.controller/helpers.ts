@@ -1,10 +1,10 @@
 import { QueryRunner, In } from 'typeorm';
 import { ApiError, FeeRecordEntity } from '@ukef/dtfs2-common';
+import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { InvalidPayloadError, NotFoundError, TransactionFailedError } from '../../../../errors';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
-import { TfmSessionUser } from 'src/types/tfm/tfm-session-user';
-import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
+import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
 
 /**

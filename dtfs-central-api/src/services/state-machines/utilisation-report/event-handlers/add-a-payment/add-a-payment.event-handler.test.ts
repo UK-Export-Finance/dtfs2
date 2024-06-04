@@ -171,7 +171,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
           type: 'PAYMENT_ADDED',
           payload: expect.objectContaining({
             status: newStatus,
-          }),
+          }) as { status: FeeRecordStatus },
         }),
       );
     });
@@ -205,7 +205,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
           type: 'PAYMENT_ADDED',
           payload: expect.objectContaining({
             status: newStatus,
-          }),
+          }) as { status: FeeRecordStatus },
         }),
       );
     });

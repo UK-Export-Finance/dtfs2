@@ -19,7 +19,6 @@ import { aPortalUser } from '../../../test-helpers/test-data/portal-user';
 import { aTfmUser } from '../../../test-helpers/test-data/tfm-user';
 import { aTfmSessionUser } from '../../../test-helpers/test-data/tfm-session-user';
 
-console.log = jest.fn();
 console.error = jest.fn();
 
 const api = createApi(app);

@@ -1,5 +1,4 @@
 import { EntityManager } from 'typeorm';
-import { feeRecordsMatchAttachedPayments } from './helpers';
 import {
   Currency,
   FeeRecordEntity,
@@ -8,6 +7,7 @@ import {
   PaymentEntityMockBuilder,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
+import { feeRecordsMatchAttachedPayments } from './helpers';
 
 describe('payment-added-to-fee-record.event-handler helpers', () => {
   describe('feeRecordsMatchAttachedPayments', () => {
@@ -82,7 +82,7 @@ describe('payment-added-to-fee-record.event-handler helpers', () => {
       // Assert
       expect(result).toBe(true);
     });
-    
+
     it('returns false when the payments attached to the fee records do not have the same total payments', async () => {
       // Arrange
       const paymentCurrency: Currency = 'GBP';

@@ -1,15 +1,21 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
+import { ApiError, Currency } from '@ukef/dtfs2-common';
+import { HttpStatusCode } from 'axios';
 import { PostAddPaymentRequest, postAddPayment } from '.';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
 import { addPaymentToUtilisationReport } from './helpers';
-import { ApiError, Currency } from '@ukef/dtfs2-common';
 import { PostAddPaymentPayload } from '../../../routes/middleware/payload-validation/validate-post-add-payment-payload';
-import { HttpStatusCode } from 'axios';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
 
 jest.mock('./helpers');
+
+class TestApiError extends ApiError {
+  constructor(status?: number, message?: string) {
+    super({ status: status ?? 500, message: message ?? '' });
+  }
+}
 
 describe('post-add-payment.controller', () => {
   describe('postAddPayment', () => {
@@ -88,16 +94,7 @@ describe('post-add-payment.controller', () => {
       const res = httpMocks.createResponse();
 
       const errorStatus = 404;
-      class TestError extends ApiError {
-        constructor() {
-          super({
-            status: errorStatus,
-            message: 'Some error message',
-          });
-        }
-      }
-
-      jest.mocked(addPaymentToUtilisationReport).mockRejectedValue(new TestError());
+      jest.mocked(addPaymentToUtilisationReport).mockRejectedValue(new TestApiError(errorStatus, undefined));
 
       // Act
       await postAddPayment(req, res);
@@ -115,16 +112,7 @@ describe('post-add-payment.controller', () => {
       const res = httpMocks.createResponse();
 
       const errorMessage = 'Some error message';
-      class TestError extends ApiError {
-        constructor() {
-          super({
-            status: 400,
-            message: errorMessage,
-          });
-        }
-      }
-
-      jest.mocked(addPaymentToUtilisationReport).mockRejectedValue(new TestError());
+      jest.mocked(addPaymentToUtilisationReport).mockRejectedValue(new TestApiError(undefined, errorMessage));
 
       // Act
       await postAddPayment(req, res);
@@ -150,7 +138,7 @@ describe('post-add-payment.controller', () => {
       expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
     });
 
-    it("responds with a generic error message if an unknown error occurs", async () => {
+    it('responds with a generic error message if an unknown error occurs', async () => {
       // Arrange
       const req = httpMocks.createRequest<PostAddPaymentRequest>({
         params: aValidRequestQuery(),
