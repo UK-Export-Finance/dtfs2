@@ -217,6 +217,54 @@ utilisationReportsRouter
   .route('/:id/selected-fee-records-details')
   .get(validation.sqlIdValidation('id'), handleExpressValidatorResult, getSelectedFeeRecordDetails);
 
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/add-a-payment:
+ *   post:
+ *     summary: Add a payment to the utilisation report
+ *     tags: [UtilisationReport]
+ *     description: Get the fee record details for the selected fee record ids
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report to add the payment to
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *              properties:
+ *               feeRecordIds:
+ *                 description: The ids of the selected fee records
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *               user:
+ *                 $ref: '#/definitions/TFMUser'
+ *               paymentCurrency:
+ *                 $ref: '#/definitions/Currency'
+ *               paymentAmount:
+ *                 type: number
+ *               datePaymentReceived:
+ *                 type: string
+ *                 description: the date the payment was received as an ISO date string
+ *               paymentReference:
+ *                 type: string
+ *                 required: false
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
 utilisationReportsRouter
   .route('/:reportId/add-payment')
   .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePostAddPaymentPayload, postAddPayment);
