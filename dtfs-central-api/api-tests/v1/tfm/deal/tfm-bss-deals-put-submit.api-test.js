@@ -1,6 +1,6 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -9,6 +9,7 @@ const CONSTANTS = require('../../../../src/constants');
 const DEFAULTS = require('../../../../src/v1/defaults');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../../helpers/create-deal');
+const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
@@ -33,7 +34,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       .put({
         dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
         dealId: 'invalid',
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+        auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
       })
       .to('/v1/tfm/deals/submit');
     expect(status).toEqual(400);
@@ -46,7 +47,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       .put({
         dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
         dealId: invalidDealId,
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+        auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
       })
       .to('/v1/tfm/deals/submit');
     expect(status).toEqual(404);
@@ -63,7 +64,6 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
 
     withValidateAuditDetailsTests({
       makeRequest: (auditDetails) => api.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit'),
-      validUserTypes: ['portal'],
     });
 
     it('returns dealSnapshot with tfm object', async () => {
@@ -71,7 +71,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
@@ -86,7 +86,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
           facilities: [],
         },
         tfm: DEFAULTS.DEAL_TFM,
-        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
+        auditRecord: generateParsedMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id),
       };
 
       expect(body).toEqual(expected);
@@ -119,7 +119,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
@@ -138,7 +138,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
           updatedAt: expect.any(Number),
         },
         tfm: DEFAULTS.FACILITY_TFM,
-        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
+        auditRecord: generateParsedMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id),
       });
 
       const facility2 = await api.get(`/v1/tfm/facilities/${facility2Id}`);
@@ -153,7 +153,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
           updatedAt: expect.any(Number),
         },
         tfm: DEFAULTS.FACILITY_TFM,
-        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
+        auditRecord: generateParsedMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id),
       });
     });
   });
