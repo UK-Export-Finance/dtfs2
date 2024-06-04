@@ -16,6 +16,9 @@ const BASE_TEST_USER = {
     name: 'HSBC',
     emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
   },
+  isTrusted: false,
+  signInLinkSendDate: 1700000000000,
+  signInLinkSendCount: 1,
 };
 
 const TEST_USER = produce(BASE_TEST_USER, (draft) => {

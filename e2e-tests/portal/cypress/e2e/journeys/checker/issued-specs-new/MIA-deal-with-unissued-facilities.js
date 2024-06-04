@@ -26,6 +26,7 @@ const deal = {
     email: 'maker@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     'user-status': 'active',
+    isTrusted: false,
   },
   details: {
     created: new Date().valueOf(),
@@ -251,6 +252,7 @@ const deal = {
         email: 'maker@ukexportfinance.gov.uk',
         timezone: 'Europe/London',
         'user-status': 'active',
+        isTrusted: false,
       },
       timestamp: '1597782964434',
       text: 'test',

@@ -1,9 +1,8 @@
+const { generatePortalAuditDetails, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const {
-  generatePortalAuditDetails,
-  generateNoUserLoggedInAuditDetails,
   generateMockNoUserLoggedInAuditDatabaseRecord,
   generateParsedMockPortalUserAuditDatabaseRecord,
-} = require('@ukef/dtfs2-common/change-stream');
+} = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');

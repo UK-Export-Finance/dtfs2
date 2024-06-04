@@ -1,4 +1,4 @@
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -153,8 +153,6 @@ describe(baseUrl, () => {
       } = await as(aMaker).get(`${baseUrl}/${dealId}`);
 
       expect(auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(aMaker._id));
-
-      // console.log(getResponse)
     });
 
     it('returns a `404` status if the maker belongs to a different bank', async () => {

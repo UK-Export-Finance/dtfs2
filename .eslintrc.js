@@ -9,18 +9,7 @@ const baseRules = {
   'no-underscore-dangle': [
     'error',
     {
-      allow: [
-        '_id',
-        '_csrf',
-        '_getBuffer',
-        '_getData',
-        '_getHeaders',
-        '_getStatusCode',
-        '_getRedirectUrl',
-        '_getRenderData',
-        '_getRenderView',
-        '_isEndCalled',
-      ],
+      allow: ['_id', '_csrf', '_getBuffer', '_getData', '_getHeaders', '_getStatusCode', '_getRedirectUrl', '_getRenderData', '_getRenderView', '_isEndCalled'],
     },
   ],
   'import/extensions': 'off',
@@ -29,14 +18,7 @@ const baseRules = {
   'import/no-extraneous-dependencies': [
     'error',
     {
-      devDependencies: [
-        '**/*.test.{js,ts}',
-        '**/*.api-test.{js,ts}',
-        '**/*.spec.{js,ts}',
-        '**/webpack.*.{js,ts}',
-        '**/api-test*/**',
-        '**/__mocks__/**',
-      ],
+      devDependencies: ['**/*.test.{js,ts}', '**/*.api-test.{js,ts}', '**/*.spec.{js,ts}', '**/webpack.*.{js,ts}', '**/api-test*/**', '**/__mocks__/**'],
     },
   ],
   'import/prefer-default-export': 'off',
@@ -52,7 +34,12 @@ const baseRules = {
     },
   ],
   'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
-  'no-unused-vars': ['error'],
+  'no-unused-vars': [
+    'error',
+    {
+      varsIgnorePattern: '^_',
+    },
+  ],
   'object-curly-newline': [
     'error',
     {
@@ -91,7 +78,12 @@ module.exports = {
       rules: {
         ...baseRules,
         'no-unused-vars': 'off',
-        '@typescript-eslint/no-unused-vars': ['error'],
+        '@typescript-eslint/no-unused-vars': [
+          'error',
+          {
+            varsIgnorePattern: '^_',
+          },
+        ],
         '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
         '@typescript-eslint/restrict-template-expressions': ['error', { allowNever: true }],
         '@typescript-eslint/ban-ts-comment': 'off',

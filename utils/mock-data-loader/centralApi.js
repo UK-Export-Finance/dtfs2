@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { mockDataLoaderPortalAuditDetails } = require('./constants/mockDataLoaderAuditDetails');
 const ApiError = require('./errors/api.error');
 require('dotenv').config();
 
@@ -75,6 +76,9 @@ const deleteFacility = async (facilityId) => {
     method: 'delete',
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
     headers,
+    data: {
+      auditDetails: mockDataLoaderPortalAuditDetails,
+    },
   }).catch((error) => {
     throw new ApiError({ cause: error });
   });
