@@ -1,4 +1,12 @@
 /**
+ * This function is an Azure Durable sub-orchestrator function.
+ * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
+ * function.
+ *
+ * @module acbs-amend-facility-loan-record
+ */
+
+/**
  * Facility Loan Record amendment SOF
  * **********************************
  * This is a sub-orchestrated function invoked from it's master orchestrator.

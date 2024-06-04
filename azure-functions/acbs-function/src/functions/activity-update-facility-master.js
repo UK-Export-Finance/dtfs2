@@ -1,3 +1,11 @@
+/**
+ * This function is an Azure Durable sub-orchestrator function.
+ * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
+ * function.
+ *
+ * @module acbs-update-facility-loan-master
+ */
+
 /*
  * Facility master record update DAF
  * **********************************
@@ -45,50 +53,52 @@ const mandatoryFields = [
   'obligorIndustryClassification',
 ];
 
-const updateFacilityMaster = async (context) => {
-  try {
-    const { facilityId, acbsFacilityMasterInput, updateType, etag } = context.bindingData;
-
-    const missingMandatory = findMissingMandatory(acbsFacilityMasterInput, mandatoryFields);
-
-    if (missingMandatory.length) {
-      return { missingMandatory };
-    }
-
-    const submittedToACBS = getNowAsIsoString();
-
-    const { status, data } = await api.updateFacility(facilityId, updateType, acbsFacilityMasterInput, etag);
-
-    if (isHttpErrorStatus(status)) {
-      throw new Error(
-        JSON.stringify(
-          {
-            name: 'ACBS Facility update error',
-            submittedToACBS,
-            receivedFromACBS: getNowAsIsoString(),
-            dataReceived: data,
-            dataSent: acbsFacilityMasterInput,
-          },
-          null,
-          4,
-        ),
-      );
-    }
-
-    return {
-      status,
-      updateType,
-      submittedToACBS,
-      receivedFromACBS: getNowAsIsoString(),
-      dataSent: acbsFacilityMasterInput,
-      ...data,
-    };
-  } catch (error) {
-    console.error('Error updating facility master record %o', error);
-    throw new Error(`Error updating facility master record ${error}`);
-  }
-};
-
 df.app.activity('update-facility-master', {
-  handler: updateFacilityMaster,
+  handler: async (payload) => {
+    try {
+      if (!payload) {
+        throw new Error('Invalid facility master amendment payload');
+      }
+
+      const { facilityId, acbsFacilityMasterInput, updateType, etag } = payload;
+
+      const missingMandatory = findMissingMandatory(acbsFacilityMasterInput, mandatoryFields);
+
+      if (missingMandatory.length) {
+        return { missingMandatory };
+      }
+
+      const submittedToACBS = getNowAsIsoString();
+
+      const { status, data } = await api.updateFacility(facilityId, updateType, acbsFacilityMasterInput, etag);
+
+      if (isHttpErrorStatus(status)) {
+        throw new Error(
+          JSON.stringify(
+            {
+              name: 'ACBS Facility update error',
+              submittedToACBS,
+              receivedFromACBS: getNowAsIsoString(),
+              dataReceived: data,
+              dataSent: acbsFacilityMasterInput,
+            },
+            null,
+            4,
+          ),
+        );
+      }
+
+      return {
+        status,
+        updateType,
+        submittedToACBS,
+        receivedFromACBS: getNowAsIsoString(),
+        dataSent: acbsFacilityMasterInput,
+        ...data,
+      };
+    } catch (error) {
+      console.error('Unable to amend facility master record %o', error);
+      throw new Error(`Unable to amend facility master record ${error}`);
+    }
+  },
 });

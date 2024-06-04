@@ -1,4 +1,12 @@
 /**
+ * This function is an Azure Durable sub-orchestrator function.
+ * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
+ * function.
+ *
+ * @module acbs-amend-facility
+ */
+
+/**
  * Facility Amendment DOF
  * ***********************
  * This DOF invokes following activity functions to satisfy mandatory amendments ACs
@@ -56,7 +64,7 @@ df.app.orchestration('acbs-amend-facility', function* amendACBSFacility(context)
         }
 
         // 1. DAF : get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
-        const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, { facilityId });
+        const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, facilityId);
 
         /**
          * Check 1 - Facility stage `07` only

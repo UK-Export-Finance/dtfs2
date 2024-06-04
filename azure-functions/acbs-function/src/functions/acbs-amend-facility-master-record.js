@@ -1,4 +1,12 @@
 /**
+ * This function is an Azure Durable sub-orchestrator function.
+ * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
+ * function.
+ *
+ * @module acbs-amend-facility-master-record
+ */
+
+/**
  * Facility Master Record amendment SOF
  * **********************************
  * This is a sub-orchestrated function invoked from it's master orchestrator.
@@ -53,9 +61,7 @@ df.app.orchestration('acbs-amend-facility-master-record', function* Facility(con
       // 2.2.2 - Cover end date
       if (amendment.coverEndDate) {
         // 2.2.3. DAF : get-facility-master: Retrieve ACBS `Facility Master Record` with new eTag
-        const updatedFmr = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, {
-          facilityId,
-        });
+        const updatedFmr = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, facilityId);
 
         if (updatedFmr.etag) {
           const coverEndDate = yield context.df.callActivityWithRetry('update-facility-master', retryOptions, {

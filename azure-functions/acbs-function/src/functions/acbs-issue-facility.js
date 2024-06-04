@@ -1,8 +1,9 @@
-/*
- * This function is not intended to be invoked directly. Instead it will be
- * triggered by an HTTP trigger function.
+/**
+ * This function is an Azure Durable sub-orchestrator function.
+ * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
+ * function.
  *
-
+ * @module acbs-issue-facility
  */
 
 const df = require('durable-functions');
@@ -42,7 +43,7 @@ df.app.orchestration('acbs-issue-facility', function* updateACBSfacility(context
 
     if (facilityId) {
       // 1. GET Facility master record object
-      const { acbsFacility, etag } = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, { facilityId });
+      const { acbsFacility, etag } = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, facilityId);
 
       if (acbsFacility && etag) {
         // 2.1. Create updated facility master record object
