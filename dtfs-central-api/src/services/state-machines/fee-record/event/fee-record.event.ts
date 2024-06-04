@@ -1,3 +1,3 @@
-import { FeeRecordAddAPaymentEvent } from '../event-handlers';
+import { FeeRecordPaymentAddedEvent } from '../event-handlers';
 
-export type FeeRecordEvent = FeeRecordAddAPaymentEvent;
+export type FeeRecordEvent = FeeRecordPaymentAddedEvent;

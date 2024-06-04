@@ -1,8 +1,8 @@
 import { EntityManager } from 'typeorm';
 import { DbRequestSource, FeeRecordEntity, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { handleFeeRecordAddAPaymentEvent } from './add-a-payment.event-handler';
+import { handleFeeRecordPaymentAddedEvent } from './payment-added.event-handler';
 
-describe('handleFeeRecordAddAPaymentEvent', () => {
+describe('handleFeeRecordPaymentAddedEvent', () => {
   const PENDING_RECONCILIATION_REPORT = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
   const mockEntityManager = {
@@ -20,7 +20,7 @@ describe('handleFeeRecordAddAPaymentEvent', () => {
     const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus('TO_DO').build();
 
     // Act
-    await handleFeeRecordAddAPaymentEvent(feeRecord, {
+    await handleFeeRecordPaymentAddedEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
       status: 'MATCH',
       requestSource,
@@ -35,7 +35,7 @@ describe('handleFeeRecordAddAPaymentEvent', () => {
     const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus('TO_DO').build();
 
     // Act
-    await handleFeeRecordAddAPaymentEvent(feeRecord, {
+    await handleFeeRecordPaymentAddedEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
       status,
       requestSource,
@@ -50,7 +50,7 @@ describe('handleFeeRecordAddAPaymentEvent', () => {
     const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus('TO_DO').build();
 
     // Act
-    await handleFeeRecordAddAPaymentEvent(feeRecord, {
+    await handleFeeRecordPaymentAddedEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
       status: 'MATCH',
       requestSource,
@@ -65,7 +65,7 @@ describe('handleFeeRecordAddAPaymentEvent', () => {
     const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus('TO_DO').build();
 
     // Act
-    await handleFeeRecordAddAPaymentEvent(feeRecord, {
+    await handleFeeRecordPaymentAddedEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
       status: 'MATCH',
       requestSource,
@@ -80,7 +80,7 @@ describe('handleFeeRecordAddAPaymentEvent', () => {
     const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus('TO_DO').build();
 
     // Act
-    await handleFeeRecordAddAPaymentEvent(feeRecord, {
+    await handleFeeRecordPaymentAddedEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
       status: 'MATCH',
       requestSource,

@@ -28,7 +28,7 @@ const addPaymentToUtilisationReportWithTransaction = async (
     await queryRunner.startTransaction();
 
     await utilisationReportStateMachine.handleEvent({
-      type: 'PAYMENT_ADDED_TO_FEE_RECORD',
+      type: 'ADD_A_PAYMENT',
       payload: {
         transactionEntityManager: queryRunner.manager,
         feeRecords,

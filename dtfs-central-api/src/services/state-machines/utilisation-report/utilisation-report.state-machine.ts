@@ -6,7 +6,7 @@ import {
   handleUtilisationReportFeeRecordKeyedEvent,
   handleUtilisationReportManuallySetCompletedEvent,
   handleUtilisationReportManuallySetIncompleteEvent,
-  handleUtilisationReportPaymentAddedToFeeRecordEvent,
+  handleUtilisationReportAddAPaymentEvent,
   handleUtilisationReportPaymentRemovedFromFeeRecordEvent,
   handleUtilisationReportReportUploadedEvent,
 } from './event-handlers';
@@ -75,8 +75,8 @@ export class UtilisationReportStateMachine {
         }
       case 'PENDING_RECONCILIATION':
         switch (event.type) {
-          case 'PAYMENT_ADDED_TO_FEE_RECORD':
-            return handleUtilisationReportPaymentAddedToFeeRecordEvent(this.report, event.payload);
+          case 'ADD_A_PAYMENT':
+            return handleUtilisationReportAddAPaymentEvent(this.report, event.payload);
           case 'MANUALLY_SET_COMPLETED':
             return handleUtilisationReportManuallySetCompletedEvent(this.report, event.payload);
           default:
@@ -84,8 +84,8 @@ export class UtilisationReportStateMachine {
         }
       case 'RECONCILIATION_IN_PROGRESS':
         switch (event.type) {
-          case 'PAYMENT_ADDED_TO_FEE_RECORD':
-            return handleUtilisationReportPaymentAddedToFeeRecordEvent(this.report, event.payload);
+          case 'ADD_A_PAYMENT':
+            return handleUtilisationReportAddAPaymentEvent(this.report, event.payload);
           case 'PAYMENT_REMOVED_FROM_FEE_RECORD':
             return handleUtilisationReportPaymentRemovedFromFeeRecordEvent(this.report, event.payload);
           case 'FEE_RECORD_KEYED':

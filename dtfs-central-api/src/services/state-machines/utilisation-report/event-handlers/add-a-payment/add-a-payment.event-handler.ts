@@ -5,18 +5,18 @@ import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { feeRecordsMatchAttachedPayments } from './helpers';
 
-type PaymentAddedToFeeRecordEventPayload = {
+type AddAPaymentEventPayload = {
   transactionEntityManager: EntityManager;
   feeRecords: FeeRecordEntity[];
   paymentDetails: NewPaymentDetails;
   requestSource: DbRequestSource;
 };
 
-export type UtilisationReportPaymentAddedToFeeRecordEvent = BaseUtilisationReportEvent<'PAYMENT_ADDED_TO_FEE_RECORD', PaymentAddedToFeeRecordEventPayload>;
+export type UtilisationReportAddAPaymentEvent = BaseUtilisationReportEvent<'ADD_A_PAYMENT', AddAPaymentEventPayload>;
 
-export const handleUtilisationReportPaymentAddedToFeeRecordEvent = async (
+export const handleUtilisationReportAddAPaymentEvent = async (
   report: UtilisationReportEntity,
-  { transactionEntityManager, feeRecords, paymentDetails, requestSource }: PaymentAddedToFeeRecordEventPayload,
+  { transactionEntityManager, feeRecords, paymentDetails, requestSource }: AddAPaymentEventPayload,
 ): Promise<UtilisationReportEntity> => {
   const payment = PaymentEntity.create({
     ...paymentDetails,
@@ -31,7 +31,7 @@ export const handleUtilisationReportPaymentAddedToFeeRecordEvent = async (
   await Promise.all(
     feeRecordStateMachines.map((stateMachine) =>
       stateMachine.handleEvent({
-        type: 'ADD_A_PAYMENT',
+        type: 'PAYMENT_ADDED',
         payload: {
           transactionEntityManager,
           status: feeRecordStatusToSet,

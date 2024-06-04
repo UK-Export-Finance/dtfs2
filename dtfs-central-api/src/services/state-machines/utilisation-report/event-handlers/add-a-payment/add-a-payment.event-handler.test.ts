@@ -10,14 +10,14 @@ import {
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import { handleUtilisationReportPaymentAddedToFeeRecordEvent } from './payment-added-to-fee-record.event-handler';
+import { handleUtilisationReportAddAPaymentEvent } from './add-a-payment.event-handler';
 import { NewPaymentDetails } from '../../../../../types/utilisation-reports';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { feeRecordsMatchAttachedPayments } from './helpers';
 
 jest.mock('./helpers');
 
-describe('handleUtilisationReportPaymentAddedToFeeRecordEvent', () => {
+describe('handleUtilisationReportAddAPaymentEvent', () => {
   const tfmUserId = 'abc123';
   const requestSource: DbRequestSource = {
     platform: 'TFM',
@@ -81,7 +81,7 @@ describe('handleUtilisationReportPaymentAddedToFeeRecordEvent', () => {
     });
 
     // Act
-    await handleUtilisationReportPaymentAddedToFeeRecordEvent(utilisationReport, {
+    await handleUtilisationReportAddAPaymentEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
       feeRecords,
       paymentDetails,
@@ -101,7 +101,7 @@ describe('handleUtilisationReportPaymentAddedToFeeRecordEvent', () => {
     mockFeeRecordStateMachineConstructorImplementation(feeRecords, feeRecordStateMatchines);
 
     // Act
-    await handleUtilisationReportPaymentAddedToFeeRecordEvent(utilisationReport, {
+    await handleUtilisationReportAddAPaymentEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
       feeRecords,
       paymentDetails,
@@ -112,7 +112,7 @@ describe('handleUtilisationReportPaymentAddedToFeeRecordEvent', () => {
     expect(feeRecordsMatchAttachedPayments).toHaveBeenCalledWith(feeRecords, mockEntityManager);
   });
 
-  it("calls the fee record state machine 'ADD_A_PAYMENT' event for each fee record in the payload", async () => {
+  it("calls the fee record state machine 'PAYMENT_ADDED' event for each fee record in the payload", async () => {
     // Arrange
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
@@ -123,7 +123,7 @@ describe('handleUtilisationReportPaymentAddedToFeeRecordEvent', () => {
     const eventHandlerSpies = getEventHandlerSpiesForFeeRecordStateMachines(feeRecordStateMatchines, feeRecords);
 
     // Act
-    await handleUtilisationReportPaymentAddedToFeeRecordEvent(utilisationReport, {
+    await handleUtilisationReportAddAPaymentEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
       feeRecords,
       paymentDetails,
@@ -133,7 +133,7 @@ describe('handleUtilisationReportPaymentAddedToFeeRecordEvent', () => {
     // Assert
     eventHandlerSpies.forEach((eventHandlerSpy) => {
       expect(eventHandlerSpy).toHaveBeenCalledWith({
-        type: 'ADD_A_PAYMENT',
+        type: 'PAYMENT_ADDED',
         payload: {
           transactionEntityManager: mockEntityManager,
           status: 'DOES_NOT_MATCH',
@@ -143,7 +143,7 @@ describe('handleUtilisationReportPaymentAddedToFeeRecordEvent', () => {
     });
   });
 
-  it("calls the 'ADD_A_PAYMENT' fee record event handler with the status set to 'MATCH' if 'feeRecordsMatchAttachedPayments' returns true", async () => {
+  it("calls the 'PAYMENT_ADDED' fee record event handler with the status set to 'MATCH' if 'feeRecordsMatchAttachedPayments' returns true", async () => {
     // Arrange
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
@@ -157,7 +157,7 @@ describe('handleUtilisationReportPaymentAddedToFeeRecordEvent', () => {
     const newStatus: FeeRecordStatus = 'MATCH';
 
     // Act
-    await handleUtilisationReportPaymentAddedToFeeRecordEvent(utilisationReport, {
+    await handleUtilisationReportAddAPaymentEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
       feeRecords,
       paymentDetails,
@@ -168,7 +168,7 @@ describe('handleUtilisationReportPaymentAddedToFeeRecordEvent', () => {
     eventHandlerSpies.forEach((eventHandlerSpy) => {
       expect(eventHandlerSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          type: 'ADD_A_PAYMENT',
+          type: 'PAYMENT_ADDED',
           payload: expect.objectContaining({
             status: newStatus,
           }),
@@ -177,7 +177,7 @@ describe('handleUtilisationReportPaymentAddedToFeeRecordEvent', () => {
     });
   });
 
-  it("calls the 'ADD_A_PAYMENT' fee record event handler with the status set to 'DOES_NOT_MATCH' if 'feeRecordsMatchAttachedPayments' returns true", async () => {
+  it("calls the 'PAYMENT_ADDED' fee record event handler with the status set to 'DOES_NOT_MATCH' if 'feeRecordsMatchAttachedPayments' returns true", async () => {
     // Arrange
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
@@ -191,7 +191,7 @@ describe('handleUtilisationReportPaymentAddedToFeeRecordEvent', () => {
     const newStatus: FeeRecordStatus = 'DOES_NOT_MATCH';
 
     // Act
-    await handleUtilisationReportPaymentAddedToFeeRecordEvent(utilisationReport, {
+    await handleUtilisationReportAddAPaymentEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
       feeRecords,
       paymentDetails,
@@ -202,7 +202,7 @@ describe('handleUtilisationReportPaymentAddedToFeeRecordEvent', () => {
     eventHandlerSpies.forEach((eventHandlerSpy) => {
       expect(eventHandlerSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          type: 'ADD_A_PAYMENT',
+          type: 'PAYMENT_ADDED',
           payload: expect.objectContaining({
             status: newStatus,
           }),
@@ -220,7 +220,7 @@ describe('handleUtilisationReportPaymentAddedToFeeRecordEvent', () => {
     mockFeeRecordStateMachineConstructorImplementation(feeRecords, feeRecordStateMatchines);
 
     // Act
-    await handleUtilisationReportPaymentAddedToFeeRecordEvent(utilisationReport, {
+    await handleUtilisationReportAddAPaymentEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
       feeRecords,
       paymentDetails,
@@ -240,7 +240,7 @@ describe('handleUtilisationReportPaymentAddedToFeeRecordEvent', () => {
     mockFeeRecordStateMachineConstructorImplementation(feeRecords, feeRecordStateMatchines);
 
     // Act
-    await handleUtilisationReportPaymentAddedToFeeRecordEvent(reconciliationInProgressReport, {
+    await handleUtilisationReportAddAPaymentEvent(reconciliationInProgressReport, {
       transactionEntityManager: mockEntityManager,
       feeRecords,
       paymentDetails,
@@ -262,7 +262,7 @@ describe('handleUtilisationReportPaymentAddedToFeeRecordEvent', () => {
     mockFeeRecordStateMachineConstructorImplementation(feeRecords, feeRecordStateMatchines);
 
     // Act
-    await handleUtilisationReportPaymentAddedToFeeRecordEvent(pendingReconciliationReport, {
+    await handleUtilisationReportAddAPaymentEvent(pendingReconciliationReport, {
       transactionEntityManager: mockEntityManager,
       feeRecords,
       paymentDetails,

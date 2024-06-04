@@ -111,13 +111,13 @@ describe('post-add-payment.controller helpers', () => {
       expect(mockQueryRunner.startTransaction).toHaveBeenCalled();
     });
 
-    it("calls the 'UtilisationReportStateMachine.handleEvent' function with the 'PAYMENT_ADDED_TO_FEE_RECORD' event and payload", async () => {
+    it("calls the 'UtilisationReportStateMachine.handleEvent' function with the 'ADD_A_PAYMENT' event and payload", async () => {
       // Act
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
       // Assert
       expect(handleEventSpy).toHaveBeenCalledWith({
-        type: 'PAYMENT_ADDED_TO_FEE_RECORD',
+        type: 'ADD_A_PAYMENT',
         payload: {
           transactionEntityManager: mockQueryRunner.manager,
           feeRecords: feeRecordsInPaymentCurrency,

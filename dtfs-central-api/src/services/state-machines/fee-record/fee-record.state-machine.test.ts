@@ -4,7 +4,7 @@ import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FEE_REC
 import { InvalidStateMachineTransitionError } from '../../../errors';
 import { FEE_RECORD_EVENT_TYPE, FEE_RECORD_EVENT_TYPES, FeeRecordEventType } from './event/fee-record.event-type';
 import { FeeRecordStateMachine } from './fee-record.state-machine';
-import { handleFeeRecordAddAPaymentEvent } from './event-handlers';
+import { handleFeeRecordPaymentAddedEvent } from './event-handlers';
 
 jest.mock('./event-handlers');
 
@@ -24,7 +24,7 @@ describe('FeeRecordStateMachine', () => {
     // Arrange
     const TO_DO_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('TO_DO').build();
 
-    const VALID_TO_DO_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['ADD_A_PAYMENT'];
+    const VALID_TO_DO_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['PAYMENT_ADDED'];
     const INVALID_TO_DO_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_TO_DO_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_TO_DO_FEE_RECORD_EVENT_TYPES.length !== 0) {
@@ -40,13 +40,13 @@ describe('FeeRecordStateMachine', () => {
       );
     }
 
-    it(`handles the '${FEE_RECORD_EVENT_TYPE.ADD_A_PAYMENT}' event`, async () => {
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.PAYMENT_ADDED}' event`, async () => {
       // Arrange
       const stateMachine = FeeRecordStateMachine.forFeeRecord(TO_DO_FEE_RECORD);
 
       // Act
       await stateMachine.handleEvent({
-        type: 'ADD_A_PAYMENT',
+        type: 'PAYMENT_ADDED',
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
           status: 'DOES_NOT_MATCH',
@@ -55,7 +55,7 @@ describe('FeeRecordStateMachine', () => {
       });
 
       // Assert
-      expect(handleFeeRecordAddAPaymentEvent).toHaveBeenCalledTimes(1);
+      expect(handleFeeRecordPaymentAddedEvent).toHaveBeenCalledTimes(1);
     });
   });
 

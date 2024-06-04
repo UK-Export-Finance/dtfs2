@@ -10,6 +10,11 @@ export type PostAddPaymentRequest = CustomExpressRequest<{
   reqBody: PostAddPaymentPayload;
 }>;
 
+/**
+ * Controller for the POST add a payment route
+ * @param req - The request object
+ * @param res - The response object
+ */
 export const postAddPayment = async (req: PostAddPaymentRequest, res: Response) => {
   const { reportId } = req.params;
   const { feeRecordIds, paymentCurrency, paymentAmount, datePaymentReceived, paymentReference, user } = req.body;
