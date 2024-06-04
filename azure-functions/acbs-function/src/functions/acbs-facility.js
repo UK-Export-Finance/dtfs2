@@ -1,8 +1,9 @@
-/*
- * This function is not intended to be invoked directly. Instead it will be
- * triggered by an HTTP trigger function.
+/**
+ * This function is an Azure Durable sub-orchestrator function.
+ * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
+ * function.
  *
-
+ * @module acbs-facility
  */
 
 const df = require('durable-functions');
@@ -27,9 +28,7 @@ df.app.orchestration('acbs-facility', function* createACBSfacility(context) {
       throw new Error(`Invalid facility ID ${facilityIdentifier}`);
     }
 
-    const facilityMaster = yield context.df.callActivityWithRetry('create-facility-master', retryOptions, {
-      acbsFacilityMasterInput,
-    });
+    const facilityMaster = yield context.df.callActivityWithRetry('create-facility-master', retryOptions, acbsFacilityMasterInput);
 
     // 2. Facility Investor
     const acbsFacilityInvestorInput = mappings.facility.facilityInvestor(deal, facility);
@@ -77,11 +76,10 @@ df.app.orchestration('acbs-facility', function* createACBSfacility(context) {
     // 5. Bundle creation + Facility activation
     const acbsCodeValueTransactionInput = mappings.facility.codeValueTransaction();
 
-    const codeValueTransaction = yield context.df.callActivity(
-      'create-code-value-transaction',
-      { facilityIdentifier, acbsCodeValueTransactionInput },
-      retryOptions,
-    );
+    const codeValueTransaction = yield context.df.callActivity('create-code-value-transaction', retryOptions, {
+      facilityIdentifier,
+      acbsCodeValueTransactionInput,
+    });
 
     // Records only created for `Issued` and `Activated` facilities only
     if (helpers.hasFacilityBeenIssued(facility)) {

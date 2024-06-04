@@ -1,6 +1,5 @@
 /**
- * This function is an Azure Durable Function activity named 'get-acbs-industry-sector'.
- * It is designed to fetch the ACBS industry sector code for a given industry.
+ * This function is an Azure Durable activity function.
  * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
  * function.
  *

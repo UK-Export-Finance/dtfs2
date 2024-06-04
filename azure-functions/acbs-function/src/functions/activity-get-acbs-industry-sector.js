@@ -1,6 +1,5 @@
 /**
- * This function is an Azure Durable Function activity named 'get-acbs-industry-sector'.
- * It is designed to fetch the ACBS industry sector code for a given industry.
+ * This function is an Azure Durable activity function.
  * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
  * function.
  *
@@ -13,7 +12,7 @@ const { INDUSTRY } = require('../../constants');
 const mdm = require('../../apim-mdm');
 
 /**
- * Azure Durable Function activity handler to get the ACBS industry sector code.
+ * Azure Durable activity function handler to get the ACBS industry sector code.
  *
  * This activity function takes an industry code as input and queries the MDM service
  * to retrieve the corresponding ACBS industry sector code. If the query is successful

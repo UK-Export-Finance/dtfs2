@@ -3,7 +3,7 @@
  * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
  * function.
  *
- * @module create-facility-guarantee
+ * @module create-facility-code-value-transaction
  */
 
 const df = require('durable-functions');
@@ -12,40 +12,37 @@ const api = require('../../api');
 const { isHttpErrorStatus } = require('../../helpers/http');
 const { findMissingMandatory } = require('../../helpers/mandatoryFields');
 
-const mandatoryFields = ['guarantorParty', 'limitKey', 'guaranteeExpiryDate', 'effectiveDate', 'maximumLiability', 'guaranteeTypeCode'];
+const mandatoryFields = ['lenderTypeCode', 'initialBundleStatusCode', 'facilityTransactionCodeValueCode'];
 
-df.app.activity('create-facility-guarantee', {
+df.app.activity('create-code-value-transation', {
   handler: async (payload) => {
     try {
       if (!payload) {
-        throw new Error('Invalid facility guarantee record payload');
+        throw new Error('Invalid facility code value transaction record payload');
       }
 
-      const { facilityIdentifier, acbsFacilityGuaranteeInput } = payload;
+      const { facilityIdentifier, acbsCodeValueTransactionInput } = payload;
 
-      const missingMandatory = findMissingMandatory(acbsFacilityGuaranteeInput, mandatoryFields);
+      const missingMandatory = findMissingMandatory(acbsCodeValueTransactionInput, mandatoryFields);
 
       if (missingMandatory.length) {
         return { missingMandatory };
       }
 
       const submittedToACBS = getNowAsIsoString();
-      const { status, data } = await api.createFacilityGuarantee(facilityIdentifier, acbsFacilityGuaranteeInput);
+      const { status, data } = await api.createCodeValueTransaction(facilityIdentifier, acbsCodeValueTransactionInput);
 
-      /**
-       * Multiple guarantee records are possible.
-       * Adding `400` (Facility guarantee exists) to status ignore list.
-       */
-      if (isHttpErrorStatus(status, 400)) {
+      if (isHttpErrorStatus(status)) {
         throw new Error(
           JSON.stringify(
             {
-              name: 'ACBS Facility Guarantee create error',
+              name: 'ACBS code create value transaction error',
+              status,
               facilityIdentifier,
               submittedToACBS,
               receivedFromACBS: getNowAsIsoString(),
               dataReceived: data,
-              dataSent: acbsFacilityGuaranteeInput,
+              dataSent: acbsCodeValueTransactionInput,
             },
             null,
             4,
@@ -55,14 +52,14 @@ df.app.activity('create-facility-guarantee', {
 
       return {
         status,
-        dataSent: acbsFacilityGuaranteeInput,
+        dataSent: acbsCodeValueTransactionInput,
         submittedToACBS,
         receivedFromACBS: getNowAsIsoString(),
         ...data,
       };
     } catch (error) {
-      console.error('Unable to create facility guarantee record %o', error);
-      throw new Error(`Unable to create facility guarantee record ${error}`);
+      console.error('Unable to create facility code value transaction record %o', error);
+      throw new Error(`Unable to create facility code value transaction record ${error}`);
     }
   },
 });

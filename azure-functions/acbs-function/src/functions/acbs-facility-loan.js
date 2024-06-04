@@ -1,8 +1,9 @@
-/*
- * This function is not intended to be invoked directly. Instead it will be
- * triggered by an HTTP trigger function.
+/**
+ * This function is an Azure Durable sub-orchestrator function.
+ * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
+ * function.
  *
-
+ * @module acbs-facility-loan
  */
 
 const df = require('durable-functions');
