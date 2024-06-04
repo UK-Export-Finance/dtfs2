@@ -52,7 +52,7 @@ describe('/v1/portal/deals', () => {
 
       expect(status).toEqual(200);
 
-      expect(body).toEqual(expectAddedFieldsWithEditedBy(expectedResponse, MOCK_PORTAL_USER));
+      expect(body).toEqual(expectAddedFieldsWithEditedBy({ baseDeal: expectedResponse, user: MOCK_PORTAL_USER, auditRecordType: 'portal' }));
     });
 
     it('handles partial updates', async () => {
@@ -65,7 +65,6 @@ describe('/v1/portal/deals', () => {
           mockNewField: true,
         },
       };
-      const expectedAuditRecord = generateParsedMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id);
 
       const expectedDataIncludingUpdate = {
         ...newDeal,
@@ -75,7 +74,6 @@ describe('/v1/portal/deals', () => {
           ...newDeal.eligibility,
           mockNewField: true,
         },
-        auditRecord: expectedAuditRecord,
       };
 
       const { status: putStatus } = await api.put({ dealUpdate: partialUpdate, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
@@ -84,7 +82,7 @@ describe('/v1/portal/deals', () => {
       const { status, body } = await api.get(`/v1/portal/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.deal).toEqual(expectAddedFieldsWithEditedBy(expectedDataIncludingUpdate, MOCK_PORTAL_USER));
+      expect(body.deal).toEqual(expectAddedFieldsWithEditedBy({ baseDeal: expectedDataIncludingUpdate, user: MOCK_PORTAL_USER, auditRecordType: 'portal' }));
     });
 
     it('updates the deal', async () => {
@@ -97,16 +95,13 @@ describe('/v1/portal/deals', () => {
         additionalRefName: 'change this field',
       };
 
-      const expectedAuditRecord = generateParsedMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id);
-      const expectedResponse = { ...updatedDeal, auditRecord: expectedAuditRecord };
-
       await api.put({ dealUpdate: updatedDeal, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
 
       const { status, body } = await api.get(`/v1/portal/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
 
-      expect(body.deal).toEqual(expectAddedFieldsWithEditedBy(expectedResponse, MOCK_PORTAL_USER));
+      expect(body.deal).toEqual(expectAddedFieldsWithEditedBy({ baseDeal: updatedDeal, user: MOCK_PORTAL_USER, auditRecordType: 'portal' }));
     });
 
     it('adds updates and retains `editedBy` array with user data', async () => {
@@ -135,8 +130,12 @@ describe('/v1/portal/deals', () => {
       expect(dealAfterSecondUpdate.status).toEqual(200);
 
       expect(dealAfterSecondUpdate.body.deal.editedBy.length).toEqual(2);
-      expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(expectAddedFieldsWithEditedBy(expectedResponse, MOCK_PORTAL_USER, 1).editedBy[0]);
-      expect(dealAfterSecondUpdate.body.deal.editedBy[1]).toEqual(expectAddedFieldsWithEditedBy(expectedResponse, MOCK_PORTAL_USER, 2).editedBy[1]);
+      expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(
+        expectAddedFieldsWithEditedBy({ baseDeal: expectedResponse, user: MOCK_PORTAL_USER, auditRecordType: 'portal', numberOfUpdates: 1 }).editedBy[0],
+      );
+      expect(dealAfterSecondUpdate.body.deal.editedBy[1]).toEqual(
+        expectAddedFieldsWithEditedBy({ baseDeal: expectedResponse, user: MOCK_PORTAL_USER, auditRecordType: 'portal', numberOfUpdates: 2 }).editedBy[1],
+      );
     });
   });
 });
