@@ -14,7 +14,7 @@ const { findMissingMandatory } = require('../../helpers/mandatoryFields');
 
 const mandatoryFields = ['lenderTypeCode', 'initialBundleStatusCode', 'facilityTransactionCodeValueCode'];
 
-df.app.activity('create-code-value-transation', {
+df.app.activity('create-code-value-transaction', {
   handler: async (payload) => {
     try {
       if (!payload) {

@@ -31,7 +31,7 @@ df.app.activity('get-acbs-country-code', {
 
       return CONSTANTS.DEAL.COUNTRY.DEFAULT;
     } catch (error) {
-      console.error(`Failed to get ACBS country code for country %s %s`, country, error);
+      console.error(`Failed to get ACBS country code for country %s %o`, country, error);
       return CONSTANTS.DEAL.COUNTRY.DEFAULT;
     }
   },

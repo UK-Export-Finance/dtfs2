@@ -35,7 +35,7 @@ df.app.activity('get-acbs-industry-sector', {
 
       return INDUSTRY.DEFAULT.ACBS.CODE;
     } catch (error) {
-      console.error(`Failed to get ACBS industry sector for industry %s %s`, industry, error);
+      console.error(`Failed to get ACBS industry sector for industry %s %o`, industry, error);
       return INDUSTRY.DEFAULT.ACBS.CODE;
     }
   },

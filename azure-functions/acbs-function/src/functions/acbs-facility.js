@@ -76,7 +76,7 @@ df.app.orchestration('acbs-facility', function* createACBSfacility(context) {
     // 5. Bundle creation + Facility activation
     const acbsCodeValueTransactionInput = mappings.facility.codeValueTransaction();
 
-    const codeValueTransaction = yield context.df.callActivity('create-code-value-transaction', retryOptions, {
+    const codeValueTransaction = yield context.df.callActivityWithRetry('create-code-value-transaction', retryOptions, {
       facilityIdentifier,
       acbsCodeValueTransactionInput,
     });
