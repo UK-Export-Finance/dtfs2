@@ -13,41 +13,35 @@ describe(page, () => {
   };
   const dueReportPeriods = [
     {
-      reportPeriod: {
-        start: {
-          month: 12,
-          year: 2022,
-        },
-        end: {
-          month: 12,
-          year: 2022,
-        },
+      start: {
+        month: 12,
+        year: 2022,
+      },
+      end: {
+        month: 12,
+        year: 2022,
       },
       formattedReportPeriod: 'December 2022',
     },
     {
-      reportPeriod: {
-        start: {
-          month: 1,
-          year: 2023,
-        },
-        end: {
-          month: 1,
-          year: 2023,
-        },
+      start: {
+        month: 1,
+        year: 2023,
+      },
+      end: {
+        month: 1,
+        year: 2023,
       },
       formattedReportPeriod: 'January 2023',
     },
     {
-      reportPeriod: {
-        start: {
-          month: 2,
-          year: 2023,
-        },
-        end: {
-          month: 2,
-          year: 2023,
-        },
+      start: {
+        month: 2,
+        year: 2023,
+      },
+      end: {
+        month: 2,
+        year: 2023,
       },
       formattedReportPeriod: 'February 2023',
     },
