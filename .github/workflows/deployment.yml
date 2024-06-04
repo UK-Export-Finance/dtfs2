@@ -86,7 +86,7 @@ jobs:
 
   database:
     name: MSSQL 🗄️
-    if: ${{ github.event.workflow_run.conclusion == 'success' && vars.DATABASE == '1' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && '1' == vars.DATABASE }}
     environment: ${{ needs.setup.outputs.environment }}
     needs: [setup]
     runs-on: [self-hosted, DTFS, deployment]

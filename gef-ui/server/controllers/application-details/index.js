@@ -94,7 +94,12 @@ function buildBody(app, previewMode, user) {
       data: app.facilities.items
         .map((item) => ({
           heading: startCase(FACILITY_TYPE[item.details.type.toUpperCase()].toLowerCase()),
-          rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), mapSummaryParams, previewMode),
+          rows: mapSummaryList(
+            item,
+            facilityItems(`${facilityUrl}/${item.details._id}`, item.details),
+            mapSummaryParams,
+            previewMode,
+          ),
           createdAt: item.details.createdAt,
           facilityId: item.details._id,
           // facilityName added for aria-label for accessibility
@@ -121,13 +126,23 @@ function buildBody(app, previewMode, user) {
     isUkefReviewPositive: ukefReviewPositive,
     ukefDecisionAccepted: hasUkefDecisionAccepted,
     coverDatesConfirmed: coverDates,
-    renderReviewDecisionLink: ukefReviewAvailable && ukefReviewPositive && !coverDates && !hasUkefDecisionAccepted && app.userRoles.includes(MAKER),
+    renderReviewDecisionLink:
+      ukefReviewAvailable &&
+      ukefReviewPositive &&
+      !coverDates &&
+      !hasUkefDecisionAccepted &&
+      app.userRoles.includes(MAKER),
     previewMode,
     hasChangedFacilities,
     userRoles: app.userRoles,
     displayComments: displayTaskComments(app),
     displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
-    canUpdateUnissuedFacilities: canUpdateUnissuedFacilitiesCheck(app, unissuedFacilitiesPresent, facilitiesChangedToIssued, hasUkefDecisionAccepted),
+    canUpdateUnissuedFacilities: canUpdateUnissuedFacilitiesCheck(
+      app,
+      unissuedFacilitiesPresent,
+      facilitiesChangedToIssued,
+      hasUkefDecisionAccepted,
+    ),
     MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
     returnToMakerNoFacilitiesChanged: returnToMakerNoFacilitiesChanged(app, hasChangedFacilities),
   };
@@ -261,7 +276,7 @@ const applicationDetails = async (req, res, next) => {
 
     return res.render(`partials/${partial}.njk`, params);
   } catch (error) {
-    console.error('Unable to build application view %s', error);
+    console.error('Unable to build application view %o', error);
     return next(error);
   }
 };

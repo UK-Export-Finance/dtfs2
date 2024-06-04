@@ -12,9 +12,7 @@ const getAmendmentAnswers = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const {
-    dealId, requireUkefApproval, changeCoverEndDate, changeFacilityValue,
-  } = amendment;
+  const { dealId, requireUkefApproval, changeCoverEndDate, changeFacilityValue } = amendment;
   const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
   const requestDate = format(fromUnixTime(amendment.requestDate), 'dd MMM yyyy');
@@ -87,7 +85,7 @@ const postAmendmentAnswers = async (req, res) => {
     console.error('Unable to submit the amendment');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
   } catch (error) {
-    console.error('There was a problem creating the amendment approval %s', error);
+    console.error('There was a problem creating the amendment approval %o', error);
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
 };

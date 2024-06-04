@@ -10,7 +10,11 @@ const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-faciliti
 
 const ALL_MOCK_DEALS = require('./mock-deals');
 
-const ALL_MOCK_FACILITIES = [...MOCK_FACILITIES, ...MOCK_BSS_FACILITIES_USD_CURRENCY, ...MOCK_CASH_CONTINGENT_FACILITIES];
+const ALL_MOCK_FACILITIES = [
+  ...MOCK_FACILITIES,
+  ...MOCK_BSS_FACILITIES_USD_CURRENCY,
+  ...MOCK_CASH_CONTINGENT_FACILITIES,
+];
 
 /*
  * Note - We should look to update functions in this file to be a jest.fn(), and add common implementation to common-api-mocks.js
@@ -85,7 +89,7 @@ module.exports = {
   updateGefFacility: (facilityId, facilityUpdate) => Promise.resolve(facilityUpdate),
   addPortalDealComment: jest.fn(),
   addUnderwriterCommentToGefDeal: jest.fn(),
-  queryDeals: () => ALL_MOCK_DEALS,
+  queryDeals: jest.fn(),
   updateDeal: jest.fn(),
   updateDealSnapshot: (dealId, snapshotUpdate) => {
     const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
@@ -159,7 +163,7 @@ module.exports = {
 
     return mapped;
   },
-  updateFacility: (facilityId, tfmUpdate) => {
+  updateFacility: ({ facilityId, tfmUpdate }) => {
     const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId);
 
     // for some reason 2 api tests act differently if tfmUpdate is *not* included in both
@@ -179,13 +183,13 @@ module.exports = {
     exposurePeriodInMonths: 12,
   })),
   getPartyDbInfo: ({ companyRegNo }) =>
-    (companyRegNo === 'NO_MATCH'
+    companyRegNo === 'NO_MATCH'
       ? false
       : [
-        {
-          partyUrn: 'testPartyUrn',
-        },
-      ]),
+          {
+            partyUrn: 'testPartyUrn',
+          },
+        ],
   findUser: (username) => {
     if (username === 'invalidUser') {
       return false;
@@ -205,7 +209,8 @@ module.exports = {
       acbsTaskLinks: {
         mockLinkUrl: 'mockLinkUrl',
       },
-    }),),
+    }),
+  ),
   getFunctionsAPI: jest.fn((statusQueryGetUri) =>
     Promise.resolve({
       runtimeStatus: 'Completed',
@@ -213,8 +218,9 @@ module.exports = {
       output: {
         facilities: [{ facilityId: '1234' }],
       },
-    }),),
-  createEstoreFolders: (deal) => deal,
+    }),
+  ),
+  createEstoreSite: (deal) => deal,
   getPremiumSchedule: jest.fn(() => MOCK_PREMIUM_SCHEDULE_RESPONSE),
   sendEmail: jest.fn((templateId, sendToEmailAddress, emailVariables) => {
     const mockResponse = {
@@ -233,4 +239,5 @@ module.exports = {
   getUtilisationReportsReconciliationSummary: jest.fn(),
   getUtilisationReportById: jest.fn(() => Promise.resolve(MOCK_UTILISATION_REPORT)),
   updateUtilisationReportStatus: jest.fn(),
+  getUtilisationReportReconciliationDetailsById: jest.fn(),
 };

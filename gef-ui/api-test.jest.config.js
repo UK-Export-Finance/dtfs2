@@ -6,7 +6,7 @@ module.exports = {
     'server/helpers/*.{js,}',
     'scripts/**/*.{js,}',
   ],
-  coverageDirectory: 'generated_reports/coverage/api-test',
+  coverageReporters: ['text', 'text-summary'],
   testMatch: ['**/*.api-test.js'],
   moduleNameMapper: {
     '^.+\\.(css|less|scss)$': 'babel-jest',

@@ -1119,9 +1119,6 @@ jobs:
                 APIM_TFS_URL=${{ secrets.APIM_TFS_URL }} \
                 APIM_TFS_KEY=${{ secrets.APIM_TFS_KEY }} \
                 APIM_TFS_VALUE=${{ secrets.APIM_TFS_VALUE }} \
-                MULESOFT_API_PARTY_DB_KEY="${{ secrets.MULESOFT_API_PARTY_DB_KEY}}" \
-                MULESOFT_API_PARTY_DB_SECRET="${{ secrets.MULESOFT_API_PARTY_DB_SECRET}}" \
-                MULESOFT_API_PARTY_DB_URL="${{ secrets.MULESOFT_API_PARTY_DB_URL}}" \
                 APIM_MDM_URL="${{ secrets.APIM_MDM_URL }}" \
                 APIM_MDM_KEY="${{ secrets.APIM_MDM_KEY }}" \
                 APIM_MDM_VALUE="${{ secrets.APIM_MDM_VALUE }}" \
@@ -1495,7 +1492,7 @@ jobs:
                 TFM_API_URL="http://$tfm_api_url" \
                 COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
                 COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}" \
-                PDC_INPUTTERS_EMAIL_RECIPIENT="${{ secrets.PDC_INPUTTERS_EMAIL_RECIPIENT }}"
+                UKEF_GEF_REPORTING_EMAIL_RECIPIENT="${{ secrets.UKEF_GEF_REPORTING_EMAIL_RECIPIENT }}"
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
@@ -2004,6 +2001,7 @@ jobs:
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
                 UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
                 ESTORE_URL="${{ secrets.ESTORE_URL }}" \
+                ESTORE_CRON_MANAGER_SCHEDULE="${{ vars.ESTORE_CRON_MANAGER_SCHEDULE }}" \
                 HTTPS=1 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
                 CONTACT_US_SELF_SERVICE_PORTAL_URL=${{ vars.secrets.CONTACT_US_SELF_SERVICE_PORTAL_URL }} \

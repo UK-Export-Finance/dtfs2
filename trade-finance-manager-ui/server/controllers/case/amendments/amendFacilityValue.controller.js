@@ -51,7 +51,11 @@ const postAmendFacilityValue = async (req, res) => {
     currentFacilityValue = `${currency} ${formattedNumber(latestAmendmentValue.value)}`;
   }
 
-  const { errorsObject, amendFacilityValueErrors } = amendFacilityValueValidation(currentFacilityValue, value, currency);
+  const { errorsObject, amendFacilityValueErrors } = amendFacilityValueValidation(
+    currentFacilityValue,
+    value,
+    currency,
+  );
 
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId } = amendment;
@@ -90,7 +94,7 @@ const postAmendFacilityValue = async (req, res) => {
     console.error('Unable to update the facility value');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
   } catch (error) {
-    console.error('There was a problem creating the amendment approval %s', error);
+    console.error('There was a problem creating the amendment approval %o', error);
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
 };

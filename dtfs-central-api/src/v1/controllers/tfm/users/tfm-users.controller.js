@@ -1,26 +1,40 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const {
+  validateAuditDetails,
+  generateAuditDatabaseRecordFromAuditDetails,
+} = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client').default;
 const { PAYLOAD } = require('../../../../constants');
 const { payloadVerification } = require('../../../../helpers');
 
-const createUser = async (User) => {
+const createUser = async (user, auditDetails) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
-  return collection.insertOne(User);
+  return collection.insertOne({ ...user, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) });
 };
 exports.createUser = createUser;
 
 exports.createTfmUser = async (req, res) => {
-  const payload = req?.body?.user;
+  const { user: payload, auditDetails } = req.body;
 
-  if (payloadVerification(payload, PAYLOAD.TFM.USER)) {
-    const response = await createUser(payload);
-
-    const { insertedId } = response;
-    return res.status(200).json({ _id: insertedId });
+  if (!payloadVerification(payload, PAYLOAD.TFM.USER)) {
+    return res.status(400).send({ status: 400, message: 'Invalid TFM user payload' });
   }
 
-  return res.status(400).send({ status: 400, message: 'Invalid TFM user payload' });
+  try {
+    validateAuditDetails(auditDetails);
+  } catch ({ message }) {
+    return res.status(400).send({ status: 400, message: `Invalid auditDetails, ${message}` });
+  }
+
+  if (auditDetails.userType !== 'tfm') {
+    return res.status(400).send({ status: 400, message: `Invalid auditDetails, userType must be 'tfm'` });
+  }
+
+  const response = await createUser(payload, auditDetails);
+
+  const { insertedId } = response;
+  return res.status(200).json({ _id: insertedId });
 };
 
 const listUsers = async () => {
@@ -104,7 +118,5 @@ exports.deleteUser = deleteUser;
 exports.deleteTfmUser = async (req, res) => {
   const deleted = await deleteUser(req.params.username);
 
-  return deleted
-    ? res.status(200).send(deleted)
-    : res.status(400).send({ status: 400, message: 'Invalid username' });
+  return deleted ? res.status(200).send(deleted) : res.status(400).send({ status: 400, message: 'Invalid username' });
 };

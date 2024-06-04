@@ -20,12 +20,12 @@ const updateDeal = async (dealId, update) => {
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: { $eq: ObjectId(String(dealId)) } },
       { $set: dealUpdate },
-      { returnNewDocument: true, returnDocument: 'after' }
+      { returnNewDocument: true, returnDocument: 'after' },
     );
 
     return findAndUpdateResponse.value;
   } catch (error) {
-    console.error('Unable to update deal %s %s', dealId, error);
+    console.error('Unable to update deal %s %o', dealId, error);
     return { status: 500, message: error };
   }
 };
@@ -52,7 +52,7 @@ exports.updateDealPut = async (req, res) => {
       return res.status(404).send();
     });
   } catch (error) {
-    console.error('Unable to update deal %s', error);
+    console.error('Unable to update deal %o', error);
     return res.status(500).send({ status: 500, message: error });
   }
 };

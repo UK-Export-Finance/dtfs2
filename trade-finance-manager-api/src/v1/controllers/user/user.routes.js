@@ -1,6 +1,10 @@
 const { ObjectId } = require('mongodb');
 const utils = require('../../../utils/crypto.util');
-const { userIsDisabled, usernameOrPasswordIncorrect, userIsBlocked } = require('../../../constants/login-results.constant');
+const {
+  userIsDisabled,
+  usernameOrPasswordIncorrect,
+  userIsBlocked,
+} = require('../../../constants/login-results.constant');
 const { create, update, removeTfmUserById, findOne, findByUsername } = require('./user.controller');
 
 const { mapUserData } = require('./helpers/mapUserData.helper');
@@ -46,7 +50,8 @@ module.exports.createTfmUser = (req, res, next) => {
 
   const newUser = { ...userToCreate, salt, hash };
 
-  return create(newUser, (error, user) => {
+  // This is called on the open and auth router ('v1/user' and 'v1/users') endpoints so req.user may be undefined
+  return create(newUser, req.user, (error, user) => {
     if (error) {
       return next(error);
     }
@@ -96,7 +101,7 @@ module.exports.updateTfmUserById = (req, res, next) => {
           },
         });
       } else {
-        update(req.params.user, req.body, (updateErr, updatedUser) => {
+        update(req.params.user, req.body, req.user, (updateErr, updatedUser) => {
           if (updateErr) {
             next(updateErr);
           } else {

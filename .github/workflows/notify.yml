@@ -1,0 +1,80 @@
+name: Notify
+on:
+  push:
+    branches:
+      - main
+
+env:
+  environment: dev
+  timezone: ${{ vars.TIMEZONE }}
+  MICROSOFT_TEAMS_WEBHOOK: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK  }}
+
+jobs:
+  # 1. Setup test infrastructure
+  setup:
+    name: Infrastructure setup 🔧
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ env.environment }}
+      timezone: ${{ env.timezone }}
+    steps:
+      - name: Environment 🧪
+        run: echo "Environment set to ${{ env.environment }}"
+
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.timezone }}"
+
+  notify-teams:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+
+    steps:
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Extract
+        run: |
+          COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
+          COMMIT_SHA=$(git log --format=%H --abbrev=7 -n 1 ${{ github.sha }})
+          COMMIT_TIMESTAMP=$(git log --format=%ci -n 1 ${{ github.sha }})
+          COMMIT_AUTHOR=${{ github.actor }}
+
+          echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
+          echo "COMMIT_SHA=$COMMIT_SHA" >> $GITHUB_ENV
+          echo "COMMIT_AUTHOR=$COMMIT_AUTHOR" >> $GITHUB_ENV
+          echo "COMMIT_TIMESTAMP=$COMMIT_TIMESTAMP" >> $GITHUB_ENV
+
+      - name: Notify
+        run: |
+          curl -g -X POST -H 'Content-Type: application/json' -d '{
+            "type":"message",
+            "attachments":[
+                {
+                  "contentType":"application/vnd.microsoft.card.adaptive",
+                  "contentUrl":null,
+                  "content": {
+                    "type": "AdaptiveCard",
+                    "body": [
+                      {
+                        "type": "TextBlock",
+                        "size": "Medium",
+                        "weight": "Bolder",
+                        "text": "Commit to DTFS main"
+                      },
+                      {
+                        "type": "FactSet",
+                        "facts": [
+                          { "title": "By", "value": "'"${COMMIT_AUTHOR}"'" },
+                          { "title": "At", "value": "'"${COMMIT_TIMESTAMP}"'" },
+                          { "title": "Change", "value": "'"${COMMIT_MESSAGE}"'" },
+                          { "title": "SHA", "value": "'"${COMMIT_SHA}"'" }
+                        ]
+                      }
+                    ],
+                    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                    "version": "1.2"
+                  }
+                }
+            ]
+          }' "${MICROSOFT_TEAMS_WEBHOOK}"

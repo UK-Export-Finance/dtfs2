@@ -1,7 +1,9 @@
 const express = require('express');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
-const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
+const {
+  getUtilisationReportById,
+} = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
 const {
   postUploadUtilisationReport,
   postUploadUtilisationReportPayloadValidator,
@@ -10,6 +12,9 @@ const {
   getUtilisationReportsReconciliationSummary,
 } = require('../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller');
 const putUtilisationReportStatusController = require('../controllers/utilisation-report-service/put-utilisation-report-status.controller');
+const {
+  getUtilisationReportReconciliationDetailsById,
+} = require('../controllers/utilisation-report-service/get-utilisation-report-reconciliation-details-by-id.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -77,7 +82,9 @@ utilisationReportsRouter.route('/').post(postUploadUtilisationReportPayloadValid
  *       404:
  *         description: Not found
  */
-utilisationReportsRouter.route('/:id').get(validation.sqlIdValidation('id'), handleExpressValidatorResult, getUtilisationReportById);
+utilisationReportsRouter
+  .route('/:id')
+  .get(validation.sqlIdValidation('id'), handleExpressValidatorResult, getUtilisationReportById);
 
 /**
  * @openapi
@@ -109,7 +116,11 @@ utilisationReportsRouter.route('/:id').get(validation.sqlIdValidation('id'), han
  */
 utilisationReportsRouter
   .route('/reconciliation-summary/:submissionMonth')
-  .get(validation.isoMonthValidation('submissionMonth'), handleExpressValidatorResult, getUtilisationReportsReconciliationSummary);
+  .get(
+    validation.isoMonthValidation('submissionMonth'),
+    handleExpressValidatorResult,
+    getUtilisationReportsReconciliationSummary,
+  );
 
 /**
  * @openapi
@@ -139,5 +150,35 @@ utilisationReportsRouter
  *         description: Internal Server Error
  */
 utilisationReportsRouter.route('/set-status').put(putUtilisationReportStatusController.putUtilisationReportStatus);
+
+/**
+ * @openapi
+ * /utilisation-reports/reconciliation-details/:reportId:
+ *   put:
+ *     summary: Get the reconciliation details for the utilisation report by the report id
+ *     tags: [UtilisationReport]
+ *     description: Gets the reconciliation details for the utilisation report by the report id
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/UtilisationReportReconciliationDetails'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found (if either the report with matching id or bank with matching id cannot be found)
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/reconciliation-details/:reportId')
+  .get(
+    validation.sqlIdValidation('reportId'),
+    handleExpressValidatorResult,
+    getUtilisationReportReconciliationDetailsById,
+  );
 
 module.exports = utilisationReportsRouter;

@@ -1,3 +1,4 @@
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const app = require('../../../src/createApp');
 const { post } = require('../../api')(app);
 
@@ -14,6 +15,7 @@ describe('/feedback', () => {
       username: 'Tester',
       email: 'test@test.test',
     },
+    auditDetails: generateTfmAuditDetails('abcdef123456abcdef123456'),
   };
 
   describe('POST /v1/feedback', () => {

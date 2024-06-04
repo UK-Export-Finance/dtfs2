@@ -4,16 +4,7 @@ const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const aDeal = require('../deal-builder');
 const { MOCK_DEAL } = require('../mocks/mock-data');
-
-const mockUser = {
-  _id: '123456789',
-  username: 'temp',
-  roles: [],
-  bank: {
-    id: '956',
-    name: 'Barclays Bank',
-  },
-};
+const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 
 const mockFacility = {
   type: 'Bond',
@@ -32,7 +23,7 @@ const newDeal = aDeal({
 });
 
 const createDeal = async () => {
-  const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+  const { body } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
   return body;
 };
 describe('/v1/portal/facilities', () => {
@@ -51,9 +42,9 @@ describe('/v1/portal/facilities', () => {
 
   describe('GET /v1/portal/facilities/', () => {
     it('returns multiple facilities', async () => {
-      await api.post({ facility: mockFacility, user: mockUser }).to('/v1/portal/facilities');
-      await api.post({ facility: mockFacility, user: mockUser }).to('/v1/portal/facilities');
-      await api.post({ facility: mockFacility, user: mockUser }).to('/v1/portal/facilities');
+      await api.post({ facility: mockFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+      await api.post({ facility: mockFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+      await api.post({ facility: mockFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
 
       const { status, body } = await api.get('/v1/portal/facilities');
 
@@ -74,16 +65,11 @@ describe('/v1/portal/facilities', () => {
     it('creates and returns multiple facilities with createdDate and updatedAt', async () => {
       await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES]);
 
-      const facilities = [
-        mockFacility,
-        mockFacility,
-        mockFacility,
-        mockFacility,
-      ];
+      const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
 
       const postBody = {
         facilities,
-        user: mockUser,
+        user: MOCK_PORTAL_USER,
         dealId,
       };
 
@@ -100,12 +86,7 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('returns 400 where user is missing', async () => {
-      const facilities = [
-        mockFacility,
-        mockFacility,
-        mockFacility,
-        mockFacility,
-      ];
+      const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
 
       const postBody = {
         facilities,
@@ -118,12 +99,7 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('returns 400 where deal is not found', async () => {
-      const facilities = [
-        mockFacility,
-        mockFacility,
-        mockFacility,
-        mockFacility,
-      ];
+      const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
 
       const postBody = {
         facilities,

@@ -40,16 +40,19 @@ context('User can login', () => {
     pages.landingPage.submitButton().contains('Sign in');
   });
 
-  it('should login, redirect to /deals. Header displays user\'s first and last name and logout link', () => {
+  it("should login, redirect to /deals/0. Header displays user's first and last name and logout link", () => {
     cy.login(T1_USER_1);
 
     pages.landingPage.submitButton().click();
-    cy.url().should('eq', relative('/deals'));
+    cy.url().should('eq', relative('/deals/0'));
 
-    partials.header.userLink().invoke('text').then((text) => {
-      const expected = `${T1_USER_1.firstName} ${T1_USER_1.lastName}`;
-      expect(text.trim()).to.contain(expected);
-    });
+    partials.header
+      .userLink()
+      .invoke('text')
+      .then((text) => {
+        const expected = `${T1_USER_1.firstName} ${T1_USER_1.lastName}`;
+        expect(text.trim()).to.contain(expected);
+      });
 
     partials.header.signOutLink().should('exist');
   });
@@ -57,15 +60,18 @@ context('User can login', () => {
   it('should login, and show relevant header information', () => {
     cy.login(T1_USER_1);
     pages.landingPage.submitButton().click();
-    cy.url().should('eq', relative('/deals'));
+    cy.url().should('eq', relative('/deals/0'));
 
     partials.header.ukefLogo().should('exist');
     partials.header.headerName().should('exist');
     partials.header.headerName().contains('Trade Finance Manager');
 
-    partials.header.headerName().invoke('attr', 'href').then((href) => {
-      expect(href).to.equal('/deals');
-    });
+    partials.header
+      .headerName()
+      .invoke('attr', 'href')
+      .then((href) => {
+        expect(href).to.equal('/deals');
+      });
 
     partials.header.userLink().should('exist');
     partials.header.signOutLink().should('exist');
@@ -78,9 +84,12 @@ context('User can login', () => {
     partials.header.betaBanner().contains('This is a new service – your feedback will help us to improve it.');
     partials.header.betaBanner().contains('beta');
     partials.header.betaBannerHref().contains('feedback');
-    partials.header.betaBannerHref().invoke('attr', 'href').then((href) => {
-      expect(href).to.equal('/feedback');
-    });
+    partials.header
+      .betaBannerHref()
+      .invoke('attr', 'href')
+      .then((href) => {
+        expect(href).to.equal('/feedback');
+      });
   });
 
   it('should not login and redirect to /deals with invalid email/username', () => {

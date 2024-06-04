@@ -27,7 +27,7 @@ const findAllAmendmentsByStatus = async (status) => {
     // returns the amendment object for the given facilityId and amendmentId
     return amendment[0]?.amendments ?? null;
   } catch (error) {
-    console.error('Unable to find amendments object %s', error);
+    console.error('Unable to find amendments object %o', error);
     return null;
   }
 };
@@ -67,7 +67,7 @@ const findAllAmendmentsByFacilityId = async (facilityId) => {
     // returns the amendment object for the given facilityId and amendmentId
     return amendment[0]?.amendments ?? null;
   } catch (error) {
-    console.error('Unable to find amendments object %s', error);
+    console.error('Unable to find amendments object %o', error);
     return null;
   }
 };
@@ -120,7 +120,7 @@ const findAmendmentById = async (facilityId, amendmentId) => {
     // returns the amendment object for the given facilityId and amendmentId
     return amendment[0]?.amendments ?? null;
   } catch (error) {
-    console.error('Unable to find amendments object %s', error);
+    console.error('Unable to find amendments object %o', error);
     return null;
   }
 };
@@ -154,7 +154,12 @@ const findAmendmentsByDealId = async (dealId) => {
         { $project: { _id: false, amendments: true } },
         { $unwind: '$amendments' },
         { $sort: { 'amendments.submittedAt': -1 } },
-        { $match: { 'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED }, 'amendments.submittedByPim': { $eq: true } } },
+        {
+          $match: {
+            'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED },
+            'amendments.submittedByPim': { $eq: true },
+          },
+        },
         { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
         { $project: { _id: false, amendments: true } },
       ])
@@ -162,7 +167,7 @@ const findAmendmentsByDealId = async (dealId) => {
     // returns the amendment object for the given dealId
     return amendment[0]?.amendments ?? null;
   } catch (error) {
-    console.error('Unable to find the amendments object by Deal Id %s', error);
+    console.error('Unable to find the amendments object by Deal Id %o', error);
     return null;
   }
 };
@@ -199,7 +204,7 @@ const findAmendmentByStatusAndFacilityId = async (facilityId, status) => {
     // returns the amendment object for the given facilityId
     return amendment[0]?.amendments ?? null;
   } catch (error) {
-    console.error('Unable to find amendments object %s', error);
+    console.error('Unable to find amendments object %o', error);
     return null;
   }
 };
@@ -242,7 +247,7 @@ const findAmendmentByStatusAndDealId = async (dealId, status) => {
     // returns the amendment object for the given dealId
     return amendment[0]?.amendments ?? null;
   } catch (error) {
-    console.error('Unable to find the amendments object %s', error);
+    console.error('Unable to find the amendments object %o', error);
     return null;
   }
 };
@@ -314,7 +319,7 @@ const findLatestCompletedValueAmendmentByFacilityId = async (facilityId) => {
     }
     return null;
   } catch (error) {
-    console.error('Unable to find latest completed amendments value %s', error);
+    console.error('Unable to find latest completed amendments value %o', error);
     return null;
   }
 };
@@ -385,7 +390,7 @@ const findLatestCompletedDateAmendmentByFacilityId = async (facilityId) => {
     }
     return null;
   } catch (error) {
-    console.error('Unable to find latest completed amendments coverEndDate %s', error);
+    console.error('Unable to find latest completed amendments coverEndDate %o', error);
     return null;
   }
 };
@@ -413,7 +418,7 @@ const findLatestCompletedAmendmentByFacilityIdVersion = async (facilityId) => {
       .toArray();
     return amendment[0]?.amendments?.version ?? null;
   } catch (error) {
-    console.error('Unable to find amendments object %s', error);
+    console.error('Unable to find amendments object %o', error);
     return null;
   }
 };
@@ -449,7 +454,7 @@ const findLatestCompletedAmendmentByDealId = async (dealId) => {
       .toArray();
     return amendment[0]?.amendments ?? null;
   } catch (error) {
-    console.error('Unable to find amendments object %s', error);
+    console.error('Unable to find amendments object %o', error);
     return null;
   }
 };
@@ -465,7 +470,8 @@ exports.getAmendmentsByFacilityId = async (req, res) => {
   let amendment;
   switch (amendmentIdOrStatus) {
     case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS: {
-      const amendmentsInProgress = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
+      const amendmentsInProgress =
+        (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
       amendment = amendmentsInProgress[0] ?? {};
       break;
     }
@@ -475,7 +481,8 @@ exports.getAmendmentsByFacilityId = async (req, res) => {
       } else if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
         amendment = (await findLatestCompletedDateAmendmentByFacilityId(facilityId)) ?? {};
       } else {
-        amendment = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
+        amendment =
+          (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
       }
       break;
     default:
@@ -499,13 +506,15 @@ exports.getAmendmentsByDealId = async (req, res) => {
   let amendment;
   switch (status) {
     case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS:
-      amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
+      amendment =
+        (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
       break;
     case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED:
       if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST) {
         amendment = (await findLatestCompletedAmendmentByDealId(dealId)) ?? {};
       } else {
-        amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
+        amendment =
+          (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
       }
       break;
     default:

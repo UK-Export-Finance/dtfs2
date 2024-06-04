@@ -3,7 +3,7 @@ import { MongoDbClient } from '@ukef/dtfs2-common/mongo-db-client';
 import { Bank, PortalUser, TfmUser, ROLES, TEAM_IDS } from '@ukef/dtfs2-common';
 
 const mongoDbConfigSchema = z.object({
-  MONGODB_URI_FOR_TESTS: z.string(),
+  MONGODB_URI_QA: z.string(),
   MONGO_INITDB_DATABASE: z.string(),
 });
 
@@ -11,7 +11,7 @@ const getMongoDbClient = (): MongoDbClient => {
   const mongoDbConfig = mongoDbConfigSchema.parse(process.env);
   return new MongoDbClient({
     dbName: mongoDbConfig.MONGO_INITDB_DATABASE,
-    dbConnectionString: mongoDbConfig.MONGODB_URI_FOR_TESTS,
+    dbConnectionString: mongoDbConfig.MONGODB_URI_QA,
   });
 };
 

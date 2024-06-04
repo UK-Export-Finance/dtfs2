@@ -8,13 +8,20 @@
  *  * - run 'npm install durable-functions' from the wwwroot folder of your
  *   function app in Kudu
  */
-
+const df = require('durable-functions');
 const { getNowAsIsoString } = require('../helpers/date');
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
-const mandatoryFields = ['guarantorParty', 'limitKey', 'guaranteeExpiryDate', 'effectiveDate', 'maximumLiability', 'guaranteeTypeCode'];
+const mandatoryFields = [
+  'guarantorParty',
+  'limitKey',
+  'guaranteeExpiryDate',
+  'effectiveDate',
+  'maximumLiability',
+  'guaranteeTypeCode',
+];
 const createFacilityGuarantee = async (context) => {
   try {
     const { facilityIdentifier, acbsFacilityGuaranteeInput } = context.bindingData;
@@ -22,7 +29,7 @@ const createFacilityGuarantee = async (context) => {
     const missingMandatory = findMissingMandatory(acbsFacilityGuaranteeInput, mandatoryFields);
 
     if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      return { missingMandatory };
     }
 
     const submittedToACBS = getNowAsIsoString();
@@ -57,9 +64,11 @@ const createFacilityGuarantee = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create facility guarantee record. %s', error);
-    throw new Error('Unable to create facility guarantee record. %s', error);
+    console.error('Unable to create facility guarantee record. %o', error);
+    throw new Error(`Unable to create facility guarantee record ${error}`);
   }
 };
 
-module.exports = createFacilityGuarantee;
+df.app.activity('create-facility-guarantee', {
+  handler: createFacilityGuarantee,
+});

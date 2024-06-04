@@ -20,8 +20,10 @@
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --forceExit --config=api-test.jest.config.js",
     "api-test-dev": "jest --verbose --runInBand --forceExit --config=api-test.jest.config.js",
-    "lint": "eslint ./src ./api-tests && npm run type-check",
-    "lint:fix": "eslint ./src ./api-tests --fix",
+    "lint": "eslint --color **/*.{ts,js}",
+    "lint:fix": "eslint --fix --color **/*.{ts,js}",
+    "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js}",
+    "prettier:fix": "prettier --write **/*.{ts,js}",
     "start": "npx ts-node src/index.ts",
     "type-check": "tsc --noEmit",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
@@ -45,11 +47,11 @@
     "express-rate-limit": "^6.11.2",
     "express-validator": "7.0.1",
     "is-port-reachable": "^3.1.0",
-    "joi": "^17.12.3",
+    "joi": "^17.13.1",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongo-dot-notation": "^3.1.0",
-    "mongodb": "4.17.0",
+    "mongodb": "4.17.2",
     "passport": "0.6.0",
     "passport-jwt": "^4.0.1",
     "sanitize-html": "^2.13.0",
@@ -76,7 +78,7 @@
     "node-mocks-http": "^1.14.1",
     "supertest": "^6.3.4",
     "ts-jest": "^29.1.2",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.5"
   },
   "engines": {
     "node": ">=20",

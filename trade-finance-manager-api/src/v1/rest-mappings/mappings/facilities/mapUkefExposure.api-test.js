@@ -1,7 +1,7 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const mapUkefExposure = require('./mapUkefExposure');
 const { formattedNumber } = require('../../../../utils/number');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../../../constants/deals');
-const { CURRENCY } = require('../../../../constants/currency.constant');
 
 describe('mapUkefExposure()', () => {
   const mockAmendment = {

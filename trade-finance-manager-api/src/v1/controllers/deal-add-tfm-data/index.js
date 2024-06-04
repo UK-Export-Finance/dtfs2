@@ -4,18 +4,13 @@ const addDealProduct = require('./dealProduct');
 const addDealPricingAndRisk = require('./dealPricingAndRisk');
 const addDealStage = require('./dealStage');
 
-const addTfmDealData = async (deal) => {
+const addTfmDealData = async (deal, auditDetails) => {
   if (!deal) {
     console.error('Unable to add TFM object to deal %s', deal._id);
     return false;
   }
 
-  const {
-    _id: dealId,
-    submissionType,
-    status,
-    tfm,
-  } = deal;
+  const { _id: dealId, submissionType, status, tfm } = deal;
 
   const dealUpdate = {
     tfm: {
@@ -29,7 +24,7 @@ const addTfmDealData = async (deal) => {
     },
   };
 
-  const updatedDeal = await api.updateDeal(dealId, dealUpdate);
+  const updatedDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
   return {
     ...deal,

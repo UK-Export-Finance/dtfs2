@@ -1,7 +1,13 @@
 const { HttpStatusCode } = require('axios');
 const axios = require('axios');
 const FormData = require('form-data');
-const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName, isValidBankId } = require('./validation/validate-ids');
+const {
+  isValidMongoId,
+  isValidResetPasswordToken,
+  isValidDocumentType,
+  isValidFileName,
+  isValidBankId,
+} = require('./validation/validate-ids');
 const { FILE_UPLOAD } = require('./constants');
 
 require('dotenv').config();
@@ -96,7 +102,7 @@ const resetPasswordFromToken = async (resetPwdToken, formData) => {
       data: response.data,
     };
   } catch (error) {
-    console.error('Reset password failed %s', error?.response?.data);
+    console.error('Reset password failed %o', error?.response?.data);
     return {
       status: error?.response?.status || 500,
       data: error?.response?.data,
@@ -644,7 +650,7 @@ const validateBank = async (dealId, bankId, token) => {
     });
     return data;
   } catch (error) {
-    console.error('Unable to validate the bank %s', error);
+    console.error('Unable to validate the bank %o', error);
     return 'Failed to validate the bank';
   }
 };
@@ -732,7 +738,7 @@ const updateUser = async (id, update, token) => {
     },
     data: update,
   }).catch((error) => {
-    console.error('Unable to update user %s', error);
+    console.error('Unable to update user %o', error);
     return error.response;
   });
 
@@ -830,7 +836,7 @@ const getUnissuedFacilitiesReport = async (token) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to return unissued facilities %s', error);
+    console.error('Unable to return unissued facilities %o', error);
     return { status: error?.code || 500, data: 'Error getting unissued facilities report.' };
   }
 };
@@ -848,12 +854,19 @@ const getUkefDecisionReport = async (token, payload) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to return UKEF decision report %s', error);
+    console.error('Unable to return UKEF decision report %o', error);
     return { status: error?.code || 500, data: 'Error getting Ukef decision report.' };
   }
 };
 
-const uploadUtilisationReportData = async (uploadingUser, reportPeriod, csvData, csvFileBuffer, formattedReportPeriod, token) => {
+const uploadUtilisationReportData = async (
+  uploadingUser,
+  reportPeriod,
+  csvData,
+  csvFileBuffer,
+  formattedReportPeriod,
+  token,
+) => {
   try {
     const formData = new FormData();
     formData.append('reportData', JSON.stringify(csvData));
@@ -863,7 +876,10 @@ const uploadUtilisationReportData = async (uploadingUser, reportPeriod, csvData,
     formData.append('formattedReportPeriod', formattedReportPeriod);
 
     const buffer = Buffer.from(csvFileBuffer);
-    const month = reportPeriod.start.month === reportPeriod.end.month ? `${reportPeriod.start.month}` : `${reportPeriod.start.month}_${reportPeriod.end.month}`;
+    const month =
+      reportPeriod.start.month === reportPeriod.end.month
+        ? `${reportPeriod.start.month}`
+        : `${reportPeriod.start.month}_${reportPeriod.end.month}`;
     const filename = `${reportPeriod.start.year}_${month}_${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}_${uploadingUser.bank.name}_utilisation_report.csv`;
     formData.append('csvFile', buffer, { filename });
 
@@ -883,7 +899,7 @@ const uploadUtilisationReportData = async (uploadingUser, reportPeriod, csvData,
 
     return response;
   } catch (error) {
-    console.error('Unable to upload utilisation report %s', error);
+    console.error('Unable to upload utilisation report %o', error);
     return { status: error?.code || 500, data: 'Error uploading utilisation report.' };
   }
 };

@@ -18,7 +18,9 @@ const getSecurityDetails = async (req, res) => {
       return res.sendStatus(404);
     }
 
-    const { supportingInformation: { securityDetails = {} } } = application;
+    const {
+      supportingInformation: { securityDetails = {} },
+    } = application;
 
     return res.render('partials/security-details.njk', {
       dealId,
@@ -27,7 +29,7 @@ const getSecurityDetails = async (req, res) => {
       facilitySecurity: securityDetails.facility,
     });
   } catch (error) {
-    console.error('Error getting security details %s', error);
+    console.error('Error getting security details %o', error);
     return res.sendStatus(500);
   }
 };
@@ -114,7 +116,7 @@ const postSecurityDetails = async (req, res) => {
 
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (error) {
-    console.error('Error updating security details %s', error);
+    console.error('Error updating security details %o', error);
     return res.sendStatus(500);
   }
 };

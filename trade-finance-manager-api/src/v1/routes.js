@@ -85,7 +85,11 @@ authRouter
 
 authRouter
   .route('/facilities/:facilityId/amendments/:amendmentId')
-  .put(validation.facilityIdAndAmendmentIdValidations, handleExpressValidatorResult, amendmentController.updateFacilityAmendment);
+  .put(
+    validation.facilityIdAndAmendmentIdValidations,
+    handleExpressValidatorResult,
+    amendmentController.updateFacilityAmendment,
+  );
 
 authRouter
   .route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?')
@@ -121,20 +125,42 @@ authRouter
 authRouter.route('/amendments/:status?').get(amendmentController.getAllAmendments);
 
 authRouter.route('/party/urn/:urn').get(validation.partyUrnValidation, handleExpressValidatorResult, party.getCompany);
-authRouter.route('/parties/:dealId').put(validation.dealIdValidation, handleExpressValidatorResult, partyController.updateParty);
+authRouter
+  .route('/parties/:dealId')
+  .put(validation.dealIdValidation, handleExpressValidatorResult, partyController.updateParty);
 
 authRouter.route('/bank-holidays').get(bankHolidaysController.getBankHolidays);
 
 authRouter
   .route('/utilisation-reports/reconciliation-summary/:submissionMonth')
-  .get(validation.isoMonthValidation('submissionMonth'), handleExpressValidatorResult, utilisationReportsController.getUtilisationReportsReconciliationSummary);
+  .get(
+    validation.isoMonthValidation('submissionMonth'),
+    handleExpressValidatorResult,
+    utilisationReportsController.getUtilisationReportsReconciliationSummary,
+  );
 
 authRouter
   .route('/utilisation-reports/:id/download')
-  .get(validation.sqlIdValidation('id'), handleExpressValidatorResult, utilisationReportsController.getUtilisationReportDownload);
+  .get(
+    validation.sqlIdValidation('id'),
+    handleExpressValidatorResult,
+    utilisationReportsController.getUtilisationReportDownload,
+  );
 
 authRouter
   .route('/utilisation-reports/set-status')
-  .put(validation.updateReportStatusPayloadValidation, handleExpressValidatorResult, utilisationReportsController.updateUtilisationReportStatus);
+  .put(
+    validation.updateReportStatusPayloadValidation,
+    handleExpressValidatorResult,
+    utilisationReportsController.updateUtilisationReportStatus,
+  );
+
+authRouter
+  .route('/utilisation-reports/reconciliation-details/:reportId')
+  .get(
+    validation.sqlIdValidation('reportId'),
+    handleExpressValidatorResult,
+    utilisationReportsController.getUtilisationReportReconciliationDetailsById,
+  );
 
 module.exports = { authRouter, openRouter };

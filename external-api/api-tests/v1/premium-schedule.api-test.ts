@@ -23,7 +23,7 @@ describe('/premium-schedule', () => {
     cumulativeAmount: 0,
   };
 
-  const mock = new MockAdapter(axios);
+  const axiosMock = new MockAdapter(axios);
   jest.mock('axios', () => jest.requireActual('axios'));
 
   const mockResponse = {
@@ -33,8 +33,8 @@ describe('/premium-schedule', () => {
     },
   };
 
-  mock.onPost(`${process.env.APIM_MDM_URL}premium/schedule`).reply(200, mockResponse);
-  mock.onGet(`${process.env.APIM_MDM_URL}premium/segments/12345678`).reply(200, mockResponse);
+  axiosMock.onPost(`${process.env.APIM_MDM_URL}premium/schedule`).reply(200, mockResponse);
+  axiosMock.onGet(`${process.env.APIM_MDM_URL}premium/segments/12345678`).reply(200, mockResponse);
 
   describe('when premium schedule parameters are empty', () => {
     it('should return a status of 400', async () => {
@@ -77,14 +77,17 @@ describe('/premium-schedule', () => {
   const invalidFacilityUrnTestCases = [['123'], ['127.0.0.1'], ['{}'], ['[]']];
 
   describe('when facility urn is invalid', () => {
-    test.each(invalidFacilityUrnTestCases)('returns a 400 if you provide an invalid facility urn: %s', async (facilityUrn) => {
-      const invalidPayload = payload;
-      invalidPayload.facilityURN = facilityUrn;
+    test.each(invalidFacilityUrnTestCases)(
+      'returns a 400 if you provide an invalid facility urn %s',
+      async (facilityUrn) => {
+        const invalidPayload = payload;
+        invalidPayload.facilityURN = facilityUrn;
 
-      const { status, body } = await getWithRequestBody(invalidPayload).to('/premium-schedule');
+        const { status, body } = await getWithRequestBody(invalidPayload).to('/premium-schedule');
 
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid facility URN', status: 400 });
-    });
+        expect(status).toEqual(400);
+        expect(body).toMatchObject({ data: 'Invalid facility URN', status: 400 });
+      },
+    );
   });
 });

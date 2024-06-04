@@ -35,7 +35,10 @@ const postAmendmentOptions = async (req, res) => {
 
   const facility = await api.getFacility(facilityId, userToken);
   const { hasBeenIssued } = facility.facilitySnapshot;
-  const { errorsObject, amendmentOptionsValidationErrors } = amendmentOptionsValidation(amendmentOptions, hasBeenIssued);
+  const { errorsObject, amendmentOptionsValidationErrors } = amendmentOptionsValidation(
+    amendmentOptions,
+    hasBeenIssued,
+  );
 
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId } = amendment;
@@ -80,7 +83,7 @@ const postAmendmentOptions = async (req, res) => {
     console.error('Unable to update the amendment options');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
   } catch (error) {
-    console.error('There was a problem creating the amendment approval %s', error);
+    console.error('There was a problem creating the amendment approval %o', error);
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
 };

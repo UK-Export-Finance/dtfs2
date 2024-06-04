@@ -57,7 +57,7 @@ on:
       - "dtfs-central-api/**"
       - "azure-functions/**"
       - "e2e-tests/**"
-      - "utils/mock-data-loader/**"
+      - "utils/**"
       - "libs/**"
 
   push:
@@ -86,7 +86,7 @@ env:
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
   MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
-  MONGODB_URI_FOR_TESTS: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
+  MONGODB_URI_QA: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
   AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
   AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
   AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
@@ -113,6 +113,7 @@ env:
   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
   UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
+  ESTORE_CRON_MANAGER_SCHEDULE: ${{ vars.ESTORE_CRON_MANAGER_SCHEDULE }}
   TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
   PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
   DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
@@ -142,6 +143,8 @@ env:
   SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD_QA }}
   SQL_DB_NAME: ${{ secrets.SQL_DB_NAME_QA }}
   SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
+  ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE: ${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }}
+  FF_TFM_PAYMENT_RECONCILIATION_ENABLED: "false"
 
 jobs:
   # 1. Setup test infrastructure
@@ -220,18 +223,12 @@ jobs:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
 
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
-
       - name: Execute
         run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
 
       - name: Stop
         working-directory: ./
-        run: docker compose -f docker-compose.gha.yml down
+        run: docker compose down
 
       - name: Coverage
         uses: codecov/codecov-action@v3
@@ -417,12 +414,6 @@ jobs:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
 
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
-
       - name: Execute
         working-directory: ./e2e-tests
         env:
@@ -497,12 +488,6 @@ jobs:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
 
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
-
       - name: Execute
         working-directory: ./e2e-tests
         env:
@@ -574,12 +559,6 @@ jobs:
         env:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
-
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
@@ -661,12 +640,6 @@ jobs:
         env:
           SQL_DB_HOST: localhost
         run: npm run db:migrate
-
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests

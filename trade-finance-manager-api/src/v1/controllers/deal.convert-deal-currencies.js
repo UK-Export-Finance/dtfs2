@@ -1,16 +1,11 @@
 const api = require('../api');
 
-const convertDealCurrencies = async (deal) => {
+const convertDealCurrencies = async (deal, auditDetails) => {
   if (!deal) {
     return false;
   }
 
-  const {
-    _id: dealId,
-    dealCurrency,
-    dealValue,
-    tfm,
-  } = deal;
+  const { _id: dealId, dealCurrency, dealValue, tfm } = deal;
 
   if (dealCurrency && dealCurrency.id !== 'GBP') {
     const currencyExchange = await api.getCurrencyExchangeRate(dealCurrency.id, 'GBP');
@@ -25,9 +20,7 @@ const convertDealCurrencies = async (deal) => {
         },
       };
     } else {
-      const {
-        exchangeRate,
-      } = currencyExchange;
+      const { exchangeRate } = currencyExchange;
 
       const strippedDealValue = Number(dealValue.replace(/,/g, ''));
 
@@ -42,7 +35,7 @@ const convertDealCurrencies = async (deal) => {
       };
     }
 
-    const updatedDeal = await api.updateDeal(dealId, dealUpdate);
+    const updatedDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
     return {
       ...deal,

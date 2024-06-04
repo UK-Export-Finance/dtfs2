@@ -1,7 +1,4 @@
-const {
-  DEAL_STATUS,
-  AUTHORISATION_LEVEL,
-} = require('../constants');
+const { DEAL_STATUS, AUTHORISATION_LEVEL } = require('../constants');
 
 const statesWhereMakerHasEditAccess = [
   DEAL_STATUS.DRAFT,
@@ -56,7 +53,7 @@ const getUserAuthorisationLevelsToApplication = (user, application) => {
     const unique = new Set(levels);
     return [...unique];
   } catch (error) {
-    console.error('Authorisation error %s', error);
+    console.error('Authorisation error %o', error);
   }
 
   return [];

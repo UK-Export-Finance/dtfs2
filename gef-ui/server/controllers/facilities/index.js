@@ -4,7 +4,11 @@ const { FACILITY_TYPE } = require('../../constants');
 const api = require('../../services/api');
 
 const facilities = async (req, res) => {
-  const { params, query, session: { userToken } } = req;
+  const {
+    params,
+    query,
+    session: { userToken },
+  } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
   let { facilityType } = query;
@@ -31,15 +35,13 @@ const facilities = async (req, res) => {
       status,
     });
   } catch (error) {
-    console.error('Facilities error %s', error);
+    console.error('Facilities error %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
 
 const createFacility = async (req, res) => {
-  const {
-    body, params, query, session,
-  } = req;
+  const { body, params, query, session } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
   const { user, userToken } = session;
@@ -93,7 +95,7 @@ const createFacility = async (req, res) => {
 
     return res.redirect(`/gef/application-details/${dealId}/facilities/${facility.details._id}/about-facility`);
   } catch (error) {
-    console.error('Error creating a facility %s', error);
+    console.error('Error creating a facility %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

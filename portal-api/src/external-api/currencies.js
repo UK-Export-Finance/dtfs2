@@ -8,7 +8,7 @@ const { EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 
 const headers = {
   'Content-Type': 'application/json',
-  'x-api-key': EXTERNAL_API_KEY,
+  'x-api-key': String(EXTERNAL_API_KEY),
 };
 
 const getCurrencies = async () => {
@@ -17,7 +17,7 @@ const getCurrencies = async () => {
     url: `${EXTERNAL_API_URL}/currencies`,
     headers,
   }).catch((error) => {
-    console.error('Error retrieving currencies from External API. %O %s', error?.response?.data, error?.status);
+    console.error('Error retrieving currencies from External API. %o %s', error?.response?.data, error?.status);
     return { status: error?.response?.status || 500, data: 'Failed to get currencies' };
   });
 
@@ -37,7 +37,7 @@ const getCurrency = async (id) => {
     url: `${EXTERNAL_API_URL}/currencies/${id}`,
     headers,
   }).catch((error) => {
-    console.error('Error retrieving currency from External API. %O %s', error?.response?.data, error?.status);
+    console.error('Error retrieving currency from External API. %o %s', error?.response?.data, error?.status);
     return {
       status: 404,
       error: 'Failed to get currency',

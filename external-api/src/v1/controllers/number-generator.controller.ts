@@ -39,7 +39,10 @@ export const getNumberTypeId = (entityType: string): number => {
  * @param res - The HTTP response object used to send the response back to the client.
  * @returns {Promise<Object>} The retrieved number in the response body.
  */
-export const getNumber = async (req: Request, res: Response): Promise<Response<NumberGeneratorResponse> | Response<NumberGeneratorErrorResponse>> => {
+export const getNumber = async (
+  req: Request,
+  res: Response,
+): Promise<Response<NumberGeneratorResponse> | Response<NumberGeneratorErrorResponse>> => {
   try {
     const { entityType, dealId } = req.body;
     const numberTypeId = getNumberTypeId(entityType);
@@ -56,13 +59,17 @@ export const getNumber = async (req: Request, res: Response): Promise<Response<N
 
     if (!response.data) {
       console.error('❌ Invalid number generator response received for deal %s %o', dealId, response);
-      throw new Error(`Invalid number generator response received for deal ${dealId}`, { cause: 'Invalid response from APIM MDM' });
+      throw new Error(`Invalid number generator response received for deal ${dealId}`, {
+        cause: 'Invalid response from APIM MDM',
+      });
     }
 
     const { status, data } = response;
 
     if (!data.length) {
-      throw new Error(`Empty number generator response received for deal ${dealId}`, { cause: 'Empty response from APIM MDM' });
+      throw new Error(`Empty number generator response received for deal ${dealId}`, {
+        cause: 'Empty response from APIM MDM',
+      });
     }
 
     const { maskedId: ukefId } = data[0];
@@ -74,7 +81,7 @@ export const getNumber = async (req: Request, res: Response): Promise<Response<N
       data,
     });
   } catch (error: any) {
-    console.error('❌ Error getting number from number generator: %o', error);
+    console.error('❌ Error getting number from number generator %o', error);
 
     if (error instanceof InvalidEntityTypeError) {
       return res.status(HttpStatusCode.BadRequest).send({

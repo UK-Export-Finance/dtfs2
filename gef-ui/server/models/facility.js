@@ -1,13 +1,8 @@
-const {
-  getFacility,
-  getApplication,
-} = require('../services/api');
+const { getFacility, getApplication } = require('../services/api');
 const { FACILITY_TYPE } = require('../constants');
 
 class Facility {
-  static async find({
-    dealId, facilityId, status, user, userToken,
-  }) {
+  static async find({ dealId, facilityId, status, user, userToken }) {
     try {
       const { details } = await getFacility({ facilityId, userToken });
       const { bank } = await getApplication({ dealId, userToken });
@@ -36,7 +31,7 @@ class Facility {
         feeType: details.feeType,
       };
     } catch (error) {
-      console.info('GEF Facility model error %s', error);
+      console.info('GEF Facility model error %o', error);
       throw new Error('GEF Facility model error');
     }
   }

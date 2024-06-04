@@ -16,7 +16,7 @@ const labelCase = (label) => label.charAt(0).toUpperCase() + label.substring(1).
  * @param {Object} record ACBS response object
  * @returns {Integer} EPOCH time without the milliseconds
  */
-const getTimestamp = (record) => (new Date(record.receivedFromACBS).valueOf()) / 1000;
+const getTimestamp = (record) => new Date(record.receivedFromACBS).valueOf() / 1000;
 
 /**
  * Returns activity compatible author object
@@ -39,14 +39,14 @@ const getComments = (role, deal) => {
   if (deal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS && deal.dealSnapshot.comments) {
     const comments = deal.dealSnapshot.comments.filter((comment) => comment.user.roles.includes(role));
     if (comments.length > 0) {
-      return comments[(comments.length - 1)].text;
+      return comments[comments.length - 1].text;
     }
   }
 
   if (deal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF && deal.dealSnapshot.comments) {
     const comments = deal.dealSnapshot.comments.filter((comment) => comment.roles.includes(role));
     if (comments.length > 0) {
-      return comments[(comments.length - 1)].comment;
+      return comments[comments.length - 1].comment;
     }
   }
   return '';
@@ -120,7 +120,7 @@ const getActivities = (deal) => {
     }
     return activities;
   } catch (error) {
-    console.error('Error creating activity object. %s', error);
+    console.error('Error creating activity object. %o', error);
   }
   return {};
 };

@@ -2,6 +2,7 @@ const stream = require('stream');
 const { ObjectId } = require('mongodb');
 const filesize = require('filesize');
 
+const { generatePortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const File = require('../models/files');
@@ -89,7 +90,9 @@ exports.create = async (req, res) => {
         const fileObject = { ...file, documentPath };
 
         const collection = await db.getCollection(filesCollection);
-        const insertedFile = await collection.insertOne(new File(fileObject, parentId));
+        const insertedFile = await collection.insertOne(
+          new File(fileObject, parentId, generatePortalUserAuditDatabaseRecord(req.user._id)),
+        );
         const insertedId = String(insertedFile.insertedId);
 
         if (!ObjectId.isValid(insertedId)) {
@@ -108,7 +111,7 @@ exports.create = async (req, res) => {
 
     return res.status(status).send(processedFiles);
   } catch (error) {
-    console.error('Error uploading file(s): %s', error);
+    console.error('Error uploading file(s) %o', error);
     return res.status(500).send('An error occurred while uploading the file');
   }
 };
@@ -174,7 +177,7 @@ exports.downloadFile = async (req, res) => {
 
     return readStream.pipe(res);
   } catch (error) {
-    console.error('Error downloading file: %s', error);
+    console.error('Error downloading file %o', error);
     return res.status(error?.code || 500).send('An error occurred while downloading the file');
   }
 };
@@ -200,7 +203,7 @@ exports.delete = async (req, res) => {
     const response = await collection.findOneAndDelete({ _id: { $eq: ObjectId(file._id) } });
     return res.status(utils.mongoStatus(response)).send(response.value);
   } catch (error) {
-    console.error('Error deleting file: %s', error);
+    console.error('Error deleting file %o', error);
     return res.status(error?.code || 500).send('An error occurred while deleting the file');
   }
 };

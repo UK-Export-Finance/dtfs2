@@ -1,5 +1,6 @@
 const { format, getUnixTime } = require('date-fns');
 const commaNumber = require('comma-number');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../api');
 const { findOneTfmDeal } = require('./deal.controller');
 const facilityMapper = require('../rest-mappings/facility');
@@ -19,10 +20,10 @@ const getFacility = async (req, res) => {
     const tfmFacility = facilityMapper(facility, dealSnapshot, dealTfm);
 
     return res.status(200).send({
-      facility: tfmFacility
+      facility: tfmFacility,
     });
   } catch (error) {
-    console.error('Error fetching facility %O', error);
+    console.error('Error fetching facility %o', error);
     return res.status(500).send(error.message);
   }
 };
@@ -35,7 +36,7 @@ const getFacilities = async (req, res) => {
       return res.status(400).send();
     }
 
-    const dbFacilities = await api.getAllFacilities(queryParams);
+    const { facilities: dbFacilities, pagination } = await api.getAllFacilities({ queryParams });
 
     const facilities = dbFacilities.map((dbFacility) => {
       const { tfmFacilities: facility } = dbFacility;
@@ -80,9 +81,9 @@ const getFacilities = async (req, res) => {
       return facility;
     });
 
-    return res.status(200).send({ tfmFacilities: facilities });
+    return res.status(200).send({ facilities, pagination });
   } catch (error) {
-    console.error('Error fetching facilities %O', error);
+    console.error('Error fetching facilities %o', error);
     return res.status(500).send(error.message);
   }
 };
@@ -91,12 +92,16 @@ const updateFacility = async (req, res) => {
   const { facilityId } = req.params;
   const facilityUpdate = req.body;
   try {
-    const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
+    const updatedFacility = await api.updateFacility({
+      facilityId,
+      tfmUpdate: facilityUpdate,
+      auditDetails: generateTfmAuditDetails(req.user._id),
+    });
     return res.status(200).send({
-      updateFacility: updatedFacility.tfm
+      updateFacility: updatedFacility.tfm,
     });
   } catch (error) {
-    console.error('Unable to update facility: %O', error);
+    console.error('Unable to update facility %o', error);
     return res.status(500).send({ data: 'Unable to update facility' });
   }
 };
@@ -111,22 +116,10 @@ const getAllFacilities = async (searchString) => {
   return allFacilities;
 };
 
-const updateTfmFacility = async (facilityId, tfmUpdate) => {
-  const updatedFacility = await api.updateFacility(facilityId, tfmUpdate);
-  return updatedFacility.tfm;
-};
-
-const updateTfmFacilityRiskProfile = async (facilityId, tfmUpdate) => {
-  const updatedFacility = await api.updateFacility(facilityId, tfmUpdate);
-  return updatedFacility.tfm;
-};
-
 module.exports = {
   getFacility,
   getFacilities,
   updateFacility,
   getAllFacilities,
   findOneFacility,
-  updateTfmFacility,
-  updateTfmFacilityRiskProfile,
 };

@@ -4,7 +4,7 @@ import api from '../../api';
 import { getUtilisationReportDownload } from './get-utilisation-report-download.controller';
 import fileshare from '../../../drivers/fileshare';
 import { FILESHARES } from '../../../constants';
-import { UtilisationReportResponseBody } from '../../api-response-types/UtilisationReportResponseBody';
+import { UtilisationReportResponseBody } from '../../api-response-types/utilisation-report-response-body';
 
 jest.mock('../../api');
 jest.mock('../../../drivers/fileshare');

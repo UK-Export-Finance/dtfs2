@@ -48,7 +48,10 @@ const getLastUploadedReportDetails = async (userToken, bankId) => {
   const nextReportPeriod = await api.getNextReportPeriodByBankId(userToken, bankId);
   const formattedNextReportPeriod = getFormattedReportPeriodWithLongMonth(nextReportPeriod);
 
-  const nextReportPeriodSubmissionEndDate = addMonths(new Date(nextReportPeriod.end.year, nextReportPeriod.end.month - 1), 1);
+  const nextReportPeriodSubmissionEndDate = addMonths(
+    new Date(nextReportPeriod.end.year, nextReportPeriod.end.month - 1),
+    1,
+  );
   const nextReportPeriodSubmissionStart = format(startOfMonth(nextReportPeriodSubmissionEndDate), 'd MMMM yyyy');
 
   return { ...reportAndUserDetails, formattedNextReportPeriod, nextReportPeriodSubmissionStart };
@@ -125,7 +128,9 @@ const postUtilisationReportUpload = async (req, res) => {
           href: '#utilisation-report-file-upload',
         },
       ];
-      const extractDataError = { text: 'The selected file could not be uploaded, try again and make sure it is not password protected' };
+      const extractDataError = {
+        text: 'The selected file could not be uploaded, try again and make sure it is not password protected',
+      };
       const dueReportPeriods = await getDueReportPeriodsByBankId(userToken, bankId);
       return renderPageWithError(req, res, extractDataErrorSummary, extractDataError, dueReportPeriods);
     }
@@ -186,7 +191,14 @@ const postReportConfirmAndSend = async (req, res) => {
 
     const mappedReportData = removeCellAddressesFromArray(reportData);
 
-    const response = await api.uploadUtilisationReportData(user, reportPeriod, mappedReportData, fileBuffer, formattedReportPeriod, userToken);
+    const response = await api.uploadUtilisationReportData(
+      user,
+      reportPeriod,
+      mappedReportData,
+      fileBuffer,
+      formattedReportPeriod,
+      userToken,
+    );
 
     if (response?.status === 200 || response?.status === 201) {
       const { paymentOfficerEmails } = response.data;
@@ -196,10 +208,10 @@ const postReportConfirmAndSend = async (req, res) => {
       };
       return res.redirect('/utilisation-report-upload/confirmation');
     }
-    console.error('Error saving utilisation report: %O', response);
+    console.error('Error saving utilisation report %o', response);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   } catch (error) {
-    console.error('Error saving utilisation report: %O', error);
+    console.error('Error saving utilisation report %o', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };

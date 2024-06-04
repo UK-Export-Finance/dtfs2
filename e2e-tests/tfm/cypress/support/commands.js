@@ -7,9 +7,15 @@ Cypress.Commands.add('login', require('./ui/logIn'));
 // commands used to interact directly with Deal API
 // NOTE: this will eventually become TFM API, that calls Deal API.
 // right now we only have TFM API that can find a deal, Portal API does the rest.
-Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', require('./portal-api/overridePortalUserSignInTokenWithValidTokenByUsername'));
+Cypress.Commands.add(
+  'overridePortalUserSignInTokenWithValidTokenByUsername',
+  require('./portal-api/overridePortalUserSignInTokenWithValidTokenByUsername'),
+);
 Cypress.Commands.add('getUserByUsername', require('./portal-api/getUserByUsername'));
-Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal-api/resetPortalUserStatusAndNumberOfSignInLinks'));
+Cypress.Commands.add(
+  'resetPortalUserStatusAndNumberOfSignInLinks',
+  require('./portal-api/resetPortalUserStatusAndNumberOfSignInLinks'),
+);
 
 Cypress.Commands.add('insertOneDeal', require('./portal-api/insertOneDeal'));
 Cypress.Commands.add('insertManyDeals', require('./portal-api/insertManyDeals'));
@@ -30,3 +36,20 @@ Cypress.Commands.add('submitManyDeals', require('./trade-finance-manager-api/sub
 Cypress.Commands.add('getUser', require('./trade-finance-manager-api/getUser'));
 
 Cypress.Commands.add('typeWithoutDelay', { prevSubject: true }, require('./ui/type-without-delay'));
+Cypress.Commands.add('insertManyTfmDealsIntoDb', require('./trade-finance-manager-api/insertManyTfmDealsIntoDb'));
+Cypress.Commands.add('deleteAllTfmDealsFromDb', require('./trade-finance-manager-api/deleteAllTfmDealsFromDb'));
+Cypress.Commands.add(
+  'insertManyTfmFacilitiesAndTwoLinkedDealsIntoDb',
+  require('./trade-finance-manager-api/insertManyTfmFacilitiesAndTwoLinkedDealsIntoDb'),
+);
+Cypress.Commands.add(
+  'deleteAllTfmFacilitiesFromDb',
+  require('./trade-finance-manager-api/deleteAllTfmFacilitiesFromDb'),
+);
+Cypress.Commands.add('checkDealIdCells', require('./trade-finance-manager-api/checkDealIdCells'));
+Cypress.Commands.add('checkDealsTableRowsTotal', require('./trade-finance-manager-api/checkDealsTableRowsTotal'));
+Cypress.Commands.add('checkFacilityIdCells', require('./trade-finance-manager-api/checkFacilityIdCells'));
+Cypress.Commands.add(
+  'checkFacilitiesTableRowsTotal',
+  require('./trade-finance-manager-api/checkFacilitiesTableRowsTotal'),
+);

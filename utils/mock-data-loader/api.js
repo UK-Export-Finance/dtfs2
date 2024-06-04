@@ -8,9 +8,7 @@ const ApiError = require('./errors/api.error');
 const FailedToDeleteBankError = require('./errors/failed-to-delete-bank.error');
 const FailedToGetBanksError = require('./errors/get-banks.error');
 
-const {
-  PORTAL_API_URL, PORTAL_API_KEY, TFM_API_URL, TFM_API_KEY
-} = process.env;
+const { PORTAL_API_URL, PORTAL_API_KEY, TFM_API_URL, TFM_API_KEY } = process.env;
 
 const createBank = async (bank, token) => {
   const response = await axios({
@@ -189,7 +187,7 @@ const createInitialTfmUser = async (user) => {
     },
     data: user,
   }).catch((error) => {
-    throw FailedToCreateUserError({ username: user.username, cause: error });
+    throw new FailedToCreateUserError({ username: user.username, cause: error });
   });
 };
 
@@ -343,7 +341,7 @@ const listBanks = async (token) => {
     },
     url: `${PORTAL_API_URL}/v1/banks`,
   }).catch((error) => {
-    FailedToGetBanksError({ cause: error });
+    throw new FailedToGetBanksError({ cause: error });
   });
 
   return response.data.banks;

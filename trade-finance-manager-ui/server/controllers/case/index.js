@@ -231,7 +231,9 @@ const formatAmendmentDetails = (allAmendments) => {
       item.value = value?.value ? `${value.currency} ${formattedNumber(value.value)}` : null;
       item.requireUkefApproval = value?.requireUkefApproval ? 'Yes' : 'No';
       // if bankDecision submitted, then adds decision, else adds awaiting decision (locally)
-      item.banksDecision = value?.bankDecision?.submitted ? value?.bankDecision?.decision : AMENDMENTS.AMENDMENT_BANK_DECISION.AWAITING_DECISION;
+      item.banksDecision = value?.bankDecision?.submitted
+        ? value?.bankDecision?.decision
+        : AMENDMENTS.AMENDMENT_BANK_DECISION.AWAITING_DECISION;
       // checks if coverEndDate/facility value or both on an amendment request are declined
       if (value?.ukefDecision?.submitted) {
         if (ukefDecisionRejected(value)) {
@@ -250,9 +252,15 @@ const formatAmendmentDetails = (allAmendments) => {
       item.bankDecisionTags = AMENDMENTS.BANK_DECISIONS_TAGS;
 
       if (value?.requireUkefApproval) {
-        item.ukefDecisionValue = value?.ukefDecision?.submitted ? value?.ukefDecision?.value : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
-        item.ukefDecisionCoverEndDate = value?.ukefDecision?.submitted ? value?.ukefDecision?.coverEndDate : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
-        item.effectiveDate = value?.bankDecision?.effectiveDate ? format(fromUnixTime(item.bankDecision.effectiveDate), 'dd MMMM yyyy') : null;
+        item.ukefDecisionValue = value?.ukefDecision?.submitted
+          ? value?.ukefDecision?.value
+          : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
+        item.ukefDecisionCoverEndDate = value?.ukefDecision?.submitted
+          ? value?.ukefDecision?.coverEndDate
+          : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
+        item.effectiveDate = value?.bankDecision?.effectiveDate
+          ? format(fromUnixTime(item.bankDecision.effectiveDate), 'dd MMMM yyyy')
+          : null;
       } else {
         item.ukefDecisionValue = UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL;
         item.ukefDecisionCoverEndDate = UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL;
@@ -290,7 +298,8 @@ const getCaseFacility = async (req, res) => {
   const deal = await api.getDeal(dealId, userToken);
 
   const hasAmendmentInProgressButton = amendment.status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
-  const showContinueAmendmentButton = hasAmendmentInProgressButton && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
+  const showContinueAmendmentButton =
+    hasAmendmentInProgressButton && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
 
   const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
   const hasAmendmentInProgress = hasAmendmentInProgressDealStage(amendments);
@@ -357,7 +366,7 @@ const getCaseDocuments = async (req, res) => {
       amendmentsInProgress,
     });
   } catch (error) {
-    console.error('Error getCaseDocuments %s', error);
+    console.error('Error getCaseDocuments %o', error);
     return res.redirect('/not-found');
   }
 };
@@ -448,7 +457,10 @@ const confirmTfmFacility = async (req, res) => {
       api
         .getParty(urn, userToken)
         // Non-existent party urn
-        .then((company) => (!company?.data || company?.status !== 200 ? Promise.resolve(false) : Promise.resolve(true))));
+        .then((company) =>
+          !company?.data || company?.status !== 200 ? Promise.resolve(false) : Promise.resolve(true),
+        ),
+    );
 
     const responses = await Promise.all(companies);
     let invalidUrn = 0;
@@ -476,7 +488,7 @@ const confirmTfmFacility = async (req, res) => {
 
     return res.redirect(`/case/${dealId}/parties/${party}/summary`);
   } catch (error) {
-    console.error('Error posting bond party URN %s', error);
+    console.error('Error posting bond party URN %o', error);
     return res.redirect('/not-found');
   }
 };
@@ -537,7 +549,7 @@ const postTfmFacility = async (req, res) => {
 
     return res.redirect(`/case/${dealId}/parties`);
   } catch (error) {
-    console.error('Error posting bond party URN to TFM %s', error);
+    console.error('Error posting bond party URN to TFM %o', error);
     return res.redirect('/not-found');
   }
 };

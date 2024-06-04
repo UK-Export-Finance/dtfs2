@@ -19,7 +19,7 @@ const validateBank = async ({ dealId, bankId, userToken }) => {
     const { data } = await Axios.get('/validate/bank', { ...config(userToken), data: { dealId, bankId } });
     return data;
   } catch (error) {
-    console.error('Unable to validate the bank %s', error);
+    console.error('Unable to validate the bank %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to validate bank' };
   }
 };
@@ -79,16 +79,18 @@ const updateApplication = async ({ dealId, application, userToken }) => {
   }
 };
 
-const updateSupportingInformation = async ({
-  dealId, application, field, user, userToken,
-}) => {
+const updateSupportingInformation = async ({ dealId, application, field, user, userToken }) => {
   if (!isValidMongoId(dealId)) {
     console.error('updateSupportingInformation: API call failed for dealId %s', dealId);
     return false;
   }
 
   try {
-    const { data } = await Axios.put(`/gef/application/supporting-information/${dealId}`, { application, field, user }, config(userToken));
+    const { data } = await Axios.put(
+      `/gef/application/supporting-information/${dealId}`,
+      { application, field, user },
+      config(userToken),
+    );
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -121,10 +123,7 @@ const getFacilities = async ({ dealId, userToken }) => {
   }
 
   try {
-    const { data } = await Axios.get(
-      '/gef/facilities',
-      { ...config(userToken), params: { dealId } },
-    );
+    const { data } = await Axios.get('/gef/facilities', { ...config(userToken), params: { dealId } });
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -192,7 +191,7 @@ const getCompaniesHouseDetails = async ({ companyRegNumber, userToken }) => {
     const { data } = await Axios.get(`/gef/company/${companyRegNumber}`, config(userToken));
     return data;
   } catch (error) {
-    console.error('Unable to get company house details %s', error?.response?.data);
+    console.error('Unable to get company house details %o', error?.response?.data);
     return apiErrorHandler(error);
   }
 };
@@ -229,11 +228,14 @@ const getUserDetails = async ({ userId, userToken }) => {
   }
 };
 
-const uploadFile = async ({
-  files, id, userToken, maxSize: maxFileSize, documentPath,
-}) => {
+const uploadFile = async ({ files, id, userToken, maxSize: maxFileSize, documentPath }) => {
   if (!files?.length || !id || !userToken) {
-    console.error('uploadFile: API call failed for id %s, number of files %s, user token %s', id, files?.length, userToken);
+    console.error(
+      'uploadFile: API call failed for id %s, number of files %s, user token %s',
+      id,
+      files?.length,
+      userToken,
+    );
     return false;
   }
 
@@ -268,7 +270,7 @@ const uploadFile = async ({
 
     return data;
   } catch (error) {
-    console.error('GEF-UI - Error uploading file %s', error);
+    console.error('GEF-UI - Error uploading file %o', error);
     return apiErrorHandler(error);
   }
 };
@@ -281,7 +283,7 @@ const deleteFile = async ({ fileId, userToken, documentPath }) => {
     });
     return data;
   } catch (error) {
-    console.error('Unable to delete the file %s', error);
+    console.error('Unable to delete the file %o', error);
     return apiErrorHandler(error);
   }
 };
@@ -301,7 +303,7 @@ const downloadFile = async ({ fileId, userToken }) => {
     });
     return data;
   } catch (error) {
-    console.error('Unable to download the file %s', error);
+    console.error('Unable to download the file %o', error);
     return apiErrorHandler(error);
   }
 };

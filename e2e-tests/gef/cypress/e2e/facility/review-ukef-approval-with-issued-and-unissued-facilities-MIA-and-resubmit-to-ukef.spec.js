@@ -13,7 +13,11 @@ import {
   underwriterManagersDecision,
 } from '../../fixtures/mocks/mock-deals';
 
-import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
+import {
+  BANK1_MAKER1,
+  BANK1_CHECKER1,
+  BANK1_CHECKER1_WITH_MOCK_ID,
+} from '../../../../e2e-fixtures/portal-users.fixture';
 import {
   MOCK_FACILITY_ONE,
   MOCK_FACILITY_TWO_NULL_MIA,
@@ -37,45 +41,43 @@ let dealId;
 let token;
 let facilityTwoId;
 
-const unissuedFacilitiesArray = [
-  MOCK_FACILITY_ONE,
-  MOCK_FACILITY_THREE,
-  MOCK_FACILITY_FOUR,
-];
+const unissuedFacilitiesArray = [MOCK_FACILITY_ONE, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR];
 
-const issuedFacilities = [
-  MOCK_FACILITY_TWO_NULL_MIA,
-];
+const issuedFacilities = [MOCK_FACILITY_TWO_NULL_MIA];
 
 context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued facility', () => {
   before(() => {
-    cy.apiLogin(BANK1_MAKER1).then((t) => {
-      token = t;
-    }).then(() => {
-      // creates application and inserts facilities and changes status
-      cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
-        dealId = body._id;
-        cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA_DRAFT);
-        cy.submitDealAfterUkefIds(dealId, 'GEF', BANK1_CHECKER1);
-        cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA).then(() => {
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-            MOCK_FACILITY_ONE._id = facility.body.details._id;
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
+    cy.apiLogin(BANK1_MAKER1)
+      .then((t) => {
+        token = t;
+      })
+      .then(() => {
+        // creates application and inserts facilities and changes status
+        cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
+          dealId = body._id;
+          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA_DRAFT);
+          cy.submitDealAfterUkefIds(dealId, 'GEF', BANK1_CHECKER1_WITH_MOCK_ID);
+          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA).then(() => {
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+              MOCK_FACILITY_ONE._id = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
+            });
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+              facilityTwoId = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO_NULL_MIA);
+            });
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE),
+            );
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+            );
+            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS);
+            cy.addCommentObjToDeal(dealId, CONSTANTS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION, UKEF_DECISION);
           });
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-            facilityTwoId = facility.body.details._id;
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO_NULL_MIA);
-          });
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE));
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR));
-          cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS);
-          cy.addCommentObjToDeal(dealId, CONSTANTS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION, UKEF_DECISION);
+          cy.addUnderwriterCommentToTfm(dealId, underwriterManagersDecision);
         });
-        cy.addUnderwriterCommentToTfm(dealId, underwriterManagersDecision);
       });
-    });
   });
 
   describe('Review UKEF decision', () => {
@@ -142,24 +144,33 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
     it('checks correct status and review UKEF decision link exist', () => {
       statusBanner.bannerStatus().contains(CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS);
       applicationPreview.ukefReview().contains('Review UKEF decision');
-      applicationPreview.ukefReviewLink().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`/gef/application-details/${dealId}/review-decision`);
-      });
+      applicationPreview
+        .ukefReviewLink()
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal(`/gef/application-details/${dealId}/review-decision`);
+        });
     });
 
     it('clicking review UKEF decision displays correct page', () => {
       applicationPreview.ukefReviewLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/review-decision`));
       applicationPreview.ukefReviewHeading().contains('Review UKEF decision');
-      applicationPreview.reviewDecision().contains('Do you want to accept these conditions and proceed with UKEF cover?');
+      applicationPreview
+        .reviewDecision()
+        .contains('Do you want to accept these conditions and proceed with UKEF cover?');
     });
 
     it('clicking yes, accept and proceed takes you to cover-start-date page', () => {
       applicationPreview.ukefReviewLink().click();
       // shows error message do not click yes radio button
       applicationPreview.reviewDecisionContinue().click();
-      applicationPreview.errorSummary().contains('Select yes if you want to accept the conditions and proceed with UKEF cover.');
-      applicationPreview.reviewDecisionError('Select yes if you want to accept the conditions and proceed with UKEF cover.');
+      applicationPreview
+        .errorSummary()
+        .contains('Select yes if you want to accept the conditions and proceed with UKEF cover.');
+      applicationPreview.reviewDecisionError(
+        'Select yes if you want to accept the conditions and proceed with UKEF cover.',
+      );
 
       applicationPreview.reviewDecisionTrue().click();
       applicationPreview.reviewDecisionContinue().click();
@@ -169,13 +180,17 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       coverStartDate.updateIndividualCoverStartDateButton(0).click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
-      coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
+      coverStartDate
+        .coverStartDateScreen()
+        .contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
     });
 
     it('entering cover date correctly shows success message and redirects to unissued facilities table', () => {
       cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
 
-      coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
+      coverStartDate
+        .coverStartDateScreen()
+        .contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
 
       coverStartDate.coverStartDateNo().click();
 
@@ -202,7 +217,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
     it('entering cover date in past on confirm cover start date shows an error', () => {
       cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
-      coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
+      coverStartDate
+        .coverStartDateScreen()
+        .contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
 
       coverStartDate.coverStartDateNo().click();
 
@@ -222,7 +239,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
     it('entering cover date over three months away on confirm cover start date shows an error', () => {
       cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
-      coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
+      coverStartDate
+        .coverStartDateScreen()
+        .contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
 
       coverStartDate.coverStartDateNo().click();
 
@@ -268,14 +287,24 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
     it('pressing submit button takes you to submit page and with correct panel once submitted to checker', () => {
       // check correct accepting conditions message is shown
-      applicationPreview.acceptMIADecision().contains('You are proceeding with UKEF cover and accepting the following conditions:');
+      applicationPreview
+        .acceptMIADecision()
+        .contains('You are proceeding with UKEF cover and accepting the following conditions:');
 
       applicationPreview.submitButtonPostApproval().click();
-      applicationSubmission.submissionText().contains(`Someone at your bank must check your ${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} before they can submit it to UKEF.`);
+      applicationSubmission
+        .submissionText()
+        .contains(
+          `Someone at your bank must check your ${toTitleCase(
+            CONSTANTS.DEAL_SUBMISSION_TYPE.MIA,
+          )} before they can submit it to UKEF.`,
+        );
       applicationSubmission.submitButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
-      applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
+      applicationSubmission
+        .confirmationPanelTitle()
+        .contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
     });
   });
 });
@@ -291,7 +320,9 @@ context('Return to maker', () => {
     it('should show changed facilities in task comments box with correct heading for reviewing UKEF decision', () => {
       applicationPreview.miaStageChecker().contains('Check manual inclusion application before submitting to UKEF');
       applicationPreview.acceptMIADecision().contains('You are accepting the following conditions:');
-      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
+      applicationPreview
+        .updatedUnissuedFacilitiesHeader()
+        .contains('The following facility stages have been updated to issued:');
     });
 
     it('should show correct status', () => {
@@ -368,7 +399,7 @@ context('Return to maker', () => {
    * log in as maker as application is on Further Maker's input required
    * ensure application details page is locked apart from unissued facilities section
    * submit to checker
-  */
+   */
   describe('Check application details page works as expected with correct fields unlocked', () => {
     beforeEach(() => {
       cy.saveSession();
@@ -378,7 +409,9 @@ context('Return to maker', () => {
 
     it('Statuses and banners should correct text', () => {
       statusBanner.bannerStatus().contains(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED);
-      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
+      applicationPreview
+        .updatedUnissuedFacilitiesHeader()
+        .contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
     });
 
@@ -463,7 +496,9 @@ context('Return to maker', () => {
     it('should be able to submit to checker after making changes', () => {
       applicationDetails.submitButton().click();
       applicationSubmission.submitButton().click();
-      applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
+      applicationSubmission
+        .confirmationPanelTitle()
+        .contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
     });
   });
 });
@@ -473,7 +508,7 @@ context('Return to maker', () => {
  * ensure everything locked
  * submit to UKEF
  * ensure correct success message and text are shown
-*/
+ */
 context('Submit to UKEF', () => {
   describe('Check all fields are populated and return to maker', () => {
     beforeEach(() => {
@@ -483,7 +518,9 @@ context('Submit to UKEF', () => {
     });
 
     it('should show changed facilities in task comments box with correct heading including newly issued', () => {
-      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
+      applicationPreview
+        .updatedUnissuedFacilitiesHeader()
+        .contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
     });
 
@@ -496,9 +533,13 @@ context('Submit to UKEF', () => {
       applicationPreview.submitButton().click();
       applicationSubmission.confirmSubmissionCheckbox().click();
       applicationSubmission.submitButton().click();
-      applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIN)} submitted to UKEF`);
+      applicationSubmission
+        .confirmationPanelTitle()
+        .contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIN)} submitted to UKEF`);
       // check that correct text is displayed under confirmation panel
-      applicationSubmission.confirmationText().contains('We\'ll send you a confirmation email shortly, once we\'ve acknowledged your inclusion notice.');
+      applicationSubmission
+        .confirmationText()
+        .contains("We'll send you a confirmation email shortly, once we've acknowledged your inclusion notice.");
     });
   });
 });
@@ -508,7 +549,7 @@ context('Submit to UKEF', () => {
  * Should contain Bank facility stage changed
  * Should contain links and tags
  * Should not contain already issued facilities
-*/
+ */
 context('Check activity feed', () => {
   describe('Check activity feed contains the correct facility issued activity', () => {
     beforeEach(() => {
@@ -522,14 +563,23 @@ context('Check activity feed', () => {
       applicationActivities.activityTimeline().contains('Bank facility stage changed');
 
       // contains submission message
-      applicationActivities.activityTimeline().contains(`${CONSTANTS.PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+      applicationActivities
+        .activityTimeline()
+        .contains(
+          `${CONSTANTS.PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`,
+        );
 
       // first facility issued activity
-      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[0].ukefFacilityId).contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
-      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[0].ukefFacilityId).contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+      applicationActivities
+        .facilityActivityChangedBy(unissuedFacilitiesArray[0].ukefFacilityId)
+        .contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
+      applicationActivities
+        .facilityActivityCheckedBy(unissuedFacilitiesArray[0].ukefFacilityId)
+        .contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
       applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Unissued');
       applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Issued');
-      applicationActivities.facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId)
+      applicationActivities
+        .facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId)
         .contains(`${unissuedFacilitiesArray[0].type} facility ${unissuedFacilitiesArray[0].ukefFacilityId}`);
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId).click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[0]._id}`));

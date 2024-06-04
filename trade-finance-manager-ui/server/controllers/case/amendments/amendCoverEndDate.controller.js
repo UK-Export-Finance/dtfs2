@@ -25,7 +25,11 @@ const getAmendCoverEndDate = async (req, res) => {
   }
 
   const facility = await api.getFacility(facilityId, userToken);
-  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(facilityId, amendmentId, userToken);
+  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(
+    facilityId,
+    amendmentId,
+    userToken,
+  );
 
   let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
 
@@ -51,7 +55,11 @@ const postAmendCoverEndDate = async (req, res) => {
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId } = amendment;
   const facility = await api.getFacility(facilityId, userToken);
-  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(facilityId, amendmentId, userToken);
+  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(
+    facilityId,
+    amendmentId,
+    userToken,
+  );
 
   let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
 
@@ -79,7 +87,7 @@ const postAmendCoverEndDate = async (req, res) => {
   try {
     let formatCurrentCoverEndDate = currentCoverEndDate;
     // convert the current end date to EPOCH format
-    formatCurrentCoverEndDate = getUnixTime((new Date(formatCurrentCoverEndDate)).setHours(2, 2, 2, 2));
+    formatCurrentCoverEndDate = getUnixTime(new Date(formatCurrentCoverEndDate).setHours(2, 2, 2, 2));
     const payload = { coverEndDate, currentCoverEndDate: formatCurrentCoverEndDate };
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
@@ -92,7 +100,7 @@ const postAmendCoverEndDate = async (req, res) => {
     console.error('Unable to update the cover end date');
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   } catch (error) {
-    console.error('There was a problem adding the cover end date %s', error);
+    console.error('There was a problem adding the cover end date %o', error);
     return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}#amendments`);
   }
 };
