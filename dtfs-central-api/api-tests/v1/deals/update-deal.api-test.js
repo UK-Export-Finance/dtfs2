@@ -1,3 +1,4 @@
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deal-builder');
@@ -44,11 +45,14 @@ describe('/v1/portal/deals', () => {
         },
       };
 
+      const expectedAuditRecord = generateParsedMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id);
+      const expectedResponse = { ...updatedDeal, auditRecord: expectedAuditRecord };
+
       const { status, body } = await api.put({ dealUpdate: updatedDeal, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
 
-      expect(body).toEqual(expectAddedFieldsWithEditedBy(updatedDeal, MOCK_PORTAL_USER));
+      expect(body).toEqual(expectAddedFieldsWithEditedBy(expectedResponse, MOCK_PORTAL_USER));
     });
 
     it('handles partial updates', async () => {
@@ -61,6 +65,7 @@ describe('/v1/portal/deals', () => {
           mockNewField: true,
         },
       };
+      const expectedAuditRecord = generateParsedMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id);
 
       const expectedDataIncludingUpdate = {
         ...newDeal,
@@ -70,6 +75,7 @@ describe('/v1/portal/deals', () => {
           ...newDeal.eligibility,
           mockNewField: true,
         },
+        auditRecord: expectedAuditRecord,
       };
 
       const { status: putStatus } = await api.put({ dealUpdate: partialUpdate, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
@@ -91,13 +97,16 @@ describe('/v1/portal/deals', () => {
         additionalRefName: 'change this field',
       };
 
+      const expectedAuditRecord = generateParsedMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id);
+      const expectedResponse = { ...updatedDeal, auditRecord: expectedAuditRecord };
+
       await api.put({ dealUpdate: updatedDeal, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
 
       const { status, body } = await api.get(`/v1/portal/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
 
-      expect(body.deal).toEqual(expectAddedFieldsWithEditedBy(updatedDeal, MOCK_PORTAL_USER));
+      expect(body.deal).toEqual(expectAddedFieldsWithEditedBy(expectedResponse, MOCK_PORTAL_USER));
     });
 
     it('adds updates and retains `editedBy` array with user data', async () => {
@@ -108,6 +117,8 @@ describe('/v1/portal/deals', () => {
         additionalRefName: 'change this field',
       };
 
+      const expectedAuditRecord = generateParsedMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id);
+
       await api.put({ dealUpdate: firstUpdate, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
 
       const dealAfterFirstUpdate = await api.get(`/v1/portal/deals/${createdDeal._id}`);
@@ -116,6 +127,7 @@ describe('/v1/portal/deals', () => {
         ...dealAfterFirstUpdate.body.deal,
         additionalRefName: 'change this field again',
       };
+      const expectedResponse = { ...secondUpdate, auditRecord: expectedAuditRecord };
 
       await api.put({ dealUpdate: secondUpdate, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
 
@@ -123,8 +135,8 @@ describe('/v1/portal/deals', () => {
       expect(dealAfterSecondUpdate.status).toEqual(200);
 
       expect(dealAfterSecondUpdate.body.deal.editedBy.length).toEqual(2);
-      expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, MOCK_PORTAL_USER, 1).editedBy[0]);
-      expect(dealAfterSecondUpdate.body.deal.editedBy[1]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, MOCK_PORTAL_USER, 2).editedBy[1]);
+      expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(expectAddedFieldsWithEditedBy(expectedResponse, MOCK_PORTAL_USER, 1).editedBy[0]);
+      expect(dealAfterSecondUpdate.body.deal.editedBy[1]).toEqual(expectAddedFieldsWithEditedBy(expectedResponse, MOCK_PORTAL_USER, 2).editedBy[1]);
     });
   });
 });
