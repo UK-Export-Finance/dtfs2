@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
@@ -692,6 +692,7 @@ describe(baseUrl, () => {
           timezone: aChecker.timezone,
           lastLogin: expect.any(String),
           'user-status': STATUS.ACTIVE,
+          isTrusted: aChecker.isTrusted,
         };
 
         expect(tfmDealSubmitSpy.mock.calls[0][0]).toEqual(dealId);

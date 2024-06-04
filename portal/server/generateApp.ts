@@ -8,11 +8,11 @@ import csrf from 'csurf';
 import flash from 'connect-flash';
 import connectRedis from 'connect-redis';
 import { isHttpError } from 'http-errors';
+import { InvalidEnvironmentVariableError } from '@ukef/dtfs2-common';
 import routes from './routes';
 import healthcheck from './healthcheck';
 import configureNunjucks from './nunjucks-configuration';
 import { csrfToken, copyCsrfTokenFromQueryToBody, seo, security, createRateLimit } from './routes/middleware';
-import InvalidEnvironmentVariableError from './errors/invalid-environment-variable.error';
 import { asLoggedInUserSession, withUnknownLoginStatusUserSession } from './helpers/express-session';
 
 const MAX_CSRF_COOKIE_AGE = 43200; // 12 hours

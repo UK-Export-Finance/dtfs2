@@ -17,3 +17,9 @@ export type UtilisationReportReconciliationSummary = {
   submissionMonth: IsoMonthStamp;
   items: UtilisationReportReconciliationSummaryItem[];
 };
+
+export type UtilisationReportSearchSummary = {
+  bankName: string;
+  year: string;
+  reports: UtilisationReportReconciliationSummaryItem[];
+};

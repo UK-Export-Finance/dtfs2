@@ -1,11 +1,14 @@
-import { CurrencyAndAmount, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
+import { Currency, CurrencyAndAmount, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { mapFeeRecordItemsToFeeRecordViewModelItems } from './reconciliation-for-report-helper';
 import { FeeRecordItem } from '../../../api-response-types';
 import { aFeeRecordItem } from '../../../../test-helpers';
 import { SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
+import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 
 describe('reconciliation-for-report-helper', () => {
   describe('mapFeeRecordItemsToFeeRecordViewModelItems', () => {
+    const DEFAULT_IS_CHECKBOX_SELECTED = () => false;
+
     it('maps the fee record facility id, exporter and status to the view model item', () => {
       // Arrange
       const facilityId = '12345678';
@@ -22,7 +25,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems);
+      const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(feeRecordViewModelItems).toHaveLength(1);
@@ -47,7 +50,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems);
+      const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(feeRecordViewModelItems).toHaveLength(1);
@@ -102,7 +105,7 @@ describe('reconciliation-for-report-helper', () => {
         ];
 
         // Act
-        const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems);
+        const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems, DEFAULT_IS_CHECKBOX_SELECTED);
 
         // Assert
         expect(feeRecordViewModelItems).toHaveLength(1);
@@ -142,7 +145,7 @@ describe('reconciliation-for-report-helper', () => {
 
         it("sets the 'dataSortValue' such that the items are ordered alphabetically by currency and numerically by amount in ascending order", () => {
           // Act
-          const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems);
+          const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems, DEFAULT_IS_CHECKBOX_SELECTED);
 
           // Assert
           SORTED_AND_FORMATTED_CURRENCY_AND_AMOUNTS.forEach(({ dataSortValue }, index) => {
@@ -152,7 +155,7 @@ describe('reconciliation-for-report-helper', () => {
 
         it("sets the 'formattedCurrencyAndAmount' to be the currency followed by the amount using two decimal places and comma-separated thousands", () => {
           // Act
-          const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems);
+          const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems, DEFAULT_IS_CHECKBOX_SELECTED);
 
           // Assert
           SORTED_AND_FORMATTED_CURRENCY_AND_AMOUNTS.forEach(({ formattedCurrencyAndAmount }, index) => {
@@ -187,7 +190,7 @@ describe('reconciliation-for-report-helper', () => {
           }));
 
           // Act
-          const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems);
+          const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems, DEFAULT_IS_CHECKBOX_SELECTED);
 
           // Assert
           expect(feeRecordViewModelItems).toHaveLength(feeRecordItems.length);
@@ -196,6 +199,57 @@ describe('reconciliation-for-report-helper', () => {
           });
         },
       );
+    });
+
+    describe("when a specific 'isCheckboxSelected' function is specified", () => {
+      const FEE_RECORD_ID = 1;
+      const PAYMENTS_RECEIVED_CURRENCY: Currency = 'GBP';
+      const STATUS: FeeRecordStatus = 'TO_DO';
+
+      const CHECKED_FEE_RECORD_CHECKBOX_ID: PremiumPaymentsTableCheckboxId = `feeRecordId-${FEE_RECORD_ID}-reportedPaymentsCurrency-${PAYMENTS_RECEIVED_CURRENCY}-status-${STATUS}`;
+      const IS_CHECKBOX_SELECTED = (checkboxId: string) => checkboxId === CHECKED_FEE_RECORD_CHECKBOX_ID;
+
+      it("sets the 'isChecked' property to false when the fee record item does not match the checked checkbox id", () => {
+        // Arrange
+        const feeRecordItems: FeeRecordItem[] = [
+          {
+            ...aFeeRecordItem(),
+            id: 2,
+            paymentsReceived: {
+              amount: 100.0,
+              currency: 'EUR',
+            },
+            status: 'DOES_NOT_MATCH',
+          },
+        ];
+
+        // Act
+        const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems, IS_CHECKBOX_SELECTED);
+
+        // Assert
+        expect(feeRecordViewModelItems[0].isChecked).toBe(false);
+      });
+
+      it("sets the 'isChecked' property to true when the fee record item does match the checked checkbox id", () => {
+        // Arrange
+        const feeRecordItems: FeeRecordItem[] = [
+          {
+            ...aFeeRecordItem(),
+            id: FEE_RECORD_ID,
+            reportedPayments: {
+              amount: 100.0,
+              currency: PAYMENTS_RECEIVED_CURRENCY,
+            },
+            status: STATUS,
+          },
+        ];
+
+        // Act
+        const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems, IS_CHECKBOX_SELECTED);
+
+        // Assert
+        expect(feeRecordViewModelItems[0].isChecked).toBe(true);
+      });
     });
   });
 });

@@ -109,6 +109,7 @@ describe('a user', () => {
                 surname: MOCK_USER.surname,
                 timezone: 'Europe/London',
                 'user-status': STATUS.ACTIVE,
+                isTrusted: MOCK_USER.isTrusted,
               },
             ]),
           }),

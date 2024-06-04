@@ -48,13 +48,14 @@ module.exports.updateFacility = (facilityId, facilityUpdate, user) =>
       return resp.body;
     });
 
-module.exports.deleteFacility = (facilityId, user) =>
+module.exports.deleteFacility = (facilityId, user, auditDetails) =>
   cy
     .request({
       method: 'DELETE',
       url: `${api()}/v1/portal/facilities/${facilityId}`,
       body: {
         user,
+        auditDetails,
       },
       headers,
     })

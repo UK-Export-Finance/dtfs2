@@ -1,4 +1,5 @@
 import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '../../sql-db-entities';
+import { PaymentEntity } from '../../sql-db-entities/payment';
 import { Currency, FeeRecordStatus } from '../../types';
 
 export class FeeRecordEntityMockBuilder {
@@ -30,6 +31,7 @@ export class FeeRecordEntityMockBuilder {
     data.paymentCurrency = 'GBP';
     data.paymentExchangeRate = 1;
     data.status = 'TO_DO';
+    data.payments = [];
     data.updateLastUpdatedBy(requestSource);
     return new FeeRecordEntityMockBuilder(data);
   }
@@ -96,6 +98,11 @@ export class FeeRecordEntityMockBuilder {
 
   public withStatus(status: FeeRecordStatus): FeeRecordEntityMockBuilder {
     this.feeRecord.status = status;
+    return this;
+  }
+
+  public withPayments(payments: PaymentEntity[]): FeeRecordEntityMockBuilder {
+    this.feeRecord.payments = payments;
     return this;
   }
 

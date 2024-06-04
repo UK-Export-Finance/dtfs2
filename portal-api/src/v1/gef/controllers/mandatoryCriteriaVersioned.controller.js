@@ -1,3 +1,5 @@
+const { PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
@@ -5,8 +7,6 @@ const { MandatoryCriteria } = require('../models/mandatoryCriteria');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const api = require('../../api');
-const { PAYLOAD } = require('../../../constants');
-const payloadVerification = require('../../helpers/payload');
 
 const collectionName = 'gef-mandatoryCriteriaVersioned';
 
@@ -42,7 +42,7 @@ const findOneMandatoryCriteria = async (id, callback) => {
 exports.create = async (req, res) => {
   const collection = await db.getCollection(collectionName);
 
-  if (!payloadVerification(req.body, PAYLOAD.CRITERIA.MANDATORY.VERSIONED)) {
+  if (!isVerifiedPayload({ payload: req.body, template: PAYLOAD_VERIFICATION.CRITERIA.MANDATORY.VERSIONED })) {
     return res.status(400).send({ status: 400, message: 'Invalid GEF mandatory criteria payload' });
   }
 

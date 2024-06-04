@@ -13,6 +13,7 @@ const mockDataLoaderUser = {
   email: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
   bank: { id: '*' },
   timezone: 'Europe/London',
+  isTrusted: false,
 };
 
 const mockDataLoaderTFMUser = {

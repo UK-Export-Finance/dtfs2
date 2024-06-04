@@ -1,9 +1,10 @@
 const { ObjectId } = require('mongodb');
-const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
+const { PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const db = require('../../../drivers/db-client');
-const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
-const { USER, PAYLOAD } = require('../../../constants');
+const { USER } = require('../../../constants');
 const utils = require('../../../utils/crypto.util');
 
 const businessRules = { loginFailureCount: 5 };
@@ -44,7 +45,7 @@ exports.create = async (user, auditDetails, callback) => {
   delete tfmUser.token;
   delete tfmUser.password;
 
-  if (payloadVerification(tfmUser, PAYLOAD.TFM.USER)) {
+  if (isVerifiedPayload({ payload: tfmUser, template: PAYLOAD_VERIFICATION.TFM.USER })) {
     const createUserResult = await collection.insertOne(tfmUser);
 
     const { insertedId: userId } = createUserResult;
@@ -141,13 +142,20 @@ exports.incrementFailedLoginCount = async (user, auditDetails) => {
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 };
 
-exports.removeTfmUserById = async (_id, callback) => {
-  if (ObjectId.isValid(_id)) {
-    const collection = await db.getCollection('tfm-users');
-    const status = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
-
-    return callback(null, status);
+exports.removeTfmUserById = async (_id, auditDetails, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    return callback('Invalid TFM user id', 400);
   }
 
-  return callback('Invalid TFM user id', 400);
+  try {
+    await deleteOne({
+      documentId: new ObjectId(_id),
+      collectionName: 'tfm-users',
+      db,
+      auditDetails,
+    });
+    return callback(null, 200);
+  } catch (error) {
+    return callback(error, 500);
+  }
 };

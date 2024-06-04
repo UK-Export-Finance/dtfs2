@@ -13,6 +13,7 @@ import {
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { getAllBanks } from '../../../../repositories/banks-repo';
+import { mapReportToSummaryItem } from '../helper';
 
 type UtilisationReportForSubmissionMonth = {
   submissionMonth: IsoMonthStamp;
@@ -22,27 +23,6 @@ type UtilisationReportForSubmissionMonth = {
 type SummaryItemForSubmissionMonth = {
   submissionMonth: IsoMonthStamp;
   item: UtilisationReportReconciliationSummaryItem;
-};
-
-const mapReportToSummaryItem = (bank: Bank, report: UtilisationReportEntity): UtilisationReportReconciliationSummaryItem => {
-  const totalFeesReported = report.feeRecords.length;
-
-  // TODO FN-1398 - status to be added to report fee records to allow us to calculate how
-  //  many facilities are left to reconcile
-  const reportedFeesLeftToReconcile = totalFeesReported;
-
-  return {
-    reportId: report.id,
-    reportPeriod: report.reportPeriod,
-    bank: {
-      id: bank.id,
-      name: bank.name,
-    },
-    status: report.status,
-    dateUploaded: report.dateUploaded ?? undefined,
-    totalFeesReported,
-    reportedFeesLeftToReconcile,
-  };
 };
 
 const mapToSummaryItemForSubmissionMonth = (bank: Bank, { submissionMonth, report }: UtilisationReportForSubmissionMonth): SummaryItemForSubmissionMonth => ({
