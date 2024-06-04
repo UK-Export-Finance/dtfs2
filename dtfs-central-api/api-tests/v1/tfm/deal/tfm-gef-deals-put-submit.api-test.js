@@ -58,7 +58,6 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
 
     withValidateAuditDetailsTests({
       makeRequest: (auditDetails) => api.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF, dealId }).to('/v1/tfm/deals/submit'),
-      validUserTypes: ['portal'],
     });
 
     it('returns dealSnapshot with tfm object', async () => {
