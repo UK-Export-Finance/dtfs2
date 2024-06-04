@@ -1,4 +1,3 @@
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deal-builder');
@@ -33,16 +32,14 @@ describe('/v1/portal/deals', () => {
 
   describe('GET /v1/portal/deals/:id', () => {
     it('returns the requested resource', async () => {
-      const expectedAuditRecord = generateParsedMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id);
-      const expectedResponse = { ...newDeal, auditRecord: expectedAuditRecord };
-
+      const expectedResponse = expectAddedFields({ baseDeal: newDeal, userId: MOCK_PORTAL_USER._id, auditRecordType: 'portal' });
       const postResult = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = postResult.body._id;
 
       const { status, body } = await api.get(`/v1/portal/deals/${dealId}`);
 
       expect(status).toEqual(200);
-      expect(body.deal).toEqual(expectAddedFields(expectedResponse));
+      expect(body.deal).toEqual(expectedResponse);
     });
 
     describe('when a BSS deal has facilities', () => {

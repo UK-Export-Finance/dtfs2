@@ -1,4 +1,3 @@
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deal-builder');
@@ -46,8 +45,7 @@ describe('/v1/portal/deals', () => {
     });
 
     it('returns the created deal with correct fields', async () => {
-      const expectedAuditRecord = generateParsedMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id);
-      const expectedResponse = { ...newDeal, auditRecord: expectedAuditRecord };
+      const expectedResponse = expectAddedFields({ baseDeal: newDeal, userId: MOCK_PORTAL_USER._id, auditRecordType: 'portal' });
 
       const { body, status } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
 
@@ -55,7 +53,7 @@ describe('/v1/portal/deals', () => {
 
       const { body: createdDeal } = await api.get(`/v1/portal/deals/${body._id}`);
 
-      expect(createdDeal.deal).toEqual(expectAddedFields(expectedResponse));
+      expect(createdDeal.deal).toEqual(expectedResponse);
 
       expect(createdDeal.deal.maker).toEqual(MOCK_PORTAL_USER);
       expect(createdDeal.deal.bank).toEqual(MOCK_PORTAL_USER.bank);

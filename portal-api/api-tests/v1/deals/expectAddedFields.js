@@ -1,8 +1,17 @@
+const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const CONSTANTS = require('../../../src/constants');
 const { expectMongoId } = require('../../expectMongoIds');
 
-const expectAddedFields = (obj) => {
-  const expectation = expectMongoId({
+const addExpectedAuditRecord = (baseDeal, auditDetails) => {
+  const expectedAuditRecord = generateParsedMockAuditDatabaseRecord(auditDetails);
+  return {
+    ...baseDeal,
+    auditRecord: expectedAuditRecord,
+  };
+};
+
+const addBaseFields = (baseDeal) => {
+  return expectMongoId({
     dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
     status: 'Draft',
     eligibility: {
@@ -27,19 +36,24 @@ const expectAddedFields = (obj) => {
     },
     summary: {},
     comments: [],
-    ...obj,
+    ...baseDeal,
     maker: expect.any(Object),
     bank: expect.any(Object),
     details: {
-      ...obj.details,
+      ...baseDeal.details,
       created: expect.any(Number),
     },
     editedBy: [],
     exporter: expect.any(Object),
     updatedAt: expect.any(Number),
   });
+};
 
-  return expectation;
+const expectAddedFields = ({ baseDeal, userId, auditRecordType }) => {
+  const expectation = addBaseFields(baseDeal);
+  const expectationWithAuditRecord = addExpectedAuditRecord(expectation, { id: userId, userType: auditRecordType });
+
+  return expectationWithAuditRecord;
 };
 
 const expectedEditedByObject = (user) => ({
@@ -50,22 +64,19 @@ const expectedEditedByObject = (user) => ({
   userId: user._id,
 });
 
-const expectAddedFieldsWithEditedBy = (obj, user, numberOfUpdates = 1) => {
+const expectAddedFieldsWithEditedBy = (baseDeal, user, numberOfUpdates = 1) => {
   const expectedEditedByArray = new Array(numberOfUpdates);
   expectedEditedByArray.fill(expectedEditedByObject(user));
 
   const expectation = expectMongoId({
-    ...expectAddedFields(obj),
+    ...addBaseFields(baseDeal),
     editedBy: expectedEditedByArray,
   });
 
   return expectation;
 };
 
-const expectAllAddedFields = (list) => list.map(expectAddedFields);
-
 module.exports = {
   expectAddedFields,
-  expectAllAddedFields,
   expectAddedFieldsWithEditedBy,
 };

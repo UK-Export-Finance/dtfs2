@@ -1,4 +1,3 @@
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
@@ -121,13 +120,9 @@ describe('/v1/deals', () => {
     });
 
     it('returns the requested resource', async () => {
-      const expectedAuditRecord = generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id);
-      const expectedResponse = { ...newDeal, auditRecord: expectedAuditRecord };
-
       const { status, body } = await as(aBarclaysMaker).get(aDealUrl);
-
       expect(status).toEqual(200);
-      expect(body.deal).toEqual(expectAddedFields(expectedResponse));
+      expect(body.deal).toEqual(expectAddedFields({ baseDeal: newDeal, userId: aBarclaysMaker._id, auditRecordType: 'portal' }));
     });
 
     it('calculates deal.submissionDetails.status = Incomplete if there are validation failures', async () => {
@@ -320,17 +315,15 @@ describe('/v1/deals', () => {
     });
 
     it('returns the created deal', async () => {
-      const expectedAuditRecord = generateParsedMockPortalUserAuditDatabaseRecord(anHSBCMaker._id);
-      const expectedCreateDeal = expectAddedFields(newDeal);
-      const expeectedResponse = { ...expectedCreateDeal, auditRecord: expectedAuditRecord };
-
       const { body: createdDeal, status } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+
+      const expectedCreateDeal = expectAddedFields({ baseDeal: newDeal, userId: anHSBCMaker._id, auditRecordType: 'portal' });
 
       expect(status).toEqual(200);
 
       const { body: dealAfterCreation } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
-      expect(dealAfterCreation.deal).toEqual(expeectedResponse);
+      expect(dealAfterCreation.deal).toEqual(expectedCreateDeal);
     });
 
     it('creates unique deal IDs', async () => {
