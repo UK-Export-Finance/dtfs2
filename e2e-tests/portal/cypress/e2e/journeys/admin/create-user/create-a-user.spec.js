@@ -60,10 +60,10 @@ context('Admin user creates a new user', () => {
     createUser.createUser().click();
 
     // Check if the validation text is displayed for the first name, surname, roles, and bank fields
-    createUser.firstnameerror().should('contain', 'First name is required');
-    createUser.surnameerror().should('contain', 'Surname is required');
-    createUser.roleserror().should('contain', 'At least one role is required');
-    createUser.bankerror().should('contain', 'Bank is required');
+    createUser.firstNameError().should('contain', 'First name is required');
+    createUser.surNameError().should('contain', 'Surname is required');
+    createUser.rolesError().should('contain', 'At least one role is required');
+    createUser.bankError().should('contain', 'Bank is required');
   });
 
   it('Admin create user with empty fields', () => {

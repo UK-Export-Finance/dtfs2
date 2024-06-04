@@ -10,7 +10,13 @@ describe('selectAtLeastOneRole', () => {
     },
   ];
 
-  const testCases = [{ description: 'when no roles are provided', change: { roles: [] } }];
+  const testCases = [
+    { description: 'when no roles are provided', change: { roles: [] } },
+    { description: 'when roles are null', change: { roles: null } },
+    { description: 'when roles are undefined', change: { roles: undefined } },
+    { description: 'when roles are an empty object', change: { roles: {} } },
+    { description: 'when roles are a string with a space', change: { roles: ' ' } },
+  ];
 
   describe.each(testCases)('$description', ({ change }) => {
     it('should return an error if no roles are selected', () => {

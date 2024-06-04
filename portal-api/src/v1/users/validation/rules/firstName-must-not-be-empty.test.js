@@ -10,7 +10,14 @@ describe('firstNameMustNotBeEmpty', () => {
     },
   ];
 
-  const testCases = [{ description: 'when no first name is provided', change: { firstName: '' } }];
+  const testCases = [
+    { description: 'when no first name is provided', change: { firstName: '' } },
+    { description: 'when first name is null', change: { firstName: null } },
+    { description: 'when first name is undefined', change: { firstName: undefined } },
+    { description: 'when first name is an empty array', change: { firstName: [] } },
+    { description: 'when first name is an empty object', change: { firstName: {} } },
+    { description: 'when first name is a space', change: { firstName: ' ' } },
+  ];
 
   describe.each(testCases)('$description', ({ change }) => {
     it('should return an error if no first name is provided', () => {

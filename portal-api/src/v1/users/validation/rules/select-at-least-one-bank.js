@@ -1,11 +1,14 @@
+const { ADMIN } = require('../../../roles/roles');
+
+const CONSTANT = require('../../../../constants');
 /**
- * Validates that if the password is present it is at least 8 characters long
+ * Validates that if the bank is present it is not empty
  * @param {Object} user the existing user
  * @param {Object} change the changes to make
  * @returns {Array} either an empty array or an array containing an error object
  */
 const selectAtLeastOneBank = (user, change) => {
-  if (!change.bank) {
+  if (!change.bank || change.bank.length === 0 || (change.bank.length === 1 && change.bank[0] === null)) {
     return [
       {
         bank: {
@@ -16,7 +19,8 @@ const selectAtLeastOneBank = (user, change) => {
     ];
   }
 
-  if (change.bank === 'all' && (!change.roles || !change.roles.includes('admin'))) {
+  const cantHaveAllBank = change.bank === CONSTANT.ALL && !change.roles?.includes(ADMIN);
+  if (cantHaveAllBank) {
     return [
       {
         bank: {

@@ -10,10 +10,10 @@ const page = {
   isTrustedFalse: () => cy.get('[data-cy="is-trusted-false"]'),
   createUser: () => cy.get('[data-cy="create-user-add"]'),
   cancel: () => cy.get('[data-cy="create-user-cancel"]'),
-  firstnameerror: () => cy.get('[data-cy="firstname-error-message"]'),
-  surnameerror: () => cy.get('[data-cy="surname-error-message"]'),
-  roleserror: () => cy.get('[data-cy="roles-error-message"]'),
-  bankerror: () => cy.get('[data-cy="bank-error-message"]'),
+  firstNameError: () => cy.get('[data-cy="firstname-error-message"]'),
+  surNameError: () => cy.get('[data-cy="surname-error-message"]'),
+  rolesError: () => cy.get('[data-cy="roles-error-message"]'),
+  bankError: () => cy.get('[data-cy="bank-error-message"]'),
 };
 
 module.exports = page;
