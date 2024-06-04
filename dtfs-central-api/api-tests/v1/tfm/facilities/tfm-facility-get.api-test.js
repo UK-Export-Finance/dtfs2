@@ -33,7 +33,7 @@ describe('/v1/tfm/facilities', () => {
   });
 
   beforeEach(async () => {
-    const deal = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+    const { body: deal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
     dealId = deal._id;
 
     newFacility.dealId = dealId;
