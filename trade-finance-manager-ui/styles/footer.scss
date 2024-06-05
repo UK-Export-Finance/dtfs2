@@ -3,15 +3,12 @@
   margin-block-start: 1em;
   margin-block-end: 1em;
 
-  dt {
-    display: inline;
-  }
-  dd {
-    display: inline;
-    margin-inline-start: 0;
-  }
-  dd::after {
-    content:"\a";
-    white-space: pre;
+  .contact-details__row {
+    align-self: flex-start;
+    display: flex;
+    margin-bottom: govuk-spacing(2);
+    &:last-child {
+    margin-bottom: 0;
+    }
   }
 }
