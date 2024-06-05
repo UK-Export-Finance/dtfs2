@@ -1,4 +1,3 @@
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { UNDERWRITER_1_WITH_MOCK_ID } = require('../../../../e2e-fixtures/tfm-users.fixture');
 
 const api = () => {
@@ -101,7 +100,7 @@ module.exports.updateTFMDeal = (dealId, dealUpdate) =>
       method: 'PUT',
       body: {
         dealUpdate,
-        auditDetails: generateTfmAuditDetails(UNDERWRITER_1_WITH_MOCK_ID._id),
+        auditDetails: { userType: 'tfm', id: UNDERWRITER_1_WITH_MOCK_ID._id },
       },
       headers,
     })

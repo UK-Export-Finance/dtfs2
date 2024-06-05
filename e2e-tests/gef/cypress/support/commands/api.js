@@ -1,4 +1,3 @@
-import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { SIGN_IN_TOKENS } from '../../fixtures/constants';
 import { BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../e2e-fixtures/portal-users.fixture';
 import { UNDERWRITER_1_WITH_MOCK_ID } from '../../../../e2e-fixtures/tfm-users.fixture';
@@ -240,7 +239,7 @@ const addUnderwriterCommentToTfm = (dealId, underwriterComment) =>
     .request({
       url: `${centralApiUrl()}/v1/tfm/deals/${dealId}`,
       method: 'put',
-      body: { dealUpdate: underwriterComment, auditDetails: generateTfmAuditDetails(UNDERWRITER_1_WITH_MOCK_ID._id) },
+      body: { dealUpdate: underwriterComment, auditDetails: { userType: 'tfm', id: UNDERWRITER_1_WITH_MOCK_ID._id } },
       headers,
     })
     .then((resp) => {
