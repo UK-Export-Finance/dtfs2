@@ -1,13 +1,5 @@
-const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { addAuditRecordToExpectedResponse } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { expectMongoId } = require('../../expectMongoIds');
-
-const addExpectedAuditRecord = (baseDeal, auditDetails) => {
-  const expectedAuditRecord = generateParsedMockAuditDatabaseRecord(auditDetails);
-  return {
-    ...baseDeal,
-    auditRecord: expectedAuditRecord,
-  };
-};
 
 const addBaseFields = (baseDeal) => {
   let eligibilityUpdate;
@@ -46,7 +38,7 @@ const addBaseFields = (baseDeal) => {
 
 const expectAddedFields = ({ baseDeal, userId, auditRecordType }) => {
   const expectation = addBaseFields(baseDeal);
-  const expectationWithAuditRecord = addExpectedAuditRecord(expectation, { id: userId, userType: auditRecordType });
+  const expectationWithAuditRecord = addAuditRecordToExpectedResponse({ baseResponse: expectation, auditDetails: { id: userId, userType: auditRecordType } });
 
   return expectationWithAuditRecord;
 };
@@ -68,7 +60,7 @@ const expectAddedFieldsWithEditedBy = ({ baseDeal, user, auditRecordType, number
     editedBy: expectedEditedByArray,
   });
 
-  const expectationWithAuditRecord = addExpectedAuditRecord(expectation, { id: user._id, userType: auditRecordType });
+  const expectationWithAuditRecord = addAuditRecordToExpectedResponse({ baseResponse: expectation, auditDetails: { id: user._id, userType: auditRecordType } });
 
   return expectationWithAuditRecord;
 };
