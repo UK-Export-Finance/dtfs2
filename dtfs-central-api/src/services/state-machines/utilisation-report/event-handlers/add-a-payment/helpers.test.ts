@@ -25,7 +25,7 @@ describe('payment-added-to-fee-record.event-handler helpers', () => {
       jest.resetAllMocks();
     });
 
-    it("calls the 'transactionEntityManager.find' method to fetch all payments attached to the fee record", async () => {
+    it('finds the fee record corresponding to the first supplied fee record with the attached payments included', async () => {
       // Arrange
       const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
       const feeRecords = [
@@ -119,6 +119,49 @@ describe('payment-added-to-fee-record.event-handler helpers', () => {
 
       // Assert
       expect(result).toBe(false);
+    });
+
+    it('returns true when the payments attached to the fee records have the same total payments when converted to the payment currency', async () => {
+      // Arrange
+      const feesPaidToUkefForThePeriodCurrency: Currency = 'EUR';
+      const paymentExchangeRate = 1.1;
+      const firstFeeRecordAmount = 100; // = 90.91 GBP
+      const secondFeeRecordAmount = 50; // = 45.45 GBP
+
+      const paymentCurrency: Currency = 'GBP';
+      const firstPaymentAmount = 30;
+      const secondPaymentAmount = 106.36;
+
+      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+      const feeRecords = [
+        FeeRecordEntityMockBuilder.forReport(utilisationReport)
+          .withId(1)
+          .withPaymentCurrency(paymentCurrency)
+          .withPaymentExchangeRate(paymentExchangeRate)
+          .withFeesPaidToUkefForThePeriodCurrency(feesPaidToUkefForThePeriodCurrency)
+          .withFeesPaidToUkefForThePeriod(firstFeeRecordAmount)
+          .build(),
+        FeeRecordEntityMockBuilder.forReport(utilisationReport)
+          .withId(2)
+          .withPaymentCurrency(paymentCurrency)
+          .withPaymentExchangeRate(paymentExchangeRate)
+          .withFeesPaidToUkefForThePeriodCurrency(feesPaidToUkefForThePeriodCurrency)
+          .withFeesPaidToUkefForThePeriod(secondFeeRecordAmount)
+          .build(),
+      ];
+
+      const payments = [
+        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(1).withAmountReceived(firstPaymentAmount).build(),
+        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(2).withAmountReceived(secondPaymentAmount).build(),
+      ];
+
+      jest.mocked(mockEntityManager.find).mockResolvedValue(addPaymentsToFeeRecords(feeRecords, payments));
+
+      // Act
+      const result = await feeRecordsMatchAttachedPayments(feeRecords, mockEntityManager);
+
+      // Assert
+      expect(result).toBe(true);
     });
   });
 });

@@ -2,12 +2,12 @@ import { ApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
-import { PostAddPaymentPayload } from '../../../routes/middleware/payload-validation/validate-post-add-payment-payload';
+import { PostPaymentPayload } from '../../../routes/middleware/payload-validation/validate-post-payment-payload';
 import { addPaymentToUtilisationReport } from './helpers';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
 
-export type PostAddPaymentRequest = CustomExpressRequest<{
-  reqBody: PostAddPaymentPayload;
+export type PostPaymentRequest = CustomExpressRequest<{
+  reqBody: PostPaymentPayload;
 }>;
 
 /**
@@ -15,7 +15,7 @@ export type PostAddPaymentRequest = CustomExpressRequest<{
  * @param req - The request object
  * @param res - The response object
  */
-export const postAddPayment = async (req: PostAddPaymentRequest, res: Response) => {
+export const postPayment = async (req: PostPaymentRequest, res: Response) => {
   const { reportId } = req.params;
   const { feeRecordIds, paymentCurrency, paymentAmount, datePaymentReceived, paymentReference, user } = req.body;
 

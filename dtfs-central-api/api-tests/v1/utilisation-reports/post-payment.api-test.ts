@@ -23,8 +23,8 @@ console.error = jest.fn();
 
 const api = createApi(app);
 
-describe('POST /v1/utilisation-reports/:reportId/add-payment', () => {
-  const getUrl = (reportId: number | string) => `/v1/utilisation-reports/${reportId}/add-payment`;
+describe('POST /v1/utilisation-reports/:reportId/payment', () => {
+  const getUrl = (reportId: number | string) => `/v1/utilisation-reports/${reportId}/payment`;
 
   const reportId = 1;
 
@@ -45,6 +45,7 @@ describe('POST /v1/utilisation-reports/:reportId/add-payment', () => {
   const feeRecords = feeRecordIds.map((id) =>
     FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport).withId(id).withPaymentCurrency(paymentCurrency).build(),
   );
+  uploadedUtilisationReport.feeRecords = feeRecords;
 
   const aValidRequestBody = () => ({
     user: {
@@ -74,13 +75,11 @@ describe('POST /v1/utilisation-reports/:reportId/add-payment', () => {
   });
 
   beforeEach(async () => {
-    await SqlDbHelper.saveNewEntries('FeeRecord', feeRecords);
+    await SqlDbHelper.saveNewEntry('UtilisationReport', uploadedUtilisationReport);
   });
 
   afterEach(async () => {
-    await SqlDbHelper.deleteAllJoinTableEntries('fee_record_payments_payment');
-    await SqlDbHelper.deleteAllEntries('FeeRecord');
-    await SqlDbHelper.deleteAllEntries('Payment');
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
   });
 
   afterAll(async () => {
@@ -140,7 +139,6 @@ describe('POST /v1/utilisation-reports/:reportId/add-payment', () => {
 
   it.each(Object.values(CURRENCY))("returns a 200 when 'paymentCurrency' is '%s'", async (currency) => {
     // Arrange
-    await SqlDbHelper.deleteAllJoinTableEntries('fee_record_payments_payment');
     await SqlDbHelper.deleteAllEntries('Payment');
     await SqlDbHelper.deleteAllEntries('FeeRecord');
 
@@ -247,7 +245,6 @@ describe('POST /v1/utilisation-reports/:reportId/add-payment', () => {
 
   it('returns a 400 when the new payment currency does not match the existing fee record currency', async () => {
     // Arrange
-    await SqlDbHelper.deleteAllJoinTableEntries('fee_record_payments_payment');
     await SqlDbHelper.deleteAllEntries('Payment');
     await SqlDbHelper.deleteAllEntries('FeeRecord');
 
@@ -319,7 +316,6 @@ describe('POST /v1/utilisation-reports/:reportId/add-payment', () => {
 
   it("sets the fee record status to 'DOES_NOT_MATCH' if the new payment plus the existing payments does not match the fee record amounts", async () => {
     // Arrange
-    await SqlDbHelper.deleteAllJoinTableEntries('fee_record_payments_payment');
     await SqlDbHelper.deleteAllEntries('Payment');
     await SqlDbHelper.deleteAllEntries('FeeRecord');
 
@@ -370,7 +366,6 @@ describe('POST /v1/utilisation-reports/:reportId/add-payment', () => {
 
   it("sets the fee record status to 'MATCH' if the new payment plus the existing payments match the fee record amount", async () => {
     // Arrange
-    await SqlDbHelper.deleteAllJoinTableEntries('fee_record_payments_payment');
     await SqlDbHelper.deleteAllEntries('Payment');
     await SqlDbHelper.deleteAllEntries('FeeRecord');
 

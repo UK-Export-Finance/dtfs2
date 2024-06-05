@@ -11,4 +11,5 @@ export const TfmSessionUserSchema = z.object({
   lastName: z.string(),
   status: z.string(),
   _id: MongoObjectIdSchema,
+  lastLogin: z.number().optional(),
 });

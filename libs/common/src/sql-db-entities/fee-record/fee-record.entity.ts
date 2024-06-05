@@ -103,6 +103,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
    */
   @ManyToMany(() => PaymentEntity, (payment) => payment.feeRecords, {
     cascade: ['insert'],
+    onDelete: 'CASCADE',
   })
   @JoinTable()
   payments!: PaymentEntity[];

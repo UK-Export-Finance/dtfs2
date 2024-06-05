@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { CurrencySchema, TfmSessionUserSchema } from './schemas';
 
-const PostAddPaymentSchema = z.object({
+const PostPaymentSchema = z.object({
   feeRecordIds: z.array(z.number().gte(1)).min(1),
   paymentCurrency: CurrencySchema,
   paymentAmount: z.number().gte(0),
@@ -12,10 +12,10 @@ const PostAddPaymentSchema = z.object({
   user: TfmSessionUserSchema,
 });
 
-export type PostAddPaymentPayload = z.infer<typeof PostAddPaymentSchema>;
+export type PostPaymentPayload = z.infer<typeof PostPaymentSchema>;
 
-export const validatePostAddPaymentPayload = (req: Request, res: Response, next: NextFunction) => {
-  const { success, error, data } = PostAddPaymentSchema.safeParse(req.body);
+export const validatePostPaymentPayload = (req: Request, res: Response, next: NextFunction) => {
+  const { success, error, data } = PostPaymentSchema.safeParse(req.body);
   if (success) {
     req.body = data;
     return next();

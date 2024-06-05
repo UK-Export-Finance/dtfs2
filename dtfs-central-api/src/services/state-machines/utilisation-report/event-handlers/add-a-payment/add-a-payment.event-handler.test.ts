@@ -41,24 +41,9 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     FeeRecordEntityMockBuilder.forReport(report).withId(2).withPaymentCurrency(paymentCurrency).build(),
   ];
 
-  const getFeeRecordStateMachinesForFeeRecords = (feeRecords: FeeRecordEntity[]) =>
-    feeRecords.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
-
-  const getEventHandlerSpiesForFeeRecordStateMachines = (feeRecordStateMachines: FeeRecordStateMachine[], feeRecords: FeeRecordEntity[]) =>
-    feeRecordStateMachines.map((stateMachine, index) => jest.spyOn(stateMachine, 'handleEvent').mockResolvedValue(feeRecords[index]));
-
-  const mockFeeRecordStateMachineConstructorImplementation = (feeRecords: FeeRecordEntity[], feeRecordStateMachines: FeeRecordStateMachine[]) => {
-    jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => {
-      const indexOfMatchingFeeRecord = feeRecords.findIndex(({ id }) => id === feeRecord.id);
-      if (indexOfMatchingFeeRecord === -1) {
-        throw new Error('Failed to find fee record with matching id');
-      }
-      return feeRecordStateMachines[indexOfMatchingFeeRecord];
-    });
-  };
-
   beforeEach(() => {
     jest.mocked(feeRecordsMatchAttachedPayments).mockResolvedValue(false);
+    jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockReturnValue(aMockFeeRecordStateMachine());
   });
 
   afterEach(() => {
@@ -71,8 +56,6 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
-    const feeRecordStateMatchines = getFeeRecordStateMachinesForFeeRecords(feeRecords);
-    mockFeeRecordStateMachineConstructorImplementation(feeRecords, feeRecordStateMatchines);
 
     const newPaymentEntity = PaymentEntity.create({
       ...paymentDetails,
@@ -92,13 +75,17 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     expect(mockEntityManager.save).toHaveBeenCalledWith(PaymentEntity, newPaymentEntity);
   });
 
-  it("calls the 'feeRecordsMatchAttachedPayments' function with the supplied fee records and the new payment", async () => {
+  it('calls the fee record state machine event handler for each fee record in the payload', async () => {
     // Arrange
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
-    const feeRecordStateMatchines = getFeeRecordStateMachinesForFeeRecords(feeRecords);
-    mockFeeRecordStateMachineConstructorImplementation(feeRecords, feeRecordStateMatchines);
+    const feeRecordStateMachines = feeRecords.reduce(
+      (stateMachines, { id }) => ({ ...stateMachines, [id]: aMockFeeRecordStateMachine() }),
+      {} as { [id: number]: FeeRecordStateMachine },
+    );
+
+    jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
     // Act
     await handleUtilisationReportAddAPaymentEvent(utilisationReport, {
@@ -109,30 +96,9 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     });
 
     // Assert
-    expect(feeRecordsMatchAttachedPayments).toHaveBeenCalledWith(feeRecords, mockEntityManager);
-  });
-
-  it("calls the fee record state machine 'PAYMENT_ADDED' event for each fee record in the payload", async () => {
-    // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
-
-    const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
-    const feeRecordStateMatchines = getFeeRecordStateMachinesForFeeRecords(feeRecords);
-    mockFeeRecordStateMachineConstructorImplementation(feeRecords, feeRecordStateMatchines);
-
-    const eventHandlerSpies = getEventHandlerSpiesForFeeRecordStateMachines(feeRecordStateMatchines, feeRecords);
-
-    // Act
-    await handleUtilisationReportAddAPaymentEvent(utilisationReport, {
-      transactionEntityManager: mockEntityManager,
-      feeRecords,
-      paymentDetails,
-      requestSource,
-    });
-
-    // Assert
-    eventHandlerSpies.forEach((eventHandlerSpy) => {
-      expect(eventHandlerSpy).toHaveBeenCalledWith({
+    feeRecords.forEach((feeRecord) => {
+      const eventHandler = feeRecordStateMachines[feeRecord.id].handleEvent;
+      expect(eventHandler).toHaveBeenCalledWith({
         type: 'PAYMENT_ADDED',
         payload: {
           transactionEntityManager: mockEntityManager,
@@ -143,15 +109,17 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     });
   });
 
-  it("calls the 'PAYMENT_ADDED' fee record event handler with the status set to 'MATCH' if 'feeRecordsMatchAttachedPayments' returns true", async () => {
+  it("calls the fee record state machine event handler with the status set to 'MATCH' if the fee records match the payments", async () => {
     // Arrange
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
-    const feeRecordStateMatchines = getFeeRecordStateMachinesForFeeRecords(feeRecords);
-    mockFeeRecordStateMachineConstructorImplementation(feeRecords, feeRecordStateMatchines);
+    const feeRecordStateMachines: { [id: number]: FeeRecordStateMachine } = feeRecords.reduce(
+      (stateMachines, { id }) => ({ ...stateMachines, [id]: aMockFeeRecordStateMachine() }),
+      {},
+    );
 
-    const eventHandlerSpies = getEventHandlerSpiesForFeeRecordStateMachines(feeRecordStateMatchines, feeRecords);
+    jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
     jest.mocked(feeRecordsMatchAttachedPayments).mockResolvedValue(true);
     const newStatus: FeeRecordStatus = 'MATCH';
@@ -165,8 +133,9 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     });
 
     // Assert
-    eventHandlerSpies.forEach((eventHandlerSpy) => {
-      expect(eventHandlerSpy).toHaveBeenCalledWith(
+    feeRecords.forEach((feeRecord) => {
+      const eventHandler = feeRecordStateMachines[feeRecord.id].handleEvent;
+      expect(eventHandler).toHaveBeenCalledWith(
         expect.objectContaining({
           type: 'PAYMENT_ADDED',
           payload: expect.objectContaining({
@@ -177,15 +146,17 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     });
   });
 
-  it("calls the 'PAYMENT_ADDED' fee record event handler with the status set to 'DOES_NOT_MATCH' if 'feeRecordsMatchAttachedPayments' returns true", async () => {
+  it("calls the fee record state machine event handler with the status set to 'DOES_NOT_MATCH' if the fee records do not match the payment", async () => {
     // Arrange
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
-    const feeRecordStateMatchines = getFeeRecordStateMachinesForFeeRecords(feeRecords);
-    mockFeeRecordStateMachineConstructorImplementation(feeRecords, feeRecordStateMatchines);
+    const feeRecordStateMachines: { [id: number]: FeeRecordStateMachine } = feeRecords.reduce(
+      (stateMachines, { id }) => ({ ...stateMachines, [id]: aMockFeeRecordStateMachine() }),
+      {},
+    );
 
-    const eventHandlerSpies = getEventHandlerSpiesForFeeRecordStateMachines(feeRecordStateMatchines, feeRecords);
+    jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
     jest.mocked(feeRecordsMatchAttachedPayments).mockResolvedValue(false);
     const newStatus: FeeRecordStatus = 'DOES_NOT_MATCH';
@@ -199,8 +170,9 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     });
 
     // Assert
-    eventHandlerSpies.forEach((eventHandlerSpy) => {
-      expect(eventHandlerSpy).toHaveBeenCalledWith(
+    feeRecords.forEach((feeRecord) => {
+      const eventHandler = feeRecordStateMachines[feeRecord.id].handleEvent;
+      expect(eventHandler).toHaveBeenCalledWith(
         expect.objectContaining({
           type: 'PAYMENT_ADDED',
           payload: expect.objectContaining({
@@ -216,8 +188,6 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
-    const feeRecordStateMatchines = getFeeRecordStateMachinesForFeeRecords(feeRecords);
-    mockFeeRecordStateMachineConstructorImplementation(feeRecords, feeRecordStateMatchines);
 
     // Act
     await handleUtilisationReportAddAPaymentEvent(utilisationReport, {
@@ -236,8 +206,6 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     const reconciliationInProgressReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
 
     const feeRecords = aListOfFeeRecordsForReport(reconciliationInProgressReport);
-    const feeRecordStateMatchines = getFeeRecordStateMachinesForFeeRecords(feeRecords);
-    mockFeeRecordStateMachineConstructorImplementation(feeRecords, feeRecordStateMatchines);
 
     // Act
     await handleUtilisationReportAddAPaymentEvent(reconciliationInProgressReport, {
@@ -258,8 +226,6 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     const pendingReconciliationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
     const feeRecords = aListOfFeeRecordsForReport(pendingReconciliationReport);
-    const feeRecordStateMatchines = getFeeRecordStateMachinesForFeeRecords(feeRecords);
-    mockFeeRecordStateMachineConstructorImplementation(feeRecords, feeRecordStateMatchines);
 
     // Act
     await handleUtilisationReportAddAPaymentEvent(pendingReconciliationReport, {
@@ -275,4 +241,10 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     expect(pendingReconciliationReport.lastUpdatedByTfmUserId).toBe(tfmUserId);
     expect(pendingReconciliationReport.status).toBe(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS);
   });
+
+  function aMockFeeRecordStateMachine(): FeeRecordStateMachine {
+    return {
+      handleEvent: jest.fn(),
+    } as unknown as FeeRecordStateMachine;
+  }
 });

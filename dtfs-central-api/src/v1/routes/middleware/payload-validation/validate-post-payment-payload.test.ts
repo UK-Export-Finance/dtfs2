@@ -1,15 +1,15 @@
 import { CURRENCY } from '@ukef/dtfs2-common';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { PostAddPaymentPayload, validatePostAddPaymentPayload } from './validate-post-add-payment-payload';
+import { PostPaymentPayload, validatePostPaymentPayload } from './validate-post-payment-payload';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
 
-describe('validatePostAddPaymentPayload', () => {
+describe('validatePostPaymentPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();
 
-  const requiredPayloadKeys: (keyof PostAddPaymentPayload)[] = ['feeRecordIds', 'paymentCurrency', 'paymentAmount', 'datePaymentReceived', 'user'];
+  const requiredPayloadKeys: (keyof PostPaymentPayload)[] = ['feeRecordIds', 'paymentCurrency', 'paymentAmount', 'datePaymentReceived', 'user'];
 
-  const aValidPayload = (): PostAddPaymentPayload => ({
+  const aValidPayload = (): PostPaymentPayload => ({
     feeRecordIds: [1],
     paymentCurrency: 'GBP',
     paymentAmount: 100,
@@ -30,7 +30,7 @@ describe('validatePostAddPaymentPayload', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePostAddPaymentPayload(req, res, next);
+    validatePostPaymentPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -50,7 +50,7 @@ describe('validatePostAddPaymentPayload', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePostAddPaymentPayload(req, res, next);
+    validatePostPaymentPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -70,7 +70,7 @@ describe('validatePostAddPaymentPayload', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePostAddPaymentPayload(req, res, next);
+    validatePostPaymentPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -90,7 +90,7 @@ describe('validatePostAddPaymentPayload', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePostAddPaymentPayload(req, res, next);
+    validatePostPaymentPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -110,7 +110,7 @@ describe('validatePostAddPaymentPayload', () => {
     req.body = validPayload;
 
     // Act
-    validatePostAddPaymentPayload(req, res, next);
+    validatePostPaymentPayload(req, res, next);
 
     // Assert
     expect(next).toHaveBeenCalled();
@@ -131,8 +131,8 @@ describe('validatePostAddPaymentPayload', () => {
     req.body = validPayload;
 
     // Act
-    validatePostAddPaymentPayload(req, res, next);
-    const { datePaymentReceived } = req.body as PostAddPaymentPayload;
+    validatePostPaymentPayload(req, res, next);
+    const { datePaymentReceived } = req.body as PostPaymentPayload;
 
     // Assert
     expect(datePaymentReceived).toEqual(new Date(dateAsString));
@@ -152,7 +152,7 @@ describe('validatePostAddPaymentPayload', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePostAddPaymentPayload(req, res, next);
+    validatePostPaymentPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -172,7 +172,7 @@ describe('validatePostAddPaymentPayload', () => {
     req.body = validPayload;
 
     // Act
-    validatePostAddPaymentPayload(req, res, next);
+    validatePostPaymentPayload(req, res, next);
 
     // Assert
     expect(next).toHaveBeenCalled();

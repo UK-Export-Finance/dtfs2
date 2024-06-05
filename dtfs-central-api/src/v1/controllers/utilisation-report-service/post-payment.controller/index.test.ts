@@ -2,11 +2,11 @@ import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
 import { ApiError, Currency } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
-import { PostAddPaymentRequest, postAddPayment } from '.';
+import { PostPaymentRequest, postPayment } from '.';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
 import { addPaymentToUtilisationReport } from './helpers';
-import { PostAddPaymentPayload } from '../../../routes/middleware/payload-validation/validate-post-add-payment-payload';
+import { PostPaymentPayload } from '../../../routes/middleware/payload-validation/validate-post-payment-payload';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
 
 jest.mock('./helpers');
@@ -17,8 +17,8 @@ class TestApiError extends ApiError {
   }
 }
 
-describe('post-add-payment.controller', () => {
-  describe('postAddPayment', () => {
+describe('post-payment.controller', () => {
+  describe('postPayment', () => {
     const tfmUserId = new ObjectId().toString();
     const tfmUser: TfmSessionUser = {
       ...aTfmSessionUser(),
@@ -35,7 +35,7 @@ describe('post-add-payment.controller', () => {
     const datePaymentReceived = new Date();
     const paymentReference = 'A payment reference';
 
-    const aValidRequestBody = (): PostAddPaymentPayload => ({
+    const aValidRequestBody = (): PostPaymentPayload => ({
       feeRecordIds,
       user: tfmUser,
       paymentCurrency,
@@ -44,9 +44,9 @@ describe('post-add-payment.controller', () => {
       paymentReference,
     });
 
-    it("calls the 'addPaymentToUtilisationReport' helper function with the report id, fee record ids, user and the new payment", async () => {
+    it('attempts to save the payment using the supplied report id, fee record ids, user and the new payment', async () => {
       // Arrange
-      const req = httpMocks.createRequest<PostAddPaymentRequest>({
+      const req = httpMocks.createRequest<PostPaymentRequest>({
         params: aValidRequestQuery(),
         body: aValidRequestBody(),
       });
@@ -62,15 +62,15 @@ describe('post-add-payment.controller', () => {
       };
 
       // Act
-      await postAddPayment(req, res);
+      await postPayment(req, res);
 
       // Assert
       expect(addPaymentToUtilisationReport).toHaveBeenCalledWith(reportId, feeRecordIds, tfmUser, newPaymentDetails);
     });
 
-    it("responds with a '200' if 'addPaymentToUtilisationReport' does not throw any errors", async () => {
+    it("responds with a '200' if the report is saved successfully", async () => {
       // Arrange
-      const req = httpMocks.createRequest<PostAddPaymentRequest>({
+      const req = httpMocks.createRequest<PostPaymentRequest>({
         params: aValidRequestQuery(),
         body: aValidRequestBody(),
       });
@@ -79,15 +79,15 @@ describe('post-add-payment.controller', () => {
       jest.mocked(addPaymentToUtilisationReport).mockResolvedValue();
 
       // Act
-      await postAddPayment(req, res);
+      await postPayment(req, res);
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
     });
 
-    it("responds with the specific error status if 'addPaymentToUtilisationReport' throws an 'ApiError'", async () => {
+    it("responds with the specific error status if saving the report throws an 'ApiError'", async () => {
       // Arrange
-      const req = httpMocks.createRequest<PostAddPaymentRequest>({
+      const req = httpMocks.createRequest<PostPaymentRequest>({
         params: aValidRequestQuery(),
         body: aValidRequestBody(),
       });
@@ -97,15 +97,15 @@ describe('post-add-payment.controller', () => {
       jest.mocked(addPaymentToUtilisationReport).mockRejectedValue(new TestApiError(errorStatus, undefined));
 
       // Act
-      await postAddPayment(req, res);
+      await postPayment(req, res);
 
       // Assert
       expect(res._getStatusCode()).toBe(errorStatus);
     });
 
-    it("responds with the specific error message if 'addPaymentToUtilisationReport' throws an 'ApiError'", async () => {
+    it("responds with the specific error message if saving the report throws an 'ApiError'", async () => {
       // Arrange
-      const req = httpMocks.createRequest<PostAddPaymentRequest>({
+      const req = httpMocks.createRequest<PostPaymentRequest>({
         params: aValidRequestQuery(),
         body: aValidRequestBody(),
       });
@@ -115,7 +115,7 @@ describe('post-add-payment.controller', () => {
       jest.mocked(addPaymentToUtilisationReport).mockRejectedValue(new TestApiError(undefined, errorMessage));
 
       // Act
-      await postAddPayment(req, res);
+      await postPayment(req, res);
 
       // Assert
       expect(res._getData()).toBe(`Failed to add a new payment: ${errorMessage}`);
@@ -123,7 +123,7 @@ describe('post-add-payment.controller', () => {
 
     it("responds with a '500' if an unknown error occurs", async () => {
       // Arrange
-      const req = httpMocks.createRequest<PostAddPaymentRequest>({
+      const req = httpMocks.createRequest<PostPaymentRequest>({
         params: aValidRequestQuery(),
         body: aValidRequestBody(),
       });
@@ -132,7 +132,7 @@ describe('post-add-payment.controller', () => {
       jest.mocked(addPaymentToUtilisationReport).mockRejectedValue(new Error('Some error'));
 
       // Act
-      await postAddPayment(req, res);
+      await postPayment(req, res);
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
@@ -140,7 +140,7 @@ describe('post-add-payment.controller', () => {
 
     it('responds with a generic error message if an unknown error occurs', async () => {
       // Arrange
-      const req = httpMocks.createRequest<PostAddPaymentRequest>({
+      const req = httpMocks.createRequest<PostPaymentRequest>({
         params: aValidRequestQuery(),
         body: aValidRequestBody(),
       });
@@ -149,7 +149,7 @@ describe('post-add-payment.controller', () => {
       jest.mocked(addPaymentToUtilisationReport).mockRejectedValue(new Error('Some error'));
 
       // Act
-      await postAddPayment(req, res);
+      await postPayment(req, res);
 
       // Assert
       expect(res._getData()).toBe('Failed to add a new payment');

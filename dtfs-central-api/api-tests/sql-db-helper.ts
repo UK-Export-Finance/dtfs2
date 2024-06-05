@@ -69,22 +69,10 @@ const saveNewEntries = async <TableName extends SqlTableName>(tableName: TableNa
   }
 };
 
-type SqlJoinTableName = 'fee_record_payments_payment';
-
-const deleteAllJoinTableEntries = async (tableName: SqlJoinTableName): Promise<void> => {
-  switch (tableName) {
-    case 'fee_record_payments_payment':
-      return await SqlDbDataSource.manager.query(`DELETE FROM ${tableName}`);
-    default:
-      throw new Error(`Cannot delete all join table entries: no join table named '${tableName}' exists`);
-  }
-};
-
 export const SqlDbHelper = {
   initialize,
   deleteAllEntries,
   saveNewEntry,
   saveNewEntries,
-  deleteAllJoinTableEntries,
   manager: SqlDbDataSource.manager,
 };

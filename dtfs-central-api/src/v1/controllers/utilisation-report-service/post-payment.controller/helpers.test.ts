@@ -55,7 +55,7 @@ describe('post-add-payment.controller helpers', () => {
       jest.resetAllMocks();
     });
 
-    it("calls the 'UtilisationReportStateMachine.forReportId' method with the supplied report id", async () => {
+    it('initialises a utilisation report state machine with the supplied report id', async () => {
       // Act
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
@@ -63,7 +63,7 @@ describe('post-add-payment.controller helpers', () => {
       expect(utilisationReportStateMachineConstructorSpy).toHaveBeenCalledWith(reportId);
     });
 
-    it("calls the 'FeeRecordRepo.findBy' method with the supplied list of fee record ids", async () => {
+    it('attempts to find all the fee records which have the id specified by the supplied feeRecordIds list', async () => {
       // Act
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
@@ -95,7 +95,24 @@ describe('post-add-payment.controller helpers', () => {
       await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetailsWithEURCurrency)).rejects.toThrow(InvalidPayloadError);
     });
 
-    it("calls the 'queryRunner.connect' method", async () => {
+    it("throws the 'InvalidPayloadError' if the payment currency matches all but one of the fee record payment currencies", async () => {
+      // Arrange
+      const feeRecordsWithGBPPaymentCurrency = feeRecordIds.map((feeRecordId) =>
+        FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(feeRecordId).withPaymentCurrency('GBP').build(),
+      );
+      const feeRecordWithEURPaymentCurrency = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(100).withPaymentCurrency('EUR').build();
+      feeRecordFindBySpy.mockResolvedValue([...feeRecordsWithGBPPaymentCurrency, feeRecordWithEURPaymentCurrency]);
+
+      const newPaymentDetailsWithGBPCurrency: NewPaymentDetails = {
+        ...newPaymentDetails,
+        currency: 'GBP',
+      };
+
+      // Act / Assert
+      await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetailsWithGBPCurrency)).rejects.toThrow(InvalidPayloadError);
+    });
+
+    it('creates a database connection for the transaction', async () => {
       // Act
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
@@ -103,7 +120,7 @@ describe('post-add-payment.controller helpers', () => {
       expect(mockQueryRunner.connect).toHaveBeenCalled();
     });
 
-    it("calls the 'queryRunner.startTransaction' method", async () => {
+    it('starts the transaction', async () => {
       // Act
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
@@ -111,7 +128,7 @@ describe('post-add-payment.controller helpers', () => {
       expect(mockQueryRunner.startTransaction).toHaveBeenCalled();
     });
 
-    it("calls the 'UtilisationReportStateMachine.handleEvent' function with the 'ADD_A_PAYMENT' event and payload", async () => {
+    it('adds the payment to the utilisation report using the utilisation report state machine', async () => {
       // Act
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
@@ -130,7 +147,7 @@ describe('post-add-payment.controller helpers', () => {
       });
     });
 
-    it("calls the 'queryRunner.commitTransaction' method if the event handler runs successfully", async () => {
+    it('commits the transaction if the utilisation report state machine event handler runs successfully', async () => {
       // Arrange
       handleEventSpy.mockResolvedValue(utilisationReport);
 
@@ -141,7 +158,7 @@ describe('post-add-payment.controller helpers', () => {
       expect(mockQueryRunner.commitTransaction).toHaveBeenCalled();
     });
 
-    it("calls the 'queryRunner.rollbackTransaction' method if the event handler throws an error", async () => {
+    it('rolls back the transaction if the utilisation report state machine event handler throws an error', async () => {
       // Arrange
       handleEventSpy.mockRejectedValue(new Error('Some error'));
 
@@ -150,7 +167,7 @@ describe('post-add-payment.controller helpers', () => {
       expect(mockQueryRunner.rollbackTransaction).toHaveBeenCalled();
     });
 
-    it("does not call the 'queryRunner.commitTransaction' method if the event handler throws an error", async () => {
+    it('does not commit the transaction if the utilisation report state machine event handler throws an error', async () => {
       // Arrange
       handleEventSpy.mockRejectedValue(new Error('Some error'));
 
@@ -186,7 +203,7 @@ describe('post-add-payment.controller helpers', () => {
       await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails)).rejects.toThrow(new TransactionFailedError(errorMessage));
     });
 
-    it("calls the 'queryRunner.release' method if the event handler runs successfully", async () => {
+    it('releases the connection used for the transaction if the event handler runs successfully', async () => {
       // Act
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
@@ -194,7 +211,7 @@ describe('post-add-payment.controller helpers', () => {
       expect(mockQueryRunner.release).toHaveBeenCalled();
     });
 
-    it("calls the 'queryRunner.release' method if the event handler throws an error", async () => {
+    it('releases the connection used for the transaction if the event handler throws an error', async () => {
       // Arrange
       handleEventSpy.mockRejectedValue(new Error('Some error'));
 

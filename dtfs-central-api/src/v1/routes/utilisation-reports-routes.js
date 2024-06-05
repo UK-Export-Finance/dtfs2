@@ -1,7 +1,7 @@
 const express = require('express');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
-const { validatePostAddPaymentPayload } = require('./middleware/payload-validation/validate-post-add-payment-payload');
+const { validatePostPaymentPayload } = require('./middleware/payload-validation/validate-post-payment-payload');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
 const {
   postUploadUtilisationReport,
@@ -15,7 +15,7 @@ const {
   getUtilisationReportReconciliationDetailsById,
 } = require('../controllers/utilisation-report-service/get-utilisation-report-reconciliation-details-by-id.controller');
 const { getSelectedFeeRecordDetails } = require('../controllers/utilisation-report-service/get-selected-fee-records-details.controller');
-const { postAddPayment } = require('../controllers/utilisation-report-service/post-add-payment.controller');
+const { postPayment } = require('../controllers/utilisation-report-service/post-payment.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -219,11 +219,11 @@ utilisationReportsRouter
 
 /**
  * @openapi
- * /utilisation-reports/:reportId/add-a-payment:
+ * /utilisation-reports/:reportId/payment:
  *   post:
  *     summary: Add a payment to the utilisation report
  *     tags: [UtilisationReport]
- *     description: Get the fee record details for the selected fee record ids
+ *     description: Adds a new payment to the utilisation report with the supplied report id
  *     parameters:
  *       - in: path
  *         name: reportId
@@ -266,7 +266,7 @@ utilisationReportsRouter
  *         description: Internal Server Error
  */
 utilisationReportsRouter
-  .route('/:reportId/add-payment')
-  .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePostAddPaymentPayload, postAddPayment);
+  .route('/:reportId/payment')
+  .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePostPaymentPayload, postPayment);
 
 module.exports = utilisationReportsRouter;
