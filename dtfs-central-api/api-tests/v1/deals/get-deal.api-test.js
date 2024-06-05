@@ -32,8 +32,9 @@ describe('/v1/portal/deals', () => {
 
   describe('GET /v1/portal/deals/:id', () => {
     it('returns the requested resource', async () => {
-      const expectedResponse = expectAddedFields({ baseDeal: newDeal, userId: MOCK_PORTAL_USER._id, auditRecordType: 'portal' });
       const postResult = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+      const expectedResponse = expectAddedFields({ baseDeal: newDeal, auditDetails: postResult.auditDetails });
+
       const dealId = postResult.body._id;
 
       const { status, body } = await api.get(`/v1/portal/deals/${dealId}`);

@@ -36,9 +36,9 @@ const addBaseFields = (baseDeal) => {
   return expectation;
 };
 
-const expectAddedFields = ({ baseDeal, userId, auditRecordType }) => {
+const expectAddedFields = ({ baseDeal, auditDetails }) => {
   const expectation = addBaseFields(baseDeal);
-  const expectationWithAuditRecord = addAuditRecordToExpectedResponse({ baseResponse: expectation, auditDetails: { id: userId, userType: auditRecordType } });
+  const expectationWithAuditRecord = addAuditRecordToExpectedResponse({ baseResponse: expectation, auditDetails });
 
   return expectationWithAuditRecord;
 };
@@ -51,7 +51,7 @@ const expectedEditedByObject = (user) => ({
   userId: user._id,
 });
 
-const expectAddedFieldsWithEditedBy = ({ baseDeal, user, auditRecordType, numberOfUpdates = 1 }) => {
+const expectAddedFieldsWithEditedBy = ({ baseDeal, user, auditDetails, numberOfUpdates = 1 }) => {
   const expectedEditedByArray = new Array(numberOfUpdates);
   expectedEditedByArray.fill(expectedEditedByObject(user));
 
@@ -60,7 +60,7 @@ const expectAddedFieldsWithEditedBy = ({ baseDeal, user, auditRecordType, number
     editedBy: expectedEditedByArray,
   });
 
-  const expectationWithAuditRecord = addAuditRecordToExpectedResponse({ baseResponse: expectation, auditDetails: { id: user._id, userType: auditRecordType } });
+  const expectationWithAuditRecord = addAuditRecordToExpectedResponse({ baseResponse: expectation, auditDetails });
 
   return expectationWithAuditRecord;
 };

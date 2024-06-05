@@ -45,9 +45,8 @@ describe('/v1/portal/deals', () => {
     });
 
     it('returns the created deal with correct fields', async () => {
-      const expectedResponse = expectAddedFields({ baseDeal: newDeal, userId: MOCK_PORTAL_USER._id, auditRecordType: 'portal' });
-
-      const { body, status } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+      const { body, status, auditDetails } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+      const expectedResponse = expectAddedFields({ baseDeal: newDeal, auditDetails });
 
       expect(status).toEqual(200);
 
