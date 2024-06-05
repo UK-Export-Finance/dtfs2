@@ -28,13 +28,16 @@ const newDeal = aDeal({
 
 describe('/v1/portal/deals', () => {
   let postResult;
-  beforeAll(async () => {
+
+  beforeEach(async () => {
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
+    postResult = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+  });
+
+  afterAll(async () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
   });
 
-  beforeEach(async () => {
-    postResult = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
-  });
   describe('PUT /v1/portal/deals/:id', () => {
     it('returns the updated deal', async () => {
       const createdDeal = postResult.body;
