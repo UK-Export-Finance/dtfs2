@@ -7,9 +7,7 @@
 const selectAtLeastOneRole = (user, change) => {
   if (
     !change.roles ||
-    change.roles.length === 0 ||
-    (change.roles.length === 1 && change.roles[0] === null) ||
-    (typeof change.roles === 'object' && Object.keys(change.roles).length === 0) ||
+    (Array.isArray(change.roles) && change.roles.every((item) => item === null)) ||
     (typeof change.roles === 'string' && change.roles.trim() === '')
   ) {
     return [

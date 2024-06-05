@@ -10,27 +10,20 @@ describe('surnameMustNotBeEmpty', () => {
     },
   ];
 
-  const testCases = [
-    { description: 'when no surname is provided', change: { surname: '' } },
-    { description: 'when surname is null', change: { surname: null } },
-    { description: 'when surname is undefined', change: { surname: undefined } },
-    { description: 'when surname is an empty array', change: { surname: [] } },
-    { description: 'when surname is an empty object', change: { surname: {} } },
-    { description: 'when surname is a space', change: { surname: ' ' } },
-  ];
+  const inputs = ['', ' ', [], {}];
 
-  describe.each(testCases)('$description', ({ change }) => {
-    it('should return an error if no surname is provided', () => {
-      const errors = surnameMustNotBeEmpty(undefined, change);
+  describe('surname validation', () => {
+    test.each(inputs)('should return an error when first name is an %s', (input) => {
+      const errors = surnameMustNotBeEmpty(undefined, input);
       expect(errors).toStrictEqual(surnameMustNotBeEmptyError);
     });
+  });
 
-    describe('when a surname is provided', () => {
-      it('should not return an error', () => {
-        const surnameChange = { surname: 'Doe' };
-        const errors = surnameMustNotBeEmpty(undefined, surnameChange);
-        expect(errors).toStrictEqual([]);
-      });
+  describe('when a surname is provided', () => {
+    it('should not return an error', () => {
+      const surnameChange = { surname: 'Doe' };
+      const errors = surnameMustNotBeEmpty(undefined, surnameChange);
+      expect(errors).toStrictEqual([]);
     });
   });
 });
