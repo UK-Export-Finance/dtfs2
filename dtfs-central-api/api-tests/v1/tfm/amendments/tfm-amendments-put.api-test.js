@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
@@ -68,7 +68,7 @@ describe('PUT TFM amendments', () => {
           api
             .put({ payload: { updatePayload: { createdBy: MOCK_PORTAL_USER } }, auditDetails })
             .to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`),
-        validUserTypes: ['tfm'],
+        validUserTypes: [AUDIT_USER_TYPES.TFM],
       });
 
       it('should update an amendment based on facilityId and amendmentId', async () => {

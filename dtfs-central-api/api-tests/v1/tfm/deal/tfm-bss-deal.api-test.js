@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
@@ -155,7 +155,7 @@ describe('/v1/tfm/deal/:id', () => {
               },
             })
             .to(`/v1/tfm/deals/${dealId}/snapshot`),
-        validUserTypes: ['portal'],
+        validUserTypes: [AUDIT_USER_TYPES.PORTAL],
       });
 
       it('updates deal.dealSnapshot whilst retaining existing snapshot deal.tfm', async () => {

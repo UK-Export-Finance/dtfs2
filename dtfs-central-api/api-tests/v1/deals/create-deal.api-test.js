@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deal-builder');
 
@@ -41,7 +41,7 @@ describe('/v1/portal/deals', () => {
   describe('POST /v1/portal/deals', () => {
     withValidateAuditDetailsTests({
       makeRequest: async (auditDetails) => await api.post({ auditDetails, deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals'),
-      validUserTypes: ['portal'],
+      validUserTypes: [AUDIT_USER_TYPES.PORTAL],
     });
 
     it('returns the created deal with correct fields', async () => {

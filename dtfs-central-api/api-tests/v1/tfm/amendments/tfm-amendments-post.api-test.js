@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
@@ -59,7 +59,7 @@ describe('POST TFM amendments', () => {
 
       withValidateAuditDetailsTests({
         makeRequest: (auditDetails) => api.post({ auditDetails }).to(`/v1/tfm/facilities/${facilityId}/amendments`),
-        validUserTypes: ['tfm'],
+        validUserTypes: [AUDIT_USER_TYPES.TFM],
       });
 
       it('should create a new amendment based on facilityId', async () => {

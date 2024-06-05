@@ -1,3 +1,4 @@
+const { AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { withDeleteOneTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
@@ -36,7 +37,7 @@ describe('DELETE /v1/portal/deals', () => {
           auditDetails,
         })
         .to(`/v1/portal/deals/${dealToDeleteId}`),
-    validUserTypes: ['portal'],
+    validUserTypes: [AUDIT_USER_TYPES.PORTAL],
   });
 
   withDeleteOneTests({
