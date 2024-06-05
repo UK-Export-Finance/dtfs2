@@ -1,11 +1,17 @@
 import { CurrencyAndAmountString } from '@ukef/dtfs2-common';
 
-export type SelectedReportedFeeViewModel = {
+type SelectedReportedFeeViewModel = {
   feeRecordId: number;
   facilityId: string;
   exporter: string;
-  reportedFee: CurrencyAndAmountString;
-  reportedPayments: CurrencyAndAmountString;
+  reportedFee: {
+    value: CurrencyAndAmountString;
+    dataSortValue: number;
+  };
+  reportedPayments: {
+    value: CurrencyAndAmountString;
+    dataSortValue: number;
+  };
 };
 
 export type SelectedReportedFeesDetailsViewModel = {
