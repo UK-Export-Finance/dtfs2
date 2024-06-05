@@ -1,3 +1,4 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { isValidMongoId } = require('../validation/validateIds');
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
@@ -189,7 +190,7 @@ exports.deleteLoan = async (req, res) => {
         return res.status(401).send();
       }
 
-      const { status, data } = await facilitiesController.delete(loanId, req.user);
+      const { status, data } = await facilitiesController.delete(loanId, req.user, generatePortalAuditDetails(req.user._id));
 
       return res.status(status).send(data);
     }

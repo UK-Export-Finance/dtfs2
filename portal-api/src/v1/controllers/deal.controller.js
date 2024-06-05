@@ -1,3 +1,4 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const DEFAULTS = require('../defaults');
 const db = require('../../drivers/db-client');
 const { isValidMongoId } = require('../validation/validateIds');
@@ -159,7 +160,7 @@ exports.delete = async (req, res) => {
     if (!userHasAccessTo(req.user, deal)) {
       res.status(401).send();
     } else {
-      const response = await api.deleteDeal(dealId);
+      const response = await api.deleteDeal(dealId, generatePortalAuditDetails(req.user._id));
       res.status(response.status).send(response.body);
     }
   });

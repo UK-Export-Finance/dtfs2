@@ -50,13 +50,14 @@ module.exports.updateFacility = (facilityId, facilityUpdate, user) =>
       return resp.body;
     });
 
-module.exports.deleteFacility = (facilityId, user) =>
+module.exports.deleteFacility = (facilityId, user, auditDetails) =>
   cy
     .request({
       method: 'DELETE',
       url: `${api()}/v1/portal/facilities/${facilityId}`,
       body: {
         user,
+        auditDetails,
       },
       headers,
     })
@@ -65,12 +66,15 @@ module.exports.deleteFacility = (facilityId, user) =>
       return resp.body;
     });
 
-module.exports.deleteTfmDeal = (dealId) =>
+module.exports.deleteTfmDeal = (dealId, auditDetails) =>
   cy
     .request({
       url: `${api()}/v1/tfm/deals/${dealId}`,
       method: 'DELETE',
       headers,
+      body: {
+        auditDetails,
+      },
     })
     .then((resp) => {
       expect(resp.status).to.equal(200);

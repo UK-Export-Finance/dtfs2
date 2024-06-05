@@ -25,4 +25,5 @@ export const MOCK_PORTAL_SESSION_USER: PortalSessionUser = {
   },
   timezone: 'Europe/London',
   'user-status': 'active',
+  isTrusted: false,
 };

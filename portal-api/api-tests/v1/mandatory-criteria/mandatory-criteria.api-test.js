@@ -1,4 +1,4 @@
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests, withNoRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');

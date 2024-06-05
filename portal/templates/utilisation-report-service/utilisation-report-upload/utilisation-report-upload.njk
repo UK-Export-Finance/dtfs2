@@ -48,11 +48,11 @@
         }) }}
         <ul class="govuk-list govuk-list--bullet" data-cy="due-reports-list">
             {% for dueReport in dueReportPeriods.slice(0, -1) %}
-                <li data-cy="list-item-{{ dueReport.reportPeriod.start.month }}-{{ dueReport.reportPeriod.start.year }}__overdue">
+                <li data-cy="list-item-{{ dueReport.start.month }}-{{ dueReport.start.year }}__overdue">
                     {{ dueReport.formattedReportPeriod }} report is overdue
                 </li>
             {% endfor %}
-            <li data-cy="list-item-{{ dueReportPeriods.at(-1).reportPeriod.start.month }}-{{ dueReportPeriods.at(-1).reportPeriod.start.year }}__now-due">
+            <li data-cy="list-item-{{ dueReportPeriods.at(-1).start.month }}-{{ dueReportPeriods.at(-1).start.year }}__now-due">
                 {{ dueReportPeriods.at(-1).formattedReportPeriod }} report is now due
             </li>
         </ul>

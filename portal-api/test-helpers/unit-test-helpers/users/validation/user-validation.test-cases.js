@@ -40,7 +40,10 @@ const itThrowsAnError = ({ makeApplyRulesCall, expectedRulesTestCases, mockAllRu
 const itReturnsAllErrors = ({ makeApplyRulesCall, expectedErrors }) => {
   it('returns all errors', async () => {
     const result = await makeApplyRulesCall();
-    expect(result).toEqual(expectedErrors);
+
+    // The following is used as order is not important and varies
+    expect(result).toHaveLength(expectedErrors.length);
+    expect(result).toEqual(expect.arrayContaining(expectedErrors));
   });
 };
 

@@ -45,7 +45,7 @@ exports.update = async (dealId, facilityId, facilityBody, user) => {
 /**
  * Delete a facility (BSS, EWCS only)
  */
-exports.delete = async (facilityId, user) => api.deleteFacility(facilityId, user);
+exports.delete = async (facilityId, user, auditDetails) => api.deleteFacility(facilityId, user, auditDetails);
 
 /**
  * Create multiple facilities (BSS, EWCS only)

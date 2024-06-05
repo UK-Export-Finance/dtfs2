@@ -5,6 +5,10 @@ jest.mock('node-cron', () => ({
   validate: jest.fn(),
 }));
 
+jest.mock('./src/services/changeStream/setupChangeStream', () => ({
+  setupChangeStream: jest.fn(),
+}));
+
 afterAll(async () => {
   await db.close();
 });

@@ -19,7 +19,7 @@ type ReportPeriodSummaryViewModel = {
 
 type SummaryViewModel = ReportPeriodSummaryViewModel[];
 
-const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportReconciliationStatus, string> = {
+export const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportReconciliationStatus, string> = {
   REPORT_NOT_RECEIVED: 'Not received',
   PENDING_RECONCILIATION: 'Pending reconciliation',
   RECONCILIATION_IN_PROGRESS: 'Reconciliation in progress',

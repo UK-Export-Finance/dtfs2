@@ -27,10 +27,11 @@ const sanitize = (user) => ({
   'user-status': user['user-status'],
   disabled: user.disabled,
   _id: user._id,
+  isTrusted: user.isTrusted,
 });
 
 const sessionIdentifierValidation = (user, jwtPayload) =>
-  user?.sessionIdentifier === jwtPayload?.sessionIdentifier ? PASSPORT_VALIDATION_RESULTS.PASSED : PASSPORT_VALIDATION_RESULTS.FAILED;
+  user && user.sessionIdentifier === jwtPayload.sessionIdentifier ? PASSPORT_VALIDATION_RESULTS.PASSED : PASSPORT_VALIDATION_RESULTS.FAILED;
 
 const baseAuthenticationConfiguration = ({
   name,

@@ -1,0 +1,36 @@
+{% macro render(params) %}
+  {% set feeRecords = params.reportedFeeDetails.feeRecords %}
+  {% set totalReportedPayments = params.reportedFeeDetails.totalReportedPayments %}
+  <table class="govuk-table"
+         data-module="moj-sortable-table"
+         data-cy="selected-reported-fees-details-table">
+    <caption class="govuk-table__caption govuk-table__caption--m">Selected reported fees details</caption>
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header" aria-sort="ascending">Facility ID</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Exporter</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="none">Reported fee</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="none">Reported payments</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      {% for feeRecord in feeRecords %}
+        <tr class="govuk-table__row"
+            data-cy="selected-reported-fees-details-table-row--feeRecordId-{{ feeRecord.feeRecordId }}">
+          <th scope="row" class="govuk-table__header govuk-!-font-weight-regular" data-sort-value="{{ feeRecord.facilityId }}">{{ feeRecord.facilityId }}</th>
+          <td class="govuk-table__cell" data-sort-value="{{ feeRecord.exported }}">{{ feeRecord.exporter }}</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ feeRecord.reportedFee.dataSortValue }}">{{ feeRecord.reportedFee.value }}</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ feeRecord.reportedPayments.dataSortValue }}">{{ feeRecord.reportedPayments.value }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr class="govuk-table__row">
+        <td colspan="4"
+            class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold">
+          Total reported payments <span class="govuk-!-margin-left-2">{{ totalReportedPayments }}</span>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+{% endmacro %}
