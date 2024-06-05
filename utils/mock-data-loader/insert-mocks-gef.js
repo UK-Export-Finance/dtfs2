@@ -24,8 +24,7 @@ const insertMocks = async (token) => {
 
   const makerToken = await portalApi.loginViaPortal(BANK1_MAKER1);
 
-  // eslint-disable-next-line no-unused-vars
-  for (const [index, item] of MOCKS.APPLICATION.entries()) {
+  for (const [_index, item] of MOCKS.APPLICATION.entries()) {
     item.userId = makerUserId;
     const application = await api.createApplication(item, makerToken);
 
@@ -42,12 +41,9 @@ const insertMocks = async (token) => {
 
   logger.info('inserting and updating GEF facilities', { depth: 1 });
   for (const [index, item] of MOCKS.FACILITIES.entries()) {
-    // eslint-disable-next-line no-restricted-syntax
     for (const subitem of item) {
-      // eslint-disable-next-line no-param-reassign
       subitem.dealId = gefDeals[index]._id;
       const facility = await api.createFacilities(subitem, makerToken);
-      // eslint-disable-next-line no-param-reassign
       delete subitem.dealId;
       await api.updateFacilities(facility.details, subitem, makerToken);
     }
