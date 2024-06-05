@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FeeRecordEntity, FeeRecordStatus, PaymentEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, FeeRecordEntity, PaymentEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { NewPaymentDetails } from '../../../../../types/utilisation-reports';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
@@ -25,7 +25,7 @@ export const handleUtilisationReportAddAPaymentEvent = async (
   });
   await transactionEntityManager.save(PaymentEntity, payment);
 
-  const feeRecordStatusToSet: FeeRecordStatus = (await feeRecordsMatchAttachedPayments(feeRecords, transactionEntityManager)) ? 'MATCH' : 'DOES_NOT_MATCH';
+  const feeRecordsAndPaymentsMatch = await feeRecordsMatchAttachedPayments(feeRecords, transactionEntityManager);
 
   const feeRecordStateMachines = feeRecords.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
   await Promise.all(
@@ -34,7 +34,7 @@ export const handleUtilisationReportAddAPaymentEvent = async (
         type: 'PAYMENT_ADDED',
         payload: {
           transactionEntityManager,
-          status: feeRecordStatusToSet,
+          feeRecordsAndPaymentsMatch,
           requestSource,
         },
       }),

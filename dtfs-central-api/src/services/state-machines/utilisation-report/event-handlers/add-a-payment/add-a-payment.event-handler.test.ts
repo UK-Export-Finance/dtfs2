@@ -4,7 +4,6 @@ import {
   DbRequestSource,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
-  FeeRecordStatus,
   PaymentEntity,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntity,
@@ -102,14 +101,14 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
         type: 'PAYMENT_ADDED',
         payload: {
           transactionEntityManager: mockEntityManager,
-          status: 'DOES_NOT_MATCH',
+          feeRecordsAndPaymentsMatch: false,
           requestSource,
         },
       });
     });
   });
 
-  it("calls the fee record state machine event handler with the status set to 'MATCH' if the fee records match the payments", async () => {
+  it("calls the fee record state machine event handler with 'feeRecordsAndPaymentsMatch' set to true if the fee records match the payments", async () => {
     // Arrange
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
@@ -122,7 +121,6 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
     jest.mocked(feeRecordsMatchAttachedPayments).mockResolvedValue(true);
-    const newStatus: FeeRecordStatus = 'MATCH';
 
     // Act
     await handleUtilisationReportAddAPaymentEvent(utilisationReport, {
@@ -139,14 +137,14 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
         expect.objectContaining({
           type: 'PAYMENT_ADDED',
           payload: expect.objectContaining({
-            status: newStatus,
-          }) as { status: FeeRecordStatus },
+            feeRecordsAndPaymentsMatch: true,
+          }) as { feeRecordsAndPaymentsMatch: boolean },
         }),
       );
     });
   });
 
-  it("calls the fee record state machine event handler with the status set to 'DOES_NOT_MATCH' if the fee records do not match the payment", async () => {
+  it("calls the fee record state machine event handler with 'feeRecordsAndPaymentsMatch' set to false if the fee records do not match the payments", async () => {
     // Arrange
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
@@ -159,7 +157,6 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
     jest.mocked(feeRecordsMatchAttachedPayments).mockResolvedValue(false);
-    const newStatus: FeeRecordStatus = 'DOES_NOT_MATCH';
 
     // Act
     await handleUtilisationReportAddAPaymentEvent(utilisationReport, {
@@ -176,8 +173,8 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
         expect.objectContaining({
           type: 'PAYMENT_ADDED',
           payload: expect.objectContaining({
-            status: newStatus,
-          }) as { status: FeeRecordStatus },
+            feeRecordsAndPaymentsMatch: false,
+          }) as { feeRecordsAndPaymentsMatch: boolean },
         }),
       );
     });

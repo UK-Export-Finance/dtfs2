@@ -42,11 +42,15 @@ export class FeeRecordStateMachine {
         }
       case 'MATCH':
         switch (event.type) {
+          case 'PAYMENT_ADDED':
+            return handleFeeRecordPaymentAddedEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
       case 'DOES_NOT_MATCH':
         switch (event.type) {
+          case 'PAYMENT_ADDED':
+            return handleFeeRecordPaymentAddedEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }

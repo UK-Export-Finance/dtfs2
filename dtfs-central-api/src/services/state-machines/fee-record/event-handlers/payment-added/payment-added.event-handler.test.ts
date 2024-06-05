@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FeeRecordEntity, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { handleFeeRecordPaymentAddedEvent } from './payment-added.event-handler';
 
 describe('handleFeeRecordPaymentAddedEvent', () => {
@@ -22,7 +22,7 @@ describe('handleFeeRecordPaymentAddedEvent', () => {
     // Act
     await handleFeeRecordPaymentAddedEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
-      status: 'MATCH',
+      feeRecordsAndPaymentsMatch: true,
       requestSource,
     });
 
@@ -30,20 +30,26 @@ describe('handleFeeRecordPaymentAddedEvent', () => {
     expect(mockEntityManager.save).toHaveBeenCalledWith(FeeRecordEntity, feeRecord);
   });
 
-  it.each(['MATCH', 'DOES_NOT_MATCH'] as const)("sets the fee record status to '%s' when the event payload status is '%s'", async (status) => {
-    // Arrange
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus('TO_DO').build();
+  it.each([
+    { feeRecordsAndPaymentsMatch: true, expectedStatus: FEE_RECORD_STATUS.MATCH },
+    { feeRecordsAndPaymentsMatch: false, expectedStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH },
+  ])(
+    "sets the fee record status to '$expectedStatus' when the event payload 'feeRecordsAndPaymentsMatch' is '$feeRecordsAndPaymentsMatch'",
+    async ({ feeRecordsAndPaymentsMatch, expectedStatus }) => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus('TO_DO').build();
 
-    // Act
-    await handleFeeRecordPaymentAddedEvent(feeRecord, {
-      transactionEntityManager: mockEntityManager,
-      status,
-      requestSource,
-    });
+      // Act
+      await handleFeeRecordPaymentAddedEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        feeRecordsAndPaymentsMatch,
+        requestSource,
+      });
 
-    // Assert
-    expect(feeRecord.status).toBe(status);
-  });
+      // Assert
+      expect(feeRecord.status).toBe(expectedStatus);
+    },
+  );
 
   it("sets the fee record 'lastUpdatedByIsSystemUser' field to false", async () => {
     // Arrange
@@ -52,7 +58,7 @@ describe('handleFeeRecordPaymentAddedEvent', () => {
     // Act
     await handleFeeRecordPaymentAddedEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
-      status: 'MATCH',
+      feeRecordsAndPaymentsMatch: true,
       requestSource,
     });
 
@@ -67,7 +73,7 @@ describe('handleFeeRecordPaymentAddedEvent', () => {
     // Act
     await handleFeeRecordPaymentAddedEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
-      status: 'MATCH',
+      feeRecordsAndPaymentsMatch: true,
       requestSource,
     });
 
@@ -82,7 +88,7 @@ describe('handleFeeRecordPaymentAddedEvent', () => {
     // Act
     await handleFeeRecordPaymentAddedEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
-      status: 'MATCH',
+      feeRecordsAndPaymentsMatch: true,
       requestSource,
     });
 
