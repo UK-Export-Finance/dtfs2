@@ -4,12 +4,17 @@ import { REGEX } from '../../../constants';
 import { AddPaymentErrorsViewModel, AddPaymentPaymentDateErrorViewModel, ErrorSummaryViewModel } from '../../../types/view-models';
 import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
 
+const isCurrencyNumberOptionallyWithThousandsSeparators = (value: string) => {
+  const currencyNumberWithOptionalThousandsSeparatorsRegex = /^(\d+|\d{1,3}(,\d{3})+)(\.\d{1,2})?$/;
+  return currencyNumberWithOptionalThousandsSeparatorsRegex.test(value);
+};
+
 const isPaymentCurrencyValid = (paymentCurrency: string | undefined): boolean => {
   return isNonEmptyString(paymentCurrency) && (Object.values(CURRENCY) as string[]).includes(paymentCurrency);
 };
 
 const isPaymentAmountValid = (paymentAmount: string | undefined): boolean => {
-  return isNonEmptyString(paymentAmount) && REGEX.CURRENCY_NUMBER_WITH_OPTIONAL_THOUSANDS_SEPARATOR_REGEX.test(paymentAmount);
+  return isNonEmptyString(paymentAmount) && isCurrencyNumberOptionallyWithThousandsSeparators(paymentAmount);
 };
 
 const isAddAnotherPaymentChoiceValid = (addAnotherPaymentChoice: string | undefined): boolean => {
@@ -64,8 +69,11 @@ const getMissingDateFieldsError = (fieldTitle: string, missingFields: DateFieldN
   };
 };
 
-const getIsoString = (day: string, month: string, year: string) => {
-  return `${year}-${month.length === 1 ? `0${month}` : month}-${day.length === 1 ? `0${day}` : day}`;
+const parseDate = (day: string, month: string, year: string) => {
+  // Calling new Date(`${year}-${month}-${day}`) would parse `2024-02-31` as the 3rd of march (or 2nd depending on the year).
+  // However we want to display the 31st of February as invalid to the user and force them to enter a valid date so we instead use date-fns parseISO which treats dates like this as an error.
+  const isoDateString = `${year}-${month.length === 1 ? `0${month}` : month}-${day.length === 1 ? `0${day}` : day}`;
+  return parseISO(isoDateString);
 };
 
 const validatePaymentDateAndReturnErrorIfInvalid = (
@@ -92,8 +100,7 @@ const validatePaymentDateAndReturnErrorIfInvalid = (
     return { message: `The ${fieldTitle} must be a real date`, dayError: hasDayError, monthError: hasMonthError, yearError: hasYearError };
   }
 
-  const isoDateString = getIsoString(dayString, monthString, yearString);
-  const date = parseISO(isoDateString);
+  const date = parseDate(dayString, monthString, yearString);
   if (!isValid(date)) {
     return { message: `The ${fieldTitle} must be a real date`, dayError: true, monthError: true, yearError: true };
   }
