@@ -1,3 +1,4 @@
+import { COMPANY_REGISTRATION_NUMBER } from '..';
 import { isString } from './string';
 
 /**
@@ -12,3 +13,8 @@ export const asString = (value: unknown, context: string): string => {
 
   return value;
 };
+
+export const matchesRegex = (regex: RegExp, input: string): boolean => regex.test(input);
+
+export const isValidCompanyRegistrationNumber = (registrationNumber: string): boolean =>
+  matchesRegex(COMPANY_REGISTRATION_NUMBER.REGEX, registrationNumber.toString());

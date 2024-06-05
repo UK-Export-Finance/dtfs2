@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { isValidCompanyRegistrationNumber } from '@ukef/dtfs2-common';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
-import { isValidCompaniesHouseNumber } from '../../helpers';
 
 dotenv.config();
 
@@ -18,7 +18,7 @@ const headers = {
 export const lookup = async (req: Request, res: Response) => {
   const { partyDbCompanyRegistrationNumber: companyReg } = req.params;
 
-  if (!isValidCompaniesHouseNumber(companyReg)) {
+  if (!isValidCompanyRegistrationNumber(companyReg)) {
     console.error('Invalid company registration number provided %s', companyReg);
     return res.status(400).send({ status: 400, data: 'Invalid company registration number' });
   }

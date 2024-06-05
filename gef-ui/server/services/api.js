@@ -1,7 +1,8 @@
 const FormData = require('form-data');
+const { isValidCompanyRegistrationNumber } = require('@ukef/dtfs2-common');
 const Axios = require('./axios');
 const { apiErrorHandler } = require('../utils/helpers');
-const { isValidMongoId, isValidUkPostcode, isValidCompaniesHouseNumber } = require('../utils/validateIds');
+const { isValidMongoId, isValidUkPostcode } = require('../utils/validateIds');
 
 const config = (userToken) => ({ headers: { Authorization: userToken } });
 
@@ -182,14 +183,14 @@ const getCompanyByRegistrationNumber = async ({ registrationNumber, userToken })
     if (!registrationNumber) {
       return {
         errRef: 'regNumber',
-        errMsg: 'Enter a Companies House registration number.',
+        errMsg: 'Enter a Companies House registration number',
       };
     }
 
-    if (!isValidCompaniesHouseNumber(registrationNumber)) {
+    if (!isValidCompanyRegistrationNumber(registrationNumber)) {
       return {
         errRef: 'regNumber',
-        errMsg: 'Enter a valid Companies House registration number.',
+        errMsg: 'Enter a valid Companies House registration number',
       };
     }
 
@@ -202,17 +203,17 @@ const getCompanyByRegistrationNumber = async ({ registrationNumber, userToken })
       case 400:
         return {
           errRef: 'regNumber',
-          errMsg: 'Enter a valid Companies House registration number.',
+          errMsg: 'Enter a valid Companies House registration number',
         };
       case 404:
         return {
           errRef: 'regNumber',
-          errMsg: 'No company matching the Companies House registration number entered was found.',
+          errMsg: 'No company matching the Companies House registration number entered was found',
         };
       case 422:
         return {
           errRef: 'regNumber',
-          errMsg: 'UKEF can only process applications from companies based in the UK.',
+          errMsg: 'UKEF can only process applications from companies based in the UK',
         };
       default:
         throw error;

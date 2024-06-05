@@ -1,3 +1,4 @@
+const { COMPANY_REGISTRATION_NUMBER } = require('@ukef/dtfs2-common');
 const { contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
@@ -157,12 +158,12 @@ context('about-supply-contract', () => {
 
     // should see companies house validation errors
     partials.errorSummary.errorSummaryLinks().should('have.length', 12);
-    contractAboutSupplier.expectError('Enter a valid Companies House registration number');
+    contractAboutSupplier.expectError('Enter a Companies House registration number');
 
     //---------------------------------------------------------------
     // supplier companies house submit - providing an invalid value
     //---------------------------------------------------------------
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('TEST');
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_LONG);
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -180,13 +181,13 @@ context('about-supply-contract', () => {
     partials.errorSummary.errorSummaryLinks().should('have.length', 11);
 
     // triggering companies house error should then display companies house & required validation errors
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('TEST');
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_LONG);
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
     partials.errorSummary.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
   });
 
-  it('A maker picks up a deal in status=Draft, fills in a field, triggers Supplier companies house validation errors', () => {
+  it.only('A maker picks up a deal in status=Draft, fills in a field, triggers Supplier companies house validation errors', () => {
     cy.login(BANK1_MAKER1);
     contractAboutSupplier.visit(deal);
 
@@ -198,7 +199,7 @@ context('about-supply-contract', () => {
     //---------------------------------------------------------------
     // supplier companies house submit - providing an invalid value
     //---------------------------------------------------------------
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('TEST');
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_LONG);
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -215,7 +216,7 @@ context('about-supply-contract', () => {
       .supplierCompaniesHouseRegistrationNumber()
       .invoke('val')
       .then((value) => {
-        expect(value).equal('TEST');
+        expect(value).equal(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_LONG);
       });
 
     //---------------------------------------------------------------
@@ -227,7 +228,7 @@ context('about-supply-contract', () => {
     partials.errorSummary.errorSummaryLinks().should('have.length', 11);
 
     // triggering companies house error should then display companies house & required validation errors
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('TEST');
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_LONG);
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
     partials.errorSummary.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
@@ -247,13 +248,13 @@ context('about-supply-contract', () => {
 
     // should see companies house validation errors
     partials.errorSummary.errorSummaryLinks().should('have.length', 12);
-    contractAboutSupplier.expectError('Enter a valid Companies House registration number');
+    contractAboutSupplier.expectError('Enter a Companies House registration number');
 
     //---------------------------------------------------------------
-    // indemnifier companies house submit - providing an invalid value
+    // indemnifier companies house submit - providing a value which is too short
     //---------------------------------------------------------------
     contractAboutSupplier.legallyDistinct().click();
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().type('TEST');
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_LONG);
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -266,7 +267,7 @@ context('about-supply-contract', () => {
     // indemnifier companies house submit - providing a value which is too short
     //---------------------------------------------------------------------------
 
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type('89898');
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SHORT);
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -279,7 +280,7 @@ context('about-supply-contract', () => {
     // indemnifier companies house submit - providing a value which has a special character
     //---------------------------------------------------------------------------------------
 
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type('R$00592C');
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SPECIAL_CHARACTER);
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -292,7 +293,7 @@ context('about-supply-contract', () => {
     // indemnifier companies house submit - providing a value which has a space
     //--------------------------------------------------------------------------
 
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type(COMPANIES_HOUSE_NUMBERS.INVALID_WITH_SPACE);
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SPACE);
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -319,7 +320,7 @@ context('about-supply-contract', () => {
 
     // triggering companies house error should then display companies house & required validation errors
     contractAboutSupplier.legallyDistinct().click();
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().type('TEST');
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_LONG);
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
     partials.errorSummary.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
@@ -341,8 +342,12 @@ context('about-supply-contract', () => {
     // Click on "View Details" under the "About the Supplier" contract
     cy.get('[data-cy="ViewAboutSupplierDetails"]').click();
 
+    //---------------------------------------------------------------------------
+    // Invalid Companies House registration number
+    //---------------------------------------------------------------------------
+
     // Enter an invalid Companies House registration number
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('TEST');
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_LONG);
 
     // Click on Search
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
@@ -350,6 +355,10 @@ context('about-supply-contract', () => {
     // Check that the correct validation error is displayed
     partials.errorSummary.errorSummaryLinks().should('have.length', 1);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
+
+    //---------------------------------------------------------------------------
+    // Empty Companies House registration number
+    //---------------------------------------------------------------------------
 
     // Enter an empty Companies House registration number
     contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().clear();
@@ -359,7 +368,35 @@ context('about-supply-contract', () => {
 
     // Check that the correct validation error is displayed
     partials.errorSummary.errorSummaryLinks().should('have.length', 1);
-    contractAboutSupplier.expectError('Enter a valid Companies House registration number');
+    contractAboutSupplier.expectError('Enter a Companies House registration number');
+
+    //---------------------------------------------------------------------------
+    // Valid but non-existent Companies House registration number
+    //---------------------------------------------------------------------------
+
+    // Enter a valid but non-existent Companies House registration number
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID_NONEXISTENT);
+
+    // Click on Search
+    contractAboutSupplier.supplierSearchCompaniesHouse().click();
+
+    // Check that the correct validation error is displayed
+    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+    contractAboutSupplier.expectError('No company matching the Companies House registration number entered was found');
+
+    //---------------------------------------------------------------------------
+    // Valid Companies House registration number for an overseas company
+    //---------------------------------------------------------------------------
+
+    // Enter a valid Companies House registration number for an overseas company
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID_OVERSEAS);
+
+    // Click on Search
+    contractAboutSupplier.supplierSearchCompaniesHouse().click();
+
+    // Check that the correct validation error is displayed
+    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+    contractAboutSupplier.expectError('UKEF can only process applications from companies based in the UK');
   });
 
   it('A maker picks up a deal in status=Draft, misses mandatory field then trigger missed validation error.', () => {

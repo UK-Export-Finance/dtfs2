@@ -1,3 +1,4 @@
+const { COMPANY_REGISTRATION_NUMBER } = require('@ukef/dtfs2-common');
 const { contract, contractAboutSupplier, contractAboutPreview, defaults } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
@@ -60,7 +61,7 @@ context('about-supply-contract', () => {
     // use companies-house lookup
     //---
     contractAboutSupplier.supplierType().select('Exporter');
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('06771815');
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID);
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     // // the search should populate the supplier address fields

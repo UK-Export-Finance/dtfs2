@@ -7,24 +7,74 @@ const { POSTCODE } = require('../../fixtures/postcode');
 
 const { as, get } = require('../../api')(app);
 
-describe('GET /v1/gef/address/:postcode', () => {
-  const aPostcodeAddressUrl = `/v1/gef/address/${POSTCODE.VALID}`;
+jest.unmock('../../../src/external-api/api');
+
+const baseUrl = '/v1/gef';
+
+describe(`GET ${baseUrl}/address/:postcode (Ordnance Survey)`, () => {
   let testUsers;
+  let aMaker;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
+    aMaker = testUsers().withRole(MAKER).one();
   });
 
-  withClientAuthenticationTests({
-    makeRequestWithoutAuthHeader: () => get(aPostcodeAddressUrl),
-    makeRequestWithAuthHeader: (authHeader) => get(aPostcodeAddressUrl, { headers: { Authorization: authHeader } }),
+  it('Returns a list of addresses', async () => {
+    const { status, body } = await as(aMaker).get(`${baseUrl}/address/SW1A2HQ`);
+    expect(status).toEqual(200);
+    expect(body[0]).toEqual({
+      organisationName: expect.any(String),
+      addressLine1: expect.any(String),
+      addressLine2: null,
+      addressLine3: null,
+      country: null,
+      locality: expect.any(String),
+      postalCode: expect.any(String),
+    });
   });
 
-  withRoleAuthorisationTests({
-    allowedRoles: [MAKER, READ_ONLY, ADMIN],
-    getUserWithRole: (role) => testUsers().withRole(role).one(),
-    getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-    makeRequestAsUser: (user) => as(user).get(aPostcodeAddressUrl),
-    successStatusCode: 200,
+  it('Returns a not found address if the postcode was not found', async () => {
+    const { status, body } = await as(aMaker).get(`${baseUrl}/address/AA11AA`);
+    expect(status).toEqual(422);
+    expect(body).toEqual([
+      {
+        status: 422,
+        errCode: 'ERROR',
+        errRef: 'postcode',
+      },
+    ]);
+  });
+
+  it('Returns a not found address if the postcode was invalid', async () => {
+    const { status } = await as(aMaker).get(`${baseUrl}/address/A1`);
+    expect(status).toEqual(400);
+  });
+
+  describe('auth tests', () => {
+    const ordnanceSurveyGetAddressesByPostcodeActual = ordnanceSurvey.getAddressesByPostcode;
+    const aPostcodeAddressUrl = `${baseUrl}/address/${POSTCODE.VALID}`;
+
+    beforeEach(() => {
+      ordnanceSurvey.getAddressesByPostcode = jest.fn();
+      ordnanceSurvey.getAddressesByPostcode.mockResolvedValueOnce({ data: { results: [] } });
+    });
+
+    afterAll(() => {
+      ordnanceSurvey.getAddressesByPostcode = ordnanceSurveyGetAddressesByPostcodeActual;
+    });
+
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(aPostcodeAddressUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(aPostcodeAddressUrl, { headers: { Authorization: authHeader } }),
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER, READ_ONLY, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(aPostcodeAddressUrl),
+      successStatusCode: 200,
+    });
   });
 });

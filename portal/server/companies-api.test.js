@@ -1,0 +1,153 @@
+import axios, { AxiosError } from 'axios';
+import { COMPANY_REGISTRATION_NUMBER } from '@ukef/dtfs2-common';
+
+const { when } = require('jest-when');
+const { getCompanyByRegistrationNumber } = require('./companies-api');
+
+require('dotenv').config();
+
+const { PORTAL_API_URL } = process.env;
+
+const registrationNumber = COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID;
+const token = 'a token';
+
+const portalApiGetCompanyResponse = {
+  companiesHouseRegistrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID,
+  companyName: 'TEST COMPANY LTD',
+  registeredAddress: {
+    addressLine1: '1 Test Street',
+    locality: 'Test City',
+    postalCode: 'A1 2BC',
+    country: 'United Kingdom',
+  },
+  industries: [],
+};
+
+let axiosGetActual;
+let axiosGetMock;
+
+describe('getCompanyByRegistrationNumber()', () => {
+  beforeAll(() => {
+    axiosGetActual = axios.get;
+    axiosGetMock = jest.fn();
+    axios.get = axiosGetMock;
+  });
+
+  afterAll(() => {
+    axios.get = axiosGetActual;
+  });
+
+  it('returns the company if it is returned by the request to Portal API', async () => {
+    mockAxiosGetReturning({ status: 200, data: portalApiGetCompanyResponse });
+
+    const response = await getCompanyByRegistrationNumber(registrationNumber, token);
+
+    expect(response).toEqual({ company: portalApiGetCompanyResponse });
+  });
+
+  it('returns the correct error information if it is called without a registration number', async () => {
+    const response = await getCompanyByRegistrationNumber(undefined, token);
+
+    expect(response).toEqual({
+      errorMessage: 'Enter a Companies House registration number',
+    });
+  });
+
+  it('returns the correct error information if it is called with a null registration number', async () => {
+    const response = await getCompanyByRegistrationNumber(null, token);
+
+    expect(response).toEqual({
+      errorMessage: 'Enter a Companies House registration number',
+    });
+  });
+
+  it('returns the correct error information if it is called with a registration number that is the empty string', async () => {
+    const response = await getCompanyByRegistrationNumber('', token);
+
+    expect(response).toEqual({
+      errorMessage: 'Enter a Companies House registration number',
+    });
+  });
+
+  it('returns the correct error information if it is called with an invalid registration number', async () => {
+    const response = await getCompanyByRegistrationNumber(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SHORT, token);
+
+    expect(response).toEqual({
+      errorMessage: 'Enter a valid Companies House registration number',
+    });
+  });
+
+  it.each([
+    {
+      status: 400,
+      errorMessage: 'Enter a valid Companies House registration number',
+    },
+    {
+      status: 404,
+      errorMessage: 'No company matching the Companies House registration number entered was found',
+    },
+    {
+      status: 422,
+      errorMessage: 'UKEF can only process applications from companies based in the UK',
+    },
+  ])('returns the correct error information if the request to Portal API returns a $status', async ({ status, errorMessage }) => {
+    const axiosError = new AxiosError();
+    axiosError.response = {
+      status,
+    };
+    mockAxiosGetThrowing(axiosError);
+
+    const response = await getCompanyByRegistrationNumber(registrationNumber, token);
+
+    expect(response).toEqual({
+      errorMessage,
+    });
+  });
+
+  it('returns the correct error information if the request to Portal API returns an unhandled status', async () => {
+    const axiosError = new AxiosError();
+    axiosError.response = {
+      status: 500,
+    };
+    mockAxiosGetThrowing(axiosError);
+
+    const response = await getCompanyByRegistrationNumber(registrationNumber, token);
+
+    expect(response).toEqual({
+      errorMessage: 'An unknown error occurred. Please try again or enter the company details manually',
+    });
+  });
+
+  it('returns the correct error information if making the request to Portal API throws an unhandled error', async () => {
+    const error = new Error();
+    mockAxiosGetThrowing(error);
+
+    const response = await getCompanyByRegistrationNumber(registrationNumber, token);
+
+    expect(response).toEqual({
+      errorMessage: 'An unknown error occurred. Please try again or enter the company details manually',
+    });
+  });
+
+  function mockAxiosGetReturning(response) {
+    when(axiosGetMock)
+      .calledWith(`${PORTAL_API_URL}/v1/companies/${registrationNumber}`, {
+        headers: {
+          Authorization: token,
+          'Content-Type': 'application/json',
+        },
+      })
+      .mockResolvedValueOnce(response);
+  }
+
+  function mockAxiosGetThrowing(error) {
+    when(axiosGetMock)
+      .calledWith(`${PORTAL_API_URL}/v1/companies/${registrationNumber}`, {
+        headers: {
+          Authorization: token,
+          'Content-Type': 'application/json',
+        },
+      })
+      .mockRejectedValueOnce(error);
+  }
+});

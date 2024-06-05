@@ -1,11 +1,11 @@
+const { COMPANY_REGISTRATION_NUMBER } = require('@ukef/dtfs2-common');
 const { contract, contractAboutSupplier } = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../fixtures/constants');
 const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
-
-const { COMPANIES_HOUSE_NUMBERS, INDUSTRY_SECTOR_CODES, DEALS } = CONSTANTS;
+const { INDUSTRY_SECTOR_CODES, DEALS } = CONSTANTS;
 
 context('Supply contract form - create element and check if inserted into deal', () => {
   let deal;
@@ -46,7 +46,7 @@ context('Supply contract form - create element and check if inserted into deal',
     // use companies-house lookup
     //---
     contractAboutSupplier.supplierType().select('Exporter');
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANIES_HOUSE_NUMBERS.VALID);
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID);
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     //---

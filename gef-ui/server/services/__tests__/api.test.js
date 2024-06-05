@@ -1,3 +1,5 @@
+import { AxiosError } from 'axios';
+import { COMPANY_REGISTRATION_NUMBER } from '@ukef/dtfs2-common';
 import Axios from '../axios';
 import api from '../api';
 import CONSTANTS from '../../constants';
@@ -240,22 +242,108 @@ describe('deleteFacility()', () => {
   });
 });
 
-describe('getCompaniesHouseDetails()', () => {
-  const companiesHouseNumber = '03827491';
+describe('getCompanyByRegistrationNumber()', () => {
+  const registrationNumber = COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID;
 
-  it('returns the correct response', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.getCompaniesHouseDetails({ companyRegNumber: companiesHouseNumber, userToken });
-    expect(response).toEqual({ status: 200 });
+  const portalApiGetCompanyResponse = {
+    companiesHouseRegistrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID,
+    companyName: 'TEST COMPANY LTD',
+    registeredAddress: {
+      addressLine1: '1 Test Street',
+      locality: 'Test City',
+      postalCode: 'A1 2BC',
+      country: 'United Kingdom',
+    },
+    industries: [],
+  };
+
+  it('returns the company if it is returned by the request to Portal API', async () => {
+    Axios.get.mockResolvedValueOnce({ status: 200, data: portalApiGetCompanyResponse });
+
+    const response = await api.getCompanyByRegistrationNumber({ registrationNumber, userToken });
+
+    expect(response).toEqual({ company: portalApiGetCompanyResponse });
   });
 
-  it('throws an error if there is an api error', async () => {
-    Axios.get.mockReturnValue(Promise.reject());
-    await expect(api.getCompaniesHouseDetails({ companyRegNumber: companiesHouseNumber, userToken })).rejects.toThrowError();
+  it('returns the correct error information if it is called without a registration number', async () => {
+    const response = await api.getCompanyByRegistrationNumber({ userToken });
+
+    expect(response).toEqual({
+      errRef: 'regNumber',
+      errMsg: 'Enter a Companies House registration number',
+    });
   });
 
-  it('throws an appropriate error when given an invalid companiesHouseNumber', async () => {
-    await expect(api.getCompaniesHouseDetails({ companyRegNumber: 'invalid', userToken })).rejects.toThrowError('Invalid company house number');
+  it('returns the correct error information if it is called with a null registration number', async () => {
+    const response = await api.getCompanyByRegistrationNumber({ registrationNumber: null, userToken });
+
+    expect(response).toEqual({
+      errRef: 'regNumber',
+      errMsg: 'Enter a Companies House registration number',
+    });
+  });
+
+  it('returns the correct error information if it is called with a registration number that is the empty string', async () => {
+    const response = await api.getCompanyByRegistrationNumber({ registrationNumber: '', userToken });
+
+    expect(response).toEqual({
+      errRef: 'regNumber',
+      errMsg: 'Enter a Companies House registration number',
+    });
+  });
+
+  it('returns the correct error information if it is called with an invalid registration number', async () => {
+    const response = await api.getCompanyByRegistrationNumber({ registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SHORT, userToken });
+
+    expect(response).toEqual({
+      errRef: 'regNumber',
+      errMsg: 'Enter a valid Companies House registration number',
+    });
+  });
+
+  it.each([
+    {
+      status: 400,
+      errMsg: 'Enter a valid Companies House registration number',
+    },
+    {
+      status: 404,
+      errMsg: 'No company matching the Companies House registration number entered was found',
+    },
+    {
+      status: 422,
+      errMsg: 'UKEF can only process applications from companies based in the UK',
+    },
+  ])('returns the correct error information if the request to Portal API returns a $status', async ({ status, errMsg }) => {
+    const axiosError = new AxiosError();
+    axiosError.response = {
+      status,
+    };
+    Axios.get.mockRejectedValueOnce(axiosError);
+
+    const response = await api.getCompanyByRegistrationNumber({ registrationNumber, userToken });
+
+    expect(response).toEqual({
+      errRef: 'regNumber',
+      errMsg,
+    });
+  });
+
+  it('rethrows the error if the request to Portal API throws an error with an unhandled status', async () => {
+    const axiosError = new AxiosError();
+    axiosError.response = {
+      status: 418,
+    };
+    Axios.get.mockRejectedValueOnce(axiosError);
+
+    await expect(api.getCompanyByRegistrationNumber({ registrationNumber, userToken })).rejects.toBe(axiosError);
+  });
+
+  it('rethrows the error if making the request to Portal API throws an unhandled error', async () => {
+    const error = new Error();
+    Axios.get.mockRejectedValueOnce(error);
+
+    await expect(api.getCompanyByRegistrationNumber({ registrationNumber, userToken })).rejects.toBe(error);
   });
 });
 

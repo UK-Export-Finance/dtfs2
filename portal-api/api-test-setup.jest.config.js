@@ -24,6 +24,19 @@ expect.extend({
       pass: true,
     };
   },
+
+  toBeStringOrUndefined(received) {
+    if (typeof received !== 'string' && received !== undefined) {
+      return {
+        pass: false,
+        message: () => 'Expected a string or undefined value',
+      };
+    }
+
+    return {
+      pass: true,
+    };
+  },
 });
 
 afterAll(async () => {

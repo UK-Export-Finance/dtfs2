@@ -1,3 +1,4 @@
+const { COMPANY_REGISTRATION_NUMBER } = require('@ukef/dtfs2-common');
 const { contract, contractAboutSupplier, contractAboutPreview } = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
@@ -73,7 +74,7 @@ context('about-supply-contract', () => {
 
     //-----
     // use the companies house search to find the indemnifier
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().type('06771815');
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID);
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     //------

@@ -1,5 +1,4 @@
 const bankHolidays = require('./bank-holidays');
-const companiesHouse = require('./companies-house');
 const MOCK_COUNTRIES = require('./countries');
 const MOCK_CURRENCIES = require('./currencies');
 const MOCK_INDUSTRY_SECTORS = require('./industry-sectors');
@@ -20,7 +19,6 @@ const sendEmail = () => MOCK_EMAIL_RESPONSE;
 
 module.exports = {
   bankHolidays,
-  companiesHouse,
   countries: {
     getCountries,
     getCountry,
