@@ -41,9 +41,9 @@ const addBaseFields = (baseDeal) => {
   });
 };
 
-const expectAddedFields = ({ baseDeal, userId, auditRecordType }) => {
+const expectAddedFields = ({ baseDeal, auditDetails }) => {
   const expectation = addBaseFields(baseDeal);
-  const expectationWithAuditRecord = addAuditRecordToExpectedResponse({ baseResponse: expectation, auditDetails: { id: userId, userType: auditRecordType } });
+  const expectationWithAuditRecord = addAuditRecordToExpectedResponse({ baseResponse: expectation, auditDetails });
 
   return expectationWithAuditRecord;
 };

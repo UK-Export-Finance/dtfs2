@@ -1,6 +1,6 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -55,7 +55,7 @@ describe('/v1/tfm/deal/:id', () => {
     it('404s if updating an unknown id', async () => {
       // TODO: refactor this as MOCK_USER
       const { status, body } = await api
-        .put({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+        .put({ auditDetails: generatePortalAuditDetails(MOCK_TFM_USER._id) })
         .to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
       expect(status).toEqual(404);
       expect(body.message).toEqual('Deal not found');
@@ -72,12 +72,12 @@ describe('/v1/tfm/deal/:id', () => {
           },
         },
       };
-
+      const auditDetails = generatePortalAuditDetails(MOCK_PORTAL_USER._id);
       await api
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
           dealId,
-          auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
+          auditDetails,
         })
         .to('/v1/tfm/deals/submit');
 
@@ -94,7 +94,7 @@ describe('/v1/tfm/deal/:id', () => {
           someNewField: true,
           testing: true,
         },
-        auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
+        auditDetails,
       };
 
       const { status, body } = await api.put(snapshotUpdate).to(`/v1/tfm/deals/${dealId}/snapshot`);
@@ -108,7 +108,7 @@ describe('/v1/tfm/deal/:id', () => {
         ...mockTfm.tfm,
         lastUpdated: expect.any(Number),
       });
-      expect(body.auditRecord).toEqual(generateParsedMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id));
+      expect(body.auditRecord).toEqual(generateParsedMockAuditDatabaseRecord(auditDetails));
     });
   });
 });

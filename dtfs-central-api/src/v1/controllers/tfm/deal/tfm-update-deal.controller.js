@@ -149,7 +149,7 @@ exports.updateDealSnapshotPut = async (req, res) => {
   const { snapshotUpdate, auditDetails } = req.body;
 
   try {
-    validateAuditDetailsAndUserType(auditDetails, 'tfm');
+    validateAuditDetailsAndUserType(auditDetails, 'portal');
   } catch (error) {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({

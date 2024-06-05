@@ -1,3 +1,4 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
@@ -122,7 +123,7 @@ describe('/v1/deals', () => {
     it('returns the requested resource', async () => {
       const { status, body } = await as(aBarclaysMaker).get(aDealUrl);
       expect(status).toEqual(200);
-      expect(body.deal).toEqual(expectAddedFields({ baseDeal: newDeal, userId: aBarclaysMaker._id, auditRecordType: 'portal' }));
+      expect(body.deal).toEqual(expectAddedFields({ baseDeal: newDeal, auditDetails: generatePortalAuditDetails(aBarclaysMaker._id) }));
     });
 
     it('calculates deal.submissionDetails.status = Incomplete if there are validation failures', async () => {
@@ -317,7 +318,7 @@ describe('/v1/deals', () => {
     it('returns the created deal', async () => {
       const { body: createdDeal, status } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
-      const expectedCreateDeal = expectAddedFields({ baseDeal: newDeal, userId: anHSBCMaker._id, auditRecordType: 'portal' });
+      const expectedCreateDeal = expectAddedFields({ baseDeal: newDeal, auditDetails: generatePortalAuditDetails(anHSBCMaker._id) });
 
       expect(status).toEqual(200);
 
