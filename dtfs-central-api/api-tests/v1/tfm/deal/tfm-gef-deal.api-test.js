@@ -55,7 +55,7 @@ describe('/v1/tfm/deal/:id', () => {
     it('404s if updating an unknown id', async () => {
       // TODO: refactor this as MOCK_USER
       const { status, body } = await api
-        .put({ auditDetails: generatePortalAuditDetails(MOCK_TFM_USER._id) })
+        .put({ auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
         .to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
       expect(status).toEqual(404);
       expect(body.message).toEqual('Deal not found');
