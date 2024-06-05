@@ -10,12 +10,14 @@ import { MOCK_PORTAL_USER } from '../mocks/test-users/mock-portal-user';
 
 type MakeRequest = (auditDetails?: AuditDetails) => Promise<{ status: number; body: object }>;
 
+type ValidUserTypeParams = ('tfm' | 'portal' | 'system' | 'none')[];
+
 type Params = {
   makeRequest: MakeRequest;
-  validUserTypes: ('tfm' | 'portal' | 'system' | 'none')[];
+  validUserTypes: ValidUserTypeParams;
 };
 
-export const withValidateAuditDetailsTests = ({ makeRequest, validUserTypes }: Params) => {
+export const withValidateAuditDetailsTests = ({ makeRequest, validUserTypes = ['tfm', 'portal', 'system', 'none'] }: Params) => {
   describe('when validating audit details', () => {
     const { validAuditDetails, invalidAuditDetails } = getValidAndInvalidAuditDetails(validUserTypes);
 
@@ -54,7 +56,7 @@ function withInvalidAuditDetailsTests(invalidAuditDetails: AuditDetails[], makeR
   });
 }
 
-function getValidAndInvalidAuditDetails(validUserTypes: ('tfm' | 'portal' | 'system' | 'none')[] = ['tfm', 'portal', 'system', 'none']) {
+function getValidAndInvalidAuditDetails(validUserTypes: ValidUserTypeParams) {
   const allAuditDetails = [
     generateSystemAuditDetails(),
     generatePortalAuditDetails(MOCK_PORTAL_USER._id),
