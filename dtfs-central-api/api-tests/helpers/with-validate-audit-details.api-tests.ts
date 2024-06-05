@@ -1,4 +1,4 @@
-import { AuditDetails } from '@ukef/dtfs2-common';
+import { AUDIT_USER_TYPES_AS_ARRAY, AuditDetails, AuditUserTypes } from '@ukef/dtfs2-common';
 import {
   generateNoUserLoggedInAuditDetails,
   generatePortalAuditDetails,
@@ -10,14 +10,12 @@ import { MOCK_PORTAL_USER } from '../mocks/test-users/mock-portal-user';
 
 type MakeRequest = (auditDetails?: AuditDetails) => Promise<{ status: number; body: object }>;
 
-type ValidUserTypeParams = ('tfm' | 'portal' | 'system' | 'none')[];
-
 type Params = {
   makeRequest: MakeRequest;
-  validUserTypes: ValidUserTypeParams;
+  validUserTypes: AuditUserTypes[];
 };
 
-export const withValidateAuditDetailsTests = ({ makeRequest, validUserTypes = ['tfm', 'portal', 'system', 'none'] }: Params) => {
+export const withValidateAuditDetailsTests = ({ makeRequest, validUserTypes = AUDIT_USER_TYPES_AS_ARRAY }: Params) => {
   describe('when validating audit details', () => {
     const { validAuditDetails, invalidAuditDetails } = getValidAndInvalidAuditDetails(validUserTypes);
 
@@ -56,7 +54,7 @@ function withInvalidAuditDetailsTests(invalidAuditDetails: AuditDetails[], makeR
   });
 }
 
-function getValidAndInvalidAuditDetails(validUserTypes: ValidUserTypeParams) {
+function getValidAndInvalidAuditDetails(validUserTypes: AuditUserTypes[]) {
   const allAuditDetails = [
     generateSystemAuditDetails(),
     generatePortalAuditDetails(MOCK_PORTAL_USER._id),
