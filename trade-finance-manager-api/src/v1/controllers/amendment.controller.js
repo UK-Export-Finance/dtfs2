@@ -207,7 +207,7 @@ const updateFacilityAmendment = async (req, res) => {
       }
 
       if (payload.leadUnderwriter) {
-        // Tasks are not present in payload when loadUnderwriter is updated, so it is safe to add `tasks`.
+        // Tasks are not present in payload when leadUnderwriter is updated, so it is safe to add `tasks`.
         payload.tasks = await getTasksAssignedToUserByGroup(amendment.tasks, CONSTANTS.TEAMS.UNDERWRITERS.id, payload.leadUnderwriter._id);
       }
 
