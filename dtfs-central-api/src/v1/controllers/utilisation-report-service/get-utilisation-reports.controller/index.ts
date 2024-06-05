@@ -5,7 +5,7 @@ import { UtilisationReportRepo } from '../../../../repositories/utilisation-repo
 import { parseReportPeriod } from '../../../../utils/report-period';
 import { mapUtilisationReportEntityToGetUtilisationReportResponse } from '../../../../mapping/mapUtilisationReport';
 
-export type GetUtilisationReportsRequest = CustomExpressRequest<{
+export type GetUtilisationReportsByBankIdAndOptionsRequest = CustomExpressRequest<{
   params: {
     bankId: string;
   };
@@ -22,7 +22,7 @@ export type GetUtilisationReportsRequest = CustomExpressRequest<{
  * @param req - The request object
  * @param res - The response object
  */
-export const getUtilisationReports = async (req: GetUtilisationReportsRequest, res: Response) => {
+export const getUtilisationReportsByBankIdAndOptions = async (req: GetUtilisationReportsByBankIdAndOptionsRequest, res: Response) => {
   try {
     const { bankId } = req.params;
     const { reportPeriod, excludeNotReceived } = req.query;

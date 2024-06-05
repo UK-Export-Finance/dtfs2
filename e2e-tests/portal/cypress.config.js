@@ -1,5 +1,12 @@
 const { defineConfig } = require('cypress');
+const dotenv = require('dotenv');
+const path = require('path');
 const { createTasks } = require('../support/tasks');
+
+// Read from root `./.env` directory
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+
+const { CONTACT_US_EMAIL_ADDRESS } = process.env;
 
 module.exports = defineConfig({
   apiProtocol: 'http://',
@@ -29,6 +36,9 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       const { dbName, dbConnectionString } = config;
       on('task', createTasks({ dbName, dbConnectionString }));
+    },
+    env: {
+      CONTACT_US_EMAIL_ADDRESS,
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],

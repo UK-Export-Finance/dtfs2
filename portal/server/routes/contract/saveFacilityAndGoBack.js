@@ -1,8 +1,4 @@
-const {
-  requestParams,
-  errorHref,
-  postToApi,
-} = require('../../helpers');
+const { requestParams, errorHref, postToApi } = require('../../helpers');
 const api = require('../../api');
 const { formDataMatchesOriginalData } = require('./formDataMatchesOriginalData');
 
@@ -23,15 +19,7 @@ const saveFacilityAndGoBackToDeal = async (req, res, sanitizedBody) => {
 
   if (!formDataMatchesOriginalData(sanitizedBody, mappedOriginalData)) {
     const update = req.apiData?.bond ? api.updateBond : api.updateLoan;
-    await postToApi(
-      update(
-        dealId,
-        facilityId,
-        sanitizedBody,
-        userToken,
-      ),
-      errorHref,
-    );
+    await postToApi(update(dealId, facilityId, sanitizedBody, userToken), errorHref);
   }
 
   const redirectUrl = `/contract/${req.params._id}`;

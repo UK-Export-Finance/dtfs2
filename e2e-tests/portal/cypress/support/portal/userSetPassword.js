@@ -1,6 +1,4 @@
-const {
-  changePassword, resetPassword,
-} = require('../../e2e/pages');
+const { changePassword, resetPassword } = require('../../e2e/pages');
 
 module.exports = (email, password) => {
   cy.task('getUserFromDbByEmail', email).then((user) => {

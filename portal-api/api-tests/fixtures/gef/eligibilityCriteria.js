@@ -15,16 +15,14 @@ const ELIGIBILITY_CRITERIA = [
         id: 13,
         name: 'noticeDate',
         text: 'The period between the Inclusion Notice Date and the Requested Cover Start Date does not exceed 3 months (or such longer period as may be agreed by UK Export Finance).',
-        errMsg: 'Select if the period between the Inclusion Notice Date and the Requested Cover Start Date exceeds 3 months (or any other period agreed by UK Export Finance)',
+        errMsg:
+          'Select if the period between the Inclusion Notice Date and the Requested Cover Start Date exceeds 3 months (or any other period agreed by UK Export Finance)',
       },
       {
         id: 14,
         name: 'facilityLimit',
         text: 'The Covered Facility Limit (converted for this purpose into the Master Guarantee Base Currency ) of the facility is not more than the lesser of:',
-        textList: [
-          'the Available Master Guarantee Limit; and',
-          'the Available Obligor\'s limit',
-        ],
+        textList: ['the Available Master Guarantee Limit; and', "the Available Obligor's limit"],
         errMsg: 'Select if the Covered Facility Limit is not more than the lowest of either of the 2 options',
       },
       {
@@ -36,8 +34,9 @@ const ELIGIBILITY_CRITERIA = [
       {
         id: 16,
         name: 'revenueThreshold',
-        text: 'The Bank has received an Exporter Declaration which confirms that the Exporter\'s Revenue Threshold Test Percentage (as defined in the relevant Exporter Declaration) is below 5%.',
-        errMsg: 'Select if the Bank has received an Exporter Declaration which confirms that the Exporter\'s Revenue Threshold Test Percentage (as defined in the relevant Exporter Declaration) is below 5%.',
+        text: "The Bank has received an Exporter Declaration which confirms that the Exporter's Revenue Threshold Test Percentage (as defined in the relevant Exporter Declaration) is below 5%.",
+        errMsg:
+          "Select if the Bank has received an Exporter Declaration which confirms that the Exporter's Revenue Threshold Test Percentage (as defined in the relevant Exporter Declaration) is below 5%.",
       },
       {
         id: 17,
@@ -50,7 +49,7 @@ const ELIGIBILITY_CRITERIA = [
         name: 'facilityLetter',
         text: 'Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee:',
         textList: [
-          'has been set in accordance with the Bank\'s normal pricing policies consistently applied;',
+          "has been set in accordance with the Bank's normal pricing policies consistently applied;",
           'has been set in accordance with the overall minimum pricing requirements, if any, most recently notified by UK Export Finance to the Bank;',
           '(where the Covered Facility Limit in relation to the Facility is more than the Available Obligor(s) Limit) has been set in accordance with the overall pricing requirements, if any, most recently notified by UK Export Finance to the Bank for the relevant Obligor(s); and',
           '(in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee cover the whole Cover Period of the Covered Facility',

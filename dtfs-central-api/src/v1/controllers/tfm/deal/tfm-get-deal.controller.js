@@ -27,11 +27,13 @@ const findOneDeal = async (_id, callback) => {
         const mappedDeal = deal.dealSnapshot;
         const mappedBonds = [];
         const mappedLoans = [];
-        const facilities = await facilitiesCollection.find({
-          _id: {
-            $in: facilityIds,
-          },
-        }).toArray();
+        const facilities = await facilitiesCollection
+          .find({
+            _id: {
+              $in: facilityIds,
+            },
+          })
+          .toArray();
 
         facilityIds.forEach((id) => {
           const { facilitySnapshot } = facilities.find((f) => f._id.toHexString() === id.toHexString());
@@ -85,5 +87,6 @@ exports.findOneDealGet = async (req, res) => {
 
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
+
   return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
 };

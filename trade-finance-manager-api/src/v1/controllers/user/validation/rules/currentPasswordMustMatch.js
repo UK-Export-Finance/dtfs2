@@ -9,23 +9,27 @@ module.exports = (user, change) => {
         return [];
       }
 
-      return [{
-        currentPassword: {
-          order: '7',
-          text: 'Current password is not correct.',
+      return [
+        {
+          currentPassword: {
+            order: '7',
+            text: 'Current password is not correct.',
+          },
         },
-      }];
+      ];
     }
 
     const validPassword = utils.validPassword(change.currentPassword, user.hash, user.salt);
 
     if (!validPassword) {
-      return [{
-        currentPassword: {
-          order: '7',
-          text: 'Current password is not correct.',
+      return [
+        {
+          currentPassword: {
+            order: '7',
+            text: 'Current password is not correct.',
+          },
         },
-      }];
+      ];
     }
   }
 

@@ -103,10 +103,16 @@ authRouter
   .get(mandatoryCriteria.findOne)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteria.delete);
 
-authRouter.route('/users').get(users.list).post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), users.create);
+authRouter
+  .route('/users')
+  .get(users.list)
+  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), users.create);
 authRouter.route('/users/:_id').get(validateUserIsActingOnSelfToChangePasswordOrIsAdmin, users.list);
-authRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), users.remove);
-
+authRouter
+  .route('/users/:_id')
+  .get(users.findById)
+  .put(users.updateById)
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), users.remove);
 
 authRouter.use('/gef', gef);
 

@@ -49,12 +49,7 @@ describe('/v1/tfm/facilities', () => {
         },
         {
           sortByField: 'tfmFacilities.coverEndDate',
-          fieldValuesInAscendingOrder: [
-            '2021-08-12T00:00:00.000Z',
-            '2022-08-12T00:00:00.000Z',
-            '2023-08-12T00:00:00.000Z',
-            '2024-08-12T00:00:00.000Z',
-          ],
+          fieldValuesInAscendingOrder: ['2021-08-12T00:00:00.000Z', '2022-08-12T00:00:00.000Z', '2023-08-12T00:00:00.000Z', '2024-08-12T00:00:00.000Z'],
           generateFacilities: generateFacilitiesFromValues,
           getFieldPathAndExpectedFieldValues: getFieldPathAndExpectedFieldValuesForField,
         },
@@ -64,82 +59,71 @@ describe('/v1/tfm/facilities', () => {
           generateFacilities: generateFacilitiesFromFacilityStageValues,
           getFieldPathAndExpectedFieldValues: getFieldPathAndExpectedFieldValuesForFacilityStage,
         },
-      ])(
-        'by $sortByField',
-        ({ sortByField, fieldValuesInAscendingOrder, generateFacilities, getFieldPathAndExpectedFieldValues }) => {
-          const facilities = generateFacilities(fieldValuesInAscendingOrder, sortByField);
+      ])('by $sortByField', ({ sortByField, fieldValuesInAscendingOrder, generateFacilities, getFieldPathAndExpectedFieldValues }) => {
+        const facilities = generateFacilities(fieldValuesInAscendingOrder, sortByField);
 
-          beforeEach(async () => {
-            await createAndSubmitFacilities(facilities);
+        beforeEach(async () => {
+          await createAndSubmitFacilities(facilities);
+        });
+
+        describe.each(['ascending', 'descending'])('in %s order', (sortByOrder) => {
+          const urlWithoutPagination = `/v1/tfm/facilities?sortBy[order]=${sortByOrder}&sortBy[field]=${sortByField}`;
+
+          it('without pagination', async () => {
+            const { status, body } = await api.get(urlWithoutPagination);
+
+            expect(status).toEqual(200);
+            expect(body.facilities.length).toEqual(4);
+            expect(body.pagination.totalItems).toEqual(4);
+            expect(body.pagination.currentPage).toEqual(0);
+            expect(body.pagination.totalPages).toEqual(1);
+
+            const { fieldPath, expectedFieldValues } = getFieldPathAndExpectedFieldValues(fieldValuesInAscendingOrder, sortByOrder, sortByField);
+
+            for (let i = 0; i < 4; i += 1) {
+              const fieldValue = getObjectPropertyValueFromStringPath(body.facilities[i], fieldPath);
+
+              expect(fieldValue).toEqual(expectedFieldValues[i]);
+            }
           });
 
-          describe.each(['ascending', 'descending'])('in %s order', (sortByOrder) => {
-            const urlWithoutPagination = `/v1/tfm/facilities?sortBy[order]=${sortByOrder}&sortBy[field]=${sortByField}`;
+          it('with pagination', async () => {
+            const pagesize = 2;
 
-            it('without pagination', async () => {
-              const { status, body } = await api.get(urlWithoutPagination);
+            const urlWithPagination = (page) => `${urlWithoutPagination}&pagesize=${pagesize}&page=${page}`;
 
-              expect(status).toEqual(200);
-              expect(body.facilities.length).toEqual(4);
-              expect(body.pagination.totalItems).toEqual(4);
-              expect(body.pagination.currentPage).toEqual(0);
-              expect(body.pagination.totalPages).toEqual(1);
+            const { status: page1Status, body: page1Body } = await api.get(urlWithPagination(0));
 
-              const { fieldPath, expectedFieldValues } = getFieldPathAndExpectedFieldValues(
-                fieldValuesInAscendingOrder,
-                sortByOrder,
-                sortByField,
-              );
+            const { status: page2Status, body: page2Body } = await api.get(urlWithPagination(1));
 
-              for (let i = 0; i < 4; i += 1) {
-                const fieldValue = getObjectPropertyValueFromStringPath(body.facilities[i], fieldPath);
+            expect(page1Status).toEqual(200);
+            expect(page1Body.facilities.length).toEqual(2);
+            expect(page1Body.pagination.totalItems).toEqual(4);
+            expect(page1Body.pagination.currentPage).toEqual(0);
+            expect(page1Body.pagination.totalPages).toEqual(2);
 
-                expect(fieldValue).toEqual(expectedFieldValues[i]);
-              }
-            });
+            expect(page2Status).toEqual(200);
+            expect(page2Body.facilities.length).toEqual(2);
+            expect(page2Body.pagination.totalItems).toEqual(4);
+            expect(page2Body.pagination.currentPage).toEqual(1);
+            expect(page2Body.pagination.totalPages).toEqual(2);
 
-            it('with pagination', async () => {
-              const pagesize = 2;
+            const { fieldPath, expectedFieldValues } = getFieldPathAndExpectedFieldValues(fieldValuesInAscendingOrder, sortByOrder, sortByField);
 
-              const urlWithPagination = (page) => `${urlWithoutPagination}&pagesize=${pagesize}&page=${page}`;
+            for (let i = 0; i < 2; i += 1) {
+              const fieldValue = getObjectPropertyValueFromStringPath(page1Body.facilities[i], fieldPath);
 
-              const { status: page1Status, body: page1Body } = await api.get(urlWithPagination(0));
+              expect(fieldValue).toEqual(expectedFieldValues[i]);
+            }
 
-              const { status: page2Status, body: page2Body } = await api.get(urlWithPagination(1));
+            for (let i = 0; i < 2; i += 1) {
+              const fieldValue = getObjectPropertyValueFromStringPath(page2Body.facilities[i], fieldPath);
 
-              expect(page1Status).toEqual(200);
-              expect(page1Body.facilities.length).toEqual(2);
-              expect(page1Body.pagination.totalItems).toEqual(4);
-              expect(page1Body.pagination.currentPage).toEqual(0);
-              expect(page1Body.pagination.totalPages).toEqual(2);
-
-              expect(page2Status).toEqual(200);
-              expect(page2Body.facilities.length).toEqual(2);
-              expect(page2Body.pagination.totalItems).toEqual(4);
-              expect(page2Body.pagination.currentPage).toEqual(1);
-              expect(page2Body.pagination.totalPages).toEqual(2);
-
-              const { fieldPath, expectedFieldValues } = getFieldPathAndExpectedFieldValues(
-                fieldValuesInAscendingOrder,
-                sortByOrder,
-                sortByField,
-              );
-
-              for (let i = 0; i < 2; i += 1) {
-                const fieldValue = getObjectPropertyValueFromStringPath(page1Body.facilities[i], fieldPath);
-
-                expect(fieldValue).toEqual(expectedFieldValues[i]);
-              }
-
-              for (let i = 0; i < 2; i += 1) {
-                const fieldValue = getObjectPropertyValueFromStringPath(page2Body.facilities[i], fieldPath);
-
-                expect(fieldValue).toEqual(expectedFieldValues[i + 2]);
-              }
-            });
+              expect(fieldValue).toEqual(expectedFieldValues[i + 2]);
+            }
           });
-        },
-      );
+        });
+      });
     });
   });
 
@@ -212,9 +196,7 @@ describe('/v1/tfm/facilities', () => {
       facility.dealId = dealId;
       await api.post(facility).to('/v1/portal/gef/facilities');
 
-      await api
-        .put({ dealType: deal.dealType, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
-        .to('/v1/tfm/deals/submit');
+      await api.put({ dealType: deal.dealType, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) }).to('/v1/tfm/deals/submit');
     }
   }
 

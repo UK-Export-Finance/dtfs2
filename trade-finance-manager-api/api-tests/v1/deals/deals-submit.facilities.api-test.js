@@ -170,9 +170,7 @@ describe('/v1/deals', () => {
 
           const cashFacility = body.facilities.find(({ type }) => type === CONSTANTS.FACILITIES.FACILITY_TYPE.CASH);
 
-          const contingentFacility = body.facilities.find(
-            ({ type }) => type === CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
-          );
+          const contingentFacility = body.facilities.find(({ type }) => type === CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT);
 
           expect(cashFacility.tfm.riskProfile).toEqual('Flat');
           expect(contingentFacility.tfm.riskProfile).toEqual('Flat');

@@ -15,6 +15,7 @@ export const MONGO_DB_COLLECTIONS = {
   TFM_USERS: 'tfm-users',
   TRANSACTIONS: 'transactions',
   USERS: 'users',
+  DELETION_AUDIT_LOGS: 'deletion-audit-logs',
   // TODO FN-1853 Remove after SQL refactor
   UTILISATION_DATA: 'utilisationData',
   UTILISATION_REPORTS: 'utilisationReports',

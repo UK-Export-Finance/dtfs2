@@ -1,21 +1,7 @@
-import z from 'zod';
-import { MongoDbClient } from '@ukef/dtfs2-common/mongo-db-client';
 import { Bank, PortalUser, TfmUser, ROLES, TEAM_IDS } from '@ukef/dtfs2-common';
+import { mongoDbClient } from '../mongo-db-client';
 
-const mongoDbConfigSchema = z.object({
-  MONGODB_URI_FOR_TESTS: z.string(),
-  MONGO_INITDB_DATABASE: z.string(),
-});
-
-const getMongoDbClient = (): MongoDbClient => {
-  const mongoDbConfig = mongoDbConfigSchema.parse(process.env);
-  return new MongoDbClient({
-    dbName: mongoDbConfig.MONGO_INITDB_DATABASE,
-    dbConnectionString: mongoDbConfig.MONGODB_URI_FOR_TESTS,
-  });
-};
-
-const getPaymentReportOfficerOrFail = async (mongoDbClient: MongoDbClient, username: string): Promise<PortalUser> => {
+const getPaymentReportOfficerOrFail = async (username: string): Promise<PortalUser> => {
   const usersCollection = await mongoDbClient.getCollection('users');
   const paymentReportOfficer: PortalUser | null = await usersCollection.findOne({
     username: { $eq: username },
@@ -27,7 +13,7 @@ const getPaymentReportOfficerOrFail = async (mongoDbClient: MongoDbClient, usern
   return paymentReportOfficer;
 };
 
-const getPdcReconcileTfmUserOrFail = async (mongoDbClient: MongoDbClient, username: string): Promise<TfmUser> => {
+const getPdcReconcileTfmUserOrFail = async (username: string): Promise<TfmUser> => {
   const tfmUsersCollection = await mongoDbClient.getCollection('tfm-users');
   const pdcReconcileUser: TfmUser | null = await tfmUsersCollection.findOne({
     username: { $eq: username },
@@ -49,10 +35,8 @@ export const getUsersFromMongoDbOrFail = async ({
   paymentReportOfficer: PortalUser;
   pdcReconcileUser: TfmUser;
 }> => {
-  const mongoDbClient = getMongoDbClient();
-
-  const paymentReportOfficer = await getPaymentReportOfficerOrFail(mongoDbClient, paymentReportOfficerUsername);
-  const pdcReconcileUser = await getPdcReconcileTfmUserOrFail(mongoDbClient, pdcReconcileUserUsername);
+  const paymentReportOfficer = await getPaymentReportOfficerOrFail(paymentReportOfficerUsername);
+  const pdcReconcileUser = await getPdcReconcileTfmUserOrFail(pdcReconcileUserUsername);
 
   return {
     paymentReportOfficer,
@@ -61,8 +45,6 @@ export const getUsersFromMongoDbOrFail = async ({
 };
 
 export const getAllBanksFromMongoDb = async (): Promise<Bank[]> => {
-  const mongoDbClient = getMongoDbClient();
-
   const banksCollection = await mongoDbClient.getCollection('banks');
   return banksCollection.find({}).toArray();
 };

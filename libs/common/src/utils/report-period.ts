@@ -32,16 +32,11 @@ export const getSubmissionMonthForReportPeriod = (reportPeriod: ReportPeriod): I
  * @param dateInTargetReportPeriod - A date in the target report period
  * @returns The report period for the target report period
  */
-const getReportPeriodForBankScheduleByTargetDate = (
-  bankReportPeriodSchedule: BankReportPeriodSchedule,
-  dateInTargetReportPeriod: Date,
-): ReportPeriod => {
+const getReportPeriodForBankScheduleByTargetDate = (bankReportPeriodSchedule: BankReportPeriodSchedule, dateInTargetReportPeriod: Date): ReportPeriod => {
   const targetMonth = getOneIndexedMonth(dateInTargetReportPeriod);
   const targetYear = dateInTargetReportPeriod.getFullYear();
 
-  const scheduleInCurrentYear = bankReportPeriodSchedule.find(
-    (schedule) => targetMonth >= schedule.startMonth && targetMonth <= schedule.endMonth,
-  );
+  const scheduleInCurrentYear = bankReportPeriodSchedule.find((schedule) => targetMonth >= schedule.startMonth && targetMonth <= schedule.endMonth);
   if (scheduleInCurrentYear) {
     return {
       start: {
@@ -89,12 +84,8 @@ const getPreviousReportPeriodForBankScheduleByTargetDate = (
   const indexOfCurrentSchedule = bankReportPeriodSchedule.findIndex(
     (schedule) =>
       (schedule.startMonth <= targetMonth && targetMonth <= schedule.endMonth) ||
-      (schedule.startMonth > schedule.endMonth &&
-        targetMonth >= schedule.endMonth &&
-        targetMonth >= schedule.startMonth) ||
-      (schedule.startMonth > schedule.endMonth &&
-        targetMonth <= schedule.endMonth &&
-        targetMonth <= schedule.startMonth),
+      (schedule.startMonth > schedule.endMonth && targetMonth >= schedule.endMonth && targetMonth >= schedule.startMonth) ||
+      (schedule.startMonth > schedule.endMonth && targetMonth <= schedule.endMonth && targetMonth <= schedule.startMonth),
   );
   if (indexOfCurrentSchedule === -1) {
     throw new Error('Failed to find a schedule');
@@ -119,9 +110,7 @@ const getPreviousReportPeriodForBankScheduleByTargetDate = (
  * @param bankReportPeriodSchedule - The bank report period schedule
  * @returns The current report period
  */
-export const getNextReportPeriodForBankSchedule = (
-  bankReportPeriodSchedule: BankReportPeriodSchedule,
-): ReportPeriod => {
+export const getNextReportPeriodForBankSchedule = (bankReportPeriodSchedule: BankReportPeriodSchedule): ReportPeriod => {
   const currentMonthDate = new Date();
   return getReportPeriodForBankScheduleByTargetDate(bankReportPeriodSchedule, currentMonthDate);
 };
@@ -131,9 +120,7 @@ export const getNextReportPeriodForBankSchedule = (
  * @param bankReportPeriodSchedule - The bank report period schedule
  * @returns The current report period
  */
-export const getCurrentReportPeriodForBankSchedule = (
-  bankReportPeriodSchedule: BankReportPeriodSchedule,
-): ReportPeriod => {
+export const getCurrentReportPeriodForBankSchedule = (bankReportPeriodSchedule: BankReportPeriodSchedule): ReportPeriod => {
   const currentMonthDate = new Date();
   return getPreviousReportPeriodForBankScheduleByTargetDate(bankReportPeriodSchedule, currentMonthDate);
 };
@@ -144,20 +131,12 @@ export const getCurrentReportPeriodForBankSchedule = (
  * @param month - The submission month
  * @returns The report period for the submission month
  */
-export const getPreviousReportPeriodForBankScheduleByMonth = (
-  bankReportPeriodSchedule: BankReportPeriodSchedule,
-  month: IsoMonthStamp,
-) => {
+export const getPreviousReportPeriodForBankScheduleByMonth = (bankReportPeriodSchedule: BankReportPeriodSchedule, month: IsoMonthStamp) => {
   const monthDate = new Date(month);
   return getPreviousReportPeriodForBankScheduleByTargetDate(bankReportPeriodSchedule, monthDate);
 };
 
-const getFormattedReportPeriod = (
-  reportPeriod: ReportPeriod,
-  monthFormat: string,
-  includePeriodicity: boolean,
-  alwaysStateYear = false,
-): string => {
+const getFormattedReportPeriod = (reportPeriod: ReportPeriod, monthFormat: string, includePeriodicity: boolean, alwaysStateYear = false): string => {
   const startOfReportPeriod = getDateFromMonthAndYear(reportPeriod.start);
   const endOfReportPeriod = getDateFromMonthAndYear(reportPeriod.end);
 
@@ -170,9 +149,7 @@ const getFormattedReportPeriod = (
     reportPeriod.start.year === reportPeriod.end.year && !alwaysStateYear
       ? format(startOfReportPeriod, monthFormat)
       : format(startOfReportPeriod, `${monthFormat} yyyy`);
-  return includePeriodicity
-    ? `${formattedStartOfPeriod} to ${formattedEndOfPeriod} (quarterly)`
-    : `${formattedStartOfPeriod} to ${formattedEndOfPeriod}`;
+  return includePeriodicity ? `${formattedStartOfPeriod} to ${formattedEndOfPeriod} (quarterly)` : `${formattedStartOfPeriod} to ${formattedEndOfPeriod}`;
 };
 
 /**
@@ -204,8 +181,7 @@ const getFormattedReportPeriod = (
  * const formattedReportPeriod = getFormattedReportPeriod(reportPeriod);
  * console.log(formattedReportPeriod); // December 2023 to January 2024
  */
-export const getFormattedReportPeriodWithLongMonth = (reportPeriod: ReportPeriod): string =>
-  getFormattedReportPeriod(reportPeriod, 'MMMM', false);
+export const getFormattedReportPeriodWithLongMonth = (reportPeriod: ReportPeriod): string => getFormattedReportPeriod(reportPeriod, 'MMMM', false);
 
 /**
  * Gets the formatted report period with the month in short format
@@ -247,8 +223,5 @@ export const getFormattedReportPeriodWithLongMonth = (reportPeriod: ReportPeriod
  * const formattedReportPeriod = getFormattedReportPeriod(reportPeriod, false);
  * console.log(formattedReportPeriod); // Dec 2023 to Jan 2024
  */
-export const getFormattedReportPeriodWithShortMonth = (
-  reportPeriod: ReportPeriod,
-  includePeriodicity: boolean,
-  alwaysStateYear = false,
-): string => getFormattedReportPeriod(reportPeriod, 'MMM', includePeriodicity, alwaysStateYear);
+export const getFormattedReportPeriodWithShortMonth = (reportPeriod: ReportPeriod, includePeriodicity: boolean, alwaysStateYear = false): string =>
+  getFormattedReportPeriod(reportPeriod, 'MMM', includePeriodicity, alwaysStateYear);

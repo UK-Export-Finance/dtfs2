@@ -18,10 +18,13 @@ const multerFilter = (req, file, cb) => {
   if (file.originalname.match(allowedFormatsRegex)) {
     cb(null, true);
   } else {
-    cb({
-      message: `${file.originalname} must be a ${FILE_UPLOAD.ALLOWED_FORMATS.join(', ').toUpperCase()}`,
-      file,
-    }, false);
+    cb(
+      {
+        message: `${file.originalname} must be a ${FILE_UPLOAD.ALLOWED_FORMATS.join(', ').toUpperCase()}`,
+        file,
+      },
+      false,
+    );
   }
 };
 

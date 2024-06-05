@@ -1,5 +1,9 @@
-const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
-const { DATE: { LONDON_TIMEZONE } } = require('../../../server/constants');
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
+const {
+  DATE: { LONDON_TIMEZONE },
+} = require('../../../server/constants');
 const componentRenderer = require('../../componentRenderer');
 const deal = require('../../fixtures/deal-fully-completed');
 

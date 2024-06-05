@@ -1,8 +1,6 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const {
-  generatePortalAuditDetails,
-  generateParsedMockPortalUserAuditDatabaseRecord,
-} = require('@ukef/dtfs2-common/change-stream');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -24,12 +22,7 @@ const newFacility = {
 
 describe('/v1/tfm/deals/submit - GEF deal', () => {
   beforeEach(async () => {
-    await wipeDB.wipe([
-      MONGO_DB_COLLECTIONS.DEALS,
-      MONGO_DB_COLLECTIONS.FACILITIES,
-      MONGO_DB_COLLECTIONS.TFM_DEALS,
-      MONGO_DB_COLLECTIONS.TFM_FACILITIES,
-    ]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
   });
   it('400s for an invalid id', async () => {
     const { status } = await api
@@ -64,8 +57,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
     });
 
     withValidateAuditDetailsTests({
-      makeRequest: (auditDetails) =>
-        api.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF, dealId }).to('/v1/tfm/deals/submit'),
+      makeRequest: (auditDetails) => api.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF, dealId }).to('/v1/tfm/deals/submit'),
       validUserTypes: ['portal'],
     });
 

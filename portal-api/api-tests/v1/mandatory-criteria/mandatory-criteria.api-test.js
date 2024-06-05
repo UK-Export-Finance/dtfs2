@@ -1,10 +1,7 @@
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const {
-  withRoleAuthorisationTests,
-  withNoRoleAuthorisationTests,
-} = require('../../common-tests/role-authorisation-tests');
+const { withRoleAuthorisationTests, withNoRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -48,8 +45,7 @@ describe('/v1/mandatory-criteria', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(allMandatoryCriteriaUrl),
-      makeRequestWithAuthHeader: (authHeader) =>
-        get(allMandatoryCriteriaUrl, { headers: { Authorization: authHeader } }),
+      makeRequestWithAuthHeader: (authHeader) => get(allMandatoryCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
     withNoRoleAuthorisationTests({
@@ -82,8 +78,7 @@ describe('/v1/mandatory-criteria', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(latestMandatoryCriteriaUrl),
-      makeRequestWithAuthHeader: (authHeader) =>
-        get(latestMandatoryCriteriaUrl, { headers: { Authorization: authHeader } }),
+      makeRequestWithAuthHeader: (authHeader) => get(latestMandatoryCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
     withNoRoleAuthorisationTests({
@@ -144,8 +139,7 @@ describe('/v1/mandatory-criteria', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => post(allMandatoryCriteriaUrl, newMandatoryCriteria),
-      makeRequestWithAuthHeader: (authHeader) =>
-        post(allMandatoryCriteriaUrl, newMandatoryCriteria, { headers: { Authorization: authHeader } }),
+      makeRequestWithAuthHeader: (authHeader) => post(allMandatoryCriteriaUrl, newMandatoryCriteria, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -162,8 +156,7 @@ describe('/v1/mandatory-criteria', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => put(mandatoryCriteria1Url, updatedMandatoryCriteria),
-      makeRequestWithAuthHeader: (authHeader) =>
-        put(mandatoryCriteria1Url, updatedMandatoryCriteria, { headers: { Authorization: authHeader } }),
+      makeRequestWithAuthHeader: (authHeader) => put(mandatoryCriteria1Url, updatedMandatoryCriteria, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -201,8 +194,7 @@ describe('/v1/mandatory-criteria', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => remove(mandatoryCriteria1Url),
-      makeRequestWithAuthHeader: (authHeader) =>
-        remove(mandatoryCriteria1Url, { headers: { Authorization: authHeader } }),
+      makeRequestWithAuthHeader: (authHeader) => remove(mandatoryCriteria1Url, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({

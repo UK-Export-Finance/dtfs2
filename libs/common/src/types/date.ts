@@ -49,3 +49,8 @@ export type UnixTimestampString = string;
  * ISO 8601 day string in format 'yyyy-MM-dd'
  */
 export type IsoDayStamp = string;
+
+/**
+ * ISO 8601 year string in format 'yyyy'
+ */
+export type IsoYearStamp = string;

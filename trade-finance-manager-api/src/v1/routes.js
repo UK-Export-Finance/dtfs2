@@ -13,6 +13,7 @@ const facilityController = require('./controllers/facility.controller');
 const partyController = require('./controllers/party.controller');
 const bankHolidaysController = require('./controllers/bank-holidays');
 const utilisationReportsController = require('./controllers/utilisation-reports');
+const banksController = require('./controllers/banks.controller');
 const users = require('./controllers/user/user.routes');
 const party = require('./controllers/deal.party-db');
 const validation = require('./validation/route-validators/route-validators');
@@ -140,5 +141,20 @@ authRouter
 authRouter
   .route('/utilisation-reports/reconciliation-details/:reportId')
   .get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.getUtilisationReportReconciliationDetailsById);
+
+authRouter
+  .route('/utilisation-reports/:id/selected-fee-records-details')
+  .get(validation.sqlIdValidation('id'), handleExpressValidatorResult, utilisationReportsController.getSelectedFeeRecordsDetails);
+
+authRouter.route('/banks').get(banksController.getAllBanks);
+
+authRouter
+  .route('/bank/:bankId/utilisation-reports/reconciliation-summary-by-year/:year')
+  .get(
+    validation.bankIdValidation,
+    validation.isoYearValidation('year'),
+    handleExpressValidatorResult,
+    utilisationReportsController.getUtilisationReportSummariesByBankAndYear,
+  );
 
 module.exports = { authRouter, openRouter };

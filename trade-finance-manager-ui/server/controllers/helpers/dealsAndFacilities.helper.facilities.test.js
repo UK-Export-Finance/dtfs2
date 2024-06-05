@@ -185,14 +185,15 @@ describe('controllers - facilities', () => {
 
       describe('when there are no facilities', () => {
         beforeEach(() => {
-          api.getFacilities = () => Promise.resolve({
-            facilities: [],
-            pagination: {
-              totalItems: 0,
-              currentPage: 0,
-              totalPages: 1,
-            },
-          });
+          api.getFacilities = () =>
+            Promise.resolve({
+              facilities: [],
+              pagination: {
+                totalItems: 0,
+                currentPage: 0,
+                totalPages: 1,
+              },
+            });
         });
 
         const mockReq = structuredClone(mockReqTemplate);
@@ -310,10 +311,7 @@ describe('controllers - facilities', () => {
         });
       });
 
-      describe.each([
-        'ascending',
-        'descending',
-      ])('', (order) => {
+      describe.each(['ascending', 'descending'])('', (order) => {
         describe(`when a ${order} sort field is specified in the request body`, () => {
           const mockReq = structuredClone(mockReqTemplate);
 

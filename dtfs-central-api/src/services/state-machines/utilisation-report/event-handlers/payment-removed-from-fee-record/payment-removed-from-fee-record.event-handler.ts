@@ -14,10 +14,9 @@ export type UtilisationReportPaymentRemovedFromFeeRecordEvent = BaseUtilisationR
 >;
 
 export const handleUtilisationReportPaymentRemovedFromFeeRecordEvent = (
-  /* eslint-disable @typescript-eslint/no-unused-vars */
   report: UtilisationReportEntity,
   payload: PaymentRemovedFromFeeRecordEventPayload,
-  /* eslint-enable @typescript-eslint/no-unused-vars */
 ): Promise<UtilisationReportEntity> => {
+  console.error('Utilisation report payment removed from fee record error %o %o', report, payload);
   throw new NotImplementedError('TODO FN-1697');
 };

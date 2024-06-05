@@ -1,5 +1,5 @@
 module.exports = ({ getWrapper, currentPage }) => {
-  it('should render a \'First\' link', () => {
+  it("should render a 'First' link", () => {
     const wrapper = getWrapper();
 
     wrapper.expectElement('[data-cy="First_listItem"]').hasClass('govuk-body');
@@ -9,7 +9,7 @@ module.exports = ({ getWrapper, currentPage }) => {
     wrapper.expectElement('[data-cy="First"]').hasClass('govuk-link');
   });
 
-  it('should render a \'Previous\' link', () => {
+  it("should render a 'Previous' link", () => {
     const wrapper = getWrapper();
 
     wrapper.expectElement('[data-cy="Previous_listItem"]').hasClass('govuk-body');

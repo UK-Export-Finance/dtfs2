@@ -131,7 +131,11 @@ describe('updateSupportingInformation()', () => {
 describe('setApplicationStatus()', () => {
   it('returns the correct response', async () => {
     Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.setApplicationStatus({ dealId: validMongoId, status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, userToken });
+    const response = await api.setApplicationStatus({
+      dealId: validMongoId,
+      status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL,
+      userToken,
+    });
     expect(response).toEqual({ status: 200 });
   });
 
@@ -141,7 +145,11 @@ describe('setApplicationStatus()', () => {
   });
 
   test.each(invalidMongoIdTestCases)('returns false when given an invalid dealId', async (invalidMongoId) => {
-    const response = await api.setApplicationStatus({ dealId: invalidMongoId, status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, userToken });
+    const response = await api.setApplicationStatus({
+      dealId: invalidMongoId,
+      status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL,
+      userToken,
+    });
     expect(response).toEqual(false);
   });
 });

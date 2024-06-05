@@ -12,7 +12,11 @@ const { ADMIN } = require('../../../src/v1/roles/roles');
 const { STATUS } = require('../../../src/constants/user');
 
 const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
-const MOCK_USER = { ...users.barclaysBankMaker1, username: temporaryUsernameAndEmail, email: temporaryUsernameAndEmail };
+const MOCK_USER = {
+  ...users.barclaysBankMaker1,
+  username: temporaryUsernameAndEmail,
+  email: temporaryUsernameAndEmail,
+};
 
 describe('a user', () => {
   let aNonAdmin;

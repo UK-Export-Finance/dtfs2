@@ -1,8 +1,12 @@
-const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 
 const pageRenderer = require('../pageRenderer');
 const dealFullyCompleted = require('../fixtures/deal-fully-completed');
-const { DATE: { LONDON_TIMEZONE } } = require('../../server/constants')
+const {
+  DATE: { LONDON_TIMEZONE },
+} = require('../../server/constants');
 
 const deal = { _id: '61f6fbaea2460c018a4189d7', ...dealFullyCompleted };
 deal.bondTransactions.items[0]._id = '61f6fbaea2460c018a4189e1';
@@ -105,7 +109,8 @@ describe(page, () => {
 
   describe('Bonds', () => {
     it('should render a heading, edit link component and Bond Submission Details component', () => {
-      for (const bond of deal.bondTransactions.items) { // eslint-disable-line no-restricted-syntax
+      for (const bond of deal.bondTransactions.items) {
+        // eslint-disable-line no-restricted-syntax
         const bondSelector = `[data-cy="bond-${bond._id}"]`;
 
         wrapper.expectText(`${bondSelector} [data-cy="bond-heading"]`).toRead('Bond');
@@ -120,7 +125,8 @@ describe(page, () => {
 
   describe('Loans', () => {
     it('should render a heading, edit link and Loan Submission Details component', () => {
-      for (const loan of deal.loanTransactions.items) { // eslint-disable-line no-restricted-syntax
+      for (const loan of deal.loanTransactions.items) {
+        // eslint-disable-line no-restricted-syntax
         const loanSelector = `[data-cy="loan-${loan._id}"]`;
 
         wrapper.expectText(`${loanSelector} [data-cy="loan-heading"]`).toRead('Loan');

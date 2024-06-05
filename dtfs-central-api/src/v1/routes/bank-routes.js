@@ -6,7 +6,10 @@ const getBankController = require('../controllers/bank/get-bank.controller');
 const getBanksController = require('../controllers/bank/get-banks.controller');
 const createBankController = require('../controllers/bank/create-bank.controller');
 const getNextReportPeriodController = require('../controllers/bank/get-next-report-period-by-bank.controller');
-const getUtilisationReportsController = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
+const { getUtilisationReportsByBankIdAndOptions } = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
+const {
+  getUtilisationReportSummariesByBankIdAndYear,
+} = require('../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller');
 
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
@@ -134,42 +137,71 @@ bankRouter.route('/').get(getBanksController.getAllBanksGet);
  *       404:
  *         description: Not found
  */
-bankRouter
-  .route('/:bankId/utilisation-reports')
-  .get(validation.bankIdValidation, handleExpressValidatorResult, getUtilisationReportsController.getUtilisationReports);
+bankRouter.route('/:bankId/utilisation-reports').get(validation.bankIdValidation, handleExpressValidatorResult, getUtilisationReportsByBankIdAndOptions);
 
 /**
-* @openapi
-* /bank/:bankId/next-report-period:
-*   get:
-*     summary: Get utilisation reports by bank ID
-*     tags: [UtilisationReport]
-*     description: Get a banks utilisation reports by ID.
-*     parameters:
-*       - in: path
-*         name: bankId
-*         schema:
-*           type: string
-*         required: true
-*         description: bank ID to fetch reports for
-*     responses:
-*       200:
-*         description: OK
-*         content:
-*           application/json:
-*             schema:
-*               allOf:
-*                 - $ref: '#/definitions/ReportPeriod'
-*                 - type: object
-*       400:
-*         description: Bad request
-*       404:
-*         description: Not found
-*       500:
-*         description: Internal server error
-*/
+ * @openapi
+ * /bank/:bankId/next-report-period:
+ *   get:
+ *     summary: Get utilisation reports by bank ID
+ *     tags: [UtilisationReport]
+ *     description: Get a banks utilisation reports by ID.
+ *     parameters:
+ *       - in: path
+ *         name: bankId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: bank ID to fetch reports for
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/ReportPeriod'
+ *                 - type: object
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal server error
+ */
 bankRouter
   .route('/:bankId/next-report-period')
   .get(validation.bankIdValidation, handleExpressValidatorResult, getNextReportPeriodController.getNextReportPeriodByBankId);
+
+/**
+ * @openapi
+ * /bank/:bankId/utilisation-reports/reconciliation-summary-by-year/:year:
+ *   get:
+ *     summary: |
+ *       Utilisation reports for the specified submission
+ *       year and bank. This includes status and details of
+ *       reports that have been submitted.
+ *     tags: [UtilisationReport]
+ *     description: |
+ *       Utilisation reports for the specified submission
+ *       year and bank. This includes status and details of
+ *       reports that have been submitted.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/UtilisationReportReportReconciliationSummaryItem'
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal Server Error
+ */
+bankRouter
+  .route('/:bankId/utilisation-reports/reconciliation-summary-by-year/:year')
+  .get(validation.bankIdValidation, validation.yearValidation('year'), handleExpressValidatorResult, getUtilisationReportSummariesByBankIdAndYear);
 
 module.exports = bankRouter;

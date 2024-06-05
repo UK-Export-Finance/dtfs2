@@ -19,9 +19,7 @@ describe('/v1/deals/:id/loan', () => {
       },
     },
     eligibility: {
-      criteria: [
-        { id: 15, answer: true }
-      ],
+      criteria: [{ id: 15, answer: true }],
     },
   });
 
@@ -114,7 +112,7 @@ describe('/v1/deals/:id/loan', () => {
 
             const { validationErrors } = await updateLoanInDeal(dealId, loan);
             expect(validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Enter the Length of time that the UKEF\'s guarantee will be in place for');
+            expect(validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual("Enter the Length of time that the UKEF's guarantee will be in place for");
           });
         });
 
@@ -128,7 +126,9 @@ describe('/v1/deals/:id/loan', () => {
 
             const { validationErrors } = await updateLoanInDeal(dealId, loan);
             expect(validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be a number, like 1 or 12');
+            expect(validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual(
+              "Length of time that the UKEF's guarantee will be in place for must be a number, like 1 or 12",
+            );
           });
         });
 
@@ -142,7 +142,9 @@ describe('/v1/deals/:id/loan', () => {
 
             const { validationErrors } = await updateLoanInDeal(dealId, loan);
             expect(validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be a whole number, like 12');
+            expect(validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual(
+              "Length of time that the UKEF's guarantee will be in place for must be a whole number, like 12",
+            );
           });
         });
 
@@ -156,7 +158,9 @@ describe('/v1/deals/:id/loan', () => {
 
             const { validationErrors } = await updateLoanInDeal(dealId, loan);
             expect(validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 999');
+            expect(validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual(
+              "Length of time that the UKEF's guarantee will be in place for must be between 0 and 999",
+            );
           });
         });
 
@@ -170,7 +174,9 @@ describe('/v1/deals/:id/loan', () => {
 
             const { validationErrors } = await updateLoanInDeal(dealId, loan);
             expect(validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 999');
+            expect(validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual(
+              "Length of time that the UKEF's guarantee will be in place for must be between 0 and 999",
+            );
           });
         });
       });
@@ -284,9 +290,7 @@ describe('/v1/deals/:id/loan', () => {
           const dealWithEligibilityCriteria15False = {
             ...deal,
             eligibility: {
-              criteria: [
-                { id: 15, answer: false }
-              ],
+              criteria: [{ id: 15, answer: false }],
             },
           };
 
@@ -312,7 +316,7 @@ describe('/v1/deals/:id/loan', () => {
                 details: {
                   ...newDeal.details,
                   submissionDate: nowDate.valueOf(),
-                }
+                },
               });
 
               const yesterday = sub(nowDate, { days: 1 });
@@ -335,7 +339,7 @@ describe('/v1/deals/:id/loan', () => {
                 details: {
                   ...newDeal.details,
                   submissionDate: nowDate.valueOf(),
-                }
+                },
               });
 
               const requestedCoverStartDate = add(nowDate, { months: 3, days: 1 });
@@ -532,7 +536,9 @@ describe('/v1/deals/:id/loan', () => {
 
             const body = await updateLoanInDeal(dealId, loan);
             expect(body.validationErrors.errorList.disbursementAmount).toBeDefined();
-            expect(body.validationErrors.errorList.disbursementAmount.text).toEqual(`Disbursement amount must be less than the Loan facility value (${loan.value})`);
+            expect(body.validationErrors.errorList.disbursementAmount.text).toEqual(
+              `Disbursement amount must be less than the Loan facility value (${loan.value})`,
+            );
           });
         });
       });
@@ -621,7 +627,9 @@ describe('/v1/deals/:id/loan', () => {
 
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
           expect(validationErrors.errorList.currencySameAsSupplyContractCurrency).toBeDefined();
-          expect(validationErrors.errorList.currencySameAsSupplyContractCurrency.text).toEqual('Select if the currency for this Transaction is the same as your Supply Contract currency');
+          expect(validationErrors.errorList.currencySameAsSupplyContractCurrency.text).toEqual(
+            'Select if the currency for this Transaction is the same as your Supply Contract currency',
+          );
         });
       });
     });
@@ -658,7 +666,9 @@ describe('/v1/deals/:id/loan', () => {
           it('should return validationError', async () => {
             const { validationErrors } = await updateBondConversionRate('1234567.123456');
             expect(validationErrors.errorList.conversionRate).toBeDefined();
-            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate must be 12 numbers or fewer. You can include up to 6 decimal places as part of your number.');
+            expect(validationErrors.errorList.conversionRate.text).toEqual(
+              'Conversion rate must be 12 numbers or fewer. You can include up to 6 decimal places as part of your number.',
+            );
           });
         });
 

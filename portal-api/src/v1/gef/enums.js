@@ -10,7 +10,7 @@ const DEAL_STATUS = {
   NOT_STARTED: 'Not started',
   IN_PROGRESS: 'In progress',
   COMPLETED: 'Completed',
-  READY_FOR_APPROVAL: 'Ready for Checker\'s approval',
+  READY_FOR_APPROVAL: "Ready for Checker's approval",
   CHANGES_REQUIRED: "Further Maker's input required",
   ABANDONED: 'Abandoned',
   SUBMITTED_TO_UKEF: 'Submitted',
@@ -48,13 +48,6 @@ const FACILITY_PAYMENT_TYPE = {
   AT_MATURITY: 'At maturity',
 };
 
-const CURRENCY = {
-  GBP: 'GBP',
-  EUR: 'EUR',
-  USD: 'USD',
-  YEN: 'JPY',
-};
-
 module.exports = {
   DEAL_TYPE,
   FACILITY_TYPE,
@@ -62,5 +55,4 @@ module.exports = {
   ERROR,
   FACILITY_PROVIDED_DETAILS,
   FACILITY_PAYMENT_TYPE,
-  CURRENCY,
 };

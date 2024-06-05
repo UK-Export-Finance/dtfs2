@@ -45,7 +45,7 @@ exports.update = async (dealId, facilityId, facilityBody, user) => {
 /**
  * Delete a facility (BSS, EWCS only)
  */
-exports.delete = async (facilityId, user) => api.deleteFacility(facilityId, user);
+exports.delete = async (facilityId, user, auditDetails) => api.deleteFacility(facilityId, user, auditDetails);
 
 /**
  * Create multiple facilities (BSS, EWCS only)
@@ -122,10 +122,7 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
       {
         $facet: {
           count: [{ $count: 'total' }],
-          facilities: [
-            { $skip: startPage },
-            ...(pagesize ? [{ $limit: pagesize }] : []),
-          ],
+          facilities: [{ $skip: startPage }, ...(pagesize ? [{ $limit: pagesize }] : [])],
         },
       },
       { $unwind: '$count' },

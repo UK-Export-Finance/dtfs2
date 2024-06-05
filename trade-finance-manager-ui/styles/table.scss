@@ -114,19 +114,31 @@ table.sortable {
   .table-cell-checkbox-input {
     top: -9px;
   }
-
+  
   .table-cell-checkbox-label {
     &::before {
       top: 1px;
     }
-
+    
     &::after {
       top: 9px;
     }
   }
-
+  
   .table-cell-checkbox-text {
     display: inline-block;
     vertical-align: middle;
   }
+  
+  .fee-record-status-tag {
+    white-space: nowrap;
+  }
+  
+  div.select-all-table-cell-checkbox {
+    visibility: hidden;
+  }
+}
+
+.js-enabled .govuk-table div.select-all-table-cell-checkbox {
+  visibility: visible;
 }

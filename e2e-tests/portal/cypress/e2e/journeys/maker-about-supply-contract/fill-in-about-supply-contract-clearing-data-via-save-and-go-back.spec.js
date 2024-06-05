@@ -1,6 +1,4 @@
-const {
-  contractAboutSupplier, contractAboutPreview,
-} = require('../../pages');
+const { contractAboutSupplier, contractAboutPreview } = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const aDealWithAboutSupplyContractComplete = require('./dealWithFirstPageComplete.json');
 
@@ -11,8 +9,9 @@ context('about-supply-contract', () => {
 
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(aDealWithAboutSupplyContractComplete, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(aDealWithAboutSupplyContractComplete, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   it('A maker picks up a deal with every field filled in and starts deselecting "separate indemnifier correspondence address" etc.', () => {

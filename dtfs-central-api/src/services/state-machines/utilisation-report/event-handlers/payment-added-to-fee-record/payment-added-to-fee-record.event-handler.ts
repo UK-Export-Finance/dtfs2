@@ -1,20 +1,21 @@
-import { UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { NotImplementedError } from '../../../../../errors';
+import { DbRequestSource, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
+import { UtilisationReportRepo } from '../../../../../repositories/utilisation-reports-repo';
 
-// TODO FN-1697 - define payload
 type PaymentAddedToFeeRecordEventPayload = {
-  feeRecordId: number;
-  paymentId: number;
+  requestSource: DbRequestSource;
 };
 
 export type UtilisationReportPaymentAddedToFeeRecordEvent = BaseUtilisationReportEvent<'PAYMENT_ADDED_TO_FEE_RECORD', PaymentAddedToFeeRecordEventPayload>;
 
-export const handleUtilisationReportPaymentAddedToFeeRecordEvent = (
-  /* eslint-disable @typescript-eslint/no-unused-vars */
+export const handleUtilisationReportPaymentAddedToFeeRecordEvent = async (
   report: UtilisationReportEntity,
-  payload: PaymentAddedToFeeRecordEventPayload,
-  /* eslint-enable @typescript-eslint/no-unused-vars */
+  { requestSource }: PaymentAddedToFeeRecordEventPayload,
 ): Promise<UtilisationReportEntity> => {
-  throw new NotImplementedError('TODO FN-1697');
+  if (report.status === 'RECONCILIATION_IN_PROGRESS') {
+    report.updateLastUpdatedBy(requestSource);
+    return await UtilisationReportRepo.save(report);
+  }
+  report.updateWithStatus({ status: 'RECONCILIATION_IN_PROGRESS', requestSource });
+  return await UtilisationReportRepo.save(report);
 };

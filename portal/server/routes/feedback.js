@@ -27,9 +27,7 @@ router.post('/feedback', async (req, res) => {
 
     const feedbackBody = req.body;
     feedbackBody.submittedBy = userDetails;
-    feedbackBody.auditDetails = sessionUserId
-      ? generatePortalAuditDetails(sessionUserId)
-      : generateNoUserLoggedInAuditDetails();
+    feedbackBody.auditDetails = sessionUserId ? generatePortalAuditDetails(sessionUserId) : generateNoUserLoggedInAuditDetails();
 
     const response = await api.createFeedback(feedbackBody);
     if (response) {

@@ -58,14 +58,20 @@ df.app.orchestration('acbs', function* HDeal(context) {
       }
 
       // 1. Create Parties
-      const exporterTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.exporter({ deal, acbsReference }) });
+      const exporterTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, {
+        party: mappings.party.exporter({ deal, acbsReference }),
+      });
 
-      const bankTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.bank({ bank }) });
+      const bankTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, {
+        party: mappings.party.bank({ bank }),
+      });
 
       let buyerTask;
 
       if (product !== CONSTANTS.PRODUCT.TYPE.GEF) {
-        buyerTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, { party: mappings.party.buyer({ deal }) });
+        buyerTask = context.df.callActivityWithRetry('activity-create-party', retryOptions, {
+          party: mappings.party.buyer({ deal }),
+        });
 
         /*
       Following parties are only created once the
@@ -113,7 +119,9 @@ df.app.orchestration('acbs', function* HDeal(context) {
         throw new Error(`Invalid deal ID ${dealIdentifier}`);
       }
 
-      const dealRecord = yield context.df.callActivityWithRetry('activity-create-deal', retryOptions, { deal: acbsDealInput });
+      const dealRecord = yield context.df.callActivityWithRetry('activity-create-deal', retryOptions, {
+        deal: acbsDealInput,
+      });
 
       // 3. Create Deal investor
       const acbsDealInvestorInput = mappings.deal.dealInvestor(deal);
@@ -147,7 +155,8 @@ df.app.orchestration('acbs', function* HDeal(context) {
           dealAcbsData,
           acbsReference,
           bank,
-        }));
+        }),
+      );
 
       yield context.df.Task.all([...facilityTasks]);
 

@@ -34,7 +34,11 @@ describe('controllers - case - amendments', () => {
       };
 
       beforeEach(() => {
-        api.getAmendmentById = () => Promise.resolve({ status: 200, data: { status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS, dealId: '4567' } });
+        api.getAmendmentById = () =>
+          Promise.resolve({
+            status: 200,
+            data: { status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS, dealId: '4567' },
+          });
       });
 
       it('should render deal template with data', async () => {
@@ -92,7 +96,11 @@ describe('controllers - case - amendments', () => {
 
       beforeEach(() => {
         api.getFacility = () => Promise.resolve(mockFacility);
-        api.getAmendmentById = () => Promise.resolve({ status: 200, data: { status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS, dealId: '4567' } });
+        api.getAmendmentById = () =>
+          Promise.resolve({
+            status: 200,
+            data: { status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS, dealId: '4567' },
+          });
       });
 
       it('should render the template with errors if no date is provided', async () => {
@@ -231,7 +239,11 @@ describe('controllers - case - amendments', () => {
         };
         api.getFacility = () => Promise.resolve(mockFacility);
         api.updateAmendment = () => Promise.resolve(update);
-        api.getAmendmentById = () => Promise.resolve({ status: 200, data: { status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS, dealId: '4567' } });
+        api.getAmendmentById = () =>
+          Promise.resolve({
+            status: 200,
+            data: { status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS, dealId: '4567' },
+          });
 
         const today = new Date();
 
@@ -253,7 +265,9 @@ describe('controllers - case - amendments', () => {
         };
 
         await amendmentsController.postAmendmentRequestDate(req, res);
-        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockFacility.facilitySnapshot.dealId}/facility/${mockFacility._id}/amendment/626bae8c43c01e02076352e1/request-approval`);
+        expect(res.redirect).toHaveBeenCalledWith(
+          `/case/${mockFacility.facilitySnapshot.dealId}/facility/${mockFacility._id}/amendment/626bae8c43c01e02076352e1/request-approval`,
+        );
       });
     });
   });

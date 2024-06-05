@@ -1,5 +1,5 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const amendmentHelpers = require('./amendment.helpers');
-const { CURRENCY } = require('../../../constants/currency.constant');
 
 describe('amendmentChangeValueExportCurrency()', () => {
   const amendment = { currency: CURRENCY.GBP };
@@ -143,7 +143,7 @@ describe('calculateAmendmentTotalExposure()', () => {
       coverPercentage: 25,
     },
     tfm: {
-      ukefExposure: 23000.00,
+      ukefExposure: 23000.0,
       facilityValueInGBP: 1034.7800881821,
     },
     amendments: [{ ...mockAmendmentValueResponse }],
@@ -183,11 +183,7 @@ describe('findLatestCompletedAmendment()', () => {
   });
 
   it('should return null if no tfm objects in array', () => {
-    const amendments = [
-      { value: 2000 },
-      { value: 2000 },
-      { value: 5000 },
-    ];
+    const amendments = [{ value: 2000 }, { value: 2000 }, { value: 5000 }];
 
     const response = amendmentHelpers.findLatestCompletedAmendment(amendments);
     expect(response).toBeNull();

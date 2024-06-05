@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // Premium Schedule API returns the premium schedule for a given facility
 // 1) Post parameters to Premium Schedule API, returns  header location to load the segments
 // 2) Premium Schedule Segments gets the segments by facilityURN
@@ -8,6 +13,7 @@ import { Request, Response } from 'express';
 import { PremiumSchedule } from '../../interfaces';
 import { UKEF_ID } from '../../constants';
 import { validUkefId, objectIsEmpty } from '../../helpers';
+
 dotenv.config();
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
@@ -16,9 +22,9 @@ const headers = {
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
 
-const successStatus: Array<number> = [200, 201];
+export const successStatus: Array<number> = [200, 201];
 
-const premiumScheduleCalls = {
+export const premiumScheduleCalls = {
   /**
    * Post premium schedule segments
    * @param {Array} premiumSchedulePayload PS entries

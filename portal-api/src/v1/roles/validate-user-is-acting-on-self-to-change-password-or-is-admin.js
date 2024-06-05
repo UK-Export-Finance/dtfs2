@@ -1,3 +1,5 @@
+const axios = require('axios');
+const CONSTANT = require('../../constants');
 /**
  * Creates a middleware that returns a 401 error if the current user logs with
  * old password have at least one of the allowedRoles, and calls the next handler otherwise.
@@ -6,11 +8,11 @@
  */
 const validateSelfOrAdmin = (req, res, next) => {
   if (!req.user) {
-    return res.status(401).send('Unauthorized');
+    return res.status(axios.HttpStatus.UNAUTHORIZED).send('Unauthorized');
   }
 
-  if (req?.user?._id !== req?.params?._id && !req?.user?.roles?.includes('admin')) {
-    return res.status(403).send('Forbidden');
+  if (req?.user?._id !== req?.params?._id && !req?.user?.roles?.includes(CONSTANT.ADMIN)) {
+    return res.status(axios.HttpStatus.FORBIDDEN).send('Forbidden');
   }
 
   return next();
@@ -18,4 +20,4 @@ const validateSelfOrAdmin = (req, res, next) => {
 
 module.exports = {
   validateSelfOrAdmin,
-}
+};

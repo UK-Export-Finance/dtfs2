@@ -4,10 +4,7 @@ const CONSTANTS = require('../../../../fixtures/constants');
 const CONTENT_STRINGS = require('../../../../fixtures/content-strings');
 const { dashboardDeals } = require('../../../pages');
 const { dashboardFilters } = require('../../../partials');
-const {
-  BSS_DEAL_READY_FOR_CHECK,
-  GEF_DEAL_DRAFT,
-} = require('../fixtures');
+const { BSS_DEAL_READY_FOR_CHECK, GEF_DEAL_DRAFT } = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 

@@ -154,7 +154,12 @@ const findAmendmentsByDealId = async (dealId) => {
         { $project: { _id: false, amendments: true } },
         { $unwind: '$amendments' },
         { $sort: { 'amendments.submittedAt': -1 } },
-        { $match: { 'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED }, 'amendments.submittedByPim': { $eq: true } } },
+        {
+          $match: {
+            'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED },
+            'amendments.submittedByPim': { $eq: true },
+          },
+        },
         { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
         { $project: { _id: false, amendments: true } },
       ])

@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const { produce } = require('immer');
 const databaseHelper = require('../../database-helper');
 const testUserCache = require('../../api-test-users');
@@ -47,7 +48,10 @@ describe('a user', () => {
       makeRequestWithAuthHeader: (authHeader) => post(BASE_URL, MOCK_USER, { headers: { Authorization: authHeader } }),
     });
 
-    withValidatePasswordWhenCreatingUserTests({ payload: MOCK_USER, makeRequest: async (user) => await createUser(user) });
+    withValidatePasswordWhenCreatingUserTests({
+      payload: MOCK_USER,
+      makeRequest: async (user) => await createUser(user),
+    });
 
     withValidateEmailIsUniqueTests({
       payload: MOCK_USER,
@@ -94,32 +98,25 @@ describe('a user', () => {
         const { status, body } = await createUser(userWithRoles);
 
         expect(status).toEqual(200);
-        expect(body).toStrictEqual({
-          success: true,
-          user: {
-            username: userWithRoles.username,
-            email: userWithRoles.email,
-            roles: userWithRoles.roles,
-            bank: userWithRoles.bank,
-            _id: expect.any(String),
-            firstname: userWithRoles.firstname,
-            surname: userWithRoles.surname,
-            timezone: 'Europe/London',
-            'user-status': STATUS.ACTIVE,
-          }
-        });
-      });
-
-      it('does not create a user with Maker and Checker roles', async () => {
-        const userWithBothRoles = {
-          ...MOCK_USER,
-          roles: ['Maker', 'Checker'],
-        };
-
-        const { status, body } = await createUser(userWithBothRoles);
-
-        expect(status).toEqual(400);
-        expect(body).toHaveProperty('error', 'Invalid combination of roles');
+        expect(body).toStrictEqual(
+          expect.objectContaining({
+            success: true,
+            users: expect.arrayContaining([
+              {
+                username: MOCK_USER.username,
+                email: MOCK_USER.email,
+                roles: MOCK_USER.roles,
+                bank: MOCK_USER.bank,
+                _id: expect.any(String),
+                firstname: MOCK_USER.firstname,
+                surname: MOCK_USER.surname,
+                timezone: 'Europe/London',
+                'user-status': STATUS.ACTIVE,
+                isTrusted: MOCK_USER.isTrusted,
+              },
+            ]),
+          }),
+        );
       });
 
       it('it creates the user if the user creation request has the read-only role repeated', async () => {

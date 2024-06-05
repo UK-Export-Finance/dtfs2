@@ -1,16 +1,8 @@
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
-const {
-  dashboardFacilities,
-} = require('../../../pages');
-const {
-  dashboardSubNavigation,
-  dashboardFilters,
-} = require('../../../partials');
-const {
-  BSS_DEAL_AIN,
-  BSS_FACILITY_BOND,
-} = require('../fixtures');
+const { dashboardFacilities } = require('../../../pages');
+const { dashboardSubNavigation, dashboardFilters } = require('../../../partials');
+const { BSS_DEAL_AIN, BSS_FACILITY_BOND } = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 

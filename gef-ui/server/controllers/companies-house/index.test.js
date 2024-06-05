@@ -3,9 +3,7 @@ import { companiesHouse, validateCompaniesHouse } from './index';
 
 const { COMPANIES_HOUSE_NUMBER } = require('../../test-mocks/companies-house-number');
 
-const {
-  VALID, INVALID_SPECIAL_CHARACTER,
-} = COMPANIES_HOUSE_NUMBER;
+const { VALID, INVALID_SPECIAL_CHARACTER } = COMPANIES_HOUSE_NUMBER;
 
 jest.mock('../../services/api');
 
@@ -105,12 +103,15 @@ describe('controllers/about-exporter', () => {
 
       await validateCompaniesHouse(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', expect.objectContaining({
-        errors: expect.any(Object),
-        regNumber: '',
-        dealId: '123',
-        status: undefined,
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/companies-house.njk',
+        expect.objectContaining({
+          errors: expect.any(Object),
+          regNumber: '',
+          dealId: '123',
+          status: undefined,
+        }),
+      );
     });
 
     it('returns error object if companies house registration number is invalid', async () => {
@@ -120,12 +121,15 @@ describe('controllers/about-exporter', () => {
 
       await validateCompaniesHouse(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', expect.objectContaining({
-        errors: expect.any(Object),
-        regNumber: INVALID_SPECIAL_CHARACTER,
-        dealId: '123',
-        status: undefined,
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/companies-house.njk',
+        expect.objectContaining({
+          errors: expect.any(Object),
+          regNumber: INVALID_SPECIAL_CHARACTER,
+          dealId: '123',
+          status: undefined,
+        }),
+      );
     });
 
     it('redirects user to `exporters address` page if response from api is successful', async () => {
@@ -157,7 +161,11 @@ describe('controllers/about-exporter', () => {
         },
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
+      expect(updateApplicationSpy).toHaveBeenCalledWith({
+        dealId: mockRequest.params.dealId,
+        application: expectedUpdateObj,
+        userToken,
+      });
     });
 
     it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {

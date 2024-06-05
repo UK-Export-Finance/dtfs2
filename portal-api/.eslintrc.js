@@ -3,72 +3,71 @@ const baseParserOptions = {
 };
 
 const baseRules = {
+  'no-console': ['error', { allow: ['info', 'error'] }],
+  'prettier/prettier': 'error',
   'class-methods-use-this': 'off',
-  'max-len': [
-    'error',
-    160,
-    2,
-    {
-      ignoreUrls: true,
-      ignoreComments: false,
-      ignoreRegExpLiterals: true,
-      ignoreStrings: true,
-      ignoreTemplateLiterals: true,
-    },
-  ],
-  'import/no-unresolved': 'error',
-  'no-console': ['error', { allow: ['info', 'warn', 'error'] }],
-  'no-param-reassign': ['error', { props: true, ignorePropertyModificationsForRegex: ['^draft', 'req', 'res'] }],
-  'no-return-await': 'off',
   'no-underscore-dangle': [
     'error',
-    { allow: ['_id', '_csrf', '_getBuffer', '_getData', '_getHeaders', '_getStatusCode', '_getRedirectUrl', '_getRenderData', '_getRenderView'] },
-  ],
-  'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.{js,ts}', '**/*.api-test.{js,ts}', '**/api-tests/**'] }],
-  'import/no-named-as-default': 'off',
-  'import/prefer-default-export': 'off',
-  'import/extensions': 'off',
-  'implicit-arrow-linebreak': 'off',
-  'comma-dangle': 'off',
-  'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
-  'no-loop-func': 'off',
-  'no-unused-vars': ['error', { ignoreRestSiblings: true }],
-  'object-curly-newline': [
-    'error',
     {
-      consistent: true,
+      allow: ['_id', '_csrf', '_getBuffer', '_getData', '_getHeaders', '_getStatusCode', '_getRedirectUrl', '_getRenderData', '_getRenderView', '_isEndCalled'],
     },
   ],
-  'no-restricted-syntax': 'off',
+  'import/extensions': 'off',
+  'import/no-named-as-default': 'off',
+  'implicit-arrow-linebreak': 'off',
+  'import/no-extraneous-dependencies': [
+    'error',
+    {
+      devDependencies: ['**/*.test.{js,ts}', '**/*.api-test.{js,ts}', '**/*.spec.{js,ts}', '**/webpack.*.{js,ts}', '**/api-test*/**', '**/__mocks__/**'],
+    },
+  ],
+  'import/prefer-default-export': 'off',
+  'comma-dangle': 'off',
+  'no-loop-func': 'off',
   'no-await-in-loop': 'off',
+  'no-restricted-syntax': 'off',
+  'no-return-await': 'off',
   'no-use-before-define': [
     'error',
     {
       functions: false,
     },
   ],
+  'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
+  'no-unused-vars': [
+    'error',
+    {
+      varsIgnorePattern: '^_',
+    },
+  ],
+  'object-curly-newline': [
+    'error',
+    {
+      consistent: true,
+    },
+  ],
 };
 
 module.exports = {
-  extends: ['airbnb-base', 'prettier'],
+  extends: ['airbnb-base', 'plugin:prettier/recommended'],
   env: {
     jest: true,
     browser: true,
   },
   root: true,
-  rules: baseRules,
   ignorePatterns: ['**/node_modules/**'],
-  parserOptions: baseParserOptions,
+  rules: baseRules,
   settings: {
     'import/resolver': {
-      typescript: true,
-      node: true,
+      typescript: {},
     },
   },
+  parserOptions: baseParserOptions,
   overrides: [
+    // Typescript files only
     {
       files: ['*.ts'],
-      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked', 'prettier'],
+      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked', 'plugin:prettier/recommended'],
       plugins: ['@typescript-eslint'],
       parser: '@typescript-eslint/parser',
       parserOptions: {
@@ -78,9 +77,18 @@ module.exports = {
       },
       rules: {
         ...baseRules,
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': [
+          'error',
+          {
+            varsIgnorePattern: '^_',
+          },
+        ],
+        '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
         '@typescript-eslint/restrict-template-expressions': ['error', { allowNever: true }],
-        'no-unused-vars': 'off'
-      }
+        '@typescript-eslint/ban-ts-comment': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+      },
     },
   ],
 };

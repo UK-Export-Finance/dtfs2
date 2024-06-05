@@ -1,6 +1,6 @@
 const axios = require('axios');
-const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId } = require('./helpers/validateIds');
-const { assertValidIsoMonth } = require('./helpers/date');
+const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId, isValidBankId } = require('./helpers/validateIds');
+const { assertValidIsoMonth, assertValidIsoYear } = require('./helpers/date');
 const PageOutOfBoundsError = require('./errors/page-out-of-bounds.error');
 
 require('dotenv').config();
@@ -878,6 +878,64 @@ const getUtilisationReportReconciliationDetailsById = async (reportId, userToken
   return response.data;
 };
 
+/**
+ * @param {number} reportId - The report id
+ * @param {number[]} feeRecordIds - The ids of the selected fee records
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('@ukef/dtfs2-common').SelectedFeeRecordsDetails>}
+ */
+const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
+    headers: generateHeaders(userToken),
+    data: {
+      feeRecordIds,
+    },
+  });
+
+  return response.data;
+};
+
+/**
+ * Fetches all banks
+ * @param {string} userToken - token to validate session
+ * @returns {Promise<import('./types/banks').Bank[]>}
+ */
+const getAllBanks = async (userToken) => {
+  try {
+    const { data } = await axios.get(`${TFM_API_URL}/v1/banks`, {
+      headers: generateHeaders(userToken),
+    });
+
+    return data;
+  } catch (error) {
+    console.error('Failed to get banks', error);
+    throw error;
+  }
+};
+
+/**
+ * Fetches all submitted reports by bank ID and year
+ * @param {string} userToken - token to validate session
+ * @param {string} bankId - the bank ID
+ * @param {string} year - the year
+ * @returns {Promise<import('./types/utilisation-reports').UtilisationReportSearchSummary>}
+ */
+const getReportSummariesByBankAndYear = async (userToken, bankId, year) => {
+  try {
+    isValidBankId(bankId);
+    assertValidIsoYear(year);
+
+    const { data } = await axios.get(`${TFM_API_URL}/v1/bank/${bankId}/utilisation-reports/reconciliation-summary-by-year/${year}`, {
+      headers: generateHeaders(userToken),
+    });
+
+    return data;
+  } catch (error) {
+    console.error('Failed to get utilisation report summaries by bank ID and year', error);
+    throw error;
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -917,4 +975,7 @@ module.exports = {
   downloadUtilisationReport,
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
+  getAllBanks,
+  getSelectedFeeRecordsDetails,
+  getReportSummariesByBankAndYear,
 };

@@ -5,7 +5,7 @@ name: Feature environment deployment
 on:
   push:
     branches:
-      - feat/e2etf-sql
+      - main
     paths:
       - "portal/**"
       - "portal-api/**"
@@ -45,7 +45,7 @@ jobs:
     runs-on: [self-hosted, linux, deployment]
     environment: dev
     env:
-      SQL_DB_HOST: ${{ vars.SQL_DB_HOST }}
+      SQL_DB_HOST: ${{ secrets.SQL_DB_HOST }}
       SQL_DB_PORT: ${{ secrets.SQL_DB_PORT }}
       SQL_DB_USERNAME: ${{ secrets.SQL_DB_USERNAME }}
       SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD }}
@@ -57,7 +57,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 2. Install node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -79,7 +79,7 @@ jobs:
     # environment:
     #   name: ${{ needs.deployment-environment.outputs.environment }}
     strategy:
-      max-parallel: 2
+      max-parallel: 1
       matrix:
         repository:
           - portal-ui
@@ -130,13 +130,24 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: 6. Slot
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.9
         with:
           inlineScript: |
             az config get defaults
             az webapp deployment slot create --name tfs-${{ env.environment }}-${{ matrix.repository }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ matrix.repository }}
             az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ matrix.repository }} --resource-group ${{ env.resource_group }}  --slot ${{ github.sha }} --action swap
             az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ matrix.repository }} --resource-group ${{ env.resource_group }}  --slot ${{ github.sha }}
+
+      - name: Cleanup 🧹
+        if: always()
+        uses: azure/cli@v1.0.9
+        with:
+          inlineScript: |
+            # Delete temporary slot
+            az webapp deployment slot delete \
+            --slot ${{ github.sha }} \
+            --name tfs-${{ env.environment }}-${{ matrix.repository }} \
+            --resource-group ${{ env.resource_group }}
 
   deploy-functionapps:
     # Disable for now

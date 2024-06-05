@@ -1,20 +1,12 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { isValidMongoId } = require('../validation/validateIds');
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const loanValidationErrors = require('../validation/loan');
-const {
-  calculateGuaranteeFee,
-  calculateUkefExposure,
-} = require('../section-calculations');
+const { calculateGuaranteeFee, calculateUkefExposure } = require('../section-calculations');
 const { handleTransactionCurrencyFields } = require('../section-currency');
-const {
-  hasAllRequestedCoverStartDateValues,
-  updateRequestedCoverStartDate,
-} = require('../facility-dates/requested-cover-start-date');
-const {
-  hasAllCoverEndDateValues,
-  updateCoverEndDate,
-} = require('../facility-dates/cover-end-date');
+const { hasAllRequestedCoverStartDateValues, updateRequestedCoverStartDate } = require('../facility-dates/requested-cover-start-date');
+const { hasAllCoverEndDateValues, updateCoverEndDate } = require('../facility-dates/cover-end-date');
 const { loanStatus } = require('../section-status/loans');
 const { sanitizeCurrency } = require('../../utils/number');
 const facilitiesController = require('./facilities.controller');
@@ -49,10 +41,7 @@ exports.create = async (req, res) => {
 };
 
 exports.getLoan = async (req, res) => {
-  const {
-    id: dealId,
-    loanId,
-  } = req.params;
+  const { id: dealId, loanId } = req.params;
 
   if (!isValidMongoId(req?.params?.id) || !isValidMongoId(req?.params?.loanId)) {
     console.error('Get loan API failed for deal/loan id %s', req.params.id, req.params.loanId);
@@ -122,10 +111,7 @@ const premiumTypeFields = (loan) => {
 };
 
 exports.updateLoan = async (req, res) => {
-  const {
-    id: dealId,
-    loanId,
-  } = req.params;
+  const { id: dealId, loanId } = req.params;
 
   await findOneDeal(dealId, async (deal) => {
     if (deal) {
@@ -146,10 +132,7 @@ exports.updateLoan = async (req, res) => {
 
       modifiedLoan = facilityStageFields(modifiedLoan);
 
-      modifiedLoan = await handleTransactionCurrencyFields(
-        modifiedLoan,
-        deal,
-      );
+      modifiedLoan = await handleTransactionCurrencyFields(modifiedLoan, deal);
 
       modifiedLoan = premiumTypeFields(modifiedLoan);
 
@@ -181,12 +164,7 @@ exports.updateLoan = async (req, res) => {
         modifiedLoan.coverEndDate = null;
       }
 
-      const { status, data } = await facilitiesController.update(
-        dealId,
-        loanId,
-        modifiedLoan,
-        req.user,
-      );
+      const { status, data } = await facilitiesController.update(dealId, loanId, modifiedLoan, req.user);
 
       const validationErrors = loanValidationErrors(data, deal);
 
@@ -204,9 +182,7 @@ exports.updateLoan = async (req, res) => {
 };
 
 exports.deleteLoan = async (req, res) => {
-  const {
-    loanId,
-  } = req.params;
+  const { loanId } = req.params;
 
   await findOneDeal(req.params.id, async (deal) => {
     if (deal) {
@@ -214,7 +190,7 @@ exports.deleteLoan = async (req, res) => {
         return res.status(401).send();
       }
 
-      const { status, data } = await facilitiesController.delete(loanId, req.user);
+      const { status, data } = await facilitiesController.delete(loanId, req.user, generatePortalAuditDetails(req.user._id));
 
       return res.status(status).send(data);
     }

@@ -18,18 +18,20 @@
   "license": "MIT",
   "author": "UK Export Finance",
   "scripts": {
-    "lint": "eslint --color **/*.{ts,js}",
+    "lint": "eslint --color **/*.{ts,js} --ignore-path ../.eslintignore",
     "lint:fix": "eslint --color **/*.{ts,js} --fix",
-    "load": "cd .. && npm run load",
-    "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js}",
-    "prettier:fix": "prettier --write **/*.{ts,js}",
+    "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js} --ignore-path ../.prettierignore",
+    "prettier:fix": "prettier --write **/*.{ts,js} --ignore-path ../.prettierignore",
     "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "@ukef/dtfs2-common": "1.0.0",
-    "bson": "^6.6.0",
+    "bson": "^6.7.0",
     "chance": "^1.1.11",
-    "cypress": "^13.8.1",
+    "cypress": "^13.9.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-plugin-tab": "^1.0.5",
     "cypress-v10-preserve-cookie": "^1.2.1",

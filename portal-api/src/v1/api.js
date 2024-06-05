@@ -76,7 +76,7 @@ const updateDeal = async (dealId, dealUpdate, user) => {
   }
 };
 
-const deleteDeal = async (dealId) => {
+const deleteDeal = async (dealId, auditDetails) => {
   try {
     if (!isValidMongoId(dealId)) {
       console.error('Delete deal API failed for deal id %s', dealId);
@@ -87,6 +87,9 @@ const deleteDeal = async (dealId) => {
       method: 'delete',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
       headers: headers.central,
+      data: {
+        auditDetails,
+      },
     });
   } catch (error) {
     console.error('Unable to delete deal %o', error);
@@ -193,7 +196,7 @@ const updateFacility = async (facilityId, facility, user) => {
   }
 };
 
-const deleteFacility = async (facilityId, user) => {
+const deleteFacility = async (facilityId, user, auditDetails) => {
   try {
     if (!isValidMongoId(facilityId)) {
       console.error('Delete facility API failed for facility id %s', facilityId);
@@ -206,6 +209,7 @@ const deleteFacility = async (facilityId, user) => {
       headers: headers.central,
       data: {
         user,
+        auditDetails,
       },
     });
   } catch (error) {
@@ -346,24 +350,23 @@ const getUtilisationReportById = async (id) => {
   }
 };
 
+/**
+ * Call the central API to get a bank
+ * @param {string} bankId
+ * @returns {Promise<import('./api-response-types').BankResponse>} response of API call
+ */
 const getBankById = async (bankId) => {
-  try {
-    if (!isValidBankId(bankId)) {
-      console.error('Get bank failed with the following bank ID %s', bankId);
-      return false;
-    }
-
-    const response = await axios({
-      method: 'get',
-      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}`,
-      headers: headers.central,
-    });
-
-    return { status: 200, data: response.data };
-  } catch (error) {
-    console.error('Unable to get bank by ID %o', error);
-    return { status: error?.response?.status || 500, data: 'Failed to get bank by ID' };
+  if (!isValidBankId(bankId)) {
+    throw new Error(`Invalid bank id: ${bankId}`);
   }
+
+  const response = await axios({
+    method: 'get',
+    url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}`,
+    headers: headers.central,
+  });
+
+  return response.data;
 };
 
 /**

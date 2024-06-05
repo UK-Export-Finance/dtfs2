@@ -1,9 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import Big from 'big.js';
 import { UtilisationReportEntity } from '../utilisation-report';
-import { Currency } from '../../types';
+import { Currency, FeeRecordStatus } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import { CreateFeeRecordParams } from './fee-record.types';
 import { MonetaryColumn, ExchangeRateColumn } from '../custom-columns';
+import { PaymentEntity } from '../payment';
 
 @Entity('FeeRecord')
 export class FeeRecordEntity extends AuditableBaseEntity {
@@ -80,10 +82,30 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   paymentCurrency!: Currency;
 
   /**
-   * The exchange rate from the {@link baseCurrency} to the {@link paymentCurrency}
+   * The exchange rate from the {@link paymentCurrency} to the {@link feesPaidToUkefForThePeriodCurrency}
+   *
+   * For example, for a fee record with `feesPaidToUkefForThePeriod` equal to `100.00`,
+   * `feesPaidToUkefForThePeriodCurrency` equal to `'EUR'`, `paymentCurrency` equal to `'GBP'` and
+   * `paymentExchangeRate` equal to `1.1`, the fees paid to ukef for the period in the payment currency
+   * would be `100.00 ('EUR') / 1.1 = 90.91 ('GBP')`.
    */
   @ExchangeRateColumn()
   paymentExchangeRate!: number;
+
+  /**
+   * Status code representing the reconciliation state of the fee record
+   */
+  @Column({ type: 'nvarchar', default: 'TO_DO' })
+  status!: FeeRecordStatus;
+
+  /**
+   * The payments associated with the fee record
+   */
+  @ManyToMany(() => PaymentEntity, (payment) => payment.feeRecords, {
+    cascade: ['insert'],
+  })
+  @JoinTable()
+  payments!: PaymentEntity[];
 
   // TODO FN-1726 - when we have a status on this entity we should make this method name specific to the initial status
   static create({
@@ -98,6 +120,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     feesPaidToUkefForThePeriodCurrency,
     paymentCurrency,
     paymentExchangeRate,
+    status,
     requestSource,
     report,
   }: CreateFeeRecordParams): FeeRecordEntity {
@@ -113,8 +136,21 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     feeRecord.feesPaidToUkefForThePeriodCurrency = feesPaidToUkefForThePeriodCurrency;
     feeRecord.paymentCurrency = paymentCurrency;
     feeRecord.paymentExchangeRate = paymentExchangeRate;
+    feeRecord.status = status;
     feeRecord.report = report;
     feeRecord.updateLastUpdatedBy(requestSource);
+    feeRecord.payments = [];
     return feeRecord;
+  }
+
+  public getFeesPaidToUkefForThePeriodInThePaymentCurrency(): number {
+    if (this.paymentCurrency === this.feesPaidToUkefForThePeriodCurrency) {
+      return this.feesPaidToUkefForThePeriod;
+    }
+
+    const feesPaidToUkefForThePeriodAsBig = new Big(this.feesPaidToUkefForThePeriod);
+    const paymentExchangeRateAsBig = new Big(this.paymentExchangeRate);
+    const precision = 2;
+    return feesPaidToUkefForThePeriodAsBig.div(paymentExchangeRateAsBig).round(precision).toNumber();
   }
 }

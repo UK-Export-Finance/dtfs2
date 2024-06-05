@@ -14,7 +14,7 @@ describe(component, () => {
 
     // Act
     const wrapper = render(params);
-  
+
     // Assert
     wrapper.expectElement('div.govuk-checkboxes').toExist();
     wrapper.expectElement('input.govuk-checkboxes__input').toHaveAttribute('id', 'abc123');

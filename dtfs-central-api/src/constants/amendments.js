@@ -25,7 +25,7 @@ const AMENDMENT_QUERY_STATUSES = {
 const AMENDMENT_QUERIES = {
   LATEST_VALUE: 'latest-value',
   LATEST_COVER_END_DATE: 'latest-cover-end-date',
-  LATEST: 'latest'
+  LATEST: 'latest',
 };
 
 module.exports = {
@@ -33,5 +33,5 @@ module.exports = {
   AMENDMENT_BANK_DECISION,
   AMENDMENT_MANAGER_DECISIONS,
   AMENDMENT_QUERY_STATUSES,
-  AMENDMENT_QUERIES
+  AMENDMENT_QUERIES,
 };

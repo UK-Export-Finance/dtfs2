@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { generateTfmAuditDetails, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const utils = require('../../../utils/crypto.util');
 const { userIsDisabled, usernameOrPasswordIncorrect, userIsBlocked } = require('../../../constants/login-results.constant');
 const { create, update, removeTfmUserById, findOne, findByUsername } = require('./user.controller');
@@ -28,6 +29,7 @@ const combineErrors = (listOfErrors) =>
 module.exports.createTfmUser = (req, res, next) => {
   const userToCreate = req.body;
   const errors = applyCreateRules(userToCreate);
+  const auditDetails = req.user?._id ? generateTfmAuditDetails(req.user._id) : generateNoUserLoggedInAuditDetails();
 
   if (errors.length) {
     return res.status(400).json({
@@ -47,7 +49,7 @@ module.exports.createTfmUser = (req, res, next) => {
   const newUser = { ...userToCreate, salt, hash };
 
   // This is called on the open and auth router ('v1/user' and 'v1/users') endpoints so req.user may be undefined
-  return create(newUser, req.user, (error, user) => {
+  return create(newUser, auditDetails, (error, user) => {
     if (error) {
       return next(error);
     }
@@ -97,7 +99,8 @@ module.exports.updateTfmUserById = (req, res, next) => {
           },
         });
       } else {
-        update(req.params.user, req.body, req.user, (updateErr, updatedUser) => {
+        const auditDetails = generateTfmAuditDetails(req.user._id);
+        update(req.params.user, req.body, auditDetails, (updateErr, updatedUser) => {
           if (updateErr) {
             next(updateErr);
           } else {
@@ -112,7 +115,7 @@ module.exports.updateTfmUserById = (req, res, next) => {
 };
 
 module.exports.removeTfmUserById = (req, res, next) => {
-  removeTfmUserById(req.params.user, (error, status) => {
+  removeTfmUserById(req.params.user, generateTfmAuditDetails(req.user._id), (error, status) => {
     if (error) {
       next(error);
     } else {
@@ -124,7 +127,7 @@ module.exports.removeTfmUserById = (req, res, next) => {
 module.exports.login = async (req, res, next) => {
   const { username, password } = req.body;
 
-  const loginResult = await loginCallback(username, password);
+  const loginResult = await loginCallback(username, password, generateNoUserLoggedInAuditDetails());
 
   if (loginResult.error) {
     // pick out the specific cases we understand and could treat differently

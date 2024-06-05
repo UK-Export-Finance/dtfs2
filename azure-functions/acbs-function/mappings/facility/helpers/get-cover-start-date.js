@@ -6,9 +6,7 @@ const { formatDate } = require('../../../helpers/date');
  * @param {Boolean} fromEpoch Format timestamp
  * @returns {String} Formatted timestamp if true
  */
-const format = (epoch, fromEpoch) => (fromEpoch
-  ? formatDate(epoch)
-  : epoch);
+const format = (epoch, fromEpoch) => (fromEpoch ? formatDate(epoch) : epoch);
 
 /**
  * Evaluates the cover start date of a facility.
@@ -24,9 +22,7 @@ const getCoverStartDate = (facility, formatted) => {
       ? facility.facilitySnapshot.requestedCoverStartDate
       : format(facility.facilitySnapshot.coverStartDate, formatted);
   }
-  return facility.requestedCoverStartDate
-    ? facility.requestedCoverStartDate
-    : format(facility.coverStartDate, formatted);
+  return facility.requestedCoverStartDate ? facility.requestedCoverStartDate : format(facility.coverStartDate, formatted);
 };
 
 module.exports = getCoverStartDate;

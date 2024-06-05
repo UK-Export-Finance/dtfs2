@@ -1,13 +1,15 @@
 import { ROLES } from '@ukef/dtfs2-common';
 import { DEAL, FACILITY } from '../../../server/constants/status';
-import { getNowAsEpoch } from '../../../server/helpers'
+import { getNowAsEpoch } from '../../../server/helpers';
 
-const { DATE: { LONDON_TIMEZONE } } = require('../../../server/constants');
+const {
+  DATE: { LONDON_TIMEZONE },
+} = require('../../../server/constants');
 const { NON_MAKER_OR_CHECKER_ROLES } = require('../../../test-helpers/common-role-lists');
 
 const componentRenderer = require('../../componentRenderer');
 
-const { MAKER, CHECKER } = ROLES; 
+const { MAKER, CHECKER } = ROLES;
 
 const component = 'contract/components/bond-transactions-table.njk';
 const render = componentRenderer(component);

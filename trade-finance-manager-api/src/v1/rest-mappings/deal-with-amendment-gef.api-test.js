@@ -1,7 +1,7 @@
 const { fromUnixTime, format } = require('date-fns');
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const dealReducer = require('./deal');
 const mapGefDeal = require('./mappings/gef-deal/mapGefDeal');
-const { CURRENCY } = require('../../constants/currency.constant');
 
 const MOCK_GEF_DEAL = require('../__mocks__/mock-gef-deal');
 const MOCK_CASH_CONTINGENT_FACILITIES = require('../__mocks__/mock-cash-contingent-facilities');
@@ -112,9 +112,11 @@ describe('gef deal with amendments', () => {
     expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.value).toEqual(amendedValue);
     expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.coverEndDate).not.toEqual(amendedCoverEndDate);
     expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.tenor).not.toEqual(amendedTenor);
-    expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.coverEndDate)
-      .toEqual(originalResult.dealSnapshot.facilities[0].facilitySnapshot.dates.coverEndDate);
-    expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.tenor)
-      .toEqual(originalResult.dealSnapshot.facilities[0].facilitySnapshot.dates.tenor);
+    expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.coverEndDate).toEqual(
+      originalResult.dealSnapshot.facilities[0].facilitySnapshot.dates.coverEndDate,
+    );
+    expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.tenor).toEqual(
+      originalResult.dealSnapshot.facilities[0].facilitySnapshot.dates.tenor,
+    );
   });
 });

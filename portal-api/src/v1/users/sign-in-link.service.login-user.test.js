@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const { when } = require('jest-when');
 const { produce } = require('immer');
 const { cloneDeep } = require('lodash');
@@ -89,7 +90,10 @@ describe('SignInLinkService', () => {
 
       it('updates the last login of the user', async () => {
         await service.loginUser(testUser._id);
-        expect(userRepository.updateLastLoginAndResetSignInData).toHaveBeenCalledWith({ userId: testUser._id, sessionIdentifier });
+        expect(userRepository.updateLastLoginAndResetSignInData).toHaveBeenCalledWith({
+          userId: testUser._id,
+          sessionIdentifier,
+        });
       });
 
       it('returns the user and a new 2FA JWT for the user', async () => {

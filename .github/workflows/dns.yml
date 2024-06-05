@@ -13,6 +13,7 @@ env:
   key_vault_secret: ${{ secrets.PROD_KEYVAULT_SECRET }}
   front_door_name: ${{ secrets.PROD_FRONTDOOR_NAME }}
   domain_name: "get-a-guarantee-for-export-finance.service.gov.uk"
+  contact_us_email_address:  ${{ vars.CONTACT_US_EMAIL_ADDRESS }}
 
 jobs:
 
@@ -66,7 +67,7 @@ jobs:
       with:
         inlineScript: |
           az network dns record-set caa add-record -n '@' --value 'globalsign.com' --tag 'issue' --flags 0 --zone-name ${{ env.domain_name }}
-          az network dns record-set caa add-record -n '@' --value 'mailto:DigitalService.TradeFinance@ukexportfinance.gov.uk' --tag 'iodef' --flags 0 --zone-name ${{ env.domain_name }}
+          az network dns record-set caa add-record -n '@' --value 'mailto:${{ env.contact_us_email_address }}' --tag 'iodef' --flags 0 --zone-name ${{ env.domain_name }}
 
     - name: FD - Add domains
       uses: azure/cli@v1.0.9
