@@ -6,7 +6,7 @@ import {
   generateSystemAuditDatabaseRecord,
   generateTfmUserAuditDatabaseRecord,
 } from './generate-audit-database-record';
-import { generateTfmAuditDetails } from './generate-audit-details';
+import { generatePortalAuditDetails, generateTfmAuditDetails } from './generate-audit-details';
 
 describe('generate audit details', () => {
   const now = new Date(1712574419579);
@@ -103,7 +103,7 @@ describe('generate audit details', () => {
 
     it('returns the correct audit details for a portal user', () => {
       const anObjectId = new ObjectId();
-      const auditDetails = generateTfmAuditDetails(anObjectId);
+      const auditDetails = generatePortalAuditDetails(anObjectId);
 
       const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
