@@ -26,8 +26,8 @@ describe(page, () => {
         feeRecordId: 12,
         facilityId: '000123',
         exporter: 'abcde',
-        reportedFee: 'EUR 0.01',
-        reportedPayments: 'JPY 3',
+        reportedFee: { value: 'EUR 0.01', dataSortValue: 0 },
+        reportedPayments: { value: 'JPY 3', dataSortValue: 0 },
       },
     ];
     const wrapper = render(addPaymentViewModel);

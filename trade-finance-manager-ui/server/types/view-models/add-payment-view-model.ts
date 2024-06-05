@@ -3,12 +3,18 @@ import { ErrorSummaryViewModel } from './error-summary-view-model';
 import { AddPaymentFormValues } from '../add-payment-form-values';
 import { BaseViewModel } from './base-view-model';
 
-export type SelectedReportedFeeViewModel = {
+type SelectedReportedFeeViewModel = {
   feeRecordId: number;
   facilityId: string;
   exporter: string;
-  reportedFee: CurrencyAndAmountString;
-  reportedPayments: CurrencyAndAmountString;
+  reportedFee: {
+    value: CurrencyAndAmountString;
+    dataSortValue: number;
+  };
+  reportedPayments: {
+    value: CurrencyAndAmountString;
+    dataSortValue: number;
+  };
 };
 
 export type SelectedReportedFeesDetailsViewModel = {

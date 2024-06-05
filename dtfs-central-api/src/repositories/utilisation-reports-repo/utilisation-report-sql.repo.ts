@@ -42,7 +42,21 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
       findByOptionsWhere.status = Not('REPORT_NOT_RECEIVED');
     }
 
-    return await this.findBy(findByOptionsWhere);
+    return await this.find({
+      where: findByOptionsWhere,
+      order: {
+        reportPeriod: {
+          start: {
+            year: 'ASC',
+            month: 'ASC',
+          },
+          end: {
+            year: 'ASC',
+            month: 'ASC',
+          },
+        },
+      },
+    });
   },
 
   /**
@@ -86,6 +100,14 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
       ],
       relations: {
         feeRecords: includeFeeRecords,
+      },
+      order: {
+        reportPeriod: {
+          end: {
+            year: 'ASC',
+            month: 'ASC',
+          },
+        },
       },
     });
   },

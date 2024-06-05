@@ -1,6 +1,6 @@
 import { Response } from 'express';
-import { SelectedFeeRecordDetails, SelectedFeeRecordsDetails, getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
-import { AddPaymentErrorsViewModel, AddPaymentViewModel, SelectedReportedFeeViewModel, SelectedReportedFeesDetailsViewModel } from '../../../types/view-models';
+import { SelectedFeeRecordsDetails, getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { AddPaymentErrorsViewModel, AddPaymentViewModel, SelectedReportedFeesDetailsViewModel } from '../../../types/view-models';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import {
@@ -12,6 +12,7 @@ import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-
 import { validateAddPaymentRequestFormValues } from './add-payment-form-values-validator';
 import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
+import { getKeyToCurrencyAndAmountSortValueMap } from '../helpers';
 
 export type AddPaymentRequestBody = Record<PremiumPaymentsTableCheckboxId, 'on'> & {
   paymentCurrency?: string;
@@ -43,18 +44,24 @@ const extractFormValuesFromRequestBody = (requestBody: AddPaymentRequestBody): A
 
 const renderAddPaymentPage = (res: Response, context: AddPaymentViewModel) => res.render('utilisation-reports/add-payment.njk', context);
 
-const mapToSelectedReportedFeeViewModel = (feeRecord: SelectedFeeRecordDetails): SelectedReportedFeeViewModel => ({
-  feeRecordId: feeRecord.id,
-  facilityId: feeRecord.facilityId,
-  exporter: feeRecord.exporter,
-  reportedFee: getFormattedCurrencyAndAmount(feeRecord.reportedFee),
-  reportedPayments: getFormattedCurrencyAndAmount(feeRecord.reportedPayments),
-});
-
-const mapToSelectedReportedFeesDetailsViewModel = (selectedFeeRecordData: SelectedFeeRecordsDetails): SelectedReportedFeesDetailsViewModel => ({
-  totalReportedPayments: getFormattedCurrencyAndAmount(selectedFeeRecordData.totalReportedPayments),
-  feeRecords: selectedFeeRecordData.feeRecords.map((record) => mapToSelectedReportedFeeViewModel(record)),
-});
+const mapToSelectedReportedFeesDetailsViewModel = (selectedFeeRecordData: SelectedFeeRecordsDetails): SelectedReportedFeesDetailsViewModel => {
+  const reportedFeeDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
+    selectedFeeRecordData.feeRecords.map((record) => ({ ...record.reportedFee, key: record.id })),
+  );
+  const reportedPaymentsDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
+    selectedFeeRecordData.feeRecords.map((record) => ({ ...record.reportedPayments, key: record.id })),
+  );
+  return {
+    totalReportedPayments: getFormattedCurrencyAndAmount(selectedFeeRecordData.totalReportedPayments),
+    feeRecords: selectedFeeRecordData.feeRecords.map((record) => ({
+      feeRecordId: record.id,
+      facilityId: record.facilityId,
+      exporter: record.exporter,
+      reportedFee: { value: getFormattedCurrencyAndAmount(record.reportedFee), dataSortValue: reportedFeeDataSortValueMap[record.id] },
+      reportedPayments: { value: getFormattedCurrencyAndAmount(record.reportedPayments), dataSortValue: reportedPaymentsDataSortValueMap[record.id] },
+    })),
+  };
+};
 
 export const addPayment = async (req: AddPaymentRequest, res: Response) => {
   try {
