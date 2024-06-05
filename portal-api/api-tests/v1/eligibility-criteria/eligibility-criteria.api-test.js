@@ -1,4 +1,10 @@
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { ObjectId } = require('mongodb');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const {
+  generateParsedMockPortalUserAuditDatabaseRecord,
+  withDeleteOneTests,
+  expectAnyPortalUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
@@ -103,17 +109,17 @@ describe('/v1/eligibility-criteria', () => {
   });
 
   describe('GET /v1/eligibility-criteria/:version', () => {
-    const eligibilityCriteria1Url = '/v1/eligibility-criteria/1';
+    const eligibilityCriteriaUrl = `/v1/eligibility-criteria/${newEligibilityCriteria.version}`;
 
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => get(eligibilityCriteria1Url),
-      makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteria1Url, { headers: { Authorization: authHeader } }),
+      makeRequestWithoutAuthHeader: () => get(eligibilityCriteriaUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
     withNoRoleAuthorisationTests({
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).get(eligibilityCriteria1Url),
+      makeRequestAsUser: (user) => as(user).get(eligibilityCriteriaUrl),
       successStatusCode: 200,
     });
 
@@ -150,18 +156,18 @@ describe('/v1/eligibility-criteria', () => {
   });
 
   describe('PUT /v1/eligibility-criteria/:version', () => {
-    const eligibilityCriteria1Url = '/v1/eligibility-criteria/1';
+    const eligibilityCriteriaUrl = `/v1/eligibility-criteria/${newEligibilityCriteria.version}`;
 
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => put(eligibilityCriteria1Url, updatedEligibilityCriteria),
-      makeRequestWithAuthHeader: (authHeader) => put(eligibilityCriteria1Url, updatedEligibilityCriteria, { headers: { Authorization: authHeader } }),
+      makeRequestWithoutAuthHeader: () => put(eligibilityCriteriaUrl, updatedEligibilityCriteria),
+      makeRequestWithAuthHeader: (authHeader) => put(eligibilityCriteriaUrl, updatedEligibilityCriteria, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).put(updatedEligibilityCriteria).to(eligibilityCriteria1Url),
+      makeRequestAsUser: (user) => as(user).put(updatedEligibilityCriteria).to(eligibilityCriteriaUrl),
       successStatusCode: 200,
     });
 
@@ -188,29 +194,32 @@ describe('/v1/eligibility-criteria', () => {
   });
 
   describe('DELETE /v1/eligibility-criteria/:version', () => {
-    const eligibilityCriteria1Url = '/v1/eligibility-criteria/1';
+    const eligibilityCriteriaUrl = `/v1/eligibility-criteria/${newEligibilityCriteria.version}`;
+    let eligibilityCriteriaToDeleteId;
+
+    beforeEach(async () => {
+      const { body } = await as(anAdmin).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
+      eligibilityCriteriaToDeleteId = new ObjectId(body.insertedId);
+    });
 
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => remove(eligibilityCriteria1Url),
-      makeRequestWithAuthHeader: (authHeader) => remove(eligibilityCriteria1Url, { headers: { Authorization: authHeader } }),
+      makeRequestWithoutAuthHeader: () => remove(eligibilityCriteriaUrl),
+      makeRequestWithAuthHeader: (authHeader) => remove(eligibilityCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).remove(eligibilityCriteria1Url),
+      makeRequestAsUser: (user) => as(user).remove(eligibilityCriteriaUrl),
       successStatusCode: 200,
     });
 
-    it('deletes the eligibility-criteria', async () => {
-      await as(anAdmin).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
-      await as(anAdmin).remove('/v1/eligibility-criteria/1');
-
-      const { status, body } = await as(anAdmin).get('/v1/eligibility-criteria/1');
-
-      expect(status).toEqual(200);
-      expect(body).toEqual({});
+    withDeleteOneTests({
+      makeRequest: () => as(anAdmin).remove(eligibilityCriteriaUrl),
+      collectionName: MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA,
+      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
+      getDeletedDocumentId: () => eligibilityCriteriaToDeleteId,
     });
   });
 });

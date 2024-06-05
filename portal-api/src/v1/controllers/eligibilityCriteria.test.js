@@ -1,4 +1,4 @@
-const db = require('../../drivers/db-client');
+const db = require('../../drivers/db-client').default;
 const { DEAL } = require('../../constants');
 const { getLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
 

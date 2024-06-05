@@ -29,8 +29,8 @@ describe('DELETE /v1/portal/deals', () => {
   });
 
   withValidateAuditDetailsTests({
-    makeRequest: async (auditDetails) =>
-      await api
+    makeRequest: (auditDetails) =>
+      api
         .remove({
           auditDetails,
         })
@@ -39,13 +39,12 @@ describe('DELETE /v1/portal/deals', () => {
   });
 
   withDeleteOneTests({
-    makeRequest: async () => {
-      await api
+    makeRequest: () =>
+      api
         .remove({
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
-        .to(`/v1/portal/deals/${dealToDeleteId}`);
-    },
+        .to(`/v1/portal/deals/${dealToDeleteId}`),
     collectionName: 'deals',
     auditRecord: generateMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
     getDeletedDocumentId: () => dealToDeleteId,
