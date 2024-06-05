@@ -8,6 +8,7 @@ const { expectAddedFieldsWithEditedBy } = require('./expectAddedFields');
 const CONSTANTS = require('../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../helpers/create-deal');
+const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 
 const newDeal = aDeal({
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
@@ -37,7 +38,19 @@ describe('/v1/portal/deals', () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
   });
 
-  describe('PUT /v1/portal/deals/:id', () => {
+    withValidateAuditDetailsTests({
+      makeRequest: async (auditDetails) =>
+        await api
+          .put({
+            dealUpdate: {
+              additionalRefName: 'change this field',
+            },
+            user: MOCK_PORTAL_USER,
+            auditDetails,
+          })
+          .to(`/v1/portal/deals/${createdDeal._id}`),
+    });
+
     it('returns the updated deal', async () => {
       const createdDeal = postResult.body;
       const updatedDeal = {
@@ -51,6 +64,10 @@ describe('/v1/portal/deals', () => {
       };
 
       const { status, body } = await api.put({ dealUpdate: updatedDeal, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
+
+      const { status, body } = await api
+        .put({ dealUpdate: updatedDeal, user: MOCK_PORTAL_USER, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
+        .to(`/v1/portal/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
 
@@ -77,7 +94,9 @@ describe('/v1/portal/deals', () => {
         },
       };
 
-      const { status: putStatus } = await api.put({ dealUpdate: partialUpdate, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
+      const { status: putStatus } = await api
+        .put({ dealUpdate: partialUpdate, user: MOCK_PORTAL_USER, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
+        .to(`/v1/portal/deals/${createdDeal._id}`);
       expect(putStatus).toEqual(200);
 
       const { status, body } = await api.get(`/v1/portal/deals/${createdDeal._id}`);
@@ -97,7 +116,9 @@ describe('/v1/portal/deals', () => {
         additionalRefName: 'change this field',
       };
 
-      await api.put({ dealUpdate: updatedDeal, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
+      await api
+        .put({ dealUpdate: updatedDeal, user: MOCK_PORTAL_USER, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
+        .to(`/v1/portal/deals/${createdDeal._id}`);
 
       const { status, body } = await api.get(`/v1/portal/deals/${createdDeal._id}`);
 
@@ -122,7 +143,9 @@ describe('/v1/portal/deals', () => {
         additionalRefName: 'change this field again',
       };
 
-      await api.put({ dealUpdate: secondUpdate, user: MOCK_PORTAL_USER }).to(`/v1/portal/deals/${createdDeal._id}`);
+      await api
+        .put({ dealUpdate: secondUpdate, user: MOCK_PORTAL_USER, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
+        .to(`/v1/portal/deals/${createdDeal._id}`);
 
       const dealAfterSecondUpdate = await api.get(`/v1/portal/deals/${createdDeal._id}`);
       expect(dealAfterSecondUpdate.status).toEqual(200);

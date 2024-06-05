@@ -204,7 +204,7 @@ exports.updateDealPut = async (req, res) => {
     const {
       params: { id: dealId },
       body: { user, dealUpdate, auditDetails },
-    } = req.body;
+    } = req;
 
     if (!ObjectId.isValid(dealId)) {
       return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
