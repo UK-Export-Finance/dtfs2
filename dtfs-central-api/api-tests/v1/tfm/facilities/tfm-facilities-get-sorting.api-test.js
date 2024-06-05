@@ -1,4 +1,4 @@
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
@@ -196,7 +196,7 @@ describe('/v1/tfm/facilities', () => {
       facility.dealId = dealId;
       await api.post(facility).to('/v1/portal/gef/facilities');
 
-      await api.put({ dealType: deal.dealType, dealId, auditDetails: generateTfmAuditDetails(MOCK_PORTAL_USER._id) }).to('/v1/tfm/deals/submit');
+      await api.put({ dealType: deal.dealType, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) }).to('/v1/tfm/deals/submit');
     }
   }
 
