@@ -78,14 +78,16 @@ const createNewDealData = async (deal, maker) => {
 /**
  * Create a deal (BSS, EWCS only)
  */
-const createDeal = async (dealBody, user) => {
+const createDeal = async (dealBody, user, auditDetails) => {
   const deal = await createNewDealData(dealBody, user);
-  return api.createDeal(deal, user);
+  return api.createDeal(deal, user, auditDetails);
 };
+
 exports.createDeal = createDeal;
 
 exports.create = async (req, res) => {
-  const { status, data } = await createDeal(req.body, req.user);
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+  const { status, data } = await createDeal(req.body, req.user, auditDetails);
   return res.status(status).send(data);
 };
 
