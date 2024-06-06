@@ -21,7 +21,7 @@
  * 0. 'npm install durable-functions'
  * 1. Durable HTTP trigger function (acbs-http)
  * 2. DOF (acbs-amend-facility)
- * 3. DAF (get-loan-id, update-facility-loan-amount, update-facility-loan)
+ * 3. DAF (get-facility-loan-id, update-facility-loan-amount, update-facility-loan)
  *
  * ACBS
  * ----
@@ -45,7 +45,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* Facility(conte
       const flrMApped = mappings.facility.facilityLoanAmend(amendments, facility, fmr);
 
       // 1.2. Extract loan id for facility id
-      const loanId = yield context.df.callActivityWithRetry('get-loan-id', retryOptions, {
+      const loanId = yield context.df.callActivityWithRetry('get-facility-loan-id', retryOptions, {
         facilityId,
       });
 

@@ -25,7 +25,7 @@ df.app.activity('get-acbs-country-code', {
       const { status, data } = await mdm.getACBSCountryCode(country);
 
       // Check if the request was successful and data was returned
-      if (status === HttpStatusCode.Ok && !data?.length) {
+      if (status === HttpStatusCode.Ok && data?.length) {
         return data[0].isoCode;
       }
 

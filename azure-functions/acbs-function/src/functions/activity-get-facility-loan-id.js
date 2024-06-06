@@ -26,7 +26,7 @@ const df = require('durable-functions');
 const api = require('../../api');
 const { isHttpErrorStatus } = require('../../helpers/http');
 
-df.app.activity('get-loan-id', {
+df.app.activity('get-facility-loan-id', {
   handler: async (facilityId) => {
     try {
       if (!facilityId) {

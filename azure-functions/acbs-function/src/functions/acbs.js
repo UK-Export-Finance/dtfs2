@@ -72,25 +72,6 @@ df.app.orchestration('acbs', function* HDeal(context) {
       if (product !== CONSTANTS.PRODUCT.TYPE.GEF) {
         const buyer = mappings.party.buyer({ deal });
         buyerTask = context.df.callActivityWithRetry('create-party', retryOptions, buyer);
-
-        /*
-      Following parties are only created once the
-      future tickets have been incorporated.
-
-      let agentTask;
-      let indemnifierTask;
-
-      agentTask = context.df.callActivityWithRetry(
-        'create-party',
-        retryOptions,
-        { party: mappings.party.agent({ deal }) },
-      );
-      indemnifierTask = context.df.callActivityWithRetry(
-        'create-party',
-        retryOptions,
-        { party: mappings.party.indemnifier({ deal }) },
-      );
-      */
       }
 
       // 1.1. Party tasks are run in parallel so wait for them all to be finished.

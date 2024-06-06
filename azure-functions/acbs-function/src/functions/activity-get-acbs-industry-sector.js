@@ -29,7 +29,7 @@ df.app.activity('get-acbs-industry-sector', {
       const { status, data } = await mdm.getACBSIndustrySector(industry);
 
       // Check if the request was successful and data was returned
-      if (status === HttpStatusCode.Ok && !data?.length) {
+      if (status === HttpStatusCode.Ok && data?.length) {
         return data[0].acbsIndustryId;
       }
 
