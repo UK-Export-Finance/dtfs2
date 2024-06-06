@@ -187,7 +187,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
   });
 
-  it.only('A maker picks up a deal in status=Draft, fills in a field, triggers Supplier companies house validation errors', () => {
+  it('A maker picks up a deal in status=Draft, fills in a field, triggers Supplier companies house validation errors', () => {
     cy.login(BANK1_MAKER1);
     contractAboutSupplier.visit(deal);
 

@@ -13,7 +13,6 @@ const getMdmUrlForRegistrationNumber = (registrationNumber: string) => `${APIM_M
 
 const { get } = api(app);
 
-// Mock Axios
 const axiosMock = new MockAdapter(axios);
 
 const mdmGetCompanyResponse = {

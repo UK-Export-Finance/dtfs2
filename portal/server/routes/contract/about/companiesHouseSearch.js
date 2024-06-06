@@ -1,6 +1,5 @@
 const express = require('express');
 const { provide, DEAL, COUNTRIES } = require('../../api-data-provider');
-const { requestParams } = require('../../../helpers');
 const companiesApi = require('../../../companies-api');
 
 // https://developer.companieshouse.gov.uk/api/docs/company/company_number/registered-office-address/registeredOfficeAddress-resource.html
@@ -17,9 +16,11 @@ const getPortalCountryForCompaniesHouseCountry = (companiesHouseCountry) => {
 const router = express.Router();
 
 router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', provide([DEAL, COUNTRIES]), async (req, res) => {
-  const { userToken } = requestParams(req);
-  const { prefix } = req.params;
-  const { deal } = req.apiData;
+  const {
+    session: { userToken },
+    params: { prefix },
+    apiData: { deal },
+  } = req;
 
   const registrationNumberField = `${prefix}-companies-house-registration-number`;
   const registrationNumberFieldValue = req.body[registrationNumberField];

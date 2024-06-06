@@ -20,7 +20,6 @@ const { APIM_MDM_URL } = process.env;
 const { VALID, VALID_WITH_LETTERS } = COMPANY_REGISTRATION_NUMBER.EXAMPLES;
 const { get } = api(app);
 
-// Mock Axios
 const axiosMock = new MockAdapter(axios);
 axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
 axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
