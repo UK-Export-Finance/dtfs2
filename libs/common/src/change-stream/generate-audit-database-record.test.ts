@@ -6,6 +6,7 @@ import {
   generateSystemAuditDatabaseRecord,
   generateTfmUserAuditDatabaseRecord,
 } from './generate-audit-database-record';
+import { generatePortalAuditDetails, generateTfmAuditDetails } from './generate-audit-details';
 
 describe('generate audit details', () => {
   const now = new Date(1712574419579);
@@ -89,26 +90,26 @@ describe('generate audit details', () => {
 
   describe('generateAuditDatabaseRecordFromAuditDetails', () => {
     it('returns the correct audit details for a tfm user', () => {
-      const auditRecord = generateAuditDatabaseRecordFromAuditDetails({
-        userType: 'tfm',
-        id: '1234567890abcdef12345678',
-      });
+      const anObjectId = new ObjectId();
+      const auditDetails = generateTfmAuditDetails(anObjectId);
+
+      const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
       expect(auditRecord).toEqual({
         ...defaultAuditDatabaseRecord,
-        lastUpdatedByTfmUserId: new ObjectId('1234567890abcdef12345678'),
+        lastUpdatedByTfmUserId: anObjectId,
       });
     });
 
     it('returns the correct audit details for a portal user', () => {
-      const auditRecord = generateAuditDatabaseRecordFromAuditDetails({
-        userType: 'portal',
-        id: '1234567890abcdef12345678',
-      });
+      const anObjectId = new ObjectId();
+      const auditDetails = generatePortalAuditDetails(anObjectId);
+
+      const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
       expect(auditRecord).toEqual({
         ...defaultAuditDatabaseRecord,
-        lastUpdatedByPortalUserId: new ObjectId('1234567890abcdef12345678'),
+        lastUpdatedByPortalUserId: anObjectId,
       });
     });
 

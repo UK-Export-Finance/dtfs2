@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { withDeleteOneTests, generateMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
@@ -62,7 +62,7 @@ describe('/v1/tfm/users', () => {
   describe('POST /v1/tfm/users', () => {
     withValidateAuditDetailsTests({
       makeRequest: (auditDetails) => api.post({ user: mockUsers[0], auditDetails }).to('/v1/tfm/users'),
-      validUserTypes: ['tfm'],
+      validUserTypes: [AUDIT_USER_TYPES.TFM],
     });
 
     it('returns the created resource', async () => {
@@ -159,7 +159,6 @@ describe('/v1/tfm/users', () => {
 
     withValidateAuditDetailsTests({
       makeRequest: (auditDetails) => api.remove({ auditDetails }).to(`/v1/tfm/users/${mockUsers[0].username}`),
-      validUserTypes: ['none', 'portal', 'system', 'tfm'],
     });
 
     withDeleteOneTests({
