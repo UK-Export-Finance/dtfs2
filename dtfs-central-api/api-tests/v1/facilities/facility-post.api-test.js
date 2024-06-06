@@ -56,8 +56,10 @@ describe('/v1/portal/facilities', () => {
         type: 'Bond',
       };
 
-      const { status } = await createFacility({ api, facility: facilityWithInvalidDealId });
+      const { status } = await await api
+        .post({ facility: facilityWithInvalidDealId })
 
+        .to('/v1/portal/facilities');
       expect(status).toEqual(404);
     });
 
