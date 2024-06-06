@@ -1,3 +1,4 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { SIGN_IN_TOKENS } = require('../../fixtures/constants');
 
 const api = () => {
@@ -193,6 +194,7 @@ module.exports.createFacilities = (dealId, facilities, user, token) =>
         facilities,
         dealId,
         user,
+        auditDetails: generatePortalAuditDetails(user._id),
       },
       headers: {
         'Content-Type': 'application/json',
