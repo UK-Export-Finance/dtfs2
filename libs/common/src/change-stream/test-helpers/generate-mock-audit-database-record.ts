@@ -5,7 +5,7 @@ import {
   generateSystemAuditDatabaseRecord,
   generateNoUserLoggedInAuditDatabaseRecord,
 } from '../generate-audit-database-record';
-import { AuditDatabaseRecord } from '../../types';
+import { AuditDatabaseRecord, AuditDetails } from '../../types';
 
 export const generateMockTfmUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
   ...generateTfmUserAuditDatabaseRecord(mockUserId),
@@ -54,3 +54,14 @@ export const expectAnyPortalUserAuditDatabaseRecord = (): AuditDatabaseRecord =>
   lastUpdatedByIsSystem: null,
   noUserLoggedIn: null,
 });
+
+export const generateParsedMockAuditDatabaseRecord = (auditDetails: AuditDetails) => {
+  switch (auditDetails.userType) {
+    case 'tfm':
+      return generateParsedMockTfmUserAuditDatabaseRecord(auditDetails.id);
+    case 'portal':
+      return generateParsedMockPortalUserAuditDatabaseRecord(auditDetails.id);
+    default:
+      throw new Error('Invalid auditDetails userType');
+  }
+};

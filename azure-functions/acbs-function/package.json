@@ -1,8 +1,23 @@
 {
   "name": "acbs-function",
   "version": "1.0.0",
+  "private": true,
   "description": "DTFS ACBS DOF",
+  "keywords": [
+    "export",
+    "finance"
+  ],
+  "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
+  "bugs": {
+    "url": "https://github.com/UK-Export-Finance/dtfs2/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UK-Export-Finance/dtfs2.git"
+  },
+  "license": "MIT",
   "author": "UK Export Finance",
+  "main": "src/functions/*.js",
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --config=api-test.jest.config.js ",
     "lint": "eslint --color **/*.{ts,js} --ignore-path ../../.eslintignore",
@@ -14,8 +29,7 @@
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },
   "dependencies": {
-    "@azure/functions": "^4.5.0",
-    "axios": "^0.27.2",
+    "axios": "^1.7.2",
     "date-fns": "^2.30.0",
     "dotenv": "^16.4.5",
     "durable-functions": "^3.1.0",
