@@ -97,6 +97,9 @@ const assertions = (wrapper, html, params) => ({
     toBeChecked: () => {
       expect(wrapper(selector).is(':checked')).toEqual(true);
     },
+    notToBeChecked: () => {
+      expect(wrapper(selector).is(':checked')).toEqual(false);
+    },
   }),
   expectTextArea: (selector) => ({
     toHaveValue: (value) => {
