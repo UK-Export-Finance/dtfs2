@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ObjectId } from 'mongodb';
 import {
   generateTfmUserAuditDatabaseRecord,
@@ -5,26 +7,26 @@ import {
   generateSystemAuditDatabaseRecord,
   generateNoUserLoggedInAuditDatabaseRecord,
 } from '../generate-audit-database-record';
-import { AuditDatabaseRecord, AuditDetails } from '../../types';
+import { AuditDetails } from '../../types';
 
 export const generateMockTfmUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
   ...generateTfmUserAuditDatabaseRecord(mockUserId),
-  lastUpdatedAt: expect.any(String) as string,
+  lastUpdatedAt: expect.any(String),
 });
 
 export const generateMockPortalUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
   ...generatePortalUserAuditDatabaseRecord(mockUserId),
-  lastUpdatedAt: expect.any(String) as string,
+  lastUpdatedAt: expect.any(String),
 });
 
 export const generateMockSystemAuditDatabaseRecord = () => ({
   ...generateSystemAuditDatabaseRecord(),
-  lastUpdatedAt: expect.any(String) as string,
+  lastUpdatedAt: expect.any(String),
 });
 
 export const generateMockNoUserLoggedInAuditDatabaseRecord = () => ({
   ...generateNoUserLoggedInAuditDatabaseRecord(),
-  lastUpdatedAt: expect.any(String) as string,
+  lastUpdatedAt: expect.any(String),
 });
 
 /**
@@ -33,8 +35,8 @@ export const generateMockNoUserLoggedInAuditDatabaseRecord = () => ({
  * In particular, the ObjectId is converted to strings
  */
 export const generateParsedMockTfmUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
-  ...(JSON.parse(JSON.stringify(generateTfmUserAuditDatabaseRecord(mockUserId))) as object),
-  lastUpdatedAt: expect.any(String) as string,
+  ...JSON.parse(JSON.stringify(generateTfmUserAuditDatabaseRecord(mockUserId))),
+  lastUpdatedAt: expect.any(String),
 });
 
 /**
@@ -43,13 +45,13 @@ export const generateParsedMockTfmUserAuditDatabaseRecord = (mockUserId: string 
  * In particular, the ObjectId is converted to strings
  */
 export const generateParsedMockPortalUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
-  ...(JSON.parse(JSON.stringify(generatePortalUserAuditDatabaseRecord(mockUserId))) as object),
-  lastUpdatedAt: expect.any(String) as string,
+  ...JSON.parse(JSON.stringify(generatePortalUserAuditDatabaseRecord(mockUserId))),
+  lastUpdatedAt: expect.any(String),
 });
 
-export const expectAnyPortalUserAuditDatabaseRecord = (): AuditDatabaseRecord => ({
-  lastUpdatedAt: expect.any(String) as string,
-  lastUpdatedByPortalUserId: expect.anything() as ObjectId,
+export const expectAnyPortalUserAuditDatabaseRecord = () => ({
+  lastUpdatedAt: expect.any(String),
+  lastUpdatedByPortalUserId: expect.anything(),
   lastUpdatedByTfmUserId: null,
   lastUpdatedByIsSystem: null,
   noUserLoggedIn: null,
