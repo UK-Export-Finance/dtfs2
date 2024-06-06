@@ -2,10 +2,10 @@ import { HttpStatusCode } from 'axios';
 import { ApiError } from '.';
 
 export class TransactionFailedError extends ApiError {
-  constructor(message: string = 'Transaction failed') {
+  constructor(apiError?: ApiError) {
     super({
-      message,
-      status: HttpStatusCode.InternalServerError,
+      message: apiError?.message ?? 'Transaction failed',
+      status: apiError?.status ?? HttpStatusCode.InternalServerError,
     });
   }
 }
