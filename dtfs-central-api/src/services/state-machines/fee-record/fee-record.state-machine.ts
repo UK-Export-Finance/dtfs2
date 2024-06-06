@@ -42,8 +42,6 @@ export class FeeRecordStateMachine {
         }
       case 'MATCH':
         switch (event.type) {
-          case 'PAYMENT_ADDED':
-            return handleFeeRecordPaymentAddedEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }

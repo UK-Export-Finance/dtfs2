@@ -63,7 +63,7 @@ describe('FeeRecordStateMachine', () => {
     // Arrange
     const MATCH_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('MATCH').build();
 
-    const VALID_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['PAYMENT_ADDED'];
+    const VALID_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [];
     const INVALID_MATCH_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_MATCH_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_MATCH_FEE_RECORD_EVENT_TYPES.length !== 0) {
@@ -78,24 +78,6 @@ describe('FeeRecordStateMachine', () => {
         },
       );
     }
-
-    it(`handles the '${FEE_RECORD_EVENT_TYPE.PAYMENT_ADDED}' event`, async () => {
-      // Arrange
-      const stateMachine = FeeRecordStateMachine.forFeeRecord(MATCH_FEE_RECORD);
-
-      // Act
-      await stateMachine.handleEvent({
-        type: 'PAYMENT_ADDED',
-        payload: {
-          transactionEntityManager: {} as unknown as EntityManager,
-          feeRecordsAndPaymentsMatch: true,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
-        },
-      });
-
-      // Assert
-      expect(handleFeeRecordPaymentAddedEvent).toHaveBeenCalledTimes(1);
-    });
   });
 
   describe(`when the fee record has the '${FEE_RECORD_STATUS.DOES_NOT_MATCH}' status`, () => {
