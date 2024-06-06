@@ -63,24 +63,35 @@ const mapToSelectedReportedFeesDetailsViewModel = (selectedFeeRecordData: Select
   };
 };
 
+const extractAddPaymentFormValuesAndValidateIfPresent = (
+  requestBody: AddPaymentRequestBody,
+): { errors: AddPaymentErrorsViewModel; formValues: AddPaymentFormValues; paymentNumber?: number } => {
+  if (!('addPaymentFormSubmission' in requestBody)) {
+    return {
+      errors: { errorSummary: [] },
+      formValues: { paymentDate: {} },
+    };
+  }
+
+  const formValues = extractFormValuesFromRequestBody(requestBody);
+  return {
+    formValues,
+    errors: validateAddPaymentRequestFormValues(formValues),
+    paymentNumber: Number(requestBody.paymentNumber),
+  };
+};
+
 export const addPayment = async (req: AddPaymentRequest, res: Response) => {
   try {
     const { user, userToken } = asUserSession(req.session);
     const { reportId } = req.params;
     const checkedCheckboxIds = getPremiumPaymentsCheckboxIdsFromObjectKeys(req.body);
     const feeRecordIds = checkedCheckboxIds.map((checkboxId) => getFeeRecordIdFromPremiumPaymentsCheckboxId(checkboxId));
+    const { errors, formValues, paymentNumber } = extractAddPaymentFormValuesAndValidateIfPresent(req.body);
 
-    let paymentNumber;
-    let errors: AddPaymentErrorsViewModel = { errorSummary: [] };
-    let formValues: AddPaymentFormValues = { paymentDate: {} };
-    if ('addPaymentFormSubmission' in req.body) {
-      paymentNumber = Number(req.body.paymentNumber);
-      formValues = extractFormValuesFromRequestBody(req.body);
-      errors = validateAddPaymentRequestFormValues(formValues);
-      if (errors.errorSummary.length === 0) {
-        // TODO FN-1739 save data upon valid submission
-        return res.status(501).send('Your request was valid, but we have not finished building the feature');
-      }
+    if ('addPaymentFormSubmission' in req.body && errors.errorSummary.length === 0) {
+      // TODO FN-1739 save data upon valid submission
+      return res.status(501).send('Your request was valid, but we have not finished building the feature');
     }
 
     const selectedFeeRecordDetails = await api.getSelectedFeeRecordsDetails(Number(reportId), feeRecordIds, userToken);
