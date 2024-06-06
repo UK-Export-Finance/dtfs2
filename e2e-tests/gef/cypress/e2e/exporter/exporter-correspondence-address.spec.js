@@ -1,3 +1,4 @@
+import { COMPANY_REGISTRATION_NUMBER } from '@ukef/dtfs2-common';
 import relative from '../relativeURL';
 import applicationDetails from '../pages/application-details';
 import dashboardPage from '../pages/dashboard-page';
@@ -5,7 +6,6 @@ import companiesHouse from '../pages/companies-house';
 import exportersAddress from '../pages/exporters-address';
 import aboutExporter from '../pages/about-exporter';
 import selectExportersCorAddress from '../pages/select-exporters-corr-address';
-
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import { COMPANIES_HOUSE_NUMBERS } from '../../fixtures/constants';
 
@@ -36,7 +36,7 @@ context('Incomplete exporter section - application details page', () => {
     it('completes the exporter section', () => {
       cy.visit(url);
       applicationDetails.exporterDetailsLink().click();
-      companiesHouse.regNumberField().type(COMPANIES_HOUSE_NUMBERS.VALID);
+      companiesHouse.regNumberField().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID);
       companiesHouse.continueButton().click();
       exportersAddress.noRadioButton().click();
       exportersAddress.continueButton().click();
