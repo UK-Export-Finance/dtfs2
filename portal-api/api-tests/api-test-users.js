@@ -141,17 +141,6 @@ const testUsers = [
     isTrusted: false,
   },
   {
-    username: 'barclays-no-roles@ukexportfinance.gov.uk',
-    password: 'P@ssword1234',
-    firstname: 'No Roles',
-    surname: 'barclays',
-    email: 'barclays-no-roles@ukexportfinance.gov.uk',
-    timezone: 'Europe/London',
-    roles: [],
-    bank: banks.Barclays,
-    isTrusted: false,
-  },
-  {
     username: 'Ukef-maker-1@ukexportfinance.gov.uk',
     password: 'P@ssword1234',
     firstname: 'Mister',
