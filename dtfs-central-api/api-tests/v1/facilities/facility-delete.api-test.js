@@ -1,3 +1,4 @@
+const { AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { withDeleteOneTests, generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
@@ -7,6 +8,7 @@ const api = require('../../api')(app);
 const { DEALS } = require('../../../src/constants');
 const aDeal = require('../deal-builder');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
+const { createDeal } = require('../../helpers/create-deal');
 
 const newDeal = aDeal({
   dealType: DEALS.DEAL_TYPE.BSS_EWCS,
@@ -19,8 +21,8 @@ describe('DELETE /v1/portal/facilities/:id', () => {
   let documentToDeleteId;
 
   beforeEach(async () => {
-    const createDealResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
-    dealId = createDealResult.body._id;
+    const { body: deal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+    dealId = deal._id;
 
     const createFacilityResult = await api
       .post({
@@ -50,7 +52,7 @@ describe('DELETE /v1/portal/facilities/:id', () => {
           auditDetails,
         })
         .to(`/v1/portal/facilities/${documentToDeleteId}`),
-    validUserTypes: ['portal'],
+    validUserTypes: [AUDIT_USER_TYPES.PORTAL],
   });
 
   withDeleteOneTests({
