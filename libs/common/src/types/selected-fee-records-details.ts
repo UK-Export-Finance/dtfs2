@@ -1,6 +1,12 @@
 import { CurrencyAndAmount } from './currency';
 import { ReportPeriod } from './utilisation-reports';
 
+export type SelectedFeeRecordsPaymentDetails = {
+  value: CurrencyAndAmount;
+  dateReceived: Date;
+  reference?: string;
+};
+
 export type SelectedFeeRecordDetails = {
   id: number;
   facilityId: string;
@@ -16,4 +22,5 @@ export type SelectedFeeRecordsDetails = {
   };
   reportPeriod: ReportPeriod;
   feeRecords: SelectedFeeRecordDetails[];
+  payments: SelectedFeeRecordsPaymentDetails[];
 };

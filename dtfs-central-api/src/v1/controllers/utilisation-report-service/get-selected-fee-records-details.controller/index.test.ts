@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { FeeRecordEntityMockBuilder, SelectedFeeRecordsDetails, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, SelectedFeeRecordsDetails, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { GetSelectedFeeRecordDetailsRequest, getSelectedFeeRecordDetails } from '.';
@@ -112,6 +112,11 @@ describe('get selected fee records details controller', () => {
     const { req, res } = getHttpMocks([1, 2]);
     const reportPeriod = aReportPeriod();
     const reportEntity = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withBankId('999').withReportPeriod(reportPeriod).build();
+    const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
+      .withDateReceived(new Date('2024-01-01'))
+      .withAmount(150)
+      .withReference('A payment')
+      .build();
     const feeRecordOne = FeeRecordEntityMockBuilder.forReport(reportEntity)
       .withId(1)
       .withFacilityId('FACILITY 1')
@@ -119,6 +124,7 @@ describe('get selected fee records details controller', () => {
       .withPaymentCurrency('GBP')
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withFeesPaidToUkefForThePeriod(100)
+      .withPayments([paymentEntity])
       .build();
     const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(reportEntity)
       .withId(2)
@@ -127,6 +133,7 @@ describe('get selected fee records details controller', () => {
       .withPaymentCurrency('GBP')
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withFeesPaidToUkefForThePeriod(200)
+      .withPayments([paymentEntity])
       .build();
     reportEntity.feeRecords = [feeRecordOne, feeRecordTwo];
     jest.spyOn(UtilisationReportRepo, 'findOne').mockResolvedValue(reportEntity);
@@ -170,6 +177,16 @@ describe('get selected fee records details controller', () => {
             currency: 'GBP',
             amount: 200,
           },
+        },
+      ],
+      payments: [
+        {
+          dateReceived: new Date('2024-01-01'),
+          value: {
+            amount: 150,
+            currency: 'GBP',
+          },
+          reference: 'A payment',
         },
       ],
     });

@@ -1,11 +1,12 @@
 import httpMocks from 'node-mocks-http';
-import { CURRENCY, SelectedFeeRecordDetails, SelectedFeeRecordsDetails } from '@ukef/dtfs2-common';
+import { CURRENCY, SelectedFeeRecordDetails } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 import { AddPaymentRequestBody, addPayment } from '.';
-import { AddPaymentErrorsViewModel, AddPaymentViewModel } from '../../../types/view-models';
+import { AddPaymentErrorsViewModel, AddPaymentViewModel, RecordedPaymentDetailsViewModel } from '../../../types/view-models';
 import * as validation from './add-payment-form-values-validator';
 import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
+import { SelectedFeeRecordsDetailsResponseBody } from '../../../api-response-types';
 
 jest.mock('../../../api');
 
@@ -46,7 +47,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
         params: { reportId: '123' },
         body: requestBodyForPostFromPremiumPaymentsPage,
       });
-      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue({
+      const selectedFeeRecordDetailsResponse: SelectedFeeRecordsDetailsResponseBody = {
         bank: { name: 'Test' },
         reportPeriod: { start: { month: 2, year: 2024 }, end: { month: 4, year: 2024 } },
         totalReportedPayments: { amount: 1000, currency: 'JPY' },
@@ -59,13 +60,25 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
             reportedPayments: { amount: 3000, currency: 'USD' },
           },
         ],
-      });
+        payments: [
+          {
+            dateReceived: '1912-12-19T00:00:00.000Z',
+            value: {
+              currency: 'USD',
+              amount: 2000,
+            },
+            reference: 'A payment',
+          },
+        ],
+      };
+      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(selectedFeeRecordDetailsResponse);
 
       // Act
       await addPayment(req, res);
 
       // Assert
       expect(api.getSelectedFeeRecordsDetails).toHaveBeenCalledWith('123', [456], requestSession.userToken);
+      expect(res._getRenderView()).toEqual('utilisation-reports/add-payment.njk');
       expect((res._getRenderData() as AddPaymentViewModel).bank).toEqual({ name: 'Test' });
       expect((res._getRenderData() as AddPaymentViewModel).formattedReportPeriod).toEqual('February to April 2024');
       expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails).toEqual({
@@ -80,6 +93,13 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
           },
         ],
       });
+      expect((res._getRenderData() as AddPaymentViewModel).recordedPaymentsDetails).toEqual<RecordedPaymentDetailsViewModel[]>([
+        {
+          formattedDateReceived: '19 Dec 1912',
+          value: 'USD 2,000.00',
+          reference: 'A payment',
+        },
+      ]);
     });
 
     it('should not display any errors', async () => {
@@ -407,6 +427,16 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
               reportedPayments: { amount: 3000, currency: 'USD' },
             },
           ],
+          payments: [
+            {
+              dateReceived: '1912-12-19T00:00:00.000Z',
+              value: {
+                currency: 'USD',
+                amount: 2000,
+              },
+              reference: 'A payment',
+            },
+          ],
         });
 
         // Act
@@ -428,6 +458,13 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
             },
           ],
         });
+        expect((res._getRenderData() as AddPaymentViewModel).recordedPaymentsDetails).toEqual<RecordedPaymentDetailsViewModel[]>([
+          {
+            formattedDateReceived: '19 Dec 1912',
+            value: 'USD 2,000.00',
+            reference: 'A payment',
+          },
+        ]);
       });
 
       it('should set selected checkbox ids', async () => {
@@ -735,7 +772,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
     });
   });
 
-  function aSelectedFeeRecordsDetails(): SelectedFeeRecordsDetails {
+  function aSelectedFeeRecordsDetails(): SelectedFeeRecordsDetailsResponseBody {
     return {
       bank: { name: 'Test' },
       reportPeriod: { start: { month: 2, year: 2024 }, end: { month: 4, year: 2024 } },
@@ -749,6 +786,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
           reportedPayments: { amount: 3000, currency: 'USD' },
         },
       ],
+      payments: [],
     };
   }
 

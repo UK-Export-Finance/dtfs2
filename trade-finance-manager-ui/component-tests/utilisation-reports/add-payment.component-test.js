@@ -1,5 +1,5 @@
 const pageRenderer = require('../pageRenderer');
-const { anAddPaymentViewModel } = require('../../test-helpers/test-data/add-payment-view-model');
+const { anAddPaymentViewModel, aRecordedPaymentDetailsViewModel } = require('../../test-helpers/test-data/add-payment-view-model');
 
 const page = '../templates/utilisation-reports/add-payment.njk';
 const render = pageRenderer(page);
@@ -15,6 +15,60 @@ describe(page, () => {
     // Assert
     wrapper.expectText('h1').toRead('Add a payment');
     wrapper.expectText('main').toContain('My bank, December 1998');
+  });
+
+  it('should display the recorded payments accordion when there are previously recorded payments', () => {
+    // Arrange
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.recordedPaymentsDetails = [
+      {
+        formattedDateReceived: '23 Dec 2024',
+        value: 'GBP 300',
+        reference: 'REF1234',
+      },
+    ];
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    wrapper.expectText('main').toContain('Recorded payments');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('Date received');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('Amount received');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('Payment reference');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('23 Dec 2024');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('GBP 300');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('REF1234');
+  });
+
+  it('should not display the recorded payments accordion when there are no previously recorded payments', () => {
+    // Arrange
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.recordedPaymentsDetails = [];
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    wrapper.expectText('main').notToContain('Recorded payments');
+  });
+
+  it('should display the recorded payments accordion title as "Recorded payments for this fee" when "multipleFeeRecordsSelected" is false', () => {
+    // Arrange
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.multipleFeeRecordsSelected = false;
+    addPaymentViewModel.recordedPaymentsDetails = [aRecordedPaymentDetailsViewModel()];
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    wrapper.expectText('main').toContain('Recorded payments for this fee');
+  });
+
+  it('should display the recorded payments accordion title as "Recorded payments for these fees" when "multipleFeeRecordsSelected" is true', () => {
+    // Arrange
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.multipleFeeRecordsSelected = true;
+    addPaymentViewModel.recordedPaymentsDetails = [aRecordedPaymentDetailsViewModel()];
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    wrapper.expectText('main').toContain('Recorded payments for these fees');
   });
 
   it('should display selected fee record details table', () => {

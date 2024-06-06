@@ -31,7 +31,7 @@ export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetai
 
     const utilisationReport = await UtilisationReportRepo.findOne({
       where: { id: Number(reportId) },
-      relations: { feeRecords: true },
+      relations: { feeRecords: { payments: true } },
     });
 
     if (!utilisationReport) {

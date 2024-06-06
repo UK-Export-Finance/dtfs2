@@ -1,7 +1,21 @@
-import { CurrencyAndAmount, FeeRecordEntity, ReportPeriod, SelectedFeeRecordDetails, SelectedFeeRecordsDetails } from '@ukef/dtfs2-common';
+import {
+  CurrencyAndAmount,
+  FeeRecordEntity,
+  PaymentEntity,
+  ReportPeriod,
+  SelectedFeeRecordDetails,
+  SelectedFeeRecordsDetails,
+  SelectedFeeRecordsPaymentDetails,
+} from '@ukef/dtfs2-common';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from '../../../../mapping/fee-record-mapper';
+
+const mapPaymentEntityToSelectedFeeRecordsPaymentDetails = (paymentEntity: PaymentEntity): SelectedFeeRecordsPaymentDetails => ({
+  value: { amount: paymentEntity.amount, currency: paymentEntity.currency },
+  reference: paymentEntity.reference,
+  dateReceived: paymentEntity.dateReceived,
+});
 
 const mapFeeRecordEntityToSelectedFeeRecordDetails = (feeRecordEntity: FeeRecordEntity): SelectedFeeRecordDetails => ({
   id: feeRecordEntity.id,
@@ -26,6 +40,9 @@ export const mapToSelectedFeeRecordDetails = async (
     throw new NotFoundError(`Failed to find a bank with id '${bankId}'`);
   }
 
+  // On the premium payments tab it is only possible to select fee records with no linked payments or a single group of fee records all having the same linked payments
+  const distinctPaymentsForFeeRecords = selectedFeeRecordEntities[0].payments;
+  const recordedPaymentDetails = distinctPaymentsForFeeRecords.map((paymentEntity) => mapPaymentEntityToSelectedFeeRecordsPaymentDetails(paymentEntity));
   const selectedFeeRecordDetails = selectedFeeRecordEntities.map((feeRecordEntity) => mapFeeRecordEntityToSelectedFeeRecordDetails(feeRecordEntity));
 
   return {
@@ -33,5 +50,6 @@ export const mapToSelectedFeeRecordDetails = async (
     reportPeriod,
     totalReportedPayments: getTotalReportedPayments(selectedFeeRecordDetails),
     feeRecords: selectedFeeRecordDetails,
+    payments: recordedPaymentDetails ?? [],
   };
 };

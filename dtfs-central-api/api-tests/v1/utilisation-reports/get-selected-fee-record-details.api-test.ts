@@ -95,6 +95,7 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
             reportedPayments: { currency: 'GBP', amount: 100 },
           },
         ],
+        payments: [],
       });
     });
   });

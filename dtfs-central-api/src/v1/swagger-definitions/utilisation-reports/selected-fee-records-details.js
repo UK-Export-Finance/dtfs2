@@ -30,4 +30,16 @@
  *         type: array
  *         items:
  *           $ref: '#/definitions/SelectedFeeRecordDetails'
+ *       payments:
+ *         type: array
+ *         items:
+ *           type: object
+ *           properties:
+ *             dateReceived:
+ *               type: string
+ *             value:
+ *               $ref: '#/definitions/CurrencyAndAmount'
+ *             reference:
+ *               type: string
+ *               nullable: true
  */
