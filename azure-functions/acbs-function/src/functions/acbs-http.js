@@ -8,18 +8,23 @@ const df = require('durable-functions');
  *
  * Guidance: https://learn.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-http-api
  */
+
+const handler = async (request, client) => {
+  console.info('⚡️ Invoking ACBS DOF using HTTP trigger at %s with HTTP %s method.', request.url, request.method);
+
+  // HTTP body
+  const input = await request.json();
+  // Orchestration instance ID
+  const instanceId = await client.startNew(request.params.orchestratorName, { input });
+
+  return client.createCheckStatusResponse(request, instanceId);
+};
+
 df.app.client.http('acbs-http', {
   methods: ['GET', 'POST'],
   route: 'orchestrators/{orchestratorName}',
   extraInputs: [df.input.durableClient()],
-  handler: async (request, client) => {
-    console.info('⚡️ Invoking ACBS DOF using HTTP trigger at %s with HTTP %s method.', request.url, request.method);
-
-    // HTTP body
-    const input = await request.json();
-    // Orchestration instance ID
-    const instanceId = await client.startNew(request.params.orchestratorName, { input });
-
-    return client.createCheckStatusResponse(request, instanceId);
-  },
+  handler,
 });
+
+module.exports = handler;
