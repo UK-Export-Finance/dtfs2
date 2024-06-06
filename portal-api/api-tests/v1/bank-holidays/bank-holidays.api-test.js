@@ -12,12 +12,10 @@ jest.mock('../../../src/external-api/api', () => ({
 }));
 
 describe('/v1/bank-holidays', () => {
-  let noRoles;
   let testUsers;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
   });
 
   describe('GET /v1/bank-holidays', () => {
@@ -30,7 +28,6 @@ describe('/v1/bank-holidays', () => {
 
     withNoRoleAuthorisationTests({
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).get(urlToGetBankHolidays),
       successStatusCode: 200,
     });

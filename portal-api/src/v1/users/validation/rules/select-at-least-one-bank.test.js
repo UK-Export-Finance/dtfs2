@@ -19,18 +19,16 @@ describe('selectAtLeastOneBank', () => {
     },
   ];
 
-  const testCases = [
+  const inputs = [
     { user: 'user var is not used in this validation case', change: { bank: [], roles: ['any'] }, expected: selectAtLeastOneBankError },
     { user: 'NA', change: { bank: 'all', roles: ['admin'] }, expected: [] },
     { user: 'NA', change: { bank: 'all', roles: ['checker'] }, expected: allBankError },
   ];
 
-  testCases.forEach(({ user, change, expected }) => {
-    it(`should return ${expected.length > 0 ? 'an error' : 'no error'} when new user is ${change.roles[0]} and ${
-      change.bank.length > 0 ? 'a bank is selected' : 'no bank is selected'
-    }`, () => {
-      const errors = selectAtLeastOneBank(user, change);
-      expect(errors).toStrictEqual(expected);
+  describe('selectAtLeastOneBank validation', () => {
+    test.each(inputs)('should return %s when new user is %s and %s', (input) => {
+      const errors = selectAtLeastOneBank(input.user, input.change);
+      expect(errors).toStrictEqual(input.expected);
     });
   });
 });

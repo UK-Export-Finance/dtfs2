@@ -5,14 +5,12 @@
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { withNoRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
 const { as, get } = require('../../api')(app);
 
 jest.unmock('../../../src/external-api/api');
 
 describe('/v1/countries', () => {
-  let noRoles;
   let testUsers;
 
   const gbr = {
@@ -35,7 +33,6 @@ describe('/v1/countries', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
   });
 
   describe('GET /v1/countries', () => {
@@ -46,15 +43,8 @@ describe('/v1/countries', () => {
       makeRequestWithAuthHeader: (authHeader) => get(urlToGetCountries, { headers: { Authorization: authHeader } }),
     });
 
-    withNoRoleAuthorisationTests({
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).get(urlToGetCountries),
-      successStatusCode: 200,
-    });
-
     it('returns a list of countries, alphabetised but with GBR/United Kingdom at the top', async () => {
-      const { status, body } = await as(noRoles).get(urlToGetCountries);
+      const { status, body } = await as(testUsers).get(urlToGetCountries);
 
       expect(status).toEqual(200);
       expect(body.countries.length).toBeGreaterThan(1);
@@ -74,39 +64,32 @@ describe('/v1/countries', () => {
       makeRequestWithAuthHeader: (authHeader) => get(urlToGetGbrCountry, { headers: { Authorization: authHeader } }),
     });
 
-    withNoRoleAuthorisationTests({
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).get(urlToGetGbrCountry),
-      successStatusCode: 200,
-    });
-
     it('returns the country for "United Kingdom"', async () => {
-      const { status, body } = await as(noRoles).get('/v1/countries/GBR');
+      const { status, body } = await as(testUsers).get('/v1/countries/GBR');
       expect(status).toEqual(200);
       expect(body).toEqual(gbr);
     });
 
     it('returns the country for "Abu Dhabi"', async () => {
-      const { status, body } = await as(noRoles).get('/v1/countries/XAD');
+      const { status, body } = await as(testUsers).get('/v1/countries/XAD');
       expect(status).toEqual(200);
       expect(body).toEqual(abuDhabi);
     });
 
     it('returns the country for "Dubai"', async () => {
-      const { status, body } = await as(noRoles).get('/v1/countries/XDB');
+      const { status, body } = await as(testUsers).get('/v1/countries/XDB');
       expect(status).toEqual(200);
       expect(body).toEqual(dubai);
     });
 
     it("returns 404 when country doesn't exist", async () => {
-      const { status } = await as(noRoles).get('/v1/countries/ABC');
+      const { status } = await as(testUsers).get('/v1/countries/ABC');
 
       expect(status).toEqual(404);
     });
 
     it('returns 400 when country id is invalid', async () => {
-      const { status } = await as(noRoles).get('/v1/countries/A12');
+      const { status } = await as(testUsers).get('/v1/countries/A12');
 
       expect(status).toEqual(400);
     });

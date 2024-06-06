@@ -28,13 +28,11 @@ const newDeal = aDeal({
 });
 
 describe('/v1/deals/:id/additionalRefName', () => {
-  let noRoles;
   let aBarclaysMaker;
   let anotherBarclaysMaker;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
     const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
     [aBarclaysMaker, anotherBarclaysMaker] = barclaysMakers;
   });
@@ -52,7 +50,7 @@ describe('/v1/deals/:id/additionalRefName', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put({ additionalRefName: 'a new name' }).to('/v1/deals/123456789012/additionalRefName');
+      const { status } = await as(aBarclaysMaker).put({ additionalRefName: 'a new name' }).to('/v1/deals/123456789012/additionalRefName');
 
       expect(status).toEqual(401);
     });

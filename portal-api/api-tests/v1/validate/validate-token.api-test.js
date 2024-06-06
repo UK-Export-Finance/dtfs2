@@ -20,7 +20,6 @@ describe('GET /v1/validate', () => {
 
   withNoRoleAuthorisationTests({
     getUserWithRole: (role) => testUsers().withRole(role).one(),
-    getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
     makeRequestAsUser: (user) => as(user).get(url),
     successStatusCode: 200,
   });

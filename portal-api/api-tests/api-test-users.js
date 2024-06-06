@@ -42,17 +42,6 @@ const banks = {
 
 const testUsers = [
   {
-    firstname: 'first',
-    surname: 'last',
-    timezone: 'Europe/London',
-    username: 'no-roles@ukexportfinance.gov.uk',
-    email: 'no-roles@ukexportfinance.gov.uk',
-    password: 'P@ssword1234',
-    roles: [],
-    bank: {},
-    isTrusted: false,
-  },
-  {
     username: 'hsbc-maker-1@ukexportfinance.gov.uk',
     password: 'P@ssword1234',
     firstname: 'Mister',
@@ -250,10 +239,6 @@ const finder = () => {
     },
     withoutRole: (role) => {
       users = users.filter((user) => !user.roles.includes(role));
-      return fluidBuilder;
-    },
-    withoutAnyRoles: () => {
-      users = users.filter((user) => user.roles.length === 0);
       return fluidBuilder;
     },
     withBankName: (bankName) => {

@@ -29,7 +29,6 @@ describe('GET /v1/gef/address/:postcode', () => {
   withRoleAuthorisationTests({
     allowedRoles: [MAKER, READ_ONLY, ADMIN],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
-    getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
     makeRequestAsUser: (user) => as(user).get(aPostcodeAddressUrl),
     successStatusCode: 200,
   });

@@ -21,14 +21,12 @@ const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const newDeal = aDeal({ additionalRefName: 'Original Value' });
 
 describe('/v1/deals/:id/eligibility-criteria', () => {
-  let noRoles;
   let anHSBCMaker;
   let aBarclaysMaker;
   let aSuperuser;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
@@ -47,7 +45,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put(updatedECPartial).to('/v1/deals/620a1aa095a618b12da38c7b/eligibility-criteria');
+      const { status } = await as(anHSBCMaker).put(updatedECPartial).to('/v1/deals/620a1aa095a618b12da38c7b/eligibility-criteria');
 
       expect(status).toEqual(401);
     });
