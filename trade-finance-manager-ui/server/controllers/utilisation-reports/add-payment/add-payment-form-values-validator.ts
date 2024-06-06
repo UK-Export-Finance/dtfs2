@@ -70,8 +70,10 @@ const getMissingDateFieldsError = (fieldTitle: string, missingFields: DateFieldN
 };
 
 const parseDate = (day: string, month: string, year: string) => {
-  // Calling new Date(`${year}-${month}-${day}`) would parse `2024-02-31` as the 3rd of march (or 2nd depending on the year).
-  // However we want to display the 31st of February as invalid to the user and force them to enter a valid date so we instead use date-fns parseISO which treats dates like this as an error.
+  /*
+   * Calling new Date(`${year}-${month}-${day}`) would parse `2024-02-31` as the 3rd of march (or 2nd depending on the year).
+   * However we want to display the 31st of February as invalid to the user and force them to enter a valid date so we instead use date-fns parseISO which treats dates like this as an error.
+   */
   const isoDateString = `${year}-${month.length === 1 ? `0${month}` : month}-${day.length === 1 ? `0${day}` : day}`;
   return parseISO(isoDateString);
 };
