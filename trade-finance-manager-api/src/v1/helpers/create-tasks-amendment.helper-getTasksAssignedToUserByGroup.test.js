@@ -50,4 +50,30 @@ describe('getTasksAssignedToUserByGroup()', () => {
 
     expect(finalResponse).toEqual(TASKS_UNASSIGNED_FOR_UNDERWRITER);
   });
+
+  it('should not modify tasks if Group/Teams is not in tasks list', async () => {
+    const finalResponse = await getTasksAssignedToUserByGroup(MOCK_TASKS, TEAMS.RISK_MANAGERS.id, underwriter._id);
+
+    expect(finalResponse).toEqual(MOCK_TASKS);
+  });
+
+  it('throws exception if tasks are empty array', async () => {
+    // Act & Assert
+    await expect(getTasksAssignedToUserByGroup([], TEAMS.RISK_MANAGERS.id, underwriter._id)).rejects.toThrow('Tasks list is empty or missing');
+  });
+
+  it('throws exception if tasks are null', async () => {
+    // Act & Assert
+    await expect(getTasksAssignedToUserByGroup(null, TEAMS.RISK_MANAGERS.id, underwriter._id)).rejects.toThrow('Tasks list is empty or missing');
+  });
+
+  it('throws exception if group name are null', async () => {
+    // Act & Assert
+    await expect(getTasksAssignedToUserByGroup(MOCK_TASKS, null, underwriter._id)).rejects.toThrow('Group name is missing');
+  });
+
+  it('throws exception if new user id is null', async () => {
+    // Act & Assert
+    await expect(getTasksAssignedToUserByGroup(MOCK_TASKS, TEAMS.RISK_MANAGERS.id, null)).rejects.toThrow('User id is missing');
+  });
 });

@@ -327,6 +327,19 @@ const updateAmendmentTasks = async (facilityId, amendmentId, taskUpdate) => {
  */
 const getTasksAssignedToUserByGroup = async (tasks, groupName, newUserId) => {
   const updatedAt = getUnixTime(new Date());
+
+  if (!tasks?.length) {
+    throw new Error('Tasks list is empty or missing');
+  }
+
+  if (!groupName) {
+    throw new Error('Group name is missing');
+  }
+
+  if (!newUserId) {
+    throw new Error('User id is missing');
+  }
+
   const userFullName = await getAssigneeFullName(newUserId);
 
   return tasks.map((group) => {
