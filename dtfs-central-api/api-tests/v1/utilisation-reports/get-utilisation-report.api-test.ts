@@ -6,7 +6,7 @@ import apiModule from '../../api';
 import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { wipe } from '../../wipeDB';
-import mongoDbClient from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../src/drivers/db-client';
 
 const api = apiModule(app);
 const getUrl = (id: string) => `/v1/utilisation-reports/${id}`;

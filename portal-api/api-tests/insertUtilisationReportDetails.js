@@ -1,4 +1,4 @@
-const db = require('../src/drivers/db-client');
+const { mongoDbClient: db } = require('../src/drivers/db-client');
 const { DB_COLLECTIONS } = require('./fixtures/constants');
 
 const insertOneUtilisationReportDetails = async (report) => {

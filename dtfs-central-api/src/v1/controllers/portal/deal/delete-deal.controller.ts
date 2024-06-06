@@ -3,7 +3,7 @@ import { InvalidAuditDetailsError, AuditDetails, MONGO_DB_COLLECTIONS } from '@u
 import { ObjectId } from 'mongodb';
 import { Response } from 'express';
 import { findOneDeal } from './get-deal.controller';
-import db from '../../../../drivers/db-client';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 
 export const deleteDeal = async (req: CustomExpressRequest<{ params: { id: string }; reqBody: { auditDetails: AuditDetails } }>, res: Response) => {

@@ -1,6 +1,6 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const DEFAULTS = require('../defaults');
-const db = require('../../drivers/db-client');
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const { isValidMongoId } = require('../validation/validateIds');
 const { userHasAccessTo } = require('../users/checks');
 const validate = require('../validation/completeDealValidation');
