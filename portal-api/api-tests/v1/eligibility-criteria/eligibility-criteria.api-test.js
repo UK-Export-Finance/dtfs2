@@ -109,17 +109,17 @@ describe('/v1/eligibility-criteria', () => {
   });
 
   describe('GET /v1/eligibility-criteria/:version', () => {
-    const eligibilityCriteriaUrl = `/v1/eligibility-criteria/${newEligibilityCriteria.version}`;
+    const eligibilityCriteria1Url = `/v1/eligibility-criteria/${newEligibilityCriteria.version}`;
 
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => get(eligibilityCriteriaUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteriaUrl, { headers: { Authorization: authHeader } }),
+      makeRequestWithoutAuthHeader: () => get(eligibilityCriteria1Url),
+      makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteria1Url, { headers: { Authorization: authHeader } }),
     });
 
     withNoRoleAuthorisationTests({
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).get(eligibilityCriteriaUrl),
+      makeRequestAsUser: (user) => as(user).get(eligibilityCriteria1Url),
       successStatusCode: 200,
     });
 
@@ -156,18 +156,18 @@ describe('/v1/eligibility-criteria', () => {
   });
 
   describe('PUT /v1/eligibility-criteria/:version', () => {
-    const eligibilityCriteriaUrl = `/v1/eligibility-criteria/${newEligibilityCriteria.version}`;
+    const eligibilityCriteria1Url = `/v1/eligibility-criteria/${newEligibilityCriteria.version}`;
 
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => put(eligibilityCriteriaUrl, updatedEligibilityCriteria),
-      makeRequestWithAuthHeader: (authHeader) => put(eligibilityCriteriaUrl, updatedEligibilityCriteria, { headers: { Authorization: authHeader } }),
+      makeRequestWithoutAuthHeader: () => put(eligibilityCriteria1Url, updatedEligibilityCriteria),
+      makeRequestWithAuthHeader: (authHeader) => put(eligibilityCriteria1Url, updatedEligibilityCriteria, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).put(updatedEligibilityCriteria).to(eligibilityCriteriaUrl),
+      makeRequestAsUser: (user) => as(user).put(updatedEligibilityCriteria).to(eligibilityCriteria1Url),
       successStatusCode: 200,
     });
 
@@ -194,7 +194,7 @@ describe('/v1/eligibility-criteria', () => {
   });
 
   describe('DELETE /v1/eligibility-criteria/:version', () => {
-    const eligibilityCriteriaUrl = `/v1/eligibility-criteria/${newEligibilityCriteria.version}`;
+    const eligibilityCriteria1Url = `/v1/eligibility-criteria/${newEligibilityCriteria.version}`;
     let eligibilityCriteriaToDeleteId;
 
     beforeEach(async () => {
@@ -203,20 +203,20 @@ describe('/v1/eligibility-criteria', () => {
     });
 
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => remove(eligibilityCriteriaUrl),
-      makeRequestWithAuthHeader: (authHeader) => remove(eligibilityCriteriaUrl, { headers: { Authorization: authHeader } }),
+      makeRequestWithoutAuthHeader: () => remove(eligibilityCriteria1Url),
+      makeRequestWithAuthHeader: (authHeader) => remove(eligibilityCriteria1Url, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).remove(eligibilityCriteriaUrl),
+      makeRequestAsUser: (user) => as(user).remove(eligibilityCriteria1Url),
       successStatusCode: 200,
     });
 
     withDeleteOneTests({
-      makeRequest: () => as(anAdmin).remove(eligibilityCriteriaUrl),
+      makeRequest: () => as(anAdmin).remove(eligibilityCriteria1Url),
       collectionName: MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA,
       auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentId: () => eligibilityCriteriaToDeleteId,
