@@ -93,7 +93,7 @@ describe('GET /companies/:registrationNumber', () => {
       expectedBody: mdmGetCompanyResponse,
     },
     {
-      registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SHORT,
+      registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_SHORT,
       expectedStatus: HttpStatusCode.BadRequest,
       expectedBody: mdmGetCompanyBadRequestResponse,
     },

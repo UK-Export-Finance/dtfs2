@@ -3,15 +3,15 @@ import { COMPANY_REGISTRATION_NUMBER } from '..';
 
 const {
   VALID,
-  VALID_LETTERS,
-  VALID_LAST_LETTER,
-  VALID_LETTERS_NI,
+  VALID_WITH_LETTERS,
+  VALID_ENDS_WITH_LETTER,
+  VALID_WITH_NI_PREFIX,
   VALID_NONEXISTENT,
   VALID_OVERSEAS,
-  INVALID_SHORT,
-  INVALID_LONG,
-  INVALID_SPACE,
-  INVALID_SPECIAL_CHARACTER,
+  INVALID_TOO_SHORT,
+  INVALID_TOO_LONG,
+  INVALID_WITH_SPACE,
+  INVALID_WITH_SPECIAL_CHARACTER,
 } = COMPANY_REGISTRATION_NUMBER.EXAMPLES;
 
 describe('validation helpers', () => {
@@ -49,20 +49,20 @@ describe('validation helpers', () => {
       expect(result).toEqual(true);
     });
 
-    it(`should return true for company number ${VALID_LETTERS}, which contains letters`, () => {
-      const result = isValidCompanyRegistrationNumber(VALID_LETTERS);
+    it(`should return true for company number ${VALID_WITH_LETTERS}, which contains letters`, () => {
+      const result = isValidCompanyRegistrationNumber(VALID_WITH_LETTERS);
 
       expect(result).toEqual(true);
     });
 
-    it(`should return true for company number ${VALID_LAST_LETTER}, which ends in a letter`, () => {
-      const result = isValidCompanyRegistrationNumber(VALID_LAST_LETTER);
+    it(`should return true for company number ${VALID_ENDS_WITH_LETTER}, which ends in a letter`, () => {
+      const result = isValidCompanyRegistrationNumber(VALID_ENDS_WITH_LETTER);
 
       expect(result).toEqual(true);
     });
 
-    it(`should return true for company number ${VALID_LETTERS_NI}, which contains the prefix 'NI'`, () => {
-      const result = isValidCompanyRegistrationNumber(VALID_LETTERS_NI);
+    it(`should return true for company number ${VALID_WITH_NI_PREFIX}, which contains the prefix 'NI'`, () => {
+      const result = isValidCompanyRegistrationNumber(VALID_WITH_NI_PREFIX);
 
       expect(result).toEqual(true);
     });
@@ -79,26 +79,26 @@ describe('validation helpers', () => {
       expect(result).toEqual(true);
     });
 
-    it(`should return false for company number ${INVALID_SHORT}, which is too short`, () => {
-      const result = isValidCompanyRegistrationNumber(INVALID_SHORT);
+    it(`should return false for company number ${INVALID_TOO_SHORT}, which is too short`, () => {
+      const result = isValidCompanyRegistrationNumber(INVALID_TOO_SHORT);
 
       expect(result).toEqual(false);
     });
 
-    it(`should return false for company number ${INVALID_LONG}, which is too long`, () => {
-      const result = isValidCompanyRegistrationNumber(INVALID_LONG);
+    it(`should return false for company number ${INVALID_TOO_LONG}, which is too long`, () => {
+      const result = isValidCompanyRegistrationNumber(INVALID_TOO_LONG);
 
       expect(result).toEqual(false);
     });
 
-    it(`should return false for company number ${INVALID_SPECIAL_CHARACTER}, which has a special character`, () => {
-      const result = isValidCompanyRegistrationNumber(INVALID_SPECIAL_CHARACTER);
+    it(`should return false for company number ${INVALID_WITH_SPECIAL_CHARACTER}, which has a special character`, () => {
+      const result = isValidCompanyRegistrationNumber(INVALID_WITH_SPECIAL_CHARACTER);
 
       expect(result).toEqual(false);
     });
 
-    it(`should return false for company number ${INVALID_SPACE}, which has a space`, () => {
-      const result = isValidCompanyRegistrationNumber(INVALID_SPACE);
+    it(`should return false for company number ${INVALID_WITH_SPACE}, which has a space`, () => {
+      const result = isValidCompanyRegistrationNumber(INVALID_WITH_SPACE);
 
       expect(result).toEqual(false);
     });

@@ -293,7 +293,7 @@ describe('getCompanyByRegistrationNumber()', () => {
   });
 
   it('returns the correct error information if it is called with an invalid registration number', async () => {
-    const response = await api.getCompanyByRegistrationNumber({ registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SHORT, userToken });
+    const response = await api.getCompanyByRegistrationNumber({ registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_SHORT, userToken });
 
     expect(response).toEqual({
       errRef: 'regNumber',

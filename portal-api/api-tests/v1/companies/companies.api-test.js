@@ -41,7 +41,7 @@ describe.each([{ baseUrl: '/v1' }, { baseUrl: '/v1/gef' }])('GET $baseUrl/compan
   });
 
   it('returns a 400 response if an invalid company registration number is provided', async () => {
-    const { status } = await as(aMaker).get(`${baseUrl}/companies/${COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SHORT}`);
+    const { status } = await as(aMaker).get(`${baseUrl}/companies/${COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_SHORT}`);
     expect(status).toEqual(400);
   });
 

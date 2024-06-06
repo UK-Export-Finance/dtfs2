@@ -163,7 +163,7 @@ context('about-supply-contract', () => {
     //---------------------------------------------------------------
     // supplier companies house submit - providing an invalid value
     //---------------------------------------------------------------
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_LONG);
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_LONG);
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -181,7 +181,7 @@ context('about-supply-contract', () => {
     partials.errorSummary.errorSummaryLinks().should('have.length', 11);
 
     // triggering companies house error should then display companies house & required validation errors
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_LONG);
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_LONG);
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
     partials.errorSummary.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
@@ -199,7 +199,7 @@ context('about-supply-contract', () => {
     //---------------------------------------------------------------
     // supplier companies house submit - providing an invalid value
     //---------------------------------------------------------------
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_LONG);
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_LONG);
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -216,7 +216,7 @@ context('about-supply-contract', () => {
       .supplierCompaniesHouseRegistrationNumber()
       .invoke('val')
       .then((value) => {
-        expect(value).equal(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_LONG);
+        expect(value).equal(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_LONG);
       });
 
     //---------------------------------------------------------------
@@ -228,7 +228,7 @@ context('about-supply-contract', () => {
     partials.errorSummary.errorSummaryLinks().should('have.length', 11);
 
     // triggering companies house error should then display companies house & required validation errors
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_LONG);
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_LONG);
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
     partials.errorSummary.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
@@ -254,7 +254,7 @@ context('about-supply-contract', () => {
     // indemnifier companies house submit - providing a value which is too short
     //---------------------------------------------------------------
     contractAboutSupplier.legallyDistinct().click();
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_LONG);
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_LONG);
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -267,7 +267,7 @@ context('about-supply-contract', () => {
     // indemnifier companies house submit - providing a value which is too short
     //---------------------------------------------------------------------------
 
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SHORT);
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_SHORT);
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -280,7 +280,7 @@ context('about-supply-contract', () => {
     // indemnifier companies house submit - providing a value which has a special character
     //---------------------------------------------------------------------------------------
 
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SPECIAL_CHARACTER);
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_WITH_SPECIAL_CHARACTER);
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -293,7 +293,7 @@ context('about-supply-contract', () => {
     // indemnifier companies house submit - providing a value which has a space
     //--------------------------------------------------------------------------
 
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SPACE);
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_WITH_SPACE);
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -320,7 +320,7 @@ context('about-supply-contract', () => {
 
     // triggering companies house error should then display companies house & required validation errors
     contractAboutSupplier.legallyDistinct().click();
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_LONG);
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_LONG);
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
     partials.errorSummary.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
@@ -347,7 +347,7 @@ context('about-supply-contract', () => {
     //---------------------------------------------------------------------------
 
     // Enter an invalid Companies House registration number
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_LONG);
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_LONG);
 
     // Click on Search
     contractAboutSupplier.supplierSearchCompaniesHouse().click();

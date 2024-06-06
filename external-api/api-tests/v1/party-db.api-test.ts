@@ -17,13 +17,13 @@ import { app } from '../../src/createApp';
 import { api } from '../api';
 
 const { APIM_MDM_URL } = process.env;
-const { VALID, VALID_LETTERS } = COMPANY_REGISTRATION_NUMBER.EXAMPLES;
+const { VALID, VALID_WITH_LETTERS } = COMPANY_REGISTRATION_NUMBER.EXAMPLES;
 const { get } = api(app);
 
 // Mock Axios
 const axiosMock = new MockAdapter(axios);
 axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
-axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_LETTERS}`).reply(HttpStatusCode.Ok, {});
+axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
 
 describe('/party-db', () => {
   describe('GET /party-db', () => {
@@ -34,7 +34,7 @@ describe('/party-db', () => {
     });
 
     it('returns a 200 response with a valid companies house number', async () => {
-      const { status } = await get(`/party-db/${VALID_LETTERS}`);
+      const { status } = await get(`/party-db/${VALID_WITH_LETTERS}`);
 
       expect(status).toEqual(200);
     });

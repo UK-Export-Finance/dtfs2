@@ -84,11 +84,11 @@ describe('controllers/about-exporter', () => {
     });
 
     it('renders the `companies-house` template with pre-populated field', async () => {
-      mockApplicationResponse.exporter.companiesHouseRegistrationNumber = COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SPECIAL_CHARACTER;
+      mockApplicationResponse.exporter.companiesHouseRegistrationNumber = COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_WITH_SPECIAL_CHARACTER;
       await companiesHouse(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
-        regNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SPECIAL_CHARACTER,
+        regNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_WITH_SPECIAL_CHARACTER,
         dealId: '123',
         status: undefined,
       });
@@ -201,17 +201,17 @@ describe('controllers/about-exporter', () => {
       };
 
       when(getCompanyByRegistrationNumberMock)
-        .calledWith({ registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SHORT, userToken })
+        .calledWith({ registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_SHORT, userToken })
         .mockResolvedValue(invalidCompanyRegistrationNumberErrorObject);
       when(validationErrorHandler).calledWith([invalidCompanyRegistrationNumberErrorObject]).mockReturnValue(mappedErrorObject);
 
-      mockRequest.body.regNumber = COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SHORT;
+      mockRequest.body.regNumber = COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_SHORT;
 
       await validateCompaniesHouse(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
         errors: mappedErrorObject,
-        regNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SHORT,
+        regNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_SHORT,
         dealId: '123',
         status: undefined,
       });

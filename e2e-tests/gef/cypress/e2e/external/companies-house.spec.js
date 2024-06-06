@@ -66,7 +66,7 @@ context('Companies House Page', () => {
     });
 
     it('shows the correct error message if the registration number is too short', () => {
-      companiesHouse.regNumberField().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SHORT);
+      companiesHouse.regNumberField().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_SHORT);
       companiesHouse.continueButton().click();
       companiesHouse.errorSummary().should('be.visible');
       companiesHouse.errorSummary().should('contain', 'Enter a valid Companies House registration number');
@@ -75,7 +75,7 @@ context('Companies House Page', () => {
     });
 
     it('shows the correct error message if the registration number is too long', () => {
-      companiesHouse.regNumberField().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_LONG);
+      companiesHouse.regNumberField().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_LONG);
       companiesHouse.continueButton().click();
       companiesHouse.errorSummary().should('be.visible');
       companiesHouse.errorSummary().should('contain', 'Enter a valid Companies House registration number');
@@ -84,7 +84,7 @@ context('Companies House Page', () => {
     });
 
     it('shows the correct error message if the registration number has a special character', () => {
-      companiesHouse.regNumberField().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SPECIAL_CHARACTER);
+      companiesHouse.regNumberField().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_WITH_SPECIAL_CHARACTER);
       companiesHouse.continueButton().click();
       companiesHouse.errorSummary().should('be.visible');
       companiesHouse.errorSummary().should('contain', 'Enter a valid Companies House registration number');
@@ -93,7 +93,7 @@ context('Companies House Page', () => {
     });
 
     it('shows the correct error message if the registration number has a space', () => {
-      companiesHouse.regNumberField().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SPACE);
+      companiesHouse.regNumberField().clear().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_WITH_SPACE);
       companiesHouse.continueButton().click();
       companiesHouse.errorSummary().should('be.visible');
       companiesHouse.errorSummary().should('contain', 'Enter a valid Companies House registration number');

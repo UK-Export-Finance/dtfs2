@@ -70,7 +70,7 @@ describe('getCompanyByRegistrationNumber()', () => {
   });
 
   it('returns the correct error information if it is called with an invalid registration number', async () => {
-    const response = await getCompanyByRegistrationNumber(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_SHORT, token);
+    const response = await getCompanyByRegistrationNumber(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_SHORT, token);
 
     expect(response).toEqual({
       errorMessage: 'Enter a valid Companies House registration number',
