@@ -82,7 +82,7 @@ exports.delete = async (req, res) => {
   const { id } = req.params;
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
-  if (!(typeof id === 'string')) {
+  if (typeof id !== 'string') {
     return res.status(400).send({ status: 400, message: 'Invalid bank id' });
   }
 
