@@ -1,6 +1,7 @@
 # ACBS - Azure Function App ⚡️
 
-Azure Functions are not platform-agnostic and work exclusively within the Azure cloud ecosystem. They are accessed through Azure's serverless compute service.
+Azure Functions are not platform-agnostic and work exclusively within the Azure cloud ecosystem.
+They are accessed through Azure's serverless compute service.
 
 ## Jargons ✏️
 
@@ -26,7 +27,9 @@ Azure Functions can be run locally on port 7071 using the Azure Functions Core T
 
 ### Running Durable Functions locally using Azure Functions Core Tools
 
-This guide provides detailed steps to run Durable Functions locally using Azure Functions Core Tools with Node.js. Durable Functions is an extension of Azure Functions that lets you write stateful functions in a serverless environment. By running it locally, you can develop and test your functions before deploying them to Azure.
+This guide provides detailed steps to run Durable Functions locally using Azure Functions Core Tools with Node.js.
+Durable Functions is an extension of Azure Functions that lets you write stateful functions in a serverless environment.
+By running it locally, you can develop and test your functions before deploying them to Azure.
 
 #### Prerequisites
 
@@ -39,7 +42,8 @@ Before you start, ensure you have the following installed on your machine:
 
 #### Configuring Local Settings
 
-Update your `local.settings.json` to configure the Azure Storage connection string. This file holds the settings used when running your project locally.
+Update your `local.settings.json` to configure the Azure Storage connection string.
+This file holds the settings used when running your project locally.
 
 ```javascript
 {
@@ -74,7 +78,9 @@ Durable Functions are initiated by an HTTP trigger function, often referred to a
 
 ## Durable Functions 🔄
 
-Durable Functions are an extension of Azure Functions, allowing for stateful orchestrator functions within a serverless environment. These orchestrator functions enable the orchestration of various functions over extended time periods. Orchestrations can persist their state, even in the event of disruptions.
+Durable Functions are an extension of Azure Functions, allowing for stateful orchestrator functions within a serverless environment.
+These orchestrator functions enable the orchestration of various functions over extended time periods.
+Orchestrations can persist their state, even in the event of disruptions.
 
 ## Application Pattern :rocket:
 
