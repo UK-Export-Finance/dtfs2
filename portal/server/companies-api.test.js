@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { COMPANY_REGISTRATION_NUMBER } from '@ukef/dtfs2-common';
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
 
 const { when } = require('jest-when');
 const { getCompanyByRegistrationNumber } = require('./companies-api');
@@ -8,11 +8,11 @@ require('dotenv').config();
 
 const { PORTAL_API_URL } = process.env;
 
-const registrationNumber = COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID;
+const registrationNumber = MOCK_COMPANY_REGISTRATION_NUMBERS.VALID;
 const token = 'a token';
 
 const portalApiGetCompanyResponse = {
-  companiesHouseRegistrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID,
+  companiesHouseRegistrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
   companyName: 'TEST COMPANY LTD',
   registeredAddress: {
     addressLine1: '1 Test Street',
@@ -70,7 +70,7 @@ describe('getCompanyByRegistrationNumber()', () => {
   });
 
   it('returns the correct error information if it is called with an invalid registration number', async () => {
-    const response = await getCompanyByRegistrationNumber(COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_SHORT, token);
+    const response = await getCompanyByRegistrationNumber(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT, token);
 
     expect(response).toEqual({
       errorMessage: 'Enter a valid Companies House registration number',

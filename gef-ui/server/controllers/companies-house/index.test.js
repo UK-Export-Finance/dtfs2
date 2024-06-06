@@ -1,4 +1,4 @@
-import { COMPANY_REGISTRATION_NUMBER } from '@ukef/dtfs2-common';
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
 import { when } from 'jest-when';
 import api from '../../services/api';
 import { companiesHouse, validateCompaniesHouse } from './index';
@@ -84,11 +84,11 @@ describe('controllers/about-exporter', () => {
     });
 
     it('renders the `companies-house` template with pre-populated field', async () => {
-      mockApplicationResponse.exporter.companiesHouseRegistrationNumber = COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_WITH_SPECIAL_CHARACTER;
+      mockApplicationResponse.exporter.companiesHouseRegistrationNumber = MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_WITH_SPECIAL_CHARACTER;
       await companiesHouse(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
-        regNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_WITH_SPECIAL_CHARACTER,
+        regNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_WITH_SPECIAL_CHARACTER,
         dealId: '123',
         status: undefined,
       });
@@ -111,10 +111,10 @@ describe('controllers/about-exporter', () => {
 
     it(`redirects to the 'exporter's address' page when the API call returns company data`, async () => {
       when(getCompanyByRegistrationNumberMock)
-        .calledWith({ registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID, userToken })
+        .calledWith({ registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID, userToken })
         .mockResolvedValue({ company: {} });
 
-      mockRequest.body.regNumber = COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID;
+      mockRequest.body.regNumber = MOCK_COMPANY_REGISTRATION_NUMBERS.VALID;
 
       await validateCompaniesHouse(mockRequest, mockResponse);
 
@@ -123,10 +123,10 @@ describe('controllers/about-exporter', () => {
 
     it('updates the application with the correct details when the company data contains a non-empty industries array', async () => {
       when(getCompanyByRegistrationNumberMock)
-        .calledWith({ registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID, userToken })
+        .calledWith({ registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID, userToken })
         .mockResolvedValue({ company: { industries: ['some industry'] } });
 
-      mockRequest.body.regNumber = COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID;
+      mockRequest.body.regNumber = MOCK_COMPANY_REGISTRATION_NUMBERS.VALID;
 
       await validateCompaniesHouse(mockRequest, mockResponse);
 
@@ -152,10 +152,10 @@ describe('controllers/about-exporter', () => {
 
     it('updates the application with the correct details when the company data does not contain an industries array', async () => {
       when(getCompanyByRegistrationNumberMock)
-        .calledWith({ registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID, userToken })
+        .calledWith({ registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID, userToken })
         .mockResolvedValue({ company: {} });
 
-      mockRequest.body.regNumber = COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID;
+      mockRequest.body.regNumber = MOCK_COMPANY_REGISTRATION_NUMBERS.VALID;
 
       await validateCompaniesHouse(mockRequest, mockResponse);
 
@@ -180,11 +180,11 @@ describe('controllers/about-exporter', () => {
 
     it(`redirects to the 'application details' page when the API call returns company data and the status query is set to 'change'`, async () => {
       when(getCompanyByRegistrationNumberMock)
-        .calledWith({ registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID, userToken })
+        .calledWith({ registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID, userToken })
         .mockResolvedValue({ company: {} });
 
       mockRequest.query.status = 'change';
-      mockRequest.body.regNumber = COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID;
+      mockRequest.body.regNumber = MOCK_COMPANY_REGISTRATION_NUMBERS.VALID;
 
       await validateCompaniesHouse(mockRequest, mockResponse);
 
@@ -201,17 +201,17 @@ describe('controllers/about-exporter', () => {
       };
 
       when(getCompanyByRegistrationNumberMock)
-        .calledWith({ registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_SHORT, userToken })
+        .calledWith({ registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT, userToken })
         .mockResolvedValue(invalidCompanyRegistrationNumberErrorObject);
       when(validationErrorHandler).calledWith([invalidCompanyRegistrationNumberErrorObject]).mockReturnValue(mappedErrorObject);
 
-      mockRequest.body.regNumber = COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_SHORT;
+      mockRequest.body.regNumber = MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT;
 
       await validateCompaniesHouse(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
         errors: mappedErrorObject,
-        regNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_SHORT,
+        regNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT,
         dealId: '123',
         status: undefined,
       });

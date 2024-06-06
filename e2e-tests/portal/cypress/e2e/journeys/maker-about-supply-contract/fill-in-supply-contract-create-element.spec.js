@@ -1,4 +1,4 @@
-const { COMPANY_REGISTRATION_NUMBER } = require('@ukef/dtfs2-common');
+const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
 const { contract, contractAboutSupplier } = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../fixtures/constants');
@@ -46,7 +46,7 @@ context('Supply contract form - create element and check if inserted into deal',
     // use companies-house lookup
     //---
     contractAboutSupplier.supplierType().select('Exporter');
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID);
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     //---

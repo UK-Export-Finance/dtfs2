@@ -12,12 +12,12 @@
 
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
-import { COMPANY_REGISTRATION_NUMBER } from '@ukef/dtfs2-common';
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
 import { app } from '../../src/createApp';
 import { api } from '../api';
 
 const { APIM_MDM_URL } = process.env;
-const { VALID, VALID_WITH_LETTERS } = COMPANY_REGISTRATION_NUMBER.EXAMPLES;
+const { VALID, VALID_WITH_LETTERS } = MOCK_COMPANY_REGISTRATION_NUMBERS;
 const { get } = api(app);
 
 const axiosMock = new MockAdapter(axios);

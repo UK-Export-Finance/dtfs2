@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { COMPANY_REGISTRATION_NUMBER } from '@ukef/dtfs2-common';
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
 import Axios from '../axios';
 import api from '../api';
 import CONSTANTS from '../../constants';
@@ -243,10 +243,10 @@ describe('deleteFacility()', () => {
 });
 
 describe('getCompanyByRegistrationNumber()', () => {
-  const registrationNumber = COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID;
+  const registrationNumber = MOCK_COMPANY_REGISTRATION_NUMBERS.VALID;
 
   const portalApiGetCompanyResponse = {
-    companiesHouseRegistrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID,
+    companiesHouseRegistrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
     companyName: 'TEST COMPANY LTD',
     registeredAddress: {
       addressLine1: '1 Test Street',
@@ -293,7 +293,7 @@ describe('getCompanyByRegistrationNumber()', () => {
   });
 
   it('returns the correct error information if it is called with an invalid registration number', async () => {
-    const response = await api.getCompanyByRegistrationNumber({ registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_SHORT, userToken });
+    const response = await api.getCompanyByRegistrationNumber({ registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT, userToken });
 
     expect(response).toEqual({
       errRef: 'regNumber',

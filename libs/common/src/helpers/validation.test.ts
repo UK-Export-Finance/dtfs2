@@ -1,5 +1,5 @@
 import { asString, isValidCompanyRegistrationNumber } from './validation';
-import { COMPANY_REGISTRATION_NUMBER } from '..';
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '..';
 
 const {
   VALID,
@@ -12,7 +12,7 @@ const {
   INVALID_TOO_LONG,
   INVALID_WITH_SPACE,
   INVALID_WITH_SPECIAL_CHARACTER,
-} = COMPANY_REGISTRATION_NUMBER.EXAMPLES;
+} = MOCK_COMPANY_REGISTRATION_NUMBERS;
 
 describe('validation helpers', () => {
   describe('asString', () => {

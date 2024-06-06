@@ -1,7 +1,7 @@
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
-import { COMPANY_REGISTRATION_NUMBER } from '@ukef/dtfs2-common';
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
 import { app } from '../../src/createApp';
 import { api } from '../api';
 
@@ -16,7 +16,7 @@ const { get } = api(app);
 const axiosMock = new MockAdapter(axios);
 
 const mdmGetCompanyResponse = {
-  companiesHouseRegistrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID,
+  companiesHouseRegistrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
   companyName: 'TEST COMPANY LTD',
   registeredAddress: {
     addressLine1: '1 Test Street',
@@ -87,27 +87,27 @@ const mdmGetCompanyInternalServerErrorResponse = {
 describe('GET /companies/:registrationNumber', () => {
   it.each([
     {
-      registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID,
+      registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
       expectedStatus: HttpStatusCode.Ok,
       expectedBody: mdmGetCompanyResponse,
     },
     {
-      registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.INVALID_TOO_SHORT,
+      registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT,
       expectedStatus: HttpStatusCode.BadRequest,
       expectedBody: mdmGetCompanyBadRequestResponse,
     },
     {
-      registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID_NONEXISTENT,
+      registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_NONEXISTENT,
       expectedStatus: HttpStatusCode.NotFound,
       expectedBody: mdmGetCompanyNotFoundResponse,
     },
     {
-      registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID_OVERSEAS,
+      registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_OVERSEAS,
       expectedStatus: HttpStatusCode.UnprocessableEntity,
       expectedBody: mdmGetCompanyUnprocessableEntityResponse,
     },
     {
-      registrationNumber: COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID,
+      registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
       expectedStatus: HttpStatusCode.InternalServerError,
       expectedBody: mdmGetCompanyInternalServerErrorResponse,
     },

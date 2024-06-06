@@ -1,4 +1,4 @@
-import { COMPANY_REGISTRATION_NUMBER } from '@ukef/dtfs2-common';
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
 import applicationDetails from '../pages/application-details';
 import dashboardPage from '../pages/dashboard-page';
 import companiesHouse from '../pages/companies-house';
@@ -32,7 +32,7 @@ context('Incomplete exporter section - application details page', () => {
     it('add the exporter', () => {
       cy.visit(url);
       applicationDetails.exporterDetailsLink().click();
-      companiesHouse.regNumberField().type(COMPANY_REGISTRATION_NUMBER.EXAMPLES.VALID);
+      companiesHouse.regNumberField().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
       companiesHouse.continueButton().click();
       exportersAddress.noRadioButton().click();
       exportersAddress.continueButton().click();
