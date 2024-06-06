@@ -110,7 +110,7 @@ jobs:
           add_git_labels: true
 
       - name: 3. ACR login
-        uses: azure/docker-login@v1
+        uses: azure/docker-login@v2
         with:
           login-server: ${{ env.acr }}
           username: ${{ env.acr_username }}
@@ -187,7 +187,7 @@ jobs:
           add_git_labels: true
 
       - name: 3. ACR login
-        uses: azure/docker-login@v1
+        uses: azure/docker-login@v2
         with:
           login-server: ${{ env.acr }}
           username: ${{ env.acr_username }}

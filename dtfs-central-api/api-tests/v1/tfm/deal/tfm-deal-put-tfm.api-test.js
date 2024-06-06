@@ -1,5 +1,5 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
 const aDeal = require('../../deal-builder');
@@ -9,6 +9,7 @@ const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
+const { createDeal } = require('../../../helpers/create-deal');
 
 const newDeal = aDeal({
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
@@ -44,7 +45,7 @@ describe('/v1/tfm/deal/:id', () => {
     });
 
     it('updates the created deal with correct fields, retaining original dealSnapshot', async () => {
-      const { body: portalDeal } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+      const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = portalDeal._id;
 
       await api
@@ -72,7 +73,7 @@ describe('/v1/tfm/deal/:id', () => {
     });
 
     it('does NOT add anything to the root if for example deal.dealSnapshot or deal.tfm is not passed', async () => {
-      const { body: portalDeal } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+      const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = portalDeal._id;
 
       await api
@@ -96,7 +97,7 @@ describe('/v1/tfm/deal/:id', () => {
     });
 
     it('updates deal.tfm.lastUpdated on each update', async () => {
-      const { body: portalDeal } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+      const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = portalDeal._id;
 
       await api
@@ -130,7 +131,7 @@ describe('/v1/tfm/deal/:id', () => {
     });
 
     it('should not add blank activity object to deal.tfm.activities', async () => {
-      const { body: portalDeal } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+      const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = portalDeal._id;
 
       await api
@@ -165,7 +166,7 @@ describe('/v1/tfm/deal/:id', () => {
     });
 
     it('should add correct activity object to tfm in reverse order', async () => {
-      const { body: portalDeal } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+      const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = portalDeal._id;
 
       await api
@@ -232,7 +233,7 @@ describe('/v1/tfm/deal/:id', () => {
     });
 
     it('should not add duplicated activity objects when adding duplicate single activity object', async () => {
-      const { body: portalDeal } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+      const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = portalDeal._id;
 
       await api
@@ -300,7 +301,7 @@ describe('/v1/tfm/deal/:id', () => {
     });
 
     it('should not add duplicated activity objects when adding duplicate activity array', async () => {
-      const { body: portalDeal } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+      const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = portalDeal._id;
 
       await api
@@ -368,7 +369,7 @@ describe('/v1/tfm/deal/:id', () => {
     });
 
     it('should not add duplicated activity objects when adding multiple duplicate activities with different labels', async () => {
-      const { body: portalDeal } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+      const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = portalDeal._id;
 
       await api

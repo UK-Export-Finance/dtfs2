@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
@@ -128,7 +128,7 @@ exports.submitDealPut = async (req, res) => {
   }
 
   try {
-    validateAuditDetailsAndUserType(auditDetails, 'portal');
+    validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);
   } catch (error) {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
