@@ -6,6 +6,7 @@ const aDeal = require('../deal-builder');
 const { MOCK_DEAL } = require('../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../helpers/create-deal');
+const { createFacility } = require('../../helpers/create-facility');
 
 const newFacility = {
   type: 'Bond',
@@ -35,7 +36,7 @@ describe('/v1/portal/facilities', () => {
         type: 'Bond',
       };
 
-      const { status } = await api.post({ facility: facilityWithInvalidDealId, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+      const { status } = await createFacility({ api, facility: facilityWithInvalidDealId, user: MOCK_PORTAL_USER });
 
       expect(status).toEqual(404);
     });
@@ -46,7 +47,7 @@ describe('/v1/portal/facilities', () => {
         type: 'Bond',
       };
 
-      const { status } = await api.post({ facility: facilityWithInvalidDealId }).to('/v1/portal/facilities');
+      const { status } = await createFacility({ api, facility: facilityWithInvalidDealId });
 
       expect(status).toEqual(404);
     });
@@ -57,7 +58,7 @@ describe('/v1/portal/facilities', () => {
       } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       newFacility.dealId = _id;
 
-      const { body, status } = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+      const { body, status } = await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
 
       expect(status).toEqual(200);
 
@@ -79,9 +80,9 @@ describe('/v1/portal/facilities', () => {
       } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       newFacility.dealId = _id;
 
-      const facility1 = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
-      const facility2 = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
-      const facility3 = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+      const facility1 = await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
+      const facility2 = await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
+      const facility3 = await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
 
       expect(typeof facility1.body._id).toEqual('string');
       expect(typeof facility2.body._id).toEqual('string');
@@ -94,9 +95,7 @@ describe('/v1/portal/facilities', () => {
       } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       newFacility.dealId = _id;
 
-      const { status: createdFacilityStatus, body: createdFacility } = await api
-        .post({ facility: newFacility, user: MOCK_PORTAL_USER })
-        .to('/v1/portal/facilities');
+      const { status: createdFacilityStatus, body: createdFacility } = await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
 
       expect(createdFacilityStatus).toEqual(200);
 
@@ -122,7 +121,7 @@ describe('/v1/portal/facilities', () => {
           dealId: '',
         };
 
-        const { body, status } = await api.post({ facility: postBody, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const { body, status } = await createFacility({ api, facility: postBody, user: MOCK_PORTAL_USER });
 
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(2);
@@ -149,7 +148,7 @@ describe('/v1/portal/facilities', () => {
           user: {},
         };
 
-        const { body, status } = await api.post({ facility: postBody, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const { body, status } = await createFacility({ api, facility: postBody, user: MOCK_PORTAL_USER });
 
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(1);
@@ -167,7 +166,7 @@ describe('/v1/portal/facilities', () => {
       } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       newFacility.dealId = _id;
 
-      const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+      const postResult = await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
       const newId = postResult.body._id;
 
       const { status, body } = await api.get(`/v1/portal/facilities/${newId}`);

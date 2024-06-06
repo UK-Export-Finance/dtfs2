@@ -6,6 +6,7 @@ const aDeal = require('../deal-builder');
 const { MOCK_DEAL } = require('../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../helpers/create-deal');
+const { createFacility } = require('../../helpers/create-facility');
 
 const mockFacility = {
   type: 'Bond',
@@ -39,9 +40,9 @@ describe('/v1/portal/facilities', () => {
 
   describe('GET /v1/portal/facilities/', () => {
     it('returns multiple facilities', async () => {
-      await api.post({ facility: mockFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
-      await api.post({ facility: mockFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
-      await api.post({ facility: mockFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+      await createFacility({ api, facility: mockFacility, user: MOCK_PORTAL_USER });
+      await createFacility({ api, facility: mockFacility, user: MOCK_PORTAL_USER });
+      await createFacility({ api, facility: mockFacility, user: MOCK_PORTAL_USER });
 
       const { status, body } = await api.get('/v1/portal/facilities');
 
