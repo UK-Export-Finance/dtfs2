@@ -3,10 +3,6 @@
  * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
  * function.
  *
- * @module acbs-amend-facility-loan-record
- */
-
-/**
  * Facility Loan Record amendment SOF
  * **********************************
  * This is a sub-orchestrated function invoked from it's master orchestrator.
@@ -32,7 +28,7 @@ const df = require('durable-functions');
 const retryOptions = require('../../helpers/retryOptions');
 const mappings = require('../../mappings');
 
-df.app.orchestration('acbs-amend-facility-loan-record', function* Facility(context) {
+df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityLoan(context) {
   const payload = context.df.input;
 
   try {
@@ -85,7 +81,8 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* Facility(conte
 
       return facilityLoanRecordAmendments;
     }
-    console.error('No input specified');
+
+    throw new Error('Invalid payload provided');
   } catch (error) {
     console.error('Error amending facility loan record %o', error);
     throw new Error(`Error amending facility loan record ${error}`);

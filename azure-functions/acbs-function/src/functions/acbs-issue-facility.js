@@ -3,7 +3,6 @@
  * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
  * function.
  *
- * @module acbs-issue-facility
  */
 
 const df = require('durable-functions');
@@ -11,7 +10,7 @@ const retryOptions = require('../../helpers/retryOptions');
 const mappings = require('../../mappings');
 const CONSTANTS = require('../../constants');
 
-df.app.orchestration('acbs-issue-facility', function* updateACBSfacility(context) {
+df.app.orchestration('acbs-issue-facility', function* issueFacility(context) {
   const payload = context.df.input;
 
   try {
@@ -107,7 +106,7 @@ df.app.orchestration('acbs-issue-facility', function* updateACBSfacility(context
       }
     }
 
-    throw new Error('Invalid argument set');
+    throw new Error('Invalid argument set provided');
   } catch (error) {
     console.error('Error processing facility issuance %o', error);
     throw new Error(`Error processing facility issuance ${error}`);

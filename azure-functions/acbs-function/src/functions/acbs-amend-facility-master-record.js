@@ -3,10 +3,6 @@
  * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
  * function.
  *
- * @module acbs-amend-facility-master-record
- */
-
-/**
  * Facility Master Record amendment SOF
  * **********************************
  * This is a sub-orchestrated function invoked from it's master orchestrator.
@@ -32,7 +28,7 @@ const df = require('durable-functions');
 const retryOptions = require('../../helpers/retryOptions');
 const mappings = require('../../mappings');
 
-df.app.orchestration('acbs-amend-facility-master-record', function* Facility(context) {
+df.app.orchestration('acbs-amend-facility-master-record', function* amendFacilityMaster(context) {
   const payload = context.df.input;
 
   try {
@@ -81,7 +77,8 @@ df.app.orchestration('acbs-amend-facility-master-record', function* Facility(con
 
       return facilityMasterRecordAmendments;
     }
-    console.error('No input specified');
+
+    throw new Error('Invalid argument set provided');
   } catch (error) {
     console.error('Error amending facility master record %o', error);
     throw new Error(`Error amending facility master record ${error}`);

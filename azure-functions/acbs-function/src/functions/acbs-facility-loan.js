@@ -3,7 +3,6 @@
  * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
  * function.
  *
- * @module acbs-facility-loan
  */
 
 const df = require('durable-functions');
@@ -11,7 +10,7 @@ const mappings = require('../../mappings');
 const CONSTANTS = require('../../constants');
 const retryOptions = require('../../helpers/retryOptions');
 
-df.app.orchestration('acbs-facility-loan', function* createACBSfacilityBond(context) {
+df.app.orchestration('acbs-facility-loan', function* createFacilityLoan(context) {
   const payload = context.df.input;
 
   try {

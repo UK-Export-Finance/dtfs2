@@ -3,10 +3,6 @@
  * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
  * function.
  *
- * @module acbs-amend-facility
- */
-
-/**
  * Facility Amendment DOF
  * ***********************
  * This DOF invokes following activity functions to satisfy mandatory amendments ACs
@@ -36,7 +32,7 @@ const { DEAL, FACILITY } = require('../../constants');
 
 const acceptableFacilityStage = ['07'];
 
-df.app.orchestration('acbs-amend-facility', function* amendACBSFacility(context) {
+df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
   const payload = context.df.input;
 
   try {
@@ -134,7 +130,7 @@ df.app.orchestration('acbs-amend-facility', function* amendACBSFacility(context)
       }
     }
 
-    throw new Error('Invalid argument set');
+    throw new Error('Invalid argument set provided');
   } catch (error) {
     console.error('Error amending facility records %o', error);
     return false;

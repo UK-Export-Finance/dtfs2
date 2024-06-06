@@ -3,7 +3,6 @@
  * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
  * function.
  *
- * @module acbs-get-facility-loan-id
  */
 
 /*
@@ -26,45 +25,21 @@ const df = require('durable-functions');
 const api = require('../../api');
 const { isHttpErrorStatus } = require('../../helpers/http');
 
-df.app.activity('get-facility-loan-id', {
-  handler: async (facilityId) => {
-    try {
-      if (!facilityId) {
-        throw new Error('Invalid facility ID');
-      }
+const handler = async (facilityId) => {
+  try {
+    if (!facilityId) {
+      throw new Error('Invalid facility ID');
+    }
 
-      if (facilityId) {
-        const { status, data } = await api.getLoanId(facilityId);
+    if (facilityId) {
+      const { status, data } = await api.getLoanId(facilityId);
 
-        // Non 200 HTTP response code
-        if (isHttpErrorStatus(status)) {
-          throw new Error(
-            JSON.stringify(
-              {
-                name: 'ACBS Loan ID fetch error',
-                facilityId,
-                dataReceived: data,
-              },
-              null,
-              4,
-            ),
-          );
-        }
-
-        // Validate returned data
-        if (data.length) {
-          const [loan] = data;
-
-          if (loan.loanIdentifier) {
-            return loan.loanIdentifier;
-          }
-        }
-
-        // Throw an error upon data validation failure
+      // Non 200 HTTP response code
+      if (isHttpErrorStatus(status)) {
         throw new Error(
           JSON.stringify(
             {
-              name: 'Invalid dataset returned',
+              name: 'ACBS Loan ID fetch error',
               facilityId,
               dataReceived: data,
             },
@@ -74,10 +49,36 @@ df.app.activity('get-facility-loan-id', {
         );
       }
 
-      return null;
-    } catch (error) {
-      console.error('Unable to get facility loan %o', error);
-      throw new Error(`Unable to get facility loan ${error}`);
+      // Validate returned data
+      if (data.length) {
+        const [loan] = data;
+
+        if (loan.loanIdentifier) {
+          return loan.loanIdentifier;
+        }
+      }
+
+      // Throw an error upon data validation failure
+      throw new Error(
+        JSON.stringify(
+          {
+            name: 'Invalid dataset returned',
+            facilityId,
+            dataReceived: data,
+          },
+          null,
+          4,
+        ),
+      );
     }
-  },
+
+    return null;
+  } catch (error) {
+    console.error('Unable to get facility loan %o', error);
+    throw new Error(`Unable to get facility loan ${error}`);
+  }
+};
+
+df.app.activity('get-facility-loan-id', {
+  handler,
 });

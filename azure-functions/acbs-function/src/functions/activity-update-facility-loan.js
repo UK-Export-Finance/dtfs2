@@ -3,7 +3,6 @@
  * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
  * function.
  *
- * @module acbs-update-facility-loan
  */
 
 /*
@@ -30,51 +29,53 @@ const { findMissingMandatory } = require('../../helpers/mandatoryFields');
 
 const mandatoryFields = ['expiryDate'];
 
-df.app.activity('update-facility-loan', {
-  handler: async (payload) => {
-    try {
-      if (!payload) {
-        throw new Error('Invalid facility loan amendment payload');
-      }
-
-      const { loanId, facilityId, acbsFacilityLoanInput } = payload;
-
-      const missingMandatory = findMissingMandatory(acbsFacilityLoanInput, mandatoryFields);
-
-      if (missingMandatory.length) {
-        return { missingMandatory };
-      }
-
-      const submittedToACBS = getNowAsIsoString();
-
-      const { status, data } = await api.updateFacilityLoan(facilityId, loanId, acbsFacilityLoanInput);
-
-      if (isHttpErrorStatus(status)) {
-        throw new Error(
-          JSON.stringify(
-            {
-              name: 'ACBS Facility loan amend error',
-              submittedToACBS,
-              receivedFromACBS: getNowAsIsoString(),
-              dataReceived: data,
-              dataSent: acbsFacilityLoanInput,
-            },
-            null,
-            4,
-          ),
-        );
-      }
-
-      return {
-        status,
-        submittedToACBS,
-        receivedFromACBS: getNowAsIsoString(),
-        dataSent: acbsFacilityLoanInput,
-        ...data,
-      };
-    } catch (error) {
-      console.error('Unable to amend facility loan record %o', error);
-      throw new Error(`Unable to amend facility loan record ${error}`);
+const handler = async (payload) => {
+  try {
+    if (!payload) {
+      throw new Error('Invalid facility loan amendment payload');
     }
-  },
+
+    const { loanId, facilityId, acbsFacilityLoanInput } = payload;
+
+    const missingMandatory = findMissingMandatory(acbsFacilityLoanInput, mandatoryFields);
+
+    if (missingMandatory.length) {
+      return { missingMandatory };
+    }
+
+    const submittedToACBS = getNowAsIsoString();
+
+    const { status, data } = await api.updateFacilityLoan(facilityId, loanId, acbsFacilityLoanInput);
+
+    if (isHttpErrorStatus(status)) {
+      throw new Error(
+        JSON.stringify(
+          {
+            name: 'ACBS Facility loan amend error',
+            submittedToACBS,
+            receivedFromACBS: getNowAsIsoString(),
+            dataReceived: data,
+            dataSent: acbsFacilityLoanInput,
+          },
+          null,
+          4,
+        ),
+      );
+    }
+
+    return {
+      status,
+      submittedToACBS,
+      receivedFromACBS: getNowAsIsoString(),
+      dataSent: acbsFacilityLoanInput,
+      ...data,
+    };
+  } catch (error) {
+    console.error('Unable to amend facility loan record %o', error);
+    throw new Error(`Unable to amend facility loan record ${error}`);
+  }
+};
+
+df.app.activity('update-facility-loan', {
+  handler,
 });

@@ -3,7 +3,6 @@
  * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
  * function.
  *
- * @module create-facility-fixed-fee
  */
 
 const df = require('durable-functions');
@@ -25,50 +24,52 @@ const mandatoryFields = [
   'spreadToInvestorsIndicator',
 ];
 
-df.app.activity('create-facility-fee', {
-  handler: async (payload) => {
-    try {
-      if (!payload) {
-        throw new Error('Invalid facility fixed fee record payload');
-      }
-
-      const { facilityIdentifier, acbsFacilityFeeInput } = payload;
-
-      const missingMandatory = findMissingMandatory(acbsFacilityFeeInput, mandatoryFields);
-      if (missingMandatory.length) {
-        return { missingMandatory };
-      }
-
-      const submittedToACBS = getNowAsIsoString();
-      const { status, data } = await api.createFacilityFee(facilityIdentifier, acbsFacilityFeeInput);
-
-      if (isHttpErrorStatus(status)) {
-        throw new Error(
-          JSON.stringify(
-            {
-              name: 'ACBS Facility fee record create error',
-              facilityIdentifier,
-              submittedToACBS,
-              receivedFromACBS: getNowAsIsoString(),
-              dataReceived: data,
-              dataSent: acbsFacilityFeeInput,
-            },
-            null,
-            4,
-          ),
-        );
-      }
-
-      return {
-        status,
-        dataSent: acbsFacilityFeeInput,
-        submittedToACBS,
-        receivedFromACBS: getNowAsIsoString(),
-        ...data,
-      };
-    } catch (error) {
-      console.error('Unable to create facility fixed fee record %o', error);
-      throw new Error(`Unable to create facility fixed fee record ${error}`);
+const handler = async (payload) => {
+  try {
+    if (!payload) {
+      throw new Error('Invalid facility fixed fee record payload');
     }
-  },
+
+    const { facilityIdentifier, acbsFacilityFeeInput } = payload;
+
+    const missingMandatory = findMissingMandatory(acbsFacilityFeeInput, mandatoryFields);
+    if (missingMandatory.length) {
+      return { missingMandatory };
+    }
+
+    const submittedToACBS = getNowAsIsoString();
+    const { status, data } = await api.createFacilityFee(facilityIdentifier, acbsFacilityFeeInput);
+
+    if (isHttpErrorStatus(status)) {
+      throw new Error(
+        JSON.stringify(
+          {
+            name: 'ACBS Facility fee record create error',
+            facilityIdentifier,
+            submittedToACBS,
+            receivedFromACBS: getNowAsIsoString(),
+            dataReceived: data,
+            dataSent: acbsFacilityFeeInput,
+          },
+          null,
+          4,
+        ),
+      );
+    }
+
+    return {
+      status,
+      dataSent: acbsFacilityFeeInput,
+      submittedToACBS,
+      receivedFromACBS: getNowAsIsoString(),
+      ...data,
+    };
+  } catch (error) {
+    console.error('Unable to create facility fixed fee record %o', error);
+    throw new Error(`Unable to create facility fixed fee record ${error}`);
+  }
+};
+
+df.app.activity('create-facility-fee', {
+  handler,
 });
