@@ -1,10 +1,3 @@
-/**
- * This function is an Azure Durable activity function.
- * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
- * function.
- *
- */
-
 const df = require('durable-functions');
 const { getNowAsIsoString } = require('../../helpers/date');
 const api = require('../../api');
@@ -36,6 +29,18 @@ const mandatoryFields = [
   'obligorIndustryClassification',
 ];
 
+/**
+ * This function is used to create a facility master record. It first checks if the payload is valid and contains all mandatory fields.
+ * If the payload is valid, it sends a request to the API to create the facility master record.
+ * If the API request is successful, it returns the status and data received from the API.
+ * If the API request fails, it throws an error with details about the request and the error.
+ * If the payload is not valid or does not contain all mandatory fields, it returns an object with the missing mandatory fields.
+ * If any other error occurs, it throws a new error.
+ *
+ * @param {Object} payload - The payload containing the mandatory fields for creating a facility master record.
+ * @returns {Object} - An object containing the status and data received from the API, or an object with the missing mandatory fields.
+ * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
+ */
 const handler = async (payload) => {
   try {
     if (!payload) {

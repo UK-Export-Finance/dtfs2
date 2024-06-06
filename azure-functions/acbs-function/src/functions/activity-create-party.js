@@ -1,10 +1,3 @@
-/**
- * This function is an Azure Durable activity function.
- * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
- * function.
- *
- */
-
 const df = require('durable-functions');
 const { getNowAsIsoString } = require('../../helpers/date');
 const api = require('../../api');
@@ -13,6 +6,18 @@ const { findMissingMandatory } = require('../../helpers/mandatoryFields');
 
 const mandatoryFields = ['alternateIdentifier', 'industryClassification', 'name1', 'smeType', 'citizenshipClass', 'officerRiskDate', 'countryCode'];
 
+/**
+ * This function is used to create a party record. It first checks if the party object is provided and if it contains all mandatory fields.
+ * If the party object is not provided or does not contain all mandatory fields, it returns an object with the missing mandatory fields.
+ * If the party object is valid, it sends a request to the API to create the party record.
+ * If the API request is successful, it returns an object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
+ * If the API request fails, it throws an error with details about the request and the error.
+ * If any other error occurs, it logs the error and throws a new error.
+ *
+ * @param {Object} party - The party object containing the mandatory fields for creating a party record.
+ * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API, or an object with the missing mandatory fields.
+ * @throws {Error} - Throws an error if the API request fails, or if any other error occurs.
+ */
 const handler = async (party) => {
   try {
     if (!party) {

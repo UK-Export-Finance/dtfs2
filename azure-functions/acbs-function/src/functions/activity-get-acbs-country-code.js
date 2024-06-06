@@ -10,6 +10,12 @@ const { HttpStatusCode } = require('axios');
 const mdm = require('../../apim-mdm');
 const CONSTANTS = require('../../constants');
 
+/**
+ * Asynchronous function that retrieves the ACBS country code for a given country.
+ *
+ * @param {string} country - The country for which the ACBS country code is to be retrieved.
+ * @returns {string} The ISO code of the country if successful, otherwise returns the default country code.
+ */
 const handler = async (country) => {
   try {
     const { status, data } = await mdm.getACBSCountryCode(country);

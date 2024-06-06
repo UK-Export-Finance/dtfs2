@@ -1,10 +1,3 @@
-/**
- * This function is an Azure Durable sub-orchestrator function.
- * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
- * function.
- *
- */
-
 /*
  * GET Loan ID for facility DAF
  * *****************************
@@ -25,6 +18,18 @@ const df = require('durable-functions');
 const api = require('../../api');
 const { isHttpErrorStatus } = require('../../helpers/http');
 
+/**
+ * This function is used to get the loan ID for a given facility.
+ * It first checks if the facility ID is provided. If not, it throws an error.
+ * If the facility ID is provided, it sends a request to the API to get the loan ID.
+ * If the API request is successful and data is returned, it returns the loanIdentifier of the first data object.
+ * If the API request is not successful or no data is returned, it throws an error with details about the request and the error.
+ * If any other error occurs, it throws a new error.
+ *
+ * @param {string} facilityId - The ID of the facility for which to get the loan ID.
+ * @returns {string} - The loanIdentifier of the first data object if the API request is successful and data is returned.
+ * @throws {Error} - Throws an error if the facility ID is not provided, if the API request is not successful, if no data is returned, or if any other error occurs.
+ */
 const handler = async (facilityId) => {
   try {
     if (!facilityId) {

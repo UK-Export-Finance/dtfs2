@@ -1,10 +1,3 @@
-/**
- * This function is an Azure Durable activity function.
- * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
- * function.
- *
- */
-
 const df = require('durable-functions');
 const { getNowAsIsoString } = require('../../helpers/date');
 const api = require('../../api');
@@ -15,6 +8,19 @@ const { findMissingMandatory } = require('../../helpers/mandatoryFields');
 
 const mandatoryFields = ['covenantIdentifier', 'covenantType', 'maximumLiability', 'currency', 'guaranteeExpiryDate', 'effectiveDate'];
 
+/**
+ * This function is used to create a facility covenant record. It first checks if the payload is valid.
+ * If the payload is valid, it generates a covenant ID using the number generator and replaces the ISO currency with the ACBS currency code.
+ * It then checks for missing mandatory fields in the acbsFacilityCovenantInput object.
+ * If the payload is not valid, it throws an error.
+ * If the API request to generate the covenant ID fails, it throws an error with details about the request and the error.
+ * If the API request to get the ACBS currency code fails, it defaults the currency code to GBP.
+ *
+ * @param {Object} payload - The payload containing the facilityIdentifier and acbsFacilityCovenantInput.
+ * @param {string} payload.facilityIdentifier - The identifier of the facility.
+ * @param {Object} payload.acbsFacilityCovenantInput - The acbsFacilityCovenantInput object containing the covenant details.
+ * @throws {Error} - Throws an error if the payload is invalid, if the API request to generate the covenant ID fails, or if any other error occurs.
+ */
 const handler = async (payload) => {
   try {
     if (!payload) {
