@@ -12,7 +12,7 @@ import {
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { PutUtilisationReportStatusRequest, putUtilisationReportStatus } from '.';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
-import { getMockQueryRunner } from '../../../../../test-helpers/mock-query-runner';
+import { getQueryRunnerMocks } from '../../../../../test-helpers/mock-query-runner';
 
 console.error = jest.fn();
 
@@ -31,7 +31,7 @@ describe('put-utilisation-report-status.controller', () => {
       body: { ...validRequestBody },
     });
 
-  const mockQueryRunner = getMockQueryRunner();
+  const { mockQueryRunner, mockConnect, mockStartTransaction, mockCommitTransaction, mockRollbackTransaction, mockRelease, mockSave } = getQueryRunnerMocks();
 
   const createQueryRunnerSpy = jest.spyOn(SqlDbDataSource, 'createQueryRunner');
 
@@ -115,19 +115,19 @@ describe('put-utilisation-report-status.controller', () => {
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
       expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-      expect(mockQueryRunner.connect).toHaveBeenCalledTimes(1);
-      expect(mockQueryRunner.startTransaction).toHaveBeenCalledTimes(1);
-      expect(mockQueryRunner.commitTransaction).toHaveBeenCalledTimes(1);
-      expect(mockQueryRunner.rollbackTransaction).not.toHaveBeenCalled();
-      expect(mockQueryRunner.release).toHaveBeenCalled();
-      expect(mockQueryRunner.manager.save).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsCompleted.length);
+      expect(mockConnect).toHaveBeenCalledTimes(1);
+      expect(mockStartTransaction).toHaveBeenCalledTimes(1);
+      expect(mockCommitTransaction).toHaveBeenCalledTimes(1);
+      expect(mockRollbackTransaction).not.toHaveBeenCalled();
+      expect(mockRelease).toHaveBeenCalled();
+      expect(mockSave).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsCompleted.length);
 
       existingReports.forEach((report) => {
         expect(report.status).toBe(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
         expect(report.lastUpdatedByIsSystemUser).toBe(false);
         expect(report.lastUpdatedByPortalUserId).toBeNull();
         expect(report.lastUpdatedByTfmUserId).toBe(userId);
-        expect(mockQueryRunner.manager.save).toHaveBeenCalledWith(UtilisationReportEntity, report);
+        expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
       });
     });
 
@@ -154,12 +154,12 @@ describe('put-utilisation-report-status.controller', () => {
         expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
         expect(res._getData()).toEqual('Failed to update utilisation report statuses: Transaction failed');
         expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-        expect(mockQueryRunner.connect).toHaveBeenCalledTimes(1);
-        expect(mockQueryRunner.startTransaction).toHaveBeenCalledTimes(1);
-        expect(mockQueryRunner.commitTransaction).not.toHaveBeenCalled();
-        expect(mockQueryRunner.rollbackTransaction).toHaveBeenCalledTimes(1);
-        expect(mockQueryRunner.release).toHaveBeenCalled();
-        expect(mockQueryRunner.manager.save).not.toHaveBeenCalled();
+        expect(mockConnect).toHaveBeenCalledTimes(1);
+        expect(mockStartTransaction).toHaveBeenCalledTimes(1);
+        expect(mockCommitTransaction).not.toHaveBeenCalled();
+        expect(mockRollbackTransaction).toHaveBeenCalledTimes(1);
+        expect(mockRelease).toHaveBeenCalled();
+        expect(mockSave).not.toHaveBeenCalled();
       },
     );
   });
@@ -201,12 +201,12 @@ describe('put-utilisation-report-status.controller', () => {
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
       expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-      expect(mockQueryRunner.connect).toHaveBeenCalledTimes(1);
-      expect(mockQueryRunner.startTransaction).toHaveBeenCalledTimes(1);
-      expect(mockQueryRunner.commitTransaction).toHaveBeenCalledTimes(1);
-      expect(mockQueryRunner.rollbackTransaction).not.toHaveBeenCalled();
-      expect(mockQueryRunner.release).toHaveBeenCalled();
-      expect(mockQueryRunner.manager.save).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsNotCompleted.length);
+      expect(mockConnect).toHaveBeenCalledTimes(1);
+      expect(mockStartTransaction).toHaveBeenCalledTimes(1);
+      expect(mockCommitTransaction).toHaveBeenCalledTimes(1);
+      expect(mockRollbackTransaction).not.toHaveBeenCalled();
+      expect(mockRelease).toHaveBeenCalled();
+      expect(mockSave).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsNotCompleted.length);
 
       existingReports.forEach((report, index) => {
         const expectedStatus = reportsWithStatusForMarkingAsNotCompleted[index].status;
@@ -214,7 +214,7 @@ describe('put-utilisation-report-status.controller', () => {
         expect(report.lastUpdatedByIsSystemUser).toBe(false);
         expect(report.lastUpdatedByPortalUserId).toBeNull();
         expect(report.lastUpdatedByTfmUserId).toBe(userId);
-        expect(mockQueryRunner.manager.save).toHaveBeenCalledWith(UtilisationReportEntity, report);
+        expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
       });
     });
 
@@ -241,12 +241,12 @@ describe('put-utilisation-report-status.controller', () => {
         expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
         expect(res._getData()).toEqual('Failed to update utilisation report statuses: Transaction failed');
         expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-        expect(mockQueryRunner.connect).toHaveBeenCalledTimes(1);
-        expect(mockQueryRunner.startTransaction).toHaveBeenCalledTimes(1);
-        expect(mockQueryRunner.commitTransaction).not.toHaveBeenCalled();
-        expect(mockQueryRunner.rollbackTransaction).toHaveBeenCalledTimes(1);
-        expect(mockQueryRunner.release).toHaveBeenCalled();
-        expect(mockQueryRunner.manager.save).not.toHaveBeenCalled();
+        expect(mockConnect).toHaveBeenCalledTimes(1);
+        expect(mockStartTransaction).toHaveBeenCalledTimes(1);
+        expect(mockCommitTransaction).not.toHaveBeenCalled();
+        expect(mockRollbackTransaction).toHaveBeenCalledTimes(1);
+        expect(mockRelease).toHaveBeenCalled();
+        expect(mockSave).not.toHaveBeenCalled();
       },
     );
   });

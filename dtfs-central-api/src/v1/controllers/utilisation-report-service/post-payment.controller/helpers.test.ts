@@ -7,7 +7,7 @@ import { UtilisationReportStateMachine } from '../../../../services/state-machin
 import { InvalidPayloadError, NotFoundError, TransactionFailedError } from '../../../../errors';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
-import { getMockQueryRunner } from '../../../../../test-helpers/mock-query-runner';
+import { getQueryRunnerMocks } from '../../../../../test-helpers/mock-query-runner';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
 
@@ -37,7 +37,7 @@ describe('post-add-payment.controller helpers', () => {
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(feeRecordId).withPaymentCurrency(paymentCurrency).build(),
     );
 
-    const mockQueryRunner = getMockQueryRunner();
+    const { mockQueryRunner, mockConnect, mockStartTransaction, mockCommitTransaction, mockRollbackTransaction, mockRelease } = getQueryRunnerMocks();
     const feeRecordFindBySpy = jest.spyOn(FeeRecordRepo, 'findBy');
     const createQueryRunnerSpy = jest.spyOn(SqlDbDataSource, 'createQueryRunner');
 
@@ -117,7 +117,7 @@ describe('post-add-payment.controller helpers', () => {
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
       // Assert
-      expect(mockQueryRunner.connect).toHaveBeenCalled();
+      expect(mockConnect).toHaveBeenCalled();
     });
 
     it('starts the transaction', async () => {
@@ -125,7 +125,7 @@ describe('post-add-payment.controller helpers', () => {
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
       // Assert
-      expect(mockQueryRunner.startTransaction).toHaveBeenCalled();
+      expect(mockStartTransaction).toHaveBeenCalled();
     });
 
     it('adds the payment to the utilisation report using the utilisation report state machine', async () => {
@@ -155,7 +155,7 @@ describe('post-add-payment.controller helpers', () => {
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
       // Assert
-      expect(mockQueryRunner.commitTransaction).toHaveBeenCalled();
+      expect(mockCommitTransaction).toHaveBeenCalled();
     });
 
     it('rolls back the transaction if the utilisation report state machine event handler throws an error', async () => {
@@ -164,7 +164,7 @@ describe('post-add-payment.controller helpers', () => {
 
       // Act / Assert
       await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails)).rejects.toThrow();
-      expect(mockQueryRunner.rollbackTransaction).toHaveBeenCalled();
+      expect(mockRollbackTransaction).toHaveBeenCalled();
     });
 
     it('does not commit the transaction if the utilisation report state machine event handler throws an error', async () => {
@@ -173,7 +173,7 @@ describe('post-add-payment.controller helpers', () => {
 
       // Act / Assert
       await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails)).rejects.toThrow();
-      expect(mockQueryRunner.rollbackTransaction).toHaveBeenCalled();
+      expect(mockRollbackTransaction).toHaveBeenCalled();
     });
 
     it("throws the 'TransactionFailedError' with the generic 'Unknown error' message if an unexpected error occurred", async () => {
@@ -208,7 +208,7 @@ describe('post-add-payment.controller helpers', () => {
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
       // Assert
-      expect(mockQueryRunner.release).toHaveBeenCalled();
+      expect(mockRelease).toHaveBeenCalled();
     });
 
     it('releases the connection used for the transaction if the event handler throws an error', async () => {
@@ -217,7 +217,7 @@ describe('post-add-payment.controller helpers', () => {
 
       // Act / Assert
       await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails)).rejects.toThrow();
-      expect(mockQueryRunner.release).toHaveBeenCalled();
+      expect(mockRelease).toHaveBeenCalled();
     });
   });
 });

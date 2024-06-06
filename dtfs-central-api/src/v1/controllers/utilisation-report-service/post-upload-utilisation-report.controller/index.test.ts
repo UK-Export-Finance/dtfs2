@@ -6,7 +6,7 @@ import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { postUploadUtilisationReport, postUploadUtilisationReportPayloadValidator, PostUploadUtilisationReportRequestBody } from '.';
 import { MOCK_UTILISATION_REPORT_RAW_CSV_DATA } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-report-raw-csv-data';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
-import { getMockQueryRunner } from '../../../../../test-helpers/mock-query-runner';
+import { getQueryRunnerMocks } from '../../../../../test-helpers/mock-query-runner';
 
 console.error = jest.fn();
 
@@ -33,7 +33,7 @@ describe('post-upload-utilisation-report controller', () => {
       },
     });
 
-  const mockQueryRunner = getMockQueryRunner();
+  const { mockQueryRunner, mockSave, mockConnect, mockStartTransaction, mockCommitTransaction, mockRollbackTransaction, mockRelease } = getQueryRunnerMocks();
 
   const createQueryRunnerSpy = jest.spyOn(SqlDbDataSource, 'createQueryRunner');
 
@@ -127,7 +127,7 @@ describe('post-upload-utilisation-report controller', () => {
         id: validPostUploadUtilisationReportRequestBody.reportId,
       });
       expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-      expect(mockQueryRunner.manager.save).not.toHaveBeenCalled();
+      expect(mockSave).not.toHaveBeenCalled();
       expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
       expect(res._getData()).toEqual(expect.stringContaining('Failed to save utilisation report:'));
     });
@@ -149,12 +149,12 @@ describe('post-upload-utilisation-report controller', () => {
           id: validPostUploadUtilisationReportRequestBody.reportId,
         });
         expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-        expect(mockQueryRunner.connect).toHaveBeenCalledTimes(1);
-        expect(mockQueryRunner.startTransaction).toHaveBeenCalledTimes(1);
-        expect(mockQueryRunner.commitTransaction).toHaveBeenCalledTimes(1);
-        expect(mockQueryRunner.rollbackTransaction).not.toHaveBeenCalled();
-        expect(mockQueryRunner.release).toHaveBeenCalled();
-        expect(mockQueryRunner.manager.save).toHaveBeenCalled();
+        expect(mockConnect).toHaveBeenCalledTimes(1);
+        expect(mockStartTransaction).toHaveBeenCalledTimes(1);
+        expect(mockCommitTransaction).toHaveBeenCalledTimes(1);
+        expect(mockRollbackTransaction).not.toHaveBeenCalled();
+        expect(mockRelease).toHaveBeenCalled();
+        expect(mockSave).toHaveBeenCalled();
 
         expect(res._getStatusCode()).toBe(HttpStatusCode.Created);
         expect(res._getData()).toEqual({ dateUploaded: mockDate });
@@ -167,7 +167,7 @@ describe('post-upload-utilisation-report controller', () => {
         const notReceivedReport = getNotReceivedReport();
         utilisationReportRepoFindOneBySpy.mockResolvedValue(notReceivedReport);
 
-        jest.mocked(mockQueryRunner.manager.save).mockRejectedValue(new Error('Some error'));
+        jest.mocked(mockSave).mockRejectedValue(new Error('Some error'));
 
         // Act
         await postUploadUtilisationReport(req, res);
@@ -177,7 +177,7 @@ describe('post-upload-utilisation-report controller', () => {
         expect(utilisationReportRepoFindOneBySpy).toHaveBeenCalledWith({
           id: validPostUploadUtilisationReportRequestBody.reportId,
         });
-        expect(mockQueryRunner.manager.save).toHaveBeenCalledTimes(1);
+        expect(mockSave).toHaveBeenCalledTimes(1);
         expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
       });
     });

@@ -11,12 +11,14 @@ import { feeRecordsMatchAttachedPayments } from './helpers';
 
 describe('payment-added-to-fee-record.event-handler helpers', () => {
   describe('feeRecordsMatchAttachedPayments', () => {
+    const mockFind = jest.fn();
     const mockEntityManager = {
-      find: jest.fn(),
+      find: mockFind,
     } as unknown as EntityManager;
 
     const addPaymentsToFeeRecords = (feeRecords: FeeRecordEntity[], payments?: PaymentEntity[]): FeeRecordEntity[] =>
       feeRecords.map((feeRecord) => {
+        // eslint-disable-next-line no-param-reassign
         feeRecord.payments = payments ?? [];
         return feeRecord;
       });
@@ -33,13 +35,13 @@ describe('payment-added-to-fee-record.event-handler helpers', () => {
         FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).build(),
       ];
 
-      jest.mocked(mockEntityManager.find).mockResolvedValue(addPaymentsToFeeRecords(feeRecords));
+      jest.mocked(mockFind).mockResolvedValue(addPaymentsToFeeRecords(feeRecords));
 
       // Act
       await feeRecordsMatchAttachedPayments(feeRecords, mockEntityManager);
 
       // Assert
-      expect(mockEntityManager.find).toHaveBeenCalledWith(FeeRecordEntity, {
+      expect(mockFind).toHaveBeenCalledWith(FeeRecordEntity, {
         where: { id: feeRecords[0].id },
         relations: { payments: true },
       });
@@ -74,7 +76,7 @@ describe('payment-added-to-fee-record.event-handler helpers', () => {
         PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(2).withAmountReceived(secondPaymentAmount).build(),
       ];
 
-      jest.mocked(mockEntityManager.find).mockResolvedValue(addPaymentsToFeeRecords(feeRecords, payments));
+      jest.mocked(mockFind).mockResolvedValue(addPaymentsToFeeRecords(feeRecords, payments));
 
       // Act
       const result = await feeRecordsMatchAttachedPayments(feeRecords, mockEntityManager);
@@ -112,7 +114,7 @@ describe('payment-added-to-fee-record.event-handler helpers', () => {
         PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(2).withAmountReceived(secondPaymentAmount).build(),
       ];
 
-      jest.mocked(mockEntityManager.find).mockResolvedValue(addPaymentsToFeeRecords(feeRecords, payments));
+      jest.mocked(mockFind).mockResolvedValue(addPaymentsToFeeRecords(feeRecords, payments));
 
       // Act
       const result = await feeRecordsMatchAttachedPayments(feeRecords, mockEntityManager);
@@ -155,7 +157,7 @@ describe('payment-added-to-fee-record.event-handler helpers', () => {
         PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(2).withAmountReceived(secondPaymentAmount).build(),
       ];
 
-      jest.mocked(mockEntityManager.find).mockResolvedValue(addPaymentsToFeeRecords(feeRecords, payments));
+      jest.mocked(mockFind).mockResolvedValue(addPaymentsToFeeRecords(feeRecords, payments));
 
       // Act
       const result = await feeRecordsMatchAttachedPayments(feeRecords, mockEntityManager);

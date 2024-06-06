@@ -23,8 +23,9 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     userId: tfmUserId,
   };
 
+  const mockSave = jest.fn();
   const mockEntityManager = {
-    save: jest.fn(),
+    save: mockSave,
   } as unknown as EntityManager;
 
   const paymentCurrency: Currency = 'GBP';
@@ -40,9 +41,15 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     FeeRecordEntityMockBuilder.forReport(report).withId(2).withPaymentCurrency(paymentCurrency).build(),
   ];
 
+  const aMockEventHandler = () => jest.fn();
+  const aMockFeeRecordStateMachine = (eventHandler: jest.Mock): FeeRecordStateMachine =>
+    ({
+      handleEvent: eventHandler,
+    }) as unknown as FeeRecordStateMachine;
+
   beforeEach(() => {
     jest.mocked(feeRecordsMatchAttachedPayments).mockResolvedValue(false);
-    jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockReturnValue(aMockFeeRecordStateMachine());
+    jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockReturnValue(aMockFeeRecordStateMachine(aMockEventHandler()));
   });
 
   afterEach(() => {
@@ -71,7 +78,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     });
 
     // Assert
-    expect(mockEntityManager.save).toHaveBeenCalledWith(PaymentEntity, newPaymentEntity);
+    expect(mockSave).toHaveBeenCalledWith(PaymentEntity, newPaymentEntity);
   });
 
   it('calls the fee record state machine event handler for each fee record in the payload', async () => {
@@ -79,8 +86,9 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
+    const eventHandlers = feeRecords.reduce((obj, { id }) => ({ ...obj, [id]: aMockEventHandler() }), {} as { [id: number]: jest.Mock });
     const feeRecordStateMachines = feeRecords.reduce(
-      (stateMachines, { id }) => ({ ...stateMachines, [id]: aMockFeeRecordStateMachine() }),
+      (stateMachines, { id }) => ({ ...stateMachines, [id]: aMockFeeRecordStateMachine(eventHandlers[id]) }),
       {} as { [id: number]: FeeRecordStateMachine },
     );
 
@@ -95,8 +103,8 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     });
 
     // Assert
-    feeRecords.forEach((feeRecord) => {
-      const eventHandler = feeRecordStateMachines[feeRecord.id].handleEvent;
+    feeRecords.forEach(({ id }) => {
+      const eventHandler = eventHandlers[id];
       expect(eventHandler).toHaveBeenCalledWith({
         type: 'PAYMENT_ADDED',
         payload: {
@@ -113,9 +121,10 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
-    const feeRecordStateMachines: { [id: number]: FeeRecordStateMachine } = feeRecords.reduce(
-      (stateMachines, { id }) => ({ ...stateMachines, [id]: aMockFeeRecordStateMachine() }),
-      {},
+    const eventHandlers = feeRecords.reduce((obj, { id }) => ({ ...obj, [id]: aMockEventHandler() }), {} as { [id: number]: jest.Mock });
+    const feeRecordStateMachines = feeRecords.reduce(
+      (stateMachines, { id }) => ({ ...stateMachines, [id]: aMockFeeRecordStateMachine(eventHandlers[id]) }),
+      {} as { [id: number]: FeeRecordStateMachine },
     );
 
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
@@ -131,8 +140,8 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     });
 
     // Assert
-    feeRecords.forEach((feeRecord) => {
-      const eventHandler = feeRecordStateMachines[feeRecord.id].handleEvent;
+    feeRecords.forEach(({ id }) => {
+      const eventHandler = eventHandlers[id];
       expect(eventHandler).toHaveBeenCalledWith(
         expect.objectContaining({
           type: 'PAYMENT_ADDED',
@@ -149,9 +158,10 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
-    const feeRecordStateMachines: { [id: number]: FeeRecordStateMachine } = feeRecords.reduce(
-      (stateMachines, { id }) => ({ ...stateMachines, [id]: aMockFeeRecordStateMachine() }),
-      {},
+    const eventHandlers = feeRecords.reduce((obj, { id }) => ({ ...obj, [id]: aMockEventHandler() }), {} as { [id: number]: jest.Mock });
+    const feeRecordStateMachines = feeRecords.reduce(
+      (stateMachines, { id }) => ({ ...stateMachines, [id]: aMockFeeRecordStateMachine(eventHandlers[id]) }),
+      {} as { [id: number]: FeeRecordStateMachine },
     );
 
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
@@ -167,8 +177,8 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     });
 
     // Assert
-    feeRecords.forEach((feeRecord) => {
-      const eventHandler = feeRecordStateMachines[feeRecord.id].handleEvent;
+    feeRecords.forEach(({ id }) => {
+      const eventHandler = eventHandlers[id];
       expect(eventHandler).toHaveBeenCalledWith(
         expect.objectContaining({
           type: 'PAYMENT_ADDED',
@@ -195,7 +205,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     });
 
     // Assert
-    expect(mockEntityManager.save).toHaveBeenCalledWith(UtilisationReportEntity, utilisationReport);
+    expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, utilisationReport);
   });
 
   it(`only updates the report audit fields if the report status is '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS}'`, async () => {
@@ -238,10 +248,4 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     expect(pendingReconciliationReport.lastUpdatedByTfmUserId).toBe(tfmUserId);
     expect(pendingReconciliationReport.status).toBe(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS);
   });
-
-  function aMockFeeRecordStateMachine(): FeeRecordStateMachine {
-    return {
-      handleEvent: jest.fn(),
-    } as unknown as FeeRecordStateMachine;
-  }
 });

@@ -5,8 +5,9 @@ import { handleFeeRecordPaymentAddedEvent } from './payment-added.event-handler'
 describe('handleFeeRecordPaymentAddedEvent', () => {
   const PENDING_RECONCILIATION_REPORT = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
+  const mockSave = jest.fn();
   const mockEntityManager = {
-    save: jest.fn(),
+    save: mockSave,
   } as unknown as EntityManager;
 
   const userId = 'abc123';
@@ -27,7 +28,7 @@ describe('handleFeeRecordPaymentAddedEvent', () => {
     });
 
     // Assert
-    expect(mockEntityManager.save).toHaveBeenCalledWith(FeeRecordEntity, feeRecord);
+    expect(mockSave).toHaveBeenCalledWith(FeeRecordEntity, feeRecord);
   });
 
   it.each([
