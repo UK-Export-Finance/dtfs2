@@ -7,7 +7,6 @@ import exportersAddress from '../pages/exporters-address';
 import aboutExporter from '../pages/about-exporter';
 import selectExportersCorAddress from '../pages/select-exporters-corr-address';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import { COMPANIES_HOUSE_NUMBERS } from '../../fixtures/constants';
 
 let url;
 let dealId;
