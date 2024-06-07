@@ -1,6 +1,5 @@
-import { PrimaryNavigationKey } from '../primary-navigation-key';
-import { TfmSessionUser } from '../tfm-session-user';
 import { UtilisationReportReconciliationSummaryItem } from '../utilisation-reports';
+import { BaseViewModel } from './base-view-model';
 
 export type FindReportSummaryItemViewModel = UtilisationReportReconciliationSummaryItem & {
   formattedReportPeriod: string;
@@ -8,9 +7,7 @@ export type FindReportSummaryItemViewModel = UtilisationReportReconciliationSumm
   formattedDateUploaded?: string;
 };
 
-export type UtilisationReportsByBankAndYearViewModel = {
-  user: TfmSessionUser;
-  activePrimaryNavigation: PrimaryNavigationKey;
+export type UtilisationReportsByBankAndYearViewModel = BaseViewModel & {
   bankName: string;
   year: string;
   reports: FindReportSummaryItemViewModel[];
