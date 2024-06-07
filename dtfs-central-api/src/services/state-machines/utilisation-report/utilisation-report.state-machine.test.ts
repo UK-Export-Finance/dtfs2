@@ -121,9 +121,9 @@ describe('UtilisationReportStateMachine', () => {
           feeRecords: [],
           paymentDetails: {
             currency: 'GBP',
-            amountReceived: 100,
+            amount: 100,
             dateReceived: new Date(),
-            paymentReference: 'A payment reference',
+            reference: 'A payment reference',
           },
           requestSource: {
             platform: 'TFM',
@@ -187,9 +187,9 @@ describe('UtilisationReportStateMachine', () => {
           feeRecords: [],
           paymentDetails: {
             currency: 'GBP',
-            amountReceived: 100,
+            amount: 100,
             dateReceived: new Date(),
-            paymentReference: 'A payment reference',
+            reference: 'A payment reference',
           },
           requestSource: {
             platform: 'TFM',
