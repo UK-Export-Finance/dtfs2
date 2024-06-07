@@ -35,6 +35,7 @@ export const lookup = async (req: Request, res: Response) => {
   });
 
   if (!response) {
+    console.error('MDM Geospatial Addresses API - empty response for postcode %s', postcode);
     return res.status(HttpStatusCode.BadRequest).send({});
   }
 
