@@ -98,8 +98,7 @@ describe('/geospatial/addresses/postcode', () => {
       const { status, body } = await get(`/geospatial/addresses/postcode/${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`);
 
       expect(status).toEqual(HttpStatusCode.InternalServerError);
-      expect(body).toBeDefined();
-      expect(body).toBe({});
+      expect(body).toStrictEqual({});
     });
   });
 
