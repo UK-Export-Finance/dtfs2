@@ -1,4 +1,4 @@
-import { AuditDetails } from '@ukef/dtfs2-common';
+import { AUDIT_USER_TYPES_AS_ARRAY, AuditDetails, AuditUserTypes } from '@ukef/dtfs2-common';
 import {
   generateNoUserLoggedInAuditDetails,
   generatePortalAuditDetails,
@@ -12,10 +12,10 @@ type MakeRequest = (auditDetails?: AuditDetails) => Promise<{ status: number; bo
 
 type Params = {
   makeRequest: MakeRequest;
-  validUserTypes: ('tfm' | 'portal' | 'system' | 'none')[];
+  validUserTypes: AuditUserTypes[];
 };
 
-export const withValidateAuditDetailsTests = ({ makeRequest, validUserTypes }: Params) => {
+export const withValidateAuditDetailsTests = ({ makeRequest, validUserTypes = AUDIT_USER_TYPES_AS_ARRAY }: Params) => {
   describe('when validating audit details', () => {
     const { validAuditDetails, invalidAuditDetails } = getValidAndInvalidAuditDetails(validUserTypes);
 
@@ -54,7 +54,7 @@ function withInvalidAuditDetailsTests(invalidAuditDetails: AuditDetails[], makeR
   });
 }
 
-function getValidAndInvalidAuditDetails(validUserTypes: ('tfm' | 'portal' | 'system' | 'none')[]) {
+function getValidAndInvalidAuditDetails(validUserTypes: AuditUserTypes[]) {
   const allAuditDetails = [
     generateSystemAuditDetails(),
     generatePortalAuditDetails(MOCK_PORTAL_USER._id),

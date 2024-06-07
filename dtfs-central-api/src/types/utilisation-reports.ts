@@ -114,3 +114,10 @@ export type UtilisationReportReconciliationDetails = {
   dateUploaded: Date;
   feeRecords: FeeRecordItem[];
 };
+
+export type NewPaymentDetails = {
+  currency: Currency;
+  amountReceived: number;
+  dateReceived: Date;
+  paymentReference?: string;
+};

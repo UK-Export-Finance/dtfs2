@@ -1,16 +1,17 @@
-const databaseHelper = require('../../database-helper');
-const aDeal = require('./deal-builder');
-const app = require('../../../src/createApp');
-const testUserCache = require('../../api-test-users');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const { expectAddedFields, expectAddedFieldsWithEditedBy } = require('./expectAddedFields');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
+const databaseHelper = require('../../database-helper');
+const aDeal = require('./deal-builder');
+const testUserCache = require('../../api-test-users');
 const dealWithAboutComplete = require('../../fixtures/deal-with-complete-about-section.json');
 const dealWithAboutIncomplete = require('../../fixtures/deal-with-incomplete-about-section.json');
-const { as, get } = require('../../api')(app);
-const { expectAddedFields, expectAddedFieldsWithEditedBy } = require('./expectAddedFields');
 const calculateDealSummary = require('../../../src/v1/deal-summary');
-const { DB_COLLECTIONS } = require('../../fixtures/constants');
+const app = require('../../../src/createApp');
+const { as, get } = require('../../api')(app);
 
 const newDeal = aDeal({
   additionalRefName: 'mock name',
@@ -121,9 +122,8 @@ describe('/v1/deals', () => {
 
     it('returns the requested resource', async () => {
       const { status, body } = await as(aBarclaysMaker).get(aDealUrl);
-
       expect(status).toEqual(200);
-      expect(body.deal).toEqual(expectAddedFields(newDeal));
+      expect(body.deal).toEqual(expectAddedFields({ baseDeal: newDeal, auditDetails: generatePortalAuditDetails(aBarclaysMaker._id) }));
     });
 
     it('calculates deal.submissionDetails.status = Incomplete if there are validation failures', async () => {
@@ -318,11 +318,13 @@ describe('/v1/deals', () => {
     it('returns the created deal', async () => {
       const { body: createdDeal, status } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
+      const expectedCreateDeal = expectAddedFields({ baseDeal: newDeal, auditDetails: generatePortalAuditDetails(anHSBCMaker._id) });
+
       expect(status).toEqual(200);
 
       const { body: dealAfterCreation } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
-      expect(dealAfterCreation.deal).toEqual(expectAddedFields(newDeal));
+      expect(dealAfterCreation.deal).toEqual(expectedCreateDeal);
     });
 
     it('creates unique deal IDs', async () => {

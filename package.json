@@ -33,7 +33,6 @@
     "db:seed:reset": "(cd utils && npm run db:seed:reset)",
     "env:copy": "(cd utils && npm run env:copy)",
     "housekeeping": "npm run update:all && npm run install:all && npm run prettier:fix:all && npm run lint:fix:all && npm run audit:fix:all && npm run spellcheck",
-    "postinstall": "husky install",
     "install:all": "npm install --if-present",
     "lint:all": "npm run lint --workspaces --if-present",
     "lint:fix:all": "npm run lint --workspaces --if-present -- --fix",
@@ -60,7 +59,7 @@
     ]
   },
   "dependencies": {
-    "axios": "^1.6.8",
+    "axios": "^1.7.2",
     "release-please": "^16.10.2"
   },
   "devDependencies": {
@@ -68,7 +67,7 @@
     "@commitlint/config-conventional": "^17.8.1",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "cspell": "^8.8.1",
+    "cspell": "^8.8.4",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",

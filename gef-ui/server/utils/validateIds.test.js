@@ -1,7 +1,7 @@
 const { isValidMongoId, isValidCompaniesHouseNumber, isValidUkPostcode } = require('./validateIds');
 const { COMPANIES_HOUSE_NUMBER } = require('../test-mocks/companies-house-number');
 
-const { VALID, VALID_LAST_LETTER, VALID_LETTERS, VALID_LETTERS_NI, INVALID_SHORT, INVALID_SPACE, INVALID_SPECIAL_CHARACTER } = COMPANIES_HOUSE_NUMBER;
+const { VALID, VALID_LAST_LETTER, VALID_LETTERS, VALID_LETTERS_NI, INVALID_TOO_SHORT, INVALID_WITH_SPACE, INVALID_SPECIAL_CHARACTER } = COMPANIES_HOUSE_NUMBER;
 
 describe('validateIds', () => {
   describe('isValidMongoId', () => {
@@ -51,7 +51,7 @@ describe('validateIds', () => {
     });
 
     it('should return false for company number which is too short', () => {
-      const result = isValidCompaniesHouseNumber(INVALID_SHORT);
+      const result = isValidCompaniesHouseNumber(INVALID_TOO_SHORT);
 
       expect(result).toEqual(false);
     });
@@ -63,7 +63,7 @@ describe('validateIds', () => {
     });
 
     it('should return false for company number which has a special character', () => {
-      const result = isValidCompaniesHouseNumber(INVALID_SPACE);
+      const result = isValidCompaniesHouseNumber(INVALID_WITH_SPACE);
 
       expect(result).toEqual(false);
     });
