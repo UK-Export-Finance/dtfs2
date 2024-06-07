@@ -52,7 +52,10 @@ exports.delete = async (facilityId, user, auditDetails) => api.deleteFacility(fa
  * Create multiple facilities (BSS, EWCS only)
  */
 exports.createMultiple = async (req, res) => {
-  const { facilities, dealId, user } = req.body;
+  const {
+    body: { facilities, dealId },
+    user,
+  } = req;
 
   const auditDetails = generatePortalAuditDetails(user._id);
 
