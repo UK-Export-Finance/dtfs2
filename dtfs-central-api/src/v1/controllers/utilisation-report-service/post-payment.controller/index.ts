@@ -22,9 +22,9 @@ export const postPayment = async (req: PostPaymentRequest, res: Response) => {
   try {
     const newPaymentDetails: NewPaymentDetails = {
       currency: paymentCurrency,
-      amountReceived: paymentAmount,
+      amount: paymentAmount,
       dateReceived: datePaymentReceived,
-      paymentReference,
+      reference: paymentReference,
     };
 
     await addPaymentToUtilisationReport(parseInt(reportId, 10), feeRecordIds, user, newPaymentDetails);

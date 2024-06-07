@@ -25,9 +25,9 @@ describe('post-add-payment.controller helpers', () => {
 
     const newPaymentDetails: NewPaymentDetails = {
       currency: paymentCurrency,
-      amountReceived: 100,
+      amount: 100,
       dateReceived: new Date(),
-      paymentReference: 'A payment reference',
+      reference: 'A payment reference',
     };
 
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
