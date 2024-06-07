@@ -8,7 +8,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { MAKER, CHECKER, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../../../src/v1/roles/roles');
 const { as, get, remove } = require('../../api')(app);
 
 describe('/v1/feedback', () => {
@@ -41,7 +41,7 @@ describe('/v1/feedback', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    testUser = testUsers().one();
+    testUser = testUsers().withRole(READ_ONLY).one();
     aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
     aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Barclays Bank').one();
     anAdmin = testUsers().withRole(ADMIN).one();
