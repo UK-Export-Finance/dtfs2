@@ -56,9 +56,9 @@ describe('post-payment.controller', () => {
 
       const newPaymentDetails: NewPaymentDetails = {
         currency: paymentCurrency,
-        amountReceived: paymentAmount,
+        amount: paymentAmount,
         dateReceived: datePaymentReceived,
-        paymentReference,
+        reference: paymentReference,
       };
 
       // Act
