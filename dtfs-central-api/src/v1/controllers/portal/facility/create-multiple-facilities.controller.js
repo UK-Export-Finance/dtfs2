@@ -75,6 +75,7 @@ exports.createMultipleFacilitiesPost = async (req, res) => {
     }
     return res.status(500).send({ status: 500, error });
   }
+
   return findOneDeal(dealId, async (deal) => {
     if (deal) {
       const response = await createFacilities(facilities, dealId, auditDetails);

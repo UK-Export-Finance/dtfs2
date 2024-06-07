@@ -1,4 +1,5 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const getCreateFacilityErrors = require('../../../validation/create-facility');
@@ -43,14 +44,25 @@ exports.createFacilityPost = async (req, res) => {
       validationErrors,
     });
   }
+  try {
+    validateAuditDetails(auditDetails);
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
+  }
 
   const deal = await findOneDeal(facility.dealId);
 
-  if (deal) {
-    const createdFacility = await createFacility(facility, user, req.routePath, auditDetails);
-
-    return res.status(200).send(createdFacility);
+  if (!deal) {
+    return res.status(404).send('Deal not found');
   }
 
-  return res.status(404).send('Deal not found');
+  const createdFacility = await createFacility(facility, user, req.routePath, auditDetails);
+
+  return res.status(200).send(createdFacility);
 };

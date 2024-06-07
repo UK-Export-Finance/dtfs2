@@ -8,6 +8,7 @@ const { MOCK_DEAL } = require('../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../helpers/create-deal');
 const { createFacility } = require('../../helpers/create-facility');
+const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 
 const mockFacility = {
   type: 'Bond',
@@ -61,10 +62,22 @@ describe('/v1/portal/facilities', () => {
   });
 
   describe('POST /v1/portal/multiple-facilities', () => {
+    const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
+
+    withValidateAuditDetailsTests({
+      makeRequest: (auditDetails) => {
+        return api
+          .post({
+            facilities,
+            user: MOCK_PORTAL_USER,
+            dealId,
+            auditDetails,
+          })
+          .to('/v1/portal/multiple-facilities');
+      },
+    });
     it('creates and returns multiple facilities with createdDate and updatedAt', async () => {
       await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES]);
-
-      const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
 
       const postBody = {
         facilities,
@@ -86,8 +99,6 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('returns 400 where user is missing', async () => {
-      const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
-
       const postBody = {
         facilities,
         dealId,
@@ -99,8 +110,6 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('returns 400 where deal is not found', async () => {
-      const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
-
       const postBody = {
         facilities,
         dealId: '61e54dd5b578247e14575880',

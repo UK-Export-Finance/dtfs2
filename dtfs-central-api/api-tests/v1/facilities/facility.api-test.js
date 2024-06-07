@@ -7,6 +7,7 @@ const { MOCK_DEAL } = require('../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../helpers/create-deal');
 const { createFacility } = require('../../helpers/create-facility');
+const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 
 const newFacility = {
   type: 'Bond',
@@ -30,6 +31,18 @@ describe('/v1/portal/facilities', () => {
   });
 
   describe('POST /v1/portal/facilities', () => {
+    withValidateAuditDetailsTests({
+      makeRequest: async (auditDetails) => {
+        const {
+          body: { _id },
+        } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+
+        newFacility.dealId = _id;
+
+        return api.post({ facility: newFacility, user: MOCK_PORTAL_USER, auditDetails }).to('/v1/portal/facilities');
+      },
+    });
+
     it('returns 404 when associatedDeal/dealId is not found', async () => {
       const facilityWithInvalidDealId = {
         dealId: MOCK_DEAL.DEAL_ID,
