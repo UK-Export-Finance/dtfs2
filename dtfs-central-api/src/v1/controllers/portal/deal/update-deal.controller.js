@@ -66,7 +66,7 @@ const updateDealEditedByPortal = async (dealId, user) => {
 };
 exports.updateDealEditedByPortal = updateDealEditedByPortal;
 
-const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath, auditDetails) => {
+const updateDeal = async (dealId, dealChanges, user, auditDetails, existingDeal, routePath) => {
   try {
     if (!ObjectId.isValid(dealId)) {
       return { status: 400, message: 'Invalid Deal Id' };
@@ -152,7 +152,7 @@ const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath, audit
     const updatedFacilities = [...facilities, newFacilityId.toHexString()];
     const dealUpdate = { ...deal, facilities: updatedFacilities };
 
-    const response = await updateDeal(dealId, dealUpdate, user, null, routePath, auditDetails);
+    const response = await updateDeal(dealId, dealUpdate, user, auditDetails, null, routePath);
     const status = isNumber(response?.status, 3);
 
     if (status) {
@@ -180,7 +180,7 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath, aud
         facilities: updatedFacilities,
       };
 
-      const response = await updateDeal(dealId, dealUpdate, user, null, routePath, auditDetails);
+      const response = await updateDeal(dealId, dealUpdate, user, auditDetails, null, routePath);
       const status = isNumber(response?.status, 3);
 
       if (status) {
@@ -217,7 +217,7 @@ exports.updateDealPut = async (req, res) => {
       if (!deal) {
         return res.status(404).send({ status: 404, message: 'Deal not found' });
       }
-      const response = await updateDeal(dealId, dealUpdate, user, deal, req.routePath, auditDetails);
+      const response = await updateDeal(dealId, dealUpdate, user, auditDetails, deal, req.routePath);
       const status = isNumber(response?.status, 3);
       const code = status ? response.status : 200;
 

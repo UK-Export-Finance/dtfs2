@@ -1,3 +1,4 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
@@ -69,6 +70,7 @@ describe('/v1/portal/facilities', () => {
         facilities,
         user: MOCK_PORTAL_USER,
         dealId,
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       };
 
       const { status, body } = await api.post(postBody).to('/v1/portal/multiple-facilities');
@@ -102,6 +104,8 @@ describe('/v1/portal/facilities', () => {
       const postBody = {
         facilities,
         dealId: '61e54dd5b578247e14575880',
+        user: MOCK_PORTAL_USER,
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       };
 
       const { status } = await api.post(postBody).to('/v1/portal/multiple-facilities');
