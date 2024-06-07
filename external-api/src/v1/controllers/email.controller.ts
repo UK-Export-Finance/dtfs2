@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import * as dotenv from 'dotenv';
-import axios, { HttpStatusCode } from 'axios';
+import axios, { AxiosError, HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
 import { MDM } from '../../constants';
 import { getNowAsEpoch } from '../../helpers/date';
@@ -40,7 +39,7 @@ export const emailNotification = async (req: Request, res: Response) => {
       reference,
       personalisation,
     },
-  }).catch((error: any) => {
+  }).catch((error: AxiosError) => {
     console.error('Error calling APIM MDM GovNotify API %o', error);
     return { status: error?.response?.status || HttpStatusCode.UnprocessableEntity, data: 'Failed to call MDM GovNotify API' };
   });

@@ -11,7 +11,7 @@ const { APIM_MDM_URL, EXTERNAL_API_URL } = process.env;
 const { post } = api(app);
 
 const mockSuccessfulResponse = {
-  status: 201,
+  status: HttpStatusCode.Created,
   data: {
     content: {
       body: 'Dear John Smith,\r\n\r\nThe status of your MIA for EuroStar has been updated.\r\n\r\nEmail: test@test.gov.uk\r\nPhone: +44 (0)202 123 4567\r\nOpening times: Monday to Friday, 9am to 5pm (excluding public holidays)',
