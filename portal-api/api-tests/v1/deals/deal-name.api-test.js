@@ -5,7 +5,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
 const { as } = require('../../api')(app);
-const { MAKER } = require('../../../src/v1/roles/roles');
+const { MAKER, READ_ONLY } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const newDeal = aDeal({
@@ -34,7 +34,7 @@ describe('/v1/deals/:id/additionalRefName', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    testUser = testUsers().one();
+    testUser = testUsers().withRole(READ_ONLY).one();
     const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
     [aBarclaysMaker, anotherBarclaysMaker] = barclaysMakers;
   });

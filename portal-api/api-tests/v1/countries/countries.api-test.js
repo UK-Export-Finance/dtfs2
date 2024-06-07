@@ -46,7 +46,7 @@ describe('/v1/countries', () => {
     });
 
     it('returns a list of countries, alphabetised but with GBR/United Kingdom at the top', async () => {
-      const { status, body } = await as(testUsers).get(urlToGetCountries);
+      const { status, body } = await as(testUser).get(urlToGetCountries);
 
       expect(status).toEqual(200);
       expect(body.countries.length).toBeGreaterThan(1);
