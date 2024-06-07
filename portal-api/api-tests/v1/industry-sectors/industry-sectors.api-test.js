@@ -16,9 +16,11 @@ const mockIndustrySectorCode = '1008';
 describe('/v1/industry-sectors', () => {
   let aBarclaysMaker;
   let testUsers;
+  let testUser;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
+    testUser = testUsers().one();
     aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
   });
 
@@ -53,7 +55,7 @@ describe('/v1/industry-sectors', () => {
     });
 
     it('returns an industry sector', async () => {
-      const { status, body } = await as(testUsers).get(`/v1/industry-sectors/${mockIndustrySectorCode}`);
+      const { status, body } = await as(testUser).get(`/v1/industry-sectors/${mockIndustrySectorCode}`);
 
       expect(status).toEqual(200);
       expect(body.code).toBeDefined();

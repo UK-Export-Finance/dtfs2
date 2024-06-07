@@ -28,9 +28,11 @@ const updatedMandatoryCriteria = {
 describe('/v1/mandatory-criteria', () => {
   let anAdmin;
   let testUsers;
+  let testUser;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
+    testUser = testUsers().one();
     anAdmin = testUsers().withRole(ADMIN).one();
   });
 
@@ -50,7 +52,7 @@ describe('/v1/mandatory-criteria', () => {
       await as(anAdmin).post(allMandatoryCriteria[0]).to(allMandatoryCriteriaUrl);
       await as(anAdmin).post(allMandatoryCriteria[1]).to(allMandatoryCriteriaUrl);
 
-      const { body } = await as(testUsers).get(allMandatoryCriteriaUrl);
+      const { body } = await as(testUser).get(allMandatoryCriteriaUrl);
 
       expect(body).toEqual({
         count: allMandatoryCriteria.length,

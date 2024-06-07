@@ -12,6 +12,7 @@ jest.unmock('../../../src/external-api/api');
 
 describe('/v1/countries', () => {
   let testUsers;
+  let testUser;
 
   const gbr = {
     id: 826,
@@ -33,6 +34,7 @@ describe('/v1/countries', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
+    testUser = testUsers().one();
   });
 
   describe('GET /v1/countries', () => {
@@ -65,31 +67,31 @@ describe('/v1/countries', () => {
     });
 
     it('returns the country for "United Kingdom"', async () => {
-      const { status, body } = await as(testUsers).get('/v1/countries/GBR');
+      const { status, body } = await as(testUser).get('/v1/countries/GBR');
       expect(status).toEqual(200);
       expect(body).toEqual(gbr);
     });
 
     it('returns the country for "Abu Dhabi"', async () => {
-      const { status, body } = await as(testUsers).get('/v1/countries/XAD');
+      const { status, body } = await as(testUser).get('/v1/countries/XAD');
       expect(status).toEqual(200);
       expect(body).toEqual(abuDhabi);
     });
 
     it('returns the country for "Dubai"', async () => {
-      const { status, body } = await as(testUsers).get('/v1/countries/XDB');
+      const { status, body } = await as(testUser).get('/v1/countries/XDB');
       expect(status).toEqual(200);
       expect(body).toEqual(dubai);
     });
 
     it("returns 404 when country doesn't exist", async () => {
-      const { status } = await as(testUsers).get('/v1/countries/ABC');
+      const { status } = await as(testUser).get('/v1/countries/ABC');
 
       expect(status).toEqual(404);
     });
 
     it('returns 400 when country id is invalid', async () => {
-      const { status } = await as(testUsers).get('/v1/countries/A12');
+      const { status } = await as(testUser).get('/v1/countries/A12');
 
       expect(status).toEqual(400);
     });

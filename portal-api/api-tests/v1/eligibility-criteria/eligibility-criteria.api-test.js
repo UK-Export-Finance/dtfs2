@@ -27,9 +27,11 @@ const updatedEligibilityCriteria = {
 describe('/v1/eligibility-criteria', () => {
   let anAdmin;
   let testUsers;
+  let testUser;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
+    testUser = testUsers().one();
     anAdmin = testUsers().withRole(ADMIN).one();
   });
 
@@ -50,7 +52,7 @@ describe('/v1/eligibility-criteria', () => {
       await as(anAdmin).post(allEligibilityCriteria[0]).to(eligibilityCriteriaUrl);
       await as(anAdmin).post(allEligibilityCriteria[1]).to(eligibilityCriteriaUrl);
 
-      const { body } = await as(testUsers).get(eligibilityCriteriaUrl);
+      const { body } = await as(testUser).get(eligibilityCriteriaUrl);
       expect(body).toEqual({
         count: allEligibilityCriteria.length,
         eligibilityCriteria: expectMongoIds(

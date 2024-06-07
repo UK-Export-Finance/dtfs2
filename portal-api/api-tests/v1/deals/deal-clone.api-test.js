@@ -44,9 +44,11 @@ dealToClone.ukefDecision = [
 describe('/v1/deals/:id/clone', () => {
   let anHSBCMaker;
   let aBarclaysMaker;
+  let testUser;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
+    testUser = testUsers().one();
     aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
   });
@@ -57,13 +59,13 @@ describe('/v1/deals/:id/clone', () => {
 
   describe('POST /v1/deals/:id/clone', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().post(dealToClone).to('/v1/deals/620a1aa095a618b12da38c7b/clone');
+      const { status } = await as(testUser).post(dealToClone).to('/v1/deals/620a1aa095a618b12da38c7b/clone');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(anHSBCMaker).post(dealToClone).to('/v1/deals/620a1aa095a618b12da38c7b/clone');
+      const { status } = await as(testUser).post(dealToClone).to('/v1/deals/620a1aa095a618b12da38c7b/clone');
 
       expect(status).toEqual(401);
     });
