@@ -7,13 +7,14 @@ import { changeStreamConfig } from '../config';
 const { CHANGE_STREAM_ENABLED } = changeStreamConfig;
 
 type Params = {
-  makeRequest: () => Promise<void>;
+  makeRequest: () => Promise<{ status: number; body: unknown }>;
   collectionName: MongoDbCollectionName;
   auditRecord: AuditDatabaseRecord;
   getDeletedDocumentIds: () => ObjectId[];
+  expectedSuccessResponseBody: object;
 };
 
-export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, getDeletedDocumentIds }: Params) => {
+export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, getDeletedDocumentIds, expectedSuccessResponseBody }: Params) => {
   describe(`when deleting many documents from ${collectionName}`, () => {
     let mongoDbClient: MongoDbClient;
     let deletionAuditLogsCollection: Collection<WithoutId<DeletionAuditLog>>;
@@ -64,6 +65,13 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
           const deletedDocuments = await collection.find({ _id: { $in: getDeletedDocumentIds() } }).toArray();
 
           expect(deletedDocuments.length).toBe(0);
+        });
+
+        it('should return 200', async () => {
+          const { status, body } = await makeRequest();
+
+          expect(status).toBe(200);
+          expect(body).toEqual(expectedSuccessResponseBody);
         });
       });
 
@@ -196,6 +204,12 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
         const deletedDocuments = await collection.find({ _id: { $in: getDeletedDocumentIds() } }).toArray();
 
         expect(deletedDocuments.length).toBe(getDeletedDocumentIds().length);
+      });
+
+      it('should return a 500', async () => {
+        const { status } = await makeRequest();
+
+        expect(status).toBe(500);
       });
     }
   });

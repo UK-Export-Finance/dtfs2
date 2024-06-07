@@ -568,6 +568,7 @@ describe(baseUrl, () => {
         lastUpdatedByPortalUserId: expect.anything(),
       },
       getDeletedDocumentIds: () => facilitiesToDeleteIds,
+      expectedSuccessResponseBody: { acknowledged: true },
     });
   });
 

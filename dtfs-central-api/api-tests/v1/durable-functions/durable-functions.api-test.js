@@ -7,7 +7,7 @@ const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-a
 const { default: db } = require('../../../src/drivers/db-client');
 
 describe('DELETE /v1/portal/durable-functions', () => {
-  let logToDeleteIds;
+  let logsToDeleteIds;
 
   beforeEach(async () => {
     const durableFunctionsLogCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG);
@@ -15,7 +15,7 @@ describe('DELETE /v1/portal/durable-functions', () => {
       { aField: 'aValue', auditRecord: generateSystemAuditDatabaseRecord() },
       { anotherField: 'anotherValue', auditRecord: generateSystemAuditDatabaseRecord() },
     ]);
-    logToDeleteIds = Object.values(insertionResult.insertedIds);
+    logsToDeleteIds = Object.values(insertionResult.insertedIds);
   });
 
   afterAll(() => {
@@ -33,24 +33,15 @@ describe('DELETE /v1/portal/durable-functions', () => {
   });
 
   withDeleteManyTests({
-    makeRequest: async () => {
-      await api
+    makeRequest: () =>
+      api
         .remove({
           auditDetails: generateSystemAuditDetails(),
         })
-        .to(`/v1/portal/durable-functions`);
-    },
+        .to(`/v1/portal/durable-functions`),
     collectionName: MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG,
     auditRecord: generateMockSystemAuditDatabaseRecord(),
-    getDeletedDocumentIds: () => logToDeleteIds,
-  });
-
-  it('returns 200', async () => {
-    const deleteResponse = await api
-      .remove({
-        auditDetails: generateSystemAuditDetails(),
-      })
-      .to(`/v1/portal/durable-functions`);
-    expect(deleteResponse.status).toBe(200);
+    getDeletedDocumentIds: () => logsToDeleteIds,
+    expectedSuccessResponseBody: {},
   });
 });

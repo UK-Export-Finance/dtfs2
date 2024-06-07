@@ -8,7 +8,7 @@ const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-a
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 
 describe('DELETE v1/portal/cron-jobs', () => {
-  let logToDeleteIds;
+  let logsToDeleteIds;
 
   beforeEach(async () => {
     const cronJobLogsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
@@ -16,7 +16,7 @@ describe('DELETE v1/portal/cron-jobs', () => {
       { aField: 'aValue', auditRecord: generateSystemAuditDatabaseRecord() },
       { anotherField: 'anotherValue', auditRecord: generateSystemAuditDatabaseRecord() },
     ]);
-    logToDeleteIds = Object.values(insertionResult.insertedIds);
+    logsToDeleteIds = Object.values(insertionResult.insertedIds);
   });
 
   afterAll(() => {
@@ -34,24 +34,15 @@ describe('DELETE v1/portal/cron-jobs', () => {
   });
 
   withDeleteManyTests({
-    makeRequest: async () => {
-      await api
+    makeRequest: () =>
+      api
         .remove({
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
-        .to(`/v1/portal/cron-jobs`);
-    },
+        .to(`/v1/portal/cron-jobs`),
     collectionName: MONGO_DB_COLLECTIONS.CRON_JOB_LOGS,
     auditRecord: generateMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
-    getDeletedDocumentIds: () => logToDeleteIds,
-  });
-
-  it('returns 200', async () => {
-    const deleteResponse = await api
-      .remove({
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-      })
-      .to(`/v1/portal/cron-jobs`);
-    expect(deleteResponse.status).toBe(200);
+    getDeletedDocumentIds: () => logsToDeleteIds,
+    expectedSuccessResponseBody: {},
   });
 });

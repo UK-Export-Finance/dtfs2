@@ -1,3 +1,4 @@
+import { when } from 'jest-when';
 import { AuditDetails, DURABLE_FUNCTIONS_LOG, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { deleteMany } from '@ukef/dtfs2-common/change-stream';
 import db from '../drivers/db-client';
@@ -37,6 +38,22 @@ describe('durable-functions-repo', () => {
         db,
         auditDetails: generateSystemAuditDetails(),
       });
+    });
+
+    it('returns the response from deleteMany', async () => {
+      const mockDeleteManyResponse = { acknowledged: true };
+      when(deleteMany)
+        .calledWith({
+          filter: expectedDeleteManyCalledWith,
+          collectionName: MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG,
+          db,
+          auditDetails: generateSystemAuditDetails(),
+        })
+        .mockResolvedValueOnce(mockDeleteManyResponse);
+
+      const response = await makeRequest(generateSystemAuditDetails());
+
+      expect(response).toEqual(mockDeleteManyResponse);
     });
   });
 });

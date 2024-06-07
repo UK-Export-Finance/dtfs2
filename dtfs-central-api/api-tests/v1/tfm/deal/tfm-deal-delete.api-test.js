@@ -42,7 +42,7 @@ const newFacilities = [
 describe('/v1/tfm/deal/:id', () => {
   describe('DELETE /v1/tfm/deals', () => {
     let tfmDealToDeleteId;
-    let tfmFacilityToDeleteIds;
+    let tfmFacilitiesToDeleteIds;
 
     beforeEach(async () => {
       const postResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
@@ -63,7 +63,7 @@ describe('/v1/tfm/deal/:id', () => {
       tfmDealToDeleteId = new ObjectId(submitResult.body._id);
 
       const tfmFacilityCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
-      tfmFacilityToDeleteIds = (await tfmFacilityCollection.find({ 'facilitySnapshot.dealId': { $eq: tfmDealToDeleteId } }).toArray()).map(({ _id }) => _id);
+      tfmFacilitiesToDeleteIds = (await tfmFacilityCollection.find({ 'facilitySnapshot.dealId': { $eq: tfmDealToDeleteId } }).toArray()).map(({ _id }) => _id);
     });
 
     afterAll(() => {
@@ -81,29 +81,28 @@ describe('/v1/tfm/deal/:id', () => {
     });
 
     withDeleteOneTests({
-      makeRequest: async () => {
-        await api
+      makeRequest: () =>
+        api
           .remove({
             auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
           })
-          .to(`/v1/tfm/deals/${tfmDealToDeleteId}`);
-      },
+          .to(`/v1/tfm/deals/${tfmDealToDeleteId}`),
       collectionName: MONGO_DB_COLLECTIONS.TFM_DEALS,
       auditRecord: generateMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id),
       getDeletedDocumentId: () => tfmDealToDeleteId,
     });
 
     withDeleteManyTests({
-      makeRequest: async () => {
-        await api
+      makeRequest: () =>
+        api
           .remove({
             auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
           })
-          .to(`/v1/tfm/deals/${tfmDealToDeleteId}`);
-      },
+          .to(`/v1/tfm/deals/${tfmDealToDeleteId}`),
       collectionName: MONGO_DB_COLLECTIONS.TFM_FACILITIES,
       auditRecord: generateMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id),
-      getDeletedDocumentIds: () => tfmFacilityToDeleteIds,
+      getDeletedDocumentIds: () => tfmFacilitiesToDeleteIds,
+      expectedSuccessResponseBody: { acknowledged: true, deletedCount: 1 },
     });
   });
 });
