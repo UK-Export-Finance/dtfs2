@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import * as dotenv from 'dotenv';
-import axios from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
 import { MDM } from '../../constants';
 import { getNowAsEpoch } from '../../helpers/date';
@@ -28,7 +28,7 @@ export const emailNotification = async (req: Request, res: Response) => {
 
   const personalisation = emailVariables;
 
-  console.info('Calling MDM Gov Notify API. templateId %s', templateId);
+  console.info('Calling APIM MDM GovNotify API template id %s', templateId);
 
   const response: { status: number | undefined; data: unknown } = await axios({
     method: 'post',
@@ -41,18 +41,18 @@ export const emailNotification = async (req: Request, res: Response) => {
       personalisation,
     },
   }).catch((error: any) => {
-    console.error('Error calling MDM Gov Notify API %o', error);
-    return { status: error?.response?.status || 422, data: 'Failed to call MDM Gov Notify API' };
+    console.error('Error calling APIM MDM GovNotify API %o', error);
+    return { status: error?.response?.status || HttpStatusCode.UnprocessableEntity, data: 'Failed to call MDM GovNotify API' };
   });
 
   if (!response) {
-    console.error('Empty MDM Gov Notify API response');
-    return res.status(422).send({});
+    console.error('Empty APIM MDM GovNotify API response');
+    return res.status(HttpStatusCode.UnprocessableEntity).send({});
   }
 
   const { status, data } = response;
 
-  return res.status(status || 422).send(data);
+  return res.status(status || HttpStatusCode.UnprocessableEntity).send(data);
 };
 
 export const sendEmail = async (templateId: string, sendToEmailAddress: string, emailVariables: object) => {

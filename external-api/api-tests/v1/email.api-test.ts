@@ -44,7 +44,7 @@ const mockBody = {
 
 describe('/email', () => {
   describe('POST /v1/email', () => {
-    it('should return 201 response from MDM Gov Notify API', async () => {
+    it('should return 201 response from MDM GovNotify API', async () => {
       axiosMock.onPost(`${APIM_MDM_URL}emails`).reply(HttpStatusCode.Created, mockSuccessfulResponse.data);
 
       const { status, body } = await post(mockBody).to('/email');
@@ -53,7 +53,7 @@ describe('/email', () => {
       expect(body).toEqual(mockSuccessfulResponse.data);
     });
 
-    it('should return error status from MDM Gov Notify API if error message is missing', async () => {
+    it('should return error status from MDM GovNotify API if error message is missing', async () => {
       const unknown500Status = Math.floor(Math.random() * 50 + 500);
       axiosMock.onPost(`${APIM_MDM_URL}emails`).reply(unknown500Status, '');
 
@@ -63,7 +63,7 @@ describe('/email', () => {
       expect(body).toEqual({});
     });
 
-    it('should return error status from MDM Gov Notify API if error message provided', async () => {
+    it('should return error status from MDM GovNotify API if error message provided', async () => {
       const errorMessage = 'an error message';
       const unknown500Status = Math.floor(Math.random() * 50) + 500;
       axiosMock.onPost(`${APIM_MDM_URL}emails`).reply(unknown500Status, errorMessage);
@@ -76,7 +76,7 @@ describe('/email', () => {
   });
 
   describe('sendEmail', () => {
-    it('should return 201 response from MDM Gov Notify API', async () => {
+    it('should return 201 response from MDM GovNotify API', async () => {
       axiosMock.onPost(`${EXTERNAL_API_URL}/email`).reply(HttpStatusCode.Created, mockSuccessfulResponse.data);
 
       const response = await sendEmail(mockBody.templateId, mockBody.sendToEmailAddress, mockBody.emailVariables);
@@ -84,7 +84,7 @@ describe('/email', () => {
       expect(response).toEqual(mockSuccessfulResponse.data);
     });
 
-    it('should null in case of error', async () => {
+    it('should return null in case of error', async () => {
       axiosMock.onPost(`${EXTERNAL_API_URL}/email`).reply(HttpStatusCode.Forbidden);
 
       const response = await sendEmail(mockBody.templateId, mockBody.sendToEmailAddress, mockBody.emailVariables);

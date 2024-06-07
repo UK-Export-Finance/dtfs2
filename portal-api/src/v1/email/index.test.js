@@ -85,4 +85,22 @@ describe('sendEmail', () => {
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('Portal API - Failed to send email %o', undefined);
   });
+
+  it('returns error if parameter templateId is missing', async () => {
+    const response = await sendEmail(null, emailAddress, emailVariables);
+
+    expect(response).toStrictEqual({ status: 400, data: 'Missing parameter templateId' });
+  });
+
+  it('returns error if parameter emailAddress is missing', async () => {
+    const response = await sendEmail(templateId, null, emailVariables);
+
+    expect(response).toStrictEqual({ status: 400, data: 'Missing parameter emailAddress' });
+  });
+
+  it('returns error if parameter emailVariables is missing', async () => {
+    const response = await sendEmail(templateId, emailAddress, null);
+
+    expect(response).toStrictEqual({ status: 400, data: 'Missing parameter emailVariables' });
+  });
 });
