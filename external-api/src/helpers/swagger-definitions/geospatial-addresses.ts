@@ -9,10 +9,10 @@
  *         organisationName:
  *            type: string
  *            nullable: true
- *            example: CHURCHILL MUSEUM & CABINET WAR ROOMS
+ *            example: H M TREASURY
  *          addressLine1:
  *            type: string
- *            example: CLIVE STEPS KING CHARLES STREET
+ *            example: 1 HORSE GUARDS ROAD
  *          addressLine2:
  *            type: string
  *            nullable: true
@@ -26,7 +26,7 @@
  *            example: LONDON
  *          postalCode:
  *            type: string
- *            example: SW1A 2AQ
+ *            example: SW1A 2HQ
  *          country:
  *            type: string
  *            example: England

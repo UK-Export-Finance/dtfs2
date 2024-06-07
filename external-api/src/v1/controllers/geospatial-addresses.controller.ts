@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import axios from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
 import { isValidPostcode } from '../../helpers';
@@ -20,7 +20,7 @@ export const lookup = async (req: Request, res: Response) => {
 
   if (!isValidPostcode(noWhitespacePostcode)) {
     console.error('Invalid postcode %s', postcode);
-    return res.status(400).send({ status: 400, data: 'Invalid postcode' });
+    return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid postcode' });
   }
 
   console.info('Calling MDM Geospatial Addresses API %s', postcode);
@@ -31,11 +31,11 @@ export const lookup = async (req: Request, res: Response) => {
     headers,
   }).catch((error: any) => {
     console.error('Error calling MDM Geospatial Addresses API %o', error);
-    return { status: error?.response?.status || 500, data: 'Failed to call Geospatial Addresses API' };
+    return { status: error?.response?.status || HttpStatusCode.InternalServerError, data: 'Failed to call Geospatial Addresses API' };
   });
 
   if (!response) {
-    return res.status(400).send({});
+    return res.status(HttpStatusCode.BadRequest).send({});
   }
 
   const { status, data } = response;

@@ -12,6 +12,7 @@
 
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
+import { ADDRESSES } from '../../src/constants';
 import { app } from '../../src/createApp';
 import { api } from '../api';
 
@@ -22,10 +23,10 @@ const mockResponse = {
   status: 200,
   data: {
     header: {
-      uri: 'https://api.os.co.uk/search/places/v1/postcode?postcode=WR90DJ',
-      query: 'postcode=WR90DJ',
+      uri: `https://api.os.co.uk/search/places/v1/postcode?postcode=${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`,
+      query: `postcode=${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`,
       offset: 0,
-      totalresults: 46,
+      totalresults: 1,
       format: 'JSON',
       dataset: 'DPA',
       lr: 'EN,CY',
@@ -36,80 +37,69 @@ const mockResponse = {
     results: [
       {
         DPA: {
-          UPRN: '100120684064',
-          UDPRN: '26788471',
-          ADDRESS: '1, NUFFIELD DRIVE, DROITWICH, WR9 0DJ',
+          UPRN: '10033548201',
+          UDPRN: '23748017',
+          ADDRESS: 'H M TREASURY, 1, HORSE GUARDS ROAD, LONDON, SW1A 2HQ',
+          ORGANISATION_NAME: 'H M TREASURY',
           BUILDING_NUMBER: '1',
-          THOROUGHFARE_NAME: 'NUFFIELD DRIVE',
-          POST_TOWN: 'DROITWICH',
-          POSTCODE: 'WR9 0DJ',
+          THOROUGHFARE_NAME: 'HORSE GUARDS ROAD',
+          POST_TOWN: 'LONDON',
+          POSTCODE: 'SW1A 2HQ',
           RPC: '2',
-          X_COORDINATE: 388468.3,
-          Y_COORDINATE: 263305.6,
+          X_COORDINATE: 529944.0,
+          Y_COORDINATE: 179754.0,
           STATUS: 'APPROVED',
           LOGICAL_STATUS_CODE: '1',
-          CLASSIFICATION_CODE: 'RD02',
-          CLASSIFICATION_CODE_DESCRIPTION: 'Detached',
-          LOCAL_CUSTODIAN_CODE: 1840,
-          LOCAL_CUSTODIAN_CODE_DESCRIPTION: 'WYCHAVON',
+          CLASSIFICATION_CODE: 'CO01',
+          CLASSIFICATION_CODE_DESCRIPTION: 'Office / Work Studio',
+          LOCAL_CUSTODIAN_CODE: 5990,
+          LOCAL_CUSTODIAN_CODE_DESCRIPTION: 'CITY OF WESTMINSTER',
+          COUNTRY_CODE: 'E',
+          COUNTRY_CODE_DESCRIPTION: 'This record is within England',
           POSTAL_ADDRESS_CODE: 'D',
           POSTAL_ADDRESS_CODE_DESCRIPTION: 'A record which is linked to PAF',
-          BLPU_STATE_CODE: null,
-          BLPU_STATE_CODE_DESCRIPTION: 'Unknown/Not applicable',
-          TOPOGRAPHY_LAYER_TOID: 'mock-1',
-          LAST_UPDATE_DATE: '10/02/2016',
-          ENTRY_DATE: '22/09/2000',
+          BLPU_STATE_CODE: '2',
+          BLPU_STATE_CODE_DESCRIPTION: 'In use',
+          TOPOGRAPHY_LAYER_TOID: 'abcd1000042216423',
+          WARD_CODE: 'E05013806',
+          LAST_UPDATE_DATE: '12/11/2018',
+          ENTRY_DATE: '27/04/2003',
+          BLPU_STATE_DATE: '27/04/2003',
           LANGUAGE: 'EN',
-          MATCH: 1,
+          MATCH: 1.0,
           MATCH_DESCRIPTION: 'EXACT',
-        },
-      },
-      {
-        DPA: {
-          UPRN: '100120684065',
-          UDPRN: '26788481',
-          ADDRESS: '2, NUFFIELD DRIVE, DROITWICH, WR9 0DJ',
-          BUILDING_NUMBER: '2',
-          THOROUGHFARE_NAME: 'NUFFIELD DRIVE',
-          POST_TOWN: 'DROITWICH',
-          POSTCODE: 'WR9 0DJ',
-          RPC: '2',
-          X_COORDINATE: 388504.3,
-          Y_COORDINATE: 263362.3,
-          STATUS: 'APPROVED',
-          LOGICAL_STATUS_CODE: '1',
-          CLASSIFICATION_CODE: 'RD02',
-          CLASSIFICATION_CODE_DESCRIPTION: 'Detached',
-          LOCAL_CUSTODIAN_CODE: 1840,
-          LOCAL_CUSTODIAN_CODE_DESCRIPTION: 'WYCHAVON',
-          POSTAL_ADDRESS_CODE: 'D',
-          POSTAL_ADDRESS_CODE_DESCRIPTION: 'A record which is linked to PAF',
-          BLPU_STATE_CODE: null,
-          BLPU_STATE_CODE_DESCRIPTION: 'Unknown/Not applicable',
-          TOPOGRAPHY_LAYER_TOID: 'mock-2',
-          LAST_UPDATE_DATE: '17/03/2020',
-          ENTRY_DATE: '22/09/2000',
-          LANGUAGE: 'EN',
-          MATCH: 1,
-          MATCH_DESCRIPTION: 'EXACT',
+          DELIVERY_POINT_SUFFIX: '1A',
         },
       },
     ],
   },
 };
 
-// Mock Axios
 const axiosMock = new MockAdapter(axios);
 
-axiosMock.onGet(`${APIM_MDM_URL}geospatial/addresses/postcode?postcode=WR90DJ`).reply(HttpStatusCode.Ok, mockResponse.data);
+axiosMock
+  .onGet(`${APIM_MDM_URL}geospatial/addresses/postcode?postcode=${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`)
+  .reply(HttpStatusCode.Ok, mockResponse.data);
 
 describe('/geospatial/addresses/postcode', () => {
   describe('GET /geospatial/addresses/postcode', () => {
     it('returns a list of addresses', async () => {
-      const { status, body } = await get('/geospatial/addresses/postcode/WR90DJ');
+      const { status, body } = await get(`/geospatial/addresses/postcode/${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`);
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
       expect(body.results).toBeDefined();
+    });
+
+    it('returns a 500 response when MDM returns 500', async () => {
+      axiosMock
+        .onGet(`${APIM_MDM_URL}geospatial/addresses/postcode?postcode=${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`)
+        .reply(HttpStatusCode.InternalServerError, '');
+
+      const { status, body } = await get(`/geospatial/addresses/postcode/${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`);
+
+      expect(status).toEqual(HttpStatusCode.InternalServerError);
+      expect(body).toBeDefined();
+      expect(body).toBe({});
     });
   });
 
@@ -119,8 +109,8 @@ describe('/geospatial/addresses/postcode', () => {
     test.each(invalidPostcodeTestCases)('returns a 400 if you provide an invalid postcode %s', async (postcode) => {
       const { status, body } = await get(`/geospatial/addresses/postcode/${postcode}`);
 
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid postcode', status: 400 });
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body).toMatchObject({ data: 'Invalid postcode', status: HttpStatusCode.BadRequest });
     });
   });
 });
