@@ -107,7 +107,7 @@ describe(baseUrl, () => {
     it('returns a 422 response if backend returns 500', async () => {
       jest.mock('../../../src/external-api/api', () => ({
         geospatialAddresses: {
-          getAddressesByPostcode: () => ({ status: 500 }),
+          getAddressesByPostcode: () => ({ status: HttpStatusCode.InternalServerError }),
         },
       }));
 
