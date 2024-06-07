@@ -6,6 +6,9 @@ import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { mapFeeRecordItemsToFeeRecordViewModelItems } from '../helpers';
 import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 import { getAndClearAddPaymentFieldsFromRedirectSessionData } from './get-and-clear-add-payment-fields-from-redirect-session-data';
+import { FeeRecordItem } from '../../../api-response-types';
+
+const isAtLeastOnePaymentReceivedNonNull = (feeRecords: FeeRecordItem[]): boolean => feeRecords.some(({ paymentsReceived }) => paymentsReceived !== null);
 
 const renderUtilisationReportReconciliationForReport = (res: Response, viewModel: UtilisationReportReconciliationForReportViewModel) =>
   res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', viewModel);
@@ -17,19 +20,22 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
   try {
     const { addPaymentErrorSummary, isCheckboxChecked } = getAndClearAddPaymentFieldsFromRedirectSessionData(req);
 
-    const utilisationReportReconciliationDetails = await api.getUtilisationReportReconciliationDetailsById(reportId, userToken);
+    const { feeRecords, reportPeriod, bank } = await api.getUtilisationReportReconciliationDetailsById(reportId, userToken);
 
-    const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(utilisationReportReconciliationDetails.reportPeriod);
+    const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(reportPeriod);
 
-    const feeRecordViewModel = mapFeeRecordItemsToFeeRecordViewModelItems(utilisationReportReconciliationDetails.feeRecords, isCheckboxChecked);
+    const feeRecordViewModel = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecords, isCheckboxChecked);
+
+    const enablePaymentsReceivedSorting = isAtLeastOnePaymentReceivedNonNull(feeRecords);
 
     return renderUtilisationReportReconciliationForReport(res, {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
-      bank: utilisationReportReconciliationDetails.bank,
+      bank,
       formattedReportPeriod,
-      reportId: utilisationReportReconciliationDetails.reportId,
+      reportId,
       feeRecords: feeRecordViewModel,
+      enablePaymentsReceivedSorting,
       errorSummary: addPaymentErrorSummary,
     });
   } catch (error) {
