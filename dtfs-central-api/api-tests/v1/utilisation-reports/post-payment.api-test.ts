@@ -269,7 +269,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     // Arrange
     const feeRecordId = 10;
     const existingPaymentReference = 'First payment';
-    const existingPayment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(feeRecordId).withPaymentReference(existingPaymentReference).build();
+    const existingPayment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(feeRecordId).withReference(existingPaymentReference).build();
     const newFeeRecord = FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport)
       .withId(10)
       .withPaymentCurrency(paymentCurrency)
@@ -303,13 +303,13 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
       expect.objectContaining<Partial<PaymentEntity>>({
         id: feeRecordId,
         currency: paymentCurrency,
-        paymentReference: existingPaymentReference,
+        reference: existingPaymentReference,
       }),
     );
     expect(payments[1]).toEqual(
       expect.objectContaining<Partial<PaymentEntity>>({
         currency: paymentCurrency,
-        paymentReference: newPaymentReference,
+        reference: newPaymentReference,
       }),
     );
   });
@@ -338,7 +338,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
       .build();
 
     const firstPayment = PaymentEntityMockBuilder.forCurrency(paymentCurrency)
-      .withAmountReceived(firstPaymentAmount)
+      .withAmount(firstPaymentAmount)
       .withFeeRecords([firstFeeRecord, secondFeeRecord])
       .build();
 
@@ -388,7 +388,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
       .build();
 
     const firstPayment = PaymentEntityMockBuilder.forCurrency(paymentCurrency)
-      .withAmountReceived(firstPaymentAmount)
+      .withAmount(firstPaymentAmount)
       .withFeeRecords([firstFeeRecord, secondFeeRecord])
       .build();
 

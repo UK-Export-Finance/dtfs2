@@ -4,9 +4,9 @@ import { DbRequestSource } from '../helpers';
 
 export type CreatePaymentParams = {
   currency: Currency;
-  amountReceived: number;
+  amount: number;
   dateReceived: Date;
-  paymentReference?: string;
+  reference?: string;
   feeRecords: FeeRecordEntity[];
   requestSource: DbRequestSource;
 };
