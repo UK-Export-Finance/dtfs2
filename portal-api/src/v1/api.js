@@ -123,7 +123,7 @@ const addDealComment = async (dealId, commentType, comment) => {
   }
 };
 
-const createFacility = async (facility, user) => {
+const createFacility = async (facility, user, auditDetails) => {
   try {
     return await axios({
       method: 'post',
@@ -132,6 +132,7 @@ const createFacility = async (facility, user) => {
       data: {
         facility,
         user,
+        auditDetails,
       },
     });
   } catch ({ response }) {
@@ -139,7 +140,7 @@ const createFacility = async (facility, user) => {
   }
 };
 
-const createMultipleFacilities = async (facilities, dealId, user) => {
+const createMultipleFacilities = async (facilities, dealId, user, auditDetails) => {
   try {
     return await axios({
       method: 'post',
@@ -149,6 +150,7 @@ const createMultipleFacilities = async (facilities, dealId, user) => {
         facilities,
         dealId,
         user,
+        auditDetails,
       },
     });
   } catch ({ response }) {

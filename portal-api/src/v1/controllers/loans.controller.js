@@ -13,12 +13,17 @@ const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
 
 exports.create = async (req, res) => {
-  if (!isValidMongoId(req?.params?.id)) {
-    console.error('Create loans API failed for deal id %s', req.params.id);
+  const {
+    user,
+    params: { dealId },
+    body,
+  } = req;
+  if (!isValidMongoId(dealId)) {
+    console.error('Create loans API failed for deal id %s', dealId);
     return res.status(400).send({ status: 400, message: 'Invalid id provided' });
   }
 
-  return findOneDeal(req.params.id, async (deal) => {
+  return findOneDeal(dealId, async (deal) => {
     if (!deal) return res.status(404).send();
 
     if (!userHasAccessTo(req.user, deal)) {
@@ -27,11 +32,13 @@ exports.create = async (req, res) => {
 
     const facilityBody = {
       type: 'Loan',
-      dealId: req.params.id,
-      ...req.body,
+      dealId,
+      ...body,
     };
 
-    const { status, data } = await facilitiesController.create(facilityBody, req.user);
+    const auditDetails = generatePortalAuditDetails(user._id);
+
+    const { status, data } = await facilitiesController.create(facilityBody, user, auditDetails);
 
     return res.status(status).send({
       ...data,

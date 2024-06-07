@@ -1,3 +1,4 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 const api = require('../api');
 const { escapeOperators } = require('../helpers/escapeOperators');
@@ -7,8 +8,8 @@ const { updateDeal } = require('./deal.controller');
 /**
  * Create a facility (BSS, EWCS only)
  */
-exports.create = async (facilityBody, user) => {
-  const createdFacility = await api.createFacility(facilityBody, user);
+exports.create = async (facilityBody, user, auditDetails) => {
+  const createdFacility = await api.createFacility(facilityBody, user, auditDetails);
 
   const { status, data } = createdFacility;
   const { _id } = data;
@@ -53,7 +54,9 @@ exports.delete = async (facilityId, user, auditDetails) => api.deleteFacility(fa
 exports.createMultiple = async (req, res) => {
   const { facilities, dealId, user } = req.body;
 
-  const { data: ids } = await api.createMultipleFacilities(facilities, dealId, user);
+  const auditDetails = generatePortalAuditDetails(user._id);
+
+  const { data: ids } = await api.createMultipleFacilities(facilities, dealId, user, auditDetails);
 
   const allFacilities = await Promise.all(
     ids.map(async (id) => {
@@ -68,7 +71,7 @@ exports.createMultiple = async (req, res) => {
 /**
  * Create multiple facilities (BSS, EWCS only)
  */
-exports.createMultipleFacilities = async (facilities, dealId, user) => api.createMultipleFacilities(facilities, dealId, user);
+exports.createMultipleFacilities = async (facilities, dealId, user, auditDetails) => api.createMultipleFacilities(facilities, dealId, user, auditDetails);
 
 /**
  * Queries all facilities in the facilities collection (BSS, EWCS, GEF)
