@@ -1234,7 +1234,7 @@ const getUtilisationReportById = async (id) => {
 /**
  * Sends a payload to DTFS central API to update
  * the status of one or more utilisation reports
- * @param {import('../types/utilisation-reports').ReportWithStatus[]} reportsWithStatus
+ * @param {import('@ukef/dtfs2-common').ReportWithStatus[]} reportsWithStatus
  * @param {import('../types/tfm-session-user').TfmSessionUser} user - The current user stored in the session
  * @returns {Promise<{ status: number }>}
  */
@@ -1285,7 +1285,7 @@ const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds) => {
 /**
  * Gets the utilisation report summaries by bank id and year
  * @param {string} bankId - The bank id
- * @param { string} year - The year which a report period ends in
+ * @param {string} year - The year which a report period ends in
  * @returns {Promise<import('./api-response-types').UtilisationReportSummariesByBankAndYearResponseBody>}
  */
 const getUtilisationReportSummariesByBankIdAndYear = async (bankId, year) => {
@@ -1294,6 +1294,33 @@ const getUtilisationReportSummariesByBankIdAndYear = async (bankId, year) => {
     headers: headers.central,
   });
 
+  return response.data;
+};
+
+/**
+ * Adds a new payment to the supplied fee records
+ * @param {string} reportId - The report id
+ * @param {number[]} feeRecordIds - The list of fee record ids to add the payment to
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The user adding the payment
+ * @param {import('@ukef/dtfs2-common').Currency} paymentCurrency - The payment currency
+ * @param {number} paymentAmount - The payment amount
+ * @param {import('@ukef/dtfs2-common').IsoDateTimeStamp} datePaymentReceived - The date the payment was received
+ * @param {string | undefined} paymentReference - The payment reference
+ */
+const addPaymentToFeeRecords = async (reportId, feeRecordIds, user, paymentCurrency, paymentAmount, datePaymentReceived, paymentReference) => {
+  const response = await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/payment`,
+    method: 'post',
+    headers: headers.central,
+    data: {
+      feeRecordIds,
+      user,
+      paymentCurrency,
+      paymentAmount,
+      datePaymentReceived,
+      paymentReference,
+    },
+  });
   return response.data;
 };
 
@@ -1359,4 +1386,5 @@ module.exports = {
   getUtilisationReportReconciliationDetailsById,
   getSelectedFeeRecordsDetails,
   getUtilisationReportSummariesByBankIdAndYear,
+  addPaymentToFeeRecords,
 };

@@ -1,10 +1,11 @@
 import { Response } from 'express';
-import { SelectedFeeRecordsDetails, getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { Currency, SelectedFeeRecordsDetails, getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { AddPaymentErrorsViewModel, AddPaymentViewModel, SelectedReportedFeesDetailsViewModel } from '../../../types/view-models';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import {
   getFeeRecordIdFromPremiumPaymentsCheckboxId,
+  getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId,
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
 } from '../../../helpers/premium-payments-table-checkbox-id-helper';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
@@ -29,6 +30,9 @@ export type AddPaymentRequestBody = Record<PremiumPaymentsTableCheckboxId, 'on'>
 export type AddPaymentRequest = CustomExpressRequest<{
   reqBody: AddPaymentRequestBody;
 }>;
+
+const EMPTY_ADD_PAYMENT_ERRORS: AddPaymentErrorsViewModel = { errorSummary: [] };
+const EMPTY_ADD_PAYMENT_FORM_VALUES: AddPaymentFormValues = { paymentDate: {} };
 
 const extractFormValuesFromRequestBody = (requestBody: AddPaymentRequestBody): AddPaymentFormValues => ({
   paymentCurrency: requestBody.paymentCurrency,
@@ -65,19 +69,27 @@ const mapToSelectedReportedFeesDetailsViewModel = (selectedFeeRecordData: Select
 
 const extractAddPaymentFormValuesAndValidateIfPresent = (
   requestBody: AddPaymentRequestBody,
-): { errors: AddPaymentErrorsViewModel; formValues: AddPaymentFormValues; paymentNumber?: number } => {
-  if (!('addPaymentFormSubmission' in requestBody)) {
+  feeRecordPaymentCurrency: Currency,
+): { isAddingPayment: boolean; errors: AddPaymentErrorsViewModel; formValues: AddPaymentFormValues; paymentNumber?: number } => {
+  const isAddingPayment = 'addPaymentFormSubmission' in requestBody;
+
+  if (!isAddingPayment) {
     return {
-      errors: { errorSummary: [] },
-      formValues: { paymentDate: {} },
+      isAddingPayment,
+      errors: EMPTY_ADD_PAYMENT_ERRORS,
+      formValues: EMPTY_ADD_PAYMENT_FORM_VALUES,
     };
   }
 
+  const paymentNumber = Number(requestBody.paymentNumber);
+
   const formValues = extractFormValuesFromRequestBody(requestBody);
+  const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
   return {
+    isAddingPayment,
     formValues,
-    errors: validateAddPaymentRequestFormValues(formValues),
-    paymentNumber: Number(requestBody.paymentNumber),
+    errors,
+    paymentNumber,
   };
 };
 
@@ -87,21 +99,27 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
     const { reportId } = req.params;
     const checkedCheckboxIds = getPremiumPaymentsCheckboxIdsFromObjectKeys(req.body);
     const feeRecordIds = checkedCheckboxIds.map((checkboxId) => getFeeRecordIdFromPremiumPaymentsCheckboxId(checkboxId));
-    const { errors, formValues, paymentNumber } = extractAddPaymentFormValuesAndValidateIfPresent(req.body);
+    const feeRecordPaymentCurrency = getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId(checkedCheckboxIds[0]);
 
-    if ('addPaymentFormSubmission' in req.body && errors.errorSummary.length === 0) {
-      // TODO FN-1739 save data upon valid submission
-      return res.status(501).send('Your request was valid, but we have not finished building the feature');
+    const { isAddingPayment, errors, formValues, paymentNumber } = extractAddPaymentFormValuesAndValidateIfPresent(req.body, feeRecordPaymentCurrency);
+    const canSubmitFormValues = errors.errorSummary.length === 0;
+
+    if (isAddingPayment && canSubmitFormValues) {
+      const { addAnotherPayment, ...paymentFormValues } = formValues;
+      await api.addPaymentToFeeRecords(reportId, paymentFormValues, feeRecordIds, user, userToken);
+      if (addAnotherPayment && addAnotherPayment !== 'true') {
+        return res.redirect(`/utilisation-reports/${reportId}`);
+      }
     }
 
-    const selectedFeeRecordDetails = await api.getSelectedFeeRecordsDetails(Number(reportId), feeRecordIds, userToken);
+    const selectedFeeRecordDetails = await api.getSelectedFeeRecordsDetails(reportId, feeRecordIds, userToken);
     return renderAddPaymentPage(res, {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
-      reportId: Number(reportId),
+      reportId,
       selectedFeeRecordCheckboxIds: checkedCheckboxIds,
       errors,
-      formValues,
+      formValues: canSubmitFormValues ? EMPTY_ADD_PAYMENT_FORM_VALUES : formValues,
       paymentNumber,
       bank: selectedFeeRecordDetails.bank,
       formattedReportPeriod: getFormattedReportPeriodWithLongMonth(selectedFeeRecordDetails.reportPeriod),

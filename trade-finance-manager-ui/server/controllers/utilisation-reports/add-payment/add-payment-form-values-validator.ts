@@ -1,4 +1,4 @@
-import { CURRENCY, isNonEmptyString } from '@ukef/dtfs2-common';
+import { CURRENCY, Currency, isNonEmptyString } from '@ukef/dtfs2-common';
 import { isBefore, isValid, parseISO, startOfDay } from 'date-fns';
 import { REGEX } from '../../../constants';
 import { AddPaymentErrorsViewModel, AddPaymentPaymentDateErrorViewModel, ErrorSummaryViewModel } from '../../../types/view-models';
@@ -9,8 +9,18 @@ const isCurrencyNumberOptionallyWithThousandsSeparators = (value: string) => {
   return currencyNumberWithOptionalThousandsSeparatorsRegex.test(value);
 };
 
-const isPaymentCurrencyValid = (paymentCurrency: string | undefined): boolean => {
+const isPaymentCurrencyValid = (paymentCurrency: string | undefined): paymentCurrency is Currency => {
   return isNonEmptyString(paymentCurrency) && (Object.values(CURRENCY) as string[]).includes(paymentCurrency);
+};
+
+const getPaymentCurrencyValidationsErrors = (paymentCurrency: string | undefined, feeRecordPaymentCurrency: Currency): string | undefined => {
+  if (!isPaymentCurrencyValid(paymentCurrency)) {
+    return 'Select payment currency';
+  }
+  if (paymentCurrency !== feeRecordPaymentCurrency) {
+    return 'The new payment currency must be the same as the reported payment currency of the selected fees';
+  }
+  return undefined;
 };
 
 const isPaymentAmountValid = (paymentAmount: string | undefined): boolean => {
@@ -127,10 +137,10 @@ const getPaymentDateHref = (paymentDateError: AddPaymentPaymentDateErrorViewMode
   return '#paymentDate-year';
 };
 
-export const validateAddPaymentRequestFormValues = (formValues: AddPaymentFormValues): AddPaymentErrorsViewModel => {
+export const validateAddPaymentRequestFormValues = (formValues: AddPaymentFormValues, feeRecordPaymentCurrency: Currency): AddPaymentErrorsViewModel => {
   const errorSummary: ErrorSummaryViewModel[] = [];
 
-  const paymentCurrencyErrorMessage = isPaymentCurrencyValid(formValues.paymentCurrency) ? undefined : 'Select payment currency';
+  const paymentCurrencyErrorMessage = getPaymentCurrencyValidationsErrors(formValues.paymentCurrency, feeRecordPaymentCurrency);
   if (paymentCurrencyErrorMessage) {
     errorSummary.push({ text: paymentCurrencyErrorMessage, href: '#paymentCurrency' });
   }
