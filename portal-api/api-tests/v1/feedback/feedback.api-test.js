@@ -63,7 +63,7 @@ describe('/v1/feedback', () => {
     });
 
     it('returns 200 for requests that do not come from a user with role=maker || role=checker', async () => {
-      const { status } = await as(testUser).post(getFeedbackToSubmit(testUsers)).to('/v1/feedback');
+      const { status } = await as(testUser).post(getFeedbackToSubmit(testUser)).to('/v1/feedback');
       expect(status).toEqual(200);
     });
 
