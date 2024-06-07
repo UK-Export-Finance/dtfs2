@@ -5,7 +5,7 @@
  * @returns {Array} either an empty array or an array containing an error object
  */
 const surnameMustNotBeEmpty = (user, change) => {
-  if (typeof change.surname !== 'string' || !change.surname.trim()) {
+  if (!change.surname || !change.surname.trim()) {
     return [
       {
         surname: {

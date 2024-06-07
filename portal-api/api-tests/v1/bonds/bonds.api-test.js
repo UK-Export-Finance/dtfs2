@@ -66,6 +66,7 @@ describe('/v1/deals/:id/bond', () => {
   let aBarclaysMaker;
   let anHSBCMaker;
   let aSuperuser;
+  let testUser;
 
   const createBond = async () => {
     const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
@@ -81,7 +82,7 @@ describe('/v1/deals/:id/bond', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-
+    testUser = testUsers().withRole(READ_ONLY).one();
     aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
@@ -730,11 +731,11 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(401);
     });
 
-    // it('401s requests that do not come from a user with role=maker', async () => {
-    //   const { status } = await as(noRoles).remove(`/v1/deals/${dealId}/bond/12345678`);
+    it('401s requests that do not come from a user with role=maker', async () => {
+      const { status } = await as(testUser).remove(`/v1/deals/${dealId}/bond/12345678`);
 
-    //   expect(status).toEqual(401);
-    // });
+      expect(status).toEqual(401);
+    });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
       const { status } = await as(anHSBCMaker).remove(`/v1/deals/${dealId}/bond/12345678`);
