@@ -194,7 +194,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', '/banks-decision/check-answers');
-    amendmentsPage.underWritingSubmitButton().click();
+    amendmentsPage.assignLeadUnderwriterSaveButton().click();
   });
 
   it('should throw an error if keeping the same facility value.  should submit amendment if same coverEndDate but different facility value', () => {
@@ -292,7 +292,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', '/banks-decision/check-answers');
-    amendmentsPage.underWritingSubmitButton().click();
+    amendmentsPage.assignLeadUnderwriterSaveButton().click();
   });
 
   it('should submit an amendment without errors with same values as last request as was withdrawn by bank', () => {

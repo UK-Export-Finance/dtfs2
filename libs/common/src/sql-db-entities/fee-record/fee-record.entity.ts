@@ -3,7 +3,7 @@ import Big from 'big.js';
 import { UtilisationReportEntity } from '../utilisation-report';
 import { Currency, FeeRecordStatus } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
-import { CreateFeeRecordParams } from './fee-record.types';
+import { CreateFeeRecordParams, UpdateWithStatusParams } from './fee-record.types';
 import { MonetaryColumn, ExchangeRateColumn } from '../custom-columns';
 import { PaymentEntity } from '../payment';
 
@@ -103,6 +103,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
    */
   @ManyToMany(() => PaymentEntity, (payment) => payment.feeRecords, {
     cascade: ['insert'],
+    onDelete: 'CASCADE',
   })
   @JoinTable()
   payments!: PaymentEntity[];
@@ -152,5 +153,10 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     const paymentExchangeRateAsBig = new Big(this.paymentExchangeRate);
     const precision = 2;
     return feesPaidToUkefForThePeriodAsBig.div(paymentExchangeRateAsBig).round(precision).toNumber();
+  }
+
+  public updateWithStatus({ status, requestSource }: UpdateWithStatusParams): void {
+    this.status = status;
+    this.updateLastUpdatedBy(requestSource);
   }
 }

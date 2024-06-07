@@ -29,7 +29,7 @@
             rows: [
               {
                 key: {
-                  text: leadUnderwriter.firstName + " " + leadUnderwriter.lastName
+                  html: '<span data-cy="amendment--lead-underwriter-fullname">' + leadUnderwriter.firstName + ' ' + leadUnderwriter.lastName + '</span>'
                 },
                 value: {
                   html: '<a class="govuk-link" href="mailto:'+leadUnderwriter.email+'" data-cy="amendment--lead-underwriter-email">'+leadUnderwriter.email+'</a>'
