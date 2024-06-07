@@ -9,8 +9,6 @@ const { Application } = require('../models/application');
 const { calculateUkefExposure, calculateGuaranteeFee } = require('../calculations/facility-calculations');
 const { InvalidDatabaseQueryError } = require('../../errors/invalid-database-query.error');
 
-const dealsCollectionName = 'deals';
-
 exports.create = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
   if (!req.body.type || !req.body.dealId) {
@@ -122,7 +120,7 @@ exports.getById = async (req, res) => {
 const update = async (id, updateBody, auditDetails) => {
   try {
     const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
-    const dealsCollection = await db.getCollection(dealsCollectionName);
+    const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
     const facilityId = ObjectId(String(id));
 

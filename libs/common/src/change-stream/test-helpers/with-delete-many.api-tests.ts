@@ -14,7 +14,7 @@ type Params = {
 };
 
 export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, getDeletedDocumentIds }: Params) => {
-  describe(`when deleting a document from ${collectionName}`, () => {
+  describe(`when deleting many documents from ${collectionName}`, () => {
     let mongoDbClient: MongoDbClient;
     let deletionAuditLogsCollection: Collection<WithoutId<DeletionAuditLog>>;
     const deleteManyMock = jest.spyOn(Collection.prototype, 'deleteMany');
@@ -41,17 +41,10 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
 
     if (CHANGE_STREAM_ENABLED) {
       describe('when the service is working normally', () => {
-        it('should add a deletion audit log', async () => {
+        it('should add deletion audit logs', async () => {
           await makeRequest();
 
-          const deletionAuditLogs = await deletionAuditLogsCollection
-            .find({
-              $or: getDeletedDocumentIds().map((deletedDocumentId) => ({
-                collectionName: { $eq: collectionName },
-                deletedDocumentId: { $eq: deletedDocumentId },
-              })),
-            })
-            .toArray();
+          const deletionAuditLogs = await deletionAuditLogsCollection.find({ collectionName, deletedDocumentId: { $in: getDeletedDocumentIds() } }).toArray();
 
           expect(deletionAuditLogs).toEqual(
             getDeletedDocumentIds().map((id) => ({
@@ -68,13 +61,7 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
           await makeRequest();
 
           const collection = await mongoDbClient.getCollection(collectionName);
-          const deletedDocuments = await collection
-            .find({
-              $or: getDeletedDocumentIds().map((deletedDocumentId) => ({
-                _id: { $eq: deletedDocumentId },
-              })),
-            })
-            .toArray();
+          const deletedDocuments = await collection.find({ _id: { $in: getDeletedDocumentIds() } }).toArray();
 
           expect(deletedDocuments.length).toBe(0);
         });
@@ -84,24 +71,36 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
         beforeEach(() => {
           when(deleteManyMock)
             // @ts-ignore
-            .calledWith(expect.anything() as object, { session: expect.any(ClientSession) as ClientSession })
-            .mockImplementationOnce(() => ({
+            .calledWith(
+              { $or: expect.arrayContaining(getDeletedDocumentIds().map((_id) => ({ _id: new ObjectId(_id) }))) as { _id: ObjectId }[] },
+              {
+                session: expect.any(ClientSession) as ClientSession,
+              },
+            )
+            // @ts-ignore
+            .mockResolvedValueOnce({
               acknowledged: false,
-            }));
+            });
         });
 
         itDoesNotUpdateTheDatabase();
       });
 
-      describe('when no document is deleted', () => {
+      describe('when no documents are deleted', () => {
         beforeEach(() => {
           when(deleteManyMock)
             // @ts-ignore
-            .calledWith(expect.anything() as object, { session: expect.any(ClientSession) as ClientSession })
-            .mockImplementationOnce(() => ({
+            .calledWith(
+              { $or: expect.arrayContaining(getDeletedDocumentIds().map((_id) => ({ _id: new ObjectId(_id) }))) as { _id: ObjectId }[] },
+              {
+                session: expect.any(ClientSession) as ClientSession,
+              },
+            )
+            // @ts-ignore
+            .mockResolvedValueOnce({
               acknowledged: true,
               deletedCount: 0,
-            }));
+            });
         });
 
         itDoesNotUpdateTheDatabase();
@@ -111,7 +110,12 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
         beforeEach(() => {
           when(deleteManyMock)
             // @ts-ignore
-            .calledWith(expect.anything() as object, { session: expect.any(ClientSession) as ClientSession })
+            .calledWith(
+              { $or: expect.arrayContaining(getDeletedDocumentIds().map((_id) => ({ _id: new ObjectId(_id) }))) as { _id: ObjectId }[] },
+              {
+                session: expect.any(ClientSession) as ClientSession,
+              },
+            )
             .mockImplementationOnce(() => {
               throw new Error();
             });
@@ -124,10 +128,21 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
         beforeEach(() => {
           when(insertManyMock)
             // @ts-ignore
-            .calledWith(expect.anything() as DeletionAuditLog[], { session: expect.any(ClientSession) as ClientSession })
-            .mockImplementationOnce(() => ({
+            .calledWith(
+              expect.arrayContaining(
+                getDeletedDocumentIds().map((id) => ({
+                  collectionName,
+                  deletedDocumentId: new ObjectId(id),
+                  auditRecord,
+                  expireAt: expect.any(Date) as Date,
+                })),
+              ) as WithoutId<DeletionAuditLog>[],
+              { session: expect.any(ClientSession) as ClientSession },
+            )
+            // @ts-ignore
+            .mockResolvedValueOnce({
               acknowledged: false,
-            }));
+            });
         });
 
         itDoesNotUpdateTheDatabase();
@@ -137,7 +152,17 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
         beforeEach(() => {
           when(insertManyMock)
             // @ts-ignore
-            .calledWith(expect.anything() as DeletionAuditLog[], { session: expect.any(ClientSession) as ClientSession })
+            .calledWith(
+              expect.arrayContaining(
+                getDeletedDocumentIds().map((id) => ({
+                  collectionName,
+                  deletedDocumentId: new ObjectId(id),
+                  auditRecord,
+                  expireAt: expect.any(Date) as Date,
+                })),
+              ) as WithoutId<DeletionAuditLog>[],
+              { session: expect.any(ClientSession) as ClientSession },
+            )
             .mockImplementationOnce(() => {
               throw new Error();
             });
@@ -150,44 +175,25 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
         await makeRequest();
 
         const collection = await mongoDbClient.getCollection(collectionName);
-        const deletedDocuments = await collection
-          .find({
-            $or: getDeletedDocumentIds().map((deletedDocumentId) => ({
-              _id: { $eq: deletedDocumentId },
-            })),
-          })
-          .toArray();
+        const deletedDocuments = await collection.find({ _id: { $in: getDeletedDocumentIds() } }).toArray();
 
         expect(deletedDocuments.length).toBe(0);
       });
     }
 
     function itDoesNotUpdateTheDatabase() {
-      it('should not add a deletion audit log', async () => {
+      it('should not add deletion audit logs', async () => {
         await makeRequest();
 
-        const deletionAuditLogs = await deletionAuditLogsCollection
-          .find({
-            $or: getDeletedDocumentIds().map((deletedDocumentId) => ({
-              collectionName: { $eq: collectionName },
-              deletedDocumentId: { $eq: deletedDocumentId },
-            })),
-          })
-          .toArray();
+        const deletionAuditLogs = await deletionAuditLogsCollection.find({ collectionName, deletedDocumentId: { $in: getDeletedDocumentIds() } }).toArray();
         expect(deletionAuditLogs).toEqual([]);
       });
 
-      it('should not delete the document', async () => {
+      it('should not delete the documents', async () => {
         await makeRequest();
 
         const collection = await mongoDbClient.getCollection(collectionName);
-        const deletedDocuments = await collection
-          .find({
-            $or: getDeletedDocumentIds().map((deletedDocumentId) => ({
-              _id: { $eq: deletedDocumentId },
-            })),
-          })
-          .toArray();
+        const deletedDocuments = await collection.find({ _id: { $in: getDeletedDocumentIds() } }).toArray();
 
         expect(deletedDocuments.length).toBe(getDeletedDocumentIds().length);
       });

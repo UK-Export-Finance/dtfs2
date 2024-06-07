@@ -15,7 +15,7 @@ const { withClientAuthenticationTests } = require('../../common-tests/client-aut
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 
-const { as, get } = require('../../api')(app);
+const { as, get, remove } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
 
 const { exporterStatus } = require('../../../src/v1/gef/controllers/validation/exporter');
@@ -756,7 +756,7 @@ describe(baseUrl, () => {
 
   describe(`DELETE ${baseUrl}/:id`, () => {
     let applicationToDeleteId;
-    let facilitiesToDelete;
+    let facilitiesToDeleteIds;
 
     beforeEach(async () => {
       const { body } = await as(aMaker).post(mockApplications[0]).to(`${baseUrl}`);
@@ -773,7 +773,12 @@ describe(baseUrl, () => {
         .post({ ...mockFacilities[1], dealId: applicationToDeleteId })
         .to(facilitiesUrl);
 
-      facilitiesToDelete = [new ObjectId(facility0._id), new ObjectId(facility1._id)];
+      facilitiesToDeleteIds = [new ObjectId(facility0._id), new ObjectId(facility1._id)];
+    });
+
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => remove(`${baseUrl}/${applicationToDeleteId}`),
+      makeRequestWithAuthHeader: (authHeader) => remove(`${baseUrl}/${applicationToDeleteId}`, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -801,7 +806,7 @@ describe(baseUrl, () => {
         ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
         lastUpdatedByPortalUserId: expect.anything(),
       },
-      getDeletedDocumentIds: () => facilitiesToDelete,
+      getDeletedDocumentIds: () => facilitiesToDeleteIds,
     });
   });
 });

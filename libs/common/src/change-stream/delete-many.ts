@@ -49,7 +49,7 @@ const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetail
       }
     }, transactionOptions);
   } catch (error) {
-    console.error(`Failed to delete many, rolling back changes. Deleting from collection ${collectionName} with filter ${JSON.stringify(filter)}`);
+    console.error(`Failed to delete many from collection ${collectionName} with filter ${JSON.stringify(filter)}, rolling back changes.`);
     throw error;
   } finally {
     await session.endSession();
@@ -67,6 +67,6 @@ export const deleteMany = async ({ filter, collectionName, db, auditDetails }: D
 
     return { acknowledged: true };
   }
-  const durableFunctionLogsCollection = await db.getCollection(collectionName);
-  return durableFunctionLogsCollection.deleteMany(filter);
+  const collection = await db.getCollection(collectionName);
+  return collection.deleteMany(filter);
 };
