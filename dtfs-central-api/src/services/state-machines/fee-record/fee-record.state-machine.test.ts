@@ -1,9 +1,10 @@
 import difference from 'lodash/difference';
+import { EntityManager } from 'typeorm';
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { InvalidStateMachineTransitionError } from '../../../errors';
 import { FEE_RECORD_EVENT_TYPE, FEE_RECORD_EVENT_TYPES, FeeRecordEventType } from './event/fee-record.event-type';
 import { FeeRecordStateMachine } from './fee-record.state-machine';
-import { handleFeeRecordAddAPaymentEvent } from './event-handlers';
+import { handleFeeRecordPaymentAddedEvent } from './event-handlers';
 
 jest.mock('./event-handlers');
 
@@ -23,7 +24,7 @@ describe('FeeRecordStateMachine', () => {
     // Arrange
     const TO_DO_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('TO_DO').build();
 
-    const VALID_TO_DO_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['ADD_A_PAYMENT'];
+    const VALID_TO_DO_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['PAYMENT_ADDED'];
     const INVALID_TO_DO_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_TO_DO_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_TO_DO_FEE_RECORD_EVENT_TYPES.length !== 0) {
@@ -39,20 +40,22 @@ describe('FeeRecordStateMachine', () => {
       );
     }
 
-    it(`handles the '${FEE_RECORD_EVENT_TYPE.ADD_A_PAYMENT}' event`, async () => {
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.PAYMENT_ADDED}' event`, async () => {
       // Arrange
       const stateMachine = FeeRecordStateMachine.forFeeRecord(TO_DO_FEE_RECORD);
 
       // Act
       await stateMachine.handleEvent({
-        type: 'ADD_A_PAYMENT',
+        type: 'PAYMENT_ADDED',
         payload: {
-          paymentId: 1,
+          transactionEntityManager: {} as unknown as EntityManager,
+          feeRecordsAndPaymentsMatch: true,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
         },
       });
 
       // Assert
-      expect(handleFeeRecordAddAPaymentEvent).toHaveBeenCalledTimes(1);
+      expect(handleFeeRecordPaymentAddedEvent).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -81,7 +84,7 @@ describe('FeeRecordStateMachine', () => {
     // Arrange
     const DOES_NOT_MATCH_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('DOES_NOT_MATCH').build();
 
-    const VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [];
+    const VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['PAYMENT_ADDED'];
     const INVALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES.length !== 0) {
@@ -96,6 +99,24 @@ describe('FeeRecordStateMachine', () => {
         },
       );
     }
+
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.PAYMENT_ADDED}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(DOES_NOT_MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'PAYMENT_ADDED',
+        payload: {
+          transactionEntityManager: {} as unknown as EntityManager,
+          feeRecordsAndPaymentsMatch: true,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordPaymentAddedEvent).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe(`when the fee record has the '${FEE_RECORD_STATUS.READY_TO_KEY}' status`, () => {

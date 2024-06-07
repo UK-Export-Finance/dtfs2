@@ -1,4 +1,4 @@
-const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
+const { InvalidAuditDetailsError, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
@@ -17,7 +17,7 @@ exports.postTfmAmendment = async (req, res) => {
   const { auditDetails } = req.body;
 
   try {
-    validateAuditDetailsAndUserType(auditDetails, 'tfm');
+    validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.TFM);
   } catch (error) {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({

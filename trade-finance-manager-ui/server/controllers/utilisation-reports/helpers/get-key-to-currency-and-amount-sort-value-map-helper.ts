@@ -4,7 +4,7 @@ import { Currency } from '@ukef/dtfs2-common';
 export type GetKeyToSortValueMapItem = {
   currency?: Currency | undefined;
   amount?: number | undefined;
-  key: number;
+  key: number | string;
 };
 
 /**

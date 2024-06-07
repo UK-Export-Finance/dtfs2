@@ -132,7 +132,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
 
     cy.url().should('contain', '/banks-decision/check-answers');
 
-    amendmentsPage.underWritingSubmitButton().click();
+    amendmentsPage.assignLeadUnderwriterSaveButton().click();
   });
 
   it('should show the correct details for amendment 1 on facility amendments page', () => {
@@ -235,7 +235,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
 
     cy.url().should('contain', '/banks-decision/check-answers');
 
-    amendmentsPage.underWritingSubmitButton().click();
+    amendmentsPage.assignLeadUnderwriterSaveButton().click();
   });
 
   it('should show the correct details for amendment 2 on facility amendments page', () => {
@@ -349,7 +349,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
 
     cy.url().should('contain', '/banks-decision/check-answers');
 
-    amendmentsPage.underWritingSubmitButton().click();
+    amendmentsPage.assignLeadUnderwriterSaveButton().click();
   });
 
   it('should show the correct details for amendment 3 on facility amendments page', () => {

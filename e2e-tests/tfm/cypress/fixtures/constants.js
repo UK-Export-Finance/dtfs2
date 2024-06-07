@@ -1,5 +1,9 @@
 const { DEAL_TYPE, DEAL_STATUS, SUBMISSION_TYPE: DEAL_SUBMISSION_TYPE, FACILITY_TYPE } = require('../../../e2e-fixtures/constants.fixture');
 
+const TASKS = {
+  UNASSIGNED: 'Unassigned',
+};
+
 const DEAL_STAGE_TFM = {
   CONFIRMED: 'Confirmed',
   APPLICATION: 'Application',
@@ -52,6 +56,7 @@ const ALIAS_KEY = {
 };
 
 module.exports = {
+  TASKS,
   DEAL_TYPE,
   DEAL_SUBMISSION_TYPE,
   DEAL_STATUS,

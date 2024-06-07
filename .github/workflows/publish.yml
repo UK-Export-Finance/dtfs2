@@ -1,4 +1,4 @@
-# DTFS Git Hub Actions
+# Git Hub Actions
 #####################################
 # This GHA is responsible for creating automated
 # GitHub release based PR. Once the PR is merged
@@ -45,10 +45,8 @@ jobs:
       - name: Repository
         uses: actions/checkout@v4
 
-      - name: Dependencies
-        working-directory: ./
-        run: npm ci
-
       - name: Create
-        working-directory: ./
-        run: npx release-please release-pr --token=${{ secrets.RELEASE_TOKEN }} --repo-url=https://github.com/${{ github.repository }} --release-type=node
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.RELEASE_TOKEN }}
+          release-type: node

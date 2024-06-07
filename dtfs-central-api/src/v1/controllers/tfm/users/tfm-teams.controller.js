@@ -1,8 +1,13 @@
 const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
-const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
+const {
+  validateAuditDetails,
+  generateAuditDatabaseRecordFromAuditDetails,
+  deleteOne,
+  validateAuditDetailsAndUserType,
+} = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../../drivers/db-client').default;
 
 const createTeam = async (team, auditDetails) => {
@@ -19,7 +24,7 @@ exports.createTfmTeam = async (req, res) => {
   }
 
   try {
-    validateAuditDetails(auditDetails);
+    validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.TFM);
   } catch (error) {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
@@ -28,10 +33,6 @@ exports.createTfmTeam = async (req, res) => {
       });
     }
     return res.status(500).send({ status: 500, error });
-  }
-
-  if (auditDetails.userType !== 'tfm') {
-    return res.status(400).send({ status: 400, message: `Invalid auditDetails, userType must be 'tfm'` });
   }
 
   const { insertedId } = await createTeam(teamToCreate, auditDetails);

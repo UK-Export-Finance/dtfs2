@@ -1,6 +1,6 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
-const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { getUnixTime } = require('date-fns');
@@ -16,7 +16,7 @@ exports.updateTfmAmendment = async (req, res) => {
   }
 
   try {
-    validateAuditDetails(auditDetails);
+    validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.TFM);
   } catch (error) {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
@@ -25,10 +25,6 @@ exports.updateTfmAmendment = async (req, res) => {
       });
     }
     return res.status(500).send({ status: 500, error });
-  }
-
-  if (auditDetails.userType !== 'tfm') {
-    return res.status(400).send({ status: 400, message: `Invalid auditDetails, userType must be 'tfm'` });
   }
 
   const findAmendment = await findAmendmentById(facilityId, amendmentId);
