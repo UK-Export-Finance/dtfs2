@@ -17,9 +17,7 @@ export const feeRecordsMatchAttachedPayments = async (feeRecords: FeeRecordEntit
 
   const attachedPayments = await getPaymentsAttachedToFeeRecord(feeRecords[0], transactionEntityManager);
 
-  const totalPaymentsReceived = attachedPayments
-    .map((payment) => payment.amountReceived)
-    .reduce((total, amountReceived) => total.add(amountReceived), new Big(0));
+  const totalPaymentsReceived = attachedPayments.map((payment) => payment.amount).reduce((total, amount) => total.add(amount), new Big(0));
 
   const difference = totalReportedPayments.minus(totalPaymentsReceived).abs();
   const tolerance = 0;

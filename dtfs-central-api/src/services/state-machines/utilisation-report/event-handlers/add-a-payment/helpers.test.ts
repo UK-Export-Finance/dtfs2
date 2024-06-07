@@ -72,8 +72,8 @@ describe('payment-added-to-fee-record.event-handler helpers', () => {
       ];
 
       const payments = [
-        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(1).withAmountReceived(firstPaymentAmount).build(),
-        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(2).withAmountReceived(secondPaymentAmount).build(),
+        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(1).withAmount(firstPaymentAmount).build(),
+        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(2).withAmount(secondPaymentAmount).build(),
       ];
 
       jest.mocked(mockFind).mockResolvedValue(addPaymentsToFeeRecords(feeRecords, payments));
@@ -110,8 +110,8 @@ describe('payment-added-to-fee-record.event-handler helpers', () => {
       ];
 
       const payments = [
-        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(1).withAmountReceived(firstPaymentAmount).build(),
-        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(2).withAmountReceived(secondPaymentAmount).build(),
+        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(1).withAmount(firstPaymentAmount).build(),
+        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(2).withAmount(secondPaymentAmount).build(),
       ];
 
       jest.mocked(mockFind).mockResolvedValue(addPaymentsToFeeRecords(feeRecords, payments));
@@ -153,8 +153,8 @@ describe('payment-added-to-fee-record.event-handler helpers', () => {
       ];
 
       const payments = [
-        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(1).withAmountReceived(firstPaymentAmount).build(),
-        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(2).withAmountReceived(secondPaymentAmount).build(),
+        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(1).withAmount(firstPaymentAmount).build(),
+        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(2).withAmount(secondPaymentAmount).build(),
       ];
 
       jest.mocked(mockFind).mockResolvedValue(addPaymentsToFeeRecords(feeRecords, payments));

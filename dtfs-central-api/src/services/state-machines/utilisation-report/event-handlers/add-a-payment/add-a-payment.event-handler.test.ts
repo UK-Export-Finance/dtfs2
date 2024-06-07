@@ -31,9 +31,9 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
   const paymentCurrency: Currency = 'GBP';
   const paymentDetails: NewPaymentDetails = {
     currency: paymentCurrency,
-    amountReceived: 100,
+    amount: 100,
     dateReceived: new Date(),
-    paymentReference: 'A payment reference',
+    reference: 'A payment reference',
   };
 
   const aListOfFeeRecordsForReport = (report: UtilisationReportEntity): FeeRecordEntity[] => [

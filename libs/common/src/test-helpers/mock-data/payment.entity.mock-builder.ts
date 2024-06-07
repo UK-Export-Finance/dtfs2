@@ -13,9 +13,9 @@ export class PaymentEntityMockBuilder {
     payment.currency = currency;
 
     payment.id = 1;
-    payment.amountReceived = 100;
+    payment.amount = 100;
     payment.dateReceived = new Date();
-    payment.paymentReference = undefined;
+    payment.reference = undefined;
 
     return new PaymentEntityMockBuilder(payment);
   }
@@ -25,8 +25,8 @@ export class PaymentEntityMockBuilder {
     return this;
   }
 
-  public withAmountReceived(amountReceived: number): PaymentEntityMockBuilder {
-    this.payment.amountReceived = amountReceived;
+  public withAmount(amount: number): PaymentEntityMockBuilder {
+    this.payment.amount = amount;
     return this;
   }
 
@@ -35,8 +35,8 @@ export class PaymentEntityMockBuilder {
     return this;
   }
 
-  public withPaymentReference(paymentReference: string): PaymentEntityMockBuilder {
-    this.payment.paymentReference = paymentReference;
+  public withReference(reference: string): PaymentEntityMockBuilder {
+    this.payment.reference = reference;
     return this;
   }
 

@@ -117,7 +117,7 @@ export type UtilisationReportReconciliationDetails = {
 
 export type NewPaymentDetails = {
   currency: Currency;
-  amountReceived: number;
+  amount: number;
   dateReceived: Date;
-  paymentReference?: string;
+  reference?: string;
 };
