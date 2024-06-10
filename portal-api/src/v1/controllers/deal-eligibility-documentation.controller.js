@@ -1,3 +1,4 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const stream = require('stream');
 const filesize = require('filesize');
 
@@ -38,7 +39,7 @@ const removeDeletedFiles = (supportingInformation, deletedFilesList) => {
 
 exports.update = async (req, res) => {
   const uploadErrors = req.filesNotAllowed ? req.filesNotAllowed : [];
-
+  const auditDetails = generatePortalAuditDetails(req.user._id);
   await findOneDeal(req.params.id, async (deal) => {
     if (!userHasAccessTo(req.user, deal)) {
       res.status(401).send();
@@ -130,7 +131,7 @@ exports.update = async (req, res) => {
       },
     };
 
-    const updatedDeal = await updateDeal(deal._id, updatedDealData, req.user);
+    const updatedDeal = await updateDeal(deal._id, updatedDealData, req.user, auditDetails);
 
     // Don't want to save upload errors to db, only display on this request
     Object.entries(validationUploadErrors.errorList).forEach(([key, value]) => {

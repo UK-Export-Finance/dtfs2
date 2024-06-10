@@ -89,7 +89,7 @@ exports.update = async (req, res) => {
       });
     }
 
-    let updatedDeal = await updateStatus(dealId, currentStatus, newStatus, user);
+    let updatedDeal = await updateStatus(dealId, currentStatus, newStatus, user, auditDetails);
 
     // First submission of the deal to the checker
     if (currentStatus === CONSTANTS.DEAL.DEAL_STATUS.DRAFT && newStatus === CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL) {
@@ -103,7 +103,7 @@ exports.update = async (req, res) => {
 
     // Update the deal
     if (newStatus !== CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED && newStatus !== CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF) {
-      updatedDeal = await updateDeal(dealId, updatedDeal, user);
+      updatedDeal = await updateDeal(dealId, updatedDeal, user, auditDetails);
     }
 
     // Subsequent submission of the deal to the checker
@@ -134,14 +134,14 @@ exports.update = async (req, res) => {
 
       await updateSubmittedIssuedFacilities(user, updatedDeal, auditDetails);
 
-      updatedDeal = await updateSubmissionCount(updatedDeal, user);
+      updatedDeal = await updateSubmissionCount(updatedDeal, user, auditDetails);
 
       if (!updatedDeal?.details?.submissionDate) {
-        updatedDeal = await createSubmissionDate(dealId, user);
+        updatedDeal = await createSubmissionDate(dealId, user, auditDetails);
       }
 
       if (updatedDeal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA && !updatedDeal.details.manualInclusionApplicationSubmissionDate) {
-        updatedDeal = await createMiaSubmissionDate(dealId, user);
+        updatedDeal = await createMiaSubmissionDate(dealId, user, auditDetails);
       }
 
       if (updatedDeal?.details?.submissionCount === 1) {
@@ -153,7 +153,7 @@ exports.update = async (req, res) => {
 
     // UKEF Approval
     if (newStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS || newStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS) {
-      updatedDeal = await createApprovalDate(dealId);
+      updatedDeal = await createApprovalDate(dealId, auditDetails);
     }
 
     // Send status update emails

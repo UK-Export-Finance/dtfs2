@@ -1,3 +1,4 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const validateSubmissionDetails = require('../validation/submission-details');
@@ -32,7 +33,7 @@ exports.findOne = async (req, res) => {
   }
 };
 
-const updateSubmissionDetails = async (dealId, submissionDetails, user) => {
+const updateSubmissionDetails = async (dealId, submissionDetails, user, auditDetails) => {
   const update = {
     submissionDetails,
     updatedAt: Date.now(),
@@ -51,7 +52,7 @@ const updateSubmissionDetails = async (dealId, submissionDetails, user) => {
     };
   }
 
-  const updateDealResponse = await updateDeal(dealId, update, user);
+  const updateDealResponse = await updateDeal(dealId, update, user, auditDetails);
   return updateDealResponse;
 };
 
@@ -136,11 +137,16 @@ const checkCurrency = async (existingCurrencyObj, submitted) => {
  * @param {Object} res - The response object used to send the HTTP response.
  */
 exports.update = async (req, res) => {
-  try {
-    const { user } = req;
-    let submissionDetails = req.body;
+  const {
+    user,
+    body: submissionDetails,
+    params: { id: dealId },
+  } = req;
 
-    const deal = await findOneDeal(req.params.id);
+  const auditDetails = generatePortalAuditDetails(user._id);
+
+  try {
+    const deal = await findOneDeal(dealId);
 
     if (!deal) {
       return res.status(404).send();
@@ -162,13 +168,16 @@ exports.update = async (req, res) => {
       submissionDetails.supplyContractValue = sanitizedValue;
     }
 
-    submissionDetails = await checkAllCountryCodes(deal, submissionDetails);
+    const submissionDetailsWithUpdatedCountryCodes = await checkAllCountryCodes(deal, submissionDetails);
 
-    if (submissionDetails.supplyContractCurrency) {
-      submissionDetails.supplyContractCurrency = await checkCurrency(deal.supplyContractCurrency, submissionDetails.supplyContractCurrency);
+    if (submissionDetailsWithUpdatedCountryCodes.supplyContractCurrency) {
+      submissionDetailsWithUpdatedCountryCodes.supplyContractCurrency = await checkCurrency(
+        deal.supplyContractCurrency,
+        submissionDetailsWithUpdatedCountryCodes.supplyContractCurrency,
+      );
     }
 
-    const dealAfterAllUpdates = await updateSubmissionDetails(req.params.id, submissionDetails, user);
+    const dealAfterAllUpdates = await updateSubmissionDetails(dealId, submissionDetailsWithUpdatedCountryCodes, user, auditDetails);
 
     const validationErrors = await validateSubmissionDetails({ ...dealAfterAllUpdates.submissionDetails, ...req.body });
 

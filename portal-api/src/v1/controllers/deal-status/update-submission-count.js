@@ -6,7 +6,7 @@ const { updateDeal } = require('../deal.controller');
  * @param {Object} user - The user object.
  * @returns {Promise<Object>} - The updated deal object with submission count incremented.
  */
-const updateSubmissionCount = async (deal, user) => {
+const updateSubmissionCount = async (deal, user, auditDetails) => {
   const { _id: dealId } = deal;
   let submissionCount = 1;
 
@@ -20,7 +20,7 @@ const updateSubmissionCount = async (deal, user) => {
     },
   };
 
-  const updatedDeal = await updateDeal(dealId, modifiedDeal, user);
+  const updatedDeal = await updateDeal(dealId, modifiedDeal, user, auditDetails);
 
   return updatedDeal;
 };

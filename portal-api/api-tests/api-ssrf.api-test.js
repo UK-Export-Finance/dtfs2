@@ -1,3 +1,4 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const MockAdapter = require('axios-mock-adapter');
 const axios = require('axios');
 const deal = require('./fixtures/deal-fully-completed');
@@ -15,6 +16,7 @@ describe('api', () => {
   const invalidId = '../../../etc/passwd';
   const validId = '620a1aa095a618b12da38c7b';
   const validNonExistentId = '620a1aa095a6bbbbbbbbb';
+  const mockPortalAuditDetails = generatePortalAuditDetails(validId);
 
   describe('findOneDeal', () => {
     it('should return false when an invalid dealId is provided', async () => {
@@ -40,7 +42,7 @@ describe('api', () => {
 
   describe('updateDeal', () => {
     it('should return false when an invalid dealId is provided', async () => {
-      const response = await api.updateDeal(invalidId, deal, {});
+      const response = await api.updateDeal(invalidId, deal, {}, mockPortalAuditDetails);
 
       expect(response).toEqual(false);
     });
@@ -48,13 +50,13 @@ describe('api', () => {
     it('should return the deal when a valid dealId is provided', async () => {
       mock.onPut(`${DTFS_CENTRAL_API_URL}/v1/portal/deals/${validId}`).reply(200, deal);
 
-      const response = await api.updateDeal(validId, deal, {});
+      const response = await api.updateDeal(validId, deal, {}, mockPortalAuditDetails);
 
       expect(response).toEqual(deal);
     });
 
     it('should return deal when a non-existent dealId is provided', async () => {
-      const response = await api.updateDeal(validNonExistentId, deal, {});
+      const response = await api.updateDeal(validNonExistentId, deal, {}, mockPortalAuditDetails);
 
       expect(response).toEqual(false);
     });
@@ -62,7 +64,7 @@ describe('api', () => {
 
   describe('deleteDeal', () => {
     it('should return false when an invalid dealId is provided', async () => {
-      const response = await api.deleteDeal(invalidId, deal, {});
+      const response = await api.deleteDeal(invalidId, mockPortalAuditDetails);
 
       expect(response).toEqual(false);
     });
@@ -70,13 +72,13 @@ describe('api', () => {
     it('should return the status as 200 when a valid dealId is provided', async () => {
       mock.onDelete(`${DTFS_CENTRAL_API_URL}/v1/portal/deals/${validId}`).reply(200, {});
 
-      const response = await api.deleteDeal(validId);
+      const response = await api.deleteDeal(validId, mockPortalAuditDetails);
 
       expect(response.status).toEqual(200);
     });
 
     it('should return false when a non-existent dealId is provided', async () => {
-      const response = await api.deleteDeal(validNonExistentId);
+      const response = await api.deleteDeal(validNonExistentId, mockPortalAuditDetails);
 
       expect(response.status).toEqual(undefined);
     });

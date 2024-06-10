@@ -32,6 +32,7 @@ const createUkefIds = async (deal, user, auditDetails) => {
         },
       },
       user,
+      auditDetails,
     );
 
     // Generate and update UKEF IDs for each facility in the deal's facilities array
