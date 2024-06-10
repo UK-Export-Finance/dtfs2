@@ -31,7 +31,9 @@ exports.create = async (req, res) => {
       ...req.body,
     };
 
-    const { status, data } = await facilitiesController.create(facilityBody, req.user);
+    const auditDetails = generatePortalAuditDetails(req.user._id);
+
+    const { status, data } = await facilitiesController.create(facilityBody, req.user, auditDetails);
 
     return res.status(status).send({
       ...data,
