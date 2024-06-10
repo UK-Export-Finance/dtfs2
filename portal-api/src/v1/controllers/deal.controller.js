@@ -150,7 +150,7 @@ exports.update = async (req, res) => {
 
     const auditDetails = generatePortalAuditDetails(user._id);
 
-    const updatedDeal = await updateDeal(dealId, body, user, deal, auditDetails);
+    const updatedDeal = await updateDeal(dealId, body, user, auditDetails);
 
     return res.status(200).json(updatedDeal);
   });

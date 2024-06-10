@@ -40,6 +40,7 @@ const removeDeletedFiles = (supportingInformation, deletedFilesList) => {
 exports.update = async (req, res) => {
   const uploadErrors = req.filesNotAllowed ? req.filesNotAllowed : [];
   const auditDetails = generatePortalAuditDetails(req.user._id);
+
   await findOneDeal(req.params.id, async (deal) => {
     if (!userHasAccessTo(req.user, deal)) {
       res.status(401).send();
