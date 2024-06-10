@@ -6,6 +6,7 @@ import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { mapFeeRecordItemsToFeeRecordViewModelItems } from '../helpers';
 import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 import { getAndClearAddPaymentFieldsFromRedirectSessionData } from './get-and-clear-add-payment-fields-from-redirect-session-data';
+import { validateFacilityIdQuery } from './validate-facility-id-query';
 
 const renderUtilisationReportReconciliationForReport = (res: Response, viewModel: UtilisationReportReconciliationForReportViewModel) =>
   res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', viewModel);
@@ -15,9 +16,11 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
   const { reportId } = req.params;
 
   try {
-    const { addPaymentErrorSummary, isCheckboxChecked } = getAndClearAddPaymentFieldsFromRedirectSessionData(req);
+    const { addPaymentError, isCheckboxChecked } = getAndClearAddPaymentFieldsFromRedirectSessionData(req);
 
-    const utilisationReportReconciliationDetails = await api.getUtilisationReportReconciliationDetailsById(reportId, userToken);
+    const { validatedFacilityIdQuery, facilityIdQueryError } = validateFacilityIdQuery(req);
+
+    const utilisationReportReconciliationDetails = await api.getUtilisationReportReconciliationDetailsById(reportId, validatedFacilityIdQuery, userToken);
 
     const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(utilisationReportReconciliationDetails.reportPeriod);
 
@@ -30,7 +33,8 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
       formattedReportPeriod,
       reportId: utilisationReportReconciliationDetails.reportId,
       feeRecords: feeRecordViewModel,
-      errorSummary: addPaymentErrorSummary,
+      addPaymentError,
+      facilityIdQueryError,
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);

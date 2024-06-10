@@ -33,5 +33,6 @@ export type UtilisationReportReconciliationForReportViewModel = {
   formattedReportPeriod: string;
   reportId: number;
   feeRecords: FeeRecordViewModelItem[];
-  errorSummary: [ErrorSummaryViewModel] | undefined;
+  addPaymentError: [ErrorSummaryViewModel] | undefined;
+  facilityIdQueryError: [ErrorSummaryViewModel] | undefined;
 };

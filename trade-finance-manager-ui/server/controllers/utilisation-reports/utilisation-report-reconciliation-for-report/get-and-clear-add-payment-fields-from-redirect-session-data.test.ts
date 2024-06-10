@@ -33,7 +33,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       });
 
       // Act
-      const { addPaymentErrorSummary, isCheckboxChecked } = getAndClearAddPaymentFieldsFromRedirectSessionData(req);
+      const { addPaymentError: addPaymentErrorSummary, isCheckboxChecked } = getAndClearAddPaymentFieldsFromRedirectSessionData(req);
 
       // Assert
       assertSessionHasBeenCleared(req);
@@ -67,7 +67,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       });
 
       // Act
-      const { addPaymentErrorSummary } = getAndClearAddPaymentFieldsFromRedirectSessionData(req);
+      const { addPaymentError: addPaymentErrorSummary } = getAndClearAddPaymentFieldsFromRedirectSessionData(req);
 
       // Assert
       assertSessionHasBeenCleared(req);

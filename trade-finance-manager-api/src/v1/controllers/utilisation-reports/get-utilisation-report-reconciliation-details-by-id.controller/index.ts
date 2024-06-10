@@ -16,7 +16,8 @@ export const getUtilisationReportReconciliationDetailsById = async (req: GetUtil
   const { reportId } = req.params;
 
   try {
-    const utilisationReportReconciliationDetails = await api.getUtilisationReportReconciliationDetailsById(reportId);
+    const queryParams = req.query;
+    const utilisationReportReconciliationDetails = await api.getUtilisationReportReconciliationDetailsById(reportId, { queryParams });
 
     return res.status(HttpStatusCode.Ok).send(utilisationReportReconciliationDetails);
   } catch (error) {

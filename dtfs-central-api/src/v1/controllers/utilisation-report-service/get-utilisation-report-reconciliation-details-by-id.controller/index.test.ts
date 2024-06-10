@@ -1,6 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { FeeRecordEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { Like } from 'typeorm';
 import { GetUtilisationReportReconciliationDetailsByIdRequest, getUtilisationReportReconciliationDetailsById } from '.';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import * as banksRepo from '../../../../repositories/banks-repo';
@@ -11,10 +12,13 @@ console.error = jest.fn();
 describe('get-utilisation-report-reconciliation-details-by-id.controller', () => {
   describe('getUtilisationReportReconciliationDetailsById', () => {
     const reportId = 1;
-    const getHttpMocks = () =>
+    const getHttpMocks = (facilityIdQuery: string | undefined = undefined) =>
       httpMocks.createMocks<GetUtilisationReportReconciliationDetailsByIdRequest>({
         params: {
           reportId,
+        },
+        query: {
+          facilityIdQuery,
         },
       });
 
@@ -91,7 +95,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       expect(getBankNameByIdSpy).toHaveBeenCalledWith(bankId);
     });
 
-    it('responds with a 200 and the mapped report', async () => {
+    it('responds with a 200 and the mapped report when there is no facilityIdQuery query param', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
@@ -198,6 +202,89 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
 
       expect(findOneSpy).toHaveBeenCalledWith({
         where: { id: reportId },
+        relations: { feeRecords: true },
+      });
+      expect(getBankNameByIdSpy).toHaveBeenCalledWith(bankId);
+    });
+
+    it('responds with a 200 and queries fee records when there is a facilityIdQuery query param', async () => {
+      // Arrange
+      const facilityIdQuery = '1234';
+      const { req, res } = getHttpMocks(facilityIdQuery);
+
+      const bankId = '123';
+      const dateUploaded = new Date();
+      const reportPeriod: ReportPeriod = {
+        start: { month: 1, year: 2024 },
+        end: { month: 3, year: 2024 },
+      };
+      const reconciliationInProgressReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
+        .withId(reportId)
+        .withBankId(bankId)
+        .withReportPeriod(reportPeriod)
+        .withDateUploaded(dateUploaded)
+        .build();
+
+      const feeRecords = [
+        FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport)
+          .withId(1)
+          .withFacilityId('12345678')
+          .withExporter('Test exporter 1')
+          .withFeesPaidToUkefForThePeriodCurrency('GBP')
+          .withFeesPaidToUkefForThePeriod(314.59)
+          .withPaymentCurrency('GBP')
+          .withStatus('TO_DO')
+          .build(),
+      ];
+      reconciliationInProgressReport.feeRecords = feeRecords;
+
+      findOneSpy.mockResolvedValue(reconciliationInProgressReport);
+
+      const feeRecordItems: FeeRecordItem[] = [
+        {
+          id: 1,
+          facilityId: '12345678',
+          exporter: 'Test exporter 1',
+          reportedFees: {
+            currency: 'GBP',
+            amount: 314.59,
+          },
+          reportedPayments: {
+            currency: 'GBP',
+            amount: 314.59,
+          },
+          totalReportedPayments: {
+            currency: 'GBP',
+            amount: 314.59,
+          },
+          paymentsReceived: null,
+          totalPaymentsReceived: null,
+          status: 'TO_DO',
+        },
+      ];
+
+      const bankName = 'Test bank';
+      getBankNameByIdSpy.mockResolvedValue(bankName);
+
+      // Act
+      await getUtilisationReportReconciliationDetailsById(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getData()).toEqual<UtilisationReportReconciliationDetails>({
+        reportId,
+        bank: {
+          id: bankId,
+          name: bankName,
+        },
+        status: 'RECONCILIATION_IN_PROGRESS',
+        reportPeriod,
+        dateUploaded,
+        feeRecords: feeRecordItems,
+      });
+
+      expect(findOneSpy).toHaveBeenCalledWith({
+        where: { id: reportId, feeRecords: { facilityId: Like(`%${facilityIdQuery}%`) } },
         relations: { feeRecords: true },
       });
       expect(getBankNameByIdSpy).toHaveBeenCalledWith(bankId);

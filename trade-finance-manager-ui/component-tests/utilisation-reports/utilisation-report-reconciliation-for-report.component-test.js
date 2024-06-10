@@ -79,4 +79,16 @@ describe(page, () => {
 
     wrapper.expectElement(`${premiumPaymentsTabSelector} table[data-cy="premium-payments-table"]`).toExist();
   });
+
+  it('should render the facility ID filter input', () => {
+    wrapper.expectElement('[data-cy="facility-filter-input"]').toExist();
+  });
+
+  it('should render the facility ID filter submit button', () => {
+    wrapper.expectElement('[data-cy="facility-filter-submit-button"]').toExist();
+  });
+
+  it('should render the facility ID filter clear button', () => {
+    wrapper.expectElement('[data-cy="facility-filter-clear-button"]').toExist();
+  });
 });

@@ -10,13 +10,13 @@ const clearRedirectSessionData = (req: Request): void => {
 export const getAndClearAddPaymentFieldsFromRedirectSessionData = (
   req: Request,
 ): {
-  addPaymentErrorSummary: [ErrorSummaryViewModel] | undefined;
+  addPaymentError: [ErrorSummaryViewModel] | undefined;
   isCheckboxChecked: (checkboxId: string) => boolean;
 } => {
   const { addPaymentErrorKey } = req.session;
   if (!addPaymentErrorKey) {
     return {
-      addPaymentErrorSummary: undefined,
+      addPaymentError: undefined,
       isCheckboxChecked: () => false,
     };
   }
@@ -31,7 +31,7 @@ export const getAndClearAddPaymentFieldsFromRedirectSessionData = (
     case 'different-fee-record-payment-currencies':
     case 'multiple-does-not-match-selected':
       clearRedirectSessionData(req);
-      return { addPaymentErrorSummary: getAddPaymentError(addPaymentErrorKey), isCheckboxChecked };
+      return { addPaymentError: getAddPaymentError(addPaymentErrorKey), isCheckboxChecked };
     default:
       clearRedirectSessionData(req);
       throw new Error(`Unrecognised add payment error key '${addPaymentErrorKey}'`);
