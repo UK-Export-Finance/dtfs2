@@ -8,11 +8,11 @@ const CONSTANT = require('../../constants');
  */
 const validateSelfOrAdmin = (req, res, next) => {
   if (!req.user) {
-    return res.status(axios.HttpStatus.UNAUTHORIZED).send('Unauthorized');
+    return res.status(axios.HttpStatus.Unauthorized).send('Unauthorized');
   }
 
   if (req?.user?._id !== req?.params?._id && !req?.user?.roles?.includes(CONSTANT.ADMIN)) {
-    return res.status(axios.HttpStatus.FORBIDDEN).send('Forbidden');
+    return res.status(axios.HttpStatus.Forbidden).send('Forbidden');
   }
 
   return next();
