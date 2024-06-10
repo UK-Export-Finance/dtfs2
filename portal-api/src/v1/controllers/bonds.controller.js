@@ -114,67 +114,71 @@ const feeTypeFields = (bond) => {
 };
 
 exports.updateBond = async (req, res) => {
-  const { id: dealId, bondId } = req.params;
+  const {
+    user,
+    params: { id: dealId, bondId },
+  } = req;
+  const auditDetails = generatePortalAuditDetails(user._id);
 
   await findOneDeal(dealId, async (deal) => {
-    if (deal) {
-      if (!userHasAccessTo(req.user, deal)) {
-        res.status(401).send();
-      }
-
-      const existingBond = await facilitiesController.findOne(bondId);
-
-      if (!existingBond) {
-        return res.status(404).send();
-      }
-
-      let modifiedBond = {
-        ...existingBond,
-        ...req.body,
-      };
-
-      modifiedBond = facilityStageFields(modifiedBond);
-
-      modifiedBond = await handleTransactionCurrencyFields(modifiedBond, deal);
-
-      modifiedBond = feeTypeFields(modifiedBond);
-
-      const { value, coveredPercentage, riskMarginFee } = modifiedBond;
-      const sanitizedFacilityValue = sanitizeCurrency(value);
-
-      modifiedBond.guaranteeFeePayableByBank = calculateGuaranteeFee(riskMarginFee);
-
-      if (sanitizedFacilityValue.sanitizedValue) {
-        modifiedBond.ukefExposure = calculateUkefExposure(sanitizedFacilityValue.sanitizedValue, coveredPercentage);
-        modifiedBond.value = sanitizedFacilityValue.sanitizedValue;
-      }
-
-      if (hasAllRequestedCoverStartDateValues(modifiedBond)) {
-        modifiedBond = updateRequestedCoverStartDate(modifiedBond);
-      } else {
-        modifiedBond.requestedCoverStartDate = null;
-      }
-
-      if (hasAllCoverEndDateValues(modifiedBond)) {
-        modifiedBond = updateCoverEndDate(modifiedBond);
-      } else {
-        modifiedBond.coverEndDate = null;
-      }
-
-      const { status, data } = await facilitiesController.update(dealId, bondId, modifiedBond, req.user);
-
-      const validationErrors = bondValidationErrors(data, deal);
-
-      if (validationErrors.count !== 0) {
-        return res.status(400).send({
-          validationErrors,
-          bond: data,
-        });
-      }
-
-      return res.status(status).send(data);
+    if (!deal) {
+      return res.status(404).send();
     }
-    return res.status(404).send();
+
+    if (!userHasAccessTo(user, deal)) {
+      res.status(401).send();
+    }
+
+    const existingBond = await facilitiesController.findOne(bondId);
+
+    if (!existingBond) {
+      return res.status(404).send();
+    }
+
+    let modifiedBond = {
+      ...existingBond,
+      ...req.body,
+    };
+
+    modifiedBond = facilityStageFields(modifiedBond);
+
+    modifiedBond = await handleTransactionCurrencyFields(modifiedBond, deal);
+
+    modifiedBond = feeTypeFields(modifiedBond);
+
+    const { value, coveredPercentage, riskMarginFee } = modifiedBond;
+    const sanitizedFacilityValue = sanitizeCurrency(value);
+
+    modifiedBond.guaranteeFeePayableByBank = calculateGuaranteeFee(riskMarginFee);
+
+    if (sanitizedFacilityValue.sanitizedValue) {
+      modifiedBond.ukefExposure = calculateUkefExposure(sanitizedFacilityValue.sanitizedValue, coveredPercentage);
+      modifiedBond.value = sanitizedFacilityValue.sanitizedValue;
+    }
+
+    if (hasAllRequestedCoverStartDateValues(modifiedBond)) {
+      modifiedBond = updateRequestedCoverStartDate(modifiedBond);
+    } else {
+      modifiedBond.requestedCoverStartDate = null;
+    }
+
+    if (hasAllCoverEndDateValues(modifiedBond)) {
+      modifiedBond = updateCoverEndDate(modifiedBond);
+    } else {
+      modifiedBond.coverEndDate = null;
+    }
+
+    const { status, data } = await facilitiesController.update(dealId, bondId, modifiedBond, user, auditDetails);
+
+    const validationErrors = bondValidationErrors(data, deal);
+    if (validationErrors.count !== 0) {
+      return res.status(400).send({
+        validationErrors,
+        bond: data,
+      });
+    }
+
+    return res.status(status).send(data);
   });
 };
 

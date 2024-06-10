@@ -1,3 +1,4 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { HttpStatusCode } = require('axios');
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { addComment } = require('./deal-comments.controller');
@@ -49,10 +50,15 @@ exports.findOne = async (req, res) => {
  * @returns {Promise<Response>} - The latest deal information.
  */
 exports.update = async (req, res) => {
+  const {
+    user,
+    params: { id: dealId },
+    body,
+  } = req;
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
   try {
-    const { user } = req;
-    const dealId = req.params.id;
-    const newStatus = req.body.status;
+    const newStatus = body.status;
 
     const deal = await findOneDeal(dealId);
 
@@ -74,7 +80,7 @@ exports.update = async (req, res) => {
       }
     }
 
-    const validationErrors = await validateStateChange(deal, req.body, user);
+    const validationErrors = await validateStateChange(deal, body, user);
 
     if (validationErrors) {
       return res.status(HttpStatusCode.Ok).send({
@@ -87,12 +93,12 @@ exports.update = async (req, res) => {
 
     // First submission of the deal to the checker
     if (currentStatus === CONSTANTS.DEAL.DEAL_STATUS.DRAFT && newStatus === CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL) {
-      await updateFacilityCoverStartDates(user, updatedDeal);
+      await updateFacilityCoverStartDates(user, updatedDeal, auditDetails);
     }
 
     // Add a comment to the deal
-    if (req.body.comments) {
-      updatedDeal = await addComment(dealId, req.body.comments, user);
+    if (body.comments) {
+      updatedDeal = await addComment(dealId, body.comments, user);
     }
 
     // Update the deal
@@ -105,21 +111,28 @@ exports.update = async (req, res) => {
       const canUpdateIssuedFacilitiesCoverStartDates = true;
       const newIssuedFacilityStatus = 'Ready for check';
 
-      updatedDeal = await updateIssuedFacilities(user, currentStatus, updatedDeal, canUpdateIssuedFacilitiesCoverStartDates, newIssuedFacilityStatus);
+      updatedDeal = await updateIssuedFacilities(
+        user,
+        currentStatus,
+        updatedDeal,
+        canUpdateIssuedFacilitiesCoverStartDates,
+        newIssuedFacilityStatus,
+        auditDetails,
+      );
     }
 
     // Send back the deal to the maker
     if (newStatus === CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED) {
       const newIssuedFacilityStatus = "Maker's input required";
 
-      updatedDeal = await updateIssuedFacilities(user, currentStatus, updatedDeal, false, newIssuedFacilityStatus);
+      updatedDeal = await updateIssuedFacilities(user, currentStatus, updatedDeal, false, newIssuedFacilityStatus, auditDetails);
     }
 
     // Submit to UKEF / TFM
     if (newStatus === CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF) {
       console.info('Submit deal %s to UKEF', dealId);
 
-      await updateSubmittedIssuedFacilities(user, updatedDeal);
+      await updateSubmittedIssuedFacilities(user, updatedDeal, auditDetails);
 
       updatedDeal = await updateSubmissionCount(updatedDeal, user);
 
@@ -132,7 +145,7 @@ exports.update = async (req, res) => {
       }
 
       if (updatedDeal?.details?.submissionCount === 1) {
-        updatedDeal = await createUkefIds(updatedDeal, user);
+        updatedDeal = await createUkefIds(updatedDeal, user, auditDetails);
       }
 
       await api.tfmDealSubmit(dealId, CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS, user);
