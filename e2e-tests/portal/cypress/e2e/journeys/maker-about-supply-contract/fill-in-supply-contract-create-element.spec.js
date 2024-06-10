@@ -46,7 +46,7 @@ context('Supply contract form - create element and check if inserted into deal',
     // use companies-house lookup
     //---
     contractAboutSupplier.supplierType().select('Exporter');
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANIES_HOUSE_NUMBERS[1]);
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANIES_HOUSE_NUMBERS.VALID);
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     //---

@@ -1,5 +1,6 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
+const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
 const aDeal = require('../../deal-builder');
 
@@ -8,6 +9,8 @@ const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
+const { createDeal } = require('../../../helpers/create-deal');
+const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 
 const newDeal = aDeal({
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
@@ -27,7 +30,7 @@ describe('/v1/tfm/deal/:id', () => {
 
   describe('GET /v1/tfm/deal/:id', () => {
     it('returns the requested resource', async () => {
-      const postResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+      const postResult = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = postResult.body._id;
 
       await api
@@ -46,7 +49,7 @@ describe('/v1/tfm/deal/:id', () => {
 
     describe('when a deal has facilities', () => {
       it('returns facilities mapped to deal.bondTransactions and deal.loanTransactions', async () => {
-        const postResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+        const postResult = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
         const dealId = postResult.body._id;
 
         // create some facilities
@@ -121,7 +124,7 @@ describe('/v1/tfm/deal/:id', () => {
       };
 
       beforeEach(async () => {
-        const { body: portalDeal } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+        const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
         dealId = portalDeal._id;
 
         await api
@@ -136,7 +139,7 @@ describe('/v1/tfm/deal/:id', () => {
         await api
           .put({
             dealUpdate: mockTfm,
-            auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+            auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
           })
           .to(`/v1/tfm/deals/${dealId}`);
       });
@@ -152,16 +155,17 @@ describe('/v1/tfm/deal/:id', () => {
               },
             })
             .to(`/v1/tfm/deals/${dealId}/snapshot`),
-        validUserTypes: ['portal'],
+        validUserTypes: [AUDIT_USER_TYPES.PORTAL],
       });
 
       it('updates deal.dealSnapshot whilst retaining existing snapshot deal.tfm', async () => {
+        const auditDetails = generatePortalAuditDetails(MOCK_PORTAL_USER._id);
         const snapshotUpdate = {
           snapshotUpdate: {
             someNewField: true,
             testing: true,
           },
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          auditDetails,
         };
 
         const { status } = await api.put(snapshotUpdate).to(`/v1/tfm/deals/${dealId}/snapshot`);
@@ -180,13 +184,7 @@ describe('/v1/tfm/deal/:id', () => {
           lastUpdated: expect.any(Number),
         });
 
-        expect(bodyAfterUpdate.deal.auditRecord).toEqual({
-          lastUpdatedAt: expect.any(String),
-          lastUpdatedByPortalUserId: MOCK_PORTAL_USER._id,
-          lastUpdatedByTfmUserId: null,
-          lastUpdatedByIsSystem: null,
-          noUserLoggedIn: null,
-        });
+        expect(bodyAfterUpdate.deal.auditRecord).toEqual(generateParsedMockAuditDatabaseRecord(auditDetails));
       });
     });
   });

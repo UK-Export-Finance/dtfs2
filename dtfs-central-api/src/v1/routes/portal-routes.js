@@ -52,13 +52,16 @@ portalRouter.use((req, res, next) => {
  *       content:
  *         application/json:
  *           schema:
- *             type: object
  *             properties:
+ *               user:
+ *                 type: object
  *               deal:
  *                 type: object
  *                 properties:
  *                   details:
  *                     type: object
+ *               auditDetails:
+ *                 $ref: '#/definitions/portalAuditDetails'
  *           example:
  *             bankInternalRefName: 'a1'
  *             additionalRefName: 'test'

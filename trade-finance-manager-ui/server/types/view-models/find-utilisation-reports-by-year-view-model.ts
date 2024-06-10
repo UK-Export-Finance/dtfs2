@@ -1,6 +1,5 @@
 import { FindUtilisationReportByYearValidationErrors } from '../../controllers/utilisation-reports/find-reports-by-year/search-input-validator';
-import { PrimaryNavigationKey } from '../primary-navigation-key';
-import { TfmSessionUser } from '../tfm-session-user';
+import { BaseViewModel } from './base-view-model';
 
 export type FindUtilisationReportsByYearBankViewModel = {
   value: string;
@@ -8,10 +7,9 @@ export type FindUtilisationReportsByYearBankViewModel = {
   attributes?: Record<string, string>;
 };
 
-export type FindUtilisationReportsByYearViewModel = FindUtilisationReportByYearValidationErrors & {
-  user: TfmSessionUser;
-  activePrimaryNavigation: PrimaryNavigationKey;
-  bankItems: FindUtilisationReportsByYearBankViewModel[];
-  selectedBank?: string;
-  selectedYear?: string;
-};
+export type FindUtilisationReportsByYearViewModel = BaseViewModel &
+  FindUtilisationReportByYearValidationErrors & {
+    bankItems: FindUtilisationReportsByYearBankViewModel[];
+    selectedBank?: string;
+    selectedYear?: string;
+  };

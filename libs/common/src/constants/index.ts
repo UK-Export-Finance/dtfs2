@@ -6,4 +6,5 @@ export * from './tfm';
 export * from './portal';
 export * from './durable-functions-log.constant';
 export * from './fee-record-status';
+export * from './audit-user-types';
 export * as PAYLOAD_VERIFICATION from './payload-verification';

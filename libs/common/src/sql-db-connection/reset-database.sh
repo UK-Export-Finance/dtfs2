@@ -1,9 +1,25 @@
 #!/bin/bash
 
-execute_docker_sql_command() {
-  docker exec dtfs2-dtfs-sql-1 //opt//mssql-tools//bin//sqlcmd -S localhost -U sa -P "AbC!2345" -Q "$1"
+
+restart_docker_sql_container() {
+  docker restart $container_name
   return $?
 }
+
+execute_docker_sql_command() {
+  docker exec $container_name //opt//mssql-tools//bin//sqlcmd -S localhost -U sa -P "AbC!2345" -Q "$1"
+  return $?
+}
+
+readonly container_name=dtfs2-dtfs-sql-1
+readonly container_start_wait_time=20
+
+echo "Restarting docker container '$container_name'..."
+
+restart_docker_sql_container
+
+echo "Waiting $container_start_wait_time seconds for container to start..."
+sleep $container_start_wait_time
 
 echo "Attempting to drop and recreate database '$SQL_DB_NAME'..."
 

@@ -5,6 +5,7 @@ const api = require('../../api')(app);
 const aDeal = require('../deal-builder');
 const { MOCK_DEAL } = require('../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
+const { createDeal } = require('../../helpers/create-deal');
 
 const newFacility = {
   type: 'Bond',
@@ -21,11 +22,6 @@ const newDeal = aDeal({
     criteria: [{}],
   },
 });
-
-const createDeal = async () => {
-  const { body } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
-  return body;
-};
 
 describe('/v1/portal/facilities', () => {
   beforeEach(async () => {
@@ -56,7 +52,9 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('creates a facility', async () => {
-      const { _id } = await createDeal();
+      const {
+        body: { _id },
+      } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       newFacility.dealId = _id;
 
       const { body, status } = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
@@ -76,7 +74,9 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('creates incremental integer facility IDs', async () => {
-      const { _id } = await createDeal();
+      const {
+        body: { _id },
+      } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       newFacility.dealId = _id;
 
       const facility1 = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
@@ -89,7 +89,9 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('adds the facility id to the associated deal', async () => {
-      const { _id } = await createDeal();
+      const {
+        body: { _id },
+      } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       newFacility.dealId = _id;
 
       const { status: createdFacilityStatus, body: createdFacility } = await api
@@ -109,7 +111,10 @@ describe('/v1/portal/facilities', () => {
 
     describe('when required fields are missing', () => {
       it('returns 400 with validation errors', async () => {
-        const { _id } = await createDeal();
+        const {
+          body: { _id },
+        } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+
         newFacility.dealId = _id;
 
         const postBody = {
@@ -132,7 +137,10 @@ describe('/v1/portal/facilities', () => {
 
     describe('when required fields are invalid', () => {
       it('returns 400 with validation errors', async () => {
-        const { _id } = await createDeal();
+        const {
+          body: { _id },
+        } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+
         newFacility.dealId = _id;
 
         const postBody = {
@@ -154,7 +162,9 @@ describe('/v1/portal/facilities', () => {
 
   describe('GET /v1/portal/facilities/:id', () => {
     it('returns the requested resource', async () => {
-      const { _id } = await createDeal();
+      const {
+        body: { _id },
+      } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       newFacility.dealId = _id;
 
       const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');

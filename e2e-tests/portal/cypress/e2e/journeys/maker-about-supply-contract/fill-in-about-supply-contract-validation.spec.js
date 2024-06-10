@@ -3,6 +3,7 @@ const partials = require('../../partials');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
+const { COMPANIES_HOUSE_NUMBERS } = require('../../../fixtures/constants');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
@@ -291,7 +292,7 @@ context('about-supply-contract', () => {
     // indemnifier companies house submit - providing a value which has a space
     //--------------------------------------------------------------------------
 
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type('8989898 ');
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type(COMPANIES_HOUSE_NUMBERS.INVALID_WITH_SPACE);
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -305,7 +306,7 @@ context('about-supply-contract', () => {
       .indemnifierCompaniesHouseRegistrationNumber()
       .invoke('val')
       .then((value) => {
-        expect(value).equal('8989898 ');
+        expect(value).equal(COMPANIES_HOUSE_NUMBERS.INVALID_WITH_SPACE);
       });
 
     //---------------------------------------------------------------
