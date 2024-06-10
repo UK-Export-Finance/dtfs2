@@ -9,7 +9,7 @@ const getCompanyByRegistrationNumber = async (req, res) => {
     if (!isValidCompanyRegistrationNumber(registrationNumber)) {
       console.error('Invalid company registration number provided: %s', registrationNumber);
 
-      res.status(HttpStatusCode.BadRequest).send({
+      return res.status(HttpStatusCode.BadRequest).send({
         error: 'Bad Request',
         statusCode: HttpStatusCode.BadRequest,
       });
@@ -17,13 +17,13 @@ const getCompanyByRegistrationNumber = async (req, res) => {
 
     const { status, data } = await externalApi.companies.getCompanyByRegistrationNumber(registrationNumber);
 
-    res.status(status).send(data);
+    return res.status(status).send(data);
   } catch (error) {
     console.error('Error getting company by registration number: %o', error);
     const status = error?.response?.status || HttpStatusCode.InternalServerError;
     const data = error?.response?.data || 'Error getting the company from External API';
 
-    res.status(status).send(data);
+    return res.status(status).send(data);
   }
 };
 
