@@ -60,15 +60,6 @@ const mdmGetCompanyResponse = {
   ],
 };
 
-const mdmGetCompanyBadRequestResponse = {
-  message: [
-    'registrationNumber must match /^(([A-Z]{2}|[A-Z]\\d|\\d{2})(\\d{5,6}|\\d{4,5}[A-Z]))$/ regular expression',
-    'registrationNumber must be longer than or equal to 7 characters',
-  ],
-  error: 'Bad Request',
-  statusCode: 400,
-};
-
 const mdmGetCompanyNotFoundResponse = {
   message: 'Not found',
   statusCode: 404,
@@ -79,40 +70,47 @@ const mdmGetCompanyUnprocessableEntityResponse = {
   statusCode: 422,
 };
 
+const mdmGetCompanyTooManyRequestsResponse = {
+  message: 'Too many requests',
+  statusCode: 429,
+};
+
 const mdmGetCompanyInternalServerErrorResponse = {
   message: 'Internal server error',
   statusCode: 500,
 };
 
+const testCases = [
+  {
+    registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
+    expectedStatus: HttpStatusCode.Ok,
+    expectedBody: mdmGetCompanyResponse,
+  },
+  {
+    registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_NONEXISTENT,
+    expectedStatus: HttpStatusCode.NotFound,
+    expectedBody: mdmGetCompanyNotFoundResponse,
+  },
+  {
+    registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_OVERSEAS,
+    expectedStatus: HttpStatusCode.UnprocessableEntity,
+    expectedBody: mdmGetCompanyUnprocessableEntityResponse,
+  },
+  {
+    registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
+    expectedStatus: HttpStatusCode.TooManyRequests,
+    expectedBody: mdmGetCompanyTooManyRequestsResponse,
+  },
+  {
+    registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
+    expectedStatus: HttpStatusCode.InternalServerError,
+    expectedBody: mdmGetCompanyInternalServerErrorResponse,
+  },
+];
+
 describe('GET /companies/:registrationNumber', () => {
-  it.each([
-    {
-      registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
-      expectedStatus: HttpStatusCode.Ok,
-      expectedBody: mdmGetCompanyResponse,
-    },
-    {
-      registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT,
-      expectedStatus: HttpStatusCode.BadRequest,
-      expectedBody: mdmGetCompanyBadRequestResponse,
-    },
-    {
-      registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_NONEXISTENT,
-      expectedStatus: HttpStatusCode.NotFound,
-      expectedBody: mdmGetCompanyNotFoundResponse,
-    },
-    {
-      registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_OVERSEAS,
-      expectedStatus: HttpStatusCode.UnprocessableEntity,
-      expectedBody: mdmGetCompanyUnprocessableEntityResponse,
-    },
-    {
-      registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
-      expectedStatus: HttpStatusCode.InternalServerError,
-      expectedBody: mdmGetCompanyInternalServerErrorResponse,
-    },
-  ])(
-    'returns a $expectedStatus with the response body from MDM if MDM returns a $expectedStatus with a response body',
+  it.each(testCases)(
+    'returns the $expectedStatus with the response body from APIM MDM, if MDM returns a $expectedStatus code with a response body',
     async ({ registrationNumber, expectedStatus, expectedBody }) => {
       axiosMock.onGet(getMdmUrlForRegistrationNumber(registrationNumber)).reply(expectedStatus, expectedBody);
 
@@ -122,4 +120,14 @@ describe('GET /companies/:registrationNumber', () => {
       expect(response.body).toStrictEqual(expectedBody);
     },
   );
+
+  it('returns a 400 if the company registration number is invalid', async () => {
+    const response = await get(`/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT}`);
+
+    expect(response.status).toEqual(400);
+    expect(response.body).toStrictEqual({
+      error: 'Bad Request',
+      statusCode: 400,
+    });
+  });
 });

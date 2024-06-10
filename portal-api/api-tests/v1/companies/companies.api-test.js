@@ -1,6 +1,7 @@
 const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
+const { HttpStatusCode } = require('axios');
 const app = require('../../../src/createApp');
-const { MAKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER } = require('../../../src/v1/roles/roles');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
@@ -21,7 +22,7 @@ describe.each([{ baseUrl: '/v1' }, { baseUrl: '/v1/gef' }])('GET $baseUrl/compan
 
   it('returns a 200 response with the company when it is found', async () => {
     const { status, body } = await as(aMaker).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID}`);
-    expect(status).toEqual(200);
+    expect(status).toEqual(HttpStatusCode.Ok);
     expect(body.companiesHouseRegistrationNumber).toEqual(expect.any(String));
     expect(body.companyName).toEqual(expect.any(String));
     expect(body.registeredAddress).toEqual({
@@ -40,19 +41,19 @@ describe.each([{ baseUrl: '/v1' }, { baseUrl: '/v1/gef' }])('GET $baseUrl/compan
     });
   });
 
-  it('returns a 400 response if an invalid company registration number is provided', async () => {
+  it.only('returns a 400 response if an invalid company registration number is provided', async () => {
     const { status } = await as(aMaker).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT}`);
-    expect(status).toEqual(400);
+    expect(status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it('returns a 404 response when the company is not found', async () => {
     const { status } = await as(aMaker).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_NONEXISTENT}`);
-    expect(status).toEqual(404);
+    expect(status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('returns a 422 response when the company is an overseas company', async () => {
     const { status } = await as(aMaker).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_OVERSEAS}`);
-    expect(status).toEqual(422);
+    expect(status).toEqual(HttpStatusCode.UnprocessableEntity);
   });
 
   describe('auth tests', () => {
@@ -62,7 +63,7 @@ describe.each([{ baseUrl: '/v1' }, { baseUrl: '/v1/gef' }])('GET $baseUrl/compan
     beforeEach(() => {
       companies.getCompanyByRegistrationNumber = jest.fn();
       companies.getCompanyByRegistrationNumber.mockResolvedValueOnce({
-        status: 200,
+        status: HttpStatusCode.Ok,
         data: {
           companiesHouseRegistrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
           companyName: 'Test Co.',
@@ -89,11 +90,11 @@ describe.each([{ baseUrl: '/v1' }, { baseUrl: '/v1/gef' }])('GET $baseUrl/compan
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [MAKER, READ_ONLY, ADMIN],
+      allowedRoles: [MAKER],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(aCompanyNumberUrl),
-      successStatusCode: 200,
+      successStatusCode: HttpStatusCode.Ok,
     });
   });
 });

@@ -1,6 +1,7 @@
 const { isValidCompanyRegistrationNumber } = require('@ukef/dtfs2-common');
-
 const axios = require('axios');
+
+const { HttpStatusCode } = axios;
 
 require('dotenv').config();
 
@@ -31,15 +32,15 @@ const getCompanyByRegistrationNumber = async (registrationNumber, token) => {
   } catch (error) {
     console.error(`Error calling Portal API 'GET /companies/:registrationNumber': %o`, error);
     switch (error?.response?.status) {
-      case 400:
+      case HttpStatusCode.BadRequest:
         return {
           errorMessage: 'Enter a valid Companies House registration number',
         };
-      case 404:
+      case HttpStatusCode.NotFound:
         return {
           errorMessage: 'No company matching the Companies House registration number entered was found',
         };
-      case 422:
+      case HttpStatusCode.UnprocessableEntity:
         return {
           errorMessage: 'UKEF can only process applications from companies based in the UK',
         };

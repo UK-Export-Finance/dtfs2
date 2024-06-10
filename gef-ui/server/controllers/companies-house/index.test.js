@@ -103,13 +103,7 @@ describe('controllers/about-exporter', () => {
   });
 
   describe('Validate Companies House', () => {
-    it(`calls api.getApplication with the correct arguments`, async () => {
-      await validateCompaniesHouse(mockRequest, mockResponse);
-
-      expect(getApplicationSpy).toHaveBeenCalledWith({ dealId: '123', userToken });
-    });
-
-    it(`redirects to the 'exporter's address' page when the API call returns company data`, async () => {
+    it(`redirects to the 'exporter's address' page when the api.getCompanyByRegistrationNumber call returns company data`, async () => {
       when(getCompanyByRegistrationNumberMock)
         .calledWith({ registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID, userToken })
         .mockResolvedValue({ company: {} });
@@ -119,6 +113,18 @@ describe('controllers/about-exporter', () => {
       await validateCompaniesHouse(mockRequest, mockResponse);
 
       expect(mockResponse.redirect).toHaveBeenCalledWith('exporters-address');
+    });
+
+    it(`calls api.getApplication with the correct arguments when the api.getCompanyByRegistrationNumber call returns company data`, async () => {
+      when(getCompanyByRegistrationNumberMock)
+        .calledWith({ registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID, userToken })
+        .mockResolvedValue({ company: {} });
+
+      mockRequest.body.regNumber = MOCK_COMPANY_REGISTRATION_NUMBERS.VALID;
+
+      await validateCompaniesHouse(mockRequest, mockResponse);
+
+      expect(getApplicationSpy).toHaveBeenCalledWith({ dealId: '123', userToken });
     });
 
     it('updates the application with the correct details when the company data contains a non-empty industries array', async () => {
@@ -178,7 +184,7 @@ describe('controllers/about-exporter', () => {
       });
     });
 
-    it(`redirects to the 'application details' page when the API call returns company data and the status query is set to 'change'`, async () => {
+    it(`redirects to the 'application details' page when the api.getCompanyByRegistrationNumber call returns company data and the status query is set to 'change'`, async () => {
       when(getCompanyByRegistrationNumberMock)
         .calledWith({ registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID, userToken })
         .mockResolvedValue({ company: {} });
@@ -191,7 +197,7 @@ describe('controllers/about-exporter', () => {
       expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
     });
 
-    it('rerenders the page with the correct errors the API call returns an error object', async () => {
+    it('rerenders the page with the correct errors when the api.getCompanyByRegistrationNumber call returns an error object', async () => {
       const invalidCompanyRegistrationNumberErrorObject = {
         errRef: 'regNumber',
         errMsg: 'Enter a valid Companies House registration number.',
@@ -215,20 +221,22 @@ describe('controllers/about-exporter', () => {
         dealId: '123',
         status: undefined,
       });
+      expect(getApplicationSpy).not.toHaveBeenCalled();
+      expect(updateApplicationSpy).not.toHaveBeenCalled();
     });
 
     it(`redirects to the 'problem with service' page if any of the API calls throw errors`, async () => {
       const mockedRejection = { response: { status: 400, message: 'Whoops' } };
-      api.getApplication.mockRejectedValueOnce(mockedRejection);
+      api.getCompanyByRegistrationNumber.mockRejectedValueOnce(mockedRejection);
 
       await validateCompaniesHouse(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
 
-    it(`logs the error if any of the API calls throw errors`, async () => {
-      const mockedRejection = { response: { status: 400, message: 'Whoops' } };
-      api.getApplication.mockRejectedValueOnce(mockedRejection);
+    it.each([{ status: 400 }, { status: 500 }])(`logs the error if any of the API calls throw a $status error`, async ({ status }) => {
+      const mockedRejection = { response: { status, message: 'Whoops' } };
+      api.getCompanyByRegistrationNumber.mockRejectedValueOnce(mockedRejection);
 
       await validateCompaniesHouse(mockRequest, mockResponse);
 

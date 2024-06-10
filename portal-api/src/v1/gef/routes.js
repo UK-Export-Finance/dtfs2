@@ -104,9 +104,7 @@ router
 
 router.route('/files/:id/download').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), files.downloadFile);
 
-router
-  .route('/companies/:registrationNumber')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, ADMIN] }), companies.getCompanyByRegistrationNumber);
+router.route('/companies/:registrationNumber').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), companies.getCompanyByRegistrationNumber);
 
 router
   .route('/address/:postcode') // Geospatial Addresses

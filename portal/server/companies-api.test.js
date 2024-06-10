@@ -23,6 +23,21 @@ const portalApiGetCompanyResponse = {
   industries: [],
 };
 
+const apiErrorCases = [
+  {
+    status: 400,
+    errorMessage: 'Enter a valid Companies House registration number',
+  },
+  {
+    status: 404,
+    errorMessage: 'No company matching the Companies House registration number entered was found',
+  },
+  {
+    status: 422,
+    errorMessage: 'UKEF can only process applications from companies based in the UK',
+  },
+];
+
 let axiosGetActual;
 let axiosGetMock;
 
@@ -77,20 +92,7 @@ describe('getCompanyByRegistrationNumber()', () => {
     });
   });
 
-  it.each([
-    {
-      status: 400,
-      errorMessage: 'Enter a valid Companies House registration number',
-    },
-    {
-      status: 404,
-      errorMessage: 'No company matching the Companies House registration number entered was found',
-    },
-    {
-      status: 422,
-      errorMessage: 'UKEF can only process applications from companies based in the UK',
-    },
-  ])('returns the correct error information if the request to Portal API returns a $status', async ({ status, errorMessage }) => {
+  it.each(apiErrorCases)('returns the correct error information if the request to Portal API returns a $status', async ({ status, errorMessage }) => {
     const axiosError = new AxiosError();
     axiosError.response = {
       status,

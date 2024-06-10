@@ -31,8 +31,6 @@ const validateCompaniesHouse = async (req, res) => {
     const { user, userToken } = session;
     const { _id: editorId } = user;
 
-    const { exporter } = await api.getApplication({ dealId, userToken });
-
     const { company: companiesHouseDetails, errRef, errMsg } = await api.getCompanyByRegistrationNumber({ registrationNumber, userToken });
 
     if (!companiesHouseDetails) {
@@ -43,6 +41,8 @@ const validateCompaniesHouse = async (req, res) => {
         status,
       });
     }
+
+    const { exporter } = await api.getApplication({ dealId, userToken });
 
     // no errors so we can safely update the application.
     /**

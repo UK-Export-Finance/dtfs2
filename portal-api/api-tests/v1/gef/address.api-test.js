@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const app = require('../../../src/createApp');
 const { MAKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 const testUserCache = require('../../api-test-users');
@@ -22,7 +23,7 @@ describe(`GET ${baseUrl}/address/:postcode (Ordnance Survey)`, () => {
 
   it('Returns a list of addresses', async () => {
     const { status, body } = await as(aMaker).get(`${baseUrl}/address/SW1A2HQ`);
-    expect(status).toEqual(200);
+    expect(status).toEqual(HttpStatusCode.Ok);
     expect(body[0]).toEqual({
       organisationName: expect.any(String),
       addressLine1: expect.any(String),
@@ -36,10 +37,10 @@ describe(`GET ${baseUrl}/address/:postcode (Ordnance Survey)`, () => {
 
   it('Returns a not found address if the postcode was not found', async () => {
     const { status, body } = await as(aMaker).get(`${baseUrl}/address/AA11AA`);
-    expect(status).toEqual(422);
+    expect(status).toEqual(HttpStatusCode.UnprocessableEntity);
     expect(body).toEqual([
       {
-        status: 422,
+        status: HttpStatusCode.UnprocessableEntity,
         errCode: 'ERROR',
         errRef: 'postcode',
       },
@@ -48,7 +49,7 @@ describe(`GET ${baseUrl}/address/:postcode (Ordnance Survey)`, () => {
 
   it('Returns a not found address if the postcode was invalid', async () => {
     const { status } = await as(aMaker).get(`${baseUrl}/address/A1`);
-    expect(status).toEqual(400);
+    expect(status).toEqual(HttpStatusCode.BadRequest);
   });
 
   describe('auth tests', () => {
@@ -74,7 +75,7 @@ describe(`GET ${baseUrl}/address/:postcode (Ordnance Survey)`, () => {
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(aPostcodeAddressUrl),
-      successStatusCode: 200,
+      successStatusCode: HttpStatusCode.Ok,
     });
   });
 });

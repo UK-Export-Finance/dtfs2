@@ -1,5 +1,6 @@
 const FormData = require('form-data');
 const { isValidCompanyRegistrationNumber } = require('@ukef/dtfs2-common');
+const { HttpStatusCode } = require('axios');
 const Axios = require('./axios');
 const { apiErrorHandler } = require('../utils/helpers');
 const { isValidMongoId, isValidUkPostcode } = require('../utils/validateIds');
@@ -200,17 +201,17 @@ const getCompanyByRegistrationNumber = async ({ registrationNumber, userToken })
   } catch (error) {
     console.error(`Error calling Portal API 'GET /gef/companies/:registrationNumber': %o`, error);
     switch (error?.response?.status) {
-      case 400:
+      case HttpStatusCode.BadRequest:
         return {
           errRef: 'regNumber',
           errMsg: 'Enter a valid Companies House registration number',
         };
-      case 404:
+      case HttpStatusCode.NotFound:
         return {
           errRef: 'regNumber',
           errMsg: 'No company matching the Companies House registration number entered was found',
         };
-      case 422:
+      case HttpStatusCode.UnprocessableEntity:
         return {
           errRef: 'regNumber',
           errMsg: 'UKEF can only process applications from companies based in the UK',

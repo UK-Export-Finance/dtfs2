@@ -1,4 +1,7 @@
+const { isValidCompanyRegistrationNumber } = require('@ukef/dtfs2-common');
 const axios = require('axios');
+
+const { HttpStatusCode } = axios;
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -16,12 +19,23 @@ const headers = {
  */
 const getCompanyByRegistrationNumber = async (registrationNumber) => {
   try {
+    if (!isValidCompanyRegistrationNumber(registrationNumber)) {
+      console.error('Invalid company registration number provided: %s', registrationNumber);
+      return {
+        status: HttpStatusCode.BadRequest,
+        data: {
+          error: 'Bad Request',
+          statusCode: HttpStatusCode.BadRequest,
+        },
+      };
+    }
+
     const response = await axios.get(`${EXTERNAL_API_URL}/companies/${registrationNumber}`, { headers });
 
     return response;
   } catch (error) {
     console.error(`Error calling External API 'GET /companies/:registrationNumber': %o`, error);
-    const status = error?.response?.status || 500;
+    const status = error?.response?.status || HttpStatusCode.InternalServerError;
     const data = error?.response?.data || 'Error getting the company from External API';
 
     return { status, data };

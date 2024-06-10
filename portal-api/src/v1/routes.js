@@ -313,6 +313,6 @@ authRouter.route('/bank-holidays').get(getBankHolidays);
 
 authRouter
   .route('/companies/:registrationNumber')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, ADMIN] }), companies.getCompanyByRegistrationNumber);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), companies.getCompanyByRegistrationNumber);
 
 module.exports = { openRouter, authRouter };

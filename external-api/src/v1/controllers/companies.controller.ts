@@ -1,6 +1,7 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
+import { isValidCompanyRegistrationNumber } from '@ukef/dtfs2-common';
 
 dotenv.config();
 
@@ -10,17 +11,36 @@ const headers = {
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
 
-export const getCompanyByRegistrationNumber = async (req: Request, res: Response) => {
+/**
+ * Get company details for the company matching the Companies House registration number provided.
+ * @param {Request} req Express request with `registrationNumber` as a URL parameter.
+ * @param {Response} res Express response.
+ * @returns {Promise<Response>} Express response with `status` and `data`. `Data` contains the company details,
+ * or error data if the request was unsuccessful.
+ */
+export const getCompanyByRegistrationNumber = async (req: Request, res: Response): Promise<Response> => {
+  let response: { status: number | undefined; data: unknown };
+
   const { registrationNumber } = req.params;
 
-  const url: string = `${APIM_MDM_URL}companies?registrationNumber=${encodeURIComponent(registrationNumber)}`;
+  if (!isValidCompanyRegistrationNumber(registrationNumber)) {
+    response = {
+      status: 400,
+      data: {
+        error: 'Bad Request',
+        statusCode: 400,
+      },
+    };
+  } else {
+    const url: string = `${APIM_MDM_URL}companies?registrationNumber=${encodeURIComponent(registrationNumber)}`;
 
-  const response: { status: number | undefined; data: unknown } = await axios.get(url, { headers }).catch((error: AxiosError) => {
-    console.error(`Error calling MDM API 'GET /companies?registrationNumber=': %o`, error);
-    return { status: error.response?.status, data: error.response?.data };
-  });
+    response = await axios.get(url, { headers }).catch((error: AxiosError) => {
+      console.error(`Error calling MDM API 'GET /companies?registrationNumber=': %o`, error);
+      return { status: error.response?.status, data: error.response?.data };
+    });
+  }
 
   const { status, data } = response;
 
-  return res.status(status || 500).send(data);
+  return res.status(status || HttpStatusCode.InternalServerError).send(data);
 };

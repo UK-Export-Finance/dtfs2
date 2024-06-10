@@ -1,4 +1,4 @@
-import { AxiosError } from 'axios';
+import { AxiosError, HttpStatusCode } from 'axios';
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
 import Axios from '../axios';
 import api from '../api';
@@ -257,6 +257,21 @@ describe('getCompanyByRegistrationNumber()', () => {
     industries: [],
   };
 
+  const apiErrorCases = [
+    {
+      status: HttpStatusCode.BadRequest,
+      errMsg: 'Enter a valid Companies House registration number',
+    },
+    {
+      status: HttpStatusCode.NotFound,
+      errMsg: 'No company matching the Companies House registration number entered was found',
+    },
+    {
+      status: HttpStatusCode.UnprocessableEntity,
+      errMsg: 'UKEF can only process applications from companies based in the UK',
+    },
+  ];
+
   it('returns the company if it is returned by the request to Portal API', async () => {
     Axios.get.mockResolvedValueOnce({ status: 200, data: portalApiGetCompanyResponse });
 
@@ -301,20 +316,7 @@ describe('getCompanyByRegistrationNumber()', () => {
     });
   });
 
-  it.each([
-    {
-      status: 400,
-      errMsg: 'Enter a valid Companies House registration number',
-    },
-    {
-      status: 404,
-      errMsg: 'No company matching the Companies House registration number entered was found',
-    },
-    {
-      status: 422,
-      errMsg: 'UKEF can only process applications from companies based in the UK',
-    },
-  ])('returns the correct error information if the request to Portal API returns a $status', async ({ status, errMsg }) => {
+  it.each(apiErrorCases)('returns the correct error information if the request to Portal API returns a $status', async ({ status, errMsg }) => {
     const axiosError = new AxiosError();
     axiosError.response = {
       status,
@@ -332,7 +334,7 @@ describe('getCompanyByRegistrationNumber()', () => {
   it('rethrows the error if the request to Portal API throws an error with an unhandled status', async () => {
     const axiosError = new AxiosError();
     axiosError.response = {
-      status: 418,
+      status: HttpStatusCode.InternalServerError,
     };
     Axios.get.mockRejectedValueOnce(axiosError);
 
