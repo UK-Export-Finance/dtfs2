@@ -3,9 +3,11 @@ import { ApiError } from '.';
 
 export class TransactionFailedError extends ApiError {
   constructor(apiError?: ApiError) {
+    const errorMessage = apiError?.message ?? 'Unknown error';
+    const errorStatus = apiError?.status ?? HttpStatusCode.InternalServerError;
     super({
-      message: apiError?.message ?? 'Transaction failed',
-      status: apiError?.status ?? HttpStatusCode.InternalServerError,
+      message: errorMessage,
+      status: errorStatus,
     });
   }
 }
