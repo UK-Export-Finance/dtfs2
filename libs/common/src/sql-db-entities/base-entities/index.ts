@@ -1,1 +1,2 @@
-export { AuditableBaseEntity } from './auditable.base-entity';
+export { NewTable } from './new-table.base-entity';
+export { TableWithLedgerEnabled } from './table-with-ledger-enabled.base-entity';

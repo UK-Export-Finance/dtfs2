@@ -1,12 +1,12 @@
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Currency } from '../../types';
-import { AuditableBaseEntity } from '../base-entities';
+import { TableWithLedgerEnabled } from '../base-entities';
 import { CreatePaymentParams } from './payment.types';
 import { FeeRecordEntity } from '../fee-record';
 import { MonetaryColumn } from '../custom-columns';
 
 @Entity('Payment')
-export class PaymentEntity extends AuditableBaseEntity {
+export class PaymentEntity extends TableWithLedgerEnabled {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -19,7 +19,7 @@ export class PaymentEntity extends AuditableBaseEntity {
   /**
    * The amount received in the payment
    */
-  @MonetaryColumn({ nullable: true, defaultValue: 0 })
+  @MonetaryColumn({ nullable: true })
   amount!: number;
 
   /**

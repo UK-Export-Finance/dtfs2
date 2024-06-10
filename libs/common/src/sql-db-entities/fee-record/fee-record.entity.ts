@@ -2,13 +2,13 @@ import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColum
 import Big from 'big.js';
 import { UtilisationReportEntity } from '../utilisation-report';
 import { Currency, FeeRecordStatus } from '../../types';
-import { AuditableBaseEntity } from '../base-entities';
+import { TableWithLedgerEnabled } from '../base-entities';
 import { CreateFeeRecordParams, UpdateWithStatusParams } from './fee-record.types';
 import { MonetaryColumn, ExchangeRateColumn } from '../custom-columns';
 import { PaymentEntity } from '../payment';
 
 @Entity('FeeRecord')
-export class FeeRecordEntity extends AuditableBaseEntity {
+export class FeeRecordEntity extends TableWithLedgerEnabled {
   @PrimaryGeneratedColumn()
   id!: number;
 

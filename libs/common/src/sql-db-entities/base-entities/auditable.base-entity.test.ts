@@ -1,4 +1,4 @@
-import { AuditableBaseEntity } from '.';
+import { AuditableBaseEntity } from './auditable.base-entity';
 import { DbRequestSource } from '../helpers';
 
 // We cannot create instances of abstract classes, so we define a test class below

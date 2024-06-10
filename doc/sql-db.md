@@ -10,6 +10,39 @@ As of January 2024 the project is in the process of migrating from a MongoDB (No
 
 The SQL Server database tables all have ledger enabled which has some impacts on how we alter tables. For more details than those discussed below, refer to [the SQL Server docs](https://learn.microsoft.com/en-us/sql/relational-databases/security/ledger/ledger-limits?view=sql-server-ver16).
 
+### Adding a new table
+
+When a migration is generated to add a new table, the following must be manually added to the migration to enable ledger.
+
+```SQL
+CREATE TABLE "NewTable" (
+  ...
+) WITH (
+  SYSTEM_VERSIONING = ON,
+  LEDGER = ON
+)
+```
+
+#### - Defining the new entity class
+
+Before a migration to add a new table is generated, the new entity should extend the [`NewTable`](../libs/common/src/sql-db-entities/base-entities/index.ts) class.
+
+```typescript
+export class MyEntity extends NewTable { ... };
+```
+
+After generating this migration, modifying the migration with the above lines to enable ledger and running it, the entity definition should then be modified to extend the [`TableWithLedgerEnabled`](../libs/common/src/sql-db-entities/base-entities/index.ts) class.
+
+```typescript
+export class MyEntity extends TableWithLedgerEnabled { ... };
+```
+
+This class includes columns which are always added due to ledger which would otherwise appear whenever new migrations are generated. By using this base entity, these columns will not appear in migrations which are generated in the future.
+
+⚠️ It is important to note that this class must not be used to generate the initial migration as, if the migration attempts to add the ledger columns itself, an error will be thrown.
+
+⚠️ Any migrations which modify existing columns will generate rows in the generated ledger tables. These rows will then be picked up by migrations which are generated in the future. These need to be manually 
+
 ### Adding a new column
 
 Nullable columns can be added to a ledger table with no issues. Non-nullable columns should not be added to tables after they have been created, and existing columns should not be converted to non-nullable. For more details, read [here](https://learn.microsoft.com/en-us/sql/relational-databases/security/ledger/ledger-limits?view=sql-server-ver16#adding-columns).
@@ -89,6 +122,10 @@ In the new file there will be two functions:
 - `down`: how to revert the changes
 
 ⚠️ Always check the contents of the auto-generated migrations for correctness. In some situations we will always need to manually adjust them (e.g. if a new non-nullable column is added we will need to specify how to populate any existing rows)
+
+##### Ledger table considerations
+
+Due to SQL Server ledger being enabled for each table, there is a specific procedure which should be followed when generating a migration to add a new table. You can read more about this [here](#ledger-tables).
 
 #### - Run migrations
 

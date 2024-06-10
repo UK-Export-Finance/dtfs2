@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UtilisationReportReconciliationStatus } from '../../types';
-import { AuditableBaseEntity } from '../base-entities';
+import { TableWithLedgerEnabled } from '../base-entities';
 import { ReportPeriodPartialEntity } from '../partial-entities';
 import { AzureFileInfoEntity } from '../azure-file-info';
 import { FeeRecordEntity } from '../fee-record';
@@ -12,7 +12,7 @@ import {
 } from './utilisation-report.types';
 
 @Entity('UtilisationReport')
-export class UtilisationReportEntity extends AuditableBaseEntity {
+export class UtilisationReportEntity extends TableWithLedgerEnabled {
   @PrimaryGeneratedColumn()
   id!: number;
 
