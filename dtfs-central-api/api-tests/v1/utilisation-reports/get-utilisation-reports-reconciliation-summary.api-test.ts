@@ -30,6 +30,12 @@ describe('/v1/utilisation-reports/reconciliation-summary/:submissionMonth', () =
     await api.post(withoutMongoId(MOCK_BANKS.BARCLAYS)).to('/v1/bank');
 
     await SqlDbHelper.initialize();
+
+    // TODO: DTFS2-7202 - Refactor generateApp to be an asynchronous function
+    // This timeout is needed as the SQL db connection is not being awaited & the first test is often run before the database has connected
+    await new Promise((resolve) => {
+      setTimeout(resolve, 5000);
+    });
   });
 
   describe('GET /v1/utilisation-reports/reconciliation-summary/:submissionMonth', () => {
