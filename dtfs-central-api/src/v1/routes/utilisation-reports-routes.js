@@ -57,7 +57,7 @@ utilisationReportsRouter.route('/').post(postUploadUtilisationReportPayloadValid
  * /utilisation-reports/:id:
  *   get:
  *     summary: Get utilisation report with the specified id ('id')
- *     tags: [UtilisationReport]
+ *     tags: [Utilisation Report]
  *     description: Get utilisation report with the specified id ('id')
  *     parameters:
  *       - in: path
@@ -94,7 +94,7 @@ utilisationReportsRouter.route('/:id').get(validation.sqlIdValidation('id'), han
  *       month. This includes status of reports for all banks in the current
  *       submission month, and details of any open reports from previous
  *       submission months
- *     tags: [UtilisationReport]
+ *     tags: [Utilisation Report]
  *     description: |
  *       Get a summary of utilisation report reconciliation status for all banks
  *       in the specified report submission month, and open reports from
@@ -122,7 +122,7 @@ utilisationReportsRouter
  * /utilisation-reports/set-status:
  *   put:
  *     summary: Put utilisation report status for multiple utilisation reports
- *     tags: [UtilisationReport]
+ *     tags: [Utilisation Report]
  *     description: Set the status of many utilisation reports to completed or not completed.
  *     requestBody:
  *       content:
@@ -151,7 +151,7 @@ utilisationReportsRouter.route('/set-status').put(putUtilisationReportStatusCont
  * /utilisation-reports/reconciliation-details/:reportId:
  *   get:
  *     summary: Get the reconciliation details for the utilisation report by the report id
- *     tags: [UtilisationReport]
+ *     tags: [Utilisation Report]
  *     description: Gets the reconciliation details for the utilisation report by the report id
  *     responses:
  *       200:
@@ -177,7 +177,7 @@ utilisationReportsRouter
  * /utilisation-reports/:id/selected-fee-records-details:
  *   get:
  *     summary: Get the fee record details for the selected fee record ids
- *     tags: [UtilisationReport]
+ *     tags: [Utilisation Report]
  *     description: Get the fee record details for the selected fee record ids
  *     parameters:
  *       - in: path
@@ -192,7 +192,7 @@ utilisationReportsRouter
  *         application/json:
  *           schema:
  *             type: object
- *              properties:
+ *             properties:
  *               feeRecordIds:
  *                 description: The ids of the selected fee records
  *                 type: array
@@ -222,7 +222,7 @@ utilisationReportsRouter
  * /utilisation-reports/:reportId/payment:
  *   post:
  *     summary: Add a payment to the utilisation report
- *     tags: [UtilisationReport]
+ *     tags: [Utilisation Report]
  *     description: Adds a new payment to the utilisation report with the supplied report id
  *     parameters:
  *       - in: path
@@ -237,7 +237,7 @@ utilisationReportsRouter
  *         application/json:
  *           schema:
  *             type: object
- *              properties:
+ *             properties:
  *               feeRecordIds:
  *                 description: The ids of the selected fee records
  *                 type: array
