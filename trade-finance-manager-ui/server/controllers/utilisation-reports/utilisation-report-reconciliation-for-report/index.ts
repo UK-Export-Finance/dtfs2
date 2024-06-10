@@ -8,7 +8,7 @@ import { UtilisationReportReconciliationForReportViewModel } from '../../../type
 import { getAndClearAddPaymentFieldsFromRedirectSessionData } from './get-and-clear-add-payment-fields-from-redirect-session-data';
 import { FeeRecordItem } from '../../../api-response-types';
 
-const isAtLeastOnePaymentReceivedNonNull = (feeRecords: FeeRecordItem[]): boolean => feeRecords.some(({ paymentsReceived }) => paymentsReceived !== null);
+const feeRecordsHaveAtLeastOnePaymentReceived = (feeRecords: FeeRecordItem[]): boolean => feeRecords.some(({ paymentsReceived }) => paymentsReceived !== null);
 
 const renderUtilisationReportReconciliationForReport = (res: Response, viewModel: UtilisationReportReconciliationForReportViewModel) =>
   res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', viewModel);
@@ -26,7 +26,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
 
     const feeRecordViewModel = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecords, isCheckboxChecked);
 
-    const enablePaymentsReceivedSorting = isAtLeastOnePaymentReceivedNonNull(feeRecords);
+    const enablePaymentsReceivedSorting = feeRecordsHaveAtLeastOnePaymentReceived(feeRecords);
 
     return renderUtilisationReportReconciliationForReport(res, {
       user,
