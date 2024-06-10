@@ -298,7 +298,7 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
     cy.url().should('contain', '/banks-decision/received-date');
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/banks-decision/check-answers');
-    amendmentsPage.underWritingSubmitButton().click();
+    amendmentsPage.assignLeadUnderwriterSaveButton().click();
 
     caseSubNavigation.dealLink().click();
     caseDealPage.dealFacilitiesTable.row(dealFacilities[0]._id).facilityId().click();
@@ -523,7 +523,7 @@ context('Amendments underwriting - add banks decision - change from proceed to w
     cy.url().should('contain', '/banks-decision/received-date');
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/banks-decision/check-answers');
-    amendmentsPage.underWritingSubmitButton().click();
+    amendmentsPage.assignLeadUnderwriterSaveButton().click();
 
     caseSubNavigation.dealLink().click();
     caseDealPage.dealFacilitiesTable.row(dealFacilities[0]._id).facilityId().click();

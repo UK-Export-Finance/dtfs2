@@ -490,7 +490,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.url().should('contain', '/banks-decision/effective-date');
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/banks-decision/check-answers');
-    amendmentsPage.underWritingSubmitButton().click();
+    amendmentsPage.assignLeadUnderwriterSaveButton().click();
 
     caseSubNavigation.dealLink().click();
     caseDealPage.dealFacilitiesTable.row(dealFacilities[0]._id).facilityId().click();

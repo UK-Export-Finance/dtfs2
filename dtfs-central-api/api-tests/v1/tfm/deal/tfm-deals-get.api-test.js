@@ -5,6 +5,7 @@ const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
+const { createDeal } = require('../../../helpers/create-deal');
 
 const newDeal = (dealOverrides) => ({
   additionalRefName: 'mock name',
@@ -34,13 +35,7 @@ const createAndSubmitDeals = async (deals) => {
   const result = await Promise.all(
     deals.map(async (deal) => {
       // create deal
-      const createResponse = await api
-        .post({
-          deal,
-          user: deal.maker,
-        })
-        .to('/v1/portal/deals');
-
+      const createResponse = await createDeal({ api, deal, user: deal.maker });
       expect(createResponse.status).toEqual(200);
 
       // submit deal

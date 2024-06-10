@@ -1,3 +1,4 @@
+const { getUnixTime } = require('date-fns');
 const CONSTANTS = require('../../constants');
 
 const api = require('../api');
@@ -5,6 +6,7 @@ const { getGroupById, getTaskInGroupById, hasAmendmentAdverseHistoryTaskComplete
 const mapTaskObject = require('../tasks/map-task-object');
 const { previousTaskIsComplete, taskCanBeEditedWithoutPreviousTaskComplete, handleTaskEditFlagAndStatus } = require('../tasks/tasks-edit-logic');
 const sendUpdatedTaskEmail = require('../controllers/task-emails');
+const getAssigneeFullName = require('./get-assignee-full-name');
 
 /**
  * Create tasks for a single group
@@ -314,6 +316,49 @@ const updateAmendmentTasks = async (facilityId, amendmentId, taskUpdate) => {
   return originalTask;
 };
 
+/**
+ * Assigns facility amendment tasks belonging to groupName to a user with specified id.
+ *
+ * @param {Array} tasks - A list of task groups, where each group is a dictionary containing
+ *                        a 'groupTasks' key with a list of tasks.
+ * @param {string} groupName - The name of the team/group which tasks should be assigned.
+ * @param {string} newUserId - The ID of the user to whom tasks should be assigned.
+ * @returns {Array} A modified list of task groups.
+ */
+const getTasksAssignedToUserByGroup = async (tasks, groupName, newUserId) => {
+  const updatedAt = getUnixTime(new Date());
+
+  if (!tasks?.length) {
+    throw new Error('Tasks list is empty or missing');
+  }
+
+  if (!groupName) {
+    throw new Error('Group name is missing');
+  }
+
+  if (!newUserId) {
+    throw new Error('User id is missing');
+  }
+
+  const userFullName = await getAssigneeFullName(newUserId);
+
+  return tasks.map((group) => {
+    const assignedTasks = group.groupTasks.map((task) =>
+      task.team?.id !== groupName
+        ? task
+        : {
+            ...task,
+            updatedAt,
+            assignedTo: {
+              userFullName,
+              userId: newUserId,
+            },
+          },
+    );
+    return { ...group, groupTasks: assignedTasks };
+  });
+};
+
 module.exports = {
   createGroupTasks,
   createTasksAutomaticAmendment,
@@ -322,4 +367,5 @@ module.exports = {
   updateTask,
   updateAllTasks,
   updateAmendmentTasks,
+  getTasksAssignedToUserByGroup,
 };

@@ -7,6 +7,7 @@ import aboutExporter from '../pages/about-exporter';
 import selectExportersCorAddress from '../pages/select-exporters-corr-address';
 
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
+import { COMPANIES_HOUSE_NUMBERS } from '../../fixtures/constants';
 
 let url;
 let dealId;
@@ -35,7 +36,7 @@ context('Incomplete exporter section - application details page', () => {
     it('completes the exporter section', () => {
       cy.visit(url);
       applicationDetails.exporterDetailsLink().click();
-      companiesHouse.regNumberField().type('8989898');
+      companiesHouse.regNumberField().type(COMPANIES_HOUSE_NUMBERS.VALID);
       companiesHouse.continueButton().click();
       exportersAddress.noRadioButton().click();
       exportersAddress.continueButton().click();

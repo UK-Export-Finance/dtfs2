@@ -15,15 +15,15 @@ describe(component, () => {
         feeRecordId: 123,
         facilityId: '000123',
         exporter: 'Exporter 123',
-        reportedFee: 'EUR 800,000.00',
-        reportedPayments: 'GBP 700,000.00',
+        reportedFee: { value: 'EUR 800,000.00', dataSortValue: 0 },
+        reportedPayments: { value: 'GBP 700,000.00', dataSortValue: 1 },
       },
       {
         feeRecordId: 456,
         facilityId: '000456',
         exporter: 'Exporter 456',
-        reportedFee: 'EUR 350,000.00',
-        reportedPayments: 'GBP 300,000.00',
+        reportedFee: { value: 'EUR 350,000.00', dataSortValue: 2 },
+        reportedPayments: { value: 'GBP 300,000.00', dataSortValue: 3 },
       },
     ],
   };
@@ -54,6 +54,14 @@ describe(component, () => {
     wrapper.expectElement(`tr[data-cy="selected-reported-fees-details-table-row--feeRecordId-456"] td:contains("Exporter 456")`).toExist();
     wrapper.expectElement(`tr[data-cy="selected-reported-fees-details-table-row--feeRecordId-456"] td:contains("EUR 350,000.00")`).toExist();
     wrapper.expectElement(`tr[data-cy="selected-reported-fees-details-table-row--feeRecordId-456"] td:contains("GBP 300,000.00")`).toExist();
+  });
+
+  it('should set data sort value for monetary columns to passed in dataSortValue', () => {
+    const wrapper = getWrapper();
+    wrapper.expectElement(`td:contains("EUR 800,000.00")`).toHaveAttribute('data-sort-value', '0');
+    wrapper.expectElement(`td:contains("GBP 700,000.00")`).toHaveAttribute('data-sort-value', '1');
+    wrapper.expectElement(`td:contains("EUR 350,000.00")`).toHaveAttribute('data-sort-value', '2');
+    wrapper.expectElement(`td:contains("GBP 300,000.00")`).toHaveAttribute('data-sort-value', '3');
   });
 
   it('should render the total reported payments', () => {
