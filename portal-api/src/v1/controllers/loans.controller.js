@@ -15,7 +15,7 @@ const CONSTANTS = require('../../constants');
 exports.create = async (req, res) => {
   const {
     user,
-    params: { dealId },
+    params: { id: dealId },
     body,
   } = req;
   if (!isValidMongoId(dealId)) {

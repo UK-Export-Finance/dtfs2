@@ -347,7 +347,7 @@ describe('/v1/deals/:id/bond', () => {
         });
 
         describe('when eligibility criteria 15 answer is `false`', () => {
-          it.only('should NOT return validationError when date is greater than 3 months', async () => {
+          it('should NOT return validationError when date is greater than 3 months', async () => {
             const dealWithEligibilityCriteria15False = {
               ...deal,
               eligibility: {
