@@ -9,6 +9,7 @@ const aDeal = require('../../deal-builder');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
+const { createDeal } = require('../../../helpers/create-deal');
 const db = require('../../../../src/drivers/db-client').default;
 
 const newDeal = aDeal({
@@ -45,7 +46,7 @@ describe('/v1/tfm/deal/:id', () => {
     let tfmFacilitiesToDeleteIds;
 
     beforeEach(async () => {
-      const postResult = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
+      const postResult = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       const portalDealId = postResult.body._id;
 
       await Promise.all(
