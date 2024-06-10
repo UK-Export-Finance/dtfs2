@@ -148,7 +148,7 @@ utilisationReportsRouter.route('/set-status').put(putUtilisationReportStatusCont
 
 /**
  * @openapi
- * /:utilisation-reports/reconciliation-details/:reportId:
+ * /utilisation-reports/reconciliation-details/:reportId:
  *   get:
  *     summary: Get the reconciliation details for the utilisation report by the report id
  *     tags: [Utilisation Report]
