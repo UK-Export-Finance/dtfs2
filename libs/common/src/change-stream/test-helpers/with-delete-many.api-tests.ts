@@ -80,7 +80,7 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
           when(deleteManyMock)
             // @ts-ignore
             .calledWith(
-              { $or: expect.arrayContaining(getDeletedDocumentIds().map((_id) => ({ _id: new ObjectId(_id) }))) as { _id: ObjectId }[] },
+              { _id: { $in: expect.arrayContaining(getDeletedDocumentIds().map((id) => new ObjectId(id))) as ObjectId[] } },
               {
                 session: expect.any(ClientSession) as ClientSession,
               },
@@ -99,7 +99,7 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
           when(deleteManyMock)
             // @ts-ignore
             .calledWith(
-              { $or: expect.arrayContaining(getDeletedDocumentIds().map((_id) => ({ _id: new ObjectId(_id) }))) as { _id: ObjectId }[] },
+              { _id: { $in: expect.arrayContaining(getDeletedDocumentIds().map((id) => new ObjectId(id))) as ObjectId[] } },
               {
                 session: expect.any(ClientSession) as ClientSession,
               },
@@ -119,7 +119,7 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
           when(deleteManyMock)
             // @ts-ignore
             .calledWith(
-              { $or: expect.arrayContaining(getDeletedDocumentIds().map((_id) => ({ _id: new ObjectId(_id) }))) as { _id: ObjectId }[] },
+              { _id: { $in: expect.arrayContaining(getDeletedDocumentIds().map((id) => new ObjectId(id))) as ObjectId[] } },
               {
                 session: expect.any(ClientSession) as ClientSession,
               },

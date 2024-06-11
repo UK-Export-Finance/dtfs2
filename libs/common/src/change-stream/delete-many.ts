@@ -26,12 +26,12 @@ const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetail
     };
     await session.withTransaction(async () => {
       const collection = await db.getCollection(collectionName);
-      const documentsToDelete = await collection.find(filter, { projection: { _id: true }, session }).toArray();
+      const documentsToDeleteIds = (await collection.find(filter, { projection: { _id: true }, session }).toArray()).map(({ _id }) => _id);
 
-      if (documentsToDelete.length) {
-        const logsToInsert: WithoutId<DeletionAuditLog>[] = documentsToDelete.map(({ _id }) => ({
+      if (documentsToDeleteIds.length) {
+        const logsToInsert: WithoutId<DeletionAuditLog>[] = documentsToDeleteIds.map((deletedDocumentId) => ({
           collectionName,
-          deletedDocumentId: _id,
+          deletedDocumentId,
           auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
           expireAt: add(new Date(), { seconds: DELETION_AUDIT_LOGS_TTL_SECONDS }),
         }));
@@ -42,8 +42,8 @@ const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetail
           throw new Error('Failed to create deletion audit logs');
         }
 
-        const deleteResult = await collection.deleteMany({ $or: documentsToDelete.map(({ _id }) => ({ _id })) }, { session });
-        if (!(deleteResult.acknowledged && deleteResult.deletedCount === documentsToDelete.length)) {
+        const deleteResult = await collection.deleteMany({ _id: { $in: documentsToDeleteIds } }, { session });
+        if (!(deleteResult.acknowledged && deleteResult.deletedCount === documentsToDeleteIds.length)) {
           throw new Error('Failed to delete documents');
         }
       }

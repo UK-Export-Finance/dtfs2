@@ -518,15 +518,15 @@ describe(baseUrl, () => {
     });
 
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => remove(`${baseUrl}/${String(facilityToDeleteId)}`),
-      makeRequestWithAuthHeader: (authHeader) => remove(`${baseUrl}/${String(facilityToDeleteId)}`, { headers: { Authorization: authHeader } }),
+      makeRequestWithoutAuthHeader: () => remove(`${baseUrl}/${facilityToDeleteId}`),
+      makeRequestWithAuthHeader: (authHeader) => remove(`${baseUrl}/${facilityToDeleteId}`, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-      makeRequestAsUser: (user) => as(user).remove(`${baseUrl}/${String(facilityToDeleteId)}`),
+      makeRequestAsUser: (user) => as(user).remove(`${baseUrl}/${facilityToDeleteId}`),
       successStatusCode: 200,
     });
 
