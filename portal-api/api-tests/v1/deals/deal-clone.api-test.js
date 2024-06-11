@@ -1,12 +1,13 @@
-const databaseHelper = require('../../database-helper');
-const app = require('../../../src/createApp');
-const testUserCache = require('../../api-test-users');
-const completedDeal = require('../../fixtures/deal-fully-completed');
-const { as } = require('../../api')(app);
-const createFacilities = require('../../createFacilities');
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { createDealEligibility } = require('../../../src/v1/controllers/deal.controller');
 const { MAKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
+const databaseHelper = require('../../database-helper');
+const testUserCache = require('../../api-test-users');
+const completedDeal = require('../../fixtures/deal-fully-completed');
+const createFacilities = require('../../createFacilities');
+const app = require('../../../src/createApp');
+const { as } = require('../../api')(app);
 
 const dealToClone = completedDeal;
 
@@ -91,8 +92,6 @@ describe('/v1/deals/:id/clone', () => {
 
         const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
-        expect(body._id).toEqual(body._id);
-
         const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
 
         expect(cloned.deal.bankInternalRefName).toEqual(clonePostBody.bankInternalRefName);
@@ -114,6 +113,23 @@ describe('/v1/deals/:id/clone', () => {
         expect(cloned.deal.comments).toEqual([]);
         expect(cloned.deal.ukefComments).toEqual([]);
         expect(cloned.deal.ukefDecision).toEqual([]);
+      });
+
+      it('updates the audit details to the user cloning the deal', async () => {
+        const clonePostBody = {
+          bankInternalRefName: 'new-bank-deal-id',
+          additionalRefName: 'new-bank-deal-name',
+          cloneTransactions: 'true',
+        };
+
+        const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+
+        expect(body._id).toEqual(body._id);
+
+        const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
+
+        expect(originalDeal.auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(anHSBCMaker._id));
+        expect(cloned.deal.auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id));
       });
 
       it('should clone eligibility', async () => {

@@ -6,7 +6,7 @@ import {
   handleUtilisationReportFeeRecordKeyedEvent,
   handleUtilisationReportManuallySetCompletedEvent,
   handleUtilisationReportManuallySetIncompleteEvent,
-  handleUtilisationReportPaymentAddedToFeeRecordEvent,
+  handleUtilisationReportAddAPaymentEvent,
   handleUtilisationReportPaymentRemovedFromFeeRecordEvent,
   handleUtilisationReportReportUploadedEvent,
 } from './event-handlers';
@@ -109,14 +109,22 @@ describe('UtilisationReportStateMachine', () => {
   describe(`when report is in '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}' status`, () => {
     const PENDING_RECONCILIATION_REPORT = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
-    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.PAYMENT_ADDED_TO_FEE_RECORD}' event`, async () => {
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT}' event`, async () => {
       // Arrange
       const stateMachine = UtilisationReportStateMachine.forReport(PENDING_RECONCILIATION_REPORT);
 
       // Act
       await stateMachine.handleEvent({
-        type: 'PAYMENT_ADDED_TO_FEE_RECORD',
+        type: 'ADD_A_PAYMENT',
         payload: {
+          transactionEntityManager: {} as unknown as EntityManager,
+          feeRecords: [],
+          paymentDetails: {
+            currency: 'GBP',
+            amount: 100,
+            dateReceived: new Date(),
+            reference: 'A payment reference',
+          },
           requestSource: {
             platform: 'TFM',
             userId: 'abc123',
@@ -125,7 +133,7 @@ describe('UtilisationReportStateMachine', () => {
       });
 
       // Assert
-      expect(handleUtilisationReportPaymentAddedToFeeRecordEvent).toHaveBeenCalledTimes(1);
+      expect(handleUtilisationReportAddAPaymentEvent).toHaveBeenCalledTimes(1);
     });
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED}' event`, async () => {
@@ -150,10 +158,7 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportManuallySetCompletedEvent).toHaveBeenCalledTimes(1);
     });
 
-    const VALID_PENDING_RECONCILIATION_EVENT_TYPES = [
-      UTILISATION_REPORT_EVENT_TYPE.PAYMENT_ADDED_TO_FEE_RECORD,
-      UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED,
-    ];
+    const VALID_PENDING_RECONCILIATION_EVENT_TYPES = [UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT, UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_PENDING_RECONCILIATION_EVENT_TYPES))(
       "throws an 'InvalidStateMachineTransitionError' for event type %p",
@@ -170,14 +175,22 @@ describe('UtilisationReportStateMachine', () => {
   describe(`when report is in '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS}' status`, () => {
     const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
 
-    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.PAYMENT_ADDED_TO_FEE_RECORD}' event`, async () => {
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT}' event`, async () => {
       // Arrange
       const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_IN_PROGRESS_REPORT);
 
       // Act
       await stateMachine.handleEvent({
-        type: 'PAYMENT_ADDED_TO_FEE_RECORD',
+        type: 'ADD_A_PAYMENT',
         payload: {
+          transactionEntityManager: {} as unknown as EntityManager,
+          feeRecords: [],
+          paymentDetails: {
+            currency: 'GBP',
+            amount: 100,
+            dateReceived: new Date(),
+            reference: 'A payment reference',
+          },
           requestSource: {
             platform: 'TFM',
             userId: 'abc123',
@@ -186,7 +199,7 @@ describe('UtilisationReportStateMachine', () => {
       });
 
       // Assert
-      expect(handleUtilisationReportPaymentAddedToFeeRecordEvent).toHaveBeenCalledTimes(1);
+      expect(handleUtilisationReportAddAPaymentEvent).toHaveBeenCalledTimes(1);
     });
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.PAYMENT_REMOVED_FROM_FEE_RECORD}' event`, async () => {
@@ -218,7 +231,7 @@ describe('UtilisationReportStateMachine', () => {
     });
 
     const VALID_RECONCILIATION_IN_PROGRESS_EVENT_TYPES = [
-      UTILISATION_REPORT_EVENT_TYPE.PAYMENT_ADDED_TO_FEE_RECORD,
+      UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT,
       UTILISATION_REPORT_EVENT_TYPE.PAYMENT_REMOVED_FROM_FEE_RECORD,
       UTILISATION_REPORT_EVENT_TYPE.FEE_RECORD_KEYED,
     ];

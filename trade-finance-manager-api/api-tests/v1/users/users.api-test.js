@@ -1,11 +1,3 @@
-const actualDb = jest.requireActual('../../../src/drivers/db-client');
-const mockGetCollection = jest.fn(actualDb.getCollection.bind(actualDb));
-
-jest.mock('../../../src/drivers/db-client', () => ({
-  ...jest.requireActual('../../../src/drivers/db-client'),
-  getCollection: mockGetCollection,
-}));
-
 const { ObjectId } = require('mongodb');
 const { withDeleteOneTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { generateMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
@@ -93,7 +85,6 @@ describe('user controller', () => {
           lastUpdatedByTfmUserId: expect.anything(),
         },
         getDeletedDocumentId: () => new ObjectId(userToDeleteId),
-        mockGetCollection,
       });
     }
 

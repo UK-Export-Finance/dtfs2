@@ -10,7 +10,7 @@ import USERS from '../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import { aliasSelector } from '../../../../../support/alias-selector';
 
-context('PDC_READ users can route to the payments page for a bank', () => {
+context('PDC_RECONCILE users can route to the payments page for a bank', () => {
   const allBanksAlias = 'allBanksAlias';
   const submissionMonth = toIsoMonthStamp(new Date());
   const latestQuarterlySubmissionMonth = getLatestQuarterlySubmissionMonth();

@@ -36,7 +36,7 @@ const findOneDeal = async (dealId) => {
   }
 };
 
-const createDeal = async (deal, user) => {
+const createDeal = async (deal, user, auditDetails) => {
   try {
     return await axios({
       method: 'post',
@@ -45,6 +45,7 @@ const createDeal = async (deal, user) => {
       data: {
         deal,
         user,
+        auditDetails,
       },
     });
   } catch ({ response }) {
@@ -196,7 +197,7 @@ const updateFacility = async (facilityId, facility, user) => {
   }
 };
 
-const deleteFacility = async (facilityId, user) => {
+const deleteFacility = async (facilityId, user, auditDetails) => {
   try {
     if (!isValidMongoId(facilityId)) {
       console.error('Delete facility API failed for facility id %s', facilityId);
@@ -209,6 +210,7 @@ const deleteFacility = async (facilityId, user) => {
       headers: headers.central,
       data: {
         user,
+        auditDetails,
       },
     });
   } catch (error) {

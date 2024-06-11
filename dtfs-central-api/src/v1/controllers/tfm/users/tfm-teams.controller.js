@@ -1,7 +1,13 @@
-const { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
-const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common/errors');
+const { ObjectId } = require('mongodb');
+const { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
+const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
-const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const {
+  validateAuditDetails,
+  generateAuditDatabaseRecordFromAuditDetails,
+  deleteOne,
+  validateAuditDetailsAndUserType,
+} = require('@ukef/dtfs2-common/change-stream');
 const db = require('../../../../drivers/db-client').default;
 
 const createTeam = async (team, auditDetails) => {
@@ -18,7 +24,7 @@ exports.createTfmTeam = async (req, res) => {
   }
 
   try {
-    validateAuditDetails(auditDetails);
+    validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.TFM);
   } catch (error) {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
@@ -27,10 +33,6 @@ exports.createTfmTeam = async (req, res) => {
       });
     }
     return res.status(500).send({ status: 500, error });
-  }
-
-  if (auditDetails.userType !== 'tfm') {
-    return res.status(400).send({ status: 400, message: `Invalid auditDetails, userType must be 'tfm'` });
   }
 
   const { insertedId } = await createTeam(teamToCreate, auditDetails);
@@ -72,18 +74,45 @@ exports.findOneTfmTeam = async (req, res) => {
   return res.status(404).send();
 };
 
-const deleteTeam = async (id) => {
-  if (typeof id === 'string') {
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_TEAMS);
-    return collection.deleteOne({ id: { $eq: id } });
+exports.deleteTfmTeam = async (req, res) => {
+  const { id } = req.params;
+  const { auditDetails } = req.body;
+
+  if (!(typeof id === 'string')) {
+    return res.status(400).send({ status: 400, message: 'Invalid team Id' });
   }
 
-  return false;
-};
-exports.deleteTeam = deleteTeam;
+  // Teams have both id and _id. The delete team request specifies the id of the team to delete, however deleteOne requires _id to operate
+  const teamsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_TEAMS);
+  const team = await teamsCollection.findOne({ id: { $eq: id } });
 
-exports.deleteTfmTeam = async (req, res) => {
-  const deleted = await deleteTeam(req.params.id);
+  if (!team) {
+    return res.status(404).send({ status: 400, message: 'Team not found' });
+  }
 
-  return deleted ? res.status(200).send(deleted) : res.status(400).send({ status: 400, message: 'Invalid team Id' });
+  try {
+    validateAuditDetails(auditDetails);
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: 400,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
+  }
+
+  try {
+    const deleteResult = await deleteOne({
+      documentId: new ObjectId(team._id),
+      collectionName: MONGO_DB_COLLECTIONS.TFM_TEAMS,
+      db,
+      auditDetails,
+    });
+
+    return res.status(200).send(deleteResult);
+  } catch (error) {
+    console.error('Error deleting TFM team %o', error);
+    return res.status(500).send({ status: 500, error });
+  }
 };

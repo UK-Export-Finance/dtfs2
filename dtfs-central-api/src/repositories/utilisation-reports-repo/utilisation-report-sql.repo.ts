@@ -42,7 +42,21 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
       findByOptionsWhere.status = Not('REPORT_NOT_RECEIVED');
     }
 
-    return await this.findBy(findByOptionsWhere);
+    return await this.find({
+      where: findByOptionsWhere,
+      order: {
+        reportPeriod: {
+          start: {
+            year: 'ASC',
+            month: 'ASC',
+          },
+          end: {
+            year: 'ASC',
+            month: 'ASC',
+          },
+        },
+      },
+    });
   },
 
   /**
@@ -86,6 +100,50 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
       ],
       relations: {
         feeRecords: includeFeeRecords,
+      },
+      order: {
+        reportPeriod: {
+          end: {
+            year: 'ASC',
+            month: 'ASC',
+          },
+        },
+      },
+    });
+  },
+
+  /**
+   * Finds submitted reports & fee records by bank id which have report periods which ended in
+   * the supplied year
+   * @param bankId - The bank id
+   * @param year - The search year
+   * @returns The found reports
+   */
+  async findSubmittedReportsForBankIdWithReportPeriodEndInYear(bankId: string, year: number): Promise<UtilisationReportEntity[]> {
+    const bankIdAndStatusFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
+      bankId,
+      status: Not('REPORT_NOT_RECEIVED'),
+    };
+
+    const sameYearFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
+      reportPeriod: {
+        end: {
+          year: Equal(year),
+        },
+      },
+    };
+
+    return await this.find({
+      where: { ...bankIdAndStatusFindOptions, ...sameYearFindOptions },
+      relations: {
+        feeRecords: true,
+      },
+      order: {
+        reportPeriod: {
+          end: {
+            month: 'ASC',
+          },
+        },
       },
     });
   },

@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
@@ -9,6 +9,7 @@ const { MOCK_DEAL } = require('../../mocks/mock-data');
 const aDeal = require('../../deal-builder');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
+const { createDeal } = require('../../../helpers/create-deal');
 
 describe('POST TFM amendments', () => {
   let dealId;
@@ -29,17 +30,12 @@ describe('POST TFM amendments', () => {
     },
   });
 
-  const createDeal = async () => {
-    const { body } = await api.post({ deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals');
-    return body;
-  };
-
   beforeAll(async () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_FACILITIES, MONGO_DB_COLLECTIONS.TFM_DEALS]);
   });
 
   beforeEach(async () => {
-    const deal = await createDeal();
+    const { body: deal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
     dealId = deal._id;
 
     newFacility.dealId = dealId;
@@ -63,7 +59,7 @@ describe('POST TFM amendments', () => {
 
       withValidateAuditDetailsTests({
         makeRequest: (auditDetails) => api.post({ auditDetails }).to(`/v1/tfm/facilities/${facilityId}/amendments`),
-        validUserTypes: ['tfm'],
+        validUserTypes: [AUDIT_USER_TYPES.TFM],
       });
 
       it('should create a new amendment based on facilityId', async () => {

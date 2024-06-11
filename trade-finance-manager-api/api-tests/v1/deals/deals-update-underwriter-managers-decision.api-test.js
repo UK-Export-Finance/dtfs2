@@ -1,3 +1,5 @@
+const { AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { when } = require('jest-when');
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
@@ -85,7 +87,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
           },
         }),
         auditDetails: {
-          userType: 'tfm',
+          userType: AUDIT_USER_TYPES.TFM,
           id: expect.anything(),
         },
         onError: expect.any(Function),
@@ -205,7 +207,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
       .calledWith({
         dealId: VALID_DEAL_ID,
         dealUpdate: expect.any(Object),
-        auditDetails: { userType: 'tfm', id: tokenUser._id },
+        auditDetails: generateTfmAuditDetails(tokenUser._id),
       })
       .mockRejectedValueOnce(new Error(`Updating the deal with dealId ${VALID_DEAL_ID} failed with status 500 and message: test error message`));
 
