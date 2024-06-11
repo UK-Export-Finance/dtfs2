@@ -1,56 +1,57 @@
-/* eslint-disable @typescript-eslint/unbound-method */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable no-param-reassign */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import * as dotenv from 'dotenv';
-import axios from 'axios';
+import axios, { AxiosError, HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
+import { MDM } from '../../constants';
 import { getNowAsEpoch } from '../../helpers/date';
-
-const { NotifyClient } = require('notifications-node-client'); // eslint-disable-line @typescript-eslint/no-var-requires
 
 dotenv.config();
 
 const referenceProxyUrl = process.env.EXTERNAL_API_URL;
-const notifyKey: any = process.env.GOV_NOTIFY_API_KEY;
-const notifyClient = new NotifyClient(notifyKey);
+const notifyKey: string = process.env.GOV_NOTIFY_API_KEY || '';
+
+const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
+const headers = {
+  'Content-Type': 'application/json',
+  [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
+  [String(MDM.GOV_UK_NOTIFY_KEY_HEADER_NAME)]: notifyKey,
+};
 
 export const emailNotification = async (req: Request, res: Response) => {
-  try {
-    const { templateId, sendToEmailAddress, emailVariables } = req.body;
-    // Add a unique reference to an email
-    const reference = `${templateId}-${getNowAsEpoch()}`;
+  const { templateId, sendToEmailAddress, emailVariables }: { templateId: string; sendToEmailAddress: string; emailVariables: Record<string, string> } =
+    req.body;
+  // Add a unique reference to an email
+  const reference = `${templateId}-${getNowAsEpoch()}`;
 
-    console.info('Calling Notify API. templateId %s', templateId);
+  const personalisation = emailVariables;
 
-    const personalisation = emailVariables;
+  console.info('Calling APIM MDM GovNotify API template id %s', templateId);
 
-    const notifyResponse = await notifyClient
-      .sendEmail(templateId, sendToEmailAddress, {
-        personalisation,
-        reference,
-      })
-      .then((response: any) => response);
+  const response: { status: number | undefined; data: unknown } = await axios({
+    method: 'post',
+    url: `${APIM_MDM_URL}emails`,
+    headers,
+    data: {
+      templateId,
+      sendToEmailAddress,
+      reference,
+      personalisation,
+    },
+  }).catch((error: AxiosError) => {
+    console.error('Error calling APIM MDM GovNotify API %o', error);
+    return { status: error?.response?.status || HttpStatusCode.UnprocessableEntity, data: 'Failed to call MDM GovNotify API' };
+  });
 
-    if (!notifyResponse) {
-      return res.status(422).send({});
-    }
-
-    const { status, data } = notifyResponse;
-
-    return res.status(status).send(data);
-  } catch (error) {
-    console.error('Unable to send email %o', error);
+  if (!response) {
+    console.error('Empty APIM MDM GovNotify API response');
+    return res.status(HttpStatusCode.UnprocessableEntity).send({});
   }
-  return res.status(422).send({});
+
+  const { status, data } = response;
+
+  return res.status(status || HttpStatusCode.UnprocessableEntity).send(data);
 };
 
 export const sendEmail = async (templateId: string, sendToEmailAddress: string, emailVariables: object) => {
