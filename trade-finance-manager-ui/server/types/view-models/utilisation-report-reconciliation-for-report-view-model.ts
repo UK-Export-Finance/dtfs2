@@ -28,7 +28,8 @@ export type FeeRecordViewModelItem = {
 export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & {
   bank: SessionBank;
   formattedReportPeriod: string;
-  reportId: number;
+  reportId: string;
   feeRecords: FeeRecordViewModelItem[];
+  enablePaymentsReceivedSorting: boolean;
   errorSummary: [ErrorSummaryViewModel] | undefined;
 };

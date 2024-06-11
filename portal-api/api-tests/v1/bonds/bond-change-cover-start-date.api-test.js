@@ -1,11 +1,12 @@
 const { format, sub, add } = require('date-fns');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
-const { MAKER } = require('../../../src/v1/roles/roles');
-const { DB_COLLECTIONS } = require('../../fixtures/constants');
+const { MAKER, ADMIN } = require('../../../src/v1/roles/roles');
+const mockEligibilityCriteria = require('../../fixtures/eligibilityCriteria');
 
 describe('/v1/deals/:id/bond/change-cover-start-date', () => {
   const nowDate = new Date();
@@ -76,11 +77,15 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
     aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
+    const anAdmin = testUsers().withRole(ADMIN).one();
+
+    await databaseHelper.wipe([MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA]);
+    await as(anAdmin).post(mockEligibilityCriteria[0]).to('/v1/eligibility-criteria');
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe([DB_COLLECTIONS.DEALS]);
-    await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
+    await databaseHelper.wipe([MONGO_DB_COLLECTIONS.DEALS]);
+    await databaseHelper.wipe([MONGO_DB_COLLECTIONS.FACILITIES]);
     await createDealAndBond();
   });
 

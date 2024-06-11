@@ -5,7 +5,7 @@
  * @returns {Array} either an empty array or an array containing an error object
  */
 const selectAtLeastOneRole = (user, change) => {
-  if (!(change.roles && change.roles.some((item) => item))) {
+  if (!change?.roles?.some((item) => item)) {
     return [
       {
         roles: {

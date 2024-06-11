@@ -1,7 +1,11 @@
+const { ObjectId } = require('mongodb');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const {
   generateMockNoUserLoggedInAuditDatabaseRecord,
   generateParsedMockPortalUserAuditDatabaseRecord,
+  withDeleteOneTests,
+  expectAnyPortalUserAuditDatabaseRecord,
 } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
@@ -209,10 +213,12 @@ describe('/v1/feedback', () => {
 
   describe('DELETE /v1/feedback/:id', () => {
     let aFeedbackUrl;
+    let feedbackToDeleteId;
+
     beforeEach(async () => {
       const createdFeedback = await postFeedback();
-      const { _id } = createdFeedback.body;
-      aFeedbackUrl = `/v1/feedback/${_id}`;
+      feedbackToDeleteId = new ObjectId(createdFeedback.body._id);
+      aFeedbackUrl = `/v1/feedback/${feedbackToDeleteId}`;
     });
 
     withClientAuthenticationTests({
@@ -227,20 +233,16 @@ describe('/v1/feedback', () => {
       successStatusCode: 200,
     });
 
+    withDeleteOneTests({
+      makeRequest: () => as(anAdmin).remove(aFeedbackUrl),
+      collectionName: MONGO_DB_COLLECTIONS.FEEDBACK,
+      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
+      getDeletedDocumentId: () => feedbackToDeleteId,
+    });
+
     it('404s requests for unknown resources', async () => {
       const { status } = await as(anAdmin).remove('/v1/feedback/620a1aa095a618b12da38c7b');
       expect(status).toEqual(404);
-    });
-
-    it('deletes feedback', async () => {
-      const createdFeedback = await postFeedback();
-      const { _id } = createdFeedback.body;
-
-      const { status } = await as(anAdmin).remove(`/v1/feedback/${_id}`);
-      expect(status).toEqual(200);
-
-      const getResponse = await as(anAdmin).get(`/v1/feedback/${_id}`);
-      expect(getResponse.status).toEqual(404);
     });
   });
 });
