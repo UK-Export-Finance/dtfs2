@@ -89,7 +89,7 @@ exports.update = async (req, res) => {
       });
     }
 
-    let updatedDeal = await updateStatus(dealId, currentStatus, newStatus, user, auditDetails);
+    let updatedDeal = await updateStatus(dealId, currentStatus, newStatus, auditDetails);
 
     // First submission of the deal to the checker
     if (currentStatus === CONSTANTS.DEAL.DEAL_STATUS.DRAFT && newStatus === CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL) {
@@ -141,7 +141,7 @@ exports.update = async (req, res) => {
       }
 
       if (updatedDeal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA && !updatedDeal.details.manualInclusionApplicationSubmissionDate) {
-        updatedDeal = await createMiaSubmissionDate(dealId, user, auditDetails);
+        updatedDeal = await createMiaSubmissionDate(dealId, auditDetails);
       }
 
       if (updatedDeal?.details?.submissionCount === 1) {
