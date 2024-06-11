@@ -1,9 +1,10 @@
-const { PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
+const { ObjectId } = require('mongodb');
+const { PAYLOAD_VERIFICATION, MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const assert = require('assert');
-const { generatePortalAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generatePortalAuditDetails, generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
 
-const db = require('../../drivers/db-client');
+const db = require('../../drivers/db-client').default;
 
 const sortMandatoryCriteria = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.id) - Number(b.id));
@@ -11,7 +12,7 @@ const sortMandatoryCriteria = (arr, callback) => {
 };
 
 const findMandatoryCriteria = async (callback) => {
-  const collection = await db.getCollection('mandatoryCriteria');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA);
 
   collection.find().toArray((error, result) => {
     assert.equal(error, null);
@@ -26,7 +27,7 @@ const findOneMandatoryCriteria = async (version, callback) => {
   }
   const versionAsNumber = Number(version);
 
-  const collection = await db.getCollection('mandatoryCriteria');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA);
   collection.findOne({ version: { $eq: versionAsNumber } }, (error, result) => {
     assert.equal(error, null);
     callback(result);
@@ -45,7 +46,7 @@ exports.create = async (req, res) => {
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
   // MC insertion on non-production environments
-  const collection = await db.getCollection('mandatoryCriteria');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA);
   const criteria = { ...req?.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
   const result = await collection.insertOne(criteria);
 
@@ -65,7 +66,7 @@ exports.findAll = (req, res) =>
 exports.findOne = (req, res) => findOneMandatoryCriteria(req.params.version, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria));
 
 const findLatestMandatoryCriteria = async () => {
-  const collection = await db.getCollection('mandatoryCriteria');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA);
   const latest = await collection.find().sort({ version: -1 }).limit(1).toArray();
   return latest[0];
 };
@@ -88,7 +89,7 @@ exports.update = async (req, res) => {
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
   // MC insertion on non-production environments
-  const collection = await db.getCollection('mandatoryCriteria');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA);
   const status = await collection.updateOne(
     { version: { $eq: Number(req.params.version) } },
     { $set: { criteria: req.body.criteria, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) } },
@@ -98,14 +99,31 @@ exports.update = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-  const collection = await db.getCollection('mandatoryCriteria');
-  const { version } = req.params;
-  const versionNumber = Number(version);
+  const versionNumber = Number(req.params.version);
+  const auditDetails = generatePortalAuditDetails(req.user._id);
 
-  if (!Number.isNaN(versionNumber)) {
-    const status = await collection.deleteOne({ version: { $eq: versionNumber } });
-    return res.status(200).send(status);
+  if (Number.isNaN(versionNumber)) {
+    return res.status(400).send({ status: 400, message: 'Invalid mandatory criteria version number' });
   }
 
-  return res.status(400).send({ status: 400, message: 'Invalid mandatory criteria version number' });
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA);
+  const mandatoryCriteria = await collection.findOne({ version: { $eq: versionNumber } }, { projection: { _id: true } });
+
+  if (!mandatoryCriteria) {
+    return res.status(404).send({ status: 404, message: 'Mandatory Criteria not found' });
+  }
+
+  try {
+    const deleteResult = await deleteOne({
+      documentId: new ObjectId(mandatoryCriteria._id),
+      collectionName: MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA,
+      db,
+      auditDetails,
+    });
+
+    return res.status(200).send(deleteResult);
+  } catch (error) {
+    console.error('Error occurred deleting mandatory criteria, %o', error);
+    return res.status(500).send({ status: 500, error });
+  }
 };
