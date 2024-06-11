@@ -212,7 +212,9 @@ describe('/v1/deals', () => {
 
       expect(status).toEqual(200);
 
-      expect(body).toMatchObject(expectAddedFieldsWithEditedBy(updatedDeal, anHSBCMaker));
+      expect(body).toMatchObject(
+        expectAddedFieldsWithEditedBy({ baseDeal: updatedDeal, user: anHSBCMaker, auditDetails: generatePortalAuditDetails(anHSBCMaker._id) }),
+      );
     });
 
     it('handles partial updates', async () => {
@@ -241,7 +243,9 @@ describe('/v1/deals', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.deal).toMatchObject(expectAddedFieldsWithEditedBy(expectedDataIncludingUpdate, anHSBCMaker));
+      expect(body.deal).toMatchObject(
+        expectAddedFieldsWithEditedBy({ baseDeal: expectedDataIncludingUpdate, user: anHSBCMaker, auditDetails: generatePortalAuditDetails(anHSBCMaker._id) }),
+      );
     });
 
     it('updates the deal', async () => {
@@ -262,7 +266,9 @@ describe('/v1/deals', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.deal).toMatchObject(expectAddedFieldsWithEditedBy(updatedDeal, anHSBCMaker));
+      expect(body.deal).toMatchObject(
+        expectAddedFieldsWithEditedBy({ baseDeal: updatedDeal, user: anHSBCMaker, auditDetails: generatePortalAuditDetails(anHSBCMaker._id) }),
+      );
     });
 
     it('adds updates and retains `editedBy` array with req.user data', async () => {
@@ -293,8 +299,22 @@ describe('/v1/deals', () => {
       const dealAfterSecondUpdate = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
       expect(dealAfterSecondUpdate.status).toEqual(200);
       expect(dealAfterSecondUpdate.body.deal.editedBy.length).toEqual(2);
-      expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, anHSBCMaker, 1).editedBy[0]);
-      expect(dealAfterSecondUpdate.body.deal.editedBy[1]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, anHSBCMaker, 2).editedBy[1]);
+      expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(
+        expectAddedFieldsWithEditedBy({
+          baseDeal: secondUpdate,
+          user: anHSBCMaker,
+          numberOfUpdates: 1,
+          auditDetails: generatePortalAuditDetails(anHSBCMaker._id),
+        }).editedBy[0],
+      );
+      expect(dealAfterSecondUpdate.body.deal.editedBy[1]).toEqual(
+        expectAddedFieldsWithEditedBy({
+          baseDeal: secondUpdate,
+          user: anHSBCMaker,
+          numberOfUpdates: 2,
+          auditDetails: generatePortalAuditDetails(anHSBCMaker._id),
+        }).editedBy[1],
+      );
     });
   });
 
