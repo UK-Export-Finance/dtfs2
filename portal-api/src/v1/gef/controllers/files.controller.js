@@ -183,8 +183,9 @@ exports.delete = async (req, res) => {
     const {
       params: { id },
       body: { documentPath },
+      user,
     } = req;
-    const auditDetails = generatePortalAuditDetails(req.user._id);
+    const auditDetails = generatePortalAuditDetails(user._id);
 
     if (!ObjectId.isValid(id)) {
       return res.status(400).send({ status: 400, message: 'Invalid File Id' });
