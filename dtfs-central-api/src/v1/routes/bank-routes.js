@@ -98,7 +98,7 @@ bankRouter.route('/').get(getBanksController.getAllBanksGet);
  * /bank/:bankId/utilisation-reports:
  *   get:
  *     summary: Get utilisation reports by bank ID
- *     tags: [UtilisationReport]
+ *     tags: [Utilisation Report]
  *     description: Get a banks utilisation reports by ID.
  *     parameters:
  *       - in: path
@@ -144,7 +144,7 @@ bankRouter.route('/:bankId/utilisation-reports').get(validation.bankIdValidation
  * /bank/:bankId/next-report-period:
  *   get:
  *     summary: Get utilisation reports by bank ID
- *     tags: [UtilisationReport]
+ *     tags: [Utilisation Report]
  *     description: Get a banks utilisation reports by ID.
  *     parameters:
  *       - in: path
@@ -181,7 +181,7 @@ bankRouter
  *       Utilisation reports for the specified submission
  *       year and bank. This includes status and details of
  *       reports that have been submitted.
- *     tags: [UtilisationReport]
+ *     tags: [Utilisation Report]
  *     description: |
  *       Utilisation reports for the specified submission
  *       year and bank. This includes status and details of

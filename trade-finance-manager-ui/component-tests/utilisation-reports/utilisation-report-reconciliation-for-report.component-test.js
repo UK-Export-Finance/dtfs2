@@ -21,6 +21,7 @@ describe(page, () => {
     formattedReportPeriod,
     reportId,
     feeRecords: [],
+    enablePaymentsReceivedSorting: false,
     errorSummary: undefined,
   };
 

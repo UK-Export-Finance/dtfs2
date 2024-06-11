@@ -7,7 +7,7 @@ import { changeStreamConfig } from '../config';
 const { CHANGE_STREAM_ENABLED } = changeStreamConfig;
 
 type Params = {
-  makeRequest: () => Promise<void>;
+  makeRequest: () => Promise<{ status: number }>;
   collectionName: MongoDbCollectionName;
   auditRecord: AuditDatabaseRecord;
   getDeletedDocumentId: () => ObjectId;
@@ -66,6 +66,12 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
           const deletedDocument = await collection.findOne({ _id: { $eq: getDeletedDocumentId() } });
 
           expect(deletedDocument).toBe(null);
+        });
+
+        it('should return 200', async () => {
+          const { status } = await makeRequest();
+
+          expect(status).toBe(200);
         });
       });
 

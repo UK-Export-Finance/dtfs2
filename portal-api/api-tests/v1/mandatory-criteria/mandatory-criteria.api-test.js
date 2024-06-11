@@ -1,4 +1,10 @@
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { ObjectId } = require('mongodb');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const {
+  generateParsedMockPortalUserAuditDatabaseRecord,
+  withDeleteOneTests,
+  expectAnyPortalUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests, withNoRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
@@ -190,29 +196,32 @@ describe('/v1/mandatory-criteria', () => {
   });
 
   describe('DELETE /v1/mandatory-criteria/:version', () => {
-    const mandatoryCriteria1Url = '/v1/mandatory-criteria/1';
+    const newMandatoryCriteriaUrl = `/v1/mandatory-criteria/${newMandatoryCriteria.version}`;
+    let mandatoryCriteriaToDeleteId;
+
+    beforeEach(async () => {
+      const { body } = await as(anAdmin).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
+      mandatoryCriteriaToDeleteId = new ObjectId(body.insertedId);
+    });
 
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => remove(mandatoryCriteria1Url),
-      makeRequestWithAuthHeader: (authHeader) => remove(mandatoryCriteria1Url, { headers: { Authorization: authHeader } }),
+      makeRequestWithoutAuthHeader: () => remove(newMandatoryCriteriaUrl),
+      makeRequestWithAuthHeader: (authHeader) => remove(newMandatoryCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-      makeRequestAsUser: (user) => as(user).remove(mandatoryCriteria1Url),
+      makeRequestAsUser: (user) => as(user).remove(newMandatoryCriteriaUrl),
       successStatusCode: 200,
     });
 
-    it('deletes the mandatory-criteria', async () => {
-      await as(anAdmin).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
-      await as(anAdmin).remove(mandatoryCriteria1Url);
-
-      const { status, body } = await as(anAdmin).get(mandatoryCriteria1Url);
-
-      expect(status).toEqual(200);
-      expect(body).toEqual({});
+    withDeleteOneTests({
+      makeRequest: () => as(anAdmin).remove(newMandatoryCriteriaUrl),
+      collectionName: MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA,
+      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
+      getDeletedDocumentId: () => mandatoryCriteriaToDeleteId,
     });
   });
 });
