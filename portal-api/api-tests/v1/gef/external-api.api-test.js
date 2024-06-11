@@ -64,11 +64,6 @@ describe(baseUrl, () => {
   });
 
   describe(`GET ${baseUrl}/address (Geospatial Addresses)`, () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-      jest.restoreAllMocks();
-    });
-
     it('Returns a list of addresses', async () => {
       const { status, body } = await as(aMaker).get(`${baseUrl}/address/${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`);
       expect(status).toEqual(HttpStatusCode.Ok);
@@ -84,7 +79,7 @@ describe(baseUrl, () => {
     });
 
     it('Returns a not found address if the postcode was not found', async () => {
-      const { status, body } = await as(aMaker).get(`${baseUrl}/address/AA11AA`);
+      const { status, body } = await as(aMaker).get(`${baseUrl}/address/${ADDRESSES.EXAMPLES.POSTCODE_UNPROCESSABLE}`);
       expect(status).toEqual(HttpStatusCode.UnprocessableEntity);
       expect(body).toEqual([
         {
@@ -110,13 +105,7 @@ describe(baseUrl, () => {
     });
 
     it('returns a 422 response if backend returns 500', async () => {
-      jest.mock('../../../src/external-api/api', () => ({
-        geospatialAddresses: {
-          getAddressesByPostcode: () => ({ status: HttpStatusCode.InternalServerError }),
-        },
-      }));
-
-      const { status, body } = await as(aMaker).get(`${baseUrl}/address/${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`);
+      const { status, body } = await as(aMaker).get(`${baseUrl}/address/${ADDRESSES.EXAMPLES.POSTCODE_UNPROCESSABLE}`);
 
       expect(status).toEqual(HttpStatusCode.UnprocessableEntity);
       expect(body).toEqual([
