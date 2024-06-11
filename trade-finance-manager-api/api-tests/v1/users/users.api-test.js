@@ -11,7 +11,7 @@ describe('user controller', () => {
   let tokenUser;
 
   beforeEach(async () => {
-    tokenUser = await testUserCache.initialise(app);
+    tokenUser = await testUserCache.initialise();
   });
 
   afterAll(() => {
@@ -21,7 +21,13 @@ describe('user controller', () => {
   describe('POST /v1/users', () => {
     it('should not create a new TFM user with malformed payload', async () => {
       const { body } = await as(tokenUser).post({}).to('/v1/users');
-      expect(body).toEqual({});
+      expect(body).toEqual({
+        errors: {
+          count: 1,
+          errorList: ['User creation failed'],
+        },
+        success: false,
+      });
     });
 
     it('creates a new TFM user', async () => {
@@ -36,7 +42,7 @@ describe('user controller', () => {
 
   describe('GET /v1/users', () => {
     it('returns the requested user if matched', async () => {
-      const expectedResponse = { _id: userId, ...MOCK_USERS[0], status: 'active' };
+      const expectedResponse = { _id: userId, ...MOCK_USERS[0] };
       delete expectedResponse.password;
 
       const { status, body } = await as(tokenUser).get(`/v1/users/${userId}`);
@@ -55,6 +61,12 @@ describe('user controller', () => {
       expect(status).toEqual(404);
       expect(body.status).toEqual(404);
       expect(body.message).toEqual('User does not exist');
+    });
+
+    it('returns status 400 if userId is not valid', async () => {
+      const invalidId = 'Z1234567890abcd';
+      const { status } = await as(tokenUser).get(`/v1/users/${invalidId}`);
+      expect(status).toEqual(400);
     });
   });
 
@@ -79,6 +91,12 @@ describe('user controller', () => {
     it('returns 200', async () => {
       const { status } = await as(tokenUser).remove().to(`/v1/users/${userToDeleteId}`);
       expect(status).toEqual(200);
+    });
+
+    it('returns status 400 if userId is not valid', async () => {
+      const invalidId = 'Z1234567890abcd';
+      const { status } = await as(tokenUser).remove().to(`/v1/users/${invalidId}`);
+      expect(status).toEqual(400);
     });
   });
 });

@@ -62,7 +62,6 @@ context('Portal to TFM deal submission', () => {
     cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
-    cy.forceVisit(TFM_URL);
 
     cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
@@ -102,7 +101,6 @@ context('Portal to TFM deal submission', () => {
     cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
-    cy.forceVisit(TFM_URL);
 
     cy.tfmLogin(UNDERWRITER_MANAGER_1);
 
@@ -123,7 +121,6 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     tfmPartials.caseSubNavigation.underwritingLink().click();
     tfmPages.managersDecisionPage.addDecisionLink().click({ force: true });
-
     const MOCK_COMMENTS = 'e2e test comment';
 
     tfmPages.managersDecisionPage.decisionRadioInputApproveWithConditions().click();
@@ -212,7 +209,6 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal deal status should be updated
     //---------------------------------------------------------------
-
     portalPages.contract.visit(deal);
     portalPages.contract
       .status()
@@ -246,8 +242,6 @@ context('Portal to TFM deal submission', () => {
     cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
-
-    cy.forceVisit(TFM_URL);
 
     cy.tfmLogin(UNDERWRITER_MANAGER_1);
 

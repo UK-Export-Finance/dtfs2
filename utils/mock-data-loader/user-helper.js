@@ -1,4 +1,4 @@
-const { ROLES } = require('@ukef/dtfs2-common');
+const { ROLES, TEAMS } = require('@ukef/dtfs2-common');
 const api = require('./api');
 const tfmApi = require('./tfm/api');
 const FailedToCreateLoggedInUserSessionError = require('./errors/failed-to-create-logged-in-user-session.error');
@@ -17,11 +17,11 @@ const mockDataLoaderUser = {
 };
 
 const mockDataLoaderTFMUser = {
-  username: 're-insert-mocks',
-  password: 'AbC!2345',
+  azureOid: 're-insert-mocks',
+  username: 're-insert-mocks-data-loader-tfm@ukexportfinance.gov.uk',
   firstName: 'Mock',
   lastName: 'DataLoader',
-  teams: [],
+  teams: [TEAMS.RISK_MANAGERS.id, TEAMS.UNDERWRITER_MANAGERS.id],
   email: 're-insert-mocks-data-loader-tfm@ukexportfinance.gov.uk',
   timezone: 'Europe/London',
 };
@@ -51,8 +51,7 @@ const deleteInitialUser = async (token) => {
 const createAndLogInAsInitialTfmUser = async () => {
   try {
     logger.info('logging in as initial TFM user');
-    const token = await api.loginTfmUser(mockDataLoaderTFMUser);
-
+    const token = await api.loginViaTfm(mockDataLoaderTFMUser);
     if (!token) {
       throw new FailedToCreateLoggedInUserSessionError({
         username: mockDataLoaderTFMUser.username,
@@ -70,7 +69,7 @@ const createAndLogInAsInitialTfmUser = async () => {
       },
     );
     await api.createInitialTfmUser(mockDataLoaderTFMUser);
-    return api.loginTfmUser(mockDataLoaderTFMUser);
+    return api.loginViaTfm(mockDataLoaderTFMUser);
   }
 };
 

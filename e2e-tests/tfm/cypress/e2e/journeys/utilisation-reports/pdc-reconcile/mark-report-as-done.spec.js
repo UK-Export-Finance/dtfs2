@@ -77,7 +77,6 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, utilisationReports);
     cy.wrap(utilisationReports).as(utilisationReportsAlias);
 
-    pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
     pages.utilisationReportsPage.visit();

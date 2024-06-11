@@ -72,8 +72,6 @@ context('Portal to TFM deal submission', () => {
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
 
-    cy.forceVisit(TFM_URL);
-
     cy.tfmLogin(BUSINESS_SUPPORT_USER_1);
 
     const row = tfmPages.dealsPage.dealsTable.row(dealId);

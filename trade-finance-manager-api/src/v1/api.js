@@ -673,7 +673,7 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
 /**
  * Get company information from Party URN
  * @param {Integer} partyUrn Party URN
- * @returns {Object} Company information
+ * @returns {Promise<Object>} Company information
  */
 const getCompanyInfo = async (partyUrn) => {
   try {

@@ -4,4 +4,5 @@ module.exports = {
     '^.+\\.js$': 'babel-jest',
     '^.+\\.ts$': 'ts-jest',
   },
+  reporters: [['default', { summaryThreshold: 1 }]],
 };

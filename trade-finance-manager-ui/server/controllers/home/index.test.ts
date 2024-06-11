@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { TEAM_IDS, PDC_TEAM_IDS, TeamId, PdcTeamId } from '@ukef/dtfs2-common';
+import { PDC_TEAM_IDS, NON_PDC_TEAM_IDS, TeamId } from '@ukef/dtfs2-common';
 import * as homeController from '.';
 
 describe('controllers - home', () => {
@@ -27,12 +27,11 @@ describe('controllers - home', () => {
     id,
     redirectLocation: '/utilisation-reports',
   }));
-  const nonPdcTeams = Object.values(TEAM_IDS)
-    .filter((id) => !Object.values(PDC_TEAM_IDS).includes(id as PdcTeamId))
-    .map((id) => ({
-      id,
-      redirectLocation: '/deals',
-    }));
+
+  const nonPdcTeams = Object.values(NON_PDC_TEAM_IDS).map((id) => ({
+    id,
+    redirectLocation: '/deals',
+  }));
 
   it.each([...pdcTeams, ...nonPdcTeams])("should redirect to $redirectLocation if the user is in the '$id' team", (team) => {
     // Arrange

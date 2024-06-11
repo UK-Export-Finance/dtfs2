@@ -15,7 +15,7 @@ context('Case tasks - AIN deal', () => {
   let usersInTeam;
 
   before(() => {
-    cy.getUser(MOCK_USERS.BUSINESS_SUPPORT_USER_1.username, T1_USER_1).then((userObj) => {
+    cy.getUser(MOCK_USERS.BUSINESS_SUPPORT_USER_1.username).then((userObj) => {
       userId = userObj._id;
     });
 

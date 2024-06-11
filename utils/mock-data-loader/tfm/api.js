@@ -67,7 +67,7 @@ const createTfmUser = async (user, token) => {
       'x-api-key': TFM_API_KEY,
     },
     url: `${TFM_API_URL}/v1/users`,
-    data: user,
+    data: { azureOid: user.username, ...user },
   }).catch((error) => {
     throw new ApiError({ cause: error });
   });

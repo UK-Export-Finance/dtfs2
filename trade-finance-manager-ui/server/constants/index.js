@@ -7,6 +7,7 @@ const AMENDMENTS = require('./amendments');
 const DECISIONS = require('./decisions.constant');
 const PARTY = require('./party');
 const { BANK_HOLIDAY_REGION } = require('./bank-holiday-region');
+const SSO = require('./sso');
 const { PRIMARY_NAVIGATION_KEYS } = require('./primary-navigation-keys');
 const { REGEX } = require('./regex');
 
@@ -20,6 +21,7 @@ module.exports = {
   DECISIONS,
   PARTY,
   BANK_HOLIDAY_REGION,
+  SSO,
   PRIMARY_NAVIGATION_KEYS,
   REGEX,
 };

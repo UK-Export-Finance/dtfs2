@@ -14,7 +14,7 @@ describe('/v1/banks', () => {
   describe('GET /v1/banks', () => {
     it('gets banks for authenticated user', async () => {
       // Arrange
-      const user = await testUserCache.initialise(app);
+      const user = await testUserCache.initialise();
 
       // Act
       const response: CustomResponse = await as(user).get('/v1/banks');

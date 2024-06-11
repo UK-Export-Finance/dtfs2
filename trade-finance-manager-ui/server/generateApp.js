@@ -8,6 +8,7 @@ const csrf = require('csurf');
 
 const routes = require('./routes');
 const feedbackRoutes = require('./routes/feedback');
+const loginController = require('./controllers/login');
 const configureNunjucks = require('./nunjucks-configuration');
 const sessionOptions = require('./session-configuration');
 const healthcheck = require('./healthcheck');
@@ -55,7 +56,21 @@ const generateApp = () => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
+
+  app.use(
+    morgan('dev', {
+      skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
+    }),
+  );
+
+  app.use('/assets', express.static('node_modules/govuk-frontend/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
+
+  app.use(createRateLimit());
+
   app.use('/', feedbackRoutes);
+  // Traffic to /login/sso/redirect comes from AZURE_SSO_AUTHORITY, so no CSRF cookie is present.
+  app.use('/login/sso/redirect', express.Router().post('/', loginController.handleSsoRedirect));
+
   app.use(
     csrf({
       cookie: {
@@ -67,15 +82,6 @@ const generateApp = () => {
   app.use(csrfToken());
   app.use(sanitizeXss());
 
-  app.use(
-    morgan('dev', {
-      skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
-    }),
-  );
-
-  app.use('/assets', express.static('node_modules/govuk-frontend/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
-
-  app.use(createRateLimit());
   app.use(healthcheck);
   app.use('/', routes);
 

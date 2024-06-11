@@ -38,7 +38,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
   };
 
   beforeAll(async () => {
-    tokenUser = await testUserCache.initialise(app);
+    tokenUser = await testUserCache.initialise();
   });
 
   beforeEach(() => {

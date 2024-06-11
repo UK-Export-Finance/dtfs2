@@ -10,6 +10,7 @@ const { swaggerSpec, swaggerUiOptions } = require('./swagger');
 const feedbackController = require('./controllers/feedback-controller');
 const amendmentController = require('./controllers/amendment.controller');
 const facilityController = require('./controllers/facility.controller');
+const authController = require('./controllers/auth/auth.controller');
 const partyController = require('./controllers/party.controller');
 const bankHolidaysController = require('./controllers/bank-holidays');
 const utilisationReportsController = require('./controllers/utilisation-reports');
@@ -68,14 +69,22 @@ authRouter.use('/', tasksRouter);
  */
 openRouter.route('/feedback').post(feedbackController.create);
 
+// Used for creating initial user for data load.
 openRouter.route('/user').post(users.createTfmUser);
+// Used for creating mock/test users.
 authRouter.route('/users').post(users.createTfmUser);
 
+// Used for clearing test data.
 authRouter
   .route('/users/:user')
   .get(validation.userIdEscapingSanitization, handleExpressValidatorResult, users.findTfmUser)
-  .put(validation.userIdValidation, handleExpressValidatorResult, users.updateTfmUserById)
   .delete(validation.userIdValidation, handleExpressValidatorResult, users.removeTfmUserById);
+
+authRouter.get('/validate-user-token', (_req, res) => res.status(200).send());
+
+openRouter.route('/auth/login-url').get(authController.getLoginUrl);
+openRouter.route('/auth/process-sso-redirect').post(authController.processSsoRedirect);
+authRouter.route('/auth/logout-url').get(authController.getLogoutUrl);
 
 authRouter.route('/facilities').get(facilityController.getFacilities);
 

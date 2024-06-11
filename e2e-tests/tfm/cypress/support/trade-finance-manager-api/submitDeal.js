@@ -1,14 +1,24 @@
-const { submitDealAfterUkefIds, login } = require('./api');
+const { submitDealAfterUkefIds } = require('./api');
 const { ALIAS_KEY } = require('../../fixtures/constants');
 const { BANK1_CHECKER1_WITH_MOCK_ID } = require('../../../../e2e-fixtures/portal-users.fixture');
 
-module.exports = (dealId, dealType, opts) => {
+/**
+ * submitDeal
+ * Login to TFM and submit a deal.
+ * @param {Integer} dealId: Deal ID
+ * @param {String} dealType: Deal type
+ * @param {Object} user: User object
+ */
+const submitDeal = (dealId, dealType, user) => {
   console.info('submitDeal::');
-  const { username, password } = opts;
 
-  login(username, password)
+  const isSessionForAPI = true;
+
+  cy.login(user, isSessionForAPI)
     .then((token) => submitDealAfterUkefIds(dealId, dealType, BANK1_CHECKER1_WITH_MOCK_ID, token))
     .then((deal) => {
       cy.wrap(deal).as(ALIAS_KEY.SUBMIT_DEAL);
     });
 };
+
+module.exports = submitDeal;

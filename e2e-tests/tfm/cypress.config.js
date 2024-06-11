@@ -1,5 +1,8 @@
 const { defineConfig } = require('cypress');
+const path = require('path');
 const { createTasks } = require('../support/tasks');
+
+require('dotenv').config({ path: `${path.resolve(__dirname, '../..')}/.env` });
 
 module.exports = defineConfig({
   dealApiProtocol: 'http://',
@@ -17,23 +20,38 @@ module.exports = defineConfig({
   // TODO: Read value from environment variable
   apiKey: 'test',
   dbName: 'dtfs-submissions',
+  redisHost: 'localhost',
+  redisPort: '6379',
+  redisKey: '',
   dbConnectionString: 'mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true',
   responseTimeout: 100000,
   pageLoadTimeout: 120000,
   redirectionLimit: 100,
   numTestsKeptInMemory: 1,
-  viewportWidth: 3840,
+  viewportWidth: 1450, // TFM website max width is 1440px
   viewportHeight: 2400,
   retries: {
     runMode: 2,
     openMode: 0,
   },
+  jwtSigningKey: process.env.JWT_SIGNING_KEY,
+  cookieSigningKey: process.env.SESSION_SECRET,
+  azureSsoAuthority: `${process.env.AZURE_SSO_AUTHORITY}/`,
   e2e: {
     baseUrl: 'http://localhost:5003',
     specPattern: 'cypress/e2e/**/*.spec.js',
     setupNodeEvents(on, config) {
-      const { dbName, dbConnectionString } = config;
-      on('task', createTasks({ dbName, dbConnectionString }));
+      const { dbName, dbConnectionString, redisHost, redisPort, redisKey } = config;
+      on(
+        'task',
+        createTasks({
+          dbName,
+          dbConnectionString,
+          redisHost,
+          redisPort,
+          redisKey,
+        }),
+      );
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],

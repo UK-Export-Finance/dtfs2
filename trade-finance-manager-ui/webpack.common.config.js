@@ -9,6 +9,7 @@ module.exports = {
     govukFrontend: './scripts/govuk-frontend.js',
     mojFrontend: './scripts/moj-frontend.js',
     jsEnabled: './scripts/js-enabled.js',
+    ssoAutoSubmit: './scripts/sso-auto-submit.js',
     disableFormSubmitOnSubmission: '../libs/common/src/ui-scripts/disable-form-submit-on-submission.js',
     enableSelectAllTableCheckbox: './scripts/enable-select-all-table-checkbox.js',
   },

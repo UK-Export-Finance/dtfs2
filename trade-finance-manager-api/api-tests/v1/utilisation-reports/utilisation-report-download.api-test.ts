@@ -23,7 +23,7 @@ describe('/v1/utilisation-reports/:id/download', () => {
 
     it('returns a 400 response when the id path param is invalid', async () => {
       // Arrange
-      const tokenUser = await testUserCache.initialise(app);
+      const tokenUser = await testUserCache.initialise();
       const url = getUtilisationReportDownloadUrl({ id: 'invalid' });
 
       // Act
@@ -35,7 +35,7 @@ describe('/v1/utilisation-reports/:id/download', () => {
 
     it('gets report download for an authenticated user', async () => {
       // Arrange
-      const tokenUser = await testUserCache.initialise(app);
+      const tokenUser = await testUserCache.initialise();
       const url = getUtilisationReportDownloadUrl({ id: integerId });
 
       // Act

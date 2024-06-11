@@ -1,4 +1,5 @@
 const FACILITIES = require('./facilities');
+const DATE = require('./date');
 const DEALS = require('./deals');
 const { TEAMS, TEAM_IDS } = require('./teams');
 const TASKS = require('./tasks');
@@ -7,12 +8,12 @@ const NDB_TASKS_AMENDMENT = require('./tasks-ndb-amendment.constant');
 const EMAIL_TEMPLATE_IDS = require('./email-template-ids');
 const ACTIVITY = require('./activity');
 const AMENDMENTS = require('./amendments');
-const USER = require('./user');
 const REGEX = require('./regex');
 const { FILESHARES } = require('./fileshares');
 
 module.exports = {
   FACILITIES,
+  DATE,
   DEALS,
   TEAMS,
   TEAM_IDS,
@@ -22,7 +23,6 @@ module.exports = {
   TASKS_AMENDMENT,
   NDB_TASKS_AMENDMENT,
   AMENDMENTS,
-  USER,
   REGEX,
   FILESHARES,
 };
