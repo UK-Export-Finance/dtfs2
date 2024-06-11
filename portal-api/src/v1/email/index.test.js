@@ -1,3 +1,5 @@
+const { HttpStatusCode } = require('axios');
+
 const mockExternalApiEmail = jest.fn(() => Promise.resolve({}));
 
 jest.mock('../../../src/external-api/api', () => ({
@@ -32,7 +34,7 @@ describe('sendEmail', () => {
   });
 
   it('returns the response from the sendEmail method call on the external api, if it is successful', async () => {
-    const externalApiSendEmailResponse = { status: 201 };
+    const externalApiSendEmailResponse = { status: HttpStatusCode.Created };
 
     mockExternalApiEmail.mockImplementation(() => Promise.resolve(externalApiSendEmailResponse));
 
@@ -41,9 +43,9 @@ describe('sendEmail', () => {
     expect(response).toEqual(externalApiSendEmailResponse);
   });
 
-  it('returns an object with a 500 status code if the sendEmail method call on the externalApi fails and the error object has a different status code', async () => {
-    const error = { response: { status: 400 } };
-    const expectedResponse = { status: 500, data: 'Failed to send an email' };
+  it('returns an object with a HttpStatusCode.InternalServerError status code if the sendEmail method call on the externalApi fails and the error object has a different status code', async () => {
+    const error = { response: { status: HttpStatusCode.BadRequest } };
+    const expectedResponse = { status: HttpStatusCode.InternalServerError, data: 'Failed to send an email' };
 
     mockExternalApiEmail.mockImplementation(() => Promise.reject(error));
 
@@ -52,9 +54,9 @@ describe('sendEmail', () => {
     expect(response).toEqual(expectedResponse);
   });
 
-  it('returns an object with a 500 status code if the sendEmail method call on the externalApi fails and the error object has no status code', async () => {
+  it('returns an object with a HttpStatusCode.InternalServerError status code if the sendEmail method call on the externalApi fails and the error object has no status code', async () => {
     const error = {};
-    const expectedResponse = { status: 500, data: 'Failed to send an email' };
+    const expectedResponse = { status: HttpStatusCode.InternalServerError, data: 'Failed to send an email' };
 
     mockExternalApiEmail.mockImplementation(() => Promise.reject(error));
 
@@ -89,18 +91,18 @@ describe('sendEmail', () => {
   it('returns error if parameter templateId is missing', async () => {
     const response = await sendEmail(null, emailAddress, emailVariables);
 
-    expect(response).toStrictEqual({ status: 400, data: 'Missing parameter templateId' });
+    expect(response).toStrictEqual({ status: HttpStatusCode.BadRequest, data: 'Missing parameter templateId' });
   });
 
   it('returns error if parameter emailAddress is missing', async () => {
     const response = await sendEmail(templateId, null, emailVariables);
 
-    expect(response).toStrictEqual({ status: 400, data: 'Missing parameter emailAddress' });
+    expect(response).toStrictEqual({ status: HttpStatusCode.BadRequest, data: 'Missing parameter sendToEmailAddress' });
   });
 
   it('returns error if parameter emailVariables is missing', async () => {
     const response = await sendEmail(templateId, emailAddress, null);
 
-    expect(response).toStrictEqual({ status: 400, data: 'Missing parameter emailVariables' });
+    expect(response).toStrictEqual({ status: HttpStatusCode.BadRequest, data: 'Missing parameter emailVariables' });
   });
 });
