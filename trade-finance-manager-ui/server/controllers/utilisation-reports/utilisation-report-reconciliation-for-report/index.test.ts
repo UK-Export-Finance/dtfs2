@@ -5,7 +5,7 @@ import { getUtilisationReportReconciliationByReportId } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { aUtilisationReportReconciliationDetailsResponse } from '../../../../test-helpers';
-import { UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
+import { FeeRecordItem, UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
 import { ErrorSummaryViewModel, FeeRecordViewModelItem, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 
 jest.mock('../../../api');
@@ -126,7 +126,8 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         bank,
         formattedReportPeriod,
-        reportId: 1,
+        enablePaymentsReceivedSorting: true,
+        reportId: '1',
         feeRecords: feeRecordViewModel,
         errorSummary: undefined,
       });
@@ -144,34 +145,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
       const utilisationReportReconciliationDetails: UtilisationReportReconciliationDetailsResponseBody = {
         ...aUtilisationReportReconciliationDetailsResponse(),
-        feeRecords: [
-          {
-            id: 1,
-            facilityId: '12345678',
-            exporter: 'Test exporter',
-            reportedFees: {
-              currency: 'GBP',
-              amount: 100.0,
-            },
-            reportedPayments: {
-              currency: 'GBP',
-              amount: 100.0,
-            },
-            totalReportedPayments: {
-              currency: 'GBP',
-              amount: 100.0,
-            },
-            paymentsReceived: {
-              currency: 'GBP',
-              amount: 100.0,
-            },
-            totalPaymentsReceived: {
-              currency: 'GBP',
-              amount: 100.0,
-            },
-            status: 'TO_DO',
-          },
-        ],
+        feeRecords: [aFeeRecordItem()],
       };
 
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
@@ -187,5 +161,100 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect((viewModel.errorSummary as [ErrorSummaryViewModel])[0].text).toBe('Select a fee or fees with the same status');
       expect(viewModel.feeRecords[0].isChecked).toBe(true);
     });
+
+    it("renders the page with 'enablePaymentsReceivedSorting' set to true if at least one fee record has a non-null 'paymentsReceived'", async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+
+      const utilisationReportReconciliationDetails: UtilisationReportReconciliationDetailsResponseBody = {
+        ...aUtilisationReportReconciliationDetailsResponse(),
+        feeRecords: [
+          {
+            ...aFeeRecordItem(),
+            id: 1,
+            paymentsReceived: null,
+            totalPaymentsReceived: null,
+          },
+          {
+            ...aFeeRecordItem(),
+            id: 2,
+            paymentsReceived: { currency: 'GBP', amount: 100 },
+            totalPaymentsReceived: { currency: 'GBP', amount: 100 },
+          },
+        ],
+      };
+
+      jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
+
+      // Act
+      await getUtilisationReportReconciliationByReportId(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
+      const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
+      expect(viewModel.enablePaymentsReceivedSorting).toBe(true);
+    });
+
+    it("renders the page with 'enablePaymentsReceivedSorting' set to false if all fee records have null 'paymentsReceived'", async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+
+      const utilisationReportReconciliationDetails: UtilisationReportReconciliationDetailsResponseBody = {
+        ...aUtilisationReportReconciliationDetailsResponse(),
+        feeRecords: [
+          {
+            ...aFeeRecordItem(),
+            id: 1,
+            paymentsReceived: null,
+            totalPaymentsReceived: null,
+          },
+          {
+            ...aFeeRecordItem(),
+            id: 2,
+            paymentsReceived: null,
+            totalPaymentsReceived: null,
+          },
+        ],
+      };
+
+      jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
+
+      // Act
+      await getUtilisationReportReconciliationByReportId(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
+      const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
+      expect(viewModel.enablePaymentsReceivedSorting).toBe(false);
+    });
+
+    function aFeeRecordItem(): FeeRecordItem {
+      return {
+        id: 1,
+        facilityId: '12345678',
+        exporter: 'Test exporter',
+        reportedFees: {
+          currency: 'GBP',
+          amount: 100.0,
+        },
+        reportedPayments: {
+          currency: 'GBP',
+          amount: 100.0,
+        },
+        totalReportedPayments: {
+          currency: 'GBP',
+          amount: 100.0,
+        },
+        paymentsReceived: {
+          currency: 'GBP',
+          amount: 100.0,
+        },
+        totalPaymentsReceived: {
+          currency: 'GBP',
+          amount: 100.0,
+        },
+        status: 'TO_DO',
+      };
+    }
   });
 });

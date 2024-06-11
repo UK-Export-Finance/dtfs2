@@ -41,7 +41,7 @@ describe(component, () => {
     },
   ];
 
-  const getWrapper = () => render({ feeRecords });
+  const getWrapper = () => render({ feeRecords, enablePaymentsReceivedSorting: true });
 
   it('should render the table headings', () => {
     const wrapper = getWrapper();
@@ -65,6 +65,20 @@ describe(component, () => {
     wrapper.expectElement(`${tableSelector} thead th:contains("Total reported payments")`).hasClass(numericHeaderClass);
     wrapper.expectElement(`${tableSelector} thead th:contains("Payments received")`).hasClass(numericHeaderClass);
     wrapper.expectElement(`${tableSelector} thead th:contains("Total payments received")`).hasClass(numericHeaderClass);
+  });
+
+  it("should set the payments received and total payments received column headers to sortable if 'enablePaymentsReceivedSorting' is set to true", () => {
+    const wrapper = render({ feeRecords, enablePaymentsReceivedSorting: true });
+
+    wrapper.expectElement(`${tableSelector} thead th:contains("Payments received")`).toHaveAttribute('aria-sort', 'none');
+    wrapper.expectElement(`${tableSelector} thead th:contains("Total payments received")`).toHaveAttribute('aria-sort', 'none');
+  });
+
+  it("should not set the payments received and total payments received column headers to sortable if 'enablePaymentsReceivedSorting' is set to false", () => {
+    const wrapper = render({ feeRecords, enablePaymentsReceivedSorting: false });
+
+    wrapper.expectElement(`${tableSelector} thead th:contains("Payments received")`).toHaveAttribute('aria-sort', undefined);
+    wrapper.expectElement(`${tableSelector} thead th:contains("Total payments received")`).toHaveAttribute('aria-sort', undefined);
   });
 
   it('should render the select all checkbox in the table headings row', () => {
