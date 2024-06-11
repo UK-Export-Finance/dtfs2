@@ -1,5 +1,5 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const db = require('../src/drivers/db-client').default;
+const { mongoDbClient: db } = require('../src/drivers/db-client');
 
 /**
  * @param {import('@ukef/dtfs2-common').MongoDbCollectionName[]} collections

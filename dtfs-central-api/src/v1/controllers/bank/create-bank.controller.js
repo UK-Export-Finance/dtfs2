@@ -1,7 +1,7 @@
 const { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 
-const db = require('../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 
 const createBank = async (bank) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.BANKS);

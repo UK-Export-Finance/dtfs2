@@ -1,4 +1,4 @@
-const db = require('./src/drivers/db-client');
+const { mongoDbClient: db } = require('./src/drivers/db-client');
 
 const mockFiles = ['./src/v1/api'];
 

@@ -2,7 +2,7 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { produce } = require('immer');
-const db = require('../src/drivers/db-client');
+const { mongoDbClient: db } = require('../src/drivers/db-client');
 
 const wipe = async (collections) => {
   const drop = async (collection) =>

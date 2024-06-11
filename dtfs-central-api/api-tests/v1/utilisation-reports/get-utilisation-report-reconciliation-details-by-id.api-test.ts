@@ -4,7 +4,7 @@ import app from '../../../src/createApp';
 import apiModule from '../../api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { wipe } from '../../wipeDB';
-import mongoDbClient from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../src/drivers/db-client';
 import { UtilisationReportReconciliationDetails } from '../../../src/types/utilisation-reports';
 import { aBank } from '../../../test-helpers/test-data/bank';
 import { aPortalUser } from '../../../test-helpers/test-data/portal-user';
