@@ -56,10 +56,9 @@ exports.update = async (req, res) => {
     body,
   } = req;
   const auditDetails = generatePortalAuditDetails(req.user._id);
+  const newStatus = body.status;
 
   try {
-    const newStatus = body.status;
-
     const deal = await findOneDeal(dealId);
 
     if (!deal) {

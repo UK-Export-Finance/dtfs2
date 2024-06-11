@@ -1,3 +1,4 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
 const api = require('../api');
 
@@ -16,6 +17,7 @@ describe('updatePortalDealFromMIAtoMIN()', () => {
     surname: 'bob',
   };
 
+  const checkerAuditDetails = generatePortalAuditDetails(checker);
   const dealId = '123';
 
   beforeEach(() => {
@@ -25,7 +27,7 @@ describe('updatePortalDealFromMIAtoMIN()', () => {
   });
 
   it('should return the dealUpdate object on gef deal update', async () => {
-    const update = await updatePortalDealFromMIAtoMIN(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker);
+    const update = await updatePortalDealFromMIAtoMIN(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, checkerAuditDetails);
 
     const dealUpdate = {
       submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
@@ -37,7 +39,7 @@ describe('updatePortalDealFromMIAtoMIN()', () => {
   });
 
   it('should return the dealUpdate object on BSS deal update', async () => {
-    const update = await updatePortalDealFromMIAtoMIN(dealId, CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, checker);
+    const update = await updatePortalDealFromMIAtoMIN(dealId, CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, checker, checkerAuditDetails);
 
     const dealUpdate = {
       submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
@@ -51,7 +53,7 @@ describe('updatePortalDealFromMIAtoMIN()', () => {
   });
 
   it('should return undefined if no deal type', async () => {
-    const update = await updatePortalDealFromMIAtoMIN(dealId, '', checker);
+    const update = await updatePortalDealFromMIAtoMIN(dealId, '', checker, checkerAuditDetails);
 
     expect(update).toBeUndefined();
   });
