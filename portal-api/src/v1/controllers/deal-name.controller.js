@@ -17,7 +17,7 @@ const updateName = async (dealId, to, user, auditDetails) => {
 exports.update = (req, res) => {
   const {
     user,
-    body: additionalRefName,
+    body: { additionalRefName },
     params: { id: dealId },
   } = req;
 
