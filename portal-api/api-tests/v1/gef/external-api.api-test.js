@@ -64,6 +64,10 @@ describe(baseUrl, () => {
   });
 
   describe(`GET ${baseUrl}/address (Geospatial Addresses)`, () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
     it('Returns a list of addresses', async () => {
       const { status, body } = await as(aMaker).get(`${baseUrl}/address/${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`);
       expect(status).toEqual(HttpStatusCode.Ok);
