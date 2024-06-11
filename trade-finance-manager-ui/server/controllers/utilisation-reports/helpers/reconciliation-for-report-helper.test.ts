@@ -1,255 +1,406 @@
-import { Currency, CurrencyAndAmount, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
-import { mapFeeRecordItemsToFeeRecordViewModelItems } from './reconciliation-for-report-helper';
-import { FeeRecordItem } from '../../../api-response-types';
-import { aFeeRecordItem } from '../../../../test-helpers';
-import { SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
-import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
+import { Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems } from './reconciliation-for-report-helper';
+import { FeeRecordItem, FeeRecordPaymentGroupItem } from '../../../api-response-types';
+import { aFeeRecordPaymentGroupItem, aFeeRecordItem } from '../../../../test-helpers';
 
 describe('reconciliation-for-report-helper', () => {
-  describe('mapFeeRecordItemsToFeeRecordViewModelItems', () => {
+  describe('mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems', () => {
     const DEFAULT_IS_CHECKBOX_SELECTED = () => false;
 
-    it('maps the fee record facility id, exporter and status to the view model item', () => {
+    it('maps the group feeRecords id to the view model feeRecords id', () => {
       // Arrange
-      const facilityId = '12345678';
-      const exporter = 'Test exporter';
-      const status = FEE_RECORD_STATUS.TO_DO;
+      const firstFeeRecordId = 10;
+      const firstFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), id: firstFeeRecordId };
 
-      const feeRecordItems: FeeRecordItem[] = [
+      const secondFeeRecordId = 30;
+      const secondFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), id: secondFeeRecordId };
+
+      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
         {
-          ...aFeeRecordItem(),
-          facilityId,
-          exporter,
-          status,
+          ...aFeeRecordPaymentGroupItem(),
+          feeRecords: [firstFeeRecord, secondFeeRecord],
         },
       ];
 
       // Act
-      const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
-      expect(feeRecordViewModelItems).toHaveLength(1);
-      expect(feeRecordViewModelItems[0].facilityId).toBe(facilityId);
-      expect(feeRecordViewModelItems[0].exporter).toBe(exporter);
-      expect(feeRecordViewModelItems[0].status).toBe(status);
+      expect(viewModel).toHaveLength(1);
+      expect(viewModel[0].feeRecords).toHaveLength(2);
+      expect(viewModel[0].feeRecords[0].id).toBe(firstFeeRecordId);
+      expect(viewModel[0].feeRecords[1].id).toBe(secondFeeRecordId);
     });
 
-    it.each([
-      { status: FEE_RECORD_STATUS.TO_DO, displayStatus: 'TO DO' },
-      { status: FEE_RECORD_STATUS.MATCH, displayStatus: 'MATCH' },
-      { status: FEE_RECORD_STATUS.DOES_NOT_MATCH, displayStatus: 'DOES NOT MATCH' },
-      { status: FEE_RECORD_STATUS.READY_TO_KEY, displayStatus: 'READY TO KEY' },
-      { status: FEE_RECORD_STATUS.RECONCILED, displayStatus: 'RECONCILED' },
-    ])("converts the '$status' status to the display status '$displayStatus'", ({ status, displayStatus }) => {
+    it('maps the group feeRecords facilityId to the view model feeRecords facilityId', () => {
       // Arrange
-      const feeRecordItems: FeeRecordItem[] = [
+      const firstFeeRecordFacilityId = '12345678';
+      const firstFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), facilityId: firstFeeRecordFacilityId };
+
+      const secondFeeRecordFacilityId = '87654321';
+      const secondFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), facilityId: secondFeeRecordFacilityId };
+
+      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
         {
-          ...aFeeRecordItem(),
-          status,
+          ...aFeeRecordPaymentGroupItem(),
+          feeRecords: [firstFeeRecord, secondFeeRecord],
         },
       ];
 
       // Act
-      const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
-      expect(feeRecordViewModelItems).toHaveLength(1);
-      expect(feeRecordViewModelItems[0].displayStatus).toBe(displayStatus);
+      expect(viewModel).toHaveLength(1);
+      expect(viewModel[0].feeRecords).toHaveLength(2);
+      expect(viewModel[0].feeRecords[0].facilityId).toBe(firstFeeRecordFacilityId);
+      expect(viewModel[0].feeRecords[1].facilityId).toBe(secondFeeRecordFacilityId);
+    });
+
+    it('maps the group feeRecords exporter to the view model feeRecords exporter', () => {
+      // Arrange
+      const firstFeeRecordExporter = 'Test exporter 1';
+      const firstFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), exporter: firstFeeRecordExporter };
+
+      const secondFeeRecordExporter = 'Test exporter 2';
+      const secondFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), exporter: secondFeeRecordExporter };
+
+      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+        {
+          ...aFeeRecordPaymentGroupItem(),
+          feeRecords: [firstFeeRecord, secondFeeRecord],
+        },
+      ];
+
+      // Act
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+
+      // Assert
+      expect(viewModel).toHaveLength(1);
+      expect(viewModel[0].feeRecords).toHaveLength(2);
+      expect(viewModel[0].feeRecords[0].exporter).toBe(firstFeeRecordExporter);
+      expect(viewModel[0].feeRecords[1].exporter).toBe(secondFeeRecordExporter);
+    });
+
+    it('maps the group feeRecords reportedFees to the view model feeRecords reportedFees formatted currency and amount', () => {
+      // Arrange
+      const firstFeeRecordReportedFees: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
+      const firstFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), reportedFees: firstFeeRecordReportedFees };
+      const firstFeeRecordFormattedReportedFees = 'GBP 100.00';
+
+      const secondFeeRecordReportedFees: CurrencyAndAmount = { currency: 'EUR', amount: 314.59 };
+      const secondFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), reportedFees: secondFeeRecordReportedFees };
+      const secondFeeRecordFormattedReportedFees = 'EUR 314.59';
+
+      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+        {
+          ...aFeeRecordPaymentGroupItem(),
+          feeRecords: [firstFeeRecord, secondFeeRecord],
+        },
+      ];
+
+      // Act
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+
+      // Assert
+      expect(viewModel).toHaveLength(1);
+      expect(viewModel[0].feeRecords).toHaveLength(2);
+      expect(viewModel[0].feeRecords[0].reportedFees).toBe(firstFeeRecordFormattedReportedFees);
+      expect(viewModel[0].feeRecords[1].reportedFees).toBe(secondFeeRecordFormattedReportedFees);
+    });
+
+    it('maps the group feeRecords reportedPayments to the view model feeRecords reportedPayments formatted currency and amount', () => {
+      // Arrange
+      const firstFeeRecordReportedPayments: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
+      const firstFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), reportedPayments: firstFeeRecordReportedPayments };
+      const firstFeeRecordFormattedReportedPayments = 'GBP 100.00';
+
+      const secondFeeRecordReportedPayments: CurrencyAndAmount = { currency: 'EUR', amount: 314.59 };
+      const secondFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), reportedPayments: secondFeeRecordReportedPayments };
+      const secondFeeRecordFormattedReportedPayments = 'EUR 314.59';
+
+      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+        {
+          ...aFeeRecordPaymentGroupItem(),
+          feeRecords: [firstFeeRecord, secondFeeRecord],
+        },
+      ];
+
+      // Act
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+
+      // Assert
+      expect(viewModel).toHaveLength(1);
+      expect(viewModel[0].feeRecords).toHaveLength(2);
+      expect(viewModel[0].feeRecords[0].reportedPayments).toBe(firstFeeRecordFormattedReportedPayments);
+      expect(viewModel[0].feeRecords[1].reportedPayments).toBe(secondFeeRecordFormattedReportedPayments);
+    });
+
+    it('maps the group totalReportedPayments to the view model totalReportedPayments formattedCurrencyAndAmount', () => {
+      // Arrange
+      const totalReportedPayments: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
+      const totalReportedPaymentsFormattedCurrencyAndAmount = 'GBP 100.00';
+
+      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+        {
+          ...aFeeRecordPaymentGroupItem(),
+          totalReportedPayments,
+        },
+      ];
+
+      // Act
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+
+      // Assert
+      expect(viewModel).toHaveLength(1);
+      expect(viewModel[0].totalReportedPayments.formattedCurrencyAndAmount).toBe(totalReportedPaymentsFormattedCurrencyAndAmount);
+    });
+
+    it('sorts the group totalReportedPayments and sets to the view model totalReportedPayments dataSortValue', () => {
+      // Arrange
+      const firstTotalReportedPayments: CurrencyAndAmount = { currency: 'GBP', amount: 100 }; // dataSortValue = 2
+      const secondTotalReportedPayments: CurrencyAndAmount = { currency: 'EUR', amount: 100 }; // dataSortValue = 1
+      const thirdTotalReportedPayments: CurrencyAndAmount = { currency: 'GBP', amount: 200 }; // dataSortValue = 3
+      const fourthTotalReportedPayments: CurrencyAndAmount = { currency: 'EUR', amount: 50 }; // dataSortValue = 0
+
+      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+        { ...aFeeRecordPaymentGroupItem(), totalReportedPayments: firstTotalReportedPayments },
+        { ...aFeeRecordPaymentGroupItem(), totalReportedPayments: secondTotalReportedPayments },
+        { ...aFeeRecordPaymentGroupItem(), totalReportedPayments: thirdTotalReportedPayments },
+        { ...aFeeRecordPaymentGroupItem(), totalReportedPayments: fourthTotalReportedPayments },
+      ];
+
+      // Act
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+
+      // Assert
+      expect(viewModel).toHaveLength(4);
+      expect(viewModel[0].totalReportedPayments.dataSortValue).toBe(2);
+      expect(viewModel[1].totalReportedPayments.dataSortValue).toBe(1);
+      expect(viewModel[2].totalReportedPayments.dataSortValue).toBe(3);
+      expect(viewModel[3].totalReportedPayments.dataSortValue).toBe(0);
+    });
+
+    it('sets the view model paymentsReceived to undefined when the group paymentsReceived is null', () => {
+      // Arrange
+      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [{ ...aFeeRecordPaymentGroupItem(), paymentsReceived: null }];
+
+      // Act
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+
+      // Assert
+      expect(viewModel).toHaveLength(1);
+      expect(viewModel[0].paymentsReceived).toBeUndefined();
+    });
+
+    it('maps the group paymentsReceived to the view model paymentsReceived formatted currency and amount', () => {
+      // Arrange
+      const paymentsReceived: CurrencyAndAmount[] = [{ currency: 'GBP', amount: 314.59 }];
+      const paymentsReceivedFormattedCurrencyAndAmount = 'GBP 314.59';
+
+      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+        {
+          ...aFeeRecordPaymentGroupItem(),
+          paymentsReceived,
+        },
+      ];
+
+      // Act
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+
+      // Assert
+      expect(viewModel[0].paymentsReceived).toHaveLength(1);
+      expect(viewModel[0].paymentsReceived![0]).toBe(paymentsReceivedFormattedCurrencyAndAmount);
+    });
+
+    it('sets the view model totalPaymentsReceived formattedCurrencyAndAmount to undefined when the group totalPaymentsReceived is null', () => {
+      // Arrange
+      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+        {
+          ...aFeeRecordPaymentGroupItem(),
+          totalPaymentsReceived: null,
+        },
+      ];
+
+      // Act
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+
+      // Assert
+      expect(viewModel).toHaveLength(1);
+      expect(viewModel[0].totalPaymentsReceived.formattedCurrencyAndAmount).toBeUndefined();
+    });
+
+    it('maps the group totalPaymentsReceived to the view model totalPaymentsReceived formattedCurrencyAndAmount', () => {
+      // Arrange
+      const totalPaymentsReceived: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
+      const totalPaymentsReceivedFormattedCurrencyAndAmount = 'GBP 100.00';
+
+      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+        {
+          ...aFeeRecordPaymentGroupItem(),
+          totalPaymentsReceived,
+        },
+      ];
+
+      // Act
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+
+      // Assert
+      expect(viewModel).toHaveLength(1);
+      expect(viewModel[0].totalPaymentsReceived.formattedCurrencyAndAmount).toBe(totalPaymentsReceivedFormattedCurrencyAndAmount);
+    });
+
+    it('sorts the group totalPaymentsReceived and sets to the view model totalPaymentsReceived dataSortValue', () => {
+      // Arrange
+      const firstTotalPaymentsReceived: CurrencyAndAmount = { currency: 'GBP', amount: 100 }; // dataSortValue = 2
+      const secondTotalPaymentsReceived: CurrencyAndAmount = { currency: 'EUR', amount: 100 }; // dataSortValue = 1
+      const thirdTotalPaymentsReceived: CurrencyAndAmount = { currency: 'GBP', amount: 200 }; // dataSortValue = 3
+      const fourthTotalPaymentsReceived: CurrencyAndAmount = { currency: 'EUR', amount: 50 }; // dataSortValue = 0
+
+      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+        { ...aFeeRecordPaymentGroupItem(), totalPaymentsReceived: firstTotalPaymentsReceived },
+        { ...aFeeRecordPaymentGroupItem(), totalPaymentsReceived: secondTotalPaymentsReceived },
+        { ...aFeeRecordPaymentGroupItem(), totalPaymentsReceived: thirdTotalPaymentsReceived },
+        { ...aFeeRecordPaymentGroupItem(), totalPaymentsReceived: fourthTotalPaymentsReceived },
+      ];
+
+      // Act
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+
+      // Assert
+      expect(viewModel).toHaveLength(4);
+      expect(viewModel[0].totalPaymentsReceived.dataSortValue).toBe(2);
+      expect(viewModel[1].totalPaymentsReceived.dataSortValue).toBe(1);
+      expect(viewModel[2].totalPaymentsReceived.dataSortValue).toBe(3);
+      expect(viewModel[3].totalPaymentsReceived.dataSortValue).toBe(0);
+    });
+
+    it('maps the group status to the view model status', () => {
+      // Arrange
+      const status: FeeRecordStatus = 'TO_DO';
+      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [{ ...aFeeRecordPaymentGroupItem(), status }];
+
+      // Act
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+
+      // Assert
+      expect(viewModel).toHaveLength(1);
+      expect(viewModel[0].status).toBe(status);
     });
 
     it.each([
-      {
-        property: 'reportedFees',
-        currencyAndAmount: { currency: 'GBP', amount: 314.59 },
-        expectedValue: { formattedCurrencyAndAmount: 'GBP 314.59', dataSortValue: 0 },
-      },
-      {
-        property: 'reportedPayments',
-        currencyAndAmount: { currency: 'GBP', amount: 314.59 },
-        expectedValue: { formattedCurrencyAndAmount: 'GBP 314.59', dataSortValue: 0 },
-      },
-      {
-        property: 'totalReportedPayments',
-        currencyAndAmount: { currency: 'GBP', amount: 314.59 },
-        expectedValue: { formattedCurrencyAndAmount: 'GBP 314.59', dataSortValue: 0 },
-      },
-      {
-        property: 'paymentsReceived',
-        currencyAndAmount: { currency: 'GBP', amount: 314.59 },
-        expectedValue: { formattedCurrencyAndAmount: 'GBP 314.59', dataSortValue: 0 },
-      },
-      {
-        property: 'paymentsReceived',
-        currencyAndAmount: null,
-        expectedValue: { formattedCurrencyAndAmount: undefined, dataSortValue: 0 },
-      },
-      {
-        property: 'totalPaymentsReceived',
-        currencyAndAmount: { currency: 'GBP', amount: 314.59 },
-        expectedValue: { formattedCurrencyAndAmount: 'GBP 314.59', dataSortValue: 0 },
-      },
-      {
-        property: 'totalPaymentsReceived',
-        currencyAndAmount: null,
-        expectedValue: { formattedCurrencyAndAmount: undefined, dataSortValue: 0 },
-      },
+      { feeRecordStatus: 'TO_DO', feeRecordDisplayStatus: 'TO DO' },
+      { feeRecordStatus: 'MATCH', feeRecordDisplayStatus: 'MATCH' },
+      { feeRecordStatus: 'DOES_NOT_MATCH', feeRecordDisplayStatus: 'DOES NOT MATCH' },
+      { feeRecordStatus: 'READY_TO_KEY', feeRecordDisplayStatus: 'READY TO KEY' },
+      { feeRecordStatus: 'RECONCILED', feeRecordDisplayStatus: 'RECONCILED' },
     ] as const)(
-      "converts the fee record item '$property' value of '$currencyAndAmount' to '$expectedValue'",
-      ({ property, currencyAndAmount, expectedValue }) => {
+      "maps the fee record status '$feeRecordStatus' to the view model display status '%feeRecordDisplayStatus'",
+      ({ feeRecordStatus, feeRecordDisplayStatus }) => {
         // Arrange
-        const feeRecordItems: FeeRecordItem[] = [
-          {
-            ...aFeeRecordItem(),
-            [property]: currencyAndAmount,
-          },
-        ];
+        const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [{ ...aFeeRecordPaymentGroupItem(), status: feeRecordStatus }];
 
         // Act
-        const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems, DEFAULT_IS_CHECKBOX_SELECTED);
+        const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
         // Assert
-        expect(feeRecordViewModelItems).toHaveLength(1);
-        expect(feeRecordViewModelItems[0][property]).toEqual(expectedValue);
+        expect(viewModel[0].displayStatus).toBe(feeRecordDisplayStatus);
       },
     );
 
-    describe('when there are multiple fee record items', () => {
-      const UNSORTED_CURRENCY_AND_AMOUNTS: CurrencyAndAmount[] = [
-        { currency: 'GBP', amount: 1000.0 },
-        { currency: 'EUR', amount: 1000.0 },
-        { currency: 'GBP', amount: 100.0 },
-        { currency: 'EUR', amount: 100.0 },
-        { currency: 'EUR', amount: 300.0 },
-      ];
+    it('sets the view model checkboxId using the supplied fee record items for the ids, currency and the group status for the status', () => {
+      // Arrange
+      const feeRecordIds = [1, 20];
 
-      const SORTED_AND_FORMATTED_CURRENCY_AND_AMOUNTS: SortedAndFormattedCurrencyAndAmount[] = [
-        { formattedCurrencyAndAmount: 'GBP 1,000.00', dataSortValue: 4 },
-        { formattedCurrencyAndAmount: 'EUR 1,000.00', dataSortValue: 2 },
-        { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 3 },
-        { formattedCurrencyAndAmount: 'EUR 100.00', dataSortValue: 0 },
-        { formattedCurrencyAndAmount: 'EUR 300.00', dataSortValue: 1 },
-      ];
-
-      describe.each([
-        { property: 'reportedFees' },
-        { property: 'reportedPayments' },
-        { property: 'totalReportedPayments' },
-        { property: 'paymentsReceived' },
-        { property: 'totalPaymentsReceived' },
-      ] as const)("when sorting and formatting the '$property' column", ({ property }) => {
-        // Arrange
-        const feeRecordItems: FeeRecordItem[] = UNSORTED_CURRENCY_AND_AMOUNTS.map((currencyAndAmount) => ({
-          ...aFeeRecordItem(),
-          [property]: currencyAndAmount,
-        }));
-
-        it("sets the 'dataSortValue' such that the items are ordered alphabetically by currency and numerically by amount in ascending order", () => {
-          // Act
-          const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems, DEFAULT_IS_CHECKBOX_SELECTED);
-
-          // Assert
-          SORTED_AND_FORMATTED_CURRENCY_AND_AMOUNTS.forEach(({ dataSortValue }, index) => {
-            expect(feeRecordViewModelItems[index][property].dataSortValue).toBe(dataSortValue);
-          });
-        });
-
-        it("sets the 'formattedCurrencyAndAmount' to be the currency followed by the amount using two decimal places and comma-separated thousands", () => {
-          // Act
-          const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems, DEFAULT_IS_CHECKBOX_SELECTED);
-
-          // Assert
-          SORTED_AND_FORMATTED_CURRENCY_AND_AMOUNTS.forEach(({ formattedCurrencyAndAmount }, index) => {
-            expect(feeRecordViewModelItems[index][property].formattedCurrencyAndAmount).toBe(formattedCurrencyAndAmount);
-          });
-        });
-      });
-    });
-
-    describe('when sorting the payments received and total payments received columns for fee records with some null values', () => {
-      const UNSORTED_CURRENCY_AND_AMOUNT_OR_NULLS: (CurrencyAndAmount | null)[] = [
-        null,
-        { currency: 'GBP', amount: 100.0 },
-        null,
-        { currency: 'EUR', amount: 100.0 },
-      ];
-
-      const SORTED_AND_FORMATTED_CURRENCY_AND_AMOUNTS: SortedAndFormattedCurrencyAndAmount[] = [
-        { formattedCurrencyAndAmount: undefined, dataSortValue: 0 },
-        { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 3 },
-        { formattedCurrencyAndAmount: undefined, dataSortValue: 1 },
-        { formattedCurrencyAndAmount: 'EUR 100.00', dataSortValue: 2 },
-      ];
-
-      it.each([{ property: 'paymentsReceived' }, { property: 'totalPaymentsReceived' }] as const)(
-        "assigns any null entries to the lowest 'dataSortValue' for the '$property' column sets 'formattedCurrencyAndAmount' to undefined",
-        ({ property }) => {
-          // Arrange
-          const feeRecordItems: FeeRecordItem[] = UNSORTED_CURRENCY_AND_AMOUNT_OR_NULLS.map((currencyAndAmountOrNull) => ({
-            ...aFeeRecordItem(),
-            [property]: currencyAndAmountOrNull,
-          }));
-
-          // Act
-          const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems, DEFAULT_IS_CHECKBOX_SELECTED);
-
-          // Assert
-          expect(feeRecordViewModelItems).toHaveLength(feeRecordItems.length);
-          SORTED_AND_FORMATTED_CURRENCY_AND_AMOUNTS.forEach((expectedValue, index) => {
-            expect(feeRecordViewModelItems[index][property]).toEqual(expectedValue);
-          });
+      const firstFeeRecordReportedPaymentsCurrency: Currency = 'GBP';
+      const firstFeeRecord: FeeRecordItem = {
+        ...aFeeRecordItem(),
+        id: feeRecordIds[0],
+        reportedPayments: {
+          currency: firstFeeRecordReportedPaymentsCurrency,
+          amount: 100,
         },
-      );
+      };
+
+      const secondFeeRecord: FeeRecordItem = {
+        ...aFeeRecordItem(),
+        id: feeRecordIds[1],
+        reportedPayments: {
+          currency: 'EUR',
+          amount: 100,
+        },
+      };
+
+      const feeRecords = [firstFeeRecord, secondFeeRecord];
+
+      const groupStatus: FeeRecordStatus = 'TO_DO';
+
+      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [{ ...aFeeRecordPaymentGroupItem(), feeRecords, status: groupStatus }];
+
+      const checkboxId = `feeRecordIds-${feeRecordIds.join(',')}-reportedPaymentsCurrency-${firstFeeRecordReportedPaymentsCurrency}-status-${groupStatus}`;
+
+      // Act
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+
+      // Assert
+      expect(viewModel[0].checkboxId).toBe(checkboxId);
     });
 
-    describe("when a specific 'isCheckboxSelected' function is specified", () => {
-      const FEE_RECORD_ID = 1;
-      const PAYMENTS_RECEIVED_CURRENCY: Currency = 'GBP';
-      const STATUS: FeeRecordStatus = 'TO_DO';
+    it('sets isChecked to true if the generated checkboxId is recognised by the supplied isCheckboxChecked function', () => {
+      // Arrange
+      const feeRecordId = 1;
+      const feeRecordReportedPaymentsCurrency: Currency = 'GBP';
+      const feeRecord: FeeRecordItem = {
+        ...aFeeRecordItem(),
+        id: feeRecordId,
+        reportedPayments: {
+          currency: feeRecordReportedPaymentsCurrency,
+          amount: 100,
+        },
+      };
 
-      const CHECKED_FEE_RECORD_CHECKBOX_ID: PremiumPaymentsTableCheckboxId = `feeRecordId-${FEE_RECORD_ID}-reportedPaymentsCurrency-${PAYMENTS_RECEIVED_CURRENCY}-status-${STATUS}`;
-      const IS_CHECKBOX_SELECTED = (checkboxId: string) => checkboxId === CHECKED_FEE_RECORD_CHECKBOX_ID;
+      const status: FeeRecordStatus = 'DOES_NOT_MATCH';
 
-      it("sets the 'isChecked' property to false when the fee record item does not match the checked checkbox id", () => {
-        // Arrange
-        const feeRecordItems: FeeRecordItem[] = [
-          {
-            ...aFeeRecordItem(),
-            id: 2,
-            paymentsReceived: {
-              amount: 100.0,
-              currency: 'EUR',
-            },
-            status: 'DOES_NOT_MATCH',
-          },
-        ];
+      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [{ ...aFeeRecordPaymentGroupItem(), feeRecords: [feeRecord], status }];
 
-        // Act
-        const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems, IS_CHECKBOX_SELECTED);
+      const checkedCheckboxId = `feeRecordIds-${feeRecordId}-reportedPaymentsCurrency-${feeRecordReportedPaymentsCurrency}-status-${status}`;
 
-        // Assert
-        expect(feeRecordViewModelItems[0].isChecked).toBe(false);
-      });
+      const isCheckboxChecked = (checkboxId: string) => checkboxId === checkedCheckboxId;
 
-      it("sets the 'isChecked' property to true when the fee record item does match the checked checkbox id", () => {
-        // Arrange
-        const feeRecordItems: FeeRecordItem[] = [
-          {
-            ...aFeeRecordItem(),
-            id: FEE_RECORD_ID,
-            reportedPayments: {
-              amount: 100.0,
-              currency: PAYMENTS_RECEIVED_CURRENCY,
-            },
-            status: STATUS,
-          },
-        ];
+      // Act
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
 
-        // Act
-        const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordItems, IS_CHECKBOX_SELECTED);
+      // Assert
+      expect(viewModel[0].isChecked).toBe(true);
+    });
 
-        // Assert
-        expect(feeRecordViewModelItems[0].isChecked).toBe(true);
-      });
+    it('sets isChecked to false if the generated checkboxId is not recognised by the supplied isCheckboxChecked function', () => {
+      // Arrange
+      const feeRecordId = 1;
+      const nonMatchingFeeRecordId = 5;
+      const feeRecordReportedPaymentsCurrency: Currency = 'GBP';
+      const feeRecord: FeeRecordItem = {
+        ...aFeeRecordItem(),
+        id: feeRecordId,
+        reportedPayments: {
+          currency: feeRecordReportedPaymentsCurrency,
+          amount: 100,
+        },
+      };
+
+      const status: FeeRecordStatus = 'DOES_NOT_MATCH';
+
+      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [{ ...aFeeRecordPaymentGroupItem(), feeRecords: [feeRecord], status }];
+
+      const checkedCheckboxId = `feeRecordIds-${nonMatchingFeeRecordId}-reportedPaymentsCurrency-${feeRecordReportedPaymentsCurrency}-status-${status}`;
+
+      const isCheckboxChecked = (checkboxId: string) => checkboxId === checkedCheckboxId;
+
+      // Act
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
+
+      // Assert
+      expect(viewModel[0].isChecked).toBe(false);
     });
   });
 });

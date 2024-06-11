@@ -3,8 +3,109 @@
 {% import "../../_macros/table-cell-checkbox.njk" as tableCellCheckbox %}
 {% import "../../_macros/select-all-table-cell-checkbox.njk" as selectAllTableCellCheckbox %}
 
+{% macro renderPremiumPaymentsTableRow(params) %}
+  {% set feeRecordPaymentGroup = params.feeRecordPaymentGroup %}
+
+  {% set feeRecords = feeRecordPaymentGroup.feeRecords %}
+  {% set totalReportedPayments = feeRecordPaymentGroup.totalReportedPayments %}
+  {% set paymentsReceived = feeRecordPaymentGroup.paymentsReceived %}
+  {% set totalPaymentsReceived = feeRecordPaymentGroup.totalPaymentsReceived %}
+  {% set status = feeRecordPaymentGroup.status %}
+  {% set displayStatus = feeRecordPaymentGroup.displayStatus %}
+  {% set checkboxId = feeRecordPaymentGroup.checkboxId %}
+  {% set isChecked = feeRecordPaymentGroup.isChecked %}
+
+  {% for feeRecord in feeRecords %}
+    {% set isFirstRow = loop.index === 1 %}
+    {% set isLastRow = loop.index === feeRecords.length %}
+
+    <tr
+      class="govuk-table__row"
+      data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }}"
+    >
+      <th
+        scope="row"
+        class="govuk-table__header govuk-!-font-weight-regular{{ " no-border" if not isLastRow }}"
+      >
+        {{ feeRecord.facilityId }}
+      </th>
+      <td class="govuk-table__cell{{ " no-border" if not isLastRow }}">
+        {{ feeRecord.exporter }}
+      </td>
+      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastRow }}">
+        {{ feeRecord.reportedFees }}
+      </td>
+      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastRow }}">
+        {{ feeRecord.reportedPayments }}
+      </td>
+
+      {% if isFirstRow %}
+        <td
+          class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastRow }}"
+          data-sort-value="{{ totalReportedPayments.dataSortValue }}"
+        >
+          {{ totalReportedPayments.formattedCurrencyAndAmount }}
+        </td>
+      {% elif isLastRow %}
+        <td class="govuk-table__cell" data-sort-value="{{ totalReportedPayments.dataSortValue }}"></td>
+      {% else %}
+        <td class="govuk-table__cell no-border" data-sort-value="{{ totalReportedPayments.dataSortValue }}"></td>
+      {% endif %}
+      
+      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastRow }}">
+        {% if isFirstRow and paymentsReceived %}
+          <ul class="payments-list">
+            {% for paymentReceived in paymentsReceived %}
+              <li class="payments-list-item">
+                <a href="#">{{ paymentReceived }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </td>
+
+      {% if isFirstRow and totalPaymentsReceived %}
+        <td
+          class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastRow }}"
+          data-sort-value="{{ totalPaymentsReceived.dataSortValue }}"
+        >
+          {{ totalPaymentsReceived.formattedCurrencyAndAmount }}
+        </td>
+      {% elif isLastRow %}
+        <td class="govuk-table__cell" data-sort-value="{{ totalPaymentsReceived.dataSortValue }}"></td>
+      {% else %}
+        <td class="govuk-table__cell no-border" data-sort-value="{{ totalPaymentsReceived.dataSortValue }}"></td>
+      {% endif %}
+
+      {% if isFirstRow %}
+        <td class="govuk-table__cell{{ " no-border" if not isLastRow }}" data-sort-value="{{ displayStatus }}">
+          {{ feeRecordStatus.render({
+            status: status,
+            displayStatus: displayStatus
+          }) }}
+        </td>
+      {% elif isLastRow %}
+        <td class="govuk-table__cell" data-sort-value="{{ displayStatus }}"></td>
+      {% else %}
+        <td class="govuk-table__cell no-border" data-sort-value="{{ displayStatus }}"></td>
+      {% endif %}
+
+      <td class="govuk-table__cell{{ " no-border" if not isLastRow }}">
+        {% if isFirstRow %}
+          {% if status === 'TO_DO' or status === 'DOES_NOT_MATCH' %}
+            {{ tableCellCheckbox.render({
+              checkboxId: checkboxId,
+              checked: isChecked
+            }) }}
+          {% endif %}
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+{% endmacro %}
+
 {% macro render(params) %}
-  {% set feeRecords = params.feeRecords %}
+  {% set feeRecordPaymentGroups = params.feeRecordPaymentGroups %}
   {% set enablePaymentsReceivedSorting = params.enablePaymentsReceivedSorting %}
 
   {% macro tableHeader(params) %}
@@ -25,15 +126,15 @@
     {% endif %}
   {% endmacro %}
 
-  <table class="govuk-table" data-module="moj-sortable-table" data-cy="premium-payments-table">
+  <table class="govuk-table premium-payments-table tablesorter" data-module="moj-sortable-table" data-cy="premium-payments-table">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
-        {{ tableHeader({ headerText: 'Facility ID', isNumericColumn: false, enableSorting: true, ariaSort: 'ascending' }) }}
-        {{ tableHeader({ headerText: 'Exporter', isNumericColumn: false, enableSorting: true, ariaSort: 'none' }) }}
-        {{ tableHeader({ headerText: 'Reported fees', isNumericColumn: true, enableSorting: true, ariaSort: 'none' }) }}
-        {{ tableHeader({ headerText: 'Reported payments', isNumericColumn: true, enableSorting: true, ariaSort: 'none' }) }}
-        {{ tableHeader({ headerText: 'Total reported payments', isNumericColumn: true, enableSorting: true, ariaSort: 'none' }) }}
-        {{ tableHeader({ headerText: 'Payments received', isNumericColumn: true, enableSorting: enablePaymentsReceivedSorting, ariaSort: 'none' }) }}
+        {{ tableHeader({ headerText: 'Facility ID', isNumericColumn: false, enableSorting: false }) }}
+        {{ tableHeader({ headerText: 'Exporter', isNumericColumn: false, enableSorting: false }) }}
+        {{ tableHeader({ headerText: 'Reported fees', isNumericColumn: true, enableSorting: false }) }}
+        {{ tableHeader({ headerText: 'Reported payments', isNumericColumn: true, enableSorting: false }) }}
+        {{ tableHeader({ headerText: 'Total reported payments', isNumericColumn: true, enableSorting: true, ariaSort: 'ascending' }) }}
+        {{ tableHeader({ headerText: 'Payments received', isNumericColumn: true, enableSorting: false }) }}
         {{ tableHeader({ headerText: 'Total payments received', isNumericColumn: true, enableSorting: enablePaymentsReceivedSorting, ariaSort: 'none' }) }}
         {{ tableHeader({ headerText: 'Status', isNumericColumn: false, enableSorting: true, ariaSort: 'none' }) }}
         <th scope="col" class="govuk-table__header">
@@ -43,51 +144,8 @@
     </thead>
 
     <tbody class="govuk-table__body">
-    {% for feeRecord in feeRecords %}
-      <tr
-        class="govuk-table__row"
-        data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }}"
-      >
-        <th
-          scope="row"
-          class="govuk-table__header govuk-!-font-weight-regular"
-          data-sort-value="{{ feeRecord.facilityId }}"
-        >
-          {{ feeRecord.facilityId }}
-        </th>
-        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.exported }}">
-          {{ feeRecord.exporter }}
-        </td>
-        <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ feeRecord.reportedFees.dataSortValue }}">
-          {{ feeRecord.reportedFees.formattedCurrencyAndAmount }}
-        </td>
-        <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ feeRecord.reportedPayments.dataSortValue }}">
-          {{ feeRecord.reportedPayments.formattedCurrencyAndAmount }}
-        </td>
-        <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ feeRecord.totalReportedPayments.dataSortValue }}">
-          {{ feeRecord.totalReportedPayments.formattedCurrencyAndAmount }}
-        </td>
-        <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ feeRecord.paymentsReceived.dataSortValue }}">
-          {{ feeRecord.paymentsReceived.formattedCurrencyAndAmount }}
-        </td>
-        <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ feeRecord.totalPaymentsReceived.dataSortValue }}">
-          {{ feeRecord.totalPaymentsReceived.formattedCurrencyAndAmount }}
-        </td>
-        <td class="govuk-table__cell" data-sort-value="{{ feeRecord.displayStatus }}">
-          {{ feeRecordStatus.render({
-            status: feeRecord.status,
-            displayStatus: feeRecord.displayStatus
-          }) }}
-        </td>
-        <td class="govuk-table__cell">
-          {% if feeRecord.status === 'TO_DO' or feeRecord.status === 'DOES_NOT_MATCH' %}
-            {{ tableCellCheckbox.render({
-              checkboxId: feeRecord.checkboxId,
-              checked: feeRecord.isChecked
-            }) }}
-          {% endif %}
-        </td>
-      </tr>
+    {% for feeRecordPaymentGroup in feeRecordPaymentGroups %}
+      {{ renderPremiumPaymentsTableRow({ feeRecordPaymentGroup: feeRecordPaymentGroup }) }}
     {% endfor %}
     </tbody>
   </table>

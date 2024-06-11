@@ -1,5 +1,6 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
+import { In } from 'typeorm';
 import { SelectedFeeRecordsDetails } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
@@ -30,7 +31,12 @@ export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetai
     }
 
     const utilisationReport = await UtilisationReportRepo.findOne({
-      where: { id: Number(reportId) },
+      where: {
+        id: Number(reportId),
+        feeRecords: {
+          id: In(selectedFeeRecordIds),
+        },
+      },
       relations: { feeRecords: true },
     });
 
@@ -38,7 +44,7 @@ export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetai
       throw new NotFoundError(`Failed to find a report with id '${reportId}'`);
     }
 
-    const selectedFeeRecords = utilisationReport.feeRecords.filter((feeRecord) => selectedFeeRecordIds.includes(feeRecord.id));
+    const selectedFeeRecords = utilisationReport.feeRecords;
 
     if (selectedFeeRecords.length !== selectedFeeRecordIds.length) {
       throw new InvalidPayloadError('All selected fee records must belong to the requested report');

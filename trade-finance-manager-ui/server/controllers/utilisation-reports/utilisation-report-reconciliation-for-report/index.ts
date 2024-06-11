@@ -3,12 +3,13 @@ import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { mapFeeRecordItemsToFeeRecordViewModelItems } from '../helpers';
+import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems } from '../helpers';
 import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 import { getAndClearAddPaymentFieldsFromRedirectSessionData } from './get-and-clear-add-payment-fields-from-redirect-session-data';
-import { FeeRecordItem } from '../../../api-response-types';
+import { FeeRecordPaymentGroupItem } from '../../../api-response-types';
 
-const feeRecordsHaveAtLeastOnePaymentReceived = (feeRecords: FeeRecordItem[]): boolean => feeRecords.some(({ paymentsReceived }) => paymentsReceived !== null);
+const feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived = (feeRecordPaymentGroup: FeeRecordPaymentGroupItem[]): boolean =>
+  feeRecordPaymentGroup.some(({ paymentsReceived }) => paymentsReceived !== null);
 
 const renderUtilisationReportReconciliationForReport = (res: Response, viewModel: UtilisationReportReconciliationForReportViewModel) =>
   res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', viewModel);
@@ -20,13 +21,13 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
   try {
     const { addPaymentErrorSummary, isCheckboxChecked } = getAndClearAddPaymentFieldsFromRedirectSessionData(req);
 
-    const { feeRecords, reportPeriod, bank } = await api.getUtilisationReportReconciliationDetailsById(reportId, userToken);
+    const { feeRecordPaymentGroups, reportPeriod, bank } = await api.getUtilisationReportReconciliationDetailsById(reportId, userToken);
 
     const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(reportPeriod);
 
-    const feeRecordViewModel = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecords, isCheckboxChecked);
+    const enablePaymentsReceivedSorting = feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived(feeRecordPaymentGroups);
 
-    const enablePaymentsReceivedSorting = feeRecordsHaveAtLeastOnePaymentReceived(feeRecords);
+    const feeRecordPaymentGroupViewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
 
     return renderUtilisationReportReconciliationForReport(res, {
       user,
@@ -34,8 +35,8 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
       bank,
       formattedReportPeriod,
       reportId,
-      feeRecords: feeRecordViewModel,
       enablePaymentsReceivedSorting,
+      feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
       errorSummary: addPaymentErrorSummary,
     });
   } catch (error) {

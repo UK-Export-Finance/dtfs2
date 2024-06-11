@@ -1,5 +1,12 @@
-import { CURRENCY, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from './fee-record-mapper';
+import {
+  CURRENCY,
+  CurrencyAndAmount,
+  FeeRecordEntity,
+  FeeRecordEntityMockBuilder,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
+import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments, mapFeeRecordEntitiesToTotalReportedPayments } from './fee-record-mapper';
 
 describe('fee record mapper', () => {
   describe('mapFeeRecordEntityToReportedFees', () => {
@@ -83,4 +90,72 @@ describe('fee record mapper', () => {
       expect(reportedPayments.amount).toEqual(expectedReportedPaymentAmount);
     });
   });
+
+  describe('mapFeeRecordEntitiesToTotalReportedPayments', () => {
+    it('throws an error when the supplied list of fee records is empty', () => {
+      // Arrange
+      const feeRecords: FeeRecordEntity[] = [];
+
+      // Act / Assert
+      expect(() => mapFeeRecordEntitiesToTotalReportedPayments(feeRecords)).toThrow(Error);
+    });
+
+    it("returns the total of the fee record 'feesPaidToUkefForThePeriod' when the payment currency matches the fees paid currency", () => {
+      // Arrange
+      const utilisationReport = aUtilisationReport();
+      const feeRecords = [
+        FeeRecordEntityMockBuilder.forReport(utilisationReport)
+          .withFeesPaidToUkefForThePeriod(100)
+          .withFeesPaidToUkefForThePeriodCurrency('GBP')
+          .withPaymentCurrency('GBP')
+          .build(),
+        FeeRecordEntityMockBuilder.forReport(utilisationReport)
+          .withFeesPaidToUkefForThePeriod(50)
+          .withFeesPaidToUkefForThePeriodCurrency('GBP')
+          .withPaymentCurrency('GBP')
+          .build(),
+      ];
+
+      // Act
+      const totalReportedPayments = mapFeeRecordEntitiesToTotalReportedPayments(feeRecords);
+
+      // Assert
+      expect(totalReportedPayments).toEqual<CurrencyAndAmount>({
+        currency: 'GBP',
+        amount: 150,
+      });
+    });
+
+    it("returns the total of the fee record 'feesPaidToUkefForThePeriod' converted to the payment currency when the payment currency does not match the fees paid currency", () => {
+      // Arrange
+      const utilisationReport = aUtilisationReport();
+      const feeRecords = [
+        FeeRecordEntityMockBuilder.forReport(utilisationReport)
+          .withFeesPaidToUkefForThePeriod(100)
+          .withFeesPaidToUkefForThePeriodCurrency('GBP')
+          .withPaymentCurrency('EUR')
+          .withPaymentExchangeRate(1.1)
+          .build(),
+        FeeRecordEntityMockBuilder.forReport(utilisationReport)
+          .withFeesPaidToUkefForThePeriod(50)
+          .withFeesPaidToUkefForThePeriodCurrency('GBP')
+          .withPaymentCurrency('EUR')
+          .withPaymentExchangeRate(1.1)
+          .build(),
+      ];
+
+      // Act
+      const totalReportedPayments = mapFeeRecordEntitiesToTotalReportedPayments(feeRecords);
+
+      // Assert
+      expect(totalReportedPayments).toEqual<CurrencyAndAmount>({
+        currency: 'EUR',
+        amount: 136.36,
+      });
+    });
+  });
+
+  function aUtilisationReport(): UtilisationReportEntity {
+    return UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+  }
 });

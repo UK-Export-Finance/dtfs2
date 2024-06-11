@@ -20,7 +20,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
 
   describe('when navigating from premium payments table', () => {
     const requestBodyForPostFromPremiumPaymentsPage: AddPaymentRequestBody = {
-      'feeRecordId-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
+      'feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
     };
 
     it('should render add payment page', async () => {
@@ -122,7 +122,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
         session: requestSession,
         params: { reportId: '123' },
         body: {
-          'feeRecordId-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
+          'feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
         },
       });
       jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
@@ -131,7 +131,9 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
       await addPayment(req, res);
 
       // Assert
-      expect((res._getRenderData() as AddPaymentViewModel).selectedFeeRecordCheckboxIds).toEqual(['feeRecordId-456-reportedPaymentsCurrency-GBP-status-TO_DO']);
+      expect((res._getRenderData() as AddPaymentViewModel).selectedFeeRecordCheckboxIds).toEqual([
+        'feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO',
+      ]);
     });
 
     it('should not preset any form values', async () => {
@@ -284,7 +286,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
   describe('when add payment form is submitted', () => {
     describe('and the data is not valid', () => {
       const addPaymentFormSubmissionRequestBodyWithIncompleteData: AddPaymentRequestBody = {
-        'feeRecordId-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
+        'feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
         addPaymentFormSubmission: 'true',
       };
 
@@ -311,7 +313,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
           session: requestSession,
           params: { reportId: '123' },
           body: {
-            'feeRecordId-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
+            'feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
             addPaymentFormSubmission: 'true',
             paymentAmount: 'one hundred',
           },
@@ -350,7 +352,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
       it('sets form values to submitted values', async () => {
         // Arrange
         const requestBody: AddPaymentRequestBody = {
-          'feeRecordId-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
+          'feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
           addPaymentFormSubmission: 'true',
           paymentCurrency: 'JPY',
           paymentAmount: 'one hundred',
@@ -390,7 +392,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
           session: requestSession,
           params: { reportId: '123' },
           body: {
-            'feeRecordId-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
+            'feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
             addPaymentFormSubmission: 'true',
           },
         });
@@ -436,7 +438,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
           session: requestSession,
           params: { reportId: '123' },
           body: {
-            'feeRecordId-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
+            'feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
             addPaymentFormSubmission: 'true',
           },
         });
@@ -447,7 +449,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
 
         // Assert
         expect((res._getRenderData() as AddPaymentViewModel).selectedFeeRecordCheckboxIds).toEqual([
-          'feeRecordId-456-reportedPaymentsCurrency-GBP-status-TO_DO',
+          'feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO',
         ]);
       });
 
@@ -473,7 +475,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
           session: requestSession,
           params: { reportId: '123' },
           body: {
-            'feeRecordId-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
+            'feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
             addPaymentFormSubmission: 'true',
             paymentNumber: '13',
           },
@@ -604,7 +606,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
       const feeRecordIds = [123];
 
       const addPaymentFormSubmissionRequestBody: AddPaymentRequestBody = {
-        'feeRecordId-123-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
+        'feeRecordIds-123-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
         addPaymentFormSubmission: 'true',
         paymentCurrency: CURRENCY.GBP,
         paymentAmount: '100',
