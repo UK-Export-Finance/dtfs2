@@ -12,7 +12,7 @@ const { APIM_MDM_URL } = process.env;
 const { get } = api(app);
 
 const mockResponse = {
-  status: 200,
+  status: HttpStatusCode.Ok,
   data: {
     header: {
       uri: `https://api.os.co.uk/search/places/v1/postcode?postcode=${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`,
