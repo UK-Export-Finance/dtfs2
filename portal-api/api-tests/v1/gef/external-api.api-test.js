@@ -66,6 +66,7 @@ describe(baseUrl, () => {
   describe(`GET ${baseUrl}/address (Geospatial Addresses)`, () => {
     beforeEach(() => {
       jest.resetAllMocks();
+      jest.restoreAllMocks();
     });
 
     it('Returns a list of addresses', async () => {
