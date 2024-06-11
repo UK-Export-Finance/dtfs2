@@ -1,5 +1,5 @@
 import { MONGO_DB_COLLECTIONS, Bank } from '@ukef/dtfs2-common';
-import db from '../drivers/db-client';
+import { mongoDbClient as db } from '../drivers/db-client';
 
 export const getAllBanks = async (): Promise<Bank[]> => {
   const banksCollection = await db.getCollection(MONGO_DB_COLLECTIONS.BANKS);

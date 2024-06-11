@@ -4,7 +4,7 @@ const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = re
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./tfm-get-facility.controller');
-const db = require('../../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };

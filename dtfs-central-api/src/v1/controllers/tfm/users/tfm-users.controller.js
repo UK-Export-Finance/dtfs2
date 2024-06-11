@@ -8,7 +8,7 @@ const {
   validateAuditDetailsAndUserType,
 } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
 const createUser = async (user, auditDetails) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);

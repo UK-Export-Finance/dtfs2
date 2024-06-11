@@ -1,4 +1,4 @@
-const db = require('../../drivers/db-client');
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const api = require('../api');
 
 const findOneBank = async (id) => {
