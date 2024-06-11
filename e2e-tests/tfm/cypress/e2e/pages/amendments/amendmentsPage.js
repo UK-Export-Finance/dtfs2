@@ -51,8 +51,8 @@ const amendmentsPage = {
 
   underWriterManagerDecisionRadioInputValidationError: () => cy.get('[data-cy="decision-input-error"]'),
 
-  underWritingSubmitButton: () => cy.get('[data-cy="amendment--continue-button"]'),
-  underWritingCancelLink: () => cy.get('[data-cy="cancel-link"]'),
+  assignLeadUnderwriterSaveButton: () => cy.get('[data-cy="amendment--continue-button"]'),
+  assignLeadUnderwriterCancelLink: () => cy.get('[data-cy="cancel-link"]'),
 
   amendmentAnswerBankRequestDate: () => cy.get('[data-cy="amendment--bank-request-date-response"]'),
   amendmentAnswerRequireApproval: () => cy.get('[data-cy="amendment--require-approval-response"]'),

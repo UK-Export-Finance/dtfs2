@@ -55,7 +55,8 @@
       </div>
 
       {{ premiumPaymentsTable.render({
-        feeRecords: feeRecords
+        feeRecords: feeRecords,
+        enablePaymentsReceivedSorting: enablePaymentsReceivedSorting
       }) }}
     </form>
   {% if errorSummary %}

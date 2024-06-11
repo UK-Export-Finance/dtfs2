@@ -1,6 +1,7 @@
 const express = require('express');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
+const { validatePostPaymentPayload } = require('./middleware/payload-validation/validate-post-payment-payload');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
 const {
   postUploadUtilisationReport,
@@ -14,6 +15,7 @@ const {
   getUtilisationReportReconciliationDetailsById,
 } = require('../controllers/utilisation-report-service/get-utilisation-report-reconciliation-details-by-id.controller');
 const { getSelectedFeeRecordDetails } = require('../controllers/utilisation-report-service/get-selected-fee-records-details.controller');
+const { postPayment } = require('../controllers/utilisation-report-service/post-payment.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -55,7 +57,7 @@ utilisationReportsRouter.route('/').post(postUploadUtilisationReportPayloadValid
  * /utilisation-reports/:id:
  *   get:
  *     summary: Get utilisation report with the specified id ('id')
- *     tags: [UtilisationReport]
+ *     tags: [Utilisation Report]
  *     description: Get utilisation report with the specified id ('id')
  *     parameters:
  *       - in: path
@@ -92,7 +94,7 @@ utilisationReportsRouter.route('/:id').get(validation.sqlIdValidation('id'), han
  *       month. This includes status of reports for all banks in the current
  *       submission month, and details of any open reports from previous
  *       submission months
- *     tags: [UtilisationReport]
+ *     tags: [Utilisation Report]
  *     description: |
  *       Get a summary of utilisation report reconciliation status for all banks
  *       in the specified report submission month, and open reports from
@@ -120,7 +122,7 @@ utilisationReportsRouter
  * /utilisation-reports/set-status:
  *   put:
  *     summary: Put utilisation report status for multiple utilisation reports
- *     tags: [UtilisationReport]
+ *     tags: [Utilisation Report]
  *     description: Set the status of many utilisation reports to completed or not completed.
  *     requestBody:
  *       content:
@@ -149,7 +151,7 @@ utilisationReportsRouter.route('/set-status').put(putUtilisationReportStatusCont
  * /utilisation-reports/reconciliation-details/:reportId:
  *   get:
  *     summary: Get the reconciliation details for the utilisation report by the report id
- *     tags: [UtilisationReport]
+ *     tags: [Utilisation Report]
  *     description: Gets the reconciliation details for the utilisation report by the report id
  *     responses:
  *       200:
@@ -175,7 +177,7 @@ utilisationReportsRouter
  * /utilisation-reports/:id/selected-fee-records-details:
  *   get:
  *     summary: Get the fee record details for the selected fee record ids
- *     tags: [UtilisationReport]
+ *     tags: [Utilisation Report]
  *     description: Get the fee record details for the selected fee record ids
  *     parameters:
  *       - in: path
@@ -190,7 +192,7 @@ utilisationReportsRouter
  *         application/json:
  *           schema:
  *             type: object
- *              properties:
+ *             properties:
  *               feeRecordIds:
  *                 description: The ids of the selected fee records
  *                 type: array
@@ -214,5 +216,57 @@ utilisationReportsRouter
 utilisationReportsRouter
   .route('/:id/selected-fee-records-details')
   .get(validation.sqlIdValidation('id'), handleExpressValidatorResult, getSelectedFeeRecordDetails);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/payment:
+ *   post:
+ *     summary: Add a payment to the utilisation report
+ *     tags: [Utilisation Report]
+ *     description: Adds a new payment to the utilisation report with the supplied report id
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report to add the payment to
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               feeRecordIds:
+ *                 description: The ids of the selected fee records
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *               user:
+ *                 $ref: '#/definitions/TFMUser'
+ *               paymentCurrency:
+ *                 $ref: '#/definitions/Currency'
+ *               paymentAmount:
+ *                 type: number
+ *               datePaymentReceived:
+ *                 type: string
+ *                 description: the date the payment was received as an ISO date string
+ *               paymentReference:
+ *                 type: string
+ *                 required: false
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/payment')
+  .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePostPaymentPayload, postPayment);
 
 module.exports = utilisationReportsRouter;
