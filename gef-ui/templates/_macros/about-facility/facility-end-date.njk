@@ -1,0 +1,45 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% macro render(facilityEndDateExists, errors) %}
+  {{ govukRadios({
+      idPrefix: "facilityEndDateExists",
+      name: "facilityEndDateExists",
+      fieldset: {
+        legend: {
+          text: "Do you have a facility end date?",
+          classes: "govuk-fieldset__legend--m"
+        }
+      },
+      errorMessage: errors and errors.fieldErrors.facilityEndDateExists and {
+        text: errors.fieldErrors.facilityEndDateExists.text,
+        attributes: {
+          'data-cy': 'facility-end-date-exists-error'
+        }
+      },
+      items: [
+        {
+          value: 'true',
+          text: "Yes",
+          checked: facilityEndDateExists === 'true',
+          attributes: {
+            'data-cy': "facility-end-date-exists-yes"
+          }
+        },
+        {
+          value: 'false',
+          text: "No",
+          checked: facilityEndDateExists === 'false',
+          attributes: {
+            'data-cy': "facility-end-date-exists-no"
+          }
+        }
+      ]
+    }) }}
+
+  {{ govukDetails({
+      summaryText: "What is a facility end date",
+      text: "The facility end date is the deadline for a committed loan to be repaid at which point the contract will be terminated."
+    }) }}
+
+{% endmacro %}

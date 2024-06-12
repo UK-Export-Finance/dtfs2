@@ -10,6 +10,7 @@
 {% import '../_macros/about-facility/issue-date.njk' as issueDateSection %}
 {% import '../_macros/about-facility/cover-start-date.njk' as coverStartDateSection %}
 {% import '../_macros/about-facility/cover-end-date.njk' as coverEndDateSection %}
+{% import '../_macros/about-facility/facility-end-date.njk' as facilityEndDateSection %}
 {% import '../_macros/about-facility/cover-start-submission.njk' as coverStartSubmissionSection %}
 {% import '../_macros/about-facility/what-is-a-facility-end-date.njk' as whatIsAFacilityEndDate %}
 
@@ -99,6 +100,8 @@
           {{coverStartSubmissionSection.render(coverStartSubmissionParams)}}
 
           {{ coverEndDateSection.render(coverEndDateDay, coverEndDateMonth, coverEndDateYear, errors) }}
+
+          {{ facilityEndDateSection.render(facilityEndDateExists, errors)}}
 
         {% else %}
           {# Elements to Show if Unissued #}
