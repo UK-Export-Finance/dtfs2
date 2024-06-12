@@ -1,3 +1,5 @@
+const { HttpStatusCode } = require('axios');
+const { ADDRESSES } = require('@ukef/dtfs2-common');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
@@ -44,10 +46,10 @@ describe(baseUrl, () => {
 
     it('Returns a not found company profile', async () => {
       const { status, body } = await as(aMaker).get(`${baseUrl}/company/1111111`);
-      expect(status).toEqual(422);
+      expect(status).toEqual(HttpStatusCode.UnprocessableEntity);
       expect(body).toEqual([
         {
-          status: 422,
+          status: HttpStatusCode.UnprocessableEntity,
           errCode: 'company-profile-not-found',
           errRef: 'regNumber',
           errMsg: 'Invalid Companies House registration number',
@@ -57,40 +59,63 @@ describe(baseUrl, () => {
 
     it('Returns a status of 400 if invalid company number provided', async () => {
       const { status } = await as(aMaker).get(`${baseUrl}/company/123`);
-      expect(status).toEqual(400);
+      expect(status).toEqual(HttpStatusCode.BadRequest);
     });
   });
 
-  describe(`GET ${baseUrl}/address (Ordnance Survey)`, () => {
+  describe(`GET ${baseUrl}/address (Geospatial Addresses)`, () => {
     it('Returns a list of addresses', async () => {
-      const { status, body } = await as(aMaker).get(`${baseUrl}/address/SW1A2HQ`);
-      expect(status).toEqual(200);
+      const { status, body } = await as(aMaker).get(`${baseUrl}/address/${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`);
+      expect(status).toEqual(HttpStatusCode.Ok);
       expect(body[0]).toEqual({
         organisationName: expect.any(String),
         addressLine1: expect.any(String),
         addressLine2: null,
         addressLine3: null,
-        country: null,
+        country: expect.any(String),
         locality: expect.any(String),
         postalCode: expect.any(String),
       });
     });
 
     it('Returns a not found address if the postcode was not found', async () => {
-      const { status, body } = await as(aMaker).get(`${baseUrl}/address/AA11AA`);
-      expect(status).toEqual(422);
+      const { status, body } = await as(aMaker).get(`${baseUrl}/address/${ADDRESSES.EXAMPLES.POSTCODE_UNPROCESSABLE}`);
+      expect(status).toEqual(HttpStatusCode.UnprocessableEntity);
       expect(body).toEqual([
         {
-          status: 422,
+          status: HttpStatusCode.UnprocessableEntity,
+          errMsg: {},
           errCode: 'ERROR',
           errRef: 'postcode',
         },
       ]);
     });
 
-    it('Returns a not found address if the postcode was invalid', async () => {
-      const { status } = await as(aMaker).get(`${baseUrl}/address/A1`);
-      expect(status).toEqual(400);
+    it('Returns an invalid postcode error, if the postcode specified is invalid', async () => {
+      const { status, body } = await as(aMaker).get(`${baseUrl}/address/A1`);
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body).toEqual([
+        {
+          status: HttpStatusCode.BadRequest,
+          errMsg: 'Invalid postcode',
+          errCode: 'ERROR',
+          errRef: 'postcode',
+        },
+      ]);
+    });
+
+    it('returns a 422 response if backend returns 500', async () => {
+      const { status, body } = await as(aMaker).get(`${baseUrl}/address/${ADDRESSES.EXAMPLES.POSTCODE_UNPROCESSABLE}`);
+
+      expect(status).toEqual(HttpStatusCode.UnprocessableEntity);
+      expect(body).toEqual([
+        {
+          status: HttpStatusCode.UnprocessableEntity,
+          errMsg: {},
+          errCode: 'ERROR',
+          errRef: 'postcode',
+        },
+      ]);
     });
   });
 });

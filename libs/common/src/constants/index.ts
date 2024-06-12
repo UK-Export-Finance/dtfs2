@@ -1,4 +1,5 @@
 export * from './currency';
+export * from './geospatial.constant';
 export * from './utilisation-report-headers';
 export * from './utilisation-report-reconciliation-status';
 export * from './mongo-db-collections';

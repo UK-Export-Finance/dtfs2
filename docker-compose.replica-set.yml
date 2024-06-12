@@ -271,8 +271,6 @@ services:
       - CORS_ORIGIN
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
-      - ORDNANCE_SURVEY_API_URL=https://api.os.co.uk
-      - ORDNANCE_SURVEY_API_KEY
       - APIM_TFS_URL
       - APIM_TFS_KEY
       - APIM_TFS_VALUE

@@ -198,7 +198,7 @@ services:
       - CLAMAV_DEBUG_MODE_ENABLED=true
       - CLAMAV_SCANNING_ENABLED
       - UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=1048576
-      - CONTACT_US_EMAIL_ADDRESS 
+      - CONTACT_US_EMAIL_ADDRESS
 
   portal-api:
     build:
@@ -277,8 +277,6 @@ services:
       - EXTERNAL_API_KEY
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
-      - ORDNANCE_SURVEY_API_URL=https://api.os.co.uk
-      - ORDNANCE_SURVEY_API_KEY
       - APIM_TFS_URL
       - APIM_TFS_KEY
       - APIM_TFS_VALUE

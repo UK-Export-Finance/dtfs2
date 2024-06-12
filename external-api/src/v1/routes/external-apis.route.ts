@@ -12,7 +12,7 @@ import * as acbs from '../controllers/acbs.controller';
 import * as currencyExchangeRate from '../controllers/currency-exchange-rate.controller';
 import * as exposurePeriod from '../controllers/exposure-period.controller';
 import * as companiesHouse from '../controllers/companies-house.controller';
-import * as ordnanceSurvey from '../controllers/ordnance-survey.controller';
+import * as geospatialAddresses from '../controllers/geospatial-addresses.controller';
 import * as eStore from '../controllers/estore/eStore.controller';
 import * as premiumSchedule from '../controllers/premium-schedule.controller';
 import * as email from '../controllers/email.controller';
@@ -184,7 +184,7 @@ apiRoutes.get('/industry-sectors/:code/acbs-sector', industrySectors.getACBSIndu
  * /number-generator:
  *   post:
  *     summary: Calls Number Generator APIM MDM API
- *     tags: [Number Generator]
+ *     tags: [Number Generator, APIM]
  *     description: Endpoint is responsible for getting a number from the number-generator via APIM MDM
  *     requestBody:
  *       required: true
@@ -522,13 +522,12 @@ apiRoutes.get('/companies-house/:companyRegistrationNumber', companiesHouse.look
 
 /**
  * @openapi
- * /ordnance-survey/:OSPostcode:
+ * /geospatial/addresses/postcode/:postcode:
  *   get:
- *     summary: Get a list of addresses from Ordnance Survey API
- *     tags: [Ordnance Survey]
+ *     summary: Get a list of addresses from MDM API
+ *     tags: [Addresses, APIM]
  *     description: >-
- *       Get a list of addresses from Ordnance Survey API.
- *       Note - Not all fields are in the response body example. See Ordnance Survey API documentation.
+ *       Get a list of addresses from MDM API.
  *     parameters:
  *       - in: path
  *         name: OSPostcode
@@ -542,9 +541,9 @@ apiRoutes.get('/companies-house/:companyRegistrationNumber', companiesHouse.look
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/definitions/OrdnanceSurveyResponseBody'
+ *               $ref: '#/definitions/MdmGeospatialAddressesResponseBody'
  */
-apiRoutes.get('/ordnance-survey/:OSPostcode', ordnanceSurvey.lookup);
+apiRoutes.get('/geospatial/addresses/postcode/:postcode', geospatialAddresses.lookup);
 
 /**
  * @openapi

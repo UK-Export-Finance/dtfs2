@@ -25,7 +25,6 @@ env:
   palo_alto_next_hop: 10.50.0.100
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
-  ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"
 
 # Below this line should be the same for all environments
 
@@ -1128,9 +1127,7 @@ jobs:
                 APIM_ESTORE_VALUE="${{ secrets.APIM_ESTORE_VALUE }}" \
                 COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
                 COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}" \
-                ORDNANCE_SURVEY_API_URL="${{ env.ORDNANCE_SURVEY_API_URL }}" \
                 GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
-                ORDNANCE_SURVEY_API_KEY="${{ secrets.ORDNANCE_SURVEY_API_KEY }}" \
                 AZURE_ACBS_FUNCTION_URL="https://$acbs_function_url" \
                 GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
                 MONGO_INITDB_DATABASE="${{ env.database_name }}" \

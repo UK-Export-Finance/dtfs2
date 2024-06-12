@@ -194,7 +194,7 @@ const getCompaniesHouseDetails = async ({ companyRegNumber, userToken }) => {
 
 const getAddressesByPostcode = async ({ postcode, userToken }) => {
   if (!isValidUkPostcode(postcode)) {
-    console.error('getAddressesByPostcode: API call failed for postcode %s', postcode);
+    console.error('getAddressesByPostcode: API call failed for postcode %s, validation failed before call', postcode);
     throw new Error('Invalid postcode');
   }
 
