@@ -20,7 +20,7 @@ describe.each([{ baseUrl: '/v1' }, { baseUrl: '/v1/gef' }])('GET $baseUrl/compan
     aMaker = testUsers().withRole(MAKER).one();
   });
 
-  it('returns a 200 response with the company when it is found', async () => {
+  it(`returns a ${HttpStatusCode.Ok} response with the company when it is found`, async () => {
     const { status, body } = await as(aMaker).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID}`);
     expect(status).toEqual(HttpStatusCode.Ok);
     expect(body.companiesHouseRegistrationNumber).toEqual(expect.any(String));
@@ -41,17 +41,17 @@ describe.each([{ baseUrl: '/v1' }, { baseUrl: '/v1/gef' }])('GET $baseUrl/compan
     });
   });
 
-  it('returns a 400 response if an invalid company registration number is provided', async () => {
+  it(`returns a ${HttpStatusCode.BadRequest} response if an invalid company registration number is provided`, async () => {
     const { status } = await as(aMaker).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT}`);
     expect(status).toEqual(HttpStatusCode.BadRequest);
   });
 
-  it('returns a 404 response when the company is not found', async () => {
+  it(`returns a ${HttpStatusCode.NotFound} response when the company is not found`, async () => {
     const { status } = await as(aMaker).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_NONEXISTENT}`);
     expect(status).toEqual(HttpStatusCode.NotFound);
   });
 
-  it('returns a 422 response when the company is an overseas company', async () => {
+  it(`returns a ${HttpStatusCode.UnprocessableEntity} response when the company is an overseas company`, async () => {
     const { status } = await as(aMaker).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_OVERSEAS}`);
     expect(status).toEqual(HttpStatusCode.UnprocessableEntity);
   });

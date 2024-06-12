@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const express = require('express');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../roles/roles');
 const { validateUserHasAtLeastOneAllowedRole } = require('../roles/validate-user-has-at-least-one-allowed-role');
@@ -91,7 +92,7 @@ router.route('/files').post(
         return next();
       }
       console.error('Unable to upload file %o', error);
-      return res.status(400).json({ status: 400, data: 'Failed to upload file' });
+      return res.status(HttpStatusCode.BadRequest).json({ status: HttpStatusCode.BadRequest, data: 'Failed to upload file' });
     });
   },
   files.create,

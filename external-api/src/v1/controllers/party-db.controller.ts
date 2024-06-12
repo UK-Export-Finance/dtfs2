@@ -1,5 +1,5 @@
 import { isValidCompanyRegistrationNumber } from '@ukef/dtfs2-common';
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 
@@ -16,7 +16,7 @@ export const lookup = async (req: Request, res: Response) => {
 
   if (!isValidCompanyRegistrationNumber(companyReg)) {
     console.error('Invalid company registration number provided %s', companyReg);
-    return res.status(400).send({ status: 400, data: 'Invalid company registration number' });
+    return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
   }
 
   const response: { status: number; data: unknown } = await axios({
@@ -25,7 +25,7 @@ export const lookup = async (req: Request, res: Response) => {
     headers,
   }).catch((error: AxiosError) => {
     console.error('Error calling Party DB API %o', error);
-    return { data: 'Failed to call Party DB API', status: error?.response?.status || 500 };
+    return { data: 'Failed to call Party DB API', status: error?.response?.status || HttpStatusCode.InternalServerError };
   });
 
   const { status, data } = response;

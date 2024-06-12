@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, HttpStatusCode } from 'axios';
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
 
 const { when } = require('jest-when');
@@ -25,15 +25,15 @@ const portalApiGetCompanyResponse = {
 
 const apiErrorCases = [
   {
-    status: 400,
+    status: HttpStatusCode.BadRequest,
     errorMessage: 'Enter a valid Companies House registration number',
   },
   {
-    status: 404,
+    status: HttpStatusCode.NotFound,
     errorMessage: 'No company matching the Companies House registration number entered was found',
   },
   {
-    status: 422,
+    status: HttpStatusCode.UnprocessableEntity,
     errorMessage: 'UKEF can only process applications from companies based in the UK',
   },
 ];
@@ -53,7 +53,7 @@ describe('getCompanyByRegistrationNumber()', () => {
   });
 
   it('returns the company if it is returned by the request to Portal API', async () => {
-    mockAxiosGetReturning({ status: 200, data: portalApiGetCompanyResponse });
+    mockAxiosGetReturning({ status: HttpStatusCode.Ok, data: portalApiGetCompanyResponse });
 
     const response = await getCompanyByRegistrationNumber(registrationNumber, token);
 
@@ -109,7 +109,7 @@ describe('getCompanyByRegistrationNumber()', () => {
   it('returns the correct error information if the request to Portal API returns an unhandled status', async () => {
     const axiosError = new AxiosError();
     axiosError.response = {
-      status: 500,
+      status: HttpStatusCode.InternalServerError,
     };
     mockAxiosGetThrowing(axiosError);
 

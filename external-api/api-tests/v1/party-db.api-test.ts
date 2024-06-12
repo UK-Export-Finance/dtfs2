@@ -26,27 +26,30 @@ axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_WITH_LETTERS}`).rep
 
 describe('/party-db', () => {
   describe('GET /party-db', () => {
-    it('returns a 200 response with a valid companies house number', async () => {
+    it(`returns a ${HttpStatusCode.Ok} response with a valid companies house number`, async () => {
       const { status } = await get(`/party-db/${VALID}`);
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
     });
 
-    it('returns a 200 response with a valid companies house number', async () => {
+    it(`returns a ${HttpStatusCode.Ok} response with a valid companies house number`, async () => {
       const { status } = await get(`/party-db/${VALID_WITH_LETTERS}`);
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
     });
   });
 
   const invalidCompaniesHouseNumberTestCases = [['ABC22'], ['127.0.0.1'], ['{}'], ['[]']];
 
   describe('when company house number is invalid', () => {
-    test.each(invalidCompaniesHouseNumberTestCases)('returns a 400 if you provide an invalid company house number %s', async (companyHouseNumber) => {
-      const { status, body } = await get(`/party-db/${companyHouseNumber}`);
+    test.each(invalidCompaniesHouseNumberTestCases)(
+      `returns a ${HttpStatusCode.BadRequest} if you provide an invalid company house number %s`,
+      async (companyHouseNumber) => {
+        const { status, body } = await get(`/party-db/${companyHouseNumber}`);
 
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid company registration number', status: 400 });
-    });
+        expect(status).toEqual(HttpStatusCode.BadRequest);
+        expect(body).toMatchObject({ data: 'Invalid company registration number', status: HttpStatusCode.BadRequest });
+      },
+    );
   });
 });

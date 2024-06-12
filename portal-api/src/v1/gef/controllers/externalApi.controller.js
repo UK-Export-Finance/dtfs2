@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const { isValidRegex } = require('../../validation/validateIds');
 const { UK_POSTCODE } = require('../../../constants/regex');
 
@@ -10,9 +11,9 @@ exports.getAddressesByPostcode = async (req, res) => {
 
     if (!isValidRegex(UK_POSTCODE, postcode)) {
       console.error('Get addresses by postcode failed for postcode %s', postcode);
-      return res.status(axios.HttpStatusCode.BadRequest).send([
+      return res.status(HttpStatusCode.BadRequest).send([
         {
-          status: axios.HttpStatusCode.BadRequest,
+          status: HttpStatusCode.BadRequest,
           errCode: 'ERROR',
           errRef: 'postcode',
           errMsg: 'Invalid postcode',
@@ -22,10 +23,10 @@ exports.getAddressesByPostcode = async (req, res) => {
 
     const response = await externalApi.geospatialAddresses.getAddressesByPostcode(postcode);
 
-    if (response.status !== axios.HttpStatusCode.Ok) {
-      return res.status(axios.HttpStatusCode.UnprocessableEntity).send([
+    if (response.status !== HttpStatusCode.Ok) {
+      return res.status(HttpStatusCode.UnprocessableEntity).send([
         {
-          status: axios.HttpStatusCode.UnprocessableEntity,
+          status: HttpStatusCode.UnprocessableEntity,
           errCode: 'ERROR',
 
           errRef: 'postcode',
@@ -33,11 +34,11 @@ exports.getAddressesByPostcode = async (req, res) => {
       ]);
     }
 
-    return res.status(axios.HttpStatusCode.Ok).send(response.data);
+    return res.status(HttpStatusCode.Ok).send(response.data);
   } catch (error) {
     let { status } = error.response;
-    if (status >= 400 && status < 500) {
-      status = axios.HttpStatusCode.UnprocessableEntity;
+    if (status >= HttpStatusCode.BadRequest && status < HttpStatusCode.InternalServerError) {
+      status = HttpStatusCode.UnprocessableEntity;
     }
     const response = [
       {

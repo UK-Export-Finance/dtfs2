@@ -1,5 +1,6 @@
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
 import { when } from 'jest-when';
+import { HttpStatusCode } from 'axios';
 import api from '../../services/api';
 import { companiesHouse, validateCompaniesHouse } from './index';
 
@@ -95,7 +96,7 @@ describe('controllers/about-exporter', () => {
     });
 
     it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {
-      const mockedRejection = { response: { status: 400, message: 'Whoops' } };
+      const mockedRejection = { response: { status: HttpStatusCode.BadRequest, message: 'Whoops' } };
       api.getApplication.mockRejectedValueOnce(mockedRejection);
       await companiesHouse(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
@@ -226,7 +227,7 @@ describe('controllers/about-exporter', () => {
     });
 
     it(`redirects to the 'problem with service' page if any of the API calls throw errors`, async () => {
-      const mockedRejection = { response: { status: 400, message: 'Whoops' } };
+      const mockedRejection = { response: { status: HttpStatusCode.BadRequest, message: 'Whoops' } };
       api.getCompanyByRegistrationNumber.mockRejectedValueOnce(mockedRejection);
 
       await validateCompaniesHouse(mockRequest, mockResponse);
@@ -234,13 +235,16 @@ describe('controllers/about-exporter', () => {
       expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
 
-    it.each([{ status: 400 }, { status: 500 }])(`logs the error if any of the API calls throw a $status error`, async ({ status }) => {
-      const mockedRejection = { response: { status, message: 'Whoops' } };
-      api.getCompanyByRegistrationNumber.mockRejectedValueOnce(mockedRejection);
+    it.each([{ status: HttpStatusCode.BadRequest }, { status: HttpStatusCode.InternalServerError }])(
+      `logs the error if any of the API calls throw a $status error`,
+      async ({ status }) => {
+        const mockedRejection = { response: { status, message: 'Whoops' } };
+        api.getCompanyByRegistrationNumber.mockRejectedValueOnce(mockedRejection);
 
-      await validateCompaniesHouse(mockRequest, mockResponse);
+        await validateCompaniesHouse(mockRequest, mockResponse);
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith('GEF-UI - Error validating companies house page %o', mockedRejection);
-    });
+        expect(consoleErrorSpy).toHaveBeenCalledWith('GEF-UI - Error validating companies house page %o', mockedRejection);
+      },
+    );
   });
 });

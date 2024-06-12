@@ -25,10 +25,10 @@ export const getCompanyByRegistrationNumber = async (req: Request, res: Response
 
   if (!isValidCompanyRegistrationNumber(registrationNumber)) {
     response = {
-      status: 400,
+      status: HttpStatusCode.BadRequest,
       data: {
         error: 'Bad Request',
-        statusCode: 400,
+        statusCode: HttpStatusCode.BadRequest,
       },
     };
   } else {

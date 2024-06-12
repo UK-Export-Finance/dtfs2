@@ -16,13 +16,13 @@ const userToken = 'test-token';
 
 describe('validateToken()', () => {
   it('returns `true` if token is valid', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ status: 200 }));
+    Axios.get.mockReturnValue(Promise.resolve({ status: HttpStatusCode.Ok }));
     const response = await api.validateToken(userToken);
     expect(response).toBeTruthy();
   });
 
   it('returns `false` if token is not valid', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ status: 400 }));
+    Axios.get.mockReturnValue(Promise.resolve({ status: HttpStatusCode.BadRequest }));
     const response = await api.validateToken(userToken);
     expect(response).toBeFalsy();
   });
@@ -36,9 +36,9 @@ describe('validateToken()', () => {
 
 describe('getMandatoryCriteria()', () => {
   it('returns the correct response', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    Axios.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.getMandatoryCriteria({ userToken });
-    expect(response).toEqual({ status: 200 });
+    expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
@@ -50,9 +50,9 @@ describe('getMandatoryCriteria()', () => {
 
 describe('createApplication()', () => {
   it('returns the correct response', async () => {
-    Axios.post.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    Axios.post.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.createApplication({ payload: {}, userToken });
-    expect(response).toEqual({ status: 200 });
+    expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
@@ -64,9 +64,9 @@ describe('createApplication()', () => {
 
 describe('cloneApplication()', () => {
   it('returns the correct response', async () => {
-    Axios.post.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    Axios.post.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.cloneApplication({ payload: {}, userToken });
-    expect(response).toEqual({ status: 200 });
+    expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
@@ -78,9 +78,9 @@ describe('cloneApplication()', () => {
 
 describe('getApplication()', () => {
   it('returns the correct response', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    Axios.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.getApplication({ dealId: validMongoId, userToken });
-    expect(response).toEqual({ status: 200 });
+    expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
@@ -96,9 +96,9 @@ describe('getApplication()', () => {
 
 describe('updateApplication()', () => {
   it('returns the correct response', async () => {
-    Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    Axios.put.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.updateApplication({ dealId: validMongoId, application: {}, userToken });
-    expect(response).toEqual({ status: 200 });
+    expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
@@ -114,9 +114,9 @@ describe('updateApplication()', () => {
 
 describe('updateSupportingInformation()', () => {
   it('returns the correct response', async () => {
-    Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    Axios.put.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.updateSupportingInformation({ dealId: validMongoId, application: {}, userToken });
-    expect(response).toEqual({ status: 200 });
+    expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
@@ -132,13 +132,13 @@ describe('updateSupportingInformation()', () => {
 
 describe('setApplicationStatus()', () => {
   it('returns the correct response', async () => {
-    Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    Axios.put.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.setApplicationStatus({
       dealId: validMongoId,
       status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL,
       userToken,
     });
-    expect(response).toEqual({ status: 200 });
+    expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
@@ -158,15 +158,15 @@ describe('setApplicationStatus()', () => {
 
 describe('getFacilities()', () => {
   it('returns an empty Array if no application Id is passed', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    Axios.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.getFacilities({ userToken });
     expect(response).toEqual([]);
   });
 
   it('returns the correct response', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    Axios.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.getFacilities({ dealId: validMongoId, userToken });
-    expect(response).toEqual({ status: 200 });
+    expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
@@ -177,9 +177,9 @@ describe('getFacilities()', () => {
 
 describe('getFacility()', () => {
   it('returns the correct response', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    Axios.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.getFacility({ facilityId: validMongoId, userToken });
-    expect(response).toEqual({ status: 200 });
+    expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
@@ -195,9 +195,9 @@ describe('getFacility()', () => {
 
 describe('createFacility()', () => {
   it('returns the correct response', async () => {
-    Axios.post.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    Axios.post.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.createFacility({ payload: {}, userToken });
-    expect(response).toEqual({ status: 200 });
+    expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
@@ -208,9 +208,9 @@ describe('createFacility()', () => {
 
 describe('updateFacility()', () => {
   it('returns the correct response', async () => {
-    Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    Axios.put.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.updateFacility({ facilityId: validMongoId, payload: {}, userToken });
-    expect(response).toEqual({ status: 200 });
+    expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
@@ -226,9 +226,9 @@ describe('updateFacility()', () => {
 
 describe('deleteFacility()', () => {
   it('returns the correct response', async () => {
-    Axios.delete.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    Axios.delete.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.deleteFacility({ facilityId: validMongoId, userToken });
-    expect(response).toEqual({ status: 200 });
+    expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
@@ -273,7 +273,7 @@ describe('getCompanyByRegistrationNumber()', () => {
   ];
 
   it('returns the company if it is returned by the request to Portal API', async () => {
-    Axios.get.mockResolvedValueOnce({ status: 200, data: portalApiGetCompanyResponse });
+    Axios.get.mockResolvedValueOnce({ status: HttpStatusCode.Ok, data: portalApiGetCompanyResponse });
 
     const response = await api.getCompanyByRegistrationNumber({ registrationNumber, userToken });
 
@@ -353,9 +353,9 @@ describe('getAddressesByPostcode()', () => {
   const postcode = 'EE1 1EE';
 
   it('returns the correct response', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    Axios.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.getAddressesByPostcode({ postcode, userToken });
-    expect(response).toEqual({ status: 200 });
+    expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {

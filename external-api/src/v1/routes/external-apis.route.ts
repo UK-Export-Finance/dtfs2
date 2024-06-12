@@ -515,6 +515,16 @@ apiRoutes.get('/premium-schedule', premiumSchedule.getPremiumSchedule);
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/Company'
+ *       400:
+ *         description: Bad request. Invalid Companies House registration number
+ *       404:
+ *         description: Not found. No company with this Companies House registration number exists
+ *       422:
+ *         description: Unprocessable entity. This Companies House registration number is for an overseas company and UKEF can only process applications from UK companies
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
  */
 
 apiRoutes.get('/companies/:registrationNumber', companies.getCompanyByRegistrationNumber);

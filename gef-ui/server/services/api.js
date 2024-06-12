@@ -10,7 +10,7 @@ const config = (userToken) => ({ headers: { Authorization: userToken } });
 const validateToken = async (userToken) => {
   try {
     const { status } = await Axios.get('/validate', config(userToken));
-    return status === 200;
+    return status === HttpStatusCode.Ok;
   } catch (error) {
     return false;
   }
@@ -22,7 +22,7 @@ const validateBank = async ({ dealId, bankId, userToken }) => {
     return data;
   } catch (error) {
     console.error('Unable to validate the bank %o', error);
-    return { status: error?.response?.status || 500, data: 'Failed to validate bank' };
+    return { status: error?.response?.status || HttpStatusCode.InternalServerError, data: 'Failed to validate bank' };
   }
 };
 

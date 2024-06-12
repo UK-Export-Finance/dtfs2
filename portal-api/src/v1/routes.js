@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const express = require('express');
 const passport = require('passport');
 const { param } = require('express-validator');
@@ -174,7 +175,7 @@ authRouter.route('/deals/:id/eligibility-documentation').put(
         return next();
       }
       console.error('Unable to upload file %o', error);
-      return res.status(400).json({ status: 400, data: 'Failed to upload file' });
+      return res.status(HttpStatusCode.BadRequest).json({ status: HttpStatusCode.BadRequest, data: 'Failed to upload file' });
     });
   },
   dealEligibilityDocumentation.update,
@@ -234,10 +235,10 @@ authRouter
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), ukefDecisionReport.reviewUkefDecisionReports);
 
 // token-validator
-authRouter.get('/validate', (_req, res) => res.status(200).send());
+authRouter.get('/validate', (_req, res) => res.status(HttpStatusCode.Ok).send());
 
 openRouter.get('/validate-partial-2fa-token', passport.authenticate(partial2faTokenPassportStrategy, { session: false }), (_req, res) =>
-  res.status(200).send(),
+  res.status(HttpStatusCode.Ok).send(),
 );
 
 // bank-validator
@@ -252,7 +253,7 @@ authRouter.route('/utilisation-reports').post(
         return next();
       }
       console.error('Unable to upload file %o', error);
-      return res.status(400).json({ status: 400, data: 'Failed to upload file' });
+      return res.status(HttpStatusCode.BadRequest).json({ status: HttpStatusCode.BadRequest, data: 'Failed to upload file' });
     });
   },
   utilisationReportControllers.uploadReportAndSendNotification,

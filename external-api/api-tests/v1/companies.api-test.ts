@@ -62,22 +62,22 @@ const mdmGetCompanyResponse = {
 
 const mdmGetCompanyNotFoundResponse = {
   message: 'Not found',
-  statusCode: 404,
+  statusCode: HttpStatusCode.NotFound,
 };
 
 const mdmGetCompanyUnprocessableEntityResponse = {
   message: 'Unprocessable entity',
-  statusCode: 422,
+  statusCode: HttpStatusCode.UnprocessableEntity,
 };
 
 const mdmGetCompanyTooManyRequestsResponse = {
   message: 'Too many requests',
-  statusCode: 429,
+  statusCode: HttpStatusCode.TooManyRequests,
 };
 
 const mdmGetCompanyInternalServerErrorResponse = {
   message: 'Internal server error',
-  statusCode: 500,
+  statusCode: HttpStatusCode.InternalServerError,
 };
 
 const testCases = [
@@ -121,13 +121,13 @@ describe('GET /companies/:registrationNumber', () => {
     },
   );
 
-  it('returns a 400 if the company registration number is invalid', async () => {
+  it(`returns a ${HttpStatusCode.BadRequest} if the company registration number is invalid`, async () => {
     const response = await get(`/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT}`);
 
-    expect(response.status).toEqual(400);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
     expect(response.body).toStrictEqual({
       error: 'Bad Request',
-      statusCode: 400,
+      statusCode: HttpStatusCode.BadRequest,
     });
   });
 });
