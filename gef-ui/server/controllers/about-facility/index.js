@@ -59,6 +59,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
       monthsOfCover,
       facilityName,
       shouldCoverStartOnSubmission,
+      facilityEndDateExists,
     },
     query: { saveAndReturn, status },
     params: { dealId, facilityId },
@@ -112,6 +113,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
     monthsOfCover,
     facilityName,
     shouldCoverStartOnSubmission,
+    facilityEndDateExists,
   });
 
   if (aboutFacilityErrors.length > 0) {
@@ -133,6 +135,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
       facilityId,
       status,
       isFacilityEndDateFeatureFlagEnabled: isFacilityEndDateFeatureFlagEnabled(),
+      facilityEndDateExists,
     });
   }
 
@@ -159,6 +162,10 @@ const validateAndUpdateAboutFacility = async (req, res) => {
 
     if (isTrueSet(saveAndReturn)) {
       return res.redirect(`/gef/application-details/${dealId}`);
+    }
+
+    if (isTrueSet(facilityEndDateExists)) {
+      // TODO: DTFS2-7161 - Implement page to submit facilityEndDate
     }
 
     return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`);
