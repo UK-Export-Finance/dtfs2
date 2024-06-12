@@ -1450,7 +1450,9 @@ jobs:
                 UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE="${{ vars.UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE }}" \
                 AZURE_UTILISATION_REPORTS_FILESHARE_NAME="${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}" \
                 CLAMAV_HOST="$clamav_host" \
-                CLAMAV_PORT="$clamav_port"
+                CLAMAV_PORT="$clamav_port" \
+                CHANGE_STREAM_ENABLED="${{ vars.CHANGE_STREAM_ENABLED}}" \
+                DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}"
 
       - name: Secrets
         uses: azure/cli@v1.0.9

@@ -1,5 +1,6 @@
 const axios = require('axios');
 const ApiError = require('../errors/api.error');
+const { mockDataLoaderPortalAuditDetails } = require('../constants/mockDataLoaderAuditDetails');
 require('dotenv').config();
 
 const { PORTAL_API_URL, DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY } = process.env;
@@ -255,6 +256,9 @@ const deleteDurableFunctions = async (token) => {
       Authorization: token,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/durable-functions`,
+    data: {
+      auditDetails: mockDataLoaderPortalAuditDetails,
+    },
   }).catch((error) => {
     throw new ApiError({ cause: error });
   });
@@ -269,6 +273,10 @@ const deleteCronJobs = async (token) => {
       Authorization: token,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/cron-jobs`,
+
+    data: {
+      auditDetails: mockDataLoaderPortalAuditDetails,
+    },
   }).catch((error) => {
     throw new ApiError({ cause: error });
   });
