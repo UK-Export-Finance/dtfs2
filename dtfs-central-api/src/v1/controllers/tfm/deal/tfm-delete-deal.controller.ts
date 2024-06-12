@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 import { AuditDetails, MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
 import { deleteMany, deleteOne, validateAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { findOneDeal } from './tfm-get-deal.controller';
-import db from '../../../../drivers/db-client';
+import { mongoDbClient } from '../../../../drivers/db-client';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 
 export const deleteDeal = async (req: CustomExpressRequest<{ reqBody: { auditDetails: AuditDetails } }>, res: Response) => {
@@ -36,14 +36,14 @@ export const deleteDeal = async (req: CustomExpressRequest<{ reqBody: { auditDet
     const deleteResult = await deleteOne({
       documentId: new ObjectId(id),
       collectionName: MONGO_DB_COLLECTIONS.TFM_DEALS,
-      db,
+      db: mongoDbClient,
       auditDetails,
     });
 
     await deleteMany({
       filter: { 'facilitySnapshot.dealId': { $eq: deal._id } },
       collectionName: MONGO_DB_COLLECTIONS.TFM_FACILITIES,
-      db,
+      db: mongoDbClient,
       auditDetails,
     });
 

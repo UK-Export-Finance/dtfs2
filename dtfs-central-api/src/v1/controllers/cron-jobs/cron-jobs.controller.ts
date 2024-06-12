@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { AuditDetails, MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
 import { deleteMany, validateAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
-import db from '../../../drivers/db-client';
+import { mongoDbClient } from '../../../drivers/db-client';
 
 export const deleteAllEstoreLogs = async (req: CustomExpressRequest<{ reqBody: { auditDetails: AuditDetails } }>, res: Response) => {
   const { auditDetails } = req.body;
@@ -23,7 +23,7 @@ export const deleteAllEstoreLogs = async (req: CustomExpressRequest<{ reqBody: {
     await deleteMany({
       filter: {},
       collectionName: MONGO_DB_COLLECTIONS.CRON_JOB_LOGS,
-      db,
+      db: mongoDbClient,
       auditDetails,
     });
 

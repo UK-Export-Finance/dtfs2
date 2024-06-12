@@ -10,7 +10,7 @@ const { withValidateAuditDetailsTests } = require('../../../helpers/with-validat
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../../helpers/create-deal');
-const db = require('../../../../src/drivers/db-client').default;
+const { mongoDbClient } = require('../../../../src/drivers/db-client');
 
 const newDeal = aDeal({
   dealType: DEALS.DEAL_TYPE.BSS_EWCS,
@@ -63,7 +63,7 @@ describe('/v1/tfm/deal/:id', () => {
 
       tfmDealToDeleteId = new ObjectId(submitResult.body._id);
 
-      const tfmFacilityCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+      const tfmFacilityCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
       tfmFacilitiesToDeleteIds = (await tfmFacilityCollection.find({ 'facilitySnapshot.dealId': { $eq: tfmDealToDeleteId } }).toArray()).map(({ _id }) => _id);
     });
 

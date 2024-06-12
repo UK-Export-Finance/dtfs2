@@ -4,13 +4,13 @@ const { generateMockSystemAuditDatabaseRecord, withDeleteManyTests } = require('
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
-const { default: db } = require('../../../src/drivers/db-client');
+const { mongoDbClient } = require('../../../src/drivers/db-client');
 
 describe('DELETE /v1/portal/durable-functions', () => {
   let logsToDeleteIds;
 
   beforeEach(async () => {
-    const durableFunctionsLogCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG);
+    const durableFunctionsLogCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG);
     const insertionResult = await durableFunctionsLogCollection.insertMany([
       { aField: 'aValue', auditRecord: generateSystemAuditDatabaseRecord() },
       { anotherField: 'anotherValue', auditRecord: generateSystemAuditDatabaseRecord() },

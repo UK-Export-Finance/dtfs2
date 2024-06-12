@@ -2,7 +2,7 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generateMockPortalUserAuditDatabaseRecord, withDeleteManyTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { generatePortalAuditDetails, generateSystemAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
 const app = require('../../../src/createApp');
-const db = require('../../../src/drivers/db-client').default;
+const { mongoDbClient } = require('../../../src/drivers/db-client');
 const api = require('../../api')(app);
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
@@ -11,7 +11,7 @@ describe('DELETE v1/portal/cron-jobs', () => {
   let logsToDeleteIds;
 
   beforeEach(async () => {
-    const cronJobLogsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
+    const cronJobLogsCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
     const insertionResult = await cronJobLogsCollection.insertMany([
       { aField: 'aValue', auditRecord: generateSystemAuditDatabaseRecord() },
       { anotherField: 'anotherValue', auditRecord: generateSystemAuditDatabaseRecord() },
