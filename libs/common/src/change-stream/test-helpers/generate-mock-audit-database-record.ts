@@ -52,7 +52,6 @@ export const generateParsedMockPortalUserAuditDatabaseRecord = (mockUserId: stri
 
 export const expectAnyPortalUserAuditDatabaseRecord = () => ({
   lastUpdatedAt: expect.any(String),
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   lastUpdatedByPortalUserId: expect.toBeObjectId(),
   lastUpdatedByTfmUserId: null,
   lastUpdatedByIsSystem: null,
