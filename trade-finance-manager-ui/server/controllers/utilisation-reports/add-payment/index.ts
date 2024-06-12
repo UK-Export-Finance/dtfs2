@@ -25,7 +25,6 @@ import { parseValidatedAddPaymentFormValues } from './parse-validated-add-paymen
 
 export type AddPaymentRequestBody = Record<PremiumPaymentsTableCheckboxId, 'on'> & {
   paymentCurrency?: string;
-  paymentNumber?: string;
   paymentAmount?: string;
   'paymentDate-day'?: string;
   'paymentDate-month'?: string;
@@ -86,7 +85,7 @@ const mapToSelectedReportedFeesDetailsViewModel = (selectedFeeRecordData: Select
 const extractAddPaymentFormValuesAndValidateIfPresent = (
   requestBody: AddPaymentRequestBody,
   feeRecordPaymentCurrency: Currency,
-): { isAddingPayment: boolean; errors: AddPaymentErrorsViewModel; formValues: AddPaymentFormValues; paymentNumber?: number } => {
+): { isAddingPayment: boolean; errors: AddPaymentErrorsViewModel; formValues: AddPaymentFormValues } => {
   const isAddingPayment = 'addPaymentFormSubmission' in requestBody;
 
   if (!isAddingPayment) {
@@ -97,15 +96,12 @@ const extractAddPaymentFormValuesAndValidateIfPresent = (
     };
   }
 
-  const paymentNumber = Number(requestBody.paymentNumber);
-
   const formValues = extractFormValuesFromRequestBody(requestBody);
   const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
   return {
     isAddingPayment,
     formValues,
     errors,
-    paymentNumber,
   };
 };
 
@@ -117,7 +113,7 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
     const feeRecordPaymentCurrency = getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId(checkedCheckboxIds[0]);
     const feeRecordIds = getFeeRecordIdsFromPremiumPaymentsCheckboxIds(checkedCheckboxIds);
 
-    const { isAddingPayment, errors, formValues, paymentNumber } = extractAddPaymentFormValuesAndValidateIfPresent(req.body, feeRecordPaymentCurrency);
+    const { isAddingPayment, errors, formValues } = extractAddPaymentFormValuesAndValidateIfPresent(req.body, feeRecordPaymentCurrency);
     const formHasErrors = errors.errorSummary.length !== 0;
 
     if (isAddingPayment && !formHasErrors) {
@@ -137,7 +133,7 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
       selectedFeeRecordCheckboxIds: checkedCheckboxIds,
       errors,
       formValues: formHasErrors ? formValues : EMPTY_ADD_PAYMENT_FORM_VALUES,
-      paymentNumber,
+      paymentNumber: undefined,
       bank: selectedFeeRecordDetails.bank,
       formattedReportPeriod: getFormattedReportPeriodWithLongMonth(selectedFeeRecordDetails.reportPeriod),
       reportedFeeDetails: mapToSelectedReportedFeesDetailsViewModel(selectedFeeRecordDetails),

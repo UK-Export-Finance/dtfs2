@@ -330,17 +330,6 @@ describe(page, () => {
     wrapper.expectElement('input[name="fee-record-20"]').toExist();
   });
 
-  it('should set a hidden input for the payment number', () => {
-    // Arrange
-    const addPaymentViewModel = anAddPaymentViewModel();
-    addPaymentViewModel.paymentNumber = 35;
-    const wrapper = render(addPaymentViewModel);
-
-    // Assert
-    wrapper.expectElement('input[name="paymentNumber"]').toExist();
-    wrapper.expectInput('input[name="paymentNumber"]').toHaveValue('35');
-  });
-
   it('should display error summary', () => {
     // Arrange
     const addPaymentViewModel = anAddPaymentViewModel();

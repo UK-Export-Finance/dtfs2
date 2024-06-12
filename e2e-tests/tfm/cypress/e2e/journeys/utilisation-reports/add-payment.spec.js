@@ -89,4 +89,41 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     cy.getInputByLabelText('Month').should('have.value', '12');
     cy.getInputByLabelText('Year').should('have.value', '2023');
   });
+
+  it('submits form and redirects to premium payments page when user submits form with valid values and user selects no to adding another payment', () => {
+    cy.getInputByLabelText('GBP').click();
+    cy.getInputByLabelText('Amount received').type('100');
+    cy.getInputByLabelText('Day').type('12');
+    cy.getInputByLabelText('Month').type('12');
+    cy.getInputByLabelText('Year').type('2023');
+    cy.getInputByLabelText('No').click();
+
+    cy.contains('button', 'Continue').click();
+
+    cy.contains('Premium payments');
+  });
+
+  it('submits form and reloads the page with no values when user submits form with valid values and user selects yes to adding another payment', () => {
+    cy.getInputByLabelText('GBP').click();
+    cy.getInputByLabelText('Amount received').type('100');
+    cy.getInputByLabelText('Day').type('12');
+    cy.getInputByLabelText('Month').type('12');
+    cy.getInputByLabelText('Year').type('2023');
+    cy.getInputByLabelText('Yes').click();
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('h1').invoke('text').should('contain', 'Add a payment');
+    cy.getInputByLabelText('GBP').should('not.be.checked');
+    cy.getInputByLabelText('USD').should('not.be.checked');
+    cy.getInputByLabelText('JPY').should('not.be.checked');
+    cy.getInputByLabelText('EUR').should('not.be.checked');
+    cy.getInputByLabelText('Amount received').should('have.value', '');
+    cy.getInputByLabelText('Day').should('have.value', '');
+    cy.getInputByLabelText('Month').should('have.value', '');
+    cy.getInputByLabelText('Year').should('have.value', '');
+    cy.getInputByLabelText('Payment reference').should('have.value', '');
+    cy.getInputByLabelText('Yes').should('not.be.checked');
+    cy.getInputByLabelText('No').should('not.be.checked');
+  });
 });

@@ -502,26 +502,6 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
         expect((res._getRenderData() as AddPaymentViewModel).reportId).toEqual('123');
       });
 
-      it('should set payment number to submitted value', async () => {
-        // Arrange
-        const { req, res } = httpMocks.createMocks({
-          session: requestSession,
-          params: { reportId: '123' },
-          body: {
-            'feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
-            addPaymentFormSubmission: 'true',
-            paymentNumber: '13',
-          },
-        });
-        jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
-
-        // Act
-        await addPayment(req, res);
-
-        // Assert
-        expect((res._getRenderData() as AddPaymentViewModel).paymentNumber).toEqual(13);
-      });
-
       it('should set data sort values for reported fee column to order by currency alphabetically then value', async () => {
         // Arrange
         const { req, res } = httpMocks.createMocks({
