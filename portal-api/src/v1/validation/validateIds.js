@@ -1,5 +1,4 @@
 const validator = require('validator');
-const { COMPANIES_HOUSE_NUMBER_REGEX } = require('../../constants/regex');
 
 /**
  * isValidMongoId
@@ -27,14 +26,6 @@ const isValidRegex = (regex, value) => regex.test(value);
  * @returns {boolean}
  */
 const isValidCurrencyCode = (code) => (code ? validator.isISO4217(String(code)) : false);
-
-/**
- * isValidCompaniesHouseNumber
- * checks if companiesHouseNumber conforms to regex
- * @param {string} companiesHouseNumber
- * @returns {boolean} asserts if regex is matched
- */
-const isValidCompaniesHouseNumber = (companiesHouseNumber) => isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, companiesHouseNumber);
 
 /**
  * isValidBankId
@@ -81,7 +72,6 @@ module.exports = {
   isValidMongoId,
   isValidRegex,
   isValidCurrencyCode,
-  isValidCompaniesHouseNumber,
   isValidBankId,
   isValidMonth,
   isValidYear,

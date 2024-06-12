@@ -29,9 +29,5 @@ export const schemas = {
 
     // 2. GOV NOTIFY
     GOV_NOTIFY_API_KEY: Joi.string().required(),
-
-    // 3. COMPANIES HOUSE
-    COMPANIES_HOUSE_API_KEY: Joi.string().required(),
-    COMPANIES_HOUSE_API_URL: Joi.string().required(),
   }).unknown(),
 };

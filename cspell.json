@@ -20,7 +20,8 @@
     "**.css",
     "**.scss",
     "**/migrations/*",
-    "**/*.drawio"
+    "**/*.drawio",
+    "CHANGELOG.md"
   ],
   "language": "en",
   "noConfigSearch": true,

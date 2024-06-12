@@ -1,11 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from 'axios';
+import { isValidCompanyRegistrationNumber } from '@ukef/dtfs2-common';
+import axios, { AxiosError, HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
-import { isValidCompaniesHouseNumber } from '../../helpers';
 
 dotenv.config();
 
@@ -18,18 +14,18 @@ const headers = {
 export const lookup = async (req: Request, res: Response) => {
   const { partyDbCompanyRegistrationNumber: companyReg } = req.params;
 
-  if (!isValidCompaniesHouseNumber(companyReg)) {
+  if (!isValidCompanyRegistrationNumber(companyReg)) {
     console.error('Invalid company registration number provided %s', companyReg);
-    return res.status(400).send({ status: 400, data: 'Invalid company registration number' });
+    return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
   }
 
-  const response = await axios({
+  const response: { status: number; data: unknown } = await axios({
     method: 'get',
     url: `${APIM_MDM_URL}customers?companyReg=${companyReg}`,
     headers,
-  }).catch((error: any) => {
+  }).catch((error: AxiosError) => {
     console.error('Error calling Party DB API %o', error);
-    return { data: 'Failed to call Party DB API', status: error?.response?.status || 500 };
+    return { data: 'Failed to call Party DB API', status: error?.response?.status || HttpStatusCode.InternalServerError };
   });
 
   const { status, data } = response;

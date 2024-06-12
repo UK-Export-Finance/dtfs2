@@ -24,9 +24,6 @@ env:
   production_subnet_cidr: 10.60.0.0/16
   palo_alto_next_hop: 10.50.0.100
   api_portal_access_port: 44232
-  # App service settings
-  COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
-  COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
 
 # Below this line should be the same for all environments
 
@@ -1124,8 +1121,6 @@ jobs:
                 APIM_ESTORE_URL="${{ secrets.APIM_ESTORE_URL }}" \
                 APIM_ESTORE_KEY="${{ secrets.APIM_ESTORE_KEY }}" \
                 APIM_ESTORE_VALUE="${{ secrets.APIM_ESTORE_VALUE }}" \
-                COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
-                COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}" \
                 GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
                 AZURE_ACBS_FUNCTION_URL="https://$acbs_function_url" \
                 GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
@@ -1491,8 +1486,6 @@ jobs:
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
                 DTFS_CENTRAL_API_URL="http://$dtfs_central_api_url" \
                 TFM_API_URL="http://$tfm_api_url" \
-                COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
-                COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}" \
                 UKEF_GEF_REPORTING_EMAIL_RECIPIENT="${{ secrets.UKEF_GEF_REPORTING_EMAIL_RECIPIENT }}"
 
   trade-finance-manager-api:
@@ -1830,7 +1823,6 @@ jobs:
                 PORT=5000 \
                 WEBSITES_PORT=5000 \
                 PORTAL_API_URL="https://$deal_api" \
-                COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
                 WEBSITE_DNS_SERVER="168.63.129.16" \
                 WEBSITE_VNET_ROUTE_ALL=1 \
                 REDIS_HOSTNAME="$redis_hostname" \
@@ -1850,8 +1842,7 @@ jobs:
             az webapp config connection-string set --name tfs-${{ env.environment }}-portal-ui \
               --connection-string-type custom \
               --settings \
-                SESSION_SECRET="${{ secrets.SESSION_SECRET }}" \
-                COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
+                SESSION_SECRET="${{ secrets.SESSION_SECRET }}"
 
   trade-finance-manager-ui:
     name: Trade Finance Manager UI
@@ -2157,7 +2148,6 @@ jobs:
                 PORT=5000 \
                 WEBSITES_PORT=5000 \
                 PORTAL_API_URL="https://$deal_api" \
-                COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
                 WEBSITE_DNS_SERVER="168.63.129.16" \
                 WEBSITE_VNET_ROUTE_ALL=1 \
                 REDIS_HOSTNAME="$redis_hostname" \
@@ -2174,8 +2164,7 @@ jobs:
             az webapp config connection-string set --name tfs-${{ env.environment }}-gef-ui \
               --connection-string-type custom \
               --settings \
-                SESSION_SECRET="${{ secrets.SESSION_SECRET }}" \
-                COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
+                SESSION_SECRET="${{ secrets.SESSION_SECRET }}"
 
   # END UI setup
 
