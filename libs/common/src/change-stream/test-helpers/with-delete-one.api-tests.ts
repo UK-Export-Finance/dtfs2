@@ -182,6 +182,12 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
 
         expect(document).toBeTruthy();
       });
+
+      it('should return 500', async () => {
+        const { status } = await makeRequest();
+
+        expect(status).toBe(500);
+      });
     }
   });
 };
