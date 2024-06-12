@@ -10,33 +10,11 @@ As of January 2024 the project is in the process of migrating from a MongoDB (No
 
 The SQL Server database tables all have ledger enabled which has some impacts on how we alter tables. For more details than those discussed below, refer to [the SQL Server docs](https://learn.microsoft.com/en-us/sql/relational-databases/security/ledger/ledger-limits?view=sql-server-ver16).
 
-### Adding a new, non-nullable column
+### Adding a new column
 
-Nullable columns can be added to a ledger table with no issues. If you want to add a non-nullable column, you need your column to have a default value and need to manually update the migration generated via [`npm run db:generate-migration`](#--generate-new-migration). For example, as we use typeorm to generate our migrations, consider the following column
+Nullable columns can be added to a ledger table with no issues. Non-nullable columns should not be added to tables after they have been created, and existing columns should not be converted to non-nullable. For more details, read [here](https://learn.microsoft.com/en-us/sql/relational-databases/security/ledger/ledger-limits?view=sql-server-ver16#adding-columns).
 
-```typescript
-@Column({ nullable: false, default: 0 })
-age!: number;
-```
-
-The `npm run db:generate-migration` command will then generate a query similar to
-
-```sql
-ALTER TABLE "Person" ADD "age" int CONSTRAINT "DF_abc123" DEFAULT 0
-```
-
-However, this will cause an error as the existing rows will do not satisfy the non-nullable constraint. To overcome this, you need to manually update your migration to have the following three steps:
-
-```sql
--- Add column as nullable
-ALTER TABLE "Person" ADD "age" int NULL CONSTRAINT "DF_abc123" DEFAULT 0;
-
--- Update all existing columns to have the default value
-UPDATE "Person" SET "age" = 0;
-
--- Set the new column to non-nullable
-ALTER TABLE "Person" ALTER COLUMN "age" int NOT NULL;
-```
+NOTE: it can sometimes be possible to add a new, non-nullable column to a table if certain conditions are met, but it is usually more safe to assume that new columns need to be nullable.
 
 ## Running locally
 
