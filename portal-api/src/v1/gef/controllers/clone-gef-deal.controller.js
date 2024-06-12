@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const db = require('../../../drivers/db-client');
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 
 const { validateApplicationReferences } = require('./validation/application');
 const { exporterStatus } = require('./validation/exporter');

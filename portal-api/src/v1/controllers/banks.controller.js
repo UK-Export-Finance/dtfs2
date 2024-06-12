@@ -5,7 +5,7 @@ const { ObjectId } = require('mongodb');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
 const { hasValidObjectId } = require('../validation/validateObjectId');
 
-const db = require('../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../drivers/db-client');
 
 const findBanks = async (callback) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.BANKS);

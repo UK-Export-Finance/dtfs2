@@ -1,5 +1,5 @@
 import { MONGO_DB_COLLECTIONS, UtilisationData, UtilisationReport } from '@ukef/dtfs2-common';
-import db from '../../drivers/db-client';
+import { mongoDbClient as db } from '../../drivers/db-client';
 
 export const getAllUtilisationDataForReport = async ({ _id: reportId, reportPeriod }: UtilisationReport): Promise<UtilisationData[]> => {
   const utilisationDataCollection = await db.getCollection(MONGO_DB_COLLECTIONS.UTILISATION_DATA);

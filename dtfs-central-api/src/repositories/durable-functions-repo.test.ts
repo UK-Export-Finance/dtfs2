@@ -1,7 +1,7 @@
 import { when } from 'jest-when';
 import { AuditDetails, DURABLE_FUNCTIONS_LOG, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { deleteMany } from '@ukef/dtfs2-common/change-stream';
-import db from '../drivers/db-client';
+import { mongoDbClient as db } from '../drivers/db-client';
 import { deleteAllCompleteAcbsDurableFunctionLogs, deleteAllDurableFunctionLogs } from './durable-functions-repo';
 
 jest.mock('@ukef/dtfs2-common/change-stream');

@@ -1,7 +1,7 @@
 const { PORTAL_USER } = require('@ukef/dtfs2-common/schemas');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const db = require('../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 
 /**
  * @deprecated Do not use -- Favour Portal API (removal todo:DTFS2-7160)

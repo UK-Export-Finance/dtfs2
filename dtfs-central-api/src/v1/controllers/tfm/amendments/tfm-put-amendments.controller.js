@@ -4,7 +4,7 @@ const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUser
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { getUnixTime } = require('date-fns');
-const db = require('../../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { findAmendmentById } = require('./tfm-get-amendments.controller');
 
 exports.updateTfmAmendment = async (req, res) => {

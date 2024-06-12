@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const db = require('../../drivers/db-client');
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const { transformDatabaseUser } = require('./transform-database-user');
 const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError, InvalidSessionIdentifierError } = require('../errors');
 const { USER, SIGN_IN_LINK } = require('../../constants');

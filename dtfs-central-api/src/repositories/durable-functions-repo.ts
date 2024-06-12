@@ -1,6 +1,6 @@
 import { AuditDetails, DURABLE_FUNCTIONS_LOG, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { deleteMany } from '@ukef/dtfs2-common/change-stream';
-import db from '../drivers/db-client';
+import { mongoDbClient as db } from '../drivers/db-client';
 
 export const deleteAllDurableFunctionLogs = (auditDetails: AuditDetails): Promise<{ acknowledged: boolean }> => {
   return deleteMany({

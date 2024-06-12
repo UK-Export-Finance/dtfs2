@@ -9,7 +9,7 @@ const {
   deleteOne,
   generatePortalAuditDetails,
 } = require('@ukef/dtfs2-common/change-stream');
-const db = require('../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
 const sendEmail = require('../email');
 

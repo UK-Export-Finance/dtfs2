@@ -3,7 +3,7 @@ const { PAYLOAD_VERIFICATION, MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-comm
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const assert = require('assert');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
-const db = require('../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const { DEAL } = require('../../constants');
 
 const sortEligibilityCriteria = (arr, callback) => {

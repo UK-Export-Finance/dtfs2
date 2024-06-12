@@ -4,7 +4,7 @@ const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification')
 const assert = require('assert');
 const { generatePortalAuditDetails, generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
 
-const db = require('../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../drivers/db-client');
 
 const sortMandatoryCriteria = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.id) - Number(b.id));

@@ -1,6 +1,6 @@
 const { format, add, differenceInCalendarDays } = require('date-fns');
 const commaNumber = require('comma-number');
-const db = require('../../../drivers/db-client');
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 const CONSTANTS = require('../../../constants');
 
 // helper function to retrieve the unissued facilities for MIN/AIN deals

@@ -1,7 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { HttpStatusCode } from 'axios';
 import { AzureFileInfo, Unknown, UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import {
   validateReportId,
   validateUtilisationReportData,
@@ -11,7 +10,8 @@ import {
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { UtilisationReportRawCsvData } from '../../../../types/utilisation-reports';
-import { ApiError, TransactionFailedError } from '../../../../errors';
+import { ApiError } from '../../../../errors';
+import { executeWithSqlTransaction } from '../../../../helpers';
 
 export type PostUploadUtilisationReportRequestBody = {
   reportId: number;
@@ -67,15 +67,9 @@ export const uploadReportInTransaction = async (
 ): Promise<UtilisationReportEntity> => {
   const uploadedByUserId = user._id.toString();
 
-  const queryRunner = SqlDbDataSource.createQueryRunner();
-  await queryRunner.connect();
-
-  await queryRunner.startTransaction();
-  try {
-    const transactionEntityManager = queryRunner.manager;
-    const reportStateMachine = await UtilisationReportStateMachine.forReportId(reportId);
-
-    const updatedReport = await reportStateMachine.handleEvent({
+  const reportStateMachine = await UtilisationReportStateMachine.forReportId(reportId);
+  const updatedReport = await executeWithSqlTransaction(async (transactionEntityManager) => {
+    return await reportStateMachine.handleEvent({
       type: 'REPORT_UPLOADED',
       payload: {
         azureFileInfo: fileInfo,
@@ -88,18 +82,8 @@ export const uploadReportInTransaction = async (
         transactionEntityManager,
       },
     });
-    await queryRunner.commitTransaction();
-    return updatedReport;
-  } catch (error) {
-    await queryRunner.rollbackTransaction();
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw new TransactionFailedError();
-    }
-  } finally {
-    await queryRunner.release();
-  }
+  });
+  return updatedReport;
 };
 
 /**

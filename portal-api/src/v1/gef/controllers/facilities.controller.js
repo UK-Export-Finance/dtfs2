@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteMany } = require('@ukef/dtfs2-common/change-stream');
-const db = require('../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const { facilitiesValidation, facilitiesStatus, facilitiesOverallStatus, facilitiesCheckEnums } = require('./validation/facilities');
 const { Facility } = require('../models/facilities');

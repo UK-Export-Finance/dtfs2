@@ -1,4 +1,4 @@
-const db = require('./src/drivers/db-client').default;
+const { mongoDbClient: db } = require('./src/drivers/db-client');
 
 jest.mock('node-cron', () => ({
   schedule: jest.fn(),
