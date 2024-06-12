@@ -1,5 +1,5 @@
 import { DURABLE_FUNCTIONS_LOG, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
-import db from '../drivers/db-client';
+import { mongoDbClient as db } from '../drivers/db-client';
 import { deleteAllCompleteAcbsDurableFunctionLogs, deleteAllDurableFunctionLogs } from './durable-functions-repo';
 
 describe('durable-functions-repo', () => {

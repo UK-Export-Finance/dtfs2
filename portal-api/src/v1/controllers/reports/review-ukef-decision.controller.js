@@ -1,5 +1,5 @@
 const { format, differenceInBusinessDays, addBusinessDays } = require('date-fns');
-const db = require('../../../drivers/db-client');
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 const CONSTANTS = require('../../../constants');
 
 // helper function to retrieve the unissued facilities for MIN/AIN deals

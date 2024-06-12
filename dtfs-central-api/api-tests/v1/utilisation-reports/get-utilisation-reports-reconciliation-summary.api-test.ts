@@ -16,7 +16,7 @@ import { SqlDbHelper } from '../../sql-db-helper';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../src/types/utilisation-reports';
 import { withoutMongoId } from '../../../src/helpers/mongodb';
 import { aPortalUser } from '../../../test-helpers/test-data/portal-user';
-import mongoDbClient from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../src/drivers/db-client';
 
 const api = createApi(app);
 

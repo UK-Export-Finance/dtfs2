@@ -1,5 +1,5 @@
 const api = require('./api');
-const db = require('../src/drivers/db-client');
+const { mongoDbClient: db } = require('../src/drivers/db-client');
 const { genPassword } = require('../src/crypto/utils');
 const databaseHelper = require('./database-helper');
 const { MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_REPORT_OFFICER } = require('../src/v1/roles/roles');

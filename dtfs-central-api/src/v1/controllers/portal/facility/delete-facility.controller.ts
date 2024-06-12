@@ -5,7 +5,7 @@ import { deleteOne, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/c
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { findOneFacility } from './get-facility.controller';
 import { removeFacilityIdFromDeal } from '../deal/update-deal.controller';
-import db from '../../../../drivers/db-client';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
 
 export const deleteFacility = async (
   req: CustomExpressRequest<{ params: { id: string }; reqBody: { auditDetails: AuditDetails; user: object } }>,

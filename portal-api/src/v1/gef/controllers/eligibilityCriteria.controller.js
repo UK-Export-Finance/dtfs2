@@ -2,7 +2,7 @@ const { PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { EligibilityCriteria } = require('../models/eligibilityCriteria');
-const db = require('../../../drivers/db-client');
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const { DEAL } = require('../../../constants');
 

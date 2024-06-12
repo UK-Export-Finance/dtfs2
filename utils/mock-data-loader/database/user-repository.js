@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const jsonwebtoken = require('jsonwebtoken');
-const db = require('./database-client');
+const { mongoDbClient: db } = require('./database-client');
 
 const LOGIN_STATUSES = { VALID_USERNAME_AND_PASSWORD: 'Valid username and password', VALID_2FA: 'Valid 2FA' };
 

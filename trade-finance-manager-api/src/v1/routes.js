@@ -146,6 +146,10 @@ authRouter
   .route('/utilisation-reports/:id/selected-fee-records-details')
   .get(validation.sqlIdValidation('id'), handleExpressValidatorResult, utilisationReportsController.getSelectedFeeRecordsDetails);
 
+authRouter
+  .route('/utilisation-reports/:reportId/payment')
+  .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.postPayment);
+
 authRouter.route('/banks').get(banksController.getAllBanks);
 
 authRouter

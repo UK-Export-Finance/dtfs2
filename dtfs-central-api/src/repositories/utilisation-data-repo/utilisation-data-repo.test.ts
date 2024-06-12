@@ -1,6 +1,6 @@
 import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { getAllUtilisationDataForReport } from './utilisation-data-repo';
-import db from '../../drivers/db-client';
+import { mongoDbClient as db } from '../../drivers/db-client';
 import { MOCK_UTILISATION_DATA } from '../../../api-tests/mocks/utilisation-reports/utilisation-data';
 import { MOCK_UTILISATION_REPORT } from '../../../api-tests/mocks/utilisation-reports/utilisation-reports';
 
