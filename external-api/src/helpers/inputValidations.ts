@@ -27,15 +27,6 @@ export const isValidCurrency = (currencyCode: string): boolean => (currencyCode 
 export const isValidPostcode = (postcode: string): boolean => isValidInput(REGEX.POSTCODE, postcode);
 
 /**
-  Validates if a value is a valid companies house number using a predefined regex
-
- * @param companiesHouseNumber - the value to validate as a number
- * @returns Boolean - true if valid, false if not
- */
-export const isValidCompaniesHouseNumber = (companiesHouseNumber: string): boolean =>
-  isValidInput(REGEX.COMPANIES_HOUSE_NUMBER_REGEX, companiesHouseNumber.toString());
-
-/**
   Validates if a value is a valid industry id using a predefined regex
 
  * @param industryId - the value to validate
