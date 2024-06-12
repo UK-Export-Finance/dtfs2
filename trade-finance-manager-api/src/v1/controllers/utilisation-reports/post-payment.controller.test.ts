@@ -89,20 +89,6 @@ describe('postPayment', () => {
     expect(res._isEndCalled()).toBe(true);
   });
 
-  it('responds with a generic error message if an unknown error occurs', async () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-
-    jest.mocked(api.addPaymentToFeeRecords).mockRejectedValue(new Error('Some error'));
-
-    // Act
-    await postPayment(req, res);
-
-    // Assert
-    expect(res._getData()).toBe('Failed to add payment');
-    expect(res._isEndCalled()).toBe(true);
-  });
-
   it('responds with a specific error code if an axios error is thrown', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
@@ -120,20 +106,17 @@ describe('postPayment', () => {
     expect(res._isEndCalled()).toBe(true);
   });
 
-  it('responds with a specific error message if an axios error is thrown', async () => {
+  it('responds with an error message', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
-    const errorMessage = 'Some specific error';
-    const axiosError = new AxiosError(errorMessage);
-
-    jest.mocked(api.addPaymentToFeeRecords).mockRejectedValue(axiosError);
+    jest.mocked(api.addPaymentToFeeRecords).mockRejectedValue(new Error('Some error'));
 
     // Act
     await postPayment(req, res);
 
     // Assert
-    expect(res._getData()).toBe(`Failed to add payment: ${errorMessage}`);
+    expect(res._getData()).toBe('Failed to add payment');
     expect(res._isEndCalled()).toBe(true);
   });
 });

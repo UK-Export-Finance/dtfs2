@@ -32,11 +32,8 @@ export const postPayment = async (req: PostPaymentRequest, res: Response) => {
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
     const errorMessage = 'Failed to add payment';
-    if (isAxiosError(error)) {
-      console.error(`${errorMessage}: ${error.message}`);
-      return res.status(error.response?.status || HttpStatusCode.InternalServerError).send(`${errorMessage}: ${error.message}`);
-    }
-    console.error(errorMessage);
-    return res.status(HttpStatusCode.InternalServerError).send(errorMessage);
+    const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
+    console.error(errorMessage, error);
+    return res.status(errorStatus).send(errorMessage);
   }
 };

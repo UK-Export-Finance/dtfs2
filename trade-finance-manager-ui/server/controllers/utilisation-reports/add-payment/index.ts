@@ -31,6 +31,15 @@ export type AddPaymentRequest = CustomExpressRequest<{
   reqBody: AddPaymentRequestBody;
 }>;
 
+type ValidatedAddPaymentFormValues = Required<AddPaymentFormValues> & {
+  addAnotherPayment: 'true' | 'false';
+  paymentDate: {
+    day: string;
+    month: string;
+    year: string;
+  };
+};
+
 const EMPTY_ADD_PAYMENT_ERRORS: AddPaymentErrorsViewModel = { errorSummary: [] };
 const EMPTY_ADD_PAYMENT_FORM_VALUES: AddPaymentFormValues = { paymentDate: {} };
 
@@ -102,12 +111,12 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
     const feeRecordPaymentCurrency = getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId(checkedCheckboxIds[0]);
 
     const { isAddingPayment, errors, formValues, paymentNumber } = extractAddPaymentFormValuesAndValidateIfPresent(req.body, feeRecordPaymentCurrency);
-    const canSubmitFormValues = errors.errorSummary.length === 0;
+    const formHasErrors = errors.errorSummary.length !== 0;
 
-    if (isAddingPayment && canSubmitFormValues) {
-      const { addAnotherPayment, ...paymentFormValues } = formValues;
+    if (isAddingPayment && !formHasErrors) {
+      const { addAnotherPayment, ...paymentFormValues } = formValues as ValidatedAddPaymentFormValues;
       await api.addPaymentToFeeRecords(reportId, paymentFormValues, feeRecordIds, user, userToken);
-      if (addAnotherPayment && addAnotherPayment !== 'true') {
+      if (addAnotherPayment !== 'true') {
         return res.redirect(`/utilisation-reports/${reportId}`);
       }
     }
@@ -119,7 +128,7 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
       reportId,
       selectedFeeRecordCheckboxIds: checkedCheckboxIds,
       errors,
-      formValues: canSubmitFormValues ? EMPTY_ADD_PAYMENT_FORM_VALUES : formValues,
+      formValues: formHasErrors ? formValues : EMPTY_ADD_PAYMENT_FORM_VALUES,
       paymentNumber,
       bank: selectedFeeRecordDetails.bank,
       formattedReportPeriod: getFormattedReportPeriodWithLongMonth(selectedFeeRecordDetails.reportPeriod),
