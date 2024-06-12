@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals';
 import { ObjectId } from 'mongodb';
-import './expect-to-be-object-id.tests.d';
+import './expect-to-be-object-id.d';
 
 const toBeObjectId = (received: unknown) => {
   const validString = typeof received === 'string' && ObjectId.isValid(received);

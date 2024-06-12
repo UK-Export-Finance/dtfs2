@@ -27,6 +27,7 @@ const baseRules = {
         '**/__mocks__/**',
         '**/*.tests.{js,ts}',
         '**/*.api-tests.{js,ts}',
+        '**/test-helpers/**',
       ],
     },
   ],

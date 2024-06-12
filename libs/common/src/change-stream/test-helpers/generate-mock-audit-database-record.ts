@@ -8,7 +8,7 @@ import {
   generateNoUserLoggedInAuditDatabaseRecord,
 } from '../generate-audit-database-record';
 import { AuditDetails } from '../../types';
-import './expect-to-be-object-id.tests';
+import '../../test-helpers/expect-to-be-object-id';
 
 export const generateMockTfmUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
   ...generateTfmUserAuditDatabaseRecord(mockUserId),
