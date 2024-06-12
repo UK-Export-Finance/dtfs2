@@ -1,4 +1,4 @@
-const isNumber = require('./isNumber');
+import { isNumber } from './isNumber';
 
 describe('isNumber', () => {
   it('should correctly identify a single digit number', () => {

@@ -21,7 +21,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', mockReport);
   });
 
-  it(`should return a 500 error when trying to set a non-existent report to '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}'`, async () => {
+  it(`should return a 404 error when trying to set a non-existent report to '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}'`, async () => {
     // Arrange
     const invalidReportId = reportId + 1;
     const requestBody = {
@@ -38,7 +38,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     const { status } = await api.put(requestBody).to(setStatusUrl);
 
     // Assert
-    expect(status).toBe(500);
+    expect(status).toBe(404);
   });
 
   it("returns a 400 error if a request body item is missing the 'reportId' property", async () => {
