@@ -34,7 +34,7 @@ export type AddPaymentErrorsViewModel = {
 };
 
 export type AddPaymentViewModel = BaseViewModel & {
-  reportId: number;
+  reportId: string;
   bank: { name: string };
   formattedReportPeriod: string;
   reportedFeeDetails: SelectedReportedFeesDetailsViewModel;

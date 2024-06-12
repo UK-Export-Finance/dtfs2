@@ -6,6 +6,9 @@ import { AddPaymentPaymentDateErrorViewModel } from '../../../types/view-models'
 
 describe('add payment form values validator', () => {
   describe('validateAddPaymentRequestFormValues', () => {
+    const paymentCurrency: Currency = 'GBP';
+    const feeRecordPaymentCurrency = paymentCurrency;
+
     it('should set payment currency error when no payment currency is provided', () => {
       // Arrange
       const formValues: AddPaymentFormValues = {
@@ -14,7 +17,7 @@ describe('add payment form values validator', () => {
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary).toEqual([{ text: 'Select payment currency', href: '#paymentCurrency' }]);
@@ -29,11 +32,30 @@ describe('add payment form values validator', () => {
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary).toEqual([{ text: 'Select payment currency', href: '#paymentCurrency' }]);
       expect(errors.paymentCurrencyErrorMessage).toEqual('Select payment currency');
+    });
+
+    it('should set payment currency error when payment currency value provided does not match fee record payment currency', () => {
+      // Arrange
+      const formValues: AddPaymentFormValues = {
+        ...aValidSetOfFormValues(),
+        paymentCurrency: CURRENCY.GBP,
+      };
+
+      const nonMatchingFeeRecordPaymentCurrency = CURRENCY.EUR;
+
+      // Act
+      const errors = validateAddPaymentRequestFormValues(formValues, nonMatchingFeeRecordPaymentCurrency);
+
+      // Assert
+      expect(errors.errorSummary).toEqual([
+        { text: 'The new payment currency must be the same as the reported payment currency of the selected fees', href: '#paymentCurrency' },
+      ]);
+      expect(errors.paymentCurrencyErrorMessage).toBe('The new payment currency must be the same as the reported payment currency of the selected fees');
     });
 
     it.each(Object.values(CURRENCY))('should not set payment currency error when payment currency value is %s', (currency: Currency) => {
@@ -44,7 +66,7 @@ describe('add payment form values validator', () => {
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, currency);
 
       // Assert
       expect(errors.errorSummary.length).toEqual(0);
@@ -59,7 +81,7 @@ describe('add payment form values validator', () => {
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary).toEqual([{ text: 'Enter a valid amount received', href: '#paymentAmount' }]);
@@ -79,7 +101,7 @@ describe('add payment form values validator', () => {
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary).toEqual([{ text: 'Enter a valid amount received', href: '#paymentAmount' }]);
@@ -100,7 +122,7 @@ describe('add payment form values validator', () => {
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary.length).toEqual(0);
@@ -115,7 +137,7 @@ describe('add payment form values validator', () => {
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary).toEqual([{ text: 'Payment reference must be 50 characters or less', href: '#paymentReference' }]);
@@ -130,7 +152,7 @@ describe('add payment form values validator', () => {
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary.length).toEqual(0);
@@ -145,7 +167,7 @@ describe('add payment form values validator', () => {
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary.length).toEqual(0);
@@ -160,7 +182,7 @@ describe('add payment form values validator', () => {
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary).toEqual([{ text: 'Select add another payment choice', href: '#addAnotherPayment' }]);
@@ -171,18 +193,18 @@ describe('add payment form values validator', () => {
       // Arrange
       const formValues: AddPaymentFormValues = {
         ...aValidSetOfFormValues(),
-        addAnotherPayment: 'not an option',
+        addAnotherPayment: 'not an option' as 'true' | 'false',
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary).toEqual([{ text: 'Select add another payment choice', href: '#addAnotherPayment' }]);
       expect(errors.addAnotherPaymentErrorMessage).toEqual('Select add another payment choice');
     });
 
-    it.each(['true', 'false'])('should not set add another payment error when value provided is %s', (addAnotherPaymentChoice: string) => {
+    it.each(['true', 'false'] as const)('should not set add another payment error when value provided is %s', (addAnotherPaymentChoice) => {
       // Arrange
       const formValues: AddPaymentFormValues = {
         ...aValidSetOfFormValues(),
@@ -190,7 +212,7 @@ describe('add payment form values validator', () => {
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary.length).toEqual(0);
@@ -222,7 +244,7 @@ describe('add payment form values validator', () => {
         };
 
         // Act
-        const errors = validateAddPaymentRequestFormValues(formValues);
+        const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
         // Assert
         expect(errors.errorSummary.length).toEqual(1);
@@ -260,7 +282,7 @@ describe('add payment form values validator', () => {
         };
 
         // Act
-        const errors = validateAddPaymentRequestFormValues(formValues);
+        const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
         // Assert
         expect(errors.paymentDateError?.dayError).toEqual(hasDayError);
@@ -288,7 +310,7 @@ describe('add payment form values validator', () => {
         };
 
         // Act
-        const errors = validateAddPaymentRequestFormValues(formValues);
+        const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
         // Assert
         expect(errors.errorSummary.length).toEqual(1);
@@ -311,7 +333,7 @@ describe('add payment form values validator', () => {
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary).toEqual([{ text: 'The date payment received must be a real date', href: '#paymentDate-day' }]);
@@ -338,7 +360,7 @@ describe('add payment form values validator', () => {
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary).toEqual([{ text: 'The date payment received must be a real date', href: '#paymentDate-month' }]);
@@ -365,7 +387,7 @@ describe('add payment form values validator', () => {
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary).toEqual([{ text: 'The date payment received must be a real date', href: '#paymentDate-year' }]);
@@ -385,7 +407,7 @@ describe('add payment form values validator', () => {
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary).toEqual([{ text: 'The date payment received must be a real date', href: '#paymentDate-day' }]);
@@ -406,7 +428,7 @@ describe('add payment form values validator', () => {
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary).toEqual([{ text: 'The date payment received must be in the past', href: '#paymentDate-day' }]);
@@ -428,7 +450,7 @@ describe('add payment form values validator', () => {
       };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary.length).toEqual(0);
@@ -440,7 +462,7 @@ describe('add payment form values validator', () => {
       const formValues: AddPaymentFormValues = { paymentDate: {} };
 
       // Act
-      const errors = validateAddPaymentRequestFormValues(formValues);
+      const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
       expect(errors.errorSummary).toEqual([
@@ -453,7 +475,7 @@ describe('add payment form values validator', () => {
 
     function aValidSetOfFormValues(): AddPaymentFormValues {
       return {
-        paymentCurrency: 'GBP',
+        paymentCurrency,
         paymentAmount: '100.00',
         paymentDate: {
           day: '11',
