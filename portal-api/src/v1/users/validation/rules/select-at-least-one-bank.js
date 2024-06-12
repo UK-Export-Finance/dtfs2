@@ -8,7 +8,7 @@ const CONSTANT = require('../../../../constants');
  * @returns {Array} either an empty array or an array containing an error object
  */
 const selectAtLeastOneBank = (user, change) => {
-  if (!change?.bank || change.bank.length === 0) {
+  if (change?.bank?.length === 0) {
     return [
       {
         bank: {
