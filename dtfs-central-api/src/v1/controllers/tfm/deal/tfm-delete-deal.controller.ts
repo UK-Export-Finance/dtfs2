@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { ObjectId } from 'mongodb';
-import { AuditDetails, MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { AuditDetails, MONGO_DB_COLLECTIONS, InvalidAuditDetailsError, DocumentNotDeletedError } from '@ukef/dtfs2-common';
 import { deleteMany, deleteOne, validateAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { findOneDeal } from './tfm-get-deal.controller';
 import { mongoDbClient } from '../../../../drivers/db-client';
@@ -33,13 +33,21 @@ export const deleteDeal = async (req: CustomExpressRequest<{ reqBody: { auditDet
   }
 
   try {
-    const deleteResult = await deleteOne({
+    await deleteOne({
       documentId: new ObjectId(id),
       collectionName: MONGO_DB_COLLECTIONS.TFM_DEALS,
       db: mongoDbClient,
       auditDetails,
     });
+  } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return res.status(404).send({ status: 404, message: 'Deal not found' });
+    }
+    console.error('Error deleting deals');
+    return res.status(500).send({ status: 500, error });
+  }
 
+  try {
     await deleteMany({
       filter: { 'facilitySnapshot.dealId': { $eq: deal._id } },
       collectionName: MONGO_DB_COLLECTIONS.TFM_FACILITIES,
@@ -47,8 +55,12 @@ export const deleteDeal = async (req: CustomExpressRequest<{ reqBody: { auditDet
       auditDetails,
     });
 
-    return res.status(200).send(deleteResult);
+    return res.status(200).send({ acknowledged: true, deletedCount: 1 });
   } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return res.status(200).send({ acknowledged: true, deletedCount: 1 });
+    }
+    console.error('Error deleting facilities on deal');
     return res.status(500).send({ status: 500, error });
   }
 };
