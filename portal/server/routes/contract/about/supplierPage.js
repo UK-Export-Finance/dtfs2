@@ -1,6 +1,7 @@
 const express = require('express');
 const {
   ROLES: { MAKER },
+  isValidCompanyRegistrationNumber,
 } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { requestParams, mapCountries, mapIndustrySectors, mapIndustryClasses, errorHref, generateErrorSummary, constructPayload } = require('../../../helpers');
@@ -12,7 +13,6 @@ const { supplierValidationErrors } = require('./pageSpecificValidationErrors');
 const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
 const industryFields = require('./industryFields');
 const { validateRole } = require('../../middleware');
-const { isValidCompaniesHouseNumber } = require('../../../validation/validate-ids');
 
 const router = express.Router();
 
@@ -47,7 +47,7 @@ router.get('/contract/:_id/about/supplier', [validateRole({ role: [MAKER] }), pr
     req.session.aboutSupplierFormData = null;
   }
   if (deal.submissionDetails['supplier-companies-house-registration-number']) {
-    if (!isValidCompaniesHouseNumber(deal.submissionDetails['supplier-companies-house-registration-number'])) {
+    if (!isValidCompanyRegistrationNumber(deal.submissionDetails['supplier-companies-house-registration-number'])) {
       validationErrors.count += 1;
       validationErrors.errorList = {
         ...validationErrors.errorList,

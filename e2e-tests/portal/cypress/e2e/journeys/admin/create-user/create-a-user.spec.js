@@ -63,7 +63,6 @@ context('Admin user creates a new user', () => {
     createUser.firstNameError().should('contain', 'First name is required');
     createUser.surNameError().should('contain', 'Surname is required');
     createUser.rolesError().should('contain', 'At least one role is required');
-    createUser.bankError().should('contain', 'Bank is required');
   });
 
   it('Admin create user with empty fields', () => {

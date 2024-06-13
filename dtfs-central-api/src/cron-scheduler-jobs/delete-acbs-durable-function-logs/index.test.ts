@@ -26,7 +26,7 @@ describe('scheduler/jobs/delete-acbs-durable-function-logs', () => {
 
     it('calls deleteAllCompleteAcbsDurableFunctionLogs from the durable functions repo', async () => {
       // Arrange
-      jest.mocked(deleteAllCompleteAcbsDurableFunctionLogs).mockResolvedValue({ acknowledged: true, deletedCount: 1 });
+      jest.mocked(deleteAllCompleteAcbsDurableFunctionLogs).mockResolvedValue({ acknowledged: true });
 
       // Act
       await deleteCompleteAcbsDurableFunctionLogsJob.task(new Date());
@@ -47,26 +47,15 @@ describe('scheduler/jobs/delete-acbs-durable-function-logs', () => {
 
     it('throws an error if deleteAllCompleteAcbsDurableFunctionLogs fails to write', async () => {
       // Arrange
-      jest.mocked(deleteAllCompleteAcbsDurableFunctionLogs).mockResolvedValue({ acknowledged: false, deletedCount: 1 });
+      jest.mocked(deleteAllCompleteAcbsDurableFunctionLogs).mockResolvedValue({ acknowledged: false });
 
       // Act
       await expect(deleteCompleteAcbsDurableFunctionLogsJob.task(new Date())).rejects.toThrow(WriteConcernError);
     });
 
-    it('does not throw if deleteAllCompleteAcbsDurableFunctionLogs resolves with documents deleted', async () => {
+    it('does not throw if deleteAllCompleteAcbsDurableFunctionLogs is acknowledged', async () => {
       // Arrange
-      jest.mocked(deleteAllCompleteAcbsDurableFunctionLogs).mockResolvedValue({ acknowledged: true, deletedCount: 1 });
-
-      // Act
-      const result = await deleteCompleteAcbsDurableFunctionLogsJob.task(new Date());
-
-      // Assert
-      expect(result).toEqual(undefined);
-    });
-
-    it('does not throw if deleteAllCompleteAcbsDurableFunctionLogs resolves with no documents deleted', async () => {
-      // Arrange
-      jest.mocked(deleteAllCompleteAcbsDurableFunctionLogs).mockResolvedValue({ acknowledged: true, deletedCount: 0 });
+      jest.mocked(deleteAllCompleteAcbsDurableFunctionLogs).mockResolvedValue({ acknowledged: true });
 
       // Act
       const result = await deleteCompleteAcbsDurableFunctionLogsJob.task(new Date());
