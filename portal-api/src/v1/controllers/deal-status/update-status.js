@@ -1,16 +1,16 @@
 const { updateDeal } = require('../deal.controller');
 
 const updateStatus = async (dealId, from, to, auditDetails) => {
-  const modifiedDeal = {
+  const dealUpdate = {
     updatedAt: Date.now(),
     status: to,
   };
 
   if (from !== to) {
-    modifiedDeal.previousStatus = from;
+    dealUpdate.previousStatus = from;
   }
 
-  const updatedDeal = await updateDeal(dealId, modifiedDeal, undefined, auditDetails);
+  const updatedDeal = await updateDeal({ dealId, dealUpdate, auditDetails });
 
   return updatedDeal;
 };

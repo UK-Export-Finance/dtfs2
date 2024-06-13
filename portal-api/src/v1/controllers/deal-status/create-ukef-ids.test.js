@@ -101,6 +101,6 @@ describe('createUkefIds', () => {
     ${undefined}
     ${''}
   `('should throw an error when user argument provided is $value', async ({ value }) => {
-    await expect(createUkefIds(mockDeal, value)).rejects.toThrow('Unable to get UKEF IDs from the number generator');
+    await expect(createUkefIds(mockDeal, value, mockUserAuditDetails)).rejects.toThrow('Unable to get UKEF IDs from the number generator');
   });
 });

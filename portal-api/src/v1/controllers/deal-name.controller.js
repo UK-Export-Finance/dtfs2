@@ -4,12 +4,12 @@ const { userOwns } = require('../users/checks');
 const validateNameChange = require('../validation/deal-name');
 
 const updateName = async (dealId, to, user, auditDetails) => {
-  const modifiedDeal = {
+  const dealUpdate = {
     updatedAt: Date.now(),
     additionalRefName: to,
   };
 
-  const updatedDeal = await updateDeal(dealId, modifiedDeal, user, auditDetails);
+  const updatedDeal = await updateDeal({ dealId, dealUpdate, user, auditDetails });
 
   return updatedDeal;
 };

@@ -128,7 +128,7 @@ describe('API is protected against SSRF attacks', () => {
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
 
-      const addingAPortalDealComment = () => api.addPortalDealComment(urlTraversal, 'mock', 'mock');
+      const addingAPortalDealComment = () => api.addPortalDealComment(urlTraversal, 'mock', 'mock', MOCK_PORTAL_USER_AUDIT_DETAILS);
 
       await expect(addingAPortalDealComment).rejects.toThrow(`Invalid deal id: ${urlTraversal}`);
     });
@@ -136,7 +136,7 @@ describe('API is protected against SSRF attacks', () => {
     it('Returns an error when a local IP is supplied', async () => {
       const localIp = '127.0.0.1';
 
-      const addingAPortalDealComment = () => api.addPortalDealComment(localIp, 'mock', 'mock');
+      const addingAPortalDealComment = () => api.addPortalDealComment(localIp, 'mock', 'mock', MOCK_PORTAL_USER_AUDIT_DETAILS);
 
       await expect(addingAPortalDealComment).rejects.toThrow(`Invalid deal id: ${localIp}`);
     });
@@ -144,7 +144,7 @@ describe('API is protected against SSRF attacks', () => {
     it('Makes an axios request when the deal id is valid', async () => {
       const validDealId = '5ce819935e539c343f141ece';
 
-      const response = await api.addPortalDealComment(validDealId, 'mock', 'mock');
+      const response = await api.addPortalDealComment(validDealId, 'mock', 'mock', MOCK_PORTAL_USER_AUDIT_DETAILS);
 
       expect(response).toEqual(mockResponse);
     });

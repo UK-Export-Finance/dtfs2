@@ -37,7 +37,7 @@ const createFacilities = async (facilities, dealId, auditDetails) => {
       facilities: idsArray,
     };
 
-    const response = await updateDeal(dealId, dealUpdate, undefined, auditDetails);
+    const response = await updateDeal({ dealId, dealUpdate, auditDetails });
 
     const status = isNumber(response?.status, 3);
 

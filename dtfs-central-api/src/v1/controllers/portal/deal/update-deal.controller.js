@@ -66,7 +66,18 @@ const updateDealEditedByPortal = async (dealId, user) => {
 };
 exports.updateDealEditedByPortal = updateDealEditedByPortal;
 
-const updateDeal = async (dealId, dealChanges, user, auditDetails, existingDeal, routePath) => {
+/**
+ * Updates a deal in the database.
+ * @param {Object} params - The parameters for updating the deal.
+ * @param {string} params.dealId - The ID of the deal being updated.
+ * @param {Object} params.dealUpdate - The update to be made to the deal.
+ * @param {Object} params.user - The user making the changes.
+ * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - The audit details for the update.
+ * @param {Object} params.existingDeal - The existing deal object.
+ * @param {string} params.routePath - The route path.
+ * @returns {Promise<{ status: number, message: string }>} The updated deal object.
+ */
+const updateDeal = async ({ dealId, dealUpdate, user, auditDetails, existingDeal, routePath }) => {
   try {
     if (!ObjectId.isValid(dealId)) {
       return { status: 400, message: 'Invalid Deal Id' };
@@ -85,8 +96,8 @@ const updateDeal = async (dealId, dealChanges, user, auditDetails, existingDeal,
 
     const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
-    const update = {
-      ...dealChanges,
+    const dealUpdateForDatabase = {
+      ...dealUpdate,
       auditRecord,
       updatedAt: Date.now(),
     };
@@ -114,25 +125,25 @@ const updateDeal = async (dealId, dealChanges, user, auditDetails, existingDeal,
      * is extracted at the begining of this function.
      */
 
-    if (dealChanges?.details) {
-      update.details = {
+    if (dealUpdate?.details) {
+      dealUpdateForDatabase.details = {
         ...originalDealDetails,
-        ...dealChanges.details,
+        ...dealUpdate.details,
       };
     }
 
-    if (dealChanges?.eligibility) {
-      update.eligibility = {
+    if (dealUpdate?.eligibility) {
+      dealUpdateForDatabase.eligibility = {
         ...originalDealEligibility,
-        ...dealChanges.eligibility,
+        ...dealUpdate.eligibility,
       };
     }
 
     if (routePath === PORTAL_ROUTE) {
-      update.editedBy = await handleEditedByPortal(dealId, update, user);
+      dealUpdateForDatabase.editedBy = await handleEditedByPortal(dealId, dealUpdateForDatabase, user);
     }
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(withoutId(update)), {
+    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(withoutId(dealUpdateForDatabase)), {
       returnNewDocument: true,
       returnDocument: 'after',
     });
@@ -152,7 +163,7 @@ const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath, audit
     const updatedFacilities = [...facilities, newFacilityId.toHexString()];
     const dealUpdate = { ...deal, facilities: updatedFacilities };
 
-    const response = await updateDeal(dealId, dealUpdate, user, auditDetails, null, routePath);
+    const response = await updateDeal({ dealId, dealUpdate, user, auditDetails, existingDeal: null, routePath });
     const status = isNumber(response?.status, 3);
 
     if (status) {
@@ -180,7 +191,7 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath, aud
         facilities: updatedFacilities,
       };
 
-      const response = await updateDeal(dealId, dealUpdate, user, auditDetails, null, routePath);
+      const response = await updateDeal({ dealId, dealUpdate, user, auditDetails, existingDeal: null, routePath });
       const status = isNumber(response?.status, 3);
 
       if (status) {
@@ -204,6 +215,7 @@ exports.updateDealPut = async (req, res) => {
     const {
       params: { id: dealId },
       body: { user, dealUpdate, auditDetails },
+      routePath,
     } = req;
 
     if (!ObjectId.isValid(dealId)) {
@@ -213,11 +225,11 @@ exports.updateDealPut = async (req, res) => {
     validateAuditDetails(auditDetails);
 
     // TODO: Refactor callback with status check
-    return findOneDeal(dealId, async (deal) => {
-      if (!deal) {
+    return findOneDeal(dealId, async (existingDeal) => {
+      if (!existingDeal) {
         return res.status(404).send({ status: 404, message: 'Deal not found' });
       }
-      const response = await updateDeal(dealId, dealUpdate, user, auditDetails, deal, req.routePath);
+      const response = await updateDeal({ dealId, dealUpdate, user, auditDetails, existingDeal, routePath });
       const status = isNumber(response?.status, 3);
       const code = status ? response.status : 200;
 

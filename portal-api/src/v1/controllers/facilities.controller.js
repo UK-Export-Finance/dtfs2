@@ -37,7 +37,7 @@ exports.update = async (dealId, facilityId, facilityBody, user, auditDetails) =>
       facilitiesUpdated: new Date().valueOf(),
     };
 
-    await updateDeal(dealId, dealUpdate, user, auditDetails);
+    await updateDeal({ dealId, dealUpdate, user, auditDetails });
   }
 
   return updatedFacility;

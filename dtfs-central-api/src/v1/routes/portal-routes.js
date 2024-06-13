@@ -329,6 +329,8 @@ portalRouter.route('/facilities').get(getFacilitiesController.findAllGet);
  *                 type: string
  *               dealId:
  *                 type: string
+ *               auditDetails:
+ *                 $ref: '#/definitions/portalAuditDetails'
  *           example:
  *             type: 'Bond'
  *             dealId: '123abc'

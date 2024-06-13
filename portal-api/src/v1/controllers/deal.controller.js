@@ -124,8 +124,17 @@ exports.findOne = (req, res) => {
   });
 };
 
-const updateDeal = async (dealId, dealUpdate, user, auditDetails) => {
-  const updatedDeal = await api.updateDeal(dealId, dealUpdate, user, auditDetails);
+/**
+ * Sends a request to DTFS Central to update a deal
+ * @param {Object} params - The parameters for updating the deal.
+ * @param {string} params.dealId - The ID of the deal being updated.
+ * @param {Object} params.dealUpdate - The update to be made to the deal.
+ * @param {Object} params.user - The user making the changes.
+ * @param {Object} params.auditDetails - The audit details for the update.
+ * @returns {Promise<Object | false>} The updated deal object.
+ */
+const updateDeal = async ({ dealId, dealUpdate, user, auditDetails }) => {
+  const updatedDeal = await api.updateDeal({ dealId, dealUpdate, user, auditDetails });
 
   return updatedDeal;
 };
@@ -138,7 +147,7 @@ exports.update = async (req, res) => {
   const {
     user,
     params: { id: dealId },
-    body,
+    body: dealUpdate,
   } = req;
 
   await findOneDeal(dealId, async (deal) => {
@@ -150,7 +159,7 @@ exports.update = async (req, res) => {
 
     const auditDetails = generatePortalAuditDetails(user._id);
 
-    const updatedDeal = await updateDeal(dealId, body, user, auditDetails);
+    const updatedDeal = await updateDeal({ dealId, dealUpdate, user, auditDetails });
 
     return res.status(200).json(updatedDeal);
   });

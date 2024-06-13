@@ -55,7 +55,7 @@ exports.update = async (req, res) => {
     params: { id: dealId },
     body,
   } = req;
-  const auditDetails = generatePortalAuditDetails(req.user._id);
+  const auditDetails = generatePortalAuditDetails(user._id);
   const newStatus = body.status;
 
   try {

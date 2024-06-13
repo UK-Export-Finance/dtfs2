@@ -34,7 +34,7 @@ exports.findOne = async (req, res) => {
 };
 
 const updateSubmissionDetails = async (dealId, submissionDetails, user, auditDetails) => {
-  const update = {
+  const dealUpdate = {
     submissionDetails,
     updatedAt: Date.now(),
   };
@@ -47,12 +47,12 @@ const updateSubmissionDetails = async (dealId, submissionDetails, user, auditDet
    * Therefore, we add this value to the deal object under exporter.
    * */
   if (submissionDetails['supplier-name']) {
-    update.exporter = {
+    dealUpdate.exporter = {
       companyName: submissionDetails['supplier-name'],
     };
   }
 
-  const updateDealResponse = await updateDeal(dealId, update, user, auditDetails);
+  const updateDealResponse = await updateDeal({ dealId, dealUpdate, user, auditDetails });
   return updateDealResponse;
 };
 

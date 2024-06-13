@@ -53,7 +53,16 @@ const createDeal = async (deal, user, auditDetails) => {
   }
 };
 
-const updateDeal = async (dealId, dealUpdate, user, auditDetails) => {
+/**
+ * Sends a request to DTFS Central to update a deal
+ * @param {Object} params - The parameters for updating the deal.
+ * @param {string} params.dealId - The ID of the deal being updated.
+ * @param {Object} params.dealUpdate - The update to be made to the deal.
+ * @param {Object} params.user - The user making the changes.
+ * @param {Object} params.auditDetails - The audit details for the update.
+ * @returns {Promise<Object | false>} The updated deal object.
+ */
+const updateDeal = async ({ dealId, dealUpdate, user, auditDetails }) => {
   try {
     if (!isValidMongoId(dealId)) {
       console.error('Update deal API failed for deal id %s', dealId);
