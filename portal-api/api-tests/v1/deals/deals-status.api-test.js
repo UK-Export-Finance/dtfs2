@@ -1,3 +1,4 @@
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
@@ -243,6 +244,7 @@ describe('/v1/deals/:id/status', () => {
           'user-status': STATUS.ACTIVE,
           isTrusted: aBarclaysMaker.isTrusted,
         },
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id),
       });
     });
 

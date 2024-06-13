@@ -279,7 +279,7 @@ portalRouter.route('/deals/:id/status').put(updateDealStatusController.updateDea
  *                     schema:
  *                       $ref: '#/definitions/User'
  *               auditDetails:
- *                 $ref: '#/definitions/portalAuditDetails'#
+ *                 $ref: '#/definitions/portalAuditDetails'
  *                   text:
  *                     type: string
  *                     example: Amazing comment
