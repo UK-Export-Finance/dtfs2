@@ -139,7 +139,7 @@ exports.update = async (req, res) => {
       },
     };
 
-    const updatedDeal = await updateDeal({ dealId: deal._id, updateDeal: updatedDealData, user, auditDetails });
+    const updatedDeal = await updateDeal({ dealId: deal._id, dealUpdate: updatedDealData, user, auditDetails });
 
     // Don't want to save upload errors to db, only display on this request
     Object.entries(validationUploadErrors.errorList).forEach(([key, value]) => {

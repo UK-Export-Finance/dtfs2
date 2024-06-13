@@ -102,7 +102,7 @@ exports.update = async (req, res) => {
 
     // Update the deal
     if (newStatus !== CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED && newStatus !== CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF) {
-      updatedDeal = await updateDeal(dealId, updatedDeal, user, auditDetails);
+      updatedDeal = await updateDeal({ dealId, updatedDeal, user, auditDetails });
     }
 
     // Subsequent submission of the deal to the checker
