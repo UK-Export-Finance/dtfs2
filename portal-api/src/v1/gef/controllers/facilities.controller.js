@@ -201,6 +201,9 @@ exports.delete = async (req, res) => {
 
     return res.status(200).send(deleteOneResponse);
   } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return res.sendStatus(404);
+    }
     return res.status(500).send({ status: 500, error });
   }
 };

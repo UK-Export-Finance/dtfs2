@@ -1,4 +1,4 @@
-const { PAYLOAD_VERIFICATION, MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { PAYLOAD_VERIFICATION, MONGO_DB_COLLECTIONS, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
@@ -106,6 +106,9 @@ exports.delete = async (req, res) => {
 
     return res.status(200).send(deleteResult);
   } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return res.sendStatus(404);
+    }
     console.error(error);
     return res.status(500).send({ status: 500, error });
   }

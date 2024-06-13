@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { PAYLOAD_VERIFICATION, MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { PAYLOAD_VERIFICATION, MONGO_DB_COLLECTIONS, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const assert = require('assert');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
@@ -113,6 +113,7 @@ exports.delete = async (req, res) => {
   if (!eligibilityCriteria) {
     return res.status(404).send({ status: 404, message: 'Eligibility criteria not found' });
   }
+
   try {
     const deleteResult = await deleteOne({
       documentId: new ObjectId(eligibilityCriteria._id),
@@ -123,6 +124,9 @@ exports.delete = async (req, res) => {
 
     return res.status(200).send(deleteResult);
   } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return res.status(404).send({ status: 404, message: 'Eligibility criteria not found' });
+    }
     console.error('Error deleting eligibility criteria', error);
     return res.status(500).send({ status: 500, error });
   }

@@ -298,14 +298,22 @@ exports.delete = async (req, res) => {
   }
 
   try {
-    const applicationDeleteResult = await deleteOne({
+    await deleteOne({
       documentId: new ObjectId(dealId),
       collectionName: MONGO_DB_COLLECTIONS.DEALS,
       db,
       auditDetails,
     });
+  } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return res.sendStatus(404);
+    }
+    console.error(error);
+    return res.status(500).send({ status: 500, error });
+  }
 
-    // remove facility information related to the application
+  // remove facility information related to the application
+  try {
     await deleteMany({
       filter: { dealId: { $eq: ObjectId(dealId) } },
       collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
@@ -313,10 +321,10 @@ exports.delete = async (req, res) => {
       auditDetails,
     });
 
-    return res.status(200).send(applicationDeleteResult);
+    return res.status(200).send({ acknowledged: true, deletedCount: 1 });
   } catch (error) {
     if (error instanceof DocumentNotDeletedError) {
-      return res.sendStatus(204);
+      return res.status(200).send({ acknowledged: true, deletedCount: 1 });
     }
     console.error(error);
     return res.status(500).send({ status: 500, error });

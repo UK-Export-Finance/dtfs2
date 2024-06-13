@@ -1,4 +1,4 @@
-import { AuditDetails, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { AuditDetails, DocumentNotDeletedError, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { Response } from 'express';
 import { deleteOne, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
@@ -51,6 +51,9 @@ export const deleteFacility = async (
     await removeFacilityIdFromDeal(facility.dealId, facilityId, user, req.routePath);
     return res.status(200).send();
   } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return res.status(404).send({ status: 400, message: 'Facility not found' });
+    }
     return res.status(500).send({ status: 500, error });
   }
 };

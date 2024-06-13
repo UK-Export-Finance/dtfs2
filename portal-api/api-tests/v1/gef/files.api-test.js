@@ -228,6 +228,7 @@ describe(baseUrl, () => {
       collectionName: MONGO_DB_COLLECTIONS.FILES,
       auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentId: () => new ObjectId(fileToDeleteId),
+      expectedStatusWhenNoDeletion: 500,
     });
 
     it('returns 404 if files is not found', async () => {
