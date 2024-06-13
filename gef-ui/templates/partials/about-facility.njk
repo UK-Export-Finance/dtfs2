@@ -129,7 +129,9 @@
           }) }}
         {% endif %}
 
-        {{ whatIsAFacilityEndDate.render() }}
+        {% if isFacilityEndDateFeatureFlagEnabled %}
+          {{ whatIsAFacilityEndDate.render() }}
+        {% endif %}
 
         <div class="govuk-button-group">
           {{ govukButton({

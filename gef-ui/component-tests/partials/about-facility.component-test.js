@@ -1,3 +1,5 @@
+import { isFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
+
 const pageRenderer = require('../pageRenderer');
 const { FACILITY_TYPE } = require('../../server/constants');
 
@@ -59,12 +61,18 @@ describe(page, () => {
     wrapper.expectInput('[data-cy="facility-name"]').toHaveValue(facilityName);
   });
 
-  it(`renders the 'What is a Facility End Date' details`, () => {
-    wrapper.expectText('[data-cy="facility-end-date-details"] span').toRead('What is a Facility End Date');
-    wrapper
-      .expectText('[data-cy="facility-end-date-details"] div')
-      .toRead('The facility end date is the deadline for a committed loan to be repaid at which point the contract will be terminated.');
-  });
+  if (isFacilityEndDateFeatureFlagEnabled()) {
+    it(`renders the 'What is a Facility End Date' details`, () => {
+      wrapper.expectText('[data-cy="facility-end-date-details"] span').toRead('What is a Facility End Date');
+      wrapper
+        .expectText('[data-cy="facility-end-date-details"] div')
+        .toRead('The facility end date is the deadline for a committed loan to be repaid at which point the contract will be terminated.');
+    });
+  } else {
+    it(`does not render the 'What is a Facility End Date' details`, () => {
+      wrapper.expectElement('[data-cy="facility-end-date-details"]').notToExist();
+    });
+  }
 
   it(`renders the 'Continue' button`, () => {
     wrapper.expectText('[data-cy="continue-button"]').toRead('Continue');
