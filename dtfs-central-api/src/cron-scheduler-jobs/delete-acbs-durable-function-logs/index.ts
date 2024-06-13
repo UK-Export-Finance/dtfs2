@@ -1,6 +1,5 @@
-import { asString, CronSchedulerJob } from '@ukef/dtfs2-common';
+import { asString, CronSchedulerJob, WriteConcernError } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { WriteConcernError } from '../../errors';
 import { deleteAllCompleteAcbsDurableFunctionLogs } from '../../repositories/durable-functions-repo';
 
 const { ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE } = process.env;

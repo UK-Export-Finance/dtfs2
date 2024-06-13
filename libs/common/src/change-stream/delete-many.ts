@@ -5,6 +5,7 @@ import type { AuditDetails, DeletionAuditLog, MongoDbCollectionName } from '../t
 import { MongoDbClient } from '../mongo-db-client';
 import { generateAuditDatabaseRecordFromAuditDetails } from './generate-audit-database-record';
 import { changeStreamConfig } from './config';
+import { DocumentNotDeletedError, WriteConcernError } from '../errors';
 
 const { DELETION_AUDIT_LOGS_TTL_SECONDS } = changeStreamConfig;
 
@@ -15,6 +16,10 @@ type DeleteManyParams = {
   auditDetails: AuditDetails;
 };
 
+/**
+ * @throws {DocumentNotDeletedError} - if there are no documents matching the filter to delete
+ * @throws {WriteConcernError} - if either the deletion-audit-log insertion or document deletion operations are not acknowledged
+ */
 const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetails }: DeleteManyParams) => {
   const client = await db.getClient();
   const session = client.startSession();
@@ -28,6 +33,10 @@ const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetail
       const collection = await db.getCollection(collectionName);
       const documentsToDeleteIds = (await collection.find(filter, { projection: { _id: true }, session }).toArray()).map(({ _id }) => _id);
 
+      if (!documentsToDeleteIds.length) {
+        throw new DocumentNotDeletedError();
+      }
+
       if (documentsToDeleteIds.length) {
         const logsToInsert: WithoutId<DeletionAuditLog>[] = documentsToDeleteIds.map((deletedDocumentId) => ({
           collectionName,
@@ -39,12 +48,12 @@ const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetail
         const deletionCollection = await db.getCollection('deletion-audit-logs');
         const insertResult = await deletionCollection.insertMany(logsToInsert, { session });
         if (!insertResult.acknowledged) {
-          throw new Error('Failed to create deletion audit logs');
+          throw new WriteConcernError();
         }
 
         const deleteResult = await collection.deleteMany({ _id: { $in: documentsToDeleteIds } }, { session });
         if (!(deleteResult.acknowledged && deleteResult.deletedCount === documentsToDeleteIds.length)) {
-          throw new Error('Failed to delete documents');
+          throw new WriteConcernError();
         }
       }
     }, transactionOptions);
@@ -56,6 +65,11 @@ const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetail
   }
 };
 
+/**
+ * When the `CHANGE_STREAM_ENABLED` feature flag is enabled adds deletions audit logs and calls Collection.deleteMany.
+ * @throws {DocumentNotDeletedError} - if there are no documents matching the filter to delete
+ * @throws {WriteConcernError} - if either the deletion-audit-log insertion or document deletion operations are not acknowledged
+ */
 export const deleteMany = async ({ filter, collectionName, db, auditDetails }: DeleteManyParams): Promise<{ acknowledged: boolean }> => {
   if (process.env.CHANGE_STREAM_ENABLED === 'true') {
     await deleteManyWithAuditLogs({
