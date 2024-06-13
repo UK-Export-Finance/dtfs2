@@ -1,7 +1,6 @@
-import { asString } from '@ukef/dtfs2-common';
+import { asString, WriteConcernError } from '@ukef/dtfs2-common';
 import { deleteAllCompleteAcbsDurableFunctionLogs } from '../../repositories/durable-functions-repo';
 import { deleteCompleteAcbsDurableFunctionLogsJob } from '.';
-import { WriteConcernError } from '../../errors';
 
 console.info = jest.fn();
 
