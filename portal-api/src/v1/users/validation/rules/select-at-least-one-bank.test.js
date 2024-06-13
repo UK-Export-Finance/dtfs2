@@ -20,7 +20,7 @@ describe('selectAtLeastOneBank', () => {
   ];
 
   const inputs = [
-    { user: 'user var is not used in this validation case', change: { bank: [], roles: ['any'] }, expected: selectAtLeastOneBankError },
+    { user: 'user var is not used in this validation case', change: { bank: null, roles: ['maker'] }, expected: selectAtLeastOneBankError },
     { user: 'NA', change: { bank: 'all', roles: ['admin'] }, expected: [] },
     { user: 'NA', change: { bank: 'all', roles: ['checker'] }, expected: allBankError },
   ];
