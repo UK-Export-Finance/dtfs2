@@ -1,5 +1,5 @@
 const validator = require('validator');
-const { COMPANIES_HOUSE_NUMBER_REGEX, FILE_NAME_REGEX } = require('../constants/regex');
+const { FILE_NAME_REGEX } = require('../constants/regex');
 const { FILE_UPLOAD } = require('../constants/file-upload');
 
 /**
@@ -33,14 +33,6 @@ const isValidSignInToken = (signInToken) => (signInToken ? validator.isHexadecim
  * @returns {Boolean} asserts if regex is matched or not
  */
 const isValidRegex = (regex, value) => regex.test(value);
-
-/**
- * isValidCompaniesHouseNumber
- * checks if companiesHouseNumber conforms to regex
- * @param {String} companiesHouseNumber
- * @returns {Boolean} asserts if regex is matched
- */
-const isValidCompaniesHouseNumber = (companiesHouseNumber) => isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, companiesHouseNumber);
 
 /**
  * isValidResetPasswordToken
@@ -87,7 +79,6 @@ module.exports = {
   isValidUserId,
   isValidSignInToken,
   isValidRegex,
-  isValidCompaniesHouseNumber,
   isValidResetPasswordToken,
   isValidDocumentType,
   isValidFileName,

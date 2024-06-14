@@ -1,4 +1,4 @@
-const db = require('../../drivers/db-client');
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const sendEmail = require('../email');
 const { createPasswordToken } = require('./controller');
 const { EMAIL_TEMPLATE_IDS } = require('../../constants');

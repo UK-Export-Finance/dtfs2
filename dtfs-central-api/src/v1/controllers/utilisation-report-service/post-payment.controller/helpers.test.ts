@@ -1,15 +1,16 @@
 import { ObjectId } from 'mongodb';
-import { In } from 'typeorm';
-import { ApiError, Currency, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
+import { In, EntityManager } from 'typeorm';
+import { Currency, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { addPaymentToUtilisationReport } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
-import { InvalidPayloadError, NotFoundError, TransactionFailedError } from '../../../../errors';
+import { InvalidPayloadError, NotFoundError } from '../../../../errors';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
-import { getQueryRunnerMocks } from '../../../../../test-helpers/mock-query-runner';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
+import { executeWithSqlTransaction } from '../../../../helpers';
+
+jest.mock('../../../../helpers');
 
 describe('post-add-payment.controller helpers', () => {
   describe('addPaymentToUtilisationReport', () => {
@@ -37,18 +38,24 @@ describe('post-add-payment.controller helpers', () => {
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(feeRecordId).withPaymentCurrency(paymentCurrency).build(),
     );
 
-    const { mockQueryRunner, mockConnect, mockStartTransaction, mockCommitTransaction, mockRollbackTransaction, mockRelease } = getQueryRunnerMocks();
     const feeRecordFindBySpy = jest.spyOn(FeeRecordRepo, 'findBy');
-    const createQueryRunnerSpy = jest.spyOn(SqlDbDataSource, 'createQueryRunner');
 
     const utilisationReportStateMachineConstructorSpy = jest.spyOn(UtilisationReportStateMachine, 'forReportId');
     const handleEventSpy = jest.spyOn(utilisationReportStateMachine, 'handleEvent');
 
+    const mockEntityManager = {
+      save: jest.fn(),
+      find: jest.fn(),
+    } as unknown as EntityManager;
+
     beforeEach(() => {
       feeRecordFindBySpy.mockResolvedValue(feeRecordsInPaymentCurrency);
-      createQueryRunnerSpy.mockReturnValue(mockQueryRunner);
       utilisationReportStateMachineConstructorSpy.mockResolvedValue(utilisationReportStateMachine);
       handleEventSpy.mockResolvedValue(utilisationReport);
+
+      jest.mocked(executeWithSqlTransaction).mockImplementation(async (functionToExecute) => {
+        await functionToExecute(mockEntityManager);
+      });
     });
 
     afterEach(() => {
@@ -112,22 +119,6 @@ describe('post-add-payment.controller helpers', () => {
       await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetailsWithGBPCurrency)).rejects.toThrow(InvalidPayloadError);
     });
 
-    it('creates a database connection for the transaction', async () => {
-      // Act
-      await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
-
-      // Assert
-      expect(mockConnect).toHaveBeenCalled();
-    });
-
-    it('starts the transaction', async () => {
-      // Act
-      await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
-
-      // Assert
-      expect(mockStartTransaction).toHaveBeenCalled();
-    });
-
     it('adds the payment to the utilisation report using the utilisation report state machine', async () => {
       // Act
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
@@ -136,7 +127,7 @@ describe('post-add-payment.controller helpers', () => {
       expect(handleEventSpy).toHaveBeenCalledWith({
         type: 'ADD_A_PAYMENT',
         payload: {
-          transactionEntityManager: mockQueryRunner.manager,
+          transactionEntityManager: mockEntityManager,
           feeRecords: feeRecordsInPaymentCurrency,
           paymentDetails: newPaymentDetails,
           requestSource: {
@@ -145,79 +136,6 @@ describe('post-add-payment.controller helpers', () => {
           },
         },
       });
-    });
-
-    it('commits the transaction if the utilisation report state machine event handler runs successfully', async () => {
-      // Arrange
-      handleEventSpy.mockResolvedValue(utilisationReport);
-
-      // Act
-      await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
-
-      // Assert
-      expect(mockCommitTransaction).toHaveBeenCalled();
-    });
-
-    it('rolls back the transaction if the utilisation report state machine event handler throws an error', async () => {
-      // Arrange
-      handleEventSpy.mockRejectedValue(new Error('Some error'));
-
-      // Act / Assert
-      await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails)).rejects.toThrow();
-      expect(mockRollbackTransaction).toHaveBeenCalled();
-    });
-
-    it('does not commit the transaction if the utilisation report state machine event handler throws an error', async () => {
-      // Arrange
-      handleEventSpy.mockRejectedValue(new Error('Some error'));
-
-      // Act / Assert
-      await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails)).rejects.toThrow();
-      expect(mockRollbackTransaction).toHaveBeenCalled();
-    });
-
-    it("throws the 'TransactionFailedError' with the generic 'Unknown error' message if an unexpected error occurred", async () => {
-      // Arrange
-      handleEventSpy.mockRejectedValue(new Error('Some error'));
-
-      // Act / Assert
-      await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails)).rejects.toThrow(
-        new TransactionFailedError('Unknown error'),
-      );
-    });
-
-    it("throws the 'TransactionFailedError' with the specific error message if the event handler throws an 'ApiError'", async () => {
-      // Arrange
-      const errorMessage = 'Some specific error';
-      class TestError extends ApiError {
-        constructor() {
-          super({
-            status: 400,
-            message: errorMessage,
-          });
-        }
-      }
-      handleEventSpy.mockRejectedValue(new TestError());
-
-      // Act / Assert
-      await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails)).rejects.toThrow(new TransactionFailedError(errorMessage));
-    });
-
-    it('releases the connection used for the transaction if the event handler runs successfully', async () => {
-      // Act
-      await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
-
-      // Assert
-      expect(mockRelease).toHaveBeenCalled();
-    });
-
-    it('releases the connection used for the transaction if the event handler throws an error', async () => {
-      // Arrange
-      handleEventSpy.mockRejectedValue(new Error('Some error'));
-
-      // Act / Assert
-      await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails)).rejects.toThrow();
-      expect(mockRelease).toHaveBeenCalled();
     });
   });
 });

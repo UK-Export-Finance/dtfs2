@@ -1,3 +1,6 @@
+const { ObjectId } = require('mongodb');
+const { withDeleteOneTests, expectAnyPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const testUserCache = require('../../api-test-users');
 
@@ -40,16 +43,18 @@ describe('a user', () => {
   });
 
   describe('DELETE /v1/users/:userId', () => {
-    it('a user can be deleted', async () => {
+    let userToDeleteId;
+
+    beforeEach(async () => {
       const response = await createUser(MOCK_USER);
-      const createdUser = response.body.user;
+      userToDeleteId = new ObjectId(response.body.user._id);
+    });
 
-      await as(anAdmin).remove(`/v1/users/${createdUser._id}`);
-
-      const { status, body } = await as(anAdmin).get(`/v1/users/${createdUser._id}`);
-
-      expect(status).toEqual(200);
-      expect(body).toMatchObject({});
+    withDeleteOneTests({
+      makeRequest: () => as(aNonAdmin).remove(`/v1/users/${userToDeleteId}`),
+      collectionName: MONGO_DB_COLLECTIONS.USERS,
+      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
+      getDeletedDocumentId: () => userToDeleteId,
     });
   });
 

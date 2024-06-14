@@ -30,7 +30,7 @@ const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, db, aud
           collectionName,
           deletedDocumentId: documentId,
           auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-          expireAt: add(new Date(), { seconds: Number(DELETION_AUDIT_LOGS_TTL_SECONDS) }),
+          expireAt: add(new Date(), { seconds: DELETION_AUDIT_LOGS_TTL_SECONDS }),
         },
         { session },
       );

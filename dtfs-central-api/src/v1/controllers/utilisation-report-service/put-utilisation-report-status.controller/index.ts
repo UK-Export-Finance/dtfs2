@@ -1,12 +1,12 @@
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
-import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { DbRequestSource, ReportWithStatus } from '@ukef/dtfs2-common';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
-import { ApiError, InvalidPayloadError, TransactionFailedError } from '../../../../errors';
+import { ApiError, InvalidPayloadError } from '../../../../errors';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
+import { executeWithSqlTransaction } from '../../../../helpers';
 
 export type PutUtilisationReportStatusRequest = CustomExpressRequest<{
   reqBody: {
@@ -69,20 +69,9 @@ const executeEventHandler = async (
  * @throws {TransactionFailedError}
  */
 const updateReportStatusesInTransaction = async (reportsWithStatus: ReportWithStatus[], requestSource: DbRequestSource): Promise<void> => {
-  const queryRunner = SqlDbDataSource.createQueryRunner();
-  await queryRunner.connect();
-
-  await queryRunner.startTransaction();
-  try {
-    const transactionEntityManager = queryRunner.manager;
+  await executeWithSqlTransaction(async (transactionEntityManager) => {
     await Promise.all(reportsWithStatus.map((reportWithStatus) => executeEventHandler(reportWithStatus, transactionEntityManager, requestSource)));
-    await queryRunner.commitTransaction();
-  } catch (error) {
-    await queryRunner.rollbackTransaction();
-    throw new TransactionFailedError();
-  } finally {
-    await queryRunner.release();
-  }
+  });
 };
 
 /**

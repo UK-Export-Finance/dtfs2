@@ -1,7 +1,7 @@
 const { DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
 const { issueAcbsFacilities, addToACBSLog } = require('./acbs.controller');
 const api = require('../api');
-const db = require('../../drivers/db-client');
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const CONSTANTS = require('../../constants');
 
 const consoleErrorMock = jest.spyOn(console, 'error');

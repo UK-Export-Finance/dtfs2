@@ -1,5 +1,5 @@
 # Node Azure Functions v4 Image
-FROM mcr.microsoft.com/azure-functions/node:4-node18
+FROM mcr.microsoft.com/azure-functions/node:4-node20-slim
 
 # Variables
 ARG GITHUB_SHA

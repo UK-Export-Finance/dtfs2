@@ -39,7 +39,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(baseUrl),
       successStatusCode: 200,
     });
@@ -60,7 +59,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(latestEligibilityCriteriaUrl),
       successStatusCode: 200,
     });
@@ -97,7 +95,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(eligibilityCriteria1Url),
       successStatusCode: 200,
     });
@@ -132,7 +129,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).post(mockEligibilityCriteria[0]).to(baseUrl),
       successStatusCode: 201,
     });
@@ -153,7 +149,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).remove(eligibilityCriteria1Url),
       successStatusCode: 200,
     });

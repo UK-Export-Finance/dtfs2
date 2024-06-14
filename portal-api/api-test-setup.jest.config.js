@@ -1,4 +1,4 @@
-const db = require('./src/drivers/db-client');
+const { mongoDbClient: db } = require('./src/drivers/db-client');
 
 const mockFiles = ['./src/external-api/api'];
 
@@ -17,6 +17,19 @@ expect.extend({
       return {
         pass: false,
         message: () => 'Expected a number or null value',
+      };
+    }
+
+    return {
+      pass: true,
+    };
+  },
+
+  toBeStringOrUndefined(received) {
+    if (typeof received !== 'string' && received !== undefined) {
+      return {
+        pass: false,
+        message: () => 'Expected a string or undefined value',
       };
     }
 

@@ -1,5 +1,5 @@
 const app = require('../../../src/createApp');
-const { getCollection } = require('../../../src/drivers/db-client');
+const { mongoDbClient: db } = require('../../../src/drivers/db-client');
 const { Hasher } = require('../../../src/crypto/hasher');
 const { Pbkdf2Sha512HashStrategy } = require('../../../src/crypto/pbkdf2-sha512-hash-strategy');
 const { CryptographicallyStrongGenerator } = require('../../../src/crypto/cryptographically-strong-generator');
@@ -39,7 +39,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
   const loginWithSignInLink = ({ userId, signInToken, userToken }) =>
     as({ token: userToken }).post().to(`/v1/users/${userId}/sign-in-link/${signInToken}/login`);
 
-  const usersCollection = () => getCollection('users');
+  const usersCollection = () => db.getCollection('users');
 
   beforeAll(async () => {
     // Not faking next tick is required for database interaction to work

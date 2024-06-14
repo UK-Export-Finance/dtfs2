@@ -1,6 +1,6 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const getCreateFacilityErrors = require('../../../validation/create-facility');
 const { findOneDeal } = require('../deal/get-deal.controller');
 const { addFacilityIdToDeal } = require('../deal/update-deal.controller');

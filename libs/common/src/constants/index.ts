@@ -1,4 +1,5 @@
 export * from './currency';
+export * from './geospatial.constant';
 export * from './utilisation-report-headers';
 export * from './utilisation-report-reconciliation-status';
 export * from './mongo-db-collections';
@@ -8,3 +9,4 @@ export * from './durable-functions-log.constant';
 export * from './fee-record-status';
 export * from './audit-user-types';
 export * as PAYLOAD_VERIFICATION from './payload-verification';
+export * from './company-registration-number';

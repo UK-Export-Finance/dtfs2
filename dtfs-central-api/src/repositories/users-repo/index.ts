@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { PortalUser } from '@ukef/dtfs2-common';
-import mongoDbClient from '../../drivers/db-client';
+import { mongoDbClient } from '../../drivers/db-client';
 
 /**
  * Gets the portal user with the supplied id

@@ -1,8 +1,9 @@
-const { PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
+const { ObjectId } = require('mongodb');
+const { PAYLOAD_VERIFICATION, MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const assert = require('assert');
-const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const db = require('../../drivers/db-client');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const { DEAL } = require('../../constants');
 
 const sortEligibilityCriteria = (arr, callback) => {
@@ -12,7 +13,7 @@ const sortEligibilityCriteria = (arr, callback) => {
 
 const findEligibilityCriteria = (callback) =>
   new Promise((resolve) => {
-    db.getCollection('eligibilityCriteria').then((collection) => {
+    db.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA).then((collection) => {
       collection.find({ product: { $eq: DEAL.DEAL_TYPE.BSS_EWCS } }).toArray((error, result) => {
         assert.equal(error, null);
         resolve(result);
@@ -27,7 +28,7 @@ const findOneEligibilityCriteria = async (version, callback) => {
     throw new Error('Invalid Version');
   }
 
-  const collection = await db.getCollection('eligibilityCriteria');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA);
   collection.findOne({ $and: [{ version: { $eq: Number(version) } }, { product: DEAL.DEAL_TYPE.BSS_EWCS }] }, (error, result) => {
     assert.equal(error, null);
     callback(result);
@@ -41,7 +42,7 @@ exports.create = async (req, res) => {
 
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
-  const collection = await db.getCollection('eligibilityCriteria');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA);
   const criteria = { ...req?.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
   const eligibilityCriteria = await collection.insertOne(criteria);
   return res.status(200).send(eligibilityCriteria);
@@ -67,7 +68,7 @@ exports.findOne = (req, res) => findOneEligibilityCriteria(Number(req.params.ver
  * @returns {Object} The latest eligibility criteria document.
  */
 const getLatestEligibilityCriteria = async () => {
-  const collection = await db.getCollection('eligibilityCriteria');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA);
   const [latestEligibilityCriteria] = await collection
     .find({ $and: [{ product: { $eq: DEAL.DEAL_TYPE.BSS_EWCS } }, { isInDraft: { $eq: false } }] })
     .sort({ version: -1 })
@@ -90,7 +91,7 @@ exports.update = async (req, res) => {
 
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
-  const collection = await db.getCollection('eligibilityCriteria');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA);
   const status = await collection.updateOne(
     { version: { $eq: Number(req.params.version) } },
     { $set: { criteria: req.body.criteria, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) } },
@@ -100,14 +101,29 @@ exports.update = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-  const collection = await db.getCollection('eligibilityCriteria');
-  const { version } = req.params;
-  const versionNumber = Number(version);
+  const versionNumber = Number(req.params.version);
+  const auditDetails = generatePortalAuditDetails(req.user._id);
 
-  if (!Number.isNaN(versionNumber)) {
-    const status = await collection.deleteOne({ version: { $eq: versionNumber } });
-    return res.status(200).send(status);
+  if (Number.isNaN(versionNumber)) {
+    return res.status(400).send({ status: 400, message: 'Invalid eligibility criteria version number' });
   }
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA);
+  const eligibilityCriteria = await collection.findOne({ version: { $eq: versionNumber } });
 
-  return res.status(400).send({ status: 400, message: 'Invalid eligibility criteria version number' });
+  if (!eligibilityCriteria) {
+    return res.status(404).send({ status: 404, message: 'Eligibility criteria not found' });
+  }
+  try {
+    const deleteResult = await deleteOne({
+      documentId: new ObjectId(eligibilityCriteria._id),
+      collectionName: MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA,
+      db,
+      auditDetails,
+    });
+
+    return res.status(200).send(deleteResult);
+  } catch (error) {
+    console.error('Error deleting eligibility criteria', error);
+    return res.status(500).send({ status: 500, error });
+  }
 };

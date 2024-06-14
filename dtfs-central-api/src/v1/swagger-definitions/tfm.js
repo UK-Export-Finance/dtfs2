@@ -67,11 +67,15 @@
  *   TFMUser:
  *     type: object
  *     properties:
+ *       _id:
+ *         type: string
+ *         example: 5c0a7922c9d89830f4911426
  *       username:
  *         type: string
  *         example: T1_USER_1
  *       email:
- *         type: test@testing.com
+ *         type: string
+ *         example: test@testing.com
  *       teams:
  *         type: array
  *         items:

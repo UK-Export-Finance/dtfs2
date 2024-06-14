@@ -175,7 +175,8 @@ module.exports.disable = (req, res, next) => {
 };
 
 module.exports.remove = (req, res, next) => {
-  remove(req.params._id, (error, status) => {
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+  remove(req.params._id, auditDetails, (error, status) => {
     if (error) {
       next(error);
     } else {
