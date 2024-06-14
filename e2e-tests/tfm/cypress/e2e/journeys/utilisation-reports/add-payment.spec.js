@@ -57,8 +57,9 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
-    cy.get(`[type="checkbox"][id="feeRecordId-${FEE_RECORD_ID_ONE}-reportedPaymentsCurrency-${PAYMENT_CURRENCY}-status-${FEE_RECORD_STATUS}"]`).check();
-    cy.get(`[type="checkbox"][id="feeRecordId-${FEE_RECORD_ID_TWO}-reportedPaymentsCurrency-${PAYMENT_CURRENCY}-status-${FEE_RECORD_STATUS}"]`).check();
+    cy.get(
+      `[type="checkbox"][id="feeRecordIds-${FEE_RECORD_ID_ONE},${FEE_RECORD_ID_TWO}-reportedPaymentsCurrency-${PAYMENT_CURRENCY}-status-${FEE_RECORD_STATUS}"]`,
+    ).check();
     cy.get('[type="submit"]').contains('Add a payment').click();
   });
 
