@@ -27,7 +27,7 @@ export const anAddPaymentViewModel = (): AddPaymentViewModel => ({
   formValues: {
     paymentDate: {},
   },
-  paymentNumber: undefined,
+  paymentNumber: 1,
   recordedPaymentsDetails: [],
   multipleFeeRecordsSelected: false,
 });

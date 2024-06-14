@@ -1,4 +1,9 @@
-import { FeeRecordEntityMockBuilder, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
@@ -17,15 +22,21 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
       .withId(REPORT_ID)
       .withBankId(BANK_ID)
       .build();
+    const payment = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY)
+      .withAmount(60)
+      .withDateReceived(new Date('2023-02-02'))
+      .withReference('REF01234')
+      .build();
     const feeRecordOne = FeeRecordEntityMockBuilder.forReport(undefined)
       .withId(FEE_RECORD_ID_ONE)
-      .withFacilityId('111111111')
+      .withFacilityId('11111111')
       .withExporter('Exporter 1')
       .withPaymentCurrency(PAYMENT_CURRENCY)
       .withFeesPaidToUkefForThePeriod(100)
       .withFeesPaidToUkefForThePeriodCurrency('JPY')
       .withPaymentExchangeRate(2)
       .withStatus('TO_DO')
+      .withPayments([payment])
       .build();
     const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(undefined)
       .withId(FEE_RECORD_ID_TWO)
@@ -36,6 +47,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
       .withPaymentCurrency(PAYMENT_CURRENCY)
       .withPaymentExchangeRate(0.5)
       .withStatus('TO_DO')
+      .withPayments([payment])
       .build();
     report.feeRecords = [feeRecordOne, feeRecordTwo];
 
@@ -68,6 +80,12 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('Total reported payments GBP 450');
   });
 
+  it('should render the recorded payment details table', () => {
+    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().contains('GBP 60');
+    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().contains('2 Feb 2023');
+    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().contains('REF01234');
+  });
+
   it('should display errors when form submitted with invalid values', () => {
     cy.getInputByLabelText('Amount received').type('100');
     cy.getInputByLabelText('Day').type('56');
@@ -76,13 +94,13 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
     cy.contains('button', 'Continue').click();
 
-    cy.contains('a', 'Select payment currency').should('exist');
-    cy.contains('a', 'The date payment received must be a real date').should('exist');
-    cy.contains('a', 'Select add another payment choice').should('exist');
+    cy.get('a').contains('Select payment currency');
+    cy.get('a').contains('The date payment received must be a real date');
+    cy.get('a').contains('Select add another payment choice');
 
-    cy.contains('form', 'Select payment currency').should('exist');
-    cy.contains('form', 'The date payment received must be a real date').should('exist');
-    cy.contains('form', 'Select add another payment choice').should('exist');
+    cy.get('form').contains('Select payment currency');
+    cy.get('form').contains('The date payment received must be a real date');
+    cy.get('form').contains('Select add another payment choice');
 
     cy.getInputByLabelText('Amount received').should('have.value', '100');
     cy.getInputByLabelText('Day').should('have.value', '56');

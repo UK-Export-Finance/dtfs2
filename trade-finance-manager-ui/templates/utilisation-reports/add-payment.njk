@@ -38,7 +38,7 @@
     }) }}
   {% endif %}
   <h2 class="govuk-heading-m">
-    {% if paymentNumber %}
+    {% if paymentNumber > 1 %}
       Payment {{ paymentNumber }} details
     {% else %}
       New payment details

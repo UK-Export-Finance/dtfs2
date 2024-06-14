@@ -6,7 +6,7 @@ import { AddPaymentRequestBody, addPayment } from '.';
 import { AddPaymentErrorsViewModel, AddPaymentViewModel, RecordedPaymentDetailsViewModel } from '../../../types/view-models';
 import * as validation from './add-payment-form-values-validator';
 import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
-import { SelectedFeeRecordsDetailsResponseBody } from '../../../api-response-types';
+import { SelectedFeeRecordsDetailsResponseBody, SelectedFeeRecordsPaymentDetailsResponse } from '../../../api-response-types';
 
 jest.mock('../../../api');
 
@@ -100,6 +100,22 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
       ]);
     });
 
+    it('should set payment number to number of payments plus 1', async () => {
+      // Arrange
+      const { req, res } = httpMocks.createMocks({
+        session: requestSession,
+        params: { reportId: '123' },
+        body: requestBodyForPostFromPremiumPaymentsPage,
+      });
+      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue({ ...aSelectedFeeRecordsDetails(), payments: [] });
+
+      // Act
+      await addPayment(req, res);
+
+      // Assert
+      expect((res._getRenderData() as AddPaymentViewModel).paymentNumber).toEqual(1);
+    });
+
     it('should not display any errors', async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
@@ -170,22 +186,6 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
       expect((res._getRenderData() as AddPaymentViewModel).formValues).toEqual({
         paymentDate: {},
       });
-    });
-
-    it('should set payment number to undefined', async () => {
-      // Arrange
-      const { req, res } = httpMocks.createMocks({
-        session: requestSession,
-        params: { reportId: '123' },
-        body: requestBodyForPostFromPremiumPaymentsPage,
-      });
-      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
-
-      // Act
-      await addPayment(req, res);
-
-      // Assert
-      expect((res._getRenderData() as AddPaymentViewModel).paymentNumber).toEqual(undefined);
     });
 
     it('should set data sort values for reported fee column to order by currency alphabetically then value', async () => {
@@ -322,6 +322,25 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
 
         // Assert
         expect(res._getRenderView()).toEqual('utilisation-reports/add-payment.njk');
+      });
+
+      it('should set payment number to number of payments plus 1', async () => {
+        // Arrange
+        const { req, res } = httpMocks.createMocks({
+          session: requestSession,
+          params: { reportId: '123' },
+          body: addPaymentFormSubmissionRequestBodyWithIncompleteData,
+        });
+        jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue({
+          ...aSelectedFeeRecordsDetails(),
+          payments: [aSelectedFeeRecordsPaymentDetailsResponse(), aSelectedFeeRecordsPaymentDetailsResponse()],
+        });
+
+        // Act
+        await addPayment(req, res);
+
+        // Assert
+        expect((res._getRenderData() as AddPaymentViewModel).paymentNumber).toEqual(3);
       });
 
       it('should set the errors returned from the validator', async () => {
@@ -775,6 +794,13 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
       exporter: 'Export Company',
       reportedFee: { amount: 2000, currency: 'EUR' },
       reportedPayments: { amount: 3000, currency: 'USD' },
+    };
+  }
+
+  function aSelectedFeeRecordsPaymentDetailsResponse(): SelectedFeeRecordsPaymentDetailsResponse {
+    return {
+      value: { currency: 'GBP', amount: 100 },
+      dateReceived: '1912-12-19T00:00:00.000Z',
     };
   }
 });

@@ -126,6 +126,7 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
     }
 
     const selectedFeeRecordDetails = await api.getSelectedFeeRecordsDetails(reportId, feeRecordIds, userToken);
+    const paymentNumber = selectedFeeRecordDetails.payments.length + 1;
     return renderAddPaymentPage(res, {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
@@ -133,7 +134,7 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
       selectedFeeRecordCheckboxIds: checkedCheckboxIds,
       errors,
       formValues: formHasErrors ? formValues : EMPTY_ADD_PAYMENT_FORM_VALUES,
-      paymentNumber: undefined,
+      paymentNumber,
       bank: selectedFeeRecordDetails.bank,
       formattedReportPeriod: getFormattedReportPeriodWithLongMonth(selectedFeeRecordDetails.reportPeriod),
       reportedFeeDetails: mapToSelectedReportedFeesDetailsViewModel(selectedFeeRecordDetails),
