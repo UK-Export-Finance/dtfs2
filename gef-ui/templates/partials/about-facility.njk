@@ -11,6 +11,7 @@
 {% import '../_macros/about-facility/cover-start-date.njk' as coverStartDateSection %}
 {% import '../_macros/about-facility/cover-end-date.njk' as coverEndDateSection %}
 {% import '../_macros/about-facility/cover-start-submission.njk' as coverStartSubmissionSection %}
+{% import '../_macros/about-facility/what-is-a-facility-end-date.njk' as whatIsAFacilityEndDate %}
 
 {% block pageTitle -%}
   About this {{ facilityTypeString }} facility
@@ -126,6 +127,10 @@
               }
             }
           }) }}
+        {% endif %}
+
+        {% if isFacilityEndDateFeatureFlagEnabled %}
+          {{ whatIsAFacilityEndDate.render() }}
         {% endif %}
 
         <div class="govuk-button-group">

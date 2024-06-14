@@ -321,6 +321,7 @@ services:
       - EXTERNAL_API_KEY
       - RATE_LIMIT_THRESHOLD
       - CONTACT_US_EMAIL_ADDRESS
+      - FF_FACILITY_END_DATE_ENABLED
 
   redis:
     image: 'redis:alpine'
