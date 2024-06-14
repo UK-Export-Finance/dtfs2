@@ -1,108 +1,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% import "./fee-record-status.njk" as feeRecordStatus %}
-{% import "../../_macros/table-cell-checkbox.njk" as tableCellCheckbox %}
 {% import "../../_macros/select-all-table-cell-checkbox.njk" as selectAllTableCellCheckbox %}
-
-{% macro renderPremiumPaymentsTableRow(params) %}
-  {% set feeRecordPaymentGroup = params.feeRecordPaymentGroup %}
-
-  {% set feeRecords = feeRecordPaymentGroup.feeRecords %}
-  {% set totalReportedPayments = feeRecordPaymentGroup.totalReportedPayments %}
-  {% set paymentsReceived = feeRecordPaymentGroup.paymentsReceived %}
-  {% set totalPaymentsReceived = feeRecordPaymentGroup.totalPaymentsReceived %}
-  {% set status = feeRecordPaymentGroup.status %}
-  {% set displayStatus = feeRecordPaymentGroup.displayStatus %}
-  {% set checkboxId = feeRecordPaymentGroup.checkboxId %}
-  {% set isChecked = feeRecordPaymentGroup.isChecked %}
-
-  {% for feeRecord in feeRecords %}
-    {% set isFirstRow = loop.index === 1 %}
-    {% set isLastRow = loop.index === feeRecords.length %}
-
-    <tr
-      class="govuk-table__row"
-      data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }}"
-    >
-      <th
-        scope="row"
-        class="govuk-table__header govuk-!-font-weight-regular{{ " no-border" if not isLastRow }}"
-      >
-        {{ feeRecord.facilityId }}
-      </th>
-      <td class="govuk-table__cell{{ " no-border" if not isLastRow }}">
-        {{ feeRecord.exporter }}
-      </td>
-      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastRow }}">
-        {{ feeRecord.reportedFees }}
-      </td>
-      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastRow }}">
-        {{ feeRecord.reportedPayments }}
-      </td>
-
-      {% if isFirstRow %}
-        <td
-          class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastRow }}"
-          data-sort-value="{{ totalReportedPayments.dataSortValue }}"
-        >
-          {{ totalReportedPayments.formattedCurrencyAndAmount }}
-        </td>
-      {% elif isLastRow %}
-        <td class="govuk-table__cell" data-sort-value="{{ totalReportedPayments.dataSortValue }}"></td>
-      {% else %}
-        <td class="govuk-table__cell no-border" data-sort-value="{{ totalReportedPayments.dataSortValue }}"></td>
-      {% endif %}
-      
-      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastRow }}">
-        {% if isFirstRow and paymentsReceived %}
-          <ul class="payments-list">
-            {% for paymentReceived in paymentsReceived %}
-              <li class="payments-list-item">
-                <a href="#">{{ paymentReceived }}</a>
-              </li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-      </td>
-
-      {% if isFirstRow and totalPaymentsReceived %}
-        <td
-          class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastRow }}"
-          data-sort-value="{{ totalPaymentsReceived.dataSortValue }}"
-        >
-          {{ totalPaymentsReceived.formattedCurrencyAndAmount }}
-        </td>
-      {% elif isLastRow %}
-        <td class="govuk-table__cell" data-sort-value="{{ totalPaymentsReceived.dataSortValue }}"></td>
-      {% else %}
-        <td class="govuk-table__cell no-border" data-sort-value="{{ totalPaymentsReceived.dataSortValue }}"></td>
-      {% endif %}
-
-      {% if isFirstRow %}
-        <td class="govuk-table__cell{{ " no-border" if not isLastRow }}" data-sort-value="{{ displayStatus }}">
-          {{ feeRecordStatus.render({
-            status: status,
-            displayStatus: displayStatus
-          }) }}
-        </td>
-      {% elif isLastRow %}
-        <td class="govuk-table__cell" data-sort-value="{{ displayStatus }}"></td>
-      {% else %}
-        <td class="govuk-table__cell no-border" data-sort-value="{{ displayStatus }}"></td>
-      {% endif %}
-
-      <td class="govuk-table__cell{{ " no-border" if not isLastRow }}">
-        {% if isFirstRow %}
-          {% if status === 'TO_DO' or status === 'DOES_NOT_MATCH' %}
-            {{ tableCellCheckbox.render({
-              checkboxId: checkboxId,
-              checked: isChecked
-            }) }}
-          {% endif %}
-        {% endif %}
-      </td>
-    </tr>
-  {% endfor %}
-{% endmacro %}
+{% import "./premium-payments-table-row.njk" as premiumPaymentsTableRow %}
 
 {% macro render(params) %}
   {% set feeRecordPaymentGroups = params.feeRecordPaymentGroups %}
@@ -145,7 +43,7 @@
 
     <tbody class="govuk-table__body">
     {% for feeRecordPaymentGroup in feeRecordPaymentGroups %}
-      {{ renderPremiumPaymentsTableRow({ feeRecordPaymentGroup: feeRecordPaymentGroup }) }}
+      {{ premiumPaymentsTableRow.render({ feeRecordPaymentGroup: feeRecordPaymentGroup }) }}
     {% endfor %}
     </tbody>
   </table>

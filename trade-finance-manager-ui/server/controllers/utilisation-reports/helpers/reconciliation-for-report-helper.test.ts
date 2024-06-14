@@ -111,13 +111,13 @@ describe('reconciliation-for-report-helper', () => {
 
     it('maps the group feeRecords reportedPayments to the view model feeRecords reportedPayments formatted currency and amount', () => {
       // Arrange
-      const firstFeeRecordReportedPayments: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
+      const firstFeeRecordReportedPayments: CurrencyAndAmount = { currency: 'EUR', amount: 314.59 };
       const firstFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), reportedPayments: firstFeeRecordReportedPayments };
-      const firstFeeRecordFormattedReportedPayments = 'GBP 100.00';
+      const firstFeeRecordFormattedReportedPayments = 'EUR 314.59';
 
-      const secondFeeRecordReportedPayments: CurrencyAndAmount = { currency: 'EUR', amount: 314.59 };
+      const secondFeeRecordReportedPayments: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
       const secondFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), reportedPayments: secondFeeRecordReportedPayments };
-      const secondFeeRecordFormattedReportedPayments = 'EUR 314.59';
+      const secondFeeRecordFormattedReportedPayments = 'GBP 100.00';
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
         {
@@ -134,6 +134,34 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].feeRecords).toHaveLength(2);
       expect(viewModel[0].feeRecords[0].reportedPayments).toBe(firstFeeRecordFormattedReportedPayments);
       expect(viewModel[0].feeRecords[1].reportedPayments).toBe(secondFeeRecordFormattedReportedPayments);
+    });
+
+    it('sorts the view model feeRecords reportedPayments by currency first and amount second in ascending order', () => {
+      // Arrange
+      const unsortedFeeRecords: FeeRecordItem[] = [
+        { ...aFeeRecordItem(), reportedPayments: { currency: 'GBP', amount: 100 } }, // after sorting: 'GBP 100.00' at index 1
+        { ...aFeeRecordItem(), reportedPayments: { currency: 'USD', amount: 200 } }, // after sorting: 'USD 200.00' at index 4
+        { ...aFeeRecordItem(), reportedPayments: { currency: 'EUR', amount: 100 } }, // after sorting: 'EUR 100.00' at index 0
+        { ...aFeeRecordItem(), reportedPayments: { currency: 'USD', amount: 100 } }, // after sorting: 'USD 100.00' at index 3
+        { ...aFeeRecordItem(), reportedPayments: { currency: 'GBP', amount: 500 } }, // after sorting: 'GBP 500.00' at index 2
+      ];
+
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
+        {
+          ...aFeeRecordPaymentGroup(),
+          feeRecords: unsortedFeeRecords,
+        },
+      ];
+
+      // Act
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+
+      // Assert
+      expect(viewModel[0].feeRecords[0].reportedPayments).toBe('EUR 100.00');
+      expect(viewModel[0].feeRecords[1].reportedPayments).toBe('GBP 100.00');
+      expect(viewModel[0].feeRecords[2].reportedPayments).toBe('GBP 500.00');
+      expect(viewModel[0].feeRecords[3].reportedPayments).toBe('USD 100.00');
+      expect(viewModel[0].feeRecords[4].reportedPayments).toBe('USD 200.00');
     });
 
     it('maps the group totalReportedPayments to the view model totalReportedPayments formattedCurrencyAndAmount', () => {

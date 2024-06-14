@@ -1,11 +1,7 @@
+import orderBy from 'lodash.orderby';
 import { CurrencyAndAmount, CurrencyAndAmountString, FeeRecordStatus, getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
 import { FeeRecordItem, FeeRecordPaymentGroup } from '../../../api-response-types';
-import {
-  FeeRecordDisplayStatus,
-  FeeRecordPaymentGroupViewModelItem,
-  FeeRecordViewModelItem,
-  SortedAndFormattedCurrencyAndAmount,
-} from '../../../types/view-models';
+import { FeeRecordDisplayStatus, FeeRecordPaymentGroupViewModelItem, FeeRecordViewModelItem } from '../../../types/view-models';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
 import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 
@@ -17,6 +13,8 @@ const feeRecordStatusToDisplayStatus: Record<FeeRecordStatus, FeeRecordDisplaySt
   RECONCILED: 'RECONCILED',
 };
 
+const sortFeeRecordsByReportedPayments = (feeRecords: FeeRecordItem[]): FeeRecordItem[] =>
+  orderBy(feeRecords, [({ reportedPayments }) => reportedPayments.currency, ({ reportedPayments }) => reportedPayments.amount], ['asc']);
 /**
  * Maps the fee record items to the fee record view model items
  * @param feeRecordItems - The fee record items
@@ -46,27 +44,17 @@ const mapPaymentItemsToPaymentViewModelItems = (paymentsReceived: CurrencyAndAmo
   return paymentsReceived.map(getFormattedCurrencyAndAmount);
 };
 
-const mapFeeRecordPaymentGroupsToTotalReportedPayments = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): SortedAndFormattedCurrencyAndAmount[] => {
-  const totalReportedPaymentsWithIndexAsKey = feeRecordPaymentGroups.map(({ totalReportedPayments }, index) => ({ ...totalReportedPayments, key: index }));
-  const totalReportedPaymentsDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(totalReportedPaymentsWithIndexAsKey);
+type SortableFeeRecordPaymentGroupProperty = 'totalReportedPayments' | 'totalPaymentsReceived';
 
-  return feeRecordPaymentGroups.map(({ totalReportedPayments }, index) => ({
-    formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(totalReportedPayments),
-    dataSortValue: totalReportedPaymentsDataSortValueMap[index],
-  }));
+const getDataSortValueMapForFeeRecordPaymentGroupProperty = (
+  feeRecordPaymentGroups: FeeRecordPaymentGroup[],
+  property: SortableFeeRecordPaymentGroupProperty,
+) => {
+  const propertyWithIndexAsKey = feeRecordPaymentGroups.map((group, index) => ({ ...group[property], key: index }));
+  return getKeyToCurrencyAndAmountSortValueMap(propertyWithIndexAsKey);
 };
 
-const mapFeeRecordPaymentGroupsToTotalPaymentsReceived = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): SortedAndFormattedCurrencyAndAmount[] => {
-  const totalPaymentsReceivedWithIndexAsKey = feeRecordPaymentGroups.map(({ totalPaymentsReceived }, index) => ({ ...totalPaymentsReceived, key: index }));
-  const totalPaymentsReceivedDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(totalPaymentsReceivedWithIndexAsKey);
-
-  return feeRecordPaymentGroups.map(({ totalPaymentsReceived }, index) => ({
-    formattedCurrencyAndAmount: totalPaymentsReceived ? getFormattedCurrencyAndAmount(totalPaymentsReceived) : undefined,
-    dataSortValue: totalPaymentsReceivedDataSortValueMap[index],
-  }));
-};
-
-const mapFeeRecordItemsToCheckboxId = (feeRecords: FeeRecordItem[], status: FeeRecordStatus): PremiumPaymentsTableCheckboxId => {
+const getCheckboxIdForFeeRecordsAndStatus = (feeRecords: FeeRecordItem[], status: FeeRecordStatus): PremiumPaymentsTableCheckboxId => {
   const feeRecordIdList = feeRecords.map(({ id }) => id).join(',');
   const reportedPaymentsCurrency = feeRecords[0].reportedPayments.currency;
   return `feeRecordIds-${feeRecordIdList}-reportedPaymentsCurrency-${reportedPaymentsCurrency}-status-${status}`;
@@ -76,25 +64,32 @@ export const mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems = (
   feeRecordPaymentGroups: FeeRecordPaymentGroup[],
   isCheckboxChecked: (checkboxId: string) => boolean,
 ): FeeRecordPaymentGroupViewModelItem[] => {
-  const totalReportedPayments = mapFeeRecordPaymentGroupsToTotalReportedPayments(feeRecordPaymentGroups);
-  const totalPaymentsReceived = mapFeeRecordPaymentGroupsToTotalPaymentsReceived(feeRecordPaymentGroups);
+  const totalReportedPaymentsDataSortValueMap = getDataSortValueMapForFeeRecordPaymentGroupProperty(feeRecordPaymentGroups, 'totalReportedPayments');
+  const totalPaymentsReceivedDataSortValueMap = getDataSortValueMapForFeeRecordPaymentGroupProperty(feeRecordPaymentGroups, 'totalPaymentsReceived');
 
   return feeRecordPaymentGroups.map((feeRecordPaymentGroup, index) => {
-    const { status, feeRecords, paymentsReceived } = feeRecordPaymentGroup;
+    const { status, feeRecords, paymentsReceived, totalReportedPayments, totalPaymentsReceived } = feeRecordPaymentGroup;
 
     const displayStatus = feeRecordStatusToDisplayStatus[status];
 
-    const checkboxId = mapFeeRecordItemsToCheckboxId(feeRecords, status);
+    const checkboxId = getCheckboxIdForFeeRecordsAndStatus(feeRecords, status);
     const isChecked = isCheckboxChecked(checkboxId);
 
-    const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecords);
+    const feeRecordsSortedByReportedPayments = sortFeeRecordsByReportedPayments(feeRecords);
+    const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordsSortedByReportedPayments);
     const paymentViewModelItems = mapPaymentItemsToPaymentViewModelItems(paymentsReceived);
 
     return {
       feeRecords: feeRecordViewModelItems,
-      totalReportedPayments: totalReportedPayments[index],
+      totalReportedPayments: {
+        formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(totalReportedPayments),
+        dataSortValue: totalReportedPaymentsDataSortValueMap[index],
+      },
       paymentsReceived: paymentViewModelItems,
-      totalPaymentsReceived: totalPaymentsReceived[index],
+      totalPaymentsReceived: {
+        formattedCurrencyAndAmount: totalPaymentsReceived ? getFormattedCurrencyAndAmount(totalPaymentsReceived) : undefined,
+        dataSortValue: totalPaymentsReceivedDataSortValueMap[index],
+      },
       status,
       displayStatus,
       checkboxId,
