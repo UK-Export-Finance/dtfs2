@@ -37,24 +37,22 @@ const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetail
         throw new DocumentNotDeletedError();
       }
 
-      if (documentsToDeleteIds.length) {
-        const logsToInsert: WithoutId<DeletionAuditLog>[] = documentsToDeleteIds.map((deletedDocumentId) => ({
-          collectionName,
-          deletedDocumentId,
-          auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-          expireAt: add(new Date(), { seconds: DELETION_AUDIT_LOGS_TTL_SECONDS }),
-        }));
+      const logsToInsert: WithoutId<DeletionAuditLog>[] = documentsToDeleteIds.map((deletedDocumentId) => ({
+        collectionName,
+        deletedDocumentId,
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+        expireAt: add(new Date(), { seconds: DELETION_AUDIT_LOGS_TTL_SECONDS }),
+      }));
 
-        const deletionCollection = await db.getCollection('deletion-audit-logs');
-        const insertResult = await deletionCollection.insertMany(logsToInsert, { session });
-        if (!insertResult.acknowledged) {
-          throw new WriteConcernError();
-        }
+      const deletionCollection = await db.getCollection('deletion-audit-logs');
+      const insertResult = await deletionCollection.insertMany(logsToInsert, { session });
+      if (!insertResult.acknowledged) {
+        throw new WriteConcernError();
+      }
 
-        const deleteResult = await collection.deleteMany({ _id: { $in: documentsToDeleteIds } }, { session });
-        if (!(deleteResult.acknowledged && deleteResult.deletedCount === documentsToDeleteIds.length)) {
-          throw new WriteConcernError();
-        }
+      const deleteResult = await collection.deleteMany({ _id: { $in: documentsToDeleteIds } }, { session });
+      if (!(deleteResult.acknowledged && deleteResult.deletedCount === documentsToDeleteIds.length)) {
+        throw new WriteConcernError();
       }
     }, transactionOptions);
   } catch (error) {
