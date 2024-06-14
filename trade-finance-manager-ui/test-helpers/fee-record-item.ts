@@ -12,17 +12,4 @@ export const aFeeRecordItem = (): FeeRecordItem => ({
     currency: 'EUR',
     amount: 100.0,
   },
-  totalReportedPayments: {
-    currency: 'EUR',
-    amount: 100.0,
-  },
-  paymentsReceived: {
-    currency: 'JPY',
-    amount: 123.456,
-  },
-  totalPaymentsReceived: {
-    currency: 'JPY',
-    amount: 654.321,
-  },
-  status: 'TO_DO',
 });

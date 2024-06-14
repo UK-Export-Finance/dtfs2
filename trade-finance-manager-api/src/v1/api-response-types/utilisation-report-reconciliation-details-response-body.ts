@@ -1,13 +1,17 @@
 import { IsoDateTimeStamp, ReportPeriod, UtilisationReportReconciliationStatus, FeeRecordStatus, CurrencyAndAmount } from '@ukef/dtfs2-common';
 
-export type FeeRecordItem = {
+type FeeRecordItem = {
   id: number;
   facilityId: string;
   exporter: string;
   reportedFees: CurrencyAndAmount;
   reportedPayments: CurrencyAndAmount;
+};
+
+type FeeRecordPaymentGroup = {
+  feeRecords: FeeRecordItem[];
   totalReportedPayments: CurrencyAndAmount;
-  paymentsReceived: CurrencyAndAmount | null;
+  paymentsReceived: CurrencyAndAmount[] | null;
   totalPaymentsReceived: CurrencyAndAmount | null;
   status: FeeRecordStatus;
 };
@@ -21,5 +25,5 @@ export type UtilisationReportReconciliationDetailsResponseBody = {
   status: UtilisationReportReconciliationStatus;
   reportPeriod: ReportPeriod;
   dateUploaded: IsoDateTimeStamp;
-  feeRecords: FeeRecordItem[];
+  feeRecordPaymentGroups: FeeRecordPaymentGroup[];
 };
