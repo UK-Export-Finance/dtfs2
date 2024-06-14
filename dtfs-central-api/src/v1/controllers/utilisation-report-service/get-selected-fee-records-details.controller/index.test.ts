@@ -1,7 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { FeeRecordEntityMockBuilder, SelectedFeeRecordsDetails, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
-import { In } from 'typeorm';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { GetSelectedFeeRecordDetailsRequest, getSelectedFeeRecordDetails } from '.';
 import { aReportPeriod } from '../../../../../test-helpers/test-data/report-period';
@@ -22,6 +21,8 @@ describe('get selected fee records details controller', () => {
       },
     });
 
+  const findReportSpy = jest.spyOn(UtilisationReportRepo, 'findOneByIdWithFeeRecordsFilteredById');
+
   afterEach(() => {
     jest.resetAllMocks();
   });
@@ -29,18 +30,14 @@ describe('get selected fee records details controller', () => {
   it('responds with a 404 when there is no report with the given id', async () => {
     // Arrange
     const { req, res } = getHttpMocks([1, 2]);
-    const findReportSpy = jest.spyOn(UtilisationReportRepo, 'findOne').mockResolvedValue(null);
+    findReportSpy.mockResolvedValue(null);
 
     // Act
     await getSelectedFeeRecordDetails(req, res);
 
     // Assert
     expect(findReportSpy).toHaveBeenCalledTimes(1);
-    expect(findReportSpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: expect.objectContaining({ id: REPORT_ID }) as { id: number },
-      }),
-    );
+    expect(findReportSpy).toHaveBeenCalledWith(REPORT_ID, [1, 2]);
     expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
   });
 
@@ -51,7 +48,7 @@ describe('get selected fee records details controller', () => {
     const feeRecordWithPaymentCurrencyPounds = FeeRecordEntityMockBuilder.forReport(reportEntity).withId(1).withPaymentCurrency('GBP').build();
     const feeRecordWithPaymentCurrencyEuros = FeeRecordEntityMockBuilder.forReport(reportEntity).withId(2).withPaymentCurrency('EUR').build();
     reportEntity.feeRecords = [feeRecordWithPaymentCurrencyPounds, feeRecordWithPaymentCurrencyEuros];
-    jest.spyOn(UtilisationReportRepo, 'findOne').mockResolvedValue(reportEntity);
+    findReportSpy.mockResolvedValue(reportEntity);
 
     // Act
     await getSelectedFeeRecordDetails(req, res);
@@ -79,7 +76,7 @@ describe('get selected fee records details controller', () => {
     const reportEntity = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
     const feeRecord = FeeRecordEntityMockBuilder.forReport(reportEntity).withId(1).withPaymentCurrency('GBP').build();
     reportEntity.feeRecords = [feeRecord];
-    jest.spyOn(UtilisationReportRepo, 'findOne').mockResolvedValue(reportEntity);
+    findReportSpy.mockResolvedValue(reportEntity);
 
     // Act
     await getSelectedFeeRecordDetails(req, res);
@@ -87,29 +84,6 @@ describe('get selected fee records details controller', () => {
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
     expect(res._getData()).toEqual(expect.stringContaining('All selected fee records must belong to the requested report'));
-  });
-
-  it('finds the fee records with the supplied ids and joins them to the report', async () => {
-    // Arrange
-    const feeRecordIds = [1, 2];
-    const { req, res } = getHttpMocks(feeRecordIds);
-    const reportEntity = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
-    const feeRecords = feeRecordIds.map((id) => FeeRecordEntityMockBuilder.forReport(reportEntity).withId(id).build());
-    reportEntity.feeRecords = feeRecords;
-    const findOneSpy = jest.spyOn(UtilisationReportRepo, 'findOne').mockResolvedValue(reportEntity);
-    jest.mocked(getBankNameById).mockResolvedValue('Test Bank');
-
-    // Act
-    await getSelectedFeeRecordDetails(req, res);
-
-    // Assert
-    expect(findOneSpy).toHaveBeenCalledWith({
-      where: {
-        id: REPORT_ID,
-        feeRecords: { id: In(feeRecordIds) },
-      },
-      relations: { feeRecords: true },
-    });
   });
 
   it('responds with a 200 and the mapped selected fee record details', async () => {
@@ -134,7 +108,7 @@ describe('get selected fee records details controller', () => {
       .withFeesPaidToUkefForThePeriod(200)
       .build();
     reportEntity.feeRecords = [feeRecordOne, feeRecordTwo];
-    jest.spyOn(UtilisationReportRepo, 'findOne').mockResolvedValue(reportEntity);
+    findReportSpy.mockResolvedValue(reportEntity);
     jest.mocked(getBankNameById).mockResolvedValue('Test Bank');
 
     // Act
@@ -142,6 +116,7 @@ describe('get selected fee records details controller', () => {
 
     // Assert
     expect(getBankNameById).toHaveBeenCalledWith('999');
+    expect(findReportSpy).toHaveBeenCalledWith(REPORT_ID, [1, 2]);
     expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
     expect(res._getData()).toEqual<SelectedFeeRecordsDetails>({
       reportPeriod,

@@ -1,6 +1,5 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { In } from 'typeorm';
 import { SelectedFeeRecordsDetails } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
@@ -30,15 +29,7 @@ export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetai
       throw new InvalidPayloadError('No fee records selected');
     }
 
-    const utilisationReport = await UtilisationReportRepo.findOne({
-      where: {
-        id: Number(reportId),
-        feeRecords: {
-          id: In(selectedFeeRecordIds),
-        },
-      },
-      relations: { feeRecords: true },
-    });
+    const utilisationReport = await UtilisationReportRepo.findOneByIdWithFeeRecordsFilteredById(Number(reportId), selectedFeeRecordIds);
 
     if (!utilisationReport) {
       throw new NotFoundError(`Failed to find a report with id '${reportId}'`);

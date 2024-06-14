@@ -2,12 +2,9 @@ import { FeeRecordEntity, PaymentEntity, UtilisationReportEntity } from '@ukef/d
 import { FeeRecordItem, FeeRecordPaymentGroup, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
-import {
-  mapFeeRecordEntitiesToTotalReportedPayments,
-  mapFeeRecordEntityToReportedFees,
-  mapFeeRecordEntityToReportedPayments,
-} from '../../../../mapping/fee-record-mapper';
-import { mapPaymentEntitiesToTotalPaymentsReceived, mapPaymentEntityToPaymentsReceived } from '../../../../mapping/payment-mapper';
+import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from '../../../../mapping/fee-record-mapper';
+import { mapPaymentEntityToCurrencyAndAmount } from '../../../../mapping/payment-mapper';
+import { calculateTotalCurrencyAndAmount } from '../../../../helpers';
 
 const mapFeeRecordEntityToFeeRecordItem = (feeRecord: FeeRecordEntity): FeeRecordItem => ({
   id: feeRecord.id,
@@ -69,10 +66,13 @@ const mapFeeRecordEntitiesToFeeRecordPaymentGroups = (feeRecordEntities: FeeReco
     const { status } = feeRecords[0];
 
     if (payments.length === 0) {
-      // If there are no payments, then there
+      // If there are no payments, there is only one fee record in the group
+      const feeRecordItem = mapFeeRecordEntityToFeeRecordItem(feeRecords[0]);
+      const totalReportedPayments = feeRecordItem.reportedPayments;
+
       return {
-        feeRecords: [mapFeeRecordEntityToFeeRecordItem(feeRecords[0])],
-        totalReportedPayments: mapFeeRecordEntitiesToTotalReportedPayments(feeRecords),
+        feeRecords: [feeRecordItem],
+        totalReportedPayments,
         paymentsReceived: null,
         totalPaymentsReceived: null,
         status,
@@ -80,10 +80,12 @@ const mapFeeRecordEntitiesToFeeRecordPaymentGroups = (feeRecordEntities: FeeReco
     }
 
     const feeRecordItems = feeRecords.map(mapFeeRecordEntityToFeeRecordItem);
-    const totalReportedPayments = mapFeeRecordEntitiesToTotalReportedPayments(feeRecords);
 
-    const paymentsReceived = payments.map(mapPaymentEntityToPaymentsReceived);
-    const totalPaymentsReceived = mapPaymentEntitiesToTotalPaymentsReceived(payments);
+    const allReportedPayments = feeRecordItems.map(({ reportedPayments }) => reportedPayments);
+    const totalReportedPayments = calculateTotalCurrencyAndAmount(allReportedPayments);
+
+    const paymentsReceived = payments.map(mapPaymentEntityToCurrencyAndAmount);
+    const totalPaymentsReceived = calculateTotalCurrencyAndAmount(paymentsReceived);
 
     return {
       feeRecords: feeRecordItems,

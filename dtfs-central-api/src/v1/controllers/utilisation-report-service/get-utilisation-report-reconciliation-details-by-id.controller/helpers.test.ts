@@ -1,7 +1,10 @@
 import {
+  Currency,
   CurrencyAndAmount,
+  FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
+  PaymentEntity,
   PaymentEntityMockBuilder,
   ReportPeriod,
   UtilisationReportEntityMockBuilder,
@@ -64,6 +67,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         .build();
 
       const bankName = 'Test bank';
+      jest.mocked(getBankNameById).mockResolvedValue('Different bank');
       when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
 
       // Act
@@ -84,143 +88,140 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       });
     });
 
-    describe('when the report has a single fee record with no attached payments', () => {
+    describe('when the report has multiple fee records with no attached payments', () => {
       const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
-      const feeRecordId = 1;
-      const feeRecordStatus: FeeRecordStatus = 'TO_DO';
-      const feeRecordFacilityId = '12345678';
-      const feeRecordExporter = 'Test exporter';
+      const currency: Currency = 'GBP';
+      const amount = 100;
 
-      const feeRecordReportedFees: CurrencyAndAmount = {
-        currency: 'GBP',
-        amount: 100,
-      };
+      const createFeeRecord = (id: number, status: FeeRecordStatus, facilityId: string, exporter: string): FeeRecordEntity =>
+        FeeRecordEntityMockBuilder.forReport(uploadedReport)
+          .withId(id)
+          .withStatus(status)
+          .withFacilityId(facilityId)
+          .withExporter(exporter)
+          .withFeesPaidToUkefForThePeriod(amount)
+          .withFeesPaidToUkefForThePeriodCurrency(currency)
+          .withPaymentCurrency(currency)
+          .build();
 
-      const feeRecordTotalReportedPayments: CurrencyAndAmount = {
-        currency: 'GBP',
-        amount: 100,
-      };
-
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(uploadedReport)
-        .withId(feeRecordId)
-        .withStatus(feeRecordStatus)
-        .withFacilityId(feeRecordFacilityId)
-        .withExporter(feeRecordExporter)
-        .withFeesPaidToUkefForThePeriod(feeRecordReportedFees.amount)
-        .withFeesPaidToUkefForThePeriodCurrency(feeRecordReportedFees.currency)
-        .withPaymentCurrency(feeRecordReportedFees.currency)
-        .build();
-      uploadedReport.feeRecords = [feeRecord];
+      const feeRecords = [
+        createFeeRecord(1, 'TO_DO', '12345678', 'Test exporter 1'),
+        createFeeRecord(2, 'MATCH', '87654321', 'Test exporter 2'),
+        createFeeRecord(3, 'DOES_NOT_MATCH', '10203040', 'Test exporter 3'),
+      ];
+      uploadedReport.feeRecords = feeRecords;
 
       beforeEach(() => {
-        when(getBankNameById).calledWith(bankId).mockResolvedValue('Test bank');
+        jest.mocked(getBankNameById).mockResolvedValue('Test bank');
       });
 
-      it('maps the utilisation report fee records to the feeRecordPaymentGroups array with length 1', async () => {
+      it('maps the utilisation report fee records to the on object with as many feeRecordPaymentGroups as there are fee records on the report', async () => {
         // Act
         const mappedReport = await mapUtilisationReportEntityToReconciliationDetails(uploadedReport);
 
         // Assert
-        expect(mappedReport.feeRecordPaymentGroups).toHaveLength(1);
+        expect(mappedReport.feeRecordPaymentGroups).toHaveLength(feeRecords.length);
       });
 
-      it('sets the feeRecordPaymentGroups item status to the status of the fee record', async () => {
+      it('sets the feeRecordPaymentGroup status to the status of the fee record at the same index', async () => {
         // Act
         const mappedReport = await mapUtilisationReportEntityToReconciliationDetails(uploadedReport);
 
         // Assert
-        expect(mappedReport.feeRecordPaymentGroups[0].status).toBe(feeRecordStatus);
+        mappedReport.feeRecordPaymentGroups.forEach((group, index) => {
+          expect(group.status).toBe(feeRecords[index].status);
+        });
       });
 
-      it('sets the feeRecordPaymentGroups item feeRecordItems to the mapped fee record', async () => {
+      it('sets the feeRecordPaymentGroup feeRecords to the mapped fee record at the same index', async () => {
+        // Act
+        const mappedReport = await mapUtilisationReportEntityToReconciliationDetails(uploadedReport);
+
+        const feeRecordItems: FeeRecordItem[] = feeRecords.map((feeRecord) => ({
+          id: feeRecord.id,
+          facilityId: feeRecord.facilityId,
+          exporter: feeRecord.exporter,
+          reportedFees: { currency, amount },
+          reportedPayments: { currency, amount },
+        }));
+
+        // Assert
+        mappedReport.feeRecordPaymentGroups.forEach((group, index) => {
+          expect(group.feeRecords).toEqual([feeRecordItems[index]]);
+        });
+      });
+
+      it('sets the feeRecordPaymentGroup totalReportedPayments to the same value as the fee record reported payments', async () => {
         // Act
         const mappedReport = await mapUtilisationReportEntityToReconciliationDetails(uploadedReport);
 
         // Assert
-        expect(mappedReport.feeRecordPaymentGroups[0].feeRecords).toEqual<FeeRecordItem[]>([
-          {
-            id: feeRecordId,
-            facilityId: feeRecordFacilityId,
-            exporter: feeRecordExporter,
-            reportedFees: feeRecordReportedFees,
-            reportedPayments: feeRecordReportedFees,
-          },
-        ]);
+        mappedReport.feeRecordPaymentGroups.forEach((group) => {
+          expect(group.totalReportedPayments).toEqual({ currency, amount });
+        });
       });
 
-      it('sets the feeRecordPaymentGroups item totalReportedPayments to the total reported fees', async () => {
+      it('sets the feeRecordPaymentGroup paymentsReceived to null', async () => {
         // Act
         const mappedReport = await mapUtilisationReportEntityToReconciliationDetails(uploadedReport);
 
         // Assert
-        expect(mappedReport.feeRecordPaymentGroups[0].totalReportedPayments).toEqual(feeRecordTotalReportedPayments);
+        mappedReport.feeRecordPaymentGroups.forEach((group) => {
+          expect(group.paymentsReceived).toBeNull();
+        });
       });
 
-      it('sets the feeRecordPaymentGroups item paymentsReceived to null', async () => {
+      it('sets the feeRecordPaymentGroup totalPaymentsReceived to null', async () => {
         // Act
         const mappedReport = await mapUtilisationReportEntityToReconciliationDetails(uploadedReport);
 
         // Assert
-        expect(mappedReport.feeRecordPaymentGroups[0].paymentsReceived).toBeNull();
-      });
-
-      it('sets the feeRecordPaymentGroups item totalPaymentsReceived to null', async () => {
-        // Act
-        const mappedReport = await mapUtilisationReportEntityToReconciliationDetails(uploadedReport);
-
-        // Assert
-        expect(mappedReport.feeRecordPaymentGroups[0].totalPaymentsReceived).toBeNull();
+        mappedReport.feeRecordPaymentGroups.forEach((group) => {
+          expect(group.totalPaymentsReceived).toBeNull();
+        });
       });
     });
 
-    describe('when the report has a single fee record with one attached payment', () => {
+    describe('when the report has multiple fee records with the same attached payments', () => {
       const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
-      const feeRecordId = 1;
-      const feeRecordStatus: FeeRecordStatus = 'TO_DO';
-      const feeRecordFacilityId = '12345678';
-      const feeRecordExporter = 'Test exporter';
+      const paymentCurrency: Currency = 'GBP';
+      const paymentAmount = 100;
 
-      const feeRecordReportedFees: CurrencyAndAmount = {
-        currency: 'GBP',
-        amount: 100,
-      };
+      const payments = [
+        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(1).withAmount(paymentAmount).build(),
+        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(2).withAmount(paymentAmount).build(),
+      ];
+      const totalPaymentsReceivedAmount = paymentAmount * payments.length;
 
-      const feeRecordTotalReportedPayments: CurrencyAndAmount = {
-        currency: 'GBP',
-        amount: 100,
-      };
+      const feeRecordStatus: FeeRecordStatus = 'DOES_NOT_MATCH';
 
-      const paymentsReceived: CurrencyAndAmount = {
-        currency: 'GBP',
-        amount: 100,
-      };
+      const createFeeRecord = (id: number, facilityId: string, exporter: string): FeeRecordEntity =>
+        FeeRecordEntityMockBuilder.forReport(uploadedReport)
+          .withId(id)
+          .withStatus(feeRecordStatus)
+          .withFacilityId(facilityId)
+          .withExporter(exporter)
+          .withFeesPaidToUkefForThePeriod(paymentAmount)
+          .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
+          .withPaymentCurrency(paymentCurrency)
+          .withPayments(payments)
+          .build();
 
-      const totalPaymentsReceived: CurrencyAndAmount = {
-        currency: 'GBP',
-        amount: 100,
-      };
-
-      const payment = PaymentEntityMockBuilder.forCurrency(paymentsReceived.currency).withAmount(paymentsReceived.amount).build();
-
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(uploadedReport)
-        .withId(feeRecordId)
-        .withStatus(feeRecordStatus)
-        .withFacilityId(feeRecordFacilityId)
-        .withExporter(feeRecordExporter)
-        .withFeesPaidToUkefForThePeriod(feeRecordReportedFees.amount)
-        .withFeesPaidToUkefForThePeriodCurrency(feeRecordReportedFees.currency)
-        .withPaymentCurrency(feeRecordReportedFees.currency)
-        .withPayments([payment])
-        .build();
-      uploadedReport.feeRecords = [feeRecord];
+      const feeRecords = [
+        createFeeRecord(1, '12345678', 'Test exporter 1'),
+        createFeeRecord(2, '87654321', 'Test exporter 2'),
+        createFeeRecord(3, '10203040', 'Test exporter 3'),
+      ];
+      uploadedReport.feeRecords = feeRecords;
+      const totalReportedPaymentsAmount = paymentAmount * feeRecords.length;
 
       beforeEach(() => {
-        when(getBankNameById).calledWith(bankId).mockResolvedValue('Test bank');
+        jest.mocked(getBankNameById).mockResolvedValue('Test bank');
       });
 
-      it('maps the utilisation report fee records to the feeRecordPaymentGroups array with length 1', async () => {
+      it('maps the utilisation report to an object with only one fee record payment group', async () => {
         // Act
         const mappedReport = await mapUtilisationReportEntityToReconciliationDetails(uploadedReport);
 
@@ -236,45 +237,139 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         expect(mappedReport.feeRecordPaymentGroups[0].status).toBe(feeRecordStatus);
       });
 
-      it('sets the feeRecordPaymentGroups item feeRecordItems to the mapped fee record', async () => {
+      it('sets the feeRecordPaymentGroup feeRecords to the mapped fee record at the same index', async () => {
+        // Act
+        const mappedReport = await mapUtilisationReportEntityToReconciliationDetails(uploadedReport);
+
+        const feeRecordItems: FeeRecordItem[] = feeRecords.map((feeRecord) => ({
+          id: feeRecord.id,
+          facilityId: feeRecord.facilityId,
+          exporter: feeRecord.exporter,
+          reportedFees: { currency: paymentCurrency, amount: paymentAmount },
+          reportedPayments: { currency: paymentCurrency, amount: paymentAmount },
+        }));
+
+        // Assert
+        expect(mappedReport.feeRecordPaymentGroups[0].feeRecords).toEqual(feeRecordItems);
+      });
+
+      it('sets the feeRecordPaymentGroup totalReportedPayments to the total of the fee record reported payments', async () => {
         // Act
         const mappedReport = await mapUtilisationReportEntityToReconciliationDetails(uploadedReport);
 
         // Assert
-        expect(mappedReport.feeRecordPaymentGroups[0].feeRecords).toEqual<FeeRecordItem[]>([
-          {
-            id: feeRecordId,
-            facilityId: feeRecordFacilityId,
-            exporter: feeRecordExporter,
-            reportedFees: feeRecordReportedFees,
-            reportedPayments: feeRecordReportedFees,
-          },
-        ]);
+        expect(mappedReport.feeRecordPaymentGroups[0].totalReportedPayments).toEqual({ amount: totalReportedPaymentsAmount, currency: paymentCurrency });
       });
 
-      it('sets the feeRecordPaymentGroups item totalReportedPayments to the total reported fees', async () => {
+      it('sets the feeRecordPaymentGroup paymentsReceived to the mapped payments', async () => {
         // Act
         const mappedReport = await mapUtilisationReportEntityToReconciliationDetails(uploadedReport);
 
         // Assert
-        expect(mappedReport.feeRecordPaymentGroups[0].totalReportedPayments).toEqual(feeRecordTotalReportedPayments);
+        expect(mappedReport.feeRecordPaymentGroups[0].paymentsReceived).toHaveLength(payments.length);
+        mappedReport.feeRecordPaymentGroups[0].paymentsReceived!.forEach((paymentsReceivedItem, index) => {
+          const expectedPaymentsReceived: CurrencyAndAmount = { currency: payments[index].currency, amount: payments[index].amount };
+          expect(paymentsReceivedItem).toEqual(expectedPaymentsReceived);
+        });
       });
 
-      it('sets the feeRecordPaymentGroups item paymentsReceived to the mapped payment', async () => {
+      it('sets the feeRecordPaymentGroup totalPaymentsReceived to the total of the payment amounts', async () => {
         // Act
         const mappedReport = await mapUtilisationReportEntityToReconciliationDetails(uploadedReport);
 
         // Assert
-        expect(mappedReport.feeRecordPaymentGroups[0].paymentsReceived).toEqual<CurrencyAndAmount[]>([paymentsReceived]);
+        expect(mappedReport.feeRecordPaymentGroups[0].totalPaymentsReceived).toEqual({ currency: paymentCurrency, amount: totalPaymentsReceivedAmount });
+      });
+    });
+
+    describe('when the report has multiple linked fee records and payments', () => {
+      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+
+      const paymentAmount = 100;
+
+      const feeRecordIdGenerator = idGenerator();
+      const paymentIdGenerator = idGenerator();
+
+      const createFeeRecord = (currency: Currency, payments: PaymentEntity[]): FeeRecordEntity =>
+        FeeRecordEntityMockBuilder.forReport(uploadedReport)
+          .withId(feeRecordIdGenerator.next().value)
+          .withStatus('DOES_NOT_MATCH')
+          .withFacilityId('12345678')
+          .withExporter('Test exporter')
+          .withFeesPaidToUkefForThePeriod(paymentAmount)
+          .withFeesPaidToUkefForThePeriodCurrency(currency)
+          .withPaymentCurrency(currency)
+          .withPayments(payments)
+          .build();
+
+      const createPayment = (currency: Currency): PaymentEntity =>
+        PaymentEntityMockBuilder.forCurrency(currency).withId(paymentIdGenerator.next().value).withAmount(paymentAmount).build();
+
+      // First group of linked fee records and payments
+      const firstPaymentCurrency: Currency = 'EUR';
+      const firstPayments = [createPayment(firstPaymentCurrency), createPayment(firstPaymentCurrency)];
+      const firstFeeRecords = [
+        createFeeRecord(firstPaymentCurrency, firstPayments),
+        createFeeRecord(firstPaymentCurrency, firstPayments),
+        createFeeRecord(firstPaymentCurrency, firstPayments),
+      ];
+
+      // Second group of linked fee records and payments
+      const secondPaymentCurrency: Currency = 'GBP';
+      const secondPayments = [createPayment(secondPaymentCurrency)];
+      const secondFeeRecords = [
+        createFeeRecord(secondPaymentCurrency, secondPayments),
+        createFeeRecord(secondPaymentCurrency, secondPayments),
+        createFeeRecord(secondPaymentCurrency, secondPayments),
+        createFeeRecord(secondPaymentCurrency, secondPayments),
+      ];
+
+      uploadedReport.feeRecords = [...firstFeeRecords, ...secondFeeRecords];
+
+      beforeEach(() => {
+        jest.mocked(getBankNameById).mockResolvedValue('Test bank');
       });
 
-      it('sets the feeRecordPaymentGroups item totalPaymentsReceived to the total payment amount', async () => {
+      it('maps the utilisation report to an object containing two groups', async () => {
         // Act
         const mappedReport = await mapUtilisationReportEntityToReconciliationDetails(uploadedReport);
 
         // Assert
-        expect(mappedReport.feeRecordPaymentGroups[0].totalPaymentsReceived).toEqual(totalPaymentsReceived);
+        expect(mappedReport.feeRecordPaymentGroups).toHaveLength(2);
       });
+
+      it('maps the report to groups containing the linked fee records and payments', async () => {
+        // Act
+        const mappedReport = await mapUtilisationReportEntityToReconciliationDetails(uploadedReport);
+
+        // Assert - First group
+        const firstGroup = mappedReport.feeRecordPaymentGroups[0];
+
+        expect(firstGroup.feeRecords).toHaveLength(firstFeeRecords.length);
+        const feeRecordIdsInFirstGroup = firstGroup.feeRecords.map(({ id }) => id);
+        firstFeeRecords.forEach(({ id }) => expect(feeRecordIdsInFirstGroup).toContain(id));
+
+        expect(firstGroup.paymentsReceived).toHaveLength(firstPayments.length);
+        firstGroup.paymentsReceived!.forEach(({ currency }) => expect(currency).toBe(firstPaymentCurrency));
+
+        // Assert - Second group
+        const secondGroup = mappedReport.feeRecordPaymentGroups[1];
+
+        expect(secondGroup.feeRecords).toHaveLength(secondFeeRecords.length);
+        const feeRecordIdsInSecondGroup = secondGroup.feeRecords.map(({ id }) => id);
+        secondFeeRecords.forEach(({ id }) => expect(feeRecordIdsInSecondGroup).toContain(id));
+
+        expect(secondGroup.paymentsReceived).toHaveLength(secondPayments.length);
+        secondGroup.paymentsReceived!.forEach(({ currency }) => expect(currency).toBe(secondPaymentCurrency));
+      });
+
+      function* idGenerator(): Generator<number, number, unknown> {
+        let id = 1;
+        while (true) {
+          yield id;
+          id += 1;
+        }
+      }
     });
   });
 });

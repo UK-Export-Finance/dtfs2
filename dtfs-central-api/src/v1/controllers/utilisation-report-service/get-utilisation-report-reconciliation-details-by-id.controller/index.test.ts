@@ -23,6 +23,11 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
 
     const getBankNameByIdSpy = jest.spyOn(banksRepo, 'getBankNameById');
 
+    beforeEach(() => {
+      const reconciliationCompletedReportWithDifferentId = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withId(50).build();
+      findOneSpy.mockResolvedValue(reconciliationCompletedReportWithDifferentId);
+    });
+
     afterEach(() => {
       jest.resetAllMocks();
     });
