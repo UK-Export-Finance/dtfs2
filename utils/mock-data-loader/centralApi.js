@@ -34,6 +34,7 @@ const createFacility = async (facility, dealId, user) => {
         dealId,
       },
       user,
+      auditDetails: mockDataLoaderPortalAuditDetails,
     },
   }).catch((error) => {
     throw new ApiError({ cause: error });

@@ -63,7 +63,7 @@ const shouldUpdateFacility = (facility) => {
   return false;
 };
 
-const updateIssuedFacilities = async (user, fromStatus, deal, canUpdateIssuedFacilitiesCoverStartDates, newStatus) => {
+const updateIssuedFacilities = async (user, fromStatus, deal, canUpdateIssuedFacilitiesCoverStartDates, newStatus, auditDetails) => {
   const fromStatusIsApprovedStatus =
     fromStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS || fromStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
 
@@ -121,7 +121,7 @@ const updateIssuedFacilities = async (user, fromStatus, deal, canUpdateIssuedFac
             }
           }
 
-          await facilitiesController.update(deal._id, facilityId, facility, user);
+          await facilitiesController.update(deal._id, facilityId, facility, user, auditDetails);
 
           updatedCount += 1;
         }
