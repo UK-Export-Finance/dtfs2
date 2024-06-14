@@ -181,8 +181,6 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - PORTAL_API_URL=http://portal-api:5001
-      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
-      - COMPANIES_HOUSE_API_KEY
       - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_API_KEY
       - TFM_API_KEY
@@ -275,8 +273,6 @@ services:
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
-      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
-      - COMPANIES_HOUSE_API_KEY
       - APIM_TFS_URL
       - APIM_TFS_KEY
       - APIM_TFS_VALUE
@@ -315,8 +311,6 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - PORTAL_API_URL=http://portal-api:5001
-      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
-      - COMPANIES_HOUSE_API_KEY
       - EXTERNAL_API_URL=http://external-api:5002
       - SESSION_SECRET
       - TZ=Europe/London

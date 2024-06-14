@@ -172,8 +172,6 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - PORTAL_API_URL=http://portal-api:5001
-      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
-      - COMPANIES_HOUSE_API_KEY
       - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_API_KEY
       - TFM_API_KEY
@@ -237,6 +235,7 @@ services:
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
       - UTILISATION_REPORT_DUE_EMAIL_SCHEDULE
       - UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE
+      - CHANGE_STREAM_ENABLED
 
   external-api:
     build:
@@ -259,8 +258,6 @@ services:
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - CORS_ORIGIN
-      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
-      - COMPANIES_HOUSE_API_KEY
       - APIM_TFS_URL
       - APIM_TFS_KEY
       - APIM_TFS_VALUE
@@ -300,8 +297,6 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - PORTAL_API_URL=http://portal-api:5001
-      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
-      - COMPANIES_HOUSE_API_KEY
       - EXTERNAL_API_URL=http://external-api:5002
       - REDIS_HOSTNAME=redis
       - SESSION_SECRET

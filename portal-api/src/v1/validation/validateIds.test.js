@@ -1,7 +1,4 @@
-const { isValidMongoId, isValidRegex, isValidCurrencyCode, isValidCompaniesHouseNumber, isValidMonth, isValidYear } = require('./validateIds');
-const { COMPANIES_HOUSE_NUMBER } = require('../../../api-tests/fixtures/companies-house-number');
-
-const { VALID, VALID_LAST_LETTER, VALID_LETTERS, VALID_LETTERS_NI, INVALID_TOO_SHORT, INVALID_SPECIAL_CHARACTER, INVALID_WITH_SPACE } = COMPANIES_HOUSE_NUMBER;
+const { isValidMongoId, isValidRegex, isValidCurrencyCode, isValidMonth, isValidYear } = require('./validateIds');
 
 describe('validateIds', () => {
   describe('isValidMongoId', () => {
@@ -51,50 +48,6 @@ describe('validateIds', () => {
       const result = isValidCurrencyCode('GBP');
 
       expect(result).toEqual(true);
-    });
-  });
-
-  describe('companiesHouseNumberRegex', () => {
-    it(`should return true for company number ${VALID}`, () => {
-      const result = isValidCompaniesHouseNumber(VALID);
-
-      expect(result).toEqual(true);
-    });
-
-    it(`should return true for company number ${VALID_LETTERS}`, () => {
-      const result = isValidCompaniesHouseNumber(VALID_LETTERS);
-
-      expect(result).toEqual(true);
-    });
-
-    it(`should return true for company number ${VALID_LAST_LETTER}`, () => {
-      const result = isValidCompaniesHouseNumber(VALID_LAST_LETTER);
-
-      expect(result).toEqual(true);
-    });
-
-    it(`should return true for company number ${VALID_LETTERS_NI}`, () => {
-      const result = isValidCompaniesHouseNumber(VALID_LETTERS_NI);
-
-      expect(result).toEqual(true);
-    });
-
-    it('should return false for company number which is too short', () => {
-      const result = isValidCompaniesHouseNumber(INVALID_TOO_SHORT);
-
-      expect(result).toEqual(false);
-    });
-
-    it('should return false for company number which has a special character', () => {
-      const result = isValidCompaniesHouseNumber(INVALID_SPECIAL_CHARACTER);
-
-      expect(result).toEqual(false);
-    });
-
-    it('should return false for company number which has a special character', () => {
-      const result = isValidCompaniesHouseNumber(INVALID_WITH_SPACE);
-
-      expect(result).toEqual(false);
     });
   });
 

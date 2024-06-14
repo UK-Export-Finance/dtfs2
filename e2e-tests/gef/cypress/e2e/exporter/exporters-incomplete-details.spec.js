@@ -1,8 +1,8 @@
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
 import applicationDetails from '../pages/application-details';
 import dashboardPage from '../pages/dashboard-page';
 import companiesHouse from '../pages/companies-house';
 import exportersAddress from '../pages/exporters-address';
-
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 let url;
@@ -32,7 +32,7 @@ context('Incomplete exporter section - application details page', () => {
     it('add the exporter', () => {
       cy.visit(url);
       applicationDetails.exporterDetailsLink().click();
-      companiesHouse.regNumberField().type('06771815');
+      companiesHouse.regNumberField().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
       companiesHouse.continueButton().click();
       exportersAddress.noRadioButton().click();
       exportersAddress.continueButton().click();
