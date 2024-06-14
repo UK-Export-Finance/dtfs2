@@ -11,9 +11,10 @@ import {
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 import { validateAddPaymentRequestFormValues } from './add-payment-form-values-validator';
-import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
+import { AddPaymentFormValues, ValidatedAddPaymentFormValues } from '../../../types/add-payment-form-values';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { getKeyToCurrencyAndAmountSortValueMap } from '../helpers';
+import { parseValidatedAddPaymentFormValues } from './parse-validated-add-payment-form-values';
 
 export type AddPaymentRequestBody = Record<PremiumPaymentsTableCheckboxId, 'on'> & {
   paymentCurrency?: string;
@@ -30,15 +31,6 @@ export type AddPaymentRequestBody = Record<PremiumPaymentsTableCheckboxId, 'on'>
 export type AddPaymentRequest = CustomExpressRequest<{
   reqBody: AddPaymentRequestBody;
 }>;
-
-type ValidatedAddPaymentFormValues = Required<AddPaymentFormValues> & {
-  addAnotherPayment: 'true' | 'false';
-  paymentDate: {
-    day: string;
-    month: string;
-    year: string;
-  };
-};
 
 const EMPTY_ADD_PAYMENT_ERRORS: AddPaymentErrorsViewModel = { errorSummary: [] };
 const EMPTY_ADD_PAYMENT_FORM_VALUES: AddPaymentFormValues = { paymentDate: {} };
@@ -115,7 +107,8 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
 
     if (isAddingPayment && !formHasErrors) {
       const { addAnotherPayment, ...paymentFormValues } = formValues as ValidatedAddPaymentFormValues;
-      await api.addPaymentToFeeRecords(reportId, paymentFormValues, feeRecordIds, user, userToken);
+      const parsedAddPaymentFormValues = parseValidatedAddPaymentFormValues(paymentFormValues);
+      await api.addPaymentToFeeRecords(reportId, parsedAddPaymentFormValues, feeRecordIds, user, userToken);
       if (addAnotherPayment !== 'true') {
         return res.redirect(`/utilisation-reports/${reportId}`);
       }

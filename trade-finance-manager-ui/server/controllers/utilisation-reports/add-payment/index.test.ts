@@ -640,22 +640,22 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
           body: addPaymentFormSubmissionRequestBody,
         });
 
-        const addPaymentFormValues: AddPaymentFormValues = {
-          paymentCurrency: addPaymentFormSubmissionRequestBody.paymentCurrency,
-          paymentAmount: addPaymentFormSubmissionRequestBody.paymentAmount,
-          paymentDate: {
-            day: addPaymentFormSubmissionRequestBody['paymentDate-day'],
-            month: addPaymentFormSubmissionRequestBody['paymentDate-month'],
-            year: addPaymentFormSubmissionRequestBody['paymentDate-year'],
-          },
-          paymentReference: addPaymentFormSubmissionRequestBody.paymentReference,
-        };
-
         // Act
         await addPayment(req, res);
 
         // Assert
-        expect(addPaymentToFeeRecordsSpy).toHaveBeenCalledWith(reportId, addPaymentFormValues, feeRecordIds, requestSession.user, requestSession.userToken);
+        expect(addPaymentToFeeRecordsSpy).toHaveBeenCalledWith(
+          reportId,
+          {
+            paymentCurrency: CURRENCY.GBP,
+            paymentAmount: 100,
+            datePaymentReceived: new Date('2024-5-1'),
+            paymentReference: 'A payment reference',
+          },
+          feeRecordIds,
+          requestSession.user,
+          requestSession.userToken,
+        );
       });
 
       it("redirects to premium payments if 'addAnotherPayment' is set to 'false'", async () => {
