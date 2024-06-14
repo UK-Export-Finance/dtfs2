@@ -37,7 +37,6 @@ const newDeal = aDeal({
 });
 
 describe('/v1/deals', () => {
-  let noRoles;
   let anHSBCMaker;
   let aBarclaysMaker;
   let aSuperuser;
@@ -45,7 +44,6 @@ describe('/v1/deals', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
@@ -67,7 +65,6 @@ describe('/v1/deals', () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).get(dealsUrl),
       successStatusCode: 200,
     });
@@ -91,7 +88,6 @@ describe('/v1/deals', () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withBankName('Barclays Bank').withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withBankName('Barclays Bank').withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(aDealUrl),
       successStatusCode: 200,
     });
@@ -165,7 +161,7 @@ describe('/v1/deals', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put(newDeal).to('/v1/deals/620a1aa095a618b12da38c7b');
+      const { status } = await as(testUsers).put(newDeal).to('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });
@@ -310,7 +306,7 @@ describe('/v1/deals', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).post(newDeal).to('/v1/deals');
+      const { status } = await as(testUsers).post(newDeal).to('/v1/deals');
 
       expect(status).toEqual(401);
     });
@@ -364,7 +360,7 @@ describe('/v1/deals', () => {
 
     it('401s requests that do not come from a user with role=maker', async () => {
       await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const { status } = await as(noRoles).remove('/v1/deals/620a1aa095a618b12da38c7b');
+      const { status } = await as(testUsers).remove('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });

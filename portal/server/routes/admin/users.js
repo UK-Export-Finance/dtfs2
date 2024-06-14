@@ -53,11 +53,7 @@ router.get('/users/create', async (req, res) => {
 
 // Admin - user create
 router.post('/users/create', async (req, res) => {
-  const { firstname, surname, roles, bank } = req.body;
-
-  if (!(firstname && surname && roles && bank)) {
-    return res.redirect('/admin/users/create');
-  }
+  const { bank } = req.body;
 
   const { userToken } = requestParams(req);
   const user = convertUserFormDataToRequest(req.body);

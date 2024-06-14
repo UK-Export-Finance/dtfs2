@@ -939,15 +939,13 @@ const getReportSummariesByBankAndYear = async (userToken, bankId, year) => {
 /**
  *
  * @param {string} reportId - The report id
- * @param {import('./types/add-payment-form-values').AddPaymentFormValues} addPaymentFormValues - The submitted form values
+ * @param {import('./types/add-payment-form-values').ParsedAddPaymentFormValues} parsedAddPaymentFormValues - The parsed submitted form values
  * @param {number[]} feeRecordIds - The list of fee record ids to add the payment to
  * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user adding the payment
  * @param {string} userToken - The user token
  */
-const addPaymentToFeeRecords = async (reportId, addPaymentFormValues, feeRecordIds, user, userToken) => {
-  const { paymentCurrency, paymentAmount, paymentDate, paymentReference } = addPaymentFormValues;
-
-  const datePaymentReceived = new Date(`${paymentDate.year}-${paymentDate.month}-${paymentDate.day}`);
+const addPaymentToFeeRecords = async (reportId, parsedAddPaymentFormValues, feeRecordIds, user, userToken) => {
+  const { paymentCurrency, paymentAmount, datePaymentReceived, paymentReference } = parsedAddPaymentFormValues;
 
   const response = await axios({
     method: 'post',
@@ -956,7 +954,7 @@ const addPaymentToFeeRecords = async (reportId, addPaymentFormValues, feeRecordI
     data: {
       feeRecordIds,
       paymentCurrency,
-      paymentAmount: Number(paymentAmount),
+      paymentAmount,
       datePaymentReceived,
       paymentReference,
       user,
