@@ -1,7 +1,7 @@
 const difference = require('lodash/difference');
 const { FEE_RECORD_STATUS } = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
-const { aFeeRecordPaymentGroupItem, aFeeRecordViewModelItem } = require('../../../test-helpers');
+const { aFeeRecordPaymentGroup, aFeeRecordViewModelItem } = require('../../../test-helpers');
 
 jest.mock('../../../server/api');
 
@@ -16,7 +16,7 @@ describe(component, () => {
    */
   const aFeeRecordPaymentGroupList = () => [
     {
-      ...aFeeRecordPaymentGroupItem(),
+      ...aFeeRecordPaymentGroup(),
       feeRecords: [
         {
           ...aFeeRecordViewModelItem(),
@@ -109,11 +109,11 @@ describe(component, () => {
     const feeRecordItems = feeRecordIds.map((id) => ({ ...aFeeRecordViewModelItem(), id }));
     const feeRecordPaymentGroups = [
       {
-        ...aFeeRecordPaymentGroupItem(),
+        ...aFeeRecordPaymentGroup(),
         feeRecords: [feeRecordItems[0], feeRecordItems[1]],
       },
       {
-        ...aFeeRecordPaymentGroupItem(),
+        ...aFeeRecordPaymentGroup(),
         feeRecords: [feeRecordItems[2]],
       },
     ];
@@ -133,7 +133,7 @@ describe(component, () => {
     const feeRecordItem = { ...aFeeRecordViewModelItem(), id: feeRecordId, facilityId };
     const feeRecordPaymentGroups = [
       {
-        ...aFeeRecordPaymentGroupItem(),
+        ...aFeeRecordPaymentGroup(),
         feeRecords: [feeRecordItem],
       },
     ];
@@ -150,7 +150,7 @@ describe(component, () => {
     const feeRecordItem = { ...aFeeRecordViewModelItem(), id: feeRecordId, exporter };
     const feeRecordPaymentGroups = [
       {
-        ...aFeeRecordPaymentGroupItem(),
+        ...aFeeRecordPaymentGroup(),
         feeRecords: [feeRecordItem],
       },
     ];
@@ -167,7 +167,7 @@ describe(component, () => {
     const feeRecordItem = { ...aFeeRecordViewModelItem(), id: feeRecordId, reportedFees };
     const feeRecordPaymentGroups = [
       {
-        ...aFeeRecordPaymentGroupItem(),
+        ...aFeeRecordPaymentGroup(),
         feeRecords: [feeRecordItem],
       },
     ];
@@ -185,7 +185,7 @@ describe(component, () => {
     const feeRecordItem = { ...aFeeRecordViewModelItem(), id: feeRecordId, reportedPayments };
     const feeRecordPaymentGroups = [
       {
-        ...aFeeRecordPaymentGroupItem(),
+        ...aFeeRecordPaymentGroup(),
         feeRecords: [feeRecordItem],
       },
     ];
@@ -207,7 +207,7 @@ describe(component, () => {
     };
     const feeRecordPaymentGroups = [
       {
-        ...aFeeRecordPaymentGroupItem(),
+        ...aFeeRecordPaymentGroup(),
         feeRecords: feeRecordItems,
         totalReportedPayments,
       },
@@ -238,7 +238,7 @@ describe(component, () => {
     const paymentsReceived = ['GBP 100.00'];
     const feeRecordPaymentGroups = [
       {
-        ...aFeeRecordPaymentGroupItem(),
+        ...aFeeRecordPaymentGroup(),
         feeRecords: feeRecordItems,
         paymentsReceived,
       },
@@ -267,7 +267,7 @@ describe(component, () => {
     const paymentsReceived = ['GBP 100.00', 'GBP 200.00', 'GBP 300.00'];
     const feeRecordPaymentGroups = [
       {
-        ...aFeeRecordPaymentGroupItem(),
+        ...aFeeRecordPaymentGroup(),
         feeRecords: feeRecordItems,
         paymentsReceived,
       },
@@ -286,7 +286,7 @@ describe(component, () => {
     const paymentsReceived = undefined;
     const feeRecordPaymentGroups = [
       {
-        ...aFeeRecordPaymentGroupItem(),
+        ...aFeeRecordPaymentGroup(),
         feeRecords: feeRecordItems,
         paymentsReceived,
       },
@@ -308,7 +308,7 @@ describe(component, () => {
     };
     const feeRecordPaymentGroups = [
       {
-        ...aFeeRecordPaymentGroupItem(),
+        ...aFeeRecordPaymentGroup(),
         feeRecords: feeRecordItems,
         totalPaymentsReceived,
       },
@@ -338,7 +338,7 @@ describe(component, () => {
     const checkboxId = 'some-checkbox-id';
     const feeRecordPaymentGroups = [
       {
-        ...aFeeRecordPaymentGroupItem(),
+        ...aFeeRecordPaymentGroup(),
         status: feeRecordStatus,
         checkboxId,
       },
@@ -354,7 +354,7 @@ describe(component, () => {
       const checkboxId = 'some-checkbox-id';
       const feeRecordPaymentGroups = [
         {
-          ...aFeeRecordPaymentGroupItem(),
+          ...aFeeRecordPaymentGroup(),
           status: feeRecordStatus,
           checkboxId,
         },
@@ -372,7 +372,7 @@ describe(component, () => {
     const checkboxId = 'some-checkbox-id';
     const feeRecordPaymentGroups = [
       {
-        ...aFeeRecordPaymentGroupItem(),
+        ...aFeeRecordPaymentGroup(),
         feeRecords: feeRecordItems,
         checkboxId,
       },
@@ -396,7 +396,7 @@ describe(component, () => {
     const checkboxId = 'some-checkbox-id';
     const feeRecordPaymentGroups = [
       {
-        ...aFeeRecordPaymentGroupItem(),
+        ...aFeeRecordPaymentGroup(),
         status: FEE_RECORD_STATUS.TO_DO,
         checkboxId,
         isChecked: true,
@@ -411,7 +411,7 @@ describe(component, () => {
     const checkboxId = 'some-checkbox-id';
     const feeRecordPaymentGroups = [
       {
-        ...aFeeRecordPaymentGroupItem(),
+        ...aFeeRecordPaymentGroup(),
         status: FEE_RECORD_STATUS.TO_DO,
         checkboxId,
         isChecked: false,

@@ -1,5 +1,5 @@
 import { FeeRecordEntity, PaymentEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { FeeRecordItem, FeeRecordPaymentGroupItem, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
+import { FeeRecordItem, FeeRecordPaymentGroup, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 import {
@@ -62,13 +62,14 @@ const getFeeRecordPaymentEntityGroupsFromFeeRecordEntities = (feeRecords: FeeRec
   return Object.values(paymentIdKeyToGroupMap);
 };
 
-const mapFeeRecordEntitiesToFeeRecordPaymentGroupItems = (feeRecordEntities: FeeRecordEntity[]): FeeRecordPaymentGroupItem[] => {
+const mapFeeRecordEntitiesToFeeRecordPaymentGroups = (feeRecordEntities: FeeRecordEntity[]): FeeRecordPaymentGroup[] => {
   const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(feeRecordEntities);
 
   return feeRecordPaymentEntityGroups.map(({ feeRecords, payments }) => {
     const { status } = feeRecords[0];
 
     if (payments.length === 0) {
+      // If there are no payments, then there
       return {
         feeRecords: [mapFeeRecordEntityToFeeRecordItem(feeRecords[0])],
         totalReportedPayments: mapFeeRecordEntitiesToTotalReportedPayments(feeRecords),
@@ -115,7 +116,7 @@ export const mapUtilisationReportEntityToReconciliationDetails = async (
     throw new NotFoundError(`Failed to find a bank with id '${bankId}'`);
   }
 
-  const feeRecordPaymentGroups = mapFeeRecordEntitiesToFeeRecordPaymentGroupItems(feeRecords);
+  const feeRecordPaymentGroups = mapFeeRecordEntitiesToFeeRecordPaymentGroups(feeRecords);
 
   return {
     reportId: id,

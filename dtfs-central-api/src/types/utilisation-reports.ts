@@ -87,7 +87,7 @@ export type FeeRecordItem = {
   reportedPayments: CurrencyAndAmount;
 };
 
-export type FeeRecordPaymentGroupItem = {
+export type FeeRecordPaymentGroup = {
   feeRecords: FeeRecordItem[];
   totalReportedPayments: CurrencyAndAmount;
   paymentsReceived: CurrencyAndAmount[] | null;
@@ -104,7 +104,7 @@ export type UtilisationReportReconciliationDetails = {
   status: UtilisationReportReconciliationStatus;
   reportPeriod: ReportPeriod;
   dateUploaded: Date;
-  feeRecordPaymentGroups: FeeRecordPaymentGroupItem[];
+  feeRecordPaymentGroups: FeeRecordPaymentGroup[];
 };
 
 export type NewPaymentDetails = {

@@ -6,9 +6,9 @@ import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems } from '../helpers';
 import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 import { getAndClearAddPaymentFieldsFromRedirectSessionData } from './get-and-clear-add-payment-fields-from-redirect-session-data';
-import { FeeRecordPaymentGroupItem } from '../../../api-response-types';
+import { FeeRecordPaymentGroup } from '../../../api-response-types';
 
-const feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived = (feeRecordPaymentGroup: FeeRecordPaymentGroupItem[]): boolean =>
+const feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived = (feeRecordPaymentGroup: FeeRecordPaymentGroup[]): boolean =>
   feeRecordPaymentGroup.some(({ paymentsReceived }) => paymentsReceived !== null);
 
 const renderUtilisationReportReconciliationForReport = (res: Response, viewModel: UtilisationReportReconciliationForReportViewModel) =>

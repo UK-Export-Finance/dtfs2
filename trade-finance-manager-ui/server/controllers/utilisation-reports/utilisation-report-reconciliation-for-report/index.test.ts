@@ -5,7 +5,7 @@ import api from '../../../api';
 import { getUtilisationReportReconciliationByReportId } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { aFeeRecordPaymentGroupItem, aUtilisationReportReconciliationDetailsResponse } from '../../../../test-helpers';
+import { aFeeRecordPaymentGroup, aUtilisationReportReconciliationDetailsResponse } from '../../../../test-helpers';
 import { UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
 import { ErrorSummaryViewModel, FeeRecordPaymentGroupViewModelItem, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 
@@ -145,7 +145,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
       const utilisationReportReconciliationDetails: UtilisationReportReconciliationDetailsResponseBody = {
         ...aUtilisationReportReconciliationDetailsResponse(),
-        feeRecordPaymentGroups: [aFeeRecordPaymentGroupItem()],
+        feeRecordPaymentGroups: [aFeeRecordPaymentGroup()],
       };
 
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
@@ -170,12 +170,12 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         ...aUtilisationReportReconciliationDetailsResponse(),
         feeRecordPaymentGroups: [
           {
-            ...aFeeRecordPaymentGroupItem(),
+            ...aFeeRecordPaymentGroup(),
             paymentsReceived: null,
             totalPaymentsReceived: null,
           },
           {
-            ...aFeeRecordPaymentGroupItem(),
+            ...aFeeRecordPaymentGroup(),
             paymentsReceived: [{ currency: 'GBP', amount: 100 }],
             totalPaymentsReceived: { currency: 'GBP', amount: 100 },
           },
@@ -201,12 +201,12 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         ...aUtilisationReportReconciliationDetailsResponse(),
         feeRecordPaymentGroups: [
           {
-            ...aFeeRecordPaymentGroupItem(),
+            ...aFeeRecordPaymentGroup(),
             paymentsReceived: null,
             totalPaymentsReceived: null,
           },
           {
-            ...aFeeRecordPaymentGroupItem(),
+            ...aFeeRecordPaymentGroup(),
             paymentsReceived: null,
             totalPaymentsReceived: null,
           },

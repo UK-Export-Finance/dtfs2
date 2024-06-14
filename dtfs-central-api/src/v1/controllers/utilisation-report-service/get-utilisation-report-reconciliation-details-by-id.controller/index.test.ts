@@ -5,7 +5,7 @@ import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, ReportPeriod, Uti
 import { GetUtilisationReportReconciliationDetailsByIdRequest, getUtilisationReportReconciliationDetailsById } from '.';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import * as banksRepo from '../../../../repositories/banks-repo';
-import { FeeRecordItem, FeeRecordPaymentGroupItem, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
+import { FeeRecordItem, FeeRecordPaymentGroup, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
 
 console.error = jest.fn();
 
@@ -193,7 +193,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
         },
       ];
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
         {
           feeRecords: feeRecordItems,
           totalReportedPayments: {

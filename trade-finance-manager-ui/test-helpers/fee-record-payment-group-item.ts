@@ -1,6 +1,6 @@
-import { FeeRecordPaymentGroupItem } from '../server/api-response-types';
+import { FeeRecordPaymentGroup } from '../server/api-response-types';
 
-export const aFeeRecordPaymentGroupItem = (): FeeRecordPaymentGroupItem => ({
+export const aFeeRecordPaymentGroup = (): FeeRecordPaymentGroup => ({
   feeRecords: [
     {
       id: 1,

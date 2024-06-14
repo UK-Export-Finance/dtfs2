@@ -1,7 +1,7 @@
 import { Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems } from './reconciliation-for-report-helper';
-import { FeeRecordItem, FeeRecordPaymentGroupItem } from '../../../api-response-types';
-import { aFeeRecordPaymentGroupItem, aFeeRecordItem } from '../../../../test-helpers';
+import { FeeRecordItem, FeeRecordPaymentGroup } from '../../../api-response-types';
+import { aFeeRecordPaymentGroup, aFeeRecordItem } from '../../../../test-helpers';
 
 describe('reconciliation-for-report-helper', () => {
   describe('mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems', () => {
@@ -15,9 +15,9 @@ describe('reconciliation-for-report-helper', () => {
       const secondFeeRecordId = 30;
       const secondFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), id: secondFeeRecordId };
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
         {
-          ...aFeeRecordPaymentGroupItem(),
+          ...aFeeRecordPaymentGroup(),
           feeRecords: [firstFeeRecord, secondFeeRecord],
         },
       ];
@@ -40,9 +40,9 @@ describe('reconciliation-for-report-helper', () => {
       const secondFeeRecordFacilityId = '87654321';
       const secondFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), facilityId: secondFeeRecordFacilityId };
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
         {
-          ...aFeeRecordPaymentGroupItem(),
+          ...aFeeRecordPaymentGroup(),
           feeRecords: [firstFeeRecord, secondFeeRecord],
         },
       ];
@@ -65,9 +65,9 @@ describe('reconciliation-for-report-helper', () => {
       const secondFeeRecordExporter = 'Test exporter 2';
       const secondFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), exporter: secondFeeRecordExporter };
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
         {
-          ...aFeeRecordPaymentGroupItem(),
+          ...aFeeRecordPaymentGroup(),
           feeRecords: [firstFeeRecord, secondFeeRecord],
         },
       ];
@@ -92,9 +92,9 @@ describe('reconciliation-for-report-helper', () => {
       const secondFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), reportedFees: secondFeeRecordReportedFees };
       const secondFeeRecordFormattedReportedFees = 'EUR 314.59';
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
         {
-          ...aFeeRecordPaymentGroupItem(),
+          ...aFeeRecordPaymentGroup(),
           feeRecords: [firstFeeRecord, secondFeeRecord],
         },
       ];
@@ -119,9 +119,9 @@ describe('reconciliation-for-report-helper', () => {
       const secondFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), reportedPayments: secondFeeRecordReportedPayments };
       const secondFeeRecordFormattedReportedPayments = 'EUR 314.59';
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
         {
-          ...aFeeRecordPaymentGroupItem(),
+          ...aFeeRecordPaymentGroup(),
           feeRecords: [firstFeeRecord, secondFeeRecord],
         },
       ];
@@ -141,9 +141,9 @@ describe('reconciliation-for-report-helper', () => {
       const totalReportedPayments: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
       const totalReportedPaymentsFormattedCurrencyAndAmount = 'GBP 100.00';
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
         {
-          ...aFeeRecordPaymentGroupItem(),
+          ...aFeeRecordPaymentGroup(),
           totalReportedPayments,
         },
       ];
@@ -163,11 +163,11 @@ describe('reconciliation-for-report-helper', () => {
       const thirdTotalReportedPayments: CurrencyAndAmount = { currency: 'GBP', amount: 200 }; // dataSortValue = 3
       const fourthTotalReportedPayments: CurrencyAndAmount = { currency: 'EUR', amount: 50 }; // dataSortValue = 0
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
-        { ...aFeeRecordPaymentGroupItem(), totalReportedPayments: firstTotalReportedPayments },
-        { ...aFeeRecordPaymentGroupItem(), totalReportedPayments: secondTotalReportedPayments },
-        { ...aFeeRecordPaymentGroupItem(), totalReportedPayments: thirdTotalReportedPayments },
-        { ...aFeeRecordPaymentGroupItem(), totalReportedPayments: fourthTotalReportedPayments },
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
+        { ...aFeeRecordPaymentGroup(), totalReportedPayments: firstTotalReportedPayments },
+        { ...aFeeRecordPaymentGroup(), totalReportedPayments: secondTotalReportedPayments },
+        { ...aFeeRecordPaymentGroup(), totalReportedPayments: thirdTotalReportedPayments },
+        { ...aFeeRecordPaymentGroup(), totalReportedPayments: fourthTotalReportedPayments },
       ];
 
       // Act
@@ -183,7 +183,7 @@ describe('reconciliation-for-report-helper', () => {
 
     it('sets the view model paymentsReceived to undefined when the group paymentsReceived is null', () => {
       // Arrange
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [{ ...aFeeRecordPaymentGroupItem(), paymentsReceived: null }];
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), paymentsReceived: null }];
 
       // Act
       const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
@@ -198,9 +198,9 @@ describe('reconciliation-for-report-helper', () => {
       const paymentsReceived: CurrencyAndAmount[] = [{ currency: 'GBP', amount: 314.59 }];
       const paymentsReceivedFormattedCurrencyAndAmount = 'GBP 314.59';
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
         {
-          ...aFeeRecordPaymentGroupItem(),
+          ...aFeeRecordPaymentGroup(),
           paymentsReceived,
         },
       ];
@@ -215,9 +215,9 @@ describe('reconciliation-for-report-helper', () => {
 
     it('sets the view model totalPaymentsReceived formattedCurrencyAndAmount to undefined when the group totalPaymentsReceived is null', () => {
       // Arrange
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
         {
-          ...aFeeRecordPaymentGroupItem(),
+          ...aFeeRecordPaymentGroup(),
           totalPaymentsReceived: null,
         },
       ];
@@ -235,9 +235,9 @@ describe('reconciliation-for-report-helper', () => {
       const totalPaymentsReceived: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
       const totalPaymentsReceivedFormattedCurrencyAndAmount = 'GBP 100.00';
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
         {
-          ...aFeeRecordPaymentGroupItem(),
+          ...aFeeRecordPaymentGroup(),
           totalPaymentsReceived,
         },
       ];
@@ -257,11 +257,11 @@ describe('reconciliation-for-report-helper', () => {
       const thirdTotalPaymentsReceived: CurrencyAndAmount = { currency: 'GBP', amount: 200 }; // dataSortValue = 3
       const fourthTotalPaymentsReceived: CurrencyAndAmount = { currency: 'EUR', amount: 50 }; // dataSortValue = 0
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [
-        { ...aFeeRecordPaymentGroupItem(), totalPaymentsReceived: firstTotalPaymentsReceived },
-        { ...aFeeRecordPaymentGroupItem(), totalPaymentsReceived: secondTotalPaymentsReceived },
-        { ...aFeeRecordPaymentGroupItem(), totalPaymentsReceived: thirdTotalPaymentsReceived },
-        { ...aFeeRecordPaymentGroupItem(), totalPaymentsReceived: fourthTotalPaymentsReceived },
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
+        { ...aFeeRecordPaymentGroup(), totalPaymentsReceived: firstTotalPaymentsReceived },
+        { ...aFeeRecordPaymentGroup(), totalPaymentsReceived: secondTotalPaymentsReceived },
+        { ...aFeeRecordPaymentGroup(), totalPaymentsReceived: thirdTotalPaymentsReceived },
+        { ...aFeeRecordPaymentGroup(), totalPaymentsReceived: fourthTotalPaymentsReceived },
       ];
 
       // Act
@@ -278,7 +278,7 @@ describe('reconciliation-for-report-helper', () => {
     it('maps the group status to the view model status', () => {
       // Arrange
       const status: FeeRecordStatus = 'TO_DO';
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [{ ...aFeeRecordPaymentGroupItem(), status }];
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), status }];
 
       // Act
       const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
@@ -298,7 +298,7 @@ describe('reconciliation-for-report-helper', () => {
       "maps the fee record status '$feeRecordStatus' to the view model display status '%feeRecordDisplayStatus'",
       ({ feeRecordStatus, feeRecordDisplayStatus }) => {
         // Arrange
-        const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [{ ...aFeeRecordPaymentGroupItem(), status: feeRecordStatus }];
+        const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), status: feeRecordStatus }];
 
         // Act
         const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
@@ -335,7 +335,7 @@ describe('reconciliation-for-report-helper', () => {
 
       const groupStatus: FeeRecordStatus = 'TO_DO';
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [{ ...aFeeRecordPaymentGroupItem(), feeRecords, status: groupStatus }];
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), feeRecords, status: groupStatus }];
 
       const checkboxId = `feeRecordIds-${feeRecordIds.join(',')}-reportedPaymentsCurrency-${firstFeeRecordReportedPaymentsCurrency}-status-${groupStatus}`;
 
@@ -361,7 +361,7 @@ describe('reconciliation-for-report-helper', () => {
 
       const status: FeeRecordStatus = 'DOES_NOT_MATCH';
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [{ ...aFeeRecordPaymentGroupItem(), feeRecords: [feeRecord], status }];
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), feeRecords: [feeRecord], status }];
 
       const checkedCheckboxId = `feeRecordIds-${feeRecordId}-reportedPaymentsCurrency-${feeRecordReportedPaymentsCurrency}-status-${status}`;
 
@@ -390,7 +390,7 @@ describe('reconciliation-for-report-helper', () => {
 
       const status: FeeRecordStatus = 'DOES_NOT_MATCH';
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupItem[] = [{ ...aFeeRecordPaymentGroupItem(), feeRecords: [feeRecord], status }];
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), feeRecords: [feeRecord], status }];
 
       const checkedCheckboxId = `feeRecordIds-${nonMatchingFeeRecordId}-reportedPaymentsCurrency-${feeRecordReportedPaymentsCurrency}-status-${status}`;
 

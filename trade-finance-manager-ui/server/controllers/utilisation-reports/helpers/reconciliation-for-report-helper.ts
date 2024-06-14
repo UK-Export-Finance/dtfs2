@@ -1,5 +1,5 @@
 import { CurrencyAndAmount, CurrencyAndAmountString, FeeRecordStatus, getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
-import { FeeRecordItem, FeeRecordPaymentGroupItem } from '../../../api-response-types';
+import { FeeRecordItem, FeeRecordPaymentGroup } from '../../../api-response-types';
 import {
   FeeRecordDisplayStatus,
   FeeRecordPaymentGroupViewModelItem,
@@ -46,7 +46,7 @@ const mapPaymentItemsToPaymentViewModelItems = (paymentsReceived: CurrencyAndAmo
   return paymentsReceived.map(getFormattedCurrencyAndAmount);
 };
 
-const mapFeeRecordPaymentGroupItemsToTotalReportedPayments = (feeRecordPaymentGroups: FeeRecordPaymentGroupItem[]): SortedAndFormattedCurrencyAndAmount[] => {
+const mapFeeRecordPaymentGroupsToTotalReportedPayments = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): SortedAndFormattedCurrencyAndAmount[] => {
   const totalReportedPaymentsWithIndexAsKey = feeRecordPaymentGroups.map(({ totalReportedPayments }, index) => ({ ...totalReportedPayments, key: index }));
   const totalReportedPaymentsDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(totalReportedPaymentsWithIndexAsKey);
 
@@ -56,7 +56,7 @@ const mapFeeRecordPaymentGroupItemsToTotalReportedPayments = (feeRecordPaymentGr
   }));
 };
 
-const mapFeeRecordPaymentGroupItemsToTotalPaymentsReceived = (feeRecordPaymentGroups: FeeRecordPaymentGroupItem[]): SortedAndFormattedCurrencyAndAmount[] => {
+const mapFeeRecordPaymentGroupsToTotalPaymentsReceived = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): SortedAndFormattedCurrencyAndAmount[] => {
   const totalPaymentsReceivedWithIndexAsKey = feeRecordPaymentGroups.map(({ totalPaymentsReceived }, index) => ({ ...totalPaymentsReceived, key: index }));
   const totalPaymentsReceivedDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(totalPaymentsReceivedWithIndexAsKey);
 
@@ -73,11 +73,11 @@ const mapFeeRecordItemsToCheckboxId = (feeRecords: FeeRecordItem[], status: FeeR
 };
 
 export const mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems = (
-  feeRecordPaymentGroups: FeeRecordPaymentGroupItem[],
+  feeRecordPaymentGroups: FeeRecordPaymentGroup[],
   isCheckboxChecked: (checkboxId: string) => boolean,
 ): FeeRecordPaymentGroupViewModelItem[] => {
-  const totalReportedPayments = mapFeeRecordPaymentGroupItemsToTotalReportedPayments(feeRecordPaymentGroups);
-  const totalPaymentsReceived = mapFeeRecordPaymentGroupItemsToTotalPaymentsReceived(feeRecordPaymentGroups);
+  const totalReportedPayments = mapFeeRecordPaymentGroupsToTotalReportedPayments(feeRecordPaymentGroups);
+  const totalPaymentsReceived = mapFeeRecordPaymentGroupsToTotalPaymentsReceived(feeRecordPaymentGroups);
 
   return feeRecordPaymentGroups.map((feeRecordPaymentGroup, index) => {
     const { status, feeRecords, paymentsReceived } = feeRecordPaymentGroup;
