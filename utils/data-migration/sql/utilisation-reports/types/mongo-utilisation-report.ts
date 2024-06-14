@@ -1,17 +1,7 @@
 import { WithId } from 'mongodb';
-import { AzureFileInfo } from '../azure-file-info';
-import { UtilisationReportReconciliationStatus, ReportPeriod } from '../utilisation-reports';
-import { SessionBank } from '../session-bank';
-import { Prettify } from '../types-helper';
+import { AzureFileInfo, UtilisationReportReconciliationStatus, ReportPeriod, SessionBank, Prettify, UploadedByUserDetails } from '@ukef/dtfs2-common';
 
-// TODO FN-1853 to be removed as this is now an sql table
-export type UploadedByUserDetails = {
-  id: string;
-  firstname: string;
-  surname: string;
-};
-
-export type UtilisationReport = Prettify<
+export type MongoUtilisationReport = Prettify<
   WithId<{
     /**
      * Details of the bank the report was uploaded for
