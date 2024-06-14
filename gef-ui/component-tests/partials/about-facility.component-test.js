@@ -36,6 +36,7 @@ describe(page, () => {
     dealId,
     facilityId,
     status: null,
+    isFacilityEndDateFeatureFlagEnabled: isFacilityEndDateFeatureFlagEnabled(),
   };
 
   beforeEach(() => {

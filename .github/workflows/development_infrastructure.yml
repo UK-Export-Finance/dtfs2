@@ -2155,7 +2155,8 @@ jobs:
                 REDIS_KEY="$redis_key" \
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
                 HTTPS=1 \
-                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
+                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
+                FF_FACILITY_END_DATE_ENABLED=${{ vars.FF_FACILITY_END_DATE_ENABLED }}
 
       - name: Secrets
         uses: azure/cli@v1.0.9
