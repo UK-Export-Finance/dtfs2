@@ -1,31 +1,100 @@
-import { FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { FeeRecordItem, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
+import { FeeRecordEntity, PaymentEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { FeeRecordItem, FeeRecordPaymentGroup, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from '../../../../mapping/fee-record-mapper';
+import { mapPaymentEntityToCurrencyAndAmount } from '../../../../mapping/payment-mapper';
+import { calculateTotalCurrencyAndAmount } from '../../../../helpers';
 
-/**
- * Maps a fee record entity to a fee record item
- * @param feeRecord - The fee record entity
- * @returns The mapped fee record
- */
-export const mapFeeRecordEntityToReconciliationDetailsFeeRecordItem = (feeRecord: FeeRecordEntity): FeeRecordItem => {
-  const reportedFees = mapFeeRecordEntityToReportedFees(feeRecord);
-  const reportedPayments = mapFeeRecordEntityToReportedPayments(feeRecord);
+const mapFeeRecordEntityToFeeRecordItem = (feeRecord: FeeRecordEntity): FeeRecordItem => ({
+  id: feeRecord.id,
+  facilityId: feeRecord.facilityId,
+  exporter: feeRecord.exporter,
+  reportedFees: mapFeeRecordEntityToReportedFees(feeRecord),
+  reportedPayments: mapFeeRecordEntityToReportedPayments(feeRecord),
+});
 
-  const totalReportedPayments = reportedPayments;
+type FeeRecordPaymentEntityGroup = {
+  feeRecords: FeeRecordEntity[];
+  payments: PaymentEntity[];
+};
 
-  return {
-    id: feeRecord.id,
-    facilityId: feeRecord.facilityId,
-    exporter: feeRecord.exporter,
-    status: feeRecord.status,
-    reportedFees,
-    reportedPayments,
-    totalReportedPayments,
-    paymentsReceived: null,
-    totalPaymentsReceived: null,
-  };
+const getPaymentIdKeyFromPaymentEntities = (payments: PaymentEntity[]) =>
+  `paymentIds-${payments
+    .map(({ id }) => id)
+    .toSorted((id1, id2) => id1 - id2)
+    .join('-')}`;
+
+const getFeeRecordPaymentEntityGroupsFromFeeRecordEntities = (feeRecords: FeeRecordEntity[]): FeeRecordPaymentEntityGroup[] => {
+  function* generateUniqueKey(): Generator<string, string, unknown> {
+    let key = 1;
+    while (true) {
+      yield key.toString();
+      key += 1;
+    }
+  }
+
+  const keyGenerator = generateUniqueKey();
+
+  const paymentIdKeyToGroupMap = feeRecords.reduce(
+    (map, feeRecord) => {
+      const paymentIdKey = feeRecord.payments.length === 0 ? keyGenerator.next().value : getPaymentIdKeyFromPaymentEntities(feeRecord.payments);
+
+      if (map[paymentIdKey]) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+        map[paymentIdKey].feeRecords.push(feeRecord);
+        return map;
+      }
+
+      return {
+        ...map,
+        [paymentIdKey]: {
+          feeRecords: [feeRecord],
+          payments: feeRecord.payments,
+        },
+      };
+    },
+    {} as { [key: string]: FeeRecordPaymentEntityGroup },
+  );
+  return Object.values(paymentIdKeyToGroupMap);
+};
+
+const mapFeeRecordEntitiesToFeeRecordPaymentGroups = (feeRecordEntities: FeeRecordEntity[]): FeeRecordPaymentGroup[] => {
+  const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(feeRecordEntities);
+
+  return feeRecordPaymentEntityGroups.map(({ feeRecords, payments }) => {
+    const { status } = feeRecords[0];
+
+    if (payments.length === 0) {
+      // If there are no payments, there is only one fee record in the group
+      const feeRecordItem = mapFeeRecordEntityToFeeRecordItem(feeRecords[0]);
+      const totalReportedPayments = feeRecordItem.reportedPayments;
+
+      return {
+        feeRecords: [feeRecordItem],
+        totalReportedPayments,
+        paymentsReceived: null,
+        totalPaymentsReceived: null,
+        status,
+      };
+    }
+
+    const feeRecordItems = feeRecords.map(mapFeeRecordEntityToFeeRecordItem);
+
+    const allReportedPayments = feeRecordItems.map(({ reportedPayments }) => reportedPayments);
+    const totalReportedPayments = calculateTotalCurrencyAndAmount(allReportedPayments);
+
+    const paymentsReceived = payments.map(mapPaymentEntityToCurrencyAndAmount);
+    const totalPaymentsReceived = calculateTotalCurrencyAndAmount(paymentsReceived);
+
+    return {
+      feeRecords: feeRecordItems,
+      totalReportedPayments,
+      paymentsReceived,
+      totalPaymentsReceived,
+      status,
+    };
+  });
 };
 
 /**
@@ -49,7 +118,7 @@ export const mapUtilisationReportEntityToReconciliationDetails = async (
     throw new NotFoundError(`Failed to find a bank with id '${bankId}'`);
   }
 
-  const mappedFeeRecords = feeRecords.map(mapFeeRecordEntityToReconciliationDetailsFeeRecordItem);
+  const feeRecordPaymentGroups = mapFeeRecordEntitiesToFeeRecordPaymentGroups(feeRecords);
 
   return {
     reportId: id,
@@ -60,6 +129,6 @@ export const mapUtilisationReportEntityToReconciliationDetails = async (
     status,
     reportPeriod,
     dateUploaded,
-    feeRecords: mappedFeeRecords,
+    feeRecordPaymentGroups,
   };
 };

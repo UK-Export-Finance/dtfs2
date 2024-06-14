@@ -85,21 +85,13 @@ export type FeeRecordItem = {
    * The fees paid to UKEF converted to the payment currency
    */
   reportedPayments: CurrencyAndAmount;
-  /**
-   * The total of reported fees paid to UKEF in the payment currency
-   */
+};
+
+export type FeeRecordPaymentGroup = {
+  feeRecords: FeeRecordItem[];
   totalReportedPayments: CurrencyAndAmount;
-  /**
-   * The payments added in TFM
-   */
-  paymentsReceived: CurrencyAndAmount | null;
-  /**
-   * The total of the payments added in TFM
-   */
+  paymentsReceived: CurrencyAndAmount[] | null;
   totalPaymentsReceived: CurrencyAndAmount | null;
-  /**
-   * The status of the fee record
-   */
   status: FeeRecordStatus;
 };
 
@@ -112,7 +104,7 @@ export type UtilisationReportReconciliationDetails = {
   status: UtilisationReportReconciliationStatus;
   reportPeriod: ReportPeriod;
   dateUploaded: Date;
-  feeRecords: FeeRecordItem[];
+  feeRecordPaymentGroups: FeeRecordPaymentGroup[];
 };
 
 export type NewPaymentDetails = {

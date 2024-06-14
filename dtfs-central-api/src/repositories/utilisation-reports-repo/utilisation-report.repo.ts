@@ -1,8 +1,6 @@
-// TODO FN-1853 - rename this to `utilisation-report.repo.ts` when all repo
-//  methods have been migrated from MongoDB to SQL
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { UtilisationReportEntity, ReportPeriod } from '@ukef/dtfs2-common';
-import { Not, Equal, FindOptionsWhere, LessThan } from 'typeorm';
+import { Not, Equal, FindOptionsWhere, LessThan, In } from 'typeorm';
 
 export type GetUtilisationReportDetailsOptions = {
   reportPeriod?: ReportPeriod;
@@ -145,6 +143,26 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
           },
         },
       },
+    });
+  },
+
+  /**
+   * Finds a utilisation report with the supplied id and attached
+   * all the fee records which match the supplied fee record id
+   * list
+   * @param reportId - The report id
+   * @param feeRecordIds - The fee record ids to include
+   * @returns The utilisation report with the attached fee records
+   */
+  async findOneByIdWithFeeRecordsFilteredByIdWithPayments(reportId: number, feeRecordIds: number[]): Promise<UtilisationReportEntity | null> {
+    return await UtilisationReportRepo.findOne({
+      where: {
+        id: Number(reportId),
+        feeRecords: {
+          id: In(feeRecordIds),
+        },
+      },
+      relations: { feeRecords: { payments: true } },
     });
   },
 });

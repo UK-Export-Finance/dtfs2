@@ -10,7 +10,7 @@ import {
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import {
-  getFeeRecordIdFromPremiumPaymentsCheckboxId,
+  getFeeRecordIdsFromPremiumPaymentsCheckboxIds,
   getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId,
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
 } from '../../../helpers/premium-payments-table-checkbox-id-helper';
@@ -114,8 +114,8 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
     const { user, userToken } = asUserSession(req.session);
     const { reportId } = req.params;
     const checkedCheckboxIds = getPremiumPaymentsCheckboxIdsFromObjectKeys(req.body);
-    const feeRecordIds = checkedCheckboxIds.map((checkboxId) => getFeeRecordIdFromPremiumPaymentsCheckboxId(checkboxId));
     const feeRecordPaymentCurrency = getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId(checkedCheckboxIds[0]);
+    const feeRecordIds = getFeeRecordIdsFromPremiumPaymentsCheckboxIds(checkedCheckboxIds);
 
     const { isAddingPayment, errors, formValues, paymentNumber } = extractAddPaymentFormValuesAndValidateIfPresent(req.body, feeRecordPaymentCurrency);
     const formHasErrors = errors.errorSummary.length !== 0;

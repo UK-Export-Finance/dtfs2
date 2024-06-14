@@ -29,16 +29,13 @@ export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetai
       throw new InvalidPayloadError('No fee records selected');
     }
 
-    const utilisationReport = await UtilisationReportRepo.findOne({
-      where: { id: Number(reportId) },
-      relations: { feeRecords: { payments: true } },
-    });
+    const utilisationReport = await UtilisationReportRepo.findOneByIdWithFeeRecordsFilteredByIdWithPayments(Number(reportId), selectedFeeRecordIds);
 
     if (!utilisationReport) {
       throw new NotFoundError(`Failed to find a report with id '${reportId}'`);
     }
 
-    const selectedFeeRecords = utilisationReport.feeRecords.filter((feeRecord) => selectedFeeRecordIds.includes(feeRecord.id));
+    const selectedFeeRecords = utilisationReport.feeRecords;
 
     if (selectedFeeRecords.length !== selectedFeeRecordIds.length) {
       throw new InvalidPayloadError('All selected fee records must belong to the requested report');
