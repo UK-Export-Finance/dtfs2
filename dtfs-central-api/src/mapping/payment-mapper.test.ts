@@ -1,32 +1,45 @@
 import { Currency, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
-import { mapPaymentEntityToCurrencyAndAmount } from './payment-mapper';
+import { mapPaymentEntityToPaymentItem } from './payment-mapper';
 
 describe('payment mapper', () => {
-  describe('mapPaymentEntityToCurrencyAndAmount', () => {
-    it('maps the payment currency to the currencyAndAmount currency', () => {
+  describe('mapPaymentEntityToPaymentItem', () => {
+    it('maps the payment currency to the payment item currency', () => {
       // Arrange
       const paymentCurrency: Currency = 'GBP';
 
       const payment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).build();
 
       // Act
-      const currencyAndAmount = mapPaymentEntityToCurrencyAndAmount(payment);
+      const paymentItem = mapPaymentEntityToPaymentItem(payment);
 
       // Assert
-      expect(currencyAndAmount.currency).toBe(paymentCurrency);
+      expect(paymentItem.currency).toBe(paymentCurrency);
     });
 
-    it('maps the payment amount to the currencyAndAmount amount', () => {
+    it('maps the payment amount to the payment item amount', () => {
       // Arrange
       const paymentAmount = 100;
 
       const payment = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(paymentAmount).build();
 
       // Act
-      const currencyAndAmount = mapPaymentEntityToCurrencyAndAmount(payment);
+      const paymentItem = mapPaymentEntityToPaymentItem(payment);
 
       // Assert
-      expect(currencyAndAmount.amount).toBe(paymentAmount);
+      expect(paymentItem.amount).toBe(paymentAmount);
+    });
+
+    it('maps the payment id to the payment item id', () => {
+      // Arrange
+      const paymentId = 12;
+
+      const payment = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).build();
+
+      // Act
+      const paymentItem = mapPaymentEntityToPaymentItem(payment);
+
+      // Assert
+      expect(paymentItem.id).toBe(paymentId);
     });
   });
 });

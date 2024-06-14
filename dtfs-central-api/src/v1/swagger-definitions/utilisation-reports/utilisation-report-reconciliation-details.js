@@ -14,14 +14,34 @@
  *         $ref: '#/definitions/CurrencyAndAmount'
  *       reportedPayments:
  *         $ref: '#/definitions/CurrencyAndAmount'
+ *   UtilisationReportReconciliationDetailsPaymentItem:
+ *     type: object
+ *     properties:
+ *       id:
+ *         type: number
+ *       currency:
+ *         $ref: '#/definitions/Currency'
+ *       amount:
+ *         type: number
+ *   UtilisationReportReconciliationDetailsFeeRecordPaymentGroup:
+ *     type: object
+ *     properties:
+ *       feeRecords:
+ *         type: array
+ *         items:
+ *           $ref: '#/definitions/UtilisationReportReconciliationDetailsFeeRecordItem'
  *       totalReportedPayments:
  *         $ref: '#/definitions/CurrencyAndAmount'
  *       paymentsReceived:
+ *         type: array
  *         nullable: true
- *         $ref: '#/definitions/CurrencyAndAmount'
+ *         items:
+ *           $ref: '#/definitions/UtilisationReportReconciliationDetailsPaymentItem'
  *       totalPaymentsReceived:
- *         nullable: true
  *         $ref: '#/definitions/CurrencyAndAmount'
+ *         nullable: true
+ *       status:
+ *         $ref: '#/definitions/FeeRecordStatus'
  *   UtilisationReportReconciliationDetails:
  *     type: object
  *     properties:
@@ -39,9 +59,10 @@
  *       reportPeriod:
  *         $ref: '#/definitions/ReportPeriod'
  *       dateUploaded:
- *         type: Date
- *       feeRecords:
+ *         type: string
+ *         format: date-time
+ *       feeRecordPaymentGroups:
  *         type: array
  *         items:
- *           $ref: '#/definitions/UtilisationReportReconciliationFeeRecordItem'
+ *           $ref: '#/definitions/UtilisationReportReconciliationDetailsFeeRecordPaymentGroup'
  */

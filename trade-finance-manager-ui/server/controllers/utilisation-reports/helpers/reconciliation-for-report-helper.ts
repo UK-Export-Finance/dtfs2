@@ -1,7 +1,7 @@
 import orderBy from 'lodash.orderby';
-import { CurrencyAndAmount, CurrencyAndAmountString, FeeRecordStatus, getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
-import { FeeRecordItem, FeeRecordPaymentGroup } from '../../../api-response-types';
-import { FeeRecordDisplayStatus, FeeRecordPaymentGroupViewModelItem, FeeRecordViewModelItem } from '../../../types/view-models';
+import { FeeRecordStatus, getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
+import { FeeRecordItem, FeeRecordPaymentGroup, PaymentItem } from '../../../api-response-types';
+import { FeeRecordDisplayStatus, FeeRecordPaymentGroupViewModelItem, FeeRecordViewModelItem, PaymentViewModelItem } from '../../../types/view-models';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
 import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 
@@ -36,12 +36,15 @@ const mapFeeRecordItemsToFeeRecordViewModelItems = (feeRecordItems: FeeRecordIte
  * @param paymentsReceived - The list of received payments
  * @returns The payment view model items
  */
-const mapPaymentItemsToPaymentViewModelItems = (paymentsReceived: CurrencyAndAmount[] | null): CurrencyAndAmountString[] | undefined => {
+const mapPaymentItemsToPaymentViewModelItems = (paymentsReceived: PaymentItem[] | null): PaymentViewModelItem[] | undefined => {
   if (!paymentsReceived) {
     return undefined;
   }
 
-  return paymentsReceived.map(getFormattedCurrencyAndAmount);
+  return paymentsReceived.map((payment) => ({
+    id: payment.id,
+    formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(payment),
+  }));
 };
 
 type SortableFeeRecordPaymentGroupProperty = 'totalReportedPayments' | 'totalPaymentsReceived';
