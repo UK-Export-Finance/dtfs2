@@ -39,7 +39,11 @@
     classes: "govuk-!-width-one-third",
     id: "firstname",
     name: "firstname",
-    value: displayedUser.firstname
+    value: displayedUser.firstname,
+    errorMessage: validationErrors.errorList.firstname and {
+      text: validationErrors.errorList.firstname.text,
+      attributes: { "data-cy": "firstname-error-message" }
+    }
   }) }}
 
   {{ govukInput({
@@ -51,7 +55,11 @@
     classes: "govuk-!-width-one-third",
     id: "surname",
     name: "surname",
-    value: displayedUser.surname
+    value: displayedUser.surname,
+    errorMessage: validationErrors.errorList.surname and {
+      text: validationErrors.errorList.surname.text,
+      attributes: { "data-cy": "surname-error-message" }
+    }
   }) }}
 
   {{ govukRadios({
@@ -208,8 +216,14 @@
 
     {% set banksList = [
       {
+            value: "",
+            text: "Please select a bank",
+            selected: displayedUser.bank === ""
+      },
+      {
             value: "all",
-            text: "All"
+            text: "All",
+            selected: displayedUser.bank === "all"
       }
     ] %}
     {% for bank in banks %}
@@ -235,6 +249,10 @@
       },
       hint: {
         text: "Applicable for Bank Staff users only"
+      },
+      errorMessage: validationErrors.errorList.bank and {
+        text: validationErrors.errorList.bank.text,
+        attributes: { "data-cy": "bank-error-message" }
       },
       attributes: {
         "data-cy": "bank"

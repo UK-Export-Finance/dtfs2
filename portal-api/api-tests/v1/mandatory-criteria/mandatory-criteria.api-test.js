@@ -7,7 +7,7 @@ const {
 } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { withRoleAuthorisationTests, withNoRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -32,13 +32,13 @@ const updatedMandatoryCriteria = {
 };
 
 describe('/v1/mandatory-criteria', () => {
-  let noRoles;
   let anAdmin;
   let testUsers;
+  let testUser;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
+    testUser = testUsers().one();
     anAdmin = testUsers().withRole(ADMIN).one();
   });
 
@@ -54,18 +54,11 @@ describe('/v1/mandatory-criteria', () => {
       makeRequestWithAuthHeader: (authHeader) => get(allMandatoryCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
-    withNoRoleAuthorisationTests({
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-      makeRequestAsUser: (user) => as(user).get(allMandatoryCriteriaUrl),
-      successStatusCode: 200,
-    });
-
     it('returns a list of mandatory-criteria sorted by id', async () => {
       await as(anAdmin).post(allMandatoryCriteria[0]).to(allMandatoryCriteriaUrl);
       await as(anAdmin).post(allMandatoryCriteria[1]).to(allMandatoryCriteriaUrl);
 
-      const { body } = await as(noRoles).get(allMandatoryCriteriaUrl);
+      const { body } = await as(testUser).get(allMandatoryCriteriaUrl);
 
       expect(body).toEqual({
         count: allMandatoryCriteria.length,
@@ -85,13 +78,6 @@ describe('/v1/mandatory-criteria', () => {
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(latestMandatoryCriteriaUrl),
       makeRequestWithAuthHeader: (authHeader) => get(latestMandatoryCriteriaUrl, { headers: { Authorization: authHeader } }),
-    });
-
-    withNoRoleAuthorisationTests({
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-      makeRequestAsUser: (user) => as(user).get(latestMandatoryCriteriaUrl),
-      successStatusCode: 200,
     });
 
     it('returns the latest mandatory criteria', async () => {
@@ -116,13 +102,6 @@ describe('/v1/mandatory-criteria', () => {
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(mandatoryCriteria1Url),
       makeRequestWithAuthHeader: (authHeader) => get(mandatoryCriteria1Url, { headers: { Authorization: authHeader } }),
-    });
-
-    withNoRoleAuthorisationTests({
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-      makeRequestAsUser: (user) => as(user).get(mandatoryCriteria1Url),
-      successStatusCode: 200,
     });
 
     it('returns a mandatory-criteria', async () => {
@@ -151,7 +130,6 @@ describe('/v1/mandatory-criteria', () => {
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).post(newMandatoryCriteria).to(allMandatoryCriteriaUrl),
       successStatusCode: 200,
     });
@@ -168,7 +146,6 @@ describe('/v1/mandatory-criteria', () => {
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).put(updatedMandatoryCriteria).to(mandatoryCriteria1Url),
       successStatusCode: 200,
     });

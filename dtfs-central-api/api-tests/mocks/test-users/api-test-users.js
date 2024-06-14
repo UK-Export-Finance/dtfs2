@@ -110,10 +110,6 @@ const finder = () => {
       users = users.filter((user) => !user.roles.includes(role));
       return fluidBuilder;
     },
-    withoutAnyRoles: () => {
-      users = users.filter((user) => user.roles.length === 0);
-      return fluidBuilder;
-    },
     withBankName: (bankName) => {
       users = users.filter((user) => user.bank && user.bank.name === bankName);
       return fluidBuilder;

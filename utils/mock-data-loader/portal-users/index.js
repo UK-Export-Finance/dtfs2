@@ -182,17 +182,6 @@ const MOCK_USERS = {
     bank: UKEF_TEST_BANK_2,
     isTrusted: false,
   },
-  NOBODY: {
-    username: 'test1@ukexportfinance.gov.uk',
-    password: 'AbC!2345',
-    firstname: 'first',
-    surname: 'Spang',
-    email: 'test1@ukexportfinance.gov.uk',
-    timezone: 'Europe/London',
-    roles: [],
-    bank: UKEF_TEST_BANK_1,
-    isTrusted: false,
-  },
   ADMIN: {
     username: 'test2@ukexportfinance.gov.uk',
     password: 'AbC!2345',

@@ -10,7 +10,7 @@ const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { withNoRoleAuthorisationTests, withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
 const { as, get, remove, put, post } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
@@ -31,13 +31,13 @@ const updatedEligibilityCriteria = {
 };
 
 describe('/v1/eligibility-criteria', () => {
-  let noRoles;
   let anAdmin;
   let testUsers;
+  let testUser;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
+    testUser = testUsers().one();
     anAdmin = testUsers().withRole(ADMIN).one();
   });
 
@@ -53,19 +53,12 @@ describe('/v1/eligibility-criteria', () => {
       makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
-    withNoRoleAuthorisationTests({
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).get(eligibilityCriteriaUrl),
-      successStatusCode: 200,
-    });
-
     it('returns a list of eligibility-criteria sorted by id', async () => {
       // randomise the order a bit on the way in...
       await as(anAdmin).post(allEligibilityCriteria[0]).to(eligibilityCriteriaUrl);
       await as(anAdmin).post(allEligibilityCriteria[1]).to(eligibilityCriteriaUrl);
 
-      const { body } = await as(noRoles).get(eligibilityCriteriaUrl);
+      const { body } = await as(testUser).get(eligibilityCriteriaUrl);
       expect(body).toEqual({
         count: allEligibilityCriteria.length,
         eligibilityCriteria: expectMongoIds(
@@ -84,13 +77,6 @@ describe('/v1/eligibility-criteria', () => {
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(latestEligibilityCriteriaUrl),
       makeRequestWithAuthHeader: (authHeader) => get(latestEligibilityCriteriaUrl, { headers: { Authorization: authHeader } }),
-    });
-
-    withNoRoleAuthorisationTests({
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).get(latestEligibilityCriteriaUrl),
-      successStatusCode: 200,
     });
 
     it('returns the last created eligibility-criteria', async () => {
@@ -114,13 +100,6 @@ describe('/v1/eligibility-criteria', () => {
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(eligibilityCriteria1Url),
       makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteria1Url, { headers: { Authorization: authHeader } }),
-    });
-
-    withNoRoleAuthorisationTests({
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).get(eligibilityCriteria1Url),
-      successStatusCode: 200,
     });
 
     it('returns an eligibility-criteria', async () => {
@@ -149,7 +128,6 @@ describe('/v1/eligibility-criteria', () => {
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).post(newEligibilityCriteria).to(eligibilityCriteriaUrl),
       successStatusCode: 200,
     });
@@ -166,7 +144,6 @@ describe('/v1/eligibility-criteria', () => {
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).put(updatedEligibilityCriteria).to(eligibilityCriteria1Url),
       successStatusCode: 200,
     });
@@ -210,7 +187,6 @@ describe('/v1/eligibility-criteria', () => {
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).remove(eligibilityCriteria1Url),
       successStatusCode: 200,
     });
