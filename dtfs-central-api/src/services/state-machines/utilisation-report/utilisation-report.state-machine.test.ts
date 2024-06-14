@@ -7,7 +7,6 @@ import {
   handleUtilisationReportManuallySetCompletedEvent,
   handleUtilisationReportManuallySetIncompleteEvent,
   handleUtilisationReportAddAPaymentEvent,
-  handleUtilisationReportPaymentRemovedFromFeeRecordEvent,
   handleUtilisationReportReportUploadedEvent,
 } from './event-handlers';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
@@ -202,20 +201,6 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportAddAPaymentEvent).toHaveBeenCalledTimes(1);
     });
 
-    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.PAYMENT_REMOVED_FROM_FEE_RECORD}' event`, async () => {
-      // Arrange
-      const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_IN_PROGRESS_REPORT);
-
-      // Act
-      await stateMachine.handleEvent({
-        type: 'PAYMENT_REMOVED_FROM_FEE_RECORD',
-        payload: { feeRecordId: 1, paymentId: 2 },
-      });
-
-      // Assert
-      expect(handleUtilisationReportPaymentRemovedFromFeeRecordEvent).toHaveBeenCalledTimes(1);
-    });
-
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.FEE_RECORD_KEYED}' event`, async () => {
       // Arrange
       const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_IN_PROGRESS_REPORT);
@@ -232,7 +217,7 @@ describe('UtilisationReportStateMachine', () => {
 
     const VALID_RECONCILIATION_IN_PROGRESS_EVENT_TYPES = [
       UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT,
-      UTILISATION_REPORT_EVENT_TYPE.PAYMENT_REMOVED_FROM_FEE_RECORD,
+      UTILISATION_REPORT_EVENT_TYPE.DELETE_PAYMENT,
       UTILISATION_REPORT_EVENT_TYPE.FEE_RECORD_KEYED,
     ];
 
