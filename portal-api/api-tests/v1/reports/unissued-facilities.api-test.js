@@ -53,7 +53,6 @@ describe('GET /v1/reports/unissued-facilities', () => {
   withRoleAuthorisationTests({
     allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
-    getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
     makeRequestAsUser: (user) => as(user).get(unissuedFacilitiesReportUrl),
     successStatusCode: 200,
   });

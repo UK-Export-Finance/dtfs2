@@ -87,7 +87,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl),
       successStatusCode: 201,
     });
@@ -177,7 +176,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(oneFileUrl),
       successStatusCode: 200,
     });
@@ -217,7 +215,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).remove(oneFileUrl),
       successStatusCode: 200,
     });
@@ -271,7 +268,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(oneFileDownloadUrl),
       successStatusCode: 200,
     });
