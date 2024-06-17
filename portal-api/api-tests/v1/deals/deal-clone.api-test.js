@@ -1,6 +1,6 @@
 const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { createDealEligibility } = require('../../../src/v1/controllers/deal.controller');
-const { MAKER } = require('../../../src/v1/roles/roles');
+const { MAKER, READ_ONLY } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const databaseHelper = require('../../database-helper');
 const testUserCache = require('../../api-test-users');
@@ -42,13 +42,13 @@ dealToClone.ukefDecision = [
 ];
 
 describe('/v1/deals/:id/clone', () => {
-  let noRoles;
   let anHSBCMaker;
   let aBarclaysMaker;
+  let testUser;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
+    testUser = testUsers().withRole(READ_ONLY).one();
     aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
   });
@@ -59,13 +59,13 @@ describe('/v1/deals/:id/clone', () => {
 
   describe('POST /v1/deals/:id/clone', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().post(dealToClone).to('/v1/deals/620a1aa095a618b12da38c7b/clone');
+      const { status } = await as(testUser).post(dealToClone).to('/v1/deals/620a1aa095a618b12da38c7b/clone');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).post(dealToClone).to('/v1/deals/620a1aa095a618b12da38c7b/clone');
+      const { status } = await as(testUser).post(dealToClone).to('/v1/deals/620a1aa095a618b12da38c7b/clone');
 
       expect(status).toEqual(401);
     });

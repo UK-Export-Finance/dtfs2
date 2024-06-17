@@ -25,7 +25,6 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
     },
   });
 
-  let noRoles;
   let aBarclaysMaker;
   let anHSBCMaker;
   let aSuperuser;
@@ -75,7 +74,6 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
 
-    noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
@@ -99,7 +97,7 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
+      const { status } = await as(anHSBCMaker).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(401);
     });

@@ -1,11 +1,12 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { findOneDeal } = require('../deal/get-deal.controller');
 const { updateDeal } = require('../deal/update-deal.controller');
 const { isNumber } = require('../../../../helpers');
 
-const createFacilities = async (facilities, dealId) => {
+const createFacilities = async (facilities, dealId, auditDetails) => {
   try {
     if (!ObjectId.isValid(dealId)) {
       return { status: 400, message: 'Invalid Deal Id' };
@@ -36,7 +37,7 @@ const createFacilities = async (facilities, dealId) => {
       facilities: idsArray,
     };
 
-    const response = await updateDeal(dealId, dealUpdate);
+    const response = await updateDeal({ dealId, dealUpdate, auditDetails });
 
     const status = isNumber(response?.status, 3);
 
@@ -57,15 +58,27 @@ const createFacilities = async (facilities, dealId) => {
 };
 
 exports.createMultipleFacilitiesPost = async (req, res) => {
-  const { facilities, dealId, user } = req.body;
+  const { facilities, dealId, user, auditDetails } = req.body;
 
   if (!user) {
     return res.status(404).send();
   }
 
+  try {
+    validateAuditDetails(auditDetails);
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
+  }
+
   return findOneDeal(dealId, async (deal) => {
     if (deal) {
-      const response = await createFacilities(facilities, dealId);
+      const response = await createFacilities(facilities, dealId, auditDetails);
       const status = isNumber(response?.status, 3);
       const code = status ? response.status : 200;
 

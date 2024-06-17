@@ -12,37 +12,39 @@ const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { getNowAsEpoch } = require('../../../src/v1/helpers/date');
 
 describe('/v1/deals/:id/status - facilities', () => {
-  let aBarclaysMaker;
-  let aBarclaysChecker;
-  let aSuperuser;
-  const originalFacilities = completedDeal.mockFacilities;
-
-  const isUnsubmittedIssuedFacility = (facility) => {
-    if (
-      (facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED ||
-        facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL) &&
-      facility.issueFacilityDetailsProvided &&
-      !facility.issueFacilityDetailsSubmitted &&
-      facility.status !== 'Submitted'
-    ) {
-      return facility;
-    }
-    return null;
-  };
-
-  beforeAll(async () => {
-    await databaseHelper.wipe([DB_COLLECTIONS.DEALS]);
-    await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
-
-    const testUsers = await testUserCache.initialise(app);
-    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
-    [aBarclaysMaker] = barclaysMakers;
-    aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Barclays Bank').one();
-
-    aSuperuser = testUsers().superuser().one();
-  });
-
   describe('PUT /v1/deals/:id/status', () => {
+    let aBarclaysMaker;
+    let aBarclaysChecker;
+    let aSuperuser;
+    const originalFacilities = completedDeal.mockFacilities;
+
+    const isUnsubmittedIssuedFacility = (facility) => {
+      if (
+        (facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED ||
+          facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL) &&
+        facility.issueFacilityDetailsProvided &&
+        !facility.issueFacilityDetailsSubmitted &&
+        facility.status !== 'Submitted'
+      ) {
+        return facility;
+      }
+      return null;
+    };
+
+    beforeAll(async () => {
+      const testUsers = await testUserCache.initialise(app);
+      const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
+      [aBarclaysMaker] = barclaysMakers;
+      aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Barclays Bank').one();
+
+      aSuperuser = testUsers().superuser().one();
+    });
+
+    beforeEach(async () => {
+      await databaseHelper.wipe([DB_COLLECTIONS.DEALS]);
+      await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
+    });
+
     describe("when the status changes from `Further Maker's input required` to `Ready for Checker's approval`", () => {
       let createdDeal;
       let updatedDeal;

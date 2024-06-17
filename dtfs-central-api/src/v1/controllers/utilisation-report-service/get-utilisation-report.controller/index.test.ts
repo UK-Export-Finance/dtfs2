@@ -16,7 +16,6 @@ import { GetUtilisationReportByIdRequest, getUtilisationReportById } from '.';
 
 jest.mock('../../../../repositories/utilisation-reports-repo');
 jest.mock('../../../../repositories/users-repo');
-jest.mock('../../../../repositories/utilisation-reports-repo/utilisation-report-sql.repo');
 
 console.error = jest.fn();
 

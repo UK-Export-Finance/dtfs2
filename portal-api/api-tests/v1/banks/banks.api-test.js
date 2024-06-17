@@ -12,7 +12,6 @@ const { ADMIN } = require('../../../src/v1/roles/roles');
 
 const aBank = require('./bank-builder');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { withNoRoleAuthorisationTests, withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
 const newBanks = ['112233', '112234', '112235'].map((id) => aBank({ id, name: `Bank${id}` }));
 
@@ -24,12 +23,10 @@ const updatedBank = aBank({
 describe('/v1/banks', () => {
   let anAdmin;
   let testUsers;
-  let noRoles;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     anAdmin = testUsers().withRole(ADMIN).one();
-    noRoles = testUsers().withoutAnyRoles().one();
   });
 
   beforeEach(async () => {
@@ -40,13 +37,6 @@ describe('/v1/banks', () => {
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get('/v1/banks'),
       makeRequestWithAuthHeader: (authHeader) => get('/v1/banks', { headers: { Authorization: authHeader } }),
-    });
-
-    withNoRoleAuthorisationTests({
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).get('/v1/banks'),
-      successStatusCode: 200,
     });
 
     it('returns a list of banks', async () => {
@@ -66,13 +56,6 @@ describe('/v1/banks', () => {
       makeRequestWithAuthHeader: (authHeader) => get(`/v1/banks/${newBanks[0]}`, { headers: { Authorization: authHeader } }),
     });
 
-    withNoRoleAuthorisationTests({
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).get(`/v1/banks/${newBanks[0]}`),
-      successStatusCode: 200,
-    });
-
     it('returns a bank', async () => {
       await as(anAdmin).post(newBanks[0]).to('/v1/banks');
 
@@ -90,14 +73,6 @@ describe('/v1/banks', () => {
       makeRequestWithAuthHeader: (authHeader) => post('/v1/banks', newBanks[0], { headers: { Authorization: authHeader } }),
     });
 
-    withRoleAuthorisationTests({
-      allowedRoles: [ADMIN],
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).post(newBanks[0]).to('/v1/banks'),
-      successStatusCode: 200,
-    });
-
     it('accepts requests that present a valid Authorization token with "admin" role', async () => {
       const { status } = await as(anAdmin).post(newBanks[0]).to('/v1/banks');
 
@@ -109,14 +84,6 @@ describe('/v1/banks', () => {
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => put(`/v1/banks/${newBanks[0].id}`, updatedBank),
       makeRequestWithAuthHeader: (authHeader) => put(`/v1/banks/${newBanks[0].id}`, updatedBank, { headers: { Authorization: authHeader } }),
-    });
-
-    withRoleAuthorisationTests({
-      allowedRoles: [ADMIN],
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).put(updatedBank).to(`/v1/banks/${newBanks[0].id}`),
-      successStatusCode: 200,
     });
 
     it('updates the bank', async () => {
@@ -142,14 +109,6 @@ describe('/v1/banks', () => {
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => remove(`/v1/banks/${newBanks[0].id}`),
       makeRequestWithAuthHeader: (authHeader) => remove(`/v1/banks/${newBanks[0].id}`, { headers: { Authorization: authHeader } }),
-    });
-
-    withRoleAuthorisationTests({
-      allowedRoles: [ADMIN],
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).remove(`/v1/banks/${newBanks[0].id}`),
-      successStatusCode: 200,
     });
 
     withDeleteOneTests({

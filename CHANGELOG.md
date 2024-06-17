@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.2.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.1.0...v2.2.0) (2024-06-12)
+
+
+### Features
+
+* **DTFS2-7122:** invoke new companies house mdm endpoint ([#3155](https://github.com/UK-Export-Finance/dtfs2/issues/3155)) ([a5f12c4](https://github.com/UK-Export-Finance/dtfs2/commit/a5f12c4b8db47fa7929936554e5934ed321881e7))
+
+
+### Bug Fixes
+
+* **acbs-docker-image:** upgraded to node v20 ([c4cd4da](https://github.com/UK-Export-Finance/dtfs2/commit/c4cd4da36a33458a7a0c049b00263d5b59e9a94d))
+* **acbs-docker-image:** upgraded to node v20 ([#3234](https://github.com/UK-Export-Finance/dtfs2/issues/3234)) ([cc75938](https://github.com/UK-Export-Finance/dtfs2/commit/cc75938c30242447b5a61ae51c54a8569e44843e))
+* **DTFS2-7051:** removed companies house env variable ([15b1ce4](https://github.com/UK-Export-Finance/dtfs2/commit/15b1ce47ef04f9c31b46f302eb674872003df273))
+* **DTFS2-7051:** removed companies house envionment variable ([#3232](https://github.com/UK-Export-Finance/dtfs2/issues/3232)) ([866a3cc](https://github.com/UK-Export-Finance/dtfs2/commit/866a3ccace1cbf0ba4684b242c369c32261e9262))
+
 ## [2.1.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.0.0...v2.1.0) (2024-06-12)
 
 

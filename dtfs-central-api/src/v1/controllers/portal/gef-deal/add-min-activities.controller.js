@@ -77,7 +77,7 @@ const portalActivityGenerator = (activityParams) => {
  * adds to front of portalActivity array in correct format
  * @param {Object} application
  * @param {Array} facilities
- * @returns {Array} portalActivities
+ * @returns {Promise<Array>} portalActivities
  */
 const facilityChangePortalActivity = async (application, facilities) => {
   try {
@@ -116,7 +116,7 @@ const facilityChangePortalActivity = async (application, facilities) => {
  * Generates activity for MIN submission to UKEF
  * Adds to front of portalActivities array in correct format
  * @param {Object} application
- * @returns {Array} portalActivities
+ * @returns {Promise<Array>} portalActivities
  */
 const ukefSubmissionPortalActivity = async (application) => {
   try {

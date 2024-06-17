@@ -87,7 +87,6 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
   withRoleAuthorisationTests({
     allowedRoles: [PAYMENT_REPORT_OFFICER],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
-    getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
     makeRequestAsUser: (user) => as(user).get(previousReportsUrl(bankId)),
     successStatusCode: 200,
   });
