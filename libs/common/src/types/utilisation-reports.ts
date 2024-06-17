@@ -22,3 +22,9 @@ export type UtilisationReportRawCsvData = {
 };
 
 export type FeeRecordStatus = ValuesOf<typeof FEE_RECORD_STATUS>;
+
+export type UploadedByUserDetails = {
+  id: string;
+  firstname: string;
+  surname: string;
+};

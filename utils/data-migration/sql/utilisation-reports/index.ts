@@ -1,10 +1,6 @@
-import {
-  UtilisationData as MongoUtilisationData,
-  UtilisationReport as MongoUtilisationReport,
-  UtilisationReportEntity,
-  FeeRecordEntity,
-} from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, FeeRecordEntity } from '@ukef/dtfs2-common';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
+import { MongoUtilisationData, MongoUtilisationReport } from './types';
 import reportsEJson from './mongodb-ejson/utilisationReports.json';
 import reportsDataEJson from './mongodb-ejson/utilisationData.json';
 import { deserialiseEJson, toSqlUtilisationReport } from './helpers';

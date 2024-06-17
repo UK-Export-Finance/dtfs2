@@ -1,11 +1,5 @@
-import {
-  AzureFileInfo as MongoAzureFileInfo,
-  UtilisationData as MongoUtilisationData,
-  UtilisationReport as MongoUtilisationReport,
-  AzureFileInfoEntity,
-  FeeRecordEntity,
-  UtilisationReportEntity,
-} from '@ukef/dtfs2-common';
+import { AzureFileInfoEntity, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { MongoAzureFileInfo, MongoUtilisationData, MongoUtilisationReport } from '../types';
 
 const toSqlAzureFileInfo = (mongoAzureFileInfo: MongoAzureFileInfo | null): AzureFileInfoEntity | undefined => {
   if (!mongoAzureFileInfo) {
