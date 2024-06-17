@@ -62,18 +62,39 @@ describe(page, () => {
     wrapper.expectInput('[data-cy="facility-name"]').toHaveValue(facilityName);
   });
 
-  if (isFacilityEndDateFeatureFlagEnabled()) {
+  describe('with the facility end date feature flag enabled', () => {
+    beforeEach(() => {
+      wrapper = render({ ...params, isFacilityEndDateFeatureFlagEnabled: true });
+    });
+
     it(`renders the 'What is a Facility End Date' details`, () => {
       wrapper.expectText('[data-cy="facility-end-date-details"] span').toRead('What is a Facility End Date');
       wrapper
         .expectText('[data-cy="facility-end-date-details"] div')
         .toRead('The facility end date is the deadline for a committed loan to be repaid at which point the contract will be terminated.');
     });
-  } else {
+
+    it(`renders the 'Do you have a facility end date?' question`, () => {
+      wrapper.expectText('.govuk-fieldset__legend--m').toRead('Do you have a facility end date?');
+      wrapper.expectInput('[data-cy="facility-end-date-exists-yes"]').toNotBeChecked();
+      wrapper.expectInput('[data-cy="facility-end-date-exists-no"]').toNotBeChecked();
+    });
+  });
+
+  describe('with the facility end date feature flag disabled', () => {
+    beforeEach(() => {
+      wrapper = render({ ...params, isFacilityEndDateFeatureFlagEnabled: false });
+    });
+
     it(`does not render the 'What is a Facility End Date' details`, () => {
       wrapper.expectElement('[data-cy="facility-end-date-details"]').notToExist();
     });
-  }
+
+    it(`does not render the 'Do you have a facility end date?' radio buttons`, () => {
+      wrapper.expectElement('[data-cy="facility-end-date-exists-yes"]').notToExist();
+      wrapper.expectElement('[data-cy="facility-end-date-exists-no"]').notToExist();
+    });
+  });
 
   it(`renders the 'Continue' button`, () => {
     wrapper.expectText('[data-cy="continue-button"]').toRead('Continue');
@@ -134,7 +155,7 @@ describe(page, () => {
 
     if (hasBeenIssued) {
       it(`renders the 'Do you want UKEF cover to start on the day you submit the automatic inclusion notice?' question with radio buttons`, () => {
-        wrapper.expectText('.govuk-fieldset__legend--m').toRead('Do you want UKEF cover to start on the day you submit the automatic inclusion notice?');
+        wrapper.expectText('.govuk-fieldset__legend--m').toContain('Do you want UKEF cover to start on the day you submit the automatic inclusion notice?');
         wrapper.expectInput('[data-cy="should-cover-start-on-submission-yes"]').toNotBeChecked();
         wrapper.expectInput('[data-cy="should-cover-start-on-submission-no"]').toNotBeChecked();
       });
