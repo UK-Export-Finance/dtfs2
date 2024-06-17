@@ -199,7 +199,7 @@ exports.delete = async (req, res) => {
     }
 
     // Check user has rights to access this file
-    if (!userHasAccess(req.user, deal)) {
+    if (!userHasAccess(user, deal)) {
       return res.sendStatus(401);
     }
 
