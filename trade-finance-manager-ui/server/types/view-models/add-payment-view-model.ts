@@ -23,7 +23,7 @@ export type SelectedReportedFeesDetailsViewModel = {
 };
 
 export type RecordedPaymentDetailsViewModel = {
-  value: CurrencyAndAmountString;
+  formattedCurrencyAndAmount: CurrencyAndAmountString;
   formattedDateReceived: string;
   reference?: string;
 };

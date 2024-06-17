@@ -50,6 +50,6 @@ export const mapToSelectedFeeRecordDetails = async (
     reportPeriod,
     totalReportedPayments: getTotalReportedPayments(selectedFeeRecordDetails),
     feeRecords: selectedFeeRecordDetails,
-    payments: recordedPaymentDetails ?? [],
+    payments: recordedPaymentDetails,
   };
 };

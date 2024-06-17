@@ -96,7 +96,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
       expect((res._getRenderData() as AddPaymentViewModel).recordedPaymentsDetails).toEqual<RecordedPaymentDetailsViewModel[]>([
         {
           formattedDateReceived: '19 Dec 1912',
-          value: 'USD 2,000.00',
+          formattedCurrencyAndAmount: 'USD 2,000.00',
           reference: 'A payment',
         },
       ]);
@@ -463,7 +463,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
         expect((res._getRenderData() as AddPaymentViewModel).recordedPaymentsDetails).toEqual<RecordedPaymentDetailsViewModel[]>([
           {
             formattedDateReceived: '19 Dec 1912',
-            value: 'USD 2,000.00',
+            formattedCurrencyAndAmount: 'USD 2,000.00',
             reference: 'A payment',
           },
         ]);

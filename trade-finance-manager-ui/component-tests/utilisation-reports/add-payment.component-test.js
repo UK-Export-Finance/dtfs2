@@ -23,7 +23,7 @@ describe(page, () => {
     addPaymentViewModel.recordedPaymentsDetails = [
       {
         formattedDateReceived: '23 Dec 2024',
-        value: 'GBP 300',
+        formattedCurrencyAndAmount: 'GBP 300',
         reference: 'REF1234',
       },
     ];

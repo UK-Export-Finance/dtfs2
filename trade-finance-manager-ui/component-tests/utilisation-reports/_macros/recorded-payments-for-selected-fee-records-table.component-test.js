@@ -12,11 +12,11 @@ describe(component, () => {
     {
       reference: 'REF1234',
       formattedDateReceived: '22 Mar 1999',
-      value: 'JPY 100,000.00',
+      formattedCurrencyAndAmount: 'JPY 100,000.00',
     },
     {
       formattedDateReceived: '23 Apr 2020',
-      value: 'JPY 500,000.00',
+      formattedCurrencyAndAmount: 'JPY 500,000.00',
     },
   ];
 
@@ -43,6 +43,7 @@ describe(component, () => {
 
   it('should render one row per fee record displaying the date received, value of payment and reference if provided', () => {
     const wrapper = getWrapper();
+    wrapper.expectElement(`tbody tr`).toHaveCount(2);
     wrapper.expectElement(`tbody tr:nth-child(1) td:contains("REF1234")`).toExist();
     wrapper.expectElement(`tbody tr:nth-child(1) td:contains("22 Mar 1999")`).toExist();
     wrapper.expectElement(`tbody tr:nth-child(1) td:contains("JPY 100,000.00")`).toExist();

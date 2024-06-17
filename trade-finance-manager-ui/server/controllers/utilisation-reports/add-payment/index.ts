@@ -59,7 +59,7 @@ const renderAddPaymentPage = (res: Response, context: AddPaymentViewModel) => re
 const mapToRecordedPaymentDetailsViewModel = (payment: SelectedFeeRecordsPaymentDetailsResponse): RecordedPaymentDetailsViewModel => {
   return {
     reference: payment.reference,
-    value: getFormattedCurrencyAndAmount(payment.value),
+    formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(payment.value),
     formattedDateReceived: format(parseISO(payment.dateReceived), 'd MMM yyyy'),
   };
 };

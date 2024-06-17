@@ -147,9 +147,8 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
   },
 
   /**
-   * Finds a utilisation report with the supplied id and attached
-   * all the fee records which match the supplied fee record id
-   * list
+   * Finds a utilisation report with the supplied id and attached all the fee records which match the supplied fee
+   * record id list with their payments attached
    * @param reportId - The report id
    * @param feeRecordIds - The fee record ids to include
    * @returns The utilisation report with the attached fee records

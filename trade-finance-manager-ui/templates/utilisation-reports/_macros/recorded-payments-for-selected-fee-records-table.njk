@@ -1,4 +1,5 @@
 {% from "govuk/components/accordion/macro.njk" import govukAccordion %}
+
 {% macro render(params) %}
   {% set payments = params.recordedPaymentsDetails %}
   {% set multipleFeeRecordsSelected = params.multipleFeeRecordsSelected %}
@@ -17,7 +18,7 @@
         {% for payment in payments %}
           <tr class="govuk-table__row">
             <td class="govuk-table__cell">{{ payment.formattedDateReceived }}</td>
-            <td class="govuk-table__cell govuk-table__cell--numeric">{{ payment.value }}</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">{{ payment.formattedCurrencyAndAmount }}</td>
             <td class="govuk-table__cell">{{ payment.reference }}</td>
           </tr>
         {% endfor %}
