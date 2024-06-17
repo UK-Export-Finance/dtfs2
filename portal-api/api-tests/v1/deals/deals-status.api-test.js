@@ -244,8 +244,19 @@ describe('/v1/deals/:id/status', () => {
           'user-status': STATUS.ACTIVE,
           isTrusted: aBarclaysMaker.isTrusted,
         },
-        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id),
       });
+    });
+
+    it('updates the audit record', async () => {
+      const statusUpdate = {
+        comments: 'Flee!',
+        status: 'Abandoned',
+      };
+
+      await as(aBarclaysMaker).put(statusUpdate).to(urlForDealStatus);
+
+      const { body } = await as(aBarclaysMaker).get(urlForDeal);
+      expect(body.deal.auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id));
     });
 
     it('adds the user to `editedBy` array', async () => {
