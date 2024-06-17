@@ -1,5 +1,5 @@
 import { TfmSessionUser } from './tfm-session-user';
-import { AddPaymentErrorKey } from '../controllers/utilisation-reports/helpers';
+import { AddPaymentErrorKey, GenerateKeyingDataErrorKey } from '../controllers/utilisation-reports/helpers';
 
 export type UserSessionData = {
   user: TfmSessionUser;
@@ -11,5 +11,6 @@ declare module 'express-session' {
   interface SessionData extends UserSessionData {
     addPaymentErrorKey: AddPaymentErrorKey;
     checkedCheckboxIds: Record<string, true | undefined>;
+    generateKeyingDataErrorKey: GenerateKeyingDataErrorKey;
   }
 }

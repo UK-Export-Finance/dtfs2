@@ -1,5 +1,5 @@
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { UtilisationReportEntity, ReportPeriod } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, ReportPeriod, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { Not, Equal, FindOptionsWhere, LessThan, In } from 'typeorm';
 
 export type GetUtilisationReportDetailsOptions = {
@@ -157,9 +157,29 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
   async findOneByIdWithFeeRecordsFilteredById(reportId: number, feeRecordIds: number[]): Promise<UtilisationReportEntity | null> {
     return await UtilisationReportRepo.findOne({
       where: {
-        id: Number(reportId),
+        id: reportId,
         feeRecords: {
           id: In(feeRecordIds),
+        },
+      },
+      relations: { feeRecords: true },
+    });
+  },
+
+  /**
+   * Finds a utilisation report with the supplied id and attaches
+   * all the fee records which match the supplied fee record
+   * status list
+   * @param reportId - The report id
+   * @param feeRecordStatuses - The fee record statuses to filter by
+   * @returns The utilisation report with attached fee records
+   */
+  async findOneByIdWithFeeRecordsFilteredByStatus(reportId: number, feeRecordStatuses: FeeRecordStatus[]): Promise<UtilisationReportEntity | null> {
+    return await UtilisationReportRepo.findOne({
+      where: {
+        id: reportId,
+        feeRecords: {
+          status: In(feeRecordStatuses),
         },
       },
       relations: { feeRecords: true },

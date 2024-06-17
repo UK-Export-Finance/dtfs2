@@ -126,6 +126,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         bank,
         formattedReportPeriod,
         enablePaymentsReceivedSorting: true,
+        canGenerateKeyingData: false,
         reportId: '1',
         feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
         errorSummary: undefined,
@@ -221,6 +222,72 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
       expect(viewModel.enablePaymentsReceivedSorting).toBe(false);
+    });
+
+    it("renders the page with 'canGenerateKeyingData' set to false if no fee record payment groups have the 'MATCH' status", async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+
+      const utilisationReportReconciliationDetails: UtilisationReportReconciliationDetailsResponseBody = {
+        ...aUtilisationReportReconciliationDetailsResponse(),
+        feeRecordPaymentGroups: [
+          {
+            ...aFeeRecordPaymentGroup(),
+            status: 'TO_DO',
+          },
+          {
+            ...aFeeRecordPaymentGroup(),
+            status: 'DOES_NOT_MATCH',
+          },
+          {
+            ...aFeeRecordPaymentGroup(),
+            status: 'RECONCILED',
+          },
+        ],
+      };
+
+      jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
+
+      // Act
+      await getUtilisationReportReconciliationByReportId(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
+      const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
+      expect(viewModel.canGenerateKeyingData).toBe(false);
+    });
+
+    it("renders the page with 'canGenerateKeyingData' set to true if at least one fee record payment group has the 'MATCH' status", async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+
+      const utilisationReportReconciliationDetails: UtilisationReportReconciliationDetailsResponseBody = {
+        ...aUtilisationReportReconciliationDetailsResponse(),
+        feeRecordPaymentGroups: [
+          {
+            ...aFeeRecordPaymentGroup(),
+            status: 'TO_DO',
+          },
+          {
+            ...aFeeRecordPaymentGroup(),
+            status: 'DOES_NOT_MATCH',
+          },
+          {
+            ...aFeeRecordPaymentGroup(),
+            status: 'MATCH',
+          },
+        ],
+      };
+
+      jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
+
+      // Act
+      await getUtilisationReportReconciliationByReportId(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
+      const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
+      expect(viewModel.canGenerateKeyingData).toBe(true);
     });
   });
 });

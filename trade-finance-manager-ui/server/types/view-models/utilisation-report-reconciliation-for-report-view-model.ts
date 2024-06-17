@@ -39,6 +39,7 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   formattedReportPeriod: string;
   reportId: string;
   enablePaymentsReceivedSorting: boolean;
+  canGenerateKeyingData: boolean;
   feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[];
   errorSummary: [ErrorSummaryViewModel] | undefined;
 };

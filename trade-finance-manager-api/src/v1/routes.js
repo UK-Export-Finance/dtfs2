@@ -161,4 +161,8 @@ authRouter
     utilisationReportsController.getUtilisationReportSummariesByBankAndYear,
   );
 
+authRouter
+  .route('/utilisation-reports/:reportId/keying-data')
+  .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.postKeyingData);
+
 module.exports = { authRouter, openRouter };

@@ -6,3 +6,4 @@ export { NotImplementedError } from './not-implemented.error';
 export { TransactionFailedError } from './transaction-failed.error';
 export { WriteConcernError } from './write-concern.error';
 export { NotFoundError } from './not-found.error';
+export { NoMatchingFeeRecordsError } from './no-matching-fee-records.error';

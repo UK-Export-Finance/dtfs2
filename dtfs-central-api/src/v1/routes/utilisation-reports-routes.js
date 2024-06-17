@@ -16,6 +16,7 @@ const {
 } = require('../controllers/utilisation-report-service/get-utilisation-report-reconciliation-details-by-id.controller');
 const { getSelectedFeeRecordDetails } = require('../controllers/utilisation-report-service/get-selected-fee-records-details.controller');
 const { postPayment } = require('../controllers/utilisation-report-service/post-payment.controller');
+const { postKeyingData } = require('../controllers/utilisation-report-service/post-keying-data.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -268,5 +269,31 @@ utilisationReportsRouter
 utilisationReportsRouter
   .route('/:reportId/payment')
   .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePostPaymentPayload, postPayment);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/keying-data:
+ *   post:
+ *     summary: Generate keying data for a utilisation report
+ *     tags: [Utilisation Report]
+ *     description: Generates keying data for the utilisation report with the supplied report id
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report to generate keying data for
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter.route('/:reportId/keying-data').post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, postKeyingData);
 
 module.exports = utilisationReportsRouter;
