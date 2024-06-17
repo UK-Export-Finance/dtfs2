@@ -568,6 +568,14 @@ describe(baseUrl, () => {
       getDeletedDocumentIds: () => facilitiesToDeleteIds,
       expectedSuccessResponseBody: { acknowledged: true },
     });
+
+    it('returns 404 if there are no facilities to delete', async () => {
+      const { status: firstStatus } = await as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
+      const { status: secondStatus } = await as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
+
+      expect(firstStatus).toBe(200);
+      expect(secondStatus).toBe(404);
+    });
   });
 
   describe(`Overall Status: ${baseUrl}`, () => {

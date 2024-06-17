@@ -24,7 +24,7 @@ export const deleteAllDurableFunctions = async (req: CustomExpressRequest<{ reqB
     return res.status(200).send();
   } catch (error) {
     if (error instanceof DocumentNotDeletedError) {
-      return res.sendStatus(204);
+      return res.sendStatus(404);
     }
     console.error('ACBS DOF error %o', error);
 

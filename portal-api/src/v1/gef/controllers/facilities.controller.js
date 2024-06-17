@@ -226,7 +226,7 @@ exports.deleteByDealId = async (req, res) => {
     return res.status(200).send(response);
   } catch (error) {
     if (error instanceof DocumentNotDeletedError) {
-      return res.sendStatus(204);
+      return res.sendStatus(404);
     }
     console.error(error);
     return res.status(500).send({ status: 500, error });

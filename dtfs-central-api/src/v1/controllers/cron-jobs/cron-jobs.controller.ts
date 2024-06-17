@@ -30,7 +30,7 @@ export const deleteAllEstoreLogs = async (req: CustomExpressRequest<{ reqBody: {
     return res.status(200).send();
   } catch (error) {
     if (error instanceof DocumentNotDeletedError) {
-      return res.sendStatus(204);
+      return res.sendStatus(404);
     }
 
     console.error('CRON job error %o', error);

@@ -241,6 +241,14 @@ describe(baseUrl, () => {
       expect(status).toEqual(401);
     });
 
+    it('deletes the file', async () => {
+      const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
+
+      const { status } = await as(aMaker).remove(`${baseUrl}/${body[0]._id}`);
+
+      expect(status).toEqual(200);
+    });
+
     it('returns 500 if there is an api error', async () => {
       deleteFile.mockRejectedValueOnce(new Error('mock error'));
 
