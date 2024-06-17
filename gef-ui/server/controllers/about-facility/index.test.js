@@ -100,7 +100,7 @@ describe('controllers/about-facility', () => {
     });
   });
 
-  describe('Validate About Facility', () => {
+  describe('POST About Facility', () => {
     const now = new Date();
     const tomorrow = add(now, { days: 1 });
     const yesterday = sub(now, { days: 1 });
@@ -127,28 +127,62 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
       mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
+      if (isFacilityEndDateFeatureFlagEnabled()) {
+        mockRequest.body.facilityEndDateExists = 'true';
+      }
+
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
+      const expectedPayload = {
+        coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
+        coverStartDate: format(now, 'MMMM d, yyyy'),
+        facilityEndDateExists: true,
+        shouldCoverStartOnSubmission: null,
+        monthsOfCover: null,
+        name: undefined,
+        coverDateConfirmed: null,
+      };
+      if (isFacilityEndDateFeatureFlagEnabled()) {
+        expectedPayload.facilityEndDateExists = true;
+      }
       expect(api.updateFacility).toHaveBeenCalledWith({
         facilityId: 'xyz',
-        payload: {
-          coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-          coverStartDate: format(now, 'MMMM d, yyyy'),
-          shouldCoverStartOnSubmission: null,
-          monthsOfCover: null,
-          name: undefined,
-          coverDateConfirmed: null,
-        },
+        payload: expectedPayload,
         userToken,
       });
     });
 
-    it('calls api.updateApplication with editorId if successfully updates facility', async () => {
+    it('calls api.updateApplication with editorId if successfully updates facility when `saveAndReturn` true', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.query.saveAndReturn = 'true';
       mockRequest.body['cover-start-date-day'] = format(now, 'd');
       mockRequest.body['cover-start-date-month'] = format(now, 'M');
       mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
+
+      mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
+
+      const expectedUpdateObj = {
+        editorId: '12345',
+      };
+
+      expect(updateApplicationSpy).toHaveBeenCalledWith({
+        dealId: mockRequest.params.dealId,
+        application: expectedUpdateObj,
+        userToken,
+      });
+    });
+
+    it('calls api.updateApplication with editorId if successfully updates facility when `saveAndReturn` false', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.query.saveAndReturn = 'false';
+      mockRequest.body['cover-start-date-day'] = format(now, 'd');
+      mockRequest.body['cover-start-date-month'] = format(now, 'M');
+      mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
+      mockRequest.body.facilityEndDateExists = 'false';
 
       mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
@@ -775,6 +809,24 @@ describe('controllers/about-facility', () => {
       );
     });
 
+    if (isFacilityEndDateFeatureFlagEnabled()) {
+      it('shows error message if facilityEndDateExists is not a boolean', async () => {
+        mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+        mockRequest.body.hasBeenIssued = 'true';
+
+        await validateAndUpdateAboutFacility(mockRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/about-facility.njk',
+          expect.objectContaining({
+            errors: expect.objectContaining({
+              errorSummary: expect.arrayContaining([{ href: '#facilityEndDateExists', text: 'Select if there is an end date for this facility' }]),
+            }),
+          }),
+        );
+      });
+    }
+
     it('redirects user to provided facility page if all of method passes', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
@@ -785,6 +837,10 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-day'] = format(threeMonthsAndOneDayFromNow, 'd');
       mockRequest.body['cover-end-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
       mockRequest.body['cover-end-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
+
+      if (isFacilityEndDateFeatureFlagEnabled()) {
+        mockRequest.body.facilityEndDateExists = 'true';
+      }
 
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
