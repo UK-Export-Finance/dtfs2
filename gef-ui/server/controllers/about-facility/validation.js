@@ -303,7 +303,7 @@ const validateAboutFacility = ({
   }
 
   if (isFacilityEndDateFeatureFlagEnabled()) {
-    if (!facilityEndDateExists) {
+    if (!facilityEndDateExists && !saveAndReturn) {
       aboutFacilityErrors.push({
         errRef: 'facilityEndDateExists',
         errMsg: 'Select if there is an end date for this facility',
