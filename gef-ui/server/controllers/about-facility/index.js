@@ -22,6 +22,14 @@ const aboutFacility = async (req, res) => {
     const coverEndDate = details.coverEndDate ? new Date(details.coverEndDate) : null;
     const monthsOfCover = JSON.stringify(details.monthsOfCover);
 
+    let facilityEndDateExists;
+    if (details.facilityEndDateExists === true) {
+      facilityEndDateExists = 'true';
+    }
+    if (details.facilityEndDateExists === false) {
+      facilityEndDateExists = 'false';
+    }
+
     return res.render('partials/about-facility.njk', {
       facilityType: FACILITY_TYPE[details.type.toUpperCase()],
       facilityName: details.name,
@@ -39,6 +47,7 @@ const aboutFacility = async (req, res) => {
       facilityId,
       status,
       isFacilityEndDateFeatureFlagEnabled: isFacilityEndDateFeatureFlagEnabled(),
+      facilityEndDateExists,
     });
   } catch (error) {
     return res.render('partials/problem-with-service.njk');
@@ -150,6 +159,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
         coverStartDate: coverStartDate ? format(coverStartDate, DATE_FORMAT.COVER) : null,
         coverEndDate: coverEndDate ? format(coverEndDate, DATE_FORMAT.COVER) : null,
         coverDateConfirmed: deal.submissionType === DEAL_SUBMISSION_TYPE.AIN ? true : null,
+        facilityEndDateExists: isFacilityEndDateFeatureFlagEnabled() ? isTrueSet(facilityEndDateExists) : undefined,
       },
       userToken,
     });

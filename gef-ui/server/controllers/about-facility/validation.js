@@ -1,5 +1,6 @@
 const { add, isAfter, isBefore, isEqual, set } = require('date-fns');
 const Joi = require('joi');
+const { isFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { isTrueSet } = require('../../utils/helpers');
 
 /**
@@ -183,13 +184,6 @@ const validateAboutFacility = ({
         subFieldErrorRefs: dateFieldsInError,
       });
     }
-
-    if (!facilityEndDateExists) {
-      aboutFacilityErrors.push({
-        errRef: 'facilityEndDateExists',
-        errMsg: 'Select if there is an end date for this facility',
-      });
-    }
   }
   // Only validate months of cover if hasBeenIssued is set to No
   if (!saveAndReturn && !isTrueSet(hasBeenIssued) && !monthsOfCover) {
@@ -304,6 +298,15 @@ const validateAboutFacility = ({
       aboutFacilityErrors.push({
         errRef: 'monthsOfCover',
         errMsg: 'You can only enter a maximum of 999 months cover',
+      });
+    }
+  }
+
+  if (isFacilityEndDateFeatureFlagEnabled()) {
+    if (!facilityEndDateExists) {
+      aboutFacilityErrors.push({
+        errRef: 'facilityEndDateExists',
+        errMsg: 'Select if there is an end date for this facility',
       });
     }
   }

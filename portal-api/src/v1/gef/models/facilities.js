@@ -1,3 +1,4 @@
+const { isFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const convertToTimestamp = require('../../helpers/convertToTimestamp');
 
@@ -186,6 +187,10 @@ class Facility {
 
       if (req.specialIssuePermission != null) {
         this.specialIssuePermission = Object(req.specialIssuePermission);
+      }
+
+      if (isFacilityEndDateFeatureFlagEnabled() && typeof req.facilityEndDateExists === 'boolean') {
+        this.facilityEndDateExists = req.facilityEndDateExists;
       }
 
       this.updatedAt = Date.now();
