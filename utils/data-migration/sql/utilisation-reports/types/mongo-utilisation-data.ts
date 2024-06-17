@@ -1,9 +1,7 @@
 import { WithId } from 'mongodb';
-import { Currency } from '../currency';
-import { ReportPeriod } from '../utilisation-reports';
+import { Currency, ReportPeriod } from '@ukef/dtfs2-common';
 
-// TODO FN-1853 to be removed as this is now an sql table
-export type UtilisationData = WithId<{
+export type MongoUtilisationData = WithId<{
   facilityId: string;
   /**
    * The '_id' of the associated report from the 'utilisationReports' collection
