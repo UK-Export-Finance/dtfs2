@@ -96,7 +96,7 @@ describe('api', () => {
 
   describe('addDealComment', () => {
     it('should return false when an invalid dealId is provided', async () => {
-      const response = await api.addDealComment(invalidId, deal, {});
+      const response = await api.addDealComment(invalidId, deal, {}, mockPortalAuditDetails);
 
       expect(response).toEqual(false);
     });
@@ -106,13 +106,13 @@ describe('api', () => {
 
       mock.onPost(`${DTFS_CENTRAL_API_URL}/v1/portal/deals/${validId}/comment`).reply(200, success);
 
-      const response = await api.addDealComment(validId);
+      const response = await api.addDealComment(validId, undefined, undefined, mockPortalAuditDetails);
 
       expect(response).toEqual(success);
     });
 
     it('should return false when a non-existent dealId is provided', async () => {
-      const response = await api.addDealComment(validNonExistentId, deal, {});
+      const response = await api.addDealComment(validNonExistentId, deal, {}, mockPortalAuditDetails);
 
       expect(response).toEqual(false);
     });

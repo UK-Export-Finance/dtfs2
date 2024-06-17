@@ -1,3 +1,4 @@
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
@@ -244,6 +245,18 @@ describe('/v1/deals/:id/status', () => {
           isTrusted: aBarclaysMaker.isTrusted,
         },
       });
+    });
+
+    it('updates the audit record', async () => {
+      const statusUpdate = {
+        comments: 'Flee!',
+        status: 'Abandoned',
+      };
+
+      await as(aBarclaysMaker).put(statusUpdate).to(urlForDealStatus);
+
+      const { body } = await as(aBarclaysMaker).get(urlForDeal);
+      expect(body.deal.auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id));
     });
 
     it('adds the user to `editedBy` array', async () => {
