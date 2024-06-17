@@ -1,6 +1,6 @@
 import orderBy from 'lodash.orderby';
 import { FeeRecordStatus, getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
-import { FeeRecordItem, FeeRecordPaymentGroup, PaymentItem } from '../../../api-response-types';
+import { FeeRecordItem, FeeRecordPaymentGroup, Payment } from '../../../api-response-types';
 import { FeeRecordDisplayStatus, FeeRecordPaymentGroupViewModelItem, FeeRecordViewModelItem, PaymentViewModelItem } from '../../../types/view-models';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
 import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
@@ -36,7 +36,7 @@ const mapFeeRecordItemsToFeeRecordViewModelItems = (feeRecordItems: FeeRecordIte
  * @param paymentsReceived - The list of received payments
  * @returns The payment view model items
  */
-const mapPaymentItemsToPaymentViewModelItems = (paymentsReceived: PaymentItem[] | null): PaymentViewModelItem[] | undefined => {
+const mapPaymentsToPaymentViewModelItems = (paymentsReceived: Payment[] | null): PaymentViewModelItem[] | undefined => {
   if (!paymentsReceived) {
     return undefined;
   }
@@ -80,7 +80,7 @@ export const mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems = (
 
     const feeRecordsSortedByReportedPayments = sortFeeRecordsByReportedPayments(feeRecords);
     const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordsSortedByReportedPayments);
-    const paymentViewModelItems = mapPaymentItemsToPaymentViewModelItems(paymentsReceived);
+    const paymentViewModelItems = mapPaymentsToPaymentViewModelItems(paymentsReceived);
 
     return {
       feeRecords: feeRecordViewModelItems,

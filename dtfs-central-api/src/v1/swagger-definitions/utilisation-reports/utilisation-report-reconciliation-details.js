@@ -14,7 +14,7 @@
  *         $ref: '#/definitions/CurrencyAndAmount'
  *       reportedPayments:
  *         $ref: '#/definitions/CurrencyAndAmount'
- *   UtilisationReportReconciliationDetailsPaymentItem:
+ *   UtilisationReportReconciliationDetailsPayment:
  *     type: object
  *     properties:
  *       id:
@@ -36,7 +36,7 @@
  *         type: array
  *         nullable: true
  *         items:
- *           $ref: '#/definitions/UtilisationReportReconciliationDetailsPaymentItem'
+ *           $ref: '#/definitions/UtilisationReportReconciliationDetailsPayment'
  *       totalPaymentsReceived:
  *         $ref: '#/definitions/CurrencyAndAmount'
  *         nullable: true

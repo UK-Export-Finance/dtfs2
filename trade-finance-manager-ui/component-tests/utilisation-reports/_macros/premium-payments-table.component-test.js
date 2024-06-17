@@ -308,7 +308,7 @@ describe(component, () => {
       const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
       paymentsReceived.forEach((payment) => {
         wrapper
-          .expectLink(`${rowSelector} td > ul.payments-list > li > a:contains(${payment.formattedCurrencyAndAmount})`)
+          .expectLink(`${rowSelector} td a:contains(${payment.formattedCurrencyAndAmount})`)
           .toLinkTo(`/utilisation-reports/${reportId}/edit-payment/${payment.id}`, payment.formattedCurrencyAndAmount);
       });
     },
@@ -338,8 +338,8 @@ describe(component, () => {
 
       const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
       paymentsReceived.forEach((payment) => {
-        wrapper.expectElement(`${rowSelector} td > ul.payments-list > li:contains(${payment.formattedCurrencyAndAmount})`).toExist();
-        wrapper.expectElement(`${rowSelector} td > ul.payments-list > li > a:contains(${payment.formattedCurrencyAndAmount})`).notToExist();
+        wrapper.expectElement(`${rowSelector} td li:contains(${payment.formattedCurrencyAndAmount})`).toExist();
+        wrapper.expectElement(`${rowSelector} td a:contains(${payment.formattedCurrencyAndAmount})`).notToExist();
       });
     },
   );

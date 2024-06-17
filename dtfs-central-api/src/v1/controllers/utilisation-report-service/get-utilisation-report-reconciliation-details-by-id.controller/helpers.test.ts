@@ -12,7 +12,7 @@ import { when } from 'jest-when';
 import { mapUtilisationReportEntityToReconciliationDetails } from './helpers';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
-import { FeeRecordItem, PaymentItem, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
+import { FeeRecordItem, Payment, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
 
 jest.mock('../../../../repositories/banks-repo');
 
@@ -267,7 +267,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         // Assert
         expect(mappedReport.feeRecordPaymentGroups[0].paymentsReceived).toHaveLength(payments.length);
         mappedReport.feeRecordPaymentGroups[0].paymentsReceived!.forEach((paymentsReceivedItem, index) => {
-          const expectedPaymentsReceived: PaymentItem = {
+          const expectedPaymentsReceived: Payment = {
             currency: payments[index].currency,
             amount: payments[index].amount,
             id: payments[index].id,

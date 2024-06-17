@@ -1,45 +1,45 @@
 import { Currency, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
-import { mapPaymentEntityToPaymentItem } from './payment-mapper';
+import { mapPaymentEntityToPayment } from './payment-mapper';
 
 describe('payment mapper', () => {
-  describe('mapPaymentEntityToPaymentItem', () => {
-    it('maps the payment currency to the payment item currency', () => {
+  describe('mapPaymentEntityToPayment', () => {
+    it('maps the payment entity currency to the payment currency', () => {
       // Arrange
       const paymentCurrency: Currency = 'GBP';
 
-      const payment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).build();
+      const paymentEntity = PaymentEntityMockBuilder.forCurrency(paymentCurrency).build();
 
       // Act
-      const paymentItem = mapPaymentEntityToPaymentItem(payment);
+      const payment = mapPaymentEntityToPayment(paymentEntity);
 
       // Assert
-      expect(paymentItem.currency).toBe(paymentCurrency);
+      expect(payment.currency).toBe(paymentCurrency);
     });
 
-    it('maps the payment amount to the payment item amount', () => {
+    it('maps the payment entity amount to the payment amount', () => {
       // Arrange
       const paymentAmount = 100;
 
-      const payment = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(paymentAmount).build();
+      const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(paymentAmount).build();
 
       // Act
-      const paymentItem = mapPaymentEntityToPaymentItem(payment);
+      const payment = mapPaymentEntityToPayment(paymentEntity);
 
       // Assert
-      expect(paymentItem.amount).toBe(paymentAmount);
+      expect(payment.amount).toBe(paymentAmount);
     });
 
-    it('maps the payment id to the payment item id', () => {
+    it('maps the payment entity id to the payment id', () => {
       // Arrange
       const paymentId = 12;
 
-      const payment = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).build();
+      const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).build();
 
       // Act
-      const paymentItem = mapPaymentEntityToPaymentItem(payment);
+      const payment = mapPaymentEntityToPayment(paymentEntity);
 
       // Assert
-      expect(paymentItem.id).toBe(paymentId);
+      expect(payment.id).toBe(paymentId);
     });
   });
 });
