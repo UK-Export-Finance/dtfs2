@@ -13,6 +13,7 @@ const createFacility = async (facility, user, routePath, auditDetails) => {
   const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
   const newFacility = {
+    ...facility,
     dealId: new ObjectId(facility.dealId),
     createdDate: Date.now(),
     updatedAt: Date.now(),
