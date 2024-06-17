@@ -21,7 +21,7 @@ describe('get selected fee records details controller', () => {
       },
     });
 
-  const findReportSpy = jest.spyOn(UtilisationReportRepo, 'findOneByIdWithFeeRecordsFilteredById');
+  const findReportSpy = jest.spyOn(UtilisationReportRepo, 'findOneByIdWithFeeRecordsFilteredByIdWithPayments');
 
   afterEach(() => {
     jest.resetAllMocks();
