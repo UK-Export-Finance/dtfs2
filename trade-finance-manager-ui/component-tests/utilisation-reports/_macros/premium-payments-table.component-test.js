@@ -41,7 +41,7 @@ describe(component, () => {
     },
   ];
 
-  const getWrapper = () => render({ feeRecordPaymentGroups: aFeeRecordPaymentGroupList(), enablePaymentsReceivedSorting: true });
+  const getWrapper = () => render({ reportId: 1, feeRecordPaymentGroups: aFeeRecordPaymentGroupList(), enablePaymentsReceivedSorting: true });
 
   const numericCellClass = 'govuk-table__cell--numeric';
 
@@ -278,6 +278,71 @@ describe(component, () => {
     const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectElement(`${rowSelector} td > ul.payments-list > li`).toHaveCount(paymentsReceived.length);
   });
+
+  const FEE_RECORD_STATUSES_WHERE_PAYMENTS_RECEIVED_SHOULD_BE_LINKS = [FEE_RECORD_STATUS.MATCH, FEE_RECORD_STATUS.DOES_NOT_MATCH];
+
+  it.each(FEE_RECORD_STATUSES_WHERE_PAYMENTS_RECEIVED_SHOULD_BE_LINKS)(
+    "should render the payments received as links to the edit payment page when the fee record status is '%s'",
+    (status) => {
+      const feeRecordId = 1;
+      const feeRecordItems = [{ ...aFeeRecordViewModelItem(), id: feeRecordId }];
+
+      const paymentsReceived = [
+        { id: 1, formattedCurrencyAndAmount: 'GBP 100.00' },
+        { id: 2, formattedCurrencyAndAmount: 'GBP 200.00' },
+      ];
+
+      const feeRecordPaymentGroups = [
+        {
+          ...aFeeRecordPaymentGroup(),
+          feeRecords: feeRecordItems,
+          status,
+          paymentsReceived,
+        },
+      ];
+
+      const reportId = 12;
+
+      const wrapper = render({ reportId, feeRecordPaymentGroups });
+
+      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+      paymentsReceived.forEach((payment) => {
+        wrapper
+          .expectLink(`${rowSelector} td a:contains(${payment.formattedCurrencyAndAmount})`)
+          .toLinkTo(`/utilisation-reports/${reportId}/edit-payment/${payment.id}`, payment.formattedCurrencyAndAmount);
+      });
+    },
+  );
+
+  it.each(difference(Object.values(FEE_RECORD_STATUS), FEE_RECORD_STATUSES_WHERE_PAYMENTS_RECEIVED_SHOULD_BE_LINKS))(
+    "should render the payments received as plain text when the status is '%s'",
+    (status) => {
+      const feeRecordId = 1;
+      const feeRecordItems = [{ ...aFeeRecordViewModelItem(), id: feeRecordId }];
+
+      const paymentsReceived = [
+        { formattedCurrencyAndAmount: 'GBP 100.00', id: 1 },
+        { formattedCurrencyAndAmount: 'GBP 200.00', id: 2 },
+      ];
+
+      const feeRecordPaymentGroups = [
+        {
+          ...aFeeRecordPaymentGroup(),
+          feeRecords: feeRecordItems,
+          status,
+          paymentsReceived,
+        },
+      ];
+
+      const wrapper = render({ feeRecordPaymentGroups });
+
+      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+      paymentsReceived.forEach((payment) => {
+        wrapper.expectElement(`${rowSelector} td li:contains(${payment.formattedCurrencyAndAmount})`).toExist();
+        wrapper.expectElement(`${rowSelector} td a:contains(${payment.formattedCurrencyAndAmount})`).notToExist();
+      });
+    },
+  );
 
   it('should not render the payments received list when the group payments received is undefined', () => {
     const feeRecordId = 1;

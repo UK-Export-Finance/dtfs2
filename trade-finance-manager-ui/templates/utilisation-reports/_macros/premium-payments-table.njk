@@ -3,6 +3,7 @@
 {% import "./premium-payments-table-row.njk" as premiumPaymentsTableRow %}
 
 {% macro render(params) %}
+  {% set reportId = params.reportId %}
   {% set feeRecordPaymentGroups = params.feeRecordPaymentGroups %}
   {% set enablePaymentsReceivedSorting = params.enablePaymentsReceivedSorting %}
 
@@ -43,7 +44,7 @@
 
     <tbody class="govuk-table__body">
     {% for feeRecordPaymentGroup in feeRecordPaymentGroups %}
-      {{ premiumPaymentsTableRow.render({ feeRecordPaymentGroup: feeRecordPaymentGroup }) }}
+      {{ premiumPaymentsTableRow.render({ reportId: reportId, feeRecordPaymentGroup: feeRecordPaymentGroup }) }}
     {% endfor %}
     </tbody>
   </table>

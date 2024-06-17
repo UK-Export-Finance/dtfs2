@@ -1,6 +1,5 @@
 import httpMocks from 'node-mocks-http';
 import { SessionData } from 'express-session';
-import { CurrencyAndAmountString } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getUtilisationReportReconciliationByReportId } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
@@ -78,7 +77,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
               },
             ],
             totalReportedPayments: { currency: 'GBP', amount: 100 },
-            paymentsReceived: [{ currency: 'GBP', amount: 100 }],
+            paymentsReceived: [{ id: 1, currency: 'GBP', amount: 100 }],
             totalPaymentsReceived: { currency: 'GBP', amount: 100 },
             status: 'TO_DO',
           },
@@ -101,7 +100,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
             formattedCurrencyAndAmount: 'GBP 100.00',
             dataSortValue: 0,
           },
-          paymentsReceived: ['GBP 100.00' as CurrencyAndAmountString],
+          paymentsReceived: [{ id: 1, formattedCurrencyAndAmount: 'GBP 100.00' }],
           totalPaymentsReceived: {
             formattedCurrencyAndAmount: 'GBP 100.00',
             dataSortValue: 0,
@@ -176,7 +175,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
           },
           {
             ...aFeeRecordPaymentGroup(),
-            paymentsReceived: [{ currency: 'GBP', amount: 100 }],
+            paymentsReceived: [{ id: 1, currency: 'GBP', amount: 100 }],
             totalPaymentsReceived: { currency: 'GBP', amount: 100 },
           },
         ],

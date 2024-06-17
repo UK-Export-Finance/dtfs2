@@ -8,10 +8,14 @@ type FeeRecordItem = {
   reportedPayments: CurrencyAndAmount;
 };
 
+type Payment = CurrencyAndAmount & {
+  id: number;
+};
+
 type FeeRecordPaymentGroup = {
   feeRecords: FeeRecordItem[];
   totalReportedPayments: CurrencyAndAmount;
-  paymentsReceived: CurrencyAndAmount[] | null;
+  paymentsReceived: Payment[] | null;
   totalPaymentsReceived: CurrencyAndAmount | null;
   status: FeeRecordStatus;
 };
