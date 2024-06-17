@@ -21,7 +21,6 @@ const addDealComment = async (_id, commentType, comment, auditDetails) => {
           $each: [
             {
               ...comment,
-              auditRecord,
               timestamp: Date.now(),
             },
           ],
@@ -41,37 +40,17 @@ const addDealComment = async (_id, commentType, comment, auditDetails) => {
 };
 
 exports.addDealCommentPost = async (req, res) => {
+  const {
+    params: { id: dealId },
+    body: { commentType, comment, auditDetails },
+  } = req;
+
+  if (!ObjectId.isValid(dealId)) {
+    res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  }
+
   try {
-    const {
-      params: { id: dealId },
-      body: { commentType, comment, auditDetails },
-    } = req;
-
-    if (!ObjectId.isValid(dealId)) {
-      res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
-    }
-
-    try {
-      validateAuditDetails(auditDetails);
-    } catch (error) {
-      if (error instanceof InvalidAuditDetailsError) {
-        return res.status(error.status).send({
-          status: error.status,
-          message: `Invalid auditDetails, ${error.message}`,
-        });
-      }
-      return res.status(500).send({ status: 500, error });
-    }
-
-    return findOneDeal(dealId, async (deal) => {
-      if (!deal) {
-        return res.status(404).send({ status: 400, message: 'Deal not found' });
-      }
-
-      const updatedDeal = await addDealComment(dealId, commentType, comment, auditDetails);
-
-      return res.status(200).json(updatedDeal);
-    });
+    validateAuditDetails(auditDetails);
   } catch (error) {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
@@ -79,7 +58,16 @@ exports.addDealCommentPost = async (req, res) => {
         message: `Invalid auditDetails, ${error.message}`,
       });
     }
-
-    throw error;
+    return res.status(500).send({ status: 500, error });
   }
+
+  return findOneDeal(dealId, async (deal) => {
+    if (!deal) {
+      return res.status(404).send({ status: 400, message: 'Deal not found' });
+    }
+
+    const updatedDeal = await addDealComment(dealId, commentType, comment, auditDetails);
+
+    return res.status(200).json(updatedDeal);
+  });
 };
