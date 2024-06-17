@@ -11,6 +11,7 @@ const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../../helpers/create-deal');
 const { mongoDbClient } = require('../../../../src/drivers/db-client');
+const { createFacility } = require('../../../helpers/create-facility');
 
 const newDeal = aDeal({
   dealType: DEALS.DEAL_TYPE.BSS_EWCS,
@@ -48,10 +49,7 @@ describe('/v1/tfm/deal/:id', () => {
     beforeEach(async () => {
       const postResult = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
       const portalDealId = postResult.body._id;
-
-      await Promise.all(
-        newFacilities.map((facility) => api.post({ facility: { ...facility, dealId: portalDealId }, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities')),
-      );
+      await Promise.all(newFacilities.map((facility) => createFacility({ api, facility: { ...facility, dealId: portalDealId }, user: MOCK_PORTAL_USER })));
 
       const submitResult = await api
         .put({

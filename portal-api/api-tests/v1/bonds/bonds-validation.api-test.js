@@ -354,8 +354,7 @@ describe('/v1/deals/:id/bond', () => {
                 criteria: [{ id: 15, answer: false }],
               },
             };
-
-            await as(aBarclaysMaker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
+            await updateDeal(dealWithEligibilityCriteria15False);
 
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': format(todayPlus3Months1Day, 'dd'),

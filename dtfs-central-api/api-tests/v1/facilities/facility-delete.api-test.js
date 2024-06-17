@@ -9,6 +9,7 @@ const { DEALS } = require('../../../src/constants');
 const aDeal = require('../deal-builder');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../helpers/create-deal');
+const { createFacility } = require('../../helpers/create-facility');
 
 const newDeal = aDeal({
   dealType: DEALS.DEAL_TYPE.BSS_EWCS,
@@ -24,16 +25,14 @@ describe('DELETE /v1/portal/facilities/:id', () => {
     const { body: deal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
     dealId = deal._id;
 
-    const createFacilityResult = await api
-      .post({
-        facility: {
-          dealId,
-          type: 'Bond',
-        },
-        user: MOCK_PORTAL_USER,
-      })
-      .to('/v1/portal/facilities');
-
+    const createFacilityResult = await createFacility({
+      api,
+      facility: {
+        dealId,
+        type: 'Bond',
+      },
+      user: MOCK_PORTAL_USER,
+    });
     documentToDeleteId = new ObjectId(createFacilityResult.body._id);
 
     jest.clearAllMocks();

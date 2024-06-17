@@ -35,7 +35,7 @@ const findOnePortalDeal = async (dealId) => {
   }
 };
 
-const updatePortalDeal = async (dealId, update) => {
+const updatePortalDeal = async (dealId, update, auditDetails) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -50,6 +50,7 @@ const updatePortalDeal = async (dealId, update) => {
       headers: headers.central,
       data: {
         dealUpdate: update,
+        auditDetails,
       },
     });
 

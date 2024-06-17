@@ -10,6 +10,7 @@ const CONSTANTS = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../../helpers/create-deal');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
+const { createFacility } = require('../../../helpers/create-facility');
 
 const newFacility = {
   type: 'Bond',
@@ -49,7 +50,7 @@ describe('/v1/tfm/facilities', () => {
 
   describe('PUT /v1/tfm/facilities/:id', () => {
     it('returns 404 when adding facility to non-existent deal', async () => {
-      await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+      await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
       await api
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
@@ -69,7 +70,7 @@ describe('/v1/tfm/facilities', () => {
       let createdFacility;
 
       beforeEach(async () => {
-        const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER, auditDetails: portalAuditDetails }).to('/v1/portal/facilities');
+        const postResult = await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
 
         await api
           .put({
