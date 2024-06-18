@@ -1,5 +1,5 @@
 import { add, sub, format } from 'date-fns';
-import { isFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
+import { isFacilityEndDateEnabledByDefault } from '@ukef/dtfs2-common';
 import { aboutFacility, validateAndUpdateAboutFacility } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
@@ -56,7 +56,7 @@ describe('controllers/about-facility', () => {
     mockRequest = MockRequest();
     mockFacilityResponse = MockFacilityResponse();
 
-    api.getApplication.mockResolvedValue({});
+    api.getApplication.mockResolvedValue({ version: 0 }); // TODO: get the default version number
     api.getFacility.mockResolvedValue(mockFacilityResponse);
     api.updateFacility.mockResolvedValue({});
     api.updateApplication = updateApplicationSpy;
@@ -88,7 +88,7 @@ describe('controllers/about-facility', () => {
           dealId: '123',
           facilityId: 'xyz',
           status: 'change',
-          isFacilityEndDateFeatureFlagEnabled: isFacilityEndDateFeatureFlagEnabled(),
+          isFacilityEndDateEnabled: isFacilityEndDateEnabledByDefault(),
         }),
       );
     });
@@ -127,7 +127,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
       mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-      if (isFacilityEndDateFeatureFlagEnabled()) {
+      if (isFacilityEndDateEnabledByDefault()) {
         mockRequest.body.facilityEndDateExists = 'true';
       }
 
@@ -142,7 +142,7 @@ describe('controllers/about-facility', () => {
         name: undefined,
         coverDateConfirmed: null,
       };
-      if (isFacilityEndDateFeatureFlagEnabled()) {
+      if (isFacilityEndDateEnabledByDefault()) {
         expectedPayload.facilityEndDateExists = true;
       }
       expect(api.updateFacility).toHaveBeenCalledWith({
@@ -809,7 +809,7 @@ describe('controllers/about-facility', () => {
       );
     });
 
-    if (isFacilityEndDateFeatureFlagEnabled()) {
+    if (isFacilityEndDateEnabledByDefault()) {
       it('shows error message if facilityEndDateExists is not a boolean', async () => {
         mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
         mockRequest.body.hasBeenIssued = 'true';
@@ -838,7 +838,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
       mockRequest.body['cover-end-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
 
-      if (isFacilityEndDateFeatureFlagEnabled()) {
+      if (isFacilityEndDateEnabledByDefault()) {
         mockRequest.body.facilityEndDateExists = 'true';
       }
 

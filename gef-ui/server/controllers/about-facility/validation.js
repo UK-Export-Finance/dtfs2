@@ -1,6 +1,5 @@
 const { add, isAfter, isBefore, isEqual, set } = require('date-fns');
 const Joi = require('joi');
-const { isFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { isTrueSet } = require('../../utils/helpers');
 
 /**
@@ -41,6 +40,7 @@ const validateAboutFacility = ({
   facilityName,
   shouldCoverStartOnSubmission,
   facilityEndDateExists,
+  isFacilityEndDateEnabled,
 }) => {
   let coverEndDateValid = true;
 
@@ -302,7 +302,7 @@ const validateAboutFacility = ({
     }
   }
 
-  if (isFacilityEndDateFeatureFlagEnabled()) {
+  if (isFacilityEndDateEnabled) {
     if (!facilityEndDateExists && !saveAndReturn) {
       aboutFacilityErrors.push({
         errRef: 'facilityEndDateExists',

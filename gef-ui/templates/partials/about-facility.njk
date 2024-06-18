@@ -131,7 +131,7 @@
           }) }}
         {% endif %}
 
-        {% if isFacilityEndDateFeatureFlagEnabled %}
+        {% if isFacilityEndDateEnabled %}
           {{ facilityEndDateSection.render(facilityEndDateExists, errors)}}
           {{ whatIsAFacilityEndDate.render() }}
         {% endif %}

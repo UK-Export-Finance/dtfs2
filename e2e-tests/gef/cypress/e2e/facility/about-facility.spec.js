@@ -50,8 +50,7 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateDay();
       aboutFacility.coverEndDateMonth();
       aboutFacility.coverEndDateYear();
-      // TODO: DTFS2-7224 - remove feature flag
-      if (Cypress.env('FF_FACILITY_END_DATE_ENABLED')) {
+      if (applications[1].version >= 1) {
         aboutFacility.facilityEndDateExistsYes();
         aboutFacility.facilityEndDateExistsNo();
       }
@@ -73,8 +72,7 @@ context('About Facility Page', () => {
       aboutFacility.facilityNameError();
       aboutFacility.shouldCoverStartOnSubmissionError();
       aboutFacility.coverEndDateError();
-      // TODO: DTFS2-7224 - remove feature flag
-      if (Cypress.env('FF_FACILITY_END_DATE_ENABLED')) {
+      if (applications[1].version >= 1) {
         aboutFacility.facilityEndDateExistsError();
       }
     });
@@ -186,8 +184,7 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateDay().type(now.getDate());
       aboutFacility.coverEndDateMonth().type(now.getMonth());
       aboutFacility.coverEndDateYear().type(now.getFullYear() + 1);
-      // TODO: DTFS2-7224 - remove feature flag
-      if (Cypress.env('FF_FACILITY_END_DATE_ENABLED')) {
+      if (applications[1].version >= 1) {
         aboutFacility.facilityEndDateExistsYes().click();
       }
       aboutFacility.continueButton().click();
@@ -197,7 +194,7 @@ context('About Facility Page', () => {
       );
     });
 
-    if (Cypress.env('FF_FACILITY_END_DATE_ENABLED')) {
+    if (applications[1].version >= 1) {
       it('stores the facility end date when returning to the page', () => {
         cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
         aboutFacility.facilityName().type('Name');
@@ -240,8 +237,7 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateDay().should('not.exist');
       aboutFacility.coverEndDateMonth().should('not.exist');
       aboutFacility.coverEndDateYear().should('not.exist');
-      // TODO: DTFS2-7224 - remove feature flag
-      if (Cypress.env('FF_FACILITY_END_DATE_ENABLED')) {
+      if (applications[1].version >= 1) {
         aboutFacility.facilityEndDateExistsYes();
         aboutFacility.facilityEndDateExistsNo();
       }
@@ -253,8 +249,7 @@ context('About Facility Page', () => {
     it('does not validate facility name field as its optional', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
       aboutFacility.monthsOfCover().type('10');
-      // TODO: DTFS2-7224 - remove feature flag
-      if (Cypress.env('FF_FACILITY_END_DATE_ENABLED')) {
+      if (applications[1].version >= 1) {
         aboutFacility.facilityEndDateExistsYes().click();
       }
       aboutFacility.continueButton().click();
@@ -293,8 +288,7 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateMonth();
       aboutFacility.coverEndDateYear();
       aboutFacility.continueButton();
-      // TODO: DTFS2-7224 - remove feature flag
-      if (Cypress.env('FF_FACILITY_END_DATE_ENABLED')) {
+      if (applications[2].version >= 1) {
         aboutFacility.facilityEndDateExistsYes();
         aboutFacility.facilityEndDateExistsNo();
       }
@@ -319,8 +313,7 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateMonth().should('not.exist');
       aboutFacility.coverEndDateYear().should('not.exist');
       aboutFacility.continueButton();
-      // TODO: DTFS2-7224 - remove feature flag
-      if (Cypress.env('FF_FACILITY_END_DATE_ENABLED')) {
+      if (applications[2].version >= 1) {
         aboutFacility.facilityEndDateExistsYes();
         aboutFacility.facilityEndDateExistsNo();
       }

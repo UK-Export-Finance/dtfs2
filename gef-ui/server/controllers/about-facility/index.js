@@ -1,5 +1,5 @@
 const { format, set } = require('date-fns');
-const { isFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { isFacilityEndDateEnabledOnDeal } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { FACILITY_TYPE, DATE_FORMAT, DEAL_SUBMISSION_TYPE } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
@@ -16,6 +16,7 @@ const aboutFacility = async (req, res) => {
 
   try {
     const { details } = await api.getFacility({ facilityId, userToken });
+    const deal = await api.getApplication({ dealId, userToken });
     const facilityTypeString = FACILITY_TYPE[details.type.toUpperCase()].toLowerCase();
     const shouldCoverStartOnSubmission = JSON.stringify(details.shouldCoverStartOnSubmission);
     const coverStartDate = details.coverStartDate ? new Date(details.coverStartDate) : null;
@@ -46,7 +47,7 @@ const aboutFacility = async (req, res) => {
       dealId,
       facilityId,
       status,
-      isFacilityEndDateFeatureFlagEnabled: isFacilityEndDateFeatureFlagEnabled(),
+      isFacilityEndDateEnabled: isFacilityEndDateEnabledOnDeal(deal.version ?? 0),
       facilityEndDateExists,
     });
   } catch (error) {
@@ -78,6 +79,8 @@ const validateAndUpdateAboutFacility = async (req, res) => {
     },
   } = req;
   const facilityTypeString = facilityType.toLowerCase();
+
+  const deal = await api.getApplication({ dealId, userToken });
 
   const coverStartDateIsFullyComplete = coverStartDateDay && coverStartDateMonth && coverStartDateYear;
   const coverEndDateIsFullyComplete = coverEndDateDay && coverEndDateMonth && coverEndDateYear;
@@ -123,6 +126,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
     facilityName,
     shouldCoverStartOnSubmission,
     facilityEndDateExists,
+    isFacilityEndDateEnabled: isFacilityEndDateEnabledOnDeal(deal.version ?? 0),
   });
 
   if (aboutFacilityErrors.length > 0) {
@@ -143,13 +147,12 @@ const validateAndUpdateAboutFacility = async (req, res) => {
       dealId,
       facilityId,
       status,
-      isFacilityEndDateFeatureFlagEnabled: isFacilityEndDateFeatureFlagEnabled(),
+      isFacilityEndDateEnabled: isFacilityEndDateEnabledOnDeal(deal.version ?? 0),
       facilityEndDateExists,
     });
   }
 
   try {
-    const deal = await api.getApplication({ dealId, userToken });
     await api.updateFacility({
       facilityId,
       payload: {
@@ -159,7 +162,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
         coverStartDate: coverStartDate ? format(coverStartDate, DATE_FORMAT.COVER) : null,
         coverEndDate: coverEndDate ? format(coverEndDate, DATE_FORMAT.COVER) : null,
         coverDateConfirmed: deal.submissionType === DEAL_SUBMISSION_TYPE.AIN ? true : null,
-        facilityEndDateExists: isFacilityEndDateFeatureFlagEnabled() ? isTrueSet(facilityEndDateExists) : undefined,
+        facilityEndDateExists: isFacilityEndDateEnabledOnDeal(deal.version ?? 0) ? isTrueSet(facilityEndDateExists) : undefined,
       },
       userToken,
     });

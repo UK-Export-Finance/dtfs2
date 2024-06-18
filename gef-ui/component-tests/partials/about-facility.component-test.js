@@ -1,5 +1,3 @@
-import { isFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
-
 const pageRenderer = require('../pageRenderer');
 const { FACILITY_TYPE } = require('../../server/constants');
 
@@ -36,7 +34,7 @@ describe(page, () => {
     dealId,
     facilityId,
     status: null,
-    isFacilityEndDateFeatureFlagEnabled: isFacilityEndDateFeatureFlagEnabled(),
+    isFacilityEndDateEnabled: true,
   };
 
   beforeEach(() => {
@@ -62,9 +60,9 @@ describe(page, () => {
     wrapper.expectInput('[data-cy="facility-name"]').toHaveValue(facilityName);
   });
 
-  describe('with the facility end date feature flag enabled', () => {
+  describe('with the facility end date enabled', () => {
     beforeEach(() => {
-      wrapper = render({ ...params, isFacilityEndDateFeatureFlagEnabled: true });
+      wrapper = render({ ...params, isFacilityEndDateEnabled: true });
     });
 
     it(`renders the 'What is a Facility End Date' details`, () => {
@@ -81,9 +79,9 @@ describe(page, () => {
     });
   });
 
-  describe('with the facility end date feature flag disabled', () => {
+  describe('with the facility end date disabled', () => {
     beforeEach(() => {
-      wrapper = render({ ...params, isFacilityEndDateFeatureFlagEnabled: false });
+      wrapper = render({ ...params, isFacilityEndDateEnabled: false });
     });
 
     it(`does not render the 'What is a Facility End Date' details`, () => {
