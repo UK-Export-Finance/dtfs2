@@ -1,3 +1,4 @@
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { add, format } = require('date-fns');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
@@ -586,6 +587,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             'requestedCoverStartDate-year': expect.any(Number),
             _id: expect.any(String),
             dealId,
+            auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id),
           });
 
           expect(body.deal.bondTransactions.items[2]).toEqual({
@@ -600,6 +602,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             'requestedCoverStartDate-year': expect.any(Number),
             _id: expect.any(String),
             dealId,
+            auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id),
           });
         });
       });
@@ -623,6 +626,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             'requestedCoverStartDate-year': expect.any(Number),
             _id: expect.any(String),
             dealId,
+            auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id),
           });
 
           expect(body.deal.loanTransactions.items[2]).toEqual({
@@ -637,6 +641,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             'requestedCoverStartDate-year': expect.any(Number),
             _id: expect.any(String),
             dealId,
+            auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id),
           });
         });
       });

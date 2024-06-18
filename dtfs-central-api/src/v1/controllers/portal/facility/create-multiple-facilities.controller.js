@@ -16,18 +16,16 @@ const createFacilities = async (facilities, dealId, auditDetails) => {
 
     const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
-    const facilitiesWithId = await Promise.all(
-      facilities.map(async (f) => {
-        const facility = f;
+    const facilitiesWithId = facilities.map((f) => {
+      const facility = f;
 
-        facility._id = new ObjectId(facility._id);
-        facility.createdDate = Date.now();
-        facility.updatedAt = Date.now();
-        facility.dealId = new ObjectId(dealId);
-        facility.auditRecord = auditRecord;
-        return facility;
-      }),
-    );
+      facility._id = new ObjectId(facility._id);
+      facility.createdDate = Date.now();
+      facility.updatedAt = Date.now();
+      facility.dealId = new ObjectId(dealId);
+      facility.auditRecord = auditRecord;
+      return facility;
+    });
 
     const idsArray = [];
     facilitiesWithId.forEach((f) => {
