@@ -45,7 +45,7 @@ describe('DELETE /v1/portal/durable-functions', () => {
     expectedSuccessResponseBody: {},
   });
 
-  it('returns 404 if there are no durable function logs to delete', async () => {
+  it('returns 200 if there are no durable function logs to delete', async () => {
     const { status: firstStatus } = await api
       .remove({
         auditDetails: generateSystemAuditDetails(),
@@ -58,6 +58,6 @@ describe('DELETE /v1/portal/durable-functions', () => {
       .to(`/v1/portal/durable-functions`);
 
     expect(firstStatus).toBe(200);
-    expect(secondStatus).toBe(404);
+    expect(secondStatus).toBe(200);
   });
 });

@@ -46,7 +46,7 @@ describe('DELETE v1/portal/cron-jobs', () => {
     expectedSuccessResponseBody: {},
   });
 
-  it('returns 404 if there are no cron job logs to delete', async () => {
+  it('returns 200 if there are no cron job logs to delete', async () => {
     const { status: firstStatus } = await api
       .remove({
         auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
@@ -59,6 +59,6 @@ describe('DELETE v1/portal/cron-jobs', () => {
       .to(`/v1/portal/cron-jobs`);
 
     expect(firstStatus).toBe(200);
-    expect(secondStatus).toBe(404);
+    expect(secondStatus).toBe(200);
   });
 });
