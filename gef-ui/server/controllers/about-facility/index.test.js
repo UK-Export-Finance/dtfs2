@@ -1,5 +1,5 @@
 import { add, sub, format } from 'date-fns';
-import { isFacilityEndDateEnabledByDefault } from '@ukef/dtfs2-common';
+import { getDefaultGefDealVersion, isFacilityEndDateEnabledByDefault } from '@ukef/dtfs2-common';
 import { aboutFacility, validateAndUpdateAboutFacility } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
@@ -56,7 +56,7 @@ describe('controllers/about-facility', () => {
     mockRequest = MockRequest();
     mockFacilityResponse = MockFacilityResponse();
 
-    api.getApplication.mockResolvedValue({ version: 0 }); // TODO: get the default version number
+    api.getApplication.mockResolvedValue({ version: getDefaultGefDealVersion() });
     api.getFacility.mockResolvedValue(mockFacilityResponse);
     api.updateFacility.mockResolvedValue({});
     api.updateApplication = updateApplicationSpy;

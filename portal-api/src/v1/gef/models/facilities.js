@@ -1,4 +1,3 @@
-const { isFacilityEndDateEnabledByDefault } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const convertToTimestamp = require('../../helpers/convertToTimestamp');
 
@@ -20,8 +19,7 @@ class Facility {
   constructor(req) {
     if (req.dealId) {
       // new facility
-      this.version = 0; // GET VERSION NUMBER;
-      this.dealId = req.dealId ? ObjectId(req.dealId) : null;
+      this.dealId = ObjectId(req.dealId);
       this.type = checkType(req.type);
       this.hasBeenIssued = null;
       if (req.hasBeenIssued != null) {
@@ -190,7 +188,7 @@ class Facility {
         this.specialIssuePermission = Object(req.specialIssuePermission);
       }
 
-      if (isFacilityEndDateEnabledByDefault() && typeof req.facilityEndDateExists === 'boolean') {
+      if (typeof req.facilityEndDateExists === 'boolean') {
         this.facilityEndDateExists = req.facilityEndDateExists;
       }
 
