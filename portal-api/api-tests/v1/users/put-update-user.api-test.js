@@ -119,7 +119,7 @@ describe('a user', () => {
 
         await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
-        const { status, body } = await as(anAdmin).get(`/v1/users/${createdUser._id}`);
+        const { status, body } = await as(READ_ONLY).get(`/v1/users/${createdUser._id}`);
 
         expect(status).toEqual(200);
         expect(body.roles).toEqual([READ_ONLY]);
@@ -132,7 +132,7 @@ describe('a user', () => {
 
         await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
-        const { status, body } = await as(anAdmin).get(`/v1/users/${createdUser._id}`);
+        const { status, body } = await as(READ_ONLY).get(`/v1/users/${createdUser._id}`);
 
         expect(status).toEqual(200);
         expect(body.roles).toStrictEqual([READ_ONLY, READ_ONLY]);
@@ -192,7 +192,7 @@ describe('a user', () => {
 
         await as(createdUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
-        const { status, body } = await as(anAdmin).get(`/v1/users/${createdUser._id}`);
+        const { status, body } = await as(MAKER).get(`/v1/users/${createdUser._id}`);
 
         expect(status).toEqual(200);
         expect(body.roles).toEqual(MOCK_USER.roles);

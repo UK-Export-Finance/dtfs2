@@ -58,6 +58,10 @@ const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username,
 };
 
 const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
+  if (!user) {
+    throw new Error('User object is null or undefined');
+  }
+
   try {
     const userCollection = await db.getCollection('users');
     const userFromDatabase = await userCollection.findOne({ username: { $eq: user.username } }, { collation: { locale: 'en', strength: 2 } });
