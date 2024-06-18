@@ -18,10 +18,15 @@ export type FeeRecordViewModelItem = {
   reportedPayments: CurrencyAndAmountString;
 };
 
+export type PaymentViewModelItem = {
+  id: number;
+  formattedCurrencyAndAmount: CurrencyAndAmountString;
+};
+
 export type FeeRecordPaymentGroupViewModelItem = {
   feeRecords: FeeRecordViewModelItem[];
   totalReportedPayments: SortedAndFormattedCurrencyAndAmount;
-  paymentsReceived: CurrencyAndAmountString[] | undefined;
+  paymentsReceived: PaymentViewModelItem[] | undefined;
   totalPaymentsReceived: SortedAndFormattedCurrencyAndAmount;
   status: FeeRecordStatus;
   displayStatus: FeeRecordDisplayStatus;
