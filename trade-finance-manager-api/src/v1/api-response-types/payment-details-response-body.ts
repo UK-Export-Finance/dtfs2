@@ -6,6 +6,13 @@ export type PaymentDetailsResponseBody = {
   bank: SessionBank;
   reportPeriod: ReportPeriod;
   payment: Payment;
-  feeRecords: FeeRecord[];
-  totalReportedPayments: CurrencyAndAmount;
-};
+} & (
+  | {
+      feeRecords: FeeRecord[];
+      totalReportedPayments: CurrencyAndAmount;
+    }
+  | {
+      feeRecords?: undefined;
+      totalReportedPayments?: undefined;
+    }
+);

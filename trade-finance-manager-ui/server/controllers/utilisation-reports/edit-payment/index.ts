@@ -18,7 +18,7 @@ export const getEditPayment = async (req: Request, res: Response) => {
   const { reportId, paymentId } = req.params;
 
   try {
-    const paymentDetails = await api.getPaymentDetails(reportId, paymentId, userToken);
+    const paymentDetails = await api.getPaymentDetailsWithFeeRecords(reportId, paymentId, userToken);
     const editPaymentViewModel = getEditPaymentViewModel(paymentDetails, reportId, paymentId);
     return renderEditPaymentPage(res, editPaymentViewModel);
   } catch (error) {
@@ -45,7 +45,7 @@ export const postEditPayment = async (req: PostEditPaymentRequest, res: Response
       return res.redirect(`/utilisation-reports/${reportId}`);
     }
 
-    const paymentDetails = await api.getPaymentDetails(reportId, paymentId, userToken);
+    const paymentDetails = await api.getPaymentDetailsWithFeeRecords(reportId, paymentId, userToken);
     const editPaymentViewModel = getEditPaymentViewModelWithFormValuesAndErrors(paymentDetails, reportId, paymentId, formValues, editPaymentErrors);
     return renderEditPaymentPage(res, editPaymentViewModel);
   } catch (error) {

@@ -241,4 +241,5 @@ module.exports = {
   generateKeyingData: jest.fn(),
   getUtilisationReportWithFeeRecordsToKey: jest.fn(),
   getPaymentDetails: jest.fn(),
+  deletePaymentById: jest.fn(),
 };

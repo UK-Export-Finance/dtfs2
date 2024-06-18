@@ -52,6 +52,15 @@ const assertions = (wrapper, html, params) => ({
       expect(wrapper(selector).text().trim()).toEqual(text);
     },
   }),
+  expectWarningButton: (selector) => ({
+    toLinkTo: (href, text) => {
+      expect(wrapper(selector).hasClass('govuk-button--disabled')).toEqual(false);
+      expect(wrapper(selector).hasClass('govuk-button--warning')).toEqual(true);
+      expect(wrapper(selector).attr('href')).toEqual(href);
+      expect(wrapper(selector).attr('disabled')).toBeUndefined();
+      expect(wrapper(selector).text().trim()).toEqual(text);
+    },
+  }),
   expectText: (selector) => ({
     notToExist: () => {
       expect(wrapper(selector).html()).toBeNull();
