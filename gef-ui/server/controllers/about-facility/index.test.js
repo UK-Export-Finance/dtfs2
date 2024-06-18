@@ -136,7 +136,6 @@ describe('controllers/about-facility', () => {
       const expectedPayload = {
         coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
         coverStartDate: format(now, 'MMMM d, yyyy'),
-        facilityEndDateExists: true,
         shouldCoverStartOnSubmission: null,
         monthsOfCover: null,
         name: undefined,
