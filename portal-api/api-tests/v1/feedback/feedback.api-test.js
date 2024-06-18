@@ -12,15 +12,15 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { MAKER, CHECKER, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../../../src/v1/roles/roles');
 const { as, get, remove } = require('../../api')(app);
 
 describe('/v1/feedback', () => {
-  let noRoles;
   let anAdmin;
   let aBarclaysMaker;
   let aBarclaysChecker;
   let testUsers;
+  let testUser;
 
   const defaultFeedbackForm = {
     role: 'computers',
@@ -45,8 +45,7 @@ describe('/v1/feedback', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-
-    noRoles = testUsers().withoutAnyRoles().one();
+    testUser = testUsers().withRole(READ_ONLY).one();
     aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
     aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Barclays Bank').one();
     anAdmin = testUsers().withRole(ADMIN).one();
@@ -68,7 +67,7 @@ describe('/v1/feedback', () => {
     });
 
     it('returns 200 for requests that do not come from a user with role=maker || role=checker', async () => {
-      const { status } = await as(noRoles).post(getFeedbackToSubmit(noRoles)).to('/v1/feedback');
+      const { status } = await as(testUser).post(getFeedbackToSubmit(testUser)).to('/v1/feedback');
       expect(status).toEqual(200);
     });
 
@@ -148,7 +147,6 @@ describe('/v1/feedback', () => {
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).get(feedbackUrl),
       successStatusCode: 200,
     });
@@ -187,7 +185,6 @@ describe('/v1/feedback', () => {
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).get(aFeedbackUrl),
       successStatusCode: 200,
     });
@@ -232,7 +229,6 @@ describe('/v1/feedback', () => {
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).remove(aFeedbackUrl),
       successStatusCode: 200,
     });

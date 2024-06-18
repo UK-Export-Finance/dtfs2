@@ -8,7 +8,7 @@ const FEE_RECORD_STATUS_REGEX_GROUP = `(?<status>${Object.values(FEE_RECORD_STAT
 const FEE_RECORD_STATUS_REGEX = new RegExp(FEE_RECORD_STATUS_REGEX_GROUP);
 
 const PREMIUM_PAYMENTS_TABLE_CHECKBOX_ID_REGEX = new RegExp(
-  `feeRecordId-\\d+-reportedPaymentsCurrency-${CURRENCY_REGEX_GROUP}-status-${FEE_RECORD_STATUS_REGEX_GROUP}`,
+  `feeRecordIds-(\\d+,?)+-reportedPaymentsCurrency-${CURRENCY_REGEX_GROUP}-status-${FEE_RECORD_STATUS_REGEX_GROUP}`,
 );
 
 export const getPremiumPaymentsCheckboxIdsFromObjectKeys = (object: object): PremiumPaymentsTableCheckboxId[] =>
@@ -24,7 +24,10 @@ export const getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId = (checkbo
   return currency as Currency;
 };
 
-export const getFeeRecordIdFromPremiumPaymentsCheckboxId = (checkboxId: PremiumPaymentsTableCheckboxId): number => {
-  const { id } = /feeRecordId-(?<id>\d+)/.exec(checkboxId)!.groups!;
-  return Number(id);
-};
+export const getFeeRecordIdsFromPremiumPaymentsCheckboxIds = (checkboxIds: PremiumPaymentsTableCheckboxId[]): number[] =>
+  checkboxIds.reduce((ids, checkboxId) => {
+    const { commaSeparatedIds } = /feeRecordIds-(?<commaSeparatedIds>(\d+,?)+)/.exec(checkboxId)!.groups!;
+
+    const newIds = commaSeparatedIds.split(',').map((id) => parseInt(id, 10));
+    return [...ids, ...newIds];
+  }, [] as number[]);

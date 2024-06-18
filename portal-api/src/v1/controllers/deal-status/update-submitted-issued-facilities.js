@@ -1,7 +1,7 @@
 const CONSTANTS = require('../../../constants');
 const facilitiesController = require('../facilities.controller');
 
-const updateSubmittedIssuedFacilities = async (user, deal) => {
+const updateSubmittedIssuedFacilities = async (user, deal, auditDetails) => {
   const modifiedDeal = deal;
 
   modifiedDeal.facilities.forEach(async (facilityId) => {
@@ -48,7 +48,7 @@ const updateSubmittedIssuedFacilities = async (user, deal) => {
       facility.status = CONSTANTS.FACILITIES.DEAL_STATUS.SUBMITTED_TO_UKEF;
     }
 
-    const { data } = await facilitiesController.update(deal._id, facilityId, facility, user);
+    const { data } = await facilitiesController.update(deal._id, facilityId, facility, user, auditDetails);
 
     return data;
   });

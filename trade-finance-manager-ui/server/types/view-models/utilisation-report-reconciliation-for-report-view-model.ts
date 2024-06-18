@@ -14,10 +14,19 @@ export type FeeRecordViewModelItem = {
   id: number;
   facilityId: string;
   exporter: string;
-  reportedFees: SortedAndFormattedCurrencyAndAmount;
-  reportedPayments: SortedAndFormattedCurrencyAndAmount;
+  reportedFees: CurrencyAndAmountString;
+  reportedPayments: CurrencyAndAmountString;
+};
+
+export type PaymentViewModelItem = {
+  id: number;
+  formattedCurrencyAndAmount: CurrencyAndAmountString;
+};
+
+export type FeeRecordPaymentGroupViewModelItem = {
+  feeRecords: FeeRecordViewModelItem[];
   totalReportedPayments: SortedAndFormattedCurrencyAndAmount;
-  paymentsReceived: SortedAndFormattedCurrencyAndAmount;
+  paymentsReceived: PaymentViewModelItem[] | undefined;
   totalPaymentsReceived: SortedAndFormattedCurrencyAndAmount;
   status: FeeRecordStatus;
   displayStatus: FeeRecordDisplayStatus;
@@ -29,7 +38,7 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   bank: SessionBank;
   formattedReportPeriod: string;
   reportId: string;
-  feeRecords: FeeRecordViewModelItem[];
   enablePaymentsReceivedSorting: boolean;
+  feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[];
   errorSummary: [ErrorSummaryViewModel] | undefined;
 };
