@@ -48,7 +48,7 @@ export const deleteFacility = async (
       auditDetails,
     });
 
-    await removeFacilityIdFromDeal(facility.dealId, facilityId, user, req.routePath);
+    await removeFacilityIdFromDeal(facility.dealId, facilityId, user, req.routePath, auditDetails);
     return res.status(200).send();
   } catch (error) {
     return res.status(500).send({ status: 500, error });

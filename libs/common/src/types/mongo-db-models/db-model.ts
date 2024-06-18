@@ -4,8 +4,6 @@ import { Bank } from './banks';
 import { PortalUser } from './users';
 import { TfmUser } from './tfm-users';
 import { TfmTeam } from './tfm-teams';
-import { UtilisationReport } from './utilisation-reports';
-import { UtilisationData } from './utilisation-data';
 import { DeletionAuditLog } from './deletion-audit-logs';
 
 /**
@@ -37,10 +35,6 @@ export type DbModel<TCollectionName extends MongoDbCollectionName> = TCollection
   ? TfmUser
   : TCollectionName extends 'tfm-teams'
   ? TfmTeam
-  : TCollectionName extends 'utilisationReports' // TODO FN-1853 Remove after SQL refactor
-  ? UtilisationReport
-  : TCollectionName extends 'utilisationData'
-  ? UtilisationData
   : TCollectionName extends 'deletion-audit-logs'
   ? DeletionAuditLog
   : WithId<any>;

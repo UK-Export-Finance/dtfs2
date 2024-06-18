@@ -149,9 +149,18 @@ portalRouter.route('/deals/:id').get(getDealController.findOneDealGet);
  *         application/json:
  *           schema:
  *             type: object
+ *             properties:
+ *               dealUpdate:
+ *                 type: object
+ *               user:
+ *                 type: object
+ *               auditDetails:
+ *                 $ref: '#/definitions/portalAuditDetails'
+
  *             example:
  *               user: { _id: '123456abc' }
  *               dealUpdate: { aNewField: true }
+ *               auditDetails: { userType: 'portal', id: 'abcdef123456abcdef123456' }
  *     responses:
  *       200:
  *         description: OK
@@ -269,6 +278,8 @@ portalRouter.route('/deals/:id/status').put(updateDealStatusController.updateDea
  *                     type: object
  *                     schema:
  *                       $ref: '#/definitions/User'
+ *               auditDetails:
+ *                 $ref: '#/definitions/portalAuditDetails'
  *                   text:
  *                     type: string
  *                     example: Amazing comment
@@ -320,6 +331,8 @@ portalRouter.route('/facilities').get(getFacilitiesController.findAllGet);
  *                 type: string
  *               dealId:
  *                 type: string
+ *               auditDetails:
+ *                 $ref: '#/definitions/portalAuditDetails'
  *           example:
  *             type: 'Bond'
  *             dealId: '123abc'

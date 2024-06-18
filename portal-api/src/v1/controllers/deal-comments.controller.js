@@ -1,39 +1,11 @@
 const api = require('../api');
 
-exports.addComment = async (_id, commentToAdd, user) => {
+exports.addComment = async (_id, commentToAdd, user, auditDetails) => {
   const commentToInsert = {
     user,
     text: commentToAdd,
   };
 
-  const value = await api.addDealComment(_id, 'comments', commentToInsert);
-  return value;
-};
-
-exports.addUkefComment = async (_id, commentToAdd, user) => {
-  if (!commentToAdd) {
-    return false;
-  }
-
-  const commentToInsert = {
-    user,
-    text: commentToAdd,
-  };
-
-  const value = await api.addDealComment(_id, 'ukefComments', commentToInsert);
-  return value;
-};
-
-exports.addUkefDecision = async (_id, commentToAdd, user) => {
-  if (!commentToAdd) {
-    return false;
-  }
-
-  const commentToInsert = {
-    user,
-    text: commentToAdd,
-  };
-
-  const value = await api.addDealComment(_id, 'ukefDecision', commentToInsert);
+  const value = await api.addDealComment(_id, 'comments', commentToInsert, auditDetails);
   return value;
 };

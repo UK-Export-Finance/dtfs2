@@ -136,7 +136,7 @@ exports.clone = async (req, res) => {
           return facility;
         });
 
-        await facilitiesController.createMultipleFacilities(strippedFacilities, createdDealId, user);
+        await facilitiesController.createMultipleFacilities(strippedFacilities, createdDealId, user, auditDetails);
       }
     }
 

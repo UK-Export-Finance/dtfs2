@@ -56,7 +56,7 @@ const expectedEditedByObject = (user) => ({
   userId: user._id,
 });
 
-const expectAddedFieldsWithEditedBy = (baseDeal, user, numberOfUpdates = 1) => {
+const expectAddedFieldsWithEditedBy = ({ baseDeal, user, auditDetails, numberOfUpdates = 1 }) => {
   const expectedEditedByArray = new Array(numberOfUpdates);
   expectedEditedByArray.fill(expectedEditedByObject(user));
 
@@ -65,7 +65,9 @@ const expectAddedFieldsWithEditedBy = (baseDeal, user, numberOfUpdates = 1) => {
     editedBy: expectedEditedByArray,
   });
 
-  return expectation;
+  const expectationWithAuditRecord = addAuditRecordToExpectedResponse({ baseResponse: expectation, auditDetails });
+
+  return expectationWithAuditRecord;
 };
 
 module.exports = {

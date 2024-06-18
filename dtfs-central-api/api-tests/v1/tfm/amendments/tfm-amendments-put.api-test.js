@@ -11,6 +11,7 @@ const aDeal = require('../../deal-builder');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 const { createDeal } = require('../../../helpers/create-deal');
+const { createFacility } = require('../../../helpers/create-facility');
 
 describe('PUT TFM amendments', () => {
   let dealId;
@@ -48,7 +49,7 @@ describe('PUT TFM amendments', () => {
       let amendmentId;
 
       beforeEach(async () => {
-        const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const postResult = await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
         facilityId = postResult.body._id;
 
         await api
@@ -103,7 +104,7 @@ describe('PUT TFM amendments', () => {
     });
 
     it('should return 404 if facilityId and amendmentId are valid but are NOT associated to a record', async () => {
-      const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+      const postResult = await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
       const newId = postResult.body._id;
 
       await api
@@ -125,7 +126,7 @@ describe('PUT TFM amendments', () => {
     });
 
     it('should return 400 if invalid dealId', async () => {
-      await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+      await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
       await api
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,

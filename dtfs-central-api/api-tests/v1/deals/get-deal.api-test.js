@@ -8,6 +8,7 @@ const { expectAddedFields } = require('./expectAddedFields');
 const CONSTANTS = require('../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../helpers/create-deal');
+const { createFacility } = require('../../helpers/create-facility');
 
 const newDeal = aDeal({
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
@@ -65,10 +66,10 @@ describe('/v1/portal/deals', () => {
           ...mockFacility,
         };
 
-        const { body: createdBond1 } = await api.post({ facility: mockBond, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
-        const { body: createdBond2 } = await api.post({ facility: mockBond, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
-        const { body: createdLoan1 } = await api.post({ facility: mockLoan, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
-        const { body: createdLoan2 } = await api.post({ facility: mockLoan, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const { body: createdBond1 } = await createFacility({ api, facility: mockBond, user: MOCK_PORTAL_USER });
+        const { body: createdBond2 } = await createFacility({ api, facility: mockBond, user: MOCK_PORTAL_USER });
+        const { body: createdLoan1 } = await createFacility({ api, facility: mockLoan, user: MOCK_PORTAL_USER });
+        const { body: createdLoan2 } = await createFacility({ api, facility: mockLoan, user: MOCK_PORTAL_USER });
 
         const { body: bond1 } = await api.get(`/v1/portal/facilities/${createdBond1._id}`);
         const { body: bond2 } = await api.get(`/v1/portal/facilities/${createdBond2._id}`);

@@ -109,7 +109,7 @@ describe('GET /v1/utilisation-reports/reconciliation-details/:reportId', () => {
         status: 'RECONCILIATION_IN_PROGRESS',
         reportPeriod: reconciliationInProgressReport.reportPeriod,
         dateUploaded: reconciliationInProgressReport.dateUploaded!.toISOString(),
-        feeRecords: [],
+        feeRecordPaymentGroups: [],
       });
     });
   });

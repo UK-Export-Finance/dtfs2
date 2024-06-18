@@ -1,3 +1,4 @@
+import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import createUkefIds from './create-ukef-ids';
 import { number } from '../../../external-api/api';
 import { NUMBER } from '../../../constants';
@@ -35,25 +36,28 @@ const mockDeal = {
   facilities: [mockFacility1, mockFacility2],
 };
 
-const updatedDeal = {
+const mockUser = {
+  _id: '1234',
+};
+
+const mockUserAuditDetails = generatePortalAuditDetails(mockUser._id);
+
+const updatedDealWithAuditDetails = {
   _id: mockDeal._id,
   details: {
     ukefDealId: NUMBER.UKEF_ID.TEST,
   },
-};
-
-const mockUser = {
-  _id: '1234',
+  auditDetails: mockUserAuditDetails,
 };
 
 describe('createUkefIds', () => {
   beforeEach(() => {
     number.getNumber = jest.fn().mockResolvedValue(mockSuccessfulResponse);
-    api.updateDeal = jest.fn().mockResolvedValue(updatedDeal);
+    api.updateDeal = jest.fn().mockResolvedValue(updatedDealWithAuditDetails);
     facilitiesController.update = jest.fn().mockResolvedValue({});
   });
 
-  it('Should generate and update UKEF IDs for a given deal and its facilities', async () => {
+  it('should generate and update UKEF IDs for a given deal and its facilities', async () => {
     // Arrange
     const modifiedMockFacility1 = {
       ukefFacilityId: NUMBER.UKEF_ID.TEST,
@@ -65,14 +69,14 @@ describe('createUkefIds', () => {
     const facilitiesControllerUpdateSpy = jest.spyOn(facilitiesController, 'update');
 
     // Act
-    const result = await createUkefIds(mockDeal, mockUser);
+    const result = await createUkefIds(mockDeal, mockUser, mockUserAuditDetails);
 
     // Assert
-    expect(result).toEqual(updatedDeal);
+    expect(result).toEqual(updatedDealWithAuditDetails);
     expect(number.getNumber).toHaveBeenCalledWith(NUMBER.ENTITY_TYPE.DEAL, mockDeal._id);
     expect(number.getNumber).toHaveBeenCalledWith(NUMBER.ENTITY_TYPE.FACILITY, mockDeal._id);
-    expect(facilitiesControllerUpdateSpy).toHaveBeenCalledWith(mockDeal._id, mockFacility1, modifiedMockFacility1, mockUser);
-    expect(facilitiesControllerUpdateSpy).toHaveBeenCalledWith(mockDeal._id, mockFacility2, modifiedMockFacility2, mockUser);
+    expect(facilitiesControllerUpdateSpy).toHaveBeenCalledWith(mockDeal._id, mockFacility1, modifiedMockFacility1, mockUser, mockUserAuditDetails);
+    expect(facilitiesControllerUpdateSpy).toHaveBeenCalledWith(mockDeal._id, mockFacility2, modifiedMockFacility2, mockUser, mockUserAuditDetails);
 
     // Clean up
     facilitiesControllerUpdateSpy.mockRestore();
@@ -85,8 +89,8 @@ describe('createUkefIds', () => {
     ${null}
     ${undefined}
     ${''}
-  `('Should throw an error when deal argument provided is $value', async ({ value }) => {
-    await expect(createUkefIds(value, mockUser)).rejects.toThrow('Unable to get UKEF IDs from the number generator');
+  `('should throw an error when deal argument provided is $value', async ({ value }) => {
+    await expect(createUkefIds(value, mockUser, mockUserAuditDetails)).rejects.toThrow('Unable to get UKEF IDs from the number generator');
   });
 
   it.each`
@@ -96,7 +100,7 @@ describe('createUkefIds', () => {
     ${null}
     ${undefined}
     ${''}
-  `('Should throw an error when user argument provided is $value', async ({ value }) => {
-    await expect(createUkefIds(mockDeal, value)).rejects.toThrow('Unable to get UKEF IDs from the number generator');
+  `('should throw an error when user argument provided is $value', async ({ value }) => {
+    await expect(createUkefIds(mockDeal, value, mockUserAuditDetails)).rejects.toThrow('Unable to get UKEF IDs from the number generator');
   });
 });
