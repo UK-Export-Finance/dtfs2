@@ -18,7 +18,4 @@ export const MONGO_DB_COLLECTIONS = {
   DELETION_AUDIT_LOGS: 'deletion-audit-logs',
   FEEDBACK: 'feedback',
   FILES: 'files',
-  // TODO FN-1853 Remove after SQL refactor
-  UTILISATION_DATA: 'utilisationData',
-  UTILISATION_REPORTS: 'utilisationReports',
 } as const;

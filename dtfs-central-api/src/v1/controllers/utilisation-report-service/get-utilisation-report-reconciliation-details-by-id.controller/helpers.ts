@@ -3,7 +3,7 @@ import { FeeRecordItem, FeeRecordPaymentGroup, UtilisationReportReconciliationDe
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from '../../../../mapping/fee-record-mapper';
-import { mapPaymentEntityToCurrencyAndAmount } from '../../../../mapping/payment-mapper';
+import { mapPaymentEntityToPayment } from '../../../../mapping/payment-mapper';
 import { calculateTotalCurrencyAndAmount } from '../../../../helpers';
 
 const mapFeeRecordEntityToFeeRecordItem = (feeRecord: FeeRecordEntity): FeeRecordItem => ({
@@ -84,7 +84,7 @@ const mapFeeRecordEntitiesToFeeRecordPaymentGroups = (feeRecordEntities: FeeReco
     const allReportedPayments = feeRecordItems.map(({ reportedPayments }) => reportedPayments);
     const totalReportedPayments = calculateTotalCurrencyAndAmount(allReportedPayments);
 
-    const paymentsReceived = payments.map(mapPaymentEntityToCurrencyAndAmount);
+    const paymentsReceived = payments.map(mapPaymentEntityToPayment);
     const totalPaymentsReceived = calculateTotalCurrencyAndAmount(paymentsReceived);
 
     return {

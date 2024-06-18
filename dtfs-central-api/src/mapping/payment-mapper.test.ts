@@ -1,32 +1,45 @@
 import { Currency, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
-import { mapPaymentEntityToCurrencyAndAmount } from './payment-mapper';
+import { mapPaymentEntityToPayment } from './payment-mapper';
 
 describe('payment mapper', () => {
-  describe('mapPaymentEntityToCurrencyAndAmount', () => {
-    it('maps the payment currency to the currencyAndAmount currency', () => {
+  describe('mapPaymentEntityToPayment', () => {
+    it('maps the payment entity currency to the payment currency', () => {
       // Arrange
       const paymentCurrency: Currency = 'GBP';
 
-      const payment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).build();
+      const paymentEntity = PaymentEntityMockBuilder.forCurrency(paymentCurrency).build();
 
       // Act
-      const currencyAndAmount = mapPaymentEntityToCurrencyAndAmount(payment);
+      const payment = mapPaymentEntityToPayment(paymentEntity);
 
       // Assert
-      expect(currencyAndAmount.currency).toBe(paymentCurrency);
+      expect(payment.currency).toBe(paymentCurrency);
     });
 
-    it('maps the payment amount to the currencyAndAmount amount', () => {
+    it('maps the payment entity amount to the payment amount', () => {
       // Arrange
       const paymentAmount = 100;
 
-      const payment = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(paymentAmount).build();
+      const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(paymentAmount).build();
 
       // Act
-      const currencyAndAmount = mapPaymentEntityToCurrencyAndAmount(payment);
+      const payment = mapPaymentEntityToPayment(paymentEntity);
 
       // Assert
-      expect(currencyAndAmount.amount).toBe(paymentAmount);
+      expect(payment.amount).toBe(paymentAmount);
+    });
+
+    it('maps the payment entity id to the payment id', () => {
+      // Arrange
+      const paymentId = 12;
+
+      const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).build();
+
+      // Act
+      const payment = mapPaymentEntityToPayment(paymentEntity);
+
+      // Assert
+      expect(payment.id).toBe(paymentId);
     });
   });
 });
