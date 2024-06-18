@@ -11,9 +11,6 @@ import { FeeRecordPaymentGroup } from '../../../api-response-types';
 const feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): boolean =>
   feeRecordPaymentGroups.some(({ paymentsReceived }) => paymentsReceived !== null);
 
-const feeRecordPaymentGroupsHaveAtLeastOneMatchingGroup = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): boolean =>
-  feeRecordPaymentGroups.some(({ status }) => status === 'MATCH');
-
 const renderUtilisationReportReconciliationForReport = (res: Response, viewModel: UtilisationReportReconciliationForReportViewModel) =>
   res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', viewModel);
 
@@ -30,8 +27,6 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
 
     const enablePaymentsReceivedSorting = feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived(feeRecordPaymentGroups);
 
-    const canGenerateKeyingData = feeRecordPaymentGroupsHaveAtLeastOneMatchingGroup(feeRecordPaymentGroups);
-
     const feeRecordPaymentGroupViewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
 
     return renderUtilisationReportReconciliationForReport(res, {
@@ -41,7 +36,6 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
       formattedReportPeriod,
       reportId,
       enablePaymentsReceivedSorting,
-      canGenerateKeyingData,
       feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
       errorSummary,
     });

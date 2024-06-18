@@ -80,7 +80,7 @@ describe(page, () => {
     wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).hasClass('govuk-button--secondary');
     wrapper
       .expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`)
-      .toHaveAttribute('formaction', `/utilisation-reports/${reportId}/keying-data`);
+      .toHaveAttribute('formaction', `/utilisation-reports/${reportId}/check-keying-data`);
 
     wrapper.expectElement(`${premiumPaymentsTabSelector} table[data-cy="premium-payments-table"]`).toExist();
   });

@@ -23,77 +23,35 @@ describe('controllers/utilisation-reports/keying-data', () => {
       jest.mocked(api.generateKeyingData).mockResolvedValue({});
     });
 
-    describe("when 'canGenerateKeyingData' is set to 'false'", () => {
-      const canGenerateKeyingData = 'false';
-
-      it("sets the request session generateKeyingDataErrorKey field when canGenerateKeyingData is set to 'false'", async () => {
-        // Arrange
-        const { req, res } = httpMocks.createMocks({
-          session: requestSession,
-          params: { reportId: '1' },
-          body: { canGenerateKeyingData },
-        });
-
-        // Act
-        await postKeyingData(req, res);
-
-        // Assert
-        expect(req.session.generateKeyingDataErrorKey).toBe('no-matching-fee-records');
+    it('generates the keying data for the report', async () => {
+      // Arrange
+      const reportId = '15';
+      const { req, res } = httpMocks.createMocks({
+        session: requestSession,
+        params: { reportId },
       });
 
-      it("redirects to '/utilisation-reports/:reportId' when canGenerateKeyingData is set to 'false'", async () => {
-        // Arrange
-        const reportId = '12';
-        const { req, res } = httpMocks.createMocks({
-          session: requestSession,
-          params: { reportId },
-          body: { canGenerateKeyingData },
-        });
+      // Act
+      await postKeyingData(req, res);
 
-        // Act
-        await postKeyingData(req, res);
-
-        // Assert
-        expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}`);
-        expect(res._isEndCalled()).toBe(true);
-      });
+      // Assert
+      expect(api.generateKeyingData).toHaveBeenCalledWith(reportId, userToken);
     });
 
-    describe("when 'canGenerateKeyingData' is set to 'true'", () => {
-      const canGenerateKeyingData = 'true';
-
-      it('generates the keying data for the report', async () => {
-        // Arrange
-        const reportId = '15';
-        const { req, res } = httpMocks.createMocks({
-          session: requestSession,
-          params: { reportId },
-          body: { canGenerateKeyingData },
-        });
-
-        // Act
-        await postKeyingData(req, res);
-
-        // Assert
-        expect(api.generateKeyingData).toHaveBeenCalledWith(reportId, userToken);
+    it("redirects to '/utilisation-reports/:reportId#keying-sheet'", async () => {
+      // Arrange
+      const reportId = '12';
+      const { req, res } = httpMocks.createMocks({
+        session: requestSession,
+        params: { reportId },
       });
 
-      it("redirects to '/utilisation-reports/:reportId#keying-sheet'", async () => {
-        // Arrange
-        const reportId = '12';
-        const { req, res } = httpMocks.createMocks({
-          session: requestSession,
-          params: { reportId },
-          body: { canGenerateKeyingData },
-        });
+      // Act
+      await postKeyingData(req, res);
 
-        // Act
-        await postKeyingData(req, res);
-
-        // Assert
-        expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}#keying-sheet`);
-        expect(res._isEndCalled()).toBe(true);
-      });
+      // Assert
+      expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}#keying-sheet`);
+      expect(res._isEndCalled()).toBe(true);
     });
 
     it('renders the problem-with-service page when an error occurs', async () => {
@@ -101,7 +59,6 @@ describe('controllers/utilisation-reports/keying-data', () => {
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
         params: { reportId: '1' },
-        body: { canGenerateKeyingData: 'true' },
       });
 
       jest.mocked(api.generateKeyingData).mockRejectedValue(new Error('Some error'));

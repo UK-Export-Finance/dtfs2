@@ -9,6 +9,7 @@ import { getUtilisationReportReconciliationByReportId } from '../../controllers/
 import { getFindReportsByYear } from '../../controllers/utilisation-reports/find-reports-by-year';
 import { addPayment } from '../../controllers/utilisation-reports/add-payment';
 import { postKeyingData } from '../../controllers/utilisation-reports/keying-data';
+import { postCheckKeyingData } from '../../controllers/utilisation-reports/check-keying-data';
 
 export const utilisationReportsRoutes = express.Router();
 
@@ -38,9 +39,17 @@ utilisationReportsRoutes.post(
 );
 
 utilisationReportsRoutes.post(
+  '/:reportId/check-keying-data',
+  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  postCheckKeyingData,
+);
+
+utilisationReportsRoutes.post(
   '/:reportId/keying-data',
   validateTfmPaymentReconciliationFeatureFlagIsEnabled,
-  validateUserTeam(['PDC_RECONCILE']),
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   postKeyingData,
 );

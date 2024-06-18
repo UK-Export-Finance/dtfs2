@@ -65,7 +65,7 @@ const getCheckboxIdForFeeRecordsAndStatus = (feeRecords: FeeRecordItem[], status
 
 export const mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems = (
   feeRecordPaymentGroups: FeeRecordPaymentGroup[],
-  isCheckboxChecked: (checkboxId: string) => boolean,
+  isCheckboxChecked: (checkboxId: string) => boolean = () => false,
 ): FeeRecordPaymentGroupViewModelItem[] => {
   const totalReportedPaymentsDataSortValueMap = getDataSortValueMapForFeeRecordPaymentGroupProperty(feeRecordPaymentGroups, 'totalReportedPayments');
   const totalPaymentsReceivedDataSortValueMap = getDataSortValueMapForFeeRecordPaymentGroupProperty(feeRecordPaymentGroups, 'totalPaymentsReceived');
