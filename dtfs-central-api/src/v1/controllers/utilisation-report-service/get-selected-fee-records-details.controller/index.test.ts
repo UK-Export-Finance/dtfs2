@@ -162,10 +162,8 @@ describe('get selected fee records details controller', () => {
       payments: [
         {
           dateReceived: new Date('2024-01-01'),
-          value: {
-            amount: 150,
-            currency: 'GBP',
-          },
+          amount: 150,
+          currency: 'GBP',
           reference: 'A payment',
         },
       ],

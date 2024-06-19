@@ -1,8 +1,7 @@
 import { CurrencyAndAmount } from './currency';
 import { ReportPeriod } from './utilisation-reports';
 
-export type SelectedFeeRecordsPaymentDetails = {
-  value: CurrencyAndAmount;
+export type SelectedFeeRecordsPaymentDetails = CurrencyAndAmount & {
   dateReceived: Date;
   reference?: string;
 };

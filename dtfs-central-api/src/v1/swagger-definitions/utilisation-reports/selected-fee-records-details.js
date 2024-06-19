@@ -37,8 +37,10 @@
  *           properties:
  *             dateReceived:
  *               type: string
- *             value:
- *               $ref: '#/definitions/CurrencyAndAmount'
+ *             currency:
+ *                 $ref: '#/definitions/Currency'
+ *              amount:
+ *                 type: number
  *             reference:
  *               type: string
  *               nullable: true

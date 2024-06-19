@@ -132,8 +132,8 @@ describe('get selected fee record details controller helpers', () => {
 
       // Assert
       expect(result.payments).toEqual<SelectedFeeRecordsPaymentDetails[]>([
-        { value: { currency: 'GBP', amount: 100 }, dateReceived: new Date('2022-01-01'), reference: 'First payment' },
-        { value: { currency: 'GBP', amount: 200 }, dateReceived: new Date('2022-02-02'), reference: 'Second payment' },
+        { currency: 'GBP', amount: 100, dateReceived: new Date('2022-01-01'), reference: 'First payment' },
+        { currency: 'GBP', amount: 200, dateReceived: new Date('2022-02-02'), reference: 'Second payment' },
       ]);
     });
 

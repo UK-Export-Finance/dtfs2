@@ -12,7 +12,8 @@ import { NotFoundError } from '../../../../errors';
 import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from '../../../../mapping/fee-record-mapper';
 
 const mapPaymentEntityToSelectedFeeRecordsPaymentDetails = (paymentEntity: PaymentEntity): SelectedFeeRecordsPaymentDetails => ({
-  value: { amount: paymentEntity.amount, currency: paymentEntity.currency },
+  amount: paymentEntity.amount,
+  currency: paymentEntity.currency,
   reference: paymentEntity.reference,
   dateReceived: paymentEntity.dateReceived,
 });

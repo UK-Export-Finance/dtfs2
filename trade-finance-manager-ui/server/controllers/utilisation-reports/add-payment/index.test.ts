@@ -63,10 +63,8 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
         payments: [
           {
             dateReceived: '1912-12-19T00:00:00.000Z',
-            value: {
-              currency: 'USD',
-              amount: 2000,
-            },
+            currency: 'USD',
+            amount: 2000,
             reference: 'A payment',
           },
         ],
@@ -432,10 +430,8 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
           payments: [
             {
               dateReceived: '1912-12-19T00:00:00.000Z',
-              value: {
-                currency: 'USD',
-                amount: 2000,
-              },
+              currency: 'USD',
+              amount: 2000,
               reference: 'A payment',
             },
           ],

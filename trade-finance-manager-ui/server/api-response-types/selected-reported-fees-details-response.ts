@@ -1,7 +1,6 @@
 import { CurrencyAndAmount, IsoDateTimeStamp, ReportPeriod, SelectedFeeRecordDetails } from '@ukef/dtfs2-common';
 
-export type SelectedFeeRecordsPaymentDetailsResponse = {
-  value: CurrencyAndAmount;
+export type SelectedFeeRecordsPaymentDetailsResponse = CurrencyAndAmount & {
   dateReceived: IsoDateTimeStamp;
   reference?: string;
 };
