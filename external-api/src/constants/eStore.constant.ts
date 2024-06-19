@@ -1,3 +1,11 @@
+/**
+ * Represents the endpoints for the eStore API
+ * using constant object statement to assert the
+ * immutability and exact types of values at runtime.
+ * `sites` becomes a type which then can be used with
+ * `Category` type for both compile time and run time
+ * type checking.
+ */
 export const ENDPOINT = {
   SITE: 'sites',
   TERM: 'terms/facilities',
