@@ -5,7 +5,7 @@ export const ENDPOINT = {
   DEAL: 'deals',
   FACILITY: 'facilities',
   DOCUMENT: 'documents',
-};
+} as const;
 
 export const ESTORE_SITE_STATUS = {
   CREATED: 'Created',

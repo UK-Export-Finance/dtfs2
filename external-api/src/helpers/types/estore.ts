@@ -1,5 +1,5 @@
 /**
- * Represents a category in the eStore.
- * Possible values are 'sites', 'buyer', 'deals', 'facilities', and 'documents'.
+ * Represents a category in the e-store.
+ * Possible values are: 'sites', 'buyer', 'deals', 'terms/facilities', 'documents'.
  */
-export type Category = 'sites' | 'buyer' | 'deals' | 'facilities' | 'documents';
+export type Category = 'sites' | 'buyer' | 'deals' | 'terms/facilities' | 'documents';

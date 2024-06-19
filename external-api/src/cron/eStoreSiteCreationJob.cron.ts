@@ -1,11 +1,10 @@
 import { cloneDeep } from 'lodash';
 import { ObjectId } from 'mongodb';
-import { Category } from '../helpers/types/estore';
 import { cron } from '../helpers/cron';
 import { getCollection } from '../database';
 import { Estore, EstoreErrorResponse, SiteExistsResponse } from '../interfaces';
 import { ENDPOINT, ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../constants';
-import { eStoreTermStoreAndBuyerFolder } from './eStoreTermStoreAndBuyerFolder.cron';
+import { eStoreTermStoreCreationJob } from './eStoreTermStoreCreationJob.cron';
 import { siteExists } from '../v1/controllers/estore/eStoreApi';
 import { getNowAsEpoch } from '../helpers/date';
 
@@ -19,10 +18,9 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
   const tfmDeals = await getCollection('tfm-deals');
   const data = cloneDeep(eStoreData);
   const now = new Date().toISOString();
-  const category = ENDPOINT.SITE as Category;
 
   // Step 1: Initiate the CRON job
-  await cron(eStoreData, category);
+  await cron(eStoreData, ENDPOINT.SITE);
 
   // Step 2: Site existence check
   const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(eStoreData.exporterName);
@@ -56,10 +54,10 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
     );
 
     // Stop CRON job
-    await cron(eStoreData, category, true);
+    await cron(eStoreData, ENDPOINT.SITE, true);
 
     // Add facility IDs to term store and create the buyer folder
-    await eStoreTermStoreAndBuyerFolder(data);
+    await eStoreTermStoreCreationJob(data);
   } else if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING) {
     // Step 3: Site is still being provisioned
     console.info('⚡ CRON: eStore site creation %s is still in progress for deal %s %s', siteExistsResponse.data.siteId, eStoreData.dealIdentifier, now);

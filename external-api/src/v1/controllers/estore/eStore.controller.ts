@@ -5,7 +5,7 @@ import { getCollection } from '../../../database';
 import { Estore, SiteExistsResponse, EstoreErrorResponse } from '../../../interfaces';
 import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../../../constants';
 import { areValidUkefIds, objectIsEmpty } from '../../../helpers';
-import { eStoreTermStoreAndBuyerFolder, eStoreSiteCreationCron } from '../../../cron';
+import { eStoreTermStoreCreationJob, eStoreSiteCreationCron } from '../../../cron';
 import { createExporterSite, siteExists } from './eStoreApi';
 import { getNowAsEpoch } from '../../../helpers/date';
 
@@ -24,22 +24,11 @@ export const create = async (req: Request, res: Response) => {
     const cronJobLogs = await getCollection('cron-job-logs');
     const tfmDeals = await getCollection('tfm-deals');
 
-    const { dealId, siteId, facilityIdentifiers, supportingInformation, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = req.body as {
-      dealId: ObjectId;
-      siteId: string;
-      facilityIdentifiers: number[];
-      supportingInformation: string[];
-      exporterName: string;
-      buyerName: string;
-      dealIdentifier: string;
-      destinationMarket: string;
-      riskMarket: string;
-    };
+    const { dealId, siteId, facilityIdentifiers, supportingInformation, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } =
+      req.body as Estore;
 
-    let eStoreData = {} as Estore;
-
-    eStoreData = {
-      dealId: new ObjectId(String(dealId)),
+    const eStoreData: Estore = {
+      dealId,
       dealIdentifier,
       facilityIdentifiers,
       siteId,
@@ -179,7 +168,7 @@ export const create = async (req: Request, res: Response) => {
         eStoreData.siteId = String(siteExistsResponse.data.siteId);
 
         // Add facility IDs to term store and create the buyer folder
-        await eStoreTermStoreAndBuyerFolder(eStoreData);
+        await eStoreTermStoreCreationJob(eStoreData);
       } else if (absent || provisioning) {
         let siteCreationResponse: SiteExistsResponse | EstoreErrorResponse;
         // Step 3: Site does not exists in eStore

@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import { CronJob } from 'cron';
-// import { ENDPOINT } from '../constants';
 import { Estore } from '../interfaces';
 import { Category } from './types/estore';
 import { eStoreSiteCreationCron } from '../cron/eStoreSiteCreationJob.cron';

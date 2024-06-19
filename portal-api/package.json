@@ -46,7 +46,7 @@
     "express-validator": "^7.1.0",
     "filesize": "^8.0.7",
     "immer": "^10.1.1",
-    "joi": "^17.13.1",
+    "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongodb": "4.17.2",
@@ -77,7 +77,7 @@
     "node-mocks-http": "^1.14.1",
     "prettier": "^2.8.8",
     "supertest": "6.3.3",
-    "ts-jest": "^29.1.4",
+    "ts-jest": "^29.1.5",
     "typescript": "^5.4.5"
   },
   "engines": {
