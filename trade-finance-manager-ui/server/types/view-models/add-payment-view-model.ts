@@ -22,6 +22,12 @@ export type SelectedReportedFeesDetailsViewModel = {
   totalReportedPayments: CurrencyAndAmountString;
 };
 
+export type RecordedPaymentDetailsViewModel = {
+  formattedCurrencyAndAmount: CurrencyAndAmountString;
+  formattedDateReceived: string;
+  reference?: string;
+};
+
 export type AddPaymentPaymentDateErrorViewModel = { message: string; dayError: boolean; monthError: boolean; yearError: boolean };
 
 export type AddPaymentErrorsViewModel = {
@@ -38,6 +44,8 @@ export type AddPaymentViewModel = BaseViewModel & {
   bank: { name: string };
   formattedReportPeriod: string;
   reportedFeeDetails: SelectedReportedFeesDetailsViewModel;
+  recordedPaymentsDetails: RecordedPaymentDetailsViewModel[];
+  multipleFeeRecordsSelected: boolean;
   paymentNumber: number | undefined;
   selectedFeeRecordCheckboxIds: string[];
   errors: AddPaymentErrorsViewModel;
