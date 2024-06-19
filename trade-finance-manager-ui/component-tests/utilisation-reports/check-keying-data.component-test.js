@@ -97,4 +97,12 @@ describe(page, () => {
     wrapper.expectInput(`${formSelector} input.govuk-button`).toHaveValue('Generate keying sheet data');
     wrapper.expectElement(`${formSelector} input.govuk-button`).toHaveAttribute('formaction', '/utilisation-reports/1/keying-data');
   });
+
+  it('renders the cancel link which links to the premium payments table', () => {
+    // Act
+    const wrapper = getWrapper();
+
+    // Assert
+    wrapper.expectLink('form[method="post"] a').toLinkTo(`/utilisation-reports/1`, 'Cancel');
+  });
 });
