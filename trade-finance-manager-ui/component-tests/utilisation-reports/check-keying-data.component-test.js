@@ -9,7 +9,7 @@ describe(page, () => {
     reportId: '1',
     bank: { id: '123', name: 'Test bank' },
     formattedReportPeriod: 'January 2024',
-    feeRecordPaymentGroups: [],
+    feeRecords: [],
     numberOfMatchingFacilities: 1,
   };
 

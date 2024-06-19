@@ -185,4 +185,24 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
       relations: { feeRecords: true },
     });
   },
+
+  /**
+   * Finds a utilisation report with the supplied id and attaches
+   * all the fee records which match the supplied fee record
+   * status list with the payments attached
+   * @param reportId - The report id
+   * @param feeRecordStatuses - The fee record statuses to filter by
+   * @returns The utilisation report with attached fee records and payments
+   */
+  async findOneByIdWithFeeRecordsFilteredByStatusWithPayments(reportId: number, feeRecordStatuses: FeeRecordStatus[]): Promise<UtilisationReportEntity | null> {
+    return await UtilisationReportRepo.findOne({
+      where: {
+        id: reportId,
+        feeRecords: {
+          status: In(feeRecordStatuses),
+        },
+      },
+      relations: { feeRecords: { payments: true } },
+    });
+  },
 });

@@ -165,4 +165,8 @@ authRouter
   .route('/utilisation-reports/:reportId/keying-data')
   .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.postKeyingData);
 
+authRouter
+  .route('/utilisation-reports/:reportId/fee-records-to-key')
+  .get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.getFeeRecordsToKey);
+
 module.exports = { authRouter, openRouter };

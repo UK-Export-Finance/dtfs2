@@ -979,6 +979,20 @@ const generateKeyingData = async (reportId, userToken) => {
   return response.data;
 };
 
+/**
+ * Gets the utilisation report with the fee
+ * records to key
+ * @param {string} reportId - The report id
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').FeeRecordsToKeyResponseBody>}
+ */
+const getUtilisationReportWithFeeRecordsToKey = async (reportId, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records-to-key`, {
+    headers: generateHeaders(userToken),
+  });
+  return response.data;
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1023,4 +1037,5 @@ module.exports = {
   getReportSummariesByBankAndYear,
   addPaymentToFeeRecords,
   generateKeyingData,
+  getUtilisationReportWithFeeRecordsToKey,
 };

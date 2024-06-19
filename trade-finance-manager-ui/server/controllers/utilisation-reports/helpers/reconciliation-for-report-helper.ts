@@ -1,17 +1,10 @@
 import orderBy from 'lodash.orderby';
 import { FeeRecordStatus, getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
 import { FeeRecordItem, FeeRecordPaymentGroup, Payment } from '../../../api-response-types';
-import { FeeRecordDisplayStatus, FeeRecordPaymentGroupViewModelItem, FeeRecordViewModelItem, PaymentViewModelItem } from '../../../types/view-models';
+import { FeeRecordPaymentGroupViewModelItem, FeeRecordViewModelItem, PaymentViewModelItem } from '../../../types/view-models';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
 import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
-
-const feeRecordStatusToDisplayStatus: Record<FeeRecordStatus, FeeRecordDisplayStatus> = {
-  TO_DO: 'TO DO',
-  MATCH: 'MATCH',
-  DOES_NOT_MATCH: 'DOES NOT MATCH',
-  READY_TO_KEY: 'READY TO KEY',
-  RECONCILED: 'RECONCILED',
-};
+import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
 
 const sortFeeRecordsByReportedPayments = (feeRecords: FeeRecordItem[]): FeeRecordItem[] =>
   orderBy(feeRecords, [({ reportedPayments }) => reportedPayments.currency, ({ reportedPayments }) => reportedPayments.amount], ['asc']);
@@ -73,7 +66,7 @@ export const mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems = (
   return feeRecordPaymentGroups.map((feeRecordPaymentGroup, index) => {
     const { status, feeRecords, paymentsReceived, totalReportedPayments, totalPaymentsReceived } = feeRecordPaymentGroup;
 
-    const displayStatus = feeRecordStatusToDisplayStatus[status];
+    const displayStatus = getFeeRecordDisplayStatus(status);
 
     const checkboxId = getCheckboxIdForFeeRecordsAndStatus(feeRecords, status);
     const isChecked = isCheckboxChecked(checkboxId);

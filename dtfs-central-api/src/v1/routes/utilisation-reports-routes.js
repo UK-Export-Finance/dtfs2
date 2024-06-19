@@ -17,6 +17,7 @@ const {
 const { getSelectedFeeRecordDetails } = require('../controllers/utilisation-report-service/get-selected-fee-records-details.controller');
 const { postPayment } = require('../controllers/utilisation-report-service/post-payment.controller');
 const { postKeyingData } = require('../controllers/utilisation-report-service/post-keying-data.controller');
+const { getFeeRecordsToKey } = require('../controllers/utilisation-report-service/get-fee-records-to-key.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -295,5 +296,36 @@ utilisationReportsRouter
  *         description: Internal Server Error
  */
 utilisationReportsRouter.route('/:reportId/keying-data').post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, postKeyingData);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/fee-records-to-key:
+ *   get:
+ *     summary: Get the fee records to key for a utilisation report
+ *     tags: [Utilisation Report]
+ *     description: Gets the fee record to key for the utilisation report with the supplied id
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report to get the fee records for
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/UtilisationReportWithFeeRecordsToKey'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter.route('/:reportId/fee-records-to-key').get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, getFeeRecordsToKey);
 
 module.exports = utilisationReportsRouter;

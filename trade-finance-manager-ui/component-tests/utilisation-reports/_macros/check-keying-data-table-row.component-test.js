@@ -7,121 +7,154 @@ const renderTableContainer = true;
 const render = componentRenderer(component, renderTableContainer);
 
 describe(component, () => {
-  const FEE_RECORD_PAYMENT_GROUP = {
-    feeRecords: [
-      {
-        id: 1,
-        facilityId: '12345678',
-        exporter: 'Test exporter 1',
-        reportedFees: 'EUR 100.00',
-        reportedPayments: 'GBP 90.91',
-      },
-      {
-        id: 2,
-        facilityId: '87654321',
-        exporter: 'Test exporter 2',
-        reportedFees: 'USD 500.00',
-        reportedPayments: 'USD 500.00',
-      },
-    ],
-    paymentsReceived: [{ formattedCurrencyAndAmount: 'GBP 90.91' }, { formattedCurrencyAndAmount: 'USD 500.00' }],
+  const aFeeRecordToKey = () => ({
+    id: 1,
+    facilityId: '12345678',
+    exporter: 'Test exporter 1',
+    reportedFees: {
+      formattedCurrencyAndAmount: 'EUR 100.00',
+      dataSortValue: 0,
+    },
+    reportedPayments: {
+      formattedCurrencyAndAmount: 'GBP 90.91',
+      dataSortValue: 0,
+    },
+    paymentsReceived: ['GBP 90.91'],
     status: FEE_RECORD_STATUS.MATCH,
     displayStatus: 'MATCH',
-  };
+  });
 
-  const getWrapper = () => render({ feeRecordPaymentGroup: FEE_RECORD_PAYMENT_GROUP });
-
-  const firstRowSelector = 'tr[data-cy="check-keying-data-table-row--feeRecordId-1"]';
-  const secondRowSelector = 'tr[data-cy="check-keying-data-table-row--feeRecordId-2"]';
+  const getRowSelector = (feeRecordId) => `tr[data-cy="check-keying-data-table-row--feeRecordId-${feeRecordId}"]`;
 
   const govukNumericCellClassName = 'govuk-table__cell--numeric';
 
-  it('creates a table row for each fee record in the fee record payment group', () => {
-    // Act
-    const wrapper = getWrapper();
-
-    // Assert
-    wrapper.expectElement(firstRowSelector).toExist();
-    wrapper.expectElement(secondRowSelector).toExist();
-    wrapper.expectElement('tr').toHaveCount(2);
-  });
-
-  it('renders the facility id for each of the fee records', () => {
-    // Act
-    const wrapper = getWrapper();
-
-    // Assert
-    wrapper.expectElement(`${firstRowSelector} th:contains("12345678")`).toExist();
-    wrapper.expectElement(`${secondRowSelector} th:contains("87654321")`).toExist();
-  });
-
-  it('renders the exporter for each of the fee records', () => {
-    // Act
-    const wrapper = getWrapper();
-
-    // Assert
-    wrapper.expectElement(`${firstRowSelector} td:contains("Test exporter 1")`).toExist();
-    wrapper.expectElement(`${secondRowSelector} td:contains("Test exporter 2")`).toExist();
-  });
-
-  it('renders the reported fees for each of the fee records using the numeric cell class', () => {
-    // Act
-    const wrapper = getWrapper();
-
-    // Assert
-    wrapper.expectElement(`${firstRowSelector} td:contains("EUR 100.00")`).toExist();
-    wrapper.expectElement(`${firstRowSelector} td:contains("EUR 100.00")`).hasClass(govukNumericCellClassName);
-    wrapper.expectElement(`${secondRowSelector} td:contains("USD 500.00")`).toExist();
-    wrapper.expectElement(`${secondRowSelector} td:contains("USD 500.00")`).hasClass(govukNumericCellClassName);
-  });
-
-  it('renders the reported payment for each of the fee records with the numeric cell class', () => {
-    // Act
-    const wrapper = getWrapper();
-
-    // Assert
-    wrapper.expectElement(`${firstRowSelector} td:contains("GBP 90.91")`).toExist();
-    wrapper.expectElement(`${firstRowSelector} td:contains("GBP 90.91")`).hasClass(govukNumericCellClassName);
-    wrapper.expectElement(`${secondRowSelector} td:contains("USD 500.00")`).toExist();
-    wrapper.expectElement(`${secondRowSelector} td:contains("USD 500.00")`).hasClass(govukNumericCellClassName);
-  });
-
-  it('renders a list item for each of the payments received in the first table row with the numeric cell class', () => {
-    // Act
-    const wrapper = getWrapper();
-
-    // Assert
-    wrapper.expectElement(`${firstRowSelector} td:has(ul.payments-list)`).toExist();
-    wrapper.expectElement(`${firstRowSelector} td:has(ul.payments-list)`).hasClass(govukNumericCellClassName);
-
-    wrapper.expectElement(`${firstRowSelector} ul.payments-list li`).toHaveCount(2);
-    wrapper.expectElement(`${firstRowSelector} li:contains("GBP 90.91")`).toExist();
-    wrapper.expectElement(`${firstRowSelector} li:contains("USD 500.00")`).toExist();
-
-    wrapper.expectElement(`${secondRowSelector} ul`).notToExist();
-  });
-
-  it('does not render any payments received when they are undefined', () => {
+  it('creates a single table row', () => {
     // Arrange
-    const feeRecordPaymentGroup = {
-      ...FEE_RECORD_PAYMENT_GROUP,
-      paymentsReceived: undefined,
+    const feeRecord = { ...aFeeRecordToKey(), id: 1 };
+
+    // Act
+    const wrapper = render({ feeRecord });
+
+    // Assert
+    wrapper.expectElement(getRowSelector(1)).toHaveCount(1);
+  });
+
+  it('renders the facility id', () => {
+    // Arrange
+    const feeRecord = { ...aFeeRecordToKey(), id: 1, facilityId: '12345678' };
+
+    // Act
+    const wrapper = render({ feeRecord });
+
+    // Assert
+    wrapper.expectElement(`${getRowSelector(1)} th:contains("12345678")`).toExist();
+  });
+
+  it('renders the exporter', () => {
+    // Arrange
+    const feeRecord = { ...aFeeRecordToKey(), id: 1, exporter: 'Test exporter' };
+
+    // Act
+    const wrapper = render({ feeRecord });
+
+    // Assert
+    wrapper.expectElement(`${getRowSelector(1)} td:contains("Test exporter")`).toExist();
+  });
+
+  it('renders the reported fees using the numeric cell class with the data sort value attribute', () => {
+    // Arrange
+    const feeRecord = {
+      ...aFeeRecordToKey(),
+      id: 1,
+      reportedFees: {
+        formattedCurrencyAndAmount: 'JPY 100.00',
+        dataSortValue: 5,
+      },
     };
 
     // Act
-    const wrapper = render({ feeRecordPaymentGroup });
+    const wrapper = render({ feeRecord });
 
     // Assert
-    wrapper.expectElement(`${firstRowSelector}:has(ul)`).notToExist();
-    wrapper.expectElement(`${secondRowSelector}:has(ul)`).notToExist();
+    const rowSelector = getRowSelector(1);
+    wrapper.expectElement(`${rowSelector} td:contains("JPY 100.00")`).toExist();
+    wrapper.expectElement(`${rowSelector} td:contains("JPY 100.00")`).hasClass(govukNumericCellClassName);
+    wrapper.expectElement(`${rowSelector} td:contains("JPY 100.00")`).toHaveAttribute('data-sort-value', '5');
+  });
+
+  it('renders the reported payment using the numeric cell class with the data sort value attribute', () => {
+    // Arrange
+    const feeRecord = {
+      ...aFeeRecordToKey(),
+      id: 1,
+      reportedPayments: {
+        formattedCurrencyAndAmount: 'USD 100.00',
+        dataSortValue: 3,
+      },
+    };
+
+    // Act
+    const wrapper = render({ feeRecord });
+
+    // Assert
+    const rowSelector = getRowSelector(1);
+    wrapper.expectElement(`${rowSelector} td:contains("USD 100.00")`).toExist();
+    wrapper.expectElement(`${rowSelector} td:contains("USD 100.00")`).hasClass(govukNumericCellClassName);
+    wrapper.expectElement(`${rowSelector} td:contains("USD 100.00")`).toHaveAttribute('data-sort-value', '3');
+  });
+
+  it('renders the payments received with the numeric cell class when there is only one payment received', () => {
+    // Arrange
+    const feeRecord = {
+      ...aFeeRecordToKey(),
+      id: 1,
+      paymentsReceived: ['GBP 90.91'],
+    };
+
+    // Act
+    const wrapper = render({ feeRecord });
+
+    // Assert
+    const rowSelector = getRowSelector(1);
+    wrapper.expectElement(`${rowSelector} td:contains("GBP 90.91")`).toExist();
+    wrapper.expectElement(`${rowSelector} td:contains("GBP 90.91")`).hasClass(govukNumericCellClassName);
+    wrapper.expectElement(`${rowSelector} td:has(ul)`).notToExist();
+  });
+
+  it('renders a list item for each payment received with the numeric cell class when there are multiple payments received', () => {
+    // Arrange
+    const feeRecord = {
+      ...aFeeRecordToKey(),
+      id: 1,
+      paymentsReceived: ['GBP 90.91', 'GBP 50.10', 'GBP 314.59'],
+    };
+
+    // Act
+    const wrapper = render({ feeRecord });
+
+    // Assert
+    const rowSelector = getRowSelector(1);
+    wrapper.expectElement(`${rowSelector} td:has(ul.payments-list)`).toExist();
+    wrapper.expectElement(`${rowSelector} td:has(ul.payments-list)`).hasClass(govukNumericCellClassName);
+
+    wrapper.expectElement(`${rowSelector} ul.payments-list li`).toHaveCount(3);
+    wrapper.expectElement(`${rowSelector} li:contains("GBP 90.91")`).toExist();
+    wrapper.expectElement(`${rowSelector} li:contains("GBP 50.10")`).toExist();
+    wrapper.expectElement(`${rowSelector} li:contains("GBP 314.59")`).toExist();
   });
 
   it('renders the display status badge in the first table row', () => {
+    // Arrange
+    const feeRecord = {
+      ...aFeeRecordToKey(),
+      id: 1,
+      displayStatus: 'MATCH',
+    };
+
     // Act
-    const wrapper = getWrapper();
+    const wrapper = render({ feeRecord });
 
     // Assert
-    wrapper.expectElement(`${firstRowSelector} td:contains("${FEE_RECORD_STATUS.MATCH}")`).toExist();
-    wrapper.expectElement(`${secondRowSelector} td:contains("${FEE_RECORD_STATUS.MATCH}")`).notToExist();
+    wrapper.expectElement(`${getRowSelector(1)} td:contains("MATCH")`).toExist();
   });
 });

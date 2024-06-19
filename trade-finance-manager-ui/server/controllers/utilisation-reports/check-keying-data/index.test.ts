@@ -1,12 +1,11 @@
 import httpMocks from 'node-mocks-http';
-import difference from 'lodash.difference';
-import { FEE_RECORD_STATUS, SessionBank } from '@ukef/dtfs2-common';
+import { SessionBank } from '@ukef/dtfs2-common';
 import { postCheckKeyingData } from '.';
 import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-user';
 import api from '../../../api';
-import { CheckKeyingDataFeeRecordPaymentGroupViewModelItem, CheckKeyingDataViewModel } from '../../../types/view-models';
-import { aFeeRecordItem, aFeeRecordPaymentGroup, aUtilisationReportReconciliationDetailsResponse } from '../../../../test-helpers';
-import { UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
+import { CheckKeyingDataViewModel, FeeRecordToKeyViewModelItem } from '../../../types/view-models';
+import { aFeeRecordsToKeyResponseBody } from '../../../../test-helpers';
+import { FeeRecordToKey, FeeRecordsToKeyResponseBody } from '../../../api-response-types';
 
 console.error = jest.fn();
 
@@ -41,15 +40,11 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
       expect(res._getRenderData()).toEqual({ user: requestSession.user });
     });
 
-    describe('when there are no matching fee record payment groups', () => {
+    describe('when there are no fee records to key', () => {
       beforeEach(() => {
-        jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue({
-          ...aUtilisationReportReconciliationDetailsResponse(),
-          feeRecordPaymentGroups: [
-            { ...aFeeRecordPaymentGroup(), status: 'DOES_NOT_MATCH' },
-            { ...aFeeRecordPaymentGroup(), status: 'TO_DO' },
-            { ...aFeeRecordPaymentGroup(), status: 'TO_DO' },
-          ],
+        jest.mocked(api.getUtilisationReportWithFeeRecordsToKey).mockResolvedValue({
+          ...aFeeRecordsToKeyResponseBody(),
+          feeRecords: [],
         });
       });
 
@@ -84,15 +79,21 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
       });
     });
 
-    describe('when there are matching fee record payment groups', () => {
+    describe('when there are fee records to key', () => {
+      const aFeeRecordToKey = (): FeeRecordToKey => ({
+        id: 1,
+        facilityId: '12345678',
+        exporter: 'Test exporter',
+        reportedFees: { currency: 'EUR', amount: 100 },
+        reportedPayments: { currency: 'GBP', amount: 90.91 },
+        paymentsReceived: [{ currency: 'GBP', amount: 90.91 }],
+        status: 'MATCH',
+      });
+
       beforeEach(() => {
-        jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue({
-          ...aUtilisationReportReconciliationDetailsResponse(),
-          feeRecordPaymentGroups: [
-            { ...aFeeRecordPaymentGroup(), status: 'DOES_NOT_MATCH' },
-            { ...aFeeRecordPaymentGroup(), status: 'TO_DO' },
-            { ...aFeeRecordPaymentGroup(), status: 'MATCH' },
-          ],
+        jest.mocked(api.getUtilisationReportWithFeeRecordsToKey).mockResolvedValue({
+          ...aFeeRecordsToKeyResponseBody(),
+          feeRecords: [aFeeRecordToKey()],
         });
       });
 
@@ -121,12 +122,12 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
           id: '123',
           name: 'Test bank',
         };
-        const utilisationReportResponse: UtilisationReportReconciliationDetailsResponseBody = {
-          ...aUtilisationReportReconciliationDetailsResponse(),
-          feeRecordPaymentGroups: [{ ...aFeeRecordPaymentGroup(), status: 'MATCH' }],
+        const utilisationReportResponse: FeeRecordsToKeyResponseBody = {
+          ...aFeeRecordsToKeyResponseBody(),
+          feeRecords: [aFeeRecordToKey()],
           bank,
         };
-        jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportResponse);
+        jest.mocked(api.getUtilisationReportWithFeeRecordsToKey).mockResolvedValue(utilisationReportResponse);
 
         // Act
         await postCheckKeyingData(req, res);
@@ -143,15 +144,15 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
           params: { reportId: '1' },
         });
 
-        const utilisationReportResponse: UtilisationReportReconciliationDetailsResponseBody = {
-          ...aUtilisationReportReconciliationDetailsResponse(),
-          feeRecordPaymentGroups: [{ ...aFeeRecordPaymentGroup(), status: 'MATCH' }],
+        const utilisationReportResponse: FeeRecordsToKeyResponseBody = {
+          ...aFeeRecordsToKeyResponseBody(),
+          feeRecords: [aFeeRecordToKey()],
           reportPeriod: {
             start: { month: 1, year: 2024 },
             end: { month: 1, year: 2024 },
           },
         };
-        jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportResponse);
+        jest.mocked(api.getUtilisationReportWithFeeRecordsToKey).mockResolvedValue(utilisationReportResponse);
 
         // Act
         await postCheckKeyingData(req, res);
@@ -161,121 +162,72 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
         expect(viewModel.formattedReportPeriod).toBe('January 2024');
       });
 
-      it('renders the page with the mapped fee record payment groups', async () => {
+      it('renders the page with the mapped fee records', async () => {
         // Arrange
         const { req, res } = httpMocks.createMocks({
           session: requestSession,
           params: { reportId: '1' },
         });
 
-        const utilisationReportResponse: UtilisationReportReconciliationDetailsResponseBody = {
-          ...aUtilisationReportReconciliationDetailsResponse(),
-          feeRecordPaymentGroups: [
-            {
-              feeRecords: [
-                {
-                  id: 1,
-                  facilityId: '12345678',
-                  exporter: 'Test exporter',
-                  reportedFees: { currency: 'EUR', amount: 100 },
-                  reportedPayments: { currency: 'GBP', amount: 90.91 },
-                },
-              ],
-              totalReportedPayments: { currency: 'GBP', amount: 90.91 },
-              paymentsReceived: null,
-              totalPaymentsReceived: null,
-              status: 'MATCH',
-            },
-          ],
-        };
-        jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportResponse);
-
-        // Act
-        await postCheckKeyingData(req, res);
-
-        // Assert
-        const viewModel = res._getRenderData() as CheckKeyingDataViewModel;
-        expect(viewModel.feeRecordPaymentGroups).toHaveLength(1);
-        expect(viewModel.feeRecordPaymentGroups[0]).toEqual<CheckKeyingDataFeeRecordPaymentGroupViewModelItem>({
+        const utilisationReportResponse: FeeRecordsToKeyResponseBody = {
+          ...aFeeRecordsToKeyResponseBody(),
           feeRecords: [
             {
               id: 1,
               facilityId: '12345678',
               exporter: 'Test exporter',
-              reportedFees: 'EUR 100.00',
-              reportedPayments: 'GBP 90.91',
-            },
-          ],
-          paymentsReceived: undefined,
-          status: 'MATCH',
-          displayStatus: 'MATCH',
-        });
-      });
-
-      it.each(difference(Object.values(FEE_RECORD_STATUS), [FEE_RECORD_STATUS.MATCH]))(
-        "does not render fee record payment groups with the status '%s'",
-        async (status) => {
-          // Arrange
-          const { req, res } = httpMocks.createMocks({
-            session: requestSession,
-            params: { reportId: '1' },
-          });
-
-          const utilisationReportResponse: UtilisationReportReconciliationDetailsResponseBody = {
-            ...aUtilisationReportReconciliationDetailsResponse(),
-            feeRecordPaymentGroups: [
-              {
-                ...aFeeRecordPaymentGroup(),
-                status,
-              },
-              {
-                ...aFeeRecordPaymentGroup(),
-                status: 'MATCH',
-              },
-            ],
-          };
-          jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportResponse);
-
-          // Act
-          await postCheckKeyingData(req, res);
-
-          // Assert
-          const viewModel = res._getRenderData() as CheckKeyingDataViewModel;
-          expect(viewModel.feeRecordPaymentGroups).toHaveLength(1);
-          expect(viewModel.feeRecordPaymentGroups[0].status).toBe(FEE_RECORD_STATUS.MATCH);
-        },
-      );
-
-      it('sets the view model number of matching facilities property to the number of fee records in matching groups', async () => {
-        // Arrange
-        const { req, res } = httpMocks.createMocks({
-          session: requestSession,
-          params: { reportId: '1' },
-        });
-
-        const utilisationReportResponse: UtilisationReportReconciliationDetailsResponseBody = {
-          ...aUtilisationReportReconciliationDetailsResponse(),
-          feeRecordPaymentGroups: [
-            {
-              ...aFeeRecordPaymentGroup(),
-              feeRecords: [{ ...aFeeRecordItem() }, { ...aFeeRecordItem() }],
-              status: 'DOES_NOT_MATCH',
-            },
-            {
-              ...aFeeRecordPaymentGroup(),
-              feeRecords: [{ ...aFeeRecordItem() }, { ...aFeeRecordItem() }, { ...aFeeRecordItem() }],
+              reportedFees: { currency: 'EUR', amount: 100 },
+              reportedPayments: { currency: 'GBP', amount: 90.91 },
+              paymentsReceived: [{ currency: 'GBP', amount: 90.91 }],
               status: 'MATCH',
             },
           ],
         };
-        jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportResponse);
+        jest.mocked(api.getUtilisationReportWithFeeRecordsToKey).mockResolvedValue(utilisationReportResponse);
 
         // Act
         await postCheckKeyingData(req, res);
 
         // Assert
         const viewModel = res._getRenderData() as CheckKeyingDataViewModel;
-        expect(viewModel.feeRecordPaymentGroups).toHaveLength(1);
+        expect(viewModel.feeRecords).toHaveLength(1);
+        expect(viewModel.feeRecords[0]).toEqual<FeeRecordToKeyViewModelItem>({
+          id: 1,
+          facilityId: '12345678',
+          exporter: 'Test exporter',
+          reportedFees: {
+            formattedCurrencyAndAmount: 'EUR 100.00',
+            dataSortValue: 0,
+          },
+          reportedPayments: {
+            formattedCurrencyAndAmount: 'GBP 90.91',
+            dataSortValue: 0,
+          },
+          paymentsReceived: ['GBP 90.91'],
+          status: 'MATCH',
+          displayStatus: 'MATCH',
+        });
+      });
+
+      it('sets the view model number of matching facilities property to the number of fee records to key', async () => {
+        // Arrange
+        const { req, res } = httpMocks.createMocks({
+          session: requestSession,
+          params: { reportId: '1' },
+        });
+
+        const utilisationReportResponse: FeeRecordsToKeyResponseBody = {
+          ...aFeeRecordsToKeyResponseBody(),
+          feeRecords: [aFeeRecordToKey(), aFeeRecordToKey(), aFeeRecordToKey()],
+        };
+        jest.mocked(api.getUtilisationReportWithFeeRecordsToKey).mockResolvedValue(utilisationReportResponse);
+
+        // Act
+        await postCheckKeyingData(req, res);
+
+        // Assert
+        const viewModel = res._getRenderData() as CheckKeyingDataViewModel;
+        expect(viewModel.feeRecords).toHaveLength(3);
         expect(viewModel.numberOfMatchingFacilities).toBe(3);
       });
 

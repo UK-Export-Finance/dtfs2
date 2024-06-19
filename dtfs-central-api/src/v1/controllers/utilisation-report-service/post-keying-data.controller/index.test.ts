@@ -63,7 +63,7 @@ describe('post-keying-data.controller', () => {
       expect(res._isEndCalled()).toBe(true);
     });
 
-    it('responds with the 200 error code', async () => {
+    it('responds with the 200 error status', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 

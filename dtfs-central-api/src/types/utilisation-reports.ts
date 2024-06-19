@@ -9,6 +9,7 @@ import {
   IsoMonthStamp,
   FeeRecordStatus,
   CurrencyAndAmount,
+  SessionBank,
 } from '@ukef/dtfs2-common';
 
 export type GetUtilisationReportResponse = {
@@ -105,4 +106,16 @@ export type NewPaymentDetails = {
   amount: number;
   dateReceived: Date;
   reference?: string;
+};
+
+export type FeeRecordToKey = FeeRecordItem & {
+  paymentsReceived: CurrencyAndAmount[];
+  status: FeeRecordStatus;
+};
+
+export type UtilisationReportWithFeeRecordsToKey = {
+  id: number;
+  bank: SessionBank;
+  reportPeriod: ReportPeriod;
+  feeRecords: FeeRecordToKey[];
 };

@@ -1,14 +1,21 @@
-import { Prettify, SessionBank } from '@ukef/dtfs2-common';
-import { FeeRecordPaymentGroupViewModelItem } from './utilisation-report-reconciliation-for-report-view-model';
+import { CurrencyAndAmountString, FeeRecordStatus, SessionBank } from '@ukef/dtfs2-common';
+import { FeeRecordDisplayStatus, SortedAndFormattedCurrencyAndAmount } from './utilisation-report-reconciliation-for-report-view-model';
 
-export type CheckKeyingDataFeeRecordPaymentGroupViewModelItem = Prettify<
-  Omit<FeeRecordPaymentGroupViewModelItem, 'totalReportedPayments' | 'totalPaymentsReceived' | 'checkboxId' | 'isChecked'>
->;
+export type FeeRecordToKeyViewModelItem = {
+  id: number;
+  facilityId: string;
+  exporter: string;
+  reportedFees: SortedAndFormattedCurrencyAndAmount;
+  reportedPayments: SortedAndFormattedCurrencyAndAmount;
+  paymentsReceived: CurrencyAndAmountString[];
+  status: FeeRecordStatus;
+  displayStatus: FeeRecordDisplayStatus;
+};
 
 export type CheckKeyingDataViewModel = {
   reportId: string;
   bank: SessionBank;
   formattedReportPeriod: string;
-  feeRecordPaymentGroups: CheckKeyingDataFeeRecordPaymentGroupViewModelItem[];
+  feeRecords: FeeRecordToKeyViewModelItem[];
   numberOfMatchingFacilities: number;
 };
