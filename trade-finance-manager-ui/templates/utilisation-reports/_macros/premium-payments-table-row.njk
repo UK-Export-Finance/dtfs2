@@ -2,6 +2,7 @@
 {% import "../../_macros/table-cell-checkbox.njk" as tableCellCheckbox %}
 
 {% macro render(params) %}
+  {% set reportId = params.reportId %}
   {% set feeRecordPaymentGroup = params.feeRecordPaymentGroup %}
 
   {% set feeRecords = feeRecordPaymentGroup.feeRecords %}
@@ -49,7 +50,13 @@
           <ul class="payments-list">
             {% for paymentReceived in paymentsReceived %}
               <li class="payments-list-item">
-                <a href="#">{{ paymentReceived }}</a>
+                {% if status === 'MATCH' or status === 'DOES_NOT_MATCH' %}
+                  <a href="/utilisation-reports/{{ reportId }}/edit-payment/{{ paymentReceived.id }}">
+                    {{ paymentReceived.formattedCurrencyAndAmount }}
+                  </a>
+                {% else %}
+                  {{ paymentReceived.formattedCurrencyAndAmount }}
+                {% endif %}
               </li>
             {% endfor %}
           </ul>

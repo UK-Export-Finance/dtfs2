@@ -88,7 +88,7 @@ const updatePortalBssDealStatus = async (dealId, status) => {
   }
 };
 
-const addPortalDealComment = async (dealId, commentType, comment) => {
+const addPortalDealComment = async (dealId, commentType, comment, auditDetails) => {
   const isValidDealId = isValidMongoId(dealId);
 
   if (!isValidDealId) {
@@ -104,6 +104,7 @@ const addPortalDealComment = async (dealId, commentType, comment) => {
       dealId,
       commentType,
       comment,
+      auditDetails,
     },
   });
 
@@ -1107,7 +1108,7 @@ const updateGefMINActivity = async (dealId) => {
   }
 };
 
-const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
+const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment, auditDetails) => {
   const isValidDealId = isValidMongoId(dealId);
 
   if (!isValidDealId) {
@@ -1119,7 +1120,7 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
     method: 'post',
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}/comment`,
     headers: headers.central,
-    data: { dealId, commentType, comment },
+    data: { dealId, commentType, comment, auditDetails },
   });
 
   return response.data;

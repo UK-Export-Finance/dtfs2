@@ -97,7 +97,7 @@ exports.update = async (req, res) => {
 
     // Add a comment to the deal
     if (body.comments) {
-      updatedDeal = await addComment(dealId, body.comments, user);
+      updatedDeal = await addComment(dealId, body.comments, user, auditDetails);
     }
 
     // Update the deal

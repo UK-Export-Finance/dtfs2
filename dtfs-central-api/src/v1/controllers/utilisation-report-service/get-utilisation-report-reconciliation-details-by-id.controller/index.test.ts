@@ -131,7 +131,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
         .withDateUploaded(dateUploaded)
         .build();
 
-      const payment = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(100).build();
+      const payment = PaymentEntityMockBuilder.forCurrency('GBP').withId(1).withAmount(100).build();
 
       const feeRecords = [
         FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport)
@@ -209,6 +209,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
             {
               currency: 'GBP',
               amount: 100,
+              id: 1,
             },
           ],
           totalPaymentsReceived: {

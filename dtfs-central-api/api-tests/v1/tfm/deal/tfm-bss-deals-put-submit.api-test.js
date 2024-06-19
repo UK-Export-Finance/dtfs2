@@ -99,9 +99,9 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       const newFacility1 = { ...newFacility, dealId };
       const newFacility2 = { ...newFacility, dealId };
 
-      const { body: facility1Body } = await createFacility({ api, facility: newFacility1, user: MOCK_PORTAL_USER });
+      const { body: facility1Body, auditDetails: facility1AuditDetails } = await createFacility({ api, facility: newFacility1, user: MOCK_PORTAL_USER });
 
-      const { body: facility2Body } = await createFacility({ api, facility: newFacility2, user: MOCK_PORTAL_USER });
+      const { body: facility2Body, auditDetails: facility2AuditDetails } = await createFacility({ api, facility: newFacility2, user: MOCK_PORTAL_USER });
 
       const facility1Id = facility1Body._id;
       const facility2Id = facility2Body._id;
@@ -129,6 +129,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
           ...newFacility1,
           createdDate: expect.any(Number),
           updatedAt: expect.any(Number),
+          auditRecord: generateParsedMockAuditDatabaseRecord(facility1AuditDetails),
         },
         tfm: DEFAULTS.FACILITY_TFM,
         auditRecord: generateParsedMockAuditDatabaseRecord(auditDetails),
@@ -144,6 +145,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
           ...newFacility2,
           createdDate: expect.any(Number),
           updatedAt: expect.any(Number),
+          auditRecord: generateParsedMockAuditDatabaseRecord(facility2AuditDetails),
         },
         tfm: DEFAULTS.FACILITY_TFM,
         auditRecord: generateParsedMockAuditDatabaseRecord(auditDetails),

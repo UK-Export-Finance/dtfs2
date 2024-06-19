@@ -1,3 +1,4 @@
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { format, add } = require('date-fns');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
@@ -263,6 +264,12 @@ describe('/v1/deals/:id/bond', () => {
   });
 
   describe('PUT /v1/deals/:id/bond/:bondId', () => {
+    let aBarclaysMaker1AuditRecord;
+
+    beforeAll(async () => {
+      aBarclaysMaker1AuditRecord = generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id);
+    });
+
     it('401s requests that do not present a valid Authorization token', async () => {
       const { status } = await as().put().to('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
 
@@ -362,6 +369,7 @@ describe('/v1/deals/:id/bond', () => {
           'conversionRateDate-day': null,
           'conversionRateDate-month': null,
           'conversionRateDate-year': null,
+          auditRecord: aBarclaysMaker1AuditRecord,
         };
         expect(updatedBond).toEqual(expectedUpdatedBond);
       });
@@ -435,6 +443,7 @@ describe('/v1/deals/:id/bond', () => {
           'conversionRateDate-day': null,
           'conversionRateDate-month': null,
           'conversionRateDate-year': null,
+          auditRecord: aBarclaysMaker1AuditRecord,
         };
 
         expect(updatedBond).toEqual(expectedBond);
@@ -514,6 +523,7 @@ describe('/v1/deals/:id/bond', () => {
           'conversionRateDate-day': null,
           'conversionRateDate-month': null,
           'conversionRateDate-year': null,
+          auditRecord: aBarclaysMaker1AuditRecord,
         };
         expect(updatedBond).toEqual(expectedBond);
       });
@@ -566,6 +576,7 @@ describe('/v1/deals/:id/bond', () => {
         'conversionRateDate-day': null,
         'conversionRateDate-month': null,
         'conversionRateDate-year': null,
+        auditRecord: aBarclaysMaker1AuditRecord,
       });
     });
 

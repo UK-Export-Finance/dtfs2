@@ -1,6 +1,6 @@
 import { Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems } from './reconciliation-for-report-helper';
-import { FeeRecordItem, FeeRecordPaymentGroup } from '../../../api-response-types';
+import { FeeRecordItem, FeeRecordPaymentGroup, Payment } from '../../../api-response-types';
 import { aFeeRecordPaymentGroup, aFeeRecordItem } from '../../../../test-helpers';
 
 describe('reconciliation-for-report-helper', () => {
@@ -223,7 +223,7 @@ describe('reconciliation-for-report-helper', () => {
 
     it('maps the group paymentsReceived to the view model paymentsReceived formatted currency and amount', () => {
       // Arrange
-      const paymentsReceived: CurrencyAndAmount[] = [{ currency: 'GBP', amount: 314.59 }];
+      const paymentsReceived: Payment[] = [{ id: 1, currency: 'GBP', amount: 314.59 }];
       const paymentsReceivedFormattedCurrencyAndAmount = 'GBP 314.59';
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
@@ -238,7 +238,26 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(viewModel[0].paymentsReceived).toHaveLength(1);
-      expect(viewModel[0].paymentsReceived![0]).toBe(paymentsReceivedFormattedCurrencyAndAmount);
+      expect(viewModel[0].paymentsReceived![0].formattedCurrencyAndAmount).toBe(paymentsReceivedFormattedCurrencyAndAmount);
+    });
+
+    it('maps the group paymentsReceived id to the view model paymentsReceived id', () => {
+      // Arrange
+      const paymentsReceived: Payment[] = [{ id: 1, currency: 'GBP', amount: 100 }];
+
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
+        {
+          ...aFeeRecordPaymentGroup(),
+          paymentsReceived,
+        },
+      ];
+
+      // Act
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+
+      // Assert
+      expect(viewModel[0].paymentsReceived).toHaveLength(1);
+      expect(viewModel[0].paymentsReceived![0].id).toBe(1);
     });
 
     it('sets the view model totalPaymentsReceived formattedCurrencyAndAmount to undefined when the group totalPaymentsReceived is null', () => {
@@ -323,7 +342,7 @@ describe('reconciliation-for-report-helper', () => {
       { feeRecordStatus: 'READY_TO_KEY', feeRecordDisplayStatus: 'READY TO KEY' },
       { feeRecordStatus: 'RECONCILED', feeRecordDisplayStatus: 'RECONCILED' },
     ] as const)(
-      "maps the fee record status '$feeRecordStatus' to the view model display status '%feeRecordDisplayStatus'",
+      "maps the fee record status '$feeRecordStatus' to the view model display status '$feeRecordDisplayStatus'",
       ({ feeRecordStatus, feeRecordDisplayStatus }) => {
         // Arrange
         const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), status: feeRecordStatus }];

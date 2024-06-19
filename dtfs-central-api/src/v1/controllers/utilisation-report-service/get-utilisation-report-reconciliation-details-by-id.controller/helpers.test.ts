@@ -1,6 +1,5 @@
 import {
   Currency,
-  CurrencyAndAmount,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
@@ -13,7 +12,7 @@ import { when } from 'jest-when';
 import { mapUtilisationReportEntityToReconciliationDetails } from './helpers';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
-import { FeeRecordItem, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
+import { FeeRecordItem, Payment, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
 
 jest.mock('../../../../repositories/banks-repo');
 
@@ -268,7 +267,11 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         // Assert
         expect(mappedReport.feeRecordPaymentGroups[0].paymentsReceived).toHaveLength(payments.length);
         mappedReport.feeRecordPaymentGroups[0].paymentsReceived!.forEach((paymentsReceivedItem, index) => {
-          const expectedPaymentsReceived: CurrencyAndAmount = { currency: payments[index].currency, amount: payments[index].amount };
+          const expectedPaymentsReceived: Payment = {
+            currency: payments[index].currency,
+            amount: payments[index].amount,
+            id: payments[index].id,
+          };
           expect(paymentsReceivedItem).toEqual(expectedPaymentsReceived);
         });
       });
@@ -350,7 +353,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         firstFeeRecords.forEach(({ id }) => expect(feeRecordIdsInFirstGroup).toContain(id));
 
         expect(firstGroup.paymentsReceived).toHaveLength(firstPayments.length);
-        firstGroup.paymentsReceived!.forEach(({ currency }) => expect(currency).toBe(firstPaymentCurrency));
+        firstGroup.paymentsReceived!.forEach(({ currency, id }, index) => {
+          expect(currency).toBe(firstPaymentCurrency);
+          expect(id).toBe(firstPayments[index].id);
+        });
 
         // Assert - Second group
         const secondGroup = mappedReport.feeRecordPaymentGroups[1];
@@ -360,7 +366,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         secondFeeRecords.forEach(({ id }) => expect(feeRecordIdsInSecondGroup).toContain(id));
 
         expect(secondGroup.paymentsReceived).toHaveLength(secondPayments.length);
-        secondGroup.paymentsReceived!.forEach(({ currency }) => expect(currency).toBe(secondPaymentCurrency));
+        secondGroup.paymentsReceived!.forEach(({ currency, id }, index) => {
+          expect(currency).toBe(secondPaymentCurrency);
+          expect(id).toBe(secondPayments[index].id);
+        });
       });
 
       function* idGenerator(): Generator<number, number, unknown> {
