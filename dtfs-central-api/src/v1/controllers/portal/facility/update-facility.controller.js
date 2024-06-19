@@ -14,7 +14,7 @@ const withoutId = (obj) => {
 };
 
 const updateFacility = async (facilityId, facilityUpdate, dealId, user, routePath, auditDetails) => {
-  if (!ObjectId.isValid(dealId) || ObjectId.isValid(facilityId)) {
+  if (!ObjectId.isValid(dealId) || !ObjectId.isValid(facilityId)) {
     return { status: 400, message: 'Invalid Deal or Facility Id' };
   }
 
@@ -44,12 +44,12 @@ exports.updateFacility = updateFacility;
 
 exports.updateFacilityPut = async (req, res) => {
   const {
-    params: { facilityId },
+    params: { id: facilityId },
     body: { user, facilityUpdate, auditDetails },
     routePath,
   } = req;
 
-  if (ObjectId.isValid(facilityId)) {
+  if (!ObjectId.isValid(facilityId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
   }
 
@@ -65,13 +65,13 @@ exports.updateFacilityPut = async (req, res) => {
   }
   const facility = await findOneFacility(facilityId);
 
-  if (facility) {
-    const { dealId } = facility;
-
-    const updatedFacility = await updateFacility(facilityId, facilityUpdate, dealId, user, routePath, auditDetails);
-
-    return res.status(200).json(updatedFacility);
+  if (!facility) {
+    return res.status(404).send();
   }
 
-  return res.status(404).send();
+  const { dealId } = facility;
+
+  const updatedFacility = await updateFacility(facilityId, facilityUpdate, dealId, user, routePath, auditDetails);
+
+  return res.status(200).json(updatedFacility);
 };

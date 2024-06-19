@@ -406,13 +406,15 @@ portalRouter.route('/facilities/:id').get(getFacilityController.findOneFacilityG
  *       required: true
  *       content:
  *         application/json:
- *           properties:
- *             facilityUpdate:
- *               type: object
- *             user:
- *               type: object
- *             auditDetails:
- *               $ref: '#/definitions/portalAuditDetails'
+ *           schema:
+ *             type: object
+ *             properties:
+ *               facilityUpdate:
+ *                 type: object
+ *               user:
+ *                 type: object
+ *               auditDetails:
+ *                 $ref: '#/definitions/portalAuditDetails'
  *     responses:
  *       200:
  *         description: OK
