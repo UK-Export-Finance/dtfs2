@@ -66,7 +66,7 @@ describe('/v1/portal/facilities', () => {
           auditDetails: auditDetailsToUse,
         };
 
-        return api.put({ user: MOCK_PORTAL_USER, facilityUpdate, auditDetails }).to(`/v1/portal/facilities/${createdFacility._id}`);
+        return api.put(facilityUpdate).to(`/v1/portal/facilities/${createdFacility._id}`);
       },
     });
 
