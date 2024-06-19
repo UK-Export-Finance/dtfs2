@@ -320,6 +320,8 @@ exports.delete = async (req, res) => {
     }
 
     if (error instanceof DocumentNotFoundError) {
+      // The deletedCount refers to the number of deals deleted not the number of facilities.
+      // DocumentNotFoundError is returned if no facilities are found, which occurs after the deal is successfully deleted
       return res.status(200).send({ acknowledged: true, deletedCount: 1 });
     }
     console.error(error);
