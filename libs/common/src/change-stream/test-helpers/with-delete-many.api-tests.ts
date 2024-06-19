@@ -94,7 +94,7 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
         itDoesNotUpdateTheDatabase();
       });
 
-      describe('when no documents are deleted', () => {
+      describe('when the number of documents deleted does not match the expected number', () => {
         beforeEach(() => {
           when(deleteManyMock)
             // @ts-ignore

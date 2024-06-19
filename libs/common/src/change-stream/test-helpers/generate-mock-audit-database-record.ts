@@ -8,6 +8,7 @@ import {
   generateNoUserLoggedInAuditDatabaseRecord,
 } from '../generate-audit-database-record';
 import { AuditDetails } from '../../types';
+import '../../test-helpers/expect-to-be-object-id';
 
 export const generateMockTfmUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
   ...generateTfmUserAuditDatabaseRecord(mockUserId),
@@ -51,7 +52,7 @@ export const generateParsedMockPortalUserAuditDatabaseRecord = (mockUserId: stri
 
 export const expectAnyPortalUserAuditDatabaseRecord = () => ({
   lastUpdatedAt: expect.any(String),
-  lastUpdatedByPortalUserId: expect.anything(),
+  lastUpdatedByPortalUserId: expect.toBeObjectId(),
   lastUpdatedByTfmUserId: null,
   lastUpdatedByIsSystem: null,
   noUserLoggedIn: null,

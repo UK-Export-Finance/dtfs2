@@ -1,3 +1,4 @@
+const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
@@ -64,6 +65,10 @@ describe('/v1/portal/facilities', () => {
   describe('POST /v1/portal/multiple-facilities', () => {
     const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
 
+    beforeEach(async () => {
+      await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES]);
+    });
+
     withValidateAuditDetailsTests({
       makeRequest: (auditDetails) => {
         return api
@@ -76,9 +81,33 @@ describe('/v1/portal/facilities', () => {
           .to('/v1/portal/multiple-facilities');
       },
     });
-    it('creates and returns multiple facilities with createdDate and updatedAt', async () => {
-      await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES]);
 
+    it('updates the audit record', async () => {
+      const auditDetails = generatePortalAuditDetails(MOCK_PORTAL_USER._id);
+      const postBody = {
+        facilities,
+        user: MOCK_PORTAL_USER,
+        dealId,
+        auditDetails,
+      };
+
+      const { status, body } = await api.post(postBody).to('/v1/portal/multiple-facilities');
+      expect(status).toEqual(200);
+      expect(body.length).toEqual(4);
+
+      const createdFacilities = await Promise.all(
+        body.map(async (facilityId) => {
+          const { body: facility } = await api.get(`/v1/portal/facilities/${facilityId}`);
+          return facility;
+        }),
+      );
+
+      createdFacilities.forEach((facility) => {
+        expect(facility.auditRecord).toEqual(generateParsedMockAuditDatabaseRecord(auditDetails));
+      });
+    });
+
+    it('creates and returns multiple facilities with createdDate and updatedAt', async () => {
       const postBody = {
         facilities,
         user: MOCK_PORTAL_USER,

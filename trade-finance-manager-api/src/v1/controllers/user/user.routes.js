@@ -29,6 +29,7 @@ const combineErrors = (listOfErrors) =>
 module.exports.createTfmUser = (req, res, next) => {
   const userToCreate = req.body;
   const errors = applyCreateRules(userToCreate);
+  // This is called on the open and auth router ('v1/user' and 'v1/users') endpoints so req.user may be undefined
   const auditDetails = req.user?._id ? generateTfmAuditDetails(req.user._id) : generateNoUserLoggedInAuditDetails();
 
   if (errors.length) {
@@ -48,7 +49,6 @@ module.exports.createTfmUser = (req, res, next) => {
 
   const newUser = { ...userToCreate, salt, hash };
 
-  // This is called on the open and auth router ('v1/user' and 'v1/users') endpoints so req.user may be undefined
   return create(newUser, auditDetails, (error, user) => {
     if (error) {
       return next(error);
@@ -114,13 +114,13 @@ module.exports.updateTfmUserById = (req, res, next) => {
   });
 };
 
-module.exports.removeTfmUserById = (req, res, next) => {
-  removeTfmUserById(req.params.user, generateTfmAuditDetails(req.user._id), (error, status) => {
+module.exports.removeTfmUserById = (req, res) => {
+  const auditDetails = generateTfmAuditDetails(req.user._id);
+  removeTfmUserById(req.params.user, auditDetails, (error, status) => {
     if (error) {
-      next(error);
-    } else {
-      res.status(200).json(status);
+      return res.status(status).send({ status, error });
     }
+    return res.sendStatus(status);
   });
 };
 

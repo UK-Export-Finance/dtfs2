@@ -1,3 +1,9 @@
+/**
+ * @param {import('mongodb').ModifyResult} response
+ * @returns
+ *
+ * @deprecated the type ModifyResult is removed in mongodb v5
+ */
 exports.mongoStatus = (response) => {
   let status = 200;
   if (response.ok) {
