@@ -1,6 +1,6 @@
-export default (label) => {
+export default (labelText) => {
   return cy
-    .get('label', label)
+    .contains('label', labelText)
     .invoke('attr', 'for')
     .then((id) => cy.get(`#${id}`));
 };
