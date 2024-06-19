@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, DocumentNotFoundError } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteMany, deleteOne } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
 const utils = require('../utils.service');
@@ -315,6 +315,15 @@ exports.delete = async (req, res) => {
 
     return res.status(200).send(applicationDeleteResult);
   } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return res.sendStatus(404);
+    }
+
+    if (error instanceof DocumentNotFoundError) {
+      // The deletedCount refers to the number of deals deleted not the number of facilities.
+      // DocumentNotFoundError is returned if no facilities are found, which occurs after the deal is successfully deleted
+      return res.status(200).send({ acknowledged: true, deletedCount: 1 });
+    }
     console.error(error);
     return res.status(500).send({ status: 500, error });
   }

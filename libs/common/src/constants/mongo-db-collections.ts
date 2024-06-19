@@ -17,4 +17,5 @@ export const MONGO_DB_COLLECTIONS = {
   USERS: 'users',
   DELETION_AUDIT_LOGS: 'deletion-audit-logs',
   FEEDBACK: 'feedback',
+  FILES: 'files',
 } as const;

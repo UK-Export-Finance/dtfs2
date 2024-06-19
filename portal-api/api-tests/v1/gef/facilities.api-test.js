@@ -3,7 +3,8 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const {
   generateParsedMockPortalUserAuditDatabaseRecord,
   withDeleteManyTests,
-  generateMockPortalUserAuditDatabaseRecord,
+  withDeleteOneTests,
+  expectAnyPortalUserAuditDatabaseRecord,
 } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { CURRENCY } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
@@ -528,9 +529,11 @@ describe(baseUrl, () => {
       successStatusCode: 200,
     });
 
-    it('returns a 204 - "No Content" if there are no records', async () => {
-      const { status } = await as(aMaker).remove(`${baseUrl}/doesnotexist`);
-      expect(status).toEqual(204);
+    withDeleteOneTests({
+      makeRequest: () => as(aMaker).remove(`${baseUrl}/${String(facilityToDeleteId)}`),
+      collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
+      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
+      getDeletedDocumentId: () => facilityToDeleteId,
     });
   });
 
@@ -561,12 +564,17 @@ describe(baseUrl, () => {
     withDeleteManyTests({
       makeRequest: () => as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`),
       collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
-      auditRecord: {
-        ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
-        lastUpdatedByPortalUserId: expect.anything(),
-      },
+      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentIds: () => facilitiesToDeleteIds,
       expectedSuccessResponseBody: { acknowledged: true },
+    });
+
+    it('returns 404 if there are no facilities to delete', async () => {
+      const { status: firstStatus } = await as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
+      const { status: secondStatus } = await as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
+
+      expect(firstStatus).toBe(200);
+      expect(secondStatus).toBe(404);
     });
   });
 
