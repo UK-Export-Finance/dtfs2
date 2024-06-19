@@ -101,7 +101,7 @@ describe('/v1/portal/facilities', () => {
       expect(body.value).toEqual(aValidUpdateRequest.facilityUpdate.value);
     });
 
-    it.only('updates `editedBy` in the associated deal', async () => {
+    it('updates `editedBy` in the associated deal', async () => {
       const getDealResponse = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
       expect(getDealResponse.body.deal.editedBy.length).toEqual(1);
 
