@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
 const { PORTAL_USER } = require('@ukef/dtfs2-common/schemas');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const { ObjectId } = require('mongodb');
@@ -334,6 +334,9 @@ exports.remove = async (_id, auditDetails, callback) => {
 
     return callback(null, 200);
   } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return callback(error, 404);
+    }
     console.error('Deleting a user threw an error %o', error);
     return callback(error, 500);
   }

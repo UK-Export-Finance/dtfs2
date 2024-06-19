@@ -882,7 +882,7 @@ const getUtilisationReportReconciliationDetailsById = async (reportId, userToken
  * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The ids of the selected fee records
  * @param {string} userToken - The user token
- * @returns {Promise<import('@ukef/dtfs2-common').SelectedFeeRecordsDetails>}
+ * @returns {Promise<import('./api-response-types').SelectedFeeRecordsDetailsResponseBody>}
  */
 const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {

@@ -11,9 +11,10 @@ type Params = {
   collectionName: MongoDbCollectionName;
   auditRecord: AuditDatabaseRecord;
   getDeletedDocumentId: () => ObjectId;
+  expectedStatusWhenNoDeletion?: number;
 };
 
-export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, getDeletedDocumentId }: Params) => {
+export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, getDeletedDocumentId, expectedStatusWhenNoDeletion = 404 }: Params) => {
   describe(`when deleting a document from ${collectionName}`, () => {
     let mongoDbClient: MongoDbClient;
     let deletionAuditLogsCollection: Collection<WithoutId<DeletionAuditLog>>;
@@ -85,6 +86,12 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
         });
 
         itDoesNotUpdateTheDatabase();
+
+        it('should return 500', async () => {
+          const { status } = await makeRequest();
+
+          expect(status).toBe(500);
+        });
       });
 
       describe('when no document is deleted', () => {
@@ -98,6 +105,12 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
         });
 
         itDoesNotUpdateTheDatabase();
+
+        it(`should return ${expectedStatusWhenNoDeletion}`, async () => {
+          const { status } = await makeRequest();
+
+          expect(status).toBe(expectedStatusWhenNoDeletion);
+        });
       });
 
       describe('when deleting the document throws an error', () => {
@@ -110,6 +123,12 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
         });
 
         itDoesNotUpdateTheDatabase();
+
+        it('should return 500', async () => {
+          const { status } = await makeRequest();
+
+          expect(status).toBe(500);
+        });
       });
 
       describe('when inserting the deletion log is not acknowledged', () => {
@@ -131,6 +150,12 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
         });
 
         itDoesNotUpdateTheDatabase();
+
+        it('should return 500', async () => {
+          const { status } = await makeRequest();
+
+          expect(status).toBe(500);
+        });
       });
 
       describe('when inserting the deletion log throws an error', () => {
@@ -152,6 +177,12 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
         });
 
         itDoesNotUpdateTheDatabase();
+
+        it('should return 500', async () => {
+          const { status } = await makeRequest();
+
+          expect(status).toBe(500);
+        });
       });
     } else {
       it('should delete the document', async () => {
@@ -161,6 +192,12 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
         const deletedDocument = await collection.findOne({ _id: { $eq: getDeletedDocumentId() } });
 
         expect(deletedDocument).toBe(null);
+      });
+
+      it('should return 200', async () => {
+        const { status } = await makeRequest();
+
+        expect(status).toBe(200);
       });
     }
 
