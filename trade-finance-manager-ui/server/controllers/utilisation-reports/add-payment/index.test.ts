@@ -799,7 +799,8 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
 
   function aSelectedFeeRecordsPaymentDetailsResponse(): SelectedFeeRecordsPaymentDetailsResponse {
     return {
-      value: { currency: 'GBP', amount: 100 },
+      currency: 'GBP',
+      amount: 100,
       dateReceived: '1912-12-19T00:00:00.000Z',
     };
   }
