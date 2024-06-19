@@ -5,7 +5,7 @@ import type { AuditDetails, DeletionAuditLog, MongoDbCollectionName } from '../t
 import { MongoDbClient } from '../mongo-db-client';
 import { generateAuditDatabaseRecordFromAuditDetails } from './generate-audit-database-record';
 import { changeStreamConfig } from './config';
-import { DocumentNotDeletedError, WriteConcernError } from '../errors';
+import { DocumentNotFoundError, WriteConcernError } from '../errors';
 
 const { DELETION_AUDIT_LOGS_TTL_SECONDS } = changeStreamConfig;
 
@@ -17,7 +17,7 @@ type DeleteManyParams = {
 };
 
 /**
- * @throws {DocumentNotDeletedError} - if there are no documents matching the filter to delete
+ * @throws {DocumentNotFoundError} - if there are no documents matching the filter to delete
  * @throws {WriteConcernError} - if either the deletion-audit-log insertion or document deletion operations are not acknowledged
  */
 const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetails }: DeleteManyParams) => {
@@ -34,7 +34,7 @@ const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetail
       const documentsToDeleteIds = (await collection.find(filter, { projection: { _id: true }, session }).toArray()).map(({ _id }) => _id);
 
       if (!documentsToDeleteIds.length) {
-        throw new DocumentNotDeletedError();
+        throw new DocumentNotFoundError();
       }
 
       const logsToInsert: WithoutId<DeletionAuditLog>[] = documentsToDeleteIds.map((deletedDocumentId) => ({
@@ -65,7 +65,7 @@ const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetail
 
 /**
  * When the `CHANGE_STREAM_ENABLED` feature flag is enabled adds deletions audit logs and calls Collection.deleteMany.
- * @throws {DocumentNotDeletedError} - if there are no documents matching the filter to delete
+ * @throws {DocumentNotFoundError} - if there are no documents matching the filter to delete
  * @throws {WriteConcernError} - if either the deletion-audit-log insertion or document deletion operations are not acknowledged
  */
 export const deleteMany = async ({ filter, collectionName, db, auditDetails }: DeleteManyParams): Promise<{ acknowledged: boolean }> => {

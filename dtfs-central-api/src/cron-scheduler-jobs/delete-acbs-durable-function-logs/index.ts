@@ -1,4 +1,4 @@
-import { asString, CronSchedulerJob, DocumentNotDeletedError, WriteConcernError } from '@ukef/dtfs2-common';
+import { asString, CronSchedulerJob, DocumentNotFoundError, WriteConcernError } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { deleteAllCompleteAcbsDurableFunctionLogs } from '../../repositories/durable-functions-repo';
 
@@ -16,7 +16,7 @@ const deleteCompleteAcbsDurableFunctionLogs = async (): Promise<void> => {
       throw new WriteConcernError();
     }
   } catch (error) {
-    if (!(error instanceof DocumentNotDeletedError)) {
+    if (!(error instanceof DocumentNotFoundError)) {
       throw error;
     }
   }

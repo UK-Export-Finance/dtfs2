@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { AuditDetails, MONGO_DB_COLLECTIONS, InvalidAuditDetailsError, DocumentNotDeletedError } from '@ukef/dtfs2-common';
+import { AuditDetails, MONGO_DB_COLLECTIONS, InvalidAuditDetailsError, DocumentNotFoundError } from '@ukef/dtfs2-common';
 import { deleteMany, validateAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { mongoDbClient } from '../../../drivers/db-client';
@@ -29,7 +29,7 @@ export const deleteAllEstoreLogs = async (req: CustomExpressRequest<{ reqBody: {
 
     return res.status(200).send();
   } catch (error) {
-    if (error instanceof DocumentNotDeletedError) {
+    if (error instanceof DocumentNotFoundError) {
       return res.sendStatus(200);
     }
 

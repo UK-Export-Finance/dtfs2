@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, DocumentNotFoundError } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteMany, deleteOne } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
 const utils = require('../utils.service');
@@ -298,22 +298,14 @@ exports.delete = async (req, res) => {
   }
 
   try {
-    await deleteOne({
+    const applicationDeleteResult = await deleteOne({
       documentId: new ObjectId(dealId),
       collectionName: MONGO_DB_COLLECTIONS.DEALS,
       db,
       auditDetails,
     });
-  } catch (error) {
-    if (error instanceof DocumentNotDeletedError) {
-      return res.sendStatus(404);
-    }
-    console.error(error);
-    return res.status(500).send({ status: 500, error });
-  }
 
-  // remove facility information related to the application
-  try {
+    // remove facility information related to the application
     await deleteMany({
       filter: { dealId: { $eq: ObjectId(dealId) } },
       collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
@@ -321,9 +313,13 @@ exports.delete = async (req, res) => {
       auditDetails,
     });
 
-    return res.status(200).send({ acknowledged: true, deletedCount: 1 });
+    return res.status(200).send(applicationDeleteResult);
   } catch (error) {
     if (error instanceof DocumentNotDeletedError) {
+      return res.sendStatus(404);
+    }
+
+    if (error instanceof DocumentNotFoundError) {
       return res.status(200).send({ acknowledged: true, deletedCount: 1 });
     }
     console.error(error);
