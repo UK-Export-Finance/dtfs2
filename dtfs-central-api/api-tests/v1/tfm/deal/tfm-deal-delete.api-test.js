@@ -89,6 +89,7 @@ describe('/v1/tfm/deal/:id', () => {
       collectionName: MONGO_DB_COLLECTIONS.TFM_DEALS,
       auditRecord: generateMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id),
       getDeletedDocumentId: () => tfmDealToDeleteId,
+      expectedStatusWhenNoDeletion: 404,
     });
 
     withDeleteManyTests({

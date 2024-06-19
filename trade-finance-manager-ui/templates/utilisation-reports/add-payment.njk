@@ -5,6 +5,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% import "./_macros/selected-reported-fees-details-table.njk" as selectedReportedFeesDetailsTable %}
+{% import "./_macros/recorded-payments-for-selected-fee-records-table.njk" as recordedPaymentsTable %}
 
 {% extends "index.njk" %}
 
@@ -30,6 +31,12 @@
   {{ selectedReportedFeesDetailsTable.render({
     reportedFeeDetails: reportedFeeDetails
     }) }}
+  {% if recordedPaymentsDetails | length %}
+    {{ recordedPaymentsTable.render({
+      recordedPaymentsDetails: recordedPaymentsDetails,
+      multipleFeeRecordsSelected: multipleFeeRecordsSelected
+    }) }}
+  {% endif %}
   <h2 class="govuk-heading-m">
     {% if paymentNumber %}
       Payment {{ paymentNumber }} details

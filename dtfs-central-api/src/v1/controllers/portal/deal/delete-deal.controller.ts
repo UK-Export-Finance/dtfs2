@@ -1,5 +1,5 @@
 import { deleteOne, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
-import { InvalidAuditDetailsError, AuditDetails, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { InvalidAuditDetailsError, AuditDetails, MONGO_DB_COLLECTIONS, DocumentNotDeletedError } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { Response } from 'express';
 import { findOneDeal } from './get-deal.controller';
@@ -42,6 +42,9 @@ export const deleteDeal = async (req: CustomExpressRequest<{ params: { id: strin
 
     return res.status(200).send();
   } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return res.sendStatus(404);
+    }
     return res.status(500).send({ status: 500, error });
   }
 };

@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteMany } = require('@ukef/dtfs2-common/change-stream');
+const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, DocumentNotFoundError } = require('@ukef/dtfs2-common');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteOne, deleteMany } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const { facilitiesValidation, facilitiesStatus, facilitiesOverallStatus, facilitiesCheckEnums } = require('./validation/facilities');
@@ -185,13 +185,27 @@ exports.updatePUT = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
   if (!ObjectId.isValid(req.params.id)) {
     return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
   }
 
-  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
-  const response = await collection.findOneAndDelete({ _id: { $eq: ObjectId(req.params.id) } });
-  return res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
+  try {
+    const deleteOneResponse = await deleteOne({
+      documentId: new ObjectId(req.params.id),
+      collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
+      db,
+      auditDetails,
+    });
+
+    return res.status(200).send(deleteOneResponse);
+  } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return res.sendStatus(404);
+    }
+    return res.status(500).send({ status: 500, error });
+  }
 };
 
 exports.deleteByDealId = async (req, res) => {
@@ -211,6 +225,9 @@ exports.deleteByDealId = async (req, res) => {
     });
     return res.status(200).send(response);
   } catch (error) {
+    if (error instanceof DocumentNotFoundError) {
+      return res.sendStatus(404);
+    }
     console.error(error);
     return res.status(500).send({ status: 500, error });
   }

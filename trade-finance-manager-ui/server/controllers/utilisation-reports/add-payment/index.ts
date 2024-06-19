@@ -1,6 +1,12 @@
 import { Response } from 'express';
-import { Currency, SelectedFeeRecordsDetails, getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
-import { AddPaymentErrorsViewModel, AddPaymentViewModel, SelectedReportedFeesDetailsViewModel } from '../../../types/view-models';
+import { Currency, getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { format, parseISO } from 'date-fns';
+import {
+  AddPaymentErrorsViewModel,
+  AddPaymentViewModel,
+  RecordedPaymentDetailsViewModel,
+  SelectedReportedFeesDetailsViewModel,
+} from '../../../types/view-models';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import {
@@ -14,6 +20,7 @@ import { validateAddPaymentRequestFormValues } from './add-payment-form-values-v
 import { AddPaymentFormValues, ValidatedAddPaymentFormValues } from '../../../types/add-payment-form-values';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { getKeyToCurrencyAndAmountSortValueMap } from '../helpers';
+import { SelectedFeeRecordsDetailsResponseBody, SelectedFeeRecordsPaymentDetailsResponse } from '../../../api-response-types';
 import { parseValidatedAddPaymentFormValues } from './parse-validated-add-payment-form-values';
 
 export type AddPaymentRequestBody = Record<PremiumPaymentsTableCheckboxId, 'on'> & {
@@ -49,7 +56,15 @@ const extractFormValuesFromRequestBody = (requestBody: AddPaymentRequestBody): A
 
 const renderAddPaymentPage = (res: Response, context: AddPaymentViewModel) => res.render('utilisation-reports/add-payment.njk', context);
 
-const mapToSelectedReportedFeesDetailsViewModel = (selectedFeeRecordData: SelectedFeeRecordsDetails): SelectedReportedFeesDetailsViewModel => {
+const mapToRecordedPaymentDetailsViewModel = (payment: SelectedFeeRecordsPaymentDetailsResponse): RecordedPaymentDetailsViewModel => {
+  return {
+    reference: payment.reference,
+    formattedCurrencyAndAmount: getFormattedCurrencyAndAmount({ currency: payment.currency, amount: payment.amount }),
+    formattedDateReceived: format(parseISO(payment.dateReceived), 'd MMM yyyy'),
+  };
+};
+
+const mapToSelectedReportedFeesDetailsViewModel = (selectedFeeRecordData: SelectedFeeRecordsDetailsResponseBody): SelectedReportedFeesDetailsViewModel => {
   const reportedFeeDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
     selectedFeeRecordData.feeRecords.map((record) => ({ ...record.reportedFee, key: record.id })),
   );
@@ -126,6 +141,8 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
       bank: selectedFeeRecordDetails.bank,
       formattedReportPeriod: getFormattedReportPeriodWithLongMonth(selectedFeeRecordDetails.reportPeriod),
       reportedFeeDetails: mapToSelectedReportedFeesDetailsViewModel(selectedFeeRecordDetails),
+      recordedPaymentsDetails: selectedFeeRecordDetails.payments.map((payment) => mapToRecordedPaymentDetailsViewModel(payment)),
+      multipleFeeRecordsSelected: selectedFeeRecordDetails.feeRecords.length > 1,
     });
   } catch (error) {
     console.error('Failed to add payment', error);
