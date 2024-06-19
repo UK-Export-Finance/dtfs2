@@ -1,14 +1,16 @@
 const FormData = require('form-data');
+const { isValidCompanyRegistrationNumber } = require('@ukef/dtfs2-common');
+const { HttpStatusCode } = require('axios');
 const Axios = require('./axios');
 const { apiErrorHandler } = require('../utils/helpers');
-const { isValidMongoId, isValidUkPostcode, isValidCompaniesHouseNumber } = require('../utils/validateIds');
+const { isValidMongoId, isValidUkPostcode } = require('../utils/validateIds');
 
 const config = (userToken) => ({ headers: { Authorization: userToken } });
 
 const validateToken = async (userToken) => {
   try {
     const { status } = await Axios.get('/validate', config(userToken));
-    return status === 200;
+    return status === HttpStatusCode.Ok;
   } catch (error) {
     return false;
   }
@@ -20,7 +22,7 @@ const validateBank = async ({ dealId, bankId, userToken }) => {
     return data;
   } catch (error) {
     console.error('Unable to validate the bank %o', error);
-    return { status: error?.response?.status || 500, data: 'Failed to validate bank' };
+    return { status: error?.response?.status || HttpStatusCode.InternalServerError, data: 'Failed to validate bank' };
   }
 };
 
@@ -177,24 +179,52 @@ const deleteFacility = async ({ facilityId, userToken }) => {
   }
 };
 
-const getCompaniesHouseDetails = async ({ companyRegNumber, userToken }) => {
-  if (!isValidCompaniesHouseNumber(companyRegNumber)) {
-    console.error('getCompaniesHouseDetails: API call failed for companyRegNumber %s', companyRegNumber);
-    throw new Error('Invalid company house number');
-  }
-
+const getCompanyByRegistrationNumber = async ({ registrationNumber, userToken }) => {
   try {
-    const { data } = await Axios.get(`/gef/company/${companyRegNumber}`, config(userToken));
-    return data;
+    if (!registrationNumber) {
+      return {
+        errRef: 'regNumber',
+        errMsg: 'Enter a Companies House registration number',
+      };
+    }
+
+    if (!isValidCompanyRegistrationNumber(registrationNumber)) {
+      return {
+        errRef: 'regNumber',
+        errMsg: 'Enter a valid Companies House registration number',
+      };
+    }
+
+    const { data } = await Axios.get(`/gef/companies/${registrationNumber}`, config(userToken));
+
+    return { company: data };
   } catch (error) {
-    console.error('Unable to get company house details %o', error?.response?.data);
-    return apiErrorHandler(error);
+    console.error(`Error calling Portal API 'GET /gef/companies/:registrationNumber': %o`, error);
+    switch (error?.response?.status) {
+      case HttpStatusCode.BadRequest:
+        return {
+          errRef: 'regNumber',
+          errMsg: 'Enter a valid Companies House registration number',
+        };
+      case HttpStatusCode.NotFound:
+        return {
+          errRef: 'regNumber',
+          errMsg: 'No company matching the Companies House registration number entered was found',
+        };
+      case HttpStatusCode.UnprocessableEntity:
+        return {
+          errRef: 'regNumber',
+          errMsg: 'UKEF can only process applications from companies based in the UK',
+        };
+      default:
+        throw error;
+    }
   }
 };
 
 const getAddressesByPostcode = async ({ postcode, userToken }) => {
   if (!isValidUkPostcode(postcode)) {
-    console.error('getAddressesByPostcode: API call failed for postcode %s', postcode);
+    console.error('getAddressesByPostcode: API call failed for postcode %s, validation failed before call', postcode);
     throw new Error('Invalid postcode');
   }
 
@@ -312,7 +342,7 @@ module.exports = {
   getFacility,
   updateFacility,
   deleteFacility,
-  getCompaniesHouseDetails,
+  getCompanyByRegistrationNumber,
   getAddressesByPostcode,
   getUserDetails,
   setApplicationStatus,

@@ -1,8 +1,7 @@
 import { CurrencyAndAmountString, FeeRecordStatus, SessionBank } from '@ukef/dtfs2-common';
-import { PrimaryNavigationKey } from '../primary-navigation-key';
-import { TfmSessionUser } from '../tfm-session-user';
 import { ErrorSummaryViewModel } from './error-summary-view-model';
 import { PremiumPaymentsTableCheckboxId } from '../premium-payments-table-checkbox-id';
+import { BaseViewModel } from './base-view-model';
 
 export type SortedAndFormattedCurrencyAndAmount = {
   formattedCurrencyAndAmount: CurrencyAndAmountString | undefined;
@@ -15,10 +14,19 @@ export type FeeRecordViewModelItem = {
   id: number;
   facilityId: string;
   exporter: string;
-  reportedFees: SortedAndFormattedCurrencyAndAmount;
-  reportedPayments: SortedAndFormattedCurrencyAndAmount;
+  reportedFees: CurrencyAndAmountString;
+  reportedPayments: CurrencyAndAmountString;
+};
+
+export type PaymentViewModelItem = {
+  id: number;
+  formattedCurrencyAndAmount: CurrencyAndAmountString;
+};
+
+export type FeeRecordPaymentGroupViewModelItem = {
+  feeRecords: FeeRecordViewModelItem[];
   totalReportedPayments: SortedAndFormattedCurrencyAndAmount;
-  paymentsReceived: SortedAndFormattedCurrencyAndAmount;
+  paymentsReceived: PaymentViewModelItem[] | undefined;
   totalPaymentsReceived: SortedAndFormattedCurrencyAndAmount;
   status: FeeRecordStatus;
   displayStatus: FeeRecordDisplayStatus;
@@ -26,12 +34,11 @@ export type FeeRecordViewModelItem = {
   isChecked: boolean;
 };
 
-export type UtilisationReportReconciliationForReportViewModel = {
-  user: TfmSessionUser;
-  activePrimaryNavigation: PrimaryNavigationKey;
+export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & {
   bank: SessionBank;
   formattedReportPeriod: string;
-  reportId: number;
-  feeRecords: FeeRecordViewModelItem[];
+  reportId: string;
+  enablePaymentsReceivedSorting: boolean;
+  feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[];
   errorSummary: [ErrorSummaryViewModel] | undefined;
 };

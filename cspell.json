@@ -20,7 +20,8 @@
     "**.css",
     "**.scss",
     "**/migrations/*",
-    "**/*.drawio"
+    "**/*.drawio",
+    "CHANGELOG.md"
   ],
   "language": "en",
   "noConfigSearch": true,
@@ -191,6 +192,7 @@
     "Unauthorised",
     "unmock",
     "unsubmitted",
+    "unassigning",
     "UPRN",
     "upserted",
     "venv",

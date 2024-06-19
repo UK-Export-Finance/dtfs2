@@ -879,7 +879,7 @@ const getUtilisationReportReconciliationDetailsById = async (reportId, userToken
 };
 
 /**
- * @param {number} reportId - The report id
+ * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The ids of the selected fee records
  * @param {string} userToken - The user token
  * @returns {Promise<import('@ukef/dtfs2-common').SelectedFeeRecordsDetails>}
@@ -936,6 +936,33 @@ const getReportSummariesByBankAndYear = async (userToken, bankId, year) => {
   }
 };
 
+/**
+ *
+ * @param {string} reportId - The report id
+ * @param {import('./types/add-payment-form-values').ParsedAddPaymentFormValues} parsedAddPaymentFormValues - The parsed submitted form values
+ * @param {number[]} feeRecordIds - The list of fee record ids to add the payment to
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user adding the payment
+ * @param {string} userToken - The user token
+ */
+const addPaymentToFeeRecords = async (reportId, parsedAddPaymentFormValues, feeRecordIds, user, userToken) => {
+  const { paymentCurrency, paymentAmount, datePaymentReceived, paymentReference } = parsedAddPaymentFormValues;
+
+  const response = await axios({
+    method: 'post',
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment`,
+    headers: generateHeaders(userToken),
+    data: {
+      feeRecordIds,
+      paymentCurrency,
+      paymentAmount,
+      datePaymentReceived,
+      paymentReference,
+      user,
+    },
+  });
+  return response.data;
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -978,4 +1005,5 @@ module.exports = {
   getAllBanks,
   getSelectedFeeRecordsDetails,
   getReportSummariesByBankAndYear,
+  addPaymentToFeeRecords,
 };

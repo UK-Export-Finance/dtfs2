@@ -1,4 +1,7 @@
 import { CurrencyAndAmountString } from '@ukef/dtfs2-common';
+import { ErrorSummaryViewModel } from './error-summary-view-model';
+import { AddPaymentFormValues } from '../add-payment-form-values';
+import { BaseViewModel } from './base-view-model';
 
 type SelectedReportedFeeViewModel = {
   feeRecordId: number;
@@ -19,8 +22,24 @@ export type SelectedReportedFeesDetailsViewModel = {
   totalReportedPayments: CurrencyAndAmountString;
 };
 
-export type AddPaymentViewModel = {
+export type AddPaymentPaymentDateErrorViewModel = { message: string; dayError: boolean; monthError: boolean; yearError: boolean };
+
+export type AddPaymentErrorsViewModel = {
+  paymentCurrencyErrorMessage?: string;
+  paymentAmountErrorMessage?: string;
+  paymentDateError?: AddPaymentPaymentDateErrorViewModel;
+  paymentReferenceErrorMessage?: string;
+  addAnotherPaymentErrorMessage?: string;
+  errorSummary: ErrorSummaryViewModel[];
+};
+
+export type AddPaymentViewModel = BaseViewModel & {
+  reportId: string;
   bank: { name: string };
   formattedReportPeriod: string;
   reportedFeeDetails: SelectedReportedFeesDetailsViewModel;
+  paymentNumber: number | undefined;
+  selectedFeeRecordCheckboxIds: string[];
+  errors: AddPaymentErrorsViewModel;
+  formValues: AddPaymentFormValues;
 };

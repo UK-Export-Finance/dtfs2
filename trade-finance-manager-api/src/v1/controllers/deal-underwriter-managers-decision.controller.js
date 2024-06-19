@@ -43,7 +43,7 @@ const updatePortalDealStatusToMatchDecision = ({ dealId, dealType, decision }) =
   return Promise.reject(new Error(`Unrecognised deal type ${dealType} for deal id ${dealId}.`));
 };
 
-const addUnderwriterManagersCommentToPortalDeal = ({ dealId, dealType, decision, comments }) => {
+const addUnderwriterManagersCommentToPortalDeal = ({ dealId, dealType, decision, comments, auditDetails }) => {
   const mappedPortalStatus = mapTfmDealStageToPortalStatus(decision);
   const portalCommentObj = {
     text: comments,
@@ -55,7 +55,7 @@ const addUnderwriterManagersCommentToPortalDeal = ({ dealId, dealType, decision,
       decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS || decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS
         ? CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION
         : CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_COMMENT;
-    return api.addPortalDealComment(dealId, portalCommentType, portalCommentObj);
+    return api.addPortalDealComment(dealId, portalCommentType, portalCommentObj, auditDetails);
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
@@ -83,6 +83,7 @@ const extractDecisionFromRequest = (req) => {
 const updateUnderwriterManagersDecision = async (req, res) => {
   try {
     const { dealId, decision, comments, internalComments, userFullName } = extractDecisionFromRequest(req);
+    const auditDetails = generateTfmAuditDetails(req.user._id);
 
     const updatedDeal = await addUnderwriterManagersDecisionToDeal({
       dealId,
@@ -90,13 +91,13 @@ const updateUnderwriterManagersDecision = async (req, res) => {
       comments,
       internalComments,
       userFullName,
-      auditDetails: generateTfmAuditDetails(req.user._id),
+      auditDetails,
     });
     const mappedDeal = mapSubmittedDeal(updatedDeal);
     const { dealType, submissionType } = mappedDeal;
 
     await updatePortalDealStatusToMatchDecision({ dealId, dealType, decision });
-    await addUnderwriterManagersCommentToPortalDeal({ dealId, dealType, decision, comments });
+    await addUnderwriterManagersCommentToPortalDeal({ dealId, dealType, decision, comments, auditDetails });
 
     if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       await sendDealDecisionEmail(mappedDeal);

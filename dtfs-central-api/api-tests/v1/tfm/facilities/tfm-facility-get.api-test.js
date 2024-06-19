@@ -8,6 +8,7 @@ const CONSTANTS = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../../helpers/create-deal');
+const { createFacility } = require('../../../helpers/create-facility');
 
 const newFacility = {
   type: 'Bond',
@@ -41,7 +42,7 @@ describe('/v1/tfm/facilities', () => {
 
   describe('GET /v1/tfm/facilities/:id', () => {
     it('returns the requested resource', async () => {
-      const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+      const postResult = await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
       const newId = postResult.body._id;
 
       await api

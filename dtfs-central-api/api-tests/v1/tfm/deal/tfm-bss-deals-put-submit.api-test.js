@@ -9,6 +9,7 @@ const CONSTANTS = require('../../../../src/constants');
 const DEFAULTS = require('../../../../src/v1/defaults');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../../helpers/create-deal');
+const { createFacility } = require('../../../helpers/create-facility');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
@@ -98,19 +99,9 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       const newFacility1 = { ...newFacility, dealId };
       const newFacility2 = { ...newFacility, dealId };
 
-      const { body: facility1Body } = await api
-        .post({
-          facility: newFacility1,
-          user: MOCK_PORTAL_USER,
-        })
-        .to('/v1/portal/facilities');
+      const { body: facility1Body, auditDetails: facility1AuditDetails } = await createFacility({ api, facility: newFacility1, user: MOCK_PORTAL_USER });
 
-      const { body: facility2Body } = await api
-        .post({
-          facility: newFacility2,
-          user: MOCK_PORTAL_USER,
-        })
-        .to('/v1/portal/facilities');
+      const { body: facility2Body, auditDetails: facility2AuditDetails } = await createFacility({ api, facility: newFacility2, user: MOCK_PORTAL_USER });
 
       const facility1Id = facility1Body._id;
       const facility2Id = facility2Body._id;
@@ -138,6 +129,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
           ...newFacility1,
           createdDate: expect.any(Number),
           updatedAt: expect.any(Number),
+          auditRecord: generateParsedMockAuditDatabaseRecord(facility1AuditDetails),
         },
         tfm: DEFAULTS.FACILITY_TFM,
         auditRecord: generateParsedMockAuditDatabaseRecord(auditDetails),
@@ -153,6 +145,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
           ...newFacility2,
           createdDate: expect.any(Number),
           updatedAt: expect.any(Number),
+          auditRecord: generateParsedMockAuditDatabaseRecord(facility2AuditDetails),
         },
         tfm: DEFAULTS.FACILITY_TFM,
         auditRecord: generateParsedMockAuditDatabaseRecord(auditDetails),

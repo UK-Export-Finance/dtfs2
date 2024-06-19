@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb');
-const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const db = require('../../../drivers/db-client');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteMany, deleteOne } = require('@ukef/dtfs2-common/change-stream');
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const { validateApplicationReferences, validatorStatusCheckEnums } = require('./validation/application');
 const { exporterStatus } = require('./validation/exporter');
@@ -19,9 +20,6 @@ const {
   DEAL: { DEAL_STATUS, DEAL_TYPE },
 } = require('../../../constants');
 
-const dealsCollection = 'deals';
-const facilitiesCollection = 'facilities';
-
 exports.create = async (req, res) => {
   try {
     const newDeal = {
@@ -32,7 +30,7 @@ exports.create = async (req, res) => {
       },
     };
 
-    const applicationCollection = await db.getCollection(dealsCollection);
+    const applicationCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
     const validateErrs = validateApplicationReferences(newDeal);
 
@@ -75,7 +73,7 @@ exports.create = async (req, res) => {
 };
 
 exports.getAll = async (req, res) => {
-  const collection = await db.getCollection(dealsCollection);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
   const doc = await collection.find({ dealType: { $eq: DEAL_TYPE.GEF } }).toArray();
 
@@ -95,7 +93,7 @@ exports.getById = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
-  const collection = await db.getCollection(dealsCollection);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
   const doc = await collection.findOne({ _id: { $eq: ObjectId(_id) } });
 
@@ -120,7 +118,7 @@ exports.getStatus = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
-  const collection = await db.getCollection(dealsCollection);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
   const doc = await collection.findOne({
     _id: { $eq: ObjectId(_id) },
   });
@@ -139,7 +137,7 @@ exports.update = async (req, res) => {
   }
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
-  const collection = await db.getCollection(dealsCollection);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
   const update = new Application({
     ...req.body,
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
@@ -185,7 +183,7 @@ exports.updateSupportingInformation = async (req, res) => {
   const { _id: editorId } = user;
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
-  const collection = await db.getCollection(dealsCollection);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
   const result = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(dealId) } },
     {
@@ -242,7 +240,7 @@ exports.changeStatus = async (req, res) => {
     return res.status(422).send(enumValidationErr);
   }
 
-  const collection = await db.getCollection(dealsCollection);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
   const existingApplication = await collection.findOne({ _id: { $eq: ObjectId(dealId) } });
   if (!existingApplication) {
     return res.status(404).send();
@@ -293,22 +291,33 @@ exports.changeStatus = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const { id: dealId } = req.params;
+  const auditDetails = generatePortalAuditDetails(req.user._id);
 
   if (!ObjectId.isValid(dealId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
-  const applicationCollection = await db.getCollection(dealsCollection);
-  const applicationResponse = await applicationCollection.findOneAndDelete({
-    _id: { $eq: ObjectId(dealId) },
-  });
-  if (applicationResponse.value) {
-    // remove facility information related to the application
-    const query = await db.getCollection(facilitiesCollection);
-    await query.deleteMany({ dealId: { $eq: ObjectId(dealId) } });
-  }
+  try {
+    const applicationDeleteResult = await deleteOne({
+      documentId: new ObjectId(dealId),
+      collectionName: MONGO_DB_COLLECTIONS.DEALS,
+      db,
+      auditDetails,
+    });
 
-  return res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
+    // remove facility information related to the application
+    await deleteMany({
+      filter: { dealId: { $eq: ObjectId(dealId) } },
+      collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
+      db,
+      auditDetails,
+    });
+
+    return res.status(200).send(applicationDeleteResult);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ status: 500, error });
+  }
 };
 
 const dealsFilters = (user, filters = []) => {
@@ -334,7 +343,7 @@ const dealsFilters = (user, filters = []) => {
 exports.findDeals = async (requestingUser, filters, start = 0, pagesize = 0) => {
   const sanitisedFilters = dealsFilters(requestingUser, filters);
 
-  const collection = await db.getCollection(dealsCollection);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
   const doc = await collection
     .aggregate([

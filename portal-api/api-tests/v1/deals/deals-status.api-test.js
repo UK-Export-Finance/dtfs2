@@ -1,3 +1,4 @@
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
@@ -20,7 +21,6 @@ describe('/v1/deals/:id/status', () => {
   const dealStatusUrl = (dealId) => `/v1/deals/${dealId}/status`;
   const dealStatusUrlForUnknownDealId = dealStatusUrl('620a1aa095a618b12da38c7b');
 
-  let noRoles;
   let aBarclaysMaker;
   let anHSBCMaker;
   let aBarclaysChecker;
@@ -30,7 +30,6 @@ describe('/v1/deals/:id/status', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
     const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
     [aBarclaysMaker] = barclaysMakers;
     anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
@@ -61,7 +60,6 @@ describe('/v1/deals/:id/status', () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().withBankName('Barclays Bank').one(),
       makeRequestAsUser: (user) => as(user).get(urlToGetDealStatus),
       successStatusCode: 200,
     });
@@ -121,13 +119,12 @@ describe('/v1/deals/:id/status', () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER],
       getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().withBankName('Barclays Bank').one(),
       makeRequestAsUser: (user) => as(user).put(completedDeal).to(urlForDealStatus),
       successStatusCode: 200,
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put(completedDeal).to(dealStatusUrlForUnknownDealId);
+      const { status } = await as(testUsers).put(completedDeal).to(dealStatusUrlForUnknownDealId);
 
       expect(status).toEqual(401);
     });
@@ -248,6 +245,18 @@ describe('/v1/deals/:id/status', () => {
           isTrusted: aBarclaysMaker.isTrusted,
         },
       });
+    });
+
+    it('updates the audit record', async () => {
+      const statusUpdate = {
+        comments: 'Flee!',
+        status: 'Abandoned',
+      };
+
+      await as(aBarclaysMaker).put(statusUpdate).to(urlForDealStatus);
+
+      const { body } = await as(aBarclaysMaker).get(urlForDeal);
+      expect(body.deal.auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id));
     });
 
     it('adds the user to `editedBy` array', async () => {

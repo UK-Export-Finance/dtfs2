@@ -15,7 +15,6 @@ const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const newDeal = aDeal({ id: 'dealApiTest', additionalRefName: 'Original Value' });
 
 describe('/v1/deals/:id/eligibility-documentation', () => {
-  let noRoles;
   let aBarclaysMaker;
   let anHSBCMaker;
   let anAdmin;
@@ -23,7 +22,6 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().withBankName('Barclays Bank').one();
     aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
     anAdmin = testUsers().withRole(ADMIN).one();
@@ -71,7 +69,6 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
-      getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).get(aBarclaysEligibilityDocumentationFileUrl),
       successStatusCode: 200,
     });
@@ -137,7 +134,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
         },
       ];
 
-      const { status } = await as(noRoles).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
+      const { status } = await as(testUsers).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(401);
     });
@@ -158,7 +155,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
         },
       ];
 
-      const { status } = await as(noRoles).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
+      const { status } = await as(testUsers).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(401);
     });

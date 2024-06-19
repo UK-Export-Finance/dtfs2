@@ -18,6 +18,8 @@ SqlDbDataSource.initialize()
 const generateApp = () => {
   const app = express();
 
+  app.use(`/v1/${SWAGGER_ROUTE}`, swaggerRoutes);
+
   app.use(seo);
   app.use(security);
   app.use(healthcheck);
@@ -39,7 +41,6 @@ const generateApp = () => {
   app.use(`/v1/${TFM_ROUTE}`, tfmRoutes);
   app.use(`/v1/${USER_ROUTE}`, userRoutes);
   app.use(`/v1/${UTILISATION_REPORTS_ROUTE}`, utilisationReportsRoutes);
-  app.use(`/v1/${SWAGGER_ROUTE}`, swaggerRoutes);
 
   // Return 200 on get to / to confirm to Azure that
   // the container has started successfully:

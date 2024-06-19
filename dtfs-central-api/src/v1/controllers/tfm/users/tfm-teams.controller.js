@@ -8,7 +8,7 @@ const {
   deleteOne,
   validateAuditDetailsAndUserType,
 } = require('@ukef/dtfs2-common/change-stream');
-const db = require('../../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
 const createTeam = async (team, auditDetails) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_TEAMS);

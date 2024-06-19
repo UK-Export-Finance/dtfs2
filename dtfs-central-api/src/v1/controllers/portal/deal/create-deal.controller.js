@@ -1,7 +1,7 @@
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
 const { InvalidAuditDetailsError, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const db = require('../../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const DEFAULTS = require('../../../defaults');
 const getDealErrors = require('../../../validation/create-deal');
 

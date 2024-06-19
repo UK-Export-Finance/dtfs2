@@ -1,9 +1,6 @@
 import {
   ValuesOf,
   UtilisationReportReconciliationStatus,
-  UtilisationReport,
-  Prettify,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
   Currency,
   ReportPeriod,
   AzureFileInfo,
@@ -56,14 +53,6 @@ export type UtilisationReportRawCsvData = {
   [HeaderKey in UtilisationReportHeader]: HeaderKey extends `${string}currency` ? Currency : string;
 };
 
-export type UtilisationReportUploadDetails = Prettify<
-  Required<
-    Pick<UtilisationReport, 'azureFileInfo' | 'dateUploaded' | 'uploadedBy'> & {
-      status: typeof UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
-    }
-  >
->;
-
 export type FeeRecordItem = {
   /**
    * The fee record id
@@ -85,21 +74,17 @@ export type FeeRecordItem = {
    * The fees paid to UKEF converted to the payment currency
    */
   reportedPayments: CurrencyAndAmount;
-  /**
-   * The total of reported fees paid to UKEF in the payment currency
-   */
+};
+
+export type Payment = CurrencyAndAmount & {
+  id: number;
+};
+
+export type FeeRecordPaymentGroup = {
+  feeRecords: FeeRecordItem[];
   totalReportedPayments: CurrencyAndAmount;
-  /**
-   * The payments added in TFM
-   */
-  paymentsReceived: CurrencyAndAmount | null;
-  /**
-   * The total of the payments added in TFM
-   */
+  paymentsReceived: Payment[] | null;
   totalPaymentsReceived: CurrencyAndAmount | null;
-  /**
-   * The status of the fee record
-   */
   status: FeeRecordStatus;
 };
 
@@ -112,5 +97,12 @@ export type UtilisationReportReconciliationDetails = {
   status: UtilisationReportReconciliationStatus;
   reportPeriod: ReportPeriod;
   dateUploaded: Date;
-  feeRecords: FeeRecordItem[];
+  feeRecordPaymentGroups: FeeRecordPaymentGroup[];
+};
+
+export type NewPaymentDetails = {
+  currency: Currency;
+  amount: number;
+  dateReceived: Date;
+  reference?: string;
 };

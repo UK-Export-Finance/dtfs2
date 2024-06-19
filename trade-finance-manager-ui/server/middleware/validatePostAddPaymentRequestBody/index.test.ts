@@ -24,7 +24,7 @@ describe('validatePostAddPaymentRequestBody', () => {
     });
 
   const getCheckboxId = (feeRecordId: number, reportedPaymentsCurrency: Currency, status: FeeRecordStatus): PremiumPaymentsTableCheckboxId =>
-    `feeRecordId-${feeRecordId}-reportedPaymentsCurrency-${reportedPaymentsCurrency}-status-${status}`;
+    `feeRecordIds-${feeRecordId}-reportedPaymentsCurrency-${reportedPaymentsCurrency}-status-${status}`;
 
   const getRequestBodyFromCheckboxIds = (checkboxIds: PremiumPaymentsTableCheckboxId[]) =>
     checkboxIds.reduce((obj, checkboxId) => ({ ...obj, [checkboxId]: 'on' }), {});

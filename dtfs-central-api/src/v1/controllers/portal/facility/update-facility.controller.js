@@ -3,7 +3,7 @@ const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
 const { updateDealEditedByPortal } = require('../deal/update-deal.controller');
-const db = require('../../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { PORTAL_ROUTE } = require('../../../../constants/routes');
 
 const withoutId = (obj) => {
@@ -39,33 +39,33 @@ const updateFacility = async (facilityId, facilityBody, dealId, user, routePath)
 exports.updateFacility = updateFacility;
 
 exports.updateFacilityPut = async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    const facilityId = req.params.id;
+  if (!ObjectId.isValid(req.params.id)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
+  }
 
-    let facilityUpdate;
-    let user;
+  const facilityId = req.params.id;
 
-    if (req.body.user) {
-      user = req.body.user;
+  let facilityUpdate;
+  let user;
 
-      delete req.body.user;
-      facilityUpdate = req.body;
-    } else {
-      facilityUpdate = req.body;
-    }
+  if (req.body.user) {
+    user = req.body.user;
 
-    const facility = await findOneFacility(facilityId);
+    delete req.body.user;
+    facilityUpdate = req.body;
+  } else {
+    facilityUpdate = req.body;
+  }
 
-    if (facility) {
-      const { dealId } = facility;
+  const facility = await findOneFacility(facilityId);
 
-      const updatedFacility = await updateFacility(facilityId, facilityUpdate, dealId, user, req.routePath);
-
-      return res.status(200).json(updatedFacility);
-    }
-
+  if (!facility) {
     return res.status(404).send();
   }
 
-  return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
+  const { dealId } = facility;
+
+  const updatedFacility = await updateFacility(facilityId, facilityUpdate, dealId, user, req.routePath);
+
+  return res.status(200).json(updatedFacility);
 };

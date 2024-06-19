@@ -17,7 +17,6 @@ import { getAllBanks } from '../../../../repositories/banks-repo';
 
 jest.mock('../../../../repositories/banks-repo');
 jest.mock('../../../../repositories/utilisation-reports-repo');
-jest.mock('../../../../repositories/utilisation-data-repo');
 
 describe('get-utilisation-reports-reconciliation-summary.controller helper', () => {
   const getMockFeeRecordForReport = (report: UtilisationReportEntity): FeeRecordEntity => FeeRecordEntityMockBuilder.forReport(report).build();

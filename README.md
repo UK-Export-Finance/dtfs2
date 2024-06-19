@@ -291,7 +291,7 @@ To address these issues, the plan is to move all these API calls into background
 
 ## Email Notifications :email:
 
-Email notifications are triggered using [GOV.UK Notify](https://notifications.service.gov.uk) at various stages, such as:
+Email notifications are sent through MDM APIM using [GOV.UK Notify](https://notifications.service.gov.uk) at various stages, such as:
 
 - When a deal status changes in Portal.
 - When TFM acknowledges a deal submission.

@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const db = require('../../../src/drivers/db-client');
+const { mongoDbClient: db } = require('../../../src/drivers/db-client');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');

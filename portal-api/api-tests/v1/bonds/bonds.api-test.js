@@ -1,3 +1,4 @@
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { format, add } = require('date-fns');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
@@ -63,10 +64,10 @@ describe('/v1/deals/:id/bond', () => {
   };
 
   let testUsers;
-  let noRoles;
   let aBarclaysMaker;
   let anHSBCMaker;
   let aSuperuser;
+  let testUser;
 
   const createBond = async () => {
     const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
@@ -82,8 +83,7 @@ describe('/v1/deals/:id/bond', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-
-    noRoles = testUsers().withoutAnyRoles().withBankName('Barclays Bank').one();
+    testUser = testUsers().withRole(READ_ONLY).one();
     aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
@@ -121,7 +121,6 @@ describe('/v1/deals/:id/bond', () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
-      getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).get(aBarclaysBondUrl),
       successStatusCode: 200,
     });
@@ -215,7 +214,7 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put().to('/v1/deals/620a1aa095a618b12da38c7b/bond/create');
+      const { status } = await as(testUsers).put().to('/v1/deals/620a1aa095a618b12da38c7b/bond/create');
 
       expect(status).toEqual(401);
     });
@@ -265,6 +264,12 @@ describe('/v1/deals/:id/bond', () => {
   });
 
   describe('PUT /v1/deals/:id/bond/:bondId', () => {
+    let aBarclaysMaker1AuditRecord;
+
+    beforeAll(async () => {
+      aBarclaysMaker1AuditRecord = generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id);
+    });
+
     it('401s requests that do not present a valid Authorization token', async () => {
       const { status } = await as().put().to('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
 
@@ -272,7 +277,7 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put().to('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
+      const { status } = await as(testUsers).put().to('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });
@@ -364,6 +369,7 @@ describe('/v1/deals/:id/bond', () => {
           'conversionRateDate-day': null,
           'conversionRateDate-month': null,
           'conversionRateDate-year': null,
+          auditRecord: aBarclaysMaker1AuditRecord,
         };
         expect(updatedBond).toEqual(expectedUpdatedBond);
       });
@@ -437,6 +443,7 @@ describe('/v1/deals/:id/bond', () => {
           'conversionRateDate-day': null,
           'conversionRateDate-month': null,
           'conversionRateDate-year': null,
+          auditRecord: aBarclaysMaker1AuditRecord,
         };
 
         expect(updatedBond).toEqual(expectedBond);
@@ -516,6 +523,7 @@ describe('/v1/deals/:id/bond', () => {
           'conversionRateDate-day': null,
           'conversionRateDate-month': null,
           'conversionRateDate-year': null,
+          auditRecord: aBarclaysMaker1AuditRecord,
         };
         expect(updatedBond).toEqual(expectedBond);
       });
@@ -568,6 +576,7 @@ describe('/v1/deals/:id/bond', () => {
         'conversionRateDate-day': null,
         'conversionRateDate-month': null,
         'conversionRateDate-year': null,
+        auditRecord: aBarclaysMaker1AuditRecord,
       });
     });
 
@@ -734,7 +743,7 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).remove(`/v1/deals/${dealId}/bond/12345678`);
+      const { status } = await as(testUser).remove(`/v1/deals/${dealId}/bond/12345678`);
 
       expect(status).toEqual(401);
     });

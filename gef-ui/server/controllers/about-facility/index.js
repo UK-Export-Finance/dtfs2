@@ -1,5 +1,6 @@
 const { add, format, isAfter, isBefore, isEqual, set } = require('date-fns');
 const Joi = require('joi');
+const { isFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { FACILITY_TYPE, DATE_FORMAT, DEAL_SUBMISSION_TYPE } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
@@ -37,6 +38,7 @@ const aboutFacility = async (req, res) => {
       dealId,
       facilityId,
       status,
+      isFacilityEndDateFeatureFlagEnabled: isFacilityEndDateFeatureFlagEnabled(),
     });
   } catch (error) {
     return res.render('partials/problem-with-service.njk');
@@ -363,6 +365,7 @@ const validateAboutFacility = async (req, res) => {
       dealId,
       facilityId,
       status,
+      isFacilityEndDateFeatureFlagEnabled: isFacilityEndDateFeatureFlagEnabled(),
     });
   }
 

@@ -1,4 +1,5 @@
-const db = require('../../drivers/db-client');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const api = require('../api');
 const { escapeOperators } = require('../helpers/escapeOperators');
 const computeSkipPosition = require('../helpers/computeSkipPosition');
@@ -7,8 +8,8 @@ const { updateDeal } = require('./deal.controller');
 /**
  * Create a facility (BSS, EWCS only)
  */
-exports.create = async (facilityBody, user) => {
-  const createdFacility = await api.createFacility(facilityBody, user);
+exports.create = async (facilityBody, user, auditDetails) => {
+  const createdFacility = await api.createFacility(facilityBody, user, auditDetails);
 
   const { status, data } = createdFacility;
   const { _id } = data;
@@ -26,7 +27,7 @@ exports.create = async (facilityBody, user) => {
  */
 exports.findOne = async (facilityId) => api.findOneFacility(facilityId);
 
-exports.update = async (dealId, facilityId, facilityBody, user) => {
+exports.update = async (dealId, facilityId, facilityBody, user, auditDetails) => {
   const updatedFacility = await api.updateFacility(facilityId, facilityBody, user);
 
   if (updatedFacility) {
@@ -36,7 +37,7 @@ exports.update = async (dealId, facilityId, facilityBody, user) => {
       facilitiesUpdated: new Date().valueOf(),
     };
 
-    await updateDeal(dealId, dealUpdate, user);
+    await updateDeal({ dealId, dealUpdate, user, auditDetails });
   }
 
   return updatedFacility;
@@ -51,9 +52,14 @@ exports.delete = async (facilityId, user, auditDetails) => api.deleteFacility(fa
  * Create multiple facilities (BSS, EWCS only)
  */
 exports.createMultiple = async (req, res) => {
-  const { facilities, dealId, user } = req.body;
+  const {
+    body: { facilities, dealId },
+    user,
+  } = req;
 
-  const { data: ids } = await api.createMultipleFacilities(facilities, dealId, user);
+  const auditDetails = generatePortalAuditDetails(user._id);
+
+  const { data: ids } = await api.createMultipleFacilities(facilities, dealId, user, auditDetails);
 
   const allFacilities = await Promise.all(
     ids.map(async (id) => {
@@ -68,7 +74,7 @@ exports.createMultiple = async (req, res) => {
 /**
  * Create multiple facilities (BSS, EWCS only)
  */
-exports.createMultipleFacilities = async (facilities, dealId, user) => api.createMultipleFacilities(facilities, dealId, user);
+exports.createMultipleFacilities = async (facilities, dealId, user, auditDetails) => api.createMultipleFacilities(facilities, dealId, user, auditDetails);
 
 /**
  * Queries all facilities in the facilities collection (BSS, EWCS, GEF)

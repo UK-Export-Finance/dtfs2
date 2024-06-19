@@ -12,7 +12,7 @@ const {
 const collectionName = MONGO_DB_COLLECTIONS.FACILITIES;
 const applicationCollectionName = MONGO_DB_COLLECTIONS.DEALS;
 
-const db = require('../../../src/drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../src/drivers/db-client');
 
 const { APPLICATION } = require('../../mocks/gef/gef-applications');
 const { mockFacilities } = require('../../mocks/gef/gef-facilities');

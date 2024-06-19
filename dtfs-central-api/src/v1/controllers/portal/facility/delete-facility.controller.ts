@@ -5,7 +5,7 @@ import { deleteOne, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/c
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { findOneFacility } from './get-facility.controller';
 import { removeFacilityIdFromDeal } from '../deal/update-deal.controller';
-import db from '../../../../drivers/db-client';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
 
 export const deleteFacility = async (
   req: CustomExpressRequest<{ params: { id: string }; reqBody: { auditDetails: AuditDetails; user: object } }>,
@@ -48,7 +48,7 @@ export const deleteFacility = async (
       auditDetails,
     });
 
-    await removeFacilityIdFromDeal(facility.dealId, facilityId, user, req.routePath);
+    await removeFacilityIdFromDeal(facility.dealId, facilityId, user, req.routePath, auditDetails);
     return res.status(200).send();
   } catch (error) {
     return res.status(500).send({ status: 500, error });
