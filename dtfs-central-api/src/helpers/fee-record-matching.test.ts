@@ -75,7 +75,7 @@ describe('fee-record-matching', () => {
       expect(result).toBe(false);
     });
 
-    it('returns true when the payments attached to the fee records have the same total payments when converted to the payment currency', async () => {
+    it('returns true when the payments attached to the fee records have the same total payments when converted to the payment currency', () => {
       // Arrange
       const feesPaidToUkefForThePeriodCurrency: Currency = 'EUR';
       const paymentExchangeRate = 1.1;
