@@ -31,10 +31,17 @@ export const handleUtilisationReportDeletePaymentEvent = async (
 
   await transactionEntityManager.remove(payment);
 
-  const { payments: remainingLinkedPayments } = await transactionEntityManager.findOneOrFail(FeeRecordEntity, {
+  const feeRecordsWithPayments = await transactionEntityManager.findOne(FeeRecordEntity, {
     where: { id: linkedFeeRecords[0].id },
     relations: { payments: true },
   });
+
+  if (!feeRecordsWithPayments) {
+    throw new NotFoundError(`Failed to find a fee record with id '${linkedFeeRecords[0].id}'`);
+  }
+
+  const remainingLinkedPayments = feeRecordsWithPayments.payments;
+
   const feesAndPaymentsMatch = feeRecordsAndPaymentsMatch(linkedFeeRecords, remainingLinkedPayments);
   const feeRecordStateMachines = linkedFeeRecords.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
   await Promise.all(

@@ -3,19 +3,15 @@ import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { executeWithSqlTransaction } from '../../../../helpers';
-import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
+import { DeletePaymentPayload } from '../../../routes/middleware/payload-validation/validate-delete-payment-payload';
 
 export type DeletePaymentRequest = CustomExpressRequest<{
   params: {
     reportId: string;
     paymentId: string;
   };
-  reqBody: {
-    user: {
-      _id: TfmSessionUser['_id'];
-    };
-  };
+  reqBody: DeletePaymentPayload;
 }>;
 
 /**
@@ -49,6 +45,6 @@ export const deletePayment = async (req: DeletePaymentRequest, res: Response) =>
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }
-    return res.status(500).send(errorMessage);
+    return res.status(HttpStatusCode.InternalServerError).send(errorMessage);
   }
 };

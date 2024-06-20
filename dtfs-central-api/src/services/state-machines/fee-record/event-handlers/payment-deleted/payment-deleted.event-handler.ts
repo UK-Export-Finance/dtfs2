@@ -15,10 +15,16 @@ export const handleFeeRecordPaymentDeletedEvent = async (
   feeRecord: FeeRecordEntity,
   { transactionEntityManager, feeRecordsAndPaymentsMatch, hasAttachedPayments, requestSource }: PaymentDeletedEventPayload,
 ): Promise<FeeRecordEntity> => {
-  let status: FeeRecordStatus = 'MATCH';
-  if (!feeRecordsAndPaymentsMatch) {
-    status = hasAttachedPayments ? 'DOES_NOT_MATCH' : 'TO_DO';
+  if (hasAttachedPayments) {
+    const status: FeeRecordStatus = feeRecordsAndPaymentsMatch ? 'MATCH' : 'DOES_NOT_MATCH';
+    feeRecord.updateWithStatus({ status, requestSource });
+    return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
   }
-  feeRecord.updateWithStatus({ status, requestSource });
+
+  if (feeRecordsAndPaymentsMatch) {
+    throw new Error('Fee records and payments cannot match when there are no attached payments');
+  }
+
+  feeRecord.updateWithStatus({ status: 'TO_DO', requestSource });
   return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
 };

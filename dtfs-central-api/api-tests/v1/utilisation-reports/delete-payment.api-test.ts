@@ -106,4 +106,26 @@ describe('DELETE /v1/utilisation-reports/:reportId/payments/:paymentId', () => {
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
   });
+
+  it('returns a 404 when the report with the supplied id cannot be found', async () => {
+    // Arrange
+    const invalidReportId = reportId + 1;
+
+    // Act
+    const response: Response = await api.remove(aDeletePaymentRequestBody()).to(getUrl(invalidReportId, paymentId));
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.NotFound);
+  });
+
+  it('returns a 404 when the payment with the id cannot be found', async () => {
+    // Arrange
+    const invalidPaymentId = paymentId + 1;
+
+    // Act
+    const response: Response = await api.remove(aDeletePaymentRequestBody()).to(getUrl(reportId, invalidPaymentId));
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.NotFound);
+  });
 });

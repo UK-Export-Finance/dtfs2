@@ -8,6 +8,7 @@ import {
   handleUtilisationReportManuallySetIncompleteEvent,
   handleUtilisationReportAddAPaymentEvent,
   handleUtilisationReportReportUploadedEvent,
+  handleUtilisationReportDeletePaymentEvent,
 } from './event-handlers';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
 import { UtilisationReportStateMachine } from './utilisation-report.state-machine';
@@ -199,6 +200,24 @@ describe('UtilisationReportStateMachine', () => {
 
       // Assert
       expect(handleUtilisationReportAddAPaymentEvent).toHaveBeenCalledTimes(1);
+    });
+
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.DELETE_PAYMENT}' event`, async () => {
+      // Arrange
+      const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_IN_PROGRESS_REPORT);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'DELETE_PAYMENT',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          paymentId: 1,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleUtilisationReportDeletePaymentEvent).toHaveBeenCalledTimes(1);
     });
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.FEE_RECORD_KEYED}' event`, async () => {

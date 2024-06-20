@@ -13,11 +13,9 @@ jest.mock('../../../../../helpers/fee-record-matching');
 describe('handleUtilisationReportPaymentDeletedEvent', () => {
   const mockRemove = jest.fn();
   const mockFindOne = jest.fn();
-  const mockFindOneOrFail = jest.fn();
   const mockEntityManager = {
     remove: mockRemove,
     findOne: mockFindOne,
-    findOneOrFail: mockFindOneOrFail,
   } as unknown as EntityManager;
 
   const aMockEventHandler = () => jest.fn();
@@ -71,14 +69,44 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     expect(mockRemove).toHaveBeenCalledWith(paymentEntity);
   });
 
+  it('throws a NotFoundError if a fee record with the id of the fee record attached to the payment cannot be found', async () => {
+    // Arrange
+    const paymentId = 12;
+    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+
+    const firstFeeRecordId = 12;
+    const linkedFeeRecords = [
+      FeeRecordEntityMockBuilder.forReport(report).withId(firstFeeRecordId).build(),
+      FeeRecordEntityMockBuilder.forReport(report)
+        .withId(firstFeeRecordId + 1)
+        .build(),
+    ];
+
+    const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withFeeRecords(linkedFeeRecords).build();
+
+    when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
+    when(mockFindOne).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(null);
+
+    // Act / Assert
+    await expect(
+      handleUtilisationReportDeletePaymentEvent(report, {
+        transactionEntityManager: mockEntityManager,
+        paymentId: 1,
+        requestSource: aDbRequestSource(),
+      }),
+    ).rejects.toThrow(NotFoundError);
+    expect(mockFindOne).toHaveBeenCalledTimes(2);
+  });
+
   it('removes payment if there are linked fee records', async () => {
     // Arrange
     const paymentId = 123;
+    const feeRecordId = 456;
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-    const linkedFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(report).withId(456).build();
+    const linkedFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(report).withId(feeRecordId).build();
     const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withFeeRecords([linkedFeeRecordEntity]).build();
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
-    when(mockFindOneOrFail).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(linkedFeeRecordEntity);
+    when(mockFindOne).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(linkedFeeRecordEntity);
 
     // Act
     await handleUtilisationReportDeletePaymentEvent(report, {
@@ -88,8 +116,9 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     });
 
     // Assert
-    expect(mockFindOne).toHaveBeenCalledTimes(1);
+    expect(mockFindOne).toHaveBeenCalledTimes(2);
     expect(mockFindOne).toHaveBeenCalledWith(PaymentEntity, { where: { id: paymentId }, relations: { feeRecords: true } });
+    expect(mockFindOne).toHaveBeenCalledWith(FeeRecordEntity, { where: { id: feeRecordId }, relations: { payments: true } });
     expect(mockRemove).toHaveBeenCalledTimes(1);
     expect(mockRemove).toHaveBeenCalledWith(paymentEntity);
   });
@@ -106,7 +135,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
       .withFeeRecords([linkedFeeRecordEntityOne, linkedFeeRecordEntityTwo])
       .build();
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
-    when(mockFindOneOrFail).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(linkedFeeRecordEntityOne);
+    when(mockFindOne).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(linkedFeeRecordEntityOne);
 
     const mockEventHandlerOne = aMockEventHandler();
     const mockEventHandlerTwo = aMockEventHandler();
@@ -149,7 +178,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     const linkedFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(report).withId(456).build();
     const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withFeeRecords([linkedFeeRecordEntity]).build();
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
-    when(mockFindOneOrFail).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(linkedFeeRecordEntity);
+    when(mockFindOne).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(linkedFeeRecordEntity);
 
     const mockEventHandler = aMockEventHandler();
     const feeRecordStateMachine = aMockFeeRecordStateMachine(mockEventHandler);
@@ -185,7 +214,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     const linkedFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(report).withId(456).build();
     const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withFeeRecords([linkedFeeRecordEntity]).build();
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
-    when(mockFindOneOrFail).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(linkedFeeRecordEntity);
+    when(mockFindOne).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(linkedFeeRecordEntity);
 
     const mockEventHandler = aMockEventHandler();
     const feeRecordStateMachine = aMockFeeRecordStateMachine(mockEventHandler);
@@ -227,7 +256,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
       .withId(456)
       .build();
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
-    when(mockFindOneOrFail).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(linkedFeeRecordEntityAfterPaymentDeletion);
+    when(mockFindOne).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(linkedFeeRecordEntityAfterPaymentDeletion);
 
     const mockEventHandler = aMockEventHandler();
     const feeRecordStateMachine = aMockFeeRecordStateMachine(mockEventHandler);
@@ -264,7 +293,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
       .build();
     const linkedFeeRecordEntityAfterPaymentDeletion = FeeRecordEntityMockBuilder.forReport(report).withPayments([]).withId(456).build();
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
-    when(mockFindOneOrFail).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(linkedFeeRecordEntityAfterPaymentDeletion);
+    when(mockFindOne).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(linkedFeeRecordEntityAfterPaymentDeletion);
 
     const mockEventHandler = aMockEventHandler();
     const feeRecordStateMachine = aMockFeeRecordStateMachine(mockEventHandler);
