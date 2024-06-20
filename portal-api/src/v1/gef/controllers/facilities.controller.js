@@ -170,6 +170,9 @@ const update = async (id, updateBody, auditDetails) => {
     }
     return updatedFacility;
   } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
     console.error('Unable to update the facility %o', error);
     return false;
   }
