@@ -27,6 +27,7 @@ import footer from './footer';
 import activitiesPage from './activities/activitiesPage';
 import utilisationReportsPage from './utilisationReportsPage';
 import { searchUtilisationReportsFormPage, searchUtilisationReportsResultsPage } from './searchUtilisationReportsPage';
+import { utilisationReportAddPaymentPage } from './utilisationReportAddPaymentPage';
 
 export default {
   landingPage,
@@ -59,4 +60,5 @@ export default {
   utilisationReportsPage,
   searchUtilisationReportsFormPage,
   searchUtilisationReportsResultsPage,
+  utilisationReportAddPaymentPage,
 };
