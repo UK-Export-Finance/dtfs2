@@ -52,6 +52,7 @@ portalRouter.use((req, res, next) => {
  *       content:
  *         application/json:
  *           schema:
+ *             type: object
  *             properties:
  *               user:
  *                 type: object
@@ -61,7 +62,8 @@ portalRouter.use((req, res, next) => {
  *                   details:
  *                     type: object
  *               auditDetails:
- *                 $ref: '#/definitions/portalAuditDetails'
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
  *           example:
  *             bankInternalRefName: 'a1'
  *             additionalRefName: 'test'
@@ -155,8 +157,8 @@ portalRouter.route('/deals/:id').get(getDealController.findOneDealGet);
  *               user:
  *                 type: object
  *               auditDetails:
- *                 $ref: '#/definitions/portalAuditDetails'
-
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
  *             example:
  *               user: { _id: '123456abc' }
  *               dealUpdate: { aNewField: true }
@@ -276,10 +278,10 @@ portalRouter.route('/deals/:id/status').put(updateDealStatusController.updateDea
  *                 properties:
  *                   user:
  *                     type: object
- *                     schema:
- *                       $ref: '#/definitions/User'
- *               auditDetails:
- *                 $ref: '#/definitions/portalAuditDetails'
+ *                     $ref: '#/definitions/User'
+ *                   auditDetails:
+ *                     type: object
+ *                     $ref: '#/definitions/PortalAuditDetails'
  *                   text:
  *                     type: string
  *                     example: Amazing comment
@@ -332,7 +334,8 @@ portalRouter.route('/facilities').get(getFacilitiesController.findAllGet);
  *               dealId:
  *                 type: string
  *               auditDetails:
- *                 $ref: '#/definitions/portalAuditDetails'
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
  *           example:
  *             type: 'Bond'
  *             dealId: '123abc'

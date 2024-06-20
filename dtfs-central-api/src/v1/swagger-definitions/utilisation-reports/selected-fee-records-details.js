@@ -39,7 +39,7 @@
  *               type: string
  *             currency:
  *                 $ref: '#/definitions/Currency'
- *              amount:
+ *             amount:
  *                 type: number
  *             reference:
  *               type: string

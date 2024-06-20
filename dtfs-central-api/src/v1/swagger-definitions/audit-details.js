@@ -1,7 +1,7 @@
 /**
  * @openapi
  * definitions:
- *   systemPortalOrTfmAuditDetails:
+ *   SystemPortalOrTfmAuditDetails:
  *     type: object
  *     properties:
  *       userType:
@@ -10,7 +10,7 @@
  *       id:
  *         type: string
  *         example: '1234567890abcdef12345678'
- *   portalAuditDetails:
+ *   PortalAuditDetails:
  *     type: object
  *     properties:
  *       userType:
@@ -19,7 +19,7 @@
  *       id:
  *         type: string
  *         example: '1234567890abcdef12345678'
- *   tfmAuditDetails:
+ *   TfmAuditDetails:
  *     type: object
  *     properties:
  *       userType:
