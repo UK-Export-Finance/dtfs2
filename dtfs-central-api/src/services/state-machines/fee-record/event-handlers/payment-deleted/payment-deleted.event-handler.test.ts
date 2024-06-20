@@ -86,7 +86,7 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
     // Act
     await handleFeeRecordPaymentDeletedEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
-      feeRecordsAndPaymentsMatch: true,
+      feeRecordsAndPaymentsMatch: false,
       hasAttachedPayments: false,
       requestSource: {
         platform: 'TFM',
