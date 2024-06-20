@@ -28,7 +28,7 @@ export const create = async (req: Request, res: Response) => {
       req.body as Estore;
 
     const eStoreData: Estore = {
-      dealId,
+      dealId: new ObjectId(dealId),
       dealIdentifier,
       facilityIdentifiers,
       siteId,
@@ -67,27 +67,27 @@ export const create = async (req: Request, res: Response) => {
               site: {
                 status: ESTORE_CRON_STATUS.FAILED,
                 response: ' Invalid eStore payload',
-                timestamp: getNowAsEpoch,
+                timestamp: getNowAsEpoch(),
               },
               term: {
                 status: ESTORE_CRON_STATUS.FAILED,
                 response: ' Invalid eStore payload',
-                timestamp: getNowAsEpoch,
+                timestamp: getNowAsEpoch(),
               },
               buyer: {
                 status: ESTORE_CRON_STATUS.FAILED,
                 response: ' Invalid eStore payload',
-                timestamp: getNowAsEpoch,
+                timestamp: getNowAsEpoch(),
               },
               deal: {
                 status: ESTORE_CRON_STATUS.FAILED,
                 response: ' Invalid eStore payload',
-                timestamp: getNowAsEpoch,
+                timestamp: getNowAsEpoch(),
               },
               facility: {
                 status: ESTORE_CRON_STATUS.FAILED,
                 response: ' Invalid eStore payload',
-                timestamp: getNowAsEpoch,
+                timestamp: getNowAsEpoch(),
               },
             },
           },

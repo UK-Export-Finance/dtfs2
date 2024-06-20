@@ -16,16 +16,17 @@ import { ObjectId } from 'mongodb';
 import { app } from '../../src/createApp';
 import { api } from '../api';
 import { UKEF_ID, ESTORE_CRON_STATUS } from '../../src/constants';
+import { Estore } from '../../src/interfaces';
 
 const { post } = api(app);
 
 const { APIM_ESTORE_URL } = process.env;
 
-const payload = {
+const payload: Estore = {
   dealId: new ObjectId('6597dffeb5ef5ff4267e5044'),
   siteId: 'ukef',
   facilityIdentifiers: [1234567890, 1234567891],
-  supportingInformation: 'test',
+  supportingInformation: ['test'],
   exporterName: 'testName',
   buyerName: 'testBuyer',
   dealIdentifier: '1234567890',
@@ -124,10 +125,11 @@ describe('/estore', () => {
   });
 
   describe('When the Mongo deal ID is not a valid Mongo ObjectID', () => {
-    it('Should return 500 with catch-all error message', async () => {
+    const invalidObjectIds = [[], {}, '', 'invalid', '!"£'];
+    it.each(invalidObjectIds)('Should return 500 for a %s string which is neither 12 bytes nor 24 bytes hex characters or an integer', async (dealId) => {
       const invalidPayload = {
         ...payload,
-        dealId: 'invalid',
+        dealId,
       };
 
       const { status, body } = await post(invalidPayload).to('/estore');
@@ -139,6 +141,7 @@ describe('/estore', () => {
 
   describe('eStore CRON jobs', () => {
     beforeEach(() => {
+      mockFindOne.mockReset();
       mockInsertOne.mockReset();
     });
 
@@ -152,9 +155,11 @@ describe('/estore', () => {
       await post(payload).to('/estore');
 
       // Look up for the deal ID in the collection
+      expect(mockFindOne).toHaveBeenCalledTimes(1);
       expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: new ObjectId(payload.dealId) } });
 
       // Insert a new entry in the collection
+      expect(mockInsertOne).toHaveBeenCalledTimes(1);
       expect(mockInsertOne).toHaveBeenCalledWith({
         payload,
         timestamp: expect.any(Number),
