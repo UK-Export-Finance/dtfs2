@@ -122,7 +122,7 @@ exports.getById = async (req, res) => {
  * @param {ObjectId | string} id - facility id to update
  * @param {object} updateBody - update to make
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
- * @returns
+ * @returns {Promise<import("mongodb").ModifyResult | false>}
  */
 const update = async (id, updateBody, auditDetails) => {
   try {
@@ -136,7 +136,17 @@ const update = async (id, updateBody, auditDetails) => {
     }
 
     const existingFacility = await facilitiesCollection.findOne({ _id: { $eq: facilityId } });
+
+    if (!existingFacility) {
+      return { ok: true, value: existingFacility };
+    }
+
     const existingDeal = await dealsCollection.findOne({ _id: { $eq: ObjectId(existingFacility.dealId) } });
+
+    if (!existingDeal) {
+      throw new Error('Facility `dealId` deal does not exist');
+    }
+
     if (!isFacilityEndDateEnabledOnDeal(existingDeal.version) && updateBody.facilityEndDateExists) {
       throw new DealVersionError(`Cannot add facility end date to deal version ${existingDeal.version}`);
     }
@@ -170,6 +180,9 @@ const update = async (id, updateBody, auditDetails) => {
     }
     return updatedFacility;
   } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
     console.error('Unable to update the facility %o', error);
     return false;
   }

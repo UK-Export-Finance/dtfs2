@@ -194,32 +194,43 @@ context('About Facility Page', () => {
       );
     });
 
-    if (applications[1].version >= 1) {
-      it('stores the facility end date when returning to the page', () => {
-        cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
-        aboutFacility.facilityName().type('Name');
-        aboutFacility.shouldCoverStartOnSubmissionNo().click();
-        aboutFacility.coverStartDateDay().type(now.getDate());
-        aboutFacility.coverStartDateMonth().type(now.getMonth() + 1);
-        aboutFacility.coverStartDateYear().type(now.getFullYear());
-        aboutFacility.coverEndDateDay().type(now.getDate());
-        aboutFacility.coverEndDateMonth().type(now.getMonth());
-        aboutFacility.coverEndDateYear().type(now.getFullYear() + 1);
+    it('stores the values when returning to the page', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
+      aboutFacility.facilityName().type('Name');
+      aboutFacility.shouldCoverStartOnSubmissionNo().click();
+      aboutFacility.coverStartDateDay().type(now.getDate());
+      aboutFacility.coverStartDateMonth().type(now.getMonth() + 1);
+      aboutFacility.coverStartDateYear().type(now.getFullYear());
+      aboutFacility.coverEndDateDay().type(now.getDate());
+      aboutFacility.coverEndDateMonth().type(now.getMonth());
+      aboutFacility.coverEndDateYear().type(now.getFullYear() + 1);
+      if (applications[1].version >= 1) {
         aboutFacility.facilityEndDateExistsYes().click();
-        aboutFacility.continueButton().click();
+      }
+      aboutFacility.continueButton().click();
 
-        cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
+      aboutFacility.facilityName().should('have.value', 'Name');
+      aboutFacility.shouldCoverStartOnSubmissionNo().should('be.checked');
+      aboutFacility.coverStartDateDay().should('have.value', now.getDate());
+      aboutFacility.coverStartDateMonth().should('have.value', now.getMonth() + 1);
+      aboutFacility.coverStartDateYear().should('have.value', now.getFullYear());
+      aboutFacility.coverEndDateDay().should('have.value', now.getDate());
+      aboutFacility.coverEndDateMonth().should('have.value', now.getMonth());
+      aboutFacility.coverEndDateYear().should('have.value', now.getFullYear() + 1);
+
+      if (applications[1].version >= 1) {
         aboutFacility.facilityEndDateExistsYes().should('be.checked');
         aboutFacility.facilityEndDateExistsNo().should('be.not.checked');
-
         aboutFacility.facilityEndDateExistsNo().click();
+
         aboutFacility.continueButton().click();
 
         cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
         aboutFacility.facilityEndDateExistsNo().should('be.checked');
         aboutFacility.facilityEndDateExistsYes().should('be.not.checked');
-      });
-    }
+      }
+    });
   });
 
   describe('Visiting page with unissued cash facility', () => {
