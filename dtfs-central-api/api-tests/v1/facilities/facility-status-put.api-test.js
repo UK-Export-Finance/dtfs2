@@ -1,4 +1,5 @@
-const { generatePortalAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { ObjectId } = require('mongodb');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
@@ -86,7 +87,7 @@ describe('/v1/portal/facilities', () => {
 
       const { body } = await api.get(`/v1/portal/facilities/${facilityIdToUpdate}`);
 
-      expect(body.auditRecord).toEqual(generateAuditDatabaseRecordFromAuditDetails(updateAuditDetails));
+      expect(body.auditRecord).toEqual(generateParsedMockAuditDatabaseRecord(updateAuditDetails));
     });
 
     it('does NOT update `editedBy` in the associated deal', async () => {
