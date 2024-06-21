@@ -1,7 +1,6 @@
 const { AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { set } = require('date-fns');
 const { cloneDeep } = require('lodash');
-const { AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const getGuaranteeDates = require('../../../src/v1/helpers/get-guarantee-dates');
