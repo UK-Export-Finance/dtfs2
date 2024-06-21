@@ -37,7 +37,7 @@ const updatePortalDealStatusToMatchDecision = ({ dealId, dealType, decision, aud
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    return api.updatePortalGefDealStatus(dealId, mappedPortalStatus);
+    return api.updatePortalGefDealStatus({ dealId, status: mappedPortalStatus, auditDetails });
   }
 
   return Promise.reject(new Error(`Unrecognised deal type ${dealType} for deal id ${dealId}.`));

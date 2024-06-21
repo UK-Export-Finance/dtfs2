@@ -33,7 +33,7 @@ const updatePortalDealStatus = async (deal, auditDetails) => {
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     await api.updatePortalBssDealStatus({ dealId: _id, status, auditDetails });
   } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    await api.updatePortalGefDealStatus(_id, status);
+    await api.updatePortalGefDealStatus({ dealId: _id, status, auditDetails });
   }
 
   return deal;

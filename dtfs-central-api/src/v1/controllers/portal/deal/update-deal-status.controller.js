@@ -6,9 +6,6 @@ const { findOneDeal } = require('./get-deal.controller');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
 const updateDealStatus = async ({ dealId, status, existingDeal, auditDetails }) => {
-  if (!ObjectId.isValid(dealId)) {
-    return { status: 400, message: 'Invalid Deal Id' };
-  }
   const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
   const previousStatus = existingDeal.status;
@@ -34,8 +31,6 @@ const updateDealStatus = async ({ dealId, status, existingDeal, auditDetails }) 
 
   return findAndUpdateResponse.value;
 };
-
-exports.updateDealStatus = updateDealStatus;
 
 exports.updateDealStatusPut = async (req, res) => {
   const {
