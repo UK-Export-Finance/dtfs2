@@ -32,7 +32,7 @@
     "db:seed": "(cd utils && npm run db:seed)",
     "db:seed:reset": "(cd utils && npm run db:seed:reset)",
     "env:copy": "(cd utils && npm run env:copy)",
-    "housekeeping": "npm run update:all && npm run install:all && npm run prettier:fix:all && npm run lint:fix:all && npm run audit:fix:all && npm run spellcheck",
+    "housekeeping": "npm run update:all && npm run install:all && npm run prettier:fix:all && npm run lint:fix:all && npm run validate:yml:all && npm run audit:fix:all && npm run spellcheck",
     "install:all": "npm install --if-present",
     "lint:all": "npm run lint --workspaces --if-present",
     "lint:fix:all": "npm run lint --workspaces --if-present -- --fix",
@@ -46,13 +46,15 @@
     "start:detach": "npm run start -- --detach",
     "stop": "docker compose down",
     "type-check:all": "npm run type-check --workspaces --if-present",
-    "update:all": "npm update --save --if-present"
+    "update:all": "npm update --save --if-present",
+    "validate:yml": "npx yaml-lint **/*.yml"
   },
   "lint-staged": {
     "**/package.json": "sort-package-json",
     "**/*.{js,ts}": [
       "eslint --fix",
-      "prettier --write"
+      "prettier --write",
+      "validate:yml"
     ],
     "**/*": [
       "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"

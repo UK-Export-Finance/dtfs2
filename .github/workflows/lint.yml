@@ -156,4 +156,4 @@ jobs:
 
       - name: Linting
         working-directory: ./
-        run: npx yaml-lint **/*.yml
+        run: npm run validate:yml
