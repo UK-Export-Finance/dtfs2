@@ -478,6 +478,7 @@ portalRouter.route('/facilities/:id').delete(deleteFacilityController.deleteFaci
  *             status:
  *               type: string
  *             auditDetails:
+ *               type: object
  *               $ref: '#/definitions/portalAuditDetails'
  *     responses:
  *       200:
