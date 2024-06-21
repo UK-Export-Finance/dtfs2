@@ -1,5 +1,5 @@
-const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
@@ -11,7 +11,7 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateFacilityStatus = async (facilityId, status, existingFacility, auditDetails) => {
+const updateFacilityStatus = async ({ facilityId, status, existingFacility, auditDetails }) => {
   if (ObjectId.isValid(facilityId)) {
     const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
 
@@ -42,20 +42,33 @@ const updateFacilityStatus = async (facilityId, status, existingFacility, auditD
 exports.updateFacilityStatus = updateFacilityStatus;
 
 exports.updateFacilityStatusPut = async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    const facilityId = req.params.id;
+  const {
+    body: { status, auditDetails },
+    params: { id: facilityId },
+  } = req;
 
-    const { status, auditDetails } = req.body;
-
-    return await findOneFacility(facilityId, async (existingFacility) => {
-      if (existingFacility) {
-        const updatedFacility = await updateFacilityStatus(facilityId, status, existingFacility, auditDetails);
-        return res.status(200).json(updatedFacility);
-      }
-
-      return res.status(404).send();
-    });
+  if (!ObjectId.isValid(facilityId)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
   }
 
-  return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
+  try {
+    validateAuditDetails(auditDetails);
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
+  }
+
+  return await findOneFacility(facilityId, async (existingFacility) => {
+    if (existingFacility) {
+      const updatedFacility = await updateFacilityStatus({ facilityId, status, existingFacility, auditDetails });
+      return res.status(200).json(updatedFacility);
+    }
+
+    return res.status(404).send();
+  });
 };
