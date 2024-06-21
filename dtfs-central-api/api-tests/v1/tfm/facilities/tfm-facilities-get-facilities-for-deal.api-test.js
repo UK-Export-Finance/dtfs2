@@ -2,8 +2,7 @@ const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream
 const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../../wipeDB');
-const app = require('../../../../src/createApp');
-const api = require('../../../api')(app);
+const { TestApi } = require('../../../test-api');
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
@@ -26,37 +25,35 @@ describe('/v1/tfm/deals/:id/facilities', () => {
   describe('GET /v1/tfm/deal/:id/facilities', () => {
     it('returns a 400 error if the id is not a valid mongo id', async () => {
       const invalidMongoId = 'abc';
-      const { status, body } = await api.get(`/v1/tfm/deals/${invalidMongoId}/facilities`);
+      const { status, body } = await TestApi.get(`/v1/tfm/deals/${invalidMongoId}/facilities`);
       expect(status).toBe(400);
       expect(body).toStrictEqual({ status: 400, message: 'Invalid Deal Id' });
     });
 
     it('returns the requested resource', async () => {
       // create deal
-      const { body: createdDeal } = await api.post(newDeal).to('/v1/portal/gef/deals');
+      const { body: createdDeal } = await TestApi.post(newDeal).to('/v1/portal/gef/deals');
 
       const dealId = createdDeal._id;
 
       // create some facilities
       newFacility.dealId = dealId;
-      await api.post(newFacility).to('/v1/portal/gef/facilities');
-      await api.post(newFacility).to('/v1/portal/gef/facilities');
+      await TestApi.post(newFacility).to('/v1/portal/gef/facilities');
+      await TestApi.post(newFacility).to('/v1/portal/gef/facilities');
 
       // submit deal/facilities
-      await api
-        .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-          dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-        })
-        .to('/v1/tfm/deals/submit');
+      await TestApi.put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+        dealId,
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+      }).to('/v1/tfm/deals/submit');
 
-      const { status, body } = await api.get(`/v1/tfm/deals/${dealId}/facilities`);
+      const { status, body } = await TestApi.get(`/v1/tfm/deals/${dealId}/facilities`);
 
       expect(status).toEqual(200);
 
       // get facilities after they've been created so we have all the data
-      const { body: allFacilitiesAfterCreation } = await api.get(`/v1/portal/gef/deals/${dealId}/facilities`);
+      const { body: allFacilitiesAfterCreation } = await TestApi.get(`/v1/portal/gef/deals/${dealId}/facilities`);
 
       const expectedFacilityShape = (facility) => ({
         _id: facility._id,
