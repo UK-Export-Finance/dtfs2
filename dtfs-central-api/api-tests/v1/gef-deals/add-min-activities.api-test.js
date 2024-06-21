@@ -32,10 +32,6 @@ const baseUrl = '/v1/portal/gef/facilities';
 const applicationBaseUrl = '/v1/portal/gef/deals';
 
 describe('submissionPortalActivity()', () => {
-  beforeAll(async () => {
-    await TestApi.initialise();
-  });
-
   it('should return a populated array with submission activity object and MIA', async () => {
     await wipeDB.wipe([collectionName]);
     await wipeDB.wipe([applicationCollectionName]);
@@ -392,8 +388,6 @@ describe('updateChangedToIssued()', () => {
   let mockApplication;
 
   beforeAll(async () => {
-    await TestApi.initialise();
-
     await wipeDB.wipe([collectionName]);
     await wipeDB.wipe([applicationCollectionName]);
     const testUsers = await testUserCache.initialise();

@@ -44,8 +44,6 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
   utilisationReport.feeRecords = [feeRecord, anotherFeeRecord];
 
   beforeAll(async () => {
-    await TestApi.initialise();
-
     await SqlDbHelper.initialize();
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
     await SqlDbHelper.saveNewEntry('UtilisationReport', utilisationReport);

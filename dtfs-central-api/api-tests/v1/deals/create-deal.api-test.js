@@ -34,8 +34,6 @@ const newDeal = aDeal({
 
 describe('/v1/portal/deals', () => {
   beforeAll(async () => {
-    await TestApi.initialise();
-
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
   });
 

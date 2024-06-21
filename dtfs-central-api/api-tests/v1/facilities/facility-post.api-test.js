@@ -25,10 +25,6 @@ const newDeal = aDeal({
 });
 
 describe('/v1/portal/facilities', () => {
-  beforeAll(async () => {
-    await TestApi.initialise();
-  });
-
   describe('POST /v1/portal/facilities', () => {
     let dealId;
 

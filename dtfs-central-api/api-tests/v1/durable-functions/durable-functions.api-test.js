@@ -8,10 +8,6 @@ const { mongoDbClient } = require('../../../src/drivers/db-client');
 describe('DELETE /v1/portal/durable-functions', () => {
   let logsToDeleteIds;
 
-  beforeAll(async () => {
-    await TestApi.initialise();
-  });
-
   beforeEach(async () => {
     const durableFunctionsLogCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG);
     const insertionResult = await durableFunctionsLogCollection.insertMany([

@@ -20,10 +20,6 @@ const newDeal = aDeal({
 describe('DELETE /v1/portal/deals', () => {
   let dealToDeleteId;
 
-  beforeAll(async () => {
-    await TestApi.initialise();
-  });
-
   beforeEach(async () => {
     const postResult = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
     dealToDeleteId = new ObjectId(postResult.body._id);

@@ -1,8 +1,7 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
-const app = require('../../../../src/createApp');
-const api = require('../../../api')(app);
+const { TestApi } = require('../../../test-api');
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../../helpers/create-deal');
@@ -35,17 +34,15 @@ const createAndSubmitDeals = async (deals) => {
   const result = await Promise.all(
     deals.map(async (deal) => {
       // create deal
-      const createResponse = await createDeal({ api, deal, user: deal.maker });
+      const createResponse = await createDeal({ deal, user: deal.maker });
       expect(createResponse.status).toEqual(200);
 
       // submit deal
-      const submitResponse = await api
-        .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-          dealId: createResponse.body._id,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-        })
-        .to('/v1/tfm/deals/submit');
+      const submitResponse = await TestApi.put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+        dealId: createResponse.body._id,
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+      }).to('/v1/tfm/deals/submit');
 
       expect(submitResponse.status).toEqual(200);
 
@@ -60,14 +57,12 @@ module.exports.createAndSubmitDeals = createAndSubmitDeals;
 const updateDealsTfm = async (dealsTfmUpdate, sessionTfmUser) => {
   const result = await Promise.all(
     dealsTfmUpdate.map(async (deal) => {
-      const updateResponse = await api
-        .put({
-          dealUpdate: {
-            tfm: deal.tfm,
-          },
-          auditDetails: generateTfmAuditDetails(sessionTfmUser._id),
-        })
-        .to(`/v1/tfm/deals/${deal._id}`);
+      const updateResponse = await TestApi.put({
+        dealUpdate: {
+          tfm: deal.tfm,
+        },
+        auditDetails: generateTfmAuditDetails(sessionTfmUser._id),
+      }).to(`/v1/tfm/deals/${deal._id}`);
 
       expect(updateResponse.status).toEqual(200);
       return updateResponse.body;
@@ -102,7 +97,7 @@ describe('/v1/tfm/deals', () => {
       });
 
       it('without pagination', async () => {
-        const { status, body } = await api.get('/v1/tfm/deals');
+        const { status, body } = await TestApi.get('/v1/tfm/deals');
 
         expect(status).toEqual(200);
         const expectedTotalDeals = 5;
@@ -118,7 +113,7 @@ describe('/v1/tfm/deals', () => {
         const urlWithPagination = (page) => `/v1/tfm/deals?&pagesize=${pagesize}&page=${page}`;
 
         const queryParams = { page: 0, pagesize };
-        const { status: page1Status, body: page1Body } = await api.get(urlWithPagination(0));
+        const { status: page1Status, body: page1Body } = await TestApi.get(urlWithPagination(0));
 
         const expectedTotalDeals = 5;
 
@@ -129,7 +124,7 @@ describe('/v1/tfm/deals', () => {
         expect(page1Body.pagination.totalPages).toEqual(2);
 
         queryParams.page = 1;
-        const { status: page2Status, body: page2Body } = await api.get(urlWithPagination(1));
+        const { status: page2Status, body: page2Body } = await TestApi.get(urlWithPagination(1));
 
         expect(page2Status).toEqual(200);
         expect(page2Body.deals.length).toEqual(1);

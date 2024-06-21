@@ -27,10 +27,6 @@ const newDeal = aDeal({
 });
 
 describe('/v1/portal/deals', () => {
-  beforeAll(async () => {
-    await TestApi.initialise();
-  });
-
   describe('PUT /v1/portal/deals/:id', () => {
     const updateAuditDetails = generatePortalAuditDetails(new ObjectId());
     let createdDeal;

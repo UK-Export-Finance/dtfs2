@@ -23,8 +23,6 @@ interface CustomResponse extends Response {
 
 describe('/v1/utilisation-reports/reconciliation-summary/:submissionMonth', () => {
   beforeAll(async () => {
-    await TestApi.initialise();
-
     await wipe([MONGO_DB_COLLECTIONS.BANKS]);
     await TestApi.post(withoutMongoId(MOCK_BANKS.BARCLAYS)).to('/v1/bank');
 

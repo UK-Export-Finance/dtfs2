@@ -21,8 +21,6 @@ describe('PUT updateGefFacilities', () => {
   let mockApplication;
 
   beforeAll(async () => {
-    await TestApi.initialise();
-
     const testUsers = await testUserCache.initialise();
     aMaker = testUsers().withRole('maker').one();
   });

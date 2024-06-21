@@ -20,10 +20,6 @@ describe('DELETE /v1/portal/facilities/:id', () => {
   let dealId;
   let documentToDeleteId;
 
-  beforeAll(async () => {
-    await TestApi.initialise();
-  });
-
   beforeEach(async () => {
     const { body: deal } = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
     dealId = deal._id;

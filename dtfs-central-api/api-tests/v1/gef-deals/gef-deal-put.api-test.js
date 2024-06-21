@@ -6,8 +6,6 @@ const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 
 describe('/v1/portal/gef/deals/:id', () => {
   beforeAll(async () => {
-    await TestApi.initialise();
-
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
   });
 

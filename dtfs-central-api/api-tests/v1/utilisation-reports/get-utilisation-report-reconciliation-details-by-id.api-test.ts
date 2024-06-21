@@ -35,8 +35,6 @@ describe('GET /v1/utilisation-reports/reconciliation-details/:reportId', () => {
     .build();
 
   beforeAll(async () => {
-    await TestApi.initialise();
-
     await SqlDbHelper.initialize();
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
     await SqlDbHelper.saveNewEntry('UtilisationReport', reconciliationInProgressReport);

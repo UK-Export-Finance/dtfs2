@@ -9,10 +9,6 @@ const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 describe('DELETE v1/portal/cron-jobs', () => {
   let logsToDeleteIds;
 
-  beforeAll(async () => {
-    await TestApi.initialise();
-  });
-
   beforeEach(async () => {
     const cronJobLogsCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
     const insertionResult = await cronJobLogsCollection.insertMany([

@@ -5,8 +5,6 @@ const CONSTANTS = require('../../../src/constants');
 
 describe('/v1/portal/gef/deals/:id/status', () => {
   beforeAll(async () => {
-    await TestApi.initialise();
-
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
   });
 

@@ -1,4 +1,3 @@
-import { Response } from 'supertest';
 import { HttpStatusCode } from 'axios';
 import {
   CURRENCY,
@@ -57,8 +56,6 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
   });
 
   beforeAll(async () => {
-    await TestApi.initialise();
-
     await SqlDbHelper.initialize();
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
@@ -91,7 +88,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response: Response = await TestApi.post(requestBody).to(getUrl(reportId));
+    const response = await TestApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -102,7 +99,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response: Response = await TestApi.post(requestBody).to(getUrl('invalid-id'));
+    const response = await TestApi.post(requestBody).to(getUrl('invalid-id'));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -116,7 +113,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await TestApi.post(requestBody).to(getUrl(reportId));
+    const response = await TestApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -130,7 +127,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await TestApi.post(requestBody).to(getUrl(reportId));
+    const response = await TestApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -152,7 +149,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await TestApi.post(requestBody).to(getUrl(reportId));
+    const response = await TestApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -166,7 +163,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await TestApi.post(requestBody).to(getUrl(reportId));
+    const response = await TestApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -180,7 +177,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await TestApi.post(requestBody).to(getUrl(reportId));
+    const response = await TestApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -194,7 +191,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await TestApi.post(requestBody).to(getUrl(reportId));
+    const response = await TestApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -208,7 +205,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await TestApi.post(requestBody).to(getUrl(reportId));
+    const response = await TestApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -222,7 +219,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await TestApi.post(requestBody).to(getUrl(reportId));
+    const response = await TestApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -236,7 +233,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await TestApi.post(requestBody).to(getUrl(reportId));
+    const response = await TestApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -258,7 +255,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await TestApi.post(requestBodyWithEURPaymentCurrency).to(getUrl(reportId));
+    const response = await TestApi.post(requestBodyWithEURPaymentCurrency).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);

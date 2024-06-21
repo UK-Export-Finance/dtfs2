@@ -30,8 +30,6 @@ describe('/v1/portal/facilities', () => {
   let dealId;
 
   beforeAll(async () => {
-    await TestApi.initialise();
-
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
   });
 

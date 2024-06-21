@@ -12,8 +12,6 @@ describe('/v1/utilisation-reports/set-status', () => {
   const mockReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).build();
 
   beforeAll(async () => {
-    await TestApi.initialise();
-
     await SqlDbHelper.initialize();
 
     await SqlDbHelper.deleteAllEntries('UtilisationReport');

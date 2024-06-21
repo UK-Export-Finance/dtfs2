@@ -30,8 +30,6 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
   const portalUserId = portalUser._id.toString();
 
   beforeAll(async () => {
-    await TestApi.initialise();
-
     await SqlDbHelper.initialize();
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
