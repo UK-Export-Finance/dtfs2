@@ -49,7 +49,7 @@ const updatedIssuedFacilities = async (deal, auditDetails) => {
               hasBeenIssuedAndAcknowledged: true,
             };
 
-            const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate);
+            const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate, auditDetails);
             facility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
             facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
             facility.status = facilityStatusUpdate;

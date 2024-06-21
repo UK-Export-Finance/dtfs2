@@ -51,7 +51,7 @@ const updateFacilities = async (deal, auditDetails) => {
           portalFacilityUpdate.hasBeenAcknowledged = true;
 
           // updates BSS facility collection
-          const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate);
+          const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate, auditDetails);
 
           facility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
           facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
