@@ -1,4 +1,6 @@
-const api = require('../../api');
+import { Bank, PortalRole, PortalUser } from '@ukef/dtfs2-common';
+import { TestApi } from '../../test-api';
+import { mongoDbClient } from '../../../src/drivers/db-client';
 
 const banks = {
   Barclays: {
@@ -19,7 +21,7 @@ const banks = {
   any: {
     id: '*',
   },
-};
+} as unknown as Record<string, Bank>;
 
 const testUsers = [
   { username: 'no-roles', password: 'P@ssword1234', roles: [] },
@@ -87,64 +89,51 @@ const testUsers = [
       useTFM: true,
     },
   },
-];
+] as unknown as PortalUser[];
 
 let notYetInitialised = true;
-const loadedUsers = [];
 
-const finder = () => {
-  let users = [...loadedUsers];
-
-  const fluidBuilder = {
+const finder = (allUsers: PortalUser[]) => () => {
+  const fluidBuilder = (users: PortalUser[]) => ({
     all: () => users,
     one: () => users[0],
-    withRole: (role) => {
-      users = users.filter((user) => user.roles.includes(role));
-      return fluidBuilder;
+    withRole: (role: PortalRole) => {
+      const usersWithRole = users.filter((user) => user.roles.includes(role));
+      return fluidBuilder(usersWithRole);
     },
-    withMultipleRoles: (role1, role2) => {
-      users = users.filter((user) => user.roles.includes(role1) && user.roles.includes(role2));
-      return fluidBuilder;
+    withMultipleRoles: (role1: PortalRole, role2: PortalRole) => {
+      const usersWithRoles = users.filter((user) => user.roles.includes(role1) && user.roles.includes(role2));
+      return fluidBuilder(usersWithRoles);
     },
-    withoutRole: (role) => {
-      users = users.filter((user) => !user.roles.includes(role));
-      return fluidBuilder;
+    withoutRole: (role: PortalRole) => {
+      const usersWithoutRole = users.filter((user) => !user.roles.includes(role));
+      return fluidBuilder(usersWithoutRole);
     },
-    withBankName: (bankName) => {
-      users = users.filter((user) => user.bank && user.bank.name === bankName);
-      return fluidBuilder;
+    withBankName: (bankName: string) => {
+      const usersWithBankName = users.filter((user) => user.bank && user.bank.name === bankName);
+      return fluidBuilder(usersWithBankName);
     },
     superuser: () => {
-      users = users.filter((user) => user.bank && user.bank.id === '*');
-      return fluidBuilder;
+      const superUsers = users.filter((user) => user.bank && user.bank.id === '*');
+      return fluidBuilder(superUsers);
     },
-  };
+  });
 
-  return fluidBuilder;
+  return fluidBuilder(allUsers);
 };
 
-module.exports.initialise = async (app) => {
+export const initialise = async () => {
+  await TestApi.initialise();
+
+  const usersCollection = await mongoDbClient.getCollection('users');
+
   if (notYetInitialised) {
-    const { get, post, remove } = api(app).as();
-
-    const currentUsersResponse = await get('/v1/user');
-    const existingUsers = currentUsersResponse.body.users;
-
-    for (const existingUser of existingUsers) {
-      await remove(`/v1/users/${existingUser._id}`);
-    }
-
-    for (const testUser of testUsers) {
-      const { body } = await post(testUser).to('/v1/user/');
-
-      loadedUsers.push({
-        ...testUser,
-        _id: body._id,
-      });
-    }
-
+    await usersCollection.deleteMany({});
+    await usersCollection.insertMany(testUsers);
     notYetInitialised = false;
   }
 
-  return finder;
+  const loadedUsers = await usersCollection.find({}).toArray();
+
+  return finder(loadedUsers);
 };

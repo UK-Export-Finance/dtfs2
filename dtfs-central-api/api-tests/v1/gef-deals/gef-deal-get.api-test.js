@@ -1,7 +1,6 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
-const app = require('../../../src/createApp');
-const api = require('../../api')(app);
+const { TestApi } = require('../../test-api');
 const CONSTANTS = require('../../../src/constants');
 
 const newDeal = {
@@ -11,6 +10,8 @@ const newDeal = {
 
 describe('/v1/portal/gef/deals/:id', () => {
   beforeAll(async () => {
+    await TestApi.initialise();
+
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
   });
 
@@ -18,15 +19,15 @@ describe('/v1/portal/gef/deals/:id', () => {
     it('returns 404 when the deal is not found', async () => {
       const invalidDealId = '123456789f0ffe00219319c1';
 
-      const { status } = await api.get(`/v1/portal/gef/deals/${invalidDealId}`);
+      const { status } = await TestApi.get(`/v1/portal/gef/deals/${invalidDealId}`);
 
       expect(status).toEqual(404);
     });
 
     it('returns the deal', async () => {
-      const { body: createdDeal } = await api.post(newDeal).to('/v1/portal/gef/deals');
+      const { body: createdDeal } = await TestApi.post(newDeal).to('/v1/portal/gef/deals');
 
-      const { body, status } = await api.get(`/v1/portal/gef/deals/${createdDeal._id}`);
+      const { body, status } = await TestApi.get(`/v1/portal/gef/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
 

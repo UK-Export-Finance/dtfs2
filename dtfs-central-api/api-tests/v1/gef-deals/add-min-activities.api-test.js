@@ -25,19 +25,22 @@ const MOCK_APPLICATION_FACILITIES = APPLICATION[1];
 const wipeDB = require('../../wipeDB');
 
 const testUserCache = require('../../mocks/test-users/api-test-users');
-const app = require('../../../src/createApp');
 
-const { as } = require('../../api')(app);
+const { TestApi } = require('../../test-api');
 
 const baseUrl = '/v1/portal/gef/facilities';
 const applicationBaseUrl = '/v1/portal/gef/deals';
 
 describe('submissionPortalActivity()', () => {
+  beforeAll(async () => {
+    await TestApi.initialise();
+  });
+
   it('should return a populated array with submission activity object and MIA', async () => {
     await wipeDB.wipe([collectionName]);
     await wipeDB.wipe([applicationCollectionName]);
     // adds user to db incase empty
-    const testUsers = await testUserCache.initialise(app);
+    const testUsers = await testUserCache.initialise();
 
     testUsers().withRole('maker').one();
     testUsers().withRole('checker').one();
@@ -389,18 +392,20 @@ describe('updateChangedToIssued()', () => {
   let mockApplication;
 
   beforeAll(async () => {
+    await TestApi.initialise();
+
     await wipeDB.wipe([collectionName]);
     await wipeDB.wipe([applicationCollectionName]);
-    const testUsers = await testUserCache.initialise(app);
+    const testUsers = await testUserCache.initialise();
     aMaker = testUsers().withRole('maker').one();
     aChecker = testUsers().withRole('checker').one();
-    mockApplication = await as(aMaker).post(APPLICATION[0]).to(applicationBaseUrl);
-    await as(aMaker).put(APPLICATION[0]).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await TestApi.as(aMaker).post(APPLICATION[0]).to(applicationBaseUrl);
+    await TestApi.as(aMaker).put(APPLICATION[0]).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
   });
 
   beforeEach(async () => {
     // posts facility with canResubmitIssuedFacilities as true
-    await as(aMaker)
+    await TestApi.as(aMaker)
       .post({
         dealId: mockApplication.body._id,
         type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
@@ -411,7 +416,7 @@ describe('updateChangedToIssued()', () => {
 
     const mockQuery = { dealId: mockApplication.body._id };
 
-    const { body } = await as(aChecker).get(baseUrl, mockQuery);
+    const { body } = await TestApi.as(aChecker).get(baseUrl, mockQuery);
 
     // changes to false to test
     await updateChangedToIssued(body);
@@ -421,7 +426,7 @@ describe('updateChangedToIssued()', () => {
     const mockQuery = { dealId: mockApplication.body._id };
 
     // gets facilities from DB
-    const { body } = await as(aChecker).get(baseUrl, mockQuery);
+    const { body } = await TestApi.as(aChecker).get(baseUrl, mockQuery);
 
     // gets value from body for changedToIssued
     const changedToIssuedValue = body[0].canResubmitIssuedFacilities;

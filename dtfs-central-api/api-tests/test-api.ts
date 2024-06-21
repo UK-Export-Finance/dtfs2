@@ -21,6 +21,9 @@ export class TestApi {
   private constructor() {}
 
   public static async initialise(): Promise<void> {
+    if (TestApi.isInitialised) {
+      return;
+    }
     TestApi.app = await createApp();
     TestApi.isInitialised = true;
   }
