@@ -51,6 +51,7 @@ const updateFacility = async (facilityId, facilityUpdate, user) => {
     data: {
       facilityUpdate,
       user,
+      auditDetails: mockDataLoaderPortalAuditDetails,
     },
   }).catch((error) => {
     throw new ApiError({ cause: error });

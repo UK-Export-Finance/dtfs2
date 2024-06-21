@@ -13,7 +13,7 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateFacility = async (facilityId, facilityUpdate, dealId, user, routePath, auditDetails) => {
+const updateFacility = async ({ facilityId, facilityUpdate, dealId, user, routePath, auditDetails }) => {
   if (!ObjectId.isValid(dealId) || !ObjectId.isValid(facilityId)) {
     return { status: 400, message: 'Invalid Deal or Facility Id' };
   }
@@ -71,7 +71,7 @@ exports.updateFacilityPut = async (req, res) => {
 
   const { dealId } = facility;
 
-  const updatedFacility = await updateFacility(facilityId, facilityUpdate, dealId, user, routePath, auditDetails);
+  const updatedFacility = await updateFacility({ facilityId, facilityUpdate, dealId, user, routePath, auditDetails });
 
   return res.status(200).json(updatedFacility);
 };

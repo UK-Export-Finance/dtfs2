@@ -414,6 +414,7 @@ portalRouter.route('/facilities/:id').get(getFacilityController.findOneFacilityG
  *               user:
  *                 type: object
  *               auditDetails:
+ *                 type: object
  *                 $ref: '#/definitions/portalAuditDetails'
  *     responses:
  *       200:
@@ -776,6 +777,7 @@ portalRouter.route('/gef/facilities').get(getGefFacilitiesController.findAllFaci
  *         application/json:
  *           schema:
  *             type: object
+ *             example: { aNewField: true }
  *     responses:
  *       200:
  *         description: OK
