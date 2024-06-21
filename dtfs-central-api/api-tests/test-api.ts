@@ -12,72 +12,72 @@ const headers = {
   'content-type': 'application/json',
 };
 
-export class TestApi {
-  private static app: Express;
+class TestApi {
+  private app: Express | null;
 
-  private static isInitialised = false;
+  public constructor() {
+    this.app = null;
+  }
 
-  // eslint-disable-next-line no-useless-constructor, no-empty-function
-  private constructor() {}
-
-  public static async initialise(): Promise<void> {
-    if (TestApi.isInitialised) {
+  public async initialise(): Promise<void> {
+    if (this.app) {
       return;
     }
-    TestApi.app = await createApp();
-    TestApi.isInitialised = true;
+    this.app = await createApp();
   }
 
-  public static async reset(): Promise<void> {
-    TestApi.isInitialised = false;
-    await TestApi.initialise();
+  public async reset(): Promise<void> {
+    this.app = null;
+    await this.initialise();
   }
 
-  private static assertIsInitialised() {
-    if (!TestApi.isInitialised) {
+  private assertIsInitialised() {
+    if (!this.app) {
       throw new Error('TestApi has not been initialised yet');
     }
   }
 
-  public static post(data: object) {
-    TestApi.assertIsInitialised();
-    const to = async (url: string) => await request(TestApi.app).post(url).send(data).set(headers);
+  public post(data: object) {
+    this.assertIsInitialised();
+    const to = async (url: string) => await request(this.app).post(url).send(data).set(headers);
     return { to };
   }
 
-  public static put(data: object) {
-    TestApi.assertIsInitialised();
-    const to = async (url: string) => await request(TestApi.app).put(url).send(data).set(headers);
+  public put(data: object) {
+    this.assertIsInitialised();
+    const to = async (url: string) => await request(this.app).put(url).send(data).set(headers);
     return { to };
   }
 
-  public static async get(url: string, data?: object) {
-    TestApi.assertIsInitialised();
-    return await request(TestApi.app).get(url).send(data).set(headers);
+  public async get(url: string, data?: object) {
+    this.assertIsInitialised();
+    return await request(this.app).get(url).send(data).set(headers);
   }
 
-  public static remove(data: object) {
-    TestApi.assertIsInitialised();
-    const to = async (url: string) => await request(TestApi.app).delete(url).send(data).set(headers);
+  public remove(data: object) {
+    this.assertIsInitialised();
+    const to = async (url: string) => await request(this.app).delete(url).send(data).set(headers);
     return { to };
   }
 
-  public static as(user?: { token?: string }) {
-    TestApi.assertIsInitialised();
+  public as(user?: { token?: string }) {
+    this.assertIsInitialised();
     const token = user?.token || '';
 
     const post = (data: object) => ({
-      to: async (url: string) => await request(TestApi.app).post(url).set({ authorization: token }).send(data).set(headers),
+      to: async (url: string) => await request(this.app).post(url).set({ authorization: token }).send(data).set(headers),
     });
 
     const put = (data: object) => ({
-      to: async (url: string) => await request(TestApi.app).put(url).set({ authorization: token }).send(data).set(headers),
+      to: async (url: string) => await request(this.app).put(url).set({ authorization: token }).send(data).set(headers),
     });
 
-    const get = async (url: string, query = {}) => await request(TestApi.app).get(url).set({ authorization: token }).query(query).set(headers);
+    const get = async (url: string, query = {}) => await request(this.app).get(url).set({ authorization: token }).query(query).set(headers);
 
-    const remove = async (url: string) => await request(TestApi.app).delete(url).set({ authorization: token }).send().set(headers);
+    const remove = async (url: string) => await request(this.app).delete(url).set({ authorization: token }).send().set(headers);
 
     return { post, put, get, remove };
   }
 }
+
+export const testApi = new TestApi();

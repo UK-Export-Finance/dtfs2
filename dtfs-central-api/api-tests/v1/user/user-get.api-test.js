@@ -1,6 +1,6 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
-const { TestApi } = require('../../test-api');
+const { testApi } = require('../../test-api');
 
 const newUser = {
   username: 'maker1@ukexportfinance.gov.uk',
@@ -37,9 +37,9 @@ describe('/v1/user/:id', () => {
 
   describe('GET /v1/user/:id', () => {
     it('returns a user', async () => {
-      const { body: createdUser } = await TestApi.post(newUser).to('/v1/user');
+      const { body: createdUser } = await testApi.post(newUser).to('/v1/user');
 
-      const { body, status } = await TestApi.get(`/v1/user/${createdUser._id}`);
+      const { body, status } = await testApi.get(`/v1/user/${createdUser._id}`);
 
       expect(status).toEqual(200);
 
@@ -52,7 +52,7 @@ describe('/v1/user/:id', () => {
     });
 
     it('returns 404 when there is no user', async () => {
-      const { status } = await TestApi.get('/v1/user/123456789101');
+      const { status } = await testApi.get('/v1/user/123456789101');
 
       expect(status).toEqual(404);
     });

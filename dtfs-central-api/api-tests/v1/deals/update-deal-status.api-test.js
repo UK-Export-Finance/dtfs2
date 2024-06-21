@@ -2,7 +2,7 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deal-builder');
 
-const { TestApi } = require('../../test-api');
+const { testApi } = require('../../test-api');
 const CONSTANTS = require('../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../helpers/create-deal');
@@ -41,12 +41,12 @@ describe('/v1/portal/deals', () => {
 
       // First status update - 200
       let statusUpdate = 'Acknowledged';
-      const { status } = await TestApi.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
+      const { status } = await testApi.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
       expect(status).toEqual(200);
 
       // Second status update - 400
       statusUpdate = 'Acknowledged';
-      const { status: secondStatus } = await TestApi.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
+      const { status: secondStatus } = await testApi.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
       expect(secondStatus).toEqual(400);
     });
 
@@ -61,7 +61,7 @@ describe('/v1/portal/deals', () => {
       const createdDeal = postResult.body;
       const statusUpdate = 'Acknowledged';
 
-      const { status, body } = await TestApi.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
+      const { status, body } = await testApi.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
 
       expect(status).toEqual(200);
 

@@ -1,7 +1,7 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generateSystemAuditDatabaseRecord, generateSystemAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateMockSystemAuditDatabaseRecord, withDeleteManyTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { TestApi } = require('../../test-api');
+const { testApi } = require('../../test-api');
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 const { mongoDbClient } = require('../../../src/drivers/db-client');
 
@@ -23,17 +23,21 @@ describe('DELETE /v1/portal/durable-functions', () => {
 
   withValidateAuditDetailsTests({
     makeRequest: (auditDetails) =>
-      TestApi.remove({
-        auditDetails,
-      }).to(`/v1/portal/durable-functions`),
+      testApi
+        .remove({
+          auditDetails,
+        })
+        .to(`/v1/portal/durable-functions`),
     validUserTypes: ['none', 'portal', 'system', 'tfm'],
   });
 
   withDeleteManyTests({
     makeRequest: () =>
-      TestApi.remove({
-        auditDetails: generateSystemAuditDetails(),
-      }).to(`/v1/portal/durable-functions`),
+      testApi
+        .remove({
+          auditDetails: generateSystemAuditDetails(),
+        })
+        .to(`/v1/portal/durable-functions`),
     collectionName: MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG,
     auditRecord: generateMockSystemAuditDatabaseRecord(),
     getDeletedDocumentIds: () => logsToDeleteIds,
@@ -41,12 +45,16 @@ describe('DELETE /v1/portal/durable-functions', () => {
   });
 
   it('returns 200 if there are no durable function logs to delete', async () => {
-    const { status: firstStatus } = await TestApi.remove({
-      auditDetails: generateSystemAuditDetails(),
-    }).to(`/v1/portal/durable-functions`);
-    const { status: secondStatus } = await TestApi.remove({
-      auditDetails: generateSystemAuditDetails(),
-    }).to(`/v1/portal/durable-functions`);
+    const { status: firstStatus } = await testApi
+      .remove({
+        auditDetails: generateSystemAuditDetails(),
+      })
+      .to(`/v1/portal/durable-functions`);
+    const { status: secondStatus } = await testApi
+      .remove({
+        auditDetails: generateSystemAuditDetails(),
+      })
+      .to(`/v1/portal/durable-functions`);
 
     expect(firstStatus).toBe(200);
     expect(secondStatus).toBe(200);

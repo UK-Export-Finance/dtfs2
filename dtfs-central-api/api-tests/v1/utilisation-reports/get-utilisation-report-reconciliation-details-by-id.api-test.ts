@@ -1,6 +1,6 @@
 import { Response } from 'supertest';
 import { Bank, IsoDateTimeStamp, PortalUser, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { TestApi } from '../../test-api';
+import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { wipe } from '../../wipeDB';
 import { mongoDbClient } from '../../../src/drivers/db-client';
@@ -59,7 +59,7 @@ describe('GET /v1/utilisation-reports/reconciliation-details/:reportId', () => {
       const invalidReportId = 'invalid-id';
 
       // Act
-      const response: CustomResponse = await TestApi.get(getUrl(invalidReportId));
+      const response: CustomResponse = await testApi.get(getUrl(invalidReportId));
 
       // Assert
       expect(response.status).toEqual(400);
@@ -67,7 +67,7 @@ describe('GET /v1/utilisation-reports/reconciliation-details/:reportId', () => {
 
     it('returns a 404 when a report with the matching id does not exist', async () => {
       // Act
-      const response: CustomResponse = await TestApi.get(getUrl(99999));
+      const response: CustomResponse = await testApi.get(getUrl(99999));
 
       // Assert
       expect(response.status).toBe(404);
@@ -85,7 +85,7 @@ describe('GET /v1/utilisation-reports/reconciliation-details/:reportId', () => {
       await SqlDbHelper.saveNewEntry('UtilisationReport', reportWithNoMatchingBank);
 
       // Act
-      const response: CustomResponse = await TestApi.get(getUrl(reportIdWithNoMatchingBank));
+      const response: CustomResponse = await testApi.get(getUrl(reportIdWithNoMatchingBank));
 
       // Assert
       expect(response.status).toBe(404);
@@ -93,7 +93,7 @@ describe('GET /v1/utilisation-reports/reconciliation-details/:reportId', () => {
 
     it('gets a utilisation report', async () => {
       // Act
-      const response: CustomResponse = await TestApi.get(getUrl(reportId));
+      const response: CustomResponse = await testApi.get(getUrl(reportId));
 
       // Assert
       expect(response.status).toEqual(200);

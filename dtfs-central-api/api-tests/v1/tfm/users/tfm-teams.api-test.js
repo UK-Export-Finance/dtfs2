@@ -3,7 +3,7 @@ const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common')
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { withDeleteOneTests, generateMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
-const { TestApi } = require('../../../test-api');
+const { testApi } = require('../../../test-api');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const { expectMongoIds } = require('../../../expectMongoIds');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
@@ -30,20 +30,20 @@ describe('/v1/tfm/teams', () => {
 
   describe('POST /v1/tfm/teams', () => {
     withValidateAuditDetailsTests({
-      makeRequest: (auditDetails) => TestApi.post({ team: mockTeams[0], auditDetails }).to('/v1/tfm/teams'),
+      makeRequest: (auditDetails) => testApi.post({ team: mockTeams[0], auditDetails }).to('/v1/tfm/teams'),
       validUserTypes: [AUDIT_USER_TYPES.TFM],
     });
 
     it('returns the created resource', async () => {
       const mockTeam = mockTeams[0];
 
-      const { status, body } = await TestApi.post({ team: mockTeam, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/teams');
+      const { status, body } = await testApi.post({ team: mockTeam, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/teams');
 
       expect(status).toEqual(200);
 
       const teamMongoId = body._id;
 
-      const { body: teamAfterCreation } = await TestApi.get(`/v1/tfm/teams/${mockTeam.id}`);
+      const { body: teamAfterCreation } = await testApi.get(`/v1/tfm/teams/${mockTeam.id}`);
 
       expect(teamAfterCreation).toMatchObject({
         team: {
@@ -64,9 +64,9 @@ describe('/v1/tfm/teams', () => {
   describe('GET /v1/tfm/teams', () => {
     it('returns all teams', async () => {
       await Promise.all(
-        mockTeams.map(async (mockTeam) => TestApi.post({ team: mockTeam, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/teams')),
+        mockTeams.map(async (mockTeam) => testApi.post({ team: mockTeam, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/teams')),
       );
-      const { status, body } = await TestApi.get('/v1/tfm/teams');
+      const { status, body } = await testApi.get('/v1/tfm/teams');
       expect(status).toEqual(200);
       expect(orderTeams(body.teams)).toEqual(
         orderTeams(
@@ -89,18 +89,18 @@ describe('/v1/tfm/teams', () => {
 
   describe('GET /v1/tfm/teams/:id', () => {
     it('404s requests for unknown ids', async () => {
-      const { status } = await TestApi.get('/v1/tfm/teams/12345678910');
+      const { status } = await testApi.get('/v1/tfm/teams/12345678910');
       expect(status).toEqual(404);
     });
 
     it('returns the requested resource', async () => {
       const mockTeam = mockTeams[0];
 
-      await TestApi.post({ team: mockTeam, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/teams');
+      await testApi.post({ team: mockTeam, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/teams');
 
       const teamId = mockTeam.id;
 
-      const { status, body } = await TestApi.get(`/v1/tfm/teams/${teamId}`);
+      const { status, body } = await testApi.get(`/v1/tfm/teams/${teamId}`);
 
       expect(status).toEqual(200);
       expect(body.team).toMatchObject({
@@ -120,17 +120,17 @@ describe('/v1/tfm/teams', () => {
     let teamToDeleteObjectId;
 
     beforeEach(async () => {
-      const { body } = await TestApi.post({ team: mockTeams[0], auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/teams');
+      const { body } = await testApi.post({ team: mockTeams[0], auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/teams');
 
       teamToDeleteObjectId = body._id;
     });
 
     withValidateAuditDetailsTests({
-      makeRequest: (auditDetails) => TestApi.remove({ auditDetails }).to(`/v1/tfm/teams/${mockTeams[0].id}`),
+      makeRequest: (auditDetails) => testApi.remove({ auditDetails }).to(`/v1/tfm/teams/${mockTeams[0].id}`),
     });
 
     withDeleteOneTests({
-      makeRequest: () => TestApi.remove({ auditDetails: generateTfmAuditDetails('abcdef123456abcdef123456') }).to(`/v1/tfm/teams/${mockTeams[0].id}`),
+      makeRequest: () => testApi.remove({ auditDetails: generateTfmAuditDetails('abcdef123456abcdef123456') }).to(`/v1/tfm/teams/${mockTeams[0].id}`),
       collectionName: MONGO_DB_COLLECTIONS.TFM_TEAMS,
       auditRecord: generateMockTfmUserAuditDatabaseRecord('abcdef123456abcdef123456'),
       getDeletedDocumentId: () => new ObjectId(teamToDeleteObjectId),

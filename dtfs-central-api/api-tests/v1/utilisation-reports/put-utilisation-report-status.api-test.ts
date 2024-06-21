@@ -1,5 +1,5 @@
 import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { TestApi } from '../../test-api';
+import { testApi } from '../../test-api';
 import { MOCK_TFM_USER } from '../../mocks/test-users/mock-tfm-user';
 import { SqlDbHelper } from '../../sql-db-helper';
 
@@ -32,7 +32,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await TestApi.put(requestBody).to(setStatusUrl);
+    const { status } = await testApi.put(requestBody).to(setStatusUrl);
 
     // Assert
     expect(status).toBe(404);
@@ -51,7 +51,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await TestApi.put(requestBody).to(setStatusUrl);
+    const { status } = await testApi.put(requestBody).to(setStatusUrl);
 
     // Assert
     expect(status).toBe(400);
@@ -70,7 +70,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await TestApi.put(requestBody).to(setStatusUrl);
+    const { status } = await testApi.put(requestBody).to(setStatusUrl);
 
     // Assert
     expect(status).toBe(400);
@@ -89,7 +89,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await TestApi.put(requestBody).to(setStatusUrl);
+    const { status } = await testApi.put(requestBody).to(setStatusUrl);
 
     // Assert
     expect(status).toBe(200);

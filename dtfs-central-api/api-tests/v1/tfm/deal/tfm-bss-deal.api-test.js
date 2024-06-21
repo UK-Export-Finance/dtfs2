@@ -4,7 +4,7 @@ const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/ch
 const wipeDB = require('../../../wipeDB');
 const aDeal = require('../../deal-builder');
 
-const { TestApi } = require('../../../test-api');
+const { testApi } = require('../../../test-api');
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
@@ -33,13 +33,15 @@ describe('/v1/tfm/deal/:id', () => {
       const postResult = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = postResult.body._id;
 
-      await TestApi.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-      }).to('/v1/tfm/deals/submit');
+      await testApi
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+        })
+        .to('/v1/tfm/deals/submit');
 
-      const { status, body } = await TestApi.get(`/v1/tfm/deals/${dealId}`);
+      const { status, body } = await testApi.get(`/v1/tfm/deals/${dealId}`);
 
       expect(status).toEqual(200);
       expect(body.deal.dealSnapshot).toMatchObject(newDeal);
@@ -72,18 +74,20 @@ describe('/v1/tfm/deal/:id', () => {
         const { body: createdLoan1 } = await createFacility({ facility: mockLoan, user: MOCK_PORTAL_USER });
         const { body: createdLoan2 } = await createFacility({ facility: mockLoan, user: MOCK_PORTAL_USER });
 
-        const { body: bond1 } = await TestApi.get(`/v1/portal/facilities/${createdBond1._id}`);
-        const { body: bond2 } = await TestApi.get(`/v1/portal/facilities/${createdBond2._id}`);
-        const { body: loan1 } = await TestApi.get(`/v1/portal/facilities/${createdLoan1._id}`);
-        const { body: loan2 } = await TestApi.get(`/v1/portal/facilities/${createdLoan2._id}`);
+        const { body: bond1 } = await testApi.get(`/v1/portal/facilities/${createdBond1._id}`);
+        const { body: bond2 } = await testApi.get(`/v1/portal/facilities/${createdBond2._id}`);
+        const { body: loan1 } = await testApi.get(`/v1/portal/facilities/${createdLoan1._id}`);
+        const { body: loan2 } = await testApi.get(`/v1/portal/facilities/${createdLoan2._id}`);
 
-        await TestApi.put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-          dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-        }).to('/v1/tfm/deals/submit');
+        await testApi
+          .put({
+            dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+            dealId,
+            auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          })
+          .to('/v1/tfm/deals/submit');
 
-        const { status, body } = await TestApi.get(`/v1/tfm/deals/${dealId}`);
+        const { status, body } = await testApi.get(`/v1/tfm/deals/${dealId}`);
 
         expect(status).toEqual(200);
 
@@ -96,15 +100,15 @@ describe('/v1/tfm/deal/:id', () => {
 
   describe('PUT /v1/tfm/deal/:id/snapshot', () => {
     it('400s if the deal id provided is invalid', async () => {
-      const { status, body } = await TestApi.put({}).to('/v1/tfm/deals/test/snapshot');
+      const { status, body } = await testApi.put({}).to('/v1/tfm/deals/test/snapshot');
       expect(status).toEqual(400);
       expect(body.message).toEqual('Invalid Deal Id');
     });
 
     it('404s if deal id is valid but does not exist', async () => {
-      const { status, body } = await TestApi.put({ auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) }).to(
-        '/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot',
-      );
+      const { status, body } = await testApi
+        .put({ auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
+        .to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
       expect(status).toEqual(404);
       expect(body.message).toEqual('Deal not found');
     });
@@ -123,28 +127,34 @@ describe('/v1/tfm/deal/:id', () => {
         const { body: portalDeal } = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
         dealId = portalDeal._id;
 
-        await TestApi.put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-          dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-        }).to('/v1/tfm/deals/submit');
+        await testApi
+          .put({
+            dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+            dealId,
+            auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          })
+          .to('/v1/tfm/deals/submit');
 
         // add some dummy data to deal.tfm
-        await TestApi.put({
-          dealUpdate: mockTfm,
-          auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
-        }).to(`/v1/tfm/deals/${dealId}`);
+        await testApi
+          .put({
+            dealUpdate: mockTfm,
+            auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
+          })
+          .to(`/v1/tfm/deals/${dealId}`);
       });
 
       withValidateAuditDetailsTests({
         makeRequest: (auditDetails) =>
-          TestApi.put({
-            auditDetails,
-            snapshotUpdate: {
-              someNewField: true,
-              testing: true,
-            },
-          }).to(`/v1/tfm/deals/${dealId}/snapshot`),
+          testApi
+            .put({
+              auditDetails,
+              snapshotUpdate: {
+                someNewField: true,
+                testing: true,
+              },
+            })
+            .to(`/v1/tfm/deals/${dealId}/snapshot`),
         validUserTypes: [AUDIT_USER_TYPES.PORTAL],
       });
 
@@ -158,11 +168,11 @@ describe('/v1/tfm/deal/:id', () => {
           auditDetails,
         };
 
-        const { status } = await TestApi.put(snapshotUpdate).to(`/v1/tfm/deals/${dealId}/snapshot`);
+        const { status } = await testApi.put(snapshotUpdate).to(`/v1/tfm/deals/${dealId}/snapshot`);
 
         expect(status).toEqual(200);
 
-        const { body: bodyAfterUpdate } = await TestApi.get(`/v1/tfm/deals/${dealId}`);
+        const { body: bodyAfterUpdate } = await testApi.get(`/v1/tfm/deals/${dealId}`);
 
         expect(bodyAfterUpdate.deal.dealSnapshot).toMatchObject({
           ...newDeal,

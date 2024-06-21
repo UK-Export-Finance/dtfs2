@@ -2,7 +2,7 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
-const { TestApi } = require('../../../test-api');
+const { testApi } = require('../../../test-api');
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
@@ -20,16 +20,18 @@ describe('/v1/tfm/deal/:id', () => {
 
   describe('GET /v1/tfm/deal/:id', () => {
     it('returns the requested resource', async () => {
-      const postResult = await TestApi.post(newDeal).to('/v1/portal/gef/deals');
+      const postResult = await testApi.post(newDeal).to('/v1/portal/gef/deals');
       const dealId = postResult.body._id;
 
-      await TestApi.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-        dealId,
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-      }).to('/v1/tfm/deals/submit');
+      await testApi
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+          dealId,
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+        })
+        .to('/v1/tfm/deals/submit');
 
-      const { status, body } = await TestApi.get(`/v1/tfm/deals/${dealId}`);
+      const { status, body } = await testApi.get(`/v1/tfm/deals/${dealId}`);
 
       expect(status).toEqual(200);
       expect(body.deal.dealSnapshot).toMatchObject(newDeal);
@@ -38,28 +40,28 @@ describe('/v1/tfm/deal/:id', () => {
 
   describe('PUT /v1/tfm/deal/:id/snapshot', () => {
     it('400s if invalid deal id', async () => {
-      const { status, body } = await TestApi.put({}).to('/v1/tfm/deals/test/snapshot');
+      const { status, body } = await testApi.put({}).to('/v1/tfm/deals/test/snapshot');
       expect(status).toEqual(400);
       expect(body.message).toEqual('Invalid Deal Id');
     });
 
     it('400s if invalid user id', async () => {
-      const { status, body } = await TestApi.put({}).to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
+      const { status, body } = await testApi.put({}).to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
       expect(status).toEqual(400);
       expect(body.message).toEqual('Invalid auditDetails, Missing property `userType`');
     });
 
     it('404s if updating an unknown id', async () => {
       // TODO: refactor this as MOCK_USER
-      const { status, body } = await TestApi.put({ auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) }).to(
-        '/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot',
-      );
+      const { status, body } = await testApi
+        .put({ auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) })
+        .to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
       expect(status).toEqual(404);
       expect(body.message).toEqual('Deal not found');
     });
 
     it('updates deal.dealSnapshot whilst retaining deal.tfm', async () => {
-      const { body: createDealBody } = await TestApi.post(newDeal).to('/v1/portal/gef/deals');
+      const { body: createDealBody } = await testApi.post(newDeal).to('/v1/portal/gef/deals');
       const dealId = createDealBody._id;
 
       const mockTfm = {
@@ -70,17 +72,21 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
       const auditDetails = generatePortalAuditDetails(MOCK_PORTAL_USER._id);
-      await TestApi.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-        dealId,
-        auditDetails,
-      }).to('/v1/tfm/deals/submit');
+      await testApi
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+          dealId,
+          auditDetails,
+        })
+        .to('/v1/tfm/deals/submit');
 
       // add some dummy data to deal.tfm
-      await TestApi.put({
-        dealUpdate: mockTfm,
-        auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
-      }).to(`/v1/tfm/deals/${dealId}`);
+      await testApi
+        .put({
+          dealUpdate: mockTfm,
+          auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
+        })
+        .to(`/v1/tfm/deals/${dealId}`);
 
       const snapshotUpdate = {
         snapshotUpdate: {
@@ -90,7 +96,7 @@ describe('/v1/tfm/deal/:id', () => {
         auditDetails,
       };
 
-      const { status, body } = await TestApi.put(snapshotUpdate).to(`/v1/tfm/deals/${dealId}/snapshot`);
+      const { status, body } = await testApi.put(snapshotUpdate).to(`/v1/tfm/deals/${dealId}/snapshot`);
 
       expect(status).toEqual(200);
       expect(body.dealSnapshot).toMatchObject({

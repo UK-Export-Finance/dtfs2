@@ -10,7 +10,7 @@ import {
 } from '@ukef/dtfs2-common';
 import { wipe } from '../../wipeDB';
 import { MOCK_BANKS } from '../../mocks/banks';
-import { TestApi } from '../../test-api';
+import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../src/types/utilisation-reports';
 import { withoutMongoId } from '../../../src/helpers/mongodb';
@@ -24,7 +24,7 @@ interface CustomResponse extends Response {
 describe('/v1/utilisation-reports/reconciliation-summary/:submissionMonth', () => {
   beforeAll(async () => {
     await wipe([MONGO_DB_COLLECTIONS.BANKS]);
-    await TestApi.post(withoutMongoId(MOCK_BANKS.BARCLAYS)).to('/v1/bank');
+    await testApi.post(withoutMongoId(MOCK_BANKS.BARCLAYS)).to('/v1/bank');
 
     await SqlDbHelper.initialize();
 
@@ -41,7 +41,7 @@ describe('/v1/utilisation-reports/reconciliation-summary/:submissionMonth', () =
       const submissionMonth = '2023-11';
 
       // Act
-      const response: CustomResponse = await TestApi.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
+      const response: CustomResponse = await testApi.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
 
       // Assert
       expect(response.status).toEqual(200);
@@ -55,7 +55,7 @@ describe('/v1/utilisation-reports/reconciliation-summary/:submissionMonth', () =
       const submissionMonth = 'invalid';
 
       // Act
-      const response: CustomResponse = await TestApi.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
+      const response: CustomResponse = await testApi.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
 
       // Assert
       expect(response.status).toEqual(400);
@@ -81,7 +81,7 @@ describe('/v1/utilisation-reports/reconciliation-summary/:submissionMonth', () =
       await SqlDbHelper.saveNewEntries('FeeRecord', feeRecords);
 
       // Act
-      const response: CustomResponse = await TestApi.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
+      const response: CustomResponse = await testApi.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
 
       // Assert
       expect(response.status).toBe(200);
@@ -134,7 +134,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
 
   it('returns 400 when an invalid bank id is provided', async () => {
     // Act
-    const response: CustomErrorResponse = await TestApi.get(getUrl('invalid-id', '2024'));
+    const response: CustomErrorResponse = await testApi.get(getUrl('invalid-id', '2024'));
 
     // Assert
     expect(response.status).toEqual(400);
@@ -145,7 +145,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
   it('returns 400 when an invalid year is provided', async () => {
     // Act
     const bankId = '13';
-    const response: CustomErrorResponse = await TestApi.get(getUrl(bankId, 'invalid-year'));
+    const response: CustomErrorResponse = await testApi.get(getUrl(bankId, 'invalid-year'));
 
     // Assert
     expect(response.status).toEqual(400);
@@ -169,7 +169,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
     await saveReportsToDatabase(uploadedReport, reconciliationCompletedReport);
 
     // Act
-    const response: CustomSuccessResponse = await TestApi.get(getUrl(bankId, year));
+    const response: CustomSuccessResponse = await testApi.get(getUrl(bankId, year));
 
     // Assert
     expect(response.status).toEqual(200);
@@ -198,7 +198,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
     await saveReportsToDatabase(uploadedReport, notReceivedReport, reconciliationCompletedReport);
 
     // Act
-    const response: CustomSuccessResponse = await TestApi.get(`${getUrl(bankId, year)}`);
+    const response: CustomSuccessResponse = await testApi.get(`${getUrl(bankId, year)}`);
 
     // Assert
     expect(response.status).toEqual(200);
@@ -234,7 +234,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
     await saveReportsToDatabase(uploadedReportForYear, uploadedReportForDifferentYear);
 
     // Act
-    const response: CustomSuccessResponse = await TestApi.get(`${getUrl(bankId, year)}`);
+    const response: CustomSuccessResponse = await testApi.get(`${getUrl(bankId, year)}`);
 
     // Assert
     expect(response.status).toEqual(200);
@@ -267,7 +267,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
     await saveReportsToDatabase(notReceivedReportForReportPeriod, uploadedReportForDifferentReportPeriod);
 
     // Act
-    const response: CustomSuccessResponse = await TestApi.get(`${getUrl(bankId, year)}`);
+    const response: CustomSuccessResponse = await testApi.get(`${getUrl(bankId, year)}`);
 
     // Assert
     expect(response.status).toEqual(200);

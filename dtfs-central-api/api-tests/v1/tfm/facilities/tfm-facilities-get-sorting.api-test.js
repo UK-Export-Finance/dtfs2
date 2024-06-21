@@ -1,6 +1,6 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
-const { TestApi } = require('../../../test-api');
+const { testApi } = require('../../../test-api');
 const getObjectPropertyValueFromStringPath = require('../../../../src/utils/getObjectPropertyValueFromStringPath');
 const setObjectPropertyValueFromStringPath = require('../../../helpers/set-object-property-value-from-string-path');
 const CONSTANTS = require('../../../../src/constants');
@@ -69,7 +69,7 @@ describe('/v1/tfm/facilities', () => {
           const urlWithoutPagination = `/v1/tfm/facilities?sortBy[order]=${sortByOrder}&sortBy[field]=${sortByField}`;
 
           it('without pagination', async () => {
-            const { status, body } = await TestApi.get(urlWithoutPagination);
+            const { status, body } = await testApi.get(urlWithoutPagination);
 
             expect(status).toEqual(200);
             expect(body.facilities.length).toEqual(4);
@@ -91,9 +91,9 @@ describe('/v1/tfm/facilities', () => {
 
             const urlWithPagination = (page) => `${urlWithoutPagination}&pagesize=${pagesize}&page=${page}`;
 
-            const { status: page1Status, body: page1Body } = await TestApi.get(urlWithPagination(0));
+            const { status: page1Status, body: page1Body } = await testApi.get(urlWithPagination(0));
 
-            const { status: page2Status, body: page2Body } = await TestApi.get(urlWithPagination(1));
+            const { status: page2Status, body: page2Body } = await testApi.get(urlWithPagination(1));
 
             expect(page1Status).toEqual(200);
             expect(page1Body.facilities.length).toEqual(2);
@@ -188,14 +188,14 @@ describe('/v1/tfm/facilities', () => {
     for (const facilityAndAssociatedDeal of facilities) {
       const { facility, deal } = facilityAndAssociatedDeal;
 
-      const { body: createdDeal } = await TestApi.post(deal).to('/v1/portal/gef/deals');
+      const { body: createdDeal } = await testApi.post(deal).to('/v1/portal/gef/deals');
 
       const dealId = createdDeal._id;
 
       facility.dealId = dealId;
-      await TestApi.post(facility).to('/v1/portal/gef/facilities');
+      await testApi.post(facility).to('/v1/portal/gef/facilities');
 
-      await TestApi.put({ dealType: deal.dealType, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) }).to('/v1/tfm/deals/submit');
+      await testApi.put({ dealType: deal.dealType, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) }).to('/v1/tfm/deals/submit');
     }
   }
 

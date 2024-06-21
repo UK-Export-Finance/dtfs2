@@ -3,7 +3,7 @@ const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/d
 const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const wipeDB = require('../../../wipeDB');
-const { TestApi } = require('../../../test-api');
+const { testApi } = require('../../../test-api');
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const aDeal = require('../../deal-builder');
@@ -51,29 +51,31 @@ describe('PUT TFM amendments', () => {
         const postResult = await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
         facilityId = postResult.body._id;
 
-        await TestApi.put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-          dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-        }).to('/v1/tfm/deals/submit');
+        await testApi
+          .put({
+            dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+            dealId,
+            auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+          })
+          .to('/v1/tfm/deals/submit');
 
-        const { body } = await TestApi.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments/`);
+        const { body } = await testApi.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments/`);
         amendmentId = body.amendmentId;
       });
 
       withValidateAuditDetailsTests({
         makeRequest: (auditDetails) =>
-          TestApi.put({ payload: { updatePayload: { createdBy: MOCK_PORTAL_USER } }, auditDetails }).to(
-            `/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
-          ),
+          testApi
+            .put({ payload: { updatePayload: { createdBy: MOCK_PORTAL_USER } }, auditDetails })
+            .to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`),
         validUserTypes: [AUDIT_USER_TYPES.TFM],
       });
 
       it('should update an amendment based on facilityId and amendmentId', async () => {
         const updatePayload = { createdBy: MOCK_PORTAL_USER };
-        const { body: bodyPutResponse } = await TestApi.put({ payload: { updatePayload }, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(
-          `/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
-        );
+        const { body: bodyPutResponse } = await testApi
+          .put({ payload: { updatePayload }, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+          .to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`);
 
         const expected = {
           dealId: expect.any(String),
@@ -90,11 +92,11 @@ describe('PUT TFM amendments', () => {
 
       it('should update the auditRecord on the facility document', async () => {
         const updatePayload = { createdBy: MOCK_PORTAL_USER };
-        await TestApi.put({ payload: { updatePayload }, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(
-          `/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
-        );
+        await testApi
+          .put({ payload: { updatePayload }, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+          .to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`);
 
-        const { body: updatedFacility } = await TestApi.get(`/v1/tfm/facilities/${facilityId}`);
+        const { body: updatedFacility } = await testApi.get(`/v1/tfm/facilities/${facilityId}`);
 
         expect(updatedFacility.auditRecord).toEqual(generateParsedMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id));
       });
@@ -104,17 +106,19 @@ describe('PUT TFM amendments', () => {
       const postResult = await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
       const newId = postResult.body._id;
 
-      await TestApi.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-      }).to('/v1/tfm/deals/submit');
+      await testApi
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+        })
+        .to('/v1/tfm/deals/submit');
 
       const updatePayload = { createdBy: MOCK_PORTAL_USER };
-      const { status } = await TestApi.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${newId}/amendments/`);
-      const { body: bodyPutResponse } = await TestApi.put({ payload: updatePayload, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(
-        `/v1/tfm/facilities/${newId}/amendments/626aa00e2446022434c52148`,
-      );
+      const { status } = await testApi.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${newId}/amendments/`);
+      const { body: bodyPutResponse } = await testApi
+        .put({ payload: updatePayload, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+        .to(`/v1/tfm/facilities/${newId}/amendments/626aa00e2446022434c52148`);
 
       expect(status).toEqual(200);
       expect(bodyPutResponse).toEqual({ status: 404, message: 'The amendment does not exist' });
@@ -122,15 +126,17 @@ describe('PUT TFM amendments', () => {
 
     it('should return 400 if invalid dealId', async () => {
       await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
-      await TestApi.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-      }).to('/v1/tfm/deals/submit');
+      await testApi
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+        })
+        .to('/v1/tfm/deals/submit');
 
-      const { status, body } = await TestApi.put({ payload: { amendmentsUpdate: {} }, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(
-        '/v1/tfm/facilities/123/amendments/1234',
-      );
+      const { status, body } = await testApi
+        .put({ payload: { amendmentsUpdate: {} }, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+        .to('/v1/tfm/facilities/123/amendments/1234');
       expect(status).toEqual(400);
       expect(body).toEqual({ status: 400, message: 'Invalid facility or amendment id' });
     });

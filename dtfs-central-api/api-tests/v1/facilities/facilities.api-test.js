@@ -2,7 +2,7 @@ const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/ch
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
-const { TestApi } = require('../../test-api');
+const { testApi } = require('../../test-api');
 const aDeal = require('../deal-builder');
 const { MOCK_DEAL } = require('../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
@@ -46,7 +46,7 @@ describe('/v1/portal/facilities', () => {
       await createFacility({ facility: mockFacility, user: MOCK_PORTAL_USER });
       await createFacility({ facility: mockFacility, user: MOCK_PORTAL_USER });
 
-      const { status, body } = await TestApi.get('/v1/portal/facilities');
+      const { status, body } = await testApi.get('/v1/portal/facilities');
 
       expect(status).toEqual(200);
       expect(body.length).toEqual(3);
@@ -54,7 +54,7 @@ describe('/v1/portal/facilities', () => {
 
     it('returns 200 with empty array when there are no facilities', async () => {
       await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES]);
-      const { status, body } = await TestApi.get('/v1/portal/facilities');
+      const { status, body } = await testApi.get('/v1/portal/facilities');
 
       expect(status).toEqual(200);
       expect(body.length).toEqual(0);
@@ -70,12 +70,14 @@ describe('/v1/portal/facilities', () => {
 
     withValidateAuditDetailsTests({
       makeRequest: (auditDetails) => {
-        return TestApi.post({
-          facilities,
-          user: MOCK_PORTAL_USER,
-          dealId,
-          auditDetails,
-        }).to('/v1/portal/multiple-facilities');
+        return testApi
+          .post({
+            facilities,
+            user: MOCK_PORTAL_USER,
+            dealId,
+            auditDetails,
+          })
+          .to('/v1/portal/multiple-facilities');
       },
     });
 
@@ -88,13 +90,13 @@ describe('/v1/portal/facilities', () => {
         auditDetails,
       };
 
-      const { status, body } = await TestApi.post(postBody).to('/v1/portal/multiple-facilities');
+      const { status, body } = await testApi.post(postBody).to('/v1/portal/multiple-facilities');
       expect(status).toEqual(200);
       expect(body.length).toEqual(4);
 
       const createdFacilities = await Promise.all(
         body.map(async (facilityId) => {
-          const { body: facility } = await TestApi.get(`/v1/portal/facilities/${facilityId}`);
+          const { body: facility } = await testApi.get(`/v1/portal/facilities/${facilityId}`);
           return facility;
         }),
       );
@@ -112,13 +114,13 @@ describe('/v1/portal/facilities', () => {
         auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       };
 
-      const { status, body } = await TestApi.post(postBody).to('/v1/portal/multiple-facilities');
+      const { status, body } = await testApi.post(postBody).to('/v1/portal/multiple-facilities');
 
       expect(status).toEqual(200);
       expect(body.length).toEqual(4);
 
       const facilityId = body[0];
-      const { body: facilityAfterCreation } = await TestApi.get(`/v1/portal/facilities/${facilityId}`);
+      const { body: facilityAfterCreation } = await testApi.get(`/v1/portal/facilities/${facilityId}`);
 
       expect(typeof facilityAfterCreation.createdDate).toEqual('number');
       expect(typeof facilityAfterCreation.updatedAt).toEqual('number');
@@ -130,7 +132,7 @@ describe('/v1/portal/facilities', () => {
         dealId,
       };
 
-      const { status } = await TestApi.post(postBody).to('/v1/portal/multiple-facilities');
+      const { status } = await testApi.post(postBody).to('/v1/portal/multiple-facilities');
 
       expect(status).toEqual(404);
     });
@@ -143,7 +145,7 @@ describe('/v1/portal/facilities', () => {
         auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       };
 
-      const { status } = await TestApi.post(postBody).to('/v1/portal/multiple-facilities');
+      const { status } = await testApi.post(postBody).to('/v1/portal/multiple-facilities');
 
       expect(status).toEqual(404);
     });

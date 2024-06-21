@@ -4,7 +4,7 @@ const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream
 const { withDeleteOneTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 
-const { TestApi } = require('../../test-api');
+const { testApi } = require('../../test-api');
 const { DEALS } = require('../../../src/constants');
 const aDeal = require('../deal-builder');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
@@ -31,17 +31,21 @@ describe('DELETE /v1/portal/deals', () => {
 
   withValidateAuditDetailsTests({
     makeRequest: (auditDetails) =>
-      TestApi.remove({
-        auditDetails,
-      }).to(`/v1/portal/deals/${dealToDeleteId}`),
+      testApi
+        .remove({
+          auditDetails,
+        })
+        .to(`/v1/portal/deals/${dealToDeleteId}`),
     validUserTypes: [AUDIT_USER_TYPES.PORTAL],
   });
 
   withDeleteOneTests({
     makeRequest: () =>
-      TestApi.remove({
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-      }).to(`/v1/portal/deals/${dealToDeleteId}`),
+      testApi
+        .remove({
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+        })
+        .to(`/v1/portal/deals/${dealToDeleteId}`),
     collectionName: 'deals',
     auditRecord: generateMockPortalUserAuditDatabaseRecord(MOCK_PORTAL_USER._id),
     getDeletedDocumentId: () => dealToDeleteId,

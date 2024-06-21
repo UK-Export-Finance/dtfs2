@@ -2,7 +2,7 @@ const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common')
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
-const { TestApi } = require('../../../test-api');
+const { testApi } = require('../../../test-api');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const CONSTANTS = require('../../../../src/constants');
 const DEFAULTS = require('../../../../src/v1/defaults');
@@ -29,22 +29,26 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
   });
 
   it('400s for an invalid id', async () => {
-    const { status } = await TestApi.put({
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-      dealId: 'invalid',
-      auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-    }).to('/v1/tfm/deals/submit');
+    const { status } = await testApi
+      .put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+        dealId: 'invalid',
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+      })
+      .to('/v1/tfm/deals/submit');
     expect(status).toEqual(400);
   });
 
   it('404s for an unknown id', async () => {
     const invalidDealId = '61e54e2e532cf2027303e001';
 
-    const { status } = await TestApi.put({
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-      dealId: invalidDealId,
-      auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-    }).to('/v1/tfm/deals/submit');
+    const { status } = await testApi
+      .put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+        dealId: invalidDealId,
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+      })
+      .to('/v1/tfm/deals/submit');
     expect(status).toEqual(404);
   });
 
@@ -58,21 +62,23 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
     });
 
     withValidateAuditDetailsTests({
-      makeRequest: (auditDetails) => TestApi.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit'),
+      makeRequest: (auditDetails) => testApi.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit'),
       validUserTypes: [AUDIT_USER_TYPES.PORTAL],
     });
 
     it('returns dealSnapshot with tfm object', async () => {
       const auditDetails = generatePortalAuditDetails(MOCK_PORTAL_USER._id);
-      const { status, body } = await TestApi.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-        auditDetails,
-      }).to('/v1/tfm/deals/submit');
+      const { status, body } = await testApi
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+          auditDetails,
+        })
+        .to('/v1/tfm/deals/submit');
 
       expect(status).toEqual(200);
 
-      const { body: dealAfterCreation } = await TestApi.get(`/v1/portal/deals/${dealId}`);
+      const { body: dealAfterCreation } = await testApi.get(`/v1/portal/deals/${dealId}`);
 
       const expected = {
         _id: dealId,
@@ -101,16 +107,18 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
 
       // submit deal
       const auditDetails = generatePortalAuditDetails(MOCK_PORTAL_USER._id);
-      const { status } = await TestApi.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-        auditDetails,
-      }).to('/v1/tfm/deals/submit');
+      const { status } = await testApi
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+          auditDetails,
+        })
+        .to('/v1/tfm/deals/submit');
 
       expect(status).toEqual(200);
 
       // get the facilities in tfm
-      const facility1 = await TestApi.get(`/v1/tfm/facilities/${facility1Id}`);
+      const facility1 = await testApi.get(`/v1/tfm/facilities/${facility1Id}`);
 
       expect(facility1.status).toEqual(200);
       expect(facility1.body).toEqual({
@@ -126,7 +134,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
         auditRecord: generateParsedMockAuditDatabaseRecord(auditDetails),
       });
 
-      const facility2 = await TestApi.get(`/v1/tfm/facilities/${facility2Id}`);
+      const facility2 = await testApi.get(`/v1/tfm/facilities/${facility2Id}`);
 
       expect(facility2.status).toEqual(200);
       expect(facility2.body).toEqual({

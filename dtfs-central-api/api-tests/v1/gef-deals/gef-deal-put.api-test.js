@@ -1,6 +1,6 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
-const { TestApi } = require('../../test-api');
+const { testApi } = require('../../test-api');
 const CONSTANTS = require('../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 
@@ -17,13 +17,13 @@ describe('/v1/portal/gef/deals/:id', () => {
   describe('PUT /v1/portal/gef/deals/:id', () => {
     it('Returns 404 when the deal does not exist ', async () => {
       const invalidDealId = '123456789f0ffe00219319c1';
-      const { status } = await TestApi.put({}).to(`/v1/portal/gef/deals/${invalidDealId} `);
+      const { status } = await testApi.put({}).to(`/v1/portal/gef/deals/${invalidDealId} `);
 
       expect(status).toEqual(404);
     });
 
     it('Return and update the GEF deal', async () => {
-      const postResult = await TestApi.post(newDeal).to('/v1/portal/gef/deals');
+      const postResult = await testApi.post(newDeal).to('/v1/portal/gef/deals');
       const createdDeal = postResult.body;
       const dealId = createdDeal._id;
 
@@ -37,7 +37,7 @@ describe('/v1/portal/gef/deals/:id', () => {
         },
       };
 
-      const { status, body } = await TestApi.put({ dealUpdate: updatedDeal, user: MOCK_PORTAL_USER }).to(`/v1/portal/gef/deals/${dealId}`);
+      const { status, body } = await testApi.put({ dealUpdate: updatedDeal, user: MOCK_PORTAL_USER }).to(`/v1/portal/gef/deals/${dealId}`);
 
       expect(status).toEqual(200);
 

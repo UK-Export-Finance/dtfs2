@@ -2,7 +2,7 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deal-builder');
 
-const { TestApi } = require('../../test-api');
+const { testApi } = require('../../test-api');
 const { expectAddedFields } = require('./expectAddedFields');
 const CONSTANTS = require('../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
@@ -37,7 +37,7 @@ describe('/v1/portal/deals', () => {
 
       const dealId = postResult.body._id;
 
-      const { status, body } = await TestApi.get(`/v1/portal/deals/${dealId}`);
+      const { status, body } = await testApi.get(`/v1/portal/deals/${dealId}`);
 
       expect(status).toEqual(200);
       expect(body.deal).toEqual(expectedResponse);
@@ -70,12 +70,12 @@ describe('/v1/portal/deals', () => {
         const { body: createdLoan1 } = await createFacility({ facility: mockLoan, user: MOCK_PORTAL_USER });
         const { body: createdLoan2 } = await createFacility({ facility: mockLoan, user: MOCK_PORTAL_USER });
 
-        const { body: bond1 } = await TestApi.get(`/v1/portal/facilities/${createdBond1._id}`);
-        const { body: bond2 } = await TestApi.get(`/v1/portal/facilities/${createdBond2._id}`);
-        const { body: loan1 } = await TestApi.get(`/v1/portal/facilities/${createdLoan1._id}`);
-        const { body: loan2 } = await TestApi.get(`/v1/portal/facilities/${createdLoan2._id}`);
+        const { body: bond1 } = await testApi.get(`/v1/portal/facilities/${createdBond1._id}`);
+        const { body: bond2 } = await testApi.get(`/v1/portal/facilities/${createdBond2._id}`);
+        const { body: loan1 } = await testApi.get(`/v1/portal/facilities/${createdLoan1._id}`);
+        const { body: loan2 } = await testApi.get(`/v1/portal/facilities/${createdLoan2._id}`);
 
-        const { status, body } = await TestApi.get(`/v1/portal/deals/${dealId}`);
+        const { status, body } = await testApi.get(`/v1/portal/deals/${dealId}`);
 
         expect(status).toEqual(200);
         expect(body.deal.bondTransactions.items).toEqual([bond1, bond2]);

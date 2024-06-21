@@ -1,7 +1,7 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
-const { TestApi } = require('../../../test-api');
+const { testApi } = require('../../../test-api');
 const aDeal = require('../../deal-builder');
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
@@ -44,13 +44,15 @@ describe('/v1/tfm/facilities', () => {
       const postResult = await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
       const newId = postResult.body._id;
 
-      await TestApi.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-      }).to('/v1/tfm/deals/submit');
+      await testApi
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+        })
+        .to('/v1/tfm/deals/submit');
 
-      const { status, body } = await TestApi.get(`/v1/tfm/facilities/${newId}`);
+      const { status, body } = await testApi.get(`/v1/tfm/facilities/${newId}`);
 
       expect(status).toEqual(200);
       expect(body._id).toEqual(newId);

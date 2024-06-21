@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { Response } from 'supertest';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { TestApi } from '../../test-api';
+import { testApi } from '../../test-api';
 
 dotenv.config();
 
@@ -16,7 +16,7 @@ describe('api rate limiting', () => {
     }
 
     process.env.RATE_LIMIT_THRESHOLD = rateLimit.toString();
-    await TestApi.reset();
+    await testApi.reset();
   });
 
   afterEach(() => {
@@ -24,7 +24,7 @@ describe('api rate limiting', () => {
   });
 
   const sendRequestTimes = async (numberOfRequestsToSend: number) => {
-    const requests = Array.from({ length: numberOfRequestsToSend }, () => TestApi.get('/v1/user'));
+    const requests = Array.from({ length: numberOfRequestsToSend }, () => testApi.get('/v1/user'));
     return await Promise.allSettled(requests);
   };
 

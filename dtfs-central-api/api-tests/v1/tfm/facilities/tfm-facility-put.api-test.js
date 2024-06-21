@@ -2,7 +2,7 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
-const { TestApi } = require('../../../test-api');
+const { testApi } = require('../../../test-api');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const aDeal = require('../../deal-builder');
 const CONSTANTS = require('../../../../src/constants');
@@ -50,15 +50,17 @@ describe('/v1/tfm/facilities', () => {
   describe('PUT /v1/tfm/facilities/:id', () => {
     it('returns 404 when adding facility to non-existent deal', async () => {
       await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
-      await TestApi.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId: '61e54e2e532cf2027303e001',
-        auditDetails: portalAuditDetails,
-      }).to('/v1/tfm/deals/submit');
+      await testApi
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId: '61e54e2e532cf2027303e001',
+          auditDetails: portalAuditDetails,
+        })
+        .to('/v1/tfm/deals/submit');
 
-      const { status } = await TestApi.put({ facility: newFacility, user: MOCK_PORTAL_USER, auditDetails: tfmAuditDetails }).to(
-        '/v1/tfm/facilities/61e54e2e532cf2027303e001',
-      );
+      const { status } = await testApi
+        .put({ facility: newFacility, user: MOCK_PORTAL_USER, auditDetails: tfmAuditDetails })
+        .to('/v1/tfm/facilities/61e54e2e532cf2027303e001');
 
       expect(status).toEqual(404);
     });
@@ -69,18 +71,20 @@ describe('/v1/tfm/facilities', () => {
       beforeEach(async () => {
         const postResult = await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
 
-        await TestApi.put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-          dealId,
-          auditDetails: portalAuditDetails,
-        }).to('/v1/tfm/deals/submit');
+        await testApi
+          .put({
+            dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+            dealId,
+            auditDetails: portalAuditDetails,
+          })
+          .to('/v1/tfm/deals/submit');
 
         createdFacility = postResult.body;
       });
 
       withValidateAuditDetailsTests({
         makeRequest: (auditDetails) =>
-          TestApi.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to(`/v1/tfm/facilities/${createdFacility._id}`),
+          testApi.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to(`/v1/tfm/facilities/${createdFacility._id}`),
       });
 
       it('returns the updated facility', async () => {
@@ -91,7 +95,7 @@ describe('/v1/tfm/facilities', () => {
           auditDetails: portalAuditDetails,
         };
 
-        const { body, status } = await TestApi.put(updatedFacility).to(`/v1/tfm/facilities/${createdFacility._id}`);
+        const { body, status } = await testApi.put(updatedFacility).to(`/v1/tfm/facilities/${createdFacility._id}`);
 
         expect(status).toEqual(200);
         expect(body.tfm).toEqual(updatedFacility.tfmUpdate);
