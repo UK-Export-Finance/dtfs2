@@ -1,3 +1,4 @@
+const { AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { set } = require('date-fns');
 const { cloneDeep } = require('lodash');
 const api = require('../../../src/v1/api');
@@ -178,10 +179,14 @@ describe('/v1/deals', () => {
 
           const bondId = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND)._id;
 
-          expect(updatePortalFacilitySpy).toHaveBeenCalledWith(bondId, {
-            hasBeenAcknowledged: true,
-            hasBeenIssuedAndAcknowledged: true,
-          });
+          expect(updatePortalFacilitySpy).toHaveBeenCalledWith(
+            bondId,
+            {
+              hasBeenAcknowledged: true,
+              hasBeenIssuedAndAcknowledged: true,
+            },
+            { userType: AUDIT_USER_TYPES.PORTAL, id: expect.anything() },
+          );
         });
 
         it('should add bond.hasBeenAcknowledged', async () => {
@@ -270,10 +275,14 @@ describe('/v1/deals', () => {
 
           const loanId = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN)._id;
 
-          expect(updatePortalFacilitySpy).toHaveBeenCalledWith(loanId, {
-            hasBeenAcknowledged: true,
-            hasBeenIssuedAndAcknowledged: true,
-          });
+          expect(updatePortalFacilitySpy).toHaveBeenCalledWith(
+            loanId,
+            {
+              hasBeenAcknowledged: true,
+              hasBeenIssuedAndAcknowledged: true,
+            },
+            { userType: AUDIT_USER_TYPES.PORTAL, id: expect.anything() },
+          );
         });
 
         it('should add loan.hasBeenAcknowledged', async () => {

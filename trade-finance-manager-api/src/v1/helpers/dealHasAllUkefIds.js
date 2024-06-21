@@ -6,7 +6,7 @@ const { isValidUkefNumericId } = require('../validation/validateIds');
  * Verify whether the deal and all its facilities have a UKEF ID.
  * `PENDING` is an acceptable ID.
  * @param {String} dealId UKEF tfmDeal ID
- * @returns {Boolean}  Boolean value
+ * @returns {Promise<Boolean>}  Boolean value
  */
 const dealHasAllUkefIds = async (dealId) => {
   const tfmDeal = await findOneTfmDeal(dealId);
