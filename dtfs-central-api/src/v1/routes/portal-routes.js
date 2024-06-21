@@ -481,9 +481,12 @@ portalRouter.route('/facilities/:id').delete(deleteFacilityController.deleteFaci
  *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             type: object
- *             example: { status: Ready for Checker's approval }
+ *           properties:
+ *             status:
+ *               type: string
+ *             auditDetails:
+ *               type: object
+ *               $ref: '#/definitions/portalAuditDetails'
  *     responses:
  *       200:
  *         description: OK

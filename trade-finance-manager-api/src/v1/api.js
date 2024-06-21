@@ -111,7 +111,7 @@ const addPortalDealComment = async (dealId, commentType, comment, auditDetails) 
   return response.data;
 };
 
-const updatePortalFacilityStatus = async (facilityId, status) => {
+const updatePortalFacilityStatus = async (facilityId, status, auditDetails) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
 
@@ -126,6 +126,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
       headers: headers.central,
       data: {
         status,
+        auditDetails,
       },
     });
 
