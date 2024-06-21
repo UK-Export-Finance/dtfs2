@@ -17,6 +17,7 @@ const login = async (username, password) => {
     method: 'post',
     url: `${PORTAL_API_URL}/v1/login`,
     headers: {
+      ...apiKeyHeader,
       'Content-Type': 'application/json',
     },
     data: { username, password },
@@ -68,6 +69,7 @@ const resetPassword = async (email) => {
     method: 'post',
     url: `${PORTAL_API_URL}/v1/users/reset-password`,
     headers: {
+      ...apiKeyHeader,
       'Content-Type': 'application/json',
     },
     data: { email },
@@ -87,6 +89,7 @@ const resetPasswordFromToken = async (resetPwdToken, formData) => {
       method: 'post',
       url: `${PORTAL_API_URL}/v1/users/reset-password/${resetPwdToken}`,
       headers: {
+        ...apiKeyHeader,
         'Content-Type': 'application/json',
       },
       data: formData,
@@ -798,6 +801,7 @@ const downloadEligibilityDocumentationFile = async (id, fieldname, filename, tok
     url: `${PORTAL_API_URL}/v1/deals/${id}/eligibility-documentation/${fieldname}/${filename}`,
     headers: {
       Authorization: token,
+      'Content-Type': 'application/json',
     },
   });
 
