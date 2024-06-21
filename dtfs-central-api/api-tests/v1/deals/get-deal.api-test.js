@@ -2,8 +2,7 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deal-builder');
 
-const app = require('../../../src/createApp');
-const api = require('../../api')(app);
+const { TestApi } = require('../../test-api');
 const { expectAddedFields } = require('./expectAddedFields');
 const CONSTANTS = require('../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
@@ -28,17 +27,19 @@ const newDeal = aDeal({
 
 describe('/v1/portal/deals', () => {
   beforeAll(async () => {
+    await TestApi.initialise();
+
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
   });
 
   describe('GET /v1/portal/deals/:id', () => {
     it('returns the requested resource', async () => {
-      const postResult = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+      const postResult = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
       const expectedResponse = expectAddedFields({ baseDeal: newDeal, auditDetails: postResult.auditDetails });
 
       const dealId = postResult.body._id;
 
-      const { status, body } = await api.get(`/v1/portal/deals/${dealId}`);
+      const { status, body } = await TestApi.get(`/v1/portal/deals/${dealId}`);
 
       expect(status).toEqual(200);
       expect(body.deal).toEqual(expectedResponse);
@@ -46,7 +47,7 @@ describe('/v1/portal/deals', () => {
 
     describe('when a BSS deal has facilities', () => {
       it('returns facilities mapped to deal.bondTransactions and deal.loanTransactions', async () => {
-        const postResult = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+        const postResult = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
         const dealId = postResult.body._id;
 
         // create some facilities
@@ -66,17 +67,17 @@ describe('/v1/portal/deals', () => {
           ...mockFacility,
         };
 
-        const { body: createdBond1 } = await createFacility({ api, facility: mockBond, user: MOCK_PORTAL_USER });
-        const { body: createdBond2 } = await createFacility({ api, facility: mockBond, user: MOCK_PORTAL_USER });
-        const { body: createdLoan1 } = await createFacility({ api, facility: mockLoan, user: MOCK_PORTAL_USER });
-        const { body: createdLoan2 } = await createFacility({ api, facility: mockLoan, user: MOCK_PORTAL_USER });
+        const { body: createdBond1 } = await createFacility({ facility: mockBond, user: MOCK_PORTAL_USER });
+        const { body: createdBond2 } = await createFacility({ facility: mockBond, user: MOCK_PORTAL_USER });
+        const { body: createdLoan1 } = await createFacility({ facility: mockLoan, user: MOCK_PORTAL_USER });
+        const { body: createdLoan2 } = await createFacility({ facility: mockLoan, user: MOCK_PORTAL_USER });
 
-        const { body: bond1 } = await api.get(`/v1/portal/facilities/${createdBond1._id}`);
-        const { body: bond2 } = await api.get(`/v1/portal/facilities/${createdBond2._id}`);
-        const { body: loan1 } = await api.get(`/v1/portal/facilities/${createdLoan1._id}`);
-        const { body: loan2 } = await api.get(`/v1/portal/facilities/${createdLoan2._id}`);
+        const { body: bond1 } = await TestApi.get(`/v1/portal/facilities/${createdBond1._id}`);
+        const { body: bond2 } = await TestApi.get(`/v1/portal/facilities/${createdBond2._id}`);
+        const { body: loan1 } = await TestApi.get(`/v1/portal/facilities/${createdLoan1._id}`);
+        const { body: loan2 } = await TestApi.get(`/v1/portal/facilities/${createdLoan2._id}`);
 
-        const { status, body } = await api.get(`/v1/portal/deals/${dealId}`);
+        const { status, body } = await TestApi.get(`/v1/portal/deals/${dealId}`);
 
         expect(status).toEqual(200);
         expect(body.deal.bondTransactions.items).toEqual([bond1, bond2]);

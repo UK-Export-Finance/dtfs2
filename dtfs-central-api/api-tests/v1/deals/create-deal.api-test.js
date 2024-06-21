@@ -2,8 +2,7 @@ const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common')
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deal-builder');
 
-const app = require('../../../src/createApp');
-const api = require('../../api')(app);
+const { TestApi } = require('../../test-api');
 const { expectAddedFields } = require('./expectAddedFields');
 const CONSTANTS = require('../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
@@ -35,22 +34,24 @@ const newDeal = aDeal({
 
 describe('/v1/portal/deals', () => {
   beforeAll(async () => {
+    await TestApi.initialise();
+
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
   });
 
   describe('POST /v1/portal/deals', () => {
     withValidateAuditDetailsTests({
-      makeRequest: async (auditDetails) => await api.post({ auditDetails, deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals'),
+      makeRequest: async (auditDetails) => await TestApi.post({ auditDetails, deal: newDeal, user: MOCK_PORTAL_USER }).to('/v1/portal/deals'),
       validUserTypes: [AUDIT_USER_TYPES.PORTAL],
     });
 
     it('returns the created deal with correct fields', async () => {
-      const { body, status, auditDetails } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+      const { body, status, auditDetails } = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
       const expectedResponse = expectAddedFields({ baseDeal: newDeal, auditDetails });
 
       expect(status).toEqual(200);
 
-      const { body: createdDeal } = await api.get(`/v1/portal/deals/${body._id}`);
+      const { body: createdDeal } = await TestApi.get(`/v1/portal/deals/${body._id}`);
 
       expect(createdDeal.deal).toEqual(expectedResponse);
 
@@ -68,7 +69,7 @@ describe('/v1/portal/deals', () => {
           additionalRefName: '',
         };
 
-        const { status } = await api.post({ deal: postBody }).to('/v1/portal/deals');
+        const { status } = await TestApi.post({ deal: postBody }).to('/v1/portal/deals');
 
         expect(status).toEqual(400);
       });
@@ -80,7 +81,7 @@ describe('/v1/portal/deals', () => {
           additionalRefName: 'name',
         };
 
-        const { body, status } = await createDeal({ api, deal: postBody, user: mockUserNoBank });
+        const { body, status } = await createDeal({ deal: postBody, user: mockUserNoBank });
 
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(1);
@@ -98,7 +99,7 @@ describe('/v1/portal/deals', () => {
           additionalRefName: '',
         };
 
-        const { body, status } = await createDeal({ api, deal: postBody, user: MOCK_PORTAL_USER });
+        const { body, status } = await createDeal({ deal: postBody, user: MOCK_PORTAL_USER });
 
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(2);
@@ -119,7 +120,7 @@ describe('/v1/portal/deals', () => {
           additionalRefName: 'b'.repeat(101),
         };
 
-        const { body, status } = await createDeal({ api, deal: postBody, user: mockUserNoBank });
+        const { body, status } = await createDeal({ deal: postBody, user: mockUserNoBank });
 
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(3);
