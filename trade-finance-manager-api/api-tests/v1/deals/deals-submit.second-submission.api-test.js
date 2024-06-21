@@ -73,6 +73,8 @@ const mockChecker = {
   username: 'checker1@ukexportfinance.gov.uk',
 };
 
+const expectAnyPortalUserAuditDetails = { userType: AUDIT_USER_TYPES.PORTAL, id: expect.anything() };
+
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
@@ -131,7 +133,7 @@ describe('/v1/deals', () => {
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
           const bondId = body.dealSnapshot.bondTransactions.items[0]._id;
 
-          expect(updatePortalFacilityStatusSpy).toHaveBeenCalledWith(bondId, 'Acknowledged');
+          expect(updatePortalFacilityStatusSpy).toHaveBeenCalledWith(bondId, 'Acknowledged', expectAnyPortalUserAuditDetails);
         });
 
         it('should update bond.exposurePeriodInMonths', async () => {
@@ -226,7 +228,7 @@ describe('/v1/deals', () => {
 
           const loanId = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN)._id;
 
-          expect(updatePortalFacilityStatusSpy).toHaveBeenCalledWith(loanId, 'Acknowledged');
+          expect(updatePortalFacilityStatusSpy).toHaveBeenCalledWith(loanId, 'Acknowledged', expectAnyPortalUserAuditDetails);
         });
 
         it('should update loan.exposurePeriodInMonths', async () => {

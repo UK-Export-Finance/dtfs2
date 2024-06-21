@@ -1,9 +1,9 @@
-const { PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
+const { ObjectId } = require('mongodb');
+const { PAYLOAD_VERIFICATION, MONGO_DB_COLLECTIONS, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
-const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
 const { EligibilityCriteria } = require('../models/eligibilityCriteria');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
-const utils = require('../utils.service');
 const { DEAL } = require('../../../constants');
 
 const sortByVersion = (arr, callback) => {
@@ -77,7 +77,29 @@ exports.create = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-  const collection = await db.getCollection('eligibilityCriteria');
-  const response = await collection.findOneAndDelete({ version: { $eq: Number(req.params.version) } });
-  res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA);
+  const criteria = await collection.findOne({ version: { $eq: Number(req.params.version) } });
+
+  if (!criteria) {
+    return res.status(404).send({ status: 404, message: 'Eligibility criteria not found' });
+  }
+
+  try {
+    const deleteResponse = await deleteOne({
+      documentId: new ObjectId(criteria._id),
+      collectionName: MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA,
+      db,
+      auditDetails,
+    });
+
+    return res.status(200).send(deleteResponse);
+  } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return res.status(404).send({ status: 404, message: 'Eligibility criteria not found' });
+    }
+    console.error(error);
+    return res.status(500).send({ status: 500, error });
+  }
 };

@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { PAYLOAD_VERIFICATION, MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { PAYLOAD_VERIFICATION, MONGO_DB_COLLECTIONS, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const assert = require('assert');
 const { generatePortalAuditDetails, generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
@@ -123,6 +123,9 @@ exports.delete = async (req, res) => {
 
     return res.status(200).send(deleteResult);
   } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return res.status(404).send({ status: 404, message: 'Mandatory Criteria not found' });
+    }
     console.error('Error occurred deleting mandatory criteria, %o', error);
     return res.status(500).send({ status: 500, error });
   }

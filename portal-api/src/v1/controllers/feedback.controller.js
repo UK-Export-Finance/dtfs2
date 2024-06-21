@@ -2,7 +2,7 @@ const assert = require('assert');
 const { ObjectId } = require('mongodb');
 const sanitizeHtml = require('sanitize-html');
 const { format, getUnixTime, fromUnixTime } = require('date-fns');
-const { InvalidAuditDetailsError, MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { InvalidAuditDetailsError, MONGO_DB_COLLECTIONS, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
 const {
   generateAuditDatabaseRecordFromAuditDetails,
   validateAuditDetails,
@@ -155,6 +155,9 @@ exports.delete = async (req, res) => {
 
       return res.status(200).send(deleteResult);
     } catch (error) {
+      if (error instanceof DocumentNotDeletedError) {
+        return res.sendStatus(404);
+      }
       console.error('Error deleting feedback', error);
       return res.status(500).send({ status: 500, error });
     }

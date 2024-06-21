@@ -46,7 +46,7 @@ const updateFacilities = async (deal, auditDetails) => {
         } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
           const facilityStatusUpdate = CONSTANTS.FACILITIES.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
 
-          await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate);
+          await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate, auditDetails);
 
           portalFacilityUpdate.hasBeenAcknowledged = true;
 

@@ -29,7 +29,7 @@ export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetai
       throw new InvalidPayloadError('No fee records selected');
     }
 
-    const utilisationReport = await UtilisationReportRepo.findOneByIdWithFeeRecordsFilteredById(Number(reportId), selectedFeeRecordIds);
+    const utilisationReport = await UtilisationReportRepo.findOneByIdWithFeeRecordsFilteredByIdWithPayments(Number(reportId), selectedFeeRecordIds);
 
     if (!utilisationReport) {
       throw new NotFoundError(`Failed to find a report with id '${reportId}'`);

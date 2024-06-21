@@ -1,5 +1,5 @@
 import { PRIMARY_NAVIGATION_KEYS } from '../../server/constants';
-import { AddPaymentViewModel } from '../../server/types/view-models';
+import { AddPaymentViewModel, RecordedPaymentDetailsViewModel } from '../../server/types/view-models';
 import { aTfmSessionUser } from './tfm-session-user';
 
 export const anAddPaymentViewModel = (): AddPaymentViewModel => ({
@@ -27,5 +27,13 @@ export const anAddPaymentViewModel = (): AddPaymentViewModel => ({
   formValues: {
     paymentDate: {},
   },
-  paymentNumber: undefined,
+  paymentNumber: 1,
+  recordedPaymentsDetails: [],
+  multipleFeeRecordsSelected: false,
+});
+
+export const aRecordedPaymentDetailsViewModel = (): RecordedPaymentDetailsViewModel => ({
+  formattedDateReceived: '23 Dec 2024',
+  formattedCurrencyAndAmount: 'GBP 300',
+  reference: 'REF1234',
 });

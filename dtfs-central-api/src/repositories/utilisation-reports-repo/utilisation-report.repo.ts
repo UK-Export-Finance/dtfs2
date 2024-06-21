@@ -147,14 +147,13 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
   },
 
   /**
-   * Finds a utilisation report with the supplied id and attached
-   * all the fee records which match the supplied fee record id
-   * list
+   * Finds a utilisation report with the supplied id and attached all the fee records which match the supplied fee
+   * record id list with their payments attached
    * @param reportId - The report id
    * @param feeRecordIds - The fee record ids to include
    * @returns The utilisation report with the attached fee records
    */
-  async findOneByIdWithFeeRecordsFilteredById(reportId: number, feeRecordIds: number[]): Promise<UtilisationReportEntity | null> {
+  async findOneByIdWithFeeRecordsFilteredByIdWithPayments(reportId: number, feeRecordIds: number[]): Promise<UtilisationReportEntity | null> {
     return await UtilisationReportRepo.findOne({
       where: {
         id: Number(reportId),
@@ -162,7 +161,7 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
           id: In(feeRecordIds),
         },
       },
-      relations: { feeRecords: true },
+      relations: { feeRecords: { payments: true } },
     });
   },
 });
