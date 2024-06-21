@@ -1062,7 +1062,7 @@ const updatePortalGefDealStatus = async ({ dealId, status, auditDetails }) => {
   }
 };
 
-const updatePortalGefDeal = async (dealId, update) => {
+const updatePortalGefDeal = async ({ dealId, dealUpdate, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -1076,7 +1076,8 @@ const updatePortalGefDeal = async (dealId, update) => {
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}`,
       headers: headers.central,
       data: {
-        dealUpdate: update,
+        dealUpdate,
+        auditDetails,
       },
     });
 

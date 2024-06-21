@@ -13,7 +13,7 @@ const updatePortalDealFromMIAtoMIN = async (dealId, dealType, checker, auditDeta
       manualInclusionNoticeSubmissionDate: getNowAsEpochMillisecondString(),
     };
 
-    await api.updatePortalGefDeal(dealId, dealUpdate);
+    await api.updatePortalGefDeal({ dealId, dealUpdate, auditDetails });
 
     // adds portal activity object for min submission and facilities changed -> issued
     await api.updateGefMINActivity(dealId);
