@@ -62,7 +62,7 @@ const updatePortalDeal = async (dealId, update, auditDetails) => {
   }
 };
 
-const updatePortalBssDealStatus = async (dealId, status) => {
+const updatePortalBssDealStatus = async ({ dealId, status, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -77,6 +77,7 @@ const updatePortalBssDealStatus = async (dealId, status) => {
       headers: headers.central,
       data: {
         status,
+        auditDetails,
       },
     });
 

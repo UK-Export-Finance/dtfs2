@@ -6,7 +6,7 @@ const CONSTANTS = require('../../constants');
  * @param {object} deal - The deal object containing properties `_id`, `dealType`, and `submissionType`.
  * @returns {Promise<object>} - The updated deal object.
  */
-const updatePortalDealStatus = async (deal) => {
+const updatePortalDealStatus = async (deal, auditDetails) => {
   const { _id, dealType, submissionType } = deal;
   const noticeSubmissionType = [CONSTANTS.DEALS.SUBMISSION_TYPE.AIN, CONSTANTS.DEALS.SUBMISSION_TYPE.MIN];
   const applicationSubmissionType = [CONSTANTS.DEALS.SUBMISSION_TYPE.MIA];
@@ -31,7 +31,7 @@ const updatePortalDealStatus = async (deal) => {
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    await api.updatePortalBssDealStatus(_id, status);
+    await api.updatePortalBssDealStatus({ dealId: _id, status, auditDetails });
   } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     await api.updatePortalGefDealStatus(_id, status);
   }

@@ -29,11 +29,11 @@ const addUnderwriterManagersDecisionToDeal = ({ dealId, decision, comments, inte
   });
 };
 
-const updatePortalDealStatusToMatchDecision = ({ dealId, dealType, decision }) => {
+const updatePortalDealStatusToMatchDecision = ({ dealId, dealType, decision, auditDetails }) => {
   const mappedPortalStatus = mapTfmDealStageToPortalStatus(decision);
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    return api.updatePortalBssDealStatus(dealId, mappedPortalStatus);
+    return api.updatePortalBssDealStatus({ dealId, status: mappedPortalStatus, auditDetails });
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
@@ -96,7 +96,7 @@ const updateUnderwriterManagersDecision = async (req, res) => {
     const mappedDeal = mapSubmittedDeal(updatedDeal);
     const { dealType, submissionType } = mappedDeal;
 
-    await updatePortalDealStatusToMatchDecision({ dealId, dealType, decision });
+    await updatePortalDealStatusToMatchDecision({ dealId, dealType, decision, auditDetails });
     await addUnderwriterManagersCommentToPortalDeal({ dealId, dealType, decision, comments, auditDetails });
 
     if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
