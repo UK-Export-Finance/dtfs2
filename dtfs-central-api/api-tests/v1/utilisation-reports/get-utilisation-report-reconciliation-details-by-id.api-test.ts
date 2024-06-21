@@ -1,15 +1,12 @@
 import { Response } from 'supertest';
 import { Bank, IsoDateTimeStamp, PortalUser, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import app from '../../../src/createApp';
-import apiModule from '../../api';
+import { TestApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { wipe } from '../../wipeDB';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { UtilisationReportReconciliationDetails } from '../../../src/types/utilisation-reports';
 import { aBank } from '../../../test-helpers/test-data/bank';
 import { aPortalUser } from '../../../test-helpers/test-data/portal-user';
-
-const api = apiModule(app);
 
 const getUrl = (reportId: number | string) => `/v1/utilisation-reports/reconciliation-details/${reportId}`;
 
@@ -38,6 +35,8 @@ describe('GET /v1/utilisation-reports/reconciliation-details/:reportId', () => {
     .build();
 
   beforeAll(async () => {
+    await TestApi.initialise();
+
     await SqlDbHelper.initialize();
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
     await SqlDbHelper.saveNewEntry('UtilisationReport', reconciliationInProgressReport);
@@ -62,7 +61,7 @@ describe('GET /v1/utilisation-reports/reconciliation-details/:reportId', () => {
       const invalidReportId = 'invalid-id';
 
       // Act
-      const response: CustomResponse = await api.get(getUrl(invalidReportId));
+      const response: CustomResponse = await TestApi.get(getUrl(invalidReportId));
 
       // Assert
       expect(response.status).toEqual(400);
@@ -70,7 +69,7 @@ describe('GET /v1/utilisation-reports/reconciliation-details/:reportId', () => {
 
     it('returns a 404 when a report with the matching id does not exist', async () => {
       // Act
-      const response: CustomResponse = await api.get(getUrl(99999));
+      const response: CustomResponse = await TestApi.get(getUrl(99999));
 
       // Assert
       expect(response.status).toBe(404);
@@ -88,7 +87,7 @@ describe('GET /v1/utilisation-reports/reconciliation-details/:reportId', () => {
       await SqlDbHelper.saveNewEntry('UtilisationReport', reportWithNoMatchingBank);
 
       // Act
-      const response: CustomResponse = await api.get(getUrl(reportIdWithNoMatchingBank));
+      const response: CustomResponse = await TestApi.get(getUrl(reportIdWithNoMatchingBank));
 
       // Assert
       expect(response.status).toBe(404);
@@ -96,7 +95,7 @@ describe('GET /v1/utilisation-reports/reconciliation-details/:reportId', () => {
 
     it('gets a utilisation report', async () => {
       // Act
-      const response: CustomResponse = await api.get(getUrl(reportId));
+      const response: CustomResponse = await TestApi.get(getUrl(reportId));
 
       // Assert
       expect(response.status).toEqual(200);

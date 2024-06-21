@@ -1,10 +1,7 @@
 import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import app from '../../../src/createApp';
-import createApi from '../../api';
+import { TestApi } from '../../test-api';
 import { MOCK_TFM_USER } from '../../mocks/test-users/mock-tfm-user';
 import { SqlDbHelper } from '../../sql-db-helper';
-
-const api = createApi(app);
 
 console.error = jest.fn();
 
@@ -15,6 +12,8 @@ describe('/v1/utilisation-reports/set-status', () => {
   const mockReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).build();
 
   beforeAll(async () => {
+    await TestApi.initialise();
+
     await SqlDbHelper.initialize();
 
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
@@ -35,7 +34,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await api.put(requestBody).to(setStatusUrl);
+    const { status } = await TestApi.put(requestBody).to(setStatusUrl);
 
     // Assert
     expect(status).toBe(404);
@@ -54,7 +53,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await api.put(requestBody).to(setStatusUrl);
+    const { status } = await TestApi.put(requestBody).to(setStatusUrl);
 
     // Assert
     expect(status).toBe(400);
@@ -73,7 +72,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await api.put(requestBody).to(setStatusUrl);
+    const { status } = await TestApi.put(requestBody).to(setStatusUrl);
 
     // Assert
     expect(status).toBe(400);
@@ -92,7 +91,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await api.put(requestBody).to(setStatusUrl);
+    const { status } = await TestApi.put(requestBody).to(setStatusUrl);
 
     // Assert
     expect(status).toBe(200);

@@ -1,15 +1,12 @@
 import { Response } from 'supertest';
 import { IsoDateTimeStamp, PortalUser, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import axios from 'axios';
-import app from '../../../src/createApp';
-import createApi from '../../api';
+import { TestApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
 import { aPortalUser } from '../../../test-helpers/test-data/portal-user';
-
-const api = createApi(app);
 
 const saveReportsToDatabase = async (...reports: UtilisationReportEntity[]): Promise<UtilisationReportEntity[]> =>
   await SqlDbHelper.saveNewEntries('UtilisationReport', reports);
@@ -33,6 +30,8 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
   const portalUserId = portalUser._id.toString();
 
   beforeAll(async () => {
+    await TestApi.initialise();
+
     await SqlDbHelper.initialize();
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
@@ -51,7 +50,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
 
   it('returns 400 when an invalid bank id is provided', async () => {
     // Act
-    const response: CustomErrorResponse = await api.get(getUrl('invalid-id'));
+    const response: CustomErrorResponse = await TestApi.get(getUrl('invalid-id'));
 
     // Assert
     expect(response.status).toEqual(400);
@@ -74,7 +73,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     await saveReportsToDatabase(uploadedReport, nonUploadedReport);
 
     // Act
-    const response: CustomSuccessResponse = await api.get(getUrl(bankId));
+    const response: CustomSuccessResponse = await TestApi.get(getUrl(bankId));
 
     // Assert
     expect(response.status).toEqual(200);
@@ -102,7 +101,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     await saveReportsToDatabase(uploadedReport, notReceivedReport, reconciliationCompletedReport);
 
     // Act
-    const response: CustomSuccessResponse = await api.get(`${getUrl(bankId)}?excludeNotReceived=true`);
+    const response: CustomSuccessResponse = await TestApi.get(`${getUrl(bankId)}?excludeNotReceived=true`);
 
     // Assert
     expect(response.status).toEqual(200);
@@ -138,7 +137,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
 
     // Act
     const urlWithQueryParams = axios.getUri({ url: getUrl(bankId), params: { reportPeriod } });
-    const response: CustomSuccessResponse = await api.get(urlWithQueryParams);
+    const response: CustomSuccessResponse = await TestApi.get(urlWithQueryParams);
 
     // Assert
     expect(response.status).toEqual(200);
@@ -174,7 +173,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
       url: getUrl(bankId),
       params: { reportPeriod, excludeNotReceived: true },
     });
-    const response: CustomSuccessResponse = await api.get(urlWithQueryParams);
+    const response: CustomSuccessResponse = await TestApi.get(urlWithQueryParams);
 
     // Assert
     expect(response.status).toEqual(200);
