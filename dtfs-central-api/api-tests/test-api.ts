@@ -28,6 +28,11 @@ export class TestApi {
     TestApi.isInitialised = true;
   }
 
+  public static async reset(): Promise<void> {
+    TestApi.isInitialised = false;
+    await TestApi.initialise();
+  }
+
   private static assertIsInitialised() {
     if (!TestApi.isInitialised) {
       throw new Error('TestApi has not been initialised yet');

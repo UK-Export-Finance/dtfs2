@@ -1,5 +1,4 @@
 import { Bank, PortalRole, PortalUser } from '@ukef/dtfs2-common';
-import { TestApi } from '../../test-api';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 
 const banks = {
@@ -123,8 +122,6 @@ const finder = (allUsers: PortalUser[]) => () => {
 };
 
 export const initialise = async () => {
-  await TestApi.initialise();
-
   const usersCollection = await mongoDbClient.getCollection('users');
 
   if (notYetInitialised) {
