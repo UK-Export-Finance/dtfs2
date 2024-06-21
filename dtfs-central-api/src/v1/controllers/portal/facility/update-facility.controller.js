@@ -35,7 +35,7 @@ const updateFacility = async ({ facilityId, facilityUpdate, dealId, user, routeP
     // update the deal so that the user that has edited this facility,
     // is also marked as editing the associated deal
 
-    await updateDealEditedByPortal(dealId, user);
+    await updateDealEditedByPortal({ dealId, user, auditDetails });
   }
 
   return updatedFacility;
