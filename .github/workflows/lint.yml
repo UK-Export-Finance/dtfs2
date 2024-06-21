@@ -100,10 +100,9 @@ jobs:
 
       - name: Linting
         working-directory: ./
-        run:
-          npm run lint:all
+        run: npm run lint:all
 
-  # 3. Lint
+  # 3. Prettier
   prettier:
     name: Prettier 🎨
     environment:
@@ -130,3 +129,31 @@ jobs:
       - name: Linting
         working-directory: ./
         run: npm run prettier:all
+
+  # 4. YAML
+  yaml:
+    name: YAML 🎨
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm run ci:all
+
+      - name: Linting
+        working-directory: ./
+        run: npx yaml-lint **/*.yml
