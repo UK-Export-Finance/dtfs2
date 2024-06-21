@@ -48,13 +48,13 @@ const partial2faTokenPassportStrategy = 'login-in-progress';
 const openRouter = express.Router();
 
 // Login route
-openRouter.route('/login').post(users.login);
+openRouter.route('/login').post(checkApiKey, users.login);
 
 // 1. Request password reset
-openRouter.route('/users/reset-password').post(users.resetPassword);
+openRouter.route('/users/reset-password').post(checkApiKey, users.resetPassword);
 
 // 2. Password reset post request
-openRouter.route('/users/reset-password/:resetPwdToken').post(users.resetPasswordWithToken);
+openRouter.route('/users/reset-password/:resetPwdToken').post(checkApiKey, users.resetPasswordWithToken);
 
 // API Key Routes
 openRouter.route('/feedback').post(checkApiKey, feedback.create);
