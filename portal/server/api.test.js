@@ -4,7 +4,12 @@ const api = require('./api');
 const { LOGIN_STATUS } = require('./constants');
 
 jest.mock('axios');
-const { PORTAL_API_URL } = process.env;
+const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
+
+const headers = {
+  'Content-Type': 'application/json',
+  'x-api-key': PORTAL_API_KEY,
+};
 
 describe('api.login', () => {
   const username = 'a username';
@@ -20,9 +25,7 @@ describe('api.login', () => {
       .calledWith({
         method: 'post',
         url: `${PORTAL_API_URL}/v1/login`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        ...headers,
         data: { username, password },
       })
       .mockResolvedValueOnce({ data: { token, loginStatus, user } });

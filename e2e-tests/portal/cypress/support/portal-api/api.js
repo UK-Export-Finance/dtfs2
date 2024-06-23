@@ -1,5 +1,10 @@
 const { SIGN_IN_TOKENS } = require('../../fixtures/constants');
 
+const headers = {
+  'x-api-key': Cypress.config('apiKey'),
+  'Content-Type': 'application/json',
+};
+
 const api = () => {
   const url = `${Cypress.config('apiProtocol')}${Cypress.config('apiHost')}:${Cypress.config('apiPort')}`;
   return url;
@@ -32,9 +37,7 @@ module.exports.logIn = ({ username, password }) => {
       url: `${api()}/v1/login`,
       method: 'POST',
       body: { username, password },
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     })
     .then((loginResponse) => {
       expect(loginResponse.status).to.equal(200);
