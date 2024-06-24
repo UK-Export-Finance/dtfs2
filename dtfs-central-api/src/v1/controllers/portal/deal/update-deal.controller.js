@@ -220,8 +220,17 @@ exports.updateDealPut = async (req, res) => {
       return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
     }
 
-    validateAuditDetails(auditDetails);
-
+    try {
+      validateAuditDetails(auditDetails);
+    } catch (error) {
+      if (error instanceof InvalidAuditDetailsError) {
+        return res.status(error.status).send({
+          status: error.status,
+          message: `Invalid auditDetails, ${error.message}`,
+        });
+      }
+      return res.status(500).send({ status: 500, error });
+    }
     // TODO: Refactor callback with status check
     return findOneDeal(dealId, async (existingDeal) => {
       if (!existingDeal) {
