@@ -411,7 +411,14 @@ portalRouter.route('/facilities/:id').get(getFacilityController.findOneFacilityG
  *         application/json:
  *           schema:
  *             type: object
- *             example: { aNewField: true }
+ *             properties:
+ *               facilityUpdate:
+ *                 type: object
+ *               user:
+ *                 type: object
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/portalAuditDetails'
  *     responses:
  *       200:
  *         description: OK
@@ -474,9 +481,12 @@ portalRouter.route('/facilities/:id').delete(deleteFacilityController.deleteFaci
  *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             type: object
- *             example: { status: Ready for Checker's approval }
+ *           properties:
+ *             status:
+ *               type: string
+ *             auditDetails:
+ *               type: object
+ *               $ref: '#/definitions/portalAuditDetails'
  *     responses:
  *       200:
  *         description: OK
