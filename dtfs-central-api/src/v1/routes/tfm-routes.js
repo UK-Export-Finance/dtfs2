@@ -179,6 +179,7 @@ tfmRouter.route('/deals/:id').delete(tfmDeleteDealController.deleteDeal);
  *             type: object
  *             properties:
  *               auditDetails:
+ *                 type: object
  *                 $ref: '#/definitions/portalAuditDetails'
  *             example:
  *               aNewField: true
@@ -393,6 +394,7 @@ tfmRouter.route('/facilities/:id').get(tfmGetFacilityController.findOneFacilityG
  *               facilityUpdate:
  *                 type: string
  *               auditDetails:
+ *                 type: object
  *                 $ref: '#/definitions/systemPortalOrTfmAuditDetails'
  *             example:
  *               facilityUpdate: { aNewField: true }
@@ -479,6 +481,7 @@ tfmRouter.route('/deals/:dealId/amendments/:status?/:type?').get(tfmGetAmendment
  *               id:
  *                 type: string
  *               auditDetails:
+ *                 type: object
  *                 $ref: '#/definitions/tfmAuditDetails'
  *     responses:
  *       200:
@@ -535,8 +538,10 @@ tfmRouter.route('/teams').get(tfmTeamsController.listTfmTeam);
  *         application/json:
  *           schema:
  *             team:
+ *               type: object
  *               $ref: '#/definitions/TFMTeam'
  *             auditDetails:
+ *               type: object
  *               $ref: '#/definitions/tfmAuditDetails'
  *     responses:
  *       200:
@@ -631,8 +636,10 @@ tfmRouter.route('/users').get(tfmUsersController.listTfmUser);
  *         application/json:
  *           schema:
  *             user:
+ *               type: object
  *               $ref: '#/definitions/TFMUser'
  *             auditDetails:
+ *               type: object
  *               $ref: '#/definitions/tfmAuditDetails'
  *     responses:
  *       200:

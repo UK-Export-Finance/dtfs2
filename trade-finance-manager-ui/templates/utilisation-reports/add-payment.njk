@@ -38,7 +38,7 @@
     }) }}
   {% endif %}
   <h2 class="govuk-heading-m">
-    {% if paymentNumber %}
+    {% if paymentNumber > 1 %}
       Payment {{ paymentNumber }} details
     {% else %}
       New payment details
@@ -47,7 +47,6 @@
   <form method="post">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
     <input type="hidden" name="addPaymentFormSubmission" value="true" />
-    <input type="hidden" name="paymentNumber" value={{ paymentNumber }} />
     {% for id in selectedFeeRecordCheckboxIds %}<input type="hidden" name={{ id }} value="on" />{% endfor %}
     {{ govukRadios({
         classes: "govuk-radios--small",

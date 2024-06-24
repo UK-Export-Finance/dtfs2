@@ -28,7 +28,7 @@ exports.create = async (facilityBody, user, auditDetails) => {
 exports.findOne = async (facilityId) => api.findOneFacility(facilityId);
 
 exports.update = async (dealId, facilityId, facilityBody, user, auditDetails) => {
-  const updatedFacility = await api.updateFacility(facilityId, facilityBody, user);
+  const updatedFacility = await api.updateFacility(facilityId, facilityBody, user, auditDetails);
 
   if (updatedFacility) {
     // update facilitiesUpdated timestamp in the deal

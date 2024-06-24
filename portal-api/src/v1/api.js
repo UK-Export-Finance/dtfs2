@@ -188,7 +188,7 @@ const findOneFacility = async (facilityId) => {
   }
 };
 
-const updateFacility = async (facilityId, facility, user) => {
+const updateFacility = async (facilityId, facility, user, auditDetails) => {
   try {
     if (!isValidMongoId(facilityId)) {
       console.error('Update facility API failed for facility id %s', facilityId);
@@ -200,8 +200,9 @@ const updateFacility = async (facilityId, facility, user) => {
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
       headers: headers.central,
       data: {
-        ...facility,
+        facilityUpdate: facility,
         user,
+        auditDetails,
       },
     });
   } catch (error) {

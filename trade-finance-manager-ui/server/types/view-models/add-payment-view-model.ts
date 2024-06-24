@@ -46,7 +46,7 @@ export type AddPaymentViewModel = BaseViewModel & {
   reportedFeeDetails: SelectedReportedFeesDetailsViewModel;
   recordedPaymentsDetails: RecordedPaymentDetailsViewModel[];
   multipleFeeRecordsSelected: boolean;
-  paymentNumber: number | undefined;
+  paymentNumber: number;
   selectedFeeRecordCheckboxIds: string[];
   errors: AddPaymentErrorsViewModel;
   formValues: AddPaymentFormValues;
