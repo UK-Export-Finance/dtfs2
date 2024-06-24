@@ -1,6 +1,6 @@
-import { FeeRecordItem } from '../server/api-response-types';
+import { FeeRecord } from '../server/api-response-types';
 
-export const aFeeRecordItem = (): FeeRecordItem => ({
+export const aFeeRecord = (): FeeRecord => ({
   id: 1,
   facilityId: '12345678',
   exporter: 'Test exporter',
