@@ -6,11 +6,7 @@ initialiseCronJobScheduler(cronSchedulerJobs);
 
 const PORT = process.env.PORT || 5005;
 
-createApp()
-  .then((app) => {
-    app.listen(PORT, () => console.info('✅ Central micro-service initialised on %s', PORT));
-  })
-  .catch((error) => {
-    console.error('Failed to start app:', error);
-    throw error;
-  });
+(async () => {
+  const app = await createApp();
+  app.listen(PORT, () => console.info('✅ Central micro-service initialised on %s', PORT));
+})();
