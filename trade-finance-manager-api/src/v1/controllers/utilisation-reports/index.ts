@@ -7,3 +7,4 @@ export { getUtilisationReportSummariesByBankAndYear } from './get-utilisation-re
 export { postPayment } from './post-payment.controller';
 export { postKeyingData } from './post-keying-data.controller';
 export { getFeeRecordsToKey } from './get-fee-records-to-key.controller';
+export { getEditPayment } from './get-edit-payment.controller';

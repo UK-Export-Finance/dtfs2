@@ -8,6 +8,7 @@ import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
 
 const sortFeeRecordsByReportedPayments = (feeRecords: FeeRecord[]): FeeRecord[] =>
   orderBy(feeRecords, [({ reportedPayments }) => reportedPayments.currency, ({ reportedPayments }) => reportedPayments.amount], ['asc']);
+
 /**
  * Maps the fee records to the fee record view model items
  * @param feeRecords - The fee record items

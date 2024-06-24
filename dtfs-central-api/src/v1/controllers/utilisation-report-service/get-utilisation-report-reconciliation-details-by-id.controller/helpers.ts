@@ -1,19 +1,10 @@
 import { FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { FeeRecordPaymentGroup, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
-import { FeeRecord } from '../../../../types/fee-records';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
-import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from '../../../../mapping/fee-record-mapper';
+import { mapFeeRecordEntityToFeeRecord } from '../../../../mapping/fee-record-mapper';
 import { mapPaymentEntityToPayment } from '../../../../mapping/payment-mapper';
 import { calculateTotalCurrencyAndAmount, getFeeRecordPaymentEntityGroupsFromFeeRecordEntities } from '../../../../helpers';
-
-const mapFeeRecordEntityToFeeRecord = (feeRecord: FeeRecordEntity): FeeRecord => ({
-  id: feeRecord.id,
-  facilityId: feeRecord.facilityId,
-  exporter: feeRecord.exporter,
-  reportedFees: mapFeeRecordEntityToReportedFees(feeRecord),
-  reportedPayments: mapFeeRecordEntityToReportedPayments(feeRecord),
-});
 
 const mapFeeRecordEntitiesToFeeRecordPaymentGroups = (feeRecordEntities: FeeRecordEntity[]): FeeRecordPaymentGroup[] => {
   const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(feeRecordEntities);

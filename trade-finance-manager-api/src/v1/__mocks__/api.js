@@ -240,4 +240,5 @@ module.exports = {
   addPaymentToFeeRecords: jest.fn(),
   generateKeyingData: jest.fn(),
   getUtilisationReportWithFeeRecordsToKey: jest.fn(),
+  getEditPaymentDetails: jest.fn(),
 };

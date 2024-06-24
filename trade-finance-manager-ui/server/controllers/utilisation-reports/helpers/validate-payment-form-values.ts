@@ -1,8 +1,9 @@
 import { CURRENCY, Currency, isNonEmptyString } from '@ukef/dtfs2-common';
 import { isBefore, isValid, parseISO, startOfDay } from 'date-fns';
 import { REGEX } from '../../../constants';
-import { AddPaymentErrorsViewModel, AddPaymentPaymentDateErrorViewModel, ErrorSummaryViewModel } from '../../../types/view-models';
+import { PaymentErrorsViewModel, PaymentDateErrorViewModel, ErrorSummaryViewModel } from '../../../types/view-models';
 import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
+import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 
 const isCurrencyNumberOptionallyWithThousandsSeparators = (value: string) => {
   const currencyNumberWithOptionalThousandsSeparatorsRegex = /^(\d+|\d{1,3}(,\d{3})+)(\.\d{1,2})?$/;
@@ -66,7 +67,7 @@ const getMissingDateFields = (day: string | undefined, month: string | undefined
   return missingFields;
 };
 
-const getMissingDateFieldsError = (fieldTitle: string, missingFields: DateFieldName[]): AddPaymentPaymentDateErrorViewModel => {
+const getMissingDateFieldsError = (fieldTitle: string, missingFields: DateFieldName[]): PaymentDateErrorViewModel => {
   if (missingFields.length === 3) {
     return { message: `Enter the ${fieldTitle}`, dayError: true, monthError: true, yearError: true };
   }
@@ -92,7 +93,7 @@ const validatePaymentDateAndReturnErrorIfInvalid = (
   day: string | undefined,
   month: string | undefined,
   year: string | undefined,
-): AddPaymentPaymentDateErrorViewModel | undefined => {
+): PaymentDateErrorViewModel | undefined => {
   const fieldTitle = 'date payment received';
 
   const missingFields = getMissingDateFields(day, month, year);
@@ -125,7 +126,7 @@ const validatePaymentDateAndReturnErrorIfInvalid = (
   return undefined;
 };
 
-const getPaymentDateHref = (paymentDateError: AddPaymentPaymentDateErrorViewModel): string => {
+const getPaymentDateHref = (paymentDateError: PaymentDateErrorViewModel): string => {
   if (paymentDateError.dayError) {
     return '#paymentDate-day';
   }
@@ -137,7 +138,7 @@ const getPaymentDateHref = (paymentDateError: AddPaymentPaymentDateErrorViewMode
   return '#paymentDate-year';
 };
 
-export const validateAddPaymentRequestFormValues = (formValues: AddPaymentFormValues, feeRecordPaymentCurrency: Currency): AddPaymentErrorsViewModel => {
+export const validateAddPaymentRequestFormValues = (formValues: AddPaymentFormValues, feeRecordPaymentCurrency: Currency): PaymentErrorsViewModel => {
   const errorSummary: ErrorSummaryViewModel[] = [];
 
   const paymentCurrencyErrorMessage = getPaymentCurrencyValidationsErrors(formValues.paymentCurrency, feeRecordPaymentCurrency);
@@ -173,6 +174,36 @@ export const validateAddPaymentRequestFormValues = (formValues: AddPaymentFormVa
     paymentAmountErrorMessage,
     paymentReferenceErrorMessage,
     addAnotherPaymentErrorMessage,
+    paymentDateError,
+  };
+};
+
+export const validateEditPaymentRequestFormValues = (
+  formValues: EditPaymentFormValues,
+): Omit<PaymentErrorsViewModel, 'paymentCurrencyErrorMessage' | 'addAnotherPaymentErrorMessage'> => {
+  const errorSummary: ErrorSummaryViewModel[] = [];
+
+  const paymentAmountErrorMessage = isPaymentAmountValid(formValues.paymentAmount) ? undefined : 'Enter a valid amount received';
+  if (paymentAmountErrorMessage) {
+    errorSummary.push({ text: paymentAmountErrorMessage, href: '#paymentAmount' });
+  }
+
+  const paymentReferenceErrorMessage = isPaymentReferenceOverFiftyCharacters(formValues.paymentReference)
+    ? 'Payment reference must be 50 characters or less'
+    : undefined;
+  if (paymentReferenceErrorMessage) {
+    errorSummary.push({ text: paymentReferenceErrorMessage, href: '#paymentReference' });
+  }
+
+  const paymentDateError = validatePaymentDateAndReturnErrorIfInvalid(formValues.paymentDate.day, formValues.paymentDate.month, formValues.paymentDate.year);
+  if (paymentDateError) {
+    errorSummary.push({ text: paymentDateError.message, href: getPaymentDateHref(paymentDateError) });
+  }
+
+  return {
+    errorSummary,
+    paymentAmountErrorMessage,
+    paymentReferenceErrorMessage,
     paymentDateError,
   };
 };

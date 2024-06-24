@@ -18,6 +18,7 @@ const { getSelectedFeeRecordDetails } = require('../controllers/utilisation-repo
 const { postPayment } = require('../controllers/utilisation-report-service/post-payment.controller');
 const { postKeyingData } = require('../controllers/utilisation-report-service/post-keying-data.controller');
 const { getFeeRecordsToKey } = require('../controllers/utilisation-report-service/get-fee-records-to-key.controller');
+const { getEditPayment } = require('../controllers/utilisation-report-service/get-edit-payment.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -327,5 +328,44 @@ utilisationReportsRouter.route('/:reportId/keying-data').post(validation.sqlIdVa
  *         description: Internal Server Error
  */
 utilisationReportsRouter.route('/:reportId/fee-records-to-key').get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, getFeeRecordsToKey);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/payment/:paymentId/edit:
+ *   get:
+ *     summary: Get the edit payment details
+ *     tags: [Utilisation Report]
+ *     description: Gets the edit payment details required to render the edit payment page for the supplied report and payment id
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *       - in: path
+ *         name: paymentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the payment
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/EditPaymentDetailsResponseBody'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/payment/:paymentId/edit')
+  .get(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('paymentId'), handleExpressValidatorResult, getEditPayment);
 
 module.exports = utilisationReportsRouter;

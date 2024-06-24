@@ -4,13 +4,10 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% import "./_macros/selected-reported-fees-details-table.njk" as selectedReportedFeesDetailsTable %}
 {% import "./_macros/recorded-payments-for-selected-fee-records-table.njk" as recordedPaymentsTable %}
-
+{% import "./_macros/fee-record-details-table.njk" as feeRecordDetailsTable %}
 {% extends "index.njk" %}
-
 {% set backLink = {"href": '/utilisation-reports/' + reportId} %}
-
 {% block pageTitle %}Add a payment{% endblock %}
 {% block content %}
   {% if errors.errorSummary | length %}
@@ -24,13 +21,20 @@
   {% endif %}
   <div class="govuk-grid-row govuk-!-padding-top-7">
     <div class="govuk-grid-column-one-half">
-      <span class="govuk-caption-l" data-cy="add-a-payment-heading-caption">{{ bank.name }}, {{ formattedReportPeriod }}</span>
+      <span class="govuk-caption-l" data-cy="add-payment-heading-caption">{{ bank.name }},
+      {{ formattedReportPeriod }}</span>
       <h1 class="govuk-heading-l">Add a payment</h1>
     </div>
   </div>
-  {{ selectedReportedFeesDetailsTable.render({
-    reportedFeeDetails: reportedFeeDetails
-    }) }}
+  {{ feeRecordDetailsTable.render({
+    captionText: "Selected reported fees details",
+    feeRecords: reportedFeeDetails.feeRecords,
+    totalReportedPayments: reportedFeeDetails.totalReportedPayments,
+    enableSelectingFeeRecords: false,
+    overrides: {
+      reportedFeesHeader: 'Reported fee'
+    }
+  }) }}
   {% if recordedPaymentsDetails | length %}
     {{ recordedPaymentsTable.render({
       recordedPaymentsDetails: recordedPaymentsDetails,
@@ -45,9 +49,9 @@
     {% endif %}
   </h2>
   <form method="post">
-    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-    <input type="hidden" name="addPaymentFormSubmission" value="true" />
-    {% for id in selectedFeeRecordCheckboxIds %}<input type="hidden" name={{ id }} value="on" />{% endfor %}
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+    <input type="hidden" name="addPaymentFormSubmission" value="true"/>
+    {% for id in selectedFeeRecordCheckboxIds %}<input type="hidden" name={{ id }} value="on"/>{% endfor %}
     {{ govukRadios({
         classes: "govuk-radios--small",
         name: "paymentCurrency",

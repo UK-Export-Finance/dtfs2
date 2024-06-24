@@ -169,4 +169,13 @@ authRouter
   .route('/utilisation-reports/:reportId/fee-records-to-key')
   .get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.getFeeRecordsToKey);
 
+authRouter
+  .route('/utilisation-reports/:reportId/payment/:paymentId/edit')
+  .get(
+    validation.sqlIdValidation('reportId'),
+    validation.sqlIdValidation('paymentId'),
+    handleExpressValidatorResult,
+    utilisationReportsController.getEditPayment,
+  );
+
 module.exports = { authRouter, openRouter };

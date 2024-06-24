@@ -10,4 +10,6 @@ export const mapPaymentEntityToPayment = (payment: PaymentEntity): Payment => ({
   id: payment.id,
   currency: payment.currency,
   amount: payment.amount,
+  dateReceived: payment.dateReceived,
+  reference: payment.reference,
 });

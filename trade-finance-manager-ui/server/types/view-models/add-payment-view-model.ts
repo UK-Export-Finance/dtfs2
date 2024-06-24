@@ -1,24 +1,10 @@
 import { CurrencyAndAmountString } from '@ukef/dtfs2-common';
-import { ErrorSummaryViewModel } from './error-summary-view-model';
-import { AddPaymentFormValues } from '../add-payment-form-values';
 import { BaseViewModel } from './base-view-model';
-
-type SelectedReportedFeeViewModel = {
-  feeRecordId: number;
-  facilityId: string;
-  exporter: string;
-  reportedFee: {
-    value: CurrencyAndAmountString;
-    dataSortValue: number;
-  };
-  reportedPayments: {
-    value: CurrencyAndAmountString;
-    dataSortValue: number;
-  };
-};
+import { PaymentFormViewModel } from './payment-form-view-model';
+import { FeeRecordDetailsViewModel } from './fee-record-details-view-model';
 
 export type SelectedReportedFeesDetailsViewModel = {
-  feeRecords: SelectedReportedFeeViewModel[];
+  feeRecords: FeeRecordDetailsViewModel;
   totalReportedPayments: CurrencyAndAmountString;
 };
 
@@ -28,26 +14,12 @@ export type RecordedPaymentDetailsViewModel = {
   reference?: string;
 };
 
-export type AddPaymentPaymentDateErrorViewModel = { message: string; dayError: boolean; monthError: boolean; yearError: boolean };
-
-export type AddPaymentErrorsViewModel = {
-  paymentCurrencyErrorMessage?: string;
-  paymentAmountErrorMessage?: string;
-  paymentDateError?: AddPaymentPaymentDateErrorViewModel;
-  paymentReferenceErrorMessage?: string;
-  addAnotherPaymentErrorMessage?: string;
-  errorSummary: ErrorSummaryViewModel[];
-};
-
-export type AddPaymentViewModel = BaseViewModel & {
-  reportId: string;
-  bank: { name: string };
-  formattedReportPeriod: string;
-  reportedFeeDetails: SelectedReportedFeesDetailsViewModel;
-  recordedPaymentsDetails: RecordedPaymentDetailsViewModel[];
-  multipleFeeRecordsSelected: boolean;
-  paymentNumber: number;
-  selectedFeeRecordCheckboxIds: string[];
-  errors: AddPaymentErrorsViewModel;
-  formValues: AddPaymentFormValues;
-};
+export type AddPaymentViewModel = BaseViewModel &
+  PaymentFormViewModel & {
+    reportId: string;
+    bank: { name: string };
+    formattedReportPeriod: string;
+    reportedFeeDetails: SelectedReportedFeesDetailsViewModel;
+    recordedPaymentsDetails: RecordedPaymentDetailsViewModel[];
+    multipleFeeRecordsSelected: boolean;
+  };
