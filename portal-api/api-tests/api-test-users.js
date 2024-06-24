@@ -1,5 +1,5 @@
 const api = require('./api');
-const db = require('../src/drivers/db-client');
+const { mongoDbClient: db } = require('../src/drivers/db-client');
 const { genPassword } = require('../src/crypto/utils');
 const databaseHelper = require('./database-helper');
 const { MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_REPORT_OFFICER } = require('../src/v1/roles/roles');
@@ -41,17 +41,6 @@ const banks = {
 };
 
 const testUsers = [
-  {
-    firstname: 'first',
-    surname: 'last',
-    timezone: 'Europe/London',
-    username: 'no-roles@ukexportfinance.gov.uk',
-    email: 'no-roles@ukexportfinance.gov.uk',
-    password: 'P@ssword1234',
-    roles: [],
-    bank: {},
-    isTrusted: false,
-  },
   {
     username: 'hsbc-maker-1@ukexportfinance.gov.uk',
     password: 'P@ssword1234',
@@ -152,17 +141,6 @@ const testUsers = [
     isTrusted: false,
   },
   {
-    username: 'barclays-no-roles@ukexportfinance.gov.uk',
-    password: 'P@ssword1234',
-    firstname: 'No Roles',
-    surname: 'barclays',
-    email: 'barclays-no-roles@ukexportfinance.gov.uk',
-    timezone: 'Europe/London',
-    roles: [],
-    bank: banks.Barclays,
-    isTrusted: false,
-  },
-  {
     username: 'Ukef-maker-1@ukexportfinance.gov.uk',
     password: 'P@ssword1234',
     firstname: 'Mister',
@@ -250,10 +228,6 @@ const finder = () => {
     },
     withoutRole: (role) => {
       users = users.filter((user) => !user.roles.includes(role));
-      return fluidBuilder;
-    },
-    withoutAnyRoles: () => {
-      users = users.filter((user) => user.roles.length === 0);
       return fluidBuilder;
     },
     withBankName: (bankName) => {

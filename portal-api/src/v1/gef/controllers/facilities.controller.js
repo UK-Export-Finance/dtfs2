@@ -1,15 +1,13 @@
 const { ObjectId } = require('mongodb');
-const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const db = require('../../../drivers/db-client');
+const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, DocumentNotFoundError } = require('@ukef/dtfs2-common');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteOne, deleteMany } = require('@ukef/dtfs2-common/change-stream');
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const { facilitiesValidation, facilitiesStatus, facilitiesOverallStatus, facilitiesCheckEnums } = require('./validation/facilities');
 const { Facility } = require('../models/facilities');
 const { Application } = require('../models/application');
 const { calculateUkefExposure, calculateGuaranteeFee } = require('../calculations/facility-calculations');
 const { InvalidDatabaseQueryError } = require('../../errors/invalid-database-query.error');
-
-const facilitiesCollectionName = 'facilities';
-const dealsCollectionName = 'deals';
 
 exports.create = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
@@ -22,7 +20,7 @@ exports.create = async (req, res) => {
   }
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
-  const facilitiesQuery = await db.getCollection(facilitiesCollectionName);
+  const facilitiesQuery = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
   const createdFacility = await facilitiesQuery.insertOne(
     new Facility({ ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) }),
   );
@@ -46,7 +44,7 @@ exports.create = async (req, res) => {
 };
 
 const getAllFacilitiesByDealId = async (dealId) => {
-  const collection = await db.getCollection(facilitiesCollectionName);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
   if (!dealId) {
     // TODO SR-8: This is required to preserve existing behaviour and allow tests to pass, but seems like a bug.
     return collection.find().toArray();
@@ -100,7 +98,7 @@ exports.getById = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
   }
 
-  const collection = await db.getCollection(facilitiesCollectionName);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
   const doc = await collection.findOne({ _id: { $eq: ObjectId(String(req.params.id)) } });
   if (doc) {
     return res.status(200).send({
@@ -121,8 +119,8 @@ exports.getById = async (req, res) => {
  */
 const update = async (id, updateBody, auditDetails) => {
   try {
-    const facilitiesCollection = await db.getCollection(facilitiesCollectionName);
-    const dealsCollection = await db.getCollection(dealsCollectionName);
+    const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
+    const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
     const facilityId = ObjectId(String(id));
 
@@ -187,23 +185,50 @@ exports.updatePUT = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
   if (!ObjectId.isValid(req.params.id)) {
     return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
   }
 
-  const collection = await db.getCollection(facilitiesCollectionName);
-  const response = await collection.findOneAndDelete({ _id: { $eq: ObjectId(req.params.id) } });
-  return res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
+  try {
+    const deleteOneResponse = await deleteOne({
+      documentId: new ObjectId(req.params.id),
+      collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
+      db,
+      auditDetails,
+    });
+
+    return res.status(200).send(deleteOneResponse);
+  } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return res.sendStatus(404);
+    }
+    return res.status(500).send({ status: 500, error });
+  }
 };
 
 exports.deleteByDealId = async (req, res) => {
   const { dealId } = req.query;
+  const auditDetails = generatePortalAuditDetails(req.user._id);
 
   if (typeof dealId !== 'string') {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
-  const collection = await db.getCollection(facilitiesCollectionName);
-  const response = await collection.deleteMany({ dealId: { $eq: dealId } });
-  return res.status(200).send(response);
+  try {
+    const response = await deleteMany({
+      filter: { dealId: { $eq: ObjectId(dealId) } },
+      collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
+      db,
+      auditDetails,
+    });
+    return res.status(200).send(response);
+  } catch (error) {
+    if (error instanceof DocumentNotFoundError) {
+      return res.sendStatus(404);
+    }
+    console.error(error);
+    return res.status(500).send({ status: 500, error });
+  }
 };

@@ -1,4 +1,11 @@
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { ObjectId } = require('mongodb');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const {
+  generateParsedMockPortalUserAuditDatabaseRecord,
+  withDeleteManyTests,
+  withDeleteOneTests,
+  expectAnyPortalUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { CURRENCY } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const CONSTANTS = require('../../../src/constants');
@@ -10,7 +17,7 @@ const { withClientAuthenticationTests } = require('../../common-tests/client-aut
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 
-const { as, get } = require('../../api')(app);
+const { as, get, remove } = require('../../api')(app);
 
 const baseUrl = '/v1/gef/facilities';
 const mockFacilities = require('../../fixtures/gef/facilities');
@@ -112,7 +119,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(facilitiesUrl),
       successStatusCode: 200,
     });
@@ -144,7 +150,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(oneFacilityUrl),
       successStatusCode: 200,
     });
@@ -505,28 +510,71 @@ describe(baseUrl, () => {
   });
 
   describe(`DELETE ${baseUrl}/:id`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().remove(`${baseUrl}/1`);
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests that present a valid Authorization token with "maker" role', async () => {
+    let facilityToDeleteId;
+    beforeEach(async () => {
       const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      const { status } = await as(aMaker).remove(`${baseUrl}/${String(body.details._id)}`);
-      expect(status).toEqual(200);
-      expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
+      facilityToDeleteId = new ObjectId(body.details._id);
     });
 
-    it('removes all items by application ID', async () => {
-      const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      const { status } = await as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
-      expect(status).toEqual(200);
-      expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => remove(`${baseUrl}/${facilityToDeleteId}`),
+      makeRequestWithAuthHeader: (authHeader) => remove(`${baseUrl}/${facilityToDeleteId}`, { headers: { Authorization: authHeader } }),
     });
 
-    it('returns a 204 - "No Content" if there are no records', async () => {
-      const { status } = await as(aMaker).remove(`${baseUrl}/doesnotexist`);
-      expect(status).toEqual(204);
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).remove(`${baseUrl}/${facilityToDeleteId}`),
+      successStatusCode: 200,
+    });
+
+    withDeleteOneTests({
+      makeRequest: () => as(aMaker).remove(`${baseUrl}/${String(facilityToDeleteId)}`),
+      collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
+      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
+      getDeletedDocumentId: () => facilityToDeleteId,
+    });
+  });
+
+  describe(`DELETE ${baseUrl}?dealId=`, () => {
+    let facilitiesToDeleteIds;
+
+    beforeEach(async () => {
+      const { body: cashBody } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      const { body: contingentBody } = await as(aMaker)
+        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CONTINGENT, hasBeenIssued: false })
+        .to(baseUrl);
+      facilitiesToDeleteIds = [new ObjectId(cashBody.details._id), new ObjectId(contingentBody.details._id)];
+    });
+
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => remove(`${baseUrl}?dealId=${mockApplication.body._id}`),
+      makeRequestWithAuthHeader: (authHeader) => remove(`${baseUrl}?dealId=${mockApplication.body._id}`, { headers: { Authorization: authHeader } }),
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).remove(`${baseUrl}?dealId=${mockApplication.body._id}`),
+      successStatusCode: 200,
+    });
+
+    withDeleteManyTests({
+      makeRequest: () => as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`),
+      collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
+      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
+      getDeletedDocumentIds: () => facilitiesToDeleteIds,
+      expectedSuccessResponseBody: { acknowledged: true },
+    });
+
+    it('returns 404 if there are no facilities to delete', async () => {
+      const { status: firstStatus } = await as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
+      const { status: secondStatus } = await as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
+
+      expect(firstStatus).toBe(200);
+      expect(secondStatus).toBe(404);
     });
   });
 

@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const db = require('../../../drivers/db-client');
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 
 const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../portalActivity-object-generator/activityConstants');
 const portalActivityGenerator = require('../../portalActivity-object-generator');

@@ -1,5 +1,5 @@
 import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
-import db from '../drivers/db-client';
+import { mongoDbClient as db } from '../drivers/db-client';
 import { getAllBanks, getBankNameById, getBankById } from './banks-repo';
 import { MOCK_BANKS } from '../../api-tests/mocks/banks';
 

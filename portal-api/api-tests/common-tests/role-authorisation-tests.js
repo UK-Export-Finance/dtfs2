@@ -10,7 +10,7 @@ const expectNotAuthorisedResponse = ({ status, body }) => {
 
 const allRoles = Object.values(ROLES);
 
-const withRoleAuthorisationTests = ({ allowedRoles, getUserWithRole, getUserWithoutAnyRoles, makeRequestAsUser, successStatusCode }) => {
+const withRoleAuthorisationTests = ({ allowedRoles, getUserWithRole, makeRequestAsUser, successStatusCode }) => {
   const notAllowedRoles = allRoles.filter((role) => !allowedRoles.includes(role));
 
   if (notAllowedRoles.length) {
@@ -21,12 +21,6 @@ const withRoleAuthorisationTests = ({ allowedRoles, getUserWithRole, getUserWith
     });
   }
 
-  it('returns a 401 response for requests from a user without any roles', async () => {
-    const userWithoutRoles = getUserWithoutAnyRoles();
-    const response = await makeRequestAsUser(userWithoutRoles);
-    expectNotAuthorisedResponse(response);
-  });
-
   it.each(allowedRoles)(`returns a ${successStatusCode} response for requests from a user with role %s`, async (role) => {
     const userWithRole = getUserWithRole(role);
     const { status } = await makeRequestAsUser(userWithRole);
@@ -34,21 +28,6 @@ const withRoleAuthorisationTests = ({ allowedRoles, getUserWithRole, getUserWith
   });
 };
 
-const withNoRoleAuthorisationTests = ({ getUserWithRole, getUserWithoutAnyRoles, makeRequestAsUser, successStatusCode }) => {
-  it.each(allRoles)(`returns a ${successStatusCode} response for requests from a user with role %s`, async (role) => {
-    const userWithRole = getUserWithRole(role);
-    const { status } = await makeRequestAsUser(userWithRole);
-    expect(status).toBe(successStatusCode);
-  });
-
-  it(`returns a ${successStatusCode} response for requests from a user without any roles`, async () => {
-    const userWithoutRoles = getUserWithoutAnyRoles();
-    const { status } = await makeRequestAsUser(userWithoutRoles);
-    expect(status).toBe(successStatusCode);
-  });
-};
-
 module.exports = {
   withRoleAuthorisationTests,
-  withNoRoleAuthorisationTests,
 };

@@ -10,6 +10,7 @@ const aDeal = require('../../deal-builder');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 const { createDeal } = require('../../../helpers/create-deal');
+const { createFacility } = require('../../../helpers/create-facility');
 
 describe('POST TFM amendments', () => {
   let dealId;
@@ -45,7 +46,7 @@ describe('POST TFM amendments', () => {
     describe('with a valid facility submitted to portal', () => {
       let facilityId;
       beforeEach(async () => {
-        const postResult = await api.post({ facility: newFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const postResult = await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
         facilityId = postResult.body._id;
 
         await api

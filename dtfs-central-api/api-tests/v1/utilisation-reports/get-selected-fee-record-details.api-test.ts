@@ -4,7 +4,7 @@ import app from '../../../src/createApp';
 import apiModule from '../../api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { wipe } from '../../wipeDB';
-import mongoDbClient from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../src/drivers/db-client';
 import { aBank } from '../../../test-helpers/test-data/bank';
 import { aReportPeriod } from '../../../test-helpers/test-data/report-period';
 
@@ -95,6 +95,7 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
             reportedPayments: { currency: 'GBP', amount: 100 },
           },
         ],
+        payments: [],
       });
     });
   });

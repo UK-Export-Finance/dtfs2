@@ -1,10 +1,10 @@
 import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
-import { getCollection, getConnection } from './database/database-client';
+import { mongoDbClient } from './database/database-client';
 import { logger } from './helpers/logger.helper';
 
 export const deleteDeletionAuditLogsCollection = async () => {
   logger.info('Dropping deletion audit logs collection');
-  const collection = await getCollection(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS);
+  const collection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS);
 
   try {
     await collection.drop();
@@ -16,7 +16,7 @@ export const deleteDeletionAuditLogsCollection = async () => {
 
 export const setupDeletionAuditLogsCollection = async () => {
   logger.info('Setting up deletion audit logs collection');
-  const dbConnection = await getConnection();
+  const dbConnection = await mongoDbClient.getConnection();
 
   const collection = await dbConnection.createCollection(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS, {
     validator: {

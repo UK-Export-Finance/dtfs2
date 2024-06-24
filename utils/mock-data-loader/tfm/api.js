@@ -135,6 +135,7 @@ const deleteDeal = async (deal) => {
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${deal._id}`,
+    data: { auditDetails: mockDataLoaderTfmAuditDetails },
   }).catch((error) => {
     throw new ApiError({ cause: error });
   });

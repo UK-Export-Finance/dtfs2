@@ -53,7 +53,16 @@ const createDeal = async (deal, user, auditDetails) => {
   }
 };
 
-const updateDeal = async (dealId, dealUpdate, user) => {
+/**
+ * Sends a request to DTFS Central to update a deal
+ * @param {Object} params - The parameters for updating the deal.
+ * @param {string} params.dealId - The ID of the deal being updated.
+ * @param {Object} params.dealUpdate - The update to be made to the deal.
+ * @param {Object} params.user - The user making the changes.
+ * @param {Object} params.auditDetails - The audit details for the update.
+ * @returns {Promise<Object | false>} The updated deal object.
+ */
+const updateDeal = async ({ dealId, dealUpdate, user, auditDetails }) => {
   try {
     if (!isValidMongoId(dealId)) {
       console.error('Update deal API failed for deal id %s', dealId);
@@ -67,6 +76,7 @@ const updateDeal = async (dealId, dealUpdate, user) => {
       data: {
         dealUpdate,
         user,
+        auditDetails,
       },
     });
 
@@ -98,7 +108,7 @@ const deleteDeal = async (dealId, auditDetails) => {
   }
 };
 
-const addDealComment = async (dealId, commentType, comment) => {
+const addDealComment = async (dealId, commentType, comment, auditDetails) => {
   try {
     if (!isValidMongoId(dealId)) {
       console.error('Add deal comment API failed for deal id %s', dealId);
@@ -112,6 +122,7 @@ const addDealComment = async (dealId, commentType, comment) => {
       data: {
         commentType,
         comment,
+        auditDetails,
       },
     });
 
@@ -122,7 +133,7 @@ const addDealComment = async (dealId, commentType, comment) => {
   }
 };
 
-const createFacility = async (facility, user) => {
+const createFacility = async (facility, user, auditDetails) => {
   try {
     return await axios({
       method: 'post',
@@ -131,6 +142,7 @@ const createFacility = async (facility, user) => {
       data: {
         facility,
         user,
+        auditDetails,
       },
     });
   } catch ({ response }) {
@@ -138,7 +150,7 @@ const createFacility = async (facility, user) => {
   }
 };
 
-const createMultipleFacilities = async (facilities, dealId, user) => {
+const createMultipleFacilities = async (facilities, dealId, user, auditDetails) => {
   try {
     return await axios({
       method: 'post',
@@ -148,6 +160,7 @@ const createMultipleFacilities = async (facilities, dealId, user) => {
         facilities,
         dealId,
         user,
+        auditDetails,
       },
     });
   } catch ({ response }) {
@@ -175,7 +188,7 @@ const findOneFacility = async (facilityId) => {
   }
 };
 
-const updateFacility = async (facilityId, facility, user) => {
+const updateFacility = async (facilityId, facility, user, auditDetails) => {
   try {
     if (!isValidMongoId(facilityId)) {
       console.error('Update facility API failed for facility id %s', facilityId);
@@ -187,8 +200,9 @@ const updateFacility = async (facilityId, facility, user) => {
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
       headers: headers.central,
       data: {
-        ...facility,
+        facilityUpdate: facility,
         user,
+        auditDetails,
       },
     });
   } catch (error) {

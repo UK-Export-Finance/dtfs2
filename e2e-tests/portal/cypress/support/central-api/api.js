@@ -39,7 +39,7 @@ module.exports.updateFacility = (facilityId, facilityUpdate, user) =>
         Accepts: 'application/json',
       },
       body: {
-        ...facilityUpdate,
+        facilityUpdate,
         user,
       },
     })

@@ -34,6 +34,7 @@ const createFacility = async (facility, dealId, user) => {
         dealId,
       },
       user,
+      auditDetails: mockDataLoaderPortalAuditDetails,
     },
   }).catch((error) => {
     throw new ApiError({ cause: error });
@@ -48,8 +49,9 @@ const updateFacility = async (facilityId, facilityUpdate, user) => {
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
     headers,
     data: {
-      ...facilityUpdate,
+      facilityUpdate,
       user,
+      auditDetails: mockDataLoaderPortalAuditDetails,
     },
   }).catch((error) => {
     throw new ApiError({ cause: error });

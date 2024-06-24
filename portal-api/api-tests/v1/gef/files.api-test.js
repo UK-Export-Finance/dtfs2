@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb');
-
+const { withDeleteOneTests, expectAnyPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -12,7 +13,6 @@ const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/role
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const baseUrl = '/v1/gef/files';
-const collectionName = 'files';
 
 const applicationCollectionName = DB_COLLECTIONS.DEALS;
 const applicationBaseUrl = '/v1/gef/application';
@@ -64,7 +64,7 @@ describe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe([collectionName]);
+    await databaseHelper.wipe([MONGO_DB_COLLECTIONS.FILES]);
   });
 
   describe(`POST ${baseUrl}`, () => {
@@ -87,7 +87,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl),
       successStatusCode: 201,
     });
@@ -177,7 +176,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(oneFileUrl),
       successStatusCode: 200,
     });
@@ -202,11 +200,12 @@ describe(baseUrl, () => {
 
   describe(`DELETE ${baseUrl}/:id`, () => {
     let oneFileUrl;
+    let fileToDeleteId;
 
     beforeEach(async () => {
       const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
-      const createdId = body[0]._id;
-      oneFileUrl = `${baseUrl}/${createdId}`;
+      fileToDeleteId = body[0]._id;
+      oneFileUrl = `${baseUrl}/${fileToDeleteId}`;
     });
 
     withClientAuthenticationTests({
@@ -217,9 +216,16 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).remove(oneFileUrl),
       successStatusCode: 200,
+    });
+
+    withDeleteOneTests({
+      makeRequest: () => as(aMaker).remove(oneFileUrl),
+      collectionName: MONGO_DB_COLLECTIONS.FILES,
+      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
+      getDeletedDocumentId: () => new ObjectId(fileToDeleteId),
+      expectedStatusWhenNoDeletion: 500,
     });
 
     it('returns 404 if files is not found', async () => {
@@ -271,7 +277,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(oneFileDownloadUrl),
       successStatusCode: 200,
     });

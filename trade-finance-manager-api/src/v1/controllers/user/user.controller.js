@@ -1,8 +1,8 @@
 const { ObjectId } = require('mongodb');
 const { generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
-const { PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
+const { PAYLOAD_VERIFICATION, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
-const db = require('../../../drivers/db-client');
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { USER } = require('../../../constants');
 const utils = require('../../../utils/crypto.util');
@@ -156,6 +156,9 @@ exports.removeTfmUserById = async (_id, auditDetails, callback) => {
     });
     return callback(null, 200);
   } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return callback(error, 404);
+    }
     return callback(error, 500);
   }
 };

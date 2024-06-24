@@ -237,4 +237,5 @@ module.exports = {
   getUtilisationReportById: jest.fn(() => Promise.resolve(MOCK_UTILISATION_REPORT)),
   updateUtilisationReportStatus: jest.fn(),
   getUtilisationReportReconciliationDetailsById: jest.fn(),
+  addPaymentToFeeRecords: jest.fn(),
 };

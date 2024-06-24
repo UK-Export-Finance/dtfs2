@@ -1,4 +1,5 @@
 import { add, sub, format } from 'date-fns';
+import { isFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { aboutFacility, validateAboutFacility } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
@@ -87,6 +88,7 @@ describe('controllers/about-facility', () => {
           dealId: '123',
           facilityId: 'xyz',
           status: 'change',
+          isFacilityEndDateFeatureFlagEnabled: isFacilityEndDateFeatureFlagEnabled(),
         }),
       );
     });

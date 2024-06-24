@@ -1,4 +1,10 @@
-import { CurrencyAndAmount, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  CurrencyAndAmount,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  SelectedFeeRecordsPaymentDetails,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { mapToSelectedFeeRecordDetails } from './helpers';
 import { aReportPeriod } from '../../../../../test-helpers/test-data/report-period';
@@ -96,6 +102,53 @@ describe('get selected fee record details controller helpers', () => {
 
       // Assert
       expect(result.feeRecords[0].reportedFee).toEqual<CurrencyAndAmount>({ amount: 2200, currency: 'EUR' });
+    });
+
+    it('maps fee record payments removing any duplicates', async () => {
+      // Arrange
+      const bankId = '123';
+      const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+      const firstPaymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
+        .withDateReceived(new Date('2022-01-01'))
+        .withAmount(100)
+        .withReference('First payment')
+        .build();
+      const secondPaymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
+        .withDateReceived(new Date('2022-02-02'))
+        .withAmount(200)
+        .withReference('Second payment')
+        .build();
+      const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport)
+        .withPaymentCurrency('GBP')
+        .withPayments([firstPaymentEntity, secondPaymentEntity])
+        .build();
+      const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport)
+        .withPaymentCurrency('GBP')
+        .withPayments([firstPaymentEntity, secondPaymentEntity])
+        .build();
+
+      // Act
+      const result = await mapToSelectedFeeRecordDetails(bankId, aReportPeriod(), [firstFeeRecord, secondFeeRecord]);
+
+      // Assert
+      expect(result.payments).toEqual<SelectedFeeRecordsPaymentDetails[]>([
+        { currency: 'GBP', amount: 100, dateReceived: new Date('2022-01-01'), reference: 'First payment' },
+        { currency: 'GBP', amount: 200, dateReceived: new Date('2022-02-02'), reference: 'Second payment' },
+      ]);
+    });
+
+    it('sets payments to empty array when fee records have no attached payments', async () => {
+      // Arrange
+      const bankId = '123';
+      const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+      const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withPayments([]).build();
+      const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withPayments([]).build();
+
+      // Act
+      const result = await mapToSelectedFeeRecordDetails(bankId, aReportPeriod(), [firstFeeRecord, secondFeeRecord]);
+
+      // Assert
+      expect(result.payments).toEqual([]);
     });
 
     it('calculates total reported payments in payment currency by adding up reported payments of all fee records', async () => {

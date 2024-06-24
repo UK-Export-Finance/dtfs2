@@ -4,6 +4,7 @@ import { AuditDetails, MongoDbCollectionName } from '../types';
 import { MongoDbClient } from '../mongo-db-client';
 import { generateAuditDatabaseRecordFromAuditDetails } from './generate-audit-database-record';
 import { changeStreamConfig } from './config';
+import { DocumentNotDeletedError, WriteConcernError } from '../errors';
 
 const { DELETION_AUDIT_LOGS_TTL_SECONDS } = changeStreamConfig;
 
@@ -13,7 +14,10 @@ type DeleteOneParams = {
   db: MongoDbClient;
   auditDetails: AuditDetails;
 };
-
+/**
+ * @throws {WriteConcernError} - if either the deletion-audit-log insertion or document deletion operations are not acknowledged
+ * @throws {DocumentNotDeletedError} - if the deletion operation is acknowledged but nothing is deleted
+ */
 const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, db, auditDetails }: DeleteOneParams) => {
   const client = await db.getClient();
   const session = client.startSession();
@@ -30,18 +34,22 @@ const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, db, aud
           collectionName,
           deletedDocumentId: documentId,
           auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-          expireAt: add(new Date(), { seconds: Number(DELETION_AUDIT_LOGS_TTL_SECONDS) }),
+          expireAt: add(new Date(), { seconds: DELETION_AUDIT_LOGS_TTL_SECONDS }),
         },
         { session },
       );
       if (!insertResult.acknowledged) {
-        throw new Error('Failed to create deletion audit log');
+        throw new WriteConcernError();
       }
 
       const collection = await db.getCollection(collectionName);
       const deleteResult = await collection.deleteOne({ _id: { $eq: documentId } }, { session });
-      if (!(deleteResult.acknowledged && deleteResult.deletedCount === 1)) {
-        throw new Error('Failed to delete document');
+      if (!deleteResult.acknowledged) {
+        throw new WriteConcernError();
+      }
+
+      if (deleteResult.deletedCount === 0) {
+        throw new DocumentNotDeletedError();
       }
     }, transactionOptions);
   } catch (error) {
@@ -52,6 +60,11 @@ const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, db, aud
   }
 };
 
+/**
+ * When the `CHANGE_STREAM_ENABLED` feature flag is enabled adds deletions audit logs and calls Collection.deleteOne.
+ * @throws {WriteConcernError} - if either the deletion-audit-log insertion or document deletion operations are not acknowledged
+ * @throws {DocumentNotDeletedError} - if the deletion operation is acknowledged but nothing is deleted
+ */
 export const deleteOne = async ({ documentId, collectionName, db, auditDetails }: DeleteOneParams): Promise<DeleteResult> => {
   if (process.env.CHANGE_STREAM_ENABLED === 'true') {
     await deleteDocumentWithAuditLogs({

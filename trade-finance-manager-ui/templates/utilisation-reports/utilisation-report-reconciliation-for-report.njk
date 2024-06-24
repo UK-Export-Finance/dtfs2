@@ -100,7 +100,9 @@
         </div>
 
       {{ premiumPaymentsTable.render({
-        feeRecords: feeRecords
+        reportId: reportId,
+        feeRecordPaymentGroups: feeRecordPaymentGroups,
+        enablePaymentsReceivedSorting: enablePaymentsReceivedSorting
       }) }}
     </form>
   {% if addPaymentError %}

@@ -1,4 +1,5 @@
 const FACILITIES = require('./facilities');
+const BANKS = require('./banks');
 const DEAL = require('./deal');
 const LOGIN_RESULTS = require('./login-results');
 const USER = require('./user');
@@ -25,4 +26,6 @@ module.exports = {
   PASSPORT_VALIDATION_RESULTS,
   DATE_FORMATS,
   NUMBER,
+  BANKS,
+  ALL: 'all',
 };

@@ -35,10 +35,11 @@ export const getUtilisationReportReconciliationDetailsById = async (req: GetUtil
         : {};
 
     const utilisationReport = await UtilisationReportRepo.findOne({
-      relations: { feeRecords: true },
-      where: {
-        id: Number(reportId),
-        ...feeRecordFindOptions,
+      where: { id: Number(reportId), ...feeRecordFindOptions },
+      relations: {
+        feeRecords: {
+          payments: true,
+        },
       },
     });
 

@@ -181,8 +181,6 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - PORTAL_API_URL=http://portal-api:5001
-      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
-      - COMPANIES_HOUSE_API_KEY
       - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_API_KEY
       - TFM_API_KEY
@@ -198,7 +196,7 @@ services:
       - CLAMAV_DEBUG_MODE_ENABLED=true
       - CLAMAV_SCANNING_ENABLED
       - UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=1048576
-      - CONTACT_US_EMAIL_ADDRESS 
+      - CONTACT_US_EMAIL_ADDRESS
 
   portal-api:
     build:
@@ -251,6 +249,8 @@ services:
       - SQL_DB_PASSWORD
       - SQL_DB_NAME
       - SQL_DB_LOGGING_ENABLED
+      - CHANGE_STREAM_ENABLED
+      - DELETION_AUDIT_LOGS_TTL_SECONDS
     entrypoint: npx ts-node portal-api/src/index.ts
 
   external-api:
@@ -273,10 +273,6 @@ services:
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
-      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
-      - COMPANIES_HOUSE_API_KEY
-      - ORDNANCE_SURVEY_API_URL=https://api.os.co.uk
-      - ORDNANCE_SURVEY_API_KEY
       - APIM_TFS_URL
       - APIM_TFS_KEY
       - APIM_TFS_VALUE
@@ -315,8 +311,6 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - PORTAL_API_URL=http://portal-api:5001
-      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
-      - COMPANIES_HOUSE_API_KEY
       - EXTERNAL_API_URL=http://external-api:5002
       - SESSION_SECRET
       - TZ=Europe/London
@@ -327,6 +321,7 @@ services:
       - DTFS_CENTRAL_API_KEY
       - RATE_LIMIT_THRESHOLD
       - CONTACT_US_EMAIL_ADDRESS
+      - FF_FACILITY_END_DATE_ENABLED
 
   redis:
     image: 'redis:alpine'

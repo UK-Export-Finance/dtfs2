@@ -1,3 +1,5 @@
+const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
@@ -6,6 +8,8 @@ const aDeal = require('../deal-builder');
 const { MOCK_DEAL } = require('../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../helpers/create-deal');
+const { createFacility } = require('../../helpers/create-facility');
+const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 
 const mockFacility = {
   type: 'Bond',
@@ -39,9 +43,9 @@ describe('/v1/portal/facilities', () => {
 
   describe('GET /v1/portal/facilities/', () => {
     it('returns multiple facilities', async () => {
-      await api.post({ facility: mockFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
-      await api.post({ facility: mockFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
-      await api.post({ facility: mockFacility, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+      await createFacility({ api, facility: mockFacility, user: MOCK_PORTAL_USER });
+      await createFacility({ api, facility: mockFacility, user: MOCK_PORTAL_USER });
+      await createFacility({ api, facility: mockFacility, user: MOCK_PORTAL_USER });
 
       const { status, body } = await api.get('/v1/portal/facilities');
 
@@ -59,15 +63,56 @@ describe('/v1/portal/facilities', () => {
   });
 
   describe('POST /v1/portal/multiple-facilities', () => {
-    it('creates and returns multiple facilities with createdDate and updatedAt', async () => {
+    const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
+
+    beforeEach(async () => {
       await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES]);
+    });
 
-      const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
+    withValidateAuditDetailsTests({
+      makeRequest: (auditDetails) => {
+        return api
+          .post({
+            facilities,
+            user: MOCK_PORTAL_USER,
+            dealId,
+            auditDetails,
+          })
+          .to('/v1/portal/multiple-facilities');
+      },
+    });
 
+    it('updates the audit record', async () => {
+      const auditDetails = generatePortalAuditDetails(MOCK_PORTAL_USER._id);
       const postBody = {
         facilities,
         user: MOCK_PORTAL_USER,
         dealId,
+        auditDetails,
+      };
+
+      const { status, body } = await api.post(postBody).to('/v1/portal/multiple-facilities');
+      expect(status).toEqual(200);
+      expect(body.length).toEqual(4);
+
+      const createdFacilities = await Promise.all(
+        body.map(async (facilityId) => {
+          const { body: facility } = await api.get(`/v1/portal/facilities/${facilityId}`);
+          return facility;
+        }),
+      );
+
+      createdFacilities.forEach((facility) => {
+        expect(facility.auditRecord).toEqual(generateParsedMockAuditDatabaseRecord(auditDetails));
+      });
+    });
+
+    it('creates and returns multiple facilities with createdDate and updatedAt', async () => {
+      const postBody = {
+        facilities,
+        user: MOCK_PORTAL_USER,
+        dealId,
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       };
 
       const { status, body } = await api.post(postBody).to('/v1/portal/multiple-facilities');
@@ -83,8 +128,6 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('returns 400 where user is missing', async () => {
-      const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
-
       const postBody = {
         facilities,
         dealId,
@@ -96,11 +139,11 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('returns 400 where deal is not found', async () => {
-      const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
-
       const postBody = {
         facilities,
         dealId: '61e54dd5b578247e14575880',
+        user: MOCK_PORTAL_USER,
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       };
 
       const { status } = await api.post(postBody).to('/v1/portal/multiple-facilities');

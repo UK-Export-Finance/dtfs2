@@ -1,5 +1,5 @@
 const pageRenderer = require('../pageRenderer');
-const { anAddPaymentViewModel } = require('../../test-helpers/test-data/add-payment-view-model');
+const { anAddPaymentViewModel, aRecordedPaymentDetailsViewModel } = require('../../test-helpers/test-data/add-payment-view-model');
 
 const page = '../templates/utilisation-reports/add-payment.njk';
 const render = pageRenderer(page);
@@ -15,6 +15,60 @@ describe(page, () => {
     // Assert
     wrapper.expectText('h1').toRead('Add a payment');
     wrapper.expectText('main').toContain('My bank, December 1998');
+  });
+
+  it('should display the recorded payments accordion when there are previously recorded payments', () => {
+    // Arrange
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.recordedPaymentsDetails = [
+      {
+        formattedDateReceived: '23 Dec 2024',
+        formattedCurrencyAndAmount: 'GBP 300',
+        reference: 'REF1234',
+      },
+    ];
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    wrapper.expectText('main').toContain('Recorded payments');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('Date received');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('Amount received');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('Payment reference');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('23 Dec 2024');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('GBP 300');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('REF1234');
+  });
+
+  it('should not display the recorded payments accordion when there are no previously recorded payments', () => {
+    // Arrange
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.recordedPaymentsDetails = [];
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    wrapper.expectText('main').notToContain('Recorded payments');
+  });
+
+  it('should display the recorded payments accordion title as "Recorded payments for this fee" when "multipleFeeRecordsSelected" is false', () => {
+    // Arrange
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.multipleFeeRecordsSelected = false;
+    addPaymentViewModel.recordedPaymentsDetails = [aRecordedPaymentDetailsViewModel()];
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    wrapper.expectText('main').toContain('Recorded payments for this fee');
+  });
+
+  it('should display the recorded payments accordion title as "Recorded payments for these fees" when "multipleFeeRecordsSelected" is true', () => {
+    // Arrange
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.multipleFeeRecordsSelected = true;
+    addPaymentViewModel.recordedPaymentsDetails = [aRecordedPaymentDetailsViewModel()];
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    wrapper.expectText('main').toContain('Recorded payments for these fees');
   });
 
   it('should display selected fee record details table', () => {
@@ -245,24 +299,24 @@ describe(page, () => {
     wrapper.expectLink('a:contains("Back")').toLinkTo('/utilisation-reports/123', 'Back');
   });
 
-  it('should display form heading as "New payment details" when payment number is undefined', () => {
+  it('should display form heading as "New payment details" when payment number is 1', () => {
     // Arrange
     const addPaymentViewModel = anAddPaymentViewModel();
-    addPaymentViewModel.paymentNumber = undefined;
+    addPaymentViewModel.paymentNumber = 1;
     const wrapper = render(addPaymentViewModel);
 
     // Assert
     wrapper.expectElement('h2:contains("New payment details")').toExist();
   });
 
-  it('should display number of the payment in the form heading when payment number is provided', () => {
+  it('should display number of the payment in the form heading when payment number is greater than 1', () => {
     // Arrange
     const addPaymentViewModel = anAddPaymentViewModel();
-    addPaymentViewModel.paymentNumber = 5;
+    addPaymentViewModel.paymentNumber = 2;
     const wrapper = render(addPaymentViewModel);
 
     // Assert
-    wrapper.expectElement('h2:contains("Payment 5 details")').toExist();
+    wrapper.expectElement('h2:contains("Payment 2 details")').toExist();
   });
 
   it('should set hidden inputs for each selected checkbox id', () => {
@@ -274,17 +328,6 @@ describe(page, () => {
     // Assert
     wrapper.expectElement('input[name="fee-record-5"]').toExist();
     wrapper.expectElement('input[name="fee-record-20"]').toExist();
-  });
-
-  it('should set a hidden input for the payment number', () => {
-    // Arrange
-    const addPaymentViewModel = anAddPaymentViewModel();
-    addPaymentViewModel.paymentNumber = 35;
-    const wrapper = render(addPaymentViewModel);
-
-    // Assert
-    wrapper.expectElement('input[name="paymentNumber"]').toExist();
-    wrapper.expectInput('input[name="paymentNumber"]').toHaveValue('35');
   });
 
   it('should display error summary', () => {

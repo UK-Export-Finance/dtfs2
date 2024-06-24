@@ -65,6 +65,9 @@ const assertions = (wrapper, html, params) => ({
     toContain: (text) => {
       expect(wrapper(selector).text().trim()).toContain(text);
     },
+    notToContain: (text) => {
+      expect(wrapper(selector).text().trim()).not.toContain(text);
+    },
   }),
   expectElement: (selector) => ({
     toExist: () => {
