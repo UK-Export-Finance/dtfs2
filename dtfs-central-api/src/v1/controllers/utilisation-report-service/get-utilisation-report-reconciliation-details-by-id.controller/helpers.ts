@@ -35,7 +35,7 @@ const mapFeeRecordEntitiesToFeeRecordPaymentGroups = (feeRecordEntities: FeeReco
       };
     }
 
-    const feeRecords = feeRecordEntities.map(mapFeeRecordEntityToFeeRecord);
+    const feeRecords = feeRecordEntitiesInGroup.map(mapFeeRecordEntityToFeeRecord);
 
     const allReportedPayments = feeRecords.map(({ reportedPayments }) => reportedPayments);
     const totalReportedPayments = calculateTotalCurrencyAndAmount(allReportedPayments);
