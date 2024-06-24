@@ -1,5 +1,5 @@
 import { FeeRecordEntity, PaymentEntity } from '@ukef/dtfs2-common';
-import { FeeRecordToKey } from '../../../../types/utilisation-reports';
+import { FeeRecordToKey } from '../../../../types/fee-records';
 import { getFeeRecordPaymentEntityGroupsFromFeeRecordEntities } from '../../../../helpers';
 import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from '../../../../mapping/fee-record-mapper';
 

@@ -1,7 +1,7 @@
 /**
  * @openapi
  * definitions:
- *   UtilisationReportReconciliationDetailsFeeRecordItem:
+ *   UtilisationReportReconciliationDetailsFeeRecord:
  *     type: object
  *     properties:
  *       id:
@@ -29,7 +29,7 @@
  *       feeRecords:
  *         type: array
  *         items:
- *           $ref: '#/definitions/UtilisationReportReconciliationDetailsFeeRecordItem'
+ *           $ref: '#/definitions/UtilisationReportReconciliationDetailsFeeRecord'
  *       totalReportedPayments:
  *         $ref: '#/definitions/CurrencyAndAmount'
  *       paymentsReceived:

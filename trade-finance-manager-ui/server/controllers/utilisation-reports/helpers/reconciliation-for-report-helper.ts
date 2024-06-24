@@ -1,26 +1,26 @@
 import orderBy from 'lodash.orderby';
 import { FeeRecordStatus, getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
-import { FeeRecordItem, FeeRecordPaymentGroup, Payment } from '../../../api-response-types';
+import { FeeRecord, FeeRecordPaymentGroup, Payment } from '../../../api-response-types';
 import { FeeRecordPaymentGroupViewModelItem, FeeRecordViewModelItem, PaymentViewModelItem } from '../../../types/view-models';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
 import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
 
-const sortFeeRecordsByReportedPayments = (feeRecords: FeeRecordItem[]): FeeRecordItem[] =>
+const sortFeeRecordsByReportedPayments = (feeRecords: FeeRecord[]): FeeRecord[] =>
   orderBy(feeRecords, [({ reportedPayments }) => reportedPayments.currency, ({ reportedPayments }) => reportedPayments.amount], ['asc']);
 /**
- * Maps the fee record items to the fee record view model items
- * @param feeRecordItems - The fee record items
+ * Maps the fee records to the fee record view model items
+ * @param feeRecords - The fee record items
  * @returns The fee record view model items
  */
-const mapFeeRecordItemsToFeeRecordViewModelItems = (feeRecordItems: FeeRecordItem[]): FeeRecordViewModelItem[] =>
-  feeRecordItems.map((feeRecordItem) => {
+const mapFeeRecordsToFeeRecordViewModelItems = (feeRecords: FeeRecord[]): FeeRecordViewModelItem[] =>
+  feeRecords.map((feeRecord) => {
     return {
-      id: feeRecordItem.id,
-      facilityId: feeRecordItem.facilityId,
-      exporter: feeRecordItem.exporter,
-      reportedFees: getFormattedCurrencyAndAmount(feeRecordItem.reportedFees),
-      reportedPayments: getFormattedCurrencyAndAmount(feeRecordItem.reportedPayments),
+      id: feeRecord.id,
+      facilityId: feeRecord.facilityId,
+      exporter: feeRecord.exporter,
+      reportedFees: getFormattedCurrencyAndAmount(feeRecord.reportedFees),
+      reportedPayments: getFormattedCurrencyAndAmount(feeRecord.reportedPayments),
     };
   });
 
@@ -50,7 +50,7 @@ const getDataSortValueMapForFeeRecordPaymentGroupProperty = (
   return getKeyToCurrencyAndAmountSortValueMap(propertyWithIndexAsKey);
 };
 
-const getCheckboxIdForFeeRecordsAndStatus = (feeRecords: FeeRecordItem[], status: FeeRecordStatus): PremiumPaymentsTableCheckboxId => {
+const getCheckboxIdForFeeRecordsAndStatus = (feeRecords: FeeRecord[], status: FeeRecordStatus): PremiumPaymentsTableCheckboxId => {
   const feeRecordIdList = feeRecords.map(({ id }) => id).join(',');
   const reportedPaymentsCurrency = feeRecords[0].reportedPayments.currency;
   return `feeRecordIds-${feeRecordIdList}-reportedPaymentsCurrency-${reportedPaymentsCurrency}-status-${status}`;
@@ -72,7 +72,7 @@ export const mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems = (
     const isChecked = isCheckboxChecked(checkboxId);
 
     const feeRecordsSortedByReportedPayments = sortFeeRecordsByReportedPayments(feeRecords);
-    const feeRecordViewModelItems = mapFeeRecordItemsToFeeRecordViewModelItems(feeRecordsSortedByReportedPayments);
+    const feeRecordViewModelItems = mapFeeRecordsToFeeRecordViewModelItems(feeRecordsSortedByReportedPayments);
     const paymentViewModelItems = mapPaymentsToPaymentViewModelItems(paymentsReceived);
 
     return {

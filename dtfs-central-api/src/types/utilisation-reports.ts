@@ -11,6 +11,8 @@ import {
   CurrencyAndAmount,
   SessionBank,
 } from '@ukef/dtfs2-common';
+import { FeeRecord, FeeRecordToKey } from './fee-records';
+import { Payment } from './payments';
 
 export type GetUtilisationReportResponse = {
   id: number;
@@ -54,35 +56,8 @@ export type UtilisationReportRawCsvData = {
   [HeaderKey in UtilisationReportHeader]: HeaderKey extends `${string}currency` ? Currency : string;
 };
 
-export type FeeRecordItem = {
-  /**
-   * The fee record id
-   */
-  id: number;
-  /**
-   * The facility id
-   */
-  facilityId: string;
-  /**
-   * The exporter
-   */
-  exporter: string;
-  /**
-   * The fees paid to UKEF for the period in the actual payment currency
-   */
-  reportedFees: CurrencyAndAmount;
-  /**
-   * The fees paid to UKEF converted to the payment currency
-   */
-  reportedPayments: CurrencyAndAmount;
-};
-
-export type Payment = CurrencyAndAmount & {
-  id: number;
-};
-
 export type FeeRecordPaymentGroup = {
-  feeRecords: FeeRecordItem[];
+  feeRecords: FeeRecord[];
   totalReportedPayments: CurrencyAndAmount;
   paymentsReceived: Payment[] | null;
   totalPaymentsReceived: CurrencyAndAmount | null;
@@ -106,11 +81,6 @@ export type NewPaymentDetails = {
   amount: number;
   dateReceived: Date;
   reference?: string;
-};
-
-export type FeeRecordToKey = FeeRecordItem & {
-  paymentsReceived: CurrencyAndAmount[];
-  status: FeeRecordStatus;
 };
 
 export type UtilisationReportWithFeeRecordsToKey = {

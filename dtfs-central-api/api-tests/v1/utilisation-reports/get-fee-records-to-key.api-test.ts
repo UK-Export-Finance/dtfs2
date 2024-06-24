@@ -7,7 +7,8 @@ import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
 import { aBank } from '../../../test-helpers/test-data/bank';
-import { FeeRecordToKey, UtilisationReportWithFeeRecordsToKey } from '../../../src/types/utilisation-reports';
+import { UtilisationReportWithFeeRecordsToKey } from '../../../src/types/utilisation-reports';
+import { FeeRecordToKey } from '../../../src/types/fee-records';
 
 interface CustomResponse extends Response {
   body: UtilisationReportWithFeeRecordsToKey;

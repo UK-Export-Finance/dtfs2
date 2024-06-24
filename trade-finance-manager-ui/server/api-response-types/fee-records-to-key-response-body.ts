@@ -1,7 +1,7 @@
 import { CurrencyAndAmount, FeeRecordStatus, ReportPeriod, SessionBank } from '@ukef/dtfs2-common';
-import { FeeRecordItem } from './utilisation-report-reconciliation-details-response-body';
+import { FeeRecord } from './fee-record';
 
-export type FeeRecordToKey = FeeRecordItem & {
+export type FeeRecordToKey = FeeRecord & {
   paymentsReceived: CurrencyAndAmount[];
   status: FeeRecordStatus;
 };

@@ -1,12 +1,13 @@
 import { FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { FeeRecordItem, FeeRecordPaymentGroup, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
+import { FeeRecordPaymentGroup, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
+import { FeeRecord } from '../../../../types/fee-records';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from '../../../../mapping/fee-record-mapper';
 import { mapPaymentEntityToPayment } from '../../../../mapping/payment-mapper';
 import { calculateTotalCurrencyAndAmount, getFeeRecordPaymentEntityGroupsFromFeeRecordEntities } from '../../../../helpers';
 
-const mapFeeRecordEntityToFeeRecordItem = (feeRecord: FeeRecordEntity): FeeRecordItem => ({
+const mapFeeRecordEntityToFeeRecord = (feeRecord: FeeRecordEntity): FeeRecord => ({
   id: feeRecord.id,
   facilityId: feeRecord.facilityId,
   exporter: feeRecord.exporter,
@@ -17,16 +18,16 @@ const mapFeeRecordEntityToFeeRecordItem = (feeRecord: FeeRecordEntity): FeeRecor
 const mapFeeRecordEntitiesToFeeRecordPaymentGroups = (feeRecordEntities: FeeRecordEntity[]): FeeRecordPaymentGroup[] => {
   const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(feeRecordEntities);
 
-  return feeRecordPaymentEntityGroups.map(({ feeRecords, payments }) => {
-    const { status } = feeRecords[0];
+  return feeRecordPaymentEntityGroups.map(({ feeRecords: feeRecordEntitiesInGroup, payments }) => {
+    const { status } = feeRecordEntitiesInGroup[0];
 
     if (payments.length === 0) {
       // If there are no payments, there is only one fee record in the group
-      const feeRecordItem = mapFeeRecordEntityToFeeRecordItem(feeRecords[0]);
-      const totalReportedPayments = feeRecordItem.reportedPayments;
+      const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntitiesInGroup[0]);
+      const totalReportedPayments = feeRecord.reportedPayments;
 
       return {
-        feeRecords: [feeRecordItem],
+        feeRecords: [feeRecord],
         totalReportedPayments,
         paymentsReceived: null,
         totalPaymentsReceived: null,
@@ -34,16 +35,16 @@ const mapFeeRecordEntitiesToFeeRecordPaymentGroups = (feeRecordEntities: FeeReco
       };
     }
 
-    const feeRecordItems = feeRecords.map(mapFeeRecordEntityToFeeRecordItem);
+    const feeRecords = feeRecordEntities.map(mapFeeRecordEntityToFeeRecord);
 
-    const allReportedPayments = feeRecordItems.map(({ reportedPayments }) => reportedPayments);
+    const allReportedPayments = feeRecords.map(({ reportedPayments }) => reportedPayments);
     const totalReportedPayments = calculateTotalCurrencyAndAmount(allReportedPayments);
 
     const paymentsReceived = payments.map(mapPaymentEntityToPayment);
     const totalPaymentsReceived = calculateTotalCurrencyAndAmount(paymentsReceived);
 
     return {
-      feeRecords: feeRecordItems,
+      feeRecords,
       totalReportedPayments,
       paymentsReceived,
       totalPaymentsReceived,

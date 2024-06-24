@@ -12,7 +12,9 @@ import { when } from 'jest-when';
 import { mapUtilisationReportEntityToReconciliationDetails } from './helpers';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
-import { FeeRecordItem, Payment, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
+import { UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
+import { Payment } from '../../../../types/payments';
+import { FeeRecord } from '../../../../types/fee-records';
 
 jest.mock('../../../../repositories/banks-repo');
 
@@ -93,7 +95,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       const currency: Currency = 'GBP';
       const amount = 100;
 
-      const createFeeRecord = (id: number, status: FeeRecordStatus, facilityId: string, exporter: string): FeeRecordEntity =>
+      const createFeeRecordEntity = (id: number, status: FeeRecordStatus, facilityId: string, exporter: string): FeeRecordEntity =>
         FeeRecordEntityMockBuilder.forReport(uploadedReport)
           .withId(id)
           .withStatus(status)
@@ -104,12 +106,12 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           .withPaymentCurrency(currency)
           .build();
 
-      const feeRecords = [
-        createFeeRecord(1, 'TO_DO', '12345678', 'Test exporter 1'),
-        createFeeRecord(2, 'MATCH', '87654321', 'Test exporter 2'),
-        createFeeRecord(3, 'DOES_NOT_MATCH', '10203040', 'Test exporter 3'),
+      const feeRecordEntities = [
+        createFeeRecordEntity(1, 'TO_DO', '12345678', 'Test exporter 1'),
+        createFeeRecordEntity(2, 'MATCH', '87654321', 'Test exporter 2'),
+        createFeeRecordEntity(3, 'DOES_NOT_MATCH', '10203040', 'Test exporter 3'),
       ];
-      uploadedReport.feeRecords = feeRecords;
+      uploadedReport.feeRecords = feeRecordEntities;
 
       beforeEach(() => {
         jest.mocked(getBankNameById).mockResolvedValue('Test bank');
@@ -120,7 +122,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const mappedReport = await mapUtilisationReportEntityToReconciliationDetails(uploadedReport);
 
         // Assert
-        expect(mappedReport.feeRecordPaymentGroups).toHaveLength(feeRecords.length);
+        expect(mappedReport.feeRecordPaymentGroups).toHaveLength(feeRecordEntities.length);
       });
 
       it('sets the feeRecordPaymentGroup status to the status of the fee record at the same index', async () => {
@@ -129,7 +131,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
         // Assert
         mappedReport.feeRecordPaymentGroups.forEach((group, index) => {
-          expect(group.status).toBe(feeRecords[index].status);
+          expect(group.status).toBe(feeRecordEntities[index].status);
         });
       });
 
@@ -137,7 +139,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         // Act
         const mappedReport = await mapUtilisationReportEntityToReconciliationDetails(uploadedReport);
 
-        const feeRecordItems: FeeRecordItem[] = feeRecords.map((feeRecord) => ({
+        const feeRecords: FeeRecord[] = feeRecordEntities.map((feeRecord) => ({
           id: feeRecord.id,
           facilityId: feeRecord.facilityId,
           exporter: feeRecord.exporter,
@@ -147,7 +149,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
         // Assert
         mappedReport.feeRecordPaymentGroups.forEach((group, index) => {
-          expect(group.feeRecords).toEqual([feeRecordItems[index]]);
+          expect(group.feeRecords).toEqual([feeRecords[index]]);
         });
       });
 
@@ -196,7 +198,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
       const feeRecordStatus: FeeRecordStatus = 'DOES_NOT_MATCH';
 
-      const createFeeRecord = (id: number, facilityId: string, exporter: string): FeeRecordEntity =>
+      const createFeeRecordEntity = (id: number, facilityId: string, exporter: string): FeeRecordEntity =>
         FeeRecordEntityMockBuilder.forReport(uploadedReport)
           .withId(id)
           .withStatus(feeRecordStatus)
@@ -208,13 +210,13 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           .withPayments(payments)
           .build();
 
-      const feeRecords = [
-        createFeeRecord(1, '12345678', 'Test exporter 1'),
-        createFeeRecord(2, '87654321', 'Test exporter 2'),
-        createFeeRecord(3, '10203040', 'Test exporter 3'),
+      const feeRecordEntities = [
+        createFeeRecordEntity(1, '12345678', 'Test exporter 1'),
+        createFeeRecordEntity(2, '87654321', 'Test exporter 2'),
+        createFeeRecordEntity(3, '10203040', 'Test exporter 3'),
       ];
-      uploadedReport.feeRecords = feeRecords;
-      const totalReportedPaymentsAmount = paymentAmount * feeRecords.length;
+      uploadedReport.feeRecords = feeRecordEntities;
+      const totalReportedPaymentsAmount = paymentAmount * feeRecordEntities.length;
 
       beforeEach(() => {
         jest.mocked(getBankNameById).mockResolvedValue('Test bank');
@@ -240,7 +242,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         // Act
         const mappedReport = await mapUtilisationReportEntityToReconciliationDetails(uploadedReport);
 
-        const feeRecordItems: FeeRecordItem[] = feeRecords.map((feeRecord) => ({
+        const feeRecords: FeeRecord[] = feeRecordEntities.map((feeRecord) => ({
           id: feeRecord.id,
           facilityId: feeRecord.facilityId,
           exporter: feeRecord.exporter,
@@ -249,7 +251,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         }));
 
         // Assert
-        expect(mappedReport.feeRecordPaymentGroups[0].feeRecords).toEqual(feeRecordItems);
+        expect(mappedReport.feeRecordPaymentGroups[0].feeRecords).toEqual(feeRecords);
       });
 
       it('sets the feeRecordPaymentGroup totalReportedPayments to the total of the fee record reported payments', async () => {
@@ -293,7 +295,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       const feeRecordIdGenerator = idGenerator();
       const paymentIdGenerator = idGenerator();
 
-      const createFeeRecord = (currency: Currency, payments: PaymentEntity[]): FeeRecordEntity =>
+      const createFeeRecordEntity = (currency: Currency, payments: PaymentEntity[]): FeeRecordEntity =>
         FeeRecordEntityMockBuilder.forReport(uploadedReport)
           .withId(feeRecordIdGenerator.next().value)
           .withStatus('DOES_NOT_MATCH')
@@ -305,29 +307,29 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           .withPayments(payments)
           .build();
 
-      const createPayment = (currency: Currency): PaymentEntity =>
+      const createPaymentEntity = (currency: Currency): PaymentEntity =>
         PaymentEntityMockBuilder.forCurrency(currency).withId(paymentIdGenerator.next().value).withAmount(paymentAmount).build();
 
       // First group of linked fee records and payments
       const firstPaymentCurrency: Currency = 'EUR';
-      const firstPayments = [createPayment(firstPaymentCurrency), createPayment(firstPaymentCurrency)];
-      const firstFeeRecords = [
-        createFeeRecord(firstPaymentCurrency, firstPayments),
-        createFeeRecord(firstPaymentCurrency, firstPayments),
-        createFeeRecord(firstPaymentCurrency, firstPayments),
+      const firstPaymentEntities = [createPaymentEntity(firstPaymentCurrency), createPaymentEntity(firstPaymentCurrency)];
+      const firstFeeRecordEntities = [
+        createFeeRecordEntity(firstPaymentCurrency, firstPaymentEntities),
+        createFeeRecordEntity(firstPaymentCurrency, firstPaymentEntities),
+        createFeeRecordEntity(firstPaymentCurrency, firstPaymentEntities),
       ];
 
       // Second group of linked fee records and payments
       const secondPaymentCurrency: Currency = 'GBP';
-      const secondPayments = [createPayment(secondPaymentCurrency)];
-      const secondFeeRecords = [
-        createFeeRecord(secondPaymentCurrency, secondPayments),
-        createFeeRecord(secondPaymentCurrency, secondPayments),
-        createFeeRecord(secondPaymentCurrency, secondPayments),
-        createFeeRecord(secondPaymentCurrency, secondPayments),
+      const secondPaymentEntities = [createPaymentEntity(secondPaymentCurrency)];
+      const secondFeeRecordEntities = [
+        createFeeRecordEntity(secondPaymentCurrency, secondPaymentEntities),
+        createFeeRecordEntity(secondPaymentCurrency, secondPaymentEntities),
+        createFeeRecordEntity(secondPaymentCurrency, secondPaymentEntities),
+        createFeeRecordEntity(secondPaymentCurrency, secondPaymentEntities),
       ];
 
-      uploadedReport.feeRecords = [...firstFeeRecords, ...secondFeeRecords];
+      uploadedReport.feeRecords = [...firstFeeRecordEntities, ...secondFeeRecordEntities];
 
       beforeEach(() => {
         jest.mocked(getBankNameById).mockResolvedValue('Test bank');
@@ -348,27 +350,27 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         // Assert - First group
         const firstGroup = mappedReport.feeRecordPaymentGroups[0];
 
-        expect(firstGroup.feeRecords).toHaveLength(firstFeeRecords.length);
+        expect(firstGroup.feeRecords).toHaveLength(firstFeeRecordEntities.length);
         const feeRecordIdsInFirstGroup = firstGroup.feeRecords.map(({ id }) => id);
-        firstFeeRecords.forEach(({ id }) => expect(feeRecordIdsInFirstGroup).toContain(id));
+        firstFeeRecordEntities.forEach(({ id }) => expect(feeRecordIdsInFirstGroup).toContain(id));
 
-        expect(firstGroup.paymentsReceived).toHaveLength(firstPayments.length);
+        expect(firstGroup.paymentsReceived).toHaveLength(firstPaymentEntities.length);
         firstGroup.paymentsReceived!.forEach(({ currency, id }, index) => {
           expect(currency).toBe(firstPaymentCurrency);
-          expect(id).toBe(firstPayments[index].id);
+          expect(id).toBe(firstPaymentEntities[index].id);
         });
 
         // Assert - Second group
         const secondGroup = mappedReport.feeRecordPaymentGroups[1];
 
-        expect(secondGroup.feeRecords).toHaveLength(secondFeeRecords.length);
+        expect(secondGroup.feeRecords).toHaveLength(secondFeeRecordEntities.length);
         const feeRecordIdsInSecondGroup = secondGroup.feeRecords.map(({ id }) => id);
-        secondFeeRecords.forEach(({ id }) => expect(feeRecordIdsInSecondGroup).toContain(id));
+        secondFeeRecordEntities.forEach(({ id }) => expect(feeRecordIdsInSecondGroup).toContain(id));
 
-        expect(secondGroup.paymentsReceived).toHaveLength(secondPayments.length);
+        expect(secondGroup.paymentsReceived).toHaveLength(secondPaymentEntities.length);
         secondGroup.paymentsReceived!.forEach(({ currency, id }, index) => {
           expect(currency).toBe(secondPaymentCurrency);
-          expect(id).toBe(secondPayments[index].id);
+          expect(id).toBe(secondPaymentEntities[index].id);
         });
       });
 
