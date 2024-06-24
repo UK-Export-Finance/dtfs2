@@ -212,7 +212,7 @@ jobs:
       - name: Initialise
         working-directory: ./
         run: |
-          sleep 60s
+          sleep 100s
           npm run load
 
       - name: SQL
@@ -403,7 +403,7 @@ jobs:
       - name: Initialise
         working-directory: ./
         run: |
-          sleep 60s
+          sleep 100s
           npm run load
 
       - name: SQL
@@ -477,7 +477,7 @@ jobs:
       - name: Initialise
         working-directory: ./
         run: |
-          sleep 60s
+          sleep 100s
           npm run load
 
       - name: SQL
@@ -549,7 +549,7 @@ jobs:
       - name: Initialise
         working-directory: ./
         run: |
-          sleep 60s
+          sleep 100s
           npm run load
 
       - name: SQL
@@ -630,7 +630,7 @@ jobs:
       - name: Initialise
         working-directory: ./
         run: |
-          sleep 60s
+          sleep 100s
           npm run load
 
       - name: SQL
