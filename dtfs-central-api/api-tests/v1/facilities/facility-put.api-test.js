@@ -49,7 +49,7 @@ describe('/v1/portal/facilities', () => {
     const expectedAuditRecord = generateParsedMockAuditDatabaseRecord(auditDetails);
 
     beforeEach(async () => {
-      ({ body: createdFacility } = await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER }));
+      ({ body: createdFacility } = await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER }));
       aValidUpdateRequest = {
         facilityUpdate: { ...createdFacility, value: 123456 },
         user: MOCK_PORTAL_USER,
@@ -65,12 +65,12 @@ describe('/v1/portal/facilities', () => {
           auditDetails: auditDetailsToUse,
         };
 
-        return api.put(facilityUpdate).to(`/v1/portal/facilities/${createdFacility._id}`);
+        return testApi.put(facilityUpdate).to(`/v1/portal/facilities/${createdFacility._id}`);
       },
     });
 
     it('saves audit record to the facility', async () => {
-      const { body, status } = await api.put(aValidUpdateRequest).to(`/v1/portal/facilities/${createdFacility._id}`);
+      const { body, status } = await testApi.put(aValidUpdateRequest).to(`/v1/portal/facilities/${createdFacility._id}`);
 
       expect(status).toEqual(200);
       expect(body.auditRecord).toEqual(expectedAuditRecord);
@@ -104,7 +104,7 @@ describe('/v1/portal/facilities', () => {
       const getDealResponse = await testApi.get(`/v1/portal/deals/${newFacility.dealId}`);
       expect(getDealResponse.body.deal.editedBy.length).toEqual(1);
 
-      await TestApi.put(aValidUpdateRequest).to(`/v1/portal/facilities/${createdFacility._id}`);
+      await testApi.put(aValidUpdateRequest).to(`/v1/portal/facilities/${createdFacility._id}`);
 
       const { body } = await testApi.get(`/v1/portal/deals/${newFacility.dealId}`);
       expect(body.deal.editedBy.length).toEqual(2);
