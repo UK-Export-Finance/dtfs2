@@ -38,7 +38,9 @@ export const getUtilisationReportReconciliationDetailsById = async (req: GetUtil
       where: { id: Number(reportId), ...feeRecordFindOptions },
       relations: {
         feeRecords: {
-          payments: true,
+          payments: {
+            feeRecords: true,
+          },
         },
       },
     });

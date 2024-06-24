@@ -5,7 +5,7 @@ import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from '../../../../mapping/fee-record-mapper';
 import { mapPaymentEntityToPayment } from '../../../../mapping/payment-mapper';
-import { calculateTotalCurrencyAndAmount, getFeeRecordPaymentEntityGroupsFromFeeRecordEntities } from '../../../../helpers';
+import { calculateTotalCurrencyAndAmount, getFeeRecordPaymentEntityGroupsFromFilteredFeeRecordEntities } from '../../../../helpers';
 
 const mapFeeRecordEntityToFeeRecord = (feeRecord: FeeRecordEntity): FeeRecord => ({
   id: feeRecord.id,
@@ -16,7 +16,7 @@ const mapFeeRecordEntityToFeeRecord = (feeRecord: FeeRecordEntity): FeeRecord =>
 });
 
 const mapFeeRecordEntitiesToFeeRecordPaymentGroups = (feeRecordEntities: FeeRecordEntity[]): FeeRecordPaymentGroup[] => {
-  const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(feeRecordEntities);
+  const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFilteredFeeRecordEntities(feeRecordEntities);
 
   return feeRecordPaymentEntityGroups.map(({ feeRecords: feeRecordEntitiesInGroup, payments }) => {
     const { status } = feeRecordEntitiesInGroup[0];
