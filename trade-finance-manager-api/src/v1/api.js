@@ -111,7 +111,7 @@ const addPortalDealComment = async (dealId, commentType, comment, auditDetails) 
   return response.data;
 };
 
-const updatePortalFacilityStatus = async (facilityId, status) => {
+const updatePortalFacilityStatus = async (facilityId, status, auditDetails) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
 
@@ -126,6 +126,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
       headers: headers.central,
       data: {
         status,
+        auditDetails,
       },
     });
 
@@ -137,7 +138,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
   }
 };
 
-const updatePortalFacility = async (facilityId, update) => {
+const updatePortalFacility = async (facilityId, update, auditDetails) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
 
@@ -150,7 +151,7 @@ const updatePortalFacility = async (facilityId, update) => {
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
       headers: headers.central,
-      data: update,
+      data: { facilityUpdate: update, auditDetails },
     });
 
     return response.data;
