@@ -12,4 +12,5 @@ createApp()
   })
   .catch((error) => {
     console.error('Failed to start app:', error);
+    throw error;
   });
