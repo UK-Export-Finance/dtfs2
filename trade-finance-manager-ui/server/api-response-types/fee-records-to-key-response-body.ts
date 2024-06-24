@@ -7,7 +7,7 @@ export type FeeRecordToKey = FeeRecord & {
 };
 
 export type FeeRecordsToKeyResponseBody = {
-  id: number;
+  reportId: number;
   bank: SessionBank;
   reportPeriod: ReportPeriod;
   feeRecords: FeeRecordToKey[];

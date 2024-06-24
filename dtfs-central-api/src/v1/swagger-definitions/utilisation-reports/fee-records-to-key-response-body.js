@@ -20,10 +20,10 @@
  *         type: array
  *         items:
  *           $ref: '#/definitions/CurrencyAndAmount'
- *   UtilisationReportWithFeeRecordsToKey:
+ *   FeeRecordsToKeyResponseBody:
  *     type: object
  *     properties:
- *       id:
+ *       reportId:
  *         type: number
  *       bank:
  *         type: object

@@ -1,7 +1,7 @@
 import { FeeRecordsToKeyResponseBody } from '../server/api-response-types';
 
 export const aFeeRecordsToKeyResponseBody = (): FeeRecordsToKeyResponseBody => ({
-  id: 1,
+  reportId: 1,
   bank: {
     id: '123',
     name: 'Test bank',

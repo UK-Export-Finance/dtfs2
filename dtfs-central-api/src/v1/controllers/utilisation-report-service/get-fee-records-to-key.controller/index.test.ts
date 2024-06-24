@@ -1,10 +1,9 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { getFeeRecordsToKey } from '.';
+import { getFeeRecordsToKey, GetFeeRecordsToKeyResponseBody } from '.';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { getBankNameById } from '../../../../repositories/banks-repo';
-import { UtilisationReportWithFeeRecordsToKey } from '../../../../types/utilisation-reports';
 
 console.error = jest.fn();
 
@@ -94,11 +93,11 @@ describe('get-fee-records-to-key.controller', () => {
       await getFeeRecordsToKey(req, res);
 
       // Assert
-      const responseBody = res._getData() as UtilisationReportWithFeeRecordsToKey;
-      expect(responseBody.id).toBe(1);
+      const responseBody = res._getData() as GetFeeRecordsToKeyResponseBody;
+      expect(responseBody.reportId).toBe(1);
     });
 
-    it('responds with a body containing the session bank', async () => {
+    it('responds with a body containing the report session bank', async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         params: { reportId: '1' },
@@ -117,11 +116,11 @@ describe('get-fee-records-to-key.controller', () => {
       await getFeeRecordsToKey(req, res);
 
       // Assert
-      const responseBody = res._getData() as UtilisationReportWithFeeRecordsToKey;
+      const responseBody = res._getData() as GetFeeRecordsToKeyResponseBody;
       expect(responseBody.bank).toEqual({ id: bankId, name: bankName });
     });
 
-    it('responds with a body containing the report period', async () => {
+    it('responds with a body containing the report report period', async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         params: { reportId: '1' },
@@ -142,7 +141,7 @@ describe('get-fee-records-to-key.controller', () => {
       await getFeeRecordsToKey(req, res);
 
       // Assert
-      const responseBody = res._getData() as UtilisationReportWithFeeRecordsToKey;
+      const responseBody = res._getData() as GetFeeRecordsToKeyResponseBody;
       expect(responseBody.reportPeriod).toEqual(reportPeriod);
     });
 
@@ -162,7 +161,7 @@ describe('get-fee-records-to-key.controller', () => {
       await getFeeRecordsToKey(req, res);
 
       // Assert
-      const responseBody = res._getData() as UtilisationReportWithFeeRecordsToKey;
+      const responseBody = res._getData() as GetFeeRecordsToKeyResponseBody;
       expect(responseBody.feeRecords).toEqual([]);
     });
   });

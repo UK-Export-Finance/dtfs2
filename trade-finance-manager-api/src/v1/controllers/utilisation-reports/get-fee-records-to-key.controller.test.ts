@@ -4,6 +4,8 @@ import api from '../../api';
 import { getFeeRecordsToKey } from './get-fee-records-to-key.controller';
 import { FeeRecordsToKeyResponseBody } from '../../api-response-types';
 
+console.error = jest.fn();
+
 jest.mock('../../api');
 
 describe('get-fee-records-to-key.controller', () => {
@@ -16,7 +18,7 @@ describe('get-fee-records-to-key.controller', () => {
       });
 
     const aUtilisationReportWithFeeRecordsToKeyResponseBody = (): FeeRecordsToKeyResponseBody => ({
-      id: 1,
+      reportId: 1,
       bank: { id: '123', name: 'Test bank' },
       reportPeriod: {
         start: { month: 1, year: 2024 },

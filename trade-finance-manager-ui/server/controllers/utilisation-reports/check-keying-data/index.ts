@@ -37,7 +37,7 @@ export const postCheckKeyingData = async (req: Request, res: Response) => {
   const { reportId } = req.params;
 
   try {
-    const { bank, reportPeriod, feeRecords } = await api.getUtilisationReportWithFeeRecordsToKey(reportId, userToken);
+    const { reportPeriod, bank, feeRecords } = await api.getUtilisationReportWithFeeRecordsToKey(reportId, userToken);
 
     const numberOfMatchingFacilities = feeRecords.length;
 

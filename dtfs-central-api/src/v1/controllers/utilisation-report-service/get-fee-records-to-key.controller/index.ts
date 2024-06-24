@@ -1,12 +1,20 @@
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
+import { ReportPeriod, SessionBank } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { ApiError, NotFoundError } from '../../../../errors';
-import { UtilisationReportWithFeeRecordsToKey } from '../../../../types/utilisation-reports';
+import { FeeRecordToKey } from '../../../../types/fee-records';
 import { mapToFeeRecordsToKey } from './helpers';
 
-type GetFeeRecordsToKeyResponse = Response<UtilisationReportWithFeeRecordsToKey | string>;
+export type GetFeeRecordsToKeyResponseBody = {
+  feeRecords: FeeRecordToKey[];
+  reportId: number;
+  bank: SessionBank;
+  reportPeriod: ReportPeriod;
+};
+
+type GetFeeRecordsToKeyResponse = Response<GetFeeRecordsToKeyResponseBody | string>;
 
 export const getFeeRecordsToKey = async (req: Request, res: GetFeeRecordsToKeyResponse) => {
   const { reportId } = req.params;
@@ -27,13 +35,13 @@ export const getFeeRecordsToKey = async (req: Request, res: GetFeeRecordsToKeyRe
     const feeRecordsToKey = mapToFeeRecordsToKey(feeRecords);
 
     return res.status(HttpStatusCode.Ok).send({
-      id,
+      feeRecords: feeRecordsToKey,
+      reportId: id,
       bank: {
         id: bankId,
         name: bankName,
       },
       reportPeriod,
-      feeRecords: feeRecordsToKey,
     });
   } catch (error) {
     const errorMessage = 'Failed to generate keying data';

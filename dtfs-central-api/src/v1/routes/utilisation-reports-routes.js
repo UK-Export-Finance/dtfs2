@@ -318,7 +318,7 @@ utilisationReportsRouter.route('/:reportId/keying-data').post(validation.sqlIdVa
  *           application/json:
  *             schema:
  *               type: object
- *               $ref: '#/definitions/UtilisationReportWithFeeRecordsToKey'
+ *               $ref: '#/definitions/FeeRecordsToKeyResponseBody'
  *       400:
  *         description: Bad request
  *       404:

@@ -7,11 +7,11 @@ import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
 import { aBank } from '../../../test-helpers/test-data/bank';
-import { UtilisationReportWithFeeRecordsToKey } from '../../../src/types/utilisation-reports';
 import { FeeRecordToKey } from '../../../src/types/fee-records';
+import { GetFeeRecordsToKeyResponseBody } from '../../../src/v1/controllers/utilisation-report-service/get-fee-records-to-key.controller';
 
 interface CustomResponse extends Response {
-  body: UtilisationReportWithFeeRecordsToKey;
+  body: GetFeeRecordsToKeyResponseBody;
 }
 
 console.error = jest.fn();
@@ -139,7 +139,7 @@ describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
     const response: CustomResponse = await api.get(getUrl(reportId));
 
     // Assert
-    expect(response.body.id).toBe(reportId);
+    expect(response.body.reportId).toBe(reportId);
   });
 
   it('returns a body containing the session bank', async () => {
