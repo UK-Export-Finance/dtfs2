@@ -1,14 +1,18 @@
 /**
- * Defines the constant headers used in the application.
+ * Represents the constant headers used in the application.
  */
 export const HEADERS = {
   /**
-   * Defines the content type headers.
+   * Represents the content type header key.
    */
   CONTENT_TYPE: {
+    KEY: 'Content-Type',
     /**
-     * Defines the JSON content type header.
+     * Represents the possible values for the content type header.
      */
-    JSON: "'Content-Type': 'application/json'",
+    VALUES: {
+      JSON: 'application/json',
+      // Add more possible values here if needed
+    },
   },
 } as const;

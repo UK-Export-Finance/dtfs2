@@ -1,9 +1,7 @@
 const { HttpStatusCode } = require('axios');
 const axios = require('axios');
 const FormData = require('form-data');
-const {
-  HEADERS: { CONTENT_TYPE },
-} = require('@ukef/dtfs2-common');
+const { HEADERS } = require('@ukef/dtfs2-common');
 const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName, isValidBankId } = require('./validation/validate-ids');
 const { FILE_UPLOAD } = require('./constants');
 
@@ -11,20 +9,19 @@ require('dotenv').config();
 
 const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
 
-const apiKeyHeader = {
+const headers = {
   'x-api-key': PORTAL_API_KEY,
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
 };
 
 const login = async (username, password) => {
   const response = await axios({
     method: 'post',
     url: `${PORTAL_API_URL}/v1/login`,
-    headers: {
-      ...apiKeyHeader,
-      ...CONTENT_TYPE.JSON,
-    },
+    headers,
     data: { username, password },
   });
+
   const { token, loginStatus, user } = response.data;
   return { token, loginStatus, user };
 };
@@ -53,7 +50,7 @@ const loginWithSignInLink = async ({ token: requestAuthToken, userId, signInToke
     method: 'post',
     url: `${PORTAL_API_URL}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
     headers: {
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Authorization: requestAuthToken,
     },
   });
@@ -70,10 +67,7 @@ const resetPassword = async (email) => {
   const response = await axios({
     method: 'post',
     url: `${PORTAL_API_URL}/v1/users/reset-password`,
-    headers: {
-      ...apiKeyHeader,
-      ...CONTENT_TYPE.JSON,
-    },
+    headers,
     data: { email },
   });
 
@@ -90,10 +84,7 @@ const resetPasswordFromToken = async (resetPwdToken, formData) => {
     const response = await axios({
       method: 'post',
       url: `${PORTAL_API_URL}/v1/users/reset-password/${resetPwdToken}`,
-      headers: {
-        ...apiKeyHeader,
-        ...CONTENT_TYPE.JSON,
-      },
+      headers,
       data: formData,
     });
     return {
@@ -122,7 +113,7 @@ const allDeals = async (start, pagesize, filters, token, sort) => {
     url: `${PORTAL_API_URL}/v1/deals`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     data: payload,
   });
@@ -143,7 +134,7 @@ const allFacilities = async (start, pagesize, filters, token, sort) => {
     url: `${PORTAL_API_URL}/v1/facilities`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     data: payload,
   });
@@ -157,7 +148,7 @@ const createDeal = async (deal, token) => {
     url: `${PORTAL_API_URL}/v1/deals`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     data: deal,
   });
@@ -178,7 +169,7 @@ const updateDealName = async (id, newName, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${id}/additionalRefName`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     data: { additionalRefName: newName },
   });
@@ -206,7 +197,7 @@ const updateDealStatus = async (statusUpdate, token) => {
     const response = await axios.put(`${PORTAL_API_URL}/v1/deals/${statusUpdate._id}/status`, statusUpdate, {
       headers: {
         Authorization: token,
-        ...CONTENT_TYPE.JSON,
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       },
     });
 
@@ -236,7 +227,7 @@ const getSubmissionDetails = async (id, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${id}/submission-details`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
 
@@ -253,7 +244,7 @@ const updateSubmissionDetails = async (deal, submissionDetails, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${deal._id}/submission-details`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     data: submissionDetails,
   });
@@ -276,7 +267,7 @@ const cloneDeal = async (dealId, newDealData, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/clone`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     data: newDealData,
   });
@@ -295,7 +286,7 @@ const updateEligibilityCriteria = async (dealId, criteria, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/eligibility-criteria`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     data: criteria,
   });
@@ -350,7 +341,7 @@ const createLoan = async (dealId, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/loan/create`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
   return response.data;
@@ -366,7 +357,7 @@ const getLoan = async (dealId, loanId, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/loan/${loanId}`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
   return response.data;
@@ -383,7 +374,7 @@ const updateLoan = async (dealId, loanId, formData, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/loan/${loanId}`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     data: formData,
   });
@@ -401,7 +392,7 @@ const updateLoanIssueFacility = async (dealId, loanId, formData, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/loan/${loanId}/issue-facility`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     data: formData,
   });
@@ -419,7 +410,7 @@ const updateLoanCoverStartDate = async (dealId, loanId, formData, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/loan/${loanId}/change-cover-start-date`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     data: formData,
   });
@@ -437,7 +428,7 @@ const deleteLoan = async (dealId, loanId, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/loan/${loanId}`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
   return response.data;
@@ -454,7 +445,7 @@ const createBond = async (dealId, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/bond/create`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
   return response.data;
@@ -470,7 +461,7 @@ const contractBond = async (dealId, bondId, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/bond/${bondId}`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
   return response.data;
@@ -487,7 +478,7 @@ const updateBond = async (dealId, bondId, formData, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/bond/${bondId}`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     data: formData,
   });
@@ -505,7 +496,7 @@ const updateBondIssueFacility = async (dealId, bondId, formData, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/bond/${bondId}/issue-facility`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     data: formData,
   });
@@ -523,7 +514,7 @@ const updateBondCoverStartDate = async (dealId, bondId, formData, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/bond/${bondId}/change-cover-start-date`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     data: formData,
   });
@@ -541,7 +532,7 @@ const deleteBond = async (dealId, bondId, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/bond/${bondId}`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
   return response.data;
@@ -553,7 +544,7 @@ const banks = async (token) => {
     url: `${PORTAL_API_URL}/v1/banks`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
 
@@ -566,7 +557,7 @@ const getCurrencies = async (token, includeDisabled) => {
     url: `${PORTAL_API_URL}/v1/currencies`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
 
@@ -584,7 +575,7 @@ const getCountries = async (token, includeDisabled) => {
     url: `${PORTAL_API_URL}/v1/countries`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
 
@@ -602,7 +593,7 @@ const getIndustrySectors = async (token) => {
     url: `${PORTAL_API_URL}/v1/industry-sectors`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
 
@@ -619,7 +610,7 @@ const validateToken = async (token) => {
     method: 'get',
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     url: `${PORTAL_API_URL}/v1/validate`,
   }).catch((error) => error.response);
@@ -631,7 +622,7 @@ const validatePartialAuthToken = (token) =>
     method: 'get',
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     url: `${PORTAL_API_URL}/v1/validate-partial-2fa-token`,
   });
@@ -643,7 +634,7 @@ const validateBank = async (dealId, bankId, token) => {
       url: `${PORTAL_API_URL}/v1/validate/bank`,
       headers: {
         Authorization: token,
-        ...CONTENT_TYPE.JSON,
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       },
       data: { dealId, bankId },
     });
@@ -664,7 +655,7 @@ const users = async (token) => {
     method: 'get',
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     url: `${PORTAL_API_URL}/v1/users`,
   });
@@ -687,7 +678,7 @@ const user = async (id, token) => {
     method: 'get',
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     url: `${PORTAL_API_URL}/v1/users/${id}`,
   });
@@ -706,7 +697,7 @@ const createUser = async (userToCreate, token) => {
     url: `${PORTAL_API_URL}/v1/users`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     data: userToCreate,
   }).catch((error) => {
@@ -733,7 +724,7 @@ const updateUser = async (id, update, token) => {
     url: `${PORTAL_API_URL}/v1/users/${id}`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     data: update,
   }).catch((error) => {
@@ -757,7 +748,7 @@ const getDeal = async (id, token) => {
     url: `${PORTAL_API_URL}/v1/deals/${id}`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
 
@@ -774,7 +765,7 @@ const getLatestMandatoryCriteria = async (token) => {
     url: `${PORTAL_API_URL}/v1/mandatory-criteria/latest`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
 
@@ -803,7 +794,7 @@ const downloadEligibilityDocumentationFile = async (id, fieldname, filename, tok
     url: `${PORTAL_API_URL}/v1/deals/${id}/eligibility-documentation/${fieldname}/${filename}`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
 
@@ -816,8 +807,7 @@ const createFeedback = async (formData, token) => {
     url: `${PORTAL_API_URL}/v1/feedback`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
-      ...apiKeyHeader,
+      ...headers,
     },
     data: formData,
   });
@@ -831,7 +821,7 @@ const getUnissuedFacilitiesReport = async (token) => {
       url: `${PORTAL_API_URL}/v1/reports/unissued-facilities`,
       headers: {
         Authorization: token,
-        ...CONTENT_TYPE.JSON,
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       },
     });
     return response.data;
@@ -848,7 +838,7 @@ const getUkefDecisionReport = async (token, payload) => {
       url: `${PORTAL_API_URL}/v1/reports/review-ukef-decision`,
       headers: {
         Authorization: token,
-        ...CONTENT_TYPE.JSON,
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       },
       data: payload,
     });
@@ -910,7 +900,7 @@ const getPreviousUtilisationReportsByBank = async (token, bankId) => {
     url: `${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-reports`,
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
 
@@ -931,7 +921,7 @@ const getLastUploadedReportByBankId = async (userToken, bankId) => {
   const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-reports/last-uploaded`, {
     headers: {
       Authorization: userToken,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
   return response.data;
@@ -945,7 +935,7 @@ const getDueReportPeriodsByBankId = async (token, bankId) => {
   const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/due-report-periods`, {
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
   return response.data;
@@ -959,7 +949,7 @@ const getNextReportPeriodByBankId = async (token, bankId) => {
   const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/next-report-period`, {
     headers: {
       Authorization: token,
-      ...CONTENT_TYPE.JSON,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
   return response.data;
@@ -976,7 +966,7 @@ const getUkBankHolidays = async (token) => {
     const { data } = await axios.get(`${PORTAL_API_URL}/v1/bank-holidays`, {
       headers: {
         Authorization: token,
-        ...CONTENT_TYPE.JSON,
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       },
     });
     return data;

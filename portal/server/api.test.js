@@ -25,7 +25,7 @@ describe('api.login', () => {
       .calledWith({
         method: 'post',
         url: `${PORTAL_API_URL}/v1/login`,
-        ...headers,
+        headers,
         data: { username, password },
       })
       .mockResolvedValueOnce({ data: { token, loginStatus, user } });
