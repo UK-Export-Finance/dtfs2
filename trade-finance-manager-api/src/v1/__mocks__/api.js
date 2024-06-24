@@ -238,4 +238,6 @@ module.exports = {
   updateUtilisationReportStatus: jest.fn(),
   getUtilisationReportReconciliationDetailsById: jest.fn(),
   addPaymentToFeeRecords: jest.fn(),
+  generateKeyingData: jest.fn(),
+  getUtilisationReportWithFeeRecordsToKey: jest.fn(),
 };

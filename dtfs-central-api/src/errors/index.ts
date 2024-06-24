@@ -5,3 +5,4 @@ export { InvalidStateMachineTransitionError } from './invalid-state-machine-tran
 export { NotImplementedError } from './not-implemented.error';
 export { TransactionFailedError } from './transaction-failed.error';
 export { NotFoundError } from './not-found.error';
+export { NoMatchingFeeRecordsError } from './no-matching-fee-records.error';

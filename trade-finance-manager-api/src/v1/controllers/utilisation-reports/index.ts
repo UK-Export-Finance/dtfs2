@@ -5,3 +5,5 @@ export { getUtilisationReportReconciliationDetailsById } from './get-utilisation
 export { getSelectedFeeRecordsDetails } from './get-selected-fee-records-details.controller';
 export { getUtilisationReportSummariesByBankAndYear } from './get-utilisation-reports-by-bank-and-year.controller';
 export { postPayment } from './post-payment.controller';
+export { postKeyingData } from './post-keying-data.controller';
+export { getFeeRecordsToKey } from './get-fee-records-to-key.controller';
