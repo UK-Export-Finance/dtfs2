@@ -4,7 +4,7 @@ import { UtilisationReportRepo } from '../../../../repositories/utilisation-repo
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { ApiError, NotFoundError } from '../../../../errors';
 import { UtilisationReportWithFeeRecordsToKey } from '../../../../types/utilisation-reports';
-import { getFeeRecordsToKeyFromFeeRecordEntities } from './helpers';
+import { mapToFeeRecordsToKey } from './helpers';
 
 type GetFeeRecordsToKeyResponse = Response<UtilisationReportWithFeeRecordsToKey | string>;
 
@@ -24,7 +24,7 @@ export const getFeeRecordsToKey = async (req: Request, res: GetFeeRecordsToKeyRe
       throw new NotFoundError(`Failed to find a bank with id ${bankId}`);
     }
 
-    const feeRecordsToKey = getFeeRecordsToKeyFromFeeRecordEntities(feeRecords);
+    const feeRecordsToKey = mapToFeeRecordsToKey(feeRecords);
 
     return res.status(HttpStatusCode.Ok).send({
       id,

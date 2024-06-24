@@ -143,7 +143,7 @@ describe(component, () => {
     wrapper.expectElement(`${rowSelector} li:contains("GBP 314.59")`).toExist();
   });
 
-  it('renders the display status badge in the first table row', () => {
+  it('renders the display status badge', () => {
     // Arrange
     const feeRecord = {
       ...aFeeRecordToKey(),

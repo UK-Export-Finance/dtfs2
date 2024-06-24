@@ -7,10 +7,10 @@ import {
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import { getFeeRecordsToKeyFromFeeRecordEntities } from './helpers';
+import { mapToFeeRecordsToKey } from './helpers';
 
 describe('get-fee-records-to-key.controller helpers', () => {
-  describe('getFeeRecordsToKeyFromFeeRecordEntities', () => {
+  describe('mapToFeeRecordsToKey', () => {
     it.each(difference(Object.values(FEE_RECORD_STATUS), [FEE_RECORD_STATUS.MATCH]))(
       "throws an error if at least one of the fee records has the '%s' status",
       (status) => {
@@ -18,7 +18,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
         const feeRecordEntities = [FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(status).build()];
 
         // Act / Assert
-        expect(() => getFeeRecordsToKeyFromFeeRecordEntities(feeRecordEntities)).toThrow(Error);
+        expect(() => mapToFeeRecordsToKey(feeRecordEntities)).toThrow(Error);
       },
     );
 
@@ -28,7 +28,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('MATCH').withId(id).build();
 
       // Act
-      const feeRecordsToKey = getFeeRecordsToKeyFromFeeRecordEntities([feeRecord]);
+      const feeRecordsToKey = mapToFeeRecordsToKey([feeRecord]);
 
       // Assert
       expect(feeRecordsToKey[0].id).toBe(id);
@@ -40,7 +40,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('MATCH').withFacilityId(facilityId).build();
 
       // Act
-      const feeRecordsToKey = getFeeRecordsToKeyFromFeeRecordEntities([feeRecord]);
+      const feeRecordsToKey = mapToFeeRecordsToKey([feeRecord]);
 
       // Assert
       expect(feeRecordsToKey[0].facilityId).toBe(facilityId);
@@ -52,7 +52,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('MATCH').withExporter(exporter).build();
 
       // Act
-      const feeRecordsToKey = getFeeRecordsToKeyFromFeeRecordEntities([feeRecord]);
+      const feeRecordsToKey = mapToFeeRecordsToKey([feeRecord]);
 
       // Assert
       expect(feeRecordsToKey[0].exporter).toBe(exporter);
@@ -64,7 +64,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(status).build();
 
       // Act
-      const feeRecordsToKey = getFeeRecordsToKeyFromFeeRecordEntities([feeRecord]);
+      const feeRecordsToKey = mapToFeeRecordsToKey([feeRecord]);
 
       // Assert
       expect(feeRecordsToKey[0].status).toBe(status);
@@ -81,7 +81,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
         .build();
 
       // Act
-      const feeRecordsToKey = getFeeRecordsToKeyFromFeeRecordEntities([feeRecord]);
+      const feeRecordsToKey = mapToFeeRecordsToKey([feeRecord]);
 
       // Assert
       expect(feeRecordsToKey[0].reportedFees).toEqual({
@@ -102,7 +102,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
         .build();
 
       // Act
-      const feeRecordsToKey = getFeeRecordsToKeyFromFeeRecordEntities([feeRecord]);
+      const feeRecordsToKey = mapToFeeRecordsToKey([feeRecord]);
 
       // Assert
       expect(feeRecordsToKey[0].reportedPayments).toEqual({
@@ -127,7 +127,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
       const convertedAmount = 90.91; // 100 / 1.1
 
       // Act
-      const feeRecordsToKey = getFeeRecordsToKeyFromFeeRecordEntities([feeRecord]);
+      const feeRecordsToKey = mapToFeeRecordsToKey([feeRecord]);
 
       // Assert
       expect(feeRecordsToKey[0].reportedPayments).toEqual({
@@ -168,7 +168,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
       ];
 
       // Act
-      const feeRecordsToKey = getFeeRecordsToKeyFromFeeRecordEntities(feeRecords);
+      const feeRecordsToKey = mapToFeeRecordsToKey(feeRecords);
 
       // Assert
       expect(feeRecordsToKey).toHaveLength(2);
@@ -214,7 +214,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
       ];
 
       // Act
-      const feeRecordsToKey = getFeeRecordsToKeyFromFeeRecordEntities(feeRecords);
+      const feeRecordsToKey = mapToFeeRecordsToKey(feeRecords);
 
       // Assert
       expect(feeRecordsToKey).toHaveLength(2);
@@ -252,7 +252,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
       ];
 
       // Act
-      const feeRecordsToKey = getFeeRecordsToKeyFromFeeRecordEntities(feeRecords);
+      const feeRecordsToKey = mapToFeeRecordsToKey(feeRecords);
 
       // Assert
       expect(feeRecordsToKey).toHaveLength(1);
@@ -291,7 +291,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
       ];
 
       // Act
-      const feeRecordsToKey = getFeeRecordsToKeyFromFeeRecordEntities(feeRecords);
+      const feeRecordsToKey = mapToFeeRecordsToKey(feeRecords);
 
       // Assert
       expect(feeRecordsToKey).toHaveLength(1);

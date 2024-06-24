@@ -1,19 +1,9 @@
-import { FeeRecordEntity, PaymentEntity } from '@ukef/dtfs2-common';
+import { CurrencyAndAmount, FeeRecordEntity } from '@ukef/dtfs2-common';
 import { FeeRecordToKey } from '../../../../types/fee-records';
 import { getFeeRecordPaymentEntityGroupsFromFeeRecordEntities } from '../../../../helpers';
 import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from '../../../../mapping/fee-record-mapper';
 
-const getFeeRecordsToKeyWithPayments = (feeRecordEntity: FeeRecordEntity, paymentEntities: PaymentEntity[]): FeeRecordToKey => ({
-  id: feeRecordEntity.id,
-  facilityId: feeRecordEntity.facilityId,
-  exporter: feeRecordEntity.exporter,
-  reportedFees: mapFeeRecordEntityToReportedFees(feeRecordEntity),
-  reportedPayments: mapFeeRecordEntityToReportedPayments(feeRecordEntity),
-  paymentsReceived: paymentEntities.map(({ currency, amount }) => ({ currency, amount })),
-  status: feeRecordEntity.status,
-});
-
-const getFeeRecordToKey = (feeRecordEntity: FeeRecordEntity): FeeRecordToKey => {
+const mapToFeeRecordToKey = (feeRecordEntity: FeeRecordEntity, paymentsReceived: CurrencyAndAmount[]): FeeRecordToKey => {
   const reportedFees = mapFeeRecordEntityToReportedFees(feeRecordEntity);
   const reportedPayments = mapFeeRecordEntityToReportedPayments(feeRecordEntity);
 
@@ -23,18 +13,18 @@ const getFeeRecordToKey = (feeRecordEntity: FeeRecordEntity): FeeRecordToKey => 
     exporter: feeRecordEntity.exporter,
     reportedFees,
     reportedPayments,
-    paymentsReceived: [reportedPayments],
+    paymentsReceived,
     status: feeRecordEntity.status,
   };
 };
 
 /**
- * Gets the fee records to key from the supplied fee record entities
+ * Maps the fee record entities to the fee records to key
  * @param feeRecordEntities - The fee record entities with 'MATCH' status
  * @returns The fee records to key
  * @throws {Error} If the supplied fee records are not all at the 'MATCH' status
  */
-export const getFeeRecordsToKeyFromFeeRecordEntities = (feeRecordEntities: FeeRecordEntity[]): FeeRecordToKey[] => {
+export const mapToFeeRecordsToKey = (feeRecordEntities: FeeRecordEntity[]): FeeRecordToKey[] => {
   if (feeRecordEntities.some(({ status }) => status !== 'MATCH')) {
     throw new Error("All fee records must have 'MATCH' status to get fee records to key");
   }
@@ -43,11 +33,20 @@ export const getFeeRecordsToKeyFromFeeRecordEntities = (feeRecordEntities: FeeRe
 
   return feeRecordPaymentEntityGroups.reduce((feeRecordsToKey, group) => {
     const { feeRecords, payments } = group;
+
     if (feeRecords.length === 1) {
       // If one fee record to many payments, list all the payments
-      return [...feeRecordsToKey, getFeeRecordsToKeyWithPayments(feeRecords[0], payments)];
+      const paymentsReceived = payments.map(({ currency, amount }) => ({ currency, amount }));
+      return [...feeRecordsToKey, ...feeRecords.map((feeRecord) => mapToFeeRecordToKey(feeRecord, paymentsReceived))];
     }
+
     // Otherwise, fee record payments received should equal fee record reported payments
-    return [...feeRecordsToKey, ...feeRecords.map((feeRecord) => getFeeRecordToKey(feeRecord))];
+    return [
+      ...feeRecordsToKey,
+      ...feeRecords.map((feeRecord) => {
+        const paymentReceived = mapFeeRecordEntityToReportedPayments(feeRecord);
+        return mapToFeeRecordToKey(feeRecord, [paymentReceived]);
+      }),
+    ];
   }, [] as FeeRecordToKey[]);
 };
