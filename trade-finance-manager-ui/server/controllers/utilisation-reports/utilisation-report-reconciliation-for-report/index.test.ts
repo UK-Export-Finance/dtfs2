@@ -134,7 +134,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         enablePaymentsReceivedSorting: true,
         reportId: '1',
         feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
-        addPaymentError: undefined,
+        premiumPaymentFormError: undefined,
         facilityIdQueryError: undefined,
       });
     });
@@ -162,9 +162,9 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.addPaymentError).toBeDefined();
-      expect((viewModel.addPaymentError as [ErrorSummaryViewModel])[0].href).toBe('#different-fee-record-statuses');
-      expect((viewModel.addPaymentError as [ErrorSummaryViewModel])[0].text).toBe('Select a fee or fees with the same status');
+      expect(viewModel.premiumPaymentFormError).toBeDefined();
+      expect((viewModel.premiumPaymentFormError as [ErrorSummaryViewModel])[0].href).toBe('#different-fee-record-statuses');
+      expect((viewModel.premiumPaymentFormError as [ErrorSummaryViewModel])[0].text).toBe('Select a fee or fees with the same status');
       expect(viewModel.feeRecordPaymentGroups[0].isChecked).toBe(true);
     });
 

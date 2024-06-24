@@ -11,10 +11,10 @@
 {% endblock %}
 
 {% set premiumPaymentsHtml %}
-  {% if addPaymentError or facilityIdQueryError %}
+  {% if premiumPaymentFormError or facilityIdQueryError %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: [addPaymentError[0], facilityIdQueryError[0]],
+      errorList: [premiumPaymentFormError[0], facilityIdQueryError[0]],
       attributes: {
         'data-cy': 'error-summary'
       }
@@ -24,7 +24,7 @@
   {% set clearButtonHref %}
       /utilisation-reports/{{ reportId }}
   {% endset %}
-  
+
     <h2 class="govuk-heading-l" data-cy="premium-payments-heading">Premium payments</h2>
 
     <div class="govuk-grid-row ukef-grid-container">
@@ -63,7 +63,7 @@
           <div class="govuk-!-display-inline-block">
             {{ govukButton({
               text: "Clear filter",
-              classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2 ukef-margin-bottom-0",                
+              classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2 ukef-margin-bottom-0",
               id: "facility-id-clear-button",
               href: clearButtonHref,
               attributes: {'data-cy': 'facility-filter-clear-button'}
@@ -72,32 +72,30 @@
         </form>
       </div>
     </div>
-      
-{% if addPaymentError %}
+
+{% if premiumPaymentFormError %}
     <div class="govuk-form-group--error">
   {% endif %}
     <form method="post" data-cy="premium-payments-form">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+      <input type="hidden" name="canGenerateKeyingData" value="{{ canGenerateKeyingData }}"/>
 
       <div class="govuk-button-group">
-          <input
-            class="govuk-button govuk-!-margin-right-3"
-            formaction="/utilisation-reports/{{ reportId }}/add-payment"
-            value="Add a payment"
-            data-module="govuk-button"
-            type="submit"
-            data-cy="add-a-payment-button"/>
-          {{ govukButton({
-            text: "Generate keying data",
-            name: "generate-keying-data",
-            value: "generate-keying-data",
-            href: "#",
-            classes: "govuk-button--secondary",
-            attributes: {
-              "data-cy": "generate-keying-data-button"
-            }
-          }) }}
-        </div>
+        <input
+          class="govuk-button govuk-!-margin-right-3"
+          formaction="/utilisation-reports/{{ reportId }}/add-payment"
+          value="Add a payment"
+          data-module="govuk-button"
+          type="submit"
+          data-cy="add-a-payment-button"/>
+        <input
+          class="govuk-button govuk-button--secondary govuk-!-margin-right-3"
+          formaction="/utilisation-reports/{{ reportId }}/check-keying-data"
+          value="Generate keying data"
+          data-module="govuk-button"
+          type="submit"
+          data-cy="generate-keying-data-button"/>
+      </div>
 
       {{ premiumPaymentsTable.render({
         reportId: reportId,
@@ -105,7 +103,7 @@
         enablePaymentsReceivedSorting: enablePaymentsReceivedSorting
       }) }}
     </form>
-  {% if addPaymentError %}
+  {% if premiumPaymentFormError %}
     </div>
   {% endif %}
 {% endset %}

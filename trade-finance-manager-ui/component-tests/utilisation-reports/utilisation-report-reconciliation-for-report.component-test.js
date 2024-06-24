@@ -75,8 +75,12 @@ describe(page, () => {
       .expectElement(`${premiumPaymentsTabSelector} input[data-cy="add-a-payment-button"]`)
       .toHaveAttribute('formaction', `/utilisation-reports/${reportId}/add-payment`);
 
-    wrapper.expectElement(`${premiumPaymentsTabSelector} a[data-cy="generate-keying-data-button"]`).toExist();
-    wrapper.expectSecondaryButton(`${premiumPaymentsTabSelector} a[data-cy="generate-keying-data-button"]`).toLinkTo('#', 'Generate keying data');
+    wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).toExist();
+    wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).toHaveAttribute('value', 'Generate keying data');
+    wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).hasClass('govuk-button--secondary');
+    wrapper
+      .expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`)
+      .toHaveAttribute('formaction', `/utilisation-reports/${reportId}/check-keying-data`);
 
     wrapper.expectElement(`${premiumPaymentsTabSelector} table[data-cy="premium-payments-table"]`).toExist();
   });

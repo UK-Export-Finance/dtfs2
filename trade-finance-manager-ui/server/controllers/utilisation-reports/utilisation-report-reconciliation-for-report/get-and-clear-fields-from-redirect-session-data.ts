@@ -1,22 +1,38 @@
 import { Request } from 'express';
 import { ErrorSummaryViewModel } from '../../../types/view-models';
 import { getAddPaymentError } from '../helpers/get-add-payment-error-helper';
+import { getGenerateKeyingDataError } from '../helpers';
 
 const clearRedirectSessionData = (req: Request): void => {
   delete req.session.addPaymentErrorKey;
   delete req.session.checkedCheckboxIds;
+  delete req.session.generateKeyingDataErrorKey;
 };
 
-export const getAndClearAddPaymentFieldsFromRedirectSessionData = (
+export const getAndClearFieldsFromRedirectSessionData = (
   req: Request,
 ): {
-  addPaymentError: [ErrorSummaryViewModel] | undefined;
+  errorSummary: [ErrorSummaryViewModel] | undefined;
   isCheckboxChecked: (checkboxId: string) => boolean;
 } => {
-  const { addPaymentErrorKey } = req.session;
+  const { addPaymentErrorKey, generateKeyingDataErrorKey } = req.session;
+
+  if (generateKeyingDataErrorKey) {
+    clearRedirectSessionData(req);
+    switch (generateKeyingDataErrorKey) {
+      case 'no-matching-fee-records':
+        return {
+          errorSummary: getGenerateKeyingDataError(generateKeyingDataErrorKey),
+          isCheckboxChecked: () => false,
+        };
+      default:
+        throw new Error(`Unrecognised generate keying data error key '${generateKeyingDataErrorKey}'`);
+    }
+  }
+
   if (!addPaymentErrorKey) {
     return {
-      addPaymentError: undefined,
+      errorSummary: undefined,
       isCheckboxChecked: () => false,
     };
   }
@@ -31,7 +47,7 @@ export const getAndClearAddPaymentFieldsFromRedirectSessionData = (
     case 'different-fee-record-payment-currencies':
     case 'multiple-does-not-match-selected':
       clearRedirectSessionData(req);
-      return { addPaymentError: getAddPaymentError(addPaymentErrorKey), isCheckboxChecked };
+      return { errorSummary: getAddPaymentError(addPaymentErrorKey), isCheckboxChecked };
     default:
       clearRedirectSessionData(req);
       throw new Error(`Unrecognised add payment error key '${addPaymentErrorKey}'`);
