@@ -53,7 +53,9 @@
     "**/package.json": "sort-package-json",
     "**/*.{js,ts}": [
       "eslint --fix",
-      "prettier --write",
+      "prettier --write"
+    ],
+    "**/*.{yml}": [
       "validate:yml"
     ],
     "**/*": [
