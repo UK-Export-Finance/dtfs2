@@ -37,8 +37,6 @@ jest.mock('../../src/database/mongo-client', () => ({
   })),
 }));
 
-// jest.mock('axios', () => jest.requireActual('axios'));
-
 const mockExporterResponse = {
   siteId: 'test',
   status: 'Created',
