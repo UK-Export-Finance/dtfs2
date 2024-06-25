@@ -20,7 +20,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
   const now = new Date().toISOString();
 
   // Step 1: Initiate the CRON job
-  await cron(eStoreData, ENDPOINT.SITE);
+  cron(eStoreData, ENDPOINT.SITE);
 
   // Step 2: Site existence check
   const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(eStoreData.exporterName);
@@ -54,7 +54,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
     );
 
     // Stop CRON job
-    await cron(eStoreData, ENDPOINT.SITE, true);
+    cron(eStoreData, ENDPOINT.SITE, true);
 
     // Add facility IDs to term store and create the buyer folder
     await eStoreTermStoreCreationJob(data);

@@ -96,6 +96,19 @@ export interface EstoreDealFiles {
 
 // Responses
 /**
+ * Represents a generic Axios response from the eStore, including status and data.
+ * @interface EstoreResponse
+ * @property {number} status - HTTP status code of the response.
+ * @property {object} body - Body payload comprising a response
+ */
+export interface EstoreAxiosResponse {
+  readonly status: number;
+  readonly body: {
+    message?: string;
+  };
+}
+
+/**
  * Represents a generic response from the eStore, including status and data.
  * @interface EstoreResponse
  * @property {number} status - HTTP status code of the response.

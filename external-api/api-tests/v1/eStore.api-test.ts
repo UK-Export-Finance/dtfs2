@@ -1,15 +1,10 @@
-// TODO: Remove below
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { app } from '../../src/createApp';
 import { api } from '../api';
 import { UKEF_ID, ESTORE_CRON_STATUS } from '../../src/constants';
-import { Estore } from '../../src/interfaces';
+import { Estore, EstoreAxiosResponse } from '../../src/interfaces';
 
 const { post } = api(app);
 
@@ -42,7 +37,8 @@ jest.mock('../../src/database/mongo-client', () => ({
   })),
 }));
 
-jest.mock('axios', () => jest.requireActual('axios'));
+// jest.mock('axios', () => jest.requireActual('axios'));
+
 const mockExporterResponse = {
   siteId: 'test',
   status: 'Created',
@@ -60,7 +56,7 @@ axiosMock.onPost(estoreSitesRegex).reply(HttpStatusCode.Ok, mockApiResponse);
 describe('/estore', () => {
   describe('Empty payload', () => {
     it('should return a status of 400 and an invalid request message', async () => {
-      const { status, body } = await post().to('/estore');
+      const { status, body } = (await post().to('/estore')) as EstoreAxiosResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
       expect(body.message).toEqual('Invalid request');
@@ -73,7 +69,7 @@ describe('/estore', () => {
         ...payload,
         dealIdentifier: UKEF_ID.TEST,
       };
-      const { status, body } = await post(invalidPayload).to('/estore');
+      const { status, body } = (await post(invalidPayload).to('/estore')) as EstoreAxiosResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
       expect(body.message).toEqual('Invalid IDs');
@@ -85,7 +81,7 @@ describe('/estore', () => {
         dealIdentifier: UKEF_ID.PENDING,
       };
 
-      const { status, body } = await post(invalidPayload).to('/estore');
+      const { status, body } = (await post(invalidPayload).to('/estore')) as EstoreAxiosResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
       expect(body.message).toEqual('Invalid IDs');
@@ -98,7 +94,7 @@ describe('/estore', () => {
         ...payload,
         facilityIdentifiers: [UKEF_ID.TEST],
       };
-      const { status, body } = await post(invalidPayload).to('/estore');
+      const { status, body } = (await post(invalidPayload).to('/estore')) as EstoreAxiosResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
       expect(body.message).toEqual('Invalid IDs');
@@ -110,7 +106,7 @@ describe('/estore', () => {
         facilityIdentifiers: [UKEF_ID.PENDING],
       };
 
-      const { status, body } = await post(invalidPayload).to('/estore');
+      const { status, body } = (await post(invalidPayload).to('/estore')) as EstoreAxiosResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
       expect(body.message).toEqual('Invalid IDs');
@@ -125,7 +121,7 @@ describe('/estore', () => {
         dealId,
       };
 
-      const { status, body } = await post(invalidPayload).to('/estore');
+      const { status, body } = (await post(invalidPayload).to('/estore')) as EstoreAxiosResponse;
 
       expect(status).toEqual(HttpStatusCode.InternalServerError);
       expect(body.message).toEqual('Unable to create eStore directories');
@@ -155,7 +151,7 @@ describe('/estore', () => {
       expect(mockInsertOne).toHaveBeenCalledTimes(1);
       expect(mockInsertOne).toHaveBeenCalledWith({
         payload,
-        timestamp: expect.any(Number),
+        timestamp: expect.any(Number) as number,
         cron: {
           site: { status: ESTORE_CRON_STATUS.PENDING },
           term: { status: ESTORE_CRON_STATUS.PENDING },

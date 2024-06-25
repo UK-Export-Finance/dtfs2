@@ -1,15 +1,16 @@
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { getCollection } from '../../../database';
 import { Estore, SiteExistsResponse, EstoreErrorResponse } from '../../../interfaces';
+import { EstoreRequest } from '../../../helpers/types/estore';
 import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../../../constants';
 import { areValidUkefIds, objectIsEmpty } from '../../../helpers';
 import { eStoreTermStoreCreationJob, eStoreSiteCreationCron } from '../../../cron';
 import { createExporterSite, siteExists } from './eStoreApi';
 import { getNowAsEpoch } from '../../../helpers/date';
 
-export const create = async (req: Request, res: Response) => {
+export const create = async (req: EstoreRequest, res: Response) => {
   try {
     const { body } = req as {
       body: object;
@@ -24,8 +25,7 @@ export const create = async (req: Request, res: Response) => {
     const cronJobLogs = await getCollection('cron-job-logs');
     const tfmDeals = await getCollection('tfm-deals');
 
-    const { dealId, siteId, facilityIdentifiers, supportingInformation, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } =
-      req.body as Estore;
+    const { dealId, siteId, facilityIdentifiers, supportingInformation, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = req.body;
 
     const eStoreData: Estore = {
       dealId: new ObjectId(dealId),

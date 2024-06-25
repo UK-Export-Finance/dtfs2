@@ -35,7 +35,7 @@ const onComplete = (eStoreData: Estore, category: Category) => {
  * @param kill - Flag used to terminate the CRON job, defaults to `false`
  * @returns A promise that resolves when the CRON job is started.
  */
-export const cron = (eStoreData: Estore, category: Category, kill: boolean = false): Promise<boolean> => {
+export const cron = (eStoreData: Estore, category: Category, kill: boolean = false): boolean => {
   const id = `estore_cron_${category}_${eStoreData.dealId.toString()}`;
 
   // Stop the CRON job
@@ -47,14 +47,14 @@ export const cron = (eStoreData: Estore, category: Category, kill: boolean = fal
     jobs.delete(id);
     job.stop();
 
-    return Promise.resolve(true);
+    return true;
   }
 
   // Check job existence
   if (jobs.has(id)) {
     console.info('⚠️ eStore %s CRON %s already exists for deal %s.', category, id, eStoreData.dealIdentifier);
 
-    return Promise.resolve(false);
+    return false;
   }
 
   const cronJob = new CronJob(
