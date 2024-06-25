@@ -55,7 +55,7 @@
       "eslint --fix",
       "prettier --write"
     ],
-    "**/*.{yml}": [
+    "**/*.yml": [
       "validate:yml"
     ],
     "**/*": [
