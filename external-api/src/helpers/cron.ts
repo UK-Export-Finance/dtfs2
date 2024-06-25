@@ -72,5 +72,5 @@ export const cron = (eStoreData: Estore, category: Category, kill: boolean = fal
   }
 
   console.info('⚡ eStore %s CRON has been initiated for deal %s.', category, eStoreData.dealIdentifier);
-  return Promise.resolve(true);
+  return false;
 };
