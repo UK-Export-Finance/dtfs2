@@ -65,7 +65,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
   if (firstDealSubmission) {
     const acceptableTaskSubmissionTypes = [CONSTANTS.DEALS.SUBMISSION_TYPE.AIN, CONSTANTS.DEALS.SUBMISSION_TYPE.MIA];
     // Updates portal deal status
-    await updatePortalDealStatus(mappedDeal);
+    await updatePortalDealStatus(mappedDeal, auditDetails);
 
     /**
      * Below action is performed to retrieve the latest portal application status.
@@ -134,7 +134,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
     }
 
     // Update portal deal status
-    await updatePortalDealStatus(mappedDeal);
+    await updatePortalDealStatus(mappedDeal, auditDetails);
 
     /**
      * Below action is performed to retrieve the latest portal application status.

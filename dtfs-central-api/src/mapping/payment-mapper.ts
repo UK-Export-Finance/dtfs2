@@ -1,5 +1,5 @@
 import { PaymentEntity } from '@ukef/dtfs2-common';
-import { Payment } from '../types/utilisation-reports';
+import { Payment } from '../types/payments';
 
 /**
  * Maps the payment entity to a payment

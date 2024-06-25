@@ -5,7 +5,8 @@ import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, ReportPeriod, Uti
 import { GetUtilisationReportReconciliationDetailsByIdRequest, getUtilisationReportReconciliationDetailsById } from '.';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import * as banksRepo from '../../../../repositories/banks-repo';
-import { FeeRecordItem, FeeRecordPaymentGroup, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
+import { FeeRecordPaymentGroup, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
+import { FeeRecord } from '../../../../types/fee-records';
 
 console.error = jest.fn();
 
@@ -133,7 +134,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
 
       const payment = PaymentEntityMockBuilder.forCurrency('GBP').withId(1).withAmount(100).build();
 
-      const feeRecords = [
+      const feeRecordEntities = [
         FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport)
           .withId(1)
           .withFacilityId('12345678')
@@ -156,7 +157,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
           .withPayments([payment])
           .build(),
       ];
-      reconciliationInProgressReport.feeRecords = feeRecords;
+      reconciliationInProgressReport.feeRecords = feeRecordEntities;
 
       when(findOneSpy)
         .calledWith({
@@ -169,7 +170,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
         })
         .mockResolvedValue(reconciliationInProgressReport);
 
-      const feeRecordItems: FeeRecordItem[] = [
+      const feeRecords: FeeRecord[] = [
         {
           id: 1,
           facilityId: '12345678',
@@ -200,7 +201,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
         {
-          feeRecords: feeRecordItems,
+          feeRecords,
           totalReportedPayments: {
             currency: 'GBP',
             amount: 405.5,

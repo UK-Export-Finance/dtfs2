@@ -62,7 +62,7 @@ const updatePortalDeal = async (dealId, update, auditDetails) => {
   }
 };
 
-const updatePortalBssDealStatus = async (dealId, status) => {
+const updatePortalBssDealStatus = async ({ dealId, status, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -77,6 +77,7 @@ const updatePortalBssDealStatus = async (dealId, status) => {
       headers: headers.central,
       data: {
         status,
+        auditDetails,
       },
     });
 
@@ -1034,7 +1035,7 @@ const findOneGefDeal = async (dealId) => {
   }
 };
 
-const updatePortalGefDealStatus = async (dealId, status) => {
+const updatePortalGefDealStatus = async ({ dealId, status, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -1049,6 +1050,7 @@ const updatePortalGefDealStatus = async (dealId, status) => {
       headers: headers.central,
       data: {
         status,
+        auditDetails,
       },
     });
 
@@ -1327,6 +1329,34 @@ const addPaymentToFeeRecords = async (reportId, feeRecordIds, user, paymentCurre
   return response.data;
 };
 
+/**
+ * Generates keying data for the utilisation report
+ * with the supplied id
+ * @param {string} reportId - The report id
+ * @returns {Promise<{}>}
+ */
+const generateKeyingData = async (reportId) => {
+  const response = await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/keying-data`,
+    method: 'post',
+    headers: headers.central,
+  });
+  return response.data;
+};
+
+/**
+ * Gets the utilisation report with the supplied id and the
+ * fee records to key
+ * @param {string} reportId - The report id
+ * @returns {Promise<import('./api-response-types').FeeRecordsToKeyResponseBody>} The utilisation report with fee records to key
+ */
+const getUtilisationReportWithFeeRecordsToKey = async (reportId) => {
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records-to-key`, {
+    headers: headers.central,
+  });
+  return response.data;
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1390,4 +1420,6 @@ module.exports = {
   getSelectedFeeRecordsDetails,
   getUtilisationReportSummariesByBankIdAndYear,
   addPaymentToFeeRecords,
+  generateKeyingData,
+  getUtilisationReportWithFeeRecordsToKey,
 };

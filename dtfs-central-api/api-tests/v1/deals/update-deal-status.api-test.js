@@ -1,3 +1,6 @@
+const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { ObjectId } = require('mongodb');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deal-builder');
@@ -6,6 +9,7 @@ const { testApi } = require('../../test-api');
 const CONSTANTS = require('../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../helpers/create-deal');
+const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 
 const newDeal = aDeal({
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
@@ -24,49 +28,54 @@ const newDeal = aDeal({
 });
 
 describe('/v1/portal/deals', () => {
-  beforeAll(async () => {
+  let createdDeal;
+  const acknowledgedStatus = 'Acknowledged';
+  const submittedStatus = 'Submitted';
+  const auditDetails = generatePortalAuditDetails(new ObjectId());
+
+  beforeEach(async () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
+    const dealWithSubmittedStatus = {
+      ...newDeal,
+      status: submittedStatus,
+    };
+
+    ({ body: createdDeal } = await createDeal({ deal: dealWithSubmittedStatus, user: MOCK_PORTAL_USER }));
   });
 
   describe('PUT /v1/portal/deals/:id/status', () => {
-    it('Should return 400 bad request status code when the new status is same and existing application status', async () => {
-      // Create a new BSS deal
-      const dealWithSubmittedStatus = {
-        ...newDeal,
-        status: 'Submitted',
-        previousStatus: "Checker's approval",
-      };
-      const postResult = await createDeal({ deal: dealWithSubmittedStatus, user: MOCK_PORTAL_USER });
-      const createdDeal = postResult.body;
+    withValidateAuditDetailsTests({
+      makeRequest: (auditDetailsToUse) => {
+        return testApi.put({ status: acknowledgedStatus, auditDetails: auditDetailsToUse }).to(`/v1/portal/deals/${createdDeal._id}/status`);
+      },
+    });
 
+    it('should return audit record', async () => {
+      const { status, body } = await testApi.put({ status: acknowledgedStatus, auditDetails }).to(`/v1/portal/deals/${createdDeal._id}/status`);
+
+      expect(status).toEqual(200);
+      expect(body.auditRecord).toEqual(generateParsedMockAuditDatabaseRecord(auditDetails));
+    });
+
+    it('Should return 400 bad request status code when the new status is same and existing application status', async () => {
       // First status update - 200
-      let statusUpdate = 'Acknowledged';
-      const { status } = await testApi.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
+      let statusUpdate = acknowledgedStatus;
+      const { status } = await testApi.put({ status: statusUpdate, auditDetails }).to(`/v1/portal/deals/${createdDeal._id}/status`);
       expect(status).toEqual(200);
 
       // Second status update - 400
-      statusUpdate = 'Acknowledged';
-      const { status: secondStatus } = await testApi.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
+      statusUpdate = acknowledgedStatus;
+      const { status: secondStatus } = await testApi.put({ status: statusUpdate, auditDetails }).to(`/v1/portal/deals/${createdDeal._id}/status`);
       expect(secondStatus).toEqual(400);
     });
 
     it('returns the updated deal with updated statuses', async () => {
-      const dealWithSubmittedStatus = {
-        ...newDeal,
-        status: 'Submitted',
-        previousStatus: "Checker's approval",
-      };
-
-      const postResult = await createDeal({ deal: dealWithSubmittedStatus, user: MOCK_PORTAL_USER });
-      const createdDeal = postResult.body;
-      const statusUpdate = 'Acknowledged';
-
-      const { status, body } = await testApi.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
+      const { status, body } = await testApi.put({ status: acknowledgedStatus, auditDetails }).to(`/v1/portal/deals/${createdDeal._id}/status`);
 
       expect(status).toEqual(200);
 
-      expect(body.status).toEqual('Acknowledged');
-      expect(body.previousStatus).toEqual('Submitted');
+      expect(body.status).toEqual(acknowledgedStatus);
+      expect(body.previousStatus).toEqual(submittedStatus);
       expect(typeof body.updatedAt).toEqual('number');
     });
   });
