@@ -32,6 +32,7 @@ const onComplete = (eStoreData: Estore, category: Category) => {
  * Creates and starts a CRON job for eStore data.
  * @param eStoreData - The eStore data.
  * @param category - The category of the eStore data.
+ * @param kill - Flag used to terminate the CRON job, defaults to `false`
  * @returns A promise that resolves when the CRON job is started.
  */
 export const cron = (eStoreData: Estore, category: Category, kill: boolean = false): Promise<boolean> => {
