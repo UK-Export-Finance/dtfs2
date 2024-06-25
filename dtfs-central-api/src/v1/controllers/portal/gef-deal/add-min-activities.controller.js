@@ -1,4 +1,5 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { getUnixTime } = require('date-fns');
 const { ObjectId } = require('mongodb');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
@@ -156,38 +157,52 @@ const ukefSubmissionPortalActivity = async (application) => {
  * @param {*} res
  */
 const generateMINActivities = async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    try {
-      const dealId = req.params.id;
+  const {
+    params: { id: dealId },
+    body: { auditDetails },
+  } = req;
+  if (!ObjectId.isValid(dealId)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  }
 
-      const application = await findOneDeal(dealId);
-
-      if (application) {
-        const facilities = await findAllGefFacilitiesByDealId(dealId);
-        let { portalActivities } = application;
-
-        portalActivities = await ukefSubmissionPortalActivity(application);
-        portalActivities = await facilityChangePortalActivity(application, facilities);
-
-        const update = {
-          portalActivities,
-        };
-
-        await updateChangedToIssued(facilities);
-
-        const response = await updateDeal(dealId, update);
-        const status = isNumber(response?.status, 3);
-        const code = status ? response.status : 200;
-
-        res.status(code).send(response);
-      }
-      res.status(404).send();
-    } catch (error) {
-      console.error('Central-API - Error generating MIN activities %o', error);
-      res.status(400).send();
+  try {
+    validateAuditDetails(auditDetails);
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: `Invalid auditDetails, ${error.message}`,
+      });
     }
-  } else {
-    res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+    return res.status(500).send({ status: 500, error });
+  }
+
+  try {
+    const application = await findOneDeal(dealId);
+
+    if (application) {
+      const facilities = await findAllGefFacilitiesByDealId(dealId);
+      let { portalActivities } = application;
+
+      portalActivities = await ukefSubmissionPortalActivity(application);
+      portalActivities = await facilityChangePortalActivity(application, facilities);
+
+      const update = {
+        portalActivities,
+      };
+
+      await updateChangedToIssued(facilities);
+
+      const response = await updateDeal({ dealId, dealUpdate: update, auditDetails });
+      const status = isNumber(response?.status, 3);
+      const code = status ? response.status : 200;
+
+      return res.status(code).send(response);
+    }
+    return res.status(404).send();
+  } catch (error) {
+    console.error('Central-API - Error generating MIN activities %o', error);
+    return res.status(400).send();
   }
 };
 
