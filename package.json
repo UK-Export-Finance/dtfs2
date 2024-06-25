@@ -56,7 +56,7 @@
       "prettier --write"
     ],
     "**/*.yml": [
-      "validate:yml"
+      "npm run validate:yml"
     ],
     "**/*": [
       "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"
