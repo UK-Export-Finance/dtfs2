@@ -59,7 +59,7 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
     // Make a GET request to the eStore API to check if a site exists
     const response: SiteExistsResponse = await get(`${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`, {
       validateStatus(status) {
-        return customValidateStatus(status, [200, 201, 202, 404]);
+        return customValidateStatus(status);
       },
       headers,
     });
