@@ -133,34 +133,22 @@ export interface SiteCreationResponse {
 }
 
 /**
- * Represents a response when a site is not found within the eStore.
- * @interface SiteNotFoundResponse
- * @property {object} response - Optional response object.
- * @property {number} response.data.statusCode - HTTP status code of the response.
- * @property {string} response.data.message - Error message.
- */
-export interface SiteNotFoundResponse {
-  readonly response?: {
-    data: {
-      statusCode: number;
-      message: string;
-    };
-  };
-}
-
-/**
- * Represents a response when a site already exists within the eStore.
+ * Represents a response from APIM on eStore site existence check.
  * @interface SiteExistsResponse
  * @extends SiteNotFoundResponse
  * @property {number} status - HTTP status code of the response.
  * @property {string} data.status - Status message.
  * @property {string} data.siteId - Unique identifier for the existing site.
+ * @property {number} data.statusCode - HTTP status code.
+ * @property {string} data.message - Message comprising site status.
  */
-export interface SiteExistsResponse extends SiteNotFoundResponse {
+export interface SiteExistsResponse {
   readonly status: number;
   readonly data: {
     status: string;
     siteId: string;
+    statusCode?: number;
+    message?: string;
   };
 }
 

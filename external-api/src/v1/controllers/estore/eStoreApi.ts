@@ -1,5 +1,6 @@
 import { get, post, HttpStatusCode } from 'axios';
 import dotenv from 'dotenv';
+import { customValidateStatus } from '@ukef/dtfs2-common';
 import {
   Estore,
   EstoreSite,
@@ -57,6 +58,9 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
 
     // Make a GET request to the eStore API to check if a site exists
     const response: SiteExistsResponse = await get(`${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`, {
+      validateStatus(status) {
+        return customValidateStatus(status, [200, 201, 202, 404]);
+      },
       headers,
     });
 
@@ -69,26 +73,26 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
     let siteId: string = '';
 
     /**
-     * `404` response is returned inside `response`
+     * `404` response is returned inside `data.message`
      * object if the site does not exist.
      * @example response: { "message": "Not found", "statusCode": 404 }
      */
-    if (response.response) {
-      statusCode = response.response?.data?.statusCode;
-      status = response.response?.data?.message;
+    if (response?.data?.message) {
+      statusCode = response?.status;
+      status = response?.data?.message;
       siteId = '';
     }
 
     /**
      * If not `404`, response is returned inside
-     * `data` object.
+     * `data.siteId` object.
      * @example data: { "siteId": "1234567", "status": "Provisioning",  }
      * @example data: { "siteId": "1234567", "status": "Created" }
      */
-    if (response.data) {
-      statusCode = response.status;
-      status = response.data.status;
-      siteId = response.data.siteId;
+    if (response?.data?.siteId) {
+      statusCode = response?.status;
+      status = response?.data?.status;
+      siteId = response?.data?.siteId;
     }
 
     return {
