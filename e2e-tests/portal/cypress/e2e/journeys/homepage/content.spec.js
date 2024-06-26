@@ -28,6 +28,7 @@ context('Portal homepage', () => {
     login.banks().contains('Emirates NBD Bank (P.J.S.C)');
     login.banks().contains('Virgin Money');
     login.banks().contains('Shawbrook Bank');
+    login.banks().contains('Societe Generale');
   });
 
   it('Ensure product text is visible on the portal login page', () => {
