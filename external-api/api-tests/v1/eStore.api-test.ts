@@ -113,7 +113,7 @@ describe('/estore', () => {
 
   describe('When the Mongo deal ID is not a valid Mongo ObjectID', () => {
     const invalidObjectIds = [[], {}, '', 'invalid', '!"£'];
-    it.each(invalidObjectIds)('Should return 500 for a %s string which is neither 12 bytes nor 24 bytes hex characters or an integer', async (dealId) => {
+    it.each(invalidObjectIds)('Should return 400 for a %s string which is neither 12 bytes nor 24 bytes hex characters or an integer', async (dealId) => {
       const invalidPayload = {
         ...payload,
         dealId,
@@ -121,8 +121,8 @@ describe('/estore', () => {
 
       const { status, body } = (await post(invalidPayload).to('/estore')) as EstoreAxiosResponse;
 
-      expect(status).toEqual(HttpStatusCode.InternalServerError);
-      expect(body.message).toEqual('Unable to create eStore directories');
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body.message).toEqual('Invalid deal ObjectId');
     });
   });
 
