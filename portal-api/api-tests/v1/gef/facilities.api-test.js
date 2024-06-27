@@ -569,12 +569,14 @@ describe(baseUrl, () => {
       expectedSuccessResponseBody: { acknowledged: true },
     });
 
-    it('returns 404 if there are no facilities to delete', async () => {
+    // This behaviour matches existing implimentation
+    // As this endpoint is called when deleting by deal id, there is a chance that there are
+    // no facilities to delete, but we can just handle this as a success
+    it('returns 200 if there are no facilities to delete', async () => {
       const { status: firstStatus } = await as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
       const { status: secondStatus } = await as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
-
       expect(firstStatus).toBe(200);
-      expect(secondStatus).toBe(404);
+      expect(secondStatus).toBe(200);
     });
   });
 

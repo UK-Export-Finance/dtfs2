@@ -7,12 +7,6 @@ const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { PORTAL_ROUTE } = require('../../../../constants/routes');
 const { isNumber } = require('../../../../helpers');
 
-const withoutId = (obj) => {
-  const cleanedObject = { ...obj };
-  delete cleanedObject._id;
-  return cleanedObject;
-};
-
 const handleEditedByPortal = async (dealId, dealUpdate, user) => {
   let editedBy = [];
 
@@ -49,21 +43,24 @@ const handleEditedByPortal = async (dealId, dealUpdate, user) => {
   return editedBy;
 };
 
-const updateDealEditedByPortal = async (dealId, user) => {
-  if (ObjectId.isValid(dealId)) {
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
-    const editedBy = await handleEditedByPortal(dealId, {}, user);
-
-    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(withoutId({ editedBy })), {
-      returnNewDocument: true,
-      returnDocument: 'after',
-    });
-
-    const { value } = findAndUpdateResponse;
-    return value;
+const updateDealEditedByPortal = async ({ dealId, user, auditDetails }) => {
+  if (!ObjectId.isValid(dealId)) {
+    return { status: 400, message: 'Invalid Deal Id' };
   }
-  return { status: 400, message: 'Invalid Deal Id' };
+
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+  const { _id, ...editedByWithoutId } = await handleEditedByPortal(dealId, {}, user);
+  const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
+
+  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten({ editedBy: editedByWithoutId, auditRecord }), {
+    returnNewDocument: true,
+    returnDocument: 'after',
+  });
+
+  const { value } = findAndUpdateResponse;
+  return value;
 };
+
 exports.updateDealEditedByPortal = updateDealEditedByPortal;
 
 /**
@@ -142,8 +139,9 @@ const updateDeal = async ({ dealId, dealUpdate, user, auditDetails, existingDeal
     if (routePath === PORTAL_ROUTE) {
       dealUpdateForDatabase.editedBy = await handleEditedByPortal(dealId, dealUpdateForDatabase, user);
     }
+    const { _id, ...dealUpdateForDatabaseWithoutId } = dealUpdateForDatabase;
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(withoutId(dealUpdateForDatabase)), {
+    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(dealUpdateForDatabaseWithoutId), {
       returnNewDocument: true,
       returnDocument: 'after',
     });
@@ -222,8 +220,17 @@ exports.updateDealPut = async (req, res) => {
       return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
     }
 
-    validateAuditDetails(auditDetails);
-
+    try {
+      validateAuditDetails(auditDetails);
+    } catch (error) {
+      if (error instanceof InvalidAuditDetailsError) {
+        return res.status(error.status).send({
+          status: error.status,
+          message: `Invalid auditDetails, ${error.message}`,
+        });
+      }
+      return res.status(500).send({ status: 500, error });
+    }
     // TODO: Refactor callback with status check
     return findOneDeal(dealId, async (existingDeal) => {
       if (!existingDeal) {
