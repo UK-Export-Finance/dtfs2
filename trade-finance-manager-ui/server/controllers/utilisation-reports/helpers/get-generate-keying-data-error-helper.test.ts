@@ -11,7 +11,7 @@ describe('get-generate-keying-data-error-helper', () => {
 
       // Assert
       expect(generateKeyingDataError).toHaveLength(1);
-      expect(generateKeyingDataError[0].text).toBe('No matched facilities to generate keying data with');
+      expect(generateKeyingDataError[0].text).toBe('No matched fees to generate keying data with');
       expect(generateKeyingDataError[0].href).toBe('#no-matching-fee-records');
     });
   });
