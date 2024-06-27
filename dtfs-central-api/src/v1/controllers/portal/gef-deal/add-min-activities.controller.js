@@ -15,16 +15,14 @@ const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../con
  * canResubmitIssuedFacilities - changes flags to false
  * @param {Object} facilities
  */
-const updateChangedToIssued = async (facilities) => {
+const updateChangedToIssued = async ({ facilities, auditDetails }) => {
   facilities.forEach(async (facility) => {
-    const { _id, canResubmitIssuedFacilities } = facility;
-
+    const { _id: facilityId, canResubmitIssuedFacilities } = facility;
     if (canResubmitIssuedFacilities) {
-      const update = {
+      const facilityUpdate = {
         canResubmitIssuedFacilities: false,
       };
-
-      await updateFacility(_id, update);
+      await updateFacility({ facilityId, facilityUpdate, auditDetails });
     }
   });
 };
@@ -191,7 +189,7 @@ const generateMINActivities = async (req, res) => {
         portalActivities,
       };
 
-      await updateChangedToIssued(facilities);
+      await updateChangedToIssued({ facilities, auditDetails });
 
       const response = await updateDeal({ dealId, dealUpdate: update, auditDetails });
       const status = isNumber(response?.status, 3);

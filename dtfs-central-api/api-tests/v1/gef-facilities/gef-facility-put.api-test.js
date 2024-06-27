@@ -1,6 +1,10 @@
+const { ObjectId } = require('mongodb');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const CONSTANTS = require('../../../src/constants');
+const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
@@ -21,7 +25,16 @@ const createDeal = async () => {
 
 describe('PUT updateGefFacilities', () => {
   let aMaker;
-  let mockApplication;
+  let aDeal;
+  let aValidFacilityId;
+  let auditDetails;
+
+  const aValidFacilityUpdate = {
+    hasBeenIssued: false,
+    name: 'Test',
+    type: 'Cash',
+    currency: { id: 'GBP' },
+  };
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
@@ -30,34 +43,49 @@ describe('PUT updateGefFacilities', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.DEALS]);
+    aDeal = await createDeal();
+
+    ({
+      body: { _id: aValidFacilityId },
+    } = await as(aMaker).post({ dealId: aDeal._id, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl));
+
+    auditDetails = generatePortalAuditDetails(new ObjectId());
   });
 
-  it('returns 404 if facility does not exist', async () => {
-    const { status } = await as().put({}).to(`${baseUrl}/6215fed9a216070012c365af`);
+  withValidateAuditDetailsTests({
+    makeRequest: (auditDetailsToUse) => {
+      return api
+        .put({
+          facilityUpdate: aValidFacilityUpdate,
+          auditDetails: auditDetailsToUse,
+        })
+        .to(`${baseUrl}/${aValidFacilityId}`);
+    },
+  });
+
+  it('returns a 404 if the facility does not exist', async () => {
+    const aValidButNonExistantFacilityId = new ObjectId();
+    const { status } = await as().put({ facilityUpdate: aValidFacilityUpdate, auditDetails }).to(`${baseUrl}/${aValidButNonExistantFacilityId}`);
 
     expect(status).toEqual(404);
   });
 
+  it('returns a 400 if the facility id is invalid', async () => {
+    const anInvalidFacilityId = 'aaaa';
+    const { status } = await as().put({ facilityUpdate: aValidFacilityUpdate, auditDetails }).to(`${baseUrl}/${anInvalidFacilityId}`);
+
+    expect(status).toEqual(400);
+  });
+
   it('updates a facility', async () => {
-    const update = {
-      hasBeenIssued: false,
-      name: 'Test',
-      type: 'Cash',
-      currency: { id: 'GBP' },
-    };
-
-    mockApplication = await createDeal();
-
-    const item = await as(aMaker).post({ dealId: mockApplication._id, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-
-    const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body._id}`);
+    const { status, body } = await as(aMaker).put({ facilityUpdate: aValidFacilityUpdate, auditDetails }).to(`${baseUrl}/${aValidFacilityId}`);
 
     const expected = {
       hasBeenIssued: false,
       name: 'Test',
       currency: { id: 'GBP' },
-      dealId: mockApplication._id,
-      _id: item.body._id,
+      dealId: aDeal._id,
+      _id: aValidFacilityId,
     };
 
     expect(body.value).toEqual(expect.objectContaining(expected));
@@ -65,7 +93,7 @@ describe('PUT updateGefFacilities', () => {
   });
 
   it('fully update a facility ', async () => {
-    const update = {
+    const facilityUpdate = {
       hasBeenIssued: true,
       name: 'test',
       shouldCoverStartOnSubmission: true,
@@ -87,18 +115,14 @@ describe('PUT updateGefFacilities', () => {
       type: 'Cash',
     };
 
-    mockApplication = await createDeal();
-
-    const item = await as(aMaker).post({ dealId: mockApplication._id, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-
-    const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body._id}`);
+    const { status, body } = await as(aMaker).put({ facilityUpdate, auditDetails }).to(`${baseUrl}/${aValidFacilityId}`);
 
     const expected = {
       hasBeenIssued: true,
       name: 'test',
       currency: { id: 'GBP' },
-      dealId: mockApplication._id,
-      _id: item.body._id,
+      dealId: aDeal._id,
+      _id: aValidFacilityId,
       shouldCoverStartOnSubmission: true,
       coverStartDate: null,
       coverEndDate: '2015-01-01T00:00:00.000Z',
@@ -115,6 +139,7 @@ describe('PUT updateGefFacilities', () => {
       coverDateConfirmed: true,
       ukefFacilityId: 1234,
       type: 'Cash',
+      auditRecord: generateParsedMockAuditDatabaseRecord(auditDetails),
     };
 
     expect(body.value).toEqual(expect.objectContaining(expected));

@@ -1,5 +1,12 @@
 const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, DocumentNotFoundError } = require('@ukef/dtfs2-common');
+const {
+  MONGO_DB_COLLECTIONS,
+  DocumentNotDeletedError,
+  DocumentNotFoundError,
+  InvalidDealIdError,
+  FacilityNotFoundError,
+  DealNotFoundError,
+} = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteMany, deleteOne } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
 const utils = require('../utils.service');
@@ -231,7 +238,7 @@ exports.changeStatus = async (req, res) => {
   const dealId = req.params.id;
 
   if (!ObjectId.isValid(dealId)) {
-    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+    throw new InvalidDealIdError(dealId);
   }
 
   const enumValidationErr = validatorStatusCheckEnums(req.body);
@@ -243,7 +250,7 @@ exports.changeStatus = async (req, res) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
   const existingApplication = await collection.findOne({ _id: { $eq: ObjectId(dealId) } });
   if (!existingApplication) {
-    return res.status(404).send();
+    throw new DealNotFoundError(dealId);
   }
 
   const { status } = req.body;
@@ -256,7 +263,7 @@ exports.changeStatus = async (req, res) => {
   };
 
   if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
-    const submissionData = await addSubmissionData(dealId, existingApplication, generatePortalAuditDetails(req.user._id));
+    const submissionData = await addSubmissionData(dealId, existingApplication, auditDetails);
 
     applicationUpdate = {
       ...applicationUpdate,
@@ -315,8 +322,12 @@ exports.delete = async (req, res) => {
 
     return res.status(200).send(applicationDeleteResult);
   } catch (error) {
-    if (error instanceof DocumentNotDeletedError) {
-      return res.sendStatus(404);
+    if (error instanceof DocumentNotDeletedError || error instanceof DealNotFoundError || error instanceof FacilityNotFoundError) {
+      return res.status(404).send({ status: 404, message: error.message });
+    }
+
+    if (error instanceof InvalidDealIdError) {
+      return res.sendStatus(400).send({ status: 400, message: error.message });
     }
 
     if (error instanceof DocumentNotFoundError) {
@@ -324,6 +335,7 @@ exports.delete = async (req, res) => {
       // DocumentNotFoundError is returned if no facilities are found, which occurs after the deal is successfully deleted
       return res.status(200).send({ acknowledged: true, deletedCount: 1 });
     }
+
     console.error(error);
     return res.status(500).send({ status: 500, error });
   }
