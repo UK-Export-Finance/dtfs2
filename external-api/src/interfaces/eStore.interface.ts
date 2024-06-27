@@ -1,5 +1,3 @@
-import { ObjectId } from 'mongodb';
-
 // Input
 
 /**
@@ -16,7 +14,7 @@ import { ObjectId } from 'mongodb';
  * @property {string} riskMarket - Risk market for the deal.
  */
 export interface Estore {
-  dealId: ObjectId;
+  dealId: string;
   siteId: string;
   facilityIdentifiers: number[];
   supportingInformation: string[];

@@ -12,9 +12,7 @@ import { getNowAsEpoch } from '../../../helpers/date';
 
 export const create = async (req: EstoreRequest, res: Response) => {
   try {
-    const { body } = req as {
-      body: object;
-    };
+    const { body } = req;
 
     // Ensure `req.body` is valid
     if (objectIsEmpty(body)) {
@@ -25,10 +23,10 @@ export const create = async (req: EstoreRequest, res: Response) => {
     const cronJobLogs = await getCollection('cron-job-logs');
     const tfmDeals = await getCollection('tfm-deals');
 
-    const { dealId, siteId, facilityIdentifiers, supportingInformation, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = req.body;
+    const { dealId, siteId, facilityIdentifiers, supportingInformation, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = body;
 
     const eStoreData: Estore = {
-      dealId: new ObjectId(dealId),
+      dealId,
       dealIdentifier,
       facilityIdentifiers,
       siteId,

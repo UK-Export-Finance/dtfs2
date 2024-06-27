@@ -11,7 +11,7 @@ const { post } = api(app);
 const { APIM_ESTORE_URL } = process.env;
 
 const payload: Estore = {
-  dealId: new ObjectId('6597dffeb5ef5ff4267e5044'),
+  dealId: '6597dffeb5ef5ff4267e5044',
   siteId: 'ukef',
   facilityIdentifiers: [1234567890, 1234567891],
   supportingInformation: ['test'],
