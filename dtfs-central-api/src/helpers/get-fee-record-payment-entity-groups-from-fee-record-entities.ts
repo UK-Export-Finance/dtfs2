@@ -1,6 +1,6 @@
 import { FeeRecordEntity, PaymentEntity } from '@ukef/dtfs2-common';
 
-type FeeRecordPaymentEntityGroup = {
+export type FeeRecordPaymentEntityGroup = {
   feeRecords: FeeRecordEntity[];
   payments: PaymentEntity[];
 };
@@ -51,7 +51,7 @@ const getFeeRecordIdKeyFromFeeRecordEntities = (feeRecords: FeeRecordEntity[]) =
     .toSorted((id1, id2) => id1 - id2)
     .join('-')}`;
 
-export const getFeeRecordPaymentEntityGroupsFromFilteredFeeRecordEntities = (feeRecords: FeeRecordEntity[]): FeeRecordPaymentEntityGroup[] => {
+export const getCompleteFeeRecordPaymentEntityGroupsFromFilteredFeeRecordEntities = (feeRecords: FeeRecordEntity[]): FeeRecordPaymentEntityGroup[] => {
   function* generateUniqueKey(): Generator<string, string, unknown> {
     let key = 1;
     while (true) {

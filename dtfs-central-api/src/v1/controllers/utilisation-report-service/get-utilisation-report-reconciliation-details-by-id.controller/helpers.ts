@@ -5,7 +5,13 @@ import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from '../../../../mapping/fee-record-mapper';
 import { mapPaymentEntityToPayment } from '../../../../mapping/payment-mapper';
-import { calculateTotalCurrencyAndAmount, getFeeRecordPaymentEntityGroupsFromFilteredFeeRecordEntities } from '../../../../helpers';
+import {
+  FeeRecordPaymentEntityGroup,
+  calculateTotalCurrencyAndAmount,
+  getCompleteFeeRecordPaymentEntityGroupsFromFilteredFeeRecordEntities,
+  getFeeRecordPaymentEntityGroupsFromFeeRecordEntities,
+} from '../../../../helpers';
+import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 
 const mapFeeRecordEntityToFeeRecord = (feeRecord: FeeRecordEntity): FeeRecord => ({
   id: feeRecord.id,
@@ -15,9 +21,7 @@ const mapFeeRecordEntityToFeeRecord = (feeRecord: FeeRecordEntity): FeeRecord =>
   reportedPayments: mapFeeRecordEntityToReportedPayments(feeRecord),
 });
 
-const mapFeeRecordEntitiesToFeeRecordPaymentGroups = (feeRecordEntities: FeeRecordEntity[]): FeeRecordPaymentGroup[] => {
-  const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFilteredFeeRecordEntities(feeRecordEntities);
-
+const mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups = (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[]): FeeRecordPaymentGroup[] => {
   return feeRecordPaymentEntityGroups.map(({ feeRecords: feeRecordEntitiesInGroup, payments }) => {
     const { status } = feeRecordEntitiesInGroup[0];
 
@@ -56,12 +60,14 @@ const mapFeeRecordEntitiesToFeeRecordPaymentGroups = (feeRecordEntities: FeeReco
 /**
  * Maps the utilisation report entity to the reconciliation details
  * @param utilisationReport - The utilisation report entity
+ * @param feeRecordGroupingFunction - The method that should be called to create the fee record payment groups
  * @returns The utilisation report reconciliation details
  * @throws {Error} If the report has not been uploaded
  * @throws {NotFoundError} If a bank cannot be found with the matching bank id
  */
-export const mapUtilisationReportEntityToReconciliationDetails = async (
+const mapUtilisationReportEntityToReconciliationDetails = async (
   utilisationReport: UtilisationReportEntity,
+  feeRecordGroupingFunction: (feeRecords: FeeRecordEntity[]) => FeeRecordPaymentEntityGroup[],
 ): Promise<UtilisationReportReconciliationDetails> => {
   const { id, bankId, feeRecords, dateUploaded, status, reportPeriod } = utilisationReport;
 
@@ -74,7 +80,8 @@ export const mapUtilisationReportEntityToReconciliationDetails = async (
     throw new NotFoundError(`Failed to find a bank with id '${bankId}'`);
   }
 
-  const feeRecordPaymentGroups = mapFeeRecordEntitiesToFeeRecordPaymentGroups(feeRecords);
+  const feeRecordPaymentEntityGroups = feeRecordGroupingFunction(feeRecords);
+  const feeRecordPaymentGroups = mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(feeRecordPaymentEntityGroups);
 
   return {
     reportId: id,
@@ -87,4 +94,39 @@ export const mapUtilisationReportEntityToReconciliationDetails = async (
     dateUploaded,
     feeRecordPaymentGroups,
   };
+};
+
+const getUtilisationReportReconciliationDetailsFilteredByPartialFacilityId = async (
+  reportId: number,
+  facilityIdQuery: string,
+): Promise<UtilisationReportReconciliationDetails> => {
+  const utilisationReportWithFilteredFeeRecords = await UtilisationReportRepo.findOneByIdWithFeeRecordsFilteredByPartialFacilityId(reportId, facilityIdQuery);
+
+  if (!utilisationReportWithFilteredFeeRecords) {
+    throw new NotFoundError(`Failed to find a report with id '${reportId}'`);
+  }
+
+  return await mapUtilisationReportEntityToReconciliationDetails(
+    utilisationReportWithFilteredFeeRecords,
+    getCompleteFeeRecordPaymentEntityGroupsFromFilteredFeeRecordEntities,
+  );
+};
+
+const getUtilisationReportReconciliationDetailsWithoutFiltering = async (reportId: number): Promise<UtilisationReportReconciliationDetails> => {
+  const utilisationReport = await UtilisationReportRepo.findOneByIdWithFeeRecordsWithPayments(reportId);
+
+  if (!utilisationReport) {
+    throw new NotFoundError(`Failed to find a report with id '${reportId}'`);
+  }
+
+  return await mapUtilisationReportEntityToReconciliationDetails(utilisationReport, getFeeRecordPaymentEntityGroupsFromFeeRecordEntities);
+};
+
+export const getUtilisationReportReconciliationDetails = async (
+  reportId: number,
+  facilityIdQuery?: string,
+): Promise<UtilisationReportReconciliationDetails> => {
+  return facilityIdQuery
+    ? await getUtilisationReportReconciliationDetailsFilteredByPartialFacilityId(reportId, facilityIdQuery)
+    : await getUtilisationReportReconciliationDetailsWithoutFiltering(reportId);
 };
