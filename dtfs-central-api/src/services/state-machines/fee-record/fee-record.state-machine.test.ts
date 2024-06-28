@@ -4,7 +4,7 @@ import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FEE_REC
 import { InvalidStateMachineTransitionError } from '../../../errors';
 import { FEE_RECORD_EVENT_TYPE, FEE_RECORD_EVENT_TYPES, FeeRecordEventType } from './event/fee-record.event-type';
 import { FeeRecordStateMachine } from './fee-record.state-machine';
-import { handleFeeRecordPaymentAddedEvent, handleFeeRecordPaymentDeletedEvent } from './event-handlers';
+import { handleFeeRecordPaymentAddedEvent, handleFeeRecordPaymentDeletedEvent, handleFeeRecordPaymentEditedEvent } from './event-handlers';
 
 jest.mock('./event-handlers');
 
@@ -63,8 +63,23 @@ describe('FeeRecordStateMachine', () => {
     // Arrange
     const MATCH_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('MATCH').build();
 
-    const VALID_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['PAYMENT_DELETED'];
-    const INVALID_MATCH_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_MATCH_FEE_RECORD_EVENT_TYPES);
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.PAYMENT_EDITED}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'PAYMENT_EDITED',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          feeRecordsAndPaymentsMatch: true,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordPaymentEditedEvent).toHaveBeenCalledTimes(1);
+    });
 
     it(`handles the '${FEE_RECORD_EVENT_TYPE.PAYMENT_DELETED}' event`, async () => {
       // Arrange
@@ -85,6 +100,9 @@ describe('FeeRecordStateMachine', () => {
       expect(handleFeeRecordPaymentDeletedEvent).toHaveBeenCalledTimes(1);
     });
 
+    const VALID_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['PAYMENT_DELETED', 'PAYMENT_EDITED'];
+    const INVALID_MATCH_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_MATCH_FEE_RECORD_EVENT_TYPES);
+
     if (INVALID_MATCH_FEE_RECORD_EVENT_TYPES.length !== 0) {
       it.each(INVALID_MATCH_FEE_RECORD_EVENT_TYPES)(
         "throws an 'InvalidStateMachineTransitionError' for event type %p",
@@ -103,7 +121,25 @@ describe('FeeRecordStateMachine', () => {
     // Arrange
     const DOES_NOT_MATCH_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('DOES_NOT_MATCH').build();
 
-    const VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['PAYMENT_ADDED', 'PAYMENT_DELETED'];
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.PAYMENT_EDITED}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(DOES_NOT_MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'PAYMENT_EDITED',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          feeRecordsAndPaymentsMatch: true,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordPaymentEditedEvent).toHaveBeenCalledTimes(1);
+    });
+
+    const VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['PAYMENT_ADDED', 'PAYMENT_DELETED', 'PAYMENT_EDITED'];
     const INVALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES.length !== 0) {

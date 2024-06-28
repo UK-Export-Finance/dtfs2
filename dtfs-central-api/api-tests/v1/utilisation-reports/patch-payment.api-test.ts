@@ -1,0 +1,164 @@
+import { HttpStatusCode } from 'axios';
+import { ObjectId } from 'mongodb';
+import {
+  FeeRecordEntityMockBuilder,
+  PaymentEntity,
+  PaymentEntityMockBuilder,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
+import { difference } from 'lodash';
+import { testApi } from '../../test-api';
+import { SqlDbHelper } from '../../sql-db-helper';
+import { PatchPaymentPayload } from '../../../src/v1/routes/middleware/payload-validation';
+import { aTfmSessionUser } from '../../../test-helpers/test-data';
+
+describe('PATCH /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
+  const getUrl = (reportId: string | number, paymentId: string | number) => `/v1/utilisation-reports/${reportId}/payment/${paymentId}`;
+
+  const reportId = 12;
+  const paymentId = 34;
+
+  const aPatchPaymentRequestBody = (): PatchPaymentPayload => ({
+    paymentAmount: 100,
+    datePaymentReceived: new Date(),
+    paymentReference: 'A payment reference',
+    user: aTfmSessionUser(),
+  });
+
+  const payment = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).build();
+
+  const aReport = () => UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+
+  const feeRecordsForReportWithPayments = (report: UtilisationReportEntity, payments: PaymentEntity[]) => [
+    FeeRecordEntityMockBuilder.forReport(report)
+      .withId(1)
+      .withStatus('DOES_NOT_MATCH')
+      .withFeesPaidToUkefForThePeriodCurrency('GBP')
+      .withPayments(payments)
+      .build(),
+    FeeRecordEntityMockBuilder.forReport(report)
+      .withId(2)
+      .withStatus('DOES_NOT_MATCH')
+      .withFeesPaidToUkefForThePeriodCurrency('GBP')
+      .withPayments(payments)
+      .build(),
+  ];
+
+  beforeAll(async () => {
+    await SqlDbHelper.initialize();
+  });
+
+  beforeEach(async () => {
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+
+    const report = aReport();
+    report.feeRecords = feeRecordsForReportWithPayments(report, [payment]);
+    await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+  });
+
+  it('returns a 400 when the report id is not a valid id', async () => {
+    // Act
+    const response = await testApi.patch(aPatchPaymentRequestBody()).to(getUrl('invalid-id', paymentId));
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.BadRequest);
+  });
+
+  it('returns a 400 when the payment id is not a valid id', async () => {
+    // Act
+    const response = await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, 'invalid-id'));
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.BadRequest);
+  });
+
+  it('returns a 404 when the payment with the supplied id does not exist', async () => {
+    // Act
+    const response = await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, paymentId + 1));
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.NotFound);
+  });
+
+  it('returns a 404 when the payment with the supplied id exists but it is not attached to a report with the supplied id', async () => {
+    // Arrange
+    const differentPaymentId = 25;
+    const differentPayment = PaymentEntityMockBuilder.forCurrency('GBP').withId(differentPaymentId).build();
+    await SqlDbHelper.saveNewEntry('Payment', differentPayment);
+
+    // Act
+    const response = await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, differentPaymentId));
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.NotFound);
+  });
+
+  it.each(difference(Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS), [UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS]))(
+    "returns a 400 when the report the payment is attached has the status '%s'",
+    async (status) => {
+      // Arrange
+      const report = aReport();
+      report.status = status;
+      report.feeRecords = feeRecordsForReportWithPayments(report, [payment]);
+
+      await SqlDbHelper.deleteAllEntries('UtilisationReport');
+      await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+      // Act
+      const response = await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, paymentId));
+
+      // Assert
+      expect(response.status).toBe(HttpStatusCode.BadRequest);
+    },
+  );
+
+  it('returns a 200 when the payment can be edited', async () => {
+    // Act
+    const response = await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, paymentId));
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.Ok);
+  });
+
+  it('updates the payment and report with the fields supplied in the payload', async () => {
+    // Arrange
+    const paymentAmount = 314.59;
+    const datePaymentReceived = new Date('2024-02-04');
+    const paymentReference = 'A new payment reference';
+    const tfmUserId = new ObjectId().toString();
+
+    const requestBody: PatchPaymentPayload = {
+      paymentAmount,
+      datePaymentReceived,
+      paymentReference,
+      user: {
+        ...aTfmSessionUser(),
+        _id: tfmUserId,
+      },
+    };
+
+    // Act
+    const response = await testApi.patch(requestBody).to(getUrl(reportId, paymentId));
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.Ok);
+
+    const paymentEntity = (await SqlDbHelper.manager.findOneBy(PaymentEntity, { id: paymentId }))!;
+
+    expect(paymentEntity.amount).toBe(paymentAmount);
+    expect(paymentEntity.dateReceived).toEqual(datePaymentReceived);
+    expect(paymentEntity.reference).toBe(paymentReference);
+
+    expect(paymentEntity.lastUpdatedByTfmUserId).toBe(tfmUserId);
+    expect(paymentEntity.lastUpdatedByPortalUserId).toBeNull();
+    expect(paymentEntity.lastUpdatedByIsSystemUser).toBe(false);
+
+    const reportEntity = (await SqlDbHelper.manager.findOneBy(UtilisationReportEntity, { id: reportId }))!;
+
+    expect(reportEntity.lastUpdatedByTfmUserId).toBe(tfmUserId);
+    expect(reportEntity.lastUpdatedByPortalUserId).toBeNull();
+    expect(reportEntity.lastUpdatedByIsSystemUser).toBe(false);
+  });
+});

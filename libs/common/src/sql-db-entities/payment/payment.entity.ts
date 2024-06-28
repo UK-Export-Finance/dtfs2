@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Currency } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
-import { CreatePaymentParams } from './payment.types';
+import { CreatePaymentParams, UpdatePaymentParams } from './payment.types';
 import { FeeRecordEntity } from '../fee-record';
 import { MonetaryColumn } from '../custom-columns';
 
@@ -52,5 +52,12 @@ export class PaymentEntity extends AuditableBaseEntity {
     payment.feeRecords = feeRecords;
     payment.updateLastUpdatedBy(requestSource);
     return payment;
+  }
+
+  public update({ amount, dateReceived, reference, requestSource }: UpdatePaymentParams): void {
+    this.amount = amount;
+    this.dateReceived = dateReceived;
+    this.reference = reference;
+    this.updateLastUpdatedBy(requestSource);
   }
 }
