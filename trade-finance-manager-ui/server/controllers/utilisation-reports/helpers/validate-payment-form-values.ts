@@ -138,13 +138,8 @@ const getPaymentDateHref = (paymentDateError: PaymentDateErrorViewModel): string
   return '#paymentDate-year';
 };
 
-export const validateAddPaymentRequestFormValues = (formValues: AddPaymentFormValues, feeRecordPaymentCurrency: Currency): PaymentErrorsViewModel => {
+const validateCommonPaymentRequestFormValues = (formValues: AddPaymentFormValues | EditPaymentFormValues): PaymentErrorsViewModel => {
   const errorSummary: ErrorSummaryViewModel[] = [];
-
-  const paymentCurrencyErrorMessage = getPaymentCurrencyValidationsErrors(formValues.paymentCurrency, feeRecordPaymentCurrency);
-  if (paymentCurrencyErrorMessage) {
-    errorSummary.push({ text: paymentCurrencyErrorMessage, href: '#paymentCurrency' });
-  }
 
   const paymentAmountErrorMessage = isPaymentAmountValid(formValues.paymentAmount) ? undefined : 'Enter a valid amount received';
   if (paymentAmountErrorMessage) {
@@ -161,6 +156,26 @@ export const validateAddPaymentRequestFormValues = (formValues: AddPaymentFormVa
   const paymentDateError = validatePaymentDateAndReturnErrorIfInvalid(formValues.paymentDate.day, formValues.paymentDate.month, formValues.paymentDate.year);
   if (paymentDateError) {
     errorSummary.push({ text: paymentDateError.message, href: getPaymentDateHref(paymentDateError) });
+  }
+
+  return {
+    errorSummary,
+    paymentAmountErrorMessage,
+    paymentReferenceErrorMessage,
+    paymentDateError,
+  };
+};
+
+export const validateAddPaymentRequestFormValues = (formValues: AddPaymentFormValues, feeRecordPaymentCurrency: Currency): PaymentErrorsViewModel => {
+  const errorSummary: ErrorSummaryViewModel[] = [];
+
+  const commonPaymentFormErrors = validateCommonPaymentRequestFormValues(formValues);
+  const { paymentAmountErrorMessage, paymentReferenceErrorMessage, paymentDateError } = commonPaymentFormErrors;
+  errorSummary.push(...commonPaymentFormErrors.errorSummary);
+
+  const paymentCurrencyErrorMessage = getPaymentCurrencyValidationsErrors(formValues.paymentCurrency, feeRecordPaymentCurrency);
+  if (paymentCurrencyErrorMessage) {
+    errorSummary.push({ text: paymentCurrencyErrorMessage, href: '#paymentCurrency' });
   }
 
   const addAnotherPaymentErrorMessage = isAddAnotherPaymentChoiceValid(formValues.addAnotherPayment) ? undefined : 'Select add another payment choice';
@@ -178,32 +193,5 @@ export const validateAddPaymentRequestFormValues = (formValues: AddPaymentFormVa
   };
 };
 
-export const validateEditPaymentRequestFormValues = (
-  formValues: EditPaymentFormValues,
-): Omit<PaymentErrorsViewModel, 'paymentCurrencyErrorMessage' | 'addAnotherPaymentErrorMessage'> => {
-  const errorSummary: ErrorSummaryViewModel[] = [];
-
-  const paymentAmountErrorMessage = isPaymentAmountValid(formValues.paymentAmount) ? undefined : 'Enter a valid amount received';
-  if (paymentAmountErrorMessage) {
-    errorSummary.push({ text: paymentAmountErrorMessage, href: '#paymentAmount' });
-  }
-
-  const paymentReferenceErrorMessage = isPaymentReferenceOverFiftyCharacters(formValues.paymentReference)
-    ? 'Payment reference must be 50 characters or less'
-    : undefined;
-  if (paymentReferenceErrorMessage) {
-    errorSummary.push({ text: paymentReferenceErrorMessage, href: '#paymentReference' });
-  }
-
-  const paymentDateError = validatePaymentDateAndReturnErrorIfInvalid(formValues.paymentDate.day, formValues.paymentDate.month, formValues.paymentDate.year);
-  if (paymentDateError) {
-    errorSummary.push({ text: paymentDateError.message, href: getPaymentDateHref(paymentDateError) });
-  }
-
-  return {
-    errorSummary,
-    paymentAmountErrorMessage,
-    paymentReferenceErrorMessage,
-    paymentDateError,
-  };
-};
+export const validateEditPaymentRequestFormValues = (formValues: EditPaymentFormValues): PaymentErrorsViewModel =>
+  validateCommonPaymentRequestFormValues(formValues);
