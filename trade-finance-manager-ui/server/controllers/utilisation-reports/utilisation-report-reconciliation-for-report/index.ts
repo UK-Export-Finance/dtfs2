@@ -7,6 +7,7 @@ import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems } from '
 import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 import { getAndClearFieldsFromRedirectSessionData } from './get-and-clear-fields-from-redirect-session-data';
 import { FeeRecordPaymentGroup } from '../../../api-response-types';
+import { userIsInTeam } from '../../../helpers/user';
 
 const feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): boolean =>
   feeRecordPaymentGroups.some(({ paymentsReceived }) => paymentsReceived !== null);
@@ -17,6 +18,8 @@ const renderUtilisationReportReconciliationForReport = (res: Response, viewModel
 export const getUtilisationReportReconciliationByReportId = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
   const { reportId } = req.params;
+
+  const canEdit = !userIsInTeam(user, ['PDC_READ']);
 
   try {
     const { errorSummary, isCheckboxChecked } = getAndClearFieldsFromRedirectSessionData(req);
@@ -37,6 +40,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
       reportId,
       enablePaymentsReceivedSorting,
       feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
+      canEdit,
       errorSummary,
     });
   } catch (error) {
